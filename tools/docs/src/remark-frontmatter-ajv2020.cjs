@@ -4,21 +4,8 @@ const { pathToFileURL } = require('node:url')
 const { load } = require('js-yaml')
 const Ajv2020 = require('ajv/dist/2020').default
 
-const DEFAULT_SCHEMAS = {
-  deliverables: 'docs/shared/schemas/deliverable-frontmatter.schema.yaml',
-  rulebook: 'docs/shared/schemas/rulebook-frontmatter.schema.yaml',
-  instruction: 'docs/shared/schemas/instruction-frontmatter.schema.yaml',
-  guide: 'docs/shared/schemas/guide-frontmatter.schema.yaml',
-}
-
-const DEFAULT_SCHEMA_RULES = [
-  { startsWith: 'docs/ja/handbook/rulebooks/', schema: 'rulebook' },
-  { startsWith: 'docs/ja/handbook/instructions/', schema: 'instruction' },
-  { startsWith: 'docs/ja/handbook/guidelines/', schema: 'guide' },
-  { endsWith: '.md', schema: 'deliverables' },
-  { endsWith: '.mdx', schema: 'deliverables' },
-]
-
+// Markdown の frontmatter を、設定で指定したスキーマへマッピングして検証する Remark プラグイン。
+// `yaml.schemas` 形式（schemaPath: [glob...]）または `schemaRules` 形式を受け取り、先勝ちで適用する。
 const validatorCache = new Map()
 
 function toPosix(p) {
@@ -47,6 +34,7 @@ function toArray(value) {
 }
 
 function globToRegExp(globPattern) {
+  // VS Code の yaml.schemas に近いグロブ解釈になるように変換する。
   const pattern = toPosix(String(globPattern || ''))
   let source = '^'
   for (let i = 0; i < pattern.length; i += 1) {
@@ -83,6 +71,7 @@ function normalizeYamlSchemas(yamlSchemas) {
   }
 
   const rules = []
+  // { schemaPath: [glob...] } を内部のマッチングルールへ正規化する。
   for (const [schemaPath, patterns] of Object.entries(yamlSchemas)) {
     for (const pattern of toArray(patterns)) {
       rules.push({ glob: String(pattern), schema: String(schemaPath) })
@@ -126,6 +115,7 @@ function resolveSchemaPath(schemaRef, schemas) {
 function selectSchemaPath(relativePath, schemas, schemaRules) {
   const filePath = toPosix(relativePath || '')
 
+  // 先勝ちで評価するため、具体的なルールを汎用ルールより前に置く。
   for (const rule of schemaRules) {
     if (!rule || typeof rule !== 'object') continue
     if (!ruleMatches(filePath, rule)) continue
@@ -177,19 +167,23 @@ module.exports = function remarkFrontmatterAjv2020(options = {}) {
   const strictMode = options.strict !== false
   const optionSchemas = options.schemas || {}
   const schemas = {
-    ...DEFAULT_SCHEMAS,
     ...optionSchemas,
-    ...(optionSchemas.spec && !optionSchemas.deliverables
-      ? { deliverables: optionSchemas.spec }
-      : {}),
   }
+  // 互換性のため、camelCase と VS Code 風キー名の両方を受け付ける。
   const yamlSchemasOption = options.yamlSchemas || options['yaml.schemas']
   const yamlSchemaRules = normalizeYamlSchemas(yamlSchemasOption)
   const schemaRules = Array.isArray(options.schemaRules)
     ? options.schemaRules
     : yamlSchemaRules.length
       ? yamlSchemaRules
-      : DEFAULT_SCHEMA_RULES
+      : []
+
+  if (!schemaRules.length) {
+    throw new Error(
+      // 設定漏れ時に frontmatter 検証を黙ってスキップしないため、明示的に失敗させる。
+      'remark-frontmatter-ajv2020: schema rules are required. Set options.schemaRules or options["yaml.schemas"].'
+    )
+  }
 
   return function transformer(tree, file) {
     const workspaceRoot = options.workspaceRoot || process.cwd()
