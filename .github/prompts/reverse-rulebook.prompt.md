@@ -1,37 +1,24 @@
 # 成果物から対応する rules を逆生成
 
-@file:.github/skills/upsert-rulebook/SKILL.md
+@file:.github/skills/reverse-rulebook/SKILL.md
 
-現在開いている **成果物ファイル** を分析し、
-対応する `*-rulebook.md` を新規作成または更新してください。
+`/reverse-rulebook` は、上記 SKILL に定義された手順と実行ルールに従って実行してください。
 
-## 対象の決定
+## 入力の扱い
 
-- 開いているファイルが `sample-gcs-product/` 配下、またはプロジェクト成果物の場合 → 成果物からの逆生成フローを適用する
-- 開いているファイルが `*-rulebook.md` / `*-instruction.md` / `*-sample.md` の場合 → `upsert-rulebook` プロンプトの対象のため、処理を中止し誘導する
-- 開いているファイルが `meta-*-rulebook.md` の場合 → 対象外として処理を中止する
+- 現在開いているファイルを単一対象として処理する。
+- 開いているファイルがサンプル、またはプロジェクト成果物の場合のみ逆生成を実行する。
+- 開いているファイルが `*-rulebook.md` / `*-instruction.md` / `meta-*-rulebook.md` の場合は対象外として中止し、対応プロンプトへ誘導する。
 
-## 対象ファイル → rules の特定
+## 実行方針
 
-1. ファイル名プレフィックス（`cdfd-`, `bes-` 等）を抽出し、`meta-id-and-file-naming-rulebook.md` の「プレフィックス表」で照合
-2. プレフィックスが取れない場合は Frontmatter `id` → 親ディレクトリ名 → 内容パターンの順で特定
-3. 特定できない場合はユーザに確認する
+- 対象ファイルから rules を特定する優先順位（Frontmatter `rulebook` 最優先）や、妥当性評価・汎用化の基準は SKILL の定義を正とする。
+- 既存 rules がある場合は差分アップサート、ない場合は新規作成とする。
+- 処理完了後に `npm run -s lint:md` を実行する。
 
-## 対応ルール
+## 出力
 
-- 出力先: `docs/ja/handbook/rulebooks/<prefix>-rulebook.md`
-- `meta-*-rulebook.md` は対象外
-- 対応する rules が存在しない場合は新規作成
-- 存在する場合はアップサート（成果物の実態との乖離を差分修正）
-
-## 進め方
-
-1. 開いているファイルから対応するプレフィックスと rules ファイルを特定
-2. 成果物の構造を分析（見出し構成・表カラム・Mermaid 有無・Frontmatter）
-3. 同ディレクトリの他ファイルも 2〜3 件確認し、パターンの共通性を把握
-4. `meta-rulebook-structure-rulebook.md` を読み、標準章構成を把握
-5. docs-contents-guide から対象ドキュメントの目的・内容を確認
-6. 同カテゴリの既存 rules を参考に粒度を把握
-7. 分析結果を標準章構成に当てはめ、新規作成またはアップサートを実行
-8. `サンプル（最小でも可）` のリンクと `生成 AI への指示テンプレート` のリンクを確認・更新
-9. `npm run -s lint:md` で検証
+- 対象ごとの結果（更新 / 新規 / スキップ / 失敗）
+- 変更ファイル一覧
+- 妥当性評価と汎用化の要約（採用した規則 / 汎用化した規則 / 非採用項目）
+- lint 結果
