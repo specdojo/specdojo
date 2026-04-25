@@ -350,3 +350,139 @@ docs/
 │
 └── en/                                           # 将来の英語ドキュメント用ディレクトリ
 ```
+
+## 6. プロジェクトドキュメントの依存関係
+
+### 6.1. 成果物カタログを中心としたドキュメント依存関係
+
+成果物カタログ（`prj-deliverables-catalog`）をプロジェクト定義フェーズの出口とし、管理計画・WBS・プロダクト変更・実行管理への入口と位置づける。
+
+- **prj-deliverables-catalog 以前**: 何を実現するか、何を作るべきかを決める
+- **prj-deliverables-catalog 以後**: 決めた成果物を、どう作り、どう管理し、どう実行するかを決める
+
+```mermaid
+flowchart TD
+  subgraph A["A. 成果物カタログ定義"]
+    A1["prj-overview<br/>プロジェクト概要"]
+    A2["prj-stakeholder-register<br/>ステークホルダー登録"]
+    A3["prj-charter<br/>プロジェクト憲章<br/>（立ち上げ認可）"]
+    A4["prj-scope<br/>スコープ"]
+    A5["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入基準"]
+    A6["prj-assumptions-constraints-dependencies<br/>前提条件・制約・依存関係"]
+    A7["prj-issues-and-approach<br/>課題とアプローチ"]
+    A8["prj-comparison-of-alternatives<br/>代替案の比較<br/>（必要時）"]
+
+    A9["020-product-change<br/>プロダクト変更<br/>構成方針"]
+    A10["030-project-management<br/>プロジェクトマネジメント<br/>構成方針"]
+
+    A11["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロジェクト定義の出口）"]
+  end
+
+  subgraph B["B. 成果物カタログ定義以降"]
+    B1["pm-plan<br/>プロジェクトマネジメント計画"]
+    B2["pm-* sub plans<br/>サブ計画"]
+    B3["WBS / Schedule<br/>WBS / スケジュール"]
+    B4["product-change<br/>成果物の詳細作成"]
+    B5["execution / reporting / controls<br/>実行 / 報告 / 管理"]
+  end
+
+  A1 --> A2
+  A1 --> A3
+  A2 --> A3
+
+  A3 --> A4
+  A4 --> A5
+  A4 --> A6
+  A4 --> A7
+  A6 --> A7
+  A7 --> A8
+
+  A4 --> A9
+  A5 --> A9
+  A6 --> A9
+  A7 --> A9
+
+  A4 --> A10
+  A5 --> A10
+  A6 --> A10
+
+  A9 --> A11
+  A10 --> A11
+  A5 --> A11
+  A6 --> A11
+  A7 --> A11
+  A8 --> A11
+
+  A11 --> B1
+  A11 --> B3
+  A11 --> B4
+
+  B1 --> B2
+  B2 --> B3
+  B3 --> B5
+  B4 --> B5
+
+  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
+  class A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11 projectWise;
+  class B1,B2,B3,B4,B5 projectWise;
+```
+
+プロダクト変更（`020-product-change`）とプロジェクトマネジメント（`030-project-management`）の構成方針は、プロジェクト定義フェーズの出口で決定し、構成要素を成果物カタログに登録する。
+
+### 6.2. 成果物カタログを作成するまでのプロジェクト管理
+
+- **成果物カタログ前**: 暫定WBS・暫定スケジュールで定義作業を管理する
+  - `wbs-definition-phase.yaml`
+  - `sch-definition-phase.yaml`
+- **成果物カタログ後**: 成果物カタログを入力に正式WBS・正式スケジュールを作成する
+  - `wbs-<domain>.yaml`
+  - `sch-<domain>.yaml`
+
+```mermaid
+flowchart TD
+  POV["prj-overview<br/>プロジェクト概要"]
+  SHR["prj-stakeholder-register<br/>ステークホルダー登録"]
+  PCH["prj-charter<br/>プロジェクト憲章<br/>（立ち上げ認可）"]
+
+  TWBS["暫定WBS<br/>wbs-definition-phase.yaml"]
+  TSCH["暫定スケジュール<br/>sch-definition-phase.yaml"]
+
+  PSC["prj-scope<br/>スコープ"]
+  SCA["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入基準"]
+  ACD["prj-assumptions-constraints-dependencies<br/>前提条件・制約・依存関係"]
+  PIA["prj-issues-and-approach<br/>課題とアプローチ"]
+  COA["prj-comparison-of-alternatives<br/>代替案の比較<br/>（必要時）"]
+  DVC["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロジェクト定義の出口）"]
+
+  PMP["pm-plan<br/>本格実行計画"]
+  FWBS["正式WBS<br/>wbs-*.yaml"]
+  FSCH["正式スケジュール<br/>sch-*.yaml"]
+
+  POV --> SHR
+  POV --> PCH
+  SHR --> PCH
+
+  PCH --> TWBS
+  TWBS --> TSCH
+
+  TSCH --> PSC
+  TSCH --> SCA
+  TSCH --> ACD
+  TSCH --> PIA
+  TSCH --> COA
+  TSCH --> DVC
+
+  PSC --> DVC
+  SCA --> DVC
+  ACD --> DVC
+  PIA --> DVC
+  COA --> DVC
+
+  DVC --> PMP
+  PMP --> FWBS
+  DVC --> FWBS
+  FWBS --> FSCH
+
+  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
+  class POV,SHR,PCH,TWBS,TSCH,PSC,SCA,ACD,PIA,COA,DVC　projectWise;
+```
