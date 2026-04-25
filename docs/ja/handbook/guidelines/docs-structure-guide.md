@@ -175,7 +175,6 @@ docs/
 │   │   │   │   ├── prj-overview.md               # プロジェクト概要
 │   │   │   │   ├── prj-stakeholder-register.md   # ステークホルダー登録簿
 │   │   │   │   ├── prj-charter.md                # プロジェクト憲章
-│   │   │   │   ├── prj-definition-strategy.md # プロジェクト定義戦略
 │   │   │   │   ├── prj-scope.md                  # プロジェクトスコープ
 │   │   │   │   ├── prj-success-criteria-and-acceptance-criteria.md # 成功基準と受入条件
 │   │   │   │   ├── prj-deliverables-catalog.md   # 成果物カタログ
@@ -359,89 +358,120 @@ docs/
 ここで示す依存関係は、主に作成順・検討順を表します。
 Frontmatter の `based_on` は、各文書を作成する際に直接根拠として参照した文書のみを記載するため、本図のすべての矢印を `based_on` に反映する必要はありません。
 
-### 6.1. 成果物カタログを中心としたドキュメント依存関係
+### 6.1. 成果物カタログを起点としたドキュメント依存関係
 
-成果物カタログ（`prj-deliverables-catalog`）をプロジェクト定義フェーズの出口とし、管理計画・WBS・プロダクト変更・実行管理への入口と位置づけます。
-
-- **prj-deliverables-catalog 以前**: 何を実現するか、何を作るべきかを決める
-- **prj-deliverables-catalog 以後**: 決めた成果物を、どう作り、どう管理し、どう実行するかを決める
+- 成果物の類型毎に成果物カタログ（`prj-deliverables-catalog`）を起点として、必要な成果物を作成して行きます。
+- 成果物の類型は次の5つに大別されます。
+  - A. 立ち上げ
+  - B. プロジェクトマネジメント
+  - C. プロジェクト定義
+  - D. プロダクト変更
+  - E. プロダクト成果物
+- 成果物の作成順は、A → B → C → D → E が基本になりますが、プロジェクトの状況に応じて柔軟に対応します。
+- 図中の `prj-deliverables-catalog` は同一文書を表し、各サブグラフでは当該類型に関する登録範囲を示しています。
 
 ```mermaid
-flowchart TD
-  subgraph A["A. 成果物カタログ定義まで"]
-    A1["prj-overview<br/>プロジェクト概要"]
-    A2["prj-stakeholder-register<br/>ステークホルダー登録簿"]
-    A3["prj-charter<br/>プロジェクト憲章<br/>（立ち上げ認可）"]
-    A4["prj-definition-strategy<br/>プロジェクト定義方針"]
-    A5["暫定WBS<br/>wbs-definition-phase.yaml"]
-    A6["暫定スケジュール<br/>sch-definition-phase.yaml"]
-
-    A7["prj-scope<br/>スコープ"]
-    A8["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入条件"]
-    A9["prj-assumptions-constraints-dependencies<br/>前提・制約・依存関係"]
-    A10["prj-issues-and-approach<br/>課題とアプローチ"]
-    A11["prj-comparison-of-alternatives<br/>代替案の比較<br/>（必要時）"]
-
-    A12["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロジェクト定義の出口）"]
+flowchart TB
+  subgraph INIT["A. 立ち上げ"]
+  direction LR
+    OV["prj-overview<br/>プロジェクト概要"]
+    SR["prj-stakeholder-register<br/>ステークホルダー登録簿"]
+    CH["prj-charter<br/>プロジェクト憲章<br/>立ち上げ認可"]
+    OV --> SR --> CH
   end
 
-  subgraph B["B. 成果物カタログ定義以降"]
-    B1["pm-plan<br/>プロジェクト管理計画"]
-    B2["pm-* sub plans<br/>コミュニケーション / 品質 / RACI"]
-    B3["pm-wbs-decomposition-strategy<br/>WBS分解戦略"]
-    B4["pm-wbs-to-schedule-strategy<br/>WBSからスケジュールへの変換戦略"]
-    B5["正式WBS / 正式スケジュール<br/>wbs-&lt;domain&gt;.yaml / sch-&lt;domain&gt;.yaml"]
-    B6["execution / reporting / controls<br/>実行 / 報告 / 管理"]
-    B7["成果物<br/>(product-change含む, delivery-catalogに定義されたもの)"]
+
+  subgraph PM["B. プロジェクトマネジメント"]
+  direction LR
+    PM_DC["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロジェクトマネジメント用）"]
+    PM_EXE["実行・管理"]
+    PL["pm-plan<br/>プロジェクト管理計画"]
+    CP["pm-communication-plan<br/>コミュニケーション計画"]
+    QMP["pm-quality-management-plan<br/>品質管理計画"]
+    ORG["pm-organization-and-raci<br/>組織体制とRACI"]
+    PM_DC --> PM_EXE --> PL
+    PL --> CP
+    PL --> QMP
+    PL --> ORG
   end
 
-  A1 --> A2
-  A1 --> A3
-  A2 --> A3
+  subgraph PD["C. プロジェクト定義"]
+  direction LR
+    PD_DC["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロジェクト定義用）"]
+    PD_EXE["実行・管理"]
+    PS["prj-scope<br/>スコープ"]
+    SC_AC["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入条件"]
+    ACD["prj-assumptions-constraints-dependencies<br/>前提・制約・依存関係"]
+    IA["prj-issues-and-approach<br/>課題とアプローチ"]
+    CA["prj-comparison-of-alternatives<br/>代替案の比較<br/>（必要時）"]
+    PD_DC --> PD_EXE --> PS
+    PS --> SC_AC
+    PS --> ACD
+    PS --> IA
+    PS --> CA
+    ACD --> IA
+    IA --> CA
+  end
 
-  A3 --> A4
-  A4 --> A5
-  A5 --> A6
+  subgraph PC["D. プロダクト変更"]
+  direction LR
+    PC_DC["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロダクト変更用）"]
+    PC_EXE["実行・管理"]
+    AS_IS["As-Is<br/>現状定義"]
+    IMP["Impact<br/>影響範囲"]
+    TRC["Traceability<br/>トレーサビリティ"]
+    MIG["Migration<br/>移行"]
+    PC_DC --> PC_EXE --> AS_IS
+    AS_IS --> IMP
+    AS_IS --> TRC
+    IMP --> TRC
+    TRC --> MIG
+  end
 
-  A6 --> A7
-  A6 --> A8
-  A6 --> A9
-  A6 --> A10
-  A6 --> A11
+  subgraph DEL["E. プロダクト成果物"]
+  direction LR
+    DEL_DC["prj-deliverables-catalog<br/>成果物カタログ<br/>（プロダクト成果物用）"]
+    DEL_EXE["実行・管理"]
+    DE["deliverables<br/>成果物"]
+    DEL_DC --> DEL_EXE --> DE
+  end
 
-  A7 --> A8
-  A7 --> A9
-  A7 --> A10
-  A9 --> A10
-  A10 --> A11
-
-  A4 --> A12
-  A7 --> A12
-  A8 --> A12
-  A9 --> A12
-  A10 --> A12
-  A11 --> A12
-
-  A12 --> B1
-  A12 --> B3
-
-  B1 --> B2
-  B1 --> B3
-  B3 --> B4
-  B4 --> B5
-  B5 --> B6
-  B6 --> B7
+  INIT --> PM
+  PM --> PD
+  PD --> PC
+  PC --> DEL
 
   classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13 projectWise;
-  class B1,B2,B3,B4,B5,B6 projectWise;
+  classDef productSpec fill:#d0ebff,stroke:#1c7ed6,color:#000;
+
+  class OV,SR,CH projectWise;
+  class PM_DC,PM_EXE,PL,CP,QMP,ORG projectWise;
+  class PD_DC,PD_EXE,PS,SC_AC,ACD,IA,CA projectWise;
+  class PC_DC,PC_EXE,AS_IS,IMP,TRC,MIG projectWise;
+  class DEL_DC,DEL_EXE projectWise;
+  class DE productSpec;
 ```
 
-プロダクト変更（`020-product-change`）とプロジェクトマネジメント（`030-project-management`）の構成要素は、`prj-definition-strategy` で方針を定義し、成果物カタログに登録します。
+## 6.2. 実行・管理の流れ
 
-成果物カタログには、プロジェクト定義文書、プロダクト変更成果物、プロジェクトマネジメント成果物、生成成果物を含めます。
+実行・管理の成果物の依存関係は以下になります。
 
-成果物カタログを作成するまでのプロジェクト管理については、暫定WBS・暫定スケジュールで管理します。成果物カタログを作成した後は、成果物カタログを入力として、プロジェクト管理計画、正式WBS、正式スケジュールを作成して管理します。
+```mermaid
+flowchart LR
 
-- **成果物カタログ前**: `wbs-definition-phase.yaml`, `sch-definition-phase.yaml`
-- **成果物カタログ後**: `wbs-<domain>.yaml`, `sch-<domain>.yaml`
+  DC["prj-deliverables-catalog<br/>成果物カタログ"]
+  DS["pm-wbs-decomposition-strategy<br/>WBS分解戦略"]
+  WBS["WBS<br/>wbs-&lt;domain&gt;.yaml"]
+  W2S["pm-wbs-to-schedule-strategy<br/>WBSからスケジュールへの変換戦略"]
+  SCH["スケジュール<br/>sch-&lt;domain&gt;.yaml"]
+  EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
+
+  DC --> WBS --> SCH --> EXE
+  DS --> WBS
+  W2S --> SCH
+  DC --> DS
+  DC --> W2S
+
+  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
+  class DC,DS,W2S,WBS,SCH,EXE projectWise;
+```
