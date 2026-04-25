@@ -26,13 +26,40 @@ Project Overview Documentation Rulebook
 プロジェクト概要と他ドキュメントの関係を示します。
 
 ```mermaid
-flowchart LR
-  POV["プロジェクト概要"]
-  PCH["プロジェクト憲章"]
-  PSC["プロジェクトスコープ"]
-  PIA["プロジェクト課題と<br>解決アプローチ"]
+flowchart TD
+  POV["プロジェクト概要<br/>prj-overview"]
+  SHR["ステークホルダー登録簿<br/>prj-stakeholder-register"]
+  PCH["プロジェクト憲章<br/>prj-charter"]
 
-  POV --> PCH --> PSC --> PIA
+  PSC["プロジェクトスコープ<br/>prj-scope"]
+  SCA["成功基準と受入条件<br/>prj-success-criteria-and-acceptance-criteria"]
+  DVC["成果物カタログ<br/>prj-deliverables-catalog"]
+  ACD["前提・制約・依存関係<br/>prj-assumptions-constraints-dependencies"]
+
+  PMP["プロジェクト管理計画<br/>pm-plan"]
+  RAC["組織体制とRACI<br/>pm-organization-and-raci"]
+  GNG["実行開始 GO / Not GO 判断"]
+
+  POV --> SHR
+  POV --> PCH
+  SHR --> PCH
+
+  PCH --> PSC
+  PCH --> SCA
+  PCH --> DVC
+  PCH --> ACD
+
+  PSC --> PMP
+  SCA --> PMP
+  DVC --> PMP
+  ACD --> PMP
+  PCH --> PMP
+
+  SHR --> RAC
+  PCH --> RAC
+
+  PMP --> GNG
+  RAC --> GNG
 
   classDef target stroke-width:4px
   class POV target
