@@ -181,6 +181,7 @@ docs/
 │   │   │   ├── 020-project-definition/           # プロジェクト定義
 │   │   │   │   ├── prj-overview.md               # プロジェクト概要
 │   │   │   │   ├── prj-stakeholder-register.md   # ステークホルダー登録簿
+│   │   │   │   ├── prj-organization.md           # 組織体制
 │   │   │   │   ├── prj-charter.md                # プロジェクト憲章
 │   │   │   │   ├── prj-scope.md                  # プロジェクトスコープ
 │   │   │   │   ├── prj-success-criteria-and-acceptance-criteria.md # 成功基準と受入条件
@@ -193,7 +194,7 @@ docs/
 │   │   │   │   │   ├── pm-plan.md                # プロジェクト管理計画
 │   │   │   │   │   ├── pm-communication-plan.md  # コミュニケーション計画
 │   │   │   │   │   ├── pm-quality-management-plan.md　# 品質管理計画
-│   │   │   │   │   ├── pm-organization-and-raci.md　# 組織体制とRACI
+│   │   │   │   │   ├── pm-raci.md　              # 組織体制とRACI
 │   │   │   │   │   ├── pm-wbs-decomposition-strategy.md　# WBS分解戦略
 │   │   │   │   │   └── pm-wbs-to-schedule-strategy.md　# WBSからスケジュールへの変換戦略
 │   │   │   │   │
