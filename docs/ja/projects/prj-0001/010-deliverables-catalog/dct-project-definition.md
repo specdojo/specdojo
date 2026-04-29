@@ -2,7 +2,7 @@
 id: prj-0001:dct-project-definition
 type: project
 status: draft
-part_of: [prj-0001-dct-index]
+part_of: [prj-0001:dct-index]
 rulebook: prj-deliverables-catalog-rulebook
 ---
 
@@ -12,11 +12,12 @@ Project Deliverables Catalog: Project Definition for SpecDojo Handbook
 
 本ドキュメントは、プロジェクト定義に関する成果物の一覧とその説明をまとめたカタログです。各成果物の目的・内容・配置先・派生関係を定義します。
 
+- project-id: `prj-0001`
 - ドメイン: `project-definition`
 - DOMAIN: `PJD`
 - 配置先: `docs/ja/projects/prj-0001/020-project-definition`
 
-| name                                           | ARTIFACT      | 成果物名                         | 種別 | 根拠                                                    | 概要                                         |
+| local-id                                       | ARTIFACT      | 成果物名                         | 種別 | 根拠                                                    | 概要                                         |
 | ---------------------------------------------- | ------------- | -------------------------------- | ---- | ------------------------------------------------------- | -------------------------------------------- |
 | `prj-overview`                                 | `OVERVIEW`    | プロジェクト概要                 | work | -                                                       | プロジェクトの目的・背景・ゴールを定義       |
 | `prj-stakeholder-register`                     | `STAKEHOLDER` | ステークホルダー登録簿           | work | `prj-overview`                                          | 関係者の役割・関心・影響度を一覧化           |
