@@ -9,14 +9,15 @@ status: draft
 Work Breakdown Structure Documentation Rules
 
 本ドキュメントは、`wbs-<domain>.yaml` を一貫した粒度と命名で作成・更新するためのルールを定義します。
-WBS は成果物スコープと完了定義（WHAT）に特化し、実行順序・依存・日程（WHEN/ORDER）は Schedule 側で管理します。
+WBS は「どの成果物をどこに作成・更新し、何を満たせば完了か」を定義する層であり、実行順序・依存・日程（WHEN/ORDER）は Schedule 側で管理します。
 本ルールで示す YAML 構造は、`docs/shared/schemas/wbs.schema.yaml` を正とします。
 
 ## 1. 全体方針
 
-- `1 成果物 = 1 WBS Item` を基本単位とする。対象は成果物カタログの `kind: work` の成果物のみ。
+- `1 成果物 = 1 WBS Item` を基本単位とする。WBS 展開の主対象は成果物カタログの `kind: work` の成果物。プロジェクト遂行上、作成・更新を明示的に管理する必要がある `kind: control` は例外的に WBS 展開対象にできる。`kind: generated` は対象外。
 - WBS には成果物スコープ、`deliverables`、`done_criteria` を記述し、実行計画（依存・順序・所要期間）は記述しない。
 - `DOMAIN` と `ARTIFACT` は成果物カタログで定義する。WBS Item の `id` はそれらをベースに採番する。
+- 成果物カタログ・WBS・Schedule の責務分担と展開フローの全体像は `specdojo-deliverables-to-schedule-guide.md` を参照する。
 
 ### 1.1. スキーマ版管理（`$id`）
 
@@ -120,15 +121,16 @@ WBS-PJM-COMM-020
 ### 6.1. 粒度
 
 - `1 成果物 = 1 WBS Item` を厳守する。
-- 成果物カタログの `kind: work` の成果物のみが WBS Item の対象。
+- 成果物カタログの `kind: work` が WBS Item の主対象。プロジェクト遂行上、明示的に管理が必要な `kind: control` は例外的に対象にできる。`kind: generated` は対象外。
 - 同一成果物が複数フェーズで扱われる場合でも、WBS Item は重複させない。
 
 ### 6.2. `deliverables`
 
 - 各要素をオブジェクトで記述し、`path` を必須とする。
+- `path` は、成果物カタログに記載された配置先ディレクトリの配下に置く。
 - 実在パスを列挙し、曖昧な表記（例: 「関連資料一式」）は使わない。
 - 将来増減が見込まれる場合でも、現時点で管理対象とするファイルを明示する。
-- 成果物カタログの `kind: work` 以外の成果物は列挙しない。
+- WBS 展開対象外の成果物は列挙しない。
 
 例:
 
