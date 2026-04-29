@@ -10,6 +10,13 @@ Document Structure Guide
 
 SpecDojoで扱うドキュメントの全体構成について、以下のガイドラインを示します。
 
+## SpecDojoで扱うドキュメントの全体構成
+
+- SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメントとプロジェクトドキュメントを含む1つの `docs/` ルートを指します（例: `repo/docs/ja/product/`）。
+- 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します（例: `repo/docs/ja/projects/prj-0001/`）。
+- 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに `docs/` ルートを分け、それぞれを独立した SpecDojo Unit として扱います（例: `repo/apps/product-a/docs/ja/product/`, `repo/apps/product-b/docs/ja/product/`）。
+- 成果物IDは、原則として SpecDojo Unit 内で一意にします。複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID と成果物IDの組み合わせで識別します。
+
 ## 1. ドキュメントの分類
 
 ドキュメントは、プロダクトドキュメントとプロジェクトドキュメントの2種類に分類されます。
