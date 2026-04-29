@@ -4,7 +4,7 @@ type: rulebook
 status: draft
 ---
 
-# WBS 定義 作成ルール
+# WBS 作成ルール
 
 Work Breakdown Structure Documentation Rules
 

@@ -1,6 +1,7 @@
 # sch.schema.yaml
 $schema: "https://json-schema.org/draft/2020-12/schema"
-title: "SpecDojo Schedule schema (level-discriminated)"
+$id: "https://specdojo.org/schemas/sch/v1"
+title: "SpecDojo Schedule schema"
 type: object
 $comment: >
   Schema for schedule SSOT files. File name is NOT used to infer
