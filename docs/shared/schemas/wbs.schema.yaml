@@ -110,17 +110,25 @@ $defs:
       id:
         $ref: "#/$defs/DocId"
         description: >
-          Deliverable document ID. Local project references are allowed and
-          resolved using project_id when the context is known.
+          SpecDojo deliverable ID. This identifies the deliverable within
+          SpecDojo. If the deliverable file can carry compatible metadata, this
+          should resolve to the same identity as the file metadata ID. If not,
+          this ID and path mapping is authoritative in WBS.
       path:
         type: string
         minLength: 1
         description: >
           Repository path to the deliverable file completed by this WBS item.
           This is the file-level path used for creation, validation, and
-          execution. It should normally be placed under the placement directory
-          defined in the deliverables catalog.
+          execution.
         pattern: "^(.+/)?[^\\s]+$"
+      native_id:
+        type: string
+        minLength: 1
+        description: >
+          Optional ID, key, URI, or identifier already defined by the
+          deliverable itself or by an external tool/specification. This is not
+          the SpecDojo deliverable ID.
       note:
         type: string
         description: "Optional note about the deliverable."

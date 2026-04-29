@@ -71,12 +71,15 @@ WBSへの展開対象は原則 `work` のみとする。ただし、プロジェ
 
 - 成果物カタログは、成果物ID、成果物略称、成果物種別、根拠、概要、およびドメイン単位の配置先を定義する。
 - 成果物カタログに記載する配置先は、成果物を配置する既定ディレクトリを表す。
-- WBS は、成果物IDを参照してスコープ完了単位を定義する。
-- WBS は、WBS展開対象成果物について、ファイル単位の成果物パスを `deliverables[].path` として定義する。
-- `deliverables[].path` は、原則として成果物カタログに記載された配置先配下に置く。
-- Schedule は、WBS item ID と成果物IDを参照して実行タスクを定義する。
-- Schedule は、原則として成果物パスを持たない。
+- WBS は、WBS展開対象成果物のスコープ完了単位を定義し、`deliverables[].id` と `deliverables[].path` の組で成果物IDと実体を管理する。
+  - `deliverables[].id` は、SpecDojo 上の成果物IDを表す。
+  - `deliverables[].path` は、成果物の実体ファイルまたはディレクトリのパスを表す。
+  - `deliverables[].path` は、原則として成果物カタログに記載された配置先配下に置く。
+- Schedule は、WBS item ID と成果物IDを参照して実行タスクを定義し、成果物パスは原則持たない。
 - `create` / `modify` / `review` / `approve` / `publish` などの action は Schedule に記載する。
+- 成果物ファイルに SpecDojo のIDを保持できる場合は、`deliverables[].id` と一致、または解決可能な関係にする。
+- 成果物ファイルに任意のIDを付与できない場合、または既存のID体系を持つ場合は、ファイル内IDを変更せず、WBS の `deliverables[].id` と `deliverables[].path` の対応を正本とする。
+- 成果物が既存IDや外部仕様IDを持つ場合は、必要に応じて `native_id` として記録する。
 
 ## 6. 定義の流れ
 
