@@ -104,6 +104,7 @@ WBS-PJM-COMM
 | wbs[].deliverables        | ○    | 成果物配列                                        |
 | wbs[].deliverables[].id   | ○    | 成果物ドキュメントID                              |
 | wbs[].deliverables[].path | ○    | 成果物パス                                        |
+| wbs[].deliverables[].native_id | 任意 | 外部仕様・ネイティブ形式側の識別子                |
 | wbs[].deliverables[].note | 任意 | 成果物補足                                        |
 | wbs[].done_criteria       | ○    | 完了判定可能な条件（文字列配列、1件以上必須）     |
 | wbs[].acceptance_refs     | 任意 | 受入基準や決定記録への参照ID配列                  |
@@ -126,7 +127,11 @@ WBS-PJM-COMM
 ### 6.2. `deliverables`
 
 - 各要素をオブジェクトで記述し、`id` と `path` を必須とする。
-- `id` は成果物ドキュメントのフロントマターに記載された `id` 値と一致させる。
+- `id` は SpecDojo における成果物管理IDとする。
+- 成果物ドキュメントが SpecDojo 互換のメタデータを持つ場合、`id` は成果物ドキュメントの Frontmatter または YAML ルートに記載された `id` 値と一致させる。
+- 成果物ドキュメントが SpecDojo 互換のメタデータを持たない場合、WBS の `deliverables[].id` と `deliverables[].path` の対応関係を SpecDojo 管理IDの正本とする。
+- 外部仕様を持つファイル（例: `SKILL.md`）では、SpecDojo ID をファイル内に埋め込まず、WBS の `deliverables[].id` で管理する。
+- 外部仕様側の ID・キー・URI などが別に存在する場合のみ、`native_id` に記録する。`native_id` は SpecDojo 成果物IDとして扱わない。
 - `path` は、成果物カタログに記載された配置先ディレクトリの配下に置く。
 - 実在パスを列挙し、曖昧な表記（例: 「関連資料一式」）は使わない。
 - 将来増減が見込まれる場合でも、現時点で管理対象とするファイルを明示する。
@@ -141,6 +146,10 @@ deliverables:
     note: WBS ルール本文
   - id: wbs-sample
     path: docs/ja/handbook/samples/wbs-sample.yaml
+  - id: skill-auth-review
+    path: .codex/skills/auth-review/SKILL.md
+    native_id: auth-review
+    note: SKILL.md 側の識別子は native_id に保持する
 ```
 
 ### 6.3. `done_criteria`
