@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "prepare": "lefthook install",
+    "pre-commit": "lefthook run pre-commit",
     "specdojo:build": "npm --workspace tools/specdojo run build",
     "lint:md": "markdownlint '**/*.md'",
     "lint:md:fix": "markdownlint --fix '**/*.md'",
