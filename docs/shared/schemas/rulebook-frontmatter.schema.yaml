@@ -8,10 +8,8 @@ allOf:
     properties:
       type:
         type: string
-        enum:
-          - rulebook
-          - meta
-        description: "ドキュメント種別（rulebook または meta）"
+        const: rulebook
+        description: "ドキュメント種別（rulebook 固定）"
       target_format:
         type: string
         enum:

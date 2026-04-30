@@ -1,6 +1,6 @@
 ---
 id: rulebook-structure-standard
-type: meta
+type: standard
 status: draft
 ---
 

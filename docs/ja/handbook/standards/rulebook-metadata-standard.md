@@ -1,6 +1,6 @@
 ---
 id: rulebook-metadata-standard
-type: meta
+type: standard
 status: draft
 ---
 
@@ -18,11 +18,11 @@ Rulebook Metadata Standard
 
 ## 2. 必須項目
 
-| 項目   | 説明                     |
-| ------ | ------------------------ |
-| id     | ドキュメントID           |
-| type   | `rulebook` または `meta` |
-| status | ドキュメント状態         |
+| 項目   | 説明                |
+| ------ | ------------------- |
+| id     | ドキュメントID      |
+| type   | `rulebook` 固定     |
+| status | ドキュメント状態    |
 
 ## 3. 推奨項目
 
@@ -41,7 +41,7 @@ Rulebook Metadata Standard
 
 - `id` は `^[a-z0-9][a-z0-9-]*$` に一致する。
 - `status` は `draft` / `ready` / `deprecated` に限定する。
-- `type` は `rulebook` または `meta` に限定する。
+- `type` は `rulebook` 固定とする。
 
 ## 5. 記述例
 

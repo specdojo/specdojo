@@ -1,6 +1,6 @@
 ---
 id: instruction-metadata-standard
-type: meta
+type: standard
 status: draft
 ---
 

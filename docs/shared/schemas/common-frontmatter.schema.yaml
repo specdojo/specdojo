@@ -23,7 +23,6 @@ $defs:
       - type: string
         pattern: "^[a-z0-9][a-z0-9-]*-rulebook$"
     description: "準拠する rulebook の ID。該当がない場合は none。"
-
 properties:
   id:
     $ref: "#/$defs/idRef"
@@ -39,7 +38,7 @@ properties:
     description: "対象フェーズ"
   type:
     type: string
-    description: "仕様の種別"
+    description: "ドキュメント種別"
   status:
     type: string
     # draft: 作成中

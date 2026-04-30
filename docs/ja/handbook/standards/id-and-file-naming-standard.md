@@ -1,6 +1,6 @@
 ---
 id: id-and-file-naming-standard
-type: meta
+type: standard
 status: draft
 ---
 

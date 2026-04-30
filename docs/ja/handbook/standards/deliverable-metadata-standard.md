@@ -1,6 +1,6 @@
 ---
 id: deliverable-metadata-standard
-type: meta
+type: standard
 status: draft
 ---
 
@@ -15,6 +15,8 @@ Deliverable Metadata Standard
 - 対象: `project` / `screen` / `api` / `domain` / `data` / `test` / `flow` / `rule` / `architecture` / `decision` / `meta` / `guide` / `migration` / `operations` / `template`
 - 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml)
+
+補足: `standard` は handbook 共通標準用の種別であり、[docs/shared/schemas/standard-frontmatter.schema.yaml](../../../../shared/schemas/standard-frontmatter.schema.yaml) を使用する。
 
 ## 2. 必須項目
 

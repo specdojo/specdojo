@@ -20,6 +20,8 @@ plugins:
           - docs/ja/handbook/rulebooks/**/*.md
         docs/shared/schemas/guide-frontmatter.schema.yaml:
           - docs/ja/handbook/guidelines/**/*.md
+        docs/shared/schemas/standard-frontmatter.schema.yaml:
+          - docs/ja/handbook/standards/**/*.md
         docs/shared/schemas/instruction-frontmatter.schema.yaml:
           - docs/ja/handbook/instructions/**/*.md
         docs/shared/schemas/deliverable-frontmatter.schema.yaml:

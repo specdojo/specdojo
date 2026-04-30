@@ -1,6 +1,6 @@
 ---
 id: test-document-scope-standard
-type: meta
+type: standard
 status: draft
 ---
 
