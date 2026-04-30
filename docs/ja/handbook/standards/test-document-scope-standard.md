@@ -1,10 +1,10 @@
 ---
-id: meta-test-document-scope-rulebook
+id: test-document-scope-standard
 type: meta
 status: draft
 ---
 
-# テストドキュメントスコープ定義ルール
+# テストドキュメントスコープ定義標準
 
 ## 1. 目的
 

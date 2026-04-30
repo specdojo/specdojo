@@ -1,19 +1,19 @@
 ---
-id: meta-rulebook-metadata-rulebook
+id: rulebook-metadata-standard
 type: meta
 status: draft
 ---
 
-# Rulebook メタ情報の記述ルール
+# Rulebook メタ情報標準
 
-Rulebook Metadata Rulebook
+Rulebook Metadata Standard
 
-`*-rulebook.md` の Frontmatter 記述ルールを定義します。`meta-*-rulebook.md` を含む rulebook 系ドキュメントに適用します。
+`*-rulebook.md` の Frontmatter 記述ルールを定義します。rulebook 系ドキュメントに適用します。
 
 ## 1. 適用範囲
 
 - 対象: `docs/ja/handbook/rulebooks/` 配下の `*-rulebook.md`
-- 共通原則の正本: [meta-document-metadata-rulebook.md](meta-document-metadata-rulebook.md)
+- 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/shared/schemas/rulebook-frontmatter.schema.yaml](../../../../shared/schemas/rulebook-frontmatter.schema.yaml)
 
 ## 2. 必須項目

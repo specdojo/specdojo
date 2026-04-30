@@ -175,6 +175,7 @@ docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── handbook/
 │   │   ├── guidelines/                           # ドキュメント作成ガイド
+│   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
 │   │   └── instructions/                         # 生成AIへの指示テンプレート
 │   │
@@ -416,6 +417,7 @@ docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── handbook/
 │   │   ├── guidelines/                           # ドキュメント作成ガイド
+│   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
 │   │   └── instructions/                         # 生成AIへの指示テンプレート
 │   │

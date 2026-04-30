@@ -32,12 +32,12 @@ Impact Analysis (Test) Rulebook
 
 - 対象ドキュメント ID は `imp-test` とする。
 - 対象ドキュメントの推奨ファイル名は `imp-test.md` とする。
-- `id` は `meta-id-and-file-naming-rulebook.md` の規則に従い、英小文字・数字・ハイフンで構成する。
+- `id` は [id-and-file-naming-standard.md](../standards/id-and-file-naming-standard.md) の規則に従い、英小文字・数字・ハイフンで構成する。
 - 関連する追補文書を分割する場合は `imp-test-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
-影響調査（テスト）ドキュメントでは、`meta-deliverable-metadata-rulebook.md` に準拠し、以下を推奨する。
+影響調査（テスト）ドキュメントでは、[deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md) に準拠し、以下を推奨する。
 
 | 項目       | 説明                                | 必須 |
 | ---------- | ----------------------------------- | ---- |

@@ -47,7 +47,7 @@ Cutover Plan Index Documentation Rules
 Frontmatter は共通スキーマに従う。
 
 - 参照: `docs/shared/schemas/deliverable-frontmatter.schema.yaml`
-- 参照: `meta-deliverable-metadata-rulebook.md`
+- 参照: [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)
 
 | 項目       | 説明                             | 必須 |
 | ---------- | -------------------------------- | ---- |

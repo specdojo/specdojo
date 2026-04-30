@@ -1,12 +1,12 @@
 ---
-id: meta-id-and-file-naming-rulebook
+id: id-and-file-naming-standard
 type: meta
 status: draft
 ---
 
-# ドキュメントIDおよびファイル命名ルール
+# ドキュメントIDおよびファイル命名標準
 
-Document ID and File Naming Rules
+Document ID and File Naming Standard
 
 ## 1. 目的
 

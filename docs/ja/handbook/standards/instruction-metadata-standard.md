@@ -1,19 +1,19 @@
 ---
-id: meta-instruction-metadata-rulebook
+id: instruction-metadata-standard
 type: meta
 status: draft
 ---
 
-# Instruction メタ情報の記述ルール
+# Instruction メタ情報標準
 
-Instruction Metadata Rules
+Instruction Metadata Standard
 
 `*-instruction.md` の Frontmatter 記述ルールを定義します。
 
 ## 1. 適用範囲
 
 - 対象: `docs/ja/handbook/instructions/` 配下の `*-instruction.md`
-- 共通原則の正本: [meta-document-metadata-rulebook.md](meta-document-metadata-rulebook.md)
+- 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/shared/schemas/instruction-frontmatter.schema.yaml](../../../../shared/schemas/instruction-frontmatter.schema.yaml)
 
 ## 2. 必須項目

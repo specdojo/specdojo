@@ -1,19 +1,19 @@
 ---
-id: meta-deliverable-metadata-rulebook
+id: deliverable-metadata-standard
 type: meta
 status: draft
 ---
 
-# 成果物メタ情報の記述ルール
+# 成果物メタ情報標準
 
-Deliverable Metadata Rules
+Deliverable Metadata Standard
 
 成果物ドキュメントの Frontmatter 記述ルールを定義します。本書は deliverable 系ドキュメントに適用します。
 
 ## 1. 適用範囲
 
 - 対象: `project` / `screen` / `api` / `domain` / `data` / `test` / `flow` / `rule` / `architecture` / `decision` / `meta` / `guide` / `migration` / `operations` / `template`
-- 共通原則の正本: [meta-document-metadata-rulebook.md](meta-document-metadata-rulebook.md)
+- 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml)
 
 ## 2. 必須項目

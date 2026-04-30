@@ -102,14 +102,14 @@ wbs:
       Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
     component: meta
     deliverables:
-      - id: meta-document-metadata-rulebook
-        path: docs/ja/handbook/rulebooks/meta-document-metadata-rulebook.md
-      - id: meta-id-and-file-naming-rulebook
-        path: docs/ja/handbook/rulebooks/meta-id-and-file-naming-rulebook.md
-      - id: meta-rulebook-structure-rulebook
-        path: docs/ja/handbook/rulebooks/meta-rulebook-structure-rulebook.md
-      - id: meta-test-document-scope-rulebook
-        path: docs/ja/handbook/rulebooks/meta-test-document-scope-rulebook.md
+      - id: document-metadata-standard
+        path: docs/ja/handbook/standards/document-metadata-standard.md
+      - id: id-and-file-naming-standard
+        path: docs/ja/handbook/standards/id-and-file-naming-standard.md
+      - id: rulebook-structure-standard
+        path: docs/ja/handbook/standards/rulebook-structure-standard.md
+      - id: test-document-scope-standard
+        path: docs/ja/handbook/standards/test-document-scope-standard.md
     done_criteria:
       - |-
         メタルールセットが、下流のルール・指示が矛盾なく再利用できる 共有メタデータ・命名・構造・テストスコープの制約を定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。

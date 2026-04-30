@@ -54,7 +54,7 @@ WBSへの展開対象は原則 `work` のみとする。ただし、プロジェ
 
 ## 4. 管理単位のID付けルール
 
-- 成果物の `id` は frontmatter の `id` を使用する。`id` の命名ルールは、[ドキュメントIDおよびファイル命名ルール](../rulebooks/meta-id-and-file-naming-rulebook.md) に従う。
+- 成果物の `id` は frontmatter の `id` を使用する。`id` の命名ルールは、[ドキュメントIDおよびファイル命名ルール](../standards/id-and-file-naming-standard.md) に従う。
 - 成果物については、成果物カタログの中で略称を定める。略称は、ドメインの略称 `<DOMAIN>` と成果物の略称 `<ARTIFACT>` を定義し、`<DOMAIN>-<ARTIFACT>` はプロジェクト内で一意になるように定める。
 - WBS item の `id` は、成果物の略称をベースに `WBS-<DOMAIN>-<ARTIFACT>` 形式で付ける。
   - 例: `WBS-PJD-OVERVIEW`

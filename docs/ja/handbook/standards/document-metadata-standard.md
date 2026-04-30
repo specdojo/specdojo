@@ -1,20 +1,20 @@
 ---
-id: meta-document-metadata-rulebook
+id: document-metadata-standard
 type: meta
 status: draft
 ---
 
-# ドキュメントのメタ情報の記述ルール
+# ドキュメントメタ情報標準
 
-Document Metadata Rules
+Document Metadata Standard
 
 ## 1. 目的
 
 本書は、Frontmatter ルールの共通原則のみを定義するハブです。各ドキュメント種別の詳細ルールは、以下の 3 ファイルを正とします。
 
-- 成果物（deliverable）: [meta-deliverable-metadata-rulebook.md](meta-deliverable-metadata-rulebook.md)
-- rulebook: [meta-rulebook-metadata-rulebook.md](meta-rulebook-metadata-rulebook.md)
-- instruction: [meta-instruction-metadata-rulebook.md](meta-instruction-metadata-rulebook.md)
+- 成果物（deliverable）: [deliverable-metadata-standard.md](deliverable-metadata-standard.md)
+- rulebook: [rulebook-metadata-standard.md](rulebook-metadata-standard.md)
+- instruction: [instruction-metadata-standard.md](instruction-metadata-standard.md)
 
 ## 2. 共通原則
 

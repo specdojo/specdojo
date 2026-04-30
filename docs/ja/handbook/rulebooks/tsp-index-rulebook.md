@@ -21,7 +21,7 @@ TSP は「個別のテストケース集」ではありません。
   - 例: 「ドメインロジックは単体〜結合まで自動化し、UI は主要シナリオのみ E2E を行う」
 - テスト戦略は全体の考え方・分配、テスト方針は各レベル・領域での具体的な判断基準を指します。
 - TSP は下位成果物（各テストレベルのテストカタログ（`<level>c-index`/`<level>c-<term>`）、テストコード／CI成果物、受入条件（SAC/BAC））を導く **上位方針**です。
-  - 下位成果物に“何をどこまで書くか”の境界は、[meta-test-document-scope-rulebook.md](meta-test-document-scope-rulebook.md) の責務分離に従って定義します。
+  - 下位成果物に“何をどこまで書くか”の境界は、[test-document-scope-standard.md](../standards/test-document-scope-standard.md) の責務分離に従って定義します。
 - TSP では、観点/条件を設計するための **共通原則（定義粒度・分類・判定軸）** を定義し、レベル共通の採用基準・分配方針は `*c-index`、対象別の観点→ケース化は `*c-<term>` に委譲します。
 - TSP では各テストレベルについて、**保証すること（合格したら何が言えるか）** と **やらないこと（何をこのレベルの責務にしないか）** をセットで明文化します。
 - 曖昧な表現（例: 「十分にテストする」「品質を確保する」）は禁止し、
@@ -79,7 +79,7 @@ flowchart BT
 
 ## 3. ファイル命名・ID規則
 
-ID 命名ルールは [meta-id-and-file-naming-rulebook.md](meta-id-and-file-naming-rulebook.md) に従います。
+ID 命名ルールは [id-and-file-naming-standard.md](../standards/id-and-file-naming-standard.md) に従います。
 
 - `id`: 小文字ハイフン形式で `tsp-<term>` の構造とします。
   - **デフォルト: `tsp-index`** （全体方針の入口・概説）
@@ -93,7 +93,7 @@ ID 命名ルールは [meta-id-and-file-naming-rulebook.md](meta-id-and-file-nam
 
 ### 4.1. 設定内容
 
-Frontmatter は共通スキーマに従います（参照: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml) / [meta-deliverable-metadata-rulebook.md](meta-deliverable-metadata-rulebook.md)）。
+Frontmatter は共通スキーマに従います（参照: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml) / [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)）。
 
 | 項目       | 説明                                               | 必須 |
 | ---------- | -------------------------------------------------- | ---- |

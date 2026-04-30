@@ -56,7 +56,7 @@ Code as Spec の原則:
 
 ### 4.1. 設定内容
 
-Frontmatter は共通スキーマに従います（参照: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml) / [meta-deliverable-metadata-rulebook.md](meta-deliverable-metadata-rulebook.md)）。
+Frontmatter は共通スキーマに従います（参照: [docs/shared/schemas/deliverable-frontmatter.schema.yaml](../../../../shared/schemas/deliverable-frontmatter.schema.yaml) / [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)）。
 
 | 項目       | 説明                                                   | 必須 |
 | ---------- | ------------------------------------------------------ | ---- |

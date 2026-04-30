@@ -1,18 +1,18 @@
 ---
-id: meta-rulebook-structure-rulebook
+id: rulebook-structure-standard
 type: meta
 status: draft
 ---
 
-# 作成ルールの章立てルール
+# Rulebook 章立て標準
 
-Rulebook Structure Rules
+Rulebook Structure Standard
 
 `docs/ja/handbook/rulebooks/` 配下の各 `*-rulebook.md` が従うべき共通の章立てルールを定義します。ドキュメント種別ごとの詳細ルールは各ファイルに記載し、本書は章構成と見出しレベルの統一だけを扱います。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/handbook/rulebooks/` 配下のすべての `*-rulebook.md`。ただし、`meta-*-rulebook.md`は除く。
+- 対象: `docs/ja/handbook/rulebooks/` 配下のすべての `*-rulebook.md`
 - 目的: 章構成と見出しレベルを統一し、参照・保守を容易にする
 
 ## 2. 見出しレベルと章番号の原則

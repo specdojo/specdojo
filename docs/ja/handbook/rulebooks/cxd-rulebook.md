@@ -29,7 +29,7 @@ Mermaid 記法そのもののルールは [cxd-mermaid-rulebook.md](cxd-mermaid-
 
 ## 3. 推奨 Frontmatter 項目
 
-Frontmatter の共通ルールは [meta-deliverable-metadata-rulebook.md](meta-deliverable-metadata-rulebook.md) に従います。
+Frontmatter の共通ルールは [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md) に従います。
 
 | 項目       | 説明                                           | 必須 |
 | ---------- | ---------------------------------------------- | ---- |
