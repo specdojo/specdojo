@@ -1,44 +1,35 @@
+---
+applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
+---
+
 # Rulebook 作成運用ルール
 
-このファイルは、`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を作成/更新するための共通運用ルールです。
-章立ては `docs/ja/specdojo/standards/rulebook-structure-standard.md` に従い、構成・見出し順・必須要素を統一します。
+`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を作成/更新するための共通運用ルールです。
 
 ## 1. 目的と適用範囲
 
 - 目的は、`*-rulebook.md` の章構成と記述品質を統一し、参照・保守を容易にすること。
-- 本ルールは `docs/ja/specdojo/rulebooks/` 配下の `*-rulebook.md` の作成/更新に適用する。
+- 本ルールは `docs/ja/specdojo/rulebooks/` 配下の `*-rulebook.md` に適用する。
 
 ## 2. 入力情報
 
-- 対象ファイル: `docs/ja/specdojo/rulebooks/<name>-rulebook.md`
+- 対象ファイル: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
 - 構成基準: `docs/ja/specdojo/standards/rulebook-structure-standard.md`
 - ファイル名・ディレクトリ構成基準: `docs/ja/specdojo/guidelines/docs-structure-guide.md`
 - Frontmatter スキーマ: `docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml`
-- メタ情報標準（種別別）:
-  - `docs/ja/specdojo/standards/rulebook-metadata-standard.md`
-  - `docs/ja/specdojo/standards/deliverable-metadata-standard.md`
 - 参照先（必要に応じて）: `[*-sample](../samples/*-sample.md)`、`[*-instruction](../instructions/*-instruction.md)`
 
 ## 3. 出力仕様（Frontmatter と命名）
 
-- ファイル名は `<name>-rulebook.md` とする。
+- ファイル名は `<prefix>-rulebook.md` とする。
 - ファイル先頭に YAML Frontmatter を置き、最低限 `id` / `type` / `status` を含める。
 - rulebook の Frontmatter は `docs/ja/specdojo/standards/rulebook-metadata-standard.md` に従う。
 - `rulebook` は推奨項目として扱い、原則 `none` を記載する。
 - `id` は英小文字・数字・ハイフンのみを使用し、一意にする。
 - H1 はファイル内で 1 つだけとし、タイトルとして使用する。
 - タイトル直下に英語名（1行）と目的・概要（1〜3文）を置く。
-- `target_format` が `yaml` / `json` / `markdown` のいずれかを確認し、本文ルールを対象フォーマットに合わせる。
-- `target_format` が未記載の場合は、本文・サンプルリンク・記述例から対象フォーマットを推測し、推測結果に合わせて本文ルールを適用する。
-
-補足:
-
-- `target_format: markdown` の場合は、対象ドキュメントの先頭に置く Frontmatter を `推奨 Frontmatter 項目` に記載する。
-- `target_format: yaml` または `target_format: json` の場合は、対象データの先頭メタ項目（例: `id` / `type` / `status` など）を `推奨 Frontmatter 項目` と同章で扱ってよい。
-- `target_format` 未記載時の推測は次の優先順位で行う。
-  1. `サンプル` 章の参照拡張子（`.md` / `.yaml` / `.json`）
-  2. 本文の記述例（YAMLブロック、JSONオブジェクト、Markdown章構成）
-  3. 章内の用語（Frontmatter 前提か、先頭メタ項目前提か）
+- `target_format` がある場合は、本文ルール、サンプルリンク、記述例を対象フォーマットに合わせる。
+- `target_format` が未記載の場合は、サンプル拡張子、本文の記述例、用語から推測する。
 
 ## 4. 標準章構成（必須）
 
@@ -58,9 +49,7 @@
 | 8      | サンプル                     | ○    |
 | 9      | 生成 AI への指示テンプレート | ○    |
 
-補足:
-
-- `位置づけと用語定義`については、用語定義がない場合は章タイトルは`位置づけ`とする。
+- `位置づけと用語定義` は、用語定義がない場合のみ `位置づけ` としてよい。
 
 ## 5. 記述ルール
 
@@ -70,31 +59,19 @@
 - 共通事項は上位ドキュメントを SSOT とし、重複記載を避ける。
 - 章への参照は章番号ではなく章タイトルで記載する（例: `本文構成（標準テンプレ）` のようにタイトルで参照する）。
 - 用語はファイル内で統一し、`index` / `overview` などの命名ゆれを持ち込まない。
-- 未確定事項や仮置き情報がある場合は、`*-rulebook.md` 本文の中に `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` を直接記述する。
-- 対象ドキュメントで未確定事項や仮置き情報を扱う必要がある場合は、共通ラベルとして `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` のみを使用してよい。
-- 各ラベルの意味は以下のとおりとする。
+- 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
   - `_TODO_:` 後で人または生成 AI が確認・追記・修正する必要がある事項
   - `_UNDECIDED_:` 情報不足ではなく、意思決定が未了で未確定の事項
   - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
-- ラベルは確定事項を書くためには使用せず、未確定・暫定・補助的な情報を明示するためにのみ使用する。
-- 確定した内容はラベルを外し、通常の本文として記述する。
-- `*_rules.md` 自体にラベル運用を記載する場合は、対象ドキュメントにとって必要な場合のみ記載し、不要な rules には機械的に追加しない。
-- ラベルを記載する場合は、本文の補助として箇条書き内に記述し、ラベル自体を章構成や見出しとして扱わない。
 - `推奨 Frontmatter 項目` は `docs/ja/specdojo/standards/deliverable-metadata-standard.md` に従う。
-- `target_format` が `yaml` / `json` の場合は、`推奨 Frontmatter 項目` 章に「Frontmatter と同等の先頭メタ項目」として記載してよい。
-- `target_format` が `yaml` / `json` の場合は、`推奨 Frontmatter 項目` 章の冒頭に「Frontmatter と同等の先頭メタ項目を対象データ先頭に定義する」旨を明記する。
-- `target_format` が `yaml` / `json` の場合は、`本文構成（標準テンプレ）` 章でルートキーと必須キーを明示し、必要に応じてネスト構造（例: `entities` / `fields`）まで表で定義する。
-- `target_format` が `yaml` / `json` の場合は、`記述ガイド` 章で命名規則・参照規則・型制約（`enum` / `pattern` / `required` など）を、対象フォーマットでそのまま実装可能な粒度で記載する。
-- `ファイル命名・ID規則` でのファイル名及びディレクトリ名は以下のルールに従う
-  - ファイル名およびディレクトリ名は、`docs/ja/specdojo/guidelines/docs-structure-guide.md` のディレクトリ構成に従う。
-  - 命名は英語名称を推奨し、日本語名称も可とする。
-  - 日本語名称を採用する場合は、同一ディレクトリ内で一貫した命名規約を維持し、Frontmatter の `id` と対応関係を明確にする。
-- `サンプル`には、ファイルが存在する場合は、`target_format` に合わせて次のいずれかでリンクを記載する。
-  - Markdown の場合: `- 参照先: [<name>-sample](../samples/<name>-sample.md)`
-  - YAML の場合: `- 参照先: [<name>-sample](../samples/<name>-sample.yaml)`
-  - JSON の場合: `- 参照先: [<name>-sample](../samples/<name>-sample.json)`
+- `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。
+- `ファイル命名・ID規則` は `docs/ja/specdojo/guidelines/docs-structure-guide.md` に従う。
+- `サンプル` には、ファイルが存在する場合は `target_format` に合わせて次のいずれかでリンクを記載する。
+  - Markdown の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.md)`
+  - YAML の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.yaml)`
+  - JSON の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.json)`
     存在しない場合は「サンプル未作成。作成後にリンクを追記する」と記載する。
-- `生成 AI への指示テンプレート` には、ファイルが存在する場合は、`- 参照先: [<name>-instruction](../instructions/<name>-instruction.md)`でリンクを記載する。
+- `生成 AI への指示テンプレート` には、ファイルが存在する場合は、`- 参照先: [<prefix>-instruction](../instructions/<prefix>-instruction.md)`でリンクを記載する。
   存在しない場合は「instruction 未作成。作成後にリンクを追記する」と記載する。
 
 ### 5.1. 内容充実化ルール（薄いドキュメント防止）
@@ -102,14 +79,8 @@
 - 各必須章には、最低 3 つ以上の具体項目（箇条書きまたは表項目）を置く。
 - 「適切に」「十分に」などの抽象語だけで終わらせず、判断可能な条件を書く。
 - 少なくとも 1 つは、推奨表のカラム定義（例: ID、目的、条件、判定基準、担当）を提示する。
-- 次の観点の欠落有無を確認する。
-  - 要求の明確性（目的、対象範囲、責務境界）
-  - 品質特性（性能、可用性、保守性、セキュリティ、操作性）
-  - テスト/受入（検証観点、合格基準、証跡）
-  - 運用/保守（監視、障害時対応、変更時の扱い）
-  - トレーサビリティ（上位/下位ドキュメントへの導線）
-- docs-contents-guide の記述が短い場合でも、類似 rulebook と一般的開発知見で必要観点を補完する。
-- PMBOK 成果物観点（立上げ/計画/監視・統制/終結）で不足がないか確認し、対象外とする観点は理由を明記する。
+- 要求、品質特性、テスト/受入、運用/保守、トレーサビリティの欠落有無を確認する。
+- docs-contents-guide の記述が短い場合でも、類似 rulebook、一般的開発知見、PMBOK 成果物観点で必要観点を補完する。
 - ただし、実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）には踏み込まない。
 
 ## 6. 禁止事項
@@ -120,8 +91,7 @@
 - rules 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
-- 確定済みの内容をラベル付きのまま放置しない。
-- ラベルを本文の代替として多用し、対象ドキュメントの確定記述を不足させない。
+- 確定済みの内容をラベル付きのまま放置したり、ラベルを本文の代替として多用したりしない。
 
 ## 7. 作成・更新手順
 
