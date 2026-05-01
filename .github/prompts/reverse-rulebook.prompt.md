@@ -1,24 +1,11 @@
 # 成果物から対応する rules を逆生成
 
-@file:.github/skills/reverse-rulebook/SKILL.md
+参照 Skill: `.github/skills/reverse-rulebook/SKILL.md`
 
-`/reverse-rulebook` は、上記 SKILL に定義された手順と実行ルールに従って実行してください。
+`/reverse-rulebook` は、上記 Skill に定義された手順と実行ルールに従って実行してください。
 
 ## 入力の扱い
 
 - 現在開いているファイルを単一対象として処理する。
 - 開いているファイルがサンプル、またはプロジェクト成果物の場合のみ逆生成を実行する。
 - 開いているファイルが `*-rulebook.md` / `*-instruction.md` の場合は対象外として中止し、対応プロンプトへ誘導する。
-
-## 実行方針
-
-- 対象ファイルから rules を特定する優先順位（Frontmatter `rulebook` 最優先）や、妥当性評価・汎用化の基準は SKILL の定義を正とする。
-- 既存 rules がある場合は差分アップサート、ない場合は新規作成とする。
-- 処理完了後に `npm run -s lint:md` を実行する。
-
-## 出力
-
-- 対象ごとの結果（更新 / 新規 / スキップ / 失敗）
-- 変更ファイル一覧
-- 妥当性評価と汎用化の要約（採用した規則 / 汎用化した規則 / 非採用項目）
-- lint 結果
