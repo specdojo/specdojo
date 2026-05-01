@@ -28,7 +28,7 @@ primary_paths:
 
 - .github/instructions/markdown.instructions.md
 - .github/instructions/rulebook.instructions.md
-- .github/instructions/rulebook-to-instruction.instructions.md
+- .github/instructions/instruction.instructions.md
 - .github/instructions/rulebook-to-sample.instructions.md
 
 secondary_paths:

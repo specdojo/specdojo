@@ -16,8 +16,8 @@ wbs:
         path: .github/instructions/markdown.instructions.md
       - id: rulebook
         path: .github/instructions/rulebook.instructions.md
-      - id: rulebook-to-instruction
-        path: .github/instructions/rulebook-to-instruction.instructions.md
+      - id: instruction
+        path: .github/instructions/instruction.instructions.md
       - id: rulebook-to-sample
         path: .github/instructions/rulebook-to-sample.instructions.md
     done_criteria:

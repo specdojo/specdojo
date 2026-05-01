@@ -17,7 +17,7 @@ description: '`docs/ja/specdojo/rulebooks` の更新内容を、`docs/ja/specdoj
 
 ## 前提
 
-- 共通運用ルール: `@file:.github/instructions/rulebook-to-instruction.instructions.md`
+- 共通運用ルール: `@file:.github/instructions/instruction.instructions.md`
 - 命名対応: `<name>-rulebook.md` → `<name>-instruction.md`
 - 出力先ディレクトリ: `docs/ja/specdojo/instructions/`
 
