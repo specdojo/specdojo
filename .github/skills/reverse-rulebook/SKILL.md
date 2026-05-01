@@ -23,10 +23,10 @@ description: '成果物ファイルを分析し、対応する `docs/ja/specdojo
 以下のシグナルを優先順に使い、対応する `<prefix>-rulebook.md` を特定する。
 
 1. Frontmatter の `rulebook` フィールド（最優先）
-   - `rulebook: bes-rulebook` なら `bes-rulebook.md` を優先採用する
+   - `rulebook: <prefix>-rulebook` なら `<prefix>-rulebook.md` を優先採用する
    - `rulebook` が未記載、または `none` の場合は次の手段へ進む
 2. Frontmatter の `id` フィールド
-   - `id: bes-order-flow` → プレフィックス `bes-` → `bes-rulebook.md`
+   - `id: <prefix>-order-flow` → プレフィックス `<prefix>-` → `<prefix>-rulebook.md`
 
 ## 逆生成の実行フロー
 
