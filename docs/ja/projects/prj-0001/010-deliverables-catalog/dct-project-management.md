@@ -4,7 +4,7 @@ type: project
 status: draft
 part_of:
   - 'prj-0001:dct-index'
-rulebook: prj-deliverables-catalog-rulebook
+rulebook: dct-rulebook
 ---
 
 # 成果物カタログ: SpecDojo Handbook プロジェクトマネジメント

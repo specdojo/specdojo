@@ -14,9 +14,9 @@ Project Deliverables Catalog Index
 
 ## 1. 共通ルール
 
-- `name` は成果物の論理名を表し、ファイル名および frontmatter の `id` の基礎として使用します。
-- ファイルは、`<name>.md` もしくは、`<name>.yaml` 形式で作成し、`配置先`に保存します。
-- Frontmatter の `id` は `<project-id>:<name>` とします。
+- `local-id` は成果物の論理名を表し、ファイル名および frontmatter の `id` の基礎として使用します。
+- ファイルは、`<local-id>.md` もしくは、`<local-id>.yaml` 形式で作成し、`配置先`に保存します。
+- Frontmatter の `id` は `<project-id>:<local-id>` とします。
 - `根拠`には、その成果物の検討・作成における主要な依存関係を記載します。
 - Frontmatter の `based_on` には、直接根拠として参照した文書のみを記載します。
 - `根拠` と `based_on` は原則として一致させますが、必要に応じて差分があっても構いません。
@@ -27,3 +27,4 @@ Project Deliverables Catalog Index
 | ドメイン             | 名称             | 成果物カタログ                                        | 概要                                       |
 | -------------------- | ---------------- | ----------------------------------------------------- | ------------------------------------------ |
 | `project-definition` | プロジェクト定義 | [dct-project-definition](./dct-project-definition.md) | プロジェクト定義に関する成果物の一覧と説明 |
+| `project-management` | プロジェクト管理 | [dct-project-management](./dct-project-management.md) | プロジェクト管理に関する成果物の一覧と説明 |
