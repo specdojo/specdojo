@@ -3,7 +3,7 @@ type: wbs
 status: draft
 project_id: prj-0001
 domain: design
-assigned_team: specdojo-handbook
+assigned_team: specdojo
 wbs:
   - id: WBS-DES-IFX-010
     name: 外部インターフェースドキュメントファミリーの整備

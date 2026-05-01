@@ -58,8 +58,8 @@
     "validate:schema": "npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:wbs",
     "check": "npm run lint:md && npm run lint:fm && npm run validate:schema",
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
-    "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo-handbook/ {print \\$1; exit}\"'",
-    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo-handbook/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it \"$name\" bash -lc \"cd /workspaces/specdojo-handbook && exec bash\" || echo \"matching container not found\"'"
+    "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
+    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it \"$name\" bash -lc \"cd /workspaces/specdojo && exec bash\" || echo \"matching container not found\"'"
   },
   "dependencies": {
     "commander": "^12.1.0",

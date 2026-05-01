@@ -174,7 +174,7 @@
       "approve": true,
       "matchCommandLine": true
     },
-    "/^set -e\ncd /workspaces/specdojo-handbook\nrg -n --hidden -g '!\\.git' -- 'docs/ja/specdojo/rulebooks\\|docs/ja/specdojo/rulebooks\\|\\\\\\.\\\\\\./rulebooks/' \\. \\| head -n 120 \\|\\| true$/": {
+    "/^set -e\ncd /workspaces/specdojo\nrg -n --hidden -g '!\\.git' -- 'docs/ja/specdojo/rulebooks\\|docs/ja/specdojo/rulebooks\\|\\\\\\.\\\\\\./rulebooks/' \\. \\| head -n 120 \\|\\| true$/": {
       "approve": true,
       "matchCommandLine": true
     }

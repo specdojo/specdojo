@@ -3,7 +3,7 @@ type: wbs
 status: draft
 project_id: prj-0001
 domain: nfr
-assigned_team: specdojo-handbook
+assigned_team: specdojo
 wbs:
   - id: WBS-NFR-INDEX-010
     name: 非機能要件インデックスペアの整備

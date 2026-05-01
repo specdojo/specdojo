@@ -1,5 +1,5 @@
 {
-  "name": "specdojo handbook devcontainer",
+  "name": "specdojo devcontainer",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."

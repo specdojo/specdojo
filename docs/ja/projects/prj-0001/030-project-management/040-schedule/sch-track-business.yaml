@@ -3,7 +3,7 @@ version: 1
 project_id: prj-0001
 schedule_level: domain
 domain: business
-assigned_team: specdojo-handbook
+assigned_team: specdojo
 default_agent_mode: agent-ultra
 settings:
   finish_milestone_id: M-SDH-BIZ-900
