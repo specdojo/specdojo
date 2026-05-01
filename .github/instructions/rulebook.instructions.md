@@ -2,9 +2,9 @@
 applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 ---
 
-# Rulebook 作成運用ルール
+# Rulebook 記述ルール
 
-`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を作成/更新するための共通運用ルールです。
+`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を作成/更新するための記述ルールです。
 
 ## 1. 目的と適用範囲
 

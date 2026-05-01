@@ -2,9 +2,9 @@
 applyTo: 'docs/ja/specdojo/instructions/**/*-instruction.md'
 ---
 
-# Instruction 作成運用ルール
+# Instruction 記述ルール
 
-`docs/ja/specdojo/instructions` 配下の `*-instruction.md` を作成/更新するための共通運用ルールです。
+`docs/ja/specdojo/instructions` 配下の `*-instruction.md` を作成/更新するための記述ルールです。
 
 ## 1. 目的と適用範囲
 
@@ -25,7 +25,6 @@ applyTo: 'docs/ja/specdojo/instructions/**/*-instruction.md'
 - instruction の Frontmatter は `docs/ja/specdojo/standards/instruction-metadata-standard.md` に従う。
 - `id` は英小文字・数字・ハイフンのみを使用し、一意にする。
 - H1 はファイル内で 1 つだけとし、タイトルとして使用する。
-- タイトル直下に英語名（1行）と目的・概要（1〜3文）を置く。
 
 ```yaml
 ---
@@ -62,55 +61,23 @@ rulebook: <prefix>-rulebook
   - `_UNDECIDED_:` 意思決定が未了で未確定の事項
   - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
 
-### 5.1. 章ごとの記述方針
+### 5.1. 章ごとの最小要件
 
-**目的と前提**
+- `目的と前提`: 生成対象、目的、対象外を簡潔に示す。
+- `入力情報`: 生成に必要な情報と、未確定時の扱いを示す。
+- `出力フォーマット`: Frontmatter 要件と、`target_format` に応じた出力構造を示す。
+- `記述ルール`: 必須要素、表カラム、判定条件を rulebook と整合させて示す。
 
-- 何を生成するか、出力対象の成果物種別と目的を1〜3文で明示する。
-- 記載粒度（例: 業務担当者が合意できるレベル）を指定する。
-- 対象外事項（実装詳細など）を列挙する。
+### 5.2. rulebook との整合と更新手順（作成・更新時）
 
-**入力情報**
-
-- 生成に必要な情報（ID、関係者、制約、依存成果物など）を箇条書きで列挙する。
-- 未確定時の扱い（未解決事項として明示する等）を記載する。
-
-**出力フォーマット**
-
-- Frontmatter の必須項目・値制約・記述例を示す。
-- 対応 rulebook の `target_format` に応じて以下を区別する。
-  - `markdown` の場合: 本文見出し順を章番号付きリストで示す。
-  - `yaml` / `json` の場合: ルートキー、必須キー、ネスト構造、型制約（`enum` / `pattern` / `required`）を示す。
-- 見出し名称は rulebook の章タイトルと整合させる。
-
-**記述ルール**
-
-- 章ごとの必須要素（必須表・カラム定義・記述条件）を指示する。
-- 最低 3 つ以上の具体項目を置き、抽象語だけで終わらせない。
-- `index` 系の場合は「共通原則」「採用基準」「分配方針」の有無を確認する。
-
-**禁止事項**
-
-- 実装依存情報（SQL 全文、具体クラス名、詳細 API 設計）を追加しない。
-- 曖昧語（適切に、十分に）を根拠なく使用しない。
-- rulebook 側の記述をそのまま転記しない。
-
-**最終チェック**
-
-- Frontmatter がスキーマ要件（`id` / `type` / `status` / `rulebook`）を満たしていることを確認する。
-- 章構成が `## 1.` からの連番で必須章が欠落していないことを確認する。
-- `target_format: yaml` / `json` の場合は、対応 sample が schema と整合することを確認する。
-- `npm run -s lint:md` を実行しエラーがないことを確認する。
-
-### 5.2. rulebook との整合チェック（作成・更新時）
-
-- rulebook 側で追加された「必須章」「必須表」「責務分担」を instruction 側へ反映する。
-- rulebook 側の「生成 AI への指示テンプレート」章には、対応する `*-instruction.md` へのリンクのみを記載し、指示本文は instruction 側へ集約する。
-- `target_format: yaml` / `json` の rulebook では、instruction 側に以下が反映されていることを確認する。
-  - 先頭メタ項目
-  - ルートキーと必須キー
-  - 命名規則・参照規則・型制約
-  - sample / schema による検証手順
+1. 対応 `<prefix>-rulebook.md` を読み込み、`target_format`・必須章・禁止事項を把握する。
+2. `<prefix>-instruction.md` の存在を確認し、新規作成またはアップサートを選択する。
+3. Frontmatter を `instruction-metadata-standard.md` に従って記述する。
+4. 標準章構成に従い、rulebook の内容を生成 AI への実行指示として再構成する。
+5. rulebook 側で追加された「必須章」「必須表」「責務分担」を instruction 側へ反映する。
+6. rulebook 側の「生成 AI への指示テンプレート」章には、`*-instruction.md` へのリンクのみを記載し、指示本文は instruction 側へ集約する。
+7. `target_format: yaml` / `json` の場合は、先頭メタ項目・ルートキー・必須キー・型制約・検証手順を instruction 側に反映する。
+8. `npm run -s lint:md` を実行し、エラーがないことを確認する。
 
 ## 6. 禁止事項
 
@@ -118,18 +85,10 @@ rulebook: <prefix>-rulebook
 - 章番号末尾の `.` を省略しない。
 - rulebook の本文をそのまま複製して instruction に貼り付けない。
 - 実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を記述しない。
+- 曖昧語（適切に、十分に）を根拠なく使用しない。
 - `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを共通ルール未定義のまま追加しない。
 
-## 7. 作成・更新手順
-
-1. 対応 `<prefix>-rulebook.md` を読み込み、`target_format`・必須章・禁止事項を把握する。
-2. `<prefix>-instruction.md` の存在を確認し、新規作成またはアップサートを選択する。
-3. Frontmatter を `instruction-metadata-standard.md` に従って記述する。
-4. 標準章構成に従い、rulebook の内容を生成 AI への実行指示として再構成する。
-5. rulebook 側の「生成 AI への指示テンプレート」章のリンクを更新する。
-6. `npm run -s lint:md` を実行しエラーがないことを確認する。
-
-## 8. 最終チェック
+## 7. 最終チェック
 
 - Frontmatter が `id` / `type` / `status` / `rulebook` を満たしている。
 - 章構成が `## 1.` からの連番で必須章が欠落していない。

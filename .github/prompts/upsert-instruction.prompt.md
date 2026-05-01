@@ -1,8 +1,8 @@
-# 対象の rulebook を作成/更新
+# 対象の instruction を作成/更新
 
-参照 Skill: `.github/skills/upsert-rulebook/SKILL.md`
+参照 Skill: `.github/skills/upsert-instruction/SKILL.md`
 
-`/upsert-rulebook` は、上記 Skill に定義された手順と実行ルールに従って実行してください。
+`/upsert-instruction` は、上記 Skill に定義された手順と実行ルールに従って実行してください。
 
 ## 入力の扱い
 
