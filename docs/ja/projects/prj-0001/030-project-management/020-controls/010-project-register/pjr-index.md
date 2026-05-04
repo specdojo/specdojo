@@ -21,11 +21,15 @@ Project Register
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0001 | open | WBS->スケジュール展開スクリプト | WBSをスケジュールに展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - |
-| PJR-0002 | open | LaunchのWBS, スケジュール | Track=LaunchのWBS、スケジュールを作成 | todo | high | PO | 2026-05-15 | - |
-| PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | medium | PM | 2026-05-20 | - |
-| PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | medium | PM | 2026-05-20 | - |
-| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をWBS, スケジュールに記述 | todo | medium | PM | 2026-05-20 | - |
-| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | medium | PM | 2026-05-20 | - |
+| PJR-0002 | open | LaunchのWBS, スケジュール | Track=LaunchのWBS、スケジュールを作成 | todo | high | PO | 2026-05-10 | - |
+| PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PM | 2026-05-10 | - |
+| PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | PM | 2026-05-10 | - |
+| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をWBS, スケジュールに記述 | todo | high | PM | 2026-05-10 | - |
+| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | PM | 2026-05-10 | - |
+| PJR-0007 | open | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | - |
+| PJR-0008 | open | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | - |
+| PJR-0009 | open | WBSを作成プロンプト | dctからwbsを作成するinstructions, SKILL, promptを作成する | todo | high | ARC | 2026-05-10 | - |
+| PJR-0010 | open | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる  | todo | high | ARC | 2026-05-10 | - |
 
 ## 4. 派生ビュー
 
