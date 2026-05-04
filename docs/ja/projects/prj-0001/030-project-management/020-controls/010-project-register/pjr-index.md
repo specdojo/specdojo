@@ -18,14 +18,14 @@ Project Register
 ## 1. 登録項目一覧
 
 <!-- prettier-ignore -->
-| ID | タイトル | 説明 | 分類 | ステータス | 優先度 | 担当 | 期限 | 個票 |
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PJR-0001 | WBS->スケジュール展開スクリプト | WBSをスケジュールに展開するスクリプトを開発する | todo | open | high | ARC | 2026-05-10 | - |
-| PJR-0002 | LaunchのWBS, スケジュール | Track=LaunchのWBS、スケジュールを作成 | todo | open | high | PO | 2026-05-15 | - |
-| PJR-0003 | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | open | medium | PM | 2026-05-20 | - |
-| PJR-0004 | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | open | medium | PM | 2026-05-20 | - |
-| PJR-0005 | pjr-rulebook作成のtask化 | pjr-rulebookの作成をWBS, スケジュールに記述 | todo | open | medium | PM | 2026-05-20 | - |
-| PJR-0006 | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | open | medium | PM | 2026-05-20 | - |
+| PJR-0001 | open | WBS->スケジュール展開スクリプト | WBSをスケジュールに展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - |
+| PJR-0002 | open | LaunchのWBS, スケジュール | Track=LaunchのWBS、スケジュールを作成 | todo | high | PO | 2026-05-15 | - |
+| PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | medium | PM | 2026-05-20 | - |
+| PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | medium | PM | 2026-05-20 | - |
+| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をWBS, スケジュールに記述 | todo | medium | PM | 2026-05-20 | - |
+| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | medium | PM | 2026-05-20 | - |
 
 ## 4. 派生ビュー
 

@@ -83,8 +83,6 @@ export function readYaml(path: string): any {
 
 export function isSchYamlFilename(path: string): boolean {
   const name = basename(path)
-  // Exclude defaults file
-  if (name === 'sch-defaults.yaml' || name === 'sch-defaults.yml') return false
   return /^sch-.*\.(yaml|yml)$/.test(name)
 }
 
