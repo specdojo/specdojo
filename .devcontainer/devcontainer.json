@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile",
     "context": "."
   },
-  "remoteUser": "root",
+  "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
@@ -14,16 +14,19 @@
     "ghcr.io/devcontainers/features/copilot-cli:1": {},
     "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/va-h/devcontainers-features/uv:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "ripgrep,fd-find,gh,fzf,yq,shellcheck,shfmt",
       "upgradePackages": false
     }
   },
-  "postCreateCommand": "npm install -g @fission-ai/openspec@latest @openai/codex && if command -v fdfind >/dev/null 2>&1; then ln -sf $(command -v fdfind) /usr/local/bin/fd; fi",
+  "mounts": ["source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind"],
+  "postCreateCommand": "sudo npm install -g @openai/codex && if command -v fdfind >/dev/null 2>&1; then sudo ln -sf $(command -v fdfind) /usr/local/bin/fd; fi",
 
   "customizations": {
     "vscode": {
       "extensions": [
+        "anthropic.claude-code",
         "streetsidesoftware.code-spell-checker",
         "mhutchie.git-graph",
         "openai.chatgpt",

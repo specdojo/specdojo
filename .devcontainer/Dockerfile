@@ -1,6 +1,6 @@
 # Node + TypeScript 用の devcontainer ベースイメージ
 # (multi-arch 対応 & Debian/Ubuntu ベースなので glibc あり)
-FROM mcr.microsoft.com/devcontainers/typescript-node:22-bookworm
+FROM mcr.microsoft.com/devcontainers/javascript-node:24-trixie
 
 # mermaid-cli(mmdc) が使う Chromium と、その周辺ライブラリをインストール
 RUN apt-get update && \
