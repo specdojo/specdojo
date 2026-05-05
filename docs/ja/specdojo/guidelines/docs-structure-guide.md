@@ -189,7 +189,6 @@ docs/
 │   │   │   ├── 020-project-definition/           # プロジェクト定義
 │   │   │   │   ├── prj-overview.md               # プロジェクト概要
 │   │   │   │   ├── prj-stakeholder-register.md   # ステークホルダー登録簿
-│   │   │   │   ├── prj-organization.md           # 組織体制
 │   │   │   │   ├── prj-charter.md                # プロジェクト憲章
 │   │   │   │   ├── prj-scope.md                  # プロジェクトスコープ
 │   │   │   │   ├── prj-success-criteria-and-acceptance-criteria.md # 成功基準と受入条件
@@ -202,8 +201,12 @@ docs/
 │   │   │   │   │   ├── pm-plan.md                # プロジェクト管理計画
 │   │   │   │   │   ├── pm-communication-plan.md  # コミュニケーション計画
 │   │   │   │   │   ├── pm-quality-management-plan.md　# 品質管理計画
-│   │   │   │   │   ├── pm-raci.md　              # 組織体制とRACI
 │   │   │   │   │   └── pm-wbs-to-schedule-strategy.md　# WBSからスケジュールへの変換戦略
+│   │   │   │   │
+│   │   │   │   ├── 020-organization/             # 組織体制
+│   │   │   │   │   ├── pm-roles.md               # ロール定義
+│   │   │   │   │   ├── pm-members.md             # メンバー定義
+│   │   │   │   │   └── pm-raci.md　              # 組織体制とRACI
 │   │   │   │   │
 │   │   │   │   ├── 020-controls/                 # 管理台帳・管理ビュー ※WBS対象外
 │   │   │   │   │   ├── 010-project-register/     # 統合管理台帳（正本）
