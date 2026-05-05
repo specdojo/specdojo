@@ -7,9 +7,9 @@ part_of:
 rulebook: dct-rulebook
 ---
 
-# 成果物カタログ: SpecDojo Handbook プロジェクトマネジメント
+# 成果物カタログ: SpecDojo プロジェクトマネジメント
 
-Project Deliverables Catalog: Project Management for SpecDojo Handbook
+Project Deliverables Catalog: Project Management for SpecDojo
 
 本ドキュメントは、プロジェクトマネジメントに関する成果物の一覧とその説明をまとめたカタログです。各成果物の目的・内容・配置先・派生関係を定義します。
 

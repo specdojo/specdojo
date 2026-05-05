@@ -6,9 +6,9 @@ part_of: [prj-0001:dct-index]
 rulebook: dct-rulebook
 ---
 
-# 成果物カタログ: SpecDojo Handbook プロジェクト定義
+# 成果物カタログ: SpecDojo プロジェクト定義
 
-Project Deliverables Catalog: Project Definition for SpecDojo Handbook
+Project Deliverables Catalog: Project Definition for SpecDojo
 
 本ドキュメントは、プロジェクト定義に関する成果物の一覧とその説明をまとめたカタログです。各成果物の目的・内容・配置先・派生関係を定義します。
 

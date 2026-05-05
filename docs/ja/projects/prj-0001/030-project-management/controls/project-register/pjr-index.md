@@ -46,7 +46,7 @@ Project Register
 | PJR-0024 | done | pm-roles-*作成 | yamlを作る前提でrulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
 | PJR-0025 | done | pm-members-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
 | PJR-0026 | done | pm-raci-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
-| PJR-0027 | open | Handbookの見直し | HandbookとなっているのをSpecDojoへ見直し | todo | high | PO | 2026-05-10 | - |
+| PJR-0027 | done | プロジェクト名の見直し | 旧プロジェクト名となっている箇所を SpecDojo へ見直し | done | high | PO | 2026-05-10 | 関連ドキュメントを更新済み |
 | PJR-0028 | done | pm-organization-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
 | PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | PO | 2026-05-10 | - |
 

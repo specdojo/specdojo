@@ -1,4 +1,4 @@
-# SpecDojo Handbook
+# SpecDojo
 
 - [日本語](/ja/)
 - [English](/en/)

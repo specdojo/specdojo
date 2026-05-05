@@ -9,7 +9,7 @@ based_on:
 
 # 組織定義
 
-本書は、SpecDojo Handbook プロジェクトにおけるロール採用方針と最小限の責務境界を定義する。
+本書は、SpecDojo プロジェクトにおけるロール採用方針と最小限の責務境界を定義する。
 
 Role、Member、Task owner、Executor、RACI の共通定義と使い分けは [人と組織の定義標準](../../../../specdojo/standards/people-and-organization-definition-standard.md) を参照する。本書では、共通ルールを再掲せず、本プロジェクトでの採用判断だけを記載する。
 

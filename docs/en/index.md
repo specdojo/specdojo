@@ -1,3 +1,3 @@
-# SpecDojo Handbook
+# SpecDojo
 
 This page is under construction.

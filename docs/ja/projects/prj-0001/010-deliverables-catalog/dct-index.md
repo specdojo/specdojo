@@ -9,7 +9,7 @@ rulebook: dct-index-rulebook
 
 Project Deliverables Catalog
 
-本ドキュメントは、SpecDojo Handbook プロジェクトで作成する成果物とその説明をまとめた成果物カタログです。
+本ドキュメントは、SpecDojo プロジェクトで作成する成果物とその説明をまとめた成果物カタログです。
 ドメイン別成果物カタログは、以下のリンクから参照してください。
 
 ## 1. 共通ルール
