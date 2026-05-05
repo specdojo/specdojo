@@ -45,8 +45,11 @@ description: '`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を
    - 章構成・記述品質・禁止事項は `.github/instructions/sample.instructions.md` に従う
    - 対応 instruction の指示に従い、駄菓子屋文脈の記述例を構成する
    - 必要な前提情報が不足する場合は、駄菓子屋の販売管理システムとして妥当な内容を仮定して記述する
-6. 対応 rulebook の「サンプル」章に `*-sample.<ext>` へのリンクを記載する
-7. 対象ごとの結果を集約し、`npm run -s lint:md` で検証する
+6. sample 作成後にリンク解決を確認する
+   - sample 内で記載したリンク先ファイルの存在を確認する
+   - 存在しないリンクはデッドリンク回避のため Markdown リンクにせず、バッククォートで囲んだファイル名表記へ置換する
+7. 対応 rulebook の「サンプル」章に `*-sample.<ext>` へのリンクを記載する
+8. 対象ごとの結果を集約し、`npm run -s lint:md` で検証する
 
 ## 実行ルール
 
@@ -57,6 +60,7 @@ description: '`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を
 - 業務文脈は「駄菓子屋の販売管理システム構築プロジェクト」に統一し、他業種の題材を混在させない
 - 不足している前提条件は、駄菓子屋の販売管理システムに適合する範囲で合理的に仮定して補う
 - 実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）は sample に含めない
+- sample 作成後の最終状態では、存在確認できない参照先を Markdown リンクのまま残さず、すべてバッククォートで囲んだファイル名表記へ置換する
 
 ## 出力
 
