@@ -1,7 +1,7 @@
 version: 1
 project_id: prj-0001
 document:
-  id: prj-0001-pm-members
+  id: prj-0001:pm-members
   type: project
   status: draft
   based_on:

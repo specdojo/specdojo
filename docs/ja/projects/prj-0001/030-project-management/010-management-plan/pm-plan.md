@@ -182,6 +182,7 @@ supersedes: []
 | [pm-communication-plan.md](pm-communication-plan.md) | 報告、連絡、会議体、情報共有方針を定義する |
 | [pm-wbs-to-schedule-strategy.md](pm-wbs-to-schedule-strategy.md) | WBS から Schedule への展開方針を定義する |
 | [pm-organization.md](../020-organization/pm-organization.md) | 採用ロール、未採用ロール、責務境界を定義する |
+| [pm-roles.yaml](../020-organization/pm-roles.yaml) | 採用 Role code を machine-readable な YAML として一覧化する |
 | [pm-raci.md](../020-organization/pm-raci.md) | 成果物別、プロセス別の責任分担を定義する |
 | [pjr-index.md](../controls/project-register/pjr-index.md) | プロジェクト登録簿として、未決事項、課題、リスク、変更要求を管理する |
 

@@ -1,5 +1,5 @@
 ---
-id: prj-0001-prj-overview
+id: prj-0001:prj-overview
 type: project
 status: draft
 rulebook: prj-overview-rulebook

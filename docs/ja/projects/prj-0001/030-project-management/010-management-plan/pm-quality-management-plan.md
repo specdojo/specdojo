@@ -57,6 +57,8 @@ supersedes: []
 | 指標 | 算出方法 | 閾値 | 計測頻度 | 報告先 |
 | ---- | -------- | ---- | -------- | ------ |
 | Markdown lint 結果 | `npm run -s lint:md` の失敗件数 | 0 件 | 主要成果物更新時 | `PO`, `QE` |
+| YAML schema 検証 | `npm run validate:schema:file` のエラー件数（`pm-roles.yaml`, `pm-members.yaml` 等の YAML 成果物が schema に適合しているか） | 0 件 | YAML 成果物更新時 | `ARC`, `QE` |
+| ビルド検証 | `npm run docs:build` の失敗件数 | 0 件 | 公開前 / 主要リリース前 | `PO`, `QE` |
 | 重大レビュー指摘残 | 公開・完了判断を妨げる未解決指摘件数 | 0 件 | 公開前 / 完了判断前 | `PO`, `QE` |
 | 関連リンク不整合 | 存在しない参照、誤った相対リンク、古い成果物名の件数 | 0 件 | 主要成果物更新時 | `ARC`, `QE` |
 | ルールブック不適合 | 対象成果物が該当ルールブックの必須構成を満たさない件数 | 0 件 | 新規成果物作成時 | `PO`, `QE` |
@@ -111,6 +113,7 @@ supersedes: []
 | [pm-plan.md](pm-plan.md) | プロジェクト全体の管理方針、品質・リスク・課題管理方針を定義する |
 | [pm-communication-plan.md](pm-communication-plan.md) | レビュー結果、課題、是正内容の報告・連絡方針を定義する |
 | [pm-organization.md](../020-organization/pm-organization.md) | 採用ロール、未採用ロール、責務境界を定義する |
+| [pm-roles.yaml](../020-organization/pm-roles.yaml) | 採用 Role code を machine-readable な YAML として一覧化する |
 | [pm-raci.md](../020-organization/pm-raci.md) | 成果物別、プロセス別の責任分担を定義する |
 | [dct-index.md](../../010-deliverables-catalog/dct-index.md) | 成果物カタログの入口 |
 | [dct-project-management.md](../../010-deliverables-catalog/dct-project-management.md) | プロジェクトマネジメント成果物の一覧 |
