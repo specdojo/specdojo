@@ -31,7 +31,7 @@ Project Register
 | PJR-0009 | open | WBS作成プロンプト | dctからwbsを作成するinstructions, SKILL, promptを作成する | todo | high | ARC | 2026-05-10 | - |
 | PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる  | todo | high | ARC | 2026-05-10 | - |
 | PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | PM | 2026-05-10 | - |
-| PJR-0012 | open | claudeのSKILL対応| .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | - |
+| PJR-0012 | done | claudeのSKILL対応| .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | - |
 
 ## 4. 派生ビュー
 
