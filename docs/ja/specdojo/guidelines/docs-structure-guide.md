@@ -170,6 +170,10 @@ flowchart TB
 ディレクトリ名とファイル名については、以下のようにfrontmatterで定義されたidと対応させることを推奨します。
 idと対応させない場合（日本語名称を使用する場合等）は、一貫性を保った命名規約を採用してください。
 
+> WBSの対象の成果物に関しては、ディレクトリの頭に`NNN-`の番号を付与することを推奨します（例: `010-deliverables-catalog/`）。
+> ただし、プロジェクトドキュメントの中にはWBSの対象外となる管理台帳や管理ビューも存在するため、
+> これらは番号なしで構成することを推奨します（例: `controls/`）。
+
 ```text
 docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
@@ -208,7 +212,7 @@ docs/
 │   │   │   │   │   ├── pm-members.md             # メンバー定義
 │   │   │   │   │   └── pm-raci.md　              # 組織体制とRACI
 │   │   │   │   │
-│   │   │   │   ├── 030-controls/                 # 管理台帳・管理ビュー ※WBS対象外
+│   │   │   │   ├── controls/                     # 管理台帳・管理ビュー ※WBS対象外
 │   │   │   │   │   ├── 010-project-register/     # 統合管理台帳（正本）
 │   │   │   │   │   │   ├── pjr-index.md          # プロジェクト登録簿の索引・一覧
 │   │   │   │   │   │   ├── pjr-0001-auth.md      # 登録項目（認証）
@@ -225,20 +229,20 @@ docs/
 │   │   │   │   │       ├── pm-change-request-log.md # type=change-request の抽出ビュー
 │   │   │   │   │       └── pm-decision-log.md    # type=decision の抽出ビュー
 │   │   │   │   │
-│   │   │   │   ├── 040-wbs/                      # WBS
+│   │   │   │   ├── wbs/                          # WBS
 │   │   │   │   │   ├── wbs-definition.yaml       # 成果物カタログ作成までのWBS
 │   │   │   │   │   ├── wbs-auth.yaml             # WBS定義（認証）
 │   │   │   │   │   ├── wbs-payment.yaml          # WBS定義（決済）
 │   │   │   │   │   └── wbs-infra.yaml            # WBS定義（インフラ）
 │   │   │   │   │
-│   │   │   │   ├── 050-schedule/                 # スケジュール
+│   │   │   │   ├── schedule/                     # スケジュール
 │   │   │   │   │   ├── sch-definition.yaml       # 成果物カタログ作成のスケジュール
 │   │   │   │   │   ├── sch-milestones.yaml       # マイルストーン定義
 │   │   │   │   │   ├── sch-auth.yaml             # スケジュール定義（認証）
 │   │   │   │   │   ├── sch-auth-api.yaml         # スケジュール定義（認証API）
 │   │   │   │   │   └── sch-payment.yaml          # スケジュール定義（決済）
 │   │   │   │   │
-│   │   │   │   ├── 060-reporting/                # レポート ※WBS対象外
+│   │   │   │   ├── reporting/                    # レポート ※WBS対象外
 │   │   │   │   │   ├── progress-reports/         # 進捗報告
 │   │   │   │   │   │   ├── pr-2026-03-01-01.md   # 進捗報告
 │   │   │   │   │   │   └── pr-2026-03-08-01.md   # 進捗報告
@@ -246,7 +250,7 @@ docs/
 │   │   │   │   │       ├── mm-2026-03-01-01.md   # 議事録
 │   │   │   │   │       └── mm-2026-03-08-01.md   # 議事録
 │   │   │   │   │
-│   │   │   │   └── 070-execution/                # 実行管理 ※WBS対象外
+│   │   │   │   └── execution/                    # 実行管理 ※WBS対象外
 │   │   │   │       ├── exec/                     # タスク実行ワークスペース
 │   │   │   │       │   ├── events/               # イベントログ
 │   │   │   │       │   └── .locks/               # 実行ロック
