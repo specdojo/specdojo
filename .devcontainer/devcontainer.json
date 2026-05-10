@@ -6,6 +6,7 @@
   },
   "remoteUser": "node",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "none",
 
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
