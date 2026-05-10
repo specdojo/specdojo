@@ -152,6 +152,58 @@ PARAMETER temperature 0.2
 ollama create qwen3-coder:30b-32k -f qwen3-coder-30b-32k/Modelfile
 ```
 
+### Qwen3-Coder 30B 複数コーディング用
+
+`qwen3-coder-30b-64k/Modelfile`：
+
+```text
+FROM qwen3-coder:30b
+PARAMETER num_ctx 65536
+PARAMETER temperature 0.2
+```
+
+作成：
+
+```bash
+ollama create qwen3-coder:30b-64k -f qwen3-coder-30b-64k/Modelfile
+```
+
+### Qwen3-Coder 30B 主力レビュー用
+
+`qwen3-coder-30b-128k/Modelfile`：
+
+```text
+FROM qwen3-coder:30b
+PARAMETER num_ctx 131072
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+```
+
+作成：
+
+```bash
+ollama create qwen3-coder:30b-128k -f qwen3-coder-30b-128k/Modelfile
+```
+
+### Qwen3-Coder 30B 横断レビュー用
+
+`qwen3-coder-30b-256k/Modelfile`：
+
+```text
+FROM qwen3-coder:30b
+PARAMETER num_ctx 262144
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+```
+
+作成：
+
+```bash
+ollama create qwen3-coder:30b-256k -f qwen3-coder-30b-256k/Modelfile
+```
+
 ### 動作確認
 
 ```bash
@@ -168,6 +220,9 @@ ollama run gemma4:31b-32k "Markdown設計書の深いレビュー観点を列挙
 
 ```bash
 ollama run qwen3-coder:30b-32k "TypeScriptのテスト設計の観点を出してください。"
+ollama run qwen3-coder:30b-64k "TypeScriptのテスト設計の観点を出してください。"
+ollama run qwen3-coder:30b-128k "TypeScriptのテスト設計の観点を出してください。"
+ollama run qwen3-coder:30b-256k "TypeScriptのテスト設計の観点を出してください。"
 ```
 
 ---
