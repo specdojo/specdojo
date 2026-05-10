@@ -7,6 +7,7 @@ GIT_CONFIG_DIR="/home/node/.config/git"
 GIT_CONFIG_FILE="${GIT_CONFIG_GLOBAL:-/home/node/.config/git/config}"
 
 sudo mkdir -p \
+  /home/node/.config \
   "$GIT_CONFIG_DIR" \
   /home/node/.claude \
   /home/node/.claude-state \
@@ -18,6 +19,8 @@ sudo mkdir -p \
 sudo touch "$CLAUDE_STATE_JSON"
 sudo touch "$GIT_CONFIG_FILE"
 
+sudo chown node:node /home/node/.config
+
 sudo chown -R node:node \
   "$GIT_CONFIG_DIR" \
   /home/node/.claude \
@@ -26,6 +29,8 @@ sudo chown -R node:node \
   /home/node/.copilot \
   /home/node/.config/gh \
   /home/node/.config/opencode
+
+chmod 755 /home/node/.config
 
 chmod 700 \
   "$GIT_CONFIG_DIR" \
@@ -53,6 +58,8 @@ command -v gh >/dev/null 2>&1 && gh --version | head -n 1 || true
 
 echo "Checking Git config..."
 echo "GIT_CONFIG_GLOBAL=${GIT_CONFIG_FILE}"
+ls -ld /home/node/.config "$GIT_CONFIG_DIR" || true
+ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 
 echo "Checking Local LLM API..."
