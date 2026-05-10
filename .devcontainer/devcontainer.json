@@ -1,10 +1,12 @@
 {
-  "name": "specdojo devcontainer",
+  "name": "${localWorkspaceFolderBasename} devcontainer",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
   },
   "remoteUser": "node",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
@@ -20,18 +22,29 @@
       "upgradePackages": false
     }
   },
+
   "mounts": [
-    "source=specdojo-claude,target=/home/node/.claude,type=volume",
-    "source=specdojo-claude-state,target=/home/node/.claude-state,type=volume",
-    "source=specdojo-codex,target=/home/node/.codex,type=volume",
-    "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
-    "source=specdojo-gh,target=/home/node/.config/gh,type=volume"
+    "source=${localWorkspaceFolderBasename}-git,target=/home/node/.config/git,type=volume",
+    "source=${localWorkspaceFolderBasename}-claude,target=/home/node/.claude,type=volume",
+    "source=${localWorkspaceFolderBasename}-claude-state,target=/home/node/.claude-state,type=volume",
+    "source=${localWorkspaceFolderBasename}-codex,target=/home/node/.codex,type=volume",
+    "source=${localWorkspaceFolderBasename}-copilot,target=/home/node/.copilot,type=volume",
+    "source=${localWorkspaceFolderBasename}-opencode,target=/home/node/.config/opencode,type=volume",
+    "source=${localWorkspaceFolderBasename}-gh,target=/home/node/.config/gh,type=volume"
   ],
+
   "containerEnv": {
-    "COPILOT_HOME": "/home/node/.copilot"
+    "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config",
+    "COPILOT_HOME": "/home/node/.copilot",
+    "OLLAMA_BASE_URL": "http://host.docker.internal:11434",
+    "LOCAL_OPENAI_BASE_URL": "http://host.docker.internal:11434/v1",
+    "OPENCODE_DISABLE_AUTO_UPDATE": "1"
   },
-  "postStartCommand": "bash .devcontainer/post-start.sh",
+
+  "runArgs": ["--add-host=host.docker.internal:host-gateway"],
+
   "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
 
   "customizations": {
     "vscode": {
@@ -52,7 +65,8 @@
         "esbenp.prettier-vscode",
         "unifiedjs.vscode-remark",
         "yzhang.markdown-all-in-one",
-        "vue.volar"
+        "vue.volar",
+        "redhat.vscode-xml"
       ]
     }
   }

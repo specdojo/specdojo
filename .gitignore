@@ -46,13 +46,16 @@ next-env.d.ts
 !.vscode/schemas
 !.vscode/markdown-preview.css
 
-# env files
+# env / secrets files
 # because this project is public and template, don't include .env.* files
 .env
 .env.development
 .env.production
 .env.test
 .env.staging
+secrets/
+config/credentials.json
+*.key
 
 # vitepress build output
 /docs/.vitepress/dist
@@ -63,3 +66,12 @@ next-env.d.ts
 
 # claude
 .claude/settings.local.json
+CLAUDE.local.md
+
+# Codex local
+.codex/auth.json
+.codex/sessions/
+
+# OpenCode local
+.opencode/auth.json
+.opencode/sessions/

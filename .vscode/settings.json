@@ -46,15 +46,22 @@
     "MAINT",
     "mhutchie",
     "mmdc",
+    "Modelfile",
+    "modelfiles",
     "MTBF",
     "MTTD",
     "MTTR",
     "nexts",
+    "nomic",
+    "Ollama",
+    "opencode",
     "openspec",
     "pipefail",
     "PMBOK",
     "QLTY",
     "QMPLAN",
+    "quotepath",
+    "qwen",
     "RACI",
     "rcmd",
     "Redmine",
@@ -85,6 +92,7 @@
     "systemization",
     "TAXCLASS",
     "TESTPLAN",
+    "toplevel",
     "topo",
     "TSCH",
     "TWBS",
@@ -165,15 +173,19 @@
     "./docs/specdojo/schemas/v1/wbs.schema.yaml": ["docs/ja/**/wbs-*.yaml"]
   },
 
+  "files.associations": {
+    "*.schema.yaml": "yaml",
+    "*.instructions.md": "markdown",
+    "*.plist": "xml"
+  },
   "[yaml]": {
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-
-  "files.associations": {
-    "*.schema.yaml": "yaml",
-    "*.instructions.md": "markdown"
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.formatOnSave": true
   },
   "json.schemaDownload.enable": false,
   "chat.tools.terminal.autoApprove": {

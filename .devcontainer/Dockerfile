@@ -2,6 +2,8 @@
 # (multi-arch 対応 & Debian/Ubuntu ベースなので glibc あり)
 FROM mcr.microsoft.com/devcontainers/javascript-node:24-trixie
 
+USER root
+
 # mermaid-cli(mmdc) が使う Chromium と、その周辺ライブラリをインストール
 RUN apt-get update && \
     apt-get install -y \
@@ -19,6 +21,13 @@ RUN apt-get update && \
       libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
+# Codex / OpenCode
+RUN npm install -g \
+    @openai/codex \
+    opencode-ai
+
 # puppeteer/mermaid-cli に「自前の Chromium を使え」と伝える
 ENV PUPPETEER_SKIP_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+USER node
