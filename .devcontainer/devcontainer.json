@@ -39,6 +39,7 @@
     "COPILOT_HOME": "/home/node/.copilot",
     "OLLAMA_BASE_URL": "http://host.docker.internal:11434",
     "LOCAL_OPENAI_BASE_URL": "http://host.docker.internal:11434/v1",
+    "COMFYUI_BASE_URL": "http://host.docker.internal:8188",
     "OPENCODE_DISABLE_AUTO_UPDATE": "1"
   },
 
