@@ -50,6 +50,7 @@ Project Register
 | PJR-0028 | done | pm-organization-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
 | PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | PO | 2026-05-10 | - |
 | PJR-0030 | open | wbs to schedule strategyの見直し | deliverable -> rules の順番で作成するように見直し | todo | high | PO | 2026-05-10 | [./pjr-0030-wbs-to-sch.md](./pjr-0030-wbs-to-sch.md) |
+| PJR-0031 | open | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | PO | 2026-05-10 | - |
 
 ## 4. 派生ビュー
 
