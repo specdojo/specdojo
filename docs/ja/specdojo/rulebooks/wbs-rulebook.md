@@ -100,11 +100,12 @@ WBS-PJM-COMM
 | wbs[].name                | ○    | 一覧で識別できる短いラベル                        |
 | wbs[].description         | 任意 | スコープ説明                                      |
 | wbs[].component           | 任意 | サブ領域（例: api, ui, db）                       |
-| wbs[].deliverables        | ○    | 成果物配列                                        |
-| wbs[].deliverables[].id   | ○    | 成果物ドキュメントID                              |
-| wbs[].deliverables[].path | ○    | 成果物パス                                        |
-| wbs[].deliverables[].native_id | 任意 | 外部仕様・ネイティブ形式側の識別子                |
-| wbs[].deliverables[].note | 任意 | 成果物補足                                        |
+| wbs[].deliverable         | ○    | 成果物オブジェクト（1:1 固定）                    |
+| wbs[].deliverable.id      | ○    | 成果物ドキュメントID                              |
+| wbs[].deliverable.path    | ○    | 成果物パス                                        |
+| wbs[].deliverable.native_id | 任意 | 外部仕様・ネイティブ形式側の識別子              |
+| wbs[].deliverable.note    | 任意 | 成果物補足                                        |
+| wbs[].depends_on          | 任意 | 先行成果物 ID 配列（論理的な成果物依存のみ）      |
 | wbs[].done_criteria       | ○    | 完了判定可能な条件（文字列配列、1件以上必須）     |
 | wbs[].acceptance_refs     | 任意 | 受入基準や決定記録への参照ID配列                  |
 | wbs[].tags                | 任意 | 分類タグ配列                                      |
@@ -123,32 +124,25 @@ WBS-PJM-COMM
 - 成果物カタログの `kind: work` が WBS Item の主対象。プロジェクト遂行上、明示的に管理が必要な `kind: control` は例外的に対象にできる。`kind: generated` は対象外。
 - 同一成果物が複数フェーズで扱われる場合でも、WBS Item は重複させない。
 
-### 6.2. `deliverables`
+### 6.2. `deliverable`
 
-- 各要素をオブジェクトで記述し、`id` と `path` を必須とする。
+- `1 成果物 = 1 WBS item` の原則に従い、**単一オブジェクト**として記述する（配列ではない）。
+- `id` と `path` を必須とする。
 - `id` は SpecDojo における成果物管理IDとする。
 - 成果物ドキュメントが SpecDojo 互換のメタデータを持つ場合、`id` は成果物ドキュメントの Frontmatter または YAML ルートに記載された `id` 値と一致させる。
-- 成果物ドキュメントが SpecDojo 互換のメタデータを持たない場合、WBS の `deliverables[].id` と `deliverables[].path` の対応関係を SpecDojo 管理IDの正本とする。
-- 外部仕様を持つファイル（例: `SKILL.md`）では、SpecDojo ID をファイル内に埋め込まず、WBS の `deliverables[].id` で管理する。
+- 成果物ドキュメントが SpecDojo 互換のメタデータを持たない場合、WBS の `deliverable.id` と `deliverable.path` の対応関係を SpecDojo 管理IDの正本とする。
+- 外部仕様を持つファイル（例: `SKILL.md`）では、SpecDojo ID をファイル内に埋め込まず、WBS の `deliverable.id` で管理する。
 - 外部仕様側の ID・キー・URI などが別に存在する場合のみ、`native_id` に記録する。`native_id` は SpecDojo 成果物IDとして扱わない。
 - `path` は、成果物カタログに記載された配置先ディレクトリの配下に置く。
-- 実在パスを列挙し、曖昧な表記（例: 「関連資料一式」）は使わない。
-- 将来増減が見込まれる場合でも、現時点で管理対象とするファイルを明示する。
-- WBS 展開対象外の成果物は列挙しない。
+- 曖昧な表記（例: 「関連資料一式」）は使わない。
 
 例:
 
 ```yaml
-deliverables:
-  - id: wbs-rulebook
-    path: docs/ja/specdojo/rulebooks/wbs-rulebook.md
-    note: WBS ルール本文
-  - id: wbs-sample
-    path: docs/ja/specdojo/samples/wbs-sample.yaml
-  - id: skill-auth-review
-    path: .codex/skills/auth-review/SKILL.md
-    native_id: auth-review
-    note: SKILL.md 側の識別子は native_id に保持する
+deliverable:
+  id: wbs-rulebook
+  path: docs/ja/specdojo/rulebooks/wbs-rulebook.md
+  note: WBS ルール本文
 ```
 
 ### 6.3. `done_criteria`
@@ -171,17 +165,40 @@ done_criteria:
   - BPS を更新すること。
 ```
 
-### 6.4. 対象外の扱い
+### 6.4. `depends_on`
+
+- 1成果物 = 1 WBS item の原則に基づき、**先行成果物の deliverable ID** を記述する。
+- 後続 WBS Item の成果物作成が**論理的に不可能**な場合のみ記述する。
+- 「先に見たい」「担当者の都合で直列にしたい」程度の関係は記述しない。
+- 並列着手が可能な WBS Item には依存を置かない。
+- 実行順序・スケジュール上の都合は Schedule 側の `depends_on` で扱う。
+
+良い例:
+
+```yaml
+depends_on:
+  - gov-rulebook  # ルールブック確定前は instruction が作成不可
+```
+
+悪い例:
+
+```yaml
+depends_on:
+  - biz-br  # 並列着手は可能だが、担当者の都合で直列化したい
+```
+
+### 6.5. 対象外の扱い
 
 - WBS 対象外成果物を誤って WBS 化しない。
 - 対象外成果物の実行管理が必要な場合は、WBS ではなく個別の運用計画または別管理台帳で扱う。
 
 ## 7. 禁止事項
 
-- 実行順序・依存・日程を WBS に直接書くこと。
+- 実行順序・日程・所要期間を WBS に直接書くこと。
+- 論理的な成果物依存ではなく、スケジュール都合の依存を `depends_on` に書くこと。
 - `id` に意味のない略号や重複番号を使うこと。
-- `deliverables` を文字列配列で記述すること（`id` と `path` の両方が必須のオブジェクト配列で記述する）。
-- `deliverables` に存在しない/曖昧なパスを記載すること。
+- `deliverable` を配列で記述すること（単一オブジェクトで記述する）。
+- `deliverable.path` に存在しない/曖昧なパスを記載すること。
 - `done_criteria` を文字列ではなく配列以外の形式で記述すること。
 - `done_criteria` を判定不能な抽象語だけで記述すること。
 - 成果物カタログで WBS 対象外とされた成果物を WBS 管理対象へ混在させること。

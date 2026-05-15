@@ -5,163 +5,467 @@ project_id: prj-0001
 domain: design
 assigned_team: specdojo
 wbs:
-  - id: WBS-DES-IFX-010
-    name: 外部インターフェースドキュメントファミリーの整備
-    description: |-
-      外部システムIF一覧・API・ファイル・メッセージ仕様の ルール・指示ファイルを1つのインターフェースファミリーとして整備する（成果物カタログ「外部 IF 仕様」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+  - id: WBS-DES-IFX-RULEBOOK
+    name: IFX ルールブックの整備
     component: external-if
-    deliverables:
-      - id: ifx-rulebook
-        path: docs/ja/specdojo/rulebooks/ifx-rulebook.md
-      - id: ifx-instruction
-        path: docs/ja/specdojo/instructions/ifx-instruction.md
-      - id: ifx-api-rulebook
-        path: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
-      - id: ifx-api-instruction
-        path: docs/ja/specdojo/instructions/ifx-api-instruction.md
-      - id: ifx-file-rulebook
-        path: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
-      - id: ifx-file-instruction
-        path: docs/ja/specdojo/instructions/ifx-file-instruction.md
-      - id: ifx-msg-rulebook
-        path: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
-      - id: ifx-msg-instruction
-        path: docs/ja/specdojo/instructions/ifx-msg-instruction.md
-      - id: ifx-sample
-        path: docs/ja/specdojo/samples/ifx-sample.md
-      - id: ifx-api-sample
-        path: docs/ja/specdojo/samples/ifx-api-sample.md
-      - id: ifx-file
-        path: docs/ja/specdojo/samples/ifx-file-sample.md
-      - id: ifx-msg-sample
-        path: docs/ja/specdojo/samples/ifx-msg-sample.md
+    deliverable:
+      id: ifx-rulebook
+      path: docs/ja/specdojo/rulebooks/ifx-rulebook.md
     done_criteria:
-      - |-
-        外部インターフェースのルール・指示ファイルが、IF一覧・API・ファイル・ メッセージ仕様ドキュメント全体にわたり一貫した構造・必須フィールド・ AI生成制約を定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-CXD-020
-    name: C4 コンテキスト図ドキュメントファミリーの整備
-    description: |-
-      C4 コンテキストレベルドキュメントの CXD Markdown および Mermaid の ルール・指示ファイルを整備する（成果物カタログ「アーキテクチャ / C4 モデル」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - IFX ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-INSTRUCTION
+    name: IFX instruction の整備
+    component: external-if
+    depends_on:
+      - ifx-rulebook
+    deliverable:
+      id: ifx-instruction
+      path: docs/ja/specdojo/instructions/ifx-instruction.md
+    done_criteria:
+      - IFX instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-SAMPLE
+    name: IFX sample の整備
+    component: external-if
+    depends_on:
+      - ifx-instruction
+    deliverable:
+      id: ifx-sample
+      path: docs/ja/specdojo/samples/ifx-sample.md
+    done_criteria:
+      - IFX sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-IFX-API-RULEBOOK
+    name: IFX-API ルールブックの整備
+    component: external-if
+    deliverable:
+      id: ifx-api-rulebook
+      path: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+    done_criteria:
+      - IFX-API ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-API-INSTRUCTION
+    name: IFX-API instruction の整備
+    component: external-if
+    depends_on:
+      - ifx-api-rulebook
+    deliverable:
+      id: ifx-api-instruction
+      path: docs/ja/specdojo/instructions/ifx-api-instruction.md
+    done_criteria:
+      - IFX-API instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-API-SAMPLE
+    name: IFX-API sample の整備
+    component: external-if
+    depends_on:
+      - ifx-api-instruction
+    deliverable:
+      id: ifx-api-sample
+      path: docs/ja/specdojo/samples/ifx-api-sample.md
+    done_criteria:
+      - IFX-API sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-IFX-FILE-RULEBOOK
+    name: IFX-FILE ルールブックの整備
+    component: external-if
+    deliverable:
+      id: ifx-file-rulebook
+      path: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+    done_criteria:
+      - IFX-FILE ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-FILE-INSTRUCTION
+    name: IFX-FILE instruction の整備
+    component: external-if
+    depends_on:
+      - ifx-file-rulebook
+    deliverable:
+      id: ifx-file-instruction
+      path: docs/ja/specdojo/instructions/ifx-file-instruction.md
+    done_criteria:
+      - IFX-FILE instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-FILE-SAMPLE
+    name: IFX-FILE sample の整備
+    component: external-if
+    depends_on:
+      - ifx-file-instruction
+    deliverable:
+      id: ifx-file-sample
+      path: docs/ja/specdojo/samples/ifx-file-sample.md
+    done_criteria:
+      - IFX-FILE sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-IFX-MSG-RULEBOOK
+    name: IFX-MSG ルールブックの整備
+    component: external-if
+    deliverable:
+      id: ifx-msg-rulebook
+      path: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+    done_criteria:
+      - IFX-MSG ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-MSG-INSTRUCTION
+    name: IFX-MSG instruction の整備
+    component: external-if
+    depends_on:
+      - ifx-msg-rulebook
+    deliverable:
+      id: ifx-msg-instruction
+      path: docs/ja/specdojo/instructions/ifx-msg-instruction.md
+    done_criteria:
+      - IFX-MSG instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFX-MSG-SAMPLE
+    name: IFX-MSG sample の整備
+    component: external-if
+    depends_on:
+      - ifx-msg-instruction
+    deliverable:
+      id: ifx-msg-sample
+      path: docs/ja/specdojo/samples/ifx-msg-sample.md
+    done_criteria:
+      - IFX-MSG sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CXD-RULEBOOK
+    name: CXD ルールブックの整備
     component: c4-context
-    deliverables:
-      - id: cxd-rulebook
-        path: docs/ja/specdojo/rulebooks/cxd-rulebook.md
-      - id: cxd-instruction
-        path: docs/ja/specdojo/instructions/cxd-instruction.md
-      - id: cxd-mermaid-rulebook
-        path: docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md
-      - id: cxd-mermaid-instruction
-        path: docs/ja/specdojo/instructions/cxd-mermaid-instruction.md
-      - id: cxd
-        path: docs/ja/specdojo/samples/cxd-sample.md
-      - id: cxd-mermaid-sample
-        path: docs/ja/specdojo/samples/cxd-mermaid-sample.md
+    deliverable:
+      id: cxd-rulebook
+      path: docs/ja/specdojo/rulebooks/cxd-rulebook.md
     done_criteria:
-      - |-
-        CXD ファミリーが、C4 コンテキスト図の Markdown と Mermaid の 出力を整合させ、必須コンテンツとAIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-CND-030
-    name: C4 コンテナ図ドキュメントファミリーの整備
-    description: |-
-      C4 コンテナレベルドキュメントの CND Markdown および Mermaid の ルール・指示ファイルを整備する（成果物カタログ「アーキテクチャ / C4 モデル」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - CXD ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CXD-INSTRUCTION
+    name: CXD instruction の整備
+    component: c4-context
+    depends_on:
+      - cxd-rulebook
+    deliverable:
+      id: cxd-instruction
+      path: docs/ja/specdojo/instructions/cxd-instruction.md
+    done_criteria:
+      - CXD instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CXD-MERMAID-RULEBOOK
+    name: CXD Mermaid ルールブックの整備
+    component: c4-context
+    deliverable:
+      id: cxd-mermaid-rulebook
+      path: docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md
+    done_criteria:
+      - CXD Mermaid ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CXD-MERMAID-INSTRUCTION
+    name: CXD Mermaid instruction の整備
+    component: c4-context
+    depends_on:
+      - cxd-mermaid-rulebook
+    deliverable:
+      id: cxd-mermaid-instruction
+      path: docs/ja/specdojo/instructions/cxd-mermaid-instruction.md
+    done_criteria:
+      - CXD Mermaid instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CXD-SAMPLE
+    name: CXD sample の整備
+    component: c4-context
+    depends_on:
+      - cxd-instruction
+    deliverable:
+      id: cxd-sample
+      path: docs/ja/specdojo/samples/cxd-sample.md
+    done_criteria:
+      - CXD sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CXD-MERMAID-SAMPLE
+    name: CXD Mermaid sample の整備
+    component: c4-context
+    depends_on:
+      - cxd-mermaid-instruction
+    deliverable:
+      id: cxd-mermaid-sample
+      path: docs/ja/specdojo/samples/cxd-mermaid-sample.md
+    done_criteria:
+      - CXD Mermaid sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CND-RULEBOOK
+    name: CND ルールブックの整備
     component: c4-container
-    deliverables:
-      - id: cnd-rulebook
-        path: docs/ja/specdojo/rulebooks/cnd-rulebook.md
-      - id: cnd-instruction
-        path: docs/ja/specdojo/instructions/cnd-instruction.md
-      - id: cnd-mermaid-rulebook
-        path: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
-      - id: cnd-mermaid-instruction
-        path: docs/ja/specdojo/instructions/cnd-mermaid-instruction.md
-      - id: cnd
-        path: docs/ja/specdojo/samples/cnd-sample.md
-      - id: cnd-mermaid-sample
-        path: docs/ja/specdojo/samples/cnd-mermaid-sample.md
+    deliverable:
+      id: cnd-rulebook
+      path: docs/ja/specdojo/rulebooks/cnd-rulebook.md
     done_criteria:
-      - |-
-        CND ファミリーが、C4 コンテナドキュメントの Markdown と Mermaid の ナラティブと図の要件を整合させて定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-CPD-040
-    name: C4 コンポーネント図ドキュメントファミリーの整備
-    description: |-
-      C4 コンポーネントレベルドキュメントの CPD Markdown および Mermaid の ルール・指示ファイルを整備する（成果物カタログ「アーキテクチャ / C4 モデル」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - CND ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CND-INSTRUCTION
+    name: CND instruction の整備
+    component: c4-container
+    depends_on:
+      - cnd-rulebook
+    deliverable:
+      id: cnd-instruction
+      path: docs/ja/specdojo/instructions/cnd-instruction.md
+    done_criteria:
+      - CND instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CND-MERMAID-RULEBOOK
+    name: CND Mermaid ルールブックの整備
+    component: c4-container
+    deliverable:
+      id: cnd-mermaid-rulebook
+      path: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+    done_criteria:
+      - CND Mermaid ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CND-MERMAID-INSTRUCTION
+    name: CND Mermaid instruction の整備
+    component: c4-container
+    depends_on:
+      - cnd-mermaid-rulebook
+    deliverable:
+      id: cnd-mermaid-instruction
+      path: docs/ja/specdojo/instructions/cnd-mermaid-instruction.md
+    done_criteria:
+      - CND Mermaid instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CND-SAMPLE
+    name: CND sample の整備
+    component: c4-container
+    depends_on:
+      - cnd-instruction
+    deliverable:
+      id: cnd-sample
+      path: docs/ja/specdojo/samples/cnd-sample.md
+    done_criteria:
+      - CND sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CND-MERMAID-SAMPLE
+    name: CND Mermaid sample の整備
+    component: c4-container
+    depends_on:
+      - cnd-mermaid-instruction
+    deliverable:
+      id: cnd-mermaid-sample
+      path: docs/ja/specdojo/samples/cnd-mermaid-sample.md
+    done_criteria:
+      - CND Mermaid sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CPD-RULEBOOK
+    name: CPD ルールブックの整備
     component: c4-component
-    deliverables:
-      - id: cpd-rulebook
-        path: docs/ja/specdojo/rulebooks/cpd-rulebook.md
-      - id: cpd-instruction
-        path: docs/ja/specdojo/instructions/cpd-instruction.md
-      - id: cpd-mermaid-rulebook
-        path: docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md
-      - id: cpd-mermaid-instruction
-        path: docs/ja/specdojo/instructions/cpd-mermaid-instruction.md
-      - id: cpd
-        path: docs/ja/specdojo/samples/cpd-sample.md
-      - id: cpd-mermaid-sample
-        path: docs/ja/specdojo/samples/cpd-mermaid-sample.md
+    deliverable:
+      id: cpd-rulebook
+      path: docs/ja/specdojo/rulebooks/cpd-rulebook.md
     done_criteria:
-      - |-
-        CPD ファミリーが、C4 コンポーネントドキュメントのナラティブと Mermaid の 出力をスコープ・用語・必須要素で整合させて定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-IFD-050
-    name: インフラ構成図 Mermaid ペアの整備
-    description: |-
-      インフラ構成図の IFD Mermaid ルール・指示ペアを 整備する（成果物カタログ「アーキテクチャ / インフラ・技術スタック」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - CPD ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CPD-INSTRUCTION
+    name: CPD instruction の整備
+    component: c4-component
+    depends_on:
+      - cpd-rulebook
+    deliverable:
+      id: cpd-instruction
+      path: docs/ja/specdojo/instructions/cpd-instruction.md
+    done_criteria:
+      - CPD instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CPD-MERMAID-RULEBOOK
+    name: CPD Mermaid ルールブックの整備
+    component: c4-component
+    deliverable:
+      id: cpd-mermaid-rulebook
+      path: docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md
+    done_criteria:
+      - CPD Mermaid ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CPD-MERMAID-INSTRUCTION
+    name: CPD Mermaid instruction の整備
+    component: c4-component
+    depends_on:
+      - cpd-mermaid-rulebook
+    deliverable:
+      id: cpd-mermaid-instruction
+      path: docs/ja/specdojo/instructions/cpd-mermaid-instruction.md
+    done_criteria:
+      - CPD Mermaid instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-CPD-SAMPLE
+    name: CPD sample の整備
+    component: c4-component
+    depends_on:
+      - cpd-instruction
+    deliverable:
+      id: cpd-sample
+      path: docs/ja/specdojo/samples/cpd-sample.md
+    done_criteria:
+      - CPD sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-CPD-MERMAID-SAMPLE
+    name: CPD Mermaid sample の整備
+    component: c4-component
+    depends_on:
+      - cpd-mermaid-instruction
+    deliverable:
+      id: cpd-mermaid-sample
+      path: docs/ja/specdojo/samples/cpd-mermaid-sample.md
+    done_criteria:
+      - CPD Mermaid sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-IFD-MERMAID-RULEBOOK
+    name: IFD Mermaid ルールブックの整備
     component: infrastructure
-    deliverables:
-      - id: ifd-mermaid-rulebook
-        path: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
-      - id: ifd-mermaid-instruction
-        path: docs/ja/specdojo/instructions/ifd-mermaid-instruction.md
-      - id: ifd-mermaid-sample
-        path: docs/ja/specdojo/samples/ifd-mermaid-sample.md
+    deliverable:
+      id: ifd-mermaid-rulebook
+      path: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
     done_criteria:
-      - |-
-        IFD Mermaid ルール・指示ペアが、図の構文・必須ノード・関係・ AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-TSD-060
-    name: 技術スタック定義ペアの整備
-    description: |-
-      採用技術・バージョン・選定理由を網羅する技術スタック定義ドキュメントの TSD ルール・指示ペアを整備する（成果物カタログ「アーキテクチャ / インフラ・技術スタック」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - IFD Mermaid ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFD-MERMAID-INSTRUCTION
+    name: IFD Mermaid instruction の整備
+    component: infrastructure
+    depends_on:
+      - ifd-mermaid-rulebook
+    deliverable:
+      id: ifd-mermaid-instruction
+      path: docs/ja/specdojo/instructions/ifd-mermaid-instruction.md
+    done_criteria:
+      - IFD Mermaid instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-IFD-MERMAID-SAMPLE
+    name: IFD Mermaid sample の整備
+    component: infrastructure
+    depends_on:
+      - ifd-mermaid-instruction
+    deliverable:
+      id: ifd-mermaid-sample
+      path: docs/ja/specdojo/samples/ifd-mermaid-sample.md
+    done_criteria:
+      - IFD Mermaid sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-TSD-RULEBOOK
+    name: TSD ルールブックの整備
     component: tech-stack
-    deliverables:
-      - id: tsd-rulebook
-        path: docs/ja/specdojo/rulebooks/tsd-rulebook.md
-      - id: tsd-instruction
-        path: docs/ja/specdojo/instructions/tsd-instruction.md
-      - id: tsd
-        path: docs/ja/specdojo/samples/tsd-sample.md
+    deliverable:
+      id: tsd-rulebook
+      path: docs/ja/specdojo/rulebooks/tsd-rulebook.md
     done_criteria:
-      - |-
-        TSD ルール・指示ペアが、技術スタックの必須セクション・ バージョン制約・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-DES-SYSD-070
-    name: システム設計ドキュメントファミリーの整備
-    description: |-
-      システム設計インデックス・クリティカルフロー・横断的ポリシーの ルール・指示ファイルを1つのシステム設計ファミリーとして整備する（成果物カタログ「システム設計」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - TSD ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-TSD-INSTRUCTION
+    name: TSD instruction の整備
+    component: tech-stack
+    depends_on:
+      - tsd-rulebook
+    deliverable:
+      id: tsd-instruction
+      path: docs/ja/specdojo/instructions/tsd-instruction.md
+    done_criteria:
+      - TSD instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-TSD-SAMPLE
+    name: TSD sample の整備
+    component: tech-stack
+    depends_on:
+      - tsd-instruction
+    deliverable:
+      id: tsd-sample
+      path: docs/ja/specdojo/samples/tsd-sample.md
+    done_criteria:
+      - TSD sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-SYSD-INDEX-RULEBOOK
+    name: SYSD インデックスルールブックの整備
     component: system-design
-    deliverables:
-      - id: sysd-index-rules
-        path: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
-      - id: sysd-index-instruction
-        path: docs/ja/specdojo/instructions/sysd-index-instruction.md
-      - id: sysd-critical-flows-rules
-        path: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
-      - id: sysd-critical-flows-instruction
-        path: docs/ja/specdojo/instructions/sysd-critical-flows-instruction.md
-      - id: sysd-cross-cutting-policy-rules
-        path: docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
-      - id: sysd-cross-cutting-policy-instruction
-        path: docs/ja/specdojo/instructions/sysd-cross-cutting-policy-instruction.md
-      - id: sysd-index
-        path: docs/ja/specdojo/samples/sysd-index-sample.md
-      - id: sysd-critical-flows
-        path: docs/ja/specdojo/samples/sysd-critical-flows-sample.md
-      - id: sysd-cross-cutting-policy
-        path: docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md
+    deliverable:
+      id: sysd-index-rulebook
+      path: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
     done_criteria:
-      - |-
-        SYSD ファミリーが、インデックス・クリティカルフロー・横断的ポリシーの 成果物を整合したセクション構造と再利用可能なAIガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - SYSD インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-INDEX-INSTRUCTION
+    name: SYSD インデックス instruction の整備
+    component: system-design
+    depends_on:
+      - sysd-index-rulebook
+    deliverable:
+      id: sysd-index-instruction
+      path: docs/ja/specdojo/instructions/sysd-index-instruction.md
+    done_criteria:
+      - SYSD インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-CRITICAL-FLOWS-RULEBOOK
+    name: SYSD クリティカルフロールールブックの整備
+    component: system-design
+    deliverable:
+      id: sysd-critical-flows-rulebook
+      path: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
+    done_criteria:
+      - SYSD クリティカルフロールールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-CRITICAL-FLOWS-INSTRUCTION
+    name: SYSD クリティカルフロー instruction の整備
+    component: system-design
+    depends_on:
+      - sysd-critical-flows-rulebook
+    deliverable:
+      id: sysd-critical-flows-instruction
+      path: docs/ja/specdojo/instructions/sysd-critical-flows-instruction.md
+    done_criteria:
+      - SYSD クリティカルフロー instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-CROSS-CUTTING-RULEBOOK
+    name: SYSD 横断的ポリシールールブックの整備
+    component: system-design
+    deliverable:
+      id: sysd-cross-cutting-policy-rulebook
+      path: docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
+    done_criteria:
+      - SYSD 横断的ポリシールールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-CROSS-CUTTING-INSTRUCTION
+    name: SYSD 横断的ポリシー instruction の整備
+    component: system-design
+    depends_on:
+      - sysd-cross-cutting-policy-rulebook
+    deliverable:
+      id: sysd-cross-cutting-policy-instruction
+      path: docs/ja/specdojo/instructions/sysd-cross-cutting-policy-instruction.md
+    done_criteria:
+      - SYSD 横断的ポリシー instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-DES-SYSD-INDEX-SAMPLE
+    name: SYSD インデックス sample の整備
+    component: system-design
+    depends_on:
+      - sysd-index-instruction
+    deliverable:
+      id: sysd-index-sample
+      path: docs/ja/specdojo/samples/sysd-index-sample.md
+    done_criteria:
+      - SYSD インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-SYSD-CRITICAL-FLOWS-SAMPLE
+    name: SYSD クリティカルフロー sample の整備
+    component: system-design
+    depends_on:
+      - sysd-critical-flows-instruction
+    deliverable:
+      id: sysd-critical-flows-sample
+      path: docs/ja/specdojo/samples/sysd-critical-flows-sample.md
+    done_criteria:
+      - SYSD クリティカルフロー sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-DES-SYSD-CROSS-CUTTING-SAMPLE
+    name: SYSD 横断的ポリシー sample の整備
+    component: system-design
+    depends_on:
+      - sysd-cross-cutting-policy-instruction
+    deliverable:
+      id: sysd-cross-cutting-policy-sample
+      path: docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md
+    done_criteria:
+      - SYSD 横断的ポリシー sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。

@@ -45,15 +45,17 @@ project_id: <project-id>
 domain: <scope>
 assigned_team: <team-name>
 wbs:
-  - id: WBS-<DOMAIN>-<ARTIFACT>-<NNNN>
+  - id: WBS-<DOMAIN>-<ARTIFACT>
     name: <short-label>
     description: <optional-scope-description>
     owner: PO
     component: <optional-component>
-    deliverables:
-      - path: <repo-path>
-        kind: create
-        note: <optional-note>
+    deliverable:
+      id: <deliverable-id>
+      path: <repo-path>
+      note: <optional-note>
+    depends_on:
+      - <deliverable-id>
     done_criteria: <reviewable-completion-criteria>
     acceptance_refs:
       - <REF-ID>
@@ -67,24 +69,23 @@ wbs:
 - `type` は必ず `wbs` としてください。
 - `id` は文書 ID として英小文字・数字・ハイフンを使用してください。
 - `domain` はファイル名 `wbs-<domain>.yaml` の `<domain>` と一致させてください。
-- `wbs[].id` は `WBS-<DOMAIN>-<ARTIFACT>-<NNNN>` を推奨し、`<NNNN>` は 4 桁固定・`0010` 刻みで採番してください。
+- `wbs[].id` は `WBS-<DOMAIN>-<ARTIFACT>` 形式とし、末尾に連番を付けないでください。
 - `owner` は `PO` / `BA` / `ARC` / `QE` のいずれかに限定してください。
-- `deliverables[].kind` は `create` / `modify` / `reference` のいずれかにしてください。
 
 ## 4. 記述ルール
 
 ### 4.1. 粒度
 
-- 同じ完了条件でレビューできる成果物群を 1 WBS Item にまとめてください。
-- 単一ファイルごとに機械的に分割せず、成果物ファミリー単位でまとめてください。
-- `rules` / `instruction` / `sample` が一体運用される場合は 1 WBS Item にまとめてください。
+- `1 成果物 = 1 WBS Item` を厳守してください。
+- `deliverables` は1件のみ記述してください（スキーマ上 `maxItems: 1` で制約）。
 
-### 4.2. `deliverables`
+### 4.2. `deliverable`
 
-- `deliverables` は文字列配列ではなく、`path` / `kind` / `note?` を持つオブジェクト配列で記述してください。
+- `deliverable` は配列ではなく**単一オブジェクト**で記述してください（1成果物 = 1 WBS item）。
+- `id` と `path` を必須で記述してください。
 - `path` には実在または作成予定の具体的なリポジトリパスを記述してください。
-- 曖昧な表現は使わず、管理対象ファイルを列挙してください。
-- 成果物カタログで対象外とされた管理台帳、レポート、実行管理、決定記録は含めないでください。
+- 曖昧な表現は使わないでください。
+- 成果物カタログで対象外とされた管理台帳、レポート、実行管理、決定記録は記述しないでください。
 
 ### 4.3. `done_criteria`
 
@@ -99,7 +100,8 @@ wbs:
 
 ## 5. 禁止事項
 
-- 実行順序・依存・日程・所要期間を WBS に記述しないでください。
+- 実行順序・日程・所要期間を WBS に記述しないでください。
+- `depends_on` には先行成果物の `deliverable.id` を記述し、論理的な成果物依存（後続 WBS Item の作成が真に不可能な場合）のみを対象とし、スケジュール都合の依存を書かないでください。
 - `deliverables` を文字列配列で書かないでください。
 - `owner` に許可されていない値を使わないでください。
 - 存在しない、または曖昧な `path` を書かないでください。
@@ -111,9 +113,10 @@ wbs:
 - ルート必須項目 `id` / `type` / `status` / `project_id` / `domain` / `wbs` が揃っている
 - `type` が `wbs` 固定になっている
 - `domain` がファイル名と一致している
-- すべての `wbs[].id` が推奨形式に従っている
-- すべての `deliverables` が `{path, kind, note?}` 形式になっている
+- すべての `wbs[].id` が `WBS-<DOMAIN>-<ARTIFACT>` 形式（末尾に連番なし）になっている
+- `deliverable` が配列でなく単一オブジェクト `{id, path, note?}` になっている
 - `done_criteria` がレビュー可能な文になっている
 - WBS 対象外成果物が含まれていない
-- 実行順序・依存・日程を記述していない
+- `depends_on` が記述されている場合は論理的な成果物依存のみを記述している
+- 実行順序・日程・所要期間を記述していない
 - `npm run validate:schema:file -- --schema <schema-path> --data <wbs-path>` で schema 検証が通る

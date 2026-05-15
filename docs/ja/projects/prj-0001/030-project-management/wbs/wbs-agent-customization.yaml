@@ -5,91 +5,152 @@ project_id: prj-0001
 domain: agent-customization
 assigned_team: specdojo
 wbs:
-  - id: WBS-AGT-INS-010
-    name: Instructions セットの整備
-    description: |-
-      .github/instructions 配下の instructions ファイルを、
-      成果物カタログ「エージェントカスタマイズ（.github/）/ Instructions」と整合する形で整備する。
+  - id: WBS-AGT-INS-MARKDOWN
+    name: markdown.instructions.md の整備
     component: instructions
-    deliverables:
-      - id: markdown
-        path: .github/instructions/markdown.instructions.md
-      - id: rulebook
-        path: .github/instructions/rulebook.instructions.md
-      - id: instruction
-        path: .github/instructions/instruction.instructions.md
-      - id: rulebook-to-sample
-        path: .github/instructions/rulebook-to-sample.instructions.md
+    deliverable:
+      id: ins-markdown
+      path: .github/instructions/markdown.instructions.md
+      native_id: markdown
     done_criteria:
-      - |-
-        Instructions セットが、適用範囲（applyTo）・運用ルール・責務境界を矛盾なく定義し、
-        成果物カタログの Instructions 一覧と実体が一致していること。
-  - id: WBS-AGT-SKL-020
-    name: Skills セットの整備
-    description: |-
-      .github/skills 配下の SKILL ファイルを、
-      成果物カタログ「エージェントカスタマイズ（.github/）/ SKILL」と整合する形で整備する。
+      - Markdown 記述ルールが適用範囲・責務境界を矛盾なく定義していること。
+
+  - id: WBS-AGT-INS-RULEBOOK
+    name: rulebook.instructions.md の整備
+    component: instructions
+    deliverable:
+      id: ins-rulebook
+      path: .github/instructions/rulebook.instructions.md
+      native_id: rulebook
+    done_criteria:
+      - rulebook 記述ルールが適用範囲・責務境界を矛盾なく定義していること。
+
+  - id: WBS-AGT-INS-INSTRUCTION
+    name: instruction.instructions.md の整備
+    component: instructions
+    deliverable:
+      id: ins-instruction
+      path: .github/instructions/instruction.instructions.md
+      native_id: instruction
+    done_criteria:
+      - instruction 記述ルールが適用範囲・責務境界を矛盾なく定義していること。
+
+  - id: WBS-AGT-INS-SAMPLE
+    name: sample.instructions.md の整備
+    component: instructions
+    deliverable:
+      id: ins-sample
+      path: .github/instructions/sample.instructions.md
+      native_id: sample
+    done_criteria:
+      - sample 記述ルールが適用範囲・責務境界を矛盾なく定義していること。
+
+  - id: WBS-AGT-SKL-UPSERT-RULEBOOK
+    name: upsert-rulebook SKILL の整備
     component: skills
-    deliverables:
-      - id: skill
-        path: .github/skills/upsert-rulebook/SKILL.md
-      - id: skill
-        path: .github/skills/rulebook-to-instruction/SKILL.md
-      - id: skill
-        path: .github/skills/rulebook-to-sample/SKILL.md
-      - id: skill
-        path: .github/skills/rulebook-lifecycle/SKILL.md
-      - id: skill
-        path: .github/skills/rulebook-lifecycle-all/SKILL.md
+    deliverable:
+      id: skill-upsert-rulebook
+      path: .github/skills/upsert-rulebook/SKILL.md
+      native_id: upsert-rulebook
     done_criteria:
-      - |-
-        Skills セットが、単体実行と全体実行のワークフロー境界を明確に定義し、
-        参照先 instructions / prompts との整合が取れていること。
-  - id: WBS-AGT-PRM-030
-    name: Prompts セットの整備
-    description: |-
-      .github/prompts 配下の prompt ファイルを、
-      成果物カタログ「エージェントカスタマイズ（.github/）/ Prompts」と整合する形で整備する。
+      - 起動対象・入力・出力が定義され、参照先 instruction と整合していること。
+
+  - id: WBS-AGT-SKL-UPSERT-INSTRUCTION
+    name: upsert-instruction SKILL の整備
+    component: skills
+    deliverable:
+      id: skill-upsert-instruction
+      path: .github/skills/upsert-instruction/SKILL.md
+      native_id: upsert-instruction
+    done_criteria:
+      - 起動対象・入力・出力が定義され、参照先 instruction と整合していること。
+
+  - id: WBS-AGT-SKL-UPSERT-SAMPLE
+    name: upsert-sample SKILL の整備
+    component: skills
+    deliverable:
+      id: skill-upsert-sample
+      path: .github/skills/upsert-sample/SKILL.md
+      native_id: upsert-sample
+    done_criteria:
+      - 起動対象・入力・出力が定義され、参照先 instruction と整合していること。
+
+  - id: WBS-AGT-SKL-REVERSE-RULEBOOK
+    name: reverse-rulebook SKILL の整備
+    component: skills
+    deliverable:
+      id: skill-reverse-rulebook
+      path: .github/skills/reverse-rulebook/SKILL.md
+      native_id: reverse-rulebook
+    done_criteria:
+      - 起動対象・入力・出力が定義され、参照先 instruction と整合していること。
+
+  - id: WBS-AGT-SKL-SIMPLIFY
+    name: simplify SKILL の整備
+    component: skills
+    deliverable:
+      id: skill-simplify
+      path: .github/skills/simplify/SKILL.md
+      native_id: simplify
+    done_criteria:
+      - 起動対象・入力・出力が定義され、参照先 instruction と整合していること。
+
+  - id: WBS-AGT-PRM-UPSERT-RULEBOOK
+    name: upsert-rulebook.prompt.md の整備
     component: prompts
-    deliverables:
-      - id: upsert-rulebook
-        path: .github/prompts/upsert-rulebook.prompt.md
-      - id: upsert-instruction
-        path: .github/prompts/upsert-instruction.prompt.md
-      - id: upsert-all-instructions
-        path: .github/prompts/upsert-all-instructions.prompt.md
-      - id: upsert-changed-instructions
-        path: .github/prompts/upsert-changed-instructions.prompt.md
-      - id: upsert-last-commit-instructions
-        path: .github/prompts/upsert-last-commit-instructions.prompt.md
-      - id: upsert-test-instructions
-        path: .github/prompts/upsert-test-instructions.prompt.md
-      - id: upsert-nfr-instructions
-        path: .github/prompts/upsert-nfr-instructions.prompt.md
-      - id: upsert-migration-instructions
-        path: .github/prompts/upsert-migration-instructions.prompt.md
-      - id: rulebook-lifecycle
-        path: .github/prompts/rulebook-lifecycle.prompt.md
-      - id: rulebook-lifecycle-all
-        path: .github/prompts/rulebook-lifecycle-all.prompt.md
-      - id: reverse-rulebook
-        path: .github/prompts/reverse-rulebook.prompt.md
+    deliverable:
+      id: prm-upsert-rulebook
+      path: .github/prompts/upsert-rulebook.prompt.md
+      native_id: upsert-rulebook
     done_criteria:
-      - |-
-        Prompts セットが、起動対象 Skill・想定入力・出力形式を一貫して定義し、
-        カタログ上の Prompt 一覧と実体が一致していること。
-  - id: WBS-AGT-INT-040
-    name: カタログ整合性の確認
-    description: |-
-      プロジェクト成果物カタログと .github 配下成果物の対応を確認し、
-      追加・名称変更・廃止がある場合に差分を反映する。
+      - 起動対象 Skill・想定入力・出力形式が定義されていること。
+
+  - id: WBS-AGT-PRM-UPSERT-INSTRUCTION
+    name: upsert-instruction.prompt.md の整備
+    component: prompts
+    deliverable:
+      id: prm-upsert-instruction
+      path: .github/prompts/upsert-instruction.prompt.md
+      native_id: upsert-instruction
+    done_criteria:
+      - 起動対象 Skill・想定入力・出力形式が定義されていること。
+
+  - id: WBS-AGT-PRM-UPSERT-SAMPLE
+    name: upsert-sample.prompt.md の整備
+    component: prompts
+    deliverable:
+      id: prm-upsert-sample
+      path: .github/prompts/upsert-sample.prompt.md
+      native_id: upsert-sample
+    done_criteria:
+      - 起動対象 Skill・想定入力・出力形式が定義されていること。
+
+  - id: WBS-AGT-PRM-REVERSE-RULEBOOK
+    name: reverse-rulebook.prompt.md の整備
+    component: prompts
+    deliverable:
+      id: prm-reverse-rulebook
+      path: .github/prompts/reverse-rulebook.prompt.md
+      native_id: reverse-rulebook
+    done_criteria:
+      - 起動対象 Skill・想定入力・出力形式が定義されていること。
+
+  - id: WBS-AGT-INT-CATALOG
+    name: プロジェクト成果物カタログの整合確認
     component: governance
-    deliverables:
-      - id: prj-deliverables-catalog
-        path: docs/ja/projects/prj-0001/010-project-definition/030-prj-deliverables-catalog.md
-      - id: wbs-agent-customization
-        path: docs/ja/projects/prj-0001/030-project-management/030-wbs/wbs-agent-customization.yaml
+    deliverable:
+      id: prj-deliverables-catalog
+      path: docs/ja/projects/prj-0001/010-project-definition/030-prj-deliverables-catalog.md
     done_criteria:
-      - |-
-        成果物カタログと WBS の対応が保たれ、
-        エージェントカスタマイズ成果物の一覧に不足・重複・命名不整合がないこと。
+      - 成果物カタログのエージェントカスタマイズ一覧に不足・重複・命名不整合がないこと。
+
+  - id: WBS-AGT-INT-WBS
+    name: wbs-agent-customization.yaml の整合確認
+    component: governance
+    depends_on:
+      - prj-deliverables-catalog
+    deliverable:
+      id: wbs-agent-customization
+      path: docs/ja/projects/prj-0001/030-project-management/wbs/wbs-agent-customization.yaml
+    done_criteria:
+      - WBS とカタログの対応が保たれ、エージェントカスタマイズ成果物の一覧に不足・重複がないこと。

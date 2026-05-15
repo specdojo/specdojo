@@ -5,147 +5,281 @@ project_id: prj-0001
 domain: nfr
 assigned_team: specdojo
 wbs:
-  - id: WBS-NFR-INDEX-010
-    name: 非機能要件インデックスペアの整備
-    description: |-
-      非機能要件ドキュメントセットの共通構造を定義する NFR インデックスルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+  - id: WBS-NFR-INDEX-RULEBOOK
+    name: NFR インデックスルールブックの整備
     component: index
-    deliverables:
-      - id: nfr-index-rules
-        path: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
-      - id: nfr-index-instruction
-        path: docs/ja/specdojo/instructions/nfr-index-instruction.md
-      - id: nfr-index
-        path: docs/ja/specdojo/samples/nfr-index-sample.md
+    deliverable:
+      id: nfr-index-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
     done_criteria:
-      - |-
-        NFR インデックスルール・指示ペアが、共通インデックス構造・ 選定ロジック・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-AVAIL-020
-    name: 可用性要件ペアの整備
-    description: |-
-      可用性に特化した非機能要件ドキュメントの 可用性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - NFR インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-INDEX-INSTRUCTION
+    name: NFR インデックス instruction の整備
+    component: index
+    depends_on:
+      - nfr-index-rulebook
+    deliverable:
+      id: nfr-index-instruction
+      path: docs/ja/specdojo/instructions/nfr-index-instruction.md
+    done_criteria:
+      - NFR インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-INDEX-SAMPLE
+    name: NFR インデックス sample の整備
+    component: index
+    depends_on:
+      - nfr-index-instruction
+    deliverable:
+      id: nfr-index-sample
+      path: docs/ja/specdojo/samples/nfr-index-sample.md
+    done_criteria:
+      - NFR インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-AVAIL-RULEBOOK
+    name: 可用性 NFR ルールブックの整備
     component: availability
-    deliverables:
-      - id: nfr-availability-rules
-        path: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md
-      - id: nfr-availability
-        path: docs/ja/specdojo/instructions/nfr-availability-instruction.md
-      - id: nfr-availability
-        path: docs/ja/specdojo/samples/nfr-availability-sample.md
+    deliverable:
+      id: nfr-availability-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md
     done_criteria:
-      - |-
-        可用性 NFR ルール・指示ペアが、必須の可用性基準・エビデンス期待・ AIガイダンスを曖昧な閾値なく定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-INTEG-030
-    name: 完全性要件ペアの整備
-    description: |-
-      完全性に特化した非機能要件ドキュメントの 完全性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 可用性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-AVAIL-INSTRUCTION
+    name: 可用性 NFR instruction の整備
+    component: availability
+    depends_on:
+      - nfr-availability-rulebook
+    deliverable:
+      id: nfr-availability-instruction
+      path: docs/ja/specdojo/instructions/nfr-availability-instruction.md
+    done_criteria:
+      - 可用性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-AVAIL-SAMPLE
+    name: 可用性 NFR sample の整備
+    component: availability
+    depends_on:
+      - nfr-availability-instruction
+    deliverable:
+      id: nfr-availability-sample
+      path: docs/ja/specdojo/samples/nfr-availability-sample.md
+    done_criteria:
+      - 可用性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-INTEG-RULEBOOK
+    name: 完全性 NFR ルールブックの整備
     component: integrity
-    deliverables:
-      - id: nfr-integrity-rules
-        path: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
-      - id: nfr-integrity
-        path: docs/ja/specdojo/instructions/nfr-integrity-instruction.md
-      - id: nfr-integrity
-        path: docs/ja/specdojo/samples/nfr-integrity-sample.md
+    deliverable:
+      id: nfr-integrity-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
     done_criteria:
-      - |-
-        完全性 NFR ルール・指示ペアが、必須の完全性統制・ ドキュメントセクション・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-MAINT-040
-    name: 保守性要件ペアの整備
-    description: |-
-      保守性要件ドキュメントの 保守性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 完全性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-INTEG-INSTRUCTION
+    name: 完全性 NFR instruction の整備
+    component: integrity
+    depends_on:
+      - nfr-integrity-rulebook
+    deliverable:
+      id: nfr-integrity-instruction
+      path: docs/ja/specdojo/instructions/nfr-integrity-instruction.md
+    done_criteria:
+      - 完全性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-INTEG-SAMPLE
+    name: 完全性 NFR sample の整備
+    component: integrity
+    depends_on:
+      - nfr-integrity-instruction
+    deliverable:
+      id: nfr-integrity-sample
+      path: docs/ja/specdojo/samples/nfr-integrity-sample.md
+    done_criteria:
+      - 完全性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-MAINT-RULEBOOK
+    name: 保守性 NFR ルールブックの整備
     component: maintainability
-    deliverables:
-      - id: nfr-maintainability-rules
-        path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
-      - id: nfr-maintainability
-        path: docs/ja/specdojo/instructions/nfr-maintainability-instruction.md
-      - id: nfr-maintainability
-        path: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+    deliverable:
+      id: nfr-maintainability-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
     done_criteria:
-      - |-
-        保守性 NFR ルール・指示ペアが、測定可能な保守性期待・ 必須セクション・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-OPS-050
-    name: 運用性要件ペアの整備
-    description: |-
-      運用・可観測性に特化した非機能要件の 運用性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 保守性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-MAINT-INSTRUCTION
+    name: 保守性 NFR instruction の整備
+    component: maintainability
+    depends_on:
+      - nfr-maintainability-rulebook
+    deliverable:
+      id: nfr-maintainability-instruction
+      path: docs/ja/specdojo/instructions/nfr-maintainability-instruction.md
+    done_criteria:
+      - 保守性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-MAINT-SAMPLE
+    name: 保守性 NFR sample の整備
+    component: maintainability
+    depends_on:
+      - nfr-maintainability-instruction
+    deliverable:
+      id: nfr-maintainability-sample
+      path: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+    done_criteria:
+      - 保守性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-OPS-RULEBOOK
+    name: 運用性 NFR ルールブックの整備
     component: operations
-    deliverables:
-      - id: nfr-operations-rules
-        path: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
-      - id: nfr-operations
-        path: docs/ja/specdojo/instructions/nfr-operations-instruction.md
-      - id: nfr-operations
-        path: docs/ja/specdojo/samples/nfr-operations-sample.md
+    deliverable:
+      id: nfr-operations-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
     done_criteria:
-      - |-
-        運用性 NFR ルール・指示ペアが、運用制約・可観測性期待・ AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-PERF-060
-    name: 性能要件ペアの整備
-    description: |-
-      測定可能な性能要件ドキュメントの 性能 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 運用性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-OPS-INSTRUCTION
+    name: 運用性 NFR instruction の整備
+    component: operations
+    depends_on:
+      - nfr-operations-rulebook
+    deliverable:
+      id: nfr-operations-instruction
+      path: docs/ja/specdojo/instructions/nfr-operations-instruction.md
+    done_criteria:
+      - 運用性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-OPS-SAMPLE
+    name: 運用性 NFR sample の整備
+    component: operations
+    depends_on:
+      - nfr-operations-instruction
+    deliverable:
+      id: nfr-operations-sample
+      path: docs/ja/specdojo/samples/nfr-operations-sample.md
+    done_criteria:
+      - 運用性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-PERF-RULEBOOK
+    name: 性能 NFR ルールブックの整備
     component: performance
-    deliverables:
-      - id: nfr-performance-rules
-        path: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
-      - id: nfr-performance-instruction
-        path: docs/ja/specdojo/instructions/nfr-performance-instruction.md
-      - id: nfr-performance
-        path: docs/ja/specdojo/samples/nfr-performance-sample.md
+    deliverable:
+      id: nfr-performance-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
     done_criteria:
-      - |-
-        性能 NFR ルール・指示ペアが、測定可能な性能目標・ ワークロード前提・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-RELY-070
-    name: 信頼性要件ペアの整備
-    description: |-
-      障害対応・レジリエンス要件ドキュメントの 信頼性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 性能 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-PERF-INSTRUCTION
+    name: 性能 NFR instruction の整備
+    component: performance
+    depends_on:
+      - nfr-performance-rulebook
+    deliverable:
+      id: nfr-performance-instruction
+      path: docs/ja/specdojo/instructions/nfr-performance-instruction.md
+    done_criteria:
+      - 性能 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-PERF-SAMPLE
+    name: 性能 NFR sample の整備
+    component: performance
+    depends_on:
+      - nfr-performance-instruction
+    deliverable:
+      id: nfr-performance-sample
+      path: docs/ja/specdojo/samples/nfr-performance-sample.md
+    done_criteria:
+      - 性能 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-RELY-RULEBOOK
+    name: 信頼性 NFR ルールブックの整備
     component: reliability
-    deliverables:
-      - id: nfr-reliability-rules
-        path: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
-      - id: nfr-reliability
-        path: docs/ja/specdojo/instructions/nfr-reliability-instruction.md
-      - id: nfr-reliability
-        path: docs/ja/specdojo/samples/nfr-reliability-sample.md
+    deliverable:
+      id: nfr-reliability-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
     done_criteria:
-      - |-
-        信頼性 NFR ルール・指示ペアが、障害対応期待・エビデンス要件・ AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-SEC-080
-    name: セキュリティ・安全性要件ペアの整備
-    description: |-
-      脅威・統制・安全性に特化した要件ドキュメントの セキュリティ・安全性 NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - 信頼性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-RELY-INSTRUCTION
+    name: 信頼性 NFR instruction の整備
+    component: reliability
+    depends_on:
+      - nfr-reliability-rulebook
+    deliverable:
+      id: nfr-reliability-instruction
+      path: docs/ja/specdojo/instructions/nfr-reliability-instruction.md
+    done_criteria:
+      - 信頼性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-RELY-SAMPLE
+    name: 信頼性 NFR sample の整備
+    component: reliability
+    depends_on:
+      - nfr-reliability-instruction
+    deliverable:
+      id: nfr-reliability-sample
+      path: docs/ja/specdojo/samples/nfr-reliability-sample.md
+    done_criteria:
+      - 信頼性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-SEC-RULEBOOK
+    name: セキュリティ・安全性 NFR ルールブックの整備
     component: security-safety
-    deliverables:
-      - id: nfr-security-safety-rules
-        path: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
-      - id: nfr-security-safety
-        path: docs/ja/specdojo/instructions/nfr-security-safety-instruction.md
-      - id: nfr-security-safety
-        path: docs/ja/specdojo/samples/nfr-security-safety-sample.md
+    deliverable:
+      id: nfr-security-safety-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
     done_criteria:
-      - |-
-        セキュリティ・安全性 NFR ルール・指示ペアが、必須の脅威・ 統制・安全性カバレッジを具体的かつ監査可能なAIガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-NFR-USAB-090
-    name: ユーザビリティ要件ペアの整備
-    description: |-
-      ユーザー中心の非機能要件ドキュメントの ユーザビリティ NFR ルール・指示ペアを整備する（成果物カタログ「非機能要件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - セキュリティ・安全性 NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-SEC-INSTRUCTION
+    name: セキュリティ・安全性 NFR instruction の整備
+    component: security-safety
+    depends_on:
+      - nfr-security-safety-rulebook
+    deliverable:
+      id: nfr-security-safety-instruction
+      path: docs/ja/specdojo/instructions/nfr-security-safety-instruction.md
+    done_criteria:
+      - セキュリティ・安全性 NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-SEC-SAMPLE
+    name: セキュリティ・安全性 NFR sample の整備
+    component: security-safety
+    depends_on:
+      - nfr-security-safety-instruction
+    deliverable:
+      id: nfr-security-safety-sample
+      path: docs/ja/specdojo/samples/nfr-security-safety-sample.md
+    done_criteria:
+      - セキュリティ・安全性 NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-NFR-USAB-RULEBOOK
+    name: ユーザビリティ NFR ルールブックの整備
     component: usability
-    deliverables:
-      - id: nfr-usability-rules
-        path: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
-      - id: nfr-usability
-        path: docs/ja/specdojo/instructions/nfr-usability-instruction.md
-      - id: nfr-usability
-        path: docs/ja/specdojo/samples/nfr-usability-sample.md
+    deliverable:
+      id: nfr-usability-rulebook
+      path: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
     done_criteria:
-      - |-
-        ユーザビリティ NFR ルール・指示ペアが、ユーザー中心の基準・ 測定期待・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - ユーザビリティ NFR ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-USAB-INSTRUCTION
+    name: ユーザビリティ NFR instruction の整備
+    component: usability
+    depends_on:
+      - nfr-usability-rulebook
+    deliverable:
+      id: nfr-usability-instruction
+      path: docs/ja/specdojo/instructions/nfr-usability-instruction.md
+    done_criteria:
+      - ユーザビリティ NFR instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-NFR-USAB-SAMPLE
+    name: ユーザビリティ NFR sample の整備
+    component: usability
+    depends_on:
+      - nfr-usability-instruction
+    deliverable:
+      id: nfr-usability-sample
+      path: docs/ja/specdojo/samples/nfr-usability-sample.md
+    done_criteria:
+      - ユーザビリティ NFR sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。

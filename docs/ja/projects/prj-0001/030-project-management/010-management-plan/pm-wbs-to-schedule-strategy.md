@@ -273,7 +273,8 @@ Milestone は 0 日タスクの代替として使用します。
 
 ### 8.1. 原則
 
-- `depends_on` には、真に着手不能となる先行 Task または Milestone のみを記述します。
+- WBS Item に `depends_on` が記述されている場合は、対応する Task の `depends_on` の起点として参照します。
+- Schedule の `depends_on` には、真に着手不能となる先行 Task または Milestone のみを記述します。
 - 「参考にしたい」「先に見たい」程度の関係は依存にしません。
 - 依存は原則として Finish-to-Start として扱います。
 - 空の依存関係は `depends_on: []` と明示します。
@@ -553,7 +554,7 @@ tasks:
 5. `1 WBS Item = 1～3 Task` を目安に Task へ展開する
 6. Task の `id` を `T-<TRACK>-<SUBJECT>-<NNN>` 形式で採番する
 7. Task の `wbs` に対応する WBS Item ID を記述する
-8. 真に必要な依存だけを `depends_on` に記述する
+8. WBS Item の `depends_on` を参照し、対応する先行 Task ID に変換して Schedule の `depends_on` に記述する。WBS に記載のない依存でも着手不能な理由が明確な場合は追加してよい
 9. `duration_days` を 0 より大きい値で見積もる
 10. 必要に応じて Milestone を追加する
 11. ドメイン固有の展開判断は `Appendix B` に追記する

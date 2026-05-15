@@ -5,177 +5,542 @@ project_id: prj-0001
 domain: quality
 assigned_team: specdojo
 wbs:
-  - id: WBS-QLTY-SAC-010
-    name: システム受入条件ペアの整備
-    description: |-
-      システム受入条件ドキュメントとその境界定義の SAC ルール・指示ペアを整備する（成果物カタログ「システム受入条件」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+  - id: WBS-QLTY-SAC-RULEBOOK
+    name: SAC ルールブックの整備
     component: acceptance
-    deliverables:
-      - id: sac-rulebook
-        path: docs/ja/specdojo/rulebooks/sac-rulebook.md
-      - id: sac-instruction
-        path: docs/ja/specdojo/instructions/sac-instruction.md
-      - id: sac
-        path: docs/ja/specdojo/samples/sac-sample.md
+    deliverable:
+      id: sac-rulebook
+      path: docs/ja/specdojo/rulebooks/sac-rulebook.md
     done_criteria:
-      - |-
-        SAC ルール・指示ペアが、システム受入の必須コンテンツ・ 受入境界・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-TSP-020
-    name: テスト戦略・計画ペアの整備
-    description: |-
-      テスト戦略・レベル・全体計画構造を定義する TSP インデックスルール・指示ペアを整備する（成果物カタログ「テスト / テスト戦略・方針」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - SAC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-SAC-INSTRUCTION
+    name: SAC instruction の整備
+    component: acceptance
+    depends_on:
+      - sac-rulebook
+    deliverable:
+      id: sac-instruction
+      path: docs/ja/specdojo/instructions/sac-instruction.md
+    done_criteria:
+      - SAC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-SAC-SAMPLE
+    name: SAC sample の整備
+    component: acceptance
+    depends_on:
+      - sac-instruction
+    deliverable:
+      id: sac-sample
+      path: docs/ja/specdojo/samples/sac-sample.md
+    done_criteria:
+      - SAC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-TSP-INDEX-RULEBOOK
+    name: TSP インデックスルールブックの整備
     component: test-planning
-    deliverables:
-      - id: tsp-index-rules
-        path: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
-      - id: tsp-index-instruction
-        path: docs/ja/specdojo/instructions/tsp-index-instruction.md
-      - id: tsp-index
-        path: docs/ja/specdojo/samples/tsp-index-sample.md
+    deliverable:
+      id: tsp-index-rulebook
+      path: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
     done_criteria:
-      - |-
-        TSP インデックスルール・指示ペアが、テスト戦略コンテンツ・ レベル定義・AIガイダンスを定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-UTC-030
-    name: 単体テストドキュメントファミリーの整備
-    description: |-
-      単体テストカタログドキュメントの UTC インデックスおよび 詳細ドキュメントのルール・指示ファイルを整備する（成果物カタログ「テスト / 単体テスト」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - TSP インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-TSP-INDEX-INSTRUCTION
+    name: TSP インデックス instruction の整備
+    component: test-planning
+    depends_on:
+      - tsp-index-rulebook
+    deliverable:
+      id: tsp-index-instruction
+      path: docs/ja/specdojo/instructions/tsp-index-instruction.md
+    done_criteria:
+      - TSP インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-TSP-INDEX-SAMPLE
+    name: TSP インデックス sample の整備
+    component: test-planning
+    depends_on:
+      - tsp-index-instruction
+    deliverable:
+      id: tsp-index-sample
+      path: docs/ja/specdojo/samples/tsp-index-sample.md
+    done_criteria:
+      - TSP インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-UTC-INDEX-RULEBOOK
+    name: UTC インデックスルールブックの整備
     component: unit-tests
-    deliverables:
-      - id: utc-index-rules
-        path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
-      - id: utc-index-instruction
-        path: docs/ja/specdojo/instructions/utc-index-instruction.md
-      - id: utc-rules
-        path: docs/ja/specdojo/rulebooks/utc-rulebook.md
-      - id: utc-instruction
-        path: docs/ja/specdojo/instructions/utc-instruction.md
-      - id: utc-index
-        path: docs/ja/specdojo/samples/utc-index-sample.md
-      - id: utc
-        path: docs/ja/specdojo/samples/utc-sample.md
+    deliverable:
+      id: utc-index-rulebook
+      path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
     done_criteria:
-      - |-
-        UTC ファミリーが、単体テストのインデックスと詳細の要件を固定見出し・ テスト期待・AIガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-ITC-040
-    name: 結合テストドキュメントファミリーの整備
-    description: |-
-      内部結合テストカタログドキュメントの ITC インデックスおよび 詳細ドキュメントのルール・指示ファイルを整備する（成果物カタログ「テスト / 内部結合テスト」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - UTC インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-UTC-INDEX-INSTRUCTION
+    name: UTC インデックス instruction の整備
+    component: unit-tests
+    depends_on:
+      - utc-index-rulebook
+    deliverable:
+      id: utc-index-instruction
+      path: docs/ja/specdojo/instructions/utc-index-instruction.md
+    done_criteria:
+      - UTC インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-UTC-RULEBOOK
+    name: UTC ルールブックの整備
+    component: unit-tests
+    deliverable:
+      id: utc-rulebook
+      path: docs/ja/specdojo/rulebooks/utc-rulebook.md
+    done_criteria:
+      - UTC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-UTC-INSTRUCTION
+    name: UTC instruction の整備
+    component: unit-tests
+    depends_on:
+      - utc-rulebook
+    deliverable:
+      id: utc-instruction
+      path: docs/ja/specdojo/instructions/utc-instruction.md
+    done_criteria:
+      - UTC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-UTC-INDEX-SAMPLE
+    name: UTC インデックス sample の整備
+    component: unit-tests
+    depends_on:
+      - utc-index-instruction
+    deliverable:
+      id: utc-index-sample
+      path: docs/ja/specdojo/samples/utc-index-sample.md
+    done_criteria:
+      - UTC インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-UTC-SAMPLE
+    name: UTC sample の整備
+    component: unit-tests
+    depends_on:
+      - utc-instruction
+    deliverable:
+      id: utc-sample
+      path: docs/ja/specdojo/samples/utc-sample.md
+    done_criteria:
+      - UTC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ITC-INDEX-RULEBOOK
+    name: ITC インデックスルールブックの整備
     component: integration-tests
-    deliverables:
-      - id: itc-index-rules
-        path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
-      - id: itc-index-instruction
-        path: docs/ja/specdojo/instructions/itc-index-instruction.md
-      - id: itc-rules
-        path: docs/ja/specdojo/rulebooks/itc-rulebook.md
-      - id: itc-instruction
-        path: docs/ja/specdojo/instructions/itc-instruction.md
-      - id: itc-index
-        path: docs/ja/specdojo/samples/itc-index-sample.md
-      - id: itc
-        path: docs/ja/specdojo/samples/itc-sample.md
+    deliverable:
+      id: itc-index-rulebook
+      path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
     done_criteria:
-      - |-
-        ITC ファミリーが、インデックス・基準・詳細ドキュメントの期待を 明示的な必須コンテンツとAI指示で定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-ETC-050
-    name: 外部結合テストドキュメントファミリーの整備
-    description: |-
-      ETC インデックス・詳細ドキュメントのルール・指示ファイル、 および派生テスト設計・シナリオ指示を整備する（成果物カタログ「テスト / 外部結合テスト」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - ITC インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ITC-INDEX-INSTRUCTION
+    name: ITC インデックス instruction の整備
+    component: integration-tests
+    depends_on:
+      - itc-index-rulebook
+    deliverable:
+      id: itc-index-instruction
+      path: docs/ja/specdojo/instructions/itc-index-instruction.md
+    done_criteria:
+      - ITC インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ITC-RULEBOOK
+    name: ITC ルールブックの整備
+    component: integration-tests
+    deliverable:
+      id: itc-rulebook
+      path: docs/ja/specdojo/rulebooks/itc-rulebook.md
+    done_criteria:
+      - ITC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ITC-INSTRUCTION
+    name: ITC instruction の整備
+    component: integration-tests
+    depends_on:
+      - itc-rulebook
+    deliverable:
+      id: itc-instruction
+      path: docs/ja/specdojo/instructions/itc-instruction.md
+    done_criteria:
+      - ITC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ITC-INDEX-SAMPLE
+    name: ITC インデックス sample の整備
+    component: integration-tests
+    depends_on:
+      - itc-index-instruction
+    deliverable:
+      id: itc-index-sample
+      path: docs/ja/specdojo/samples/itc-index-sample.md
+    done_criteria:
+      - ITC インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ITC-SAMPLE
+    name: ITC sample の整備
+    component: integration-tests
+    depends_on:
+      - itc-instruction
+    deliverable:
+      id: itc-sample
+      path: docs/ja/specdojo/samples/itc-sample.md
+    done_criteria:
+      - ITC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETC-INDEX-RULEBOOK
+    name: ETC インデックスルールブックの整備
     component: external-tests
-    deliverables:
-      - id: etc-index-rules
-        path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
-      - id: etc-index-instruction
-        path: docs/ja/specdojo/instructions/etc-index-instruction.md
-      - id: etc-rules
-        path: docs/ja/specdojo/rulebooks/etc-rulebook.md
-      - id: etc-instruction
-        path: docs/ja/specdojo/instructions/etc-instruction.md
-      - id: etd-index-instruction
-        path: docs/ja/specdojo/instructions/etd-index-instruction.md
-      - id: etd-instruction
-        path: docs/ja/specdojo/instructions/etd-instruction.md
-      - id: ets-index-instruction
-        path: docs/ja/specdojo/instructions/ets-index-instruction.md
-      - id: ets-instruction
-        path: docs/ja/specdojo/instructions/ets-instruction.md
-      - id: etc-index
-        path: docs/ja/specdojo/samples/etc-index-sample.md
-      - id: etc
-        path: docs/ja/specdojo/samples/etc-sample.md
-      - id: etd-index-sample
-        path: docs/ja/specdojo/samples/etd-index-sample.md
-      - id: etd-sample
-        path: docs/ja/specdojo/samples/etd-sample.md
-      - id: ets-index-sample
-        path: docs/ja/specdojo/samples/ets-index-sample.md
-      - id: ets-sample
-        path: docs/ja/specdojo/samples/ets-sample.md
+    deliverable:
+      id: etc-index-rulebook
+      path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
     done_criteria:
-      - |-
-        ETC ファミリーが、外部テストのルールセットとすべての派生指示テンプレートを 整合した構造・スコープ配分・AI執筆ガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-STC-060
-    name: システムテストドキュメントファミリーの整備
-    description: |-
-      システムテストカタログドキュメントの STC インデックスおよび 詳細ドキュメントのルール・指示ファイルを整備する（成果物カタログ「テスト / 総合テスト」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - ETC インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETC-INDEX-INSTRUCTION
+    name: ETC インデックス instruction の整備
+    component: external-tests
+    depends_on:
+      - etc-index-rulebook
+    deliverable:
+      id: etc-index-instruction
+      path: docs/ja/specdojo/instructions/etc-index-instruction.md
+    done_criteria:
+      - ETC インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETC-RULEBOOK
+    name: ETC ルールブックの整備
+    component: external-tests
+    deliverable:
+      id: etc-rulebook
+      path: docs/ja/specdojo/rulebooks/etc-rulebook.md
+    done_criteria:
+      - ETC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETC-INSTRUCTION
+    name: ETC instruction の整備
+    component: external-tests
+    depends_on:
+      - etc-rulebook
+    deliverable:
+      id: etc-instruction
+      path: docs/ja/specdojo/instructions/etc-instruction.md
+    done_criteria:
+      - ETC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETD-INDEX-INSTRUCTION
+    name: ETD インデックス instruction の整備
+    component: external-tests
+    deliverable:
+      id: etd-index-instruction
+      path: docs/ja/specdojo/instructions/etd-index-instruction.md
+    done_criteria:
+      - ETD インデックス instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETD-INSTRUCTION
+    name: ETD instruction の整備
+    component: external-tests
+    depends_on:
+      - etd-index-instruction
+    deliverable:
+      id: etd-instruction
+      path: docs/ja/specdojo/instructions/etd-instruction.md
+    done_criteria:
+      - ETD instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETS-INDEX-INSTRUCTION
+    name: ETS インデックス instruction の整備
+    component: external-tests
+    deliverable:
+      id: ets-index-instruction
+      path: docs/ja/specdojo/instructions/ets-index-instruction.md
+    done_criteria:
+      - ETS インデックス instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETS-INSTRUCTION
+    name: ETS instruction の整備
+    component: external-tests
+    depends_on:
+      - ets-index-instruction
+    deliverable:
+      id: ets-instruction
+      path: docs/ja/specdojo/instructions/ets-instruction.md
+    done_criteria:
+      - ETS instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ETC-INDEX-SAMPLE
+    name: ETC インデックス sample の整備
+    component: external-tests
+    depends_on:
+      - etc-index-instruction
+    deliverable:
+      id: etc-index-sample
+      path: docs/ja/specdojo/samples/etc-index-sample.md
+    done_criteria:
+      - ETC インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETC-SAMPLE
+    name: ETC sample の整備
+    component: external-tests
+    depends_on:
+      - etc-instruction
+    deliverable:
+      id: etc-sample
+      path: docs/ja/specdojo/samples/etc-sample.md
+    done_criteria:
+      - ETC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETD-INDEX-SAMPLE
+    name: ETD インデックス sample の整備
+    component: external-tests
+    depends_on:
+      - etd-index-instruction
+    deliverable:
+      id: etd-index-sample
+      path: docs/ja/specdojo/samples/etd-index-sample.md
+    done_criteria:
+      - ETD インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETD-SAMPLE
+    name: ETD sample の整備
+    component: external-tests
+    depends_on:
+      - etd-instruction
+    deliverable:
+      id: etd-sample
+      path: docs/ja/specdojo/samples/etd-sample.md
+    done_criteria:
+      - ETD sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETS-INDEX-SAMPLE
+    name: ETS インデックス sample の整備
+    component: external-tests
+    depends_on:
+      - ets-index-instruction
+    deliverable:
+      id: ets-index-sample
+      path: docs/ja/specdojo/samples/ets-index-sample.md
+    done_criteria:
+      - ETS インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ETS-SAMPLE
+    name: ETS sample の整備
+    component: external-tests
+    depends_on:
+      - ets-instruction
+    deliverable:
+      id: ets-sample
+      path: docs/ja/specdojo/samples/ets-sample.md
+    done_criteria:
+      - ETS sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-STC-INDEX-RULEBOOK
+    name: STC インデックスルールブックの整備
     component: system-tests
-    deliverables:
-      - id: stc-index-rules
-        path: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
-      - id: stc-index-instruction
-        path: docs/ja/specdojo/instructions/stc-index-instruction.md
-      - id: stc-rules
-        path: docs/ja/specdojo/rulebooks/stc-rulebook.md
-      - id: stc-instruction
-        path: docs/ja/specdojo/instructions/stc-instruction.md
-      - id: stc-index
-        path: docs/ja/specdojo/samples/stc-index-sample.md
-      - id: stc
-        path: docs/ja/specdojo/samples/stc-sample.md
+    deliverable:
+      id: stc-index-rulebook
+      path: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
     done_criteria:
-      - |-
-        STC ファミリーが、インデックスと詳細ドキュメントの構造を統一用語と AI生成ガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
-  - id: WBS-QLTY-ATC-070
-    name: 受入テストドキュメントファミリーの整備
-    description: |-
-      ATC インデックス・詳細ドキュメントのルール・指示ファイル、 および派生テスト設計・シナリオ指示を整備する（成果物カタログ「テスト / 受入テスト」）。
-      Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - STC インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-STC-INDEX-INSTRUCTION
+    name: STC インデックス instruction の整備
+    component: system-tests
+    depends_on:
+      - stc-index-rulebook
+    deliverable:
+      id: stc-index-instruction
+      path: docs/ja/specdojo/instructions/stc-index-instruction.md
+    done_criteria:
+      - STC インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-STC-RULEBOOK
+    name: STC ルールブックの整備
+    component: system-tests
+    deliverable:
+      id: stc-rulebook
+      path: docs/ja/specdojo/rulebooks/stc-rulebook.md
+    done_criteria:
+      - STC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-STC-INSTRUCTION
+    name: STC instruction の整備
+    component: system-tests
+    depends_on:
+      - stc-rulebook
+    deliverable:
+      id: stc-instruction
+      path: docs/ja/specdojo/instructions/stc-instruction.md
+    done_criteria:
+      - STC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-STC-INDEX-SAMPLE
+    name: STC インデックス sample の整備
+    component: system-tests
+    depends_on:
+      - stc-index-instruction
+    deliverable:
+      id: stc-index-sample
+      path: docs/ja/specdojo/samples/stc-index-sample.md
+    done_criteria:
+      - STC インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-STC-SAMPLE
+    name: STC sample の整備
+    component: system-tests
+    depends_on:
+      - stc-instruction
+    deliverable:
+      id: stc-sample
+      path: docs/ja/specdojo/samples/stc-sample.md
+    done_criteria:
+      - STC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATC-INDEX-RULEBOOK
+    name: ATC インデックスルールブックの整備
     component: acceptance-tests
-    deliverables:
-      - id: atc-index-rules
-        path: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
-      - id: atc-index-instruction
-        path: docs/ja/specdojo/instructions/atc-index-instruction.md
-      - id: atc-rules
-        path: docs/ja/specdojo/rulebooks/atc-rulebook.md
-      - id: atc-instruction
-        path: docs/ja/specdojo/instructions/atc-instruction.md
-      - id: atd-index-instruction
-        path: docs/ja/specdojo/instructions/atd-index-instruction.md
-      - id: atd-instruction
-        path: docs/ja/specdojo/instructions/atd-instruction.md
-      - id: ats-index-instruction
-        path: docs/ja/specdojo/instructions/ats-index-instruction.md
-      - id: ats-instruction
-        path: docs/ja/specdojo/instructions/ats-instruction.md
-      - id: atc-index
-        path: docs/ja/specdojo/samples/atc-index-sample.md
-      - id: atc
-        path: docs/ja/specdojo/samples/atc-sample.md
-      - id: atd-index-sample
-        path: docs/ja/specdojo/samples/atd-index-sample.md
-      - id: atd-sample
-        path: docs/ja/specdojo/samples/atd-sample.md
-      - id: ats-index-sample
-        path: docs/ja/specdojo/samples/ats-index-sample.md
-      - id: ats-sample
-        path: docs/ja/specdojo/samples/ats-sample.md
+    deliverable:
+      id: atc-index-rulebook
+      path: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
     done_criteria:
-      - |-
-        ATC ファミリーが、受入テストのルールセットとすべての派生指示テンプレートを 一貫したスコープ分割・必須セクション・AIガイダンスで定義していること。 Agent-Ultra前提: 中間承認は省略可能とし、最終承認で rules/instruction/sample を一括で ready 化する。
+      - ATC インデックスルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATC-INDEX-INSTRUCTION
+    name: ATC インデックス instruction の整備
+    component: acceptance-tests
+    depends_on:
+      - atc-index-rulebook
+    deliverable:
+      id: atc-index-instruction
+      path: docs/ja/specdojo/instructions/atc-index-instruction.md
+    done_criteria:
+      - ATC インデックス instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATC-RULEBOOK
+    name: ATC ルールブックの整備
+    component: acceptance-tests
+    deliverable:
+      id: atc-rulebook
+      path: docs/ja/specdojo/rulebooks/atc-rulebook.md
+    done_criteria:
+      - ATC ルールブックが必須章構成・禁止事項を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATC-INSTRUCTION
+    name: ATC instruction の整備
+    component: acceptance-tests
+    depends_on:
+      - atc-rulebook
+    deliverable:
+      id: atc-instruction
+      path: docs/ja/specdojo/instructions/atc-instruction.md
+    done_criteria:
+      - ATC instruction が対応 rulebook と整合し、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATD-INDEX-INSTRUCTION
+    name: ATD インデックス instruction の整備
+    component: acceptance-tests
+    deliverable:
+      id: atd-index-instruction
+      path: docs/ja/specdojo/instructions/atd-index-instruction.md
+    done_criteria:
+      - ATD インデックス instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATD-INSTRUCTION
+    name: ATD instruction の整備
+    component: acceptance-tests
+    depends_on:
+      - atd-index-instruction
+    deliverable:
+      id: atd-instruction
+      path: docs/ja/specdojo/instructions/atd-instruction.md
+    done_criteria:
+      - ATD instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATS-INDEX-INSTRUCTION
+    name: ATS インデックス instruction の整備
+    component: acceptance-tests
+    deliverable:
+      id: ats-index-instruction
+      path: docs/ja/specdojo/instructions/ats-index-instruction.md
+    done_criteria:
+      - ATS インデックス instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATS-INSTRUCTION
+    name: ATS instruction の整備
+    component: acceptance-tests
+    depends_on:
+      - ats-index-instruction
+    deliverable:
+      id: ats-instruction
+      path: docs/ja/specdojo/instructions/ats-instruction.md
+    done_criteria:
+      - ATS instruction が必須章構成を満たし、npm run -s lint:md が通ること。
+
+  - id: WBS-QLTY-ATC-INDEX-SAMPLE
+    name: ATC インデックス sample の整備
+    component: acceptance-tests
+    depends_on:
+      - atc-index-instruction
+    deliverable:
+      id: atc-index-sample
+      path: docs/ja/specdojo/samples/atc-index-sample.md
+    done_criteria:
+      - ATC インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATC-SAMPLE
+    name: ATC sample の整備
+    component: acceptance-tests
+    depends_on:
+      - atc-instruction
+    deliverable:
+      id: atc-sample
+      path: docs/ja/specdojo/samples/atc-sample.md
+    done_criteria:
+      - ATC sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATD-INDEX-SAMPLE
+    name: ATD インデックス sample の整備
+    component: acceptance-tests
+    depends_on:
+      - atd-index-instruction
+    deliverable:
+      id: atd-index-sample
+      path: docs/ja/specdojo/samples/atd-index-sample.md
+    done_criteria:
+      - ATD インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATD-SAMPLE
+    name: ATD sample の整備
+    component: acceptance-tests
+    depends_on:
+      - atd-instruction
+    deliverable:
+      id: atd-sample
+      path: docs/ja/specdojo/samples/atd-sample.md
+    done_criteria:
+      - ATD sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATS-INDEX-SAMPLE
+    name: ATS インデックス sample の整備
+    component: acceptance-tests
+    depends_on:
+      - ats-index-instruction
+    deliverable:
+      id: ats-index-sample
+      path: docs/ja/specdojo/samples/ats-index-sample.md
+    done_criteria:
+      - ATS インデックス sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
+
+  - id: WBS-QLTY-ATS-SAMPLE
+    name: ATS sample の整備
+    component: acceptance-tests
+    depends_on:
+      - ats-instruction
+    deliverable:
+      id: ats-sample
+      path: docs/ja/specdojo/samples/ats-sample.md
+    done_criteria:
+      - ATS sample が instruction の要件を満たし、npm run -s lint:md と docs:build が通ること。
