@@ -10,15 +10,6 @@ function resolveBasePath(parentBase: string, childBase: string | undefined): str
   return parentBase ? `${parentBase}/${childBase}` : childBase
 }
 
-// If note matches "ID は <pattern> 形式", use <pattern> as display local_id
-function displayLocalId(item: DctDeliverableItem): string {
-  if (item.note) {
-    const m = item.note.match(/^ID は (\S+) 形式/)
-    if (m) return m[1]
-  }
-  return item.local_id
-}
-
 function formatDependsOn(deps: string[] | undefined): string {
   if (!deps || deps.length === 0) return '-'
   return deps.map(d => `\`${d}\``).join(', ')
@@ -29,7 +20,7 @@ function renderTable(deliverables: DctDeliverableItem[]): string[] {
   lines.push('| local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |')
   lines.push('| --- | --- | --- | --- | --- | --- |')
   for (const item of deliverables) {
-    const localId = `\`${displayLocalId(item)}\``
+    const localId = `\`${item.local_id}\``
     const artifact = item.artifact_code ? `\`${item.artifact_code}\`` : '-'
     const deps = formatDependsOn(item.depends_on)
     lines.push(

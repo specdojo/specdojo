@@ -43,7 +43,7 @@ WBS への落とし込み対象外。
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
 | `pjr-index` | `CTLIND` | プロジェクト登録簿 | control | - | 識別済み検討項目と対応策を管理（台帳） |
-| `pjr-<NNNN>-<term>` | `CTLITM` | プロジェクト登録項目 | control | `pjr-index` | 識別済み検討項目と対応策を管理（個別課題） |
+| `pjr-NNNN-TERM` | `CTLITM` | プロジェクト登録項目 | control | `pjr-index` | 識別済み検討項目と対応策を管理（個別課題） |
 
 ## 4. 管理台帳補助ビュー
 
@@ -53,10 +53,10 @@ WBS への落とし込み対象外。
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
-| `pjr-open-items` | `CTLOI` | 未完了項目一覧 | generated | `pjr-index`, `pjr-item` | プロジェクト登録簿の未完了項目を一覧化 |
-| `pjr-by-owner` | `CTLOB` | 担当者別一覧 | generated | `pjr-index`, `pjr-item` | プロジェクト登録簿の担当者別項目を一覧化 |
-| `pjr-by-priority` | `CTLPR` | 優先度別一覧 | generated | `pjr-index`, `pjr-item` | プロジェクト登録簿の優先度別項目を一覧化 |
-| `pjr-by-status` | `CTLST` | 状態別一覧 | generated | `pjr-index`, `pjr-item` | プロジェクト登録簿の状態別項目を一覧化 |
+| `pjr-open-items` | `CTLOI` | 未完了項目一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の未完了項目を一覧化 |
+| `pjr-by-owner` | `CTLOB` | 担当者別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の担当者別項目を一覧化 |
+| `pjr-by-priority` | `CTLPR` | 優先度別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の優先度別項目を一覧化 |
+| `pjr-by-status` | `CTLST` | 状態別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の状態別項目を一覧化 |
 
 ## 5. 管理ビュー
 
@@ -66,10 +66,10 @@ WBS への落とし込み対象外。
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
-| `pm-risk-register` | `CTLRSK` | リスク登録簿 | generated | `pjr-item` | 識別済みリスクと対応策を管理 |
-| `pm-issue-log` | `CTLISS` | 課題ログ | generated | `pjr-item` | 発生した課題と対応状況を管理 |
-| `pm-change-request-log` | `CTLCRQ` | 変更要求ログ | generated | `pjr-item` | 変更要求の申請・審査・決定を管理 |
-| `pm-decision-log` | `CTLDEC` | 決定記録 | generated | `pjr-item` | プロジェクト上の意思決定とその根拠を記録 |
+| `pm-risk-register` | `CTLRSK` | リスク登録簿 | generated | `pjr-NNNN-TERM` | 識別済みリスクと対応策を管理 |
+| `pm-issue-log` | `CTLISS` | 課題ログ | generated | `pjr-NNNN-TERM` | 発生した課題と対応状況を管理 |
+| `pm-change-request-log` | `CTLCRQ` | 変更要求ログ | generated | `pjr-NNNN-TERM` | 変更要求の申請・審査・決定を管理 |
+| `pm-decision-log` | `CTLDEC` | 決定記録 | generated | `pjr-NNNN-TERM` | プロジェクト上の意思決定とその根拠を記録 |
 
 ## 6. WBS
 
@@ -102,7 +102,7 @@ WBS への落とし込み対象外。
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
-| `pr-<yyyy-mm-dd>` | `PR` | 進捗報告 | control | - | 定期的な進捗状況の報告 |
+| `pr-YYYY-MM-DD` | `PR` | 進捗報告 | control | - | 定期的な進捗状況の報告 |
 
 ### 8.2. 議事録
 
@@ -110,4 +110,4 @@ WBS への落とし込み対象外。
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
-| `mm-<yyyy-mm-dd>` | `MM` | 議事録 | control | - | 会議の決定事項・アクションを記録 |
+| `mm-YYYY-MM-DD` | `MM` | 議事録 | control | - | 会議の決定事項・アクションを記録 |

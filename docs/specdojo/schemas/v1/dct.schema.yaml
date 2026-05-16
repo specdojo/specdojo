@@ -129,11 +129,12 @@ $defs:
     properties:
       local_id:
         type: string
-        pattern: "^[a-z0-9][a-z0-9-]*$"
+        pattern: "^[a-z0-9][a-zA-Z0-9-]*$"
         description: >
-          Deliverable logical name. Lowercase alphanumeric and hyphens only.
-          Template patterns with angle brackets (e.g., pjr-<NNNN>-<term>) are
-          not validated by this schema; use the note field to document them.
+          Deliverable logical name. Starts with lowercase or digit; subsequent
+          characters may be lowercase, uppercase, digits, or hyphens.
+          Use uppercase to mark template placeholders
+          (e.g., pjr-NNNN-TERM, mm-YYYY-MM-DD).
 
       artifact_code:
         type: string
