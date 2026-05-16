@@ -1,0 +1,350 @@
+id: prj-0001:dct-project-management
+type: project
+status: draft
+part_of:
+  - prj-0001:dct-index
+project_id: prj-0001
+domain: project-management
+domain_code: PJM
+base_path: /docs/ja/projects/prj-0001/030-project-management
+
+groups:
+
+  - name: 管理計画
+    base_path: 010-management-plan
+    deliverables:
+      - local_id: pm-plan
+        artifact: PLAN
+        name: プロジェクト管理計画
+        kind: work
+        depends_on: []
+        overview: プロジェクト全体の管理方針・プロセスを定義
+        path: pm-plan.md
+        done_criteria:
+          - PO がプロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
+          - BA が業務プロセスとの整合を確認できること
+          - ARC が構成管理・技術的負債管理など技術管理上の観点が含まれていることを確認できること
+          - QE がレビュー方針・品質基準への参照を確認できること
+
+      - local_id: pm-communication-plan
+        artifact: COMM
+        name: コミュニケーション計画
+        kind: work
+        depends_on:
+          - pm-plan
+        overview: 報告・連絡・会議体の計画を定義
+        path: pm-communication-plan.md
+        done_criteria:
+          - PO が報告・連絡・会議体の計画を承認できる粒度で記述されていること
+          - BA が業務観点のコミュニケーション要件が含まれていることを確認できること
+          - ARC が技術チームへの連絡経路が識別されていることを確認できること
+          - QE が品質関連の報告経路が確認できること
+
+      - local_id: pm-quality-management-plan
+        artifact: QLTY
+        name: 品質管理計画
+        kind: work
+        depends_on:
+          - pm-plan
+        overview: 品質目標・レビュー方針・品質基準を定義
+        path: pm-quality-management-plan.md
+        done_criteria:
+          - PO が品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
+          - BA が業務品質基準との整合を確認できること
+          - ARC がコードレビュー・設計レビューなど技術品質基準が含まれていることを確認できること
+          - QE が実施可能な検証・レビュー手順が記述されていることを確認できること
+
+  - name: 組織体制
+    base_path: 020-organization
+    deliverables:
+      - local_id: pm-organization
+        artifact: ORG
+        name: 組織定義
+        kind: work
+        depends_on:
+          - prj-overview
+        overview: ロール・責務境界・兼務方針・意思決定責任を定義
+        path: pm-organization.md
+        done_criteria:
+          - PO がロール・責務境界・意思決定責任を承認できる粒度で記述されていること
+          - BA が業務担当者のロールと責務が識別されていることを確認できること
+          - ARC が技術チームのロールと責務が識別されていることを確認できること
+          - QE が品質保証に関わるロールと責務が識別されていることを確認できること
+
+      - local_id: pm-roles
+        artifact: ROLE
+        name: ロール定義
+        kind: work
+        depends_on:
+          - pm-organization
+        overview: 採用 Role code を machine-readable な YAML として一覧化する
+        path: pm-roles.yaml
+        done_criteria:
+          - PO が採用ロールコードの一覧を承認できること
+          - BA が業務ロールが網羅されていることを確認できること
+          - ARC が技術ロールが網羅されていることを確認できること
+          - QE が QE ロールが明確に定義されていることを確認できること
+
+      - local_id: pm-members
+        artifact: MBR
+        name: メンバー定義
+        kind: work
+        depends_on:
+          - pm-organization
+          - pm-roles
+        overview: yaml で実行主体（人間・agent）とロール対応を定義
+        path: pm-members.yaml
+        done_criteria:
+          - PO が実行主体（人間・agent）とロール対応を承認できること
+          - BA が業務担当者の割り当てが確認できること
+          - ARC が技術担当者の割り当てが確認できること
+          - QE が QE 担当者の割り当てが確認できること
+
+      - local_id: pm-raci
+        artifact: RACI
+        name: RACI
+        kind: work
+        depends_on:
+          - pm-organization
+        overview: 成果物・プロセスごとの責任分担マトリクスを定義（中規模以上）
+        path: pm-raci.md
+        done_criteria:
+          - PO が成果物・プロセスごとの責任分担マトリクスを承認できること
+          - BA が業務観点での責任分担が確認できること
+          - ARC が技術観点での責任分担が確認できること
+          - QE が品質観点での責任分担が確認できること
+
+  - name: 管理台帳
+    base_path: controls/project-register
+    note: WBS への落とし込み対象外。
+    deliverables:
+      - local_id: pjr-index
+        artifact: CTLIND
+        name: プロジェクト登録簿
+        kind: control
+        depends_on: []
+        overview: 識別済み検討項目と対応策を管理（台帳）
+        path: pjr-index.md
+
+      - local_id: pjr-item
+        artifact: CTLITM
+        name: プロジェクト登録項目
+        kind: control
+        depends_on:
+          - pjr-index
+        overview: 識別済み検討項目と対応策を管理（個別課題）
+        note: "ID は pjr-<NNNN>-<term> 形式。NNNN は4桁連番、term は件名の略称（kebab-case）"
+
+  - name: 管理台帳補助ビュー
+    base_path: controls/project-register/generated
+    note: WBS への落とし込み対象外。
+    deliverables:
+      - local_id: pjr-open-items
+        artifact: CTLOI
+        name: 未完了項目一覧
+        kind: generated
+        depends_on:
+          - pjr-index
+          - pjr-item
+        overview: プロジェクト登録簿の未完了項目を一覧化
+        path: pjr-open-items.md
+
+      - local_id: pjr-by-owner
+        artifact: CTLOB
+        name: 担当者別一覧
+        kind: generated
+        depends_on:
+          - pjr-index
+          - pjr-item
+        overview: プロジェクト登録簿の担当者別項目を一覧化
+        path: pjr-by-owner.md
+
+      - local_id: pjr-by-priority
+        artifact: CTLPR
+        name: 優先度別一覧
+        kind: generated
+        depends_on:
+          - pjr-index
+          - pjr-item
+        overview: プロジェクト登録簿の優先度別項目を一覧化
+        path: pjr-by-priority.md
+
+      - local_id: pjr-by-status
+        artifact: CTLST
+        name: 状態別一覧
+        kind: generated
+        depends_on:
+          - pjr-index
+          - pjr-item
+        overview: プロジェクト登録簿の状態別項目を一覧化
+        path: pjr-by-status.md
+
+  - name: 管理ビュー
+    base_path: controls/generated
+    note: WBS への落とし込み対象外。
+    deliverables:
+      - local_id: pm-risk-register
+        artifact: CTLRSK
+        name: リスク登録簿
+        kind: generated
+        depends_on:
+          - pjr-item
+        overview: 識別済みリスクと対応策を管理
+        path: pm-risk-register.md
+
+      - local_id: pm-issue-log
+        artifact: CTLISS
+        name: 課題ログ
+        kind: generated
+        depends_on:
+          - pjr-item
+        overview: 発生した課題と対応状況を管理
+        path: pm-issue-log.md
+
+      - local_id: pm-change-request-log
+        artifact: CTLCRQ
+        name: 変更要求ログ
+        kind: generated
+        depends_on:
+          - pjr-item
+        overview: 変更要求の申請・審査・決定を管理
+        path: pm-change-request-log.md
+
+      - local_id: pm-decision-log
+        artifact: CTLDEC
+        name: 決定記録
+        kind: generated
+        depends_on:
+          - pjr-item
+        overview: プロジェクト上の意思決定とその根拠を記録
+        path: pm-decision-log.md
+
+  - name: WBS
+    base_path: wbs
+    deliverables:
+      - local_id: wbs-project-management
+        artifact: WBSPJM
+        name: WBS 定義（プロジェクト管理）
+        kind: work
+        depends_on: []
+        overview: プロジェクトマネジメント成果物作成の作業分解構造を YAML で定義
+        path: wbs-project-management.yaml
+        done_criteria:
+          - PO が管理対象成果物のスコープと完了条件を承認できること
+          - BA が成果物の網羅性・整合性を確認できること
+          - ARC が validate:schema を通過していることを確認できること
+          - QE が完了条件の検証可能性を確認できること
+
+      - local_id: wbs-project-definition
+        artifact: WBSPJD
+        name: WBS 定義（プロジェクト定義）
+        kind: work
+        depends_on: []
+        overview: プロジェクト定義成果物作成の作業分解構造を YAML で定義
+        path: wbs-project-definition.yaml
+        done_criteria:
+          - PO が管理対象成果物のスコープと完了条件を承認できること
+          - BA が成果物の網羅性・整合性を確認できること
+          - ARC が validate:schema を通過していることを確認できること
+          - QE が完了条件の検証可能性を確認できること
+
+  - name: スケジュール
+    base_path: schedule
+    deliverables:
+      - local_id: sch-milestones
+        artifact: SCHMS
+        name: マイルストーン定義
+        kind: work
+        depends_on: []
+        overview: プロジェクト全体のマイルストーンを定義
+        path: sch-milestones.yaml
+        done_criteria:
+          - PO がプロジェクト全体のマイルストーンを承認できること
+          - BA がビジネスマイルストーンが含まれていることを確認できること
+          - ARC が技術マイルストーンが含まれていることを確認できること
+          - QE が品質ゲートが含まれていることを確認できること
+
+      - local_id: sch-defaults
+        artifact: SCHDEF
+        name: スケジュールデフォルト定義
+        kind: work
+        depends_on:
+          - wbs-project-management
+          - wbs-project-definition
+        overview: スケジュールのデフォルト設定を定義
+        path: sch-defaults.yaml
+        done_criteria:
+          - PO がカレンダー・開始日などのデフォルト設定を承認できること
+          - BA が業務稼働日・休日設定が確認できること
+          - ARC が validate:schema を通過していることを確認できること
+          - QE が設定値の妥当性を確認できること
+
+      - local_id: sch-track-launch
+        artifact: SCHTLNCH
+        name: Launch スケジュール定義
+        kind: work
+        depends_on:
+          - wbs-project-management
+          - wbs-project-definition
+        overview: Launch フェーズの詳細スケジュールを定義
+        path: sch-track-launch.yaml
+        done_criteria:
+          - PO が Launch フェーズのタスク・マイルストーン計画を承認できること
+          - BA がビジネスタスクの順序・依存関係が確認できること
+          - ARC が技術タスクのスコープと順序が確認できること
+          - QE が品質ゲート・レビュータスクが含まれていることを確認できること
+
+      - local_id: sch-config-launch
+        artifact: SCHCFG
+        name: Launch スケジュール設定
+        kind: work
+        depends_on:
+          - wbs-project-management
+          - wbs-project-definition
+        overview: Launch フェーズの詳細スケジュールの設定を定義
+        path: sch-config-launch.yaml
+        done_criteria:
+          - PO が担当チーム・エージェントモードなどトラック設定を承認できること
+          - BA が担当割り当てが確認できること
+          - ARC が validate:schema を通過していることを確認できること
+          - QE が設定値の妥当性を確認できること
+
+      - local_id: sch-agent-overrides-launch
+        artifact: SCHAOV
+        name: Launch スケジュールエージェント上書き設定
+        kind: work
+        depends_on:
+          - wbs-project-management
+          - wbs-project-definition
+        overview: Launch フェーズの詳細スケジュールのエージェント上書き設定を定義
+        path: sch-agent-overrides-launch.yaml
+        done_criteria:
+          - PO が例外的なエージェントモード上書き設定を承認できること
+          - BA が手動確認が必要なタスクが識別されていることを確認できること
+          - ARC が validate:schema を通過していることを確認できること
+          - QE が品質関連タスクのエージェントモードが適切であることを確認できること
+
+  - name: レポート
+    note: WBS への落とし込み対象外。
+    groups:
+      - name: 進捗報告
+        base_path: reporting/progress-reports
+        deliverables:
+          - local_id: pr-item
+            artifact: PR
+            name: 進捗報告
+            kind: control
+            depends_on: []
+            overview: 定期的な進捗状況の報告
+            note: "ID は pr-<yyyy-mm-dd> 形式。yyyy-mm-dd は報告日"
+
+      - name: 議事録
+        base_path: reporting/meeting-minutes
+        deliverables:
+          - local_id: mm-item
+            artifact: MM
+            name: 議事録
+            kind: control
+            depends_on: []
+            overview: 会議の決定事項・アクションを記録
+            note: "ID は mm-<yyyy-mm-dd> 形式。yyyy-mm-dd は会議日"
