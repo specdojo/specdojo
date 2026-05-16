@@ -12,11 +12,11 @@ Deliverable Metadata Standard
 
 ## 1. 適用範囲
 
-- 対象: `project` / `screen` / `api` / `domain` / `data` / `test` / `flow` / `rule` / `architecture` / `decision` / `meta` / `guide` / `migration` / `operations` / `template`
+- 対象: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template` / `sample`
 - 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
-補足: `standard` は handbook 共通標準用の種別であり、[docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml](../../../specdojo/schemas/v1/standard-frontmatter.schema.yaml) を使用する。
+補足: `rulebook` / `instruction` / `guide` / `standard` は専用スキーマを持つため本標準の対象外とする。
 
 ## 2. 必須項目
 
