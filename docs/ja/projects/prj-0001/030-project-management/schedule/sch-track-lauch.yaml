@@ -1,0 +1,25 @@
+kind: track
+version: 1
+project_id: prj-0001
+schedule_level: domain
+domain: business
+assigned_team: specdojo
+default_agent_mode: agent-ultra
+settings:
+  finish_milestone_id: M-SDH-BIZ-900
+  notes: >-
+    業務ドメインスケジュール。 各成果物エントリを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。
+    依存グループ: 基盤（BPS→BR→BES）、データ（BDD→BDS）、リファレンス（GL, REFDATA）、 モデル（CDFD, CDSD,
+    CSTD, CCD）、システム（UIS, SF）、受入（BAC）。
+tasks:
+  - id: T-SDH-BIZ-010
+    wbs: WBS-BIZ-BPS-010
+    name: 業務プロセス仕様ルールの起草・レビュー
+    duration_days: 0.5
+    depends_on:
+      - M-SDH-100
+    owner: BA
+    tags:
+      - business
+      - rulebook-lifecycle
+    notes: "Phase 1 はエージェント起草・修正・レビューを連続実行し、中間の人間承認は省略可能。最終承認は後段で一括実施。"
