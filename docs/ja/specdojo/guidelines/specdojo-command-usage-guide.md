@@ -39,6 +39,12 @@ repo-root/
 │  └─ ja/
 │     └─ projects/
 │        └─ prj-0001/
+│           ├─ 010-deliverables-catalog/
+│           │  ├─ dct-project-definition.yaml
+│           │  ├─ dct-project-management.yaml
+│           │  └─ generated/
+│           │     ├─ dct-project-definition.md
+│           │     └─ dct-project-management.md
 │           ├─ 060-schedule/
 │           │  ├─ sch-milestones.yaml
 │           │  ├─ sch-governance.yaml
@@ -66,6 +72,7 @@ repo-root/
   "version": 1,
   "projects": {
     "shj-0001": {
+      "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
       "schedule_path": "docs/ja/projects/prj-0001/060-schedule",
       "execution_path": "docs/ja/projects/prj-0001/070-execution",
       "members_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-members.yaml"
@@ -409,7 +416,57 @@ agent-docs
 agent-test
 ```
 
-## 18. まとめ
+## 18. catalog コマンド
+
+`specdojo catalog` は `catalog_path` 配下の `dct-<domain>.yaml` を読み込み、`generated/` に Markdown を出力するコマンド群です。
+
+- 検証（`validate`）
+- Markdown 生成（`build`）
+
+## 19. catalog パス確認
+
+```bash
+specdojo catalog where --project shj-0001
+```
+
+出力例:
+
+```text
+catalog-path: /repo/.../010-deliverables-catalog
+generated   : /repo/.../010-deliverables-catalog/generated
+```
+
+## 20. catalog 検証
+
+```bash
+specdojo catalog validate --project shj-0001
+```
+
+検証内容:
+
+- JSON Schema 検証（`dct.schema.yaml`）
+- `local_id` の一意性確認
+- `depends_on` 参照先の存在確認
+- `kind: work` の必須フィールド確認（`path`、`done_criteria`）
+
+## 21. catalog 生成
+
+```bash
+specdojo catalog build --project shj-0001
+```
+
+生成:
+
+```text
+generated/
+├─ dct-project-definition.md
+├─ dct-project-management.md
+└─ ...（dct-*.yaml ごとに 1 ファイル）
+```
+
+`dct-<domain>.md` は対応する `dct-<domain>.yaml` の `groups` 構造に従い、成果物一覧を章立てで出力します。
+
+## 22. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -420,3 +477,4 @@ agent-test
 - CPM / Critical Path計算
 - schedule diff検出
 - AI Agent向けタスク取得
+- 成果物カタログ Markdown 生成（`catalog build`）
