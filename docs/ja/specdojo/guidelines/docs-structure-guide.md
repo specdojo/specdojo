@@ -229,12 +229,6 @@ docs/
 │   │   │   │   │       ├── pm-change-request-log.md # type=change-request の抽出ビュー
 │   │   │   │   │       └── pm-decision-log.md    # type=decision の抽出ビュー
 │   │   │   │   │
-│   │   │   │   ├── wbs/                          # WBS
-│   │   │   │   │   ├── wbs-definition.yaml       # 成果物カタログ作成までのWBS
-│   │   │   │   │   ├── wbs-auth.yaml             # WBS定義（認証）
-│   │   │   │   │   ├── wbs-payment.yaml          # WBS定義（決済）
-│   │   │   │   │   └── wbs-infra.yaml            # WBS定義（インフラ）
-│   │   │   │   │
 │   │   │   │   ├── schedule/                     # スケジュール
 │   │   │   │   │   ├── sch-definition.yaml       # 成果物カタログ作成のスケジュール
 │   │   │   │   │   ├── sch-milestones.yaml       # マイルストーン定義
@@ -420,7 +414,6 @@ flowchart LR
 
   PJR["pjr-index/&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
   DC["dct-index/&lt;domain&gt;<br/>成果物カタログ"]
-  WBS["wbs-&lt;domain&gt;.yaml<br/>WBS"]
   SCH["sch-&lt;track&gt;-&lt;domain&gt;-&lt;artifact&gt;-&lt;NNN&gt;.yaml<br/>スケジュール"]
   EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
   POI["pjr-open-items<br/>未完了項目一覧"]
@@ -428,14 +421,14 @@ flowchart LR
   PRR["pm-risk-register<br/>リスク登録簿"]
   PL["pm-issue/change-request/decision-log<br/>課題/変更要求/意思決定<br/>ログ"]
 
-  PJR --> DC --> WBS --> SCH --> EXE
+  PJR --> DC --> SCH --> EXE
   PJR --> POI
   PJR --> PB
   PJR --> PRR
   PJR --> PL
 
   classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class PJR,DCI,DC,WBS,SCH,EXE,POI,PB,PRR,PL projectWise;
+  class PJR,DCI,DC,SCH,EXE,POI,PB,PRR,PL projectWise;
 ```
 
 ## 7. プロダクトドキュメントの構成

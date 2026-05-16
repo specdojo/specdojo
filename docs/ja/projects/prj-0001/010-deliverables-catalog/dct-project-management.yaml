@@ -116,7 +116,6 @@ groups:
 
   - name: 管理台帳
     base_path: controls/project-register
-    note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pjr-index
         artifact_code: CTLIND
@@ -137,7 +136,6 @@ groups:
 
   - name: 管理台帳補助ビュー
     base_path: controls/project-register/generated
-    note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pjr-open-items
         artifact_code: CTLOI
@@ -181,7 +179,6 @@ groups:
 
   - name: 管理ビュー
     base_path: controls/generated
-    note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pm-risk-register
         artifact_code: CTLRSK
@@ -219,35 +216,6 @@ groups:
         overview: プロジェクト上の意思決定とその根拠を記録
         path: pm-decision-log.md
 
-  - name: WBS
-    base_path: wbs
-    deliverables:
-      - local_id: wbs-project-management
-        artifact_code: WBSPJM
-        name: WBS 定義（プロジェクト管理）
-        kind: work
-        depends_on: []
-        overview: プロジェクトマネジメント成果物作成の作業分解構造を YAML で定義
-        path: wbs-project-management.yaml
-        done_criteria:
-          - PO が管理対象成果物のスコープと完了条件を承認できること
-          - BA が成果物の網羅性・整合性を確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が完了条件の検証可能性を確認できること
-
-      - local_id: wbs-project-definition
-        artifact_code: WBSPJD
-        name: WBS 定義（プロジェクト定義）
-        kind: work
-        depends_on: []
-        overview: プロジェクト定義成果物作成の作業分解構造を YAML で定義
-        path: wbs-project-definition.yaml
-        done_criteria:
-          - PO が管理対象成果物のスコープと完了条件を承認できること
-          - BA が成果物の網羅性・整合性を確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が完了条件の検証可能性を確認できること
-
   - name: スケジュール
     base_path: schedule
     deliverables:
@@ -268,9 +236,7 @@ groups:
         artifact_code: SCHDEF
         name: スケジュールデフォルト定義
         kind: work
-        depends_on:
-          - wbs-project-management
-          - wbs-project-definition
+        depends_on: []
         overview: スケジュールのデフォルト設定を定義
         path: sch-defaults.yaml
         done_criteria:
@@ -283,9 +249,7 @@ groups:
         artifact_code: SCHTLNCH
         name: Launch スケジュール定義
         kind: work
-        depends_on:
-          - wbs-project-management
-          - wbs-project-definition
+        depends_on: []
         overview: Launch フェーズの詳細スケジュールを定義
         path: sch-track-launch.yaml
         done_criteria:
@@ -298,9 +262,7 @@ groups:
         artifact_code: SCHCFG
         name: Launch スケジュール設定
         kind: work
-        depends_on:
-          - wbs-project-management
-          - wbs-project-definition
+        depends_on: []
         overview: Launch フェーズの詳細スケジュールの設定を定義
         path: sch-config-launch.yaml
         done_criteria:
@@ -313,9 +275,7 @@ groups:
         artifact_code: SCHAOV
         name: Launch スケジュールエージェント上書き設定
         kind: work
-        depends_on:
-          - wbs-project-management
-          - wbs-project-definition
+        depends_on: []
         overview: Launch フェーズの詳細スケジュールのエージェント上書き設定を定義
         path: sch-agent-overrides-launch.yaml
         done_criteria:
@@ -325,7 +285,6 @@ groups:
           - QE が品質関連タスクのエージェントモードが適切であることを確認できること
 
   - name: レポート
-    note: WBS への落とし込み対象外。
     groups:
       - name: 進捗報告
         base_path: reporting/progress-reports

@@ -177,8 +177,7 @@
     "./docs/specdojo/schemas/v1/sch-config.schema.yaml": ["docs/ja/**/sch-config-*.yaml"],
     "./docs/specdojo/schemas/v1/sch-agent-overrides.schema.yaml": [
       "docs/ja/**/sch-agent-overrides-*.yaml"
-    ],
-    "./docs/specdojo/schemas/v1/wbs.schema.yaml": ["docs/ja/**/wbs-*.yaml"]
+    ]
   },
 
   "files.associations": {

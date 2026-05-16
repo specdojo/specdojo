@@ -38,8 +38,6 @@ rulebook: dct-rulebook
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/project-register`
 
-WBS への落とし込み対象外。
-
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
 | `pjr-index` | `CTLIND` | プロジェクト登録簿 | control | - | 識別済み検討項目と対応策を管理（台帳） |
@@ -48,8 +46,6 @@ WBS への落とし込み対象外。
 ## 4. 管理台帳補助ビュー
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/project-register/generated`
-
-WBS への落とし込み対象外。
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
@@ -62,8 +58,6 @@ WBS への落とし込み対象外。
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/generated`
 
-WBS への落とし込み対象外。
-
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
 | `pm-risk-register` | `CTLRSK` | リスク登録簿 | generated | `pjr-NNNN-TERM` | 識別済みリスクと対応策を管理 |
@@ -71,32 +65,21 @@ WBS への落とし込み対象外。
 | `pm-change-request-log` | `CTLCRQ` | 変更要求ログ | generated | `pjr-NNNN-TERM` | 変更要求の申請・審査・決定を管理 |
 | `pm-decision-log` | `CTLDEC` | 決定記録 | generated | `pjr-NNNN-TERM` | プロジェクト上の意思決定とその根拠を記録 |
 
-## 6. WBS
-
-- 配置先: `docs/ja/projects/prj-0001/030-project-management/wbs`
-
-| local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
-| --- | --- | --- | --- | --- | --- |
-| `wbs-project-management` | `WBSPJM` | WBS 定義（プロジェクト管理） | work | - | プロジェクトマネジメント成果物作成の作業分解構造を YAML で定義 |
-| `wbs-project-definition` | `WBSPJD` | WBS 定義（プロジェクト定義） | work | - | プロジェクト定義成果物作成の作業分解構造を YAML で定義 |
-
-## 7. スケジュール
+## 6. スケジュール
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/schedule`
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
 | `sch-milestones` | `SCHMS` | マイルストーン定義 | work | - | プロジェクト全体のマイルストーンを定義 |
-| `sch-defaults` | `SCHDEF` | スケジュールデフォルト定義 | work | `wbs-project-management`, `wbs-project-definition` | スケジュールのデフォルト設定を定義 |
-| `sch-track-launch` | `SCHTLNCH` | Launch スケジュール定義 | work | `wbs-project-management`, `wbs-project-definition` | Launch フェーズの詳細スケジュールを定義 |
-| `sch-config-launch` | `SCHCFG` | Launch スケジュール設定 | work | `wbs-project-management`, `wbs-project-definition` | Launch フェーズの詳細スケジュールの設定を定義 |
-| `sch-agent-overrides-launch` | `SCHAOV` | Launch スケジュールエージェント上書き設定 | work | `wbs-project-management`, `wbs-project-definition` | Launch フェーズの詳細スケジュールのエージェント上書き設定を定義 |
+| `sch-defaults` | `SCHDEF` | スケジュールデフォルト定義 | work | - | スケジュールのデフォルト設定を定義 |
+| `sch-track-launch` | `SCHTLNCH` | Launch スケジュール定義 | work | - | Launch フェーズの詳細スケジュールを定義 |
+| `sch-config-launch` | `SCHCFG` | Launch スケジュール設定 | work | - | Launch フェーズの詳細スケジュールの設定を定義 |
+| `sch-agent-overrides-launch` | `SCHAOV` | Launch スケジュールエージェント上書き設定 | work | - | Launch フェーズの詳細スケジュールのエージェント上書き設定を定義 |
 
-## 8. レポート
+## 7. レポート
 
-WBS への落とし込み対象外。
-
-### 8.1. 進捗報告
+### 7.1. 進捗報告
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/reporting/progress-reports`
 
@@ -104,7 +87,7 @@ WBS への落とし込み対象外。
 | --- | --- | --- | --- | --- | --- |
 | `pr-YYYY-MM-DD` | `PR` | 進捗報告 | control | - | 定期的な進捗状況の報告 |
 
-### 8.2. 議事録
+### 7.2. 議事録
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/reporting/meeting-minutes`
 
