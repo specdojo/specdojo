@@ -12,7 +12,7 @@ rulebook: pm-organization-rulebook
 本書は、駄菓子屋きぬや販売管理システム構築プロジェクトにおける採用ロールと `owner` 利用方針を定義する最小サンプルである。
 
 - 本プロジェクトは店主と少人数の支援メンバーで進める小規模運用とする。
-- WBS / Schedule の `owner` には採用済み Role code だけを使用する。
+- Schedule の `owner` には採用済み Role code だけを使用する。
 - 最終判断は `PO` に集約し、`PM` の管理責務は `PO` が兼務する。
 - 標準ロールの一般的な責務や `owner` / `role` / `--by` の共通定義は [people-and-organization-definition-standard.md](../standards/people-and-organization-definition-standard.md) を参照する。
 
@@ -60,7 +60,7 @@ rulebook: pm-organization-rulebook
 
 ## 7. 禁止事項
 
-- 未採用ロールを WBS / Schedule の `owner` に使わない。
+- 未採用ロールを Schedule の `owner` に使わない。
 - 個人名を `owner` に使わない。
 - agent に最終判断を委ねない。
 - 標準ロールの一般責務や共通定義表を本書へ複製しない。

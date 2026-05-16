@@ -21,7 +21,7 @@ rulebook: pm-organization-rulebook
 - プロジェクト規模。`小規模`、`中規模`、`大規模` のいずれかを選択し、必要に応じて個人運用、複数人運用、外部関係者ありなどの補足を添える。
 - 採用する Role code 一覧、正式名称、プロジェクトでの扱い、採用理由。
 - 採用しない Role code 一覧、未採用理由、代替方針、追加条件。
-- WBS / Schedule の `owner` に使用する Role code 一覧。
+- Schedule の `owner` に使用する Role code 一覧。
 - 最終判断の集約先、必要なエスカレーション先。
 - 関連ドキュメントの有無と役割。最低でも `pm-roles.yaml`、`pm-members.yaml`、`pm-raci.md`、`people-and-organization-definition-standard.md` を確認する。
 - ロール採用を見直す更新トリガーと、見直し時に更新する内容。
@@ -93,7 +93,7 @@ based_on:
 - `owner` / `role` / `--by` の共通定義表を再掲しない。
 - `pm-members.yaml` の具体的な member 一覧を複製しない。
 - プロジェクト固有でない Agent 委任方針や RACI 定義を再掲しない。
-- 未採用ロールを WBS / Schedule の `owner` に使えるような記述をしない。
+- 未採用ロールを Schedule の `owner` に使えるような記述をしない。
 - 個人名を `owner` に使わない。
 - agent に最終判断を委ねない。
 

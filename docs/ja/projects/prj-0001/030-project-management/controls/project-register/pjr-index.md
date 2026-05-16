@@ -20,15 +20,15 @@ Project Register
 <!-- prettier-ignore -->
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PJR-0001 | open | WBS->スケジュール展開スクリプト | WBSをスケジュールに展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - |
-| PJR-0002 | open | LaunchのWBS, スケジュール | Track=LaunchのWBS、スケジュールを作成 | todo | high | PO | 2026-05-10 | - |
+| PJR-0001 | rejected | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する（WBS統合により不要） | todo | high | ARC | 2026-05-10 | - |
+| PJR-0002 | open | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | - |
 | PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PM | 2026-05-10 | - |
 | PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | PM | 2026-05-10 | - |
-| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をWBS, スケジュールに記述 | todo | high | PM | 2026-05-10 | - |
+| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PM | 2026-05-10 | - |
 | PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | PM | 2026-05-10 | - |
 | PJR-0007 | open | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | - |
 | PJR-0008 | open | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | - |
-| PJR-0009 | open | WBS作成プロンプト | dctからwbsを作成するinstructions, SKILL, promptを作成する | todo | high | ARC | 2026-05-10 | - |
+| PJR-0009 | rejected | WBS作成プロンプト | WBS統合により不要 | todo | high | ARC | 2026-05-10 | - |
 | PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる  | todo | high | ARC | 2026-05-10 | - |
 | PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | PM | 2026-05-10 | - |
 | PJR-0012 | done | claudeのSKILL対応| .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | - |
@@ -49,7 +49,7 @@ Project Register
 | PJR-0027 | done | プロジェクト名の見直し | 旧プロジェクト名となっている箇所を SpecDojo へ見直し | done | high | PO | 2026-05-10 | 関連ドキュメントを更新済み |
 | PJR-0028 | done | pm-organization-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - |
 | PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | PO | 2026-05-10 | - |
-| PJR-0030 | open | wbs to schedule strategyの見直し | deliverable -> rules の順番で作成するように見直し | todo | high | PO | 2026-05-10 | [./pjr-0030-wbs-to-sch.md](./pjr-0030-wbs-to-sch.md) |
+| PJR-0030 | rejected | wbs to schedule strategyの見直し | WBS統合により不要 | todo | high | PO | 2026-05-10 | - |
 | PJR-0031 | done | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | PO | 2026-05-10 | - |
 | PJR-0032 | done | wbs を成果物カタログに統合 | 成果物カタログをyaml化して統合 | todo | high | PO | 2026-05-17 | - |
 | PJR-0033 | done | 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | PO | 2026-05-17 | - |

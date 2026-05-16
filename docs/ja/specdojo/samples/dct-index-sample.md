@@ -16,13 +16,13 @@ Project Deliverables Catalog
 ## 1. 共通ルール
 
 - `local-id` は成果物の論理名とし、ファイル名・Frontmatter `id` の基礎として使用する（例: `prj-overview`）。
-- `ARTIFACT` は `local-id` の短縮名で、WBS などで識別子を短縮する場面で使用する。
+- `ARTIFACT` は `local-id` の短縮名で、Schedule などで識別子を短縮する場面で使用する。
 - 成果物本体のファイル名は `<local-id>.md` 形式とする。
 - 成果物本体の Frontmatter `id` は `<project-id>:<local-id>` 形式とする。
-- `ドメイン` は成果物の分類識別子。`DOMAIN` はその短縮名で WBS などで使用する。
+- `ドメイン` は成果物の分類識別子。`DOMAIN` はその短縮名で Schedule などで使用する。
 - `根拠` には主要な依存関係を `local-id` で記載する。
 - `based_on` には直接根拠のみを記載し、`根拠` と差分があってもよい。
-- 種別は `work` / `control` / `generated` の3値のみを使用し、WBS 展開対象は `work` のみとする。
+- 種別は `work` / `control` / `generated` の3値のみを使用し、スケジュール展開対象は `work` のみとする。
 
 ## 2. 成果物カタログ一覧
 

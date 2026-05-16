@@ -8,7 +8,7 @@ default_agent_mode: agent-ultra
 settings:
   finish_milestone_id: M-SDH-DES-900
   notes: |-
-    設計ドメインスケジュール。 各 WBS アイテムを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。 C4 チェーン: CXD → CND → CPD。SYSD は他の全タスクに依存。
+    設計ドメインスケジュール。 各成果物エントリを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。 C4 チェーン: CXD → CND → CPD。SYSD は他の全タスクに依存。
 tasks:
   - id: T-SDH-DES-010
     wbs: WBS-DES-IFX-010

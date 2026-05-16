@@ -8,7 +8,7 @@ default_agent_mode: agent-ultra
 settings:
   finish_milestone_id: M-SDH-BIZ-900
   notes: >-
-    業務ドメインスケジュール。 各 WBS アイテムを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。
+    業務ドメインスケジュール。 各成果物エントリを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。
     依存グループ: 基盤（BPS→BR→BES）、データ（BDD→BDS）、リファレンス（GL, REFDATA）、 モデル（CDFD, CDSD,
     CSTD, CCD）、システム（UIS, SF）、受入（BAC）。
 tasks:

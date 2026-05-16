@@ -9,7 +9,7 @@ rulebook: pm-roles-rulebook
 
 ## 1. 目的と前提
 
-- 目的: プロジェクトで採用する Role code を machine-readable な YAML 一覧として定義し、WBS / Schedule の `owner` および `pm-members.yaml` の `members[].role` の参照基準とする。
+- 目的: プロジェクトで採用する Role code を machine-readable な YAML 一覧として定義し、Schedule の `owner` および `pm-members.yaml` の `members[].role` の参照基準とする。
 - 参照ルール: `../rulebooks/pm-roles-rulebook.md`
 - 主な内容: 採用 Role code の一覧（`code`・`name`・`project_note`）。
 - 未採用ロールの理由・代替方針は `pm-organization.md` に記載し、本ファイルには含めない。
@@ -61,7 +61,7 @@ roles:
 - 未採用ロールを `roles` に含める（`pm-organization.md` との不整合を招く）。
 - `people-and-organization-definition-standard` 未定義の独自 Role code を追加する。
 - 未採用ロールの理由・代替方針を本ファイルに記載する（`pm-organization.md` の責務）。
-- `roles[].code` に設定した Role code を WBS / Schedule の `owner` に一切使わないまま定義する。
+- `roles[].code` に設定した Role code を Schedule の `owner` に一切使わないまま定義する。
 
 ## 6. 最終チェック
 

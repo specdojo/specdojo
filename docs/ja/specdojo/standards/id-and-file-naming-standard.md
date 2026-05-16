@@ -109,7 +109,6 @@ arc-index
 ```text
 prj-0001:prj-overview
 prj-0001:prj-charter
-prj-0001:wbs-index
 prj-0001:sch-index
 ```
 
@@ -199,7 +198,6 @@ id: 'prj-0001:prj-overview'
 | プロダクト文書   | `utd-auth`                         | `utd-auth.md`                  |
 | プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
 | プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
-| プロジェクト文書 | `prj-0001:wbs-business-definition` | `wbs-business-definition.yaml` |
 | プロジェクト文書 | `prj-0001:sch-launch`              | `sch-launch.yaml`              |
 
 ### 3.4. 参照ルール
@@ -273,7 +271,6 @@ br-discount
 prj-0001:prj-overview
 prj-0001:prj-charter
 prj-0001:dct-index
-prj-0001:wbs-index
 prj-0001:sch-index
 ```
 
@@ -497,7 +494,6 @@ based_on:
 | プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
 | プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
 | 成果物カタログ   | `prj-0001:dct-index`               | `dct-index.md`                 |
-| プロジェクト文書 | `prj-0001:wbs-business-definition` | `wbs-business-definition.yaml` |
 | プロジェクト文書 | `prj-0001:sch-launch`              | `sch-launch.yaml`              |
 
 ### 6.3. namespace とディレクトリの関係
@@ -589,7 +585,6 @@ OK:
 
 ```text
 010-project-definition/prj-overview.md
-020-project-management/wbs-index.yaml
 ```
 
 NG:
@@ -712,7 +707,6 @@ supersedes:
 | プロジェクトスコープ | Project Scope | prj- | prj-scope | prj-0001:prj-scope |
 | 成功条件・受入条件 | Success Criteria and Acceptance Criteria | prj- | prj-success-criteria-and-acceptance-criteria | prj-0001:prj-success-criteria-and-acceptance-criteria |
 | 成果物カタログ | Deliverables Catalog | dct- | dct-index, dct-project-definition | prj-0001:dct-index, prj-0001:dct-project-definition |
-| WBS | Work Breakdown Structure | wbs- | wbs-auth | prj-0001:wbs-auth |
 | プロジェクト課題と解決アプローチ | Project Issues and Approach | prj- | prj-issues-and-approach | prj-0001:prj-issues-and-approach |
 | 前提・制約・依存 | Assumptions, Constraints, and Dependencies | prj- | prj-assumptions-constraints-dependencies | prj-0001:prj-assumptions-constraints-dependencies |
 | 代替案の比較 | Comparison of Alternatives | prj- | prj-comparison-of-alternatives | prj-0001:prj-comparison-of-alternatives |

@@ -20,8 +20,8 @@ supersedes: []
 ## 1. 基本方針
 
 - ステークホルダーは、プロジェクトに影響する、または影響を受ける関係者・集団・外部基盤を表す。
-- ステークホルダーは、Schedule / WBS の `owner` には使用しない。
-- Schedule / WBS の `owner` は、`pm-organization.md` で採用した Role code を使用する。
+- ステークホルダーは、Schedule の `owner` には使用しない。
+- Schedule の `owner` は、`pm-organization.md` で採用した Role code を使用する。
 - ステークホルダーに対応する Role code がある場合は、`対応 Role code` として明示する。
 - 対応 Role code は、`pm-roles.yaml` および `pm-organization.md` で採用した Role code だけを記載する。
 - ステークホルダー登録簿は、利害、期待、懸念、合意対象、関与方針を整理するために使用する。
@@ -84,7 +84,7 @@ supersedes: []
 
 - `STH-FUTURE-USER` は、SpecDojo を利用する想定ステークホルダーである。
 - `BA` は、将来利用者の視点を整理するロールである。
-- Schedule / WBS の `owner` には `STH-FUTURE-USER` ではなく `BA` を書く。
+- Schedule の `owner` には `STH-FUTURE-USER` ではなく `BA` を書く。
 - `対応 Role code` は、ステークホルダーの期待、懸念、合意対象を主に扱う Role code を示す。
 - 1 つのステークホルダーに複数の Role code が対応してよい。
 - 対応 Role code がない外部基盤や外部集団は、必要に応じて `なし` と記載し、無理に Role code を割り当てない。
@@ -105,7 +105,7 @@ supersedes: []
 
 ## 8. 禁止事項
 
-- ステークホルダー ID を Schedule / WBS の `owner` に使うこと。
+- ステークホルダー ID を Schedule の `owner` に使うこと。
 - ステークホルダー登録簿で member nickname を管理すること。
 - ステークホルダー登録簿に不要な個人名、連絡先、非公開組織情報を書くこと。
 - AI Agent を最終判断者または承認者として扱うこと。

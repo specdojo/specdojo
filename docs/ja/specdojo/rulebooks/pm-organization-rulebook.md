@@ -63,7 +63,7 @@ Organization Definition Documentation Rulebook
 | 1 | 基本方針 | ○ | プロジェクト規模、`owner` の使用範囲、最終判断の集約先 |
 | 2 | 採用ロール | ○ | 採用する Role code、正式名称、プロジェクトでの扱い |
 | 3 | 未採用ロール | ○ | 未採用の Role code、未採用理由、代替方針 |
-| 4 | 本プロジェクトで使用できる `owner` | ○ | WBS / Schedule の `owner` に使える Role code 一覧 |
+| 4 | 本プロジェクトで使用できる `owner` | ○ | Schedule の `owner` に使える Role code 一覧 |
 | 5 | 関連ドキュメント | ○ | `pm-roles.yaml`、`pm-members.yaml`、`pm-raci.md`、標準への参照 |
 | 6 | 見直し条件 | ○ | ロール採用を見直すトリガーと見直し内容 |
 | 7 | 禁止事項 | ○ | プロジェクト固有の禁止事項 |
@@ -74,7 +74,7 @@ Organization Definition Documentation Rulebook
 
 - プロジェクト規模を明示する。例: 個人・小規模運用、複数人運用、外部関係者あり。
 - 規模の判断は `people-and-organization-definition-standard` の規模別採用パターンを参照し、小規模・中規模・大規模に応じて採用ロール、RACI、意思決定責任、見直し条件の記述粒度を調整する。
-- WBS / Schedule の `owner` に採用ロールだけを使う方針を記載する。
+- Schedule の `owner` に採用ロールだけを使う方針を記載する。
 - 最終判断の集約先を記載する。小規模運用では `PO` に集約してよい。
 - `owner` / `role` / `--by` の詳細な説明は標準へ参照し、本文に比較表を再掲しない。
 
@@ -93,7 +93,7 @@ Organization Definition Documentation Rulebook
 
 - 標準ロールのうち採用しない Role code を表にする。
 - 未採用理由と、誰が兼務するか、またはどの条件で追加するかを記載する。
-- 未採用ロールは WBS / Schedule の `owner` に使用しないことが分かるようにする。
+- 未採用ロールは Schedule の `owner` に使用しないことが分かるようにする。
 
 推奨表:
 
@@ -102,7 +102,7 @@ Organization Definition Documentation Rulebook
 
 ### 6.4. 本プロジェクトで使用できる `owner`
 
-- WBS / Schedule の `owner` に使える Role code を箇条書きで列挙する。
+- Schedule の `owner` に使える Role code を箇条書きで列挙する。
 - 未採用ロールを `owner` として使わないことを明記する。
 - `owner` の概念説明や `--by` との違いは標準へ参照する。
 
@@ -135,7 +135,7 @@ Organization Definition Documentation Rulebook
 | `owner` / `role` / `--by` の共通定義表を `pm-organization.md` に再掲する | 定義変更時に不整合が起きるため |
 | `pm-members.yaml` の具体的な member 一覧を `pm-organization.md` に複製する | 実行主体の正本が分散するため |
 | プロジェクト固有でない Agent 委任方針や RACI 定義を再掲する | 全体ルールと重複するため |
-| 未採用ロールを WBS / Schedule の `owner` に使う余地を残す | 実行管理で参照不整合が起きるため |
+| 未採用ロールを Schedule の `owner` に使う余地を残す | 実行管理で参照不整合が起きるため |
 
 ## 8. サンプル
 

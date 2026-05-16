@@ -9,7 +9,7 @@ settings:
   finish_milestone_id: M-SDH-AGT-900
   notes: |-
     エージェントカスタマイズドメインスケジュール。
-    WBS（instructions / skills / prompts / catalog-integrity）を順次実行し、
+    成果物カタログ（instructions / skills / prompts / catalog-integrity）を順次実行し、
     .github 配下成果物と成果物カタログの整合を確定する。
 tasks:
   - id: T-SDH-AGT-010

@@ -28,7 +28,7 @@ Scheduleは次を定義する。
 | milestone  | ゲート         |
 | ready      | 実行可能タスク |
 
-Scheduleは **WBSを参照する**。
+Scheduleは **成果物カタログ（dct）を参照する**。
 
 ## 2. Task粒度（AI向け）
 
@@ -64,7 +64,7 @@ complete
 ```yaml
 tasks:
   - id: T-AUTH-API-010
-    wbs: WBS-AUTH-API-010
+
     name: create login endpoint
     duration_days: 0.25
     depends_on:

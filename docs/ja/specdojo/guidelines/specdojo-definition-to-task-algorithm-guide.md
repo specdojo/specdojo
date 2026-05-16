@@ -37,7 +37,6 @@ Needs / Requirements / Specs → Deliverables → Tasks → Schedule → Executi
 生成される成果は、最終的に以下へ反映される。
 
 - `sch-*.yaml`
-- 必要に応じて `wbs-*.yaml`
 - `generated/` 配下のレビュー用出力
 
 ## 2. 基本原則

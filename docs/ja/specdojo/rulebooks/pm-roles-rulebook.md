@@ -18,7 +18,7 @@ Project Role Definition Documentation Rulebook
 - `pm-roles.yaml` には、プロジェクトで採用した Role code だけを記載する。
 - Role code の共通定義・責務・規模別パターンは `people-and-organization-definition-standard` を参照し、本ファイルに再掲しない。
 - 未採用ロールと `owner` 利用ルールは `pm-organization.md` を参照し、本ファイルに重複して記載しない。
-- `pm-roles.yaml` の `roles[].code` は、WBS / Schedule の `owner` および `pm-members.yaml` の `members[].role` で使用できる Role code の正当な一覧として機能する。
+- `pm-roles.yaml` の `roles[].code` は、Schedule の `owner` および `pm-members.yaml` の `members[].role` で使用できる Role code の正当な一覧として機能する。
 
 ## 2. 位置づけと用語定義
 
@@ -94,10 +94,10 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭の `document` 
 
 | 禁止事項                                                                        | 理由                                                                                  |
 | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 未採用ロールを `roles` に含める                                                 | `pm-organization.md` との整合が崩れ、WBS / Schedule の `owner` 検証が不正確になるため |
+| 未採用ロールを `roles` に含める                                                 | `pm-organization.md` との整合が崩れ、Schedule の `owner` 検証が不正確になるため |
 | `people-and-organization-definition-standard` 未定義の独自 Role code を追加する | 標準との整合が取れなくなるため                                                        |
 | 未採用ロールの理由や代替方針を本ファイルに記載する                              | `pm-organization.md` の責務であり重複になるため                                       |
-| `roles[].code` の値を WBS / Schedule の `owner` に使わないまま定義する          | 定義したロールは `owner` で使う前提のため、使わないなら定義しない                     |
+| `roles[].code` の値を Schedule の `owner` に使わないまま定義する          | 定義したロールは `owner` で使う前提のため、使わないなら定義しない                     |
 
 ## 8. サンプル
 

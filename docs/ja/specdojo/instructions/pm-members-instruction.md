@@ -9,7 +9,7 @@ rulebook: pm-members-rulebook
 
 ## 1. 目的と前提
 
-- 目的: `specdojo exec --by <nickname>` で指定できる実行主体（人間または agent）を machine-readable な YAML として管理し、WBS / Schedule の `owner`（Role code）と実行主体（nickname）を分離する。
+- 目的: `specdojo exec --by <nickname>` で指定できる実行主体（人間または agent）を machine-readable な YAML として管理し、Schedule の `owner`（Role code）と実行主体（nickname）を分離する。
 - 参照ルール: `../rulebooks/pm-members-rulebook.md`
 - 主な内容: member 一覧（`nickname`・`display_name`・`role`・`type`・`persona`・`focus`・`scheduler_strategy`・`note`）。
 - 採用ロール・未採用ロールの定義は `pm-organization.md` を参照し、本ファイルには含めない。
@@ -69,8 +69,8 @@ members:
 ## 5. 禁止事項
 
 - `members[].role` に `pm-organization.md` で未採用の Role code を使う。
-- `owner` フィールドを member 側で使う（WBS / Schedule の `owner` は Role code であり member 定義とは別）。
-- WBS / Schedule の `owner` に `nickname`・人名・agent 名を書く。
+- `owner` フィールドを member 側で使う（Schedule の `owner` は Role code であり member 定義とは別）。
+- Schedule の `owner` に `nickname`・人名・agent 名を書く。
 - agent に最終承認・公開可否判断・説明責任を割り当てる。
 - 実行ログ記録後に `nickname` を変更する。
 - 公開文書に不要な個人名・私用メールアドレス・非公開組織情報を含める。

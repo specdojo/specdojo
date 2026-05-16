@@ -47,7 +47,7 @@ based_on:
 | `pm-raci`                    | A   | C   | C   | R   |
 | `dct-index` / 成果物カタログ | A   | C   | R   | C   |
 | `pm-plan`                    | A/R | C   | C   | C   |
-| WBS / Schedule               | A   | R   | R   | C   |
+| Schedule               | A   | R   | R   | C   |
 
 ## 5. プロセス別 RACI
 
@@ -77,4 +77,4 @@ based_on:
 - member nickname、人名、agent 名を RACI 列に使わない。
 - Agent に `A` を割り当てない。
 - 兼務を理由に、最終判断者である `A` を曖昧にしない。
-- WBS / Schedule の `owner` と矛盾する責任分担を記載しない。
+- Schedule の `owner` と矛盾する責任分担を記載しない。

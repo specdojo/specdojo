@@ -11,13 +11,13 @@ based_on:
 
 Project Member Roster Documentation Rulebook
 
-本ドキュメントは、`pm-members.yaml` を一貫した構造で作成・更新するためのルールを定義する。Member は実際に作業する人間または agent を表し、WBS / Schedule の `owner` で使う Role code とは分けて管理する。
+本ドキュメントは、`pm-members.yaml` を一貫した構造で作成・更新するためのルールを定義する。Member は実際に作業する人間または agent を表し、Schedule の `owner` で使う Role code とは分けて管理する。
 
 ## 1. 全体方針
 
 - `pm-members.yaml` は、`specdojo exec --by <nickname>` で指定できる実行主体の machine-readable な一覧として管理する。
 - Member は人間または agent を表し、責務・判断権限を表す Role とは分離する。
-- Member が対応できる Role code は `members[].role` で表し、WBS / Schedule の `owner` には member nickname を書かない。
+- Member が対応できる Role code は `members[].role` で表し、Schedule の `owner` には member nickname を書かない。
 - 採用ロールと未採用ロールは `roles.adopted` / `roles.not_adopted` で明示し、`pm-organization.md` と整合させる。
 - 公開文書では個人名、私用メールアドレス、非公開組織情報を記載しない。
 
@@ -29,14 +29,14 @@ Project Member Roster Documentation Rulebook
 | ---------- | ---------------------------------------- | ------------------------------------------ |
 | Role       | 責務・判断権限・専門性を表す論理的な役割 | `pm-organization.md`                       |
 | Member     | 実際に作業する人間または agent           | `pm-members.yaml`                          |
-| Task owner | WBS / Schedule 上の主責任ロール          | WBS / Schedule                             |
+| Task owner | Schedule 上の主責任ロール          | Schedule                             |
 | Executor   | 実際にタスクを実行する主体               | `specdojo exec --by <nickname>` / 実行ログ |
 
 `owner`、`role`、`--by` は次のように使い分ける。
 
 | 項目    | 意味                          | 値の例     | 管理先                  |
 | ------- | ----------------------------- | ---------- | ----------------------- |
-| `owner` | タスクの主責任ロール          | `BA`       | WBS / Schedule          |
+| `owner` | タスクの主責任ロール          | `BA`       | Schedule          |
 | `role`  | member が対応できる Role code | `BA`       | `pm-members.yaml`       |
 | `--by`  | 実行主体の nickname           | `ba-agent` | 実行コマンド / 実行ログ |
 
@@ -111,7 +111,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭メタ項目と
 - `role` には `roles.adopted` に含まれる Role code を記載する。
 - 特定ロールに固定しない汎用 agent は `role: null` としてよい。
 - `role: null` の member を実行に使う場合は、実行時の文脈またはタスク owner で対象 Role を明示する。
-- `role` は member 側の対応ロールを表す。WBS / Schedule の `owner` の代替として使わない。
+- `role` は member 側の対応ロールを表す。Schedule の `owner` の代替として使わない。
 
 ### 6.4. `members[].type`
 
@@ -136,8 +136,8 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭メタ項目と
 
 | 禁止事項                                                             | 理由                                                                            |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `pm-members.yaml` の member 側で `owner` フィールドを使う            | `owner` は WBS / Schedule の主責任ロールであり、member 側では `role` を使うため |
-| WBS / Schedule の `owner` に `nickname`、人名、agent 名を書く        | タスク責任が Role code で追跡できなくなるため                                   |
+| `pm-members.yaml` の member 側で `owner` フィールドを使う            | `owner` は Schedule の主責任ロールであり、member 側では `role` を使うため |
+| Schedule の `owner` に `nickname`、人名、agent 名を書く        | タスク責任が Role code で追跡できなくなるため                                   |
 | `members[].role` に `pm-organization.md` で未採用の Role code を書く | 実行候補の判定が不整合になるため                                                |
 | agent に最終承認や公開可否判断を割り当てる                           | 人間の判断責任を代替してしまうため                                              |
 | 公開文書に不要な個人名、私用メールアドレス、非公開組織情報を書く     | 公開範囲とプライバシーに反するため                                              |

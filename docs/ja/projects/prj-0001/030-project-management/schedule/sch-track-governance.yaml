@@ -8,7 +8,7 @@ default_agent_mode: agent-ultra
 settings:
   finish_milestone_id: M-SDH-GOV-900
   notes: |-
-    ガバナンスドメインスケジュール。 各 WBS アイテムを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。 meta-* ルールは Phase 1 のみ（派生成果物なし）。
+    ガバナンスドメインスケジュール。 各成果物エントリを Phase 1（ルールライフサイクル）と Phase 2（派生成果物ライフサイクル）に分割。 meta-* ルールは Phase 1 のみ（派生成果物なし）。
 tasks:
   - id: T-SDH-GOV-010
     wbs: WBS-GOV-PRJ-010

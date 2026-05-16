@@ -16,7 +16,7 @@ Role、Member、Task owner、Executor、RACI の共通定義と使い分けは [
 ## 1. 基本方針
 
 - 本プロジェクトは個人・小規模運用を前提とする。
-- WBS / Schedule の `owner` には、採用ロールの Role code のみを使用する。
+- Schedule の `owner` には、採用ロールの Role code のみを使用する。
 - 1 人の人間または agent が複数ロールの作業を支援してよい。ただし最終判断は `PO` が担う。
 - `owner`、`role`、`--by` の使い分けは、標準の定義に従う。
 
@@ -40,7 +40,7 @@ Role、Member、Task owner、Executor、RACI の共通定義と使い分けは [
 
 ## 4. 本プロジェクトで使用できる `owner`
 
-WBS / Schedule の `owner` として使用できる Role code は次の 4 つに限定する。
+Schedule の `owner` として使用できる Role code は次の 4 つに限定する。
 
 - `PO`
 - `BA`
@@ -62,12 +62,12 @@ WBS / Schedule の `owner` として使用できる Role code は次の 4 つに
 
 | 更新トリガー | 見直し内容 |
 | ------------ | ---------- |
-| WBS / Schedule の `owner` に未採用ロールが必要になった | 採用ロールと未採用ロールの見直し |
+| Schedule の `owner` に未採用ロールが必要になった | 採用ロールと未採用ロールの見直し |
 | 複数人での継続運用を開始した | `PM` の独立採用と RACI の追加要否 |
 | 実装・公開・運用タスクが増えた | `DEV`、`UX`、`OPS` の追加要否 |
 
 ## 7. 禁止事項
 
-- 未採用ロール（`PM`、`DEV`、`UX`、`OPS`）を WBS / Schedule の `owner` に使わない。
-- member nickname、人名、agent 名を WBS / Schedule の `owner` に使わない。
+- 未採用ロール（`PM`、`DEV`、`UX`、`OPS`）を Schedule の `owner` に使わない。
+- member nickname、人名、agent 名を Schedule の `owner` に使わない。
 - agent に最終承認や公開可否判断を委ねない。

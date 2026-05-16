@@ -447,7 +447,7 @@ exec/.locks/
 | PMBOK             | SpecDojo          |
 | ----------------- | ----------------- |
 | Product Scope     | Definition Layer  |
-| WBS               | Plan Layer        |
+| WBS / Schedule    | Plan Layer        |
 | Deliverables      | Deliverable Layer |
 | Progress          | Event Layer       |
 | Status Report     | Derived Layer     |

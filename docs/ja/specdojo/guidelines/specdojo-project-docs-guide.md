@@ -53,17 +53,12 @@ docs/
             │   │   ├── pm-communication-plan.md # コミュニケーション計画
             │   │   ├── pm-quality-management-plan.md # 品質管理計画
             │   │   ├── pm-organization.md # 組織体制とRACI
-            │   │   └── pm-wbs-to-schedule-strategy.md # WBSからスケジュールへの戦略
             │   │
             │   ├── 020-controls/ # 管理台帳
             │   │   ├── pm-risk-register.md # リスク登録簿
             │   │   ├── pm-issue-log.md # 課題ログ
             │   │   └── pm-change-request-log.md # 変更要求ログ
             │   │
-            │   ├── 030-wbs/ # WBS
-            │   │   ├── wbs-auth.yaml # WBS定義（認証）
-            │   │   ├── wbs-payment.yaml # WBS定義（決済）
-            │   │   └── wbs-infra.yaml # WBS定義（インフラ）
             │   │
             │   ├── 040-schedule/ # スケジュール
             │   │   ├── sch-milestones.yaml # マイルストーン定義
