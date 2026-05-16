@@ -15,7 +15,7 @@
 ### 1.1 ID規約
 
 - 機能一覧IDは正規表現 `^sf-[a-z0-9-]+$` に合致する一意IDを使用する。
-- `type: domain` は業務ドメイン仕様であることを示す。
+- `type: data` は業務ドメイン仕様であることを示す。
 
 ドキュメントID・機能IDともに `sf-` プレフィックスの `lower-kebab` 形式（正規表現: `^sf-[a-z0-9-]+$`）を使用します。
 一覧ハブには `sf-index`、個別機能には `sf-<機能名>` を付与してください（例: `sf-product-register`）。
@@ -47,7 +47,7 @@
 ```yaml
 ---
 id: sf-index
-type: domain
+type: data
 title: システム化機能一覧(main)
 status: draft
 supersedes: []

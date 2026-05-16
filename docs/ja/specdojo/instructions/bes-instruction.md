@@ -11,7 +11,7 @@
   ```yaml
   ---
   id: bes-<英小文字とハイフンで構成したID>
-  type: domain
+  type: data
   title: 業務イベント: <イベント名>
   status: draft
   part_of: []

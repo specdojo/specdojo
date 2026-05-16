@@ -208,7 +208,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: mip-index
-type: migration
+type: project
 title: 移行計画: 概要（example）
 status: draft
 based_on: []

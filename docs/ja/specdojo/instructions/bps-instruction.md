@@ -17,7 +17,7 @@
   ```yaml
   ---
   id: bps-<英小文字とハイフンで構成したID> # 例: bps-low-stock-detection
-  type: domain
+  type: data
   title: <業務プロセス名> # 例: 在庫不足検知
   status: draft # draft / ready / deprecated のいずれか
   part_of: [] # 子プロセスの場合、親プロセスIDを指定

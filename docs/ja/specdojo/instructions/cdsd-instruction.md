@@ -8,7 +8,7 @@
   ```yaml
   ---
   id: cdsl-<英小文字とハイフンで構成したID> # 例: cdsl-main
-  type: domain
+  type: data
   title: <概念データストア一覧名> # 例: 概念データストア一覧(main)
   status: draft # draft / ready / deprecated のいずれか
   supersedes: []

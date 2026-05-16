@@ -33,7 +33,7 @@
 ```yaml
 ---
 id: otp-<term>
-type: migration
+type: project
 title: 運用切替計画: <対象名>
 status: draft # draft / ready / deprecated
 based_on: []
@@ -163,7 +163,7 @@ supersedes: []
 ## 最終チェック（自己検査）
 
 - `id` が `otp-<term>` である
-- `type: migration` / `status` が設定されている
+- `type: project` / `status` が設定されている
 - 見出しが指定順序で揃っている（欠落なし）
 - 監視/アラートに指標/閾値・通知先・初動ルールがある
 - 初期増員体制に期間・当番・SLA・終了判断者がある

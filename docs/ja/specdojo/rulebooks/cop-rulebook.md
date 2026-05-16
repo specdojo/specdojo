@@ -204,7 +204,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: cop-cutover-day
-type: migration
+type: project
 title: カットオーバー計画: 本番切替当日
 status: draft
 based_on:

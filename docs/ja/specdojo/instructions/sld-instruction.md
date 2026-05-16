@@ -8,7 +8,7 @@
   ```yaml
   ---
   id: sll-<英小文字とハイフンで構成したID> # 例: sll-main
-  type: domain
+  type: data
   title: <保管場所一覧名> # 例: 保管場所一覧(main)
   status: draft # draft / ready / deprecated のいずれか
   supersedes: []

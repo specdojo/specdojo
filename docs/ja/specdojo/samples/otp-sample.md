@@ -1,6 +1,6 @@
 ---
 id: otp-hypercare
-type: migration
+type: project
 status: draft
 rulebook: otp-rulebook
 ---

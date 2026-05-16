@@ -200,7 +200,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: mtp-index
-type: migration
+type: project
 title: 移行テスト計画: 全体
 status: draft
 based_on: []
@@ -280,7 +280,7 @@ supersedes: []
 ```yaml
 ---
 id: mtp-cutover-rehearsal
-type: migration
+type: project
 title: 移行テスト計画: カットオーバーリハーサル
 status: draft
 based_on:

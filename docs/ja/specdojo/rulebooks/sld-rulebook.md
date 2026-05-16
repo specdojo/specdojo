@@ -15,7 +15,7 @@
 ### 1.1 ID規約
 
 - 保管場所一覧IDは正規表現 `^sll-[a-z0-9-]+$` に合致する一意IDを用いる。
-- `type: domain` は業務ドメイン仕様であることを示す。
+- `type: data` は業務ドメイン仕様であることを示す。
 
 ## 2. 記述ルール
 
@@ -43,7 +43,7 @@
 ```yaml
 ---
 id: sll-main
-type: domain
+type: data
 title: 保管場所一覧(main)
 status: draft
 supersedes: []
@@ -72,7 +72,7 @@ supersedes: []
 >   ```yaml
 >   ---
 >   id: sll-<英小文字とハイフンで構成したID> # 例: sll-main
->   type: domain
+>   type: data
 >   title: <保管場所一覧名> # 例: 保管場所一覧(main)
 >   status: draft # draft / ready / deprecated のいずれか
 >   supersedes: []

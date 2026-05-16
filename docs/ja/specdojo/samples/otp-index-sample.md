@@ -1,6 +1,6 @@
 ---
 id: otp-index
-type: migration
+type: project
 status: draft
 rulebook: otp-index-rulebook
 ---

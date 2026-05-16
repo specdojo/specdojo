@@ -12,7 +12,7 @@
 
 ```yaml
 id: bdd-XXXX # 任意の一意ID（bdd-から始める）
-type: domain
+type: data
 title: 業務データ辞書(XXXX)
 status: draft
 supersedes: []

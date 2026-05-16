@@ -8,7 +8,7 @@
   ```yaml
   ---
   id: stl-<英小文字とハイフンで構成したID> # 例: stl-money
-  type: domain
+  type: data
   title: <ステータス一覧名> # 例: お金のステータス
   status: draft # draft / ready / deprecated のいずれか
   supersedes: []

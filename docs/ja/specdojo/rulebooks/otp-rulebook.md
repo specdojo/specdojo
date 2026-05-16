@@ -216,7 +216,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: otp-hypercare
-type: migration
+type: project
 title: 運用切替計画: ハイパーケア
 status: draft
 based_on:

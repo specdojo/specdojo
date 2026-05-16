@@ -32,7 +32,7 @@
 ```yaml
 ---
 id: dmd-<term>
-type: migration
+type: project
 title: データ移行設計: <対象名>
 status: draft # draft / ready / deprecated
 based_on: []
@@ -143,7 +143,7 @@ supersedes: []
 ## 最終チェック（自己検査）
 
 - `id` が `dmd-<term>` である
-- `type: migration` / `status` が設定されている
+- `type: project` / `status` が設定されている
 - 見出しが指定順序で揃っている（欠落なし）
 - `dmd-<term>` の場合、対象データ詳細に「方式（フル/増分）」と「増分基準」がある
 - `dmd-<term>` の場合、データマッピングに主キー/参照整合の扱いがある

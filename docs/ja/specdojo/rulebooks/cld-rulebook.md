@@ -47,7 +47,7 @@
 ### 1.1 ID規約
 
 - 分類一覧IDは正規表現 **`^cll-[a-z0-9-]+$`** に合致すること
-- `type: domain` は画面やAPI仕様と切り離して管理することを示す
+- `type: data` は画面やAPI仕様と切り離して管理することを示す
 
 ## 2. 記述ルール（共通）
 
@@ -159,7 +159,7 @@
 ```yaml
 ---
 id: cll-product-type
-type: domain
+type: data
 title: 商品区分
 status: draft
 supersedes: []
@@ -196,7 +196,7 @@ supersedes: []
 >   ```yaml
 >   ---
 >   id: cll-<英小文字とハイフンで構成したID> # 例: cll-product-type
->   type: domain
+>   type: data
 >   title: <分類一覧名> # 例: 商品区分
 >   status: draft # draft / ready / deprecated のいずれか
 >   supersedes: []

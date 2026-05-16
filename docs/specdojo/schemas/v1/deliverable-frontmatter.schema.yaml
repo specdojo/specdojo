@@ -11,21 +11,24 @@ allOf:
       type:
         type: string
         enum:
-          - project # プロジェクト関連
-          - screen # 画面仕様
-          - api # API仕様
-          - domain # ドメイン仕様
-          - data # データ仕様
-          - test # テスト仕様
-          - flow # 業務フロー仕様
-          - rule # 業務ルール仕様
-          - architecture # 構造・構成仕様（C4、配置、統合、ネットワーク境界など
-          - decision # 設計判断（ADR的な意思決定記録）
-          - meta # 共通/横断ルール
+          # SpecDojo基盤文書
+          - rulebook # 記述規約
+          - instruction # 生成AI指示テンプレート
+          - template # 文書テンプレート（雛形）
+          - standard # 共通標準・規約
           - guide # ガイドライン
-          - migration # 移行計画・設計・手順
-          - operations # 運用要件・設計・手順
-          - template # ドキュメントテンプレート
+          - sample # 記述例
+          # プロジェクト文書
+          - project # プロジェクト文書全般
+          # プロダクト仕様文書
+          - flow # 業務フロー・プロセス仕様
+          - rule # 業務ルール仕様
+          - data # データ仕様
+          - ui # 画面・帳票仕様
+          - api # API・外部I/F仕様
+          - architecture # アーキテクチャ設計
+          - test # テスト仕様・設計
+          - operations # 運用設計・手順
         description: "仕様の種別"
       rulebook:
         $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"

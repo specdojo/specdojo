@@ -217,7 +217,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: dmd-order-data
-type: migration
+type: project
 title: データ移行設計: 受注データ
 status: draft
 based_on:

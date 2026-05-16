@@ -9,7 +9,7 @@
   ```yaml
   ---
   id: cll-<英小文字とハイフンで構成したID> # 例: cll-product-type
-  type: domain
+  type: data
   title: <分類一覧名> # 例: 商品区分
   status: draft # draft / ready / deprecated のいずれか
   supersedes: []

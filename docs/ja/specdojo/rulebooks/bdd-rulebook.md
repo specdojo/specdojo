@@ -21,7 +21,7 @@ Business Data Dictionary (BDD) Documentation Rules
 
 ## 2. 位置づけと用語定義
 
-- 本ルールは `type: domain` の成果物に適用する。
+- 本ルールは `type: data` の成果物に適用する。
 - `logical_name` は業務利用者が理解できる論理名、`physical_name` はDB列互換の物理名を指す。
 - `glossary_term_id` は用語集との参照キー、`related_terms` は関連用語への補助参照を指す。
 

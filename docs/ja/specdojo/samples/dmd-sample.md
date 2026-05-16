@@ -1,6 +1,6 @@
 ---
 id: dmd-order-data
-type: migration
+type: project
 status: draft
 rulebook: dmd-rulebook
 ---

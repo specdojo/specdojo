@@ -136,7 +136,7 @@ Frontmatter の共通ルールは [deliverable-metadata-standard.md](../standard
 ````markdown
 ---
 id: product-cstd-as-is
-type: domain
+type: data
 title: 商品の概念状態遷移図 (AS-IS)
 status: draft
 part_of: []

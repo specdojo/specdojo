@@ -19,7 +19,7 @@
   ```yaml
   ---
   id: bds-<英小文字とハイフンで構成したID> # 例: bds-daily-sales-summary
-  type: domain
+  type: data
   title: <帳票名> # 例: 日次売上サマリ
   status: draft # draft / ready / deprecated のいずれか
   part_of: []

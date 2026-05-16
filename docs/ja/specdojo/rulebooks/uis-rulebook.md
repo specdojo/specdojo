@@ -39,8 +39,8 @@
 
 ### NG/OK例（抜粋）
 
-- NG例: `id: UI_ProductList`（大文字/アンダースコアNG）, `type: domain`（`screen`以外NG）, `extra: foo`（未定義プロパティNG）
-- OK例: `id: uis-product-list`, `type: screen`, `status: ready`
+- NG例: `id: UI_ProductList`（大文字/アンダースコアNG）, `type: data`（`screen`以外NG）, `extra: foo`（未定義プロパティNG）
+- OK例: `id: uis-product-list`, `type: ui`, `status: ready`
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -144,7 +144,7 @@
 ```markdown
 ---
 id: uis-product-list
-type: screen
+type: ui
 title: 商品一覧
 status: draft
 part_of: []
@@ -216,7 +216,7 @@ based_on: []
 >   ```yaml
 >   ---
 >   id: uis-<英小文字とハイフンで構成したID> # 例: uis-product-list
->   type: screen
+>   type: ui
 >   title: <画面名> # 例: 商品一覧
 >   status: draft # draft / ready / deprecated のいずれか
 >   part_of: []

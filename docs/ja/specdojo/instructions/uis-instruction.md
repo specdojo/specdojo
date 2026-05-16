@@ -17,7 +17,7 @@
   ```yaml
   ---
   id: uis-<英小文字とハイフンで構成したID> # 例: uis-product-list
-  type: screen
+  type: ui
   title: <画面名> # 例: 商品一覧
   status: draft # draft / ready / deprecated のいずれか
   part_of: []

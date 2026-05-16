@@ -18,7 +18,7 @@
 ### 1.1 ID規約
 
 - ステータス一覧IDは `^stl-[a-z0-9-]+$` に合致する一意IDを用いる。
-- `type: domain` は業務ドメイン仕様であることを示す。
+- `type: data` は業務ドメイン仕様であることを示す。
 
 ## 2. 記述ルール
 
@@ -66,7 +66,7 @@
 ```yaml
 ---
 id: stl-money
-type: domain
+type: data
 title: お金のステータス
 status: draft
 supersedes: []
@@ -108,7 +108,7 @@ supersedes: []
 >   ```yaml
 >   ---
 >   id: stl-<英小文字とハイフンで構成したID> # 例: stl-money
->   type: domain
+>   type: data
 >   title: <ステータス一覧名> # 例: お金のステータス
 >   status: draft # draft / ready / deprecated のいずれか
 >   supersedes: []

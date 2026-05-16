@@ -1,6 +1,6 @@
 ---
 id: dmd-index
-type: migration
+type: project
 status: draft
 rulebook: dmd-index-rulebook
 ---

@@ -30,7 +30,7 @@
 ```yaml
 ---
 id: mip-index
-type: migration
+type: project
 title: 移行計画: 概要（<システム名>）
 status: draft # draft / ready / deprecated
 based_on: []
@@ -167,7 +167,7 @@ supersedes: []
 
 ## 最終チェック（自己検査）
 
-- `id: mip-index` / `type: migration` / `status` が設定されている
+- `id: mip-index` / `type: project` / `status` が設定されている
 - 見出しが指定順序で揃っている（欠落なし）
 - スコープ（対象/非対象）が明確になっている
 - 成功条件・受入基準に停止許容時間/許容誤差/完了定義が含まれている

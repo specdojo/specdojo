@@ -31,7 +31,7 @@
 ```yaml
 ---
 id: mtp-index
-type: migration
+type: project
 title: 移行テスト計画: 全体
 status: draft # draft / ready / deprecated
 based_on: []
@@ -44,7 +44,7 @@ supersedes: []
 ```yaml
 ---
 id: mtp-<term>
-type: migration
+type: project
 title: 移行テスト計画: <対象名>
 status: draft # draft / ready / deprecated
 based_on: []
@@ -165,7 +165,7 @@ supersedes: []
 ## 最終チェック（自己検査）
 
 - `id` が `mtp-index` または `mtp-<term>` である
-- `type: migration` / `status` が設定されている
+- `type: project` / `status` が設定されている
 - 見出しが指定順序で揃っている（欠落なし）
 - リハーサル回数・日程・完了条件が明記されている
 - 合否基準と差異発生時の扱い（許容/修正/再実行）が明記されている

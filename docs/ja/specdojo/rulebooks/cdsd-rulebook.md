@@ -22,7 +22,7 @@ Conceptual Data Stores Definition (CDSD) Documentation Rules
 ### 1.1 ID規約
 
 - 概念データストア一覧IDは正規表現 `^cdsl-[a-z0-9-]+$` に合致する一意IDを用いる。
-- `type: domain` は業務ドメイン仕様であることを示す。画面やAPI仕様（`screen`/`api`）とは別ドキュメントで管理する。
+- `type: data` は業務ドメイン仕様であることを示す。画面やAPI仕様（`screen`/`api`）とは別ドキュメントで管理する。
 
 ## 2. 記述ルール
 
@@ -71,7 +71,7 @@ Conceptual Data Stores Definition (CDSD) Documentation Rules
 ```yaml
 ---
 id: cdsl-main
-type: domain
+type: data
 title: 概念データストア一覧(main)
 status: draft
 supersedes: []
@@ -103,7 +103,7 @@ supersedes: []
 >   ```yaml
 >   ---
 >   id: cdsl-<英小文字とハイフンで構成したID> # 例: cdsl-main
->   type: domain
+>   type: data
 >   title: <概念データストア一覧名> # 例: 概念データストア一覧(main)
 >   status: draft # draft / ready / deprecated のいずれか
 >   supersedes: []

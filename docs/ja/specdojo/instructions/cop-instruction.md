@@ -32,7 +32,7 @@
 ```yaml
 ---
 id: cop-<term>
-type: migration
+type: project
 title: カットオーバー計画: <対象名>
 status: draft # draft / ready / deprecated
 based_on: []
@@ -160,7 +160,7 @@ supersedes: []
 ## 最終チェック（自己検査）
 
 - `id` が `cop-<term>` である
-- `type: migration` / `status` が設定されている
+- `type: project` / `status` が設定されている
 - 見出しが指定順序で揃っている（欠落なし）
 - 当日タイムラインが分単位で記載され、完了条件と判定点がある
 - 切替判定ポイントに判断者と失敗時の扱いがある
