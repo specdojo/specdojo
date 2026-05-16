@@ -1,6 +1,6 @@
 # WBS 定義 作成の指示テンプレート
 
-以下のルールに従って、`wbs-<scope>.yaml` を 1 ファイル作成してください。出力は **YAML** とします。
+以下のルールに従って、`wbs-<domain>.yaml` を 1 ファイル作成してください。出力は **YAML** とします。
 
 - WBS は成果物スコープと完了定義を記述する文書です。実行順序・依存・日程は含めません。
 - 構造と制約は `docs/specdojo/schemas/v1/wbs.schema.yaml` を正とし、出力内容はこれに厳密準拠してください。
@@ -15,10 +15,10 @@
 
 ## 2. 入力情報
 
-次の情報が与えられている前提で、それに整合する `wbs-<scope>.yaml` を生成してください。不明な場合は推測で補完せず、入力不足として扱ってください。
+次の情報が与えられている前提で、それに整合する `wbs-<domain>.yaml` を生成してください。不明な場合は推測で補完せず、入力不足として扱ってください。
 
 - 対象プロジェクト ID
-- 対象 `scope` と対応ドメイン名
+- 対象 `domain` と対応ドメイン名
 - 成果物カタログ
 - WBS 分解方針
 - 各成果物の作成/更新/参照区分
@@ -35,14 +35,14 @@ YAML ルートには次を記述してください。
 - 任意: `part_of` / `based_on` / `supersedes` / `assigned_team`
 
 ```yaml
-id: wbs-<scope>
+id: wbs-<domain>
 type: wbs
 status: draft
 part_of: []
 based_on: []
 supersedes: []
 project_id: <project-id>
-domain: <scope>
+domain: <domain>
 assigned_team: <team-name>
 wbs:
   - id: WBS-<DOMAIN>-<ARTIFACT>

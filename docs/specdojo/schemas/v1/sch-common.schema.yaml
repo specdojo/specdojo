@@ -199,8 +199,8 @@ $defs:
       wbs:
         type: string
         minLength: 1
-        description: "WBS element ID this task contributes to (e.g., WBS-PJD-OVERVIEW-010)."
-        pattern: "^WBS-[A-Z0-9]+-[A-Z0-9-]+-[0-9]{3}$"
+        description: "WBS element ID this task contributes to (e.g., WBS-PJD-OVERVIEW)."
+        pattern: "^WBS-[A-Z0-9]+-[A-Z0-9-]+$"
       name:
         type: string
         minLength: 1

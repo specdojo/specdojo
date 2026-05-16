@@ -176,32 +176,38 @@ Schedule ファイルは `kind` で種別を区別する。
 
 - `tasks[].wbs` に対応する WBS Item の ID を記載し、WBS との追跡可能性を保つ。
 - 1 WBS Item を複数 Task に分割する場合（レビュー・承認・外部待ちなど）は、全 Task に同じ `wbs` を記載する。
-- `wbs` フィールドはスキーマ上 `^WBS-[A-Z0-9]+-[A-Z0-9-]+-[0-9]{3}$` パターンを要求する（NNN サフィックス含む）。
+- `wbs` フィールドの形式は `WBS-<DOMAIN>-<ARTIFACT>`（末尾に連番なし）とする。
 
-### 6.4. `depends_on`
+### 6.4. action の種別
+
+- `create` / `modify` / `review` / `approve` / `publish` などの action は Schedule の Task として表現する。
+- action の種別は `tasks[].name` に動詞句として含める（例: 「BPS ルールブックをレビューする」）。
+- action は WBS の `done_criteria` や `deliverable` には記載しない（WBS は WHAT、Schedule は HOW/WHEN を扱う）。
+
+### 6.5. `depends_on`
 
 - 前提のないタスク・マイルストーンは `depends_on: []` と明示する（省略不可）。
 - `depends_on` には同一ファイル内の ID だけでなく、`sch-milestones.yaml` や他の `sch-track-<track>.yaml` の ID も参照できる。
 - ツールが依存グラフの整合性（ID 存在確認・循環参照検出）を検証する。
 
-### 6.5. `duration_days`
+### 6.6. `duration_days`
 
 - 稼働日ベースで記述する。小数可（例: `0.125`, `0.25`, `0.5`）。ゼロは不可（ゼロ期間は Milestone を使う）。
 - カレンダー設定（`workdays`, `work_hours_per_day`）は `sch-defaults.yaml` に集約し、個別ファイルでは `calendar` で差分のみ上書きする。
 
-### 6.6. `kind: defaults` の使い方
+### 6.7. `kind: defaults` の使い方
 
 - プロジェクト共通の `calendar`（タイムゾーン・稼働曜日・祝日）と `settings.start_date` を `sch-defaults.yaml` に定義する。
 - 個別の `sch-track-<track>.yaml` で `calendar` を省略すると defaults が適用される。
 - `sch-defaults.yaml` は `project_id` を持たない（スキーマ上禁止）。
 
-### 6.7. `kind: config` の使い方
+### 6.8. `kind: config` の使い方
 
 - トラックごとの担当チーム、既定エージェントモード、運用上の設定は `sch-config-<track>.yaml` に定義する。
 - `sch-track-<track>.yaml` は Task / Milestone の実行計画を主に扱い、設定値の重複を避ける。
 - `sch-config-<track>.yaml` の `<track>` は、対応する `sch-track-<track>.yaml` と一致させる。
 
-### 6.8. `kind: agent_overrides` の使い方
+### 6.9. `kind: agent_overrides` の使い方
 
 - 特定タスクのエージェントモードを上書きする場合に使う（例: 特定タスクだけ `manual` にする）。
 - `default_agent_mode` は `sch-config-<track>.yaml` に定義し、個別タスクの例外だけを `sch-agent-overrides-<track>.yaml` に記載する。

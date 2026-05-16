@@ -71,7 +71,7 @@ properties:
     type: string
     minLength: 1
     description: >
-      Stable domain or scope boundary used in the file name wbs-<domain>.yaml,
+      Stable domain boundary used in the file name wbs-<domain>.yaml,
       e.g. project-management, project-definition, requirements.
     pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
 
