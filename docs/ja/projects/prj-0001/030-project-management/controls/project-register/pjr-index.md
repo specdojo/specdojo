@@ -57,6 +57,7 @@ Project Register
 | PJR-0035 | done | `dct-<domain>`雛形作成 | `dct-<domain>`のプロジェクト横断での雛形を作成 | todo | high | PO | 2026-05-17 | 2026-05-16 | `docs/specdojo/templates/` に small/medium/large 対応テンプレートを作成 | - |
 | PJR-0036 | done | pjr-indexの一覧見直し | 一覧に完了日や結果を記入する欄の追加検討 | todo | high | PO | 2026-05-17 | 2026-05-16 | `完了日` と `結論` 列を追加 | - |
 | PJR-0037 | open | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | PO | 2026-05-17 | - | - | [prj-0037-sch-strategy](pjr-0037-sch-strategy.md) |
+| PJR-0038 | done | `pjr-<domain>.md`にdone_criteria追加 | done_criteriaをMarkdownに追加 | todo | high | PO | 2026-05-17 | 2026-05-17 | done_criteriaの追加をscriptで自動化 | - |
 
 ## 4. 派生ビュー
 

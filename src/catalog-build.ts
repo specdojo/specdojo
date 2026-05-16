@@ -30,6 +30,20 @@ function renderTable(deliverables: DctDeliverableItem[]): string[] {
   return lines
 }
 
+function renderDoneCriteria(deliverables: DctDeliverableItem[]): string[] {
+  const lines: string[] = []
+  for (const item of deliverables) {
+    if (item.kind !== 'work' || !item.done_criteria || item.done_criteria.length === 0) continue
+    lines.push('')
+    lines.push(`**\`${item.local_id}\`** の完了条件:`)
+    lines.push('')
+    for (const criterion of item.done_criteria) {
+      lines.push(`- ${criterion}`)
+    }
+  }
+  return lines
+}
+
 function renderSections(
   sections: DctSection[],
   parentBase: string,
@@ -56,6 +70,7 @@ function renderSections(
       if (section.deliverables && section.deliverables.length > 0) {
         lines.push('')
         lines.push(...renderTable(section.deliverables))
+        lines.push(...renderDoneCriteria(section.deliverables))
       }
       if (section.groups && section.groups.length > 0) {
         lines.push(...renderSections(section.groups, sectionBase, depth, prefix))
@@ -83,6 +98,7 @@ function renderSections(
     if (section.deliverables && section.deliverables.length > 0) {
       lines.push('')
       lines.push(...renderTable(section.deliverables))
+      lines.push(...renderDoneCriteria(section.deliverables))
     }
 
     if (section.groups && section.groups.length > 0) {
