@@ -11,7 +11,7 @@ base_path: /docs/ja/projects/prj-0001/020-project-definition
 groups:
   - deliverables:
       - local_id: prj-overview
-        artifact: OVERVIEW
+        artifact_code: OVERVIEW
         name: プロジェクト概要
         kind: work
         depends_on: []
@@ -23,7 +23,7 @@ groups:
           - QE が成功判定の輪郭を確認できること
 
       - local_id: prj-stakeholder-register
-        artifact: STAKEHOLDER
+        artifact_code: STAKEHOLDER
         name: ステークホルダー登録簿
         kind: work
         depends_on:
@@ -36,7 +36,7 @@ groups:
           - QE が品質に影響するステークホルダーを確認できること
 
       - local_id: prj-charter
-        artifact: CHARTER
+        artifact_code: CHARTER
         name: プロジェクト憲章
         kind: work
         depends_on:
@@ -50,7 +50,7 @@ groups:
           - QE が品質目標・受入基準への参照を確認できること
 
       - local_id: prj-scope
-        artifact: SCOPE
+        artifact_code: SCOPE
         name: プロジェクトスコープ
         kind: work
         depends_on:
@@ -63,7 +63,7 @@ groups:
           - QE がテスト対象・対象外の境界を判断できること
 
       - local_id: prj-success-criteria-and-acceptance-criteria
-        artifact: SUCCESS
+        artifact_code: SUCCESS
         name: 成功基準と受入条件
         kind: work
         depends_on:
@@ -76,7 +76,7 @@ groups:
           - QE が検証可能な形で受入条件が記述されていること
 
       - local_id: prj-assumptions-constraints-dependencies
-        artifact: ACD
+        artifact_code: ACD
         name: 前提・制約・依存関係
         kind: work
         depends_on:
@@ -89,7 +89,7 @@ groups:
           - QE がテスト実施上の前提・制約を確認できること
 
       - local_id: prj-issues-and-approach
-        artifact: ISSUES
+        artifact_code: ISSUES
         name: プロジェクト課題と解決アプローチ
         kind: work
         depends_on:
@@ -103,7 +103,7 @@ groups:
           - QE が解決アプローチの検証可能性を確認できること
 
       - local_id: prj-comparison-of-alternatives
-        artifact: ALT
+        artifact_code: ALT
         name: 代替案比較
         kind: work
         depends_on:

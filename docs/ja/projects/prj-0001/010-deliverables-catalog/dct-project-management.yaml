@@ -14,7 +14,7 @@ groups:
     base_path: 010-management-plan
     deliverables:
       - local_id: pm-plan
-        artifact: PLAN
+        artifact_code: PLAN
         name: プロジェクト管理計画
         kind: work
         depends_on: []
@@ -27,7 +27,7 @@ groups:
           - QE がレビュー方針・品質基準への参照を確認できること
 
       - local_id: pm-communication-plan
-        artifact: COMM
+        artifact_code: COMM
         name: コミュニケーション計画
         kind: work
         depends_on:
@@ -41,7 +41,7 @@ groups:
           - QE が品質関連の報告経路が確認できること
 
       - local_id: pm-quality-management-plan
-        artifact: QLTY
+        artifact_code: QLTY
         name: 品質管理計画
         kind: work
         depends_on:
@@ -58,7 +58,7 @@ groups:
     base_path: 020-organization
     deliverables:
       - local_id: pm-organization
-        artifact: ORG
+        artifact_code: ORG
         name: 組織定義
         kind: work
         depends_on:
@@ -72,7 +72,7 @@ groups:
           - QE が品質保証に関わるロールと責務が識別されていることを確認できること
 
       - local_id: pm-roles
-        artifact: ROLE
+        artifact_code: ROLE
         name: ロール定義
         kind: work
         depends_on:
@@ -86,7 +86,7 @@ groups:
           - QE が QE ロールが明確に定義されていることを確認できること
 
       - local_id: pm-members
-        artifact: MBR
+        artifact_code: MBR
         name: メンバー定義
         kind: work
         depends_on:
@@ -101,7 +101,7 @@ groups:
           - QE が QE 担当者の割り当てが確認できること
 
       - local_id: pm-raci
-        artifact: RACI
+        artifact_code: RACI
         name: RACI
         kind: work
         depends_on:
@@ -119,7 +119,7 @@ groups:
     note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pjr-index
-        artifact: CTLIND
+        artifact_code: CTLIND
         name: プロジェクト登録簿
         kind: control
         depends_on: []
@@ -127,7 +127,7 @@ groups:
         path: pjr-index.md
 
       - local_id: pjr-item
-        artifact: CTLITM
+        artifact_code: CTLITM
         name: プロジェクト登録項目
         kind: control
         depends_on:
@@ -140,7 +140,7 @@ groups:
     note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pjr-open-items
-        artifact: CTLOI
+        artifact_code: CTLOI
         name: 未完了項目一覧
         kind: generated
         depends_on:
@@ -150,7 +150,7 @@ groups:
         path: pjr-open-items.md
 
       - local_id: pjr-by-owner
-        artifact: CTLOB
+        artifact_code: CTLOB
         name: 担当者別一覧
         kind: generated
         depends_on:
@@ -160,7 +160,7 @@ groups:
         path: pjr-by-owner.md
 
       - local_id: pjr-by-priority
-        artifact: CTLPR
+        artifact_code: CTLPR
         name: 優先度別一覧
         kind: generated
         depends_on:
@@ -170,7 +170,7 @@ groups:
         path: pjr-by-priority.md
 
       - local_id: pjr-by-status
-        artifact: CTLST
+        artifact_code: CTLST
         name: 状態別一覧
         kind: generated
         depends_on:
@@ -184,7 +184,7 @@ groups:
     note: WBS への落とし込み対象外。
     deliverables:
       - local_id: pm-risk-register
-        artifact: CTLRSK
+        artifact_code: CTLRSK
         name: リスク登録簿
         kind: generated
         depends_on:
@@ -193,7 +193,7 @@ groups:
         path: pm-risk-register.md
 
       - local_id: pm-issue-log
-        artifact: CTLISS
+        artifact_code: CTLISS
         name: 課題ログ
         kind: generated
         depends_on:
@@ -202,7 +202,7 @@ groups:
         path: pm-issue-log.md
 
       - local_id: pm-change-request-log
-        artifact: CTLCRQ
+        artifact_code: CTLCRQ
         name: 変更要求ログ
         kind: generated
         depends_on:
@@ -211,7 +211,7 @@ groups:
         path: pm-change-request-log.md
 
       - local_id: pm-decision-log
-        artifact: CTLDEC
+        artifact_code: CTLDEC
         name: 決定記録
         kind: generated
         depends_on:
@@ -223,7 +223,7 @@ groups:
     base_path: wbs
     deliverables:
       - local_id: wbs-project-management
-        artifact: WBSPJM
+        artifact_code: WBSPJM
         name: WBS 定義（プロジェクト管理）
         kind: work
         depends_on: []
@@ -236,7 +236,7 @@ groups:
           - QE が完了条件の検証可能性を確認できること
 
       - local_id: wbs-project-definition
-        artifact: WBSPJD
+        artifact_code: WBSPJD
         name: WBS 定義（プロジェクト定義）
         kind: work
         depends_on: []
@@ -252,7 +252,7 @@ groups:
     base_path: schedule
     deliverables:
       - local_id: sch-milestones
-        artifact: SCHMS
+        artifact_code: SCHMS
         name: マイルストーン定義
         kind: work
         depends_on: []
@@ -265,7 +265,7 @@ groups:
           - QE が品質ゲートが含まれていることを確認できること
 
       - local_id: sch-defaults
-        artifact: SCHDEF
+        artifact_code: SCHDEF
         name: スケジュールデフォルト定義
         kind: work
         depends_on:
@@ -280,7 +280,7 @@ groups:
           - QE が設定値の妥当性を確認できること
 
       - local_id: sch-track-launch
-        artifact: SCHTLNCH
+        artifact_code: SCHTLNCH
         name: Launch スケジュール定義
         kind: work
         depends_on:
@@ -295,7 +295,7 @@ groups:
           - QE が品質ゲート・レビュータスクが含まれていることを確認できること
 
       - local_id: sch-config-launch
-        artifact: SCHCFG
+        artifact_code: SCHCFG
         name: Launch スケジュール設定
         kind: work
         depends_on:
@@ -310,7 +310,7 @@ groups:
           - QE が設定値の妥当性を確認できること
 
       - local_id: sch-agent-overrides-launch
-        artifact: SCHAOV
+        artifact_code: SCHAOV
         name: Launch スケジュールエージェント上書き設定
         kind: work
         depends_on:
@@ -331,7 +331,7 @@ groups:
         base_path: reporting/progress-reports
         deliverables:
           - local_id: pr-item
-            artifact: PR
+            artifact_code: PR
             name: 進捗報告
             kind: control
             depends_on: []
@@ -342,7 +342,7 @@ groups:
         base_path: reporting/meeting-minutes
         deliverables:
           - local_id: mm-item
-            artifact: MM
+            artifact_code: MM
             name: 議事録
             kind: control
             depends_on: []

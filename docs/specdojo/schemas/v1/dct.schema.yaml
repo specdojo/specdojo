@@ -135,7 +135,7 @@ $defs:
           Template patterns with angle brackets (e.g., pjr-<NNNN>-<term>) are
           not validated by this schema; use the note field to document them.
 
-      artifact:
+      artifact_code:
         type: string
         pattern: "^[A-Z][A-Z0-9]{1,11}$"
         description: "Optional short uppercase code for the deliverable (e.g., OVERVIEW, PLAN)."
