@@ -6,6 +6,7 @@ import yaml from 'js-yaml'
 import type { SchedulerStrategy } from './exec-types.js'
 
 export type SpecDojoProjectConfig = {
+  catalog_path?: string
   schedule_path: string
   execution_path: string
   members_path?: string
