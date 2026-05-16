@@ -52,8 +52,9 @@ Project Register
 | PJR-0030 | open | wbs to schedule strategyの見直し | deliverable -> rules の順番で作成するように見直し | todo | high | PO | 2026-05-10 | [./pjr-0030-wbs-to-sch.md](./pjr-0030-wbs-to-sch.md) |
 | PJR-0031 | done | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | PO | 2026-05-10 | - |
 | PJR-0032 | done| wbs を成果物カタログに統合 | 成果物カタログをyaml化して統合 | todo | high | PO | 2026-05-17 | - |
-| PJR-0033 | open| 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | PO | 2026-05-17 | - |
+| PJR-0033 | done| 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | PO | 2026-05-17 | - |
 | PJR-0034 | open| wbsの削除| 不要になったwbsファイルとその記述を削除 | todo | high | PO | 2026-05-17 | - |
+| PJR-0035 | done | `dct-<domain>`雛形作成 | `dct-<domain>`のプロジェクト横断での雛形を作成 | todo | high | PO | 2026-05-17 | - |
 
 ## 4. 派生ビュー
 

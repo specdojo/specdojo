@@ -26,6 +26,7 @@ status: draft
 - クリティカルパス算出
 - スケジュール差分検出
 - Agent安全実行（排他ロック）
+- 成果物カタログの scaffold・検証・Markdown 生成
 
 ## 2. ディレクトリ構成
 
@@ -36,6 +37,10 @@ repo-root/
 ├─ specdojo.config.json
 ├─ .env
 ├─ docs/
+│  ├─ specdojo/
+│  │  └─ templates/
+│  │     ├─ dct-project-definition.yaml
+│  │     └─ dct-project-management.yaml
 │  └─ ja/
 │     └─ projects/
 │        └─ prj-0001/
@@ -418,10 +423,11 @@ agent-test
 
 ## 18. catalog コマンド
 
-`specdojo catalog` は `catalog_path` 配下の `dct-<domain>.yaml` を読み込み、`generated/` に Markdown を出力するコマンド群です。
+`specdojo catalog` は成果物カタログ（`dct-<domain>.yaml`）の scaffold・検証・Markdown 生成を行うコマンド群です。
 
-- 検証（`validate`）
-- Markdown 生成（`build`）
+- scaffold（`scaffold`）: テンプレートから `dct-*.yaml` を生成
+- 検証（`validate`）: `dct-*.yaml` の整合性確認
+- Markdown 生成（`build`）: `generated/dct-*.md` を出力
 
 ## 19. catalog パス確認
 
@@ -466,7 +472,37 @@ generated/
 
 `dct-<domain>.md` は対応する `dct-<domain>.yaml` の `groups` 構造に従い、成果物一覧を章立てで出力します。
 
-## 22. まとめ
+## 22. catalog scaffold
+
+`catalog_path` に `dct-*.yaml` を新規生成します。`docs/specdojo/templates/` のテンプレートをもとに、プロジェクト規模に応じた成果物セットを出力します。
+
+```bash
+specdojo catalog scaffold --project shj-0001 --size medium
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--size` | `small` / `medium` / `large` | `medium` |
+| `--project-id` | 生成ファイルに埋め込む project_id（省略時は `catalog_path` から自動導出） | 自動導出 |
+| `--force` | 既存ファイルを上書き | `false` |
+
+サイズ別の収録成果物:
+
+| 成果物 | small | medium | large |
+| --- | :---: | :---: | :---: |
+| プロジェクト概要・スコープ・成功基準 | ○ | ○ | ○ |
+| 管理計画・組織定義・メンバー定義 | ○ | ○ | ○ |
+| マイルストーン定義 | ○ | ○ | ○ |
+| ステークホルダー・憲章・前提制約・課題・代替案比較 | - | ○ | ○ |
+| コミュニケーション計画・品質管理計画・ロール定義 | - | ○ | ○ |
+| 管理台帳・WBS・フルスケジュール・レポート | - | ○ | ○ |
+| RACI | - | - | ○ |
+
+既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
+
+## 23. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -477,4 +513,4 @@ generated/
 - CPM / Critical Path計算
 - schedule diff検出
 - AI Agent向けタスク取得
-- 成果物カタログ Markdown 生成（`catalog build`）
+- 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）

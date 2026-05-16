@@ -1,0 +1,127 @@
+# Template: project definition deliverables catalog
+# min_size: deliverable is included only when scaffold --size >= this value
+# Placeholder prj-0000 is replaced with the actual project_id on scaffold.
+id: prj-0000:dct-project-definition
+type: project
+status: draft
+part_of:
+  - prj-0000:dct-index
+project_id: prj-0000
+domain: project-definition
+domain_code: PJD
+base_path: /docs/ja/projects/prj-0000/020-project-definition
+
+groups:
+  - deliverables:
+      # ── small ────────────────────────────────────────────────────────────
+      - local_id: prj-overview
+        artifact_code: OVERVIEW
+        name: プロジェクト概要
+        kind: work
+        depends_on: []
+        overview: プロジェクトの目的・背景・ゴールを定義
+        path: prj-overview.md
+        done_criteria:
+          - PO/BA がプロジェクトの目的・背景・ゴールを業務観点で確認できる粒度で記述されていること
+          - ARC が技術的前提・制約を読み取れる情報が含まれていること
+          - QE が成功判定の輪郭を確認できること
+
+      - local_id: prj-scope
+        artifact_code: SCOPE
+        name: プロジェクトスコープ
+        kind: work
+        depends_on:
+          - prj-overview
+        overview: プロジェクトの対象範囲と除外範囲を定義
+        path: prj-scope.md
+        done_criteria:
+          - PO/BA が対象範囲と除外範囲を業務観点で確認できること
+          - ARC が技術的スコープ境界を識別できること
+          - QE がテスト対象・対象外の境界を判断できること
+
+      - local_id: prj-success-criteria-and-acceptance-criteria
+        artifact_code: SUCCESS
+        name: 成功基準と受入条件
+        kind: work
+        depends_on:
+          - prj-scope
+        overview: プロジェクト成功の判定基準と受入条件を明確化
+        path: prj-success-criteria-and-acceptance-criteria.md
+        done_criteria:
+          - PO/BA がプロジェクト成功の判定基準を業務観点で確認できること
+          - ARC が技術的受入条件を確認できること
+          - QE が検証可能な形で受入条件が記述されていること
+
+      # ── medium ───────────────────────────────────────────────────────────
+      - local_id: prj-stakeholder-register
+        artifact_code: STAKEHOLDER
+        min_size: medium
+        name: ステークホルダー登録簿
+        kind: work
+        depends_on:
+          - prj-overview
+        overview: 関係者の役割・関心・影響度を一覧化
+        path: prj-stakeholder-register.md
+        done_criteria:
+          - PO/BA が業務観点で関係者の役割・関心・影響度を確認できる形で一覧化されていること
+          - ARC が技術的意思決定者・承認者を識別できること
+          - QE が品質に影響するステークホルダーを確認できること
+
+      - local_id: prj-charter
+        artifact_code: CHARTER
+        min_size: medium
+        name: プロジェクト憲章
+        kind: work
+        depends_on:
+          - prj-overview
+          - prj-stakeholder-register
+        overview: プロジェクトの正式な認可と権限委譲を文書化
+        path: prj-charter.md
+        done_criteria:
+          - PO/BA がプロジェクトの正式認可・権限委譲・予算枠を業務観点で確認できること
+          - ARC が技術的制約・前提を読み取れること
+          - QE が品質目標・受入基準への参照を確認できること
+
+      - local_id: prj-assumptions-constraints-dependencies
+        artifact_code: ACD
+        min_size: medium
+        name: 前提・制約・依存関係
+        kind: work
+        depends_on:
+          - prj-scope
+        overview: 前提条件・制約事項・外部依存を整理
+        path: prj-assumptions-constraints-dependencies.md
+        done_criteria:
+          - PO/BA が業務上の前提・制約を業務観点で識別できること
+          - ARC が技術的制約・外部依存を識別できること
+          - QE がテスト実施上の前提・制約を確認できること
+
+      - local_id: prj-issues-and-approach
+        artifact_code: ISSUES
+        min_size: medium
+        name: プロジェクト課題と解決アプローチ
+        kind: work
+        depends_on:
+          - prj-scope
+          - prj-assumptions-constraints-dependencies
+        overview: 主要課題の特定と解決アプローチを定義
+        path: prj-issues-and-approach.md
+        done_criteria:
+          - PO/BA が主要課題と解決アプローチを業務観点で確認できること
+          - ARC が技術的課題と実現方式の方向性を識別できること
+          - QE が解決アプローチの検証可能性を確認できること
+
+      - local_id: prj-comparison-of-alternatives
+        artifact_code: ALT
+        min_size: medium
+        name: 代替案比較
+        kind: work
+        depends_on:
+          - prj-scope
+          - prj-issues-and-approach
+        overview: 技術的・方針的な代替案を比較評価
+        path: prj-comparison-of-alternatives.md
+        done_criteria:
+          - PO/BA が代替案の比較軸・評価根拠・推奨案を業務観点で確認できること
+          - ARC が技術的実現可能性・影響の評価を確認できること
+          - QE が選択された案に対する検証方針を確認できること

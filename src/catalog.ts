@@ -1,9 +1,10 @@
 import { Command } from 'commander'
 import { dirname, join, resolve } from 'node:path'
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
-import { loadConfig, loadEnv } from './specdojo-config.js'
+import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import { buildCatalog, validateDctDoc } from './catalog-build.js'
+import { runScaffold, type ProjectSize } from './catalog-scaffold.js'
 import type { DctDoc } from './catalog-types.js'
 
 function resolveCatalogPath(opts: { project?: string }): string {
@@ -128,6 +129,50 @@ export function registerCatalogCommands(program: Command): void {
       if (errors.length > 0) {
         process.exitCode = 1
       }
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  const sccmd = cat
+    .command('scaffold')
+    .description('Create dct-*.yaml from templates (small|medium|large)')
+  addProjectOption(sccmd)
+  sccmd.option('--size <size>', 'Project size: small|medium|large', 'medium')
+  sccmd.option('--project-id <projectId>', 'Project ID to embed (e.g. prj-0001); derived from catalog_path if omitted')
+  sccmd.option('--force', 'Overwrite existing files', false)
+  sccmd.action(opts => {
+    try {
+      const catalogPath = resolveCatalogPath(opts)
+      const size = (opts.size ?? 'medium') as ProjectSize
+      if (!['small', 'medium', 'large'].includes(size)) {
+        throw new Error(`Invalid --size: "${size}". Must be one of: small|medium|large`)
+      }
+
+      const templatesPath = resolve(specdojoRootDir(), 'docs/specdojo/templates')
+      if (!existsSync(templatesPath)) {
+        throw new Error(`Templates directory not found: ${templatesPath}`)
+      }
+
+      const { written, skipped, errors } = runScaffold({
+        catalogPath,
+        templatesPath,
+        size,
+        projectId: opts.projectId ?? null,
+        force: !!opts.force,
+      })
+
+      for (const err of errors) {
+        process.stdout.write(`ERROR: ${err}\n`)
+      }
+      for (const p of written) {
+        process.stdout.write(`Created: ${p}\n`)
+      }
+      for (const p of skipped) {
+        process.stdout.write(`Skipped (already exists; use --force to overwrite): ${p}\n`)
+      }
+
+      if (errors.length > 0) process.exitCode = 1
     } catch (error) {
       printCommandError(error)
     }

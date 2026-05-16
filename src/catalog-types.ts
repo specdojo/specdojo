@@ -11,12 +11,14 @@ export type DctDeliverableItem = {
   path?: string
   done_criteria?: string[]
   note?: string
+  min_size?: string // template-only: 'small' | 'medium' | 'large'
 }
 
 export type DctSection = {
   name?: string
   base_path?: string
   note?: string
+  min_size?: string // template-only: 'small' | 'medium' | 'large'
   groups?: DctSection[]
   deliverables?: DctDeliverableItem[]
 }
