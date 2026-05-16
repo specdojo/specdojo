@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import yaml from 'js-yaml'
-import type { DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
+import type { DctDeliverableItem, DctDoc, DctSection, DctTemplateDoc } from './catalog-types.js'
 
 export type ProjectSize = 'small' | 'medium' | 'large'
 
@@ -52,7 +52,7 @@ export function deriveProjectId(catalogPath: string): string | null {
   return m ? m[1] : null
 }
 
-export function scaffoldDoc(template: DctDoc, projectId: string, size: ProjectSize): DctDoc {
+export function scaffoldDoc(template: DctTemplateDoc, projectId: string, size: ProjectSize): DctDoc {
   const PLACEHOLDER = 'prj-0000'
   const replace = (s: string) => s.replaceAll(PLACEHOLDER, projectId)
 
@@ -61,8 +61,8 @@ export function scaffoldDoc(template: DctDoc, projectId: string, size: ProjectSi
     .filter((g): g is DctSection => g !== null)
 
   const doc: DctDoc = {
-    id: replace(template.id),
-    type: template.type,
+    id: `${projectId}:${template.id.replace(/-template$/, '')}`,
+    type: 'project',
     status: template.status,
     project_id: projectId,
     domain: template.domain,
@@ -112,7 +112,8 @@ export function runScaffold(opts: {
 
   for (const f of templateFiles) {
     const templatePath = join(templatesPath, f)
-    const outputPath = join(catalogPath, f)
+    const outputFilename = f.replace(/-template(\.yaml)$/, '$1')
+    const outputPath = join(catalogPath, outputFilename)
 
     if (existsSync(outputPath) && !force) {
       skipped.push(outputPath)
@@ -121,7 +122,7 @@ export function runScaffold(opts: {
 
     try {
       const raw = readFileSync(templatePath, 'utf8')
-      const template = yaml.load(raw) as DctDoc
+      const template = yaml.load(raw) as DctTemplateDoc
       const scaffolded = scaffoldDoc(template, projectId, size)
       const out = yaml.dump(scaffolded, {
         lineWidth: 120,

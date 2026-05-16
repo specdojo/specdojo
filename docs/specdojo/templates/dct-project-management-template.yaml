@@ -2,12 +2,11 @@
 # min_size on a group excludes the entire group below that size.
 # min_size on a deliverable excludes only that item.
 # Placeholder prj-0000 is replaced with the actual project_id on scaffold.
-id: prj-0000:dct-project-management
-type: project
+id: dct-project-management-template
+type: template
 status: draft
 part_of:
   - prj-0000:dct-index
-project_id: prj-0000
 domain: project-management
 domain_code: PJM
 base_path: /docs/ja/projects/prj-0000/030-project-management

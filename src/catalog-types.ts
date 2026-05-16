@@ -35,6 +35,17 @@ export type DctDoc = {
   groups: DctSection[]
 }
 
+export type DctTemplateDoc = {
+  id: string
+  type: 'template'
+  status: DctStatus
+  part_of?: string[]
+  domain: string
+  domain_code?: string
+  base_path?: string
+  groups: DctSection[]
+}
+
 export type DctValidationResult = {
   ok: boolean
   errors: string[]
