@@ -11,10 +11,12 @@ Launch Phase Schedule Strategy
 
 ## 1. 成果物の種類
 
-成果物の範囲は以下;
+スケジュールタスクとして計画する対象は `kind: work` の成果物に限定する。
 
-- `dct-project-definition`
-- `dct-project-management`
+- `dct-project-definition`（`kind: work` のみ）
+- `dct-project-management`（`kind: work` のみ）
+
+`kind: control`（管理台帳・報告書）および `kind: generated`（生成ビュー）はスケジュールタスクとして計画せず、随時更新・生成で管理する。
 
 ## 2. 成果物の作成フロー
 
@@ -30,9 +32,19 @@ Launch Phase Schedule Strategy
 
 ## 3. タスクの担当者
 
-- `documentたたき台`の作成: `BA`
-- `document一次版`の作成: `BA`
-- `document完成版`の作成: `BA`
+成果物の作成タスクの `owner` は、成果物の性質に応じて以下の方針で決定する。
+
+| ドメイン / グループ | 作成担当 |
+| --- | --- |
+| dct-project-definition: 要件・スコープ・課題系 | `BA` |
+| dct-project-definition: 技術制約・代替案系 | `ARC` |
+| dct-project-definition: 正式認可（`prj-charter`） | `PO` |
+| dct-project-management: 管理計画・スケジュール計画・RACI | `PM` |
+| dct-project-management: 品質管理計画 | `QE` |
+| dct-project-management: 組織定義（`pm-organization`） | `PO` |
+| dct-project-management: ロール・メンバー・スケジュール設定 | `ARC` |
+
+- `documentたたき台`・`document一次版`・`document完成版`の作成: 上表の担当ロール
 - レビュー・修正依頼: 各成果物の `done_criteria` に指定されたロール（`PO`, `BA`, `ARC`, `QE` を基本とし、成果物によって `PM`・`DEV`・`UX`・`OPS` が追加される）
 
 ## 4. タスクの所用時間
@@ -44,9 +56,6 @@ Launch Phase Schedule Strategy
 | `work` | たたき台作成 | 初版ドラフトを作成する | 1〜2h |
 | `work` | レビュー・修正（繰り返し） | `done_criteria` を基にレビューし修正する | 0.5〜1h × 回数 |
 | `work` | 完成版仕上げ | ドメイン整合調整・最終承認を経て `ready` にする | 0.5〜1h |
-| `control` | 初期登録 | 管理台帳・報告書の初版を作成する | 0.5〜1h |
-| `control` | 随時更新 | 課題・変更・報告を都度記録する | 0.1〜0.5h / 件 |
-| `generated` | 生成・再生成 | スクリプトまたは手動集計で随時出力する | 0.1〜0.5h / 回 |
 
 ## 5. メンバーとロールの対応
 
@@ -63,10 +72,9 @@ Launch Phase Schedule Strategy
 
 タスク区分ごとの担当:
 
-- たたき台作成: `ba-agent`（主担当）、`copilot`（補助）
-- レビュー・修正依頼: `po-agent`、`arc-agent`、`qe-agent`
+- たたき台作成: 各成果物の `owner` に対応する agent（`ba-agent`・`po-agent`・`arc-agent`・`qe-agent`）、`copilot`（補助）
+- レビュー・修正依頼: 各成果物の `done_criteria` に指定されたロールに対応する agent
 - 最終承認: `po`（human のみ）
-- `generated` 成果物の生成: `copilot`
 
 ## 6. 成果物展開順序
 
@@ -118,30 +126,6 @@ Launch Phase Schedule Strategy
 | 1 | `sch-config-launch` | Launch スケジュール設定 | なし |
 | 1 | `sch-agent-overrides-launch` | Launch スケジュールエージェント上書き設定 | なし |
 
-#### 6.2.4. 管理台帳
-
-`control` 種別のため、プロジェクト開始と同時に開設し、随時更新する。
-
-| 順序 | `local_id` | 成果物名 | 依存先 |
-| --- | --- | --- | --- |
-| 1 | `pjr-index` | プロジェクト登録簿 | なし |
-| 随時 | `pjr-NNNN-TERM` | プロジェクト登録項目 | `pjr-index` |
-
-#### 6.2.5. 管理台帳補助ビュー・管理ビュー
-
-`generated` 種別のため、`pjr-NNNN-TERM` が更新されるたびに再生成する。
-
-| `local_id` | 成果物名 | 依存先 |
-| --- | --- | --- |
-| `pjr-open-items` | 未完了項目一覧 | `pjr-index`, `pjr-NNNN-TERM` |
-| `pjr-by-owner` | 担当者別一覧 | `pjr-index`, `pjr-NNNN-TERM` |
-| `pjr-by-priority` | 優先度別一覧 | `pjr-index`, `pjr-NNNN-TERM` |
-| `pjr-by-status` | 状態別一覧 | `pjr-index`, `pjr-NNNN-TERM` |
-| `pm-risk-register` | リスク登録簿 | `pjr-NNNN-TERM` |
-| `pm-issue-log` | 課題ログ | `pjr-NNNN-TERM` |
-| `pm-change-request-log` | 変更要求ログ | `pjr-NNNN-TERM` |
-| `pm-decision-log` | 決定記録 | `pjr-NNNN-TERM` |
-
 ## 7. ドメイン間の依存関係と展開方針
 
 `dct-project-definition` と `dct-project-management` の間にドメインをまたぐ依存が1件ある。
@@ -152,5 +136,3 @@ Launch Phase Schedule Strategy
 
 1. `prj-overview` を最優先で完成させる。
 2. `prj-overview` 完了後、`dct-project-definition` の残成果物と `dct-project-management` の全グループを並行して進める。
-3. 管理台帳（`control`）はプロジェクト開始と同時に開設し、随時記録する。
-4. 管理補助ビュー・管理ビュー（`generated`）は台帳が更新されるたびに再生成する。
