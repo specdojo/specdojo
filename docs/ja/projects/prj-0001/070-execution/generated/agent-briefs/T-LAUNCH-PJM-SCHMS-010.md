@@ -11,9 +11,7 @@
 - name: sch-milestones たたき台作成
 - owner: PM
 - kind: task
-- artifact_kind: タスク定義に従う作業
 - schedule_file: `sch-track-launch.yaml`
-- wbs: `-`
 - duration_days: `0.125`
 
 ## 2. 実施内容
@@ -22,15 +20,16 @@
 - schedule_notes: -
 - tags: -
 
-## 3. 対象成果物候補
+## 3. 対象成果物
 
-primary_paths:
+- path: `sch-milestones.yaml`
 
-- deliverables 未定義。WBS または schedule から対象を確認する。
+done_criteria:
 
-secondary_paths:
-
-- なし
+- PO がプロジェクト全体のマイルストーンを承認できること
+- BA がビジネスマイルストーンが含まれていることを確認できること
+- ARC が技術マイルストーンが含まれていることを確認できること
+- QE が品質ゲートが含まれていることを確認できること
 
 ## 4. 依存と優先度
 
@@ -43,7 +42,7 @@ secondary_paths:
 ## 5. 実行ガイド
 
 1. 対象 task を claim する。
-2. 対応する rules / instruction / sample の対象を特定する。
+2. 対応する成果物を特定する。
 3. task 名と notes に沿って成果物を更新する。
 4. 必要な検証と lint を実行する。
 5. 完了時のみ complete、問題があれば block を記録する。

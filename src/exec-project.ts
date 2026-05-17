@@ -88,6 +88,9 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
     return {
       schedulePath: resolveProjectRelative(baseDir, getProjectSchedulePath(project)),
       executionPath: resolveProjectRelative(baseDir, getProjectExecutionPath(project)),
+      catalogPath: project.catalog_path
+        ? resolveProjectRelative(baseDir, project.catalog_path)
+        : undefined,
     }
   }
 

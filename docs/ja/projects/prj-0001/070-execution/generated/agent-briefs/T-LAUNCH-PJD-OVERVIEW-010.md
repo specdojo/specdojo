@@ -11,9 +11,7 @@
 - name: prj-overview たたき台作成
 - owner: BA
 - kind: task
-- artifact_kind: タスク定義に従う作業
 - schedule_file: `sch-track-launch.yaml`
-- wbs: `-`
 - duration_days: `0.25`
 
 ## 2. 実施内容
@@ -22,15 +20,16 @@
 - schedule_notes: -
 - tags: -
 
-## 3. 対象成果物候補
+## 3. 対象成果物
 
-primary_paths:
+- path: `prj-overview.md`
 
-- deliverables 未定義。WBS または schedule から対象を確認する。
+done_criteria:
 
-secondary_paths:
-
-- なし
+- PO/BA がプロジェクトの目的・背景・ゴールを業務観点で確認できる粒度で記述されていること
+- ARC が技術的前提・制約を読み取れる情報が含まれていること
+- QE が成功判定の輪郭を確認できること
+- PM がプロジェクトの目的・スコープを計画立案の基礎として確認できること
 
 ## 4. 依存と優先度
 
@@ -43,7 +42,7 @@ secondary_paths:
 ## 5. 実行ガイド
 
 1. 対象 task を claim する。
-2. 対応する rules / instruction / sample の対象を特定する。
+2. 対応する成果物を特定する。
 3. task 名と notes に沿って成果物を更新する。
 4. 必要な検証と lint を実行する。
 5. 完了時のみ complete、問題があれば block を記録する。

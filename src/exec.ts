@@ -100,6 +100,7 @@ function addCommonAddOptions(cmd: Command): Command {
 function resolveProjectContext(opts: { project?: string }): {
   schedulePath: string
   executionPath: string
+  catalogPath?: string
 } {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
@@ -209,23 +210,29 @@ function runTaskCatalogBuild(schedulePath: string, executionPath: string): void 
   }
 }
 
-function runAgentBriefBuild(schedulePath: string, executionPath: string, cliProject = ''): void {
+function runAgentBriefBuild(
+  schedulePath: string,
+  executionPath: string,
+  cliProject = '',
+  catalogPath = ''
+): void {
   const currentFileDir = dirname(fileURLToPath(import.meta.url))
   const scriptPath = resolve(currentFileDir, '../tools/docs/src/gen-agent-briefs.ts')
   const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
 
-  const result = spawnSync(
-    npxCmd,
-    [
-      'tsx',
-      scriptPath,
-      '--schedule-path',
-      schedulePath,
-      '--execution-path',
-      executionPath,
-      '--cli-project',
-      cliProject,
-    ],
+  const args = [
+    'tsx',
+    scriptPath,
+    '--schedule-path',
+    schedulePath,
+    '--execution-path',
+    executionPath,
+    '--cli-project',
+    cliProject,
+  ]
+  if (catalogPath) args.push('--catalog-path', catalogPath)
+
+  const result = spawnSync(npxCmd, args,
     {
       encoding: 'utf8',
       env: process.env,
@@ -381,7 +388,8 @@ function runLockedEventCommand(opts: any, action: LockedEventAction): void {
       runAgentBriefBuild(
         schedulePath,
         executionPath,
-        opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
+        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
+        resolveProjectContext(opts).catalogPath ?? ''
       )
       saveClaimBriefSnapshot(executionPath, taskId, actor, event.ts)
       event.meta = {
@@ -485,7 +493,7 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(bcmd)
   bcmd.action(opts => {
     try {
-      const { schedulePath, executionPath } = resolveProjectContext(opts)
+      const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts)
 
       const res = validateAll(schedulePath)
       printValidateResult(res)
@@ -505,7 +513,8 @@ export function registerExecCommands(program: Command): void {
       runAgentBriefBuild(
         schedulePath,
         executionPath,
-        opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
+        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
+        catalogPath ?? ''
       )
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`)

@@ -168,4 +168,5 @@ export type ClaimNextSnapshot = {
 export type ResolvedProjectPaths = {
   schedulePath: string
   executionPath: string
+  catalogPath?: string
 }

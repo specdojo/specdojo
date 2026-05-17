@@ -9,7 +9,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs'
-import { dirname, extname, join } from 'node:path'
+import { extname, join } from 'node:path'
 import { load } from 'js-yaml'
 
 type ReadyTask = {
@@ -39,7 +39,6 @@ type ReadyJson = {
 
 type ScheduleTask = {
   id: string
-  wbs?: string
   name?: string
   owner?: string
   duration_days?: number
@@ -63,54 +62,50 @@ type ScheduleDoc = {
   milestones?: ScheduleMilestone[]
 }
 
+type CatalogItem = {
+  local_id: string
+  path: string
+  done_criteria?: string[]
+}
+
 type TaskDetail = {
   id: string
   name: string
   owner: string
   scheduleFile: string
   kind: 'task' | 'milestone'
-  wbs: string
   durationDays: string
   dependsOn: string[]
   tags: string[]
   notes: string
-  deliverables: string[]
-}
-
-type WbsDoc = {
-  wbs?: Array<{
-    id?: string
-    deliverables?: Array<{
-      path?: string
-    }>
-  }>
+  deliverablePath?: string
+  doneCriteria?: string[]
 }
 
 function parseArgs(argv: string[]): {
   schedulePath: string
   executionPath: string
+  catalogPath: string
   cliProject: string
 } {
   let schedulePath = ''
   let executionPath = ''
+  let catalogPath = ''
   let cliProject = ''
 
   for (let i = 2; i < argv.length; i++) {
     const arg = argv[i]
-    if (arg === '--schedule-path') {
-      schedulePath = argv[++i] ?? ''
-    } else if (arg === '--execution-path') {
-      executionPath = argv[++i] ?? ''
-    } else if (arg === '--cli-project') {
-      cliProject = argv[++i] ?? ''
-    }
+    if (arg === '--schedule-path') schedulePath = argv[++i] ?? ''
+    else if (arg === '--execution-path') executionPath = argv[++i] ?? ''
+    else if (arg === '--catalog-path') catalogPath = argv[++i] ?? ''
+    else if (arg === '--cli-project') cliProject = argv[++i] ?? ''
   }
 
   if (!schedulePath || !executionPath) {
     throw new Error('Usage: gen-agent-briefs.ts --schedule-path <path> --execution-path <path>')
   }
 
-  return { schedulePath, executionPath, cliProject }
+  return { schedulePath, executionPath, catalogPath, cliProject }
 }
 
 function listFilesRecursive(dirPath: string): string[] {
@@ -128,15 +123,12 @@ function isScheduleYaml(filePath: string): boolean {
   const base = filePath.split('/').pop() ?? filePath
   const ext = extname(base).toLowerCase()
   if (ext !== '.yaml' && ext !== '.yml') return false
-  if (base === 'schedule-defaults.yaml' || base === 'schedule-defaults.yml') return false
   return /^sch-.+\.ya?ml$/i.test(base)
 }
 
-function isWbsYaml(filePath: string): boolean {
+function isDctYaml(filePath: string): boolean {
   const base = filePath.split('/').pop() ?? filePath
-  const ext = extname(base).toLowerCase()
-  if (ext !== '.yaml' && ext !== '.yml') return false
-  return /^wbs-.+\.ya?ml$/i.test(base)
+  return /^dct-.+\.ya?ml$/i.test(base)
 }
 
 function safeString(value: unknown, fallback = ''): string {
@@ -164,83 +156,62 @@ function relativeScheduleFile(schedulePath: string, filePath: string): string {
   return filePath
 }
 
-function inferArtifactKind(taskId: string, tags: string[]): string {
-  if (taskId.endsWith('-INS')) return 'instruction の起草・レビュー'
-  if (taskId.endsWith('-SMP')) return 'sample の起草・レビュー'
-  if (tags.includes('rulebook-lifecycle')) return 'rules の起草・レビュー'
-  if (tags.includes('derivatives-lifecycle')) return '派生成果物の起草・レビュー'
-  return 'タスク定義に従う作業'
-}
-
 function criticalityText(slack: number | undefined): string {
   if (slack === undefined) return 'CPM 情報なし'
   if (slack === 0) return 'クリティカルパス上。遅延余裕なし。'
   return `遅延余裕あり（slack=${slack}）。`
 }
 
-function wbsPathForSchedule(schedulePath: string): string {
-  return join(dirname(schedulePath), '050-wbs')
+function collectCatalogItems(sections: unknown[], out: Map<string, CatalogItem>): void {
+  for (const section of sections) {
+    if (!section || typeof section !== 'object') continue
+    const s = section as Record<string, unknown>
+    if (Array.isArray(s.groups)) collectCatalogItems(s.groups, out)
+    for (const item of Array.isArray(s.deliverables) ? s.deliverables : []) {
+      if (!item || typeof item !== 'object') continue
+      const it = item as Record<string, unknown>
+      const local_id = safeString(it.local_id)
+      const path = safeString(it.path)
+      if (!local_id || !path) continue
+      out.set(local_id, {
+        local_id,
+        path,
+        done_criteria: Array.isArray(it.done_criteria)
+          ? it.done_criteria.map((c: unknown) => String(c).trim()).filter(Boolean)
+          : undefined,
+      })
+    }
+  }
 }
 
-function loadWbsDeliverables(schedulePath: string): Map<string, string[]> {
-  const out = new Map<string, string[]>()
-  const wbsPath = wbsPathForSchedule(schedulePath)
-  if (!existsSync(wbsPath)) return out
+function loadCatalogItems(catalogPath: string): Map<string, CatalogItem> {
+  const out = new Map<string, CatalogItem>()
+  if (!catalogPath || !existsSync(catalogPath)) return out
 
-  for (const filePath of listFilesRecursive(wbsPath).filter(isWbsYaml).sort()) {
-    let doc: WbsDoc
+  for (const filePath of listFilesRecursive(catalogPath).filter(isDctYaml).sort()) {
+    let doc: unknown
     try {
-      doc = load(readFileSync(filePath, 'utf8')) as WbsDoc
+      doc = load(readFileSync(filePath, 'utf8'))
     } catch {
       continue
     }
-
-    for (const item of Array.isArray(doc?.wbs) ? doc.wbs : []) {
-      const id = safeString(item?.id)
-      if (!id) continue
-      const deliverables = Array.isArray(item?.deliverables)
-        ? item.deliverables.map(deliverable => safeString(deliverable?.path)).filter(Boolean)
-        : []
-      out.set(id, deliverables)
-    }
+    if (!doc || typeof doc !== 'object') continue
+    const d = doc as Record<string, unknown>
+    if (Array.isArray(d.groups)) collectCatalogItems(d.groups, out)
   }
-
   return out
 }
 
-function selectArtifactCandidates(detail: TaskDetail): string[] {
-  const deliverables = detail.deliverables
-  if (deliverables.length === 0) return []
-
-  if (detail.id.endsWith('-INS')) {
-    const instructionPaths = deliverables.filter(path => path.includes('/instructions/'))
-    return instructionPaths.length > 0 ? instructionPaths : deliverables
-  }
-  if (detail.id.endsWith('-SMP')) {
-    const samplePaths = deliverables.filter(path => path.includes('/samples/'))
-    return samplePaths.length > 0 ? samplePaths : deliverables
-  }
-  if (detail.tags.includes('rulebook-lifecycle')) {
-    const rulePaths = deliverables.filter(path => path.includes('/rulebooks/'))
-    return rulePaths.length > 0 ? rulePaths : deliverables
-  }
-
-  return deliverables
+function extractLocalId(taskName: string): string {
+  return taskName.split(/\s/)[0] ?? ''
 }
 
-function selectSecondaryArtifactCandidates(detail: TaskDetail, primaryPaths: string[]): string[] {
-  if (detail.deliverables.length === 0) return []
-  const primarySet = new Set(primaryPaths)
-  return detail.deliverables.filter(path => !primarySet.has(path))
-}
-
-function loadTaskDetails(schedulePath: string): {
-  projectId: string
-  byId: Map<string, TaskDetail>
-} {
+function loadTaskDetails(
+  schedulePath: string,
+  catalogItems: Map<string, CatalogItem>
+): { projectId: string; byId: Map<string, TaskDetail> } {
   const byId = new Map<string, TaskDetail>()
   let projectId = ''
-  const wbsDeliverables = loadWbsDeliverables(schedulePath)
 
   for (const filePath of listFilesRecursive(schedulePath).filter(isScheduleYaml).sort()) {
     let doc: ScheduleDoc
@@ -249,7 +220,7 @@ function loadTaskDetails(schedulePath: string): {
     } catch {
       continue
     }
-    const kind = safeString((doc as any)?.kind)
+    const kind = safeString((doc as Record<string, unknown>)?.kind)
     if (kind !== 'track' && kind !== 'milestones' && kind !== 'schedule') continue
 
     if (!projectId) projectId = safeString(doc?.project_id)
@@ -258,18 +229,20 @@ function loadTaskDetails(schedulePath: string): {
     for (const task of Array.isArray(doc?.tasks) ? doc.tasks : []) {
       const id = safeString(task?.id)
       if (!id) continue
+      const name = safeString(task?.name, id)
+      const catalogItem = catalogItems.get(extractLocalId(name))
       byId.set(id, {
         id,
-        name: safeString(task?.name, id),
+        name,
         owner: safeString(task?.owner, '-'),
         scheduleFile,
         kind: 'task',
-        wbs: safeString(task?.wbs, '-'),
         durationDays: typeof task?.duration_days === 'number' ? String(task.duration_days) : '-',
         dependsOn: toStringArray(task?.depends_on),
         tags: toStringArray(task?.tags),
         notes: safeString(task?.notes, '-'),
-        deliverables: wbsDeliverables.get(safeString(task?.wbs)) ?? [],
+        deliverablePath: catalogItem?.path,
+        doneCriteria: catalogItem?.done_criteria,
       })
     }
 
@@ -282,12 +255,10 @@ function loadTaskDetails(schedulePath: string): {
         owner: safeString(milestone?.owner, '-'),
         scheduleFile,
         kind: 'milestone',
-        wbs: '-',
         durationDays: '0',
         dependsOn: toStringArray(milestone?.depends_on),
         tags: toStringArray(milestone?.tags),
         notes: safeString(milestone?.notes, '-'),
-        deliverables: [],
       })
     }
   }
@@ -303,13 +274,7 @@ function buildBriefMarkdown(
 ): string {
   const lines: string[] = []
   const cpm = readyTask.cpm
-  const artifactKind = inferArtifactKind(readyTask.id, detail.tags)
   const commandProject = cliProject || projectId || '<project-id>'
-  const primaryArtifactCandidates = selectArtifactCandidates(detail)
-  const secondaryArtifactCandidates = selectSecondaryArtifactCandidates(
-    detail,
-    primaryArtifactCandidates
-  )
 
   lines.push(`# Agent Brief: ${readyTask.id}`)
   lines.push('')
@@ -324,9 +289,7 @@ function buildBriefMarkdown(
   lines.push(`- name: ${detail.name}`)
   lines.push(`- owner: ${detail.owner}`)
   lines.push(`- kind: ${detail.kind}`)
-  lines.push(`- artifact_kind: ${artifactKind}`)
   lines.push(`- schedule_file: \`${detail.scheduleFile}\``)
-  lines.push(`- wbs: \`${detail.wbs}\``)
   lines.push(`- duration_days: \`${detail.durationDays}\``)
   lines.push('')
   lines.push('## 2. 実施内容')
@@ -337,26 +300,20 @@ function buildBriefMarkdown(
     `- tags: ${detail.tags.length ? detail.tags.map(tag => `\`${tag}\``).join(', ') : '-'}`
   )
   lines.push('')
-  lines.push('## 3. 対象成果物候補')
+  lines.push('## 3. 対象成果物')
   lines.push('')
-  lines.push('primary_paths:')
-  lines.push('')
-  if (primaryArtifactCandidates.length > 0) {
-    for (const path of primaryArtifactCandidates) {
-      lines.push(`- ${path}`)
+  if (detail.deliverablePath) {
+    lines.push(`- path: \`${detail.deliverablePath}\``)
+    if (detail.doneCriteria && detail.doneCriteria.length > 0) {
+      lines.push('')
+      lines.push('done_criteria:')
+      lines.push('')
+      for (const criterion of detail.doneCriteria) {
+        lines.push(`- ${criterion}`)
+      }
     }
   } else {
-    lines.push('- deliverables 未定義。WBS または schedule から対象を確認する。')
-  }
-  lines.push('')
-  lines.push('secondary_paths:')
-  lines.push('')
-  if (secondaryArtifactCandidates.length > 0) {
-    for (const path of secondaryArtifactCandidates) {
-      lines.push(`- ${path}`)
-    }
-  } else {
-    lines.push('- なし')
+    lines.push('- 成果物カタログに登録されていないタスク。タスク名を参照する。')
   }
   lines.push('')
   lines.push('## 4. 依存と優先度')
@@ -376,7 +333,7 @@ function buildBriefMarkdown(
   lines.push('## 5. 実行ガイド')
   lines.push('')
   lines.push('1. 対象 task を claim する。')
-  lines.push('2. 対応する rules / instruction / sample の対象を特定する。')
+  lines.push('2. 対応する成果物を特定する。')
   lines.push('3. task 名と notes に沿って成果物を更新する。')
   lines.push('4. 必要な検証と lint を実行する。')
   lines.push('5. 完了時のみ complete、問題があれば block を記録する。')
@@ -483,11 +440,12 @@ function buildClaimSnapshotIndexMarkdown(briefsDir: string): string {
 }
 
 function main(): void {
-  const { schedulePath, executionPath, cliProject } = parseArgs(process.argv)
+  const { schedulePath, executionPath, catalogPath, cliProject } = parseArgs(process.argv)
   const generatedDir = join(executionPath, 'generated')
   const briefsDir = join(generatedDir, 'agent-briefs')
   const ready = readJsonFile<ReadyJson>(join(generatedDir, 'ready.json'))
-  const { projectId, byId } = loadTaskDetails(schedulePath)
+  const catalogItems = loadCatalogItems(catalogPath)
+  const { projectId, byId } = loadTaskDetails(schedulePath, catalogItems)
   const tasks = Array.isArray(ready.tasks) ? ready.tasks : []
   const claimsDir = join(executionPath, 'exec', 'agent-briefs', 'claims')
 
