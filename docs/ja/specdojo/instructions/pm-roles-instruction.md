@@ -9,22 +9,27 @@ rulebook: pm-roles-rulebook
 
 ## 1. 目的と前提
 
-- 目的: プロジェクトで採用する Role code を machine-readable な YAML 一覧として定義し、Schedule の `owner` および `pm-members.yaml` の `members[].role` の参照基準とする。
-- 参照ルール: `../rulebooks/pm-roles-rulebook.md`
-- 主な内容: 採用 Role code の一覧（`code`・`name`・`project_note`）。
-- 未採用ロールの理由・代替方針は `pm-organization.md` に記載し、本ファイルには含めない。
-- Role code の共通定義・責務は `people-and-organization-definition-standard` に委ね、再掲しない。
+- 生成対象は `pm-roles.yaml` とする。
+- 目的は、プロジェクトで使用する全 Role code を machine-readable な YAML として一覧化し、Schedule の `owner` および `pm-members.yaml` の `members[].roles` で使用できる語彙を定義することとする。
+- 参照ルールは [pm-roles-rulebook.md](../rulebooks/pm-roles-rulebook.md) とし、Role code の共通定義・責務・規模別パターンは `people-and-organization-definition-standard` を正として扱う。
+- 兼務の割り当ては `pm-members.yaml` の `members[].roles` で管理し、本ファイルには記載しない。
+- ロール採用の方針・根拠は `pm-organization.md` に委ね、本ファイルには重複して記載しない。
+- 対象外は、未採用ロールの理由、代替方針、member への割り当て、RACI の責任分担とする。
 
 ## 2. 入力情報
 
-- `pm-organization.md` に記載されている採用ロール一覧（`code` / 正式名称 / プロジェクトでの扱い）
-- プロジェクト ID（`project_id` に使用）
-- プロジェクト固有の責務強調・兼務内容・運用注意事項（`project_note` として記載）
+- プロジェクト ID。
+- プロジェクトで使用する Role code 一覧。現時点で担当 member が存在しないロールも、Schedule の `owner` や将来の責務分担で使うなら含める。
+- 各 Role code の正式名称。
+- 各 Role code のプロジェクト固有の扱い、責務強調、将来の追加条件など、`project_note` に 1 行で記述できる補足。
+- `pm-organization.md` に記載されたロール・メンバー構成の設計根拠。
+- 未確定事項は `_TODO_:`, `_UNDECIDED_:`, `_ASSUMPTION_:` のいずれかで明示する。
 
 ## 3. 出力フォーマット
 
-- 出力形式は YAML（`pm-roles.yaml`）。
-- ファイル先頭に `version`、`project_id`、`document` ブロックを置く。
+- 出力形式は YAML とし、ファイル名は `pm-roles.yaml` を基本とする。
+- ファイル先頭に `version`、`project_id`、`document`、`roles` を置く。
+- YAML 成果物のため Markdown Frontmatter は使わず、先頭の `document` ブロックとしてメタ情報を記述する。
 
 ```yaml
 version: 1
@@ -36,37 +41,52 @@ document:
   based_on:
     - people-and-organization-definition-standard
     - <project-id>:pm-organization
-```
-
-- `roles` には採用 Role code のみを次の構造で記載する。
-
-```yaml
 roles:
   - code: PO
     name: Project Owner
-    project_note: <プロジェクト固有の扱い（1行）>
+    project_note: <プロジェクト固有の扱い（任意・1行）>
 ```
+
+- `roles[]` は次のフィールドを標準とする。
+
+| フィールド | 必須 | 記述内容 |
+| ---------- | ---- | -------- |
+| `code` | ○ | Role code。`people-and-organization-definition-standard` で定義された標準 Role code を使う |
+| `name` | ○ | Role の正式名称 |
+| `project_note` | 任意 | プロジェクト固有の扱いを 1 行で記述する |
 
 - `roles` の記載順は標準ロールの定義順（`PO` → `PM` → `BA` → `ARC` → `DEV` → `QE` → `UX` → `OPS`）に揃える。
 
 ## 4. 記述ルール
 
-- `roles[].code` は `people-and-organization-definition-standard` で定義された標準 Role code（`PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS`）のみを使う。独自 Role code は追加しない。
-- `roles[].code` の一覧は `pm-organization.md` の採用ロールと一致させる。
-- `roles[].project_note` には、標準責務の再掲ではなく、プロジェクト固有の強調点・兼務・注意事項を 1 行で記述する。記載すべき内容がない場合は省略する。
-- コメント行（`#`）は最小限に留め、ファイル先頭またはセクション境界にのみ配置する。
+- `roles` にはプロジェクトで使用する全 Role code を記載する。現時点で担当 member が存在しないロールも、プロジェクトで使用するなら含めてよい。
+- `roles[].code` は `people-and-organization-definition-standard` で定義された標準 Role code（`PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS`）のみを使う。
+- プロジェクト固有の独自 Role code は追加しない。
+- `roles[].name` は標準にある正式名称と整合させる。
+- `roles[].project_note` には、プロジェクト固有の責務強調、現時点での兼務状況、将来の追加条件、運用上の注意を 1 行で記述する。標準に記載済みの一般責務は再掲しない。
+- `project_note` に記載すべきプロジェクト固有の補足がない場合は省略してよい。
+- 兼務の具体的な割り当て、member nickname、人名、agent 名は `pm-members.yaml` に委ねる。
+- ロール採用の長い根拠や未採用ロールの代替方針は `pm-organization.md` に委ねる。
+- コメント行（`#`）は最小限に留め、ファイル先頭またはセクション境界に限定する。
+- 章への参照は章番号ではなく章タイトルで記載する。
 
 ## 5. 禁止事項
 
-- 未採用ロールを `roles` に含める（`pm-organization.md` との不整合を招く）。
-- `people-and-organization-definition-standard` 未定義の独自 Role code を追加する。
-- 未採用ロールの理由・代替方針を本ファイルに記載する（`pm-organization.md` の責務）。
-- `roles[].code` に設定した Role code を Schedule の `owner` に一切使わないまま定義する。
+- `people-and-organization-definition-standard` 未定義の独自 Role code を追加しない。
+- 兼務の割り当て、member nickname、人名、agent 名を本ファイルに記載しない。
+- ロール採用の根拠・方針を長く記載しない。
+- 未採用ロールの理由・代替方針を本ファイルに記載しない。
+- 標準に記載済みの一般的な責務を `project_note` に再掲しない。
+- Schedule の `owner` や `pm-members.yaml` の `members[].roles` で使う予定の Role code を `roles` から漏らさない。
 
 ## 6. 最終チェック
 
-- `roles` の `code` 一覧が `pm-organization.md` の採用ロールと一致している。
-- `roles[].code` がすべて標準 Role code の範囲内である。
-- 未採用ロールが `roles` に含まれていない。
+- `version`、`project_id`、`document`、`roles` がある。
+- `document.id` が `<project-id>:pm-roles` 形式である。
+- `document.type` が `project`、`document.status` が `draft` / `ready` / `deprecated` のいずれかである。
 - `document.based_on` に `people-and-organization-definition-standard` と `<project-id>:pm-organization` が含まれている。
+- `roles[].code` がすべて標準 Role code の範囲内である。
+- `roles` の記載順が標準ロールの定義順に揃っている。
+- 兼務の具体的な割り当て、member nickname、人名、agent 名が含まれていない。
+- `project_note` が標準責務の再掲ではなく、プロジェクト固有の補足になっている。
 - YAML 構文エラーがない。

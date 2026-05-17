@@ -22,6 +22,7 @@ groups:
         path: pm-plan.md
         done_criteria:
           - PO がプロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
+          - PM が計画・進捗・リスク管理の方針が記述されていることを確認できること
           - BA が業務プロセスとの整合を確認できること
           - ARC が構成管理・技術的負債管理など技術管理上の観点が含まれていることを確認できること
           - QE がレビュー方針・品質基準への参照を確認できること
@@ -36,6 +37,7 @@ groups:
         path: pm-communication-plan.md
         done_criteria:
           - PO が報告・連絡・会議体の計画を承認できる粒度で記述されていること
+          - PM が進捗・課題・リスクの報告経路が定義されていることを確認できること
           - BA が業務観点のコミュニケーション要件が含まれていることを確認できること
           - ARC が技術チームへの連絡経路が識別されていることを確認できること
           - QE が品質関連の報告経路が確認できること
@@ -50,6 +52,7 @@ groups:
         path: pm-quality-management-plan.md
         done_criteria:
           - PO が品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
+          - PM が品質管理プロセスが全体計画と整合していることを確認できること
           - BA が業務品質基準との整合を確認できること
           - ARC がコードレビュー・設計レビューなど技術品質基準が含まれていることを確認できること
           - QE が実施可能な検証・レビュー手順が記述されていることを確認できること
@@ -63,13 +66,13 @@ groups:
         kind: work
         depends_on:
           - prj-overview
-        overview: ロール・責務境界・兼務方針・意思決定責任を定義
+        overview: ロール・メンバー構成の方針と設計根拠を定義
         path: pm-organization.md
         done_criteria:
-          - PO がロール・責務境界・意思決定責任を承認できる粒度で記述されていること
-          - BA が業務担当者のロールと責務が識別されていることを確認できること
-          - ARC が技術チームのロールと責務が識別されていることを確認できること
-          - QE が品質保証に関わるロールと責務が識別されていることを確認できること
+          - PO が兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
+          - BA が pm-roles.yaml と pm-members.yaml への導線が整備されていることを確認できること
+          - ARC が pm-roles.yaml と pm-members.yaml への導線が整備されていることを確認できること
+          - QE が禁止事項・見直し条件が実施可能な粒度で記述されていることを確認できること
 
       - local_id: pm-roles
         artifact_code: ROLE
@@ -77,13 +80,17 @@ groups:
         kind: work
         depends_on:
           - pm-organization
-        overview: 採用 Role code を machine-readable な YAML として一覧化する
+        overview: 全 Role code を machine-readable な YAML として一覧化する
         path: pm-roles.yaml
         done_criteria:
-          - PO が採用ロールコードの一覧を承認できること
-          - BA が業務ロールが網羅されていることを確認できること
-          - ARC が技術ロールが網羅されていることを確認できること
-          - QE が QE ロールが明確に定義されていることを確認できること
+          - PO が全ロールコードとプロジェクト固有メモを承認できること
+          - BA が BA ロールが定義されていることを確認できること
+          - ARC が ARC ロールが定義されていることを確認できること
+          - QE が QE ロールが定義されていることを確認できること
+          - PM が PM ロールが定義されていることを確認できること
+          - DEV が DEV ロールが定義されていることを確認できること
+          - UX が UX ロールが定義されていることを確認できること
+          - OPS が OPS ロールが定義されていることを確認できること
 
       - local_id: pm-members
         artifact_code: MBR
@@ -92,13 +99,14 @@ groups:
         depends_on:
           - pm-organization
           - pm-roles
-        overview: yaml で実行主体（人間・agent）とロール対応を定義
+        overview: yaml で実行主体（人間・agent）と担当ロールリスト（roles）を定義
         path: pm-members.yaml
         done_criteria:
-          - PO が実行主体（人間・agent）とロール対応を承認できること
-          - BA が業務担当者の割り当てが確認できること
-          - ARC が技術担当者の割り当てが確認できること
-          - QE が QE 担当者の割り当てが確認できること
+          - PO が実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
+          - BA が BA ロールを担う member が定義されていることを確認できること
+          - ARC が ARC ロールを担う member が定義されていることを確認できること
+          - QE が QE ロールを担う member が定義されていることを確認できること
+          - PM が PM ロールを担う member または兼務設定が確認できること
 
       - local_id: pm-raci
         artifact_code: RACI

@@ -24,6 +24,7 @@ groups:
           - PO/BA がプロジェクトの目的・背景・ゴールを業務観点で確認できる粒度で記述されていること
           - ARC が技術的前提・制約を読み取れる情報が含まれていること
           - QE が成功判定の輪郭を確認できること
+          - PM がプロジェクトの目的・スコープを計画立案の基礎として確認できること
 
       - local_id: prj-scope
         artifact_code: SCOPE
@@ -37,6 +38,7 @@ groups:
           - PO/BA が対象範囲と除外範囲を業務観点で確認できること
           - ARC が技術的スコープ境界を識別できること
           - QE がテスト対象・対象外の境界を判断できること
+          - PM がスコープ境界をスケジュール計画の前提として確認できること
 
       - local_id: prj-success-criteria-and-acceptance-criteria
         artifact_code: SUCCESS
@@ -94,6 +96,7 @@ groups:
           - PO/BA が業務上の前提・制約を業務観点で識別できること
           - ARC が技術的制約・外部依存を識別できること
           - QE がテスト実施上の前提・制約を確認できること
+          - DEV が実装上の技術制約・外部依存を確認できること
 
       - local_id: prj-issues-and-approach
         artifact_code: ISSUES

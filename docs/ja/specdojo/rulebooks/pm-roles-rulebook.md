@@ -11,14 +11,15 @@ based_on:
 
 Project Role Definition Documentation Rulebook
 
-本ドキュメントは、`pm-roles.yaml` を一貫した構造で作成・更新するためのルールを定義する。`pm-roles.yaml` は、プロジェクトで採用した Role code の machine-readable な一覧であり、`pm-organization.md` の採用判断を YAML で表現したものである。
+本ドキュメントは、`pm-roles.yaml` を一貫した構造で作成・更新するためのルールを定義する。`pm-roles.yaml` は、プロジェクトで使用する全 Role code の machine-readable な一覧であり、Schedule の `owner` として使用できる Role code の語彙を定義する。兼務の割り当ては `pm-members.yaml` の `roles` フィールドで管理する。
 
 ## 1. 全体方針
 
-- `pm-roles.yaml` には、プロジェクトで採用した Role code だけを記載する。
+- `pm-roles.yaml` には、プロジェクトで使用する全 Role code を記載する。現時点で担当メンバーが存在しないロールも含めてよい。
 - Role code の共通定義・責務・規模別パターンは `people-and-organization-definition-standard` を参照し、本ファイルに再掲しない。
-- 未採用ロールと `owner` 利用ルールは `pm-organization.md` を参照し、本ファイルに重複して記載しない。
-- `pm-roles.yaml` の `roles[].code` は、Schedule の `owner` および `pm-members.yaml` の `members[].role` で使用できる Role code の正当な一覧として機能する。
+- 兼務の割り当ては `pm-members.yaml` の `roles` フィールドで管理し、本ファイルに記載しない。
+- ロール採用の方針・根拠は `pm-organization.md` を参照し、本ファイルに重複して記載しない。
+- `pm-roles.yaml` の `roles[].code` は、Schedule の `owner` および `pm-members.yaml` の `members[].roles` で使用できる Role code の語彙一覧として機能する。
 
 ## 2. 位置づけと用語定義
 
@@ -27,7 +28,7 @@ Project Role Definition Documentation Rulebook
 | ドキュメント                                     | 役割                                                                 |
 | ------------------------------------------------ | -------------------------------------------------------------------- |
 | `people-and-organization-definition-standard.md` | Role code の共通定義・責務・規模別パターンを定義する                 |
-| `pm-organization.md`                             | プロジェクト固有の採用判断、未採用理由、`owner` 利用ルールを記述する |
+| `pm-organization.md`                             | ロール・メンバー構成の方針と設計根拠を記述する                       |
 | `pm-roles.yaml`                                  | 採用した Role code を machine-readable な YAML として一覧化する      |
 | `pm-members.yaml`                                | 実行主体と対応する Role code の対応を管理する                        |
 
@@ -61,7 +62,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭の `document` 
 | `version`    | ○    | データバージョン |
 | `project_id` | ○    | プロジェクト ID  |
 | `document`   | ○    | 成果物メタ情報   |
-| `roles`      | ○    | 採用 Role の配列 |
+| `roles`      | ○    | 全 Role の配列   |
 
 `roles[]` は次のフィールドを標準とする。
 
@@ -75,9 +76,9 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭の `document` 
 
 ### 6.1. `roles`
 
-- `roles` には採用した Role code のみを記載する。未採用ロールは含めない。
+- `roles` にはプロジェクトで使用する全 Role code を記載する。
 - 記載順は標準ロールの定義順（`PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS`）に揃えることを推奨する。
-- `pm-organization.md` の採用ロール一覧と `roles[].code` の内容を一致させる。
+- `people-and-organization-definition-standard` で定義された標準 Role code のみを使用する。
 
 ### 6.2. `roles[].code`
 
@@ -86,18 +87,17 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭の `document` 
 
 ### 6.3. `roles[].project_note`
 
-- プロジェクト固有の責務強調、兼務内容、運用上の注意を 1 行で記述する。
+- プロジェクト固有の責務強調、現時点での兼務状況（誰が担当するか）、将来の追加条件を 1 行で記述する。
 - 標準に記載済みの一般的な責務を再掲しない。
 - 記載すべき内容がない場合は省略してよい。
 
 ## 7. 禁止事項
 
-| 禁止事項                                                                        | 理由                                                                                  |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 未採用ロールを `roles` に含める                                                 | `pm-organization.md` との整合が崩れ、Schedule の `owner` 検証が不正確になるため |
-| `people-and-organization-definition-standard` 未定義の独自 Role code を追加する | 標準との整合が取れなくなるため                                                        |
-| 未採用ロールの理由や代替方針を本ファイルに記載する                              | `pm-organization.md` の責務であり重複になるため                                       |
-| `roles[].code` の値を Schedule の `owner` に使わないまま定義する          | 定義したロールは `owner` で使う前提のため、使わないなら定義しない                     |
+| 禁止事項                                                                        | 理由                                                                             |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `people-and-organization-definition-standard` 未定義の独自 Role code を追加する | 標準との整合が取れなくなるため                                                   |
+| 兼務の割り当てを本ファイルに記載する                                            | `pm-members.yaml` の `roles` フィールドの責務であり重複になるため                |
+| ロール採用の根拠・方針を本ファイルに長く記載する                                | `pm-organization.md` の責務であり重複になるため                                  |
 
 ## 8. サンプル
 
