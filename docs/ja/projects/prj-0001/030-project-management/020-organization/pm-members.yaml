@@ -10,15 +10,14 @@ document:
     - prj-0001:pm-roles
 
 # Member は、実際に作業する人間または agent を表す。
-# 採用ロール・未採用ロールの定義は pm-organization.md を参照する。
-# タスク側の owner には pm-organization.md で採用した Role code のみを使う。
-# member 側では owner ではなく role を使う。
+# roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
+# タスク側の owner には pm-roles.yaml に存在する Role code を使う。
 
 members:
   - nickname: po
     display_name: Project Owner
     email: null
-    role: PO
+    roles: [PO, PM, OPS]
     type: human
     persona: final-decision-maker
     focus:
@@ -29,13 +28,13 @@ members:
       - accountability
     scheduler_strategy: critical-first
     note: >-
-      小規模運用における人間の最終判断主体。 Project Manager 的な計画・進捗・課題・リスク管理も兼務する。
+      小規模運用における人間の最終判断主体。PM・OPS 責務を兼務する。
       公開文書では個人名と連絡先を記載しない。
 
   - nickname: po-agent
     display_name: Project Owner Agent
     email: null
-    role: PO
+    roles: [PO, PM, OPS]
     type: agent
     persona: concise-project-organizer
     focus:
@@ -45,12 +44,12 @@ members:
       - simplification
     scheduler_strategy: critical-first
     note: >-
-      PO ロールの草案作成、論点整理、判断材料整理を支援する agent。 最終判断や公開可否判断は行わない。
+      PO ロールの草案作成、論点整理、判断材料整理を支援する agent。最終判断や公開可否判断は行わない。
 
   - nickname: ba-agent
     display_name: Business Analyst Agent
     email: null
-    role: BA
+    roles: [BA, UX]
     type: agent
     persona: user-value-oriented
     focus:
@@ -60,12 +59,13 @@ members:
       - practical-usability
     scheduler_strategy: fifo
     note: >-
-      要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。 将来利用者や将来貢献者の視点から分かりにくさを検出する。
+      要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。UX 観点も兼務する。
+      将来利用者や将来貢献者の視点から分かりにくさを検出する。
 
   - nickname: arc-agent
     display_name: Architect Agent
     email: null
-    role: ARC
+    roles: [ARC]
     type: agent
     persona: structure-first
     focus:
@@ -76,12 +76,12 @@ members:
       - technical-constraints
     scheduler_strategy: dependency-first
     note: >-
-      文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。 技術方針の最終判断は行わない。
+      文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。技術方針の最終判断は行わない。
 
   - nickname: qe-agent
     display_name: Quality Engineer Agent
     email: null
-    role: QE
+    roles: [QE]
     type: agent
     persona: risk-averse-reviewer
     focus:
@@ -92,12 +92,12 @@ members:
       - edge-cases
     scheduler_strategy: critical-first
     note: >-
-      品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。 最終承認や公開可否判断は行わない。
+      品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。最終承認や公開可否判断は行わない。
 
   - nickname: copilot
     display_name: General Copilot Agent
     email: null
-    role: null
+    roles: []
     type: agent
     persona: general-assistant
     focus:
@@ -107,4 +107,4 @@ members:
       - mechanical-updates
     scheduler_strategy: manual
     note: >-
-      特定ロールに固定しない汎用 agent。 実行時には対象タスクの owner または明示された文脈に従って支援する。
+      特定ロールに固定しない汎用 agent。実行時には対象タスクの owner または明示された文脈に従って支援する。
