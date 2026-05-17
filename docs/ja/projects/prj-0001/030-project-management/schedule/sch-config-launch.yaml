@@ -1,8 +1,0 @@
-kind: config
-track: launch
-version: 1
-project_id: prj-0001
-assigned_team: specdojo
-default_agent_mode: agent-ultra
-settings:
-  notes: "note"

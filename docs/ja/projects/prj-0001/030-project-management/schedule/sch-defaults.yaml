@@ -4,10 +4,10 @@ kind: defaults
 calendar:
   timezone: Asia/Tokyo
   work_hours_per_day: 8
-  workdays: [ Mon, Tue, Wed, Thu, Fri ]
+  workdays: [Mon, Tue, Wed, Thu, Fri]
   holidays:
     - "2026-03-20"
 
 settings:
-  start_date: "2026-03-28"
+  start_date: "2026-05-18"
   notes: Shared schedule defaults for prj-0001 schedule files.
