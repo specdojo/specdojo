@@ -104,24 +104,13 @@ function nonEmptyString(value: unknown): string | null {
 }
 
 function scheduleSectionLabelForDoc(doc: any, fallback: string): string {
-  const scheduleLevel = nonEmptyString(doc?.schedule_level)
-  if (!scheduleLevel) return fallback
+  const docKind = nonEmptyString(doc?.kind)
+  if (docKind === 'milestones') return 'milestones'
 
-  if (scheduleLevel === 'milestones') return scheduleLevel
-
-  if (scheduleLevel === 'domain') {
-    const domain = nonEmptyString(doc?.domain)
-    return domain ?? fallback
-  }
-
-  if (scheduleLevel === 'container') {
-    const domain = nonEmptyString(doc?.domain)
-    const container = nonEmptyString(doc?.container)
-    if (domain && container) return `${domain} / ${container}`
-    return domain ?? container ?? fallback
-  }
-
-  return fallback
+  const domain = nonEmptyString(doc?.domain)
+  const container = nonEmptyString(doc?.container)
+  if (domain && container) return `${domain} / ${container}`
+  return domain ?? fallback
 }
 
 export function buildScheduleIndex(projectPath: string): ScheduleIndex {
@@ -165,7 +154,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
     if (!doc || typeof doc !== 'object') continue
 
     const docKind = nonEmptyString(doc?.kind)
-    if (docKind === 'defaults' || docKind === 'config' || docKind === 'agent_overrides') {
+    if (docKind === 'defaults' || docKind === 'strategy') {
       continue
     }
     if (docKind !== 'milestones' && docKind !== 'track') {
