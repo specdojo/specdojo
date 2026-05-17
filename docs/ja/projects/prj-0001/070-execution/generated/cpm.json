@@ -1,0 +1,1033 @@
+{
+  "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+  "project_start_date": "2026-05-18",
+  "project_duration_days": 2.5,
+  "nodes": {
+    "T-LAUNCH-PJD-OVERVIEW-010": {
+      "id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "name": "prj-overview たたき台作成",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0,
+      "ef": 0.25,
+      "ls": 0,
+      "lf": 0.25,
+      "slack": 0,
+      "depends_on": [],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-020": {
+      "id": "T-LAUNCH-PJD-OVERVIEW-020",
+      "name": "prj-overview レビュー・修正",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.25,
+      "ef": 0.375,
+      "ls": 0.25,
+      "lf": 0.375,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-030": {
+      "id": "T-LAUNCH-PJD-OVERVIEW-030",
+      "name": "prj-overview 完成版仕上げ",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.375,
+      "ef": 0.5,
+      "ls": 0.375,
+      "lf": 0.5,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SCOPE-010": {
+      "id": "T-LAUNCH-PJD-SCOPE-010",
+      "name": "prj-scope たたき台作成",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0.5,
+      "ef": 0.75,
+      "ls": 0.5,
+      "lf": 0.75,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SCOPE-020": {
+      "id": "T-LAUNCH-PJD-SCOPE-020",
+      "name": "prj-scope レビュー・修正",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.75,
+      "ef": 0.875,
+      "ls": 0.75,
+      "lf": 0.875,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SCOPE-030": {
+      "id": "T-LAUNCH-PJD-SCOPE-030",
+      "name": "prj-scope 完成版仕上げ",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.875,
+      "ef": 1,
+      "ls": 0.875,
+      "lf": 1,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ACD-010": {
+      "id": "T-LAUNCH-PJD-ACD-010",
+      "name": "prj-assumptions-constraints-dependencies たたき台作成",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 1,
+      "ef": 1.25,
+      "ls": 1,
+      "lf": 1.25,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ACD-020": {
+      "id": "T-LAUNCH-PJD-ACD-020",
+      "name": "prj-assumptions-constraints-dependencies レビュー・修正",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.25,
+      "ef": 1.375,
+      "ls": 1.25,
+      "lf": 1.375,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ACD-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ACD-030": {
+      "id": "T-LAUNCH-PJD-ACD-030",
+      "name": "prj-assumptions-constraints-dependencies 完成版仕上げ",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.375,
+      "ef": 1.5,
+      "ls": 1.375,
+      "lf": 1.5,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ACD-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ISSUES-010": {
+      "id": "T-LAUNCH-PJD-ISSUES-010",
+      "name": "prj-issues-and-approach たたき台作成",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 1.5,
+      "ef": 1.75,
+      "ls": 1.5,
+      "lf": 1.75,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-030",
+        "T-LAUNCH-PJD-ACD-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ISSUES-020": {
+      "id": "T-LAUNCH-PJD-ISSUES-020",
+      "name": "prj-issues-and-approach レビュー・修正",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.75,
+      "ef": 1.875,
+      "ls": 1.75,
+      "lf": 1.875,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ISSUES-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ISSUES-030": {
+      "id": "T-LAUNCH-PJD-ISSUES-030",
+      "name": "prj-issues-and-approach 完成版仕上げ",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.875,
+      "ef": 2,
+      "ls": 1.875,
+      "lf": 2,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ISSUES-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ALT-010": {
+      "id": "T-LAUNCH-PJD-ALT-010",
+      "name": "prj-comparison-of-alternatives たたき台作成",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 2,
+      "ef": 2.25,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-030",
+        "T-LAUNCH-PJD-ISSUES-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ALT-020": {
+      "id": "T-LAUNCH-PJD-ALT-020",
+      "name": "prj-comparison-of-alternatives レビュー・修正",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 2.25,
+      "ef": 2.375,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ALT-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-ALT-030": {
+      "id": "T-LAUNCH-PJD-ALT-030",
+      "name": "prj-comparison-of-alternatives 完成版仕上げ",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 2.375,
+      "ef": 2.5,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-ALT-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-010": {
+      "id": "T-LAUNCH-PJD-STAKEHOLDER-010",
+      "name": "prj-stakeholder-register たたき台作成",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0.5,
+      "ef": 0.75,
+      "ls": 1.5,
+      "lf": 1.75,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-020": {
+      "id": "T-LAUNCH-PJD-STAKEHOLDER-020",
+      "name": "prj-stakeholder-register レビュー・修正",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.75,
+      "ef": 0.875,
+      "ls": 1.75,
+      "lf": 1.875,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-STAKEHOLDER-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-030": {
+      "id": "T-LAUNCH-PJD-STAKEHOLDER-030",
+      "name": "prj-stakeholder-register 完成版仕上げ",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.875,
+      "ef": 1,
+      "ls": 1.875,
+      "lf": 2,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-STAKEHOLDER-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-CHARTER-010": {
+      "id": "T-LAUNCH-PJD-CHARTER-010",
+      "name": "prj-charter たたき台作成",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 1,
+      "ef": 1.25,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-030",
+        "T-LAUNCH-PJD-STAKEHOLDER-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-CHARTER-020": {
+      "id": "T-LAUNCH-PJD-CHARTER-020",
+      "name": "prj-charter レビュー・修正",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.25,
+      "ef": 1.375,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-CHARTER-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-CHARTER-030": {
+      "id": "T-LAUNCH-PJD-CHARTER-030",
+      "name": "prj-charter 完成版仕上げ",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.375,
+      "ef": 1.5,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-CHARTER-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SUCCESS-010": {
+      "id": "T-LAUNCH-PJD-SUCCESS-010",
+      "name": "prj-success-criteria-and-acceptance-criteria たたき台作成",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 1,
+      "ef": 1.25,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-SCOPE-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SUCCESS-020": {
+      "id": "T-LAUNCH-PJD-SUCCESS-020",
+      "name": "prj-success-criteria-and-acceptance-criteria レビュー・修正",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.25,
+      "ef": 1.375,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-SUCCESS-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJD-SUCCESS-030": {
+      "id": "T-LAUNCH-PJD-SUCCESS-030",
+      "name": "prj-success-criteria-and-acceptance-criteria 完成版仕上げ",
+      "owner": "BA",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.375,
+      "ef": 1.5,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJD-SUCCESS-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "M-LAUNCH-PJD-900": {
+      "id": "M-LAUNCH-PJD-900",
+      "name": "プロジェクト定義ドメイン完了",
+      "owner": "PM",
+      "kind": "milestone",
+      "duration_days": 0,
+      "es": 2.5,
+      "ef": 2.5,
+      "ls": 2.5,
+      "lf": 2.5,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJD-CHARTER-030",
+        "T-LAUNCH-PJD-SUCCESS-030",
+        "T-LAUNCH-PJD-ALT-030"
+      ],
+      "schedule_file": "sch-milestones.yaml"
+    },
+    "T-LAUNCH-PJM-ORG-010": {
+      "id": "T-LAUNCH-PJM-ORG-010",
+      "name": "pm-organization たたき台作成",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0.5,
+      "ef": 0.75,
+      "ls": 1.125,
+      "lf": 1.375,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJD-OVERVIEW-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ORG-020": {
+      "id": "T-LAUNCH-PJM-ORG-020",
+      "name": "pm-organization レビュー・修正",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.75,
+      "ef": 0.875,
+      "ls": 1.375,
+      "lf": 1.5,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ORG-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ORG-030": {
+      "id": "T-LAUNCH-PJM-ORG-030",
+      "name": "pm-organization 完成版仕上げ",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.875,
+      "ef": 1,
+      "ls": 1.5,
+      "lf": 1.625,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ORG-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-PLAN-010": {
+      "id": "T-LAUNCH-PJM-PLAN-010",
+      "name": "pm-plan たたき台作成",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0,
+      "ef": 0.25,
+      "ls": 1.5,
+      "lf": 1.75,
+      "slack": 1.5,
+      "depends_on": [],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-PLAN-020": {
+      "id": "T-LAUNCH-PJM-PLAN-020",
+      "name": "pm-plan レビュー・修正",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.25,
+      "ef": 0.375,
+      "ls": 1.75,
+      "lf": 1.875,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-PLAN-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-PLAN-030": {
+      "id": "T-LAUNCH-PJM-PLAN-030",
+      "name": "pm-plan 完成版仕上げ",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.375,
+      "ef": 0.5,
+      "ls": 1.875,
+      "lf": 2,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-PLAN-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-COMM-010": {
+      "id": "T-LAUNCH-PJM-COMM-010",
+      "name": "pm-communication-plan たたき台作成",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0.5,
+      "ef": 0.75,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-PLAN-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-COMM-020": {
+      "id": "T-LAUNCH-PJM-COMM-020",
+      "name": "pm-communication-plan レビュー・修正",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.75,
+      "ef": 0.875,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-COMM-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-COMM-030": {
+      "id": "T-LAUNCH-PJM-COMM-030",
+      "name": "pm-communication-plan 完成版仕上げ",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.875,
+      "ef": 1,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-COMM-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-QLTY-010": {
+      "id": "T-LAUNCH-PJM-QLTY-010",
+      "name": "pm-quality-management-plan たたき台作成",
+      "owner": "QE",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 0.5,
+      "ef": 0.75,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-PLAN-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-QLTY-020": {
+      "id": "T-LAUNCH-PJM-QLTY-020",
+      "name": "pm-quality-management-plan レビュー・修正",
+      "owner": "QE",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.75,
+      "ef": 0.875,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-QLTY-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-QLTY-030": {
+      "id": "T-LAUNCH-PJM-QLTY-030",
+      "name": "pm-quality-management-plan 完成版仕上げ",
+      "owner": "QE",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.875,
+      "ef": 1,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-QLTY-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "M-LAUNCH-PJM-PLAN-900": {
+      "id": "M-LAUNCH-PJM-PLAN-900",
+      "name": "管理計画グループ完了",
+      "owner": "PM",
+      "kind": "milestone",
+      "duration_days": 0,
+      "es": 1,
+      "ef": 1,
+      "ls": 2.5,
+      "lf": 2.5,
+      "slack": 1.5,
+      "depends_on": [
+        "T-LAUNCH-PJM-COMM-030",
+        "T-LAUNCH-PJM-QLTY-030"
+      ],
+      "schedule_file": "sch-milestones.yaml"
+    },
+    "T-LAUNCH-PJM-RACI-010": {
+      "id": "T-LAUNCH-PJM-RACI-010",
+      "name": "pm-raci たたき台作成",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.25,
+      "es": 1,
+      "ef": 1.25,
+      "ls": 2,
+      "lf": 2.25,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJM-ORG-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-RACI-020": {
+      "id": "T-LAUNCH-PJM-RACI-020",
+      "name": "pm-raci レビュー・修正",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.25,
+      "ef": 1.375,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJM-RACI-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-RACI-030": {
+      "id": "T-LAUNCH-PJM-RACI-030",
+      "name": "pm-raci 完成版仕上げ",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.375,
+      "ef": 1.5,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 1,
+      "depends_on": [
+        "T-LAUNCH-PJM-RACI-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ROLE-010": {
+      "id": "T-LAUNCH-PJM-ROLE-010",
+      "name": "pm-roles たたき台作成",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1,
+      "ef": 1.125,
+      "ls": 1.625,
+      "lf": 1.75,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ORG-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ROLE-020": {
+      "id": "T-LAUNCH-PJM-ROLE-020",
+      "name": "pm-roles スキーマ検証",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.0625,
+      "es": 1.125,
+      "ef": 1.1875,
+      "ls": 1.75,
+      "lf": 1.8125,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ROLE-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ROLE-030": {
+      "id": "T-LAUNCH-PJM-ROLE-030",
+      "name": "pm-roles レビュー・修正",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.1875,
+      "ef": 1.3125,
+      "ls": 1.8125,
+      "lf": 1.9375,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ROLE-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-ROLE-040": {
+      "id": "T-LAUNCH-PJM-ROLE-040",
+      "name": "pm-roles 完成版仕上げ",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.3125,
+      "ef": 1.4375,
+      "ls": 1.9375,
+      "lf": 2.0625,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ROLE-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-MBR-010": {
+      "id": "T-LAUNCH-PJM-MBR-010",
+      "name": "pm-members たたき台作成",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.4375,
+      "ef": 1.5625,
+      "ls": 2.0625,
+      "lf": 2.1875,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-ORG-030",
+        "T-LAUNCH-PJM-ROLE-040"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-MBR-020": {
+      "id": "T-LAUNCH-PJM-MBR-020",
+      "name": "pm-members スキーマ検証",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.0625,
+      "es": 1.5625,
+      "ef": 1.625,
+      "ls": 2.1875,
+      "lf": 2.25,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-MBR-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-MBR-030": {
+      "id": "T-LAUNCH-PJM-MBR-030",
+      "name": "pm-members レビュー・修正",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.625,
+      "ef": 1.75,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-MBR-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-MBR-040": {
+      "id": "T-LAUNCH-PJM-MBR-040",
+      "name": "pm-members 完成版仕上げ",
+      "owner": "PO",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 1.75,
+      "ef": 1.875,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-MBR-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "M-LAUNCH-PJM-ORG-900": {
+      "id": "M-LAUNCH-PJM-ORG-900",
+      "name": "組織体制グループ完了",
+      "owner": "PM",
+      "kind": "milestone",
+      "duration_days": 0,
+      "es": 1.875,
+      "ef": 1.875,
+      "ls": 2.5,
+      "lf": 2.5,
+      "slack": 0.625,
+      "depends_on": [
+        "T-LAUNCH-PJM-MBR-040",
+        "T-LAUNCH-PJM-RACI-030"
+      ],
+      "schedule_file": "sch-milestones.yaml"
+    },
+    "T-LAUNCH-PJM-SCHDEF-010": {
+      "id": "T-LAUNCH-PJM-SCHDEF-010",
+      "name": "sch-defaults たたき台作成",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0,
+      "ef": 0.125,
+      "ls": 2.0625,
+      "lf": 2.1875,
+      "slack": 2.0625,
+      "depends_on": [],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHDEF-020": {
+      "id": "T-LAUNCH-PJM-SCHDEF-020",
+      "name": "sch-defaults スキーマ検証",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.0625,
+      "es": 0.125,
+      "ef": 0.1875,
+      "ls": 2.1875,
+      "lf": 2.25,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHDEF-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHDEF-030": {
+      "id": "T-LAUNCH-PJM-SCHDEF-030",
+      "name": "sch-defaults レビュー・修正",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.1875,
+      "ef": 0.3125,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHDEF-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHDEF-040": {
+      "id": "T-LAUNCH-PJM-SCHDEF-040",
+      "name": "sch-defaults 完成版仕上げ",
+      "owner": "ARC",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.3125,
+      "ef": 0.4375,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHDEF-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHMS-010": {
+      "id": "T-LAUNCH-PJM-SCHMS-010",
+      "name": "sch-milestones たたき台作成",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0,
+      "ef": 0.125,
+      "ls": 2.0625,
+      "lf": 2.1875,
+      "slack": 2.0625,
+      "depends_on": [],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHMS-020": {
+      "id": "T-LAUNCH-PJM-SCHMS-020",
+      "name": "sch-milestones スキーマ検証",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.0625,
+      "es": 0.125,
+      "ef": 0.1875,
+      "ls": 2.1875,
+      "lf": 2.25,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHMS-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHMS-030": {
+      "id": "T-LAUNCH-PJM-SCHMS-030",
+      "name": "sch-milestones レビュー・修正",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.1875,
+      "ef": 0.3125,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHMS-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHMS-040": {
+      "id": "T-LAUNCH-PJM-SCHMS-040",
+      "name": "sch-milestones 完成版仕上げ",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.3125,
+      "ef": 0.4375,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHMS-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-010": {
+      "id": "T-LAUNCH-PJM-SCHTLNCH-010",
+      "name": "sch-track-launch たたき台作成",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0,
+      "ef": 0.125,
+      "ls": 2.0625,
+      "lf": 2.1875,
+      "slack": 2.0625,
+      "depends_on": [],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-020": {
+      "id": "T-LAUNCH-PJM-SCHTLNCH-020",
+      "name": "sch-track-launch スキーマ検証",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.0625,
+      "es": 0.125,
+      "ef": 0.1875,
+      "ls": 2.1875,
+      "lf": 2.25,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHTLNCH-010"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-030": {
+      "id": "T-LAUNCH-PJM-SCHTLNCH-030",
+      "name": "sch-track-launch レビュー・修正",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.1875,
+      "ef": 0.3125,
+      "ls": 2.25,
+      "lf": 2.375,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHTLNCH-020"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-040": {
+      "id": "T-LAUNCH-PJM-SCHTLNCH-040",
+      "name": "sch-track-launch 完成版仕上げ",
+      "owner": "PM",
+      "kind": "task",
+      "duration_days": 0.125,
+      "es": 0.3125,
+      "ef": 0.4375,
+      "ls": 2.375,
+      "lf": 2.5,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHTLNCH-030"
+      ],
+      "schedule_file": "sch-track-launch.yaml"
+    },
+    "M-LAUNCH-PJM-SCH-900": {
+      "id": "M-LAUNCH-PJM-SCH-900",
+      "name": "スケジュールグループ完了",
+      "owner": "PM",
+      "kind": "milestone",
+      "duration_days": 0,
+      "es": 0.4375,
+      "ef": 0.4375,
+      "ls": 2.5,
+      "lf": 2.5,
+      "slack": 2.0625,
+      "depends_on": [
+        "T-LAUNCH-PJM-SCHMS-040",
+        "T-LAUNCH-PJM-SCHDEF-040",
+        "T-LAUNCH-PJM-SCHTLNCH-040"
+      ],
+      "schedule_file": "sch-milestones.yaml"
+    }
+  },
+  "critical_path": [
+    "T-LAUNCH-PJD-OVERVIEW-010",
+    "T-LAUNCH-PJD-OVERVIEW-020",
+    "T-LAUNCH-PJD-OVERVIEW-030",
+    "T-LAUNCH-PJD-SCOPE-010",
+    "T-LAUNCH-PJD-SCOPE-020",
+    "T-LAUNCH-PJD-SCOPE-030",
+    "T-LAUNCH-PJD-ACD-010",
+    "T-LAUNCH-PJD-ACD-020",
+    "T-LAUNCH-PJD-ACD-030",
+    "T-LAUNCH-PJD-ISSUES-010",
+    "T-LAUNCH-PJD-ISSUES-020",
+    "T-LAUNCH-PJD-ISSUES-030",
+    "T-LAUNCH-PJD-ALT-010",
+    "T-LAUNCH-PJD-ALT-020",
+    "T-LAUNCH-PJD-ALT-030",
+    "M-LAUNCH-PJD-900"
+  ]
+}

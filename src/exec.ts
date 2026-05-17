@@ -187,7 +187,7 @@ function printCommandError(error: unknown, fail = true): void {
 
 function runTaskCatalogBuild(schedulePath: string, executionPath: string): void {
   const currentFileDir = dirname(fileURLToPath(import.meta.url))
-  const scriptPath = resolve(currentFileDir, '../../docs/src/gen-task-catalog.ts')
+  const scriptPath = resolve(currentFileDir, '../tools/docs/src/gen-task-catalog.ts')
   const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
 
   const result = spawnSync(
@@ -211,7 +211,7 @@ function runTaskCatalogBuild(schedulePath: string, executionPath: string): void 
 
 function runAgentBriefBuild(schedulePath: string, executionPath: string, cliProject = ''): void {
   const currentFileDir = dirname(fileURLToPath(import.meta.url))
-  const scriptPath = resolve(currentFileDir, '../../docs/src/gen-agent-briefs.ts')
+  const scriptPath = resolve(currentFileDir, '../tools/docs/src/gen-agent-briefs.ts')
   const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
 
   const result = spawnSync(

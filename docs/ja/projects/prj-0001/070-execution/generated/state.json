@@ -1,0 +1,194 @@
+{
+  "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+  "tasks": {
+    "M-LAUNCH-PJD-900": {
+      "state": "todo"
+    },
+    "M-LAUNCH-PJM-PLAN-900": {
+      "state": "todo"
+    },
+    "M-LAUNCH-PJM-ORG-900": {
+      "state": "todo"
+    },
+    "M-LAUNCH-PJM-SCH-900": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SCOPE-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SCOPE-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SCOPE-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SUCCESS-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SUCCESS-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SUCCESS-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ACD-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ACD-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ACD-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ISSUES-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ISSUES-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ISSUES-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ALT-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ALT-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ALT-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-PLAN-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-PLAN-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-PLAN-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-COMM-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-COMM-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-COMM-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-QLTY-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-QLTY-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-QLTY-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ORG-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ORG-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ORG-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ROLE-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ROLE-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ROLE-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ROLE-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-MBR-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-MBR-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-MBR-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-MBR-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-RACI-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-RACI-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-RACI-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHMS-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHMS-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHMS-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHMS-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHDEF-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHDEF-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHDEF-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHDEF-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-SCHTLNCH-040": {
+      "state": "todo"
+    }
+  }
+}

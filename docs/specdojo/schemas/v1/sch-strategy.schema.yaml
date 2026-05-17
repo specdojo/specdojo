@@ -114,6 +114,55 @@ properties:
         owner:
           $ref: "./sch-common.schema.yaml#/$defs/Owner"
 
+  group_milestones:
+    type: array
+    description: >
+      Per-domain/per-group milestones to upsert into sch-milestones.yaml.
+      Each entry targets one top-level group within a catalog.
+      Omit 'group' for catalogs with a single unnamed group.
+      depends_on is auto-computed from leaf finalize tasks within the group.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - catalog_id
+        - milestone
+      properties:
+        catalog_id:
+          type: string
+          minLength: 1
+          description: "Catalog ID to scope (must match one of scope.catalogs[].id)."
+        group:
+          type: string
+          minLength: 1
+          description: "Top-level group name. Omit for unnamed/single groups."
+        milestone:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - name
+            - owner
+          properties:
+            id:
+              type: string
+              minLength: 1
+              description: "Milestone ID (e.g., M-LAUNCH-PJD-900)."
+            name:
+              type: string
+              minLength: 1
+              description: "Milestone display name."
+            owner:
+              $ref: "./sch-common.schema.yaml#/$defs/Owner"
+            date_hint:
+              $ref: "./sch-common.schema.yaml#/$defs/Date"
+            tags:
+              type: array
+              items:
+                type: string
+                minLength: 1
+              uniqueItems: true
+
   cross_domain_dependencies:
     type: array
     description: >

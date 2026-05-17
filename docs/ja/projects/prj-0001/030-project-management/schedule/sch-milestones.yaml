@@ -4,62 +4,31 @@ type: project
 status: draft
 version: 1
 project_id: prj-0001
-settings:
-  finish_milestone_id: M-SDH-999
-  notes: |-
-    プロジェクトレベルのマイルストーン計画。 ドメイン完了マイルストーン（M-SDH-*-900）は各ドメインスケジュールで定義。
+settings: {}
 milestones:
-  - id: M-SDH-100
-    name: スケジュールキックオフ
-    depends_on: []
-    owner: PO
-    date_hint: "2026-03-16"
-    tags:
-      - kickoff
-  - id: M-SDH-200
-    name: ガバナンスベースライン確定
+  - id: M-LAUNCH-PJD-900
+    name: プロジェクト定義ドメイン完了
     depends_on:
-      - M-SDH-AGT-900
-      - M-SDH-GOV-900
-    owner: PO
-    date_hint: "2026-03-21"
-    tags:
-      - governance
-  - id: M-SDH-300
-    name: 業務・非機能要件ベースライン確定
+      - T-LAUNCH-PJD-CHARTER-030
+      - T-LAUNCH-PJD-SUCCESS-030
+      - T-LAUNCH-PJD-ALT-030
+    owner: PM
+  - id: M-LAUNCH-PJM-PLAN-900
+    name: 管理計画グループ完了
     depends_on:
-      - M-SDH-BIZ-900
-      - M-SDH-NFR-900
-    owner: PO
-    date_hint: "2026-04-01"
-    tags:
-      - definition
-  - id: M-SDH-350
-    name: 設計ベースライン確定
+      - T-LAUNCH-PJM-COMM-030
+      - T-LAUNCH-PJM-QLTY-030
+    owner: PM
+  - id: M-LAUNCH-PJM-ORG-900
+    name: 組織体制グループ完了
     depends_on:
-      - M-SDH-DES-900
-    owner: ARC
-    date_hint: "2026-04-10"
-    tags:
-      - design
-  - id: M-SDH-400
-    name: 品質ベースライン確定
+      - T-LAUNCH-PJM-MBR-040
+      - T-LAUNCH-PJM-RACI-030
+    owner: PM
+  - id: M-LAUNCH-PJM-SCH-900
+    name: スケジュールグループ完了
     depends_on:
-      - M-SDH-QLT-900
-    owner: PO
-    date_hint: "2026-04-18"
-    tags:
-      - quality
-  - id: M-SDH-999
-    name: prj-0001 スケジュールスコープ完了
-    depends_on:
-      - M-SDH-AGT-900
-      - M-SDH-GOV-900
-      - M-SDH-BIZ-900
-      - M-SDH-NFR-900
-      - M-SDH-DES-900
-      - M-SDH-QLT-900
-    owner: PO
-    date_hint: "2026-04-18"
-    tags:
-      - finish
+      - T-LAUNCH-PJM-SCHMS-040
+      - T-LAUNCH-PJM-SCHDEF-040
+      - T-LAUNCH-PJM-SCHTLNCH-040
+    owner: PM

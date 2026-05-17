@@ -28,6 +28,20 @@ type CrossDomainDep = {
   note?: string
 }
 
+type MilestoneConfig = {
+  id: string
+  name: string
+  owner: string
+  date_hint?: string
+  tags?: string[]
+}
+
+type GroupMilestone = {
+  catalog_id: string
+  group?: string
+  milestone: MilestoneConfig
+}
+
 type StrategyDoc = {
   id: string
   type: string
@@ -38,6 +52,7 @@ type StrategyDoc = {
   task_id_pattern: string
   owner_rules: OwnerRule[]
   cross_domain_dependencies?: CrossDomainDep[]
+  group_milestones?: GroupMilestone[]
 }
 
 // --- Intermediate types ---
@@ -48,6 +63,8 @@ type DeliverableInfo = {
   domain_code: string
   path: string
   depends_on: string[]
+  catalogId: string
+  groupName: string | null
 }
 
 // --- Output types ---
@@ -60,10 +77,20 @@ export type GeneratedTask = {
   owner: string
 }
 
+export type GeneratedMilestone = {
+  id: string
+  name: string
+  depends_on: string[]
+  owner: string
+  date_hint?: string
+  tags?: string[]
+}
+
 export type GenerateResult = {
   projectId: string
   track: string
   tasks: GeneratedTask[]
+  milestones: GeneratedMilestone[]
   errors: string[]
   warnings: string[]
 }
@@ -74,10 +101,16 @@ function collectDeliverables(
   sections: DctSection[],
   domainCode: string,
   includeKinds: string[],
+  catalogId: string,
+  topLevelGroup: string | null,
   out: DeliverableInfo[]
 ): void {
   for (const section of sections) {
-    if (section.groups) collectDeliverables(section.groups, domainCode, includeKinds, out)
+    // Lock the top-level group name on the first call; preserve it for nested calls.
+    const effectiveGroup = topLevelGroup ?? section.name ?? null
+    if (section.groups) {
+      collectDeliverables(section.groups, domainCode, includeKinds, catalogId, effectiveGroup, out)
+    }
     if (!section.deliverables) continue
     for (const item of section.deliverables) {
       if (!includeKinds.includes(item.kind)) continue
@@ -88,6 +121,8 @@ function collectDeliverables(
         domain_code: domainCode,
         path: item.path,
         depends_on: item.depends_on ?? [],
+        catalogId,
+        groupName: effectiveGroup,
       })
     }
   }
@@ -185,10 +220,10 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       continue
     }
     const domainCode = doc.domain_code ?? doc.domain.toUpperCase().slice(0, 3)
-    collectDeliverables(doc.groups, domainCode, strategy.scope.include_kinds, allDeliverables)
+    collectDeliverables(doc.groups, domainCode, strategy.scope.include_kinds, ref.id, null, allDeliverables)
   }
 
-  if (errors.length > 0) return { projectId, track, tasks: [], errors, warnings }
+  if (errors.length > 0) return { projectId, track, tasks: [], milestones: [], errors, warnings }
 
   // Topological sort
   const crossDeps = strategy.cross_domain_dependencies ?? []
@@ -197,7 +232,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     sorted = topoSort(allDeliverables, crossDeps)
   } catch (err) {
     errors.push(err instanceof Error ? err.message : String(err))
-    return { projectId, track, tasks: [], errors, warnings }
+    return { projectId, track, tasks: [], milestones: [], errors, warnings }
   }
 
   // Map local_id → finalize task ID for dependency resolution
@@ -251,6 +286,54 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     if (prevId) finalizeTaskId.set(d.local_id, prevId)
   }
 
-  if (errors.length > 0) return { projectId, track, tasks: [], errors, warnings }
-  return { projectId, track, tasks, errors, warnings }
+  if (errors.length > 0) return { projectId, track, tasks: [], milestones: [], errors, warnings }
+
+  // Build per-group milestones from group_milestones config
+  const milestones: GeneratedMilestone[] = []
+  for (const gm of strategy.group_milestones ?? []) {
+    const groupDeliverables = sorted.filter(d => {
+      if (d.catalogId !== gm.catalog_id) return false
+      return gm.group !== undefined ? d.groupName === gm.group : d.groupName === null
+    })
+
+    if (groupDeliverables.length === 0) {
+      warnings.push(
+        `group_milestones: no work deliverables for catalog_id=${gm.catalog_id} group=${gm.group ?? '(unnamed)'}`
+      )
+      continue
+    }
+
+    // Leaf deliverables within the group: not required by any sibling in the same group
+    const groupIds = new Set(groupDeliverables.map(d => d.local_id))
+    const dependedUponWithinGroup = new Set<string>()
+    for (const d of groupDeliverables) {
+      for (const dep of d.depends_on) {
+        if (groupIds.has(dep)) dependedUponWithinGroup.add(dep)
+      }
+    }
+
+    const leafFinalizeIds = groupDeliverables
+      .filter(d => !dependedUponWithinGroup.has(d.local_id))
+      .map(d => finalizeTaskId.get(d.local_id))
+      .filter((id): id is string => id !== undefined)
+
+    if (leafFinalizeIds.length === 0) {
+      warnings.push(
+        `group_milestones: no finalize tasks for catalog_id=${gm.catalog_id} group=${gm.group ?? '(unnamed)'}`
+      )
+      continue
+    }
+
+    const mc = gm.milestone
+    milestones.push({
+      id: mc.id,
+      name: mc.name,
+      depends_on: leafFinalizeIds,
+      owner: mc.owner,
+      ...(mc.date_hint !== undefined ? { date_hint: mc.date_hint } : {}),
+      ...(mc.tags !== undefined ? { tags: mc.tags } : {}),
+    })
+  }
+
+  return { projectId, track, tasks, milestones, errors, warnings }
 }

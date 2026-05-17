@@ -3,7 +3,8 @@ import { dirname, join, resolve } from 'node:path'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import yaml from 'js-yaml'
 import { loadConfig, loadEnv } from './specdojo-config.js'
-import { generateScheduleTrack } from './schedule-generate.js'
+import { generateScheduleTrack, GeneratedMilestone } from './schedule-generate.js'
+import { readYaml } from './exec-shared.js'
 
 function resolveSchedulePath(opts: { project?: string }): { schedulePath: string; baseDir: string } {
   loadEnv()
@@ -33,6 +34,67 @@ function resolveSchedulePath(opts: { project?: string }): { schedulePath: string
   }
 
   return { schedulePath: resolve(baseDir, rawPath.trim()), baseDir }
+}
+
+function updateMilestonesFile(
+  schedulePath: string,
+  projectId: string,
+  newMilestones: GeneratedMilestone[],
+  dryRun: boolean
+): { added: string[]; updated: string[]; fileCreated: boolean } {
+  if (newMilestones.length === 0) return { added: [], updated: [], fileCreated: false }
+
+  const filePath = join(schedulePath, 'sch-milestones.yaml')
+  const added: string[] = []
+  const updated: string[] = []
+  let fileCreated = false
+
+  let doc: Record<string, unknown>
+
+  if (existsSync(filePath)) {
+    const parsed = readYaml(filePath)
+    if (!parsed || typeof parsed !== 'object') {
+      throw new Error(`${filePath}: invalid or empty YAML`)
+    }
+    doc = parsed as Record<string, unknown>
+    if (!Array.isArray(doc.milestones)) doc.milestones = []
+  } else {
+    doc = {
+      kind: 'milestones',
+      id: `${projectId}:sch-milestones`,
+      type: 'project',
+      status: 'draft',
+      version: 1,
+      project_id: projectId,
+      settings: {},
+      milestones: [],
+    }
+    fileCreated = true
+  }
+
+  const list = doc.milestones as Array<Record<string, unknown>>
+  for (const m of newMilestones) {
+    const idx = list.findIndex(entry => entry?.id === m.id)
+    if (idx >= 0) {
+      list[idx].depends_on = m.depends_on
+      updated.push(m.id)
+    } else {
+      list.push({ ...m } as Record<string, unknown>)
+      added.push(m.id)
+    }
+  }
+
+  const outYaml = yaml.dump(doc, { lineWidth: 120, noRefs: true })
+
+  if (dryRun) {
+    const label = fileCreated ? 'created' : 'updated'
+    process.stdout.write(`\n# --- (dry-run) sch-milestones.yaml (${label}) ---\n`)
+    process.stdout.write(outYaml)
+  } else {
+    writeFileSync(filePath, outYaml, 'utf8')
+  }
+
+  return { added, updated, fileCreated }
 }
 
 function printCommandError(error: unknown): void {
@@ -110,7 +172,10 @@ export function registerScheduleCommands(program: Command): void {
         )
       }
 
-      const { projectId, tasks, errors, warnings } = generateScheduleTrack(strategyFile, baseDir)
+      const { projectId, tasks, milestones, errors, warnings } = generateScheduleTrack(
+        strategyFile,
+        baseDir
+      )
 
       for (const w of warnings) process.stdout.write(`WARN: ${w}\n`)
       for (const e of errors) process.stdout.write(`ERROR: ${e}\n`)
@@ -122,6 +187,9 @@ export function registerScheduleCommands(program: Command): void {
 
       const outDoc = {
         kind: 'track',
+        id: `${projectId}:sch-track-${track}`,
+        type: 'project',
+        status: 'draft',
         version: 1,
         project_id: projectId,
         track,
@@ -139,11 +207,30 @@ export function registerScheduleCommands(program: Command): void {
       if (opts.dryRun) {
         process.stdout.write(outYaml)
         process.stdout.write(`\n# dry-run: ${tasks.length} tasks — not written to disk\n`)
+        if (milestones.length > 0) {
+          updateMilestonesFile(schedulePath, projectId, milestones, true)
+        }
         return
       }
 
       writeFileSync(outFile, outYaml, 'utf8')
       process.stdout.write(`Generated: ${outFile} (${tasks.length} tasks)\n`)
+
+      if (milestones.length > 0) {
+        const { added, updated, fileCreated } = updateMilestonesFile(
+          schedulePath,
+          projectId,
+          milestones,
+          false
+        )
+        const milestonesFile = join(schedulePath, 'sch-milestones.yaml')
+        const verb = fileCreated ? 'Created' : 'Updated'
+        const detail = [
+          ...added.map(id => `added ${id}`),
+          ...updated.map(id => `updated ${id}`),
+        ].join(', ')
+        process.stdout.write(`${verb}: ${milestonesFile} (${detail})\n`)
+      }
     } catch (error) {
       printCommandError(error)
     }

@@ -1,0 +1,106 @@
+{
+  "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+  "execution_path": "docs/ja/projects/prj-0001/070-execution",
+  "generated_dir": "docs/ja/projects/prj-0001/070-execution/generated",
+  "ready_count": 5,
+  "default_strategy": "critical-first",
+  "strategies": {
+    "critical-first": {
+      "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-PJD-OVERVIEW-010",
+        "T-LAUNCH-PJM-PLAN-010",
+        "T-LAUNCH-PJM-SCHDEF-010",
+        "T-LAUNCH-PJM-SCHMS-010",
+        "T-LAUNCH-PJM-SCHTLNCH-010"
+      ]
+    },
+    "fifo": {
+      "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-PJD-OVERVIEW-010",
+        "T-LAUNCH-PJM-PLAN-010",
+        "T-LAUNCH-PJM-SCHDEF-010",
+        "T-LAUNCH-PJM-SCHMS-010",
+        "T-LAUNCH-PJM-SCHTLNCH-010"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "name": "prj-overview たたき台作成",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 1,
+      "critical_first_rank": 1,
+      "cpm": {
+        "es": 0,
+        "ef": 0.25,
+        "ls": 0,
+        "lf": 0.25,
+        "slack": 0
+      }
+    },
+    {
+      "id": "T-LAUNCH-PJM-PLAN-010",
+      "name": "pm-plan たたき台作成",
+      "owner": "PM",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 2,
+      "critical_first_rank": 2,
+      "cpm": {
+        "es": 0,
+        "ef": 0.25,
+        "ls": 1.5,
+        "lf": 1.75,
+        "slack": 1.5
+      }
+    },
+    {
+      "id": "T-LAUNCH-PJM-SCHDEF-010",
+      "name": "sch-defaults たたき台作成",
+      "owner": "ARC",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 3,
+      "critical_first_rank": 3,
+      "cpm": {
+        "es": 0,
+        "ef": 0.125,
+        "ls": 2.0625,
+        "lf": 2.1875,
+        "slack": 2.0625
+      }
+    },
+    {
+      "id": "T-LAUNCH-PJM-SCHMS-010",
+      "name": "sch-milestones たたき台作成",
+      "owner": "PM",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 4,
+      "critical_first_rank": 4,
+      "cpm": {
+        "es": 0,
+        "ef": 0.125,
+        "ls": 2.0625,
+        "lf": 2.1875,
+        "slack": 2.0625
+      }
+    },
+    {
+      "id": "T-LAUNCH-PJM-SCHTLNCH-010",
+      "name": "sch-track-launch たたき台作成",
+      "owner": "PM",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 5,
+      "critical_first_rank": 5,
+      "cpm": {
+        "es": 0,
+        "ef": 0.125,
+        "ls": 2.0625,
+        "lf": 2.1875,
+        "slack": 2.0625
+      }
+    }
+  ]
+}

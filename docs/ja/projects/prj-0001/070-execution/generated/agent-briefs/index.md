@@ -1,0 +1,15 @@
+# Agent Brief Index
+
+ready.json をもとに生成した Agent 向け実行ブリーフ一覧。
+各ブリーフは非正本であり、進捗は保持しない。
+
+- ready_count: `5`
+- default_strategy: `critical-first`
+
+| id | owner | name | critical_rank | fifo_rank | slack | brief |
+|---|---|---|---:|---:|---:|---|
+| `T-LAUNCH-PJD-OVERVIEW-010` | BA | prj-overview たたき台作成 | 1 | 1 | 0 | [T-LAUNCH-PJD-OVERVIEW-010.md](./T-LAUNCH-PJD-OVERVIEW-010.md) |
+| `T-LAUNCH-PJM-PLAN-010` | PM | pm-plan たたき台作成 | 2 | 2 | 1.5 | [T-LAUNCH-PJM-PLAN-010.md](./T-LAUNCH-PJM-PLAN-010.md) |
+| `T-LAUNCH-PJM-SCHDEF-010` | ARC | sch-defaults たたき台作成 | 3 | 3 | 2.0625 | [T-LAUNCH-PJM-SCHDEF-010.md](./T-LAUNCH-PJM-SCHDEF-010.md) |
+| `T-LAUNCH-PJM-SCHMS-010` | PM | sch-milestones たたき台作成 | 4 | 4 | 2.0625 | [T-LAUNCH-PJM-SCHMS-010.md](./T-LAUNCH-PJM-SCHMS-010.md) |
+| `T-LAUNCH-PJM-SCHTLNCH-010` | PM | sch-track-launch たたき台作成 | 5 | 5 | 2.0625 | [T-LAUNCH-PJM-SCHTLNCH-010.md](./T-LAUNCH-PJM-SCHTLNCH-010.md) |
