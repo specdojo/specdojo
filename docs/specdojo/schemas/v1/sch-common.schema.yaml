@@ -5,8 +5,8 @@ title: "SpecDojo Schedule common definitions"
 $defs:
   Owner:
     type: string
-    description: "Document owner role. PO=Project Owner, BA=Business Analyst, ARC=Architect, QE=Quality Engineer."
-    enum: [ "PO", "BA", "ARC", "QE" ]
+    description: "Task owner Role code. Must exist in pm-roles.yaml (e.g., PO, PM, BA, ARC, DEV, QE, UX, OPS)."
+    pattern: "^[A-Z]{2,4}$"
 
   Id:
     type: string
@@ -42,15 +42,10 @@ $defs:
     description: "Sub-scope inside a domain. Use a stable slug."
     pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
 
-  AssignedTeam:
-    type: string
-    description: "Optional current team/org label. For readability/reporting only."
-    pattern: "^[^\\s].{0,127}$"
-
   AgentMode:
     type: string
-    description: "Agent execution mode. manual requires step-by-step human confirmation."
-    enum: [ "manual", "standard", "agent-max", "agent-ultra" ]
+    description: "Task execution mode. auto=agent executes via pm-members.yaml role lookup; manual=human execution required."
+    enum: [ "auto", "manual" ]
 
   Calendar:
     type: object
@@ -215,6 +210,8 @@ $defs:
         $ref: "#/$defs/DependencyIds"
       owner:
         $ref: "#/$defs/Owner"
+      agent_mode:
+        $ref: "#/$defs/AgentMode"
       tags:
         type: array
         description: "Optional tags for filtering/grouping."
@@ -256,17 +253,3 @@ $defs:
         type: string
         description: "Optional notes."
 
-  AgentTaskOverride:
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - agent_mode
-    properties:
-      id:
-        $ref: "#/$defs/Id"
-      agent_mode:
-        $ref: "#/$defs/AgentMode"
-      notes:
-        type: string
-        description: "Optional rationale for the override."

@@ -1,0 +1,161 @@
+# sch-strategy.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Schedule strategy schema"
+description: >
+  Defines generation rules for sch-track-<track>.yaml.
+  Used as input to the code generator; not a runtime schedule file.
+type: object
+additionalProperties: false
+
+required:
+  - id
+  - type
+  - status
+  - track
+  - scope
+  - phases
+  - task_id_pattern
+  - owner_rules
+
+properties:
+  id:
+    type: string
+    minLength: 1
+    description: "Deliverable ID (e.g., prj-0001:sch-strategy-launch)."
+
+  type:
+    const: "project"
+
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+
+  track:
+    $ref: "./sch-common.schema.yaml#/$defs/Track"
+
+  scope:
+    type: object
+    additionalProperties: false
+    required:
+      - catalogs
+      - include_kinds
+    properties:
+      catalogs:
+        type: array
+        minItems: 1
+        description: "Target deliverables catalog files."
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - path
+          properties:
+            id:
+              type: string
+              minLength: 1
+              description: "Catalog document ID (e.g., prj-0001:dct-project-definition)."
+            path:
+              type: string
+              pattern: "^/"
+              description: "Absolute path to the catalog YAML file."
+      include_kinds:
+        type: array
+        minItems: 1
+        description: "Deliverable kinds to include in generation (typically [work])."
+        items:
+          type: string
+          enum: ["work", "control", "generated"]
+
+  phases:
+    type: object
+    description: >
+      Phase definitions keyed by file format (e.g., markdown, yaml).
+      The format key is matched against the deliverable path extension.
+    minProperties: 1
+    additionalProperties:
+      type: array
+      minItems: 1
+      items:
+        $ref: "#/$defs/Phase"
+
+  task_id_pattern:
+    type: string
+    minLength: 1
+    description: >
+      Task ID generation pattern with placeholders.
+      Available placeholders: {domain_code}, {artifact_code}, {phase_suffix}.
+      Example: T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}
+
+  owner_rules:
+    type: array
+    minItems: 1
+    description: "Mapping from deliverable local_id list to owner Role code."
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - local_ids
+        - owner
+      properties:
+        local_ids:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          description: "Deliverable local_ids covered by this rule."
+          items:
+            type: string
+            minLength: 1
+        owner:
+          $ref: "./sch-common.schema.yaml#/$defs/Owner"
+
+  cross_domain_dependencies:
+    type: array
+    description: >
+      Supplementary cross-domain dependencies not present in catalog depends_on.
+      dependent.draft task starts after requires.finalize task completes.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - dependent
+        - requires
+      properties:
+        dependent:
+          type: string
+          minLength: 1
+          description: "local_id of the dependent deliverable."
+        requires:
+          type: string
+          minLength: 1
+          description: "local_id of the prerequisite deliverable."
+        note:
+          type: string
+          description: "Optional explanation."
+
+$defs:
+  Phase:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - name
+      - task_suffix
+      - duration_days
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Phase identifier (e.g., draft, validate, review, finalize)."
+      name:
+        type: string
+        minLength: 1
+        description: "Phase display name."
+      task_suffix:
+        type: string
+        pattern: "^[0-9]{3}$"
+        description: "3-digit numeric suffix appended to the generated task ID."
+      duration_days:
+        type: number
+        exclusiveMinimum: 0
+        description: "Default task duration in working days for this phase."

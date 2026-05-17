@@ -8,8 +8,8 @@ required:
   - kind
   - version
   - project_id
+  - track
   - settings
-  - schedule_level
 
 properties:
   kind:
@@ -22,20 +22,12 @@ properties:
     type: string
     minLength: 1
     description: "Project identifier (e.g., prj-0001)."
-  schedule_level:
-    type: string
-    description: "Schedule granularity level."
-    enum: [ "domain", "container" ]
   track:
     $ref: "./sch-common.schema.yaml#/$defs/Track"
   domain:
     $ref: "./sch-common.schema.yaml#/$defs/Domain"
   container:
     $ref: "./sch-common.schema.yaml#/$defs/Container"
-  assigned_team:
-    $ref: "./sch-common.schema.yaml#/$defs/AssignedTeam"
-  default_agent_mode:
-    $ref: "./sch-common.schema.yaml#/$defs/AgentMode"
   calendar:
     $ref: "./sch-common.schema.yaml#/$defs/CalendarOverride"
   settings:
@@ -45,42 +37,12 @@ properties:
     description: "Optional file-level notes."
   tasks:
     type: array
+    minItems: 1
     description: "Scheduled tasks (duration-based)."
     items:
       $ref: "./sch-common.schema.yaml#/$defs/Task"
   milestones:
     type: array
-    description: "Track-level milestones (duration=0) typically representing gates/approvals."
+    description: "Track-level milestones (duration=0) representing gates/approvals."
     items:
       $ref: "./sch-common.schema.yaml#/$defs/Milestone"
-
-oneOf:
-  - title: "Domain track schedule"
-    required:
-      - domain
-      - tasks
-    properties:
-      schedule_level:
-        const: "domain"
-      domain: true
-      tasks:
-        type: array
-        minItems: 1
-    not:
-      anyOf:
-        - required: [ "container" ]
-          properties:
-            container: true
-  - title: "Container track schedule"
-    required:
-      - domain
-      - container
-      - tasks
-    properties:
-      schedule_level:
-        const: "container"
-      domain: true
-      container: true
-      tasks:
-        type: array
-        minItems: 1

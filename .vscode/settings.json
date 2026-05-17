@@ -174,10 +174,7 @@
     "./docs/specdojo/schemas/v1/sch-defaults.schema.yaml": ["docs/ja/**/sch-defaults*.yaml"],
     "./docs/specdojo/schemas/v1/sch-milestones.schema.yaml": ["docs/ja/**/sch-milestones*.yaml"],
     "./docs/specdojo/schemas/v1/sch-track.schema.yaml": ["docs/ja/**/sch-track-*.yaml"],
-    "./docs/specdojo/schemas/v1/sch-config.schema.yaml": ["docs/ja/**/sch-config-*.yaml"],
-    "./docs/specdojo/schemas/v1/sch-agent-overrides.schema.yaml": [
-      "docs/ja/**/sch-agent-overrides-*.yaml"
-    ]
+    "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": ["docs/ja/**/sch-strategy-*.yaml"]
   },
 
   "files.associations": {

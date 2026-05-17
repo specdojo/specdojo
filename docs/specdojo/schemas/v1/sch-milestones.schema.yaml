@@ -9,7 +9,6 @@ required:
   - version
   - project_id
   - settings
-  - schedule_level
   - milestones
 
 properties:
@@ -23,10 +22,6 @@ properties:
     type: string
     minLength: 1
     description: "Project identifier (e.g., prj-0001)."
-  schedule_level:
-    const: "milestones"
-  assigned_team:
-    $ref: "./sch-common.schema.yaml#/$defs/AssignedTeam"
   calendar:
     $ref: "./sch-common.schema.yaml#/$defs/CalendarOverride"
   settings:
