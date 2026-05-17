@@ -1,13 +1,12 @@
+id: prj-0001:pm-members
+type: project
+status: draft
+based_on:
+  - people-and-organization-definition-standard
+  - prj-0001:pm-organization
+  - prj-0001:pm-roles
 version: 1
 project_id: prj-0001
-document:
-  id: prj-0001:pm-members
-  type: project
-  status: draft
-  based_on:
-    - people-and-organization-definition-standard
-    - prj-0001:pm-organization
-    - prj-0001:pm-roles
 
 # Member は、実際に作業する人間または agent を表す。
 # roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
@@ -17,7 +16,10 @@ members:
   - nickname: po
     display_name: Project Owner
     email: null
-    roles: [PO, PM, OPS]
+    roles:
+      - PO
+      - PM
+      - OPS
     type: human
     persona: final-decision-maker
     focus:
@@ -27,14 +29,14 @@ members:
       - publication
       - accountability
     scheduler_strategy: critical-first
-    note: >-
-      小規模運用における人間の最終判断主体。PM・OPS 責務を兼務する。
-      公開文書では個人名と連絡先を記載しない。
-
+    note: 小規模運用における人間の最終判断主体。PM・OPS 責務を兼務する。 公開文書では個人名と連絡先を記載しない。
   - nickname: po-agent
     display_name: Project Owner Agent
     email: null
-    roles: [PO, PM, OPS]
+    roles:
+      - PO
+      - PM
+      - OPS
     type: agent
     persona: concise-project-organizer
     focus:
@@ -43,13 +45,13 @@ members:
       - decision-support
       - simplification
     scheduler_strategy: critical-first
-    note: >-
-      PO ロールの草案作成、論点整理、判断材料整理を支援する agent。最終判断や公開可否判断は行わない。
-
+    note: PO ロールの草案作成、論点整理、判断材料整理を支援する agent。最終判断や公開可否判断は行わない。
   - nickname: ba-agent
     display_name: Business Analyst Agent
     email: null
-    roles: [BA, UX]
+    roles:
+      - BA
+      - UX
     type: agent
     persona: user-value-oriented
     focus:
@@ -58,14 +60,12 @@ members:
       - stakeholder-viewpoint
       - practical-usability
     scheduler_strategy: fifo
-    note: >-
-      要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。UX 観点も兼務する。
-      将来利用者や将来貢献者の視点から分かりにくさを検出する。
-
+    note: 要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。UX 観点も兼務する。 将来利用者や将来貢献者の視点から分かりにくさを検出する。
   - nickname: arc-agent
     display_name: Architect Agent
     email: null
-    roles: [ARC]
+    roles:
+      - ARC
     type: agent
     persona: structure-first
     focus:
@@ -75,13 +75,12 @@ members:
       - consistency
       - technical-constraints
     scheduler_strategy: dependency-first
-    note: >-
-      文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。技術方針の最終判断は行わない。
-
+    note: 文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。技術方針の最終判断は行わない。
   - nickname: qe-agent
     display_name: Quality Engineer Agent
     email: null
-    roles: [QE]
+    roles:
+      - QE
     type: agent
     persona: risk-averse-reviewer
     focus:
@@ -91,9 +90,7 @@ members:
       - omissions
       - edge-cases
     scheduler_strategy: critical-first
-    note: >-
-      品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。最終承認や公開可否判断は行わない。
-
+    note: 品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。最終承認や公開可否判断は行わない。
   - nickname: copilot
     display_name: General Copilot Agent
     email: null
@@ -106,5 +103,4 @@ members:
       - summarization
       - mechanical-updates
     scheduler_strategy: manual
-    note: >-
-      特定ロールに固定しない汎用 agent。実行時には対象タスクの owner または明示された文脈に従って支援する。
+    note: 特定ロールに固定しない汎用 agent。実行時には対象タスクの owner または明示された文脈に従って支援する。

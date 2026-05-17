@@ -94,6 +94,7 @@
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
     "vitepress": "^1.6.4",
-    "vitepress-sidebar": "^1.33.0"
+    "vitepress-sidebar": "^1.33.0",
+    "ajv-formats": "^2.1.1"
   }
 }

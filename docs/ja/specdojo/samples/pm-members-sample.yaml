@@ -1,26 +1,27 @@
+id: prj-0001:pm-members
+type: project
+status: draft
+rulebook: pm-members-rulebook
+based_on:
+  - people-and-organization-definition-standard
+  - prj-0001:pm-roles
 version: 1
 project_id: prj-0001
-document:
-  id: prj-0001:pm-members
-  type: project
-  status: draft
-  rulebook: pm-members-rulebook
-  based_on:
-    - people-and-organization-definition-standard
-    - prj-0001:pm-roles
-
 members:
   - nickname: po
     display_name: 店主代表
     email: null
-    roles: [PO, PM, OPS]
+    roles:
+      - PO
+      - PM
+      - OPS
     type: human
     note: 目的・優先順位・公開可否の最終判断を担う。小規模運用のため管理とリリース判断も兼務する
-
   - nickname: ba-agent
     display_name: BA エージェント
     email: null
-    roles: [BA]
+    roles:
+      - BA
     type: agent
     persona: requirements-navigator
     focus:
@@ -29,11 +30,12 @@ members:
       - 要件の抜け漏れ確認
     scheduler_strategy: dependency-first
     note: 要件整理と受入条件草案を支援する。最終判断は人間の PO が行う
-
   - nickname: arc-agent
     display_name: ARC エージェント
     email: null
-    roles: [ARC, DEV]
+    roles:
+      - ARC
+      - DEV
     type: agent
     persona: spec-navigator
     focus:
@@ -42,11 +44,11 @@ members:
       - 成果物間の依存関係確認
     scheduler_strategy: dependency-first
     note: 構成方針・技術観点・実装関連成果物の草案確認を支援する。承認責任は持たない
-
   - nickname: qe-agent
     display_name: QE エージェント
     email: null
-    roles: [QE]
+    roles:
+      - QE
     type: agent
     persona: risk-averse-reviewer
     focus:
@@ -55,7 +57,6 @@ members:
       - 禁止事項・ルール準拠の確認
     scheduler_strategy: critical-first
     note: 品質基準・レビュー観点・確認手順の草案確認を支援する。公開可否判断は行わない
-
   - nickname: copilot
     display_name: 汎用支援エージェント
     email: null
@@ -68,7 +69,6 @@ members:
       - 成果物間の軽微な整合性確認
     scheduler_strategy: manual
     note: 特定 Role に固定しない汎用支援 agent。実行時のタスク owner または文脈で対象 Role を明示する
-
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
   - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。

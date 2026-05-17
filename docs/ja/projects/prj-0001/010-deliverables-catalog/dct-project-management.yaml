@@ -266,31 +266,6 @@ groups:
           - ARC が技術タスクのスコープと順序が確認できること
           - QE が品質ゲート・レビュータスクが含まれていることを確認できること
 
-      - local_id: sch-config-launch
-        artifact_code: SCHCFG
-        name: Launch スケジュール設定
-        kind: work
-        depends_on: []
-        overview: Launch フェーズの詳細スケジュールの設定を定義
-        path: sch-config-launch.yaml
-        done_criteria:
-          - PO が担当チーム・エージェントモードなどトラック設定を承認できること
-          - BA が担当割り当てが確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が設定値の妥当性を確認できること
-
-      - local_id: sch-agent-overrides-launch
-        artifact_code: SCHAOV
-        name: Launch スケジュールエージェント上書き設定
-        kind: work
-        depends_on: []
-        overview: Launch フェーズの詳細スケジュールのエージェント上書き設定を定義
-        path: sch-agent-overrides-launch.yaml
-        done_criteria:
-          - PO が例外的なエージェントモード上書き設定を承認できること
-          - BA が手動確認が必要なタスクが識別されていることを確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が品質関連タスクのエージェントモードが適切であることを確認できること
 
   - name: レポート
     groups:

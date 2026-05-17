@@ -5,6 +5,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { load } from 'js-yaml'
 import fg from 'fast-glob'
 import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
 import Ajv2020 from 'ajv/dist/2020'
 
 type JsonObject = Record<string, unknown>
@@ -56,10 +57,12 @@ function parseArgs(argv: string[]): CliArgs {
 
 function selectAjv(schema: JsonObject): Ajv | Ajv2020 {
   const schemaUri = typeof schema.$schema === 'string' ? schema.$schema : ''
-  if (schemaUri.includes('draft/2020-12/')) {
-    return new Ajv2020({ allErrors: true, strict: false })
-  }
-  return new Ajv({ allErrors: true, strict: false })
+  const ajv = schemaUri.includes('draft/2020-12/')
+    ? new Ajv2020({ allErrors: true, strict: false })
+    : new Ajv({ allErrors: true, strict: false })
+
+  addFormats(ajv)
+  return ajv
 }
 
 function addSiblingSchemas(ajv: Ajv | Ajv2020, schemaPath: string): void {

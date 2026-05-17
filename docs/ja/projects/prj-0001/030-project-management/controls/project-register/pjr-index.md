@@ -61,7 +61,7 @@ Project Register
 | PJR-0039 | done | frontmatterのtypeの見直し | deliverables-catalogなどを追加するかを検討 | todo | high | PO | 2026-05-17 | 2026-05-18 | productの小分類を見直し | - |
 | PJR-0040 | open | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | PO | 2026-05-17 | - | - | - |
 | PJR-0041 | done | roles, membersの見直し | rolesに全ロールを記述して、membersに兼務を反映するように変更 | todo | high | PO | 2026-05-17 | 2026-05-17 | rolesとmembers, 関連文書を見直し | - |
-| PJR-0042 | open | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | PO | 2026-05-17 | - | - | - |
+| PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | PO | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | - |
 | PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | PO | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
 
 ## 4. 派生ビュー

@@ -1,12 +1,11 @@
+id: prj-0001:pm-roles
+type: project
+status: draft
+based_on:
+  - people-and-organization-definition-standard
+  - prj-0001:pm-organization
 version: 1
 project_id: prj-0001
-document:
-  id: prj-0001:pm-roles
-  type: project
-  status: draft
-  based_on:
-    - people-and-organization-definition-standard
-    - prj-0001:pm-organization
 
 # ロール一覧。Role code の共通定義・責務は people-and-organization-definition-standard を参照する。
 # 兼務の割り当ては pm-members.yaml の roles フィールドで管理する。
@@ -16,31 +15,24 @@ roles:
   - code: PO
     name: Project Owner
     project_note: 最終判断・スコープ・優先順位・公開方針を担う。
-
   - code: PM
     name: Project Manager
     project_note: 計画・進捗・課題・リスク管理を担う。小規模運用では po が兼務する。
-
   - code: BA
     name: Business Analyst
     project_note: 要件、利用者視点、受入条件を整理する。
-
   - code: ARC
     name: Architect
     project_note: 文書体系、構成方針、技術制約を整理する。
-
   - code: DEV
     name: Developer
     project_note: 実装・設定・技術的変更作業を担う。実装タスクが増えた場合に専任メンバーを追加する。
-
   - code: QE
     name: Quality Engineer
     project_note: 品質基準、レビュー観点、整合性を確認する。
-
   - code: UX
     name: UX / Documentation Designer
     project_note: 利用者導線・説明・文書体験を担う。小規模運用では ba-agent が兼務する。
-
   - code: OPS
     name: Operations / Release Manager
     project_note: リリース・公開・配布・変更管理を担う。小規模運用では po が兼務する。

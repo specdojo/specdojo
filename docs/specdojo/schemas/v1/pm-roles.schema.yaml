@@ -12,11 +12,45 @@ $comment: >
 additionalProperties: false
 
 required:
+  - id
+  - type
+  - status
   - version
   - project_id
   - roles
 
 properties:
+  id:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-:]*$"
+    description: "Document metadata ID (e.g., prj-0001:pm-roles)."
+
+  type:
+    type: string
+    const: project
+    description: "Document type. Must be 'project'."
+
+  status:
+    type: string
+    enum: [ draft, ready, deprecated ]
+    description: "Document status."
+
+  based_on:
+    type: array
+    description: "Optional source document IDs."
+    items:
+      type: string
+      pattern: "^[a-z0-9][a-z0-9-:]*$"
+    uniqueItems: true
+
+  supersedes:
+    type: array
+    description: "Optional superseded document IDs."
+    items:
+      type: string
+      pattern: "^[a-z0-9][a-z0-9-:]*$"
+    uniqueItems: true
+
   version:
     type: integer
     minimum: 1
@@ -26,11 +60,6 @@ properties:
     type: string
     minLength: 1
     description: "Project identifier (e.g., prj-0001)."
-
-  document:
-    type: object
-    description: "Optional document metadata (id, type, status, based_on)."
-    additionalProperties: true
 
   roles:
     type: array
