@@ -24,11 +24,21 @@ groups:
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
         done_criteria:
-          - PO がプロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
-          - PM が計画・進捗・リスク管理の方針が記述されていることを確認できること
-          - BA が業務プロセスとの整合を確認できること
-          - ARC が構成管理・技術的負債管理など技術管理上の観点が含まれていることを確認できること
-          - QE がレビュー方針・品質基準への参照を確認できること
+          - text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 計画・進捗・リスク管理の方針が記述されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: 業務プロセスとの整合が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 構成管理・技術管理の観点が含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: レビュー方針・品質基準への参照が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: pm-communication-plan
         artifact_code: COMM
@@ -40,11 +50,21 @@ groups:
         overview: 報告・連絡・会議体の計画を定義
         path: pm-communication-plan.md
         done_criteria:
-          - PO が報告・連絡・会議体の計画を承認できる粒度で記述されていること
-          - PM が進捗・課題・リスクの報告経路が定義されていることを確認できること
-          - BA が業務観点のコミュニケーション要件が含まれていることを確認できること
-          - ARC が技術チームへの連絡経路が識別されていることを確認できること
-          - QE が品質関連の報告経路が確認できること
+          - text: 報告・連絡・会議体の計画を承認できる粒度で記述されていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 進捗・課題・リスクの報告経路が定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-control-reporting
+          - text: 業務観点のコミュニケーション要件が含まれていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: 技術チームへの連絡経路が識別されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質関連の報告経路が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: pm-quality-management-plan
         artifact_code: QLTY
@@ -56,11 +76,21 @@ groups:
         overview: 品質目標・レビュー方針・品質基準を定義
         path: pm-quality-management-plan.md
         done_criteria:
-          - PO が品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
-          - PM が品質管理プロセスが全体計画と整合していることを確認できること
-          - BA が業務品質基準との整合を確認できること
-          - ARC がコードレビュー・設計レビューなど技術品質基準が含まれていることを確認できること
-          - QE が実施可能な検証・レビュー手順が記述されていることを確認できること
+          - text: 品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 品質管理プロセスが全体計画と整合していること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: 業務品質基準との整合が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: コードレビュー・設計レビューなど技術品質基準が含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 実施可能な検証・レビュー手順が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
   # ── 組織体制 ──────────────────────────────────────────────────────────────
   - name: 組織体制
@@ -75,10 +105,18 @@ groups:
         overview: ロール・メンバー構成の方針と設計根拠を定義
         path: pm-organization.md
         done_criteria:
-          - PO が兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
-          - BA が pm-roles.yaml と pm-members.yaml への導線が整備されていることを確認できること
-          - ARC が pm-roles.yaml と pm-members.yaml への導線が整備されていることを確認できること
-          - QE が禁止事項・見直し条件が実施可能な粒度で記述されていることを確認できること
+          - text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: pm-roles.yaml と pm-members.yaml への導線が整備されていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: pm-roles.yaml と pm-members.yaml との構造整合が取れていること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: 禁止事項・見直し条件が実施可能な粒度で記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: pm-roles                 # small+
         artifact_code: ROLE
@@ -89,14 +127,30 @@ groups:
         overview: 全 Role code を machine-readable な YAML として一覧化する
         path: pm-roles.yaml
         done_criteria:
-          - PO が全ロールコードとプロジェクト固有メモを承認できること
-          - BA が BA ロールが定義されていることを確認できること
-          - ARC が ARC ロールが定義されていることを確認できること
-          - QE が QE ロールが定義されていることを確認できること
-          - PM が PM ロールが定義されていることを確認できること
-          - DEV が DEV ロールが定義されていることを確認できること
-          - UX が UX ロールが定義されていることを確認できること
-          - OPS が OPS ロールが定義されていることを確認できること
+          - text: 全ロールコードとプロジェクト固有メモを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: PM ロールが定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: BA ロールが定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: ARC ロールが定義されていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: DEV ロールが定義されていること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+          - text: QE ロールが定義されていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: UX ロールが定義されていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+          - text: OPS ロールが定義されていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
 
       - local_id: pm-members               # small+
         artifact_code: MBR
@@ -108,11 +162,21 @@ groups:
         overview: yaml で実行主体（人間・agent）と担当ロールリスト（roles）を定義
         path: pm-members.yaml
         done_criteria:
-          - PO が実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
-          - BA が BA ロールを担う member が定義されていることを確認できること
-          - ARC が ARC ロールを担う member が定義されていることを確認できること
-          - QE が QE ロールを担う member が定義されていることを確認できること
-          - PM が PM ロールを担う member または兼務設定が確認できること
+          - text: 実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: PM ロールを担う member または兼務設定が確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: BA ロールを担う member が定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: ARC ロールを担う member が定義されていること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: QE ロールを担う member が定義されていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
 
       - local_id: pm-raci
         artifact_code: RACI
@@ -124,10 +188,18 @@ groups:
         overview: 成果物・プロセスごとの責任分担マトリクスを定義（中規模以上）
         path: pm-raci.md
         done_criteria:
-          - PO が成果物・プロセスごとの責任分担マトリクスを承認できること
-          - BA が業務観点での責任分担が確認できること
-          - ARC が技術観点での責任分担が確認できること
-          - QE が品質観点での責任分担が確認できること
+          - text: 成果物・プロセスごとの責任分担マトリクスを承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 業務観点での責任分担が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: 技術観点での責任分担が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: 品質観点での責任分担が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
 
   # ── 管理台帳 (medium+) ────────────────────────────────────────────────────
   - name: 管理台帳
@@ -249,10 +321,18 @@ groups:
         overview: プロジェクト全体のマイルストーンを定義
         path: sch-milestones.yaml
         done_criteria:
-          - PO がプロジェクト全体のマイルストーンを承認できること
-          - BA がビジネスマイルストーンが含まれていることを確認できること
-          - ARC が技術マイルストーンが含まれていることを確認できること
-          - QE が品質ゲートが含まれていることを確認できること
+          - text: プロジェクト全体のマイルストーンを承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: ビジネスマイルストーンが含まれていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 技術マイルストーンが含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質ゲートが含まれていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: sch-defaults
         artifact_code: SCHDEF
@@ -263,10 +343,18 @@ groups:
         overview: スケジュールのデフォルト設定を定義
         path: sch-defaults.yaml
         done_criteria:
-          - PO がカレンダー・開始日などのデフォルト設定を承認できること
-          - BA が業務稼働日・休日設定が確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が設定値の妥当性を確認できること
+          - text: カレンダー・開始日などのデフォルト設定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 業務稼働日・休日設定が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: validate:schema を通過していること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 設定値の妥当性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: sch-track-launch
         artifact_code: SCHTLNCH
@@ -277,10 +365,18 @@ groups:
         overview: Launch フェーズの詳細スケジュールを定義
         path: sch-track-launch.yaml
         done_criteria:
-          - PO が Launch フェーズのタスク・マイルストーン計画を承認できること
-          - BA がビジネスタスクの順序・依存関係が確認できること
-          - ARC が技術タスクのスコープと順序が確認できること
-          - QE が品質ゲート・レビュータスクが含まれていることを確認できること
+          - text: Launch フェーズのタスク・マイルストーン計画を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: ビジネスタスクの順序・依存関係が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 技術タスクのスコープと順序が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質ゲート・レビュータスクが含まれていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: sch-config-launch
         artifact_code: SCHCFG
@@ -291,10 +387,18 @@ groups:
         overview: Launch フェーズの詳細スケジュールの設定を定義
         path: sch-config-launch.yaml
         done_criteria:
-          - PO が担当チーム・エージェントモードなどトラック設定を承認できること
-          - BA が担当割り当てが確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が設定値の妥当性を確認できること
+          - text: 担当チーム・エージェントモードなどトラック設定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 担当割り当てが確認できること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: validate:schema を通過していること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 設定値の妥当性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: sch-agent-overrides-launch
         artifact_code: SCHAOV
@@ -305,10 +409,18 @@ groups:
         overview: Launch フェーズの詳細スケジュールのエージェント上書き設定を定義
         path: sch-agent-overrides-launch.yaml
         done_criteria:
-          - PO が例外的なエージェントモード上書き設定を承認できること
-          - BA が手動確認が必要なタスクが識別されていることを確認できること
-          - ARC が validate:schema を通過していることを確認できること
-          - QE が品質関連タスクのエージェントモードが適切であることを確認できること
+          - text: 例外的なエージェントモード上書き設定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 手動確認が必要なタスクが識別されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: validate:schema を通過していること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 品質関連タスクのエージェントモードが妥当であること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
   # ── レポート (medium+) ────────────────────────────────────────────────────
   - name: レポート

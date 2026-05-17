@@ -74,6 +74,31 @@ properties:
       $ref: "#/$defs/Section"
 
 $defs:
+  CriteriaItem:
+    type: object
+    additionalProperties: false
+    required:
+      - text
+      - roles
+      - viewpoint
+    properties:
+      text:
+        type: string
+        minLength: 1
+        description: "Verifiable condition the deliverable must satisfy."
+      roles:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Role codes responsible for verifying this criterion."
+        items:
+          type: string
+          enum: [PO, PM, BA, ARC, DEV, QE, UX, OPS]
+      viewpoint:
+        type: string
+        pattern: "^vp-[a-z][a-z0-9-]*$"
+        description: "Primary review viewpoint ID (vp-*) from pm-review-viewpoints.yaml."
+
   DocId:
     type: string
     pattern: "^[a-z0-9][a-z0-9-:]*$"
@@ -178,10 +203,10 @@ $defs:
         minItems: 1
         description: >
           Completion criteria for this deliverable. Required for kind: work.
-          Each item must be a reviewable condition, not a vague action verb.
+          Each item links a verifiable condition to the role(s) that confirm it
+          and the primary review viewpoint (vp-*) from pm-review-viewpoints.yaml.
         items:
-          type: string
-          minLength: 1
+          $ref: "#/$defs/CriteriaItem"
 
       note:
         type: string

@@ -21,10 +21,21 @@ groups:
         overview: プロジェクトの目的・背景・ゴールを定義
         path: prj-overview.md
         done_criteria:
-          - PO/BA がプロジェクトの目的・背景・ゴールを業務観点で確認できる粒度で記述されていること
-          - ARC が技術的前提・制約を読み取れる情報が含まれていること
-          - QE が成功判定の輪郭を確認できること
-          - PM がプロジェクトの目的・スコープを計画立案の基礎として確認できること
+          - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: プロジェクトの目的・スコープを承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的前提・制約を読み取れる情報が含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 成功判定の輪郭が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: プロジェクトの目的・スコープを計画立案の基礎として確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
 
       - local_id: prj-scope
         artifact_code: SCOPE
@@ -35,10 +46,21 @@ groups:
         overview: プロジェクトの対象範囲と除外範囲を定義
         path: prj-scope.md
         done_criteria:
-          - PO/BA が対象範囲と除外範囲を業務観点で確認できること
-          - ARC が技術的スコープ境界を識別できること
-          - QE がテスト対象・対象外の境界を判断できること
-          - PM がスコープ境界をスケジュール計画の前提として確認できること
+          - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対象範囲・対象外を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的スコープ境界が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象・対象外の境界が判断できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: スコープ境界をスケジュール計画の前提として確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
 
       - local_id: prj-success-criteria-and-acceptance-criteria
         artifact_code: SUCCESS
@@ -49,9 +71,18 @@ groups:
         overview: プロジェクト成功の判定基準と受入条件を明確化
         path: prj-success-criteria-and-acceptance-criteria.md
         done_criteria:
-          - PO/BA がプロジェクト成功の判定基準を業務観点で確認できること
-          - ARC が技術的受入条件を確認できること
-          - QE が検証可能な形で受入条件が記述されていること
+          - text: 業務価値と受入条件が対応していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 成功基準を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的受入条件が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 受入条件が検証可能な形で記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       # ── medium ───────────────────────────────────────────────────────────
       - local_id: prj-stakeholder-register
@@ -64,9 +95,18 @@ groups:
         overview: 関係者の役割・関心・影響度を一覧化
         path: prj-stakeholder-register.md
         done_criteria:
-          - PO/BA が業務観点で関係者の役割・関心・影響度を確認できる形で一覧化されていること
-          - ARC が技術的意思決定者・承認者を識別できること
-          - QE が品質に影響するステークホルダーを確認できること
+          - text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: 合意対象と意思決定者が識別できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的意思決定者・承認者が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質に影響するステークホルダーが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: prj-charter
         artifact_code: CHARTER
@@ -79,9 +119,18 @@ groups:
         overview: プロジェクトの正式な認可と権限委譲を文書化
         path: prj-charter.md
         done_criteria:
-          - PO/BA がプロジェクトの正式認可・権限委譲・予算枠を業務観点で確認できること
-          - ARC が技術的制約・前提を読み取れること
-          - QE が品質目標・受入基準への参照を確認できること
+          - text: 業務上の目的・認可条件・期待効果が明確であること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 正式認可・権限委譲・予算枠を承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的制約・前提が読み取れること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質目標・受入基準への参照が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: prj-assumptions-constraints-dependencies
         artifact_code: ACD
@@ -93,10 +142,21 @@ groups:
         overview: 前提条件・制約事項・外部依存を整理
         path: prj-assumptions-constraints-dependencies.md
         done_criteria:
-          - PO/BA が業務上の前提・制約を業務観点で識別できること
-          - ARC が技術的制約・外部依存を識別できること
-          - QE がテスト実施上の前提・制約を確認できること
-          - DEV が実装上の技術制約・外部依存を確認できること
+          - text: 業務上の前提・制約が業務観点で識別できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 重要な前提・制約を受け入れられる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的制約・外部依存が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト実施上の前提・制約が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装上の技術制約・外部依存が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
 
       - local_id: prj-issues-and-approach
         artifact_code: ISSUES
@@ -109,9 +169,18 @@ groups:
         overview: 主要課題の特定と解決アプローチを定義
         path: prj-issues-and-approach.md
         done_criteria:
-          - PO/BA が主要課題と解決アプローチを業務観点で確認できること
-          - ARC が技術的課題と実現方式の方向性を識別できること
-          - QE が解決アプローチの検証可能性を確認できること
+          - text: 業務課題と解決アプローチが業務観点で対応していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 主要課題と解決方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的課題と実現方式の方向性が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 解決アプローチが検証可能な形で記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
 
       - local_id: prj-comparison-of-alternatives
         artifact_code: ALT
@@ -124,6 +193,15 @@ groups:
         overview: 技術的・方針的な代替案を比較評価
         path: prj-comparison-of-alternatives.md
         done_criteria:
-          - PO/BA が代替案の比較軸・評価根拠・推奨案を業務観点で確認できること
-          - ARC が技術的実現可能性・影響の評価を確認できること
-          - QE が選択された案に対する検証方針を確認できること
+          - text: 比較軸・評価根拠が業務価値と対応していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 推奨案を判断できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的実現可能性・影響が評価されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 選択された案に対する検証方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
