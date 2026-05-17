@@ -6,7 +6,7 @@ $comment: >
   Schema for project member roster files:
   docs/ja/projects/<project_id>/030-project-management/020-organization/pm-members.yaml
   Manages the mapping from --by <nickname> (used in specdojo exec events) to
-  display name, contact info, role, and actor type. nickname is immutable once
+  display name, contact info, roles, and actor type. nickname is immutable once
   recorded in the event log.
 
 additionalProperties: false
@@ -43,9 +43,8 @@ properties:
 $defs:
   RoleLabel:
     type: string
-    description: "Role code. PO=Project Owner, BA=Business Analyst, ARC=Architect,
-      QE=Quality Engineer."
-    enum: [ "PO", "BA", "ARC", "QE" ]
+    description: "Role code. Must exist in pm-roles.yaml (e.g., PO, PM, BA, ARC, DEV, QE, UX, OPS)."
+    pattern: "^[A-Z]{2,4}$"
 
   Member:
     type: object
@@ -75,12 +74,12 @@ $defs:
             format: email
           - type: "null"
 
-      role:
-        description: "Role code this member corresponds to. Use null for cross-role
-          (general-purpose) agents."
-        oneOf:
-          - $ref: "#/$defs/RoleLabel"
-          - type: "null"
+      roles:
+        type: array
+        description: "Role codes this member corresponds to. Use empty array for cross-role (general-purpose) agents."
+        items:
+          $ref: "#/$defs/RoleLabel"
+        uniqueItems: true
 
       type:
         type: string

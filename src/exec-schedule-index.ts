@@ -107,10 +107,8 @@ function scheduleSectionLabelForDoc(doc: any, fallback: string): string {
   const docKind = nonEmptyString(doc?.kind)
   if (docKind === 'milestones') return 'milestones'
 
-  const domain = nonEmptyString(doc?.domain)
-  const container = nonEmptyString(doc?.container)
-  if (domain && container) return `${domain} / ${container}`
-  return domain ?? fallback
+  const track = nonEmptyString(doc?.track)
+  return track ?? fallback
 }
 
 export function buildScheduleIndex(projectPath: string): ScheduleIndex {

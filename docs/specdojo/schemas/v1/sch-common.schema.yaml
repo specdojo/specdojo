@@ -32,49 +32,10 @@ $defs:
     description: "Stable schedule management track identifier."
     pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
 
-  Domain:
-    type: string
-    description: "Stable ownership boundary."
-    pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
-
-  Container:
-    type: string
-    description: "Sub-scope inside a domain. Use a stable slug."
-    pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
-
   AgentMode:
     type: string
     description: "Task execution mode. auto=agent executes via pm-members.yaml role lookup; manual=human execution required."
     enum: [ "auto", "manual" ]
-
-  Calendar:
-    type: object
-    additionalProperties: false
-    required:
-      - timezone
-      - workdays
-    properties:
-      timezone:
-        type: string
-        minLength: 1
-        description: "IANA timezone name (e.g., Asia/Tokyo)."
-      work_hours_per_day:
-        type: number
-        exclusiveMinimum: 0
-        maximum: 24
-        description: "Working hours represented by one schedule day."
-      workdays:
-        type: array
-        minItems: 1
-        uniqueItems: true
-        description: "Working weekdays."
-        items:
-          $ref: "#/$defs/Weekday"
-      holidays:
-        type: array
-        description: "Optional holiday dates excluded from workdays."
-        items:
-          $ref: "#/$defs/Date"
 
   CalendarOverride:
     type: object
@@ -131,20 +92,6 @@ $defs:
         description: "Optional holiday dates excluded from workdays."
         items:
           $ref: "#/$defs/Date"
-
-  Settings:
-    type: object
-    additionalProperties: false
-    required:
-      - start_date
-    properties:
-      start_date:
-        $ref: "#/$defs/Date"
-      finish_milestone_id:
-        $ref: "#/$defs/Id"
-      notes:
-        type: string
-        description: "Optional schedule-wide notes."
 
   SettingsOverride:
     type: object

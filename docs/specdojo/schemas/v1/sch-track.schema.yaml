@@ -24,10 +24,6 @@ properties:
     description: "Project identifier (e.g., prj-0001)."
   track:
     $ref: "./sch-common.schema.yaml#/$defs/Track"
-  domain:
-    $ref: "./sch-common.schema.yaml#/$defs/Domain"
-  container:
-    $ref: "./sch-common.schema.yaml#/$defs/Container"
   calendar:
     $ref: "./sch-common.schema.yaml#/$defs/CalendarOverride"
   settings:
