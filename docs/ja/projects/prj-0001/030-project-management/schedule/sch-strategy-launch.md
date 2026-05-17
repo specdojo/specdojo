@@ -42,7 +42,8 @@ Launch Phase Schedule Strategy
 | dct-project-management: 管理計画・スケジュール計画・RACI | `PM` |
 | dct-project-management: 品質管理計画 | `QE` |
 | dct-project-management: 組織定義（`pm-organization`） | `PO` |
-| dct-project-management: ロール・メンバー・スケジュール設定 | `ARC` |
+| dct-project-management: ロール・メンバー定義（`pm-roles`, `pm-members`） | `PO` |
+| dct-project-management: スケジュール設定（`sch-defaults`, `sch-config-launch`, `sch-agent-overrides-launch`） | `ARC` |
 
 - `documentたたき台`・`document一次版`・`document完成版`の作成: 上表の担当ロール
 - レビュー・修正依頼: 各成果物の `done_criteria` に指定されたロール（`PO`, `BA`, `ARC`, `QE` を基本とし、成果物によって `PM`・`DEV`・`UX`・`OPS` が追加される）
