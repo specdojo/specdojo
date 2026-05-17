@@ -46,7 +46,7 @@ import {
 import { ExecEventType, ExecEventV1, SchedulerStrategy } from './exec-types.js'
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 
-const KNOWN_OWNER_LABELS = ['PO', 'BA', 'ARC', 'QE'] as const
+const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
 
 type LoadedExecState = {
@@ -136,9 +136,10 @@ function resolveClaimOwner(
     typeof process.env.SPECDOJO_OWNER === 'string'
       ? process.env.SPECDOJO_OWNER.trim().toUpperCase()
       : ''
+  const rosterMemberRoles = findRosterMember(roster, actor)?.roles
   const rosterOwner =
-    typeof findRosterMember(roster, actor)?.owner === 'string'
-      ? findRosterMember(roster, actor)!.owner!.trim().toUpperCase()
+    Array.isArray(rosterMemberRoles) && rosterMemberRoles.length > 0
+      ? rosterMemberRoles[0].trim().toUpperCase()
       : ''
 
   if (cliOwner && !KNOWN_OWNER_LABELS.includes(cliOwner as (typeof KNOWN_OWNER_LABELS)[number])) {

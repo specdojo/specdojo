@@ -1,0 +1,359 @@
+kind: track
+version: 1
+project_id: prj-0001
+track: launch
+settings: {}
+tasks:
+  - id: T-LAUNCH-PJD-OVERVIEW-010
+    name: prj-overview たたき台作成
+    duration_days: 0.25
+    depends_on: []
+    owner: BA
+  - id: T-LAUNCH-PJD-OVERVIEW-020
+    name: prj-overview レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-010
+    owner: BA
+  - id: T-LAUNCH-PJD-OVERVIEW-030
+    name: prj-overview 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-020
+    owner: BA
+  - id: T-LAUNCH-PJD-STAKEHOLDER-010
+    name: prj-stakeholder-register たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+    owner: BA
+  - id: T-LAUNCH-PJD-STAKEHOLDER-020
+    name: prj-stakeholder-register レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-STAKEHOLDER-010
+    owner: BA
+  - id: T-LAUNCH-PJD-STAKEHOLDER-030
+    name: prj-stakeholder-register 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-STAKEHOLDER-020
+    owner: BA
+  - id: T-LAUNCH-PJD-CHARTER-010
+    name: prj-charter たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+      - T-LAUNCH-PJD-STAKEHOLDER-030
+    owner: PO
+  - id: T-LAUNCH-PJD-CHARTER-020
+    name: prj-charter レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-CHARTER-010
+    owner: PO
+  - id: T-LAUNCH-PJD-CHARTER-030
+    name: prj-charter 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-CHARTER-020
+    owner: PO
+  - id: T-LAUNCH-PJD-SCOPE-010
+    name: prj-scope たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+    owner: BA
+  - id: T-LAUNCH-PJD-SCOPE-020
+    name: prj-scope レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-010
+    owner: BA
+  - id: T-LAUNCH-PJD-SCOPE-030
+    name: prj-scope 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-020
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-010
+    name: prj-success-criteria-and-acceptance-criteria たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-030
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-020
+    name: prj-success-criteria-and-acceptance-criteria レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SUCCESS-010
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-030
+    name: prj-success-criteria-and-acceptance-criteria 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SUCCESS-020
+    owner: BA
+  - id: T-LAUNCH-PJD-ACD-010
+    name: prj-assumptions-constraints-dependencies たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-030
+    owner: ARC
+  - id: T-LAUNCH-PJD-ACD-020
+    name: prj-assumptions-constraints-dependencies レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ACD-010
+    owner: ARC
+  - id: T-LAUNCH-PJD-ACD-030
+    name: prj-assumptions-constraints-dependencies 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ACD-020
+    owner: ARC
+  - id: T-LAUNCH-PJD-ISSUES-010
+    name: prj-issues-and-approach たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-030
+      - T-LAUNCH-PJD-ACD-030
+    owner: BA
+  - id: T-LAUNCH-PJD-ISSUES-020
+    name: prj-issues-and-approach レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ISSUES-010
+    owner: BA
+  - id: T-LAUNCH-PJD-ISSUES-030
+    name: prj-issues-and-approach 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ISSUES-020
+    owner: BA
+  - id: T-LAUNCH-PJD-ALT-010
+    name: prj-comparison-of-alternatives たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-030
+      - T-LAUNCH-PJD-ISSUES-030
+    owner: ARC
+  - id: T-LAUNCH-PJD-ALT-020
+    name: prj-comparison-of-alternatives レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ALT-010
+    owner: ARC
+  - id: T-LAUNCH-PJD-ALT-030
+    name: prj-comparison-of-alternatives 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-ALT-020
+    owner: ARC
+  - id: T-LAUNCH-PJM-PLAN-010
+    name: pm-plan たたき台作成
+    duration_days: 0.25
+    depends_on: []
+    owner: PM
+  - id: T-LAUNCH-PJM-PLAN-020
+    name: pm-plan レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-PLAN-010
+    owner: PM
+  - id: T-LAUNCH-PJM-PLAN-030
+    name: pm-plan 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-PLAN-020
+    owner: PM
+  - id: T-LAUNCH-PJM-COMM-010
+    name: pm-communication-plan たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJM-PLAN-030
+    owner: PM
+  - id: T-LAUNCH-PJM-COMM-020
+    name: pm-communication-plan レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-COMM-010
+    owner: PM
+  - id: T-LAUNCH-PJM-COMM-030
+    name: pm-communication-plan 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-COMM-020
+    owner: PM
+  - id: T-LAUNCH-PJM-QLTY-010
+    name: pm-quality-management-plan たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJM-PLAN-030
+    owner: QE
+  - id: T-LAUNCH-PJM-QLTY-020
+    name: pm-quality-management-plan レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-QLTY-010
+    owner: QE
+  - id: T-LAUNCH-PJM-QLTY-030
+    name: pm-quality-management-plan 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-QLTY-020
+    owner: QE
+  - id: T-LAUNCH-PJM-ORG-010
+    name: pm-organization たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+    owner: PO
+  - id: T-LAUNCH-PJM-ORG-020
+    name: pm-organization レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ORG-010
+    owner: PO
+  - id: T-LAUNCH-PJM-ORG-030
+    name: pm-organization 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ORG-020
+    owner: PO
+  - id: T-LAUNCH-PJM-ROLE-010
+    name: pm-roles たたき台作成
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ORG-030
+    owner: PO
+  - id: T-LAUNCH-PJM-ROLE-020
+    name: pm-roles スキーマ検証
+    duration_days: 0.0625
+    depends_on:
+      - T-LAUNCH-PJM-ROLE-010
+    owner: PO
+  - id: T-LAUNCH-PJM-ROLE-030
+    name: pm-roles レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ROLE-020
+    owner: PO
+  - id: T-LAUNCH-PJM-ROLE-040
+    name: pm-roles 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ROLE-030
+    owner: PO
+  - id: T-LAUNCH-PJM-MBR-010
+    name: pm-members たたき台作成
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-ORG-030
+      - T-LAUNCH-PJM-ROLE-040
+    owner: PO
+  - id: T-LAUNCH-PJM-MBR-020
+    name: pm-members スキーマ検証
+    duration_days: 0.0625
+    depends_on:
+      - T-LAUNCH-PJM-MBR-010
+    owner: PO
+  - id: T-LAUNCH-PJM-MBR-030
+    name: pm-members レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-MBR-020
+    owner: PO
+  - id: T-LAUNCH-PJM-MBR-040
+    name: pm-members 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-MBR-030
+    owner: PO
+  - id: T-LAUNCH-PJM-RACI-010
+    name: pm-raci たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJM-ORG-030
+    owner: PM
+  - id: T-LAUNCH-PJM-RACI-020
+    name: pm-raci レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-RACI-010
+    owner: PM
+  - id: T-LAUNCH-PJM-RACI-030
+    name: pm-raci 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-RACI-020
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHMS-010
+    name: sch-milestones たたき台作成
+    duration_days: 0.125
+    depends_on: []
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHMS-020
+    name: sch-milestones スキーマ検証
+    duration_days: 0.0625
+    depends_on:
+      - T-LAUNCH-PJM-SCHMS-010
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHMS-030
+    name: sch-milestones レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHMS-020
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHMS-040
+    name: sch-milestones 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHMS-030
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHDEF-010
+    name: sch-defaults たたき台作成
+    duration_days: 0.125
+    depends_on: []
+    owner: ARC
+  - id: T-LAUNCH-PJM-SCHDEF-020
+    name: sch-defaults スキーマ検証
+    duration_days: 0.0625
+    depends_on:
+      - T-LAUNCH-PJM-SCHDEF-010
+    owner: ARC
+  - id: T-LAUNCH-PJM-SCHDEF-030
+    name: sch-defaults レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHDEF-020
+    owner: ARC
+  - id: T-LAUNCH-PJM-SCHDEF-040
+    name: sch-defaults 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHDEF-030
+    owner: ARC
+  - id: T-LAUNCH-PJM-SCHTLNCH-010
+    name: sch-track-launch たたき台作成
+    duration_days: 0.125
+    depends_on: []
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHTLNCH-020
+    name: sch-track-launch スキーマ検証
+    duration_days: 0.0625
+    depends_on:
+      - T-LAUNCH-PJM-SCHTLNCH-010
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHTLNCH-030
+    name: sch-track-launch レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHTLNCH-020
+    owner: PM
+  - id: T-LAUNCH-PJM-SCHTLNCH-040
+    name: sch-track-launch 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJM-SCHTLNCH-030
+    owner: PM

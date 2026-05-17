@@ -16,7 +16,7 @@ export type ProjectMember = {
   nickname: string
   display_name: string
   email: string | null
-  owner: string | null
+  roles: string[]
   type: 'human' | 'agent'
   persona?: string
   focus?: string[]

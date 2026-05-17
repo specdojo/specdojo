@@ -96,8 +96,6 @@ owner_rules:
 
   - local_ids:
       - sch-defaults
-      - sch-config-launch
-      - sch-agent-overrides-launch
     owner: ARC
 
 # catalog の depends_on を補完するドメイン間依存

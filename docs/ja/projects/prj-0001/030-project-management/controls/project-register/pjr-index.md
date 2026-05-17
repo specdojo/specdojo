@@ -56,12 +56,13 @@ Project Register
 | PJR-0034 | done | wbsの削除 | 不要になったwbsファイルとその記述を削除 | todo | high | PO | 2026-05-17 | 2026-05-16 | wbs関連ファイル・記述をすべて削除済み | - |
 | PJR-0035 | done | `dct-<domain>`雛形作成 | `dct-<domain>`のプロジェクト横断での雛形を作成 | todo | high | PO | 2026-05-17 | 2026-05-16 | `docs/specdojo/templates/` に small/medium/large 対応テンプレートを作成 | - |
 | PJR-0036 | done | pjr-indexの一覧見直し | 一覧に完了日や結果を記入する欄の追加検討 | todo | high | PO | 2026-05-17 | 2026-05-16 | `完了日` と `結論` 列を追加 | - |
-| PJR-0037 | open | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | PO | 2026-05-17 | - | - | [prj-0037-sch-strategy](pjr-0037-sch-strategy.md) |
+| PJR-0037 | done | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | PO | 2026-05-17 | 2026-05-17 | strategy yamlを作成 | - |
 | PJR-0038 | done | `pjr-<domain>.md`にdone_criteria追加 | done_criteriaをMarkdownに追加 | todo | high | PO | 2026-05-17 | 2026-05-17 | done_criteriaの追加をscriptで自動化 | - |
 | PJR-0039 | done | frontmatterのtypeの見直し | deliverables-catalogなどを追加するかを検討 | todo | high | PO | 2026-05-17 | 2026-05-18 | productの小分類を見直し | - |
 | PJR-0040 | open | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | PO | 2026-05-17 | - | - | - |
 | PJR-0041 | done | roles, membersの見直し | rolesに全ロールを記述して、membersに兼務を反映するように変更 | todo | high | PO | 2026-05-17 | 2026-05-17 | rolesとmembers, 関連文書を見直し | - |
 | PJR-0042 | open | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | PO | 2026-05-17 | - | - | - |
+| PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | PO | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
 
 ## 4. 派生ビュー
 

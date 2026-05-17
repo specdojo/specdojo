@@ -3,6 +3,7 @@ import { Command } from 'commander'
 import { registerConfigCommands, registerProjectCommands } from './specdojo-config.js'
 import { registerExecCommands } from './exec.js'
 import { registerCatalogCommands } from './catalog.js'
+import { registerScheduleCommands } from './schedule.js'
 
 function main(): void {
   const program = new Command()
@@ -13,6 +14,7 @@ function main(): void {
   registerProjectCommands(program)
   registerExecCommands(program)
   registerCatalogCommands(program)
+  registerScheduleCommands(program)
 
   program.parse(process.argv)
 }
