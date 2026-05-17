@@ -127,6 +127,7 @@ decision:
 
 | ドキュメント | 役割 |
 | ------------ | ---- |
+| [specdojo-review-guide.md](../../../../specdojo/guidelines/specdojo-review-guide.md) | レビューの具体的な進め方、coverage_types の使い方、レビュー結果の記録形式を定義する |
 | [pm-review-viewpoints.yaml](pm-review-viewpoints.yaml) | 観点語彙（`vp-*`）、severity、verdict の定義 |
 | [pm-quality-management-plan.md](pm-quality-management-plan.md) | 品質目標、レビュー方針、品質メトリクス、是正プロセスを定義する |
 | [pm-plan.md](pm-plan.md) | プロジェクト全体の管理方針、意思決定、レポーティングを定義する |
