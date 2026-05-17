@@ -1,65 +1,52 @@
 version: 1
 project_id: prj-0001
 document:
-  id: prj-0001-pm-members
+  id: prj-0001:pm-members
   type: project
   status: draft
+  rulebook: pm-members-rulebook
   based_on:
     - people-and-organization-definition-standard
-    - prj-0001:pm-organization
+    - prj-0001:pm-roles
 
-# 実行主体の一覧
-# 採用ロール・未採用ロールの定義は pm-organization.md を参照する
 members:
   - nickname: po
-    display_name: 店主（プロジェクトオーナー）
+    display_name: 店主代表
     email: null
-    role: PO
+    roles: [PO, PM, OPS]
     type: human
-    note: 最終判断・優先順位の確定を担う。PM・OPS 責務を兼務する
-
-  - nickname: po-agent
-    display_name: PO エージェント
-    email: null
-    role: PO
-    type: agent
-    persona: stakeholder-advocate
-    focus:
-      - 目的整合性の確認
-      - 優先順位の明確化
-    scheduler_strategy: manual
-    note: PO 視点での草案確認・整合性チェックを支援する。最終判断は人間の PO が行う
+    note: 目的・優先順位・公開可否の最終判断を担う。小規模運用のため管理とリリース判断も兼務する
 
   - nickname: ba-agent
     display_name: BA エージェント
     email: null
-    role: BA
+    roles: [BA]
     type: agent
     persona: requirements-navigator
     focus:
-      - 要件の完全性確認
-      - 利用者視点の受入条件整理
       - 販売・在庫・つけ管理の業務フロー整理
+      - 利用者視点の受入条件確認
+      - 要件の抜け漏れ確認
     scheduler_strategy: dependency-first
-    note: 要件整理・受入条件草案の作成を支援する
+    note: 要件整理と受入条件草案を支援する。最終判断は人間の PO が行う
 
   - nickname: arc-agent
     display_name: ARC エージェント
     email: null
-    role: ARC
+    roles: [ARC, DEV]
     type: agent
     persona: spec-navigator
     focus:
-      - 文書体系と構成方針の整合性
-      - タブレット前提の技術制約確認
+      - タブレット前提の構成方針確認
+      - データ管理方針の整合性確認
       - 成果物間の依存関係確認
     scheduler_strategy: dependency-first
-    note: 構成方針・成果物間整合性の確認を支援する
+    note: 構成方針・技術観点・実装関連成果物の草案確認を支援する。承認責任は持たない
 
   - nickname: qe-agent
     display_name: QE エージェント
     email: null
-    role: QE
+    roles: [QE]
     type: agent
     persona: risk-averse-reviewer
     focus:
@@ -67,16 +54,24 @@ members:
       - 欠品・会計ミス防止観点のレビュー
       - 禁止事項・ルール準拠の確認
     scheduler_strategy: critical-first
-    note: 品質基準・受入条件・レビュー観点の草案確認を支援する
+    note: 品質基準・レビュー観点・確認手順の草案確認を支援する。公開可否判断は行わない
 
   - nickname: copilot
-    display_name: GitHub Copilot（汎用支援）
+    display_name: 汎用支援エージェント
     email: null
-    role: null
+    roles: []
     type: agent
     persona: general-assistant
     focus:
       - 草案作成支援
-      - 整合性確認
+      - 表記ゆれ確認
+      - 成果物間の軽微な整合性確認
     scheduler_strategy: manual
-    note: 特定ロールに固定しない汎用支援 agent。実行タスクの文脈で役割を補完する
+    note: 特定 Role に固定しない汎用支援 agent。実行時のタスク owner または文脈で対象 Role を明示する
+
+rules:
+  - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
+  - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
+  - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
+  - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。

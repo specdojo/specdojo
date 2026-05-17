@@ -8,21 +8,35 @@ document:
     - people-and-organization-definition-standard
     - prj-0001:pm-organization
 
-# 採用ロール一覧
-# 未採用ロール・owner 利用方針は pm-organization.md を参照する
 roles:
   - code: PO
     name: Project Owner
-    project_note: 店主代表として目的・優先順位・最終判断を担い、PM・OPS 責務を兼務する
+    project_note: 店主代表が目的・優先順位・公開可否の最終判断を担い、小規模運用のため PM と OPS の判断も兼務する
+
+  - code: PM
+    name: Project Manager
+    project_note: 独立 member は置かず PO が兼務する。週次管理が滞る場合に独立を再検討する
 
   - code: BA
     name: Business Analyst
-    project_note: 店舗業務（販売・在庫・つけ管理）の要件整理と利用者視点の受入条件を担う
+    project_note: 販売・在庫・つけ管理の業務整理と、店主・家族店番の利用者視点を反映した受入条件整理を担う
 
   - code: ARC
     name: Architect
-    project_note: タブレット前提の構成方針・データ管理方針・技術制約を整理する
+    project_note: 店頭タブレット 1 台での利用を前提に、構成方針、データ管理方針、成果物間の整合を整理する
+
+  - code: DEV
+    name: Developer
+    project_note: 初期は ARC 観点と合わせて管理し、実装タスクが継続増加した場合に独立 member の割り当てを検討する
 
   - code: QE
     name: Quality Engineer
-    project_note: 受入観点・操作確認・欠品や会計ミス防止の検証観点を管理する
+    project_note: 欠品削減、つけ残高の記録漏れ防止、店頭操作の受入確認観点を管理する
+
+  - code: UX
+    name: UX / Documentation Designer
+    project_note: 初期は BA 観点で扱い、家族店番向け説明や画面文言改善が増えた場合に独立を検討する
+
+  - code: OPS
+    name: Operations / Release Manager
+    project_note: 初期は PO が兼務し、リリース手順や障害一次対応が定常化した場合に独立を検討する
