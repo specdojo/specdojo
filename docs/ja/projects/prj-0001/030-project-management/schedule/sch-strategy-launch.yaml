@@ -1,0 +1,107 @@
+id: prj-0001:sch-strategy-launch
+type: project
+status: draft
+track: launch
+
+# sch-track-launch.yaml を生成するための戦略定義。
+# scope の catalog から kind: work の成果物を抽出し、
+# phases と owner_rules を基にタスクを生成する。
+#
+# owner はロール（BA / PO 等）のみを持つ。
+# 実際の実行者（--by <nickname>）は実行時に pm-members.yaml の roles フィールドと照合して決定する。
+# レビュータスクの担当ロールは各成果物の done_criteria から取得する。
+
+scope:
+  catalogs:
+    - id: prj-0001:dct-project-definition
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+    - id: prj-0001:dct-project-management
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml
+  include_kinds:
+    - work
+
+# 成果物の path 拡張子でフェーズセットを切り替える
+phases:
+  markdown:
+    - id: draft
+      name: たたき台作成
+      task_suffix: "010"
+      duration_days: 0.25   # 1〜2h 相当
+    - id: review
+      name: レビュー・修正
+      task_suffix: "020"
+      duration_days: 0.125  # 0.5〜1h 相当
+    - id: finalize
+      name: 完成版仕上げ
+      task_suffix: "030"
+      duration_days: 0.125  # 0.5〜1h 相当
+
+  yaml:
+    - id: draft
+      name: たたき台作成
+      task_suffix: "010"
+      duration_days: 0.125  # 0.5〜1h 相当
+    - id: validate
+      name: スキーマ検証
+      task_suffix: "020"
+      duration_days: 0.0625 # 0.25〜0.5h 相当
+    - id: review
+      name: レビュー・修正
+      task_suffix: "030"
+      duration_days: 0.125  # 0.5〜1h 相当
+    - id: finalize
+      name: 完成版仕上げ
+      task_suffix: "040"
+      duration_days: 0.125  # 0.5〜1h 相当
+
+# タスク ID パターン（domain_code・artifact_code・phase_suffix を展開）
+task_id_pattern: "T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}"
+
+# 成果物 local_id → 作成タスクの owner ロール
+owner_rules:
+  - local_ids:
+      - prj-overview
+      - prj-stakeholder-register
+      - prj-scope
+      - prj-success-criteria-and-acceptance-criteria
+      - prj-issues-and-approach
+    owner: BA
+
+  - local_ids:
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+    owner: ARC
+
+  - local_ids:
+      - prj-charter
+    owner: PO
+
+  - local_ids:
+      - pm-plan
+      - pm-communication-plan
+      - sch-milestones
+      - sch-track-launch
+      - pm-raci
+    owner: PM
+
+  - local_ids:
+      - pm-quality-management-plan
+    owner: QE
+
+  - local_ids:
+      - pm-organization
+      - pm-roles
+      - pm-members
+    owner: PO
+
+  - local_ids:
+      - sch-defaults
+      - sch-config-launch
+      - sch-agent-overrides-launch
+    owner: ARC
+
+# catalog の depends_on を補完するドメイン間依存
+# dependent の draft タスクは requires の finalize タスク完了後に着手する
+cross_domain_dependencies:
+  - dependent: pm-organization
+    requires: prj-overview
