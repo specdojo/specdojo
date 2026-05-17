@@ -397,7 +397,6 @@ Schedule:
 ```yaml
 tasks:
   - id: T-LAUNCH-PJD-SCOPE-010
-    wbs: WBS-PJD-SCOPE-010
     name: prj-scope を作成する
     duration_days: 0.5
     depends_on: []

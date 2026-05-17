@@ -502,7 +502,111 @@ specdojo catalog scaffold --project shj-0001 --size medium
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
 
-## 23. まとめ
+## 23. schedule コマンド
+
+`specdojo schedule` は、`sch-strategy-<track>.yaml` と成果物カタログから `sch-track-<track>.yaml` を生成するコマンド群です。
+
+### 23.1. schedule generate
+
+成果物カタログ（`dct-*.yaml`）と `sch-strategy-<track>.yaml` を入力として、`sch-track-<track>.yaml` を生成します。
+
+```bash
+specdojo schedule generate --project prj-0001 --track launch
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--track` | 生成対象のトラック名（`sch-strategy-<track>.yaml` の `track` フィールドと一致） | 必須 |
+| `--force` | 既存の `sch-track-<track>.yaml` を上書き | `false` |
+| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+
+#### 23.1.1. 生成フロー
+
+1. `schedule_path` から `sch-strategy-<track>.yaml` を読み込む。
+2. `scope.catalogs` に列挙されたカタログファイルを読み込み、`include_kinds` でフィルタリングする。
+3. カタログの `depends_on` と `cross_domain_dependencies` から成果物の展開順序を決定する。
+4. 成果物ごとに `path` 拡張子を判定し、対応する `phases` フェーズセットを適用する。
+5. `owner_rules` から `owner` ロールを決定する。
+6. `task_id_pattern` でタスク ID を採番し、タスクを生成する。
+7. `sch-track-<track>.yaml`（`kind: track`）として `schedule_path` に出力する。
+
+#### 23.1.2. タスク生成ルール
+
+各 `kind: work` 成果物に対してフェーズごとのタスクを生成する。
+
+| フェーズ（例: markdown） | タスク ID | `depends_on` |
+| --- | --- | --- |
+| draft（010） | `T-LAUNCH-PJD-OVERVIEW-010` | 依存成果物の finalize タスク ID |
+| review（020） | `T-LAUNCH-PJD-OVERVIEW-020` | draft タスク ID |
+| finalize（030） | `T-LAUNCH-PJD-OVERVIEW-030` | review タスク ID |
+
+yaml フォーマットの成果物には validate フェーズ（020）が draft と review の間に挿入される。
+
+| フェーズ（yaml） | タスク ID | `depends_on` |
+| --- | --- | --- |
+| draft（010） | `T-LAUNCH-PJM-ROLE-010` | 依存成果物の finalize タスク ID |
+| validate（020） | `T-LAUNCH-PJM-ROLE-020` | draft タスク ID |
+| review（030） | `T-LAUNCH-PJM-ROLE-030` | validate タスク ID |
+| finalize（040） | `T-LAUNCH-PJM-ROLE-040` | review タスク ID |
+
+#### 23.1.3. 出力例（抜粋）
+
+```yaml
+kind: track
+version: 1
+project_id: prj-0001
+track: launch
+settings: {}
+tasks:
+  - id: T-LAUNCH-PJD-OVERVIEW-010
+    name: prj-overview たたき台を作成する
+    duration_days: 0.25
+    depends_on: []
+    owner: BA
+
+  - id: T-LAUNCH-PJD-OVERVIEW-020
+    name: prj-overview をレビューする
+    duration_days: 0.125
+    depends_on: [T-LAUNCH-PJD-OVERVIEW-010]
+    owner: BA
+
+  - id: T-LAUNCH-PJD-OVERVIEW-030
+    name: prj-overview 完成版を仕上げる
+    duration_days: 0.125
+    depends_on: [T-LAUNCH-PJD-OVERVIEW-020]
+    owner: BA
+
+  - id: T-LAUNCH-PJM-ORG-010
+    name: pm-organization たたき台を作成する
+    duration_days: 0.25
+    depends_on: [T-LAUNCH-PJD-OVERVIEW-030]  # cross_domain_dependencies による依存
+    owner: PO
+```
+
+レビュー担当ロールは成果物カタログの `done_criteria` から読み取り、生成後の `sch-track-<track>.yaml` を人間が編集して `notes` に記録することを推奨する。
+
+### 23.2. schedule where
+
+スケジュールパスを確認する。
+
+```bash
+specdojo schedule where --project prj-0001
+```
+
+出力例:
+
+```text
+schedule-path: /repo/.../030-project-management/schedule
+strategy-files:
+  - sch-strategy-launch.yaml
+track-files:
+  - sch-track-launch.yaml (generated)
+```
+
+## 24. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -514,3 +618,4 @@ specdojo catalog scaffold --project shj-0001 --size medium
 - schedule diff検出
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
+- スケジュールトラック生成（`schedule generate`）
