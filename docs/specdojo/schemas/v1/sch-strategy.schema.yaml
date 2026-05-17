@@ -8,6 +8,7 @@ type: object
 additionalProperties: false
 
 required:
+  - kind
   - id
   - type
   - status
@@ -18,6 +19,10 @@ required:
   - owner_rules
 
 properties:
+  kind:
+    const: "strategy"
+    description: "File kind identifier. Must be 'strategy'."
+
   id:
     type: string
     minLength: 1

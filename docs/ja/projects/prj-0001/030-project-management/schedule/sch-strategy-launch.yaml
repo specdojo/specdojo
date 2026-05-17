@@ -1,3 +1,4 @@
+kind: strategy
 id: prj-0001:sch-strategy-launch
 type: project
 status: draft

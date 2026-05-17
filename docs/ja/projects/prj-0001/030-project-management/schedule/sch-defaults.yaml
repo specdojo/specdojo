@@ -1,5 +1,8 @@
-version: 1
 kind: defaults
+id: prj-0001:sch-defaults
+type: project
+status: draft
+version: 1
 
 calendar:
   timezone: Asia/Tokyo

@@ -6,6 +6,9 @@ additionalProperties: false
 
 required:
   - kind
+  - id
+  - type
+  - status
   - version
   - project_id
   - track
@@ -14,6 +17,15 @@ required:
 properties:
   kind:
     const: "track"
+  id:
+    type: string
+    minLength: 1
+    description: "Deliverable ID (e.g., prj-0001:sch-track-launch)."
+  type:
+    const: "project"
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
   version:
     type: integer
     minimum: 1

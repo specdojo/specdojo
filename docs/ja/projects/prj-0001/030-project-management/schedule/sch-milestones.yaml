@@ -1,4 +1,7 @@
 kind: milestones
+id: prj-0001:sch-milestones
+type: project
+status: draft
 version: 1
 project_id: prj-0001
 settings:

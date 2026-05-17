@@ -12,7 +12,7 @@ export function topoSort(schedule: ScheduleIndex): { order: string[]; cycle?: st
 
   for (const node of schedule.nodes.values()) {
     for (const dep of node.depends_on) {
-      out.get(dep)!.push(node.id)
+      out.get(dep)?.push(node.id)
       indeg.set(node.id, (indeg.get(node.id) ?? 0) + 1)
     }
   }
