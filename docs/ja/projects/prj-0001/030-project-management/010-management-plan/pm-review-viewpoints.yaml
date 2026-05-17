@@ -41,6 +41,15 @@ severity_levels:
     description: 意味や判断を大きく変えない補足不足、表記ゆれ、軽微な修正。
   - id: note
     description: 改善提案、将来検討、補足コメント。
+verdict_definitions:
+  - id: pass
+    description: 対象 Role code の観点では修正不要。次の Role code または PO 判断へ進める。
+  - id: conditional_pass
+    description: 軽微な修正または PO 判断待ちを条件に進めてよい。条件を明記し、必要に応じて minor 指摘を残す。
+  - id: changes_requested
+    description: 修正後の再レビューが必要。修正担当 Role code と再レビュー観点を明記する。
+  - id: blocked
+    description: 前提不足、依存成果物未整備、重大矛盾によりレビュー継続不可。PJR 登録または PO 判断を依頼する。
 viewpoints:
   - id: vp-po-purpose-alignment
     role: PO
