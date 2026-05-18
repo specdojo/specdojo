@@ -146,21 +146,153 @@ unverified_scope:
 
 機械検証で失敗した成果物は、意味レビューの前に修正する。ただし、検証不能な前提や設計判断は review result に残してよい。
 
-## 7. レビュー結果の残し方
+## 7. review plan と review result
 
-レビュー結果は、成果物単位、版単位、Role code 単位で記録する。
+SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残す**。
+
+```text
+pm-review-viewpoints.yaml
+  ↓
+dct-*.yaml
+  ↓
+rulebook / schema / related documents
+  ↓
+review plan
+  ↓
+human / agent review
+  ↓
+review result
+  ↓
+PJR / 修正 / 再レビュー
+```
+
+review plan は「今回のレビューで何を見るか」を固定する。review result は「実際に何を見て、何が分かり、何を未確認として残したか」を記録する。
+
+| 成果物 | 役割 |
+| ------ | ---- |
+| review plan | 対象、stage、Role code、viewpoint、coverage_required、evidence_required を定義する |
+| review result | plan item ごとの判定、coverage_checked、evidence、findings、unverified_scope を記録する |
+
+review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくする。
+
+### 7.1. review plan の生成
+
+review plan は機械生成を基本とする。
+
+主な入力
+
+- 成果物カタログの `local_id`、`path`、`depends_on`、`done_criteria`
+- `pm-review-viewpoints.yaml` の `viewpoints`、`coverage_types`
+- 対応する rulebook、schema、instruction、sample
+- 上位・下位・隣接する関連成果物
+- stage とレビュー対象版
+
+review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から review item を作る。
+
+### 7.2. review plan の配置
+
+推奨配置
+
+```text
+docs/ja/projects/<project_id>/030-project-management/controls/reviews/plans/
+```
 
 推奨ファイル名
 
 ```text
-rev-<local_id>-<stage>-<role>.yaml
+rvp-<local_id>-<stage>.yaml
 ```
+
+例
+
+```text
+rvp-prj-overview-draft.yaml
+rvp-pm-members-final.yaml
+```
+
+### 7.3. review plan の推奨構造
+
+```yaml
+id: rvp-<local_id>-<stage>
+project_id: <project_id>
+target:
+  local_id: <local_id>
+  path: <target-path>
+  stage: draft | first | final | ready-candidate
+  version_ref: <commit | timestamp | none>
+inputs:
+  deliverable_catalog: <dct-path>
+  rulebook: <rulebook-path | none>
+  viewpoints: <pm-review-viewpoints.yaml>
+  related_documents:
+    - <path>
+machine_checks_required:
+  - name: lint:md
+    required: true
+  - name: schema
+    required: false
+review_items:
+  - id: RVP-001
+    role: <Role code>
+    viewpoint_id: <vp-*>
+    done_criterion: <done_criteria text>
+    coverage_required:
+      - <coverage_type>
+    evidence_required:
+      - target_document
+      - deliverable_catalog
+      - related_documents
+    expected_output:
+      - result
+      - evidence
+      - findings
+      - unverified_scope
+```
+
+### 7.4. review execution
+
+人または agent は review plan に従ってレビューする。
+
+実行時の原則
+
+- `review_items` を勝手に省略しない。
+- plan にない観点で重大な問題を見つけた場合は、追加 finding として残す。
+- 確認できない範囲は pass にせず、`unverified_scope` に残す。
+- 機械検証の失敗は、意味レビューの結果と分けて記録する。
+- agent は最終承認、公開可否判断、説明責任を担わない。
+
+### 7.5. review result の配置
+
+推奨配置
+
+```text
+docs/ja/projects/<project_id>/030-project-management/controls/reviews/results/
+```
+
+推奨ファイル名
+
+```text
+rvr-<local_id>-<stage>-<role>.yaml
+```
+
+例
+
+```text
+rvr-prj-overview-draft-ba.yaml
+rvr-pm-members-final-qe.yaml
+```
+
+## 8. レビュー結果の残し方
+
+レビュー結果は、成果物単位、版単位、Role code 単位で記録する。review result は必ず review plan に対応させる。
 
 推奨構造
 
 ```yaml
-id: rev-<local_id>-<stage>-<role>
+id: rvr-<local_id>-<stage>-<role>
 project_id: <project_id>
+based_on:
+  - rvp-<local_id>-<stage>
 target:
   local_id: <local_id>
   path: <target-path>
@@ -170,18 +302,13 @@ review:
   reviewer: <member nickname>
   status: pass | conditional_pass | changes_requested | blocked
   reviewed_at: <YYYY-MM-DD>
-inputs:
-  deliverable_catalog: <dct-path>
-  rulebook: <rulebook-path | none>
-  viewpoints: <pm-review-viewpoints.yaml>
-  related_documents:
-    - <path>
 machine_checks:
   - name: lint:md
     result: pass | fail | skipped
     notes: <補足>
-viewpoint_results:
-  - viewpoint_id: <vp-*>
+review_results:
+  - plan_item_id: RVP-001
+    viewpoint_id: <vp-*>
     result: pass | fail | skip
     coverage_checked:
       - <coverage_type>
@@ -189,10 +316,12 @@ viewpoint_results:
       - <確認した根拠>
     notes: <判定根拠>
 unverified_scope:
-  - coverage_type: <coverage_type>
+  - plan_item_id: RVP-001
+    coverage_type: <coverage_type>
     reason: <未確認理由>
 findings:
   - id: F-001
+    plan_item_id: RVP-001
     viewpoint_id: <vp-*>
     coverage_type: <coverage_type>
     severity: blocker | major | minor | note
@@ -205,7 +334,7 @@ decision:
   approver_required: PO | none
 ```
 
-## 8. finding の分類
+## 9. finding の分類
 
 | 種別 | 内容 |
 | ---- | ---- |
@@ -217,7 +346,7 @@ decision:
 | risk | 後続作業、公開、運用で問題になる可能性がある |
 | policy_violation | 禁止事項、承認責任、agent 委任境界に違反している |
 
-## 9. PJR への転記
+## 10. PJR への転記
 
 すべてのレビュー指摘を PJR に転記しない。review result には詳細を残し、プロジェクト管理対象だけを PJR に転記する。
 
@@ -229,51 +358,50 @@ PJR に転記する条件
 - 重大な矛盾によりレビュー継続ができない
 - 将来リスクとして監視する必要がある
 
-## 10. Agent への指示テンプレート
+## 11. Agent への指示テンプレート
 
-### 10.1. 単体レビュー
+### 11.1. 単体レビュー
 
 ```text
-対象成果物をレビューしてください。
-成果物カタログの done_criteria、対応 rulebook、pm-review-viewpoints.yaml の Role code 観点を使って確認してください。
-
-結果には viewpoint_id、coverage_checked、evidence、findings、unverified_scope、verdict を含めてください。
+review plan に従って対象成果物をレビューしてください。
+各 review_items について pass / fail / skip を判定し、plan_item_id、viewpoint_id、coverage_checked、evidence、findings、unverified_scope、verdict を含めてください。
 ```
 
-### 10.2. トレーサビリティレビュー
+### 11.2. トレーサビリティレビュー
 
 ```text
 対象成果物を単体でレビューせず、上位成果物と下位成果物の対応を確認してください。
 上位から下位への未展開、下位から上位への根拠なし、横断観点の抜けを findings として整理してください。
 ```
 
-### 10.3. 差分レビュー
+### 11.3. 差分レビュー
 
 ```text
 前回レビュー結果と現在の成果物を比較してください。
 解消済み、未解消、新規発生、再発を分類し、再レビューが必要な viewpoint_id を明示してください。
 ```
 
-### 10.4. 再レビュー
+### 11.4. 再レビュー
 
 ```text
 前回 findings の対応結果だけでなく、修正により新しい矛盾や抜けが発生していないかを確認してください。
 変更箇所、関連成果物、coverage_types を根拠付きで記録してください。
 ```
 
-## 11. 完了条件
+## 12. 完了条件
 
 レビューを完了とするには、次を満たす。
 
+- review result が review plan の全 `review_items` に対応している。
 - 対象成果物の `done_criteria` に対応する観点を確認している。
-- 使用した `viewpoint_id` と `coverage_checked` が記録されている。
+- 使用した `plan_item_id`、`viewpoint_id`、`coverage_checked` が記録されている。
 - pass / fail の根拠となる `evidence` が記録されている。
 - 未確認範囲がある場合は `unverified_scope` に残している。
 - `blocker` と `major` の未解決指摘が扱われている。
 - PO 判断が必要な事項は PJR または decision に接続されている。
 - agent が最終承認者になっていない。
 
-## 12. 関連ドキュメント
+## 13. 関連ドキュメント
 
 | ドキュメント | 役割 |
 | ------------ | ---- |
