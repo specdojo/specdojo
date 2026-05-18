@@ -2,7 +2,6 @@ id: prj-0001:pm-review-viewpoints
 type: project
 status: draft
 based_on:
-  - prj-0001:pm-review-policy
   - prj-0001:pm-roles
   - prj-0001:pm-quality-management-plan
 version: 1
@@ -10,7 +9,7 @@ project_id: prj-0001
 
 # レビュー観点一覧。
 # Role code の語彙は pm-roles.yaml を参照する。
-# レビュー運用方針は pm-review-policy.md を参照する。
+# レビュー運用方針は specdojo-review-guide.md を参照する。
 # 成果物ごとの完了条件は成果物カタログの done_criteria を正とする。
 
 categories:

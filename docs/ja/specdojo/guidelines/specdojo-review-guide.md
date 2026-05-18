@@ -401,12 +401,22 @@ review plan に従って対象成果物をレビューしてください。
 - PO 判断が必要な事項は PJR または decision に接続されている。
 - agent が最終承認者になっていない。
 
-## 13. 関連ドキュメント
+## 13. 成果物 ready 化条件
+
+成果物を完成版または `ready` 候補にするには、次をすべて満たすこと。
+
+- 対象成果物の `done_criteria` に対応する全 Role code のレビューが完了している。
+- `blocker` と `major` の未解決指摘が 0 件である。
+- `conditional_pass` の条件が PO により許容または対応済みと判断されている。
+- 関連する PJR がある場合、対応方針、担当 Role code、期限が記録されている。
+- `npm run -s lint:md`、必要な YAML schema 検証、生成物再作成など、対象成果物に必要な機械検証が完了している。
+- 最終承認、公開可否判断、説明責任を人間の `PO` が担っている。
+
+## 14. 関連ドキュメント
 
 | ドキュメント | 役割 |
 | ------------ | ---- |
-| `pm-review-policy.md` | プロジェクトごとのレビュー運用、判定、PJR連携を定義する |
 | `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する |
-| `dct-*.yaml` | 成果物、依存関係、done_criteria を定義する |
+| `dct-*.yaml` | 成果物、依存関係、done_criteria（text / roles / viewpoint）を定義する |
 | `*-rulebook.md` | 成果物ごとの構造、必須項目、禁止事項を定義する |
 | `pjr-index.md` | プロジェクト管理対象の未解決事項、課題、リスク、変更要求、決定を管理する |
