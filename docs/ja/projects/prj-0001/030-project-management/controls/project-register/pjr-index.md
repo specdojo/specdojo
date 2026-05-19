@@ -66,7 +66,7 @@ Project Register
 | PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | 2026-05-17 | 2026-05-17 | buildまで確認 | - |
 | PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | PM | 2026-05-19 | - | - | - |
 | PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | PM | 2026-05-19 | - | - | [PJR-0046-draft-agent](./pjr-0046-draft-agent.md) |
-| PJR-0047 | open | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | PM | 2026-05-19 | - | - | -|
+| PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | PM | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | - |
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | PM | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | open | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | PM | 2026-05-19 | - | - | - |
 | PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | PM | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | - |

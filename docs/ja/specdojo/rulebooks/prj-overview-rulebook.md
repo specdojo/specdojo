@@ -23,7 +23,7 @@ Project Overview Documentation Rulebook
 
 ### 2.1. 位置づけ（他ドキュメントとの関係）
 
-ドキュメント間の関係は [ドキュメント構成ガイド](../guidelines/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。
+ドキュメント間の関係は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。
 
 ### 2.2. 用語定義（本ルール内）
 
@@ -41,7 +41,7 @@ Project Overview Documentation Rulebook
 ### 3.1. 配置（推奨）
 
 - `docs/ja/projects/prj-0001/` のように、プロジェクト単位のフォルダ配下に配置します。
-- 配下の章ディレクトリは `020-project-definition/` を用います（構成は [docs-structure-guide.md](../guidelines/docs-structure-guide.md) に従う）。
+- 配下の章ディレクトリは `020-project-definition/` を用います（構成は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う）。
 - 章ディレクトリには、サブディレクトリを切って、プロジェクトの背景や目的に関わる関連資料（図表、参考資料など）を置いてもよい。
 
 ### 3.2. ドキュメントID（推奨）

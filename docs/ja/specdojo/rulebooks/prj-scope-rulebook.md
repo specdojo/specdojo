@@ -53,7 +53,7 @@ flowchart LR
 ### 3.1. 配置（推奨）
 
 - `docs/ja/projects/<project-id>/020-project-definition/prj-scope.md` への配置を推奨します。
-- プロジェクト配下の章構成は [docs-structure-guide.md](../guidelines/docs-structure-guide.md) に従います。
+- プロジェクト配下の章構成は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従います。
 - 参考図表や補足資料を別ファイルにする場合は、スコープ本文から参照リンクで紐付けます。
 
 ### 3.2. ドキュメントID（推奨）

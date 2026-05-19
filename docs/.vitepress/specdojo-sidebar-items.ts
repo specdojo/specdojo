@@ -3,23 +3,23 @@ export const specdojoSidebarItems = [
     text: 'ガイドライン',
     collapsed: false,
     items: [
-      { text: 'ドキュメントの構成', link: '/ja/specdojo/guidelines/docs-structure-guide' },
-      { text: 'ドキュメントのフェーズ概要', link: '/ja/specdojo/guidelines/docs-phases-overview' },
-      { text: 'ドキュメントの内容', link: '/ja/specdojo/guidelines/docs-contents-guide' },
-      { text: 'ドキュメントの書き方', link: '/ja/specdojo/guidelines/docs-editing-guide' },
+      { text: 'ドキュメントの構成', link: '/ja/specdojo/guides/docs-structure-guide' },
+      { text: 'ドキュメントのフェーズ概要', link: '/ja/specdojo/guides/docs-phases-overview' },
+      { text: 'ドキュメントの内容', link: '/ja/specdojo/guides/docs-contents-guide' },
+      { text: 'ドキュメントの書き方', link: '/ja/specdojo/guides/docs-editing-guide' },
       {
         text: 'プロジェクトマネジメント',
         collapsed: false,
         items: [
-          { text: '実行モデル', link: '/ja/specdojo/guidelines/specdojo-execution-model-guide' },
+          { text: '実行モデル', link: '/ja/specdojo/guides/specdojo-execution-model-guide' },
           {
             text: 'プロジェクトドキュメント',
-            link: '/ja/specdojo/guidelines/specdojo-project-docs-guide',
+            link: '/ja/specdojo/guides/specdojo-project-docs-guide',
           },
-          { text: 'WBS設計', link: '/ja/specdojo/guidelines/specdojo-wbs-design-guide' },
+          { text: 'WBS設計', link: '/ja/specdojo/guides/specdojo-wbs-design-guide' },
           {
             text: '定義からタスクの生成アルゴリズム',
-            link: '/ja/specdojo/guidelines/specdojo-definition-to-task-algorithm-guide',
+            link: '/ja/specdojo/guides/specdojo-definition-to-task-algorithm-guide',
           },
         ],
       },

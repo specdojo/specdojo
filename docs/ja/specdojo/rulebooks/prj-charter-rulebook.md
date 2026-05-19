@@ -25,7 +25,7 @@ Project Charter Documentation Rulebook
 
 ### 2.1. 位置づけ（他ドキュメントとの関係）
 
-ドキュメント間の関係は [ドキュメント構成ガイド](../guidelines/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-charter`）は `prj-overview` と `prj-stakeholder-register` を根拠として立ち上げを正式認可し、後続のプロジェクト定義・管理計画文書群の起点となります。
+ドキュメント間の関係は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-charter`）は `prj-overview` と `prj-stakeholder-register` を根拠として立ち上げを正式認可し、後続のプロジェクト定義・管理計画文書群の起点となります。
 
 ### 2.2. 用語定義（本ルール内）
 
@@ -230,7 +230,7 @@ supersedes: []
 
 ### 6.10. 後続で作成・詳細化する文書
 
-- 憲章承認後に作成する文書を A. 立ち上げと B/C フェーズに分けて明示します（作成順は [ドキュメント構成ガイド](../guidelines/docs-structure-guide.md) に従います）。
+- 憲章承認後に作成する文書を A. 立ち上げと B/C フェーズに分けて明示します（作成順は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) に従います）。
 - 後続文書で詳細化する事項を憲章本文に重複して詳細記載しません。
 
 推奨表（後続文書）:
@@ -251,7 +251,7 @@ supersedes: []
 
 - 本憲章の承認は A. 立ち上げフェーズの完了を示します。
 - 最初の GO / NOT GO 判断（TO-BE の明確化）は、B. プロジェクト定義と C. プロジェクトマネジメントが完了した時点で行います。
-- 判断構造の詳細は [ドキュメント構成ガイド](../guidelines/docs-structure-guide.md) のゲート構造を参照します。
+- 判断構造の詳細は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) のゲート構造を参照します。
 - 判断結果は `pm-plan` または決定記録に証跡として記録します。
 
 推奨表（GO / Not GO 判断結果）:

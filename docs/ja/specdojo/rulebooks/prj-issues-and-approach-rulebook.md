@@ -56,7 +56,7 @@ flowchart LR
 ### 3.1. 配置（推奨）
 
 - `docs/ja/projects/<project-id>/020-project-definition/prj-issues-and-approach.md` への配置を推奨します。
-- プロジェクト配下の章構成は [docs-structure-guide.md](../guidelines/docs-structure-guide.md) に従います。
+- プロジェクト配下の章構成は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従います。
 - 課題と方針の根拠となる関連資料を別ファイルにする場合は、本文から参照リンクで紐付けます。
 
 ### 3.2. ドキュメントID（推奨）

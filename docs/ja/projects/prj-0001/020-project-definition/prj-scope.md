@@ -28,7 +28,7 @@ supersedes: []
 
 | 対象             | 内容                                                                                        |
 | ---------------- | ------------------------------------------------------------------------------------------- |
-| 文書体系         | `docs/ja/specdojo` 配下の standards、guidelines、rulebooks、instructions、samples           |
+| 文書体系         | `docs/ja/specdojo` 配下の standards、guides、rulebooks、instructions、samples           |
 | プロジェクト文書 | `docs/ja/projects/prj-0001` 配下のプロジェクト定義、管理計画、組織、Schedule、管理台帳 |
 | サンプル         | SpecDojo の利用イメージを示すサンプルプロジェクト、サンプル成果物                           |
 | 補助ツール       | Schedule / 実行管理 / 生成物確認を支援する `specdojo` 関連コマンドおよび生成物        |

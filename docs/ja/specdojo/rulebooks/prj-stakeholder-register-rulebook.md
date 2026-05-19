@@ -27,7 +27,7 @@ Stakeholder Register Documentation Rulebook
 
 ### 2.1. 位置づけ（他ドキュメントとの関係）
 
-ドキュメント間の関係は [ドキュメント構成ガイド](../guidelines/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-stakeholder-register`）は `prj-overview` を受けて関係者を特定し、`prj-charter` と `pm-organization` の入力となります。
+ドキュメント間の関係は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の立ち上げフロー図を参照してください。本書（`prj-stakeholder-register`）は `prj-overview` を受けて関係者を特定し、`prj-charter` と `pm-organization` の入力となります。
 
 ### 2.2. 用語定義（本ルール内）
 
