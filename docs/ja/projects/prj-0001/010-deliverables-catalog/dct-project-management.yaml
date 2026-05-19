@@ -20,6 +20,7 @@ groups:
         depends_on: []
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
+        rulebook: pm-plan-rulebook
         done_criteria:
           - text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
             roles: [PO]
@@ -45,6 +46,7 @@ groups:
           - pm-plan
         overview: 報告・連絡・会議体の計画を定義
         path: pm-communication-plan.md
+        rulebook: pm-communication-plan-rulebook
         done_criteria:
           - text: 報告・連絡・会議体の計画を承認できる粒度で記述されていること
             roles: [PO]
@@ -70,6 +72,7 @@ groups:
           - pm-plan
         overview: 品質目標・レビュー方針・品質基準を定義
         path: pm-quality-management-plan.md
+        rulebook: pm-quality-management-plan-rulebook
         done_criteria:
           - text: 品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
             roles: [PO]
@@ -98,6 +101,7 @@ groups:
           - prj-overview
         overview: ロール・メンバー構成の方針と設計根拠を定義
         path: pm-organization.md
+        rulebook: pm-organization-rulebook
         done_criteria:
           - text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
             roles: [PO]
@@ -120,6 +124,7 @@ groups:
           - pm-organization
         overview: 全 Role code を machine-readable な YAML として一覧化する
         path: pm-roles.yaml
+        rulebook: pm-roles-rulebook
         done_criteria:
           - text: 全ロールコードとプロジェクト固有メモを承認できること
             roles: [PO]
@@ -155,6 +160,7 @@ groups:
           - pm-roles
         overview: yaml で実行主体（人間・agent）と担当ロールリスト（roles）を定義
         path: pm-members.yaml
+        rulebook: pm-members-rulebook
         done_criteria:
           - text: 実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
             roles: [PO]
@@ -180,6 +186,7 @@ groups:
           - pm-organization
         overview: 成果物・プロセスごとの責任分担マトリクスを定義（中規模以上）
         path: pm-raci.md
+        rulebook: pm-raci-rulebook
         done_criteria:
           - text: 成果物・プロセスごとの責任分担マトリクスを承認できること
             roles: [PO]
@@ -306,6 +313,7 @@ groups:
         depends_on: []
         overview: プロジェクト全体のマイルストーンを定義
         path: sch-milestones.yaml
+        rulebook: sch-milestones-rulebook
         done_criteria:
           - text: プロジェクト全体のマイルストーンを承認できること
             roles: [PO]

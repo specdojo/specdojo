@@ -38,13 +38,13 @@ repo-root/
 ├─ .env
 ├─ docs/
 │  ├─ specdojo/
+│  │  └─ schemas/
 │  └─ ja/
-│     └─ specdojo/
-│        └─ templates/
-│           ├─ dct-project-definition.yaml
-│           ├─ dct-project-management.yaml
-│           └─ pm-review-viewpoints.yaml
-│  └─ ja/
+│     ├─ specdojo/
+│     │  └─ templates/
+│     │     ├─ dct-project-definition.yaml
+│     │     ├─ dct-project-management.yaml
+│     │     └─ pm-review-viewpoints.yaml
 │     └─ projects/
 │        └─ prj-0001/
 │           ├─ 010-deliverables-catalog/
@@ -53,18 +53,20 @@ repo-root/
 │           │  └─ generated/
 │           │     ├─ dct-project-definition.md
 │           │     └─ dct-project-management.md
+│           ├─ 030-project-management/
+│           │  └─ controls/
+│           │     └─ reviews/
+│           │        ├─ plans/
+│           │        └─ results/
 │           ├─ 060-schedule/
 │           │  ├─ sch-milestones.yaml
-│           │  ├─ sch-governance.yaml
-│           │  ├─ sch-design.yaml
-│           │  └─ sch-design-structure.yaml
+│           │  └─ sch-track-launch.yaml
 │           └─ 070-execution/
 │              ├─ exec/
 │              │  ├─ events/
 │              │  └─ .locks/
 │              └─ generated/
 └─ tools/
-   └─ dojo/
 ```
 
 ## 3. 設定
@@ -613,6 +615,7 @@ track-files:
 
 `specdojo review` は、成果物カタログの `done_criteria` と観点定義から review plan を生成するコマンド群です。
 
+- scaffold（`scaffold`）: テンプレートから `pm-review-viewpoints.yaml` を生成
 - plan 生成（`plan`）: `dct-*.yaml` の `done_criteria` から `rvp-*.yaml` を生成
 - パス確認（`where`）: review 関連パスを確認
 
@@ -631,7 +634,24 @@ track-files:
 }
 ```
 
-### 24.1. review plan
+### 24.1. review scaffold
+
+`viewpoints_path` に `pm-review-viewpoints.yaml` を新規生成する。`docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml` をもとに `project_id` を置換して出力する。
+
+```bash
+specdojo review scaffold --project prj-0001
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--force` | 既存の `pm-review-viewpoints.yaml` を上書き | `false` |
+
+既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
+
+### 24.2. review plan
 
 成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` を読み込み、`rvp-<local_id>-<stage>.yaml` を生成する。
 
@@ -653,15 +673,15 @@ specdojo review plan \
 | `--force` | 既存の `rvp-*.yaml` を上書き | `false` |
 | `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
 
-#### 24.1.1. 生成フロー
+#### 24.2.1. 生成フロー
 
 1. `scope.catalogs` に列挙されたカタログから `--local-id` に一致する成果物を検索する。
 2. `done_criteria` を `--role` でフィルタリングする（省略時は全項目）。
 3. 各 `done_criteria` 項目の `viewpoint` を `pm-review-viewpoints.yaml` で照合し、`coverage_types` を取得する。
-4. 対応 `rulebook` パスを成果物カタログから解決する（存在しない場合は `none`）。
+4. 成果物の `rulebook` フィールド（ID）から `docs/ja/specdojo/rulebooks/<id>.md` へパスを解決する（フィールドがない場合は `none`）。
 5. `review_items` を生成し、`reviews_path/plans/rvp-<local_id>-<stage>.yaml` に出力する。
 
-#### 24.1.2. 出力例
+#### 24.2.2. 出力例
 
 ```yaml
 id: rvp-prj-overview-draft
@@ -673,7 +693,7 @@ target:
   version_ref: none
 inputs:
   deliverable_catalog: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
-  rulebook: none
+  rulebook: prj-overview-rulebook
   viewpoints: /docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
   related_documents: []
 machine_checks_required:
@@ -718,7 +738,7 @@ review_items:
       - unverified_scope
 ```
 
-### 24.2. review where
+### 24.3. review where
 
 review 関連パスを確認する。
 

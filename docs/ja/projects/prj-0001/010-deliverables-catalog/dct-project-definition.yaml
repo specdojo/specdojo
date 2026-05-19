@@ -17,6 +17,7 @@ groups:
         depends_on: []
         overview: プロジェクトの目的・背景・ゴールを定義
         path: prj-overview.md
+        rulebook: prj-overview-rulebook
         done_criteria:
           - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
             roles: [BA]
@@ -42,6 +43,7 @@ groups:
           - prj-overview
         overview: 関係者の役割・関心・影響度を一覧化
         path: prj-stakeholder-register.md
+        rulebook: prj-stakeholder-register-rulebook
         done_criteria:
           - text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
             roles: [BA]
@@ -65,6 +67,7 @@ groups:
           - prj-stakeholder-register
         overview: プロジェクトの正式な認可と権限委譲を文書化
         path: prj-charter.md
+        rulebook: prj-charter-rulebook
         done_criteria:
           - text: 業務上の目的・認可条件・期待効果が明確であること
             roles: [BA]
@@ -87,6 +90,7 @@ groups:
           - prj-overview
         overview: プロジェクトの対象範囲と除外範囲を定義
         path: prj-scope.md
+        rulebook: prj-scope-rulebook
         done_criteria:
           - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
             roles: [BA]
@@ -112,6 +116,7 @@ groups:
           - prj-scope
         overview: プロジェクト成功の判定基準と受入条件を明確化
         path: prj-success-criteria-and-acceptance-criteria.md
+        rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
         done_criteria:
           - text: 業務価値と受入条件が対応していること
             roles: [BA]
@@ -134,6 +139,7 @@ groups:
           - prj-scope
         overview: 前提条件・制約事項・外部依存を整理
         path: prj-assumptions-constraints-dependencies.md
+        rulebook: prj-assumptions-constraints-dependencies-rulebook
         done_criteria:
           - text: 業務上の前提・制約が業務観点で識別できること
             roles: [BA]
@@ -160,6 +166,7 @@ groups:
           - prj-assumptions-constraints-dependencies
         overview: 主要課題の特定と解決アプローチを定義
         path: prj-issues-and-approach.md
+        rulebook: prj-issues-and-approach-rulebook
         done_criteria:
           - text: 業務課題と解決アプローチが業務観点で対応していること
             roles: [BA]
@@ -183,6 +190,7 @@ groups:
           - prj-issues-and-approach
         overview: 技術的・方針的な代替案を比較評価
         path: prj-comparison-of-alternatives.md
+        rulebook: prj-comparison-of-alternatives-rulebook
         done_criteria:
           - text: 比較軸・評価根拠が業務価値と対応していること
             roles: [BA]

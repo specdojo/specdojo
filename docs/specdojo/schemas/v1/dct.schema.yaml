@@ -198,6 +198,14 @@ $defs:
             leading "/" → absolute from repo root
             no leading "/" → relative, joined onto the nearest ancestor group's resolved base_path.
 
+      rulebook:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]*$"
+        description: >
+          Optional rulebook ID for this deliverable (e.g., prj-overview-rulebook).
+          Resolved to docs/ja/specdojo/rulebooks/<id>.md by convention.
+          Used by review plan generation to populate inputs.rulebook.
+
       done_criteria:
         type: array
         minItems: 1

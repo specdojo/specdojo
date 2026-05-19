@@ -70,6 +70,8 @@ Project Register
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | PM | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | open | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | PM | 2026-05-19 | - | - | - |
 | PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | PM | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | - |
+| PJR-0051 | done | specdojo reviewコマンドの仕様作成 | reviewコマンドの仕様を作成 | todo | high | PM | 2026-05-20 | 2026-05-19 | command usage guideに仕様を作成 | - |
+| PJR-0052 | open | idからパスを解決するコマンドの作成 | idからファイルのパスを解決するためのDB構築と検索コマンドを作成 | todo | high | PM | 2026-05-20 | - | - | - |
 
 ## 4. 派生ビュー
 
