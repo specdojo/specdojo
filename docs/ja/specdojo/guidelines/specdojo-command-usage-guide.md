@@ -38,9 +38,12 @@ repo-root/
 ├─ .env
 ├─ docs/
 │  ├─ specdojo/
-│  │  └─ templates/
-│  │     ├─ dct-project-definition.yaml
-│  │     └─ dct-project-management.yaml
+│  └─ ja/
+│     └─ specdojo/
+│        └─ templates/
+│           ├─ dct-project-definition.yaml
+│           ├─ dct-project-management.yaml
+│           └─ pm-review-viewpoints.yaml
 │  └─ ja/
 │     └─ projects/
 │        └─ prj-0001/
@@ -474,7 +477,7 @@ generated/
 
 ## 22. catalog scaffold
 
-`catalog_path` に `dct-*.yaml` を新規生成します。`docs/specdojo/templates/` のテンプレートをもとに、プロジェクト規模に応じた成果物セットを出力します。
+`catalog_path` に `dct-*.yaml` を新規生成します。`docs/ja/specdojo/templates/` のテンプレートをもとに、プロジェクト規模に応じた成果物セットを出力します。
 
 ```bash
 specdojo catalog scaffold --project shj-0001 --size medium
@@ -606,7 +609,133 @@ track-files:
   - sch-track-launch.yaml (generated)
 ```
 
-## 24. まとめ
+## 24. review コマンド
+
+`specdojo review` は、成果物カタログの `done_criteria` と観点定義から review plan を生成するコマンド群です。
+
+- plan 生成（`plan`）: `dct-*.yaml` の `done_criteria` から `rvp-*.yaml` を生成
+- パス確認（`where`）: review 関連パスを確認
+
+`specdojo.config.json` に `reviews_path` と `viewpoints_path` を追加する。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
+      "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+      "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
+      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml"
+    }
+  }
+}
+```
+
+### 24.1. review plan
+
+成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` を読み込み、`rvp-<local_id>-<stage>.yaml` を生成する。
+
+```bash
+specdojo review plan \
+  --project prj-0001 \
+  --local-id prj-overview \
+  --stage draft
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--local-id` | 対象成果物の `local_id` | 必須 |
+| `--stage` | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須 |
+| `--role` | 対象 Role code に絞り込む（省略時は全ロール） | 省略可 |
+| `--force` | 既存の `rvp-*.yaml` を上書き | `false` |
+| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+
+#### 24.1.1. 生成フロー
+
+1. `scope.catalogs` に列挙されたカタログから `--local-id` に一致する成果物を検索する。
+2. `done_criteria` を `--role` でフィルタリングする（省略時は全項目）。
+3. 各 `done_criteria` 項目の `viewpoint` を `pm-review-viewpoints.yaml` で照合し、`coverage_types` を取得する。
+4. 対応 `rulebook` パスを成果物カタログから解決する（存在しない場合は `none`）。
+5. `review_items` を生成し、`reviews_path/plans/rvp-<local_id>-<stage>.yaml` に出力する。
+
+#### 24.1.2. 出力例
+
+```yaml
+id: rvp-prj-overview-draft
+project_id: prj-0001
+target:
+  local_id: prj-overview
+  path: /docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+  stage: draft
+  version_ref: none
+inputs:
+  deliverable_catalog: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+  rulebook: none
+  viewpoints: /docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
+  related_documents: []
+machine_checks_required:
+  - name: lint:md
+    required: true
+  - name: schema
+    required: false
+review_items:
+  - id: RVP-001
+    role: BA
+    viewpoint_id: vp-ba-business-value
+    done_criterion: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
+    coverage_required:
+      - stakeholder
+      - business_goal
+      - use_case
+      - business_event
+      - traceability
+    evidence_required:
+      - target_document
+      - deliverable_catalog
+    expected_output:
+      - result
+      - evidence
+      - findings
+      - unverified_scope
+  - id: RVP-002
+    role: PO
+    viewpoint_id: vp-po-purpose-alignment
+    done_criterion: プロジェクトの目的・スコープを承認できる情報が含まれていること
+    coverage_required:
+      - business_goal
+      - scope_boundary
+      - traceability
+    evidence_required:
+      - target_document
+      - deliverable_catalog
+    expected_output:
+      - result
+      - evidence
+      - findings
+      - unverified_scope
+```
+
+### 24.2. review where
+
+review 関連パスを確認する。
+
+```bash
+specdojo review where --project prj-0001
+```
+
+出力例:
+
+```text
+reviews-path: /repo/.../030-project-management/controls/reviews
+plans       : /repo/.../controls/reviews/plans
+results     : /repo/.../controls/reviews/results
+viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
+```
+
+## 25. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -619,3 +748,4 @@ track-files:
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）
+- レビュー plan 生成（`review plan`）

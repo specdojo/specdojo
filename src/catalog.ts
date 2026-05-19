@@ -149,7 +149,7 @@ export function registerCatalogCommands(program: Command): void {
         throw new Error(`Invalid --size: "${size}". Must be one of: small|medium|large`)
       }
 
-      const templatesPath = resolve(specdojoRootDir(), 'docs/specdojo/templates')
+      const templatesPath = resolve(specdojoRootDir(), 'docs/ja/specdojo/templates')
       if (!existsSync(templatesPath)) {
         throw new Error(`Templates directory not found: ${templatesPath}`)
       }

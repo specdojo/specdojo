@@ -59,7 +59,7 @@ Project Register
 | PJR-0037 | done | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | PO | 2026-05-17 | 2026-05-17 | strategy yamlを作成 | - |
 | PJR-0038 | done | `pjr-<domain>.md`にdone_criteria追加 | done_criteriaをMarkdownに追加 | todo | high | PO | 2026-05-17 | 2026-05-17 | done_criteriaの追加をscriptで自動化 | - |
 | PJR-0039 | done | frontmatterのtypeの見直し | deliverables-catalogなどを追加するかを検討 | todo | high | PO | 2026-05-17 | 2026-05-18 | productの小分類を見直し | - |
-| PJR-0040 | open | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | PO | 2026-05-17 | - | - | - |
+| PJR-0040 | done | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | PO | 2026-05-17 | 2026-05-18 | 種類ごとの個票テンプレートを作成 | - |
 | PJR-0041 | done | roles, membersの見直し | rolesに全ロールを記述して、membersに兼務を反映するように変更 | todo | high | PO | 2026-05-17 | 2026-05-17 | rolesとmembers, 関連文書を見直し | - |
 | PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | PO | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | - |
 | PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | PO | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
@@ -69,7 +69,7 @@ Project Register
 | PJR-0047 | open | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | PM | 2026-05-19 | - | - | -|
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | PM | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | open | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | PM | 2026-05-19 | - | - | - |
-| PJR-0050 | open | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | PM | 2026-05-19 | - | - | - |
+| PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | PM | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | - |
 
 ## 4. 派生ビュー
 

@@ -1,0 +1,233 @@
+# pm-review-viewpoints.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Review Viewpoints YAML schema"
+description: >
+  Schema for project-scoped review viewpoints files: pm-review-viewpoints.yaml.
+  Defines categories, coverage_types, severity_levels, verdict_definitions,
+  viewpoints, and role_viewpoint_sets used in review plans and results.
+type: object
+additionalProperties: false
+
+required:
+  - id
+  - type
+  - status
+  - project_id
+  - categories
+  - coverage_types
+  - severity_levels
+  - verdict_definitions
+  - viewpoints
+  - role_viewpoint_sets
+
+properties:
+  id:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-:]*$"
+    description: "Document metadata ID (e.g., prj-0001:pm-review-viewpoints)."
+
+  type:
+    type: string
+    const: "project"
+    description: "Document type. Must be 'project'."
+
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+    description: "Document status."
+
+  based_on:
+    type: array
+    description: "Optional parent document IDs."
+    items:
+      type: string
+      pattern: "^[a-z0-9][a-z0-9-:]*$"
+    uniqueItems: true
+
+  version:
+    type: integer
+    minimum: 1
+    description: "Optional schema version for this viewpoints file."
+
+  project_id:
+    type: string
+    pattern: "^prj-[0-9]{4,}$"
+    description: "Project identifier (e.g., prj-0001)."
+
+  categories:
+    type: array
+    minItems: 1
+    description: "Review category vocabulary. Each viewpoint belongs to one category."
+    items:
+      $ref: "#/$defs/Category"
+
+  coverage_types:
+    type: array
+    minItems: 1
+    description: "Coverage type vocabulary for recording what was checked during review."
+    items:
+      $ref: "#/$defs/CoverageType"
+
+  severity_levels:
+    type: array
+    minItems: 1
+    description: "Finding severity vocabulary."
+    items:
+      $ref: "#/$defs/SeverityLevel"
+
+  verdict_definitions:
+    type: array
+    minItems: 1
+    description: "Review verdict vocabulary."
+    items:
+      $ref: "#/$defs/VerdictDefinition"
+
+  viewpoints:
+    type: array
+    minItems: 1
+    description: "Role-based review viewpoints. Each viewpoint belongs to one role and one category."
+    items:
+      $ref: "#/$defs/Viewpoint"
+
+  role_viewpoint_sets:
+    type: array
+    minItems: 1
+    description: "Mapping from Role code to the list of viewpoint IDs assigned to that role."
+    items:
+      $ref: "#/$defs/RoleViewpointSet"
+
+$defs:
+  RoleCode:
+    type: string
+    enum: [PO, PM, BA, ARC, DEV, QE, UX, OPS]
+    description: "Role code. Must match a role defined in pm-roles.yaml."
+
+  ArtifactKind:
+    type: string
+    enum: [requirements, specification, design, testing, operations]
+    description: "Artifact kind that a coverage type applies to."
+
+  Category:
+    type: object
+    additionalProperties: false
+    required: [id, name]
+    properties:
+      id:
+        type: string
+        pattern: "^[a-z][a-z0-9_-]*$"
+        description: "Category identifier (lowercase, hyphens/underscores allowed)."
+      name:
+        type: string
+        minLength: 1
+        description: "Human-readable category name."
+
+  CoverageType:
+    type: object
+    additionalProperties: false
+    required: [id, name, description, applies_to]
+    properties:
+      id:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+        description: "Coverage type identifier (lowercase, underscores allowed)."
+      name:
+        type: string
+        minLength: 1
+        description: "Human-readable coverage type name."
+      description:
+        type: string
+        minLength: 1
+        description: "What this coverage type checks."
+      applies_to:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Artifact kinds this coverage type is relevant for."
+        items:
+          $ref: "#/$defs/ArtifactKind"
+
+  SeverityLevel:
+    type: object
+    additionalProperties: false
+    required: [id, description]
+    properties:
+      id:
+        type: string
+        enum: [blocker, major, minor, note]
+        description: "Severity identifier."
+      description:
+        type: string
+        minLength: 1
+        description: "Meaning and handling of this severity level."
+
+  VerdictDefinition:
+    type: object
+    additionalProperties: false
+    required: [id, description]
+    properties:
+      id:
+        type: string
+        enum: [pass, conditional_pass, changes_requested, blocked]
+        description: "Verdict identifier."
+      description:
+        type: string
+        minLength: 1
+        description: "Meaning and next action for this verdict."
+
+  Viewpoint:
+    type: object
+    additionalProperties: false
+    required: [id, role, category, title, check, evidence, default_severity]
+    properties:
+      id:
+        type: string
+        pattern: "^vp-[a-z][a-z0-9-]*$"
+        description: "Viewpoint identifier. Convention: vp-<role_lower>-<name>."
+      role:
+        $ref: "#/$defs/RoleCode"
+        description: "Role code responsible for this viewpoint."
+      category:
+        type: string
+        pattern: "^[a-z][a-z0-9_-]*$"
+        description: "Category ID this viewpoint belongs to."
+      title:
+        type: string
+        minLength: 1
+        description: "Short title for the viewpoint."
+      check:
+        type: string
+        minLength: 1
+        description: "What to verify — the core review question."
+      evidence:
+        type: string
+        minLength: 1
+        description: "What to look at as evidence when checking."
+      coverage_types:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Coverage type IDs relevant to this viewpoint."
+        items:
+          type: string
+          pattern: "^[a-z][a-z0-9_]*$"
+      default_severity:
+        type: string
+        enum: [blocker, major, minor, note]
+        description: "Default finding severity when this viewpoint fails."
+
+  RoleViewpointSet:
+    type: object
+    additionalProperties: false
+    required: [role, viewpoints]
+    properties:
+      role:
+        $ref: "#/$defs/RoleCode"
+        description: "Role code."
+      viewpoints:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Ordered list of viewpoint IDs assigned to this role."
+        items:
+          type: string
+          pattern: "^vp-[a-z][a-z0-9-]*$"

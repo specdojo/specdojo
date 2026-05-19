@@ -1,0 +1,464 @@
+# Template: project review viewpoints
+# Placeholder prj-0000 is replaced with the actual project_id on scaffold.
+id: pm-review-viewpoints-template
+type: template
+status: draft
+project_id: prj-0000
+
+# レビュー観点一覧。
+# Role code の語彙は pm-roles.yaml を参照する。
+# レビュー運用方針は specdojo-review-guide.md を参照する。
+# 成果物ごとの完了条件は成果物カタログの done_criteria を正とする。
+
+categories:
+  - id: purpose
+    name: 目的・判断
+  - id: planning
+    name: 計画・管理
+  - id: business
+    name: 業務・利用者価値
+  - id: architecture
+    name: 構造・技術整合
+  - id: implementation
+    name: 実装・設定可能性
+  - id: quality
+    name: 品質・検証可能性
+  - id: usability
+    name: 読みやすさ・利用体験
+  - id: operations
+    name: 公開・運用
+  - id: consistency
+    name: 成果物間整合
+
+coverage_types:
+  - id: stakeholder
+    name: ステークホルダー
+    description: 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: business_goal
+    name: 業務目的・価値
+    description: 業務目的、課題、期待効果、成功条件との対応が説明できるか。
+    applies_to:
+      - requirements
+      - specification
+  - id: scope_boundary
+    name: 対象範囲・対象外
+    description: 対象範囲、対象外、前提、制約、依存関係が判断できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+  - id: use_case
+    name: 利用シーン
+    description: 主要な利用シーン、利用者行動、期待結果が具体化されているか。
+    applies_to:
+      - requirements
+      - specification
+  - id: business_event
+    name: 業務イベント
+    description: 業務上の開始条件、完了条件、発生イベント、トリガーが識別されているか。
+    applies_to:
+      - requirements
+      - specification
+  - id: exception_case
+    name: 例外・異常系
+    description: 例外ケース、異常系、境界条件、失敗時の扱いが確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - testing
+  - id: permission
+    name: 権限・責務
+    description: 実行者、承認者、責任分界、権限チェック、agent と人間の境界が明確か。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: state_transition
+    name: 状態遷移
+    description: 状態、遷移条件、禁止遷移、終了状態が矛盾なく定義されているか。
+    applies_to:
+      - specification
+      - design
+      - testing
+  - id: data
+    name: 入出力・データ
+    description: 入力、出力、データ項目、保持、更新、削除、整合性の扱いが確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: integration
+    name: 外部連携
+    description: 外部システム、API、ファイル、通知、手動連携などの依存が識別されているか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: non_functional
+    name: 非機能要求
+    description: 性能、可用性、セキュリティ、保守性、拡張性、互換性などの品質要求が確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: operations
+    name: 運用・保守
+    description: 継続運用、変更管理、問い合わせ、障害時対応、再生成、公開後の保守が考慮されているか。
+    applies_to:
+      - requirements
+      - specification
+      - operations
+  - id: auditability
+    name: 監査・証跡
+    description: 判断、承認、変更、実行結果を追跡できる証跡が残るか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: acceptance
+    name: 受入条件・検証可能性
+    description: pass / fail を判断できる受入条件、完了条件、検証手順があるか。
+    applies_to:
+      - requirements
+      - specification
+      - testing
+  - id: traceability
+    name: トレーサビリティ
+    description: 上位目的から要求、要件、仕様、設計、テスト、運用までの対応を追跡できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - testing
+      - operations
+
+severity_levels:
+  - id: blocker
+    description: 完了判断、公開判断、後続作業を止める不備。
+  - id: major
+    description: done_criteria 未充足、文書間矛盾、責任分担の不整合など重要な不備。
+  - id: minor
+    description: 意味や判断を大きく変えない補足不足、表記ゆれ、軽微な修正。
+  - id: note
+    description: 改善提案、将来検討、補足コメント。
+
+verdict_definitions:
+  - id: pass
+    description: 対象 Role code の観点では修正不要。次の Role code または PO 判断へ進める。
+  - id: conditional_pass
+    description: 軽微な修正または PO 判断待ちを条件に進めてよい。条件を明記し、必要に応じて minor 指摘を残す。
+  - id: changes_requested
+    description: 修正後の再レビューが必要。修正担当 Role code と再レビュー観点を明記する。
+  - id: blocked
+    description: 前提不足、依存成果物未整備、重大矛盾によりレビュー継続不可。PJR 登録または PO 判断を依頼する。
+
+viewpoints:
+  - id: vp-po-purpose-alignment
+    role: PO
+    category: purpose
+    title: 目的・スコープとの整合
+    check: 成果物の内容がプロジェクト目的、スコープ、優先順位、公開方針と矛盾していないか。
+    evidence: 目的、対象範囲、対象外、判断理由、関連成果物への参照。
+    coverage_types:
+      - business_goal
+      - scope_boundary
+      - traceability
+    default_severity: major
+  - id: vp-po-decision-readiness
+    role: PO
+    category: purpose
+    title: 承認判断に必要な情報
+    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。
+    evidence: 判断対象、判断者、未決事項、前提、影響、次アクション。
+    coverage_types:
+      - stakeholder
+      - permission
+      - auditability
+    default_severity: major
+  - id: vp-po-publication-accountability
+    role: PO
+    category: operations
+    title: 公開可否と説明責任
+    check: 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。
+    evidence: status、公開対象、個人情報・非公開情報の有無、承認責任の記述。
+    coverage_types:
+      - permission
+      - operations
+      - auditability
+    default_severity: blocker
+  - id: vp-pm-plan-feasibility
+    role: PM
+    category: planning
+    title: 計画化可能性
+    check: 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。
+    evidence: 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。
+    default_severity: major
+  - id: vp-pm-dependency-risk
+    role: PM
+    category: planning
+    title: 依存関係・リスク・課題化
+    check: 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。
+    evidence: depends_on、関連文書、未決事項、PJR 登録候補、スケジュール影響。
+    default_severity: major
+  - id: vp-pm-control-reporting
+    role: PM
+    category: planning
+    title: 管理・報告への接続
+    check: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。
+    evidence: PJR 転記候補、報告先、対応方針、担当 Role code。
+    default_severity: minor
+  - id: vp-ba-business-value
+    role: BA
+    category: business
+    title: 業務価値との対応
+    check: 成果物の記述が業務目的、利用者、業務課題、期待効果と対応しているか。
+    evidence: 背景、目的、利用者、業務フロー、価値、成功基準。
+    coverage_types:
+      - stakeholder
+      - business_goal
+      - use_case
+      - business_event
+      - traceability
+    default_severity: major
+  - id: vp-ba-requirements-completeness
+    role: BA
+    category: business
+    title: 要件・受入条件の充足
+    check: 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているか。
+    evidence: 要件、受入条件、対象範囲、除外範囲、用語定義。
+    coverage_types:
+      - stakeholder
+      - scope_boundary
+      - use_case
+      - business_event
+      - exception_case
+      - non_functional
+      - operations
+      - acceptance
+      - traceability
+    default_severity: major
+  - id: vp-ba-stakeholder-clarity
+    role: BA
+    category: business
+    title: 関係者・利用場面の明確性
+    check: 関係者、利用場面、確認者、合意対象が読み取れるか。
+    evidence: stakeholder、利用者、店番・運用者、確認者、合意事項。
+    coverage_types:
+      - stakeholder
+      - use_case
+      - permission
+    default_severity: minor
+  - id: vp-arc-document-structure
+    role: ARC
+    category: architecture
+    title: 文書構造・配置・命名
+    check: frontmatter、ID、ファイル名、配置、見出し、リンクがプロジェクトの文書体系と整合しているか。
+    evidence: id、path、rulebook、based_on、見出し、相対リンク、成果物カタログ。
+    default_severity: major
+  - id: vp-arc-cross-document-consistency
+    role: ARC
+    category: consistency
+    title: 成果物間整合
+    check: 成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。
+    evidence: local_id、depends_on、owner、roles、RACI、関連文書、生成元。
+    coverage_types:
+      - permission
+      - traceability
+      - auditability
+    default_severity: major
+  - id: vp-arc-technical-constraints
+    role: ARC
+    category: architecture
+    title: 技術前提・制約の明確性
+    check: 技術的な前提、制約、外部依存、構成判断が必要な範囲で明示されているか。
+    evidence: 技術制約、外部依存、schema、validate 手順、構成方針。
+    coverage_types:
+      - scope_boundary
+      - data
+      - integration
+      - non_functional
+    default_severity: major
+  - id: vp-dev-implementation-readiness
+    role: DEV
+    category: implementation
+    title: 実装・設定作業への接続
+    check: 実装、設定、変更作業に必要な入力、制約、完了条件が読み取れるか。
+    evidence: 設定項目、schema、入力、出力、制約、作業対象ファイル。
+    coverage_types:
+      - data
+      - integration
+      - permission
+      - acceptance
+    default_severity: major
+  - id: vp-dev-change-impact
+    role: DEV
+    category: implementation
+    title: 技術的変更影響
+    check: 変更が既存成果物、schema、生成処理、コマンド、運用手順へ与える影響が識別されているか。
+    evidence: 影響範囲、関連コード、schema、生成物、コマンド、互換性。
+    coverage_types:
+      - scope_boundary
+      - data
+      - integration
+      - operations
+      - traceability
+    default_severity: major
+  - id: vp-dev-testability
+    role: DEV
+    category: quality
+    title: 技術検証可能性
+    check: 実装・設定変更後に確認すべき lint、schema、build、生成コマンドが分かるか。
+    evidence: 検証コマンド、期待結果、対象ファイル、エラー時対応。
+    default_severity: minor
+  - id: vp-qe-done-criteria
+    role: QE
+    category: quality
+    title: done_criteria 充足
+    check: 成果物カタログの done_criteria を満たしているか、未充足条件が明示されているか。
+    evidence: done_criteria、レビュー結果、未解決指摘、判定根拠。
+    coverage_types:
+      - acceptance
+      - traceability
+    default_severity: major
+  - id: vp-qe-verifiability
+    role: QE
+    category: quality
+    title: 検証可能性
+    check: 成功基準、受入条件、品質基準、設定値が pass / fail を判定できる表現になっているか。
+    evidence: 判定条件、数値、状態、必須項目、チェック手順。
+    coverage_types:
+      - exception_case
+      - state_transition
+      - non_functional
+      - acceptance
+    default_severity: major
+  - id: vp-qe-omissions-consistency
+    role: QE
+    category: consistency
+    title: 抜け漏れ・矛盾
+    check: 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。
+    evidence: rulebook、instruction、schema、関連文書、禁止事項、レビュー履歴。
+    coverage_types:
+      - stakeholder
+      - scope_boundary
+      - use_case
+      - business_event
+      - exception_case
+      - permission
+      - state_transition
+      - data
+      - integration
+      - non_functional
+      - operations
+      - auditability
+      - acceptance
+      - traceability
+    default_severity: major
+  - id: vp-ux-readability
+    role: UX
+    category: usability
+    title: 読みやすさ・理解しやすさ
+    check: 初見の読者が目的、対象、次に見る文書、判断ポイントを理解できるか。
+    evidence: 導入文、見出し、表、用語、関連ドキュメント、補足説明。
+    default_severity: minor
+  - id: vp-ux-user-flow
+    role: UX
+    category: usability
+    title: 利用者導線
+    check: 利用者や将来貢献者が迷わず必要情報へ到達できる構成になっているか。
+    evidence: 目次、関連リンク、手順、参照先、サンプル、説明順序。
+    default_severity: minor
+  - id: vp-ux-language-consistency
+    role: UX
+    category: usability
+    title: 用語・表現の一貫性
+    check: 用語、Role code、成果物名、状態、ラベルが読み手を混乱させない形で統一されているか。
+    evidence: 用語定義、表記ゆれ、Role code、local_id、status、ラベル。
+    default_severity: minor
+  - id: vp-ops-release-readiness
+    role: OPS
+    category: operations
+    title: リリース・公開準備
+    check: 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。
+    evidence: status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。
+    coverage_types:
+      - permission
+      - operations
+      - auditability
+      - acceptance
+    default_severity: major
+  - id: vp-ops-operability
+    role: OPS
+    category: operations
+    title: 運用しやすさ
+    check: 継続更新、再生成、変更管理、問い合わせ対応、障害時対応に必要な情報が読み取れるか。
+    evidence: 運用手順、再生成手順、変更管理、問い合わせ導線、担当 Role code。
+    coverage_types:
+      - operations
+      - integration
+      - auditability
+      - non_functional
+    default_severity: minor
+  - id: vp-ops-agent-boundary
+    role: OPS
+    category: operations
+    title: agent 委任境界
+    check: agent に最終承認、公開可否判断、説明責任を委ねる記述になっていないか。
+    evidence: owner、reviewer、approver、agent_mode、manual gate、承認責任。
+    coverage_types:
+      - permission
+      - auditability
+    default_severity: blocker
+
+role_viewpoint_sets:
+  - role: PO
+    viewpoints:
+      - vp-po-purpose-alignment
+      - vp-po-decision-readiness
+      - vp-po-publication-accountability
+  - role: PM
+    viewpoints:
+      - vp-pm-plan-feasibility
+      - vp-pm-dependency-risk
+      - vp-pm-control-reporting
+  - role: BA
+    viewpoints:
+      - vp-ba-business-value
+      - vp-ba-requirements-completeness
+      - vp-ba-stakeholder-clarity
+  - role: ARC
+    viewpoints:
+      - vp-arc-document-structure
+      - vp-arc-cross-document-consistency
+      - vp-arc-technical-constraints
+  - role: DEV
+    viewpoints:
+      - vp-dev-implementation-readiness
+      - vp-dev-change-impact
+      - vp-dev-testability
+  - role: QE
+    viewpoints:
+      - vp-qe-done-criteria
+      - vp-qe-verifiability
+      - vp-qe-omissions-consistency
+  - role: UX
+    viewpoints:
+      - vp-ux-readability
+      - vp-ux-user-flow
+      - vp-ux-language-consistency
+  - role: OPS
+    viewpoints:
+      - vp-ops-release-readiness
+      - vp-ops-operability
+      - vp-ops-agent-boundary
