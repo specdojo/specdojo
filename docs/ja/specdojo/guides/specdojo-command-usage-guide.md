@@ -755,7 +755,128 @@ results     : /repo/.../controls/reviews/results
 viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
 ```
 
-## 25. まとめ
+## 25. index コマンド
+
+`specdojo index` は、ドキュメントの `id` フィールドとファイルパスのインデックスを構築・検索するコマンド群です。
+
+- インデックス生成（`build`）: `docs/` 配下の全 frontmatter `id` を走査して `docs/.specdojo/doc-index.json` を生成
+- パス解決（`lookup`）: ID からファイルパスを返す
+
+生成したインデックスは VSCode 拡張（`tools/vscode-specdojo/`）が読み込み、YAML の構造的な ID 参照と `[[id]]` wiki リンク形式をクリック可能なリンクにします。
+
+### 25.1. index build
+
+```bash
+specdojo index build
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--root <path>` | スキャン対象ルートディレクトリ | `docs` |
+| `--output <path>` | 出力先 | `docs/.specdojo/doc-index.json` |
+
+#### 25.1.1. 生成フロー
+
+1. `--root` 配下の `*.md` と `*.yaml` を再帰的に走査する（`node_modules`、`dist`、`generated` 等は除外）。
+2. Markdown: frontmatter の `id:` フィールドを抽出する。エントリ値はパスのみ（行番号なし）。
+3. YAML: top-level の `id:` フィールドを抽出する。エントリ値はパスのみ（行番号なし）。
+4. ネストされた ID: `docs/.specdojo/index-config.yaml` で設定したフィールドから収集する。エントリ値は `"パス:行番号"` 形式（1-based）。
+5. ID → パスのマッピングを `doc-index.json` に出力する。パスは `--root` からの相対パス。
+
+#### 25.1.2. ネスト ID の設定（`index-config.yaml`）
+
+top-level 以外の ID をインデックス対象にする場合、`docs/.specdojo/index-config.yaml` に設定する。
+
+```yaml
+nested_id_files:
+  - file: docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
+    collect_from:
+      - field: viewpoints          # ドット記法でネスト可（例: groups.deliverables）
+        id_field: id               # ID として使うフィールド名（省略時: id）
+        path_field: path           # ナビゲーション先パスフィールド名（省略時: path）
+```
+
+- `file`: リポジトリルートからの相対パス
+- `field`: ドット記法でネストに対応（配列は自動展開）
+- `path_field` の値がある場合: そのパスをエントリ値として使用（行番号なし）
+- `path_field` の値がない場合: `"ファイルパス:行番号"` をエントリ値として使用
+
+#### 25.1.3. 出力例
+
+```json
+{
+  "version": 1,
+  "generated_at": "2026-05-19T10:00:00Z",
+  "entries": {
+    "prj-overview-rulebook": "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
+    "prj-0001:dct-project-definition": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml",
+    "vp-ba-business-value": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml:220"
+  }
+}
+```
+
+パスはリポジトリルートからの相対パスです。ネスト ID（`vp-ba-business-value`）は `path_field` に `path` フィールドが設定されているため行番号なしで格納されます（`path` フィールドが空の場合は `path:line` 形式）。
+
+### 25.2. index lookup
+
+ID からファイルパスを返す。
+
+```bash
+specdojo index lookup prj-overview-rulebook
+# → docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
+
+specdojo index lookup vp-ba-business-value
+# → docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml:220
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--index <path>` | インデックスファイルパス | `docs/.specdojo/doc-index.json` |
+
+### 25.3. VSCode 拡張（vscode-specdojo）
+
+`tools/vscode-specdojo/` に VSCode 拡張が含まれています。インストールするとインデックスを参照し、ファイル内の ID 参照をクリック可能なリンクにします。
+
+#### 25.3.1. ビルドとインストール
+
+```bash
+cd tools/vscode-specdojo
+npm install
+npm run compile
+# VSCode で「拡張機能: VSIX からインストール」→ out/ の内容でロード
+# または F5 でデバッグモード起動
+```
+
+#### 25.3.2. リンク対応パターン
+
+| パターン | ファイル種別 | 例 |
+| ------- | ----------- | -- |
+| `[[id]]` wiki リンク | MD / YAML | `[[prj-overview-rulebook]]` |
+| `rulebook: <id>` | YAML | `rulebook: prj-overview-rulebook` |
+| `viewpoint: <id>` | YAML | `viewpoint: vp-ba-business-value` |
+| `- prj-xxx:yyy` 名前空間付き | YAML リスト | `- prj-0001:pm-roles` |
+| `- vp-xxx` viewpoint ID | YAML リスト | `- vp-po-purpose-alignment` |
+
+#### 25.3.3. コマンドパレット
+
+`Ctrl+Shift+P` → `SpecDojo: Open Document by ID` でIDを入力してファイルを開けます。
+
+#### 25.3.4. インデックスの更新
+
+ドキュメントを追加したら `specdojo index build` を実行してインデックスを再生成します。lefthook の `pre-commit` に組み込むと自動更新できます。
+
+```yaml
+pre-commit:
+  commands:
+    index:
+      run: specdojo index build
+```
+
+## 26. まとめ
 
 `specdojo` は以下を実現します。
 

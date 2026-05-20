@@ -75,3 +75,7 @@ CLAUDE.local.md
 # OpenCode local
 .opencode/auth.json
 .opencode/sessions/
+
+# specdojo VSCode extension
+tools/vscode-specdojo/node_modules/
+tools/vscode-specdojo/out/

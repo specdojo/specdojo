@@ -1,0 +1,30 @@
+{
+  "name": "vscode-specdojo",
+  "displayName": "SpecDojo",
+  "description": "Document ID navigation for SpecDojo projects",
+  "version": "0.1.0",
+  "publisher": "specdojo",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "specdojo.openById",
+        "title": "SpecDojo: Open Document by ID"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0"
+  }
+}

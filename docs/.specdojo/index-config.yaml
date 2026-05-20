@@ -1,0 +1,21 @@
+# specdojo index 設定ファイル
+#
+# nested_id_files: YAML ファイルのうち、top-level の id に加えて
+# ネストされた id フィールドもインデックス対象にするファイル。
+#
+# - file          : リポジトリルートからの相対パス
+# - collect_from  : 収集対象を定義するオブジェクトのリスト
+#   - field       : id を収集するフィールドパス（ドット区切りでネスト可、配列は自動展開）
+#                   例: "viewpoints", "groups.deliverables"
+#   - id_field    : 各アイテム内で ID として使うフィールド名（省略時: id）
+#   - path_field  : 各アイテム内でナビゲーション先パスとして使うフィールド名（省略時: path）
+#
+# 収集ルール（top-level / Markdown は行番号なし）:
+#   - path_field の値がある場合 : そのパスをインデックス値として使用（行番号なし）
+#   - path_field の値がない場合 : "ファイルパス:行番号" をインデックス値として使用
+nested_id_files:
+  - file: docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
+    collect_from:
+      - field: viewpoints
+        id_field: id
+        path_field: path
