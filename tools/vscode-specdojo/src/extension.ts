@@ -8,7 +8,6 @@ interface DocIndex {
   entries: Record<string, string>
 }
 
-const INDEX_GLOB = '**/docs/.specdojo/doc-index.json'
 const INDEX_REL = 'docs/.specdojo/doc-index.json'
 
 // [[id]] in any file
@@ -18,44 +17,65 @@ const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)\]\]/g
 const YAML_SINGLE_KEY_RE =
   /^(\s*(?:rulebook|viewpoint):\s+)([a-z][a-z0-9:_-]+)(\s*)$/gm
 
-// YAML list items that look like namespaced IDs (e.g. prj-0001:pm-roles)
-// or vp-* IDs on their own line
+// YAML list items that look like namespaced IDs (e.g. prj-0001:pm-roles) or vp-* IDs
 const YAML_LIST_ITEM_RE = /^(\s*-\s+)((?:[a-z][a-z0-9-]+:[a-z][a-z0-9-]+|vp-[a-z][a-z0-9-]+))(\s*)$/gm
 
-class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
-  private index: Record<string, string> = {}
-  private workspaceRoot = ''
+// Module-level shared state — used by both the link provider and extendMarkdownIt
+let _wsUri: vscode.Uri | undefined       // full workspace URI (correct for remote/devcontainer)
+let _workspaceRoot = ''                  // fsPath — used only for fs operations
+let _index: Record<string, string> = {}
 
+function loadIndex(): void {
+  if (!_workspaceRoot) return
+  const indexPath = path.join(_workspaceRoot, INDEX_REL)
+  if (!fs.existsSync(indexPath)) return
+  try {
+    const data = JSON.parse(fs.readFileSync(indexPath, 'utf8')) as DocIndex
+    _index = data.entries
+  } catch {
+    _index = {}
+  }
+}
+
+function entryToUri(entry: string): vscode.Uri | undefined {
+  if (!_wsUri) return undefined
+  const colonIdx = entry.lastIndexOf(':')
+  const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1))
+  const filePath = hasLine ? entry.slice(0, colonIdx) : entry
+  const lineNumber = hasLine ? parseInt(entry.slice(colonIdx + 1), 10) - 1 : 0
+  const uri = vscode.Uri.joinPath(_wsUri, filePath)
+  return lineNumber > 0 ? uri.with({ fragment: `L${lineNumber + 1}` }) : uri
+}
+
+function resolveToUri(id: string): vscode.Uri | undefined {
+  const entry = _index[id]
+  if (!entry) return undefined
+  return entryToUri(entry)
+}
+
+class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
   constructor() {
-    const ws = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-    if (ws) {
-      this.workspaceRoot = ws
-      this.reloadIndex()
+    const folder = vscode.workspace.workspaceFolders?.[0]
+    if (folder) {
+      _wsUri = folder.uri
+      _workspaceRoot = folder.uri.fsPath
+      loadIndex()
     }
   }
 
   reloadIndex(): void {
-    if (!this.workspaceRoot) return
-    const indexPath = path.join(this.workspaceRoot, INDEX_REL)
-    if (!fs.existsSync(indexPath)) return
-    try {
-      const data = JSON.parse(fs.readFileSync(indexPath, 'utf8')) as DocIndex
-      this.index = data.entries
-    } catch {
-      this.index = {}
-    }
+    loadIndex()
   }
 
   provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const links: vscode.DocumentLink[] = []
     const text = document.getText()
 
-    // [[id]] in any file
     let m: RegExpExecArray | null
     WIKILINK_RE.lastIndex = 0
     while ((m = WIKILINK_RE.exec(text)) !== null) {
       const id = m[1]
-      const target = this.resolve(id)
+      const target = resolveToUri(id)
       if (target) {
         const start = document.positionAt(m.index + 2)
         const end = document.positionAt(m.index + 2 + id.length)
@@ -64,11 +84,10 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
     }
 
     if (document.languageId === 'yaml') {
-      // rulebook: <id>  and  viewpoint: <id>
       YAML_SINGLE_KEY_RE.lastIndex = 0
       while ((m = YAML_SINGLE_KEY_RE.exec(text)) !== null) {
         const id = m[2]
-        const target = this.resolve(id)
+        const target = resolveToUri(id)
         if (target) {
           const idStart = m.index + m[1].length
           const start = document.positionAt(idStart)
@@ -77,11 +96,10 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
         }
       }
 
-      // - prj-0001:id  or  - vp-xxx
       YAML_LIST_ITEM_RE.lastIndex = 0
       while ((m = YAML_LIST_ITEM_RE.exec(text)) !== null) {
         const id = m[2]
-        const target = this.resolve(id)
+        const target = resolveToUri(id)
         if (target) {
           const idStart = m.index + m[1].length
           const start = document.positionAt(idStart)
@@ -93,28 +111,11 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
 
     return links
   }
-
-  private resolve(id: string): vscode.Uri | undefined {
-    if (!this.workspaceRoot) return undefined
-    const entry = this.index[id]
-    if (!entry) return undefined
-    // entry is either "path" or "path:line" (1-based)
-    const colonIdx = entry.lastIndexOf(':')
-    const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1))
-    const filePath = hasLine ? entry.slice(0, colonIdx) : entry
-    const lineNumber = hasLine ? parseInt(entry.slice(colonIdx + 1), 10) - 1 : 0
-    const uri = vscode.Uri.file(path.join(this.workspaceRoot, filePath))
-    // Encode line number in the fragment (L{line}) — VSCode file links support this
-    return lineNumber > 0
-      ? uri.with({ fragment: `L${lineNumber + 1}` })
-      : uri
-  }
 }
 
-export function activate(context: vscode.ExtensionContext): void {
+export function activate(context: vscode.ExtensionContext) {
   const provider = new SpecdojoLinkProvider()
 
-  // Register for markdown and yaml
   context.subscriptions.push(
     vscode.languages.registerDocumentLinkProvider(
       [
@@ -125,13 +126,11 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
   )
 
-  // Reload index when it changes
   const watcher = vscode.workspace.createFileSystemWatcher(`**/${INDEX_REL}`)
   watcher.onDidChange(() => provider.reloadIndex())
   watcher.onDidCreate(() => provider.reloadIndex())
   context.subscriptions.push(watcher)
 
-  // Command: open by ID via quick pick
   context.subscriptions.push(
     vscode.commands.registerCommand('specdojo.openById', async () => {
       const id = await vscode.window.showInputBox({
@@ -166,6 +165,90 @@ export function activate(context: vscode.ExtensionContext): void {
       })
     }),
   )
+
+  // Return the API so VSCode's markdown extension can call extendMarkdownIt
+  return { extendMarkdownIt }
 }
 
 export function deactivate(): void {}
+
+// Markdown preview support: converts [[id]] wikilinks into clickable links
+export function extendMarkdownIt(md: any): any {
+  // VS Code calls md.parse() directly (not md.render()).
+  // Wrapping md.parse lets us identify the source document before inline rules fire.
+  let _currentRenderFsPath = ''
+  const origParse = md.parse.bind(md)
+  md.parse = (src: string, env: any) => {
+    _currentRenderFsPath = ''
+    for (const doc of vscode.workspace.textDocuments) {
+      if (doc.languageId === 'markdown' && doc.getText() === src) {
+        _currentRenderFsPath = doc.uri.fsPath
+        break
+      }
+    }
+    return origParse(src, env)
+  }
+
+  // Use an inline rule so [[id]] is intercepted before markdown-it's link parser
+  // splits the brackets into separate tokens.
+  md.inline.ruler.before('link', 'specdojo_wikilink', (state: any, silent: boolean) => {
+    const pos = state.pos
+
+    // Must start with [[
+    if (state.src.charCodeAt(pos) !== 0x5B || state.src.charCodeAt(pos + 1) !== 0x5B) return false
+
+    // Find closing ]]
+    const closeIndex = state.src.indexOf(']]', pos + 2)
+    if (closeIndex === -1 || closeIndex > state.posMax) return false
+
+    const id = state.src.slice(pos + 2, closeIndex)
+    if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
+
+    if (!silent) {
+      // Lazy init
+      if (!_wsUri) {
+        const folder = vscode.workspace.workspaceFolders?.[0]
+        if (folder) {
+          _wsUri = folder.uri
+          _workspaceRoot = folder.uri.fsPath
+          loadIndex()
+        }
+      }
+
+      const entry = _wsUri ? _index[id] : undefined
+
+      if (entry) {
+        const colonIdx = entry.lastIndexOf(':')
+        const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1))
+        const filePath = hasLine ? entry.slice(0, colonIdx) : entry
+
+        // Compute relative path from current document to target.
+        // VS Code's preview resolves hrefs relative to the current document's directory.
+        let href: string
+        if (_currentRenderFsPath && _workspaceRoot) {
+          const currentDir = path.dirname(_currentRenderFsPath)
+          const targetAbs = path.join(_workspaceRoot, filePath)
+          href = path.relative(currentDir, targetAbs).replace(/\\/g, '/')
+          if (!href.startsWith('.')) href = './' + href
+        } else {
+          href = vscode.Uri.joinPath(_wsUri!, filePath).toString()
+        }
+        let token = state.push('link_open', 'a', 1)
+        token.attrSet('href', href)
+
+        token = state.push('text', '', 0)
+        token.content = id
+
+        state.push('link_close', 'a', -1)
+      } else {
+        const token = state.push('text', '', 0)
+        token.content = `[[${id}]]`
+      }
+    }
+
+    state.pos = closeIndex + 2
+    return true
+  })
+
+  return md
+}

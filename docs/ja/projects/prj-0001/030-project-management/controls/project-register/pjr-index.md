@@ -13,7 +13,7 @@ Project Register
 
 プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
 
-記載ルール、項目定義、type / status / priority の定義は `pjr-index-rulebook.md` に従います。
+記載ルール、項目定義、type / status / priority の定義は [[pjr-index-rulebook]] に従います。
 
 ## 1. 登録項目一覧
 
@@ -72,6 +72,8 @@ Project Register
 | PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | PM | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | - |
 | PJR-0051 | done | specdojo reviewコマンドの仕様作成 | reviewコマンドの仕様を作成 | todo | high | PM | 2026-05-20 | 2026-05-19 | command usage guideに仕様を作成 | - |
 | PJR-0052 | open | idからパスを解決するコマンドの作成 | idからファイルのパスを解決するためのDB構築と検索コマンドを作成 | todo | high | PM | 2026-05-20 | - | - | - |
+| PJR-0053 | open | templateのプレースホルダーの変更 | _CAPITAL_CASE_の形式に見直し | todo | high | PM | 2026-05-20 | - | - | - |
+| PJR-0054 | open | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | PM | 2026-05-20 | - | - | - |
 
 ## 4. 派生ビュー
 
