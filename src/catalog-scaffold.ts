@@ -53,7 +53,7 @@ export function deriveProjectId(catalogPath: string): string | null {
 }
 
 export function scaffoldDoc(template: DctTemplateDoc, projectId: string, size: ProjectSize): DctDoc {
-  const PLACEHOLDER = 'prj-0000'
+  const PLACEHOLDER = '_PRJ-0000_'
   const replace = (s: string) => s.replaceAll(PLACEHOLDER, projectId)
 
   const groups = template.groups

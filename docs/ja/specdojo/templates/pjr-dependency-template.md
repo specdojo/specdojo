@@ -1,18 +1,18 @@
 ---
-id: prj-0000:pjr-XXXX
-type: project-register-item
+id: _PRJ-0000_:_PJR-XXXX_
+type: project
 status: draft
 rulebook: pjr-index-rulebook
 item_type: dependency
 ---
 
-# PJR-XXXX _DEPENDENCY_TITLE_
+# _PJR-XXXX_ _DEPENDENCY_TITLE_
 
 ## 1. 基本情報
 
 | 項目       | 内容                |
 | ---------- | ------------------- |
-| ID         | PJR-XXXX            |
+| ID         | _PJR-XXXX_          |
 | 分類       | dependency          |
 | ステータス | open                |
 | 優先度     | high / medium / low |

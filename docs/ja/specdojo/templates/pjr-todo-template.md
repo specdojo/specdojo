@@ -1,18 +1,18 @@
 ---
-id: prj-0000:pjr-XXXX
-type: project-register-item
+id: _PRJ-0000_:_PJR-XXXX_
+type: project
 status: draft
 rulebook: pjr-index-rulebook
 item_type: todo
 ---
 
-# PJR-XXXX _TODO_TITLE_
+# _PJR-XXXX_ _TODO_TITLE_
 
 ## 1. 基本情報
 
 | 項目       | 内容                |
 | ---------- | ------------------- |
-| ID         | PJR-XXXX            |
+| ID         | _PJR-XXXX_          |
 | 分類       | todo                |
 | ステータス | open                |
 | 優先度     | high / medium / low |

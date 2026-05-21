@@ -17,6 +17,10 @@ pre-commit:
       glob: '*.md'
       run: npx markdownlint {staged_files}
 
+    validate-templates:
+      glob: 'docs/ja/specdojo/templates/**'
+      run: npm run validate:templates
+
 commit-msg:
   commands:
     commitlint:

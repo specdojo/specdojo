@@ -29,3 +29,15 @@ allOf:
       rulebook:
         $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
         description: "準拠する rulebook の ID。該当がない場合は none。"
+      item_type:
+        type: string
+        enum:
+          - todo
+          - risk
+          - issue
+          - question
+          - decision
+          - dependency
+          - note
+          - change-request
+        description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"

@@ -58,7 +58,8 @@
     "validate:schema:sch-strategy": "tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data \"docs/ja/**/sch-strategy-*.yaml\" --allow-empty",
     "validate:schema:file": "tsx tools/docs/src/validate-yaml-schema.ts",
     "validate:schema": "npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy",
-    "check": "npm run lint:md && npm run lint:fm && npm run validate:schema",
+    "validate:templates": "tsx tools/docs/src/validate-templates.ts",
+    "check": "npm run lint:md && npm run lint:fm && npm run validate:schema && npm run validate:templates",
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
     "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
     "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it -u node \"$name\" bash -lc \"cd /workspaces/specdojo && exec bash\" || echo \"matching container not found\"'"

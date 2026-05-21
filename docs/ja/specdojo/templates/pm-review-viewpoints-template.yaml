@@ -1,9 +1,9 @@
 # Template: project review viewpoints
-# Placeholder prj-0000 is replaced with the actual project_id on scaffold.
+# Placeholder _PRJ-0000_ is replaced with the actual project_id on scaffold.
 id: pm-review-viewpoints-template
 type: template
 status: draft
-project_id: prj-0000
+project_id: _PRJ-0000_
 
 # レビュー観点一覧。
 # Role code の語彙は pm-roles.yaml を参照する。
