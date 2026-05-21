@@ -38,7 +38,7 @@ function renderDoneCriteria(deliverables: DctDeliverableItem[]): string[] {
     lines.push(`**\`${item.local_id}\`** の完了条件:`)
     lines.push('')
     for (const criterion of item.done_criteria) {
-      lines.push(`- ${criterion}`)
+      lines.push(`- ${criterion.text}`)
     }
   }
   return lines

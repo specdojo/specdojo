@@ -10,6 +10,7 @@ import Ajv2020 from 'ajv/dist/2020'
 import { scaffoldDoc } from '../../../src/catalog-scaffold.js'
 import type { ProjectSize } from '../../../src/catalog-scaffold.js'
 import type { DctTemplateDoc } from '../../../src/catalog-types.js'
+import { expandViewpointsDoc } from '../../../src/review-plan.js'
 
 type JsonObject = Record<string, unknown>
 
@@ -29,7 +30,15 @@ type DctScaffoldRule = {
   size: ProjectSize
 }
 
-type TemplateRule = SubstitutionRule | DctScaffoldRule
+// expandViewpointsDoc() を呼んで展開した doc を pm-review-viewpoints.schema.yaml で検証する
+type ReviewScaffoldRule = {
+  kind: 'review-scaffold'
+  pattern: string
+  schema: string
+  projectId: string
+}
+
+type TemplateRule = SubstitutionRule | DctScaffoldRule | ReviewScaffoldRule
 
 const RULES: TemplateRule[] = [
   {
@@ -46,14 +55,10 @@ const RULES: TemplateRule[] = [
     substitutions: [['_PRJ-0000_:_PJR-XXXX_', 'prj-test-0001:pjr-0001']],
   },
   {
-    kind: 'yaml',
+    kind: 'review-scaffold',
     pattern: 'docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml',
     schema: 'docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml',
-    substitutions: [
-      ['pm-review-viewpoints-template', 'prj-test-0001:pm-review-viewpoints'],
-      ['type: template', 'type: project'],
-      ['project_id: _PRJ-0000_', 'project_id: prj-0001'],
-    ],
+    projectId: 'prj-0001',
   },
 ]
 
@@ -95,6 +100,10 @@ function expandData(rule: TemplateRule, filePath: string): JsonObject {
   if (rule.kind === 'dct-scaffold') {
     const template = load(raw) as DctTemplateDoc
     return scaffoldDoc(template, rule.projectId, rule.size) as unknown as JsonObject
+  }
+
+  if (rule.kind === 'review-scaffold') {
+    return expandViewpointsDoc(resolve(filePath), rule.projectId) as JsonObject
   }
 
   const target = rule.kind === 'md-frontmatter' ? extractFrontmatter(raw, filePath) : raw

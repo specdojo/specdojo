@@ -10,6 +10,8 @@ export type SpecDojoProjectConfig = {
   schedule_path: string
   execution_path: string
   members_path?: string
+  reviews_path?: string
+  viewpoints_path?: string
 }
 
 export type ProjectMember = {

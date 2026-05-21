@@ -1,6 +1,12 @@
 export type DctKind = 'work' | 'control' | 'generated'
 export type DctStatus = 'draft' | 'ready' | 'deprecated'
 
+export type CriteriaItem = {
+  text: string
+  roles: string[]
+  viewpoint: string
+}
+
 export type DctDeliverableItem = {
   local_id: string
   artifact_code?: string
@@ -9,7 +15,8 @@ export type DctDeliverableItem = {
   depends_on?: string[]
   overview: string
   path?: string
-  done_criteria?: string[]
+  rulebook?: string
+  done_criteria?: CriteriaItem[]
   note?: string
   min_size?: string // template-only: 'small' | 'medium' | 'large'
 }

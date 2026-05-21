@@ -5,6 +5,7 @@ import { registerExecCommands } from './exec.js'
 import { registerCatalogCommands } from './catalog.js'
 import { registerScheduleCommands } from './schedule.js'
 import { registerIndexCommands } from './index-command.js'
+import { registerReviewCommands } from './review.js'
 
 function main(): void {
   const program = new Command()
@@ -17,6 +18,7 @@ function main(): void {
   registerCatalogCommands(program)
   registerScheduleCommands(program)
   registerIndexCommands(program)
+  registerReviewCommands(program)
 
   program.parse(process.argv)
 }

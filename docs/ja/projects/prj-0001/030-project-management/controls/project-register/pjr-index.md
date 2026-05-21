@@ -68,14 +68,14 @@ Project Register
 | PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](./pjr-0046-draft-agent.md) |
 | PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | - |
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
-| PJR-0049 | open | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | 2026-05-19 | - | - | - |
+| PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | - |
 | PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | ARC | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | - |
 | PJR-0051 | done | specdojo reviewコマンドの仕様作成 | reviewコマンドの仕様を作成 | todo | high | ARC | 2026-05-20 | 2026-05-19 | command usage guideに仕様を作成 | - |
 | PJR-0052 | done | idからパスを解決するコマンドの作成 | idからファイルのパスを解決するためのDB構築と検索コマンドを作成 | todo | high | ARC | 2026-05-20 | 2026-05-21 | specdojo index コマンドを作成 | - |
 | PJR-0053 | done | templateのプレースホルダーの変更 | _CAPITAL_CASE_の形式に見直し | todo | high | ARC | 2026-05-20 | 2026-05-21 | PJR-0055, 0056が残件 | - |
 | PJR-0054 | done | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | ARC | 2026-05-20 | 2026-05-21 | Markdown preview,VitePressにidリンクを反映 | - |
 | PJR-0055 | open | pjr個票生成コマンド作成 | pjr個票をテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | - | - | - |
-| PJR-0056 | open | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | - | - | - |
+| PJR-0056 | done | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-21 | specdojo review scaffoldを作成 | - |
 
 ## 4. 派生ビュー
 
