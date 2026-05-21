@@ -79,4 +79,3 @@ CLAUDE.local.md
 # specdojo VSCode extension
 tools/vscode-specdojo/node_modules/
 tools/vscode-specdojo/out/
-tools/vscode-specdojo/*.vsix

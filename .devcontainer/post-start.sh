@@ -62,6 +62,14 @@ ls -ld /home/node/.config "$GIT_CONFIG_DIR" || true
 ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 
+echo "Installing SpecDojo VSCode extension..."
+VSIX="/workspaces/specdojo/tools/vscode-specdojo/vscode-specdojo-0.1.0.vsix"
+if ! code --list-extensions 2>/dev/null | grep -q "specdojo.vscode-specdojo"; then
+  code --install-extension "$VSIX" || true
+else
+  echo "SpecDojo extension already installed."
+fi
+
 echo "Checking Local LLM API..."
 if curl -s "${OLLAMA_BASE_URL:-http://host.docker.internal:11434}/api/tags" >/dev/null; then
   echo "Ollama is reachable."
