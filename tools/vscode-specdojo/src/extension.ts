@@ -127,9 +127,11 @@ export function activate(context: vscode.ExtensionContext) {
   )
 
   const watcher = vscode.workspace.createFileSystemWatcher(`**/${INDEX_REL}`)
-  watcher.onDidChange(() => provider.reloadIndex())
-  watcher.onDidCreate(() => provider.reloadIndex())
-  context.subscriptions.push(watcher)
+  context.subscriptions.push(
+    watcher,
+    watcher.onDidChange(() => provider.reloadIndex()),
+    watcher.onDidCreate(() => provider.reloadIndex()),
+  )
 
   context.subscriptions.push(
     vscode.commands.registerCommand('specdojo.openById', async () => {
@@ -139,17 +141,11 @@ export function activate(context: vscode.ExtensionContext) {
       })
       if (!id) return
 
-      const ws = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-      if (!ws) return
-      const indexPath = path.join(ws, INDEX_REL)
-      if (!fs.existsSync(indexPath)) {
-        vscode.window.showWarningMessage(
-          `SpecDojo index not found. Run: specdojo index build`,
-        )
+      if (!_wsUri || Object.keys(_index).length === 0) {
+        vscode.window.showWarningMessage('SpecDojo index not found. Run: specdojo index build')
         return
       }
-      const data = JSON.parse(fs.readFileSync(indexPath, 'utf8')) as DocIndex
-      const entry = data.entries[id]
+      const entry = _index[id]
       if (!entry) {
         vscode.window.showWarningMessage(`ID not found: ${id}`)
         return
@@ -158,7 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
       const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1))
       const filePath = hasLine ? entry.slice(0, colonIdx) : entry
       const lineNumber = hasLine ? parseInt(entry.slice(colonIdx + 1), 10) - 1 : 0
-      const uri = vscode.Uri.file(path.join(ws, filePath))
+      const uri = vscode.Uri.joinPath(_wsUri, filePath)
       const doc = await vscode.workspace.openTextDocument(uri)
       await vscode.window.showTextDocument(doc, {
         selection: new vscode.Range(lineNumber, 0, lineNumber, 0),
@@ -205,16 +201,6 @@ export function extendMarkdownIt(md: any): any {
     if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
 
     if (!silent) {
-      // Lazy init
-      if (!_wsUri) {
-        const folder = vscode.workspace.workspaceFolders?.[0]
-        if (folder) {
-          _wsUri = folder.uri
-          _workspaceRoot = folder.uri.fsPath
-          loadIndex()
-        }
-      }
-
       const entry = _wsUri ? _index[id] : undefined
 
       if (entry) {
