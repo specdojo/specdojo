@@ -9,10 +9,23 @@ import {
 } from '../../tools/docs/src/gen-mermaid-svg'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+import { existsSync, readFileSync } from 'node:fs'
 
 const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url))
 const DOCS_ROOT = path.resolve(CONFIG_DIR, '..')
 const MERMAID_OUT_DIR = path.join(DOCS_ROOT, 'public', 'mermaid')
+
+// [[id]] wikilink index — loaded once at build/dev startup
+function loadDocIndex(docsRoot: string): Record<string, string> {
+  const p = path.join(docsRoot, '.specdojo', 'doc-index.json')
+  if (!existsSync(p)) return {}
+  try {
+    return (JSON.parse(readFileSync(p, 'utf8')) as { entries: Record<string, string> }).entries
+  } catch {
+    return {}
+  }
+}
+const docIndex = loadDocIndex(DOCS_ROOT)
 
 const specdojoItems = {
   ja: {
@@ -340,6 +353,54 @@ export default defineConfig({
           ? defaultFence(tokens, idx, options, env, self)
           : self.renderToken(tokens, idx, options)
       }
+
+      // [[id]] wikilink → VitePress 内部リンク
+      md.inline.ruler.before('link', 'specdojo_wikilink', (state: any, silent: boolean) => {
+        const pos = state.pos
+        if (state.src.charCodeAt(pos) !== 0x5B || state.src.charCodeAt(pos + 1) !== 0x5B) return false
+
+        const closeIndex = state.src.indexOf(']]', pos + 2)
+        if (closeIndex === -1 || closeIndex > state.posMax) return false
+
+        const id = state.src.slice(pos + 2, closeIndex)
+        if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
+
+        if (!silent) {
+          const entry = docIndex[id]
+          if (entry) {
+            // Strip line number suffix (e.g. "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml")
+            const colonIdx = entry.lastIndexOf(':')
+            const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1))
+            const entryPath = hasLine ? entry.slice(0, colonIdx) : entry
+
+            // Index entries are workspace-root-relative ("docs/ja/...").
+            // Strip "docs/" to get docs-root-relative path ("ja/...").
+            const docsRelTarget = entryPath.startsWith('docs/') ? entryPath.slice(5) : entryPath
+
+            // Compute href relative to the current file (VitePress sets env.relativePath)
+            const currentRelPath = state.env?.relativePath as string | undefined
+            let href: string
+            if (currentRelPath) {
+              const rel = path.relative(path.dirname(currentRelPath), docsRelTarget).replace(/\\/g, '/')
+              href = rel.startsWith('.') ? rel : './' + rel
+            } else {
+              href = '/' + docsRelTarget
+            }
+
+            let token = state.push('link_open', 'a', 1)
+            token.attrSet('href', href)
+            token = state.push('text', '', 0)
+            token.content = id
+            state.push('link_close', 'a', -1)
+          } else {
+            const token = state.push('text', '', 0)
+            token.content = `[[${id}]]`
+          }
+        }
+
+        state.pos = closeIndex + 2
+        return true
+      })
     },
   },
 
