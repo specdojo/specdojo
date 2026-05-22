@@ -76,6 +76,7 @@ Project Register
 | PJR-0054 | done | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | ARC | 2026-05-20 | 2026-05-21 | Markdown preview,VitePressにidリンクを反映 | - |
 | PJR-0055 | open | pjr個票生成コマンド作成 | pjr個票をテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | - | - | - |
 | PJR-0056 | done | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-21 | specdojo review scaffoldを作成 | - |
+| PJR-0057 | done | `[[id]]`を別名表示できるようにする| `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | - |
 
 ## 4. 派生ビュー
 

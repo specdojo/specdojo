@@ -362,7 +362,10 @@ export default defineConfig({
         const closeIndex = state.src.indexOf(']]', pos + 2)
         if (closeIndex === -1 || closeIndex > state.posMax) return false
 
-        const id = state.src.slice(pos + 2, closeIndex)
+        const inner = state.src.slice(pos + 2, closeIndex)
+        const pipeIdx = inner.indexOf('|')
+        const id = pipeIdx === -1 ? inner : inner.slice(0, pipeIdx)
+        const displayText = pipeIdx === -1 ? id : inner.slice(pipeIdx + 1)
         if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
 
         if (!silent) {
@@ -390,11 +393,11 @@ export default defineConfig({
             let token = state.push('link_open', 'a', 1)
             token.attrSet('href', href)
             token = state.push('text', '', 0)
-            token.content = id
+            token.content = displayText
             state.push('link_close', 'a', -1)
           } else {
             const token = state.push('text', '', 0)
-            token.content = `[[${id}]]`
+            token.content = `[[${inner}]]`
           }
         }
 

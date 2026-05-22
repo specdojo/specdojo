@@ -10,8 +10,8 @@ interface DocIndex {
 
 const INDEX_REL = 'docs/.specdojo/doc-index.json'
 
-// [[id]] in any file
-const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)\]\]/g
+// [[id]] or [[id|alt]] in any file — group1=id, group2=alt (undefined when absent)
+const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)(?:\|([^\]]*))?\]\]/g
 
 // YAML single-value keys where the value is a document ID
 const YAML_SINGLE_KEY_RE =
@@ -75,10 +75,16 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
     WIKILINK_RE.lastIndex = 0
     while ((m = WIKILINK_RE.exec(text)) !== null) {
       const id = m[1]
+      const alt = m[2]
       const target = resolveToUri(id)
       if (target) {
-        const start = document.positionAt(m.index + 2)
-        const end = document.positionAt(m.index + 2 + id.length)
+        // [[id|alt]] → alt をクリック可能領域にする。[[id]] → id をクリック可能領域にする
+        const linkStart = alt !== undefined
+          ? m.index + 2 + id.length + 1  // skip past [[id|
+          : m.index + 2
+        const linkText = alt !== undefined ? alt : id
+        const start = document.positionAt(linkStart)
+        const end = document.positionAt(linkStart + linkText.length)
         links.push(new vscode.DocumentLink(new vscode.Range(start, end), target))
       }
     }
@@ -197,7 +203,10 @@ export function extendMarkdownIt(md: any): any {
     const closeIndex = state.src.indexOf(']]', pos + 2)
     if (closeIndex === -1 || closeIndex > state.posMax) return false
 
-    const id = state.src.slice(pos + 2, closeIndex)
+    const inner = state.src.slice(pos + 2, closeIndex)
+    const pipeIdx = inner.indexOf('|')
+    const id = pipeIdx === -1 ? inner : inner.slice(0, pipeIdx)
+    const displayText = pipeIdx === -1 ? id : inner.slice(pipeIdx + 1)
     if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
 
     if (!silent) {
@@ -223,12 +232,12 @@ export function extendMarkdownIt(md: any): any {
         token.attrSet('href', href)
 
         token = state.push('text', '', 0)
-        token.content = id
+        token.content = displayText
 
         state.push('link_close', 'a', -1)
       } else {
         const token = state.push('text', '', 0)
-        token.content = `[[${id}]]`
+        token.content = `[[${inner}]]`
       }
     }
 
