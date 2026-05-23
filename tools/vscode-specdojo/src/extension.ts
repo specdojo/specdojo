@@ -4,7 +4,6 @@ import * as fs from 'fs'
 
 interface DocIndex {
   version: number
-  generated_at: string
   entries: Record<string, string>
 }
 

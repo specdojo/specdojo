@@ -11,7 +11,6 @@ import yaml from 'js-yaml'
 
 export interface DocIndex {
   version: number
-  generated_at: string
   // id → path  or  id → "path:line" (1-based line number)
   entries: Record<string, string>
 }
@@ -227,7 +226,6 @@ export function buildDocIndex(
 
   const index: DocIndex = {
     version: 1,
-    generated_at: new Date().toISOString(),
     entries,
   }
 
