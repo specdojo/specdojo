@@ -13,10 +13,6 @@
     "types": ["node"]
   },
   "include": [
-    "src/**/*.ts",
-    "../../src/catalog-scaffold.ts",
-    "../../src/catalog-types.ts",
-    "../../src/review-plan.ts",
-    "../../src/review-types.ts"
+    "src/**/*.ts"
   ]
 }

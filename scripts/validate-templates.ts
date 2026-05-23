@@ -7,10 +7,10 @@ import fg from 'fast-glob'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import Ajv2020 from 'ajv/dist/2020'
-import { scaffoldDoc } from '../../../src/catalog-scaffold.js'
-import type { ProjectSize } from '../../../src/catalog-scaffold.js'
-import type { DctTemplateDoc } from '../../../src/catalog-types.js'
-import { expandViewpointsDoc } from '../../../src/review-plan.js'
+import { scaffoldDoc } from '../src/catalog-scaffold.js'
+import type { ProjectSize } from '../src/catalog-scaffold.js'
+import type { DctTemplateDoc } from '../src/catalog-types.js'
+import { expandViewpointsDoc } from '../src/review-plan.js'
 
 type JsonObject = Record<string, unknown>
 

@@ -59,7 +59,7 @@
     "validate:schema:file": "tsx tools/docs/src/validate-yaml-schema.ts",
     "validate:schema:pjr-index": "tsx tools/docs/src/validate-md-content.ts --schema docs/specdojo/schemas/v1/pjr-index.schema.yaml --data \"docs/ja/**/pjr-index.md\"",
     "validate:schema": "npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:pjr-index",
-    "validate:templates": "tsx tools/docs/src/validate-templates.ts",
+    "validate:templates": "tsx scripts/validate-templates.ts",
     "check": "npm run lint:md && npm run lint:fm && npm run validate:schema && npm run validate:templates",
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
     "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
