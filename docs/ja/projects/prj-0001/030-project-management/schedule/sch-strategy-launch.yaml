@@ -30,21 +30,21 @@ phases:
     - id: draft
       name: たたき台作成
       task_suffix: "010"
-      duration_days: 0.25   # 1〜2h 相当
+      duration_days: 0.25 # 1〜2h 相当
     - id: review
       name: レビュー・修正
       task_suffix: "020"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.125 # 0.5〜1h 相当
     - id: finalize
       name: 完成版仕上げ
       task_suffix: "030"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.125 # 0.5〜1h 相当
 
   yaml:
     - id: draft
       name: たたき台作成
       task_suffix: "010"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.125 # 0.5〜1h 相当
     - id: validate
       name: スキーマ検証
       task_suffix: "020"
@@ -52,11 +52,11 @@ phases:
     - id: review
       name: レビュー・修正
       task_suffix: "030"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.125 # 0.5〜1h 相当
     - id: finalize
       name: 完成版仕上げ
       task_suffix: "040"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.125 # 0.5〜1h 相当
 
 # タスク ID パターン（domain_code・artifact_code・phase_suffix を展開）
 task_id_pattern: "T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}"
@@ -85,6 +85,7 @@ owner_rules:
       - pm-communication-plan
       - sch-milestones
       - sch-track-launch
+      - sch-strategy-launch
       - pm-raci
     owner: PM
 
@@ -135,3 +136,18 @@ group_milestones:
 cross_domain_dependencies:
   - dependent: pm-organization
     requires: prj-overview
+
+# 初期状態で作成済みの成果物を登録する
+# completed_through を省略した場合は全フェーズ完了（最終フェーズまで done）とみなす
+# completed_through には phases[].id（draft / review / finalize / validate 等）を指定する
+# by には pm-members.yaml の nickname を指定する
+initial_state:
+  completed_deliverables:
+    - local_id: sch-defaults
+      completed_on: "2026-05-23"
+      by: indie
+      note: 初期投入時点で作成済み
+    - local_id: sch-strategy-launch
+      completed_on: "2026-05-23"
+      by: indie
+      note: 初期投入時点で作成済み

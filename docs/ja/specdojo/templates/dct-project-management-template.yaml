@@ -16,13 +16,14 @@ groups:
   - name: 管理計画
     base_path: 010-management-plan
     deliverables:
-      - local_id: pm-plan                  # small+
+      - local_id: pm-plan # small+
         artifact_code: PLAN
         name: プロジェクト管理計画
         kind: work
         depends_on: []
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
+        rulebook: pm-plan-rulebook
         done_criteria:
           - text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
             roles: [PO]
@@ -49,6 +50,7 @@ groups:
           - pm-plan
         overview: 報告・連絡・会議体の計画を定義
         path: pm-communication-plan.md
+        rulebook: pm-communication-plan-rulebook
         done_criteria:
           - text: 報告・連絡・会議体の計画を承認できる粒度で記述されていること
             roles: [PO]
@@ -75,6 +77,7 @@ groups:
           - pm-plan
         overview: 品質目標・レビュー方針・品質基準を定義
         path: pm-quality-management-plan.md
+        rulebook: pm-quality-management-plan-rulebook
         done_criteria:
           - text: 品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
             roles: [PO]
@@ -96,7 +99,7 @@ groups:
   - name: 組織体制
     base_path: 020-organization
     deliverables:
-      - local_id: pm-organization          # small+
+      - local_id: pm-organization # small+
         artifact_code: ORG
         name: 組織定義
         kind: work
@@ -104,6 +107,7 @@ groups:
           - prj-overview
         overview: ロール・メンバー構成の方針と設計根拠を定義
         path: pm-organization.md
+        rulebook: pm-organization-rulebook
         done_criteria:
           - text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
             roles: [PO]
@@ -118,7 +122,7 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
 
-      - local_id: pm-roles                 # small+
+      - local_id: pm-roles # small+
         artifact_code: ROLE
         name: ロール定義
         kind: work
@@ -126,6 +130,7 @@ groups:
           - pm-organization
         overview: 全 Role code を machine-readable な YAML として一覧化する
         path: pm-roles.yaml
+        rulebook: pm-roles-rulebook
         done_criteria:
           - text: 全ロールコードとプロジェクト固有メモを承認できること
             roles: [PO]
@@ -152,7 +157,7 @@ groups:
             roles: [OPS]
             viewpoint: vp-ops-operability
 
-      - local_id: pm-members               # small+
+      - local_id: pm-members # small+
         artifact_code: MBR
         name: メンバー定義
         kind: work
@@ -161,6 +166,7 @@ groups:
           - pm-roles
         overview: yaml で実行主体（人間・agent）と担当ロールリスト（roles）を定義
         path: pm-members.yaml
+        rulebook: pm-members-rulebook
         done_criteria:
           - text: 実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
             roles: [PO]
@@ -187,6 +193,7 @@ groups:
           - pm-organization
         overview: 成果物・プロセスごとの責任分担マトリクスを定義（中規模以上）
         path: pm-raci.md
+        rulebook: pm-raci-rulebook
         done_criteria:
           - text: 成果物・プロセスごとの責任分担マトリクスを承認できること
             roles: [PO]
@@ -213,6 +220,7 @@ groups:
         depends_on: []
         overview: 識別済み検討項目と対応策を管理（台帳）
         path: pjr-index.md
+        rulebook: pjr-index-rulebook
 
       - local_id: pjr-NNNN-TERM
         artifact_code: CTLITM
@@ -313,13 +321,14 @@ groups:
   - name: スケジュール
     base_path: schedule
     deliverables:
-      - local_id: sch-milestones           # small+
+      - local_id: sch-milestones # small+
         artifact_code: SCHMS
         name: マイルストーン定義
-        kind: work
+        kind: generated
         depends_on: []
         overview: プロジェクト全体のマイルストーンを定義
         path: sch-milestones.yaml
+        rulebook: sch-rulebook
         done_criteria:
           - text: プロジェクト全体のマイルストーンを承認できること
             roles: [PO]
@@ -342,6 +351,7 @@ groups:
         depends_on: []
         overview: スケジュールのデフォルト設定を定義
         path: sch-defaults.yaml
+        rulebook: sch-rulebook
         done_criteria:
           - text: カレンダー・開始日などのデフォルト設定を承認できること
             roles: [PO]
@@ -360,10 +370,11 @@ groups:
         artifact_code: SCHTLNCH
         min_size: medium
         name: Launch スケジュール定義
-        kind: work
+        kind: generated
         depends_on: []
         overview: Launch フェーズの詳細スケジュールを定義
         path: sch-track-launch.yaml
+        rulebook: sch-rulebook
         done_criteria:
           - text: Launch フェーズのタスク・マイルストーン計画を承認できること
             roles: [PO]
@@ -378,47 +389,26 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
 
-      - local_id: sch-config-launch
-        artifact_code: SCHCFG
+      - local_id: sch-strategy-launch
+        artifact_code: SCHSTG
         min_size: medium
-        name: Launch スケジュール設定
+        name: Launch スケジュール戦略定義
         kind: work
         depends_on: []
-        overview: Launch フェーズの詳細スケジュールの設定を定義
-        path: sch-config-launch.yaml
+        overview: フェーズ定義・オーナー割当・初期状態を含む Launch トラック生成戦略を定義
+        path: sch-strategy-launch.yaml
+        rulebook: sch-rulebook
         done_criteria:
-          - text: 担当チーム・エージェントモードなどトラック設定を承認できること
+          - text: owner_rules・フェーズ定義・initial_state を含むトラック戦略を承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
-          - text: 担当割り当てが確認できること
-            roles: [BA]
-            viewpoint: vp-ba-stakeholder-clarity
+          - text: owner_rules の担当割り当てがプロジェクト体制と整合していること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
           - text: validate:schema を通過していること
             roles: [ARC]
             viewpoint: vp-arc-document-structure
-          - text: 設定値の妥当性が確認できること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
-
-      - local_id: sch-agent-overrides-launch
-        artifact_code: SCHAOV
-        min_size: medium
-        name: Launch スケジュールエージェント上書き設定
-        kind: work
-        depends_on: []
-        overview: Launch フェーズの詳細スケジュールのエージェント上書き設定を定義
-        path: sch-agent-overrides-launch.yaml
-        done_criteria:
-          - text: 例外的なエージェントモード上書き設定を承認できること
-            roles: [PO]
-            viewpoint: vp-po-decision-readiness
-          - text: 手動確認が必要なタスクが識別されていること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
-          - text: validate:schema を通過していること
-            roles: [ARC]
-            viewpoint: vp-arc-document-structure
-          - text: 品質関連タスクのエージェントモードが妥当であること
+          - text: phases・owner_rules・initial_state の各設定値の妥当性が確認できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
 
@@ -435,6 +425,7 @@ groups:
             kind: control
             depends_on: []
             overview: 定期的な進捗状況の報告
+            rulebook: pr-rulebook
             note: "YYYY-MM-DD は報告日"
 
       - name: 議事録
@@ -446,4 +437,5 @@ groups:
             kind: control
             depends_on: []
             overview: 会議の決定事項・アクションを記録
+            rulebook: mm-rulebook
             note: "YYYY-MM-DD は会議日"

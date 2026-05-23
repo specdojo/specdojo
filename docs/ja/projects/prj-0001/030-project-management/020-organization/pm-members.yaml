@@ -13,12 +13,17 @@ project_id: prj-0001
 # タスク側の owner には pm-roles.yaml に存在する Role code を使う。
 
 members:
-  - nickname: po
-    display_name: Project Owner
+  - nickname: indie
+    display_name: Indie Hacker
     email: null
     roles:
       - PO
       - PM
+      - BA
+      - ARC
+      - DEV
+      - QE
+      - UX
       - OPS
     type: human
     persona: final-decision-maker
@@ -29,7 +34,7 @@ members:
       - publication
       - accountability
     scheduler_strategy: critical-first
-    note: 小規模運用における人間の最終判断主体。PM・OPS 責務を兼務する。 公開文書では個人名と連絡先を記載しない。
+    note: 個人開発における人間の最終判断主体。全責務を兼務する。 公開文書では個人名と連絡先を記載しない。
   - nickname: po-agent
     display_name: Project Owner Agent
     email: null

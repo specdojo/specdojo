@@ -128,16 +128,10 @@ rulebook: dct-rulebook
 
 | local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- | --- |
-| `sch-milestones` | `SCHMS` | マイルストーン定義 | work | - | プロジェクト全体のマイルストーンを定義 |
+| `sch-milestones` | `SCHMS` | マイルストーン定義 | generated | - | プロジェクト全体のマイルストーンを定義 |
 | `sch-defaults` | `SCHDEF` | スケジュールデフォルト定義 | work | - | スケジュールのデフォルト設定を定義 |
-| `sch-track-launch` | `SCHTLNCH` | Launch スケジュール定義 | work | - | Launch フェーズの詳細スケジュールを定義 |
-
-**`sch-milestones`** の完了条件:
-
-- プロジェクト全体のマイルストーンを承認できること
-- ビジネスマイルストーンが含まれていること
-- 技術マイルストーンが含まれていること
-- 品質ゲートが含まれていること
+| `sch-track-launch` | `SCHTLNCH` | Launch スケジュール定義 | generated | - | Launch フェーズの詳細スケジュールを定義 |
+| `sch-strategy-launch` | `SCHSTG` | Launch スケジュール戦略定義 | work | - | フェーズ定義・オーナー割当・初期状態を含む Launch トラック生成戦略を定義 |
 
 **`sch-defaults`** の完了条件:
 
@@ -146,12 +140,12 @@ rulebook: dct-rulebook
 - validate:schema を通過していること
 - 設定値の妥当性が確認できること
 
-**`sch-track-launch`** の完了条件:
+**`sch-strategy-launch`** の完了条件:
 
-- Launch フェーズのタスク・マイルストーン計画を承認できること
-- ビジネスタスクの順序・依存関係が確認できること
-- 技術タスクのスコープと順序が確認できること
-- 品質ゲート・レビュータスクが含まれていること
+- owner_rules・フェーズ定義・initial_state を含むトラック戦略を承認できること
+- owner_rules の担当割り当てがプロジェクト体制と整合していること
+- validate:schema を通過していること
+- phases・owner_rules・initial_state の各設定値の妥当性が確認できること
 
 ## 7. レポート
 

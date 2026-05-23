@@ -487,7 +487,13 @@ generated/
 
 `catalog_path` に `dct-*.yaml` を新規生成します。`docs/ja/specdojo/templates/` のテンプレートをもとに、プロジェクト規模に応じた成果物セットを出力します。
 
+プロジェクトサイズは `dct-index.md` の `size` フィールドが SSOT です。`--size` を省略すると `dct-index.md` から読み込みます。
+
 ```bash
+# --size 省略時は dct-index.md の size フィールドを参照
+specdojo catalog scaffold --project shj-0001
+
+# --size 指定時はその値を優先（dct-index.md の値より優先される）
 specdojo catalog scaffold --project shj-0001 --size medium
 ```
 
@@ -495,7 +501,7 @@ specdojo catalog scaffold --project shj-0001 --size medium
 
 | オプション | 説明 | デフォルト |
 | --- | --- | --- |
-| `--size` | `small` / `medium` / `large` | `medium` |
+| `--size` | `small` / `medium` / `large` | `dct-index.md` の `size` フィールド（未設定時はエラー） |
 | `--project-id` | 生成ファイルに埋め込む project_id（省略時は `catalog_path` から自動導出） | 自動導出 |
 | `--force` | 既存ファイルを上書き | `false` |
 

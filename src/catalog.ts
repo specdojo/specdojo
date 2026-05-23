@@ -7,6 +7,18 @@ import { buildCatalog, validateDctDoc } from './catalog-build.js'
 import { runScaffold, type ProjectSize } from './catalog-scaffold.js'
 import type { DctDoc } from './catalog-types.js'
 
+function readSizeFromIndex(catalogPath: string): ProjectSize | null {
+  const indexPath = join(catalogPath, 'dct-index.md')
+  if (!existsSync(indexPath)) return null
+  const content = readFileSync(indexPath, 'utf8')
+  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!fm) return null
+  const m = fm[1].match(/^size:\s*(.+)$/m)
+  const size = m?.[1]?.trim()
+  if (size === 'small' || size === 'medium' || size === 'large') return size
+  return null
+}
+
 function resolveCatalogPath(opts: { project?: string }): string {
   loadEnv()
   const { config, configPath } = loadConfig()
@@ -138,16 +150,23 @@ export function registerCatalogCommands(program: Command): void {
     .command('scaffold')
     .description('Create dct-*.yaml from templates (small|medium|large)')
   addProjectOption(sccmd)
-  sccmd.option('--size <size>', 'Project size: small|medium|large', 'medium')
+  sccmd.option('--size <size>', 'Project size: small|medium|large (default: read from dct-index.md)')
   sccmd.option('--project-id <projectId>', 'Project ID to embed (e.g. prj-0001); derived from catalog_path if omitted')
   sccmd.option('--force', 'Overwrite existing files', false)
   sccmd.action(opts => {
     try {
       const catalogPath = resolveCatalogPath(opts)
-      const size = (opts.size ?? 'medium') as ProjectSize
-      if (!['small', 'medium', 'large'].includes(size)) {
-        throw new Error(`Invalid --size: "${size}". Must be one of: small|medium|large`)
+
+      const explicitSize = opts.size as string | undefined
+      if (explicitSize && !['small', 'medium', 'large'].includes(explicitSize)) {
+        throw new Error(`Invalid --size: "${explicitSize}". Must be one of: small|medium|large`)
       }
+      const size: ProjectSize = (explicitSize as ProjectSize | undefined) ??
+        readSizeFromIndex(catalogPath) ??
+        (() => { throw new Error(
+          `--size not specified and dct-index.md has no "size" field.\n` +
+          `Use --size <small|medium|large> or add size: to dct-index.md frontmatter.`
+        ) })()
 
       const templatesPath = resolve(specdojoRootDir(), 'docs/ja/specdojo/templates')
       if (!existsSync(templatesPath)) {

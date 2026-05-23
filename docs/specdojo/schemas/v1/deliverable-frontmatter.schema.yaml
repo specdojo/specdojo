@@ -41,3 +41,7 @@ allOf:
           - note
           - change-request
         description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
+      size:
+        type: string
+        enum: ["small", "medium", "large"]
+        description: "scaffold 時に選択したプロジェクトサイズ。dct-index に記録し、テンプレートの min_size フィルタの根拠とする。"

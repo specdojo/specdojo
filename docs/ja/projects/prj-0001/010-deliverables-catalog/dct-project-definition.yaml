@@ -7,7 +7,6 @@ project_id: prj-0001
 domain: project-definition
 domain_code: PJD
 base_path: /docs/ja/projects/prj-0001/020-project-definition
-
 groups:
   - deliverables:
       - local_id: prj-overview
@@ -34,54 +33,6 @@ groups:
           - text: プロジェクトの目的・スコープを計画立案の基礎として確認できること
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
-
-      - local_id: prj-stakeholder-register
-        artifact_code: STAKEHOLDER
-        name: ステークホルダー登録簿
-        kind: work
-        depends_on:
-          - prj-overview
-        overview: 関係者の役割・関心・影響度を一覧化
-        path: prj-stakeholder-register.md
-        rulebook: prj-stakeholder-register-rulebook
-        done_criteria:
-          - text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
-            roles: [BA]
-            viewpoint: vp-ba-stakeholder-clarity
-          - text: 合意対象と意思決定者が識別できること
-            roles: [PO]
-            viewpoint: vp-po-purpose-alignment
-          - text: 技術的意思決定者・承認者が識別できること
-            roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: 品質に影響するステークホルダーが確認できること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
-
-      - local_id: prj-charter
-        artifact_code: CHARTER
-        name: プロジェクト憲章
-        kind: work
-        depends_on:
-          - prj-overview
-          - prj-stakeholder-register
-        overview: プロジェクトの正式な認可と権限委譲を文書化
-        path: prj-charter.md
-        rulebook: prj-charter-rulebook
-        done_criteria:
-          - text: 業務上の目的・認可条件・期待効果が明確であること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
-          - text: 正式認可・権限委譲・予算枠を承認できる情報が含まれていること
-            roles: [PO]
-            viewpoint: vp-po-decision-readiness
-          - text: 技術的制約・前提が読み取れること
-            roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: 品質目標・受入基準への参照が確認できること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
-
       - local_id: prj-scope
         artifact_code: SCOPE
         name: プロジェクトスコープ
@@ -107,7 +58,6 @@ groups:
           - text: スコープ境界をスケジュール計画の前提として確認できること
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
-
       - local_id: prj-success-criteria-and-acceptance-criteria
         artifact_code: SUCCESS
         name: 成功基準と受入条件
@@ -130,7 +80,51 @@ groups:
           - text: 受入条件が検証可能な形で記述されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
+      - local_id: prj-stakeholder-register
+        artifact_code: STAKEHOLDER
+        name: ステークホルダー登録簿
+        kind: work
+        depends_on:
+          - prj-overview
+        overview: 関係者の役割・関心・影響度を一覧化
+        path: prj-stakeholder-register.md
+        rulebook: prj-stakeholder-register-rulebook
+        done_criteria:
+          - text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+          - text: 合意対象と意思決定者が識別できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的意思決定者・承認者が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質に影響するステークホルダーが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: prj-charter
+        artifact_code: CHARTER
+        name: プロジェクト憲章
+        kind: work
+        depends_on:
+          - prj-overview
+          - prj-stakeholder-register
+        overview: プロジェクトの正式な認可と権限委譲を文書化
+        path: prj-charter.md
+        rulebook: prj-charter-rulebook
+        done_criteria:
+          - text: 業務上の目的・認可条件・期待効果が明確であること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 正式認可・権限委譲・予算枠を承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的制約・前提が読み取れること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 品質目標・受入基準への参照が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
       - local_id: prj-assumptions-constraints-dependencies
         artifact_code: ACD
         name: 前提・制約・依存関係
@@ -156,7 +150,6 @@ groups:
           - text: 実装上の技術制約・外部依存が確認できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-
       - local_id: prj-issues-and-approach
         artifact_code: ISSUES
         name: プロジェクト課題と解決アプローチ
@@ -180,7 +173,6 @@ groups:
           - text: 解決アプローチが検証可能な形で記述されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: prj-comparison-of-alternatives
         artifact_code: ALT
         name: 代替案比較

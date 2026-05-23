@@ -7,9 +7,7 @@ project_id: prj-0001
 domain: project-management
 domain_code: PJM
 base_path: /docs/ja/projects/prj-0001/030-project-management
-
 groups:
-
   - name: 管理計画
     base_path: 010-management-plan
     deliverables:
@@ -37,7 +35,6 @@ groups:
           - text: レビュー方針・品質基準への参照が確認できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: pm-communication-plan
         artifact_code: COMM
         name: コミュニケーション計画
@@ -63,7 +60,6 @@ groups:
           - text: 品質関連の報告経路が確認できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: pm-quality-management-plan
         artifact_code: QLTY
         name: 品質管理計画
@@ -89,7 +85,6 @@ groups:
           - text: 実施可能な検証・レビュー手順が記述されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
   - name: 組織体制
     base_path: 020-organization
     deliverables:
@@ -115,7 +110,6 @@ groups:
           - text: 禁止事項・見直し条件が実施可能な粒度で記述されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: pm-roles
         artifact_code: ROLE
         name: ロール定義
@@ -150,7 +144,6 @@ groups:
           - text: OPS ロールが定義されていること
             roles: [OPS]
             viewpoint: vp-ops-operability
-
       - local_id: pm-members
         artifact_code: MBR
         name: メンバー定義
@@ -177,7 +170,6 @@ groups:
           - text: QE ロールを担う member が定義されていること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-
       - local_id: pm-raci
         artifact_code: RACI
         name: RACI
@@ -200,7 +192,6 @@ groups:
           - text: 品質観点での責任分担が確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-
   - name: 管理台帳
     base_path: controls/project-register
     deliverables:
@@ -211,7 +202,7 @@ groups:
         depends_on: []
         overview: 識別済み検討項目と対応策を管理（台帳）
         path: pjr-index.md
-
+        rulebook: pjr-index-rulebook
       - local_id: pjr-NNNN-TERM
         artifact_code: CTLITM
         name: プロジェクト登録項目
@@ -219,8 +210,7 @@ groups:
         depends_on:
           - pjr-index
         overview: 識別済み検討項目と対応策を管理（個別課題）
-        note: "NNNN は4桁連番、TERM は件名の略称（kebab-case）"
-
+        note: NNNN は4桁連番、TERM は件名の略称（kebab-case）
   - name: 管理台帳補助ビュー
     base_path: controls/project-register/generated
     deliverables:
@@ -233,7 +223,6 @@ groups:
           - pjr-NNNN-TERM
         overview: プロジェクト登録簿の未完了項目を一覧化
         path: pjr-open-items.md
-
       - local_id: pjr-by-owner
         artifact_code: CTLOB
         name: 担当者別一覧
@@ -243,7 +232,6 @@ groups:
           - pjr-NNNN-TERM
         overview: プロジェクト登録簿の担当者別項目を一覧化
         path: pjr-by-owner.md
-
       - local_id: pjr-by-priority
         artifact_code: CTLPR
         name: 優先度別一覧
@@ -253,7 +241,6 @@ groups:
           - pjr-NNNN-TERM
         overview: プロジェクト登録簿の優先度別項目を一覧化
         path: pjr-by-priority.md
-
       - local_id: pjr-by-status
         artifact_code: CTLST
         name: 状態別一覧
@@ -263,7 +250,6 @@ groups:
           - pjr-NNNN-TERM
         overview: プロジェクト登録簿の状態別項目を一覧化
         path: pjr-by-status.md
-
   - name: 管理ビュー
     base_path: controls/generated
     deliverables:
@@ -275,7 +261,6 @@ groups:
           - pjr-NNNN-TERM
         overview: 識別済みリスクと対応策を管理
         path: pm-risk-register.md
-
       - local_id: pm-issue-log
         artifact_code: CTLISS
         name: 課題ログ
@@ -284,7 +269,6 @@ groups:
           - pjr-NNNN-TERM
         overview: 発生した課題と対応状況を管理
         path: pm-issue-log.md
-
       - local_id: pm-change-request-log
         artifact_code: CTLCRQ
         name: 変更要求ログ
@@ -293,7 +277,6 @@ groups:
           - pjr-NNNN-TERM
         overview: 変更要求の申請・審査・決定を管理
         path: pm-change-request-log.md
-
       - local_id: pm-decision-log
         artifact_code: CTLDEC
         name: 決定記録
@@ -302,18 +285,17 @@ groups:
           - pjr-NNNN-TERM
         overview: プロジェクト上の意思決定とその根拠を記録
         path: pm-decision-log.md
-
   - name: スケジュール
     base_path: schedule
     deliverables:
       - local_id: sch-milestones
         artifact_code: SCHMS
         name: マイルストーン定義
-        kind: work
+        kind: generated
         depends_on: []
         overview: プロジェクト全体のマイルストーンを定義
         path: sch-milestones.yaml
-        rulebook: sch-milestones-rulebook
+        rulebook: sch-rulebook
         done_criteria:
           - text: プロジェクト全体のマイルストーンを承認できること
             roles: [PO]
@@ -327,7 +309,6 @@ groups:
           - text: 品質ゲートが含まれていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: sch-defaults
         artifact_code: SCHDEF
         name: スケジュールデフォルト定義
@@ -335,6 +316,7 @@ groups:
         depends_on: []
         overview: スケジュールのデフォルト設定を定義
         path: sch-defaults.yaml
+        rulebook: sch-rulebook
         done_criteria:
           - text: カレンダー・開始日などのデフォルト設定を承認できること
             roles: [PO]
@@ -348,14 +330,14 @@ groups:
           - text: 設定値の妥当性が確認できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
       - local_id: sch-track-launch
         artifact_code: SCHTLNCH
         name: Launch スケジュール定義
-        kind: work
+        kind: generated
         depends_on: []
         overview: Launch フェーズの詳細スケジュールを定義
         path: sch-track-launch.yaml
+        rulebook: sch-rulebook
         done_criteria:
           - text: Launch フェーズのタスク・マイルストーン計画を承認できること
             roles: [PO]
@@ -369,7 +351,27 @@ groups:
           - text: 品質ゲート・レビュータスクが含まれていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-
+      - local_id: sch-strategy-launch
+        artifact_code: SCHSTG
+        name: Launch スケジュール戦略定義
+        kind: work
+        depends_on: []
+        overview: フェーズ定義・オーナー割当・初期状態を含む Launch トラック生成戦略を定義
+        path: sch-strategy-launch.yaml
+        rulebook: sch-rulebook
+        done_criteria:
+          - text: owner_rules・フェーズ定義・initial_state を含むトラック戦略を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: owner_rules の担当割り当てがプロジェクト体制と整合していること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: validate:schema を通過していること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: phases・owner_rules・initial_state の各設定値の妥当性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
   - name: レポート
     groups:
       - name: 進捗報告
@@ -381,8 +383,8 @@ groups:
             kind: control
             depends_on: []
             overview: 定期的な進捗状況の報告
-            note: "YYYY-MM-DD は報告日"
-
+            rulebook: pr-rulebook
+            note: YYYY-MM-DD は報告日
       - name: 議事録
         base_path: reporting/meeting-minutes
         deliverables:
@@ -392,4 +394,5 @@ groups:
             kind: control
             depends_on: []
             overview: 会議の決定事項・アクションを記録
-            note: "YYYY-MM-DD は会議日"
+            rulebook: mm-rulebook
+            note: YYYY-MM-DD は会議日

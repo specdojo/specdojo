@@ -198,6 +198,43 @@ properties:
           type: string
           description: "Optional explanation."
 
+  initial_state:
+    type: object
+    additionalProperties: false
+    description: "Initial state overrides for deliverables already complete at project start."
+    properties:
+      completed_deliverables:
+        type: array
+        description: "Deliverables completed before the track start date."
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - local_id
+            - completed_on
+            - by
+          properties:
+            local_id:
+              type: string
+              minLength: 1
+              description: "Deliverable local_id (must exist in scope catalogs)."
+            completed_through:
+              type: string
+              minLength: 1
+              description: >
+                Phase id up to which the deliverable is complete (inclusive).
+                Omit to mark all phases as done.
+            completed_on:
+              $ref: "./sch-common.schema.yaml#/$defs/Date"
+              description: "Date the deliverable was completed."
+            by:
+              type: string
+              minLength: 1
+              description: "Nickname of the completing member (must exist in pm-members.yaml)."
+            note:
+              type: string
+              description: "Optional explanation of the initial state."
+
 $defs:
   Phase:
     type: object

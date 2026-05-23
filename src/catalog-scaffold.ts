@@ -5,6 +5,18 @@ import type { DctDeliverableItem, DctDoc, DctSection, DctTemplateDoc } from './c
 
 export type ProjectSize = 'small' | 'medium' | 'large'
 
+// js-yaml serializes all non-empty arrays in block style.
+// Restore flow style for the `roles` field to match template formatting.
+function applyFlowStyleRoles(yamlStr: string): string {
+  return yamlStr.replace(
+    /^(\s+roles):\n(\s+- [^\n]+\n)+/gm,
+    (match, rolesPrefix) => {
+      const items = [...match.matchAll(/^\s+- (.+)$/gm)].map(m => m[1].trim())
+      return `${rolesPrefix}: [${items.join(', ')}]\n`
+    }
+  )
+}
+
 const SIZE_ORDER: Record<ProjectSize, number> = { small: 0, medium: 1, large: 2 }
 
 function meetsSize(minSize: string | undefined, target: ProjectSize): boolean {
@@ -64,16 +76,15 @@ export function scaffoldDoc(template: DctTemplateDoc, projectId: string, size: P
     id: `${projectId}:${template.id.replace(/-template$/, '')}`,
     type: 'project',
     status: template.status,
+    ...(template.part_of && template.part_of.length > 0
+      ? { part_of: template.part_of.map(replace) }
+      : {}),
     project_id: projectId,
     domain: template.domain,
+    ...(template.domain_code ? { domain_code: template.domain_code } : {}),
+    ...(template.base_path ? { base_path: replace(template.base_path) } : {}),
     groups,
   }
-
-  if (template.part_of && template.part_of.length > 0) {
-    doc.part_of = template.part_of.map(replace)
-  }
-  if (template.domain_code) doc.domain_code = template.domain_code
-  if (template.base_path) doc.base_path = replace(template.base_path)
 
   return doc
 }
@@ -130,7 +141,7 @@ export function runScaffold(opts: {
         quotingType: "'",
         forceQuotes: false,
       })
-      writeFileSync(outputPath, out, 'utf8')
+      writeFileSync(outputPath, applyFlowStyleRoles(out), 'utf8')
       written.push(outputPath)
     } catch (err) {
       errors.push(`${templatePath}: ${err instanceof Error ? err.message : String(err)}`)
