@@ -7,7 +7,8 @@
       "execution_path": "docs/ja/projects/prj-0001/070-execution",
       "members_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-members.yaml",
       "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
-      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml"
+      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
+      "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register"
     }
   }
 }

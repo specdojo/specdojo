@@ -1,40 +1,18 @@
----
-id: prj-0001:pjr-index
-type: project
-status: ready
-rulebook: pjr-index-rulebook
----
+# 状態別一覧
 
-# プロジェクト登録簿
+> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。
 
-Project Register
-
-この文書は、プロジェクト登録簿です。
-
-プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
-
-記載ルール、項目定義、type / status / priority の定義は [[pjr-index-rulebook]] に従います。
-
-## 1. 登録項目一覧
+## 1. open
 
 <!-- prettier-ignore -->
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | - |
 | PJR-0002 | open | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |
 | PJR-0007 | open | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0008 | open | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | - | - | - |
-| PJR-0009 | rejected | WBS作成プロンプト | WBS統合により不要 | todo | high | ARC | 2026-05-10 | 2026-05-17 | WBS統合により却下 | - |
-| PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる | todo | high | ARC | 2026-05-10 | 2026-05-05 | .agent/設定を整備 | - |
-| PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | ARC | 2026-05-10 | 2026-05-04 | ID体系を修正済み | - |
-| PJR-0012 | done | claudeのSKILL対応 | .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | 2026-05-05 | 構成変更済み | - |
-| PJR-0013 | done | prj-overview-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
-| PJR-0014 | done | prj-stakeholder-register-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
-| PJR-0015 | done | prj-charter-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0016 | open | prj-scope-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0017 | open | prj-success-criteria-and-acceptance-criteria-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0018 | open | prj-issues-and-approach-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
@@ -43,13 +21,28 @@ Project Register
 | PJR-0021 | open | pm-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0022 | open | pm-communication-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0023 | open | pm-quality-management-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
+| PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | - | - | - |
+| PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](../pjr-0046-draft-agent.md) |
+
+## 2. done
+
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | - |
+| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |
+| PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる | todo | high | ARC | 2026-05-10 | 2026-05-05 | .agent/設定を整備 | - |
+| PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | ARC | 2026-05-10 | 2026-05-04 | ID体系を修正済み | - |
+| PJR-0012 | done | claudeのSKILL対応 | .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | 2026-05-05 | 構成変更済み | - |
+| PJR-0013 | done | prj-overview-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
+| PJR-0014 | done | prj-stakeholder-register-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
+| PJR-0015 | done | prj-charter-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0024 | done | pm-roles-*作成 | yamlを作る前提でrulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0025 | done | pm-members-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0026 | done | pm-raci-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0027 | done | プロジェクト名の見直し | 旧プロジェクト名となっている箇所を SpecDojo へ見直し | todo | high | PO | 2026-05-10 | 2026-05-05 | 関連ドキュメントを更新済み | - |
 | PJR-0028 | done | pm-organization-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | ARC | 2026-05-10 | 2026-05-05 | devcontainer設定更新済み | - |
-| PJR-0030 | rejected | wbs to schedule strategyの見直し | WBS統合により不要 | todo | high | ARC | 2026-05-10 | 2026-05-17 | WBS統合により却下 | - |
 | PJR-0031 | done | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | ARC | 2026-05-10 | 2026-05-15 | ドメイン別展開方針を策定済み | - |
 | PJR-0032 | done | wbs を成果物カタログに統合 | 成果物カタログをyaml化して統合 | todo | high | ARC | 2026-05-17 | 2026-05-17 | dct-*.yaml として統合完了 | - |
 | PJR-0033 | done | 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | ARC | 2026-05-17 | 2026-05-17 | `specdojo catalog build` で自動生成 | - |
@@ -64,8 +57,6 @@ Project Register
 | PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | ARC | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | - |
 | PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | ARC | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
 | PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | 2026-05-17 | 2026-05-17 | buildまで確認 | - |
-| PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | - | - | - |
-| PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](./pjr-0046-draft-agent.md) |
 | PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | - |
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | - |
@@ -76,28 +67,17 @@ Project Register
 | PJR-0054 | done | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | ARC | 2026-05-20 | 2026-05-21 | Markdown preview,VitePressにidリンクを反映 | - |
 | PJR-0055 | done | pjr個票生成コマンド作成 | pjr個票をテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-23 | specdojo register addを追加 | - |
 | PJR-0056 | done | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-21 | specdojo review scaffoldを作成 | - |
-| PJR-0057 | done | `[[id]]`を別名表示できるようにする| `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | - |
+| PJR-0057 | done | `[[id]]`を別名表示できるようにする | `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | - |
 | PJR-0058 | done | pjr-indexのスキーマ作成 | pjr-indexのフォーマットチェックできるようにする | todo | high | ARC | 2026-05-24 | 2026-05-23 | templateとスキーマを作成 | - |
 | PJR-0059 | done | pjrのscaffold | pjr-index等を自動生成するためのscaffoldを作成 | todo | high | ARC | 2026-05-24 | 2026-05-23 | specdojo register scaffold, buildを追加 | - |
 | PJR-0060 | done | pjr-indexのvscodeでのリアルタイム検証 | .remarkrc.yamlに追加してvscodeでリアルタイム検証 | todo | high | ARC | 2026-05-24 | 2026-05-23 | remark-md-content.cjsを追加し.remarkrc.yamlに設定 | - |
 | PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | - |
+
+## 3. rejected
+
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PJR-0009 | rejected | WBS作成プロンプト | WBS統合により不要 | todo | high | ARC | 2026-05-10 | 2026-05-17 | WBS統合により却下 | - |
+| PJR-0030 | rejected | wbs to schedule strategyの見直し | WBS統合により不要 | todo | high | ARC | 2026-05-10 | 2026-05-17 | WBS統合により却下 | - |
 | PJR-0063 | rejected | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | 2026-05-24 | 2026-05-23 | claudeからstrategyの方が適切と指摘を受けた | - |
-
-## 4. 派生ビュー
-
-以下のファイルは、プロジェクト登録簿から生成される補助一覧です。
-正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` とし、派生ビューは正本の内容に従属します。
-
-### 4.1. 登録簿内の補助一覧
-
-- `[未完了項目一覧](./generated/pjr-open-items.md)`
-- `[担当者別一覧](./generated/pjr-by-owner.md)`
-- `[優先度別一覧](./generated/pjr-by-priority.md)`
-- `[状態別一覧](./generated/pjr-by-status.md)`
-
-### 4.2. controls 全体の派生管理ビュー
-
-- `[リスク登録簿](../generated/pm-risk-register.md)`
-- `[課題ログ](../generated/pm-issue-log.md)`
-- `[変更要求ログ](../generated/pm-change-request-log.md)`
-- `[決定記録](../generated/pm-decision-log.md)`

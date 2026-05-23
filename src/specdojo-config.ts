@@ -12,6 +12,7 @@ export type SpecDojoProjectConfig = {
   members_path?: string
   reviews_path?: string
   viewpoints_path?: string
+  project_register_path?: string
 }
 
 export type ProjectMember = {

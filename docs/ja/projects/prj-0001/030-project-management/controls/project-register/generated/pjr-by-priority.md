@@ -1,21 +1,8 @@
----
-id: prj-0001:pjr-index
-type: project
-status: ready
-rulebook: pjr-index-rulebook
----
+# 優先度別一覧
 
-# プロジェクト登録簿
+> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。
 
-Project Register
-
-この文書は、プロジェクト登録簿です。
-
-プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
-
-記載ルール、項目定義、type / status / priority の定義は [[pjr-index-rulebook]] に従います。
-
-## 1. 登録項目一覧
+## 1. high
 
 <!-- prettier-ignore -->
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
@@ -65,7 +52,7 @@ Project Register
 | PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | ARC | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
 | PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | 2026-05-17 | 2026-05-17 | buildまで確認 | - |
 | PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | - | - | - |
-| PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](./pjr-0046-draft-agent.md) |
+| PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](../pjr-0046-draft-agent.md) |
 | PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | - |
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | - |
@@ -76,28 +63,21 @@ Project Register
 | PJR-0054 | done | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | ARC | 2026-05-20 | 2026-05-21 | Markdown preview,VitePressにidリンクを反映 | - |
 | PJR-0055 | done | pjr個票生成コマンド作成 | pjr個票をテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-23 | specdojo register addを追加 | - |
 | PJR-0056 | done | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | 2026-05-24 | 2026-05-21 | specdojo review scaffoldを作成 | - |
-| PJR-0057 | done | `[[id]]`を別名表示できるようにする| `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | - |
+| PJR-0057 | done | `[[id]]`を別名表示できるようにする | `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | - |
 | PJR-0058 | done | pjr-indexのスキーマ作成 | pjr-indexのフォーマットチェックできるようにする | todo | high | ARC | 2026-05-24 | 2026-05-23 | templateとスキーマを作成 | - |
 | PJR-0059 | done | pjrのscaffold | pjr-index等を自動生成するためのscaffoldを作成 | todo | high | ARC | 2026-05-24 | 2026-05-23 | specdojo register scaffold, buildを追加 | - |
 | PJR-0060 | done | pjr-indexのvscodeでのリアルタイム検証 | .remarkrc.yamlに追加してvscodeでリアルタイム検証 | todo | high | ARC | 2026-05-24 | 2026-05-23 | remark-md-content.cjsを追加し.remarkrc.yamlに設定 | - |
 | PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | - |
 | PJR-0063 | rejected | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | 2026-05-24 | 2026-05-23 | claudeからstrategyの方が適切と指摘を受けた | - |
 
-## 4. 派生ビュー
+## 2. medium
 
-以下のファイルは、プロジェクト登録簿から生成される補助一覧です。
-正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` とし、派生ビューは正本の内容に従属します。
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-### 4.1. 登録簿内の補助一覧
+## 3. low
 
-- `[未完了項目一覧](./generated/pjr-open-items.md)`
-- `[担当者別一覧](./generated/pjr-by-owner.md)`
-- `[優先度別一覧](./generated/pjr-by-priority.md)`
-- `[状態別一覧](./generated/pjr-by-status.md)`
-
-### 4.2. controls 全体の派生管理ビュー
-
-- `[リスク登録簿](../generated/pm-risk-register.md)`
-- `[課題ログ](../generated/pm-issue-log.md)`
-- `[変更要求ログ](../generated/pm-change-request-log.md)`
-- `[決定記録](../generated/pm-decision-log.md)`
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
