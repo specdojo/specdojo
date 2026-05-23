@@ -19,7 +19,12 @@ pre-commit:
 
     validate-templates:
       glob: 'docs/ja/specdojo/templates/**'
-      run: npm run validate:templates
+      run: npm test
+
+    register-build:
+      glob: 'docs/**/pjr-index.md'
+      run: npx tsx src/specdojo.ts register build
+      stage_fixed: true
 
 commit-msg:
   commands:

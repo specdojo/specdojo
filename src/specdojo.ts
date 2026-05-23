@@ -7,6 +7,7 @@ import { registerScheduleCommands } from './schedule.js'
 import { registerIndexCommands } from './index-command.js'
 import { registerReviewCommands } from './review.js'
 import { registerRegisterCommands } from './register.js'
+import { registerWatchCommand } from './watch.js'
 
 function main(): void {
   const program = new Command()
@@ -21,6 +22,7 @@ function main(): void {
   registerIndexCommands(program)
   registerReviewCommands(program)
   registerRegisterCommands(program)
+  registerWatchCommand(program)
 
   program.parse(process.argv)
 }

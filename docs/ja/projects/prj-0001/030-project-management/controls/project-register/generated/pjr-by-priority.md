@@ -78,8 +78,11 @@
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0065 | done | srcとtoolsが分かれているのを再考 | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | 依存しているコードを再整理。validate-templates.tsのテスト化が残 | - |
 | PJR-0066 | done | テスト環境の構築 | vitestを導入 | todo | medium | ARC | 2026-05-23 | 2026-05-23 | vitestを導入し、instructionsを整備 | - |
-| PJR-0067 | open | validate-templatesをテスト化 | validate-templatesをテストに移行 | todo | medium | ARC | 2026-05-24 | - | - | - |
-| PJR-0068 | open | auto-generateを追加 | ファイルの変更を検知して自動生成する機能を追加 | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0067 | done | validate-templatesをテスト化 | validate-templatesをテストに移行 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | catalog-scaffold, register, review-planのテストへ分解 | - |
+| PJR-0068 | done | auto-generateを追加 | ファイルの変更を検知して自動生成する機能を追加 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | specdojo watchコマンドを追加 | - |
+| PJR-0069 | open | register close reject等を追加 | registerのコマンドを拡張 | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0070 | open | sch-strategyに作成済み成果物を設定 | scheduleを生成するときに作成済みの成果物を考慮する | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0071 | open | specdojo buildコマンドの追加 | 生成物の一括ビルドを行うコマンドを追加 | todo | medium | ARC | 2026-05-24 | - | - | - |
 
 ## 3. low
 

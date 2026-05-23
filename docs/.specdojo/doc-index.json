@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-21T23:06:15.724Z",
+  "generated_at": "2026-05-23T12:15:01.234Z",
   "entries": {
     "tsd-index": "docs/ja/specdojo/samples/tsd-index-sample.md",
     "tsd-local-llm": "docs/ja/product/030-architecture/020-infrastructure/tsd-local-llm.md",
@@ -278,6 +278,7 @@
     "test-document-scope-standard": "docs/ja/specdojo/standards/test-document-scope-standard.md",
     "dct-project-definition-template": "docs/ja/specdojo/templates/dct-project-definition-template.yaml",
     "dct-project-management-template": "docs/ja/specdojo/templates/dct-project-management-template.yaml",
-    "pm-review-viewpoints-template": "docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml"
+    "pm-review-viewpoints-template": "docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml",
+    "pjr-index-content": "docs/specdojo/schemas/v1/pjr-index.schema.yaml"
   }
 }
