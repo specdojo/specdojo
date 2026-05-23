@@ -1,0 +1,79 @@
+# pjr-index.schema.yaml
+# pjr-index.md の本文構造（セクション・テーブル）を検証するカスタムスキーマ。
+# validate-md-content.ts によって読み込まれ、remark AST を使って検証する。
+id: pjr-index-content
+title: "PJR Index Content Schema"
+description: "pjr-index.md の本文構造を検証するスキーマ"
+
+# 正準（英語）列名をキーとし、許容するエイリアスの配列を値とする。
+# テーブルヘッダーがエイリアスに一致する場合、対応する英語名として扱う。
+column_aliases:
+  status:      [ステータス]
+  title:       [タイトル]
+  description: [説明]
+  type:        [分類]
+  priority:    [優先度]
+  owner:       [担当]
+  due:         [期限]
+  completed:   [完了日]
+  conclusion:  [結論]
+  ticket:      [個票]
+
+sections:
+  - heading:
+      - "Item List"
+      - "登録項目一覧"
+    level: 2
+    number: 1
+    required: true
+    table:
+      required_columns:
+        - ID
+        - status
+        - title
+        - type
+        - priority
+      optional_columns:
+        - description
+        - owner
+        - due
+        - completed
+        - conclusion
+        - ticket
+      # each row must have a value in at least one of description or ticket
+      at_least_one_of:
+        - [description, ticket]
+      column_rules:
+        ID:
+          pattern: "^PJR-\\d{4}$"
+        status:
+          enum:
+            - open
+            - in-progress
+            - waiting
+            - review
+            - decided
+            - done
+            - deferred
+            - rejected
+        type:
+          enum:
+            - todo
+            - question
+            - risk
+            - issue
+            - change-request
+            - decision
+            - dependency
+            - note
+        priority:
+          enum:
+            - high
+            - medium
+            - low
+        completed:
+          # date (YYYY-MM-DD) or "-" (not yet done)
+          pattern: "^(\\d{4}-\\d{2}-\\d{2}|-)$"
+        due:
+          # date (YYYY-MM-DD), "-", or "_TODO_" (undecided)
+          pattern: "^(\\d{4}-\\d{2}-\\d{2}|-|_TODO_)$"
