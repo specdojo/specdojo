@@ -26,6 +26,21 @@ pre-commit:
       run: npx tsx src/specdojo.ts register build
       stage_fixed: true
 
+    catalog-build:
+      glob: 'docs/**/dct-*.yaml'
+      run: npx tsx src/specdojo.ts catalog build
+      stage_fixed: true
+
+    exec-build:
+      glob: 'docs/**/sch-*.yaml'
+      run: npx tsx src/specdojo.ts exec build
+      stage_fixed: true
+
+    index-build:
+      glob: 'docs/**'
+      run: npx tsx src/specdojo.ts index build
+      stage_fixed: true
+
 commit-msg:
   commands:
     commitlint:

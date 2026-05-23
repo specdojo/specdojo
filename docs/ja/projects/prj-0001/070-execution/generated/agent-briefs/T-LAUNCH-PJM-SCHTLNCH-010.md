@@ -26,10 +26,10 @@
 
 done_criteria:
 
-- PO が Launch フェーズのタスク・マイルストーン計画を承認できること
-- BA がビジネスタスクの順序・依存関係が確認できること
-- ARC が技術タスクのスコープと順序が確認できること
-- QE が品質ゲート・レビュータスクが含まれていることを確認できること
+- [object Object]
+- [object Object]
+- [object Object]
+- [object Object]
 
 ## 4. 依存と優先度
 

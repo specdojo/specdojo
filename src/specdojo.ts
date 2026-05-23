@@ -8,6 +8,7 @@ import { registerIndexCommands } from './index-command.js'
 import { registerReviewCommands } from './review.js'
 import { registerRegisterCommands } from './register.js'
 import { registerWatchCommand } from './watch.js'
+import { registerBuildCommand } from './build-command.js'
 
 function main(): void {
   const program = new Command()
@@ -23,6 +24,7 @@ function main(): void {
   registerReviewCommands(program)
   registerRegisterCommands(program)
   registerWatchCommand(program)
+  registerBuildCommand(program)
 
   program.parse(process.argv)
 }

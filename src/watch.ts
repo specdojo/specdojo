@@ -4,6 +4,7 @@ import type { FSWatcher } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
+import { selfRunArgs } from './spawn-self.js'
 
 // ================================
 // Types
@@ -111,28 +112,27 @@ function matchesIndex(filename: string): boolean {
 function buildCommand(
   scope: Exclude<WatchScope, 'all'>,
   ctx: WatchContext
-): { label: string; args: string[] } | null {
-  const script = process.argv[1]
+): { label: string; subArgs: string[] } | null {
   const projectArgs = ctx.projectId ? ['--project', ctx.projectId] : []
 
   switch (scope) {
     case 'exec':
       return {
         label: `specdojo exec build${ctx.projectId ? ` --project ${ctx.projectId}` : ''}`,
-        args: [script, 'exec', 'build', ...projectArgs],
+        subArgs: ['exec', 'build', ...projectArgs],
       }
     case 'catalog':
       return {
         label: `specdojo catalog build${ctx.projectId ? ` --project ${ctx.projectId}` : ''}`,
-        args: [script, 'catalog', 'build', ...projectArgs],
+        subArgs: ['catalog', 'build', ...projectArgs],
       }
     case 'register':
       return {
         label: `specdojo register build${ctx.projectId ? ` --project ${ctx.projectId}` : ''}`,
-        args: [script, 'register', 'build', ...projectArgs],
+        subArgs: ['register', 'build', ...projectArgs],
       }
     case 'index':
-      return { label: 'specdojo index build', args: [script, 'index', 'build'] }
+      return { label: 'specdojo index build', subArgs: ['index', 'build'] }
   }
 }
 
@@ -157,7 +157,8 @@ function runBuild(
   log(`running: ${build.label}`)
 
   const start = Date.now()
-  const child = spawn(process.execPath, build.args, { stdio: ['ignore', 'pipe', 'pipe'] })
+  const [cmd, spawnArgs] = selfRunArgs(build.subArgs)
+  const child = spawn(cmd, spawnArgs, { stdio: ['ignore', 'pipe', 'pipe'] })
 
   child.stdout.on('data', (chunk: Buffer) => process.stdout.write(chunk))
   child.stderr.on('data', (chunk: Buffer) => process.stderr.write(chunk))

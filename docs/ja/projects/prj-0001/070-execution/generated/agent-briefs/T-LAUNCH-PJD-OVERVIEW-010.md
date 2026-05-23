@@ -26,10 +26,11 @@
 
 done_criteria:
 
-- PO/BA がプロジェクトの目的・背景・ゴールを業務観点で確認できる粒度で記述されていること
-- ARC が技術的前提・制約を読み取れる情報が含まれていること
-- QE が成功判定の輪郭を確認できること
-- PM がプロジェクトの目的・スコープを計画立案の基礎として確認できること
+- [object Object]
+- [object Object]
+- [object Object]
+- [object Object]
+- [object Object]
 
 ## 4. 依存と優先度
 

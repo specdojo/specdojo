@@ -21,4 +21,3 @@
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0069 | open | register close reject等を追加 | registerのコマンドを拡張 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0070 | open | sch-strategyに作成済み成果物を設定 | scheduleを生成するときに作成済みの成果物を考慮する | todo | medium | ARC | 2026-05-24 | - | - | - |
-| PJR-0071 | open | specdojo buildコマンドの追加 | 生成物の一括ビルドを行うコマンドを追加 | todo | medium | ARC | 2026-05-24 | - | - | - |

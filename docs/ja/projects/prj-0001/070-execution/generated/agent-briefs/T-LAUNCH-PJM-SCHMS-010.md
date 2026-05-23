@@ -26,10 +26,10 @@
 
 done_criteria:
 
-- PO がプロジェクト全体のマイルストーンを承認できること
-- BA がビジネスマイルストーンが含まれていることを確認できること
-- ARC が技術マイルストーンが含まれていることを確認できること
-- QE が品質ゲートが含まれていることを確認できること
+- [object Object]
+- [object Object]
+- [object Object]
+- [object Object]
 
 ## 4. 依存と優先度
 

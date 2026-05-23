@@ -26,10 +26,10 @@
 
 done_criteria:
 
-- PO がカレンダー・開始日などのデフォルト設定を承認できること
-- BA が業務稼働日・休日設定が確認できること
-- ARC が validate:schema を通過していることを確認できること
-- QE が設定値の妥当性を確認できること
+- [object Object]
+- [object Object]
+- [object Object]
+- [object Object]
 
 ## 4. 依存と優先度
 

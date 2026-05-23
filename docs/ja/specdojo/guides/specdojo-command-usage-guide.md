@@ -1247,7 +1247,101 @@ specdojo watch --project prj-0001 --scope register
 - ファイル変更の検出には OS のファイルシステムイベントを使用するため、NFS やリモートマウントのディレクトリでは検出できない場合がある。
 - `exec build` は排他ロック（`exec/.locks/`）を使用するため、別プロセスが実行中の場合はビルドをスキップしてエラーログを出力する。
 
-## 28. まとめ
+## 28. build コマンド
+
+`specdojo build` は、プロジェクトの全生成物を一括再生成するコマンドです。
+
+`exec build` / `catalog build` / `register build` / `index build` を順番に実行します。CI/CD の最終ステップや、ローカルで生成物を完全に同期したいときに使います。
+
+```bash
+specdojo build [--project <id>] [--scope <scope>]
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project <id>` | プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
+| `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all` |
+| `--dry-run` | 実行予定のコマンドを表示するだけでファイルを書き出さない | `false` |
+
+### 28.1. 実行順序
+
+`--scope all` のとき、以下の順序で実行する。前のステップが失敗した場合は後続ステップを実行せず、エラーを表示して終了する。
+
+| ステップ | コマンド | 生成物 |
+| --- | --- | --- |
+| 1 | `exec build` | `generated/state.json`、`ready.md`、`cpm.json` 等 |
+| 2 | `catalog build` | `generated/dct-*.md` |
+| 3 | `register build` | `generated/pjr-*.md`、`generated/pm-*.md` |
+| 4 | `index build` | `docs/.specdojo/doc-index.json` |
+
+`--scope` で単一ステップのみ指定した場合は、そのステップだけを実行する。
+
+### 28.2. 実行例
+
+全生成物を一括再生成する:
+
+```bash
+specdojo build --project prj-0001
+```
+
+カタログと登録簿のみ再生成する:
+
+```bash
+specdojo build --project prj-0001 --scope catalog
+specdojo build --project prj-0001 --scope register
+```
+
+実行予定のコマンドを確認する（ファイルは書き出さない）:
+
+```bash
+specdojo build --project prj-0001 --dry-run
+```
+
+### 28.3. 出力フォーマット
+
+各ステップの開始・完了をログに出力する。
+
+```text
+[build] step 1/4: exec build
+[build] done: exec build (1.3s)
+[build] step 2/4: catalog build
+[build] done: catalog build (0.2s)
+[build] step 3/4: register build
+[build] done: register build (0.1s)
+[build] step 4/4: index build
+[build] done: index build (0.4s)
+[build] all steps completed (2.0s)
+```
+
+ステップが失敗した場合は後続を実行せずエラーを表示する。
+
+```text
+[build] step 1/4: exec build
+[build] error: exec build exited with code 1 — aborting
+```
+
+### 28.4. CI/CD での利用
+
+CI/CD パイプラインの最終ステップとして `specdojo build` を実行し、生成物の一貫性を保証する。
+
+```yaml
+# GitHub Actions の例
+- name: Build all generated artifacts
+  run: npx tsx src/specdojo.ts build --project prj-0001
+```
+
+lefthook の `pre-push` に組み込む例:
+
+```yaml
+pre-push:
+  commands:
+    build-all:
+      run: npx tsx src/specdojo.ts build --project prj-0001
+```
+
+## 29. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -1263,3 +1357,4 @@ specdojo watch --project prj-0001 --scope register
 - レビュー plan 生成（`review plan`）
 - プロジェクト登録簿 scaffold・登録項目追加・派生ビュー生成（`register scaffold` / `register add` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）
+- 全生成物の一括再生成（`build`）

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="644" height="1728" viewBox="0 0 644 1728" role="img" aria-label="プロジェクトタイムライン">
+<svg xmlns="http://www.w3.org/2000/svg" width="532" height="1728" viewBox="0 0 532 1728" role="img" aria-label="プロジェクトタイムライン">
 <style>
     text { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #1f2937; }
     .title { font-size: 18px; font-weight: 700; fill: #0f172a; }
@@ -12,12 +12,12 @@
     .holiday { fill: #eff6ff; }
     .legend-label { font-size: 11px; fill: #475569; }
   </style>
-<rect x="0" y="0" width="644" height="1728" fill="#fffdf8" />
+<rect x="0" y="0" width="532" height="1728" fill="#fffdf8" />
 <rect x="0" y="0" width="380" height="1728" fill="#fffaf0" />
-<rect x="380" y="0" width="264" height="1728" fill="#ffffff" />
+<rect x="380" y="0" width="152" height="1728" fill="#ffffff" />
 <text class="title" x="16" y="28">プロジェクトタイムライン</text>
 <text class="caption" x="16" y="48">1 タスク 1 行で表示します。1 日の長さは 8 時間で、休日と週末は空白のままとし、次の稼働日に作業を再開します。</text>
-<rect x="0" y="72" width="644" height="28" fill="#fff7ed" />
+<rect x="0" y="72" width="532" height="28" fill="#fff7ed" />
 <rect x="16" y="64" width="14" height="14" rx="3" fill="#d1d5db" />
 <text class="legend-label" x="36" y="78">todo</text>
 <rect x="92" y="64" width="14" height="14" rx="3" fill="#2563eb" />
@@ -32,208 +32,206 @@
 <text class="legend-label" x="416" y="78">holiday</text>
 <rect x="486" y="64" width="14" height="14" fill="#f8fafc" stroke="#d7dee7" />
 <text class="legend-label" x="506" y="78">weekend</text>
+<rect class="shade" x="380" y="88" width="56" height="1620" />
 <line class="grid" x1="380" y1="88" x2="380" y2="1696" />
-<text class="axis" x="386" y="90">05/18</text>
+<text class="axis" x="386" y="90">01/01</text>
+<rect class="shade" x="436" y="88" width="56" height="1620" />
 <line class="grid" x1="436" y1="88" x2="436" y2="1696" />
-<text class="axis" x="442" y="90">05/19</text>
+<text class="axis" x="442" y="90">01/02</text>
 <line class="grid" x1="492" y1="88" x2="492" y2="1696" />
-<text class="axis" x="498" y="90">05/20</text>
-<line class="grid" x1="548" y1="88" x2="548" y2="1696" />
-<text class="axis" x="554" y="90">05/21</text>
-<line class="grid" x1="604" y1="88" x2="604" y2="1696" />
-<rect x="0" y="90" width="644" height="30" fill="#f1f5f9" />
+<rect x="0" y="90" width="532" height="30" fill="#f1f5f9" />
 <text class="section" x="16" y="108">launch</text>
-<line class="grid" x1="0" y1="116" x2="644" y2="116" />
+<line class="grid" x1="0" y1="116" x2="532" y2="116" />
 <text class="label" x="16" y="146">T-LAUNCH-PJD-OVERVIEW-010 prj-overview たたき台作成</text>
-<line class="row-grid" x1="0" y1="154" x2="644" y2="154" />
+<line class="row-grid" x1="0" y1="154" x2="532" y2="154" />
 <rect x="380" y="132" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="170">T-LAUNCH-PJM-PLAN-010 pm-plan たたき台作成</text>
-<line class="row-grid" x1="0" y1="178" x2="644" y2="178" />
+<line class="row-grid" x1="0" y1="178" x2="532" y2="178" />
 <rect x="380" y="156" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="194">T-LAUNCH-PJM-SCHDEF-010 sch-defaults たたき台作成</text>
-<line class="row-grid" x1="0" y1="202" x2="644" y2="202" />
+<line class="row-grid" x1="0" y1="202" x2="532" y2="202" />
 <rect x="380" y="180" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="218">T-LAUNCH-PJM-SCHMS-010 sch-milestones たたき台作成</text>
-<line class="row-grid" x1="0" y1="226" x2="644" y2="226" />
+<line class="row-grid" x1="0" y1="226" x2="532" y2="226" />
 <rect x="380" y="204" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="242">T-LAUNCH-PJM-SCHTLNCH-010 sch-track-launch たたき台作成</text>
-<line class="row-grid" x1="0" y1="250" x2="644" y2="250" />
+<line class="row-grid" x1="0" y1="250" x2="532" y2="250" />
 <rect x="380" y="228" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="266">T-LAUNCH-PJM-SCHDEF-020 sch-defaults スキーマ検証</text>
-<line class="row-grid" x1="0" y1="274" x2="644" y2="274" />
+<line class="row-grid" x1="0" y1="274" x2="532" y2="274" />
 <rect x="387" y="252" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="290">T-LAUNCH-PJM-SCHMS-020 sch-milestones スキーマ検証</text>
-<line class="row-grid" x1="0" y1="298" x2="644" y2="298" />
+<line class="row-grid" x1="0" y1="298" x2="532" y2="298" />
 <rect x="387" y="276" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="314">T-LAUNCH-PJM-SCHTLNCH-020 sch-track-launch スキーマ検証</text>
-<line class="row-grid" x1="0" y1="322" x2="644" y2="322" />
+<line class="row-grid" x1="0" y1="322" x2="532" y2="322" />
 <rect x="387" y="300" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="338">T-LAUNCH-PJM-SCHDEF-030 sch-defaults レビュー・修正</text>
-<line class="row-grid" x1="0" y1="346" x2="644" y2="346" />
+<line class="row-grid" x1="0" y1="346" x2="532" y2="346" />
 <rect x="390.5" y="324" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="362">T-LAUNCH-PJM-SCHMS-030 sch-milestones レビュー・修正</text>
-<line class="row-grid" x1="0" y1="370" x2="644" y2="370" />
+<line class="row-grid" x1="0" y1="370" x2="532" y2="370" />
 <rect x="390.5" y="348" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="386">T-LAUNCH-PJM-SCHTLNCH-030 sch-track-launch レビュー・修正</text>
-<line class="row-grid" x1="0" y1="394" x2="644" y2="394" />
+<line class="row-grid" x1="0" y1="394" x2="532" y2="394" />
 <rect x="390.5" y="372" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="410">T-LAUNCH-PJD-OVERVIEW-020 prj-overview レビュー・修正</text>
-<line class="row-grid" x1="0" y1="418" x2="644" y2="418" />
+<line class="row-grid" x1="0" y1="418" x2="532" y2="418" />
 <rect x="394" y="396" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="434">T-LAUNCH-PJM-PLAN-020 pm-plan レビュー・修正</text>
-<line class="row-grid" x1="0" y1="442" x2="644" y2="442" />
+<line class="row-grid" x1="0" y1="442" x2="532" y2="442" />
 <rect x="394" y="420" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="458">T-LAUNCH-PJM-SCHDEF-040 sch-defaults 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="466" x2="644" y2="466" />
+<line class="row-grid" x1="0" y1="466" x2="532" y2="466" />
 <rect x="397.5" y="444" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="482">T-LAUNCH-PJM-SCHMS-040 sch-milestones 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="490" x2="644" y2="490" />
+<line class="row-grid" x1="0" y1="490" x2="532" y2="490" />
 <rect x="397.5" y="468" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="506">T-LAUNCH-PJM-SCHTLNCH-040 sch-track-launch 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="514" x2="644" y2="514" />
+<line class="row-grid" x1="0" y1="514" x2="532" y2="514" />
 <rect x="397.5" y="492" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="530">T-LAUNCH-PJD-OVERVIEW-030 prj-overview 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="538" x2="644" y2="538" />
+<line class="row-grid" x1="0" y1="538" x2="532" y2="538" />
 <rect x="401" y="516" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="554">T-LAUNCH-PJM-PLAN-030 pm-plan 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="562" x2="644" y2="562" />
+<line class="row-grid" x1="0" y1="562" x2="532" y2="562" />
 <rect x="401" y="540" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="578">T-LAUNCH-PJD-SCOPE-010 prj-scope たたき台作成</text>
-<line class="row-grid" x1="0" y1="586" x2="644" y2="586" />
+<line class="row-grid" x1="0" y1="586" x2="532" y2="586" />
 <rect x="408" y="564" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="602">T-LAUNCH-PJD-STAKEHOLDER-010 prj-stakeholder-register たたき台作成</text>
-<line class="row-grid" x1="0" y1="610" x2="644" y2="610" />
+<line class="row-grid" x1="0" y1="610" x2="532" y2="610" />
 <rect x="408" y="588" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="626">T-LAUNCH-PJM-COMM-010 pm-communication-plan たたき台作成</text>
-<line class="row-grid" x1="0" y1="634" x2="644" y2="634" />
+<line class="row-grid" x1="0" y1="634" x2="532" y2="634" />
 <rect x="408" y="612" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="650">T-LAUNCH-PJM-ORG-010 pm-organization たたき台作成</text>
-<line class="row-grid" x1="0" y1="658" x2="644" y2="658" />
+<line class="row-grid" x1="0" y1="658" x2="532" y2="658" />
 <rect x="408" y="636" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="674">T-LAUNCH-PJM-QLTY-010 pm-quality-management-plan たたき台作成</text>
-<line class="row-grid" x1="0" y1="682" x2="644" y2="682" />
+<line class="row-grid" x1="0" y1="682" x2="532" y2="682" />
 <rect x="408" y="660" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="698">T-LAUNCH-PJD-SCOPE-020 prj-scope レビュー・修正</text>
-<line class="row-grid" x1="0" y1="706" x2="644" y2="706" />
+<line class="row-grid" x1="0" y1="706" x2="532" y2="706" />
 <rect x="422" y="684" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="722">T-LAUNCH-PJD-STAKEHOLDER-020 prj-stakeholder-register レビュー・修正</text>
-<line class="row-grid" x1="0" y1="730" x2="644" y2="730" />
+<line class="row-grid" x1="0" y1="730" x2="532" y2="730" />
 <rect x="422" y="708" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="746">T-LAUNCH-PJM-COMM-020 pm-communication-plan レビュー・修正</text>
-<line class="row-grid" x1="0" y1="754" x2="644" y2="754" />
+<line class="row-grid" x1="0" y1="754" x2="532" y2="754" />
 <rect x="422" y="732" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="770">T-LAUNCH-PJM-ORG-020 pm-organization レビュー・修正</text>
-<line class="row-grid" x1="0" y1="778" x2="644" y2="778" />
+<line class="row-grid" x1="0" y1="778" x2="532" y2="778" />
 <rect x="422" y="756" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="794">T-LAUNCH-PJM-QLTY-020 pm-quality-management-plan レビュー・修正</text>
-<line class="row-grid" x1="0" y1="802" x2="644" y2="802" />
+<line class="row-grid" x1="0" y1="802" x2="532" y2="802" />
 <rect x="422" y="780" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="818">T-LAUNCH-PJD-SCOPE-030 prj-scope 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="826" x2="644" y2="826" />
+<line class="row-grid" x1="0" y1="826" x2="532" y2="826" />
 <rect x="429" y="804" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="842">T-LAUNCH-PJD-STAKEHOLDER-030 prj-stakeholder-register 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="850" x2="644" y2="850" />
+<line class="row-grid" x1="0" y1="850" x2="532" y2="850" />
 <rect x="429" y="828" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="866">T-LAUNCH-PJM-COMM-030 pm-communication-plan 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="874" x2="644" y2="874" />
+<line class="row-grid" x1="0" y1="874" x2="532" y2="874" />
 <rect x="429" y="852" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="890">T-LAUNCH-PJM-ORG-030 pm-organization 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="898" x2="644" y2="898" />
+<line class="row-grid" x1="0" y1="898" x2="532" y2="898" />
 <rect x="429" y="876" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="914">T-LAUNCH-PJM-QLTY-030 pm-quality-management-plan 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="922" x2="644" y2="922" />
+<line class="row-grid" x1="0" y1="922" x2="532" y2="922" />
 <rect x="429" y="900" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="938">T-LAUNCH-PJD-ACD-010 prj-assumptions-constraints-dependencies たたき台作成</text>
-<line class="row-grid" x1="0" y1="946" x2="644" y2="946" />
-<rect x="436" y="924" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="946" x2="532" y2="946" />
+<rect x="436" y="924" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="962">T-LAUNCH-PJD-CHARTER-010 prj-charter たたき台作成</text>
-<line class="row-grid" x1="0" y1="970" x2="644" y2="970" />
-<rect x="436" y="948" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="970" x2="532" y2="970" />
+<rect x="436" y="948" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="986">T-LAUNCH-PJD-SUCCESS-010 prj-success-criteria-and-acceptance-criteria たたき台作成</text>
-<line class="row-grid" x1="0" y1="994" x2="644" y2="994" />
-<rect x="436" y="972" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="994" x2="532" y2="994" />
+<rect x="436" y="972" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1010">T-LAUNCH-PJM-RACI-010 pm-raci たたき台作成</text>
-<line class="row-grid" x1="0" y1="1018" x2="644" y2="1018" />
-<rect x="436" y="996" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1018" x2="532" y2="1018" />
+<rect x="436" y="996" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1034">T-LAUNCH-PJM-ROLE-010 pm-roles たたき台作成</text>
-<line class="row-grid" x1="0" y1="1042" x2="644" y2="1042" />
-<rect x="436" y="1020" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1042" x2="532" y2="1042" />
+<rect x="436" y="1020" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1058">T-LAUNCH-PJM-ROLE-020 pm-roles スキーマ検証</text>
-<line class="row-grid" x1="0" y1="1066" x2="644" y2="1066" />
-<rect x="443" y="1044" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1066" x2="532" y2="1066" />
+<rect x="436" y="1044" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1082">T-LAUNCH-PJM-ROLE-030 pm-roles レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1090" x2="644" y2="1090" />
-<rect x="446.5" y="1068" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1090" x2="532" y2="1090" />
+<rect x="436" y="1068" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1106">T-LAUNCH-PJD-ACD-020 prj-assumptions-constraints-dependencies レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1114" x2="644" y2="1114" />
-<rect x="450" y="1092" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1114" x2="532" y2="1114" />
+<rect x="436" y="1092" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1130">T-LAUNCH-PJD-CHARTER-020 prj-charter レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1138" x2="644" y2="1138" />
-<rect x="450" y="1116" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1138" x2="532" y2="1138" />
+<rect x="436" y="1116" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1154">T-LAUNCH-PJD-SUCCESS-020 prj-success-criteria-and-acceptance-criteria レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1162" x2="644" y2="1162" />
-<rect x="450" y="1140" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1162" x2="532" y2="1162" />
+<rect x="436" y="1140" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1178">T-LAUNCH-PJM-RACI-020 pm-raci レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1186" x2="644" y2="1186" />
-<rect x="450" y="1164" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1186" x2="532" y2="1186" />
+<rect x="436" y="1164" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1202">T-LAUNCH-PJM-ROLE-040 pm-roles 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1210" x2="644" y2="1210" />
-<rect x="453.5" y="1188" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1210" x2="532" y2="1210" />
+<rect x="436" y="1188" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1226">T-LAUNCH-PJD-ACD-030 prj-assumptions-constraints-dependencies 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1234" x2="644" y2="1234" />
-<rect x="457" y="1212" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1234" x2="532" y2="1234" />
+<rect x="436" y="1212" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1250">T-LAUNCH-PJD-CHARTER-030 prj-charter 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1258" x2="644" y2="1258" />
-<rect x="457" y="1236" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1258" x2="532" y2="1258" />
+<rect x="436" y="1236" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1274">T-LAUNCH-PJD-SUCCESS-030 prj-success-criteria-and-acceptance-criteria 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1282" x2="644" y2="1282" />
-<rect x="457" y="1260" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1282" x2="532" y2="1282" />
+<rect x="436" y="1260" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1298">T-LAUNCH-PJM-RACI-030 pm-raci 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1306" x2="644" y2="1306" />
-<rect x="457" y="1284" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1306" x2="532" y2="1306" />
+<rect x="436" y="1284" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1322">T-LAUNCH-PJM-MBR-010 pm-members たたき台作成</text>
-<line class="row-grid" x1="0" y1="1330" x2="644" y2="1330" />
-<rect x="460.5" y="1308" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1330" x2="532" y2="1330" />
+<rect x="436" y="1308" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1346">T-LAUNCH-PJD-ISSUES-010 prj-issues-and-approach たたき台作成</text>
-<line class="row-grid" x1="0" y1="1354" x2="644" y2="1354" />
-<rect x="464" y="1332" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1354" x2="532" y2="1354" />
+<rect x="436" y="1332" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1370">T-LAUNCH-PJM-MBR-020 pm-members スキーマ検証</text>
-<line class="row-grid" x1="0" y1="1378" x2="644" y2="1378" />
-<rect x="467.5" y="1356" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1378" x2="532" y2="1378" />
+<rect x="436" y="1356" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1394">T-LAUNCH-PJM-MBR-030 pm-members レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1402" x2="644" y2="1402" />
-<rect x="471" y="1380" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1402" x2="532" y2="1402" />
+<rect x="436" y="1380" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1418">T-LAUNCH-PJD-ISSUES-020 prj-issues-and-approach レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1426" x2="644" y2="1426" />
-<rect x="478" y="1404" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1426" x2="532" y2="1426" />
+<rect x="436" y="1404" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1442">T-LAUNCH-PJM-MBR-040 pm-members 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1450" x2="644" y2="1450" />
-<rect x="478" y="1428" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1450" x2="532" y2="1450" />
+<rect x="436" y="1428" width="2" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="1466">T-LAUNCH-PJD-ISSUES-030 prj-issues-and-approach 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1474" x2="644" y2="1474" />
-<rect x="485" y="1452" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1474" x2="532" y2="1474" />
+<rect x="436" y="1452" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1490">T-LAUNCH-PJD-ALT-010 prj-comparison-of-alternatives たたき台作成</text>
-<line class="row-grid" x1="0" y1="1498" x2="644" y2="1498" />
-<rect x="492" y="1476" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1498" x2="532" y2="1498" />
+<rect x="436" y="1476" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1514">T-LAUNCH-PJD-ALT-020 prj-comparison-of-alternatives レビュー・修正</text>
-<line class="row-grid" x1="0" y1="1522" x2="644" y2="1522" />
-<rect x="506" y="1500" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<line class="row-grid" x1="0" y1="1522" x2="532" y2="1522" />
+<rect x="436" y="1500" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label" x="16" y="1538">T-LAUNCH-PJD-ALT-030 prj-comparison-of-alternatives 完成版仕上げ</text>
-<line class="row-grid" x1="0" y1="1546" x2="644" y2="1546" />
-<rect x="513" y="1524" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<rect x="0" y="1544" width="644" height="30" fill="#f1f5f9" />
+<line class="row-grid" x1="0" y1="1546" x2="532" y2="1546" />
+<rect x="436" y="1524" width="2" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<rect x="0" y="1544" width="532" height="30" fill="#f1f5f9" />
 <text class="section" x="16" y="1562">milestones</text>
-<line class="grid" x1="0" y1="1570" x2="644" y2="1570" />
+<line class="grid" x1="0" y1="1570" x2="532" y2="1570" />
 <text class="label" x="16" y="1600">M-LAUNCH-PJM-SCH-900 スケジュールグループ完了</text>
-<line class="row-grid" x1="0" y1="1608" x2="644" y2="1608" />
+<line class="row-grid" x1="0" y1="1608" x2="532" y2="1608" />
 <polygon points="404.5,1591 411.5,1598 404.5,1605 397.5,1598" fill="#b45309" />
 <text class="label" x="16" y="1624">M-LAUNCH-PJM-PLAN-900 管理計画グループ完了</text>
-<line class="row-grid" x1="0" y1="1632" x2="644" y2="1632" />
+<line class="row-grid" x1="0" y1="1632" x2="532" y2="1632" />
 <polygon points="436,1615 443,1622 436,1629 429,1622" fill="#b45309" />
 <text class="label" x="16" y="1648">M-LAUNCH-PJM-ORG-900 組織体制グループ完了</text>
-<line class="row-grid" x1="0" y1="1656" x2="644" y2="1656" />
-<polygon points="485,1639 492,1646 485,1653 478,1646" fill="#b45309" />
+<line class="row-grid" x1="0" y1="1656" x2="532" y2="1656" />
+<polygon points="436,1639 443,1646 436,1653 429,1646" fill="#b45309" />
 <text class="label" x="16" y="1672">M-LAUNCH-PJD-900 プロジェクト定義ドメイン完了</text>
-<line class="row-grid" x1="0" y1="1680" x2="644" y2="1680" />
-<polygon points="520,1663 527,1670 520,1677 513,1670" fill="#b45309" />
+<line class="row-grid" x1="0" y1="1680" x2="532" y2="1680" />
+<polygon points="436,1663 443,1670 436,1677 429,1670" fill="#b45309" />
 </svg>

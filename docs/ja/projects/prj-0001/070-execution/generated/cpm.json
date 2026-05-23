@@ -1,6 +1,6 @@
 {
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
-  "project_start_date": "2026-05-18",
+  "project_start_date": null,
   "project_duration_days": 2.5,
   "nodes": {
     "T-LAUNCH-PJD-OVERVIEW-010": {
