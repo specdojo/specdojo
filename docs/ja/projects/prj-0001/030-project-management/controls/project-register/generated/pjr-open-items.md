@@ -7,10 +7,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0002 | open | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0007 | open | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | - | - | - |
-| PJR-0008 | open | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0016 | open | prj-scope-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0017 | open | prj-success-criteria-and-acceptance-criteria-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0018 | open | prj-issues-and-approach-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |

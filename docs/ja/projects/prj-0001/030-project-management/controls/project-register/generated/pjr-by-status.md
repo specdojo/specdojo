@@ -9,10 +9,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0002 | open | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0004 | open | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0007 | open | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | - | - | - |
-| PJR-0008 | open | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | - | - | - |
 | PJR-0016 | open | prj-scope-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0017 | open | prj-success-criteria-and-acceptance-criteria-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0018 | open | prj-issues-and-approach-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | - | - |
@@ -30,7 +27,10 @@
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | - |
+| PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | - |
 | PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |
+| PJR-0007 | done | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0058で対応 | - |
+| PJR-0008 | done | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0037 | - |
 | PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる | todo | high | ARC | 2026-05-10 | 2026-05-05 | .agent/設定を整備 | - |
 | PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | ARC | 2026-05-10 | 2026-05-04 | ID体系を修正済み | - |
 | PJR-0012 | done | claudeのSKILL対応 | .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | 2026-05-10 | 2026-05-05 | 構成変更済み | - |
