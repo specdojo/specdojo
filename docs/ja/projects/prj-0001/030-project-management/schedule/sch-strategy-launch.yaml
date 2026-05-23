@@ -12,6 +12,9 @@ track: launch
 # 実際の実行者（--by <nickname>）は実行時に pm-members.yaml の roles フィールドと照合して決定する。
 # レビュータスクの担当ロールは各成果物の done_criteria から取得する。
 
+settings:
+  start_date: "2026-05-18"
+
 scope:
   catalogs:
     - id: prj-0001:dct-project-definition

@@ -163,6 +163,17 @@ properties:
                 minLength: 1
               uniqueItems: true
 
+  settings:
+    type: object
+    additionalProperties: false
+    description: "Track-level schedule settings. start_date overrides defaults.settings.default_start_date."
+    properties:
+      start_date:
+        $ref: "./sch-common.schema.yaml#/$defs/Date"
+        description: "Track start date. Overrides sch-defaults.yaml default_start_date when specified."
+      notes:
+        type: string
+
   cross_domain_dependencies:
     type: array
     description: >

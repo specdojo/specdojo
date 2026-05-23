@@ -109,10 +109,11 @@ $defs:
     type: object
     additionalProperties: false
     required:
-      - start_date
+      - default_start_date
     properties:
-      start_date:
+      default_start_date:
         $ref: "#/$defs/Date"
+        description: "Fallback start date used when a strategy file does not specify settings.start_date."
       notes:
         type: string
 
