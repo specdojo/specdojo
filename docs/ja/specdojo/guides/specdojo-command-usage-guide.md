@@ -1168,7 +1168,86 @@ pre-commit:
       run: specdojo index build
 ```
 
-## 27. まとめ
+## 27. watch コマンド
+
+`specdojo watch` は、プロジェクトファイルの変更を監視し、変更内容に応じた build コマンドを自動実行するコマンドです。
+
+ローカル開発時に schedule / catalog / register / index の各ビルドを手動で呼び出す手間を省き、常に最新の生成物を維持します。
+
+```bash
+specdojo watch [--project <id>] [--scope <scope>]
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project <id>` | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
+| `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`） | `all` |
+| `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒） | `300` |
+
+### 27.1. 監視対象とトリガーされるコマンド
+
+| 監視対象ファイルパターン | スコープ | トリガーされるコマンド |
+| --- | --- | --- |
+| `<schedule_path>/sch-*.yaml` | `exec` | `specdojo exec build` |
+| `<execution_path>/exec/events/*.json` | `exec` | `specdojo exec build` |
+| `<catalog_path>/dct-*.yaml` | `catalog` | `specdojo catalog build` |
+| `<project_register_path>/pjr-index.md` | `register` | `specdojo register build` |
+| `docs/**/*.md`, `docs/**/*.yaml` | `index` | `specdojo index build` |
+
+- `--scope all`（デフォルト）の場合は、上記すべてのパターンを同時に監視する。
+- 複数ファイルが短時間で変更された場合は `--debounce` で指定した時間だけ待機してから1回のビルドにまとめる。
+- 同一スコープのビルドが実行中に次の変更を検出した場合は、実行完了後にキューの変更をまとめて1回再実行する。
+
+### 27.2. 実行例
+
+プロジェクト全体を監視する（デフォルト）:
+
+```bash
+specdojo watch --project prj-0001
+```
+
+スケジュール・実行ログの変更のみ監視する:
+
+```bash
+specdojo watch --project prj-0001 --scope exec
+```
+
+カタログと登録簿の変更のみ監視する:
+
+```bash
+specdojo watch --project prj-0001 --scope catalog
+specdojo watch --project prj-0001 --scope register
+```
+
+### 27.3. 出力フォーマット
+
+変更検出時とビルド完了時に標準出力へ以下の形式でログを出力する。
+
+```text
+[watch] change detected: docs/ja/projects/prj-0001/060-schedule/sch-milestones.yaml
+[watch] running: specdojo exec build --project prj-0001
+[watch] done: specdojo exec build (1.2s)
+```
+
+ビルドが失敗した場合は標準エラー出力へエラーを出力し、監視は継続する。
+
+```text
+[watch] error: specdojo catalog build exited with code 1
+```
+
+### 27.4. 終了
+
+`Ctrl+C` で監視を停止する。実行中のビルドがある場合は完了を待たずに中断する。
+
+### 27.5. 制限事項
+
+- `specdojo watch` はローカル開発用途を想定しており、CI/CD パイプラインでの常駐利用は非推奨とする。
+- ファイル変更の検出には OS のファイルシステムイベントを使用するため、NFS やリモートマウントのディレクトリでは検出できない場合がある。
+- `exec build` は排他ロック（`exec/.locks/`）を使用するため、別プロセスが実行中の場合はビルドをスキップしてエラーログを出力する。
+
+## 28. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -1183,3 +1262,4 @@ pre-commit:
 - スケジュールトラック生成（`schedule generate`）
 - レビュー plan 生成（`review plan`）
 - プロジェクト登録簿 scaffold・登録項目追加・派生ビュー生成（`register scaffold` / `register add` / `register build`）
+- ファイル変更の自動検出とビルド実行（`watch`）
