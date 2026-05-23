@@ -81,7 +81,7 @@ Project Register
 | PJR-0059 | open | pjrのscaffold | pjr-index等を自動生成するためのscaffoldを作成 | todo | high | ARC | 2026-05-24 | - | - | - |
 | PJR-0060 | done | pjr-indexのvscodeでのリアルタイム検証 | .remarkrc.yamlに追加してvscodeでリアルタイム検証 | todo | high | ARC | 2026-05-24 | 2026-05-23 | remark-md-content.cjsを追加し.remarkrc.yamlに設定 | - |
 | PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | - |
-| PJR-0063 | open | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | 2026-05-24 | - | - | - |
+| PJR-0063 | rejected | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | 2026-05-24 | 2026-05-23 | claudeからstrategyの方が適切と指摘を受けた | - |
 
 ## 4. 派生ビュー
 
