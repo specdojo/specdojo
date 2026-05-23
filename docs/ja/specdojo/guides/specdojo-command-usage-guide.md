@@ -783,7 +783,7 @@ viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
 
 ### 25.1. register scaffold
 
-`project_register_path` に `pjr-index.md` を新規生成する。`docs/ja/specdojo/templates/pjr-index-template.md` をもとに `_PRJ-0000_` をプロジェクト ID に置換して出力する。
+`project_register_path` に `pjr-index.md` を新規生成する。`docs/ja/specdojo/templates/pjr-index-template.md` をもとに `_PRJ-0000_` をプロジェクト ID に置換して出力し、最後に `register build --scope all` 相当を実行して派生ビューも生成する。
 
 ```bash
 specdojo register scaffold --project prj-0001
@@ -807,14 +807,25 @@ specdojo register scaffold --project prj-0001
 3. `docs/ja/specdojo/templates/pjr-index-template.md` を読み込む。
 4. `_PRJ-0000_` を `--project-id` または `--project` の値に置換する。
 5. `project_register_path/pjr-index.md` に出力する。
-6. `project_register_path/generated/` を作成する。
+6. `project_register_path/generated/` と `controls/generated/` を作成する。
+7. `register build --scope all` 相当を実行し、登録簿内の補助一覧と controls 全体の type 別管理ビューを生成する。
 
 #### 25.1.2. 出力
 
 ```text
-controls/project-register/
-├─ pjr-index.md
+controls/
+├─ project-register/
+│  ├─ pjr-index.md
+│  └─ generated/
+│     ├─ pjr-open-items.md
+│     ├─ pjr-by-owner.md
+│     ├─ pjr-by-priority.md
+│     └─ pjr-by-status.md
 └─ generated/
+   ├─ pm-risk-register.md
+   ├─ pm-issue-log.md
+   ├─ pm-change-request-log.md
+   └─ pm-decision-log.md
 ```
 
 `pjr-index.md` の frontmatter は以下の形式で生成する。

@@ -34,18 +34,31 @@ type PjrItem = {
 // ================================
 
 const VALID_STATUSES = [
-  'open', 'in-progress', 'waiting', 'review',
-  'decided', 'done', 'deferred', 'rejected',
+  'open',
+  'in-progress',
+  'waiting',
+  'review',
+  'decided',
+  'done',
+  'deferred',
+  'rejected',
 ] as const
 
 const VALID_TYPES = [
-  'todo', 'question', 'risk', 'issue',
-  'change-request', 'decision', 'dependency', 'note',
+  'todo',
+  'question',
+  'risk',
+  'issue',
+  'change-request',
+  'decision',
+  'dependency',
+  'note',
 ] as const
 
 const VALID_PRIORITIES = ['high', 'medium', 'low'] as const
 
-const TABLE_HEADER = '| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |'
+const TABLE_HEADER =
+  '| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |'
 const TABLE_SEPARATOR = '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 
 // ================================
@@ -78,7 +91,7 @@ function resolveRegisterPaths(opts: { project?: string }): RegisterPaths {
   if (!rawRegisterPath) {
     throw new Error(
       `project_register_path not set for project '${projectId}' in ${configPath}.\n` +
-      `Add "project_register_path": "<path>" to the project config.`
+        `Add "project_register_path": "<path>" to the project config.`
     )
   }
 
@@ -100,9 +113,7 @@ function parseTableCells(line: string): string[] {
   // Replace escaped pipes with placeholder before splitting
   const PIPE = '\x01'
   const normalized = line.replace(/\\\|/g, PIPE)
-  const cells = normalized
-    .split('|')
-    .map(c => c.replace(new RegExp(PIPE, 'g'), '\\|').trim())
+  const cells = normalized.split('|').map(c => c.replace(new RegExp(PIPE, 'g'), '\\|').trim())
   // Remove first and last empty elements (line starts and ends with |)
   return cells.slice(1, cells.length - 1)
 }
@@ -217,7 +228,9 @@ function validateFields(opts: {
     errors.push(`Invalid type: "${opts.type}". Must be one of: ${VALID_TYPES.join(', ')}`)
   }
   if (!(VALID_PRIORITIES as readonly string[]).includes(opts.priority)) {
-    errors.push(`Invalid priority: "${opts.priority}". Must be one of: ${VALID_PRIORITIES.join(', ')}`)
+    errors.push(
+      `Invalid priority: "${opts.priority}". Must be one of: ${VALID_PRIORITIES.join(', ')}`
+    )
   }
   if (opts.id && !/^PJR-\d{4}$/.test(opts.id)) {
     errors.push(`Invalid ID: "${opts.id}". Must match PJR-XXXX (e.g., PJR-0001)`)
@@ -280,7 +293,10 @@ function generateTicket(opts: {
   content = content.replace(/_PJR-XXXX_/g, opts.displayId)
   // Replace type-specific title placeholder
   const titlePh = getTitlePlaceholder(opts.type)
-  content = content.replace(new RegExp(titlePh.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), opts.title)
+  content = content.replace(
+    new RegExp(titlePh.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+    opts.title
+  )
 
   return content
 }
@@ -328,15 +344,17 @@ function generateByOwnerView(items: PjrItem[]): string {
     grouped.get(key)!.push(item)
   }
 
-  const sections: string[] = [
-    '# 担当者別一覧',
-    '',
-    derivedViewNote(),
-  ]
+  const sections: string[] = ['# 担当者別一覧', '', derivedViewNote()]
 
   let num = 1
   for (const owner of [...grouped.keys()].sort()) {
-    sections.push('', `## ${num}. ${owner}`, '', '<!-- prettier-ignore -->', makeTable(grouped.get(owner)!))
+    sections.push(
+      '',
+      `## ${num}. ${owner}`,
+      '',
+      '<!-- prettier-ignore -->',
+      makeTable(grouped.get(owner)!)
+    )
     num++
   }
 
@@ -344,11 +362,7 @@ function generateByOwnerView(items: PjrItem[]): string {
 }
 
 function generateByPriorityView(items: PjrItem[]): string {
-  const sections: string[] = [
-    '# 優先度別一覧',
-    '',
-    derivedViewNote(),
-  ]
+  const sections: string[] = ['# 優先度別一覧', '', derivedViewNote()]
 
   let num = 1
   for (const priority of VALID_PRIORITIES) {
@@ -361,11 +375,7 @@ function generateByPriorityView(items: PjrItem[]): string {
 }
 
 function generateByStatusView(items: PjrItem[]): string {
-  const sections: string[] = [
-    '# 状態別一覧',
-    '',
-    derivedViewNote(),
-  ]
+  const sections: string[] = ['# 状態別一覧', '', derivedViewNote()]
 
   let num = 1
   for (const status of VALID_STATUSES) {
@@ -389,6 +399,87 @@ function generateTypeFilterView(items: PjrItem[], type: string, title: string): 
     makeTable(filtered),
     '',
   ].join('\n')
+}
+type BuildScope = 'register' | 'controls' | 'all'
+type ViewFile = { path: string; content: string }
+
+const VALID_BUILD_SCOPES: BuildScope[] = ['register', 'controls', 'all']
+
+function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
+  const content = readFileSync(paths.pjrIndexPath, 'utf8')
+  const items = parsePjrIndex(content)
+
+  // Ticket links in pjr-index.md use ./ relative to project-register/.
+  // Rebase them so links remain valid from each generated/ directory.
+  const pjrDirName = basename(paths.projectRegisterPath)
+  const regItems = rebaseItems(items, '../')
+  const ctrlItems = rebaseItems(items, `../${pjrDirName}/`)
+
+  const registerViews: ViewFile[] = []
+  const controlsViews: ViewFile[] = []
+
+  if (scope === 'register' || scope === 'all') {
+    registerViews.push(
+      {
+        path: join(paths.generatedPath, 'pjr-open-items.md'),
+        content: generateOpenItemsView(regItems),
+      },
+      {
+        path: join(paths.generatedPath, 'pjr-by-owner.md'),
+        content: generateByOwnerView(regItems),
+      },
+      {
+        path: join(paths.generatedPath, 'pjr-by-priority.md'),
+        content: generateByPriorityView(regItems),
+      },
+      {
+        path: join(paths.generatedPath, 'pjr-by-status.md'),
+        content: generateByStatusView(regItems),
+      }
+    )
+  }
+
+  if (scope === 'controls' || scope === 'all') {
+    controlsViews.push(
+      {
+        path: join(paths.controlsGeneratedPath, 'pm-risk-register.md'),
+        content: generateTypeFilterView(ctrlItems, 'risk', 'リスク登録簿'),
+      },
+      {
+        path: join(paths.controlsGeneratedPath, 'pm-issue-log.md'),
+        content: generateTypeFilterView(ctrlItems, 'issue', '課題ログ'),
+      },
+      {
+        path: join(paths.controlsGeneratedPath, 'pm-change-request-log.md'),
+        content: generateTypeFilterView(ctrlItems, 'change-request', '変更要求ログ'),
+      },
+      {
+        path: join(paths.controlsGeneratedPath, 'pm-decision-log.md'),
+        content: generateTypeFilterView(ctrlItems, 'decision', '決定記録'),
+      }
+    )
+  }
+
+  return [...registerViews, ...controlsViews]
+}
+
+function writeDerivedViews(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
+  const views = generateDerivedViewFiles(paths, scope)
+  const hasRegisterViews = views.some(view => dirname(view.path) === paths.generatedPath)
+  const hasControlsViews = views.some(view => dirname(view.path) === paths.controlsGeneratedPath)
+
+  if (hasRegisterViews) {
+    mkdirSync(paths.generatedPath, { recursive: true })
+  }
+  if (hasControlsViews) {
+    mkdirSync(paths.controlsGeneratedPath, { recursive: true })
+  }
+
+  for (const view of views) {
+    writeFileSync(view.path, view.content, 'utf8')
+  }
+
+  return views
 }
 
 // ================================
@@ -423,7 +514,10 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts)
       const embedId = opts.projectId?.trim() || paths.projectId
 
-      const templatePath = join(specdojoRootDir(), 'docs/ja/specdojo/templates/pjr-index-template.md')
+      const templatePath = join(
+        specdojoRootDir(),
+        'docs/ja/specdojo/templates/pjr-index-template.md'
+      )
       if (!existsSync(templatePath)) {
         throw new Error(`Template not found: ${templatePath}`)
       }
@@ -448,6 +542,10 @@ export function registerRegisterCommands(program: Command): void {
       writeFileSync(paths.pjrIndexPath, content, 'utf8')
       process.stdout.write(`Created: ${paths.pjrIndexPath}\n`)
       process.stdout.write(`Created: ${paths.generatedPath}/\n`)
+
+      for (const view of writeDerivedViews(paths, 'all')) {
+        process.stdout.write(`Generated: ${view.path}\n`)
+      }
     } catch (error) {
       printCommandError(error)
     }
@@ -477,7 +575,7 @@ export function registerRegisterCommands(program: Command): void {
       if (!existsSync(paths.pjrIndexPath)) {
         throw new Error(
           `pjr-index.md not found: ${paths.pjrIndexPath}\n` +
-          `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`
+            `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`
         )
       }
 
@@ -583,64 +681,27 @@ export function registerRegisterCommands(program: Command): void {
       if (!existsSync(paths.pjrIndexPath)) {
         throw new Error(
           `pjr-index.md not found: ${paths.pjrIndexPath}\n` +
-          `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`
+            `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`
         )
       }
 
-      const validScopes = ['register', 'controls', 'all']
-      if (!validScopes.includes(opts.scope)) {
-        throw new Error(`Invalid scope: "${opts.scope}". Must be one of: ${validScopes.join(', ')}`)
-      }
-
-      const content = readFileSync(paths.pjrIndexPath, 'utf8')
-      const items = parsePjrIndex(content)
-
-      // Ticket links in pjr-index.md use ./ relative to project-register/.
-      // Rebase them so links remain valid from each generated/ directory.
-      const pjrDirName = basename(paths.projectRegisterPath)
-      const regItems = rebaseItems(items, '../')
-      const ctrlItems = rebaseItems(items, `../${pjrDirName}/`)
-
-      type ViewFile = { path: string; content: string }
-      const registerViews: ViewFile[] = []
-      const controlsViews: ViewFile[] = []
-
-      if (opts.scope === 'register' || opts.scope === 'all') {
-        registerViews.push(
-          { path: join(paths.generatedPath, 'pjr-open-items.md'), content: generateOpenItemsView(regItems) },
-          { path: join(paths.generatedPath, 'pjr-by-owner.md'), content: generateByOwnerView(regItems) },
-          { path: join(paths.generatedPath, 'pjr-by-priority.md'), content: generateByPriorityView(regItems) },
-          { path: join(paths.generatedPath, 'pjr-by-status.md'), content: generateByStatusView(regItems) },
+      const scope = opts.scope as BuildScope
+      if (!VALID_BUILD_SCOPES.includes(scope)) {
+        throw new Error(
+          `Invalid scope: "${opts.scope}". Must be one of: ${VALID_BUILD_SCOPES.join(', ')}`
         )
       }
 
-      if (opts.scope === 'controls' || opts.scope === 'all') {
-        controlsViews.push(
-          { path: join(paths.controlsGeneratedPath, 'pm-risk-register.md'), content: generateTypeFilterView(ctrlItems, 'risk', 'リスク登録簿') },
-          { path: join(paths.controlsGeneratedPath, 'pm-issue-log.md'), content: generateTypeFilterView(ctrlItems, 'issue', '課題ログ') },
-          { path: join(paths.controlsGeneratedPath, 'pm-change-request-log.md'), content: generateTypeFilterView(ctrlItems, 'change-request', '変更要求ログ') },
-          { path: join(paths.controlsGeneratedPath, 'pm-decision-log.md'), content: generateTypeFilterView(ctrlItems, 'decision', '決定記録') },
-        )
-      }
-
-      const allViews = [...registerViews, ...controlsViews]
+      const views = generateDerivedViewFiles(paths, scope)
 
       if (opts.dryRun) {
-        for (const view of allViews) {
+        for (const view of views) {
           process.stdout.write(`=== ${view.path} ===\n${view.content}\n\n`)
         }
         return
       }
 
-      if (registerViews.length > 0) {
-        mkdirSync(paths.generatedPath, { recursive: true })
-      }
-      if (controlsViews.length > 0) {
-        mkdirSync(paths.controlsGeneratedPath, { recursive: true })
-      }
-
-      for (const view of allViews) {
-        writeFileSync(view.path, view.content, 'utf8')
+      for (const view of writeDerivedViews(paths, scope)) {
         process.stdout.write(`Generated: ${view.path}\n`)
       }
     } catch (error) {
