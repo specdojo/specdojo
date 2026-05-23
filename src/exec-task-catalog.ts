@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import { load } from 'js-yaml'
@@ -49,26 +47,6 @@ type WbsDoc = {
   }>
 }
 
-function parseArgs(argv: string[]): { schedulePath: string; executionPath: string } {
-  let schedulePath = ''
-  let executionPath = ''
-
-  for (let i = 2; i < argv.length; i++) {
-    const arg = argv[i]
-    if (arg === '--schedule-path') {
-      schedulePath = argv[++i] ?? ''
-    } else if (arg === '--execution-path') {
-      executionPath = argv[++i] ?? ''
-    }
-  }
-
-  if (!schedulePath || !executionPath) {
-    throw new Error('Usage: gen-task-catalog.ts --schedule-path <path> --execution-path <path>')
-  }
-
-  return { schedulePath, executionPath }
-}
-
 function listFilesRecursive(dirPath: string): string[] {
   const out: string[] = []
   const names = readdirSync(dirPath)
@@ -113,9 +91,10 @@ function cleanupCell(text: string): string {
   return text.replace(/\|/g, '\\|').replace(/\r?\n/g, ' ').trim()
 }
 
-function pickWhat(task: any): string {
-  const notes = safeString(task?.notes)
-  const name = safeString(task?.name)
+function pickWhat(task: unknown): string {
+  const t = task as Record<string, unknown>
+  const notes = safeString(t?.notes)
+  const name = safeString(t?.name)
   return notes || name || '-'
 }
 
@@ -216,9 +195,9 @@ function buildRows(schedulePath: string, generatedDir: string): CatalogRow[] {
   const rows: CatalogRow[] = []
 
   for (const filePath of files) {
-    let doc: any
+    let doc: Record<string, unknown>
     try {
-      doc = load(readFileSync(filePath, 'utf8'))
+      doc = load(readFileSync(filePath, 'utf8')) as Record<string, unknown>
     } catch {
       continue
     }
@@ -227,23 +206,24 @@ function buildRows(schedulePath: string, generatedDir: string): CatalogRow[] {
     if (safeString(doc?.kind) !== 'schedule') continue
 
     for (const t of tasks) {
-      const id = safeString(t?.id)
+      const task = t as Record<string, unknown>
+      const id = safeString(task?.id)
       if (!id) continue
       const cpmNode = cpmById[id]
-      const wbsId = safeString(t?.wbs)
+      const wbsId = safeString(task?.wbs)
       const deliverables = wbsDeliverables.get(wbsId) ?? []
-      const tags = toArrayOfStrings(t?.tags)
+      const tags = toArrayOfStrings(task?.tags)
       const primaryPaths = selectPrimaryArtifactCandidates(id, tags, deliverables)
       const secondaryPaths = selectSecondaryArtifactCandidates(deliverables, primaryPaths)
       rows.push({
         id,
         kind: 'task',
-        owner: safeString(t?.owner) || '-',
-        what: pickWhat(t),
+        owner: safeString(task?.owner) || '-',
+        what: pickWhat(task),
         primaryPaths,
         secondaryPaths,
-        dependsOn: toArrayOfStrings(t?.depends_on),
-        durationDays: typeof t?.duration_days === 'number' ? t.duration_days : 0,
+        dependsOn: toArrayOfStrings(task?.depends_on),
+        durationDays: typeof task?.duration_days === 'number' ? task.duration_days : 0,
         scheduleFile: toScheduleFile(schedulePath, filePath),
         es: cpmNode ? String(cpmNode.es) : '-',
         ef: cpmNode ? String(cpmNode.ef) : '-',
@@ -255,17 +235,18 @@ function buildRows(schedulePath: string, generatedDir: string): CatalogRow[] {
     }
 
     for (const m of milestones) {
-      const id = safeString(m?.id)
+      const milestone = m as Record<string, unknown>
+      const id = safeString(milestone?.id)
       if (!id) continue
       const cpmNode = cpmById[id]
       rows.push({
         id,
         kind: 'milestone',
-        owner: safeString(m?.owner) || '-',
-        what: pickWhat(m),
+        owner: safeString(milestone?.owner) || '-',
+        what: pickWhat(milestone),
         primaryPaths: [],
         secondaryPaths: [],
-        dependsOn: toArrayOfStrings(m?.depends_on),
+        dependsOn: toArrayOfStrings(milestone?.depends_on),
         durationDays: 0,
         scheduleFile: toScheduleFile(schedulePath, filePath),
         es: cpmNode ? String(cpmNode.es) : '-',
@@ -309,13 +290,10 @@ function buildMarkdown(rows: CatalogRow[]): string {
   return lines.join('\n')
 }
 
-function main(): void {
-  const { schedulePath, executionPath } = parseArgs(process.argv)
+export function generateTaskCatalog(schedulePath: string, executionPath: string): void {
   const generatedDir = join(executionPath, 'generated')
   const rows = buildRows(schedulePath, generatedDir)
   const outPath = join(generatedDir, 'task-catalog.md')
   writeFileSync(outPath, buildMarkdown(rows), 'utf8')
   process.stdout.write(`Generated: ${outPath}\n`)
 }
-
-main()

@@ -1,8 +1,6 @@
 import { Command } from 'commander'
-import { spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import {
   acquireSchedulerLock,
   buildEvent,
@@ -45,6 +43,8 @@ import {
 } from './exec-schedule.js'
 import { ExecEventType, ExecEventV1, SchedulerStrategy } from './exec-types.js'
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
+import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
+import { generateTaskCatalog } from './exec-task-catalog.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -186,68 +186,6 @@ function printCommandError(error: unknown, fail = true): void {
   else process.exitCode = 1
 }
 
-function runTaskCatalogBuild(schedulePath: string, executionPath: string): void {
-  const currentFileDir = dirname(fileURLToPath(import.meta.url))
-  const scriptPath = resolve(currentFileDir, '../tools/docs/src/gen-task-catalog.ts')
-  const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
-
-  const result = spawnSync(
-    npxCmd,
-    ['tsx', scriptPath, '--schedule-path', schedulePath, '--execution-path', executionPath],
-    {
-      encoding: 'utf8',
-      env: process.env,
-    }
-  )
-
-  if (result.status !== 0) {
-    const stderr = (result.stderr ?? '').trim()
-    const stdout = (result.stdout ?? '').trim()
-    const details = [stdout, stderr].filter(Boolean).join('\n')
-    throw new Error(
-      `task-catalog generation failed: ${scriptPath}` + (details ? `\n${details}` : '')
-    )
-  }
-}
-
-function runAgentBriefBuild(
-  schedulePath: string,
-  executionPath: string,
-  cliProject = '',
-  catalogPath = ''
-): void {
-  const currentFileDir = dirname(fileURLToPath(import.meta.url))
-  const scriptPath = resolve(currentFileDir, '../tools/docs/src/gen-agent-briefs.ts')
-  const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx'
-
-  const args = [
-    'tsx',
-    scriptPath,
-    '--schedule-path',
-    schedulePath,
-    '--execution-path',
-    executionPath,
-    '--cli-project',
-    cliProject,
-  ]
-  if (catalogPath) args.push('--catalog-path', catalogPath)
-
-  const result = spawnSync(npxCmd, args,
-    {
-      encoding: 'utf8',
-      env: process.env,
-    }
-  )
-
-  if (result.status !== 0) {
-    const stderr = (result.stderr ?? '').trim()
-    const stdout = (result.stdout ?? '').trim()
-    const details = [stdout, stderr].filter(Boolean).join('\n')
-    throw new Error(
-      `agent-brief generation failed: ${scriptPath}` + (details ? `\n${details}` : '')
-    )
-  }
-}
 
 function saveClaimBriefSnapshot(
   executionPath: string,
@@ -260,44 +198,14 @@ function saveClaimBriefSnapshot(
     throw new Error(`agent brief source not found for snapshot: ${sourcePath}`)
   }
 
-  const snapshotDir = join(executionPath, 'exec', 'agent-briefs', 'claims', taskId)
+  const claimsDir = join(executionPath, 'exec', 'agent-briefs', 'claims')
+  const snapshotDir = join(claimsDir, taskId)
   mkdirSync(snapshotDir, { recursive: true })
   const fileName = `${tsForFilenameUtc(eventTs)}--${safeSlug(actor)}.md`
   copyFileSync(sourcePath, join(snapshotDir, fileName))
-  writeClaimBriefSnapshotIndex(executionPath)
+  writeClaimBriefSnapshotIndex(claimsDir)
 }
 
-function writeClaimBriefSnapshotIndex(executionPath: string): void {
-  const claimsDir = join(executionPath, 'exec', 'agent-briefs', 'claims')
-  mkdirSync(claimsDir, { recursive: true })
-
-  const taskDirs = readdirSync(claimsDir)
-    .map(name => ({ name, path: join(claimsDir, name) }))
-    .filter(entry => statSync(entry.path).isDirectory())
-    .sort((a, b) => a.name.localeCompare(b.name))
-
-  const lines: string[] = []
-  lines.push('# Claim Brief Snapshot Index')
-  lines.push('')
-  lines.push('claim 時点で固定保存した Agent ブリーフの一覧。')
-  lines.push('')
-  lines.push('| task_id | snapshots | latest | latest_file |')
-  lines.push('|---|---:|---|---|')
-
-  for (const taskDir of taskDirs) {
-    const files = readdirSync(taskDir.path)
-      .filter(name => name.endsWith('.md'))
-      .sort((a, b) => a.localeCompare(b))
-    const latest = files.at(-1)
-    if (!latest) continue
-    lines.push(
-      `| ${taskDir.name} | ${files.length} | ${latest.replace(/\.md$/, '')} | [${latest}](./${taskDir.name}/${latest}) |`
-    )
-  }
-
-  lines.push('')
-  writeFileSync(join(claimsDir, 'index.md'), `${lines.join('\n')}\n`, 'utf8')
-}
 
 function loadValidatedExecState(projectPath: string): LoadedExecState | null {
   const res = validateAll(projectPath)
@@ -384,8 +292,8 @@ function runLockedEventCommand(opts: any, action: LockedEventAction): void {
       writeGeneratedCore(schedulePath, state.events, state.schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, state.schedule)
       writeCpmFiles(schedulePath, cpm, state.snapshot)
-      runTaskCatalogBuild(schedulePath, executionPath)
-      runAgentBriefBuild(
+      generateTaskCatalog(schedulePath, executionPath)
+      generateAgentBriefs(
         schedulePath,
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
@@ -509,8 +417,8 @@ export function registerExecCommands(program: Command): void {
       const snapshot = writeGeneratedCore(schedulePath, events, schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, schedule)
       writeCpmFiles(schedulePath, cpm, snapshot)
-      runTaskCatalogBuild(schedulePath, executionPath)
-      runAgentBriefBuild(
+      generateTaskCatalog(schedulePath, executionPath)
+      generateAgentBriefs(
         schedulePath,
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',

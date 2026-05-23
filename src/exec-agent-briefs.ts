@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import {
   existsSync,
   mkdirSync,
@@ -80,32 +78,6 @@ type TaskDetail = {
   notes: string
   deliverablePath?: string
   doneCriteria?: string[]
-}
-
-function parseArgs(argv: string[]): {
-  schedulePath: string
-  executionPath: string
-  catalogPath: string
-  cliProject: string
-} {
-  let schedulePath = ''
-  let executionPath = ''
-  let catalogPath = ''
-  let cliProject = ''
-
-  for (let i = 2; i < argv.length; i++) {
-    const arg = argv[i]
-    if (arg === '--schedule-path') schedulePath = argv[++i] ?? ''
-    else if (arg === '--execution-path') executionPath = argv[++i] ?? ''
-    else if (arg === '--catalog-path') catalogPath = argv[++i] ?? ''
-    else if (arg === '--cli-project') cliProject = argv[++i] ?? ''
-  }
-
-  if (!schedulePath || !executionPath) {
-    throw new Error('Usage: gen-agent-briefs.ts --schedule-path <path> --execution-path <path>')
-  }
-
-  return { schedulePath, executionPath, catalogPath, cliProject }
 }
 
 function listFilesRecursive(dirPath: string): string[] {
@@ -408,15 +380,15 @@ function buildIndexMarkdown(ready: ReadyJson, details: Map<string, TaskDetail>):
   return lines.join('\n')
 }
 
-function buildClaimSnapshotIndexMarkdown(briefsDir: string): string {
-  const lines: string[] = []
-  const taskDirs = existsSync(briefsDir)
-    ? readdirSync(briefsDir)
-        .map(name => ({ name, path: join(briefsDir, name) }))
-        .filter(entry => statSync(entry.path).isDirectory())
-        .sort((a, b) => a.name.localeCompare(b.name))
-    : []
+export function writeClaimBriefSnapshotIndex(claimsDir: string): void {
+  mkdirSync(claimsDir, { recursive: true })
 
+  const taskDirs = readdirSync(claimsDir)
+    .map(name => ({ name, path: join(claimsDir, name) }))
+    .filter(entry => statSync(entry.path).isDirectory())
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const lines: string[] = []
   lines.push('# Claim Brief Snapshot Index')
   lines.push('')
   lines.push('claim 時点で固定保存した Agent ブリーフの一覧。')
@@ -436,11 +408,15 @@ function buildClaimSnapshotIndexMarkdown(briefsDir: string): string {
   }
 
   lines.push('')
-  return lines.join('\n')
+  writeFileSync(join(claimsDir, 'index.md'), lines.join('\n'), 'utf8')
 }
 
-function main(): void {
-  const { schedulePath, executionPath, catalogPath, cliProject } = parseArgs(process.argv)
+export function generateAgentBriefs(
+  schedulePath: string,
+  executionPath: string,
+  cliProject: string,
+  catalogPath: string
+): void {
   const generatedDir = join(executionPath, 'generated')
   const briefsDir = join(generatedDir, 'agent-briefs')
   const ready = readJsonFile<ReadyJson>(join(generatedDir, 'ready.json'))
@@ -451,7 +427,6 @@ function main(): void {
 
   rmSync(briefsDir, { recursive: true, force: true })
   mkdirSync(briefsDir, { recursive: true })
-  mkdirSync(claimsDir, { recursive: true })
 
   for (const readyTask of tasks) {
     const detail = byId.get(readyTask.id)
@@ -461,8 +436,6 @@ function main(): void {
   }
 
   writeFileSync(join(briefsDir, 'index.md'), buildIndexMarkdown(ready, byId), 'utf8')
-  writeFileSync(join(claimsDir, 'index.md'), buildClaimSnapshotIndexMarkdown(claimsDir), 'utf8')
+  writeClaimBriefSnapshotIndex(claimsDir)
   process.stdout.write(`Generated: ${briefsDir}\n`)
 }
-
-main()
