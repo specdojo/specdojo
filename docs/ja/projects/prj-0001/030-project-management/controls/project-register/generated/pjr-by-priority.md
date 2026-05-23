@@ -76,7 +76,8 @@
 | ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
-| PJR-0065 | open | srcとtoolsが分かれているのを再考--due | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0065 | done | srcとtoolsが分かれているのを再考 | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | 依存しているコードを再整理。validate-templates.tsのテスト化が残 | - |
+| PJR-0066 | open | テスト環境の構築 | vitestを導入 | todo | medium | ARC | 2026-05-23 | - | - | - |
 
 ## 3. low
 

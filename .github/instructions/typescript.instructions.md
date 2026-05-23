@@ -1,5 +1,5 @@
 ---
-applyTo: '{src,tools}/**/*.ts'
+applyTo: '{src,tools,tests,scripts}/**/*.ts'
 ---
 
 # TypeScript 実装ルール

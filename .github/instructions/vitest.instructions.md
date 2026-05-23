@@ -1,5 +1,5 @@
 ---
-applyTo: '{src,tools}/**/*.{test,spec}.ts'
+applyTo: 'tests/**/*.test.ts'
 ---
 
 # Vitest テストコード記述ルール
@@ -16,16 +16,18 @@ applyTo: '{src,tools}/**/*.{test,spec}.ts'
 
 ## 2. ファイル配置と命名
 
-- テスト対象に近い場所へ `*.test.ts` または `*.spec.ts` として配置する。
-- ファイル名はテスト対象のモジュール名に合わせる。
-- 大きな統合テストは、既存の配置がある場合はその規約に合わせる。
-- テストデータや fixture を分ける場合は、テストから参照しやすい局所的な場所に置く。
+- テストコードは `tests/` 配下に配置する。
+- ファイル名は `*.test.ts` に統一し、`*.spec.ts` は使わない。
+- テスト対象の本番コードのパスが分かるように、`tests/` 配下のディレクトリ構造を対応させる。
+- テストデータや fixture を分ける場合は、関連するテストに近い `tests/` 配下へ置く。
 
 ```text
-src/catalog.ts
-src/catalog.test.ts
-tools/docs/src/remark-md-content.ts
-tools/docs/src/remark-md-content.test.ts
+src/exec-shared.ts
+tests/src/exec-shared.test.ts
+tools/docs/src/validate-md-content.ts
+tests/tools/docs/src/validate-md-content.test.ts
+scripts/validate-templates.ts
+tests/scripts/validate-templates.test.ts
 ```
 
 ## 3. import と Vitest API
@@ -104,11 +106,18 @@ try {
 
 - mock は外部プロセス、時刻、環境変数、ネットワーク、重い I/O など境界部分に限定する。
 - 純粋な変換処理や検証ロジックは、mock せずに入力と出力で検証する。
+- モジュール全体を差し替える `vi.mock()` より、関数単位の `vi.spyOn()` を優先する。`vi.mock()` はモジュール全体の挙動が変わり、テスト間干渉の原因になりやすい。
 - `vi.spyOn` や `vi.stubEnv` を使った場合は、テスト後に `vi.restoreAllMocks()` または対応する復元処理を行う。
 - `process.env` を変更する場合は、元の値を保存して復元する。
 - テスト間で共有される mutable state を残さない。
 
-## 8. 非同期処理と CLI
+## 8. セットアップとティアダウン
+
+- セットアップ処理に副作用（ファイル生成、DB 書き込みなど）がある場合は `beforeEach` / `afterEach` を使い、テストごとに独立した状態を保証する。
+- 副作用がなく、生成コストが高い読み取り専用データ（大きな fixture の解析結果など）は `beforeAll` / `afterAll` でまとめてよい。
+- `afterEach` / `afterAll` の中でエラーが起きると後続のクリーンアップが止まる。一時ディレクトリの削除など失敗させたくないクリーンアップは `try/finally` で囲む。
+
+## 9. 非同期処理と CLI
 
 - Promise を返す処理は必ず `await` する。
 - 非同期の失敗は `await expect(promise).rejects...` で検証する。
@@ -120,21 +129,21 @@ try {
 await expect(loadYaml("missing.yaml")).rejects.toThrow(/missing.yaml/);
 ```
 
-## 9. テストデータ
+## 10. テストデータ
 
 - fixture は最小限にし、テストの意図に関係ない項目を増やさない。
 - YAML / JSON / Markdown の fixture は、実際の schema や文書規約に沿った形にする。
 - 不正データの fixture は、どのルール違反を表すか名前で分かるようにする。
 - 複数テストで共有する fixture を変更する場合は、影響範囲を確認する。
 
-## 10. 実行と検証
+## 11. 実行と検証
 
 - テスト追加後は、プロジェクトで定義された Vitest 実行 script を使って確認する。
 - Vitest 実行 script が未定義の場合は、導入時に `npm test` または `npm run test` で実行できる script を追加する。
 - TypeScript の型影響がある変更では、`npm run build` も実行する。
 - Markdown、schema、template 生成に関係するテストでは、必要に応じて `npm run check` または該当する検証 script を実行する。
 
-## 11. 禁止事項
+## 12. 禁止事項
 
 | 禁止事項                                               | 理由                                             |
 | ------------------------------------------------------ | ------------------------------------------------ |

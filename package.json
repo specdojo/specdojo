@@ -40,6 +40,8 @@
     "prepare": "lefthook install",
     "pre-commit": "lefthook run pre-commit",
     "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dev": "tsx src/specdojo.ts",
     "start": "node dist/specdojo.js",
     "prepack": "npm run build",
@@ -78,6 +80,7 @@
     "@types/node": "^24.10.1",
     "ajv": "^8.18.0",
     "ajv-cli": "^5.0.0",
+    "ajv-formats": "^2.1.1",
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "lefthook": "^2.0.2",
@@ -97,6 +100,6 @@
     "unified": "^11.0.5",
     "vitepress": "^1.6.4",
     "vitepress-sidebar": "^1.33.0",
-    "ajv-formats": "^2.1.1"
+    "vitest": "^4.1.7"
   }
 }

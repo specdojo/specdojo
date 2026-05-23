@@ -21,7 +21,7 @@
 | PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | - | - | - |
 | PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](../pjr-0046-draft-agent.md) |
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
-| PJR-0065 | open | srcとtoolsが分かれているのを再考--due | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0066 | open | テスト環境の構築 | vitestを導入 | todo | medium | ARC | 2026-05-23 | - | - | - |
 
 ## 2. done
 
@@ -74,6 +74,7 @@
 | PJR-0059 | done | pjrのscaffold | pjr-index等を自動生成するためのscaffoldを作成 | todo | high | ARC | 2026-05-24 | 2026-05-23 | specdojo register scaffold, buildを追加 | - |
 | PJR-0060 | done | pjr-indexのvscodeでのリアルタイム検証 | .remarkrc.yamlに追加してvscodeでリアルタイム検証 | todo | high | ARC | 2026-05-24 | 2026-05-23 | remark-md-content.cjsを追加し.remarkrc.yamlに設定 | - |
 | PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | - |
+| PJR-0065 | done | srcとtoolsが分かれているのを再考 | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | 依存しているコードを再整理。validate-templates.tsのテスト化が残 | - |
 
 ## 3. rejected
 

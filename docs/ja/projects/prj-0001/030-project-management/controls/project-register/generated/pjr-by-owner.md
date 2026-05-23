@@ -53,7 +53,8 @@
 | PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | - |
 | PJR-0063 | rejected | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | 2026-05-24 | 2026-05-23 | claudeからstrategyの方が適切と指摘を受けた | - |
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
-| PJR-0065 | open | srcとtoolsが分かれているのを再考--due | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0065 | done | srcとtoolsが分かれているのを再考 | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | 依存しているコードを再整理。validate-templates.tsのテスト化が残 | - |
+| PJR-0066 | open | テスト環境の構築 | vitestを導入 | todo | medium | ARC | 2026-05-23 | - | - | - |
 
 ## 2. PO
 
