@@ -52,7 +52,10 @@ const RULES: TemplateRule[] = [
     kind: 'md-frontmatter',
     pattern: 'docs/ja/specdojo/templates/pjr-*-template.md',
     schema: 'docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml',
-    substitutions: [['_PRJ-0000_:_PJR-XXXX_', 'prj-test-0001:pjr-0001']],
+    substitutions: [
+      ['_PRJ-0000_:_PJR-XXXX_', 'prj-test-0001:pjr-0001'],
+      ['_PRJ-0000_', 'prj-test-0001'],
+    ],
   },
   {
     kind: 'review-scaffold',

@@ -27,6 +27,7 @@ status: draft
 - スケジュール差分検出
 - Agent安全実行（排他ロック）
 - 成果物カタログの scaffold・検証・Markdown 生成
+- プロジェクト登録簿（`pjr-index.md`）の scaffold・登録項目追加・派生ビュー生成
 
 ## 2. ディレクトリ構成
 
@@ -44,7 +45,8 @@ repo-root/
 │     │  └─ templates/
 │     │     ├─ dct-project-definition.yaml
 │     │     ├─ dct-project-management.yaml
-│     │     └─ pm-review-viewpoints.yaml
+│     │     ├─ pm-review-viewpoints.yaml
+│     │     └─ pjr-index-template.md
 │     └─ projects/
 │        └─ prj-0001/
 │           ├─ 010-deliverables-catalog/
@@ -55,6 +57,9 @@ repo-root/
 │           │     └─ dct-project-management.md
 │           ├─ 030-project-management/
 │           │  └─ controls/
+│           │     ├─ project-register/
+│           │     │  ├─ pjr-index.md
+│           │     │  └─ generated/
 │           │     └─ reviews/
 │           │        ├─ plans/
 │           │        └─ results/
@@ -85,13 +90,14 @@ repo-root/
       "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
       "schedule_path": "docs/ja/projects/prj-0001/060-schedule",
       "execution_path": "docs/ja/projects/prj-0001/070-execution",
+      "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register",
       "members_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-members.yaml"
     }
   }
 }
 ```
 
-`projects.<id>` には `schedule_path`、`execution_path`、必要に応じて `members_path` を指定します。
+`projects.<id>` には `schedule_path`、`execution_path`、必要に応じて `project_register_path`、`members_path` を指定します。
 
 ### 3.2. `.env`（任意）
 
@@ -755,7 +761,282 @@ results     : /repo/.../controls/reviews/results
 viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
 ```
 
-## 25. index コマンド
+## 25. register コマンド
+
+`specdojo register` は、プロジェクト登録簿（Project Register）を扱うコマンド群です。
+
+- scaffold（`scaffold`）: テンプレートから `pjr-index.md` を生成
+- 登録項目追加（`add`）: `pjr-index.md` に登録項目を追加し、必要に応じて個票を生成
+- 派生ビュー生成（`build`）: `pjr-index.md` と個票から `generated/` 配下の派生ビューを生成
+
+`specdojo.config.json` に `project_register_path` を追加する。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register"
+    }
+  }
+}
+```
+
+### 25.1. register scaffold
+
+`project_register_path` に `pjr-index.md` を新規生成する。`docs/ja/specdojo/templates/pjr-index-template.md` をもとに `_PRJ-0000_` をプロジェクト ID に置換して出力する。
+
+```bash
+specdojo register scaffold --project prj-0001
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--project-id` | 生成ファイルに埋め込む project id（省略時は `--project` と同じ値） | `--project` |
+| `--force` | 既存の `pjr-index.md` を上書き | `false` |
+| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+
+既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
+
+#### 25.1.1. 生成フロー
+
+1. `--project` で指定したプロジェクト ID を `specdojo.config.json` から解決する。
+2. `projects.<id>.project_register_path` を出力先ディレクトリとして解決する。
+3. `docs/ja/specdojo/templates/pjr-index-template.md` を読み込む。
+4. `_PRJ-0000_` を `--project-id` または `--project` の値に置換する。
+5. `project_register_path/pjr-index.md` に出力する。
+6. `project_register_path/generated/` を作成する。
+
+#### 25.1.2. 出力
+
+```text
+controls/project-register/
+├─ pjr-index.md
+└─ generated/
+```
+
+`pjr-index.md` の frontmatter は以下の形式で生成する。
+
+```yaml
+id: prj-0001:pjr-index
+type: project
+status: draft
+rulebook: pjr-index-rulebook
+```
+
+本文には「登録項目一覧」テーブルを含め、初期行として `PJR-0001` の TODO 行を 1 件配置する。
+
+#### 25.1.3. 検証
+
+生成後は `pjr-index.schema.yaml` で本文構造を検証する。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+検証対象の主なルール:
+
+| 項目 | ルール |
+| --- | --- |
+| セクション | `## 1. 登録項目一覧` が存在する |
+| 必須列 | `ID`、`ステータス`、`タイトル`、`分類`、`優先度` |
+| ID | `PJR-0000` 形式 |
+| ステータス | `open` / `in-progress` / `waiting` / `review` / `decided` / `done` / `deferred` / `rejected` |
+| 分類 | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` |
+| 優先度 | `high` / `medium` / `low` |
+
+### 25.2. register add
+
+`pjr-index.md` の「登録項目一覧」テーブルに 1 行追加する。`--ticket` を指定した場合は、分類に対応する `docs/ja/specdojo/templates/pjr-<type>-template.md` から個票も生成する。
+
+```bash
+specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "レビュー観点の棚卸し" \
+  --description "既存のレビュー観点を確認し、不足を整理する" \
+  --priority high \
+  --owner ARC \
+  --due 2026-05-24
+```
+
+個票も生成する例:
+
+```bash
+specdojo register add \
+  --project prj-0001 \
+  --type risk \
+  --title "外部レビュー遅延" \
+  --description "外部レビューの回答遅延により launch track が遅れる可能性がある" \
+  --priority medium \
+  --owner PO \
+  --due 2026-05-31 \
+  --ticket \
+  --topic external-review-delay
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--type` | 登録項目の分類 | 必須 |
+| `--title` | 登録項目の短いタイトル | 必須 |
+| `--description` | 一覧に記載する説明。`--ticket` 指定時も要約として使う | `_TODO_` |
+| `--priority` | `high` / `medium` / `low` | `medium` |
+| `--status` | 登録項目のステータス | `open` |
+| `--owner` | 主担当者または役割 | `_TODO_` |
+| `--due` | 期限（`YYYY-MM-DD` / `-` / `_TODO_`） | `_TODO_` |
+| `--completed` | 完了日（`YYYY-MM-DD` / `-`） | `-` |
+| `--conclusion` | 結論または対応結果の要約 | `-` |
+| `--id` | 追加する表示 ID（例: `PJR-0061`）。省略時は既存最大 ID の次番号 | 自動採番 |
+| `--ticket` | 個票 `pjr-XXXX-<topic>.md` を生成し、「個票」列にリンクを設定 | `false` |
+| `--topic` | 個票ファイル名の `<topic>`。`--ticket` 指定時に使用 | `--title` から slug 化 |
+| `--force` | 既存の個票ファイルを上書き | `false` |
+| `--dry-run` | ファイルを書き出さず、追加予定の行と個票内容を標準出力に表示 | `false` |
+
+`--type` には以下を指定できる。
+
+| type | 個票テンプレート |
+| --- | --- |
+| `todo` | `pjr-todo-template.md` |
+| `question` | `pjr-question-template.md` |
+| `risk` | `pjr-risk-template.md` |
+| `issue` | `pjr-issue-template.md` |
+| `change-request` | `pjr-change-request-template.md` |
+| `decision` | `pjr-decision-template.md` |
+| `dependency` | `pjr-dependency-template.md` |
+| `note` | `pjr-note-template.md` |
+
+#### 25.2.1. 生成フロー
+
+1. `--project` で指定したプロジェクト ID を `specdojo.config.json` から解決する。
+2. `projects.<id>.project_register_path/pjr-index.md` を読み込む。
+3. 「登録項目一覧」テーブルから既存の `PJR-XXXX` を走査し、`--id` 省略時は次番号を採番する。
+4. `--type`、`--status`、`--priority`、`--due`、`--completed` が許容値に一致することを検証する。
+5. `pjr-index.md` のテーブル末尾に登録項目行を追加する。
+6. `--ticket` 指定時は `pjr-XXXX-<topic>.md` を生成し、「個票」列に `[pjr-XXXX-<topic>](./pjr-XXXX-<topic>.md)` を設定する。
+7. 追加後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+
+#### 25.2.2. 追加される行
+
+個票なしの場合:
+
+```markdown
+| PJR-0061 | open | レビュー観点の棚卸し | 既存のレビュー観点を確認し、不足を整理する | todo | high | ARC | 2026-05-24 | - | - | - |
+```
+
+個票ありの場合:
+
+```markdown
+| PJR-0062 | open | 外部レビュー遅延 | 外部レビューの回答遅延により launch track が遅れる可能性がある | risk | medium | PO | 2026-05-31 | - | - | [pjr-0062-external-review-delay](./pjr-0062-external-review-delay.md) |
+```
+
+#### 25.2.3. 個票生成
+
+`--ticket` 指定時は、分類に対応するテンプレートを使って個票を生成する。
+
+```text
+controls/project-register/
+├─ pjr-index.md
+├─ pjr-0062-external-review-delay.md
+└─ generated/
+```
+
+個票の frontmatter は以下の形式で生成する。
+
+```yaml
+id: prj-0001:pjr-0062
+type: project
+status: draft
+rulebook: pjr-index-rulebook
+item_type: risk
+```
+
+テンプレート内の `_PRJ-0000_`、`_PJR-XXXX_`、`_<TYPE>_TITLE_` 相当のプレースホルダーは、プロジェクト ID、表示 ID、タイトルで置換する。
+
+#### 25.2.4. 検証
+
+追加後は `pjr-index.schema.yaml` で本文構造を検証する。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+検証エラー時は `pjr-index.md` と個票を更新せず、エラー内容を表示する。
+
+### 25.3. register build
+
+`pjr-index.md` と各 `pjr-XXXX-<topic>.md` を入力として、プロジェクト登録簿の派生ビューを再生成する。派生ビューは補助一覧であり、正本は `pjr-index.md` と個票です。
+
+```bash
+specdojo register build --project prj-0001
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--scope` | 生成範囲。`register` / `controls` / `all` | `all` |
+| `--force` | 既存の派生ビューを上書き | `true` |
+| `--dry-run` | ファイルを書き出さず、生成予定のファイル一覧と内容を標準出力に表示 | `false` |
+
+#### 25.3.1. 生成されるファイル
+
+`--scope register` では、`project_register_path/generated/` に登録簿内の補助一覧を生成する。
+
+```text
+controls/project-register/generated/
+├─ pjr-open-items.md
+├─ pjr-by-owner.md
+├─ pjr-by-priority.md
+└─ pjr-by-status.md
+```
+
+`--scope controls` では、`project_register_path` の親ディレクトリの `generated/` に controls 全体の type 別管理ビューを生成する。
+
+```text
+controls/generated/
+├─ pm-risk-register.md
+├─ pm-issue-log.md
+├─ pm-change-request-log.md
+└─ pm-decision-log.md
+```
+
+#### 25.3.2. 生成フロー
+
+1. `--project` で指定したプロジェクト ID を `specdojo.config.json` から解決する。
+2. `projects.<id>.project_register_path/pjr-index.md` を読み込む。
+3. 「登録項目一覧」テーブルを解析し、必要に応じて `pjr-XXXX-<topic>.md` の個票情報を読み込む。
+4. `pjr-index.schema.yaml` で `pjr-index.md` の本文構造を検証する。
+5. `--scope` に応じて、登録簿内の補助一覧と controls 全体の type 別管理ビューを生成する。
+6. 生成ファイルには「正本は `pjr-index.md` と個票であり、派生ビューは再生成可能である」ことを明記する。
+
+#### 25.3.3. ビュー生成ルール
+
+| 派生ビュー | 抽出・並び替えルール |
+| --- | --- |
+| `pjr-open-items.md` | `status` が `done` / `rejected` / `deferred` 以外の項目を一覧化する |
+| `pjr-by-owner.md` | `担当` ごとに項目をグルーピングする |
+| `pjr-by-priority.md` | `優先度` ごとに `high` / `medium` / `low` の順でグルーピングする |
+| `pjr-by-status.md` | `ステータス` ごとに項目をグルーピングする |
+| `pm-risk-register.md` | `分類` が `risk` の項目を controls 全体のリスク登録簿として一覧化する |
+| `pm-issue-log.md` | `分類` が `issue` の項目を controls 全体の課題ログとして一覧化する |
+| `pm-change-request-log.md` | `分類` が `change-request` の項目を controls 全体の変更要求ログとして一覧化する |
+| `pm-decision-log.md` | `分類` が `decision` の項目を controls 全体の決定記録として一覧化する |
+
+#### 25.3.4. 検証
+
+生成前に `pjr-index.schema.yaml` で本文構造を検証する。検証エラー時は派生ビューを更新せず、エラー内容を表示する。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+## 26. index コマンド
 
 `specdojo index` は、ドキュメントの `id` フィールドとファイルパスのインデックスを構築・検索するコマンド群です。
 
@@ -764,7 +1045,7 @@ viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
 
 生成したインデックスは VSCode 拡張（`tools/vscode-specdojo/`）が読み込み、YAML の構造的な ID 参照と `[[id]]` wiki リンク形式をクリック可能なリンクにします。
 
-### 25.1. index build
+### 26.1. index build
 
 ```bash
 specdojo index build
@@ -777,7 +1058,7 @@ specdojo index build
 | `--root <path>` | スキャン対象ルートディレクトリ | `docs` |
 | `--output <path>` | 出力先 | `docs/.specdojo/doc-index.json` |
 
-#### 25.1.1. 生成フロー
+#### 26.1.1. 生成フロー
 
 1. `--root` 配下の `*.md` と `*.yaml` を再帰的に走査する（`node_modules`、`dist`、`generated` 等は除外）。
 2. Markdown: frontmatter の `id:` フィールドを抽出する。エントリ値はパスのみ（行番号なし）。
@@ -785,7 +1066,7 @@ specdojo index build
 4. ネストされた ID: `docs/.specdojo/index-config.yaml` で設定したフィールドから収集する。エントリ値は `"パス:行番号"` 形式（1-based）。
 5. ID → パスのマッピングを `doc-index.json` に出力する。パスは `--root` からの相対パス。
 
-#### 25.1.2. ネスト ID の設定（`index-config.yaml`）
+#### 26.1.2. ネスト ID の設定（`index-config.yaml`）
 
 top-level 以外の ID をインデックス対象にする場合、`docs/.specdojo/index-config.yaml` に設定する。
 
@@ -803,7 +1084,7 @@ nested_id_files:
 - `path_field` の値がある場合: そのパスをエントリ値として使用（行番号なし）
 - `path_field` の値がない場合: `"ファイルパス:行番号"` をエントリ値として使用
 
-#### 25.1.3. 出力例
+#### 26.1.3. 出力例
 
 ```json
 {
@@ -819,7 +1100,7 @@ nested_id_files:
 
 パスはリポジトリルートからの相対パスです。ネスト ID（`vp-ba-business-value`）は `path_field` に `path` フィールドが設定されているため行番号なしで格納されます（`path` フィールドが空の場合は `path:line` 形式）。
 
-### 25.2. index lookup
+### 26.2. index lookup
 
 ID からファイルパスを返す。
 
@@ -837,11 +1118,11 @@ specdojo index lookup vp-ba-business-value
 | --- | --- | --- |
 | `--index <path>` | インデックスファイルパス | `docs/.specdojo/doc-index.json` |
 
-### 25.3. VSCode 拡張（vscode-specdojo）
+### 26.3. VSCode 拡張（vscode-specdojo）
 
 `tools/vscode-specdojo/` に VSCode 拡張が含まれています。インストールするとインデックスを参照し、ファイル内の ID 参照をクリック可能なリンクにします。
 
-#### 25.3.1. ビルドとインストール
+#### 26.3.1. ビルドとインストール
 
 ```bash
 cd tools/vscode-specdojo
@@ -851,7 +1132,7 @@ npm run compile
 # または F5 でデバッグモード起動
 ```
 
-#### 25.3.2. リンク対応パターン
+#### 26.3.2. リンク対応パターン
 
 | パターン | ファイル種別 | 例 |
 | ------- | ----------- | -- |
@@ -861,11 +1142,11 @@ npm run compile
 | `- prj-xxx:yyy` 名前空間付き | YAML リスト | `- prj-0001:pm-roles` |
 | `- vp-xxx` viewpoint ID | YAML リスト | `- vp-po-purpose-alignment` |
 
-#### 25.3.3. コマンドパレット
+#### 26.3.3. コマンドパレット
 
 `Ctrl+Shift+P` → `SpecDojo: Open Document by ID` でIDを入力してファイルを開けます。
 
-#### 25.3.4. インデックスの更新
+#### 26.3.4. インデックスの更新
 
 ドキュメントを追加したら `specdojo index build` を実行してインデックスを再生成します。lefthook の `pre-commit` に組み込むと自動更新できます。
 
@@ -876,7 +1157,7 @@ pre-commit:
       run: specdojo index build
 ```
 
-## 26. まとめ
+## 27. まとめ
 
 `specdojo` は以下を実現します。
 
@@ -890,3 +1171,4 @@ pre-commit:
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）
 - レビュー plan 生成（`review plan`）
+- プロジェクト登録簿 scaffold・登録項目追加・派生ビュー生成（`register scaffold` / `register add` / `register build`）

@@ -13,6 +13,10 @@ plugins:
   - - remark-gfm
     - tablePipeAlign: false
   - remark-lint
+  - - ./tools/docs/src/remark-md-content.cjs
+    - schemas:
+        docs/specdojo/schemas/v1/pjr-index.schema.yaml:
+          - docs/ja/**/pjr-index.md
   - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
     - strict: true
       yaml.schemas:
