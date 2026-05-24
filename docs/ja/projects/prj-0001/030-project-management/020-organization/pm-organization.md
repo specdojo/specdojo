@@ -18,7 +18,7 @@ Role、Member、Task owner、Executor、RACI の共通定義と使い分けは [
 - 本プロジェクトは個人・小規模運用を前提とする。
 - プロジェクトで使用する全ロールは `pm-roles.yaml` に定義する。`pm-roles.yaml` に列挙されたロールはすべて Schedule の `owner` として使用できる。
 - 実行主体と担当ロールの割り当ては `pm-members.yaml` の `roles` フィールドで管理する。兼務の場合は複数のロールを列挙する。
-- 小規模運用のため、`po` が `PM`・`OPS` を、`ba-agent` が `UX` を兼務する構成を採る。
+- 小規模運用のため、`indie` が全ロールを兼務し、agent は機能別（`edit-agent` / `review-agent` / `coordinate-agent`）に統合する。
 - 最終判断・公開可否判断は `po`（human）が担う。agent はいかなる場合も最終承認しない。
 
 ## 2. 関連ドキュメント

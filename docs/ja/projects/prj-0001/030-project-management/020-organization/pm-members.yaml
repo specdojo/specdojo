@@ -35,121 +35,39 @@ members:
       - accountability
     scheduler_strategy: critical-first
     note: 個人開発における人間の最終判断主体。全責務を兼務する。 公開文書では個人名と連絡先を記載しない。
-  - nickname: po-agent
-    display_name: Project Owner Agent
+  - nickname: coordinate-agent
+    display_name: Coordinate Agent
     email: null
-    roles:
-      - PO
+    roles: []
     type: agent
-    persona: concise-project-organizer
+    persona: task-coordinator
     focus:
-      - objective-alignment
-      - scope-control
-      - decision-support
-      - simplification
+      - orchestration
+      - task-selection
+      - workflow-control
     scheduler_strategy: critical-first
-    note: PO ロールの草案作成、論点整理、判断材料整理を支援する agent。最終判断や公開可否判断は行わない。
-  - nickname: pm-agent
-    display_name: Project Manager Agent
+    note: TUI モードで validate/build/scheduler を実行し、edit-agent へタスクを委譲する調整 agent。runner スクリプトでは edit-agent を直接起動するため使用しない。
+  - nickname: edit-agent
+    display_name: Edit Agent
     email: null
-    roles:
-      - PM
+    roles: []
     type: agent
-    persona: milestone-tracker
+    persona: task-executor
     focus:
-      - planning
-      - progress
-      - risk
-      - milestone-management
-      - issue-escalation
-    scheduler_strategy: critical-first
-    note: 計画・進捗・課題・リスク管理を支援する agent。最終承認や公開可否判断は行わない。
-  - nickname: ba-agent
-    display_name: Business Analyst Agent
-    email: null
-    roles:
-      - BA
-    type: agent
-    persona: user-value-oriented
-    focus:
-      - requirements
-      - acceptance-criteria
-      - stakeholder-viewpoint
-      - practical-usability
-    scheduler_strategy: fifo
-    note: 要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。将来利用者や将来貢献者の視点から分かりにくさを検出する。
-  - nickname: arc-agent
-    display_name: Architect Agent
-    email: null
-    roles:
-      - ARC
-    type: agent
-    persona: structure-first
-    focus:
-      - document-architecture
-      - repository-structure
-      - naming
-      - consistency
-      - technical-constraints
-    scheduler_strategy: critical-first
-    note: 文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。技術方針の最終判断は行わない。
-  - nickname: dev-agent
-    display_name: Developer Agent
-    email: null
-    roles:
-      - DEV
-    type: agent
-    persona: implementation-focused
-    focus:
+      - task-execution
+      - document-creation
       - implementation
-      - coding
-      - configuration
-      - technical-changes
-      - build-and-test
     scheduler_strategy: critical-first
-    note: 実装・設定・技術的変更作業を支援する agent。設計方針の最終判断は行わない。
-  - nickname: qe-agent
-    display_name: Quality Engineer Agent
+    note: タスクの owner フィールドからロール文脈を判断し、成果物を作成・編集する agent。--by edit-agent でタスクを claim する。ロールは agent 名ではなくタスクデータから取得する。
+  - nickname: review-agent
+    display_name: Review Agent
     email: null
-    roles:
-      - QE
+    roles: []
     type: agent
-    persona: risk-averse-reviewer
+    persona: multi-viewpoint-reviewer
     focus:
-      - quality-criteria
-      - acceptance
-      - consistency
-      - omissions
-      - edge-cases
-    scheduler_strategy: critical-first
-    note: 品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。最終承認や公開可否判断は行わない。
-  - nickname: ux-agent
-    display_name: UX / Documentation Designer Agent
-    email: null
-    roles:
-      - UX
-    type: agent
-    persona: reader-experience-first
-    focus:
-      - user-flow
-      - documentation-experience
-      - usability
-      - clarity
-      - information-architecture
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
     scheduler_strategy: fifo
-    note: 利用者導線・説明・文書体験を担う agent。読み手の視点から分かりにくさ・導線の断絶を検出する。
-  - nickname: ops-agent
-    display_name: Operations Agent
-    email: null
-    roles:
-      - OPS
-    type: agent
-    persona: release-safety-first
-    focus:
-      - release-management
-      - publication
-      - deployment
-      - change-management
-      - configuration
-    scheduler_strategy: critical-first
-    note: リリース・公開・配布・変更管理を支援する agent。公開可否の最終判断は行わない。
+    note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。
