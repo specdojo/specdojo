@@ -5,8 +5,11 @@ import { specdojoRootDir } from './specdojo-config.js'
 import type { DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
 import type {
   MachineCheck,
+  MachineCheckResult,
   ReviewItem,
   ReviewPlanDoc,
+  ReviewResultDoc,
+  ReviewResultEntry,
   ReviewStage,
   ReviewViewpoint,
   ReviewViewpointsDoc,
@@ -206,6 +209,97 @@ export function writeReviewPlan(opts: {
   }
 
   if (!existsSync(plansDir)) mkdirSync(plansDir, { recursive: true })
+  writeFileSync(outputPath, outYaml, 'utf8')
+  return { outputPath, skipped: false }
+}
+
+export function generateReviewResult(opts: {
+  reviewsPath: string
+  localId: string
+  stage: ReviewStage
+  role: string
+  reviewer: string
+}): ReviewResultDoc {
+  const { reviewsPath, localId, stage, role, reviewer } = opts
+  const planPath = join(reviewsPath, 'plans', `rvp-${localId}-${stage}.yaml`)
+
+  if (!existsSync(planPath)) {
+    throw new Error(
+      `Review plan not found: ${planPath}\n` +
+        `Run: specdojo review plan --local-id ${localId} --stage ${stage}`
+    )
+  }
+
+  const plan = yaml.load(readFileSync(planPath, 'utf8')) as ReviewPlanDoc
+
+  const filteredItems = plan.review_items.filter(item => item.role === role)
+  if (filteredItems.length === 0) {
+    throw new Error(`No review_items found for role '${role}' in plan: ${planPath}`)
+  }
+
+  const machineChecks: MachineCheckResult[] = plan.machine_checks_required.map(mc => ({
+    name: mc.name,
+    result: 'skipped' as const,
+    notes: '',
+  }))
+
+  const reviewResults: ReviewResultEntry[] = filteredItems.map(item => ({
+    plan_item_id: item.id,
+    viewpoint_id: item.viewpoint_id,
+    result: '',
+    coverage_checked: [...item.coverage_required],
+    evidence: [],
+    notes: '',
+  }))
+
+  return {
+    id: `rvr-${localId}-${stage}-${role.toLowerCase()}`,
+    project_id: plan.project_id,
+    based_on: [plan.id],
+    target: {
+      local_id: plan.target.local_id,
+      path: plan.target.path,
+      stage: plan.target.stage,
+    },
+    review: {
+      role,
+      reviewer,
+      status: '',
+      reviewed_at: '',
+    },
+    machine_checks: machineChecks,
+    review_results: reviewResults,
+    unverified_scope: [],
+    findings: [],
+    decision: {
+      recommendation: '',
+      approver_required: 'none',
+    },
+  }
+}
+
+export function writeReviewResult(opts: {
+  reviewsPath: string
+  result: ReviewResultDoc
+  force: boolean
+  dryRun: boolean
+}): { outputPath: string; skipped: boolean } {
+  const { reviewsPath, result, force, dryRun } = opts
+  const resultsDir = join(reviewsPath, 'results')
+  const outputPath = join(resultsDir, `${result.id}.yaml`)
+
+  if (!dryRun && existsSync(outputPath) && !force) {
+    return { outputPath, skipped: true }
+  }
+
+  const outYaml = yaml.dump(result, { lineWidth: 120, noRefs: true })
+
+  if (dryRun) {
+    process.stdout.write(outYaml)
+    return { outputPath, skipped: false }
+  }
+
+  if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true })
   writeFileSync(outputPath, outYaml, 'utf8')
   return { outputPath, skipped: false }
 }

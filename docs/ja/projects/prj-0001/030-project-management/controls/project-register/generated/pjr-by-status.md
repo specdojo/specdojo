@@ -9,7 +9,6 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
-| PJR-0045 | open | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | - | - | - |
 | PJR-0046 | open | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | 2026-05-19 | - | - | [PJR-0046-draft-agent](../pjr-0046-draft-agent.md) |
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0073 | open | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | - | - | - |
@@ -60,6 +59,7 @@
 | PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | ARC | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | - |
 | PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | ARC | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | - |
 | PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | 2026-05-17 | 2026-05-17 | buildまで確認 | - |
+| PJR-0045 | done | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | 2026-05-19 | 2026-05-24 | review resultコマンドの追加 | - |
 | PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | - |
 | PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | 2026-05-19 | 2026-05-18 | 不要なため削除 | - |
 | PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | - |

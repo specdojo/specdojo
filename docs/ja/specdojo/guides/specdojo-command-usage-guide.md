@@ -362,10 +362,11 @@ track-files:
 
 ## 7. review コマンド
 
-`specdojo review` は、成果物カタログの `done_criteria` と観点定義から review plan を生成するコマンド群です。
+`specdojo review` は、成果物カタログの `done_criteria` と観点定義から review plan を生成し、review result をスキャフォールドするコマンド群です。
 
 - scaffold（`scaffold`）: テンプレートから `pm-review-viewpoints.yaml` を生成
 - plan 生成（`plan`）: `dct-*.yaml` の `done_criteria` から `rvp-*.yaml` を生成
+- result スキャフォールド（`result`）: `rvp-*.yaml` から `rvr-*.yaml` をスキャフォールド
 - パス確認（`where`）: review 関連パスを確認
 
 `specdojo.config.json` に `reviews_path` と `viewpoints_path` を追加する。
@@ -502,6 +503,78 @@ reviews-path: /repo/.../030-project-management/controls/reviews
 plans       : /repo/.../controls/reviews/plans
 results     : /repo/.../controls/reviews/results
 viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
+```
+
+### 7.4. review result
+
+`reviews_path/plans/rvp-<local_id>-<stage>.yaml` を読み込み、`rvr-<local_id>-<stage>-<role>.yaml` をスキャフォールドする。
+
+```bash
+specdojo review result \
+  --project prj-0001 \
+  --local-id prj-overview \
+  --stage draft \
+  --role BA
+```
+
+オプション:
+
+| オプション   | 説明                                                            | デフォルト |
+| ------------ | --------------------------------------------------------------- | ---------- |
+| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可     |
+| `--local-id` | 対象成果物の `local_id`                                         | 必須       |
+| `--stage`    | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須       |
+| `--role`     | 対象 Role code                                                  | 必須       |
+| `--reviewer` | レビュアーのニックネーム                                        | `_TODO_`   |
+| `--force`    | 既存の `rvr-*.yaml` を上書き                                    | `false`    |
+| `--dry-run`  | ファイルを書き出さず、生成内容を標準出力に表示                  | `false`    |
+
+#### 7.4.1. 生成フロー
+
+1. `reviews_path/plans/rvp-<local_id>-<stage>.yaml` を読み込む。
+2. `review_items` を `--role` でフィルタリングする。
+3. 各 `review_items` エントリに対応する `review_results` エントリを生成する（`result` は空文字列、`coverage_checked` は `coverage_required` から転記、`evidence` と `notes` は空で初期化）。
+4. `machine_checks` はレビュー計画の `machine_checks_required` から転記し、`result` を `skipped` で初期化する。
+5. `findings` と `unverified_scope` を空リストで初期化する。
+6. `reviews_path/results/rvr-<local_id>-<stage>-<role-lowercase>.yaml` に出力する。Role code はファイル名では小文字に変換する（`BA` → `ba`、`QE` → `qe`）。
+
+#### 7.4.2. 出力例
+
+```yaml
+id: rvr-prj-overview-draft-ba
+project_id: prj-0001
+based_on:
+  - rvp-prj-overview-draft
+target:
+  local_id: prj-overview
+  path: /docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+  stage: draft
+review:
+  role: BA
+  reviewer: _TODO_
+  status: ""
+  reviewed_at: ""
+machine_checks:
+  - name: lint:md
+    result: skipped
+    notes: ""
+review_results:
+  - plan_item_id: RVP-001
+    viewpoint_id: vp-ba-business-value
+    result: ""
+    coverage_checked:
+      - stakeholder
+      - business_goal
+      - use_case
+      - business_event
+      - traceability
+    evidence: []
+    notes: ""
+unverified_scope: []
+findings: []
+decision:
+  recommendation: ""
+  approver_required: none
 ```
 
 ## 8. register コマンド
@@ -1712,6 +1785,7 @@ agent-test
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）
 - レビュー plan 生成（`review plan`）
+- レビュー result スキャフォールド（`review result`）
 - プロジェクト登録簿 scaffold・登録項目追加・ステータス変更・派生ビュー生成（`register scaffold` / `register add` / `register update` / `register start` / `register wait` / `register review` / `register close` / `register reject` / `register defer` / `register reopen` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）
 - 全生成物の一括再生成（`build`）

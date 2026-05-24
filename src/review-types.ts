@@ -53,3 +53,61 @@ export type ReviewPlanDoc = {
   machine_checks_required: MachineCheck[]
   review_items: ReviewItem[]
 }
+
+export type MachineCheckResult = {
+  name: string
+  result: 'pass' | 'fail' | 'skipped'
+  notes: string
+}
+
+export type ReviewResultEntry = {
+  plan_item_id: string
+  viewpoint_id: string
+  result: string
+  coverage_checked: string[]
+  evidence: string[]
+  notes: string
+}
+
+export type UnverifiedScopeEntry = {
+  plan_item_id: string
+  coverage_type: string
+  reason: string
+}
+
+export type Finding = {
+  id: string
+  plan_item_id: string
+  viewpoint_id: string
+  coverage_type: string
+  severity: 'blocker' | 'major' | 'minor' | 'note'
+  category: string
+  location: string
+  summary: string
+  recommendation: string
+}
+
+export type ReviewResultDoc = {
+  id: string
+  project_id: string
+  based_on: string[]
+  target: {
+    local_id: string
+    path: string
+    stage: ReviewStage
+  }
+  review: {
+    role: string
+    reviewer: string
+    status: string
+    reviewed_at: string
+  }
+  machine_checks: MachineCheckResult[]
+  review_results: ReviewResultEntry[]
+  unverified_scope: UnverifiedScopeEntry[]
+  findings: Finding[]
+  decision: {
+    recommendation: string
+    approver_required: string
+  }
+}

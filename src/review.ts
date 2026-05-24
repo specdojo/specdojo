@@ -2,7 +2,13 @@ import { type Command } from 'commander'
 import { existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
-import { generateReviewPlan, scaffoldViewpoints, writeReviewPlan } from './review-plan.js'
+import {
+  generateReviewPlan,
+  generateReviewResult,
+  scaffoldViewpoints,
+  writeReviewPlan,
+  writeReviewResult,
+} from './review-plan.js'
 import type { ReviewStage } from './review-types.js'
 
 const VALID_STAGES: ReviewStage[] = ['draft', 'first', 'final', 'ready-candidate']
@@ -181,6 +187,57 @@ export function registerReviewCommands(program: Command): void {
       } else if (!opts.dryRun) {
         process.stdout.write(
           `Generated: ${outputPath} (${plan.review_items.length} items)\n`
+        )
+      }
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- result ---
+  const rescmd = rev
+    .command('result')
+    .description('Scaffold rvr-<local_id>-<stage>-<role>.yaml from review plan')
+  addProjectOption(rescmd)
+  rescmd.requiredOption('--local-id <localId>', 'Deliverable local_id')
+  rescmd.requiredOption('--stage <stage>', `Review stage: ${VALID_STAGES.join(' | ')}`)
+  rescmd.requiredOption('--role <roleCode>', 'Role code (e.g. BA, QE, PO)')
+  rescmd.option('--reviewer <nickname>', 'Reviewer nickname', '_TODO_')
+  rescmd.option('--force', 'Overwrite existing rvr-*.yaml', false)
+  rescmd.option('--dry-run', 'Print generated YAML to stdout without writing', false)
+  rescmd.action(opts => {
+    try {
+      const { reviewsPath } = resolveReviewPaths(opts)
+
+      const stage = opts.stage as ReviewStage
+      if (!VALID_STAGES.includes(stage)) {
+        throw new Error(
+          `Invalid --stage: "${stage}". Must be one of: ${VALID_STAGES.join(', ')}`
+        )
+      }
+
+      const result = generateReviewResult({
+        reviewsPath,
+        localId: opts.localId,
+        stage,
+        role: opts.role,
+        reviewer: opts.reviewer as string,
+      })
+
+      const { outputPath, skipped } = writeReviewResult({
+        reviewsPath,
+        result,
+        force: !!opts.force,
+        dryRun: !!opts.dryRun,
+      })
+
+      if (skipped) {
+        process.stdout.write(
+          `Skipped (already exists; use --force to overwrite): ${outputPath}\n`
+        )
+      } else if (!opts.dryRun) {
+        process.stdout.write(
+          `Generated: ${outputPath} (${result.review_results.length} items)\n`
         )
       }
     } catch (error) {
