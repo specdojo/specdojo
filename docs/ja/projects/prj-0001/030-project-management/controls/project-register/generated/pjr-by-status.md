@@ -13,6 +13,7 @@
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0073 | open | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0074 | open | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2025-05-24 | - | - | - |
+| PJR-0075 | open | worktreeに合わせたdevcontainer設定の変更 | マウントの変更等を実施 | todo | medium | ARC | 2025-05-24 | - | - | - |
 
 ## 2. done
 

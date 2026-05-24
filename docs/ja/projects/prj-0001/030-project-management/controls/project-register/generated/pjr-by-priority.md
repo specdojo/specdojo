@@ -86,6 +86,7 @@
 | PJR-0072 | done | 単体テストの追加 | specdojoコマンドの単体テストを追加 | todo | medium | ARC | 2026-05-24 | 2026-05-24 | vitestのコードを追加 | - |
 | PJR-0073 | open | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0074 | open | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2025-05-24 | - | - | - |
+| PJR-0075 | open | worktreeに合わせたdevcontainer設定の変更 | マウントの変更等を実施 | todo | medium | ARC | 2025-05-24 | - | - | - |
 
 ## 3. low
 

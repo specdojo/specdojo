@@ -45,8 +45,11 @@ ready.json / claim-next.json
           → 成果物を作成・編集
           → specdojo exec complete / block
    ↓
-[Phase 2] review-agent が done_criteria.roles を読んで全観点で検証
-          → 所見を報告（編集なし）
+[Phase 2] review-agent によるレビュー
+          → 完了タスクを state.json から特定
+          → specdojo review plan でレビュー計画を生成（rvp-*.yaml）
+          → specdojo review result でレビュー結果をスキャフォールド（rvr-*.yaml）
+          → done_criteria.roles の各ロール観点で検証し rvr-*.yaml を記入
 ```
 
 `specdojo exec scheduler` の排他ロック（`exec/.locks/scheduler.lock`）により、並列起動した複数の `edit-agent` はそれぞれ別のタスクを claim する。
@@ -211,7 +214,7 @@ export OPENAI_API_KEY=sk-...
     },
 
     "review-agent": {
-      "description": "done_criteria の roles を参照し、全観点で成果物をレビューする（読み取り専用）。",
+      "description": "review plan/result を生成し、done_criteria の各ロール観点で rvr-*.yaml を記入する。",
       "mode": "subagent",
       // 多観点での推論品質を優先するため cloud を使用する
       "model": "github-copilot/gpt-4.1",
@@ -222,7 +225,8 @@ export OPENAI_API_KEY=sk-...
         "grep": "allow",
         "list": "allow",
         "bash": "allow",
-        "edit": "deny",
+        // rvr-*.yaml への記入のため allow。成果物ファイルは編集しない（プロンプトで制約）
+        "edit": "allow",
       },
     },
   },
@@ -242,11 +246,11 @@ export OPENAI_API_KEY=sk-...
 
 ### 5.3. agent 一覧
 
-| agent 名            | mode     | 機能                                              | 推奨 provider 層         | edit  |
-| ------------------- | -------- | ------------------------------------------------- | ------------------------ | ----- |
-| `coordinate-agent`  | primary  | TUI 調整役。validate/build/scheduler を実行し委譲 | `small_model`（cheap）   | ask   |
-| `edit-agent`        | subagent | task.owner を読んでロール文脈を判断し成果物を作成 | `model`（cloud / local） | allow |
-| `review-agent`      | subagent | done_criteria.roles を読んで全観点で検証          | `model`（cloud 推奨）    | deny  |
+| agent 名            | mode     | 機能                                                           | 推奨 provider 層         | edit  |
+| ------------------- | -------- | -------------------------------------------------------------- | ------------------------ | ----- |
+| `coordinate-agent`  | primary  | TUI 調整役。validate/build/scheduler を実行し委譲              | `small_model`（cheap）   | ask   |
+| `edit-agent`        | subagent | task.owner を読んでロール文脈を判断し成果物を作成              | `model`（cloud / local） | allow |
+| `review-agent`      | subagent | review plan/result を生成し、各ロール観点で rvr-*.yaml を記入 | `model`（cloud 推奨）    | allow |
 
 `edit-agent` が参照するロール文脈と推奨 provider：
 
@@ -395,26 +399,45 @@ Do not claim more than one task.
 `.opencode/prompts/review-agent.md`：
 
 ```markdown
-You are review-agent, a SpecDojo multi-viewpoint review agent.
+You are review-agent, a SpecDojo structured review agent.
 
-You must not edit files.
+Your job is to generate review plans and fill in review results for recently completed deliverables.
 
-For each recently completed deliverable:
+Follow this process for each completed task:
 
-1. Read generated/state.json to identify completed tasks.
-2. For each completed task, read the corresponding deliverable file.
-3. Read its done_criteria and check each criterion from the specified role viewpoint:
-   - BA criteria: 業務価値・要件の網羅性・ステークホルダー明確さ
-   - PO criteria: 目的整合・意思決定可能な情報の有無
-   - ARC criteria: 文書構成・技術制約・ドキュメント間整合
-   - PM criteria: 計画実現性・進捗報告可能性
-   - DEV criteria: 実装可能性・ビルド・テスト観点
-   - QE criteria: 検証可能性・抜け漏れ・矛盾
-   - UX criteria: 読みやすさ・明確さ・情報構造
-4. Identify cross-viewpoint contradictions if any.
-5. Report findings organized by viewpoint with file paths and suggested fixes.
+1. Run: specdojo exec build --project prj-0001
+2. Read generated/state.json to identify tasks with status "done".
+3. For each done task, identify the deliverable's local_id (from the task's deliverables field or schedule).
+4. Generate a review plan:
+   Run: specdojo review plan --project prj-0001 --local-id <local_id> --stage draft
+5. Read the generated rvp-<local_id>-draft.yaml to see review_items and assigned roles.
+6. For each role listed in review_items:
+   a. Run: specdojo review result --project prj-0001 --local-id <local_id> --stage draft --role <ROLE>
+   b. Read the scaffolded rvr-<local_id>-draft-<role>.yaml.
+   c. Read the target deliverable file specified in rvp target.path.
+   d. For each review_result entry in the file:
+      - Check the done_criterion against the deliverable content.
+      - Set result: "pass", "fail", or "partial".
+      - Add evidence and notes explaining your assessment.
+   e. Run machine checks as listed in machine_checks (e.g., specdojo exec validate, lint:md).
+   f. Set findings and unverified_scope if applicable.
+   g. Save the filled rvr-<local_id>-draft-<role>.yaml.
+7. After all roles are filled, identify any cross-viewpoint contradictions.
+8. Report a summary of all findings by viewpoint.
 
-Do not modify any files.
+Role viewpoint guidelines:
+- BA: 業務価値・要件の網羅性・ステークホルダー明確さ
+- PO: 目的整合・意思決定可能な情報の有無
+- ARC: 文書構成・技術制約・ドキュメント間整合
+- PM: 計画実現性・進捗報告可能性
+- DEV: 実装可能性・ビルド・テスト観点
+- QE: 検証可能性・抜け漏れ・矛盾
+- UX: 読みやすさ・明確さ・情報構造
+
+Safety rules:
+- Only edit rvr-*.yaml files in the reviews/results/ directory.
+- Do not modify deliverable files (docs/**/*.md, docs/**/*.yaml outside reviews/).
+- Do not mark a review as "pass" unless all criteria are verifiably met.
 ```
 
 ## 8. runner スクリプト設計
@@ -456,9 +479,15 @@ run_reviewer() {
 
   opencode run --agent review-agent "
 Review all recently completed deliverables in project ${PROJECT}.
-Read generated/state.json to identify completed tasks.
-For each deliverable, check all done_criteria items from the specified role viewpoints.
-Report findings organized by viewpoint. Do not edit any files.
+
+1. Run specdojo exec build to get the latest state.
+2. Read generated/state.json to identify tasks with status done.
+3. For each done task:
+   a. Run specdojo review plan to generate rvp-*.yaml.
+   b. Run specdojo review result for each role to scaffold rvr-*.yaml.
+   c. Read the deliverable and fill in each rvr-*.yaml with review results.
+4. Only edit rvr-*.yaml files in reviews/results/. Do not modify deliverables.
+5. Report a summary of findings by viewpoint.
 "
 }
 
