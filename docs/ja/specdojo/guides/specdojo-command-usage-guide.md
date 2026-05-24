@@ -27,7 +27,7 @@ status: draft
 - スケジュール差分検出
 - Agent安全実行（排他ロック）
 - 成果物カタログの scaffold・検証・Markdown 生成
-- プロジェクト登録簿（`pjr-index.md`）の scaffold・登録項目追加・派生ビュー生成
+- プロジェクト登録簿（`pjr-index.md`）の scaffold・登録項目追加・ステータス変更・派生ビュー生成
 
 ## 2. ディレクトリ構成
 
@@ -774,6 +774,14 @@ viewpoints  : /repo/.../010-management-plan/pm-review-viewpoints.yaml
 - scaffold（`scaffold`）: テンプレートから `pjr-index.md` を生成
 - 登録項目追加（`add`）: `pjr-index.md` に登録項目を追加し、必要に応じて個票を生成
 - 派生ビュー生成（`build`）: `pjr-index.md` と個票から `generated/` 配下の派生ビューを生成
+- 項目更新（`update`）: タイトル・期限・担当者・優先度などのフィールドを更新
+- 作業開始（`start`）: 登録項目のステータスを `in-progress` に変更
+- 待機（`wait`）: 登録項目のステータスを `waiting` に変更
+- レビュー（`review`）: 登録項目のステータスを `review` に変更
+- 完了（`close`）: 登録項目のステータスを `done` / `decided` に変更
+- 却下（`reject`）: 登録項目のステータスを `rejected` に変更
+- 保留（`defer`）: 登録項目のステータスを `deferred` に変更
+- 再オープン（`reopen`）: 登録項目のステータスを `open` 等に戻す
 
 `specdojo.config.json` に `project_register_path` を追加する。
 
@@ -1048,6 +1056,315 @@ controls/generated/
 #### 25.3.4. 検証
 
 生成前に `pjr-index.schema.yaml` で本文構造を検証する。検証エラー時は派生ビューを更新せず、エラー内容を表示する。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.4. register close
+
+登録項目のステータスを `done`（完了）または `decided`（決定済み）に変更する。`--completed` を省略した場合は実行日の日付を使用する。
+
+```bash
+specdojo register close \
+  --project prj-0001 \
+  --id PJR-0061 \
+  --conclusion "レビュー観点の棚卸しを完了。不足していた QE 観点を rulebook に追記した。"
+```
+
+`decision` / `question` 分類の項目を決定済みにする例:
+
+```bash
+specdojo register close \
+  --project prj-0001 \
+  --id PJR-0055 \
+  --status decided \
+  --conclusion "外部APIはREST方式を採用することに決定。" \
+  --completed 2026-05-23
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--status` | 変更後のステータス。`done` または `decided` | 分類が `decision` / `question` の場合 `decided`、その他は `done` |
+| `--conclusion` | 結論・対応結果の要約 | 変更しない |
+| `--completed` | 完了日（`YYYY-MM-DD`） | 実行日 |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.4.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. `--status` が `done` / `decided` のいずれかであることを検証する。
+3. 対象行の `ステータス` 列を更新し、`完了日` 列に `--completed` の値を設定する。
+4. `--conclusion` が指定されている場合は `結論` 列を更新する。
+5. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+6. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.4.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.5. register reject
+
+登録項目のステータスを `rejected`（却下）に変更する。`--completed` を省略した場合は実行日の日付を使用する。
+
+```bash
+specdojo register reject \
+  --project prj-0001 \
+  --id PJR-0062 \
+  --conclusion "リスク軽減コストが便益を上回るため対応しないことに決定。"
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--conclusion` | 却下理由の要約 | 変更しない |
+| `--completed` | 却下日（`YYYY-MM-DD`） | 実行日 |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.5.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 対象行の `ステータス` 列を `rejected` に更新し、`完了日` 列に `--completed` の値を設定する。
+3. `--conclusion` が指定されている場合は `結論` 列を更新する。
+4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.5.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.6. register defer
+
+登録項目のステータスを `deferred`（保留）に変更する。完了日は設定しない。
+
+```bash
+specdojo register defer \
+  --project prj-0001 \
+  --id PJR-0063 \
+  --conclusion "Phase 2 以降に対応を先送りする。"
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--conclusion` | 保留理由の要約 | 変更しない |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.6.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 対象行の `ステータス` 列を `deferred` に更新する。`完了日` 列は変更しない。
+3. `--conclusion` が指定されている場合は `結論` 列を更新する。
+4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.6.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.7. register reopen
+
+`done` / `decided` / `rejected` / `deferred` の登録項目を未完了ステータスに戻す。
+
+```bash
+specdojo register reopen \
+  --project prj-0001 \
+  --id PJR-0061
+```
+
+ステータスを `in-progress` に戻す例:
+
+```bash
+specdojo register reopen \
+  --project prj-0001 \
+  --id PJR-0061 \
+  --status in-progress
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--status` | 変更後のステータス。`open` / `in-progress` / `waiting` / `review` | `open` |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.7.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. `--status` が `open` / `in-progress` / `waiting` / `review` のいずれかであることを検証する。
+3. 対象行の `ステータス` 列を更新し、`完了日` 列を `-` にリセットする。
+4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.7.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに未完了（`open` / `in-progress` / `waiting` / `review`）の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.8. register update
+
+登録項目のタイトル・説明・期限・担当者・優先度などのフィールドを更新する。ステータスの変更は専用コマンド（`start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen`）を使う。
+
+```bash
+specdojo register update \
+  --project prj-0001 \
+  --id PJR-0061 \
+  --due 2026-06-15 \
+  --owner BA
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--title` | タイトルの更新 | 変更しない |
+| `--description` | 説明の更新 | 変更しない |
+| `--priority` | 優先度の更新。`high` / `medium` / `low` | 変更しない |
+| `--owner` | 担当者または役割の更新 | 変更しない |
+| `--due` | 期限の更新（`YYYY-MM-DD` / `-` / `_TODO_`） | 変更しない |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.8.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 指定されたフィールドのみ上書きし、指定なしのフィールドは変更しない。
+3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.8.2. 検証
+
+対象 ID が存在しない場合、または更新対象フィールドが 1 つも指定されていない場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.9. register start
+
+登録項目のステータスを `in-progress`（作業中）に変更する。`open` の項目に着手するときに使う。
+
+```bash
+specdojo register start \
+  --project prj-0001 \
+  --id PJR-0061
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.9.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 対象行の `ステータス` 列を `in-progress` に更新する。
+3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.9.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.10. register wait
+
+登録項目のステータスを `waiting`（待機中）に変更する。外部依存の回答待ちや承認待ちで作業を一時停止するときに使う。
+
+```bash
+specdojo register wait \
+  --project prj-0001 \
+  --id PJR-0061 \
+  --conclusion "外部チームの回答待ち。"
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--conclusion` | 待機理由の要約 | 変更しない |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.10.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 対象行の `ステータス` 列を `waiting` に更新する。
+3. `--conclusion` が指定されている場合は `結論` 列を更新する。
+4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.10.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+### 25.11. register review
+
+登録項目のステータスを `review`（レビュー中）に変更する。成果物のレビュー依頼や確認中の状態を示すときに使う。
+
+```bash
+specdojo register review \
+  --project prj-0001 \
+  --id PJR-0061
+```
+
+オプション:
+
+| オプション | 説明 | デフォルト |
+| --- | --- | --- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+
+#### 25.11.1. 更新フロー
+
+1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
+2. 対象行の `ステータス` 列を `review` に更新する。
+3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+
+#### 25.11.2. 検証
+
+対象 ID が存在しない場合、または現在のステータスがすでに `done` / `decided` / `rejected` / `deferred` の場合はエラーを返す。
 
 ```bash
 npm run validate:schema:pjr-index
@@ -1361,6 +1678,6 @@ pre-push:
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）
 - レビュー plan 生成（`review plan`）
-- プロジェクト登録簿 scaffold・登録項目追加・派生ビュー生成（`register scaffold` / `register add` / `register build`）
+- プロジェクト登録簿 scaffold・登録項目追加・ステータス変更・派生ビュー生成（`register scaffold` / `register add` / `register update` / `register start` / `register wait` / `register review` / `register close` / `register reject` / `register defer` / `register reopen` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）
 - 全生成物の一括再生成（`build`）

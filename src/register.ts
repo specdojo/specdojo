@@ -483,6 +483,93 @@ function writeDerivedViews(paths: RegisterPaths, scope: BuildScope): ViewFile[] 
 }
 
 // ================================
+// Item Update Helpers
+// ================================
+
+const TERMINAL_STATUSES_SET = new Set(['done', 'decided', 'rejected', 'deferred'])
+
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function findItemById(items: PjrItem[], id: string): PjrItem | undefined {
+  return items.find(it => it.id === id)
+}
+
+function replaceRowInContent(content: string, updated: PjrItem): string {
+  const newRow = formatTableRow(updated)
+  const lines = content.split('\n')
+  let inSection = false
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    if (/^## 1\.\s+登録項目一覧/.test(line)) {
+      inSection = true
+      continue
+    }
+    if (inSection && /^## /.test(line)) break
+    if (!inSection) continue
+    if (!line.startsWith('|') || isTableSeparator(line)) continue
+
+    const cells = parseTableCells(line)
+    if (cells.length >= 1 && cells[0] === updated.id) {
+      lines[i] = newRow
+      return lines.join('\n')
+    }
+  }
+
+  throw new Error(`Item ${updated.id} not found in table`)
+}
+
+function loadItemForUpdate(
+  paths: RegisterPaths,
+  id: string,
+  guard?: 'require-active' | 'require-terminal'
+): { content: string; item: PjrItem } {
+  if (!existsSync(paths.pjrIndexPath)) {
+    throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`)
+  }
+  if (!/^PJR-\d{4}$/.test(id)) {
+    throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`)
+  }
+  const content = readFileSync(paths.pjrIndexPath, 'utf8')
+  const items = parsePjrIndex(content)
+  const item = findItemById(items, id)
+  if (!item) {
+    throw new Error(`Item not found: ${id}`)
+  }
+  if (guard === 'require-active' && TERMINAL_STATUSES_SET.has(item.status)) {
+    throw new Error(
+      `Cannot change ${id}: status is "${item.status}" (terminal). Use "register reopen" first.`
+    )
+  }
+  if (guard === 'require-terminal' && !TERMINAL_STATUSES_SET.has(item.status)) {
+    throw new Error(`Cannot reopen ${id}: status is "${item.status}" (already active).`)
+  }
+  return { content, item }
+}
+
+function applyItemUpdate(opts: {
+  paths: RegisterPaths
+  content: string
+  updated: PjrItem
+  dryRun: boolean
+  action?: string
+}): void {
+  const label = opts.action ?? `→ ${opts.updated.status}`
+  if (opts.dryRun) {
+    process.stdout.write(`Would update ${opts.updated.id} (${label}):\n${formatTableRow(opts.updated)}\n`)
+    return
+  }
+  const updatedContent = replaceRowInContent(opts.content, opts.updated)
+  writeFileSync(opts.paths.pjrIndexPath, updatedContent, 'utf8')
+  process.stdout.write(`Updated: ${opts.paths.pjrIndexPath} (${opts.updated.id} ${label})\n`)
+  for (const view of writeDerivedViews(opts.paths, 'all')) {
+    process.stdout.write(`Generated: ${view.path}\n`)
+  }
+}
+
+// ================================
 // Error Handling & Shared Helpers
 // ================================
 
@@ -664,6 +751,225 @@ export function registerRegisterCommands(program: Command): void {
           process.stdout.write(`Created ticket: ${ticketPath}\n`)
         }
       }
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- close ---
+  const closecmd = reg.command('close').description('Set item status to done or decided')
+  addProjectOption(closecmd)
+  closecmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  closecmd.option('--status <status>', 'done or decided (auto from item type if omitted)')
+  closecmd.option('--conclusion <text>', 'Conclusion or resolution summary')
+  closecmd.option('--completed <date>', 'Completion date (YYYY-MM-DD; defaults to today)')
+  closecmd.option('--dry-run', 'Print change without writing', false)
+  closecmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+
+      const targetStatus =
+        opts.status ?? (['decision', 'question'].includes(item.type) ? 'decided' : 'done')
+      if (targetStatus !== 'done' && targetStatus !== 'decided') {
+        throw new Error(`--status must be "done" or "decided" for the close command`)
+      }
+
+      const completed = opts.completed ?? todayIso()
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
+        throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`)
+      }
+
+      const updated: PjrItem = {
+        ...item,
+        status: targetStatus,
+        completed,
+        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
+      }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- reject ---
+  const rejectcmd = reg.command('reject').description('Set item status to rejected')
+  addProjectOption(rejectcmd)
+  rejectcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  rejectcmd.option('--conclusion <text>', 'Reason for rejection')
+  rejectcmd.option('--completed <date>', 'Rejection date (YYYY-MM-DD; defaults to today)')
+  rejectcmd.option('--dry-run', 'Print change without writing', false)
+  rejectcmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+
+      const completed = opts.completed ?? todayIso()
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
+        throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`)
+      }
+
+      const updated: PjrItem = {
+        ...item,
+        status: 'rejected',
+        completed,
+        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
+      }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- defer ---
+  const defercmd = reg.command('defer').description('Set item status to deferred')
+  addProjectOption(defercmd)
+  defercmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  defercmd.option('--conclusion <text>', 'Reason for deferral')
+  defercmd.option('--dry-run', 'Print change without writing', false)
+  defercmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+
+      const updated: PjrItem = {
+        ...item,
+        status: 'deferred',
+        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
+      }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- reopen ---
+  const reopencmd = reg.command('reopen').description('Reopen a terminal-status item')
+  addProjectOption(reopencmd)
+  reopencmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  reopencmd.option(
+    '--status <status>',
+    'Target status: open | in-progress | waiting | review',
+    'open'
+  )
+  reopencmd.option('--dry-run', 'Print change without writing', false)
+  reopencmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-terminal')
+
+      const validReopenStatuses = ['open', 'in-progress', 'waiting', 'review']
+      if (!validReopenStatuses.includes(opts.status)) {
+        throw new Error(
+          `--status must be one of: ${validReopenStatuses.join(', ')}`
+        )
+      }
+
+      const updated: PjrItem = { ...item, status: opts.status, completed: '-' }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- start ---
+  const startcmd = reg.command('start').description('Set item status to in-progress')
+  addProjectOption(startcmd)
+  startcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  startcmd.option('--dry-run', 'Print change without writing', false)
+  startcmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+      const updated: PjrItem = { ...item, status: 'in-progress' }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- wait ---
+  const waitcmd = reg.command('wait').description('Set item status to waiting')
+  addProjectOption(waitcmd)
+  waitcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  waitcmd.option('--conclusion <text>', 'Reason for waiting')
+  waitcmd.option('--dry-run', 'Print change without writing', false)
+  waitcmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+      const updated: PjrItem = {
+        ...item,
+        status: 'waiting',
+        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
+      }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- review ---
+  const reviewcmd = reg.command('review').description('Set item status to review')
+  addProjectOption(reviewcmd)
+  reviewcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  reviewcmd.option('--dry-run', 'Print change without writing', false)
+  reviewcmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
+      const updated: PjrItem = { ...item, status: 'review' }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun })
+    } catch (error) {
+      printCommandError(error)
+    }
+  })
+
+  // --- update ---
+  const updatecmd = reg.command('update').description('Update fields of a register item')
+  addProjectOption(updatecmd)
+  updatecmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  updatecmd.option('--title <title>', 'Update title')
+  updatecmd.option('--description <text>', 'Update description')
+  updatecmd.option('--priority <priority>', `Update priority: ${VALID_PRIORITIES.join(' | ')}`)
+  updatecmd.option('--owner <owner>', 'Update owner or role')
+  updatecmd.option('--due <date>', 'Update due date (YYYY-MM-DD, -, or _TODO_)')
+  updatecmd.option('--dry-run', 'Print change without writing', false)
+  updatecmd.action(opts => {
+    try {
+      const paths = resolveRegisterPaths(opts)
+      const { content, item } = loadItemForUpdate(paths, opts.id)
+
+      const hasUpdates = ['title', 'description', 'priority', 'owner', 'due'].some(
+        k => opts[k] !== undefined
+      )
+      if (!hasUpdates) {
+        throw new Error(
+          'At least one field option must be specified (--title, --description, --priority, --owner, --due)'
+        )
+      }
+
+      if (
+        opts.priority !== undefined &&
+        !(VALID_PRIORITIES as readonly string[]).includes(opts.priority)
+      ) {
+        throw new Error(
+          `Invalid priority: "${opts.priority}". Must be one of: ${VALID_PRIORITIES.join(', ')}`
+        )
+      }
+      if (opts.due !== undefined && !/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
+        throw new Error(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`)
+      }
+
+      const updated: PjrItem = {
+        ...item,
+        ...(opts.title !== undefined ? { title: opts.title } : {}),
+        ...(opts.description !== undefined ? { description: opts.description } : {}),
+        ...(opts.priority !== undefined ? { priority: opts.priority } : {}),
+        ...(opts.owner !== undefined ? { owner: opts.owner } : {}),
+        ...(opts.due !== undefined ? { due: opts.due } : {}),
+      }
+      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun, action: 'fields updated' })
     } catch (error) {
       printCommandError(error)
     }
