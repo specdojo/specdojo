@@ -394,9 +394,9 @@ set -euo pipefail
 
 PROJECT="${SPECDOJO_PROJECT:-shj-0001}"
 AGENTS=(
-  "agent-docs"
-  "agent-review"
-  "agent-fix"
+  "ba-agent"
+  "qe-agent"
+  "dev-agent"
 )
 
 run_agent() {

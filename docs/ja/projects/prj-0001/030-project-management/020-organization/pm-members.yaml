@@ -40,8 +40,6 @@ members:
     email: null
     roles:
       - PO
-      - PM
-      - OPS
     type: agent
     persona: concise-project-organizer
     focus:
@@ -51,12 +49,26 @@ members:
       - simplification
     scheduler_strategy: critical-first
     note: PO ロールの草案作成、論点整理、判断材料整理を支援する agent。最終判断や公開可否判断は行わない。
+  - nickname: pm-agent
+    display_name: Project Manager Agent
+    email: null
+    roles:
+      - PM
+    type: agent
+    persona: milestone-tracker
+    focus:
+      - planning
+      - progress
+      - risk
+      - milestone-management
+      - issue-escalation
+    scheduler_strategy: critical-first
+    note: 計画・進捗・課題・リスク管理を支援する agent。最終承認や公開可否判断は行わない。
   - nickname: ba-agent
     display_name: Business Analyst Agent
     email: null
     roles:
       - BA
-      - UX
     type: agent
     persona: user-value-oriented
     focus:
@@ -65,7 +77,7 @@ members:
       - stakeholder-viewpoint
       - practical-usability
     scheduler_strategy: fifo
-    note: 要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。UX 観点も兼務する。 将来利用者や将来貢献者の視点から分かりにくさを検出する。
+    note: 要件、利用者視点、受入条件、文書の実用性の整理を支援する agent。将来利用者や将来貢献者の視点から分かりにくさを検出する。
   - nickname: arc-agent
     display_name: Architect Agent
     email: null
@@ -79,8 +91,23 @@ members:
       - naming
       - consistency
       - technical-constraints
-    scheduler_strategy: dependency-first
+    scheduler_strategy: critical-first
     note: 文書体系、構成方針、ID、ファイル命名、リポジトリ構成の整理を支援する agent。技術方針の最終判断は行わない。
+  - nickname: dev-agent
+    display_name: Developer Agent
+    email: null
+    roles:
+      - DEV
+    type: agent
+    persona: implementation-focused
+    focus:
+      - implementation
+      - coding
+      - configuration
+      - technical-changes
+      - build-and-test
+    scheduler_strategy: critical-first
+    note: 実装・設定・技術的変更作業を支援する agent。設計方針の最終判断は行わない。
   - nickname: qe-agent
     display_name: Quality Engineer Agent
     email: null
@@ -96,16 +123,33 @@ members:
       - edge-cases
     scheduler_strategy: critical-first
     note: 品質基準、レビュー観点、整合性確認、抜け漏れ検出を支援する agent。最終承認や公開可否判断は行わない。
-  - nickname: copilot
-    display_name: General Copilot Agent
+  - nickname: ux-agent
+    display_name: UX / Documentation Designer Agent
     email: null
-    roles: []
+    roles:
+      - UX
     type: agent
-    persona: general-assistant
+    persona: reader-experience-first
     focus:
-      - drafting
-      - refactoring
-      - summarization
-      - mechanical-updates
-    scheduler_strategy: manual
-    note: 特定ロールに固定しない汎用 agent。実行時には対象タスクの owner または明示された文脈に従って支援する。
+      - user-flow
+      - documentation-experience
+      - usability
+      - clarity
+      - information-architecture
+    scheduler_strategy: fifo
+    note: 利用者導線・説明・文書体験を担う agent。読み手の視点から分かりにくさ・導線の断絶を検出する。
+  - nickname: ops-agent
+    display_name: Operations Agent
+    email: null
+    roles:
+      - OPS
+    type: agent
+    persona: release-safety-first
+    focus:
+      - release-management
+      - publication
+      - deployment
+      - change-management
+      - configuration
+    scheduler_strategy: critical-first
+    note: リリース・公開・配布・変更管理を支援する agent。公開可否の最終判断は行わない。
