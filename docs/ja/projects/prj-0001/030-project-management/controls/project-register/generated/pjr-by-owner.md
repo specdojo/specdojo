@@ -61,6 +61,8 @@
 | PJR-0070 | done | sch-strategyに作成済み成果物を設定 | scheduleを生成するときに作成済みの成果物を考慮する | todo | medium | ARC | 2026-05-24 | 2026-05-23 | sch-strategyにinitial_stateを追加 | - |
 | PJR-0071 | done | specdojo buildコマンドの追加 | 生成物の一括ビルドを行うコマンドを追加 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | specdojo buildコマンドを実装 | - |
 | PJR-0072 | done | 単体テストの追加 | specdojoコマンドの単体テストを追加 | todo | medium | ARC | 2026-05-24 | 2026-05-24 | vitestのコードを追加 | - |
+| PJR-0073 | open | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | - | - | - |
+| PJR-0074 | open | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2025-05-24 | - | - | - |
 
 ## 2. PO
 
