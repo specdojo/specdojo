@@ -58,7 +58,19 @@ members:
       - document-creation
       - implementation
     scheduler_strategy: critical-first
-    note: タスクの owner フィールドからロール文脈を判断し、成果物を作成・編集する agent。--by edit-agent でタスクを claim する。ロールは agent 名ではなくタスクデータから取得する。
+    note: draft フェーズ（model_tier:full）のタスクを担当する。タスクの owner フィールドからロール文脈を判断し、成果物を作成・編集する agent。--by edit-agent でタスクを claim する。
+  - nickname: small-edit-agent
+    display_name: Small Edit Agent
+    email: null
+    roles: []
+    type: agent
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-revision
+      - review-response
+    scheduler_strategy: critical-first
+    note: review・finalize フェーズ（model_tier:small）のタスクを担当する軽量 edit-agent。--by small-edit-agent でタスクを claim する。edit-agent と同じプロンプトを使用し、モデルのみ小型に差し替える。
   - nickname: review-agent
     display_name: Review Agent
     email: null

@@ -21,7 +21,8 @@ opencode の agent は **機能** で分類する（`coordinate-agent` / `edit-a
 
 - **ロール文脈はタスクデータから取得する**。スケジュールの `owner` フィールドと `done_criteria` の `roles` フィールドがロール情報を保持するため、agent 名にロールを含める必要はない。
 - **`--by` はアクターの識別子**。`--by edit-agent` でタスクを claim し、ロール文脈は claim 後に task の `owner` を読んで判断する。
-- **作成と検証の分離**。`edit-agent` は `edit: allow`、`review-agent` は `edit: deny` でツールレベルで保護する。
+- **2段階の edit-agent**。draft フェーズ（`model_tier: full`）は `edit-agent`（フルモデル）、review / finalize フェーズ（`model_tier: small`）は `small-edit-agent`（小型モデル）が担当する。ルーティングは task handoff JSON の `model_tier` フィールドで決定する。
+- **作成と検証の分離**。`edit-agent` / `small-edit-agent` は `edit: allow`、`review-agent` は `edit: allow`（`rvr-*.yaml` への記入のみ）でプロンプト制約を補う。
 
 ## 2. 責務分担
 
@@ -197,11 +198,27 @@ export OPENAI_API_KEY=sk-...
     },
 
     "edit-agent": {
-      "description": "タスクの owner からロール文脈を判断し、成果物を作成・編集する。--by edit-agent でタスクを claim する。",
+      "description": "draft フェーズ（model_tier:full）のタスクを担当。--by edit-agent で claim する。",
       "mode": "subagent",
-      // 文書系タスク（BA/ARC/PM/UX/OPS）は Copilot で十分。
+      // draft は構造をゼロから作るため、フルモデルを使用する
       // DEV タスクが多い場合は "openai/codex-mini-latest" への変更を推奨
       "model": "github-copilot/gpt-4.1",
+      "prompt": "{file:.opencode/prompts/edit-agent.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "edit": "allow",
+      },
+    },
+
+    "small-edit-agent": {
+      "description": "review・finalize フェーズ（model_tier:small）のタスクを担当。--by small-edit-agent で claim する。",
+      "mode": "subagent",
+      // review・finalize は既存文書の修正・確認のため、small_model で十分
+      "model": "github-copilot/gpt-4.1-mini",
       "prompt": "{file:.opencode/prompts/edit-agent.md}",
       "permission": {
         "read": "allow",
@@ -246,31 +263,41 @@ export OPENAI_API_KEY=sk-...
 
 ### 5.3. agent 一覧
 
-| agent 名            | mode     | 機能                                                           | 推奨 provider 層         | edit  |
-| ------------------- | -------- | -------------------------------------------------------------- | ------------------------ | ----- |
-| `coordinate-agent`  | primary  | TUI 調整役。validate/build/scheduler を実行し委譲              | `small_model`（cheap）   | ask   |
-| `edit-agent`        | subagent | task.owner を読んでロール文脈を判断し成果物を作成              | `model`（cloud / local） | allow |
-| `review-agent`      | subagent | review plan/result を生成し、各ロール観点で rvr-*.yaml を記入 | `model`（cloud 推奨）    | allow |
+| agent 名            | mode     | 機能                                                           | model_tier | 推奨 provider 層         | edit  |
+| ------------------- | -------- | -------------------------------------------------------------- | ---------- | ------------------------ | ----- |
+| `coordinate-agent`  | primary  | TUI 調整役。validate/build/scheduler を実行し委譲              | -          | `small_model`（cheap）   | ask   |
+| `edit-agent`        | subagent | draft フェーズのタスクを担当。ロール文脈を判断し成果物を作成   | full       | `model`（cloud / local） | allow |
+| `small-edit-agent`  | subagent | review・finalize フェーズのタスクを担当。既存文書を修正・確認 | small      | `small_model`（cheap）   | allow |
+| `review-agent`      | subagent | review plan/result を生成し、各ロール観点で rvr-*.yaml を記入 | -（常時）  | `model`（cloud 推奨）    | allow |
 
-`edit-agent` が参照するロール文脈と推奨 provider：
+`model_tier` の決定ルール（task handoff JSON の `model_tier` フィールドで通知）：
 
-| task.owner | ロール文脈                   | 推奨 provider                                |
-| ---------- | ---------------------------- | -------------------------------------------- |
-| BA         | 要件・受入条件・利用者視点   | Copilot `gpt-4.1` / local                    |
-| ARC        | 文書体系・構成方針・命名     | Copilot `gpt-4.1` / local                    |
-| PM         | 計画・進捗・マイルストーン   | Copilot `gpt-4.1` / local                    |
-| DEV        | 実装・設定・スクリプト       | **Codex `codex-mini-latest` 推奨**           |
-| UX         | 利用者導線・文書体験         | Copilot `gpt-4.1` / local                    |
-| OPS        | リリース・公開・変更管理     | Copilot `gpt-4.1` / local                    |
+| タスクフェーズ                 | ステップ番号 | model_tier | 担当 agent        |
+| ------------------------------ | ------------ | ---------- | ----------------- |
+| draft（たたき台作成）          | 010          | `full`     | `edit-agent`      |
+| validate / review / finalize   | 020 以降     | `small`    | `small-edit-agent`|
+
+`model_tier` は将来的に `sch-strategy-<track>.yaml` の phase 定義で明示設定できるように拡張する予定。当面は task ID のステップ番号（`-010` = full、`-020` 以降 = small）を runner がプロキシとして使う。
+
+`edit-agent` / `small-edit-agent` が参照するロール文脈と推奨 provider：
+
+| task.owner | ロール文脈                   | draft（full）              | review / finalize（small）  |
+| ---------- | ---------------------------- | -------------------------- | --------------------------- |
+| BA         | 要件・受入条件・利用者視点   | Copilot `gpt-4.1`          | Copilot `gpt-4.1-mini`      |
+| ARC        | 文書体系・構成方針・命名     | Copilot `gpt-4.1`          | Copilot `gpt-4.1-mini`      |
+| PM         | 計画・進捗・マイルストーン   | Copilot `gpt-4.1`          | Copilot `gpt-4.1-mini`      |
+| DEV        | 実装・設定・スクリプト       | **Codex `codex-mini-latest`** | Copilot `gpt-4.1-mini`   |
+| UX         | 利用者導線・文書体験         | Copilot `gpt-4.1`          | Copilot `gpt-4.1-mini`      |
+| OPS        | リリース・公開・変更管理     | Copilot `gpt-4.1`          | Copilot `gpt-4.1-mini`      |
 
 主な利用パターンと `opencode.json` の model 設定：
 
-| パターン               | coordinate-agent                    | edit-agent                          | review-agent                        |
-| ---------------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- |
-| Copilot（デフォルト）  | `gpt-4.1-mini`（copilot）           | `gpt-4.1`（copilot）                | `gpt-4.1`（copilot）                |
-| DEV 重視（Codex）      | `gpt-4.1-mini`（copilot）           | `codex-mini-latest`（openai）       | `gpt-4.1`（copilot）                |
-| コスト最適（hybrid）   | `gemma4:e4b-8k`（ollama-local）     | `gpt-4.1`（copilot）                | `gpt-4.1`（copilot）                |
-| ローカル完結           | `gemma4:e4b-8k`（ollama-local）     | `gemma4:26b-32k`（ollama-local）    | `gemma4:31b-32k`（ollama-local）    |
+| パターン               | coordinate-agent                | edit-agent（full）          | small-edit-agent（small）   | review-agent                |
+| ---------------------- | ------------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| Copilot（デフォルト）  | `gpt-4.1-mini`（copilot）       | `gpt-4.1`（copilot）        | `gpt-4.1-mini`（copilot）   | `gpt-4.1`（copilot）        |
+| DEV 重視（Codex）      | `gpt-4.1-mini`（copilot）       | `codex-mini-latest`（openai）| `gpt-4.1-mini`（copilot）   | `gpt-4.1`（copilot）        |
+| コスト最適（hybrid）   | `gemma4:e4b-8k`（ollama-local） | `gpt-4.1`（copilot）        | `gemma4:e4b-8k`（ollama-local）| `gpt-4.1`（copilot）     |
+| ローカル完結           | `gemma4:e4b-8k`（ollama-local） | `gemma4:26b-32k`（ollama-local）| `gemma4:e4b-8k`（ollama-local）| `gemma4:31b-32k`（ollama-local）|
 
 ### 5.4. custom command
 
@@ -449,25 +476,45 @@ Safety rules:
 set -euo pipefail
 
 PROJECT="${SPECDOJO_PROJECT:-prj-0001}"
-PARALLEL_EDITORS="${PARALLEL_EDITORS:-3}"
+FULL_EDITORS="${FULL_EDITORS:-2}"    # draft タスク向け（フルモデル）
+SMALL_EDITORS="${SMALL_EDITORS:-3}"  # review/finalize タスク向け（小型モデル）
+
+# task handoff JSON の model_tier を読んで担当 agent を決定する
+# model_tier は task ID のステップ番号から判定:
+#   -010 (draft)    → full  → edit-agent
+#   -020+ (review/finalize) → small → small-edit-agent
+get_agent_for_tier() {
+  local tier="$1"
+  if [[ "$tier" == "full" ]]; then
+    echo "edit-agent"
+  else
+    echo "small-edit-agent"
+  fi
+}
 
 run_editor() {
   local instance="$1"
-  echo "==> [Phase 1] edit-agent (instance ${instance})"
+  local tier="$2"      # full | small
+  local agent
+  agent=$(get_agent_for_tier "$tier")
+  local by="${agent}"  # --by edit-agent or --by small-edit-agent
 
-  opencode run --agent edit-agent "
-You are edit-agent (instance ${instance}).
+  echo "==> [Phase 1] ${agent} (instance ${instance}, tier ${tier})"
+
+  opencode run --agent "${agent}" "
+You are ${agent} (instance ${instance}).
 
 Run the SpecDojo execution workflow:
 
 1. specdojo exec validate --project ${PROJECT}
 2. specdojo exec build --project ${PROJECT}
-3. specdojo exec scheduler --project ${PROJECT} --by edit-agent
-4. Read the claimed task. Identify the task's owner role and adopt that perspective.
-5. Execute only that claimed task.
-6. Run validation/build.
-7. Complete the task if successful.
-8. Block it with a clear reason if not possible.
+3. specdojo exec scheduler --project ${PROJECT} --by ${by}
+4. Read the claimed task and its model_tier from the task handoff JSON.
+5. Identify the task's owner role and adopt that perspective.
+6. Execute only that claimed task.
+7. Run validation/build.
+8. Complete the task if successful.
+9. Block it with a clear reason if not possible.
 
 Do not claim more than one task.
 Do not modify unrelated files.
@@ -491,14 +538,23 @@ Review all recently completed deliverables in project ${PROJECT}.
 "
 }
 
-# Phase 1: 並列作成
-for i in $(seq 1 "${PARALLEL_EDITORS}"); do
-  run_editor "$i" &
+# Phase 1a: draft タスク（フルモデル）を並列実行
+echo "==> Phase 1a: edit-agent × ${FULL_EDITORS} (full model, draft tasks)"
+for i in $(seq 1 "${FULL_EDITORS}"); do
+  run_editor "$i" "full" &
 done
 wait
-echo "==> Phase 1 complete"
+echo "==> Phase 1a complete"
 
-# Phase 2: レビュー
+# Phase 1b: review/finalize タスク（小型モデル）を並列実行
+echo "==> Phase 1b: small-edit-agent × ${SMALL_EDITORS} (small model, review/finalize tasks)"
+for i in $(seq 1 "${SMALL_EDITORS}"); do
+  run_editor "$i" "small" &
+done
+wait
+echo "==> Phase 1b complete"
+
+# Phase 2: レビュー（常にフルモデル）
 run_reviewer
 echo "==> Phase 2 complete"
 ```
@@ -580,6 +636,8 @@ specdojo exec scheduler \
   "task_name": "implement system design doc",
   "status": "claimed",
   "owner_role": "ARC",
+  "task_phase": "draft",
+  "model_tier": "full",
   "schedule_file": "sch-track-launch.yaml",
   "depends_on": ["T-PM-001"],
   "deliverables": ["docs/ja/projects/prj-0001/040-system-design/sysd-auth.md"],
@@ -591,4 +649,15 @@ specdojo exec scheduler \
 }
 ```
 
-`owner_role` フィールドにより、`edit-agent` はタスクを読んだ時点でロール文脈を把握できる。
+`owner_role` フィールドにより、`edit-agent` はタスクを読んだ時点でロール文脈を把握できる。`model_tier` フィールドにより、runner スクリプトは claim 前に適切な agent を選択できる。
+
+`task_phase` / `model_tier` の設定ルール：
+
+| task_phase  | ステップ番号 | model_tier | 担当 agent        |
+| ----------- | ------------ | ---------- | ----------------- |
+| `draft`     | 010          | `full`     | `edit-agent`      |
+| `validate`  | 020（yaml）  | `small`    | `small-edit-agent`|
+| `review`    | 020 / 030    | `small`    | `small-edit-agent`|
+| `finalize`  | 030 / 040    | `small`    | `small-edit-agent`|
+
+将来的には `sch-strategy-<track>.yaml` の phase 定義に `model_tier` を明示設定できるよう CLI を拡張する。
