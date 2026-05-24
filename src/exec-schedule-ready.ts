@@ -1,11 +1,11 @@
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import {
-  ClaimNextSnapshot,
-  CpmResult,
-  ReadySnapshot,
-  ScheduleIndex,
-  SchedulerStrategy,
+  type ClaimNextSnapshot,
+  type CpmResult,
+  type ReadySnapshot,
+  type ScheduleIndex,
+  type SchedulerStrategy,
 } from './exec-types.js'
 import { executionRootForProject, generatedDirForProject } from './exec-project.js'
 import { ensureDir, toArtifactPath, toScheduleFilePath, writeJson } from './exec-shared.js'

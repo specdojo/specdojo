@@ -1,4 +1,4 @@
-import { CpmNode, CpmResult, ScheduleIndex } from './exec-types.js'
+import { type CpmNode, type CpmResult, type ScheduleIndex } from './exec-types.js'
 import { toArtifactPath, toScheduleFilePath } from './exec-shared.js'
 
 export function topoSort(schedule: ScheduleIndex): { order: string[]; cycle?: string[] } {

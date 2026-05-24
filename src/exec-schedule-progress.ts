@@ -1,4 +1,4 @@
-import { CpmResult, ScheduleCalendar, ScheduleIndex } from './exec-types.js'
+import { type CpmResult, type ScheduleCalendar, type ScheduleIndex } from './exec-types.js'
 import { formatDateOnlyUtc } from './exec-shared.js'
 import { isWorkingDateUtc } from './exec-schedule-calendar.js'
 

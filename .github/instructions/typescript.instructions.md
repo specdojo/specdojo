@@ -68,13 +68,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 ## 7. 命名とコメント
 
 - 変数・関数は `camelCase`、型・interface・class は `PascalCase` を使う。
+- 複数の英単語を組み合わせる場合は camelCase の語境界を省略しない（例: `closeCmd`、`buildScope`）。単語を小文字で連結した名前は Code Spell Checker に未知語として検出されるため使わない。
 - boolean は `is` / `has` / `can` / `should` などで意味が分かる名前にする。
-- 略語は既存で定着しているものだけ使う。
+- 略語は既存で定着しているものだけ使う。新たな略語を導入する場合は、省略前の完全な英単語を使う（例: `idx` → `index`、`len` → `length`、`cnt` → `count`）。
 - コメントは、コードから読み取れない意図、制約、例外的判断を補足する場合にのみ書く。
 
 ## 8. テストと検証
 
 - TypeScript 変更後は、少なくとも `npm run build` を実行して型チェックとビルドを確認する。
+- `npm run lint:ts` で ESLint（`@typescript-eslint/no-explicit-any`、`consistent-type-imports` 等）のエラーがないことを確認する。自動修正可能なものは `npm run lint:ts:fix` で一括修正する。
 - Markdown や schema 生成に影響する変更では、必要に応じて `npm run lint:md`、`npm run lint:fm`、`npm run validate:schema` を実行する。
 - CLI の挙動を変える場合は、代表的な入力で実行結果を確認する。
 

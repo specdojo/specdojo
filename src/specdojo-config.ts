@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import dotenv from 'dotenv'

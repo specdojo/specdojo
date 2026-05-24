@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { watch as fsWatch, existsSync, readdirSync } from 'node:fs'
 import type { FSWatcher } from 'node:fs'
 import { spawn } from 'node:child_process'

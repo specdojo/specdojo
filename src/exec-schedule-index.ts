@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { ScheduleCalendar, ScheduleIndex, ScheduleNode } from './exec-types.js'
+import { type ScheduleCalendar, type ScheduleIndex, type ScheduleNode } from './exec-types.js'
 import {
   isSchYamlFilename,
   listFilesRecursive,
@@ -41,16 +41,17 @@ function cloneScheduleCalendar(calendar: ScheduleCalendar): ScheduleCalendar {
   }
 }
 
-function applyScheduleCalendar(base: ScheduleCalendar, calendar: any): ScheduleCalendar | null {
+function applyScheduleCalendar(base: ScheduleCalendar, calendar: unknown): ScheduleCalendar | null {
   if (!calendar || typeof calendar !== 'object') return null
 
+  const cal = calendar as Record<string, unknown>
   const parsed = cloneScheduleCalendar(base)
-  if (typeof calendar.timezone === 'string' && calendar.timezone.trim()) {
-    parsed.timezone = calendar.timezone.trim()
+  if (typeof cal.timezone === 'string' && cal.timezone.trim()) {
+    parsed.timezone = cal.timezone.trim()
   }
-  if (Array.isArray(calendar.workdays) && calendar.workdays.length) {
+  if (Array.isArray(cal.workdays) && cal.workdays.length) {
     const workdays = new Set<number>()
-    for (const token of calendar.workdays) {
+    for (const token of cal.workdays) {
       if (typeof token !== 'string') continue
       const day = parseWorkdayToken(token)
       if (day !== null) workdays.add(day)
@@ -58,8 +59,8 @@ function applyScheduleCalendar(base: ScheduleCalendar, calendar: any): ScheduleC
     if (workdays.size) parsed.workdays = workdays
   }
 
-  if (Array.isArray(calendar.holidays) && calendar.holidays.length) {
-    for (const holiday of calendar.holidays
+  if (Array.isArray(cal.holidays) && cal.holidays.length) {
+    for (const holiday of cal.holidays
       .map((value: unknown) => normalizeDateOnly(value))
       .filter(Boolean) as string[]) {
       parsed.holidays.add(holiday)
@@ -67,12 +68,12 @@ function applyScheduleCalendar(base: ScheduleCalendar, calendar: any): ScheduleC
   }
 
   if (
-    typeof calendar.work_hours_per_day === 'number' &&
-    Number.isFinite(calendar.work_hours_per_day) &&
-    calendar.work_hours_per_day > 0 &&
-    calendar.work_hours_per_day <= 24
+    typeof cal.work_hours_per_day === 'number' &&
+    Number.isFinite(cal.work_hours_per_day) &&
+    cal.work_hours_per_day > 0 &&
+    cal.work_hours_per_day <= 24
   ) {
-    parsed.work_hours_per_day = calendar.work_hours_per_day
+    parsed.work_hours_per_day = cal.work_hours_per_day
   }
 
   return parsed
@@ -87,8 +88,15 @@ function mergeScheduleCalendar(base: ScheduleCalendar, extra: ScheduleCalendar):
   return merged
 }
 
-function extractScheduleStartDate(doc: any): string | null {
-  return normalizeDateOnly(doc?.settings?.start_date ?? doc?.start_date)
+function extractScheduleStartDate(doc: unknown): string | null {
+  if (!doc || typeof doc !== 'object') return null
+  const d = doc as Record<string, unknown>
+  const settings = d['settings']
+  const settingsDate =
+    settings && typeof settings === 'object'
+      ? (settings as Record<string, unknown>)['start_date']
+      : undefined
+  return normalizeDateOnly(settingsDate ?? d['start_date'])
 }
 
 function minDateOnly(a: string | null, b: string | null): string | null {
@@ -103,11 +111,12 @@ function nonEmptyString(value: unknown): string | null {
   return trimmed.length > 0 ? trimmed : null
 }
 
-function scheduleSectionLabelForDoc(doc: any, fallback: string): string {
-  const docKind = nonEmptyString(doc?.kind)
+function scheduleSectionLabelForDoc(doc: unknown, fallback: string): string {
+  const d = doc && typeof doc === 'object' ? (doc as Record<string, unknown>) : null
+  const docKind = nonEmptyString(d?.['kind'])
   if (docKind === 'milestones') return 'milestones'
 
-  const track = nonEmptyString(doc?.track)
+  const track = nonEmptyString(d?.['track'])
   return track ?? fallback
 }
 
@@ -127,10 +136,11 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
     try {
       const defaultsDoc = readYaml(defaultsPath)
       if (defaultsDoc && typeof defaultsDoc === 'object') {
-        startDate = minDateOnly(startDate, extractScheduleStartDate(defaultsDoc))
+        const dd = defaultsDoc as Record<string, unknown>
+        startDate = minDateOnly(startDate, extractScheduleStartDate(dd))
         const defaultCalendar = applyScheduleCalendar(
           defaultScheduleCalendar(),
-          defaultsDoc.calendar
+          dd['calendar']
         )
         if (defaultCalendar) {
           calendar = defaultCalendar
@@ -143,15 +153,16 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
   }
 
   for (const f of candidateFiles) {
-    let doc: any
+    let doc: unknown
     try {
       doc = readYaml(f)
     } catch {
       continue
     }
     if (!doc || typeof doc !== 'object') continue
+    const d = doc as Record<string, unknown>
 
-    const docKind = nonEmptyString(doc?.kind)
+    const docKind = nonEmptyString(d['kind'])
     if (docKind === 'defaults' || docKind === 'strategy') {
       continue
     }
@@ -161,12 +172,12 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
 
     files.push(f)
     const scheduleFile = toScheduleFilePath(projectPath, f)
-    sectionLabels[scheduleFile] = scheduleSectionLabelForDoc(doc, scheduleFile)
+    sectionLabels[scheduleFile] = scheduleSectionLabelForDoc(d, scheduleFile)
 
-    startDate = minDateOnly(startDate, extractScheduleStartDate(doc))
+    startDate = minDateOnly(startDate, extractScheduleStartDate(d))
 
-    const docCalendar = applyScheduleCalendar(calendar, doc.calendar)
-    if (docCalendar && doc.calendar && typeof doc.calendar === 'object') {
+    const docCalendar = applyScheduleCalendar(calendar, d['calendar'])
+    if (docCalendar && d['calendar'] && typeof d['calendar'] === 'object') {
       if (!hasCalendar) {
         calendar = cloneScheduleCalendar(docCalendar)
         hasCalendar = true
@@ -175,19 +186,20 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       }
     }
 
-    const tasks = Array.isArray(doc.tasks) ? doc.tasks : []
-    const milestones = Array.isArray(doc.milestones) ? doc.milestones : []
+    const tasks = Array.isArray(d['tasks']) ? d['tasks'] : []
+    const milestones = Array.isArray(d['milestones']) ? d['milestones'] : []
 
     for (const t of tasks) {
       if (!t || typeof t !== 'object') continue
-      const id = String(t.id ?? '').trim()
+      const tv = t as Record<string, unknown>
+      const id = String(tv['id'] ?? '').trim()
       if (!id) continue
       nodes.set(id, {
         id,
-        name: typeof t.name === 'string' ? t.name : undefined,
-        owner: typeof t.owner === 'string' ? t.owner : undefined,
-        depends_on: Array.isArray(t.depends_on) ? t.depends_on.map(String) : [],
-        duration_days: typeof t.duration_days === 'number' ? t.duration_days : 0,
+        name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
+        owner: typeof tv['owner'] === 'string' ? tv['owner'] : undefined,
+        depends_on: Array.isArray(tv['depends_on']) ? tv['depends_on'].map(String) : [],
+        duration_days: typeof tv['duration_days'] === 'number' ? tv['duration_days'] : 0,
         kind: 'task',
         schedule_file: f,
       })
@@ -195,13 +207,14 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
 
     for (const m of milestones) {
       if (!m || typeof m !== 'object') continue
-      const id = String(m.id ?? '').trim()
+      const mv = m as Record<string, unknown>
+      const id = String(mv['id'] ?? '').trim()
       if (!id) continue
       nodes.set(id, {
         id,
-        name: typeof m.name === 'string' ? m.name : undefined,
-        owner: typeof m.owner === 'string' ? m.owner : undefined,
-        depends_on: Array.isArray(m.depends_on) ? m.depends_on.map(String) : [],
+        name: typeof mv['name'] === 'string' ? mv['name'] : undefined,
+        owner: typeof mv['owner'] === 'string' ? mv['owner'] : undefined,
+        depends_on: Array.isArray(mv['depends_on']) ? mv['depends_on'].map(String) : [],
         duration_days: 0,
         kind: 'milestone',
         schedule_file: f,

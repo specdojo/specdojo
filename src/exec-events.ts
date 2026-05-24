@@ -1,13 +1,13 @@
 import { extname, join, resolve } from 'node:path'
 import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import {
-  CurrentState,
-  ExecEventType,
-  ExecEventV1,
-  ExecState,
-  ScheduleIndex,
-  SchedulerLockOptions,
-  StateSnapshot,
+  type CurrentState,
+  type ExecEventType,
+  type ExecEventV1,
+  type ExecState,
+  type ScheduleIndex,
+  type SchedulerLockOptions,
+  type StateSnapshot,
 } from './exec-types.js'
 import {
   collectRepeatable,
@@ -29,7 +29,7 @@ import { eventsDirForProject, executionRootForProject } from './exec-project.js'
 
 export { collectRepeatable }
 
-export function validateEventShape(obj: any, source: string): string[] {
+export function validateEventShape(obj: unknown, source: string): string[] {
   const errs: string[] = []
   function err(msg: string): void {
     errs.push(`${source}: ${msg}`)
@@ -39,8 +39,9 @@ export function validateEventShape(obj: any, source: string): string[] {
     err('not a JSON object')
     return errs
   }
-  if (obj.v !== 1) err('v must be 1')
-  if (typeof obj.ts !== 'string' || !isUtcIsoSeconds(obj.ts)) {
+  const o = obj as Record<string, unknown>
+  if (o.v !== 1) err('v must be 1')
+  if (typeof o.ts !== 'string' || !isUtcIsoSeconds(o.ts)) {
     err('ts must be UTC ISO seconds like 2026-03-05T03:10:00Z')
   }
   const allowed = new Set<ExecEventType>([
@@ -53,23 +54,23 @@ export function validateEventShape(obj: any, source: string): string[] {
     'link',
     'estimate',
   ])
-  if (typeof obj.type !== 'string' || !allowed.has(obj.type)) {
+  if (typeof o.type !== 'string' || !allowed.has(o.type as ExecEventType)) {
     err(`type must be one of ${Array.from(allowed).join(', ')}`)
   }
-  if (typeof obj.task_id !== 'string' || obj.task_id.trim() === '') {
+  if (typeof o.task_id !== 'string' || o.task_id.trim() === '') {
     err('task_id must be non-empty string')
   }
-  if (typeof obj.by !== 'string' || obj.by.trim() === '') err('by must be non-empty string')
-  if (typeof obj.msg !== 'string') err('msg must be string')
+  if (typeof o.by !== 'string' || o.by.trim() === '') err('by must be non-empty string')
+  if (typeof o.msg !== 'string') err('msg must be string')
   if (
-    obj.refs !== undefined &&
-    (typeof obj.refs !== 'object' || obj.refs === null || Array.isArray(obj.refs))
+    o.refs !== undefined &&
+    (typeof o.refs !== 'object' || o.refs === null || Array.isArray(o.refs))
   ) {
     err('refs must be object if provided')
   }
   if (
-    obj.meta !== undefined &&
-    (typeof obj.meta !== 'object' || obj.meta === null || Array.isArray(obj.meta))
+    o.meta !== undefined &&
+    (typeof o.meta !== 'object' || o.meta === null || Array.isArray(o.meta))
   ) {
     err('meta must be object if provided')
   }
@@ -92,13 +93,13 @@ export function readAllEventFiles(projectPath: string): { path: string; event: E
   return items
 }
 
-export function buildEvent(type: ExecEventType, o: any): ExecEventV1 {
+export function buildEvent(type: ExecEventType, o: Record<string, unknown>): ExecEventV1 {
   const task_id = requireNonEmpty('task', o.task)
   const by = requireNonEmpty('by', o.by)
   const msg = requireNonEmpty('msg', o.msg)
 
-  const refs = parseKeyValuePairs(o.ref)
-  const metaPairs = parseKeyValuePairs(o.meta)
+  const refs = parseKeyValuePairs(o.ref as string[] | undefined)
+  const metaPairs = parseKeyValuePairs(o.meta as string[] | undefined)
   const meta = metaPairs
     ? (Object.fromEntries(Object.entries(metaPairs)) as Record<string, unknown>)
     : undefined
@@ -368,8 +369,8 @@ export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOpt
         acquired_at_utc: nowUtcIsoSeconds(),
       })
       return lockDir
-    } catch (e: any) {
-      if (e?.code !== 'EEXIST') throw e
+    } catch (e: unknown) {
+      if ((e as NodeJS.ErrnoException | null)?.code !== 'EEXIST') throw e
 
       try {
         const st = statSync(lockDir)

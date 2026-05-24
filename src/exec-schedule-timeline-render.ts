@@ -1,4 +1,4 @@
-import { CpmNode, CpmResult, ExecState, ScheduleIndex, StateSnapshot } from './exec-types.js'
+import { type CpmNode, type CpmResult, type ExecState, type ScheduleIndex, type StateSnapshot } from './exec-types.js'
 import { formatDateOnlyUtc } from './exec-shared.js'
 import {
   buildWorkingTaskSegments,
@@ -6,7 +6,7 @@ import {
   isWorkingDateUtc,
   timelinePositionX,
   timelineStartDate,
-  WorkingTaskSegment,
+  type WorkingTaskSegment,
 } from './exec-schedule-calendar.js'
 
 export type TimelineMarkdownSummary = {

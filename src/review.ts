@@ -1,8 +1,8 @@
-import { Command } from 'commander'
-import { existsSync, readdirSync } from 'node:fs'
+import { type Command } from 'commander'
+import { existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
-import { findDeliverable, generateReviewPlan, scaffoldViewpoints, writeReviewPlan } from './review-plan.js'
+import { generateReviewPlan, scaffoldViewpoints, writeReviewPlan } from './review-plan.js'
 import type { ReviewStage } from './review-types.js'
 
 const VALID_STAGES: ReviewStage[] = ['draft', 'first', 'final', 'ready-candidate']

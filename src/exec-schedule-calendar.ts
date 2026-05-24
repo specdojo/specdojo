@@ -1,4 +1,4 @@
-import { ScheduleCalendar } from './exec-types.js'
+import { type ScheduleCalendar } from './exec-types.js'
 import { formatDateOnlyUtc } from './exec-shared.js'
 
 export type WorkingTaskSegment = {

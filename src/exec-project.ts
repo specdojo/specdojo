@@ -6,7 +6,7 @@ import {
   loadConfig,
   loadEnv,
 } from './specdojo-config.js'
-import { ResolvedProjectPaths } from './exec-types.js'
+import { type ResolvedProjectPaths } from './exec-types.js'
 
 function projectBaseDir(): string {
   const { configPath } = loadConfig()

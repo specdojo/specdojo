@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import {
@@ -26,7 +26,6 @@ import {
 } from './exec-project.js'
 import {
   assertValidActor,
-  defaultConfigPath,
   loadConfig,
   loadMemberRoster,
 } from './specdojo-config.js'
@@ -41,13 +40,30 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
-import { ExecEventType, ExecEventV1, SchedulerStrategy } from './exec-types.js'
+import { type ExecEventType, type ExecEventV1, type SchedulerStrategy } from './exec-types.js'
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
+
+type ExecCommandOpts = {
+  project?: string
+  by?: string
+  task?: string
+  msg?: string
+  ref?: string[]
+  meta?: string[]
+  runId?: string
+  allowMultipleDoing?: boolean
+  lockTimeoutMs?: string
+  lockStaleMs?: string
+  owner?: string
+  allowOwnerMismatch?: boolean
+  strategy?: string
+  dryRun?: boolean
+}
 
 type LoadedExecState = {
   schedule: ReturnType<typeof buildScheduleIndex>
@@ -61,7 +77,7 @@ type LockedEventAction = {
     state: LoadedExecState,
     taskId: string,
     actor: string,
-    opts: any
+    opts: ExecCommandOpts
   ) => { ok: boolean; reason?: string }
   requireSingleDoing?: boolean
 }
@@ -237,7 +253,7 @@ function ensureActorCanClaimNext(
   return false
 }
 
-function runSimpleEventCommand(opts: any, type: ExecEventType): void {
+function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void {
   try {
     const { schedulePath } = resolveProjectContext(opts)
     const actor = requireNonEmpty('by', opts.by)
@@ -252,7 +268,7 @@ function runSimpleEventCommand(opts: any, type: ExecEventType): void {
   }
 }
 
-function runLockedEventCommand(opts: any, action: LockedEventAction): void {
+function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction): void {
   let lockDir = ''
 
   try {

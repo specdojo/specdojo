@@ -69,15 +69,15 @@ export function listFilesRecursive(dir: string): string[] {
   return out
 }
 
-export function readJson(path: string): any {
+export function readJson(path: string): unknown {
   return JSON.parse(readFileSync(path, 'utf8'))
 }
 
-export function writeJson(path: string, data: any): void {
+export function writeJson(path: string, data: unknown): void {
   writeFileSync(path, JSON.stringify(data, null, 2) + '\n', 'utf8')
 }
 
-export function readYaml(path: string): any {
+export function readYaml(path: string): unknown {
   return yaml.load(readFileSync(path, 'utf8'))
 }
 

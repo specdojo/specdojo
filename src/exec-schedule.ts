@@ -1,11 +1,11 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, writeFileSync } from 'node:fs'
 import { extname, join } from 'node:path'
 import {
-  CpmResult,
-  ExecEventV1,
-  ScheduleIndex,
-  StateSnapshot,
-  ValidateResult,
+  type CpmResult,
+  type ExecEventV1,
+  type ScheduleIndex,
+  type StateSnapshot,
+  type ValidateResult,
 } from './exec-types.js'
 import { computeReadyIds, foldEventsToState, validateEventShape } from './exec-events.js'
 import {
@@ -68,7 +68,7 @@ export function validateAll(projectPath: string): ValidateResult {
   let parsedEvents = 0
 
   for (const f of files) {
-    let obj: any
+    let obj: unknown
     try {
       obj = readJson(f)
     } catch {

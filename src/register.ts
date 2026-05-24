@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'

@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { spawnSync } from 'node:child_process'
 import { dirname } from 'node:path'
 import { loadConfig, loadEnv } from './specdojo-config.js'

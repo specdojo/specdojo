@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
-import { ScheduleDiff, ScheduleHash, ScheduleIndex, ScheduleNode } from './exec-types.js'
+import { type ScheduleDiff, type ScheduleHash, type ScheduleIndex, type ScheduleNode } from './exec-types.js'
 import {
   ensureDir,
   readJson,
@@ -11,7 +11,7 @@ import {
 } from './exec-shared.js'
 import { generatedDirForProject } from './exec-project.js'
 
-function normalizeNodeForHash(n: ScheduleNode): any {
+function normalizeNodeForHash(n: ScheduleNode): Record<string, unknown> {
   return {
     id: n.id,
     name: n.name ?? '',
@@ -23,7 +23,7 @@ function normalizeNodeForHash(n: ScheduleNode): any {
   }
 }
 
-function sha256Json(obj: any): string {
+function sha256Json(obj: unknown): string {
   return createHash('sha256').update(JSON.stringify(obj)).digest('hex')
 }
 

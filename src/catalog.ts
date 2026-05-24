@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { dirname, join, resolve } from 'node:path'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
@@ -146,14 +146,20 @@ export function registerCatalogCommands(program: Command): void {
     }
   })
 
-  const sccmd = cat
+  const scCmd = cat
     .command('scaffold')
     .description('Create dct-*.yaml from templates (small|medium|large)')
-  addProjectOption(sccmd)
-  sccmd.option('--size <size>', 'Project size: small|medium|large (default: read from dct-index.md)')
-  sccmd.option('--project-id <projectId>', 'Project ID to embed (e.g. prj-0001); derived from catalog_path if omitted')
-  sccmd.option('--force', 'Overwrite existing files', false)
-  sccmd.action(opts => {
+  addProjectOption(scCmd)
+  scCmd.option(
+    '--size <size>',
+    'Project size: small|medium|large (default: read from dct-index.md)'
+  )
+  scCmd.option(
+    '--project-id <projectId>',
+    'Project ID to embed (e.g. prj-0001); derived from catalog_path if omitted'
+  )
+  scCmd.option('--force', 'Overwrite existing files', false)
+  scCmd.action(opts => {
     try {
       const catalogPath = resolveCatalogPath(opts)
 
@@ -161,12 +167,15 @@ export function registerCatalogCommands(program: Command): void {
       if (explicitSize && !['small', 'medium', 'large'].includes(explicitSize)) {
         throw new Error(`Invalid --size: "${explicitSize}". Must be one of: small|medium|large`)
       }
-      const size: ProjectSize = (explicitSize as ProjectSize | undefined) ??
+      const size: ProjectSize =
+        (explicitSize as ProjectSize | undefined) ??
         readSizeFromIndex(catalogPath) ??
-        (() => { throw new Error(
-          `--size not specified and dct-index.md has no "size" field.\n` +
-          `Use --size <small|medium|large> or add size: to dct-index.md frontmatter.`
-        ) })()
+        (() => {
+          throw new Error(
+            `--size not specified and dct-index.md has no "size" field.\n` +
+              `Use --size <small|medium|large> or add size: to dct-index.md frontmatter.`
+          )
+        })()
 
       const templatesPath = resolve(specdojoRootDir(), 'docs/ja/specdojo/templates')
       if (!existsSync(templatesPath)) {

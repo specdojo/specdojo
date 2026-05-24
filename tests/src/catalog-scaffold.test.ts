@@ -4,7 +4,6 @@ import { resolve } from 'node:path'
 import { load } from 'js-yaml'
 import fg from 'fast-glob'
 import { scaffoldDoc } from '../../src/catalog-scaffold.js'
-import type { ProjectSize } from '../../src/catalog-scaffold.js'
 import type { DctTemplateDoc } from '../../src/catalog-types.js'
 import { buildValidator, formatErrors } from '../helpers/schema.js'
 

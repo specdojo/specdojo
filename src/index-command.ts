@@ -1,4 +1,4 @@
-import { Command } from 'commander'
+import { type Command } from 'commander'
 import { resolve } from 'node:path'
 import { loadEnv, specdojoRootDir } from './specdojo-config.js'
 import { buildDocIndex, lookupDocIndex } from './doc-index.js'
