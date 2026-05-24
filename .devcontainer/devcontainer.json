@@ -1,11 +1,12 @@
 {
-  "name": "${localWorkspaceFolderBasename} devcontainer",
+  "name": "specdojo",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
   },
   "remoteUser": "node",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/specdojo-workspace/specdojo",
   "shutdownAction": "none",
 
   "features": {
@@ -25,13 +26,13 @@
   },
 
   "mounts": [
-    "source=${localWorkspaceFolderBasename}-git,target=/home/node/.config/git,type=volume",
-    "source=${localWorkspaceFolderBasename}-claude,target=/home/node/.claude,type=volume",
-    "source=${localWorkspaceFolderBasename}-claude-state,target=/home/node/.claude-state,type=volume",
-    "source=${localWorkspaceFolderBasename}-codex,target=/home/node/.codex,type=volume",
-    "source=${localWorkspaceFolderBasename}-copilot,target=/home/node/.copilot,type=volume",
-    "source=${localWorkspaceFolderBasename}-opencode,target=/home/node/.config/opencode,type=volume",
-    "source=${localWorkspaceFolderBasename}-gh,target=/home/node/.config/gh,type=volume"
+    "source=specdojo-git,target=/home/node/.config/git,type=volume",
+    "source=specdojo-claude,target=/home/node/.claude,type=volume",
+    "source=specdojo-claude-state,target=/home/node/.claude-state,type=volume",
+    "source=specdojo-codex,target=/home/node/.codex,type=volume",
+    "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
+    "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+    "source=specdojo-gh,target=/home/node/.config/gh,type=volume"
   ],
 
   "containerEnv": {

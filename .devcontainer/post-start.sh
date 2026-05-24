@@ -63,7 +63,8 @@ ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 
 echo "Installing SpecDojo VSCode extension..."
-VSIX="/workspaces/specdojo/tools/vscode-specdojo/vscode-specdojo-0.1.0.vsix"
+WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+VSIX="${WORKSPACE_DIR}/tools/vscode-specdojo/vscode-specdojo-0.1.0.vsix"
 if ! code --list-extensions 2>/dev/null | grep -q "specdojo.vscode-specdojo"; then
   code --install-extension "$VSIX" || true
 else
