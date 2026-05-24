@@ -1,11 +1,11 @@
 ---
-id: sysd-multi-agent-settings
+id: sysd-opencode-settings
 type: project
 status: draft
 rulebook: sysd-rulebook
 ---
 
-# opencode マルチエージェント設定
+# opencode 設定
 
 SpecDojo CLI と opencode を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
 
