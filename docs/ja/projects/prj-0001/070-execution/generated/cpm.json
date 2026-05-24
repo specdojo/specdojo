@@ -1,6 +1,6 @@
 {
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
-  "project_start_date": null,
+  "project_start_date": "2026-05-24",
   "project_duration_days": 2.5,
   "nodes": {
     "T-LAUNCH-PJD-OVERVIEW-010": {
@@ -400,8 +400,8 @@
       "lf": 2.5,
       "slack": 0,
       "depends_on": [
-        "T-LAUNCH-PJD-CHARTER-030",
         "T-LAUNCH-PJD-SUCCESS-030",
+        "T-LAUNCH-PJD-CHARTER-030",
         "T-LAUNCH-PJD-ALT-030"
       ],
       "schedule_file": "sch-milestones.yaml"
@@ -869,9 +869,9 @@
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "T-LAUNCH-PJM-SCHMS-010": {
-      "id": "T-LAUNCH-PJM-SCHMS-010",
-      "name": "sch-milestones たたき台作成",
+    "T-LAUNCH-PJM-SCHSTG-010": {
+      "id": "T-LAUNCH-PJM-SCHSTG-010",
+      "name": "sch-strategy-launch たたき台作成",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -883,9 +883,9 @@
       "depends_on": [],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "T-LAUNCH-PJM-SCHMS-020": {
-      "id": "T-LAUNCH-PJM-SCHMS-020",
-      "name": "sch-milestones スキーマ検証",
+    "T-LAUNCH-PJM-SCHSTG-020": {
+      "id": "T-LAUNCH-PJM-SCHSTG-020",
+      "name": "sch-strategy-launch スキーマ検証",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.0625,
@@ -895,13 +895,13 @@
       "lf": 2.25,
       "slack": 2.0625,
       "depends_on": [
-        "T-LAUNCH-PJM-SCHMS-010"
+        "T-LAUNCH-PJM-SCHSTG-010"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "T-LAUNCH-PJM-SCHMS-030": {
-      "id": "T-LAUNCH-PJM-SCHMS-030",
-      "name": "sch-milestones レビュー・修正",
+    "T-LAUNCH-PJM-SCHSTG-030": {
+      "id": "T-LAUNCH-PJM-SCHSTG-030",
+      "name": "sch-strategy-launch レビュー・修正",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -911,13 +911,13 @@
       "lf": 2.375,
       "slack": 2.0625,
       "depends_on": [
-        "T-LAUNCH-PJM-SCHMS-020"
+        "T-LAUNCH-PJM-SCHSTG-020"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "T-LAUNCH-PJM-SCHMS-040": {
-      "id": "T-LAUNCH-PJM-SCHMS-040",
-      "name": "sch-milestones 完成版仕上げ",
+    "T-LAUNCH-PJM-SCHSTG-040": {
+      "id": "T-LAUNCH-PJM-SCHSTG-040",
+      "name": "sch-strategy-launch 完成版仕上げ",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -927,69 +927,7 @@
       "lf": 2.5,
       "slack": 2.0625,
       "depends_on": [
-        "T-LAUNCH-PJM-SCHMS-030"
-      ],
-      "schedule_file": "sch-track-launch.yaml"
-    },
-    "T-LAUNCH-PJM-SCHTLNCH-010": {
-      "id": "T-LAUNCH-PJM-SCHTLNCH-010",
-      "name": "sch-track-launch たたき台作成",
-      "owner": "PM",
-      "kind": "task",
-      "duration_days": 0.125,
-      "es": 0,
-      "ef": 0.125,
-      "ls": 2.0625,
-      "lf": 2.1875,
-      "slack": 2.0625,
-      "depends_on": [],
-      "schedule_file": "sch-track-launch.yaml"
-    },
-    "T-LAUNCH-PJM-SCHTLNCH-020": {
-      "id": "T-LAUNCH-PJM-SCHTLNCH-020",
-      "name": "sch-track-launch スキーマ検証",
-      "owner": "PM",
-      "kind": "task",
-      "duration_days": 0.0625,
-      "es": 0.125,
-      "ef": 0.1875,
-      "ls": 2.1875,
-      "lf": 2.25,
-      "slack": 2.0625,
-      "depends_on": [
-        "T-LAUNCH-PJM-SCHTLNCH-010"
-      ],
-      "schedule_file": "sch-track-launch.yaml"
-    },
-    "T-LAUNCH-PJM-SCHTLNCH-030": {
-      "id": "T-LAUNCH-PJM-SCHTLNCH-030",
-      "name": "sch-track-launch レビュー・修正",
-      "owner": "PM",
-      "kind": "task",
-      "duration_days": 0.125,
-      "es": 0.1875,
-      "ef": 0.3125,
-      "ls": 2.25,
-      "lf": 2.375,
-      "slack": 2.0625,
-      "depends_on": [
-        "T-LAUNCH-PJM-SCHTLNCH-020"
-      ],
-      "schedule_file": "sch-track-launch.yaml"
-    },
-    "T-LAUNCH-PJM-SCHTLNCH-040": {
-      "id": "T-LAUNCH-PJM-SCHTLNCH-040",
-      "name": "sch-track-launch 完成版仕上げ",
-      "owner": "PM",
-      "kind": "task",
-      "duration_days": 0.125,
-      "es": 0.3125,
-      "ef": 0.4375,
-      "ls": 2.375,
-      "lf": 2.5,
-      "slack": 2.0625,
-      "depends_on": [
-        "T-LAUNCH-PJM-SCHTLNCH-030"
+        "T-LAUNCH-PJM-SCHSTG-030"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1005,9 +943,8 @@
       "lf": 2.5,
       "slack": 2.0625,
       "depends_on": [
-        "T-LAUNCH-PJM-SCHMS-040",
         "T-LAUNCH-PJM-SCHDEF-040",
-        "T-LAUNCH-PJM-SCHTLNCH-040"
+        "T-LAUNCH-PJM-SCHSTG-040"
       ],
       "schedule_file": "sch-milestones.yaml"
     }

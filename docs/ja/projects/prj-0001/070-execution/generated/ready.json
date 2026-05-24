@@ -2,7 +2,7 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/070-execution",
   "generated_dir": "docs/ja/projects/prj-0001/070-execution/generated",
-  "ready_count": 5,
+  "ready_count": 4,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
@@ -11,8 +11,7 @@
         "T-LAUNCH-PJD-OVERVIEW-010",
         "T-LAUNCH-PJM-PLAN-010",
         "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHMS-010",
-        "T-LAUNCH-PJM-SCHTLNCH-010"
+        "T-LAUNCH-PJM-SCHSTG-010"
       ]
     },
     "fifo": {
@@ -21,8 +20,7 @@
         "T-LAUNCH-PJD-OVERVIEW-010",
         "T-LAUNCH-PJM-PLAN-010",
         "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHMS-010",
-        "T-LAUNCH-PJM-SCHTLNCH-010"
+        "T-LAUNCH-PJM-SCHSTG-010"
       ]
     }
   },
@@ -73,27 +71,12 @@
       }
     },
     {
-      "id": "T-LAUNCH-PJM-SCHMS-010",
-      "name": "sch-milestones たたき台作成",
+      "id": "T-LAUNCH-PJM-SCHSTG-010",
+      "name": "sch-strategy-launch たたき台作成",
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 4,
       "critical_first_rank": 4,
-      "cpm": {
-        "es": 0,
-        "ef": 0.125,
-        "ls": 2.0625,
-        "lf": 2.1875,
-        "slack": 2.0625
-      }
-    },
-    {
-      "id": "T-LAUNCH-PJM-SCHTLNCH-010",
-      "name": "sch-track-launch たたき台作成",
-      "owner": "PM",
-      "schedule_file": "sch-track-launch.yaml",
-      "fifo_rank": 5,
-      "critical_first_rank": 5,
       "cpm": {
         "es": 0,
         "ef": 0.125,

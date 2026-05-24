@@ -94,7 +94,8 @@ function extractScheduleStartDate(doc: unknown): string | null {
   const settings = d['settings']
   const settingsDate =
     settings && typeof settings === 'object'
-      ? (settings as Record<string, unknown>)['start_date']
+      ? ((settings as Record<string, unknown>)['start_date'] ??
+        (settings as Record<string, unknown>)['default_start_date'])
       : undefined
   return normalizeDateOnly(settingsDate ?? d['start_date'])
 }

@@ -5,7 +5,8 @@ status: draft
 version: 1
 project_id: prj-0001
 track: launch
-settings: {}
+settings:
+  start_date: "2026-05-24"
 tasks:
   - id: T-LAUNCH-PJD-OVERVIEW-010
     name: prj-overview たたき台作成
@@ -23,6 +24,42 @@ tasks:
     duration_days: 0.125
     depends_on:
       - T-LAUNCH-PJD-OVERVIEW-020
+    owner: BA
+  - id: T-LAUNCH-PJD-SCOPE-010
+    name: prj-scope たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+    owner: BA
+  - id: T-LAUNCH-PJD-SCOPE-020
+    name: prj-scope レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-010
+    owner: BA
+  - id: T-LAUNCH-PJD-SCOPE-030
+    name: prj-scope 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-020
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-010
+    name: prj-success-criteria-and-acceptance-criteria たたき台作成
+    duration_days: 0.25
+    depends_on:
+      - T-LAUNCH-PJD-SCOPE-030
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-020
+    name: prj-success-criteria-and-acceptance-criteria レビュー・修正
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SUCCESS-010
+    owner: BA
+  - id: T-LAUNCH-PJD-SUCCESS-030
+    name: prj-success-criteria-and-acceptance-criteria 完成版仕上げ
+    duration_days: 0.125
+    depends_on:
+      - T-LAUNCH-PJD-SUCCESS-020
     owner: BA
   - id: T-LAUNCH-PJD-STAKEHOLDER-010
     name: prj-stakeholder-register たたき台作成
@@ -61,42 +98,6 @@ tasks:
     depends_on:
       - T-LAUNCH-PJD-CHARTER-020
     owner: PO
-  - id: T-LAUNCH-PJD-SCOPE-010
-    name: prj-scope たたき台作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
-    owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-020
-    name: prj-scope レビュー・修正
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJD-SCOPE-010
-    owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-030
-    name: prj-scope 完成版仕上げ
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJD-SCOPE-020
-    owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-010
-    name: prj-success-criteria-and-acceptance-criteria たたき台作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
-    owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-020
-    name: prj-success-criteria-and-acceptance-criteria レビュー・修正
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJD-SUCCESS-010
-    owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-030
-    name: prj-success-criteria-and-acceptance-criteria 完成版仕上げ
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJD-SUCCESS-020
-    owner: BA
   - id: T-LAUNCH-PJD-ACD-010
     name: prj-assumptions-constraints-dependencies たたき台作成
     duration_days: 0.25
@@ -291,29 +292,6 @@ tasks:
     depends_on:
       - T-LAUNCH-PJM-RACI-020
     owner: PM
-  - id: T-LAUNCH-PJM-SCHMS-010
-    name: sch-milestones たたき台作成
-    duration_days: 0.125
-    depends_on: []
-    owner: PM
-  - id: T-LAUNCH-PJM-SCHMS-020
-    name: sch-milestones スキーマ検証
-    duration_days: 0.0625
-    depends_on:
-      - T-LAUNCH-PJM-SCHMS-010
-    owner: PM
-  - id: T-LAUNCH-PJM-SCHMS-030
-    name: sch-milestones レビュー・修正
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJM-SCHMS-020
-    owner: PM
-  - id: T-LAUNCH-PJM-SCHMS-040
-    name: sch-milestones 完成版仕上げ
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-PJM-SCHMS-030
-    owner: PM
   - id: T-LAUNCH-PJM-SCHDEF-010
     name: sch-defaults たたき台作成
     duration_days: 0.125
@@ -337,26 +315,26 @@ tasks:
     depends_on:
       - T-LAUNCH-PJM-SCHDEF-030
     owner: ARC
-  - id: T-LAUNCH-PJM-SCHTLNCH-010
-    name: sch-track-launch たたき台作成
+  - id: T-LAUNCH-PJM-SCHSTG-010
+    name: sch-strategy-launch たたき台作成
     duration_days: 0.125
     depends_on: []
     owner: PM
-  - id: T-LAUNCH-PJM-SCHTLNCH-020
-    name: sch-track-launch スキーマ検証
+  - id: T-LAUNCH-PJM-SCHSTG-020
+    name: sch-strategy-launch スキーマ検証
     duration_days: 0.0625
     depends_on:
-      - T-LAUNCH-PJM-SCHTLNCH-010
+      - T-LAUNCH-PJM-SCHSTG-010
     owner: PM
-  - id: T-LAUNCH-PJM-SCHTLNCH-030
-    name: sch-track-launch レビュー・修正
+  - id: T-LAUNCH-PJM-SCHSTG-030
+    name: sch-strategy-launch レビュー・修正
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-SCHTLNCH-020
+      - T-LAUNCH-PJM-SCHSTG-020
     owner: PM
-  - id: T-LAUNCH-PJM-SCHTLNCH-040
-    name: sch-track-launch 完成版仕上げ
+  - id: T-LAUNCH-PJM-SCHSTG-040
+    name: sch-strategy-launch 完成版仕上げ
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-SCHTLNCH-030
+      - T-LAUNCH-PJM-SCHSTG-030
     owner: PM

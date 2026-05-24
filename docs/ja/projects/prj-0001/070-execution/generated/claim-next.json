@@ -10,8 +10,7 @@
         "T-LAUNCH-PJD-OVERVIEW-010",
         "T-LAUNCH-PJM-PLAN-010",
         "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHMS-010",
-        "T-LAUNCH-PJM-SCHTLNCH-010"
+        "T-LAUNCH-PJM-SCHSTG-010"
       ]
     },
     "fifo": {
@@ -20,8 +19,7 @@
         "T-LAUNCH-PJD-OVERVIEW-010",
         "T-LAUNCH-PJM-PLAN-010",
         "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHMS-010",
-        "T-LAUNCH-PJM-SCHTLNCH-010"
+        "T-LAUNCH-PJM-SCHSTG-010"
       ]
     }
   }

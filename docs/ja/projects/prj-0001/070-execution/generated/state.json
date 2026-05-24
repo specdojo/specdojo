@@ -22,24 +22,6 @@
     "T-LAUNCH-PJD-OVERVIEW-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJD-STAKEHOLDER-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJD-STAKEHOLDER-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJD-CHARTER-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJD-CHARTER-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJD-CHARTER-030": {
-      "state": "todo"
-    },
     "T-LAUNCH-PJD-SCOPE-010": {
       "state": "todo"
     },
@@ -56,6 +38,24 @@
       "state": "todo"
     },
     "T-LAUNCH-PJD-SUCCESS-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-010": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-020": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-030": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-ACD-010": {
@@ -154,18 +154,6 @@
     "T-LAUNCH-PJM-RACI-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-SCHMS-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJM-SCHMS-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJM-SCHMS-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-PJM-SCHMS-040": {
-      "state": "todo"
-    },
     "T-LAUNCH-PJM-SCHDEF-010": {
       "state": "todo"
     },
@@ -178,16 +166,16 @@
     "T-LAUNCH-PJM-SCHDEF-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-SCHTLNCH-010": {
+    "T-LAUNCH-PJM-SCHSTG-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-SCHTLNCH-020": {
+    "T-LAUNCH-PJM-SCHSTG-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-SCHTLNCH-030": {
+    "T-LAUNCH-PJM-SCHSTG-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-SCHTLNCH-040": {
+    "T-LAUNCH-PJM-SCHSTG-040": {
       "state": "todo"
     }
   }

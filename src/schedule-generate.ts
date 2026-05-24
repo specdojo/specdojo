@@ -47,6 +47,7 @@ type StrategyDoc = {
   type: string
   status: string
   track: string
+  settings?: { start_date?: string }
   scope: StrategyScope
   phases: Record<string, StrategyPhase[]>
   task_id_pattern: string
@@ -89,6 +90,7 @@ export type GeneratedMilestone = {
 export type GenerateResult = {
   projectId: string
   track: string
+  startDate: string | null
   tasks: GeneratedTask[]
   milestones: GeneratedMilestone[]
   errors: string[]
@@ -204,6 +206,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
   const projectId = String(strategy.id ?? '').split(':')[0] ?? 'unknown'
   const track = String(strategy.track ?? '')
+  const startDate = strategy.settings?.start_date ?? null
 
   // Load deliverables from catalogs
   const allDeliverables: DeliverableInfo[] = []
@@ -223,7 +226,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     collectDeliverables(doc.groups, domainCode, strategy.scope.include_kinds, ref.id, null, allDeliverables)
   }
 
-  if (errors.length > 0) return { projectId, track, tasks: [], milestones: [], errors, warnings }
+  if (errors.length > 0) return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Topological sort
   const crossDeps = strategy.cross_domain_dependencies ?? []
@@ -232,7 +235,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     sorted = topoSort(allDeliverables, crossDeps)
   } catch (err) {
     errors.push(err instanceof Error ? err.message : String(err))
-    return { projectId, track, tasks: [], milestones: [], errors, warnings }
+    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
   }
 
   // Map local_id → finalize task ID for dependency resolution
@@ -286,7 +289,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     if (prevId) finalizeTaskId.set(d.local_id, prevId)
   }
 
-  if (errors.length > 0) return { projectId, track, tasks: [], milestones: [], errors, warnings }
+  if (errors.length > 0) return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Build per-group milestones from group_milestones config
   const milestones: GeneratedMilestone[] = []
@@ -335,5 +338,5 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     })
   }
 
-  return { projectId, track, tasks, milestones, errors, warnings }
+  return { projectId, track, startDate, tasks, milestones, errors, warnings }
 }

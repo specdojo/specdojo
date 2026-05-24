@@ -9,8 +9,8 @@ milestones:
   - id: M-LAUNCH-PJD-900
     name: プロジェクト定義ドメイン完了
     depends_on:
-      - T-LAUNCH-PJD-CHARTER-030
       - T-LAUNCH-PJD-SUCCESS-030
+      - T-LAUNCH-PJD-CHARTER-030
       - T-LAUNCH-PJD-ALT-030
     owner: PM
   - id: M-LAUNCH-PJM-PLAN-900
@@ -28,7 +28,6 @@ milestones:
   - id: M-LAUNCH-PJM-SCH-900
     name: スケジュールグループ完了
     depends_on:
-      - T-LAUNCH-PJM-SCHMS-040
       - T-LAUNCH-PJM-SCHDEF-040
-      - T-LAUNCH-PJM-SCHTLNCH-040
+      - T-LAUNCH-PJM-SCHSTG-040
     owner: PM

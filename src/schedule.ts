@@ -172,7 +172,7 @@ export function registerScheduleCommands(program: Command): void {
         )
       }
 
-      const { projectId, tasks, milestones, errors, warnings } = generateScheduleTrack(
+      const { projectId, startDate, tasks, milestones, errors, warnings } = generateScheduleTrack(
         strategyFile,
         baseDir
       )
@@ -193,7 +193,7 @@ export function registerScheduleCommands(program: Command): void {
         version: 1,
         project_id: projectId,
         track,
-        settings: {},
+        settings: startDate !== null ? { start_date: startDate } : {},
         tasks,
       }
 

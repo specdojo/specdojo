@@ -86,7 +86,7 @@ repo-root/
 {
   "version": 1,
   "projects": {
-    "shj-0001": {
+    "prj-0001": {
       "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
       "schedule_path": "docs/ja/projects/prj-0001/060-schedule",
       "execution_path": "docs/ja/projects/prj-0001/070-execution",
@@ -104,7 +104,7 @@ repo-root/
 ローカル開発者用の簡易設定です。
 
 ```bash
-SPECDOJO_PROJECT=shj-0001
+SPECDOJO_PROJECT=prj-0001
 ```
 
 または
@@ -221,7 +221,7 @@ specdojo project list
 ## 8. パス確認
 
 ```bash
-specdojo exec where --project shj-0001
+specdojo exec where --project prj-0001
 ```
 
 出力例:
@@ -237,7 +237,7 @@ scheduler-lock: .../070-execution/exec/.locks/scheduler.lock
 ## 9. 検証
 
 ```bash
-specdojo exec validate --project shj-0001
+specdojo exec validate --project prj-0001
 ```
 
 検証内容:
@@ -250,7 +250,7 @@ specdojo exec validate --project shj-0001
 ## 10. 生成
 
 ```bash
-specdojo exec build --project shj-0001
+specdojo exec build --project prj-0001
 ```
 
 生成:
@@ -274,7 +274,7 @@ specdojo exec build --project shj-0001
 
 ```bash
 specdojo exec claim \
-  --project shj-0001 \
+  --project prj-0001 \
   --task T-AUTH-API-020 \
   --by agent-1 \
   --msg "start implementation"
@@ -284,7 +284,7 @@ specdojo exec claim \
 
 ```bash
 specdojo exec complete \
-  --project shj-0001 \
+  --project prj-0001 \
   --task T-AUTH-API-020 \
   --by agent-1 \
   --msg "done"
@@ -294,7 +294,7 @@ specdojo exec complete \
 
 ```bash
 specdojo exec block \
-  --project shj-0001 \
+  --project prj-0001 \
   --task T-AUTH-API-020 \
   --by agent-1 \
   --msg "waiting for spec"
@@ -304,7 +304,7 @@ specdojo exec block \
 
 ```bash
 specdojo exec unblock \
-  --project shj-0001 \
+  --project prj-0001 \
   --task T-AUTH-API-020 \
   --by agent-2 \
   --msg "spec clarified"
@@ -314,7 +314,7 @@ specdojo exec unblock \
 
 ```bash
 specdojo exec cancel \
-  --project shj-0001 \
+  --project prj-0001 \
   --task T-AUTH-API-020 \
   --by agent-1 \
   --msg "scope removed"
@@ -325,7 +325,7 @@ specdojo exec cancel \
 自動タスク取得:
 
 ```bash
-specdojo exec scheduler --project shj-0001 --by agent-1
+specdojo exec scheduler --project prj-0001 --by agent-1
 ```
 
 `specdojo exec scheduler` は `critical-first` または `fifo` の戦略で `ready.json` / `claim-next.json` と同じ順序規則を使って claim 対象を選びます。
@@ -407,12 +407,12 @@ specdojo exec build
 pre-commit:
   commands:
     validate:
-      run: ./node_modules/.bin/specdojo exec validate --project shj-0001
+      run: ./node_modules/.bin/specdojo exec validate --project prj-0001
 
 pre-push:
   commands:
     build:
-      run: ./node_modules/.bin/specdojo exec build --project shj-0001
+      run: ./node_modules/.bin/specdojo exec build --project prj-0001
 ```
 
 ## 17. Agent利用ガイド
@@ -443,7 +443,7 @@ agent-test
 ## 19. catalog パス確認
 
 ```bash
-specdojo catalog where --project shj-0001
+specdojo catalog where --project prj-0001
 ```
 
 出力例:
@@ -456,7 +456,7 @@ generated   : /repo/.../010-deliverables-catalog/generated
 ## 20. catalog 検証
 
 ```bash
-specdojo catalog validate --project shj-0001
+specdojo catalog validate --project prj-0001
 ```
 
 検証内容:
@@ -469,7 +469,7 @@ specdojo catalog validate --project shj-0001
 ## 21. catalog 生成
 
 ```bash
-specdojo catalog build --project shj-0001
+specdojo catalog build --project prj-0001
 ```
 
 生成:
@@ -491,31 +491,31 @@ generated/
 
 ```bash
 # --size 省略時は dct-index.md の size フィールドを参照
-specdojo catalog scaffold --project shj-0001
+specdojo catalog scaffold --project prj-0001
 
 # --size 指定時はその値を優先（dct-index.md の値より優先される）
-specdojo catalog scaffold --project shj-0001 --size medium
+specdojo catalog scaffold --project prj-0001 --size medium
 ```
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--size` | `small` / `medium` / `large` | `dct-index.md` の `size` フィールド（未設定時はエラー） |
-| `--project-id` | 生成ファイルに埋め込む project_id（省略時は `catalog_path` から自動導出） | 自動導出 |
-| `--force` | 既存ファイルを上書き | `false` |
+| オプション     | 説明                                                                      | デフォルト                                              |
+| -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `--size`       | `small` / `medium` / `large`                                              | `dct-index.md` の `size` フィールド（未設定時はエラー） |
+| `--project-id` | 生成ファイルに埋め込む project_id（省略時は `catalog_path` から自動導出） | 自動導出                                                |
+| `--force`      | 既存ファイルを上書き                                                      | `false`                                                 |
 
 サイズ別の収録成果物:
 
-| 成果物 | small | medium | large |
-| --- | :---: | :---: | :---: |
-| プロジェクト概要・スコープ・成功基準 | ○ | ○ | ○ |
-| 管理計画・組織定義・メンバー定義 | ○ | ○ | ○ |
-| マイルストーン定義 | ○ | ○ | ○ |
-| ステークホルダー・憲章・前提制約・課題・代替案比較 | - | ○ | ○ |
-| コミュニケーション計画・品質管理計画・ロール定義 | - | ○ | ○ |
-| 管理台帳・フルスケジュール・レポート | - | ○ | ○ |
-| RACI | - | - | ○ |
+| 成果物                                             | small | medium | large |
+| -------------------------------------------------- | :---: | :----: | :---: |
+| プロジェクト概要・スコープ・成功基準               |   ○   |   ○    |   ○   |
+| 管理計画・組織定義・メンバー定義                   |   ○   |   ○    |   ○   |
+| マイルストーン定義                                 |   ○   |   ○    |   ○   |
+| ステークホルダー・憲章・前提制約・課題・代替案比較 |   -   |   ○    |   ○   |
+| コミュニケーション計画・品質管理計画・ロール定義   |   -   |   ○    |   ○   |
+| 管理台帳・フルスケジュール・レポート               |   -   |   ○    |   ○   |
+| RACI                                               |   -   |   -    |   ○   |
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
 
@@ -533,12 +533,12 @@ specdojo schedule generate --project prj-0001 --track launch
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--track` | 生成対象のトラック名（`sch-strategy-<track>.yaml` の `track` フィールドと一致） | 必須 |
-| `--force` | 既存の `sch-track-<track>.yaml` を上書き | `false` |
-| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+| オプション  | 説明                                                                            | デフォルト |
+| ----------- | ------------------------------------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                              | 必須       |
+| `--track`   | 生成対象のトラック名（`sch-strategy-<track>.yaml` の `track` フィールドと一致） | 必須       |
+| `--force`   | 既存の `sch-track-<track>.yaml` を上書き                                        | `false`    |
+| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示                                  | `false`    |
 
 #### 23.1.1. 生成フロー
 
@@ -554,20 +554,20 @@ specdojo schedule generate --project prj-0001 --track launch
 
 各 `kind: work` 成果物に対してフェーズごとのタスクを生成する。
 
-| フェーズ（例: markdown） | タスク ID | `depends_on` |
-| --- | --- | --- |
-| draft（010） | `T-LAUNCH-PJD-OVERVIEW-010` | 依存成果物の finalize タスク ID |
-| review（020） | `T-LAUNCH-PJD-OVERVIEW-020` | draft タスク ID |
-| finalize（030） | `T-LAUNCH-PJD-OVERVIEW-030` | review タスク ID |
+| フェーズ（例: markdown） | タスク ID                   | `depends_on`                    |
+| ------------------------ | --------------------------- | ------------------------------- |
+| draft（010）             | `T-LAUNCH-PJD-OVERVIEW-010` | 依存成果物の finalize タスク ID |
+| review（020）            | `T-LAUNCH-PJD-OVERVIEW-020` | draft タスク ID                 |
+| finalize（030）          | `T-LAUNCH-PJD-OVERVIEW-030` | review タスク ID                |
 
 yaml フォーマットの成果物には validate フェーズ（020）が draft と review の間に挿入される。
 
-| フェーズ（yaml） | タスク ID | `depends_on` |
-| --- | --- | --- |
-| draft（010） | `T-LAUNCH-PJM-ROLE-010` | 依存成果物の finalize タスク ID |
-| validate（020） | `T-LAUNCH-PJM-ROLE-020` | draft タスク ID |
-| review（030） | `T-LAUNCH-PJM-ROLE-030` | validate タスク ID |
-| finalize（040） | `T-LAUNCH-PJM-ROLE-040` | review タスク ID |
+| フェーズ（yaml） | タスク ID               | `depends_on`                    |
+| ---------------- | ----------------------- | ------------------------------- |
+| draft（010）     | `T-LAUNCH-PJM-ROLE-010` | 依存成果物の finalize タスク ID |
+| validate（020）  | `T-LAUNCH-PJM-ROLE-020` | draft タスク ID                 |
+| review（030）    | `T-LAUNCH-PJM-ROLE-030` | validate タスク ID              |
+| finalize（040）  | `T-LAUNCH-PJM-ROLE-040` | review タスク ID                |
 
 #### 23.1.3. 出力例（抜粋）
 
@@ -599,7 +599,7 @@ tasks:
   - id: T-LAUNCH-PJM-ORG-010
     name: pm-organization たたき台を作成する
     duration_days: 0.25
-    depends_on: [T-LAUNCH-PJD-OVERVIEW-030]  # cross_domain_dependencies による依存
+    depends_on: [T-LAUNCH-PJD-OVERVIEW-030] # cross_domain_dependencies による依存
     owner: PO
 ```
 
@@ -656,10 +656,10 @@ specdojo review scaffold --project prj-0001
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--force` | 既存の `pm-review-viewpoints.yaml` を上書き | `false` |
+| オプション  | 説明                                               | デフォルト |
+| ----------- | -------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--force`   | 既存の `pm-review-viewpoints.yaml` を上書き        | `false`    |
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
 
@@ -676,14 +676,14 @@ specdojo review plan \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--local-id` | 対象成果物の `local_id` | 必須 |
-| `--stage` | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須 |
-| `--role` | 対象 Role code に絞り込む（省略時は全ロール） | 省略可 |
-| `--force` | 既存の `rvp-*.yaml` を上書き | `false` |
-| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+| オプション   | 説明                                                            | デフォルト |
+| ------------ | --------------------------------------------------------------- | ---------- |
+| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 必須       |
+| `--local-id` | 対象成果物の `local_id`                                         | 必須       |
+| `--stage`    | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須       |
+| `--role`     | 対象 Role code に絞り込む（省略時は全ロール）                   | 省略可     |
+| `--force`    | 既存の `rvp-*.yaml` を上書き                                    | `false`    |
+| `--dry-run`  | ファイルを書き出さず、生成内容を標準出力に表示                  | `false`    |
 
 #### 24.2.1. 生成フロー
 
@@ -805,12 +805,12 @@ specdojo register scaffold --project prj-0001
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
+| オプション     | 説明                                                               | デフォルト  |
+| -------------- | ------------------------------------------------------------------ | ----------- |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決）                 | 必須        |
 | `--project-id` | 生成ファイルに埋め込む project id（省略時は `--project` と同じ値） | `--project` |
-| `--force` | 既存の `pjr-index.md` を上書き | `false` |
-| `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示 | `false` |
+| `--force`      | 既存の `pjr-index.md` を上書き                                     | `false`     |
+| `--dry-run`    | ファイルを書き出さず、生成内容を標準出力に表示                     | `false`     |
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
 
@@ -863,14 +863,14 @@ npm run validate:schema:pjr-index
 
 検証対象の主なルール:
 
-| 項目 | ルール |
-| --- | --- |
-| セクション | `## 1. 登録項目一覧` が存在する |
-| 必須列 | `ID`、`ステータス`、`タイトル`、`分類`、`優先度` |
-| ID | `PJR-0000` 形式 |
-| ステータス | `open` / `in-progress` / `waiting` / `review` / `decided` / `done` / `deferred` / `rejected` |
-| 分類 | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` |
-| 優先度 | `high` / `medium` / `low` |
+| 項目       | ルール                                                                                         |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| セクション | `## 1. 登録項目一覧` が存在する                                                                |
+| 必須列     | `ID`、`ステータス`、`タイトル`、`分類`、`優先度`                                               |
+| ID         | `PJR-0000` 形式                                                                                |
+| ステータス | `open` / `in-progress` / `waiting` / `review` / `decided` / `done` / `deferred` / `rejected`   |
+| 分類       | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` |
+| 優先度     | `high` / `medium` / `low`                                                                      |
 
 ### 25.2. register add
 
@@ -904,36 +904,36 @@ specdojo register add \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--type` | 登録項目の分類 | 必須 |
-| `--title` | 登録項目の短いタイトル | 必須 |
-| `--description` | 一覧に記載する説明。`--ticket` 指定時も要約として使う | `_TODO_` |
-| `--priority` | `high` / `medium` / `low` | `medium` |
-| `--status` | 登録項目のステータス | `open` |
-| `--owner` | 主担当者または役割 | `_TODO_` |
-| `--due` | 期限（`YYYY-MM-DD` / `-` / `_TODO_`） | `_TODO_` |
-| `--completed` | 完了日（`YYYY-MM-DD` / `-`） | `-` |
-| `--conclusion` | 結論または対応結果の要約 | `-` |
-| `--id` | 追加する表示 ID（例: `PJR-0061`）。省略時は既存最大 ID の次番号 | 自動採番 |
-| `--ticket` | 個票 `pjr-XXXX-<topic>.md` を生成し、「個票」列にリンクを設定 | `false` |
-| `--topic` | 個票ファイル名の `<topic>`。`--ticket` 指定時に使用 | `--title` から slug 化 |
-| `--force` | 既存の個票ファイルを上書き | `false` |
-| `--dry-run` | ファイルを書き出さず、追加予定の行と個票内容を標準出力に表示 | `false` |
+| オプション      | 説明                                                            | デフォルト             |
+| --------------- | --------------------------------------------------------------- | ---------------------- |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決）              | 必須                   |
+| `--type`        | 登録項目の分類                                                  | 必須                   |
+| `--title`       | 登録項目の短いタイトル                                          | 必須                   |
+| `--description` | 一覧に記載する説明。`--ticket` 指定時も要約として使う           | `_TODO_`               |
+| `--priority`    | `high` / `medium` / `low`                                       | `medium`               |
+| `--status`      | 登録項目のステータス                                            | `open`                 |
+| `--owner`       | 主担当者または役割                                              | `_TODO_`               |
+| `--due`         | 期限（`YYYY-MM-DD` / `-` / `_TODO_`）                           | `_TODO_`               |
+| `--completed`   | 完了日（`YYYY-MM-DD` / `-`）                                    | `-`                    |
+| `--conclusion`  | 結論または対応結果の要約                                        | `-`                    |
+| `--id`          | 追加する表示 ID（例: `PJR-0061`）。省略時は既存最大 ID の次番号 | 自動採番               |
+| `--ticket`      | 個票 `pjr-XXXX-<topic>.md` を生成し、「個票」列にリンクを設定   | `false`                |
+| `--topic`       | 個票ファイル名の `<topic>`。`--ticket` 指定時に使用             | `--title` から slug 化 |
+| `--force`       | 既存の個票ファイルを上書き                                      | `false`                |
+| `--dry-run`     | ファイルを書き出さず、追加予定の行と個票内容を標準出力に表示    | `false`                |
 
 `--type` には以下を指定できる。
 
-| type | 個票テンプレート |
-| --- | --- |
-| `todo` | `pjr-todo-template.md` |
-| `question` | `pjr-question-template.md` |
-| `risk` | `pjr-risk-template.md` |
-| `issue` | `pjr-issue-template.md` |
+| type             | 個票テンプレート                 |
+| ---------------- | -------------------------------- |
+| `todo`           | `pjr-todo-template.md`           |
+| `question`       | `pjr-question-template.md`       |
+| `risk`           | `pjr-risk-template.md`           |
+| `issue`          | `pjr-issue-template.md`          |
 | `change-request` | `pjr-change-request-template.md` |
-| `decision` | `pjr-decision-template.md` |
-| `dependency` | `pjr-dependency-template.md` |
-| `note` | `pjr-note-template.md` |
+| `decision`       | `pjr-decision-template.md`       |
+| `dependency`     | `pjr-dependency-template.md`     |
+| `note`           | `pjr-note-template.md`           |
 
 #### 25.2.1. 生成フロー
 
@@ -1002,12 +1002,12 @@ specdojo register build --project prj-0001
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--scope` | 生成範囲。`register` / `controls` / `all` | `all` |
-| `--force` | 既存の派生ビューを上書き | `true` |
-| `--dry-run` | ファイルを書き出さず、生成予定のファイル一覧と内容を標準出力に表示 | `false` |
+| オプション  | 説明                                                               | デフォルト |
+| ----------- | ------------------------------------------------------------------ | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                 | 必須       |
+| `--scope`   | 生成範囲。`register` / `controls` / `all`                          | `all`      |
+| `--force`   | 既存の派生ビューを上書き                                           | `true`     |
+| `--dry-run` | ファイルを書き出さず、生成予定のファイル一覧と内容を標準出力に表示 | `false`    |
 
 #### 25.3.1. 生成されるファイル
 
@@ -1042,16 +1042,16 @@ controls/generated/
 
 #### 25.3.3. ビュー生成ルール
 
-| 派生ビュー | 抽出・並び替えルール |
-| --- | --- |
-| `pjr-open-items.md` | `status` が `done` / `rejected` / `deferred` 以外の項目を一覧化する |
-| `pjr-by-owner.md` | `担当` ごとに項目をグルーピングする |
-| `pjr-by-priority.md` | `優先度` ごとに `high` / `medium` / `low` の順でグルーピングする |
-| `pjr-by-status.md` | `ステータス` ごとに項目をグルーピングする |
-| `pm-risk-register.md` | `分類` が `risk` の項目を controls 全体のリスク登録簿として一覧化する |
-| `pm-issue-log.md` | `分類` が `issue` の項目を controls 全体の課題ログとして一覧化する |
+| 派生ビュー                 | 抽出・並び替えルール                                                            |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| `pjr-open-items.md`        | `status` が `done` / `rejected` / `deferred` 以外の項目を一覧化する             |
+| `pjr-by-owner.md`          | `担当` ごとに項目をグルーピングする                                             |
+| `pjr-by-priority.md`       | `優先度` ごとに `high` / `medium` / `low` の順でグルーピングする                |
+| `pjr-by-status.md`         | `ステータス` ごとに項目をグルーピングする                                       |
+| `pm-risk-register.md`      | `分類` が `risk` の項目を controls 全体のリスク登録簿として一覧化する           |
+| `pm-issue-log.md`          | `分類` が `issue` の項目を controls 全体の課題ログとして一覧化する              |
 | `pm-change-request-log.md` | `分類` が `change-request` の項目を controls 全体の変更要求ログとして一覧化する |
-| `pm-decision-log.md` | `分類` が `decision` の項目を controls 全体の決定記録として一覧化する |
+| `pm-decision-log.md`       | `分類` が `decision` の項目を controls 全体の決定記録として一覧化する           |
 
 #### 25.3.4. 検証
 
@@ -1085,14 +1085,14 @@ specdojo register close \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--status` | 変更後のステータス。`done` または `decided` | 分類が `decision` / `question` の場合 `decided`、その他は `done` |
-| `--conclusion` | 結論・対応結果の要約 | 変更しない |
-| `--completed` | 完了日（`YYYY-MM-DD`） | 実行日 |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション     | 説明                                               | デフォルト                                                       |
+| -------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須                                                             |
+| `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須                                                             |
+| `--status`     | 変更後のステータス。`done` または `decided`        | 分類が `decision` / `question` の場合 `decided`、その他は `done` |
+| `--conclusion` | 結論・対応結果の要約                               | 変更しない                                                       |
+| `--completed`  | 完了日（`YYYY-MM-DD`）                             | 実行日                                                           |
+| `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`                                                          |
 
 #### 25.4.1. 更新フロー
 
@@ -1124,13 +1124,13 @@ specdojo register reject \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--conclusion` | 却下理由の要約 | 変更しない |
-| `--completed` | 却下日（`YYYY-MM-DD`） | 実行日 |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション     | 説明                                               | デフォルト |
+| -------------- | -------------------------------------------------- | ---------- |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--conclusion` | 却下理由の要約                                     | 変更しない |
+| `--completed`  | 却下日（`YYYY-MM-DD`）                             | 実行日     |
+| `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.5.1. 更新フロー
 
@@ -1161,12 +1161,12 @@ specdojo register defer \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--conclusion` | 保留理由の要約 | 変更しない |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション     | 説明                                               | デフォルト |
+| -------------- | -------------------------------------------------- | ---------- |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--conclusion` | 保留理由の要約                                     | 変更しない |
+| `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.6.1. 更新フロー
 
@@ -1205,12 +1205,12 @@ specdojo register reopen \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--status` | 変更後のステータス。`open` / `in-progress` / `waiting` / `review` | `open` |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション  | 説明                                                              | デフォルト |
+| ----------- | ----------------------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                | 必須       |
+| `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）                              | 必須       |
+| `--status`  | 変更後のステータス。`open` / `in-progress` / `waiting` / `review` | `open`     |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示                | `false`    |
 
 #### 25.7.1. 更新フロー
 
@@ -1242,16 +1242,16 @@ specdojo register update \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--title` | タイトルの更新 | 変更しない |
-| `--description` | 説明の更新 | 変更しない |
-| `--priority` | 優先度の更新。`high` / `medium` / `low` | 変更しない |
-| `--owner` | 担当者または役割の更新 | 変更しない |
-| `--due` | 期限の更新（`YYYY-MM-DD` / `-` / `_TODO_`） | 変更しない |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション      | 説明                                               | デフォルト |
+| --------------- | -------------------------------------------------- | ---------- |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`          | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--title`       | タイトルの更新                                     | 変更しない |
+| `--description` | 説明の更新                                         | 変更しない |
+| `--priority`    | 優先度の更新。`high` / `medium` / `low`            | 変更しない |
+| `--owner`       | 担当者または役割の更新                             | 変更しない |
+| `--due`         | 期限の更新（`YYYY-MM-DD` / `-` / `_TODO_`）        | 変更しない |
+| `--dry-run`     | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.8.1. 更新フロー
 
@@ -1280,11 +1280,11 @@ specdojo register start \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション  | 説明                                               | デフォルト |
+| ----------- | -------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.9.1. 更新フロー
 
@@ -1314,12 +1314,12 @@ specdojo register wait \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--conclusion` | 待機理由の要約 | 変更しない |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション     | 説明                                               | デフォルト |
+| -------------- | -------------------------------------------------- | ---------- |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--conclusion` | 待機理由の要約                                     | 変更しない |
+| `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.10.1. 更新フロー
 
@@ -1349,11 +1349,11 @@ specdojo register review \
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須 |
-| `--id` | 対象登録項目の ID（`PJR-XXXX` 形式） | 必須 |
-| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false` |
+| オプション  | 説明                                               | デフォルト |
+| ----------- | -------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
+| `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
 #### 25.11.1. 更新フロー
 
@@ -1387,10 +1387,10 @@ specdojo index build
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--root <path>` | スキャン対象ルートディレクトリ | `docs` |
-| `--output <path>` | 出力先 | `docs/.specdojo/doc-index.json` |
+| オプション        | 説明                           | デフォルト                      |
+| ----------------- | ------------------------------ | ------------------------------- |
+| `--root <path>`   | スキャン対象ルートディレクトリ | `docs`                          |
+| `--output <path>` | 出力先                         | `docs/.specdojo/doc-index.json` |
 
 #### 26.1.1. 生成フロー
 
@@ -1408,9 +1408,9 @@ top-level 以外の ID をインデックス対象にする場合、`docs/.specd
 nested_id_files:
   - file: docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
     collect_from:
-      - field: viewpoints          # ドット記法でネスト可（例: groups.deliverables）
-        id_field: id               # ID として使うフィールド名（省略時: id）
-        path_field: path           # ナビゲーション先パスフィールド名（省略時: path）
+      - field: viewpoints # ドット記法でネスト可（例: groups.deliverables）
+        id_field: id # ID として使うフィールド名（省略時: id）
+        path_field: path # ナビゲーション先パスフィールド名（省略時: path）
 ```
 
 - `file`: リポジトリルートからの相対パス
@@ -1448,8 +1448,8 @@ specdojo index lookup vp-ba-business-value
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
+| オプション       | 説明                     | デフォルト                      |
+| ---------------- | ------------------------ | ------------------------------- |
 | `--index <path>` | インデックスファイルパス | `docs/.specdojo/doc-index.json` |
 
 ### 26.3. VSCode 拡張（vscode-specdojo）
@@ -1468,13 +1468,13 @@ npm run compile
 
 #### 26.3.2. リンク対応パターン
 
-| パターン | ファイル種別 | 例 |
-| ------- | ----------- | -- |
-| `[[id]]` wiki リンク | MD / YAML | `[[prj-overview-rulebook]]` |
-| `rulebook: <id>` | YAML | `rulebook: prj-overview-rulebook` |
-| `viewpoint: <id>` | YAML | `viewpoint: vp-ba-business-value` |
-| `- prj-xxx:yyy` 名前空間付き | YAML リスト | `- prj-0001:pm-roles` |
-| `- vp-xxx` viewpoint ID | YAML リスト | `- vp-po-purpose-alignment` |
+| パターン                     | ファイル種別 | 例                                |
+| ---------------------------- | ------------ | --------------------------------- |
+| `[[id]]` wiki リンク         | MD / YAML    | `[[prj-overview-rulebook]]`       |
+| `rulebook: <id>`             | YAML         | `rulebook: prj-overview-rulebook` |
+| `viewpoint: <id>`            | YAML         | `viewpoint: vp-ba-business-value` |
+| `- prj-xxx:yyy` 名前空間付き | YAML リスト  | `- prj-0001:pm-roles`             |
+| `- vp-xxx` viewpoint ID      | YAML リスト  | `- vp-po-purpose-alignment`       |
 
 #### 26.3.3. コマンドパレット
 
@@ -1503,21 +1503,21 @@ specdojo watch [--project <id>] [--scope <scope>]
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project <id>` | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
-| `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`） | `all` |
-| `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒） | `300` |
+| オプション        | 説明                                                                 | デフォルト                  |
+| ----------------- | -------------------------------------------------------------------- | --------------------------- |
+| `--project <id>`  | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
+| `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`）    | `all`                       |
+| `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒）               | `300`                       |
 
 ### 27.1. 監視対象とトリガーされるコマンド
 
-| 監視対象ファイルパターン | スコープ | トリガーされるコマンド |
-| --- | --- | --- |
-| `<schedule_path>/sch-*.yaml` | `exec` | `specdojo exec build` |
-| `<execution_path>/exec/events/*.json` | `exec` | `specdojo exec build` |
-| `<catalog_path>/dct-*.yaml` | `catalog` | `specdojo catalog build` |
+| 監視対象ファイルパターン               | スコープ   | トリガーされるコマンド    |
+| -------------------------------------- | ---------- | ------------------------- |
+| `<schedule_path>/sch-*.yaml`           | `exec`     | `specdojo exec build`     |
+| `<execution_path>/exec/events/*.json`  | `exec`     | `specdojo exec build`     |
+| `<catalog_path>/dct-*.yaml`            | `catalog`  | `specdojo catalog build`  |
 | `<project_register_path>/pjr-index.md` | `register` | `specdojo register build` |
-| `docs/**/*.md`, `docs/**/*.yaml` | `index` | `specdojo index build` |
+| `docs/**/*.md`, `docs/**/*.yaml`       | `index`    | `specdojo index build`    |
 
 - `--scope all`（デフォルト）の場合は、上記すべてのパターンを同時に監視する。
 - 複数ファイルが短時間で変更された場合は `--debounce` で指定した時間だけ待機してから1回のビルドにまとめる。
@@ -1582,22 +1582,22 @@ specdojo build [--project <id>] [--scope <scope>]
 
 オプション:
 
-| オプション | 説明 | デフォルト |
-| --- | --- | --- |
-| `--project <id>` | プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
-| `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all` |
-| `--dry-run` | 実行予定のコマンドを表示するだけでファイルを書き出さない | `false` |
+| オプション        | 説明                                                          | デフォルト                  |
+| ----------------- | ------------------------------------------------------------- | --------------------------- |
+| `--project <id>`  | プロジェクト ID（`specdojo.config.json` の `projects.<id>`）  | `SPECDOJO_PROJECT` 環境変数 |
+| `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all`                       |
+| `--dry-run`       | 実行予定のコマンドを表示するだけでファイルを書き出さない      | `false`                     |
 
 ### 28.1. 実行順序
 
 `--scope all` のとき、以下の順序で実行する。前のステップが失敗した場合は後続ステップを実行せず、エラーを表示して終了する。
 
-| ステップ | コマンド | 生成物 |
-| --- | --- | --- |
-| 1 | `exec build` | `generated/state.json`、`ready.md`、`cpm.json` 等 |
-| 2 | `catalog build` | `generated/dct-*.md` |
-| 3 | `register build` | `generated/pjr-*.md`、`generated/pm-*.md` |
-| 4 | `index build` | `docs/.specdojo/doc-index.json` |
+| ステップ | コマンド         | 生成物                                            |
+| -------- | ---------------- | ------------------------------------------------- |
+| 1        | `exec build`     | `generated/state.json`、`ready.md`、`cpm.json` 等 |
+| 2        | `catalog build`  | `generated/dct-*.md`                              |
+| 3        | `register build` | `generated/pjr-*.md`、`generated/pm-*.md`         |
+| 4        | `index build`    | `docs/.specdojo/doc-index.json`                   |
 
 `--scope` で単一ステップのみ指定した場合は、そのステップだけを実行する。
 
