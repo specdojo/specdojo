@@ -56,6 +56,9 @@ repo-root/
 │           │     ├─ dct-project-definition.md
 │           │     └─ dct-project-management.md
 │           ├─ 030-project-management/
+│           │  ├─ schedule/
+│           │  │  ├─ sch-milestones.yaml
+│           │  │  └─ sch-track-launch.yaml
 │           │  └─ controls/
 │           │     ├─ project-register/
 │           │     │  ├─ pjr-index.md
@@ -63,9 +66,6 @@ repo-root/
 │           │     └─ reviews/
 │           │        ├─ plans/
 │           │        └─ results/
-│           ├─ 060-schedule/
-│           │  ├─ sch-milestones.yaml
-│           │  └─ sch-track-launch.yaml
 │           └─ 070-execution/
 │              ├─ exec/
 │              │  ├─ events/
@@ -88,16 +88,18 @@ repo-root/
   "projects": {
     "prj-0001": {
       "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
-      "schedule_path": "docs/ja/projects/prj-0001/060-schedule",
+      "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
       "execution_path": "docs/ja/projects/prj-0001/070-execution",
       "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register",
-      "members_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-members.yaml"
+      "members_path": "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml",
+      "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
+      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml"
     }
   }
 }
 ```
 
-`projects.<id>` には `schedule_path`、`execution_path`、必要に応じて `project_register_path`、`members_path` を指定します。
+`projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path` を指定します。
 
 ### 3.2. `.env`（任意）
 
@@ -110,21 +112,32 @@ SPECDOJO_PROJECT=prj-0001
 または
 
 ```bash
-SPECDOJO_SCHEDULE_PATH=docs/ja/projects/prj-0001/060-schedule
+SPECDOJO_SCHEDULE_PATH=docs/ja/projects/prj-0001/030-project-management/schedule
 SPECDOJO_EXECUTION_PATH=docs/ja/projects/prj-0001/070-execution
 ```
 
-### 3.3. プロジェクトパス解決順序
+### 3.3. プロジェクト解決順序
 
-`specdojo` は schedule path と execution path を同じ入力元から解決します。
+プロジェクトに紐づくコマンドは、原則として同じ順序で `specdojo.config.json` の project を解決します。
 
-1. `--project` で指定したプロジェクト ID を `specdojo.config.json` から解決
-2. `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` をセットで解決
-3. `SPECDOJO_PROJECT` で指定したプロジェクト ID を `specdojo.config.json` から解決
+1. `--project` で指定したプロジェクト ID
+2. `SPECDOJO_PROJECT` で指定したプロジェクト ID
+3. `specdojo.config.json` の `projects` に定義された先頭のプロジェクト ID
 
-- `--project` を使う場合は、`specdojo.config.json` の `projects.<id>.schedule_path` と `projects.<id>.execution_path` を使います。
-- `SPECDOJO_PROJECT` を使う場合も、`specdojo.config.json` に定義済みのプロジェクト ID から両方を解決します。
-- 直接環境変数で指定する場合は、`SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` を両方指定します。
+`exec` コマンドだけは、既存運用との互換のため `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` の直接指定も受け付けます。直接指定する場合は、両方をセットで指定します。
+
+### 3.4. 共通オプション方針
+
+各コマンドのオプションは、以下の方針にそろえます。
+
+| オプション | 方針 |
+| ---------- | ---- |
+| `--project <id>` | プロジェクトに紐づくコマンドで共通。省略時は `SPECDOJO_PROJECT`、それもなければ config の先頭 project を使う。 |
+| `--dry-run` | ファイルやイベントを書き込むコマンドで、書き込み前の内容または実行予定を表示する。 |
+| `--force` | 既存ファイルがある場合にスキップする scaffold/generate 系コマンドで、上書きを許可する。 |
+| `--scope` | 複数の生成対象を持つ build/watch 系コマンドで、対象範囲を絞り込む。 |
+
+`--project` は共通オプションのため、個別コマンドの表では「省略可」として扱います。
 
 ## 4. 初期セットアップ
 
@@ -258,7 +271,7 @@ specdojo schedule generate --project prj-0001 --track launch
 
 | オプション  | 説明                                                                            | デフォルト |
 | ----------- | ------------------------------------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                              | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                              | 省略可       |
 | `--track`   | 生成対象のトラック名（`sch-strategy-<track>.yaml` の `track` フィールドと一致） | 必須       |
 | `--force`   | 既存の `sch-track-<track>.yaml` を上書き                                        | `false`    |
 | `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示                                  | `false`    |
@@ -272,6 +285,7 @@ specdojo schedule generate --project prj-0001 --track launch
 5. `owner_rules` から `owner` ロールを決定する。
 6. `task_id_pattern` でタスク ID を採番し、タスクを生成する。
 7. `sch-track-<track>.yaml`（`kind: track`）として `schedule_path` に出力する。
+8. 生成された milestone がある場合は `sch-milestones.yaml` を作成または更新する。
 
 #### 6.1.2. タスク生成ルール
 
@@ -343,7 +357,7 @@ schedule-path: /repo/.../030-project-management/schedule
 strategy-files:
   - sch-strategy-launch.yaml
 track-files:
-  - sch-track-launch.yaml (generated)
+  - sch-track-launch.yaml
 ```
 
 ## 7. review コマンド
@@ -381,7 +395,7 @@ specdojo review scaffold --project prj-0001
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--force`   | 既存の `pm-review-viewpoints.yaml` を上書き        | `false`    |
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
@@ -401,7 +415,7 @@ specdojo review plan \
 
 | オプション   | 説明                                                            | デフォルト |
 | ------------ | --------------------------------------------------------------- | ---------- |
-| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 必須       |
+| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可       |
 | `--local-id` | 対象成果物の `local_id`                                         | 必須       |
 | `--stage`    | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須       |
 | `--role`     | 対象 Role code に絞り込む（省略時は全ロール）                   | 省略可     |
@@ -530,7 +544,7 @@ specdojo register scaffold --project prj-0001
 
 | オプション     | 説明                                                               | デフォルト  |
 | -------------- | ------------------------------------------------------------------ | ----------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決）                 | 必須        |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可        |
 | `--project-id` | 生成ファイルに埋め込む project id（省略時は `--project` と同じ値） | `--project` |
 | `--force`      | 既存の `pjr-index.md` を上書き                                     | `false`     |
 | `--dry-run`    | ファイルを書き出さず、生成内容を標準出力に表示                     | `false`     |
@@ -629,7 +643,7 @@ specdojo register add \
 
 | オプション      | 説明                                                            | デフォルト             |
 | --------------- | --------------------------------------------------------------- | ---------------------- |
-| `--project`     | プロジェクト ID（`specdojo.config.json` から解決）              | 必須                   |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可                   |
 | `--type`        | 登録項目の分類                                                  | 必須                   |
 | `--title`       | 登録項目の短いタイトル                                          | 必須                   |
 | `--description` | 一覧に記載する説明。`--ticket` 指定時も要約として使う           | `_TODO_`               |
@@ -666,7 +680,7 @@ specdojo register add \
 4. `--type`、`--status`、`--priority`、`--due`、`--completed` が許容値に一致することを検証する。
 5. `pjr-index.md` のテーブル末尾に登録項目行を追加する。
 6. `--ticket` 指定時は `pjr-XXXX-<topic>.md` を生成し、「個票」列に `[pjr-XXXX-<topic>](./pjr-XXXX-<topic>.md)` を設定する。
-7. 追加後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
+7. 指定値の形式と既存 ID の重複を検証する。
 
 #### 8.2.2. 追加される行
 
@@ -707,7 +721,7 @@ item_type: risk
 
 #### 8.2.4. 検証
 
-追加後は `pjr-index.schema.yaml` で本文構造を検証する。
+追加前に ID、ステータス、分類、優先度、日付形式を検証する。必要に応じて、更新後に schema 検証を実行する。
 
 ```bash
 npm run validate:schema:pjr-index
@@ -727,9 +741,8 @@ specdojo register build --project prj-0001
 
 | オプション  | 説明                                                               | デフォルト |
 | ----------- | ------------------------------------------------------------------ | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                 | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可       |
 | `--scope`   | 生成範囲。`register` / `controls` / `all`                          | `all`      |
-| `--force`   | 既存の派生ビューを上書き                                           | `true`     |
 | `--dry-run` | ファイルを書き出さず、生成予定のファイル一覧と内容を標準出力に表示 | `false`    |
 
 #### 8.3.1. 生成されるファイル
@@ -810,7 +823,7 @@ specdojo register close \
 
 | オプション     | 説明                                               | デフォルト                                                       |
 | -------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須                                                             |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可                                                             |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須                                                             |
 | `--status`     | 変更後のステータス。`done` または `decided`        | 分類が `decision` / `question` の場合 `decided`、その他は `done` |
 | `--conclusion` | 結論・対応結果の要約                               | 変更しない                                                       |
@@ -823,8 +836,7 @@ specdojo register close \
 2. `--status` が `done` / `decided` のいずれかであることを検証する。
 3. 対象行の `ステータス` 列を更新し、`完了日` 列に `--completed` の値を設定する。
 4. `--conclusion` が指定されている場合は `結論` 列を更新する。
-5. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-6. `register build --scope all` 相当を実行して派生ビューを再生成する。
+5. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.4.2. 検証
 
@@ -849,7 +861,7 @@ specdojo register reject \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 却下理由の要約                                     | 変更しない |
 | `--completed`  | 却下日（`YYYY-MM-DD`）                             | 実行日     |
@@ -860,8 +872,7 @@ specdojo register reject \
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 対象行の `ステータス` 列を `rejected` に更新し、`完了日` 列に `--completed` の値を設定する。
 3. `--conclusion` が指定されている場合は `結論` 列を更新する。
-4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.5.2. 検証
 
@@ -886,7 +897,7 @@ specdojo register defer \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 保留理由の要約                                     | 変更しない |
 | `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
@@ -896,8 +907,7 @@ specdojo register defer \
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 対象行の `ステータス` 列を `deferred` に更新する。`完了日` 列は変更しない。
 3. `--conclusion` が指定されている場合は `結論` 列を更新する。
-4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.6.2. 検証
 
@@ -930,7 +940,7 @@ specdojo register reopen \
 
 | オプション  | 説明                                                              | デフォルト |
 | ----------- | ----------------------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                | 省略可     |
 | `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）                              | 必須       |
 | `--status`  | 変更後のステータス。`open` / `in-progress` / `waiting` / `review` | `open`     |
 | `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示                | `false`    |
@@ -940,8 +950,7 @@ specdojo register reopen \
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. `--status` が `open` / `in-progress` / `waiting` / `review` のいずれかであることを検証する。
 3. 対象行の `ステータス` 列を更新し、`完了日` 列を `-` にリセットする。
-4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.7.2. 検証
 
@@ -967,7 +976,7 @@ specdojo register update \
 
 | オプション      | 説明                                               | デフォルト |
 | --------------- | -------------------------------------------------- | ---------- |
-| `--project`     | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`          | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--title`       | タイトルの更新                                     | 変更しない |
 | `--description` | 説明の更新                                         | 変更しない |
@@ -980,8 +989,7 @@ specdojo register update \
 
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 指定されたフィールドのみ上書きし、指定なしのフィールドは変更しない。
-3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+3. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.8.2. 検証
 
@@ -1005,7 +1013,7 @@ specdojo register start \
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
@@ -1013,8 +1021,7 @@ specdojo register start \
 
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 対象行の `ステータス` 列を `in-progress` に更新する。
-3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+3. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.9.2. 検証
 
@@ -1039,7 +1046,7 @@ specdojo register wait \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 待機理由の要約                                     | 変更しない |
 | `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
@@ -1049,8 +1056,7 @@ specdojo register wait \
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 対象行の `ステータス` 列を `waiting` に更新する。
 3. `--conclusion` が指定されている場合は `結論` 列を更新する。
-4. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-5. `register build --scope all` 相当を実行して派生ビューを再生成する。
+4. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.10.2. 検証
 
@@ -1074,7 +1080,7 @@ specdojo register review \
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 必須       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
 | `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
@@ -1082,8 +1088,7 @@ specdojo register review \
 
 1. `pjr-index.md` を読み込み、`--id` に一致する行を特定する。
 2. 対象行の `ステータス` 列を `review` に更新する。
-3. 更新後の `pjr-index.md` が `pjr-index.schema.yaml` に適合することを検証する。
-4. `register build --scope all` 相当を実行して派生ビューを再生成する。
+3. `register build --scope all` 相当を実行して派生ビューを再生成する。
 
 #### 8.11.2. 検証
 
@@ -1162,7 +1167,11 @@ generated/
 ├─ critical-path.md
 ├─ schedule-hash.json
 ├─ schedule-diff.md
-└─ metadata.json
+├─ task-catalog.md
+├─ timeline.md
+├─ timeline.svg
+├─ metadata.json
+└─ agent-briefs/
 ```
 
 ### 9.4. パス確認
@@ -1174,7 +1183,7 @@ specdojo exec where --project prj-0001
 出力例:
 
 ```bash
-schedule-path: /repo/.../060-schedule
+schedule-path: /repo/.../030-project-management/schedule
 execution-path: /repo/.../070-execution
 exec/events : .../070-execution/exec/events
 generated   : .../070-execution/generated
@@ -1208,6 +1217,9 @@ specdojo exec build --project prj-0001
 - next claim target JSON
 - CPM
 - schedule diff
+- task catalog
+- timeline
+- agent briefs
 
 `ready.md` は人間向けの ready 一覧で、`critical-first` の順序と `fifo` の順序を併記します。
 
@@ -1216,6 +1228,8 @@ specdojo exec build --project prj-0001
 `claim-next.json` は strategy ごとの次の claim 対象を持ちます。
 
 ### 9.7. 実行イベントコマンド
+
+イベントコマンドは共通して `--project`、`--task`、`--by`、`--msg`、`--run-id`、`--ref`、`--meta` を受け付けます。`--task`、`--by`、`--msg` は必須です。
 
 #### 9.7.1. claim
 
@@ -1267,6 +1281,14 @@ specdojo exec cancel \
   --msg "scope removed"
 ```
 
+#### 9.7.6. note / link / estimate
+
+```bash
+specdojo exec note --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "調査メモ"
+specdojo exec link --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "関連PR" --ref pr=https://example.com/pr/1
+specdojo exec estimate --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "estimate updated" --meta duration_days=1
+```
+
 ### 9.8. scheduler
 
 自動タスク取得:
@@ -1275,12 +1297,12 @@ specdojo exec cancel \
 specdojo exec scheduler --project prj-0001 --by agent-1
 ```
 
-`specdojo exec scheduler` は `critical-first` または `fifo` の戦略で `ready.json` / `claim-next.json` と同じ順序規則を使って claim 対象を選びます。
+`specdojo exec scheduler` は `critical-first` または `fifo` の戦略で `ready.json` / `claim-next.json` と同じ順序規則を使って claim 対象を選びます。`--strategy`、`--owner`、`--allow-owner-mismatch`、`--allow-multiple-doing`、`--lock-timeout-ms`、`--lock-stale-ms` も指定できます。
 
 Dry-run:
 
 ```bash
-specdojo exec scheduler --dry-run
+specdojo exec scheduler --project prj-0001 --by agent-1 --dry-run
 ```
 
 ### 9.9. ロック
@@ -1483,7 +1505,7 @@ specdojo watch [--project <id>] [--scope <scope>]
 
 | オプション        | 説明                                                                 | デフォルト                  |
 | ----------------- | -------------------------------------------------------------------- | --------------------------- |
-| `--project <id>`  | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | `SPECDOJO_PROJECT` 環境変数 |
+| `--project <id>`  | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | 省略可 |
 | `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`）    | `all`                       |
 | `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒）               | `300`                       |
 
@@ -1527,7 +1549,7 @@ specdojo watch --project prj-0001 --scope register
 変更検出時とビルド完了時に標準出力へ以下の形式でログを出力する。
 
 ```text
-[watch] change detected: docs/ja/projects/prj-0001/060-schedule/sch-milestones.yaml
+[watch] change detected: docs/ja/projects/prj-0001/030-project-management/schedule/sch-milestones.yaml
 [watch] running: specdojo exec build --project prj-0001
 [watch] done: specdojo exec build (1.2s)
 ```
@@ -1562,7 +1584,7 @@ specdojo build [--project <id>] [--scope <scope>]
 
 | オプション        | 説明                                                          | デフォルト                  |
 | ----------------- | ------------------------------------------------------------- | --------------------------- |
-| `--project <id>`  | プロジェクト ID（`specdojo.config.json` の `projects.<id>`）  | `SPECDOJO_PROJECT` 環境変数 |
+| `--project <id>`  | プロジェクト ID（`specdojo.config.json` の `projects.<id>`）  | 省略可 |
 | `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all`                       |
 | `--dry-run`       | 実行予定のコマンドを表示するだけでファイルを書き出さない      | `false`                     |
 
@@ -1682,7 +1704,10 @@ agent-test
 - deterministic生成物
 - safe multi-agent execution
 - CPM / Critical Path計算
-- schedule diff検出
+- schedule diff
+- task catalog
+- timeline
+- agent briefs
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）

@@ -122,6 +122,11 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
     return fromProjectId(envProject.trim(), 'SPECDOJO_PROJECT')
   }
 
+  const defaultProjectId = config ? Object.keys(config.projects)[0] : ''
+  if (defaultProjectId) {
+    return fromProjectId(defaultProjectId, 'SPECDOJO_PROJECT')
+  }
+
   throw new Error(
     `Project path not specified.\n` +
       `Provide --project <id>, or SPECDOJO_PROJECT, or SPECDOJO_SCHEDULE_PATH together with SPECDOJO_EXECUTION_PATH.\n` +
