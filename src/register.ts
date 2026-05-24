@@ -558,7 +558,9 @@ function applyItemUpdate(opts: {
 }): void {
   const label = opts.action ?? `→ ${opts.updated.status}`
   if (opts.dryRun) {
-    process.stdout.write(`Would update ${opts.updated.id} (${label}):\n${formatTableRow(opts.updated)}\n`)
+    process.stdout.write(
+      `Would update ${opts.updated.id} (${label}):\n${formatTableRow(opts.updated)}\n`
+    )
     return
   }
   const updatedContent = replaceRowInContent(opts.content, opts.updated)
@@ -591,12 +593,12 @@ export function registerRegisterCommands(program: Command): void {
   const reg = program.command('register').description('Project register (pjr-index.md) commands')
 
   // --- scaffold ---
-  const scmd = reg.command('scaffold').description('Generate pjr-index.md from template')
-  addProjectOption(scmd)
-  scmd.option('--project-id <id>', 'Project ID to embed (defaults to --project value)')
-  scmd.option('--force', 'Overwrite existing pjr-index.md', false)
-  scmd.option('--dry-run', 'Print generated content to stdout without writing', false)
-  scmd.action(opts => {
+  const scaffoldCmd = reg.command('scaffold').description('Generate pjr-index.md from template')
+  addProjectOption(scaffoldCmd)
+  scaffoldCmd.option('--project-id <id>', 'Project ID to embed (defaults to --project value)')
+  scaffoldCmd.option('--force', 'Overwrite existing pjr-index.md', false)
+  scaffoldCmd.option('--dry-run', 'Print generated content to stdout without writing', false)
+  scaffoldCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const embedId = opts.projectId?.trim() || paths.projectId
@@ -639,23 +641,26 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- add ---
-  const acmd = reg.command('add').description('Add a new item to pjr-index.md')
-  addProjectOption(acmd)
-  acmd.requiredOption('--type <type>', `Item type: ${VALID_TYPES.join(' | ')}`)
-  acmd.requiredOption('--title <title>', 'Short title for the item')
-  acmd.option('--description <text>', 'Description shown in the list', '_TODO_')
-  acmd.option('--priority <priority>', `Priority: ${VALID_PRIORITIES.join(' | ')}`, 'medium')
-  acmd.option('--status <status>', `Status: ${VALID_STATUSES.join(' | ')}`, 'open')
-  acmd.option('--owner <owner>', 'Owner or role', '_TODO_')
-  acmd.option('--due <date>', 'Due date (YYYY-MM-DD, -, or _TODO_)', '_TODO_')
-  acmd.option('--completed <date>', 'Completion date (YYYY-MM-DD or -)', '-')
-  acmd.option('--conclusion <text>', 'Conclusion or resolution summary', '-')
-  acmd.option('--id <id>', 'Display ID (e.g., PJR-0061); auto-incremented if omitted')
-  acmd.option('--ticket', 'Also generate individual ticket file', false)
-  acmd.option('--topic <topic>', 'Topic slug for ticket filename; derived from --title if omitted')
-  acmd.option('--force', 'Overwrite existing ticket file', false)
-  acmd.option('--dry-run', 'Print new row and ticket content without writing', false)
-  acmd.action(opts => {
+  const addCmd = reg.command('add').description('Add a new item to pjr-index.md')
+  addProjectOption(addCmd)
+  addCmd.requiredOption('--type <type>', `Item type: ${VALID_TYPES.join(' | ')}`)
+  addCmd.requiredOption('--title <title>', 'Short title for the item')
+  addCmd.option('--description <text>', 'Description shown in the list', '_TODO_')
+  addCmd.option('--priority <priority>', `Priority: ${VALID_PRIORITIES.join(' | ')}`, 'medium')
+  addCmd.option('--status <status>', `Status: ${VALID_STATUSES.join(' | ')}`, 'open')
+  addCmd.option('--owner <owner>', 'Owner or role', '_TODO_')
+  addCmd.option('--due <date>', 'Due date (YYYY-MM-DD, -, or _TODO_)', '_TODO_')
+  addCmd.option('--completed <date>', 'Completion date (YYYY-MM-DD or -)', '-')
+  addCmd.option('--conclusion <text>', 'Conclusion or resolution summary', '-')
+  addCmd.option('--id <id>', 'Display ID (e.g., PJR-0061); auto-incremented if omitted')
+  addCmd.option('--ticket', 'Also generate individual ticket file', false)
+  addCmd.option(
+    '--topic <topic>',
+    'Topic slug for ticket filename; derived from --title if omitted'
+  )
+  addCmd.option('--force', 'Overwrite existing ticket file', false)
+  addCmd.option('--dry-run', 'Print new row and ticket content without writing', false)
+  addCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
 
@@ -757,14 +762,14 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- close ---
-  const closecmd = reg.command('close').description('Set item status to done or decided')
-  addProjectOption(closecmd)
-  closecmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  closecmd.option('--status <status>', 'done or decided (auto from item type if omitted)')
-  closecmd.option('--conclusion <text>', 'Conclusion or resolution summary')
-  closecmd.option('--completed <date>', 'Completion date (YYYY-MM-DD; defaults to today)')
-  closecmd.option('--dry-run', 'Print change without writing', false)
-  closecmd.action(opts => {
+  const closeCmd = reg.command('close').description('Set item status to done or decided')
+  addProjectOption(closeCmd)
+  closeCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  closeCmd.option('--status <status>', 'done or decided (auto from item type if omitted)')
+  closeCmd.option('--conclusion <text>', 'Conclusion or resolution summary')
+  closeCmd.option('--completed <date>', 'Completion date (YYYY-MM-DD; defaults to today)')
+  closeCmd.option('--dry-run', 'Print change without writing', false)
+  closeCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -793,13 +798,13 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- reject ---
-  const rejectcmd = reg.command('reject').description('Set item status to rejected')
-  addProjectOption(rejectcmd)
-  rejectcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  rejectcmd.option('--conclusion <text>', 'Reason for rejection')
-  rejectcmd.option('--completed <date>', 'Rejection date (YYYY-MM-DD; defaults to today)')
-  rejectcmd.option('--dry-run', 'Print change without writing', false)
-  rejectcmd.action(opts => {
+  const rejectCmd = reg.command('reject').description('Set item status to rejected')
+  addProjectOption(rejectCmd)
+  rejectCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  rejectCmd.option('--conclusion <text>', 'Reason for rejection')
+  rejectCmd.option('--completed <date>', 'Rejection date (YYYY-MM-DD; defaults to today)')
+  rejectCmd.option('--dry-run', 'Print change without writing', false)
+  rejectCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -822,12 +827,12 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- defer ---
-  const defercmd = reg.command('defer').description('Set item status to deferred')
-  addProjectOption(defercmd)
-  defercmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  defercmd.option('--conclusion <text>', 'Reason for deferral')
-  defercmd.option('--dry-run', 'Print change without writing', false)
-  defercmd.action(opts => {
+  const deferCmd = reg.command('defer').description('Set item status to deferred')
+  addProjectOption(deferCmd)
+  deferCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  deferCmd.option('--conclusion <text>', 'Reason for deferral')
+  deferCmd.option('--dry-run', 'Print change without writing', false)
+  deferCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -844,25 +849,23 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- reopen ---
-  const reopencmd = reg.command('reopen').description('Reopen a terminal-status item')
-  addProjectOption(reopencmd)
-  reopencmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  reopencmd.option(
+  const reopenCmd = reg.command('reopen').description('Reopen a terminal-status item')
+  addProjectOption(reopenCmd)
+  reopenCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  reopenCmd.option(
     '--status <status>',
     'Target status: open | in-progress | waiting | review',
     'open'
   )
-  reopencmd.option('--dry-run', 'Print change without writing', false)
-  reopencmd.action(opts => {
+  reopenCmd.option('--dry-run', 'Print change without writing', false)
+  reopenCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-terminal')
 
       const validReopenStatuses = ['open', 'in-progress', 'waiting', 'review']
       if (!validReopenStatuses.includes(opts.status)) {
-        throw new Error(
-          `--status must be one of: ${validReopenStatuses.join(', ')}`
-        )
+        throw new Error(`--status must be one of: ${validReopenStatuses.join(', ')}`)
       }
 
       const updated: PjrItem = { ...item, status: opts.status, completed: '-' }
@@ -873,11 +876,11 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- start ---
-  const startcmd = reg.command('start').description('Set item status to in-progress')
-  addProjectOption(startcmd)
-  startcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  startcmd.option('--dry-run', 'Print change without writing', false)
-  startcmd.action(opts => {
+  const startCmd = reg.command('start').description('Set item status to in-progress')
+  addProjectOption(startCmd)
+  startCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  startCmd.option('--dry-run', 'Print change without writing', false)
+  startCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -889,12 +892,12 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- wait ---
-  const waitcmd = reg.command('wait').description('Set item status to waiting')
-  addProjectOption(waitcmd)
-  waitcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  waitcmd.option('--conclusion <text>', 'Reason for waiting')
-  waitcmd.option('--dry-run', 'Print change without writing', false)
-  waitcmd.action(opts => {
+  const waitCmd = reg.command('wait').description('Set item status to waiting')
+  addProjectOption(waitCmd)
+  waitCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  waitCmd.option('--conclusion <text>', 'Reason for waiting')
+  waitCmd.option('--dry-run', 'Print change without writing', false)
+  waitCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -910,11 +913,11 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- review ---
-  const reviewcmd = reg.command('review').description('Set item status to review')
-  addProjectOption(reviewcmd)
-  reviewcmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  reviewcmd.option('--dry-run', 'Print change without writing', false)
-  reviewcmd.action(opts => {
+  const reviewCmd = reg.command('review').description('Set item status to review')
+  addProjectOption(reviewCmd)
+  reviewCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  reviewCmd.option('--dry-run', 'Print change without writing', false)
+  reviewCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id, 'require-active')
@@ -926,16 +929,16 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- update ---
-  const updatecmd = reg.command('update').description('Update fields of a register item')
-  addProjectOption(updatecmd)
-  updatecmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
-  updatecmd.option('--title <title>', 'Update title')
-  updatecmd.option('--description <text>', 'Update description')
-  updatecmd.option('--priority <priority>', `Update priority: ${VALID_PRIORITIES.join(' | ')}`)
-  updatecmd.option('--owner <owner>', 'Update owner or role')
-  updatecmd.option('--due <date>', 'Update due date (YYYY-MM-DD, -, or _TODO_)')
-  updatecmd.option('--dry-run', 'Print change without writing', false)
-  updatecmd.action(opts => {
+  const updateCmd = reg.command('update').description('Update fields of a register item')
+  addProjectOption(updateCmd)
+  updateCmd.requiredOption('--id <id>', 'Item ID (PJR-XXXX)')
+  updateCmd.option('--title <title>', 'Update title')
+  updateCmd.option('--description <text>', 'Update description')
+  updateCmd.option('--priority <priority>', `Update priority: ${VALID_PRIORITIES.join(' | ')}`)
+  updateCmd.option('--owner <owner>', 'Update owner or role')
+  updateCmd.option('--due <date>', 'Update due date (YYYY-MM-DD, -, or _TODO_)')
+  updateCmd.option('--dry-run', 'Print change without writing', false)
+  updateCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
       const { content, item } = loadItemForUpdate(paths, opts.id)
@@ -976,11 +979,11 @@ export function registerRegisterCommands(program: Command): void {
   })
 
   // --- build ---
-  const bcmd = reg.command('build').description('Generate derived views from pjr-index.md')
-  addProjectOption(bcmd)
-  bcmd.option('--scope <scope>', 'Generation scope: register | controls | all', 'all')
-  bcmd.option('--dry-run', 'Print generated content without writing', false)
-  bcmd.action(opts => {
+  const buildCmd = reg.command('build').description('Generate derived views from pjr-index.md')
+  addProjectOption(buildCmd)
+  buildCmd.option('--scope <scope>', 'Generation scope: register | controls | all', 'all')
+  buildCmd.option('--dry-run', 'Print generated content without writing', false)
+  buildCmd.action(opts => {
     try {
       const paths = resolveRegisterPaths(opts)
 
