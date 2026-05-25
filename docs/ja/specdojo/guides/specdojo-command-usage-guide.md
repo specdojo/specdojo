@@ -93,13 +93,23 @@ repo-root/
       "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register",
       "members_path": "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml",
       "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
-      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml"
+      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
+      "run": {
+        "worktree_base": "../worktrees",
+        "agent_commands": {
+          "opencode-edit": "opencode run --agent edit-agent",
+          "opencode-small": "opencode run --agent small-edit-agent",
+          "opencode-review": "opencode run --agent review-agent",
+          "claude-edit": "claude --print",
+          "claude-small": "claude --print"
+        }
+      }
     }
   }
 }
 ```
 
-`projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path` を指定します。
+`projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path`、`run` を指定します。`run` は `exec run` コマンドで使うエージェント起動設定です。
 
 ### 3.2. `.env`（任意）
 
@@ -1435,12 +1445,113 @@ blocked --> cancelled : cancel
 
 ### 9.11. 推奨ワークフロー
 
+手動でタスクを1件実行する場合:
+
 ```bash
 specdojo exec validate
 specdojo exec build
 specdojo exec scheduler --by agent-1
 specdojo exec complete ...
 specdojo exec build
+```
+
+`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）:
+
+```bash
+specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 2
+```
+
+### 9.12. exec run
+
+ワークツリーのセットアップ・エージェント起動・完了を一括で行う。`specdojo.config.json` の `run.agent_commands` に登録したコマンドを `--cmd` で切り替えることで、opencode / Claude Code など複数のエージェントツールに対応する。
+
+```bash
+specdojo exec run \
+  --project prj-0001 \
+  --cmd opencode-edit \
+  --by edit-agent \
+  --parallel 2
+```
+
+```bash
+# Claude Code を使う場合
+specdojo exec run \
+  --project prj-0001 \
+  --cmd claude-edit \
+  --by edit-agent
+```
+
+オプション:
+
+| オプション         | 説明                                                            | デフォルト          |
+| ------------------ | --------------------------------------------------------------- | ------------------- |
+| `--project`        | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可              |
+| `--cmd`            | `run.agent_commands` のキー名                                   | 必須                |
+| `--by`             | タスク claim 時のアクター識別子                                 | `--cmd` の値        |
+| `--parallel`       | 並列実行数                                                      | `1`                 |
+| `--worktree-base`  | worktree 配置先パスの上書き                                     | `run.worktree_base` |
+| `--dry-run`        | 実行せず、実行予定を標準出力に表示                              | `false`             |
+
+#### 9.12.1. `run` 設定（`specdojo.config.json`）
+
+`projects.<id>.run` に worktree の配置先とエージェントコマンドを定義する。`agent_commands` の各エントリはキー名と起動コマンド文字列のマッピング。`exec run` はタスクプロンプトを生成し、コマンド文字列の末尾に引数として追加して実行する。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": {
+        "worktree_base": "../worktrees",
+        "agent_commands": {
+          "opencode-edit":   "opencode run --agent edit-agent",
+          "opencode-small":  "opencode run --agent small-edit-agent",
+          "opencode-review": "opencode run --agent review-agent",
+          "claude-edit":     "claude --print",
+          "claude-small":    "claude --print"
+        }
+      }
+    }
+  }
+}
+```
+
+#### 9.12.2. 実行フロー
+
+1. `run.worktree_base`（または `--worktree-base`）を解決する。
+2. `exec validate --project <id>` を実行し、スケジュール整合性を確認する。
+3. `exec build --project <id>` を実行し、state と ready 情報を最新化する。
+4. `--parallel` の数だけ並列で以下を実行する：
+   a. worktree `<worktree_base>/<cmd>-<i>` が存在しない場合、`git worktree add <worktree_base>/<cmd>-<i> -b exec/<cmd>-<i>` でブランチを作成する。
+   b. 作成した worktree に移動する。
+   c. `run.agent_commands[cmd] "<task-prompt>"` を実行する。
+5. 全インスタンスの終了を待つ。
+
+タスクプロンプトのテンプレート（コマンド末尾に引数として追加）:
+
+```text
+Execute exactly one SpecDojo task for project {project_id} as {by}.
+Run: specdojo exec validate, build, scheduler --by {by}, implement, complete/block.
+Do not claim more than one task. Do not modify unrelated files.
+```
+
+#### 9.12.3. 出力フォーマット
+
+```text
+[run] validate: ok
+[run] build: ok
+[run] setup: worktree ../worktrees/opencode-edit-1 (exec/opencode-edit-1)
+[run] setup: worktree ../worktrees/opencode-edit-2 (exec/opencode-edit-2)
+[run] start: opencode-edit-1 (pid: 12345)
+[run] start: opencode-edit-2 (pid: 12346)
+[run] done: opencode-edit-1 (exit 0, 34.2s)
+[run] done: opencode-edit-2 (exit 0, 41.7s)
+[run] all 2 instances completed
+```
+
+エージェントが 0 以外の終了コードを返した場合は標準エラー出力にログを出力し、他のインスタンスは継続する。
+
+```text
+[run] error: opencode-edit-2 exited with code 1 — see above for details
 ```
 
 ## 10. index コマンド
