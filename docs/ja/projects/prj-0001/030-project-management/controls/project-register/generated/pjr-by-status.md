@@ -13,7 +13,8 @@
 | PJR-0064 | open | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0073 | open | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | - | - | - |
 | PJR-0074 | open | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2025-05-24 | - | - | - |
-| PJR-0076 | open | 完了成果物をscheduleへ反映 | specdojo scheduleに完了成果物を反映 | todo | medium | ARC | 2026-05-26 | - | - | - |
+| PJR-0076 | open | 完了成果物をscheduleへ反映 | specdojo scheduleに完了成果物を反映して初期値をずらす | todo | medium | ARC | 2026-05-26 | - | - | - |
+| PJR-0077 | open | specdojo exec runの追加 | agentの実行を管理するためのコマンドを追加 | todo | medium | ARC | 2026-05-26 | - | - | - |
 
 ## 2. done
 

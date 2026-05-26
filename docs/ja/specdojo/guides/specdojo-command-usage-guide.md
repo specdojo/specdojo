@@ -96,20 +96,14 @@ repo-root/
       "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
       "run": {
         "worktree_base": "../worktrees",
-        "agent_commands": {
-          "opencode-edit": "opencode run --agent edit-agent",
-          "opencode-small": "opencode run --agent small-edit-agent",
-          "opencode-review": "opencode run --agent review-agent",
-          "claude-edit": "claude --print",
-          "claude-small": "claude --print"
-        }
+        "agent_config": "exec-agent.yaml"
       }
     }
   }
 }
 ```
 
-`projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path`、`run` を指定します。`run` は `exec run` コマンドで使うエージェント起動設定です。
+`projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path`、`run` を指定します。`run.agent_config` に `exec-agent.yaml` のパスを指定すると、`exec run --auto` で `(phase_set, phase.id, difficulty)` から agent を自動選択できます。`tier_routing` と `agent_commands` は `exec-agent.yaml` に集約するため `specdojo.config.json` には記載しません。
 
 ### 3.2. `.env`（任意）
 
@@ -1455,9 +1449,13 @@ specdojo exec complete ...
 specdojo exec build
 ```
 
-`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）:
+`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと tier_routing でエージェントを自動選択できる:
 
 ```bash
+# tier_routing で自動選択（draft/review/small を自動ルーティング）
+specdojo exec run --project prj-0001 --auto --parallel 5
+
+# agent を明示する場合
 specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 2
 ```
 
@@ -1483,18 +1481,21 @@ specdojo exec run \
 
 オプション:
 
-| オプション         | 説明                                                            | デフォルト          |
-| ------------------ | --------------------------------------------------------------- | ------------------- |
-| `--project`        | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可              |
-| `--cmd`            | `run.agent_commands` のキー名                                   | 必須                |
-| `--by`             | タスク claim 時のアクター識別子                                 | `--cmd` の値        |
-| `--parallel`       | 並列実行数                                                      | `1`                 |
-| `--worktree-base`  | worktree 配置先パスの上書き                                     | `run.worktree_base` |
-| `--dry-run`        | 実行せず、実行予定を標準出力に表示                              | `false`             |
+| オプション         | 説明                                                                    | デフォルト          |
+| ------------------ | ----------------------------------------------------------------------- | ------------------- |
+| `--project`        | プロジェクト ID（`specdojo.config.json` から解決）                      | 省略可              |
+| `--cmd`            | `run.agent_commands` のキー名。`--auto` と排他                          | `--auto` 時は省略可 |
+| `--auto`           | ready タスクのステップ番号から tier を導出し `tier_routing` で自動選択  | `false`             |
+| `--by`             | タスク claim 時のアクター識別子                                         | `--cmd` / tier の値 |
+| `--parallel`       | 並列実行数                                                              | `1`                 |
+| `--worktree-base`  | worktree 配置先パスの上書き                                             | `run.worktree_base` |
+| `--dry-run`        | 実行せず、実行予定を標準出力に表示                                      | `false`             |
 
-#### 9.12.1. `run` 設定（`specdojo.config.json`）
+#### 9.12.1. `run` 設定（`specdojo.config.json` と `exec-agent.yaml`）
 
-`projects.<id>.run` に worktree の配置先とエージェントコマンドを定義する。`agent_commands` の各エントリはキー名と起動コマンド文字列のマッピング。`exec run` はタスクプロンプトを生成し、コマンド文字列の末尾に引数として追加して実行する。
+`projects.<id>.run` に worktree 配置先と `exec-agent.yaml` のパスを指定する。エージェントルーティング（tier_routing・agent_commands・difficulty_overrides）は `exec-agent.yaml` に集約し、`specdojo.config.json` には持ち込まない。
+
+`specdojo.config.json`:
 
 ```json
 {
@@ -1502,17 +1503,51 @@ specdojo exec run \
     "prj-0001": {
       "run": {
         "worktree_base": "../worktrees",
-        "agent_commands": {
-          "opencode-edit":   "opencode run --agent edit-agent",
-          "opencode-small":  "opencode run --agent small-edit-agent",
-          "opencode-review": "opencode run --agent review-agent",
-          "claude-edit":     "claude --print",
-          "claude-small":    "claude --print"
-        }
+        "agent_config": "exec-agent.yaml"
       }
     }
   }
 }
+```
+
+`exec-agent.yaml`（リポジトリルート）:
+
+```yaml
+phase_tier_rules:
+  - phase_set: standard
+    phase: draft
+    tier: full
+  - phase_set: standard
+    phase: review
+    tier: small
+  - phase_set: standard
+    phase: finalize
+    tier: small
+  - phase_set: research
+    phase: draft
+    tier: full
+    requires_web: true
+  - phase_set: research
+    phase: review
+    tier: full
+  - phase_set: research
+    phase: finalize
+    tier: small
+
+difficulty_overrides:
+  - difficulty: expert
+    min_tier: full
+
+tier_routing:
+  full:  { cmd: opencode-edit,  by: edit-agent }
+  small: { cmd: opencode-small, by: small-edit-agent }
+
+agent_commands:
+  opencode-edit:   "opencode run --agent edit-agent"
+  opencode-small:  "opencode run --agent small-edit-agent"
+  opencode-review: "opencode run --agent review-agent"
+  claude-edit:     "claude --print"
+  claude-small:    "claude --print"
 ```
 
 #### 9.12.2. 実行フロー
@@ -1553,6 +1588,41 @@ Do not claim more than one task. Do not modify unrelated files.
 ```text
 [run] error: opencode-edit-2 exited with code 1 — see above for details
 ```
+
+#### 9.12.4. `--auto` による自動ルーティング
+
+`--auto` を指定すると、`--cmd` を省略でき、ready タスクのステップ番号から agent を自動選択する。`--cmd` との同時指定はエラーになる。
+
+**tier 導出（`ready.json` の `model_tier` フィールドを直接参照）：**
+
+`exec build` が `sch-strategy-<track>.yaml` の `phase_sets[*][].model_tier` を各タスクに付与し、`ready.json` に書き込む。`--auto` はステップ番号からの暗黙導出を行わず、`ready.json` の `model_tier` を直接読む。
+
+| `ready.json` の `model_tier` | `tier_routing` で選択する agent           | 典型的な phase         |
+| ----------------------------- | ----------------------------------------- | ---------------------- |
+| `full`                        | `edit-agent`（新規作成・フルモデル）      | `draft`（standard / research） |
+| `small`                       | `small-edit-agent`（修正・確認・軽量）    | `validate` / `review` / `finalize` |
+
+`requires_web: true` のタスクは `ready.json` にも `requires_web: true` が付与される。`tier_routing` でウェブ対応の別コマンドを定義しておくか、エージェントプロンプト側でウェブ検索を許可する。
+
+`--auto` の実行フロー：
+
+1. `ready.json` から次の ready タスクをプレビューする（claim は agent が行う）。
+2. タスクの `model_tier`（および `requires_web`）を読み取る。
+3. `run.tier_routing[model_tier]` から `cmd` と `by` を解決する。
+4. 解決した `cmd` と `by` で `--cmd` / `--by` 指定時と同じフローを実行する。
+5. ready タスクが 0 件の場合は `[run] no ready tasks — exit` を出力して正常終了する。
+
+`--auto` を使うと、runner スクリプトは1フェーズにつき1行になる：
+
+```bash
+# Phase 1: edit + small-edit を自動ルーティング（parallel で複数起動）
+specdojo exec run --project prj-0001 --auto --parallel 5
+
+# Phase 2: review（常に review-agent のため --cmd を明示）
+specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
+```
+
+`--auto` は `tier_routing` が定義されていない場合エラーを返す。`tier_routing` に対応する tier エントリがない場合は `[run] skip: no tier_routing for tier '<tier>' — no agent selected` を出力して当該インスタンスをスキップする。
 
 ## 10. index コマンド
 

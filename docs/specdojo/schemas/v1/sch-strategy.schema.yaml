@@ -4,6 +4,10 @@ title: "SpecDojo Schedule strategy schema"
 description: >
   Defines generation rules for sch-track-<track>.yaml.
   Used as input to the code generator; not a runtime schedule file.
+  phase_sets defines named groups of phases keyed by semantic name (e.g., standard, yaml_validated).
+  Each owner_rule references a phase_set by name and carries a difficulty rating for planning.
+  AI agent routing (model_tier, requires_web, tier_routing) is NOT stored here;
+  it belongs in exec-agent.yaml, which maps (phase_set, phase.id, difficulty) to agent commands.
 type: object
 additionalProperties: false
 
@@ -14,7 +18,7 @@ required:
   - status
   - track
   - scope
-  - phases
+  - phase_sets
   - task_id_pattern
   - owner_rules
 
@@ -72,17 +76,26 @@ properties:
           type: string
           enum: ["work", "control", "generated"]
 
-  phases:
+  phase_sets:
     type: object
     description: >
-      Phase definitions keyed by file format (e.g., markdown, yaml).
-      The format key is matched against the deliverable path extension.
+      Named phase set definitions. Keys are arbitrary names (e.g., standard, yaml_validated).
+      Each owner_rule references one of these keys via its phase_set field.
+      exec build writes model_tier and requires_web from each phase into the generated task metadata,
+      allowing exec run --auto to select the agent command without parsing this file at runtime.
     minProperties: 1
     additionalProperties:
       type: array
       minItems: 1
       items:
         $ref: "#/$defs/Phase"
+
+  default_phase_set:
+    type: string
+    minLength: 1
+    description: >
+      Name of the fallback phase set used when an owner_rule does not specify phase_set.
+      Must be a key defined in phase_sets. Required when any owner_rule omits phase_set.
 
   task_id_pattern:
     type: string
@@ -95,7 +108,7 @@ properties:
   owner_rules:
     type: array
     minItems: 1
-    description: "Mapping from deliverable local_id list to owner Role code."
+    description: "Mapping from deliverable local_id list to owner role, phase set, and difficulty."
     items:
       type: object
       additionalProperties: false
@@ -113,6 +126,23 @@ properties:
             minLength: 1
         owner:
           $ref: "./sch-common.schema.yaml#/$defs/Owner"
+        phase_set:
+          type: string
+          minLength: 1
+          description: >
+            Name of the phase set to apply to these deliverables.
+            Must be a key defined in phase_sets.
+            Falls back to default_phase_set when omitted.
+        difficulty:
+          type: string
+          enum: ["low", "normal", "high", "expert"]
+          description: >
+            Informational difficulty rating for human planning.
+            Influences expected duration and serves as a hint for model selection.
+            low: straightforward content with little ambiguity.
+            normal: typical document requiring standard domain knowledge.
+            high: complex analysis, cross-domain references, or architectural decisions.
+            expert: deep technical knowledge or significant judgment required.
 
   group_milestones:
     type: array

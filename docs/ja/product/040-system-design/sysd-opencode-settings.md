@@ -28,11 +28,11 @@ opencode の agent は **機能** で分類する（`coordinate-agent` / `edit-a
 
 ## 2. 責務分担
 
-| 層                | 責務                                                                                                         | 責務外                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| SpecDojo CLI      | validate / build / ready 抽出 / claim / complete / block / lock / CPM / worktree 管理・エージェント起動（`exec run`） | タスク内容の理解・成果物の編集      |
-| opencode agent    | タスク内容の解釈・関連ドキュメントの読解・成果物の編集・complete / block の判断                              | タスク取得の排他制御・並列起動制御  |
-| runner スクリプト | フェーズ順序制御（`exec run` の呼び出し順序・並列数）                                                        | タスク管理ロジック・worktree 管理   |
+| 層                | 責務                                                                                                                  | 責務外                             |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| SpecDojo CLI      | validate / build / ready 抽出 / claim / complete / block / lock / CPM / worktree 管理・エージェント起動（`exec run`） | タスク内容の理解・成果物の編集     |
+| opencode agent    | タスク内容の解釈・関連ドキュメントの読解・成果物の編集・complete / block の判断                                       | タスク取得の排他制御・並列起動制御 |
+| runner スクリプト | フェーズ順序制御（`exec run` の呼び出し順序・並列数）                                                                 | タスク管理ロジック・worktree 管理  |
 
 ## 3. 全体フロー
 
@@ -64,7 +64,9 @@ ready.json / claim-next.json
 ```text
 workspace/
 ├─ repo-root/
-│  ├─ opencode.json
+│  ├─ opencode.json        # opencode agent 定義・モデル設定
+│  ├─ exec-agent.yaml      # exec run 用エージェントルーティング設定（AI 関連を集約）
+│  ├─ specdojo.config.json # プロジェクトレジストリ（run.agent_config でパス参照）
 │  ├─ AGENTS.md
 │  ├─ .opencode/
 │  │  └─ prompts/
@@ -78,9 +80,12 @@ workspace/
 │     └─ ja/
 │        └─ projects/
 │           └─ prj-0001/
-└─ worktrees/             # git worktree add で作成（リポジトリ外）
-   ├─ edit-agent-1/       # ブランチ: exec/edit-agent-1
-   └─ edit-agent-2/       # ブランチ: exec/edit-agent-2
+│              └─ 030-project-management/
+│                 └─ schedule/
+│                    └─ sch-strategy-launch.yaml  # AI 設定なし・プロジェクト管理のみ
+└─ worktrees/              # git worktree add で作成（リポジトリ外）
+   ├─ edit-agent-1/        # ブランチ: exec/edit-agent-1
+   └─ edit-agent-2/        # ブランチ: exec/edit-agent-2
 ```
 
 ## 5. `opencode.json` 設定
@@ -164,31 +169,31 @@ export OPENAI_API_KEY=sk-...
 
 各 agent はそれぞれ要求する推論品質が異なる。デフォルトは OpenAI Codex 最新系モデルを中心にし、Copilot 最新系モデルを代替 provider として組み合わせる。OpenAI モデルは `OPENAI_API_KEY`、Copilot モデルは `/connect` による GitHub Copilot 認証が必要。
 
-| agent              | 実際の処理             | デフォルト provider                        | 代替 provider                          |
-| ------------------ | ---------------------- | ------------------------------------------ | -------------------------------------- |
-| `coordinate-agent` | コマンド実行のみ       | Copilot `gpt-5.4-mini`（軽量）             | OpenAI `gpt-5.1-codex-mini`            |
-| `edit-agent`       | 文書・コードの新規作成 | OpenAI `gpt-5.2-codex`（Codex 最新強力）   | Copilot `gpt-5.3-codex`                |
-| `small-edit-agent` | 既存文書の修正・確認   | OpenAI `gpt-5.1-codex-mini`（Codex 軽量）  | Copilot `gpt-5.4-mini`                 |
-| `review-agent`     | 多観点推論・品質確認   | OpenAI `gpt-5.2-codex`（Codex 最新強力）   | Copilot `gpt-5.5`                      |
+| agent              | tier     | 実際の処理                      | デフォルト provider                       | 代替 provider               |
+| ------------------ | -------- | ------------------------------- | ----------------------------------------- | --------------------------- |
+| `coordinate-agent` | -        | コマンド実行のみ                | Copilot `gpt-5.4-mini`（軽量）            | OpenAI `gpt-5.1-codex-mini` |
+| `small-edit-agent` | `small`  | 既存文書の修正・確認            | OpenAI `gpt-5.1-codex-mini`（Codex 軽量） | Copilot `gpt-5.4-mini`      |
+| `edit-agent`       | `full`   | 標準的な文書・コードの新規作成  | OpenAI `gpt-5.2-codex`（Codex 強力）      | Copilot `gpt-5.3-codex`     |
+| `expert-agent`     | `expert` | 複雑な分析・多観点推論          | Claude `claude-opus-4-7`                  | OpenAI `gpt-5.3-codex`      |
+| `edit-agent-web`   | `full`   | `edit-agent` + web 検索         | OpenAI `gpt-5.2-codex`（Codex 強力）      | Copilot `gpt-5.3-codex`     |
+| `expert-agent-web` | `expert` | `expert-agent` + web 検索       | Claude `claude-opus-4-7`                  | OpenAI `gpt-5.3-codex`      |
+| `review-agent`     | -        | review plan/result の生成と記入 | OpenAI `gpt-5.2-codex`（Codex 強力）      | Copilot `gpt-5.5`           |
 
-`edit-agent` と `review-agent` は新規作成・多観点推論に最大品質が必要なため OpenAI Codex 最新強力モデルを使用する。`small-edit-agent` は既存文書の修正・確認が主なので Codex mini を使う。`coordinate-agent` はコマンド実行中心のため Copilot の軽量モデルで十分。モデル ID は opencode が対応する最新バージョンに合わせて更新し、Copilot 側はプラン・クライアントごとの提供状況を `/models` または公式ドキュメントで確認する。
+`expert-agent` は複雑な分析・アーキテクチャ判断・外部調査が必要な作業（`difficulty: expert` の成果物や `research` phase_set の draft）に使用する。web 対応バリアント（`*-web`）は `capabilities: [web_search]` が指定されたフェーズで `exec run --auto` が自動選択する。モデル ID は opencode が対応する最新バージョンに合わせて更新する。
 
 ### 5.2. agent 設定
 
-機能ベースの4 agent 構成。OpenAI Codex 最新モデル（強力 / 軽量）と GitHub Copilot 最新モデルを使い分けるハイブリッド設定をデフォルトとする。事前設定として `OPENAI_API_KEY`（edit-agent / small-edit-agent / review-agent 用）と GitHub Copilot の `/connect` 認証（coordinate-agent 用、または Copilot 代替利用時）が必要。
+`exec-agent.yaml` の tier（`small` / `full` / `expert`）と 1:1 で対応する agent 構成。`opencode.json` でモデルを agent ごとに定義し、tier の抽象化は `exec-agent.yaml` が担う。事前設定として `OPENAI_API_KEY`（Codex 系）と GitHub Copilot の `/connect` 認証（`coordinate-agent` および Copilot 代替時）が必要。
 
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
 
-  // デフォルト: OpenAI Codex 最新強力モデル（edit-agent / review-agent に適用）
-  // 事前設定: OPENAI_API_KEY 環境変数
-  // 2026-05-24 時点: gpt-5.2-codex を高品質作成・レビュー、gpt-5.1-codex-mini を軽量修正に使う
+  // グローバルデフォルト（agent 個別設定で上書き）
   "model": "openai/gpt-5.2-codex",
   "small_model": "openai/gpt-5.1-codex-mini",
 
   // Ollama: オフライン時の退避先（local・無料）
-  // 事前設定: host.docker.internal:11434 で Ollama が起動していること
   "provider": {
     "ollama-local": {
       "npm": "@ai-sdk/openai-compatible",
@@ -209,12 +214,11 @@ export OPENAI_API_KEY=sk-...
   "instructions": ["AGENTS.md", "docs/ja/handbook/**/*.md", "docs/ja/projects/**/*.md"],
 
   "agent": {
+    // --- tier: - （コマンド実行専用）---
     "coordinate-agent": {
-      "description": "SpecDojo coordinator。validate/build/scheduler を実行し、edit-agent へ委譲する。",
+      "description": "SpecDojo coordinator。validate/build/scheduler を実行し委譲する。",
       "mode": "primary",
-      // コマンド実行中心のため Copilot の軽量最新モデルを使用する
-      // 利用できない場合は "openai/gpt-5.1-codex-mini" または "ollama-local/gemma4:e4b-8k" に変更する
-      "model": "github-copilot/gpt-5.4-mini",
+      "model": "github-copilot/gpt-5.4-mini", // コマンド実行中心: Copilot 軽量で十分
       "prompt": "{file:.opencode/prompts/coordinate-agent.md}",
       "permission": {
         "read": "allow",
@@ -226,29 +230,12 @@ export OPENAI_API_KEY=sk-...
       },
     },
 
-    "edit-agent": {
-      "description": "draft フェーズ（model_tier:full）のタスクを担当。--by edit-agent で claim する。",
-      "mode": "subagent",
-      // draft は新規作成が主で最大品質が必要。OpenAI Codex 最新強力モデルを使用する
-      // Copilot に切り替える場合は "github-copilot/gpt-5.3-codex" を使用する
-      "model": "openai/gpt-5.2-codex",
-      "prompt": "{file:.opencode/prompts/edit-agent.md}",
-      "permission": {
-        "read": "allow",
-        "glob": "allow",
-        "grep": "allow",
-        "list": "allow",
-        "bash": "allow",
-        "edit": "allow",
-      },
-    },
-
+    // --- tier: small ---
     "small-edit-agent": {
-      "description": "review・finalize フェーズ（model_tier:small）のタスクを担当。--by small-edit-agent で claim する。",
+      "description": "tier:small。既存文書の修正・確認・フォーマット整形を担当。",
       "mode": "subagent",
-      // review/finalize は既存文書の修正・確認が主なので Codex mini を使用する
-      // Copilot に切り替える場合は "github-copilot/gpt-5.4-mini" を使用する
-      "model": "openai/gpt-5.1-codex-mini",
+      "model": "openai/gpt-5.1-codex-mini", // 軽量修正: Codex mini
+      // 代替: "github-copilot/gpt-5.4-mini"
       "prompt": "{file:.opencode/prompts/edit-agent.md}",
       "permission": {
         "read": "allow",
@@ -260,12 +247,78 @@ export OPENAI_API_KEY=sk-...
       },
     },
 
-    "review-agent": {
-      "description": "review plan/result を生成し、done_criteria の各ロール観点で rvr-*.yaml を記入する。",
+    // --- tier: full ---
+    "edit-agent": {
+      "description": "tier:full。標準的な文書・コードの新規作成を担当。",
       "mode": "subagent",
-      // 多観点での推論品質を優先するため OpenAI Codex 最新強力モデルを使用する
-      // Copilot に切り替える場合は "github-copilot/gpt-5.5" を使用する
+      "model": "openai/gpt-5.2-codex", // 高品質作成: Codex 強力
+      // 代替: "github-copilot/gpt-5.3-codex"
+      "prompt": "{file:.opencode/prompts/edit-agent.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "edit": "allow",
+      },
+    },
+
+    "edit-agent-web": {
+      "description": "tier:full + web_search。edit-agent に web 検索ツールを追加。",
+      "mode": "subagent",
       "model": "openai/gpt-5.2-codex",
+      "prompt": "{file:.opencode/prompts/edit-agent.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "edit": "allow",
+        "web_search": "allow",
+      }, // capabilities: [web_search]
+    },
+
+    // --- tier: expert ---
+    "expert-agent": {
+      "description": "tier:expert。複雑な分析・多観点推論・アーキテクチャ判断を担当。",
+      "mode": "subagent",
+      "model": "claude-opus-4-7", // 最高性能: Claude Opus
+      // 代替: "openai/gpt-5.3-codex"
+      "prompt": "{file:.opencode/prompts/edit-agent.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "edit": "allow",
+      },
+    },
+
+    "expert-agent-web": {
+      "description": "tier:expert + web_search。expert-agent に web 検索ツールを追加。",
+      "mode": "subagent",
+      "model": "claude-opus-4-7",
+      "prompt": "{file:.opencode/prompts/edit-agent.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "edit": "allow",
+        "web_search": "allow",
+      }, // capabilities: [web_search]
+    },
+
+    // --- tier: - （review 専用）---
+    "review-agent": {
+      "description": "review plan/result を生成し、各ロール観点で rvr-*.yaml を記入する。",
+      "mode": "subagent",
+      "model": "openai/gpt-5.2-codex", // 多観点推論: Codex 強力
+      // 代替: "github-copilot/gpt-5.5"
       "prompt": "{file:.opencode/prompts/review-agent.md}",
       "permission": {
         "read": "allow",
@@ -273,9 +326,8 @@ export OPENAI_API_KEY=sk-...
         "grep": "allow",
         "list": "allow",
         "bash": "allow",
-        // rvr-*.yaml への記入のため allow。成果物ファイルは編集しない（プロンプトで制約）
         "edit": "allow",
-      },
+      }, // rvr-*.yaml への記入のみ（プロンプトで制約）
     },
   },
 
@@ -294,40 +346,43 @@ export OPENAI_API_KEY=sk-...
 
 ### 5.3. agent 一覧
 
-| agent 名            | mode     | 機能                                                           | model_tier | デフォルト provider                    | edit  |
-| ------------------- | -------- | -------------------------------------------------------------- | ---------- | -------------------------------------- | ----- |
-| `coordinate-agent`  | primary  | validate/build/scheduler を実行し委譲                          | -          | Copilot `gpt-5.4-mini`（軽量）         | ask   |
-| `edit-agent`        | subagent | draft フェーズのタスクを担当。ロール文脈を判断し成果物を作成   | full       | OpenAI `gpt-5.2-codex`（Codex 最新強力） | allow |
-| `small-edit-agent`  | subagent | review・finalize フェーズのタスクを担当。既存文書を修正・確認 | small      | OpenAI `gpt-5.1-codex-mini`（Codex 軽量） | allow |
-| `review-agent`      | subagent | review plan/result を生成し、各ロール観点で rvr-*.yaml を記入 | -（常時）  | OpenAI `gpt-5.2-codex`（Codex 最新強力） | allow |
+| agent 名           | tier     | 機能                                                                   | デフォルト provider         | edit  |
+| ------------------ | -------- | ---------------------------------------------------------------------- | --------------------------- | ----- |
+| `coordinate-agent` | -        | validate/build/scheduler を実行し委譲                                  | Copilot `gpt-5.4-mini`      | ask   |
+| `small-edit-agent` | `small`  | 既存文書の修正・確認・フォーマット整形                                 | OpenAI `gpt-5.1-codex-mini` | allow |
+| `edit-agent`       | `full`   | 標準的な文書・コードの新規作成                                         | OpenAI `gpt-5.2-codex`      | allow |
+| `edit-agent-web`   | `full`   | `edit-agent` + web 検索（`capabilities: [web_search]` 時に自動選択）   | OpenAI `gpt-5.2-codex`      | allow |
+| `expert-agent`     | `expert` | 複雑な分析・多観点推論・アーキテクチャ判断                             | Claude `claude-opus-4-7`    | allow |
+| `expert-agent-web` | `expert` | `expert-agent` + web 検索（`capabilities: [web_search]` 時に自動選択） | Claude `claude-opus-4-7`    | allow |
+| `review-agent`     | -        | review plan/result を生成し、各ロール観点で rvr-\*.yaml を記入         | OpenAI `gpt-5.2-codex`      | allow |
 
-`model_tier` の決定ルール（task handoff JSON の `model_tier` フィールドで通知）：
+tier 決定ルール（`exec-agent.yaml` の `phase_tier_rules` で定義）：
 
-| タスクフェーズ                 | ステップ番号 | model_tier | 担当 agent        |
-| ------------------------------ | ------------ | ---------- | ----------------- |
-| draft（たたき台作成）          | 010          | `full`     | `edit-agent`      |
-| validate / review / finalize   | 020 以降     | `small`    | `small-edit-agent`|
+| phase_set  | phase.id   | tier    | requires_web | 担当 agent               |
+| ---------- | ---------- | ------- | ------------ | ------------------------ |
+| `standard` | `draft`    | `full`  | false        | `edit-agent`             |
+| `standard` | `review`   | `small` | false        | `small-edit-agent`       |
+| `standard` | `finalize` | `small` | false        | `small-edit-agent`       |
+| `research` | `draft`    | `full`  | **true**     | `edit-agent`（web 対応） |
+| `research` | `review`   | `full`  | false        | `edit-agent`             |
+| `research` | `finalize` | `small` | false        | `small-edit-agent`       |
 
-`model_tier` は将来的に `sch-strategy-<track>.yaml` の phase 定義で明示設定できるように拡張する予定。当面は task ID のステップ番号（`-010` = full、`-020` 以降 = small）を runner がプロキシとして使う。
+Markdown・YAML 問わず `standard` を使う。バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、独立した validate フェーズは設けない。
 
-`edit-agent` / `small-edit-agent` が参照するロール文脈と推奨 provider：
+`sch-strategy-<track>.yaml` は `model_tier`・`requires_web` を持たない。これらは `exec-agent.yaml` の `phase_tier_rules` で管理し、`exec build` が `ready.json` の各タスクに書き込む。`exec run --auto` は `ready.json` の `tier` を読み取り、`exec-agent.yaml` の `tier_routing` でエージェントコマンドを解決する。
 
-| task.owner | ロール文脈                   | draft（full）              | review / finalize（small） |
-| ---------- | ---------------------------- | -------------------------- | -------------------------- |
-| BA         | 要件・受入条件・利用者視点   | OpenAI `gpt-5.2-codex`     | OpenAI `gpt-5.1-codex-mini` |
-| ARC        | 文書体系・構成方針・命名     | OpenAI `gpt-5.2-codex`     | OpenAI `gpt-5.1-codex-mini` |
-| PM         | 計画・進捗・マイルストーン   | OpenAI `gpt-5.2-codex`     | OpenAI `gpt-5.1-codex-mini` |
-| DEV        | 実装・設定・スクリプト       | **OpenAI `gpt-5.2-codex`** | OpenAI `gpt-5.1-codex-mini` |
-| UX         | 利用者導線・文書体験         | OpenAI `gpt-5.2-codex`     | OpenAI `gpt-5.1-codex-mini` |
-| OPS        | リリース・公開・変更管理     | OpenAI `gpt-5.2-codex`     | OpenAI `gpt-5.1-codex-mini` |
+`difficulty_overrides` により `difficulty: expert` の成果物は全フェーズで `full` tier に昇格する。
 
-主な利用パターンと `opencode.json` の model 設定：
+各 tier の主な利用パターンと `opencode.json` の model 設定：
 
-| パターン                        | coordinate-agent                | edit-agent（full）        | small-edit-agent（small） | review-agent              |
-| ------------------------------- | ------------------------------- | ------------------------- | ------------------------- | ------------------------- |
-| **Codex + Copilot（デフォルト）** | `gpt-5.4-mini`（copilot）       | `gpt-5.2-codex`（openai） | `gpt-5.1-codex-mini`（openai） | `gpt-5.2-codex`（openai） |
-| Copilot ベース                  | `gpt-5.4-mini`（copilot）       | `gpt-5.3-codex`（copilot） | `gpt-5.4-mini`（copilot） | `gpt-5.5`（copilot）      |
-| ローカル完結                    | `gemma4:e4b-8k`（ollama-local） | `qwen3-coder:30b-32k`（ollama-local） | `gemma4:e4b-8k`（ollama-local） | `gemma4:31b-32k`（ollama-local） |
+| パターン                         | `small`（`small-edit-agent`） | `full`（`edit-agent`）       | `expert`（`expert-agent`） |
+| -------------------------------- | ----------------------------- | ---------------------------- | -------------------------- |
+| **デフォルト（Codex + Claude）** | OpenAI `gpt-5.1-codex-mini`   | OpenAI `gpt-5.2-codex`       | Claude `claude-opus-4-7`   |
+| Codex 統一                       | OpenAI `gpt-5.1-codex-mini`   | OpenAI `gpt-5.2-codex`       | OpenAI `gpt-5.3-codex`     |
+| Copilot ベース                   | Copilot `gpt-5.4-mini`        | Copilot `gpt-5.3-codex`      | Copilot `gpt-5.5`          |
+| ローカル完結                     | Ollama `gemma4:e4b-8k`        | Ollama `qwen3-coder:30b-32k` | Ollama `gemma4:31b-32k`    |
+
+`expert-agent` は `difficulty: expert` の成果物（全フェーズ）と `research` phase_set の draft / review フェーズで自動選択される。`*-web` バリアントは同じモデルを使い、`web_search` パーミッションのみ追加する。
 
 ### 5.4. custom command
 
@@ -473,16 +528,17 @@ Follow this process for each completed task:
    b. Read the scaffolded rvr-<local_id>-draft-<role>.yaml.
    c. Read the target deliverable file specified in rvp target.path.
    d. For each review_result entry in the file:
-      - Check the done_criterion against the deliverable content.
-      - Set result: "pass", "fail", or "partial".
-      - Add evidence and notes explaining your assessment.
-   e. Run machine checks as listed in machine_checks (e.g., specdojo exec validate, lint:md).
-   f. Set findings and unverified_scope if applicable.
-   g. Save the filled rvr-<local_id>-draft-<role>.yaml.
+   - Check the done_criterion against the deliverable content.
+   - Set result: "pass", "fail", or "partial".
+   - Add evidence and notes explaining your assessment.
+     e. Run machine checks as listed in machine_checks (e.g., specdojo exec validate, lint:md).
+     f. Set findings and unverified_scope if applicable.
+     g. Save the filled rvr-<local_id>-draft-<role>.yaml.
 7. After all roles are filled, identify any cross-viewpoint contradictions.
 8. Report a summary of all findings by viewpoint.
 
 Role viewpoint guidelines:
+
 - BA: 業務価値・要件の網羅性・ステークホルダー明確さ
 - PO: 目的整合・意思決定可能な情報の有無
 - ARC: 文書構成・技術制約・ドキュメント間整合
@@ -492,14 +548,15 @@ Role viewpoint guidelines:
 - UX: 読みやすさ・明確さ・情報構造
 
 Safety rules:
-- Only edit rvr-*.yaml files in the reviews/results/ directory.
-- Do not modify deliverable files (docs/**/*.md, docs/**/*.yaml outside reviews/).
+
+- Only edit rvr-\*.yaml files in the reviews/results/ directory.
+- Do not modify deliverable files (docs/**/\*.md, docs/**/\*.yaml outside reviews/).
 - Do not mark a review as "pass" unless all criteria are verifiably met.
 ```
 
 ## 8. runner スクリプト設計
 
-worktree のセットアップ・エージェント起動は `specdojo exec run` が担うため、runner スクリプトはフェーズの呼び出し順序と並列数の制御のみを担う。
+worktree のセットアップ・エージェント起動は `specdojo exec run` が担うため、runner スクリプトはフェーズの呼び出し順序と並列数の制御のみを担う。`--auto` フラグと `tier_routing` を使うと、draft / review / finalize のエージェント選択を `exec run` に委譲でき、runner をさらに簡略化できる。
 
 `tools/specdojo/run-agents.sh`：
 
@@ -508,28 +565,18 @@ worktree のセットアップ・エージェント起動は `specdojo exec run`
 set -euo pipefail
 
 PROJECT="${SPECDOJO_PROJECT:-prj-0001}"
-FULL_EDITORS="${FULL_EDITORS:-2}"    # draft タスク向け（フルモデル）
-SMALL_EDITORS="${SMALL_EDITORS:-3}"  # review/finalize タスク向け（軽量モデル）
+PARALLEL="${PARALLEL:-5}"  # Phase 1 の並列数（draft / finalize を自動ルーティング）
 
-# Phase 1a: draft（フルモデル）を並列実行
-echo "==> Phase 1a: opencode-edit × ${FULL_EDITORS}"
+# Phase 1: draft / finalize タスクを自動ルーティングで並列実行
+# tier_routing が step 番号から edit-agent / small-edit-agent を自動選択する
+echo "==> Phase 1: auto × ${PARALLEL}"
 specdojo exec run \
   --project "${PROJECT}" \
-  --cmd opencode-edit \
-  --by edit-agent \
-  --parallel "${FULL_EDITORS}"
-echo "==> Phase 1a complete"
+  --auto \
+  --parallel "${PARALLEL}"
+echo "==> Phase 1 complete"
 
-# Phase 1b: review/finalize（軽量モデル）を並列実行
-echo "==> Phase 1b: opencode-small × ${SMALL_EDITORS}"
-specdojo exec run \
-  --project "${PROJECT}" \
-  --cmd opencode-small \
-  --by small-edit-agent \
-  --parallel "${SMALL_EDITORS}"
-echo "==> Phase 1b complete"
-
-# Phase 2: レビュー
+# Phase 2: review（常に review-agent のため --cmd を明示）
 echo "==> Phase 2: opencode-review"
 specdojo exec run \
   --project "${PROJECT}" \
@@ -544,21 +591,87 @@ echo "==> Phase 2 complete"
 SPECDOJO_PROJECT=prj-0001 bash tools/specdojo/run-agents.sh
 ```
 
-並列数を指定する場合：
+並列数を変更する場合：
 
 ```bash
-SPECDOJO_PROJECT=prj-0001 FULL_EDITORS=3 SMALL_EDITORS=5 bash tools/specdojo/run-agents.sh 2>&1 | tee run-agents.log
+SPECDOJO_PROJECT=prj-0001 PARALLEL=8 bash tools/specdojo/run-agents.sh 2>&1 | tee run-agents.log
 ```
 
-Claude Code に切り替える場合は `--cmd` を変更するだけでよい：
+agent を明示したい場合（`--auto` を使わず `--cmd` で個別制御）：
 
 ```bash
-# opencode の代わりに Claude Code を使う場合
+# draft と finalize を別々に制御する場合
 SPECDOJO_PROJECT=prj-0001 bash -c '
-  specdojo exec run --project prj-0001 --cmd claude-edit --by edit-agent --parallel 2
-  specdojo exec run --project prj-0001 --cmd claude-small --by small-edit-agent --parallel 3
+  specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 3
+  specdojo exec run --project prj-0001 --cmd opencode-small --by small-edit-agent --parallel 5
   specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
 '
+```
+
+Claude Code に切り替える場合は `tier_routing` の `cmd` を変更するだけでよい：
+
+```json
+"tier_routing": {
+  "full":   { "cmd": "claude-edit",   "by": "edit-agent" },
+  "small":  { "cmd": "claude-small",  "by": "small-edit-agent" }
+}
+```
+
+### 8.1. `exec-agent.yaml` 設定
+
+AI エージェントのルーティングは `exec-agent.yaml` に集約する。`specdojo.config.json` は `run.agent_config` でパスを参照するだけにし、ルーティングロジックを持ち込まない。
+
+`specdojo.config.json`（`run.agent_config` でパス参照のみ）:
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": {
+        "worktree_base": "../worktrees",
+        "agent_config": "exec-agent.yaml"
+      }
+    }
+  }
+}
+```
+
+`exec-agent.yaml`（リポジトリルート、AI 関連設定を集約）:
+
+```yaml
+# (phase_set, phase.id) → tier のマッピング
+phase_tier_rules:
+  - { phase_set: standard, phase: draft, tier: full }
+  - { phase_set: standard, phase: review, tier: small }
+  - { phase_set: standard, phase: finalize, tier: small }
+  - { phase_set: research, phase: draft, tier: full, requires_web: true }
+  - { phase_set: research, phase: review, tier: full }
+  - { phase_set: research, phase: finalize, tier: small }
+
+# 難易度による tier 昇格（small → full のみ）
+difficulty_overrides:
+  - { difficulty: expert, min_tier: full }
+
+# tier → agent コマンド
+tier_routing:
+  full: { cmd: opencode-edit, by: edit-agent }
+  small: { cmd: opencode-small, by: small-edit-agent }
+
+# agent コマンド定義
+agent_commands:
+  opencode-edit: 'opencode run --agent edit-agent'
+  opencode-small: 'opencode run --agent small-edit-agent'
+  opencode-review: 'opencode run --agent review-agent'
+  claude-edit: 'claude --print'
+  claude-small: 'claude --print'
+```
+
+Claude Code に切り替える場合は `tier_routing` の `cmd` を変更するだけでよい:
+
+```yaml
+tier_routing:
+  full: { cmd: claude-edit, by: edit-agent }
+  small: { cmd: claude-small, by: small-edit-agent }
 ```
 
 ## 9. worktree 分離セットアップ
@@ -643,11 +756,11 @@ specdojo exec scheduler \
 
 `task_phase` / `model_tier` の設定ルール：
 
-| task_phase  | ステップ番号 | model_tier | 担当 agent        |
-| ----------- | ------------ | ---------- | ----------------- |
-| `draft`     | 010          | `full`     | `edit-agent`      |
-| `validate`  | 020（yaml）  | `small`    | `small-edit-agent`|
-| `review`    | 020 / 030    | `small`    | `small-edit-agent`|
-| `finalize`  | 030 / 040    | `small`    | `small-edit-agent`|
+| task_phase | ステップ番号 | model_tier | 担当 agent         |
+| ---------- | ------------ | ---------- | ------------------ |
+| `draft`    | 010          | `full`     | `edit-agent`       |
+| `validate` | 020（yaml）  | `small`    | `small-edit-agent` |
+| `review`   | 020 / 030    | `small`    | `small-edit-agent` |
+| `finalize` | 030 / 040    | `small`    | `small-edit-agent` |
 
 将来的には `sch-strategy-<track>.yaml` の phase 定義に `model_tier` を明示設定できるよう CLI を拡張する。

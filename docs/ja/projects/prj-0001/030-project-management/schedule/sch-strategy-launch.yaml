@@ -6,11 +6,14 @@ track: launch
 
 # sch-track-launch.yaml を生成するための戦略定義。
 # scope の catalog から kind: work の成果物を抽出し、
-# phases と owner_rules を基にタスクを生成する。
+# phase_sets と owner_rules を基にタスクを生成する。
 #
 # owner はロール（BA / PO 等）のみを持つ。
 # 実際の実行者（--by <nickname>）は実行時に pm-members.yaml の roles フィールドと照合して決定する。
-# レビュータスクの担当ロールは各成果物の done_criteria から取得する。
+#
+# AI エージェントの選択（model_tier・requires_web・tier_routing）は
+# このファイルには持たない。exec-agent.yaml で (phase_set, phase.id, difficulty) を
+# agent コマンドにマッピングする。
 
 settings:
   start_date: "2026-05-24"
@@ -24,44 +27,54 @@ scope:
   include_kinds:
     - work
 
-# 成果物の path 拡張子でフェーズセットを切り替える
-phases:
-  markdown:
-    - id: draft
-      name: たたき台作成
-      task_suffix: "010"
-      duration_days: 0.25 # 1〜2h 相当
-    - id: review
-      name: レビュー・修正
-      task_suffix: "020"
-      duration_days: 0.125 # 0.5〜1h 相当
-    - id: finalize
-      name: 完成版仕上げ
-      task_suffix: "030"
-      duration_days: 0.125 # 0.5〜1h 相当
+# named phase sets（ファイル形式ではなく作業フローで分類する）
+# Markdown・YAML 問わず同じフェーズを使う。
+# バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、
+# 独立した validate フェーズは設けない。
+# AI モデル・エージェントの設定は exec-agent.yaml に委ねる。
+phase_sets:
 
-  yaml:
+  # 標準フロー: 新規作成 → レビュー → 最終仕上げ
+  standard:
     - id: draft
       name: たたき台作成
       task_suffix: "010"
-      duration_days: 0.125 # 0.5〜1h 相当
-    - id: validate
-      name: スキーマ検証
-      task_suffix: "020"
-      duration_days: 0.0625 # 0.25〜0.5h 相当
+      duration_days: 0.25  # 1〜2h 相当
     - id: review
       name: レビュー・修正
-      task_suffix: "030"
-      duration_days: 0.125 # 0.5〜1h 相当
+      task_suffix: "020"
+      duration_days: 0.125  # 0.5〜1h 相当
     - id: finalize
       name: 完成版仕上げ
-      task_suffix: "040"
-      duration_days: 0.125 # 0.5〜1h 相当
+      task_suffix: "030"
+      duration_days: 0.125  # 0.5〜1h 相当
+
+  # 外部参照が必要な調査・分析ドキュメントのフロー
+  # （比較検討・代替案評価など、外部情報収集が品質に直結する成果物）
+  # AI の requires_web 指定は exec-agent.yaml 側で行う
+  research:
+    - id: draft
+      name: たたき台作成（調査含む）
+      task_suffix: "010"
+      duration_days: 0.5    # 2〜4h 相当（外部調査込み）
+    - id: review
+      name: レビュー・修正
+      task_suffix: "020"
+      duration_days: 0.25   # 1〜2h 相当
+    - id: finalize
+      name: 完成版仕上げ
+      task_suffix: "030"
+      duration_days: 0.125
+
+# owner_rule に phase_set を省略した場合のデフォルト
+default_phase_set: standard
 
 # タスク ID パターン（domain_code・artifact_code・phase_suffix を展開）
 task_id_pattern: "T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}"
 
-# 成果物 local_id → 作成タスクの owner ロール
+# 成果物 local_id → 作成タスクの owner ロール・phase_set・難易度
+# difficulty はプロジェクト管理上の工数・品質リスクの目安。
+# exec-agent.yaml の difficulty_overrides でエージェント tier 昇格にも使われる。
 owner_rules:
   - local_ids:
       - prj-overview
@@ -70,38 +83,57 @@ owner_rules:
       - prj-success-criteria-and-acceptance-criteria
       - prj-issues-and-approach
     owner: BA
+    phase_set: standard
+    difficulty: normal
 
   - local_ids:
       - prj-assumptions-constraints-dependencies
+    owner: ARC
+    phase_set: standard
+    difficulty: high     # 制約・前提の整理は判断コストが高い
+
+  - local_ids:
       - prj-comparison-of-alternatives
     owner: ARC
+    phase_set: research  # 外部情報収集が必要な比較検討
+    difficulty: high
 
   - local_ids:
       - prj-charter
     owner: PO
+    phase_set: standard
+    difficulty: normal
 
   - local_ids:
       - pm-plan
       - pm-communication-plan
+      - pm-raci
+      - pm-quality-management-plan
+    owner: PM
+    phase_set: standard
+    difficulty: normal
+
+  - local_ids:
       - sch-milestones
       - sch-track-launch
       - sch-strategy-launch
-      - pm-raci
     owner: PM
-
-  - local_ids:
-      - pm-quality-management-plan
-    owner: QE
+    phase_set: standard
+    difficulty: normal
 
   - local_ids:
       - pm-organization
       - pm-roles
       - pm-members
     owner: PO
+    phase_set: standard
+    difficulty: low      # テンプレートベースの定型記入
 
   - local_ids:
       - sch-defaults
     owner: ARC
+    phase_set: standard
+    difficulty: low
 
 group_milestones:
   - catalog_id: prj-0001:dct-project-definition
@@ -139,7 +171,7 @@ cross_domain_dependencies:
 
 # 初期状態で作成済みの成果物を登録する
 # completed_through を省略した場合は全フェーズ完了（最終フェーズまで done）とみなす
-# completed_through には phases[].id（draft / review / finalize / validate 等）を指定する
+# completed_through には phase_sets[<name>][].id を指定する
 # by には pm-members.yaml の nickname を指定する
 initial_state:
   completed_deliverables:
