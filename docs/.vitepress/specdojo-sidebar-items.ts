@@ -11,7 +11,6 @@ export const specdojoSidebarItems = [
         text: 'プロジェクトマネジメント',
         collapsed: false,
         items: [
-          { text: '実行モデル', link: '/ja/specdojo/guides/specdojo-execution-model-guide' },
           {
             text: 'プロジェクトドキュメント',
             link: '/ja/specdojo/guides/specdojo-project-docs-guide',
