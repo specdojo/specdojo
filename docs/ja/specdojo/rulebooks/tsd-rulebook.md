@@ -25,20 +25,20 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 | ドキュメント | 役割                     | 例                 |
 | ------------ | ------------------------ | ------------------ |
 | `tsd-index`  | 全体インベントリ（入口） | `tsd-index.md`     |
-| `tsd-<term>` | 特定技術領域の詳細定義   | `tsd-local-llm.md` |
+| `tsd-<term>` | 特定技術領域の詳細定義   | `tsd-ollama.md` |
 
 ## 3. ファイル命名・ID規則
 
 - ファイル名: `tsd-<term>.md`（`<term>` は技術領域を表す英小文字・ハイフン）
-- `id`: ファイル名から `.md` を除いた値（例: `tsd-local-llm`）
-- 命名例: `tsd-local-llm.md` / `tsd-ci-cd.md` / `tsd-database.md`
+- `id`: ファイル名から `.md` を除いた値（例: `tsd-ollama`）
+- 命名例: `tsd-ollama.md` / `tsd-ci-cd.md` / `tsd-database.md`
 - 配置先: `tsd-index.md` と同じディレクトリ（例: `030-architecture/020-infrastructure/`）
 
 ## 4. 推奨 Frontmatter 項目
 
 | 項目       | 値                                  | 必須 |
 | ---------- | ----------------------------------- | ---- |
-| `id`       | `tsd-<term>`（例: `tsd-local-llm`） | ○    |
+| `id`       | `tsd-<term>`（例: `tsd-ollama`） | ○    |
 | `type`     | `architecture`                      | ○    |
 | `status`   | `draft` / `ready` / `deprecated`    | ○    |
 | `part_of`  | `tsd-index`                         | ○    |

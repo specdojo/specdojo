@@ -2,7 +2,8 @@
   "version": 1,
   "entries": {
     "tsd-index": "docs/ja/specdojo/samples/tsd-index-sample.md",
-    "tsd-local-llm": "docs/ja/product/030-architecture/020-infrastructure/tsd-local-llm.md",
+    "tsd-ollama": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
+    "tsd-vllm-mlx": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx.md",
     "sysd-opencode-settings": "docs/ja/product/040-system-design/sysd-opencode-settings.md",
     "prj-0001:dct-index": "docs/ja/specdojo/samples/dct-index-sample.md",
     "prj-0001:dct-project-definition": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml",
