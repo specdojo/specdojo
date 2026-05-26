@@ -159,9 +159,41 @@ ollama list
 - devcontainer が Docker Desktop 上で動作していること
 - `host.docker.internal` が名前解決できること: `getent hosts host.docker.internal`
 
-## 7. モデルのチューニング（コンテキスト長を分けたモデルを作成）
+## 7. モデルのダウンロードとチューニング
 
-複数Agent運用前提のため、すべてのモデルを巨大コンテキストで動かさない設定を適用。
+Ollama のモデルは Host Mac 側でダウンロードする。devcontainer から利用する場合でも、モデル実体は Host Mac 上の Ollama が管理する。
+
+まず、利用する元モデルを `ollama pull` で取得する。
+
+```bash
+ollama pull gemma4:e4b
+ollama pull gemma4:26b
+ollama pull gemma4:31b
+ollama pull qwen3-coder:30b
+```
+
+取得済みモデルを確認する。
+
+```bash
+ollama list
+```
+
+モデルを試しに実行し、初回ロードまで確認する。
+
+```bash
+ollama run gemma4:e4b "短く自己紹介してください。"
+ollama run qwen3-coder:30b "TypeScript の関数例を1つ示してください。"
+```
+
+不要になった元モデルまたは派生モデルは `ollama rm` で削除する。
+
+```bash
+ollama rm gemma4:e4b
+ollama rm qwen3-coder:30b
+```
+
+複数Agent運用前提のため、すべてのモデルを巨大コンテキストで動かさない設定を適用する。ダウンロード済みの元モデルを `FROM` に指定し、用途ごとにコンテキスト長を分けた派生モデルを作成する。
+
 Host Mac で以下のディレクトリを作成して、そこに以下のモデルファイルを作成する。
 
 ```bash
