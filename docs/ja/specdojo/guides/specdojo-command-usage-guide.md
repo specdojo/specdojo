@@ -96,7 +96,7 @@ repo-root/
       "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
       "run": {
         "worktree_base": "../worktrees",
-        "agent_config": "exec-agent.yaml"
+        "agent_config": ".specdojo/exec-agent.yaml"
       }
     }
   }
@@ -1485,7 +1485,7 @@ specdojo exec run \
 | ------------------ | ----------------------------------------------------------------------- | ------------------- |
 | `--project`        | プロジェクト ID（`specdojo.config.json` から解決）                      | 省略可              |
 | `--cmd`            | `run.agent_commands` のキー名。`--auto` と排他                          | `--auto` 時は省略可 |
-| `--auto`           | ready タスクのステップ番号から tier を導出し `tier_routing` で自動選択  | `false`             |
+| `--auto`           | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false` |
 | `--by`             | タスク claim 時のアクター識別子                                         | `--cmd` / tier の値 |
 | `--parallel`       | 並列実行数                                                              | `1`                 |
 | `--worktree-base`  | worktree 配置先パスの上書き                                             | `run.worktree_base` |
@@ -1503,14 +1503,14 @@ specdojo exec run \
     "prj-0001": {
       "run": {
         "worktree_base": "../worktrees",
-        "agent_config": "exec-agent.yaml"
+        "agent_config": ".specdojo/exec-agent.yaml"
       }
     }
   }
 }
 ```
 
-`exec-agent.yaml`（リポジトリルート）:
+`.specdojo/exec-agent.yaml`:
 
 ```yaml
 phase_tier_rules:
@@ -1525,29 +1525,48 @@ phase_tier_rules:
     tier: small
   - phase_set: research
     phase: draft
-    tier: full
-    requires_web: true
+    tier: expert
+    capabilities:
+      - web_search
   - phase_set: research
     phase: review
-    tier: full
+    tier: expert
   - phase_set: research
     phase: finalize
     tier: small
 
 difficulty_overrides:
   - difficulty: expert
+    min_tier: expert
+  - difficulty: high
     min_tier: full
 
 tier_routing:
-  full:  { cmd: opencode-edit,  by: edit-agent }
-  small: { cmd: opencode-small, by: small-edit-agent }
+  small:
+    cmd: opencode-small
+    by: small-edit-agent
+  full:
+    cmd: opencode-edit
+    by: edit-agent
+  expert:
+    cmd: opencode-expert
+    by: expert-agent
+  expert+web_search:
+    cmd: opencode-expert-web
+    by: expert-agent
+  full+web_search:
+    cmd: opencode-edit-web
+    by: edit-agent
 
 agent_commands:
-  opencode-edit:   "opencode run --agent edit-agent"
-  opencode-small:  "opencode run --agent small-edit-agent"
-  opencode-review: "opencode run --agent review-agent"
-  claude-edit:     "claude --print"
-  claude-small:    "claude --print"
+  opencode-small:       "opencode run --agent small-edit-agent"
+  opencode-edit:        "opencode run --agent edit-agent"
+  opencode-expert:      "opencode run --agent expert-agent"
+  opencode-edit-web:    "opencode run --agent edit-agent-web"
+  opencode-expert-web:  "opencode run --agent expert-agent-web"
+  opencode-review:      "opencode run --agent review-agent"
+  claude-edit:          "claude --print"
+  claude-expert:        "claude --print"
 ```
 
 #### 9.12.2. 実行フロー
@@ -1591,34 +1610,35 @@ Do not claim more than one task. Do not modify unrelated files.
 
 #### 9.12.4. `--auto` による自動ルーティング
 
-`--auto` を指定すると、`--cmd` を省略でき、ready タスクのステップ番号から agent を自動選択する。`--cmd` との同時指定はエラーになる。
+`--auto` を指定すると `--cmd` を省略でき、タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決してエージェントを自動選択する。`--cmd` との同時指定はエラーになる。
 
-**tier 導出（`ready.json` の `model_tier` フィールドを直接参照）：**
+**tier 導出（`exec-agent.yaml` の `phase_tier_rules` / `difficulty_overrides` で解決）：**
 
-`exec build` が `sch-strategy-<track>.yaml` の `phase_sets[*][].model_tier` を各タスクに付与し、`ready.json` に書き込む。`--auto` はステップ番号からの暗黙導出を行わず、`ready.json` の `model_tier` を直接読む。
+`exec build` が各タスクに `phase_set`・`phase.id`・`difficulty` を付与して `ready.json` に書き込む。`--auto` は `ready.json` のこれらフィールドを読み取り、`exec-agent.yaml` の `phase_tier_rules` を上から評価して基本 tier を決定し、`difficulty_overrides` で昇格を適用する。
 
-| `ready.json` の `model_tier` | `tier_routing` で選択する agent           | 典型的な phase         |
-| ----------------------------- | ----------------------------------------- | ---------------------- |
-| `full`                        | `edit-agent`（新規作成・フルモデル）      | `draft`（standard / research） |
-| `small`                       | `small-edit-agent`（修正・確認・軽量）    | `validate` / `review` / `finalize` |
+| tier     | `tier_routing` で選択する agent      | 典型的な条件                             |
+| -------- | ------------------------------------ | ---------------------------------------- |
+| `small`  | `small-edit-agent`（軽量・高速）     | `review` / `finalize`（standard）        |
+| `full`   | `edit-agent`（標準品質）             | `draft`（standard）/ `difficulty: high` |
+| `expert` | `expert-agent`（最高性能）           | `draft`（research）/ `difficulty: expert` |
 
-`requires_web: true` のタスクは `ready.json` にも `requires_web: true` が付与される。`tier_routing` でウェブ対応の別コマンドを定義しておくか、エージェントプロンプト側でウェブ検索を許可する。
+`capabilities: [web_search]` が付いたフェーズのタスクは `tier+web_search` の複合キーを先に探し、なければ `tier` にフォールバックする。
 
 `--auto` の実行フロー：
 
 1. `ready.json` から次の ready タスクをプレビューする（claim は agent が行う）。
-2. タスクの `model_tier`（および `requires_web`）を読み取る。
-3. `run.tier_routing[model_tier]` から `cmd` と `by` を解決する。
+2. タスクの `phase_set`・`phase.id`・`difficulty` を読み取り、`phase_tier_rules` と `difficulty_overrides` で tier を解決する。
+3. `capabilities` がある場合は `tier_routing["<tier>+<capability>"]` を先に試し、なければ `tier_routing["<tier>"]` にフォールバックして `cmd` と `by` を解決する。
 4. 解決した `cmd` と `by` で `--cmd` / `--by` 指定時と同じフローを実行する。
 5. ready タスクが 0 件の場合は `[run] no ready tasks — exit` を出力して正常終了する。
 
 `--auto` を使うと、runner スクリプトは1フェーズにつき1行になる：
 
 ```bash
-# Phase 1: edit + small-edit を自動ルーティング（parallel で複数起動）
+# draft / review / finalize を自動ルーティング（parallel で複数起動）
 specdojo exec run --project prj-0001 --auto --parallel 5
 
-# Phase 2: review（常に review-agent のため --cmd を明示）
+# review-agent を明示指定する場合
 specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
 ```
 
@@ -1628,7 +1648,7 @@ specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
 
 `specdojo index` は、ドキュメントの `id` フィールドとファイルパスのインデックスを構築・検索するコマンド群です。
 
-- インデックス生成（`build`）: `docs/` 配下の全 frontmatter `id` を走査して `docs/.specdojo/doc-index.json` を生成
+- インデックス生成（`build`）: `docs/` 配下の全 frontmatter `id` を走査して `.specdojo/doc-index.json` を生成
 - パス解決（`lookup`）: ID からファイルパスを返す
 
 生成したインデックスは VSCode 拡張（`tools/vscode-specdojo/`）が読み込み、YAML の構造的な ID 参照と `[[id]]` wiki リンク形式をクリック可能なリンクにします。
@@ -1644,19 +1664,19 @@ specdojo index build
 | オプション        | 説明                           | デフォルト                      |
 | ----------------- | ------------------------------ | ------------------------------- |
 | `--root <path>`   | スキャン対象ルートディレクトリ | `docs`                          |
-| `--output <path>` | 出力先                         | `docs/.specdojo/doc-index.json` |
+| `--output <path>` | 出力先                         | `.specdojo/doc-index.json` |
 
 #### 10.1.1. 生成フロー
 
 1. `--root` 配下の `*.md` と `*.yaml` を再帰的に走査する（`node_modules`、`dist`、`generated` 等は除外）。
 2. Markdown: frontmatter の `id:` フィールドを抽出する。エントリ値はパスのみ（行番号なし）。
 3. YAML: top-level の `id:` フィールドを抽出する。エントリ値はパスのみ（行番号なし）。
-4. ネストされた ID: `docs/.specdojo/index-config.yaml` で設定したフィールドから収集する。エントリ値は `"パス:行番号"` 形式（1-based）。
+4. ネストされた ID: `.specdojo/index-config.yaml` で設定したフィールドから収集する。エントリ値は `"パス:行番号"` 形式（1-based）。
 5. ID → パスのマッピングを `doc-index.json` に出力する。パスは `--root` からの相対パス。
 
 #### 10.1.2. ネスト ID の設定（`index-config.yaml`）
 
-top-level 以外の ID をインデックス対象にする場合、`docs/.specdojo/index-config.yaml` に設定する。
+top-level 以外の ID をインデックス対象にする場合、`.specdojo/index-config.yaml` に設定する。
 
 ```yaml
 nested_id_files:
@@ -1704,7 +1724,7 @@ specdojo index lookup vp-ba-business-value
 
 | オプション       | 説明                     | デフォルト                      |
 | ---------------- | ------------------------ | ------------------------------- |
-| `--index <path>` | インデックスファイルパス | `docs/.specdojo/doc-index.json` |
+| `--index <path>` | インデックスファイルパス | `.specdojo/doc-index.json` |
 
 ### 10.3. VSCode 拡張（vscode-specdojo）
 
@@ -1851,7 +1871,7 @@ specdojo build [--project <id>] [--scope <scope>]
 | 1        | `exec build`     | `generated/state.json`、`ready.md`、`cpm.json` 等 |
 | 2        | `catalog build`  | `generated/dct-*.md`                              |
 | 3        | `register build` | `generated/pjr-*.md`、`generated/pm-*.md`         |
-| 4        | `index build`    | `docs/.specdojo/doc-index.json`                   |
+| 4        | `index build`    | `.specdojo/doc-index.json`                   |
 
 `--scope` で単一ステップのみ指定した場合は、そのステップだけを実行する。
 
