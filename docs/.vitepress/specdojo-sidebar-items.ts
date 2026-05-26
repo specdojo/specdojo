@@ -16,6 +16,7 @@ export const specdojoSidebarItems = [
             link: '/ja/specdojo/guides/specdojo-project-docs-guide',
           },
           { text: 'WBS設計', link: '/ja/specdojo/guides/specdojo-wbs-design-guide' },
+          { text: 'スケジュールと実行', link: '/ja/specdojo/guides/specdojo-schedule-and-execution-guide' },
           {
             text: '定義からタスクの生成アルゴリズム',
             link: '/ja/specdojo/guides/specdojo-definition-to-task-algorithm-guide',

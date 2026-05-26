@@ -3,4 +3,4 @@ approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
 [tools]
-web_search = false
+web_search = true
