@@ -1644,6 +1644,52 @@ specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
 
 `--auto` は `tier_routing` が定義されていない場合エラーを返す。`tier_routing` に対応する tier エントリがない場合は `[run] skip: no tier_routing for tier '<tier>' — no agent selected` を出力して当該インスタンスをスキップする。
 
+#### 9.12.5. レートリミット対応
+
+`exec-agent.yaml` の `rate_limit_policy` でレートリミット発生時の挙動を制御する。
+
+`exec run` はエージェントプロセスの終了コードまたは標準エラー出力のパターンマッチでレートリミットを検出し、`ready.json` の `cpm.slack` でクリティカル判定を行う。
+
+`exec-agent.yaml` への追記例:
+
+```yaml
+rate_limit_policy:
+  detection:
+    exit_codes: [1]           # レートリミットとみなす終了コード
+    stderr_patterns:
+      - "rate limit"
+      - "429"
+  on_non_critical:            # cpm.slack > 0 のタスク
+    action: skip              # block イベントを記録して次のタスクへ
+  on_critical:                # cpm.slack == 0 のタスク
+    action: retry_with_fallback
+    fallback_tier: small      # 代替 tier のエージェントで再試行
+    retry:
+      max_attempts: 3         # fallback 含めた最大試行回数
+      initial_wait_seconds: 60
+      backoff_multiplier: 3   # 60s → 180s → 540s
+      max_wait_seconds: 600   # 上限10分（TPD には対応不可）
+```
+
+挙動:
+
+1. エージェントが `exit_codes` に一致、または `stderr_patterns` にマッチして終了した場合にレートリミットと判断する。
+2. `ready.json` の `cpm.slack` を参照してクリティカル判定を行う。
+3. 非クリティカル（`slack > 0`）→ `block` イベントを記録し、当該インスタンスをスキップして次の ready タスクへ移行する。
+4. クリティカル（`slack == 0`）→ `fallback_tier` のエージェントで再試行する。再試行は指数バックオフ（`initial_wait_seconds` × `backoff_multiplier` の累乗、上限 `max_wait_seconds`）で `max_attempts` 回まで行い、すべて失敗した場合は `block` イベントを記録して停止する。
+
+> TPD（日次トークン上限）に達した場合、待機時間内に回復しないことがある。`max_wait_seconds` を超えても失敗が続く場合は人間が判断する。
+
+出力例:
+
+```text
+[run] rate-limit: opencode-expert-1 (task T-LAUNCH-PJD-OVERVIEW-010, slack=0) → retry with fallback tier small (attempt 1/3, wait 60s)
+[run] rate-limit: opencode-expert-1 (task T-LAUNCH-PJD-OVERVIEW-010, slack=0) → retry with fallback tier small (attempt 2/3, wait 180s)
+[run] rate-limit: opencode-expert-2 (task T-LAUNCH-BDD-010, slack=2) → skip (non-critical)
+```
+
+`rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
+
 ## 10. index コマンド
 
 `specdojo index` は、ドキュメントの `id` フィールドとファイルパスのインデックスを構築・検索するコマンド群です。

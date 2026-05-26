@@ -97,6 +97,32 @@ capabilities:
   extended_context:
     description: "通常より大きなコンテキストウィンドウが必要な大規模文書"
 
+# レートリミット対応ポリシー
+#
+# exec run はエージェントの終了コードまたは stderr パターンでレートリミットを検出し、
+# ready.json の cpm.slack でクリティカル判定を行う。
+#
+# on_non_critical: cpm.slack > 0 → block イベントを記録して次のタスクへスキップ
+# on_critical:     cpm.slack == 0 → fallback_tier で代替エージェントに切り替えて再試行。
+#                  指数バックオフで最大 max_attempts 回試み、すべて失敗なら block イベントを記録して停止。
+#                  TPD（日次トークン上限）には対応できないため、max_wait_seconds を超えて失敗が続く場合は人間が判断する。
+rate_limit_policy:
+  detection:
+    exit_codes: [1]
+    stderr_patterns:
+      - "rate limit"
+      - "429"
+  on_non_critical:
+    action: skip
+  on_critical:
+    action: retry_with_fallback
+    fallback_tier: small
+    retry:
+      max_attempts: 3        # fallback 含めた最大試行回数
+      initial_wait_seconds: 60
+      backoff_multiplier: 3  # 60s → 180s → 540s
+      max_wait_seconds: 600  # 上限10分（TPD には対応不可）
+
 # エージェントコマンド定義
 # specdojo exec run はタスクプロンプトを生成し、コマンド末尾に引数として追加して実行する。
 agent_commands:
