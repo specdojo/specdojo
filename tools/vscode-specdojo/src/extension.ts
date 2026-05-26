@@ -7,7 +7,7 @@ interface DocIndex {
   entries: Record<string, string>
 }
 
-const INDEX_REL = 'docs/.specdojo/doc-index.json'
+const INDEX_REL = '.specdojo/doc-index.json'
 
 // [[id]] or [[id|alt]] in any file — group1=id, group2=alt (undefined when absent)
 const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)(?:\|([^\]]*))?\]\]/g

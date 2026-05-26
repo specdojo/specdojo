@@ -14,9 +14,9 @@ export function registerIndexCommands(program: Command): void {
 
   idx
     .command('build')
-    .description('Scan docs and build docs/.specdojo/doc-index.json')
+    .description('Scan docs and build .specdojo/doc-index.json')
     .option('--root <path>', 'Root directory to scan', 'docs')
-    .option('--output <path>', 'Output path', 'docs/.specdojo/doc-index.json')
+    .option('--output <path>', 'Output path', '.specdojo/doc-index.json')
     .action(opts => {
       try {
         loadEnv()
@@ -33,7 +33,7 @@ export function registerIndexCommands(program: Command): void {
   idx
     .command('lookup <id>')
     .description('Look up a document path by ID')
-    .option('--index <path>', 'Index file path', 'docs/.specdojo/doc-index.json')
+    .option('--index <path>', 'Index file path', '.specdojo/doc-index.json')
     .action((id: string, opts) => {
       try {
         loadEnv()

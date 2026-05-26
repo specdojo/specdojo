@@ -1,6 +1,6 @@
 import { type Command } from 'commander'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import dotenv from 'dotenv'
 import yaml from 'js-yaml'
 import type { SchedulerStrategy } from './exec-types.js'
@@ -57,8 +57,8 @@ function findUpward(startDir: string, name: string): string | null {
 }
 
 export function specdojoRootDir(): string {
-  const configPath = findUpward(process.cwd(), 'specdojo.config.json')
-  if (configPath) return dirname(configPath)
+  const configPath = findUpward(process.cwd(), join('.specdojo', 'specdojo.config.json'))
+  if (configPath) return dirname(dirname(configPath))
 
   const gitMarker = findUpward(process.cwd(), '.git')
   if (gitMarker) return dirname(gitMarker)
@@ -73,7 +73,7 @@ export function loadEnv(): void {
 }
 
 export function defaultConfigPath(): string {
-  return resolve(specdojoRootDir(), 'specdojo.config.json')
+  return join(specdojoRootDir(), '.specdojo', 'specdojo.config.json')
 }
 
 export function getProjectSchedulePath(project: SpecDojoProjectConfig): string {
@@ -148,13 +148,13 @@ export function loadConfig(): ConfigLoadResult {
   const parsed = JSON.parse(raw) as SpecDojoConfig
 
   if (!parsed || parsed.version !== 1 || typeof parsed.projects !== 'object') {
-    throw new Error(`Invalid specdojo.config.json: expected { version: 1, projects: { ... } }`)
+    throw new Error(`Invalid .specdojo/specdojo.config.json: expected { version: 1, projects: { ... } }`)
   }
 
   for (const [projectId, project] of Object.entries(parsed.projects)) {
     if (!isValidProjectConfig(project)) {
       throw new Error(
-        `Invalid specdojo.config.json: projects.${projectId} must be { schedule_path, execution_path }`
+        `Invalid .specdojo/specdojo.config.json: projects.${projectId} must be { schedule_path, execution_path }`
       )
     }
   }
@@ -168,11 +168,11 @@ export function writeConfig(config: SpecDojoConfig): void {
 }
 
 export function registerConfigCommands(program: Command): void {
-  const cfg = program.command('config').description('Config helpers (specdojo.config.json)')
+  const cfg = program.command('config').description('Config helpers (.specdojo/specdojo.config.json)')
 
   cfg
     .command('init')
-    .description('Create specdojo.config.json template (does not overwrite existing)')
+    .description('Create .specdojo/specdojo.config.json template (does not overwrite existing)')
     .action(() => {
       const { configPath, config } = loadConfig()
       if (config) {
@@ -197,7 +197,7 @@ export function registerProjectCommands(program: Command): void {
   const pj = program.command('project').description('Project registry commands')
 
   pj.command('list')
-    .description('List projects from specdojo.config.json')
+    .description('List projects from .specdojo/specdojo.config.json')
     .action(() => {
       const { configPath, config } = loadConfig()
       if (!config) {

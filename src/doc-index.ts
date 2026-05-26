@@ -186,8 +186,8 @@ function walkDir(
 
 const DEFAULT_CONFIG_REL = '.specdojo/index-config.yaml'
 
-function loadIndexConfig(rootDir: string, configPath?: string): IndexConfig {
-  const p = join(rootDir, configPath ?? DEFAULT_CONFIG_REL)
+function loadIndexConfig(repoRoot: string, configPath?: string): IndexConfig {
+  const p = join(repoRoot, configPath ?? DEFAULT_CONFIG_REL)
   if (!existsSync(p)) return {}
   try {
     const parsed = yaml.load(readFileSync(p, 'utf8'))
@@ -208,7 +208,7 @@ export function buildDocIndex(
   repoRoot: string,
   configPath?: string,
 ): { count: number } {
-  const config = loadIndexConfig(rootDir, configPath)
+  const config = loadIndexConfig(repoRoot, configPath)
 
   // Build nested map: scan-root-relative path → collect_from specs
   // Config `file` values are repo-root-relative; convert to scan-root-relative
