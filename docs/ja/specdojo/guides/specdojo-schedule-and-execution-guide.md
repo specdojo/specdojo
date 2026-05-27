@@ -124,8 +124,10 @@ exec build（再実行）
 
 ## 9. 手動実行手順
 
-`specdojo exec run --auto` が行う処理をステップバイステップで手動再現する手順を示す。
-エージェントの動作確認やトラブルシュートに使う。
+`specdojo exec run --auto` が行う処理を、コマンドを使ってステップバイステップで再現する手順を示す。
+エージェントの動作確認やトラブルシュートでは、`generated/ready.json` を直接読むより、`specdojo exec scheduler` と `specdojo exec run --task --dry-run` を使う。
+
+以下では、実行主体を `<actor>`、実行対象タスクを `<task-id>` と表記する。
 
 ### 9.1. `exec build` でスケジュールを最新化する
 
@@ -133,99 +135,139 @@ exec build（再実行）
 specdojo exec build --project <project-id>
 ```
 
-`generated/ready.json` と `generated/agent-briefs/` が更新される。
+`generated/ready.json`、`generated/claim-next.json`、`generated/agent-briefs/` が更新される。
 
 ### 9.2. 次のタスクを確認する
 
-```sh
-cat generated/ready.json | jq '.strategies["critical-first"].next_task_id'
-# または
-cat generated/ready.md
-```
-
-`ready.json` の `strategies.critical-first.next_task_id` が次の実行対象タスク ID（以降 `<task-id>`）。
-`tasks[].cpm.slack` が `0` のタスクがクリティカルパス上のタスク。
-
-### 9.3. タスクの `local_id` とフェーズサフィックスを確認する
-
-タスク ID の末尾 3 桁が `task_suffix`（例: `T-LAUNCH-PJD-OVERVIEW-010` → `010`）。
-タスク名の先頭スペース区切りトークンが `local_id`（例: `"prj-overview たたき台作成"` → `prj-overview`）。
+次に claim されるタスクは `scheduler --dry-run` で確認する。
 
 ```sh
-cat generated/ready.json | jq '.tasks[] | select(.id == "<task-id>") | {name, id}'
+specdojo exec scheduler --project <project-id> --by <actor> --dry-run
 ```
 
-### 9.4. `sch-strategy-*.yaml` で `phase_set` と `difficulty` を確認する
-
-`owner_rules` の `local_ids` に対象 `local_id` が含まれるエントリを探す。
+出力されたタスクIDが次の実行対象（以降 `<task-id>`）。
+既定では `critical-first` 戦略で選択される。FIFO順で確認したい場合は `--strategy fifo` を指定する。
 
 ```sh
-grep -A 5 '<local_id>' docs/ja/projects/<project>/030-project-management/schedule/sch-strategy-*.yaml
+specdojo exec scheduler --project <project-id> --by <actor> --strategy fifo --dry-run
 ```
 
-取得した `phase_set`（省略時は `default_phase_set`）と `difficulty`（省略時は `normal`）を記録する。
-次に `phase_sets[<phase_set>]` から `task_suffix` が一致するエントリを探し、`phase.id` を取得する。
-
-### 9.5. `exec-agent.yaml` で tier を決定する
-
-`.specdojo/exec-agent.yaml` の `phase_tier_rules` を上から評価し、`phase_set` と `phase`（`phase.id`）が一致する最初のルールの `tier` と `capabilities` を取得する。
-
-次に `difficulty_overrides` を評価する。`difficulty` が一致するルールの `min_tier` が現在の `tier` より上位であれば昇格させる（`small` → `full` → `expert` の順）。
-
-### 9.6. `tier_routing` と `agent_commands` でコマンドを決定する
-
-`capabilities` がある場合は `<tier>+<capability>` の複合キーを先に確認する。なければ `<tier>` にフォールバックする。
-
-```yaml
-# 例: tier=full の場合
-tier_routing:
-  full:
-    cmd: opencode-edit    # ← このキーを agent_commands で引く
-    by: edit-agent
-
-agent_commands:
-  opencode-edit: "opencode run --agent edit-agent"
-```
-
-取得したシェルコマンド文字列（例: `opencode run --agent edit-agent`）が実行コマンドの基底になる。
-
-### 9.7. エージェントブリーフを確認する
+owner が一致しない Ready タスクも確認したい場合は、明示的に `--allow-owner-mismatch` を付ける。
 
 ```sh
-cat generated/agent-briefs/<task-id>.md
+specdojo exec scheduler \
+  --project <project-id> \
+  --by <actor> \
+  --allow-owner-mismatch \
+  --dry-run
 ```
 
-このファイルの内容がエージェントへのプロンプトとして渡される。
+### 9.3. 実行コマンドとエージェント選択を確認する
 
-### 9.8. エージェントを実行する
-
-ブリーフの内容を最後の引数として追加して実行する。
+`run --task --dry-run` を使うと、対象タスクの `phase_set`、`phase.id`、`difficulty`、tier、agent command、agent brief の有無を確認できる。
 
 ```sh
-opencode run --agent edit-agent "$(cat generated/agent-briefs/<task-id>.md)"
+specdojo exec run --project <project-id> --task <task-id> --dry-run
 ```
 
-ドライランで確認する場合:
+このコマンドは実際のエージェントを起動せず、解決されたコマンドとブリーフ文字数だけを表示する。
+`sch-strategy-*.yaml` や `exec-agent.yaml` を手作業で追う必要があるのは、解決結果が期待と違う場合に限定する。
+
+### 9.4. タスクを claim する
+
+次のタスクを安全に claim する場合は `scheduler` を使う。`scheduler` はプロジェクトロックを取得し、Ready 判定・owner 判定・戦略順序を評価したうえで claim イベントを書き込む。
 
 ```sh
-specdojo exec run --task <task-id> --dry-run --project <project-id>
+specdojo exec scheduler --project <project-id> --by <actor> --msg "manual run"
 ```
 
-### 9.9. 完了イベントを記録する
+既に対象タスクが決まっており、そのタスクを明示的に claim したい場合は `claim` を使う。
+
+```sh
+specdojo exec claim \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "manual run"
+```
+
+owner 不一致を許可する場合は、理由を残したうえで `--allow-owner-mismatch` を付ける。
+
+```sh
+specdojo exec claim \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --allow-owner-mismatch \
+  --msg "manual run with owner override"
+```
+
+### 9.5. エージェントを実行する
+
+claim したタスクを実行する。
+
+```sh
+specdojo exec run --project <project-id> --task <task-id>
+```
+
+コマンドを明示的に上書きしたい場合だけ `--agent-cmd` を指定する。
+
+```sh
+specdojo exec run \
+  --project <project-id> \
+  --task <task-id> \
+  --agent-cmd "opencode run --agent edit-agent"
+```
+
+### 9.6. 完了イベントを記録する
 
 エージェントが正常終了したら `complete` イベントを書き込む。
 
 ```sh
-specdojo exec complete --task <task-id> --by <actor> --msg "manual run"
+specdojo exec complete \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "manual run done"
 ```
 
-### 9.10. `exec build` を再実行して次の Ready タスクを更新する
+途中で仕様確認や外部待ちになった場合は、`complete` ではなく `block` または `note` を使う。
+
+```sh
+specdojo exec block \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "waiting for clarification"
+```
+
+### 9.7. `exec build` を再実行して次の Ready タスクを更新する
 
 ```sh
 specdojo exec build --project <project-id>
 ```
 
-完了したタスクの後続タスクが新たに Ready になり、`ready.json` が更新される。
+完了したタスクの後続タスクが新たに Ready になり、`ready.json`、`claim-next.json`、`ready.md` が更新される。
+
+### 9.8. 最小コマンド例
+
+次の Ready タスクを1件だけ手動実行する最小例。
+
+```sh
+specdojo exec build --project <project-id>
+task_id=$(specdojo exec scheduler --project <project-id> --by <actor> --dry-run)
+specdojo exec run --project <project-id> --task "$task_id" --dry-run
+specdojo exec scheduler --project <project-id> --by <actor> --msg "manual run"
+specdojo exec run --project <project-id> --task "$task_id"
+specdojo exec complete --project <project-id> --task "$task_id" --by <actor> --msg "manual run done"
+specdojo exec build --project <project-id>
+```
+
+完全自動でよい場合は、上記を個別に実行せず `exec run --auto` を使う。
+
+```sh
+specdojo exec run --project <project-id> --auto --count 1
+```
 
 ## 10. レートリミット対応
 

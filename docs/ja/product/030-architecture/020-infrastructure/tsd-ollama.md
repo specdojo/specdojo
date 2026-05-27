@@ -80,7 +80,7 @@ export OLLAMA_KEEP_ALIVE=10m
 export OLLAMA_MAX_LOADED_MODELS=2
 ```
 
-LLAMA_MAX_LOADED_MODELS=2 にしておくと、重いモデルの同時常駐を抑えやすくなる。
+`OLLAMA_MAX_LOADED_MODELS=2` にしておくと、重いモデルの同時常駐を抑えやすくなる。
 
 但し、macOSで常駐させる場合は、Homebrew serviceの起動方法では環境変数を渡せないため、LaunchAgentを作成して環境変数を渡す方法を採用する（次章参照）。
 
@@ -143,7 +143,7 @@ curl http://host.docker.internal:11434/api/tags
 ```bash
 curl http://host.docker.internal:11434/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"model":"gemma4:e4b-md-8k","prompt":"devcontainer から疎通確認しています。短く返答してください。","stream":false}'
+  -d '{"model":"gemma4:e4b","prompt":"devcontainer から疎通確認しています。短く返答してください。","stream":false}'
 ```
 
 `response` フィールドに文章が返れば、モデルのロードと生成まで確認できている。
