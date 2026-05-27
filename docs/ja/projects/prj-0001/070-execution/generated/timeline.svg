@@ -55,22 +55,22 @@
 <rect x="436" y="156" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="194">T-LAUNCH-PJM-SCHDEF-010 sch-defaults たたき台作成</text>
 <line class="row-grid" x1="0" y1="202" x2="700" y2="202" />
-<rect x="436" y="180" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="436" y="180" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="218">T-LAUNCH-PJM-SCHSTG-010 sch-strategy-launch たたき台作成</text>
 <line class="row-grid" x1="0" y1="226" x2="700" y2="226" />
-<rect x="436" y="204" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="436" y="204" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="242">T-LAUNCH-PJM-SCHDEF-020 sch-defaults スキーマ検証</text>
 <line class="row-grid" x1="0" y1="250" x2="700" y2="250" />
-<rect x="443" y="228" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="443" y="228" width="3.5" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="266">T-LAUNCH-PJM-SCHSTG-020 sch-strategy-launch スキーマ検証</text>
 <line class="row-grid" x1="0" y1="274" x2="700" y2="274" />
-<rect x="443" y="252" width="3.5" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="443" y="252" width="3.5" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="290">T-LAUNCH-PJM-SCHDEF-030 sch-defaults レビュー・修正</text>
 <line class="row-grid" x1="0" y1="298" x2="700" y2="298" />
-<rect x="446.5" y="276" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="446.5" y="276" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="314">T-LAUNCH-PJM-SCHSTG-030 sch-strategy-launch レビュー・修正</text>
 <line class="row-grid" x1="0" y1="322" x2="700" y2="322" />
-<rect x="446.5" y="300" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="446.5" y="300" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="338">T-LAUNCH-PJD-OVERVIEW-020 prj-overview レビュー・修正</text>
 <line class="row-grid" x1="0" y1="346" x2="700" y2="346" />
 <rect x="450" y="324" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
@@ -79,10 +79,10 @@
 <rect x="450" y="348" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="386">T-LAUNCH-PJM-SCHDEF-040 sch-defaults 完成版仕上げ</text>
 <line class="row-grid" x1="0" y1="394" x2="700" y2="394" />
-<rect x="453.5" y="372" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="453.5" y="372" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="410">T-LAUNCH-PJM-SCHSTG-040 sch-strategy-launch 完成版仕上げ</text>
 <line class="row-grid" x1="0" y1="418" x2="700" y2="418" />
-<rect x="453.5" y="396" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="453.5" y="396" width="7" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label" x="16" y="434">T-LAUNCH-PJD-OVERVIEW-030 prj-overview 完成版仕上げ</text>
 <line class="row-grid" x1="0" y1="442" x2="700" y2="442" />
 <rect x="457" y="420" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />

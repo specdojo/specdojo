@@ -8,18 +8,14 @@
       "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
       "ordered_task_ids": [
         "T-LAUNCH-PJD-OVERVIEW-010",
-        "T-LAUNCH-PJM-PLAN-010",
-        "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHSTG-010"
+        "T-LAUNCH-PJM-PLAN-010"
       ]
     },
     "fifo": {
       "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
       "ordered_task_ids": [
         "T-LAUNCH-PJD-OVERVIEW-010",
-        "T-LAUNCH-PJM-PLAN-010",
-        "T-LAUNCH-PJM-SCHDEF-010",
-        "T-LAUNCH-PJM-SCHSTG-010"
+        "T-LAUNCH-PJM-PLAN-010"
       ]
     }
   }

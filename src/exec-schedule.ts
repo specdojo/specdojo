@@ -36,6 +36,7 @@ import {
   selectNextTask,
 } from './exec-schedule-ready.js'
 import { writeScheduleHashAndDiff } from './exec-schedule-hash.js'
+import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 
 export function validateAll(projectPath: string): ValidateResult {
   const errors: string[] = []
@@ -228,7 +229,8 @@ export function writeGeneratedCore(
   const jsonl = events.map(x => JSON.stringify(x.event)).join('\n') + (events.length ? '\n' : '')
   writeFileSync(join(genDir, 'exec.jsonl'), jsonl, 'utf8')
 
-  const snapshot = foldEventsToState(events, schedule, projectPath)
+  const initialTasks = buildInitialStateFromStrategy(projectPath, schedule)
+  const snapshot = foldEventsToState(events, schedule, projectPath, initialTasks)
   writeJson(join(genDir, 'state.json'), snapshot)
 
   const ready = computeReadyIds(schedule, snapshot)

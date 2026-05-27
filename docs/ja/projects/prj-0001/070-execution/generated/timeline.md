@@ -3,7 +3,7 @@
 ## 進捗サマリー
 
 - 判定: 遅れ気味
-- 概況: 2026-05-27 時点の実績進捗は 0.0% 相当で、計画進捗 80.0% を下回っています。
+- 概況: 2026-05-27 時点の実績進捗は 14.5% 相当で、計画進捗 80.0% を下回っています。
 - 主な要因: 完了・進行中件数が計画消化ペースに対して不足しています。
 
 ## 今後のアクション案
@@ -16,8 +16,8 @@
 - project_duration_days: `2.5`
 - scope: `full_schedule`
 - critical_path_task_count: `16`
-- progress_percent: `0.0%`
-- done_tasks: `0/55`
-- task_state_counts: `todo=55, doing=0, blocked=0, done=0, cancelled=0`
+- progress_percent: `14.5%`
+- done_tasks: `8/55`
+- task_state_counts: `todo=47, doing=0, blocked=0, done=8, cancelled=0`
 
 ![プロジェクトタイムライン](./timeline.svg)

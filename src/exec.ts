@@ -46,6 +46,7 @@ import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from '.
 import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
+import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -234,7 +235,8 @@ function loadValidatedExecState(projectPath: string): LoadedExecState | null {
 
   const schedule = buildScheduleIndex(projectPath)
   const events = readAllEventFiles(projectPath)
-  const snapshot = foldEventsToState(events, schedule, projectPath)
+  const initialTasks = buildInitialStateFromStrategy(projectPath, schedule)
+  const snapshot = foldEventsToState(events, schedule, projectPath, initialTasks)
   return { schedule, events, snapshot }
 }
 

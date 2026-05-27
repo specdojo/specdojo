@@ -130,9 +130,10 @@ export function writeEventFile(projectPath: string, event: ExecEventV1): string 
 export function foldEventsToState(
   events: { path: string; event: ExecEventV1 }[],
   schedule: ScheduleIndex,
-  projectPath: string
+  projectPath: string,
+  initialTasks?: Record<string, CurrentState>
 ): StateSnapshot {
-  const tasks: Record<string, CurrentState> = {}
+  const tasks: Record<string, CurrentState> = initialTasks ? { ...initialTasks } : {}
 
   function ensure(id: string): CurrentState {
     if (!tasks[id]) tasks[id] = { state: 'todo' }
