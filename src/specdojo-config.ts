@@ -5,6 +5,11 @@ import dotenv from 'dotenv'
 import yaml from 'js-yaml'
 import type { SchedulerStrategy } from './exec-types.js'
 
+export type SpecDojoRunConfig = {
+  agent_config?: string
+  worktree_base?: string
+}
+
 export type SpecDojoProjectConfig = {
   catalog_path?: string
   schedule_path: string
@@ -13,6 +18,7 @@ export type SpecDojoProjectConfig = {
   reviews_path?: string
   viewpoints_path?: string
   project_register_path?: string
+  run?: SpecDojoRunConfig
 }
 
 export type ProjectMember = {

@@ -1,16 +1,15 @@
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import {
-  defaultConfigPath,
   getProjectExecutionPath,
   getProjectSchedulePath,
   loadConfig,
   loadEnv,
+  specdojoRootDir,
 } from './specdojo-config.js'
 import { type ResolvedProjectPaths } from './exec-types.js'
 
 function projectBaseDir(): string {
-  const { configPath } = loadConfig()
-  return dirname(configPath || defaultConfigPath())
+  return specdojoRootDir()
 }
 
 function resolveProjectRelative(baseDir: string, pathValue: string): string {
@@ -65,7 +64,7 @@ export function eventsDirForProject(projectPath: string): string {
 export function resolveProjectPaths(opts: { project?: string }): ResolvedProjectPaths {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const envSchedulePath = process.env.SPECDOJO_SCHEDULE_PATH
   const envExecutionPath = process.env.SPECDOJO_EXECUTION_PATH

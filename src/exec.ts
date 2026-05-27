@@ -1,6 +1,6 @@
 import { type Command } from 'commander'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 import {
   acquireSchedulerLock,
   buildEvent,
@@ -28,6 +28,7 @@ import {
   assertValidActor,
   loadConfig,
   loadMemberRoster,
+  specdojoRootDir,
 } from './specdojo-config.js'
 import {
   buildScheduleIndex,
@@ -44,6 +45,7 @@ import { type ExecEventType, type ExecEventV1, type SchedulerStrategy } from './
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
+import { registerRunCommand } from './exec-run.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -124,7 +126,7 @@ function resolveProjectContext(opts: { project?: string }): {
 }
 
 function loadRosterForOpts(opts: { project?: string }) {
-  const { config, configPath } = loadConfig()
+  const { config } = loadConfig()
   if (!config) return null
 
   const projectId =
@@ -135,8 +137,7 @@ function loadRosterForOpts(opts: { project?: string }) {
   const project = config.projects[projectId]
   if (!project) return null
 
-  const baseDir = dirname(configPath)
-  return loadMemberRoster(baseDir, project)
+  return loadMemberRoster(specdojoRootDir(), project)
 }
 
 function findRosterMember(roster: ReturnType<typeof loadRosterForOpts>, actor: string) {
@@ -561,6 +562,8 @@ export function registerExecCommands(program: Command): void {
       }
     }
   })
+
+  registerRunCommand(exec)
 
   const wcmd = exec.command('where').description('Print resolved paths')
   addProjectOptions(wcmd)
