@@ -11,7 +11,7 @@ SpecDojoでは、ドキュメント作成、コード生成、レビューなど
 
 ## 1. vllm-mlx実行環境
 
-vllm-mlx は Apple Silicon Mac 上で MLX を利用して LLM / Vision / Audio / Embedding などを実行するサーバーを対象とする。OpenAI互換の `/v1/*` API と Anthropic互換の `/v1/messages` API を同一プロセスから提供できるため、複数AgentやOpenAI SDK互換ツールから利用しやすい。
+vllm-mlx は Apple Silicon Mac 上で MLX を利用して LLM を実行するサーバーを対象とする。OpenAI互換の `/v1/*` API と Anthropic互換の `/v1/messages` API を同一プロセスから提供できるため、複数AgentやOpenAI SDK互換ツールから利用しやすい。
 
 Ollama よりも、以下を重視する場合に採用候補とする。
 
@@ -77,7 +77,6 @@ vllm-mlx では Hugging Face 上の MLX 形式モデルを指定する。SpecDoj
 | コーディング                   | `mlx-community/Qwen3.6-27B-4bit`              | Qwen3.6-27B の mlx-community 版 MLX 4bit 変換 |
 | Markdown設計書の作成・レビュー | `mlx-community/gemma-4-26b-a4b-it-4bit`       | 品質優先                     |
 | 軽めの設計書整理・要約         | `mlx-community/gemma-4-e4b-it-4bit`           | 速度・常駐性優先             |
-| Embedding                      | `mlx-community/all-MiniLM-L6-v2-4bit`         | ドキュメント検索用           |
 
 Markdown用途では `gemma-4-26b-a4b-it-4bit` を標準とし、メモリや応答速度を優先する場合に `gemma-4-e4b-it-4bit` へ切り替える。Code用途では `Qwen3.6-27B-4bit` を標準とする。
 
@@ -284,21 +283,6 @@ vllm-mlx serve mlx-community/gemma-4-e4b-it-4bit \
 vllm-mlx serve mlx-community/Qwen3.6-27B-4bit \
   --port 8000 \
   --continuous-batching
-```
-
-### 7.3. Embeddingモデルの動作確認
-
-```bash
-vllm-mlx serve mlx-community/gemma-4-e4b-it-4bit \
-  --port 8000 \
-  --embedding-model mlx-community/all-MiniLM-L6-v2-4bit
-```
-
-```bash
-curl http://localhost:8000/v1/embeddings \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer not-needed" \
-  -d '{"model":"mlx-community/all-MiniLM-L6-v2-4bit","input":["SpecDojo の設計書検索"]}'
 ```
 
 ## 8. アンインストール
