@@ -1,6 +1,6 @@
 import { type Command } from 'commander'
 import { existsSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import {
   generateReviewPlan,
@@ -24,7 +24,7 @@ type ReviewPaths = {
 function resolveReviewPaths(opts: { project?: string }): ReviewPaths {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const projectId =
     opts.project?.trim() ||

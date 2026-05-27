@@ -1,5 +1,5 @@
 import { type Command } from 'commander'
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
@@ -22,7 +22,7 @@ function readSizeFromIndex(catalogPath: string): ProjectSize | null {
 function resolveCatalogPath(opts: { project?: string }): string {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const projectId =
     opts.project?.trim() ||

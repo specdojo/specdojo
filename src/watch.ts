@@ -2,7 +2,7 @@ import { type Command } from 'commander'
 import { watch as fsWatch, existsSync, readdirSync } from 'node:fs'
 import type { FSWatcher } from 'node:fs'
 import { spawn } from 'node:child_process'
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import { selfRunArgs } from './spawn-self.js'
 
@@ -38,7 +38,7 @@ const SKIP_DIRS = new Set(['.git', 'node_modules', 'generated', 'dist', '.vitepr
 function resolveWatchContext(opts: { project?: string }): WatchContext {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const projectId =
     opts.project?.trim() ||

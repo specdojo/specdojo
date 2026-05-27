@@ -122,7 +122,112 @@ exec build（再実行）
 
 人間による実行が必要なタスクは `agent_mode: manual` を指定する。
 
-## 9. レートリミット対応
+## 9. 手動実行手順
+
+`specdojo exec run --auto` が行う処理をステップバイステップで手動再現する手順を示す。
+エージェントの動作確認やトラブルシュートに使う。
+
+### 9.1. `exec build` でスケジュールを最新化する
+
+```sh
+specdojo exec build --project <project-id>
+```
+
+`generated/ready.json` と `generated/agent-briefs/` が更新される。
+
+### 9.2. 次のタスクを確認する
+
+```sh
+cat generated/ready.json | jq '.strategies["critical-first"].next_task_id'
+# または
+cat generated/ready.md
+```
+
+`ready.json` の `strategies.critical-first.next_task_id` が次の実行対象タスク ID（以降 `<task-id>`）。
+`tasks[].cpm.slack` が `0` のタスクがクリティカルパス上のタスク。
+
+### 9.3. タスクの `local_id` とフェーズサフィックスを確認する
+
+タスク ID の末尾 3 桁が `task_suffix`（例: `T-LAUNCH-PJD-OVERVIEW-010` → `010`）。
+タスク名の先頭スペース区切りトークンが `local_id`（例: `"prj-overview たたき台作成"` → `prj-overview`）。
+
+```sh
+cat generated/ready.json | jq '.tasks[] | select(.id == "<task-id>") | {name, id}'
+```
+
+### 9.4. `sch-strategy-*.yaml` で `phase_set` と `difficulty` を確認する
+
+`owner_rules` の `local_ids` に対象 `local_id` が含まれるエントリを探す。
+
+```sh
+grep -A 5 '<local_id>' docs/ja/projects/<project>/030-project-management/schedule/sch-strategy-*.yaml
+```
+
+取得した `phase_set`（省略時は `default_phase_set`）と `difficulty`（省略時は `normal`）を記録する。
+次に `phase_sets[<phase_set>]` から `task_suffix` が一致するエントリを探し、`phase.id` を取得する。
+
+### 9.5. `exec-agent.yaml` で tier を決定する
+
+`.specdojo/exec-agent.yaml` の `phase_tier_rules` を上から評価し、`phase_set` と `phase`（`phase.id`）が一致する最初のルールの `tier` と `capabilities` を取得する。
+
+次に `difficulty_overrides` を評価する。`difficulty` が一致するルールの `min_tier` が現在の `tier` より上位であれば昇格させる（`small` → `full` → `expert` の順）。
+
+### 9.6. `tier_routing` と `agent_commands` でコマンドを決定する
+
+`capabilities` がある場合は `<tier>+<capability>` の複合キーを先に確認する。なければ `<tier>` にフォールバックする。
+
+```yaml
+# 例: tier=full の場合
+tier_routing:
+  full:
+    cmd: opencode-edit    # ← このキーを agent_commands で引く
+    by: edit-agent
+
+agent_commands:
+  opencode-edit: "opencode run --agent edit-agent"
+```
+
+取得したシェルコマンド文字列（例: `opencode run --agent edit-agent`）が実行コマンドの基底になる。
+
+### 9.7. エージェントブリーフを確認する
+
+```sh
+cat generated/agent-briefs/<task-id>.md
+```
+
+このファイルの内容がエージェントへのプロンプトとして渡される。
+
+### 9.8. エージェントを実行する
+
+ブリーフの内容を最後の引数として追加して実行する。
+
+```sh
+opencode run --agent edit-agent "$(cat generated/agent-briefs/<task-id>.md)"
+```
+
+ドライランで確認する場合:
+
+```sh
+specdojo exec run --task <task-id> --dry-run --project <project-id>
+```
+
+### 9.9. 完了イベントを記録する
+
+エージェントが正常終了したら `complete` イベントを書き込む。
+
+```sh
+specdojo exec complete --task <task-id> --by <actor> --msg "manual run"
+```
+
+### 9.10. `exec build` を再実行して次の Ready タスクを更新する
+
+```sh
+specdojo exec build --project <project-id>
+```
+
+完了したタスクの後続タスクが新たに Ready になり、`ready.json` が更新される。
+
+## 10. レートリミット対応
 
 AI モデルのレートリミットに達した場合、`exec run` は `exec-agent.yaml` の `rate_limit_policy` に従って自動対応する。
 
@@ -134,7 +239,7 @@ AI モデルのレートリミットに達した場合、`exec run` は `exec-ag
 クリティカルパス上のタスクはスキップせず、必ず完了させることでプロジェクト完了日への影響を防ぐ。
 設定の詳細は `specdojo-command-usage-guide.md` の `exec run` セクションを参照すること。
 
-## 10. Anti-patterns
+## 11. Anti-patterns
 
 | Anti-pattern                   | 問題点                                             |
 | ------------------------------ | -------------------------------------------------- |

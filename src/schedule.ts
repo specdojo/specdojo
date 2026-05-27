@@ -1,15 +1,15 @@
 import { type Command } from 'commander'
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import yaml from 'js-yaml'
-import { loadConfig, loadEnv } from './specdojo-config.js'
+import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import { generateScheduleTrack, type GeneratedMilestone } from './schedule-generate.js'
 import { readYaml } from './exec-shared.js'
 
 function resolveSchedulePath(opts: { project?: string }): { schedulePath: string; baseDir: string } {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const projectId =
     opts.project?.trim() ||

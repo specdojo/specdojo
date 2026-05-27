@@ -1,7 +1,6 @@
 import { type Command } from 'commander'
 import { spawnSync } from 'node:child_process'
-import { dirname } from 'node:path'
-import { loadConfig, loadEnv } from './specdojo-config.js'
+import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import type { SpecDojoProjectConfig } from './specdojo-config.js'
 import { selfRunArgs } from './spawn-self.js'
 
@@ -106,7 +105,7 @@ export function registerBuildCommand(program: Command): void {
 
       loadEnv()
       const { config, configPath } = loadConfig()
-      const baseDir = dirname(configPath)
+      const baseDir = specdojoRootDir()
 
       const projectId: string | undefined =
         opts.project?.trim() ||

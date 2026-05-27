@@ -68,7 +68,7 @@ const TABLE_SEPARATOR = '| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 function resolveRegisterPaths(opts: { project?: string }): RegisterPaths {
   loadEnv()
   const { config, configPath } = loadConfig()
-  const baseDir = dirname(configPath)
+  const baseDir = specdojoRootDir()
 
   const projectId =
     opts.project?.trim() ||
