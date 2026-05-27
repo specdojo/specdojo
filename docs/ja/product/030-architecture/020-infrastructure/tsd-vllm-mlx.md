@@ -70,15 +70,16 @@ vllm-mlx --help
 
 ## 3. vllm-mlxモデルの選定
 
-| 用途                           | 推奨モデル例                                      |
-| ------------------------------ | ------------------------------------------------- |
-| 軽めの疎通確認                 | `mlx-community/Llama-3.2-3B-Instruct-4bit`        |
-| Markdown設計書の作成・レビュー | `mlx-community/Qwen3-8B-4bit`                     |
-| コーディング補助               | `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` |
-| Vision入力の確認               | `mlx-community/Qwen3-VL-4B-Instruct-3bit`         |
-| Embedding                      | `mlx-community/all-MiniLM-L6-v2-4bit`             |
+vllm-mlx では Hugging Face 上の MLX 形式モデルを指定する。SpecDojo では、まず `mlx-community` 名前空間のモデルを優先する。Ollama の `gemma4:*` や `qwen3.6:*` とはモデルIDが異なるため、用途ごとに vllm-mlx 用のモデルIDを明示する。
 
-モデルは Hugging Face の `mlx-community` 配布を優先し、Mac のメモリ容量と用途に応じて 3B / 8B / 30B クラスを使い分ける。
+| 用途                           | 推奨モデル例                                  | 備考                         |
+| ------------------------------ | --------------------------------------------- | ---------------------------- |
+| コーディング                   | `mlx-community/Qwen3.6-27B-4bit`              | Qwen3.6-27B の mlx-community 版 MLX 4bit 変換 |
+| Markdown設計書の作成・レビュー | `mlx-community/gemma-4-26b-a4b-it-4bit`       | 品質優先                     |
+| 軽めの設計書整理・要約         | `mlx-community/gemma-4-e4b-it-4bit`           | 速度・常駐性優先             |
+| Embedding                      | `mlx-community/all-MiniLM-L6-v2-4bit`         | ドキュメント検索用           |
+
+Markdown用途では `gemma-4-26b-a4b-it-4bit` を標準とし、メモリや応答速度を優先する場合に `gemma-4-e4b-it-4bit` へ切り替える。Code用途では `Qwen3.6-27B-4bit` を標準とする。
 
 ## 4. メモリ安定化設定
 
@@ -86,16 +87,16 @@ vllm-mlx --help
 
 基本方針:
 
-- 疎通確認は 3B / 4bit クラスで行う
-- Agent常用は 8B / 4bit クラスから始める
-- 30B クラスは同時実行数を絞る
+- 疎通確認は `gemma-4-e4b-it-4bit` から始める
+- Markdown品質優先時は `gemma-4-26b-a4b-it-4bit` を使う
+- Code用途は `Qwen3.6-27B-4bit` を使い、同時実行数を絞る
 - 長文レビュー用途では SSD cache の利用を検討する
 - 生成品質と安定性を見ながら temperature / max tokens をツール側で調整する
 
 長文・複数Agent向けに起動する場合の例:
 
 ```bash
-vllm-mlx serve mlx-community/Qwen3-8B-4bit \
+vllm-mlx serve mlx-community/Qwen3.6-27B-4bit \
   --port 8000 \
   --continuous-batching \
   --ssd-cache-dir ~/.cache/vllm-mlx/kv-cache
@@ -106,7 +107,7 @@ vllm-mlx serve mlx-community/Qwen3-8B-4bit \
 macOS では、前章で mise + uv tool としてインストールした `vllm-mlx` を使う。まずはフォアグラウンドで起動する。
 
 ```bash
-vllm-mlx serve mlx-community/Llama-3.2-3B-Instruct-4bit \
+vllm-mlx serve mlx-community/gemma-4-e4b-it-4bit \
   --port 8000 \
   --continuous-batching
 ```
@@ -151,7 +152,7 @@ set -euo pipefail
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-exec vllm-mlx serve mlx-community/Qwen3-8B-4bit \
+exec vllm-mlx serve mlx-community/Qwen3.6-27B-4bit \
   --port 8000 \
   --continuous-batching \
   --ssd-cache-dir "$HOME/.cache/vllm-mlx/kv-cache"
@@ -252,29 +253,35 @@ export ANTHROPIC_API_KEY=not-needed
 vllm-mlx は Hugging Face 上の MLX 形式モデルを直接利用できる。事前にモデルの情報を確認する場合は `model inspect` を使う。
 
 ```bash
-vllm-mlx model inspect mlx-community/Llama-3.2-3B-Instruct-4bit
+vllm-mlx model inspect mlx-community/Qwen3.6-27B-4bit
 ```
 
 モデルを明示的に取得しておきたい場合は `model acquire` を使う。
 
 ```bash
 mkdir -p ~/vllm-mlx-models
-vllm-mlx model acquire mlx-community/Llama-3.2-3B-Instruct-4bit \
-  --target-dir ~/vllm-mlx-models/llama-3.2-3b-instruct-4bit
+vllm-mlx model acquire mlx-community/Qwen3.6-27B-4bit \
+  --target-dir ~/vllm-mlx-models/qwen3.6-27b-4bit
+
+vllm-mlx model acquire mlx-community/gemma-4-26b-a4b-it-4bit \
+  --target-dir ~/vllm-mlx-models/gemma-4-26b-a4b-it-4bit
+
+vllm-mlx model acquire mlx-community/gemma-4-e4b-it-4bit \
+  --target-dir ~/vllm-mlx-models/gemma-4-e4b-it-4bit
 ```
 
-### 7.1. 軽量モデルの動作確認
+### 7.1. Markdown軽量モデルの動作確認
 
 ```bash
-vllm-mlx serve mlx-community/Llama-3.2-3B-Instruct-4bit \
+vllm-mlx serve mlx-community/gemma-4-e4b-it-4bit \
   --port 8000 \
   --continuous-batching
 ```
 
-### 7.2. Agent向けモデルの動作確認
+### 7.2. Code向けモデルの動作確認
 
 ```bash
-vllm-mlx serve mlx-community/Qwen3-8B-4bit \
+vllm-mlx serve mlx-community/Qwen3.6-27B-4bit \
   --port 8000 \
   --continuous-batching
 ```
@@ -282,7 +289,7 @@ vllm-mlx serve mlx-community/Qwen3-8B-4bit \
 ### 7.3. Embeddingモデルの動作確認
 
 ```bash
-vllm-mlx serve mlx-community/Qwen3-8B-4bit \
+vllm-mlx serve mlx-community/gemma-4-e4b-it-4bit \
   --port 8000 \
   --embedding-model mlx-community/all-MiniLM-L6-v2-4bit
 ```
