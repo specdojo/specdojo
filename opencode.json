@@ -1,32 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
-    "ollama-local": {
+    "vllm-mlx-local": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama Local",
+      "name": "vllm-mlx Local",
       "options": {
-        "baseURL": "http://host.docker.internal:11434/v1",
-        "apiKey": "ollama"
+        "baseURL": "http://host.docker.internal:8000/v1",
+        "apiKey": "not-needed"
       },
       "models": {
-        "gemma4:e4b-8k": {
-          "name": "Gemma 4 E4B 8K - Fast Design"
-        },
-        "gemma4:26b-32k": {
-          "name": "Gemma 4 26B 32K - Design Review"
-        },
-        "gemma4:31b-32k": {
-          "name": "Gemma 4 31B 32K - Deep Design Review"
-        },
-        "qwen3-coder:30b-32k": {
-          "name": "Qwen3-Coder 30B 32K - Coding"
-        },
-        "nomic-embed-text:latest": {
-          "name": "nomic-embed-text - Embedding"
+        "default": {
+          "name": "Qwen3.6 27B 4bit - vllm-mlx"
         }
       }
     }
   },
-  "model": "ollama-local/gemma4:e4b-8k",
-  "small_model": "ollama-local/gemma4:e4b-8k"
+  "model": "vllm-mlx-local/default",
+  "small_model": "vllm-mlx-local/default"
 }
