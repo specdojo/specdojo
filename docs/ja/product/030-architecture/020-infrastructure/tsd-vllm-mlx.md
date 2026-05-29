@@ -288,6 +288,8 @@ export OPENAI_BASE_URL=http://host.docker.internal:8000/v1
 export OPENAI_API_KEY=not-needed
 ```
 
+opencode から使う場合の custom provider 設定は [tsd-vllm-mlx-opencode](tsd-vllm-mlx-opencode.md) を参照する。
+
 Anthropic互換ツールから参照する場合は、devcontainer 内で base URL を設定する。
 
 ```bash

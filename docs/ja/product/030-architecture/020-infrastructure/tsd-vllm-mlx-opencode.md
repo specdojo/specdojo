@@ -27,6 +27,8 @@ based_on:
 
 事前に [tsd-vllm-mlx](tsd-vllm-mlx.md) の手順で、Host Mac 上の vllm-mlx が起動していることを前提とする。SpecDojo の標準構成では `--served-model-name default` を付けて起動するため、OpenAI互換 API の `model` には `default` を指定する。
 
+安定優先の単一モデル構成では、まず `--continuous-batching` を付けずに起動する。continuous batching は複数リクエストの処理効率を上げるための検証用オプションであり、単一リクエストでの通常生成が安定してから有効化する。
+
 devcontainer 内から Host Mac に接続するため、接続先は `localhost` ではなく `host.docker.internal` を使う。
 
 まず、devcontainer のターミナルで疎通確認する。
@@ -94,12 +96,14 @@ export OPENAI_API_KEY=not-needed
 ```bash
 curl http://host.docker.internal:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer not-needed" \
   -d '{
     "model": "default",
     "messages": [
       {"role": "user", "content": "短く疎通確認してください。"}
     ],
-    "max_tokens": 32
+    "max_tokens": 32,
+    "stream": false
   }'
 ```
 
@@ -116,3 +120,33 @@ opencode run --agent edit-agent "SpecDojo task を1件実行してください"
 ### 6.1. `model` 名の整合
 
 vllm-mlx を `--served-model-name default` なしで起動すると、OpenAI互換 API の `model` 名がモデルパスや別 ID になることがある。その場合は `curl http://host.docker.internal:8000/v1/models` の結果に合わせて、`opencode.json` の `models` キーと `model` / `small_model` を変更する。
+
+### 6.2. continuous batching は初期設定にしない
+
+本書は [tsd-vllm-mlx](tsd-vllm-mlx.md) の安定優先な単一モデル構成を前提にする。そのため、起動コマンドに `--continuous-batching` を最初から含めない。continuous batching は複数リクエストが待ち行列に入る状況で効果を発揮するが、単発利用では恩恵が小さい一方で、スケジューリングや stream 管理が複雑になる。
+
+複数 agent から同時利用する検証が必要な場合だけ、単一リクエストでの通常生成が安定してから段階的に有効化する。
+
+### 6.3. 疎通確認は短い非 stream リクエストから始める
+
+初回確認では、短いプロンプトと小さい `max_tokens` を使い、`stream: false` を明示する。長い履歴や大きい `max_tokens` のまま opencode から実行すると、初回トークンまでの待ち時間が長くなり、vllm-mlx / MLX 側の不安定さを切り分けにくくなる。
+
+### 6.4. server abort が出る場合
+
+回答生成後に server が abort し、`There is no Stream(gpu, 2) in current thread.` のような例外が出る場合は、opencode の provider 設定ミスではなく、vllm-mlx またはその下の MLX / Metal ランタイム側の stream cleanup 問題を疑う。まず以下の順で切り分ける。
+
+- `--continuous-batching` を外して再起動する
+- `curl` で `stream: false` の短いリクエストを確認する
+- opencode 側でも短い質問から試す
+- `uv tool upgrade vllm-mlx` で更新する
+
+安定運用を優先する場合は、continuous batching を無効のままにし、短めの応答上限で運用する。
+
+### 6.5. Model Registry 構成とは分ける
+
+本書は単一モデル構成専用である。用途別モデルを `model` 名で切り替えたい場合は、[tsd-vllm-mlx-mr](tsd-vllm-mlx-mr.md) の Model Registry 構成を参照する。ただし、Model Registry は単一モデル構成より不安定になりやすいため、通常運用の第一候補にはしない。
+
+## 7. 参照
+
+- [tsd-vllm-mlx](tsd-vllm-mlx.md)
+- [tsd-vllm-mlx-mr](tsd-vllm-mlx-mr.md)

@@ -69,11 +69,11 @@ vllm-mlx --help
 
 Model Registry では、物理モデルIDではなく論理モデル名をアプリケーション側から指定する。SpecDojo の検証構成では、以下の3モデルを登録する。
 
-| 論理モデル名 | 用途 | 実モデル | 備考 |
-| ------------ | ---- | -------- | ---- |
-| `code` | コーディング | `mlx-community/Qwen3.6-27B-4bit` | 標準の安定確認モデル |
-| `markdown` | Markdown設計書の作成・レビュー | `mlx-community/gemma-4-26b-a4b-it-4bit` | 品質比較用 |
-| `markdown-fast` | 軽めの設計書整理・要約 | `mlx-community/gemma-4-e4b-it-4bit` | 速度比較用 |
+| 論理モデル名    | 用途                           | 実モデル                                | 備考                 |
+| --------------- | ------------------------------ | --------------------------------------- | -------------------- |
+| `code`          | コーディング                   | `mlx-community/Qwen3.6-27B-4bit`        | 標準の安定確認モデル |
+| `markdown`      | Markdown設計書の作成・レビュー | `mlx-community/gemma-4-26b-a4b-it-4bit` | 品質比較用           |
+| `markdown-fast` | 軽めの設計書整理・要約         | `mlx-community/gemma-4-e4b-it-4bit`     | 速度比較用           |
 
 Gemma 4 系モデルは、mlx-vlm 側の Attention 実装や vllm-mlx 側の batching patch との組み合わせで不安定になることがある。Gemma 4 系の `continuous_batching` は初期値では `false` にし、Qwen 系モデルだけで batching を検証する。
 
@@ -333,6 +333,8 @@ OpenAI SDK 互換ツールから参照する場合は、devcontainer 内で base
 export OPENAI_BASE_URL=http://host.docker.internal:8000/v1
 export OPENAI_API_KEY=not-needed
 ```
+
+opencode から使う場合の custom provider 設定は [tsd-vllm-mlx-mr-opencode](tsd-vllm-mlx-mr-opencode.md) を参照する。
 
 Anthropic互換ツールから参照する場合は、devcontainer 内で base URL を設定する。
 
