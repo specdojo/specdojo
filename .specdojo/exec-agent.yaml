@@ -6,13 +6,18 @@
 # agent コマンドを自動選択するためのマッピングを一元管理する。
 #
 # exec run --auto の処理フロー:
-#   1. ready.json から次のタスクを読み取る（phase_set・phase.id・difficulty を含む）
-#   2. phase_tier_rules を上から評価し、最初にマッチしたルールの tier と capabilities を適用する
-#   3. difficulty_overrides を評価し、必要に応じて tier を昇格させる
-#   4. tier_routing から cmd と by を解決する
+#   1. ready.json から次のタスクを読み取る（phase_set・phase.id・difficulty・execution を含む）
+#   2. execution == manual のタスクは skip_and_log してスキップ（以降のステップは実行しない）
+#   3. phase_tier_rules を上から評価し、最初にマッチしたルールの tier と capabilities を適用する
+#   4. difficulty_overrides を評価し、必要に応じて tier を昇格させる
+#   5. tier_routing から cmd と by を解決する
 #      - capabilities がある場合は "<tier>+<capability>" の複合キーを先に試す
 #      - 複合キーがなければ "<tier>" にフォールバックする
-#   5. agent_commands[cmd] のシェルコマンドを実行する
+#   6. agent_commands[cmd] のシェルコマンドを実行する
+#
+# execution の解決順位（後者が優先）:
+#   1. sch-strategy.yaml の phase_sets[phase_set][phase].execution（省略時は auto）
+#   2. sch-strategy.yaml の owner_rules[].phase_overrides[phase].execution
 
 # tier 定義（抽象的な能力レベル。実際のモデルは opencode.json の agent 定義が持つ）
 # small  : 軽量・高速。機械的な確認・整合修正・フォーマット整形。
@@ -72,6 +77,9 @@ difficulty_overrides:
 #   full   → opencode-edit   (例: openai/gpt-5.2-codex, copilot/gpt-5.3-codex)
 #   expert → opencode-expert (例: openai/gpt-5.3-codex, claude/claude-opus-4-7)
 tier_routing:
+  manual:
+    cmd: skip
+    by: human          # エージェントを起動せず、人間による実行待ちとして記録する
   small:
     cmd: opencode-small
     by: small-edit-agent

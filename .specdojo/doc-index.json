@@ -3,6 +3,7 @@
   "entries": {
     "tsd-index": "docs/ja/specdojo/samples/tsd-index-sample.md",
     "tsd-ollama": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
+    "tsd-vllm-mlx-mr-opencode": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx-mr-opencode.md",
     "tsd-vllm-mlx-mr": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx-mr.md",
     "tsd-vllm-mlx-opencode": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx-opencode.md",
     "tsd-vllm-mlx": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx.md",

@@ -143,6 +143,24 @@ properties:
             normal: typical document requiring standard domain knowledge.
             high: complex analysis, cross-domain references, or architectural decisions.
             expert: deep technical knowledge or significant judgment required.
+        phase_overrides:
+          type: array
+          description: >
+            Per-phase execution overrides for these deliverables.
+            Takes precedence over the execution field in phase_sets[phase_set][phase].
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - phase
+              - execution
+            properties:
+              phase:
+                type: string
+                minLength: 1
+                description: "Phase id to override (must exist in the referenced phase_set)."
+              execution:
+                $ref: "#/$defs/Execution"
 
   group_milestones:
     type: array
@@ -266,6 +284,14 @@ properties:
               description: "Optional explanation of the initial state."
 
 $defs:
+  Execution:
+    type: string
+    enum: ["auto", "manual"]
+    description: >
+      Execution mode for a phase.
+      auto: agent executes the phase according to exec-agent.yaml tier_routing.
+      manual: no agent is launched; the phase is recorded as pending human action.
+
   Phase:
     type: object
     additionalProperties: false
@@ -291,3 +317,9 @@ $defs:
         type: number
         exclusiveMinimum: 0
         description: "Default task duration in working days for this phase."
+      execution:
+        $ref: "#/$defs/Execution"
+        description: >
+          Default execution mode for this phase across all deliverables using this phase_set.
+          Omit to default to auto.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.

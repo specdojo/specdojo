@@ -32,6 +32,14 @@ scope:
 # バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、
 # 独立した validate フェーズは設けない。
 # AI モデル・エージェントの設定は exec-agent.yaml に委ねる。
+#
+# execution フィールド（省略時は auto）:
+#   auto   : exec-agent.yaml の tier_routing に従いエージェントが実行する
+#   manual : エージェントを起動せず、人間による実行待ちとして記録する
+#
+# 解決順位（後者が優先）:
+#   1. phase_sets[phase_set][phase].execution  ← phase_set レベルのデフォルト
+#   2. owner_rules[].phase_overrides[phase].execution  ← 成果物レベルの例外上書き
 phase_sets:
 
   # 標準フロー: 新規作成 → レビュー → 最終仕上げ
