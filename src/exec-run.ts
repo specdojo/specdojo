@@ -1,21 +1,26 @@
 import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
 import {
   defaultAgentConfigPath,
-  loadExecAgentConfig,
-  resolveAgentCommand,
-  resolveRouting,
-  resolveTier,
-  type ExecAgentConfig,
-  type Tier,
+  loadExecAgentGlobalConfig,
+  loadExecStrategyConfig,
+  resolveAssignment,
+  type ExecAgentGlobalConfig,
+  type ExecStrategyConfig,
+  type RateLimitDetection,
+  type RateLimitPolicy,
 } from './exec-agent-config.js'
 import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-project.js'
 import { listFilesRecursive, readJson, readYaml, sleepMs } from './exec-shared.js'
-import { loadConfig, specdojoRootDir } from './specdojo-config.js'
+import {
+  loadConfig,
+  loadMemberRoster,
+  specdojoRootDir,
+  type MemberRoster,
+} from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
-import { resolve } from 'node:path'
 
 type StrategyPhase = {
   id: string
@@ -123,9 +128,8 @@ function resolveTaskPhaseContext(
 function isRateLimitError(
   exitCode: number | null,
   stderr: string,
-  config: ExecAgentConfig
+  detection: RateLimitDetection | undefined
 ): boolean {
-  const detection = config.rate_limit_policy?.detection
   if (!detection) return false
   if (detection.exit_codes && exitCode !== null && detection.exit_codes.includes(exitCode)) {
     return true
@@ -162,10 +166,28 @@ function loadBrief(executionPath: string, taskId: string): string | null {
   return readFileSync(briefPath, 'utf8')
 }
 
+function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
+  const { config } = loadConfig()
+  if (!config) return null
+
+  const rootDir = specdojoRootDir()
+  for (const project of Object.values(config.projects)) {
+    const projExecPath = resolve(rootDir, project.execution_path.trim())
+    if (projExecPath === executionPath) {
+      try {
+        return loadMemberRoster(rootDir, project)
+      } catch {
+        return null
+      }
+    }
+  }
+  return null
+}
+
 function executeAgent(
   agentCommand: string,
   prompt: string,
-  config: ExecAgentConfig
+  detection: RateLimitDetection | undefined
 ): { result: RunResult; exitCode: number | null; stderr: string } {
   const parts = agentCommand.split(/\s+/).filter(Boolean)
   if (parts.length === 0) {
@@ -182,7 +204,7 @@ function executeAgent(
 
   if (stderr) process.stderr.write(stderr)
 
-  if (isRateLimitError(exitCode, stderr, config)) {
+  if (isRateLimitError(exitCode, stderr, detection)) {
     return { result: 'rate_limit', exitCode, stderr }
   }
   if (exitCode !== 0) {
@@ -192,50 +214,54 @@ function executeAgent(
 }
 
 function runWithRetry(
-  agentCommand: string,
+  agentCommands: string[],
   prompt: string,
   isOnCriticalPath: boolean,
-  config: ExecAgentConfig
+  globalConfig: ExecAgentGlobalConfig,
+  policy: RateLimitPolicy | undefined
 ): RunResult {
-  const first = executeAgent(agentCommand, prompt, config)
+  const detection = globalConfig.rate_limit_detection
+
+  const first = executeAgent(agentCommands[0], prompt, detection)
   if (first.result !== 'rate_limit') return first.result
 
-  const policy = config.rate_limit_policy
   if (!isOnCriticalPath || !policy) {
     process.stdout.write(`Rate limit detected (non-critical). Skipping task.\n`)
     return 'rate_limit'
   }
 
-  const onCritical = policy.on_critical
-  const { retry } = onCritical
-  const fallbackTier = onCritical.fallback_tier as Tier
-  const fallbackEntry = config.tier_routing[fallbackTier]
-  const fallbackCommand = fallbackEntry
-    ? (config.agent_commands[fallbackEntry.cmd] ?? agentCommand)
-    : agentCommand
-
+  const { retry } = policy.on_critical
   let waitSeconds = retry.initial_wait_seconds
-  for (let attempt = 2; attempt <= retry.max_attempts; attempt++) {
+  let attemptCount = 1
+
+  for (let idx = 1; idx < agentCommands.length; idx++) {
+    if (attemptCount >= retry.max_attempts) break
+
     const actualWait = Math.min(waitSeconds, retry.max_wait_seconds)
     process.stdout.write(
-      `Rate limit on critical path. Attempt ${attempt}/${retry.max_attempts}: waiting ${actualWait}s...\n`
+      `Rate limit on critical path (attempt ${attemptCount}/${retry.max_attempts}). Waiting ${actualWait}s, trying next member...\n`
     )
     sleepMs(actualWait * 1000)
+    attemptCount++
 
-    const result = executeAgent(fallbackCommand, prompt, config)
+    const result = executeAgent(agentCommands[idx], prompt, detection)
     if (result.result !== 'rate_limit') return result.result
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds)
   }
 
-  process.stdout.write(`Rate limit: all ${retry.max_attempts} attempts exhausted.\n`)
+  process.stdout.write(
+    `Rate limit: all ${agentCommands.length} member(s) exhausted after ${attemptCount} attempt(s).\n`
+  )
   return 'rate_limit'
 }
 
 function runSingleTask(
   task: ReadyTaskView,
   executionPath: string,
-  agentConfig: ExecAgentConfig,
+  strategyConfig: ExecStrategyConfig,
+  globalConfig: ExecAgentGlobalConfig,
+  roster: MemberRoster | null,
   localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
@@ -243,9 +269,9 @@ function runSingleTask(
 ): RunResult {
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}\n`)
 
-  let agentCommand = agentCmdOverride ?? ''
+  const agentCommands: string[] = agentCmdOverride ? [agentCmdOverride] : []
 
-  if (!agentCommand) {
+  if (agentCommands.length === 0) {
     const phaseCtx = resolveTaskPhaseContext(task, localIdToRule, phaseSetSuffixToId)
     if (!phaseCtx) {
       process.stdout.write(
@@ -254,55 +280,62 @@ function runSingleTask(
       return 'failure'
     }
 
-    const tierResult = resolveTier(
+    const members = resolveAssignment(
       phaseCtx.phaseSet,
       phaseCtx.phaseId,
       phaseCtx.difficulty,
-      agentConfig
+      strategyConfig
     )
-    if (!tierResult) {
+    if (!members) {
       process.stdout.write(
-        `  No phase_tier_rule for (${phaseCtx.phaseSet}, ${phaseCtx.phaseId})\n`
+        `  No assignment_rule matched (${phaseCtx.phaseSet}, ${phaseCtx.phaseId}, difficulty: ${phaseCtx.difficulty})\n`
       )
       return 'failure'
     }
 
-    const routing = resolveRouting(tierResult.tier, tierResult.capabilities, agentConfig)
-    if (!routing) {
-      process.stdout.write(`  No tier_routing entry for tier "${tierResult.tier}"\n`)
+    for (const nickname of members) {
+      const member = roster?.members.find(m => m.nickname === nickname)
+      if (!member?.command) {
+        process.stdout.write(
+          `  Member "${nickname}" not found in roster or has no command field. Skipping.\n`
+        )
+        continue
+      }
+      agentCommands.push(member.command)
+    }
+
+    if (agentCommands.length === 0) {
+      process.stdout.write(`  No executable commands resolved for members: ${members.join(', ')}\n`)
       return 'failure'
     }
 
-    const resolved = resolveAgentCommand(routing, agentConfig)
-    if (!resolved) {
-      process.stdout.write(`  No agent_command for cmd "${routing.cmd}"\n`)
-      return 'failure'
-    }
-
-    agentCommand = resolved
     process.stdout.write(
-      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Tier: ${tierResult.tier}  Agent: ${routing.cmd}\n`
+      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Agent: ${members[0]}\n`
     )
   }
 
   const brief = loadBrief(executionPath, task.id)
   if (!brief) {
-    process.stdout.write(
-      `  Agent brief not found for ${task.id}. Run: specdojo exec build\n`
-    )
+    process.stdout.write(`  Agent brief not found for ${task.id}. Run: specdojo exec build\n`)
     return 'failure'
   }
 
   if (dryRun) {
-    process.stdout.write(`  [dry-run] Command: ${agentCommand}\n`)
+    process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`)
     process.stdout.write(`  [dry-run] Brief: ${brief.length} chars\n`)
     return 'success'
   }
 
-  process.stdout.write(`  Running: ${agentCommand}\n`)
+  process.stdout.write(`  Running: ${agentCommands[0]}\n`)
 
   const isOnCriticalPath = (task.cpm?.slack ?? 1) === 0
-  const result = runWithRetry(agentCommand, brief, isOnCriticalPath, agentConfig)
+  const result = runWithRetry(
+    agentCommands,
+    brief,
+    isOnCriticalPath,
+    globalConfig,
+    strategyConfig.rate_limit_policy
+  )
 
   if (result === 'success') {
     process.stdout.write(`  Done: ${task.id}\n`)
@@ -320,8 +353,9 @@ function runAutoMode(opts: RunOpts): void {
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
 
-  const agentConfigPath = resolveAgentConfigPath(opts, schedulePath)
-  const agentConfig = loadExecAgentConfig(agentConfigPath)
+  const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
+  const strategyConfig = loadExecStrategyConfig(executionPath)
+  const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
@@ -356,7 +390,9 @@ function runAutoMode(opts: RunOpts): void {
     const result = runSingleTask(
       task,
       executionPath,
-      agentConfig,
+      strategyConfig,
+      globalConfig,
+      roster,
       localIdToRule,
       phaseSetSuffixToId,
       undefined,
@@ -386,8 +422,9 @@ function runManualMode(opts: RunOpts): void {
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
 
-  const agentConfigPath = resolveAgentConfigPath(opts, schedulePath)
-  const agentConfig = loadExecAgentConfig(agentConfigPath)
+  const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
+  const strategyConfig = loadExecStrategyConfig(executionPath)
+  const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
@@ -401,7 +438,9 @@ function runManualMode(opts: RunOpts): void {
   const result = runSingleTask(
     task,
     executionPath,
-    agentConfig,
+    strategyConfig,
+    globalConfig,
+    roster,
     localIdToRule,
     phaseSetSuffixToId,
     opts.agentCmd,
@@ -427,7 +466,7 @@ export function registerRunCommand(exec: Command): void {
   )
   rcmd.option(
     '--agent-config <path>',
-    'Path to exec-agent.yaml (default: .specdojo/exec-agent.yaml)'
+    'Path to exec-agent.yaml global config (default: .specdojo/exec-agent.yaml)'
   )
   rcmd.option(
     '--agent-cmd <command>',

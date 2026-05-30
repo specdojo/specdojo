@@ -1,25 +1,26 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { readYaml } from './exec-shared.js'
+import { listFilesRecursive, readYaml } from './exec-shared.js'
 import { specdojoRootDir } from './specdojo-config.js'
 
-export type Tier = 'small' | 'full' | 'expert'
+// ── Types for .specdojo/exec-agent.yaml (global) ──────────────────────────────
 
-export type PhaseTierRule = {
-  phase_set: string
-  phase: string
-  tier: Tier
-  capabilities?: string[]
+export type RateLimitDetection = {
+  exit_codes?: number[]
+  stderr_patterns?: string[]
 }
 
-export type DifficultyOverride = {
-  difficulty: string
-  min_tier: Tier
+export type ExecAgentGlobalConfig = {
+  rate_limit_detection?: RateLimitDetection
 }
 
-export type TierRoutingEntry = {
-  cmd: string
-  by: string
+// ── Types for execution/exec-strategy-<track>.yaml ────────────────────────────
+
+export type AssignmentRule = {
+  phase_set?: string
+  phase?: string
+  difficulty?: string
+  members: string[]
 }
 
 export type RateLimitRetry = {
@@ -30,102 +31,90 @@ export type RateLimitRetry = {
 }
 
 export type RateLimitPolicy = {
-  detection: {
-    exit_codes?: number[]
-    stderr_patterns?: string[]
-  }
   on_non_critical: {
     action: 'skip'
   }
   on_critical: {
-    action: 'retry_with_fallback'
-    fallback_tier: string
+    action: 'try_next'
     retry: RateLimitRetry
+    on_exhausted: 'block'
   }
 }
 
-export type ExecAgentConfig = {
-  phase_tier_rules: PhaseTierRule[]
-  difficulty_overrides: DifficultyOverride[]
-  tier_routing: Record<string, TierRoutingEntry>
-  capabilities?: Record<string, { description: string }>
+export type ExecStrategyConfig = {
+  assignment_rules: AssignmentRule[]
   rate_limit_policy?: RateLimitPolicy
-  agent_commands: Record<string, string>
 }
 
-export type ResolvedRouting = {
-  cmd: string
-  agentBy: string
-  tier: Tier
-  capabilities: string[]
-}
-
-const TIER_ORDER: Record<Tier, number> = { small: 0, full: 1, expert: 2 }
-
-function promoteTier(current: Tier, minTier: Tier): Tier {
-  return TIER_ORDER[current] >= TIER_ORDER[minTier] ? current : minTier
-}
+// ── Loaders ───────────────────────────────────────────────────────────────────
 
 export function defaultAgentConfigPath(): string {
   return join(specdojoRootDir(), '.specdojo', 'exec-agent.yaml')
 }
 
-export function loadExecAgentConfig(configPath?: string): ExecAgentConfig {
+export function loadExecAgentGlobalConfig(configPath?: string): ExecAgentGlobalConfig {
   const path = configPath ?? defaultAgentConfigPath()
-  if (!existsSync(path)) {
-    throw new Error(`exec-agent.yaml not found: ${path}`)
-  }
-  const raw = readYaml(path) as ExecAgentConfig
-  if (!raw || !Array.isArray(raw.phase_tier_rules)) {
-    throw new Error(`Invalid exec-agent.yaml: missing phase_tier_rules`)
-  }
-  if (!raw.agent_commands || typeof raw.agent_commands !== 'object') {
-    throw new Error(`Invalid exec-agent.yaml: missing agent_commands`)
-  }
-  return raw
+  if (!existsSync(path)) return {}
+  const raw = readYaml(path) as ExecAgentGlobalConfig
+  return raw ?? {}
 }
 
-export function resolveTier(
+export function loadExecStrategyConfig(executionPath: string): ExecStrategyConfig {
+  const files = listFilesRecursive(executionPath)
+    .filter(f => /exec-strategy-.*\.(yaml|yml)$/.test(f))
+    .sort()
+
+  const allRules: AssignmentRule[] = []
+  let policy: RateLimitPolicy | undefined
+
+  for (const file of files) {
+    let raw: ExecStrategyConfig
+    try {
+      raw = readYaml(file) as ExecStrategyConfig
+    } catch {
+      continue
+    }
+    if (!raw) continue
+    if (Array.isArray(raw.assignment_rules)) {
+      allRules.push(...raw.assignment_rules)
+    }
+    if (!policy && raw.rate_limit_policy) {
+      policy = raw.rate_limit_policy
+    }
+  }
+
+  return { assignment_rules: allRules, rate_limit_policy: policy }
+}
+
+// ── Resolution ────────────────────────────────────────────────────────────────
+
+function ruleMatches(
+  rule: AssignmentRule,
+  phaseSet: string,
+  phaseId: string,
+  difficulty: string
+): boolean {
+  if (rule.phase_set !== undefined || rule.phase !== undefined) {
+    if (rule.phase_set !== phaseSet || rule.phase !== phaseId) return false
+    if (rule.difficulty !== undefined && rule.difficulty !== difficulty) return false
+    return true
+  }
+  if (rule.difficulty !== undefined) {
+    return rule.difficulty === difficulty
+  }
+  return true
+}
+
+export function resolveAssignment(
   phaseSet: string,
   phaseId: string,
   difficulty: string,
-  config: ExecAgentConfig
-): { tier: Tier; capabilities: string[] } | null {
-  const rule = config.phase_tier_rules.find(r => r.phase_set === phaseSet && r.phase === phaseId)
-  if (!rule) return null
-
-  let tier = rule.tier
-  const capabilities = rule.capabilities ?? []
-
-  for (const override of config.difficulty_overrides) {
-    if (override.difficulty === difficulty) {
-      tier = promoteTier(tier, override.min_tier)
+  config: ExecStrategyConfig
+): string[] | null {
+  for (const rule of config.assignment_rules) {
+    if (ruleMatches(rule, phaseSet, phaseId, difficulty)) {
+      return rule.members.length > 0 ? rule.members : null
     }
   }
-
-  return { tier, capabilities }
-}
-
-export function resolveRouting(
-  tier: Tier,
-  capabilities: string[],
-  config: ExecAgentConfig
-): ResolvedRouting | null {
-  for (const cap of capabilities) {
-    const compositeKey = `${tier}+${cap}`
-    const entry = config.tier_routing[compositeKey]
-    if (entry) {
-      return { cmd: entry.cmd, agentBy: entry.by, tier, capabilities }
-    }
-  }
-  const entry = config.tier_routing[tier]
-  if (!entry) return null
-  return { cmd: entry.cmd, agentBy: entry.by, tier, capabilities }
-}
-
-export function resolveAgentCommand(
-  routing: ResolvedRouting,
-  config: ExecAgentConfig
-): string | null {
-  return config.agent_commands[routing.cmd] ?? null
+  return null
 }

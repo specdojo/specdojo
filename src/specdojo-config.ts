@@ -29,6 +29,8 @@ export type ProjectMember = {
   type: 'human' | 'agent'
   persona?: string
   focus?: string[]
+  capabilities?: string[]  // agent only: list of capabilities (e.g. web_search)
+  command?: string         // agent only: shell command executed by exec run
   scheduler_strategy?: SchedulerStrategy
   note?: string
 }
