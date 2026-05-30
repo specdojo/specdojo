@@ -180,7 +180,8 @@
     "./docs/specdojo/schemas/v1/sch-defaults.schema.yaml": ["docs/ja/**/sch-defaults*.yaml"],
     "./docs/specdojo/schemas/v1/sch-milestones.schema.yaml": ["docs/ja/**/sch-milestones*.yaml"],
     "./docs/specdojo/schemas/v1/sch-track.schema.yaml": ["docs/ja/**/sch-track-*.yaml"],
-    "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": ["docs/ja/**/sch-strategy-*.yaml"]
+    "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": ["docs/ja/**/sch-strategy-*.yaml"],
+    "./docs/specdojo/schemas/v1/dct.schema.yaml": ["docs/**/dct-*.yaml"]
   },
 
   "files.associations": {

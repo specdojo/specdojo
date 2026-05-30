@@ -1,0 +1,117 @@
+# Template: business model deliverables catalog
+id: dct-business-model-template
+type: template
+status: draft
+domain: business-model
+domain_code: BM
+base_path: /docs/ja/product/010-business-specifications/030-business-model
+
+groups:
+  # ── 業務プロセス ──────────────────────────────────────────────────────────
+  - name: 業務プロセス
+    deliverables:
+      - local_id: bps-_TERM_
+        artifact_code: BPS
+        name: 業務プロセス仕様
+        kind: work
+        depends_on: []
+        overview: 業務プロセスのトリガー・入力・処理・出力・前提を定義する
+        path: bps-_TERM_.md
+        rulebook: bps-rulebook
+        note: "_TERM_ は対象プロセス名の略称（kebab-case）"
+        done_criteria:
+          - text: トリガー・前提・入力・処理・出力が業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: プロセスのスコープと業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: システム設計・機能設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストシナリオ設計・受入条件との対応が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装設計（サービス・ユースケース）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: br-_TERM_
+        artifact_code: BR
+        min_size: medium
+        name: ビジネスルール
+        kind: work
+        depends_on: []
+        overview: 複数プロセスから参照される横断的な業務判断・条件を定義する
+        path: br-_TERM_.md
+        rulebook: br-rulebook
+        note: "_TERM_ は対象ルール名の略称（kebab-case）"
+        done_criteria:
+          - text: ルール・入力・出力・例外が業務観点で明確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ルールの業務的妥当性と適用範囲を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: ルール実装（バリデーション・ドメインロジック）の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: ルールベースのテストケース設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ビジネスロジック実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 業務イベント ──────────────────────────────────────────────────────────
+  - name: 業務イベント
+    deliverables:
+      - local_id: bes-index
+        artifact_code: BESIND
+        name: 業務イベント仕様（全体構成）
+        kind: work
+        depends_on: []
+        overview: 業務上で発生する主要なイベントを一覧で定義する
+        path: bes-index.md
+        rulebook: bes-index-rulebook
+        done_criteria:
+          - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント一覧のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント駆動設計・メッセージング設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントベースのテスト設計への網羅性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+      - local_id: bes-_TERM_
+        artifact_code: BES
+        min_size: medium
+        name: 業務イベント仕様（個別）
+        kind: work
+        depends_on:
+          - bes-index
+        overview: 業務上で発生する主要なイベントを個別に詳細定義する
+        path: bes-_TERM_.md
+        rulebook: bes-rulebook
+        note: "_TERM_ は対象イベント名の略称（kebab-case）"
+        done_criteria:
+          - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント仕様の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント処理実装・メッセージ設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントテスト設計への活用が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: イベントハンドラ・パブリッシャー実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

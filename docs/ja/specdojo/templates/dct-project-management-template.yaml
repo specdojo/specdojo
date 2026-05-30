@@ -222,14 +222,14 @@ groups:
         path: pjr-index.md
         rulebook: pjr-index-rulebook
 
-      - local_id: pjr-NNNN-TERM
+      - local_id: pjr-_NNNN_-_TERM_
         artifact_code: CTLITM
         name: プロジェクト登録項目
         kind: control
         depends_on:
           - pjr-index
         overview: 識別済み検討項目と対応策を管理（個別課題）
-        note: "NNNN は4桁連番、TERM は件名の略称（kebab-case）"
+        note: "_NNNN_ は4桁連番、_TERM_ は件名の略称（kebab-case）"
 
   # ── 管理台帳補助ビュー (medium+) ──────────────────────────────────────────
   - name: 管理台帳補助ビュー
@@ -242,7 +242,7 @@ groups:
         kind: generated
         depends_on:
           - pjr-index
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: プロジェクト登録簿の未完了項目を一覧化
         path: pjr-open-items.md
 
@@ -252,7 +252,7 @@ groups:
         kind: generated
         depends_on:
           - pjr-index
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: プロジェクト登録簿の担当者別項目を一覧化
         path: pjr-by-owner.md
 
@@ -262,7 +262,7 @@ groups:
         kind: generated
         depends_on:
           - pjr-index
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: プロジェクト登録簿の優先度別項目を一覧化
         path: pjr-by-priority.md
 
@@ -272,7 +272,7 @@ groups:
         kind: generated
         depends_on:
           - pjr-index
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: プロジェクト登録簿の状態別項目を一覧化
         path: pjr-by-status.md
 
@@ -286,7 +286,7 @@ groups:
         name: リスク登録簿
         kind: generated
         depends_on:
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: 識別済みリスクと対応策を管理
         path: pm-risk-register.md
 
@@ -295,7 +295,7 @@ groups:
         name: 課題ログ
         kind: generated
         depends_on:
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: 発生した課題と対応状況を管理
         path: pm-issue-log.md
 
@@ -304,7 +304,7 @@ groups:
         name: 変更要求ログ
         kind: generated
         depends_on:
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: 変更要求の申請・審査・決定を管理
         path: pm-change-request-log.md
 
@@ -313,7 +313,7 @@ groups:
         name: 決定記録
         kind: generated
         depends_on:
-          - pjr-NNNN-TERM
+          - pjr-_NNNN_-_TERM_
         overview: プロジェクト上の意思決定とその根拠を記録
         path: pm-decision-log.md
 
@@ -419,23 +419,23 @@ groups:
       - name: 進捗報告
         base_path: reporting/progress-reports
         deliverables:
-          - local_id: pr-YYYY-MM-DD
+          - local_id: pr-_YYYY-MM-DD_
             artifact_code: PR
             name: 進捗報告
             kind: control
             depends_on: []
             overview: 定期的な進捗状況の報告
             rulebook: pr-rulebook
-            note: "YYYY-MM-DD は報告日"
+            note: "_YYYY-MM-DD_ は報告日"
 
       - name: 議事録
         base_path: reporting/meeting-minutes
         deliverables:
-          - local_id: mm-YYYY-MM-DD
+          - local_id: mm-_YYYY-MM-DD_
             artifact_code: MM
             name: 議事録
             kind: control
             depends_on: []
             overview: 会議の決定事項・アクションを記録
             rulebook: mm-rulebook
-            note: "YYYY-MM-DD は会議日"
+            note: "_YYYY-MM-DD_ は会議日"

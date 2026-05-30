@@ -1,0 +1,269 @@
+# Template: testing deliverables catalog
+id: dct-testing-template
+type: template
+status: draft
+domain: testing
+domain_code: TST
+base_path: /docs/ja/product/080-testing
+
+groups:
+  # ── テスト戦略・方針 ──────────────────────────────────────────────────────
+  - name: テスト戦略・方針
+    base_path: 010-test-strategy-and-policy
+    deliverables:
+      - local_id: tsp-index
+        artifact_code: TSPIND
+        name: テスト戦略・方針
+        kind: work
+        depends_on: []
+        overview: テストレベル・スコープ・品質目標・体制・環境・ツール・入出口条件を定義する
+        path: tsp-index.md
+        rulebook: tsp-index-rulebook
+        done_criteria:
+          - text: テストスコープと品質目標が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: テスト全体方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テスト技術選定・自動化方針が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストレベル・入出口条件・体制が実施可能な粒度で記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: テスト環境構築・CI連携の前提として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 単体テストカタログ ────────────────────────────────────────────────────
+  - name: 単体テストカタログ
+    base_path: 020-unit-test-catalog
+    deliverables:
+      - local_id: utc-index
+        artifact_code: UTCIND
+        name: 単体テスト（全体構成）
+        kind: work
+        depends_on:
+          - tsp-index
+        overview: 単体テストとして確認する観点・条件と分配を定義する
+        path: utc-index.md
+        rulebook: utc-index-rulebook
+        done_criteria:
+          - text: 単体テストの対象範囲・除外・モック方針が合意できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 単体テスト方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テストフレームワーク・自動化方針が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト観点・合格基準・エビデンス方針が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装時のテスト作成方針として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: utc-_TARGET_
+        artifact_code: UTC
+        name: 単体テスト（対象別）
+        kind: work
+        depends_on:
+          - utc-index
+        overview: 単体テスト仕様を対象ごとに分割して定義する
+        path: utc-_TARGET_.md
+        rulebook: utc-rulebook
+        note: "_TARGET_ は対象モジュール・クラス・関数名の略称（kebab-case）"
+        done_criteria:
+          - text: 個別対象の範囲・観点・代表条件が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装時のテストコード作成の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 内部結合テストカタログ ────────────────────────────────────────────────
+  - name: 内部結合テストカタログ
+    base_path: 030-internal-integration-test-catalog
+    deliverables:
+      - local_id: itc-index
+        artifact_code: ITCIND
+        name: 内部結合テスト（全体構成）
+        kind: work
+        depends_on:
+          - tsp-index
+        overview: 内部コンポーネント間の連携を確認する観点・条件を定義する
+        path: itc-index.md
+        rulebook: itc-index-rulebook
+        done_criteria:
+          - text: 結合テストの対象コンポーネントと結合範囲が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 内部結合テスト方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 結合テストの技術方針（API/イベント/DB）が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 主要フロー・例外・トランザクション・整合性の観点が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: itc-_TARGET_
+        artifact_code: ITC
+        name: 内部結合テスト（対象別）
+        kind: work
+        depends_on:
+          - itc-index
+        overview: 内部結合テスト仕様を対象（機能・連携）ごとに分割して定義する
+        path: itc-_TARGET_.md
+        rulebook: itc-rulebook
+        note: "_TARGET_ は対象機能・連携名の略称（kebab-case）"
+        done_criteria:
+          - text: 個別結合範囲・テスト条件・合格基準が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装時のテストコード作成の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 外部結合テストカタログ (medium+) ──────────────────────────────────────
+  - name: 外部結合テストカタログ
+    base_path: 040-external-integration-test-catalog
+    min_size: medium
+    deliverables:
+      - local_id: etc-index
+        artifact_code: ETCIND
+        name: 外部結合テスト（全体構成）
+        kind: work
+        depends_on:
+          - tsp-index
+        overview: 外部システム連携を含む結合観点・条件を定義する
+        path: etc-index.md
+        rulebook: etc-index-rulebook
+        done_criteria:
+          - text: 外部I/Fテストの対象と観点が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 外部結合テスト方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 外部I/F契約・エラー処理・セキュリティの観点が記述されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 正常・異常・タイムアウト・冪等・性能観点が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: etc-_TARGET_
+        artifact_code: ETC
+        name: 外部結合テスト（対象別）
+        kind: work
+        depends_on:
+          - etc-index
+        overview: 外部結合テスト仕様を連携単位で分割して定義する
+        path: etc-_TARGET_.md
+        rulebook: etc-rulebook
+        note: "_TARGET_ は対象外部システム・I/F名の略称（kebab-case）"
+        done_criteria:
+          - text: I/Fごとのテスト条件・前提・合格基準が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: テストスタブ・モック設計の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 総合テストカタログ ────────────────────────────────────────────────────
+  - name: 総合テストカタログ
+    base_path: 050-system-test-catalog
+    deliverables:
+      - local_id: stc-index
+        artifact_code: STCIND
+        name: 総合テスト（全体構成）
+        kind: work
+        depends_on:
+          - tsp-index
+        overview: システム全体として業務シナリオが成立することを確認する観点・条件を定義する
+        path: stc-index.md
+        rulebook: stc-index-rulebook
+        done_criteria:
+          - text: エンドツーエンドの業務シナリオが網羅されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 総合テスト方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 画面・API・バッチ・外部連携の通し観点が含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 業務シナリオ・運用観点・非機能観点の合格基準が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: stc-_SCENARIO_
+        artifact_code: STC
+        name: 総合テスト（シナリオ別）
+        kind: work
+        depends_on:
+          - stc-index
+        overview: 総合テスト仕様をシナリオ・業務単位で分割して定義する
+        path: stc-_SCENARIO_.md
+        rulebook: stc-rulebook
+        note: "_SCENARIO_ は対象業務シナリオ名の略称（kebab-case）"
+        done_criteria:
+          - text: 個別シナリオの前提・データ準備・テスト条件・期待結果が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 業務シナリオとして正しく成立することが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+  # ── 受入テストカタログ ────────────────────────────────────────────────────
+  - name: 受入テストカタログ
+    base_path: 060-acceptance-test-catalog
+    deliverables:
+      - local_id: atc-index
+        artifact_code: ATCIND
+        name: 受入テスト（全体構成）
+        kind: work
+        depends_on:
+          - tsp-index
+        overview: 業務として受け入れ可能であることを確認する観点・条件を定義する
+        path: atc-index.md
+        rulebook: atc-index-rulebook
+        done_criteria:
+          - text: 業務受入シナリオと受入条件が業務観点で網羅されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 受入テスト方針と合格判定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 受入テストの技術環境・エビデンス要件が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 利用者視点の操作・期待結果・判定フローが記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: atc-_SCENARIO_
+        artifact_code: ATC
+        name: 受入テスト（シナリオ別）
+        kind: work
+        depends_on:
+          - atc-index
+        overview: 受入テスト仕様を業務シナリオ・受入条件単位で分割して定義する
+        path: atc-_SCENARIO_.md
+        rulebook: atc-rulebook
+        note: "_SCENARIO_ は対象受入シナリオ・機能名の略称（kebab-case）"
+        done_criteria:
+          - text: 個別シナリオの前提・テスト条件・期待結果・合格基準が記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 業務受入条件との対応が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 承認者・エビデンス要件が確認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness

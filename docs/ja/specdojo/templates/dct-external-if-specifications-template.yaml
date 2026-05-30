@@ -1,0 +1,115 @@
+# Template: external IF specifications deliverables catalog
+id: dct-external-if-specifications-template
+type: template
+status: draft
+domain: external-if-specifications
+domain_code: IFX
+base_path: /docs/ja/product/020-external-if-specifications
+
+groups:
+  - deliverables:
+      - local_id: ifx-index
+        artifact_code: IFXIND
+        name: 外部システムI/F一覧
+        kind: work
+        depends_on: []
+        overview: 外部システムとの連携を一覧（YAML）で定義する
+        path: ifx-index.yaml
+        rulebook: ifx-rulebook
+        done_criteria:
+          - text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 外部連携のスコープと方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 外部システム連携設計（プロトコル・認証・エラー処理）の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 外部結合テストの対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 外部I/F実装スコープの参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: ifx-api-_TERM_
+        artifact_code: IFXAPI
+        min_size: medium
+        name: 外部API仕様
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: 外部システムとのAPI連携をOpenAPI形式（YAML）で定義する
+        path: ifx-api-_TERM_.yaml
+        rulebook: ifx-api-rulebook
+        note: "_TERM_ は対象外部システム名の略称（kebab-case）"
+        done_criteria:
+          - text: APIのエンドポイント・リクエスト・レスポンスが業務利用観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: API連携方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: OpenAPIスキーマとして参照可能であること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: API契約テスト・外部結合テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: APIクライアント実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: ifx-file-_TERM_
+        artifact_code: IFXFILE
+        min_size: medium
+        name: 外部ファイル連携仕様
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: 外部システムとのファイル連携をYAMLで定義する
+        path: ifx-file-_TERM_.yaml
+        rulebook: ifx-file-rulebook
+        note: "_TERM_ は対象ファイル連携名の略称（kebab-case）"
+        done_criteria:
+          - text: ファイル形式・伝送方法・スケジュール・項目が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ファイル連携仕様を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: ファイル処理設計（転送・パース・エラー処理）の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: ファイル連携テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: ifx-msg-_TERM_
+        artifact_code: IFXMSG
+        min_size: medium
+        name: 外部メッセージ仕様
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: 他システムとのイベント・キューのメッセージ連携をAsyncAPI + CloudEvents（YAML）で定義する
+        path: ifx-msg-_TERM_.yaml
+        rulebook: ifx-msg-rulebook
+        note: "_TERM_ は対象メッセージ・イベント名の略称（kebab-case）"
+        done_criteria:
+          - text: メッセージ内容・チャネル・タイミングが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: メッセージ連携方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: AsyncAPIスキーマとして参照可能であること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: メッセージ処理テスト・非同期テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: メッセージパブリッシャー・コンシューマ実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

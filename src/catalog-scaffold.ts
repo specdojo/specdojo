@@ -24,9 +24,18 @@ function meetsSize(minSize: string | undefined, target: ProjectSize): boolean {
   return (SIZE_ORDER[minSize as ProjectSize] ?? 0) <= SIZE_ORDER[target]
 }
 
+// Entries whose local_id contains "_" are template pattern slots (e.g. pjr-_NNNN_-_TERM_).
+// They are excluded from the scaffolded project document; users add concrete instances manually.
+function isPatternId(id: string): boolean {
+  return id.includes('_')
+}
+
 function filterDeliverable(item: DctDeliverableItem): DctDeliverableItem {
-  const { min_size: _ms, ...rest } = item
-  return rest
+  const { min_size: _ms, depends_on, ...rest } = item
+  if (!depends_on) return rest
+  // Remove depends_on references that point to pattern entries.
+  const filtered = depends_on.filter(id => !isPatternId(id))
+  return filtered.length > 0 ? { ...rest, depends_on: filtered } : rest
 }
 
 function filterSection(section: DctSection, size: ProjectSize): DctSection | null {
@@ -42,6 +51,7 @@ function filterSection(section: DctSection, size: ProjectSize): DctSection | nul
   if (rest.deliverables) {
     const deliverables = rest.deliverables
       .filter(d => meetsSize(d.min_size, size))
+      .filter(d => !isPatternId(d.local_id))
       .map(filterDeliverable)
     if (deliverables.length > 0) result.deliverables = deliverables
   }

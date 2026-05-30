@@ -1,0 +1,334 @@
+# Template: product change deliverables catalog
+# min_size: deliverable is included only when scaffold --size >= this value
+# min_size on a group excludes the entire group below that size.
+# min_size on a deliverable excludes only that item.
+# Placeholder _PRJ-0000_ is replaced with the actual project_id on scaffold.
+id: dct-product-change-template
+type: template
+status: draft
+part_of:
+  - _PRJ-0000_:dct-index
+domain: product-change
+domain_code: PCC
+base_path: /docs/ja/projects/_PRJ-0000_/040-product-change
+
+groups:
+  # ── 影響調査 ──────────────────────────────────────────────────────────────
+  - name: 影響調査
+    base_path: 020-impact-analysis
+    deliverables:
+      - local_id: imp-business # small+
+        artifact_code: IMPBIZ
+        name: 影響調査（業務）
+        kind: work
+        depends_on: []
+        overview: 変更要求が業務へ与える影響を整理
+        path: imp-business.md
+        rulebook: imp-business-rulebook
+        done_criteria:
+          - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 業務影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術実装への影響範囲が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装上の変更影響が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: imp-data
+        artifact_code: IMPDAT
+        min_size: medium
+        name: 影響調査（データ）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 変更要求がデータへ与える影響を整理
+        path: imp-data.md
+        rulebook: imp-data-rulebook
+        done_criteria:
+          - text: 影響対象データ・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データ影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: データ構造・整合性への技術的影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・移行テストへの影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: データ変更の実装影響が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: imp-interface
+        artifact_code: IMPIF
+        min_size: medium
+        name: 影響調査（I/F）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 変更要求がインターフェースへ与える影響を整理
+        path: imp-interface.md
+        rulebook: imp-interface-rulebook
+        done_criteria:
+          - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: I/F影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 外部システム連携への技術的影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: I/Fテストへの影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: imp-test # small+
+        artifact_code: IMPTST
+        name: 影響調査（テスト）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 変更要求がテストへ与える影響を整理
+        path: imp-test.md
+        rulebook: imp-test-rulebook
+        done_criteria:
+          - text: 影響対象テスト・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: テスト影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テスト技術的影響（テストデータ・環境・自動化）が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 既存テスト資産への影響と追加テスト方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: imp-operations
+        artifact_code: IMPOPS
+        min_size: medium
+        name: 影響調査（運用）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 変更要求が運用へ与える影響を整理
+        path: imp-operations.md
+        rulebook: imp-operations-rulebook
+        done_criteria:
+          - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 運用影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 運用技術基盤への影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用テスト・受入への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用手順・監視設定の変更影響が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+  # ── トレーサビリティ (medium+) ────────────────────────────────────────────
+  - name: トレーサビリティ
+    base_path: 030-traceability/generated
+    min_size: medium
+    deliverables:
+      - local_id: trc-requirements-to-specs
+        artifact_code: TRCSPEC
+        name: トレーサビリティ（要求→仕様）
+        kind: generated
+        depends_on:
+          - imp-business
+        overview: 要求と仕様の対応を可視化し、漏れを防ぐ
+        path: trc-requirements-to-specs.md
+        done_criteria:
+          - text: 要求と仕様の対応関係・充足状況が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 要求カバレッジの充足状況を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術仕様との対応が整合していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: テスト設計への要求カバレッジが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+      - local_id: trc-requirements-to-tests
+        artifact_code: TRCTST
+        name: トレーサビリティ（要求→テスト）
+        kind: generated
+        depends_on:
+          - trc-requirements-to-specs
+        overview: 要求とテストの対応を可視化し、漏れを防ぐ
+        path: trc-requirements-to-tests.md
+        done_criteria:
+          - text: 要求とテストの対応関係・充足状況が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: テストカバレッジの充足状況を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テスト技術的カバレッジが確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: 要求に対するテスト充足・ギャップが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+  # ── 移行 (medium+) ────────────────────────────────────────────────────────
+  - name: 移行
+    base_path: 040-migration
+    min_size: medium
+    deliverables:
+      - local_id: mip-index # medium+
+        artifact_code: MIP
+        name: 移行計画
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 変更対象の移行方針と全体計画を定義し、切替リスクを管理
+        path: mip-index.md
+        rulebook: mip-index-rulebook
+        done_criteria:
+          - text: 移行範囲・移行方式・スケジュール・リスクが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 移行計画全体を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的移行方式・リスク対策が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 移行テスト・受入条件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 移行スケジュールと体制が計画可能な粒度で記述されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: 運用切替・ハイパーケア体制が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: dmd-index
+        artifact_code: DMD
+        min_size: large
+        name: データ移行設計
+        kind: work
+        depends_on:
+          - mip-index
+          - imp-data
+        overview: データ移行の設計内容を定義し、移行時の整合性を確保
+        path: dmd-index.md
+        rulebook: dmd-index-rulebook
+        done_criteria:
+          - text: 移行対象データ・変換方針・マッピングが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データ移行設計を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: データ変換・整合性検証の技術方式が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・ロールバック方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: データ移行実装の技術要件が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: mtp-index
+        artifact_code: MTP
+        min_size: large
+        name: 移行テスト計画（リハーサル計画）
+        kind: work
+        depends_on:
+          - mip-index
+        overview: 移行リハーサルの実施計画を定義し、切替前に妥当性を検証
+        path: mtp-index.md
+        rulebook: mtp-index-rulebook
+        done_criteria:
+          - text: テスト範囲・シナリオ・判定基準が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 移行テスト計画を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テスト環境・技術的検証方式が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 是正計画を含む合格基準が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: cop-index
+        artifact_code: COP
+        min_size: large
+        name: カットオーバー計画（本番切替手順）
+        kind: work
+        depends_on:
+          - mip-index
+          - mtp-index
+        overview: 本番切替の手順を定義し、停止時間と障害リスクを最小化
+        path: cop-index.md
+        rulebook: cop-index-rulebook
+        done_criteria:
+          - text: 切替手順・業務停止範囲・判定ポイントが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: カットオーバー計画を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的切替手順・切戻し方式が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 判定ポイント・エスカレーション・切戻し手順が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用体制・エスカレーション経路が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: otp-index
+        artifact_code: OTP
+        min_size: large
+        name: 運用切替計画（ハイパーケア含む）
+        kind: work
+        depends_on:
+          - cop-index
+        overview: 切替後の運用移管計画を定義し、安定稼働へ移行
+        path: otp-index.md
+        rulebook: otp-index-rulebook
+        done_criteria:
+          - text: 運用引継ぎ・ハイパーケア体制が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 運用移管計画を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的監視強化・問い合わせ対応方針が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 安定化完了条件・受入判定が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用体制・手順・ハイパーケア終了条件が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

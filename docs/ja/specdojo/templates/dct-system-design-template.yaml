@@ -1,0 +1,82 @@
+# Template: system design deliverables catalog
+id: dct-system-design-template
+type: template
+status: draft
+domain: system-design
+domain_code: SYD
+base_path: /docs/ja/product/040-system-design
+
+groups:
+  - deliverables:
+      - local_id: sysd-index
+        artifact_code: SYSDIND
+        name: システム設計（全体構成・リンク集）
+        kind: work
+        depends_on: []
+        overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル等）への導線を1箇所に集約する
+        path: sysd-index.md
+        rulebook: sysd-index-rulebook
+        done_criteria:
+          - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 設計のSSOT所在が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+          - text: テスト設計に必要な設計SSOTへのリンクが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用・監視設定の参照先が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: sysd-critical-flows
+        artifact_code: SYSDCF
+        min_size: medium
+        name: システム設計（重要フロー）
+        kind: work
+        depends_on:
+          - sysd-index
+        overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
+        path: sysd-critical-flows.md
+        rulebook: sysd-critical-flows-rulebook
+        done_criteria:
+          - text: 重要フローの選定理由と業務影響が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 重要フローの内容を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 重要フローのテストシナリオ設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: フロー実装の共通理解として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: sysd-cross-cutting-policy
+        artifact_code: SYSDPOL
+        min_size: medium
+        name: システム設計（横断ルール）
+        kind: work
+        depends_on:
+          - sysd-index
+        overview: 実装全体に影響する共通ルール（エラー・タイムアウト・冪等・トレーシング等）をSSOT化する
+        path: sysd-cross-cutting-policy.md
+        rulebook: sysd-cross-cutting-policy-rulebook
+        done_criteria:
+          - text: 横断ルールが実装上の制約として確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: エラー処理・冪等・タイムアウト・ログ方針が記述されていること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+          - text: 横断ルールのテスト・検証方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 監視・トレーシング・セキュリティの運用観点が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

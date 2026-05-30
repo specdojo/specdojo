@@ -1,0 +1,109 @@
+# Template: operations deliverables catalog
+id: dct-operations-template
+type: template
+status: draft
+domain: operations
+domain_code: OPD
+base_path: /docs/ja/product/090-operations
+
+groups:
+  # ── 運用設計 ──────────────────────────────────────────────────────────────
+  - name: 運用設計
+    deliverables:
+      - local_id: opd-index
+        artifact_code: OPDIND
+        name: 運用方針・設計
+        kind: work
+        depends_on: []
+        overview: 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）をSSOT化する
+        path: opd-index.md
+        rulebook: opd-rulebook
+        done_criteria:
+          - text: SLO/SLA・体制・監視・変更管理・バックアップ方針が業務継続性の観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 運用方針・品質目標を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 監視・アラート・障害対応・権限管理の技術設計が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用品質（アラート検知率・復旧達成率）の検証基準が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用手順・監視・問い合わせ対応の実施基盤として参照できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: opd-_TERM_
+        artifact_code: OPD
+        min_size: medium
+        name: 運用方針・設計（個別）
+        kind: work
+        depends_on:
+          - opd-index
+        overview: 特定の運用テーマ（監視・障害対応等）に関する方針・設計を個別に定義する
+        path: opd-_TERM_.md
+        rulebook: opd-rulebook
+        note: "_TERM_ は対象運用テーマの略称（例: monitoring, incident）（kebab-case）"
+        done_criteria:
+          - text: 個別テーマの運用方針が業務継続性の観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 個別テーマの技術設計が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用手順整備の前提として参照できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+  # ── 運用手順 ──────────────────────────────────────────────────────────────
+  - name: 運用手順
+    deliverables:
+      - local_id: opr-index
+        artifact_code: OPRIND
+        name: 運用手順
+        kind: work
+        depends_on:
+          - opd-index
+        overview: 運用作業を再現可能な手順として定義し、誰がやっても同じ結果になる状態を作る
+        path: opr-index.md
+        rulebook: opr-rulebook
+        done_criteria:
+          - text: 日次・週次・月次の定常運用手順が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 運用手順の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 障害対応・アラート対応・バックアップ手順の技術的整合が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 手順の網羅性・実施可能性・証跡要件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 誰が実施しても同じ結果になる粒度で手順が記述されていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: opr-_TERM_
+        artifact_code: OPR
+        min_size: medium
+        name: 運用手順（個別）
+        kind: work
+        depends_on:
+          - opr-index
+        overview: 特定の運用作業（障害対応・バックアップ・リストア等）の手順を個別に定義する
+        path: opr-_TERM_.md
+        rulebook: opr-rulebook
+        note: "_TERM_ は対象運用作業の略称（例: incident, backup-restore）（kebab-case）"
+        done_criteria:
+          - text: 個別手順が実施可能な粒度で記述されていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+          - text: 手順の技術的正確性が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 手順の完了条件・証跡要件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

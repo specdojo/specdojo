@@ -1,0 +1,34 @@
+# Template: data flow deliverables catalog
+# Placeholder _PRJ-0000_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+id: dct-data-flow-template
+type: template
+status: draft
+domain: data-flow
+domain_code: DFL
+base_path: /docs/ja/product/010-business-specifications/010-data-flow
+
+groups:
+  - deliverables:
+      - local_id: cdfd-_TERM_
+        artifact_code: CDFD
+        name: 概念データフロー図
+        kind: work
+        depends_on: []
+        overview: 対象業務の全体構成・情報の流れ・業務主体を可視化し定義する
+        path: cdfd-_TERM_.md
+        rulebook: cdfd-rulebook
+        note: "_TERM_ は対象業務名の略称（kebab-case）"
+        done_criteria:
+          - text: 業務プロセス・情報の流れ・業務主体が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 対象業務のスコープと境界を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: システム設計・アーキテクチャの入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象業務フローが識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

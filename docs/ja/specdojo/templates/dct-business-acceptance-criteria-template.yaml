@@ -1,0 +1,32 @@
+# Template: business acceptance criteria deliverables catalog
+id: dct-business-acceptance-criteria-template
+type: template
+status: draft
+domain: business-acceptance-criteria
+domain_code: BAC
+base_path: /docs/ja/product/050-business-acceptance-criteria
+
+groups:
+  - deliverables:
+      - local_id: bac-_TERM_
+        artifact_code: BAC
+        name: 業務受入条件
+        kind: work
+        depends_on: []
+        overview: 業務として受け入れ可能であることを示す条件・シナリオ・判定方法を定義する
+        path: bac-_TERM_.md
+        rulebook: bac-rulebook
+        note: "_TERM_ は対象業務シナリオ・機能名の略称（kebab-case）"
+        done_criteria:
+          - text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 受入条件の業務的妥当性と判定基準を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: システム実装が受入条件を満たせる設計になっていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 受入テスト設計の基礎として活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

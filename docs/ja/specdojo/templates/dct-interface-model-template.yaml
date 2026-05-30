@@ -1,0 +1,59 @@
+# Template: interface model deliverables catalog
+id: dct-interface-model-template
+type: template
+status: draft
+domain: interface-model
+domain_code: IM
+base_path: /docs/ja/product/010-business-specifications/040-interface-model
+
+groups:
+  - deliverables:
+      - local_id: uis-_TERM_
+        artifact_code: UIS
+        name: 画面仕様
+        kind: work
+        depends_on: []
+        overview: 業務ユーザー視点の画面の利用目的・表示項目・操作・遷移を定義する
+        path: uis-_TERM_.md
+        rulebook: uis-rulebook
+        note: "_TERM_ は対象画面名の略称（kebab-case）"
+        done_criteria:
+          - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 画面のスコープと利用フローを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: フロントエンド設計・API連携設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: UIテスト・受入テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 業務ユーザーが操作しやすい表現・構成になっていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+
+      - local_id: bds-_TERM_
+        artifact_code: BDS
+        min_size: medium
+        name: 帳票仕様
+        kind: work
+        depends_on: []
+        overview: 業務ユーザー視点の帳票の利用目的・表示項目・出力タイミングを定義する
+        path: bds-_TERM_.md
+        rulebook: bds-rulebook
+        note: "_TERM_ は対象帳票名の略称（kebab-case）"
+        done_criteria:
+          - text: 利用目的・表示項目・出力タイミングが業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 帳票のスコープと業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 帳票生成・PDF/印刷設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 帳票テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

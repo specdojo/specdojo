@@ -131,3 +131,15 @@ describe('catalog scaffold — dct テンプレートスキーマ適合検証', 
     expect(validator(data), formatErrors(validator.errors)).toBe(true)
   })
 })
+
+describe('catalog scaffold — dct テンプレートファイル直接検証', () => {
+  const files = fg
+    .sync('docs/ja/specdojo/templates/dct-*-template.yaml', { onlyFiles: true })
+    .sort()
+
+  it.each(files)('%s が dct スキーマに適合する（type: template として直接検証）', filePath => {
+    const validator = buildValidator('docs/specdojo/schemas/v1/dct.schema.yaml')
+    const data = load(readFileSync(resolve(filePath), 'utf8')) as unknown as Record<string, unknown>
+    expect(validator(data), formatErrors(validator.errors)).toBe(true)
+  })
+})

@@ -1,0 +1,35 @@
+# Template: system acceptance criteria deliverables catalog
+id: dct-system-acceptance-criteria-template
+type: template
+status: draft
+domain: system-acceptance-criteria
+domain_code: SAC
+base_path: /docs/ja/product/070-system-acceptance-criteria
+
+groups:
+  - deliverables:
+      - local_id: sac-_TERM_
+        artifact_code: SAC
+        name: システム受入条件
+        kind: work
+        depends_on: []
+        overview: システム全体としての合格基準（機能・非機能・障害・移行等）を定義する
+        path: sac-_TERM_.md
+        rulebook: sac-rulebook
+        note: "_TERM_ は対象システム・機能領域の略称（kebab-case）"
+        done_criteria:
+          - text: 業務機能・非機能の受入条件が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: システム受入基準を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的受入条件が実装と整合していること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 受入テスト設計・合格判定の基礎として活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装完了の判定基準として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

@@ -1,0 +1,173 @@
+# Template: data model deliverables catalog
+id: dct-data-model-template
+type: template
+status: draft
+domain: data-model
+domain_code: DM
+base_path: /docs/ja/product/010-business-specifications/020-data-model
+
+groups:
+  # ── 業務データ辞書 ────────────────────────────────────────────────────────
+  - name: 業務データ辞書
+    deliverables:
+      - local_id: bdd-_TERM_
+        artifact_code: BDD
+        name: 業務データ辞書
+        kind: work
+        depends_on: []
+        overview: 業務上の管理単位（エンティティ）とその属性の論理名・説明・制約を定義する
+        path: bdd-_TERM_.yaml
+        rulebook: bdd-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: エンティティ・属性の業務的定義が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データスコープとエンティティ境界を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: DB設計・システム設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証ルール・制約が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: cdsd-_TERM_
+        artifact_code: CDSD
+        min_size: medium
+        name: 概念データストア定義
+        kind: work
+        depends_on: []
+        overview: 概念データストア（情報の保管場所）を一覧で定義する
+        path: cdsd-_TERM_.md
+        rulebook: cdsd-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: sld-_TERM_
+        artifact_code: SLD
+        min_size: medium
+        name: 保管場所定義
+        kind: work
+        depends_on: []
+        overview: 業務対象となる物の物理的な保管場所を一覧で定義する
+        path: sld-_TERM_.md
+        rulebook: sld-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: 保管場所・保管対象・管理頻度が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 保管場所の運用・管理方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: stsd-_TERM_
+        artifact_code: STSD
+        name: ステータス定義
+        kind: work
+        depends_on: []
+        overview: 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する
+        path: stsd-_TERM_.md
+        rulebook: stsd-rulebook
+        note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: cld-_TERM_
+        artifact_code: CLD
+        min_size: medium
+        name: 分類定義
+        kind: work
+        depends_on: []
+        overview: 業務上の分類（カテゴリ・種別・区分など）を一覧で定義する
+        path: cld-_TERM_.md
+        rulebook: cld-rulebook
+        note: "_TERM_ は対象分類体系の略称（kebab-case）"
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 概念モデル ────────────────────────────────────────────────────────────
+  - name: 概念モデル
+    deliverables:
+      - local_id: ccd-_TERM_
+        artifact_code: CCD
+        name: 概念クラス図
+        kind: work
+        depends_on: []
+        overview: 業務上のエンティティ関係・継承・属性を図で定義する
+        path: ccd-_TERM_.md
+        rulebook: ccd-mermaid-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: エンティティ関係・属性が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: スコープ範囲のエンティティを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: データモデル・クラス設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストデータ設計・整合性検証に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ER図・実装モデルの基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: cstd-_TERM_
+        artifact_code: CSTD
+        min_size: medium
+        name: 概念状態遷移図
+        kind: work
+        depends_on: []
+        overview: 業務オブジェクトの状態変化・イベント・遷移条件を図で定義する
+        path: cstd-_TERM_.md
+        rulebook: cstd-rulebook
+        note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

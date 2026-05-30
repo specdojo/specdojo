@@ -1,0 +1,84 @@
+# Template: business specifications common deliverables catalog
+id: dct-business-specifications-common-template
+type: template
+status: draft
+domain: business-specifications-common
+domain_code: BSC
+base_path: /docs/ja/product/010-business-specifications/050-common
+
+groups:
+  # ── システム化機能一覧 ────────────────────────────────────────────────────
+  - name: システム化機能一覧
+    deliverables:
+      - local_id: sf-index
+        artifact_code: SFIND
+        name: システム化機能一覧（全体構成）
+        kind: work
+        depends_on: []
+        overview: システムで実現する機能の全体構成と一覧を定義する
+        path: sf-index.md
+        rulebook: sf-rulebook
+        done_criteria:
+          - text: 機能一覧が業務仕様と対応し、スコープが網羅されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: システム化機能のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 機能分割・コンポーネント設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象機能の網羅性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 実装スコープ・機能境界の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: sf-_TERM_
+        artifact_code: SF
+        min_size: medium
+        name: システム化機能一覧（個別）
+        kind: work
+        depends_on:
+          - sf-index
+        overview: 個別のシステム化機能の概要・関連仕様を定義する
+        path: sf-_TERM_.md
+        rulebook: sf-rulebook
+        note: "_TERM_ は対象機能名の略称（kebab-case）"
+        done_criteria:
+          - text: 機能概要・関連プロセス・関連仕様が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 機能の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 機能実装・コンポーネント設計の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  # ── 用語集 ────────────────────────────────────────────────────────────────
+  - name: 用語集
+    deliverables:
+      - local_id: gl-_DOMAIN_
+        artifact_code: GL
+        name: 用語集
+        kind: work
+        depends_on: []
+        overview: 業務・システムで使用する用語の意味を統一的に定義する
+        path: gl-_DOMAIN_.md
+        rulebook: gl-rulebook
+        note: "_DOMAIN_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・API命名・DBカラム名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: ドキュメント間の用語の一貫性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
