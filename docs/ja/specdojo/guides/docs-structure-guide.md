@@ -425,7 +425,7 @@ flowchart LR
   PJR --> PL
 
   classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class PJR,DC,SCH,EXE,POI,PB,PRR,PL projectWise;
+  class PJR,DC,SCH,EXE,PV,PRR,PL projectWise;
 ```
 
 ## 7. プロダクトドキュメントの構成
