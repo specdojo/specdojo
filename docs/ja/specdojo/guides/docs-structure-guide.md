@@ -12,9 +12,9 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 ## SpecDojoで扱うドキュメントの全体構成
 
-- SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメントとプロジェクトドキュメントを含む1つの `docs/` ルートを指します（例: `repo/docs/ja/product/`）。
-- 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します（例: `repo/docs/ja/projects/prj-0001/`）。
-- 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに `docs/` ルートを分け、それぞれを独立した SpecDojo Unit として扱います（例: `repo/apps/product-a/docs/ja/product/`, `repo/apps/product-b/docs/ja/product/`）。
+- SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメントとプロジェクトドキュメントを含む1つの `docs/` ルートを指します。
+- 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します。
+- 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに `docs/` ルートを分け、それぞれを独立した SpecDojo Unit として扱います。
 - 成果物IDは、原則として SpecDojo Unit 内で一意にします。複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID と成果物IDの組み合わせで識別します。
 
 ## 1. ドキュメントの分類
@@ -115,7 +115,7 @@ flowchart TB
 
       subgraph Development[プロダクトの要件〜設計]
       direction TB
-        subgraph BusinessSpec[業務仕様群<br>（業務要件を内包）]
+        subgraph BusinessSpec[業務仕様群<br>（業務要件を含む）]
           BS["業務仕様<br>🧭"]
           EI["外部I/F仕様<br>🧭 / ⚙️"]
         end
@@ -161,7 +161,7 @@ flowchart TB
 ※補足事項
 
 - 図中のアーキテクチャ設計は、個別仕様に先立つ全体構造の設計を表します。
-- 「要件含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
+- 「業務要件を含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
 
 ## 5. プロジェクトドキュメントの構成
 
@@ -170,7 +170,7 @@ flowchart TB
 ディレクトリ名とファイル名については、以下のようにfrontmatterで定義されたidと対応させることを推奨します。
 idと対応させない場合（日本語名称を使用する場合等）は、一貫性を保った命名規約を採用してください。
 
-> 成果物カタログで管理する成果物に関しては、ディレクトリの頭に`NNN-`の番号を付与することを推奨します（例: `010-deliverables-catalog/`）。
+> 成果物カタログで管理する成果物に関しては、ディレクトリの頭に`NNN-`の番号を付与することを推奨します。
 > ただし、プロジェクトドキュメントの中には成果物カタログの管理対象外となる管理台帳や管理ビューも存在するため、
 > これらは番号なしで構成することを推奨します（例: `controls/`）。
 
@@ -186,9 +186,12 @@ docs/
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）
 │   │   │   ├── 010-deliverables-catalog/         # 成果物カタログ
-│   │   │   │   ├── dct-index.md                  # 成果物カタログ
-│   │   │   │   ├── dct-010-project-definition.md # プロジェクト定義の成果物カタログ
-│   │   │   │   └── dct-020-project-management.md # プロジェクトマネジメントの成果物カタログ
+│   │   │   │   ├── dct-index.md                  # 成果物カタログの索引
+│   │   │   │   ├── dct-project-definition.yaml   # プロジェクト定義の成果物カタログ（正本）
+│   │   │   │   ├── dct-project-management.yaml   # プロジェクトマネジメントの成果物カタログ（正本）
+│   │   │   │   └── generated/                    # 正本から生成される補助一覧
+│   │   │   │       ├── dct-project-definition.md
+│   │   │   │       └── dct-project-management.md
 │   │   │   │
 │   │   │   ├── 020-project-definition/           # プロジェクト定義
 │   │   │   │   ├── prj-overview.md               # プロジェクト概要
@@ -213,7 +216,7 @@ docs/
 │   │   │   │   │   └── pm-raci.md　              # 組織体制とRACI
 │   │   │   │   │
 │   │   │   │   ├── controls/                     # 管理台帳・管理ビュー ※成果物カタログ管理対象外
-│   │   │   │   │   ├── 010-project-register/     # 統合管理台帳（正本）
+│   │   │   │   │   ├── project-register/         # 統合管理台帳（正本）
 │   │   │   │   │   │   ├── pjr-index.md          # プロジェクト登録簿
 │   │   │   │   │   │   ├── pjr-0001-auth.md      # 登録項目（認証）
 │   │   │   │   │   │   ├── pjr-0002-payment.md   # 登録項目（決済）
@@ -230,11 +233,10 @@ docs/
 │   │   │   │   │       └── pm-decision-log.md    # type=decision の抽出ビュー
 │   │   │   │   │
 │   │   │   │   ├── schedule/                     # スケジュール
-│   │   │   │   │   ├── sch-definition.yaml       # 成果物カタログ作成のスケジュール
 │   │   │   │   │   ├── sch-milestones.yaml       # マイルストーン定義
-│   │   │   │   │   ├── sch-auth.yaml             # スケジュール定義（認証）
-│   │   │   │   │   ├── sch-auth-api.yaml         # スケジュール定義（認証API）
-│   │   │   │   │   └── sch-payment.yaml          # スケジュール定義（決済）
+│   │   │   │   │   ├── sch-defaults.yaml         # 共通デフォルト設定
+│   │   │   │   │   ├── sch-track-<track>.yaml    # トラックごとのスケジュール定義
+│   │   │   │   │   └── sch-strategy-<track>.yaml # トラックごとのタスク生成戦略
 │   │   │   │   │
 │   │   │   │   ├── reporting/                    # レポート ※成果物カタログ管理対象外
 │   │   │   │   │   ├── progress-reports/         # 進捗報告
@@ -289,7 +291,7 @@ docs/
 > Frontmatter の `based_on` は各文書を作成する際に直接根拠として参照した文書のみを記載するため、
 > 本図の矢印を `based_on` は一致するわけではありません。
 
-- 成果物カタログ（`dct-index`, `dct-<domain>`）は、
+- 成果物カタログ（`dct-<domain>.yaml`）は、
   プロジェクトで管理対象とする成果物の単一の正本（SSOT）であり、各成果物の作成・更新・管理の起点となる。
   各類型（プロジェクト定義、プロジェクトマネジメント、プロダクト変更等）の成果物は、
   本カタログに登録された単位で管理されます。
@@ -302,7 +304,7 @@ docs/
 - 成果物の作成順は、`A → (C + B) → D → E` が基本になりますが、プロジェクトの状況に応じて柔軟に対応します。
   特に、`A. 立ち上げ`の成果物（概要・ステークホルダー・憲章）を起点として、
   `B. プロジェクト定義`（何を作るか）と `C. プロジェクトマネジメント`（どう進めるか）は並行して作成されることが多いです。
-- 図中の 成果物カタログ（`dct-index`, `dct-<domain>`） は同一文書を表し、各サブグラフでは当該類型に関する登録範囲を示しています。
+- 図中の成果物カタログ（`dct-<domain>.yaml`）は同一種類の正本文書を表し、各サブグラフでは当該類型に関する登録範囲を示しています。
 - プロジェクトのGO/NOT GOの判断は、以下の３つのゲートを設けることを推奨します;
   1. **TO-BEの明確化（`A`, `B`, `C`が完了）**: 将来構想が固まった段階
   2. **TO-BEの実現性が明確化（`D`が完了）**: 将来構想と現状とのギャップと対応策が明確になった段階
@@ -330,7 +332,7 @@ flowchart TB
 
   subgraph PM["C. プロジェクトマネジメント"]
   direction LR
-    PM_DC["dct-index/&lt;domain&gt;<br/>成果物カタログ<br/>（プロジェクトマネジメント用）"]
+    PM_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクトマネジメント用）"]
     PM_EXE(["実行・管理"])
     PL["pm-plan<br/>プロジェクト管理計画"]
     CP["pm-communication-plan<br/>コミュニケーション計画"]
@@ -342,7 +344,7 @@ flowchart TB
 
   subgraph PD["B. プロジェクト定義"]
   direction LR
-    PD_DC["dct-index/&lt;domain&gt;<br/>成果物カタログ<br/>（プロジェクト定義用）"]
+    PD_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクト定義用）"]
     PD_EXE(["実行・管理"])
     PS["prj-scope<br/>スコープ"]
     SC_AC["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入条件"]
@@ -363,7 +365,7 @@ flowchart TB
 
   subgraph PC["D. プロダクト変更"]
   direction LR
-    PC_DC["dct-index/&lt;domain&gt;<br/>成果物カタログ<br/>（プロダクト変更用）"]
+    PC_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト変更用）"]
     PC_EXE(["実行・管理"])
     AS_IS["As-Is<br/>現状定義"]
     IMP["Impact<br/>影響範囲"]
@@ -381,7 +383,7 @@ flowchart TB
 
   subgraph DEL["E. プロダクト成果物"]
   direction LR
-    DEL_DC["dct-index/&lt;domain&gt;<br/>成果物カタログ<br/>（プロダクト成果物用）"]
+    DEL_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト成果物用）"]
     DEL_EXE(["実行・管理"])
     DE["deliverables<br/>成果物"]
     DEL_DC --> DEL_EXE --> DE
@@ -412,9 +414,9 @@ flowchart TB
 ```mermaid
 flowchart LR
 
-  PJR["pjr-index/&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
-  DC["dct-index/&lt;domain&gt;<br/>成果物カタログ"]
-  SCH["sch-&lt;track&gt;-&lt;domain&gt;-&lt;artifact&gt;-&lt;NNN&gt;.yaml<br/>スケジュール"]
+  PJR["pjr-index / pjr-&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
+  DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ"]
+  SCH["sch-track-&lt;track&gt;.yaml<br/>スケジュール"]
   EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
   POI["pjr-open-items<br/>未完了項目一覧"]
   PB["pjr-by-owner/priority/status<br/>担当者/優先度/状態別一覧"]
@@ -428,7 +430,7 @@ flowchart LR
   PJR --> PL
 
   classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class PJR,DCI,DC,SCH,EXE,POI,PB,PRR,PL projectWise;
+  class PJR,DC,SCH,EXE,POI,PB,PRR,PL projectWise;
 ```
 
 ## 7. プロダクトドキュメントの構成

@@ -66,7 +66,7 @@
     "check": "npm run lint:ts && npm run lint:md && npm run lint:fm && npm run validate:schema && npm test",
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
     "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
-    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it -u node \"$name\" bash -lc \"cd /workspaces/specdojo && exec bash\" || echo \"matching container not found\"'"
+    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it -u node \"$name\" bash -lc \"cd /workspaces/specdojo-workspace/specdojo && exec bash\" || echo \"matching container not found\"'"
   },
   "dependencies": {
     "commander": "^12.1.0",
