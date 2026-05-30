@@ -9,4 +9,4 @@ ready.json をもとに生成した Agent 向け実行ブリーフ一覧。
 | id | owner | name | critical_rank | fifo_rank | slack | brief |
 |---|---|---|---:|---:|---:|---|
 | `T-LAUNCH-PJD-OVERVIEW-010` | BA | prj-overview たたき台作成 | 1 | 1 | 0 | [T-LAUNCH-PJD-OVERVIEW-010.md](./T-LAUNCH-PJD-OVERVIEW-010.md) |
-| `T-LAUNCH-PJM-PLAN-010` | PM | pm-plan たたき台作成 | 2 | 2 | 4.375 | [T-LAUNCH-PJM-PLAN-010.md](./T-LAUNCH-PJM-PLAN-010.md) |
+| `T-LAUNCH-PJM-PLAN-010` | PM | pm-plan たたき台作成 | 2 | 2 | 3.25 | [T-LAUNCH-PJM-PLAN-010.md](./T-LAUNCH-PJM-PLAN-010.md) |

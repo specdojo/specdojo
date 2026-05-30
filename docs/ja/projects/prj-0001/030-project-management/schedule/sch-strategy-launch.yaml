@@ -42,24 +42,23 @@ scope:
 #   finalize-pass: 一次版が揃ってから成果物間の整合性を確認し完成版にする
 #                  （align は他成果物の一次版を参照して実施する）
 phase_sets:
-
   # 一次版フロー: 人がたたき台 → エージェントが外部情報で補強 → 人がレビュー
   first-pass:
     - id: draft
       name: たたき台作成
       execution: manual
       task_suffix: "010"
-      duration_days: 0.25  # 1〜2h 相当
+      duration_days: 0.25 # 1〜2h 相当
     - id: enrich
       name: 調査・補強
       execution: auto
       task_suffix: "020"
-      duration_days: 0.5   # 2〜4h 相当（外部調査込み）
+      duration_days: 0.5 # 2〜4h 相当（外部調査込み）
     - id: review
       name: 一次版レビュー
       execution: manual
       task_suffix: "030"
-      duration_days: 0.25  # 1〜2h 相当
+      duration_days: 0.25 # 1〜2h 相当
 
   # 調査系一次版フロー: 人が予備調査を含めたたき台 → エージェントが外部情報で深掘り → 人がレビュー
   # 比較検討・代替案評価など、外部情報収集が品質に直結する成果物に使う
@@ -68,17 +67,17 @@ phase_sets:
       name: たたき台作成（予備調査含む）
       execution: manual
       task_suffix: "010"
-      duration_days: 0.5   # 2〜4h 相当（人による予備調査込み）
+      duration_days: 0.5 # 2〜4h 相当（人による予備調査込み）
     - id: enrich
       name: 調査・深掘り
       execution: auto
       task_suffix: "020"
-      duration_days: 0.5   # 2〜4h 相当（外部調査込み）
+      duration_days: 0.5 # 2〜4h 相当（外部調査込み）
     - id: review
       name: 一次版レビュー
       execution: manual
       task_suffix: "030"
-      duration_days: 0.25  # 1〜2h 相当
+      duration_days: 0.25 # 1〜2h 相当
 
   # 完成版フロー: エージェントが成果物間の整合性を確認・修正 → 人が最終確定
   finalize-pass:
@@ -86,7 +85,7 @@ phase_sets:
       name: 整合性確認・修正
       execution: auto
       task_suffix: "040"
-      duration_days: 0.25  # 1〜2h 相当
+      duration_days: 0.25 # 1〜2h 相当
     - id: finalize
       name: 完成版確定
       execution: manual
@@ -115,13 +114,13 @@ owner_rules:
   - local_ids:
       - prj-assumptions-constraints-dependencies
     owner: ARC
-    difficulty: high     # 制約・前提の整理は判断コストが高い
+    difficulty: high # 制約・前提の整理は判断コストが高い
 
   - local_ids:
       - prj-comparison-of-alternatives
     owner: ARC
     phase_sets: [research-first-pass, finalize-pass]
-    difficulty: high     # 比較検討は人とエージェント双方が外部調査を担う
+    difficulty: high # 比較検討は人とエージェント双方が外部調査を担う
 
   - local_ids:
       - prj-charter
@@ -148,7 +147,7 @@ owner_rules:
       - pm-roles
       - pm-members
     owner: PO
-    difficulty: low      # テンプレートベースの定型記入
+    difficulty: low # テンプレートベースの定型記入
 
   - local_ids:
       - sch-defaults
@@ -156,40 +155,14 @@ owner_rules:
     difficulty: low
 
 phase_gates:
-  - id: GATE-LAUNCH-PJD-FP
-    name: プロジェクト定義 first-pass 完了
-    after_phase_sets: [first-pass, research-first-pass]  # prj-comparison-of-alternatives は research-first-pass を使用
+  - id: GATE-LAUNCH-FP
+    name: プロジェクト定義・マネジメント first-pass 完了
+    after_phase_sets: [first-pass, research-first-pass] # prj-comparison-of-alternatives は research-first-pass を使用
     owner: PM
     scope:
       catalogs:
         - prj-0001:dct-project-definition
-
-  - id: GATE-LAUNCH-PJM-PLAN-FP
-    name: 管理計画 first-pass 完了
-    after_phase_sets: [first-pass]
-    owner: PM
-    scope:
-      groups:
-        - catalog_id: prj-0001:dct-project-management
-          name: 管理計画
-
-  - id: GATE-LAUNCH-PJM-ORG-FP
-    name: 組織体制 first-pass 完了
-    after_phase_sets: [first-pass]
-    owner: PM
-    scope:
-      groups:
-        - catalog_id: prj-0001:dct-project-management
-          name: 組織体制
-
-  - id: GATE-LAUNCH-PJM-SCH-FP
-    name: スケジュール first-pass 完了
-    after_phase_sets: [first-pass]
-    owner: PM
-    scope:
-      groups:
-        - catalog_id: prj-0001:dct-project-management
-          name: スケジュール
+        - prj-0001:dct-project-management
 
 group_milestones:
   - catalog_id: prj-0001:dct-project-definition
@@ -212,15 +185,9 @@ group_milestones:
       name: 組織体制グループ完了
       owner: PM
 
-  - catalog_id: prj-0001:dct-project-management
-    group: スケジュール
-    milestone:
-      id: M-LAUNCH-PJM-SCH-900
-      name: スケジュールグループ完了
-      owner: PM
-
 # catalog の depends_on を補完するドメイン間依存
-# dependent の draft タスクは requires の finalize タスク完了後に着手する
+# ゲート前の順序を定義する: dependent の draft タスクは requires の first-pass (review) 完了後に着手する
+# 完了済み成果物（initial_state）は 000 タスクにフォールバックする
 cross_domain_dependencies:
   - dependent: pm-organization
     requires: prj-overview

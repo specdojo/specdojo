@@ -1,7 +1,7 @@
 # Ready Tasks
 
 - schedule_path: `docs/ja/projects/prj-0001/030-project-management/schedule`
-- execution_path: `docs/ja/projects/prj-0001/070-execution`
+- execution_path: `docs/ja/projects/prj-0001/030-project-management/execution`
 - ready_count: `2`
 - default_strategy: `critical-first`
 
@@ -17,7 +17,7 @@
 | rank | id | owner | slack | ES | schedule_file |
 |---:|---|---|---:|---:|---|
 | 1 | `T-LAUNCH-PJD-OVERVIEW-010` | BA | 0 | 0 | sch-track-launch.yaml |
-| 2 | `T-LAUNCH-PJM-PLAN-010` | PM | 4.375 | 0 | sch-track-launch.yaml |
+| 2 | `T-LAUNCH-PJM-PLAN-010` | PM | 3.25 | 0 | sch-track-launch.yaml |
 
 ## FIFO Order
 

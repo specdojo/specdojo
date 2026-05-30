@@ -59,6 +59,7 @@ export type ScheduleNode = {
   duration_days: number
   kind: 'task' | 'milestone' | 'gate'
   schedule_file: string
+  tags?: string[]
 }
 
 export type ScheduleCalendar = {
@@ -89,6 +90,7 @@ export type CpmNode = {
   slack: number
   depends_on: string[]
   schedule_file: string
+  tags?: string[]
 }
 
 export type CpmResult = {

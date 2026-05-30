@@ -1,7 +1,7 @@
 {
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "tasks": {
-    "T-LAUNCH-PJM-SCHDEF-010": {
+    "T-LAUNCH-PJM-SCHDEF-000": {
       "state": "done",
       "last_ts": "2026-05-23T00:00:00Z",
       "last_by": "indie",
@@ -11,87 +11,7 @@
         "initial_state": true
       }
     },
-    "T-LAUNCH-PJM-SCHDEF-020": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHDEF-030": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHDEF-040": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHDEF-050": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHSTG-010": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHSTG-020": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHSTG-030": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHSTG-040": {
-      "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
-      "last_by": "indie",
-      "last_type": "complete",
-      "last_msg": "初期投入時点で作成済み",
-      "meta": {
-        "initial_state": true
-      }
-    },
-    "T-LAUNCH-PJM-SCHSTG-050": {
+    "T-LAUNCH-PJM-SCHSTG-000": {
       "state": "done",
       "last_ts": "2026-05-23T00:00:00Z",
       "last_by": "indie",
@@ -110,19 +30,7 @@
     "M-LAUNCH-PJM-ORG-900": {
       "state": "todo"
     },
-    "M-LAUNCH-PJM-SCH-900": {
-      "state": "todo"
-    },
-    "GATE-LAUNCH-PJD-FP": {
-      "state": "todo"
-    },
-    "GATE-LAUNCH-PJM-PLAN-FP": {
-      "state": "todo"
-    },
-    "GATE-LAUNCH-PJM-ORG-FP": {
-      "state": "todo"
-    },
-    "GATE-LAUNCH-PJM-SCH-FP": {
+    "GATE-LAUNCH-FP": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-OVERVIEW-010": {

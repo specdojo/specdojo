@@ -321,7 +321,8 @@ properties:
     type: array
     description: >
       Supplementary cross-domain dependencies not present in catalog depends_on.
-      dependent.draft task starts after requires.finalize task completes.
+      Defines ordering within first-pass: dependent.draft task starts after requires.last-first-pass task completes.
+      Falls back to finalize task for completed deliverables (initial_state).
     items:
       type: object
       additionalProperties: false

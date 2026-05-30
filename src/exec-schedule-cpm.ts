@@ -68,6 +68,7 @@ export function computeCpm(schedule: ScheduleIndex, projectPath: string): CpmRes
       slack: 0,
       depends_on: n.depends_on,
       schedule_file: toScheduleFilePath(projectPath, n.schedule_file),
+      ...(n.tags ? { tags: n.tags } : {}),
     }
   }
 

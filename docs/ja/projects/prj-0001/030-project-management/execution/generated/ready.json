@@ -1,7 +1,7 @@
 {
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
-  "execution_path": "docs/ja/projects/prj-0001/070-execution",
-  "generated_dir": "docs/ja/projects/prj-0001/070-execution/generated",
+  "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
+  "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
   "ready_count": 2,
   "default_strategy": "critical-first",
   "strategies": {
@@ -46,9 +46,9 @@
       "cpm": {
         "es": 0,
         "ef": 0.25,
-        "ls": 4.375,
-        "lf": 4.625,
-        "slack": 4.375
+        "ls": 3.25,
+        "lf": 3.5,
+        "slack": 3.25
       }
     }
   ]

@@ -195,6 +195,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       const tv = t as Record<string, unknown>
       const id = String(tv['id'] ?? '').trim()
       if (!id) continue
+      const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       nodes.set(id, {
         id,
         name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
@@ -203,6 +204,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
         duration_days: typeof tv['duration_days'] === 'number' ? tv['duration_days'] : 0,
         kind: 'task',
         schedule_file: f,
+        ...(taskTags ? { tags: taskTags } : {}),
       })
     }
 

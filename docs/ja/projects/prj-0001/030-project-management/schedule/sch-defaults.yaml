@@ -7,7 +7,7 @@ version: 1
 calendar:
   timezone: Asia/Tokyo
   work_hours_per_day: 8
-  workdays: [Mon, Tue, Wed, Thu, Fri]
+  workdays: [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
   holidays:
     - "2026-05-05"
 

@@ -73,6 +73,9 @@ type StrategyDoc = {
   cross_domain_dependencies?: CrossDomainDep[]
   phase_gates?: PhaseGate[]
   group_milestones?: GroupMilestone[]
+  initial_state?: {
+    completed_deliverables?: Array<{ local_id: string }>
+  }
 }
 
 // --- Intermediate types ---
@@ -95,6 +98,7 @@ export type GeneratedTask = {
   duration_days: number
   depends_on: string[]
   owner: string
+  tags?: string[]
 }
 
 export type GeneratedMilestone = {
@@ -275,6 +279,11 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     strategy.default_phase_sets ??
     (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
 
+  // Completed deliverables: generate a single 000 task instead of full phase expansion
+  const completedLocalIds = new Set(
+    (strategy.initial_state?.completed_deliverables ?? []).map((c: { local_id: string }) => c.local_id)
+  )
+
   // Map local_id → finalize task ID for dependency resolution
   const finalizeTaskId = new Map<string, string>()
   // Track phase boundary (last pre-finalize task / first finalize task) per deliverable
@@ -286,6 +295,34 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   const taskMap = new Map<string, GeneratedTask>()
 
   for (const d of sorted) {
+    // Completed deliverables: single 000 task (no phase expansion, no Gantt bar)
+    if (completedLocalIds.has(d.local_id)) {
+      const owner = getOwner(d.local_id, strategy.owner_rules) ?? 'PM'
+      const firstDeps = new Set<string>()
+      for (const dep of d.depends_on) {
+        const fin = finalizeTaskId.get(dep)
+        if (fin) firstDeps.add(fin)
+      }
+      for (const cd of crossDeps) {
+        if (cd.dependent !== d.local_id) continue
+        const fin = finalizeTaskId.get(cd.requires)
+        if (fin) firstDeps.add(fin)
+      }
+      firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
+      const taskId = expandTaskId(strategy.task_id_pattern, d.domain_code, d.artifact_code, '000')
+      taskMap.set(taskId, {
+        id: taskId,
+        name: `${d.local_id} 完了済み`,
+        duration_days: 0.001,
+        depends_on: [...firstDeps],
+        owner,
+        tags: ['initial-complete'],
+      })
+      finalizeTaskId.set(d.local_id, taskId)
+      boundaries.set(d.local_id, { lastPreFinalizeId: null, firstFinalizeId: null })
+      continue
+    }
+
     const ownerRule = strategy.owner_rules.find(r => r.local_ids.includes(d.local_id))
     const phaseSetNames: string[] =
       ownerRule?.phase_sets ??
@@ -309,16 +346,19 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       (strategy.phase_sets[lastPhaseSetName] ?? []).map(p => p.task_suffix)
     )
 
-    // First phase: depends on finalize tasks of catalog deps + cross-domain deps
+    // First phase: depends on the last first-pass task (before gate) of catalog deps
+    // and cross_domain_dependencies. These define ordering within first-pass, not
+    // a dependency on finalize. Falls back to finalizeTaskId for completed deliverables
+    // (which have no lastPreFinalizeId).
     const firstDeps = new Set<string>()
     for (const dep of d.depends_on) {
-      const fin = finalizeTaskId.get(dep)
-      if (fin) firstDeps.add(fin)
+      const depId = boundaries.get(dep)?.lastPreFinalizeId ?? finalizeTaskId.get(dep)
+      if (depId) firstDeps.add(depId)
     }
     for (const cd of crossDeps) {
       if (cd.dependent !== d.local_id) continue
-      const fin = finalizeTaskId.get(cd.requires)
-      if (fin) firstDeps.add(fin)
+      const depId = boundaries.get(cd.requires)?.lastPreFinalizeId ?? finalizeTaskId.get(cd.requires)
+      if (depId) firstDeps.add(depId)
     }
     firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
 

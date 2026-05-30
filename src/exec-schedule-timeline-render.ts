@@ -58,11 +58,13 @@ export function buildTimelineSvg(
   const dayWidth = 56
   const timelineStart = timelineStartDate(cpm.project_start_date)
 
+  const isInitialComplete = (r: CpmNode) => r.tags?.includes('initial-complete') ?? false
   const milestoneRows = rows.filter(r => r.kind === 'milestone')
   const taskRowsByFile = new Map<string, CpmNode[]>()
   let firstTaskFile: string | null = null
   for (const row of rows) {
     if (row.kind !== 'task') continue
+    if (isInitialComplete(row)) continue  // handled separately
     if (!firstTaskFile) firstTaskFile = row.schedule_file
     const group = taskRowsByFile.get(row.schedule_file)
     if (group) group.push(row)
@@ -134,11 +136,18 @@ export function buildTimelineSvg(
   }
 
   // Tasks (+ gates merged in) grouped by file
+  // initial-complete rows appear first in the first task file section (no bar)
+  const initialCompleteRows = rows.filter(r => r.kind === 'task' && isInitialComplete(r))
+  let initialCompleteInserted = false
   for (const [scheduleFile, fileRows] of taskRowsByFile.entries()) {
     layoutRows.push({
       type: 'section',
       label: schedule.section_labels[scheduleFile] ?? scheduleFile,
     })
+    if (!initialCompleteInserted && initialCompleteRows.length > 0) {
+      for (const row of initialCompleteRows) layoutRows.push({ type: 'node', row })
+      initialCompleteInserted = true
+    }
     for (const row of fileRows) layoutRows.push({ type: 'node', row })
   }
 
@@ -166,6 +175,7 @@ export function buildTimelineSvg(
     .shade { fill: #f8fafc; }
     .holiday { fill: #eff6ff; }
     .legend-label { font-size: 11px; fill: #475569; }
+    .month-grid { stroke: #94a3b8; stroke-width: 2; }
   </style>`)
   parts.push(`<rect x="0" y="0" width="${width}" height="${height}" fill="#fffdf8" />`)
   parts.push(`<rect x="0" y="0" width="${leftPad}" height="${height}" fill="#fffaf0" />`)
@@ -209,16 +219,22 @@ export function buildTimelineSvg(
     const dayStart = new Date(timelineStart.getTime() + dayIndex * 86400000)
     const x = leftPad + dayIndex * dayWidth
     const isWorking = isWorkingDateUtc(dayStart, schedule.calendar)
-    if (!isWorking) {
-      const shadeClass = schedule.calendar.holidays.has(formatDateOnlyUtc(dayStart))
-        ? 'holiday'
-        : 'shade'
+    const dayOfWeek = dayStart.getUTCDay()
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
+    const isMonthStart = dayStart.getUTCDate() === 1
+    const isHoliday = schedule.calendar.holidays.has(formatDateOnlyUtc(dayStart))
+
+    if (isHoliday) {
       parts.push(
-        `<rect class="${shadeClass}" x="${x}" y="${topPad - 20}" width="${dayWidth}" height="${height - topPad}" />`
+        `<rect class="holiday" x="${x}" y="${topPad - 20}" width="${dayWidth}" height="${height - topPad}" />`
+      )
+    } else if (!isWorking || isWeekend) {
+      parts.push(
+        `<rect class="shade" x="${x}" y="${topPad - 20}" width="${dayWidth}" height="${height - topPad}" />`
       )
     }
     parts.push(
-      `<line class="grid" x1="${x}" y1="${topPad - 20}" x2="${x}" y2="${height - bottomPad}" />`
+      `<line class="${isMonthStart ? 'month-grid' : 'grid'}" x1="${x}" y1="${topPad - 20}" x2="${x}" y2="${height - bottomPad}" />`
     )
     parts.push(
       `<text class="axis" x="${x + 6}" y="${topPad - 18}">${xmlEscape(dayLabelUtc(dayStart))}</text>`
@@ -257,12 +273,17 @@ export function buildTimelineSvg(
     if (row.kind === 'gate') {
       parts.push(`<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f3e8ff" />`)
     }
+    if (row.kind === 'task' && isInitialComplete(row)) {
+      parts.push(`<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f8fafc" />`)
+    }
     parts.push(`<text class="label" x="16" y="${currentY}">${xmlEscape(label)}</text>`)
     parts.push(
       `<line class="row-grid" x1="0" y1="${currentY + 8}" x2="${width}" y2="${currentY + 8}" />`
     )
 
-    if (row.kind === 'task') {
+    if (row.kind === 'task' && isInitialComplete(row)) {
+      // No Gantt bar for completed deliverables — row label only
+    } else if (row.kind === 'task') {
       const segments = taskSegments.get(row.id) ?? []
       for (const segment of segments) {
         const startX =
