@@ -57,11 +57,13 @@ export function buildTimelineSvg(
   const dayWidth = 56
   const timelineStart = timelineStartDate(cpm.project_start_date)
 
-  const rowsByFile = new Map<string, CpmNode[]>()
+  const milestoneRows = rows.filter(r => r.kind === 'milestone')
+  const taskRowsByFile = new Map<string, CpmNode[]>()
   for (const row of rows) {
-    const group = rowsByFile.get(row.schedule_file)
+    if (row.kind !== 'task') continue
+    const group = taskRowsByFile.get(row.schedule_file)
     if (group) group.push(row)
-    else rowsByFile.set(row.schedule_file, [row])
+    else taskRowsByFile.set(row.schedule_file, [row])
   }
 
   const taskSegments = new Map<string, WorkingTaskSegment[]>()
@@ -99,7 +101,15 @@ export function buildTimelineSvg(
   const width = leftPad + chartWidth + 40
 
   const layoutRows: Array<{ type: 'section'; label: string } | { type: 'node'; row: CpmNode }> = []
-  for (const [scheduleFile, fileRows] of rowsByFile.entries()) {
+
+  // Milestones at the top
+  if (milestoneRows.length > 0) {
+    layoutRows.push({ type: 'section', label: 'マイルストーン' })
+    for (const row of milestoneRows) layoutRows.push({ type: 'node', row })
+  }
+
+  // Tasks grouped by file
+  for (const [scheduleFile, fileRows] of taskRowsByFile.entries()) {
     layoutRows.push({
       type: 'section',
       label: schedule.section_labels[scheduleFile] ?? scheduleFile,
