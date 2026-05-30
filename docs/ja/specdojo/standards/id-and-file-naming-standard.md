@@ -91,9 +91,9 @@ repo/apps/product-b/docs/
 例:
 
 ```text
-uts-index
-utd-auth
-arc-index
+bdd-sales-management
+ifx-index
+sysd-index
 ```
 
 #### 3.1.2. プロジェクト文書
@@ -109,7 +109,7 @@ arc-index
 ```text
 prj-0001:prj-overview
 prj-0001:prj-charter
-prj-0001:sch-index
+prj-0001:sch-track-project-definition
 ```
 
 #### 3.1.3. local-id の形式
@@ -128,7 +128,7 @@ prj-0001:sch-index
 例:
 
 ```text
-uts-index
+bdd-sales-management
 br-discount
 ifx-api-inventory
 prj-overview
@@ -194,11 +194,11 @@ id: 'prj-0001:prj-overview'
 
 | 種別             | ドキュメントID                     | ファイル名                     |
 | ---------------- | ---------------------------------- | ------------------------------ |
-| プロダクト文書   | `uts-index`                        | `uts-index.md`                 |
-| プロダクト文書   | `utd-auth`                         | `utd-auth.md`                  |
+| プロダクト文書   | `bdd-sales-management`             | `bdd-sales-management.md`      |
+| プロダクト文書   | `sysd-index`                       | `sysd-index.md`                |
 | プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
 | プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
-| プロジェクト文書 | `prj-0001:sch-launch`              | `sch-launch.yaml`              |
+| プロジェクト文書 | `prj-0001:sch-track-project-definition` | `sch-track-project-definition.yaml` |
 
 ### 3.4. 参照ルール
 
@@ -216,7 +216,7 @@ id: 'prj-0001:prj-overview'
 id: 'prj-0001:prj-charter'
 based_on:
   - 'prj-overview' # prj-0001:prj-overview として解決
-  - 'uts-index' # プロダクト文書ID
+  - 'sysd-index' # プロダクト文書ID
 ---
 ```
 
@@ -247,7 +247,7 @@ SpecDojo のドキュメントIDには、次の2種類がある。
 例:
 
 ```text
-uts-index
+bdd-sales-management
 bdd-common
 sf-product-register
 br-discount
@@ -271,7 +271,7 @@ br-discount
 prj-0001:prj-overview
 prj-0001:prj-charter
 prj-0001:dct-index
-prj-0001:sch-index
+prj-0001:sch-track-project-definition
 ```
 
 プロジェクト文書で namespace を付ける理由は、同一 SpecDojo Unit 内に複数プロジェクトが存在し、同じローカルIDが繰り返し使われるためである。
@@ -297,7 +297,7 @@ prj-0002:prj-overview
 例:
 
 ```text
-uts-index
+bdd-sales-management
 br-discount
 ifx-api-inventory
 ifx-msg-stock-changed
@@ -414,7 +414,7 @@ prj-0001:prj-overview
 | ----------------------- | --------------- | ----------------------- |
 | `prj-overview`          | `prj-0001` 配下 | `prj-0001:prj-overview` |
 | `prj-0002:prj-overview` | 任意            | `prj-0002:prj-overview` |
-| `uts-index`             | 任意            | `uts-index`             |
+| `sysd-index`            | 任意            | `sysd-index`            |
 | `bdd-common`            | 任意            | `bdd-common`            |
 
 ### 5.3. 同一プロジェクト内の参照
@@ -446,8 +446,8 @@ based_on:
 
 ```yaml
 based_on:
-  - 'uts-index'
-  - 'arc-index'
+  - 'bdd-sales-management'
+  - 'sysd-index'
 ```
 
 ### 5.6. 生成物・検証結果での参照
@@ -489,12 +489,12 @@ based_on:
 
 | 種別             | ドキュメントID                     | 既定のファイル名               |
 | ---------------- | ---------------------------------- | ------------------------------ |
-| プロダクト文書   | `uts-index`                        | `uts-index.md`                 |
+| プロダクト文書   | `sysd-index`                       | `sysd-index.md`                |
 | プロダクト文書   | `bdd-common`                       | `bdd-common.md`                |
 | プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
 | プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
 | 成果物カタログ   | `prj-0001:dct-index`               | `dct-index.md`                 |
-| プロジェクト文書 | `prj-0001:sch-launch`              | `sch-launch.yaml`              |
+| プロジェクト文書 | `prj-0001:sch-track-project-definition` | `sch-track-project-definition.yaml` |
 
 ### 6.3. namespace とディレクトリの関係
 
@@ -639,10 +639,10 @@ supersedes:
 | --------------------------------------------------- | ------------------------------------------------------------------ |
 | `Order_API_v1`                                      | 大文字・アンダースコア・記号                                       |
 | `create-order-api`                                  | 動詞主導                                                           |
-| `uts-list`                                          | 一覧・入口は `index` を使う                                        |
+| `sf-list`                                           | 一覧・入口は `index` を使う                                        |
 | `bdd-main`                                          | 役割が曖昧                                                         |
 | `ifx-inventory-api`                                 | kind は prefix 直後に置く                                          |
-| `product:uts-index`                                 | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要 |
+| `product:sf-index`                                  | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要 |
 | `prj-overview` を複数プロジェクトの正本IDとして使う | プロジェクト間で衝突する                                           |
 | `prj-0001-prj-overview`                             | project-id と local-id の境界が曖昧                                |
 | `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                             |
@@ -710,19 +710,22 @@ supersedes:
 | プロジェクト課題と解決アプローチ | Project Issues and Approach | prj- | prj-issues-and-approach | prj-0001:prj-issues-and-approach |
 | 前提・制約・依存 | Assumptions, Constraints, and Dependencies | prj- | prj-assumptions-constraints-dependencies | prj-0001:prj-assumptions-constraints-dependencies |
 | 代替案の比較 | Comparison of Alternatives | prj- | prj-comparison-of-alternatives | prj-0001:prj-comparison-of-alternatives |
-| 現状定義 | As-Is Definition | asis- | asis-cdfd-index | prj-0001:asis-cdfd-index |
+| 現状定義（As-Is） | As-Is Definition | - | cdfd-sales-management | prj-0001:cdfd-sales-management |
 | 影響調査 | Impact Analysis | imp- | imp-business | prj-0001:imp-business |
 | プロジェクトマネジメント計画 | Project Management Plan | pm- | pm-plan | prj-0001:pm-plan |
-| スケジュール | Schedule | sch- | sch-project-definition | prj-0001:sch-project-definition |
+| スケジュール | Schedule | sch- | sch-milestones, sch-defaults, sch-track-project-definition, sch-strategy-project-definition | prj-0001:sch-track-project-definition |
 | コミュニケーション計画 | Communication Plan | pm- | pm-communication-plan | prj-0001:pm-communication-plan |
 | 品質管理計画 | Quality Management Plan | pm- | pm-quality-management-plan | prj-0001:pm-quality-management-plan |
 | リスク登録簿 | Risk Register | pm- | pm-risk-register | prj-0001:pm-risk-register |
 | 課題ログ | Issue Log | pm- | pm-issue-log | prj-0001:pm-issue-log |
 | 変更要求ログ | Change Request Log | pm- | pm-change-request-log | prj-0001:pm-change-request-log |
+| 決定ログ | Decision Log | pm- | pm-decision-log | prj-0001:pm-decision-log |
+| プロジェクト登録簿 | Project Register | pjr- | pjr-index, pjr-0001-auth | prj-0001:pjr-index, prj-0001:pjr-0001-auth |
 | 進捗レポート | Progress Report | pr- | pr-2026-03-01-01 | prj-0001:pr-2026-03-01-01 |
 | 議事録 | Meeting Minutes | mm- | mm-2026-03-01-01 | prj-0001:mm-2026-03-01-01 |
 | 体制・RACI | Organization and RACI | pm- | pm-organization | prj-0001:pm-organization |
-| 決定記録 | Decision Log | dec- | dec-0001-auth | prj-0001:dec-0001-auth |
+
+現状定義（As-Is）は専用prefixを設けず、`040-product-change/010-as-is/` 配下に必要なプロダクト文書を同じ local-id で配置する。
 
 ### 14.2. プロダクト関係ドキュメント
 
@@ -755,8 +758,8 @@ supersedes:
 | インフラ構成図 | Infrastructure Diagram | ifd- | ifd-index |
 | 技術スタック定義 | Technology Stack Definition | tsd- | tsd-index |
 | システム設計-全体構成 | System Design Index | sysd- | sysd-index |
-| システム設計-重要フロー / フロー| System Design Critical Flows / Flow | sysd- / scf- | sysd-critical-flows / scf-001|
-| システム設計-横断ルール / ルール | System Design Cross-cutting Policy / Policy | sysd- / scp- | sysd-cross-cutting-policy / scp-API-001 |
+| システム設計-重要フロー | System Design Critical Flows | sysd- | sysd-critical-flows |
+| システム設計-横断ルール | System Design Cross-cutting Policy | sysd- | sysd-cross-cutting-policy |
 | 非機能要件 | Non-Functional Requirements | nfr- | nfr-performance |
 | システム受入条件 | System Acceptance Criteria | sac- | sac-performance |
 | テスト戦略・方針 | Test Strategy and Policy | tsp- | tsp-index |
@@ -783,4 +786,4 @@ supersedes:
 | 種別 | English | prefix | 例 |
 | --- | --- | --- | --- |
 | 運用方針・設計 | Operations Policy and Design | opd- | opd-index, opd-monitoring |
-| 運用手順 | Operations Runbook | opr- | opr-index, opr-restore |
+| 運用手順 | Operations Runbook | opr- | opr-index, opr-incident, opr-backup-restore |
