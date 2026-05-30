@@ -24,13 +24,10 @@
     "M-LAUNCH-PJD-900": {
       "state": "todo"
     },
-    "M-LAUNCH-PJM-PLAN-900": {
-      "state": "todo"
-    },
-    "M-LAUNCH-PJM-ORG-900": {
-      "state": "todo"
-    },
     "GATE-LAUNCH-FP": {
+      "state": "todo"
+    },
+    "M-LAUNCH-PJM-PLAN-900": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-OVERVIEW-010": {

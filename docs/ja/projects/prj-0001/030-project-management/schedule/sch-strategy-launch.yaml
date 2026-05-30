@@ -172,17 +172,9 @@ group_milestones:
       owner: PM
 
   - catalog_id: prj-0001:dct-project-management
-    group: 管理計画
     milestone:
       id: M-LAUNCH-PJM-PLAN-900
-      name: 管理計画グループ完了
-      owner: PM
-
-  - catalog_id: prj-0001:dct-project-management
-    group: 組織体制
-    milestone:
-      id: M-LAUNCH-PJM-ORG-900
-      name: 組織体制グループ完了
+      name: プロジェクト・マネジメントドメイン完了
       owner: PM
 
 # catalog の depends_on を補完するドメイン間依存

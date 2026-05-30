@@ -56,6 +56,7 @@
     "prj-0001:sch-milestones": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-milestones.yaml",
     "prj-0001:sch-strategy-launch": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-strategy-launch.yaml",
     "prj-0001:sch-track-launch": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-track-launch.yaml",
+    "docs-contents-guide": "docs/ja/specdojo/guides/docs-contents-guide.md",
     "docs-structure-guide": "docs/ja/specdojo/guides/docs-structure-guide.md",
     "specdojo-command-usage-guide": "docs/ja/specdojo/guides/specdojo-command-usage-guide.md",
     "specdojo-deliverables-to-schedule-guide": "docs/ja/specdojo/guides/specdojo-deliverables-to-schedule-guide.md",

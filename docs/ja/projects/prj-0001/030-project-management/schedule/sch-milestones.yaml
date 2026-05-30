@@ -13,18 +13,6 @@ milestones:
       - T-LAUNCH-PJD-CHARTER-050
       - T-LAUNCH-PJD-ALT-050
     owner: PM
-  - id: M-LAUNCH-PJM-PLAN-900
-    name: 管理計画グループ完了
-    depends_on:
-      - T-LAUNCH-PJM-COMM-050
-      - T-LAUNCH-PJM-QLTY-050
-    owner: PM
-  - id: M-LAUNCH-PJM-ORG-900
-    name: 組織体制グループ完了
-    depends_on:
-      - T-LAUNCH-PJM-MBR-050
-      - T-LAUNCH-PJM-RACI-050
-    owner: PM
   - id: GATE-LAUNCH-FP
     name: プロジェクト定義・マネジメント first-pass 完了
     depends_on:
@@ -43,4 +31,14 @@ milestones:
       - T-LAUNCH-PJM-ROLE-030
       - T-LAUNCH-PJM-MBR-030
       - T-LAUNCH-PJM-RACI-030
+    owner: PM
+  - id: M-LAUNCH-PJM-PLAN-900
+    name: プロジェクト・マネジメントドメイン完了
+    depends_on:
+      - T-LAUNCH-PJM-COMM-050
+      - T-LAUNCH-PJM-QLTY-050
+      - T-LAUNCH-PJM-MBR-050
+      - T-LAUNCH-PJM-RACI-050
+      - T-LAUNCH-PJM-SCHDEF-000
+      - T-LAUNCH-PJM-SCHSTG-000
     owner: PM

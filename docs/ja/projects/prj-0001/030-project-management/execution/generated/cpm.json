@@ -1200,23 +1200,6 @@
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "M-LAUNCH-PJM-PLAN-900": {
-      "id": "M-LAUNCH-PJM-PLAN-900",
-      "name": "管理計画グループ完了",
-      "owner": "PM",
-      "kind": "milestone",
-      "duration_days": 0,
-      "es": 5.625,
-      "ef": 5.625,
-      "ls": 5.625,
-      "lf": 5.625,
-      "slack": 0,
-      "depends_on": [
-        "T-LAUNCH-PJM-COMM-050",
-        "T-LAUNCH-PJM-QLTY-050"
-      ],
-      "schedule_file": "sch-milestones.yaml"
-    },
     "T-LAUNCH-PJM-RACI-040": {
       "id": "T-LAUNCH-PJM-RACI-040",
       "name": "pm-raci 整合性確認・修正",
@@ -1249,23 +1232,6 @@
         "T-LAUNCH-PJM-RACI-040"
       ],
       "schedule_file": "sch-track-launch.yaml"
-    },
-    "M-LAUNCH-PJM-ORG-900": {
-      "id": "M-LAUNCH-PJM-ORG-900",
-      "name": "組織体制グループ完了",
-      "owner": "PM",
-      "kind": "milestone",
-      "duration_days": 0,
-      "es": 5.625,
-      "ef": 5.625,
-      "ls": 5.625,
-      "lf": 5.625,
-      "slack": 0,
-      "depends_on": [
-        "T-LAUNCH-PJM-MBR-050",
-        "T-LAUNCH-PJM-RACI-050"
-      ],
-      "schedule_file": "sch-milestones.yaml"
     },
     "T-LAUNCH-PJM-ROLE-040": {
       "id": "T-LAUNCH-PJM-ROLE-040",
@@ -1333,6 +1299,27 @@
       "tags": [
         "initial-complete"
       ]
+    },
+    "M-LAUNCH-PJM-PLAN-900": {
+      "id": "M-LAUNCH-PJM-PLAN-900",
+      "name": "プロジェクト・マネジメントドメイン完了",
+      "owner": "PM",
+      "kind": "milestone",
+      "duration_days": 0,
+      "es": 5.625,
+      "ef": 5.625,
+      "ls": 5.625,
+      "lf": 5.625,
+      "slack": 0,
+      "depends_on": [
+        "T-LAUNCH-PJM-COMM-050",
+        "T-LAUNCH-PJM-QLTY-050",
+        "T-LAUNCH-PJM-MBR-050",
+        "T-LAUNCH-PJM-RACI-050",
+        "T-LAUNCH-PJM-SCHDEF-000",
+        "T-LAUNCH-PJM-SCHSTG-000"
+      ],
+      "schedule_file": "sch-milestones.yaml"
     }
   },
   "critical_path": [

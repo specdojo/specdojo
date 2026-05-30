@@ -454,7 +454,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   for (const gm of strategy.group_milestones ?? []) {
     const groupDeliverables = sorted.filter(d => {
       if (d.catalogId !== gm.catalog_id) return false
-      return gm.group !== undefined ? d.groupName === gm.group : d.groupName === null
+      return gm.group !== undefined ? d.groupName === gm.group : true
     })
 
     if (groupDeliverables.length === 0) {
