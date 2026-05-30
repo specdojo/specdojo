@@ -221,10 +221,7 @@ docs/
 │   │   │   │   │   │   ├── pjr-0001-auth.md      # 登録項目（認証）
 │   │   │   │   │   │   ├── pjr-0002-payment.md   # 登録項目（決済）
 │   │   │   │   │   │   └── generated/            # 正本から生成される補助一覧
-│   │   │   │   │   │       ├── pjr-open-items.md # 未完了項目一覧
-│   │   │   │   │   │       ├── pjr-by-owner.md   # 担当者別一覧
-│   │   │   │   │   │       ├── pjr-by-priority.md # 優先度別一覧
-│   │   │   │   │   │       └── pjr-by-status.md  # 状態別一覧
+│   │   │   │   │   │       └── pjr-views.md      # 台帳ビュー（状態別・優先度別・担当者別）
 │   │   │   │   │   │
 │   │   │   │   │   └── generated/                # type別の派生管理ビュー
 │   │   │   │   │       ├── pm-risk-register.md   # type=risk の抽出ビュー
@@ -418,14 +415,12 @@ flowchart LR
   DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ"]
   SCH["sch-track-&lt;track&gt;.yaml<br/>スケジュール"]
   EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
-  POI["pjr-open-items<br/>未完了項目一覧"]
-  PB["pjr-by-owner/priority/status<br/>担当者/優先度/状態別一覧"]
+  PV["pjr-views<br/>台帳ビュー（状態別・優先度別・担当者別）"]
   PRR["pm-risk-register<br/>リスク登録簿"]
   PL["pm-issue/change-request/decision-log<br/>課題/変更要求/意思決定<br/>ログ"]
 
   PJR --> DC --> SCH --> EXE
-  PJR --> POI
-  PJR --> PB
+  PJR --> PV
   PJR --> PRR
   PJR --> PL
 

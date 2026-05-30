@@ -100,7 +100,7 @@ Project Register
 | PJR-0079 | open | taskをstep-by-stepで実行 | agentで実行する前にtaskをステップごとに実行 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0080 | open | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0081 | deferred | metadata.jsonの要否確認 | 少なくとも更新日付は不要、ファイル自体の用途も確認 | todo | medium | ARC | 2026-05-31 | - | 人向けなのでしばらく運用して不要であれば削除 | - |
-| PJR-0082 | open | pjr-by-*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0082 | done | pjr-by-*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | pjr-viewsに統合 | - |
 | PJR-0083 | done | milestoneをtimelineの上部に表示 | milestoneの表示位置をtimelineの上部に変更 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | 上部へ移動 | - |
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
@@ -112,10 +112,7 @@ Project Register
 
 ### 4.1. 登録簿内の補助一覧
 
-- `[未完了項目一覧](./generated/pjr-open-items.md)`
-- `[担当者別一覧](./generated/pjr-by-owner.md)`
-- `[優先度別一覧](./generated/pjr-by-priority.md)`
-- `[状態別一覧](./generated/pjr-by-status.md)`
+- `[台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)`
 
 ### 4.2. controls 全体の派生管理ビュー
 

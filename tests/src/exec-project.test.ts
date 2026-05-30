@@ -13,8 +13,9 @@ function clearEnv(): void {
 }
 
 function writeConfig(dir: string): void {
+  mkdirSync(join(dir, '.specdojo'), { recursive: true })
   writeFileSync(
-    join(dir, 'specdojo.config.json'),
+    join(dir, '.specdojo', 'specdojo.config.json'),
     JSON.stringify(
       {
         version: 1,

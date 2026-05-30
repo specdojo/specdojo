@@ -645,10 +645,7 @@ controls/
 ├─ project-register/
 │  ├─ pjr-index.md
 │  └─ generated/
-│     ├─ pjr-open-items.md
-│     ├─ pjr-by-owner.md
-│     ├─ pjr-by-priority.md
-│     └─ pjr-by-status.md
+│     └─ pjr-views.md
 └─ generated/
    ├─ pm-risk-register.md
    ├─ pm-issue-log.md
@@ -828,10 +825,7 @@ specdojo register build --project prj-0001
 
 ```text
 controls/project-register/generated/
-├─ pjr-open-items.md
-├─ pjr-by-owner.md
-├─ pjr-by-priority.md
-└─ pjr-by-status.md
+└─ pjr-views.md
 ```
 
 `--scope controls` では、`project_register_path` の親ディレクトリの `generated/` に controls 全体の type 別管理ビューを生成する。

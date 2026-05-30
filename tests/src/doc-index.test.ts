@@ -97,7 +97,7 @@ describe('buildDocIndex', () => {
     const repoRoot = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
     try {
       const docsRoot = join(repoRoot, 'docs')
-      mkdirSync(join(docsRoot, '.specdojo'), { recursive: true })
+      mkdirSync(join(repoRoot, '.specdojo'), { recursive: true })
       mkdirSync(join(docsRoot, 'generated'), { recursive: true })
       writeFileSync(
         join(docsRoot, 'generated', 'ignored.md'),
@@ -118,7 +118,7 @@ describe('buildDocIndex', () => {
         'utf8'
       )
       writeFileSync(
-        join(docsRoot, '.specdojo', 'index-config.yaml'),
+        join(repoRoot, '.specdojo', 'index-config.yaml'),
         [
           'nested_id_files:',
           '  - file: docs/viewpoints.yaml',

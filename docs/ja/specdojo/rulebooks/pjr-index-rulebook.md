@@ -114,10 +114,7 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 
 | 区分                        | リンク先例                              | 必須 |
 | --------------------------- | --------------------------------------- | ---- |
-| 登録簿内の未完了項目一覧    | `./generated/pjr-open-items.md`         | 任意 |
-| 登録簿内の担当者別一覧      | `./generated/pjr-by-owner.md`           | 任意 |
-| 登録簿内の優先度別一覧      | `./generated/pjr-by-priority.md`        | 任意 |
-| 登録簿内の状態別一覧        | `./generated/pjr-by-status.md`          | 任意 |
+| 登録簿内の台帳ビュー（状態別・優先度別・担当者別） | `./generated/pjr-views.md` | 任意 |
 | controls 全体のリスク登録簿 | `../generated/pm-risk-register.md`      | 任意 |
 | controls 全体の課題ログ     | `../generated/pm-issue-log.md`          | 任意 |
 | controls 全体の変更要求ログ | `../generated/pm-change-request-log.md` | 任意 |

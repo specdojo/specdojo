@@ -323,66 +323,40 @@ function derivedViewNote(): string {
   return '> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。'
 }
 
-function generateOpenItemsView(items: PjrItem[]): string {
-  const filtered = items.filter(it => !['done', 'rejected', 'deferred'].includes(it.status))
-  return [
-    '# 未完了項目一覧',
-    '',
-    derivedViewNote(),
-    '',
-    '<!-- prettier-ignore -->',
-    makeTable(filtered),
-    '',
-  ].join('\n')
-}
+function generateViewsFile(items: PjrItem[]): string {
+  const sections: string[] = ['# 台帳ビュー', '', derivedViewNote()]
 
-function generateByOwnerView(items: PjrItem[]): string {
+  // 1. 状態別
+  sections.push('', '## 1. 状態別')
+  let statusNum = 1
+  for (const status of VALID_STATUSES) {
+    const filtered = items.filter(it => it.status === status)
+    if (filtered.length === 0) continue
+    sections.push('', `### 1.${statusNum}. ${status}`, '', '<!-- prettier-ignore -->', makeTable(filtered))
+    statusNum++
+  }
+
+  // 2. 優先度別
+  sections.push('', '## 2. 優先度別')
+  let priorityNum = 1
+  for (const priority of VALID_PRIORITIES) {
+    const filtered = items.filter(it => it.priority === priority)
+    sections.push('', `### 2.${priorityNum}. ${priority}`, '', '<!-- prettier-ignore -->', makeTable(filtered))
+    priorityNum++
+  }
+
+  // 3. 担当者別
+  sections.push('', '## 3. 担当者別')
   const grouped = new Map<string, PjrItem[]>()
   for (const item of items) {
     const key = item.owner || '-'
     if (!grouped.has(key)) grouped.set(key, [])
     grouped.get(key)!.push(item)
   }
-
-  const sections: string[] = ['# 担当者別一覧', '', derivedViewNote()]
-
-  let num = 1
+  let ownerNum = 1
   for (const owner of [...grouped.keys()].sort()) {
-    sections.push(
-      '',
-      `## ${num}. ${owner}`,
-      '',
-      '<!-- prettier-ignore -->',
-      makeTable(grouped.get(owner)!)
-    )
-    num++
-  }
-
-  return sections.join('\n') + '\n'
-}
-
-function generateByPriorityView(items: PjrItem[]): string {
-  const sections: string[] = ['# 優先度別一覧', '', derivedViewNote()]
-
-  let num = 1
-  for (const priority of VALID_PRIORITIES) {
-    const filtered = items.filter(it => it.priority === priority)
-    sections.push('', `## ${num}. ${priority}`, '', '<!-- prettier-ignore -->', makeTable(filtered))
-    num++
-  }
-
-  return sections.join('\n') + '\n'
-}
-
-function generateByStatusView(items: PjrItem[]): string {
-  const sections: string[] = ['# 状態別一覧', '', derivedViewNote()]
-
-  let num = 1
-  for (const status of VALID_STATUSES) {
-    const filtered = items.filter(it => it.status === status)
-    if (filtered.length === 0) continue
-    sections.push('', `## ${num}. ${status}`, '', '<!-- prettier-ignore -->', makeTable(filtered))
-    num++
+    sections.push('', `### 3.${ownerNum}. ${owner}`, '', '<!-- prettier-ignore -->', makeTable(grouped.get(owner)!))
+    ownerNum++
   }
 
   return sections.join('\n') + '\n'
@@ -419,24 +393,10 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
   const controlsViews: ViewFile[] = []
 
   if (scope === 'register' || scope === 'all') {
-    registerViews.push(
-      {
-        path: join(paths.generatedPath, 'pjr-open-items.md'),
-        content: generateOpenItemsView(regItems),
-      },
-      {
-        path: join(paths.generatedPath, 'pjr-by-owner.md'),
-        content: generateByOwnerView(regItems),
-      },
-      {
-        path: join(paths.generatedPath, 'pjr-by-priority.md'),
-        content: generateByPriorityView(regItems),
-      },
-      {
-        path: join(paths.generatedPath, 'pjr-by-status.md'),
-        content: generateByStatusView(regItems),
-      }
-    )
+    registerViews.push({
+      path: join(paths.generatedPath, 'pjr-views.md'),
+      content: generateViewsFile(regItems),
+    })
   }
 
   if (scope === 'controls' || scope === 'all') {

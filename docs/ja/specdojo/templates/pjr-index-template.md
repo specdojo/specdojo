@@ -29,10 +29,7 @@ Project Register
 
 ### 4.1. 登録簿内の補助一覧
 
-- `[未完了項目一覧](./generated/pjr-open-items.md)`
-- `[担当者別一覧](./generated/pjr-by-owner.md)`
-- `[優先度別一覧](./generated/pjr-by-priority.md)`
-- `[状態別一覧](./generated/pjr-by-status.md)`
+- `[台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)`
 
 ### 4.2. controls 全体の派生管理ビュー
 

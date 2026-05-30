@@ -196,8 +196,9 @@ describe('buildReadySnapshot', () => {
       const executionPath = join(dir, 'execution')
       mkdirSync(projectPath, { recursive: true })
       mkdirSync(executionPath, { recursive: true })
+      mkdirSync(join(dir, '.specdojo'), { recursive: true })
       writeFileSync(
-        join(dir, 'specdojo.config.json'),
+        join(dir, '.specdojo', 'specdojo.config.json'),
         JSON.stringify(
           {
             version: 1,
@@ -244,8 +245,9 @@ describe('writeReadyFiles', () => {
       const executionPath = join(dir, 'execution')
       mkdirSync(projectPath, { recursive: true })
       mkdirSync(executionPath, { recursive: true })
+      mkdirSync(join(dir, '.specdojo'), { recursive: true })
       writeFileSync(
-        join(dir, 'specdojo.config.json'),
+        join(dir, '.specdojo', 'specdojo.config.json'),
         JSON.stringify(
           {
             version: 1,
