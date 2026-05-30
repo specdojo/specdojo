@@ -217,7 +217,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
         owner: typeof mv['owner'] === 'string' ? mv['owner'] : undefined,
         depends_on: Array.isArray(mv['depends_on']) ? mv['depends_on'].map(String) : [],
         duration_days: 0,
-        kind: 'milestone',
+        kind: id.startsWith('GATE-') ? 'gate' : 'milestone',
         schedule_file: f,
       })
     }

@@ -280,6 +280,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   // Track phase boundary (last pre-finalize task / first finalize task) per deliverable
   type Boundary = { lastPreFinalizeId: string | null; firstFinalizeId: string | null }
   const boundaries = new Map<string, Boundary>()
+  // Track first-task deps per deliverable (used for phase gate cycle detection)
+  const firstTaskDepsMap = new Map<string, Set<string>>()
   // Use a Map to allow post-generation patching for phase gates
   const taskMap = new Map<string, GeneratedTask>()
 
@@ -318,6 +320,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       const fin = finalizeTaskId.get(cd.requires)
       if (fin) firstDeps.add(fin)
     }
+    firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
 
     let prevId: string | null = null
     let lastPreFinalizeId: string | null = null
@@ -361,7 +364,30 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       continue
     }
 
-    const gateDeps = scopedLocalIds
+    // Build set of finalize task IDs (050) for all scoped deliverables.
+    // A deliverable whose first task depends on another scoped deliverable's finalize task
+    // cannot feed into the gate without creating a cycle:
+    //   GATE → A-finalize → B-first-pass → ... → B-030 → GATE
+    // Such deliverables are excluded from gateDeps but still blocked by the gate on their 040.
+    const scopedFinalizeIds = new Set<string>()
+    for (const localId of scopedLocalIds) {
+      const fin = finalizeTaskId.get(localId)
+      if (fin) scopedFinalizeIds.add(fin)
+    }
+
+    const independentIds = scopedLocalIds.filter(id => {
+      const deps = firstTaskDepsMap.get(id) ?? new Set<string>()
+      return ![...deps].some(dep => scopedFinalizeIds.has(dep))
+    })
+
+    const dependentIds = scopedLocalIds.filter(id => !independentIds.includes(id))
+    if (dependentIds.length > 0) {
+      warnings.push(
+        `phase_gate ${gate.id}: excluded from depends_on to avoid cycle (first-pass depends on scoped finalize): ${dependentIds.join(', ')}`
+      )
+    }
+
+    const gateDeps = independentIds
       .map(id => boundaries.get(id)?.lastPreFinalizeId)
       .filter((id): id is string => id !== null && id !== undefined)
 
@@ -372,6 +398,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
     milestones.push({ id: gate.id, name: gate.name, depends_on: gateDeps, owner: gate.owner })
 
+    // Patch first finalize-pass tasks for ALL scoped deliverables (including dependent ones)
     for (const localId of scopedLocalIds) {
       const firstFinalizeId = boundaries.get(localId)?.firstFinalizeId
       if (!firstFinalizeId) continue

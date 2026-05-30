@@ -37,8 +37,8 @@ done_criteria:
 - depends_on: -
 - critical_first_rank: `2`
 - fifo_rank: `2`
-- urgency: 遅延余裕あり（slack=1.5）。
-- CPM: `ES=0, EF=0.25, LS=1.5, LF=1.75, slack=1.5`
+- urgency: 遅延余裕あり（slack=4.375）。
+- CPM: `ES=0, EF=0.25, LS=4.375, LF=4.625, slack=4.375`
 
 ## 5. 実行ガイド
 

@@ -17,7 +17,7 @@
 | rank | id | owner | slack | ES | schedule_file |
 |---:|---|---|---:|---:|---|
 | 1 | `T-LAUNCH-PJD-OVERVIEW-010` | BA | 0 | 0 | sch-track-launch.yaml |
-| 2 | `T-LAUNCH-PJM-PLAN-010` | PM | 1.5 | 0 | sch-track-launch.yaml |
+| 2 | `T-LAUNCH-PJM-PLAN-010` | PM | 4.375 | 0 | sch-track-launch.yaml |
 
 ## FIFO Order
 

@@ -31,7 +31,8 @@ function dayLabelUtc(dt: Date): string {
   return `${mm}/${dd}`
 }
 
-function stateColor(state: ExecState | 'milestone', critical: boolean): string {
+function stateColor(state: ExecState | 'milestone' | 'gate', critical: boolean): string {
+  if (state === 'gate') return '#7c3aed'
   if (state === 'milestone') return '#b45309'
   if (state === 'done') return '#16a34a'
   if (state === 'doing') return '#2563eb'
@@ -59,11 +60,35 @@ export function buildTimelineSvg(
 
   const milestoneRows = rows.filter(r => r.kind === 'milestone')
   const taskRowsByFile = new Map<string, CpmNode[]>()
+  let firstTaskFile: string | null = null
   for (const row of rows) {
     if (row.kind !== 'task') continue
+    if (!firstTaskFile) firstTaskFile = row.schedule_file
     const group = taskRowsByFile.get(row.schedule_file)
     if (group) group.push(row)
     else taskRowsByFile.set(row.schedule_file, [row])
+  }
+
+  // Insert each gate row immediately after its last dependency task in the first task file section
+  const gateRows = rows.filter(r => r.kind === 'gate')
+  if (firstTaskFile && gateRows.length > 0) {
+    const fileRows = taskRowsByFile.get(firstTaskFile) ?? []
+    const rowIndexById = new Map(fileRows.map((r, i) => [r.id, i]))
+
+    // Sort gates by their insertion position descending so back-to-front splicing keeps indices stable
+    const insertions = gateRows
+      .map(gate => {
+        const depIndices = gate.depends_on
+          .map(depId => rowIndexById.get(depId) ?? -1)
+          .filter(idx => idx >= 0)
+        return { gate, insertAfter: depIndices.length > 0 ? Math.max(...depIndices) : fileRows.length - 1 }
+      })
+      .sort((a, b) => b.insertAfter - a.insertAfter)
+
+    for (const { gate, insertAfter } of insertions) {
+      fileRows.splice(insertAfter + 1, 0, gate)
+    }
+    taskRowsByFile.set(firstTaskFile, fileRows)
   }
 
   const taskSegments = new Map<string, WorkingTaskSegment[]>()
@@ -108,7 +133,7 @@ export function buildTimelineSvg(
     for (const row of milestoneRows) layoutRows.push({ type: 'node', row })
   }
 
-  // Tasks grouped by file
+  // Tasks (+ gates merged in) grouped by file
   for (const [scheduleFile, fileRows] of taskRowsByFile.entries()) {
     layoutRows.push({
       type: 'section',
@@ -160,6 +185,7 @@ export function buildTimelineSvg(
     { label: 'done', color: '#16a34a' },
     { label: 'blocked', color: '#f59e0b' },
     { label: 'critical', color: '#dc2626' },
+    { label: 'gate', color: '#7c3aed' },
   ]
   let legendX = 16
   for (const item of legend) {
@@ -220,10 +246,17 @@ export function buildTimelineSvg(
     const rowTop = currentY - 14
     const rowMid = currentY - 2
     const taskState =
-      row.kind === 'task' ? (stateSnapshot?.tasks[row.id]?.state ?? 'todo') : 'milestone'
+      row.kind === 'task'
+        ? (stateSnapshot?.tasks[row.id]?.state ?? 'todo')
+        : row.kind === 'gate'
+          ? 'gate'
+          : 'milestone'
     const fill = stateColor(taskState, criticalSet.has(row.id))
     const label = row.name ? `${row.id} ${row.name}` : row.id
 
+    if (row.kind === 'gate') {
+      parts.push(`<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f3e8ff" />`)
+    }
     parts.push(`<text class="label" x="16" y="${currentY}">${xmlEscape(label)}</text>`)
     parts.push(
       `<line class="row-grid" x1="0" y1="${currentY + 8}" x2="${width}" y2="${currentY + 8}" />`
@@ -248,6 +281,13 @@ export function buildTimelineSvg(
           `<rect x="${startX}" y="${rowTop}" width="${widthPx}" height="12" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="${criticalSet.has(row.id) ? 1.25 : 0.75}" opacity="0.94" />`
         )
       }
+    } else if (row.kind === 'gate') {
+      const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar)
+      const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth)
+      // Vertical bar with top/bottom caps (gate/barrier symbol)
+      parts.push(`<rect x="${cx - 2}" y="${rowTop}" width="4" height="12" fill="${fill}" opacity="0.9" />`)
+      parts.push(`<rect x="${cx - 7}" y="${rowTop}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`)
+      parts.push(`<rect x="${cx - 7}" y="${rowTop + 9}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`)
     } else {
       const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar)
       const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth)

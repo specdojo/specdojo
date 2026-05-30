@@ -41,6 +41,16 @@
         "initial_state": true
       }
     },
+    "T-LAUNCH-PJM-SCHDEF-050": {
+      "state": "done",
+      "last_ts": "2026-05-23T00:00:00Z",
+      "last_by": "indie",
+      "last_type": "complete",
+      "last_msg": "初期投入時点で作成済み",
+      "meta": {
+        "initial_state": true
+      }
+    },
     "T-LAUNCH-PJM-SCHSTG-010": {
       "state": "done",
       "last_ts": "2026-05-23T00:00:00Z",
@@ -81,6 +91,16 @@
         "initial_state": true
       }
     },
+    "T-LAUNCH-PJM-SCHSTG-050": {
+      "state": "done",
+      "last_ts": "2026-05-23T00:00:00Z",
+      "last_by": "indie",
+      "last_type": "complete",
+      "last_msg": "初期投入時点で作成済み",
+      "meta": {
+        "initial_state": true
+      }
+    },
     "M-LAUNCH-PJD-900": {
       "state": "todo"
     },
@@ -93,6 +113,18 @@
     "M-LAUNCH-PJM-SCH-900": {
       "state": "todo"
     },
+    "GATE-LAUNCH-PJD-FP": {
+      "state": "todo"
+    },
+    "GATE-LAUNCH-PJM-PLAN-FP": {
+      "state": "todo"
+    },
+    "GATE-LAUNCH-PJM-ORG-FP": {
+      "state": "todo"
+    },
+    "GATE-LAUNCH-PJM-SCH-FP": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJD-OVERVIEW-010": {
       "state": "todo"
     },
@@ -100,6 +132,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJD-OVERVIEW-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-OVERVIEW-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-SCOPE-010": {
@@ -111,6 +149,12 @@
     "T-LAUNCH-PJD-SCOPE-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJD-SCOPE-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SCOPE-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJD-SUCCESS-010": {
       "state": "todo"
     },
@@ -118,6 +162,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJD-SUCCESS-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SUCCESS-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-SUCCESS-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-STAKEHOLDER-010": {
@@ -129,6 +179,12 @@
     "T-LAUNCH-PJD-STAKEHOLDER-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJD-STAKEHOLDER-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-STAKEHOLDER-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJD-CHARTER-010": {
       "state": "todo"
     },
@@ -136,6 +192,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJD-CHARTER-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-CHARTER-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-ACD-010": {
@@ -147,6 +209,12 @@
     "T-LAUNCH-PJD-ACD-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJD-ACD-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ACD-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJD-ISSUES-010": {
       "state": "todo"
     },
@@ -154,6 +222,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJD-ISSUES-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ISSUES-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ISSUES-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJD-ALT-010": {
@@ -165,6 +239,12 @@
     "T-LAUNCH-PJD-ALT-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJD-ALT-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJD-ALT-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJM-PLAN-010": {
       "state": "todo"
     },
@@ -172,6 +252,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJM-PLAN-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-PLAN-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-PLAN-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJM-COMM-010": {
@@ -183,6 +269,12 @@
     "T-LAUNCH-PJM-COMM-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJM-COMM-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-COMM-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJM-QLTY-010": {
       "state": "todo"
     },
@@ -192,6 +284,12 @@
     "T-LAUNCH-PJM-QLTY-030": {
       "state": "todo"
     },
+    "T-LAUNCH-PJM-QLTY-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-QLTY-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJM-ORG-010": {
       "state": "todo"
     },
@@ -199,6 +297,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJM-ORG-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ORG-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-ORG-050": {
       "state": "todo"
     },
     "T-LAUNCH-PJM-ROLE-010": {
@@ -213,6 +317,9 @@
     "T-LAUNCH-PJM-ROLE-040": {
       "state": "todo"
     },
+    "T-LAUNCH-PJM-ROLE-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJM-MBR-010": {
       "state": "todo"
     },
@@ -225,6 +332,9 @@
     "T-LAUNCH-PJM-MBR-040": {
       "state": "todo"
     },
+    "T-LAUNCH-PJM-MBR-050": {
+      "state": "todo"
+    },
     "T-LAUNCH-PJM-RACI-010": {
       "state": "todo"
     },
@@ -232,6 +342,12 @@
       "state": "todo"
     },
     "T-LAUNCH-PJM-RACI-030": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-RACI-040": {
+      "state": "todo"
+    },
+    "T-LAUNCH-PJM-RACI-050": {
       "state": "todo"
     }
   }

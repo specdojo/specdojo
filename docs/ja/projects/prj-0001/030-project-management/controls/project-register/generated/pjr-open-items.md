@@ -16,4 +16,3 @@
 | PJR-0080 | open | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0081 | open | metadata.jsonの要否確認 | 少なくとも更新日付は不要、ファイル自体の用途も確認 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0082 | open | pjr-by-*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
-| PJR-0084 | open | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | - | - | - |

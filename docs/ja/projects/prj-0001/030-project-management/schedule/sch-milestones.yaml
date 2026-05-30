@@ -9,25 +9,46 @@ milestones:
   - id: M-LAUNCH-PJD-900
     name: プロジェクト定義ドメイン完了
     depends_on:
-      - T-LAUNCH-PJD-SUCCESS-030
-      - T-LAUNCH-PJD-CHARTER-030
-      - T-LAUNCH-PJD-ALT-030
+      - T-LAUNCH-PJD-SUCCESS-050
+      - T-LAUNCH-PJD-CHARTER-050
+      - T-LAUNCH-PJD-ALT-050
     owner: PM
   - id: M-LAUNCH-PJM-PLAN-900
     name: 管理計画グループ完了
     depends_on:
-      - T-LAUNCH-PJM-COMM-030
-      - T-LAUNCH-PJM-QLTY-030
+      - T-LAUNCH-PJM-COMM-050
+      - T-LAUNCH-PJM-QLTY-050
     owner: PM
   - id: M-LAUNCH-PJM-ORG-900
     name: 組織体制グループ完了
     depends_on:
-      - T-LAUNCH-PJM-MBR-040
-      - T-LAUNCH-PJM-RACI-030
+      - T-LAUNCH-PJM-MBR-050
+      - T-LAUNCH-PJM-RACI-050
     owner: PM
   - id: M-LAUNCH-PJM-SCH-900
     name: スケジュールグループ完了
     depends_on:
-      - T-LAUNCH-PJM-SCHDEF-040
-      - T-LAUNCH-PJM-SCHSTG-040
+      - T-LAUNCH-PJM-SCHDEF-050
+      - T-LAUNCH-PJM-SCHSTG-050
+    owner: PM
+  - id: GATE-LAUNCH-PJD-FP
+    name: プロジェクト定義 first-pass 完了
+    depends_on:
+      - T-LAUNCH-PJD-OVERVIEW-030
+    owner: PM
+  - id: GATE-LAUNCH-PJM-PLAN-FP
+    name: 管理計画 first-pass 完了
+    depends_on:
+      - T-LAUNCH-PJM-PLAN-030
+    owner: PM
+  - id: GATE-LAUNCH-PJM-ORG-FP
+    name: 組織体制 first-pass 完了
+    depends_on:
+      - T-LAUNCH-PJM-ORG-030
+    owner: PM
+  - id: GATE-LAUNCH-PJM-SCH-FP
+    name: スケジュール first-pass 完了
+    depends_on:
+      - T-LAUNCH-PJM-SCHDEF-030
+      - T-LAUNCH-PJM-SCHSTG-030
     owner: PM

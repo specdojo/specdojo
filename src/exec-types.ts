@@ -57,7 +57,7 @@ export type ScheduleNode = {
   owner?: string
   depends_on: string[]
   duration_days: number
-  kind: 'task' | 'milestone'
+  kind: 'task' | 'milestone' | 'gate'
   schedule_file: string
 }
 
@@ -80,7 +80,7 @@ export type CpmNode = {
   id: string
   name?: string
   owner?: string
-  kind: 'task' | 'milestone'
+  kind: 'task' | 'milestone' | 'gate'
   duration_days: number
   es: number
   ef: number
