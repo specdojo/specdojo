@@ -11,6 +11,11 @@ project_id: prj-0001
 # Member は、実際に作業する人間または agent を表す。
 # roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
 # タスク側の owner には pm-roles.yaml に存在する Role code を使う。
+#
+# type: agent のメンバーには command と capabilities を定義する。
+# exec-strategy-<track>.yaml がこれらを参照してタスクを割り当てる。
+#   command     : exec run が直接呼び出すシェルコマンド
+#   capabilities: このエージェントが持つ能力（web_search 等）
 
 members:
   - nickname: indie
@@ -34,7 +39,8 @@ members:
       - publication
       - accountability
     scheduler_strategy: critical-first
-    note: 個人開発における人間の最終判断主体。全責務を兼務する。 公開文書では個人名と連絡先を記載しない。
+    note: 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。
+
   - nickname: coordinate-agent
     display_name: Coordinate Agent
     email: null
@@ -47,6 +53,7 @@ members:
       - workflow-control
     scheduler_strategy: critical-first
     note: TUI モードで validate/build/scheduler を実行し、edit-agent へタスクを委譲する調整 agent。runner スクリプトでは edit-agent を直接起動するため使用しない。
+
   - nickname: edit-agent
     display_name: Edit Agent
     email: null
@@ -57,8 +64,11 @@ members:
       - task-execution
       - document-creation
       - implementation
+    capabilities: []
+    command: "opencode run --agent edit-agent"
     scheduler_strategy: critical-first
-    note: draft フェーズ（model_tier:full）のタスクを担当する。タスクの owner フィールドからロール文脈を判断し、成果物を作成・編集する agent。--by edit-agent でタスクを claim する。
+    note: 成果物の新規作成・文書化を担当する標準エージェント。タスクの owner フィールドからロール文脈を判断して作業する。
+
   - nickname: small-edit-agent
     display_name: Small Edit Agent
     email: null
@@ -69,8 +79,42 @@ members:
       - task-execution
       - document-revision
       - review-response
+    capabilities: []
+    command: "opencode run --agent small-edit-agent"
     scheduler_strategy: critical-first
-    note: review・finalize フェーズ（model_tier:small）のタスクを担当する軽量 edit-agent。--by small-edit-agent でタスクを claim する。edit-agent と同じプロンプトを使用し、モデルのみ小型に差し替える。
+    note: 軽量・高速モデルで整合性修正・フォーマット整形を担当する。edit-agent と同じプロンプトを使用し、モデルのみ小型に差し替える。
+
+  - nickname: expert-agent
+    display_name: Expert Agent
+    email: null
+    roles: []
+    type: agent
+    persona: task-executor
+    focus:
+      - task-execution
+      - complex-analysis
+      - architecture-judgment
+    capabilities: []
+    command: "opencode run --agent expert-agent"
+    scheduler_strategy: critical-first
+    note: difficulty:expert のタスクを担当する高性能エージェント。複雑な分析・多観点推論・アーキテクチャ判断を行う。
+
+  - nickname: expert-web-agent
+    display_name: Expert Web Agent
+    email: null
+    roles: []
+    type: agent
+    persona: task-executor
+    focus:
+      - task-execution
+      - research
+      - external-reference
+    capabilities:
+      - web_search
+    command: "opencode run --agent expert-agent-web"
+    scheduler_strategy: critical-first
+    note: 外部 Web 情報の参照が必要な調査・補強フェーズを担当する。research-first-pass.enrich で主に使用する。
+
   - nickname: review-agent
     display_name: Review Agent
     email: null
@@ -81,5 +125,7 @@ members:
       - done-criteria-verification
       - cross-viewpoint-consistency
       - quality-assurance
+    capabilities: []
+    command: "opencode run --agent review-agent"
     scheduler_strategy: fifo
     note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。

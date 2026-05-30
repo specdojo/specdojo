@@ -18,7 +18,7 @@
 | PJR-0079 | open | taskをstep-by-stepで実行 | agentで実行する前にtaskをステップごとに実行 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0080 | open | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0086 | open | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
-| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | _TODO_ | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
 
 ### 1.2. done
 
@@ -97,6 +97,7 @@
 | PJR-0083 | done | milestoneをtimelineの上部に表示 | milestoneの表示位置をtimelineの上部に変更 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | 上部へ移動 | - |
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-strategy-guide.mdに記述。設定ファイルも変更 | - |
 
 ### 1.3. deferred
 
@@ -212,7 +213,8 @@
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | open | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
-| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | _TODO_ | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-strategy-guide.mdに記述。設定ファイルも変更 | - |
 
 ### 2.3. low
 
@@ -295,7 +297,8 @@
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | open | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
-| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | _TODO_ | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-strategy-guide.mdに記述。設定ファイルも変更 | - |
 
 ### 3.2. PO
 

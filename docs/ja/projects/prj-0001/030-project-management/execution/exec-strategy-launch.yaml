@@ -1,0 +1,64 @@
+kind: exec-strategy
+id: prj-0001:exec-strategy-launch
+type: project
+status: draft
+track: launch
+
+# exec-strategy-launch.yaml
+# sch-strategy-launch.yaml の execution: auto フェーズに対して
+# pm-members.yaml のエージェントを割り当てる。
+#
+# 対象フェーズ（execution: auto のみ）:
+#   first-pass.enrich          → 成果物の補強・充実
+#   research-first-pass.enrich → 外部調査が必要な補強（web_search 使用）
+#   finalize-pass.align        → 成果物間の整合性確認・修正
+#
+# manual フェーズ（draft / review / finalize）はここに記載しない。
+#
+# assignment_rules の評価ルール:
+#   1. 上から順に評価し、最初にマッチしたルールを適用する。
+#   2. members 配列は優先順。先頭が primary、以降は rate limit 発生時のフォールバック候補。
+#   3. rate_limit_policy.on_critical.action: try_next により配列の次へ順次試みる。
+#   4. 全メンバーで失敗した場合は on_exhausted に従う。
+
+assignment_rules:
+  # research-first-pass.enrich → 外部調査が必要（web_search）
+  # 難易度に関わらず web_search 可能なエージェントを優先する
+  - phase_set: research-first-pass
+    phase: enrich
+    members:
+      - expert-web-agent    # web_search あり
+      - expert-agent        # フォールバック（web_search なし）
+      - edit-agent
+
+  # difficulty:expert → 高性能エージェントで実行（phase_set 非依存）
+  - difficulty: expert
+    members:
+      - expert-agent
+      - edit-agent
+
+  # first-pass.enrich → 標準的な補強
+  - phase_set: first-pass
+    phase: enrich
+    members:
+      - edit-agent
+      - small-edit-agent
+
+  # finalize-pass.align → 整合性確認・修正
+  - phase_set: finalize-pass
+    phase: align
+    members:
+      - edit-agent
+      - small-edit-agent
+
+rate_limit_policy:
+  on_non_critical:
+    action: skip            # cpm.slack > 0: block イベントを記録して次のタスクへ
+  on_critical:
+    action: try_next        # cpm.slack == 0: members 配列の次のメンバーへ
+    retry:
+      max_attempts: 3
+      initial_wait_seconds: 60
+      backoff_multiplier: 3  # 60s → 180s → 540s
+      max_wait_seconds: 600
+    on_exhausted: block      # 全メンバー試行後はブロックして人間に委ねる

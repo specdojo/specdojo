@@ -1,144 +1,23 @@
 # exec-agent.yaml
-# specdojo exec run の自動エージェント選択設定
+# specdojo exec run のエントリポイント設定
 #
-# sch-strategy-*.yaml は AI 非依存の純粋なプロジェクト管理定義（phase_set・duration・difficulty）を保持する。
-# 本ファイルは (phase_set, phase.id, difficulty) から tier と capabilities を決定し、
-# agent コマンドを自動選択するためのマッピングを一元管理する。
+# ─ 設定の分担 ────────────────────────────────────────────────────────────────
+# pm-members.yaml                     : エージェントの定義（command・capabilities）
+# schedule/exec-strategy-<track>.yaml : フェーズ・難易度 → メンバー割り当てルール
+# このファイル                         : exec run のグローバル設定
 #
-# exec run --auto の処理フロー:
-#   1. ready.json から次のタスクを読み取る（phase_set・phase.id・difficulty・execution を含む）
-#   2. execution == manual のタスクは skip_and_log してスキップ（以降のステップは実行しない）
-#   3. phase_tier_rules を上から評価し、最初にマッチしたルールの tier と capabilities を適用する
-#   4. difficulty_overrides を評価し、必要に応じて tier を昇格させる
-#   5. tier_routing から cmd と by を解決する
-#      - capabilities がある場合は "<tier>+<capability>" の複合キーを先に試す
-#      - 複合キーがなければ "<tier>" にフォールバックする
-#   6. agent_commands[cmd] のシェルコマンドを実行する
-#
-# execution の解決順位（後者が優先）:
-#   1. sch-strategy.yaml の phase_sets[phase_set][phase].execution（省略時は auto）
-#   2. sch-strategy.yaml の owner_rules[].phase_overrides[phase].execution
+# ─ exec run --auto の処理フロー ──────────────────────────────────────────────
+# 1. ready.json からタスクを取得する（phase_set・phase・difficulty・execution を含む）
+# 2. execution == manual のタスクは skip_and_log してスキップ
+# 3. トラックに対応する exec-strategy-<track>.yaml の assignment_rules を上から評価し、
+#    最初にマッチしたルールの members 配列を決定する
+# 4. members[0] の command（pm-members.yaml）を実行する
+# 5. rate limit 検出時は exec-strategy の rate_limit_policy に従い
+#    members 配列の次へ順次フォールバックする
 
-# tier 定義（抽象的な能力レベル。実際のモデルは opencode.json の agent 定義が持つ）
-# small  : 軽量・高速。機械的な確認・整合修正・フォーマット整形。
-# full   : 高品質。標準的な新規作成・設計・文書化。
-# expert : 最高性能。複雑な分析・多観点推論・アーキテクチャ判断。
-
-# フェーズ tier ルール
-# (phase_set, phase.id) の組み合わせで基本 tier と capabilities を決定する。
-# 上から順に評価し、最初にマッチしたルールを適用する。
-# マッチしない組み合わせは実行をスキップし、ログに出力する。
-#
-# Markdown・YAML ともに同じ phase_set を使う。
-# バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、
-# validate フェーズは設けない。
-phase_tier_rules:
-
-  # standard: 全成果物の標準フロー（Markdown・YAML 共通）
-  - phase_set: standard
-    phase: draft
-    tier: full
-  - phase_set: standard
-    phase: review
-    tier: small
-  - phase_set: standard
-    phase: finalize
-    tier: small
-
-  # research: 外部参照が必要な調査・分析ドキュメント
-  - phase_set: research
-    phase: draft
-    tier: expert
-    capabilities:
-      - web_search      # 外部標準・技術情報の参照が必要
-  - phase_set: research
-    phase: review
-    tier: expert        # 比較分析の妥当性確認は最高品質で行う
-  - phase_set: research
-    phase: finalize
-    tier: small
-
-# 難易度による tier 昇格（phase_tier_rules の結果に上書き適用）
-# small → full → expert の方向にのみ昇格する（降格はしない）
-difficulty_overrides:
-  - difficulty: expert
-    min_tier: expert    # expert 成果物は全フェーズで expert を使う
-  - difficulty: high
-    min_tier: full      # high 成果物の small フェーズを full に昇格させる
-
-# tier_routing: tier（と capabilities）→ agent コマンドのマッピング
-#
-# 解決順:
-#   1. "<tier>+<capability>" の複合キーを順に試す（capabilities が複数ある場合は組み合わせを試す）
-#   2. マッチしなければ "<tier>" にフォールバックする
-#
-# 現在定義している tier:
-#   small  → opencode-small  (例: openai/gpt-5.1-codex-mini, copilot/gpt-5.4-mini)
-#   full   → opencode-edit   (例: openai/gpt-5.2-codex, copilot/gpt-5.3-codex)
-#   expert → opencode-expert (例: openai/gpt-5.3-codex, claude/claude-opus-4-7)
-tier_routing:
-  manual:
-    cmd: skip
-    by: human          # エージェントを起動せず、人間による実行待ちとして記録する
-  small:
-    cmd: opencode-small
-    by: small-edit-agent
-  full:
-    cmd: opencode-edit
-    by: edit-agent
-  expert:
-    cmd: opencode-expert
-    by: expert-agent
-  # capabilities 複合キー（tier + capability の組み合わせで別コマンドにルーティング）
-  expert+web_search:
-    cmd: opencode-expert-web
-    by: expert-agent
-  full+web_search:
-    cmd: opencode-edit-web
-    by: edit-agent
-
-# capabilities 定義（利用可能な能力の一覧と説明）
-# phase_tier_rules の capabilities フィールドで参照する。
-capabilities:
-  web_search:
-    description: "外部 Web 情報の参照が必要（標準・API リファレンス・技術動向など）"
-  extended_context:
-    description: "通常より大きなコンテキストウィンドウが必要な大規模文書"
-
-# レートリミット対応ポリシー
-#
-# exec run はエージェントの終了コードまたは stderr パターンでレートリミットを検出し、
-# ready.json の cpm.slack でクリティカル判定を行う。
-#
-# on_non_critical: cpm.slack > 0 → block イベントを記録して次のタスクへスキップ
-# on_critical:     cpm.slack == 0 → fallback_tier で代替エージェントに切り替えて再試行。
-#                  指数バックオフで最大 max_attempts 回試み、すべて失敗なら block イベントを記録して停止。
-#                  TPD（日次トークン上限）には対応できないため、max_wait_seconds を超えて失敗が続く場合は人間が判断する。
-rate_limit_policy:
-  detection:
-    exit_codes: [1]
-    stderr_patterns:
-      - "rate limit"
-      - "429"
-  on_non_critical:
-    action: skip
-  on_critical:
-    action: retry_with_fallback
-    fallback_tier: small
-    retry:
-      max_attempts: 3        # fallback 含めた最大試行回数
-      initial_wait_seconds: 60
-      backoff_multiplier: 3  # 60s → 180s → 540s
-      max_wait_seconds: 600  # 上限10分（TPD には対応不可）
-
-# エージェントコマンド定義
-# specdojo exec run はタスクプロンプトを生成し、コマンド末尾に引数として追加して実行する。
-agent_commands:
-  opencode-small:       "opencode run --agent small-edit-agent"
-  opencode-edit:        "opencode run --agent edit-agent"
-  opencode-expert:      "opencode run --agent expert-agent"
-  opencode-edit-web:    "opencode run --agent edit-agent-web"
-  opencode-expert-web:  "opencode run --agent expert-agent-web"
-  opencode-review:      "opencode run --agent review-agent"
-  claude-edit:          "claude --print"
-  claude-expert:        "claude --print"  # opencode.json 側で claude-opus を指定
+# レートリミット検出設定（全トラック共通）
+rate_limit_detection:
+  exit_codes: [1]
+  stderr_patterns:
+    - "rate limit"
+    - "429"

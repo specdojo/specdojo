@@ -233,7 +233,7 @@ docs/
 │   │   │   │   │   ├── sch-milestones.yaml       # マイルストーン定義
 │   │   │   │   │   ├── sch-defaults.yaml         # 共通デフォルト設定
 │   │   │   │   │   ├── sch-track-<track>.yaml    # トラックごとのスケジュール定義
-│   │   │   │   │   └── sch-strategy-<track>.yaml # トラックごとのタスク生成戦略
+│   │   │   │   │   └── sch-strategy-<track>.yaml  # トラックごとのタスク生成戦略
 │   │   │   │   │
 │   │   │   │   ├── reporting/                    # レポート ※成果物カタログ管理対象外
 │   │   │   │   │   ├── progress-reports/         # 進捗報告
@@ -243,8 +243,9 @@ docs/
 │   │   │   │   │       ├── mm-2026-03-01-01.md   # 議事録
 │   │   │   │   │       └── mm-2026-03-08-01.md   # 議事録
 │   │   │   │   │
-│   │   │   │   └── execution/                    # 実行管理 ※成果物カタログ管理対象外
-│   │   │   │       ├── exec/                     # タスク実行ワークスペース
+│   │   │   │   └── execution/                     # 実行管理 ※成果物カタログ管理対象外
+│   │   │   │       ├── exec-strategy-<track>.yaml # トラックごとのエージェント実行戦略
+│   │   │   │       ├── exec/                      # タスク実行ワークスペース
 │   │   │   │       │   ├── events/               # イベントログ
 │   │   │   │       │   └── .locks/               # 実行ロック
 │   │   │   │       └── generated/                # 自動生成成果物

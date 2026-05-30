@@ -11,9 +11,9 @@ track: launch
 # owner はロール（BA / PO 等）のみを持つ。
 # 実際の実行者（--by <nickname>）は実行時に pm-members.yaml の roles フィールドと照合して決定する。
 #
-# AI エージェントの選択（model_tier・requires_web・tier_routing）は
-# このファイルには持たない。exec-agent.yaml で (phase_set, phase.id, difficulty) を
-# agent コマンドにマッピングする。
+# AI エージェントの選択は このファイルには持たない。
+# exec-strategy-launch.yaml で (phase_set, phase.id, difficulty) を
+# pm-members.yaml のエージェントにマッピングする。
 
 settings:
   start_date: "2026-05-24"

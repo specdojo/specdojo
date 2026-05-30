@@ -105,7 +105,8 @@ Project Register
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | open | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | - | - | - |
-| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | _TODO_ | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-strategy-guide.mdに記述。設定ファイルも変更 | - |
 
 ## 4. 派生ビュー
 
