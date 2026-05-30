@@ -8,6 +8,7 @@ type StrategyPhase = {
 
 type StrategyOwnerRule = {
   local_ids: string[]
+  phase_sets?: string[]
   phase_set?: string
 }
 
@@ -21,6 +22,7 @@ type CompletedDeliverable = {
 
 type StrategyForInitial = {
   phase_sets?: Record<string, StrategyPhase[]>
+  default_phase_sets?: string[]
   default_phase_set?: string
   owner_rules?: StrategyOwnerRule[]
   initial_state?: {
@@ -47,26 +49,33 @@ export function buildInitialStateFromStrategy(
     }
     if (!strategy?.initial_state?.completed_deliverables?.length) continue
     if (!strategy.phase_sets) continue
+    const phaseSets = strategy.phase_sets
 
-    const defaultPhaseSet = strategy.default_phase_set ?? ''
+    // Resolve default phase set names (supports both singular and plural)
+    const defaultPhaseSetNames: string[] =
+      strategy.default_phase_sets ??
+      (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(phaseSets))
 
-    // local_id → phase_set
-    const localIdPhaseSetMap = new Map<string, string>()
-    for (const rule of strategy.owner_rules ?? []) {
-      const phaseSet = rule.phase_set ?? defaultPhaseSet
-      for (const localId of rule.local_ids) {
-        localIdPhaseSetMap.set(localId, phaseSet)
+    // suffix → phase_id (global; assumes unique suffixes across all phase_sets)
+    const suffixToPhaseId = new Map<string, string>()
+    for (const phases of Object.values(phaseSets)) {
+      for (const phase of phases) {
+        suffixToPhaseId.set(phase.task_suffix, phase.id)
       }
     }
 
-    // phase_set → ordered phase ids
-    const phaseOrderMap = new Map<string, string[]>()
-    // "phase_set:suffix" → phase_id
-    const suffixToPhaseId = new Map<string, string>()
-    for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
-      phaseOrderMap.set(phaseSetName, phases.map(p => p.id))
-      for (const phase of phases) {
-        suffixToPhaseId.set(`${phaseSetName}:${phase.task_suffix}`, phase.id)
+    // local_id → ordered phase ids (combined from the deliverable's phase_sets)
+    const localIdPhasesMap = new Map<string, string[]>()
+    for (const rule of strategy.owner_rules ?? []) {
+      const rulePhaseSetNames: string[] =
+        rule.phase_sets ??
+        (rule.phase_set ? [rule.phase_set] : null) ??
+        defaultPhaseSetNames
+      const combinedPhaseIds = rulePhaseSetNames.flatMap(
+        name => (phaseSets[name] ?? []).map(p => p.id)
+      )
+      for (const localId of rule.local_ids) {
+        localIdPhasesMap.set(localId, combinedPhaseIds)
       }
     }
 
@@ -75,9 +84,10 @@ export function buildInitialStateFromStrategy(
       const completedDate = normalizeDateOnly(entry.completed_on) ?? '1970-01-01'
       const completedTs = `${completedDate}T00:00:00Z`
 
-      const phaseSet = localIdPhaseSetMap.get(local_id) ?? defaultPhaseSet
-      const phaseOrder = phaseOrderMap.get(phaseSet)
-      if (!phaseOrder?.length) continue
+      const phaseOrder =
+        localIdPhasesMap.get(local_id) ??
+        defaultPhaseSetNames.flatMap(name => (phaseSets[name] ?? []).map(p => p.id))
+      if (!phaseOrder.length) continue
 
       const throughIndex = completed_through
         ? phaseOrder.indexOf(completed_through)
@@ -105,7 +115,7 @@ export function buildInitialStateFromStrategy(
         }
 
         // completed_through is specified — check phase order
-        const phaseId = suffixToPhaseId.get(`${phaseSet}:${suffix}`)
+        const phaseId = suffixToPhaseId.get(suffix)
         if (!phaseId) continue
 
         const phaseIndex = phaseOrder.indexOf(phaseId)

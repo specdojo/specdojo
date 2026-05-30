@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { extname, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { readYaml } from './exec-shared.js'
 import type { DctDoc, DctSection } from './catalog-types.js'
 
@@ -20,12 +20,28 @@ type StrategyPhase = {
 type OwnerRule = {
   local_ids: string[]
   owner: string
+  phase_sets?: string[]
+  phase_set?: string
 }
 
 type CrossDomainDep = {
   dependent: string
   requires: string
   note?: string
+}
+
+type PhaseGateScope = {
+  catalogs?: string[]
+  groups?: Array<{ catalog_id: string; name: string }>
+  local_ids?: string[]
+}
+
+type PhaseGate = {
+  id: string
+  name: string
+  after_phase_sets: string[]
+  owner: string
+  scope: PhaseGateScope
 }
 
 type MilestoneConfig = {
@@ -49,10 +65,13 @@ type StrategyDoc = {
   track: string
   settings?: { start_date?: string }
   scope: StrategyScope
-  phases: Record<string, StrategyPhase[]>
+  phase_sets: Record<string, StrategyPhase[]>
+  default_phase_sets?: string[]
+  default_phase_set?: string
   task_id_pattern: string
   owner_rules: OwnerRule[]
   cross_domain_dependencies?: CrossDomainDep[]
+  phase_gates?: PhaseGate[]
   group_milestones?: GroupMilestone[]
 }
 
@@ -130,16 +149,29 @@ function collectDeliverables(
   }
 }
 
-function detectFormat(filePath: string): string {
-  const ext = extname(filePath).toLowerCase()
-  return ext === '.yaml' || ext === '.yml' ? 'yaml' : 'markdown'
-}
-
 function getOwner(localId: string, rules: OwnerRule[]): string | null {
   for (const rule of rules) {
     if (rule.local_ids.includes(localId)) return rule.owner
   }
   return null
+}
+
+function resolveGateScope(scope: PhaseGateScope, sorted: DeliverableInfo[]): string[] {
+  const result = new Set<string>()
+  for (const catalogId of scope.catalogs ?? []) {
+    for (const d of sorted) {
+      if (d.catalogId === catalogId) result.add(d.local_id)
+    }
+  }
+  for (const g of scope.groups ?? []) {
+    for (const d of sorted) {
+      if (d.catalogId === g.catalog_id && d.groupName === g.name) result.add(d.local_id)
+    }
+  }
+  for (const localId of scope.local_ids ?? []) {
+    result.add(localId)
+  }
+  return [...result]
 }
 
 function expandTaskId(
@@ -198,9 +230,9 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   const warnings: string[] = []
 
   const strategy = readYaml(strategyPath) as StrategyDoc
-  if (!strategy?.scope || !strategy?.phases || !strategy?.owner_rules) {
+  if (!strategy?.scope || !strategy?.phase_sets || !strategy?.owner_rules) {
     throw new Error(
-      `${strategyPath}: missing required fields (scope, phases, or owner_rules)`
+      `${strategyPath}: missing required fields (scope, phase_sets, or owner_rules)`
     )
   }
 
@@ -238,15 +270,28 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
   }
 
+  // Resolve default phase set names
+  const defaultPhaseSetNames: string[] =
+    strategy.default_phase_sets ??
+    (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
+
   // Map local_id → finalize task ID for dependency resolution
   const finalizeTaskId = new Map<string, string>()
-  const tasks: GeneratedTask[] = []
+  // Track phase boundary (last pre-finalize task / first finalize task) per deliverable
+  type Boundary = { lastPreFinalizeId: string | null; firstFinalizeId: string | null }
+  const boundaries = new Map<string, Boundary>()
+  // Use a Map to allow post-generation patching for phase gates
+  const taskMap = new Map<string, GeneratedTask>()
 
   for (const d of sorted) {
-    const format = detectFormat(d.path)
-    const phases = strategy.phases[format] ?? strategy.phases['markdown']
-    if (!phases || phases.length === 0) {
-      warnings.push(`No phases defined for format '${format}' (${d.local_id}) — skipping`)
+    const ownerRule = strategy.owner_rules.find(r => r.local_ids.includes(d.local_id))
+    const phaseSetNames: string[] =
+      ownerRule?.phase_sets ??
+      (ownerRule?.phase_set ? [ownerRule.phase_set] : null) ??
+      defaultPhaseSetNames
+    const phases = phaseSetNames.flatMap(name => strategy.phase_sets[name] ?? [])
+    if (phases.length === 0) {
+      warnings.push(`No phases resolved for '${d.local_id}' (phase_sets: ${phaseSetNames.join(', ')}) — skipping`)
       continue
     }
 
@@ -255,6 +300,12 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       errors.push(`No owner_rule found for local_id: ${d.local_id}`)
       continue
     }
+
+    // Compute the set of suffixes belonging to the last phase_set (= finalize-pass)
+    const lastPhaseSetName = phaseSetNames[phaseSetNames.length - 1]
+    const lastPhaseSetSuffixes = new Set(
+      (strategy.phase_sets[lastPhaseSetName] ?? []).map(p => p.task_suffix)
+    )
 
     // First phase: depends on finalize tasks of catalog deps + cross-domain deps
     const firstDeps = new Set<string>()
@@ -269,6 +320,9 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     }
 
     let prevId: string | null = null
+    let lastPreFinalizeId: string | null = null
+    let firstFinalizeId: string | null = null
+
     for (let i = 0; i < phases.length; i++) {
       const phase = phases[i]
       const taskId = expandTaskId(
@@ -277,22 +331,59 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         d.artifact_code,
         phase.task_suffix
       )
-      tasks.push({
+      taskMap.set(taskId, {
         id: taskId,
         name: `${d.local_id} ${phase.name}`,
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,
       })
+      if (!lastPhaseSetSuffixes.has(phase.task_suffix)) {
+        lastPreFinalizeId = taskId
+      } else if (firstFinalizeId === null) {
+        firstFinalizeId = taskId
+      }
       prevId = taskId
     }
     if (prevId) finalizeTaskId.set(d.local_id, prevId)
+    boundaries.set(d.local_id, { lastPreFinalizeId, firstFinalizeId })
   }
 
   if (errors.length > 0) return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
-  // Build per-group milestones from group_milestones config
+  // Process phase gates: create gate milestones and patch first finalize-pass tasks
   const milestones: GeneratedMilestone[] = []
+
+  for (const gate of strategy.phase_gates ?? []) {
+    const scopedLocalIds = resolveGateScope(gate.scope, sorted)
+    if (scopedLocalIds.length === 0) {
+      warnings.push(`phase_gate ${gate.id}: no deliverables found in scope`)
+      continue
+    }
+
+    const gateDeps = scopedLocalIds
+      .map(id => boundaries.get(id)?.lastPreFinalizeId)
+      .filter((id): id is string => id !== null && id !== undefined)
+
+    if (gateDeps.length === 0) {
+      warnings.push(`phase_gate ${gate.id}: no pre-finalize tasks found in scope`)
+      continue
+    }
+
+    milestones.push({ id: gate.id, name: gate.name, depends_on: gateDeps, owner: gate.owner })
+
+    for (const localId of scopedLocalIds) {
+      const firstFinalizeId = boundaries.get(localId)?.firstFinalizeId
+      if (!firstFinalizeId) continue
+      const task = taskMap.get(firstFinalizeId)
+      if (!task || task.depends_on.includes(gate.id)) continue
+      task.depends_on.push(gate.id)
+    }
+  }
+
+  const tasks = [...taskMap.values()]
+
+  // Build per-group milestones from group_milestones config
   for (const gm of strategy.group_milestones ?? []) {
     const groupDeliverables = sorted.filter(d => {
       if (d.catalogId !== gm.catalog_id) return false

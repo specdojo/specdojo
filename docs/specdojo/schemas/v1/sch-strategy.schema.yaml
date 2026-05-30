@@ -96,6 +96,19 @@ properties:
     description: >
       Name of the fallback phase set used when an owner_rule does not specify phase_set.
       Must be a key defined in phase_sets. Required when any owner_rule omits phase_set.
+      Use default_phase_sets (plural) instead when deliverables should run multiple phase sets in sequence.
+
+  default_phase_sets:
+    type: array
+    minItems: 1
+    description: >
+      Ordered list of phase set names applied to deliverables whose owner_rule omits phase_sets (plural).
+      Phases from each entry are concatenated in order to form the full task sequence.
+      Takes precedence over default_phase_set when both are present.
+      Each element must be a key defined in phase_sets.
+    items:
+      type: string
+      minLength: 1
 
   task_id_pattern:
     type: string
@@ -130,9 +143,20 @@ properties:
           type: string
           minLength: 1
           description: >
-            Name of the phase set to apply to these deliverables.
+            Name of a single phase set to apply to these deliverables.
             Must be a key defined in phase_sets.
             Falls back to default_phase_set when omitted.
+            Use phase_sets (plural) instead when multiple phase sets should run in sequence.
+        phase_sets:
+          type: array
+          minItems: 1
+          description: >
+            Ordered list of phase set names to apply to these deliverables in sequence.
+            Overrides phase_set (singular) and default_phase_sets when present.
+            Each element must be a key defined in phase_sets.
+          items:
+            type: string
+            minLength: 1
         difficulty:
           type: string
           enum: ["low", "normal", "high", "expert"]
@@ -221,6 +245,77 @@ properties:
         description: "Track start date. Overrides sch-defaults.yaml default_start_date when specified."
       notes:
         type: string
+
+  phase_gates:
+    type: array
+    description: >
+      Phase synchronization gates. Each gate creates a milestone that all scoped deliverables
+      must reach (end of their pre-finalize phase_set) before any of them can start their
+      finalize-pass phase_set. Scope is the union of catalogs, groups, and local_ids.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - after_phase_sets
+        - owner
+        - scope
+      properties:
+        id:
+          $ref: "./sch-common.schema.yaml#/$defs/Id"
+          description: "Gate milestone ID (e.g., GATE-LAUNCH-PJD-FP)."
+        name:
+          type: string
+          minLength: 1
+          description: "Gate display name."
+        after_phase_sets:
+          type: array
+          minItems: 1
+          description: >
+            Names of the phase_sets after which the gate is placed.
+            Lists all first-pass variants covered by this gate (e.g., [first-pass, research-first-pass]).
+            Documents intent; implementation gates before the last phase_set in each deliverable's sequence.
+          items:
+            type: string
+            minLength: 1
+        owner:
+          $ref: "./sch-common.schema.yaml#/$defs/Owner"
+        scope:
+          type: object
+          additionalProperties: false
+          description: "Deliverables covered by this gate. Union of catalogs, groups, and local_ids."
+          properties:
+            catalogs:
+              type: array
+              description: "All deliverables in these catalog IDs."
+              items:
+                type: string
+                minLength: 1
+              uniqueItems: true
+            groups:
+              type: array
+              description: "All deliverables in these catalog+group combinations."
+              items:
+                type: object
+                additionalProperties: false
+                required:
+                  - catalog_id
+                  - name
+                properties:
+                  catalog_id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+            local_ids:
+              type: array
+              description: "Specific deliverable local_ids."
+              items:
+                type: string
+                minLength: 1
+              uniqueItems: true
 
   cross_domain_dependencies:
     type: array

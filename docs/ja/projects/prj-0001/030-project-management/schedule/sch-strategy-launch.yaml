@@ -27,7 +27,7 @@ scope:
   include_kinds:
     - work
 
-# named phase sets（ファイル形式ではなく作業フローで分類する）
+# named phase sets（作業フローで分類する）
 # Markdown・YAML 問わず同じフェーズを使う。
 # バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、
 # 独立した validate フェーズは設けない。
@@ -37,45 +37,64 @@ scope:
 #   auto   : exec-agent.yaml の tier_routing に従いエージェントが実行する
 #   manual : エージェントを起動せず、人間による実行待ちとして記録する
 #
-# 解決順位（後者が優先）:
-#   1. phase_sets[phase_set][phase].execution  ← phase_set レベルのデフォルト
-#   2. owner_rules[].phase_overrides[phase].execution  ← 成果物レベルの例外上書き
+# フローは first-pass → finalize-pass の2段階。
+#   first-pass  : 各成果物の一次版を作成する（人がたたき台 → エージェントが補強 → 人がレビュー）
+#   finalize-pass: 一次版が揃ってから成果物間の整合性を確認し完成版にする
+#                  （align は他成果物の一次版を参照して実施する）
 phase_sets:
 
-  # 標準フロー: 新規作成 → レビュー → 最終仕上げ
-  standard:
+  # 一次版フロー: 人がたたき台 → エージェントが外部情報で補強 → 人がレビュー
+  first-pass:
     - id: draft
       name: たたき台作成
+      execution: manual
       task_suffix: "010"
       duration_days: 0.25  # 1〜2h 相当
-    - id: review
-      name: レビュー・修正
+    - id: enrich
+      name: 調査・補強
+      execution: auto
       task_suffix: "020"
-      duration_days: 0.125  # 0.5〜1h 相当
-    - id: finalize
-      name: 完成版仕上げ
+      duration_days: 0.5   # 2〜4h 相当（外部調査込み）
+    - id: review
+      name: 一次版レビュー
+      execution: manual
       task_suffix: "030"
-      duration_days: 0.125  # 0.5〜1h 相当
+      duration_days: 0.25  # 1〜2h 相当
 
-  # 外部参照が必要な調査・分析ドキュメントのフロー
-  # （比較検討・代替案評価など、外部情報収集が品質に直結する成果物）
-  # AI の requires_web 指定は exec-agent.yaml 側で行う
-  research:
+  # 調査系一次版フロー: 人が予備調査を含めたたき台 → エージェントが外部情報で深掘り → 人がレビュー
+  # 比較検討・代替案評価など、外部情報収集が品質に直結する成果物に使う
+  research-first-pass:
     - id: draft
-      name: たたき台作成（調査含む）
+      name: たたき台作成（予備調査含む）
+      execution: manual
       task_suffix: "010"
-      duration_days: 0.5    # 2〜4h 相当（外部調査込み）
-    - id: review
-      name: レビュー・修正
+      duration_days: 0.5   # 2〜4h 相当（人による予備調査込み）
+    - id: enrich
+      name: 調査・深掘り
+      execution: auto
       task_suffix: "020"
-      duration_days: 0.25   # 1〜2h 相当
-    - id: finalize
-      name: 完成版仕上げ
+      duration_days: 0.5   # 2〜4h 相当（外部調査込み）
+    - id: review
+      name: 一次版レビュー
+      execution: manual
       task_suffix: "030"
-      duration_days: 0.125
+      duration_days: 0.25  # 1〜2h 相当
 
-# owner_rule に phase_set を省略した場合のデフォルト
-default_phase_set: standard
+  # 完成版フロー: エージェントが成果物間の整合性を確認・修正 → 人が最終確定
+  finalize-pass:
+    - id: align
+      name: 整合性確認・修正
+      execution: auto
+      task_suffix: "040"
+      duration_days: 0.25  # 1〜2h 相当
+    - id: finalize
+      name: 完成版確定
+      execution: manual
+      task_suffix: "050"
+      duration_days: 0.125 # 0.5〜1h 相当
+
+# owner_rule に phase_sets を省略した場合のデフォルト（適用順）
+default_phase_sets: [first-pass, finalize-pass]
 
 # タスク ID パターン（domain_code・artifact_code・phase_suffix を展開）
 task_id_pattern: "T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}"
@@ -91,25 +110,22 @@ owner_rules:
       - prj-success-criteria-and-acceptance-criteria
       - prj-issues-and-approach
     owner: BA
-    phase_set: standard
     difficulty: normal
 
   - local_ids:
       - prj-assumptions-constraints-dependencies
     owner: ARC
-    phase_set: standard
     difficulty: high     # 制約・前提の整理は判断コストが高い
 
   - local_ids:
       - prj-comparison-of-alternatives
     owner: ARC
-    phase_set: research  # 外部情報収集が必要な比較検討
-    difficulty: high
+    phase_sets: [research-first-pass, finalize-pass]
+    difficulty: high     # 比較検討は人とエージェント双方が外部調査を担う
 
   - local_ids:
       - prj-charter
     owner: PO
-    phase_set: standard
     difficulty: normal
 
   - local_ids:
@@ -118,7 +134,6 @@ owner_rules:
       - pm-raci
       - pm-quality-management-plan
     owner: PM
-    phase_set: standard
     difficulty: normal
 
   - local_ids:
@@ -126,7 +141,6 @@ owner_rules:
       - sch-track-launch
       - sch-strategy-launch
     owner: PM
-    phase_set: standard
     difficulty: normal
 
   - local_ids:
@@ -134,14 +148,48 @@ owner_rules:
       - pm-roles
       - pm-members
     owner: PO
-    phase_set: standard
     difficulty: low      # テンプレートベースの定型記入
 
   - local_ids:
       - sch-defaults
     owner: ARC
-    phase_set: standard
     difficulty: low
+
+phase_gates:
+  - id: GATE-LAUNCH-PJD-FP
+    name: プロジェクト定義 first-pass 完了
+    after_phase_sets: [first-pass, research-first-pass]  # prj-comparison-of-alternatives は research-first-pass を使用
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-project-definition
+
+  - id: GATE-LAUNCH-PJM-PLAN-FP
+    name: 管理計画 first-pass 完了
+    after_phase_sets: [first-pass]
+    owner: PM
+    scope:
+      groups:
+        - catalog_id: prj-0001:dct-project-management
+          name: 管理計画
+
+  - id: GATE-LAUNCH-PJM-ORG-FP
+    name: 組織体制 first-pass 完了
+    after_phase_sets: [first-pass]
+    owner: PM
+    scope:
+      groups:
+        - catalog_id: prj-0001:dct-project-management
+          name: 組織体制
+
+  - id: GATE-LAUNCH-PJM-SCH-FP
+    name: スケジュール first-pass 完了
+    after_phase_sets: [first-pass]
+    owner: PM
+    scope:
+      groups:
+        - catalog_id: prj-0001:dct-project-management
+          name: スケジュール
 
 group_milestones:
   - catalog_id: prj-0001:dct-project-definition
