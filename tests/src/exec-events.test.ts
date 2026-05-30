@@ -54,7 +54,9 @@ function makeSchedule(
   }
 }
 
-function makeSnapshot(tasks: Record<string, { state: StateSnapshot['tasks'][string]['state']; last_by?: string }>): StateSnapshot {
+function makeSnapshot(
+  tasks: Record<string, { state: StateSnapshot['tasks'][string]['state']; last_by?: string }>
+): StateSnapshot {
   return {
     schedule_path: '.',
     tasks: Object.fromEntries(
@@ -93,7 +95,10 @@ describe('validateEventShape', () => {
   })
 
   it('未知の type はエラー', () => {
-    const errs = validateEventShape({ ...makeEvent(), type: 'unknown' as ExecEventV1['type'] }, 'test')
+    const errs = validateEventShape(
+      { ...makeEvent(), type: 'unknown' as ExecEventV1['type'] },
+      'test'
+    )
     expect(errs.some(e => e.includes('type must be one of'))).toBe(true)
   })
 
@@ -173,7 +178,10 @@ describe('foldEventsToState', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const events = [
       { path: '1.json', event: makeEvent({ type: 'claim', task_id: 'T-001', by: 'agent-1' }) },
-      { path: '2.json', event: makeEvent({ type: 'complete', task_id: 'T-001', by: 'agent-1', msg: 'done' }) },
+      {
+        path: '2.json',
+        event: makeEvent({ type: 'complete', task_id: 'T-001', by: 'agent-1', msg: 'done' }),
+      },
     ]
     const snapshot = foldEventsToState(events, schedule, '/dummy')
     expect(snapshot.tasks['T-001'].state).toBe('done')
@@ -183,7 +191,10 @@ describe('foldEventsToState', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const events = [
       { path: '1.json', event: makeEvent({ type: 'claim', task_id: 'T-001', by: 'agent-1' }) },
-      { path: '2.json', event: makeEvent({ type: 'block', task_id: 'T-001', by: 'agent-1', msg: 'waiting' }) },
+      {
+        path: '2.json',
+        event: makeEvent({ type: 'block', task_id: 'T-001', by: 'agent-1', msg: 'waiting' }),
+      },
     ]
     const snapshot = foldEventsToState(events, schedule, '/dummy')
     expect(snapshot.tasks['T-001'].state).toBe('blocked')
@@ -193,8 +204,14 @@ describe('foldEventsToState', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const events = [
       { path: '1.json', event: makeEvent({ type: 'claim', task_id: 'T-001', by: 'agent-1' }) },
-      { path: '2.json', event: makeEvent({ type: 'block', task_id: 'T-001', by: 'agent-1', msg: 'waiting' }) },
-      { path: '3.json', event: makeEvent({ type: 'unblock', task_id: 'T-001', by: 'agent-2', msg: 'resolved' }) },
+      {
+        path: '2.json',
+        event: makeEvent({ type: 'block', task_id: 'T-001', by: 'agent-1', msg: 'waiting' }),
+      },
+      {
+        path: '3.json',
+        event: makeEvent({ type: 'unblock', task_id: 'T-001', by: 'agent-2', msg: 'resolved' }),
+      },
     ]
     const snapshot = foldEventsToState(events, schedule, '/dummy')
     expect(snapshot.tasks['T-001'].state).toBe('todo')
@@ -203,7 +220,10 @@ describe('foldEventsToState', () => {
   it('cancel で cancelled に遷移する', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const events = [
-      { path: '1.json', event: makeEvent({ type: 'cancel', task_id: 'T-001', by: 'agent-1', msg: 'removed' }) },
+      {
+        path: '1.json',
+        event: makeEvent({ type: 'cancel', task_id: 'T-001', by: 'agent-1', msg: 'removed' }),
+      },
     ]
     const snapshot = foldEventsToState(events, schedule, '/dummy')
     expect(snapshot.tasks['T-001'].state).toBe('cancelled')
@@ -290,10 +310,7 @@ describe('computeReadyIds', () => {
   })
 
   it('milestone ノードは ready リストに含まれない', () => {
-    const schedule = makeSchedule([
-      { id: 'A' },
-      { id: 'M', kind: 'milestone', depends_on: ['A'] },
-    ])
+    const schedule = makeSchedule([{ id: 'A' }, { id: 'M', kind: 'milestone', depends_on: ['A'] }])
     const snapshot = makeSnapshot({ A: { state: 'done' } })
     expect(computeReadyIds(schedule, snapshot)).toEqual([])
   })
@@ -354,6 +371,12 @@ describe('canClaimTask', () => {
     const schedule = makeSchedule([{ id: 'T-001', owner: 'BA' }])
     const snapshot = makeSnapshot({ 'T-001': { state: 'todo' } })
     expect(canClaimTask(schedule, snapshot, 'T-001', 'PO', true).ok).toBe(true)
+  })
+
+  it('acting owner 未指定なら owner 付き task も claim できる', () => {
+    const schedule = makeSchedule([{ id: 'T-001', owner: 'BA' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'todo' } })
+    expect(canClaimTask(schedule, snapshot, 'T-001').ok).toBe(true)
   })
 })
 

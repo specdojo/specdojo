@@ -145,7 +145,7 @@ function findRosterMember(roster: ReturnType<typeof loadRosterForOpts>, actor: s
   return roster?.members.find(member => member.nickname === actor) ?? null
 }
 
-function resolveClaimOwner(
+export function resolveClaimOwner(
   opts: { owner?: string },
   actor: string,
   roster: ReturnType<typeof loadRosterForOpts> = null
@@ -178,7 +178,7 @@ function resolveClaimOwner(
     )
   }
 
-  return cliOwner || envOwner || rosterOwner || actor
+  return cliOwner || envOwner || rosterOwner || ''
 }
 
 function resolveSchedulerStrategy(
@@ -204,7 +204,6 @@ function printCommandError(error: unknown, fail = true): void {
   else process.exitCode = 1
 }
 
-
 function saveClaimBriefSnapshot(
   executionPath: string,
   taskId: string,
@@ -223,7 +222,6 @@ function saveClaimBriefSnapshot(
   copyFileSync(sourcePath, join(snapshotDir, fileName))
   writeClaimBriefSnapshotIndex(claimsDir)
 }
-
 
 function loadValidatedExecState(projectPath: string): LoadedExecState | null {
   const res = validateAll(projectPath)

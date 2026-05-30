@@ -218,7 +218,7 @@ export function canClaimTask(
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` }
   if (node.kind !== 'task') return { ok: false, reason: `cannot claim non-task node: ${taskId}` }
 
-  if (node.owner && !allowOwnerMismatch && actorOwner !== node.owner) {
+  if (node.owner && actorOwner && !allowOwnerMismatch && actorOwner !== node.owner) {
     return {
       ok: false,
       reason:
