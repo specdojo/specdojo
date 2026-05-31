@@ -124,8 +124,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerDocumentLinkProvider(
       [
-        { scheme: 'file', language: 'markdown' },
-        { scheme: 'file', language: 'yaml' },
+        { language: 'markdown' },
+        { language: 'yaml' },
       ],
       provider,
     ),
