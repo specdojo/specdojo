@@ -1,5 +1,5 @@
 ---
-id: sysd-ollama-opencode-settings
+id: sysd-opencode-agent-settings
 type: project
 status: draft
 rulebook: sysd-rulebook
