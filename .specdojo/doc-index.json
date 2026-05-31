@@ -2,6 +2,7 @@
   "version": 1,
   "entries": {
     "tsd-index": "docs/ja/specdojo/samples/tsd-index-sample.md",
+    "tsd-ollama-opencode": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md",
     "tsd-ollama": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
     "tsd-vllm-mlx-mr-opencode": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx-mr-opencode.md",
     "tsd-vllm-mlx-mr": "docs/ja/product/030-architecture/020-infrastructure/tsd-vllm-mlx-mr.md",
