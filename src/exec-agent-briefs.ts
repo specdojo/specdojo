@@ -37,6 +37,7 @@ type ReadyJson = {
 
 type ScheduleTask = {
   id: string
+  local_id?: string
   name?: string
   owner?: string
   duration_days?: number
@@ -202,7 +203,7 @@ function loadTaskDetails(
       const id = safeString(task?.id)
       if (!id) continue
       const name = safeString(task?.name, id)
-      const catalogItem = catalogItems.get(extractLocalId(name))
+      const catalogItem = catalogItems.get(safeString(task?.local_id) || extractLocalId(name))
       byId.set(id, {
         id,
         name,

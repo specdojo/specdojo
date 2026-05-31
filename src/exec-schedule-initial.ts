@@ -94,9 +94,8 @@ export function buildInitialStateFromStrategy(
 
       for (const node of schedule.nodes.values()) {
         if (node.kind !== 'task') continue
-        // Prefer explicit local_id field; fall back to name-prefix matching
-        const nodeLocalId = node.local_id ?? node.name?.split(' ')[0]
-        if (nodeLocalId !== local_id) continue
+        // Use explicit local_id field only
+        if (node.local_id !== local_id) continue
 
         const nodeParts = node.id.split('-')
         const suffix = nodeParts[nodeParts.length - 1]

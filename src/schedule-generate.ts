@@ -320,7 +320,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       taskMap.set(taskId, {
         id: taskId,
         local_id: d.local_id,
-        name: `${d.local_id} 完了済み`,
+        name: '完了済み',
         duration_days: 0.001,
         depends_on: [...firstDeps],
         owner,
@@ -388,7 +388,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       taskMap.set(taskId, {
         id: taskId,
         local_id: d.local_id,
-        name: `${d.local_id} ${phase.name}`,
+        name: phase.name,
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,

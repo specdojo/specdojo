@@ -5,7 +5,7 @@
   "nodes": {
     "T-LAUNCH-PJD-OVERVIEW-010": {
       "id": "T-LAUNCH-PJD-OVERVIEW-010",
-      "name": "prj-overview たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -19,7 +19,7 @@
     },
     "T-LAUNCH-PJD-OVERVIEW-020": {
       "id": "T-LAUNCH-PJD-OVERVIEW-020",
-      "name": "prj-overview 調査・補強",
+      "name": "調査・補強",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.5,
@@ -35,7 +35,7 @@
     },
     "T-LAUNCH-PJD-OVERVIEW-030": {
       "id": "T-LAUNCH-PJD-OVERVIEW-030",
-      "name": "prj-overview 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -51,7 +51,7 @@
     },
     "T-LAUNCH-PJD-SCOPE-010": {
       "id": "T-LAUNCH-PJD-SCOPE-010",
-      "name": "prj-scope たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -67,7 +67,7 @@
     },
     "T-LAUNCH-PJD-SCOPE-020": {
       "id": "T-LAUNCH-PJD-SCOPE-020",
-      "name": "prj-scope 調査・補強",
+      "name": "調査・補強",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.5,
@@ -83,7 +83,7 @@
     },
     "T-LAUNCH-PJD-SCOPE-030": {
       "id": "T-LAUNCH-PJD-SCOPE-030",
-      "name": "prj-scope 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -99,7 +99,7 @@
     },
     "T-LAUNCH-PJD-ACD-010": {
       "id": "T-LAUNCH-PJD-ACD-010",
-      "name": "prj-assumptions-constraints-dependencies たたき台作成",
+      "name": "たたき台作成",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.25,
@@ -115,7 +115,7 @@
     },
     "T-LAUNCH-PJD-ACD-020": {
       "id": "T-LAUNCH-PJD-ACD-020",
-      "name": "prj-assumptions-constraints-dependencies 調査・補強",
+      "name": "調査・補強",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.5,
@@ -131,7 +131,7 @@
     },
     "T-LAUNCH-PJD-ACD-030": {
       "id": "T-LAUNCH-PJD-ACD-030",
-      "name": "prj-assumptions-constraints-dependencies 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.25,
@@ -147,7 +147,7 @@
     },
     "T-LAUNCH-PJD-ISSUES-010": {
       "id": "T-LAUNCH-PJD-ISSUES-010",
-      "name": "prj-issues-and-approach たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -164,7 +164,7 @@
     },
     "T-LAUNCH-PJD-ISSUES-020": {
       "id": "T-LAUNCH-PJD-ISSUES-020",
-      "name": "prj-issues-and-approach 調査・補強",
+      "name": "調査・補強",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.5,
@@ -180,7 +180,7 @@
     },
     "T-LAUNCH-PJD-ISSUES-030": {
       "id": "T-LAUNCH-PJD-ISSUES-030",
-      "name": "prj-issues-and-approach 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -196,7 +196,7 @@
     },
     "T-LAUNCH-PJD-ALT-010": {
       "id": "T-LAUNCH-PJD-ALT-010",
-      "name": "prj-comparison-of-alternatives たたき台作成（予備調査含む）",
+      "name": "たたき台作成（予備調査含む）",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.5,
@@ -213,7 +213,7 @@
     },
     "T-LAUNCH-PJD-ALT-020": {
       "id": "T-LAUNCH-PJD-ALT-020",
-      "name": "prj-comparison-of-alternatives 調査・深掘り",
+      "name": "調査・深掘り",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.5,
@@ -229,7 +229,7 @@
     },
     "T-LAUNCH-PJD-ALT-030": {
       "id": "T-LAUNCH-PJD-ALT-030",
-      "name": "prj-comparison-of-alternatives 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.25,
@@ -245,7 +245,7 @@
     },
     "T-LAUNCH-PJD-STAKEHOLDER-010": {
       "id": "T-LAUNCH-PJD-STAKEHOLDER-010",
-      "name": "prj-stakeholder-register たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -261,7 +261,7 @@
     },
     "T-LAUNCH-PJD-STAKEHOLDER-020": {
       "id": "T-LAUNCH-PJD-STAKEHOLDER-020",
-      "name": "prj-stakeholder-register 調査・補強",
+      "name": "調査・補強",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.5,
@@ -277,7 +277,7 @@
     },
     "T-LAUNCH-PJD-STAKEHOLDER-030": {
       "id": "T-LAUNCH-PJD-STAKEHOLDER-030",
-      "name": "prj-stakeholder-register 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -293,7 +293,7 @@
     },
     "T-LAUNCH-PJD-CHARTER-010": {
       "id": "T-LAUNCH-PJD-CHARTER-010",
-      "name": "prj-charter たたき台作成",
+      "name": "たたき台作成",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -310,7 +310,7 @@
     },
     "T-LAUNCH-PJD-CHARTER-020": {
       "id": "T-LAUNCH-PJD-CHARTER-020",
-      "name": "prj-charter 調査・補強",
+      "name": "調査・補強",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.5,
@@ -326,7 +326,7 @@
     },
     "T-LAUNCH-PJD-CHARTER-030": {
       "id": "T-LAUNCH-PJD-CHARTER-030",
-      "name": "prj-charter 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -342,7 +342,7 @@
     },
     "T-LAUNCH-PJD-SUCCESS-010": {
       "id": "T-LAUNCH-PJD-SUCCESS-010",
-      "name": "prj-success-criteria-and-acceptance-criteria たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -358,7 +358,7 @@
     },
     "T-LAUNCH-PJD-SUCCESS-020": {
       "id": "T-LAUNCH-PJD-SUCCESS-020",
-      "name": "prj-success-criteria-and-acceptance-criteria 調査・補強",
+      "name": "調査・補強",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.5,
@@ -374,7 +374,7 @@
     },
     "T-LAUNCH-PJD-SUCCESS-030": {
       "id": "T-LAUNCH-PJD-SUCCESS-030",
-      "name": "prj-success-criteria-and-acceptance-criteria 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -390,7 +390,7 @@
     },
     "T-LAUNCH-PJM-ORG-010": {
       "id": "T-LAUNCH-PJM-ORG-010",
-      "name": "pm-organization たたき台作成",
+      "name": "たたき台作成",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -406,7 +406,7 @@
     },
     "T-LAUNCH-PJM-ORG-020": {
       "id": "T-LAUNCH-PJM-ORG-020",
-      "name": "pm-organization 調査・補強",
+      "name": "調査・補強",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.5,
@@ -422,7 +422,7 @@
     },
     "T-LAUNCH-PJM-ORG-030": {
       "id": "T-LAUNCH-PJM-ORG-030",
-      "name": "pm-organization 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -438,7 +438,7 @@
     },
     "T-LAUNCH-PJM-PLAN-010": {
       "id": "T-LAUNCH-PJM-PLAN-010",
-      "name": "pm-plan たたき台作成",
+      "name": "たたき台作成",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -452,7 +452,7 @@
     },
     "T-LAUNCH-PJM-PLAN-020": {
       "id": "T-LAUNCH-PJM-PLAN-020",
-      "name": "pm-plan 調査・補強",
+      "name": "調査・補強",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.5,
@@ -468,7 +468,7 @@
     },
     "T-LAUNCH-PJM-PLAN-030": {
       "id": "T-LAUNCH-PJM-PLAN-030",
-      "name": "pm-plan 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -484,7 +484,7 @@
     },
     "T-LAUNCH-PJM-COMM-010": {
       "id": "T-LAUNCH-PJM-COMM-010",
-      "name": "pm-communication-plan たたき台作成",
+      "name": "たたき台作成",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -500,7 +500,7 @@
     },
     "T-LAUNCH-PJM-COMM-020": {
       "id": "T-LAUNCH-PJM-COMM-020",
-      "name": "pm-communication-plan 調査・補強",
+      "name": "調査・補強",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.5,
@@ -516,7 +516,7 @@
     },
     "T-LAUNCH-PJM-COMM-030": {
       "id": "T-LAUNCH-PJM-COMM-030",
-      "name": "pm-communication-plan 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -532,7 +532,7 @@
     },
     "T-LAUNCH-PJM-QLTY-010": {
       "id": "T-LAUNCH-PJM-QLTY-010",
-      "name": "pm-quality-management-plan たたき台作成",
+      "name": "たたき台作成",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -548,7 +548,7 @@
     },
     "T-LAUNCH-PJM-QLTY-020": {
       "id": "T-LAUNCH-PJM-QLTY-020",
-      "name": "pm-quality-management-plan 調査・補強",
+      "name": "調査・補強",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.5,
@@ -564,7 +564,7 @@
     },
     "T-LAUNCH-PJM-QLTY-030": {
       "id": "T-LAUNCH-PJM-QLTY-030",
-      "name": "pm-quality-management-plan 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -580,7 +580,7 @@
     },
     "T-LAUNCH-PJM-RACI-010": {
       "id": "T-LAUNCH-PJM-RACI-010",
-      "name": "pm-raci たたき台作成",
+      "name": "たたき台作成",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -596,7 +596,7 @@
     },
     "T-LAUNCH-PJM-RACI-020": {
       "id": "T-LAUNCH-PJM-RACI-020",
-      "name": "pm-raci 調査・補強",
+      "name": "調査・補強",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.5,
@@ -612,7 +612,7 @@
     },
     "T-LAUNCH-PJM-RACI-030": {
       "id": "T-LAUNCH-PJM-RACI-030",
-      "name": "pm-raci 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -628,7 +628,7 @@
     },
     "T-LAUNCH-PJM-ROLE-010": {
       "id": "T-LAUNCH-PJM-ROLE-010",
-      "name": "pm-roles たたき台作成",
+      "name": "たたき台作成",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -644,7 +644,7 @@
     },
     "T-LAUNCH-PJM-ROLE-020": {
       "id": "T-LAUNCH-PJM-ROLE-020",
-      "name": "pm-roles 調査・補強",
+      "name": "調査・補強",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.5,
@@ -660,7 +660,7 @@
     },
     "T-LAUNCH-PJM-ROLE-030": {
       "id": "T-LAUNCH-PJM-ROLE-030",
-      "name": "pm-roles 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -676,7 +676,7 @@
     },
     "T-LAUNCH-PJM-MBR-010": {
       "id": "T-LAUNCH-PJM-MBR-010",
-      "name": "pm-members たたき台作成",
+      "name": "たたき台作成",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -693,7 +693,7 @@
     },
     "T-LAUNCH-PJM-MBR-020": {
       "id": "T-LAUNCH-PJM-MBR-020",
-      "name": "pm-members 調査・補強",
+      "name": "調査・補強",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.5,
@@ -709,7 +709,7 @@
     },
     "T-LAUNCH-PJM-MBR-030": {
       "id": "T-LAUNCH-PJM-MBR-030",
-      "name": "pm-members 一次版レビュー",
+      "name": "一次版レビュー",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -755,7 +755,7 @@
     },
     "T-LAUNCH-PJD-ACD-040": {
       "id": "T-LAUNCH-PJD-ACD-040",
-      "name": "prj-assumptions-constraints-dependencies 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.25,
@@ -772,7 +772,7 @@
     },
     "T-LAUNCH-PJD-ACD-050": {
       "id": "T-LAUNCH-PJD-ACD-050",
-      "name": "prj-assumptions-constraints-dependencies 完成版確定",
+      "name": "完成版確定",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.125,
@@ -788,7 +788,7 @@
     },
     "T-LAUNCH-PJD-ALT-040": {
       "id": "T-LAUNCH-PJD-ALT-040",
-      "name": "prj-comparison-of-alternatives 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.25,
@@ -805,7 +805,7 @@
     },
     "T-LAUNCH-PJD-ALT-050": {
       "id": "T-LAUNCH-PJD-ALT-050",
-      "name": "prj-comparison-of-alternatives 完成版確定",
+      "name": "完成版確定",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.125,
@@ -821,7 +821,7 @@
     },
     "T-LAUNCH-PJD-CHARTER-040": {
       "id": "T-LAUNCH-PJD-CHARTER-040",
-      "name": "prj-charter 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -838,7 +838,7 @@
     },
     "T-LAUNCH-PJD-CHARTER-050": {
       "id": "T-LAUNCH-PJD-CHARTER-050",
-      "name": "prj-charter 完成版確定",
+      "name": "完成版確定",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.125,
@@ -854,7 +854,7 @@
     },
     "T-LAUNCH-PJD-ISSUES-040": {
       "id": "T-LAUNCH-PJD-ISSUES-040",
-      "name": "prj-issues-and-approach 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -871,7 +871,7 @@
     },
     "T-LAUNCH-PJD-ISSUES-050": {
       "id": "T-LAUNCH-PJD-ISSUES-050",
-      "name": "prj-issues-and-approach 完成版確定",
+      "name": "完成版確定",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.125,
@@ -887,7 +887,7 @@
     },
     "T-LAUNCH-PJD-OVERVIEW-040": {
       "id": "T-LAUNCH-PJD-OVERVIEW-040",
-      "name": "prj-overview 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -904,7 +904,7 @@
     },
     "T-LAUNCH-PJD-OVERVIEW-050": {
       "id": "T-LAUNCH-PJD-OVERVIEW-050",
-      "name": "prj-overview 完成版確定",
+      "name": "完成版確定",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.125,
@@ -920,7 +920,7 @@
     },
     "T-LAUNCH-PJD-SCOPE-040": {
       "id": "T-LAUNCH-PJD-SCOPE-040",
-      "name": "prj-scope 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -937,7 +937,7 @@
     },
     "T-LAUNCH-PJD-SCOPE-050": {
       "id": "T-LAUNCH-PJD-SCOPE-050",
-      "name": "prj-scope 完成版確定",
+      "name": "完成版確定",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.125,
@@ -953,7 +953,7 @@
     },
     "T-LAUNCH-PJD-STAKEHOLDER-040": {
       "id": "T-LAUNCH-PJD-STAKEHOLDER-040",
-      "name": "prj-stakeholder-register 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -970,7 +970,7 @@
     },
     "T-LAUNCH-PJD-STAKEHOLDER-050": {
       "id": "T-LAUNCH-PJD-STAKEHOLDER-050",
-      "name": "prj-stakeholder-register 完成版確定",
+      "name": "完成版確定",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.125,
@@ -986,7 +986,7 @@
     },
     "T-LAUNCH-PJD-SUCCESS-040": {
       "id": "T-LAUNCH-PJD-SUCCESS-040",
-      "name": "prj-success-criteria-and-acceptance-criteria 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.25,
@@ -1003,7 +1003,7 @@
     },
     "T-LAUNCH-PJD-SUCCESS-050": {
       "id": "T-LAUNCH-PJD-SUCCESS-050",
-      "name": "prj-success-criteria-and-acceptance-criteria 完成版確定",
+      "name": "完成版確定",
       "owner": "BA",
       "kind": "task",
       "duration_days": 0.125,
@@ -1037,7 +1037,7 @@
     },
     "T-LAUNCH-PJM-COMM-040": {
       "id": "T-LAUNCH-PJM-COMM-040",
-      "name": "pm-communication-plan 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -1054,7 +1054,7 @@
     },
     "T-LAUNCH-PJM-COMM-050": {
       "id": "T-LAUNCH-PJM-COMM-050",
-      "name": "pm-communication-plan 完成版確定",
+      "name": "完成版確定",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -1070,7 +1070,7 @@
     },
     "T-LAUNCH-PJM-MBR-040": {
       "id": "T-LAUNCH-PJM-MBR-040",
-      "name": "pm-members 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -1087,7 +1087,7 @@
     },
     "T-LAUNCH-PJM-MBR-050": {
       "id": "T-LAUNCH-PJM-MBR-050",
-      "name": "pm-members 完成版確定",
+      "name": "完成版確定",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.125,
@@ -1103,7 +1103,7 @@
     },
     "T-LAUNCH-PJM-ORG-040": {
       "id": "T-LAUNCH-PJM-ORG-040",
-      "name": "pm-organization 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -1120,7 +1120,7 @@
     },
     "T-LAUNCH-PJM-ORG-050": {
       "id": "T-LAUNCH-PJM-ORG-050",
-      "name": "pm-organization 完成版確定",
+      "name": "完成版確定",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.125,
@@ -1136,7 +1136,7 @@
     },
     "T-LAUNCH-PJM-PLAN-040": {
       "id": "T-LAUNCH-PJM-PLAN-040",
-      "name": "pm-plan 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -1153,7 +1153,7 @@
     },
     "T-LAUNCH-PJM-PLAN-050": {
       "id": "T-LAUNCH-PJM-PLAN-050",
-      "name": "pm-plan 完成版確定",
+      "name": "完成版確定",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -1169,7 +1169,7 @@
     },
     "T-LAUNCH-PJM-QLTY-040": {
       "id": "T-LAUNCH-PJM-QLTY-040",
-      "name": "pm-quality-management-plan 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -1186,7 +1186,7 @@
     },
     "T-LAUNCH-PJM-QLTY-050": {
       "id": "T-LAUNCH-PJM-QLTY-050",
-      "name": "pm-quality-management-plan 完成版確定",
+      "name": "完成版確定",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -1202,7 +1202,7 @@
     },
     "T-LAUNCH-PJM-RACI-040": {
       "id": "T-LAUNCH-PJM-RACI-040",
-      "name": "pm-raci 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.25,
@@ -1219,7 +1219,7 @@
     },
     "T-LAUNCH-PJM-RACI-050": {
       "id": "T-LAUNCH-PJM-RACI-050",
-      "name": "pm-raci 完成版確定",
+      "name": "完成版確定",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.125,
@@ -1235,7 +1235,7 @@
     },
     "T-LAUNCH-PJM-ROLE-040": {
       "id": "T-LAUNCH-PJM-ROLE-040",
-      "name": "pm-roles 整合性確認・修正",
+      "name": "整合性確認・修正",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.25,
@@ -1252,7 +1252,7 @@
     },
     "T-LAUNCH-PJM-ROLE-050": {
       "id": "T-LAUNCH-PJM-ROLE-050",
-      "name": "pm-roles 完成版確定",
+      "name": "完成版確定",
       "owner": "PO",
       "kind": "task",
       "duration_days": 0.125,
@@ -1268,7 +1268,7 @@
     },
     "T-LAUNCH-PJM-SCHDEF-000": {
       "id": "T-LAUNCH-PJM-SCHDEF-000",
-      "name": "sch-defaults 完了済み",
+      "name": "完了済み",
       "owner": "ARC",
       "kind": "task",
       "duration_days": 0.001,
@@ -1285,7 +1285,7 @@
     },
     "T-LAUNCH-PJM-SCHSTG-000": {
       "id": "T-LAUNCH-PJM-SCHSTG-000",
-      "name": "sch-strategy-launch 完了済み",
+      "name": "完了済み",
       "owner": "PM",
       "kind": "task",
       "duration_days": 0.001,

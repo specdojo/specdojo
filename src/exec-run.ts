@@ -109,7 +109,7 @@ function resolveTaskPhaseContext(
   phaseSetSuffixToId: Map<string, string>
 ): TaskPhaseContext | null {
   // Prefer explicit local_id field; fall back to parsing the task name prefix
-  const localId = task.local_id ?? (task.name ?? '').split(' ')[0]
+  const localId = task.local_id
   if (!localId) return null
 
   const rule = localIdToRule.get(localId)

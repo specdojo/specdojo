@@ -24,7 +24,7 @@
     {
       "id": "T-LAUNCH-PJD-OVERVIEW-010",
       "local_id": "prj-overview",
-      "name": "prj-overview たたき台作成",
+      "name": "たたき台作成",
       "owner": "BA",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 1,
@@ -40,7 +40,7 @@
     {
       "id": "T-LAUNCH-PJM-PLAN-010",
       "local_id": "pm-plan",
-      "name": "pm-plan たたき台作成",
+      "name": "たたき台作成",
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 2,

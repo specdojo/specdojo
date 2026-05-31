@@ -8,7 +8,7 @@
 - task_id: `T-LAUNCH-PJM-PLAN-010`
 - project_id: `prj-0001`
 - specdojo_cli_project: `prj-0001`
-- name: pm-plan たたき台作成
+- name: たたき台作成
 - owner: PM
 - kind: task
 - schedule_file: `sch-track-launch.yaml`
@@ -16,7 +16,7 @@
 
 ## 2. 実施内容
 
-- primary_goal: pm-plan たたき台作成
+- primary_goal: たたき台作成
 - schedule_notes: -
 - tags: -
 
