@@ -55,7 +55,13 @@ export function buildTimelineSvg(
 ): string {
   const rows = Object.values(cpm.nodes).sort((a, b) => a.es - b.es || a.id.localeCompare(b.id))
   const criticalSet = new Set(cpm.critical_path)
-  const leftPad = 380
+  const leftPad = 440
+  // Left panel column boundaries
+  const col1X = 8
+  const col1DivX = 122
+  const col2X = 126
+  const col2DivX = 294
+  const col3X = 298
   const topPad = 108
   const bottomPad = 32
   const rowHeight = 24
@@ -177,8 +183,11 @@ export function buildTimelineSvg(
     .title { font-size: 18px; font-weight: 700; fill: #0f172a; }
     .caption { font-size: 11px; fill: #64748b; }
     .section { font-size: 13px; font-weight: 700; fill: #0f172a; }
-    .label { font-size: 12px; font-weight: 500; }
+    .label { font-size: 12px; font-weight: 600; fill: #1f2937; }
+    .label-artifact { font-size: 11px; font-weight: 400; fill: #6b7280; }
+    .label-id { font-size: 10px; font-family: ui-monospace, 'Courier New', monospace; fill: #9ca3af; }
     .axis { font-size: 11px; fill: #475569; }
+    .col-div { stroke: #d7dee7; stroke-width: 1; }
     .grid { stroke: #d7dee7; stroke-width: 1; }
     .row-grid { stroke: #edf2f7; stroke-width: 1; }
     .shade { fill: #f8fafc; }
@@ -224,6 +233,11 @@ export function buildTimelineSvg(
   )
   parts.push(`<text class="legend-label" x="${legendX + 20}" y="${legendY + 4}">weekend</text>`)
 
+  // Column header labels
+  parts.push(`<text class="axis" x="${col1X}" y="${topPad - 18}">コード</text>`)
+  parts.push(`<text class="axis" x="${col2X}" y="${topPad - 18}">成果物名</text>`)
+  parts.push(`<text class="axis" x="${col3X}" y="${topPad - 18}">フェーズ</text>`)
+
   for (let dayIndex = 0; dayIndex < totalDays; dayIndex += 1) {
     const dayStart = new Date(timelineStart.getTime() + dayIndex * 86400000)
     const x = leftPad + dayIndex * dayWidth
@@ -252,6 +266,13 @@ export function buildTimelineSvg(
   parts.push(
     `<line class="grid" x1="${leftPad + chartWidth}" y1="${topPad - 20}" x2="${leftPad + chartWidth}" y2="${height - bottomPad}" />`
   )
+  // Vertical column dividers in left panel
+  parts.push(
+    `<line class="col-div" x1="${col1DivX}" y1="${topPad - 22}" x2="${col1DivX}" y2="${height - bottomPad}" />`
+  )
+  parts.push(
+    `<line class="col-div" x1="${col2DivX}" y1="${topPad - 22}" x2="${col2DivX}" y2="${height - bottomPad}" />`
+  )
 
   let currentY = topPad
   for (const entry of layoutRows) {
@@ -278,19 +299,6 @@ export function buildTimelineSvg(
           : 'milestone'
     const fill = stateColor(taskState, criticalSet.has(row.id))
     const scheduleNode = schedule.nodes.get(row.id)
-    const label = (() => {
-      if (row.kind === 'task') {
-        const parts = row.id.split('-')
-        const shortId =
-          parts.length >= 2 ? `${parts[parts.length - 2]}-${parts[parts.length - 1]}` : row.id
-        const artifactName = scheduleNode?.artifact_name ?? ''
-        const taskName = row.name ?? ''
-        const middle = artifactName ? ` ${artifactName}` : ''
-        const suffix = taskName ? ` ${taskName}` : ''
-        return `${shortId}${middle}${suffix}`
-      }
-      return row.name ? `${row.id} ${row.name}` : row.id
-    })()
 
     if (row.kind === 'gate') {
       parts.push(
@@ -302,7 +310,26 @@ export function buildTimelineSvg(
         `<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f8fafc" />`
       )
     }
-    parts.push(`<text class="label" x="16" y="${currentY}">${xmlEscape(label)}</text>`)
+
+    if (row.kind === 'task') {
+      const idParts = row.id.split('-')
+      const shortId =
+        idParts.length >= 2
+          ? `${idParts[idParts.length - 2]}-${idParts[idParts.length - 1]}`
+          : row.id
+      const artifactName = scheduleNode?.artifact_name ?? ''
+      const taskName = row.name ?? ''
+      parts.push(`<text class="label-id" x="${col1X}" y="${currentY}">${xmlEscape(shortId)}</text>`)
+      if (artifactName)
+        parts.push(
+          `<text class="label-artifact" x="${col2X}" y="${currentY}">${xmlEscape(artifactName)}</text>`
+        )
+      if (taskName)
+        parts.push(`<text class="label" x="${col3X}" y="${currentY}">${xmlEscape(taskName)}</text>`)
+    } else {
+      const label = row.name ? `${row.id} ${row.name}` : row.id
+      parts.push(`<text class="label" x="${col1X}" y="${currentY}">${xmlEscape(label)}</text>`)
+    }
     parts.push(
       `<line class="row-grid" x1="0" y1="${currentY + 8}" x2="${width}" y2="${currentY + 8}" />`
     )
