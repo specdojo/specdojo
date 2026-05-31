@@ -225,7 +225,25 @@ PARAMETER repeat_penalty 1.05
 ollama create qwen3.6:27b-mlx-work-32k -f qwen3.6-27b-mlx-work-32k/Modelfile
 ```
 
-### 7.2. Gemma 4 E4B 軽作業用
+### 7.2. Qwen3.6-27B 通常作業用（レビュー・長文向け 64k）
+
+`qwen3.6-27b-mlx-work-64k/Modelfile`:
+
+```text
+FROM qwen3.6:27b-mlx
+PARAMETER num_ctx 65536
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+```
+
+作成:
+
+```bash
+ollama create qwen3.6:27b-mlx-work-64k -f qwen3.6-27b-mlx-work-64k/Modelfile
+```
+
+### 7.3. Gemma 4 E4B 軽作業用
 
 `gemma4-e4b-light-8k/Modelfile`:
 
@@ -242,7 +260,7 @@ PARAMETER top_p 0.9
 ollama create gemma4:e4b-light-8k -f gemma4-e4b-light-8k/Modelfile
 ```
 
-### 7.3. Qwen3.6-27B Coding MXFP8 重い実装用
+### 7.4. Qwen3.6-27B Coding MXFP8 重い実装用
 
 `qwen3.6-27b-coding-mxfp8-64k/Modelfile`:
 
@@ -260,10 +278,14 @@ PARAMETER repeat_penalty 1.05
 ollama create qwen3.6:27b-coding-mxfp8-64k -f qwen3.6-27b-coding-mxfp8-64k/Modelfile
 ```
 
-### 7.4. 動作確認
+### 7.5. 動作確認
 
 ```bash
 ollama run qwen3.6:27b-mlx-work-32k "通常作業用として、TypeScriptのテスト設計の観点を出してください。"
+```
+
+```bash
+ollama run qwen3.6:27b-mlx-work-64k "レビュー用として、このMarkdownの構成上の問題点を指摘してください。"
 ```
 
 ```bash

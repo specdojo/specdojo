@@ -29,7 +29,7 @@ based_on:
 
 - Host Mac 上の Ollama が起動していること
 - 利用するモデルがダウンロード済みであること
-- 用途別の派生モデル（`qwen3.6:27b-mlx-work-32k`、`gemma4:e4b-light-8k`、`qwen3.6:27b-coding-mxfp8-64k`）が作成済みであること
+- 用途別の派生モデル（`qwen3.6:27b-mlx-work-32k`、`qwen3.6:27b-mlx-work-64k`、`gemma4:e4b-light-8k`、`qwen3.6:27b-coding-mxfp8-64k`）が作成済みであること
 
 devcontainer 内から Host Mac に接続するため、接続先は `localhost` ではなく `host.docker.internal` を使う。
 
@@ -78,7 +78,10 @@ export OLLAMA_HOST=http://host.docker.internal:11434
       },
       "models": {
         "qwen3.6:27b-mlx-work-32k": {
-          "name": "Qwen3.6 27B-MLX 通常作業用 (32k)",
+          "name": "Qwen3.6 27B-MLX コンテキスト節約用 (32k)",
+        },
+        "qwen3.6:27b-mlx-work-64k": {
+          "name": "Qwen3.6 27B-MLX 常用 (64k)",
         },
         "gemma4:e4b-light-8k": {
           "name": "Gemma 4 E4B 軽作業用 (8k)",
@@ -89,12 +92,12 @@ export OLLAMA_HOST=http://host.docker.internal:11434
       },
     },
   },
-  "model": "ollama-local/qwen3.6:27b-mlx-work-32k",
+  "model": "ollama-local/qwen3.6:27b-mlx-work-64k",
   "small_model": "ollama-local/gemma4:e4b-light-8k",
 }
 ```
 
-`small_model` を `gemma4:e4b-light-8k` にしているのは、軽作業向けの軽量モデルを使い分けるためである。重い実装が必要な作業では、`model` を `ollama-local/qwen3.6:27b-coding-mxfp8-64k` に一時的に切り替え、完了後は元に戻す。
+常用は `qwen3.6:27b-mlx-work-64k` とし、`small_model` には軽作業向けの `gemma4:e4b-light-8k` を割り当てる。重い実装が必要な作業では、`model` を `ollama-local/qwen3.6:27b-coding-mxfp8-64k` に一時的に切り替え、完了後は `ollama-local/qwen3.6:27b-mlx-work-64k` へ戻す。
 
 ## 5. 接続確認
 
@@ -130,7 +133,9 @@ Ollama のカスタムモデル名は `ollama list` で確認できる。`openco
 
 ### 6.2. 重い実装用モデルへの切り替え
 
-`qwen3.6:27b-coding-mxfp8-64k` は容量が大きく、ロードに時間がかかる。通常作業中に常駐させると `OLLAMA_MAX_LOADED_MODELS=2` の制約を圧迫する。重い実装が必要な作業でだけ `model` を `ollama-local/qwen3.6:27b-coding-mxfp8-64k` に切り替え、完了後は `ollama-local/qwen3.6:27b-mlx-work-32k` へ戻す。
+`qwen3.6:27b-mlx-work-64k` を常用の `model` とする。同ベースの `qwen3.6:27b-mlx-work-32k` への切り替えコストは低いが、コンテキスト長が問題にならない限り常用で使い続ける。
+
+`qwen3.6:27b-coding-mxfp8-64k` は容量が大きく、ロードに時間がかかる。通常作業中に常駐させると `OLLAMA_MAX_LOADED_MODELS=2` の制約を圧迫する。重い実装が必要な作業でだけ `model` を `ollama-local/qwen3.6:27b-coding-mxfp8-64k` に切り替え、完了後は `ollama-local/qwen3.6:27b-mlx-work-64k` へ戻す。
 
 ### 6.3. 疎通確認は短い非 stream リクエストから始める
 
