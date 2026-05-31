@@ -209,7 +209,7 @@ cd ~/ollama-modelfiles
 
 ### 7.1. Qwen3.6-27B 通常作業用
 
-`qwen3.6-27b-work-32k/Modelfile`:
+`qwen3.6-27b-mlx-work-32k/Modelfile`:
 
 ```text
 FROM qwen3.6:27b-mlx
@@ -222,7 +222,7 @@ PARAMETER repeat_penalty 1.05
 作成:
 
 ```bash
-ollama create qwen3.6-27b:work-32k -f qwen3.6-27b-work-32k/Modelfile
+ollama create qwen3.6:27b-mlx-work-32k -f qwen3.6-27b-mlx-work-32k/Modelfile
 ```
 
 ### 7.2. Gemma 4 E4B 軽作業用
@@ -257,13 +257,13 @@ PARAMETER repeat_penalty 1.05
 作成:
 
 ```bash
-ollama create qwen3.6-27b-coding-mxfp8:impl-64k -f qwen3.6-27b-coding-mxfp8-64k/Modelfile
+ollama create qwen3.6:27b-coding-mxfp8-64k -f qwen3.6-27b-coding-mxfp8-64k/Modelfile
 ```
 
 ### 7.4. 動作確認
 
 ```bash
-ollama run qwen3.6-27b:work-32k "通常作業用として、TypeScriptのテスト設計の観点を出してください。"
+ollama run qwen3.6:27b-mlx-work-32k "通常作業用として、TypeScriptのテスト設計の観点を出してください。"
 ```
 
 ```bash
@@ -271,7 +271,7 @@ ollama run gemma4:e4b-light-8k "軽作業用として、短い設計書のタイ
 ```
 
 ```bash
-ollama run qwen3.6-27b-coding-mxfp8:impl-64k "重い実装用として、既存コードを安全に変更する観点を箇条書きで出してください。"
+ollama run qwen3.6:27b-coding-mxfp8-64k "重い実装用として、既存コードを安全に変更する観点を箇条書きで出してください。"
 ```
 
 ## 8. アンインストール
