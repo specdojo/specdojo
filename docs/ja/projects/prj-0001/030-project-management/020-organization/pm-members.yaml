@@ -41,21 +41,8 @@ members:
     scheduler_strategy: critical-first
     note: 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。
 
-  - nickname: coordinate-agent
-    display_name: Coordinate Agent
-    email: null
-    roles: []
-    type: agent
-    persona: task-coordinator
-    focus:
-      - orchestration
-      - task-selection
-      - workflow-control
-    scheduler_strategy: critical-first
-    note: TUI モードで validate/build/scheduler を実行し、edit-agent へタスクを委譲する調整 agent。runner スクリプトでは edit-agent を直接起動するため使用しない。
-
-  - nickname: edit-agent
-    display_name: Edit Agent
+  - nickname: opencode-edit-agent
+    display_name: OpenCode Edit Agent
     email: null
     roles: []
     type: agent
@@ -64,63 +51,13 @@ members:
       - task-execution
       - document-creation
       - implementation
-    model: claude-sonnet-4-6
     capabilities: []
     command: "opencode run --agent edit-agent"
     scheduler_strategy: critical-first
     note: 成果物の新規作成・文書化を担当する標準エージェント。タスクの owner フィールドからロール文脈を判断して作業する。
 
-  - nickname: small-edit-agent
-    display_name: Small Edit Agent
-    email: null
-    roles: []
-    type: agent
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-revision
-      - review-response
-    model: claude-haiku-4-5-20251001
-    capabilities: []
-    command: "opencode run --agent small-edit-agent"
-    scheduler_strategy: critical-first
-    note: 軽量・高速モデルで整合性修正・フォーマット整形を担当する。edit-agent と同じプロンプトを使用し、モデルのみ小型に差し替える。
-
-  - nickname: expert-agent
-    display_name: Expert Agent
-    email: null
-    roles: []
-    type: agent
-    persona: task-executor
-    focus:
-      - task-execution
-      - complex-analysis
-      - architecture-judgment
-    model: claude-opus-4-8
-    capabilities: []
-    command: "opencode run --agent expert-agent"
-    scheduler_strategy: critical-first
-    note: difficulty:expert のタスクを担当する高性能エージェント。複雑な分析・多観点推論・アーキテクチャ判断を行う。
-
-  - nickname: expert-web-agent
-    display_name: Expert Web Agent
-    email: null
-    roles: []
-    type: agent
-    persona: task-executor
-    focus:
-      - task-execution
-      - research
-      - external-reference
-    model: claude-opus-4-8
-    capabilities:
-      - web_search
-    command: "opencode run --agent expert-agent-web"
-    scheduler_strategy: critical-first
-    note: 外部 Web 情報の参照が必要な調査・補強フェーズを担当する。research-first-pass.enrich で主に使用する。
-
-  - nickname: review-agent
-    display_name: Review Agent
+  - nickname: opencode-review-agent
+    display_name: OpenCode Review Agent
     email: null
     roles: []
     type: agent
@@ -134,21 +71,69 @@ members:
     scheduler_strategy: fifo
     note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。
 
-  - nickname: claude-expert-web-agent
-    display_name: Claude Expert Web Agent
+  - nickname: claude-edit-agent
+    display_name: Claude Edit Agent
     email: null
     roles: []
     type: agent
     persona: task-executor
     focus:
       - task-execution
-      - complex-analysis
-      - architecture-judgment
-      - research
-      - external-reference
-    model: claude-opus-4-8
+      - document-creation
+      - implementation
     capabilities:
       - web_search
-    command: "claude --model claude-opus-4-8"
+    command: "claude --model sonnet --allowedTools WebSearch,WebFetch"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能エージェント。difficulty:expert のタスクおよび外部 Web 情報参照が必要なタスクを担当する。opencode の expert-web-agent と同等の役割を Claude Code CLI で担う。
+    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。
+
+  - nickname: claude-review-agent
+    display_name: Claude Review Agent
+    email: null
+    roles: []
+    type: agent
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities:
+      - web_search
+    command: "claude --model sonnet --allowedTools WebSearch,WebFetch"
+    scheduler_strategy: fifo
+    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。外部 Web 情報を参照した品質確認が可能。ファイルの編集は行わない。
+
+  - nickname: claude-expert-edit-agent
+    display_name: Claude Expert Edit Agent
+    email: null
+    roles: []
+    type: agent
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - complex-analysis
+      - architecture-judgment
+    capabilities:
+      - web_search
+    command: "claude --model opus --allowedTools WebSearch,WebFetch"
+    scheduler_strategy: critical-first
+    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断・外部 Web 情報参照が必要な成果物作成・実装タスクを担当する。
+
+  - nickname: claude-expert-review-agent
+    display_name: Claude Expert Review Agent
+    email: null
+    roles: []
+    type: agent
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities:
+      - web_search
+    command: "claude --model opus --allowedTools WebSearch,WebFetch"
+    scheduler_strategy: fifo
+    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。外部 Web 情報を参照した品質確認が可能。ファイルの編集は行わない。
