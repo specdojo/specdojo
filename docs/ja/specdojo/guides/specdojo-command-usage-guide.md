@@ -1217,11 +1217,13 @@ sch-auth-api.yaml
 
 ```yaml
 tasks:
-  - id: T-AUTH-API-020
+  - local_id: auth-api
+    phase_suffix: '020'
     name: implement login api
     duration_days: 2
     depends_on:
-      - T-AUTH-API-010
+      - T-AUTH-auth-api-010
+    owner: DEV
 ```
 
 ### 9.2. 実行イベント
@@ -1241,7 +1243,7 @@ exec/events/
   "v": 1,
   "ts": "2026-03-05T03:10:00Z",
   "type": "claim",
-  "task_id": "T-AUTH-API-020",
+  "task_id": "T-AUTH-auth-api-020",
   "by": "agent-1",
   "msg": "start implementation"
 }
@@ -1332,7 +1334,7 @@ specdojo exec build --project prj-0001
 ```bash
 specdojo exec claim \
   --project prj-0001 \
-  --task T-AUTH-API-020 \
+  --task T-AUTH-auth-api-020 \
   --by agent-1 \
   --msg "start implementation"
 ```
@@ -1342,7 +1344,7 @@ specdojo exec claim \
 ```bash
 specdojo exec complete \
   --project prj-0001 \
-  --task T-AUTH-API-020 \
+  --task T-AUTH-auth-api-020 \
   --by agent-1 \
   --msg "done"
 ```
@@ -1352,7 +1354,7 @@ specdojo exec complete \
 ```bash
 specdojo exec block \
   --project prj-0001 \
-  --task T-AUTH-API-020 \
+  --task T-AUTH-auth-api-020 \
   --by agent-1 \
   --msg "waiting for spec"
 ```
@@ -1362,7 +1364,7 @@ specdojo exec block \
 ```bash
 specdojo exec unblock \
   --project prj-0001 \
-  --task T-AUTH-API-020 \
+  --task T-AUTH-auth-api-020 \
   --by agent-2 \
   --msg "spec clarified"
 ```
@@ -1372,7 +1374,7 @@ specdojo exec unblock \
 ```bash
 specdojo exec cancel \
   --project prj-0001 \
-  --task T-AUTH-API-020 \
+  --task T-AUTH-auth-api-020 \
   --by agent-1 \
   --msg "scope removed"
 ```
@@ -1380,9 +1382,9 @@ specdojo exec cancel \
 #### 9.7.6. note / link / estimate
 
 ```bash
-specdojo exec note --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "調査メモ"
-specdojo exec link --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "関連PR" --ref pr=https://example.com/pr/1
-specdojo exec estimate --project prj-0001 --task T-AUTH-API-020 --by agent-1 --msg "estimate updated" --meta duration_days=1
+specdojo exec note --project prj-0001 --task T-AUTH-auth-api-020 --by agent-1 --msg "調査メモ"
+specdojo exec link --project prj-0001 --task T-AUTH-auth-api-020 --by agent-1 --msg "関連PR" --ref pr=https://example.com/pr/1
+specdojo exec estimate --project prj-0001 --task T-AUTH-auth-api-020 --by agent-1 --msg "estimate updated" --meta duration_days=1
 ```
 
 ### 9.8. scheduler
@@ -1702,9 +1704,9 @@ rate_limit_policy:
 出力例:
 
 ```text
-[run] rate-limit: opencode-expert-1 (task T-LAUNCH-PJD-OVERVIEW-010, slack=0) → retry with fallback tier small (attempt 1/3, wait 60s)
-[run] rate-limit: opencode-expert-1 (task T-LAUNCH-PJD-OVERVIEW-010, slack=0) → retry with fallback tier small (attempt 2/3, wait 180s)
-[run] rate-limit: opencode-expert-2 (task T-LAUNCH-BDD-010, slack=2) → skip (non-critical)
+[run] rate-limit: opencode-expert-1 (task T-LAUNCH-prj-overview-010, slack=0) → retry with fallback tier small (attempt 1/3, wait 60s)
+[run] rate-limit: opencode-expert-1 (task T-LAUNCH-prj-overview-010, slack=0) → retry with fallback tier small (attempt 2/3, wait 180s)
+[run] rate-limit: opencode-expert-2 (task T-LAUNCH-bdd-010, slack=2) → skip (non-critical)
 ```
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
