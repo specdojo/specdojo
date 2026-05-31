@@ -57,6 +57,7 @@ export function buildReadySnapshot(
     const cpmNode = cpm?.nodes[id]
     return {
       id,
+      ...(node?.local_id ? { local_id: node.local_id } : {}),
       name: node?.name,
       owner: node?.owner,
       schedule_file: node?.schedule_file ? toScheduleFilePath(projectPath, node.schedule_file) : '',

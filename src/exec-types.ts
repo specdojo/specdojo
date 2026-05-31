@@ -53,6 +53,7 @@ export type StateSnapshot = {
 
 export type ScheduleNode = {
   id: string
+  local_id?: string
   name?: string
   owner?: string
   depends_on: string[]
@@ -123,6 +124,7 @@ export type SchedulerLockOptions = {
 
 export type ReadyTaskView = {
   id: string
+  local_id?: string
   name?: string
   owner?: string
   schedule_file: string

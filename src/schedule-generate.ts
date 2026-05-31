@@ -94,6 +94,7 @@ type DeliverableInfo = {
 
 export type GeneratedTask = {
   id: string
+  local_id?: string
   name: string
   duration_days: number
   depends_on: string[]
@@ -142,7 +143,8 @@ function collectDeliverables(
       if (!item.path) continue
       out.push({
         local_id: item.local_id,
-        artifact_code: item.artifact_code ?? item.local_id.toUpperCase().replace(/-/g, '').slice(0, 8),
+        artifact_code:
+          item.artifact_code ?? item.local_id.toUpperCase().replace(/-/g, '').slice(0, 8),
         domain_code: domainCode,
         path: item.path,
         depends_on: item.depends_on ?? [],
@@ -190,10 +192,7 @@ function expandTaskId(
     .replace('{phase_suffix}', phaseSuffix)
 }
 
-function topoSort(
-  deliverables: DeliverableInfo[],
-  crossDeps: CrossDomainDep[]
-): DeliverableInfo[] {
+function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]): DeliverableInfo[] {
   const byId = new Map(deliverables.map(d => [d.local_id, d]))
 
   const extraDeps = new Map<string, Set<string>>()
@@ -235,9 +234,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
   const strategy = readYaml(strategyPath) as StrategyDoc
   if (!strategy?.scope || !strategy?.phase_sets || !strategy?.owner_rules) {
-    throw new Error(
-      `${strategyPath}: missing required fields (scope, phase_sets, or owner_rules)`
-    )
+    throw new Error(`${strategyPath}: missing required fields (scope, phase_sets, or owner_rules)`)
   }
 
   const projectId = String(strategy.id ?? '').split(':')[0] ?? 'unknown'
@@ -259,10 +256,18 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       continue
     }
     const domainCode = doc.domain_code ?? doc.domain.toUpperCase().slice(0, 3)
-    collectDeliverables(doc.groups, domainCode, strategy.scope.include_kinds, ref.id, null, allDeliverables)
+    collectDeliverables(
+      doc.groups,
+      domainCode,
+      strategy.scope.include_kinds,
+      ref.id,
+      null,
+      allDeliverables
+    )
   }
 
-  if (errors.length > 0) return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+  if (errors.length > 0)
+    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Topological sort
   const crossDeps = strategy.cross_domain_dependencies ?? []
@@ -281,7 +286,9 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
   // Completed deliverables: generate a single 000 task instead of full phase expansion
   const completedLocalIds = new Set(
-    (strategy.initial_state?.completed_deliverables ?? []).map((c: { local_id: string }) => c.local_id)
+    (strategy.initial_state?.completed_deliverables ?? []).map(
+      (c: { local_id: string }) => c.local_id
+    )
   )
 
   // Map local_id → finalize task ID for dependency resolution
@@ -312,6 +319,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       const taskId = expandTaskId(strategy.task_id_pattern, d.domain_code, d.artifact_code, '000')
       taskMap.set(taskId, {
         id: taskId,
+        local_id: d.local_id,
         name: `${d.local_id} 完了済み`,
         duration_days: 0.001,
         depends_on: [...firstDeps],
@@ -330,7 +338,9 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       defaultPhaseSetNames
     const phases = phaseSetNames.flatMap(name => strategy.phase_sets[name] ?? [])
     if (phases.length === 0) {
-      warnings.push(`No phases resolved for '${d.local_id}' (phase_sets: ${phaseSetNames.join(', ')}) — skipping`)
+      warnings.push(
+        `No phases resolved for '${d.local_id}' (phase_sets: ${phaseSetNames.join(', ')}) — skipping`
+      )
       continue
     }
 
@@ -357,7 +367,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     }
     for (const cd of crossDeps) {
       if (cd.dependent !== d.local_id) continue
-      const depId = boundaries.get(cd.requires)?.lastPreFinalizeId ?? finalizeTaskId.get(cd.requires)
+      const depId =
+        boundaries.get(cd.requires)?.lastPreFinalizeId ?? finalizeTaskId.get(cd.requires)
       if (depId) firstDeps.add(depId)
     }
     firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
@@ -376,6 +387,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       )
       taskMap.set(taskId, {
         id: taskId,
+        local_id: d.local_id,
         name: `${d.local_id} ${phase.name}`,
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
@@ -392,7 +404,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     boundaries.set(d.local_id, { lastPreFinalizeId, firstFinalizeId })
   }
 
-  if (errors.length > 0) return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+  if (errors.length > 0)
+    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Process phase gates: create gate milestones and patch first finalize-pass tasks
   const milestones: GeneratedMilestone[] = []

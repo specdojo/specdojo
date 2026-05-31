@@ -25,7 +25,7 @@ $defs:
 
   Weekday:
     type: string
-    enum: [ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ]
+    enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
   Track:
     type: string
@@ -35,7 +35,7 @@ $defs:
   AgentMode:
     type: string
     description: "Task execution mode. auto=agent executes via pm-members.yaml role lookup; manual=human execution required."
-    enum: [ "auto", "manual" ]
+    enum: ["auto", "manual"]
 
   CalendarOverride:
     type: object
@@ -138,6 +138,10 @@ $defs:
     properties:
       id:
         $ref: "#/$defs/Id"
+      local_id:
+        type: string
+        minLength: 1
+        description: "Deliverable local_id this task belongs to. Used by tooling to resolve phase context without parsing the task name."
       name:
         type: string
         minLength: 1
@@ -194,4 +198,3 @@ $defs:
       notes:
         type: string
         description: "Optional notes."
-

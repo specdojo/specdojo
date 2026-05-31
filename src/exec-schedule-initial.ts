@@ -68,11 +68,9 @@ export function buildInitialStateFromStrategy(
     const localIdPhasesMap = new Map<string, string[]>()
     for (const rule of strategy.owner_rules ?? []) {
       const rulePhaseSetNames: string[] =
-        rule.phase_sets ??
-        (rule.phase_set ? [rule.phase_set] : null) ??
-        defaultPhaseSetNames
-      const combinedPhaseIds = rulePhaseSetNames.flatMap(
-        name => (phaseSets[name] ?? []).map(p => p.id)
+        rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : null) ?? defaultPhaseSetNames
+      const combinedPhaseIds = rulePhaseSetNames.flatMap(name =>
+        (phaseSets[name] ?? []).map(p => p.id)
       )
       for (const localId of rule.local_ids) {
         localIdPhasesMap.set(localId, combinedPhaseIds)
@@ -96,7 +94,9 @@ export function buildInitialStateFromStrategy(
 
       for (const node of schedule.nodes.values()) {
         if (node.kind !== 'task') continue
-        if (!node.name?.startsWith(`${local_id} `)) continue
+        // Prefer explicit local_id field; fall back to name-prefix matching
+        const nodeLocalId = node.local_id ?? node.name?.split(' ')[0]
+        if (nodeLocalId !== local_id) continue
 
         const nodeParts = node.id.split('-')
         const suffix = nodeParts[nodeParts.length - 1]

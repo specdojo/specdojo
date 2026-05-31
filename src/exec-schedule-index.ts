@@ -139,10 +139,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       if (defaultsDoc && typeof defaultsDoc === 'object') {
         const dd = defaultsDoc as Record<string, unknown>
         startDate = minDateOnly(startDate, extractScheduleStartDate(dd))
-        const defaultCalendar = applyScheduleCalendar(
-          defaultScheduleCalendar(),
-          dd['calendar']
-        )
+        const defaultCalendar = applyScheduleCalendar(defaultScheduleCalendar(), dd['calendar'])
         if (defaultCalendar) {
           calendar = defaultCalendar
           hasCalendar = true
@@ -196,8 +193,10 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       const id = String(tv['id'] ?? '').trim()
       if (!id) continue
       const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
+      const taskLocalId = typeof tv['local_id'] === 'string' ? tv['local_id'] : undefined
       nodes.set(id, {
         id,
+        ...(taskLocalId ? { local_id: taskLocalId } : {}),
         name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
         owner: typeof tv['owner'] === 'string' ? tv['owner'] : undefined,
         depends_on: Array.isArray(tv['depends_on']) ? tv['depends_on'].map(String) : [],
