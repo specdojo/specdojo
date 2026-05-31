@@ -7,14 +7,12 @@ status: draft
 part_of:
   - _PRJ-0000_:dct-index
 domain: project-definition
-domain_code: PJD
 base_path: /docs/ja/projects/_PRJ-0000_/020-project-definition
 
 groups:
   - deliverables:
       # ── small ────────────────────────────────────────────────────────────
       - local_id: prj-overview
-        artifact_code: OVERVIEW
         name: プロジェクト概要
         kind: work
         depends_on: []
@@ -39,7 +37,6 @@ groups:
             viewpoint: vp-pm-plan-feasibility
 
       - local_id: prj-scope
-        artifact_code: SCOPE
         name: プロジェクトスコープ
         kind: work
         depends_on:
@@ -65,7 +62,6 @@ groups:
             viewpoint: vp-pm-plan-feasibility
 
       - local_id: prj-success-criteria-and-acceptance-criteria
-        artifact_code: SUCCESS
         name: 成功基準と受入条件
         kind: work
         depends_on:
@@ -89,7 +85,6 @@ groups:
 
       # ── medium ───────────────────────────────────────────────────────────
       - local_id: prj-stakeholder-register
-        artifact_code: STAKEHOLDER
         min_size: medium
         name: ステークホルダー登録簿
         kind: work
@@ -113,7 +108,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: prj-charter
-        artifact_code: CHARTER
         min_size: medium
         name: プロジェクト憲章
         kind: work
@@ -138,7 +132,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: prj-assumptions-constraints-dependencies
-        artifact_code: ACD
         min_size: medium
         name: 前提・制約・依存関係
         kind: work
@@ -165,7 +158,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: prj-issues-and-approach
-        artifact_code: ISSUES
         min_size: medium
         name: プロジェクト課題と解決アプローチ
         kind: work
@@ -190,7 +182,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: prj-comparison-of-alternatives
-        artifact_code: ALT
         min_size: medium
         name: 代替案比較
         kind: work

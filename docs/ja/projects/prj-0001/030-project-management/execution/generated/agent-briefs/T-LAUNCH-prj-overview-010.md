@@ -1,11 +1,11 @@
-# Agent Brief: T-LAUNCH-PJD-OVERVIEW-010
+# Agent Brief: T-LAUNCH-prj-overview-010
 
 このブリーフは ready 時点の実行ビューであり、進捗の正本ではない。
 進捗・監査・状態判定は exec/events のイベントログを参照する。
 
 ## 1. タスク概要
 
-- task_id: `T-LAUNCH-PJD-OVERVIEW-010`
+- task_id: `T-LAUNCH-prj-overview-010`
 - project_id: `prj-0001`
 - specdojo_cli_project: `prj-0001`
 - name: たたき台作成
@@ -36,7 +36,7 @@ done_criteria:
 
 - depends_on: -
 - critical_first_rank: `1`
-- fifo_rank: `1`
+- fifo_rank: `2`
 - urgency: クリティカルパス上。遅延余裕なし。
 - CPM: `ES=0, EF=0.25, LS=0, LF=0.25, slack=0`
 
@@ -49,9 +49,9 @@ done_criteria:
 5. 完了時のみ complete、問題があれば block を記録する。
 
 ```bash
-specdojo exec claim --project prj-0001 --task T-LAUNCH-PJD-OVERVIEW-010 --by <agent> --msg "start"
+specdojo exec claim --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "start"
 # edit / validate / lint
-specdojo exec complete --project prj-0001 --task T-LAUNCH-PJD-OVERVIEW-010 --by <agent> --msg "done"
+specdojo exec complete --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "done"
 ```
 
 ## 6. block 時の記録テンプレート
@@ -64,7 +64,7 @@ blocked: <reason>; need=<next action>; ref=<path or issue>
 ```
 
 ```bash
-specdojo exec block --project prj-0001 --task T-LAUNCH-PJD-OVERVIEW-010 --by <agent> --msg "blocked: <reason>; need=<next action>; ref=<path or issue>"
+specdojo exec block --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "blocked: <reason>; need=<next action>; ref=<path or issue>"
 ```
 
 ## 7. 注意事項

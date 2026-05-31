@@ -3,13 +3,11 @@ id: dct-business-acceptance-criteria-template
 type: template
 status: draft
 domain: business-acceptance-criteria
-domain_code: BAC
 base_path: /docs/ja/product/050-business-acceptance-criteria
 
 groups:
   - deliverables:
       - local_id: bac-_TERM_
-        artifact_code: BAC
         name: 業務受入条件
         kind: work
         depends_on: []

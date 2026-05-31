@@ -3,13 +3,11 @@ id: dct-system-acceptance-criteria-template
 type: template
 status: draft
 domain: system-acceptance-criteria
-domain_code: SAC
 base_path: /docs/ja/product/070-system-acceptance-criteria
 
 groups:
   - deliverables:
       - local_id: sac-_TERM_
-        artifact_code: SAC
         name: システム受入条件
         kind: work
         depends_on: []

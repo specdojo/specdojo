@@ -312,11 +312,7 @@ export function buildTimelineSvg(
     }
 
     if (row.kind === 'task') {
-      const idParts = row.id.split('-')
-      const shortId =
-        idParts.length >= 2
-          ? `${idParts[idParts.length - 2]}-${idParts[idParts.length - 1]}`
-          : row.id
+      const shortId = scheduleNode?.phase_suffix ?? ''
       const artifactName = scheduleNode?.artifact_name ?? ''
       const taskName = row.name ?? ''
       parts.push(`<text class="label-id" x="${col1X}" y="${currentY}">${xmlEscape(shortId)}</text>`)

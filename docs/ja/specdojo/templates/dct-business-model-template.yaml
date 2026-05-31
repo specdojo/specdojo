@@ -3,7 +3,6 @@ id: dct-business-model-template
 type: template
 status: draft
 domain: business-model
-domain_code: BM
 base_path: /docs/ja/product/010-business-specifications/030-business-model
 
 groups:
@@ -11,7 +10,6 @@ groups:
   - name: 業務プロセス
     deliverables:
       - local_id: bps-_TERM_
-        artifact_code: BPS
         name: 業務プロセス仕様
         kind: work
         depends_on: []
@@ -37,7 +35,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: br-_TERM_
-        artifact_code: BR
         min_size: medium
         name: ビジネスルール
         kind: work
@@ -67,7 +64,6 @@ groups:
   - name: 業務イベント
     deliverables:
       - local_id: bes-index
-        artifact_code: BESIND
         name: 業務イベント仕様（全体構成）
         kind: work
         depends_on: []
@@ -89,7 +85,6 @@ groups:
             viewpoint: vp-qe-omissions-consistency
 
       - local_id: bes-_TERM_
-        artifact_code: BES
         min_size: medium
         name: 業務イベント仕様（個別）
         kind: work

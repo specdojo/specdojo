@@ -3,7 +3,6 @@ id: dct-operations-template
 type: template
 status: draft
 domain: operations
-domain_code: OPD
 base_path: /docs/ja/product/090-operations
 
 groups:
@@ -11,7 +10,6 @@ groups:
   - name: 運用設計
     deliverables:
       - local_id: opd-index
-        artifact_code: OPDIND
         name: 運用方針・設計
         kind: work
         depends_on: []
@@ -36,7 +34,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: opd-_TERM_
-        artifact_code: OPD
         min_size: medium
         name: 運用方針・設計（個別）
         kind: work
@@ -61,7 +58,6 @@ groups:
   - name: 運用手順
     deliverables:
       - local_id: opr-index
-        artifact_code: OPRIND
         name: 運用手順
         kind: work
         depends_on:
@@ -87,7 +83,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: opr-_TERM_
-        artifact_code: OPR
         min_size: medium
         name: 運用手順（個別）
         kind: work

@@ -5,13 +5,11 @@ id: dct-data-flow-template
 type: template
 status: draft
 domain: data-flow
-domain_code: DFL
 base_path: /docs/ja/product/010-business-specifications/010-data-flow
 
 groups:
   - deliverables:
       - local_id: cdfd-_TERM_
-        artifact_code: CDFD
         name: 概念データフロー図
         kind: work
         depends_on: []

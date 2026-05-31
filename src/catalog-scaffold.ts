@@ -8,13 +8,10 @@ export type ProjectSize = 'small' | 'medium' | 'large'
 // js-yaml serializes all non-empty arrays in block style.
 // Restore flow style for the `roles` field to match template formatting.
 function applyFlowStyleRoles(yamlStr: string): string {
-  return yamlStr.replace(
-    /^(\s+roles):\n(\s+- [^\n]+\n)+/gm,
-    (match, rolesPrefix) => {
-      const items = [...match.matchAll(/^\s+- (.+)$/gm)].map(m => m[1].trim())
-      return `${rolesPrefix}: [${items.join(', ')}]\n`
-    }
-  )
+  return yamlStr.replace(/^(\s+roles):\n(\s+- [^\n]+\n)+/gm, (match, rolesPrefix) => {
+    const items = [...match.matchAll(/^\s+- (.+)$/gm)].map(m => m[1].trim())
+    return `${rolesPrefix}: [${items.join(', ')}]\n`
+  })
 }
 
 const SIZE_ORDER: Record<ProjectSize, number> = { small: 0, medium: 1, large: 2 }
@@ -74,7 +71,11 @@ export function deriveProjectId(catalogPath: string): string | null {
   return m ? m[1] : null
 }
 
-export function scaffoldDoc(template: DctTemplateDoc, projectId: string, size: ProjectSize): DctDoc {
+export function scaffoldDoc(
+  template: DctTemplateDoc,
+  projectId: string,
+  size: ProjectSize
+): DctDoc {
   const PLACEHOLDER = '_PRJ-0000_'
   const replace = (s: string) => s.replaceAll(PLACEHOLDER, projectId)
 
@@ -91,7 +92,6 @@ export function scaffoldDoc(template: DctTemplateDoc, projectId: string, size: P
       : {}),
     project_id: projectId,
     domain: template.domain,
-    ...(template.domain_code ? { domain_code: template.domain_code } : {}),
     ...(template.base_path ? { base_path: replace(template.base_path) } : {}),
     groups,
   }

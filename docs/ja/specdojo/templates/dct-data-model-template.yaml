@@ -3,7 +3,6 @@ id: dct-data-model-template
 type: template
 status: draft
 domain: data-model
-domain_code: DM
 base_path: /docs/ja/product/010-business-specifications/020-data-model
 
 groups:
@@ -11,7 +10,6 @@ groups:
   - name: 業務データ辞書
     deliverables:
       - local_id: bdd-_TERM_
-        artifact_code: BDD
         name: 業務データ辞書
         kind: work
         depends_on: []
@@ -37,7 +35,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: cdsd-_TERM_
-        artifact_code: CDSD
         min_size: medium
         name: 概念データストア定義
         kind: work
@@ -58,7 +55,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: sld-_TERM_
-        artifact_code: SLD
         min_size: medium
         name: 保管場所定義
         kind: work
@@ -76,7 +72,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: stsd-_TERM_
-        artifact_code: STSD
         name: ステータス定義
         kind: work
         depends_on: []
@@ -99,7 +94,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: cld-_TERM_
-        artifact_code: CLD
         min_size: medium
         name: 分類定義
         kind: work
@@ -120,7 +114,6 @@ groups:
   - name: 概念モデル
     deliverables:
       - local_id: ccd-_TERM_
-        artifact_code: CCD
         name: 概念クラス図
         kind: work
         depends_on: []
@@ -146,7 +139,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: cstd-_TERM_
-        artifact_code: CSTD
         min_size: medium
         name: 概念状態遷移図
         kind: work

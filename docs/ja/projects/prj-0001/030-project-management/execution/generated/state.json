@@ -1,7 +1,7 @@
 {
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "tasks": {
-    "T-LAUNCH-PJM-SCHDEF-000": {
+    "T-LAUNCH-sch-defaults-000": {
       "state": "done",
       "last_ts": "2026-05-23T00:00:00Z",
       "last_by": "indie",
@@ -11,7 +11,7 @@
         "initial_state": true
       }
     },
-    "T-LAUNCH-PJM-SCHSTG-000": {
+    "T-LAUNCH-sch-strategy-launch-000": {
       "state": "done",
       "last_ts": "2026-05-23T00:00:00Z",
       "last_by": "indie",
@@ -30,229 +30,229 @@
     "M-LAUNCH-PJM-PLAN-900": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-OVERVIEW-010": {
+    "T-LAUNCH-prj-overview-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-OVERVIEW-020": {
+    "T-LAUNCH-prj-overview-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-OVERVIEW-030": {
+    "T-LAUNCH-prj-overview-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-OVERVIEW-040": {
+    "T-LAUNCH-prj-overview-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-OVERVIEW-050": {
+    "T-LAUNCH-prj-overview-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SCOPE-010": {
+    "T-LAUNCH-prj-scope-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SCOPE-020": {
+    "T-LAUNCH-prj-scope-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SCOPE-030": {
+    "T-LAUNCH-prj-scope-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SCOPE-040": {
+    "T-LAUNCH-prj-scope-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SCOPE-050": {
+    "T-LAUNCH-prj-scope-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SUCCESS-010": {
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SUCCESS-020": {
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SUCCESS-030": {
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SUCCESS-040": {
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-SUCCESS-050": {
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-010": {
+    "T-LAUNCH-prj-stakeholder-register-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-020": {
+    "T-LAUNCH-prj-stakeholder-register-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-030": {
+    "T-LAUNCH-prj-stakeholder-register-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-040": {
+    "T-LAUNCH-prj-stakeholder-register-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-STAKEHOLDER-050": {
+    "T-LAUNCH-prj-stakeholder-register-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-CHARTER-010": {
+    "T-LAUNCH-prj-charter-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-CHARTER-020": {
+    "T-LAUNCH-prj-charter-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-CHARTER-030": {
+    "T-LAUNCH-prj-charter-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-CHARTER-040": {
+    "T-LAUNCH-prj-charter-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-CHARTER-050": {
+    "T-LAUNCH-prj-charter-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ACD-010": {
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ACD-020": {
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ACD-030": {
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ACD-040": {
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ACD-050": {
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ISSUES-010": {
+    "T-LAUNCH-prj-issues-and-approach-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ISSUES-020": {
+    "T-LAUNCH-prj-issues-and-approach-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ISSUES-030": {
+    "T-LAUNCH-prj-issues-and-approach-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ISSUES-040": {
+    "T-LAUNCH-prj-issues-and-approach-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ISSUES-050": {
+    "T-LAUNCH-prj-issues-and-approach-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ALT-010": {
+    "T-LAUNCH-prj-comparison-of-alternatives-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ALT-020": {
+    "T-LAUNCH-prj-comparison-of-alternatives-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ALT-030": {
+    "T-LAUNCH-prj-comparison-of-alternatives-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ALT-040": {
+    "T-LAUNCH-prj-comparison-of-alternatives-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJD-ALT-050": {
+    "T-LAUNCH-prj-comparison-of-alternatives-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-PLAN-010": {
+    "T-LAUNCH-pm-plan-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-PLAN-020": {
+    "T-LAUNCH-pm-plan-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-PLAN-030": {
+    "T-LAUNCH-pm-plan-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-PLAN-040": {
+    "T-LAUNCH-pm-plan-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-PLAN-050": {
+    "T-LAUNCH-pm-plan-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-COMM-010": {
+    "T-LAUNCH-pm-communication-plan-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-COMM-020": {
+    "T-LAUNCH-pm-communication-plan-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-COMM-030": {
+    "T-LAUNCH-pm-communication-plan-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-COMM-040": {
+    "T-LAUNCH-pm-communication-plan-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-COMM-050": {
+    "T-LAUNCH-pm-communication-plan-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-QLTY-010": {
+    "T-LAUNCH-pm-quality-management-plan-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-QLTY-020": {
+    "T-LAUNCH-pm-quality-management-plan-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-QLTY-030": {
+    "T-LAUNCH-pm-quality-management-plan-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-QLTY-040": {
+    "T-LAUNCH-pm-quality-management-plan-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-QLTY-050": {
+    "T-LAUNCH-pm-quality-management-plan-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ORG-010": {
+    "T-LAUNCH-pm-organization-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ORG-020": {
+    "T-LAUNCH-pm-organization-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ORG-030": {
+    "T-LAUNCH-pm-organization-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ORG-040": {
+    "T-LAUNCH-pm-organization-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ORG-050": {
+    "T-LAUNCH-pm-organization-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ROLE-010": {
+    "T-LAUNCH-pm-roles-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ROLE-020": {
+    "T-LAUNCH-pm-roles-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ROLE-030": {
+    "T-LAUNCH-pm-roles-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ROLE-040": {
+    "T-LAUNCH-pm-roles-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-ROLE-050": {
+    "T-LAUNCH-pm-roles-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-MBR-010": {
+    "T-LAUNCH-pm-members-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-MBR-020": {
+    "T-LAUNCH-pm-members-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-MBR-030": {
+    "T-LAUNCH-pm-members-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-MBR-040": {
+    "T-LAUNCH-pm-members-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-MBR-050": {
+    "T-LAUNCH-pm-members-050": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-RACI-010": {
+    "T-LAUNCH-pm-raci-010": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-RACI-020": {
+    "T-LAUNCH-pm-raci-020": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-RACI-030": {
+    "T-LAUNCH-pm-raci-030": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-RACI-040": {
+    "T-LAUNCH-pm-raci-040": {
       "state": "todo"
     },
-    "T-LAUNCH-PJM-RACI-050": {
+    "T-LAUNCH-pm-raci-050": {
       "state": "todo"
     }
   }

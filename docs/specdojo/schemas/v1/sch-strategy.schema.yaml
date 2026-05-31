@@ -115,8 +115,8 @@ properties:
     minLength: 1
     description: >
       Task ID generation pattern with placeholders.
-      Available placeholders: {domain_code}, {artifact_code}, {phase_suffix}.
-      Example: T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}
+      Available placeholders: {local_id}, {phase_suffix}.
+      Example: T-LAUNCH-{local_id}-{phase_suffix}
 
   owner_rules:
     type: array

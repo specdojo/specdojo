@@ -95,8 +95,8 @@ phase_sets:
 # owner_rule に phase_sets を省略した場合のデフォルト（適用順）
 default_phase_sets: [first-pass, finalize-pass]
 
-# タスク ID パターン（domain_code・artifact_code・phase_suffix を展開）
-task_id_pattern: "T-LAUNCH-{domain_code}-{artifact_code}-{phase_suffix}"
+# タスク ID パターン（local_id・phase_suffix を展開）
+task_id_pattern: "T-LAUNCH-{local_id}-{phase_suffix}"
 
 # 成果物 local_id → 作成タスクの owner ロール・phase_set・難易度
 # difficulty はプロジェクト管理上の工数・品質リスクの目安。

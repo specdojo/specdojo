@@ -1,7 +1,12 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import yaml from 'js-yaml'
-import type { DctDeliverableItem, DctDoc, DctSection, DctValidationResult } from './catalog-types.js'
+import type {
+  DctDeliverableItem,
+  DctDoc,
+  DctSection,
+  DctValidationResult,
+} from './catalog-types.js'
 
 // leading "/" = absolute from repo root (strip "/"); otherwise join with parent
 function resolveBasePath(parentBase: string, childBase: string | undefined): string {
@@ -17,15 +22,12 @@ function formatDependsOn(deps: string[] | undefined): string {
 
 function renderTable(deliverables: DctDeliverableItem[]): string[] {
   const lines: string[] = []
-  lines.push('| local-id | ARTIFACT | 成果物名 | 種別 | 根拠 | 概要 |')
-  lines.push('| --- | --- | --- | --- | --- | --- |')
+  lines.push('| local-id | 成果物名 | 種別 | 根拠 | 概要 |')
+  lines.push('| --- | --- | --- | --- | --- |')
   for (const item of deliverables) {
     const localId = `\`${item.local_id}\``
-    const artifact = item.artifact_code ? `\`${item.artifact_code}\`` : '-'
     const deps = formatDependsOn(item.depends_on)
-    lines.push(
-      `| ${localId} | ${artifact} | ${item.name} | ${item.kind} | ${deps} | ${item.overview} |`
-    )
+    lines.push(`| ${localId} | ${item.name} | ${item.kind} | ${deps} | ${item.overview} |`)
   }
   return lines
 }
@@ -135,9 +137,6 @@ export function buildMarkdown(doc: DctDoc): string {
   lines.push('')
   lines.push(`- project-id: \`${doc.project_id}\``)
   lines.push(`- ドメイン: \`${doc.domain}\``)
-  if (doc.domain_code) {
-    lines.push(`- DOMAIN: \`${doc.domain_code}\``)
-  }
 
   const topBase = resolveBasePath('', doc.base_path)
   lines.push(...renderSections(doc.groups, topBase, 1, []))

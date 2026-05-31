@@ -3,7 +3,6 @@ id: dct-business-specifications-common-template
 type: template
 status: draft
 domain: business-specifications-common
-domain_code: BSC
 base_path: /docs/ja/product/010-business-specifications/050-common
 
 groups:
@@ -11,7 +10,6 @@ groups:
   - name: システム化機能一覧
     deliverables:
       - local_id: sf-index
-        artifact_code: SFIND
         name: システム化機能一覧（全体構成）
         kind: work
         depends_on: []
@@ -36,7 +34,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: sf-_TERM_
-        artifact_code: SF
         min_size: medium
         name: システム化機能一覧（個別）
         kind: work
@@ -61,7 +58,6 @@ groups:
   - name: 用語集
     deliverables:
       - local_id: gl-_DOMAIN_
-        artifact_code: GL
         name: 用語集
         kind: work
         depends_on: []

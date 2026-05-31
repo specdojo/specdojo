@@ -4,83 +4,83 @@
 
 | id | owner | kind | dur | ES | EF | LS | LF | slack | depends_on |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---|
-| `T-LAUNCH-PJD-OVERVIEW-010` | BA | task | 0.25 | 0 | 0.25 | 0 | 0.25 | 0 |  |
-| `T-LAUNCH-PJM-PLAN-010` | PM | task | 0.25 | 0 | 0.25 | 3.25 | 3.5 | 3.25 |  |
-| `T-LAUNCH-PJM-SCHDEF-000` | ARC | task | 0.001 | 0 | 0.001 | 5.624 | 5.625 | 5.624 |  |
-| `T-LAUNCH-PJM-SCHSTG-000` | PM | task | 0.001 | 0 | 0.001 | 5.624 | 5.625 | 5.624 |  |
-| `T-LAUNCH-PJD-OVERVIEW-020` | BA | task | 0.5 | 0.25 | 0.75 | 0.25 | 0.75 | 0 | T-LAUNCH-PJD-OVERVIEW-010 |
-| `T-LAUNCH-PJM-PLAN-020` | PM | task | 0.5 | 0.25 | 0.75 | 3.5 | 4 | 3.25 | T-LAUNCH-PJM-PLAN-010 |
-| `T-LAUNCH-PJD-OVERVIEW-030` | BA | task | 0.25 | 0.75 | 1 | 0.75 | 1 | 0 | T-LAUNCH-PJD-OVERVIEW-020 |
-| `T-LAUNCH-PJM-PLAN-030` | PM | task | 0.25 | 0.75 | 1 | 4 | 4.25 | 3.25 | T-LAUNCH-PJM-PLAN-020 |
-| `T-LAUNCH-PJD-SCOPE-010` | BA | task | 0.25 | 1 | 1.25 | 1 | 1.25 | 0 | T-LAUNCH-PJD-OVERVIEW-030 |
-| `T-LAUNCH-PJD-STAKEHOLDER-010` | BA | task | 0.25 | 1 | 1.25 | 3.25 | 3.5 | 2.25 | T-LAUNCH-PJD-OVERVIEW-030 |
-| `T-LAUNCH-PJM-COMM-010` | PM | task | 0.25 | 1 | 1.25 | 4.25 | 4.5 | 3.25 | T-LAUNCH-PJM-PLAN-030 |
-| `T-LAUNCH-PJM-ORG-010` | PO | task | 0.25 | 1 | 1.25 | 2.25 | 2.5 | 1.25 | T-LAUNCH-PJD-OVERVIEW-030 |
-| `T-LAUNCH-PJM-QLTY-010` | PM | task | 0.25 | 1 | 1.25 | 4.25 | 4.5 | 3.25 | T-LAUNCH-PJM-PLAN-030 |
-| `T-LAUNCH-PJD-SCOPE-020` | BA | task | 0.5 | 1.25 | 1.75 | 1.25 | 1.75 | 0 | T-LAUNCH-PJD-SCOPE-010 |
-| `T-LAUNCH-PJD-STAKEHOLDER-020` | BA | task | 0.5 | 1.25 | 1.75 | 3.5 | 4 | 2.25 | T-LAUNCH-PJD-STAKEHOLDER-010 |
-| `T-LAUNCH-PJM-COMM-020` | PM | task | 0.5 | 1.25 | 1.75 | 4.5 | 5 | 3.25 | T-LAUNCH-PJM-COMM-010 |
-| `T-LAUNCH-PJM-ORG-020` | PO | task | 0.5 | 1.25 | 1.75 | 2.5 | 3 | 1.25 | T-LAUNCH-PJM-ORG-010 |
-| `T-LAUNCH-PJM-QLTY-020` | PM | task | 0.5 | 1.25 | 1.75 | 4.5 | 5 | 3.25 | T-LAUNCH-PJM-QLTY-010 |
-| `T-LAUNCH-PJD-SCOPE-030` | BA | task | 0.25 | 1.75 | 2 | 1.75 | 2 | 0 | T-LAUNCH-PJD-SCOPE-020 |
-| `T-LAUNCH-PJD-STAKEHOLDER-030` | BA | task | 0.25 | 1.75 | 2 | 4 | 4.25 | 2.25 | T-LAUNCH-PJD-STAKEHOLDER-020 |
-| `T-LAUNCH-PJM-COMM-030` | PM | task | 0.25 | 1.75 | 2 | 5 | 5.25 | 3.25 | T-LAUNCH-PJM-COMM-020 |
-| `T-LAUNCH-PJM-ORG-030` | PO | task | 0.25 | 1.75 | 2 | 3 | 3.25 | 1.25 | T-LAUNCH-PJM-ORG-020 |
-| `T-LAUNCH-PJM-QLTY-030` | PM | task | 0.25 | 1.75 | 2 | 5 | 5.25 | 3.25 | T-LAUNCH-PJM-QLTY-020 |
-| `T-LAUNCH-PJD-ACD-010` | ARC | task | 0.25 | 2 | 2.25 | 2 | 2.25 | 0 | T-LAUNCH-PJD-SCOPE-030 |
-| `T-LAUNCH-PJD-CHARTER-010` | PO | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-PJD-OVERVIEW-030, T-LAUNCH-PJD-STAKEHOLDER-030 |
-| `T-LAUNCH-PJD-SUCCESS-010` | BA | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-PJD-SCOPE-030 |
-| `T-LAUNCH-PJM-RACI-010` | PM | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-PJM-ORG-030 |
-| `T-LAUNCH-PJM-ROLE-010` | PO | task | 0.25 | 2 | 2.25 | 3.25 | 3.5 | 1.25 | T-LAUNCH-PJM-ORG-030 |
-| `T-LAUNCH-PJD-ACD-020` | ARC | task | 0.5 | 2.25 | 2.75 | 2.25 | 2.75 | 0 | T-LAUNCH-PJD-ACD-010 |
-| `T-LAUNCH-PJD-CHARTER-020` | PO | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-PJD-CHARTER-010 |
-| `T-LAUNCH-PJD-SUCCESS-020` | BA | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-PJD-SUCCESS-010 |
-| `T-LAUNCH-PJM-RACI-020` | PM | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-PJM-RACI-010 |
-| `T-LAUNCH-PJM-ROLE-020` | PO | task | 0.5 | 2.25 | 2.75 | 3.5 | 4 | 1.25 | T-LAUNCH-PJM-ROLE-010 |
-| `T-LAUNCH-PJD-ACD-030` | ARC | task | 0.25 | 2.75 | 3 | 2.75 | 3 | 0 | T-LAUNCH-PJD-ACD-020 |
-| `T-LAUNCH-PJD-CHARTER-030` | PO | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-PJD-CHARTER-020 |
-| `T-LAUNCH-PJD-SUCCESS-030` | BA | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-PJD-SUCCESS-020 |
-| `T-LAUNCH-PJM-RACI-030` | PM | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-PJM-RACI-020 |
-| `T-LAUNCH-PJM-ROLE-030` | PO | task | 0.25 | 2.75 | 3 | 4 | 4.25 | 1.25 | T-LAUNCH-PJM-ROLE-020 |
-| `T-LAUNCH-PJD-ISSUES-010` | BA | task | 0.25 | 3 | 3.25 | 3 | 3.25 | 0 | T-LAUNCH-PJD-SCOPE-030, T-LAUNCH-PJD-ACD-030 |
-| `T-LAUNCH-PJM-MBR-010` | PO | task | 0.25 | 3 | 3.25 | 4.25 | 4.5 | 1.25 | T-LAUNCH-PJM-ORG-030, T-LAUNCH-PJM-ROLE-030 |
-| `T-LAUNCH-PJD-ISSUES-020` | BA | task | 0.5 | 3.25 | 3.75 | 3.25 | 3.75 | 0 | T-LAUNCH-PJD-ISSUES-010 |
-| `T-LAUNCH-PJM-MBR-020` | PO | task | 0.5 | 3.25 | 3.75 | 4.5 | 5 | 1.25 | T-LAUNCH-PJM-MBR-010 |
-| `T-LAUNCH-PJD-ISSUES-030` | BA | task | 0.25 | 3.75 | 4 | 3.75 | 4 | 0 | T-LAUNCH-PJD-ISSUES-020 |
-| `T-LAUNCH-PJM-MBR-030` | PO | task | 0.25 | 3.75 | 4 | 5 | 5.25 | 1.25 | T-LAUNCH-PJM-MBR-020 |
-| `T-LAUNCH-PJD-ALT-010` | ARC | task | 0.5 | 4 | 4.5 | 4 | 4.5 | 0 | T-LAUNCH-PJD-SCOPE-030, T-LAUNCH-PJD-ISSUES-030 |
-| `T-LAUNCH-PJD-ALT-020` | ARC | task | 0.5 | 4.5 | 5 | 4.5 | 5 | 0 | T-LAUNCH-PJD-ALT-010 |
-| `T-LAUNCH-PJD-ALT-030` | ARC | task | 0.25 | 5 | 5.25 | 5 | 5.25 | 0 | T-LAUNCH-PJD-ALT-020 |
-| `GATE-LAUNCH-FP` | PM | gate | 0 | 5.25 | 5.25 | 5.25 | 5.25 | 0 | T-LAUNCH-PJD-OVERVIEW-030, T-LAUNCH-PJD-SCOPE-030, T-LAUNCH-PJD-SUCCESS-030, T-LAUNCH-PJD-STAKEHOLDER-030, T-LAUNCH-PJD-CHARTER-030, T-LAUNCH-PJD-ACD-030, T-LAUNCH-PJD-ISSUES-030, T-LAUNCH-PJD-ALT-030, T-LAUNCH-PJM-PLAN-030, T-LAUNCH-PJM-COMM-030, T-LAUNCH-PJM-QLTY-030, T-LAUNCH-PJM-ORG-030, T-LAUNCH-PJM-ROLE-030, T-LAUNCH-PJM-MBR-030, T-LAUNCH-PJM-RACI-030 |
-| `T-LAUNCH-PJD-ACD-040` | ARC | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-ACD-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-ALT-040` | ARC | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-ALT-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-CHARTER-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-CHARTER-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-ISSUES-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-ISSUES-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-OVERVIEW-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-OVERVIEW-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-SCOPE-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-SCOPE-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-STAKEHOLDER-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-STAKEHOLDER-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-SUCCESS-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJD-SUCCESS-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-COMM-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-COMM-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-MBR-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-MBR-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-ORG-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-ORG-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-PLAN-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-PLAN-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-QLTY-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-QLTY-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-RACI-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-RACI-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJM-ROLE-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-PJM-ROLE-030, GATE-LAUNCH-FP |
-| `T-LAUNCH-PJD-ACD-050` | ARC | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-ACD-040 |
-| `T-LAUNCH-PJD-ALT-050` | ARC | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-ALT-040 |
-| `T-LAUNCH-PJD-CHARTER-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-CHARTER-040 |
-| `T-LAUNCH-PJD-ISSUES-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-ISSUES-040 |
-| `T-LAUNCH-PJD-OVERVIEW-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-OVERVIEW-040 |
-| `T-LAUNCH-PJD-SCOPE-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-SCOPE-040 |
-| `T-LAUNCH-PJD-STAKEHOLDER-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-STAKEHOLDER-040 |
-| `T-LAUNCH-PJD-SUCCESS-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJD-SUCCESS-040 |
-| `T-LAUNCH-PJM-COMM-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-COMM-040 |
-| `T-LAUNCH-PJM-MBR-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-MBR-040 |
-| `T-LAUNCH-PJM-ORG-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-ORG-040 |
-| `T-LAUNCH-PJM-PLAN-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-PLAN-040 |
-| `T-LAUNCH-PJM-QLTY-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-QLTY-040 |
-| `T-LAUNCH-PJM-RACI-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-RACI-040 |
-| `T-LAUNCH-PJM-ROLE-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-PJM-ROLE-040 |
-| `M-LAUNCH-PJD-900` | PM | milestone | 0 | 5.625 | 5.625 | 5.625 | 5.625 | 0 | T-LAUNCH-PJD-SUCCESS-050, T-LAUNCH-PJD-CHARTER-050, T-LAUNCH-PJD-ALT-050 |
-| `M-LAUNCH-PJM-PLAN-900` | PM | milestone | 0 | 5.625 | 5.625 | 5.625 | 5.625 | 0 | T-LAUNCH-PJM-COMM-050, T-LAUNCH-PJM-QLTY-050, T-LAUNCH-PJM-MBR-050, T-LAUNCH-PJM-RACI-050, T-LAUNCH-PJM-SCHDEF-000, T-LAUNCH-PJM-SCHSTG-000 |
+| `T-LAUNCH-pm-plan-010` | PM | task | 0.25 | 0 | 0.25 | 3.25 | 3.5 | 3.25 |  |
+| `T-LAUNCH-prj-overview-010` | BA | task | 0.25 | 0 | 0.25 | 0 | 0.25 | 0 |  |
+| `T-LAUNCH-sch-defaults-000` | ARC | task | 0.001 | 0 | 0.001 | 5.624 | 5.625 | 5.624 |  |
+| `T-LAUNCH-sch-strategy-launch-000` | PM | task | 0.001 | 0 | 0.001 | 5.624 | 5.625 | 5.624 |  |
+| `T-LAUNCH-pm-plan-020` | PM | task | 0.5 | 0.25 | 0.75 | 3.5 | 4 | 3.25 | T-LAUNCH-pm-plan-010 |
+| `T-LAUNCH-prj-overview-020` | BA | task | 0.5 | 0.25 | 0.75 | 0.25 | 0.75 | 0 | T-LAUNCH-prj-overview-010 |
+| `T-LAUNCH-pm-plan-030` | PM | task | 0.25 | 0.75 | 1 | 4 | 4.25 | 3.25 | T-LAUNCH-pm-plan-020 |
+| `T-LAUNCH-prj-overview-030` | BA | task | 0.25 | 0.75 | 1 | 0.75 | 1 | 0 | T-LAUNCH-prj-overview-020 |
+| `T-LAUNCH-pm-communication-plan-010` | PM | task | 0.25 | 1 | 1.25 | 4.25 | 4.5 | 3.25 | T-LAUNCH-pm-plan-030 |
+| `T-LAUNCH-pm-organization-010` | PO | task | 0.25 | 1 | 1.25 | 2.25 | 2.5 | 1.25 | T-LAUNCH-prj-overview-030 |
+| `T-LAUNCH-pm-quality-management-plan-010` | PM | task | 0.25 | 1 | 1.25 | 4.25 | 4.5 | 3.25 | T-LAUNCH-pm-plan-030 |
+| `T-LAUNCH-prj-scope-010` | BA | task | 0.25 | 1 | 1.25 | 1 | 1.25 | 0 | T-LAUNCH-prj-overview-030 |
+| `T-LAUNCH-prj-stakeholder-register-010` | BA | task | 0.25 | 1 | 1.25 | 3.25 | 3.5 | 2.25 | T-LAUNCH-prj-overview-030 |
+| `T-LAUNCH-pm-communication-plan-020` | PM | task | 0.5 | 1.25 | 1.75 | 4.5 | 5 | 3.25 | T-LAUNCH-pm-communication-plan-010 |
+| `T-LAUNCH-pm-organization-020` | PO | task | 0.5 | 1.25 | 1.75 | 2.5 | 3 | 1.25 | T-LAUNCH-pm-organization-010 |
+| `T-LAUNCH-pm-quality-management-plan-020` | PM | task | 0.5 | 1.25 | 1.75 | 4.5 | 5 | 3.25 | T-LAUNCH-pm-quality-management-plan-010 |
+| `T-LAUNCH-prj-scope-020` | BA | task | 0.5 | 1.25 | 1.75 | 1.25 | 1.75 | 0 | T-LAUNCH-prj-scope-010 |
+| `T-LAUNCH-prj-stakeholder-register-020` | BA | task | 0.5 | 1.25 | 1.75 | 3.5 | 4 | 2.25 | T-LAUNCH-prj-stakeholder-register-010 |
+| `T-LAUNCH-pm-communication-plan-030` | PM | task | 0.25 | 1.75 | 2 | 5 | 5.25 | 3.25 | T-LAUNCH-pm-communication-plan-020 |
+| `T-LAUNCH-pm-organization-030` | PO | task | 0.25 | 1.75 | 2 | 3 | 3.25 | 1.25 | T-LAUNCH-pm-organization-020 |
+| `T-LAUNCH-pm-quality-management-plan-030` | PM | task | 0.25 | 1.75 | 2 | 5 | 5.25 | 3.25 | T-LAUNCH-pm-quality-management-plan-020 |
+| `T-LAUNCH-prj-scope-030` | BA | task | 0.25 | 1.75 | 2 | 1.75 | 2 | 0 | T-LAUNCH-prj-scope-020 |
+| `T-LAUNCH-prj-stakeholder-register-030` | BA | task | 0.25 | 1.75 | 2 | 4 | 4.25 | 2.25 | T-LAUNCH-prj-stakeholder-register-020 |
+| `T-LAUNCH-pm-raci-010` | PM | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-pm-organization-030 |
+| `T-LAUNCH-pm-roles-010` | PO | task | 0.25 | 2 | 2.25 | 3.25 | 3.5 | 1.25 | T-LAUNCH-pm-organization-030 |
+| `T-LAUNCH-prj-assumptions-constraints-dependencies-010` | ARC | task | 0.25 | 2 | 2.25 | 2 | 2.25 | 0 | T-LAUNCH-prj-scope-030 |
+| `T-LAUNCH-prj-charter-010` | PO | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-prj-overview-030, T-LAUNCH-prj-stakeholder-register-030 |
+| `T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010` | BA | task | 0.25 | 2 | 2.25 | 4.25 | 4.5 | 2.25 | T-LAUNCH-prj-scope-030 |
+| `T-LAUNCH-pm-raci-020` | PM | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-pm-raci-010 |
+| `T-LAUNCH-pm-roles-020` | PO | task | 0.5 | 2.25 | 2.75 | 3.5 | 4 | 1.25 | T-LAUNCH-pm-roles-010 |
+| `T-LAUNCH-prj-assumptions-constraints-dependencies-020` | ARC | task | 0.5 | 2.25 | 2.75 | 2.25 | 2.75 | 0 | T-LAUNCH-prj-assumptions-constraints-dependencies-010 |
+| `T-LAUNCH-prj-charter-020` | PO | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-prj-charter-010 |
+| `T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020` | BA | task | 0.5 | 2.25 | 2.75 | 4.5 | 5 | 2.25 | T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010 |
+| `T-LAUNCH-pm-raci-030` | PM | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-pm-raci-020 |
+| `T-LAUNCH-pm-roles-030` | PO | task | 0.25 | 2.75 | 3 | 4 | 4.25 | 1.25 | T-LAUNCH-pm-roles-020 |
+| `T-LAUNCH-prj-assumptions-constraints-dependencies-030` | ARC | task | 0.25 | 2.75 | 3 | 2.75 | 3 | 0 | T-LAUNCH-prj-assumptions-constraints-dependencies-020 |
+| `T-LAUNCH-prj-charter-030` | PO | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-prj-charter-020 |
+| `T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030` | BA | task | 0.25 | 2.75 | 3 | 5 | 5.25 | 2.25 | T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020 |
+| `T-LAUNCH-pm-members-010` | PO | task | 0.25 | 3 | 3.25 | 4.25 | 4.5 | 1.25 | T-LAUNCH-pm-organization-030, T-LAUNCH-pm-roles-030 |
+| `T-LAUNCH-prj-issues-and-approach-010` | BA | task | 0.25 | 3 | 3.25 | 3 | 3.25 | 0 | T-LAUNCH-prj-scope-030, T-LAUNCH-prj-assumptions-constraints-dependencies-030 |
+| `T-LAUNCH-pm-members-020` | PO | task | 0.5 | 3.25 | 3.75 | 4.5 | 5 | 1.25 | T-LAUNCH-pm-members-010 |
+| `T-LAUNCH-prj-issues-and-approach-020` | BA | task | 0.5 | 3.25 | 3.75 | 3.25 | 3.75 | 0 | T-LAUNCH-prj-issues-and-approach-010 |
+| `T-LAUNCH-pm-members-030` | PO | task | 0.25 | 3.75 | 4 | 5 | 5.25 | 1.25 | T-LAUNCH-pm-members-020 |
+| `T-LAUNCH-prj-issues-and-approach-030` | BA | task | 0.25 | 3.75 | 4 | 3.75 | 4 | 0 | T-LAUNCH-prj-issues-and-approach-020 |
+| `T-LAUNCH-prj-comparison-of-alternatives-010` | ARC | task | 0.5 | 4 | 4.5 | 4 | 4.5 | 0 | T-LAUNCH-prj-scope-030, T-LAUNCH-prj-issues-and-approach-030 |
+| `T-LAUNCH-prj-comparison-of-alternatives-020` | ARC | task | 0.5 | 4.5 | 5 | 4.5 | 5 | 0 | T-LAUNCH-prj-comparison-of-alternatives-010 |
+| `T-LAUNCH-prj-comparison-of-alternatives-030` | ARC | task | 0.25 | 5 | 5.25 | 5 | 5.25 | 0 | T-LAUNCH-prj-comparison-of-alternatives-020 |
+| `GATE-LAUNCH-FP` | PM | gate | 0 | 5.25 | 5.25 | 5.25 | 5.25 | 0 | T-LAUNCH-prj-overview-030, T-LAUNCH-prj-scope-030, T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030, T-LAUNCH-prj-stakeholder-register-030, T-LAUNCH-prj-charter-030, T-LAUNCH-prj-assumptions-constraints-dependencies-030, T-LAUNCH-prj-issues-and-approach-030, T-LAUNCH-prj-comparison-of-alternatives-030, T-LAUNCH-pm-plan-030, T-LAUNCH-pm-communication-plan-030, T-LAUNCH-pm-quality-management-plan-030, T-LAUNCH-pm-organization-030, T-LAUNCH-pm-roles-030, T-LAUNCH-pm-members-030, T-LAUNCH-pm-raci-030 |
+| `T-LAUNCH-pm-communication-plan-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-communication-plan-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-members-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-members-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-organization-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-organization-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-plan-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-plan-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-quality-management-plan-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-quality-management-plan-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-raci-040` | PM | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-raci-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-roles-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-pm-roles-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-assumptions-constraints-dependencies-040` | ARC | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-assumptions-constraints-dependencies-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-charter-040` | PO | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-charter-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-comparison-of-alternatives-040` | ARC | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-comparison-of-alternatives-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-issues-and-approach-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-issues-and-approach-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-overview-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-overview-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-scope-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-scope-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-stakeholder-register-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-stakeholder-register-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040` | BA | task | 0.25 | 5.25 | 5.5 | 5.25 | 5.5 | 0 | T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030, GATE-LAUNCH-FP |
+| `T-LAUNCH-pm-communication-plan-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-communication-plan-040 |
+| `T-LAUNCH-pm-members-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-members-040 |
+| `T-LAUNCH-pm-organization-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-organization-040 |
+| `T-LAUNCH-pm-plan-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-plan-040 |
+| `T-LAUNCH-pm-quality-management-plan-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-quality-management-plan-040 |
+| `T-LAUNCH-pm-raci-050` | PM | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-raci-040 |
+| `T-LAUNCH-pm-roles-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-pm-roles-040 |
+| `T-LAUNCH-prj-assumptions-constraints-dependencies-050` | ARC | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-assumptions-constraints-dependencies-040 |
+| `T-LAUNCH-prj-charter-050` | PO | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-charter-040 |
+| `T-LAUNCH-prj-comparison-of-alternatives-050` | ARC | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-comparison-of-alternatives-040 |
+| `T-LAUNCH-prj-issues-and-approach-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-issues-and-approach-040 |
+| `T-LAUNCH-prj-overview-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-overview-040 |
+| `T-LAUNCH-prj-scope-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-scope-040 |
+| `T-LAUNCH-prj-stakeholder-register-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-stakeholder-register-040 |
+| `T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050` | BA | task | 0.125 | 5.5 | 5.625 | 5.5 | 5.625 | 0 | T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040 |
+| `M-LAUNCH-PJD-900` | PM | milestone | 0 | 5.625 | 5.625 | 5.625 | 5.625 | 0 | T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050, T-LAUNCH-prj-charter-050, T-LAUNCH-prj-comparison-of-alternatives-050 |
+| `M-LAUNCH-PJM-PLAN-900` | PM | milestone | 0 | 5.625 | 5.625 | 5.625 | 5.625 | 0 | T-LAUNCH-pm-communication-plan-050, T-LAUNCH-pm-quality-management-plan-050, T-LAUNCH-pm-members-050, T-LAUNCH-pm-raci-050, T-LAUNCH-sch-defaults-000, T-LAUNCH-sch-strategy-launch-000 |

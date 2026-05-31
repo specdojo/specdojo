@@ -5,14 +5,12 @@ part_of:
   - prj-0001:dct-index
 project_id: prj-0001
 domain: project-management
-domain_code: PJM
 base_path: /docs/ja/projects/prj-0001/030-project-management
 groups:
   - name: 管理計画
     base_path: 010-management-plan
     deliverables:
       - local_id: pm-plan
-        artifact_code: PLAN
         name: プロジェクト管理計画
         kind: work
         depends_on: []
@@ -36,7 +34,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: pm-communication-plan
-        artifact_code: COMM
         name: コミュニケーション計画
         kind: work
         depends_on:
@@ -61,7 +58,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: pm-quality-management-plan
-        artifact_code: QLTY
         name: 品質管理計画
         kind: work
         depends_on:
@@ -89,7 +85,6 @@ groups:
     base_path: 020-organization
     deliverables:
       - local_id: pm-organization
-        artifact_code: ORG
         name: 組織定義
         kind: work
         depends_on:
@@ -111,7 +106,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: pm-roles
-        artifact_code: ROLE
         name: ロール定義
         kind: work
         depends_on:
@@ -145,7 +139,6 @@ groups:
             roles: [OPS]
             viewpoint: vp-ops-operability
       - local_id: pm-members
-        artifact_code: MBR
         name: メンバー定義
         kind: work
         depends_on:
@@ -171,7 +164,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: pm-raci
-        artifact_code: RACI
         name: RACI
         kind: work
         depends_on:
@@ -196,7 +188,6 @@ groups:
     base_path: controls/project-register
     deliverables:
       - local_id: pjr-index
-        artifact_code: CTLIND
         name: プロジェクト登録簿
         kind: control
         depends_on: []
@@ -204,7 +195,6 @@ groups:
         path: pjr-index.md
         rulebook: pjr-index-rulebook
       - local_id: pjr-NNNN-TERM
-        artifact_code: CTLITM
         name: プロジェクト登録項目
         kind: control
         depends_on:
@@ -215,7 +205,6 @@ groups:
     base_path: controls/project-register/generated
     deliverables:
       - local_id: pjr-open-items
-        artifact_code: CTLOI
         name: 未完了項目一覧
         kind: generated
         depends_on:
@@ -224,7 +213,6 @@ groups:
         overview: プロジェクト登録簿の未完了項目を一覧化
         path: pjr-open-items.md
       - local_id: pjr-by-owner
-        artifact_code: CTLOB
         name: 担当者別一覧
         kind: generated
         depends_on:
@@ -233,7 +221,6 @@ groups:
         overview: プロジェクト登録簿の担当者別項目を一覧化
         path: pjr-by-owner.md
       - local_id: pjr-by-priority
-        artifact_code: CTLPR
         name: 優先度別一覧
         kind: generated
         depends_on:
@@ -242,7 +229,6 @@ groups:
         overview: プロジェクト登録簿の優先度別項目を一覧化
         path: pjr-by-priority.md
       - local_id: pjr-by-status
-        artifact_code: CTLST
         name: 状態別一覧
         kind: generated
         depends_on:
@@ -254,7 +240,6 @@ groups:
     base_path: controls/generated
     deliverables:
       - local_id: pm-risk-register
-        artifact_code: CTLRSK
         name: リスク登録簿
         kind: generated
         depends_on:
@@ -262,7 +247,6 @@ groups:
         overview: 識別済みリスクと対応策を管理
         path: pm-risk-register.md
       - local_id: pm-issue-log
-        artifact_code: CTLISS
         name: 課題ログ
         kind: generated
         depends_on:
@@ -270,7 +254,6 @@ groups:
         overview: 発生した課題と対応状況を管理
         path: pm-issue-log.md
       - local_id: pm-change-request-log
-        artifact_code: CTLCRQ
         name: 変更要求ログ
         kind: generated
         depends_on:
@@ -278,7 +261,6 @@ groups:
         overview: 変更要求の申請・審査・決定を管理
         path: pm-change-request-log.md
       - local_id: pm-decision-log
-        artifact_code: CTLDEC
         name: 決定記録
         kind: generated
         depends_on:
@@ -289,7 +271,6 @@ groups:
     base_path: schedule
     deliverables:
       - local_id: sch-milestones
-        artifact_code: SCHMS
         name: マイルストーン定義
         kind: generated
         depends_on: []
@@ -310,7 +291,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: sch-defaults
-        artifact_code: SCHDEF
         name: スケジュールデフォルト定義
         kind: work
         depends_on: []
@@ -331,7 +311,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: sch-track-launch
-        artifact_code: SCHTLNCH
         name: Launch スケジュール定義
         kind: generated
         depends_on: []
@@ -352,7 +331,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: sch-strategy-launch
-        artifact_code: SCHSTG
         name: Launch スケジュール戦略定義
         kind: work
         depends_on: []
@@ -378,7 +356,6 @@ groups:
         base_path: reporting/progress-reports
         deliverables:
           - local_id: pr-YYYY-MM-DD
-            artifact_code: PR
             name: 進捗報告
             kind: control
             depends_on: []
@@ -389,7 +366,6 @@ groups:
         base_path: reporting/meeting-minutes
         deliverables:
           - local_id: mm-YYYY-MM-DD
-            artifact_code: MM
             name: 議事録
             kind: control
             depends_on: []

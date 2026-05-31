@@ -8,7 +8,6 @@ status: draft
 part_of:
   - _PRJ-0000_:dct-index
 domain: project-management
-domain_code: PJM
 base_path: /docs/ja/projects/_PRJ-0000_/030-project-management
 
 groups:
@@ -17,7 +16,6 @@ groups:
     base_path: 010-management-plan
     deliverables:
       - local_id: pm-plan # small+
-        artifact_code: PLAN
         name: プロジェクト管理計画
         kind: work
         depends_on: []
@@ -42,7 +40,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: pm-communication-plan
-        artifact_code: COMM
         min_size: medium
         name: コミュニケーション計画
         kind: work
@@ -69,7 +66,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: pm-quality-management-plan
-        artifact_code: QLTY
         min_size: medium
         name: 品質管理計画
         kind: work
@@ -100,7 +96,6 @@ groups:
     base_path: 020-organization
     deliverables:
       - local_id: pm-organization # small+
-        artifact_code: ORG
         name: 組織定義
         kind: work
         depends_on:
@@ -123,7 +118,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: pm-roles # small+
-        artifact_code: ROLE
         name: ロール定義
         kind: work
         depends_on:
@@ -158,7 +152,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: pm-members # small+
-        artifact_code: MBR
         name: メンバー定義
         kind: work
         depends_on:
@@ -185,7 +178,6 @@ groups:
             viewpoint: vp-qe-omissions-consistency
 
       - local_id: pm-raci
-        artifact_code: RACI
         min_size: large
         name: RACI
         kind: work
@@ -214,7 +206,6 @@ groups:
     min_size: medium
     deliverables:
       - local_id: pjr-index
-        artifact_code: CTLIND
         name: プロジェクト登録簿
         kind: control
         depends_on: []
@@ -223,7 +214,6 @@ groups:
         rulebook: pjr-index-rulebook
 
       - local_id: pjr-_NNNN_-_TERM_
-        artifact_code: CTLITM
         name: プロジェクト登録項目
         kind: control
         depends_on:
@@ -237,7 +227,6 @@ groups:
     min_size: medium
     deliverables:
       - local_id: pjr-open-items
-        artifact_code: CTLOI
         name: 未完了項目一覧
         kind: generated
         depends_on:
@@ -247,7 +236,6 @@ groups:
         path: pjr-open-items.md
 
       - local_id: pjr-by-owner
-        artifact_code: CTLOB
         name: 担当者別一覧
         kind: generated
         depends_on:
@@ -257,7 +245,6 @@ groups:
         path: pjr-by-owner.md
 
       - local_id: pjr-by-priority
-        artifact_code: CTLPR
         name: 優先度別一覧
         kind: generated
         depends_on:
@@ -267,7 +254,6 @@ groups:
         path: pjr-by-priority.md
 
       - local_id: pjr-by-status
-        artifact_code: CTLST
         name: 状態別一覧
         kind: generated
         depends_on:
@@ -282,7 +268,6 @@ groups:
     min_size: medium
     deliverables:
       - local_id: pm-risk-register
-        artifact_code: CTLRSK
         name: リスク登録簿
         kind: generated
         depends_on:
@@ -291,7 +276,6 @@ groups:
         path: pm-risk-register.md
 
       - local_id: pm-issue-log
-        artifact_code: CTLISS
         name: 課題ログ
         kind: generated
         depends_on:
@@ -300,7 +284,6 @@ groups:
         path: pm-issue-log.md
 
       - local_id: pm-change-request-log
-        artifact_code: CTLCRQ
         name: 変更要求ログ
         kind: generated
         depends_on:
@@ -309,7 +292,6 @@ groups:
         path: pm-change-request-log.md
 
       - local_id: pm-decision-log
-        artifact_code: CTLDEC
         name: 決定記録
         kind: generated
         depends_on:
@@ -322,7 +304,6 @@ groups:
     base_path: schedule
     deliverables:
       - local_id: sch-milestones # small+
-        artifact_code: SCHMS
         name: マイルストーン定義
         kind: generated
         depends_on: []
@@ -344,7 +325,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: sch-defaults
-        artifact_code: SCHDEF
         min_size: medium
         name: スケジュールデフォルト定義
         kind: work
@@ -367,7 +347,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: sch-track-launch
-        artifact_code: SCHTLNCH
         min_size: medium
         name: Launch スケジュール定義
         kind: generated
@@ -390,7 +369,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: sch-strategy-launch
-        artifact_code: SCHSTG
         min_size: medium
         name: Launch スケジュール戦略定義
         kind: work
@@ -420,7 +398,6 @@ groups:
         base_path: reporting/progress-reports
         deliverables:
           - local_id: pr-_YYYY-MM-DD_
-            artifact_code: PR
             name: 進捗報告
             kind: control
             depends_on: []
@@ -432,7 +409,6 @@ groups:
         base_path: reporting/meeting-minutes
         deliverables:
           - local_id: mm-_YYYY-MM-DD_
-            artifact_code: MM
             name: 議事録
             kind: control
             depends_on: []

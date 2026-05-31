@@ -50,11 +50,6 @@ properties:
     pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
     description: "Domain identifier matching the file name dct-<domain>.yaml."
 
-  domain_code:
-    type: string
-    pattern: "^[A-Z]{2,8}$"
-    description: "Optional short uppercase code for the domain (e.g., PJD, PJM)."
-
   base_path:
     type: string
     pattern: "^/[^\\s]+$"
@@ -218,11 +213,6 @@ $defs:
           Wrap template placeholders in underscores
           (e.g., pjr-_NNNN_-_TERM_, pr-_YYYY-MM-DD_).
           Project documents additionally enforce StrictDeliverableItem (kebab-case only).
-
-      artifact_code:
-        type: string
-        pattern: "^[A-Z][A-Z0-9]{1,11}$"
-        description: "Optional short uppercase code for the deliverable (e.g., OVERVIEW, PLAN)."
 
       name:
         type: string

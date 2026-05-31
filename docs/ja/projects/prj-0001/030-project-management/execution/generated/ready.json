@@ -6,28 +6,28 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "next_task_id": "T-LAUNCH-prj-overview-010",
       "ordered_task_ids": [
-        "T-LAUNCH-PJD-OVERVIEW-010",
-        "T-LAUNCH-PJM-PLAN-010"
+        "T-LAUNCH-prj-overview-010",
+        "T-LAUNCH-pm-plan-010"
       ]
     },
     "fifo": {
-      "next_task_id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
-        "T-LAUNCH-PJD-OVERVIEW-010",
-        "T-LAUNCH-PJM-PLAN-010"
+        "T-LAUNCH-pm-plan-010",
+        "T-LAUNCH-prj-overview-010"
       ]
     }
   },
   "tasks": [
     {
-      "id": "T-LAUNCH-PJD-OVERVIEW-010",
+      "id": "T-LAUNCH-prj-overview-010",
       "local_id": "prj-overview",
       "name": "たたき台作成",
       "owner": "BA",
       "schedule_file": "sch-track-launch.yaml",
-      "fifo_rank": 1,
+      "fifo_rank": 2,
       "critical_first_rank": 1,
       "cpm": {
         "es": 0,
@@ -38,12 +38,12 @@
       }
     },
     {
-      "id": "T-LAUNCH-PJM-PLAN-010",
+      "id": "T-LAUNCH-pm-plan-010",
       "local_id": "pm-plan",
       "name": "たたき台作成",
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
-      "fifo_rank": 2,
+      "fifo_rank": 1,
       "critical_first_rank": 2,
       "cpm": {
         "es": 0,

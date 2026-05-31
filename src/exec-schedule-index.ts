@@ -252,10 +252,13 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       if (!id) continue
       const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       const taskLocalId = typeof tv['local_id'] === 'string' ? tv['local_id'] : undefined
+      const taskPhaseSuffix =
+        typeof tv['phase_suffix'] === 'string' ? tv['phase_suffix'] : undefined
       const taskArtifactName = taskLocalId ? artifactNameMap.get(taskLocalId) : undefined
       nodes.set(id, {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
+        ...(taskPhaseSuffix ? { phase_suffix: taskPhaseSuffix } : {}),
         ...(taskArtifactName ? { artifact_name: taskArtifactName } : {}),
         name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
         owner: typeof tv['owner'] === 'string' ? tv['owner'] : undefined,

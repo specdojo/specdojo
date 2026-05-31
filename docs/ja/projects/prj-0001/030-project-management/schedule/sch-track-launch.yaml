@@ -8,558 +8,635 @@ track: launch
 settings:
   start_date: "2026-05-24"
 tasks:
-  - id: T-LAUNCH-PJD-OVERVIEW-010
+  - id: T-LAUNCH-prj-overview-010
     local_id: prj-overview
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on: []
     owner: BA
-  - id: T-LAUNCH-PJD-OVERVIEW-020
+  - id: T-LAUNCH-prj-overview-020
     local_id: prj-overview
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-010
+      - T-LAUNCH-prj-overview-010
     owner: BA
-  - id: T-LAUNCH-PJD-OVERVIEW-030
+  - id: T-LAUNCH-prj-overview-030
     local_id: prj-overview
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-020
+      - T-LAUNCH-prj-overview-020
     owner: BA
-  - id: T-LAUNCH-PJD-OVERVIEW-040
+  - id: T-LAUNCH-prj-overview-040
     local_id: prj-overview
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
+      - T-LAUNCH-prj-overview-030
       - GATE-LAUNCH-FP
     owner: BA
-  - id: T-LAUNCH-PJD-OVERVIEW-050
+  - id: T-LAUNCH-prj-overview-050
     local_id: prj-overview
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-040
+      - T-LAUNCH-prj-overview-040
     owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-010
+  - id: T-LAUNCH-prj-scope-010
     local_id: prj-scope
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
+      - T-LAUNCH-prj-overview-030
     owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-020
+  - id: T-LAUNCH-prj-scope-020
     local_id: prj-scope
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-010
+      - T-LAUNCH-prj-scope-010
     owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-030
+  - id: T-LAUNCH-prj-scope-030
     local_id: prj-scope
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-020
+      - T-LAUNCH-prj-scope-020
     owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-040
+  - id: T-LAUNCH-prj-scope-040
     local_id: prj-scope
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
+      - T-LAUNCH-prj-scope-030
       - GATE-LAUNCH-FP
     owner: BA
-  - id: T-LAUNCH-PJD-SCOPE-050
+  - id: T-LAUNCH-prj-scope-050
     local_id: prj-scope
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-040
+      - T-LAUNCH-prj-scope-040
     owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-010
+  - id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
     local_id: prj-success-criteria-and-acceptance-criteria
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
+      - T-LAUNCH-prj-scope-030
     owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-020
+  - id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020
     local_id: prj-success-criteria-and-acceptance-criteria
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-SUCCESS-010
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
     owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-030
+  - id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030
     local_id: prj-success-criteria-and-acceptance-criteria
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SUCCESS-020
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020
     owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-040
+  - id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040
     local_id: prj-success-criteria-and-acceptance-criteria
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SUCCESS-030
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030
       - GATE-LAUNCH-FP
     owner: BA
-  - id: T-LAUNCH-PJD-SUCCESS-050
+  - id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050
     local_id: prj-success-criteria-and-acceptance-criteria
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-SUCCESS-040
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040
     owner: BA
-  - id: T-LAUNCH-PJD-STAKEHOLDER-010
+  - id: T-LAUNCH-prj-stakeholder-register-010
     local_id: prj-stakeholder-register
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
+      - T-LAUNCH-prj-overview-030
     owner: BA
-  - id: T-LAUNCH-PJD-STAKEHOLDER-020
+  - id: T-LAUNCH-prj-stakeholder-register-020
     local_id: prj-stakeholder-register
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-STAKEHOLDER-010
+      - T-LAUNCH-prj-stakeholder-register-010
     owner: BA
-  - id: T-LAUNCH-PJD-STAKEHOLDER-030
+  - id: T-LAUNCH-prj-stakeholder-register-030
     local_id: prj-stakeholder-register
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-STAKEHOLDER-020
+      - T-LAUNCH-prj-stakeholder-register-020
     owner: BA
-  - id: T-LAUNCH-PJD-STAKEHOLDER-040
+  - id: T-LAUNCH-prj-stakeholder-register-040
     local_id: prj-stakeholder-register
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-STAKEHOLDER-030
+      - T-LAUNCH-prj-stakeholder-register-030
       - GATE-LAUNCH-FP
     owner: BA
-  - id: T-LAUNCH-PJD-STAKEHOLDER-050
+  - id: T-LAUNCH-prj-stakeholder-register-050
     local_id: prj-stakeholder-register
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-STAKEHOLDER-040
+      - T-LAUNCH-prj-stakeholder-register-040
     owner: BA
-  - id: T-LAUNCH-PJD-CHARTER-010
+  - id: T-LAUNCH-prj-charter-010
     local_id: prj-charter
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
-      - T-LAUNCH-PJD-STAKEHOLDER-030
+      - T-LAUNCH-prj-overview-030
+      - T-LAUNCH-prj-stakeholder-register-030
     owner: PO
-  - id: T-LAUNCH-PJD-CHARTER-020
+  - id: T-LAUNCH-prj-charter-020
     local_id: prj-charter
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-CHARTER-010
+      - T-LAUNCH-prj-charter-010
     owner: PO
-  - id: T-LAUNCH-PJD-CHARTER-030
+  - id: T-LAUNCH-prj-charter-030
     local_id: prj-charter
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-CHARTER-020
+      - T-LAUNCH-prj-charter-020
     owner: PO
-  - id: T-LAUNCH-PJD-CHARTER-040
+  - id: T-LAUNCH-prj-charter-040
     local_id: prj-charter
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-CHARTER-030
+      - T-LAUNCH-prj-charter-030
       - GATE-LAUNCH-FP
     owner: PO
-  - id: T-LAUNCH-PJD-CHARTER-050
+  - id: T-LAUNCH-prj-charter-050
     local_id: prj-charter
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-CHARTER-040
+      - T-LAUNCH-prj-charter-040
     owner: PO
-  - id: T-LAUNCH-PJD-ACD-010
+  - id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
     local_id: prj-assumptions-constraints-dependencies
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
+      - T-LAUNCH-prj-scope-030
     owner: ARC
-  - id: T-LAUNCH-PJD-ACD-020
+  - id: T-LAUNCH-prj-assumptions-constraints-dependencies-020
     local_id: prj-assumptions-constraints-dependencies
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-ACD-010
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-010
     owner: ARC
-  - id: T-LAUNCH-PJD-ACD-030
+  - id: T-LAUNCH-prj-assumptions-constraints-dependencies-030
     local_id: prj-assumptions-constraints-dependencies
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ACD-020
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-020
     owner: ARC
-  - id: T-LAUNCH-PJD-ACD-040
+  - id: T-LAUNCH-prj-assumptions-constraints-dependencies-040
     local_id: prj-assumptions-constraints-dependencies
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ACD-030
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-030
       - GATE-LAUNCH-FP
     owner: ARC
-  - id: T-LAUNCH-PJD-ACD-050
+  - id: T-LAUNCH-prj-assumptions-constraints-dependencies-050
     local_id: prj-assumptions-constraints-dependencies
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-ACD-040
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-040
     owner: ARC
-  - id: T-LAUNCH-PJD-ISSUES-010
+  - id: T-LAUNCH-prj-issues-and-approach-010
     local_id: prj-issues-and-approach
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
-      - T-LAUNCH-PJD-ACD-030
+      - T-LAUNCH-prj-scope-030
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-030
     owner: BA
-  - id: T-LAUNCH-PJD-ISSUES-020
+  - id: T-LAUNCH-prj-issues-and-approach-020
     local_id: prj-issues-and-approach
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-ISSUES-010
+      - T-LAUNCH-prj-issues-and-approach-010
     owner: BA
-  - id: T-LAUNCH-PJD-ISSUES-030
+  - id: T-LAUNCH-prj-issues-and-approach-030
     local_id: prj-issues-and-approach
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ISSUES-020
+      - T-LAUNCH-prj-issues-and-approach-020
     owner: BA
-  - id: T-LAUNCH-PJD-ISSUES-040
+  - id: T-LAUNCH-prj-issues-and-approach-040
     local_id: prj-issues-and-approach
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ISSUES-030
+      - T-LAUNCH-prj-issues-and-approach-030
       - GATE-LAUNCH-FP
     owner: BA
-  - id: T-LAUNCH-PJD-ISSUES-050
+  - id: T-LAUNCH-prj-issues-and-approach-050
     local_id: prj-issues-and-approach
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-ISSUES-040
+      - T-LAUNCH-prj-issues-and-approach-040
     owner: BA
-  - id: T-LAUNCH-PJD-ALT-010
+  - id: T-LAUNCH-prj-comparison-of-alternatives-010
     local_id: prj-comparison-of-alternatives
+    phase_suffix: "010"
     name: たたき台作成（予備調査含む）
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-SCOPE-030
-      - T-LAUNCH-PJD-ISSUES-030
+      - T-LAUNCH-prj-scope-030
+      - T-LAUNCH-prj-issues-and-approach-030
     owner: ARC
-  - id: T-LAUNCH-PJD-ALT-020
+  - id: T-LAUNCH-prj-comparison-of-alternatives-020
     local_id: prj-comparison-of-alternatives
+    phase_suffix: "020"
     name: 調査・深掘り
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJD-ALT-010
+      - T-LAUNCH-prj-comparison-of-alternatives-010
     owner: ARC
-  - id: T-LAUNCH-PJD-ALT-030
+  - id: T-LAUNCH-prj-comparison-of-alternatives-030
     local_id: prj-comparison-of-alternatives
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ALT-020
+      - T-LAUNCH-prj-comparison-of-alternatives-020
     owner: ARC
-  - id: T-LAUNCH-PJD-ALT-040
+  - id: T-LAUNCH-prj-comparison-of-alternatives-040
     local_id: prj-comparison-of-alternatives
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-ALT-030
+      - T-LAUNCH-prj-comparison-of-alternatives-030
       - GATE-LAUNCH-FP
     owner: ARC
-  - id: T-LAUNCH-PJD-ALT-050
+  - id: T-LAUNCH-prj-comparison-of-alternatives-050
     local_id: prj-comparison-of-alternatives
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJD-ALT-040
+      - T-LAUNCH-prj-comparison-of-alternatives-040
     owner: ARC
-  - id: T-LAUNCH-PJM-PLAN-010
+  - id: T-LAUNCH-pm-plan-010
     local_id: pm-plan
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on: []
     owner: PM
-  - id: T-LAUNCH-PJM-PLAN-020
+  - id: T-LAUNCH-pm-plan-020
     local_id: pm-plan
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-PLAN-010
+      - T-LAUNCH-pm-plan-010
     owner: PM
-  - id: T-LAUNCH-PJM-PLAN-030
+  - id: T-LAUNCH-pm-plan-030
     local_id: pm-plan
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-PLAN-020
+      - T-LAUNCH-pm-plan-020
     owner: PM
-  - id: T-LAUNCH-PJM-PLAN-040
+  - id: T-LAUNCH-pm-plan-040
     local_id: pm-plan
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-PLAN-030
+      - T-LAUNCH-pm-plan-030
       - GATE-LAUNCH-FP
     owner: PM
-  - id: T-LAUNCH-PJM-PLAN-050
+  - id: T-LAUNCH-pm-plan-050
     local_id: pm-plan
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-PLAN-040
+      - T-LAUNCH-pm-plan-040
     owner: PM
-  - id: T-LAUNCH-PJM-COMM-010
+  - id: T-LAUNCH-pm-communication-plan-010
     local_id: pm-communication-plan
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-PLAN-030
+      - T-LAUNCH-pm-plan-030
     owner: PM
-  - id: T-LAUNCH-PJM-COMM-020
+  - id: T-LAUNCH-pm-communication-plan-020
     local_id: pm-communication-plan
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-COMM-010
+      - T-LAUNCH-pm-communication-plan-010
     owner: PM
-  - id: T-LAUNCH-PJM-COMM-030
+  - id: T-LAUNCH-pm-communication-plan-030
     local_id: pm-communication-plan
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-COMM-020
+      - T-LAUNCH-pm-communication-plan-020
     owner: PM
-  - id: T-LAUNCH-PJM-COMM-040
+  - id: T-LAUNCH-pm-communication-plan-040
     local_id: pm-communication-plan
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-COMM-030
+      - T-LAUNCH-pm-communication-plan-030
       - GATE-LAUNCH-FP
     owner: PM
-  - id: T-LAUNCH-PJM-COMM-050
+  - id: T-LAUNCH-pm-communication-plan-050
     local_id: pm-communication-plan
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-COMM-040
+      - T-LAUNCH-pm-communication-plan-040
     owner: PM
-  - id: T-LAUNCH-PJM-QLTY-010
+  - id: T-LAUNCH-pm-quality-management-plan-010
     local_id: pm-quality-management-plan
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-PLAN-030
+      - T-LAUNCH-pm-plan-030
     owner: PM
-  - id: T-LAUNCH-PJM-QLTY-020
+  - id: T-LAUNCH-pm-quality-management-plan-020
     local_id: pm-quality-management-plan
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-QLTY-010
+      - T-LAUNCH-pm-quality-management-plan-010
     owner: PM
-  - id: T-LAUNCH-PJM-QLTY-030
+  - id: T-LAUNCH-pm-quality-management-plan-030
     local_id: pm-quality-management-plan
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-QLTY-020
+      - T-LAUNCH-pm-quality-management-plan-020
     owner: PM
-  - id: T-LAUNCH-PJM-QLTY-040
+  - id: T-LAUNCH-pm-quality-management-plan-040
     local_id: pm-quality-management-plan
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-QLTY-030
+      - T-LAUNCH-pm-quality-management-plan-030
       - GATE-LAUNCH-FP
     owner: PM
-  - id: T-LAUNCH-PJM-QLTY-050
+  - id: T-LAUNCH-pm-quality-management-plan-050
     local_id: pm-quality-management-plan
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-QLTY-040
+      - T-LAUNCH-pm-quality-management-plan-040
     owner: PM
-  - id: T-LAUNCH-PJM-ORG-010
+  - id: T-LAUNCH-pm-organization-010
     local_id: pm-organization
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJD-OVERVIEW-030
+      - T-LAUNCH-prj-overview-030
     owner: PO
-  - id: T-LAUNCH-PJM-ORG-020
+  - id: T-LAUNCH-pm-organization-020
     local_id: pm-organization
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-ORG-010
+      - T-LAUNCH-pm-organization-010
     owner: PO
-  - id: T-LAUNCH-PJM-ORG-030
+  - id: T-LAUNCH-pm-organization-030
     local_id: pm-organization
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ORG-020
+      - T-LAUNCH-pm-organization-020
     owner: PO
-  - id: T-LAUNCH-PJM-ORG-040
+  - id: T-LAUNCH-pm-organization-040
     local_id: pm-organization
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ORG-030
+      - T-LAUNCH-pm-organization-030
       - GATE-LAUNCH-FP
     owner: PO
-  - id: T-LAUNCH-PJM-ORG-050
+  - id: T-LAUNCH-pm-organization-050
     local_id: pm-organization
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-ORG-040
+      - T-LAUNCH-pm-organization-040
     owner: PO
-  - id: T-LAUNCH-PJM-ROLE-010
+  - id: T-LAUNCH-pm-roles-010
     local_id: pm-roles
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ORG-030
+      - T-LAUNCH-pm-organization-030
     owner: PO
-  - id: T-LAUNCH-PJM-ROLE-020
+  - id: T-LAUNCH-pm-roles-020
     local_id: pm-roles
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-ROLE-010
+      - T-LAUNCH-pm-roles-010
     owner: PO
-  - id: T-LAUNCH-PJM-ROLE-030
+  - id: T-LAUNCH-pm-roles-030
     local_id: pm-roles
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ROLE-020
+      - T-LAUNCH-pm-roles-020
     owner: PO
-  - id: T-LAUNCH-PJM-ROLE-040
+  - id: T-LAUNCH-pm-roles-040
     local_id: pm-roles
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ROLE-030
+      - T-LAUNCH-pm-roles-030
       - GATE-LAUNCH-FP
     owner: PO
-  - id: T-LAUNCH-PJM-ROLE-050
+  - id: T-LAUNCH-pm-roles-050
     local_id: pm-roles
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-ROLE-040
+      - T-LAUNCH-pm-roles-040
     owner: PO
-  - id: T-LAUNCH-PJM-MBR-010
+  - id: T-LAUNCH-pm-members-010
     local_id: pm-members
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ORG-030
-      - T-LAUNCH-PJM-ROLE-030
+      - T-LAUNCH-pm-organization-030
+      - T-LAUNCH-pm-roles-030
     owner: PO
-  - id: T-LAUNCH-PJM-MBR-020
+  - id: T-LAUNCH-pm-members-020
     local_id: pm-members
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-MBR-010
+      - T-LAUNCH-pm-members-010
     owner: PO
-  - id: T-LAUNCH-PJM-MBR-030
+  - id: T-LAUNCH-pm-members-030
     local_id: pm-members
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-MBR-020
+      - T-LAUNCH-pm-members-020
     owner: PO
-  - id: T-LAUNCH-PJM-MBR-040
+  - id: T-LAUNCH-pm-members-040
     local_id: pm-members
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-MBR-030
+      - T-LAUNCH-pm-members-030
       - GATE-LAUNCH-FP
     owner: PO
-  - id: T-LAUNCH-PJM-MBR-050
+  - id: T-LAUNCH-pm-members-050
     local_id: pm-members
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-MBR-040
+      - T-LAUNCH-pm-members-040
     owner: PO
-  - id: T-LAUNCH-PJM-RACI-010
+  - id: T-LAUNCH-pm-raci-010
     local_id: pm-raci
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-ORG-030
+      - T-LAUNCH-pm-organization-030
     owner: PM
-  - id: T-LAUNCH-PJM-RACI-020
+  - id: T-LAUNCH-pm-raci-020
     local_id: pm-raci
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
-      - T-LAUNCH-PJM-RACI-010
+      - T-LAUNCH-pm-raci-010
     owner: PM
-  - id: T-LAUNCH-PJM-RACI-030
+  - id: T-LAUNCH-pm-raci-030
     local_id: pm-raci
+    phase_suffix: "030"
     name: 一次版レビュー
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-RACI-020
+      - T-LAUNCH-pm-raci-020
     owner: PM
-  - id: T-LAUNCH-PJM-RACI-040
+  - id: T-LAUNCH-pm-raci-040
     local_id: pm-raci
+    phase_suffix: "040"
     name: 整合性確認・修正
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-PJM-RACI-030
+      - T-LAUNCH-pm-raci-030
       - GATE-LAUNCH-FP
     owner: PM
-  - id: T-LAUNCH-PJM-RACI-050
+  - id: T-LAUNCH-pm-raci-050
     local_id: pm-raci
+    phase_suffix: "050"
     name: 完成版確定
     duration_days: 0.125
     depends_on:
-      - T-LAUNCH-PJM-RACI-040
+      - T-LAUNCH-pm-raci-040
     owner: PM
-  - id: T-LAUNCH-PJM-SCHDEF-000
+  - id: T-LAUNCH-sch-defaults-000
     local_id: sch-defaults
+    phase_suffix: "000"
     name: 完了済み
     duration_days: 0.001
     depends_on: []
     owner: ARC
     tags:
       - initial-complete
-  - id: T-LAUNCH-PJM-SCHSTG-000
+  - id: T-LAUNCH-sch-strategy-launch-000
     local_id: sch-strategy-launch
+    phase_suffix: "000"
     name: 完了済み
     duration_days: 0.001
     depends_on: []

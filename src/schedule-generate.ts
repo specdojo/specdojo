@@ -82,8 +82,6 @@ type StrategyDoc = {
 
 type DeliverableInfo = {
   local_id: string
-  artifact_code: string
-  domain_code: string
   path: string
   depends_on: string[]
   catalogId: string
@@ -95,6 +93,7 @@ type DeliverableInfo = {
 export type GeneratedTask = {
   id: string
   local_id?: string
+  phase_suffix?: string
   name: string
   duration_days: number
   depends_on: string[]
@@ -125,7 +124,6 @@ export type GenerateResult = {
 
 function collectDeliverables(
   sections: DctSection[],
-  domainCode: string,
   includeKinds: string[],
   catalogId: string,
   topLevelGroup: string | null,
@@ -135,7 +133,7 @@ function collectDeliverables(
     // Lock the top-level group name on the first call; preserve it for nested calls.
     const effectiveGroup = topLevelGroup ?? section.name ?? null
     if (section.groups) {
-      collectDeliverables(section.groups, domainCode, includeKinds, catalogId, effectiveGroup, out)
+      collectDeliverables(section.groups, includeKinds, catalogId, effectiveGroup, out)
     }
     if (!section.deliverables) continue
     for (const item of section.deliverables) {
@@ -143,9 +141,6 @@ function collectDeliverables(
       if (!item.path) continue
       out.push({
         local_id: item.local_id,
-        artifact_code:
-          item.artifact_code ?? item.local_id.toUpperCase().replace(/-/g, '').slice(0, 8),
-        domain_code: domainCode,
         path: item.path,
         depends_on: item.depends_on ?? [],
         catalogId,
@@ -180,16 +175,8 @@ function resolveGateScope(scope: PhaseGateScope, sorted: DeliverableInfo[]): str
   return [...result]
 }
 
-function expandTaskId(
-  pattern: string,
-  domainCode: string,
-  artifactCode: string,
-  phaseSuffix: string
-): string {
-  return pattern
-    .replace('{domain_code}', domainCode)
-    .replace('{artifact_code}', artifactCode)
-    .replace('{phase_suffix}', phaseSuffix)
+function expandTaskId(pattern: string, localId: string, phaseSuffix: string): string {
+  return pattern.replace('{local_id}', localId).replace('{phase_suffix}', phaseSuffix)
 }
 
 function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]): DeliverableInfo[] {
@@ -255,15 +242,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       errors.push(`${catalogPath}: missing groups field`)
       continue
     }
-    const domainCode = doc.domain_code ?? doc.domain.toUpperCase().slice(0, 3)
-    collectDeliverables(
-      doc.groups,
-      domainCode,
-      strategy.scope.include_kinds,
-      ref.id,
-      null,
-      allDeliverables
-    )
+    collectDeliverables(doc.groups, strategy.scope.include_kinds, ref.id, null, allDeliverables)
   }
 
   if (errors.length > 0)
@@ -316,10 +295,11 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         if (fin) firstDeps.add(fin)
       }
       firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
-      const taskId = expandTaskId(strategy.task_id_pattern, d.domain_code, d.artifact_code, '000')
+      const taskId = expandTaskId(strategy.task_id_pattern, d.local_id, '000')
       taskMap.set(taskId, {
         id: taskId,
         local_id: d.local_id,
+        phase_suffix: '000',
         name: '完了済み',
         duration_days: 0.001,
         depends_on: [...firstDeps],
@@ -379,15 +359,11 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
     for (let i = 0; i < phases.length; i++) {
       const phase = phases[i]
-      const taskId = expandTaskId(
-        strategy.task_id_pattern,
-        d.domain_code,
-        d.artifact_code,
-        phase.task_suffix
-      )
+      const taskId = expandTaskId(strategy.task_id_pattern, d.local_id, phase.task_suffix)
       taskMap.set(taskId, {
         id: taskId,
         local_id: d.local_id,
+        phase_suffix: phase.task_suffix,
         name: phase.name,
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],

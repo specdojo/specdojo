@@ -9,7 +9,6 @@ status: draft
 part_of:
   - _PRJ-0000_:dct-index
 domain: product-change
-domain_code: PCC
 base_path: /docs/ja/projects/_PRJ-0000_/040-product-change
 
 groups:
@@ -18,7 +17,6 @@ groups:
     base_path: 020-impact-analysis
     deliverables:
       - local_id: imp-business # small+
-        artifact_code: IMPBIZ
         name: 影響調査（業務）
         kind: work
         depends_on: []
@@ -43,7 +41,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: imp-data
-        artifact_code: IMPDAT
         min_size: medium
         name: 影響調査（データ）
         kind: work
@@ -70,7 +67,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: imp-interface
-        artifact_code: IMPIF
         min_size: medium
         name: 影響調査（I/F）
         kind: work
@@ -94,7 +90,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: imp-test # small+
-        artifact_code: IMPTST
         name: 影響調査（テスト）
         kind: work
         depends_on:
@@ -117,7 +112,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: imp-operations
-        artifact_code: IMPOPS
         min_size: medium
         name: 影響調査（運用）
         kind: work
@@ -149,7 +143,6 @@ groups:
     min_size: medium
     deliverables:
       - local_id: trc-requirements-to-specs
-        artifact_code: TRCSPEC
         name: トレーサビリティ（要求→仕様）
         kind: generated
         depends_on:
@@ -171,7 +164,6 @@ groups:
             viewpoint: vp-qe-omissions-consistency
 
       - local_id: trc-requirements-to-tests
-        artifact_code: TRCTST
         name: トレーサビリティ（要求→テスト）
         kind: generated
         depends_on:
@@ -198,7 +190,6 @@ groups:
     min_size: medium
     deliverables:
       - local_id: mip-index # medium+
-        artifact_code: MIP
         name: 移行計画
         kind: work
         depends_on:
@@ -227,7 +218,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: dmd-index
-        artifact_code: DMD
         min_size: large
         name: データ移行設計
         kind: work
@@ -255,7 +245,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: mtp-index
-        artifact_code: MTP
         min_size: large
         name: 移行テスト計画（リハーサル計画）
         kind: work
@@ -279,7 +268,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: cop-index
-        artifact_code: COP
         min_size: large
         name: カットオーバー計画（本番切替手順）
         kind: work
@@ -307,7 +295,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: otp-index
-        artifact_code: OTP
         min_size: large
         name: 運用切替計画（ハイパーケア含む）
         kind: work

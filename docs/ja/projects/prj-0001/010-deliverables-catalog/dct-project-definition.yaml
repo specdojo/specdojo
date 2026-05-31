@@ -5,12 +5,10 @@ part_of:
   - prj-0001:dct-index
 project_id: prj-0001
 domain: project-definition
-domain_code: PJD
 base_path: /docs/ja/projects/prj-0001/020-project-definition
 groups:
   - deliverables:
       - local_id: prj-overview
-        artifact_code: OVERVIEW
         name: プロジェクト概要
         kind: work
         depends_on: []
@@ -34,7 +32,6 @@ groups:
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
       - local_id: prj-scope
-        artifact_code: SCOPE
         name: プロジェクトスコープ
         kind: work
         depends_on:
@@ -59,7 +56,6 @@ groups:
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
       - local_id: prj-success-criteria-and-acceptance-criteria
-        artifact_code: SUCCESS
         name: 成功基準と受入条件
         kind: work
         depends_on:
@@ -81,7 +77,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: prj-stakeholder-register
-        artifact_code: STAKEHOLDER
         name: ステークホルダー登録簿
         kind: work
         depends_on:
@@ -103,7 +98,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: prj-charter
-        artifact_code: CHARTER
         name: プロジェクト憲章
         kind: work
         depends_on:
@@ -126,7 +120,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: prj-assumptions-constraints-dependencies
-        artifact_code: ACD
         name: 前提・制約・依存関係
         kind: work
         depends_on:
@@ -151,7 +144,6 @@ groups:
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
       - local_id: prj-issues-and-approach
-        artifact_code: ISSUES
         name: プロジェクト課題と解決アプローチ
         kind: work
         depends_on:
@@ -174,7 +166,6 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: prj-comparison-of-alternatives
-        artifact_code: ALT
         name: 代替案比較
         kind: work
         depends_on:

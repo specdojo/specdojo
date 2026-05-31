@@ -3,7 +3,6 @@ id: dct-architecture-template
 type: template
 status: draft
 domain: architecture
-domain_code: ARC
 base_path: /docs/ja/product/030-architecture
 
 groups:
@@ -12,7 +11,6 @@ groups:
     base_path: 010-c4
     deliverables:
       - local_id: cxd-_CONTEXT_
-        artifact_code: CXD
         name: C4コンテキスト図
         kind: work
         depends_on: []
@@ -35,7 +33,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: cnd-_CONTAINER_
-        artifact_code: CND
         name: C4コンテナ図
         kind: work
         depends_on: []
@@ -61,7 +58,6 @@ groups:
             viewpoint: vp-dev-implementation-readiness
 
       - local_id: cpd-_COMPONENT_
-        artifact_code: CPD
         min_size: medium
         name: C4コンポーネント図
         kind: work
@@ -86,7 +82,6 @@ groups:
     base_path: 020-infrastructure
     deliverables:
       - local_id: ifd-_TERM_
-        artifact_code: IFD
         name: インフラ構成図
         kind: work
         depends_on: []
@@ -112,7 +107,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: tsd-_TERM_
-        artifact_code: TSD
         name: 技術スタック一覧
         kind: work
         depends_on: []

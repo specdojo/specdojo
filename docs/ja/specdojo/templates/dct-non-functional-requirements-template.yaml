@@ -3,13 +3,11 @@ id: dct-non-functional-requirements-template
 type: template
 status: draft
 domain: non-functional-requirements
-domain_code: NFR
 base_path: /docs/ja/product/060-non-functional-requirements
 
 groups:
   - deliverables:
       - local_id: nfr-index
-        artifact_code: NFRIND
         name: 非機能要件（全体構成）
         kind: work
         depends_on: []
@@ -31,7 +29,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-reliability
-        artifact_code: NFRREL
         name: 非機能要件（信頼性）
         kind: work
         depends_on:
@@ -54,7 +51,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-availability
-        artifact_code: NFRAVL
         name: 非機能要件（可用性）
         kind: work
         depends_on:
@@ -80,7 +76,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: nfr-maintainability
-        artifact_code: NFRMNT
         min_size: medium
         name: 非機能要件（保守性）
         kind: work
@@ -104,7 +99,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-integrity
-        artifact_code: NFRINT
         min_size: medium
         name: 非機能要件（完全性）
         kind: work
@@ -128,7 +122,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-security-safety
-        artifact_code: NFRSEC
         name: 非機能要件（機密性・安全性）
         kind: work
         depends_on:
@@ -151,7 +144,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-performance
-        artifact_code: NFRPRF
         name: 非機能要件（性能）
         kind: work
         depends_on:
@@ -174,7 +166,6 @@ groups:
             viewpoint: vp-qe-verifiability
 
       - local_id: nfr-operations
-        artifact_code: NFROPS
         min_size: medium
         name: 非機能要件（運用）
         kind: work
@@ -201,7 +192,6 @@ groups:
             viewpoint: vp-ops-operability
 
       - local_id: nfr-usability
-        artifact_code: NFRUSB
         min_size: medium
         name: 非機能要件（操作性）
         kind: work
