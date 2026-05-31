@@ -140,12 +140,12 @@ worktree を使ったマルチエージェント実行では、`current_project`
 
 各コマンドのオプションは、以下の方針にそろえます。
 
-| オプション | 方針 |
-| ---------- | ---- |
+| オプション       | 方針                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `--project <id>` | プロジェクトに紐づくコマンドで共通。省略時は `SPECDOJO_PROJECT` 環境変数、`current_project`、config 先頭の順に解決する。 |
-| `--dry-run` | ファイルやイベントを書き込むコマンドで、書き込み前の内容または実行予定を表示する。 |
-| `--force` | 既存ファイルがある場合にスキップする scaffold/generate 系コマンドで、上書きを許可する。 |
-| `--scope` | 複数の生成対象を持つ build/watch 系コマンドで、対象範囲を絞り込む。 |
+| `--dry-run`      | ファイルやイベントを書き込むコマンドで、書き込み前の内容または実行予定を表示する。                                       |
+| `--force`        | 既存ファイルがある場合にスキップする scaffold/generate 系コマンドで、上書きを許可する。                                  |
+| `--scope`        | 複数の生成対象を持つ build/watch 系コマンドで、対象範囲を絞り込む。                                                      |
 
 `--project` は共通オプションのため、個別コマンドの表では「省略可」として扱います。
 
@@ -281,7 +281,7 @@ specdojo schedule generate --project prj-0001 --track launch
 
 | オプション  | 説明                                                                            | デフォルト |
 | ----------- | ------------------------------------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                              | 省略可       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                              | 省略可     |
 | `--track`   | 生成対象のトラック名（`sch-strategy-<track>.yaml` の `track` フィールドと一致） | 必須       |
 | `--force`   | 既存の `sch-track-<track>.yaml` を上書き                                        | `false`    |
 | `--dry-run` | ファイルを書き出さず、生成内容を標準出力に表示                                  | `false`    |
@@ -291,66 +291,85 @@ specdojo schedule generate --project prj-0001 --track launch
 1. `schedule_path` から `sch-strategy-<track>.yaml` を読み込む。
 2. `scope.catalogs` に列挙されたカタログファイルを読み込み、`include_kinds` でフィルタリングする。
 3. カタログの `depends_on` と `cross_domain_dependencies` から成果物の展開順序を決定する。
-4. 成果物ごとに `path` 拡張子を判定し、対応する `phases` フェーズセットを適用する。
+4. 成果物ごとに `owner_rules` の `phase_sets` を適用し、フェーズごとのタスクを生成する。
 5. `owner_rules` から `owner` ロールを決定する。
-6. `task_id_pattern` でタスク ID を採番し、タスクを生成する。
+6. タスク ID はトラック名・`local_id`・`phase_suffix` から自動導出する（`T-<TRACK>-<local_id>-<phase_suffix>`）。
 7. `sch-track-<track>.yaml`（`kind: track`）として `schedule_path` に出力する。
 8. 生成された milestone がある場合は `sch-milestones.yaml` を作成または更新する。
 
-#### 6.1.2. タスク生成ルール
+#### 6.1.2. タスク ID の導出規則
 
-各 `kind: work` 成果物に対してフェーズごとのタスクを生成する。
+タスク ID は以下のルールで自動導出する。手動での指定は不要。
 
-| フェーズ（例: markdown） | タスク ID                   | `depends_on`                    |
-| ------------------------ | --------------------------- | ------------------------------- |
-| draft（010）             | `T-LAUNCH-PJD-OVERVIEW-010` | 依存成果物の finalize タスク ID |
-| review（020）            | `T-LAUNCH-PJD-OVERVIEW-020` | draft タスク ID                 |
-| finalize（030）          | `T-LAUNCH-PJD-OVERVIEW-030` | review タスク ID                |
+```text
+T-<TRACK>-<local_id>-<phase_suffix>
+```
 
-yaml フォーマットの成果物には validate フェーズ（020）が draft と review の間に挿入される。
+| 要素             | 値の例         | 説明                                             |
+| ---------------- | -------------- | ------------------------------------------------ |
+| `T-`             | `T-`           | タスク固定プレフィックス                         |
+| `<TRACK>`        | `LAUNCH`       | トラック名の大文字（`track: launch` → `LAUNCH`） |
+| `<local_id>`     | `prj-overview` | 成果物カタログの `local_id`（ケース変換なし）    |
+| `<phase_suffix>` | `010`          | `phase_sets` 定義の `task_suffix`                |
 
-| フェーズ（yaml） | タスク ID               | `depends_on`                    |
-| ---------------- | ----------------------- | ------------------------------- |
-| draft（010）     | `T-LAUNCH-PJM-ROLE-010` | 依存成果物の finalize タスク ID |
-| validate（020）  | `T-LAUNCH-PJM-ROLE-020` | draft タスク ID                 |
-| review（030）    | `T-LAUNCH-PJM-ROLE-030` | validate タスク ID              |
-| finalize（040）  | `T-LAUNCH-PJM-ROLE-040` | review タスク ID                |
+例: トラック `launch`、`local_id: prj-overview`、`task_suffix: "010"` → `T-LAUNCH-prj-overview-010`
 
-#### 6.1.3. 出力例（抜粋）
+マイルストーンは `M-<TRACK>-<name>`、フェーズゲートは `G-<TRACK>-<name>` の形式で `sch-milestones.yaml` に定義する。
+
+#### 6.1.3. タスク生成ルール
+
+各 `kind: work` 成果物に対してフェーズごとのタスクを生成する。フェーズは `sch-strategy-<track>.yaml` の `phase_sets` で定義する。
+
+デフォルトの `first-pass` + `finalize-pass` の構成例（`prj-overview`）:
+
+| フェーズ                  | `phase_suffix` | タスク ID                   | `depends_on`                          |
+| ------------------------- | -------------- | --------------------------- | ------------------------------------- |
+| draft（たたき台作成）     | `010`          | `T-LAUNCH-prj-overview-010` | 依存成果物の finalize タスク ID       |
+| enrich（調査・補強）      | `020`          | `T-LAUNCH-prj-overview-020` | `T-LAUNCH-prj-overview-010`           |
+| review（一次版レビュー）  | `030`          | `T-LAUNCH-prj-overview-030` | `T-LAUNCH-prj-overview-020`           |
+| align（整合性確認・修正） | `040`          | `T-LAUNCH-prj-overview-040` | `G-LAUNCH-first-pass`（ゲート通過後） |
+| finalize（完成版確定）    | `050`          | `T-LAUNCH-prj-overview-050` | `T-LAUNCH-prj-overview-040`           |
+
+`phase_sets` を変更することでフェーズ数・`task_suffix` を自由に変更できる。
+
+#### 6.1.4. 出力例（抜粋）
 
 ```yaml
 kind: track
+id: prj-0001:sch-track-launch
+type: project
+status: draft
 version: 1
 project_id: prj-0001
 track: launch
-settings: {}
+settings:
+  start_date: '2026-05-24'
 tasks:
-  - id: T-LAUNCH-PJD-OVERVIEW-010
-    name: prj-overview たたき台を作成する
+  - local_id: prj-overview
+    phase_suffix: '010'
+    name: たたき台作成
     duration_days: 0.25
     depends_on: []
     owner: BA
 
-  - id: T-LAUNCH-PJD-OVERVIEW-020
-    name: prj-overview をレビューする
-    duration_days: 0.125
-    depends_on: [T-LAUNCH-PJD-OVERVIEW-010]
+  - local_id: prj-overview
+    phase_suffix: '020'
+    name: 調査・補強
+    duration_days: 0.5
+    depends_on:
+      - T-LAUNCH-prj-overview-010
     owner: BA
 
-  - id: T-LAUNCH-PJD-OVERVIEW-030
-    name: prj-overview 完成版を仕上げる
-    duration_days: 0.125
-    depends_on: [T-LAUNCH-PJD-OVERVIEW-020]
-    owner: BA
-
-  - id: T-LAUNCH-PJM-ORG-010
-    name: pm-organization たたき台を作成する
+  - local_id: pm-organization
+    phase_suffix: '010'
+    name: たたき台作成
     duration_days: 0.25
-    depends_on: [T-LAUNCH-PJD-OVERVIEW-030] # cross_domain_dependencies による依存
+    depends_on:
+      - T-LAUNCH-prj-overview-030 # cross_domain_dependencies による依存
     owner: PO
 ```
 
-レビュー担当ロールは成果物カタログの `done_criteria` から読み取り、生成後の `sch-track-<track>.yaml` を人間が編集して `notes` に記録することを推奨する。
+タスク ID は `id:` フィールドを省略しても `T-LAUNCH-prj-overview-010` のように自動導出される。`depends_on` には導出後のフルIDを記載する。
 
 ### 6.2. schedule where
 
@@ -406,7 +425,7 @@ specdojo review scaffold --project prj-0001
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--force`   | 既存の `pm-review-viewpoints.yaml` を上書き        | `false`    |
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
@@ -426,7 +445,7 @@ specdojo review plan \
 
 | オプション   | 説明                                                            | デフォルト |
 | ------------ | --------------------------------------------------------------- | ---------- |
-| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可       |
+| `--project`  | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可     |
 | `--local-id` | 対象成果物の `local_id`                                         | 必須       |
 | `--stage`    | レビュー段階（`draft` / `first` / `final` / `ready-candidate`） | 必須       |
 | `--role`     | 対象 Role code に絞り込む（省略時は全ロール）                   | 省略可     |
@@ -562,16 +581,16 @@ target:
 review:
   role: BA
   reviewer: _TODO_
-  status: ""
-  reviewed_at: ""
+  status: ''
+  reviewed_at: ''
 machine_checks:
   - name: lint:md
     result: skipped
-    notes: ""
+    notes: ''
 review_results:
   - plan_item_id: RVP-001
     viewpoint_id: vp-ba-business-value
-    result: ""
+    result: ''
     coverage_checked:
       - stakeholder
       - business_goal
@@ -579,11 +598,11 @@ review_results:
       - business_event
       - traceability
     evidence: []
-    notes: ""
+    notes: ''
 unverified_scope: []
 findings: []
 decision:
-  recommendation: ""
+  recommendation: ''
   approver_required: none
 ```
 
@@ -627,7 +646,7 @@ specdojo register scaffold --project prj-0001
 
 | オプション     | 説明                                                               | デフォルト  |
 | -------------- | ------------------------------------------------------------------ | ----------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可        |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可      |
 | `--project-id` | 生成ファイルに埋め込む project id（省略時は `--project` と同じ値） | `--project` |
 | `--force`      | 既存の `pjr-index.md` を上書き                                     | `false`     |
 | `--dry-run`    | ファイルを書き出さず、生成内容を標準出力に表示                     | `false`     |
@@ -723,7 +742,7 @@ specdojo register add \
 
 | オプション      | 説明                                                            | デフォルト             |
 | --------------- | --------------------------------------------------------------- | ---------------------- |
-| `--project`     | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可                   |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決）              | 省略可                 |
 | `--type`        | 登録項目の分類                                                  | 必須                   |
 | `--title`       | 登録項目の短いタイトル                                          | 必須                   |
 | `--description` | 一覧に記載する説明。`--ticket` 指定時も要約として使う           | `_TODO_`               |
@@ -821,7 +840,7 @@ specdojo register build --project prj-0001
 
 | オプション  | 説明                                                               | デフォルト |
 | ----------- | ------------------------------------------------------------------ | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                 | 省略可     |
 | `--scope`   | 生成範囲。`register` / `controls` / `all`                          | `all`      |
 | `--dry-run` | ファイルを書き出さず、生成予定のファイル一覧と内容を標準出力に表示 | `false`    |
 
@@ -900,7 +919,7 @@ specdojo register close \
 
 | オプション     | 説明                                               | デフォルト                                                       |
 | -------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可                                                             |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可                                                           |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須                                                             |
 | `--status`     | 変更後のステータス。`done` または `decided`        | 分類が `decision` / `question` の場合 `decided`、その他は `done` |
 | `--conclusion` | 結論・対応結果の要約                               | 変更しない                                                       |
@@ -938,7 +957,7 @@ specdojo register reject \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 却下理由の要約                                     | 変更しない |
 | `--completed`  | 却下日（`YYYY-MM-DD`）                             | 実行日     |
@@ -974,7 +993,7 @@ specdojo register defer \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 保留理由の要約                                     | 変更しない |
 | `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
@@ -1053,7 +1072,7 @@ specdojo register update \
 
 | オプション      | 説明                                               | デフォルト |
 | --------------- | -------------------------------------------------- | ---------- |
-| `--project`     | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project`     | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`          | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--title`       | タイトルの更新                                     | 変更しない |
 | `--description` | 説明の更新                                         | 変更しない |
@@ -1090,7 +1109,7 @@ specdojo register start \
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
@@ -1123,7 +1142,7 @@ specdojo register wait \
 
 | オプション     | 説明                                               | デフォルト |
 | -------------- | -------------------------------------------------- | ---------- |
-| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project`    | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`         | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--conclusion` | 待機理由の要約                                     | 変更しない |
 | `--dry-run`    | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
@@ -1157,7 +1176,7 @@ specdojo register review \
 
 | オプション  | 説明                                               | デフォルト |
 | ----------- | -------------------------------------------------- | ---------- |
-| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可       |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
 | `--id`      | 対象登録項目の ID（`PJR-XXXX` 形式）               | 必須       |
 | `--dry-run` | ファイルを書き出さず、変更予定の行を標準出力に表示 | `false`    |
 
@@ -1481,15 +1500,15 @@ specdojo exec run \
 
 オプション:
 
-| オプション         | 説明                                                                    | デフォルト          |
-| ------------------ | ----------------------------------------------------------------------- | ------------------- |
-| `--project`        | プロジェクト ID（`specdojo.config.json` から解決）                      | 省略可              |
-| `--cmd`            | `run.agent_commands` のキー名。`--auto` と排他                          | `--auto` 時は省略可 |
-| `--auto`           | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false` |
-| `--by`             | タスク claim 時のアクター識別子                                         | `--cmd` / tier の値 |
-| `--parallel`       | 並列実行数                                                              | `1`                 |
-| `--worktree-base`  | worktree 配置先パスの上書き                                             | `run.worktree_base` |
-| `--dry-run`        | 実行せず、実行予定を標準出力に表示                                      | `false`             |
+| オプション        | 説明                                                                                                               | デフォルト          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                                 | 省略可              |
+| `--cmd`           | `run.agent_commands` のキー名。`--auto` と排他                                                                     | `--auto` 時は省略可 |
+| `--auto`          | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false`             |
+| `--by`            | タスク claim 時のアクター識別子                                                                                    | `--cmd` / tier の値 |
+| `--parallel`      | 並列実行数                                                                                                         | `1`                 |
+| `--worktree-base` | worktree 配置先パスの上書き                                                                                        | `run.worktree_base` |
+| `--dry-run`       | 実行せず、実行予定を標準出力に表示                                                                                 | `false`             |
 
 #### 9.12.1. `run` 設定（`specdojo.config.json` と `exec-agent.yaml`）
 
@@ -1559,14 +1578,14 @@ tier_routing:
     by: edit-agent
 
 agent_commands:
-  opencode-small:       "opencode run --agent small-edit-agent"
-  opencode-edit:        "opencode run --agent edit-agent"
-  opencode-expert:      "opencode run --agent expert-agent"
-  opencode-edit-web:    "opencode run --agent edit-agent-web"
-  opencode-expert-web:  "opencode run --agent expert-agent-web"
-  opencode-review:      "opencode run --agent review-agent"
-  claude-edit:          "claude --print"
-  claude-expert:        "claude --print"
+  opencode-small: 'opencode run --agent small-edit-agent'
+  opencode-edit: 'opencode run --agent edit-agent'
+  opencode-expert: 'opencode run --agent expert-agent'
+  opencode-edit-web: 'opencode run --agent edit-agent-web'
+  opencode-expert-web: 'opencode run --agent expert-agent-web'
+  opencode-review: 'opencode run --agent review-agent'
+  claude-edit: 'claude --print'
+  claude-expert: 'claude --print'
 ```
 
 #### 9.12.2. 実行フロー
@@ -1616,11 +1635,11 @@ Do not claim more than one task. Do not modify unrelated files.
 
 `exec build` が各タスクに `phase_set`・`phase.id`・`difficulty` を付与して `ready.json` に書き込む。`--auto` は `ready.json` のこれらフィールドを読み取り、`exec-agent.yaml` の `phase_tier_rules` を上から評価して基本 tier を決定し、`difficulty_overrides` で昇格を適用する。
 
-| tier     | `tier_routing` で選択する agent      | 典型的な条件                             |
-| -------- | ------------------------------------ | ---------------------------------------- |
-| `small`  | `small-edit-agent`（軽量・高速）     | `review` / `finalize`（standard）        |
-| `full`   | `edit-agent`（標準品質）             | `draft`（standard）/ `difficulty: high` |
-| `expert` | `expert-agent`（最高性能）           | `draft`（research）/ `difficulty: expert` |
+| tier     | `tier_routing` で選択する agent  | 典型的な条件                              |
+| -------- | -------------------------------- | ----------------------------------------- |
+| `small`  | `small-edit-agent`（軽量・高速） | `review` / `finalize`（standard）         |
+| `full`   | `edit-agent`（標準品質）         | `draft`（standard）/ `difficulty: high`   |
+| `expert` | `expert-agent`（最高性能）       | `draft`（research）/ `difficulty: expert` |
 
 `capabilities: [web_search]` が付いたフェーズのタスクは `tier+web_search` の複合キーを先に探し、なければ `tier` にフォールバックする。
 
@@ -1655,20 +1674,20 @@ specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent
 ```yaml
 rate_limit_policy:
   detection:
-    exit_codes: [1]           # レートリミットとみなす終了コード
+    exit_codes: [1] # レートリミットとみなす終了コード
     stderr_patterns:
-      - "rate limit"
-      - "429"
-  on_non_critical:            # cpm.slack > 0 のタスク
-    action: skip              # block イベントを記録して次のタスクへ
-  on_critical:                # cpm.slack == 0 のタスク
+      - 'rate limit'
+      - '429'
+  on_non_critical: # cpm.slack > 0 のタスク
+    action: skip # block イベントを記録して次のタスクへ
+  on_critical: # cpm.slack == 0 のタスク
     action: retry_with_fallback
-    fallback_tier: small      # 代替 tier のエージェントで再試行
+    fallback_tier: small # 代替 tier のエージェントで再試行
     retry:
-      max_attempts: 3         # fallback 含めた最大試行回数
+      max_attempts: 3 # fallback 含めた最大試行回数
       initial_wait_seconds: 60
-      backoff_multiplier: 3   # 60s → 180s → 540s
-      max_wait_seconds: 600   # 上限10分（TPD には対応不可）
+      backoff_multiplier: 3 # 60s → 180s → 540s
+      max_wait_seconds: 600 # 上限10分（TPD には対応不可）
 ```
 
 挙動:
@@ -1707,9 +1726,9 @@ specdojo index build
 
 オプション:
 
-| オプション        | 説明                           | デフォルト                      |
-| ----------------- | ------------------------------ | ------------------------------- |
-| `--root <path>`   | スキャン対象ルートディレクトリ | `docs`                          |
+| オプション        | 説明                           | デフォルト                 |
+| ----------------- | ------------------------------ | -------------------------- |
+| `--root <path>`   | スキャン対象ルートディレクトリ | `docs`                     |
 | `--output <path>` | 出力先                         | `.specdojo/doc-index.json` |
 
 #### 10.1.1. 生成フロー
@@ -1768,8 +1787,8 @@ specdojo index lookup vp-ba-business-value
 
 オプション:
 
-| オプション       | 説明                     | デフォルト                      |
-| ---------------- | ------------------------ | ------------------------------- |
+| オプション       | 説明                     | デフォルト                 |
+| ---------------- | ------------------------ | -------------------------- |
 | `--index <path>` | インデックスファイルパス | `.specdojo/doc-index.json` |
 
 ### 10.3. VSCode 拡張（vscode-specdojo）
@@ -1823,11 +1842,11 @@ specdojo watch [--project <id>] [--scope <scope>]
 
 オプション:
 
-| オプション        | 説明                                                                 | デフォルト                  |
-| ----------------- | -------------------------------------------------------------------- | --------------------------- |
-| `--project <id>`  | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | 省略可 |
-| `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`）    | `all`                       |
-| `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒）               | `300`                       |
+| オプション        | 説明                                                                 | デフォルト |
+| ----------------- | -------------------------------------------------------------------- | ---------- |
+| `--project <id>`  | 監視対象プロジェクト ID（`specdojo.config.json` の `projects.<id>`） | 省略可     |
+| `--scope <scope>` | 監視スコープ（`exec` / `catalog` / `register` / `index` / `all`）    | `all`      |
+| `--debounce <ms>` | ファイル変更検出後のビルド起動までの待機時間（ミリ秒）               | `300`      |
 
 ### 11.1. 監視対象とトリガーされるコマンド
 
@@ -1902,11 +1921,11 @@ specdojo build [--project <id>] [--scope <scope>]
 
 オプション:
 
-| オプション        | 説明                                                          | デフォルト                  |
-| ----------------- | ------------------------------------------------------------- | --------------------------- |
-| `--project <id>`  | プロジェクト ID（`specdojo.config.json` の `projects.<id>`）  | 省略可 |
-| `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all`                       |
-| `--dry-run`       | 実行予定のコマンドを表示するだけでファイルを書き出さない      | `false`                     |
+| オプション        | 説明                                                          | デフォルト |
+| ----------------- | ------------------------------------------------------------- | ---------- |
+| `--project <id>`  | プロジェクト ID（`specdojo.config.json` の `projects.<id>`）  | 省略可     |
+| `--scope <scope>` | 実行範囲（`exec` / `catalog` / `register` / `index` / `all`） | `all`      |
+| `--dry-run`       | 実行予定のコマンドを表示するだけでファイルを書き出さない      | `false`    |
 
 ### 12.1. 実行順序
 
@@ -1917,7 +1936,7 @@ specdojo build [--project <id>] [--scope <scope>]
 | 1        | `exec build`     | `generated/state.json`、`ready.md`、`cpm.json` 等 |
 | 2        | `catalog build`  | `generated/dct-*.md`                              |
 | 3        | `register build` | `generated/pjr-*.md`、`generated/pm-*.md`         |
-| 4        | `index build`    | `.specdojo/doc-index.json`                   |
+| 4        | `index build`    | `.specdojo/doc-index.json`                        |
 
 `--scope` で単一ステップのみ指定した場合は、そのステップだけを実行する。
 
