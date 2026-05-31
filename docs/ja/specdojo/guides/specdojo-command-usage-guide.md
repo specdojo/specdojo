@@ -85,6 +85,7 @@ repo-root/
 ```json
 {
   "version": 1,
+  "current_project": "prj-0001",
   "projects": {
     "prj-0001": {
       "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
@@ -103,17 +104,19 @@ repo-root/
 }
 ```
 
+`current_project` に作業中のプロジェクト ID を記載します。git で管理されているため、worktree を分離しても自動的に引き継がれます。`--project` フラグや `SPECDOJO_PROJECT` 環境変数で上書きできます。
+
 `projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path`、`run` を指定します。`run.agent_config` に `exec-agent.yaml` のパスを指定すると、`exec run --auto` で `(phase_set, phase.id, difficulty)` から agent を自動選択できます。`tier_routing` と `agent_commands` は `exec-agent.yaml` に集約するため `specdojo.config.json` には記載しません。
 
 ### 3.2. `.env`（任意）
 
-ローカル開発者用の簡易設定です。
+`current_project` を `specdojo.config.json` で管理している場合、`.env` は通常不要です。一時的にプロジェクトを切り替えたい場合や、config を変更せずに上書きしたい場合のみ使います。
 
 ```bash
 SPECDOJO_PROJECT=prj-0001
 ```
 
-または
+パス直接指定が必要な場合（config なし環境など）：
 
 ```bash
 SPECDOJO_SCHEDULE_PATH=docs/ja/projects/prj-0001/030-project-management/schedule
@@ -125,8 +128,11 @@ SPECDOJO_EXECUTION_PATH=docs/ja/projects/prj-0001/070-execution
 プロジェクトに紐づくコマンドは、原則として同じ順序で `specdojo.config.json` の project を解決します。
 
 1. `--project` で指定したプロジェクト ID
-2. `SPECDOJO_PROJECT` で指定したプロジェクト ID
-3. `specdojo.config.json` の `projects` に定義された先頭のプロジェクト ID
+2. `SPECDOJO_PROJECT` 環境変数（`.env` 含む）で指定したプロジェクト ID
+3. `specdojo.config.json` の `current_project` フィールド（**推奨**）
+4. `specdojo.config.json` の `projects` に定義された先頭のプロジェクト ID
+
+worktree を使ったマルチエージェント実行では、`current_project` を git 管理することで `.env` のコピーが不要になります。ブランチ命名を `project/<project-id>/*` とすれば、feature ブランチや exec ブランチすべてで自動的に `current_project` が引き継がれます。
 
 `exec` コマンドだけは、既存運用との互換のため `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` の直接指定も受け付けます。直接指定する場合は、両方をセットで指定します。
 
@@ -136,7 +142,7 @@ SPECDOJO_EXECUTION_PATH=docs/ja/projects/prj-0001/070-execution
 
 | オプション | 方針 |
 | ---------- | ---- |
-| `--project <id>` | プロジェクトに紐づくコマンドで共通。省略時は `SPECDOJO_PROJECT`、それもなければ config の先頭 project を使う。 |
+| `--project <id>` | プロジェクトに紐づくコマンドで共通。省略時は `SPECDOJO_PROJECT` 環境変数、`current_project`、config 先頭の順に解決する。 |
 | `--dry-run` | ファイルやイベントを書き込むコマンドで、書き込み前の内容または実行予定を表示する。 |
 | `--force` | 既存ファイルがある場合にスキップする scaffold/generate 系コマンドで、上書きを許可する。 |
 | `--scope` | 複数の生成対象を持つ build/watch 系コマンドで、対象範囲を絞り込む。 |

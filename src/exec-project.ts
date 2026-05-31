@@ -72,7 +72,7 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
 
   function fromProjectId(
     projectId: string,
-    source: '--project' | 'SPECDOJO_PROJECT'
+    source: '--project' | 'SPECDOJO_PROJECT' | 'current_project'
   ): ResolvedProjectPaths {
     if (!config) {
       throw new Error(
@@ -121,14 +121,18 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
     return fromProjectId(envProject.trim(), 'SPECDOJO_PROJECT')
   }
 
+  if (config?.current_project && config.current_project.trim()) {
+    return fromProjectId(config.current_project.trim(), 'current_project')
+  }
+
   const defaultProjectId = config ? Object.keys(config.projects)[0] : ''
   if (defaultProjectId) {
-    return fromProjectId(defaultProjectId, 'SPECDOJO_PROJECT')
+    return fromProjectId(defaultProjectId, 'current_project')
   }
 
   throw new Error(
     `Project path not specified.\n` +
-      `Provide --project <id>, or SPECDOJO_PROJECT, or SPECDOJO_SCHEDULE_PATH together with SPECDOJO_EXECUTION_PATH.\n` +
-      `SPECDOJO_PROJECT must match a project id in ${configPath}.`
+      `Provide --project <id>, set current_project in specdojo.config.json, or set SPECDOJO_PROJECT.\n` +
+      `The value must match a project id in ${configPath}.`
   )
 }

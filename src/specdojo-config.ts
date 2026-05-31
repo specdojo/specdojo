@@ -43,6 +43,7 @@ export type MemberRoster = {
 
 export type SpecDojoConfig = {
   version: 1
+  current_project?: string
   projects: Record<string, SpecDojoProjectConfig>
 }
 

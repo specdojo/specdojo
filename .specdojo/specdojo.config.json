@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "current_project": "prj-0001",
   "projects": {
     "prj-0001": {
       "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
