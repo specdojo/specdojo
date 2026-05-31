@@ -1,4 +1,10 @@
-import { type CpmNode, type CpmResult, type ExecState, type ScheduleIndex, type StateSnapshot } from './exec-types.js'
+import {
+  type CpmNode,
+  type CpmResult,
+  type ExecState,
+  type ScheduleIndex,
+  type StateSnapshot,
+} from './exec-types.js'
 import { formatDateOnlyUtc } from './exec-shared.js'
 import {
   buildWorkingTaskSegments,
@@ -64,7 +70,7 @@ export function buildTimelineSvg(
   let firstTaskFile: string | null = null
   for (const row of rows) {
     if (row.kind !== 'task') continue
-    if (isInitialComplete(row)) continue  // handled separately
+    if (isInitialComplete(row)) continue // handled separately
     if (!firstTaskFile) firstTaskFile = row.schedule_file
     const group = taskRowsByFile.get(row.schedule_file)
     if (group) group.push(row)
@@ -83,7 +89,10 @@ export function buildTimelineSvg(
         const depIndices = gate.depends_on
           .map(depId => rowIndexById.get(depId) ?? -1)
           .filter(idx => idx >= 0)
-        return { gate, insertAfter: depIndices.length > 0 ? Math.max(...depIndices) : fileRows.length - 1 }
+        return {
+          gate,
+          insertAfter: depIndices.length > 0 ? Math.max(...depIndices) : fileRows.length - 1,
+        }
       })
       .sort((a, b) => b.insertAfter - a.insertAfter)
 
@@ -268,13 +277,30 @@ export function buildTimelineSvg(
           ? 'gate'
           : 'milestone'
     const fill = stateColor(taskState, criticalSet.has(row.id))
-    const label = row.name ? `${row.id} ${row.name}` : row.id
+    const scheduleNode = schedule.nodes.get(row.id)
+    const label = (() => {
+      if (row.kind === 'task') {
+        const parts = row.id.split('-')
+        const shortId =
+          parts.length >= 2 ? `${parts[parts.length - 2]}-${parts[parts.length - 1]}` : row.id
+        const artifactName = scheduleNode?.artifact_name ?? ''
+        const taskName = row.name ?? ''
+        const middle = artifactName ? ` ${artifactName}` : ''
+        const suffix = taskName ? ` ${taskName}` : ''
+        return `${shortId}${middle}${suffix}`
+      }
+      return row.name ? `${row.id} ${row.name}` : row.id
+    })()
 
     if (row.kind === 'gate') {
-      parts.push(`<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f3e8ff" />`)
+      parts.push(
+        `<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f3e8ff" />`
+      )
     }
     if (row.kind === 'task' && isInitialComplete(row)) {
-      parts.push(`<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f8fafc" />`)
+      parts.push(
+        `<rect x="0" y="${currentY - 14}" width="${width}" height="${rowHeight}" fill="#f8fafc" />`
+      )
     }
     parts.push(`<text class="label" x="16" y="${currentY}">${xmlEscape(label)}</text>`)
     parts.push(
@@ -306,9 +332,15 @@ export function buildTimelineSvg(
       const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar)
       const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth)
       // Vertical bar with top/bottom caps (gate/barrier symbol)
-      parts.push(`<rect x="${cx - 2}" y="${rowTop}" width="4" height="12" fill="${fill}" opacity="0.9" />`)
-      parts.push(`<rect x="${cx - 7}" y="${rowTop}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`)
-      parts.push(`<rect x="${cx - 7}" y="${rowTop + 9}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`)
+      parts.push(
+        `<rect x="${cx - 2}" y="${rowTop}" width="4" height="12" fill="${fill}" opacity="0.9" />`
+      )
+      parts.push(
+        `<rect x="${cx - 7}" y="${rowTop}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`
+      )
+      parts.push(
+        `<rect x="${cx - 7}" y="${rowTop + 9}" width="14" height="3" rx="1" fill="${fill}" opacity="0.9" />`
+      )
     } else {
       const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar)
       const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth)

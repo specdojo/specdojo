@@ -54,6 +54,7 @@ export type StateSnapshot = {
 export type ScheduleNode = {
   id: string
   local_id?: string
+  artifact_name?: string
   name?: string
   owner?: string
   depends_on: string[]

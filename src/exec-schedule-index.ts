@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
+import { type DctSection } from './catalog-types.js'
 import { type ScheduleCalendar, type ScheduleIndex, type ScheduleNode } from './exec-types.js'
 import {
   isSchYamlFilename,
@@ -8,6 +9,7 @@ import {
   readYaml,
   toScheduleFilePath,
 } from './exec-shared.js'
+import { specdojoRootDir } from './specdojo-config.js'
 
 function defaultScheduleCalendar(): ScheduleCalendar {
   return {
@@ -121,6 +123,54 @@ function scheduleSectionLabelForDoc(doc: unknown, fallback: string): string {
   return track ?? fallback
 }
 
+function collectCatalogNames(sections: DctSection[], out: Map<string, string>): void {
+  for (const section of sections) {
+    if (section.groups) collectCatalogNames(section.groups, out)
+    if (!section.deliverables) continue
+    for (const item of section.deliverables) {
+      if (item.local_id && item.name) out.set(item.local_id, item.name)
+    }
+  }
+}
+
+function buildArtifactNameMap(projectPath: string, baseDir: string): Map<string, string> {
+  const map = new Map<string, string>()
+  const all = listFilesRecursive(projectPath)
+  for (const f of all) {
+    let doc: unknown
+    try {
+      doc = readYaml(f)
+    } catch {
+      continue
+    }
+    if (!doc || typeof doc !== 'object') continue
+    const d = doc as Record<string, unknown>
+    if (nonEmptyString(d['kind']) !== 'strategy') continue
+
+    const scope = d['scope']
+    if (!scope || typeof scope !== 'object') continue
+    const catalogs = (scope as Record<string, unknown>)['catalogs']
+    if (!Array.isArray(catalogs)) continue
+
+    for (const ref of catalogs) {
+      if (!ref || typeof ref !== 'object') continue
+      const path = (ref as Record<string, unknown>)['path']
+      if (typeof path !== 'string') continue
+      const catalogPath = resolve(baseDir, path.replace(/^\//, ''))
+      let catDoc: unknown
+      try {
+        catDoc = readYaml(catalogPath)
+      } catch {
+        continue
+      }
+      if (!catDoc || typeof catDoc !== 'object') continue
+      const groups = (catDoc as Record<string, unknown>)['groups']
+      if (Array.isArray(groups)) collectCatalogNames(groups as DctSection[], map)
+    }
+  }
+  return map
+}
+
 export function buildScheduleIndex(projectPath: string): ScheduleIndex {
   const all = listFilesRecursive(projectPath)
   const candidateFiles = all.filter(p => isSchYamlFilename(p))
@@ -132,6 +182,14 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
   let startDate: string | null = null
   let calendar = defaultScheduleCalendar()
   let hasCalendar = false
+
+  // Build local_id → artifact_name map from catalogs referenced in strategy files
+  let artifactNameMap: Map<string, string>
+  try {
+    artifactNameMap = buildArtifactNameMap(projectPath, specdojoRootDir())
+  } catch {
+    artifactNameMap = new Map()
+  }
 
   if (existsSync(defaultsPath)) {
     try {
@@ -194,9 +252,11 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       if (!id) continue
       const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       const taskLocalId = typeof tv['local_id'] === 'string' ? tv['local_id'] : undefined
+      const taskArtifactName = taskLocalId ? artifactNameMap.get(taskLocalId) : undefined
       nodes.set(id, {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
+        ...(taskArtifactName ? { artifact_name: taskArtifactName } : {}),
         name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
         owner: typeof tv['owner'] === 'string' ? tv['owner'] : undefined,
         depends_on: Array.isArray(tv['depends_on']) ? tv['depends_on'].map(String) : [],

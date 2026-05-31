@@ -65,144 +65,144 @@
 <text class="section" x="16" y="194">launch</text>
 <line class="grid" x1="0" y1="202" x2="812" y2="202" />
 <rect x="0" y="218" width="812" height="24" fill="#f8fafc" />
-<text class="label" x="16" y="232">T-LAUNCH-PJM-SCHDEF-000 完了済み</text>
+<text class="label" x="16" y="232">SCHDEF-000 スケジュールデフォルト定義 完了済み</text>
 <line class="row-grid" x1="0" y1="240" x2="812" y2="240" />
 <rect x="0" y="242" width="812" height="24" fill="#f8fafc" />
-<text class="label" x="16" y="256">T-LAUNCH-PJM-SCHSTG-000 完了済み</text>
+<text class="label" x="16" y="256">SCHSTG-000 Launch スケジュール戦略定義 完了済み</text>
 <line class="row-grid" x1="0" y1="264" x2="812" y2="264" />
-<text class="label" x="16" y="280">T-LAUNCH-PJD-OVERVIEW-010 たたき台作成</text>
+<text class="label" x="16" y="280">OVERVIEW-010 プロジェクト概要 たたき台作成</text>
 <line class="row-grid" x1="0" y1="288" x2="812" y2="288" />
 <rect x="380" y="266" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="304">T-LAUNCH-PJM-PLAN-010 たたき台作成</text>
+<text class="label" x="16" y="304">PLAN-010 プロジェクト管理計画 たたき台作成</text>
 <line class="row-grid" x1="0" y1="312" x2="812" y2="312" />
 <rect x="380" y="290" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="328">T-LAUNCH-PJD-OVERVIEW-020 調査・補強</text>
+<text class="label" x="16" y="328">OVERVIEW-020 プロジェクト概要 調査・補強</text>
 <line class="row-grid" x1="0" y1="336" x2="812" y2="336" />
 <rect x="394" y="314" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="352">T-LAUNCH-PJM-PLAN-020 調査・補強</text>
+<text class="label" x="16" y="352">PLAN-020 プロジェクト管理計画 調査・補強</text>
 <line class="row-grid" x1="0" y1="360" x2="812" y2="360" />
 <rect x="394" y="338" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="376">T-LAUNCH-PJD-OVERVIEW-030 一次版レビュー</text>
+<text class="label" x="16" y="376">OVERVIEW-030 プロジェクト概要 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="384" x2="812" y2="384" />
 <rect x="422" y="362" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="400">T-LAUNCH-PJM-PLAN-030 一次版レビュー</text>
+<text class="label" x="16" y="400">PLAN-030 プロジェクト管理計画 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="408" x2="812" y2="408" />
 <rect x="422" y="386" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="424">T-LAUNCH-PJD-SCOPE-010 たたき台作成</text>
+<text class="label" x="16" y="424">SCOPE-010 プロジェクトスコープ たたき台作成</text>
 <line class="row-grid" x1="0" y1="432" x2="812" y2="432" />
 <rect x="436" y="410" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="448">T-LAUNCH-PJD-STAKEHOLDER-010 たたき台作成</text>
+<text class="label" x="16" y="448">STAKEHOLDER-010 ステークホルダー登録簿 たたき台作成</text>
 <line class="row-grid" x1="0" y1="456" x2="812" y2="456" />
 <rect x="436" y="434" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="472">T-LAUNCH-PJM-COMM-010 たたき台作成</text>
+<text class="label" x="16" y="472">COMM-010 コミュニケーション計画 たたき台作成</text>
 <line class="row-grid" x1="0" y1="480" x2="812" y2="480" />
 <rect x="436" y="458" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="496">T-LAUNCH-PJM-ORG-010 たたき台作成</text>
+<text class="label" x="16" y="496">ORG-010 組織定義 たたき台作成</text>
 <line class="row-grid" x1="0" y1="504" x2="812" y2="504" />
 <rect x="436" y="482" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="520">T-LAUNCH-PJM-QLTY-010 たたき台作成</text>
+<text class="label" x="16" y="520">QLTY-010 品質管理計画 たたき台作成</text>
 <line class="row-grid" x1="0" y1="528" x2="812" y2="528" />
 <rect x="436" y="506" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="544">T-LAUNCH-PJD-SCOPE-020 調査・補強</text>
+<text class="label" x="16" y="544">SCOPE-020 プロジェクトスコープ 調査・補強</text>
 <line class="row-grid" x1="0" y1="552" x2="812" y2="552" />
 <rect x="450" y="530" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="568">T-LAUNCH-PJD-STAKEHOLDER-020 調査・補強</text>
+<text class="label" x="16" y="568">STAKEHOLDER-020 ステークホルダー登録簿 調査・補強</text>
 <line class="row-grid" x1="0" y1="576" x2="812" y2="576" />
 <rect x="450" y="554" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="592">T-LAUNCH-PJM-COMM-020 調査・補強</text>
+<text class="label" x="16" y="592">COMM-020 コミュニケーション計画 調査・補強</text>
 <line class="row-grid" x1="0" y1="600" x2="812" y2="600" />
 <rect x="450" y="578" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="616">T-LAUNCH-PJM-ORG-020 調査・補強</text>
+<text class="label" x="16" y="616">ORG-020 組織定義 調査・補強</text>
 <line class="row-grid" x1="0" y1="624" x2="812" y2="624" />
 <rect x="450" y="602" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="640">T-LAUNCH-PJM-QLTY-020 調査・補強</text>
+<text class="label" x="16" y="640">QLTY-020 品質管理計画 調査・補強</text>
 <line class="row-grid" x1="0" y1="648" x2="812" y2="648" />
 <rect x="450" y="626" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="664">T-LAUNCH-PJD-SCOPE-030 一次版レビュー</text>
+<text class="label" x="16" y="664">SCOPE-030 プロジェクトスコープ 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="672" x2="812" y2="672" />
 <rect x="478" y="650" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="688">T-LAUNCH-PJD-STAKEHOLDER-030 一次版レビュー</text>
+<text class="label" x="16" y="688">STAKEHOLDER-030 ステークホルダー登録簿 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="696" x2="812" y2="696" />
 <rect x="478" y="674" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="712">T-LAUNCH-PJM-COMM-030 一次版レビュー</text>
+<text class="label" x="16" y="712">COMM-030 コミュニケーション計画 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="720" x2="812" y2="720" />
 <rect x="478" y="698" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="736">T-LAUNCH-PJM-ORG-030 一次版レビュー</text>
+<text class="label" x="16" y="736">ORG-030 組織定義 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="744" x2="812" y2="744" />
 <rect x="478" y="722" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="760">T-LAUNCH-PJM-QLTY-030 一次版レビュー</text>
+<text class="label" x="16" y="760">QLTY-030 品質管理計画 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="768" x2="812" y2="768" />
 <rect x="478" y="746" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="784">T-LAUNCH-PJD-ACD-010 たたき台作成</text>
+<text class="label" x="16" y="784">ACD-010 前提・制約・依存関係 たたき台作成</text>
 <line class="row-grid" x1="0" y1="792" x2="812" y2="792" />
 <rect x="492" y="770" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="808">T-LAUNCH-PJD-CHARTER-010 たたき台作成</text>
+<text class="label" x="16" y="808">CHARTER-010 プロジェクト憲章 たたき台作成</text>
 <line class="row-grid" x1="0" y1="816" x2="812" y2="816" />
 <rect x="492" y="794" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="832">T-LAUNCH-PJD-SUCCESS-010 たたき台作成</text>
+<text class="label" x="16" y="832">SUCCESS-010 成功基準と受入条件 たたき台作成</text>
 <line class="row-grid" x1="0" y1="840" x2="812" y2="840" />
 <rect x="492" y="818" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="856">T-LAUNCH-PJM-RACI-010 たたき台作成</text>
+<text class="label" x="16" y="856">RACI-010 RACI たたき台作成</text>
 <line class="row-grid" x1="0" y1="864" x2="812" y2="864" />
 <rect x="492" y="842" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="880">T-LAUNCH-PJM-ROLE-010 たたき台作成</text>
+<text class="label" x="16" y="880">ROLE-010 ロール定義 たたき台作成</text>
 <line class="row-grid" x1="0" y1="888" x2="812" y2="888" />
 <rect x="492" y="866" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="904">T-LAUNCH-PJD-ACD-020 調査・補強</text>
+<text class="label" x="16" y="904">ACD-020 前提・制約・依存関係 調査・補強</text>
 <line class="row-grid" x1="0" y1="912" x2="812" y2="912" />
 <rect x="506" y="890" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="928">T-LAUNCH-PJD-CHARTER-020 調査・補強</text>
+<text class="label" x="16" y="928">CHARTER-020 プロジェクト憲章 調査・補強</text>
 <line class="row-grid" x1="0" y1="936" x2="812" y2="936" />
 <rect x="506" y="914" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="952">T-LAUNCH-PJD-SUCCESS-020 調査・補強</text>
+<text class="label" x="16" y="952">SUCCESS-020 成功基準と受入条件 調査・補強</text>
 <line class="row-grid" x1="0" y1="960" x2="812" y2="960" />
 <rect x="506" y="938" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="976">T-LAUNCH-PJM-RACI-020 調査・補強</text>
+<text class="label" x="16" y="976">RACI-020 RACI 調査・補強</text>
 <line class="row-grid" x1="0" y1="984" x2="812" y2="984" />
 <rect x="506" y="962" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1000">T-LAUNCH-PJM-ROLE-020 調査・補強</text>
+<text class="label" x="16" y="1000">ROLE-020 ロール定義 調査・補強</text>
 <line class="row-grid" x1="0" y1="1008" x2="812" y2="1008" />
 <rect x="506" y="986" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1024">T-LAUNCH-PJD-ACD-030 一次版レビュー</text>
+<text class="label" x="16" y="1024">ACD-030 前提・制約・依存関係 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1032" x2="812" y2="1032" />
 <rect x="534" y="1010" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1048">T-LAUNCH-PJD-CHARTER-030 一次版レビュー</text>
+<text class="label" x="16" y="1048">CHARTER-030 プロジェクト憲章 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1056" x2="812" y2="1056" />
 <rect x="534" y="1034" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1072">T-LAUNCH-PJD-SUCCESS-030 一次版レビュー</text>
+<text class="label" x="16" y="1072">SUCCESS-030 成功基準と受入条件 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1080" x2="812" y2="1080" />
 <rect x="534" y="1058" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1096">T-LAUNCH-PJM-RACI-030 一次版レビュー</text>
+<text class="label" x="16" y="1096">RACI-030 RACI 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1104" x2="812" y2="1104" />
 <rect x="534" y="1082" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1120">T-LAUNCH-PJM-ROLE-030 一次版レビュー</text>
+<text class="label" x="16" y="1120">ROLE-030 ロール定義 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1128" x2="812" y2="1128" />
 <rect x="534" y="1106" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1144">T-LAUNCH-PJD-ISSUES-010 たたき台作成</text>
+<text class="label" x="16" y="1144">ISSUES-010 プロジェクト課題と解決アプローチ たたき台作成</text>
 <line class="row-grid" x1="0" y1="1152" x2="812" y2="1152" />
 <rect x="548" y="1130" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1168">T-LAUNCH-PJM-MBR-010 たたき台作成</text>
+<text class="label" x="16" y="1168">MBR-010 メンバー定義 たたき台作成</text>
 <line class="row-grid" x1="0" y1="1176" x2="812" y2="1176" />
 <rect x="548" y="1154" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1192">T-LAUNCH-PJD-ISSUES-020 調査・補強</text>
+<text class="label" x="16" y="1192">ISSUES-020 プロジェクト課題と解決アプローチ 調査・補強</text>
 <line class="row-grid" x1="0" y1="1200" x2="812" y2="1200" />
 <rect x="562" y="1178" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1216">T-LAUNCH-PJM-MBR-020 調査・補強</text>
+<text class="label" x="16" y="1216">MBR-020 メンバー定義 調査・補強</text>
 <line class="row-grid" x1="0" y1="1224" x2="812" y2="1224" />
 <rect x="562" y="1202" width="28" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1240">T-LAUNCH-PJD-ISSUES-030 一次版レビュー</text>
+<text class="label" x="16" y="1240">ISSUES-030 プロジェクト課題と解決アプローチ 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1248" x2="812" y2="1248" />
 <rect x="590" y="1226" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1264">T-LAUNCH-PJM-MBR-030 一次版レビュー</text>
+<text class="label" x="16" y="1264">MBR-030 メンバー定義 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1272" x2="812" y2="1272" />
 <rect x="590" y="1250" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1288">T-LAUNCH-PJD-ALT-010 たたき台作成（予備調査含む）</text>
+<text class="label" x="16" y="1288">ALT-010 代替案比較 たたき台作成（予備調査含む）</text>
 <line class="row-grid" x1="0" y1="1296" x2="812" y2="1296" />
 <rect x="604" y="1274" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1312">T-LAUNCH-PJD-ALT-020 調査・深掘り</text>
+<text class="label" x="16" y="1312">ALT-020 代替案比較 調査・深掘り</text>
 <line class="row-grid" x1="0" y1="1320" x2="812" y2="1320" />
 <rect x="632" y="1298" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1336">T-LAUNCH-PJD-ALT-030 一次版レビュー</text>
+<text class="label" x="16" y="1336">ALT-030 代替案比較 一次版レビュー</text>
 <line class="row-grid" x1="0" y1="1344" x2="812" y2="1344" />
 <rect x="660" y="1322" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <rect x="0" y="1346" width="812" height="24" fill="#f3e8ff" />
@@ -211,94 +211,94 @@
 <rect x="672" y="1346" width="4" height="12" fill="#7c3aed" opacity="0.9" />
 <rect x="667" y="1346" width="14" height="3" rx="1" fill="#7c3aed" opacity="0.9" />
 <rect x="667" y="1355" width="14" height="3" rx="1" fill="#7c3aed" opacity="0.9" />
-<text class="label" x="16" y="1384">T-LAUNCH-PJD-ACD-040 整合性確認・修正</text>
+<text class="label" x="16" y="1384">ACD-040 前提・制約・依存関係 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1392" x2="812" y2="1392" />
 <rect x="674" y="1370" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1408">T-LAUNCH-PJD-ALT-040 整合性確認・修正</text>
+<text class="label" x="16" y="1408">ALT-040 代替案比較 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1416" x2="812" y2="1416" />
 <rect x="674" y="1394" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1432">T-LAUNCH-PJD-CHARTER-040 整合性確認・修正</text>
+<text class="label" x="16" y="1432">CHARTER-040 プロジェクト憲章 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1440" x2="812" y2="1440" />
 <rect x="674" y="1418" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1456">T-LAUNCH-PJD-ISSUES-040 整合性確認・修正</text>
+<text class="label" x="16" y="1456">ISSUES-040 プロジェクト課題と解決アプローチ 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1464" x2="812" y2="1464" />
 <rect x="674" y="1442" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1480">T-LAUNCH-PJD-OVERVIEW-040 整合性確認・修正</text>
+<text class="label" x="16" y="1480">OVERVIEW-040 プロジェクト概要 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1488" x2="812" y2="1488" />
 <rect x="674" y="1466" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1504">T-LAUNCH-PJD-SCOPE-040 整合性確認・修正</text>
+<text class="label" x="16" y="1504">SCOPE-040 プロジェクトスコープ 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1512" x2="812" y2="1512" />
 <rect x="674" y="1490" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1528">T-LAUNCH-PJD-STAKEHOLDER-040 整合性確認・修正</text>
+<text class="label" x="16" y="1528">STAKEHOLDER-040 ステークホルダー登録簿 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1536" x2="812" y2="1536" />
 <rect x="674" y="1514" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1552">T-LAUNCH-PJD-SUCCESS-040 整合性確認・修正</text>
+<text class="label" x="16" y="1552">SUCCESS-040 成功基準と受入条件 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1560" x2="812" y2="1560" />
 <rect x="674" y="1538" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1576">T-LAUNCH-PJM-COMM-040 整合性確認・修正</text>
+<text class="label" x="16" y="1576">COMM-040 コミュニケーション計画 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1584" x2="812" y2="1584" />
 <rect x="674" y="1562" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1600">T-LAUNCH-PJM-MBR-040 整合性確認・修正</text>
+<text class="label" x="16" y="1600">MBR-040 メンバー定義 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1608" x2="812" y2="1608" />
 <rect x="674" y="1586" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1624">T-LAUNCH-PJM-ORG-040 整合性確認・修正</text>
+<text class="label" x="16" y="1624">ORG-040 組織定義 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1632" x2="812" y2="1632" />
 <rect x="674" y="1610" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1648">T-LAUNCH-PJM-PLAN-040 整合性確認・修正</text>
+<text class="label" x="16" y="1648">PLAN-040 プロジェクト管理計画 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1656" x2="812" y2="1656" />
 <rect x="674" y="1634" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1672">T-LAUNCH-PJM-QLTY-040 整合性確認・修正</text>
+<text class="label" x="16" y="1672">QLTY-040 品質管理計画 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1680" x2="812" y2="1680" />
 <rect x="674" y="1658" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1696">T-LAUNCH-PJM-RACI-040 整合性確認・修正</text>
+<text class="label" x="16" y="1696">RACI-040 RACI 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1704" x2="812" y2="1704" />
 <rect x="674" y="1682" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1720">T-LAUNCH-PJM-ROLE-040 整合性確認・修正</text>
+<text class="label" x="16" y="1720">ROLE-040 ロール定義 整合性確認・修正</text>
 <line class="row-grid" x1="0" y1="1728" x2="812" y2="1728" />
 <rect x="674" y="1706" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1744">T-LAUNCH-PJD-ACD-050 完成版確定</text>
+<text class="label" x="16" y="1744">ACD-050 前提・制約・依存関係 完成版確定</text>
 <line class="row-grid" x1="0" y1="1752" x2="812" y2="1752" />
 <rect x="688" y="1730" width="7" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
-<text class="label" x="16" y="1768">T-LAUNCH-PJD-ALT-050 完成版確定</text>
+<text class="label" x="16" y="1768">ALT-050 代替案比較 完成版確定</text>
 <line class="row-grid" x1="0" y1="1776" x2="812" y2="1776" />
 <rect x="688" y="1754" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1792">T-LAUNCH-PJD-CHARTER-050 完成版確定</text>
+<text class="label" x="16" y="1792">CHARTER-050 プロジェクト憲章 完成版確定</text>
 <line class="row-grid" x1="0" y1="1800" x2="812" y2="1800" />
 <rect x="688" y="1778" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1816">T-LAUNCH-PJD-ISSUES-050 完成版確定</text>
+<text class="label" x="16" y="1816">ISSUES-050 プロジェクト課題と解決アプローチ 完成版確定</text>
 <line class="row-grid" x1="0" y1="1824" x2="812" y2="1824" />
 <rect x="688" y="1802" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1840">T-LAUNCH-PJD-OVERVIEW-050 完成版確定</text>
+<text class="label" x="16" y="1840">OVERVIEW-050 プロジェクト概要 完成版確定</text>
 <line class="row-grid" x1="0" y1="1848" x2="812" y2="1848" />
 <rect x="688" y="1826" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1864">T-LAUNCH-PJD-SCOPE-050 完成版確定</text>
+<text class="label" x="16" y="1864">SCOPE-050 プロジェクトスコープ 完成版確定</text>
 <line class="row-grid" x1="0" y1="1872" x2="812" y2="1872" />
 <rect x="688" y="1850" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1888">T-LAUNCH-PJD-STAKEHOLDER-050 完成版確定</text>
+<text class="label" x="16" y="1888">STAKEHOLDER-050 ステークホルダー登録簿 完成版確定</text>
 <line class="row-grid" x1="0" y1="1896" x2="812" y2="1896" />
 <rect x="688" y="1874" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1912">T-LAUNCH-PJD-SUCCESS-050 完成版確定</text>
+<text class="label" x="16" y="1912">SUCCESS-050 成功基準と受入条件 完成版確定</text>
 <line class="row-grid" x1="0" y1="1920" x2="812" y2="1920" />
 <rect x="688" y="1898" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1936">T-LAUNCH-PJM-COMM-050 完成版確定</text>
+<text class="label" x="16" y="1936">COMM-050 コミュニケーション計画 完成版確定</text>
 <line class="row-grid" x1="0" y1="1944" x2="812" y2="1944" />
 <rect x="688" y="1922" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1960">T-LAUNCH-PJM-MBR-050 完成版確定</text>
+<text class="label" x="16" y="1960">MBR-050 メンバー定義 完成版確定</text>
 <line class="row-grid" x1="0" y1="1968" x2="812" y2="1968" />
 <rect x="688" y="1946" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="1984">T-LAUNCH-PJM-ORG-050 完成版確定</text>
+<text class="label" x="16" y="1984">ORG-050 組織定義 完成版確定</text>
 <line class="row-grid" x1="0" y1="1992" x2="812" y2="1992" />
 <rect x="688" y="1970" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="2008">T-LAUNCH-PJM-PLAN-050 完成版確定</text>
+<text class="label" x="16" y="2008">PLAN-050 プロジェクト管理計画 完成版確定</text>
 <line class="row-grid" x1="0" y1="2016" x2="812" y2="2016" />
 <rect x="688" y="1994" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="2032">T-LAUNCH-PJM-QLTY-050 完成版確定</text>
+<text class="label" x="16" y="2032">QLTY-050 品質管理計画 完成版確定</text>
 <line class="row-grid" x1="0" y1="2040" x2="812" y2="2040" />
 <rect x="688" y="2018" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="2056">T-LAUNCH-PJM-RACI-050 完成版確定</text>
+<text class="label" x="16" y="2056">RACI-050 RACI 完成版確定</text>
 <line class="row-grid" x1="0" y1="2064" x2="812" y2="2064" />
 <rect x="688" y="2042" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
-<text class="label" x="16" y="2080">T-LAUNCH-PJM-ROLE-050 完成版確定</text>
+<text class="label" x="16" y="2080">ROLE-050 ロール定義 完成版確定</text>
 <line class="row-grid" x1="0" y1="2088" x2="812" y2="2088" />
 <rect x="688" y="2066" width="7" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 </svg>
