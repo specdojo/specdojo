@@ -154,6 +154,7 @@ owner_rules:
 phase_gates:
   - id: G-LAUNCH-first-pass
     name: first-pass 完了
+    artifact_name: 全ドメイン
     after_phase_sets: [first-pass, research-first-pass] # prj-comparison-of-alternatives は research-first-pass を使用
     owner: PM
     scope:
@@ -166,14 +167,14 @@ group_milestones:
     milestone:
       id: M-LAUNCH-project-definition
       name: ドメイン完了
-      domain_name: プロジェクト定義
+      artifact_name: プロジェクト定義
       owner: PM
 
   - catalog_id: prj-0001:dct-project-management
     milestone:
       id: M-LAUNCH-project-management
       name: ドメイン完了
-      domain_name: プロジェクト・マネジメント
+      artifact_name: プロジェクト・マネジメント
       owner: PM
 
 # catalog の depends_on を補完するドメイン間依存

@@ -725,7 +725,7 @@
     },
     "G-LAUNCH-first-pass": {
       "id": "G-LAUNCH-first-pass",
-      "name": "プロジェクト定義・マネジメント first-pass 完了",
+      "name": "first-pass 完了",
       "owner": "PM",
       "kind": "gate",
       "duration_days": 0,
@@ -1250,7 +1250,7 @@
     },
     "M-LAUNCH-project-definition": {
       "id": "M-LAUNCH-project-definition",
-      "name": "プロジェクト定義ドメイン完了",
+      "name": "ドメイン完了",
       "owner": "PM",
       "kind": "milestone",
       "duration_days": 0,
@@ -1302,7 +1302,7 @@
     },
     "M-LAUNCH-project-management": {
       "id": "M-LAUNCH-project-management",
-      "name": "プロジェクト・マネジメントドメイン完了",
+      "name": "ドメイン完了",
       "owner": "PM",
       "kind": "milestone",
       "duration_days": 0,

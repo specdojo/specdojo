@@ -7,15 +7,15 @@ project_id: prj-0001
 settings: {}
 milestones:
   - id: M-LAUNCH-project-definition
-    name: プロジェクト定義ドメイン完了
+    name: ドメイン完了
     depends_on:
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050
       - T-LAUNCH-prj-charter-050
       - T-LAUNCH-prj-comparison-of-alternatives-050
     owner: PM
-    domain_name: プロジェクト定義
+    artifact_name: プロジェクト定義
   - id: M-LAUNCH-project-management
-    name: プロジェクト・マネジメントドメイン完了
+    name: ドメイン完了
     depends_on:
       - T-LAUNCH-pm-communication-plan-050
       - T-LAUNCH-pm-quality-management-plan-050
@@ -24,9 +24,9 @@ milestones:
       - T-LAUNCH-sch-defaults-000
       - T-LAUNCH-sch-strategy-launch-000
     owner: PM
-    domain_name: プロジェクト・マネジメント
+    artifact_name: プロジェクト・マネジメント
   - id: G-LAUNCH-first-pass
-    name: プロジェクト定義・マネジメント first-pass 完了
+    name: first-pass 完了
     depends_on:
       - T-LAUNCH-prj-overview-030
       - T-LAUNCH-prj-scope-030
@@ -44,3 +44,4 @@ milestones:
       - T-LAUNCH-pm-members-030
       - T-LAUNCH-pm-raci-030
     owner: PM
+    artifact_name: 全ドメイン

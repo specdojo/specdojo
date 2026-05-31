@@ -94,8 +94,10 @@ function updateMilestonesFile(
     const idx = list.findIndex(entry => entry?.id === m.id)
     if (idx >= 0) {
       list[idx].depends_on = m.depends_on
-      if (m.domain_name !== undefined) list[idx].domain_name = m.domain_name
-      else delete list[idx].domain_name
+      list[idx].name = m.name
+      if (m.artifact_name !== undefined) list[idx].artifact_name = m.artifact_name
+      else delete list[idx].artifact_name
+      delete list[idx].domain_name // migrate: remove legacy field
       updated.push(m.id)
     } else {
       list.push({ ...m } as Record<string, unknown>)

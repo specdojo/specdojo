@@ -64,6 +64,7 @@ members:
       - task-execution
       - document-creation
       - implementation
+    model: claude-sonnet-4-6
     capabilities: []
     command: "opencode run --agent edit-agent"
     scheduler_strategy: critical-first
@@ -79,6 +80,7 @@ members:
       - task-execution
       - document-revision
       - review-response
+    model: claude-haiku-4-5-20251001
     capabilities: []
     command: "opencode run --agent small-edit-agent"
     scheduler_strategy: critical-first
@@ -94,6 +96,7 @@ members:
       - task-execution
       - complex-analysis
       - architecture-judgment
+    model: claude-opus-4-8
     capabilities: []
     command: "opencode run --agent expert-agent"
     scheduler_strategy: critical-first
@@ -109,6 +112,7 @@ members:
       - task-execution
       - research
       - external-reference
+    model: claude-opus-4-8
     capabilities:
       - web_search
     command: "opencode run --agent expert-agent-web"
@@ -129,3 +133,22 @@ members:
     command: "opencode run --agent review-agent"
     scheduler_strategy: fifo
     note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。
+
+  - nickname: claude-expert-web-agent
+    display_name: Claude Expert Web Agent
+    email: null
+    roles: []
+    type: agent
+    persona: task-executor
+    focus:
+      - task-execution
+      - complex-analysis
+      - architecture-judgment
+      - research
+      - external-reference
+    model: claude-opus-4-8
+    capabilities:
+      - web_search
+    command: "claude --model claude-opus-4-8"
+    scheduler_strategy: critical-first
+    note: Claude Code CLI を使用する高性能エージェント。difficulty:expert のタスクおよび外部 Web 情報参照が必要なタスクを担当する。opencode の expert-web-agent と同等の役割を Claude Code CLI で担う。

@@ -215,10 +215,10 @@ properties:
               type: string
               minLength: 1
               description: "Milestone display name."
-            domain_name:
+            artifact_name:
               type: string
               minLength: 1
-              description: "Human-readable domain name displayed in timeline col2 (e.g., プロジェクト定義)."
+              description: "Human-readable artifact/domain name displayed in timeline col2 (e.g., プロジェクト定義)."
             owner:
               $ref: "./sch-common.schema.yaml#/$defs/Owner"
             date_hint:
@@ -264,6 +264,10 @@ properties:
           type: string
           minLength: 1
           description: "Gate display name."
+        artifact_name:
+          type: string
+          minLength: 1
+          description: "Human-readable name displayed in timeline col2 for this gate (e.g., 全ドメイン)."
         after_phase_sets:
           type: array
           minItems: 1

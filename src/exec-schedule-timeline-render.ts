@@ -335,7 +335,7 @@ export function buildTimelineSvg(
           `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(taskName)}</text>`
         )
     } else {
-      const domainName = scheduleNode?.domain_name ?? ''
+      const domainName = scheduleNode?.artifact_name ?? ''
       const milestoneName = row.name ?? ''
       parts.push(
         `<text class="label-id" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(row.id)}</text>`
