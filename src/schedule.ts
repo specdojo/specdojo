@@ -6,7 +6,10 @@ import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
 import { generateScheduleTrack, type GeneratedMilestone } from './schedule-generate.js'
 import { readYaml } from './exec-shared.js'
 
-function resolveSchedulePath(opts: { project?: string }): { schedulePath: string; baseDir: string } {
+function resolveSchedulePath(opts: { project?: string }): {
+  schedulePath: string
+  baseDir: string
+} {
   loadEnv()
   const { config, configPath } = loadConfig()
   const baseDir = specdojoRootDir()
@@ -91,6 +94,8 @@ function updateMilestonesFile(
     const idx = list.findIndex(entry => entry?.id === m.id)
     if (idx >= 0) {
       list[idx].depends_on = m.depends_on
+      if (m.domain_name !== undefined) list[idx].domain_name = m.domain_name
+      else delete list[idx].domain_name
       updated.push(m.id)
     } else {
       list.push({ ...m } as Record<string, unknown>)

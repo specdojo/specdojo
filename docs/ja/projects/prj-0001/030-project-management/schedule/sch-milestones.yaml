@@ -6,14 +6,26 @@ version: 1
 project_id: prj-0001
 settings: {}
 milestones:
-  - id: M-LAUNCH-PJD-900
+  - id: M-LAUNCH-project-definition
     name: プロジェクト定義ドメイン完了
     depends_on:
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050
       - T-LAUNCH-prj-charter-050
       - T-LAUNCH-prj-comparison-of-alternatives-050
     owner: PM
-  - id: GATE-LAUNCH-FP
+    domain_name: プロジェクト定義
+  - id: M-LAUNCH-project-management
+    name: プロジェクト・マネジメントドメイン完了
+    depends_on:
+      - T-LAUNCH-pm-communication-plan-050
+      - T-LAUNCH-pm-quality-management-plan-050
+      - T-LAUNCH-pm-members-050
+      - T-LAUNCH-pm-raci-050
+      - T-LAUNCH-sch-defaults-000
+      - T-LAUNCH-sch-strategy-launch-000
+    owner: PM
+    domain_name: プロジェクト・マネジメント
+  - id: G-LAUNCH-first-pass
     name: プロジェクト定義・マネジメント first-pass 完了
     depends_on:
       - T-LAUNCH-prj-overview-030
@@ -31,14 +43,4 @@ milestones:
       - T-LAUNCH-pm-roles-030
       - T-LAUNCH-pm-members-030
       - T-LAUNCH-pm-raci-030
-    owner: PM
-  - id: M-LAUNCH-PJM-PLAN-900
-    name: プロジェクト・マネジメントドメイン完了
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-050
-      - T-LAUNCH-pm-quality-management-plan-050
-      - T-LAUNCH-pm-members-050
-      - T-LAUNCH-pm-raci-050
-      - T-LAUNCH-sch-defaults-000
-      - T-LAUNCH-sch-strategy-launch-000
     owner: PM

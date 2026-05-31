@@ -723,8 +723,8 @@
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "GATE-LAUNCH-FP": {
-      "id": "GATE-LAUNCH-FP",
+    "G-LAUNCH-first-pass": {
+      "id": "G-LAUNCH-first-pass",
       "name": "プロジェクト定義・マネジメント first-pass 完了",
       "owner": "PM",
       "kind": "gate",
@@ -766,7 +766,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-communication-plan-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -799,7 +799,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-members-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -832,7 +832,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-organization-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -865,7 +865,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-plan-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -898,7 +898,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-quality-management-plan-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -931,7 +931,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-raci-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -964,7 +964,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-pm-roles-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -997,7 +997,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-assumptions-constraints-dependencies-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1030,7 +1030,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-charter-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1063,7 +1063,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-comparison-of-alternatives-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1096,7 +1096,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-issues-and-approach-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1129,7 +1129,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-overview-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1162,7 +1162,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-scope-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1195,7 +1195,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-stakeholder-register-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1228,7 +1228,7 @@
       "slack": 0,
       "depends_on": [
         "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030",
-        "GATE-LAUNCH-FP"
+        "G-LAUNCH-first-pass"
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
@@ -1248,8 +1248,8 @@
       ],
       "schedule_file": "sch-track-launch.yaml"
     },
-    "M-LAUNCH-PJD-900": {
-      "id": "M-LAUNCH-PJD-900",
+    "M-LAUNCH-project-definition": {
+      "id": "M-LAUNCH-project-definition",
       "name": "プロジェクト定義ドメイン完了",
       "owner": "PM",
       "kind": "milestone",
@@ -1300,8 +1300,8 @@
         "initial-complete"
       ]
     },
-    "M-LAUNCH-PJM-PLAN-900": {
-      "id": "M-LAUNCH-PJM-PLAN-900",
+    "M-LAUNCH-project-management": {
+      "id": "M-LAUNCH-project-management",
       "name": "プロジェクト・マネジメントドメイン完了",
       "owner": "PM",
       "kind": "milestone",
@@ -1338,9 +1338,9 @@
     "T-LAUNCH-prj-comparison-of-alternatives-010",
     "T-LAUNCH-prj-comparison-of-alternatives-020",
     "T-LAUNCH-prj-comparison-of-alternatives-030",
-    "GATE-LAUNCH-FP",
+    "G-LAUNCH-first-pass",
     "T-LAUNCH-pm-communication-plan-040",
     "T-LAUNCH-pm-communication-plan-050",
-    "M-LAUNCH-PJM-PLAN-900"
+    "M-LAUNCH-project-management"
   ]
 }

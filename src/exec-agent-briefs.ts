@@ -38,6 +38,7 @@ type ReadyJson = {
 type ScheduleTask = {
   id: string
   local_id?: string
+  phase_suffix?: string
   name?: string
   owner?: string
   duration_days?: number

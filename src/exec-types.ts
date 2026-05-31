@@ -56,6 +56,7 @@ export type ScheduleNode = {
   local_id?: string
   phase_suffix?: string
   artifact_name?: string
+  domain_name?: string
   name?: string
   owner?: string
   depends_on: string[]

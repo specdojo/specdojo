@@ -21,13 +21,13 @@
         "initial_state": true
       }
     },
-    "M-LAUNCH-PJD-900": {
+    "M-LAUNCH-project-definition": {
       "state": "todo"
     },
-    "GATE-LAUNCH-FP": {
+    "M-LAUNCH-project-management": {
       "state": "todo"
     },
-    "M-LAUNCH-PJM-PLAN-900": {
+    "G-LAUNCH-first-pass": {
       "state": "todo"
     },
     "T-LAUNCH-prj-overview-010": {

@@ -283,10 +283,11 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       nodes.set(id, {
         id,
         name: typeof mv['name'] === 'string' ? mv['name'] : undefined,
+        domain_name: typeof mv['domain_name'] === 'string' ? mv['domain_name'] : undefined,
         owner: typeof mv['owner'] === 'string' ? mv['owner'] : undefined,
         depends_on: Array.isArray(mv['depends_on']) ? mv['depends_on'].map(String) : [],
         duration_days: 0,
-        kind: id.startsWith('GATE-') ? 'gate' : 'milestone',
+        kind: id.startsWith('G-') ? 'gate' : 'milestone',
         schedule_file: f,
       })
     }

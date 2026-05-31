@@ -215,6 +215,10 @@ properties:
               type: string
               minLength: 1
               description: "Milestone display name."
+            domain_name:
+              type: string
+              minLength: 1
+              description: "Human-readable domain name displayed in timeline col2 (e.g., プロジェクト定義)."
             owner:
               $ref: "./sch-common.schema.yaml#/$defs/Owner"
             date_hint:
@@ -255,7 +259,7 @@ properties:
       properties:
         id:
           $ref: "./sch-common.schema.yaml#/$defs/Id"
-          description: "Gate milestone ID (e.g., GATE-LAUNCH-PJD-FP)."
+          description: "Gate milestone ID (e.g., G-LAUNCH-PJD-FP)."
         name:
           type: string
           minLength: 1

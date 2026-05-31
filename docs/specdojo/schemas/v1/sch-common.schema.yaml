@@ -186,6 +186,10 @@ $defs:
         type: string
         minLength: 1
         description: "Milestone name."
+      domain_name:
+        type: string
+        minLength: 1
+        description: "Human-readable domain name to display in timeline (e.g., プロジェクト定義)."
       depends_on:
         $ref: "#/$defs/DependencyIds"
       owner:

@@ -48,6 +48,7 @@ type MilestoneConfig = {
   id: string
   name: string
   owner: string
+  domain_name?: string
   date_hint?: string
   tags?: string[]
 }
@@ -102,6 +103,7 @@ export type GeneratedTask = {
 export type GeneratedMilestone = {
   id: string
   name: string
+  domain_name?: string
   depends_on: string[]
   owner: string
   date_hint?: string
@@ -475,6 +477,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     milestones.push({
       id: mc.id,
       name: mc.name,
+      ...(mc.domain_name !== undefined ? { domain_name: mc.domain_name } : {}),
       depends_on: leafFinalizeIds,
       owner: mc.owner,
       ...(mc.date_hint !== undefined ? { date_hint: mc.date_hint } : {}),

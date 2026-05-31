@@ -152,8 +152,8 @@ owner_rules:
     difficulty: low
 
 phase_gates:
-  - id: GATE-LAUNCH-FP
-    name: プロジェクト定義・マネジメント first-pass 完了
+  - id: G-LAUNCH-first-pass
+    name: first-pass 完了
     after_phase_sets: [first-pass, research-first-pass] # prj-comparison-of-alternatives は research-first-pass を使用
     owner: PM
     scope:
@@ -164,14 +164,16 @@ phase_gates:
 group_milestones:
   - catalog_id: prj-0001:dct-project-definition
     milestone:
-      id: M-LAUNCH-PJD-900
-      name: プロジェクト定義ドメイン完了
+      id: M-LAUNCH-project-definition
+      name: ドメイン完了
+      domain_name: プロジェクト定義
       owner: PM
 
   - catalog_id: prj-0001:dct-project-management
     milestone:
-      id: M-LAUNCH-PJM-PLAN-900
-      name: プロジェクト・マネジメントドメイン完了
+      id: M-LAUNCH-project-management
+      name: ドメイン完了
+      domain_name: プロジェクト・マネジメント
       owner: PM
 
 # catalog の depends_on を補完するドメイン間依存

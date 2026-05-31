@@ -68,10 +68,14 @@
 <rect x="0" y="90" width="872" height="30" fill="#f1f5f9" />
 <text class="section" x="16" y="108">マイルストーン</text>
 <line class="grid" x1="0" y1="116" x2="872" y2="116" />
-<text class="label" x="8" y="146" clip-path="url(#clip-col1)">M-LAUNCH-PJD-900 プロジェクト定義ドメイン完了</text>
+<text class="label-id" x="8" y="146" clip-path="url(#clip-col1)">M-LAUNCH-project-definition</text>
+<text class="label-artifact" x="126" y="146" clip-path="url(#clip-col2)">プロジェクト定義</text>
+<text class="label" x="298" y="146" clip-path="url(#clip-col3)">プロジェクト定義ドメイン完了</text>
 <line class="row-grid" x1="0" y1="154" x2="872" y2="154" />
 <polygon points="755,137 762,144 755,151 748,144" fill="#b45309" />
-<text class="label" x="8" y="170" clip-path="url(#clip-col1)">M-LAUNCH-PJM-PLAN-900 プロジェクト・マネジメントドメイン完了</text>
+<text class="label-id" x="8" y="170" clip-path="url(#clip-col1)">M-LAUNCH-project-management</text>
+<text class="label-artifact" x="126" y="170" clip-path="url(#clip-col2)">プロジェクト・マネジメント</text>
+<text class="label" x="298" y="170" clip-path="url(#clip-col3)">プロジェクト・マネジメントドメイン完了</text>
 <line class="row-grid" x1="0" y1="178" x2="872" y2="178" />
 <polygon points="755,161 762,168 755,175 748,168" fill="#b45309" />
 <rect x="0" y="176" width="872" height="30" fill="#f1f5f9" />
@@ -313,7 +317,8 @@
 <line class="row-grid" x1="0" y1="1344" x2="872" y2="1344" />
 <rect x="720" y="1322" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <rect x="0" y="1346" width="872" height="24" fill="#f3e8ff" />
-<text class="label" x="8" y="1360" clip-path="url(#clip-col1)">GATE-LAUNCH-FP プロジェクト定義・マネジメント first-pass 完了</text>
+<text class="label-id" x="8" y="1360" clip-path="url(#clip-col1)">G-LAUNCH-first-pass</text>
+<text class="label" x="298" y="1360" clip-path="url(#clip-col3)">プロジェクト定義・マネジメント first-pass 完了</text>
 <line class="row-grid" x1="0" y1="1368" x2="872" y2="1368" />
 <rect x="732" y="1346" width="4" height="12" fill="#7c3aed" opacity="0.9" />
 <rect x="727" y="1346" width="14" height="3" rx="1" fill="#7c3aed" opacity="0.9" />

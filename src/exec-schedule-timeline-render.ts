@@ -335,10 +335,19 @@ export function buildTimelineSvg(
           `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(taskName)}</text>`
         )
     } else {
-      const label = row.name ? `${row.id} ${row.name}` : row.id
+      const domainName = scheduleNode?.domain_name ?? ''
+      const milestoneName = row.name ?? ''
       parts.push(
-        `<text class="label" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(label)}</text>`
+        `<text class="label-id" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(row.id)}</text>`
       )
+      if (domainName)
+        parts.push(
+          `<text class="label-artifact" x="${col2X}" y="${currentY}" clip-path="url(#clip-col2)">${xmlEscape(domainName)}</text>`
+        )
+      if (milestoneName)
+        parts.push(
+          `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(milestoneName)}</text>`
+        )
     }
     parts.push(
       `<line class="row-grid" x1="0" y1="${currentY + 8}" x2="${width}" y2="${currentY + 8}" />`

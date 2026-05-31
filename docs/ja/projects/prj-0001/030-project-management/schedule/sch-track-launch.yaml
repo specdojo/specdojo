@@ -34,7 +34,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-overview-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: BA
   - local_id: prj-overview
     phase_suffix: "050"
@@ -70,7 +70,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-scope-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: BA
   - local_id: prj-scope
     phase_suffix: "050"
@@ -106,7 +106,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: BA
   - local_id: prj-success-criteria-and-acceptance-criteria
     phase_suffix: "050"
@@ -142,7 +142,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-stakeholder-register-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: BA
   - local_id: prj-stakeholder-register
     phase_suffix: "050"
@@ -179,7 +179,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-charter-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PO
   - local_id: prj-charter
     phase_suffix: "050"
@@ -215,7 +215,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-assumptions-constraints-dependencies-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: ARC
   - local_id: prj-assumptions-constraints-dependencies
     phase_suffix: "050"
@@ -252,7 +252,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-issues-and-approach-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: BA
   - local_id: prj-issues-and-approach
     phase_suffix: "050"
@@ -289,7 +289,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-prj-comparison-of-alternatives-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: ARC
   - local_id: prj-comparison-of-alternatives
     phase_suffix: "050"
@@ -324,7 +324,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-plan-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PM
   - local_id: pm-plan
     phase_suffix: "050"
@@ -360,7 +360,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-communication-plan-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PM
   - local_id: pm-communication-plan
     phase_suffix: "050"
@@ -396,7 +396,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PM
   - local_id: pm-quality-management-plan
     phase_suffix: "050"
@@ -432,7 +432,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PO
   - local_id: pm-organization
     phase_suffix: "050"
@@ -468,7 +468,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PO
   - local_id: pm-roles
     phase_suffix: "050"
@@ -505,7 +505,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PO
   - local_id: pm-members
     phase_suffix: "050"
@@ -541,7 +541,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-raci-030
-      - GATE-LAUNCH-FP
+      - G-LAUNCH-first-pass
     owner: PM
   - local_id: pm-raci
     phase_suffix: "050"
