@@ -84,13 +84,13 @@ repo-root/
                └─ generated/                  # exec build 生成物
 ```
 
-worktree は repo-root の外に作成する。
+worktree は repo-root の外に作成する。task_id をディレクトリ名・ブランチ名に使い、タスクごとに作成・破棄する。
 
 ```text
 worktrees/
-├─ edit-agent-1/        # ブランチ: exec/edit-agent-1
-├─ edit-agent-2/        # ブランチ: exec/edit-agent-2
-└─ edit-agent-3/        # ブランチ: exec/edit-agent-3
+├─ T-ARC-010/           # ブランチ: exec/T-ARC-010（実行中タスク）
+├─ T-BA-020/            # ブランチ: exec/T-BA-020（実行中タスク）
+└─ T-DEV-030/           # ブランチ: exec/T-DEV-030（実行中タスク）
 ```
 
 ## 5. `opencode.json` 設定
@@ -416,31 +416,42 @@ specdojo exec run --auto --parallel 3
 
 ## 10. worktree 分離セットアップ
 
-複数 `edit-agent` を並列実行する場合は instance ごとに worktree を分離し、Git working tree の競合を防ぐ。`specdojo exec run` が初回実行時に自動でセットアップする。`review-agent` は成果物を読み取るだけなので worktree 分離は不要。
+複数 `edit-agent` を並列実行する場合は **タスクごとに** worktree を作成し、Git working tree の競合を防ぐ。worktree 名とブランチ名は task_id を使う。`specdojo exec run` が claim 時に自動でセットアップし、complete / block 後に破棄する。`review-agent` は成果物を読み取るだけなので worktree 分離は不要。
 
-### 10.1. worktree セットアップ
+### 10.1. ライフサイクル
 
-```bash
-git worktree add ../worktrees/edit-agent-1 -b exec/edit-agent-1
-git worktree add ../worktrees/edit-agent-2 -b exec/edit-agent-2
-git worktree add ../worktrees/edit-agent-3 -b exec/edit-agent-3
-```
+| タイミング          | 操作                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| claim 時            | `git worktree add ../worktrees/<task-id> -b exec/<task-id>`  |
+| complete / block 時 | `git worktree remove ../worktrees/<task-id>` でクリーンアップ |
+
+`specdojo exec run` がこのライフサイクルを自動管理するため、手動セットアップは原則不要。
 
 ### 10.2. ディレクトリ構成
 
 ```text
 repo/
 worktrees/
-  edit-agent-1/
-  edit-agent-2/
-  edit-agent-3/
+  T-ARC-010/            # ブランチ: exec/T-ARC-010（実行中）
+  T-BA-020/             # ブランチ: exec/T-BA-020（実行中）
+  T-DEV-030/            # ブランチ: exec/T-DEV-030（実行中）
 ```
 
-### 10.3. worktree での実行
+並列実行中のタスク数だけ worktree が存在する。task_id で一目でどのタスクが動いているかがわかる。
+
+### 10.3. 手動実行時の worktree セットアップ
+
+`specdojo exec run` を使わず手動で実行する場合：
 
 ```bash
-cd ../worktrees/edit-agent-1
-opencode run --agent edit-agent "SpecDojo task を1件実行してください"
+TASK_ID=T-ARC-010
+git worktree add ../worktrees/${TASK_ID} -b exec/${TASK_ID}
+
+cd ../worktrees/${TASK_ID}
+opencode run --agent edit-agent "SpecDojo task ${TASK_ID} を実行してください"
+
+# 完了後クリーンアップ
+git worktree remove ../worktrees/${TASK_ID}
 ```
 
 ### 10.4. イベントファイルの命名規則
@@ -456,4 +467,4 @@ exec/events/
   20260305T031000Z-opencode-edit-agent-T-BA-020-claim.json
 ```
 
-タスク ID がユニークなため、`--by opencode-edit-agent` が重複しても衝突しない。
+task_id がユニークなため、同じエージェントが並列実行しても衝突しない。
