@@ -18,6 +18,8 @@ project_id: prj-0001
 #   capabilities: このエージェントが持つ能力（web_search 等）
 
 members:
+  # human members
+
   - nickname: indie
     display_name: Indie Hacker
     email: null
@@ -40,6 +42,8 @@ members:
       - accountability
     scheduler_strategy: critical-first
     note: 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。
+
+  # opencode members
 
   - nickname: opencode-edit-agent
     display_name: OpenCode Edit Agent
@@ -70,6 +74,8 @@ members:
     command: "opencode run --agent review-agent"
     scheduler_strategy: fifo
     note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。
+
+  # claude code members
 
   - nickname: claude-edit-agent
     display_name: Claude Edit Agent
