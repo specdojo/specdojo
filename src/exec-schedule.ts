@@ -11,7 +11,6 @@ import { computeReadyIds, foldEventsToState, validateEventShape } from './exec-e
 import {
   ensureDir,
   listFilesRecursive,
-  nowUtcIsoSeconds,
   readJson,
   toArtifactPath,
   toScheduleFilePath,
@@ -238,7 +237,6 @@ export function writeGeneratedCore(
   writeReadyFiles(projectPath, readySnapshot)
 
   writeJson(join(genDir, 'metadata.json'), {
-    generated_at_utc: nowUtcIsoSeconds(),
     schedule_path: toArtifactPath(projectPath),
     execution_path: toArtifactPath(executionRootForProject(projectPath)),
     generated_dir: toArtifactPath(genDir),
