@@ -195,6 +195,11 @@ export function buildTimelineSvg(
     .legend-label { font-size: 11px; fill: #475569; }
     .month-grid { stroke: #94a3b8; stroke-width: 2; }
   </style>`)
+  parts.push(`<defs>
+    <clipPath id="clip-col1"><rect x="${col1X}" y="0" width="${col1DivX - col1X}" height="${height}" /></clipPath>
+    <clipPath id="clip-col2"><rect x="${col2X}" y="0" width="${col2DivX - col2X}" height="${height}" /></clipPath>
+    <clipPath id="clip-col3"><rect x="${col3X}" y="0" width="${leftPad - col3X}" height="${height}" /></clipPath>
+  </defs>`)
   parts.push(`<rect x="0" y="0" width="${width}" height="${height}" fill="#fffdf8" />`)
   parts.push(`<rect x="0" y="0" width="${leftPad}" height="${height}" fill="#fffaf0" />`)
   parts.push(
@@ -312,19 +317,28 @@ export function buildTimelineSvg(
     }
 
     if (row.kind === 'task') {
-      const shortId = scheduleNode?.phase_suffix ?? ''
+      const localId = scheduleNode?.local_id ?? ''
+      const phaseSuffix = scheduleNode?.phase_suffix ?? ''
+      const shortId =
+        localId && phaseSuffix ? `${localId}-${phaseSuffix}` : localId || phaseSuffix || row.id
       const artifactName = scheduleNode?.artifact_name ?? ''
       const taskName = row.name ?? ''
-      parts.push(`<text class="label-id" x="${col1X}" y="${currentY}">${xmlEscape(shortId)}</text>`)
+      parts.push(
+        `<text class="label-id" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(shortId)}</text>`
+      )
       if (artifactName)
         parts.push(
-          `<text class="label-artifact" x="${col2X}" y="${currentY}">${xmlEscape(artifactName)}</text>`
+          `<text class="label-artifact" x="${col2X}" y="${currentY}" clip-path="url(#clip-col2)">${xmlEscape(artifactName)}</text>`
         )
       if (taskName)
-        parts.push(`<text class="label" x="${col3X}" y="${currentY}">${xmlEscape(taskName)}</text>`)
+        parts.push(
+          `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(taskName)}</text>`
+        )
     } else {
       const label = row.name ? `${row.id} ${row.name}` : row.id
-      parts.push(`<text class="label" x="${col1X}" y="${currentY}">${xmlEscape(label)}</text>`)
+      parts.push(
+        `<text class="label" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(label)}</text>`
+      )
     }
     parts.push(
       `<line class="row-grid" x1="0" y1="${currentY + 8}" x2="${width}" y2="${currentY + 8}" />`

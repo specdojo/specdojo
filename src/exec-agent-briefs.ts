@@ -198,12 +198,18 @@ function loadTaskDetails(
 
     if (!projectId) projectId = safeString(doc?.project_id)
     const scheduleFile = relativeScheduleFile(schedulePath, filePath)
+    const docTrack = safeString((doc as Record<string, unknown>)?.track)
 
     for (const task of Array.isArray(doc?.tasks) ? doc.tasks : []) {
-      const id = safeString(task?.id)
+      const localId = safeString(task?.local_id)
+      const phaseSuffix = safeString(task?.phase_suffix)
+      let id = safeString(task?.id)
+      if (!id && localId && phaseSuffix && docTrack) {
+        id = `T-${docTrack.toUpperCase()}-${localId}-${phaseSuffix}`
+      }
       if (!id) continue
       const name = safeString(task?.name, id)
-      const catalogItem = catalogItems.get(safeString(task?.local_id) || extractLocalId(name))
+      const catalogItem = catalogItems.get(localId || extractLocalId(name))
       byId.set(id, {
         id,
         name,

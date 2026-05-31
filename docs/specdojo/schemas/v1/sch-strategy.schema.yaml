@@ -19,7 +19,6 @@ required:
   - track
   - scope
   - phase_sets
-  - task_id_pattern
   - owner_rules
 
 properties:
@@ -109,14 +108,6 @@ properties:
     items:
       type: string
       minLength: 1
-
-  task_id_pattern:
-    type: string
-    minLength: 1
-    description: >
-      Task ID generation pattern with placeholders.
-      Available placeholders: {local_id}, {phase_suffix}.
-      Example: T-LAUNCH-{local_id}-{phase_suffix}
 
   owner_rules:
     type: array

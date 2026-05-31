@@ -242,18 +242,23 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       }
     }
 
+    const docTrackName = nonEmptyString(d['track'])
+
     const tasks = Array.isArray(d['tasks']) ? d['tasks'] : []
     const milestones = Array.isArray(d['milestones']) ? d['milestones'] : []
 
     for (const t of tasks) {
       if (!t || typeof t !== 'object') continue
       const tv = t as Record<string, unknown>
-      const id = String(tv['id'] ?? '').trim()
-      if (!id) continue
-      const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       const taskLocalId = typeof tv['local_id'] === 'string' ? tv['local_id'] : undefined
       const taskPhaseSuffix =
         typeof tv['phase_suffix'] === 'string' ? tv['phase_suffix'] : undefined
+      let id = String(tv['id'] ?? '').trim()
+      if (!id && taskLocalId && taskPhaseSuffix && docTrackName) {
+        id = `T-${docTrackName.toUpperCase()}-${taskLocalId}-${taskPhaseSuffix}`
+      }
+      if (!id) continue
+      const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       const taskArtifactName = taskLocalId ? artifactNameMap.get(taskLocalId) : undefined
       nodes.set(id, {
         id,

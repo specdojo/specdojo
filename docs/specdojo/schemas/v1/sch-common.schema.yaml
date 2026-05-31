@@ -130,7 +130,6 @@ $defs:
     type: object
     additionalProperties: false
     required:
-      - id
       - name
       - duration_days
       - depends_on
@@ -142,6 +141,10 @@ $defs:
         type: string
         minLength: 1
         description: "Deliverable local_id this task belongs to. Used by tooling to resolve phase context without parsing the task name."
+      phase_suffix:
+        type: string
+        pattern: "^[0-9]{3}$"
+        description: "3-digit phase suffix (e.g., 010, 020). Identifies the phase step within a deliverable's workflow."
       name:
         type: string
         minLength: 1

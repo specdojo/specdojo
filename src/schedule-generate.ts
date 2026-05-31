@@ -68,7 +68,6 @@ type StrategyDoc = {
   phase_sets: Record<string, StrategyPhase[]>
   default_phase_sets?: string[]
   default_phase_set?: string
-  task_id_pattern: string
   owner_rules: OwnerRule[]
   cross_domain_dependencies?: CrossDomainDep[]
   phase_gates?: PhaseGate[]
@@ -91,7 +90,6 @@ type DeliverableInfo = {
 // --- Output types ---
 
 export type GeneratedTask = {
-  id: string
   local_id?: string
   phase_suffix?: string
   name: string
@@ -175,8 +173,8 @@ function resolveGateScope(scope: PhaseGateScope, sorted: DeliverableInfo[]): str
   return [...result]
 }
 
-function expandTaskId(pattern: string, localId: string, phaseSuffix: string): string {
-  return pattern.replace('{local_id}', localId).replace('{phase_suffix}', phaseSuffix)
+function buildTaskId(track: string, localId: string, phaseSuffix: string): string {
+  return `T-${track.toUpperCase()}-${localId}-${phaseSuffix}`
 }
 
 function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]): DeliverableInfo[] {
@@ -224,8 +222,9 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     throw new Error(`${strategyPath}: missing required fields (scope, phase_sets, or owner_rules)`)
   }
 
-  const projectId = String(strategy.id ?? '').split(':')[0] ?? 'unknown'
   const track = String(strategy.track ?? '')
+
+  const projectId = String(strategy.id ?? '').split(':')[0] ?? 'unknown'
   const startDate = strategy.settings?.start_date ?? null
 
   // Load deliverables from catalogs
@@ -295,9 +294,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         if (fin) firstDeps.add(fin)
       }
       firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
-      const taskId = expandTaskId(strategy.task_id_pattern, d.local_id, '000')
+      const taskId = buildTaskId(track, d.local_id, '000')
       taskMap.set(taskId, {
-        id: taskId,
         local_id: d.local_id,
         phase_suffix: '000',
         name: '完了済み',
@@ -359,9 +357,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
     for (let i = 0; i < phases.length; i++) {
       const phase = phases[i]
-      const taskId = expandTaskId(strategy.task_id_pattern, d.local_id, phase.task_suffix)
+      const taskId = buildTaskId(track, d.local_id, phase.task_suffix)
       taskMap.set(taskId, {
-        id: taskId,
         local_id: d.local_id,
         phase_suffix: phase.task_suffix,
         name: phase.name,
