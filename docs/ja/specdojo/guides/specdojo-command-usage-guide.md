@@ -1470,7 +1470,7 @@ specdojo exec complete ...
 specdojo exec build
 ```
 
-`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと tier_routing でエージェントを自動選択できる。デフォルトは1バッチ実行で終了し、`--loop` を付けると ready タスクがなくなるまで繰り返す:
+`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと `exec-strategy` の `assignment_rules` で capabilities・proficiency に基づいてエージェントを自動選択できる。デフォルトは1バッチ実行で終了し、`--loop` を付けると ready タスクがなくなるまで繰り返す:
 
 ```bash
 # 1バッチ実行して終了（デフォルト）
@@ -1508,7 +1508,7 @@ specdojo exec run \
 | オプション        | 説明                                                                                                               | デフォルト          |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------- |
 | `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                                 | 省略可              |
-| `--cmd`           | `run.agent_commands` のキー名。`--auto` と排他                                                                     | `--auto` 時は省略可 |
+| `--cmd`           | agent コマンド文字列を直接指定。`--auto` と排他                                                                    | `--auto` 時は省略可 |
 | `--auto`          | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false`             |
 | `--by`            | タスク claim 時のアクター識別子                                                                                    | `--cmd` / tier の値 |
 | `--parallel`      | 並列実行数                                                                                                         | `1`                 |

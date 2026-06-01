@@ -46,7 +46,7 @@ properties:
     description: >
       Ordered list of assignment rules. Evaluated top-down; first match wins.
       Each rule declares the capabilities and proficiency required for matching phases.
-      Omitting a filter field (phase_set, phase, mode, proficiency) matches any value.
+      Omitting a filter field (phase_set, phase, proficiency) matches any value.
     items:
       $ref: "#/$defs/AssignmentRule"
 
@@ -72,8 +72,9 @@ $defs:
       - capabilities
     description: >
       A single assignment rule. Matches a task when all specified filter fields
-      (phase_set, phase, mode) match the task's properties.
+      (phase_set, phase) match the task's properties.
       Omitting a filter field acts as a wildcard.
+      exec vs review is distinguished by capabilities: [exec] or capabilities: [review].
     properties:
       phase_set:
         type: string
@@ -87,14 +88,6 @@ $defs:
         description: >
           Phase id to match (e.g., enrich, align, review).
           Omit to match any phase.
-      mode:
-        type: string
-        enum: ["exec", "review"]
-        description: >
-          Task mode to match.
-          exec:   deliverable creation and editing tasks.
-          review: review tasks (read-only access to deliverables).
-          Omit to match any mode.
       capabilities:
         type: array
         minItems: 1

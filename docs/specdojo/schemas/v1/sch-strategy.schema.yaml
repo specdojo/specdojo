@@ -78,10 +78,10 @@ properties:
   phase_sets:
     type: object
     description: >
-      Named phase set definitions. Keys are arbitrary names (e.g., standard, yaml_validated).
+      Named phase set definitions. Keys are arbitrary names (e.g., first-pass, finalize-pass).
       Each owner_rule references one of these keys via its phase_set field.
-      exec build writes model_tier and requires_web from each phase into the generated task metadata,
-      allowing exec run --auto to select the agent command without parsing this file at runtime.
+      exec build writes phase_mode from each phase into ready.json task metadata,
+      allowing exec run --auto to evaluate exec-strategy assignment_rules at runtime.
     minProperties: 1
     additionalProperties:
       type: array

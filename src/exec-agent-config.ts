@@ -19,8 +19,13 @@ export type ExecAgentGlobalConfig = {
 export type AssignmentRule = {
   phase_set?: string
   phase?: string
-  difficulty?: string
-  members: string[]
+  capabilities: string[]
+  proficiency?: string
+}
+
+export type ResolvedRequirements = {
+  capabilities: string[]
+  proficiency?: string
 }
 
 export type RateLimitRetry = {
@@ -88,32 +93,20 @@ export function loadExecStrategyConfig(executionPath: string): ExecStrategyConfi
 
 // ── Resolution ────────────────────────────────────────────────────────────────
 
-function ruleMatches(
-  rule: AssignmentRule,
-  phaseSet: string,
-  phaseId: string,
-  difficulty: string
-): boolean {
-  if (rule.phase_set !== undefined || rule.phase !== undefined) {
-    if (rule.phase_set !== phaseSet || rule.phase !== phaseId) return false
-    if (rule.difficulty !== undefined && rule.difficulty !== difficulty) return false
-    return true
-  }
-  if (rule.difficulty !== undefined) {
-    return rule.difficulty === difficulty
-  }
+function ruleMatches(rule: AssignmentRule, phaseSet: string, phaseId: string): boolean {
+  if (rule.phase_set !== undefined && rule.phase_set !== phaseSet) return false
+  if (rule.phase !== undefined && rule.phase !== phaseId) return false
   return true
 }
 
 export function resolveAssignment(
   phaseSet: string,
   phaseId: string,
-  difficulty: string,
   config: ExecStrategyConfig
-): string[] | null {
+): ResolvedRequirements | null {
   for (const rule of config.assignment_rules) {
-    if (ruleMatches(rule, phaseSet, phaseId, difficulty)) {
-      return rule.members.length > 0 ? rule.members : null
+    if (ruleMatches(rule, phaseSet, phaseId)) {
+      return { capabilities: rule.capabilities, proficiency: rule.proficiency }
     }
   }
   return null

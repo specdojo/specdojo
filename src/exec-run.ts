@@ -4,11 +4,6 @@ import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
 import {
-  buildPhaseModeIndex,
-  resolveTaskMode,
-  type PhaseModeIndex,
-} from './exec-strategy.js'
-import {
   defaultAgentConfigPath,
   loadExecAgentGlobalConfig,
   loadExecStrategyConfig,
@@ -17,6 +12,7 @@ import {
   type ExecStrategyConfig,
   type RateLimitDetection,
   type RateLimitPolicy,
+  type ResolvedRequirements,
 } from './exec-agent-config.js'
 import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-project.js'
 import { listFilesRecursive, readJson, readYaml, sleepMs } from './exec-shared.js'
@@ -25,6 +21,7 @@ import {
   loadMemberRoster,
   specdojoRootDir,
   type MemberRoster,
+  type ProjectMember,
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
 
@@ -39,7 +36,6 @@ type StrategyOwnerRule = {
   local_ids: string[]
   owner: string
   phase_set?: string
-  difficulty?: string
 }
 
 type StrategyFile = {
@@ -52,7 +48,6 @@ type TaskPhaseContext = {
   localId: string
   phaseSet: string
   phaseId: string
-  difficulty: string
 }
 
 type RunOpts = {
@@ -71,11 +66,10 @@ type RunOpts = {
 type RunResult = 'success' | 'rate_limit' | 'failure'
 
 export function buildTaskPhaseMap(schedulePath: string): {
-  localIdToRule: Map<string, { phaseSet: string; difficulty: string }>
+  localIdToRule: Map<string, { phaseSet: string }>
   phaseSetSuffixToId: Map<string, string>
-  phaseModeIndex: PhaseModeIndex
 } {
-  const localIdToRule = new Map<string, { phaseSet: string; difficulty: string }>()
+  const localIdToRule = new Map<string, { phaseSet: string }>()
   const phaseSetSuffixToId = new Map<string, string>()
 
   const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
@@ -101,20 +95,18 @@ export function buildTaskPhaseMap(schedulePath: string): {
 
     for (const rule of strategy.owner_rules) {
       const phaseSet = rule.phase_set ?? defaultPhaseSet
-      const difficulty = rule.difficulty ?? 'normal'
       for (const localId of rule.local_ids) {
-        localIdToRule.set(localId, { phaseSet, difficulty })
+        localIdToRule.set(localId, { phaseSet })
       }
     }
   }
 
-  const phaseModeIndex = buildPhaseModeIndex(schedulePath)
-  return { localIdToRule, phaseSetSuffixToId, phaseModeIndex }
+  return { localIdToRule, phaseSetSuffixToId }
 }
 
 function resolveTaskPhaseContext(
   task: ReadyTaskView,
-  localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
+  localIdToRule: Map<string, { phaseSet: string }>,
   phaseSetSuffixToId: Map<string, string>
 ): TaskPhaseContext | null {
   const localId = task.local_id
@@ -130,7 +122,29 @@ function resolveTaskPhaseContext(
   const phaseId = phaseSetSuffixToId.get(`${rule.phaseSet}:${suffix}`)
   if (!phaseId) return null
 
-  return { localId, phaseSet: rule.phaseSet, phaseId, difficulty: rule.difficulty }
+  return { localId, phaseSet: rule.phaseSet, phaseId }
+}
+
+function selectCandidates(
+  requirements: ResolvedRequirements,
+  roster: MemberRoster | null
+): ProjectMember[] {
+  if (!roster) return []
+  const { capabilities: required, proficiency } = requirements
+  return roster.members
+    .filter(m => {
+      if (m.type !== 'agent' || !m.command) return false
+      const caps = m.capabilities ?? []
+      if (!required.every(c => caps.includes(c))) return false
+      if (proficiency !== undefined && m.proficiency !== proficiency) return false
+      return true
+    })
+    .sort((a, b) => {
+      const aExtra = (a.capabilities?.length ?? 0) - required.length
+      const bExtra = (b.capabilities?.length ?? 0) - required.length
+      if (aExtra !== bExtra) return aExtra - bExtra
+      return (a.priority ?? 999) - (b.priority ?? 999)
+    })
 }
 
 function isRateLimitError(
@@ -271,9 +285,8 @@ function runSingleTask(
   strategyConfig: ExecStrategyConfig,
   globalConfig: ExecAgentGlobalConfig,
   roster: MemberRoster | null,
-  localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
+  localIdToRule: Map<string, { phaseSet: string }>,
   phaseSetSuffixToId: Map<string, string>,
-  phaseModeIndex: PhaseModeIndex,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
   dryRun: boolean
@@ -293,45 +306,28 @@ function runSingleTask(
       return 'failure'
     }
 
-    const members = resolveAssignment(
-      phaseCtx.phaseSet,
-      phaseCtx.phaseId,
-      phaseCtx.difficulty,
-      strategyConfig
-    )
-    if (!members) {
+    const requirements = resolveAssignment(phaseCtx.phaseSet, phaseCtx.phaseId, strategyConfig)
+    if (!requirements) {
       process.stdout.write(
-        `  No assignment_rule matched (${phaseCtx.phaseSet}, ${phaseCtx.phaseId}, difficulty: ${phaseCtx.difficulty})\n`
+        `  No assignment_rule matched (${phaseCtx.phaseSet}, ${phaseCtx.phaseId}, mode: ${mode})\n`
       )
       return 'failure'
     }
 
-    for (const nickname of members) {
-      const member = roster?.members.find(m => m.nickname === nickname)
-      if (!member?.command) {
-        process.stdout.write(
-          `  Member "${nickname}" not found in roster or has no command field. Skipping.\n`
-        )
-        continue
-      }
-      agentCommands.push(member.command)
-    }
-
-    if (agentCommands.length === 0) {
-      process.stdout.write(`  No executable commands resolved for members: ${members.join(', ')}\n`)
+    const candidates = selectCandidates(requirements, roster)
+    if (candidates.length === 0) {
+      process.stdout.write(
+        `  No agents found for capabilities: [${requirements.capabilities.join(', ')}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ''}\n`
+      )
       return 'failure'
     }
 
-    if (!actorOverride) actor = members[0]
-
-    // If phase has no explicit mode, fall back to primary member's default_mode
-    const primaryMember = roster?.members.find(m => m.nickname === members[0])
-    const resolvedMode =
-      task.phase_mode !== undefined
-        ? task.phase_mode
-        : resolveTaskMode(task.local_id, task.id, phaseModeIndex, primaryMember?.default_mode)
+    for (const candidate of candidates) {
+      agentCommands.push(candidate.command!)
+    }
+    if (!actorOverride) actor = candidates[0].nickname
     process.stdout.write(
-      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Mode: ${resolvedMode}  Agent: ${members[0]}\n`
+      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Mode: ${mode}  Agent: ${candidates[0].nickname}\n`
     )
   }
 
@@ -422,7 +418,7 @@ function runAutoMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId, phaseModeIndex } = buildTaskPhaseMap(schedulePath)
+  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   const loop = !!opts.loop
@@ -471,7 +467,6 @@ function runAutoMode(opts: RunOpts): void {
         roster,
         localIdToRule,
         phaseSetSuffixToId,
-        phaseModeIndex,
         undefined,
         opts.by,
         dryRun
@@ -514,7 +509,7 @@ function runManualMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId, phaseModeIndex } = buildTaskPhaseMap(schedulePath)
+  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   let task: ReadyTaskView = { id: taskId, schedule_file: '', fifo_rank: 0, critical_first_rank: 0 }
@@ -533,7 +528,6 @@ function runManualMode(opts: RunOpts): void {
     roster,
     localIdToRule,
     phaseSetSuffixToId,
-    phaseModeIndex,
     opts.agentCmd,
     opts.by,
     !!opts.dryRun

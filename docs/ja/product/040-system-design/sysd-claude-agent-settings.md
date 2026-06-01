@@ -426,8 +426,9 @@ members:
   - nickname: claude-edit-agent
     display_name: Claude Edit Agent
     type: agent
-    capabilities:
-      - web_search
+    capabilities: [exec, web_search]
+    proficiency: normal
+    priority: 10
     command: 'claude -p --agent claude-edit-agent --permission-mode auto'
     scheduler_strategy: critical-first
     note: Sonnet モデルを使用する標準エージェント。外部 Web 情報参照が必要なタスクを担当する。
@@ -435,8 +436,9 @@ members:
   - nickname: claude-review-agent
     display_name: Claude Review Agent
     type: agent
-    capabilities:
-      - web_search
+    capabilities: [review, web_search]
+    proficiency: normal
+    priority: 10
     command: 'claude -p --agent claude-review-agent --permission-mode auto'
     scheduler_strategy: fifo
     note: Sonnet モデルを使用するレビューエージェント。done_criteria を多観点で検証する。
@@ -444,8 +446,9 @@ members:
   - nickname: claude-expert-edit-agent
     display_name: Claude Expert Edit Agent
     type: agent
-    capabilities:
-      - web_search
+    capabilities: [exec, web_search]
+    proficiency: expert
+    priority: 10
     command: 'claude -p --agent claude-expert-edit-agent --permission-mode auto'
     scheduler_strategy: critical-first
     note: Opus モデルを使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
@@ -453,8 +456,9 @@ members:
   - nickname: claude-expert-review-agent
     display_name: Claude Expert Review Agent
     type: agent
-    capabilities:
-      - web_search
+    capabilities: [review, web_search]
+    proficiency: expert
+    priority: 10
     command: 'claude -p --agent claude-expert-review-agent --permission-mode auto'
     scheduler_strategy: fifo
     note: Opus モデルを使用する高性能レビューエージェント。精度が重要なレビュータスクを担当する。
@@ -462,17 +466,19 @@ members:
 
 ### 9.2. `exec-strategy-<track>.yaml`
 
-`docs/ja/projects/prj-0001/execution/exec-strategy-<track>.yaml` にフェーズに応じたエージェント割り当てを定義する。
+`docs/ja/projects/prj-0001/execution/exec-strategy-<track>.yaml` にフェーズに応じた capabilities・proficiency を宣言する。`pm-members.yaml` の対応エージェントが自動選択される。
 
 ```yaml
 assignment_rules:
   - phase_set: first-pass
-    members:
-      - claude-edit-agent
+    phase: enrich
+    capabilities: [exec]
+    proficiency: normal
 
   - phase_set: finalize-pass
-    members:
-      - claude-edit-agent
+    phase: align
+    capabilities: [exec]
+    proficiency: normal
 
 rate_limit_policy:
   on_non_critical:
