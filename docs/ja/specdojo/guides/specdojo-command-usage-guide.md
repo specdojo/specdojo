@@ -1470,11 +1470,14 @@ specdojo exec complete ...
 specdojo exec build
 ```
 
-`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと tier_routing でエージェントを自動選択できる:
+`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと tier_routing でエージェントを自動選択できる。デフォルトは1バッチ実行で終了し、`--loop` を付けると ready タスクがなくなるまで繰り返す:
 
 ```bash
-# tier_routing で自動選択（draft/review/small を自動ルーティング）
+# 1バッチ実行して終了（デフォルト）
 specdojo exec run --project prj-0001 --auto --parallel 5
+
+# ready タスクがなくなるまで繰り返す（--loop）
+specdojo exec run --project prj-0001 --auto --loop --parallel 5
 
 # agent を明示する場合
 specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 2
@@ -1509,6 +1512,8 @@ specdojo exec run \
 | `--auto`          | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false`             |
 | `--by`            | タスク claim 時のアクター識別子                                                                                    | `--cmd` / tier の値 |
 | `--parallel`      | 並列実行数                                                                                                         | `1`                 |
+| `--loop`          | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する。`--max-rounds` と併用可   | `false`             |
+| `--max-rounds`    | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                                      | なし                |
 | `--worktree-base` | worktree 配置先パスの上書き                                                                                        | `run.worktree_base` |
 | `--dry-run`       | 実行せず、実行予定を標準出力に表示                                                                                 | `false`             |
 
@@ -1599,7 +1604,9 @@ agent_commands:
    a. worktree `<worktree_base>/<cmd>-<i>` が存在しない場合、`git worktree add <worktree_base>/<cmd>-<i> -b exec/<cmd>-<i>` でブランチを作成する。
    b. 作成した worktree に移動する。
    c. `run.agent_commands[cmd] "<task-prompt>"` を実行する。
-5. 全インスタンスの終了を待つ。
+5. 全インスタンスの終了を待つ。`--loop` を指定していない場合はここで終了する。
+
+`--loop` を指定した場合は、ready タスクが 0 件になるか `--max-rounds` に達するまでステップ 3 に戻ってラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によってアンロックされた後続タスクを反映する。
 
 タスクプロンプトのテンプレート（コマンド末尾に引数として追加）:
 
@@ -1648,16 +1655,24 @@ Do not claim more than one task. Do not modify unrelated files.
 `--auto` の実行フロー：
 
 1. `ready.json` から次の ready タスクをプレビューする（claim は agent が行う）。
-2. タスクの `phase_set`・`phase.id`・`difficulty` を読み取り、`phase_tier_rules` と `difficulty_overrides` で tier を解決する。
-3. `capabilities` がある場合は `tier_routing["<tier>+<capability>"]` を先に試し、なければ `tier_routing["<tier>"]` にフォールバックして `cmd` と `by` を解決する。
-4. 解決した `cmd` と `by` で `--cmd` / `--by` 指定時と同じフローを実行する。
-5. ready タスクが 0 件の場合は `[run] no ready tasks — exit` を出力して正常終了する。
+2. ready タスクが 0 件の場合は `[run] no ready tasks — exit` を出力して正常終了する。
+3. タスクの `phase_set`・`phase.id`・`difficulty` を読み取り、`phase_tier_rules` と `difficulty_overrides` で tier を解決する。
+4. `capabilities` がある場合は `tier_routing["<tier>+<capability>"]` を先に試し、なければ `tier_routing["<tier>"]` にフォールバックして `cmd` と `by` を解決する。
+5. 解決した `cmd` と `by` で `--cmd` / `--by` 指定時と同じフローを実行する（1バッチ分の並列実行）。
+
+`--loop` を指定すると、バッチ終了後にステップ 1 に戻ってラウンドを繰り返す。ステップ 2 の終了チェックがラウンドごとの終了判定として機能し、`--max-rounds` に達した場合も終了する。
 
 `--auto` を使うと、runner スクリプトは1フェーズにつき1行になる：
 
 ```bash
-# draft / review / finalize を自動ルーティング（parallel で複数起動）
+# 1バッチ実行して終了（デフォルト）
 specdojo exec run --project prj-0001 --auto --parallel 5
+
+# ready タスクがなくなるまで繰り返す（--loop）
+specdojo exec run --project prj-0001 --auto --loop --parallel 5
+
+# 最大 3 ラウンドで停止
+specdojo exec run --project prj-0001 --auto --loop --max-rounds 3 --parallel 5
 
 # review-agent を明示指定する場合
 specdojo exec run --project prj-0001 --cmd opencode-review --by review-agent

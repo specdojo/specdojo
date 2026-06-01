@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
+import { selfRunArgs } from './spawn-self.js'
 import {
   defaultAgentConfigPath,
   loadExecAgentGlobalConfig,
@@ -52,13 +53,14 @@ type TaskPhaseContext = {
 type RunOpts = {
   project?: string
   by?: string
-  count?: string
   strategy?: string
   agentConfig?: string
   dryRun?: boolean
   auto?: boolean
   task?: string
   agentCmd?: string
+  loop?: boolean
+  maxRounds?: string
 }
 
 type RunResult = 'success' | 'rate_limit' | 'failure'
@@ -348,6 +350,14 @@ function runSingleTask(
   return result
 }
 
+function spawnBuild(projectId: string | undefined): boolean {
+  const buildArgs = ['exec', 'build']
+  if (projectId) buildArgs.push('--project', projectId)
+  const [exe, fullArgs] = selfRunArgs(buildArgs)
+  const result = spawnSync(exe, fullArgs, { stdio: 'inherit' })
+  return result.status === 0
+}
+
 function runAutoMode(opts: RunOpts): void {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
@@ -359,60 +369,80 @@ function runAutoMode(opts: RunOpts): void {
   const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
-  if (!existsSync(readyJsonPath)) {
-    process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec build\n`)
-    process.exitCode = 1
-    return
-  }
-
-  const readySnapshot = readJson(readyJsonPath) as ReadySnapshot
-  const strategy = opts.strategy ?? 'critical-first'
-  const orderedIds: string[] =
-    strategy === 'fifo'
-      ? readySnapshot.strategies.fifo.ordered_task_ids
-      : readySnapshot.strategies['critical-first'].ordered_task_ids
-
-  if (orderedIds.length === 0) {
-    process.stdout.write('No ready tasks.\n')
-    return
-  }
-
-  const count = Math.max(1, parseInt(opts.count ?? '1', 10) || 1)
+  const loop = !!opts.loop
+  const maxRounds = opts.maxRounds ? Math.max(1, parseInt(opts.maxRounds, 10) || 1) : null
   const dryRun = !!opts.dryRun
-  const taskMap = new Map(readySnapshot.tasks.map(t => [t.id, t]))
+  const strategy = opts.strategy ?? 'critical-first'
 
-  let ran = 0
-  for (const taskId of orderedIds) {
-    if (ran >= count) break
-    const task = taskMap.get(taskId)
-    if (!task) continue
+  let round = 0
 
-    const result = runSingleTask(
-      task,
-      executionPath,
-      strategyConfig,
-      globalConfig,
-      roster,
-      localIdToRule,
-      phaseSetSuffixToId,
-      undefined,
-      dryRun
-    )
+  for (;;) {
+    round++
 
-    if (result === 'success') {
-      ran++
-    } else if (result === 'rate_limit' && (task.cpm?.slack ?? 1) === 0) {
-      process.stdout.write(`Stopping: rate limit on critical task ${taskId}.\n`)
+    if (!existsSync(readyJsonPath)) {
+      process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec build\n`)
       process.exitCode = 1
       return
     }
-  }
 
-  if (ran === 0) {
-    process.stdout.write('No tasks executed.\n')
-    process.exitCode = 1
-  } else {
-    process.stdout.write(`Executed ${ran} task(s).\n`)
+    const readySnapshot = readJson(readyJsonPath) as ReadySnapshot
+    const orderedIds: string[] =
+      strategy === 'fifo'
+        ? readySnapshot.strategies.fifo.ordered_task_ids
+        : readySnapshot.strategies['critical-first'].ordered_task_ids
+
+    if (orderedIds.length === 0) {
+      process.stdout.write('[run] no ready tasks — exit\n')
+      return
+    }
+
+    const roundSuffix = loop
+      ? ` (round ${round}${maxRounds !== null ? `/${maxRounds}` : '/-'})`
+      : ''
+    const taskMap = new Map(readySnapshot.tasks.map(t => [t.id, t]))
+    let ranThisRound = 0
+
+    for (const taskId of orderedIds) {
+      const task = taskMap.get(taskId)
+      if (!task) continue
+
+      const result = runSingleTask(
+        task,
+        executionPath,
+        strategyConfig,
+        globalConfig,
+        roster,
+        localIdToRule,
+        phaseSetSuffixToId,
+        undefined,
+        dryRun
+      )
+
+      if (result === 'success') {
+        ranThisRound++
+      } else if (result === 'rate_limit' && (task.cpm?.slack ?? 1) === 0) {
+        process.stdout.write(`[run] stopping: rate limit on critical task ${taskId}.\n`)
+        process.exitCode = 1
+        return
+      }
+    }
+
+    process.stdout.write(`[run] all ${ranThisRound} instance(s) completed${roundSuffix}\n`)
+
+    if (!loop) return
+
+    if (maxRounds !== null && round >= maxRounds) {
+      process.stdout.write(`[run] reached max-rounds ${maxRounds} — exit\n`)
+      return
+    }
+
+    const nextRoundSuffix = ` (round ${round + 1}${maxRounds !== null ? `/${maxRounds}` : '/-'})`
+    process.stdout.write(`[run] exec build${nextRoundSuffix}...\n`)
+    if (!spawnBuild(opts.project)) {
+      process.stdout.write('[run] exec build failed — exit\n')
+      process.exitCode = 1
+      return
+    }
   }
 }
 
@@ -459,10 +489,18 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option('--by <actor>', 'Actor / agent nickname (informational)')
   rcmd.option('--auto', 'Automatically select and run next ready task', false)
   rcmd.option('--task <taskId>', 'Task ID to run (manual selection)')
-  rcmd.option('--count <n>', 'Number of tasks to run (--auto only, default: 1)')
   rcmd.option(
     '--strategy <s>',
     'Task selection strategy: critical-first|fifo (default: critical-first)'
+  )
+  rcmd.option(
+    '--loop',
+    'Repeat rounds until no ready tasks remain, running exec build between rounds',
+    false
+  )
+  rcmd.option(
+    '--max-rounds <n>',
+    'Maximum number of rounds when using --loop (ignored without --loop)'
   )
   rcmd.option(
     '--agent-config <path>',
