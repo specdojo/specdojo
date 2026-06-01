@@ -14,6 +14,8 @@ type ReadyTask = {
   id: string
   name?: string
   owner?: string
+  local_id?: string
+  phase_mode?: 'exec' | 'review'
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number
@@ -310,18 +312,33 @@ function buildBriefMarkdown(
     )
   }
   lines.push('')
-  lines.push('## 5. 実施手順')
-  lines.push('')
-  lines.push('1. 対応する成果物を特定する。')
-  lines.push('2. task 名と notes に沿って成果物を更新する。')
-  lines.push('3. 必要な検証と lint を実行する。')
-  lines.push('4. 実装が完了したら正常終了する（終了コード 0）。')
-  lines.push('5. 実装できない・問題が解決できない場合は標準エラー出力に理由を書いて異常終了する（終了コード 1）。')
-  lines.push('')
-  lines.push('## 6. 異常終了の条件')
-  lines.push('')
-  lines.push('- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する。')
-  lines.push('- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。')
+  if (readyTask.phase_mode === 'review') {
+    lines.push('## 5. 実施手順（review）')
+    lines.push('')
+    lines.push('1. 対象成果物を特定する（deliverable_path を参照）。')
+    lines.push('2. `done_criteria` の各観点で成果物を確認する。')
+    lines.push('3. 必要に応じて `specdojo review plan` / `specdojo review result` を実行する。')
+    lines.push('4. すべての観点が確認できたら正常終了する（終了コード 0）。')
+    lines.push('5. 差し戻し・確認不能の場合は標準エラー出力に理由を書いて異常終了する（終了コード 1）。')
+    lines.push('')
+    lines.push('## 6. 異常終了の条件（review）')
+    lines.push('')
+    lines.push('- done_criteria を満たさない・対象ファイル不明・依存未解決の場合は異常終了する。')
+    lines.push('- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。')
+  } else {
+    lines.push('## 5. 実施手順')
+    lines.push('')
+    lines.push('1. 対応する成果物を特定する。')
+    lines.push('2. task 名と notes に沿って成果物を更新する。')
+    lines.push('3. 必要な検証と lint を実行する。')
+    lines.push('4. 実装が完了したら正常終了する（終了コード 0）。')
+    lines.push('5. 実装できない・問題が解決できない場合は標準エラー出力に理由を書いて異常終了する（終了コード 1）。')
+    lines.push('')
+    lines.push('## 6. 異常終了の条件')
+    lines.push('')
+    lines.push('- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する。')
+    lines.push('- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。')
+  }
   lines.push('')
   lines.push('## 7. 注意事項')
   lines.push('')

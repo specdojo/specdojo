@@ -4,6 +4,11 @@ import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
 import {
+  buildPhaseModeIndex,
+  resolveTaskMode,
+  type PhaseModeIndex,
+} from './exec-strategy.js'
+import {
   defaultAgentConfigPath,
   loadExecAgentGlobalConfig,
   loadExecStrategyConfig,
@@ -68,6 +73,7 @@ type RunResult = 'success' | 'rate_limit' | 'failure'
 export function buildTaskPhaseMap(schedulePath: string): {
   localIdToRule: Map<string, { phaseSet: string; difficulty: string }>
   phaseSetSuffixToId: Map<string, string>
+  phaseModeIndex: PhaseModeIndex
 } {
   const localIdToRule = new Map<string, { phaseSet: string; difficulty: string }>()
   const phaseSetSuffixToId = new Map<string, string>()
@@ -102,7 +108,8 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
   }
 
-  return { localIdToRule, phaseSetSuffixToId }
+  const phaseModeIndex = buildPhaseModeIndex(schedulePath)
+  return { localIdToRule, phaseSetSuffixToId, phaseModeIndex }
 }
 
 function resolveTaskPhaseContext(
@@ -110,7 +117,6 @@ function resolveTaskPhaseContext(
   localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
   phaseSetSuffixToId: Map<string, string>
 ): TaskPhaseContext | null {
-  // Prefer explicit local_id field; fall back to parsing the task name prefix
   const localId = task.local_id
   if (!localId) return null
 
@@ -267,11 +273,13 @@ function runSingleTask(
   roster: MemberRoster | null,
   localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
   phaseSetSuffixToId: Map<string, string>,
+  phaseModeIndex: PhaseModeIndex,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
   dryRun: boolean
 ): RunResult {
-  process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}\n`)
+  const mode = task.phase_mode ?? 'exec'
+  process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
 
   const agentCommands: string[] = agentCmdOverride ? [agentCmdOverride] : []
   let actor = actorOverride ?? 'auto-agent'
@@ -315,8 +323,15 @@ function runSingleTask(
     }
 
     if (!actorOverride) actor = members[0]
+
+    // If phase has no explicit mode, fall back to primary member's default_mode
+    const primaryMember = roster?.members.find(m => m.nickname === members[0])
+    const resolvedMode =
+      task.phase_mode !== undefined
+        ? task.phase_mode
+        : resolveTaskMode(task.local_id, task.id, phaseModeIndex, primaryMember?.default_mode)
     process.stdout.write(
-      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Agent: ${members[0]}\n`
+      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Mode: ${resolvedMode}  Agent: ${members[0]}\n`
     )
   }
 
@@ -407,7 +422,7 @@ function runAutoMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+  const { localIdToRule, phaseSetSuffixToId, phaseModeIndex } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   const loop = !!opts.loop
@@ -456,6 +471,7 @@ function runAutoMode(opts: RunOpts): void {
         roster,
         localIdToRule,
         phaseSetSuffixToId,
+        phaseModeIndex,
         undefined,
         opts.by,
         dryRun
@@ -498,7 +514,7 @@ function runManualMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+  const { localIdToRule, phaseSetSuffixToId, phaseModeIndex } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   let task: ReadyTaskView = { id: taskId, schedule_file: '', fifo_rank: 0, critical_first_rank: 0 }
@@ -517,6 +533,7 @@ function runManualMode(opts: RunOpts): void {
     roster,
     localIdToRule,
     phaseSetSuffixToId,
+    phaseModeIndex,
     opts.agentCmd,
     opts.by,
     !!opts.dryRun

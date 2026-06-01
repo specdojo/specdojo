@@ -129,6 +129,7 @@ export type ReadyTaskView = {
   local_id?: string
   name?: string
   owner?: string
+  phase_mode?: 'exec' | 'review'
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number

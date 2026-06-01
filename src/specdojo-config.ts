@@ -31,6 +31,7 @@ export type ProjectMember = {
   focus?: string[]
   capabilities?: string[]  // agent only: list of capabilities (e.g. web_search)
   command?: string         // agent only: shell command executed by exec run
+  default_mode?: 'exec' | 'review'  // agent only: fallback mode when phase has no mode field
   scheduler_strategy?: SchedulerStrategy
   note?: string
 }
