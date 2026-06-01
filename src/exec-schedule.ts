@@ -235,9 +235,10 @@ export function writeGeneratedCore(
 
   const ready = computeReadyIds(schedule, snapshot)
   const readySnapshot = buildReadySnapshot(projectPath, schedule, ready, cpm)
-  const phaseModeIndex = buildPhaseModeIndex(projectPath)
+  const executionPath = executionRootForProject(projectPath)
+  const phaseModeIndex = buildPhaseModeIndex(projectPath, executionPath)
   for (const task of readySnapshot.tasks) {
-    task.phase_mode = resolveTaskMode(task.local_id, task.id, phaseModeIndex, undefined)
+    task.phase_mode = resolveTaskMode(task.local_id, task.id, phaseModeIndex)
   }
   writeReadyFiles(projectPath, readySnapshot)
 
