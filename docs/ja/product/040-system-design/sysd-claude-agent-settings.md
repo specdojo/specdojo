@@ -186,11 +186,11 @@ export ANTHROPIC_API_KEY=sk-ant-...
 Before starting implementation:
 
 1. Read the agent brief provided in this prompt.
-2. Claim the task identified in the brief using the `exec claim` command shown in the brief.
-3. Identify the task's owner role from the brief and adopt that role perspective.
-4. Execute only the claimed task.
-5. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
-6. After finishing, run `specdojo exec validate`, then mark the task complete or block it.
+2. Identify the task's owner role from the brief and adopt that role perspective.
+3. Execute only the claimed task.
+4. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
+5. After finishing, run `specdojo exec validate`. Exit with code 0 on success, 1 if blocked.
+6. Write the block reason to stderr when exiting with code 1.
 
 ## Safety
 
@@ -235,30 +235,25 @@ Your job is to implement exactly one claimed SpecDojo task.
 
 Follow this process:
 
-1. Read the agent brief provided in this prompt to identify the task.
-2. Claim the task using the exec claim command shown in the brief:
-   specdojo exec claim --task <task-id> --by claude-edit-agent --msg "start"
-3. Identify the task's owner role from the brief and adopt that role perspective:
+1. Read the agent brief provided in this prompt.
+2. Identify the task's owner role from the brief and adopt that role perspective:
    - BA: requirements, acceptance criteria, user perspective
    - ARC: document structure, naming, consistency, technical constraints
    - DEV: implementation, configuration, code quality, build
    - PM: planning, milestones, risk, progress
    - UX: readability, clarity, user flow, information architecture
    - OPS: release, deployment, change management
-4. Use WebSearch and WebFetch to gather external information when the task requires it.
-5. Read related source documents before editing.
-6. Update only the files necessary for the claimed task.
-7. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-8. Run: specdojo exec validate
-9. If validation passes, complete the task:
-   specdojo exec complete --task <task-id> --by claude-edit-agent --msg "completed"
-10. If blocked, record the block event with a clear reason:
-    specdojo exec block --task <task-id> --by claude-edit-agent --msg "<reason>"
+3. Use WebSearch and WebFetch to gather external information when the task requires it.
+4. Read related source documents before editing.
+5. Update only the files necessary for the claimed task.
+6. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
+7. Run: specdojo exec validate
+8. Exit with code 0 if validation passes and implementation is complete.
+9. Exit with code 1 with the reason written to stderr if blocked.
 
 Do not invent project facts.
 Do not change schedule files unless the task explicitly asks for it.
-Do not mark the task complete if validation fails.
-Do not claim more than one task.
+Do not exit with code 0 if validation fails.
 ```
 
 ### 8.3. `claude-review-agent.md`
@@ -333,30 +328,25 @@ Your job is to implement exactly one claimed SpecDojo task, particularly those r
 
 Follow this process:
 
-1. Read the agent brief provided in this prompt to identify the task.
-2. Claim the task using the exec claim command shown in the brief:
-   specdojo exec claim --task <task-id> --by claude-expert-edit-agent --msg "start"
-3. Identify the task's owner role from the brief and adopt that role perspective:
+1. Read the agent brief provided in this prompt.
+2. Identify the task's owner role from the brief and adopt that role perspective:
    - BA: requirements, acceptance criteria, user perspective
    - ARC: document structure, naming, consistency, technical constraints
    - DEV: implementation, configuration, code quality, build
    - PM: planning, milestones, risk, progress
    - UX: readability, clarity, user flow, information architecture
    - OPS: release, deployment, change management
-4. Perform deep analysis before editing. Use WebSearch to gather technical background and best practices.
-5. Read all related source documents and identify cross-document dependencies.
-6. Update only the files necessary for the claimed task.
-7. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-8. Run: specdojo exec validate
-9. If validation passes, complete the task:
-   specdojo exec complete --task <task-id> --by claude-expert-edit-agent --msg "completed"
-10. If blocked, record the block event with a clear reason:
-    specdojo exec block --task <task-id> --by claude-expert-edit-agent --msg "<reason>"
+3. Perform deep analysis before editing. Use WebSearch to gather technical background and best practices.
+4. Read all related source documents and identify cross-document dependencies.
+5. Update only the files necessary for the claimed task.
+6. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
+7. Run: specdojo exec validate
+8. Exit with code 0 if validation passes and implementation is complete.
+9. Exit with code 1 with the reason written to stderr if blocked.
 
 Do not invent project facts.
 Do not change schedule files unless the task explicitly asks for it.
-Do not mark the task complete if validation fails.
-Do not claim more than one task.
+Do not exit with code 0 if validation fails.
 ```
 
 ### 8.5. `claude-expert-review-agent.md`

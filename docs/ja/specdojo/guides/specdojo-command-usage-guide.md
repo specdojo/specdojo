@@ -1599,11 +1599,13 @@ agent_commands:
 
 1. `run.worktree_base`（または `--worktree-base`）を解決する。
 2. `exec validate --project <id>` を実行し、スケジュール整合性を確認する。
-3. `exec build --project <id>` を実行し、state と ready 情報を最新化する。
+3. `exec build --project <id>` を実行し、state・ready 情報・agent brief を最新化する。
 4. `--parallel` の数だけ並列で以下を実行する：
    a. worktree `<worktree_base>/<cmd>-<i>` が存在しない場合、`git worktree add <worktree_base>/<cmd>-<i> -b exec/<cmd>-<i>` でブランチを作成する。
    b. 作成した worktree に移動する。
-   c. `run.agent_commands[cmd] "<task-prompt>"` を実行する。
+   c. `exec claim` でタスクを claim する。
+   d. `run.agent_commands[cmd] "<brief>"` を実行する（brief の内容が引数として渡される）。
+   e. 終了コード 0 → `exec complete`、終了コード 1 → `exec block` を記録する。
 5. 全インスタンスの終了を待つ。`--loop` を指定していない場合はここで終了する。
 
 `--loop` を指定した場合は、ready タスクが 0 件になるか `--max-rounds` に達するまでステップ 3 に戻ってラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によってアンロックされた後続タスクを反映する。
@@ -1613,10 +1615,10 @@ agent_commands:
 - タスク概要（`task_id`・`name`・`owner`・`duration_days`）
 - 実施内容と対象成果物のパス・`done_criteria`
 - 依存関係と CPM 情報（クリティカルパス判定）
-- 実行ガイド（`exec claim` → 実装・検証・lint → `exec complete` または `exec block`）
-- ブロック時の記録テンプレート
+- 実施手順（成果物の特定・更新・検証・lint）
+- 異常終了の条件（依存未解決・lint 未解消など）
 
-ブリーフは `exec build` 実行時に生成・更新される。エージェントはタスクを自分で探す必要はなく、ブリーフ内の `exec claim` コマンドで対象タスクを claim する。
+claim・complete・block はすべて `exec run` が制御する。エージェントは成果物の実装だけに集中し、終了コードで成否を伝える。
 
 #### 9.12.3. 出力フォーマット
 

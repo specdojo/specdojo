@@ -260,6 +260,7 @@ function runWithRetry(
 
 function runSingleTask(
   task: ReadyTaskView,
+  projectId: string | undefined,
   executionPath: string,
   strategyConfig: ExecStrategyConfig,
   globalConfig: ExecAgentGlobalConfig,
@@ -267,11 +268,13 @@ function runSingleTask(
   localIdToRule: Map<string, { phaseSet: string; difficulty: string }>,
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
+  actorOverride: string | undefined,
   dryRun: boolean
 ): RunResult {
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}\n`)
 
   const agentCommands: string[] = agentCmdOverride ? [agentCmdOverride] : []
+  let actor = actorOverride ?? 'auto-agent'
 
   if (agentCommands.length === 0) {
     const phaseCtx = resolveTaskPhaseContext(task, localIdToRule, phaseSetSuffixToId)
@@ -311,6 +314,7 @@ function runSingleTask(
       return 'failure'
     }
 
+    if (!actorOverride) actor = members[0]
     process.stdout.write(
       `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Difficulty: ${phaseCtx.difficulty}  Agent: ${members[0]}\n`
     )
@@ -323,9 +327,16 @@ function runSingleTask(
   }
 
   if (dryRun) {
+    process.stdout.write(`  [dry-run] would claim: ${task.id} as ${actor}\n`)
     process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`)
     process.stdout.write(`  [dry-run] Brief: ${brief.length} chars\n`)
     return 'success'
+  }
+
+  process.stdout.write(`  Claiming: ${task.id} as ${actor}\n`)
+  if (!spawnClaim(projectId, task.id, actor)) {
+    process.stdout.write(`  Claim failed: ${task.id}\n`)
+    return 'failure'
   }
 
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)
@@ -340,10 +351,13 @@ function runSingleTask(
   )
 
   if (result === 'success') {
+    spawnComplete(projectId, task.id, actor)
     process.stdout.write(`  Done: ${task.id}\n`)
   } else if (result === 'rate_limit') {
+    spawnBlock(projectId, task.id, actor, 'rate limit reached')
     process.stdout.write(`  Rate limited: ${task.id}\n`)
   } else {
+    spawnBlock(projectId, task.id, actor, 'agent exited with non-zero code')
     process.stdout.write(`  Failed: ${task.id}\n`)
   }
 
@@ -356,6 +370,33 @@ function spawnBuild(projectId: string | undefined): boolean {
   const [exe, fullArgs] = selfRunArgs(buildArgs)
   const result = spawnSync(exe, fullArgs, { stdio: 'inherit' })
   return result.status === 0
+}
+
+function spawnClaim(projectId: string | undefined, taskId: string, by: string): boolean {
+  const args = ['exec', 'claim', '--task', taskId, '--by', by, '--msg', 'auto-run']
+  if (projectId) args.push('--project', projectId)
+  const [exe, fullArgs] = selfRunArgs(args)
+  const result = spawnSync(exe, fullArgs, { stdio: 'inherit' })
+  return result.status === 0
+}
+
+function spawnComplete(projectId: string | undefined, taskId: string, by: string): void {
+  const args = ['exec', 'complete', '--task', taskId, '--by', by, '--msg', 'auto-complete']
+  if (projectId) args.push('--project', projectId)
+  const [exe, fullArgs] = selfRunArgs(args)
+  spawnSync(exe, fullArgs, { stdio: 'inherit' })
+}
+
+function spawnBlock(
+  projectId: string | undefined,
+  taskId: string,
+  by: string,
+  reason: string
+): void {
+  const args = ['exec', 'block', '--task', taskId, '--by', by, '--msg', reason]
+  if (projectId) args.push('--project', projectId)
+  const [exe, fullArgs] = selfRunArgs(args)
+  spawnSync(exe, fullArgs, { stdio: 'inherit' })
 }
 
 function runAutoMode(opts: RunOpts): void {
@@ -408,6 +449,7 @@ function runAutoMode(opts: RunOpts): void {
 
       const result = runSingleTask(
         task,
+        opts.project,
         executionPath,
         strategyConfig,
         globalConfig,
@@ -415,6 +457,7 @@ function runAutoMode(opts: RunOpts): void {
         localIdToRule,
         phaseSetSuffixToId,
         undefined,
+        opts.by,
         dryRun
       )
 
@@ -467,6 +510,7 @@ function runManualMode(opts: RunOpts): void {
 
   const result = runSingleTask(
     task,
+    opts.project,
     executionPath,
     strategyConfig,
     globalConfig,
@@ -474,6 +518,7 @@ function runManualMode(opts: RunOpts): void {
     localIdToRule,
     phaseSetSuffixToId,
     opts.agentCmd,
+    opts.by,
     !!opts.dryRun
   )
 
