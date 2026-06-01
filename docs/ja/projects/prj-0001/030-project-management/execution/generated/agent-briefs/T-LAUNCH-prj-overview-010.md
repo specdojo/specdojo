@@ -40,32 +40,18 @@ done_criteria:
 - urgency: クリティカルパス上。遅延余裕なし。
 - CPM: `ES=0, EF=0.25, LS=0, LF=0.25, slack=0`
 
-## 5. 実行ガイド
+## 5. 実施手順
 
-1. 対象 task を claim する。
-2. 対応する成果物を特定する。
-3. task 名と notes に沿って成果物を更新する。
-4. 必要な検証と lint を実行する。
-5. 完了時のみ complete、問題があれば block を記録する。
+1. 対応する成果物を特定する。
+2. task 名と notes に沿って成果物を更新する。
+3. 必要な検証と lint を実行する。
+4. 実装が完了したら正常終了する（終了コード 0）。
+5. 実装できない・問題が解決できない場合は標準エラー出力に理由を書いて異常終了する（終了コード 1）。
 
-```bash
-specdojo exec claim --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "start"
-# edit / validate / lint
-specdojo exec complete --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "done"
-```
+## 6. 異常終了の条件
 
-## 6. block 時の記録テンプレート
-
-- block_conditions: 依存未解決、レビュー不能、対象ファイル不明、lint/test 未解消
-- block_msg_template:
-
-```text
-blocked: <reason>; need=<next action>; ref=<path or issue>
-```
-
-```bash
-specdojo exec block --project prj-0001 --task T-LAUNCH-prj-overview-010 --by <agent> --msg "blocked: <reason>; need=<next action>; ref=<path or issue>"
-```
+- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 
 ## 7. 注意事項
 

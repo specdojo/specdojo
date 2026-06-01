@@ -106,23 +106,19 @@ owner_rules:
       - prj-success-criteria-and-acceptance-criteria
       - prj-issues-and-approach
     owner: BA
-    difficulty: normal
 
   - local_ids:
       - prj-assumptions-constraints-dependencies
     owner: ARC
-    difficulty: high # 制約・前提の整理は判断コストが高い
 
   - local_ids:
       - prj-comparison-of-alternatives
     owner: ARC
     phase_sets: [research-first-pass, finalize-pass]
-    difficulty: high # 比較検討は人とエージェント双方が外部調査を担う
 
   - local_ids:
       - prj-charter
     owner: PO
-    difficulty: normal
 
   - local_ids:
       - pm-plan
@@ -130,26 +126,22 @@ owner_rules:
       - pm-raci
       - pm-quality-management-plan
     owner: PM
-    difficulty: normal
 
   - local_ids:
       - sch-milestones
       - sch-track-launch
       - sch-strategy-launch
     owner: PM
-    difficulty: normal
 
   - local_ids:
       - pm-organization
       - pm-roles
       - pm-members
     owner: PO
-    difficulty: low # テンプレートベースの定型記入
 
   - local_ids:
       - sch-defaults
     owner: ARC
-    difficulty: low
 
 phase_gates:
   - id: G-LAUNCH-first-pass

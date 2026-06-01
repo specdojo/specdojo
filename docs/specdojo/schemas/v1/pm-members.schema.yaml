@@ -144,6 +144,53 @@ $defs:
           minLength: 1
         uniqueItems: true
 
+      capabilities:
+        type: array
+        description: >
+          Capabilities this agent can perform. Required for type: agent.
+          Core values: exec (deliverable creation/editing), review (read-only review),
+          web_search (external web search). Additional project-specific capabilities
+          may be defined freely.
+        items:
+          type: string
+          minLength: 1
+        uniqueItems: true
+
+      proficiency:
+        type: string
+        enum: ["low", "normal", "high", "expert"]
+        description: >
+          Agent proficiency level. Used by exec-strategy assignment_rules to filter
+          agents by quality tier. Required for type: agent.
+          low: lightweight tasks (formatting, template filling).
+          normal: standard document creation and editing.
+          high: complex analysis or cross-domain work.
+          expert: deep technical judgment or architectural decisions.
+
+      priority:
+        type: integer
+        minimum: 1
+        description: >
+          Tiebreaker priority within agents that share the same proficiency and
+          have equal extra-capabilities count. Lower value = tried first.
+          Required for type: agent.
+
+      command:
+        type: string
+        minLength: 1
+        description: >
+          Shell command invoked by specdojo exec run for this agent.
+          The agent brief is appended as the final argument.
+          Required for type: agent.
+
+      default_mode:
+        type: string
+        enum: ["exec", "review"]
+        description: >
+          Fallback task mode used when the phase in sch-strategy has no explicit mode
+          and exec-strategy assignment_rules do not filter by mode.
+          Optional. Typically set for review-only agents.
+
       scheduler_strategy:
         type: string
         description: "Optional default scheduler strategy used when this member runs

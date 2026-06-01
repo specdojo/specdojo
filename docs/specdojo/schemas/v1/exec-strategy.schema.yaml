@@ -1,0 +1,187 @@
+# exec-strategy.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Exec Strategy schema"
+description: >
+  Defines agent assignment rules for exec-strategy-<track>.yaml.
+  Each rule declares the capabilities and proficiency required for matching execution phases.
+  Agent selection is resolved at runtime from pm-members.yaml using:
+    1. capabilities filter  (agent must have all required capabilities, superset OK)
+    2. proficiency filter   (agent must match the specified proficiency, if set)
+    3. sort: fewest extra capabilities ascending, then priority ascending
+  The first candidate is primary; subsequent ones are rate-limit fallbacks.
+type: object
+additionalProperties: false
+
+required:
+  - kind
+  - id
+  - type
+  - status
+  - track
+  - assignment_rules
+
+properties:
+  kind:
+    const: "exec-strategy"
+    description: "File kind identifier. Must be 'exec-strategy'."
+
+  id:
+    type: string
+    minLength: 1
+    description: "Deliverable ID (e.g., prj-0001:exec-strategy-launch)."
+
+  type:
+    const: "project"
+
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+
+  track:
+    $ref: "./sch-common.schema.yaml#/$defs/Track"
+
+  assignment_rules:
+    type: array
+    minItems: 1
+    description: >
+      Ordered list of assignment rules. Evaluated top-down; first match wins.
+      Each rule declares the capabilities and proficiency required for matching phases.
+      Omitting a filter field (phase_set, phase, mode, proficiency) matches any value.
+    items:
+      $ref: "#/$defs/AssignmentRule"
+
+  rate_limit_policy:
+    $ref: "#/$defs/RateLimitPolicy"
+    description: "Defines behavior when an agent hits a rate limit during exec run."
+
+$defs:
+  Proficiency:
+    type: string
+    enum: ["low", "normal", "high", "expert"]
+    description: >
+      Agent proficiency level.
+      low:    lightweight tasks such as formatting or template filling.
+      normal: standard document creation and editing.
+      high:   complex analysis or cross-domain work.
+      expert: deep technical judgment or architectural decisions.
+
+  AssignmentRule:
+    type: object
+    additionalProperties: false
+    required:
+      - capabilities
+    description: >
+      A single assignment rule. Matches a task when all specified filter fields
+      (phase_set, phase, mode) match the task's properties.
+      Omitting a filter field acts as a wildcard.
+    properties:
+      phase_set:
+        type: string
+        minLength: 1
+        description: >
+          Phase set name to match (e.g., first-pass, research-first-pass).
+          Omit to match any phase set.
+      phase:
+        type: string
+        minLength: 1
+        description: >
+          Phase id to match (e.g., enrich, align, review).
+          Omit to match any phase.
+      mode:
+        type: string
+        enum: ["exec", "review"]
+        description: >
+          Task mode to match.
+          exec:   deliverable creation and editing tasks.
+          review: review tasks (read-only access to deliverables).
+          Omit to match any mode.
+      capabilities:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          Required capabilities. Agents must have all listed capabilities (superset match).
+          Core values:
+            exec        — deliverable creation/editing.
+            review      — review work (read-only).
+            web_search  — external web search.
+          Additional project-specific capabilities may be defined in pm-members.yaml.
+        items:
+          type: string
+          minLength: 1
+      proficiency:
+        $ref: "#/$defs/Proficiency"
+        description: >
+          Required proficiency level.
+          When specified, only agents with exactly this proficiency are selected as primary.
+          Omit to accept agents of any proficiency level.
+
+  RateLimitPolicy:
+    type: object
+    additionalProperties: false
+    required:
+      - on_non_critical
+      - on_critical
+    description: "Behavior when an agent returns a rate-limit signal during exec run."
+    properties:
+      on_non_critical:
+        type: object
+        additionalProperties: false
+        required:
+          - action
+        description: "Behavior for non-critical tasks (cpm.slack > 0)."
+        properties:
+          action:
+            const: "skip"
+            description: "Record a block event and move to the next task."
+      on_critical:
+        type: object
+        additionalProperties: false
+        required:
+          - action
+        description: "Behavior for critical-path tasks (cpm.slack == 0)."
+        properties:
+          action:
+            type: string
+            enum: ["try_next", "block"]
+            description: >
+              try_next: retry with the next agent candidate (higher proficiency or next priority).
+              block: immediately record a block event without retrying.
+          retry:
+            $ref: "#/$defs/RetryPolicy"
+            description: "Retry configuration. Required when action is try_next."
+          on_exhausted:
+            type: string
+            enum: ["block"]
+            description: >
+              Action when all agent candidates are exhausted after max_attempts.
+              block: record a block event and surface the failure to the human.
+
+  RetryPolicy:
+    type: object
+    additionalProperties: false
+    required:
+      - max_attempts
+      - initial_wait_seconds
+      - backoff_multiplier
+      - max_wait_seconds
+    description: "Exponential backoff configuration for rate-limit retries."
+    properties:
+      max_attempts:
+        type: integer
+        minimum: 1
+        description: "Total number of attempts including the initial one and all retries."
+      initial_wait_seconds:
+        type: number
+        exclusiveMinimum: 0
+        description: "Wait time in seconds before the first retry."
+      backoff_multiplier:
+        type: number
+        exclusiveMinimum: 1
+        description: >
+          Multiplier applied to wait time after each failed attempt.
+          Example: initial=60, multiplier=3 → 60s → 180s → 540s.
+      max_wait_seconds:
+        type: number
+        exclusiveMinimum: 0
+        description: "Upper bound for the wait time between retries."

@@ -148,16 +148,6 @@ properties:
           items:
             type: string
             minLength: 1
-        difficulty:
-          type: string
-          enum: ["low", "normal", "high", "expert"]
-          description: >
-            Informational difficulty rating for human planning.
-            Influences expected duration and serves as a hint for model selection.
-            low: straightforward content with little ambiguity.
-            normal: typical document requiring standard domain knowledge.
-            high: complex analysis, cross-domain references, or architectural decisions.
-            expert: deep technical knowledge or significant judgment required.
         phase_overrides:
           type: array
           description: >
