@@ -148,24 +148,16 @@ $defs:
         type: array
         description: >
           Capabilities this agent can perform. Required for type: agent.
-          Core values: exec (deliverable creation/editing), review (read-only review),
-          web_search (external web search). Additional project-specific capabilities
-          may be defined freely.
+          See exec-common.schema.yaml for core values (exec, review, web_search).
         items:
-          type: string
-          minLength: 1
+          $ref: "./exec-common.schema.yaml#/$defs/Capability"
         uniqueItems: true
 
       proficiency:
-        type: string
-        enum: ["low", "normal", "high", "expert"]
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
         description: >
           Agent proficiency level. Used by exec-strategy assignment_rules to filter
           agents by quality tier. Required for type: agent.
-          low: lightweight tasks (formatting, template filling).
-          normal: standard document creation and editing.
-          high: complex analysis or cross-domain work.
-          expert: deep technical judgment or architectural decisions.
 
       priority:
         type: integer

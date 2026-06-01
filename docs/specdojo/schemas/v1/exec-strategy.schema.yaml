@@ -55,16 +55,6 @@ properties:
     description: "Defines behavior when an agent hits a rate limit during exec run."
 
 $defs:
-  Proficiency:
-    type: string
-    enum: ["low", "normal", "high", "expert"]
-    description: >
-      Agent proficiency level.
-      low:    lightweight tasks such as formatting or template filling.
-      normal: standard document creation and editing.
-      high:   complex analysis or cross-domain work.
-      expert: deep technical judgment or architectural decisions.
-
   AssignmentRule:
     type: object
     additionalProperties: false
@@ -94,16 +84,10 @@ $defs:
         uniqueItems: true
         description: >
           Required capabilities. Agents must have all listed capabilities (superset match).
-          Core values:
-            exec        — deliverable creation/editing.
-            review      — review work (read-only).
-            web_search  — external web search.
-          Additional project-specific capabilities may be defined in pm-members.yaml.
         items:
-          type: string
-          minLength: 1
+          $ref: "./exec-common.schema.yaml#/$defs/Capability"
       proficiency:
-        $ref: "#/$defs/Proficiency"
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
         description: >
           Required proficiency level.
           When specified, only agents with exactly this proficiency are selected as primary.

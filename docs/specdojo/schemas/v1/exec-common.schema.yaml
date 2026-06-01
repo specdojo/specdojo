@@ -1,0 +1,28 @@
+# exec-common.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Exec common definitions"
+description: >
+  Shared type definitions for exec-strategy-<track>.yaml and pm-members.yaml.
+  Centralizes Proficiency and Capability so their enums and descriptions stay consistent.
+
+$defs:
+  Proficiency:
+    type: string
+    enum: ["low", "normal", "high", "expert"]
+    description: >
+      Agent proficiency level used for task assignment and brief generation.
+      low:    lightweight tasks such as formatting or template filling.
+      normal: standard document creation and editing.
+      high:   complex analysis or cross-domain work.
+      expert: deep technical judgment or architectural decisions.
+
+  Capability:
+    type: string
+    minLength: 1
+    description: >
+      Agent capability identifier.
+      Core values:
+        exec       — deliverable creation and editing tasks.
+        review     — review tasks (read-only access to deliverables).
+        web_search — external web search capability.
+      Additional project-specific capabilities may be defined freely.
