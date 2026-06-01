@@ -208,14 +208,14 @@ Before starting implementation:
 
 ### 8.1. frontmatter フィールド一覧
 
-| フィールド      | 必須 | 説明                                                                              |
-| --------------- | ---- | --------------------------------------------------------------------------------- |
-| `name`          | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する               |
-| `description`   | ○    | Claude が自動委譲を判断するための説明文                                           |
-| `tools`         | -    | 使用可能なツールのリスト（省略時は全ツールを継承）                                |
-| `model`         | -    | `sonnet` / `opus` / `haiku` またはフルモデル ID。省略時は親セッションを継承       |
-| `permissionMode`| -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`                |
-| `maxTurns`      | -    | エージェントの最大ターン数                                                        |
+| フィールド       | 必須 | 説明                                                                        |
+| ---------------- | ---- | --------------------------------------------------------------------------- |
+| `name`           | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する          |
+| `description`    | ○    | Claude が自動委譲を判断するための説明文                                     |
+| `tools`          | -    | 使用可能なツールのリスト（省略時は全ツールを継承）                          |
+| `model`          | -    | `sonnet` / `opus` / `haiku` またはフルモデル ID。省略時は親セッションを継承 |
+| `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`           |
+| `maxTurns`       | -    | エージェントの最大ターン数                                                  |
 
 ### 8.2. `claude-edit-agent.md`
 
@@ -417,12 +417,12 @@ Safety rules:
 
 ### 8.6. エージェント一覧
 
-| ファイル名                    | `name`                     | モデル   | tools（主要）                              | 用途                                       |
-| ----------------------------- | -------------------------- | -------- | ------------------------------------------ | ------------------------------------------ |
-| `claude-edit-agent.md`        | `claude-edit-agent`        | `sonnet` | Read, Edit, Write, Bash, WebSearch/Fetch   | 標準的な文書作成・実装                     |
-| `claude-review-agent.md`      | `claude-review-agent`      | `sonnet` | Read, Bash, WebSearch/Fetch（Edit/Write なし）| done_criteria の多観点レビュー         |
-| `claude-expert-edit-agent.md` | `claude-expert-edit-agent` | `opus`   | Read, Edit, Write, Bash, WebSearch/Fetch   | 複雑な設計判断・詳細分析が必要な作成タスク |
-| `claude-expert-review-agent.md`| `claude-expert-review-agent`| `opus`  | Read, Bash, WebSearch/Fetch（Edit/Write なし）| 高品質な多観点レビュー                |
+| ファイル名                      | `name`                       | モデル   | tools（主要）                                  | 用途                                       |
+| ------------------------------- | ---------------------------- | -------- | ---------------------------------------------- | ------------------------------------------ |
+| `claude-edit-agent.md`          | `claude-edit-agent`          | `sonnet` | Read, Edit, Write, Bash, WebSearch/Fetch       | 標準的な文書作成・実装                     |
+| `claude-review-agent.md`        | `claude-review-agent`        | `sonnet` | Read, Bash, WebSearch/Fetch（Edit/Write なし） | done_criteria の多観点レビュー             |
+| `claude-expert-edit-agent.md`   | `claude-expert-edit-agent`   | `opus`   | Read, Edit, Write, Bash, WebSearch/Fetch       | 複雑な設計判断・詳細分析が必要な作成タスク |
+| `claude-expert-review-agent.md` | `claude-expert-review-agent` | `opus`   | Read, Bash, WebSearch/Fetch（Edit/Write なし） | 高品質な多観点レビュー                     |
 
 ## 9. エージェント割り当て設定
 
@@ -441,7 +441,7 @@ members:
     type: agent
     capabilities:
       - web_search
-    command: "claude -p --agent claude-edit-agent --permission-mode auto"
+    command: 'claude -p --agent claude-edit-agent --permission-mode auto'
     scheduler_strategy: critical-first
     note: Sonnet モデルを使用する標準エージェント。外部 Web 情報参照が必要なタスクを担当する。
 
@@ -450,7 +450,7 @@ members:
     type: agent
     capabilities:
       - web_search
-    command: "claude -p --agent claude-review-agent --permission-mode auto"
+    command: 'claude -p --agent claude-review-agent --permission-mode auto'
     scheduler_strategy: fifo
     note: Sonnet モデルを使用するレビューエージェント。done_criteria を多観点で検証する。
 
@@ -459,7 +459,7 @@ members:
     type: agent
     capabilities:
       - web_search
-    command: "claude -p --agent claude-expert-edit-agent --permission-mode auto"
+    command: 'claude -p --agent claude-expert-edit-agent --permission-mode auto'
     scheduler_strategy: critical-first
     note: Opus モデルを使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
 
@@ -468,7 +468,7 @@ members:
     type: agent
     capabilities:
       - web_search
-    command: "claude -p --agent claude-expert-review-agent --permission-mode auto"
+    command: 'claude -p --agent claude-expert-review-agent --permission-mode auto'
     scheduler_strategy: fifo
     note: Opus モデルを使用する高性能レビューエージェント。精度が重要なレビュータスクを担当する。
 ```
