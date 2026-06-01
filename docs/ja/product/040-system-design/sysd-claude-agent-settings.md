@@ -44,16 +44,17 @@ specdojo exec build
    ↓
 ready.json / claim-next.json
    ↓
-[edit]   specdojo exec run --auto --parallel 3
-         → claude-edit-agent × N が claude -p --agent claude-edit-agent で並列起動
-         → task.owner を読んでロール文脈を判断
+[edit]   specdojo exec run --auto --loop --parallel 3
+         → exec build で ready.json を最新化し agent brief を生成
+         → claude-edit-agent × N が claude -p --agent claude-edit-agent "<brief>" で並列起動
+         → brief に従い task を claim し、ロール文脈を判断
          → 必要に応じて WebSearch / WebFetch で外部情報を取得
          → 成果物を作成・編集
          → specdojo exec complete / block
 
-[review] specdojo exec run --by claude-review-agent
-         → claude-review-agent が claude -p --agent claude-review-agent で起動
-         → 完了タスクを state.json から特定
+[review] specdojo exec run --auto
+         → exec-strategy の assignment_rules で claude-review-agent が選択される
+         → brief から対象タスクを特定
          → done_criteria.roles の各ロール観点で検証
 ```
 
@@ -184,14 +185,12 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 Before starting implementation:
 
-1. Run: `specdojo exec validate`
-2. Run: `specdojo exec build`
-3. Claim a task via the scheduler (see agent-specific prompt for details).
-4. Read generated task files and identify the task's owner role.
-5. Adopt the role context indicated by the task's owner field.
-6. Execute only the claimed task.
-7. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
-8. After finishing, run validate/build, then mark the task complete or block it.
+1. Read the agent brief provided in this prompt.
+2. Claim the task identified in the brief using the `exec claim` command shown in the brief.
+3. Identify the task's owner role from the brief and adopt that role perspective.
+4. Execute only the claimed task.
+5. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
+6. After finishing, run `specdojo exec validate`, then mark the task complete or block it.
 
 ## Safety
 
@@ -236,25 +235,24 @@ Your job is to implement exactly one claimed SpecDojo task.
 
 Follow this process:
 
-1. Run: specdojo exec validate
-2. Run: specdojo exec build
-3. Run: specdojo exec scheduler --by claude-edit-agent
-4. Read the claimed task from generated state.
-5. Identify the task's owner role and adopt that role perspective:
+1. Read the agent brief provided in this prompt to identify the task.
+2. Claim the task using the exec claim command shown in the brief:
+   specdojo exec claim --task <task-id> --by claude-edit-agent --msg "start"
+3. Identify the task's owner role from the brief and adopt that role perspective:
    - BA: requirements, acceptance criteria, user perspective
    - ARC: document structure, naming, consistency, technical constraints
    - DEV: implementation, configuration, code quality, build
    - PM: planning, milestones, risk, progress
    - UX: readability, clarity, user flow, information architecture
    - OPS: release, deployment, change management
-6. Use WebSearch and WebFetch to gather external information when the task requires it.
-7. Read related source documents before editing.
-8. Update only the files necessary for the claimed task.
-9. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-10. Run: specdojo exec validate
-11. If validation passes, complete the task:
-    specdojo exec complete --task <task-id> --by claude-edit-agent --msg "completed"
-12. If blocked, record the block event with a clear reason:
+4. Use WebSearch and WebFetch to gather external information when the task requires it.
+5. Read related source documents before editing.
+6. Update only the files necessary for the claimed task.
+7. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
+8. Run: specdojo exec validate
+9. If validation passes, complete the task:
+   specdojo exec complete --task <task-id> --by claude-edit-agent --msg "completed"
+10. If blocked, record the block event with a clear reason:
     specdojo exec block --task <task-id> --by claude-edit-agent --msg "<reason>"
 
 Do not invent project facts.
@@ -335,25 +333,24 @@ Your job is to implement exactly one claimed SpecDojo task, particularly those r
 
 Follow this process:
 
-1. Run: specdojo exec validate
-2. Run: specdojo exec build
-3. Run: specdojo exec scheduler --by claude-expert-edit-agent
-4. Read the claimed task from generated state.
-5. Identify the task's owner role and adopt that role perspective:
+1. Read the agent brief provided in this prompt to identify the task.
+2. Claim the task using the exec claim command shown in the brief:
+   specdojo exec claim --task <task-id> --by claude-expert-edit-agent --msg "start"
+3. Identify the task's owner role from the brief and adopt that role perspective:
    - BA: requirements, acceptance criteria, user perspective
    - ARC: document structure, naming, consistency, technical constraints
    - DEV: implementation, configuration, code quality, build
    - PM: planning, milestones, risk, progress
    - UX: readability, clarity, user flow, information architecture
    - OPS: release, deployment, change management
-6. Perform deep analysis before editing. Use WebSearch to gather technical background and best practices.
-7. Read all related source documents and identify cross-document dependencies.
-8. Update only the files necessary for the claimed task.
-9. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-10. Run: specdojo exec validate
-11. If validation passes, complete the task:
-    specdojo exec complete --task <task-id> --by claude-expert-edit-agent --msg "completed"
-12. If blocked, record the block event with a clear reason:
+4. Perform deep analysis before editing. Use WebSearch to gather technical background and best practices.
+5. Read all related source documents and identify cross-document dependencies.
+6. Update only the files necessary for the claimed task.
+7. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
+8. Run: specdojo exec validate
+9. If validation passes, complete the task:
+   specdojo exec complete --task <task-id> --by claude-expert-edit-agent --msg "completed"
+10. If blocked, record the block event with a clear reason:
     specdojo exec block --task <task-id> --by claude-expert-edit-agent --msg "<reason>"
 
 Do not invent project facts.
@@ -521,11 +518,14 @@ rate_limit_detection:
 ### 9.4. `exec run` による実行
 
 ```bash
-# edit: claude-edit-agent で並列実行
+# edit: 1バッチ実行して終了
 specdojo exec run --auto --parallel 3
 
-# review: claude-review-agent でレビュー
-specdojo exec run --by claude-review-agent
+# edit: ready タスクがなくなるまで繰り返す
+specdojo exec run --auto --loop --parallel 3
+
+# edit/review: exec-strategy の assignment_rules でエージェントを自動選択
+specdojo exec run --auto
 ```
 
 ## 10. バックグラウンドセッションによる並列実行

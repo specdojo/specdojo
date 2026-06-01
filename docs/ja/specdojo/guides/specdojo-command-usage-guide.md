@@ -1608,13 +1608,15 @@ agent_commands:
 
 `--loop` を指定した場合は、ready タスクが 0 件になるか `--max-rounds` に達するまでステップ 3 に戻ってラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によってアンロックされた後続タスクを反映する。
 
-タスクプロンプトのテンプレート（コマンド末尾に引数として追加）:
+エージェントコマンドの末尾には `generated/agent-briefs/<task-id>.md` の内容が引数として渡される。ブリーフには以下が含まれる。
 
-```text
-Execute exactly one SpecDojo task for project {project_id} as {by}.
-Run: specdojo exec validate, build, scheduler --by {by}, implement, complete/block.
-Do not claim more than one task. Do not modify unrelated files.
-```
+- タスク概要（`task_id`・`name`・`owner`・`duration_days`）
+- 実施内容と対象成果物のパス・`done_criteria`
+- 依存関係と CPM 情報（クリティカルパス判定）
+- 実行ガイド（`exec claim` → 実装・検証・lint → `exec complete` または `exec block`）
+- ブロック時の記録テンプレート
+
+ブリーフは `exec build` 実行時に生成・更新される。エージェントはタスクを自分で探す必要はなく、ブリーフ内の `exec claim` コマンドで対象タスクを claim する。
 
 #### 9.12.3. 出力フォーマット
 
