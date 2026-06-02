@@ -97,11 +97,12 @@ function frontmatter(meta: ExecPlanMeta): string {
   const lines = [
     '---',
     `id: ${meta.id}`,
+    `type: ${meta.type}`,
+    `rulebook: ${meta.rulebook}`,
     `task_id: ${meta.task_id}`,
     `mode: ${meta.mode}`,
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
-    `generated_at: ${meta.generated_at}`,
   ]
   if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
   lines.push('---')
@@ -118,12 +119,13 @@ function buildEditPlanMarkdown(
   const cpm = task.cpm
 
   const meta: ExecPlanMeta = {
-    id: `xep-${task.id}`,
+    id: `xep-${task.id.toLowerCase()}`,
+    type: 'exec-plan',
+    rulebook: 'xep-rulebook',
     task_id: task.id,
     mode: 'edit',
     status: 'ready',
     project_id: projectId,
-    generated_at: new Date().toISOString(),
   }
 
   lines.push(frontmatter(meta))
@@ -159,9 +161,7 @@ function buildEditPlanMarkdown(
   lines.push('')
   lines.push('## 3. 依存と優先度')
   lines.push('')
-  lines.push(
-    `- depends_on: ${task.cpm ? '' : '-'}${(task as unknown as Record<string, unknown>)['depends_on'] ? '' : ''}`
-  )
+  lines.push('- depends_on: -')
   lines.push(`- urgency: ${criticalityText(cpm?.slack)}`)
   if (cpm) {
     lines.push(
@@ -214,12 +214,13 @@ function buildReviewPlanMarkdown(
   const cpm = task.cpm
 
   const meta: ExecPlanMeta = {
-    id: `xrp-${task.id}`,
+    id: `xrp-${task.id.toLowerCase()}`,
+    type: 'exec-plan',
+    rulebook: 'xep-rulebook',
     task_id: task.id,
     mode: 'review',
     status: 'ready',
     project_id: projectId,
-    generated_at: new Date().toISOString(),
     viewpoints_ref: viewpointsRef,
   }
 

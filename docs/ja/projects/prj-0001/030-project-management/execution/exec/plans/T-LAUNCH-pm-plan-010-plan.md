@@ -1,10 +1,11 @@
 ---
-id: xep-T-LAUNCH-pm-plan-010
+id: xep-t-launch-pm-plan-010
+type: exec-plan
+rulebook: xep-rulebook
 task_id: T-LAUNCH-pm-plan-010
 mode: edit
 status: ready
 project_id: prj-0001
-generated_at: 2026-06-02T21:53:15.292Z
 ---
 
 # Edit Plan: T-LAUNCH-pm-plan-010
@@ -33,7 +34,7 @@ done_criteria:
 
 ## 3. 依存と優先度
 
-- depends_on:
+- depends_on: -
 - urgency: 遅延余裕あり（slack=3.25）。
 - CPM: `ES=0, EF=0.25, LS=3.25, LF=3.5, slack=3.25`
 

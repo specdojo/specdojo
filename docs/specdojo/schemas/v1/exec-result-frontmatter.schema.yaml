@@ -12,6 +12,7 @@ additionalProperties: true
 
 required:
   - id
+  - type
   - task_id
   - mode
   - status
@@ -24,6 +25,11 @@ properties:
     type: string
     minLength: 1
     description: "Unique document ID. Format: xer-<task-id> (edit) or xrr-<task-id> (review)."
+
+  type:
+    type: string
+    const: "exec-result"
+    description: "Document type. Always 'exec-result'."
 
   task_id:
     type: string

@@ -19,16 +19,22 @@ plugins:
           - docs/ja/**/pjr-index.md
   - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
     - strict: true
-      yaml.schemas:
-        docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml:
-          - docs/ja/specdojo/rulebooks/**/*.md
-        docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml:
-          - docs/ja/specdojo/guidelines/**/*.md
-        docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml:
-          - docs/ja/specdojo/standards/**/*.md
-        docs/specdojo/schemas/v1/instruction-frontmatter.schema.yaml:
-          - docs/ja/specdojo/instructions/**/*.md
-        docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml:
-          - docs/ja/product/**/*.md
-          - docs/ja/projects/**/*.md
-          - docs/ja/specdojo/samples/**/*.md
+      schemaRules: # 配列なので上から順に評価し、最初にマッチしたスキーマを適用します。
+        - glob: docs/ja/projects/**/exec/plans/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/exec/results/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/rulebooks/**/*.md
+          schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/guidelines/**/*.md
+          schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/standards/**/*.md
+          schema: docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/instructions/**/*.md
+          schema: docs/specdojo/schemas/v1/instruction-frontmatter.schema.yaml
+        - glob: docs/ja/product/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/samples/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml

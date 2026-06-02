@@ -1,10 +1,11 @@
 ---
-id: xep-T-LAUNCH-prj-overview-010
+id: xep-t-launch-prj-overview-010
+type: exec-plan
+rulebook: xep-rulebook
 task_id: T-LAUNCH-prj-overview-010
 mode: edit
 status: ready
 project_id: prj-0001
-generated_at: 2026-06-02T21:53:15.291Z
 ---
 
 # Edit Plan: T-LAUNCH-prj-overview-010
@@ -33,7 +34,7 @@ done_criteria:
 
 ## 3. 依存と優先度
 
-- depends_on:
+- depends_on: -
 - urgency: クリティカルパス上。遅延余裕なし。
 - CPM: `ES=0, EF=0.25, LS=0, LF=0.25, slack=0`
 

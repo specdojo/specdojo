@@ -10,14 +10,15 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   const lines = [
     '---',
     `id: ${meta.id}`,
+    `type: ${meta.type}`,
     `task_id: ${meta.task_id}`,
     `mode: ${meta.mode}`,
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
     `plan_ref: ${meta.plan_ref}`,
-    `started_at: ${meta.started_at}`,
+    `started_at: "${meta.started_at}"`,
   ]
-  if (meta.completed_at) lines.push(`completed_at: ${meta.completed_at}`)
+  if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`)
   if (meta.agent) lines.push(`agent: ${meta.agent}`)
   lines.push('---')
   return lines.join('\n')
@@ -116,7 +117,8 @@ export function scaffoldResult(opts: {
   const resultPath = resultPathForTask(executionPath, taskId)
 
   const meta: ExecResultMeta = {
-    id: mode === 'review' ? `xrr-${taskId}` : `xer-${taskId}`,
+    id: mode === 'review' ? `xrr-${taskId.toLowerCase()}` : `xer-${taskId.toLowerCase()}`,
+    type: 'exec-result',
     task_id: taskId,
     mode,
     status: 'in_progress',
@@ -144,6 +146,7 @@ export function updateResultStatus(
 
   const updatedMeta: ExecResultMeta = {
     id: existingMeta.id ?? '',
+    type: 'exec-result',
     task_id: existingMeta.task_id ?? '',
     mode: (existingMeta.mode as TaskMode) ?? 'edit',
     status,

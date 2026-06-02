@@ -183,17 +183,19 @@ export type ResolvedProjectPaths = {
 
 export type ExecPlanMeta = {
   id: string
+  type: 'exec-plan'
+  rulebook: string
   task_id: string
   mode: TaskMode
   status: 'ready'
   project_id: string
-  generated_at: string
   agent?: string
   viewpoints_ref?: string
 }
 
 export type ExecResultMeta = {
   id: string
+  type: 'exec-result'
   task_id: string
   mode: TaskMode
   status: 'in_progress' | 'complete' | 'blocked'
