@@ -33,7 +33,7 @@ export type ProjectMember = {
   proficiency?: 'low' | 'normal' | 'high' | 'expert'  // agent only: quality tier
   priority?: number                     // agent only: tiebreaker within same profile (lower = tried first)
   command?: string                      // agent only: shell command executed by exec run
-  default_mode?: 'exec' | 'review'      // agent only: fallback mode when phase has no mode field
+  mode?: 'edit' | 'review'              // agent only: work mode this agent handles (edit or review)
   scheduler_strategy?: SchedulerStrategy
   note?: string
 }

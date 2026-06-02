@@ -126,7 +126,7 @@ export function scaffoldResult(opts: {
     agent,
   }
 
-  const body = mode === 'review' ? buildReviewResultBody(taskId) : buildEditResultBody(taskId)
+  const body = mode === 'review' ? buildReviewResultBody() : buildEditResultBody()
 
   writeFileSync(resultPath, serializeFrontmatter(meta) + body, 'utf8')
   return resultPath

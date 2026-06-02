@@ -175,13 +175,15 @@ $defs:
           The agent brief is appended as the final argument.
           Required for type: agent.
 
-      default_mode:
+      mode:
         type: string
-        enum: ["exec", "review"]
+        enum: ["edit", "review"]
         description: >
-          Fallback task mode used when the phase in sch-strategy has no explicit mode
-          and exec-strategy assignment_rules do not filter by mode.
-          Optional. Typically set for review-only agents.
+          Work mode this agent is designed to handle.
+          edit:   deliverable creation and editing tasks.
+          review: deliverable review tasks.
+          When set, exec run only selects this agent for tasks whose assignment_rule
+          has a matching mode (or no mode specified). Omit to handle all modes.
 
       scheduler_strategy:
         type: string

@@ -129,7 +129,8 @@ function resolveTaskPhaseContext(
 
 function selectCandidates(
   requirements: ResolvedRequirements,
-  roster: MemberRoster | null
+  roster: MemberRoster | null,
+  taskMode?: string
 ): ProjectMember[] {
   if (!roster) return []
   const { capabilities: required, proficiency } = requirements
@@ -139,6 +140,9 @@ function selectCandidates(
       const caps = m.capabilities ?? []
       if (!required.every(c => caps.includes(c))) return false
       if (proficiency !== undefined && m.proficiency !== proficiency) return false
+      // If agent declares a mode and task has a mode, they must match.
+      // Agents without a mode field are mode-agnostic and match any task.
+      if (m.mode !== undefined && taskMode !== undefined && m.mode !== taskMode) return false
       return true
     })
     .sort((a, b) => {
@@ -319,10 +323,10 @@ function runSingleTask(
       return 'failure'
     }
 
-    const candidates = selectCandidates(requirements, roster)
+    const candidates = selectCandidates(requirements, roster, mode)
     if (candidates.length === 0) {
       process.stdout.write(
-        `  No agents found for capabilities: [${requirements.capabilities.join(', ')}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ''}\n`
+        `  No agents found for mode: ${mode}, capabilities: [${requirements.capabilities.join(', ')}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ''}\n`
       )
       return 'failure'
     }

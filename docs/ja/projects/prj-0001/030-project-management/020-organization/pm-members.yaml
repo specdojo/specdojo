@@ -51,6 +51,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: edit
     persona: task-executor
     focus:
       - task-execution
@@ -66,6 +67,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: review
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification
@@ -83,6 +85,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: edit
     persona: task-executor
     focus:
       - task-execution
@@ -99,6 +102,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: review
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification
@@ -115,6 +119,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: edit
     persona: task-executor
     focus:
       - task-execution
@@ -133,6 +138,7 @@ members:
     email: null
     roles: []
     type: agent
+    mode: review
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification
