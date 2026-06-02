@@ -42,23 +42,23 @@ schedule yaml（owner フィールドでロールを定義）
    ↓
 specdojo exec build
    ↓
-ready.json / claim-next.json
+ready.json / exec/plans/<task-id>-plan.md（edit-plan or review-plan）
    ↓
 [edit]   specdojo exec run --auto --loop --parallel 3
-         → exec build で ready.json を最新化し agent brief を生成
-         → claude-edit-agent × N が claude -p --agent claude-edit-agent "<brief>" で並列起動
-         → brief に従い task を claim し、ロール文脈を判断
-         → 必要に応じて WebSearch / WebFetch で外部情報を取得
-         → 成果物を作成・編集
-         → specdojo exec complete / block
+         → exec build で ready.json・exec/plans/ を最新化
+         → exec run が exec/results/<task-id>-result.md をscaffold生成
+         → claude-edit-agent × N が claude -p --agent claude-edit-agent "<plan>" で並列起動
+         → plan に従いロール文脈を判断して成果物を作成・編集
+         → result ファイルの done_criteria_checked セクションを記入
+         → 終了コード 0 → exec complete / 終了コード 1 → exec block
 
 [review] specdojo exec run --auto
-         → exec-strategy の assignment_rules で claude-review-agent が選択される
-         → brief から対象タスクを特定
-         → done_criteria.roles の各ロール観点で検証
+         → exec-strategy の assignment_rules で mode: review のエージェントが選択される
+         → exec run が exec/results/<task-id>-result.md をscaffold生成
+         → claude-review-agent が review-plan の各観点を確認し result に記入
 ```
 
-edit と review に順序制約はない。exec-strategy の `assignment_rules` でどのフェーズに edit・review を割り当てるかを定義し、スケジュール構造に応じて組み合わせる。
+edit と review に順序制約はない。exec-strategy の `assignment_rules` の `mode` フィールドでどのフェーズに edit・review を割り当てるかを定義し、スケジュール構造に応じて組み合わせる。
 
 ## 4. ディレクトリ構成
 
@@ -129,77 +129,17 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ## 6. `.claude/settings.json` 設定
 
-`.claude/settings.json` はプロジェクト全体で共有する設定ファイル。セッションレベルの権限デフォルトを定義する。エージェント個別の権限は `.claude/agents/*.md` の frontmatter で上書きできる。
+`.claude/settings.json` はプロジェクト全体で共有する設定ファイル。`allow`（specdojo/git/npm/Read/Web）と `deny`（.env/secrets/git push 等）でセッションレベルの権限デフォルトを定義する。エージェント個別の権限は `.claude/agents/*.md` の frontmatter で上書きできる。
 
-```jsonc
-{
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "permissions": {
-    "allow": [
-      "Bash(specdojo *)",
-      "Bash(git status)",
-      "Bash(git diff *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(npm run *)",
-      "Read(**)",
-      "WebSearch",
-      "WebFetch",
-    ],
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      "Read(./**/*secret*)",
-      "Bash(git push *)",
-      "Bash(git reset --hard *)",
-      "Bash(rm -rf *)",
-    ],
-  },
-}
-```
+実際のファイル: `.claude/settings.json`
 
 ## 7. `CLAUDE.md` 設計
 
 `CLAUDE.md` はプロジェクトルートに置き、全エージェントが自動的に読み込む共通ルールを記述する。エージェント固有のシステムプロンプトは `.claude/agents/` に分離する。
 
-`CLAUDE.md` は200行以内を目安にし、具体的・判定可能な記述に限定する。
+`CLAUDE.md` は200行以内を目安にし、具体的・判定可能な記述に限定する。Language・Project Policy・SpecDojo ワークフロー・安全規則の4セクションで構成する。
 
-```markdown
-# Agent Instructions
-
-## Language
-
-- 回答は原則として日本語で行う。
-- コード、ファイル名、識別子は英語を優先する。
-- Markdown 設計書は自然な日本語で、曖昧な表現を避ける。
-
-## Project Policy
-
-- 変更前に関連する設計書を確認する。
-- `docs/` 配下の Markdown では、frontmatter の `id`・`based_on`・`status` を尊重する。
-- 既存の命名規則・ディレクトリ規則を優先する。
-- 大きな変更は、まず設計書に反映してからコードを変更する。
-
-## SpecDojo Workflow
-
-Before starting implementation:
-
-1. Read the agent brief provided in this prompt.
-2. Identify the task's owner role from the brief and adopt that role perspective.
-3. Execute only the claimed task.
-4. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
-5. After finishing, run `specdojo exec validate`. Exit with code 0 on success, 1 if blocked.
-6. Write the block reason to stderr when exiting with code 1.
-
-## Safety
-
-- `.env`、`.env.*`、`secrets/`、認証情報、秘密鍵は読み込まない。
-- 破壊的変更を行う前に git diff を確認する。
-- Never complete a task that was not actually implemented.
-- Never claim multiple tasks in one agent process unless explicitly instructed.
-- If Git has unexpected changes, stop and report.
-```
+実際のファイル: `.claude/CLAUDE.md`
 
 ## 8. エージェント定義ファイル設計
 
@@ -207,200 +147,38 @@ Before starting implementation:
 
 ### 8.1. frontmatter フィールド一覧
 
-| フィールド       | 必須 | 説明                                                                        |
-| ---------------- | ---- | --------------------------------------------------------------------------- |
-| `name`           | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する          |
-| `description`    | ○    | Claude が自動委譲を判断するための説明文                                     |
-| `tools`          | -    | 使用可能なツールのリスト（省略時は全ツールを継承）                          |
-| `model`          | -    | `sonnet` / `opus` / `haiku` またはフルモデル ID。省略時は親セッションを継承 |
-| `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`           |
-| `maxTurns`       | -    | エージェントの最大ターン数                                                  |
+| フィールド       | 必須 | 説明                                                                                                                                                   |
+| ---------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`           | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する                                                                                     |
+| `description`    | ○    | Claude が自動委譲を判断するための説明文                                                                                                                |
+| `tools`          | -    | 使用可能なツールのリスト（省略時は全ツールを継承）                                                                                                     |
+| `model`          | -    | `sonnet` / `opus` / `haiku` またはフルモデル ID。省略時は親セッションを継承                                                                            |
+| `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`。自動実行では `bypassPermissions` を使用（`settings.json` の deny リストが安全境界） |
+| `maxTurns`       | -    | エージェントの最大ターン数                                                                                                                             |
 
 ### 8.2. `claude-edit-agent.md`
 
-`.claude/agents/claude-edit-agent.md`：
+sonnet モデルを使用する標準 edit エージェント。plan を読んでタスクを実装し、result ファイルに done_criteria の確認結果を記入する。
 
-```markdown
----
-name: claude-edit-agent
-description: SpecDojo 標準 edit エージェント。文書作成・実装・Web 情報参照が必要なタスクを担当する。
-tools: Read, Edit, Write, Bash, Glob, Grep, WebSearch, WebFetch
-model: sonnet
-permissionMode: auto
----
-
-You are an edit-agent, a SpecDojo task execution agent with web search capability.
-
-Your job is to implement exactly one claimed SpecDojo task.
-
-Follow this process:
-
-1. Read the agent brief provided in this prompt.
-2. Identify the task's owner role from the brief and adopt that role perspective:
-   - BA: requirements, acceptance criteria, user perspective
-   - ARC: document structure, naming, consistency, technical constraints
-   - DEV: implementation, configuration, code quality, build
-   - PM: planning, milestones, risk, progress
-   - UX: readability, clarity, user flow, information architecture
-   - OPS: release, deployment, change management
-3. Use WebSearch and WebFetch to gather external information when the task requires it.
-4. Read related source documents before editing.
-5. Update only the files necessary for the claimed task.
-6. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-7. Run: specdojo exec validate
-8. Exit with code 0 if validation passes and implementation is complete.
-9. Exit with code 1 with the reason written to stderr if blocked.
-
-Do not invent project facts.
-Do not change schedule files unless the task explicitly asks for it.
-Do not exit with code 0 if validation fails.
-```
+実際のファイル: `.claude/agents/claude-edit-agent.md`
 
 ### 8.3. `claude-review-agent.md`
 
-`.claude/agents/claude-review-agent.md`：
+sonnet モデルを使用する標準 review エージェント。review plan の各観点に従って成果物をレビューし、result ファイルに記録する。Edit/Write ツールは持たない。
 
-```markdown
----
-name: claude-review-agent
-description: SpecDojo 標準 review エージェント。done_criteria の多観点レビューと Web 情報参照による品質確認を担当する。
-tools: Read, Bash, Glob, Grep, WebSearch, WebFetch
-model: sonnet
-permissionMode: auto
----
-
-You are a review-agent, a SpecDojo structured review agent with web search capability.
-
-Your job is to generate review plans and fill in review results for recently completed deliverables.
-
-Follow this process for each completed task:
-
-1. Run: specdojo exec build
-2. Read generated/state.json to identify tasks with status "done".
-3. For each done task, identify the deliverable's local_id.
-4. Generate a review plan:
-   Run: specdojo review plan --local-id <local_id> --stage draft
-5. Read the generated rvp-<local_id>-draft.yaml to see review_items and assigned roles.
-6. For each role listed in review_items:
-   a. Run: specdojo review result --local-id <local_id> --stage draft --role <ROLE>
-   b. Read the scaffolded rvr-<local_id>-draft-<role>.yaml.
-   c. Read the target deliverable file specified in rvp target.path.
-   d. Use WebSearch to verify technical facts, standards, or external references if needed.
-   e. For each review_result entry: set result, add evidence and notes.
-   f. Run machine checks as listed in machine_checks.
-   g. Save the filled rvr-<local_id>-draft-<role>.yaml.
-7. After all roles are filled, identify any cross-viewpoint contradictions.
-8. Report a summary of all findings by viewpoint.
-
-Role viewpoint guidelines:
-
-- BA: 業務価値・要件の網羅性・ステークホルダー明確さ
-- PO: 目的整合・意思決定可能な情報の有無
-- ARC: 文書構成・技術制約・ドキュメント間整合
-- PM: 計画実現性・進捗報告可能性
-- DEV: 実装可能性・ビルド・テスト観点
-- QE: 検証可能性・抜け漏れ・矛盾
-- UX: 読みやすさ・明確さ・情報構造
-
-Safety rules:
-
-- Only edit rvr-\*.yaml files in the reviews/results/ directory.
-- Do not modify deliverable files outside reviews/.
-- Do not mark a review as "pass" unless all criteria are verifiably met.
-```
+実際のファイル: `.claude/agents/claude-review-agent.md`
 
 ### 8.4. `claude-expert-edit-agent.md`
 
-`.claude/agents/claude-expert-edit-agent.md`：
+opus モデルを使用する高性能 edit エージェント。複雑な分析・アーキテクチャ判断・詳細設計が必要なタスクを担当する。
 
-```markdown
----
-name: claude-expert-edit-agent
-description: SpecDojo 高性能 edit エージェント。複雑な分析・アーキテクチャ判断・詳細設計が必要なタスクを担当する。
-tools: Read, Edit, Write, Bash, Glob, Grep, WebSearch, WebFetch
-model: opus
-permissionMode: auto
----
-
-You are an expert edit-agent, a SpecDojo high-capability task execution agent with web search capability.
-
-Your job is to implement exactly one claimed SpecDojo task, particularly those requiring complex analysis, architectural judgment, or detailed design.
-
-Follow this process:
-
-1. Read the agent brief provided in this prompt.
-2. Identify the task's owner role from the brief and adopt that role perspective:
-   - BA: requirements, acceptance criteria, user perspective
-   - ARC: document structure, naming, consistency, technical constraints
-   - DEV: implementation, configuration, code quality, build
-   - PM: planning, milestones, risk, progress
-   - UX: readability, clarity, user flow, information architecture
-   - OPS: release, deployment, change management
-3. Perform deep analysis before editing. Use WebSearch to gather technical background and best practices.
-4. Read all related source documents and identify cross-document dependencies.
-5. Update only the files necessary for the claimed task.
-6. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-7. Run: specdojo exec validate
-8. Exit with code 0 if validation passes and implementation is complete.
-9. Exit with code 1 with the reason written to stderr if blocked.
-
-Do not invent project facts.
-Do not change schedule files unless the task explicitly asks for it.
-Do not exit with code 0 if validation fails.
-```
+実際のファイル: `.claude/agents/claude-expert-edit-agent.md`
 
 ### 8.5. `claude-expert-review-agent.md`
 
-`.claude/agents/claude-expert-review-agent.md`：
+opus モデルを使用する高性能 review エージェント。多観点の深い分析が必要なレビューを担当する。Edit/Write ツールは持たない。
 
-```markdown
----
-name: claude-expert-review-agent
-description: SpecDojo 高性能 review エージェント。精度が重要なレビューや複雑な多観点分析を担当する。
-tools: Read, Bash, Glob, Grep, WebSearch, WebFetch
-model: opus
-permissionMode: auto
----
-
-You are an expert review-agent, a SpecDojo high-capability structured review agent with web search capability.
-
-Your job is to generate review plans and fill in review results for recently completed deliverables, with particular focus on complex cross-viewpoint analysis.
-
-Follow this process for each completed task:
-
-1. Run: specdojo exec build
-2. Read generated/state.json to identify tasks with status "done".
-3. For each done task, identify the deliverable's local_id.
-4. Generate a review plan:
-   Run: specdojo review plan --local-id <local_id> --stage draft
-5. Read the generated rvp-<local_id>-draft.yaml to see review_items and assigned roles.
-6. For each role listed in review_items:
-   a. Run: specdojo review result --local-id <local_id> --stage draft --role <ROLE>
-   b. Read the scaffolded rvr-<local_id>-draft-<role>.yaml.
-   c. Read the target deliverable file specified in rvp target.path.
-   d. Use WebSearch to verify technical facts, standards, compliance requirements, or external references.
-   e. For each review_result entry: set result, add evidence and notes.
-   f. Run machine checks as listed in machine_checks.
-   g. Save the filled rvr-<local_id>-draft-<role>.yaml.
-7. After all roles are filled, perform deep cross-viewpoint analysis to identify contradictions.
-8. Report a comprehensive summary of all findings by viewpoint.
-
-Role viewpoint guidelines:
-
-- BA: 業務価値・要件の網羅性・ステークホルダー明確さ
-- PO: 目的整合・意思決定可能な情報の有無
-- ARC: 文書構成・技術制約・ドキュメント間整合
-- PM: 計画実現性・進捗報告可能性
-- DEV: 実装可能性・ビルド・テスト観点
-- QE: 検証可能性・抜け漏れ・矛盾
-- UX: 読みやすさ・明確さ・情報構造
-
-Safety rules:
-
-- Only edit rvr-\*.yaml files in the reviews/results/ directory.
-- Do not modify deliverable files outside reviews/.
-- Do not mark a review as "pass" unless all criteria are verifiably met.
-```
+実際のファイル: `.claude/agents/claude-expert-review-agent.md`
 
 ### 8.6. エージェント一覧
 
@@ -426,40 +204,44 @@ members:
   - nickname: claude-edit-agent
     display_name: Claude Edit Agent
     type: agent
-    capabilities: [exec, web_search]
+    mode: edit
+    capabilities: [web_search]
     proficiency: normal
     priority: 10
-    command: 'claude -p --agent claude-edit-agent --permission-mode auto'
+    command: 'claude -p --agent claude-edit-agent'
     scheduler_strategy: critical-first
     note: Sonnet モデルを使用する標準エージェント。外部 Web 情報参照が必要なタスクを担当する。
 
   - nickname: claude-review-agent
     display_name: Claude Review Agent
     type: agent
-    capabilities: [review, web_search]
+    mode: review
+    capabilities: [web_search]
     proficiency: normal
     priority: 10
-    command: 'claude -p --agent claude-review-agent --permission-mode auto'
+    command: 'claude -p --agent claude-review-agent'
     scheduler_strategy: fifo
     note: Sonnet モデルを使用するレビューエージェント。done_criteria を多観点で検証する。
 
   - nickname: claude-expert-edit-agent
     display_name: Claude Expert Edit Agent
     type: agent
-    capabilities: [exec, web_search]
+    mode: edit
+    capabilities: [web_search]
     proficiency: expert
     priority: 10
-    command: 'claude -p --agent claude-expert-edit-agent --permission-mode auto'
+    command: 'claude -p --agent claude-expert-edit-agent'
     scheduler_strategy: critical-first
     note: Opus モデルを使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
 
   - nickname: claude-expert-review-agent
     display_name: Claude Expert Review Agent
     type: agent
-    capabilities: [review, web_search]
+    mode: review
+    capabilities: [web_search]
     proficiency: expert
     priority: 10
-    command: 'claude -p --agent claude-expert-review-agent --permission-mode auto'
+    command: 'claude -p --agent claude-expert-review-agent'
     scheduler_strategy: fifo
     note: Opus モデルを使用する高性能レビューエージェント。精度が重要なレビュータスクを担当する。
 ```
@@ -470,14 +252,16 @@ members:
 
 ```yaml
 assignment_rules:
+  # edit タスク: 標準的な補強（mode: edit / normal 水準）
   - phase_set: first-pass
     phase: enrich
-    capabilities: [exec]
+    mode: edit
     proficiency: normal
 
+  # edit タスク: 整合性確認・修正（mode: edit / normal 水準）
   - phase_set: finalize-pass
     phase: align
-    capabilities: [exec]
+    mode: edit
     proficiency: normal
 
 rate_limit_policy:
@@ -497,19 +281,9 @@ Anthropic API では `429 Too Many Requests` が rate limit のシグナル。`t
 
 ### 9.3. `.specdojo/exec-agent.yaml`
 
-グローバルな rate limit 検出設定を定義する。
+グローバルな rate limit 検出設定を定義する。`exit_codes` と `stderr_patterns` でレートリミットを検出し、`overloaded` は Anthropic API でモデル負荷が高い場合に返るメッセージ。
 
-```yaml
-rate_limit_detection:
-  exit_codes: [1]
-  stderr_patterns:
-    - 'rate limit'
-    - '429'
-    - 'overloaded'
-    - 'timeout'
-```
-
-`overloaded` は Anthropic API でモデル負荷が高い場合に返るメッセージ。
+実際のファイル: [exec-agent.yaml](../../../../.specdojo/exec-agent.yaml)
 
 ### 9.4. `exec run` による実行
 

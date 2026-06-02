@@ -47,6 +47,7 @@ members:
   # opencode members
 
   - nickname: opencode-edit-agent
+    priority: 99
     display_name: OpenCode Edit Agent
     email: null
     roles: []
@@ -63,6 +64,7 @@ members:
     note: 成果物の新規作成・文書化を担当する標準エージェント。タスクの owner フィールドからロール文脈を判断して作業する。
 
   - nickname: opencode-review-agent
+    priority: 99
     display_name: OpenCode Review Agent
     email: null
     roles: []
@@ -81,6 +83,7 @@ members:
   # claude code members
 
   - nickname: claude-edit-agent
+    priority: 10
     display_name: Claude Edit Agent
     email: null
     roles: []
@@ -91,13 +94,13 @@ members:
       - task-execution
       - document-creation
       - implementation
-    capabilities:
-      - web_search
-    command: "claude --model sonnet --allowedTools WebSearch,WebFetch"
+    capabilities: [web_search]
+    command: "claude -p --agent claude-edit-agent"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。
+    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
 
   - nickname: claude-review-agent
+    priority: 10
     display_name: Claude Review Agent
     email: null
     roles: []
@@ -108,13 +111,13 @@ members:
       - done-criteria-verification
       - cross-viewpoint-consistency
       - quality-assurance
-    capabilities:
-      - web_search
-    command: "claude --model sonnet --allowedTools WebSearch,WebFetch"
+    capabilities: [web_search]
+    command: "claude -p --agent claude-review-agent"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。外部 Web 情報を参照した品質確認が可能。ファイルの編集は行わない。
+    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
 
   - nickname: claude-expert-edit-agent
+    priority: 20
     display_name: Claude Expert Edit Agent
     email: null
     roles: []
@@ -127,13 +130,13 @@ members:
       - implementation
       - complex-analysis
       - architecture-judgment
-    capabilities:
-      - web_search
-    command: "claude --model opus --allowedTools WebSearch,WebFetch"
+    capabilities: [web_search]
+    command: "claude -p --agent claude-expert-edit-agent"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断・外部 Web 情報参照が必要な成果物作成・実装タスクを担当する。
+    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
 
   - nickname: claude-expert-review-agent
+    priority: 20
     display_name: Claude Expert Review Agent
     email: null
     roles: []
@@ -145,8 +148,7 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
       - complex-analysis
-    capabilities:
-      - web_search
-    command: "claude --model opus --allowedTools WebSearch,WebFetch"
+    capabilities: [web_search]
+    command: "claude -p --agent claude-expert-review-agent"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。外部 Web 情報を参照した品質確認が可能。ファイルの編集は行わない。
+    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-expert-review-agent.md で定義。
