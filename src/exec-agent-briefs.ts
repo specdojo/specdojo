@@ -15,7 +15,7 @@ type ReadyTask = {
   name?: string
   owner?: string
   local_id?: string
-  phase_mode?: 'exec' | 'review'
+  mode?: 'edit' | 'review'
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number
@@ -312,7 +312,7 @@ function buildBriefMarkdown(
     )
   }
   lines.push('')
-  if (readyTask.phase_mode === 'review') {
+  if (readyTask.mode === 'review') {
     lines.push('## 5. 実施手順（review）')
     lines.push('')
     lines.push('1. 対象成果物を特定する（deliverable_path を参照）。')

@@ -1,6 +1,6 @@
 import { type Command } from 'commander'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, resolve as pathResolve } from 'node:path'
 import {
   acquireSchedulerLock,
   buildEvent,
@@ -44,6 +44,8 @@ import {
 import { type ExecEventType, type ExecEventV1, type SchedulerStrategy } from './exec-types.js'
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
+import { generatePlans } from './exec-plans.js'
+import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
@@ -120,6 +122,7 @@ function resolveProjectContext(opts: { project?: string }): {
   schedulePath: string
   executionPath: string
   catalogPath?: string
+  viewpointsPath?: string
 } {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
@@ -418,7 +421,8 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(bcmd)
   bcmd.action(opts => {
     try {
-      const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts)
+      const { schedulePath, executionPath, catalogPath, viewpointsPath } =
+        resolveProjectContext(opts)
 
       const res = validateAll(schedulePath)
       printValidateResult(res)
@@ -440,6 +444,13 @@ export function registerExecCommands(program: Command): void {
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
         catalogPath ?? ''
+      )
+      generatePlans(
+        schedulePath,
+        executionPath,
+        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
+        catalogPath ?? '',
+        viewpointsPath
       )
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`)
@@ -564,6 +575,61 @@ export function registerExecCommands(program: Command): void {
   })
 
   registerRunCommand(exec)
+
+  // exec scaffold: creates project setup files (viewpoints etc.)
+  const scaffoldCmd = exec
+    .command('scaffold')
+    .description('Scaffold project setup files (pm-review-viewpoints.yaml, etc.)')
+  addProjectOptions(scaffoldCmd)
+  scaffoldCmd.option('--force', 'Overwrite existing files', false)
+  scaffoldCmd.action(opts => {
+    try {
+      const { config } = loadConfig()
+      if (!config) throw new Error('specdojo.config.json not found. Run: specdojo config init')
+
+      const projectId =
+        opts.project?.trim() ||
+        process.env.SPECDOJO_PROJECT?.trim() ||
+        config.current_project?.trim() ||
+        Object.keys(config.projects)[0] ||
+        ''
+      if (!projectId) throw new Error('No project specified. Use --project <id>.')
+
+      const project = config.projects[projectId]
+      if (!project) throw new Error(`Unknown project: ${projectId}`)
+
+      const baseDir = specdojoRootDir()
+      const templatePath = join(
+        baseDir,
+        'docs',
+        'ja',
+        'specdojo',
+        'templates',
+        'pm-review-viewpoints-template.yaml'
+      )
+
+      if (project.viewpoints_path) {
+        const outputPath = pathResolve(baseDir, project.viewpoints_path.trim())
+        const result = scaffoldViewpoints({
+          templatePath,
+          projectId,
+          outputPath,
+          force: !!opts.force,
+        })
+        if (result.written) {
+          process.stdout.write(`Written: ${outputPath}\n`)
+        } else {
+          process.stdout.write(`Skipped (already exists): ${outputPath}\n`)
+        }
+      } else {
+        process.stdout.write(
+          `viewpoints_path not set for project '${projectId}'. Add it to specdojo.config.json.\n`
+        )
+      }
+    } catch (error) {
+      printCommandError(error, false)
+    }
+  })
 
   const wcmd = exec.command('where').description('Print resolved paths')
   addProjectOptions(wcmd)

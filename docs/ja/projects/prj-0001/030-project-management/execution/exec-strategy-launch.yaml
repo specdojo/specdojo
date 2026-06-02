@@ -6,7 +6,9 @@ track: launch
 
 # exec-strategy-launch.yaml
 # sch-strategy-launch.yaml の execution: auto フェーズに対して
-# 必要な capabilities と proficiency を宣言する。
+# 必要な mode / capabilities / proficiency を宣言する。
+# mode: edit（成果物の作成・編集）/ review（レビュー）
+# capabilities: ツールアクセス（web_search など）のみ。exec/review は mode で指定。
 # エージェントの選択は pm-members.yaml の capabilities / proficiency / priority から自動解決する。
 #
 # assignment_rules の評価ルール:
@@ -16,23 +18,23 @@ track: launch
 #   4. rate limit 発生時は次の候補へ順次フォールバックする。
 
 assignment_rules:
-  # research-first-pass.enrich: 外部調査が必要な補強
-  # web_search 能力を持つ expert 水準の agent を優先する
+  # research-first-pass.enrich: 外部調査が必要な補強（edit mode / web_search 必要 / expert 水準）
   - phase_set: research-first-pass
     phase: enrich
-    capabilities: [exec, web_search]
+    mode: edit
+    capabilities: [web_search]
     proficiency: expert
 
-  # first-pass.enrich: 標準的な補強
+  # first-pass.enrich: 標準的な補強（edit mode / normal 水準）
   - phase_set: first-pass
     phase: enrich
-    capabilities: [exec]
+    mode: edit
     proficiency: normal
 
-  # finalize-pass.align: 成果物間の整合性確認・修正
+  # finalize-pass.align: 成果物間の整合性確認・修正（edit mode / normal 水準）
   - phase_set: finalize-pass
     phase: align
-    capabilities: [exec]
+    mode: edit
     proficiency: normal
 
 rate_limit_policy:

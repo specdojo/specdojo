@@ -24,6 +24,8 @@ import {
   type ProjectMember,
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
+import { loadPlan } from './exec-plans.js'
+import { scaffoldResult, updateResultStatus } from './exec-results.js'
 
 type StrategyPhase = {
   id: string
@@ -182,7 +184,10 @@ function resolveAgentConfigPath(opts: RunOpts, schedulePath: string): string {
   return defaultAgentConfigPath()
 }
 
-function loadBrief(executionPath: string, taskId: string): string | null {
+function loadPrompt(executionPath: string, taskId: string): string | null {
+  // Prefer the new plan file; fall back to legacy agent-brief for compatibility
+  const plan = loadPlan(executionPath, taskId)
+  if (plan) return plan
   const briefPath = join(executionPath, 'generated', 'agent-briefs', `${taskId}.md`)
   if (!existsSync(briefPath)) return null
   return readFileSync(briefPath, 'utf8')
@@ -291,7 +296,7 @@ function runSingleTask(
   actorOverride: string | undefined,
   dryRun: boolean
 ): RunResult {
-  const mode = task.phase_mode ?? 'exec'
+  const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
 
   const agentCommands: string[] = agentCmdOverride ? [agentCmdOverride] : []
@@ -331,16 +336,16 @@ function runSingleTask(
     )
   }
 
-  const brief = loadBrief(executionPath, task.id)
-  if (!brief) {
-    process.stdout.write(`  Agent brief not found for ${task.id}. Run: specdojo exec build\n`)
+  const prompt = loadPrompt(executionPath, task.id)
+  if (!prompt) {
+    process.stdout.write(`  Plan not found for ${task.id}. Run: specdojo exec build\n`)
     return 'failure'
   }
 
   if (dryRun) {
     process.stdout.write(`  [dry-run] would claim: ${task.id} as ${actor}\n`)
     process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`)
-    process.stdout.write(`  [dry-run] Brief: ${brief.length} chars\n`)
+    process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`)
     return 'success'
   }
 
@@ -350,24 +355,40 @@ function runSingleTask(
     return 'failure'
   }
 
+  const planRef = `exec/plans/${task.id}-plan.md`
+  const startedAt = new Date().toISOString()
+  const resultPath = scaffoldResult({
+    executionPath,
+    taskId: task.id,
+    mode: task.mode ?? 'edit',
+    projectId: projectId ?? '',
+    planRef,
+    agent: actor,
+    startedAt,
+  })
+
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)
 
   const isOnCriticalPath = (task.cpm?.slack ?? 1) === 0
   const result = runWithRetry(
     agentCommands,
-    brief,
+    prompt,
     isOnCriticalPath,
     globalConfig,
     strategyConfig.rate_limit_policy
   )
 
+  const completedAt = new Date().toISOString()
   if (result === 'success') {
+    updateResultStatus(resultPath, 'complete', completedAt)
     spawnComplete(projectId, task.id, actor)
     process.stdout.write(`  Done: ${task.id}\n`)
   } else if (result === 'rate_limit') {
+    updateResultStatus(resultPath, 'blocked', completedAt)
     spawnBlock(projectId, task.id, actor, 'rate limit reached')
     process.stdout.write(`  Rate limited: ${task.id}\n`)
   } else {
+    updateResultStatus(resultPath, 'blocked', completedAt)
     spawnBlock(projectId, task.id, actor, 'agent exited with non-zero code')
     process.stdout.write(`  Failed: ${task.id}\n`)
   }

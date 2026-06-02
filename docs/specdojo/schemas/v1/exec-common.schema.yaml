@@ -20,9 +20,11 @@ $defs:
     type: string
     minLength: 1
     description: >
-      Agent capability identifier.
+      Agent tool capability identifier. Represents tool access, not work type.
+      Work type (edit vs review) is declared via the mode field in exec-strategy assignment_rules.
       Core values:
-        exec       — deliverable creation and editing tasks.
-        review     — review tasks (read-only access to deliverables).
         web_search — external web search capability.
-      Additional project-specific capabilities may be defined freely.
+      Additional project-specific tool capabilities may be defined freely.
+      Deprecated values (do not use in new configs):
+        exec   — superseded by mode: edit in assignment_rules.
+        review — superseded by mode: review in assignment_rules.

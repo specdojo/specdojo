@@ -13,9 +13,10 @@ project_id: prj-0001
 # タスク側の owner には pm-roles.yaml に存在する Role code を使う。
 #
 # type: agent のメンバーには command と capabilities を定義する。
-# exec-strategy-<track>.yaml がこれらを参照してタスクを割り当てる。
+# exec-strategy-<track>.yaml の mode（edit / review）がタスク種別を決定する。
+# capabilities はツールアクセス（web_search 等）のみを表す。edit/review は mode で指定。
 #   command     : exec run が直接呼び出すシェルコマンド
-#   capabilities: このエージェントが持つ能力（web_search 等）
+#   capabilities: このエージェントが持つツール能力（web_search 等）
 
 members:
   # human members

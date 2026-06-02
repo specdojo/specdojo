@@ -1,3 +1,5 @@
+export type TaskMode = 'edit' | 'review'
+
 export type ExecEventType =
   | 'claim'
   | 'note'
@@ -129,7 +131,7 @@ export type ReadyTaskView = {
   local_id?: string
   name?: string
   owner?: string
-  phase_mode?: 'exec' | 'review'
+  mode?: TaskMode
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number
@@ -176,4 +178,28 @@ export type ResolvedProjectPaths = {
   schedulePath: string
   executionPath: string
   catalogPath?: string
+  viewpointsPath?: string
+}
+
+export type ExecPlanMeta = {
+  id: string
+  task_id: string
+  mode: TaskMode
+  status: 'ready'
+  project_id: string
+  generated_at: string
+  agent?: string
+  viewpoints_ref?: string
+}
+
+export type ExecResultMeta = {
+  id: string
+  task_id: string
+  mode: TaskMode
+  status: 'in_progress' | 'complete' | 'blocked'
+  project_id: string
+  plan_ref: string
+  started_at: string
+  completed_at?: string
+  agent?: string
 }

@@ -90,6 +90,9 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
       catalogPath: project.catalog_path
         ? resolveProjectRelative(baseDir, project.catalog_path)
         : undefined,
+      viewpointsPath: project.viewpoints_path
+        ? resolveProjectRelative(baseDir, project.viewpoints_path)
+        : undefined,
     }
   }
 

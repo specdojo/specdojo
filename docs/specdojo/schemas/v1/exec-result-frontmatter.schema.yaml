@@ -1,0 +1,67 @@
+# exec-result-frontmatter.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Exec Result frontmatter schema"
+description: >
+  Validates the YAML frontmatter of exec result files (edit-result and review-result).
+  Result files are Markdown documents with YAML frontmatter created by exec run.
+  They reside at exec/results/<task-id>-result.md under the execution path.
+  The harness scaffolds the file before the agent runs and updates status/timestamps after.
+  The agent fills in the Markdown body (done_criteria checks, notes, handoff).
+type: object
+additionalProperties: true
+
+required:
+  - id
+  - task_id
+  - mode
+  - status
+  - project_id
+  - plan_ref
+  - started_at
+
+properties:
+  id:
+    type: string
+    minLength: 1
+    description: "Unique document ID. Format: xer-<task-id> (edit) or xrr-<task-id> (review)."
+
+  task_id:
+    type: string
+    minLength: 1
+    description: "Task ID this result belongs to (e.g., T-LAUNCH-prj-overview-020)."
+
+  mode:
+    type: string
+    enum: ["edit", "review"]
+    description: "Work type. Matches the corresponding plan mode."
+
+  status:
+    type: string
+    enum: ["in_progress", "complete", "blocked"]
+    description: >
+      Lifecycle status managed by exec run harness.
+      in_progress: scaffold created, agent running.
+      complete: agent exited 0, exec complete recorded.
+      blocked: agent exited non-zero, exec block recorded.
+
+  project_id:
+    type: string
+    minLength: 1
+    description: "Project ID (e.g., prj-0001)."
+
+  plan_ref:
+    type: string
+    minLength: 1
+    description: "Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md)."
+
+  started_at:
+    type: string
+    description: "ISO 8601 timestamp when exec run scaffolded this result and started the agent."
+
+  completed_at:
+    type: string
+    description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
+
+  agent:
+    type: string
+    description: "Agent nickname that executed this task."

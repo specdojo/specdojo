@@ -1,7 +1,6 @@
 import { existsSync } from 'node:fs'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
-
-export type TaskMode = 'exec' | 'review'
+import type { TaskMode } from './exec-types.js'
 
 type StrategyPhaseMinimal = {
   id: string
@@ -22,8 +21,8 @@ export type PhaseModeIndex = {
 /**
  * Builds a phase mode index by combining:
  *   1. sch-strategy: maps localId → phaseSet, phaseSet+phaseId → suffix
- *   2. exec-strategy: if a matched rule has capabilities:[review], marks those phases as 'review'
- * All other phases default to 'exec'.
+ *   2. exec-strategy: if a matched rule has mode: review, marks those phases as 'review'
+ * All other phases default to 'edit'.
  */
 export function buildPhaseModeIndex(
   schedulePath: string,
@@ -59,7 +58,7 @@ export function buildPhaseModeIndex(
         const phaseId = String(p.id ?? '')
         if (suffix && phaseId) {
           phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix)
-          phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, 'exec')
+          phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, 'edit')
         }
       }
     }
@@ -74,7 +73,8 @@ export function buildPhaseModeIndex(
     }
   }
 
-  // Step 2: Read exec-strategy files; any rule with capabilities:[review] marks phases as 'review'
+  // Step 2: Read exec-strategy files; rules with mode: review mark those phases as 'review'.
+  // Legacy support: rules with capabilities: [review] (no mode field) also mark as 'review'.
   if (existsSync(executionPath)) {
     const execStrategyFiles = listFilesRecursive(executionPath).filter(f =>
       /exec-strategy-.*\.(yaml|yml)$/.test(f)
@@ -92,8 +92,13 @@ export function buildPhaseModeIndex(
       for (const rule of config.assignment_rules) {
         if (!rule || typeof rule !== 'object') continue
         const r = rule as Record<string, unknown>
+
+        // Determine mode: explicit mode field takes precedence; legacy capabilities:[review] fallback
+        const explicitMode = typeof r.mode === 'string' ? r.mode : undefined
         const caps = Array.isArray(r.capabilities) ? (r.capabilities as string[]) : []
-        if (!caps.includes('review')) continue
+        const isReview =
+          explicitMode === 'review' || (explicitMode === undefined && caps.includes('review'))
+        if (!isReview) continue
 
         const rulePhaseSet = typeof r.phase_set === 'string' ? r.phase_set : undefined
         const rulePhase = typeof r.phase === 'string' ? r.phase : undefined
@@ -116,8 +121,8 @@ export function buildPhaseModeIndex(
 /**
  * Resolves the task mode for a given task.
  * Resolution order:
- *   1. Phase-level mode from exec-strategy capabilities (via index)
- *   2. 'exec' (hard default)
+ *   1. Phase-level mode from exec-strategy (via index)
+ *   2. 'edit' (hard default)
  */
 export function resolveTaskMode(
   localId: string | undefined,
@@ -134,5 +139,5 @@ export function resolveTaskMode(
       }
     }
   }
-  return 'exec'
+  return 'edit'
 }

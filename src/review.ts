@@ -85,13 +85,19 @@ function addProjectOption(cmd: Command): Command {
   return cmd.option('--project <projectId>', 'Project id in specdojo.config.json')
 }
 
+const DEPRECATION_MSG =
+  '[DEPRECATED] The `review` command is deprecated. Use `specdojo exec scaffold` for viewpoints setup, ' +
+  'and `specdojo exec build` / `specdojo exec run` for plan and result generation. ' +
+  'This command will be removed in a future release.\n'
+
 export function registerReviewCommands(program: Command): void {
-  const rev = program.command('review').description('Review plan generation commands')
+  const rev = program.command('review').description('[DEPRECATED] Review plan generation commands (use exec instead)')
 
   // --- where ---
   const wcmd = rev.command('where').description('Print resolved review paths')
   addProjectOption(wcmd)
   wcmd.action(opts => {
+    process.stderr.write(DEPRECATION_MSG)
     try {
       const { reviewsPath, viewpointsPath } = resolveReviewPaths(opts)
       process.stdout.write(`reviews-path: ${reviewsPath}\n`)
@@ -110,6 +116,7 @@ export function registerReviewCommands(program: Command): void {
   addProjectOption(scmd)
   scmd.option('--force', 'Overwrite existing pm-review-viewpoints.yaml', false)
   scmd.action(opts => {
+    process.stderr.write(DEPRECATION_MSG)
     try {
       const { projectId, viewpointsPath } = resolveReviewPaths(opts)
       const templatePath = resolve(
@@ -154,6 +161,7 @@ export function registerReviewCommands(program: Command): void {
   pcmd.option('--force', 'Overwrite existing rvp-*.yaml', false)
   pcmd.option('--dry-run', 'Print generated YAML to stdout without writing', false)
   pcmd.action(opts => {
+    process.stderr.write(DEPRECATION_MSG)
     try {
       const { projectId, catalogPath, reviewsPath, viewpointsPath } = resolveReviewPaths(opts)
 
@@ -206,6 +214,7 @@ export function registerReviewCommands(program: Command): void {
   rescmd.option('--force', 'Overwrite existing rvr-*.yaml', false)
   rescmd.option('--dry-run', 'Print generated YAML to stdout without writing', false)
   rescmd.action(opts => {
+    process.stderr.write(DEPRECATION_MSG)
     try {
       const { reviewsPath } = resolveReviewPaths(opts)
 
