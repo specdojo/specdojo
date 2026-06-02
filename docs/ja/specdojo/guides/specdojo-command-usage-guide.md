@@ -1509,8 +1509,8 @@ specdojo exec run \
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------- |
 | `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                                 | 省略可              |
 | `--cmd`           | agent コマンド文字列を直接指定。`--auto` と排他                                                                    | `--auto` 時は省略可 |
-| `--auto`          | ready タスクの `(phase_set, phase.id, difficulty)` を `exec-agent.yaml` で tier に解決し `tier_routing` で自動選択 | `false`             |
-| `--by`            | タスク claim 時のアクター識別子                                                                                    | `--cmd` / tier の値 |
+| `--auto`          | `exec-strategy` の `assignment_rules` で `capabilities`・`proficiency` を解決し `pm-members` からエージェントを自動選択 | `false`             |
+| `--by`            | タスク claim 時のアクター識別子                                                                                    | 解決された agent の nickname |
 | `--parallel`      | 並列実行数                                                                                                         | `1`                 |
 | `--loop`          | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する。`--max-rounds` と併用可   | `false`             |
 | `--max-rounds`    | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                                      | なし                |
@@ -1627,46 +1627,41 @@ specdojo exec run --project prj-0001 --auto --loop --max-rounds 3 --parallel 5
 
 #### 9.12.5. レートリミット対応
 
-`exec-agent.yaml` の `rate_limit_policy` でレートリミット発生時の挙動を制御する。
+`exec-strategy-<track>.yaml` の `rate_limit_policy` でレートリミット発生時の挙動を制御する。
 
-`exec run` はエージェントプロセスの終了コードまたは標準エラー出力のパターンマッチでレートリミットを検出し、`ready.json` の `cpm.slack` でクリティカル判定を行う。
+`exec run` はエージェントプロセスの終了コードまたは標準エラー出力のパターンマッチでレートリミットを検出し、`ready.json` の `cpm.slack` でクリティカル判定を行う。レートリミット検出条件は `.specdojo/exec-agent.yaml` でグローバルに定義する。
 
-`exec-agent.yaml` への追記例:
+`exec-strategy-<track>.yaml` の設定例:
 
 ```yaml
 rate_limit_policy:
-  detection:
-    exit_codes: [1] # レートリミットとみなす終了コード
-    stderr_patterns:
-      - 'rate limit'
-      - '429'
   on_non_critical: # cpm.slack > 0 のタスク
-    action: skip # block イベントを記録して次のタスクへ
-  on_critical: # cpm.slack == 0 のタスク
-    action: retry_with_fallback
-    fallback_tier: small # 代替 tier のエージェントで再試行
+    action: skip   # block イベントを記録して次のタスクへ
+  on_critical:     # cpm.slack == 0 のタスク
+    action: try_next  # candidates の次のエージェントへ（proficiency 昇順・priority 昇順）
     retry:
-      max_attempts: 3 # fallback 含めた最大試行回数
+      max_attempts: 3
       initial_wait_seconds: 60
-      backoff_multiplier: 3 # 60s → 180s → 540s
-      max_wait_seconds: 600 # 上限10分（TPD には対応不可）
+      backoff_multiplier: 3  # 60s → 180s → 540s
+      max_wait_seconds: 600  # 上限10分（TPD には対応不可）
+    on_exhausted: block      # 全候補失敗時はブロックして人間に委ねる
 ```
 
 挙動:
 
-1. エージェントが `exit_codes` に一致、または `stderr_patterns` にマッチして終了した場合にレートリミットと判断する。
-2. `ready.json` の `cpm.slack` を参照してクリティカル判定を行う。
-3. 非クリティカル（`slack > 0`）→ `block` イベントを記録し、当該インスタンスをスキップして次の ready タスクへ移行する。
-4. クリティカル（`slack == 0`）→ `fallback_tier` のエージェントで再試行する。再試行は指数バックオフ（`initial_wait_seconds` × `backoff_multiplier` の累乗、上限 `max_wait_seconds`）で `max_attempts` 回まで行い、すべて失敗した場合は `block` イベントを記録して停止する。
+1. エージェントがレートリミット信号（`exec-agent.yaml` の `exit_codes` または `stderr_patterns` にマッチ）で終了した場合に検出する。
+2. `ready.json` の `cpm.slack` でクリティカル判定を行う。
+3. 非クリティカル（`slack > 0`）→ `block` イベントを記録し、次の ready タスクへ移行する。
+4. クリティカル（`slack == 0`）→ `try_next` で candidates（capabilities+proficiency でソート済み）の次のエージェントへ切り替えて再試行する。バックオフ付きで `max_attempts` 回まで試行し、すべて失敗したら `on_exhausted` に従う。
 
 > TPD（日次トークン上限）に達した場合、待機時間内に回復しないことがある。`max_wait_seconds` を超えても失敗が続く場合は人間が判断する。
 
 出力例:
 
 ```text
-[run] rate-limit: opencode-expert-1 (task T-LAUNCH-prj-overview-010, slack=0) → retry with fallback tier small (attempt 1/3, wait 60s)
-[run] rate-limit: opencode-expert-1 (task T-LAUNCH-prj-overview-010, slack=0) → retry with fallback tier small (attempt 2/3, wait 180s)
-[run] rate-limit: opencode-expert-2 (task T-LAUNCH-bdd-010, slack=2) → skip (non-critical)
+[run] rate-limit: edit-agent-1 (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 1/3, wait 60s)
+[run] rate-limit: edit-agent-1 (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 2/3, wait 180s)
+[run] rate-limit: edit-agent-2 (task T-LAUNCH-bdd-010, slack=2) → skip (non-critical)
 ```
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
