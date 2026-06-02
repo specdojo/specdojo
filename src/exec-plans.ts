@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
@@ -418,4 +418,58 @@ export function loadPlan(executionPath: string, taskId: string): string | null {
   const planPath = planPathForTask(executionPath, taskId)
   if (!existsSync(planPath)) return null
   return readFileSync(planPath, 'utf8')
+}
+
+// ---------------------------------------------------------------------------
+// Claim snapshot: saves a copy of the plan at claim time for audit purposes
+// ---------------------------------------------------------------------------
+
+function writePlanClaimSnapshotIndex(claimsDir: string): void {
+  mkdirSync(claimsDir, { recursive: true })
+
+  const taskDirs = readdirSync(claimsDir)
+    .map(name => ({ name, path: join(claimsDir, name) }))
+    .filter(entry => statSync(entry.path).isDirectory())
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const lines: string[] = []
+  lines.push('# Plan Claim Snapshot Index')
+  lines.push('')
+  lines.push('claim 時点で固定保存した exec plan の一覧。')
+  lines.push('')
+  lines.push('| task_id | snapshots | latest | latest_file |')
+  lines.push('|---|---:|---|---|')
+
+  for (const taskDir of taskDirs) {
+    const files = readdirSync(taskDir.path)
+      .filter(name => name.endsWith('.md'))
+      .sort((a, b) => a.localeCompare(b))
+    const latest = files.at(-1)
+    if (!latest) continue
+    lines.push(
+      `| \`${taskDir.name}\` | ${files.length} | \`${latest.replace(/\.md$/, '')}\` | [${latest}](./${taskDir.name}/${latest}) |`
+    )
+  }
+
+  lines.push('')
+  writeFileSync(join(claimsDir, 'index.md'), lines.join('\n'), 'utf8')
+}
+
+export function savePlanClaimSnapshot(
+  executionPath: string,
+  taskId: string,
+  actor: string,
+  eventTs: string,
+  tsForFilename: (ts: string) => string,
+  safeSlugFn: (s: string) => string
+): void {
+  const sourcePath = planPathForTask(executionPath, taskId)
+  if (!existsSync(sourcePath)) return
+
+  const claimsDir = join(executionPath, 'exec', 'plans', 'claims')
+  const snapshotDir = join(claimsDir, taskId)
+  mkdirSync(snapshotDir, { recursive: true })
+  const fileName = `${tsForFilename(eventTs)}--${safeSlugFn(actor)}.md`
+  copyFileSync(sourcePath, join(snapshotDir, fileName))
+  writePlanClaimSnapshotIndex(claimsDir)
 }

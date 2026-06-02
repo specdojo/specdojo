@@ -9,7 +9,6 @@
   "event_files_count": 0,
   "default_scheduler_strategy": "critical-first",
   "derived_files": [
-    "agent-briefs/index.md",
     "claim-next.json",
     "cpm.json",
     "cpm.md",

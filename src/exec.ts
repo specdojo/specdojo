@@ -1,5 +1,4 @@
 import { type Command } from 'commander'
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import { join, resolve as pathResolve } from 'node:path'
 import {
   acquireSchedulerLock,
@@ -43,8 +42,7 @@ import {
 } from './exec-schedule.js'
 import { type ExecEventType, type ExecEventV1, type SchedulerStrategy } from './exec-types.js'
 import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
-import { generateAgentBriefs, writeClaimBriefSnapshotIndex } from './exec-agent-briefs.js'
-import { generatePlans } from './exec-plans.js'
+import { generatePlans, savePlanClaimSnapshot } from './exec-plans.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
@@ -207,25 +205,6 @@ function printCommandError(error: unknown, fail = true): void {
   else process.exitCode = 1
 }
 
-function saveClaimBriefSnapshot(
-  executionPath: string,
-  taskId: string,
-  actor: string,
-  eventTs: string
-): void {
-  const sourcePath = join(executionPath, 'generated', 'agent-briefs', `${taskId}.md`)
-  if (!existsSync(sourcePath)) {
-    throw new Error(`agent brief source not found for snapshot: ${sourcePath}`)
-  }
-
-  const claimsDir = join(executionPath, 'exec', 'agent-briefs', 'claims')
-  const snapshotDir = join(claimsDir, taskId)
-  mkdirSync(snapshotDir, { recursive: true })
-  const fileName = `${tsForFilenameUtc(eventTs)}--${safeSlug(actor)}.md`
-  copyFileSync(sourcePath, join(snapshotDir, fileName))
-  writeClaimBriefSnapshotIndex(claimsDir)
-}
-
 function loadValidatedExecState(projectPath: string): LoadedExecState | null {
   const res = validateAll(projectPath)
   if (!res.ok) {
@@ -313,13 +292,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       writeScheduleHashAndDiff(schedulePath, state.schedule)
       writeCpmFiles(schedulePath, cpm, state.snapshot)
       generateTaskCatalog(schedulePath, executionPath)
-      generateAgentBriefs(
-        schedulePath,
-        executionPath,
-        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
-        resolveProjectContext(opts).catalogPath ?? ''
-      )
-      saveClaimBriefSnapshot(executionPath, taskId, actor, event.ts)
+      savePlanClaimSnapshot(executionPath, taskId, actor, event.ts, tsForFilenameUtc, safeSlug)
       event.meta = {
         ...(event.meta ?? {}),
         claim_owner: claimOwner,
@@ -439,12 +412,6 @@ export function registerExecCommands(program: Command): void {
       writeScheduleHashAndDiff(schedulePath, schedule)
       writeCpmFiles(schedulePath, cpm, snapshot)
       generateTaskCatalog(schedulePath, executionPath)
-      generateAgentBriefs(
-        schedulePath,
-        executionPath,
-        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
-        catalogPath ?? ''
-      )
       generatePlans(
         schedulePath,
         executionPath,

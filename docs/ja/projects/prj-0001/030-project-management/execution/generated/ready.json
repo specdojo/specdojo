@@ -36,7 +36,7 @@
         "lf": 0.25,
         "slack": 0
       },
-      "phase_mode": "exec"
+      "mode": "edit"
     },
     {
       "id": "T-LAUNCH-pm-plan-010",
@@ -53,7 +53,7 @@
         "lf": 3.5,
         "slack": 3.25
       },
-      "phase_mode": "exec"
+      "mode": "edit"
     }
   ]
 }

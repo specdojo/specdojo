@@ -21,6 +21,9 @@
 | PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
 | PJR-0091 | open | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | 2026-06-05 | - | - | - |
 | PJR-0092 | open | VitePressのルートをrepoルートに変更 | 将来的にソースコードへのリンクを容易にするため。また、vscodeの絶対パスとの整合性も保てる | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0093 | open | sch-strategyのexecutionのautoを見直し | executionはauto/manualになっているがautoが単語として適切か確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0094 | open | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0096 | open | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | 2026-06-07 | - | - | - |
 
 ### 1.2. done
 
@@ -102,6 +105,7 @@
 | PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-strategy-guide.mdに記述。設定ファイルも変更 | - |
 | PJR-0089 | done | claude-agent-settingsの見直し | capability, proficiencyに対応して記述を見直し | todo | medium | ARC | 2026-06-05 | 2026-06-02 | agent file含めて整備 | - |
 | PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | - |
+| PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | - |
 
 ### 1.3. deferred
 
@@ -223,6 +227,10 @@
 | PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | - |
 | PJR-0091 | open | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | 2026-06-05 | - | - | - |
 | PJR-0092 | open | VitePressのルートをrepoルートに変更 | 将来的にソースコードへのリンクを容易にするため。また、vscodeの絶対パスとの整合性も保てる | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0093 | open | sch-strategyのexecutionのautoを見直し | executionはauto/manualになっているがautoが単語として適切か確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0094 | open | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | - |
+| PJR-0096 | open | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | 2026-06-07 | - | - | - |
 
 ### 2.3. low
 
@@ -311,6 +319,10 @@
 | PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | - |
 | PJR-0091 | open | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | 2026-06-05 | - | - | - |
 | PJR-0092 | open | VitePressのルートをrepoルートに変更 | 将来的にソースコードへのリンクを容易にするため。また、vscodeの絶対パスとの整合性も保てる | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0093 | open | sch-strategyのexecutionのautoを見直し | executionはauto/manualになっているがautoが単語として適切か確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0094 | open | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | - |
+| PJR-0096 | open | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | 2026-06-07 | - | - | - |
 
 ### 3.2. PO
 
