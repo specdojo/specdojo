@@ -474,15 +474,25 @@ export function registerExecCommands(program: Command): void {
         cpm = null
       }
 
+      // Collect all valid owner labels for this actor.
+      // Single-role actors use claimOwner; multi-role actors (e.g. indie) check every role.
+      const actorAllRoles = findRosterMember(roster, actor)
+        ?.roles
+        .map(r => r.trim().toUpperCase())
+        .filter(r => KNOWN_OWNER_LABELS.includes(r as (typeof KNOWN_OWNER_LABELS)[number])) ?? []
+      const ownerCandidates =
+        actorAllRoles.length > 1 ? actorAllRoles : (claimOwner ? [claimOwner] : [])
+
       const readyForOwner = ready.filter(taskId => {
-        const claimCheck = canClaimTask(
-          state.schedule,
-          state.snapshot,
-          taskId,
-          claimOwner,
-          allowOwnerMismatch
+        if (ownerCandidates.length === 0) {
+          return canClaimTask(
+            state.schedule, state.snapshot, taskId, claimOwner, allowOwnerMismatch
+          ).ok
+        }
+        // Pass if any of the actor's roles can claim the task
+        return ownerCandidates.some(
+          role => canClaimTask(state.schedule, state.snapshot, taskId, role, allowOwnerMismatch).ok
         )
-        return claimCheck.ok
       })
 
       // Filter by actor mode and execution type from ready.json.
@@ -534,6 +544,13 @@ export function registerExecCommands(program: Command): void {
         return
       }
 
+      // For multi-role actors, use the role that matches the selected task's owner.
+      const plannedOwner = state.schedule.nodes.get(next)?.owner ?? ''
+      const effectiveClaimOwner =
+        ownerCandidates.length > 1 && ownerCandidates.includes(plannedOwner)
+          ? plannedOwner
+          : claimOwner
+
       const ev: ExecEventV1 = {
         v: 1,
         ts: nowUtcIsoSeconds(),
@@ -542,8 +559,8 @@ export function registerExecCommands(program: Command): void {
         by: actor,
         msg,
         meta: {
-          claim_owner: claimOwner,
-          planned_owner: state.schedule.nodes.get(next)?.owner,
+          claim_owner: effectiveClaimOwner,
+          planned_owner: plannedOwner || undefined,
           scheduler_strategy: strategy,
           claimed_via: 'dojo-exec-scheduler',
         },

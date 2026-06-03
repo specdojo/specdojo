@@ -43,6 +43,7 @@ type StrategyOwnerRule = {
 type StrategyFile = {
   phase_sets: Record<string, StrategyPhase[]>
   default_phase_set?: string
+  default_phase_sets?: string[]  // array form used in sch-strategy files
   owner_rules: StrategyOwnerRule[]
 }
 
@@ -87,7 +88,8 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
     if (!strategy?.phase_sets || !Array.isArray(strategy.owner_rules)) continue
 
-    const defaultPhaseSet = strategy.default_phase_set ?? ''
+    const defaultPhaseSet =
+      strategy.default_phase_set ?? strategy.default_phase_sets?.[0] ?? ''
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
       for (const phase of phases) {
@@ -307,6 +309,15 @@ function runSingleTask(
   let actor = actorOverride ?? 'auto-agent'
 
   if (agentCommands.length === 0) {
+    // Human tasks cannot be run automatically without explicit --agent-cmd override.
+    if ((task.execution ?? 'agent') === 'human') {
+      process.stdout.write(
+        `  Task "${task.name ?? task.id}" (${task.id}) has execution: human.\n` +
+          `  This task requires human execution. Use --agent-cmd to override.\n`
+      )
+      return 'failure'
+    }
+
     const phaseCtx = resolveTaskPhaseContext(task, localIdToRule, phaseSetSuffixToId)
     if (!phaseCtx) {
       process.stdout.write(
