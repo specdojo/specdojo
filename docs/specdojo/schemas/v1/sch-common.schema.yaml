@@ -34,8 +34,8 @@ $defs:
 
   AgentMode:
     type: string
-    description: "Task execution mode. auto=agent executes via pm-members.yaml role lookup; manual=human execution required."
-    enum: ["auto", "manual"]
+    description: "Task execution mode. agent=AI agent executes via pm-members.yaml role lookup; human=human execution required."
+    enum: ["agent", "human"]
 
   CalendarOverride:
     type: object

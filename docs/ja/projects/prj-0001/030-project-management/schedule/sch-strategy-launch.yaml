@@ -46,17 +46,17 @@ phase_sets:
   first-pass:
     - id: draft
       name: たたき台作成
-      execution: manual
+      execution: human
       task_suffix: "010"
       duration_days: 0.25 # 1〜2h 相当
     - id: enrich
       name: 調査・補強
-      execution: auto
+      execution: agent
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
     - id: review
       name: 一次版レビュー
-      execution: manual
+      execution: human
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
 
@@ -65,17 +65,17 @@ phase_sets:
   research-first-pass:
     - id: draft
       name: たたき台作成（予備調査含む）
-      execution: manual
+      execution: human
       task_suffix: "010"
       duration_days: 0.5 # 2〜4h 相当（人による予備調査込み）
     - id: enrich
       name: 調査・深掘り
-      execution: auto
+      execution: agent
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
     - id: review
       name: 一次版レビュー
-      execution: manual
+      execution: human
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
 
@@ -83,12 +83,12 @@ phase_sets:
   finalize-pass:
     - id: align
       name: 整合性確認・修正
-      execution: auto
+      execution: agent
       task_suffix: "040"
       duration_days: 0.25 # 1〜2h 相当
     - id: finalize
       name: 完成版確定
-      execution: manual
+      execution: human
       task_suffix: "050"
       duration_days: 0.125 # 0.5〜1h 相当
 

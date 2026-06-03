@@ -502,7 +502,7 @@ export function registerExecCommands(program: Command): void {
             const taskInfo = taskInfoMap.get(taskId)
             if (!taskInfo) return true
             // Agents skip manual tasks
-            if (isAgent && (taskInfo.execution ?? 'auto') === 'manual') return false
+            if (isAgent && (taskInfo.execution ?? 'agent') === 'human') return false
             // Mode filter: skip tasks with different mode
             if (actorMode && (taskInfo.mode ?? 'edit') !== actorMode) return false
             return true
@@ -514,8 +514,8 @@ export function registerExecCommands(program: Command): void {
       if (!next) {
         if (readyForOwner.length > 0 && (actorMode || isAgent)) {
           process.stdout.write(
-            `No ready ${actorMode ?? 'auto'} task for ${actor}. ` +
-              `${readyForOwner.length} task(s) ready but require different mode or are manual-only.\n`
+            `No ready ${actorMode ?? 'agent'} task for ${actor}. ` +
+              `${readyForOwner.length} task(s) ready but require different mode or are human-only.\n`
           )
         } else if (ready.length > 0 && !allowOwnerMismatch) {
           process.stdout.write(
