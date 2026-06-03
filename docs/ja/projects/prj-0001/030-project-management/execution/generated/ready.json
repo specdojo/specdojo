@@ -36,7 +36,8 @@
         "lf": 0.25,
         "slack": 0
       },
-      "mode": "edit"
+      "mode": "edit",
+      "execution": "manual"
     },
     {
       "id": "T-LAUNCH-pm-plan-010",
@@ -53,7 +54,8 @@
         "lf": 3.5,
         "slack": 3.25
       },
-      "mode": "edit"
+      "mode": "edit",
+      "execution": "manual"
     }
   ]
 }

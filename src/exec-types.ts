@@ -132,6 +132,7 @@ export type ReadyTaskView = {
   name?: string
   owner?: string
   mode?: TaskMode
+  execution?: 'auto' | 'manual'
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number

@@ -36,7 +36,7 @@ import {
 } from './exec-schedule-ready.js'
 import { writeScheduleHashAndDiff } from './exec-schedule-hash.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
-import { buildPhaseModeIndex, resolveTaskMode } from './exec-strategy.js'
+import { buildPhaseModeIndex, resolveTaskExecution, resolveTaskMode } from './exec-strategy.js'
 
 export function validateAll(projectPath: string): ValidateResult {
   const errors: string[] = []
@@ -239,6 +239,7 @@ export function writeGeneratedCore(
   const phaseModeIndex = buildPhaseModeIndex(projectPath, executionPath)
   for (const task of readySnapshot.tasks) {
     task.mode = resolveTaskMode(task.local_id, task.id, phaseModeIndex)
+    task.execution = resolveTaskExecution(task.local_id, task.id, phaseModeIndex)
   }
   writeReadyFiles(projectPath, readySnapshot)
 

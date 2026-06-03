@@ -1,4 +1,5 @@
 import { type Command } from 'commander'
+import { existsSync } from 'node:fs'
 import { join, resolve as pathResolve } from 'node:path'
 import {
   acquireSchedulerLock,
@@ -40,8 +41,8 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
-import { type ExecEventType, type ExecEventV1, type SchedulerStrategy } from './exec-types.js'
-import { nowUtcIsoSeconds, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
+import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy } from './exec-types.js'
+import { nowUtcIsoSeconds, readJson, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 import { generatePlans, savePlanClaimSnapshot } from './exec-plans.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
@@ -484,9 +485,39 @@ export function registerExecCommands(program: Command): void {
         return claimCheck.ok
       })
 
-      const next = selectNextTask(readyForOwner, cpm, strategy)
+      // Filter by actor mode and execution type from ready.json.
+      // Agent actors (with mode set) skip tasks with wrong mode or execution: manual.
+      const actorMember = findRosterMember(roster, actor)
+      const actorMode = actorMember?.mode
+      const isAgent = actorMember?.type === 'agent'
+      let readyForMode = readyForOwner
+      if (actorMode || isAgent) {
+        const readyJsonPath = join(generatedDirForProject(schedulePath), 'ready.json')
+        if (existsSync(readyJsonPath)) {
+          const readySnapshot = readJson(readyJsonPath) as ReadySnapshot
+          const taskInfoMap = new Map(
+            (readySnapshot.tasks ?? []).map(t => [t.id, t])
+          )
+          readyForMode = readyForOwner.filter(taskId => {
+            const taskInfo = taskInfoMap.get(taskId)
+            if (!taskInfo) return true
+            // Agents skip manual tasks
+            if (isAgent && (taskInfo.execution ?? 'auto') === 'manual') return false
+            // Mode filter: skip tasks with different mode
+            if (actorMode && (taskInfo.mode ?? 'edit') !== actorMode) return false
+            return true
+          })
+        }
+      }
+
+      const next = selectNextTask(readyForMode, cpm, strategy)
       if (!next) {
-        if (ready.length > 0 && !allowOwnerMismatch) {
+        if (readyForOwner.length > 0 && (actorMode || isAgent)) {
+          process.stdout.write(
+            `No ready ${actorMode ?? 'auto'} task for ${actor}. ` +
+              `${readyForOwner.length} task(s) ready but require different mode or are manual-only.\n`
+          )
+        } else if (ready.length > 0 && !allowOwnerMismatch) {
           process.stdout.write(
             `No ready task assigned to owner ${claimOwner}. Use --owner <${KNOWN_OWNER_LABELS_TEXT}>, SPECDOJO_OWNER, or --allow-owner-mismatch.\n`
           )

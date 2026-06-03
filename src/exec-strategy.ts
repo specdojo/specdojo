@@ -5,6 +5,7 @@ import type { TaskMode } from './exec-types.js'
 type StrategyPhaseMinimal = {
   id: string
   task_suffix: string
+  execution?: 'auto' | 'manual'
 }
 
 type StrategyMinimal = {
@@ -16,6 +17,8 @@ type StrategyMinimal = {
 export type PhaseModeIndex = {
   localIdToPhaseSet: Map<string, string>
   phaseSetSuffixToMode: Map<string, TaskMode>
+  phaseSetSuffixToExecution: Map<string, 'auto' | 'manual'>
+  suffixToExecution: Map<string, 'auto' | 'manual'>
 }
 
 /**
@@ -32,6 +35,9 @@ export function buildPhaseModeIndex(
   // phaseSet:phaseId → suffix (used to cross-reference exec-strategy rules)
   const phaseSetPhaseIdToSuffix = new Map<string, string>()
   const phaseSetSuffixToMode = new Map<string, TaskMode>()
+  const phaseSetSuffixToExecution = new Map<string, 'auto' | 'manual'>()
+  // Global suffix → execution: suffixes are unique within a track across all phase sets.
+  const suffixToExecution = new Map<string, 'auto' | 'manual'>()
 
   // Step 1: Read sch-strategy files to build phase maps
   const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
@@ -59,6 +65,11 @@ export function buildPhaseModeIndex(
         if (suffix && phaseId) {
           phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix)
           phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, 'edit')
+          // execution: manual or auto (default: auto)
+          const execution = p.execution === 'manual' ? 'manual' : 'auto'
+          phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
+          // Global map: suffix is unique within a track across all phase sets
+          suffixToExecution.set(suffix, execution)
         }
       }
     }
@@ -115,7 +126,7 @@ export function buildPhaseModeIndex(
     }
   }
 
-  return { localIdToPhaseSet, phaseSetSuffixToMode }
+  return { localIdToPhaseSet, phaseSetSuffixToMode, phaseSetSuffixToExecution, suffixToExecution }
 }
 
 /**
@@ -140,4 +151,29 @@ export function resolveTaskMode(
     }
   }
   return 'edit'
+}
+
+/**
+ * Resolves whether the task should be executed by an agent (auto) or human (manual).
+ * Reads from sch-strategy phase execution field via the index.
+ * Default: 'auto'.
+ */
+export function resolveTaskExecution(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex
+): 'auto' | 'manual' {
+  const suffix = taskId.split('-').pop() ?? ''
+  if (!/^\d{3}$/.test(suffix)) return 'auto'
+
+  // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set)
+  if (localId) {
+    const phaseSet = index.localIdToPhaseSet.get(localId)
+    if (phaseSet) {
+      const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`)
+      if (execution !== undefined) return execution
+    }
+  }
+  // Fallback: global suffix map (covers default_phase_sets case)
+  return index.suffixToExecution.get(suffix) ?? 'auto'
 }
