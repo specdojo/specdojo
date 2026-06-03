@@ -457,7 +457,7 @@ export function registerExecCommands(program: Command): void {
     let lockDir = ''
 
     try {
-      const { schedulePath } = resolveProjectContext(opts)
+      const { schedulePath, executionPath } = resolveProjectContext(opts)
       const actor = requireNonEmpty('by', opts.by)
       const roster = loadRosterForOpts(opts)
       assertValidActor(actor, roster)
@@ -584,6 +584,7 @@ export function registerExecCommands(program: Command): void {
         ev.meta.owner_override = true
       }
 
+      savePlanClaimSnapshot(executionPath, next, actor, ev.ts, tsForFilenameUtc, safeSlug)
       const out = writeEventFile(schedulePath, ev)
       process.stdout.write(out + '\n')
       exitWithCode(true)

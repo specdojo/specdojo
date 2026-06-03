@@ -15,6 +15,9 @@ import {
   type ResolvedRequirements,
 } from './exec-agent-config.js'
 import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-project.js'
+import { readAllEventFiles, foldEventsToState } from './exec-events.js'
+import { buildScheduleIndex } from './exec-schedule.js'
+import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { listFilesRecursive, readJson, readYaml, sleepMs } from './exec-shared.js'
 import {
   loadConfig,
@@ -554,6 +557,53 @@ function runManualMode(opts: RunOpts): void {
     const found = snap.tasks.find(t => t.id === taskId)
     if (found) task = found
   }
+  // If task not in ready.json (e.g. already "doing"), derive local_id from task id pattern.
+  // Task ID format: T-<TRACK>-<local_id>-<phase_suffix>
+  if (!task.local_id) {
+    const parts = taskId.split('-')
+    if (parts.length >= 4 && parts[0] === 'T') {
+      const track = parts[1]
+      const localId = parts.slice(2, parts.length - 1).join('-')
+      task = {
+        ...task,
+        local_id: localId,
+        schedule_file: `sch-track-${track.toLowerCase()}.yaml`,
+      }
+    }
+  }
+
+  // If the task is already in "doing" state and --by/--agent-cmd are not specified,
+  // use the actor who claimed it and their command to avoid re-selecting a different agent.
+  // Read from events directly (not state.json cache) to reflect recent scheduler claims.
+  let actorOverride = opts.by
+  let agentCmdOverride = opts.agentCmd
+  if (!actorOverride) {
+    try {
+      const sch = buildScheduleIndex(schedulePath)
+      const evts = readAllEventFiles(schedulePath)
+      const initTasks = buildInitialStateFromStrategy(schedulePath, sch)
+      const snap = foldEventsToState(evts, sch, schedulePath, initTasks)
+      const taskState = snap.tasks?.[taskId]
+      if (taskState?.state === 'doing' && taskState.last_by) {
+        actorOverride = taskState.last_by
+        if (!agentCmdOverride && roster) {
+          const claimingMember = roster.members.find(
+            m => m.nickname === actorOverride && m.type === 'agent' && m.command
+          )
+          if (claimingMember?.command) {
+            agentCmdOverride = claimingMember.command
+            process.stdout.write(
+              `  Resuming with claiming actor: ${actorOverride} (${agentCmdOverride})\n`
+            )
+          } else {
+            process.stdout.write(`  Resuming with claiming actor: ${actorOverride}\n`)
+          }
+        }
+      }
+    } catch {
+      // ignore errors reading state; fall through to normal agent selection
+    }
+  }
 
   const result = runSingleTask(
     task,
@@ -564,8 +614,8 @@ function runManualMode(opts: RunOpts): void {
     roster,
     localIdToRule,
     phaseSetSuffixToId,
-    opts.agentCmd,
-    opts.by,
+    agentCmdOverride,
+    actorOverride,
     !!opts.dryRun
   )
 

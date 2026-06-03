@@ -106,7 +106,7 @@ export function resolveAssignment(
 ): ResolvedRequirements | null {
   for (const rule of config.assignment_rules) {
     if (ruleMatches(rule, phaseSet, phaseId)) {
-      return { capabilities: rule.capabilities, proficiency: rule.proficiency }
+      return { capabilities: rule.capabilities ?? [], proficiency: rule.proficiency }
     }
   }
   return null

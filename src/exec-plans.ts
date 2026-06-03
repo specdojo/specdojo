@@ -370,7 +370,13 @@ export function generatePlans(
   const tasks = (Array.isArray(ready.tasks) ? ready.tasks : []) as PlanTask[]
 
   const plansDir = join(executionPath, 'exec', 'plans')
-  rmSync(plansDir, { recursive: true, force: true })
+  // Remove only plan files and index.md; preserve the claims/ subdirectory.
+  if (existsSync(plansDir)) {
+    for (const entry of readdirSync(plansDir)) {
+      if (entry === 'claims') continue
+      rmSync(join(plansDir, entry), { recursive: true, force: true })
+    }
+  }
   mkdirSync(plansDir, { recursive: true })
 
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
@@ -417,8 +423,19 @@ export function planPathForTask(executionPath: string, taskId: string): string {
 
 export function loadPlan(executionPath: string, taskId: string): string | null {
   const planPath = planPathForTask(executionPath, taskId)
-  if (!existsSync(planPath)) return null
-  return readFileSync(planPath, 'utf8')
+  if (existsSync(planPath)) return readFileSync(planPath, 'utf8')
+
+  // Fallback: task may be in "doing" state and no longer in ready.json.
+  // Use the claim snapshot saved at claim time.
+  const claimsDir = join(executionPath, 'exec', 'plans', 'claims', taskId)
+  if (existsSync(claimsDir)) {
+    const files = readdirSync(claimsDir)
+      .filter(name => name.endsWith('.md'))
+      .sort((a, b) => a.localeCompare(b))
+    const latest = files.at(-1)
+    if (latest) return readFileSync(join(claimsDir, latest), 'utf8')
+  }
+  return null
 }
 
 // ---------------------------------------------------------------------------
