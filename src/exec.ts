@@ -115,6 +115,7 @@ function addCommonAddOptions(cmd: Command): Command {
     .option('--run-id <id>', 'Correlation id')
     .option('--ref <k=v...>', 'refs key=value (repeatable)', collectRepeatable, [])
     .option('--meta <k=v...>', 'meta key=value (repeatable)', collectRepeatable, [])
+    .option('--dry-run', 'Print event JSON without writing to disk', false)
 }
 
 function resolveProjectContext(opts: { project?: string }): {
@@ -244,6 +245,11 @@ function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void
     const roster = loadRosterForOpts(opts)
     assertValidActor(actor, roster)
     const event = buildEvent(type, opts)
+    if (opts.dryRun) {
+      process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`)
+      exitWithCode(true)
+      return
+    }
     const out = writeEventFile(schedulePath, event)
     process.stdout.write(out + '\n')
     exitWithCode(true)
@@ -302,6 +308,11 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       if (plannedOwner && claimOwner !== plannedOwner && opts.allowOwnerMismatch) {
         event.meta.owner_override = true
       }
+    }
+    if (opts.dryRun) {
+      process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`)
+      exitWithCode(true)
+      return
     }
     const out = writeEventFile(schedulePath, event)
     process.stdout.write(out + '\n')
