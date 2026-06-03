@@ -1686,7 +1686,46 @@ rate_limit_policy:
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
 
-### 9.13. exec scaffold
+### 9.13. exec status
+
+現在の実行状態でタスクを絞り込んで表示する。`--state` を省略すると doing（クレーム中）のタスクを表示する。イベントファイルから直接計算するため、`exec build` 前でも最新の状態が表示される。
+
+```sh
+specdojo exec status --project <project-id> --by <actor>
+```
+
+オプション:
+
+| オプション  | 説明                                                              | デフォルト |
+| ----------- | ----------------------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決）                | 省略可     |
+| `--by`      | actor のニックネームで絞り込む                                    | 省略可     |
+| `--state`   | 絞り込む状態。`todo` / `doing` / `blocked` / `done` / `cancelled` | `doing`    |
+
+出力例:
+
+```text
+doing tasks for indie:
+
+  task_id                                  name                 by            claimed_at
+  ---------------------------------------- -------------------- -------------- --------------------
+  T-LAUNCH-prj-overview-010                たたき台作成               indie          2026-06-03T11:19:29Z
+```
+
+利用例:
+
+```sh
+# 自分がクレームしているタスクを確認
+specdojo exec status --project <project-id> --by <actor>
+
+# 全 actor の doing タスクを確認
+specdojo exec status --project <project-id>
+
+# ブロック中のタスクを確認
+specdojo exec status --project <project-id> --by <actor> --state blocked
+```
+
+### 9.14. exec scaffold
 
 プロジェクトのセットアップファイル（`pm-review-viewpoints.yaml` など）を生成する。`review scaffold` コマンドから viewpoints 生成機能を引き継いだサブコマンドです。
 

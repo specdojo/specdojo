@@ -41,7 +41,7 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
-import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy } from './exec-types.js'
+import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot } from './exec-types.js'
 import { nowUtcIsoSeconds, readJson, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
 import { generatePlans, savePlanClaimSnapshot } from './exec-plans.js'
 import { scaffoldViewpoints } from './review-plan.js'
@@ -641,6 +641,59 @@ export function registerExecCommands(program: Command): void {
           `viewpoints_path not set for project '${projectId}'. Add it to specdojo.config.json.\n`
         )
       }
+    } catch (error) {
+      printCommandError(error, false)
+    }
+  })
+
+  const statusCmd = exec
+    .command('status')
+    .description('Show tasks filtered by state and actor')
+  addProjectOptions(statusCmd)
+  statusCmd.option('--by <actor>', 'Filter by actor nickname')
+  statusCmd.option(
+    '--state <state>',
+    'Filter by state: todo|doing|blocked|done|cancelled (default: doing)',
+    'doing'
+  )
+  statusCmd.action(opts => {
+    try {
+      const { schedulePath } = resolveProjectContext(opts)
+
+      // Compute state directly from events (not from cached state.json)
+      const state = loadValidatedExecState(schedulePath)
+      if (!state) return
+      const snapshot: StateSnapshot = state.snapshot
+      const schedule = state.schedule
+
+      const filterState = String(opts.state ?? 'doing')
+      const filterBy = typeof opts.by === 'string' ? opts.by.trim() : undefined
+
+      const entries = Object.entries(snapshot.tasks)
+        .filter(([, cs]) => cs.state === filterState)
+        .filter(([, cs]) => !filterBy || cs.last_by === filterBy)
+        .sort(([a], [b]) => a.localeCompare(b))
+
+      if (entries.length === 0) {
+        const byMsg = filterBy ? ` for ${filterBy}` : ''
+        process.stdout.write(`No ${filterState} tasks${byMsg}.\n`)
+        exitWithCode(true)
+        return
+      }
+
+      const byMsg = filterBy ? ` for ${filterBy}` : ''
+      process.stdout.write(`${filterState} tasks${byMsg}:\n\n`)
+      process.stdout.write(`  ${'task_id'.padEnd(40)} ${'name'.padEnd(20)} by            claimed_at\n`)
+      process.stdout.write(`  ${'-'.repeat(40)} ${'-'.repeat(20)} ${'-'.repeat(14)} --------------------\n`)
+      for (const [taskId, cs] of entries) {
+        const node = schedule.nodes.get(taskId)
+        const name = (node?.name ?? '-').slice(0, 18)
+        const by = (cs.last_by ?? '-').slice(0, 12)
+        const ts = cs.last_ts ?? '-'
+        process.stdout.write(`  ${taskId.padEnd(40)} ${name.padEnd(20)} ${by.padEnd(14)} ${ts}\n`)
+      }
+      process.stdout.write('')
+      exitWithCode(true)
     } catch (error) {
       printCommandError(error, false)
     }
