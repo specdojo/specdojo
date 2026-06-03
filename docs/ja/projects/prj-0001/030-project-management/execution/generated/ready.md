@@ -9,17 +9,17 @@
 
 | strategy | next_task_id |
 |---|---|
-| critical-first | `T-LAUNCH-prj-overview-010` |
+| critical-first | `T-LAUNCH-prj-overview-020` |
 | fifo | `T-LAUNCH-pm-plan-010` |
 
 ## Ready Order (critical-first)
 
 | rank | id | owner | slack | ES | schedule_file |
 |---:|---|---|---:|---:|---|
-| 1 | `T-LAUNCH-prj-overview-010` | BA | 0 | 0 | sch-track-launch.yaml |
+| 1 | `T-LAUNCH-prj-overview-020` | BA | 0 | 0.25 | sch-track-launch.yaml |
 | 2 | `T-LAUNCH-pm-plan-010` | PM | 3.25 | 0 | sch-track-launch.yaml |
 
 ## FIFO Order
 
 - `T-LAUNCH-pm-plan-010`
-- `T-LAUNCH-prj-overview-010`
+- `T-LAUNCH-prj-overview-020`

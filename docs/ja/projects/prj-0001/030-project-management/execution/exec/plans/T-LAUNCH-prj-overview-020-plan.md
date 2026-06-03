@@ -1,22 +1,22 @@
 ---
-id: xep-t-launch-prj-overview-010
+id: xep-t-launch-prj-overview-020
 type: exec-plan
 rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-overview-010
+task_id: T-LAUNCH-prj-overview-020
 mode: edit
 status: ready
 project_id: prj-0001
 ---
 
-# Edit Plan: T-LAUNCH-prj-overview-010
+# Edit Plan: T-LAUNCH-prj-overview-020
 
 このプランは ready 時点の実行ビューです。進捗の正本は exec/events です。
 
 ## 1. タスク概要
 
-- task_id: `T-LAUNCH-prj-overview-010`
+- task_id: `T-LAUNCH-prj-overview-020`
 - project_id: `prj-0001`
-- name: たたき台作成
+- name: 調査・補強
 - owner: BA
 - schedule_file: `sch-track-launch.yaml`
 
@@ -36,7 +36,7 @@ done_criteria:
 
 - depends_on: -
 - urgency: クリティカルパス上。遅延余裕なし。
-- CPM: `ES=0, EF=0.25, LS=0, LF=0.25, slack=0`
+- CPM: `ES=0.25, EF=0.75, LS=0.25, LF=0.75, slack=0`
 
 ## 4. 実施手順
 
@@ -44,7 +44,7 @@ done_criteria:
 2. task 名と notes に沿って成果物を更新する。
 3. 必要な検証と lint を実行する。
 4. result ファイルの done_criteria_checked セクションを記入する。
-   result: `exec/results/T-LAUNCH-prj-overview-010-result.md`
+   result: `exec/results/T-LAUNCH-prj-overview-020-result.md`
 5. 完了したら正常終了する（終了コード 0）。
 6. 実装できない・問題が解決できない場合は標準エラー出力に理由を書いて異常終了する（終了コード 1）。
 
