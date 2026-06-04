@@ -372,11 +372,11 @@ properties:
 $defs:
   Execution:
     type: string
-    enum: ["auto", "manual"]
+    enum: ["agent", "human"]
     description: >
       Execution mode for a phase.
-      auto: agent executes the phase; exec-strategy assignment_rules select the agent.
-      manual: no agent is launched; the phase is recorded as pending human action.
+      agent: agent executes the phase; exec-strategy assignment_rules select the agent.
+      human: no agent is launched; the phase is recorded as pending human action.
 
   Phase:
     type: object

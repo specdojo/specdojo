@@ -151,14 +151,26 @@ function findRosterMember(roster: ReturnType<typeof loadRosterForOpts>, actor: s
 export function resolveClaimOwner(
   opts: { owner?: string },
   actor: string,
-  roster: ReturnType<typeof loadRosterForOpts> = null
+  roster: ReturnType<typeof loadRosterForOpts> = null,
+  taskOwner?: string
 ): string {
   const cliOwner = typeof opts.owner === 'string' ? opts.owner.trim().toUpperCase() : ''
   const envOwner =
     typeof process.env.SPECDOJO_OWNER === 'string'
       ? process.env.SPECDOJO_OWNER.trim().toUpperCase()
       : ''
-  const rosterMemberRoles = findRosterMember(roster, actor)?.roles
+  const rosterMemberRoles = findRosterMember(roster, actor)?.roles ?? []
+  // For multi-role actors, prefer the role matching the task's planned owner.
+  const matchedRole =
+    taskOwner && rosterMemberRoles.length > 1
+      ? rosterMemberRoles.find(
+          r =>
+            r.trim().toUpperCase() === taskOwner.toUpperCase() &&
+            KNOWN_OWNER_LABELS.includes(
+              r.trim().toUpperCase() as (typeof KNOWN_OWNER_LABELS)[number]
+            )
+        )?.trim().toUpperCase() ?? ''
+      : ''
   const rosterOwner =
     Array.isArray(rosterMemberRoles) && rosterMemberRoles.length > 0
       ? rosterMemberRoles[0].trim().toUpperCase()
@@ -181,7 +193,7 @@ export function resolveClaimOwner(
     )
   }
 
-  return cliOwner || envOwner || rosterOwner || ''
+  return cliOwner || envOwner || matchedRole || rosterOwner || ''
 }
 
 function resolveSchedulerStrategy(
@@ -293,7 +305,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
     const event = buildEvent(action.type, opts)
     if (action.type === 'claim') {
       const plannedOwner = state.schedule.nodes.get(taskId)?.owner
-      const claimOwner = resolveClaimOwner(opts, actor, roster)
+      const claimOwner = resolveClaimOwner(opts, actor, roster, plannedOwner)
       const cpm = computeCpm(state.schedule, schedulePath)
       writeGeneratedCore(schedulePath, state.events, state.schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, state.schedule)
@@ -334,14 +346,16 @@ export function registerExecCommands(program: Command): void {
     claim: {
       type: 'claim',
       requireSingleDoing: true,
-      check: ({ schedule, snapshot }, taskId, actor, opts) =>
-        canClaimTask(
+      check: ({ schedule, snapshot }, taskId, actor, opts) => {
+        const taskOwner = schedule.nodes.get(taskId)?.owner
+        return canClaimTask(
           schedule,
           snapshot,
           taskId,
-          resolveClaimOwner(opts, actor, loadRosterForOpts(opts)),
+          resolveClaimOwner(opts, actor, loadRosterForOpts(opts), taskOwner),
           !!opts.allowOwnerMismatch
-        ),
+        )
+      },
     },
     complete: {
       type: 'complete',

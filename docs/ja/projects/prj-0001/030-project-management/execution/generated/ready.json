@@ -2,43 +2,23 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 2,
+  "ready_count": 1,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-prj-overview-020",
+      "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-020",
         "T-LAUNCH-pm-plan-010"
       ]
     },
     "fifo": {
       "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
-        "T-LAUNCH-pm-plan-010",
-        "T-LAUNCH-prj-overview-020"
+        "T-LAUNCH-pm-plan-010"
       ]
     }
   },
   "tasks": [
-    {
-      "id": "T-LAUNCH-prj-overview-020",
-      "local_id": "prj-overview",
-      "name": "調査・補強",
-      "owner": "BA",
-      "schedule_file": "sch-track-launch.yaml",
-      "fifo_rank": 2,
-      "critical_first_rank": 1,
-      "cpm": {
-        "es": 0.25,
-        "ef": 0.75,
-        "ls": 0.25,
-        "lf": 0.75,
-        "slack": 0
-      },
-      "mode": "edit",
-      "execution": "agent"
-    },
     {
       "id": "T-LAUNCH-pm-plan-010",
       "local_id": "pm-plan",
@@ -46,7 +26,7 @@
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 1,
-      "critical_first_rank": 2,
+      "critical_first_rank": 1,
       "cpm": {
         "es": 0,
         "ef": 0.25,

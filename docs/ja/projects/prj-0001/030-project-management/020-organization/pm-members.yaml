@@ -53,6 +53,7 @@ members:
     roles: []
     type: agent
     mode: edit
+    proficiency: normal
     persona: task-executor
     focus:
       - task-execution
@@ -70,6 +71,7 @@ members:
     roles: []
     type: agent
     mode: review
+    proficiency: normal
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification
@@ -89,6 +91,7 @@ members:
     roles: []
     type: agent
     mode: edit
+    proficiency: normal
     persona: task-executor
     focus:
       - task-execution
@@ -106,6 +109,7 @@ members:
     roles: []
     type: agent
     mode: review
+    proficiency: normal
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification
@@ -123,6 +127,7 @@ members:
     roles: []
     type: agent
     mode: edit
+    proficiency: expert
     persona: task-executor
     focus:
       - task-execution
@@ -142,6 +147,7 @@ members:
     roles: []
     type: agent
     mode: review
+    proficiency: expert
     persona: multi-viewpoint-reviewer
     focus:
       - done-criteria-verification

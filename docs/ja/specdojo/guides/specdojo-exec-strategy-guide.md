@@ -125,17 +125,18 @@ assignment_rules:
 
 1. `capabilities` でフィルタ：ルールの capabilities をすべて持つ agent（スーパーセット OK）
 2. `proficiency` でフィルタ：ルールに指定があれば一致のみ。未指定なら全水準
-3. ソート：余剰 capabilities 数（昇順）→ `priority`（昇順）
+3. ソート：`priority`（昇順）→ 余剰 capabilities 数（昇順、同 priority 内の tie-breaker）
 4. 先頭が primary、以降は rate limit 時のフォールバック
+
+capabilities は**制約**（必須ツールを持つかどうか）としてのみ機能します。priority が実際の選択順序を決定します。
 
 **例**：`mode: edit, capabilities: [], proficiency: normal` の場合
 
-| agent              | capabilities   | proficiency | 余剰 | priority | 順位                         |
-| ------------------ | -------------- | ----------- | ---- | -------- | ---------------------------- |
-| `edit-agent`       | `[]`           | `normal`    | 0    | 10       | **1位**                      |
-| `expert-web-agent` | `[web_search]` | `expert`    | -    | -        | 対象外（proficiency 不一致） |
-| `expert-agent`     | `[]`           | `expert`    | -    | -        | 対象外（proficiency 不一致） |
-| `small-edit-agent` | `[]`           | `low`       | -    | -        | 対象外（proficiency 不一致） |
+| agent              | capabilities   | proficiency | priority | 順位                         |
+| ------------------ | -------------- | ----------- | -------- | ---------------------------- |
+| `claude-edit-agent`| `[web_search]` | `normal`    | 10       | **1位**（priority 最小）     |
+| `opencode-edit-agent`| `[]`         | `normal`    | 99       | 2位                          |
+| `expert-web-agent` | `[web_search]` | `expert`    | -        | 対象外（proficiency 不一致） |
 
 rate limit 時は fallback として proficiency の高い候補（`expert`）へのエスカレーションを `rate_limit_policy` で設定できます。
 

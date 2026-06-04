@@ -1457,11 +1457,13 @@ cancelled
 | ------- | -------- | --------- | ----------- |
 | todo    | claim    | doing     | 依存完了    |
 | doing   | block    | blocked   | 同一actor   |
-| blocked | unblock  | todo      | blockedのみ |
+| blocked | unblock  | doing     | blockedのみ |
 | doing   | complete | done      | 同一actor   |
 | todo    | cancel   | cancelled | 可          |
-| doing   | cancel   | cancelled | 同一actor   |
-| blocked | cancel   | cancelled | 可          |
+| doing   | cancel   | todo      | 同一actor   |
+| blocked | cancel   | todo      | 可          |
+
+`cancel` は「この試みを放棄し再実行可能にする」操作、`unblock` は「ブロックを解除し作業を再開する」操作として機能する。`todo` からの cancel のみ終端状態 `cancelled` に遷移する。
 
 #### 9.10.2. 遷移図
 
@@ -1470,11 +1472,11 @@ stateDiagram-v2
 [*] --> todo
 todo --> doing : claim
 doing --> blocked : block
-blocked --> todo : unblock
+blocked --> doing : unblock (resume)
 doing --> done : complete
 todo --> cancelled : cancel
-doing --> cancelled : cancel
-blocked --> cancelled : cancel
+doing --> todo : cancel (release)
+blocked --> todo : cancel (abandon)
 ```
 
 ### 9.11. 推奨ワークフロー

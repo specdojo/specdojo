@@ -1,5 +1,3 @@
-{"v":1,"ts":"2026-06-03T11:19:29Z","type":"claim","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"auto-claim","meta":{"claim_owner":"BA","planned_owner":"BA","scheduler_strategy":"critical-first","claimed_via":"dojo-exec-scheduler"}}
-{"v":1,"ts":"2026-06-03T11:45:41Z","type":"block","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"test"}
-{"v":1,"ts":"2026-06-03T12:02:42Z","type":"unblock","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"test"}
-{"v":1,"ts":"2026-06-03T12:52:14Z","type":"claim","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"auto-claim","meta":{"claim_owner":"BA","planned_owner":"BA","scheduler_strategy":"critical-first","claimed_via":"dojo-exec-scheduler"}}
-{"v":1,"ts":"2026-06-03T13:58:37Z","type":"complete","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"たたき台作成"}
+{"v":1,"ts":"2026-06-04T12:44:46Z","type":"claim","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"たたき台着手","meta":{"claim_owner":"BA","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-04T12:45:01Z","type":"complete","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"たたき台完了"}
+{"v":1,"ts":"2026-06-04T12:45:58Z","type":"claim","task_id":"T-LAUNCH-prj-overview-020","by":"claude-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"BA"}}

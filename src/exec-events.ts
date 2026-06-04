@@ -84,9 +84,24 @@ export function readAllEventFiles(projectPath: string): { path: string; event: E
   const items: { path: string; event: ExecEventV1 }[] = []
   for (const f of files) items.push({ path: f, event: readJson(f) as ExecEventV1 })
 
+  // Within the same timestamp, order by logical event sequence to prevent
+  // e.g. 'cancel' (alphabetically before 'claim') from being processed first.
+  const typeOrder: Record<string, number> = {
+    claim: 1,
+    note: 2,
+    block: 3,
+    complete: 3,
+    estimate: 3,
+    link: 3,
+    unblock: 4,
+    cancel: 5,
+  }
   items.sort((a, b) => {
     if (a.event.ts < b.event.ts) return -1
     if (a.event.ts > b.event.ts) return 1
+    const orderA = typeOrder[a.event.type] ?? 99
+    const orderB = typeOrder[b.event.type] ?? 99
+    if (orderA !== orderB) return orderA - orderB
     return a.path.localeCompare(b.path)
   })
 
@@ -151,9 +166,17 @@ export function foldEventsToState(
 
     if (event.type === 'claim') cur.state = 'doing'
     else if (event.type === 'block') cur.state = 'blocked'
-    else if (event.type === 'unblock') cur.state = 'todo'
+    else if (event.type === 'unblock') cur.state = 'doing'   // resume work; same actor continues
     else if (event.type === 'complete') cur.state = 'done'
-    else if (event.type === 'cancel') cur.state = 'cancelled'
+    else if (event.type === 'cancel') {
+      // cancel semantics depend on the current state:
+      //   todo    → cancelled (task permanently abandoned)
+      //   doing   → todo     (claim released; task available for re-execution)
+      //   blocked → todo     (attempt abandoned; task available for re-execution)
+      if (cur.state === 'todo') cur.state = 'cancelled'
+      else if (cur.state === 'doing' || cur.state === 'blocked') cur.state = 'todo'
+      else cur.state = 'cancelled'
+    }
   }
 
   for (const id of schedule.nodes.keys()) ensure(id)
@@ -340,6 +363,7 @@ export function canCancelTask(
   if (state === 'done') return { ok: false, reason: `task already done: ${taskId}` }
   if (state === 'cancelled') return { ok: false, reason: `task already cancelled: ${taskId}` }
 
+  // For doing state: only the actor who claimed it can cancel (release the claim).
   if (state === 'doing' && cur?.last_by !== actor) {
     return {
       ok: false,

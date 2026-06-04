@@ -151,10 +151,14 @@ function selectCandidates(
       return true
     })
     .sort((a, b) => {
+      // Primary: priority (lower number = tried first)
+      const aPriority = a.priority ?? 999
+      const bPriority = b.priority ?? 999
+      if (aPriority !== bPriority) return aPriority - bPriority
+      // Secondary: fewest extra capabilities (tie-breaker within same priority)
       const aExtra = (a.capabilities?.length ?? 0) - required.length
       const bExtra = (b.capabilities?.length ?? 0) - required.length
-      if (aExtra !== bExtra) return aExtra - bExtra
-      return (a.priority ?? 999) - (b.priority ?? 999)
+      return aExtra - bExtra
     })
 }
 
@@ -230,8 +234,11 @@ function executeAgent(
     return { result: 'failure', exitCode: null, stderr: 'Empty agent command' }
   }
 
-  const spawnResult = spawnSync(parts[0], [...parts.slice(1), prompt], {
-    stdio: ['ignore', 'inherit', 'pipe'],
+  // Pass the prompt via stdin to avoid CLI parsers interpreting frontmatter '---' as an option.
+  // Equivalent to: echo "<prompt>" | <agentCommand>
+  const spawnResult = spawnSync(parts[0], parts.slice(1), {
+    input: prompt,
+    stdio: ['pipe', 'inherit', 'pipe'],
     encoding: 'utf8',
   })
 
@@ -303,7 +310,8 @@ function runSingleTask(
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
-  dryRun: boolean
+  dryRun: boolean,
+  skipClaim = false
 ): RunResult {
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
@@ -361,16 +369,23 @@ function runSingleTask(
   }
 
   if (dryRun) {
-    process.stdout.write(`  [dry-run] would claim: ${task.id} as ${actor}\n`)
+    const claimMsg = skipClaim
+      ? `  [dry-run] already claimed: ${task.id} as ${actor} (skip claim)`
+      : `  [dry-run] would claim: ${task.id} as ${actor}`
+    process.stdout.write(claimMsg + '\n')
     process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`)
     process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`)
     return 'success'
   }
 
-  process.stdout.write(`  Claiming: ${task.id} as ${actor}\n`)
-  if (!spawnClaim(projectId, task.id, actor)) {
-    process.stdout.write(`  Claim failed: ${task.id}\n`)
-    return 'failure'
+  if (skipClaim) {
+    process.stdout.write(`  Already claimed: ${task.id} as ${actor}\n`)
+  } else {
+    process.stdout.write(`  Claiming: ${task.id} as ${actor}\n`)
+    if (!spawnClaim(projectId, task.id, actor)) {
+      process.stdout.write(`  Claim failed: ${task.id}\n`)
+      return 'failure'
+    }
   }
 
   const planRef = `exec/plans/${task.id}-plan.md`
@@ -577,6 +592,7 @@ function runManualMode(opts: RunOpts): void {
   // Read from events directly (not state.json cache) to reflect recent scheduler claims.
   let actorOverride = opts.by
   let agentCmdOverride = opts.agentCmd
+  let alreadyClaimed = false
   if (!actorOverride) {
     try {
       const sch = buildScheduleIndex(schedulePath)
@@ -586,6 +602,7 @@ function runManualMode(opts: RunOpts): void {
       const taskState = snap.tasks?.[taskId]
       if (taskState?.state === 'doing' && taskState.last_by) {
         actorOverride = taskState.last_by
+        alreadyClaimed = true
         if (!agentCmdOverride && roster) {
           const claimingMember = roster.members.find(
             m => m.nickname === actorOverride && m.type === 'agent' && m.command
@@ -616,7 +633,8 @@ function runManualMode(opts: RunOpts): void {
     phaseSetSuffixToId,
     agentCmdOverride,
     actorOverride,
-    !!opts.dryRun
+    !!opts.dryRun,
+    alreadyClaimed
   )
 
   if (result === 'failure') process.exitCode = 1
