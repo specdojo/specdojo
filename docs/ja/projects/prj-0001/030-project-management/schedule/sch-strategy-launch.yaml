@@ -49,16 +49,28 @@ phase_sets:
       execution: human
       task_suffix: "010"
       duration_days: 0.25 # 1〜2h 相当
+      description: |
+        担当ロールが成果物の初版を作成する。
+        章構成・記載項目を決め、現時点で把握している情報を埋める。
+        調査・確認が必要な箇所は TODO として明示したまま残す。
     - id: enrich
       name: 調査・補強
       execution: agent
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
+      description: |
+        エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
+        既存記述との矛盾・抜け漏れも確認し、修正・追記する。
+        調査結果は出典・根拠とともに記載する。
     - id: review
       name: 一次版レビュー
       execution: human
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
+      description: |
+        担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。
+        修正が軽微な場合は直接編集して承認とみなす。
+        差し戻しの場合は修正箇所と理由を明記する。
 
   # 調査系一次版フロー: 人が予備調査を含めたたき台 → エージェントが外部情報で深掘り → 人がレビュー
   # 比較検討・代替案評価など、外部情報収集が品質に直結する成果物に使う
@@ -68,16 +80,28 @@ phase_sets:
       execution: human
       task_suffix: "010"
       duration_days: 0.5 # 2〜4h 相当（人による予備調査込み）
+      description: |
+        担当ロールが予備調査を行ったうえで初版を作成する。
+        比較対象の選択肢を洗い出し、比較軸・評価観点を設定する。
+        各選択肢の概要と既知の特徴を記載し、深掘りが必要な箇所を TODO として残す。
     - id: enrich
       name: 調査・深掘り
       execution: agent
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
+      description: |
+        エージェントが各選択肢を外部情報で深掘りし、比較表・評価根拠を補強する。
+        公式ドキュメント・事例・実績データを調査し、TODO を埋める。
+        調査結果は出典・根拠とともに記載する。
     - id: review
       name: 一次版レビュー
       execution: human
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
+      description: |
+        担当ロールが比較内容の妥当性・網羅性を確認し、承認・修正指示・差し戻しを判断する。
+        修正が軽微な場合は直接編集して承認とみなす。
+        差し戻しの場合は修正箇所と理由を明記する。
 
   # 完成版フロー: エージェントが成果物間の整合性を確認・修正 → 人が最終確定
   finalize-pass:
@@ -86,11 +110,18 @@ phase_sets:
       execution: agent
       task_suffix: "040"
       duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが同一ゲート内の他成果物（一次版）を参照し、用語・数値・方針の整合性を確認する。
+        矛盾・不整合が見つかった場合は修正し、修正箇所と理由を記録する。
+        他成果物への修正提案が必要な場合は、該当成果物の担当ロールへ差し戻しを起票する。
     - id: finalize
       name: 完成版確定
       execution: human
       task_suffix: "050"
       duration_days: 0.125 # 0.5〜1h 相当
+      description: |
+        担当ロールが整合性確認後の内容を最終確認し、完成版として確定する。
+        frontmatter の status を ready に更新する。
 
 # owner_rule に phase_sets を省略した場合のデフォルト（適用順）
 default_phase_sets: [first-pass, finalize-pass]

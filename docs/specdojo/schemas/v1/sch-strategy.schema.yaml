@@ -409,3 +409,8 @@ $defs:
           Default execution mode for this phase across all deliverables using this phase_set.
           Omit to default to auto.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      description:
+        type: string
+        description: >
+          Human-readable description of what to do in this phase.
+          Used as agent instructions when execution is agent, and as guidance for humans when execution is human.

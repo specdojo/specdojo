@@ -7,252 +7,201 @@ based_on:
   - tsd-ollama-opencode
 ---
 
-# opencode ローカルLLM設定（Ollama）
+# OpenCode エージェント設定（Ollama）
 
-SpecDojo CLI と opencode を組み合わせてマルチエージェント実行を行うための、Ollama（ローカルLLM）専用の設定・構成を定義する。
+SpecDojo CLI と OpenCode を組み合わせ、Ollama のローカルLLMでマルチエージェント実行を行うための設定・構成を定義する。
 
 ## 1. 設計方針
 
-SpecDojo・opencode・`specdojo exec run` の3層に責務を分割し、それぞれの関心事を分離する。
+SpecDojo・OpenCode・`specdojo exec run` の3層に責務を分割し、それぞれの関心事を分離する。
 
-- **SpecDojo CLI**: タスク管理（validate / build / claim / complete / block）および `exec run` によるエージェント起動制御
-- **opencode agent**: タスク内容の解釈と成果物の編集
-- **`specdojo exec run`**: マルチエージェントの起動・並列制御（別途 runner スクリプト不要）
+- **SpecDojo CLI**: タスク管理（validate / build / claim / complete / block）とエージェント起動制御
+- **OpenCode agent**: plan の解釈・関連文書の読解・成果物の編集またはレビュー
+- **`specdojo exec run`**: フェーズ順序・並列数・worktree・フォールバックの制御
 
-本設定では opencode の provider を Ollama（ローカルLLM）に限定する。API キー不要・ネットワーク不要で動作するが、モデルのメモリ制約とロード時間が制約条件になる。
+本設計では OpenCode の provider を `ollama-local` に限定する。API key と外部クラウドLLMを必要としない一方、ホスト側 Ollama の稼働状態、モデルロード時間、メモリ容量が制約になる。
 
-- **Ollama 専用**: provider は `ollama-local` のみ。外部 API への依存を持たない。接続設定の詳細は [tsd-ollama-opencode](../030-architecture/020-infrastructure/tsd-ollama-opencode.md) を参照。
-- **用途別モデル分担**: 通常作業（edit）を `qwen3.6:27b-mlx-work-32k`、レビューを `qwen3.6:27b-mlx-work-64k` で分担する。
-- **エージェント定義は `.opencode/agents/` に集約**: エージェントごとに Markdown ファイルを置き、フロントマターでモデル・モード・権限を定義する。`opencode.json` への inline agent 定義は使わない。
-- **メモリ制約を前提とした設計**: `OLLAMA_MAX_LOADED_MODELS=2` 制約下で、2つの27Bモデルの同時ロードに注意する。edit と review を分離して実行することを推奨する。
-- **agent は機能で分類**: `edit-agent` / `review-agent` の2分類を基本とする。
-- **プロジェクト指定は `current_project` に委ねる**: `specdojo.config.json` の `current_project` を参照するため、コマンドに `--project` を明記しない。worktree に分離しても git 管理下の config が自動的に引き継がれる。
-- **exec-strategy による割り当て制御**: `pm-members.yaml` と `exec-strategy-<track>.yaml` でフェーズに応じた担当エージェントを定義する。詳細は [specdojo-exec-strategy-guide](../../specdojo/guides/specdojo-exec-strategy-guide.md) を参照。
-- **worktree 分離はデフォルト構成**: 複数 `edit-agent` を並列実行する際は instance ごとに worktree を割り当て、Git 競合を防ぐ。
+- **非対話実行は `opencode run`**: TUI を起動せず、SpecDojo が生成した plan を標準入力で渡す。
+- **provider とモデル一覧は `opencode.json`**: 実際に利用可能なローカルモデルをプロジェクト設定として共有する。
+- **agent 定義は `.opencode/agents/*.md`**: モデル、primary / subagent、permission、システムプロンプトを分離する。
+- **共通ルールは project root の `AGENTS.md` を基本とする**: `.opencode/AGENTS.md` を使う場合は `opencode.json` の `instructions` に明示する。
+- **permission を安全境界とする**: edit agent は必要な編集操作を許可し、review agent は `edit: deny` とする。
+- **モデルは用途別に分担する**: 通常 edit、長文 review、軽作業、重い実装にモデルを割り当てる。
+- **exec-strategy で割り当てる**: `mode`・`capabilities`・`proficiency` に応じて担当 agent を選択する。
+- **並列 edit は worktree で分離する**: タスクごとに作業ツリーを分け、Git 競合を防ぐ。
 
 ## 2. 責務分担
 
 | 層                  | 責務                                                                                                                  | 責務外                             |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | SpecDojo CLI        | validate / build / ready 抽出 / claim / complete / block / lock / CPM / worktree 管理・エージェント起動（`exec run`） | タスク内容の理解・成果物の編集     |
-| opencode agent      | タスク内容の解釈・関連ドキュメントの読解・成果物の編集・complete / block の判断                                       | タスク取得の排他制御・並列起動制御 |
+| OpenCode agent      | plan の解釈・関連ドキュメントの読解・成果物の編集・done criteria の確認                                               | タスク取得の排他制御・並列起動制御 |
 | `specdojo exec run` | フェーズ順序制御・並列数・worktree 割り当て・rate limit フォールバック                                                | タスク管理ロジック・成果物の編集   |
+| Ollama              | モデルのロード・推論・OpenAI互換 API の提供                                                                           | タスク管理・ファイル編集           |
 
 ## 3. 全体フロー
 
 ```text
-schedule yaml（owner フィールドでロールを定義）
+schedule yaml（owner・phase・difficulty・execution を定義）
    ↓
-specdojo exec build          # --project 省略: current_project を参照
+specdojo exec build
    ↓
-ready.json / claim-next.json
+generated/ready.json / exec/plans/<task-id>-plan.md
    ↓
-[edit]   specdojo exec run --auto --parallel 3
-         → edit-agent × N が "opencode run --agent edit-agent" で並列起動
-         → task.owner を読んでロール文脈を判断
-         → 成果物を作成・編集
-         → specdojo exec complete / block
+[edit]   specdojo exec run --auto --loop --parallel 3
+         → exec run が result ファイルを scaffold 生成
+         → plan を標準入力で opencode run --agent edit-agent に渡す
+         → edit-agent が成果物と result を編集
+         → 終了コード 0 → exec complete / 終了コード 1 → exec block
 
-[review] specdojo exec run --by opencode-review-agent
-         → review-agent が "opencode run --agent review-agent" で起動
-         → 完了タスクを state.json から特定
-         → done_criteria.roles の各ロール観点で検証
+[review] specdojo exec run --auto
+         → assignment_rules で mode: review の member を選択
+         → plan を標準入力で opencode run --agent review-agent に渡す
+         → review-agent が成果物を変更せず result に所見を記録
 ```
 
-edit と review に順序制約はない。exec-strategy の `assignment_rules` でどのフェーズに edit・review を割り当てるかを定義し、スケジュール構造に応じて組み合わせる。
+OpenCode agent 自身が scheduler でタスクを claim する構成にはしない。claim・plan scaffold・complete / block は `specdojo exec run` が管理し、agent は渡された1件の plan だけを処理する。
 
 ## 4. ディレクトリ構成
 
 ```text
 repo-root/
-├─ opencode.json                  # provider・グローバルモデル設定
+├─ opencode.json                       # provider・モデル・プロジェクト設定
+├─ AGENTS.md                           # OpenCodeを含む共通プロジェクトルール（推奨）
 ├─ .opencode/
-│  ├─ AGENTS.md                   # プロジェクト共通ルール（全エージェント共有）
+│  ├─ AGENTS.md                        # instructions で明示して使うOpenCode固有ルール
 │  └─ agents/
-│     ├─ edit-agent.md            # edit-agent 定義（フロントマター + システムプロンプト）
-│     └─ review-agent.md          # review-agent 定義（フロントマター + システムプロンプト）
-└─ docs/
-   └─ ja/
-      └─ projects/
-         └─ prj-0001/
-            ├─ 030-project-management/
-            │  ├─ 020-organization/
-            │  │  └─ pm-members.yaml          # エージェント定義
-            │  └─ execution/
-            │     └─ exec-strategy-<track>.yaml  # フェーズ別割り当てルール
-            └─ execution/
-               └─ generated/                  # exec build 生成物
+│     ├─ edit-agent.md                 # 通常 edit primary agent
+│     ├─ review-agent.md               # 通常 review primary agent
+│     ├─ light-edit-agent.md           # 軽作業用 primary agent（任意）
+│     └─ expert-edit-agent.md          # 重い実装用 primary agent（任意）
+└─ docs/ja/projects/prj-0001/030-project-management/
+   ├─ 020-organization/pm-members.yaml
+   └─ execution/
+      ├─ exec-strategy-<track>.yaml
+      ├─ exec/plans/
+      ├─ exec/results/
+      └─ generated/
 ```
 
-worktree は repo-root の外に作成する。task_id をディレクトリ名・ブランチ名に使い、タスクごとに作成・破棄する。
-
-```text
-worktrees/
-├─ T-ARC-base-arch-010/      # ブランチ: exec/T-ARC-base-arch-010（実行中タスク）
-├─ T-BA-user-story-020/      # ブランチ: exec/T-BA-user-story-020（実行中タスク）
-└─ T-DEV-api-impl-010/       # ブランチ: exec/T-DEV-api-impl-010（実行中タスク）
-```
+OpenCode の設定は複数箇所からマージされる。主な優先順は remote config、global config、`OPENCODE_CONFIG`、project root の `opencode.json`、`.opencode/`、`OPENCODE_CONFIG_CONTENT` の順で、後の設定が競合キーを上書きする。
 
 ## 5. `opencode.json` 設定
 
-プロジェクト直下に `opencode.json` を置く。役割は **provider 定義とグローバルデフォルトモデルの設定のみ**とし、agent 定義は `.opencode/agents/` に分離する。
+### 5.1. 現在の実設定
 
-### 5.1. provider 設定
+プロジェクト直下の [opencode.json](../../../../opencode.json) は、Ollama provider、利用可能モデル、グローバルデフォルトモデルを定義している。
 
-ローカルLLM専用として `ollama-local` のみを定義する。Ollama の OpenAI互換 API（`/v1/*`）を使い、devcontainer 内から `host.docker.internal` で Host Mac の Ollama に接続する。
-
-| provider       | 種別     | 認証方法         | `opencode.json` への provider 定義 |
-| -------------- | -------- | ---------------- | ---------------------------------- |
-| `ollama-local` | カスタム | なし（ローカル） | 必要                               |
-
-### 5.2. 設定例
-
-```jsonc
+```json
 {
   "$schema": "https://opencode.ai/config.json",
-
-  // グローバルデフォルト（agent 定義ファイルで上書き）
-  "model": "ollama-local/qwen3.6:27b-mlx-work-64k",
-
   "provider": {
     "ollama-local": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama Local",
       "options": {
         "baseURL": "http://host.docker.internal:11434/v1",
-        "apiKey": "not-needed",
+        "apiKey": "not-needed"
       },
       "models": {
         "qwen3.6:27b-mlx-work-32k": {
-          "name": "Qwen3.6 27B-MLX 通常作業用 (32k)",
+          "name": "Qwen3.6 27B-MLX 通常作業用 (32k)"
         },
         "qwen3.6:27b-mlx-work-64k": {
-          "name": "Qwen3.6 27B-MLX レビュー・長文用 (64k)",
+          "name": "Qwen3.6 27B-MLX レビュー・長文用 (64k)"
         },
         "gemma4:e4b-light-8k": {
-          "name": "Gemma 4 E4B 軽作業用 (8k)",
+          "name": "Gemma 4 E4B 軽作業用 (8k)"
         },
         "qwen3.6:27b-coding-mxfp8-64k": {
-          "name": "Qwen3.6 27B Coding MXFP8 重い実装用 (64k)",
-        },
-      },
-    },
+          "name": "Qwen3.6 27B Coding MXFP8 重い実装用 (64k)"
+        }
+      }
+    }
   },
-
-  "instructions": ["AGENTS.md", ".opencode/AGENTS.md"],
-
-  "share": "disabled",
-  "autoupdate": "notify",
+  "model": "ollama-local/qwen3.6:27b-mlx-work-64k"
 }
 ```
 
-## 6. `.opencode/AGENTS.md` 設計
+### 5.2. provider 設計
 
-`.opencode/AGENTS.md` はプロジェクト共通ルールを記述し、すべての opencode エージェントが読み込む。エージェント固有のシステムプロンプトは `.opencode/agents/<name>.md` に分離する。
+| 項目       | 設定値                                      | 意図                                                |
+| ---------- | ------------------------------------------- | --------------------------------------------------- |
+| provider   | `ollama-local`                              | 外部 provider と区別するプロジェクト内識別子        |
+| npm        | `@ai-sdk/openai-compatible`                 | Ollama の OpenAI互換 API を利用                     |
+| baseURL    | `http://host.docker.internal:11434/v1`      | devcontainer からホスト側 Ollama に接続             |
+| apiKey     | `not-needed`                                | SDKの必須項目を満たすダミー値                        |
+| model      | `ollama-local/qwen3.6:27b-mlx-work-64k`     | agent 未指定時の長文対応デフォルト                  |
 
-```markdown
-# Agent Instructions
+ホスト外や Linux ホストで実行する場合は、`host.docker.internal` の名前解決と Ollama の listen address を別途確認する。
 
-## Language
+### 5.3. モデル分担
 
-- 回答は原則として日本語で行う。
-- コード、ファイル名、識別子は英語を優先する。
-- Markdown 設計書は自然な日本語で、曖昧な表現を避ける。
+| モデルID                           | 用途                 | agent 例             | 注意点                         |
+| ---------------------------------- | -------------------- | -------------------- | ------------------------------ |
+| `qwen3.6:27b-mlx-work-32k`         | 通常の文書作成・編集 | `edit-agent`         | 通常作業の標準                 |
+| `qwen3.6:27b-mlx-work-64k`         | 長文読解・レビュー   | `review-agent`       | 現在のグローバルデフォルト     |
+| `gemma4:e4b-light-8k`              | 要約・整形・軽作業   | `light-edit-agent`   | 長文・複雑な判断には使用しない |
+| `qwen3.6:27b-coding-mxfp8-64k`     | 重い実装・修正       | `expert-edit-agent`  | メモリ使用量とロード時間が大きい |
 
-## Project Policy
+### 5.4. 推奨する追加設定
 
-- 変更前に関連する設計書を確認する。
-- `docs/` 配下の Markdown では、frontmatter の `id`・`based_on`・`status` を尊重する。
-- 既存の命名規則・ディレクトリ規則を優先する。
-- 大きな変更は、まず設計書に反映してからコードを変更する。
+`.opencode/AGENTS.md` を共通指示として利用し、利用可能 provider をローカル Ollama に限定する場合は、次の設定を `opencode.json` に追加する。
 
-## SpecDojo Workflow
-
-Before starting implementation:
-
-1. Run: `specdojo exec validate`
-2. Run: `specdojo exec build`
-3. Claim a task via the scheduler (see agent-specific prompt for details).
-4. Read generated task files and identify the task's owner role.
-5. Adopt the role context indicated by the task's owner field.
-6. Execute only the claimed task.
-7. Do not edit unrelated deliverables unless the claimed task explicitly requires it.
-8. After finishing, run validate/build, then mark the task complete or block it.
-
-## Safety
-
-- `.env`、`.env.*`、`secrets/`、認証情報、秘密鍵は読み込まない。
-- 破壊的変更を行う前に git diff を確認する。
-- ファイル削除、広範囲置換、ディレクトリ移動は慎重に行う。
-- Never complete a task that was not actually implemented.
-- Never claim multiple tasks in one agent process unless explicitly instructed.
-- If Git has unexpected changes, stop and report.
+```jsonc
+{
+  "instructions": [".opencode/AGENTS.md"],
+  "enabled_providers": ["ollama-local"],
+  "share": "disabled",
+  "autoupdate": "notify"
+}
 ```
+
+`instructions` がない現在の実設定では、`.opencode/AGENTS.md` は自動読込対象ではない。project root の `AGENTS.md` を作るか、上記設定を追加する必要がある。
+
+## 6. 共通指示の設計
+
+OpenCode は project root から上位方向に `AGENTS.md` を探索する。project root に `AGENTS.md` がある場合は、それをプロジェクト共通ルールの正本とする。
+
+OpenCode 固有ルールを `.opencode/AGENTS.md` に分離する場合は、`opencode.json` の `instructions` で明示的に読み込む。`instructions` で指定したファイルは `AGENTS.md` と結合される。
+
+共通指示は次の内容に限定する。
+
+- 言語、命名、Markdown frontmatter の規則
+- 変更前に読むべき設計書と既存パターン
+- 渡された plan だけを実行する SpecDojo ワークフロー
+- result ファイルへの done criteria 記録
+- `.env`、secrets、破壊的操作、`git push` の禁止
+- 利用可能なモデルIDと用途
+
+現在の `.opencode/AGENTS.md` に記載された `gemma4:e4b`、`gemma4:26b`、`qwen3-coder:30b` は `opencode.json` のモデルIDと一致しないため、agent 運用開始前に5.3節のモデルIDへ更新する。
 
 ## 7. `.opencode/agents/` エージェント定義
 
-エージェントは `.opencode/agents/<name>.md` に Markdown 形式で定義する。YAML フロントマターにモデル・モード・権限を記述し、本文がシステムプロンプトになる。`opencode run --agent <name>` でエージェントを指定して起動する。
+OpenCode の project agent は `.opencode/agents/<name>.md` に定義する。ファイル名が `--agent` で指定する agent 名になる。YAML frontmatter に agent 設定、本文にシステムプロンプトを記述する。
 
-### 7.1. `edit-agent.md`
+### 7.1. frontmatter フィールド
 
-`.opencode/agents/edit-agent.md`：
+| フィールド    | 必須 | 説明                                                                 |
+| ------------- | ---- | -------------------------------------------------------------------- |
+| `description` | ○    | agent の用途と選択条件                                               |
+| `mode`        | -    | `primary` / `subagent` / `all`。SpecDojo 直接起動では `primary`      |
+| `model`       | -    | `provider/model-id`。省略時はグローバルモデル                        |
+| `temperature` | -    | 出力のランダム性                                                     |
+| `permission`  | -    | `allow` / `ask` / `deny` またはコマンド別パターン                    |
+| `steps`       | -    | agent の最大ステップ数                                               |
+
+`tools` は非推奨のため、新規設定では `permission` を使用する。
+
+### 7.2. `edit-agent.md`
+
+通常 edit agent は `qwen3.6:27b-mlx-work-32k` を使用する。SpecDojo が plan を渡すため、agent 自身は scheduler、claim、complete、block を実行しない。
 
 ```markdown
 ---
-description: 'SpecDojo タスクを1件実行する標準作業エージェント。文書作成・実装・設定変更を担当する。'
+description: SpecDojo の edit plan を1件実行する通常作業エージェント。
 mode: primary
 model: ollama-local/qwen3.6:27b-mlx-work-32k
-temperature: 0.3
-permission:
-  read: allow
-  glob: allow
-  grep: allow
-  list: allow
-  bash: allow
-  edit: allow
----
-
-You are edit-agent, a SpecDojo task execution agent.
-
-Your job is to implement exactly one claimed SpecDojo task.
-
-Follow this process:
-
-1. Run: specdojo exec validate
-2. Run: specdojo exec build
-3. Run: specdojo exec scheduler --by opencode-edit-agent
-4. Read the claimed task from generated state.
-5. Identify the task's owner role and adopt that role perspective:
-   - BA: requirements, acceptance criteria, user perspective
-   - ARC: document structure, naming, consistency, technical constraints
-   - DEV: implementation, configuration, code quality, build
-   - PM: planning, milestones, risk, progress
-   - UX: readability, clarity, user flow, information architecture
-   - OPS: release, deployment, change management
-6. Read related source documents before editing.
-7. Update only the files necessary for the claimed task.
-8. Keep Markdown structure, frontmatter, IDs, and file naming consistent.
-9. Run: specdojo exec validate
-10. If validation passes, complete the task:
-    specdojo exec complete --task <task-id> --by opencode-edit-agent --msg "completed"
-11. If blocked, record the block event with a clear reason:
-    specdojo exec block --task <task-id> --by opencode-edit-agent --msg "<reason>"
-
-Do not invent project facts.
-Do not change schedule files unless the task explicitly asks for it.
-Do not mark the task complete if validation fails.
-Do not claim more than one task.
-```
-
-### 7.2. `review-agent.md`
-
-`.opencode/agents/review-agent.md`：
-
-```markdown
----
-description: 'SpecDojo の完了タスクをレビューするエージェント。done_criteria を多観点で検証する。'
-mode: primary
-model: ollama-local/qwen3.6:27b-mlx-work-64k
 temperature: 0.2
 permission:
   read: allow
@@ -261,94 +210,93 @@ permission:
   list: allow
   bash: allow
   edit: allow
+  webfetch: deny
+  websearch: deny
+  external_directory: deny
 ---
 
-You are review-agent, a SpecDojo structured review agent.
-
-Your job is to generate review plans and fill in review results for recently completed deliverables.
-
-Follow this process for each completed task:
-
-1. Run: specdojo exec build
-2. Read generated/state.json to identify tasks with status "done".
-3. For each done task, identify the deliverable's local_id.
-4. Generate a review plan:
-   Run: specdojo review plan --local-id <local_id> --stage draft
-5. Read the generated rvp-<local_id>-draft.yaml to see review_items and assigned roles.
-6. For each role listed in review_items:
-   a. Run: specdojo review result --local-id <local_id> --stage draft --role <ROLE>
-   b. Read the scaffolded rvr-<local_id>-draft-<role>.yaml.
-   c. Read the target deliverable file specified in rvp target.path.
-   d. For each review_result entry: set result, add evidence and notes.
-   e. Run machine checks as listed in machine_checks.
-   f. Save the filled rvr-<local_id>-draft-<role>.yaml.
-7. After all roles are filled, identify any cross-viewpoint contradictions.
-8. Report a summary of all findings by viewpoint.
-
-Role viewpoint guidelines:
-
-- BA: 業務価値・要件の網羅性・ステークホルダー明確さ
-- PO: 目的整合・意思決定可能な情報の有無
-- ARC: 文書構成・技術制約・ドキュメント間整合
-- PM: 計画実現性・進捗報告可能性
-- DEV: 実装可能性・ビルド・テスト観点
-- QE: 検証可能性・抜け漏れ・矛盾
-- UX: 読みやすさ・明確さ・情報構造
-
-Safety rules:
-
-- Only edit rvr-\*.yaml files in the reviews/results/ directory.
-- Do not modify deliverable files outside reviews/.
-- Do not mark a review as "pass" unless all criteria are verifiably met.
+Read the SpecDojo plan provided in the prompt.
+Implement only that task, verify the done criteria, and update the result file.
+Do not claim, complete, or block tasks directly.
 ```
 
-### 7.3. エージェント一覧
+### 7.3. `review-agent.md`
 
-| ファイル名        | `--agent` 指定名 | pm-members nickname     | モード    | モデル                     | 用途                           |
-| ----------------- | ---------------- | ----------------------- | --------- | -------------------------- | ------------------------------ |
-| `edit-agent.md`   | `edit-agent`     | `opencode-edit-agent`   | `primary` | `qwen3.6:27b-mlx-work-32k` | 文書・コードの新規作成・実装   |
-| `review-agent.md` | `review-agent`   | `opencode-review-agent` | `primary` | `qwen3.6:27b-mlx-work-64k` | done_criteria の多観点レビュー |
+review agent は長文対応モデルを使用し、成果物を変更しない。SpecDojo の result ファイルだけを更新できるよう、`edit` permission をパス単位で許可する。
+
+```markdown
+---
+description: SpecDojo の review plan を多観点で検証するレビューエージェント。
+mode: primary
+model: ollama-local/qwen3.6:27b-mlx-work-64k
+temperature: 0.1
+permission:
+  read: allow
+  glob: allow
+  grep: allow
+  list: allow
+  bash: allow
+  edit:
+    "*": deny
+    "docs/ja/projects/**/execution/exec/results/**": allow
+  webfetch: deny
+  websearch: deny
+  external_directory: deny
+---
+
+Read the review plan and target deliverables.
+Report findings by severity with evidence. Do not modify deliverables.
+```
+
+### 7.4. エージェント一覧
+
+| ファイル名              | `--agent` 指定名   | mode      | モデル                             | 用途                     |
+| ----------------------- | ------------------ | --------- | ---------------------------------- | ------------------------ |
+| `edit-agent.md`         | `edit-agent`       | `primary` | `qwen3.6:27b-mlx-work-32k`         | 通常 edit                |
+| `review-agent.md`       | `review-agent`     | `primary` | `qwen3.6:27b-mlx-work-64k`         | 長文 review              |
+| `light-edit-agent.md`   | `light-edit-agent` | `primary` | `gemma4:e4b-light-8k`              | 軽い要約・整形           |
+| `expert-edit-agent.md`  | `expert-edit-agent`| `primary` | `qwen3.6:27b-coding-mxfp8-64k`     | 重い実装・複雑な修正     |
 
 ## 8. エージェント割り当て設定
 
-エージェント割り当てのより詳細な設計は [specdojo-exec-strategy-guide](../../specdojo/guides/specdojo-exec-strategy-guide.md) を参照。
-
 ### 8.1. `pm-members.yaml`
 
-`docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml` にエージェントをプロジェクトメンバーとして定義する。`command` フィールドが `exec run` から直接呼び出されるコマンドになる。
+`pm-members.yaml` の `command` を `specdojo exec run` が直接起動する。現在の設定は通常 edit / review の2メンバーである。
 
 ```yaml
 members:
   - nickname: opencode-edit-agent
-    display_name: OpenCode Edit Agent
     type: agent
+    mode: edit
+    proficiency: normal
     capabilities: []
-    command: 'opencode run --agent edit-agent'
+    command: "opencode run --agent edit-agent"
     scheduler_strategy: critical-first
-    note: 成果物の新規作成・文書化を担当する標準エージェント。
 
   - nickname: opencode-review-agent
-    display_name: OpenCode Review Agent
     type: agent
+    mode: review
+    proficiency: normal
     capabilities: []
-    command: 'opencode run --agent review-agent'
+    command: "opencode run --agent review-agent"
     scheduler_strategy: fifo
-    note: 多観点レビューを担当するエージェント。ファイルの編集は行わない。
 ```
 
-### 8.2. `exec-strategy-<track>.yaml`
+ローカルLLM agent は外部 Web 検索を使わないため `capabilities: []` とする。重い実装用 agent を追加する場合は `proficiency: expert` の member と `.opencode/agents/expert-edit-agent.md` を同時に追加する。
 
-`docs/ja/projects/prj-0001/execution/exec-strategy-<track>.yaml` にフェーズに応じたエージェント割り当てを定義する。
+### 8.2. `exec-strategy-<track>.yaml`
 
 ```yaml
 assignment_rules:
   - phase_set: first-pass
-    members:
-      - opencode-edit-agent
+    phase: enrich
+    mode: edit
+    proficiency: normal
 
   - phase_set: finalize-pass
-    members:
-      - opencode-edit-agent
+    phase: align
+    mode: review
+    proficiency: normal
 
 rate_limit_policy:
   on_non_critical:
@@ -358,113 +306,95 @@ rate_limit_policy:
     retry:
       max_attempts: 3
       initial_wait_seconds: 60
-      backoff_multiplier: 3
+      backoff_multiplier: 2
       max_wait_seconds: 600
     on_exhausted: block
 ```
 
-Ollama ではモデルのロードが遅く、rate limit の代わりにタイムアウトが発生する場合がある。その場合も `try_next` で次のメンバーへフォールバックする。
+Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になる。`try_next` を有効にする場合は、同じ mode と proficiency に適合する代替 member を定義する。
 
 ### 8.3. `.specdojo/exec-agent.yaml`
 
-グローバルな rate limit 検出設定を定義する。
+グローバルな rate limit 検出設定は [exec-agent.yaml](../../../../.specdojo/exec-agent.yaml) に定義する。現在は `rate limit` と `429` を検出する。Ollama のタイムアウトをフォールバック対象にする場合は、誤検出範囲を確認してから stderr pattern を追加する。
 
-```yaml
-rate_limit_detection:
-  exit_codes: [1]
-  stderr_patterns:
-    - 'rate limit'
-    - '429'
-    - 'timeout'
-```
-
-### 8.4. `exec run` による実行
-
-`specdojo exec run` でフェーズを順に実行する。runner スクリプトは不要。
+### 8.4. 実行コマンド
 
 ```bash
-# edit: edit-agent で並列実行（PARALLEL はデフォルト値を使う）
+# 1バッチ実行
 specdojo exec run --auto --parallel 3
 
-# review: review-agent（edit-agent と異なるモデルを使用するため別コマンドで実行）
-specdojo exec run --by opencode-review-agent
+# ready タスクがなくなるまで実行
+specdojo exec run --auto --loop --parallel 3
+
+# OpenCode agent を明示して実行
+specdojo exec run --by opencode-edit-agent
 ```
 
-## 9. `opencode serve` 常駐モード
+## 9. 非対話実行とセッション
 
-Ollama は27Bモデルのロードに数秒〜数十秒かかる。`opencode run` を毎回コールドスタートすると、呼び出しごとにこのオーバーヘッドが生じる。`opencode serve` で常駐サーバーを起動し、`--attach` で接続することでロード時間を削減できる。
+`opencode run [message..]` は非対話実行用コマンドである。`--agent` で primary agent、`--model` で一時的なモデル、`--format json` で raw JSON event 出力を指定できる。
 
 ```bash
-# 常駐サーバーを起動（バックグラウンド）
-opencode serve &
-OPENCODE_URL=http://localhost:4096
-
-# タスク実行を常駐サーバーにアタッチ
-opencode run --attach "${OPENCODE_URL}" --agent edit-agent \
-  "SpecDojo task を1件実行してください"
+opencode run \
+  --agent edit-agent \
+  --format json \
+  "SpecDojo plan を実行してください"
 ```
 
-`pm-members.yaml` の `command` フィールドに `--attach` を組み込む場合は、`OPENCODE_URL` 環境変数を `specdojo exec run` の起動前に export しておく。
+`--dangerously-skip-permissions` は明示的に deny していない permission を自動承認するため、SpecDojo の通常運用では使用しない。必要な操作は agent 定義の `permission` で allow / deny を明確にする。
+
+## 10. `opencode serve` 常駐モード
+
+`opencode run` は実行ごとにローカル backend と MCP server を起動する。起動コストを削減する場合は `opencode serve` を常駐させ、`opencode run --attach` で接続する。
 
 ```bash
-export OPENCODE_URL=http://localhost:4096
-opencode serve &
-specdojo exec run --auto --parallel 3
+export OPENCODE_SERVER_PASSWORD='<secret>'
+opencode serve --hostname 127.0.0.1 --port 4096
+
+opencode run \
+  --attach http://127.0.0.1:4096 \
+  --username opencode \
+  --password "${OPENCODE_SERVER_PASSWORD}" \
+  --agent edit-agent \
+  "SpecDojo plan を実行してください"
 ```
 
-常駐モードを使う場合は、edit フェーズと review フェーズでモデルが異なるため、フェーズ切り替え時にサーバーを再起動してモデルをアンロードすることを推奨する。
+常駐 server は loopback に限定し、共有環境では `OPENCODE_SERVER_PASSWORD` を設定する。モデル本体の保持・アンロードは Ollama 側の設定にも依存する。
 
-## 10. worktree 分離セットアップ
+## 11. worktree 分離セットアップ
 
-複数 `edit-agent` を並列実行する場合は **タスクごとに** worktree を作成し、Git working tree の競合を防ぐ。worktree 名とブランチ名は task_id を使う。`specdojo exec run` が claim 時に自動でセットアップし、complete / block 後に破棄する。`review-agent` は成果物を読み取るだけなので worktree 分離は不要。
+複数 edit agent を並列実行する場合はタスクごとに worktree を作成する。review agent は成果物を変更しない構成のため、原則として worktree 分離を不要とする。
 
-### 10.1. ライフサイクル
-
-| タイミング          | 操作                                                          |
-| ------------------- | ------------------------------------------------------------- |
-| claim 時            | `git worktree add ../worktrees/<task-id> -b exec/<task-id>`   |
-| complete / block 時 | `git worktree remove ../worktrees/<task-id>` でクリーンアップ |
-
-`specdojo exec run` がこのライフサイクルを自動管理するため、手動セットアップは原則不要。
-
-### 10.2. ディレクトリ構成
-
-```text
-repo/
-worktrees/
-  T-ARC-base-arch-010/      # ブランチ: exec/T-ARC-base-arch-010（実行中）
-  T-BA-user-story-020/      # ブランチ: exec/T-BA-user-story-020（実行中）
-  T-DEV-api-impl-010/       # ブランチ: exec/T-DEV-api-impl-010（実行中）
-```
-
-並列実行中のタスク数だけ worktree が存在する。task_id で一目でどのタスクが動いているかがわかる。
-
-### 10.3. 手動実行時の worktree セットアップ
-
-`specdojo exec run` を使わず手動で実行する場合：
+| タイミング          | 操作                                                        |
+| ------------------- | ----------------------------------------------------------- |
+| claim 時            | `git worktree add ../worktrees/<task-id> -b exec/<task-id>` |
+| complete / block 時 | `git worktree remove ../worktrees/<task-id>`                |
 
 ```bash
 TASK_ID=T-ARC-base-arch-010
 git worktree add ../worktrees/${TASK_ID} -b exec/${TASK_ID}
-
 cd ../worktrees/${TASK_ID}
 opencode run --agent edit-agent "SpecDojo task ${TASK_ID} を実行してください"
-
-# 完了後クリーンアップ
 git worktree remove ../worktrees/${TASK_ID}
 ```
 
-### 10.4. イベントファイルの命名規則
+イベントファイル名は `<timestamp>-<by>-<task-id>-<event-type>.json` とし、worktree 間の衝突を防ぐ。
 
-worktree 分離時は `exec/events/` への append-only イベントがブランチ間で衝突しやすい。イベントファイル名は必ずユニークにする。
+## 12. 現状差分と導入順序
 
-形式：`<timestamp>-<by>-<task-id>-<event-type>.json`
+| 項目                         | 現状                                         | 導入時の対応                                      |
+| ---------------------------- | -------------------------------------------- | ------------------------------------------------- |
+| `opencode.json`              | provider・4モデル・デフォルトモデルを定義済み | 必要に応じて `instructions` と provider 制限を追加 |
+| `.opencode/AGENTS.md`        | 存在するがモデルIDが実設定と不一致           | モデル用途を5.3節へ合わせて更新                   |
+| `.opencode/agents/*.md`      | 未作成                                       | edit / review agent を作成                        |
+| `pm-members.yaml`            | edit / review の command を定義済み          | agent ファイル作成後に実行確認                    |
+| `exec-agent.yaml`            | `rate limit` / `429` を検出                  | Ollama固有エラーを必要に応じて追加                |
 
-```text
-exec/events/
-  20260305T031000Z-opencode-edit-agent-T-ARC-base-arch-010-claim.json
-  20260305T031530Z-opencode-edit-agent-T-ARC-base-arch-010-complete.json
-  20260305T031000Z-opencode-edit-agent-T-BA-user-story-020-claim.json
-```
+導入は `AGENTS.md` 読込方法の確定、agent ファイル作成、`opencode agent list` による認識確認、単一タスク実行、並列実行の順で進める。
 
-task_id がユニークなため、同じエージェントが並列実行しても衝突しない。
+## 13. 公式仕様参照
+
+- [OpenCode Config](https://opencode.ai/docs/config/)
+- [OpenCode Agents](https://opencode.ai/docs/agents/)
+- [OpenCode Rules](https://opencode.ai/docs/rules/)
+- [OpenCode CLI](https://opencode.ai/docs/cli/)
