@@ -260,6 +260,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       if (!id) continue
       const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
       const taskArtifactName = taskLocalId ? artifactNameMap.get(taskLocalId) : undefined
+      const taskDescription = typeof tv['description'] === 'string' ? tv['description'] : undefined
       nodes.set(id, {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
@@ -272,6 +273,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
         kind: 'task',
         schedule_file: f,
         ...(taskTags ? { tags: taskTags } : {}),
+        ...(taskDescription ? { description: taskDescription } : {}),
       })
     }
 

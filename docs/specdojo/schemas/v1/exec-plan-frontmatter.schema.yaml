@@ -52,6 +52,14 @@ properties:
     pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
     description: "Rulebook ID for this document type. Use 'xep-rulebook' or 'none'."
 
+  owner:
+    type: string
+    description: "Owner role code (e.g., PM, BA, ARC). Carried from the schedule task."
+
+  on_critical_path:
+    type: boolean
+    description: "True when the task has CPM slack=0. Omitted when not on the critical path."
+
   agent:
     type: string
     description: "Agent nickname assigned to this task. Set by exec run at claim time."

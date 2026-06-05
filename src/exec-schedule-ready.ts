@@ -72,6 +72,7 @@ export function buildReadySnapshot(
             slack: cpmNode.slack,
           }
         : undefined,
+      ...(node?.description ? { description: node.description } : {}),
     }
   })
 

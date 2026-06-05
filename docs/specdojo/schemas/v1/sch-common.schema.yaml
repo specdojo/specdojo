@@ -171,6 +171,9 @@ $defs:
       notes:
         type: string
         description: "Optional free-form notes. Keep concise."
+      description:
+        type: string
+        description: "Phase-level description carried from sch-strategy. Used as agent/human instructions in exec plans."
 
   Milestone:
     type: object

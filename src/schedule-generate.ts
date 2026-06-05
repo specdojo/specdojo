@@ -15,6 +15,7 @@ type StrategyPhase = {
   name: string
   task_suffix: string
   duration_days: number
+  description?: string
 }
 
 type OwnerRule = {
@@ -99,6 +100,7 @@ export type GeneratedTask = {
   depends_on: string[]
   owner: string
   tags?: string[]
+  description?: string
 }
 
 export type GeneratedMilestone = {
@@ -368,6 +370,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,
+        ...(phase.description ? { description: phase.description } : {}),
       })
       if (!lastPhaseSetSuffixes.has(phase.task_suffix)) {
         lastPreFinalizeId = taskId

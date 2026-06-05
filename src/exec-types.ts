@@ -65,6 +65,7 @@ export type ScheduleNode = {
   kind: 'task' | 'milestone' | 'gate'
   schedule_file: string
   tags?: string[]
+  description?: string
 }
 
 export type ScheduleCalendar = {
@@ -143,6 +144,7 @@ export type ReadyTaskView = {
     lf: number
     slack: number
   }
+  description?: string
 }
 
 export type ReadySnapshot = {
@@ -190,6 +192,8 @@ export type ExecPlanMeta = {
   mode: TaskMode
   status: 'ready'
   project_id: string
+  owner?: string
+  on_critical_path?: true
   agent?: string
   viewpoints_ref?: string
 }
