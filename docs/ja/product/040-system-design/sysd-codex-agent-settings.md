@@ -19,7 +19,7 @@ SpecDojo・Codex・`specdojo exec run` の3層に責務を分割する。
 
 Codex CLI は非対話実行、sandbox、reasoning effort、構造化出力を組み合わせられるため、自動化・CI・複雑な実装タスクに適する。
 
-- **非対話実行は `codex exec`**: TUI を起動せず、タスクプロンプトを渡して応答後に終了する。
+- **非対話実行は `codex exec`**: TUI を起動せず、タスクプロンプトを渡して応答後に終了する。`--ask-for-approval` は存在しないが、`codex exec` は元々非対話モードであり、sandbox の範囲内は自動実行・sandbox 外はブロックとなる。
 - **用途別モデル分担**: 標準作業を高速・低コストモデル、複雑な設計判断を高性能モデルで分担する。
 - **共有設定は `.codex/config.toml`**: trusted project で読み込まれるプロジェクトデフォルトを定義する。
 - **プロジェクト共通ルールは `AGENTS.md`**: セッション開始時に自動読み込みされる。
@@ -46,13 +46,13 @@ specdojo exec build
 ready.json / exec/plans/<task-id>-plan.md（edit-plan or review-plan）
    ↓
 [edit]   specdojo exec run --auto --loop --parallel 3
-        → codex-edit-agent × N が codex exec --sandbox workspace-write "<plan>" で並列起動
+        → codex-edit-agent × N が codex exec --ephemeral --sandbox workspace-write で並列起動（plan は stdin 経由）
         → plan と AGENTS.md に従い成果物を作成・編集
         → result ファイルの done_criteria_checked セクションを記入
         → 終了コード 0 → exec complete / 終了コード 1 → exec block
 
 [review] specdojo exec run --auto
-        → codex-review-agent が codex exec --sandbox read-only "<review-plan>" で起動
+        → codex-review-agent が codex exec --ephemeral --sandbox read-only で起動（plan は stdin 経由）
         → review-plan の各観点を確認し result に記入
 ```
 
@@ -117,7 +117,7 @@ max_threads = 6
 max_depth = 1
 ```
 
-自動実行では `pm-members.yaml` の command で `--ask-for-approval never` と sandbox を明示する。CLI flag と `-c key=value` は `.codex/config.toml` より優先される。`--profile` は `~/.codex/<profile-name>.config.toml` を読み込む個人設定であり、プロジェクト共有設定としては使用しない。
+自動実行では `pm-members.yaml` の command で sandbox を明示する。CLI flag と `-c key=value` は `.codex/config.toml` より優先される。`--profile` は `~/.codex/<profile-name>.config.toml` を読み込む個人設定であり、プロジェクト共有設定としては使用しない。
 
 ## 7. `AGENTS.md` 設計
 
@@ -137,16 +137,13 @@ Codex は Git root から現在の作業ディレクトリまで `AGENTS.md` を
 - 変更前に関連する設計書を確認する。
 - タスクに関係しない変更を行わない。
 
-## SpecDojo Workflow
-
-- 渡された plan を読み、対象タスクだけを実行する。
-- result ファイルの done_criteria_checked を記録する。
-
 ## Safety
 
 - 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
 - 破壊的変更や `git push` を行わない。
 ```
+
+SpecDojo のタスク実行手順（plan の読み方・result の記入方法）は exec plan ファイル自体に記載されるため、`AGENTS.md` には含めない。`AGENTS.md` はプロジェクト全体の言語・ポリシー・安全規則のみを定義する。
 
 ## 8. Codex worker と custom agent の設計
 
@@ -193,7 +190,7 @@ members:
     capabilities: [web_search]
     proficiency: normal
     priority: 10
-    command: 'codex exec --ephemeral --ask-for-approval never --sandbox workspace-write --model gpt-5.4-mini -c model_reasoning_effort="medium"'
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
 
   - nickname: codex-review-agent
@@ -202,7 +199,7 @@ members:
     capabilities: [web_search]
     proficiency: normal
     priority: 10
-    command: 'codex exec --ephemeral --ask-for-approval never --sandbox read-only --model gpt-5.4-mini -c model_reasoning_effort="medium"'
+    command: 'codex exec --ephemeral --sandbox read-only --model gpt-5.4-mini -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
 
   - nickname: codex-expert-edit-agent
@@ -211,7 +208,7 @@ members:
     capabilities: [web_search]
     proficiency: expert
     priority: 20
-    command: 'codex exec --ephemeral --ask-for-approval never --sandbox workspace-write --model gpt-5.5 -c model_reasoning_effort="high"'
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
 
   - nickname: codex-expert-review-agent
@@ -220,7 +217,7 @@ members:
     capabilities: [web_search]
     proficiency: expert
     priority: 20
-    command: 'codex exec --ephemeral --ask-for-approval never --sandbox read-only --model gpt-5.5 -c model_reasoning_effort="high"'
+    command: 'codex exec --ephemeral --sandbox read-only --model gpt-5.5 -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
 ```
 
@@ -273,11 +270,20 @@ specdojo exec run --auto --loop --parallel 3
 ```bash
 codex exec \
   --ephemeral \
-  --ask-for-approval never \
   --sandbox workspace-write \
   --model gpt-5.4-mini \
   -c model_reasoning_effort='"medium"' \
   "SpecDojo task を1件実行してください"
+```
+
+`specdojo exec run` との統合では、plan の内容は**引数ではなく stdin** 経由で渡す。YAML frontmatter の `---` がコマンドラインオプションとして誤認されるのを防ぐためである。
+
+```bash
+cat exec/plans/<task-id>-plan.md | codex exec \
+  --ephemeral \
+  --sandbox workspace-write \
+  --model gpt-5.4-mini \
+  -c model_reasoning_effort='"medium"'
 ```
 
 非対話実行では新しい承認要求に応答できない。必要な操作が sandbox の範囲を超える場合は、権限を広げて再実行せず、タスクを block して人間へ判断を戻す。

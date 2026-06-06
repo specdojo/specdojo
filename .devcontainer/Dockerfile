@@ -19,6 +19,7 @@ RUN apt-get update && \
       libxrandr2 \
       libgbm1 \
       libasound2 \
+      bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
 # Codex / OpenCode
