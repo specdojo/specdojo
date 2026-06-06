@@ -33,11 +33,11 @@
       }
     },
     "T-LAUNCH-prj-overview-020": {
-      "state": "doing",
-      "last_ts": "2026-06-04T12:45:58Z",
+      "state": "todo",
+      "last_ts": "2026-06-05T22:32:15Z",
       "last_by": "claude-edit-agent",
-      "last_type": "claim",
-      "last_msg": "auto-run",
+      "last_type": "cancel",
+      "last_msg": "claimの不具合修正",
       "meta": {
         "claim_owner": "",
         "planned_owner": "BA"

@@ -1,9 +1,9 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { listFilesRecursive, readJson } from './exec-shared.js'
-import type { ExecPlanMeta, ReadySnapshot, ReadyTaskView, TaskMode } from './exec-types.js'
+import type { ExecPlanMeta, ReadySnapshot, ReadyTaskView, StateSnapshot, TaskMode } from './exec-types.js'
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
 import type { ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
 
@@ -324,7 +324,8 @@ export function generatePlans(
   executionPath: string,
   projectId: string,
   catalogPath: string,
-  viewpointsPath: string | undefined
+  viewpointsPath: string | undefined,
+  stateSnapshot: StateSnapshot | null
 ): void {
   const generatedDir = join(executionPath, 'generated')
   const readyJsonPath = join(generatedDir, 'ready.json')
@@ -334,10 +335,23 @@ export function generatePlans(
   const tasks = (Array.isArray(ready.tasks) ? ready.tasks : []) as PlanTask[]
 
   const plansDir = join(executionPath, 'exec', 'plans')
-  // Remove only plan files and index.md; preserve the claims/ subdirectory.
+
+  // Preserve plan files for doing/blocked tasks so they remain accessible
+  // after exec build without a separate claims snapshot.
+  const activeTaskIds = new Set<string>()
+  if (stateSnapshot) {
+    for (const [taskId, state] of Object.entries(stateSnapshot.tasks)) {
+      if (state.state === 'doing' || state.state === 'blocked') {
+        activeTaskIds.add(taskId)
+      }
+    }
+  }
+
   if (existsSync(plansDir)) {
     for (const entry of readdirSync(plansDir)) {
-      if (entry === 'claims') continue
+      if (entry === 'index.md') { rmSync(join(plansDir, entry)); continue }
+      const taskId = entry.replace(/-plan\.md$/, '')
+      if (activeTaskIds.has(taskId)) continue
       rmSync(join(plansDir, entry), { recursive: true, force: true })
     }
   }
@@ -388,70 +402,5 @@ export function planPathForTask(executionPath: string, taskId: string): string {
 export function loadPlan(executionPath: string, taskId: string): string | null {
   const planPath = planPathForTask(executionPath, taskId)
   if (existsSync(planPath)) return readFileSync(planPath, 'utf8')
-
-  // Fallback: task may be in "doing" state and no longer in ready.json.
-  // Use the claim snapshot saved at claim time.
-  const claimsDir = join(executionPath, 'exec', 'plans', 'claims', taskId)
-  if (existsSync(claimsDir)) {
-    const files = readdirSync(claimsDir)
-      .filter(name => name.endsWith('.md'))
-      .sort((a, b) => a.localeCompare(b))
-    const latest = files.at(-1)
-    if (latest) return readFileSync(join(claimsDir, latest), 'utf8')
-  }
   return null
-}
-
-// ---------------------------------------------------------------------------
-// Claim snapshot: saves a copy of the plan at claim time for audit purposes
-// ---------------------------------------------------------------------------
-
-function writePlanClaimSnapshotIndex(claimsDir: string): void {
-  mkdirSync(claimsDir, { recursive: true })
-
-  const taskDirs = readdirSync(claimsDir)
-    .map(name => ({ name, path: join(claimsDir, name) }))
-    .filter(entry => statSync(entry.path).isDirectory())
-    .sort((a, b) => a.name.localeCompare(b.name))
-
-  const lines: string[] = []
-  lines.push('# Plan Claim Snapshot Index')
-  lines.push('')
-  lines.push('claim 時点で固定保存した exec plan の一覧。')
-  lines.push('')
-  lines.push('| task_id | snapshots | latest | latest_file |')
-  lines.push('|---|---:|---|---|')
-
-  for (const taskDir of taskDirs) {
-    const files = readdirSync(taskDir.path)
-      .filter(name => name.endsWith('.md'))
-      .sort((a, b) => a.localeCompare(b))
-    const latest = files.at(-1)
-    if (!latest) continue
-    lines.push(
-      `| \`${taskDir.name}\` | ${files.length} | \`${latest.replace(/\.md$/, '')}\` | [${latest}](./${taskDir.name}/${latest}) |`
-    )
-  }
-
-  lines.push('')
-  writeFileSync(join(claimsDir, 'index.md'), lines.join('\n'), 'utf8')
-}
-
-export function savePlanClaimSnapshot(
-  executionPath: string,
-  taskId: string,
-  actor: string,
-  eventTs: string,
-  tsForFilename: (ts: string) => string,
-  safeSlugFn: (s: string) => string
-): void {
-  const sourcePath = planPathForTask(executionPath, taskId)
-  if (!existsSync(sourcePath)) return
-
-  const claimsDir = join(executionPath, 'exec', 'plans', 'claims')
-  const snapshotDir = join(claimsDir, taskId)
-  mkdirSync(snapshotDir, { recursive: true })
-  const fileName = `${tsForFilename(eventTs)}--${safeSlugFn(actor)}.md`
-  copyFileSync(sourcePath, join(snapshotDir, fileName))
-  writePlanClaimSnapshotIndex(claimsDir)
 }

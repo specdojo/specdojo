@@ -1,3 +1,6 @@
 {"v":1,"ts":"2026-06-04T12:44:46Z","type":"claim","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"たたき台着手","meta":{"claim_owner":"BA","planned_owner":"BA"}}
 {"v":1,"ts":"2026-06-04T12:45:01Z","type":"complete","task_id":"T-LAUNCH-prj-overview-010","by":"indie","msg":"たたき台完了"}
 {"v":1,"ts":"2026-06-04T12:45:58Z","type":"claim","task_id":"T-LAUNCH-prj-overview-020","by":"claude-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-05T22:30:35Z","type":"cancel","task_id":"T-LAUNCH-prj-overview-020","by":"claude-edit-agent","msg":"claimの不具合修正"}
+{"v":1,"ts":"2026-06-05T22:31:48Z","type":"claim","task_id":"T-LAUNCH-prj-overview-020","by":"claude-edit-agent","msg":"claimの不具合修正","meta":{"claim_owner":"","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-05T22:32:15Z","type":"cancel","task_id":"T-LAUNCH-prj-overview-020","by":"claude-edit-agent","msg":"claimの不具合修正"}

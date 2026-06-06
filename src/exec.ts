@@ -42,8 +42,8 @@ import {
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
 import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot } from './exec-types.js'
-import { nowUtcIsoSeconds, readJson, requireNonEmpty, safeSlug, tsForFilenameUtc } from './exec-shared.js'
-import { generatePlans, savePlanClaimSnapshot } from './exec-plans.js'
+import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
+import { generatePlans } from './exec-plans.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
@@ -311,7 +311,6 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       writeScheduleHashAndDiff(schedulePath, state.schedule)
       writeCpmFiles(schedulePath, cpm, state.snapshot)
       generateTaskCatalog(schedulePath, executionPath)
-      savePlanClaimSnapshot(executionPath, taskId, actor, event.ts, tsForFilenameUtc, safeSlug)
       event.meta = {
         ...(event.meta ?? {}),
         claim_owner: claimOwner,
@@ -443,7 +442,8 @@ export function registerExecCommands(program: Command): void {
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
         catalogPath ?? '',
-        viewpointsPath
+        viewpointsPath,
+        snapshot
       )
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`)
@@ -598,7 +598,6 @@ export function registerExecCommands(program: Command): void {
         ev.meta.owner_override = true
       }
 
-      savePlanClaimSnapshot(executionPath, next, actor, ev.ts, tsForFilenameUtc, safeSlug)
       const out = writeEventFile(schedulePath, ev)
       process.stdout.write(out + '\n')
       exitWithCode(true)

@@ -2,23 +2,44 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 1,
+  "ready_count": 2,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-pm-plan-010",
+      "next_task_id": "T-LAUNCH-prj-overview-020",
       "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-020",
         "T-LAUNCH-pm-plan-010"
       ]
     },
     "fifo": {
       "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
-        "T-LAUNCH-pm-plan-010"
+        "T-LAUNCH-pm-plan-010",
+        "T-LAUNCH-prj-overview-020"
       ]
     }
   },
   "tasks": [
+    {
+      "id": "T-LAUNCH-prj-overview-020",
+      "local_id": "prj-overview",
+      "name": "調査・補強",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 2,
+      "critical_first_rank": 1,
+      "cpm": {
+        "es": 0.25,
+        "ef": 0.75,
+        "ls": 0.25,
+        "lf": 0.75,
+        "slack": 0
+      },
+      "description": "エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。\n既存記述との矛盾・抜け漏れも確認し、修正・追記する。\n調査結果は出典・根拠とともに記載する。\n",
+      "mode": "edit",
+      "execution": "agent"
+    },
     {
       "id": "T-LAUNCH-pm-plan-010",
       "local_id": "pm-plan",
@@ -26,7 +47,7 @@
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 1,
-      "critical_first_rank": 1,
+      "critical_first_rank": 2,
       "cpm": {
         "es": 0,
         "ef": 0.25,
@@ -34,6 +55,7 @@
         "lf": 3.5,
         "slack": 3.25
       },
+      "description": "担当ロールが成果物の初版を作成する。\n章構成・記載項目を決め、現時点で把握している情報を埋める。\n調査・確認が必要な箇所は TODO として明示したまま残す。\n",
       "mode": "edit",
       "execution": "human"
     }
