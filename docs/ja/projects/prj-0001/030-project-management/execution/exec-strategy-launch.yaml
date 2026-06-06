@@ -39,12 +39,12 @@ assignment_rules:
 
 rate_limit_policy:
   on_non_critical:
-    action: skip            # cpm.slack > 0: block イベントを記録して次のタスクへ
+    action: skip # cpm.slack > 0: block イベントを記録して次のタスクへ
   on_critical:
-    action: try_next        # cpm.slack == 0: candidates 配列の次の agent へ
+    action: try_next # cpm.slack == 0: candidates 配列の次の agent へ
     retry:
       max_attempts: 3
       initial_wait_seconds: 60
-      backoff_multiplier: 3  # 60s → 180s → 540s
+      backoff_multiplier: 3 # 60s → 180s → 540s
       max_wait_seconds: 600
-    on_exhausted: block      # 全候補試行後はブロックして人間に委ねる
+    on_exhausted: block # 全候補試行後はブロックして人間に委ねる
