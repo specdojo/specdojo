@@ -94,6 +94,7 @@ $defs:
     required:
       - nickname
       - display_name
+      - roles
       - type
     properties:
       nickname:

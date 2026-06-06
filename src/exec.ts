@@ -503,7 +503,7 @@ export function registerExecCommands(program: Command): void {
       // Single-role actors use claimOwner; multi-role actors (e.g. indie) check every role.
       const actorAllRoles = findRosterMember(roster, actor)
         ?.roles
-        .map(r => r.trim().toUpperCase())
+        ?.map(r => r.trim().toUpperCase())
         .filter(r => KNOWN_OWNER_LABELS.includes(r as (typeof KNOWN_OWNER_LABELS)[number])) ?? []
       const ownerCandidates =
         actorAllRoles.length > 1 ? actorAllRoles : (claimOwner ? [claimOwner] : [])

@@ -169,8 +169,10 @@ members:
   # codex members
   #
   - nickname: codex-edit-agent
+    display_name: Codex Edit Agent
     type: agent
     mode: edit
+    roles: []
     capabilities: [web_search]
     proficiency: normal
     priority: 1
@@ -178,8 +180,10 @@ members:
     scheduler_strategy: critical-first
 
   - nickname: codex-review-agent
+    display_name: Codex Review Agent
     type: agent
     mode: review
+    roles: []
     capabilities: [web_search]
     proficiency: normal
     priority: 1
@@ -187,8 +191,10 @@ members:
     scheduler_strategy: fifo
 
   - nickname: codex-expert-edit-agent
+    display_name: Codex Expert Edit Agent
     type: agent
     mode: edit
+    roles: []
     capabilities: [web_search]
     proficiency: expert
     priority: 2
@@ -196,8 +202,10 @@ members:
     scheduler_strategy: critical-first
 
   - nickname: codex-expert-review-agent
+    display_name: Codex Expert Review Agent
     type: agent
     mode: review
+    roles: []
     capabilities: [web_search]
     proficiency: expert
     priority: 2

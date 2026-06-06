@@ -87,6 +87,7 @@
     "SCHSTR",
     "SCHTLNCH",
     "scmd",
+    "seccomp",
     "shellcheck",
     "shfmt",
     "specdojo",
