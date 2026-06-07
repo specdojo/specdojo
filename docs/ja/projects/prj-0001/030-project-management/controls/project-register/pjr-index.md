@@ -112,7 +112,7 @@ Project Register
 | PJR-0091 | open | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | 2026-06-05 | - | - | - |
 | PJR-0092 | open | VitePressのルートをrepoルートに変更 | 将来的にソースコードへのリンクを容易にするため。また、vscodeの絶対パスとの整合性も保てる | todo | medium | ARC | 2026-06-07 | - | - | - |
 | PJR-0093 | done | sch-strategyのexecutionのautoを見直し | executionはauto/manualになっているがautoが単語として適切か確認 | todo | medium | ARC | 2026-06-07 | 2026-06-03 | manual/autoではなくhuman/agentに変更 | - |
-| PJR-0094 | open | sch-strategyのexecutionが後続に反映されているか| executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0094 | done | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | 2026-06-07 | executionをhuman,agentに見直し後続へ反映 | - |
 | PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | - |
 | PJR-0096 | done | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | .remarkrc.yamlでのschema適用優先順も含め修正 | - |
 | PJR-0097 | open | xep-rulebookの追加 | edit plan用のrulebookを追加 | todo | medium | ARC | 2026-06-07 | - | - | - |
