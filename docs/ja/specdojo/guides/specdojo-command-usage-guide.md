@@ -1058,7 +1058,7 @@ generated/
 exec/
 ├─ plans/        （exec build が生成する edit-plan / review-plan）
 │  └─ <task-id>-plan.md
-├─ results/      （exec run が生成・更新する実行結果）
+├─ results/      （exec claim が scaffold 生成し、exec run / 人が更新する実行結果）
 │  └─ <task-id>-result.md
 └─ events/
 ```
@@ -1130,6 +1130,8 @@ specdojo exec claim \
   --by agent-1 \
   --msg "start implementation"
 ```
+
+`claim` はタスクを `todo` から `doing` に遷移させると同時に、タスクの `mode`（edit / review）に応じた `exec/results/<task-id>-result.md` を scaffold 生成する（既に存在する場合はスキップする）。`exec run` を介さない手動 claim でも同様に生成される。
 
 #### 8.7.2. complete
 
@@ -1349,10 +1351,9 @@ rate_limit_detection:
 4. `--parallel` の数だけ並列で以下を実行する：
    a. worktree `<worktree_base>/<cmd>-<i>` が存在しない場合、`git worktree add <worktree_base>/<cmd>-<i> -b exec/<cmd>-<i>` でブランチを作成する。
    b. 作成した worktree に移動する。
-   c. `exec claim` でタスクを claim する。
-   d. `exec/results/<task-id>-result.md` を scaffold 生成する（エージェント起動前）。
-   e. `exec/plans/<task-id>-plan.md` を読み込み、`run.agent_commands[cmd] "<brief>"` を実行する（plan と brief の内容が引数として渡される）。
-   f. 終了コード 0 → `exec complete`（result の status を `complete` に更新）、終了コード 1 → `exec block`（result の status を `blocked` に更新）を記録する。
+   c. `exec claim` でタスクを claim する（claim と同時に `exec/results/<task-id>-result.md` を scaffold 生成する）。
+   d. `exec/plans/<task-id>-plan.md` を読み込み、`run.agent_commands[cmd] "<brief>"` を実行する（plan と brief の内容が引数として渡される）。
+   e. 終了コード 0 → `exec complete`（result の status を `complete` に更新）、終了コード 1 → `exec block`（result の status を `blocked` に更新）を記録する。
 5. 全インスタンスの終了を待つ。`--loop` を指定していない場合はここで終了する。
 
 `--loop` を指定した場合は、ready タスクが 0 件になるか `--max-rounds` に達するまでステップ 3 に戻ってラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によってアンロックされた後続タスクを反映する。

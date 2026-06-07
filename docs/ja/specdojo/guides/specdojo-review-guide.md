@@ -137,7 +137,7 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残す**。
 
-review plan と review result は、`specdojo exec build` と `specdojo exec run` によって Frontmatter + Markdown 形式で生成・更新する。
+review plan は `specdojo exec build` が生成する。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新する。
 
 ```text
 pm-review-viewpoints.yaml
@@ -215,7 +215,7 @@ viewpoints_ref: <pm-review-viewpoints.yaml のパス>
 
 ### 7.4. review execution
 
-人または agent は review plan に従ってレビューする。`specdojo exec run` は `<execution_path>/exec/results/<task-id>-result.md` を scaffold し、agent または人がそこに結果を記入する。
+人または agent は review plan に従ってレビューする。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入する。
 
 実行時の原則
 

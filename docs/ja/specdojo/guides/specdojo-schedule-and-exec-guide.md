@@ -172,7 +172,7 @@ exec run --auto [--loop]
   → exec-strategy-<track>.yaml の assignment_rules でエージェントを解決
     （mode / capabilities / proficiency / priority で pm-members.yaml からエージェントを選択）
   → exec claim でタスクを claim する
-  → exec/results/<task-id>-result.md を scaffold 生成（エージェント起動前）
+    （claim と同時に exec/results/<task-id>-result.md を scaffold 生成）
   → exec/plans/<task-id>-plan.md を読み込み、pm-members.yaml の command フィールドの agent コマンドに brief を渡して実行
   → 終了コード 0 → exec complete（result の status を complete に更新）
   → 終了コード 1 → exec block（result の status を blocked に更新）
@@ -263,6 +263,8 @@ specdojo exec claim \
   --allow-owner-mismatch \
   --msg "manual run with owner override"
 ```
+
+`claim` は state を `todo` から `doing` に遷移させると同時に、タスクの `mode`（edit / review）に応じた `exec/results/<task-id>-result.md` を scaffold 生成する。`exec run` を介さず手動で claim した場合も同様に生成されるため、人が直接結果を記入できる。既にファイルが存在する場合は上書きしない。
 
 ### 9.5. エージェントを実行する
 
