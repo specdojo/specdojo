@@ -131,6 +131,18 @@ properties:
             minLength: 1
         owner:
           $ref: "./sch-common.schema.yaml#/$defs/Owner"
+        creation_mode:
+          type: string
+          enum:
+            - free-creation
+            - recipe-expansion
+            - integrated-creation
+            - rule-refinement
+          description: >
+            Creation mode for these deliverables, selected based on the availability
+            of rulebook/recipe/sample for the target deliverable type.
+            Defines how the agent should approach building or improving the deliverable.
+            See specdojo-exec-plan-guide.md for mode definitions and selection criteria.
         phase_set:
           type: string
           minLength: 1
