@@ -1117,6 +1117,56 @@ specdojo exec build --project prj-0001
 
 `claim-next.json` は strategy ごとの次の claim 対象を持ちます。
 
+#### 8.6.1. edit-plan / review-plan のテンプレート化（approach_mode 別）
+
+`exec/plans/<task-id>-plan.md` の内容は、対象成果物の `local_id` に指定された **進め方モード**（`approach_mode`）ごとに用意したテンプレートファイルを展開して生成する。`approach_mode` の定義・選定基準は [specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) を参照する。
+
+現状の edit-plan / review-plan は `approach_mode` に関わらず同一の構成・文面で生成され、進め方の指示は `specdojo-approach-mode-guide.md` を別途参照する必要がある。`approach_mode` ごとにテンプレートを用意して展開することで、対象成果物の rulebook / recipe / sample の整備状況に応じた進め方の指示を plan 本文に直接含め、エージェントが plan を読むだけで進め方を把握できる状態を目指す。
+
+_TODO_: 本節は実装前の仕様である。実装結果に応じて記述を更新する。
+
+#### 8.6.2. テンプレートファイルの配置と構成
+
+- 配置先は他の生成物テンプレートと同じ `docs/ja/specdojo/templates/` とする。
+- ファイル名は、生成物の frontmatter `id` プレフィックス（`xep-` / `xrp-`）と `approach_mode` の値を組み合わせ、`xep-<approach_mode>-template.md`（edit-plan 用）/ `xrp-<approach_mode>-template.md`（review-plan 用）とする（例: `xep-recipe-guided-template.md`、`xrp-fully-guided-template.md`）。
+- `approach_mode` の値は `sch-strategy.schema.yaml` の `owner_rules[].approach_mode` の `enum`（`freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`）と一致させる。
+- 各テンプレートは、frontmatter から各セクションまでの **plan 全体の構成** を定義する。セクション構成・見出し・進め方の指示文は `approach_mode` ごとに変えてよい。
+- タスクごとに変わる動的な内容（task*id、done_criteria、レビュー観点など）は、次の表のプレースホルダで埋め込む。記述形式は `pjr-*-template.md` と同様に、`\_UPPER_SNAKE\*` 形式のプレースホルダ文字列を本文に直接書く Markdown とする。
+
+| プレースホルダ               | 置換内容                                                                       | edit | review |
+| ---------------------------- | ------------------------------------------------------------------------------ | :--: | :----: |
+| `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む。解決した `approach_mode` を含む）      |  ○   |   ○    |
+| `_PLAN_TITLE_`               | H1 見出し文字列（`Edit Plan: <task-id>` / `Review Plan: <task-id>`）           |  ○   |   ○    |
+| `_PHASE_DESCRIPTION_`        | 「このフェーズで行うこと」の本文（`task.description`、無ければ `name` / `id`） |  ○   |   ○    |
+| `_DELIVERABLE_PATH_LINE_`    | 対象成果物の path 行（カタログ未登録タスクの場合は代替文）                     |  ○   |   ○    |
+| `_RESULT_REF_LINE_`          | result ファイルへの参照行                                                      |  ○   |   ○    |
+| `_RULEBOOK_REF_LINE_`        | 対象成果物の rulebook 参照行                                                   |      |   ○    |
+| `_DONE_CRITERIA_BLOCK_`      | done_criteria の箇条書きブロック（無い場合は空文字列）                         |  ○   |        |
+| `_REVIEW_VIEWPOINTS_TABLE_`  | レビュー観点一覧表（`RVP-NNN` / ロール / `viewpoint_id` / 確認基準）           |      |   ○    |
+| `_REVIEW_VIEWPOINTS_DETAIL_` | 観点ごとの詳細（確認基準 / coverage_required / チェック観点 / エビデンス例）   |      |   ○    |
+
+- プレースホルダはテンプレート内に 1 回だけ書く。
+- 上記以外の見出しや文章（進め方の指示、留意点など）は、`approach_mode` に応じてテンプレート側で自由に記述する。
+
+#### 8.6.3. 選択・展開とフォールバック
+
+`specdojo exec build` は、各タスクの plan を生成する際に次の手順でテンプレートを選択・展開する。
+
+1. 対象タスクの `local_id` に対応する `approach_mode` を、`sch-strategy-<track>.yaml` の `owner_rules[].approach_mode` から解決する。
+2. タスクの `mode`（edit / review）と解決した `approach_mode` から、テンプレートファイルパス（`xep-<approach_mode>-template.md` / `xrp-<approach_mode>-template.md`）を決定する。
+3. テンプレートファイルが存在する場合は、その内容を読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。生成した plan の frontmatter には、解決した `approach_mode` を追記する（例: `approach_mode: recipe-guided`）。
+4. 次のいずれかに該当する場合は、フォールバックとして現行の生成内容（`approach_mode` を考慮しない構成。frontmatter に `approach_mode` を含めない）を使用する。
+   - 対象 `local_id` に `approach_mode` が指定されていない場合
+   - 解決した `approach_mode` に対応するテンプレートファイルが存在しない場合
+
+フォールバックが発生した場合は、生成結果（または ready 一覧などのビルド出力）に「`approach_mode` 未指定」または「テンプレート未整備」を記録し、owner ロールが `sch-strategy-<track>.yaml` の追記やテンプレート整備を判断できるようにする。
+
+「完了手順」「異常終了の条件」のように `approach_mode` に関わらず内容が共通しうるセクションも、plan 全体をテンプレート化する方針上、各テンプレートにそれぞれ記述する。共通部分を変更する場合は、影響する `xep-` / `xrp-` テンプレートをすべて揃えて更新し、レビューでは差分が `approach_mode` に起因する意図的なものかを確認する。
+
+進め方モードを追加する場合は、対応する `xep-` / `xrp-` テンプレートをあわせて追加する（[specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) 「進め方モードを追加する場合の指針」も参照）。
+
+_TODO_: frontmatter へ `approach_mode` を追加することに伴う `xep-rulebook` 側のスキーマ・記述ルールへの反映要否を確認する。
+
 ### 8.7. 実行イベントコマンド
 
 イベントコマンドは共通して `--project`、`--task`、`--by`、`--msg`、`--run-id`、`--ref`、`--meta` を受け付けます。`--task`、`--by`、`--msg` は必須です。
@@ -1301,17 +1351,17 @@ specdojo exec run \
 
 オプション:
 
-| オプション        | 説明                                                                                                               | デフォルト          |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------- |
-| `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                                 | 省略可              |
-| `--cmd`           | agent コマンド文字列を直接指定。`--auto` と排他                                                                    | `--auto` 時は省略可 |
-| `--auto`          | `exec-strategy` の `assignment_rules` で `capabilities`・`proficiency` を解決し `pm-members` からエージェントを自動選択 | `false`             |
-| `--by`            | タスク claim 時のアクター識別子                                                                                    | 解決された agent の nickname |
-| `--parallel`      | 並列実行数                                                                                                         | `1`                 |
-| `--loop`          | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する。`--max-rounds` と併用可   | `false`             |
-| `--max-rounds`    | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                                      | なし                |
-| `--worktree-base` | worktree 配置先パスの上書き                                                                                        | `run.worktree_base` |
-| `--dry-run`       | 実行せず、実行予定を標準出力に表示                                                                                 | `false`             |
+| オプション        | 説明                                                                                                                    | デフォルト                   |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                                      | 省略可                       |
+| `--cmd`           | agent コマンド文字列を直接指定。`--auto` と排他                                                                         | `--auto` 時は省略可          |
+| `--auto`          | `exec-strategy` の `assignment_rules` で `capabilities`・`proficiency` を解決し `pm-members` からエージェントを自動選択 | `false`                      |
+| `--by`            | タスク claim 時のアクター識別子                                                                                         | 解決された agent の nickname |
+| `--parallel`      | 並列実行数                                                                                                              | `1`                          |
+| `--loop`          | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する。`--max-rounds` と併用可         | `false`                      |
+| `--max-rounds`    | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                                            | なし                         |
+| `--worktree-base` | worktree 配置先パスの上書き                                                                                             | `run.worktree_base`          |
+| `--dry-run`       | 実行せず、実行予定を標準出力に表示                                                                                      | `false`                      |
 
 #### 8.12.1. `run` 設定（`specdojo.config.json` と `exec-agent.yaml`）
 
@@ -1339,8 +1389,8 @@ specdojo exec run \
 rate_limit_detection:
   exit_codes: [1]
   stderr_patterns:
-    - "rate limit"
-    - "429"
+    - 'rate limit'
+    - '429'
 ```
 
 #### 8.12.2. 実行フロー
@@ -1432,15 +1482,15 @@ specdojo exec run --project prj-0001 --auto --loop --max-rounds 3 --parallel 5
 ```yaml
 rate_limit_policy:
   on_non_critical: # cpm.slack > 0 のタスク
-    action: skip   # block イベントを記録して次のタスクへ
-  on_critical:     # cpm.slack == 0 のタスク
-    action: try_next  # candidates の次のエージェントへ（proficiency 昇順・priority 昇順）
+    action: skip # block イベントを記録して次のタスクへ
+  on_critical: # cpm.slack == 0 のタスク
+    action: try_next # candidates の次のエージェントへ（proficiency 昇順・priority 昇順）
     retry:
       max_attempts: 3
       initial_wait_seconds: 60
-      backoff_multiplier: 3  # 60s → 180s → 540s
-      max_wait_seconds: 600  # 上限10分（TPD には対応不可）
-    on_exhausted: block      # 全候補失敗時はブロックして人間に委ねる
+      backoff_multiplier: 3 # 60s → 180s → 540s
+      max_wait_seconds: 600 # 上限10分（TPD には対応不可）
+    on_exhausted: block # 全候補失敗時はブロックして人間に委ねる
 ```
 
 挙動:
