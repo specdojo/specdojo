@@ -90,32 +90,19 @@ SpecDojo のレビューは次を扱う。
 
 `coverage_types` は観点そのものではなく、レビュー探索の軸である。たとえば `vp-qe-omissions-consistency` を使う場合でも、実際には `stakeholder`、`exception_case`、`non_functional`、`traceability` など、どの型を確認したかを分けて記録する。
 
+review result では、`レビュー観点別結果` セクションの各 `RVP-NNN` に対して、確認した coverage_types と根拠を記述する。
+
 例
 
-```yaml
-viewpoint_results:
-  - viewpoint_id: vp-qe-omissions-consistency
-    result: fail
-    coverage_checked:
-      - stakeholder
-      - use_case
-      - exception_case
-      - non_functional
-      - traceability
-    evidence:
-      - dct-project-definition.yaml の done_criteria
-      - prj-scope.md
-      - prj-success-criteria-and-acceptance-criteria.md
-    notes: 例外ケースと非機能要求の展開に不足がある。
+```text
+### RVP-003
+
+- result: fail
+- evidence: dct-project-definition.yaml の done_criteria / prj-scope.md / prj-success-criteria-and-acceptance-criteria.md
+- notes: 例外ケースと非機能要求の展開に不足がある（確認できたのは stakeholder, use_case, exception_case, non_functional。traceability は未確認）。
 ```
 
-`coverage_checked` は確認済みの範囲を示す。未確認の範囲がある場合は `unverified_scope` に残す。
-
-```yaml
-unverified_scope:
-  - coverage_type: integration
-    reason: 外部連携方針の成果物が未作成のため確認できない。
-```
+確認できなかった coverage_types は、上記のように `notes` に範囲と理由を明記する。重大な抜けは `findings` に指摘として残す。
 
 ## 5. 要求・要件・仕様レビュー
 
@@ -150,18 +137,20 @@ unverified_scope:
 
 SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残す**。
 
+review plan と review result は、`specdojo exec build` と `specdojo exec run` によって Frontmatter + Markdown 形式で生成・更新する。
+
 ```text
 pm-review-viewpoints.yaml
   ↓
 dct-*.yaml
   ↓
-rulebook / schema / related documents
+rulebook
   ↓
-review plan
+exec build → review plan（exec/plans/<task-id>-plan.md）
   ↓
-human / agent review
+human / agent review（exec run）
   ↓
-review result
+review result（exec/results/<task-id>-result.md）
   ↓
 PJR / 修正 / 再レビュー
 ```
@@ -170,169 +159,118 @@ review plan は「今回のレビューで何を見るか」を固定する。re
 
 | 成果物 | 役割 |
 | ------ | ---- |
-| review plan | 対象、stage、Role code、viewpoint、coverage_required、evidence_required を定義する |
-| review result | plan item ごとの判定、coverage_checked、evidence、findings、unverified_scope を記録する |
+| review plan | 対象成果物、Role code、viewpoint、coverage_required、エビデンス例、完了手順を定義する |
+| review result | レビュー観点ごとの判定（pass / fail / unclear）、根拠、findings、decision を記録する |
 
 review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくする。
 
 ### 7.1. review plan の生成
 
-review plan は機械生成を基本とする。
+review plan は `specdojo exec build` によって機械生成する（`mode: review` のタスクが対象）。
 
 主な入力
 
 - 成果物カタログの `local_id`、`path`、`depends_on`、`done_criteria`
 - `pm-review-viewpoints.yaml` の `viewpoints`、`coverage_types`
-- 対応する rulebook、schema、instruction、sample
-- 上位・下位・隣接する関連成果物
-- stage とレビュー対象版
+- 対応する rulebook
+- `sch-strategy-<track>.yaml` / `exec-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
 
-review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から review item を作る。
+review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から `レビュー観点` セクションの review item（`RVP-NNN`）を作る。
 
 ### 7.2. review plan の配置
 
-推奨配置
-
-```text
-docs/ja/projects/<project_id>/030-project-management/controls/reviews/plans/
-```
-
-推奨ファイル名
-
-```text
-rvp-<local_id>-<stage>.yaml
-```
+review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成する。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `030-project-management/execution`）を指す。
 
 例
 
 ```text
-rvp-prj-overview-draft.yaml
-rvp-pm-members-final.yaml
+exec/plans/T-LAUNCH-prj-overview-030-plan.md
 ```
 
-### 7.3. review plan の推奨構造
+### 7.3. review plan の構成
+
+review plan は Frontmatter と本文セクションで構成する。
 
 ```yaml
-id: rvp-<local_id>-<stage>
+id: xrp-<task-id>
+type: exec-plan
+rulebook: xep-rulebook
+task_id: <task-id>
+name: <フェーズ名>
+mode: review
+status: ready
 project_id: <project_id>
-target:
-  local_id: <local_id>
-  path: <target-path>
-  stage: draft | first | final | ready-candidate
-  version_ref: <commit | timestamp | none>
-inputs:
-  deliverable_catalog: <dct-path>
-  rulebook: <rulebook-path | none>
-  viewpoints: <pm-review-viewpoints.yaml>
-  related_documents:
-    - <path>
-machine_checks_required:
-  - name: lint:md
-    required: true
-  - name: schema
-    required: false
-review_items:
-  - id: RVP-001
-    role: <Role code>
-    viewpoint_id: <vp-*>
-    done_criterion: <done_criteria text>
-    coverage_required:
-      - <coverage_type>
-    evidence_required:
-      - target_document
-      - deliverable_catalog
-      - related_documents
-    expected_output:
-      - result
-      - evidence
-      - findings
-      - unverified_scope
+owner: <Role code>
+on_critical_path: true | false
+viewpoints_ref: <pm-review-viewpoints.yaml のパス>
 ```
+
+| セクション | 内容 |
+| ---------- | ---- |
+| このフェーズで行うこと | 担当ロールが何を判断するか（承認・修正指示・差し戻し） |
+| 対象成果物 | 対象パス、rulebook、対応する review result のパス |
+| レビュー観点 | `RVP-NNN` 単位の Role code、viewpoint_id、確認基準、coverage_required、チェック観点、エビデンス例 |
+| 完了手順 | レビュー観点ごとの判定方法と review result への記入手順 |
+| 異常終了の条件 | done_criteria を満たさない場合などに block を記録する条件 |
 
 ### 7.4. review execution
 
-人または agent は review plan に従ってレビューする。
+人または agent は review plan に従ってレビューする。`specdojo exec run` は `<execution_path>/exec/results/<task-id>-result.md` を scaffold し、agent または人がそこに結果を記入する。
 
 実行時の原則
 
-- `review_items` を勝手に省略しない。
-- plan にない観点で重大な問題を見つけた場合は、追加 finding として残す。
-- 確認できない範囲は pass にせず、`unverified_scope` に残す。
+- `レビュー観点` の各項目（`RVP-NNN`）を勝手に省略しない。
+- plan にない観点で重大な問題を見つけた場合は、`findings` に追加する。
+- 確認できない範囲は pass にせず、`unclear` として根拠とともに残す。
 - 機械検証の失敗は、意味レビューの結果と分けて記録する。
 - agent は最終承認、公開可否判断、説明責任を担わない。
 
-### 7.5. review result の配置
+### 7.5. review result の構成
 
-推奨配置
+review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新する。
 
-```text
-docs/ja/projects/<project_id>/030-project-management/controls/reviews/results/
+```yaml
+id: xrr-<task-id>
+type: exec-result
+task_id: <task-id>
+mode: review
+status: in_progress | complete | blocked
+project_id: <project_id>
+plan_ref: exec/plans/<task-id>-plan.md
+started_at: <ISO8601>
+completed_at: <ISO8601>
+agent: <member nickname>
 ```
 
-推奨ファイル名
-
-```text
-rvr-<local_id>-<stage>-<role>.yaml
-```
-
-例
-
-```text
-rvr-prj-overview-draft-ba.yaml
-rvr-pm-members-final-qe.yaml
-```
+| セクション | 内容 |
+| ---------- | ---- |
+| レビュー観点別結果 | `RVP-NNN` ごとの `result`（pass / fail / unclear）、`evidence`、`notes` |
+| findings | 指摘事項（severity、対象箇所、概要、修正方針を含めて記述する） |
+| decision | `recommendation`（approve / revise / reject）と承認要否 |
 
 ## 8. レビュー結果の残し方
 
-レビュー結果は、成果物単位、版単位、Role code 単位で記録する。review result は必ず review plan に対応させる。
+レビュー結果は、成果物単位、フェーズ単位、Role code 単位で記録する。review result は必ず review plan に対応させ、Frontmatter の `plan_ref` で参照する。
 
-推奨構造
+`レビュー観点別結果` セクションには、`RVP-NNN` ごとに次を記入する。
 
-```yaml
-id: rvr-<local_id>-<stage>-<role>
-project_id: <project_id>
-based_on:
-  - rvp-<local_id>-<stage>
-target:
-  local_id: <local_id>
-  path: <target-path>
-  stage: draft | first | final | ready-candidate
-review:
-  role: <Role code>
-  reviewer: <member nickname>
-  status: pass | conditional_pass | changes_requested | blocked
-  reviewed_at: <YYYY-MM-DD>
-machine_checks:
-  - name: lint:md
-    result: pass | fail | skipped
-    notes: <補足>
-review_results:
-  - plan_item_id: RVP-001
-    viewpoint_id: <vp-*>
-    result: pass | fail | skip
-    coverage_checked:
-      - <coverage_type>
-    evidence:
-      - <確認した根拠>
-    notes: <判定根拠>
-unverified_scope:
-  - plan_item_id: RVP-001
-    coverage_type: <coverage_type>
-    reason: <未確認理由>
-findings:
-  - id: F-001
-    plan_item_id: RVP-001
-    viewpoint_id: <vp-*>
-    coverage_type: <coverage_type>
-    severity: blocker | major | minor | note
-    category: purpose | planning | business | architecture | implementation | quality | usability | operations | consistency
-    location: <見出し、行、キー、またはファイル全体>
-    summary: <指摘概要>
-    recommendation: <修正方針>
-decision:
-  recommendation: approve | revise | defer | escalate
-  approver_required: PO | none
-```
+| 項目 | 内容 |
+| ---- | ---- |
+| result | `pass` / `fail` / `unclear` |
+| evidence | 確認した根拠（参照箇所、具体的な記述） |
+| notes | 判定根拠の補足、coverage_required のうち確認できた範囲とできなかった範囲 |
+
+`findings` セクションには、確認した中で見つかった指摘事項を次の観点で記述する。
+
+| 項目 | 内容 |
+| ---- | ---- |
+| severity | `blocker` / `major` / `minor` / `note` |
+| category | `purpose` / `planning` / `business` / `architecture` / `implementation` / `quality` / `usability` / `operations` / `consistency` |
+| location | 見出し、行、キー、またはファイル全体 |
+| summary | 指摘概要 |
+| recommendation | 修正方針 |
+
+`decision` セクションには、レビュー全体としての判断（`approve` / `revise` / `reject`）と、PO 判断が必要かどうかを記述する。
 
 ## 9. finding の分類
 

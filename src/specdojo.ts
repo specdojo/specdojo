@@ -5,7 +5,6 @@ import { registerExecCommands } from './exec.js'
 import { registerCatalogCommands } from './catalog.js'
 import { registerScheduleCommands } from './schedule.js'
 import { registerIndexCommands } from './index-command.js'
-import { registerReviewCommands } from './review.js'
 import { registerRegisterCommands } from './register.js'
 import { registerWatchCommand } from './watch.js'
 import { registerBuildCommand } from './build-command.js'
@@ -21,7 +20,6 @@ function main(): void {
   registerCatalogCommands(program)
   registerScheduleCommands(program)
   registerIndexCommands(program)
-  registerReviewCommands(program)
   registerRegisterCommands(program)
   registerWatchCommand(program)
   registerBuildCommand(program)
