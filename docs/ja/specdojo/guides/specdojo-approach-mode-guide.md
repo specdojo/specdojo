@@ -1,12 +1,12 @@
 ---
-id: specdojo-exec-plan-guide
+id: specdojo-approach-mode-guide
 type: guide
 status: draft
 ---
 
-# SpecDojo 実行プランガイド
+# SpecDojo 進め方モードガイド
 
-本ドキュメントは SpecDojo における **exec plan 実行時の進め方の選び方**を定義する。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用する。
+本ドキュメントは SpecDojo における **exec plan 実行時の進め方（`approach_mode`）の選び方**を定義する。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用する。
 
 exec plan は「何を」「どこまで」行うかを示すが、「どう進めるか」は対象成果物の rulebook / recipe / sample の整備状況によって変わる。これは作成・更新タスクとレビュータスクの両方に共通する課題であるため、本書はその進め方を **進め方モード**（`approach_mode`）として整理し、状況に応じた選択を支援する。
 
