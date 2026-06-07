@@ -131,17 +131,18 @@ properties:
             minLength: 1
         owner:
           $ref: "./sch-common.schema.yaml#/$defs/Owner"
-        creation_mode:
+        approach_mode:
           type: string
           enum:
-            - free-creation
-            - recipe-expansion
-            - integrated-creation
+            - freeform
+            - recipe-guided
+            - fully-guided
             - rule-refinement
           description: >
-            Creation mode for these deliverables, selected based on the availability
+            Approach mode for these deliverables, selected based on the availability
             of rulebook/recipe/sample for the target deliverable type.
-            Defines how the agent should approach building or improving the deliverable.
+            Defines how the agent should approach building, improving, or reviewing
+            the deliverable, regardless of whether the task mode is edit or review.
             See specdojo-exec-plan-guide.md for mode definitions and selection criteria.
         phase_set:
           type: string
