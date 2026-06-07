@@ -1,5 +1,7 @@
 export type TaskMode = 'edit' | 'review'
 
+export type ApproachMode = 'freeform' | 'recipe-guided' | 'fully-guided' | 'rule-refinement'
+
 export type ExecEventType =
   | 'claim'
   | 'note'
@@ -197,6 +199,7 @@ export type ExecPlanMeta = {
   on_critical_path?: true
   agent?: string
   viewpoints_ref?: string
+  approach_mode?: ApproachMode
 }
 
 export type ExecResultMeta = {

@@ -3,7 +3,15 @@ import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { listFilesRecursive, readJson } from './exec-shared.js'
-import type { ExecPlanMeta, ReadySnapshot, ReadyTaskView, StateSnapshot, TaskMode } from './exec-types.js'
+import { buildPhaseModeIndex, resolveApproachMode } from './exec-strategy.js'
+import type {
+  ApproachMode,
+  ExecPlanMeta,
+  ReadySnapshot,
+  ReadyTaskView,
+  StateSnapshot,
+  TaskMode,
+} from './exec-types.js'
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
 import type { ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
 
@@ -108,6 +116,7 @@ function frontmatter(meta: ExecPlanMeta): string {
   if (meta.owner) lines.push(`owner: ${meta.owner}`)
   if (meta.on_critical_path) lines.push(`on_critical_path: true`)
   if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
+  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
   lines.push('---')
   return lines.join('\n')
 }
@@ -306,6 +315,181 @@ function buildReviewPlanMarkdown(
 }
 
 // ---------------------------------------------------------------------------
+// Template-based generation (approach_mode 別の edit-plan / review-plan テンプレート展開)
+// ---------------------------------------------------------------------------
+
+function templateFileName(mode: TaskMode, approachMode: ApproachMode): string {
+  const prefix = mode === 'review' ? 'xrp' : 'xep'
+  return `${prefix}-${approachMode}-template.md`
+}
+
+function loadPlanTemplate(mode: TaskMode, approachMode: ApproachMode): string | null {
+  const templatePath = join(
+    specdojoRootDir(),
+    'docs/ja/specdojo/templates',
+    templateFileName(mode, approachMode)
+  )
+  if (!existsSync(templatePath)) return null
+  return readFileSync(templatePath, 'utf8')
+}
+
+function expandPlanTemplate(template: string, values: Record<string, string>): string {
+  let result = template
+  for (const [placeholder, value] of Object.entries(values)) {
+    result = result.split(placeholder).join(value)
+  }
+  return result
+}
+
+function phaseDescriptionText(task: PlanTask): string {
+  if (task.description) return task.description.trimEnd()
+  return task.name ?? task.id
+}
+
+function deliverablePathLine(deliverable: DeliverableInfo | null): string {
+  if (deliverable) return `- path: \`${deliverable.resolvedPath}\``
+  return '- 成果物カタログに登録されていないタスク。タスク名を参照する。'
+}
+
+function rulebookRefLine(deliverable: DeliverableInfo | null): string {
+  return `- rulebook: \`${deliverable?.deliverable.rulebook ?? 'none'}\``
+}
+
+function resultRefLine(resultRef: string): string {
+  return `- result: \`${resultRef}\``
+}
+
+function doneCriteriaBlock(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) {
+    return '_TODO_: 対象成果物の done_criteria が見つかりません。カタログを確認してください。'
+  }
+  const lines = ['**done_criteria:**', '']
+  for (const c of criteria) lines.push(`- ${c.text}`)
+  return lines.join('\n')
+}
+
+function reviewViewpointsTable(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) {
+    return '_TODO_: 対象成果物の done_criteria が見つかりません。カタログを確認してください。'
+  }
+  const lines = ['| ID | ロール | viewpoint_id | 確認基準 |', '|---|---|---|---|']
+  criteria.forEach((c, i) => {
+    const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
+    lines.push(`| ${vpId} | ${c.roles.join(', ')} | ${c.viewpoint} | ${c.text} |`)
+  })
+  return lines.join('\n')
+}
+
+function reviewViewpointsDetail(criteria: CriteriaItem[], vpMap: Map<string, ReviewViewpoint>): string {
+  if (criteria.length === 0) {
+    return '_TODO_: 対象成果物の done_criteria が見つからないため、観点の詳細を提示できません。'
+  }
+  const lines: string[] = []
+  criteria.forEach((c, i) => {
+    const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
+    const vp = vpMap.get(c.viewpoint)
+    if (i > 0) lines.push('')
+    lines.push(`### ${vpId}（${c.roles.join(', ')}: ${c.viewpoint}）`)
+    lines.push('')
+    lines.push(`**確認基準**: ${c.text}`)
+    if (vp?.coverage_types && vp.coverage_types.length > 0) {
+      lines.push('')
+      lines.push('**coverage_required:**')
+      lines.push('')
+      for (const ct of vp.coverage_types) lines.push(`- ${ct}`)
+    }
+    if (vp?.check) {
+      lines.push('')
+      lines.push(`**チェック観点:** ${vp.check}`)
+    }
+    if (vp?.evidence) {
+      lines.push('')
+      lines.push(`**エビデンス例:** ${vp.evidence}`)
+    }
+  })
+  return lines.join('\n')
+}
+
+function buildTemplatedEditPlan(
+  template: string,
+  task: PlanTask,
+  deliverable: DeliverableInfo | null,
+  projectId: string,
+  resultRef: string,
+  approachMode: ApproachMode
+): string {
+  const cpm = task.cpm
+  const onCriticalPath = cpm !== undefined && cpm.slack === 0
+
+  const meta: ExecPlanMeta = {
+    id: `xep-${task.id.toLowerCase()}`,
+    type: 'exec-plan',
+    rulebook: 'xep-rulebook',
+    task_id: task.id,
+    ...(task.name ? { name: task.name } : {}),
+    mode: 'edit',
+    status: 'ready',
+    project_id: projectId,
+    ...(task.owner ? { owner: task.owner } : {}),
+    ...(onCriticalPath ? { on_critical_path: true as const } : {}),
+    approach_mode: approachMode,
+  }
+
+  const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
+  const values: Record<string, string> = {
+    _FRONTMATTER_: frontmatter(meta),
+    _PLAN_TITLE_: `Edit Plan: ${task.id}`,
+    _PHASE_DESCRIPTION_: phaseDescriptionText(task),
+    _DELIVERABLE_PATH_LINE_: deliverablePathLine(deliverable),
+    _RESULT_REF_LINE_: resultRefLine(resultRef),
+    _DONE_CRITERIA_BLOCK_: doneCriteriaBlock(criteria),
+  }
+  return expandPlanTemplate(template, values)
+}
+
+function buildTemplatedReviewPlan(
+  template: string,
+  task: PlanTask,
+  deliverable: DeliverableInfo | null,
+  criteria: CriteriaItem[],
+  vpMap: Map<string, ReviewViewpoint>,
+  projectId: string,
+  viewpointsRef: string,
+  resultRef: string,
+  approachMode: ApproachMode
+): string {
+  const cpm = task.cpm
+  const onCriticalPath = cpm !== undefined && cpm.slack === 0
+
+  const meta: ExecPlanMeta = {
+    id: `xrp-${task.id.toLowerCase()}`,
+    type: 'exec-plan',
+    rulebook: 'xep-rulebook',
+    task_id: task.id,
+    ...(task.name ? { name: task.name } : {}),
+    mode: 'review',
+    status: 'ready',
+    project_id: projectId,
+    ...(task.owner ? { owner: task.owner } : {}),
+    ...(onCriticalPath ? { on_critical_path: true as const } : {}),
+    viewpoints_ref: viewpointsRef,
+    approach_mode: approachMode,
+  }
+
+  const values: Record<string, string> = {
+    _FRONTMATTER_: frontmatter(meta),
+    _PLAN_TITLE_: `Review Plan: ${task.id}`,
+    _PHASE_DESCRIPTION_: phaseDescriptionText(task),
+    _DELIVERABLE_PATH_LINE_: deliverablePathLine(deliverable),
+    _RESULT_REF_LINE_: resultRefLine(resultRef),
+    _RULEBOOK_REF_LINE_: rulebookRefLine(deliverable),
+    _REVIEW_VIEWPOINTS_TABLE_: reviewViewpointsTable(criteria),
+    _REVIEW_VIEWPOINTS_DETAIL_: reviewViewpointsDetail(criteria, vpMap),
+  }
+  return expandPlanTemplate(template, values)
+}
+
+// ---------------------------------------------------------------------------
 // Index builder
 // ---------------------------------------------------------------------------
 
@@ -373,6 +557,8 @@ export function generatePlans(
 
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
   const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
+  const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
+  const fallbackNotices: string[] = []
 
   for (const task of tasks) {
     const mode: TaskMode = task.mode ?? 'edit'
@@ -380,21 +566,37 @@ export function generatePlans(
     const deliverable = localId && catalogPath ? findDeliverableInfo(catalogPath, localId) : null
     const resultRef = `exec/results/${task.id}-result.md`
     const outPath = join(plansDir, `${task.id}-plan.md`)
+    const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
+
+    const approachMode = resolveApproachMode(localId, phaseModeIndex)
+    const template = approachMode ? loadPlanTemplate(mode, approachMode) : null
 
     let content: string
-    if (mode === 'review') {
-      const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
-      content = buildReviewPlanMarkdown(
-        { ...task, mode },
-        deliverable,
-        criteria,
-        vpMap,
-        projectId,
-        vpRef,
-        resultRef
-      )
+    if (approachMode && template) {
+      content =
+        mode === 'review'
+          ? buildTemplatedReviewPlan(
+              template,
+              { ...task, mode },
+              deliverable,
+              criteria,
+              vpMap,
+              projectId,
+              vpRef,
+              resultRef,
+              approachMode
+            )
+          : buildTemplatedEditPlan(template, { ...task, mode }, deliverable, projectId, resultRef, approachMode)
     } else {
-      content = buildEditPlanMarkdown({ ...task, mode }, deliverable, projectId, resultRef)
+      if (!approachMode) {
+        fallbackNotices.push(`${task.id}: approach_mode 未指定`)
+      } else {
+        fallbackNotices.push(`${task.id}: テンプレート未整備（${templateFileName(mode, approachMode)}）`)
+      }
+      content =
+        mode === 'review'
+          ? buildReviewPlanMarkdown({ ...task, mode }, deliverable, criteria, vpMap, projectId, vpRef, resultRef)
+          : buildEditPlanMarkdown({ ...task, mode }, deliverable, projectId, resultRef)
     }
 
     writeFileSync(outPath, content, 'utf8')
@@ -407,6 +609,12 @@ export function generatePlans(
   )
 
   process.stdout.write(`Generated: ${plansDir}\n`)
+  if (fallbackNotices.length > 0) {
+    process.stdout.write('Fallback (approach_mode テンプレート未適用):\n')
+    for (const notice of fallbackNotices) {
+      process.stdout.write(`  - ${notice}\n`)
+    }
+  }
 }
 
 export function planPathForTask(executionPath: string, taskId: string): string {

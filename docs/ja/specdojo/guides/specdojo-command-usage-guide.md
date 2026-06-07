@@ -1121,9 +1121,7 @@ specdojo exec build --project prj-0001
 
 `exec/plans/<task-id>-plan.md` の内容は、対象成果物の `local_id` に指定された **進め方モード**（`approach_mode`）ごとに用意したテンプレートファイルを展開して生成する。`approach_mode` の定義・選定基準は [specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) を参照する。
 
-現状の edit-plan / review-plan は `approach_mode` に関わらず同一の構成・文面で生成され、進め方の指示は `specdojo-approach-mode-guide.md` を別途参照する必要がある。`approach_mode` ごとにテンプレートを用意して展開することで、対象成果物の rulebook / recipe / sample の整備状況に応じた進め方の指示を plan 本文に直接含め、エージェントが plan を読むだけで進め方を把握できる状態を目指す。
-
-_TODO_: 本節は実装前の仕様である。実装結果に応じて記述を更新する。
+`approach_mode` ごとにテンプレートを用意して展開することで、対象成果物の rulebook / recipe / sample の整備状況に応じた進め方の指示を plan 本文に直接含め、エージェントが `specdojo-approach-mode-guide.md` を別途参照しなくても plan を読むだけで進め方を把握できる状態にする。`approach_mode` が指定されていない、またはテンプレートが未整備の場合は、「選択・展開とフォールバック」に従って `approach_mode` を考慮しない構成で生成する。
 
 #### 8.6.2. テンプレートファイルの配置と構成
 
@@ -1133,19 +1131,20 @@ _TODO_: 本節は実装前の仕様である。実装結果に応じて記述を
 - 各テンプレートは、frontmatter から各セクションまでの **plan 全体の構成** を定義する。セクション構成・見出し・進め方の指示文は `approach_mode` ごとに変えてよい。
 - タスクごとに変わる動的な内容（task*id、done_criteria、レビュー観点など）は、次の表のプレースホルダで埋め込む。記述形式は `pjr-*-template.md` と同様に、`\_UPPER_SNAKE\*` 形式のプレースホルダ文字列を本文に直接書く Markdown とする。
 
-| プレースホルダ               | 置換内容                                                                       | edit | review |
-| ---------------------------- | ------------------------------------------------------------------------------ | :--: | :----: |
-| `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む。解決した `approach_mode` を含む）      |  ○   |   ○    |
-| `_PLAN_TITLE_`               | H1 見出し文字列（`Edit Plan: <task-id>` / `Review Plan: <task-id>`）           |  ○   |   ○    |
-| `_PHASE_DESCRIPTION_`        | 「このフェーズで行うこと」の本文（`task.description`、無ければ `name` / `id`） |  ○   |   ○    |
-| `_DELIVERABLE_PATH_LINE_`    | 対象成果物の path 行（カタログ未登録タスクの場合は代替文）                     |  ○   |   ○    |
-| `_RESULT_REF_LINE_`          | result ファイルへの参照行                                                      |  ○   |   ○    |
-| `_RULEBOOK_REF_LINE_`        | 対象成果物の rulebook 参照行                                                   |      |   ○    |
-| `_DONE_CRITERIA_BLOCK_`      | done_criteria の箇条書きブロック（無い場合は空文字列）                         |  ○   |        |
-| `_REVIEW_VIEWPOINTS_TABLE_`  | レビュー観点一覧表（`RVP-NNN` / ロール / `viewpoint_id` / 確認基準）           |      |   ○    |
-| `_REVIEW_VIEWPOINTS_DETAIL_` | 観点ごとの詳細（確認基準 / coverage_required / チェック観点 / エビデンス例）   |      |   ○    |
+| プレースホルダ               | 置換内容                                                                                                          | edit | review |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------- | :--: | :----: |
+| `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む。解決した `approach_mode` を含む）                                         |  ○   |   ○    |
+| `_PLAN_TITLE_`               | H1 見出し文字列（`Edit Plan: <task-id>` / `Review Plan: <task-id>`）                                              |  ○   |   ○    |
+| `_PHASE_DESCRIPTION_`        | 「このフェーズで行うこと」の本文（`task.description`、無ければ `name` / `id`）                                    |  ○   |   ○    |
+| `_DELIVERABLE_PATH_LINE_`    | 対象成果物の path 行（カタログ未登録タスクの場合は代替文）                                                        |  ○   |   ○    |
+| `_RESULT_REF_LINE_`          | result ファイルへの参照行                                                                                         |  ○   |   ○    |
+| `_RULEBOOK_REF_LINE_`        | 対象成果物の rulebook 参照行（カタログ未登録の場合は `none` と表示する）                                          |      |   ○    |
+| `_DONE_CRITERIA_BLOCK_`      | done*criteria の箇条書きブロック（無い場合は `\_TODO*` 注記を表示する）                                           |  ○   |        |
+| `_REVIEW_VIEWPOINTS_TABLE_`  | レビュー観点一覧表（`RVP-NNN` / ロール / `viewpoint_id` / 確認基準。無い場合は `_TODO_` 注記を表示する）          |      |   ○    |
+| `_REVIEW_VIEWPOINTS_DETAIL_` | 観点ごとの詳細（確認基準 / coverage*required / チェック観点 / エビデンス例。無い場合は `\_TODO*` 注記を表示する） |      |   ○    |
 
 - プレースホルダはテンプレート内に 1 回だけ書く。
+- すべてのプレースホルダは常に非空の文字列へ置換する。対象データが無い場合も `none` や `_TODO_` 注記などの代替表記を使い、空文字列には置換しない。テンプレート側でプレースホルダの前後に空行を 1 行ずつ置く構成を統一でき、生成結果が `MD012`（空行の連続禁止）・`MD022`（見出し前後の空行必須）を満たせるようにするための方針である。
 - 上記以外の見出しや文章（進め方の指示、留意点など）は、`approach_mode` に応じてテンプレート側で自由に記述する。
 
 #### 8.6.3. 選択・展開とフォールバック
@@ -1165,7 +1164,7 @@ _TODO_: 本節は実装前の仕様である。実装結果に応じて記述を
 
 進め方モードを追加する場合は、対応する `xep-` / `xrp-` テンプレートをあわせて追加する（[specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) 「進め方モードを追加する場合の指針」も参照）。
 
-_TODO_: frontmatter へ `approach_mode` を追加することに伴う `xep-rulebook` 側のスキーマ・記述ルールへの反映要否を確認する。
+frontmatter への `approach_mode` 追加は `docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml` の `properties.approach_mode`（`enum`: `freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`、任意項目）に反映済みである。`xep-rulebook` は本書執筆時点で未作成であり、作成時に本節の内容を反映する。
 
 ### 8.7. 実行イベントコマンド
 

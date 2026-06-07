@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
-import type { TaskMode } from './exec-types.js'
+import type { ApproachMode, TaskMode } from './exec-types.js'
 
 type StrategyPhaseMinimal = {
   id: string
@@ -12,7 +12,12 @@ type StrategyMinimal = {
   phase_sets?: Record<string, StrategyPhaseMinimal[]>
   default_phase_sets?: string[]
   default_phase_set?: string
-  owner_rules?: Array<{ local_ids: string[]; phase_sets?: string[]; phase_set?: string }>
+  owner_rules?: Array<{
+    local_ids: string[]
+    approach_mode?: string
+    phase_sets?: string[]
+    phase_set?: string
+  }>
 }
 
 type ExecStrategyMinimal = {
@@ -22,6 +27,7 @@ type ExecStrategyMinimal = {
 
 export type PhaseModeIndex = {
   localIdToPhaseSets: Map<string, string[]>
+  localIdToApproachMode: Map<string, ApproachMode>
   phaseSetSuffixToMode: Map<string, TaskMode>
   phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
   suffixToExecution: Map<string, 'agent' | 'human'>
@@ -30,6 +36,15 @@ export type PhaseModeIndex = {
 
 function isTaskMode(value: unknown): value is TaskMode {
   return value === 'edit' || value === 'review'
+}
+
+function isApproachMode(value: unknown): value is ApproachMode {
+  return (
+    value === 'freeform' ||
+    value === 'recipe-guided' ||
+    value === 'fully-guided' ||
+    value === 'rule-refinement'
+  )
 }
 
 /**
@@ -43,6 +58,7 @@ export function buildPhaseModeIndex(
   executionPath: string
 ): PhaseModeIndex {
   const localIdToPhaseSets = new Map<string, string[]>()
+  const localIdToApproachMode = new Map<string, ApproachMode>()
   // phaseSet:phaseId → suffix (used to cross-reference exec-strategy rules)
   const phaseSetPhaseIdToSuffix = new Map<string, string>()
   const phaseSetSuffixToMode = new Map<string, TaskMode>()
@@ -114,8 +130,10 @@ export function buildPhaseModeIndex(
       for (const rule of strategy.owner_rules) {
         const phaseSetNames =
           rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : null) ?? defaultPhaseSetNames
+        const approachMode = isApproachMode(rule.approach_mode) ? rule.approach_mode : undefined
         for (const localId of rule.local_ids ?? []) {
           localIdToPhaseSets.set(localId, phaseSetNames)
+          if (approachMode) localIdToApproachMode.set(localId, approachMode)
         }
       }
     }
@@ -153,11 +171,26 @@ export function buildPhaseModeIndex(
 
   return {
     localIdToPhaseSets,
+    localIdToApproachMode,
     phaseSetSuffixToMode,
     phaseSetSuffixToExecution,
     suffixToExecution,
     defaultMode,
   }
+}
+
+/**
+ * Resolves the approach mode for a given deliverable local_id.
+ * Returns undefined when sch-strategy's owner_rules does not declare approach_mode
+ * for the local_id (no approach_mode-based template is applied; caller falls back
+ * to the default plan generation).
+ */
+export function resolveApproachMode(
+  localId: string | undefined,
+  index: PhaseModeIndex
+): ApproachMode | undefined {
+  if (!localId) return undefined
+  return index.localIdToApproachMode.get(localId)
 }
 
 /**
