@@ -32,6 +32,11 @@ properties:
     minLength: 1
     description: "Task ID this plan was generated for (e.g., T-LAUNCH-prj-overview-020)."
 
+  name:
+    type: string
+    minLength: 1
+    description: "Human-readable task name carried from the schedule (e.g., 一次版レビュー)."
+
   mode:
     type: string
     enum: ["edit", "review"]

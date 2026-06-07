@@ -200,7 +200,7 @@ describe('foldEventsToState', () => {
     expect(snapshot.tasks['T-001'].state).toBe('blocked')
   })
 
-  it('unblock で blocked → todo に戻る', () => {
+  it('unblock で blocked → doing に戻る', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const events = [
       { path: '1.json', event: makeEvent({ type: 'claim', task_id: 'T-001', by: 'agent-1' }) },
@@ -214,7 +214,7 @@ describe('foldEventsToState', () => {
       },
     ]
     const snapshot = foldEventsToState(events, schedule, '/dummy')
-    expect(snapshot.tasks['T-001'].state).toBe('todo')
+    expect(snapshot.tasks['T-001'].state).toBe('doing')
   })
 
   it('cancel で cancelled に遷移する', () => {

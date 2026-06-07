@@ -3,6 +3,7 @@ id: xep-t-launch-pm-plan-010
 type: exec-plan
 rulebook: xep-rulebook
 task_id: T-LAUNCH-pm-plan-010
+name: たたき台作成
 mode: edit
 status: ready
 project_id: prj-0001

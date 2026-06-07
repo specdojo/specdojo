@@ -37,6 +37,11 @@ assignment_rules:
     mode: edit
     proficiency: normal
 
+  # *.review: 一次版レビュー・比較レビュー（review mode / normal 水準）
+  - phase: review
+    mode: review
+    proficiency: normal
+
 rate_limit_policy:
   on_non_critical:
     action: skip # cpm.slack > 0: block イベントを記録して次のタスクへ

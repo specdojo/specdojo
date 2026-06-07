@@ -110,7 +110,7 @@
 <text class="label-artifact" x="126" y="352" clip-path="url(#clip-col2)">プロジェクト概要</text>
 <text class="label" x="298" y="352" clip-path="url(#clip-col3)">調査・補強</text>
 <line class="row-grid" x1="0" y1="360" x2="872" y2="360" />
-<rect x="454" y="338" width="28" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<rect x="454" y="338" width="28" height="12" rx="4" fill="#16a34a" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label-id" x="8" y="376" clip-path="url(#clip-col1)">pm-plan-030</text>
 <text class="label-artifact" x="126" y="376" clip-path="url(#clip-col2)">プロジェクト管理計画</text>
 <text class="label" x="298" y="376" clip-path="url(#clip-col3)">一次版レビュー</text>

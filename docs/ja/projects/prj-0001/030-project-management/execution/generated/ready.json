@@ -6,9 +6,9 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-prj-overview-020",
+      "next_task_id": "T-LAUNCH-prj-overview-030",
       "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-020",
+        "T-LAUNCH-prj-overview-030",
         "T-LAUNCH-pm-plan-010"
       ]
     },
@@ -16,29 +16,29 @@
       "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
         "T-LAUNCH-pm-plan-010",
-        "T-LAUNCH-prj-overview-020"
+        "T-LAUNCH-prj-overview-030"
       ]
     }
   },
   "tasks": [
     {
-      "id": "T-LAUNCH-prj-overview-020",
+      "id": "T-LAUNCH-prj-overview-030",
       "local_id": "prj-overview",
-      "name": "調査・補強",
+      "name": "一次版レビュー",
       "owner": "BA",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 2,
       "critical_first_rank": 1,
       "cpm": {
-        "es": 0.25,
-        "ef": 0.75,
-        "ls": 0.25,
-        "lf": 0.75,
+        "es": 0.75,
+        "ef": 1,
+        "ls": 0.75,
+        "lf": 1,
         "slack": 0
       },
-      "description": "エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。\n既存記述との矛盾・抜け漏れも確認し、修正・追記する。\n調査結果は出典・根拠とともに記載する。\n",
-      "mode": "edit",
-      "execution": "agent"
+      "description": "担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。\n修正が軽微な場合は直接編集して承認とみなす。\n差し戻しの場合は修正箇所と理由を明記する。\n",
+      "mode": "review",
+      "execution": "human"
     },
     {
       "id": "T-LAUNCH-pm-plan-010",

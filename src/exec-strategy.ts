@@ -10,12 +10,13 @@ type StrategyPhaseMinimal = {
 
 type StrategyMinimal = {
   phase_sets?: Record<string, StrategyPhaseMinimal[]>
+  default_phase_sets?: string[]
   default_phase_set?: string
-  owner_rules?: Array<{ local_ids: string[]; phase_set?: string }>
+  owner_rules?: Array<{ local_ids: string[]; phase_sets?: string[]; phase_set?: string }>
 }
 
 export type PhaseModeIndex = {
-  localIdToPhaseSet: Map<string, string>
+  localIdToPhaseSets: Map<string, string[]>
   phaseSetSuffixToMode: Map<string, TaskMode>
   phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
   suffixToExecution: Map<string, 'agent' | 'human'>
@@ -31,7 +32,7 @@ export function buildPhaseModeIndex(
   schedulePath: string,
   executionPath: string
 ): PhaseModeIndex {
-  const localIdToPhaseSet = new Map<string, string>()
+  const localIdToPhaseSets = new Map<string, string[]>()
   // phaseSet:phaseId → suffix (used to cross-reference exec-strategy rules)
   const phaseSetPhaseIdToSuffix = new Map<string, string>()
   const phaseSetSuffixToMode = new Map<string, TaskMode>()
@@ -53,7 +54,9 @@ export function buildPhaseModeIndex(
     }
     if (!strategy?.phase_sets) continue
 
-    const defaultPhaseSet = strategy.default_phase_set ?? ''
+    const defaultPhaseSetNames: string[] =
+      strategy.default_phase_sets ??
+      (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
       if (!Array.isArray(phases)) continue
@@ -76,9 +79,10 @@ export function buildPhaseModeIndex(
 
     if (Array.isArray(strategy.owner_rules)) {
       for (const rule of strategy.owner_rules) {
-        const phaseSet = rule.phase_set ?? defaultPhaseSet
+        const phaseSetNames =
+          rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : null) ?? defaultPhaseSetNames
         for (const localId of rule.local_ids ?? []) {
-          localIdToPhaseSet.set(localId, phaseSet)
+          localIdToPhaseSets.set(localId, phaseSetNames)
         }
       }
     }
@@ -126,13 +130,14 @@ export function buildPhaseModeIndex(
     }
   }
 
-  return { localIdToPhaseSet, phaseSetSuffixToMode, phaseSetSuffixToExecution, suffixToExecution }
+  return { localIdToPhaseSets, phaseSetSuffixToMode, phaseSetSuffixToExecution, suffixToExecution }
 }
 
 /**
  * Resolves the task mode for a given task.
  * Resolution order:
- *   1. Phase-level mode from exec-strategy (via index)
+ *   1. Phase-level mode from exec-strategy (via index), checked across all phase sets
+ *      assigned to the deliverable's local_id
  *   2. 'edit' (hard default)
  */
 export function resolveTaskMode(
@@ -141,12 +146,14 @@ export function resolveTaskMode(
   index: PhaseModeIndex
 ): TaskMode {
   if (localId) {
-    const phaseSet = index.localIdToPhaseSet.get(localId)
-    if (phaseSet) {
+    const phaseSets = index.localIdToPhaseSets.get(localId)
+    if (phaseSets) {
       const suffix = taskId.split('-').pop() ?? ''
       if (/^\d{3}$/.test(suffix)) {
-        const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`)
-        if (mode !== undefined) return mode
+        for (const phaseSet of phaseSets) {
+          const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`)
+          if (mode !== undefined) return mode
+        }
       }
     }
   }
@@ -166,12 +173,14 @@ export function resolveTaskExecution(
   const suffix = taskId.split('-').pop() ?? ''
   if (!/^\d{3}$/.test(suffix)) return 'agent'
 
-  // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set)
+  // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set(s))
   if (localId) {
-    const phaseSet = index.localIdToPhaseSet.get(localId)
-    if (phaseSet) {
-      const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`)
-      if (execution !== undefined) return execution
+    const phaseSets = index.localIdToPhaseSets.get(localId)
+    if (phaseSets) {
+      for (const phaseSet of phaseSets) {
+        const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`)
+        if (execution !== undefined) return execution
+      }
     }
   }
   // Fallback: global suffix map (covers default_phase_sets case)

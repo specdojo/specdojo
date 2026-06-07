@@ -5,9 +5,9 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-prj-overview-020",
+      "next_task_id": "T-LAUNCH-prj-overview-030",
       "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-020",
+        "T-LAUNCH-prj-overview-030",
         "T-LAUNCH-pm-plan-010"
       ]
     },
@@ -15,7 +15,7 @@
       "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
         "T-LAUNCH-pm-plan-010",
-        "T-LAUNCH-prj-overview-020"
+        "T-LAUNCH-prj-overview-030"
       ]
     }
   }

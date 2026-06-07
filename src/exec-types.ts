@@ -189,6 +189,7 @@ export type ExecPlanMeta = {
   type: 'exec-plan'
   rulebook: string
   task_id: string
+  name?: string
   mode: TaskMode
   status: 'ready'
   project_id: string
