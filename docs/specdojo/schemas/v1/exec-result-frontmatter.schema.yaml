@@ -62,10 +62,12 @@ properties:
 
   started_at:
     type: string
+    format: date-time
     description: "ISO 8601 timestamp when exec run scaffolded this result and started the agent."
 
   completed_at:
     type: string
+    format: date-time
     description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
 
   agent:

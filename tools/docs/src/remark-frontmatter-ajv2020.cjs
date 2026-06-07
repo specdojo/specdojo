@@ -3,6 +3,7 @@ const path = require('node:path')
 const { pathToFileURL } = require('node:url')
 const { load } = require('js-yaml')
 const Ajv2020 = require('ajv/dist/2020').default
+const addFormats = require('ajv-formats')
 
 // Markdown の frontmatter を、設定で指定したスキーマへマッピングして検証する Remark プラグイン。
 // `yaml.schemas` 形式（schemaPath: [glob...]）または `schemaRules` 形式を受け取り、先勝ちで適用する。
@@ -144,6 +145,7 @@ function getValidator(workspaceRoot, schemaPath, strictMode) {
     allErrors: true,
     strict: strictMode,
   })
+  addFormats(ajv)
 
   const commonRef = './common-frontmatter.schema.yaml'
   const schemaText = JSON.stringify(schema)

@@ -24,6 +24,8 @@ plugins:
           schema: docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/exec/results/**/*.md
           schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/exec/results/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/rulebooks/**/*.md
           schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/guidelines/**/*.md
