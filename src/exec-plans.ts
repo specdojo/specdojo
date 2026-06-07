@@ -223,9 +223,20 @@ function buildReviewPlanMarkdown(
   lines.push('')
   lines.push(`# Review Plan: ${task.id}`)
   lines.push('')
-  lines.push('このプランは ready 時点のレビュービューです。進捗の正本は exec/events です。')
+
+  // Section 1: what to do in this phase (most important, shown first)
+  lines.push('## 1. このフェーズで行うこと')
   lines.push('')
-  lines.push('## 1. 対象成果物')
+  if (task.description) {
+    for (const line of task.description.trimEnd().split('\n')) {
+      lines.push(line)
+    }
+  } else {
+    lines.push(`${task.name ?? task.id}`)
+  }
+  lines.push('')
+
+  lines.push('## 2. 対象成果物')
   lines.push('')
   if (deliverable) {
     lines.push(`- path: \`${deliverable.resolvedPath}\``)
@@ -236,7 +247,7 @@ function buildReviewPlanMarkdown(
     lines.push(`- result: \`${resultRef}\``)
   }
   lines.push('')
-  lines.push('## 2. レビュー観点')
+  lines.push('## 3. レビュー観点')
   lines.push('')
 
   if (criteria.length > 0) {
@@ -276,15 +287,15 @@ function buildReviewPlanMarkdown(
     lines.push('')
   }
 
-  // Section 3: completion steps (no exit protocol)
-  lines.push('## 3. 完了手順')
+  // Section 4: completion steps (no exit protocol)
+  lines.push('## 4. 完了手順')
   lines.push('')
   lines.push('1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。')
   lines.push('2. result の各レビュー観点セクションに記入する。')
   lines.push('')
 
-  // Section 4: termination conditions (merged from old 4 + 5)
-  lines.push('## 4. 異常終了の条件')
+  // Section 5: termination conditions (merged from old 4 + 5)
+  lines.push('## 5. 異常終了の条件')
   lines.push('')
   lines.push('- done_criteria を満たさない・対象ファイル不明・依存未解決の場合は異常終了する（終了コード 1）。')
   lines.push('- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。')

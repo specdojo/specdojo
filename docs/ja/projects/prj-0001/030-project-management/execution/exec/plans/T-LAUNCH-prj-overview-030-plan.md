@@ -14,15 +14,19 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 # Review Plan: T-LAUNCH-prj-overview-030
 
-このプランは ready 時点のレビュービューです。進捗の正本は exec/events です。
+## 1. このフェーズで行うこと
 
-## 1. 対象成果物
+担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。
+修正が軽微な場合は直接編集して承認とみなす。
+差し戻しの場合は修正箇所と理由を明記する。
+
+## 2. 対象成果物
 
 - path: `/docs/ja/projects/prj-0001/020-project-definition/prj-overview.md`
 - rulebook: `prj-overview-rulebook`
 - result: `exec/results/T-LAUNCH-prj-overview-030-result.md`
 
-## 2. レビュー観点
+## 3. レビュー観点
 
 | ID | ロール | viewpoint_id | 確認基準 |
 |---|---|---|---|
@@ -100,12 +104,12 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 **エビデンス例:** 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。
 
-## 3. 完了手順
+## 4. 完了手順
 
 1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
 2. result の各レビュー観点セクションに記入する。
 
-## 4. 異常終了の条件
+## 5. 異常終了の条件
 
 - done_criteria を満たさない・対象ファイル不明・依存未解決の場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
