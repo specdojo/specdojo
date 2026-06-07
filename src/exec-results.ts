@@ -109,12 +109,17 @@ export function scaffoldResult(opts: {
   planRef: string
   agent: string
   startedAt: string
-}): string {
+}): { resultPath: string; created: boolean } {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt } = opts
+  const resultPath = resultPathForTask(executionPath, taskId)
+
+  // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
+  if (existsSync(resultPath)) {
+    return { resultPath, created: false }
+  }
+
   const resultsDir = join(executionPath, 'exec', 'results')
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true })
-
-  const resultPath = resultPathForTask(executionPath, taskId)
 
   const meta: ExecResultMeta = {
     id: mode === 'review' ? `xrr-${taskId.toLowerCase()}` : `xer-${taskId.toLowerCase()}`,
@@ -131,7 +136,7 @@ export function scaffoldResult(opts: {
   const body = mode === 'review' ? buildReviewResultBody() : buildEditResultBody()
 
   writeFileSync(resultPath, serializeFrontmatter(meta) + body, 'utf8')
-  return resultPath
+  return { resultPath, created: true }
 }
 
 export function updateResultStatus(

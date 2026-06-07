@@ -44,10 +44,12 @@ import {
 import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot } from './exec-types.js'
 import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
 import { generatePlans } from './exec-plans.js'
+import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
+import { buildPhaseModeIndex, resolveTaskMode } from './exec-strategy.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -326,6 +328,20 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       return
     }
     const out = writeEventFile(schedulePath, event)
+    if (action.type === 'claim') {
+      const localId = state.schedule.nodes.get(taskId)?.local_id
+      const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
+      const mode = resolveTaskMode(localId, taskId, phaseModeIndex)
+      scaffoldResult({
+        executionPath,
+        taskId,
+        mode,
+        projectId: opts.project ?? '',
+        planRef: `exec/plans/${taskId}-plan.md`,
+        agent: actor,
+        startedAt: new Date().toISOString(),
+      })
+    }
     process.stdout.write(out + '\n')
     exitWithCode(true)
   } catch (error) {

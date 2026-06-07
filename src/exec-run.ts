@@ -390,7 +390,7 @@ function runSingleTask(
 
   const planRef = `exec/plans/${task.id}-plan.md`
   const startedAt = new Date().toISOString()
-  const resultPath = scaffoldResult({
+  const { resultPath } = scaffoldResult({
     executionPath,
     taskId: task.id,
     mode: task.mode ?? 'edit',
