@@ -41,6 +41,14 @@ export function collectRepeatable(value: string, previous: string[]): string[] {
   return previous.concat([value])
 }
 
+export function expandTemplate(template: string, values: Record<string, string>): string {
+  let result = template
+  for (const [placeholder, value] of Object.entries(values)) {
+    result = result.split(placeholder).join(value)
+  }
+  return result
+}
+
 export function parseKeyValuePairs(
   pairs: string[] | undefined
 ): Record<string, string> | undefined {

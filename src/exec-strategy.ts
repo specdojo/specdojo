@@ -38,7 +38,7 @@ function isTaskMode(value: unknown): value is TaskMode {
   return value === 'edit' || value === 'review'
 }
 
-function isApproachMode(value: unknown): value is ApproachMode {
+export function isApproachMode(value: unknown): value is ApproachMode {
   return (
     value === 'freeform' ||
     value === 'recipe-guided' ||

@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
-import { listFilesRecursive, readJson } from './exec-shared.js'
+import { expandTemplate, listFilesRecursive, readJson } from './exec-shared.js'
 import { buildPhaseModeIndex, resolveApproachMode } from './exec-strategy.js'
 import type {
   ApproachMode,
@@ -333,14 +333,6 @@ function loadPlanTemplate(mode: TaskMode, approachMode: ApproachMode): string | 
   return readFileSync(templatePath, 'utf8')
 }
 
-function expandPlanTemplate(template: string, values: Record<string, string>): string {
-  let result = template
-  for (const [placeholder, value] of Object.entries(values)) {
-    result = result.split(placeholder).join(value)
-  }
-  return result
-}
-
 function phaseDescriptionText(task: PlanTask): string {
   if (task.description) return task.description.trimEnd()
   return task.name ?? task.id
@@ -444,7 +436,7 @@ function buildTemplatedEditPlan(
     _RESULT_REF_LINE_: resultRefLine(resultRef),
     _DONE_CRITERIA_BLOCK_: doneCriteriaBlock(criteria),
   }
-  return expandPlanTemplate(template, values)
+  return expandTemplate(template, values)
 }
 
 function buildTemplatedReviewPlan(
@@ -486,7 +478,7 @@ function buildTemplatedReviewPlan(
     _REVIEW_VIEWPOINTS_TABLE_: reviewViewpointsTable(criteria),
     _REVIEW_VIEWPOINTS_DETAIL_: reviewViewpointsDetail(criteria, vpMap),
   }
-  return expandPlanTemplate(template, values)
+  return expandTemplate(template, values)
 }
 
 // ---------------------------------------------------------------------------

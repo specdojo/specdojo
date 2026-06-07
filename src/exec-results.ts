@@ -1,6 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { ExecResultMeta, TaskMode } from './exec-types.js'
+import { specdojoRootDir } from './specdojo-config.js'
+import { expandTemplate } from './exec-shared.js'
+import { isApproachMode } from './exec-strategy.js'
+import type { ApproachMode, ExecResultMeta, TaskMode } from './exec-types.js'
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -20,6 +23,7 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   ]
   if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`)
   if (meta.agent) lines.push(`agent: ${meta.agent}`)
+  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
   lines.push('---')
   return lines.join('\n')
 }
@@ -34,6 +38,25 @@ function parseFrontmatter(content: string): { meta: Record<string, string>; body
     meta[line.slice(0, idx).trim()] = line.slice(idx + 1).trim()
   }
   return { meta, body: match[2] }
+}
+
+// ---------------------------------------------------------------------------
+// Template-based generation (approach_mode 別の edit-result / review-result テンプレート展開)
+// ---------------------------------------------------------------------------
+
+function templateFileName(mode: TaskMode, approachMode: ApproachMode): string {
+  const prefix = mode === 'review' ? 'xrr' : 'xer'
+  return `${prefix}-${approachMode}-template.md`
+}
+
+function loadResultTemplate(mode: TaskMode, approachMode: ApproachMode): string | null {
+  const templatePath = join(
+    specdojoRootDir(),
+    'docs/ja/specdojo/templates',
+    templateFileName(mode, approachMode)
+  )
+  if (!existsSync(templatePath)) return null
+  return readFileSync(templatePath, 'utf8')
 }
 
 // ---------------------------------------------------------------------------
@@ -109,8 +132,9 @@ export function scaffoldResult(opts: {
   planRef: string
   agent: string
   startedAt: string
+  approachMode?: ApproachMode
 }): { resultPath: string; created: boolean } {
-  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt } = opts
+  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approachMode } = opts
   const resultPath = resultPathForTask(executionPath, taskId)
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
@@ -120,6 +144,8 @@ export function scaffoldResult(opts: {
 
   const resultsDir = join(executionPath, 'exec', 'results')
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true })
+
+  const template = approachMode ? loadResultTemplate(mode, approachMode) : null
 
   const meta: ExecResultMeta = {
     id: mode === 'review' ? `xrr-${taskId.toLowerCase()}` : `xer-${taskId.toLowerCase()}`,
@@ -131,11 +157,25 @@ export function scaffoldResult(opts: {
     plan_ref: planRef,
     started_at: startedAt,
     agent,
+    ...(approachMode && template ? { approach_mode: approachMode } : {}),
   }
 
-  const body = mode === 'review' ? buildReviewResultBody() : buildEditResultBody()
+  let content: string
+  if (approachMode && template) {
+    content = expandTemplate(template, { _FRONTMATTER_: serializeFrontmatter(meta) })
+  } else {
+    if (!approachMode) {
+      process.stdout.write(`Fallback (approach_mode テンプレート未適用): ${taskId}: approach_mode 未指定\n`)
+    } else {
+      process.stdout.write(
+        `Fallback (approach_mode テンプレート未適用): ${taskId}: テンプレート未整備（${templateFileName(mode, approachMode)}）\n`
+      )
+    }
+    const body = mode === 'review' ? buildReviewResultBody() : buildEditResultBody()
+    content = serializeFrontmatter(meta) + body
+  }
 
-  writeFileSync(resultPath, serializeFrontmatter(meta) + body, 'utf8')
+  writeFileSync(resultPath, content, 'utf8')
   return { resultPath, created: true }
 }
 
@@ -160,6 +200,9 @@ export function updateResultStatus(
     started_at: existingMeta.started_at ?? '',
     completed_at: completedAt,
     agent: existingMeta.agent,
+    ...(isApproachMode(existingMeta.approach_mode)
+      ? { approach_mode: existingMeta.approach_mode }
+      : {}),
   }
 
   writeFileSync(resultPath, serializeFrontmatter(updatedMeta) + body, 'utf8')

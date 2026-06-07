@@ -213,4 +213,5 @@ export type ExecResultMeta = {
   started_at: string
   completed_at?: string
   agent?: string
+  approach_mode?: ApproachMode
 }
