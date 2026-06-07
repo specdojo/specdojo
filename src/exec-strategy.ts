@@ -15,18 +15,28 @@ type StrategyMinimal = {
   owner_rules?: Array<{ local_ids: string[]; phase_sets?: string[]; phase_set?: string }>
 }
 
+type ExecStrategyMinimal = {
+  default_mode?: TaskMode
+  assignment_rules?: unknown[]
+}
+
 export type PhaseModeIndex = {
   localIdToPhaseSets: Map<string, string[]>
   phaseSetSuffixToMode: Map<string, TaskMode>
   phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
   suffixToExecution: Map<string, 'agent' | 'human'>
+  defaultMode: TaskMode
+}
+
+function isTaskMode(value: unknown): value is TaskMode {
+  return value === 'edit' || value === 'review'
 }
 
 /**
  * Builds a phase mode index by combining:
  *   1. sch-strategy: maps localId → phaseSet, phaseSet+phaseId → suffix
- *   2. exec-strategy: if a matched rule has mode: review, marks those phases as 'review'
- * All other phases default to 'edit'.
+ *   2. exec-strategy: default_mode declares the fallback mode for unmatched phases
+ *      (hard default: 'edit'); rules with mode: review mark matching phases as 'review'.
  */
 export function buildPhaseModeIndex(
   schedulePath: string,
@@ -39,6 +49,29 @@ export function buildPhaseModeIndex(
   const phaseSetSuffixToExecution = new Map<string, 'agent' | 'human'>()
   // Global suffix → execution: suffixes are unique within a track across all phase sets.
   const suffixToExecution = new Map<string, 'agent' | 'human'>()
+
+  // Step 0: Read exec-strategy files once; reused for default_mode and assignment_rules.
+  const execStrategyConfigs: ExecStrategyMinimal[] = []
+  if (existsSync(executionPath)) {
+    const execStrategyFiles = listFilesRecursive(executionPath).filter(f =>
+      /exec-strategy-.*\.(yaml|yml)$/.test(f)
+    )
+    for (const filePath of execStrategyFiles) {
+      try {
+        execStrategyConfigs.push(readYaml(filePath) as ExecStrategyMinimal)
+      } catch {
+        continue
+      }
+    }
+  }
+
+  let defaultMode: TaskMode = 'edit'
+  for (const config of execStrategyConfigs) {
+    if (isTaskMode(config.default_mode)) {
+      defaultMode = config.default_mode
+      break
+    }
+  }
 
   // Step 1: Read sch-strategy files to build phase maps
   const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
@@ -67,7 +100,7 @@ export function buildPhaseModeIndex(
         const phaseId = String(p.id ?? '')
         if (suffix && phaseId) {
           phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix)
-          phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, 'edit')
+          phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, defaultMode)
           // execution: manual or auto (default: auto)
           const execution = p.execution === 'human' ? 'human' : 'agent'
           phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
@@ -88,49 +121,43 @@ export function buildPhaseModeIndex(
     }
   }
 
-  // Step 2: Read exec-strategy files; rules with mode: review mark those phases as 'review'.
+  // Step 2: assignment_rules with mode: review mark matching phases as 'review'.
   // Legacy support: rules with capabilities: [review] (no mode field) also mark as 'review'.
-  if (existsSync(executionPath)) {
-    const execStrategyFiles = listFilesRecursive(executionPath).filter(f =>
-      /exec-strategy-.*\.(yaml|yml)$/.test(f)
-    )
+  for (const config of execStrategyConfigs) {
+    if (!Array.isArray(config.assignment_rules)) continue
 
-    for (const filePath of execStrategyFiles) {
-      let config: { assignment_rules?: unknown[] }
-      try {
-        config = readYaml(filePath) as { assignment_rules?: unknown[] }
-      } catch {
-        continue
-      }
-      if (!Array.isArray(config?.assignment_rules)) continue
+    for (const rule of config.assignment_rules) {
+      if (!rule || typeof rule !== 'object') continue
+      const r = rule as Record<string, unknown>
 
-      for (const rule of config.assignment_rules) {
-        if (!rule || typeof rule !== 'object') continue
-        const r = rule as Record<string, unknown>
+      // Determine mode: explicit mode field takes precedence; legacy capabilities:[review] fallback
+      const explicitMode = typeof r.mode === 'string' ? r.mode : undefined
+      const caps = Array.isArray(r.capabilities) ? (r.capabilities as string[]) : []
+      const isReview =
+        explicitMode === 'review' || (explicitMode === undefined && caps.includes('review'))
+      if (!isReview) continue
 
-        // Determine mode: explicit mode field takes precedence; legacy capabilities:[review] fallback
-        const explicitMode = typeof r.mode === 'string' ? r.mode : undefined
-        const caps = Array.isArray(r.capabilities) ? (r.capabilities as string[]) : []
-        const isReview =
-          explicitMode === 'review' || (explicitMode === undefined && caps.includes('review'))
-        if (!isReview) continue
+      const rulePhaseSet = typeof r.phase_set === 'string' ? r.phase_set : undefined
+      const rulePhase = typeof r.phase === 'string' ? r.phase : undefined
 
-        const rulePhaseSet = typeof r.phase_set === 'string' ? r.phase_set : undefined
-        const rulePhase = typeof r.phase === 'string' ? r.phase : undefined
-
-        for (const [key, suffix] of phaseSetPhaseIdToSuffix.entries()) {
-          const colonIdx = key.indexOf(':')
-          const keyPhaseSet = key.slice(0, colonIdx)
-          const keyPhaseId = key.slice(colonIdx + 1)
-          if (rulePhaseSet !== undefined && rulePhaseSet !== keyPhaseSet) continue
-          if (rulePhase !== undefined && rulePhase !== keyPhaseId) continue
-          phaseSetSuffixToMode.set(`${keyPhaseSet}:${suffix}`, 'review')
-        }
+      for (const [key, suffix] of phaseSetPhaseIdToSuffix.entries()) {
+        const colonIdx = key.indexOf(':')
+        const keyPhaseSet = key.slice(0, colonIdx)
+        const keyPhaseId = key.slice(colonIdx + 1)
+        if (rulePhaseSet !== undefined && rulePhaseSet !== keyPhaseSet) continue
+        if (rulePhase !== undefined && rulePhase !== keyPhaseId) continue
+        phaseSetSuffixToMode.set(`${keyPhaseSet}:${suffix}`, 'review')
       }
     }
   }
 
-  return { localIdToPhaseSets, phaseSetSuffixToMode, phaseSetSuffixToExecution, suffixToExecution }
+  return {
+    localIdToPhaseSets,
+    phaseSetSuffixToMode,
+    phaseSetSuffixToExecution,
+    suffixToExecution,
+    defaultMode,
+  }
 }
 
 /**
@@ -138,7 +165,7 @@ export function buildPhaseModeIndex(
  * Resolution order:
  *   1. Phase-level mode from exec-strategy (via index), checked across all phase sets
  *      assigned to the deliverable's local_id
- *   2. 'edit' (hard default)
+ *   2. exec-strategy's default_mode (falls back to 'edit' when not declared)
  */
 export function resolveTaskMode(
   localId: string | undefined,
@@ -157,7 +184,7 @@ export function resolveTaskMode(
       }
     }
   }
-  return 'edit'
+  return index.defaultMode
 }
 
 /**

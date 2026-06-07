@@ -16,6 +16,11 @@ track: launch
 #   2. pm-members.yaml から mode / capabilities / proficiency 条件を満たす agent を抽出する。
 #   3. priority（昇順）→ 余剰 capabilities 数（昇順）でソートし、先頭が primary。
 #   4. rate limit 発生時は次の候補へ順次フォールバックする。
+#   5. どの assignment_rule にもマッチしない phase は default_mode を適用する。
+
+# assignment_rules にマッチしない phase（draft / finalize 等）に適用する既定 mode。
+# 省略時は edit。
+default_mode: edit
 
 assignment_rules:
   # research-first-pass.enrich: 外部調査が必要な補強（edit mode / web_search 必要 / expert 水準）

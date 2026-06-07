@@ -119,6 +119,15 @@ assignment_rules:
 | `capabilities` | ○    | 必要なツールリスト（ツール不要の場合は `[]`）         |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補               |
 
+`assignment_rules` のいずれにもマッチしない phase（例: `draft` や `finalize` のような `execution: manual` フェーズ）には、トップレベルの `default_mode` を適用します。省略時は `edit` です。
+
+```yaml
+default_mode: edit
+
+assignment_rules:
+  # ...
+```
+
 ### 3.2. エージェント選択ルール
 
 ルールがマッチしたら、`pm-members.yaml` から候補エージェントを次の手順で選びます。

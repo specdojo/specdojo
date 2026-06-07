@@ -41,6 +41,12 @@ properties:
   track:
     $ref: "./sch-common.schema.yaml#/$defs/Track"
 
+  default_mode:
+    $ref: "#/$defs/TaskMode"
+    description: >
+      Fallback mode for phases not matched by any assignment_rule.
+      Omit to default to edit.
+
   assignment_rules:
     type: array
     minItems: 1
