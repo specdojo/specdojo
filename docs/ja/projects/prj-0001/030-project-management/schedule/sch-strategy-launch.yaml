@@ -33,9 +33,9 @@ scope:
 # 独立した validate フェーズは設けない。
 # AI モデル・エージェントの設定は exec-agent.yaml に委ねる。
 #
-# execution フィールド（省略時は auto）:
-#   auto   : exec-agent.yaml の tier_routing に従いエージェントが実行する
-#   manual : エージェントを起動せず、人間による実行待ちとして記録する
+# execution フィールド（省略時は agent）:
+#   agent : exec-agent.yaml の tier_routing に従いエージェントが実行する
+#   human : エージェントを起動せず、人間による実行待ちとして記録する
 #
 # フローは first-pass → finalize-pass の2段階。
 #   first-pass  : 各成果物の一次版を作成する（人がたたき台 → エージェントが補強 → 人がレビュー）

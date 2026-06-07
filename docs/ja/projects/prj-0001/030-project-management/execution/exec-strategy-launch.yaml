@@ -5,7 +5,7 @@ status: draft
 track: launch
 
 # exec-strategy-launch.yaml
-# sch-strategy-launch.yaml の execution: auto フェーズに対して
+# sch-strategy-launch.yaml の execution: agent フェーズに対して
 # 必要な mode / capabilities / proficiency を宣言する。
 # mode: edit（成果物の作成・編集）/ review（レビュー）
 # capabilities: ツールアクセス（web_search など）のみ。exec/review は mode で指定。
@@ -13,8 +13,8 @@ track: launch
 #
 # assignment_rules の評価ルール:
 #   1. 上から順に評価し、最初にマッチしたルールを適用する。
-#   2. pm-members.yaml から capabilities / proficiency 条件を満たす agent を抽出する。
-#   3. 余剰 capabilities 数（昇順）→ priority（昇順）でソートし、先頭が primary。
+#   2. pm-members.yaml から mode / capabilities / proficiency 条件を満たす agent を抽出する。
+#   3. priority（昇順）→ 余剰 capabilities 数（昇順）でソートし、先頭が primary。
 #   4. rate limit 発生時は次の候補へ順次フォールバックする。
 
 assignment_rules:
