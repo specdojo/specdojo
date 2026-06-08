@@ -41,6 +41,7 @@ type StrategyOwnerRule = {
   local_ids: string[]
   owner: string
   phase_set?: string
+  phase_sets?: string[]
 }
 
 type StrategyFile = {
@@ -72,10 +73,10 @@ type RunOpts = {
 type RunResult = 'success' | 'rate_limit' | 'failure'
 
 export function buildTaskPhaseMap(schedulePath: string): {
-  localIdToRule: Map<string, { phaseSet: string }>
+  localIdToPhaseSets: Map<string, string[]>
   phaseSetSuffixToId: Map<string, string>
 } {
-  const localIdToRule = new Map<string, { phaseSet: string }>()
+  const localIdToPhaseSets = new Map<string, string[]>()
   const phaseSetSuffixToId = new Map<string, string>()
 
   const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
@@ -91,8 +92,9 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
     if (!strategy?.phase_sets || !Array.isArray(strategy.owner_rules)) continue
 
-    const defaultPhaseSet =
-      strategy.default_phase_set ?? strategy.default_phase_sets?.[0] ?? ''
+    const defaultPhaseSets =
+      strategy.default_phase_sets ??
+      (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
       for (const phase of phases) {
@@ -101,35 +103,37 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
 
     for (const rule of strategy.owner_rules) {
-      const phaseSet = rule.phase_set ?? defaultPhaseSet
+      const phaseSets = rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : defaultPhaseSets)
       for (const localId of rule.local_ids) {
-        localIdToRule.set(localId, { phaseSet })
+        localIdToPhaseSets.set(localId, phaseSets)
       }
     }
   }
 
-  return { localIdToRule, phaseSetSuffixToId }
+  return { localIdToPhaseSets, phaseSetSuffixToId }
 }
 
 function resolveTaskPhaseContext(
   task: ReadyTaskView,
-  localIdToRule: Map<string, { phaseSet: string }>,
+  localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>
 ): TaskPhaseContext | null {
   const localId = task.local_id
   if (!localId) return null
 
-  const rule = localIdToRule.get(localId)
-  if (!rule) return null
+  const phaseSets = localIdToPhaseSets.get(localId)
+  if (!phaseSets) return null
 
   const parts = task.id.split('-')
   const suffix = parts[parts.length - 1]
   if (!/^\d{3}$/.test(suffix)) return null
 
-  const phaseId = phaseSetSuffixToId.get(`${rule.phaseSet}:${suffix}`)
-  if (!phaseId) return null
+  for (const phaseSet of phaseSets) {
+    const phaseId = phaseSetSuffixToId.get(`${phaseSet}:${suffix}`)
+    if (phaseId) return { localId, phaseSet, phaseId }
+  }
 
-  return { localId, phaseSet: rule.phaseSet, phaseId }
+  return null
 }
 
 function selectCandidates(
@@ -306,7 +310,7 @@ function runSingleTask(
   strategyConfig: ExecStrategyConfig,
   globalConfig: ExecAgentGlobalConfig,
   roster: MemberRoster | null,
-  localIdToRule: Map<string, { phaseSet: string }>,
+  localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
@@ -329,7 +333,7 @@ function runSingleTask(
       return 'failure'
     }
 
-    const phaseCtx = resolveTaskPhaseContext(task, localIdToRule, phaseSetSuffixToId)
+    const phaseCtx = resolveTaskPhaseContext(task, localIdToPhaseSets, phaseSetSuffixToId)
     if (!phaseCtx) {
       process.stdout.write(
         `  Cannot resolve phase context for "${task.name ?? task.id}": not found in sch-strategy files\n`
@@ -337,7 +341,13 @@ function runSingleTask(
       return 'failure'
     }
 
-    const requirements = resolveAssignment(phaseCtx.phaseSet, phaseCtx.phaseId, strategyConfig)
+    const requirements = resolveAssignment(
+      phaseCtx.phaseSet,
+      phaseCtx.phaseId,
+      strategyConfig,
+      mode,
+      task.task_kind
+    )
     if (!requirements) {
       process.stdout.write(
         `  No assignment_rule matched (${phaseCtx.phaseSet}, ${phaseCtx.phaseId}, mode: ${mode})\n`
@@ -474,7 +484,7 @@ function runAutoMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+  const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   const loop = !!opts.loop
@@ -521,7 +531,7 @@ function runAutoMode(opts: RunOpts): void {
         strategyConfig,
         globalConfig,
         roster,
-        localIdToRule,
+        localIdToPhaseSets,
         phaseSetSuffixToId,
         undefined,
         opts.by,
@@ -565,7 +575,7 @@ function runManualMode(opts: RunOpts): void {
   const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
-  const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+  const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   let task: ReadyTaskView = { id: taskId, schedule_file: '', fifo_rank: 0, critical_first_rank: 0 }
@@ -631,7 +641,7 @@ function runManualMode(opts: RunOpts): void {
     strategyConfig,
     globalConfig,
     roster,
-    localIdToRule,
+    localIdToPhaseSets,
     phaseSetSuffixToId,
     agentCmdOverride,
     actorOverride,

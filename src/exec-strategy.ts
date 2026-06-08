@@ -41,6 +41,7 @@ export type PhaseModeIndex = {
   suffixToExecution: Map<string, 'agent' | 'human'>
   phaseSetSuffixToApproachMode: Map<string, ApproachMode>
   phaseSetSuffixToTaskKind: Map<string, TaskKind>
+  localIdSuffixToExecution: Map<string, 'agent' | 'human'>
   localIdSuffixToApproachMode: Map<string, ApproachMode>
   localIdSuffixToTaskKind: Map<string, TaskKind>
   defaultMode: TaskMode
@@ -60,6 +61,10 @@ function isTaskKind(value: unknown): value is TaskKind {
     value === 'deliverable-review' ||
     value === 'reference-maintenance'
   )
+}
+
+function isExecution(value: unknown): value is 'agent' | 'human' {
+  return value === 'agent' || value === 'human'
 }
 
 /**
@@ -83,6 +88,7 @@ export function buildPhaseModeIndex(
   const phaseSetSuffixToApproachMode = new Map<string, ApproachMode>()
   const phaseSetSuffixToTaskKind = new Map<string, TaskKind>()
   // localId:suffix → approach_mode/task_kind declared on owner_rules[].phase_overrides (takes precedence)
+  const localIdSuffixToExecution = new Map<string, 'agent' | 'human'>()
   const localIdSuffixToApproachMode = new Map<string, ApproachMode>()
   const localIdSuffixToTaskKind = new Map<string, TaskKind>()
 
@@ -163,16 +169,25 @@ export function buildPhaseModeIndex(
 
         for (const override of rule.phase_overrides ?? []) {
           if (!override || typeof override !== 'object') continue
+          const overrideExecution = isExecution(override.execution) ? override.execution : undefined
           const overrideApproachMode = isApproachMode(override.approach_mode)
             ? override.approach_mode
             : undefined
           const overrideTaskKind = isTaskKind(override.task_kind) ? override.task_kind : undefined
-          if (overrideApproachMode === undefined && overrideTaskKind === undefined) continue
+          if (
+            overrideExecution === undefined &&
+            overrideApproachMode === undefined &&
+            overrideTaskKind === undefined
+          )
+            continue
 
           for (const phaseSetName of phaseSetNames) {
             const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`)
             if (!suffix) continue
             for (const localId of localIds) {
+              if (overrideExecution !== undefined) {
+                localIdSuffixToExecution.set(`${localId}:${suffix}`, overrideExecution)
+              }
               if (overrideApproachMode !== undefined) {
                 localIdSuffixToApproachMode.set(`${localId}:${suffix}`, overrideApproachMode)
               }
@@ -223,6 +238,7 @@ export function buildPhaseModeIndex(
     suffixToExecution,
     phaseSetSuffixToApproachMode,
     phaseSetSuffixToTaskKind,
+    localIdSuffixToExecution,
     localIdSuffixToApproachMode,
     localIdSuffixToTaskKind,
     defaultMode,
@@ -328,6 +344,11 @@ export function resolveTaskExecution(
 ): 'agent' | 'human' {
   const suffix = taskId.split('-').pop() ?? ''
   if (!/^\d{3}$/.test(suffix)) return 'agent'
+
+  if (localId) {
+    const overridden = index.localIdSuffixToExecution.get(`${localId}:${suffix}`)
+    if (overridden !== undefined) return overridden
+  }
 
   // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set(s))
   if (localId) {

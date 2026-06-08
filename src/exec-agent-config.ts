@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
 import { specdojoRootDir } from './specdojo-config.js'
+import type { TaskKind, TaskMode } from './exec-types.js'
 
 // ── Types for .specdojo/exec-agent.yaml (global) ──────────────────────────────
 
@@ -19,7 +20,9 @@ export type ExecAgentGlobalConfig = {
 export type AssignmentRule = {
   phase_set?: string
   phase?: string
-  capabilities: string[]
+  mode?: TaskMode
+  task_kind?: TaskKind
+  capabilities?: string[]
   proficiency?: string
 }
 
@@ -93,19 +96,29 @@ export function loadExecStrategyConfig(executionPath: string): ExecStrategyConfi
 
 // ── Resolution ────────────────────────────────────────────────────────────────
 
-function ruleMatches(rule: AssignmentRule, phaseSet: string, phaseId: string): boolean {
+function ruleMatches(
+  rule: AssignmentRule,
+  phaseSet: string,
+  phaseId: string,
+  mode?: TaskMode,
+  taskKind?: TaskKind
+): boolean {
   if (rule.phase_set !== undefined && rule.phase_set !== phaseSet) return false
   if (rule.phase !== undefined && rule.phase !== phaseId) return false
+  if (rule.mode !== undefined && rule.mode !== mode) return false
+  if (rule.task_kind !== undefined && rule.task_kind !== taskKind) return false
   return true
 }
 
 export function resolveAssignment(
   phaseSet: string,
   phaseId: string,
-  config: ExecStrategyConfig
+  config: ExecStrategyConfig,
+  mode?: TaskMode,
+  taskKind?: TaskKind
 ): ResolvedRequirements | null {
   for (const rule of config.assignment_rules) {
-    if (ruleMatches(rule, phaseSet, phaseId)) {
+    if (ruleMatches(rule, phaseSet, phaseId, mode, taskKind)) {
       return { capabilities: rule.capabilities ?? [], proficiency: rule.proficiency }
     }
   }
