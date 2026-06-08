@@ -1,15 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "dist",
-    "rootDir": "src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "types": ["node"]
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "tools"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.build.json" },
+    { "path": "./tsconfig.test.json" },
+    { "path": "./tools/docs/tsconfig.json" },
+    { "path": "./tools/vscode-specdojo/tsconfig.json" }
+  ]
 }
