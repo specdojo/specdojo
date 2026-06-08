@@ -153,9 +153,8 @@ properties:
           type: array
           description: >
             Per-phase overrides for these deliverables.
-            execution takes precedence over the execution field in phase_sets[phase_set][phase].
-            ignore_references narrows which reference materials the agent should consult
-            in this phase, regardless of whether rulebook/recipe/sample exist for the deliverable.
+            execution, approach_mode, and task_kind each take precedence over
+            the same-named field defined on the phase in phase_sets[phase_set][phase].
           items:
             type: object
             additionalProperties: false
@@ -168,21 +167,10 @@ properties:
                 description: "Phase id to override (must exist in the referenced phase_set)."
               execution:
                 $ref: "#/$defs/Execution"
-              ignore_references:
-                type: array
-                minItems: 1
-                uniqueItems: true
-                description: >
-                  Reference material types the agent should NOT consult in this phase,
-                  even when they exist for the deliverable (e.g., a draft phase that should
-                  proceed without being constrained by an as-yet-unrefined rulebook).
-                  Omit when the agent should consult all available reference materials.
-                items:
-                  type: string
-                  enum:
-                    - rulebook
-                    - recipe
-                    - sample
+              approach_mode:
+                $ref: "#/$defs/ApproachMode"
+              task_kind:
+                $ref: "#/$defs/TaskKind"
 
   group_milestones:
     type: array
@@ -394,6 +382,24 @@ $defs:
       agent: agent executes the phase; exec-strategy assignment_rules select the agent.
       human: no agent is launched; the phase is recorded as pending human action.
 
+  ApproachMode:
+    type: string
+    enum: ["fully-guided", "recipe-guided", "freeform"]
+    description: >
+      How strictly the agent should follow reference materials (rulebook/recipe/sample) in a phase.
+      fully-guided: rulebook/recipe/sample are mature; follow them.
+      recipe-guided: rulebook/sample are immature; use only the recipe's structure/questions/perspectives.
+      freeform: not bound by reference materials; prioritize deliverable examples and project context.
+
+  TaskKind:
+    type: string
+    enum: ["deliverable-edit", "deliverable-review", "reference-maintenance"]
+    description: >
+      The kind of work a task represents.
+      deliverable-edit / deliverable-review: ordinary deliverable creation/review work.
+      reference-maintenance: work that improves rulebook/recipe/sample based on deliverables;
+      must be declared explicitly in phase_sets and is never auto-injected.
+
   Phase:
     type: object
     additionalProperties: false
@@ -424,6 +430,18 @@ $defs:
         description: >
           Default execution mode for this phase across all deliverables using this phase_set.
           Omit to default to auto.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      approach_mode:
+        $ref: "#/$defs/ApproachMode"
+        description: >
+          Default approach_mode for this phase across all deliverables using this phase_set.
+          Carried into task frontmatter and used for template selection.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      task_kind:
+        $ref: "#/$defs/TaskKind"
+        description: >
+          Default task_kind for this phase across all deliverables using this phase_set.
+          Carried into task frontmatter to convey work intent to the agent.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       description:
         type: string

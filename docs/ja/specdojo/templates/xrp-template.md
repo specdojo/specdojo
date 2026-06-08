@@ -20,16 +20,17 @@ _REVIEW_VIEWPOINTS_DETAIL_
 
 ## 4. 進め方
 
-- 対象成果物に紐づく rulebook / recipe / sample の有無を確認する。
-- 存在する文書を、それぞれの役割に沿って確認の基準にする。
-  - rulebook がある場合: 必須要素・禁止事項を満たしているかを確認する。
-  - recipe がある場合: 章ごとの問いとレビュー観点に照らして確認する。
-  - sample がある場合: 粒度・文体が整合しているかを確認する。
-- 複数の文書間で記述に矛盾がある場合は、rulebook を正とする。
-- 存在しない文書がある場合は、他に存在する文書、類似成果物、対象領域の慣行と整合しているかを確認し、判断の根拠を review result に残す。
-- `sch-strategy-<track>.yaml` の `owner_rules[].phase_overrides[]` でこのフェーズに `ignore_references` が指定されている場合は、該当する種別の文書を確認の基準から外し、その代わりに何を根拠にしたかを記録する。
+- exec plan frontmatter の `approach_mode` ・ `task_kind` を確認する。
+- `task_kind` が `reference-maintenance` 以外の `deliverable-review`（または未指定）の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach_mode` に応じて確認の基準を決める。
+  - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体との整合を確認する。
+  - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample の構造・文体は基準にしない）。
+  - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈との整合を確認する。
+  - 未指定の場合は、存在するすべての参考資料をそれぞれの役割に沿って確認の基準にする。
+- `task_kind` が `reference-maintenance` の場合は、確認の向きを「成果物 → rulebook / recipe / sample」に切り替え、対象の参考資料が見直しに値するかを確認する。
+- 複数の文書間で記述に矛盾がある場合、確認の基準に rulebook を含む `approach_mode`（`fully-guided` など）では rulebook を正とする。
+- 存在しない、または確認の基準から外れた文書がある場合は、他に存在する文書、類似成果物、対象領域の慣行と整合しているかを確認し、判断の根拠を review result に残す。
 
-詳細は [specdojo-reference-materials-guide](../guides/specdojo-reference-materials-guide.md) を参照する。
+詳細は [[specdojo-reference-materials-guide]] を参照する。
 
 ## 5. 完了手順
 

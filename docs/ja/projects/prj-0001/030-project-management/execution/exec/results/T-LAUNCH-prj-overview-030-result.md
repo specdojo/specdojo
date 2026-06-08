@@ -4,11 +4,12 @@ type: exec-result
 task_id: T-LAUNCH-prj-overview-030
 mode: review
 status: in_progress
-project_id: 
+project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-overview-030-plan.md
-started_at: "2026-06-07T22:27:58.974Z"
+started_at: '2026-06-07T22:27:58.974Z'
 agent: codex-review-agent
 ---
+
 ## 1. レビュー観点別結果
 
 _TODO_: プランの各 RVP-XXX セクションに対して結果を記入する。

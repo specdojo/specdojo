@@ -398,6 +398,8 @@ function runSingleTask(
     planRef,
     agent: actor,
     startedAt,
+    ...(task.approach_mode ? { approachMode: task.approach_mode } : {}),
+    ...(task.task_kind ? { taskKind: task.task_kind } : {}),
   })
 
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)

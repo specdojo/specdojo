@@ -1,6 +1,8 @@
 export type TaskMode = 'edit' | 'review'
 
-export type ReferenceMaterialKind = 'rulebook' | 'recipe' | 'sample'
+export type ApproachMode = 'fully-guided' | 'recipe-guided' | 'freeform'
+
+export type TaskKind = 'deliverable-edit' | 'deliverable-review' | 'reference-maintenance'
 
 export type ExecEventType =
   | 'claim'
@@ -136,6 +138,8 @@ export type ReadyTaskView = {
   owner?: string
   mode?: TaskMode
   execution?: 'agent' | 'human'
+  approach_mode?: ApproachMode
+  task_kind?: TaskKind
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number
@@ -198,6 +202,8 @@ export type ExecPlanMeta = {
   owner?: string
   on_critical_path?: true
   agent?: string
+  approach_mode?: ApproachMode
+  task_kind?: TaskKind
   viewpoints_ref?: string
 }
 
@@ -212,4 +218,6 @@ export type ExecResultMeta = {
   started_at: string
   completed_at?: string
   agent?: string
+  approach_mode?: ApproachMode
+  task_kind?: TaskKind
 }

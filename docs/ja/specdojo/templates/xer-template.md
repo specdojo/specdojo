@@ -23,4 +23,4 @@ _TODO_: 後続タスクへの申し送り事項を記入する（なければ削
 
 ## 5. 参考資料の活用
 
-_TODO_: rulebook / recipe / sample をどのように使い分けたか（構造・必須要素は rulebook、内容の作り込みは recipe、粒度・文体は sample を基準にした、など）を記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、`ignore_references` により判断材料から外した文書とその代わりに根拠にした内容があれば、あわせて記録する。
+_TODO_: `approach_mode` ・ `task_kind` に従ってどう進めたか（`fully-guided` で rulebook / recipe / sample をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で参考資料より優先した実例やプロジェクト文脈、`reference-maintenance` で見直した参考資料とその根拠、など）を記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。

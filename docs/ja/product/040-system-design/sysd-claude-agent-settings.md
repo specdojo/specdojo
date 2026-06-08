@@ -137,7 +137,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 `CLAUDE.md` はリポジトリルートに置き、コンテキストに関わらず常に読み込まれる。そのため、リポジトリ内のどの作業にも共通する最小限のルールに限定し、特定ディレクトリ・特定ワークフローにしか適用されない指示を混在させない。
 
-- **`CLAUDE.md`（リポジトリルート）**: Language・Project Policy・安全規則など、SpecDojo ツール自体の開発作業を含むあらゆる作業に共通するルールのみを記述する。100行以内を目安にする。
+- **`CLAUDE.md`（リポジトリルート）**: Language・Project Policy・Safetyなど、SpecDojo ツール自体の開発作業を含むあらゆる作業に共通するルールのみを記述する。100行以内を目安にする。
 - **SpecDojo exec ワークフロー固有の指示**: `claim` 手順、exec plan・result ファイルの参照・記入手順など、SpecDojo exec タスク実行時にのみ必要な指示は `CLAUDE.md` に含めない。`.claude/rules/*.md` に `paths` frontmatter（例: `docs/ja/projects/**`）でスコープを限定したルールファイルとして分離し、対象ディレクトリ配下を扱う場合にのみ読み込まれるようにする。`.claude/rules/markdown.md` の構成（パス限定 + 参照リンクのみの薄いラッパー）を踏襲する。
 - **エージェント固有の指示**: `.claude/agents/*.md` の frontmatter とシステムプロンプトに分離する（既出）。
 

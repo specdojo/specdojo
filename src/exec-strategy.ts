@@ -1,17 +1,20 @@
 import { existsSync } from 'node:fs'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
-import type { ReferenceMaterialKind, TaskMode } from './exec-types.js'
+import type { ApproachMode, TaskKind, TaskMode } from './exec-types.js'
 
 type StrategyPhaseMinimal = {
   id: string
   task_suffix: string
   execution?: 'agent' | 'human'
+  approach_mode?: unknown
+  task_kind?: unknown
 }
 
 type StrategyPhaseOverrideMinimal = {
   phase: string
   execution?: 'agent' | 'human'
-  ignore_references?: unknown[]
+  approach_mode?: unknown
+  task_kind?: unknown
 }
 
 type StrategyMinimal = {
@@ -36,7 +39,10 @@ export type PhaseModeIndex = {
   phaseSetSuffixToMode: Map<string, TaskMode>
   phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
   suffixToExecution: Map<string, 'agent' | 'human'>
-  localIdSuffixToIgnoredReferences: Map<string, ReferenceMaterialKind[]>
+  phaseSetSuffixToApproachMode: Map<string, ApproachMode>
+  phaseSetSuffixToTaskKind: Map<string, TaskKind>
+  localIdSuffixToApproachMode: Map<string, ApproachMode>
+  localIdSuffixToTaskKind: Map<string, TaskKind>
   defaultMode: TaskMode
 }
 
@@ -44,8 +50,16 @@ function isTaskMode(value: unknown): value is TaskMode {
   return value === 'edit' || value === 'review'
 }
 
-function isReferenceMaterialKind(value: unknown): value is ReferenceMaterialKind {
-  return value === 'rulebook' || value === 'recipe' || value === 'sample'
+function isApproachMode(value: unknown): value is ApproachMode {
+  return value === 'fully-guided' || value === 'recipe-guided' || value === 'freeform'
+}
+
+function isTaskKind(value: unknown): value is TaskKind {
+  return (
+    value === 'deliverable-edit' ||
+    value === 'deliverable-review' ||
+    value === 'reference-maintenance'
+  )
 }
 
 /**
@@ -65,8 +79,12 @@ export function buildPhaseModeIndex(
   const phaseSetSuffixToExecution = new Map<string, 'agent' | 'human'>()
   // Global suffix → execution: suffixes are unique within a track across all phase sets.
   const suffixToExecution = new Map<string, 'agent' | 'human'>()
-  // localId:suffix → reference material kinds to ignore (from owner_rules[].phase_overrides[].ignore_references)
-  const localIdSuffixToIgnoredReferences = new Map<string, ReferenceMaterialKind[]>()
+  // phaseSet:suffix → approach_mode/task_kind declared on the phase definition (phase_sets[phaseSet][phase])
+  const phaseSetSuffixToApproachMode = new Map<string, ApproachMode>()
+  const phaseSetSuffixToTaskKind = new Map<string, TaskKind>()
+  // localId:suffix → approach_mode/task_kind declared on owner_rules[].phase_overrides (takes precedence)
+  const localIdSuffixToApproachMode = new Map<string, ApproachMode>()
+  const localIdSuffixToTaskKind = new Map<string, TaskKind>()
 
   // Step 0: Read exec-strategy files once; reused for default_mode and assignment_rules.
   const execStrategyConfigs: ExecStrategyMinimal[] = []
@@ -124,6 +142,12 @@ export function buildPhaseModeIndex(
           phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
           // Global map: suffix is unique within a track across all phase sets
           suffixToExecution.set(suffix, execution)
+          if (isApproachMode(p.approach_mode)) {
+            phaseSetSuffixToApproachMode.set(`${phaseSetName}:${suffix}`, p.approach_mode)
+          }
+          if (isTaskKind(p.task_kind)) {
+            phaseSetSuffixToTaskKind.set(`${phaseSetName}:${suffix}`, p.task_kind)
+          }
         }
       }
     }
@@ -139,16 +163,22 @@ export function buildPhaseModeIndex(
 
         for (const override of rule.phase_overrides ?? []) {
           if (!override || typeof override !== 'object') continue
-          const ignoreReferences = Array.isArray(override.ignore_references)
-            ? override.ignore_references.filter(isReferenceMaterialKind)
-            : []
-          if (!ignoreReferences.length) continue
+          const overrideApproachMode = isApproachMode(override.approach_mode)
+            ? override.approach_mode
+            : undefined
+          const overrideTaskKind = isTaskKind(override.task_kind) ? override.task_kind : undefined
+          if (overrideApproachMode === undefined && overrideTaskKind === undefined) continue
 
           for (const phaseSetName of phaseSetNames) {
             const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`)
             if (!suffix) continue
             for (const localId of localIds) {
-              localIdSuffixToIgnoredReferences.set(`${localId}:${suffix}`, ignoreReferences)
+              if (overrideApproachMode !== undefined) {
+                localIdSuffixToApproachMode.set(`${localId}:${suffix}`, overrideApproachMode)
+              }
+              if (overrideTaskKind !== undefined) {
+                localIdSuffixToTaskKind.set(`${localId}:${suffix}`, overrideTaskKind)
+              }
             }
           }
         }
@@ -191,28 +221,72 @@ export function buildPhaseModeIndex(
     phaseSetSuffixToMode,
     phaseSetSuffixToExecution,
     suffixToExecution,
-    localIdSuffixToIgnoredReferences,
+    phaseSetSuffixToApproachMode,
+    phaseSetSuffixToTaskKind,
+    localIdSuffixToApproachMode,
+    localIdSuffixToTaskKind,
     defaultMode,
   }
 }
 
 /**
- * Resolves the reference material kinds (rulebook/recipe/sample) the agent should
- * NOT consult for a given task, even when they exist for the deliverable.
+ * Resolves the approach_mode for a given task.
  * Resolution order:
- *   1. Phase-level ignore_references from owner_rules[].phase_overrides (via index),
- *      checked across all phase sets assigned to the deliverable's local_id
- *   2. Empty array when not declared (agent consults all available reference materials)
+ *   1. owner_rules[].phase_overrides[].approach_mode (per-deliverable, takes precedence)
+ *   2. Phase-level approach_mode from phase_sets[phase_set][phase], checked across all
+ *      phase sets assigned to the deliverable's local_id
+ *   3. undefined when not declared at either level
  */
-export function resolveIgnoredReferences(
+export function resolveApproachMode(
   localId: string | undefined,
   taskId: string,
   index: PhaseModeIndex
-): ReferenceMaterialKind[] {
-  if (!localId) return []
+): ApproachMode | undefined {
+  if (!localId) return undefined
   const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return []
-  return index.localIdSuffixToIgnoredReferences.get(`${localId}:${suffix}`) ?? []
+  if (!/^\d{3}$/.test(suffix)) return undefined
+
+  const overridden = index.localIdSuffixToApproachMode.get(`${localId}:${suffix}`)
+  if (overridden !== undefined) return overridden
+
+  const phaseSets = index.localIdToPhaseSets.get(localId)
+  if (phaseSets) {
+    for (const phaseSet of phaseSets) {
+      const mode = index.phaseSetSuffixToApproachMode.get(`${phaseSet}:${suffix}`)
+      if (mode !== undefined) return mode
+    }
+  }
+  return undefined
+}
+
+/**
+ * Resolves the task_kind for a given task.
+ * Resolution order:
+ *   1. owner_rules[].phase_overrides[].task_kind (per-deliverable, takes precedence)
+ *   2. Phase-level task_kind from phase_sets[phase_set][phase], checked across all
+ *      phase sets assigned to the deliverable's local_id
+ *   3. undefined when not declared at either level
+ */
+export function resolveTaskKind(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex
+): TaskKind | undefined {
+  if (!localId) return undefined
+  const suffix = taskId.split('-').pop() ?? ''
+  if (!/^\d{3}$/.test(suffix)) return undefined
+
+  const overridden = index.localIdSuffixToTaskKind.get(`${localId}:${suffix}`)
+  if (overridden !== undefined) return overridden
+
+  const phaseSets = index.localIdToPhaseSets.get(localId)
+  if (phaseSets) {
+    for (const phaseSet of phaseSets) {
+      const kind = index.phaseSetSuffixToTaskKind.get(`${phaseSet}:${suffix}`)
+      if (kind !== undefined) return kind
+    }
+  }
+  return undefined
 }
 
 /**

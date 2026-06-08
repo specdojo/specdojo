@@ -4,6 +4,7 @@ import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate, listFilesRecursive, readJson } from './exec-shared.js'
 import type {
+  ApproachMode,
   ExecPlanMeta,
   ReadySnapshot,
   ReadyTaskView,
@@ -107,6 +108,8 @@ function frontmatter(meta: ExecPlanMeta): string {
   ]
   if (meta.owner) lines.push(`owner: ${meta.owner}`)
   if (meta.on_critical_path) lines.push(`on_critical_path: true`)
+  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
+  if (meta.task_kind) lines.push(`task_kind: ${meta.task_kind}`)
   if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
   lines.push('---')
   return lines.join('\n')
@@ -116,16 +119,43 @@ function frontmatter(meta: ExecPlanMeta): string {
 // Template-based generation (edit-plan / review-plan テンプレートの展開)
 // ---------------------------------------------------------------------------
 
-function templateFileName(mode: TaskMode): string {
-  return mode === 'review' ? 'xrp-template.md' : 'xep-template.md'
+function templatePrefix(mode: TaskMode): string {
+  return mode === 'review' ? 'xrp' : 'xep'
 }
 
-function loadPlanTemplate(mode: TaskMode): string {
-  const templatePath = join(specdojoRootDir(), 'docs/ja/specdojo/templates', templateFileName(mode))
+function standardTemplateFileName(mode: TaskMode): string {
+  return `${templatePrefix(mode)}-template.md`
+}
+
+function approachModeTemplateFileName(mode: TaskMode, approachMode: ApproachMode): string {
+  return `${templatePrefix(mode)}-${approachMode}-template.md`
+}
+
+// Selects <prefix>-<approach_mode>-template.md when it exists, otherwise falls back
+// to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
+function resolvePlanTemplatePath(mode: TaskMode, approachMode: ApproachMode | undefined): string {
+  const templatesDir = join(specdojoRootDir(), 'docs/ja/specdojo/templates')
+  if (approachMode) {
+    const candidatePath = join(templatesDir, approachModeTemplateFileName(mode, approachMode))
+    if (existsSync(candidatePath)) return candidatePath
+  }
+  return join(templatesDir, standardTemplateFileName(mode))
+}
+
+function loadPlanTemplate(
+  mode: TaskMode,
+  approachMode: ApproachMode | undefined,
+  cache: Map<string, string>
+): string {
+  const templatePath = resolvePlanTemplatePath(mode, approachMode)
+  const cached = cache.get(templatePath)
+  if (cached !== undefined) return cached
   if (!existsSync(templatePath)) {
     throw new Error(`Template not found: ${templatePath}`)
   }
-  return readFileSync(templatePath, 'utf8')
+  const content = readFileSync(templatePath, 'utf8')
+  cache.set(templatePath, content)
+  return content
 }
 
 function phaseDescriptionText(task: PlanTask): string {
@@ -218,6 +248,8 @@ function buildEditPlanMarkdown(
     project_id: projectId,
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
+    ...(task.approach_mode ? { approach_mode: task.approach_mode } : {}),
+    ...(task.task_kind ? { task_kind: task.task_kind } : {}),
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
@@ -256,6 +288,8 @@ function buildReviewPlanMarkdown(
     project_id: projectId,
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
+    ...(task.approach_mode ? { approach_mode: task.approach_mode } : {}),
+    ...(task.task_kind ? { task_kind: task.task_kind } : {}),
     viewpoints_ref: viewpointsRef,
   }
 
@@ -339,8 +373,7 @@ export function generatePlans(
 
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
   const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
-  const editTemplate = loadPlanTemplate('edit')
-  const reviewTemplate = loadPlanTemplate('review')
+  const templateCache = new Map<string, string>()
 
   for (const task of tasks) {
     const mode: TaskMode = task.mode ?? 'edit'
@@ -349,12 +382,14 @@ export function generatePlans(
     const resultRef = `exec/results/${task.id}-result.md`
     const outPath = join(plansDir, `${task.id}-plan.md`)
     const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
+    const planTask: PlanTask = { ...task, mode }
+    const template = loadPlanTemplate(mode, task.approach_mode, templateCache)
 
     const content =
       mode === 'review'
         ? buildReviewPlanMarkdown(
-            reviewTemplate,
-            { ...task, mode },
+            template,
+            planTask,
             deliverable,
             criteria,
             vpMap,
@@ -362,7 +397,7 @@ export function generatePlans(
             vpRef,
             resultRef
           )
-        : buildEditPlanMarkdown(editTemplate, { ...task, mode }, deliverable, projectId, resultRef)
+        : buildEditPlanMarkdown(template, planTask, deliverable, projectId, resultRef)
 
     writeFileSync(outPath, content, 'utf8')
   }

@@ -69,6 +69,24 @@ properties:
     type: string
     description: "Agent nickname assigned to this task. Set by exec run at claim time."
 
+  approach_mode:
+    type: string
+    enum: ["fully-guided", "recipe-guided", "freeform"]
+    description: >
+      How strictly the agent should follow reference materials (rulebook/recipe/sample).
+      Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
+      Used for template selection and to convey work intent to the agent.
+      Omitted when not declared for this phase.
+
+  task_kind:
+    type: string
+    enum: ["deliverable-edit", "deliverable-review", "reference-maintenance"]
+    description: >
+      The kind of work this task represents.
+      Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
+      reference-maintenance tasks improve rulebook/recipe/sample based on deliverables.
+      Omitted when not declared for this phase.
+
   viewpoints_ref:
     type: string
     description: "Path to pm-review-viewpoints.yaml. Present only when mode is review."
