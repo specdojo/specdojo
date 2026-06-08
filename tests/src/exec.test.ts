@@ -75,6 +75,7 @@ describe('exec strategy metadata resolution', () => {
           proficiency: 'expert',
         },
         {
+          task_kind: 'deliverable' as const,
           capabilities: ['standard-edit'],
           proficiency: 'normal',
         },
@@ -87,13 +88,15 @@ describe('exec strategy metadata resolution', () => {
         proficiency: 'expert',
       }
     )
-    expect(resolveAssignment('any-pass', 'improve', config, 'review', 'deliverable-review')).toEqual(
-      {
-        capabilities: ['review-agent'],
-        proficiency: 'normal',
-      }
-    )
-    expect(resolveAssignment('any-pass', 'improve', config, 'edit', 'deliverable-edit')).toEqual({
+    expect(resolveAssignment('any-pass', 'improve', config, 'review', 'deliverable')).toEqual({
+      capabilities: ['review-agent'],
+      proficiency: 'normal',
+    })
+    expect(resolveAssignment('any-pass', 'improve', config, 'edit', 'deliverable')).toEqual({
+      capabilities: ['standard-edit'],
+      proficiency: 'normal',
+    })
+    expect(resolveAssignment('any-pass', 'improve', config, 'edit')).toEqual({
       capabilities: ['standard-edit'],
       proficiency: 'normal',
     })

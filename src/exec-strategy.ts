@@ -56,11 +56,7 @@ function isApproachMode(value: unknown): value is ApproachMode {
 }
 
 function isTaskKind(value: unknown): value is TaskKind {
-  return (
-    value === 'deliverable-edit' ||
-    value === 'deliverable-review' ||
-    value === 'reference-maintenance'
-  )
+  return value === 'deliverable' || value === 'reference-maintenance'
 }
 
 function isExecution(value: unknown): value is 'agent' | 'human' {

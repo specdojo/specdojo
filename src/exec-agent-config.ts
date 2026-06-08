@@ -103,10 +103,11 @@ function ruleMatches(
   mode?: TaskMode,
   taskKind?: TaskKind
 ): boolean {
+  const effectiveTaskKind = taskKind ?? 'deliverable'
   if (rule.phase_set !== undefined && rule.phase_set !== phaseSet) return false
   if (rule.phase !== undefined && rule.phase !== phaseId) return false
   if (rule.mode !== undefined && rule.mode !== mode) return false
-  if (rule.task_kind !== undefined && rule.task_kind !== taskKind) return false
+  if (rule.task_kind !== undefined && rule.task_kind !== effectiveTaskKind) return false
   return true
 }
 

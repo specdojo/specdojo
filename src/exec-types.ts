@@ -2,7 +2,7 @@ export type TaskMode = 'edit' | 'review'
 
 export type ApproachMode = 'fully-guided' | 'recipe-guided' | 'freeform'
 
-export type TaskKind = 'deliverable-edit' | 'deliverable-review' | 'reference-maintenance'
+export type TaskKind = 'deliverable' | 'reference-maintenance'
 
 export type ExecEventType =
   | 'claim'

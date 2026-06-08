@@ -21,7 +21,7 @@ _REVIEW_VIEWPOINTS_DETAIL_
 ## 4. 進め方
 
 - exec plan frontmatter の `approach_mode` ・ `task_kind` を確認する。
-- `task_kind` が `reference-maintenance` 以外の `deliverable-review`（または未指定）の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach_mode` に応じて確認の基準を決める。
+- `task_kind` が `reference-maintenance` 以外（`deliverable` または未指定）の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach_mode` に応じて確認の基準を決める。
   - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体との整合を確認する。
   - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample の構造・文体は基準にしない）。
   - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈との整合を確認する。

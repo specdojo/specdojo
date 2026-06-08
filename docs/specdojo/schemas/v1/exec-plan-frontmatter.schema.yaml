@@ -80,10 +80,11 @@ properties:
 
   task_kind:
     type: string
-    enum: ["deliverable-edit", "deliverable-review", "reference-maintenance"]
+    enum: ["deliverable", "reference-maintenance"]
     description: >
-      The kind of work this task represents.
+      The target kind this task works on.
       Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
+      deliverable is the default when omitted; edit/review is represented by mode.
       reference-maintenance tasks improve rulebook/recipe/sample based on deliverables.
       Omitted when not declared for this phase.
 

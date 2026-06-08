@@ -393,10 +393,10 @@ $defs:
 
   TaskKind:
     type: string
-    enum: ["deliverable-edit", "deliverable-review", "reference-maintenance"]
+    enum: ["deliverable", "reference-maintenance"]
     description: >
-      The kind of work a task represents.
-      deliverable-edit / deliverable-review: ordinary deliverable creation/review work.
+      The target kind a task works on.
+      deliverable: ordinary deliverable creation/update/review work; edit/review is represented by mode.
       reference-maintenance: work that improves rulebook/recipe/sample based on deliverables;
       must be declared explicitly in phase_sets and is never auto-injected.
 

@@ -6,14 +6,16 @@ track: launch
 
 # exec-strategy-launch.yaml
 # sch-strategy-launch.yaml の execution: agent フェーズに対して
-# 必要な mode / capabilities / proficiency を宣言する。
+# 必要な task_kind / mode / capabilities / proficiency を宣言する。
 # mode: edit（成果物の作成・編集）/ review（レビュー）
+# task_kind: deliverable（通常成果物）/ reference-maintenance（参考資料メンテナンス）
+#            省略すると全 task_kind にマッチする。task 側の task_kind 省略は deliverable 扱い。
 # capabilities: ツールアクセス（web_search など）のみ。exec/review は mode で指定。
 # エージェントの選択は pm-members.yaml の capabilities / proficiency / priority から自動解決する。
 #
 # assignment_rules の評価ルール:
 #   1. 上から順に評価し、最初にマッチしたルールを適用する。
-#   2. pm-members.yaml から mode / capabilities / proficiency 条件を満たす agent を抽出する。
+#   2. phase_set / phase / mode / task_kind がマッチしたルールの capabilities / proficiency で agent を抽出する。
 #   3. priority（昇順）→ 余剰 capabilities 数（昇順）でソートし、先頭が primary。
 #   4. rate limit 発生時は次の候補へ順次フォールバックする。
 #   5. どの assignment_rule にもマッチしない phase は default_mode を適用する。
