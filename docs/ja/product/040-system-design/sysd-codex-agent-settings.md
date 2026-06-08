@@ -121,7 +121,7 @@ max_depth = 1
 
 ## 7. `AGENTS.md` 設計
 
-リポジトリルートの `AGENTS.md` は、すべての Codex セッションが読み込む共通ルールを記述する。Language・Project Policy・SpecDojo Workflow・Safety の4セクションで構成する。
+リポジトリルートの `AGENTS.md` は、すべての Codex セッションが読み込む共通ルールを記述する。Language・Project Policy・Safety の3セクションで構成する。
 
 Codex は Git root から現在の作業ディレクトリまで `AGENTS.md` を探索し、より近いディレクトリの指示を後から適用する。局所ルールは対象ディレクトリの `AGENTS.md`、一時的な上書きは `AGENTS.override.md` に記述する。
 
