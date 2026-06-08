@@ -72,11 +72,3 @@ properties:
   viewpoints_ref:
     type: string
     description: "Path to pm-review-viewpoints.yaml. Present only when mode is review."
-
-  approach_mode:
-    type: string
-    enum: ["freeform", "recipe-guided", "fully-guided", "rule-refinement"]
-    description: >
-      Approach mode resolved from sch-strategy's owner_rules[].approach_mode for the
-      deliverable's local_id. Present only when a matching plan template was applied
-      during generation; omitted when exec build falls back to the default plan content.

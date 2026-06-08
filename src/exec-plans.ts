@@ -3,9 +3,7 @@ import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate, listFilesRecursive, readJson } from './exec-shared.js'
-import { buildPhaseModeIndex, resolveApproachMode } from './exec-strategy.js'
 import type {
-  ApproachMode,
   ExecPlanMeta,
   ReadySnapshot,
   ReadyTaskView,
@@ -95,12 +93,6 @@ function repoRelativePath(absPath: string): string {
 // Markdown builders
 // ---------------------------------------------------------------------------
 
-function criticalityText(slack: number | undefined): string {
-  if (slack === undefined) return 'CPM 情報なし'
-  if (slack === 0) return 'クリティカルパス上。遅延余裕なし。'
-  return `遅延余裕あり（slack=${slack}）。`
-}
-
 function frontmatter(meta: ExecPlanMeta): string {
   const lines = [
     '---',
@@ -116,220 +108,23 @@ function frontmatter(meta: ExecPlanMeta): string {
   if (meta.owner) lines.push(`owner: ${meta.owner}`)
   if (meta.on_critical_path) lines.push(`on_critical_path: true`)
   if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
-  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
   lines.push('---')
   return lines.join('\n')
 }
 
-function buildEditPlanMarkdown(
-  task: PlanTask,
-  deliverable: DeliverableInfo | null,
-  projectId: string,
-  resultRef: string
-): string {
-  const lines: string[] = []
-  const cpm = task.cpm
-  const onCriticalPath = cpm !== undefined && cpm.slack === 0
-
-  const meta: ExecPlanMeta = {
-    id: `xep-${task.id.toLowerCase()}`,
-    type: 'exec-plan',
-    rulebook: 'xep-rulebook',
-    task_id: task.id,
-    ...(task.name ? { name: task.name } : {}),
-    mode: 'edit',
-    status: 'ready',
-    project_id: projectId,
-    ...(task.owner ? { owner: task.owner } : {}),
-    ...(onCriticalPath ? { on_critical_path: true as const } : {}),
-  }
-
-  lines.push(frontmatter(meta))
-  lines.push('')
-  lines.push(`# Edit Plan: ${task.id}`)
-  lines.push('')
-
-  // Section 1: what to do in this phase (most important, shown first)
-  lines.push('## 1. このフェーズで行うこと')
-  lines.push('')
-  if (task.description) {
-    for (const line of task.description.trimEnd().split('\n')) {
-      lines.push(line)
-    }
-  } else {
-    lines.push(`${task.name ?? task.id}`)
-  }
-  lines.push('')
-
-  // Section 2: target deliverable + result path
-  lines.push('## 2. 対象成果物')
-  lines.push('')
-  if (deliverable) {
-    lines.push(`- path: \`${deliverable.resolvedPath}\``)
-    lines.push(`- result: \`${resultRef}\``)
-    const criteria = deliverable.deliverable.done_criteria ?? []
-    if (criteria.length > 0) {
-      lines.push('')
-      lines.push('**done_criteria:**')
-      lines.push('')
-      for (const c of criteria) {
-        lines.push(`- ${c.text}`)
-      }
-    }
-  } else {
-    lines.push('- 成果物カタログに登録されていないタスク。タスク名を参照する。')
-    lines.push(`- result: \`${resultRef}\``)
-  }
-  lines.push('')
-
-  // Section 3: completion steps (no exit protocol)
-  lines.push('## 3. 完了手順')
-  lines.push('')
-  lines.push('1. 「このフェーズで行うこと」に従って成果物を更新する。')
-  lines.push('2. 必要な検証と lint を実行する。')
-  lines.push('3. result の done_criteria_checked セクションを記入する。')
-  lines.push('')
-
-  // Section 4: termination conditions (merged from old 4 + 5)
-  lines.push('## 4. 異常終了の条件')
-  lines.push('')
-  lines.push('- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。')
-  lines.push('- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。')
-  lines.push('- 異常終了時は complete ではなく block を記録する。')
-  lines.push('')
-
-  return lines.join('\n')
-}
-
-function buildReviewPlanMarkdown(
-  task: PlanTask,
-  deliverable: DeliverableInfo | null,
-  criteria: CriteriaItem[],
-  vpMap: Map<string, ReviewViewpoint>,
-  projectId: string,
-  viewpointsRef: string,
-  resultRef: string
-): string {
-  const lines: string[] = []
-  const cpm = task.cpm
-  const onCriticalPath = cpm !== undefined && cpm.slack === 0
-
-  const meta: ExecPlanMeta = {
-    id: `xrp-${task.id.toLowerCase()}`,
-    type: 'exec-plan',
-    rulebook: 'xep-rulebook',
-    task_id: task.id,
-    ...(task.name ? { name: task.name } : {}),
-    mode: 'review',
-    status: 'ready',
-    project_id: projectId,
-    ...(task.owner ? { owner: task.owner } : {}),
-    ...(onCriticalPath ? { on_critical_path: true as const } : {}),
-    viewpoints_ref: viewpointsRef,
-  }
-
-  lines.push(frontmatter(meta))
-  lines.push('')
-  lines.push(`# Review Plan: ${task.id}`)
-  lines.push('')
-
-  // Section 1: what to do in this phase (most important, shown first)
-  lines.push('## 1. このフェーズで行うこと')
-  lines.push('')
-  if (task.description) {
-    for (const line of task.description.trimEnd().split('\n')) {
-      lines.push(line)
-    }
-  } else {
-    lines.push(`${task.name ?? task.id}`)
-  }
-  lines.push('')
-
-  lines.push('## 2. 対象成果物')
-  lines.push('')
-  if (deliverable) {
-    lines.push(`- path: \`${deliverable.resolvedPath}\``)
-    lines.push(`- rulebook: \`${deliverable.deliverable.rulebook ?? 'none'}\``)
-    lines.push(`- result: \`${resultRef}\``)
-  } else {
-    lines.push('- 成果物カタログに登録されていないタスク。タスク名を参照する。')
-    lines.push(`- result: \`${resultRef}\``)
-  }
-  lines.push('')
-  lines.push('## 3. レビュー観点')
-  lines.push('')
-
-  if (criteria.length > 0) {
-    lines.push('| ID | ロール | viewpoint_id | 確認基準 |')
-    lines.push('|---|---|---|---|')
-    criteria.forEach((c, i) => {
-      const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
-      lines.push(`| ${vpId} | ${c.roles.join(', ')} | ${c.viewpoint} | ${c.text} |`)
-    })
-    lines.push('')
-    criteria.forEach((c, i) => {
-      const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
-      const vp = vpMap.get(c.viewpoint)
-      lines.push(`### ${vpId}（${c.roles.join(', ')}: ${c.viewpoint}）`)
-      lines.push('')
-      lines.push(`**確認基準**: ${c.text}`)
-      lines.push('')
-      if (vp?.coverage_types && vp.coverage_types.length > 0) {
-        lines.push('**coverage_required:**')
-        lines.push('')
-        for (const ct of vp.coverage_types) {
-          lines.push(`- ${ct}`)
-        }
-        lines.push('')
-      }
-      if (vp?.check) {
-        lines.push(`**チェック観点:** ${vp.check}`)
-        lines.push('')
-      }
-      if (vp?.evidence) {
-        lines.push(`**エビデンス例:** ${vp.evidence}`)
-        lines.push('')
-      }
-    })
-  } else {
-    lines.push('_TODO_: 対象成果物の done_criteria が見つかりません。カタログを確認してください。')
-    lines.push('')
-  }
-
-  // Section 4: completion steps (no exit protocol)
-  lines.push('## 4. 完了手順')
-  lines.push('')
-  lines.push('1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。')
-  lines.push('2. result の各レビュー観点セクションに記入する。')
-  lines.push('')
-
-  // Section 5: termination conditions (merged from old 4 + 5)
-  lines.push('## 5. 異常終了の条件')
-  lines.push('')
-  lines.push('- done_criteria を満たさない・対象ファイル不明・依存未解決の場合は異常終了する（終了コード 1）。')
-  lines.push('- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。')
-  lines.push('- 異常終了時は complete ではなく block を記録する。')
-  lines.push('')
-
-  return lines.join('\n')
-}
-
 // ---------------------------------------------------------------------------
-// Template-based generation (approach_mode 別の edit-plan / review-plan テンプレート展開)
+// Template-based generation (edit-plan / review-plan テンプレートの展開)
 // ---------------------------------------------------------------------------
 
-function templateFileName(mode: TaskMode, approachMode: ApproachMode): string {
-  const prefix = mode === 'review' ? 'xrp' : 'xep'
-  return `${prefix}-${approachMode}-template.md`
+function templateFileName(mode: TaskMode): string {
+  return mode === 'review' ? 'xrp-template.md' : 'xep-template.md'
 }
 
-function loadPlanTemplate(mode: TaskMode, approachMode: ApproachMode): string | null {
-  const templatePath = join(
-    specdojoRootDir(),
-    'docs/ja/specdojo/templates',
-    templateFileName(mode, approachMode)
-  )
-  if (!existsSync(templatePath)) return null
+function loadPlanTemplate(mode: TaskMode): string {
+  const templatePath = join(specdojoRootDir(), 'docs/ja/specdojo/templates', templateFileName(mode))
+  if (!existsSync(templatePath)) {
+    throw new Error(`Template not found: ${templatePath}`)
+  }
   return readFileSync(templatePath, 'utf8')
 }
 
@@ -402,13 +197,12 @@ function reviewViewpointsDetail(criteria: CriteriaItem[], vpMap: Map<string, Rev
   return lines.join('\n')
 }
 
-function buildTemplatedEditPlan(
+function buildEditPlanMarkdown(
   template: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
   projectId: string,
-  resultRef: string,
-  approachMode: ApproachMode
+  resultRef: string
 ): string {
   const cpm = task.cpm
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
@@ -424,7 +218,6 @@ function buildTemplatedEditPlan(
     project_id: projectId,
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
-    approach_mode: approachMode,
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
@@ -439,7 +232,7 @@ function buildTemplatedEditPlan(
   return expandTemplate(template, values)
 }
 
-function buildTemplatedReviewPlan(
+function buildReviewPlanMarkdown(
   template: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
@@ -447,8 +240,7 @@ function buildTemplatedReviewPlan(
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
   viewpointsRef: string,
-  resultRef: string,
-  approachMode: ApproachMode
+  resultRef: string
 ): string {
   const cpm = task.cpm
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
@@ -465,7 +257,6 @@ function buildTemplatedReviewPlan(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     viewpoints_ref: viewpointsRef,
-    approach_mode: approachMode,
   }
 
   const values: Record<string, string> = {
@@ -510,7 +301,6 @@ function buildPlanIndexMarkdown(tasks: PlanTask[]): string {
 // ---------------------------------------------------------------------------
 
 export function generatePlans(
-  schedulePath: string,
   executionPath: string,
   projectId: string,
   catalogPath: string,
@@ -549,8 +339,8 @@ export function generatePlans(
 
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
   const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
-  const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
-  const fallbackNotices: string[] = []
+  const editTemplate = loadPlanTemplate('edit')
+  const reviewTemplate = loadPlanTemplate('review')
 
   for (const task of tasks) {
     const mode: TaskMode = task.mode ?? 'edit'
@@ -560,36 +350,19 @@ export function generatePlans(
     const outPath = join(plansDir, `${task.id}-plan.md`)
     const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
 
-    const approachMode = resolveApproachMode(localId, phaseModeIndex)
-    const template = approachMode ? loadPlanTemplate(mode, approachMode) : null
-
-    let content: string
-    if (approachMode && template) {
-      content =
-        mode === 'review'
-          ? buildTemplatedReviewPlan(
-              template,
-              { ...task, mode },
-              deliverable,
-              criteria,
-              vpMap,
-              projectId,
-              vpRef,
-              resultRef,
-              approachMode
-            )
-          : buildTemplatedEditPlan(template, { ...task, mode }, deliverable, projectId, resultRef, approachMode)
-    } else {
-      if (!approachMode) {
-        fallbackNotices.push(`${task.id}: approach_mode 未指定`)
-      } else {
-        fallbackNotices.push(`${task.id}: テンプレート未整備（${templateFileName(mode, approachMode)}）`)
-      }
-      content =
-        mode === 'review'
-          ? buildReviewPlanMarkdown({ ...task, mode }, deliverable, criteria, vpMap, projectId, vpRef, resultRef)
-          : buildEditPlanMarkdown({ ...task, mode }, deliverable, projectId, resultRef)
-    }
+    const content =
+      mode === 'review'
+        ? buildReviewPlanMarkdown(
+            reviewTemplate,
+            { ...task, mode },
+            deliverable,
+            criteria,
+            vpMap,
+            projectId,
+            vpRef,
+            resultRef
+          )
+        : buildEditPlanMarkdown(editTemplate, { ...task, mode }, deliverable, projectId, resultRef)
 
     writeFileSync(outPath, content, 'utf8')
   }
@@ -601,12 +374,6 @@ export function generatePlans(
   )
 
   process.stdout.write(`Generated: ${plansDir}\n`)
-  if (fallbackNotices.length > 0) {
-    process.stdout.write('Fallback (approach_mode テンプレート未適用):\n')
-    for (const notice of fallbackNotices) {
-      process.stdout.write(`  - ${notice}\n`)
-    }
-  }
 }
 
 export function planPathForTask(executionPath: string, taskId: string): string {

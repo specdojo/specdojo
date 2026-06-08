@@ -43,6 +43,17 @@
         "planned_owner": "BA"
       }
     },
+    "T-LAUNCH-prj-overview-030": {
+      "state": "doing",
+      "last_ts": "2026-06-07T22:27:58Z",
+      "last_by": "codex-review-agent",
+      "last_type": "claim",
+      "last_msg": "手動でclaim",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "BA"
+      }
+    },
     "M-LAUNCH-project-definition": {
       "state": "todo"
     },
@@ -50,9 +61,6 @@
       "state": "todo"
     },
     "G-LAUNCH-first-pass": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-030": {
       "state": "todo"
     },
     "T-LAUNCH-prj-overview-040": {

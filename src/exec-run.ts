@@ -15,11 +15,6 @@ import {
   type ResolvedRequirements,
 } from './exec-agent-config.js'
 import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-project.js'
-import {
-  buildPhaseModeIndex,
-  resolveApproachMode,
-  type PhaseModeIndex,
-} from './exec-strategy.js'
 import { readAllEventFiles, foldEventsToState } from './exec-events.js'
 import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
@@ -313,7 +308,6 @@ function runSingleTask(
   roster: MemberRoster | null,
   localIdToRule: Map<string, { phaseSet: string }>,
   phaseSetSuffixToId: Map<string, string>,
-  phaseModeIndex: PhaseModeIndex,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
   dryRun: boolean,
@@ -396,7 +390,6 @@ function runSingleTask(
 
   const planRef = `exec/plans/${task.id}-plan.md`
   const startedAt = new Date().toISOString()
-  const approachMode = resolveApproachMode(task.local_id, phaseModeIndex)
   const { resultPath } = scaffoldResult({
     executionPath,
     taskId: task.id,
@@ -405,7 +398,6 @@ function runSingleTask(
     planRef,
     agent: actor,
     startedAt,
-    approachMode,
   })
 
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)
@@ -481,7 +473,6 @@ function runAutoMode(opts: RunOpts): void {
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
-  const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   const loop = !!opts.loop
@@ -530,7 +521,6 @@ function runAutoMode(opts: RunOpts): void {
         roster,
         localIdToRule,
         phaseSetSuffixToId,
-        phaseModeIndex,
         undefined,
         opts.by,
         dryRun
@@ -574,7 +564,6 @@ function runManualMode(opts: RunOpts): void {
   const strategyConfig = loadExecStrategyConfig(executionPath)
   const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToRule, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
-  const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   let task: ReadyTaskView = { id: taskId, schedule_file: '', fifo_rank: 0, critical_first_rank: 0 }
@@ -642,7 +631,6 @@ function runManualMode(opts: RunOpts): void {
     roster,
     localIdToRule,
     phaseSetSuffixToId,
-    phaseModeIndex,
     agentCmdOverride,
     actorOverride,
     !!opts.dryRun,

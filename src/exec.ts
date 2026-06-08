@@ -49,7 +49,7 @@ import { scaffoldViewpoints } from './review-plan.js'
 import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
-import { buildPhaseModeIndex, resolveApproachMode, resolveTaskMode } from './exec-strategy.js'
+import { buildPhaseModeIndex, resolveTaskMode } from './exec-strategy.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -332,7 +332,6 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       const localId = state.schedule.nodes.get(taskId)?.local_id
       const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
       const mode = resolveTaskMode(localId, taskId, phaseModeIndex)
-      const approachMode = resolveApproachMode(localId, phaseModeIndex)
       scaffoldResult({
         executionPath,
         taskId,
@@ -341,7 +340,6 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
         planRef: `exec/plans/${taskId}-plan.md`,
         agent: actor,
         startedAt: new Date().toISOString(),
-        approachMode,
       })
     }
     process.stdout.write(out + '\n')
@@ -456,7 +454,6 @@ export function registerExecCommands(program: Command): void {
       writeCpmFiles(schedulePath, cpm, snapshot)
       generateTaskCatalog(schedulePath, executionPath)
       generatePlans(
-        schedulePath,
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
         catalogPath ?? '',
@@ -489,7 +486,7 @@ export function registerExecCommands(program: Command): void {
     let lockDir = ''
 
     try {
-      const { schedulePath, executionPath } = resolveProjectContext(opts)
+      const { schedulePath } = resolveProjectContext(opts)
       const actor = requireNonEmpty('by', opts.by)
       const roster = loadRosterForOpts(opts)
       assertValidActor(actor, roster)

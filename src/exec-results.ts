@@ -2,8 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate } from './exec-shared.js'
-import { isApproachMode } from './exec-strategy.js'
-import type { ApproachMode, ExecResultMeta, TaskMode } from './exec-types.js'
+import type { ExecResultMeta, TaskMode } from './exec-types.js'
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -23,7 +22,6 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   ]
   if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`)
   if (meta.agent) lines.push(`agent: ${meta.agent}`)
-  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
   lines.push('---')
   return lines.join('\n')
 }
@@ -41,79 +39,19 @@ function parseFrontmatter(content: string): { meta: Record<string, string>; body
 }
 
 // ---------------------------------------------------------------------------
-// Template-based generation (approach_mode 別の edit-result / review-result テンプレート展開)
+// Template-based generation (edit-result / review-result テンプレートの展開)
 // ---------------------------------------------------------------------------
 
-function templateFileName(mode: TaskMode, approachMode: ApproachMode): string {
-  const prefix = mode === 'review' ? 'xrr' : 'xer'
-  return `${prefix}-${approachMode}-template.md`
+function templateFileName(mode: TaskMode): string {
+  return mode === 'review' ? 'xrr-template.md' : 'xer-template.md'
 }
 
-function loadResultTemplate(mode: TaskMode, approachMode: ApproachMode): string | null {
-  const templatePath = join(
-    specdojoRootDir(),
-    'docs/ja/specdojo/templates',
-    templateFileName(mode, approachMode)
-  )
-  if (!existsSync(templatePath)) return null
+function loadResultTemplate(mode: TaskMode): string {
+  const templatePath = join(specdojoRootDir(), 'docs/ja/specdojo/templates', templateFileName(mode))
+  if (!existsSync(templatePath)) {
+    throw new Error(`Template not found: ${templatePath}`)
+  }
   return readFileSync(templatePath, 'utf8')
-}
-
-// ---------------------------------------------------------------------------
-// Scaffold builders
-// ---------------------------------------------------------------------------
-
-function buildEditResultBody(): string {
-  const lines: string[] = []
-  lines.push('')
-  lines.push('## 1. done_criteria 確認')
-  lines.push('')
-  lines.push('_TODO_: プランの done_criteria を確認してチェックを記入する。')
-  lines.push('')
-  lines.push('<!-- 例:')
-  lines.push('- [x] 目的・背景・ゴールが記述されている')
-  lines.push('- [ ] ステークホルダーの役割が明記されている')
-  lines.push('-->')
-  lines.push('')
-  lines.push('## 2. 実施内容')
-  lines.push('')
-  lines.push('_TODO_: 実施した内容の要約を記入する。')
-  lines.push('')
-  lines.push('## 3. 変更ファイル')
-  lines.push('')
-  lines.push('_TODO_: 変更したファイルのパスを記入する。')
-  lines.push('')
-  lines.push('## 4. 申し送り')
-  lines.push('')
-  lines.push('_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。')
-  lines.push('')
-  return lines.join('\n')
-}
-
-function buildReviewResultBody(): string {
-  const lines: string[] = []
-  lines.push('')
-  lines.push('## 1. レビュー観点別結果')
-  lines.push('')
-  lines.push('_TODO_: プランの各 RVP-XXX セクションに対して結果を記入する。')
-  lines.push('')
-  lines.push('<!-- 各観点の記入例:')
-  lines.push('### RVP-001')
-  lines.push('')
-  lines.push('- result: pass | fail | unclear')
-  lines.push('- evidence: （根拠・参照箇所）')
-  lines.push('- notes: （補足）')
-  lines.push('-->')
-  lines.push('')
-  lines.push('## 2. findings')
-  lines.push('')
-  lines.push('_TODO_: 問題点・指摘事項を記入する（なければ削除）。')
-  lines.push('')
-  lines.push('## 3. decision')
-  lines.push('')
-  lines.push('- recommendation: _TODO_（approve / revise / reject）')
-  lines.push('')
-  return lines.join('\n')
 }
 
 // ---------------------------------------------------------------------------
@@ -132,9 +70,8 @@ export function scaffoldResult(opts: {
   planRef: string
   agent: string
   startedAt: string
-  approachMode?: ApproachMode
 }): { resultPath: string; created: boolean } {
-  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approachMode } = opts
+  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt } = opts
   const resultPath = resultPathForTask(executionPath, taskId)
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
@@ -145,7 +82,7 @@ export function scaffoldResult(opts: {
   const resultsDir = join(executionPath, 'exec', 'results')
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true })
 
-  const template = approachMode ? loadResultTemplate(mode, approachMode) : null
+  const template = loadResultTemplate(mode)
 
   const meta: ExecResultMeta = {
     id: mode === 'review' ? `xrr-${taskId.toLowerCase()}` : `xer-${taskId.toLowerCase()}`,
@@ -157,23 +94,9 @@ export function scaffoldResult(opts: {
     plan_ref: planRef,
     started_at: startedAt,
     agent,
-    ...(approachMode && template ? { approach_mode: approachMode } : {}),
   }
 
-  let content: string
-  if (approachMode && template) {
-    content = expandTemplate(template, { _FRONTMATTER_: serializeFrontmatter(meta) })
-  } else {
-    if (!approachMode) {
-      process.stdout.write(`Fallback (approach_mode テンプレート未適用): ${taskId}: approach_mode 未指定\n`)
-    } else {
-      process.stdout.write(
-        `Fallback (approach_mode テンプレート未適用): ${taskId}: テンプレート未整備（${templateFileName(mode, approachMode)}）\n`
-      )
-    }
-    const body = mode === 'review' ? buildReviewResultBody() : buildEditResultBody()
-    content = serializeFrontmatter(meta) + body
-  }
+  const content = expandTemplate(template, { _FRONTMATTER_: serializeFrontmatter(meta) })
 
   writeFileSync(resultPath, content, 'utf8')
   return { resultPath, created: true }
@@ -200,9 +123,6 @@ export function updateResultStatus(
     started_at: existingMeta.started_at ?? '',
     completed_at: completedAt,
     agent: existingMeta.agent,
-    ...(isApproachMode(existingMeta.approach_mode)
-      ? { approach_mode: existingMeta.approach_mode }
-      : {}),
   }
 
   writeFileSync(resultPath, serializeFrontmatter(updatedMeta) + body, 'utf8')

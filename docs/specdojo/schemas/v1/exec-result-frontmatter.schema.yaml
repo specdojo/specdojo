@@ -73,11 +73,3 @@ properties:
   agent:
     type: string
     description: "Agent nickname that executed this task."
-
-  approach_mode:
-    type: string
-    enum: ["freeform", "recipe-guided", "fully-guided", "rule-refinement"]
-    description: >
-      Approach mode resolved from sch-strategy's owner_rules[].approach_mode for the
-      deliverable's local_id. Present only when a matching result template was applied
-      during scaffold; omitted when the harness falls back to the default result content.

@@ -1,35 +1,17 @@
----
-id: xep-t-launch-pm-plan-010
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-pm-plan-010
-name: たたき台作成
-mode: edit
-status: ready
-project_id: prj-0001
-owner: PM
----
+_FRONTMATTER_
 
-# Edit Plan: T-LAUNCH-pm-plan-010
+# _PLAN_TITLE_
 
 ## 1. このフェーズで行うこと
 
-担当ロールが成果物の初版を作成する。
-章構成・記載項目を決め、現時点で把握している情報を埋める。
-調査・確認が必要な箇所は TODO として明示したまま残す。
+_PHASE_DESCRIPTION_
 
 ## 2. 対象成果物
 
-- path: `/docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-plan.md`
-- result: `exec/results/T-LAUNCH-pm-plan-010-result.md`
+_DELIVERABLE_PATH_LINE_
+_RESULT_REF_LINE_
 
-**done_criteria:**
-
-- プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
-- 計画・進捗・リスク管理の方針が記述されていること
-- 業務プロセスとの整合が確認できること
-- 構成管理・技術管理の観点が含まれていること
-- レビュー方針・品質基準への参照が確認できること
+_DONE_CRITERIA_BLOCK_
 
 ## 3. 進め方
 

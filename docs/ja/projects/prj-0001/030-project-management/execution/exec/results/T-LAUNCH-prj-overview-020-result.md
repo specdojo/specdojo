@@ -4,11 +4,12 @@ type: exec-result
 task_id: T-LAUNCH-prj-overview-020
 mode: edit
 status: in_progress
-project_id: 
+project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-overview-020-plan.md
-started_at: "2026-06-04T12:49:43.899Z"
+started_at: '2026-06-04T12:49:43.899Z'
 agent: claude-edit-agent
 ---
+
 ## 1. done_criteria 確認
 
 _TODO_: プランの done_criteria を確認してチェックを記入する。

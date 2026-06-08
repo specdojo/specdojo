@@ -131,19 +131,6 @@ properties:
             minLength: 1
         owner:
           $ref: "./sch-common.schema.yaml#/$defs/Owner"
-        approach_mode:
-          type: string
-          enum:
-            - freeform
-            - recipe-guided
-            - fully-guided
-            - rule-refinement
-          description: >
-            Approach mode for these deliverables, selected based on the availability
-            of rulebook/recipe/sample for the target deliverable type.
-            Defines how the agent should approach building, improving, or reviewing
-            the deliverable, regardless of whether the task mode is edit or review.
-            See specdojo-approach-mode-guide.md for mode definitions and selection criteria.
         phase_set:
           type: string
           minLength: 1
@@ -165,14 +152,15 @@ properties:
         phase_overrides:
           type: array
           description: >
-            Per-phase execution overrides for these deliverables.
-            Takes precedence over the execution field in phase_sets[phase_set][phase].
+            Per-phase overrides for these deliverables.
+            execution takes precedence over the execution field in phase_sets[phase_set][phase].
+            ignore_references narrows which reference materials the agent should consult
+            in this phase, regardless of whether rulebook/recipe/sample exist for the deliverable.
           items:
             type: object
             additionalProperties: false
             required:
               - phase
-              - execution
             properties:
               phase:
                 type: string
@@ -180,6 +168,21 @@ properties:
                 description: "Phase id to override (must exist in the referenced phase_set)."
               execution:
                 $ref: "#/$defs/Execution"
+              ignore_references:
+                type: array
+                minItems: 1
+                uniqueItems: true
+                description: >
+                  Reference material types the agent should NOT consult in this phase,
+                  even when they exist for the deliverable (e.g., a draft phase that should
+                  proceed without being constrained by an as-yet-unrefined rulebook).
+                  Omit when the agent should consult all available reference materials.
+                items:
+                  type: string
+                  enum:
+                    - rulebook
+                    - recipe
+                    - sample
 
   group_milestones:
     type: array

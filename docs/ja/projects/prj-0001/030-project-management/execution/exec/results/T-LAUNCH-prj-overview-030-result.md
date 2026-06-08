@@ -1,5 +1,14 @@
-_FRONTMATTER_
-
+---
+id: xrr-t-launch-prj-overview-030
+type: exec-result
+task_id: T-LAUNCH-prj-overview-030
+mode: review
+status: in_progress
+project_id: 
+plan_ref: exec/plans/T-LAUNCH-prj-overview-030-plan.md
+started_at: "2026-06-07T22:27:58.974Z"
+agent: codex-review-agent
+---
 ## 1. レビュー観点別結果
 
 _TODO_: プランの各 RVP-XXX セクションに対して結果を記入する。
@@ -16,10 +25,6 @@ _TODO_: プランの各 RVP-XXX セクションに対して結果を記入する
 
 _TODO_: 問題点・指摘事項を記入する（なければ削除）。
 
-## 3. 進め方モードに基づく確認（自由形式）
-
-_TODO_: 類似成果物や対象領域の慣行と整合しているかどうかを確認した結果と、判断の根拠を記入する。
-
-## 4. decision
+## 3. decision
 
 - recommendation: _TODO_（approve / revise / reject）

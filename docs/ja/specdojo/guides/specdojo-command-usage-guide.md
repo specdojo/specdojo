@@ -1117,54 +1117,40 @@ specdojo exec build --project prj-0001
 
 `claim-next.json` は strategy ごとの次の claim 対象を持ちます。
 
-#### 8.6.1. edit-plan / review-plan のテンプレート化（approach_mode 別）
+#### 8.6.1. edit-plan / review-plan のテンプレート化
 
-`exec/plans/<task-id>-plan.md` の内容は、対象成果物の `local_id` に指定された **進め方モード**（`approach_mode`）ごとに用意したテンプレートファイルを展開して生成する。`approach_mode` の定義・選定基準は [specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) を参照する。
+`exec/plans/<task-id>-plan.md` の内容は、生成物の種別（edit-plan / review-plan）ごとに用意した共通テンプレートファイル（`xep-template.md` / `xrp-template.md`）を展開して生成する。
 
-`approach_mode` ごとにテンプレートを用意して展開することで、対象成果物の rulebook / recipe / sample の整備状況に応じた進め方の指示を plan 本文に直接含め、エージェントが `specdojo-approach-mode-guide.md` を別途参照しなくても plan を読むだけで進め方を把握できる状態にする。`approach_mode` が指定されていない、またはテンプレートが未整備の場合は、「選択・展開とフォールバック」に従って `approach_mode` を考慮しない構成で生成する。
+テンプレートを種別ごとに 1 つへ統一し、rulebook / recipe / sample の参照方法と `ignore_references` による参照範囲の調整を共通の「進め方」セクションとしてテンプレート本文に直接含めることで、エージェントが他の文書を別途参照しなくても plan を読むだけで進め方を把握できる状態にする。「進め方」セクションが扱う内容の詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
 
 #### 8.6.2. テンプレートファイルの配置と構成
 
 - 配置先は他の生成物テンプレートと同じ `docs/ja/specdojo/templates/` とする。
-- ファイル名は、生成物の frontmatter `id` プレフィックス（`xep-` / `xrp-`）と `approach_mode` の値を組み合わせ、`xep-<approach_mode>-template.md`（edit-plan 用）/ `xrp-<approach_mode>-template.md`（review-plan 用）とする（例: `xep-recipe-guided-template.md`、`xrp-fully-guided-template.md`）。
-- `approach_mode` の値は `sch-strategy.schema.yaml` の `owner_rules[].approach_mode` の `enum`（`freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`）と一致させる。
-- 各テンプレートは、frontmatter から各セクションまでの **plan 全体の構成** を定義する。セクション構成・見出し・進め方の指示文は `approach_mode` ごとに変えてよい。
-- タスクごとに変わる動的な内容（task*id、done_criteria、レビュー観点など）は、次の表のプレースホルダで埋め込む。記述形式は `pjr-*-template.md` と同様に、`\_UPPER_SNAKE\*` 形式のプレースホルダ文字列を本文に直接書く Markdown とする。
+- ファイル名は、生成物の frontmatter `id` プレフィックス（`xep-` / `xrp-`）に `-template.md` を付けた `xep-template.md`（edit-plan 用）/ `xrp-template.md`（review-plan 用）とする。
+- 各テンプレートは、frontmatter から各セクションまでの **plan 全体の構成** を定義する。
+- タスクごとに変わる動的な内容（task_id、done_criteria、レビュー観点など）は、次の表のプレースホルダで埋め込む。記述形式は `pjr-*-template.md` と同様に、`_UPPER_SNAKE_` 形式のプレースホルダ文字列を本文に直接書く Markdown とする。
 
 | プレースホルダ               | 置換内容                                                                                                          | edit | review |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------- | :--: | :----: |
-| `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む。解決した `approach_mode` を含む）                                         |  ○   |   ○    |
+| `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む）                                                                          |  ○   |   ○    |
 | `_PLAN_TITLE_`               | H1 見出し文字列（`Edit Plan: <task-id>` / `Review Plan: <task-id>`）                                              |  ○   |   ○    |
 | `_PHASE_DESCRIPTION_`        | 「このフェーズで行うこと」の本文（`task.description`、無ければ `name` / `id`）                                    |  ○   |   ○    |
 | `_DELIVERABLE_PATH_LINE_`    | 対象成果物の path 行（カタログ未登録タスクの場合は代替文）                                                        |  ○   |   ○    |
 | `_RESULT_REF_LINE_`          | result ファイルへの参照行                                                                                         |  ○   |   ○    |
 | `_RULEBOOK_REF_LINE_`        | 対象成果物の rulebook 参照行（カタログ未登録の場合は `none` と表示する）                                          |      |   ○    |
-| `_DONE_CRITERIA_BLOCK_`      | done*criteria の箇条書きブロック（無い場合は `\_TODO*` 注記を表示する）                                           |  ○   |        |
+| `_DONE_CRITERIA_BLOCK_`      | done_criteria の箇条書きブロック（無い場合は `_TODO_` 注記を表示する）                                            |  ○   |        |
 | `_REVIEW_VIEWPOINTS_TABLE_`  | レビュー観点一覧表（`RVP-NNN` / ロール / `viewpoint_id` / 確認基準。無い場合は `_TODO_` 注記を表示する）          |      |   ○    |
-| `_REVIEW_VIEWPOINTS_DETAIL_` | 観点ごとの詳細（確認基準 / coverage*required / チェック観点 / エビデンス例。無い場合は `\_TODO*` 注記を表示する） |      |   ○    |
+| `_REVIEW_VIEWPOINTS_DETAIL_` | 観点ごとの詳細（確認基準 / coverage_required / チェック観点 / エビデンス例。無い場合は `_TODO_` 注記を表示する）  |      |   ○    |
 
 - プレースホルダはテンプレート内に 1 回だけ書く。
 - すべてのプレースホルダは常に非空の文字列へ置換する。対象データが無い場合も `none` や `_TODO_` 注記などの代替表記を使い、空文字列には置換しない。テンプレート側でプレースホルダの前後に空行を 1 行ずつ置く構成を統一でき、生成結果が `MD012`（空行の連続禁止）・`MD022`（見出し前後の空行必須）を満たせるようにするための方針である。
-- 上記以外の見出しや文章（進め方の指示、留意点など）は、`approach_mode` に応じてテンプレート側で自由に記述する。
+- 進め方の指示や留意点を含む、上記以外の見出しや文章は、edit-plan / review-plan で共通の内容としてテンプレート側に記述する。
 
-#### 8.6.3. 選択・展開とフォールバック
+#### 8.6.3. 展開
 
-`specdojo exec build` は、各タスクの plan を生成する際に次の手順でテンプレートを選択・展開する。
+`specdojo exec build` は、各タスクの plan を生成する際、タスクの `mode`（edit / review）に対応するテンプレートファイル（`xep-template.md` / `xrp-template.md`）を読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。
 
-1. 対象タスクの `local_id` に対応する `approach_mode` を、`sch-strategy-<track>.yaml` の `owner_rules[].approach_mode` から解決する。
-2. タスクの `mode`（edit / review）と解決した `approach_mode` から、テンプレートファイルパス（`xep-<approach_mode>-template.md` / `xrp-<approach_mode>-template.md`）を決定する。
-3. テンプレートファイルが存在する場合は、その内容を読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。生成した plan の frontmatter には、解決した `approach_mode` を追記する（例: `approach_mode: recipe-guided`）。
-4. 次のいずれかに該当する場合は、フォールバックとして現行の生成内容（`approach_mode` を考慮しない構成。frontmatter に `approach_mode` を含めない）を使用する。
-   - 対象 `local_id` に `approach_mode` が指定されていない場合
-   - 解決した `approach_mode` に対応するテンプレートファイルが存在しない場合
-
-フォールバックが発生した場合は、生成結果（または ready 一覧などのビルド出力）に「`approach_mode` 未指定」または「テンプレート未整備」を記録し、owner ロールが `sch-strategy-<track>.yaml` の追記やテンプレート整備を判断できるようにする。
-
-「完了手順」「異常終了の条件」のように `approach_mode` に関わらず内容が共通しうるセクションも、plan 全体をテンプレート化する方針上、各テンプレートにそれぞれ記述する。共通部分を変更する場合は、影響する `xep-` / `xrp-` テンプレートをすべて揃えて更新し、レビューでは差分が `approach_mode` に起因する意図的なものかを確認する。
-
-進め方モードを追加する場合は、対応する `xep-` / `xrp-` テンプレートをあわせて追加する（[specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) 「進め方モードを追加する場合の指針」も参照）。
-
-frontmatter への `approach_mode` 追加は `docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml` の `properties.approach_mode`（`enum`: `freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`、任意項目）に反映済みである。`xep-rulebook` は本書執筆時点で未作成であり、作成時に本節の内容を反映する。
+「進め方」「完了手順」「異常終了の条件」のように内容が共通するセクションも、plan 全体をテンプレート化する方針上、テンプレートに直接記述する。共通部分を変更する場合は、影響する `xep-` / `xrp-` テンプレートをあわせて更新する。
 
 ### 8.7. 実行イベントコマンド
 
@@ -1230,46 +1216,32 @@ specdojo exec link --project prj-0001 --task T-AUTH-auth-api-020 --by agent-1 --
 specdojo exec estimate --project prj-0001 --task T-AUTH-auth-api-020 --by agent-1 --msg "estimate updated" --meta duration_days=1
 ```
 
-#### 8.7.7. result ファイルのテンプレート化（approach_mode 別）
+#### 8.7.7. result ファイルのテンプレート化
 
-`claim` / `exec run` が scaffold 生成する `exec/results/<task-id>-result.md` の内容も、edit-plan / review-plan と同様に、対象成果物の `local_id` に指定された **進め方モード**（`approach_mode`）ごとに用意したテンプレートファイルを展開して生成する。`approach_mode` の定義・選定基準は [specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) を参照する。
+`claim` / `exec run` が scaffold 生成する `exec/results/<task-id>-result.md` の内容も、edit-plan / review-plan と同様に、生成物の種別（edit-result / review-result）ごとに用意した共通テンプレートファイル（`xer-template.md` / `xrr-template.md`）を展開して生成する。
 
-result は対応する plan と対になる成果物であり、plan を `approach_mode` ごとにテンプレート化したことに合わせて result 側もテンプレート化することで、エージェントが result に記入する際に、進め方モードに応じてどのような判断や根拠を記録すべきかを result 本文から直接把握できる状態にする（共通の記入欄に加えて、進め方モードに応じた記録欄をテンプレートに設ける）。`approach_mode` が指定されていない、またはテンプレートが未整備の場合は、「選択・展開とフォールバック」に従って `approach_mode` を考慮しない構成で生成する。
+result は対応する plan と対になる成果物であり、plan 側の「進め方」セクションに対応する記録欄（「参考資料の活用」/「参考資料との整合確認」）をテンプレートに設けることで、エージェントが result に記入する際に、rulebook / recipe / sample をどう使い分けたか、`ignore_references` で対象から外した文書があればその根拠を、result 本文から直接把握できる状態にする。
 
 #### 8.7.8. テンプレートファイルの配置と構成
 
 - 配置先は edit-plan / review-plan のテンプレートと同じ `docs/ja/specdojo/templates/` とする。
-- ファイル名は、生成物の frontmatter `id` プレフィックス（`xer-` / `xrr-`）と `approach_mode` の値を組み合わせ、`xer-<approach_mode>-template.md`（edit-result 用）/ `xrr-<approach_mode>-template.md`（review-result 用）とする（例: `xer-recipe-guided-template.md`、`xrr-fully-guided-template.md`）。
-- `approach_mode` の値は `sch-strategy.schema.yaml` の `owner_rules[].approach_mode` の `enum`（`freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`）と一致させる。
-- 各テンプレートは、frontmatter から各セクションまでの **result 全体の構成** を定義する。セクション構成・見出し・記入欄の指示文は `approach_mode` ごとに変えてよい。
+- ファイル名は、生成物の frontmatter `id` プレフィックス（`xer-` / `xrr-`）に `-template.md` を付けた `xer-template.md`（edit-result 用）/ `xrr-template.md`（review-result 用）とする。
+- 各テンプレートは、frontmatter から各セクションまでの **result 全体の構成** を定義する。
 - result 本文はタスクごとに変わる動的な値（done_criteria の内容、レビュー観点の詳細など）を持たない。タスクごとの動的な情報はすべて frontmatter に集約されるため、本文に必要なプレースホルダは次の 1 つのみとなる。
 
-| プレースホルダ  | 置換内容                                                                  | edit | review |
-| --------------- | ------------------------------------------------------------------------- | :--: | :----: |
-| `_FRONTMATTER_` | frontmatter ブロック全体（`---` を含む。解決した `approach_mode` を含む） |  ○   |   ○    |
+| プレースホルダ  | 置換内容                                  | edit | review |
+| --------------- | ------------------------------------------ | :--: | :----: |
+| `_FRONTMATTER_` | frontmatter ブロック全体（`---` を含む）   |  ○   |   ○    |
 
 - プレースホルダはテンプレート内に 1 回だけ書く。
 - `_FRONTMATTER_` は frontmatter ブロックを表すため、常に非空の文字列へ置換される。プレースホルダの前後には空行を 1 行ずつ置き、生成結果が `MD012`（空行の連続禁止）・`MD022`（見出し前後の空行必須）を満たすようにする。
-- 上記以外の見出しや文章（記入欄の説明、進め方モードに応じた記録欄など）は、`approach_mode` に応じてテンプレート側で自由に記述する。
+- 記入欄の説明や記録欄を含む、上記以外の見出しや文章は、edit-result / review-result で共通の内容としてテンプレート側に記述する。
 
-#### 8.7.9. 選択・展開とフォールバック
+#### 8.7.9. 展開
 
-`claim` / `exec run` は、タスクの claim 時に result ファイルを scaffold 生成する際、次の手順でテンプレートを選択・展開する。
+`claim` / `exec run` は、タスクの claim 時に result ファイルを scaffold 生成する際、タスクの `mode`（edit / review）に対応するテンプレートファイル（`xer-template.md` / `xrr-template.md`）を読み込み、`_FRONTMATTER_` を frontmatter ブロックに置換して result を生成する。
 
-1. 対象タスクの `local_id` に対応する `approach_mode` を、`sch-strategy-<track>.yaml` の `owner_rules[].approach_mode` から解決する。
-2. タスクの `mode`（edit / review）と解決した `approach_mode` から、テンプレートファイルパス（`xer-<approach_mode>-template.md` / `xrr-<approach_mode>-template.md`）を決定する。
-3. テンプレートファイルが存在する場合は、その内容を読み込み、`_FRONTMATTER_` を frontmatter ブロックに置換して result を生成する。生成した result の frontmatter には、解決した `approach_mode` を追記する（例: `approach_mode: recipe-guided`）。
-4. 次のいずれかに該当する場合は、フォールバックとして現行の生成内容（`approach_mode` を考慮しない構成。frontmatter に `approach_mode` を含めない）を使用する。
-   - 対象 `local_id` に `approach_mode` が指定されていない場合
-   - 解決した `approach_mode` に対応するテンプレートファイルが存在しない場合
-
-フォールバックが発生した場合は、result を scaffold 生成した際の標準出力に「`approach_mode` 未指定」または「テンプレート未整備」を記録し、owner ロールが `sch-strategy-<track>.yaml` の追記やテンプレート整備を判断できるようにする。
-
-「done_criteria 確認」「実施内容」「変更ファイル」「申し送り」（review の場合は「レビュー観点別結果」「findings」「decision」）のように `approach_mode` に関わらず内容が共通しうるセクションも、result 全体をテンプレート化する方針上、各テンプレートにそれぞれ記述する。共通部分を変更する場合は、影響する `xer-` / `xrr-` テンプレートをすべて揃えて更新し、レビューでは差分が `approach_mode` に起因する意図的なものかを確認する。
-
-進め方モードを追加する場合は、対応する `xer-` / `xrr-` テンプレートをあわせて追加する（[specdojo-approach-mode-guide](specdojo-approach-mode-guide.md) 「進め方モードを追加する場合の指針」も参照）。
-
-frontmatter への `approach_mode` 追加は `docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml` の `properties.approach_mode`（`enum`: `freeform` / `recipe-guided` / `fully-guided` / `rule-refinement`、任意項目）に反映済みである。
+「done_criteria 確認」「実施内容」「変更ファイル」「申し送り」「参考資料の活用」（review の場合は「レビュー観点別結果」「findings」「参考資料との整合確認」「decision」）のように内容が共通するセクションも、result 全体をテンプレート化する方針上、テンプレートに直接記述する。共通部分を変更する場合は、影響する `xer-` / `xrr-` テンプレートをあわせて更新する。
 
 ### 8.8. scheduler
 
