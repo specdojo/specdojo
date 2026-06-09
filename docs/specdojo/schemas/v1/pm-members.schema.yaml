@@ -157,7 +157,7 @@ $defs:
       proficiency:
         $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
         description: >
-          Agent proficiency level. Used by exec-strategy assignment_rules to filter
+          Agent proficiency level. Used by sch-strategy phase requirements to filter
           agents by quality tier. Required for type: agent.
 
       priority:

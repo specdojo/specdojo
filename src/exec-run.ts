@@ -4,15 +4,10 @@ import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
 import {
-  defaultAgentConfigPath,
-  loadExecAgentGlobalConfig,
-  loadExecStrategyConfig,
-  resolveAssignment,
-  type ExecAgentGlobalConfig,
-  type ExecStrategyConfig,
+  defaultExecDefaultsPath,
+  loadExecDefaultsConfig,
+  type ExecDefaultsConfig,
   type RateLimitDetection,
-  type RateLimitPolicy,
-  type ResolvedRequirements,
 } from './exec-agent-config.js'
 import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-project.js'
 import { readAllEventFiles, foldEventsToState } from './exec-events.js'
@@ -27,8 +22,18 @@ import {
   type ProjectMember,
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
+import type { Proficiency } from './exec-types.js'
 import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
+import {
+  buildPhaseModeIndex,
+  resolveApproachMode,
+  resolveTaskCapabilities,
+  resolveTaskExecution,
+  resolveTaskKind,
+  resolveTaskMode,
+  resolveTaskProficiency,
+} from './exec-strategy.js'
 
 type StrategyPhase = {
   id: string
@@ -61,6 +66,7 @@ type RunOpts = {
   project?: string
   by?: string
   strategy?: string
+  execDefaults?: string
   agentConfig?: string
   dryRun?: boolean
   auto?: boolean
@@ -71,6 +77,11 @@ type RunOpts = {
 }
 
 type RunResult = 'success' | 'rate_limit' | 'failure'
+
+type ResolvedRequirements = {
+  capabilities: string[]
+  proficiency?: Proficiency
+}
 
 export function buildTaskPhaseMap(schedulePath: string): {
   localIdToPhaseSets: Map<string, string[]>
@@ -184,7 +195,8 @@ function isRateLimitError(
   return false
 }
 
-function resolveAgentConfigPath(opts: RunOpts, schedulePath: string): string {
+function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {
+  if (opts.execDefaults) return opts.execDefaults
   if (opts.agentConfig) return opts.agentConfig
 
   const { config } = loadConfig()
@@ -192,13 +204,16 @@ function resolveAgentConfigPath(opts: RunOpts, schedulePath: string): string {
     const rootDir = specdojoRootDir()
     for (const project of Object.values(config.projects)) {
       const projSchedulePath = resolve(rootDir, project.schedule_path.trim())
+      if (projSchedulePath === schedulePath && project.run?.exec_defaults) {
+        return resolve(rootDir, project.run.exec_defaults)
+      }
       if (projSchedulePath === schedulePath && project.run?.agent_config) {
         return resolve(rootDir, project.run.agent_config)
       }
     }
   }
 
-  return defaultAgentConfigPath()
+  return defaultExecDefaultsPath()
 }
 
 function loadPrompt(executionPath: string, taskId: string): string | null {
@@ -264,10 +279,10 @@ function runWithRetry(
   agentCommands: string[],
   prompt: string,
   isOnCriticalPath: boolean,
-  globalConfig: ExecAgentGlobalConfig,
-  policy: RateLimitPolicy | undefined
+  execDefaults: ExecDefaultsConfig
 ): RunResult {
-  const detection = globalConfig.rate_limit_detection
+  const detection = execDefaults.rate_limit_detection
+  const policy = execDefaults.rate_limit_policy
 
   const first = executeAgent(agentCommands[0], prompt, detection)
   if (first.result !== 'rate_limit') return first.result
@@ -307,8 +322,7 @@ function runSingleTask(
   task: ReadyTaskView,
   projectId: string | undefined,
   executionPath: string,
-  strategyConfig: ExecStrategyConfig,
-  globalConfig: ExecAgentGlobalConfig,
+  execDefaults: ExecDefaultsConfig,
   roster: MemberRoster | null,
   localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>,
@@ -341,18 +355,9 @@ function runSingleTask(
       return 'failure'
     }
 
-    const requirements = resolveAssignment(
-      phaseCtx.phaseSet,
-      phaseCtx.phaseId,
-      strategyConfig,
-      mode,
-      task.task_kind
-    )
-    if (!requirements) {
-      process.stdout.write(
-        `  No assignment_rule matched (${phaseCtx.phaseSet}, ${phaseCtx.phaseId}, mode: ${mode})\n`
-      )
-      return 'failure'
+    const requirements: ResolvedRequirements = {
+      capabilities: task.capabilities ?? [],
+      proficiency: task.proficiency,
     }
 
     const candidates = selectCandidates(requirements, roster, mode)
@@ -415,13 +420,7 @@ function runSingleTask(
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)
 
   const isOnCriticalPath = (task.cpm?.slack ?? 1) === 0
-  const result = runWithRetry(
-    agentCommands,
-    prompt,
-    isOnCriticalPath,
-    globalConfig,
-    strategyConfig.rate_limit_policy
-  )
+  const result = runWithRetry(agentCommands, prompt, isOnCriticalPath, execDefaults)
 
   const completedAt = new Date().toISOString()
   if (result === 'success') {
@@ -481,8 +480,10 @@ function runAutoMode(opts: RunOpts): void {
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
 
-  const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
-  const strategyConfig = loadExecStrategyConfig(executionPath)
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath
+  )
   const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
 
@@ -528,8 +529,7 @@ function runAutoMode(opts: RunOpts): void {
         task,
         opts.project,
         executionPath,
-        strategyConfig,
-        globalConfig,
+        execDefaults,
         roster,
         localIdToPhaseSets,
         phaseSetSuffixToId,
@@ -572,10 +572,13 @@ function runManualMode(opts: RunOpts): void {
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
 
-  const globalConfig = loadExecAgentGlobalConfig(resolveAgentConfigPath(opts, schedulePath))
-  const strategyConfig = loadExecStrategyConfig(executionPath)
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath
+  )
   const roster = loadRosterForExecutionPath(executionPath)
   const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+  const phaseModeIndex = buildPhaseModeIndex(schedulePath)
 
   const readyJsonPath = join(executionPath, 'generated', 'ready.json')
   let task: ReadyTaskView = { id: taskId, schedule_file: '', fifo_rank: 0, critical_first_rank: 0 }
@@ -597,6 +600,22 @@ function runManualMode(opts: RunOpts): void {
         schedule_file: `sch-track-${track.toLowerCase()}.yaml`,
       }
     }
+  }
+  if (task.local_id) {
+    task = {
+      ...task,
+      mode: task.mode ?? resolveTaskMode(task.local_id, task.id, phaseModeIndex),
+      execution: task.execution ?? resolveTaskExecution(task.local_id, task.id, phaseModeIndex),
+      approach_mode:
+        task.approach_mode ?? resolveApproachMode(task.local_id, task.id, phaseModeIndex),
+      task_kind: task.task_kind ?? resolveTaskKind(task.local_id, task.id, phaseModeIndex),
+    }
+    if (!task.capabilities) {
+      const capabilities = resolveTaskCapabilities(task.local_id, task.id, phaseModeIndex)
+      if (capabilities.length > 0) task.capabilities = capabilities
+    }
+    task.proficiency =
+      task.proficiency ?? resolveTaskProficiency(task.local_id, task.id, phaseModeIndex)
   }
 
   // If the task is already in "doing" state and --by/--agent-cmd are not specified,
@@ -638,8 +657,7 @@ function runManualMode(opts: RunOpts): void {
     task,
     opts.project,
     executionPath,
-    strategyConfig,
-    globalConfig,
+    execDefaults,
     roster,
     localIdToPhaseSets,
     phaseSetSuffixToId,
@@ -675,8 +693,12 @@ export function registerRunCommand(exec: Command): void {
     'Maximum number of rounds when using --loop (ignored without --loop)'
   )
   rcmd.option(
+    '--exec-defaults <path>',
+    'Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)'
+  )
+  rcmd.option(
     '--agent-config <path>',
-    'Path to exec-agent.yaml global config (default: .specdojo/exec-agent.yaml)'
+    'Deprecated alias for --exec-defaults'
   )
   rcmd.option(
     '--agent-cmd <command>',

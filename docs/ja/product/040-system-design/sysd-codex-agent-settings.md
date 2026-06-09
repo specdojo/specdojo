@@ -56,7 +56,7 @@ ready.json / exec/plans/<task-id>-plan.md（edit-plan or review-plan）
         → review-plan の各観点を確認し result に記入
 ```
 
-edit と review に順序制約はない。exec-strategy の `assignment_rules` の `mode` フィールドで割り当てを定義する。
+edit と review に順序制約はない。`sch-strategy-<track>.yaml` の phase に `mode: edit` / `mode: review` を直接定義する。
 
 ## 4. ディレクトリ構成
 
@@ -70,8 +70,9 @@ repo-root/
 │     └─ specdojo-reviewer.toml       # 必要時に親 Codex が spawn する review subagent
 └─ docs/ja/projects/prj-0001/030-project-management/
    ├─ 020-organization/pm-members.yaml
+   ├─ schedule/sch-strategy-<track>.yaml
    └─ execution/
-      ├─ exec-strategy-<track>.yaml
+      ├─ exec/
       └─ generated/
 ```
 
@@ -223,20 +224,24 @@ members:
 
 `--ephemeral` はセッション rollout ファイルを保存しない。実行履歴の正本は SpecDojo の event・plan・result とする。
 
-### 9.2. `exec-strategy-<track>.yaml`
+### 9.2. `sch-strategy-<track>.yaml`
 
 ```yaml
-assignment_rules:
-  - phase_set: first-pass
-    phase: enrich
+phase_sets:
+  first-pass:
+  - id: enrich
     mode: edit
     proficiency: normal
 
-  - phase_set: finalize-pass
-    phase: align
+  finalize-pass:
+  - id: align
     mode: edit
     proficiency: expert
+```
 
+### 9.3. `.specdojo/exec-defaults.yaml`
+
+```yaml
 rate_limit_policy:
   on_non_critical:
     action: skip
@@ -250,11 +255,9 @@ rate_limit_policy:
     on_exhausted: block
 ```
 
-### 9.3. `.specdojo/exec-agent.yaml`
+グローバルな rate limit 検出設定と rate limit policy を定義する。OpenAI API の rate limit は `429` または rate limit を示すメッセージとして検出する。
 
-グローバルな rate limit 検出設定を定義する。OpenAI API の rate limit は `429` または rate limit を示すメッセージとして検出する。
-
-実際のファイル: `.specdojo/exec-agent.yaml`
+実際のファイル: `.specdojo/exec-defaults.yaml`
 
 ### 9.4. `exec run` による実行
 

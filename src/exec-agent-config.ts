@@ -2,33 +2,12 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
 import { specdojoRootDir } from './specdojo-config.js'
-import type { TaskKind, TaskMode } from './exec-types.js'
 
-// ── Types for .specdojo/exec-agent.yaml (global) ──────────────────────────────
+// ── Types for .specdojo/exec-defaults.yaml (global) ───────────────────────────
 
 export type RateLimitDetection = {
   exit_codes?: number[]
   stderr_patterns?: string[]
-}
-
-export type ExecAgentGlobalConfig = {
-  rate_limit_detection?: RateLimitDetection
-}
-
-// ── Types for execution/exec-strategy-<track>.yaml ────────────────────────────
-
-export type AssignmentRule = {
-  phase_set?: string
-  phase?: string
-  mode?: TaskMode
-  task_kind?: TaskKind
-  capabilities?: string[]
-  proficiency?: string
-}
-
-export type ResolvedRequirements = {
-  capabilities: string[]
-  proficiency?: string
 }
 
 export type RateLimitRetry = {
@@ -49,79 +28,58 @@ export type RateLimitPolicy = {
   }
 }
 
-export type ExecStrategyConfig = {
-  assignment_rules: AssignmentRule[]
+export type ExecDefaultsConfig = {
+  rate_limit_detection?: RateLimitDetection
   rate_limit_policy?: RateLimitPolicy
 }
 
 // ── Loaders ───────────────────────────────────────────────────────────────────
 
-export function defaultAgentConfigPath(): string {
+export function defaultExecDefaultsPath(): string {
+  return join(specdojoRootDir(), '.specdojo', 'exec-defaults.yaml')
+}
+
+function legacyAgentConfigPath(): string {
   return join(specdojoRootDir(), '.specdojo', 'exec-agent.yaml')
 }
 
-export function loadExecAgentGlobalConfig(configPath?: string): ExecAgentGlobalConfig {
-  const path = configPath ?? defaultAgentConfigPath()
-  if (!existsSync(path)) return {}
-  const raw = readYaml(path) as ExecAgentGlobalConfig
-  return raw ?? {}
-}
-
-export function loadExecStrategyConfig(executionPath: string): ExecStrategyConfig {
-  const files = listFilesRecursive(executionPath)
-    .filter(f => /exec-strategy-.*\.(yaml|yml)$/.test(f))
-    .sort()
-
-  const allRules: AssignmentRule[] = []
-  let policy: RateLimitPolicy | undefined
-
+function loadLegacyRateLimitPolicy(executionPath?: string): RateLimitPolicy | undefined {
+  if (!executionPath || !existsSync(executionPath)) return undefined
+  const files = listFilesRecursive(executionPath).filter(f =>
+    /exec-strategy-.*\.(yaml|yml)$/.test(f)
+  )
   for (const file of files) {
-    let raw: ExecStrategyConfig
+    let raw: { rate_limit_policy?: RateLimitPolicy } | undefined
     try {
-      raw = readYaml(file) as ExecStrategyConfig
+      raw = readYaml(file) as { rate_limit_policy?: RateLimitPolicy }
     } catch {
       continue
     }
-    if (!raw) continue
-    if (Array.isArray(raw.assignment_rules)) {
-      allRules.push(...raw.assignment_rules)
-    }
-    if (!policy && raw.rate_limit_policy) {
-      policy = raw.rate_limit_policy
+    if (raw?.rate_limit_policy) return raw.rate_limit_policy
+  }
+  return undefined
+}
+
+export function loadExecDefaultsConfig(
+  configPath?: string,
+  executionPath?: string
+): ExecDefaultsConfig {
+  const path = configPath ?? defaultExecDefaultsPath()
+  let defaults: ExecDefaultsConfig = {}
+
+  if (existsSync(path)) {
+    defaults = (readYaml(path) as ExecDefaultsConfig) ?? {}
+  } else {
+    const legacyPath = legacyAgentConfigPath()
+    if (existsSync(legacyPath)) {
+      defaults = (readYaml(legacyPath) as ExecDefaultsConfig) ?? {}
     }
   }
 
-  return { assignment_rules: allRules, rate_limit_policy: policy }
-}
-
-// ── Resolution ────────────────────────────────────────────────────────────────
-
-function ruleMatches(
-  rule: AssignmentRule,
-  phaseSet: string,
-  phaseId: string,
-  mode?: TaskMode,
-  taskKind?: TaskKind
-): boolean {
-  const effectiveTaskKind = taskKind ?? 'deliverable'
-  if (rule.phase_set !== undefined && rule.phase_set !== phaseSet) return false
-  if (rule.phase !== undefined && rule.phase !== phaseId) return false
-  if (rule.mode !== undefined && rule.mode !== mode) return false
-  if (rule.task_kind !== undefined && rule.task_kind !== effectiveTaskKind) return false
-  return true
-}
-
-export function resolveAssignment(
-  phaseSet: string,
-  phaseId: string,
-  config: ExecStrategyConfig,
-  mode?: TaskMode,
-  taskKind?: TaskKind
-): ResolvedRequirements | null {
-  for (const rule of config.assignment_rules) {
-    if (ruleMatches(rule, phaseSet, phaseId, mode, taskKind)) {
-      return { capabilities: rule.capabilities ?? [], proficiency: rule.proficiency }
-    }
+  if (!defaults.rate_limit_policy) {
+    const legacyPolicy = loadLegacyRateLimitPolicy(executionPath)
+    if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy
   }
-  return null
+
+  return defaults
 }

@@ -6,6 +6,8 @@ import yaml from 'js-yaml'
 import type { SchedulerStrategy } from './exec-types.js'
 
 export type SpecDojoRunConfig = {
+  exec_defaults?: string
+  /** @deprecated Use exec_defaults. */
   agent_config?: string
   worktree_base?: string
 }
@@ -29,7 +31,7 @@ export type ProjectMember = {
   type: 'human' | 'agent'
   persona?: string
   focus?: string[]
-  capabilities?: string[]               // agent only: work types and tools (e.g. exec, review, web_search)
+  capabilities?: string[]               // agent only: tool access (e.g. web_search)
   proficiency?: 'low' | 'normal' | 'high' | 'expert'  // agent only: quality tier
   priority?: number                     // agent only: tiebreaker within same profile (lower = tried first)
   command?: string                      // agent only: shell command executed by exec run

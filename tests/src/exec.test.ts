@@ -3,9 +3,15 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { resolveClaimOwner } from '../../src/exec.js'
-import { resolveAssignment } from '../../src/exec-agent-config.js'
 import { buildTaskPhaseMap } from '../../src/exec-run.js'
-import { buildPhaseModeIndex, resolveTaskExecution } from '../../src/exec-strategy.js'
+import {
+  buildPhaseModeIndex,
+  resolveTaskCapabilities,
+  resolveTaskExecution,
+  resolveTaskKind,
+  resolveTaskMode,
+  resolveTaskProficiency,
+} from '../../src/exec-strategy.js'
 import type { MemberRoster } from '../../src/specdojo-config.js'
 
 function makeRoster(members: MemberRoster['members']): MemberRoster {
@@ -61,45 +67,45 @@ describe('resolveClaimOwner', () => {
 })
 
 describe('exec strategy metadata resolution', () => {
-  it('assignment_rules can match task_kind', () => {
-    const config = {
-      assignment_rules: [
-        {
-          mode: 'review' as const,
-          capabilities: ['review-agent'],
-          proficiency: 'normal',
-        },
-        {
-          task_kind: 'reference-maintenance' as const,
-          capabilities: ['reference-maintenance'],
-          proficiency: 'expert',
-        },
-        {
-          task_kind: 'deliverable' as const,
-          capabilities: ['standard-edit'],
-          proficiency: 'normal',
-        },
-      ],
-    }
+  it('phase metadata carries mode, task_kind, capabilities, and proficiency', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-phase-meta-'))
+    try {
+      writeFileSync(
+        join(dir, 'sch-strategy-test.yaml'),
+        [
+          'phase_sets:',
+          '  reference-pass:',
+          '    - id: improve',
+          '      task_suffix: "020"',
+          '      mode: edit',
+          '      task_kind: reference-maintenance',
+          '      capabilities: [web_search]',
+          '      proficiency: expert',
+          '  review-pass:',
+          '    - id: review',
+          '      task_suffix: "030"',
+          '      mode: review',
+          '      proficiency: normal',
+          'default_phase_sets: [reference-pass, review-pass]',
+          'owner_rules:',
+          '  - local_ids: [doc]',
+          '    owner: BA',
+          '',
+        ].join('\n'),
+        'utf8'
+      )
 
-    expect(resolveAssignment('any-pass', 'improve', config, 'edit', 'reference-maintenance')).toEqual(
-      {
-        capabilities: ['reference-maintenance'],
-        proficiency: 'expert',
-      }
-    )
-    expect(resolveAssignment('any-pass', 'improve', config, 'review', 'deliverable')).toEqual({
-      capabilities: ['review-agent'],
-      proficiency: 'normal',
-    })
-    expect(resolveAssignment('any-pass', 'improve', config, 'edit', 'deliverable')).toEqual({
-      capabilities: ['standard-edit'],
-      proficiency: 'normal',
-    })
-    expect(resolveAssignment('any-pass', 'improve', config, 'edit')).toEqual({
-      capabilities: ['standard-edit'],
-      proficiency: 'normal',
-    })
+      const index = buildPhaseModeIndex(dir)
+
+      expect(resolveTaskMode('doc', 'T-LAUNCH-doc-020', index)).toBe('edit')
+      expect(resolveTaskKind('doc', 'T-LAUNCH-doc-020', index)).toBe('reference-maintenance')
+      expect(resolveTaskCapabilities('doc', 'T-LAUNCH-doc-020', index)).toEqual(['web_search'])
+      expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-020', index)).toBe('expert')
+      expect(resolveTaskMode('doc', 'T-LAUNCH-doc-030', index)).toBe('review')
+      expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-030', index)).toBe('normal')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 
   it('exec run phase map keeps ordered phase_sets for a deliverable', () => {
@@ -135,7 +141,6 @@ describe('exec strategy metadata resolution', () => {
 
   it('phase_overrides.execution takes precedence over phase execution', () => {
     const scheduleDir = mkdtempSync(join(tmpdir(), 'specdojo-exec-strategy-'))
-    const executionDir = mkdtempSync(join(tmpdir(), 'specdojo-exec-execution-'))
     try {
       writeFileSync(
         join(scheduleDir, 'sch-strategy-test.yaml'),
@@ -157,12 +162,11 @@ describe('exec strategy metadata resolution', () => {
         'utf8'
       )
 
-      const index = buildPhaseModeIndex(scheduleDir, executionDir)
+      const index = buildPhaseModeIndex(scheduleDir)
 
       expect(resolveTaskExecution('doc', 'T-LAUNCH-doc-010', index)).toBe('human')
     } finally {
       rmSync(scheduleDir, { recursive: true, force: true })
-      rmSync(executionDir, { recursive: true, force: true })
     }
   })
 })

@@ -173,7 +173,7 @@ review plan は `specdojo exec build` によって機械生成する（`mode: re
 - 成果物カタログの `local_id`、`path`、`depends_on`、`done_criteria`
 - `pm-review-viewpoints.yaml` の `viewpoints`、`coverage_types`
 - 対応する rulebook
-- `sch-strategy-<track>.yaml` / `exec-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
+- `sch-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
 
 review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から `レビュー観点` セクションの review item（`RVP-NNN`）を作る。
 

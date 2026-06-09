@@ -1,0 +1,106 @@
+# exec-defaults.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Exec Defaults schema"
+description: >
+  Defines global defaults for specdojo exec run.
+  Agent selection requirements are declared on sch-strategy phases; this file only
+  contains runtime defaults shared across tracks, such as rate-limit detection and retry policy.
+type: object
+additionalProperties: false
+
+properties:
+  rate_limit_detection:
+    $ref: "#/$defs/RateLimitDetection"
+    description: "Signals used to detect agent rate-limit failures."
+
+  rate_limit_policy:
+    $ref: "#/$defs/RateLimitPolicy"
+    description: "Behavior when an agent hits a rate limit during exec run."
+
+$defs:
+  RateLimitDetection:
+    type: object
+    additionalProperties: false
+    description: "Exit codes and stderr patterns that identify rate-limit failures."
+    properties:
+      exit_codes:
+        type: array
+        uniqueItems: true
+        items:
+          type: integer
+      stderr_patterns:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+
+  RateLimitPolicy:
+    type: object
+    additionalProperties: false
+    required:
+      - on_non_critical
+      - on_critical
+    description: "Behavior when an agent returns a rate-limit signal during exec run."
+    properties:
+      on_non_critical:
+        type: object
+        additionalProperties: false
+        required:
+          - action
+        description: "Behavior for non-critical tasks (cpm.slack > 0)."
+        properties:
+          action:
+            const: "skip"
+            description: "Record a block event and move to the next task."
+      on_critical:
+        type: object
+        additionalProperties: false
+        required:
+          - action
+        description: "Behavior for critical-path tasks (cpm.slack == 0)."
+        properties:
+          action:
+            type: string
+            enum: ["try_next", "block"]
+            description: >
+              try_next: retry with the next agent candidate.
+              block: immediately record a block event without retrying.
+          retry:
+            $ref: "#/$defs/RetryPolicy"
+            description: "Retry configuration. Required when action is try_next."
+          on_exhausted:
+            type: string
+            enum: ["block"]
+            description: >
+              Action when all agent candidates are exhausted after max_attempts.
+              block: record a block event and surface the failure to the human.
+
+  RetryPolicy:
+    type: object
+    additionalProperties: false
+    required:
+      - max_attempts
+      - initial_wait_seconds
+      - backoff_multiplier
+      - max_wait_seconds
+    description: "Exponential backoff configuration for rate-limit retries."
+    properties:
+      max_attempts:
+        type: integer
+        minimum: 1
+        description: "Total number of attempts including the initial one and all retries."
+      initial_wait_seconds:
+        type: number
+        exclusiveMinimum: 0
+        description: "Wait time in seconds before the first retry."
+      backoff_multiplier:
+        type: number
+        exclusiveMinimum: 1
+        description: >
+          Multiplier applied to wait time after each failed attempt.
+          Example: initial=60, multiplier=3 -> 60s -> 180s -> 540s.
+      max_wait_seconds:
+        type: number
+        exclusiveMinimum: 0
+        description: "Upper bound for the wait time between retries."

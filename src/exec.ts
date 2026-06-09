@@ -335,7 +335,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
     const out = writeEventFile(schedulePath, event)
     if (action.type === 'claim') {
       const localId = state.schedule.nodes.get(taskId)?.local_id
-      const phaseModeIndex = buildPhaseModeIndex(schedulePath, executionPath)
+      const phaseModeIndex = buildPhaseModeIndex(schedulePath)
       const mode = resolveTaskMode(localId, taskId, phaseModeIndex)
       const approachMode = resolveApproachMode(localId, taskId, phaseModeIndex)
       const taskKind = resolveTaskKind(localId, taskId, phaseModeIndex)
@@ -545,7 +545,7 @@ export function registerExecCommands(program: Command): void {
       })
 
       // Filter by actor mode and execution type from ready.json.
-      // Agent actors (with mode set) skip tasks with wrong mode or execution: manual.
+      // Agent actors (with mode set) skip tasks with wrong mode or execution: human.
       const actorMember = findRosterMember(roster, actor)
       const actorMode = actorMember?.mode
       const isAgent = actorMember?.type === 'agent'

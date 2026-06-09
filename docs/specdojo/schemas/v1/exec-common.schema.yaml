@@ -2,7 +2,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo Exec common definitions"
 description: >
-  Shared type definitions for exec-strategy-<track>.yaml and pm-members.yaml.
+  Shared type definitions for sch-strategy, exec-defaults, and pm-members.yaml.
   Centralizes Proficiency and Capability so their enums and descriptions stay consistent.
 
 $defs:
@@ -21,10 +21,10 @@ $defs:
     minLength: 1
     description: >
       Agent tool capability identifier. Represents tool access, not work type.
-      Work type (edit vs review) is declared via the mode field in exec-strategy assignment_rules.
+      Work type (edit vs review) is declared via the mode field on sch-strategy phases.
       Core values:
         web_search — external web search capability.
       Additional project-specific tool capabilities may be defined freely.
       Deprecated values (do not use in new configs):
-        exec   — superseded by mode: edit in assignment_rules.
-        review — superseded by mode: review in assignment_rules.
+        exec   — superseded by mode: edit on phases.
+        review — superseded by mode: review on phases.

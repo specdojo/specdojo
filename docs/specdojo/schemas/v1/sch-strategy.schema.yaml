@@ -6,9 +6,9 @@ description: >
   Used as input to the code generator; not a runtime schedule file.
   phase_sets defines named groups of phases keyed by semantic name (e.g., first-pass, finalize-pass).
   Each owner_rule references a phase_set by name.
-  Phase.mode (exec/review) is written into ready.json by exec build to drive brief generation.
-  AI agent selection is NOT stored here; it belongs in exec-strategy-<track>.yaml,
-  which maps (phase_set, phase.id) to required capabilities and proficiency.
+  Phase.mode (edit/review) is written into ready.json by exec build to drive plan/result generation.
+  Agent execution requirements are declared directly on phases using capabilities and proficiency;
+  exec run --auto resolves matching agents from pm-members.yaml.
 type: object
 additionalProperties: false
 
@@ -81,8 +81,8 @@ properties:
     description: >
       Named phase set definitions. Keys are arbitrary names (e.g., first-pass, finalize-pass).
       Each owner_rule references one of these keys via its phase_set field.
-      exec build writes phase_mode from each phase into ready.json task metadata,
-      allowing exec run --auto to evaluate exec-strategy assignment_rules at runtime.
+      exec build writes phase metadata into ready.json so exec run --auto can resolve agents
+      from pm-members.yaml without a separate assignment rule file.
     minProperties: 1
     additionalProperties:
       type: array
@@ -153,7 +153,7 @@ properties:
           type: array
           description: >
             Per-phase overrides for these deliverables.
-            execution, approach_mode, and task_kind each take precedence over
+            execution, mode, approach_mode, task_kind, capabilities, and proficiency each take precedence over
             the same-named field defined on the phase in phase_sets[phase_set][phase].
           items:
             type: object
@@ -167,10 +167,16 @@ properties:
                 description: "Phase id to override (must exist in the referenced phase_set)."
               execution:
                 $ref: "#/$defs/Execution"
+              mode:
+                $ref: "#/$defs/TaskMode"
               approach_mode:
                 $ref: "#/$defs/ApproachMode"
               task_kind:
                 $ref: "#/$defs/TaskKind"
+              capabilities:
+                $ref: "#/$defs/Capabilities"
+              proficiency:
+                $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
 
   group_milestones:
     type: array
@@ -379,8 +385,16 @@ $defs:
     enum: ["agent", "human"]
     description: >
       Execution mode for a phase.
-      agent: agent executes the phase; exec-strategy assignment_rules select the agent.
+      agent: agent executes the phase; phase capabilities/proficiency select the agent.
       human: no agent is launched; the phase is recorded as pending human action.
+
+  TaskMode:
+    type: string
+    enum: ["edit", "review"]
+    description: >
+      Work mode for generated plan/result files.
+      edit: deliverable creation or update.
+      review: deliverable review.
 
   ApproachMode:
     type: string
@@ -429,7 +443,13 @@ $defs:
         $ref: "#/$defs/Execution"
         description: >
           Default execution mode for this phase across all deliverables using this phase_set.
-          Omit to default to auto.
+          Omit to default to agent.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      mode:
+        $ref: "#/$defs/TaskMode"
+        description: >
+          Default mode for this phase across all deliverables using this phase_set.
+          Omit to default to edit.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       approach_mode:
         $ref: "#/$defs/ApproachMode"
@@ -443,8 +463,28 @@ $defs:
           Default task_kind for this phase across all deliverables using this phase_set.
           Carried into task frontmatter to convey work intent to the agent.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      capabilities:
+        $ref: "#/$defs/Capabilities"
+        description: >
+          Required tool capabilities for execution: agent phases.
+          Agents must have all listed capabilities. Omit when no special tools are needed.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      proficiency:
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        description: >
+          Required agent proficiency for execution: agent phases.
+          Omit to accept agents of any proficiency level.
+          Can be overridden per-deliverable via owner_rules[].phase_overrides.
       description:
         type: string
         description: >
           Human-readable description of what to do in this phase.
           Used as agent instructions when execution is agent, and as guidance for humans when execution is human.
+
+  Capabilities:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    description: "Required agent tool capabilities."
+    items:
+      $ref: "./exec-common.schema.yaml#/$defs/Capability"

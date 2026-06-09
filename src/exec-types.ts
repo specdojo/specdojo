@@ -4,6 +4,8 @@ export type ApproachMode = 'fully-guided' | 'recipe-guided' | 'freeform'
 
 export type TaskKind = 'deliverable' | 'reference-maintenance'
 
+export type Proficiency = 'low' | 'normal' | 'high' | 'expert'
+
 export type ExecEventType =
   | 'claim'
   | 'note'
@@ -140,6 +142,8 @@ export type ReadyTaskView = {
   execution?: 'agent' | 'human'
   approach_mode?: ApproachMode
   task_kind?: TaskKind
+  capabilities?: string[]
+  proficiency?: Proficiency
   schedule_file: string
   fifo_rank: number
   critical_first_rank: number

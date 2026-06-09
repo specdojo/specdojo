@@ -1,20 +1,25 @@
-import { existsSync } from 'node:fs'
 import { listFilesRecursive, readYaml } from './exec-shared.js'
-import type { ApproachMode, TaskKind, TaskMode } from './exec-types.js'
+import type { ApproachMode, Proficiency, TaskKind, TaskMode } from './exec-types.js'
 
 type StrategyPhaseMinimal = {
   id: string
   task_suffix: string
   execution?: 'agent' | 'human'
+  mode?: unknown
   approach_mode?: unknown
   task_kind?: unknown
+  capabilities?: unknown
+  proficiency?: unknown
 }
 
 type StrategyPhaseOverrideMinimal = {
   phase: string
   execution?: 'agent' | 'human'
+  mode?: unknown
   approach_mode?: unknown
   task_kind?: unknown
+  capabilities?: unknown
+  proficiency?: unknown
 }
 
 type StrategyMinimal = {
@@ -29,11 +34,6 @@ type StrategyMinimal = {
   }>
 }
 
-type ExecStrategyMinimal = {
-  default_mode?: TaskMode
-  assignment_rules?: unknown[]
-}
-
 export type PhaseModeIndex = {
   localIdToPhaseSets: Map<string, string[]>
   phaseSetSuffixToMode: Map<string, TaskMode>
@@ -41,9 +41,14 @@ export type PhaseModeIndex = {
   suffixToExecution: Map<string, 'agent' | 'human'>
   phaseSetSuffixToApproachMode: Map<string, ApproachMode>
   phaseSetSuffixToTaskKind: Map<string, TaskKind>
+  phaseSetSuffixToCapabilities: Map<string, string[]>
+  phaseSetSuffixToProficiency: Map<string, Proficiency>
   localIdSuffixToExecution: Map<string, 'agent' | 'human'>
+  localIdSuffixToMode: Map<string, TaskMode>
   localIdSuffixToApproachMode: Map<string, ApproachMode>
   localIdSuffixToTaskKind: Map<string, TaskKind>
+  localIdSuffixToCapabilities: Map<string, string[]>
+  localIdSuffixToProficiency: Map<string, Proficiency>
   defaultMode: TaskMode
 }
 
@@ -59,22 +64,29 @@ function isTaskKind(value: unknown): value is TaskKind {
   return value === 'deliverable' || value === 'reference-maintenance'
 }
 
+function isProficiency(value: unknown): value is Proficiency {
+  return value === 'low' || value === 'normal' || value === 'high' || value === 'expert'
+}
+
 function isExecution(value: unknown): value is 'agent' | 'human' {
   return value === 'agent' || value === 'human'
 }
 
+function asCapabilityList(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined
+  const caps = value.filter((item): item is string => typeof item === 'string' && item.length > 0)
+  return caps.length === value.length ? caps : undefined
+}
+
 /**
- * Builds a phase mode index by combining:
- *   1. sch-strategy: maps localId → phaseSet, phaseSet+phaseId → suffix
- *   2. exec-strategy: default_mode declares the fallback mode for unmatched phases
- *      (hard default: 'edit'); rules with mode: review mark matching phases as 'review'.
+ * Builds a phase metadata index from sch-strategy files.
+ * sch-strategy maps localId → phaseSet and phaseSet+phaseId → suffix, and phase
+ * definitions carry runtime task metadata such as mode, execution, approach_mode,
+ * task_kind, capabilities, and proficiency.
  */
-export function buildPhaseModeIndex(
-  schedulePath: string,
-  executionPath: string
-): PhaseModeIndex {
+export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const localIdToPhaseSets = new Map<string, string[]>()
-  // phaseSet:phaseId → suffix (used to cross-reference exec-strategy rules and phase_overrides)
+  // phaseSet:phaseId → suffix (used to cross-reference phase_overrides)
   const phaseSetPhaseIdToSuffix = new Map<string, string>()
   const phaseSetSuffixToMode = new Map<string, TaskMode>()
   const phaseSetSuffixToExecution = new Map<string, 'agent' | 'human'>()
@@ -83,35 +95,19 @@ export function buildPhaseModeIndex(
   // phaseSet:suffix → approach_mode/task_kind declared on the phase definition (phase_sets[phaseSet][phase])
   const phaseSetSuffixToApproachMode = new Map<string, ApproachMode>()
   const phaseSetSuffixToTaskKind = new Map<string, TaskKind>()
-  // localId:suffix → approach_mode/task_kind declared on owner_rules[].phase_overrides (takes precedence)
+  const phaseSetSuffixToCapabilities = new Map<string, string[]>()
+  const phaseSetSuffixToProficiency = new Map<string, Proficiency>()
+  // localId:suffix → metadata declared on owner_rules[].phase_overrides (takes precedence)
   const localIdSuffixToExecution = new Map<string, 'agent' | 'human'>()
+  const localIdSuffixToMode = new Map<string, TaskMode>()
   const localIdSuffixToApproachMode = new Map<string, ApproachMode>()
   const localIdSuffixToTaskKind = new Map<string, TaskKind>()
+  const localIdSuffixToCapabilities = new Map<string, string[]>()
+  const localIdSuffixToProficiency = new Map<string, Proficiency>()
 
-  // Step 0: Read exec-strategy files once; reused for default_mode and assignment_rules.
-  const execStrategyConfigs: ExecStrategyMinimal[] = []
-  if (existsSync(executionPath)) {
-    const execStrategyFiles = listFilesRecursive(executionPath).filter(f =>
-      /exec-strategy-.*\.(yaml|yml)$/.test(f)
-    )
-    for (const filePath of execStrategyFiles) {
-      try {
-        execStrategyConfigs.push(readYaml(filePath) as ExecStrategyMinimal)
-      } catch {
-        continue
-      }
-    }
-  }
+  const defaultMode: TaskMode = 'edit'
 
-  let defaultMode: TaskMode = 'edit'
-  for (const config of execStrategyConfigs) {
-    if (isTaskMode(config.default_mode)) {
-      defaultMode = config.default_mode
-      break
-    }
-  }
-
-  // Step 1: Read sch-strategy files to build phase maps
+  // Step 1: Read sch-strategy files to build phase maps and phase metadata.
   const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
     /sch-strategy-.*\.(yaml|yml)$/.test(f)
   )
@@ -138,8 +134,11 @@ export function buildPhaseModeIndex(
         const phaseId = String(p.id ?? '')
         if (suffix && phaseId) {
           phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix)
-          phaseSetSuffixToMode.set(`${phaseSetName}:${suffix}`, defaultMode)
-          // execution: manual or auto (default: auto)
+          phaseSetSuffixToMode.set(
+            `${phaseSetName}:${suffix}`,
+            isTaskMode(p.mode) ? p.mode : defaultMode
+          )
+          // execution: human or agent (default: agent)
           const execution = p.execution === 'human' ? 'human' : 'agent'
           phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
           // Global map: suffix is unique within a track across all phase sets
@@ -149,6 +148,13 @@ export function buildPhaseModeIndex(
           }
           if (isTaskKind(p.task_kind)) {
             phaseSetSuffixToTaskKind.set(`${phaseSetName}:${suffix}`, p.task_kind)
+          }
+          const capabilities = asCapabilityList(p.capabilities)
+          if (capabilities !== undefined) {
+            phaseSetSuffixToCapabilities.set(`${phaseSetName}:${suffix}`, capabilities)
+          }
+          if (isProficiency(p.proficiency)) {
+            phaseSetSuffixToProficiency.set(`${phaseSetName}:${suffix}`, p.proficiency)
           }
         }
       }
@@ -166,14 +172,22 @@ export function buildPhaseModeIndex(
         for (const override of rule.phase_overrides ?? []) {
           if (!override || typeof override !== 'object') continue
           const overrideExecution = isExecution(override.execution) ? override.execution : undefined
+          const overrideMode = isTaskMode(override.mode) ? override.mode : undefined
           const overrideApproachMode = isApproachMode(override.approach_mode)
             ? override.approach_mode
             : undefined
           const overrideTaskKind = isTaskKind(override.task_kind) ? override.task_kind : undefined
+          const overrideCapabilities = asCapabilityList(override.capabilities)
+          const overrideProficiency = isProficiency(override.proficiency)
+            ? override.proficiency
+            : undefined
           if (
             overrideExecution === undefined &&
+            overrideMode === undefined &&
             overrideApproachMode === undefined &&
-            overrideTaskKind === undefined
+            overrideTaskKind === undefined &&
+            overrideCapabilities === undefined &&
+            overrideProficiency === undefined
           )
             continue
 
@@ -184,45 +198,24 @@ export function buildPhaseModeIndex(
               if (overrideExecution !== undefined) {
                 localIdSuffixToExecution.set(`${localId}:${suffix}`, overrideExecution)
               }
+              if (overrideMode !== undefined) {
+                localIdSuffixToMode.set(`${localId}:${suffix}`, overrideMode)
+              }
               if (overrideApproachMode !== undefined) {
                 localIdSuffixToApproachMode.set(`${localId}:${suffix}`, overrideApproachMode)
               }
               if (overrideTaskKind !== undefined) {
                 localIdSuffixToTaskKind.set(`${localId}:${suffix}`, overrideTaskKind)
               }
+              if (overrideCapabilities !== undefined) {
+                localIdSuffixToCapabilities.set(`${localId}:${suffix}`, overrideCapabilities)
+              }
+              if (overrideProficiency !== undefined) {
+                localIdSuffixToProficiency.set(`${localId}:${suffix}`, overrideProficiency)
+              }
             }
           }
         }
-      }
-    }
-  }
-
-  // Step 2: assignment_rules with mode: review mark matching phases as 'review'.
-  // Legacy support: rules with capabilities: [review] (no mode field) also mark as 'review'.
-  for (const config of execStrategyConfigs) {
-    if (!Array.isArray(config.assignment_rules)) continue
-
-    for (const rule of config.assignment_rules) {
-      if (!rule || typeof rule !== 'object') continue
-      const r = rule as Record<string, unknown>
-
-      // Determine mode: explicit mode field takes precedence; legacy capabilities:[review] fallback
-      const explicitMode = typeof r.mode === 'string' ? r.mode : undefined
-      const caps = Array.isArray(r.capabilities) ? (r.capabilities as string[]) : []
-      const isReview =
-        explicitMode === 'review' || (explicitMode === undefined && caps.includes('review'))
-      if (!isReview) continue
-
-      const rulePhaseSet = typeof r.phase_set === 'string' ? r.phase_set : undefined
-      const rulePhase = typeof r.phase === 'string' ? r.phase : undefined
-
-      for (const [key, suffix] of phaseSetPhaseIdToSuffix.entries()) {
-        const colonIdx = key.indexOf(':')
-        const keyPhaseSet = key.slice(0, colonIdx)
-        const keyPhaseId = key.slice(colonIdx + 1)
-        if (rulePhaseSet !== undefined && rulePhaseSet !== keyPhaseSet) continue
-        if (rulePhase !== undefined && rulePhase !== keyPhaseId) continue
-        phaseSetSuffixToMode.set(`${keyPhaseSet}:${suffix}`, 'review')
       }
     }
   }
@@ -234,9 +227,14 @@ export function buildPhaseModeIndex(
     suffixToExecution,
     phaseSetSuffixToApproachMode,
     phaseSetSuffixToTaskKind,
+    phaseSetSuffixToCapabilities,
+    phaseSetSuffixToProficiency,
     localIdSuffixToExecution,
+    localIdSuffixToMode,
     localIdSuffixToApproachMode,
     localIdSuffixToTaskKind,
+    localIdSuffixToCapabilities,
+    localIdSuffixToProficiency,
     defaultMode,
   }
 }
@@ -304,9 +302,9 @@ export function resolveTaskKind(
 /**
  * Resolves the task mode for a given task.
  * Resolution order:
- *   1. Phase-level mode from exec-strategy (via index), checked across all phase sets
- *      assigned to the deliverable's local_id
- *   2. exec-strategy's default_mode (falls back to 'edit' when not declared)
+ *   1. owner_rules[].phase_overrides[].mode (per-deliverable, takes precedence)
+ *   2. Phase-level mode from phase_sets[phase_set][phase]
+ *   3. 'edit' when not declared at either level
  */
 export function resolveTaskMode(
   localId: string | undefined,
@@ -314,9 +312,14 @@ export function resolveTaskMode(
   index: PhaseModeIndex
 ): TaskMode {
   if (localId) {
+    const suffix = taskId.split('-').pop() ?? ''
+    if (/^\d{3}$/.test(suffix)) {
+      const overridden = index.localIdSuffixToMode.get(`${localId}:${suffix}`)
+      if (overridden !== undefined) return overridden
+    }
+
     const phaseSets = index.localIdToPhaseSets.get(localId)
     if (phaseSets) {
-      const suffix = taskId.split('-').pop() ?? ''
       if (/^\d{3}$/.test(suffix)) {
         for (const phaseSet of phaseSets) {
           const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`)
@@ -326,6 +329,64 @@ export function resolveTaskMode(
     }
   }
   return index.defaultMode
+}
+
+/**
+ * Resolves required capabilities for a given task.
+ * Resolution order:
+ *   1. owner_rules[].phase_overrides[].capabilities (per-deliverable, takes precedence)
+ *   2. Phase-level capabilities from phase_sets[phase_set][phase]
+ *   3. [] when not declared at either level
+ */
+export function resolveTaskCapabilities(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex
+): string[] {
+  if (!localId) return []
+  const suffix = taskId.split('-').pop() ?? ''
+  if (!/^\d{3}$/.test(suffix)) return []
+
+  const overridden = index.localIdSuffixToCapabilities.get(`${localId}:${suffix}`)
+  if (overridden !== undefined) return overridden
+
+  const phaseSets = index.localIdToPhaseSets.get(localId)
+  if (phaseSets) {
+    for (const phaseSet of phaseSets) {
+      const capabilities = index.phaseSetSuffixToCapabilities.get(`${phaseSet}:${suffix}`)
+      if (capabilities !== undefined) return capabilities
+    }
+  }
+  return []
+}
+
+/**
+ * Resolves required proficiency for a given task.
+ * Resolution order:
+ *   1. owner_rules[].phase_overrides[].proficiency (per-deliverable, takes precedence)
+ *   2. Phase-level proficiency from phase_sets[phase_set][phase]
+ *   3. undefined when not declared at either level
+ */
+export function resolveTaskProficiency(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex
+): Proficiency | undefined {
+  if (!localId) return undefined
+  const suffix = taskId.split('-').pop() ?? ''
+  if (!/^\d{3}$/.test(suffix)) return undefined
+
+  const overridden = index.localIdSuffixToProficiency.get(`${localId}:${suffix}`)
+  if (overridden !== undefined) return overridden
+
+  const phaseSets = index.localIdToPhaseSets.get(localId)
+  if (phaseSets) {
+    for (const phaseSet of phaseSets) {
+      const proficiency = index.phaseSetSuffixToProficiency.get(`${phaseSet}:${suffix}`)
+      if (proficiency !== undefined) return proficiency
+    }
+  }
+  return undefined
 }
 
 /**

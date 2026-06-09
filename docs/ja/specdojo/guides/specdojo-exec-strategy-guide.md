@@ -4,36 +4,64 @@ type: guide
 status: draft
 ---
 
-# 実行戦略ガイド
+# 実行設定ガイド
 
-Exec Strategy Guide
+Exec Configuration Guide
 
-SpecDojo のエージェント実行戦略（`exec-strategy-<track>.yaml`）と、エージェントメンバー定義（`pm-members.yaml`）の設定方法を説明します。
+SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`pm-members.yaml` のエージェント定義から実行者を選択する。レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離する。
 
-## 1. 概要
+## 1. 設定ファイルの分担
 
-SpecDojo のタスク実行は、エージェントを **メンバー** として定義し、**実行戦略** でフェーズごとに必要な能力と品質水準を宣言します。設定は3つのファイルで分担します。
+| ファイル                       | 役割                                                           | 粒度         |
+| ------------------------------ | -------------------------------------------------------------- | ------------ |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`capabilities`・`proficiency`・`task_kind` | トラック     |
+| `pm-members.yaml`              | 誰が作業するか（identity・command・capabilities・proficiency） | プロジェクト |
+| `.specdojo/exec-defaults.yaml` | rate limit 検出条件・リトライポリシー                          | システム     |
 
-| ファイル                               | 役割                                                           | 粒度         |
-| -------------------------------------- | -------------------------------------------------------------- | ------------ |
-| `pm-members.yaml`                      | 誰が作業するか（identity・command・capabilities・proficiency） | プロジェクト |
-| `execution/exec-strategy-<track>.yaml` | どう割り当てるか（assignment_rules・rate_limit_policy）        | トラック     |
-| `.specdojo/exec-agent.yaml`            | exec run のエントリポイント（グローバル設定）                  | システム     |
+`sch-strategy` は agent 個体を指定しない。phase に「どんな能力が必要か」を書き、`pm-members.yaml` に「誰がその能力を持つか」を書く。
 
-`sch-strategy-<track>.yaml`（スケジュール戦略）との関係は以下の通りです。
+## 2. phase の実行要件
 
-| ファイル                     | 役割                                                            |
-| ---------------------------- | --------------------------------------------------------------- |
-| `sch-strategy-<track>.yaml`  | 何を・いつ・どのくらいでやるか（フェーズ定義・owner・duration） |
-| `exec-strategy-<track>.yaml` | auto フェーズをどの能力・品質水準のエージェントが実行するか     |
+`execution: agent` の phase には、必要に応じて `mode`・`capabilities`・`proficiency` を直接定義する。`mode` は plan/result の種別であり、agent の能力ではない。
 
-`sch-strategy-<track>.yaml` の各フェーズには `execution: auto` または `execution: manual` が設定されており、`exec-strategy` は `auto` のフェーズのみを対象とします。
+```yaml
+phase_sets:
+  first-pass:
+    - id: enrich
+      name: 調査・補強
+      execution: agent
+      task_suffix: "020"
+      mode: edit
+      proficiency: normal
 
-## 2. エージェントの定義（`pm-members.yaml`）
+  research-first-pass:
+    - id: enrich
+      name: 調査・深掘り
+      execution: agent
+      task_suffix: "020"
+      mode: edit
+      capabilities: [web_search]
+      proficiency: expert
 
-### 2.1. フィールド定義
+  review-pass:
+    - id: review
+      name: レビュー
+      execution: human
+      task_suffix: "030"
+      mode: review
+```
 
-`members` 配列に人間とエージェントを混在して定義します。`type: agent` のメンバーには `command`・`capabilities`・`proficiency`・`priority` を追加します。
+| フィールド     | 必須 | 説明                                      |
+| -------------- | ---- | ----------------------------------------- |
+| `execution`    | 任意 | `agent` または `human`。省略時は `agent`  |
+| `mode`         | 任意 | `edit` または `review`。省略時は `edit`   |
+| `task_kind`    | 任意 | `deliverable` または `reference-maintenance` |
+| `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略 |
+| `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補    |
+
+## 3. エージェントの定義
+
+`pm-members.yaml` の `type: agent` メンバーには `command`・`capabilities`・`proficiency`・`priority` を定義する。
 
 ```yaml
 members:
@@ -42,243 +70,72 @@ members:
     email: null
     roles: []
     type: agent
-    capabilities: [web_search]
+    capabilities: []
     proficiency: normal
     priority: 10
-    command: 'opencode run --agent edit-agent'
-    scheduler_strategy: critical-first
-    note: 成果物の新規作成・文書化を担当する標準エージェント。
-```
+    command: "opencode run --agent edit-agent"
 
-| フィールド           | 説明                                               | 値の例                           |
-| -------------------- | -------------------------------------------------- | -------------------------------- |
-| `nickname`           | 識別子。`exec-strategy` の参照には使わない         | `edit-agent`                     |
-| `type`               | `human` または `agent`                             | `agent`                          |
-| `capabilities`       | エージェントが使用できるツール                     | `[]` / `[web_search]`            |
-| `proficiency`        | 作業品質水準。`low` / `normal` / `high` / `expert` | `normal`                         |
-| `priority`           | 同一プロファイル内の優先順位（小さいほど先に試行） | `10`                             |
-| `command`            | exec run が直接呼び出すシェルコマンド              | `opencode run --agent edit-agent` |
-| `scheduler_strategy` | `critical-first` または `fifo`                     | `critical-first`                 |
-
-### 2.2. capabilities と proficiency
-
-`capabilities` は **使用できるツール**、`proficiency` は **どのくらい高品質にできるか** を表します。
-
-| 次元         | フィールド     | 値                                                                                  |
-| ------------ | -------------- | ----------------------------------------------------------------------------------- |
-| ツール       | `capabilities` | `web_search`（外部調査）など。作業種別（edit / review）は `mode` で区別する         |
-| 品質水準     | `proficiency`  | `low`（軽量・整形）、`normal`（標準）、`high`（複雑分析）、`expert`（深い技術判断） |
-
-### 2.3. 標準エージェントの構成例
-
-| nickname           | capabilities   | proficiency | priority | 用途                                 |
-| ------------------ | -------------- | ----------- | -------- | ------------------------------------ |
-| `edit-agent`       | `[]`           | `normal`    | `10`     | 成果物の新規作成・文書化（標準）     |
-| `small-edit-agent` | `[]`           | `low`       | `10`     | 整合性修正・フォーマット整形（軽量） |
-| `expert-agent`     | `[]`           | `expert`    | `10`     | 複雑な分析・アーキテクチャ判断       |
-| `expert-web-agent` | `[web_search]` | `expert`    | `10`     | 外部調査が必要な深掘り               |
-| `review-agent`     | `[]`           | `normal`    | `10`     | 多観点レビュー                       |
-
-## 3. 実行戦略（`exec-strategy-<track>.yaml`）
-
-`sch-strategy-<track>.yaml` の `execution: auto` フェーズに対してエージェントの要件を宣言します。`execution: manual` フェーズは記載不要です。
-
-### 3.1. assignment_rules
-
-`phase_set`・`phase`・`mode`・`task_kind` に対してルールを上から順に評価し、最初のマッチを適用します。各ルールは、対象タスクを絞り込む条件と、`capabilities`（必要なツール）・`proficiency`（必要な品質水準）を宣言します。
-
-```yaml
-assignment_rules:
-  # research-first-pass.enrich: 外部調査が必要な補強（web_search / expert 水準）
-  - phase_set: research-first-pass
-    phase: enrich
-    mode: edit
+  - nickname: expert-web-agent
+    display_name: Expert Web Agent
+    email: null
+    roles: []
+    type: agent
     capabilities: [web_search]
     proficiency: expert
-
-  # first-pass.enrich: 標準的な補強（normal 水準）
-  - phase_set: first-pass
-    phase: enrich
-    mode: edit
-    proficiency: normal
-
-  # finalize-pass.align: 整合性確認・修正（normal 水準）
-  - phase_set: finalize-pass
-    phase: align
-    mode: edit
-    proficiency: normal
+    priority: 10
+    command: "opencode run --agent expert-web-agent"
 ```
 
-| フィールド     | 必須 | 説明                                                 |
-| -------------- | ---- | ---------------------------------------------------- |
-| `phase_set`    | 任意 | 対象の phase set 名。省略すると全 phase set にマッチ |
-| `phase`        | 任意 | 対象の phase id。省略すると全 phase にマッチ         |
-| `mode`         | 任意 | `edit` または `review`。省略すると全 mode にマッチ   |
-| `task_kind`    | 任意 | `deliverable` または `reference-maintenance`。省略すると全 task_kind にマッチ |
-| `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略            |
-| `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補               |
+`exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にする。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含める。候補は `priority` 昇順、同 priority 内では余剰 capabilities 数の少ない順に並ぶ。
 
-`assignment_rules` のいずれにもマッチしない phase（例: `draft` や `finalize` のような `execution: manual` フェーズ）には、トップレベルの `default_mode` を適用します。省略時は `edit` です。
-
-```yaml
-default_mode: edit
-
-assignment_rules:
-  # ...
-```
-
-### 3.2. エージェント選択ルール
-
-ルールがマッチしたら、`pm-members.yaml` から候補エージェントを次の手順で選びます。
-
-1. `capabilities` でフィルタ：ルールの capabilities をすべて持つ agent（スーパーセット OK）
-2. `proficiency` でフィルタ：ルールに指定があれば一致のみ。未指定なら全水準
-3. ソート：`priority`（昇順）→ 余剰 capabilities 数（昇順、同 priority 内の tie-breaker）
-4. 先頭が primary、以降は rate limit 時のフォールバック
-
-capabilities は**制約**（必須ツールを持つかどうか）としてのみ機能します。priority が実際の選択順序を決定します。
-
-**例**：`mode: edit, proficiency: normal` の場合
-
-| agent              | capabilities   | proficiency | priority | 順位                         |
-| ------------------ | -------------- | ----------- | -------- | ---------------------------- |
-| `claude-edit-agent`| `[web_search]` | `normal`    | 10       | **1位**（priority 最小）     |
-| `opencode-edit-agent`| `[]`         | `normal`    | 99       | 2位                          |
-| `expert-web-agent` | `[web_search]` | `expert`    | -        | 対象外（proficiency 不一致） |
-
-rate limit 時は fallback として proficiency の高い候補（`expert`）へのエスカレーションを `rate_limit_policy` で設定できます。
-
-### 3.3. rate_limit_policy
-
-```yaml
-rate_limit_policy:
-  on_non_critical:
-    action: skip # cpm.slack > 0: block イベントを記録して次のタスクへ
-  on_critical:
-    action: try_next # cpm.slack == 0: proficiency の高い agent へエスカレーション
-    retry:
-      max_attempts: 3
-      initial_wait_seconds: 60
-      backoff_multiplier: 3 # 60s → 180s → 540s
-      max_wait_seconds: 600
-    on_exhausted: block # 全候補失敗時はブロックして人間に委ねる
-```
-
-## 4. タスク実行のエージェント選択フロー
+## 4. 実行フロー
 
 ```mermaid
 flowchart LR
-  T["タスク\nphase_set / phase / mode / task_kind\nexecution: auto"]
-  AR["exec-strategy\nassignment_rules\n→ capabilities / proficiency"]
+  T["ready task\nmode / capabilities / proficiency"]
   F1["pm-members\ncapabilities フィルタ"]
   F2["proficiency フィルタ\n（指定あれば）"]
-  S["余剰数 → priority\nでソート"]
+  S["priority → 余剰数\nでソート"]
   M0["candidates[0]\ncommand 実行"]
   RL{"rate limit?"}
   OK(["complete"])
   SK(["skip & block"])
-  MN["candidates[n+1]\nエスカレーション"]
-  EX{"全員<br/>失敗?"}
+  MN["candidates[n+1]\n再試行"]
   BL(["block & log"])
 
-  T --> AR --> F1 --> F2 --> S --> M0 --> RL
+  T --> F1 --> F2 --> S --> M0 --> RL
   RL -->|No| OK
-  RL -->|Yes, on_non_critical| SK
-  RL -->|Yes, on_critical| MN --> RL
-  MN --> EX
-  EX -->|Yes| BL
+  RL -->|Yes, non-critical| SK
+  RL -->|Yes, critical| MN --> RL
+  MN --> BL
 ```
 
-**具体例**：`phase_set: first-pass`・`phase: enrich`・`mode: edit`・`task_kind: deliverable` のタスク
+## 5. exec-defaults
 
-1. `research-first-pass.enrich` ルール → `phase_set` がマッチしない
-2. `first-pass.enrich` ルール → **マッチ**（`mode: edit, proficiency: normal`）
-3. pm-members から `capabilities ⊇ []` かつ `proficiency: normal` の agent を抽出
-4. `edit-agent`（余剰 0、priority 10）→ `opencode run --agent edit-agent <brief>` を実行
-
-## 5. グローバル設定（`.specdojo/exec-agent.yaml`）
-
-exec run のエントリポイントです。rate limit 検出の条件（全トラック共通）を定義します。
+`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義する。
 
 ```yaml
-# レートリミット検出設定（全トラック共通）
 rate_limit_detection:
   exit_codes: [1]
   stderr_patterns:
-    - 'rate limit'
-    - '429'
+    - "rate limit"
+    - "429"
+
+rate_limit_policy:
+  on_non_critical:
+    action: skip
+  on_critical:
+    action: try_next
+    retry:
+      max_attempts: 3
+      initial_wait_seconds: 60
+      backoff_multiplier: 3
+      max_wait_seconds: 600
+    on_exhausted: block
 ```
 
-per-track の割り当てルールは `exec-strategy-<track>.yaml` に委ねます。
+## 6. 変更手順
 
-## 6. エージェントの追加・変更手順
+新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加する。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加する。
 
-### 6.1. 新しいエージェントを追加する
-
-**手順 1: `pm-members.yaml` にエージェントを追加する**
-
-```yaml
-- nickname: claude-agent
-  display_name: Claude Agent
-  type: agent
-  capabilities: []
-  proficiency: normal
-  priority: 20 # edit-agent より後に試行
-  command: 'claude --print'
-  scheduler_strategy: critical-first
-  note: Claude をバックエンドに使うエージェント。
-```
-
-`exec-strategy` の変更は不要です。`mode: edit, proficiency: normal` のルールに自動的に含まれます。
-
-### 6.2. review 対応のエージェントを追加する
-
-```yaml
-# pm-members.yaml
-- nickname: review-agent
-  type: agent
-  capabilities: []
-  proficiency: normal
-  priority: 10
-  command: 'opencode run --agent review-agent'
-```
-
-```yaml
-# exec-strategy-launch.yaml
-assignment_rules:
-  - phase: review
-    mode: review
-    proficiency: normal
-```
-
-sch-strategy のフェーズに `mode: review` が設定されていれば、自動的に `review-agent` が選択されます。
-
-### 6.3. reference-maintenance 対応のエージェントを追加する
-
-```yaml
-# exec-strategy-launch.yaml
-assignment_rules:
-  - task_kind: reference-maintenance
-    mode: edit
-    proficiency: expert
-```
-
-sch-strategy のフェーズまたは `owner_rules[].phase_overrides[]` に `task_kind: reference-maintenance` が設定されていれば、参考資料メンテナンス用のルールとしてマッチします。
-
-### 6.4. web_search 対応のエージェントを追加する
-
-```yaml
-# pm-members.yaml
-- nickname: my-web-agent
-  type: agent
-  capabilities: [web_search]
-  proficiency: expert
-  priority: 5 # expert-web-agent より先に試行
-  command: 'opencode run --agent my-web-agent'
-```
-
-`exec-strategy` の `capabilities: [web_search]` ルールに自動的に含まれます。
-
-### 6.5. 新しいトラックの実行戦略を作成する
-
-`sch-strategy-<track>.yaml` を作成したら、同じプロジェクトの `execution/exec-strategy-<track>.yaml` を作成します。`phase_sets` の `execution: auto` フェーズに対応する `mode`・必要に応じた `task_kind`・`capabilities`・`proficiency`・`rate_limit_policy` を定義してください。
+`task_kind: reference-maintenance` のような作業対象の違いも phase に直接定義する。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示する。

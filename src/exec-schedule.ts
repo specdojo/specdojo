@@ -39,9 +39,11 @@ import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import {
   buildPhaseModeIndex,
   resolveApproachMode,
+  resolveTaskCapabilities,
   resolveTaskExecution,
   resolveTaskKind,
   resolveTaskMode,
+  resolveTaskProficiency,
 } from './exec-strategy.js'
 
 export function validateAll(projectPath: string): ValidateResult {
@@ -241,13 +243,16 @@ export function writeGeneratedCore(
 
   const ready = computeReadyIds(schedule, snapshot)
   const readySnapshot = buildReadySnapshot(projectPath, schedule, ready, cpm)
-  const executionPath = executionRootForProject(projectPath)
-  const phaseModeIndex = buildPhaseModeIndex(projectPath, executionPath)
+  const phaseModeIndex = buildPhaseModeIndex(projectPath)
   for (const task of readySnapshot.tasks) {
     task.mode = resolveTaskMode(task.local_id, task.id, phaseModeIndex)
     task.execution = resolveTaskExecution(task.local_id, task.id, phaseModeIndex)
     task.approach_mode = resolveApproachMode(task.local_id, task.id, phaseModeIndex)
     task.task_kind = resolveTaskKind(task.local_id, task.id, phaseModeIndex)
+    const capabilities = resolveTaskCapabilities(task.local_id, task.id, phaseModeIndex)
+    if (capabilities.length > 0) task.capabilities = capabilities
+    const proficiency = resolveTaskProficiency(task.local_id, task.id, phaseModeIndex)
+    if (proficiency !== undefined) task.proficiency = proficiency
   }
   writeReadyFiles(projectPath, readySnapshot)
 

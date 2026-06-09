@@ -11,9 +11,9 @@ track: launch
 # owner はロール（BA / PO 等）のみを持つ。
 # 実際の実行者（--by <nickname>）は実行時に pm-members.yaml の roles フィールドと照合して決定する。
 #
-# AI エージェントの選択は このファイルには持たない。
-# exec-strategy-launch.yaml で (phase_set, phase.id, difficulty) を
-# pm-members.yaml のエージェントにマッピングする。
+# AI エージェントの作業要件は phase に直接持つ。
+# execution: agent の phase に capabilities / proficiency を指定し、
+# exec run --auto が pm-members.yaml のエージェントにマッピングする。
 
 settings:
   start_date: "2026-05-24"
@@ -31,10 +31,10 @@ scope:
 # Markdown・YAML 問わず同じフェーズを使う。
 # バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、
 # 独立した validate フェーズは設けない。
-# AI モデル・エージェントの設定は exec-agent.yaml に委ねる。
+# AI モデル・エージェントの実行時共通設定は exec-defaults.yaml に委ねる。
 #
 # execution フィールド（省略時は agent）:
-#   agent : exec-agent.yaml の tier_routing に従いエージェントが実行する
+#   agent : phase の capabilities / proficiency に合うエージェントが実行する
 #   human : エージェントを起動せず、人間による実行待ちとして記録する
 #
 # フローは first-pass → finalize-pass の2段階。
@@ -47,6 +47,7 @@ phase_sets:
     - id: draft
       name: たたき台作成
       execution: human
+      mode: edit
       task_suffix: "010"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -56,6 +57,8 @@ phase_sets:
     - id: enrich
       name: 調査・補強
       execution: agent
+      mode: edit
+      proficiency: normal
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
       description: |
@@ -65,6 +68,7 @@ phase_sets:
     - id: review
       name: 一次版レビュー
       execution: human
+      mode: review
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -78,6 +82,7 @@ phase_sets:
     - id: draft
       name: たたき台作成（予備調査含む）
       execution: human
+      mode: edit
       task_suffix: "010"
       duration_days: 0.5 # 2〜4h 相当（人による予備調査込み）
       description: |
@@ -87,6 +92,9 @@ phase_sets:
     - id: enrich
       name: 調査・深掘り
       execution: agent
+      mode: edit
+      capabilities: [web_search]
+      proficiency: expert
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
       description: |
@@ -96,6 +104,7 @@ phase_sets:
     - id: review
       name: 一次版レビュー
       execution: human
+      mode: review
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -108,6 +117,8 @@ phase_sets:
     - id: align
       name: 整合性確認・修正
       execution: agent
+      mode: edit
+      proficiency: normal
       task_suffix: "040"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -117,6 +128,7 @@ phase_sets:
     - id: finalize
       name: 完成版確定
       execution: human
+      mode: edit
       task_suffix: "050"
       duration_days: 0.125 # 0.5〜1h 相当
       description: |
@@ -128,7 +140,6 @@ default_phase_sets: [first-pass, finalize-pass]
 
 # 成果物 local_id → 作成タスクの owner ロール・phase_set・難易度
 # difficulty はプロジェクト管理上の工数・品質リスクの目安。
-# exec-agent.yaml の difficulty_overrides でエージェント tier 昇格にも使われる。
 owner_rules:
   - local_ids:
       - prj-overview
