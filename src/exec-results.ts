@@ -48,6 +48,12 @@ function templateFileName(mode: TaskMode): string {
   return mode === 'review' ? 'xrr-template.md' : 'xer-template.md'
 }
 
+function execResultDocId(projectId: string, mode: TaskMode, taskId: string): string {
+  const prefix = mode === 'review' ? 'xrr' : 'xer'
+  const localId = `${prefix}-${taskId.toLowerCase()}`
+  return projectId ? `${projectId}:${localId}` : localId
+}
+
 function loadResultTemplate(mode: TaskMode): string {
   const templatePath = join(specdojoRootDir(), 'docs/ja/specdojo/templates', templateFileName(mode))
   if (!existsSync(templatePath)) {
@@ -90,7 +96,7 @@ export function scaffoldResult(opts: {
   const template = loadResultTemplate(mode)
 
   const meta: ExecResultMeta = {
-    id: mode === 'review' ? `xrr-${taskId.toLowerCase()}` : `xer-${taskId.toLowerCase()}`,
+    id: execResultDocId(projectId, mode, taskId),
     type: 'exec-result',
     task_id: taskId,
     mode,

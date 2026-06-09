@@ -192,7 +192,7 @@ exec/plans/T-LAUNCH-prj-overview-030-plan.md
 review plan は Frontmatter と本文セクションで構成する。
 
 ```yaml
-id: xrp-<task-id>
+id: <project-id>:xrp-<task-id>
 type: exec-plan
 rulebook: xep-rulebook
 task_id: <task-id>
@@ -232,7 +232,7 @@ viewpoints_ref: <pm-review-viewpoints.yaml のパス>
 review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新する。
 
 ```yaml
-id: xrr-<task-id>
+id: <project-id>:xrr-<task-id>
 type: exec-result
 task_id: <task-id>
 mode: review

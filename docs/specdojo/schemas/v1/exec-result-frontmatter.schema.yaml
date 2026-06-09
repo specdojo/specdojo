@@ -24,7 +24,7 @@ properties:
   id:
     type: string
     minLength: 1
-    description: "Unique document ID. Format: xer-<task-id> (edit) or xrr-<task-id> (review)."
+    description: "Unique document ID. Format: <project-id>:xer-<task-id> (edit) or <project-id>:xrr-<task-id> (review)."
 
   type:
     type: string

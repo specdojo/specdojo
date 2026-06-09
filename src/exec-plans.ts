@@ -25,6 +25,11 @@ type DeliverableInfo = {
   resolvedPath: string
 }
 
+function execDocId(projectId: string, prefix: 'xep' | 'xrp', taskId: string): string {
+  const localId = `${prefix}-${taskId.toLowerCase()}`
+  return projectId ? `${projectId}:${localId}` : localId
+}
+
 // ---------------------------------------------------------------------------
 // Catalog helpers
 // ---------------------------------------------------------------------------
@@ -238,7 +243,7 @@ function buildEditPlanMarkdown(
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
 
   const meta: ExecPlanMeta = {
-    id: `xep-${task.id.toLowerCase()}`,
+    id: execDocId(projectId, 'xep', task.id),
     type: 'exec-plan',
     rulebook: 'xep-rulebook',
     task_id: task.id,
@@ -278,7 +283,7 @@ function buildReviewPlanMarkdown(
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
 
   const meta: ExecPlanMeta = {
-    id: `xrp-${task.id.toLowerCase()}`,
+    id: execDocId(projectId, 'xrp', task.id),
     type: 'exec-plan',
     rulebook: 'xep-rulebook',
     task_id: task.id,

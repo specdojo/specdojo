@@ -64,11 +64,11 @@ git config --global --list || true
 
 echo "Installing SpecDojo VSCode extension..."
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-VSIX="${WORKSPACE_DIR}/tools/vscode-specdojo/vscode-specdojo-0.1.0.vsix"
-if ! code --list-extensions 2>/dev/null | grep -q "specdojo.vscode-specdojo"; then
-  code --install-extension "$VSIX" || true
+VSIX=$(ls -t "${WORKSPACE_DIR}/tools/vscode-specdojo/"*.vsix 2>/dev/null | head -n 1)
+if [ -n "$VSIX" ]; then
+  code --install-extension "$VSIX" --force || true
 else
-  echo "SpecDojo extension already installed."
+  echo "SpecDojo VSIX not found. Run 'npm run package' in tools/vscode-specdojo/."
 fi
 
 echo "Checking Local LLM API..."
