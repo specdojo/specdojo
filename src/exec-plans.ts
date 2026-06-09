@@ -25,6 +25,8 @@ type DeliverableInfo = {
   resolvedPath: string
 }
 
+const MISSING = '_MISSING_'
+
 function execDocId(projectId: string, prefix: 'xep' | 'xrp', taskId: string): string {
   const localId = `${prefix}-${taskId.toLowerCase()}`
   return projectId ? `${projectId}:${localId}` : localId
@@ -168,33 +170,22 @@ function phaseDescriptionText(task: PlanTask): string {
   return task.name ?? task.id
 }
 
-function deliverablePathLine(deliverable: DeliverableInfo | null): string {
-  if (deliverable) return `- path: \`${deliverable.resolvedPath}\``
-  return '- 成果物カタログに登録されていないタスク。タスク名を参照する。'
+function deliverablePath(deliverable: DeliverableInfo | null): string {
+  return deliverable?.resolvedPath ?? MISSING
 }
 
-function rulebookRefLine(deliverable: DeliverableInfo | null): string {
-  return `- rulebook: \`${deliverable?.deliverable.rulebook ?? 'none'}\``
+function rulebookRef(deliverable: DeliverableInfo | null): string {
+  return deliverable?.deliverable.rulebook ?? MISSING
 }
 
-function resultRefLine(resultRef: string): string {
-  return `- result: \`${resultRef}\``
+function doneCriteriaItems(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) return MISSING
+  return criteria.map(c => `- ${c.text}`).join('\n')
 }
 
-function doneCriteriaBlock(criteria: CriteriaItem[]): string {
-  if (criteria.length === 0) {
-    return '_TODO_: 対象成果物の done_criteria が見つかりません。カタログを確認してください。'
-  }
-  const lines = ['**done_criteria:**', '']
-  for (const c of criteria) lines.push(`- ${c.text}`)
-  return lines.join('\n')
-}
-
-function reviewViewpointsTable(criteria: CriteriaItem[]): string {
-  if (criteria.length === 0) {
-    return '_TODO_: 対象成果物の done_criteria が見つかりません。カタログを確認してください。'
-  }
-  const lines = ['| ID | ロール | viewpoint_id | 確認基準 |', '|---|---|---|---|']
+function reviewViewpointRows(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) return MISSING
+  const lines: string[] = []
   criteria.forEach((c, i) => {
     const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
     lines.push(`| ${vpId} | ${c.roles.join(', ')} | ${c.viewpoint} | ${c.text} |`)
@@ -202,10 +193,8 @@ function reviewViewpointsTable(criteria: CriteriaItem[]): string {
   return lines.join('\n')
 }
 
-function reviewViewpointsDetail(criteria: CriteriaItem[], vpMap: Map<string, ReviewViewpoint>): string {
-  if (criteria.length === 0) {
-    return '_TODO_: 対象成果物の done_criteria が見つからないため、観点の詳細を提示できません。'
-  }
+function reviewViewpointDetails(criteria: CriteriaItem[], vpMap: Map<string, ReviewViewpoint>): string {
+  if (criteria.length === 0) return MISSING
   const lines: string[] = []
   criteria.forEach((c, i) => {
     const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
@@ -260,11 +249,11 @@ function buildEditPlanMarkdown(
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
-    _PLAN_TITLE_: `Edit Plan: ${task.id}`,
+    _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
-    _DELIVERABLE_PATH_LINE_: deliverablePathLine(deliverable),
-    _RESULT_REF_LINE_: resultRefLine(resultRef),
-    _DONE_CRITERIA_BLOCK_: doneCriteriaBlock(criteria),
+    _DELIVERABLE_PATH_: deliverablePath(deliverable),
+    _RESULT_REF_: resultRef,
+    _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
   }
   return expandTemplate(template, values)
 }
@@ -300,13 +289,13 @@ function buildReviewPlanMarkdown(
 
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
-    _PLAN_TITLE_: `Review Plan: ${task.id}`,
+    _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
-    _DELIVERABLE_PATH_LINE_: deliverablePathLine(deliverable),
-    _RESULT_REF_LINE_: resultRefLine(resultRef),
-    _RULEBOOK_REF_LINE_: rulebookRefLine(deliverable),
-    _REVIEW_VIEWPOINTS_TABLE_: reviewViewpointsTable(criteria),
-    _REVIEW_VIEWPOINTS_DETAIL_: reviewViewpointsDetail(criteria, vpMap),
+    _DELIVERABLE_PATH_: deliverablePath(deliverable),
+    _RESULT_REF_: resultRef,
+    _RULEBOOK_REF_: rulebookRef(deliverable),
+    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap),
   }
   return expandTemplate(template, values)
 }

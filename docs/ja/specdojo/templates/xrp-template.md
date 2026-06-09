@@ -1,6 +1,6 @@
 _FRONTMATTER_
 
-# _PLAN_TITLE_
+# Review Plan: _TASK_ID_
 
 ## 1. このフェーズで行うこと
 
@@ -8,15 +8,19 @@ _PHASE_DESCRIPTION_
 
 ## 2. 対象成果物
 
-_DELIVERABLE_PATH_LINE_
-_RULEBOOK_REF_LINE_
-_RESULT_REF_LINE_
+- path: `_DELIVERABLE_PATH_`
+- rulebook: `_RULEBOOK_REF_`
+- result: `_RESULT_REF_`
 
 ## 3. レビュー観点
 
-_REVIEW_VIEWPOINTS_TABLE_
+<!-- markdownlint-disable MD055 MD056 -->
+| ID | ロール | viewpoint_id | 確認基準 |
+|---|---|---|---|
+_REVIEW_VIEWPOINT_ROWS_
+<!-- markdownlint-enable MD055 MD056 -->
 
-_REVIEW_VIEWPOINTS_DETAIL_
+_REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 

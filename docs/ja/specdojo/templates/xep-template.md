@@ -1,6 +1,6 @@
 _FRONTMATTER_
 
-# _PLAN_TITLE_
+# Edit Plan: _TASK_ID_
 
 ## 1. このフェーズで行うこと
 
@@ -8,10 +8,12 @@ _PHASE_DESCRIPTION_
 
 ## 2. 対象成果物
 
-_DELIVERABLE_PATH_LINE_
-_RESULT_REF_LINE_
+- path: `_DELIVERABLE_PATH_`
+- result: `_RESULT_REF_`
 
-_DONE_CRITERIA_BLOCK_
+**done_criteria:**
+
+_DONE_CRITERIA_ITEMS_
 
 ## 3. 進め方
 
