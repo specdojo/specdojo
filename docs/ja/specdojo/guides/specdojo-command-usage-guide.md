@@ -1651,6 +1651,7 @@ specdojo exec scaffold --project prj-0001
 
 - インデックス生成（`build`）: `docs/` 配下の全 frontmatter `id` を走査して `.specdojo/doc-index.json` を生成
 - パス解決（`lookup`）: ID からファイルパスを返す
+- リンク展開（`replace`）: ファイル内の `[[id]]` を agent が読める Markdown リンクまたは path に展開する
 
 生成したインデックスは VSCode 拡張（`tools/vscode-specdojo/`）が読み込み、YAML の構造的な ID 参照と `[[id]]` wiki リンク形式をクリック可能なリンクにします。
 
@@ -1727,11 +1728,52 @@ specdojo index lookup vp-ba-business-value
 | ---------------- | ------------------------ | -------------------------- |
 | `--index <path>` | インデックスファイルパス | `.specdojo/doc-index.json` |
 
-### 9.3. VSCode 拡張（vscode-specdojo）
+### 9.3. index replace
+
+ファイル内の `[[id]]` 形式を、`.specdojo/doc-index.json` を使って解決済み参照に変換する。正本ファイルでは `[[id]]` を維持し、agent に渡す直前の読み取り用テキストとして展開する用途を想定する。
+
+```bash
+specdojo index replace docs/ja/projects/prj-0001/030-project-management/execution/exec/plans/T-LAUNCH-pm-plan-010-plan.md
+```
+
+デフォルトでは、変換後の内容を標準出力に出し、入力ファイルは変更しない。
+
+変換例:
+
+```md
+詳細は [[specdojo-reference-materials-guide]] を参照する。
+```
+
+`--format markdown`（デフォルト）:
+
+```md
+詳細は [specdojo-reference-materials-guide](docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
+```
+
+`--format path`:
+
+```md
+詳細は docs/ja/specdojo/guides/specdojo-reference-materials-guide.md を参照する。
+```
+
+オプション:
+
+| オプション        | 説明                                                                 | デフォルト                 |
+| ----------------- | -------------------------------------------------------------------- | -------------------------- |
+| `--index <path>`  | インデックスファイルパス                                             | `.specdojo/doc-index.json` |
+| `--format <type>` | 置換形式。`markdown` は `[id](path)`、`path` は path のみに置換する   | `markdown`                 |
+| `--missing <mode>` | 未解決 ID の扱い。`keep` は `[[id]]` を残し、`marker` は `_MISSING_` に置換する | `keep`                     |
+| `--write`         | 標準出力ではなく入力ファイルを書き換える。通常の exec plan 生成では使わない | `false`                    |
+
+未解決 ID がある場合は、`--missing` の設定に従って本文を出力し、stderr に警告を出す。
+
+`exec run` では、plan ファイルそのものは `[[id]]` のまま保持し、agent に渡す prompt を作る直前に `index replace --format markdown --missing keep` 相当の処理を適用する。
+
+### 9.4. VSCode 拡張（vscode-specdojo）
 
 `tools/vscode-specdojo/` に VSCode 拡張が含まれています。インストールするとインデックスを参照し、ファイル内の ID 参照をクリック可能なリンクにします。
 
-#### 9.3.1. ビルドとインストール
+#### 9.4.1. ビルドとインストール
 
 ```bash
 cd tools/vscode-specdojo
@@ -1741,7 +1783,7 @@ npm run compile
 # または F5 でデバッグモード起動
 ```
 
-#### 9.3.2. リンク対応パターン
+#### 9.4.2. リンク対応パターン
 
 | パターン                     | ファイル種別 | 例                                |
 | ---------------------------- | ------------ | --------------------------------- |
@@ -1751,11 +1793,11 @@ npm run compile
 | `- prj-xxx:yyy` 名前空間付き | YAML リスト  | `- prj-0001:pm-roles`             |
 | `- vp-xxx` viewpoint ID      | YAML リスト  | `- vp-po-purpose-alignment`       |
 
-#### 9.3.3. コマンドパレット
+#### 9.4.3. コマンドパレット
 
 `Ctrl+Shift+P` → `SpecDojo: Open Document by ID` でIDを入力してファイルを開けます。
 
-#### 9.3.4. インデックスの更新
+#### 9.4.4. インデックスの更新
 
 ドキュメントを追加したら `specdojo index build` を実行してインデックスを再生成します。lefthook の `pre-commit` に組み込むと自動更新できます。
 
