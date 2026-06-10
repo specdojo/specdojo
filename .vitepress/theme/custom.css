@@ -43,4 +43,53 @@
 :root {
   --vp-sidebar-width: 340px; /* お好みで */
   --vp-sidebar-width-mobile: 320px; /* モバイル用（必要なら） */
+
+  /* 本文（目次ありページ）の最大幅。content-container と layout-max-width の両方で参照する */
+  --vp-doc-content-width: 900px;
+
+  /* レイアウト全体（ナビ・サイドバー・本文・目次・フッター）の最大幅。
+     サイドバー幅 + 本文左右パディング(64px) + 本文幅 + 目次幅(256px) を合計し、
+     これを超える画面幅では左右に均等な余白が入るようにする */
+  --vp-layout-max-width: calc(
+    var(--vp-sidebar-width) + 64px + var(--vp-doc-content-width) + 256px
+  );
+}
+
+/* ▼ 本文（目次ありページ）の最大幅を 688px → 900px に拡張
+   VitePress 側のコンポーネントスコープCSSが [data-v-xxxx] 属性で
+   詳細度を上げているため、!important で上書きする */
+.VPDoc.has-aside .content-container {
+  max-width: var(--vp-doc-content-width) !important;
+}
+
+/* ▼ 左サイドバーの折りたたみ（SidebarToggle.vue で html 要素にクラスを付与）
+   モバイル表示（960px未満）ではサイドバーがドロワー化されるため対象外とする */
+@media (min-width: 960px) {
+  html.vp-sidebar-collapsed .VPSidebar {
+    display: none;
+  }
+
+  html.vp-sidebar-collapsed .VPContent.has-sidebar {
+    padding-left: 0 !important;
+  }
+
+  /* ▼ サイトタイトルの右側にトグルボタン（nav-bar-title-after）を配置するための余白確保 */
+  .VPNavBarTitle.has-sidebar .title {
+    justify-content: space-between;
+  }
+
+  /* ▼ サイドバー折りたたみ中はサイト名を隠し、トグルボタンのみ左寄せで表示する
+     （justify-content: space-between のまま要素が1つになるため自動的に左端に寄る） */
+  html.vp-sidebar-collapsed .VPNavBarTitle .title > span {
+    display: none;
+  }
+}
+
+/* ▼ 目次（右サイドバー）が表示される幅では、ナビバー右側の空き領域（検索・言語・配色切り替え用）を
+   非表示にする。言語切り替え・配色切り替えは AsideExtra.vue として目次上部に移設済み。
+   960px〜1280px の範囲は目次が表示されないため、従来どおりナビバーの Extra メニューを残す */
+@media (min-width: 1280px) {
+  .VPNavBar.has-sidebar .content {
+    display: none;
+  }
 }
