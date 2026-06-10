@@ -271,6 +271,15 @@ export default defineConfig({
   // リポジトリ直下の README 等やローカル作業用ディレクトリは除外する。
   srcExclude: ['*.md', 'local/**', 'workspaces/**'],
 
+  // サイドバー折りたたみ状態の復元（初回描画前に同期実行し、ちらつきを防ぐ）
+  head: [
+    [
+      'script',
+      {},
+      `(function(){try{if(localStorage.getItem('vp-sidebar-collapsed')==='true'){document.documentElement.classList.add('vp-sidebar-collapsed')}}catch(e){}})()`,
+    ],
+  ],
+
   // 物理パスは docs/ja, docs/en のままで、
   // 公開URL（および i18n のロケール判定）は /ja/, /en/ に揃える。
   rewrites: {

@@ -12,5 +12,5 @@
     "types": ["node", "vite/client", "vitepress/client"]
   },
   "references": [{ "path": "../tools/docs/tsconfig.json" }],
-  "include": ["./**/*.ts", "./**/*.mts"]
+  "include": ["./**/*.ts", "./**/*.mts", "./**/*.vue"]
 }
