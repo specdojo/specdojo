@@ -6,18 +6,19 @@ import type { Plugin } from 'vite'
 import {
   generateMermaidSvgs,
   generateMermaidSvgsForFile,
-} from '../../tools/docs/src/gen-mermaid-svg'
+} from '../tools/docs/src/gen-mermaid-svg'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync, readFileSync } from 'node:fs'
 
 const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url))
-const DOCS_ROOT = path.resolve(CONFIG_DIR, '..')
-const MERMAID_OUT_DIR = path.join(DOCS_ROOT, 'public', 'mermaid')
+const WORKSPACE_ROOT = path.resolve(CONFIG_DIR, '..')
+const CONTENT_ROOT = path.join(WORKSPACE_ROOT, 'docs')
+const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, 'public', 'mermaid')
 
 // [[id]] wikilink index — loaded once at build/dev startup
-function loadDocIndex(docsRoot: string): Record<string, string> {
-  const p = path.join(docsRoot, '.specdojo', 'doc-index.json')
+function loadDocIndex(workspaceRoot: string): Record<string, string> {
+  const p = path.join(workspaceRoot, '.specdojo', 'doc-index.json')
   if (!existsSync(p)) return {}
   try {
     return (JSON.parse(readFileSync(p, 'utf8')) as { entries: Record<string, string> }).entries
@@ -25,7 +26,7 @@ function loadDocIndex(docsRoot: string): Record<string, string> {
     return {}
   }
 }
-const docIndex = loadDocIndex(DOCS_ROOT)
+const docIndex = loadDocIndex(WORKSPACE_ROOT)
 
 const specdojoItems = {
   ja: {
@@ -68,10 +69,10 @@ const mermaidSvgAutoGenerate = (): Plugin => {
         pendingFiles.clear()
         console.log(`[mermaid] generating svgs for ${files.length} file(s) (${reason})`)
         for (const file of files)
-          generateMermaidSvgsForFile(file, { rootDir: DOCS_ROOT, outDir: MERMAID_OUT_DIR })
+          generateMermaidSvgsForFile(file, { rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR })
       } else {
         console.log(`[mermaid] generating svgs (${reason})`)
-        generateMermaidSvgs({ rootDir: DOCS_ROOT, outDir: MERMAID_OUT_DIR })
+        generateMermaidSvgs({ rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR })
       }
     } finally {
       running = false
@@ -95,7 +96,7 @@ const mermaidSvgAutoGenerate = (): Plugin => {
   const shouldHandle = (file: string): boolean => {
     if (!file) return false
     if (!file.endsWith('.md')) return false
-    return file.startsWith(DOCS_ROOT + path.sep)
+    return file.startsWith(CONTENT_ROOT + path.sep)
   }
 
   return {
@@ -264,6 +265,19 @@ export default defineConfig({
   title: 'SpecDojo Handbook',
   description: 'Documentation for SpecDojo Handbook',
   base,
+
+  // srcDir 省略時は root（リポジトリルート）と同一になる。
+  // サイトに含めるのは docs/ 配下の Markdown のみとし、
+  // リポジトリ直下の README 等やローカル作業用ディレクトリは除外する。
+  srcExclude: ['*.md', 'local/**', 'workspaces/**'],
+
+  // 物理パスは docs/ja, docs/en のままで、
+  // 公開URL（および i18n のロケール判定）は /ja/, /en/ に揃える。
+  rewrites: {
+    'docs/index.md': 'index.md',
+    'docs/ja/:rest*': 'ja/:rest*',
+    'docs/en/:rest*': 'en/:rest*',
+  },
 
   locales: {
     ja: {

@@ -58,10 +58,10 @@ config/credentials.json
 *.key
 
 # vitepress build output
-/docs/.vitepress/dist
-/docs/.vitepress/cache
-/docs/public/mermaid
-/docs/.vitepress/.temp
+/.vitepress/dist
+/.vitepress/cache
+/.vitepress/.temp
+/public/mermaid
 /local
 
 # claude

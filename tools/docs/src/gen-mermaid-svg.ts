@@ -5,7 +5,7 @@ import * as crypto from 'crypto'
 import { fileURLToPath } from 'url'
 
 const DEFAULT_ROOT = path.resolve('docs')
-const DEFAULT_OUT_DIR = path.join(DEFAULT_ROOT, 'public', 'mermaid')
+const DEFAULT_OUT_DIR = path.resolve('public', 'mermaid')
 const PUPPETEER_CONFIG = path.resolve('puppeteer-config.json')
 const MERMAID_CONFIG = path.resolve('mermaid-config.json')
 
