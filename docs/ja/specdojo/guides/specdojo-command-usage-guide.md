@@ -1747,19 +1747,24 @@ specdojo index replace --build docs/ja/projects/prj-0001/030-project-management/
 
 ```md
 詳細は [[specdojo-reference-materials-guide]] を参照する。
+詳細は [[specdojo-reference-materials-guide|参考資料ガイド]] を参照する。
 ```
 
 `--format markdown`（デフォルト）:
 
 ```md
 詳細は [specdojo-reference-materials-guide](docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
+詳細は [参考資料ガイド](docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
 ```
 
 `--format path`:
 
 ```md
 詳細は docs/ja/specdojo/guides/specdojo-reference-materials-guide.md を参照する。
+詳細は docs/ja/specdojo/guides/specdojo-reference-materials-guide.md を参照する。
 ```
+
+`[[id|title]]` の場合、`id` はインデックス解決に使い、`title` は `--format markdown` のリンク表示名として使う。`--format path` では `title` は出力しない。
 
 オプション:
 
