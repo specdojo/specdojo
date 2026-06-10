@@ -99,6 +99,34 @@ describe('replaceDocIndexRefs', () => {
     }
   })
 
+  it('[[id|title]] は title を Markdown リンク表示名として使う', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
+      const result = replaceDocIndexRefs('See [[sample-doc|Sample Document]].', indexPath)
+
+      expect(result.content).toBe('See [Sample Document](docs/sample.md).')
+      expect(result.missingIds).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('path 形式では [[id|title]] の title を無視して path のみに置換する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
+      const result = replaceDocIndexRefs('See [[sample-doc|Sample Document]].', indexPath, {
+        format: 'path',
+      })
+
+      expect(result.content).toBe('See docs/sample.md.')
+      expect(result.missingIds).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
   it('未解決 ID はデフォルトで維持し、missingIds に一意に記録する', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
     try {
@@ -111,6 +139,19 @@ describe('replaceDocIndexRefs', () => {
       expect(result.content).toBe(
         'See [known-doc](docs/known.md), [[missing-doc]], [[missing-doc]].'
       )
+      expect(result.missingIds).toEqual(['missing-doc'])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('[[id|title]] が未解決の場合は id のみを missingIds に記録する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, {})
+      const result = replaceDocIndexRefs('See [[missing-doc|Missing Document]].', indexPath)
+
+      expect(result.content).toBe('See [[missing-doc|Missing Document]].')
       expect(result.missingIds).toEqual(['missing-doc'])
     } finally {
       rmSync(dir, { recursive: true, force: true })

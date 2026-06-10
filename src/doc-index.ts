@@ -265,11 +265,21 @@ function readDocIndex(indexPath: string): DocIndex | null {
 
 function replacementForResolvedRef(
   id: string,
+  title: string | undefined,
   path: string,
   format: DocIndexReplaceFormat
 ): string {
   if (format === 'path') return path
-  return `[${id}](${path})`
+  return `[${title ?? id}](${path})`
+}
+
+function parseWikiRef(rawRef: string): { id: string; title?: string } {
+  const separatorIndex = rawRef.indexOf('|')
+  if (separatorIndex === -1) return { id: rawRef.trim() }
+
+  const id = rawRef.slice(0, separatorIndex).trim()
+  const title = rawRef.slice(separatorIndex + 1).trim()
+  return title ? { id, title } : { id }
 }
 
 export function replaceDocIndexRefs(
@@ -284,9 +294,9 @@ export function replaceDocIndexRefs(
   const missingIds = new Set<string>()
 
   const replaced = content.replace(/\[\[([^\]\n]+)\]\]/g, (match, rawId: string) => {
-    const id = rawId.trim()
+    const { id, title } = parseWikiRef(rawId)
     const path = index?.entries[id]
-    if (path) return replacementForResolvedRef(id, path, format)
+    if (path) return replacementForResolvedRef(id, title, path, format)
 
     missingIds.add(id)
     return missing === 'marker' ? missingMarker : match
