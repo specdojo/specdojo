@@ -1737,6 +1737,11 @@ specdojo index replace docs/ja/projects/prj-0001/030-project-management/executio
 ```
 
 デフォルトでは、変換後の内容を標準出力に出し、入力ファイルは変更しない。
+参照解決の前にインデックスを最新化したい場合は `--build` を付ける。
+
+```bash
+specdojo index replace --build docs/ja/projects/prj-0001/030-project-management/execution/exec/plans/T-LAUNCH-pm-plan-010-plan.md
+```
 
 変換例:
 
@@ -1761,9 +1766,13 @@ specdojo index replace docs/ja/projects/prj-0001/030-project-management/executio
 | オプション        | 説明                                                                 | デフォルト                 |
 | ----------------- | -------------------------------------------------------------------- | -------------------------- |
 | `--index <path>`  | インデックスファイルパス                                             | `.specdojo/doc-index.json` |
+| `--build`         | 置換前に `specdojo index build` 相当の処理でインデックスを更新する   | `false`                    |
+| `--root <path>`   | `--build` 使用時のスキャン対象ルートディレクトリ                     | `docs`                     |
 | `--format <type>` | 置換形式。`markdown` は `[id](path)`、`path` は path のみに置換する   | `markdown`                 |
 | `--missing <mode>` | 未解決 ID の扱い。`keep` は `[[id]]` を残し、`marker` は `_MISSING_` に置換する | `keep`                     |
 | `--write`         | 標準出力ではなく入力ファイルを書き換える。通常の exec plan 生成では使わない | `false`                    |
+
+`--build` の実行ログは、変換後本文に混ざらないよう stderr に出力する。
 
 未解決 ID がある場合は、`--missing` の設定に従って本文を出力し、stderr に警告を出す。
 

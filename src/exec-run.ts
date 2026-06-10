@@ -23,6 +23,7 @@ import {
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
 import type { Proficiency } from './exec-types.js'
+import { replaceDocIndexRefs } from './doc-index.js'
 import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
@@ -216,13 +217,29 @@ function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {
   return defaultExecDefaultsPath()
 }
 
+function expandPromptRefs(prompt: string): string {
+  const indexPath = resolve(specdojoRootDir(), '.specdojo/doc-index.json')
+  if (!existsSync(indexPath)) return prompt
+
+  const result = replaceDocIndexRefs(prompt, indexPath, {
+    format: 'markdown',
+    missing: 'keep',
+  })
+  if (result.missingIds.length > 0) {
+    process.stderr.write(
+      `Unresolved ID reference(s): ${result.missingIds.join(', ')}\n`
+    )
+  }
+  return result.content
+}
+
 function loadPrompt(executionPath: string, taskId: string): string | null {
   // Prefer the new plan file; fall back to legacy agent-brief for compatibility
   const plan = loadPlan(executionPath, taskId)
-  if (plan) return plan
+  if (plan) return expandPromptRefs(plan)
   const briefPath = join(executionPath, 'generated', 'agent-briefs', `${taskId}.md`)
   if (!existsSync(briefPath)) return null
-  return readFileSync(briefPath, 'utf8')
+  return expandPromptRefs(readFileSync(briefPath, 'utf8'))
 }
 
 function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {

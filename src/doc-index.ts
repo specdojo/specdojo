@@ -15,6 +15,20 @@ export interface DocIndex {
   entries: Record<string, string>
 }
 
+export type DocIndexReplaceFormat = 'markdown' | 'path'
+export type DocIndexMissingMode = 'keep' | 'marker'
+
+export interface ReplaceDocIndexRefsOptions {
+  format?: DocIndexReplaceFormat
+  missing?: DocIndexMissingMode
+  missingMarker?: string
+}
+
+export interface ReplaceDocIndexRefsResult {
+  content: string
+  missingIds: string[]
+}
+
 export interface CollectFromSpec {
   field: string       // dot-separated path to the target field (arrays auto-expanded)
                       // e.g. "viewpoints", "groups.deliverables"
@@ -242,4 +256,44 @@ export function lookupDocIndex(
   if (!existsSync(indexPath)) return undefined
   const data = JSON.parse(readFileSync(indexPath, 'utf8')) as DocIndex
   return data.entries[id]
+}
+
+function readDocIndex(indexPath: string): DocIndex | null {
+  if (!existsSync(indexPath)) return null
+  return JSON.parse(readFileSync(indexPath, 'utf8')) as DocIndex
+}
+
+function replacementForResolvedRef(
+  id: string,
+  path: string,
+  format: DocIndexReplaceFormat
+): string {
+  if (format === 'path') return path
+  return `[${id}](${path})`
+}
+
+export function replaceDocIndexRefs(
+  content: string,
+  indexPath: string,
+  options: ReplaceDocIndexRefsOptions = {}
+): ReplaceDocIndexRefsResult {
+  const format = options.format ?? 'markdown'
+  const missing = options.missing ?? 'keep'
+  const missingMarker = options.missingMarker ?? '_MISSING_'
+  const index = readDocIndex(indexPath)
+  const missingIds = new Set<string>()
+
+  const replaced = content.replace(/\[\[([^\]\n]+)\]\]/g, (match, rawId: string) => {
+    const id = rawId.trim()
+    const path = index?.entries[id]
+    if (path) return replacementForResolvedRef(id, path, format)
+
+    missingIds.add(id)
+    return missing === 'marker' ? missingMarker : match
+  })
+
+  return {
+    content: replaced,
+    missingIds: [...missingIds],
+  }
 }

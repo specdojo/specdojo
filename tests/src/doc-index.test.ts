@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { buildDocIndex, lookupDocIndex } from '../../src/doc-index.js'
+import { buildDocIndex, lookupDocIndex, replaceDocIndexRefs } from '../../src/doc-index.js'
 import type { DocIndex } from '../../src/doc-index.js'
 
 function writeIndex(dir: string, entries: Record<string, string>): string {
@@ -63,6 +63,75 @@ describe('lookupDocIndex', () => {
   })
 })
 
+describe('replaceDocIndexRefs', () => {
+  it('[[id]] を Markdown リンクに置換する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, {
+        'sample-doc': 'docs/sample.md',
+        'nested-id': 'docs/viewpoints.yaml:12',
+      })
+      const result = replaceDocIndexRefs(
+        'See [[sample-doc]] and [[nested-id]].',
+        indexPath
+      )
+
+      expect(result.content).toBe(
+        'See [sample-doc](docs/sample.md) and [nested-id](docs/viewpoints.yaml:12).'
+      )
+      expect(result.missingIds).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('path 形式で置換する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
+      const result = replaceDocIndexRefs('See [[sample-doc]].', indexPath, {
+        format: 'path',
+      })
+
+      expect(result.content).toBe('See docs/sample.md.')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('未解決 ID はデフォルトで維持し、missingIds に一意に記録する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'known-doc': 'docs/known.md' })
+      const result = replaceDocIndexRefs(
+        'See [[known-doc]], [[missing-doc]], [[missing-doc]].',
+        indexPath
+      )
+
+      expect(result.content).toBe(
+        'See [known-doc](docs/known.md), [[missing-doc]], [[missing-doc]].'
+      )
+      expect(result.missingIds).toEqual(['missing-doc'])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('missing: marker の場合は未解決 ID を _MISSING_ に置換する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, {})
+      const result = replaceDocIndexRefs('See [[missing-doc]].', indexPath, {
+        missing: 'marker',
+      })
+
+      expect(result.content).toBe('See _MISSING_.')
+      expect(result.missingIds).toEqual(['missing-doc'])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
 
 describe('buildDocIndex', () => {
   it('Markdown frontmatter と YAML top-level id をインデックス化する', () => {
