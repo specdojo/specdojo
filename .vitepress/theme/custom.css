@@ -92,4 +92,20 @@
   html.vp-sidebar-collapsed .VPNavBar.has-sidebar:not(.top) {
     background-color: var(--vp-nav-bg-color);
   }
+
+  /* ▼ サイドバー折りたたみ中はトグルボタンのみが収まる幅まで
+     タイトル領域（.title）を縮小し、ヘッダー右側（.content）の
+     左パディングもそれに合わせて縮小する。
+     検索ボタンが左詰めで広がるようになる。
+     `.container > .title` として子要素セレクタにすることで、
+     VPNavBarTitle 内側の `.title`（width:100% で外側に追従する別要素）
+     を対象から除外する */
+  html.vp-sidebar-collapsed .VPNavBar.has-sidebar .container > .title {
+    width: 52px;
+    padding: 0 8px;
+  }
+
+  html.vp-sidebar-collapsed .VPNavBar.has-sidebar .content {
+    padding-left: 52px;
+  }
 }
