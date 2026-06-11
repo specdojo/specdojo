@@ -2,23 +2,44 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 1,
+  "ready_count": 2,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-pm-plan-010",
+      "next_task_id": "T-LAUNCH-prj-overview-030",
       "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-030",
         "T-LAUNCH-pm-plan-010"
       ]
     },
     "fifo": {
       "next_task_id": "T-LAUNCH-pm-plan-010",
       "ordered_task_ids": [
-        "T-LAUNCH-pm-plan-010"
+        "T-LAUNCH-pm-plan-010",
+        "T-LAUNCH-prj-overview-030"
       ]
     }
   },
   "tasks": [
+    {
+      "id": "T-LAUNCH-prj-overview-030",
+      "local_id": "prj-overview",
+      "name": "一次版レビュー",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 2,
+      "critical_first_rank": 1,
+      "cpm": {
+        "es": 0.75,
+        "ef": 1,
+        "ls": 0.75,
+        "lf": 1,
+        "slack": 0
+      },
+      "description": "担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。\n修正が軽微な場合は直接編集して承認とみなす。\n差し戻しの場合は修正箇所と理由を明記する。\n",
+      "mode": "review",
+      "execution": "human"
+    },
     {
       "id": "T-LAUNCH-pm-plan-010",
       "local_id": "pm-plan",
@@ -26,7 +47,7 @@
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",
       "fifo_rank": 1,
-      "critical_first_rank": 1,
+      "critical_first_rank": 2,
       "cpm": {
         "es": 0,
         "ef": 0.25,

@@ -44,11 +44,11 @@
       }
     },
     "T-LAUNCH-prj-overview-030": {
-      "state": "doing",
-      "last_ts": "2026-06-07T22:27:58Z",
+      "state": "todo",
+      "last_ts": "2026-06-11T12:32:47Z",
       "last_by": "codex-review-agent",
-      "last_type": "claim",
-      "last_msg": "手動でclaim",
+      "last_type": "cancel",
+      "last_msg": "test",
       "meta": {
         "claim_owner": "",
         "planned_owner": "BA"
