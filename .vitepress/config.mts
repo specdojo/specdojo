@@ -150,18 +150,13 @@ const getBaseFromLink = (link?: string): string => {
   return clean.split('/').pop() ?? ''
 }
 
-// "xxx-" を削除（xxx は英小文字）
-const stripLeadingXxxDash = (label: string): string => {
-  return label.replace(/^[a-z]+-/, '')
-}
-
 // 判定：README / *rules / *instruction
 const isReadme = (item: SidebarItem): boolean => {
   return getBaseFromLink(item.link).toLowerCase() === 'readme'
 }
 
-const isRules = (item: SidebarItem): boolean => {
-  return getBaseFromLink(item.link).toLowerCase().endsWith('rules')
+const isRulebook = (item: SidebarItem): boolean => {
+  return getBaseFromLink(item.link).toLowerCase().endsWith('rulebook')
 }
 
 const isInstruction = (item: SidebarItem): boolean => {
@@ -180,9 +175,9 @@ const isAlreadyPrefixedByAnyLocale = (path: string): boolean => {
 // 3) その他：先頭 xxx- を削除した名前でファイル名順
 const sortKey = (item: SidebarItem): { bucket: number; name: string } => {
   if (isReadme(item)) return { bucket: 0, name: '' }
-  if (isRules(item)) return { bucket: 1, name: getBaseFromLink(item.link).toLowerCase() }
+  if (isRulebook(item)) return { bucket: 1, name: getBaseFromLink(item.link).toLowerCase() }
   if (isInstruction(item)) return { bucket: 2, name: getBaseFromLink(item.link).toLowerCase() }
-  return { bucket: 3, name: stripLeadingXxxDash(getBaseFromLink(item.link)).toLowerCase() }
+  return { bucket: 3, name: getBaseFromLink(item.link).toLowerCase() }
 }
 
 const normalizeAndPrefixLink = (link: string, locale: Locale): string => {
@@ -217,17 +212,6 @@ const transformSidebar = (items: SidebarItem[], locale: Locale): SidebarItem[] =
 
       // 子も同じルールで処理
       if (next.items) next.items = transformSidebar(next.items, locale)
-
-      // 表示テキストの先頭 xxx- を削除（README も rules も含めて削除してOKならこのまま）
-      if (
-        typeof next.text === 'string' &&
-        next.text.trim().length > 0 &&
-        !isReadme(next) &&
-        !isRules(next) &&
-        !isInstruction(next)
-      ) {
-        next.text = stripLeadingXxxDash(next.text)
-      }
 
       return next
     })
