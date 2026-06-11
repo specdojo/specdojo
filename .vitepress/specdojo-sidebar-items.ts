@@ -1,459 +1,431 @@
+type SidebarItem = {
+  text: string
+  link?: string
+  collapsed?: boolean
+  items?: SidebarItem[]
+}
+
+const specdojoLink = (dir: string, id: string) => `/ja/specdojo/${dir}/${id}`
+const guide = (text: string, id: string): SidebarItem => ({
+  text,
+  link: specdojoLink('guides', id),
+})
+const standard = (text: string, id: string): SidebarItem => ({
+  text,
+  link: specdojoLink('standards', id),
+})
+const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink('rulebooks', `${id}-rulebook`),
+  ...(items ? { collapsed: true, items } : {}),
+})
+const instruction = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink('instructions', `${id}-instruction`),
+  ...(items ? { collapsed: true, items } : {}),
+})
+const group = (text: string, items: SidebarItem[], collapsed = true): SidebarItem => ({
+  text,
+  collapsed,
+  items,
+})
+
+const projectDefinitionRulebooks = [
+  rulebook('プロジェクト概要', 'prj-overview'),
+  rulebook('ステークホルダー登録簿', 'prj-stakeholder-register'),
+  rulebook('プロジェクト憲章', 'prj-charter'),
+  rulebook('プロジェクトスコープ', 'prj-scope'),
+  rulebook('成功基準と受入条件', 'prj-success-criteria-and-acceptance-criteria'),
+  rulebook('プロジェクト課題と解決アプローチ', 'prj-issues-and-approach'),
+  rulebook('前提・制約・依存関係', 'prj-assumptions-constraints-dependencies'),
+  rulebook('代替案の比較', 'prj-comparison-of-alternatives'),
+]
+
+const projectManagementRulebooks = [
+  group('成果物カタログ', [
+    rulebook('成果物カタログの索引', 'dct-index'),
+    rulebook('成果物カタログ', 'dct'),
+  ]),
+  group('管理計画', [
+    rulebook('プロジェクト管理計画', 'pm-plan'),
+    rulebook('コミュニケーション計画', 'pm-communication-plan'),
+    rulebook('品質管理計画', 'pm-quality-management-plan'),
+  ]),
+  group('組織体制', [
+    rulebook('組織とロールの定義', 'pm-organization'),
+    rulebook('ロール定義', 'pm-roles'),
+    rulebook('メンバー定義', 'pm-members'),
+    rulebook('組織体制とRACI', 'pm-raci'),
+  ]),
+  group('管理台帳・管理ビュー', [
+    rulebook('プロジェクト登録簿', 'pjr-index'),
+    rulebook('リスク登録簿', 'pm-risk-register'),
+    rulebook('課題ログ', 'pm-issue-log'),
+    rulebook('変更要求ログ', 'pm-change-request-log'),
+    rulebook('意思決定ログ', 'dec'),
+  ]),
+  rulebook('スケジュール', 'sch'),
+  rulebook('進捗報告', 'pr'),
+  rulebook('議事録', 'mm'),
+]
+
+const businessSpecificationRulebooks = [
+  rulebook('概念データフロー図', 'cdfd', [rulebook('図の記法ルール', 'cdfd-mermaid')]),
+  group('データモデル', [
+    rulebook('業務データ辞書', 'bdd'),
+    rulebook('概念データストア定義', 'cdsd'),
+    rulebook('保管場所定義', 'sld'),
+    rulebook('ステータス定義', 'stsd'),
+    rulebook('分類定義', 'cld'),
+    rulebook('概念クラス図', 'ccd-mermaid'),
+    rulebook('概念状態遷移図', 'cstd', [rulebook('図の記法ルール', 'cstd-mermaid')]),
+  ]),
+  group('業務モデル', [
+    rulebook('業務プロセス仕様', 'bps'),
+    rulebook('ビジネスルール', 'br'),
+    rulebook('業務イベント一覧', 'bes-index'),
+    rulebook('業務イベント仕様', 'bes'),
+  ]),
+  group('インターフェースモデル', [rulebook('画面仕様', 'uis'), rulebook('帳票仕様', 'bds')]),
+  group('共通', [
+    rulebook('システム化機能一覧', 'sf-index'),
+    rulebook('システム化機能', 'sf'),
+    rulebook('用語集', 'gl'),
+  ]),
+]
+
+const externalIfRulebooks = [
+  rulebook('外部システムI/F一覧', 'ifx-index', [rulebook('外部システムIF一覧（YAML）', 'ifx')]),
+  rulebook('外部API仕様', 'ifx-api'),
+  rulebook('外部ファイル仕様', 'ifx-file'),
+  rulebook('外部メッセージ仕様', 'ifx-msg'),
+]
+
+const architectureRulebooks = [
+  group('C4', [
+    rulebook('コンテキスト図', 'cxd', [rulebook('図の記法ルール', 'cxd-mermaid')]),
+    rulebook('コンテナ図', 'cnd', [rulebook('図の記法ルール', 'cnd-mermaid')]),
+    rulebook('コンポーネント図', 'cpd', [rulebook('図の記法ルール', 'cpd-mermaid')]),
+  ]),
+  group('インフラ・技術選定', [
+    rulebook('インフラ構成図', 'ifd-mermaid'),
+    rulebook('技術スタック一覧', 'tsd-index'),
+    rulebook('技術スタック', 'tsd'),
+  ]),
+]
+
+const systemDesignRulebooks = [
+  rulebook('システム設計 全体構成', 'sysd-index'),
+  rulebook('重要フロー', 'sysd-critical-flows'),
+  rulebook('横断ルール', 'sysd-cross-cutting-policy'),
+]
+
+const nonFunctionalRequirementRulebooks = [
+  rulebook('非機能要件 全体構成', 'nfr-index'),
+  rulebook('信頼性', 'nfr-reliability'),
+  rulebook('可用性', 'nfr-availability'),
+  rulebook('保守性', 'nfr-maintainability'),
+  rulebook('完全性', 'nfr-integrity'),
+  rulebook('機密性・安全性', 'nfr-security-safety'),
+  rulebook('性能', 'nfr-performance'),
+  rulebook('運用', 'nfr-operations'),
+  rulebook('操作性', 'nfr-usability'),
+]
+
+const testingRulebooks = [
+  rulebook('テスト戦略・方針', 'tsp-index'),
+  group('単体テスト', [
+    rulebook('単体テストカタログ 概要', 'utc-index'),
+    rulebook('単体テストカタログ 対象別', 'utc'),
+  ]),
+  group('内部結合テスト', [
+    rulebook('内部結合テストカタログ 概要', 'itc-index'),
+    rulebook('内部結合テストカタログ 対象別', 'itc'),
+  ]),
+  group('外部結合テスト', [
+    rulebook('外部結合テストカタログ 概要', 'etc-index'),
+    rulebook('外部結合テストカタログ 対象別', 'etc'),
+  ]),
+  group('総合テスト', [
+    rulebook('総合テストカタログ 概要', 'stc-index'),
+    rulebook('総合テストカタログ 対象別', 'stc'),
+  ]),
+  group('受入テスト', [
+    rulebook('受入テストカタログ 概要', 'atc-index'),
+    rulebook('受入テストカタログ 対象別', 'atc'),
+  ]),
+]
+
+const migrationRulebooks = [
+  rulebook('移行計画', 'mip-index'),
+  rulebook('データ移行設計 全体構成', 'dmd-index'),
+  rulebook('データ移行設計', 'dmd'),
+  rulebook('移行テスト計画', 'mtp'),
+  rulebook('カットオーバー計画 全体構成', 'cop-index'),
+  rulebook('カットオーバー計画', 'cop'),
+  rulebook('運用切替計画 全体構成', 'otp-index'),
+  rulebook('運用切替計画', 'otp'),
+]
+
+const operationsRulebooks = [
+  rulebook('運用方針・設計 全体構成', 'opd-index'),
+  rulebook('運用方針・設計', 'opd'),
+  rulebook('運用手順 全体構成', 'opr-index'),
+  rulebook('運用手順', 'opr'),
+]
+
+const productChangeRulebooks = [
+  group('影響調査', [
+    rulebook('業務影響', 'imp-business'),
+    rulebook('データ影響', 'imp-data'),
+    rulebook('インターフェース影響', 'imp-interface'),
+    rulebook('テスト影響', 'imp-test'),
+    rulebook('運用影響', 'imp-operations'),
+  ]),
+  group('トレーサビリティ', [
+    rulebook('要求と仕様のトレース', 'trc-requirements-to-specs'),
+    rulebook('要求とテストのトレース', 'trc-requirements-to-tests'),
+  ]),
+  group('移行', migrationRulebooks),
+]
+
+const projectDefinitionInstructions = [
+  instruction('ステークホルダー登録簿', 'prj-stakeholder-register'),
+  instruction('プロジェクト憲章', 'prj-charter'),
+  instruction('プロジェクトスコープ', 'prj-scope'),
+  instruction('成功基準と受入条件', 'prj-success-criteria-and-acceptance-criteria'),
+  instruction('プロジェクト課題と解決アプローチ', 'prj-issues-and-approach'),
+  instruction('前提・制約・依存関係', 'prj-assumptions-constraints-dependencies'),
+  instruction('代替案の比較', 'prj-comparison-of-alternatives'),
+]
+
+const projectManagementInstructions = [
+  group('成果物カタログ', [
+    instruction('成果物カタログの索引', 'dct-index'),
+    instruction('成果物カタログ', 'dct'),
+  ]),
+  group('管理計画', [
+    instruction('プロジェクト管理計画', 'pm-plan'),
+    instruction('コミュニケーション計画', 'pm-communication-plan'),
+    instruction('品質管理計画', 'pm-quality-management-plan'),
+  ]),
+  group('組織体制', [
+    instruction('組織とロールの定義', 'pm-organization'),
+    instruction('ロール定義', 'pm-roles'),
+    instruction('メンバー定義', 'pm-members'),
+    instruction('組織体制とRACI', 'pm-raci'),
+  ]),
+  group('管理台帳・管理ビュー', [
+    instruction('リスク登録簿', 'pm-risk-register'),
+    instruction('課題ログ', 'pm-issue-log'),
+    instruction('変更要求ログ', 'pm-change-request-log'),
+    instruction('意思決定ログ', 'dec'),
+  ]),
+  instruction('スケジュール', 'sch'),
+  instruction('進捗報告', 'pr'),
+  instruction('議事録', 'mm'),
+]
+
+const businessSpecificationInstructions = [
+  instruction('概念データフロー図', 'cdfd', [instruction('図の記法', 'cdfd-mermaid')]),
+  group('データモデル', [
+    instruction('業務データ辞書', 'bdd'),
+    instruction('概念データストア定義', 'cdsd'),
+    instruction('保管場所定義', 'sld'),
+    instruction('ステータス定義', 'stsd'),
+    instruction('分類定義', 'cld'),
+    instruction('概念クラス図', 'ccd-mermaid'),
+    instruction('概念状態遷移図', 'cstd', [instruction('図の記法', 'cstd-mermaid')]),
+  ]),
+  group('業務モデル', [
+    instruction('業務プロセス仕様', 'bps'),
+    instruction('ビジネスルール', 'br'),
+    instruction('業務イベント一覧', 'bes-index'),
+    instruction('業務イベント仕様', 'bes'),
+  ]),
+  group('インターフェースモデル', [instruction('画面仕様', 'uis'), instruction('帳票仕様', 'bds')]),
+  group('共通', [
+    instruction('システム化機能一覧', 'sf-index'),
+    instruction('システム化機能', 'sf'),
+    instruction('用語集', 'gl'),
+  ]),
+]
+
+const externalIfInstructions = [
+  instruction('外部システムI/F一覧', 'ifx-index', [
+    instruction('外部システムIF一覧（YAML）', 'ifx'),
+  ]),
+  instruction('外部API仕様', 'ifx-api'),
+  instruction('外部ファイル仕様', 'ifx-file'),
+  instruction('外部メッセージ仕様', 'ifx-msg'),
+]
+
+const architectureInstructions = [
+  group('C4', [
+    instruction('コンテキスト図', 'cxd', [instruction('図の記法', 'cxd-mermaid')]),
+    instruction('コンテナ図', 'cnd', [instruction('図の記法', 'cnd-mermaid')]),
+    instruction('コンポーネント図', 'cpd', [instruction('図の記法', 'cpd-mermaid')]),
+  ]),
+  group('インフラ・技術選定', [
+    instruction('インフラ構成図', 'ifd-mermaid'),
+    instruction('技術スタック一覧', 'tsd-index'),
+    instruction('技術スタック', 'tsd'),
+  ]),
+]
+
+const systemDesignInstructions = [
+  instruction('システム設計 全体構成', 'sysd-index'),
+  instruction('重要フロー', 'sysd-critical-flows'),
+  instruction('横断ルール', 'sysd-cross-cutting-policy'),
+]
+
+const nonFunctionalRequirementInstructions = [
+  instruction('非機能要件 全体構成', 'nfr-index'),
+  instruction('信頼性', 'nfr-reliability'),
+  instruction('可用性', 'nfr-availability'),
+  instruction('保守性', 'nfr-maintainability'),
+  instruction('完全性', 'nfr-integrity'),
+  instruction('機密性・安全性', 'nfr-security-safety'),
+  instruction('性能', 'nfr-performance'),
+  instruction('運用', 'nfr-operations'),
+  instruction('操作性', 'nfr-usability'),
+]
+
+const testingInstructions = [
+  instruction('テスト戦略・方針', 'tsp-index'),
+  group('単体テスト', [
+    instruction('単体テストカタログ 概要', 'utc-index'),
+    instruction('単体テストカタログ 対象別', 'utc'),
+  ]),
+  group('内部結合テスト', [
+    instruction('内部結合テストカタログ 概要', 'itc-index'),
+    instruction('内部結合テストカタログ 対象別', 'itc'),
+  ]),
+  group('外部結合テスト', [
+    instruction('外部結合テストカタログ 概要', 'etc-index'),
+    instruction('外部結合テストカタログ 対象別', 'etc'),
+  ]),
+  group('総合テスト', [
+    instruction('総合テストカタログ 概要', 'stc-index'),
+    instruction('総合テストカタログ 対象別', 'stc'),
+  ]),
+  group('受入テスト', [
+    instruction('受入テストカタログ 概要', 'atc-index'),
+    instruction('受入テストカタログ 対象別', 'atc'),
+  ]),
+]
+
+const migrationInstructions = [
+  instruction('移行計画', 'mip-index'),
+  instruction('データ移行設計 全体構成', 'dmd-index'),
+  instruction('データ移行設計', 'dmd'),
+  instruction('移行テスト計画', 'mtp'),
+  instruction('カットオーバー計画 全体構成', 'cop-index'),
+  instruction('カットオーバー計画', 'cop'),
+  instruction('運用切替計画 全体構成', 'otp-index'),
+  instruction('運用切替計画', 'otp'),
+]
+
+const operationsInstructions = [
+  instruction('運用方針・設計 全体構成', 'opd-index'),
+  instruction('運用方針・設計', 'opd'),
+  instruction('運用手順 全体構成', 'opr-index'),
+  instruction('運用手順', 'opr'),
+]
+
+const productChangeInstructions = [
+  group('影響調査', [
+    instruction('業務影響', 'imp-business'),
+    instruction('データ影響', 'imp-data'),
+    instruction('インターフェース影響', 'imp-interface'),
+    instruction('テスト影響', 'imp-test'),
+    instruction('運用影響', 'imp-operations'),
+  ]),
+  group('トレーサビリティ', [
+    instruction('要求と仕様のトレース', 'trc-requirements-to-specs'),
+    instruction('要求とテストのトレース', 'trc-requirements-to-tests'),
+  ]),
+  group('移行', migrationInstructions),
+]
+
 export const specdojoSidebarItems = [
   {
     text: 'ガイドライン',
     collapsed: false,
     items: [
-      { text: 'ドキュメントの構成', link: '/ja/specdojo/guides/docs-structure-guide' },
-      { text: 'ドキュメントのフェーズ概要', link: '/ja/specdojo/guides/docs-phases-overview' },
-      { text: 'ドキュメントの内容', link: '/ja/specdojo/guides/docs-contents-guide' },
-      { text: 'ドキュメントの書き方', link: '/ja/specdojo/guides/docs-editing-guide' },
-      {
-        text: 'プロジェクトマネジメント',
-        collapsed: false,
-        items: [
-          {
-            text: 'プロジェクトドキュメント',
-            link: '/ja/specdojo/guides/specdojo-project-docs-guide',
-          },
-          { text: 'WBS設計', link: '/ja/specdojo/guides/specdojo-wbs-design-guide' },
-          {
-            text: 'スケジュールと実行',
-            link: '/ja/specdojo/guides/specdojo-schedule-and-exec-guide',
-          },
-          {
-            text: '定義からタスクの生成アルゴリズム',
-            link: '/ja/specdojo/guides/specdojo-definition-to-task-algorithm-guide',
-          },
+      guide('ドキュメントの構成', 'docs-structure-guide'),
+      guide('ドキュメントのフェーズ概要', 'docs-phases-overview'),
+      guide('ドキュメントの内容', 'docs-contents-guide'),
+      guide('ドキュメントの書き方', 'docs-editing-guide'),
+      guide('ドキュメンテーションポリシー', 'specdojo-documentation-policy-guide'),
+      guide('参考資料の扱い', 'specdojo-reference-materials-guide'),
+      guide('コマンド利用', 'specdojo-command-usage-guide'),
+      guide('レビュー', 'specdojo-review-guide'),
+      group(
+        'プロジェクトマネジメント',
+        [
+          guide('スケジュールと実行', 'specdojo-schedule-and-exec-guide'),
+          guide('成果物からスケジュールへ', 'specdojo-deliverables-to-schedule-guide'),
+          guide('実行戦略', 'specdojo-exec-strategy-guide'),
         ],
-      },
+        false
+      ),
+    ],
+  },
+  {
+    text: '標準',
+    collapsed: true,
+    items: [
+      standard('ドキュメントID・ファイル命名', 'id-and-file-naming-standard'),
+      standard('ドキュメントメタ情報', 'document-metadata-standard'),
+      standard('成果物メタ情報', 'deliverable-metadata-standard'),
+      standard('ルールブックメタ情報', 'rulebook-metadata-standard'),
+      standard('ルールブック構造', 'rulebook-structure-standard'),
+      standard('指示テンプレートメタ情報', 'instruction-metadata-standard'),
+      standard('人・組織定義', 'people-and-organization-definition-standard'),
+      standard('テスト文書スコープ', 'test-document-scope-standard'),
     ],
   },
   {
     text: 'ルール',
+    collapsed: true,
     items: [
-      {
-        text: '共通',
-        collapsed: true,
-        items: [
-          {
-            text: 'ドキュメントID命名ルール',
-            link: '/ja/specdojo/rulebooks/meta-id-and-file-naming-rulebook',
-          },
-          {
-            text: 'メタ情報記述ルール',
-            link: '/ja/specdojo/rulebooks/meta-document-metadata-rulebook',
-          },
-        ],
-      },
-      {
-        text: 'プロジェクト',
-        collapsed: true,
-        items: [
-          {
-            text: 'プロジェクト概要',
-            link: '/ja/specdojo/rulebooks/prj-overview-rulebook',
-          },
-          {
-            text: 'プロジェクトスコープ',
-            link: '/ja/specdojo/rulebooks/prj-scope-rulebook',
-          },
-          {
-            text: 'プロジェクト課題と解決アプローチ',
-            link: '/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook',
-          },
-        ],
-      },
-      {
-        text: '業務仕様',
-        collapsed: true,
-        items: [
-          {
-            text: '概念データフロー図',
-            link: '/ja/specdojo/rulebooks/cdfd-rulebook',
-            collapsed: true,
-            items: [
-              { text: '図の記法ルール', link: '/ja/specdojo/rulebooks/cdfd-mermaid-rulebook' },
-            ],
-          },
-          {
-            text: 'データモデル',
-            collapsed: true,
-            items: [
-              { text: '業務データ辞書', link: '/ja/specdojo/rulebooks/bdd-rulebook' },
-              { text: '概念データストア定義', link: '/ja/specdojo/rulebooks/cdsd-rulebook' },
-              { text: '保管場所定義', link: '/ja/specdojo/rulebooks/sld-rulebook' },
-              { text: 'ステータス定義', link: '/ja/specdojo/rulebooks/stsd-rulebook' },
-              { text: '分類定義', link: '/ja/specdojo/rulebooks/cld-rulebook' },
-              { text: '概念クラス図', link: '/ja/specdojo/rulebooks/ccd-mermaid-rulebook' },
-              { text: '概念状態遷移図', link: '/ja/specdojo/rulebooks/cstd-rulebook' },
-            ],
-          },
-          {
-            text: '業務モデル',
-            collapsed: true,
-            items: [
-              { text: '業務プロセス仕様', link: '/ja/specdojo/rulebooks/bps-rulebook' },
-              { text: 'ビジネスルール', link: '/ja/specdojo/rulebooks/br-rulebook' },
-              { text: '業務イベント一覧', link: '/ja/specdojo/rulebooks/bes-index-rulebook' },
-              { text: '業務イベント仕様', link: '/ja/specdojo/rulebooks/bes-rulebook' },
-            ],
-          },
-          {
-            text: 'インターフェースモデル',
-            collapsed: true,
-            items: [
-              { text: '画面仕様', link: '/ja/specdojo/rulebooks/uis-rulebook' },
-              { text: '帳票仕様', link: '/ja/specdojo/rulebooks/bds-rulebook' },
-            ],
-          },
-          {
-            text: '共通',
-            collapsed: true,
-            items: [
-              { text: 'システム化機能一覧', link: '/ja/specdojo/rulebooks/sf-rulebook' },
-              { text: '用語集', link: '/ja/specdojo/rulebooks/gl-rulebook' },
-            ],
-          },
-        ],
-      },
-      {
-        text: '外部I/F仕様',
-        collapsed: true,
-        items: [
-          { text: '外部システムI/F一覧', link: '/ja/specdojo/rulebooks/ifx-rulebook' },
-          { text: '外部API仕様', link: '/ja/specdojo/rulebooks/ifx-api-rulebook' },
-          { text: '外部ファイル仕様', link: '/ja/specdojo/rulebooks/ifx-file-rulebook' },
-          { text: '外部メッセージ仕様', link: '/ja/specdojo/rulebooks/ifx-msg-rulebook' },
-        ],
-      },
-      {
-        text: 'アーキテクチャ',
-        collapsed: true,
-        items: [
-          {
-            text: 'C4',
-            items: [
-              {
-                text: 'コンテキスト図',
-                link: '/ja/specdojo/rulebooks/cxd-rulebook',
-                collapsed: true,
-                items: [
-                  { text: '図の記法ルール', link: '/ja/specdojo/rulebooks/cxd-mermaid-rulebook' },
-                ],
-              },
-              {
-                text: 'コンテナ図',
-                link: '/ja/specdojo/rulebooks/cnd-rulebook',
-                collapsed: true,
-                items: [
-                  { text: '図の記法ルール', link: '/ja/specdojo/rulebooks/cnd-mermaid-rulebook' },
-                ],
-              },
-              {
-                text: 'コンポーネント図',
-                link: '/ja/specdojo/rulebooks/cpd-rulebook',
-                collapsed: true,
-                items: [
-                  { text: '図の記法ルール', link: '/ja/specdojo/rulebooks/cpd-mermaid-rulebook' },
-                ],
-              },
-            ],
-          },
-          {
-            text: 'インフラ・技術選定',
-            items: [
-              {
-                text: 'インフラ構成図',
-                link: '/ja/specdojo/rulebooks/ifd-mermaid-rulebook',
-                collapsed: true,
-                items: [
-                  { text: '図の記法ルール', link: '/ja/specdojo/rulebooks/ifd-mermaid-rulebook' },
-                ],
-              },
-              { text: '技術スタック一覧', link: '/ja/specdojo/rulebooks/tsd-rulebook' },
-            ],
-          },
-        ],
-      },
-      { text: 'システム設計' },
-      { text: '業務受入条件', link: '/ja/specdojo/rulebooks/bac-rulebook' },
-      { text: '非機能要件', link: '/ja/specdojo/rulebooks/nfr-index-rulebook' },
-      { text: 'システム受入条件', link: '/ja/specdojo/rulebooks/sac-rulebook' },
-      {
-        text: 'テスト',
-        collapsed: true,
-        items: [
-          {
-            text: '各ドキュメントのスコープ',
-            link: '/ja/specdojo/rulebooks/meta-test-document-scope-rulebook',
-          },
-          { text: 'テスト戦略・方針', link: '/ja/specdojo/rulebooks/tsp-index-rulebook' },
-          {
-            text: '単体テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '単体テストカタログ 概要',
-                link: '/ja/specdojo/rulebooks/utc-index-rulebook',
-              },
-              { text: '単体テストカタログ 対象別', link: '/ja/specdojo/rulebooks/utc-rulebook' },
-            ],
-          },
-          {
-            text: '内部結合テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '内部結合テストカタログ 概要',
-                link: '/ja/specdojo/rulebooks/itc-index-rulebook',
-              },
-              {
-                text: '内部結合テストカタログ 対象別',
-                link: '/ja/specdojo/rulebooks/itc-rulebook',
-              },
-            ],
-          },
-          {
-            text: '外部結合テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '外部結合テストカタログ 概要',
-                link: '/ja/specdojo/rulebooks/etc-index-rulebook',
-              },
-              {
-                text: '外部結合テストカタログ 対象別',
-                link: '/ja/specdojo/rulebooks/etc-rulebook',
-              },
-            ],
-          },
-          {
-            text: '総合テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '総合テストカタログ 概要',
-                link: '/ja/specdojo/rulebooks/stc-index-rulebook',
-              },
-              { text: '総合テストカタログ 対象別', link: '/ja/specdojo/rulebooks/stc-rulebook' },
-            ],
-          },
-          {
-            text: '受入テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '受入テストカタログ 概要',
-                link: '/ja/specdojo/rulebooks/atc-index-rulebook',
-              },
-              { text: '受入テストカタログ 対象別', link: '/ja/specdojo/rulebooks/atc-rulebook' },
-            ],
-          },
-        ],
-      },
-      {
-        text: '移行',
-        collapsed: true,
-        items: [
-          { text: '移行計画', link: '/ja/specdojo/rulebooks/mip-index-rulebook' },
-          { text: 'データ移行設計', link: '/ja/specdojo/rulebooks/dmd-rulebook' },
-          { text: '移行テスト計画', link: '/ja/specdojo/rulebooks/mtp-rulebook' },
-          { text: 'カットオーバー計画', link: '/ja/specdojo/rulebooks/cop-rulebook' },
-          { text: '運用切替計画', link: '/ja/specdojo/rulebooks/otp-rulebook' },
-        ],
-      },
-      {
-        text: '運用',
-        collapsed: true,
-        items: [
-          { text: '運用方針・設計', link: '/ja/specdojo/rulebooks/opd-rulebook' },
-          { text: '運用手順', link: '/ja/specdojo/rulebooks/opr-rulebook' },
-        ],
-      },
+      group('プロジェクト', [
+        group('プロジェクト定義', projectDefinitionRulebooks),
+        group('プロジェクトマネジメント', projectManagementRulebooks),
+        group('プロダクト変更', productChangeRulebooks),
+      ]),
+      group('業務仕様', businessSpecificationRulebooks),
+      group('外部I/F仕様', externalIfRulebooks),
+      group('アーキテクチャ', architectureRulebooks),
+      group('システム設計', systemDesignRulebooks),
+      rulebook('業務受入条件', 'bac'),
+      group('非機能要件', nonFunctionalRequirementRulebooks),
+      rulebook('システム受入条件', 'sac'),
+      group('テスト', testingRulebooks),
+      group('移行', migrationRulebooks),
+      group('運用', operationsRulebooks),
     ],
   },
   {
     text: '指示テンプレート',
     collapsed: true,
     items: [
-      { text: 'プロジェクト' },
-      {
-        text: '業務仕様',
-        collapsed: true,
-        items: [
-          { text: '概念データフロー図', link: '/ja/specdojo/instructions/cdfd-instruction' },
-          {
-            text: 'データモデル',
-            collapsed: true,
-            items: [
-              { text: '業務データ辞書', link: '/ja/specdojo/instructions/bdd-instruction' },
-              {
-                text: '概念データストア一覧',
-                link: '/ja/specdojo/instructions/cdsd-instruction',
-              },
-              { text: '保管場所一覧', link: '/ja/specdojo/instructions/sld-instruction' },
-              { text: 'ステータス一覧', link: '/ja/specdojo/instructions/stsd-instruction' },
-              { text: '分類一覧', link: '/ja/specdojo/instructions/cld-instruction' },
-              {
-                text: '概念クラス図',
-                link: '/ja/specdojo/instructions/ccd-mermaid-instruction',
-              },
-              { text: '概念状態遷移図', link: '/ja/specdojo/instructions/cstd-instruction' },
-            ],
-          },
-          {
-            text: '業務モデル',
-            collapsed: true,
-            items: [
-              { text: '業務プロセス仕様', link: '/ja/specdojo/instructions/bps-instruction' },
-              { text: 'ビジネスルール', link: '/ja/specdojo/instructions/br-instruction' },
-              { text: '業務イベント一覧', link: '/ja/specdojo/instructions/bes-index-instruction' },
-              { text: '業務イベント仕様', link: '/ja/specdojo/instructions/bes-instruction' },
-            ],
-          },
-          {
-            text: 'インターフェースモデル',
-            collapsed: true,
-            items: [
-              { text: '画面仕様', link: '/ja/specdojo/instructions/uis-instruction' },
-              { text: '帳票仕様', link: '/ja/specdojo/instructions/bds-instruction' },
-            ],
-          },
-          {
-            text: '共通',
-            collapsed: true,
-            items: [
-              { text: 'システム化機能一覧', link: '/ja/specdojo/instructions/sf-instruction' },
-              { text: '用語集', link: '/ja/specdojo/instructions/gl-instruction' },
-            ],
-          },
-        ],
-      },
-      {
-        text: '外部I/F仕様',
-        collapsed: true,
-        items: [
-          { text: '外部システムI/F一覧', link: '/ja/specdojo/instructions/ifx-instruction' },
-          { text: '外部API仕様', link: '/ja/specdojo/instructions/ifx-api-instruction' },
-          { text: '外部ファイル仕様', link: '/ja/specdojo/instructions/ifx-file-instruction' },
-          { text: '外部メッセージ仕様', link: '/ja/specdojo/instructions/ifx-msg-instruction' },
-        ],
-      },
-      {
-        text: 'アーキテクチャ',
-        collapsed: true,
-        items: [
-          {
-            text: 'C4',
-            items: [
-              { text: 'コンテキスト図', link: '/ja/specdojo/instructions/cxd-instruction' },
-              { text: 'コンテナ図', link: '/ja/specdojo/instructions/cnd-instruction' },
-              { text: 'コンポーネント図', link: '/ja/specdojo/instructions/cpd-instruction' },
-            ],
-          },
-          {
-            text: 'インフラ・技術選定',
-            items: [
-              { text: 'インフラ構成図', link: '/ja/specdojo/instructions/ifd-mermaid-instruction' },
-              { text: '技術スタック一覧', link: '/ja/specdojo/instructions/tsd-instruction' },
-            ],
-          },
-        ],
-      },
-      { text: 'システム設計' },
-      { text: '業務受入条件', link: '/ja/specdojo/instructions/bac-instruction' },
-      { text: '非機能要件', link: '/ja/specdojo/instructions/nfr-index-instruction' },
-      { text: 'システム受入条件', link: '/ja/specdojo/instructions/sac-instruction' },
-      {
-        text: 'テスト',
-        collapsed: true,
-        items: [
-          { text: 'テスト戦略・方針', link: '/ja/specdojo/instructions/tsp-index-instruction' },
-          { text: 'テスト観点・条件' },
-          {
-            text: '単体テスト',
-            collapsed: true,
-            items: [
-              { text: '単体テスト仕様', link: '/ja/specdojo/instructions/utc-index-instruction' },
-              {
-                text: '単体テスト個別仕様',
-                link: '/ja/specdojo/instructions/utc-instruction',
-              },
-              { text: '単体テスト設計' },
-              { text: '単体テスト個別設計' },
-            ],
-          },
-          {
-            text: '内部結合テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '内部結合テスト仕様',
-                link: '/ja/specdojo/instructions/itc-index-instruction',
-              },
-              {
-                text: '内部結合テスト個別仕様',
-                link: '/ja/specdojo/instructions/itc-instruction',
-              },
-              { text: '内部結合テスト設計' },
-              { text: '内部結合テスト個別設計' },
-            ],
-          },
-          {
-            text: '外部結合テスト',
-            collapsed: true,
-            items: [
-              {
-                text: '外部結合テスト仕様',
-                link: '/ja/specdojo/instructions/etc-index-instruction',
-              },
-              {
-                text: '外部結合テスト個別仕様',
-                link: '/ja/specdojo/instructions/etc-instruction',
-              },
-              {
-                text: '外部結合テスト設計',
-                link: '/ja/specdojo/instructions/etd-index-instruction',
-              },
-              {
-                text: '外部結合テスト個別設計',
-                link: '/ja/specdojo/instructions/etd-instruction',
-              },
-            ],
-          },
-          {
-            text: '総合テスト',
-            collapsed: true,
-            items: [
-              { text: '総合テスト仕様', link: '/ja/specdojo/instructions/stc-index-instruction' },
-              {
-                text: '総合テスト個別仕様',
-                link: '/ja/specdojo/instructions/stc-instruction',
-              },
-              { text: '総合テスト設計' },
-              { text: '総合テスト個別設計' },
-            ],
-          },
-          {
-            text: '受入テスト',
-            collapsed: true,
-            items: [
-              { text: '受入テスト仕様', link: '/ja/specdojo/instructions/ats-index-instruction' },
-              {
-                text: '受入テスト個別仕様',
-                link: '/ja/specdojo/instructions/ats-instruction',
-              },
-              { text: '受入テスト設計', link: '/ja/specdojo/instructions/atd-index-instruction' },
-              {
-                text: '受入テスト個別設計',
-                link: '/ja/specdojo/instructions/atd-instruction',
-              },
-            ],
-          },
-        ],
-      },
-      { text: '移行' },
-      { text: '運用' },
+      group('プロジェクト', [
+        group('プロジェクト定義', projectDefinitionInstructions),
+        group('プロジェクトマネジメント', projectManagementInstructions),
+        group('プロダクト変更', productChangeInstructions),
+      ]),
+      group('業務仕様', businessSpecificationInstructions),
+      group('外部I/F仕様', externalIfInstructions),
+      group('アーキテクチャ', architectureInstructions),
+      group('システム設計', systemDesignInstructions),
+      instruction('業務受入条件', 'bac'),
+      group('非機能要件', nonFunctionalRequirementInstructions),
+      instruction('システム受入条件', 'sac'),
+      group('テスト', testingInstructions),
+      group('移行', migrationInstructions),
+      group('運用', operationsInstructions),
     ],
   },
 ]

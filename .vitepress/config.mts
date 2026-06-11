@@ -194,6 +194,105 @@ const normalizeAndPrefixLink = (link: string, locale: Locale): string => {
   return hash ? `${prefixedPath}#${hash}` : prefixedPath
 }
 
+const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
+  projects: 'プロジェクト',
+  '010-deliverables-catalog': '成果物カタログ',
+  '020-project-definition': 'プロジェクト定義',
+  '030-project-management': 'プロジェクトマネジメント',
+  '040-product-change': 'プロダクト変更',
+  '010-management-plan': '管理計画',
+  '020-organization': '組織体制',
+  controls: '管理台帳・管理ビュー',
+  'project-register': 'プロジェクト登録簿',
+  reporting: 'レポート',
+  'progress-reports': '進捗報告',
+  'meeting-minutes': '議事録',
+  execution: '実行管理',
+  exec: '実行ワークスペース',
+  events: 'イベントログ',
+  plans: '実行プラン',
+  results: '実行結果',
+  generated: '生成物',
+  reviews: 'レビュー',
+  schedule: 'スケジュール',
+  '010-as-is': '現状定義',
+  '010-business-specifications': '業務仕様',
+  '020-impact-analysis': '影響調査',
+  '030-traceability': 'トレーサビリティ',
+  '040-migration': '移行',
+}
+
+const PROJECTS_FILE_TEXT: Record<string, string> = {
+  index: '一覧',
+  cpm: 'クリティカルパス分析',
+  'critical-path': 'クリティカルパス',
+  ready: '着手可能タスク',
+  'schedule-diff': 'スケジュール差分',
+  'task-catalog': 'タスクカタログ',
+  timeline: 'タイムライン',
+}
+
+const stripMarkdownFrontmatter = (content: string): string =>
+  content.startsWith('---\n') ? content.replace(/^---\n[\s\S]*?\n---\n?/, '') : content
+
+const readFrontmatterString = (content: string, key: string): string | undefined => {
+  const match = content.match(/^---\n([\s\S]*?)\n---/)
+  if (!match) return undefined
+
+  const line = match[1].match(new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm'))?.[1]
+  if (!line || line.startsWith('[') || line.startsWith('{')) return undefined
+
+  return line.replace(/^['"]|['"]$/g, '').trim() || undefined
+}
+
+const readMarkdownTitle = (content: string): string | undefined => {
+  const body = stripMarkdownFrontmatter(content)
+  return body.match(/^#\s+(.+?)\s*$/m)?.[1]?.trim()
+}
+
+const docsPathFromLink = (link: string): string | undefined => {
+  const clean = link.split('#')[0].replace(/^\/+/, '').replace(/\/+$/, '')
+  if (!clean) return undefined
+
+  return path.join(WORKSPACE_ROOT, 'docs', `${clean}.md`)
+}
+
+const readProjectsMenuTextFromMarkdown = (link: string): string | undefined => {
+  const filePath = docsPathFromLink(link)
+  if (!filePath || !existsSync(filePath)) return undefined
+
+  const content = readFileSync(filePath, 'utf8')
+  const frontmatterTitle = readFrontmatterString(content, 'title')
+  if (frontmatterTitle) return frontmatterTitle
+
+  const frontmatterName = readFrontmatterString(content, 'name')
+  if (frontmatterName) {
+    const type = readFrontmatterString(content, 'type')
+    if (type === 'exec-plan') return `実行計画: ${frontmatterName}`
+    if (type === 'exec-result') return `実行結果: ${frontmatterName}`
+    return frontmatterName
+  }
+
+  return readMarkdownTitle(content)
+}
+
+const isProjectsLink = (link: string, locale: Locale): boolean => {
+  return link === `/${locale}/projects` || link.startsWith(`/${locale}/projects/`)
+}
+
+const toProjectsMenuText = (item: SidebarItem, locale: Locale): string | undefined => {
+  if (item.link) {
+    const markdownTitle = readProjectsMenuTextFromMarkdown(item.link)
+    if (markdownTitle) return markdownTitle
+
+    const base = getBaseFromLink(item.link)
+    return PROJECTS_FILE_TEXT[base] ?? PROJECTS_SEGMENT_TEXT[base]
+  }
+
+  const text = item.text ?? ''
+  return PROJECTS_SEGMENT_TEXT[text]
+}
+
 const isHandbookTop = (item: SidebarItem): boolean => {
   const link = item.link ?? ''
   const text = (item.text ?? '').toString().toLowerCase()
@@ -201,7 +300,11 @@ const isHandbookTop = (item: SidebarItem): boolean => {
 }
 
 // 再帰的に: 表示名整形（xxx-削除）、並び替え
-const transformSidebar = (items: SidebarItem[], locale: Locale): SidebarItem[] => {
+const transformSidebar = (
+  items: SidebarItem[],
+  locale: Locale,
+  parentIsProjects = false
+): SidebarItem[] => {
   const transformed = items
     .filter(it => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
     .map(it => {
@@ -210,8 +313,17 @@ const transformSidebar = (items: SidebarItem[], locale: Locale): SidebarItem[] =
       // prev/next 解決
       if (next.link) next.link = normalizeAndPrefixLink(next.link, locale)
 
+      const currentIsProjects =
+        parentIsProjects ||
+        (next.text ?? '').toString() === 'projects' ||
+        Boolean(next.link && isProjectsLink(next.link, locale))
+      if (currentIsProjects) {
+        const text = toProjectsMenuText(next, locale)
+        if (text) next.text = text
+      }
+
       // 子も同じルールで処理
-      if (next.items) next.items = transformSidebar(next.items, locale)
+      if (next.items) next.items = transformSidebar(next.items, locale, currentIsProjects)
 
       return next
     })
