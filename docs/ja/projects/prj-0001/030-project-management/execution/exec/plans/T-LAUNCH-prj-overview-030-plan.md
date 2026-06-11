@@ -23,8 +23,8 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 ## 2. 対象成果物
 
 - path: `/docs/ja/projects/prj-0001/020-project-definition/prj-overview.md`
-- rulebook: `prj-overview-rulebook`
-- result: `exec/results/T-LAUNCH-prj-overview-030-result.md`
+- rulebook: `/docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`
+- result: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-030-result.md`
 
 ## 3. レビュー観点
 

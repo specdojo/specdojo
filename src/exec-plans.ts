@@ -174,8 +174,11 @@ function deliverablePath(deliverable: DeliverableInfo | null): string {
   return deliverable?.resolvedPath ?? MISSING
 }
 
+// dct の rulebook フィールドは ID（例: prj-overview-rulebook）。docs-structure-guide の
+// 規約に従い、ファイル未作成でも一意に定まる固定パスへ展開する。
 function rulebookRef(deliverable: DeliverableInfo | null): string {
-  return deliverable?.deliverable.rulebook ?? MISSING
+  const rulebook = deliverable?.deliverable.rulebook
+  return rulebook ? `/docs/ja/specdojo/rulebooks/${rulebook}.md` : MISSING
 }
 
 function doneCriteriaItems(criteria: CriteriaItem[]): string {
@@ -193,7 +196,10 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
   return lines.join('\n')
 }
 
-function reviewViewpointDetails(criteria: CriteriaItem[], vpMap: Map<string, ReviewViewpoint>): string {
+function reviewViewpointDetails(
+  criteria: CriteriaItem[],
+  vpMap: Map<string, ReviewViewpoint>
+): string {
   if (criteria.length === 0) return MISSING
   const lines: string[] = []
   criteria.forEach((c, i) => {
@@ -357,7 +363,10 @@ export function generatePlans(
 
   if (existsSync(plansDir)) {
     for (const entry of readdirSync(plansDir)) {
-      if (entry === 'index.md') { rmSync(join(plansDir, entry)); continue }
+      if (entry === 'index.md') {
+        rmSync(join(plansDir, entry))
+        continue
+      }
       const taskId = entry.replace(/-plan\.md$/, '')
       if (activeTaskIds.has(taskId)) continue
       rmSync(join(plansDir, entry), { recursive: true, force: true })
@@ -373,7 +382,7 @@ export function generatePlans(
     const mode: TaskMode = task.mode ?? 'edit'
     const localId = task.local_id
     const deliverable = localId && catalogPath ? findDeliverableInfo(catalogPath, localId) : null
-    const resultRef = `exec/results/${task.id}-result.md`
+    const resultRef = `${repoRelativePath(executionPath)}/exec/results/${task.id}-result.md`
     const outPath = join(plansDir, `${task.id}-plan.md`)
     const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
     const planTask: PlanTask = { ...task, mode }

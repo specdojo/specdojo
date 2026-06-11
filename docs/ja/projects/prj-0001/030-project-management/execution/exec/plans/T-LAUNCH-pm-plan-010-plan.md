@@ -21,7 +21,7 @@ owner: PM
 ## 2. 対象成果物
 
 - path: `/docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-plan.md`
-- result: `exec/results/T-LAUNCH-pm-plan-010-result.md`
+- result: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-plan-010-result.md`
 
 **done_criteria:**
 
