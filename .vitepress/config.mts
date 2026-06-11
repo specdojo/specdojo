@@ -285,6 +285,40 @@ export default defineConfig({
     'docs/en/:rest*': 'en/:rest*',
   },
 
+  themeConfig: {
+    // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）
+    search: {
+      provider: 'local',
+      options: {
+        locales: {
+          ja: {
+            translations: {
+              button: {
+                buttonText: '検索',
+                buttonAriaLabel: '検索',
+              },
+              modal: {
+                displayDetails: '詳細を表示',
+                resetButtonTitle: '検索条件をリセット',
+                backButtonTitle: '検索を閉じる',
+                noResultsText: '検索結果が見つかりませんでした',
+                footer: {
+                  selectText: '選択',
+                  selectKeyAriaLabel: 'enter',
+                  navigateText: '移動',
+                  navigateUpKeyAriaLabel: '上矢印',
+                  navigateDownKeyAriaLabel: '下矢印',
+                  closeText: '閉じる',
+                  closeKeyAriaLabel: 'esc',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   locales: {
     ja: {
       label: '日本語',
