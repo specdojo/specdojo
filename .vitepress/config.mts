@@ -310,6 +310,14 @@ export default defineConfig({
       // 言語メニューで押したときのリンク先（日本語トップ）
       link: '/ja/',
       themeConfig: {
+        nav: [
+          { text: 'ホーム', link: '/ja/' },
+          { text: 'SpecDojo', link: '/ja/specdojo/guides/docs-phases-overview' },
+          {
+            text: 'プロジェクト',
+            link: '/ja/projects/prj-0001/020-project-definition/prj-overview',
+          },
+        ],
         sidebar: [specdojoItems.ja, ...sidebarJaAuto],
         langMenuLabel: '言語',
       },
@@ -319,6 +327,7 @@ export default defineConfig({
       lang: 'en',
       link: '/en/',
       themeConfig: {
+        nav: [{ text: 'Home', link: '/en/' }],
         sidebar: sidebarEnAuto,
         langMenuLabel: 'Language',
       },
