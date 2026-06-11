@@ -83,4 +83,13 @@
   html.vp-sidebar-collapsed .VPNavBarTitle .title > span {
     display: none;
   }
+
+  /* ▼ サイドバー折りたたみ中、ヘッダー右側（.content）の左パディングは
+     折りたたみ前のサイドバー幅を確保したままになる。
+     スクロール時にこの余白の背景が透過のままだと、本文（左端まで広がる）が
+     ヘッダーの下に隠れず、文字がヘッダーにかかって見えてしまう。
+     ヘッダー全体に背景色を敷き、本文をヘッダーの下に隠す */
+  html.vp-sidebar-collapsed .VPNavBar.has-sidebar:not(.top) {
+    background-color: var(--vp-nav-bg-color);
+  }
 }
