@@ -84,12 +84,3 @@
     display: none;
   }
 }
-
-/* ▼ 目次（右サイドバー）が表示される幅では、ナビバー右側の空き領域（検索・言語・配色切り替え用）を
-   非表示にする。言語切り替え・配色切り替えは AsideExtra.vue として目次上部に移設済み。
-   960px〜1280px の範囲は目次が表示されないため、従来どおりナビバーの Extra メニューを残す */
-@media (min-width: 1280px) {
-  .VPNavBar.has-sidebar .content {
-    display: none;
-  }
-}

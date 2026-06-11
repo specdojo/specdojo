@@ -3,10 +3,7 @@ import { generateSidebar } from 'vitepress-sidebar'
 import * as crypto from 'crypto'
 import { specdojoSidebarItems } from './specdojo-sidebar-items'
 import type { Plugin } from 'vite'
-import {
-  generateMermaidSvgs,
-  generateMermaidSvgsForFile,
-} from '../tools/docs/src/gen-mermaid-svg'
+import { generateMermaidSvgs, generateMermaidSvgsForFile } from '../tools/docs/src/gen-mermaid-svg'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync, readFileSync } from 'node:fs'
@@ -262,8 +259,8 @@ const sidebarJaAuto = makeSidebar('ja')
 const sidebarEnAuto = makeSidebar('en')
 
 export default defineConfig({
-  title: 'SpecDojo Handbook',
-  description: 'Documentation for SpecDojo Handbook',
+  title: 'SpecDojo',
+  description: 'Documentation for SpecDojo',
   base,
 
   // srcDir 省略時は root（リポジトリルート）と同一になる。
@@ -380,7 +377,8 @@ export default defineConfig({
       // [[id]] wikilink → VitePress 内部リンク
       md.inline.ruler.before('link', 'specdojo_wikilink', (state: any, silent: boolean) => {
         const pos = state.pos
-        if (state.src.charCodeAt(pos) !== 0x5B || state.src.charCodeAt(pos + 1) !== 0x5B) return false
+        if (state.src.charCodeAt(pos) !== 0x5b || state.src.charCodeAt(pos + 1) !== 0x5b)
+          return false
 
         const closeIndex = state.src.indexOf(']]', pos + 2)
         if (closeIndex === -1 || closeIndex > state.posMax) return false
@@ -407,7 +405,9 @@ export default defineConfig({
             const currentRelPath = state.env?.relativePath as string | undefined
             let href: string
             if (currentRelPath) {
-              const rel = path.relative(path.dirname(currentRelPath), docsRelTarget).replace(/\\/g, '/')
+              const rel = path
+                .relative(path.dirname(currentRelPath), docsRelTarget)
+                .replace(/\\/g, '/')
               href = rel.startsWith('.') ? rel : './' + rel
             } else {
               href = '/' + docsRelTarget

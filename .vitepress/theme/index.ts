@@ -2,7 +2,6 @@ import DefaultTheme from 'vitepress/theme'
 import type { Router } from 'vitepress'
 import { h } from 'vue'
 import SidebarToggle from './SidebarToggle.vue'
-import AsideExtra from './AsideExtra.vue'
 import './custom.css'
 
 export default {
@@ -10,7 +9,6 @@ export default {
   Layout: () =>
     h(DefaultTheme.Layout, null, {
       'nav-bar-title-after': () => h(SidebarToggle),
-      'aside-top': () => h(AsideExtra),
     }),
   enhanceApp({ router }: { router: Router }) {
     if (typeof window === 'undefined') return
