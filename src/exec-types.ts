@@ -1,8 +1,8 @@
 export type TaskMode = 'edit' | 'review'
 
-export type ApproachMode = 'fully-guided' | 'recipe-guided' | 'freeform'
-
-export type TaskKind = 'deliverable' | 'reference-maintenance'
+// タスクの進め方プロファイル。前3者は成果物作業で参考資料をどの程度参照するかを表し、
+// reference-maintenance は成果物を根拠に参考資料側を見直す進め方（参照の向きが逆転する）。
+export type Approach = 'fully-guided' | 'recipe-guided' | 'freeform' | 'reference-maintenance'
 
 export type Proficiency = 'low' | 'normal' | 'high' | 'expert'
 
@@ -140,8 +140,7 @@ export type ReadyTaskView = {
   owner?: string
   mode?: TaskMode
   execution?: 'agent' | 'human'
-  approach_mode?: ApproachMode
-  task_kind?: TaskKind
+  approach?: Approach
   capabilities?: string[]
   proficiency?: Proficiency
   schedule_file: string
@@ -206,8 +205,7 @@ export type ExecPlanMeta = {
   owner?: string
   on_critical_path?: true
   agent?: string
-  approach_mode?: ApproachMode
-  task_kind?: TaskKind
+  approach?: Approach
   viewpoints_ref?: string
 }
 
@@ -222,6 +220,5 @@ export type ExecResultMeta = {
   started_at: string
   completed_at?: string
   agent?: string
-  approach_mode?: ApproachMode
-  task_kind?: TaskKind
+  approach?: Approach
 }

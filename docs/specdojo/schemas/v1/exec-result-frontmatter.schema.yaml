@@ -74,16 +74,11 @@ properties:
     type: string
     description: "Agent nickname that executed this task."
 
-  approach_mode:
+  approach:
     type: string
-    enum: ["fully-guided", "recipe-guided", "freeform"]
+    enum: ["fully-guided", "recipe-guided", "freeform", "reference-maintenance"]
     description: >
-      How strictly the agent should follow reference materials (rulebook/recipe/sample).
-      Carried from the corresponding plan. Omitted when not declared for this phase.
-
-  task_kind:
-    type: string
-    enum: ["deliverable", "reference-maintenance"]
-    description: >
-      The target kind this task works on.
+      How the task is carried out. The first three values describe how strictly the agent
+      follows reference materials (rulebook/recipe/sample) when working on a deliverable;
+      reference-maintenance improves rulebook/recipe/sample based on deliverables.
       Carried from the corresponding plan. Omitted when not declared for this phase.

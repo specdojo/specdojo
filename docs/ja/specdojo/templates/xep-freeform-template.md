@@ -20,9 +20,7 @@ _DONE_CRITERIA_ITEMS_
 
 ## 3. 進め方
 
-- exec plan frontmatter の `task_kind` を確認する。
-- `task_kind` が `reference-maintenance` の場合は、参照の向きを「成果物 → rulebook / recipe / sample」に切り替えて進める。
-- それ以外の場合は、rulebook / recipe / sample に原則縛られず、対象成果物の実例やプロジェクト文脈を優先する。
+- rulebook / recipe / sample に原則縛られず、対象成果物の実例やプロジェクト文脈を優先する。
 - done_criteria とこの plan のフェーズ説明を満たすことを主な基準にする。
 - 参考資料を使った場合は、使った文書と判断根拠を成果物または result に残す。
 - 参考資料とプロジェクト文脈が矛盾する場合は、プロジェクト文脈を優先し、その理由を記録する。

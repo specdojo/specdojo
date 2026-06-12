@@ -28,10 +28,9 @@ import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
   buildPhaseModeIndex,
-  resolveApproachMode,
+  resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
-  resolveTaskKind,
   resolveTaskMode,
   resolveTaskProficiency,
 } from './exec-strategy.js'
@@ -430,8 +429,7 @@ function runSingleTask(
     planRef,
     agent: actor,
     startedAt,
-    ...(task.approach_mode ? { approachMode: task.approach_mode } : {}),
-    ...(task.task_kind ? { taskKind: task.task_kind } : {}),
+    ...(task.approach ? { approach: task.approach } : {}),
   })
 
   process.stdout.write(`  Running: ${agentCommands[0]}\n`)
@@ -623,9 +621,7 @@ function runManualMode(opts: RunOpts): void {
       ...task,
       mode: task.mode ?? resolveTaskMode(task.local_id, task.id, phaseModeIndex),
       execution: task.execution ?? resolveTaskExecution(task.local_id, task.id, phaseModeIndex),
-      approach_mode:
-        task.approach_mode ?? resolveApproachMode(task.local_id, task.id, phaseModeIndex),
-      task_kind: task.task_kind ?? resolveTaskKind(task.local_id, task.id, phaseModeIndex),
+      approach: task.approach ?? resolveApproach(task.local_id, task.id, phaseModeIndex),
     }
     if (!task.capabilities) {
       const capabilities = resolveTaskCapabilities(task.local_id, task.id, phaseModeIndex)

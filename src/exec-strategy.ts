@@ -1,13 +1,12 @@
 import { listFilesRecursive, readYaml } from './exec-shared.js'
-import type { ApproachMode, Proficiency, TaskKind, TaskMode } from './exec-types.js'
+import type { Approach, Proficiency, TaskMode } from './exec-types.js'
 
 type StrategyPhaseMinimal = {
   id: string
   task_suffix: string
   execution?: 'agent' | 'human'
   mode?: unknown
-  approach_mode?: unknown
-  task_kind?: unknown
+  approach?: unknown
   capabilities?: unknown
   proficiency?: unknown
 }
@@ -16,8 +15,7 @@ type StrategyPhaseOverrideMinimal = {
   phase: string
   execution?: 'agent' | 'human'
   mode?: unknown
-  approach_mode?: unknown
-  task_kind?: unknown
+  approach?: unknown
   capabilities?: unknown
   proficiency?: unknown
 }
@@ -39,14 +37,12 @@ export type PhaseModeIndex = {
   phaseSetSuffixToMode: Map<string, TaskMode>
   phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
   suffixToExecution: Map<string, 'agent' | 'human'>
-  phaseSetSuffixToApproachMode: Map<string, ApproachMode>
-  phaseSetSuffixToTaskKind: Map<string, TaskKind>
+  phaseSetSuffixToApproach: Map<string, Approach>
   phaseSetSuffixToCapabilities: Map<string, string[]>
   phaseSetSuffixToProficiency: Map<string, Proficiency>
   localIdSuffixToExecution: Map<string, 'agent' | 'human'>
   localIdSuffixToMode: Map<string, TaskMode>
-  localIdSuffixToApproachMode: Map<string, ApproachMode>
-  localIdSuffixToTaskKind: Map<string, TaskKind>
+  localIdSuffixToApproach: Map<string, Approach>
   localIdSuffixToCapabilities: Map<string, string[]>
   localIdSuffixToProficiency: Map<string, Proficiency>
   defaultMode: TaskMode
@@ -56,12 +52,13 @@ function isTaskMode(value: unknown): value is TaskMode {
   return value === 'edit' || value === 'review'
 }
 
-function isApproachMode(value: unknown): value is ApproachMode {
-  return value === 'fully-guided' || value === 'recipe-guided' || value === 'freeform'
-}
-
-function isTaskKind(value: unknown): value is TaskKind {
-  return value === 'deliverable' || value === 'reference-maintenance'
+function isApproach(value: unknown): value is Approach {
+  return (
+    value === 'fully-guided' ||
+    value === 'recipe-guided' ||
+    value === 'freeform' ||
+    value === 'reference-maintenance'
+  )
 }
 
 function isProficiency(value: unknown): value is Proficiency {
@@ -81,8 +78,8 @@ function asCapabilityList(value: unknown): string[] | undefined {
 /**
  * Builds a phase metadata index from sch-strategy files.
  * sch-strategy maps localId → phaseSet and phaseSet+phaseId → suffix, and phase
- * definitions carry runtime task metadata such as mode, execution, approach_mode,
- * task_kind, capabilities, and proficiency.
+ * definitions carry runtime task metadata such as mode, execution, approach,
+ * capabilities, and proficiency.
  */
 export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const localIdToPhaseSets = new Map<string, string[]>()
@@ -92,16 +89,14 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const phaseSetSuffixToExecution = new Map<string, 'agent' | 'human'>()
   // Global suffix → execution: suffixes are unique within a track across all phase sets.
   const suffixToExecution = new Map<string, 'agent' | 'human'>()
-  // phaseSet:suffix → approach_mode/task_kind declared on the phase definition (phase_sets[phaseSet][phase])
-  const phaseSetSuffixToApproachMode = new Map<string, ApproachMode>()
-  const phaseSetSuffixToTaskKind = new Map<string, TaskKind>()
+  // phaseSet:suffix → approach declared on the phase definition (phase_sets[phaseSet][phase])
+  const phaseSetSuffixToApproach = new Map<string, Approach>()
   const phaseSetSuffixToCapabilities = new Map<string, string[]>()
   const phaseSetSuffixToProficiency = new Map<string, Proficiency>()
   // localId:suffix → metadata declared on owner_rules[].phase_overrides (takes precedence)
   const localIdSuffixToExecution = new Map<string, 'agent' | 'human'>()
   const localIdSuffixToMode = new Map<string, TaskMode>()
-  const localIdSuffixToApproachMode = new Map<string, ApproachMode>()
-  const localIdSuffixToTaskKind = new Map<string, TaskKind>()
+  const localIdSuffixToApproach = new Map<string, Approach>()
   const localIdSuffixToCapabilities = new Map<string, string[]>()
   const localIdSuffixToProficiency = new Map<string, Proficiency>()
 
@@ -143,11 +138,8 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
           // Global map: suffix is unique within a track across all phase sets
           suffixToExecution.set(suffix, execution)
-          if (isApproachMode(p.approach_mode)) {
-            phaseSetSuffixToApproachMode.set(`${phaseSetName}:${suffix}`, p.approach_mode)
-          }
-          if (isTaskKind(p.task_kind)) {
-            phaseSetSuffixToTaskKind.set(`${phaseSetName}:${suffix}`, p.task_kind)
+          if (isApproach(p.approach)) {
+            phaseSetSuffixToApproach.set(`${phaseSetName}:${suffix}`, p.approach)
           }
           const capabilities = asCapabilityList(p.capabilities)
           if (capabilities !== undefined) {
@@ -173,10 +165,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           if (!override || typeof override !== 'object') continue
           const overrideExecution = isExecution(override.execution) ? override.execution : undefined
           const overrideMode = isTaskMode(override.mode) ? override.mode : undefined
-          const overrideApproachMode = isApproachMode(override.approach_mode)
-            ? override.approach_mode
-            : undefined
-          const overrideTaskKind = isTaskKind(override.task_kind) ? override.task_kind : undefined
+          const overrideApproach = isApproach(override.approach) ? override.approach : undefined
           const overrideCapabilities = asCapabilityList(override.capabilities)
           const overrideProficiency = isProficiency(override.proficiency)
             ? override.proficiency
@@ -184,8 +173,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           if (
             overrideExecution === undefined &&
             overrideMode === undefined &&
-            overrideApproachMode === undefined &&
-            overrideTaskKind === undefined &&
+            overrideApproach === undefined &&
             overrideCapabilities === undefined &&
             overrideProficiency === undefined
           )
@@ -201,11 +189,8 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
               if (overrideMode !== undefined) {
                 localIdSuffixToMode.set(`${localId}:${suffix}`, overrideMode)
               }
-              if (overrideApproachMode !== undefined) {
-                localIdSuffixToApproachMode.set(`${localId}:${suffix}`, overrideApproachMode)
-              }
-              if (overrideTaskKind !== undefined) {
-                localIdSuffixToTaskKind.set(`${localId}:${suffix}`, overrideTaskKind)
+              if (overrideApproach !== undefined) {
+                localIdSuffixToApproach.set(`${localId}:${suffix}`, overrideApproach)
               }
               if (overrideCapabilities !== undefined) {
                 localIdSuffixToCapabilities.set(`${localId}:${suffix}`, overrideCapabilities)
@@ -225,14 +210,12 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     phaseSetSuffixToMode,
     phaseSetSuffixToExecution,
     suffixToExecution,
-    phaseSetSuffixToApproachMode,
-    phaseSetSuffixToTaskKind,
+    phaseSetSuffixToApproach,
     phaseSetSuffixToCapabilities,
     phaseSetSuffixToProficiency,
     localIdSuffixToExecution,
     localIdSuffixToMode,
-    localIdSuffixToApproachMode,
-    localIdSuffixToTaskKind,
+    localIdSuffixToApproach,
     localIdSuffixToCapabilities,
     localIdSuffixToProficiency,
     defaultMode,
@@ -240,60 +223,30 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
 }
 
 /**
- * Resolves the approach_mode for a given task.
+ * Resolves the approach for a given task.
  * Resolution order:
- *   1. owner_rules[].phase_overrides[].approach_mode (per-deliverable, takes precedence)
- *   2. Phase-level approach_mode from phase_sets[phase_set][phase], checked across all
+ *   1. owner_rules[].phase_overrides[].approach (per-deliverable, takes precedence)
+ *   2. Phase-level approach from phase_sets[phase_set][phase], checked across all
  *      phase sets assigned to the deliverable's local_id
  *   3. undefined when not declared at either level
  */
-export function resolveApproachMode(
+export function resolveApproach(
   localId: string | undefined,
   taskId: string,
   index: PhaseModeIndex
-): ApproachMode | undefined {
+): Approach | undefined {
   if (!localId) return undefined
   const suffix = taskId.split('-').pop() ?? ''
   if (!/^\d{3}$/.test(suffix)) return undefined
 
-  const overridden = index.localIdSuffixToApproachMode.get(`${localId}:${suffix}`)
+  const overridden = index.localIdSuffixToApproach.get(`${localId}:${suffix}`)
   if (overridden !== undefined) return overridden
 
   const phaseSets = index.localIdToPhaseSets.get(localId)
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const mode = index.phaseSetSuffixToApproachMode.get(`${phaseSet}:${suffix}`)
-      if (mode !== undefined) return mode
-    }
-  }
-  return undefined
-}
-
-/**
- * Resolves the task_kind for a given task.
- * Resolution order:
- *   1. owner_rules[].phase_overrides[].task_kind (per-deliverable, takes precedence)
- *   2. Phase-level task_kind from phase_sets[phase_set][phase], checked across all
- *      phase sets assigned to the deliverable's local_id
- *   3. undefined when not declared at either level
- */
-export function resolveTaskKind(
-  localId: string | undefined,
-  taskId: string,
-  index: PhaseModeIndex
-): TaskKind | undefined {
-  if (!localId) return undefined
-  const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return undefined
-
-  const overridden = index.localIdSuffixToTaskKind.get(`${localId}:${suffix}`)
-  if (overridden !== undefined) return overridden
-
-  const phaseSets = index.localIdToPhaseSets.get(localId)
-  if (phaseSets) {
-    for (const phaseSet of phaseSets) {
-      const kind = index.phaseSetSuffixToTaskKind.get(`${phaseSet}:${suffix}`)
-      if (kind !== undefined) return kind
+      const approach = index.phaseSetSuffixToApproach.get(`${phaseSet}:${suffix}`)
+      if (approach !== undefined) return approach
     }
   }
   return undefined

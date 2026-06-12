@@ -27,9 +27,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- exec plan frontmatter の `task_kind` を確認する。
-- `task_kind` が `reference-maintenance` の場合は、確認の向きを「成果物 → rulebook / recipe / sample」に切り替える。
-- それ以外の場合は、rulebook / recipe / sample に原則縛られず、対象成果物の実例やプロジェクト文脈との整合を優先して確認する。
+- rulebook / recipe / sample に原則縛られず、対象成果物の実例やプロジェクト文脈との整合を優先して確認する。
 - done_criteria とレビュー観点を満たしているかを主な基準にする。
 - 参考資料を使った場合は、使った文書と判断根拠を review result に残す。
 - 参考資料とプロジェクト文脈が矛盾する場合は、プロジェクト文脈を優先し、その理由を記録する。

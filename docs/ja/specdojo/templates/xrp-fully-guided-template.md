@@ -27,9 +27,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- exec plan frontmatter の `task_kind` を確認する。
-- `task_kind` が `reference-maintenance` の場合は、確認の向きを「成果物 → rulebook / recipe / sample」に切り替える。
-- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って確認の基準にする。
+- 対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って確認の基準にする。
 - rulebook の必須要素・禁止事項に反していないか確認する。
 - recipe の問い・観点に対して内容が十分か確認する。
 - sample の粒度・文体・表現と整合しているか確認する。

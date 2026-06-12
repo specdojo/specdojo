@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate } from './exec-shared.js'
-import type { ApproachMode, ExecResultMeta, TaskKind, TaskMode } from './exec-types.js'
+import type { Approach, ExecResultMeta, TaskMode } from './exec-types.js'
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -22,8 +22,7 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   ]
   if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`)
   if (meta.agent) lines.push(`agent: ${meta.agent}`)
-  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
-  if (meta.task_kind) lines.push(`task_kind: ${meta.task_kind}`)
+  if (meta.approach) lines.push(`approach: ${meta.approach}`)
   lines.push('---')
   return lines.join('\n')
 }
@@ -78,11 +77,9 @@ export function scaffoldResult(opts: {
   planRef: string
   agent: string
   startedAt: string
-  approachMode?: ApproachMode
-  taskKind?: TaskKind
+  approach?: Approach
 }): { resultPath: string; created: boolean } {
-  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approachMode, taskKind } =
-    opts
+  const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts
   const resultPath = resultPathForTask(executionPath, taskId)
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
@@ -105,8 +102,7 @@ export function scaffoldResult(opts: {
     plan_ref: planRef,
     started_at: startedAt,
     agent,
-    ...(approachMode ? { approach_mode: approachMode } : {}),
-    ...(taskKind ? { task_kind: taskKind } : {}),
+    ...(approach ? { approach } : {}),
   }
 
   const content = expandTemplate(template, { _FRONTMATTER_: serializeFrontmatter(meta) })
@@ -136,10 +132,7 @@ export function updateResultStatus(
     started_at: existingMeta.started_at ?? '',
     completed_at: completedAt,
     agent: existingMeta.agent,
-    approach_mode: existingMeta.approach_mode
-      ? (existingMeta.approach_mode as ApproachMode)
-      : undefined,
-    task_kind: existingMeta.task_kind ? (existingMeta.task_kind as TaskKind) : undefined,
+    approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
   }
 
   writeFileSync(resultPath, serializeFrontmatter(updatedMeta) + body, 'utf8')

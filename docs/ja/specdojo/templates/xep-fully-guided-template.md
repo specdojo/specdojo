@@ -20,9 +20,7 @@ _DONE_CRITERIA_ITEMS_
 
 ## 3. 進め方
 
-- exec plan frontmatter の `task_kind` を確認する。
-- `task_kind` が `reference-maintenance` の場合は、参照の向きを「成果物 → rulebook / recipe / sample」に切り替えて進める。
-- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って参照する。
+- 対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って参照する。
 - rulebook は構造・必須要素・禁止事項の基準として扱う。
 - recipe は内容の組み立て方、問い、観点の基準として扱う。
 - sample は粒度、文体、表現、表の書き方の基準として扱う。

@@ -14,7 +14,7 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 | ファイル                       | 役割                                                           | 粒度         |
 | ------------------------------ | -------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`capabilities`・`proficiency`・`task_kind` | トラック     |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・`capabilities`・`proficiency` | トラック     |
 | `pm-members.yaml`              | 誰が作業するか（identity・command・capabilities・proficiency） | プロジェクト |
 | `.specdojo/exec-defaults.yaml` | rate limit 検出条件・リトライポリシー                          | システム     |
 
@@ -55,7 +55,7 @@ phase_sets:
 | -------------- | ---- | ----------------------------------------- |
 | `execution`    | 任意 | `agent` または `human`。省略時は `agent`  |
 | `mode`         | 任意 | `edit` または `review`。省略時は `edit`   |
-| `task_kind`    | 任意 | `deliverable` または `reference-maintenance` |
+| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `reference-maintenance` |
 | `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略 |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補    |
 
@@ -138,4 +138,4 @@ rate_limit_policy:
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加する。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加する。
 
-`task_kind: reference-maintenance` のような作業対象の違いも phase に直接定義する。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示する。
+`approach: reference-maintenance` のような進め方の違いも phase に直接定義する。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示する。

@@ -4,7 +4,7 @@ import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate, listFilesRecursive, readJson } from './exec-shared.js'
 import type {
-  ApproachMode,
+  Approach,
   ExecPlanMeta,
   ReadySnapshot,
   ReadyTaskView,
@@ -115,8 +115,7 @@ function frontmatter(meta: ExecPlanMeta): string {
   ]
   if (meta.owner) lines.push(`owner: ${meta.owner}`)
   if (meta.on_critical_path) lines.push(`on_critical_path: true`)
-  if (meta.approach_mode) lines.push(`approach_mode: ${meta.approach_mode}`)
-  if (meta.task_kind) lines.push(`task_kind: ${meta.task_kind}`)
+  if (meta.approach) lines.push(`approach: ${meta.approach}`)
   if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
   lines.push('---')
   return lines.join('\n')
@@ -134,16 +133,16 @@ function standardTemplateFileName(mode: TaskMode): string {
   return `${templatePrefix(mode)}-template.md`
 }
 
-function approachModeTemplateFileName(mode: TaskMode, approachMode: ApproachMode): string {
-  return `${templatePrefix(mode)}-${approachMode}-template.md`
+function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
+  return `${templatePrefix(mode)}-${approach}-template.md`
 }
 
-// Selects <prefix>-<approach_mode>-template.md when it exists, otherwise falls back
+// Selects <prefix>-<approach>-template.md when it exists, otherwise falls back
 // to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
-function resolvePlanTemplatePath(mode: TaskMode, approachMode: ApproachMode | undefined): string {
+function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
   const templatesDir = join(specdojoRootDir(), 'docs/ja/specdojo/templates')
-  if (approachMode) {
-    const candidatePath = join(templatesDir, approachModeTemplateFileName(mode, approachMode))
+  if (approach) {
+    const candidatePath = join(templatesDir, approachTemplateFileName(mode, approach))
     if (existsSync(candidatePath)) return candidatePath
   }
   return join(templatesDir, standardTemplateFileName(mode))
@@ -151,10 +150,10 @@ function resolvePlanTemplatePath(mode: TaskMode, approachMode: ApproachMode | un
 
 function loadPlanTemplate(
   mode: TaskMode,
-  approachMode: ApproachMode | undefined,
+  approach: Approach | undefined,
   cache: Map<string, string>
 ): string {
-  const templatePath = resolvePlanTemplatePath(mode, approachMode)
+  const templatePath = resolvePlanTemplatePath(mode, approach)
   const cached = cache.get(templatePath)
   if (cached !== undefined) return cached
   if (!existsSync(templatePath)) {
@@ -264,8 +263,7 @@ function buildEditPlanMarkdown(
     project_id: projectId,
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
-    ...(task.approach_mode ? { approach_mode: task.approach_mode } : {}),
-    ...(task.task_kind ? { task_kind: task.task_kind } : {}),
+    ...(task.approach ? { approach: task.approach } : {}),
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
@@ -307,8 +305,7 @@ function buildReviewPlanMarkdown(
     project_id: projectId,
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
-    ...(task.approach_mode ? { approach_mode: task.approach_mode } : {}),
-    ...(task.task_kind ? { task_kind: task.task_kind } : {}),
+    ...(task.approach ? { approach: task.approach } : {}),
     viewpoints_ref: viewpointsRef,
   }
 
@@ -408,7 +405,7 @@ export function generatePlans(
     const outPath = join(plansDir, `${task.id}-plan.md`)
     const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
     const planTask: PlanTask = { ...task, mode }
-    const template = loadPlanTemplate(mode, task.approach_mode, templateCache)
+    const template = loadPlanTemplate(mode, task.approach, templateCache)
 
     const content =
       mode === 'review'

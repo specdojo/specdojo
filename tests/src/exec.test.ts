@@ -6,9 +6,9 @@ import { resolveClaimOwner } from '../../src/exec.js'
 import { buildTaskPhaseMap } from '../../src/exec-run.js'
 import {
   buildPhaseModeIndex,
+  resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
-  resolveTaskKind,
   resolveTaskMode,
   resolveTaskProficiency,
 } from '../../src/exec-strategy.js'
@@ -67,7 +67,7 @@ describe('resolveClaimOwner', () => {
 })
 
 describe('exec strategy metadata resolution', () => {
-  it('phase metadata carries mode, task_kind, capabilities, and proficiency', () => {
+  it('phase metadata carries mode, approach, capabilities, and proficiency', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-phase-meta-'))
     try {
       writeFileSync(
@@ -78,7 +78,7 @@ describe('exec strategy metadata resolution', () => {
           '    - id: improve',
           '      task_suffix: "020"',
           '      mode: edit',
-          '      task_kind: reference-maintenance',
+          '      approach: reference-maintenance',
           '      capabilities: [web_search]',
           '      proficiency: expert',
           '  review-pass:',
@@ -98,7 +98,7 @@ describe('exec strategy metadata resolution', () => {
       const index = buildPhaseModeIndex(dir)
 
       expect(resolveTaskMode('doc', 'T-LAUNCH-doc-020', index)).toBe('edit')
-      expect(resolveTaskKind('doc', 'T-LAUNCH-doc-020', index)).toBe('reference-maintenance')
+      expect(resolveApproach('doc', 'T-LAUNCH-doc-020', index)).toBe('reference-maintenance')
       expect(resolveTaskCapabilities('doc', 'T-LAUNCH-doc-020', index)).toEqual(['web_search'])
       expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-020', index)).toBe('expert')
       expect(resolveTaskMode('doc', 'T-LAUNCH-doc-030', index)).toBe('review')

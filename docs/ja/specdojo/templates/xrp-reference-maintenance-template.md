@@ -27,10 +27,9 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- 対象成果物に紐づく recipe を主な確認基準にする。
-- recipe の問い・観点に照らして、成果物の内容が十分か確認する。
-- rulebook / sample が存在しても、構造・文体・粒度の必須基準としては扱わない。
-- recipe だけでは判断できない箇所は、類似成果物やプロジェクト文脈との整合を確認する。
+- 確認の向きを「成果物 → rulebook / recipe / sample」に切り替える。
+- 対象成果物に紐づく rulebook / recipe / sample が見直しに値するかを、複数の成果物、review result、対象領域の慣行と照らして確認する。
+- 構造・問い・禁止事項・サンプルとしての妥当性が成果物の実態と整合しているか確認する。
 - 判断の根拠を review result に残す。
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。

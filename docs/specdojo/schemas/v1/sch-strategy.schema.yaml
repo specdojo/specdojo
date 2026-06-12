@@ -153,7 +153,7 @@ properties:
           type: array
           description: >
             Per-phase overrides for these deliverables.
-            execution, mode, approach_mode, task_kind, capabilities, and proficiency each take precedence over
+            execution, mode, approach, capabilities, and proficiency each take precedence over
             the same-named field defined on the phase in phase_sets[phase_set][phase].
           items:
             type: object
@@ -169,10 +169,8 @@ properties:
                 $ref: "#/$defs/Execution"
               mode:
                 $ref: "#/$defs/TaskMode"
-              approach_mode:
-                $ref: "#/$defs/ApproachMode"
-              task_kind:
-                $ref: "#/$defs/TaskKind"
+              approach:
+                $ref: "#/$defs/Approach"
               capabilities:
                 $ref: "#/$defs/Capabilities"
               proficiency:
@@ -396,23 +394,17 @@ $defs:
       edit: deliverable creation or update.
       review: deliverable review.
 
-  ApproachMode:
+  Approach:
     type: string
-    enum: ["fully-guided", "recipe-guided", "freeform"]
+    enum: ["fully-guided", "recipe-guided", "freeform", "reference-maintenance"]
     description: >
-      How strictly the agent should follow reference materials (rulebook/recipe/sample) in a phase.
+      How the task is carried out in a phase. The first three values describe how strictly
+      the agent follows reference materials (rulebook/recipe/sample) when working on a deliverable.
       fully-guided: rulebook/recipe/sample are mature; follow them.
       recipe-guided: rulebook/sample are immature; use only the recipe's structure/questions/perspectives.
       freeform: not bound by reference materials; prioritize deliverable examples and project context.
-
-  TaskKind:
-    type: string
-    enum: ["deliverable", "reference-maintenance"]
-    description: >
-      The target kind a task works on.
-      deliverable: ordinary deliverable creation/update/review work; edit/review is represented by mode.
-      reference-maintenance: work that improves rulebook/recipe/sample based on deliverables;
-      must be declared explicitly in phase_sets and is never auto-injected.
+      reference-maintenance: improve rulebook/recipe/sample based on deliverables (reference
+      direction is reversed); must be declared explicitly in phase_sets and is never auto-injected.
 
   Phase:
     type: object
@@ -451,17 +443,11 @@ $defs:
           Default mode for this phase across all deliverables using this phase_set.
           Omit to default to edit.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
-      approach_mode:
-        $ref: "#/$defs/ApproachMode"
+      approach:
+        $ref: "#/$defs/Approach"
         description: >
-          Default approach_mode for this phase across all deliverables using this phase_set.
+          Default approach for this phase across all deliverables using this phase_set.
           Carried into task frontmatter and used for template selection.
-          Can be overridden per-deliverable via owner_rules[].phase_overrides.
-      task_kind:
-        $ref: "#/$defs/TaskKind"
-        description: >
-          Default task_kind for this phase across all deliverables using this phase_set.
-          Carried into task frontmatter to convey work intent to the agent.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       capabilities:
         $ref: "#/$defs/Capabilities"
