@@ -174,6 +174,22 @@ function deliverablePath(deliverable: DeliverableInfo | null): string {
   return deliverable?.resolvedPath ?? MISSING
 }
 
+function deliverableName(deliverable: DeliverableInfo | null): string {
+  return deliverable?.deliverable.name ?? MISSING
+}
+
+// dct の生成ビュー（catalog-build.ts）の「根拠」列と同じ表記に合わせる。
+function deliverableDependsOn(deliverable: DeliverableInfo | null): string {
+  if (!deliverable) return MISSING
+  const deps = deliverable.deliverable.depends_on ?? []
+  if (deps.length === 0) return '-'
+  return deps.map(d => `\`${d}\``).join(', ')
+}
+
+function deliverableOverview(deliverable: DeliverableInfo | null): string {
+  return deliverable?.deliverable.overview ?? MISSING
+}
+
 // dct の rulebook フィールドは ID（例: prj-overview-rulebook）。docs-structure-guide の
 // 規約に従い、ファイル未作成でも一意に定まる固定パスへ展開する。
 function rulebookRef(deliverable: DeliverableInfo | null): string {
@@ -257,6 +273,9 @@ function buildEditPlanMarkdown(
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
+    _DELIVERABLE_NAME_: deliverableName(deliverable),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable),
+    _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
@@ -297,6 +316,9 @@ function buildReviewPlanMarkdown(
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
+    _DELIVERABLE_NAME_: deliverableName(deliverable),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable),
+    _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: rulebookRef(deliverable),

@@ -22,6 +22,9 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 ## 2. 対象成果物
 
+- 成果物名: プロジェクト概要
+- 根拠: -
+- 概要: プロジェクトの目的・背景・ゴールを定義
 - path: `/docs/ja/projects/prj-0001/020-project-definition/prj-overview.md`
 - rulebook: `/docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`
 - result: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-030-result.md`

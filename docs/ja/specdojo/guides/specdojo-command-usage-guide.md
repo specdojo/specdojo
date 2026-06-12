@@ -1190,6 +1190,9 @@ specdojo exec build --project prj-0001
 | `_FRONTMATTER_`              | frontmatter ブロック全体（`---` を含む）                                                                          |  ○   |   ○    |
 | `_PLAN_TITLE_`               | H1 見出し文字列（`Edit Plan: <task-id>` / `Review Plan: <task-id>`）                                              |  ○   |   ○    |
 | `_PHASE_DESCRIPTION_`        | 「このフェーズで行うこと」の本文（`task.description`、無ければ `name` / `id`）                                    |  ○   |   ○    |
+| `_DELIVERABLE_NAME_`         | 成果物カタログの成果物名（カタログ未登録の場合は `_MISSING_` を表示する）                                         |  ○   |   ○    |
+| `_DELIVERABLE_DEPENDS_ON_`   | 成果物カタログの根拠（`depends_on` を `local-id` で列挙。無い場合は `-`、カタログ未登録の場合は `_MISSING_`）     |  ○   |   ○    |
+| `_DELIVERABLE_OVERVIEW_`     | 成果物カタログの概要（カタログ未登録の場合は `_MISSING_` を表示する）                                             |  ○   |   ○    |
 | `_DELIVERABLE_PATH_LINE_`    | 対象成果物の path 行（カタログ未登録タスクの場合は代替文）                                                        |  ○   |   ○    |
 | `_RESULT_REF_LINE_`          | result ファイルへの参照行                                                                                         |  ○   |   ○    |
 | `_RULEBOOK_REF_LINE_`        | 対象成果物の rulebook 参照行（カタログ未登録の場合は `none` と表示する）                                          |      |   ○    |
