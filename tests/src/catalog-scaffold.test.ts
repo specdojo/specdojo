@@ -60,6 +60,29 @@ describe('scaffoldDoc — プレースホルダ置換', () => {
     const doc = scaffoldDoc(template, 'prj-0001', 'large')
     expect(doc.part_of).toEqual(['prj-0001:dct-index'])
   })
+
+  it('instance_id_pattern をプロジェクトカタログへ保持する', () => {
+    const template: DctTemplateDoc = {
+      ...MINIMAL_TEMPLATE,
+      groups: [
+        {
+          deliverables: [
+            {
+              local_id: 'doc-entry',
+              instance_id_pattern: 'doc-{sequence}-{term}',
+              name: '反復ドキュメント',
+              kind: 'control',
+              overview: '概要',
+            },
+          ],
+        },
+      ],
+    }
+    const doc = scaffoldDoc(template, 'prj-0001', 'large')
+    expect(doc.groups[0]?.deliverables?.[0]?.instance_id_pattern).toBe(
+      'doc-{sequence}-{term}'
+    )
+  })
 })
 
 describe('scaffoldDoc — サイズフィルタリング', () => {

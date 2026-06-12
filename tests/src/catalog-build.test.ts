@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateDctDoc } from '../../src/catalog-build.js'
+import { buildMarkdown, validateDctDoc } from '../../src/catalog-build.js'
 import type { DctDoc, DctDeliverableItem, DctSection } from '../../src/catalog-types.js'
 
 function makeDoc(overrides: Partial<DctDoc> = {}): DctDoc {
@@ -87,6 +87,14 @@ describe('validateDctDoc', () => {
   })
 
   describe('local_id の重複検証', () => {
+    it('local_id に大文字が含まれる場合はエラーを返す', () => {
+      const item = makeWorkItem({ local_id: 'item-UPPER' })
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] })
+      const result = validateDctDoc(doc, '/dummy/dct.yaml')
+      expect(result.ok).toBe(false)
+      expect(result.errors.some(e => e.includes('invalid local_id'))).toBe(true)
+    })
+
     it('同一 local_id が複数ある場合はエラーを返す', () => {
       const items: DctDeliverableItem[] = [
         makeWorkItem({ local_id: 'dup-id' }),
@@ -121,6 +129,23 @@ describe('validateDctDoc', () => {
       const result = validateDctDoc(makeDoc({ groups: [outer] }), '/dummy/dct.yaml')
       expect(result.ok).toBe(false)
       expect(result.errors.some(e => e.includes('shared-id'))).toBe(true)
+    })
+  })
+
+  describe('instance_id_pattern の検証', () => {
+    it('小文字プレースホルダーを含むIDパターンを許可する', () => {
+      const item = makeWorkItem({ instance_id_pattern: 'item-{sequence}-{term}' })
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] })
+      const result = validateDctDoc(doc, '/dummy/dct.yaml')
+      expect(result.ok).toBe(true)
+    })
+
+    it('大文字プレースホルダーを含むIDパターンはエラーを返す', () => {
+      const item = makeWorkItem({ instance_id_pattern: 'item-{TERM}' })
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] })
+      const result = validateDctDoc(doc, '/dummy/dct.yaml')
+      expect(result.ok).toBe(false)
+      expect(result.errors.some(e => e.includes('invalid instance_id_pattern'))).toBe(true)
     })
   })
 
@@ -173,5 +198,34 @@ describe('validateDctDoc', () => {
       expect(result.ok).toBe(true)
       expect(result.warnings).toHaveLength(0)
     })
+  })
+})
+
+describe('buildMarkdown', () => {
+  it('各成果物テーブルの直前に prettier-ignore を出力する', () => {
+    const sections = [
+      makeSection({ name: 'セクションA', deliverables: [makeWorkItem()] }),
+      makeSection({
+        name: 'セクションB',
+        deliverables: [makeWorkItem({ local_id: 'item-2' })],
+      }),
+    ]
+    const markdown = buildMarkdown(makeDoc({ groups: sections }))
+
+    expect(markdown.match(/<!-- prettier-ignore -->\n\| local-id/g)).toHaveLength(2)
+  })
+
+  it('instance_id_pattern がある場合だけ実体IDパターン列を出力する', () => {
+    const recurring: DctDeliverableItem = {
+      local_id: 'item-entry',
+      instance_id_pattern: 'item-{sequence}-{term}',
+      name: '反復成果物',
+      kind: 'control',
+      overview: '概要',
+    }
+    const doc = makeDoc({ groups: [makeSection({ deliverables: [recurring] })] })
+    const markdown = buildMarkdown(doc)
+    expect(markdown).toContain('| local-id | 実体IDパターン |')
+    expect(markdown).toContain('| `item-entry` | `item-{sequence}-{term}` |')
   })
 })

@@ -21,13 +21,28 @@ function formatDependsOn(deps: string[] | undefined): string {
 }
 
 function renderTable(deliverables: DctDeliverableItem[]): string[] {
-  const lines: string[] = []
-  lines.push('| local-id | 成果物名 | 種別 | 根拠 | 概要 |')
-  lines.push('| --- | --- | --- | --- | --- |')
+  const lines: string[] = ['<!-- prettier-ignore -->']
+  const hasInstanceIdPattern = deliverables.some(item => item.instance_id_pattern)
+  if (hasInstanceIdPattern) {
+    lines.push('| local-id | 実体IDパターン | 成果物名 | 種別 | 根拠 | 概要 |')
+    lines.push('| --- | --- | --- | --- | --- | --- |')
+  } else {
+    lines.push('| local-id | 成果物名 | 種別 | 根拠 | 概要 |')
+    lines.push('| --- | --- | --- | --- | --- |')
+  }
   for (const item of deliverables) {
     const localId = `\`${item.local_id}\``
     const deps = formatDependsOn(item.depends_on)
-    lines.push(`| ${localId} | ${item.name} | ${item.kind} | ${deps} | ${item.overview} |`)
+    if (hasInstanceIdPattern) {
+      const instanceIdPattern = item.instance_id_pattern
+        ? `\`${item.instance_id_pattern}\``
+        : '-'
+      lines.push(
+        `| ${localId} | ${instanceIdPattern} | ${item.name} | ${item.kind} | ${deps} | ${item.overview} |`
+      )
+    } else {
+      lines.push(`| ${localId} | ${item.name} | ${item.kind} | ${deps} | ${item.overview} |`)
+    }
   }
   return lines
 }
@@ -148,6 +163,9 @@ export function buildMarkdown(doc: DctDoc): string {
 export function validateDctDoc(doc: DctDoc, filePath: string): DctValidationResult {
   const errors: string[] = []
   const warnings: string[] = []
+  const localIdPattern = /^[a-z0-9][a-z0-9-]*$/
+  const instanceIdPattern =
+    /^(?=.*\{[a-z][a-z0-9-]*\})[a-z0-9]+(?:-(?:[a-z0-9]+|\{[a-z][a-z0-9-]*\}))*$/
 
   if (!doc.id) errors.push(`${filePath}: missing required field: id`)
   if (doc.type !== 'project') errors.push(`${filePath}: type must be 'project', got: ${doc.type}`)
@@ -166,6 +184,17 @@ export function validateDctDoc(doc: DctDoc, filePath: string): DctValidationResu
     for (const section of sections) {
       if (section.deliverables) {
         for (const item of section.deliverables) {
+          if (!localIdPattern.test(item.local_id)) {
+            errors.push(`${filePath}: invalid local_id: ${item.local_id}`)
+          }
+          if (
+            item.instance_id_pattern !== undefined &&
+            !instanceIdPattern.test(item.instance_id_pattern)
+          ) {
+            errors.push(
+              `${filePath}: ${item.local_id}: invalid instance_id_pattern: ${item.instance_id_pattern}`
+            )
+          }
           if (localIds.has(item.local_id)) {
             errors.push(`${filePath}: duplicate local_id: ${item.local_id}`)
           } else {

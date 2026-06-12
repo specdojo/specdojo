@@ -16,6 +16,7 @@ rulebook: dct-rulebook
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/010-management-plan`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | `pm-plan` | プロジェクト管理計画 | work | - | プロジェクト全体の管理方針・プロセスを定義 |
@@ -50,6 +51,7 @@ rulebook: dct-rulebook
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/020-organization`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | `pm-organization` | 組織定義 | work | `prj-overview` | ロール・メンバー構成の方針と設計根拠を定義 |
@@ -94,37 +96,41 @@ rulebook: dct-rulebook
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/project-register`
 
-| local-id | 成果物名 | 種別 | 根拠 | 概要 |
-| --- | --- | --- | --- | --- |
-| `pjr-index` | プロジェクト登録簿 | control | - | 識別済み検討項目と対応策を管理（台帳） |
-| `pjr-NNNN-TERM` | プロジェクト登録項目 | control | `pjr-index` | 識別済み検討項目と対応策を管理（個別課題） |
+<!-- prettier-ignore -->
+| local-id | 実体IDパターン | 成果物名 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- | --- |
+| `pjr-index` | - | プロジェクト登録簿 | control | - | 識別済み検討項目と対応策を管理（台帳） |
+| `pjr-entry` | `pjr-{sequence}-{term}` | プロジェクト登録項目 | control | `pjr-index` | 識別済み検討項目と対応策を管理（個別課題） |
 
 ## 4. 管理台帳補助ビュー
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/project-register/generated`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
-| `pjr-open-items` | 未完了項目一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の未完了項目を一覧化 |
-| `pjr-by-owner` | 担当者別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の担当者別項目を一覧化 |
-| `pjr-by-priority` | 優先度別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の優先度別項目を一覧化 |
-| `pjr-by-status` | 状態別一覧 | generated | `pjr-index`, `pjr-NNNN-TERM` | プロジェクト登録簿の状態別項目を一覧化 |
+| `pjr-open-items` | 未完了項目一覧 | generated | `pjr-index`, `pjr-entry` | プロジェクト登録簿の未完了項目を一覧化 |
+| `pjr-by-owner` | 担当者別一覧 | generated | `pjr-index`, `pjr-entry` | プロジェクト登録簿の担当者別項目を一覧化 |
+| `pjr-by-priority` | 優先度別一覧 | generated | `pjr-index`, `pjr-entry` | プロジェクト登録簿の優先度別項目を一覧化 |
+| `pjr-by-status` | 状態別一覧 | generated | `pjr-index`, `pjr-entry` | プロジェクト登録簿の状態別項目を一覧化 |
 
 ## 5. 管理ビュー
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/controls/generated`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
-| `pm-risk-register` | リスク登録簿 | generated | `pjr-NNNN-TERM` | 識別済みリスクと対応策を管理 |
-| `pm-issue-log` | 課題ログ | generated | `pjr-NNNN-TERM` | 発生した課題と対応状況を管理 |
-| `pm-change-request-log` | 変更要求ログ | generated | `pjr-NNNN-TERM` | 変更要求の申請・審査・決定を管理 |
-| `pm-decision-log` | 決定記録 | generated | `pjr-NNNN-TERM` | プロジェクト上の意思決定とその根拠を記録 |
+| `pm-risk-register` | リスク登録簿 | generated | `pjr-entry` | 識別済みリスクと対応策を管理 |
+| `pm-issue-log` | 課題ログ | generated | `pjr-entry` | 発生した課題と対応状況を管理 |
+| `pm-change-request-log` | 変更要求ログ | generated | `pjr-entry` | 変更要求の申請・審査・決定を管理 |
+| `pm-decision-log` | 決定記録 | generated | `pjr-entry` | プロジェクト上の意思決定とその根拠を記録 |
 
 ## 6. スケジュール
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/schedule`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | `sch-milestones` | マイルストーン定義 | generated | - | プロジェクト全体のマイルストーンを定義 |
@@ -152,14 +158,16 @@ rulebook: dct-rulebook
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/reporting/progress-reports`
 
-| local-id | 成果物名 | 種別 | 根拠 | 概要 |
-| --- | --- | --- | --- | --- |
-| `pr-YYYY-MM-DD` | 進捗報告 | control | - | 定期的な進捗状況の報告 |
+<!-- prettier-ignore -->
+| local-id | 実体IDパターン | 成果物名 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- | --- |
+| `pr-progress-report` | `pr-{yyyy}-{mm}-{dd}` | 進捗報告 | control | - | 定期的な進捗状況の報告 |
 
 ### 7.2. 議事録
 
 - 配置先: `docs/ja/projects/prj-0001/030-project-management/reporting/meeting-minutes`
 
-| local-id | 成果物名 | 種別 | 根拠 | 概要 |
-| --- | --- | --- | --- | --- |
-| `mm-YYYY-MM-DD` | 議事録 | control | - | 会議の決定事項・アクションを記録 |
+<!-- prettier-ignore -->
+| local-id | 実体IDパターン | 成果物名 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- | --- |
+| `mm-meeting-minutes` | `mm-{yyyy}-{mm}-{dd}` | 議事録 | control | - | 会議の決定事項・アクションを記録 |

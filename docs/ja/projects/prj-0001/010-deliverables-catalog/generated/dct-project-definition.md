@@ -12,6 +12,7 @@ rulebook: dct-rulebook
 - project-id: `prj-0001`
 - ドメイン: `project-definition`
 
+<!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | `prj-overview` | プロジェクト概要 | work | - | プロジェクトの目的・背景・ゴールを定義 |

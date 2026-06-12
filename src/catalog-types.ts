@@ -9,6 +9,7 @@ export type CriteriaItem = {
 
 export type DctDeliverableItem = {
   local_id: string
+  instance_id_pattern?: string
   name: string
   kind: DctKind
   depends_on?: string[]
