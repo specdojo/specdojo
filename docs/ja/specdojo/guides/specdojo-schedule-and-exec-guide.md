@@ -311,6 +311,17 @@ git worktree add "${WORKTREE}" -b "${BRANCH}"
 git worktree add "${WORKTREE}" "${BRANCH}"
 ```
 
+Git worktree は親の作業ツリーにある `node_modules` を共有しない。グローバルにインストールされた agent command と `specdojo` コマンドだけを使う場合、依存関係のインストールは不要である。
+
+`npm test`、`npm run lint:*`、`npm run build` など、このリポジトリのnpm scriptを実行するタスクでは、worktree作成後に依存関係を用意する。`package-lock.json` に固定された依存関係を再現するため、`npm install` ではなく `npm ci` を使う。
+
+```sh
+cd "${WORKTREE}"
+npm ci
+```
+
+既にworktree内に `node_modules` があり、`package-lock.json` に変更がない場合は再実行不要である。
+
 `exec claim` が生成した plan と result は元の作業ツリーにある未コミットファイルの場合があるため、エージェント起動前にworktreeへコピーする。
 
 ```sh
@@ -326,19 +337,19 @@ cp "${REPO_ROOT}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md" \
   "${WORKTREE}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md"
 ```
 
-エージェントがworktree側のプロジェクトパスを参照するように環境変数を設定し、worktreeへ移動する。
+worktreeへ移動する。worktree内の `.specdojo/specdojo.config.json` が自動的に参照されるため、`SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` の設定は不要である。
+
+親の作業ツリー向けにこれらの環境変数を設定済みの場合は、設定ファイルより直接パス指定が優先されるため、エージェント起動前に解除する。
 
 ```sh
-export SPECDOJO_SCHEDULE_PATH="${WORKTREE}/${SCHEDULE_REL}"
-export SPECDOJO_EXECUTION_PATH="${WORKTREE}/${EXECUTION_REL}"
-
 cd "${WORKTREE}"
+unset SPECDOJO_SCHEDULE_PATH SPECDOJO_EXECUTION_PATH
 ```
 
 9.3の `exec run --task --dry-run` で確認したコマンドを使用し、planの内容を標準入力から渡す。例えば OpenCode を使う場合は次のように実行する。
 
 ```sh
-cat "${SPECDOJO_EXECUTION_PATH}/exec/plans/${TASK_ID}-plan.md" | \
+cat "${EXECUTION_REL}/exec/plans/${TASK_ID}-plan.md" | \
   opencode run --agent edit-agent
 ```
 
