@@ -29,7 +29,7 @@ import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
   ensureExecWorktree,
   resolveWorktreeBase,
-  worktreeSlug,
+  worktreeNameFromTaskId,
   type ExecWorktree,
 } from './exec-worktree.js'
 import {
@@ -436,11 +436,6 @@ function agentEnvironment(
   }
 }
 
-function commandInstanceName(command: string, actor: string): string {
-  if (actor && actor !== 'auto-agent') return actor
-  return command.trim().split(/\s+/)[0] || 'agent'
-}
-
 function prepareSingleTask(
   task: ReadyTaskView,
   projectId: string | undefined,
@@ -454,8 +449,7 @@ function prepareSingleTask(
   actorOverride: string | undefined,
   dryRun: boolean,
   skipClaim: boolean,
-  worktreeBase: string,
-  slot: number
+  worktreeBase: string
 ): PreparedTask | RunResult {
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
@@ -520,8 +514,7 @@ function prepareSingleTask(
     return 'failure'
   }
 
-  const instanceName = commandInstanceName(agentCommands[0], actor)
-  const worktreeName = `${worktreeSlug(instanceName)}-${slot}`
+  const worktreeName = worktreeNameFromTaskId(task.id)
   const worktree = dryRun
     ? {
         path: join(worktreeBase, worktreeName),
@@ -529,7 +522,7 @@ function prepareSingleTask(
         name: worktreeName,
         created: false,
       }
-    : ensureExecWorktree({ repoRoot, worktreeBase, instanceName, slot })
+    : ensureExecWorktree({ repoRoot, worktreeBase, taskId: task.id })
 
   const setupAction = dryRun ? 'would setup' : worktree.created ? 'setup' : 'reuse'
   process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`)
@@ -759,8 +752,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           opts.by,
           dryRun,
           false,
-          worktreeBase,
-          preparedTasks.length + 1
+          worktreeBase
         )
         if (typeof prepared !== 'string') preparedTasks.push(prepared)
       } catch (error) {
@@ -937,8 +929,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     actorOverride,
     !!opts.dryRun,
     alreadyClaimed,
-    worktreeBase,
-    1
+    worktreeBase
   )
 
   if (typeof prepared === 'string') {

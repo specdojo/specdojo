@@ -279,6 +279,83 @@ specdojo exec run \
   --agent-cmd "opencode run --agent edit-agent"
 ```
 
+#### 9.5.1. worktree を作成してエージェントを手動実行する
+
+`exec run` を使わず、worktree の作成からエージェント起動までを手動で確認したい場合は、次の手順で実行する。
+ここでは `<schedule-path>` と `<execution-path>` をリポジトリルートからの相対パスとして表記する。
+
+最初に、リポジトリルートで worktree の配置先、インスタンス名、ブランチ名を設定する。worktree はリポジトリの外に作成する。
+
+```sh
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+WORKTREE_BASE="${REPO_ROOT}/../worktrees"
+TASK_ID="<task-id>"
+INSTANCE="$(printf '%s' "${TASK_ID}" | tr ':' '-')"
+WORKTREE="${WORKTREE_BASE}/${INSTANCE}"
+BRANCH="exec/${INSTANCE}"
+
+mkdir -p "${WORKTREE_BASE}"
+```
+
+`INSTANCE` は task_id を使い、`:` を `-` に置換した値とする。例えば `prj-0001:T-LAUNCH-pm-plan-010` は `prj-0001-T-LAUNCH-pm-plan-010` になる。
+
+初回は、専用ブランチと worktree を作成する。
+
+```sh
+git worktree add "${WORKTREE}" -b "${BRANCH}"
+```
+
+同じ worktree が既に `git worktree list` に表示される場合は、再作成せずそのまま再利用する。worktree は存在しないがブランチだけが残っている場合は、既存ブランチから再作成する。
+
+```sh
+git worktree add "${WORKTREE}" "${BRANCH}"
+```
+
+`exec claim` が生成した plan と result は元の作業ツリーにある未コミットファイルの場合があるため、エージェント起動前にworktreeへコピーする。
+
+```sh
+SCHEDULE_REL="<schedule-path>"
+EXECUTION_REL="<execution-path>"
+
+mkdir -p "${WORKTREE}/${EXECUTION_REL}/exec/plans"
+mkdir -p "${WORKTREE}/${EXECUTION_REL}/exec/results"
+
+cp "${REPO_ROOT}/${EXECUTION_REL}/exec/plans/${TASK_ID}-plan.md" \
+  "${WORKTREE}/${EXECUTION_REL}/exec/plans/${TASK_ID}-plan.md"
+cp "${REPO_ROOT}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md" \
+  "${WORKTREE}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md"
+```
+
+エージェントがworktree側のプロジェクトパスを参照するように環境変数を設定し、worktreeへ移動する。
+
+```sh
+export SPECDOJO_SCHEDULE_PATH="${WORKTREE}/${SCHEDULE_REL}"
+export SPECDOJO_EXECUTION_PATH="${WORKTREE}/${EXECUTION_REL}"
+
+cd "${WORKTREE}"
+```
+
+9.3の `exec run --task --dry-run` で確認したコマンドを使用し、planの内容を標準入力から渡す。例えば OpenCode を使う場合は次のように実行する。
+
+```sh
+cat "${SPECDOJO_EXECUTION_PATH}/exec/plans/${TASK_ID}-plan.md" | \
+  opencode run --agent edit-agent
+```
+
+エージェント終了後、resultを元の作業ツリーへ戻す。
+
+```sh
+cp "${WORKTREE}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md" \
+  "${REPO_ROOT}/${EXECUTION_REL}/exec/results/${TASK_ID}-result.md"
+```
+
+成果物の変更は `${BRANCH}` に残る。元の作業ツリーへ自動では統合されないため、差分を確認し、必要な統合を終えてから9.6の `complete` または `block` を記録する。
+
+```sh
+git -C "${WORKTREE}" status --short
+git -C "${WORKTREE}" diff
+```
+
 ### 9.6. 完了イベントを記録する
 
 エージェントが正常終了したら `complete` イベントを書き込む。

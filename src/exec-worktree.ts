@@ -25,14 +25,14 @@ function gitOutput(repoRoot: string, args: string[]): string {
   return typeof result.stdout === 'string' ? result.stdout : ''
 }
 
-export function worktreeSlug(value: string): string {
+export function worktreeNameFromTaskId(value: string): string {
   const slug = value
     .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/[^A-Za-z0-9._-]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '')
-  return slug || 'agent'
+  if (!slug) throw new Error(`Task ID cannot be used as a worktree name: ${value}`)
+  return slug
 }
 
 export function resolveWorktreeBase(
@@ -66,18 +66,14 @@ function registeredWorktrees(repoRoot: string): Map<string, string | undefined> 
 export function ensureExecWorktree(opts: {
   repoRoot: string
   worktreeBase: string
-  instanceName: string
-  slot: number
+  taskId: string
 }): ExecWorktree {
   const repoRoot = resolve(opts.repoRoot)
-  if (!Number.isInteger(opts.slot) || opts.slot < 1) {
-    throw new Error(`Worktree slot must be a positive integer: ${opts.slot}`)
-  }
   const baseRelative = relative(repoRoot, resolve(opts.worktreeBase))
   if (baseRelative === '' || (!baseRelative.startsWith(`..${sep}`) && baseRelative !== '..')) {
     throw new Error(`Worktree base must be outside the repository: ${opts.worktreeBase}`)
   }
-  const name = `${worktreeSlug(opts.instanceName)}-${opts.slot}`
+  const name = worktreeNameFromTaskId(opts.taskId)
   const branch = `exec/${name}`
   const worktreePath = resolve(join(opts.worktreeBase, name))
   const registered = registeredWorktrees(repoRoot)

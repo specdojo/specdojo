@@ -3,7 +3,11 @@ import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { describe, expect, it } from 'vitest'
-import { ensureExecWorktree, resolveWorktreeBase, worktreeSlug } from '../../src/exec-worktree.js'
+import {
+  ensureExecWorktree,
+  resolveWorktreeBase,
+  worktreeNameFromTaskId,
+} from '../../src/exec-worktree.js'
 
 function git(cwd: string, ...args: string[]): string {
   return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
@@ -30,28 +34,26 @@ describe('exec worktree', () => {
     expect(resolveWorktreeBase(root, undefined, undefined)).toBe(resolve(root, '../worktrees'))
   })
 
-  it('creates and reuses an agent-slot worktree', () => {
+  it('creates and reuses a task worktree', () => {
     const repo = createGitRepository()
     const base = mkdtempSync(join(tmpdir(), 'specdojo-worktree-base-'))
     try {
       const created = ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
-        instanceName: 'Codex Edit Agent',
-        slot: 2,
+        taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
       })
 
       expect(created.created).toBe(true)
-      expect(created.name).toBe('codex-edit-agent-2')
-      expect(created.branch).toBe('exec/codex-edit-agent-2')
+      expect(created.name).toBe('prj-0001-T-LAUNCH-pm-plan-010')
+      expect(created.branch).toBe('exec/prj-0001-T-LAUNCH-pm-plan-010')
       expect(existsSync(join(created.path, 'README.md'))).toBe(true)
       expect(git(created.path, 'branch', '--show-current')).toBe(created.branch)
 
       const reused = ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
-        instanceName: 'Codex Edit Agent',
-        slot: 2,
+        taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
       })
       expect(reused).toEqual({ ...created, created: false })
     } finally {
@@ -60,9 +62,11 @@ describe('exec worktree', () => {
     }
   })
 
-  it('normalizes command labels for branch names', () => {
-    expect(worktreeSlug('claude -p --agent edit-agent')).toBe('claude-p-agent-edit-agent')
-    expect(worktreeSlug('***')).toBe('agent')
+  it('normalizes task ids for worktree and branch names', () => {
+    expect(worktreeNameFromTaskId('prj-0001:T-LAUNCH-pm-plan-010')).toBe(
+      'prj-0001-T-LAUNCH-pm-plan-010'
+    )
+    expect(() => worktreeNameFromTaskId('***')).toThrow('Task ID')
   })
 
   it('rejects a worktree base inside the repository', () => {
@@ -72,8 +76,7 @@ describe('exec worktree', () => {
         ensureExecWorktree({
           repoRoot: repo,
           worktreeBase: join(repo, 'worktrees'),
-          instanceName: 'agent',
-          slot: 1,
+          taskId: 'T-LAUNCH-pm-plan-010',
         })
       ).toThrow('outside the repository')
     } finally {
