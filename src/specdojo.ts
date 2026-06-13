@@ -9,7 +9,7 @@ import { registerRegisterCommands } from './register.js'
 import { registerWatchCommand } from './watch.js'
 import { registerBuildCommand } from './build-command.js'
 
-function main(): void {
+async function main(): Promise<void> {
   const program = new Command()
 
   program.name('specdojo').description('SpecDojo helper CLI').version('0.4.0')
@@ -24,7 +24,7 @@ function main(): void {
   registerWatchCommand(program)
   registerBuildCommand(program)
 
-  program.parse(process.argv)
+  await program.parseAsync(process.argv)
 }
 
-main()
+void main()

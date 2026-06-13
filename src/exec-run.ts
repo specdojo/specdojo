@@ -1,6 +1,6 @@
-import { spawnSync } from 'node:child_process'
-import { existsSync, readFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { spawn, spawnSync } from 'node:child_process'
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
+import { dirname, join, relative, resolve, sep } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
 import {
@@ -13,7 +13,7 @@ import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-projec
 import { readAllEventFiles, foldEventsToState } from './exec-events.js'
 import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
-import { listFilesRecursive, readJson, readYaml, sleepMs } from './exec-shared.js'
+import { listFilesRecursive, readJson, readYaml } from './exec-shared.js'
 import {
   loadConfig,
   loadMemberRoster,
@@ -26,6 +26,12 @@ import type { Proficiency } from './exec-types.js'
 import { replaceDocIndexRefs } from './doc-index.js'
 import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
+import {
+  ensureExecWorktree,
+  resolveWorktreeBase,
+  worktreeSlug,
+  type ExecWorktree,
+} from './exec-worktree.js'
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -52,7 +58,7 @@ type StrategyOwnerRule = {
 type StrategyFile = {
   phase_sets: Record<string, StrategyPhase[]>
   default_phase_set?: string
-  default_phase_sets?: string[]  // array form used in sch-strategy files
+  default_phase_sets?: string[] // array form used in sch-strategy files
   owner_rules: StrategyOwnerRule[]
 }
 
@@ -72,8 +78,11 @@ type RunOpts = {
   auto?: boolean
   task?: string
   agentCmd?: string
+  cmd?: string
   loop?: boolean
   maxRounds?: string
+  parallel?: string
+  worktreeBase?: string
 }
 
 type RunResult = 'success' | 'rate_limit' | 'failure'
@@ -81,6 +90,15 @@ type RunResult = 'success' | 'rate_limit' | 'failure'
 type ResolvedRequirements = {
   capabilities: string[]
   proficiency?: Proficiency
+}
+
+type PreparedTask = {
+  task: ReadyTaskView
+  actor: string
+  agentCommands: string[]
+  prompt: string
+  worktree: ExecWorktree
+  resultPath?: string
 }
 
 export function buildTaskPhaseMap(schedulePath: string): {
@@ -216,6 +234,35 @@ function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {
   return defaultExecDefaultsPath()
 }
 
+function configuredWorktreeBase(schedulePath: string): string | undefined {
+  const { config } = loadConfig()
+  if (!config) return undefined
+
+  const rootDir = specdojoRootDir()
+  for (const project of Object.values(config.projects)) {
+    if (resolve(rootDir, project.schedule_path.trim()) === schedulePath) {
+      return project.run?.worktree_base
+    }
+  }
+  return undefined
+}
+
+function parseParallel(value: string | undefined): number {
+  const text = value ?? '1'
+  if (!/^\d+$/.test(text)) {
+    throw new Error(`--parallel must be a positive integer: ${value ?? ''}`)
+  }
+  const parsed = Number.parseInt(text, 10)
+  if (!Number.isSafeInteger(parsed) || parsed < 1) {
+    throw new Error(`--parallel must be a positive integer: ${value ?? ''}`)
+  }
+  return parsed
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise(resolveDelay => setTimeout(resolveDelay, ms))
+}
+
 function expandPromptRefs(prompt: string): string {
   const indexPath = resolve(specdojoRootDir(), '.specdojo/doc-index.json')
   if (!existsSync(indexPath)) return prompt
@@ -225,9 +272,7 @@ function expandPromptRefs(prompt: string): string {
     missing: 'keep',
   })
   if (result.missingIds.length > 0) {
-    process.stderr.write(
-      `Unresolved ID reference(s): ${result.missingIds.join(', ')}\n`
-    )
+    process.stderr.write(`Unresolved ID reference(s): ${result.missingIds.join(', ')}\n`)
   }
   return result.content
 }
@@ -259,28 +304,38 @@ function loadRosterForExecutionPath(executionPath: string): MemberRoster | null 
   return null
 }
 
-function executeAgent(
+async function executeAgent(
   agentCommand: string,
   prompt: string,
-  detection: RateLimitDetection | undefined
-): { result: RunResult; exitCode: number | null; stderr: string } {
-  const parts = agentCommand.split(/\s+/).filter(Boolean)
-  if (parts.length === 0) {
+  detection: RateLimitDetection | undefined,
+  cwd: string,
+  env: NodeJS.ProcessEnv
+): Promise<{ result: RunResult; exitCode: number | null; stderr: string }> {
+  if (!agentCommand.trim()) {
     return { result: 'failure', exitCode: null, stderr: 'Empty agent command' }
   }
 
-  // Pass the prompt via stdin to avoid CLI parsers interpreting frontmatter '---' as an option.
-  // Equivalent to: echo "<prompt>" | <agentCommand>
-  const spawnResult = spawnSync(parts[0], parts.slice(1), {
-    input: prompt,
+  const child = spawn(agentCommand, {
+    cwd,
+    env,
+    shell: true,
     stdio: ['pipe', 'inherit', 'pipe'],
-    encoding: 'utf8',
   })
+  let stderr = ''
+  child.stderr.setEncoding('utf8')
+  child.stderr.on('data', (chunk: string) => {
+    stderr += chunk
+    process.stderr.write(chunk)
+  })
+  child.stdin.end(prompt)
 
-  const stderr = typeof spawnResult.stderr === 'string' ? spawnResult.stderr : ''
-  const exitCode = spawnResult.status
-
-  if (stderr) process.stderr.write(stderr)
+  const exitCode = await new Promise<number | null>(resolveExit => {
+    child.once('error', error => {
+      stderr += `${error.message}\n`
+      resolveExit(null)
+    })
+    child.once('close', code => resolveExit(code))
+  })
 
   if (isRateLimitError(exitCode, stderr, detection)) {
     return { result: 'rate_limit', exitCode, stderr }
@@ -291,16 +346,18 @@ function executeAgent(
   return { result: 'success', exitCode: 0, stderr: '' }
 }
 
-function runWithRetry(
+async function runWithRetry(
   agentCommands: string[],
   prompt: string,
   isOnCriticalPath: boolean,
-  execDefaults: ExecDefaultsConfig
-): RunResult {
+  execDefaults: ExecDefaultsConfig,
+  cwd: string,
+  env: NodeJS.ProcessEnv
+): Promise<RunResult> {
   const detection = execDefaults.rate_limit_detection
   const policy = execDefaults.rate_limit_policy
 
-  const first = executeAgent(agentCommands[0], prompt, detection)
+  const first = await executeAgent(agentCommands[0], prompt, detection, cwd, env)
   if (first.result !== 'rate_limit') return first.result
 
   if (!isOnCriticalPath || !policy) {
@@ -319,10 +376,10 @@ function runWithRetry(
     process.stdout.write(
       `Rate limit on critical path (attempt ${attemptCount}/${retry.max_attempts}). Waiting ${actualWait}s, trying next member...\n`
     )
-    sleepMs(actualWait * 1000)
+    await delay(actualWait * 1000)
     attemptCount++
 
-    const result = executeAgent(agentCommands[idx], prompt, detection)
+    const result = await executeAgent(agentCommands[idx], prompt, detection, cwd, env)
     if (result.result !== 'rate_limit') return result.result
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds)
@@ -334,24 +391,88 @@ function runWithRetry(
   return 'rate_limit'
 }
 
-function runSingleTask(
+function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: string): string {
+  const repoRelative = relative(repoRoot, sourcePath)
+  if (repoRelative === '..' || repoRelative.startsWith(`..${sep}`)) {
+    throw new Error(`Project path is outside repository root: ${sourcePath}`)
+  }
+  return resolve(worktreePath, repoRelative)
+}
+
+function copyTaskFileToWorktree(
+  repoRoot: string,
+  worktreePath: string,
+  sourcePath: string,
+  overwrite: boolean
+): void {
+  if (!existsSync(sourcePath)) return
+  const destination = pathInsideWorktree(repoRoot, worktreePath, sourcePath)
+  if (!overwrite && existsSync(destination)) return
+  mkdirSync(dirname(destination), { recursive: true })
+  copyFileSync(sourcePath, destination)
+}
+
+function copyTaskFileFromWorktree(
+  repoRoot: string,
+  worktreePath: string,
+  destinationPath: string
+): void {
+  const source = pathInsideWorktree(repoRoot, worktreePath, destinationPath)
+  if (!existsSync(source)) return
+  mkdirSync(dirname(destinationPath), { recursive: true })
+  copyFileSync(source, destinationPath)
+}
+
+function agentEnvironment(
+  repoRoot: string,
+  worktreePath: string,
+  schedulePath: string,
+  executionPath: string
+): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
+    SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
+  }
+}
+
+function commandInstanceName(command: string, actor: string): string {
+  if (actor && actor !== 'auto-agent') return actor
+  return command.trim().split(/\s+/)[0] || 'agent'
+}
+
+function prepareSingleTask(
   task: ReadyTaskView,
   projectId: string | undefined,
+  repoRoot: string,
+  schedulePath: string,
   executionPath: string,
-  execDefaults: ExecDefaultsConfig,
   roster: MemberRoster | null,
   localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
   actorOverride: string | undefined,
   dryRun: boolean,
-  skipClaim = false
-): RunResult {
+  skipClaim: boolean,
+  worktreeBase: string,
+  slot: number
+): PreparedTask | RunResult {
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
 
-  const agentCommands: string[] = agentCmdOverride ? [agentCmdOverride] : []
+  const explicitMember = agentCmdOverride
+    ? roster?.members.find(
+        member =>
+          member.type === 'agent' &&
+          member.command &&
+          (member.nickname === agentCmdOverride || member.command === agentCmdOverride)
+      )
+    : undefined
+  const agentCommands: string[] = agentCmdOverride
+    ? [explicitMember?.command ?? agentCmdOverride]
+    : []
   let actor = actorOverride ?? 'auto-agent'
+  if (!actorOverride && explicitMember) actor = explicitMember.nickname
 
   if (agentCommands.length === 0) {
     // Human tasks cannot be run automatically without explicit --agent-cmd override.
@@ -399,14 +520,35 @@ function runSingleTask(
     return 'failure'
   }
 
+  const instanceName = commandInstanceName(agentCommands[0], actor)
+  const worktreeName = `${worktreeSlug(instanceName)}-${slot}`
+  const worktree = dryRun
+    ? {
+        path: join(worktreeBase, worktreeName),
+        branch: `exec/${worktreeName}`,
+        name: worktreeName,
+        created: false,
+      }
+    : ensureExecWorktree({ repoRoot, worktreeBase, instanceName, slot })
+
+  const setupAction = dryRun ? 'would setup' : worktree.created ? 'setup' : 'reuse'
+  process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`)
+
   if (dryRun) {
     const claimMsg = skipClaim
       ? `  [dry-run] already claimed: ${task.id} as ${actor} (skip claim)`
       : `  [dry-run] would claim: ${task.id} as ${actor}`
     process.stdout.write(claimMsg + '\n')
     process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`)
+    process.stdout.write(`  [dry-run] CWD: ${worktree.path}\n`)
     process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`)
-    return 'success'
+    return {
+      task,
+      actor,
+      agentCommands,
+      prompt,
+      worktree,
+    }
   }
 
   if (skipClaim) {
@@ -432,50 +574,106 @@ function runSingleTask(
     ...(task.approach ? { approach: task.approach } : {}),
   })
 
-  process.stdout.write(`  Running: ${agentCommands[0]}\n`)
+  copyTaskFileToWorktree(
+    repoRoot,
+    worktree.path,
+    join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
+    true
+  )
+  copyTaskFileToWorktree(repoRoot, worktree.path, resultPath, false)
 
-  const isOnCriticalPath = (task.cpm?.slack ?? 1) === 0
-  const result = runWithRetry(agentCommands, prompt, isOnCriticalPath, execDefaults)
+  return {
+    task,
+    actor,
+    agentCommands,
+    prompt,
+    worktree,
+    resultPath,
+  }
+}
+
+async function runPreparedTask(
+  prepared: PreparedTask,
+  projectId: string | undefined,
+  repoRoot: string,
+  schedulePath: string,
+  executionPath: string,
+  execDefaults: ExecDefaultsConfig,
+  dryRun: boolean
+): Promise<RunResult> {
+  if (dryRun) return 'success'
+
+  process.stdout.write(`  Running: ${prepared.agentCommands[0]}\n`)
+  process.stdout.write(`  CWD: ${prepared.worktree.path}\n`)
+  const isOnCriticalPath = (prepared.task.cpm?.slack ?? 1) === 0
+  const result = await runWithRetry(
+    prepared.agentCommands,
+    prepared.prompt,
+    isOnCriticalPath,
+    execDefaults,
+    prepared.worktree.path,
+    agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath)
+  )
 
   const completedAt = new Date().toISOString()
+  if (prepared.resultPath) {
+    copyTaskFileFromWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
+  }
   if (result === 'success') {
-    updateResultStatus(resultPath, 'complete', completedAt)
-    spawnComplete(projectId, task.id, actor)
-    process.stdout.write(`  Done: ${task.id}\n`)
+    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'complete', completedAt)
+    spawnComplete(projectId, prepared.task.id, prepared.actor)
+    process.stdout.write(`  Done: ${prepared.task.id}\n`)
   } else if (result === 'rate_limit') {
-    updateResultStatus(resultPath, 'blocked', completedAt)
-    spawnBlock(projectId, task.id, actor, 'rate limit reached')
-    process.stdout.write(`  Rate limited: ${task.id}\n`)
+    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+    spawnBlock(projectId, prepared.task.id, prepared.actor, 'rate limit reached')
+    process.stdout.write(`  Rate limited: ${prepared.task.id}\n`)
   } else {
-    updateResultStatus(resultPath, 'blocked', completedAt)
-    spawnBlock(projectId, task.id, actor, 'agent exited with non-zero code')
-    process.stdout.write(`  Failed: ${task.id}\n`)
+    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+    spawnBlock(projectId, prepared.task.id, prepared.actor, 'agent exited with non-zero code')
+    process.stdout.write(`  Failed: ${prepared.task.id}\n`)
   }
 
   return result
 }
 
-function spawnBuild(projectId: string | undefined): boolean {
-  const buildArgs = ['exec', 'build']
-  if (projectId) buildArgs.push('--project', projectId)
-  const [exe, fullArgs] = selfRunArgs(buildArgs)
-  const result = spawnSync(exe, fullArgs, { stdio: 'inherit' })
+function spawnSelf(args: string[]): boolean {
+  const [exe, fullArgs] = selfRunArgs(args)
+  const result = spawnSync(exe, fullArgs, { stdio: 'inherit', cwd: specdojoRootDir() })
   return result.status === 0
 }
 
-function spawnClaim(projectId: string | undefined, taskId: string, by: string): boolean {
-  const args = ['exec', 'claim', '--task', taskId, '--by', by, '--msg', 'auto-run']
+function spawnValidate(projectId: string | undefined): boolean {
+  const args = ['exec', 'validate']
   if (projectId) args.push('--project', projectId)
-  const [exe, fullArgs] = selfRunArgs(args)
-  const result = spawnSync(exe, fullArgs, { stdio: 'inherit' })
-  return result.status === 0
+  return spawnSelf(args)
+}
+
+function spawnBuild(projectId: string | undefined): boolean {
+  const buildArgs = ['exec', 'build']
+  if (projectId) buildArgs.push('--project', projectId)
+  return spawnSelf(buildArgs)
+}
+
+function spawnClaim(projectId: string | undefined, taskId: string, by: string): boolean {
+  const args = [
+    'exec',
+    'claim',
+    '--task',
+    taskId,
+    '--by',
+    by,
+    '--msg',
+    'auto-run',
+    '--allow-multiple-doing',
+  ]
+  if (projectId) args.push('--project', projectId)
+  return spawnSelf(args)
 }
 
 function spawnComplete(projectId: string | undefined, taskId: string, by: string): void {
   const args = ['exec', 'complete', '--task', taskId, '--by', by, '--msg', 'auto-complete']
   if (projectId) args.push('--project', projectId)
-  const [exe, fullArgs] = selfRunArgs(args)
-  spawnSync(exe, fullArgs, { stdio: 'inherit' })
+  spawnSelf(args)
 }
 
 function spawnBlock(
@@ -486,14 +684,20 @@ function spawnBlock(
 ): void {
   const args = ['exec', 'block', '--task', taskId, '--by', by, '--msg', reason]
   if (projectId) args.push('--project', projectId)
-  const [exe, fullArgs] = selfRunArgs(args)
-  spawnSync(exe, fullArgs, { stdio: 'inherit' })
+  spawnSelf(args)
 }
 
-function runAutoMode(opts: RunOpts): void {
+async function runBatchMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
+  const repoRoot = specdojoRootDir()
+  const worktreeBase = resolveWorktreeBase(
+    repoRoot,
+    opts.worktreeBase,
+    configuredWorktreeBase(schedulePath)
+  )
+  const parallel = parseParallel(opts.parallel)
 
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
@@ -534,35 +738,83 @@ function runAutoMode(opts: RunOpts): void {
       ? ` (round ${round}${maxRounds !== null ? `/${maxRounds}` : '/-'})`
       : ''
     const taskMap = new Map(readySnapshot.tasks.map(t => [t.id, t]))
-    let ranThisRound = 0
+    const preparedTasks: PreparedTask[] = []
 
     for (const taskId of orderedIds) {
+      if (preparedTasks.length >= parallel) break
       const task = taskMap.get(taskId)
       if (!task) continue
 
-      const result = runSingleTask(
-        task,
-        opts.project,
-        executionPath,
-        execDefaults,
-        roster,
-        localIdToPhaseSets,
-        phaseSetSuffixToId,
-        undefined,
-        opts.by,
-        dryRun
-      )
-
-      if (result === 'success') {
-        ranThisRound++
-      } else if (result === 'rate_limit' && (task.cpm?.slack ?? 1) === 0) {
-        process.stdout.write(`[run] stopping: rate limit on critical task ${taskId}.\n`)
-        process.exitCode = 1
-        return
+      try {
+        const prepared = prepareSingleTask(
+          task,
+          opts.project,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          roster,
+          localIdToPhaseSets,
+          phaseSetSuffixToId,
+          opts.cmd,
+          opts.by,
+          dryRun,
+          false,
+          worktreeBase,
+          preparedTasks.length + 1
+        )
+        if (typeof prepared !== 'string') preparedTasks.push(prepared)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`)
       }
     }
 
-    process.stdout.write(`[run] all ${ranThisRound} instance(s) completed${roundSuffix}\n`)
+    if (preparedTasks.length === 0) {
+      process.stdout.write('[run] no executable tasks — exit\n')
+      process.exitCode = 1
+      return
+    }
+
+    const settledResults = await Promise.allSettled(
+      preparedTasks.map(prepared =>
+        runPreparedTask(
+          prepared,
+          opts.project,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          execDefaults,
+          dryRun
+        )
+      )
+    )
+    const results: RunResult[] = settledResults.map((settled, index) => {
+      if (settled.status === 'fulfilled') return settled.value
+      const prepared = preparedTasks[index]
+      const message =
+        settled.reason instanceof Error ? settled.reason.message : String(settled.reason)
+      process.stderr.write(`[run] error: ${prepared.worktree.name}: ${message}\n`)
+      if (!dryRun) {
+        const completedAt = new Date().toISOString()
+        if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+        spawnBlock(opts.project, prepared.task.id, prepared.actor, `runner error: ${message}`)
+      }
+      return 'failure'
+    })
+    const completed = results.filter(result => result === 'success').length
+    process.stdout.write(`[run] all ${completed} instance(s) completed${roundSuffix}\n`)
+
+    if (results.some(result => result === 'failure')) process.exitCode = 1
+
+    const criticalRateLimit = results.some(
+      (result, index) =>
+        result === 'rate_limit' && (preparedTasks[index].task.cpm?.slack ?? 1) === 0
+    )
+    if (criticalRateLimit) {
+      process.stdout.write('[run] stopping: rate limit on critical task.\n')
+      process.exitCode = 1
+      return
+    }
 
     if (!loop) return
 
@@ -581,11 +833,17 @@ function runAutoMode(opts: RunOpts): void {
   }
 }
 
-function runManualMode(opts: RunOpts): void {
+async function runManualMode(opts: RunOpts): Promise<void> {
   const taskId = opts.task as string
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath } = resolvedPaths
+  const repoRoot = specdojoRootDir()
+  const worktreeBase = resolveWorktreeBase(
+    repoRoot,
+    opts.worktreeBase,
+    configuredWorktreeBase(schedulePath)
+  )
 
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
@@ -635,7 +893,7 @@ function runManualMode(opts: RunOpts): void {
   // use the actor who claimed it and their command to avoid re-selecting a different agent.
   // Read from events directly (not state.json cache) to reflect recent scheduler claims.
   let actorOverride = opts.by
-  let agentCmdOverride = opts.agentCmd
+  let agentCmdOverride = opts.agentCmd ?? opts.cmd
   let alreadyClaimed = false
   if (!actorOverride) {
     try {
@@ -666,20 +924,37 @@ function runManualMode(opts: RunOpts): void {
     }
   }
 
-  const result = runSingleTask(
+  const prepared = prepareSingleTask(
     task,
     opts.project,
+    repoRoot,
+    schedulePath,
     executionPath,
-    execDefaults,
     roster,
     localIdToPhaseSets,
     phaseSetSuffixToId,
     agentCmdOverride,
     actorOverride,
     !!opts.dryRun,
-    alreadyClaimed
+    alreadyClaimed,
+    worktreeBase,
+    1
   )
 
+  if (typeof prepared === 'string') {
+    if (prepared === 'failure') process.exitCode = 1
+    return
+  }
+
+  const result = await runPreparedTask(
+    prepared,
+    opts.project,
+    repoRoot,
+    schedulePath,
+    executionPath,
+    execDefaults,
+    !!opts.dryRun
+  )
   if (result === 'failure') process.exitCode = 1
 }
 
@@ -692,6 +967,12 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option('--by <actor>', 'Actor / agent nickname (informational)')
   rcmd.option('--auto', 'Automatically select and run next ready task', false)
   rcmd.option('--task <taskId>', 'Task ID to run (manual selection)')
+  rcmd.option(
+    '--cmd <command>',
+    'Agent nickname or command string (selects a ready-task batch unless --task is used)'
+  )
+  rcmd.option('--parallel <n>', 'Number of worktree instances to run in parallel', '1')
+  rcmd.option('--worktree-base <path>', 'Override worktree base directory')
   rcmd.option(
     '--strategy <s>',
     'Task selection strategy: critical-first|fifo (default: critical-first)'
@@ -709,23 +990,21 @@ export function registerRunCommand(exec: Command): void {
     '--exec-defaults <path>',
     'Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)'
   )
-  rcmd.option(
-    '--agent-config <path>',
-    'Deprecated alias for --exec-defaults'
-  )
+  rcmd.option('--agent-config <path>', 'Deprecated alias for --exec-defaults')
   rcmd.option(
     '--agent-cmd <command>',
     'Override agent command string, e.g. "opencode run --agent edit-agent" (--task mode only)'
   )
   rcmd.option('--dry-run', 'Print resolved command without executing', false)
 
-  rcmd.action((opts: RunOpts) => {
+  rcmd.action(async (opts: RunOpts) => {
     try {
       const isAuto = !!opts.auto
       const isManual = !!opts.task
+      const hasCommand = !!opts.cmd
 
-      if (!isAuto && !isManual) {
-        process.stdout.write('Specify --auto or --task <taskId>.\n')
+      if (!isAuto && !isManual && !hasCommand) {
+        process.stdout.write('Specify --auto, --cmd <command>, or --task <taskId>.\n')
         process.exitCode = 1
         return
       }
@@ -734,11 +1013,40 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1
         return
       }
+      if (isAuto && hasCommand) {
+        process.stdout.write('Specify either --auto or --cmd, not both.\n')
+        process.exitCode = 1
+        return
+      }
+      if (opts.agentCmd && !isManual) {
+        process.stdout.write('--agent-cmd requires --task. Use --cmd for batch execution.\n')
+        process.exitCode = 1
+        return
+      }
+      if (isManual && parseParallel(opts.parallel) !== 1) {
+        process.stdout.write('--parallel cannot be used with --task.\n')
+        process.exitCode = 1
+        return
+      }
 
-      if (isAuto) {
-        runAutoMode(opts)
+      process.stdout.write('[run] validate...\n')
+      if (!spawnValidate(opts.project)) {
+        process.stdout.write('[run] validate failed — exit\n')
+        process.exitCode = 1
+        return
+      }
+      process.stdout.write('[run] validate: ok\n[run] build...\n')
+      if (!spawnBuild(opts.project)) {
+        process.stdout.write('[run] build failed — exit\n')
+        process.exitCode = 1
+        return
+      }
+      process.stdout.write('[run] build: ok\n')
+
+      if (isAuto || (!isManual && hasCommand)) {
+        await runBatchMode(opts)
       } else {
-        runManualMode(opts)
+        await runManualMode(opts)
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
