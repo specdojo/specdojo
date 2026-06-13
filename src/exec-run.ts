@@ -263,8 +263,10 @@ function delay(ms: number): Promise<void> {
   return new Promise(resolveDelay => setTimeout(resolveDelay, ms))
 }
 
-function expandPromptRefs(prompt: string): string {
-  const indexPath = resolve(specdojoRootDir(), '.specdojo/doc-index.json')
+export function expandPromptRefs(
+  prompt: string,
+  indexPath = resolve(specdojoRootDir(), '.specdojo/doc-index.json')
+): string {
   if (!existsSync(indexPath)) return prompt
 
   const result = replaceDocIndexRefs(prompt, indexPath, {

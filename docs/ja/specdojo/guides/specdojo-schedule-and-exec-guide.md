@@ -349,7 +349,8 @@ unset SPECDOJO_SCHEDULE_PATH SPECDOJO_EXECUTION_PATH
 9.3の `exec run --task --dry-run` で確認したコマンドを使用し、planの内容を標準入力から渡す。例えば OpenCode を使う場合は次のように実行する。
 
 ```sh
-cat "${EXECUTION_REL}/exec/plans/${TASK_ID}-plan.md" | \
+specdojo index replace --format markdown --missing keep \
+  "${EXECUTION_REL}/exec/plans/${TASK_ID}-plan.md" | \
   opencode run --agent edit-agent
 ```
 

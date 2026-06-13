@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { resolveClaimOwner } from '../../src/exec.js'
-import { buildTaskPhaseMap } from '../../src/exec-run.js'
+import { buildTaskPhaseMap, expandPromptRefs } from '../../src/exec-run.js'
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -167,6 +167,31 @@ describe('exec strategy metadata resolution', () => {
       expect(resolveTaskExecution('doc', 'T-LAUNCH-doc-010', index)).toBe('human')
     } finally {
       rmSync(scheduleDir, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('expandPromptRefs', () => {
+  it('exec run が [[id]] を Markdown リンク形式に展開する', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-exec-prompt-'))
+    try {
+      const indexPath = join(dir, 'doc-index.json')
+      writeFileSync(
+        indexPath,
+        JSON.stringify({
+          version: 1,
+          entries: {
+            'sample-doc': 'docs/sample.md',
+          },
+        }),
+        'utf8'
+      )
+
+      expect(expandPromptRefs('See [[sample-doc]].', indexPath)).toBe(
+        'See [sample-doc](docs/sample.md).'
+      )
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 })
