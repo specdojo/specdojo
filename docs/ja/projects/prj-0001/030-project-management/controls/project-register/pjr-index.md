@@ -119,6 +119,23 @@ Project Register
 | PJR-0098 | done | specdojo exec auto選択時にcapabilitiesのロジック変更 | 最小剰余を使用してcapabilitiesを選択->制約条件に変更 | todo | medium | ARC | 2026-06-07 | 2026-06-07 | priorityに基づいて選択するように変更 | - |
 | PJR-0099 | done | exec planをcreation_mode毎に出力変更 | creation_modeを反映し、planテンプレートから生成 | todo | medium | ARC | 2026-06-13 | 2026-06-10 | creation_modeをapproach_modeに変更してmode毎にテンプレート作成 | - |
 | PJR-0100 | open | *-instruction.mdを削除 | *-instruction.mdを廃止 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0101 | open | xep-freeform-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0102 | open | xep-fully-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0103 | open | xep-recipe-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0104 | open | xep-recipe-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0105 | open | xep-rulebook-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0106 | open | xep-sample-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0107 | open | xep-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0108 | open | xer-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0109 | open | xrp-freeform-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0110 | open | xrp-fully-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0111 | open | xrp-recipe-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0112 | open | xrp-recipe-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0113 | open | xrp-rulebook-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0114 | open | xrp-sample-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0115 | open | xrp-template-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0116 | open | xrp-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0117 | open | xrr-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
 
 ## 4. 派生ビュー
 
