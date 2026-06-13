@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import type { Router } from 'vitepress'
 import { h } from 'vue'
 import SidebarToggle from './SidebarToggle.vue'
+import FrontmatterTable from './FrontmatterTable.vue'
 import './custom.css'
 
 export default {
@@ -9,6 +10,7 @@ export default {
   Layout: () =>
     h(DefaultTheme.Layout, null, {
       'nav-bar-title-after': () => h(SidebarToggle),
+      'doc-before': () => h(FrontmatterTable),
     }),
   enhanceApp({ router }: { router: Router }) {
     if (typeof window === 'undefined') return
