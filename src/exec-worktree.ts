@@ -9,6 +9,11 @@ export type ExecWorktree = {
   created: boolean
 }
 
+export type RegisteredWorktree = {
+  path: string
+  branch?: string
+}
+
 const GIT_LOCAL_ENV_VARS = [
   'GIT_ALTERNATE_OBJECT_DIRECTORIES',
   'GIT_COMMON_DIR',
@@ -30,7 +35,7 @@ function gitEnvironment(): NodeJS.ProcessEnv {
   return env
 }
 
-function git(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
+export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
   return spawnSync('git', ['-C', repoRoot, ...args], {
     encoding: 'utf8',
     env: gitEnvironment(),
@@ -38,8 +43,8 @@ function git(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
   })
 }
 
-function gitOutput(repoRoot: string, args: string[]): string {
-  const result = git(repoRoot, args)
+export function gitOutput(repoRoot: string, args: string[]): string {
+  const result = gitResult(repoRoot, args)
   if (result.status !== 0) {
     const stderr = typeof result.stderr === 'string' ? result.stderr.trim() : ''
     throw new Error(`git ${args.join(' ')} failed${stderr ? `: ${stderr}` : ''}`)
@@ -66,23 +71,44 @@ export function resolveWorktreeBase(
   return isAbsolute(value) ? resolve(value) : resolve(repoRoot, value)
 }
 
-function registeredWorktrees(repoRoot: string): Map<string, string | undefined> {
+export function listRegisteredWorktrees(repoRoot: string): RegisteredWorktree[] {
   const output = gitOutput(repoRoot, ['worktree', 'list', '--porcelain'])
-  const result = new Map<string, string | undefined>()
+  const result: RegisteredWorktree[] = []
   let currentPath: string | undefined
+  let currentBranch: string | undefined
+
+  function pushCurrent(): void {
+    if (currentPath) result.push({ path: currentPath, branch: currentBranch })
+    currentPath = undefined
+    currentBranch = undefined
+  }
 
   for (const line of output.split(/\r?\n/)) {
     if (line.startsWith('worktree ')) {
+      pushCurrent()
       currentPath = resolve(line.slice('worktree '.length))
-      result.set(currentPath, undefined)
     } else if (currentPath && line.startsWith('branch refs/heads/')) {
-      result.set(currentPath, line.slice('branch refs/heads/'.length))
+      currentBranch = line.slice('branch refs/heads/'.length)
     } else if (line === '') {
-      currentPath = undefined
+      pushCurrent()
     }
   }
+  pushCurrent()
 
   return result
+}
+
+export function findExecWorktree(repoRoot: string, taskId: string): ExecWorktree | null {
+  const name = worktreeNameFromTaskId(taskId)
+  const branch = `exec/${name}`
+  const registered = listRegisteredWorktrees(repoRoot).find(item => item.branch === branch)
+  if (!registered) return null
+  return { path: registered.path, branch, name, created: false }
+}
+
+export function execBranchExists(repoRoot: string, taskId: string): boolean {
+  const branch = `exec/${worktreeNameFromTaskId(taskId)}`
+  return gitResult(repoRoot, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).status === 0
 }
 
 export function ensureExecWorktree(opts: {
@@ -98,16 +124,16 @@ export function ensureExecWorktree(opts: {
   const name = worktreeNameFromTaskId(opts.taskId)
   const branch = `exec/${name}`
   const worktreePath = resolve(join(opts.worktreeBase, name))
-  const registered = registeredWorktrees(repoRoot)
-  const registeredBranch = registered.get(worktreePath)
+  const registered = listRegisteredWorktrees(repoRoot)
+  const registeredAtPath = registered.find(item => item.path === worktreePath)
 
-  if (registered.has(worktreePath)) {
+  if (registeredAtPath) {
     if (!existsSync(worktreePath)) {
       throw new Error(`Registered worktree path does not exist: ${worktreePath}`)
     }
-    if (registeredBranch !== branch) {
+    if (registeredAtPath.branch !== branch) {
       throw new Error(
-        `Worktree ${worktreePath} uses branch ${registeredBranch ?? '(detached)'}; expected ${branch}`
+        `Worktree ${worktreePath} uses branch ${registeredAtPath.branch ?? '(detached)'}; expected ${branch}`
       )
     }
     return { path: worktreePath, branch, name, created: false }
@@ -119,7 +145,7 @@ export function ensureExecWorktree(opts: {
 
   mkdirSync(opts.worktreeBase, { recursive: true })
   const branchExists =
-    git(repoRoot, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).status === 0
+    gitResult(repoRoot, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).status === 0
   const args = branchExists
     ? ['worktree', 'add', worktreePath, branch]
     : ['worktree', 'add', worktreePath, '-b', branch]

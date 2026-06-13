@@ -62,7 +62,7 @@ type StrategyFile = {
   owner_rules: StrategyOwnerRule[]
 }
 
-type TaskPhaseContext = {
+export type TaskPhaseContext = {
   localId: string
   phaseSet: string
   phaseId: string
@@ -87,7 +87,7 @@ type RunOpts = {
 
 type RunResult = 'success' | 'rate_limit' | 'failure'
 
-type ResolvedRequirements = {
+export type ResolvedRequirements = {
   capabilities: string[]
   proficiency?: Proficiency
 }
@@ -142,7 +142,7 @@ export function buildTaskPhaseMap(schedulePath: string): {
   return { localIdToPhaseSets, phaseSetSuffixToId }
 }
 
-function resolveTaskPhaseContext(
+export function resolveTaskPhaseContext(
   task: ReadyTaskView,
   localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>
@@ -165,7 +165,7 @@ function resolveTaskPhaseContext(
   return null
 }
 
-function selectCandidates(
+export function selectCandidates(
   requirements: ResolvedRequirements,
   roster: MemberRoster | null,
   taskMode?: string
@@ -279,12 +279,12 @@ export function expandPromptRefs(
   return result.content
 }
 
-function loadPrompt(executionPath: string, taskId: string): string | null {
+export function loadPrompt(executionPath: string, taskId: string): string | null {
   const plan = loadPlan(executionPath, taskId)
   return plan ? expandPromptRefs(plan) : null
 }
 
-function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
+export function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
   const { config } = loadConfig()
   if (!config) return null
 

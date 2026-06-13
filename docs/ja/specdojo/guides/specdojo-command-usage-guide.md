@@ -1583,7 +1583,68 @@ rate_limit_policy:
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
 
-### 8.13. exec status
+### 8.13. exec worktree
+
+claim 済みタスクを人が段階ごとに確認しながら実行するため、worktree の準備、agent 起動、commit、merge、削除を分割して行う。`exec run` と異なり、`claim`、`complete`、`block` は暗黙に実行しない。
+
+```bash
+# merge 先の worktree で実行
+specdojo exec worktree prepare --project prj-0001 --task <task-id>
+
+# prepare が表示した task worktree へ移動
+cd <worktree-path>
+specdojo exec worktree status --project prj-0001 --task <task-id>
+specdojo exec worktree agent --project prj-0001 --task <task-id>
+specdojo exec worktree commit --project prj-0001 --task <task-id>
+
+# merge 先の worktree へ戻る
+cd <merge-target-worktree>
+specdojo exec worktree merge --project prj-0001 --task <task-id>
+specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branch
+```
+
+独自の JSON や状態ファイルは作成しない。worktree パスは `git worktree list --porcelain`、exec ブランチは task ID、比較起点は `git merge-base`、統合済み判定は `git merge-base --is-ancestor` から毎回導出する。
+
+| サブコマンド | 実行場所                   | 処理                                                                 |
+| ------------ | -------------------------- | -------------------------------------------------------------------- |
+| `prepare`    | merge 先の worktree        | plan、result、claim event を checkpoint commit し、task worktree を作成 |
+| `status`     | どちらでも可               | task state、actor、worktree、差分、統合状態を表示                    |
+| `agent`      | task worktree              | `[[id]]` を Markdown 形式で展開した plan を agent の標準入力へ渡す   |
+| `commit`     | task worktree              | 対象 result と成果物変更を exec ブランチへ commit                    |
+| `merge`      | merge 先の worktree        | exec ブランチを現在のブランチへ merge                                |
+| `remove`     | merge 先の worktree        | 統合済み task worktree を削除                                        |
+
+共通オプション:
+
+| オプション  | 説明                                               | デフォルト |
+| ----------- | -------------------------------------------------- | ---------- |
+| `--project` | プロジェクト ID（`specdojo.config.json` から解決） | 省略可     |
+| `--task`    | 対象 task ID                                       | 必須       |
+
+固有オプション:
+
+| サブコマンド | オプション                                                             |
+| ------------ | ---------------------------------------------------------------------- |
+| `prepare`    | `--worktree-base <path>`、`--dry-run`                                  |
+| `status`     | `--worktree-base <path>`                                               |
+| `agent`      | `--by <actor>`、`--agent-cmd <command>`、`--dry-run`                   |
+| `commit`     | `--message <message>`、`--dry-run`                                     |
+| `merge`      | `--ff-only`、`--dry-run`                                               |
+| `remove`     | `--delete-branch`、`--force`、`--dry-run`                              |
+
+`prepare` は task state が `doing` であることを確認し、scheduler と同じプロジェクトロックを取得する。root index に stage 済み変更がある場合は停止し、対象 task の plan、result、claim event だけを `exec(<task-id>): prepare execution` で commit してから `exec/<task-id-slug>` を作成する。登録済み worktree または既存 exec ブランチは再利用する。
+
+`agent` は claim actor と `pm-members.yaml` の定義から command を解決する。plan 内の `[[id]]` は `index replace --format markdown --missing keep` 相当で展開し、task worktree をカレントディレクトリとして agent を1回だけ起動する。リトライ、fallback、commit、イベント更新は行わず、agent の終了コードをそのまま返す。
+
+`commit` は `exec/plans/`、対象 task 以外の `exec/results/`、`exec/events/`、`generated/` を除外し、対象 result と成果物だけを commit する。デフォルトメッセージは `exec(<task-id>): apply task changes` である。
+
+`merge` は task worktree に commit 対象の未commit変更がないこと、exec ブランチに未統合 commit があること、現在の未commit変更と merge 対象パスが重複しないことを確認する。通常は `git merge --no-ff --no-edit`、`--ff-only` 指定時は `git merge --ff-only` 相当を実行する。競合時は Git の競合状態を保持し、自動 abort しない。
+
+`remove` は commit 対象の未commit変更がなく、exec ブランチが現在の `HEAD` へ統合済みである場合だけ worktree を削除する。`--delete-branch` は `git branch -d` を使い、未統合ブランチを強制削除しない。`--force` は `git worktree remove --force` 相当であり、未commit変更が失われる可能性がある。
+
+詳細な Git 操作と安全条件は `specdojo-schedule-and-exec-guide.md` の「9.5.1. worktree を作成してエージェントを手動実行する」を参照する。
+
+### 8.14. exec status
 
 現在の実行状態でタスクを絞り込んで表示する。`--state` を省略すると doing（クレーム中）のタスクを表示する。イベントファイルから直接計算するため、`exec build` 前でも最新の状態が表示される。
 
@@ -1622,7 +1683,7 @@ specdojo exec status --project <project-id>
 specdojo exec status --project <project-id> --by <actor> --state blocked
 ```
 
-### 8.14. exec scaffold
+### 8.15. exec scaffold
 
 プロジェクトのセットアップファイル（`pm-review-viewpoints.yaml` など）を生成する。`review scaffold` コマンドから viewpoints 生成機能を引き継いだサブコマンドです。
 

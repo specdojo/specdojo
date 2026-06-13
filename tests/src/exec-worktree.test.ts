@@ -5,9 +5,13 @@ import { tmpdir } from 'node:os'
 import { describe, expect, it } from 'vitest'
 import {
   ensureExecWorktree,
+  execBranchExists,
+  findExecWorktree,
+  listRegisteredWorktrees,
   resolveWorktreeBase,
   worktreeNameFromTaskId,
 } from '../../src/exec-worktree.js'
+import { isCommitTargetPath } from '../../src/exec-worktree-command.js'
 
 function git(cwd: string, ...args: string[]): string {
   return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
@@ -49,6 +53,15 @@ describe('exec worktree', () => {
       expect(created.branch).toBe('exec/prj-0001-T-LAUNCH-pm-plan-010')
       expect(existsSync(join(created.path, 'README.md'))).toBe(true)
       expect(git(created.path, 'branch', '--show-current')).toBe(created.branch)
+      expect(execBranchExists(repo, 'prj-0001:T-LAUNCH-pm-plan-010')).toBe(true)
+      expect(findExecWorktree(repo, 'prj-0001:T-LAUNCH-pm-plan-010')).toEqual({
+        ...created,
+        created: false,
+      })
+      expect(listRegisteredWorktrees(repo)).toContainEqual({
+        path: created.path,
+        branch: created.branch,
+      })
 
       const reused = ensureExecWorktree({
         repoRoot: repo,
@@ -103,5 +116,23 @@ describe('exec worktree', () => {
     } finally {
       rmSync(repo, { recursive: true, force: true })
     }
+  })
+
+  it('selects result and deliverable paths while excluding execution bookkeeping', () => {
+    const execution = 'docs/project/execution'
+    const result = `${execution}/exec/results/T-001-result.md`
+
+    expect(isCommitTargetPath('docs/project/deliverable.md', execution, result)).toBe(true)
+    expect(isCommitTargetPath(result, execution, result)).toBe(true)
+    expect(
+      isCommitTargetPath(`${execution}/exec/results/T-002-result.md`, execution, result)
+    ).toBe(false)
+    expect(isCommitTargetPath(`${execution}/exec/plans/T-001-plan.md`, execution, result)).toBe(
+      false
+    )
+    expect(isCommitTargetPath(`${execution}/exec/events/event.json`, execution, result)).toBe(
+      false
+    )
+    expect(isCommitTargetPath(`${execution}/generated/state.json`, execution, result)).toBe(false)
   })
 })

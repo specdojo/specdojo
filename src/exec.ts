@@ -47,6 +47,7 @@ import { generatePlans } from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { registerRunCommand } from './exec-run.js'
+import { registerExecWorktreeCommands } from './exec-worktree-command.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { buildPhaseModeIndex, resolveApproach, resolveTaskMode } from './exec-strategy.js'
 
@@ -631,6 +632,7 @@ export function registerExecCommands(program: Command): void {
   })
 
   registerRunCommand(exec)
+  registerExecWorktreeCommands(exec)
 
   // exec scaffold: creates project setup files (viewpoints etc.)
   const scaffoldCmd = exec
