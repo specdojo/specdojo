@@ -34,7 +34,6 @@
 - `critical-path.md`: クリティカルパスと slack 分析
 - `agent-briefs/*.md`: ready になった task ごとの Agent 向け実行ブリーフ（進捗は持たず、primary_paths / secondary_paths と block テンプレートを含む）
 - `timeline.md` / `timeline.svg`: プロジェクトタイムライン（Gantt-like 表示）
-- `task-catalog.md`: task/milestone の人間向けカタログ（目的・依存・状態・CPM 指標）
 - `schedule-diff.md`: スケジュールスキーマ差分（前回ビルドからの追加/削除/変更）
 - `metadata.json`: 生成メタデータ（タイムスタンプ、schedule ファイル数、派生ファイル一覧）
 

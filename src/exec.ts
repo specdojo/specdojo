@@ -46,7 +46,6 @@ import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
 import { generatePlans } from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
-import { generateTaskCatalog } from './exec-task-catalog.js'
 import { registerRunCommand } from './exec-run.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { buildPhaseModeIndex, resolveApproach, resolveTaskMode } from './exec-strategy.js'
@@ -312,7 +311,6 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       writeGeneratedCore(schedulePath, state.events, state.schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, state.schedule)
       writeCpmFiles(schedulePath, cpm, state.snapshot)
-      generateTaskCatalog(schedulePath, executionPath)
       event.meta = {
         ...(event.meta ?? {}),
         claim_owner: claimOwner,
@@ -454,7 +452,6 @@ export function registerExecCommands(program: Command): void {
       const snapshot = writeGeneratedCore(schedulePath, events, schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, schedule)
       writeCpmFiles(schedulePath, cpm, snapshot)
-      generateTaskCatalog(schedulePath, executionPath)
       generatePlans(
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',

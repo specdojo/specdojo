@@ -1099,7 +1099,6 @@ generated/
 ├─ critical-path.md
 ├─ schedule-hash.json
 ├─ schedule-diff.md
-├─ task-catalog.md
 ├─ timeline.md
 ├─ timeline.svg
 ├─ metadata.json

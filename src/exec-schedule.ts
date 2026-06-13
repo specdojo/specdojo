@@ -273,7 +273,6 @@ export function writeGeneratedCore(
       'schedule-diff.md',
       'schedule-hash.json',
       'state.json',
-      'task-catalog.md',
       'timeline.md',
       'timeline.svg',
     ],

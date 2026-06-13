@@ -349,7 +349,6 @@ function buildBriefMarkdown(
   lines.push('## 8. 参照先')
   lines.push('')
   lines.push(`- ready source: \`generated/ready.json\``)
-  lines.push(`- task catalog: \`generated/task-catalog.md\``)
   lines.push(`- CPM summary: \`generated/cpm.md\``)
   lines.push(`- critical path: \`generated/critical-path.md\``)
   lines.push(`- execution events: \`exec/events/*.json\``)
