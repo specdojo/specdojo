@@ -18,7 +18,18 @@ _PHASE_DESCRIPTION_
 
 _DONE_CRITERIA_ITEMS_
 
-## 3. 進め方
+## 3. owner ロールとしての記述ポイント
+
+frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
+
+- owner role: **_OWNER_ROLE_LABEL_**
+- 責務: _OWNER_ROLE_NOTE_
+
+このロールが重視するレビュー観点:
+
+_OWNER_ROLE_VIEWPOINTS_
+
+## 4. 進め方
 
 - 参照の向きを「成果物 → template」に切り替えて進める。
 - 対象成果物に紐づく template を「見直す対象」として扱う。
@@ -29,13 +40,13 @@ _DONE_CRITERIA_ITEMS_
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。
 
-## 4. 完了手順
+## 5. 完了手順
 
 1. 「このフェーズで行うこと」に従って template を更新する。
 2. 必要な検証と lint を実行する。
 3. result の done_criteria_checked セクションを記入する。
 
-## 5. 異常終了の条件
+## 6. 異常終了の条件
 
 - 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。

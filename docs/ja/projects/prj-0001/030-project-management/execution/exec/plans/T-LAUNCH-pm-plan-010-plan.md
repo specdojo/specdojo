@@ -34,7 +34,20 @@ owner: PM
 - 構成管理・技術管理の観点が含まれていること
 - レビュー方針・品質基準への参照が確認できること
 
-## 3. 進め方
+## 3. owner ロールとしての記述ポイント
+
+frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
+
+- owner role: **PM（Project Manager）**
+- 責務: 計画・進捗・課題・リスク管理を担う。小規模運用では po が兼務する。
+
+このロールが重視するレビュー観点:
+
+- 計画化可能性: 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。
+- 依存関係・リスク・課題化: 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。
+- 管理・報告への接続: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。
+
+## 4. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
 - `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、参照の向きを「成果物 → 対象の参考資料」に切り替えて進める。
@@ -48,13 +61,13 @@ owner: PM
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。
 
-## 4. 完了手順
+## 5. 完了手順
 
 1. 「このフェーズで行うこと」に従って成果物を更新する。
 2. 必要な検証と lint を実行する。
 3. result の done_criteria_checked セクションを記入する。
 
-## 5. 異常終了の条件
+## 6. 異常終了の条件
 
 - 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
