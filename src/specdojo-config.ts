@@ -18,6 +18,7 @@ export type SpecDojoProjectConfig = {
   execution_path: string
   members_path?: string
   reviews_path?: string
+  roles_path?: string
   viewpoints_path?: string
   project_register_path?: string
   run?: SpecDojoRunConfig

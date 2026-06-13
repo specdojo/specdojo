@@ -105,6 +105,10 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 **確認基準**: プロジェクトの目的・スコープを計画立案の基礎として確認できること
 
+**coverage_required:**
+
+_MISSING_
+
 **チェック観点:** 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。
 
 **エビデンス例:** 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。

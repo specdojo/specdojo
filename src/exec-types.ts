@@ -197,6 +197,7 @@ export type ResolvedProjectPaths = {
   schedulePath: string
   executionPath: string
   catalogPath?: string
+  rolesPath?: string
   viewpointsPath?: string
 }
 

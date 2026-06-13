@@ -24,6 +24,7 @@ function writeConfig(dir: string): void {
             schedule_path: 'docs/prj-a/schedule',
             execution_path: 'docs/prj-a/execution',
             catalog_path: 'docs/prj-a/catalog',
+            roles_path: 'docs/prj-a/pm-roles.yaml',
           },
           'prj-b': {
             schedule_path: 'docs/prj-b/schedule',
@@ -91,6 +92,14 @@ describe('resolveProjectPaths', () => {
       expect(paths.schedulePath).toBe(join(dir, 'docs/prj-a/schedule'))
       expect(paths.executionPath).toBe(join(dir, 'docs/prj-a/execution'))
       expect(paths.catalogPath).toBe(join(dir, 'docs/prj-a/catalog'))
+      expect(paths.rolesPath).toBe(join(dir, 'docs/prj-a/pm-roles.yaml'))
+    })
+  })
+
+  it('roles_path 未設定の project では rolesPath は undefined になる', () => {
+    withRepo(() => {
+      const paths = resolveProjectPaths({ project: 'prj-b' })
+      expect(paths.rolesPath).toBeUndefined()
     })
   })
 

@@ -13,6 +13,7 @@ import type {
 } from './exec-types.js'
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
 import type { ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
+import type { RoleDefinition, RolesDoc } from './role-types.js'
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -92,6 +93,16 @@ function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
   }
 }
 
+function loadRoles(rolesPath: string | undefined): Map<string, RoleDefinition> {
+  if (!rolesPath || !existsSync(rolesPath)) return new Map()
+  try {
+    const doc = load(readFileSync(rolesPath, 'utf8')) as RolesDoc
+    return new Map((doc.roles ?? []).map(role => [role.code, role]))
+  } catch {
+    return new Map()
+  }
+}
+
 function repoRelativePath(absPath: string): string {
   const rel = relative(specdojoRootDir(), absPath)
   return rel.startsWith('/') ? rel : `/${rel}`
@@ -125,6 +136,14 @@ function frontmatter(meta: ExecPlanMeta): string {
 // Template-based generation (edit-plan / review-plan テンプレートの展開)
 // ---------------------------------------------------------------------------
 
+// レビュー観点 1 件ぶんの記述ブロック断片。prose ラベル（確認基準・チェック観点など）は
+// 言語別 docs/<lang>/.../templates のこの断片に置き、コードは値のみを供給する。
+const REVIEW_VIEWPOINT_DETAIL_TEMPLATE = 'xrp-viewpoint-detail-template.md'
+
+function templatesDir(): string {
+  return join(specdojoRootDir(), 'docs/ja/specdojo/templates')
+}
+
 function templatePrefix(mode: TaskMode): string {
   return mode === 'review' ? 'xrp' : 'xep'
 }
@@ -140,20 +159,14 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
 // Selects <prefix>-<approach>-template.md when it exists, otherwise falls back
 // to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
 function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
-  const templatesDir = join(specdojoRootDir(), 'docs/ja/specdojo/templates')
   if (approach) {
-    const candidatePath = join(templatesDir, approachTemplateFileName(mode, approach))
+    const candidatePath = join(templatesDir(), approachTemplateFileName(mode, approach))
     if (existsSync(candidatePath)) return candidatePath
   }
-  return join(templatesDir, standardTemplateFileName(mode))
+  return join(templatesDir(), standardTemplateFileName(mode))
 }
 
-function loadPlanTemplate(
-  mode: TaskMode,
-  approach: Approach | undefined,
-  cache: Map<string, string>
-): string {
-  const templatePath = resolvePlanTemplatePath(mode, approach)
+function readTemplate(templatePath: string, cache: Map<string, string>): string {
   const cached = cache.get(templatePath)
   if (cached !== undefined) return cached
   if (!existsSync(templatePath)) {
@@ -162,6 +175,18 @@ function loadPlanTemplate(
   const content = readFileSync(templatePath, 'utf8')
   cache.set(templatePath, content)
   return content
+}
+
+function loadPlanTemplate(
+  mode: TaskMode,
+  approach: Approach | undefined,
+  cache: Map<string, string>
+): string {
+  return readTemplate(resolvePlanTemplatePath(mode, approach), cache)
+}
+
+function loadViewpointDetailTemplate(cache: Map<string, string>): string {
+  return readTemplate(join(templatesDir(), REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache)
 }
 
 function phaseDescriptionText(task: PlanTask): string {
@@ -211,41 +236,79 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
   return lines.join('\n')
 }
 
-function reviewViewpointDetails(
+function viewpointCoverage(vp: ReviewViewpoint | undefined): string {
+  if (!vp?.coverage_types || vp.coverage_types.length === 0) return MISSING
+  return vp.coverage_types.map(ct => `- ${ct}`).join('\n')
+}
+
+// レビュー観点ごとに detail 断片テンプレートを展開して結合する。prose ラベルは
+// detailTemplate 側にあり、ここでは値を差し込むだけ。値が無い項目は他のプレースホルダと
+// 同様に MISSING にし、表示構造はテンプレート側に委ねる。
+export function reviewViewpointDetails(
   criteria: CriteriaItem[],
-  vpMap: Map<string, ReviewViewpoint>
+  vpMap: Map<string, ReviewViewpoint>,
+  detailTemplate: string
 ): string {
   if (criteria.length === 0) return MISSING
-  const lines: string[] = []
-  criteria.forEach((c, i) => {
-    const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
-    const vp = vpMap.get(c.viewpoint)
-    if (i > 0) lines.push('')
-    lines.push(`### ${vpId}（${c.roles.join(', ')}: ${c.viewpoint}）`)
-    lines.push('')
-    lines.push(`**確認基準**: ${c.text}`)
-    if (vp?.coverage_types && vp.coverage_types.length > 0) {
-      lines.push('')
-      lines.push('**coverage_required:**')
-      lines.push('')
-      for (const ct of vp.coverage_types) lines.push(`- ${ct}`)
-    }
-    if (vp?.check) {
-      lines.push('')
-      lines.push(`**チェック観点:** ${vp.check}`)
-    }
-    if (vp?.evidence) {
-      lines.push('')
-      lines.push(`**エビデンス例:** ${vp.evidence}`)
-    }
-  })
-  return lines.join('\n')
+  return criteria
+    .map((c, i) => {
+      const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
+      const vp = vpMap.get(c.viewpoint)
+      return expandTemplate(detailTemplate, {
+        _VP_ID_: vpId,
+        _VP_ROLES_: c.roles.join(', '),
+        _VP_VIEWPOINT_: c.viewpoint,
+        _VP_CRITERION_: c.text,
+        _VP_COVERAGE_: viewpointCoverage(vp),
+        _VP_CHECK_: vp?.check ?? MISSING,
+        _VP_EVIDENCE_: vp?.evidence ?? MISSING,
+      }).trimEnd()
+    })
+    .join('\n\n')
+}
+
+// owner ロール視点の記述ガイドを構成するデータ値。prose ラベルや見出しは
+// テンプレート側（言語別 docs/<lang>/.../templates）に置き、ここでは値のみを供給する。
+type OwnerRoleFields = {
+  // owner の Role code（role 名が pm-roles.yaml にあれば `code（name）` 形式）。
+  label: string
+  // pm-roles.yaml の責務（project_note）。
+  note: string
+  // pm-review-viewpoints.yaml の該当 role 観点（`- title: check` の箇条書き）。
+  viewpoints: string
+}
+
+// owner の Role code から、pm-roles.yaml の責務（project_note）と
+// pm-review-viewpoints.yaml の該当 role 観点を取り出す。owner 未設定や情報欠落時は
+// 他のプレースホルダと同様に MISSING を返し、表示構造はテンプレート側に委ねる。
+export function ownerRoleFields(
+  owner: string | undefined,
+  roleMap: Map<string, RoleDefinition>,
+  vpMap: Map<string, ReviewViewpoint>
+): OwnerRoleFields {
+  if (!owner) {
+    return { label: MISSING, note: MISSING, viewpoints: MISSING }
+  }
+
+  const role = roleMap.get(owner)
+  const label = role?.name ? `${owner}（${role.name}）` : owner
+  const note = role?.project_note ?? MISSING
+
+  const roleViewpoints = [...vpMap.values()].filter(vp => vp.role === owner)
+  const viewpoints =
+    roleViewpoints.length > 0
+      ? roleViewpoints.map(vp => `- ${vp.title}: ${vp.check}`).join('\n')
+      : MISSING
+
+  return { label, note, viewpoints }
 }
 
 function buildEditPlanMarkdown(
   template: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
+  roleMap: Map<string, RoleDefinition>,
+  vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
   resultRef: string
 ): string {
@@ -267,6 +330,7 @@ function buildEditPlanMarkdown(
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
+  const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap)
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -277,12 +341,16 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
+    _OWNER_ROLE_LABEL_: ownerRole.label,
+    _OWNER_ROLE_NOTE_: ownerRole.note,
+    _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
   }
   return expandTemplate(template, values)
 }
 
 function buildReviewPlanMarkdown(
   template: string,
+  detailTemplate: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
   criteria: CriteriaItem[],
@@ -320,7 +388,7 @@ function buildReviewPlanMarkdown(
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: rulebookRef(deliverable),
     _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate),
   }
   return expandTemplate(template, values)
 }
@@ -357,6 +425,7 @@ export function generatePlans(
   executionPath: string,
   projectId: string,
   catalogPath: string,
+  rolesPath: string | undefined,
   viewpointsPath: string | undefined,
   stateSnapshot: StateSnapshot | null
 ): void {
@@ -394,6 +463,7 @@ export function generatePlans(
   mkdirSync(plansDir, { recursive: true })
 
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
+  const roleMap = loadRoles(rolesPath)
   const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
   const templateCache = new Map<string, string>()
 
@@ -411,6 +481,7 @@ export function generatePlans(
       mode === 'review'
         ? buildReviewPlanMarkdown(
             template,
+            loadViewpointDetailTemplate(templateCache),
             planTask,
             deliverable,
             criteria,
@@ -419,7 +490,15 @@ export function generatePlans(
             vpRef,
             resultRef
           )
-        : buildEditPlanMarkdown(template, planTask, deliverable, projectId, resultRef)
+        : buildEditPlanMarkdown(
+            template,
+            planTask,
+            deliverable,
+            roleMap,
+            vpMap,
+            projectId,
+            resultRef
+          )
 
     writeFileSync(outPath, content, 'utf8')
   }

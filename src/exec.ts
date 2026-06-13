@@ -123,6 +123,7 @@ function resolveProjectContext(opts: { project?: string }): {
   schedulePath: string
   executionPath: string
   catalogPath?: string
+  rolesPath?: string
   viewpointsPath?: string
 } {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
@@ -435,7 +436,7 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(bcmd)
   bcmd.action(opts => {
     try {
-      const { schedulePath, executionPath, catalogPath, viewpointsPath } =
+      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
         resolveProjectContext(opts)
 
       const res = validateAll(schedulePath)
@@ -456,6 +457,7 @@ export function registerExecCommands(program: Command): void {
         executionPath,
         opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
         catalogPath ?? '',
+        rolesPath,
         viewpointsPath,
         snapshot
       )
