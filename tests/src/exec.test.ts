@@ -78,7 +78,7 @@ describe('exec strategy metadata resolution', () => {
           '    - id: improve',
           '      task_suffix: "020"',
           '      mode: edit',
-          '      approach: reference-maintenance',
+          '      approach: rulebook-maintenance',
           '      capabilities: [web_search]',
           '      proficiency: expert',
           '  review-pass:',
@@ -98,7 +98,7 @@ describe('exec strategy metadata resolution', () => {
       const index = buildPhaseModeIndex(dir)
 
       expect(resolveTaskMode('doc', 'T-LAUNCH-doc-020', index)).toBe('edit')
-      expect(resolveApproach('doc', 'T-LAUNCH-doc-020', index)).toBe('reference-maintenance')
+      expect(resolveApproach('doc', 'T-LAUNCH-doc-020', index)).toBe('rulebook-maintenance')
       expect(resolveTaskCapabilities('doc', 'T-LAUNCH-doc-020', index)).toEqual(['web_search'])
       expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-020', index)).toBe('expert')
       expect(resolveTaskMode('doc', 'T-LAUNCH-doc-030', index)).toBe('review')

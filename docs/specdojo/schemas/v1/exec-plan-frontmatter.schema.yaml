@@ -71,11 +71,19 @@ properties:
 
   approach:
     type: string
-    enum: ["fully-guided", "recipe-guided", "freeform", "reference-maintenance"]
+    enum:
+      [
+        "fully-guided",
+        "recipe-guided",
+        "freeform",
+        "rulebook-maintenance",
+        "recipe-maintenance",
+        "sample-maintenance",
+      ]
     description: >
       How the task is carried out. The first three values describe how strictly the agent
       follows reference materials (rulebook/recipe/sample) when working on a deliverable;
-      reference-maintenance improves rulebook/recipe/sample based on deliverables.
+      the *-maintenance values improve the named reference material based on deliverables.
       Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
       Used for template selection and to convey work intent to the agent.
       Omitted when not declared for this phase.

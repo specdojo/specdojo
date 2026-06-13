@@ -55,7 +55,7 @@ phase_sets:
 | -------------- | ---- | ----------------------------------------- |
 | `execution`    | 任意 | `agent` または `human`。省略時は `agent`  |
 | `mode`         | 任意 | `edit` または `review`。省略時は `edit`   |
-| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `reference-maintenance` |
+| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` |
 | `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略 |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補    |
 
@@ -138,4 +138,4 @@ rate_limit_policy:
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加する。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加する。
 
-`approach: reference-maintenance` のような進め方の違いも phase に直接定義する。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示する。
+`approach: rulebook-maintenance` のような進め方の違いも phase に直接定義する。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示する。

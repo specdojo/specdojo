@@ -1,8 +1,14 @@
 export type TaskMode = 'edit' | 'review'
 
 // タスクの進め方プロファイル。前3者は成果物作業で参考資料をどの程度参照するかを表し、
-// reference-maintenance は成果物を根拠に参考資料側を見直す進め方（参照の向きが逆転する）。
-export type Approach = 'fully-guided' | 'recipe-guided' | 'freeform' | 'reference-maintenance'
+// <kind>-maintenance は成果物を根拠に対象の参考資料を見直す進め方（参照の向きが逆転する）。
+export type Approach =
+  | 'fully-guided'
+  | 'recipe-guided'
+  | 'freeform'
+  | 'rulebook-maintenance'
+  | 'recipe-maintenance'
+  | 'sample-maintenance'
 
 export type Proficiency = 'low' | 'normal' | 'high' | 'expert'
 

@@ -27,11 +27,10 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- 対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って確認の基準にする。
-- rulebook の必須要素・禁止事項に反していないか確認する。
-- recipe の問い・観点に対して内容が十分か確認する。
-- sample の粒度・文体・表現と整合しているか確認する。
-- 複数の文書間で記述に矛盾がある場合は rulebook を正とする。
+- 確認の向きを「成果物 → sample」に切り替える。
+- 対象成果物に紐づく sample の見直し内容が妥当かを、複数の成果物、review result、対象領域の慣行と照らして確認する。
+- 粒度・文体・表の書き方が完成例として適切か、実成果物の丸写しになっていないか確認する。
+- rulebook / recipe と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 - 判断の根拠を review result に残す。
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。

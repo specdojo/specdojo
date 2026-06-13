@@ -335,16 +335,18 @@ T-<TRACK>-<local_id>-<phase_suffix>
 
 `phase_sets` を変更することでフェーズ数・`task_suffix` を自由に変更できる。
 
-`approach` は、タスクの進め方プロファイルを表す。`fully-guided` / `recipe-guided` / `freeform` は成果物作業で rulebook / recipe / sample をどの程度参照するかを表し、`reference-maintenance` は成果物を根拠に参考資料側を見直す進め方を表す（参照の向きが逆転する）。作成・更新かレビューかは `mode`（`edit` / `review`）で表す。参考資料の完成度は人が判断し、タスク生成前に適切な `approach` を明示する。エージェントは参考資料の品質判定を行わず、plan に示された進め方に従う。
+`approach` は、タスクの進め方プロファイルを表す。`fully-guided` / `recipe-guided` / `freeform` は成果物作業で rulebook / recipe / sample をどの程度参照するかを表し、`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` は成果物を根拠に対象の参考資料を見直す進め方を表す（参照の向きが逆転する）。作成・更新かレビューかは `mode`（`edit` / `review`）で表す。参考資料の完成度は人が判断し、タスク生成前に適切な `approach` を明示する。エージェントは参考資料の品質判定を行わず、plan に示された進め方に従う。
 
-| `approach`              | 参照方針                              | 用途                                                                                 |
-| ----------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
-| `fully-guided`          | rulebook / recipe / sample を参照する | 参考資料が十分整っており、それらに沿って成果物を作成・更新する                       |
-| `recipe-guided`         | recipe を主に参照する                 | rulebook / sample は未成熟だが、作り方・問い・観点だけを使って成果物を作成・更新する |
-| `freeform`              | 参考資料に原則縛られない              | 参考資料より成果物の実例やプロジェクト文脈を優先して自由に作成・更新する             |
-| `reference-maintenance` | 成果物を根拠に参考資料を見直す        | 複数の成果物・review result を根拠に rulebook / recipe / sample を改善する           |
+| `approach`             | 参照方針                              | 用途                                                                                 |
+| ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
+| `fully-guided`         | rulebook / recipe / sample を参照する | 参考資料が十分整っており、それらに沿って成果物を作成・更新する                       |
+| `recipe-guided`        | recipe を主に参照する                 | rulebook / sample は未成熟だが、作り方・問い・観点だけを使って成果物を作成・更新する |
+| `freeform`             | 参考資料に原則縛られない              | 参考資料より成果物の実例やプロジェクト文脈を優先して自由に作成・更新する             |
+| `rulebook-maintenance` | 成果物を根拠に rulebook を見直す      | 複数の成果物・review result を根拠に章構成・必須項目・禁止事項・判定基準を改善する   |
+| `recipe-maintenance`   | 成果物を根拠に recipe を見直す        | 複数の成果物・review result を根拠に問い・観点・深掘り手順・レビュー観点を改善する   |
+| `sample-maintenance`   | 成果物を根拠に sample を見直す        | 複数の成果物・review result を根拠に粒度・文体・表の書き方を改善する                 |
 
-参考資料メンテナンスは自動で差し込まず、必要なときに `approach: reference-maintenance` の phase を `phase_sets` へ明示的に記述する。
+参考資料メンテナンスは自動で差し込まず、必要なときに `approach: rulebook-maintenance` のように対象を指定した phase を `phase_sets` へ明示的に記述する。
 
 `mode` / `capabilities` / `proficiency` は phase に直接定義する。`mode` は plan/result の種別を表し、`edit` または `review` を指定する。`capabilities` と `proficiency` は `execution: agent` の phase で agent 選択に使う作業要件であり、agent 個体は指定しない。ツールアクセスが不要な場合、`capabilities` は省略する。
 
@@ -1167,14 +1169,14 @@ specdojo exec build --project prj-0001
 
 `exec/plans/<task-id>-plan.md` の内容は、生成物の種別（edit-plan / review-plan）と `approach` に応じて用意したテンプレートファイルを展開して生成する。
 
-`approach` は `fully-guided` / `recipe-guided` / `freeform` / `reference-maintenance` のいずれかとし、人が参考資料の完成度を判断したうえで `sch-strategy-<track>.yaml` に明示する。エージェントは plan に展開された「進め方」に従い、参考資料の品質判定や参照除外の判断は行わない。「進め方」セクションが扱う内容の詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
+`approach` は `fully-guided` / `recipe-guided` / `freeform` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` のいずれかとし、人が参考資料の完成度を判断したうえで `sch-strategy-<track>.yaml` に明示する。エージェントは plan に展開された「進め方」に従い、参考資料の品質判定や参照除外の判断は行わない。「進め方」セクションが扱う内容の詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
 
-参考資料そのものを改善する作業は、成果物作成タスクに暗黙で混ぜない。必要な場合は `approach: reference-maintenance` の phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述し、通常の exec plan として生成・実行する。
+参考資料そのものを改善する作業は、成果物作成タスクに暗黙で混ぜない。必要な場合は `approach: rulebook-maintenance` のように対象を指定した phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述し、通常の exec plan として生成・実行する。
 
 #### 8.6.2. テンプレートファイルの配置と構成
 
 - 配置先は他の生成物テンプレートと同じ `docs/ja/specdojo/templates/` とする。
-- ファイル名は、生成物の frontmatter `id` プレフィックス（`xep-` / `xrp-`）と `approach` に対応させる。標準テンプレートは `xep-template.md`（edit-plan 用）/ `xrp-template.md`（review-plan 用）とし、進め方を分ける場合は `xep-fully-guided-template.md` / `xep-recipe-guided-template.md` / `xep-freeform-template.md` / `xep-reference-maintenance-template.md` のように `<prefix>-<approach>-template.md` を用意する。
+- ファイル名は、生成物の frontmatter `id` プレフィックス（`xep-` / `xrp-`）と `approach` に対応させる。標準テンプレートは `xep-template.md`（edit-plan 用）/ `xrp-template.md`（review-plan 用）とし、進め方を分ける場合は `xep-fully-guided-template.md` / `xep-recipe-guided-template.md` / `xep-freeform-template.md` / `xep-rulebook-maintenance-template.md` のように `<prefix>-<approach>-template.md` を用意する。
 - 各テンプレートは、frontmatter から各セクションまでの **plan 全体の構成** を定義する。
 - `approach` は task frontmatter に出力し、テンプレート選択とエージェントへの作業意図の伝達に使う。
 - タスクごとに変わる動的な内容（task*id、done_criteria、レビュー観点など）は、次の表のプレースホルダで埋め込む。記述形式は `pjr-*-template.md` と同様に、`\_UPPER_SNAKE\*` 形式のプレースホルダ文字列を本文に直接書く Markdown とする。

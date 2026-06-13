@@ -8,11 +8,11 @@ _PHASE_DESCRIPTION_
 
 ## 2. 対象成果物
 
-- 成果物名: _DELIVERABLE_NAME_
-- 根拠: _DELIVERABLE_DEPENDS_ON_
-- 概要: _DELIVERABLE_OVERVIEW_
-- path: `_DELIVERABLE_PATH_`
-- result: `_RESULT_REF_`
+- `name`: _DELIVERABLE_NAME_
+- `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `overview`: _DELIVERABLE_OVERVIEW_
+- `path`: `_DELIVERABLE_PATH_`
+- `result`: `_RESULT_REF_`
 
 **done_criteria:**
 
@@ -21,7 +21,7 @@ _DONE_CRITERIA_ITEMS_
 ## 3. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `reference-maintenance` の場合は、参照の向きを「成果物 → rulebook / recipe / sample」に切り替えて進める。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` の場合は、参照の向きを「成果物 → 対象の参考資料」に切り替えて進める。
 - それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach` に応じて参照範囲を決める。
   - `fully-guided`: rulebook / recipe / sample をそれぞれの役割に沿って活用する（構造・必須要素・禁止事項は rulebook、内容の組み立ては recipe、粒度・文体・表の書き方は sample を基準にする）。
   - `recipe-guided`: recipe が示す構成・問い・観点だけを使って組み立てる（rulebook / sample が存在しても構造・文体の基準にはしない）。

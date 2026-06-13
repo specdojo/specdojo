@@ -22,12 +22,12 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 ## 2. 対象成果物
 
-- 成果物名: プロジェクト概要
-- 根拠: -
-- 概要: プロジェクトの目的・背景・ゴールを定義
-- path: `/docs/ja/projects/prj-0001/020-project-definition/prj-overview.md`
-- rulebook: `/docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`
-- result: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-030-result.md`
+- `name`: プロジェクト概要
+- `depends_on`: -
+- `overview`: プロジェクトの目的・背景・ゴールを定義
+- `path`: `/docs/ja/projects/prj-0001/020-project-definition/prj-overview.md`
+- `rulebook`: `/docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`
+- `result`: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-030-result.md`
 
 ## 3. レビュー観点
 
@@ -112,7 +112,7 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 ## 4. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `reference-maintenance` の場合は、確認の向きを「成果物 → rulebook / recipe / sample」に切り替え、対象の参考資料が見直しに値するかを確認する。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` の場合は、確認の向きを「成果物 → 対象の参考資料」に切り替え、対象の参考資料が見直しに値するかを確認する。
 - それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach` に応じて確認の基準を決める。
   - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体との整合を確認する。
   - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample の構造・文体は基準にしない）。

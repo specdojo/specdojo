@@ -20,11 +20,11 @@ owner: PM
 
 ## 2. 対象成果物
 
-- 成果物名: プロジェクト管理計画
-- 根拠: -
-- 概要: プロジェクト全体の管理方針・プロセスを定義
-- path: `/docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-plan.md`
-- result: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-plan-010-result.md`
+- `name`: プロジェクト管理計画
+- `depends_on`: -
+- `overview`: プロジェクト全体の管理方針・プロセスを定義
+- `path`: `/docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-plan.md`
+- `result`: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-plan-010-result.md`
 
 **done_criteria:**
 
@@ -37,7 +37,7 @@ owner: PM
 ## 3. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `reference-maintenance` の場合は、参照の向きを「成果物 → rulebook / recipe / sample」に切り替えて進める。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` の場合は、参照の向きを「成果物 → 対象の参考資料」に切り替えて進める。
 - それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach` に応じて参照範囲を決める。
   - `fully-guided`: rulebook / recipe / sample をそれぞれの役割に沿って活用する（構造・必須要素・禁止事項は rulebook、内容の組み立ては recipe、粒度・文体・表の書き方は sample を基準にする）。
   - `recipe-guided`: recipe が示す構成・問い・観点だけを使って組み立てる（rulebook / sample が存在しても構造・文体の基準にはしない）。

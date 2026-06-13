@@ -396,15 +396,24 @@ $defs:
 
   Approach:
     type: string
-    enum: ["fully-guided", "recipe-guided", "freeform", "reference-maintenance"]
+    enum:
+      [
+        "fully-guided",
+        "recipe-guided",
+        "freeform",
+        "rulebook-maintenance",
+        "recipe-maintenance",
+        "sample-maintenance",
+      ]
     description: >
       How the task is carried out in a phase. The first three values describe how strictly
       the agent follows reference materials (rulebook/recipe/sample) when working on a deliverable.
       fully-guided: rulebook/recipe/sample are mature; follow them.
       recipe-guided: rulebook/sample are immature; use only the recipe's structure/questions/perspectives.
       freeform: not bound by reference materials; prioritize deliverable examples and project context.
-      reference-maintenance: improve rulebook/recipe/sample based on deliverables (reference
-      direction is reversed); must be declared explicitly in phase_sets and is never auto-injected.
+      The *-maintenance values improve the named reference material (rulebook/recipe/sample) based on
+      deliverables (reference direction is reversed); they must be declared explicitly in phase_sets
+      and are never auto-injected.
 
   Phase:
     type: object
