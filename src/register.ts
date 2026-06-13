@@ -323,12 +323,12 @@ function derivedViewNote(): string {
   return '> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。'
 }
 
-// pjr-views.md は pjr-index.md の派生ビュー。frontmatter は pjr-index.md と
-// 整合させ、派生元を part_of で示す（deliverable-frontmatter スキーマに準拠）。
-function viewsFrontmatter(projectId: string): string {
+// pjr-index.md の派生ビュー（pjr-views / pm-risk-register など）の frontmatter。
+// pjr-index.md と整合させ、派生元を part_of で示す（deliverable-frontmatter スキーマに準拠）。
+function derivedViewFrontmatter(projectId: string, localId: string): string {
   return [
     '---',
-    `id: ${projectId}:pjr-views`,
+    `id: ${projectId}:${localId}`,
     'type: project',
     'status: ready',
     'part_of:',
@@ -339,7 +339,13 @@ function viewsFrontmatter(projectId: string): string {
 }
 
 function generateViewsFile(items: PjrItem[], projectId: string): string {
-  const sections: string[] = [viewsFrontmatter(projectId), '', '# 台帳ビュー', '', derivedViewNote()]
+  const sections: string[] = [
+    derivedViewFrontmatter(projectId, 'pjr-views'),
+    '',
+    '# 台帳ビュー',
+    '',
+    derivedViewNote(),
+  ]
 
   // 1. 状態別
   sections.push('', '## 1. 状態別')
@@ -377,9 +383,17 @@ function generateViewsFile(items: PjrItem[], projectId: string): string {
   return sections.join('\n') + '\n'
 }
 
-function generateTypeFilterView(items: PjrItem[], type: string, title: string): string {
+function generateTypeFilterView(
+  items: PjrItem[],
+  type: string,
+  title: string,
+  localId: string,
+  projectId: string
+): string {
   const filtered = items.filter(it => it.type === type)
   return [
+    derivedViewFrontmatter(projectId, localId),
+    '',
     `# ${title}`,
     '',
     derivedViewNote(),
@@ -418,19 +432,19 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
     controlsViews.push(
       {
         path: join(paths.controlsGeneratedPath, 'pm-risk-register.md'),
-        content: generateTypeFilterView(ctrlItems, 'risk', 'リスク登録簿'),
+        content: generateTypeFilterView(ctrlItems, 'risk', 'リスク登録簿', 'pm-risk-register', paths.projectId),
       },
       {
         path: join(paths.controlsGeneratedPath, 'pm-issue-log.md'),
-        content: generateTypeFilterView(ctrlItems, 'issue', '課題ログ'),
+        content: generateTypeFilterView(ctrlItems, 'issue', '課題ログ', 'pm-issue-log', paths.projectId),
       },
       {
         path: join(paths.controlsGeneratedPath, 'pm-change-request-log.md'),
-        content: generateTypeFilterView(ctrlItems, 'change-request', '変更要求ログ'),
+        content: generateTypeFilterView(ctrlItems, 'change-request', '変更要求ログ', 'pm-change-request-log', paths.projectId),
       },
       {
         path: join(paths.controlsGeneratedPath, 'pm-decision-log.md'),
-        content: generateTypeFilterView(ctrlItems, 'decision', '決定記録'),
+        content: generateTypeFilterView(ctrlItems, 'decision', '決定記録', 'pm-decision-log', paths.projectId),
       }
     )
   }
