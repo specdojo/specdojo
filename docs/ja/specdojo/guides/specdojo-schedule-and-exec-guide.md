@@ -305,7 +305,18 @@ specdojo exec run \
 
 分割コマンドは `claim`、`complete`、`block` を暗黙に実行しない。対象タスクは9.4の手順でclaim済みであり、stateが `doing` でなければならない。SpecDojoのタスク状態とGitの統合状態は別々に管理し、最後に人が9.6の状態更新を行う。
 
-各コマンドは、Git common directoryの `specdojo/worktrees/<task-id-slug>.json` に実行コンテキストを保存する。通常のリポジトリでは `.git/specdojo/worktrees/<task-id-slug>.json` に相当する。このファイルにはproject ID、task ID、claim actor、worktreeパス、execブランチ、統合先ブランチ、準備時のbase commit、plan/result/claim eventのパスを記録する。実行コンテキストはGit管理対象にせず、後続コマンド間の引き継ぎに使う。
+分割コマンドは独自のJSONや状態ファイルを作成しない。後続コマンドに必要な情報は、毎回次の標準情報から導出する。
+
+| 情報                  | 導出元                                                        |
+| --------------------- | ------------------------------------------------------------- |
+| worktree名・ブランチ  | task IDから `<task-id-slug>` と `exec/<task-id-slug>` を導出  |
+| worktreeパス          | `git worktree list --porcelain` からexecブランチを検索        |
+| plan/resultパス       | SpecDojoのproject設定とtask IDから導出                         |
+| claim actor           | `exec/events/` のclaim eventから導出                           |
+| 比較起点commit        | `git merge-base HEAD <exec-branch>` で都度導出                 |
+| merge先               | `worktree merge` を実行した現在のブランチ                     |
+
+比較起点commitは保存しない。rootブランチが別タスクのcheckpoint commitやmergeによって進んだ場合も、現在のrootブランチとexecブランチの共通祖先を `git merge-base` で再計算する。
 
 plan、result、claim eventは、worktree作成前にrootの現在ブランチへ実行開始checkpointとしてcommitする。worktreeへ未commitファイルをコピーせず、Git commitをタスク実行の開始点とする。agentが更新したresultは成果物と同じexecブランチでcommitし、`worktree merge` でrootへ統合するため、独立した回収コマンドは設けない。
 
@@ -328,10 +339,9 @@ specdojo exec worktree prepare \
 3. 対象タスクのplan、result、claim eventがrootの現在ブランチに存在することを確認する。
 4. rootのindexにstage済み変更がないことを確認する。
 5. plan、result、claim eventに未commit変更があれば、実行開始checkpointとしてcommitする。
-6. rootの現在ブランチを統合先ブランチ、checkpoint commitを `BASE_COMMIT` として記録する。
-7. task IDから `<task-id-slug>` と `exec/<task-id-slug>` ブランチを導出する。
-8. `BASE_COMMIT`を起点に `<worktree-base>/<task-id-slug>` を作成する。登録済みの場合は同じブランチであることを確認して再利用する。
-9. 実行コンテキストを保存してロックを解放し、worktreeパス、execブランチ、統合先ブランチを表示する。
+6. task IDから `<task-id-slug>` と `exec/<task-id-slug>` ブランチを導出する。
+7. checkpoint commitである現在の `HEAD` を起点に `<worktree-base>/<task-id-slug>` を作成する。登録済みの場合は同じブランチであることを確認して再利用する。
+8. ロックを解放し、worktreeパスとexecブランチを表示する。
 
 checkpoint commitは対象タスクの実行管理ファイルだけを含める。rootにある無関係な未commit変更はcommitしない。commit messageのデフォルトは `exec(<task-id>): prepare execution` とする。
 
@@ -354,22 +364,31 @@ git -C "${REPO_ROOT}" diff --cached --quiet || \
     "${RESULT_REL}" \
     "${CLAIM_EVENT_REL}"
 
-BASE_COMMIT="$(git -C "${REPO_ROOT}" rev-parse HEAD)"
-
 # execブランチとworktreeをcheckpoint commitから作成
 git -C "${REPO_ROOT}" worktree add \
   "${WORKTREE}" \
   -b "${EXEC_BRANCH}" \
-  "${BASE_COMMIT}"
+  HEAD
 ```
 
-既存のexecブランチを再利用する場合は `git worktree add "${WORKTREE}" "${EXEC_BRANCH}"` 相当を使う。再利用時は、保存済みの `BASE_COMMIT` とブランチの履歴が一致することを確認し、rootで新しいcheckpoint commitを追加しない。
+既存のexecブランチを再利用する場合は `git worktree add "${WORKTREE}" "${EXEC_BRANCH}"` 相当を使う。再利用時はrootで新しいcheckpoint commitを追加せず、既存ブランチの状態をそのまま使う。
 
-`prepare` はagent commandを起動せず、依存関係もインストールしない。Git worktreeは親の作業ツリーにある `node_modules` を共有しないため、必要な場合は表示されたパスに対して `npm ci` などを明示的に実行する。
+`prepare` 完了後は、表示されたworktreeパスへ移動し、以降の `status`、`agent`、`commit` をそのworktree内で実行する。CLIの子プロセスから呼び出し元シェルのカレントディレクトリは変更できないため、`prepare` 自身は `cd` を行わない。
 
 ```sh
-npm --prefix <worktree-path> ci
+cd <worktree-path>
+
+git branch --show-current
+# → exec/<task-id-slug>
 ```
+
+`worktree` サブコマンドは `--task` とGit worktree情報から対象を解決するため、worktree内から実行できる。Git worktreeは親の作業ツリーにある `node_modules` を共有しないため、必要な場合は移動後に `npm ci` などを明示的に実行する。
+
+```sh
+npm ci
+```
+
+`merge` はコマンドを実行した現在のブランチへ統合するため、worktree内では実行しない。`commit` の完了後にrootの統合先ブランチへ戻ってから実行する。
 
 ##### 9.5.1.2. `exec worktree status`
 
@@ -381,9 +400,9 @@ specdojo exec worktree status \
   --task <task-id>
 ```
 
-task state、claim actor、worktreeパス、ブランチ、base commit、agent command、plan/resultの有無、resultと成果物の未commit変更、現在のブランチへmerge済みかを表示する。worktreeが未準備の場合もエラーにせず `not prepared` と表示する。
+task state、claim actor、worktreeパス、ブランチ、現在の比較起点commit、agent command、plan/resultの有無、resultと成果物の未commit変更、現在のブランチへmerge済みかを表示する。worktreeが未準備の場合もエラーにせず `not prepared` と表示する。
 
-以下のコマンド例では、`prepare` が保存した実行コンテキストから `REPO_ROOT`、`WORKTREE`、`EXEC_BRANCH`、`BASE_COMMIT`、`PLAN_REL`、`RESULT_REL` を解決済みとする。`status` は主に次のGitコマンドとファイル検査を行う。
+以下のコマンド例では、`REPO_ROOT`、`EXEC_BRANCH`、`PLAN_REL`、`RESULT_REL` をtask IDとproject設定から導出し、`WORKTREE`をGit worktree一覧から取得済みとする。`status` は主に次のGitコマンドとファイル検査を行う。
 
 ```sh
 # SpecDojoのtask stateとclaim actorを確認
@@ -399,12 +418,16 @@ git -C "${WORKTREE}" status --short
 git -C "${WORKTREE}" diff --name-only
 git -C "${WORKTREE}" diff --cached --name-only
 
+# 現在のrootブランチとの比較起点を導出
+COMPARE_BASE="$(git -C "${REPO_ROOT}" merge-base \
+  HEAD "${EXEC_BRANCH}")"
+
 # execブランチが現在のブランチへmerge済みか確認
 git -C "${REPO_ROOT}" merge-base --is-ancestor \
   "${EXEC_BRANCH}" HEAD
 ```
 
-plan/resultの有無は `PLAN_REL` と `RESULT_REL` をworktreeパスへ連結して確認する。resultがcheckpointから変更されたかは `git diff "${BASE_COMMIT}" -- "${RESULT_REL}"` 相当で判定する。実装ではファイル名の空白や改行を安全に扱うため、Git出力は可能な限り `-z` 形式で取得して解析する。
+plan/resultの有無は `PLAN_REL` と `RESULT_REL` をworktreeパスへ連結して確認する。resultが比較起点から変更されたかは `git diff "${COMPARE_BASE}" -- "${RESULT_REL}"` 相当で判定する。実装ではファイル名の空白や改行を安全に扱うため、Git出力は可能な限り `-z` 形式で取得して解析する。
 
 ##### 9.5.1.3. `exec worktree agent`
 
@@ -520,24 +543,27 @@ specdojo exec worktree merge \
 
 `merge` は次の安全条件を確認する。
 
-1. execブランチにbase commit以降のcommitが存在する。
+1. 現在のブランチとexecブランチの共通祖先以降に、execブランチ側のcommitが存在する。
 2. worktree内にcommit対象となる未コミット変更が残っていない。
-3. 現在のブランチが `prepare` 時に記録した統合先ブランチである。
-4. 現在のブランチが対象execブランチではない。
-5. 現在の作業ツリーの未コミット変更と、merge対象commitの変更パスが重複しない。
+3. 現在のブランチが対象execブランチではない。
+4. 現在の作業ツリーの未コミット変更と、merge対象commitの変更パスが重複しない。
 
 条件を満たした場合、`git merge --no-ff --no-edit exec/<task-id-slug>` 相当で統合する。現在の作業ツリーに無関係な未commit変更が残っていても、変更パスがmerge対象と重複しなければmergeできる。競合した場合はGitの競合状態を保持して非0で終了し、自動abortや自動解決は行わない。
 
-`merge` はプロジェクトロックを取得し、現在のブランチが `prepare` 時に記録した統合先ブランチと一致することを確認してからGit mergeを行う。`--ff-only` を指定した場合はmerge commitを作らず、fast-forward可能な場合だけ統合する。`merge` はworktreeの削除、ブランチ削除、resultの個別コピー、イベント更新を行わない。
+`merge` はプロジェクトロックを取得し、コマンドを実行した現在のブランチへGit mergeを行う。統合先を独自状態として保存しないため、利用者は意図したブランチへ移動してから実行する。`--ff-only` を指定した場合はmerge commitを作らず、fast-forward可能な場合だけ統合する。`merge` はworktreeの削除、ブランチ削除、resultの個別コピー、イベント更新を行わない。
 
 resultは成果物と同じcommitに含め、`merge` でrootへ統合する。reviewタスクのように成果物変更がない場合も、resultの変更を `commit` して `merge` する。
 
 安全条件の確認とmergeは、次のコマンドに相当する。
 
 ```sh
-# execブランチにbase commit以降のcommitがあることを確認
+# 現在のブランチとexecブランチの共通祖先を導出
+COMPARE_BASE="$(git -C "${REPO_ROOT}" merge-base \
+  HEAD "${EXEC_BRANCH}")"
+
+# execブランチ側に未統合commitがあることを確認
 test "$(git -C "${REPO_ROOT}" rev-list --count \
-  "${BASE_COMMIT}..${EXEC_BRANCH}")" -gt 0
+  "${COMPARE_BASE}..${EXEC_BRANCH}")" -gt 0
 
 # worktreeにcommit対象の変更が残っていないことを確認
 test -z "$(git -C "${WORKTREE}" status --porcelain -- . \
@@ -548,10 +574,6 @@ test -z "$(git -C "${WORKTREE}" status --porcelain -- . \
 # 現在のブランチがexecブランチではないことを確認
 test "$(git -C "${REPO_ROOT}" branch --show-current)" != \
   "${EXEC_BRANCH}"
-
-# prepare時に記録した統合先ブランチであることを確認
-test "$(git -C "${REPO_ROOT}" branch --show-current)" = \
-  "${TARGET_BRANCH}"
 
 # 通常のmerge
 git -C "${REPO_ROOT}" merge --no-ff --no-edit "${EXEC_BRANCH}"
@@ -570,7 +592,7 @@ CURRENT_DIRTY_PATHS="$({
 } | sort -u)"
 
 MERGE_PATHS="$(git -C "${REPO_ROOT}" diff --name-only \
-  "${BASE_COMMIT}..${EXEC_BRANCH}" | sort -u)"
+  "${COMPARE_BASE}..${EXEC_BRANCH}" | sort -u)"
 
 OVERLAP="$(comm -12 \
   <(printf '%s\n' "${CURRENT_DIRTY_PATHS}") \
@@ -591,7 +613,7 @@ specdojo exec worktree remove \
   --task <task-id>
 ```
 
-`remove` はcommit対象の未コミット変更と未統合commitがないことを確認してから `git worktree remove` 相当を実行し、実行コンテキストを削除する。execブランチは履歴確認のため既定では残し、`--delete-branch` を指定した場合だけmerge済みブランチを削除する。
+`remove` はcommit対象の未コミット変更と未統合commitがないことを確認してから `git worktree remove` 相当を実行する。execブランチは履歴確認のため既定では残し、`--delete-branch` を指定した場合だけmerge済みブランチを削除する。
 
 安全条件を満たさない場合は削除を拒否する。`--force` はGit worktreeの強制削除を意味するため、未commitのresultや成果物変更が失われることを警告し、明示指定時だけ許可する。
 
@@ -609,7 +631,7 @@ git -C "${REPO_ROOT}" worktree remove "${WORKTREE}"
 git -C "${REPO_ROOT}" branch -d "${EXEC_BRANCH}"
 ```
 
-これらを実行する前に、`commit` と同じ除外規則でcommit対象の未commit変更がないことを確認する。削除後は実行コンテキストファイルをファイルシステムAPIで削除する。
+これらを実行する前に、`commit` と同じ除外規則でcommit対象の未commit変更がないことを確認する。独自状態ファイルは存在しないため、削除後にSpecDojo固有ファイルをクリーンアップする処理はない。
 
 `--force` 指定時は `git worktree remove --force "${WORKTREE}"` 相当を使う。ただし、execブランチの削除には常に `git branch -d` を使い、未mergeブランチを `-D` で強制削除しない。
 
@@ -618,10 +640,20 @@ git -C "${REPO_ROOT}" branch -d "${EXEC_BRANCH}"
 editタスクの標準的な手動実行フローは次のとおり。
 
 ```sh
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
 specdojo exec worktree prepare --project <project-id> --task <task-id>
+
+# prepareが表示したworktreeパスへ移動
+cd <worktree-path>
+
 specdojo exec worktree status --project <project-id> --task <task-id>
 specdojo exec worktree agent --project <project-id> --task <task-id>
 specdojo exec worktree commit --project <project-id> --task <task-id>
+
+# merge先となるrootのブランチへ戻る
+cd "${REPO_ROOT}"
+
 specdojo exec worktree merge --project <project-id> --task <task-id>
 specdojo exec worktree remove --project <project-id> --task <task-id> --delete-branch
 ```
