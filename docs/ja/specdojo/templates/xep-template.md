@@ -21,9 +21,9 @@ _DONE_CRITERIA_ITEMS_
 ## 3. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` の場合は、参照の向きを「成果物 → 対象の参考資料」に切り替えて進める。
-- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach` に応じて参照範囲を決める。
-  - `fully-guided`: rulebook / recipe / sample をそれぞれの役割に沿って活用する（構造・必須要素・禁止事項は rulebook、内容の組み立ては recipe、粒度・文体・表の書き方は sample を基準にする）。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、参照の向きを「成果物 → 対象の参考資料」に切り替えて進める。
+- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無を確認し、`approach` に応じて参照範囲を決める。
+  - `fully-guided`: rulebook / recipe / sample / template をそれぞれの役割に沿って活用する（構造・必須要素・禁止事項は rulebook、内容の組み立ては recipe、粒度・文体・表の書き方は sample、雛形は template を基準にし、プレースホルダは残さず埋める）。
   - `recipe-guided`: recipe が示す構成・問い・観点だけを使って組み立てる（rulebook / sample が存在しても構造・文体の基準にはしない）。
   - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈を優先して組み立てる。
   - 未指定の場合は、存在するすべての参考資料をそれぞれの役割に沿って活用する。

@@ -9,6 +9,7 @@ export type Approach =
   | 'rulebook-maintenance'
   | 'recipe-maintenance'
   | 'sample-maintenance'
+  | 'template-maintenance'
 
 export type Proficiency = 'low' | 'normal' | 'high' | 'expert'
 

@@ -28,10 +28,10 @@ _REVIEW_VIEWPOINT_DETAILS_
 ## 4. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` の場合は、確認の向きを「成果物 → 対象の参考資料」に切り替え、対象の参考資料が見直しに値するかを確認する。
-- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample の有無を確認し、`approach` に応じて確認の基準を決める。
-  - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体との整合を確認する。
-  - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample の構造・文体は基準にしない）。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、確認の向きを「成果物 → 対象の参考資料」に切り替え、対象の参考資料が見直しに値するかを確認する。
+- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無を確認し、`approach` に応じて確認の基準を決める。
+  - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体、template の章構成との整合を確認する（プレースホルダが残っていないことも確認する）。
+  - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample / template の構造・文体は基準にしない）。
   - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈との整合を確認する。
   - 未指定の場合は、存在するすべての参考資料をそれぞれの役割に沿って確認の基準にする。
 - 複数の文書間で記述に矛盾がある場合、確認の基準に rulebook を含む `approach`（`fully-guided` など）では rulebook を正とする。

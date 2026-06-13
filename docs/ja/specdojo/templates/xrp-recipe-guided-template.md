@@ -29,7 +29,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 - 対象成果物に紐づく recipe を主な確認基準にする。
 - recipe の問い・観点に照らして、成果物の内容が十分か確認する。
-- rulebook / sample が存在しても、構造・文体・粒度の必須基準としては扱わない。
+- rulebook / sample / template が存在しても、構造・文体・粒度の必須基準としては扱わない。
 - recipe だけでは判断できない箇所は、類似成果物やプロジェクト文脈との整合を確認する。
 - 判断の根拠を review result に残す。
 

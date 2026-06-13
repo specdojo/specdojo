@@ -217,7 +217,7 @@ viewpoints_ref: <pm-review-viewpoints.yaml のパス>
 
 人または agent は review plan に従ってレビューする。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入する。
 
-レビューでどこまで rulebook / recipe / sample に照らすかは、タスクに付与された `approach` に従う。詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
+レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従う。詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
 
 実行時の原則
 

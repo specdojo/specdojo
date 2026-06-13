@@ -59,7 +59,8 @@ function isApproach(value: unknown): value is Approach {
     value === 'freeform' ||
     value === 'rulebook-maintenance' ||
     value === 'recipe-maintenance' ||
-    value === 'sample-maintenance'
+    value === 'sample-maintenance' ||
+    value === 'template-maintenance'
   )
 }
 

@@ -24,7 +24,7 @@ _DONE_CRITERIA_ITEMS_
 - 対象成果物に紐づく rulebook を「見直す対象」として扱う。
 - 複数の成果物、review result、対象領域の慣行を根拠に、章構成・必須項目・禁止事項・判定基準が成果物の実態と合っているかを見直す。
 - 成果物側で繰り返し守られていない規定は、規定が過剰なのか成果物側の不備なのかを判断し、根拠とともに rulebook へ反映するか result に記録する。
-- recipe / sample と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
+- recipe / sample / template と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 - 見直しの根拠とした成果物・記録を result に残す。
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。

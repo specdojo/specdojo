@@ -20,10 +20,11 @@ _DONE_CRITERIA_ITEMS_
 
 ## 3. 進め方
 
-- 対象成果物に紐づく rulebook / recipe / sample をそれぞれの役割に沿って参照する。
+- 対象成果物に紐づく rulebook / recipe / sample / template をそれぞれの役割に沿って参照する。
 - rulebook は構造・必須要素・禁止事項の基準として扱う。
 - recipe は内容の組み立て方、問い、観点の基準として扱う。
 - sample は粒度、文体、表現、表の書き方の基準として扱う。
+- template は雛形として開始点に使い、`_TODO_` などのプレースホルダを残さず埋める。
 - 複数の文書間で記述に矛盾がある場合は rulebook を正とする。
 - 参照した文書と判断根拠を成果物または result に残す。
 

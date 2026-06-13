@@ -335,16 +335,17 @@ T-<TRACK>-<local_id>-<phase_suffix>
 
 `phase_sets` を変更することでフェーズ数・`task_suffix` を自由に変更できる。
 
-`approach` は、タスクの進め方プロファイルを表す。`fully-guided` / `recipe-guided` / `freeform` は成果物作業で rulebook / recipe / sample をどの程度参照するかを表し、`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` は成果物を根拠に対象の参考資料を見直す進め方を表す（参照の向きが逆転する）。作成・更新かレビューかは `mode`（`edit` / `review`）で表す。参考資料の完成度は人が判断し、タスク生成前に適切な `approach` を明示する。エージェントは参考資料の品質判定を行わず、plan に示された進め方に従う。
+`approach` は、タスクの進め方プロファイルを表す。`fully-guided` / `recipe-guided` / `freeform` は成果物作業で rulebook / recipe / sample / template をどの程度参照するかを表し、`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は成果物を根拠に対象の参考資料を見直す進め方を表す（参照の向きが逆転する）。作成・更新かレビューかは `mode`（`edit` / `review`）で表す。参考資料の完成度は人が判断し、タスク生成前に適切な `approach` を明示する。エージェントは参考資料の品質判定を行わず、plan に示された進め方に従う。
 
 | `approach`             | 参照方針                              | 用途                                                                                 |
 | ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
-| `fully-guided`         | rulebook / recipe / sample を参照する | 参考資料が十分整っており、それらに沿って成果物を作成・更新する                       |
-| `recipe-guided`        | recipe を主に参照する                 | rulebook / sample は未成熟だが、作り方・問い・観点だけを使って成果物を作成・更新する |
+| `fully-guided`         | rulebook / recipe / sample / template を参照する | 参考資料が十分整っており、それらに沿って成果物を作成・更新する                       |
+| `recipe-guided`        | recipe を主に参照する                 | rulebook / sample / template は未成熟だが、作り方・問い・観点だけを使って成果物を作成・更新する |
 | `freeform`             | 参考資料に原則縛られない              | 参考資料より成果物の実例やプロジェクト文脈を優先して自由に作成・更新する             |
 | `rulebook-maintenance` | 成果物を根拠に rulebook を見直す      | 複数の成果物・review result を根拠に章構成・必須項目・禁止事項・判定基準を改善する   |
 | `recipe-maintenance`   | 成果物を根拠に recipe を見直す        | 複数の成果物・review result を根拠に問い・観点・深掘り手順・レビュー観点を改善する   |
 | `sample-maintenance`   | 成果物を根拠に sample を見直す        | 複数の成果物・review result を根拠に粒度・文体・表の書き方を改善する                 |
+| `template-maintenance` | 成果物を根拠に template を見直す      | 複数の成果物・review result を根拠に章構成の骨組みとプレースホルダの配置・網羅性を改善する |
 
 参考資料メンテナンスは自動で差し込まず、必要なときに `approach: rulebook-maintenance` のように対象を指定した phase を `phase_sets` へ明示的に記述する。
 
@@ -1169,7 +1170,7 @@ specdojo exec build --project prj-0001
 
 `exec/plans/<task-id>-plan.md` の内容は、生成物の種別（edit-plan / review-plan）と `approach` に応じて用意したテンプレートファイルを展開して生成する。
 
-`approach` は `fully-guided` / `recipe-guided` / `freeform` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` のいずれかとし、人が参考資料の完成度を判断したうえで `sch-strategy-<track>.yaml` に明示する。エージェントは plan に展開された「進め方」に従い、参考資料の品質判定や参照除外の判断は行わない。「進め方」セクションが扱う内容の詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
+`approach` は `fully-guided` / `recipe-guided` / `freeform` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` のいずれかとし、人が参考資料の完成度を判断したうえで `sch-strategy-<track>.yaml` に明示する。エージェントは plan に展開された「進め方」に従い、参考資料の品質判定や参照除外の判断は行わない。「進め方」セクションが扱う内容の詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
 
 参考資料そのものを改善する作業は、成果物作成タスクに暗黙で混ぜない。必要な場合は `approach: rulebook-maintenance` のように対象を指定した phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述し、通常の exec plan として生成・実行する。
 
@@ -1274,7 +1275,7 @@ specdojo exec estimate --project prj-0001 --task T-AUTH-auth-api-020 --by agent-
 
 `claim` / `exec run` が scaffold 生成する `exec/results/<task-id>-result.md` の内容も、edit-plan / review-plan と同様に、生成物の種別（edit-result / review-result）ごとに用意した共通テンプレートファイル（`xer-template.md` / `xrr-template.md`）を展開して生成する。
 
-result は対応する plan と対になる成果物であり、plan 側の「進め方」セクションに対応する記録欄（「参考資料の活用」/「参考資料との整合確認」）をテンプレートに設けることで、エージェントが result に記入する際に、`approach` に沿って rulebook / recipe / sample をどう使ったかを result 本文から直接把握できる状態にする。参考資料の完成度判断は人が `sch-strategy-<track>.yaml` の `approach` に反映するため、result では品質判定や除外判断を記録しない。
+result は対応する plan と対になる成果物であり、plan 側の「進め方」セクションに対応する記録欄（「参考資料の活用」/「参考資料との整合確認」）をテンプレートに設けることで、エージェントが result に記入する際に、`approach` に沿って rulebook / recipe / sample / template をどう使ったかを result 本文から直接把握できる状態にする。参考資料の完成度判断は人が `sch-strategy-<track>.yaml` の `approach` に反映するため、result では品質判定や除外判断を記録しない。
 
 #### 8.7.8. テンプレートファイルの配置と構成
 

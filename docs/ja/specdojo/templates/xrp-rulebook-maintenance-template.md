@@ -30,7 +30,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 - 確認の向きを「成果物 → rulebook」に切り替える。
 - 対象成果物に紐づく rulebook の見直し内容が妥当かを、複数の成果物、review result、対象領域の慣行と照らして確認する。
 - 章構成・必須項目・禁止事項・判定基準が成果物の実態と整合しているか確認する。
-- recipe / sample と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+- recipe / sample / template と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 - 判断の根拠を review result に残す。
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。
