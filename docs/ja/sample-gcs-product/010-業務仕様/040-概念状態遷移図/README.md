@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. 図の作成・更新ルールは [cstd-mermaid-rulebook.md](../../../specdojo/rulebooks/cstd-mermaid-rulebook.md) を参照してください。
-2. 生成AIを活用して Mermaid の状態遷移図を作成する場合は [cstd-mermaid-instruction.md](../../../specdojo/instructions/cstd-mermaid-instruction.md) をプロンプトのテンプレートとして利用してください。

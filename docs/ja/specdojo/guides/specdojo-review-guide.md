@@ -33,7 +33,6 @@ SpecDojo のレビューは次を扱う。
 | 対象成果物 | レビュー対象の Markdown / YAML / JSON など |
 | 成果物カタログ | `done_criteria`、依存関係、成果物の位置づけ |
 | rulebook | 必須章、必須キー、禁止事項、構造ルール |
-| instruction | agent が成果物を作成・更新するときの指示 |
 | sample | 期待する成果物の具体例 |
 | review viewpoints | Role code 別の観点、severity、verdict、coverage_types |
 | 関連成果物 | 上位・下位・隣接成果物、Schedule、RACI、PJR |

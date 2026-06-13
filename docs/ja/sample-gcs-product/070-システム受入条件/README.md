@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. ドキュメントの作成・更新ルールは [sac-rulebook.md](../../specdojo/rulebooks/sac-rulebook.md) を参照してください。
-2. 生成AIを活用してドキュメントを作成する場合は [sac-instruction.md](../../specdojo/instructions/sac-instruction.md) をプロンプトのテンプレートとして利用してください。

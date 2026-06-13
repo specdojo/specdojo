@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. 帳票仕様の作成・更新ルールは [bds-rulebook.md](../../../specdojo/rulebooks/bds-rulebook.md) を参照してください。
-2. 生成AIを活用して帳票仕様を作成する場合は [bds-instruction.md](../../../specdojo/instructions/bds-instruction.md) をプロンプトのテンプレートとして利用してください。

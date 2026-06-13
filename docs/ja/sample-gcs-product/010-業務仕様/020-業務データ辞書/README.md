@@ -6,8 +6,8 @@
 
 | ドキュメント         | 略称 | 主な対象                     | 内容                                                                             | 記法ガイド                                                                                                       |
 | -------------------- | ---- | ---------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| 業務データ辞書       | BDD  | データ項目                   | 業務上の管理単位（エンティティ）とその属性の論理名・物理名・説明・制約などを定義 | [ルール](../../../specdojo/rulebooks/bdd-rulebook.md) / [作成指示](../../../specdojo/instructions/bdd-instruction.md)   |
-| 概念データストア定義 | CDSD | データストア（概念レベル）   | 業務で扱うデータストア（帳簿・台帳・記録など）を一覧で定義                       | [ルール](../../../specdojo/rulebooks/cdsd-rulebook.md) / [作成指示](../../../specdojo/instructions/cdsd-instruction.md) |
-| 保管場所定義         | SLD  | 物理・論理の保管場所         | 業務で管理する物理的・論理的な保管場所を一覧で定義                               | [ルール](../../../specdojo/rulebooks/sld-rulebook.md) / [作成指示](../../../specdojo/instructions/sld-instruction.md)   |
-| ステータス定義       | STSD | 状態（業務・システム）       | 業務上のエンティティが取り得る状態（ステータス）を一覧で定義                     | [ルール](../../../specdojo/rulebooks/stsd-rulebook.md) / [作成指示](../../../specdojo/instructions/stsd-instruction.md) |
-| 分類定義             | CLD  | 分類（カテゴリ・種別・区分） | 業務上の分類（カテゴリ、種別、区分など）を一覧で整理                             | [ルール](../../../specdojo/rulebooks/cld-rulebook.md)/ [作成指示](../../../specdojo/instructions/cld-instruction.md)    |
+| 業務データ辞書       | BDD  | データ項目                   | 業務上の管理単位（エンティティ）とその属性の論理名・物理名・説明・制約などを定義 | [ルール](../../../specdojo/rulebooks/bdd-rulebook.md)   |
+| 概念データストア定義 | CDSD | データストア（概念レベル）   | 業務で扱うデータストア（帳簿・台帳・記録など）を一覧で定義                       | [ルール](../../../specdojo/rulebooks/cdsd-rulebook.md) |
+| 保管場所定義         | SLD  | 物理・論理の保管場所         | 業務で管理する物理的・論理的な保管場所を一覧で定義                               | [ルール](../../../specdojo/rulebooks/sld-rulebook.md)   |
+| ステータス定義       | STSD | 状態（業務・システム）       | 業務上のエンティティが取り得る状態（ステータス）を一覧で定義                     | [ルール](../../../specdojo/rulebooks/stsd-rulebook.md) |
+| 分類定義             | CLD  | 分類（カテゴリ・種別・区分） | 業務上の分類（カテゴリ、種別、区分など）を一覧で整理                             | [ルール](../../../specdojo/rulebooks/cld-rulebook.md)    |

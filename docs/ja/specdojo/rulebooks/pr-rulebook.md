@@ -59,7 +59,3 @@ Progress Report Documentation Rulebook
 ## 8. サンプル
 
 - 参照先: `[pr-sample](../samples/pr-sample.md)`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: `[pr-instruction](../instructions/pr-instruction.md)`

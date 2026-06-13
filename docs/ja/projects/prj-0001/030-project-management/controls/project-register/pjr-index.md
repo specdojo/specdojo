@@ -118,7 +118,7 @@ Project Register
 | PJR-0097 | open | xep-rulebookの追加 | edit plan用のrulebookを追加 | todo | medium | ARC | 2026-06-07 | - | - | - |
 | PJR-0098 | done | specdojo exec auto選択時にcapabilitiesのロジック変更 | 最小剰余を使用してcapabilitiesを選択->制約条件に変更 | todo | medium | ARC | 2026-06-07 | 2026-06-07 | priorityに基づいて選択するように変更 | - |
 | PJR-0099 | done | exec planをcreation_mode毎に出力変更 | creation_modeを反映し、planテンプレートから生成 | todo | medium | ARC | 2026-06-13 | 2026-06-10 | creation_modeをapproach_modeに変更してmode毎にテンプレート作成 | - |
-| PJR-0100 | open | *-instruction.mdを削除 | *-instruction.mdを廃止 | todo | medium | ARC | 2026-06-14 | - | - | - |
+| PJR-0100 | done | *-instruction.mdを削除 | *-instruction.mdを廃止 | todo | medium | ARC | 2026-06-14 | 2026-06-13 | *-instruction.mdを廃止し、rulebook、標準、Skill、サイドバー、関連文書からinstruction参照を削除 | - |
 | PJR-0101 | open | xep-freeform-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
 | PJR-0102 | open | xep-fully-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |
 | PJR-0103 | open | xep-recipe-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | - | - | - |

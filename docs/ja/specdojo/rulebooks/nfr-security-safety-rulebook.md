@@ -180,7 +180,3 @@ supersedes: []
 | 運用手順         | opr-\*           | インシデント一次対応手順    | 必須 |
 | 判断記録         | dec-\*           | セキュリティ設計判断の追跡  | 任意 |
 | セキュリティ方針 | （社内ポリシー） | 規制・社内基準との整合確認  | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-security-safety` を作成させるときの指示テンプレートは [`nfr-security-safety-instruction.md`](../instructions/nfr-security-safety-instruction.md) を参照してください。

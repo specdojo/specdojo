@@ -102,7 +102,3 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭の `document` 
 ## 8. サンプル
 
 - 参照: `../samples/pm-roles-sample.yaml`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-roles-instruction.md`

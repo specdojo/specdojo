@@ -173,7 +173,3 @@ supersedes: []
 | nfr-performance     | `docs/ja/specdojo/nfr-performance.md`     | Dev      | 性能要件           |
 | nfr-operations      | `docs/ja/specdojo/nfr-operations.md`      | Ops      | 運用要件           |
 | nfr-usability       | `docs/ja/specdojo/nfr-usability.md`       | UX/QA    | 操作性要件         |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-index` を作成させるときの指示テンプレートは [`nfr-index-instruction.md`](../instructions/nfr-index-instruction.md) を参照してください。

@@ -389,7 +389,3 @@ supersedes: []
 
 - ピーク時条件（同時数・データ量）の確定
 - 外部決済の障害時（代替運用/ロールバック）の合意
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に TSP を作らせるときの指示テンプレートは [tsp-index-instruction.md](../instructions/tsp-index-instruction.md) を参照してください。

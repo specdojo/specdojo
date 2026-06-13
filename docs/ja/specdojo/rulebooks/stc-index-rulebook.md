@@ -321,7 +321,3 @@ supersedes: []
 
 `stc-<term>` の `<term>` は主要業務フロー/ユーザシナリオのまとまりとし、
 業務境界・境界横断の同質性・データライフサイクル・運用境界を基準に分割する。
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `stc-index` を作らせるときの指示テンプレートは [`stc-index-instruction.md`](../instructions/stc-index-instruction.md) を参照してください。

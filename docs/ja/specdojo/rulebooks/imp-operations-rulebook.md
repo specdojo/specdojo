@@ -113,7 +113,3 @@ Impact Analysis (Operations) Rulebook
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/imp-operations-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/imp-operations-instruction.md`

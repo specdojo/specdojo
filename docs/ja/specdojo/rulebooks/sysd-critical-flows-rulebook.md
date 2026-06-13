@@ -365,8 +365,3 @@ flowchart LR
 | テスト   | its-index / ets-index / stc-index                                        | 観点検証               | 必須 |
 | 運用     | opd-index / opr-index                                                    | 監視・障害対応・再実行 | 必須 |
 | 判断記録 | dec-index                                                                | 例外・設計判断の追跡   | 必須 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `sysd-critical-flows` を作成させるときの指示テンプレートは
-[`sysd-critical-flows-instruction.md`](../instructions/sysd-critical-flows-instruction.md) を参照してください。

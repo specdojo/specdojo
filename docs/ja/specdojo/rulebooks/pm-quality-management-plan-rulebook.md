@@ -155,7 +155,3 @@ Quality Management Plan Documentation Rules
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/pm-quality-management-plan-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-quality-management-plan-instruction.md`

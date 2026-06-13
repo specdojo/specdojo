@@ -484,7 +484,3 @@ supersedes: []
 
 - 引き継ぎ条件:
   - 障害疑いは `opr-incident` へ（P判定を付与）
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `opr-index` / `opr-<term>` を作らせるときの指示テンプレートは `opr-instruction.md` を参照してください。

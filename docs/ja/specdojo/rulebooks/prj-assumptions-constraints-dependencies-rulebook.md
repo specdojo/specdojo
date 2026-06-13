@@ -139,7 +139,3 @@ flowchart LR
 ## 8. サンプル（最小でも可）
 
 - 参照: [prj-assumptions-constraints-dependencies-sample.md](../samples/prj-assumptions-constraints-dependencies-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: [prj-assumptions-constraints-dependencies-instruction.md](../instructions/prj-assumptions-constraints-dependencies-instruction.md)

@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. システム化機能一覧の作成・更新ルールは[sf-rulebook.md](../../../specdojo/rulebooks/sf-rulebook.md)を参照してください。
-2. 生成AIを活用してシステム化機能一覧を作成する場合は[sf-instruction.md](../../../specdojo/instructions/sf-instruction.md)をプロンプトのテンプレートとして利用してください。

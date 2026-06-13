@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 - 概念クラス図の作成・更新ルールは [ccd-mermaid-rulebook.md](../../../specdojo/rulebooks/ccd-mermaid-rulebook.md) を参照してください。
-- 生成AIを活用して概念クラス図を作成する場合は [ccd-mermaid-instruction.md](../../../specdojo/instructions/ccd-mermaid-instruction.md) をプロンプトのテンプレートとして利用してください。

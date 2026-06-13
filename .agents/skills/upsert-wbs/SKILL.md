@@ -15,7 +15,6 @@ description: '`wbs-strategy-<domain>.md` を入力として `wbs-<domain>.yaml` 
 
 ## 前提
 
-- WBS 生成ルール: `docs/ja/specdojo/instructions/wbs-instruction.md`
 - WBS スキーマ: `docs/specdojo/schemas/v1/wbs.schema.yaml`
 - WBS 記述例: `docs/ja/specdojo/samples/wbs-sample.yaml`
 - 成果物→WBS 展開ガイド: `docs/ja/specdojo/guidelines/specdojo-deliverables-to-schedule-guide.md`
@@ -39,7 +38,7 @@ description: '`wbs-strategy-<domain>.md` を入力として `wbs-<domain>.yaml` 
    - カタログが複数ある場合はすべて読み込む
    - カタログに記載された WBS 展開対象（`kind: work` / 例外的な `kind: control`）を特定する
 4. 出力先の `wbs-<domain>.yaml` の既存有無を確認する（新規 or アップサート）
-5. `wbs-instruction.md` のルールに従い、`wbs-<domain>.yaml` を生成または更新する
+5. strategy とスキーマに従い、`wbs-<domain>.yaml` を生成または更新する
    - `1 成果物 = 1 WBS item` を厳守する
    - `deliverable` は単一オブジェクト（配列不可）で記述する
    - `wbs[].id` は `WBS-<DOMAIN>-<ARTIFACT>` 形式（末尾に連番なし）とする

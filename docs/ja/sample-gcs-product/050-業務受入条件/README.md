@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. ドキュメントの作成・更新ルールは [bac-rulebook.md](../../specdojo/rulebooks/bac-rulebook.md) を参照してください。
-2. 生成AIを活用してドキュメントを作成する場合は [bac-instruction.md](../../specdojo/instructions/bac-instruction.md) をプロンプトのテンプレートとして利用してください。

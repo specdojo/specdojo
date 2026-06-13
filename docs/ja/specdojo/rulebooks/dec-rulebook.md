@@ -60,7 +60,3 @@ Decision Log Documentation Rulebook
 ## 8. サンプル
 
 - 参照先: [dec-sample](../samples/dec-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [dec-instruction](../instructions/dec-instruction.md)

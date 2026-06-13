@@ -75,7 +75,3 @@ Operations Procedure Runbook Index Documentation Rules
 ## 8. サンプル
 
 - 参照先: [opr-index-sample](../samples/opr-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [opr-index-instruction](../instructions/opr-index-instruction.md)

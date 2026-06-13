@@ -299,7 +299,3 @@ supersedes: []
 | ---------------------------- | ------------------- | ------------------ | -------------- | ---------------------- | --------- | ------------ | ------ | --------- | -------------------------------------- |
 | ut-auth-input-validation-010 | 入力: 期限切れtoken | verifyToken(token) | AUTH-001で失敗 | 例外型+code            | 時刻=固定 | TR-02        | P0     | automated | tests/auth/verifyToken.test.ts, CI#123 |
 | ut-auth-input-validation-020 | 入力: 形式不正token | verifyToken(token) | AUTH-002で失敗 | 例外型+code            | IdP=Stub  | TR-01, TR-02 | P1     | automated | tests/auth/verifyToken.test.ts, CI#124 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に個別 UTC（`utc-<term>`）を作らせるときの指示テンプレートは [utc-instruction.md](../instructions/utc-instruction.md) を参照してください。

@@ -111,7 +111,3 @@ Organization Definition Documentation Rulebook
 ## 8. サンプル
 
 - 参照: `../samples/pm-organization-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-organization-instruction.md`

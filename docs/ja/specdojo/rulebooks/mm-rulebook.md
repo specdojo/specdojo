@@ -58,7 +58,3 @@ Meeting Minutes Documentation Rulebook
 ## 8. サンプル
 
 - 参照先: `[mm-sample](../samples/mm-sample.md)`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: `[mm-instruction](../instructions/mm-instruction.md)`

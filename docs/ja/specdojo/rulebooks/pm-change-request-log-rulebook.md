@@ -93,7 +93,3 @@ Change Request Log Documentation Rules
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/pm-change-request-log-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-change-request-log-instruction.md`

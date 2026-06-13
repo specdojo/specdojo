@@ -113,7 +113,3 @@ Impact Analysis (Business) Rulebook
 ## 8. サンプル（最小でも可）
 
 - サンプル未作成。作成後に `../samples/imp-business-sample.md` へのリンクを追記する。
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/imp-business-instruction.md`

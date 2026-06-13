@@ -175,7 +175,3 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 ## 8. サンプル
 
 _TODO_: `pjr-index-sample.md` を作成する。
-
-## 9. 生成 AI への指示テンプレート
-
-_TODO_: `pjr-index-instruction.md` を作成する。

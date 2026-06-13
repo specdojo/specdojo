@@ -109,7 +109,3 @@ Requirements Traceability (Requirements to Specs) Rulebook
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/trc-requirements-to-specs-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/trc-requirements-to-specs-instruction.md`

@@ -306,7 +306,3 @@ supersedes: []
 | ---------------------------------- | -------------------------------------- | --------------------------------------- | -------------------------- | ----------------------------------- | ---------------- | -------- | ------ | --------- | ------------------------------------------------------- |
 | et-payment-gateway-idempotency-010 | 環境: 外部timeout → 同一冪等キーで再送 | authorize → timeout再現 → 同一keyで再送 | 二重課金なしで最終的に成功 | 外部取引ID一意、内部状態=authorized | sandbox(timeout) | TR-02    | P0     | automated | tests/et/payment/idempotency.test.ts, CI#..., reqId=... |
 | et-payment-gateway-idempotency-020 | 状態: Webhook重複受信                  | webhookを同一payloadで2回送信           | 状態が二重更新されない     | 更新回数=1、イベント重複なし        | sandbox/webhook  | TR-01    | P1     | automated | tests/et/payment/webhook.test.ts, CI#..., trace=...     |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に個別 ETC（`etc-<term>`）を作らせるときの指示テンプレートは `etc-instruction.md` を参照してください。

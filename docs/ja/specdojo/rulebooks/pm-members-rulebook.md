@@ -144,7 +144,3 @@ YAML 成果物のため、Markdown Frontmatter ではなく先頭メタ項目と
 ## 8. サンプル
 
 - 参照: `../samples/pm-members-sample.yaml`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-members-instruction.md`

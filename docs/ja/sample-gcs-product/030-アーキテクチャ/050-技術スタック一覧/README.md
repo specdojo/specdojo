@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. ドキュメントの作成・更新ルールは[tsd-rulebook.md](../../../specdojo/rulebooks/tsd-rulebook.md)を参照してください。
-2. 生成AIを活用してドキュメントを作成する場合は[tsd-instruction.md](../../../specdojo/instructions/tsd-instruction.md)をプロンプトのテンプレートとして利用してください。

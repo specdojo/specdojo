@@ -92,7 +92,3 @@ Issue Log Documentation Rules
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/pm-issue-log-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-issue-log-instruction.md`

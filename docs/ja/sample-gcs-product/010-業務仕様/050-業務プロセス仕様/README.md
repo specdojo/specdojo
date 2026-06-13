@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. 業務プロセス仕様の作成・更新ルールは [bps-rulebook.md](../../../specdojo/rulebooks/bps-rulebook.md) を参照してください。
-2. 生成AIを活用して業務プロセス仕様を作成する場合は [bps-instruction.md](../../../specdojo/instructions/bps-instruction.md) をプロンプトのテンプレートとして利用してください。

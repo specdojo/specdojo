@@ -99,7 +99,3 @@ Technology Stack Definition Index (TSD Index) Documentation Rules
 ## 8. サンプル
 
 - 参照先: [tsd-index-sample](../samples/tsd-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- [tsd-index-instruction](../instructions/tsd-index-instruction.md)

@@ -127,7 +127,3 @@ Deliverables Catalog Documentation Rules
 ## 8. サンプル
 
 - 参照先: [dct-index-sample](../samples/dct-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [dct-index-instruction](../instructions/dct-index-instruction.md)

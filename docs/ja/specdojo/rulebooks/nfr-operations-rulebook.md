@@ -180,7 +180,3 @@ supersedes: []
 | 運用設計 | opd-\*         | 監視設計・アラート設計          | 必須 |
 | 運用手順 | opr-\*         | Runbook・障害対応・バックアップ | 必須 |
 | 判断記録 | dec-\*         | 運用に関する設計判断の追跡      | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-operations` を作成させるときの指示テンプレートは [`nfr-operations-instruction.md`](../instructions/nfr-operations-instruction.md) を参照してください。

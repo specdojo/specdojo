@@ -348,7 +348,7 @@ viewpoints:
     category: consistency
     title: 抜け漏れ・矛盾
     check: 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。
-    evidence: rulebook、instruction、schema、関連文書、禁止事項、レビュー履歴。
+    evidence: rulebook、schema、関連文書、禁止事項、レビュー履歴。
     coverage_types:
       - stakeholder
       - scope_boundary

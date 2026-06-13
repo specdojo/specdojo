@@ -179,7 +179,3 @@ supersedes: []
 | 運用設計     | opd-\*         | 監視・アラート・復旧判断基準 | 必須 |
 | 運用手順     | opr-\*         | 障害一次対応・DR 切替手順    | 必須 |
 | 判断記録     | dec-\*         | 冗長構成・DR 方式の設計判断  | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-availability` を作成させるときの指示テンプレートは [`nfr-availability-instruction.md`](../instructions/nfr-availability-instruction.md) を参照してください。

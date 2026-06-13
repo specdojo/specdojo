@@ -11,11 +11,9 @@
 ### 概念データフロー図（CDFD）
 
 - 作成ルールは[cdfd-rulebook.md](../../../specdojo/rulebooks/cdfd-rulebook.md) を参照してください。
-- 生成AIへの指示はテンプレート[cdfd-instruction.md](../../../specdojo/instructions/cdfd-instruction.md) を参考にしてください。
 
 ### Mermaid を用いたデータフロー図（DFD）
 
 MermaidによるCDFD図の記法単体は、
 
 - 作成ルールは[cdfd-mermaid-rulebook.md](../../../specdojo/rulebooks/cdfd-mermaid-rulebook.md) を参照してください。
-- 生成AIへの指示はテンプレート[cdfd-mermaid-instruction.md](../../../specdojo/instructions/cdfd-mermaid-instruction.md) を参考にしてください。

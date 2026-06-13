@@ -56,7 +56,3 @@ External System Interface Index Documentation Rulebook
 ## 8. サンプル
 
 - 参照先: [ifx-index-sample](../samples/ifx-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [ifx-index-instruction](../instructions/ifx-index-instruction.md)

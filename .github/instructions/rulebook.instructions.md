@@ -17,7 +17,7 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 - 構成基準: `docs/ja/specdojo/standards/rulebook-structure-standard.md`
 - ファイル名・ディレクトリ構成基準: `docs/ja/specdojo/guidelines/docs-structure-guide.md`
 - Frontmatter スキーマ: `docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml`
-- 参照先（必要に応じて）: `[*-sample](../samples/*-sample.md)`、`[*-instruction](../instructions/*-instruction.md)`
+- 参照先（必要に応じて）: `[*-sample](../samples/*-sample.md)`
 
 ## 3. 出力仕様（Frontmatter と命名）
 
@@ -36,17 +36,16 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 - 章番号は `## 1.` からの連番とし、スキップしない。
 - 不要章を省略する場合は、省略理由を本文に明記する。
 
-| 章番号 | 章タイトル                   | 必須 |
-| ------ | ---------------------------- | ---- |
-| 1      | 全体方針                     | ○    |
-| 2      | 位置づけと用語定義           | 任意 |
-| 3      | ファイル命名・ID規則         | ○    |
-| 4      | 推奨 Frontmatter 項目        | 任意 |
-| 5      | 本文構成（標準テンプレ）     | ○    |
-| 6      | 記述ガイド                   | ○    |
-| 7      | 禁止事項                     | ○    |
-| 8      | サンプル                     | ○    |
-| 9      | 生成 AI への指示テンプレート | ○    |
+| 章番号 | 章タイトル               | 必須 |
+| ------ | ------------------------ | ---- |
+| 1      | 全体方針                 | ○    |
+| 2      | 位置づけと用語定義       | 任意 |
+| 3      | ファイル命名・ID規則     | ○    |
+| 4      | 推奨 Frontmatter 項目    | 任意 |
+| 5      | 本文構成（標準テンプレ） | ○    |
+| 6      | 記述ガイド               | ○    |
+| 7      | 禁止事項                 | ○    |
+| 8      | サンプル                 | ○    |
 
 - `位置づけと用語定義` は、用語定義がない場合のみ `位置づけ` としてよい。
 
@@ -70,8 +69,6 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
   - YAML の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.yaml)`
   - JSON の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.json)`
     存在しない場合は「サンプル未作成。作成後にリンクを追記する」と記載する。
-- `生成 AI への指示テンプレート` には、ファイルが存在する場合は、`- 参照先: [<prefix>-instruction](../instructions/<prefix>-instruction.md)`でリンクを記載する。
-  存在しない場合は「instruction 未作成。作成後にリンクを追記する」と記載する。
 
 ### 5.1. 内容充実化ルール（薄いドキュメント防止）
 
@@ -98,14 +95,13 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 2. 構成基準（`docs/ja/specdojo/standards/rulebook-structure-standard.md`）との差分を洗い出す。
 3. 新規作成またはアップサートで章構成と記述を反映する。
 4. sampleファイルが存在する場合は、サンプルリンクを更新する。
-5. instructionファイルが存在する場合は、instruction リンクを更新する。
-6. 変更点を要約し、最終チェック結果を記録する。
+5. 変更点を要約し、最終チェック結果を記録する。
 
 ## 8. 最終チェック
 
 - Frontmatter がスキーマ要件（`id` / `type` / `status`）を満たしている。
 - 章構成が `## 1.` からの連番で、必須章が欠落していない。
-- `サンプル` と `生成 AI への指示テンプレート` が存在し、リンクが有効。
+- `サンプル` が存在し、リンクが有効。
 - 禁止事項に該当する記述がない。
 - `npm run -s lint:md` を実行し、エラーがない。
 - `target_format` が `yaml` / `json` の場合は、対応する sample が schema と整合することを確認する。

@@ -150,17 +150,13 @@ const getBaseFromLink = (link?: string): string => {
   return clean.split('/').pop() ?? ''
 }
 
-// 判定：README / *rules / *instruction
+// 判定：README / *rulebook
 const isReadme = (item: SidebarItem): boolean => {
   return getBaseFromLink(item.link).toLowerCase() === 'readme'
 }
 
 const isRulebook = (item: SidebarItem): boolean => {
   return getBaseFromLink(item.link).toLowerCase().endsWith('rulebook')
-}
-
-const isInstruction = (item: SidebarItem): boolean => {
-  return getBaseFromLink(item.link).toLowerCase().endsWith('instruction')
 }
 
 // 既に /<locale>/ が付いているかを LOCALES から判定（将来増えてもOK）
@@ -170,14 +166,12 @@ const isAlreadyPrefixedByAnyLocale = (path: string): boolean => {
 
 // ソート用のキー：
 // 1) README（最優先）
-// 2) *rules（次）
-// 2) *instruction（次）
+// 2) *rulebook（次）
 // 3) その他：先頭 xxx- を削除した名前でファイル名順
 const sortKey = (item: SidebarItem): { bucket: number; name: string } => {
   if (isReadme(item)) return { bucket: 0, name: '' }
   if (isRulebook(item)) return { bucket: 1, name: getBaseFromLink(item.link).toLowerCase() }
-  if (isInstruction(item)) return { bucket: 2, name: getBaseFromLink(item.link).toLowerCase() }
-  return { bucket: 3, name: getBaseFromLink(item.link).toLowerCase() }
+  return { bucket: 2, name: getBaseFromLink(item.link).toLowerCase() }
 }
 
 const normalizeAndPrefixLink = (link: string, locale: Locale): string => {

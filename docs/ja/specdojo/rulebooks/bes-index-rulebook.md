@@ -100,7 +100,3 @@ Business Event Specification Index (BES Index) Documentation Rules
 ## 8. サンプル
 
 - 参照先: [bes-index-sample](../samples/bes-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [bes-index-instruction](../instructions/bes-index-instruction.md)

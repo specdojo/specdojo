@@ -178,7 +178,3 @@ supersedes: []
 | システム試験 | stc-\*           | 整合性検証・改ざん検知試験   | 必須 |
 | 判断記録     | dec-\*           | 完全性に関する例外判断の追跡 | 必須 |
 | 監査文書     | （外部監査基準） | SOC2 等の適合確認            | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-integrity` を作成させるときの指示テンプレートは [`nfr-integrity-instruction.md`](../instructions/nfr-integrity-instruction.md) を参照してください。

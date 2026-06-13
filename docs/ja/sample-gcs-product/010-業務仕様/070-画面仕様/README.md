@@ -5,4 +5,3 @@
 ## 記法ガイド
 
 1. 画面仕様の作成・更新ルールは [uis-rulebook.md](../../../specdojo/rulebooks/uis-rulebook.md) を参照してください。
-2. 生成AIを活用して画面仕様を作成する場合は [uis-instruction.md](../../../specdojo/instructions/uis-instruction.md) をプロンプトのテンプレートとして利用してください。

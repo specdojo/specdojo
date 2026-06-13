@@ -301,7 +301,3 @@ supersedes: []
 | it-order-persistence-integrity-010 | 入力: 正常 / 状態: DB空          | POST /orders | 201 + DBに1件作成        | レスポンス/DB行/主要カラム | DB=実(コンテナ) | TR-01    | P0     | automated | tests/it/orders/create.test.ts, CI#123  |
 | it-order-persistence-integrity-020 | 入力: 制約違反 / 状態: DB空      | POST /orders | 400 + DBに作成されない   | レスポンス/DB行0           | DB=実(制約観測) | TR-01    | P0     | automated | tests/it/orders/create.test.ts, CI#124  |
 | it-order-persistence-integrity-030 | 入力: 重複 / 状態: 既存orderあり | POST /orders | 409 + DB状態が変化しない | エラーコード/DB差分なし    | DB=実           | TR-02    | P1     | automated | tests/it/orders/duplicate.test.ts, CI#9 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に個別 ITC（`itc-<term>`）を作らせるときの指示テンプレートは `itc-instruction.md` を参照してください。

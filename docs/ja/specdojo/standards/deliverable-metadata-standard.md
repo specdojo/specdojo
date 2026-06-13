@@ -16,7 +16,7 @@ Deliverable Metadata Standard
 - 共通原則の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
-補足: `rulebook` / `instruction` / `guide` / `standard` は専用スキーマを持つため本標準の対象外とする。
+補足: `rulebook` / `guide` / `standard` は専用スキーマを持つため本標準の対象外とする。
 
 ## 2. 必須項目
 

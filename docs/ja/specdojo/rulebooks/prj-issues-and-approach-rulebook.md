@@ -210,7 +210,3 @@ supersedes: []
 ## 8. サンプル（最小でも可）
 
 - 参照: [prj-issues-and-approach-sample.md](../samples/prj-issues-and-approach-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: [prj-issues-and-approach-instruction.md](../instructions/prj-issues-and-approach-instruction.md)

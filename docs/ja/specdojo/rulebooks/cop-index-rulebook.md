@@ -169,7 +169,3 @@ Frontmatter は共通スキーマに従う。
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/cop-index-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/cop-index-instruction.md`

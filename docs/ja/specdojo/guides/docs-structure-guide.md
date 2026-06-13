@@ -181,7 +181,6 @@ docs/
 │   │   ├── guides/                           # ドキュメント作成ガイド
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
-│   │   └── instructions/                         # 生成AIへの指示テンプレート
 │   │
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）
@@ -442,7 +441,6 @@ docs/
 │   │   ├── guides/                           # ドキュメント作成ガイド
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
-│   │   └── instructions/                         # 生成AIへの指示テンプレート
 │   │
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）

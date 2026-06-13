@@ -271,7 +271,3 @@ Schedule ファイルは `kind` で種別を区別する。
 
 - 参照: `../samples/sch-sample.md`（ドメインレベルスケジュールの例）
 - 参照: `../samples/sch-milestones-sample.md`（マイルストーン計画の例）
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/sch-instruction.md`

@@ -75,7 +75,3 @@ Operations Policy and Design Index Documentation Rules
 ## 8. サンプル
 
 - 参照先: [opd-index-sample](../samples/opd-index-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [opd-index-instruction](../instructions/opd-index-instruction.md)

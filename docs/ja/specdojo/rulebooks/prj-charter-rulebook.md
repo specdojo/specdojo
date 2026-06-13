@@ -301,7 +301,3 @@ supersedes: []
 ## 8. サンプル
 
 - 参照: [prj-charter-sample.md](../samples/prj-charter-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: [prj-charter-instruction.md](../instructions/prj-charter-instruction.md)

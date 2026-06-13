@@ -25,7 +25,7 @@ allOf:
           - architecture # アーキテクチャ設計
           - test # テスト仕様・設計
           - operations # 運用設計・手順
-        description: "仕様の種別（rulebook/instruction/guide/standard は各専用スキーマを使用）"
+        description: "仕様の種別（rulebook/guide/standard は各専用スキーマを使用）"
       rulebook:
         $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
         description: "準拠する rulebook の ID。該当がない場合は none。"

@@ -192,7 +192,3 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 - 参照先: [dct-sample](../samples/dct-sample.yaml)
 - 構造例は成果物カタログのテンプレート（`../templates/dct-<domain>-template.yaml`）も参照する。
-
-## 9. 生成 AI への指示テンプレート
-
-- instruction 未作成。作成後にリンクを追記する。

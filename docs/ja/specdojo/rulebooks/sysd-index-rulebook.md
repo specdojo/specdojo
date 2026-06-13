@@ -230,8 +230,3 @@ supersedes: []
 | 品質     | nfr-index           | 非機能要件との整合確認         | 可用性・性能の判断基準 |
 | 運用方針 | opd-index           | 運用統制（監視/証跡/権限）確認 | 監査観点で参照         |
 | 決定記録 | dec-index           | 設計判断の背景追跡             | 破壊的変更時に必須     |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `sysd-index` を作成させるときの指示テンプレートは
-[`sysd-index-instruction.md`](../instructions/sysd-index-instruction.md) を参照してください。

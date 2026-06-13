@@ -308,8 +308,3 @@ supersedes: []
 | 非機能     | nfr-index                                              | タイムアウト/SLA/SLO整合     | 必須 |
 | 運用       | opd-index / opr-index                                  | 監視・障害対応・証跡運用     | 必須 |
 | 判断記録   | dec-index                                              | 例外・設計判断の追跡         | 必須 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `sysd-cross-cutting-policy` を作成させるときの指示テンプレートは
-[`sysd-cross-cutting-policy-instruction.md`](../instructions/sysd-cross-cutting-policy-instruction.md) を参照してください。

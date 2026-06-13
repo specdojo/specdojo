@@ -92,7 +92,3 @@ Risk Register Documentation Rules
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/pm-risk-register-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/pm-risk-register-instruction.md`

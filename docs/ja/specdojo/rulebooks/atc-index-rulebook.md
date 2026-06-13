@@ -368,7 +368,3 @@ supersedes: []
 
 将来検討事項（例）：証跡テンプレ統一、代表構成の見直し、受入の自動化範囲、カタログlint等を記録する。
 必須になった時点で本文へ昇格させる。
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `atc-index` を作らせるときの指示テンプレートは [`atc-index-instruction.md`](../instructions/atc-index-instruction.md) を参照してください。

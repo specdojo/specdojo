@@ -320,7 +320,3 @@ supersedes: []
 - `mtp-index`：移行リハーサル計画（事前合格条件）
 - `dmd-order-data`：データ移行設計（抽出/投入/検証）
 - （必要に応じて追加）`otp-index`：運用切替・ハイパーケア（監視/窓口）
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `cop-<term>` を作らせるときの指示テンプレートは `../instructions/cop-instruction.md` を参照する。

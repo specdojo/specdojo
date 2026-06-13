@@ -180,7 +180,3 @@ supersedes: []
 | システム試験 | stc-\*         | 負荷試験・性能回帰試験     | 必須 |
 | 運用設計     | opd-\*         | 監視閾値・アラート設計     | 必須 |
 | 判断記録     | dec-\*         | 性能に関する設計判断の追跡 | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-performance` を作成させるときの指示テンプレートは [`nfr-performance-instruction.md`](../instructions/nfr-performance-instruction.md) を参照してください。

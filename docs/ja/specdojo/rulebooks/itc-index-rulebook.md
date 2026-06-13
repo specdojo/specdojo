@@ -415,7 +415,3 @@ CIで再現可能な環境（固定バージョン、固定設定）で実行す
 
 将来検討事項（例）：fixture戦略、環境起動時間短縮、flaky対策、証跡リンク形式統一、カタログlint 等を記録する。
 運用必須になった時点で本文へ昇格させる。
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `itc-index` を作らせるときの指示テンプレートは [itc-index-instruction.md](../instructions/itc-index-instruction.md) を参照してください。

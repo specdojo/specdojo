@@ -375,7 +375,3 @@ supersedes: []
 
 将来検討事項（例）：sandbox不安定時の標準fallback、テストデータ廃棄、ログ/トレースリンク統一、ETの実行時間上限と分割基準等を記録する。
 運用ルールとして必須になった時点で本文へ昇格させる。
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `etc-index` を作らせるときの指示テンプレートは [`etc-index-instruction.md`](../instructions/etc-index-instruction.md) を参照してください。

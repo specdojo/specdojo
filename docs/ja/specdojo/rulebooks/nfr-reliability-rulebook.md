@@ -181,7 +181,3 @@ supersedes: []
 | 運用設計     | opd-\*         | 監視閾値・アラート設計       | 必須 |
 | 運用手順     | opr-\*         | DLQ 対応・再実行手順         | 必須 |
 | 判断記録     | dec-\*         | 信頼性に関する設計判断の追跡 | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-reliability` を作成させるときの指示テンプレートは [`nfr-reliability-instruction.md`](../instructions/nfr-reliability-instruction.md) を参照してください。

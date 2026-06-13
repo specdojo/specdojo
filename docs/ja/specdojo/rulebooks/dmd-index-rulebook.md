@@ -95,7 +95,3 @@ Data Migration Design Documentation Rules
 ## 8. サンプル（最小でも可）
 
 - 参照: `../samples/dmd-index-sample.md`
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: `../instructions/dmd-index-instruction.md`

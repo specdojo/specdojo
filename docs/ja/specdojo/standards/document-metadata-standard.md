@@ -14,7 +14,6 @@ Document Metadata Standard
 
 - 成果物（deliverable）: [deliverable-metadata-standard.md](deliverable-metadata-standard.md)
 - rulebook: [rulebook-metadata-standard.md](rulebook-metadata-standard.md)
-- instruction: [instruction-metadata-standard.md](instruction-metadata-standard.md)
 - standard: [docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml](../../../specdojo/schemas/v1/standard-frontmatter.schema.yaml)
 
 ## 2. 共通原則

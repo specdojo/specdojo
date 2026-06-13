@@ -204,7 +204,3 @@ supersedes: []
 ## 8. サンプル（最小）
 
 - 参照: [prj-scope-sample.md](../samples/prj-scope-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: [prj-scope-instruction.md](../instructions/prj-scope-instruction.md)

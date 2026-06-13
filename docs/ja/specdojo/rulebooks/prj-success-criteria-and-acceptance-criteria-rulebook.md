@@ -145,7 +145,3 @@ flowchart LR
 ## 8. サンプル（最小でも可）
 
 - 参照: [prj-success-criteria-and-acceptance-criteria-sample.md](../samples/prj-success-criteria-and-acceptance-criteria-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照: [prj-success-criteria-and-acceptance-criteria-instruction.md](../instructions/prj-success-criteria-and-acceptance-criteria-instruction.md)

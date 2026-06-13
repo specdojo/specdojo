@@ -72,20 +72,12 @@
 
 - 参照先: [gl-sample](../samples/gl-sample.yaml)
 
-## 6. 生成 AI への指示テンプレート
-
-- 参照先: [gl-instruction](../instructions/gl-instruction.md)
-
-## 7. 禁止事項
+## 6. 禁止事項
 
 - 用語定義に実装詳細（クラス名、SQL、内部コード）を記載しない。
 - 用語IDを未採番または重複させない。
 - 曖昧語のみで定義を終えない。
 
-## 8. サンプル
+## 7. サンプル
 
 - 参照先: [gl-sample](../samples/gl-sample.yaml)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [gl-instruction](../instructions/gl-instruction.md)

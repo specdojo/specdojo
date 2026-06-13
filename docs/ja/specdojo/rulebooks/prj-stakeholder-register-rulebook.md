@@ -205,7 +205,3 @@ Stakeholder Register Documentation Rulebook
 ## 8. サンプル（最小でも可）
 
 - 参照先: [prj-stakeholder-register-sample](../samples/prj-stakeholder-register-sample.md)
-
-## 9. 生成 AI への指示テンプレート
-
-- 参照先: [prj-stakeholder-register-instruction](../instructions/prj-stakeholder-register-instruction.md)

@@ -66,7 +66,7 @@ supersedes: []
 | ID                         | 情報要求                                         | 主なチャネル                             | 合意・報告の必要性                            | 証跡要件                         |
 | -------------------------- | ------------------------------------------------ | ---------------------------------------- | --------------------------------------------- | -------------------------------- |
 | `STH-PROJECT-OWNER`        | 目的、範囲、優先順位、主要判断事項               | Issue、Pull Request、決定記録            | 方針変更、公開方針、主要成果物の確認          | 決定記録、PR、Issue              |
-| `STH-AI-AGENT`             | 入力文書、作成ルール、制約条件、出力形式         | 指示テンプレート、チャット               | AI 出力の採否は人間が判断する                 | 指示内容、生成結果、レビュー結果 |
+| `STH-AI-AGENT`             | 入力文書、作成ルール、制約条件、出力形式         | 参考資料、exec plan、チャット             | AI 出力の採否は人間が判断する                 | 指示内容、生成結果、レビュー結果 |
 | `STH-FUTURE-USER`          | 目的、適用範囲、利用手順、テンプレート、サンプル | README、SpecDojo、導入ガイド             | 利用上の不明点や改善要望を Issue 等で収集する | Issue、フィードバック、更新 PR   |
 | `STH-FUTURE-CONTRIBUTOR`   | 貢献方法、レビュー基準、Issue/PR ルール          | GitHub Issue、Pull Request、CONTRIBUTING | 貢献ルールとレビュー方針を明示する            | Issue、PR、レビュー記録          |
 | `STH-PUBLICATION-PLATFORM` | リポジトリ構成、ライセンス、更新状況             | GitHub、README、Release notes            | 公開前に README、LICENSE、構成を確認する      | README、LICENSE、Git 履歴        |

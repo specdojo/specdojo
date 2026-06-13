@@ -19,11 +19,6 @@ const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem 
   link: specdojoLink('rulebooks', `${id}-rulebook`),
   ...(items ? { collapsed: true, items } : {}),
 })
-const instruction = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
-  text,
-  link: specdojoLink('instructions', `${id}-instruction`),
-  ...(items ? { collapsed: true, items } : {}),
-})
 const group = (text: string, items: SidebarItem[], collapsed = true): SidebarItem => ({
   text,
   collapsed,
@@ -189,165 +184,6 @@ const productChangeRulebooks = [
   group('移行', migrationRulebooks),
 ]
 
-const projectDefinitionInstructions = [
-  instruction('ステークホルダー登録簿', 'prj-stakeholder-register'),
-  instruction('プロジェクト憲章', 'prj-charter'),
-  instruction('プロジェクトスコープ', 'prj-scope'),
-  instruction('成功基準と受入条件', 'prj-success-criteria-and-acceptance-criteria'),
-  instruction('プロジェクト課題と解決アプローチ', 'prj-issues-and-approach'),
-  instruction('前提・制約・依存関係', 'prj-assumptions-constraints-dependencies'),
-  instruction('代替案の比較', 'prj-comparison-of-alternatives'),
-]
-
-const projectManagementInstructions = [
-  group('成果物カタログ', [
-    instruction('成果物カタログの索引', 'dct-index'),
-    instruction('成果物カタログ', 'dct'),
-  ]),
-  group('管理計画', [
-    instruction('プロジェクト管理計画', 'pm-plan'),
-    instruction('コミュニケーション計画', 'pm-communication-plan'),
-    instruction('品質管理計画', 'pm-quality-management-plan'),
-  ]),
-  group('組織体制', [
-    instruction('組織とロールの定義', 'pm-organization'),
-    instruction('ロール定義', 'pm-roles'),
-    instruction('メンバー定義', 'pm-members'),
-    instruction('組織体制とRACI', 'pm-raci'),
-  ]),
-  group('管理台帳・管理ビュー', [
-    instruction('リスク登録簿', 'pm-risk-register'),
-    instruction('課題ログ', 'pm-issue-log'),
-    instruction('変更要求ログ', 'pm-change-request-log'),
-    instruction('意思決定ログ', 'dec'),
-  ]),
-  instruction('スケジュール', 'sch'),
-  instruction('進捗報告', 'pr'),
-  instruction('議事録', 'mm'),
-]
-
-const businessSpecificationInstructions = [
-  instruction('概念データフロー図', 'cdfd', [instruction('図の記法', 'cdfd-mermaid')]),
-  group('データモデル', [
-    instruction('業務データ辞書', 'bdd'),
-    instruction('概念データストア定義', 'cdsd'),
-    instruction('保管場所定義', 'sld'),
-    instruction('ステータス定義', 'stsd'),
-    instruction('分類定義', 'cld'),
-    instruction('概念クラス図', 'ccd-mermaid'),
-    instruction('概念状態遷移図', 'cstd', [instruction('図の記法', 'cstd-mermaid')]),
-  ]),
-  group('業務モデル', [
-    instruction('業務プロセス仕様', 'bps'),
-    instruction('ビジネスルール', 'br'),
-    instruction('業務イベント一覧', 'bes-index'),
-    instruction('業務イベント仕様', 'bes'),
-  ]),
-  group('インターフェースモデル', [instruction('画面仕様', 'uis'), instruction('帳票仕様', 'bds')]),
-  group('共通', [
-    instruction('システム化機能一覧', 'sf-index'),
-    instruction('システム化機能', 'sf'),
-    instruction('用語集', 'gl'),
-  ]),
-]
-
-const externalIfInstructions = [
-  instruction('外部システムI/F一覧', 'ifx-index', [
-    instruction('外部システムIF一覧（YAML）', 'ifx'),
-  ]),
-  instruction('外部API仕様', 'ifx-api'),
-  instruction('外部ファイル仕様', 'ifx-file'),
-  instruction('外部メッセージ仕様', 'ifx-msg'),
-]
-
-const architectureInstructions = [
-  group('C4', [
-    instruction('コンテキスト図', 'cxd', [instruction('図の記法', 'cxd-mermaid')]),
-    instruction('コンテナ図', 'cnd', [instruction('図の記法', 'cnd-mermaid')]),
-    instruction('コンポーネント図', 'cpd', [instruction('図の記法', 'cpd-mermaid')]),
-  ]),
-  group('インフラ・技術選定', [
-    instruction('インフラ構成図', 'ifd-mermaid'),
-    instruction('技術スタック一覧', 'tsd-index'),
-    instruction('技術スタック', 'tsd'),
-  ]),
-]
-
-const systemDesignInstructions = [
-  instruction('システム設計 全体構成', 'sysd-index'),
-  instruction('重要フロー', 'sysd-critical-flows'),
-  instruction('横断ルール', 'sysd-cross-cutting-policy'),
-]
-
-const nonFunctionalRequirementInstructions = [
-  instruction('非機能要件 全体構成', 'nfr-index'),
-  instruction('信頼性', 'nfr-reliability'),
-  instruction('可用性', 'nfr-availability'),
-  instruction('保守性', 'nfr-maintainability'),
-  instruction('完全性', 'nfr-integrity'),
-  instruction('機密性・安全性', 'nfr-security-safety'),
-  instruction('性能', 'nfr-performance'),
-  instruction('運用', 'nfr-operations'),
-  instruction('操作性', 'nfr-usability'),
-]
-
-const testingInstructions = [
-  instruction('テスト戦略・方針', 'tsp-index'),
-  group('単体テスト', [
-    instruction('単体テストカタログ 概要', 'utc-index'),
-    instruction('単体テストカタログ 対象別', 'utc'),
-  ]),
-  group('内部結合テスト', [
-    instruction('内部結合テストカタログ 概要', 'itc-index'),
-    instruction('内部結合テストカタログ 対象別', 'itc'),
-  ]),
-  group('外部結合テスト', [
-    instruction('外部結合テストカタログ 概要', 'etc-index'),
-    instruction('外部結合テストカタログ 対象別', 'etc'),
-  ]),
-  group('総合テスト', [
-    instruction('総合テストカタログ 概要', 'stc-index'),
-    instruction('総合テストカタログ 対象別', 'stc'),
-  ]),
-  group('受入テスト', [
-    instruction('受入テストカタログ 概要', 'atc-index'),
-    instruction('受入テストカタログ 対象別', 'atc'),
-  ]),
-]
-
-const migrationInstructions = [
-  instruction('移行計画', 'mip-index'),
-  instruction('データ移行設計 全体構成', 'dmd-index'),
-  instruction('データ移行設計', 'dmd'),
-  instruction('移行テスト計画', 'mtp'),
-  instruction('カットオーバー計画 全体構成', 'cop-index'),
-  instruction('カットオーバー計画', 'cop'),
-  instruction('運用切替計画 全体構成', 'otp-index'),
-  instruction('運用切替計画', 'otp'),
-]
-
-const operationsInstructions = [
-  instruction('運用方針・設計 全体構成', 'opd-index'),
-  instruction('運用方針・設計', 'opd'),
-  instruction('運用手順 全体構成', 'opr-index'),
-  instruction('運用手順', 'opr'),
-]
-
-const productChangeInstructions = [
-  group('影響調査', [
-    instruction('業務影響', 'imp-business'),
-    instruction('データ影響', 'imp-data'),
-    instruction('インターフェース影響', 'imp-interface'),
-    instruction('テスト影響', 'imp-test'),
-    instruction('運用影響', 'imp-operations'),
-  ]),
-  group('トレーサビリティ', [
-    instruction('要求と仕様のトレース', 'trc-requirements-to-specs'),
-    instruction('要求とテストのトレース', 'trc-requirements-to-tests'),
-  ]),
-  group('移行', migrationInstructions),
-]
-
 export const specdojoSidebarItems = [
   {
     text: 'ガイドライン',
@@ -381,7 +217,6 @@ export const specdojoSidebarItems = [
       standard('成果物メタ情報', 'deliverable-metadata-standard'),
       standard('ルールブックメタ情報', 'rulebook-metadata-standard'),
       standard('ルールブック構造', 'rulebook-structure-standard'),
-      standard('指示テンプレートメタ情報', 'instruction-metadata-standard'),
       standard('人・組織定義', 'people-and-organization-definition-standard'),
       standard('テスト文書スコープ', 'test-document-scope-standard'),
     ],
@@ -405,27 +240,6 @@ export const specdojoSidebarItems = [
       group('テスト', testingRulebooks),
       group('移行', migrationRulebooks),
       group('運用', operationsRulebooks),
-    ],
-  },
-  {
-    text: '指示テンプレート',
-    collapsed: true,
-    items: [
-      group('プロジェクト', [
-        group('プロジェクト定義', projectDefinitionInstructions),
-        group('プロジェクトマネジメント', projectManagementInstructions),
-        group('プロダクト変更', productChangeInstructions),
-      ]),
-      group('業務仕様', businessSpecificationInstructions),
-      group('外部I/F仕様', externalIfInstructions),
-      group('アーキテクチャ', architectureInstructions),
-      group('システム設計', systemDesignInstructions),
-      instruction('業務受入条件', 'bac'),
-      group('非機能要件', nonFunctionalRequirementInstructions),
-      instruction('システム受入条件', 'sac'),
-      group('テスト', testingInstructions),
-      group('移行', migrationInstructions),
-      group('運用', operationsInstructions),
     ],
   },
 ]

@@ -178,7 +178,3 @@ supersedes: []
 | システム試験 | stc-\*         | 操作性観点の E2E 試験        | 必須 |
 | 画面仕様     | uis-\*         | 画面レイアウト・操作フロー   | 必須 |
 | 判断記録     | dec-\*         | 操作性に関する設計判断の追跡 | 任意 |
-
-## 9. 生成 AI への指示テンプレート
-
-生成 AI に `nfr-usability` を作成させるときの指示テンプレートは [`nfr-usability-instruction.md`](../instructions/nfr-usability-instruction.md) を参照してください。
