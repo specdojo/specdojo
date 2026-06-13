@@ -62,6 +62,27 @@ describe('exec worktree', () => {
     }
   })
 
+  it('ignores repository-local Git environment inherited from hooks', () => {
+    const repo = createGitRepository()
+    const base = mkdtempSync(join(tmpdir(), 'specdojo-worktree-base-'))
+    const originalIndexFile = process.env.GIT_INDEX_FILE
+    try {
+      process.env.GIT_INDEX_FILE = '.git/index'
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
+      })
+      expect(created.created).toBe(true)
+      expect(existsSync(join(created.path, 'README.md'))).toBe(true)
+    } finally {
+      if (originalIndexFile === undefined) delete process.env.GIT_INDEX_FILE
+      else process.env.GIT_INDEX_FILE = originalIndexFile
+      rmSync(repo, { recursive: true, force: true })
+      rmSync(base, { recursive: true, force: true })
+    }
+  })
+
   it('normalizes task ids for worktree and branch names', () => {
     expect(worktreeNameFromTaskId('prj-0001:T-LAUNCH-pm-plan-010')).toBe(
       'prj-0001-T-LAUNCH-pm-plan-010'

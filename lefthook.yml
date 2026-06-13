@@ -4,40 +4,40 @@ pre-commit:
   parallel: true
   commands:
     docs-build:
-      glob: 'docs/**'
+      glob: "docs/**"
       run: npx tsx tools/docs/src/lefthook-docs-build.ts
       stage_fixed: true
 
     format-markdown:
-      glob: '*.md'
+      glob: "*.md"
       run: npx markdownlint --fix {staged_files}
       stage_fixed: true
 
     lint-markdown:
-      glob: '*.md'
+      glob: "*.md"
       run: npx markdownlint {staged_files}
 
-    validate-templates:
-      glob: 'docs/ja/specdojo/templates/**'
+    test:
+      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
       run: npm test
 
     register-build:
-      glob: 'docs/**/pjr-index.md'
+      glob: "docs/**/pjr-index.md"
       run: npx tsx src/specdojo.ts register build
       stage_fixed: true
 
     catalog-build:
-      glob: 'docs/**/dct-*.yaml'
+      glob: "docs/**/dct-*.yaml"
       run: npx tsx src/specdojo.ts catalog build
       stage_fixed: true
 
     exec-build:
-      glob: 'docs/**/sch-*.yaml'
+      glob: "docs/**/sch-*.yaml"
       run: npx tsx src/specdojo.ts exec build
       stage_fixed: true
 
     index-build:
-      glob: 'docs/**'
+      glob: "docs/**"
       run: npx tsx src/specdojo.ts index build
       stage_fixed: true
 
