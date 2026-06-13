@@ -169,7 +169,7 @@ exec run --auto [--loop]
   → phase の capabilities / proficiency と pm-members.yaml でエージェントを解決
   → exec claim でタスクを claim する
     （claim と同時に exec/results/<task-id>-result.md を scaffold 生成）
-  → exec/plans/<task-id>-plan.md を読み込み、pm-members.yaml の command フィールドの agent コマンドに brief を渡して実行
+  → exec/plans/<task-id>-plan.md を読み込み、pm-members.yaml の command フィールドの agent コマンドに plan を渡して実行
   → 終了コード 0 → exec complete（result の status を complete に更新）
   → 終了コード 1 → exec block（result の status を blocked に更新）
 exec build（再実行）
@@ -191,7 +191,7 @@ exec build（再実行）
 specdojo exec build --project <project-id>
 ```
 
-`generated/ready.json`、`generated/claim-next.json`、`generated/agent-briefs/` が更新される。
+`generated/ready.json`、`generated/claim-next.json`、`exec/plans/` が更新される。
 
 ### 9.2. 次のタスクを確認する
 
@@ -222,13 +222,13 @@ specdojo exec scheduler \
 
 ### 9.3. 実行コマンドとエージェント選択を確認する
 
-`run --task --dry-run` を使うと、対象タスクの `phase_set`、`phase.id`、`mode`、`approach`、マッチした `capabilities`・`proficiency`、agent command、agent brief の有無を確認できる。`approach` が省略されたタスクは標準テンプレートで扱われる。
+`run --task --dry-run` を使うと、対象タスクの `phase_set`、`phase.id`、`mode`、`approach`、マッチした `capabilities`・`proficiency`、agent command、execution plan の有無を確認できる。`approach` が省略されたタスクは標準テンプレートで扱われる。
 
 ```sh
 specdojo exec run --project <project-id> --task <task-id> --dry-run
 ```
 
-このコマンドは実際のエージェントを起動せず、解決されたコマンドとブリーフ文字数だけを表示する。
+このコマンドは実際のエージェントを起動せず、解決されたコマンドと plan の文字数だけを表示する。
 `sch-strategy-*.yaml` や `pm-members.yaml` を手作業で追う必要があるのは、解決結果が期待と違う場合に限定する。
 
 ### 9.4. タスクを claim する

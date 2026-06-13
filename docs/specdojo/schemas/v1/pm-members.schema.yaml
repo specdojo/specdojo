@@ -173,7 +173,7 @@ $defs:
         minLength: 1
         description: >
           Shell command invoked by specdojo exec run for this agent.
-          The agent brief is appended as the final argument.
+          The execution plan is appended as the final argument.
           Required for type: agent.
 
       mode:

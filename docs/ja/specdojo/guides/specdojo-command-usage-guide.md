@@ -1101,8 +1101,7 @@ generated/
 ├─ schedule-diff.md
 ├─ timeline.md
 ├─ timeline.svg
-├─ metadata.json
-└─ agent-briefs/
+└─ metadata.json
 exec/
 ├─ plans/        （exec build が生成する edit-plan / review-plan）
 │  └─ <task-id>-plan.md
@@ -1156,7 +1155,6 @@ specdojo exec build --project prj-0001
 - schedule diff
 - task catalog
 - timeline
-- agent briefs
 - `exec/plans/<task-id>-plan.md`（Frontmatter+Markdown 形式の edit-plan / review-plan）
 
 `ready.md` は人間向けの ready 一覧で、`critical-first` の順序と `fifo` の順序を併記します。
@@ -1463,7 +1461,7 @@ rate_limit_detection:
 
 1. `run.worktree_base`（または `--worktree-base`）を解決する。
 2. `exec validate --project <id>` を実行し、スケジュール整合性を確認する。
-3. `exec build --project <id>` を実行し、state・ready 情報・agent brief・plan ファイルを最新化する。
+3. `exec build --project <id>` を実行し、state・ready 情報・plan ファイルを最新化する。
 4. `--parallel` の数だけ並列で以下を実行する：
    a. task_id の `:` を `-` に置換した `<task-id-slug>` を求める。
    b. worktree `<worktree_base>/<task-id-slug>` が存在しない場合、`git worktree add <worktree_base>/<task-id-slug> -b exec/<task-id-slug>` でブランチを作成する。
@@ -2038,7 +2036,6 @@ agent-test
 - schedule diff
 - task catalog
 - timeline
-- agent briefs
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule generate`）

@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
@@ -278,12 +278,8 @@ function expandPromptRefs(prompt: string): string {
 }
 
 function loadPrompt(executionPath: string, taskId: string): string | null {
-  // Prefer the new plan file; fall back to legacy agent-brief for compatibility
   const plan = loadPlan(executionPath, taskId)
-  if (plan) return expandPromptRefs(plan)
-  const briefPath = join(executionPath, 'generated', 'agent-briefs', `${taskId}.md`)
-  if (!existsSync(briefPath)) return null
-  return expandPromptRefs(readFileSync(briefPath, 'utf8'))
+  return plan ? expandPromptRefs(plan) : null
 }
 
 function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
