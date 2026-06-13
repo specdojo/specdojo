@@ -323,8 +323,23 @@ function derivedViewNote(): string {
   return '> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。'
 }
 
-function generateViewsFile(items: PjrItem[]): string {
-  const sections: string[] = ['# 台帳ビュー', '', derivedViewNote()]
+// pjr-views.md は pjr-index.md の派生ビュー。frontmatter は pjr-index.md と
+// 整合させ、派生元を part_of で示す（deliverable-frontmatter スキーマに準拠）。
+function viewsFrontmatter(projectId: string): string {
+  return [
+    '---',
+    `id: ${projectId}:pjr-views`,
+    'type: project',
+    'status: ready',
+    'part_of:',
+    `  - ${projectId}:pjr-index`,
+    'rulebook: pjr-index-rulebook',
+    '---',
+  ].join('\n')
+}
+
+function generateViewsFile(items: PjrItem[], projectId: string): string {
+  const sections: string[] = [viewsFrontmatter(projectId), '', '# 台帳ビュー', '', derivedViewNote()]
 
   // 1. 状態別
   sections.push('', '## 1. 状態別')
@@ -395,7 +410,7 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
   if (scope === 'register' || scope === 'all') {
     registerViews.push({
       path: join(paths.generatedPath, 'pjr-views.md'),
-      content: generateViewsFile(regItems),
+      content: generateViewsFile(regItems, paths.projectId),
     })
   }
 

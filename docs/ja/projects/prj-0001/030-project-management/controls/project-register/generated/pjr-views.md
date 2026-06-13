@@ -1,3 +1,12 @@
+---
+id: prj-0001:pjr-views
+type: project
+status: ready
+part_of:
+  - prj-0001:pjr-index
+rulebook: pjr-index-rulebook
+---
+
 # 台帳ビュー
 
 > このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。
