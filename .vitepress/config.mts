@@ -328,14 +328,19 @@ const transformSidebar = (
       return next
     })
 
-  transformed.sort((a, b) => {
+  // 「生成物」グループ（generated フォルダ）はグループ化せず、子を同一階層へ展開する。
+  const flattened = transformed.flatMap(it =>
+    !it.link && it.text === '生成物' && it.items ? it.items : [it]
+  )
+
+  flattened.sort((a, b) => {
     const ka = sortKey(a)
     const kb = sortKey(b)
     if (ka.bucket !== kb.bucket) return ka.bucket - kb.bucket
     return ka.name.localeCompare(kb.name, 'ja')
   })
 
-  return transformed
+  return flattened
 }
 
 // ★ここ重要：言語フォルダを documentRootPath にする
