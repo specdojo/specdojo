@@ -245,7 +245,7 @@ members:
     mode: edit
     capabilities: [web_search]
     proficiency: normal
-    priority: 1
+    priority: 2
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
 
@@ -254,7 +254,7 @@ members:
     mode: review
     capabilities: [web_search]
     proficiency: normal
-    priority: 1
+    priority: 2
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
 
@@ -263,7 +263,7 @@ members:
     mode: edit
     capabilities: [web_search]
     proficiency: expert
-    priority: 2
+    priority: 1
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
 
@@ -272,7 +272,7 @@ members:
     mode: review
     capabilities: [web_search]
     proficiency: expert
-    priority: 2
+    priority: 1
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
 ```

@@ -25,8 +25,8 @@ permission:
     "*": deny
     "docs/ja/projects/**/execution/exec/results/**": allow
   task: deny
-  webfetch: deny
-  websearch: deny
+  webfetch: allow
+  websearch: allow
   external_directory: deny
   question: deny
 ---
