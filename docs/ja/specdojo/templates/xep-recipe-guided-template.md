@@ -36,6 +36,8 @@ _OWNER_ROLE_VIEWPOINTS_
 1. recipe: 指定された recipe を読み込み、示された構成・問い・観点・深掘り手順に沿って成果物を組み立てる。
 2. recipe が答えを示さない箇所は、`depends_on` 成果物・類似成果物・プロジェクト文脈との整合で補う。
 
+成果物は、冗長な記述や内容の重複を避け、簡潔でわかりやすく記載する。
+
 rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。recipe の指示が他の文書と矛盾する場合は recipe を優先する。
 
 本タスクの実行に必要な recipe-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。

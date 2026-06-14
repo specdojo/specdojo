@@ -2,47 +2,17 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 1,
+  "ready_count": 0,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-prj-overview-010-I01",
-      "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-010-I01"
-      ]
+      "next_task_id": null,
+      "ordered_task_ids": []
     },
     "fifo": {
-      "next_task_id": "T-LAUNCH-prj-overview-010-I01",
-      "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-010-I01"
-      ]
+      "next_task_id": null,
+      "ordered_task_ids": []
     }
   },
-  "tasks": [
-    {
-      "id": "T-LAUNCH-prj-overview-010-I01",
-      "local_id": "prj-overview",
-      "phase_suffix": "010",
-      "phase_set": "first-edit-pass",
-      "phase_id": "draft",
-      "iteration": 1,
-      "name": "たたき台作成",
-      "owner": "BA",
-      "schedule_file": "sch-track-launch.yaml",
-      "fifo_rank": 1,
-      "critical_first_rank": 1,
-      "cpm": {
-        "es": 0,
-        "ef": 0.25,
-        "ls": 0,
-        "lf": 0.25,
-        "slack": 0
-      },
-      "description": "エージェントが成果物の初版を作成する。\n章構成・記載項目を決め、現時点で把握している情報を埋める。\n調査・確認が必要な箇所は TODO として明示したまま残す。\n",
-      "mode": "edit",
-      "execution": "agent",
-      "approach": "freeform",
-      "proficiency": "expert"
-    }
-  ]
+  "tasks": []
 }

@@ -152,7 +152,7 @@
 <text class="label-artifact" x="126" y="280" clip-path="url(#clip-col2)">プロジェクト概要</text>
 <text class="label" x="298" y="280" clip-path="url(#clip-col3)">たたき台作成</text>
 <line class="row-grid" x1="0" y1="288" x2="2272" y2="288" />
-<rect x="440" y="266" width="14" height="12" rx="4" fill="#dc2626" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
+<rect x="440" y="266" width="14" height="12" rx="4" fill="#2563eb" stroke="#991b1b" stroke-width="1.25" opacity="0.94" />
 <text class="label-id" x="8" y="304" clip-path="url(#clip-col1)">prj-overview-020</text>
 <text class="label-artifact" x="126" y="304" clip-path="url(#clip-col2)">プロジェクト概要</text>
 <text class="label" x="298" y="304" clip-path="url(#clip-col3)">調査・補強</text>

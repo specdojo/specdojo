@@ -21,6 +21,17 @@
         "initial_state": true
       }
     },
+    "T-LAUNCH-prj-overview-010-I01": {
+      "state": "doing",
+      "last_ts": "2026-06-14T13:30:40Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "claim",
+      "last_msg": "manual run",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "BA"
+      }
+    },
     "G-LAUNCH-first-edit-pass": {
       "state": "todo"
     },
@@ -31,9 +42,6 @@
       "state": "todo"
     },
     "M-LAUNCH-project-management": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-010-I01": {
       "state": "todo"
     },
     "T-LAUNCH-prj-overview-020-I01": {

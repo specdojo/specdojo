@@ -2,8 +2,7 @@
 
 exec build が生成した実行プラン一覧。各プランは非正本であり、進捗は保持しない。
 
-- plan_count: `1`
+- plan_count: `0`
 
 | id | mode | owner | name | plan |
 |---|---|---|---|---|
-| `T-LAUNCH-prj-overview-010-I01` | edit | BA | たたき台作成 | [T-LAUNCH-prj-overview-010-I01-plan.md](./T-LAUNCH-prj-overview-010-I01-plan.md) |

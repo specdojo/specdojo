@@ -13,12 +13,12 @@ status: draft
 
 Schedule は「いつ・どの順序で・誰が実行するか」を定義する層である。
 
-| 定義する内容     | 担当ファイル                           |
-| ---------------- | -------------------------------------- |
-| WHAT / DONE      | 成果物カタログ（`dct-*.yaml`）         |
-| WHEN / ORDER     | Schedule（`sch-*.yaml`）               |
-| エージェント定義 | `pm-members.yaml`                      |
-| 実行共通設定     | `.specdojo/exec-defaults.yaml`         |
+| 定義する内容     | 担当ファイル                   |
+| ---------------- | ------------------------------ |
+| WHAT / DONE      | 成果物カタログ（`dct-*.yaml`） |
+| WHEN / ORDER     | Schedule（`sch-*.yaml`）       |
+| エージェント定義 | `pm-members.yaml`              |
+| 実行共通設定     | `.specdojo/exec-defaults.yaml` |
 
 Schedule は成果物カタログを参照するが、成果物パスや完了条件を直接持たない。
 
@@ -369,14 +369,14 @@ specdojo exec run \
 
 `exec run` は、worktree の準備、エージェント起動、result 回収、状態更新を一括で行う自動実行コマンドである。各段階を人が確認しながら進める場合は、`exec worktree` 配下の分割コマンドを使う。
 
-| コマンド           | 責務                                             | Git変更  | イベント変更 |
-| ------------------ | ------------------------------------------------ | -------- | ------------ |
-| `worktree prepare` | 実行管理ファイルをcommitし、worktreeを準備する   | あり     | なし         |
-| `worktree status`  | worktree、result、Git差分の状態を確認する        | なし     | なし         |
-| `worktree agent`   | worktree内でagent commandを1回実行する           | agent次第 | なし         |
-| `worktree commit`  | resultと成果物変更をexecブランチへcommitする     | あり     | なし         |
-| `worktree merge`   | execブランチを現在のブランチへGit mergeする      | あり     | なし         |
-| `worktree remove`  | 統合済みworktreeを削除する                       | あり     | なし         |
+| コマンド           | 責務                                           | Git変更   | イベント変更 |
+| ------------------ | ---------------------------------------------- | --------- | ------------ |
+| `worktree prepare` | 実行管理ファイルをcommitし、worktreeを準備する | あり      | なし         |
+| `worktree status`  | worktree、result、Git差分の状態を確認する      | なし      | なし         |
+| `worktree agent`   | worktree内でagent commandを1回実行する         | agent次第 | なし         |
+| `worktree commit`  | resultと成果物変更をexecブランチへcommitする   | あり      | なし         |
+| `worktree merge`   | execブランチを現在のブランチへGit mergeする    | あり      | なし         |
+| `worktree remove`  | 統合済みworktreeを削除する                     | あり      | なし         |
 
 すべてのサブコマンドは `--project <project-id>` と `--task <task-id>` で対象を特定する。`--worktree-base <path>` を指定した場合は `run.worktree_base` より優先する。`--dry-run` を持つコマンドでは、変更を行わずに対象パスと実行予定操作を表示する。
 
@@ -393,14 +393,14 @@ specdojo exec run \
 
 分割コマンドは独自のJSONや状態ファイルを作成しない。後続コマンドに必要な情報は、毎回次の標準情報から導出する。
 
-| 情報                  | 導出元                                                        |
-| --------------------- | ------------------------------------------------------------- |
-| worktree名・ブランチ  | task IDから `<task-id-slug>` と `exec/<task-id-slug>` を導出  |
-| worktreeパス          | `git worktree list --porcelain` からexecブランチを検索        |
-| plan/resultパス       | SpecDojoのproject設定とtask IDから導出                         |
-| claim actor           | `exec/events/` のclaim eventから導出                           |
-| 比較起点commit        | `git merge-base HEAD <exec-branch>` で都度導出                 |
-| merge先               | `worktree merge` を実行した現在のブランチ                     |
+| 情報                 | 導出元                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| worktree名・ブランチ | task IDから `<task-id-slug>` と `exec/<task-id-slug>` を導出 |
+| worktreeパス         | `git worktree list --porcelain` からexecブランチを検索       |
+| plan/resultパス      | SpecDojoのproject設定とtask IDから導出                       |
+| claim actor          | `exec/events/` のclaim eventから導出                         |
+| 比較起点commit       | `git merge-base HEAD <exec-branch>` で都度導出               |
+| merge先              | `worktree merge` を実行した現在のブランチ                    |
 
 比較起点commitは保存しない。rootブランチが別タスクのcheckpoint commitやmergeによって進んだ場合も、現在のrootブランチとexecブランチの共通祖先を `git merge-base` で再計算する。
 
@@ -732,6 +732,7 @@ specdojo exec worktree prepare --project <project-id> --task <task-id>
 
 # prepareが表示したworktreeパスへ移動
 cd <worktree-path>
+npm ci
 
 specdojo exec worktree status --project <project-id> --task <task-id>
 specdojo exec worktree agent --project <project-id> --task <task-id>
@@ -814,11 +815,11 @@ AI モデルのレートリミットに達した場合、`exec run` は `exec-de
 
 ## 11. Anti-patterns
 
-| Anti-pattern                     | 問題点                                                                                               |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 巨大 Task（1日以上）             | AI が一度の実行で完了できず、途中状態が残りやすい                                                    |
-| 過剰依存チェーン                 | Ready タスクが常に少なく、並列実行の恩恵を得られない                                                 |
-| `duration_days: 0` の Task       | ゼロ期間は Milestone を使う                                                                          |
-| `depends_on` の省略              | 前提なしでも `[]` と明示する                                                                         |
-| 成果物パスを Schedule に直接記載 | パスは成果物カタログが管理する                                                                       |
+| Anti-pattern                       | 問題点                                                                                        |
+| ---------------------------------- | --------------------------------------------------------------------------------------------- |
+| 巨大 Task（1日以上）               | AI が一度の実行で完了できず、途中状態が残りやすい                                             |
+| 過剰依存チェーン                   | Ready タスクが常に少なく、並列実行の恩恵を得られない                                          |
+| `duration_days: 0` の Task         | ゼロ期間は Milestone を使う                                                                   |
+| `depends_on` の省略                | 前提なしでも `[]` と明示する                                                                  |
+| 成果物パスを Schedule に直接記載   | パスは成果物カタログが管理する                                                                |
 | `sch-strategy` に agent 個体を記載 | `sch-strategy` は phase の作業要件のみを持ち、エージェント定義は `pm-members.yaml` に集約する |
