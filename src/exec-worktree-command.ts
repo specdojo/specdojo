@@ -78,6 +78,7 @@ type ProjectContext = ReturnType<typeof resolveProjectPaths> & {
 
 const DEFAULT_LOCK_TIMEOUT_MS = 10_000
 const DEFAULT_LOCK_STALE_MS = 300_000
+const MAX_COMMIT_STABILIZATION_ATTEMPTS = 3
 
 function commandError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error)
@@ -202,6 +203,33 @@ function commitTargetPaths(context: ProjectContext, worktree: ExecWorktree, task
   return statusPaths(worktree.path).filter(path =>
     isCommitTargetPath(path, executionRel, resultRel)
   )
+}
+
+export function stabilizeCommitTargets(
+  repoRoot: string,
+  listRemainingPaths: () => string[],
+  maxAttempts = MAX_COMMIT_STABILIZATION_ATTEMPTS
+): void {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const paths = listRemainingPaths()
+    if (paths.length === 0) return
+
+    gitOutput(repoRoot, ['add', '-A', '--', ...paths])
+    const staged = gitResult(repoRoot, ['diff', '--cached', '--quiet', '--', ...paths])
+    if (staged.status === 0) {
+      throw new Error(`Failed to stage post-hook commit-target changes: ${paths.join(', ')}`)
+    }
+    if (staged.status !== 1) throw new Error('Failed to inspect post-hook worktree changes.')
+
+    gitOutput(repoRoot, ['commit', '--amend', '--no-edit', '--', ...paths])
+  }
+
+  const dirty = listRemainingPaths()
+  if (dirty.length > 0) {
+    throw new Error(
+      `Pre-commit hooks kept changing commit-target files: ${dirty.join(', ')}`
+    )
+  }
 }
 
 function zeroSeparatedPaths(repoRoot: string, args: string[]): string[] {
@@ -494,6 +522,7 @@ function commit(opts: CommitOpts): void {
     '--',
     ...paths,
   ])
+  stabilizeCommitTargets(worktree.path, () => commitTargetPaths(context, worktree, opts.task))
 }
 
 function merge(opts: MergeOpts): void {

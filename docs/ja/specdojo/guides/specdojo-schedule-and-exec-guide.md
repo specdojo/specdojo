@@ -617,6 +617,8 @@ git -C "${WORKTREE}" diff --cached --quiet || \
 
 実装では除外後の変更パスを先に列挙し、対象が0件なら `git add` と `git commit` を実行しない。`--message` が指定された場合は、その値を `git commit -m` へ渡す。
 
+pre-commit hook がインデックスなどのcommit対象ファイルを追加・更新した場合は、hook終了後に未commitの対象を再検出し、同じcommitへ自動的にamendする。amend後もhookによる変更が繰り返される場合は、無限ループを避けるため規定回数で異常終了する。
+
 ##### 9.5.1.5. `exec worktree merge`
 
 execブランチにcommitされた成果物変更を、コマンドを実行した現在のブランチへ統合する。
