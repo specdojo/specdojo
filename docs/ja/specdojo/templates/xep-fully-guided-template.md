@@ -62,13 +62,34 @@ _OWNER_ROLE_VIEWPOINTS_
 - done_criteria の充足状況: result の `done_criteria 確認` セクション。
 - 参照した rulebook / recipe / sample / template の使い分け、矛盾時に rulebook を正とした箇所、欠落・薄い参考資料の扱い、既存記述の破棄・加筆の根拠: result の `参考資料の活用` セクション。
 
-## 5. 完了手順
+## 5. 全 role 観点による自己レビュー
+
+成果物の更新後、owner の観点だけでなく、done_criteria に割り当てられたすべての role の観点で自己レビューする。この自己レビューは edit task 内で成果物の完成度を高めるために行うものであり、後続の独立した review task を代替しない。
+
+<!-- markdownlint-disable MD055 MD056 -->
+| ID | ロール | viewpoint_id | 確認基準 |
+|---|---|---|---|
+_REVIEW_VIEWPOINT_ROWS_
+<!-- markdownlint-enable MD055 MD056 -->
+
+_REVIEW_VIEWPOINT_DETAILS_
+
+### 5.1. 自己レビューと修正の手順
+
+1. 各レビュー観点を pass / fail / unclear で判定し、成果物内の根拠箇所を確認する。
+2. fail / unclear がある場合は、その指摘を解消するよう成果物を修正する。
+3. 修正後は、指摘箇所だけでなく、変更により新しい矛盾や抜けが発生していないかを全レビュー観点で再確認する。
+4. 自己レビューは初回を含めて最大3回まで行う。すべての観点が pass になった場合は、その時点で終了する。
+5. 3回実施しても fail / unclear が残る場合は、判定・根拠・未解消理由・必要な次のアクションを result の「自己レビュー結果」と「申し送り」に記録する。
+
+## 6. 完了手順
 
 1. 「このフェーズで行うこと」に従って成果物を更新する。
-2. 必要な検証と lint を実行する。
-3. result の done_criteria_checked セクションを記入する。
+2. 「全 role 観点による自己レビュー」に従って、必要な修正と再確認を行う。
+3. 必要な検証と lint を実行する。
+4. result の「done_criteria 確認」と「自己レビュー結果」を記入する。
 
-## 6. 異常終了の条件
+## 7. 異常終了の条件
 
 - 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。

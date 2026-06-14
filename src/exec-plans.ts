@@ -156,6 +156,15 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
   return `${templatePrefix(mode)}-${approach}-template.md`
 }
 
+function usesDeliverableSelfReview(approach: Approach | undefined): boolean {
+  return (
+    approach === undefined ||
+    approach === 'fully-guided' ||
+    approach === 'recipe-guided' ||
+    approach === 'freeform'
+  )
+}
+
 // Selects <prefix>-<approach>-template.md when it exists, otherwise falls back
 // to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
 function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
@@ -305,11 +314,13 @@ export function ownerRoleFields(
 
 function buildEditPlanMarkdown(
   template: string,
+  detailTemplate: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
+  viewpointsRef: string,
   resultRef: string
 ): string {
   const cpm = task.cpm
@@ -327,6 +338,9 @@ function buildEditPlanMarkdown(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
+    ...(usesDeliverableSelfReview(task.approach) && viewpointsRef
+      ? { viewpoints_ref: viewpointsRef }
+      : {}),
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
@@ -344,6 +358,8 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
+    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate),
   }
   return expandTemplate(template, values)
 }
@@ -492,11 +508,13 @@ export function generatePlans(
           )
         : buildEditPlanMarkdown(
             template,
+            loadViewpointDetailTemplate(templateCache),
             planTask,
             deliverable,
             roleMap,
             vpMap,
             projectId,
+            vpRef,
             resultRef
           )
 

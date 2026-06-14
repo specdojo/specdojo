@@ -1,5 +1,8 @@
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ownerRoleFields, reviewViewpointDetails } from '../../src/exec-plans.js'
+import { generatePlans, ownerRoleFields, reviewViewpointDetails } from '../../src/exec-plans.js'
 import type { CriteriaItem } from '../../src/catalog-types.js'
 import type { RoleDefinition } from '../../src/role-types.js'
 import type { ReviewViewpoint } from '../../src/review-types.js'
@@ -131,5 +134,123 @@ describe('reviewViewpointDetails', () => {
     expect(actual).toContain('### RVP-001（PO: vp-po-purpose-alignment）')
     expect(actual).toContain('### RVP-002（BA: vp-ba-business-value）')
     expect(actual).toContain('）\n\ncriterion: a')
+  })
+})
+
+describe('generatePlans edit self review', () => {
+  it('通常 edit plan に全 role の RVP を展開し maintenance plan には展開しない', () => {
+    const root = mkdtempSync(join(tmpdir(), 'specdojo-exec-plans-'))
+    const executionPath = join(root, 'execution')
+    const catalogPath = join(root, 'catalog')
+    const generatedPath = join(executionPath, 'generated')
+    const rolesPath = join(root, 'pm-roles.yaml')
+    const viewpointsPath = join(root, 'pm-review-viewpoints.yaml')
+
+    try {
+      mkdirSync(generatedPath, { recursive: true })
+      mkdirSync(catalogPath, { recursive: true })
+      writeFileSync(
+        join(generatedPath, 'ready.json'),
+        JSON.stringify({
+          tasks: [
+            {
+              id: 'T-TEST-overview-020',
+              local_id: 'overview',
+              name: '補強',
+              owner: 'BA',
+              mode: 'edit',
+              approach: 'recipe-guided',
+            },
+            {
+              id: 'T-TEST-overview-030',
+              local_id: 'overview',
+              name: 'Recipe メンテナンス',
+              owner: 'BA',
+              mode: 'edit',
+              approach: 'recipe-maintenance',
+            },
+          ],
+        })
+      )
+      writeFileSync(
+        join(catalogPath, 'dct-test.yaml'),
+        [
+          'id: test:dct',
+          'type: project',
+          'status: draft',
+          'project_id: test',
+          'domain: test',
+          'base_path: /docs/test',
+          'groups:',
+          '  - deliverables:',
+          '      - local_id: overview',
+          '        name: Overview',
+          '        kind: work',
+          '        overview: Test overview',
+          '        path: overview.md',
+          '        done_criteria:',
+          '          - text: Business value is clear',
+          '            roles: [BA]',
+          '            viewpoint: vp-ba-business-value',
+          '          - text: Purpose is approved',
+          '            roles: [PO]',
+          '            viewpoint: vp-po-purpose-alignment',
+        ].join('\n')
+      )
+      writeFileSync(
+        rolesPath,
+        [
+          'id: test:roles',
+          'type: roles',
+          'status: draft',
+          'project_id: test',
+          'roles:',
+          '  - code: BA',
+          '    name: Business Analyst',
+          '    project_note: Analyze requirements.',
+        ].join('\n')
+      )
+      writeFileSync(
+        viewpointsPath,
+        [
+          'id: test:viewpoints',
+          'type: review-viewpoints',
+          'status: draft',
+          'project_id: test',
+          'viewpoints:',
+          ...PO_VIEWPOINTS.flatMap(vp => [
+            `  - id: ${vp.id}`,
+            `    role: ${vp.role}`,
+            `    category: ${vp.category}`,
+            `    title: ${vp.title}`,
+            `    check: ${vp.check}`,
+            `    evidence: ${vp.evidence}`,
+            `    default_severity: ${vp.default_severity}`,
+          ]),
+        ].join('\n')
+      )
+
+      generatePlans(executionPath, 'test', catalogPath, rolesPath, viewpointsPath, null)
+
+      const editPlan = readFileSync(
+        join(executionPath, 'exec/plans/T-TEST-overview-020-plan.md'),
+        'utf8'
+      )
+      expect(editPlan).toContain('viewpoints_ref:')
+      expect(editPlan).toContain('## 5. 全 role 観点による自己レビュー')
+      expect(editPlan).toContain('| RVP-001 | BA | vp-ba-business-value |')
+      expect(editPlan).toContain('| RVP-002 | PO | vp-po-purpose-alignment |')
+      expect(editPlan).toContain('### RVP-002（PO: vp-po-purpose-alignment）')
+      expect(editPlan).toContain('自己レビューは初回を含めて最大3回まで行う')
+
+      const maintenancePlan = readFileSync(
+        join(executionPath, 'exec/plans/T-TEST-overview-030-plan.md'),
+        'utf8'
+      )
+      expect(maintenancePlan).not.toContain('viewpoints_ref:')
+      expect(maintenancePlan).not.toContain('全 role 観点による自己レビュー')
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
   })
 })

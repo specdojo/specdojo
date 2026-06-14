@@ -91,4 +91,6 @@ properties:
 
   viewpoints_ref:
     type: string
-    description: "Path to pm-review-viewpoints.yaml. Present only when mode is review."
+    description: >
+      Path to pm-review-viewpoints.yaml. Present for review plans and for regular edit plans
+      that use all-role viewpoints in deliverable self-review.
