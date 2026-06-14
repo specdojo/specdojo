@@ -10,13 +10,14 @@ description: '`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を
 ## 使いどころ
 
 - 新しい `*-sample.(md|yaml|json)` を新規作成したいとき
-- 既存の `*-sample.(md|yaml|json)` を `.github/instructions/sample.instructions.md` に準拠させたいとき
+- 既存の `*-sample.(md|yaml|json)` を Sample 記述標準に準拠させたいとき
 - 対応 rulebook が更新されたため sample 側へ差分を反映したいとき
 - 章構成や業務文脈の整合性を確認・修正したいとき
 
 ## 前提
 
-- 記述ルール: `.github/instructions/sample.instructions.md`
+- 記述標準・共通文脈: `docs/ja/specdojo/standards/sample-authoring-standard.md`
+- 作業手順: `.github/instructions/sample.instructions.md`
 - 対応 rulebook: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
 - 前提プロジェクト: 駄菓子屋の販売管理システムを構築するプロジェクト（固定）
 
@@ -39,7 +40,7 @@ description: '`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を
    - `target_format` を確認し、sample の拡張子（`.md` / `.yaml` / `.json`）を決定する
    - 類似 sample を 2〜3 件確認する
 5. 新規作成または差分アップサートを行う
-   - 章構成・記述品質・禁止事項は `.github/instructions/sample.instructions.md` に従う
+   - 章構成・記述品質・禁止事項・共通文脈は `docs/ja/specdojo/standards/sample-authoring-standard.md` に従う
    - 対応 rulebook に従い、駄菓子屋文脈の記述例を構成する
    - 必要な前提情報が不足する場合は、駄菓子屋の販売管理システムとして妥当な内容を仮定して記述する
 6. sample 作成後にリンク解決を確認する

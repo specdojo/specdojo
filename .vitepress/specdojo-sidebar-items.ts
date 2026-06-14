@@ -218,6 +218,8 @@ export const specdojoSidebarItems = [
       standard('レシピ記述', 'recipe-authoring-standard'),
       standard('サンプル記述', 'sample-authoring-standard'),
       standard('テンプレート記述', 'template-authoring-standard'),
+      standard('ガイド記述', 'guide-authoring-standard'),
+      standard('標準記述', 'standard-authoring-standard'),
       standard('人・組織定義', 'people-and-organization-definition-standard'),
       standard('テスト文書スコープ', 'test-document-scope-standard'),
     ],

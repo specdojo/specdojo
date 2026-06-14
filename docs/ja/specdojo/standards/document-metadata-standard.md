@@ -20,8 +20,8 @@ Document Metadata Standard
 
 - rulebook: [rulebook-authoring-standard.md](rulebook-authoring-standard.md) の `Frontmatter 規約`
 - recipe: [recipe-authoring-standard.md](recipe-authoring-standard.md) の `Frontmatter 規約`
-- guide: [guide-frontmatter.schema.yaml](../../../specdojo/schemas/v1/guide-frontmatter.schema.yaml)
-- standard: [standard-frontmatter.schema.yaml](../../../specdojo/schemas/v1/standard-frontmatter.schema.yaml)
+- guide: [guide-authoring-standard.md](guide-authoring-standard.md) の `Frontmatter 規約`
+- standard: [standard-authoring-standard.md](standard-authoring-standard.md) の `Frontmatter 規約`
 
 ## 2. 共通原則
 
@@ -67,11 +67,11 @@ part_of:
 
 ## 4. 成果物の任意項目
 
-| 項目       | 説明                        |
-| ---------- | --------------------------- |
+| 項目       | 説明                         |
+| ---------- | ---------------------------- |
 | part_of    | 一覧・親ドキュメントへの所属 |
-| based_on   | 根拠ドキュメント            |
-| supersedes | 置き換え対象ドキュメント    |
+| based_on   | 根拠ドキュメント             |
+| supersedes | 置き換え対象ドキュメント     |
 
 成果物種別によって追加項目を使用できる場合があります。正確な許可項目と型は成果物スキーマを正本とします。
 
