@@ -27,13 +27,28 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- 対象成果物に紐づく recipe を主な確認基準にする。
-- recipe の問い・観点に照らして、成果物の内容が十分か確認する。
-- rulebook / sample / template が存在しても、構造・文体・粒度の必須基準としては扱わない。
-- recipe だけでは判断できない箇所は、類似成果物やプロジェクト文脈との整合を確認する。
-- 判断の根拠を review result に残す。
+対象成果物に紐づく recipe を、指定されたファイルを実際に読み込んだうえで主な確認基準にする。読み込まずに記憶や推測で代替しない。レビューでは成果物を組み立てるのではなく、成果物が基準を満たすかを照合する。
 
-詳細は [[specdojo-reference-materials-guide]] を参照する。
+1. recipe: 指定された recipe を読み込み、示された問い・観点に照らして成果物の内容が十分かを確認する。
+2. recipe だけでは判断できない箇所は、`depends_on` 成果物・類似成果物・プロジェクト文脈との整合を確認する。
+
+rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。recipe の指示が他の文書と矛盾する場合は recipe を優先する。
+
+本タスクの実行に必要な recipe-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
+
+### 4.1. recipe が存在しない・内容が薄い場合
+
+- recipe は recipe-guided の唯一の主基準であるため、存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `参考資料との整合確認` セクションに記録する。
+- 欠落を理由にレビュー観点を unclear のまま放置しない。`depends_on` 成果物・類似成果物・プロジェクト文脈を基準にして判定根拠を補い、何を recipe の代わりに根拠としたかを明示する。
+- recipe そのものの整備が必要と判断した場合でも、本タスクの範囲を超える整備は行わず、findings または申し送りに残す。
+
+### 4.2. 判断根拠の記録
+
+確認した文書と判断根拠を review result に残す。記録先は次のとおり。
+
+- レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
+- recipe に照らした確認内容、rulebook / sample / template を基準にしなかった理由と代わりに根拠にした内容、欠落・薄い recipe の扱い: review result の `参考資料との整合確認` セクション。
+- 検出した問題点・指摘事項: review result の `findings` セクション。
 
 ## 5. 完了手順
 
