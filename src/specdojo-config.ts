@@ -84,7 +84,7 @@ export function specdojoRootDir(): string {
 export function loadEnv(): void {
   // Load .env from the repository root if present.
   // Safe if missing.
-  dotenv.config({ path: resolve(specdojoRootDir(), '.env') })
+  dotenv.config({ path: resolve(specdojoRootDir(), '.env'), quiet: true })
 }
 
 export function defaultConfigPath(): string {
