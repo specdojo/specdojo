@@ -54,9 +54,10 @@ rulebook / sample / template は未成熟と判断されているため、存在
 
 1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
 2. result の各レビュー観点セクションに記入する。
+3. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
 
 ## 6. 異常終了の条件
 
-- done_criteria を満たさない・対象ファイル不明・依存未解決の場合は異常終了する（終了コード 1）。
+- 対象ファイル不明・依存未解決・result 更新不能など、レビュー自体を完了できない場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
-- 異常終了時は complete ではなく block を記録する。
+- agent 自身は claim / complete / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。

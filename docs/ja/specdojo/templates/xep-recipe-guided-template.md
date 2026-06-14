@@ -69,4 +69,4 @@ rulebook / sample / template は未成熟と判断されているため、存在
 
 - 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
-- 異常終了時は complete ではなく block を記録する。
+- agent 自身は claim / complete / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。

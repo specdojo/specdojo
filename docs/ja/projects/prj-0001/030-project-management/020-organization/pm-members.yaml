@@ -64,9 +64,9 @@ members:
       - document-creation
       - implementation
     capabilities: []
-    command: "opencode run --agent edit-agent"
+    command: "opencode run --agent opencode-edit-agent"
     scheduler_strategy: critical-first
-    note: 成果物の新規作成・文書化を担当する標準エージェント。タスクの owner フィールドからロール文脈を判断して作業する。
+    note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を担当し、タスクの owner フィールドからロール文脈を判断して作業する。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
 
   - nickname: opencode-review-agent
     priority: 99
@@ -82,9 +82,9 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: []
-    command: "opencode run --agent review-agent"
+    command: "opencode run --agent opencode-review-agent"
     scheduler_strategy: fifo
-    note: done_criteria の roles フィールドを参照し、全観点で成果物をレビューする agent。ファイルの編集は行わない。
+    note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物をレビューし、成果物は変更せず result のみ更新する。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
 
   #
   # claude code members
