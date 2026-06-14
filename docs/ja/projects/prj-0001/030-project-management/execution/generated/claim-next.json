@@ -5,12 +5,16 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-prj-overview-020-I01",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-020-I01"
+      ]
     },
     "fifo": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-prj-overview-020-I01",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-020-I01"
+      ]
     }
   }
 }

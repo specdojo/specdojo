@@ -2,17 +2,50 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 0,
+  "ready_count": 1,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-prj-overview-020-I01",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-020-I01"
+      ]
     },
     "fifo": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-prj-overview-020-I01",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-020-I01"
+      ]
     }
   },
-  "tasks": []
+  "tasks": [
+    {
+      "id": "T-LAUNCH-prj-overview-020-I01",
+      "local_id": "prj-overview",
+      "phase_suffix": "020",
+      "phase_set": "first-edit-pass",
+      "phase_id": "enrich",
+      "iteration": 1,
+      "name": "調査・補強",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 1,
+      "critical_first_rank": 1,
+      "cpm": {
+        "es": 0.25,
+        "ef": 0.75,
+        "ls": 0.25,
+        "lf": 0.75,
+        "slack": 0
+      },
+      "description": "エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。\n既存記述との矛盾・抜け漏れも確認し、修正・追記する。\n調査結果は出典・根拠とともに記載する。\n",
+      "mode": "edit",
+      "execution": "agent",
+      "approach": "recipe-guided",
+      "capabilities": [
+        "web_search"
+      ],
+      "proficiency": "normal"
+    }
+  ]
 }
