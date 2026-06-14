@@ -266,7 +266,8 @@ properties:
           description: >
             Names of the phase_sets after which the gate is placed.
             Lists all first-pass variants covered by this gate (e.g., [first-pass, research-first-pass]).
-            Documents intent; implementation gates before the last phase_set in each deliverable's sequence.
+            The gate depends on the last task of the matching phase_set and blocks the first task
+            of the following phase_set in each deliverable's sequence.
           items:
             type: string
             minLength: 1

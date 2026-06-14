@@ -73,10 +73,17 @@ describe('generateScheduleTrack phase set repetition', () => {
             final: [
               { id: 'finalize', name: 'Finalize', task_suffix: '020', duration_days: 1 },
             ],
+            review: [
+              { id: 'review', name: 'Review', task_suffix: '030', duration_days: 1 },
+            ],
           },
           default_phase_sets: {
             cycles: 2,
-            sequence: [{ phase_set: 'first', iterations: 2 }, { phase_set: 'final' }],
+            sequence: [
+              { phase_set: 'first', iterations: 2 },
+              { phase_set: 'final' },
+              { phase_set: 'review' },
+            ],
           },
           owner_rules: [{ local_ids: ['doc'], owner: 'BA' }],
           phase_gates: [
@@ -87,6 +94,13 @@ describe('generateScheduleTrack phase set repetition', () => {
               owner: 'BA',
               scope: { local_ids: ['doc'] },
             },
+            {
+              id: 'G-TEST-final',
+              name: 'Final complete',
+              after_phase_sets: ['final'],
+              owner: 'BA',
+              scope: { local_ids: ['doc'] },
+            },
           ],
         }),
         'utf8'
@@ -94,28 +108,40 @@ describe('generateScheduleTrack phase set repetition', () => {
 
       const result = generateScheduleTrack(strategyPath, dir)
       expect(result.errors).toEqual([])
-      expect(result.tasks).toHaveLength(6)
+      expect(result.tasks).toHaveLength(8)
       expect(result.tasks.map(task => [task.phase_suffix, task.cycle, task.iteration])).toEqual([
         ['010', 1, 1],
         ['010', 1, 2],
         ['020', 1, undefined],
+        ['030', 1, undefined],
         ['010', 2, 1],
         ['010', 2, 2],
         ['020', 2, undefined],
+        ['030', 2, undefined],
       ])
       expect(result.tasks[1].depends_on).toEqual(['T-TEST-doc-010-C01-I01'])
       expect(result.tasks[2].depends_on).toEqual([
         'T-TEST-doc-010-C01-I02',
         'G-TEST-first-C01',
       ])
-      expect(result.tasks[3].depends_on).toEqual(['T-TEST-doc-020-C01'])
-      expect(result.tasks[5].depends_on).toEqual([
+      expect(result.tasks[3].depends_on).toEqual([
+        'T-TEST-doc-020-C01',
+        'G-TEST-final-C01',
+      ])
+      expect(result.tasks[4].depends_on).toEqual(['T-TEST-doc-030-C01'])
+      expect(result.tasks[6].depends_on).toEqual([
         'T-TEST-doc-010-C02-I02',
         'G-TEST-first-C02',
+      ])
+      expect(result.tasks[7].depends_on).toEqual([
+        'T-TEST-doc-020-C02',
+        'G-TEST-final-C02',
       ])
       expect(result.milestones.map(milestone => milestone.id)).toEqual([
         'G-TEST-first-C01',
         'G-TEST-first-C02',
+        'G-TEST-final-C01',
+        'G-TEST-final-C02',
       ])
 
       writeTrack(dir, result.tasks)
@@ -127,7 +153,7 @@ describe('generateScheduleTrack phase set repetition', () => {
         cycle: 1,
         iteration: 2,
       })
-      expect(schedule.nodes.has('T-TEST-doc-020-C02')).toBe(true)
+      expect(schedule.nodes.has('T-TEST-doc-030-C02')).toBe(true)
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }

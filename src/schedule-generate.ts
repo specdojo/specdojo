@@ -300,7 +300,12 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   const finalizeTaskId = new Map<string, string>()
   type CycleBoundary = {
     lastPreFinalizeId: string | null
-    firstFinalizeId: string | null
+    phaseSets: Array<{
+      phaseSet: string
+      firstTaskId: string
+      lastTaskId: string
+      nextTaskId: string | null
+    }>
   }
   type Boundary = {
     cycles: number
@@ -337,7 +342,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       finalizeTaskId.set(d.local_id, taskId)
       boundaries.set(d.local_id, {
         cycles: 1,
-        byCycle: new Map([[1, { lastPreFinalizeId: null, firstFinalizeId: null }]]),
+        byCycle: new Map([[1, { lastPreFinalizeId: null, phaseSets: [] }]]),
       })
       continue
     }
@@ -370,10 +375,8 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
     const lastPhaseSetIndex = selection.sequence.length - 1
 
-    // First phase: depends on the last first-pass task (before gate) of catalog deps
-    // and cross_domain_dependencies. These define ordering within first-pass, not
-    // a dependency on finalize. Falls back to finalizeTaskId for completed deliverables
-    // (which have no lastPreFinalizeId).
+    // The first task depends on the last task before the prerequisite's final phase_set.
+    // Completed deliverables have no expanded phase boundary, so fall back to their 000 task.
     const firstDeps = new Set<string>()
     for (const dep of d.depends_on) {
       const depBoundary = boundaries.get(dep)
@@ -421,15 +424,29 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       })
       const boundary = byCycle.get(expanded.cycleNumber) ?? {
         lastPreFinalizeId: null,
-        firstFinalizeId: null,
+        phaseSets: [],
+      }
+      const phaseSetBoundary = boundary.phaseSets[expanded.phaseSetIndex]
+      if (phaseSetBoundary) {
+        phaseSetBoundary.lastTaskId = taskId
+      } else {
+        boundary.phaseSets[expanded.phaseSetIndex] = {
+          phaseSet: expanded.phaseSet,
+          firstTaskId: taskId,
+          lastTaskId: taskId,
+          nextTaskId: null,
+        }
       }
       if (expanded.phaseSetIndex < lastPhaseSetIndex) {
         boundary.lastPreFinalizeId = taskId
-      } else if (boundary.firstFinalizeId === null) {
-        boundary.firstFinalizeId = taskId
       }
       byCycle.set(expanded.cycleNumber, boundary)
       prevId = taskId
+    }
+    for (const boundary of byCycle.values()) {
+      for (let i = 0; i < boundary.phaseSets.length - 1; i++) {
+        boundary.phaseSets[i].nextTaskId = boundary.phaseSets[i + 1].firstTaskId
+      }
     }
     if (prevId) finalizeTaskId.set(d.local_id, prevId)
     boundaries.set(d.local_id, { cycles: selection.cycles, byCycle })
@@ -438,7 +455,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
   if (errors.length > 0)
     return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
 
-  // Process phase gates: create gate milestones and patch first finalize-pass tasks
+  // Process phase gates and block the phase_set immediately following each configured boundary.
   const milestones: GeneratedMilestone[] = []
 
   for (const gate of strategy.phase_gates ?? []) {
@@ -453,11 +470,16 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       const gateId =
         maxCycles > 1 ? `${gate.id}-C${String(cycleNumber).padStart(2, '0')}` : gate.id
       const gateDeps = scopedLocalIds
-        .map(id => boundaries.get(id)?.byCycle.get(cycleNumber)?.lastPreFinalizeId)
+        .map(id => {
+          const phaseSets = boundaries.get(id)?.byCycle.get(cycleNumber)?.phaseSets ?? []
+          return phaseSets
+            .filter(boundary => gate.after_phase_sets.includes(boundary.phaseSet))
+            .at(-1)?.lastTaskId
+        })
         .filter((id): id is string => id !== null && id !== undefined)
 
       if (gateDeps.length === 0) {
-        warnings.push(`phase_gate ${gateId}: no pre-finalize tasks found in scope`)
+        warnings.push(`phase_gate ${gateId}: no matching phase_set tasks found in scope`)
         continue
       }
 
@@ -470,11 +492,12 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       })
 
       for (const localId of scopedLocalIds) {
-        const firstFinalizeId = boundaries
-          .get(localId)
-          ?.byCycle.get(cycleNumber)?.firstFinalizeId
-        if (!firstFinalizeId) continue
-        const task = taskMap.get(firstFinalizeId)
+        const phaseSets = boundaries.get(localId)?.byCycle.get(cycleNumber)?.phaseSets ?? []
+        const nextTaskId = phaseSets
+          .filter(boundary => gate.after_phase_sets.includes(boundary.phaseSet))
+          .at(-1)?.nextTaskId
+        if (!nextTaskId) continue
+        const task = taskMap.get(nextTaskId)
         if (!task || task.depends_on.includes(gateId)) continue
         task.depends_on.push(gateId)
       }

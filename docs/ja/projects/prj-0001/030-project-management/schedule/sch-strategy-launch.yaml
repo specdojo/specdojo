@@ -37,27 +37,31 @@ scope:
 #   agent : phase の capabilities / proficiency に合うエージェントが実行する
 #   human : エージェントを起動せず、人間による実行待ちとして記録する
 #
-# フローは first-pass → finalize-pass の2段階。
-#   first-pass  : 各成果物の一次版を作成する（人がたたき台 → エージェントが補強 → 人がレビュー）
-#   finalize-pass: 一次版が揃ってから成果物間の整合性を確認し完成版にする
-#                  （align は他成果物の一次版を参照して実施する）
+# フローは first-edit-pass → alignment-edit-pass → review-pass の3段階。
+#   first-edit-pass    : 成果物の初版作成・補強と参考資料メンテナンスを3回繰り返す
+#   alignment-edit-pass: 成果物間の整合性確認・修正と参考資料メンテナンスを3回繰り返す
+#   review-pass        : エージェントが完成版をレビューし、人が最終確定する
 phase_sets:
-  # 一次版フロー: 人がたたき台 → エージェントが外部情報で補強 → 人がレビュー
-  first-pass:
+  # 初回編集フロー: エージェントがたたき台を作成し、補強と参考資料メンテナンスを行う
+  first-edit-pass:
     - id: draft
       name: たたき台作成
-      execution: human
+      execution: agent
       mode: edit
+      approach: freeform
+      proficiency: expert
       task_suffix: "010"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        担当ロールが成果物の初版を作成する。
+        エージェントが成果物の初版を作成する。
         章構成・記載項目を決め、現時点で把握している情報を埋める。
         調査・確認が必要な箇所は TODO として明示したまま残す。
     - id: enrich
       name: 調査・補強
       execution: agent
       mode: edit
+      approach: recipe-guided
+      capabilities: [web_search]
       proficiency: normal
       task_suffix: "020"
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
@@ -65,78 +69,149 @@ phase_sets:
         エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
         既存記述との矛盾・抜け漏れも確認し、修正・追記する。
         調査結果は出典・根拠とともに記載する。
-    - id: review
-      name: 一次版レビュー
-      execution: human
-      mode: review
-      task_suffix: "030"
-      duration_days: 0.25 # 1〜2h 相当
-      description: |
-        担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。
-        修正が軽微な場合は直接編集して承認とみなす。
-        差し戻しの場合は修正箇所と理由を明記する。
-
-  # 調査系一次版フロー: 人が予備調査を含めたたき台 → エージェントが外部情報で深掘り → 人がレビュー
-  # 比較検討・代替案評価など、外部情報収集が品質に直結する成果物に使う
-  research-first-pass:
-    - id: draft
-      name: たたき台作成（予備調査含む）
-      execution: human
-      mode: edit
-      task_suffix: "010"
-      duration_days: 0.5 # 2〜4h 相当（人による予備調査込み）
-      description: |
-        担当ロールが予備調査を行ったうえで初版を作成する。
-        比較対象の選択肢を洗い出し、比較軸・評価観点を設定する。
-        各選択肢の概要と既知の特徴を記載し、深掘りが必要な箇所を TODO として残す。
-    - id: enrich
-      name: 調査・深掘り
+    - id: recipe-maintenance
+      name: Recipe メンテナンス
       execution: agent
       mode: edit
-      capabilities: [web_search]
-      proficiency: expert
-      task_suffix: "020"
-      duration_days: 0.5 # 2〜4h 相当（外部調査込み）
-      description: |
-        エージェントが各選択肢を外部情報で深掘りし、比較表・評価根拠を補強する。
-        公式ドキュメント・事例・実績データを調査し、TODO を埋める。
-        調査結果は出典・根拠とともに記載する。
-    - id: review
-      name: 一次版レビュー
-      execution: human
-      mode: review
+      approach: recipe-maintenance
+      proficiency: normal
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        担当ロールが比較内容の妥当性・網羅性を確認し、承認・修正指示・差し戻しを判断する。
-        修正が軽微な場合は直接編集して承認とみなす。
-        差し戻しの場合は修正箇所と理由を明記する。
+        エージェントが成果物の作成・更新結果を根拠に recipe を見直す。
+        問い・観点・深掘り手順・レビュー観点の不足や過剰を確認し、必要な修正を反映する。
+        成果物固有の事情は recipe に一般化せず、再利用できる作成手順として整理する。
+    - id: rulebook-maintenance
+      name: Rulebook メンテナンス
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが成果物の作成・更新結果を根拠に rulebook を見直す。
+        章構成・必須項目・禁止事項・判定基準の不足や過剰を確認し、必要な修正を反映する。
+        成果物固有の事情は rulebook に一般化せず、同種成果物へ適用できる規定として整理する。
+    - id: sample-maintenance
+      name: Sample メンテナンス
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      proficiency: normal
+      task_suffix: "050"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが成果物の作成・更新結果を根拠に sample を見直す。
+        粒度・文体・表の書き方と、完成例としての妥当性を確認し、必要な修正を反映する。
+        プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例として整える。
+    - id: template-maintenance
+      name: Template メンテナンス
+      execution: agent
+      mode: edit
+      approach: template-maintenance
+      proficiency: normal
+      task_suffix: "060"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが成果物の作成・更新結果を根拠に template を見直す。
+        章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な修正を反映する。
+        成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形に整える。
 
-  # 完成版フロー: エージェントが成果物間の整合性を確認・修正 → 人が最終確定
-  finalize-pass:
+  # 整合編集フロー: エージェントが成果物間の整合性を確認・修正し、参考資料を再調整する
+  alignment-edit-pass:
     - id: align
       name: 整合性確認・修正
       execution: agent
       mode: edit
-      proficiency: normal
-      task_suffix: "040"
+      approach: fully-guided
+      proficiency: expert
+      task_suffix: "070"
       duration_days: 0.25 # 1〜2h 相当
       description: |
         エージェントが同一ゲート内の他成果物（一次版）を参照し、用語・数値・方針の整合性を確認する。
         矛盾・不整合が見つかった場合は修正し、修正箇所と理由を記録する。
         他成果物への修正提案が必要な場合は、該当成果物の担当ロールへ差し戻しを起票する。
+    - id: recipe-maintenance
+      name: Recipe メンテナンス
+      execution: agent
+      mode: edit
+      approach: recipe-maintenance
+      proficiency: normal
+      task_suffix: "080"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが整合性確認・修正後の成果物を根拠に recipe を再確認する。
+        問い・観点・深掘り手順・レビュー観点が完成版の作成に有効か確認し、必要な修正を反映する。
+        成果物固有の事情は recipe に一般化せず、再利用できる作成手順として整理する。
+    - id: rulebook-maintenance
+      name: Rulebook メンテナンス
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが整合性確認・修正後の成果物を根拠に rulebook を再確認する。
+        章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な修正を反映する。
+        成果物固有の事情は rulebook に一般化せず、同種成果物へ適用できる規定として整理する。
+    - id: sample-maintenance
+      name: Sample メンテナンス
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      proficiency: normal
+      task_suffix: "100"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが整合性確認・修正後の成果物を根拠に sample を再確認する。
+        粒度・文体・表の書き方と、完成例としての妥当性を確認し、必要な修正を反映する。
+        プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例として整える。
+    - id: template-maintenance
+      name: Template メンテナンス
+      execution: agent
+      mode: edit
+      approach: template-maintenance
+      proficiency: normal
+      task_suffix: "110"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        エージェントが整合性確認・修正後の成果物を根拠に template を再確認する。
+        章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な修正を反映する。
+        成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形に整える。
+
+  # レビューフロー: エージェントが完成版をレビューし、人が最終確定する
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      proficiency: normal
+      task_suffix: "120"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        レビューエージェントが補強・整合性確認後の内容を確認し、承認・修正指示・差し戻しを判断する。
+        成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
+        差し戻しの場合は修正箇所と理由を明記する。
     - id: finalize
       name: 完成版確定
       execution: human
       mode: edit
-      task_suffix: "050"
+      task_suffix: "130"
       duration_days: 0.125 # 0.5〜1h 相当
       description: |
-        担当ロールが整合性確認後の内容を最終確認し、完成版として確定する。
+        担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
         frontmatter の status を ready に更新する。
 
 # owner_rule に phase_sets を省略した場合のデフォルト（適用順）
-default_phase_sets: [first-pass, finalize-pass]
+default_phase_sets:
+  - phase_set: first-edit-pass
+    iterations: 3
+  - phase_set: alignment-edit-pass
+    iterations: 3
+  - phase_set: review-pass
 
 # 成果物 local_id → 作成タスクの owner ロール・phase_set・難易度
 # difficulty はプロジェクト管理上の工数・品質リスクの目安。
@@ -156,7 +231,6 @@ owner_rules:
   - local_ids:
       - prj-comparison-of-alternatives
     owner: ARC
-    phase_sets: [research-first-pass, finalize-pass]
 
   - local_ids:
       - prj-charter
@@ -186,10 +260,20 @@ owner_rules:
     owner: ARC
 
 phase_gates:
-  - id: G-LAUNCH-first-pass
-    name: first-pass 完了
+  - id: G-LAUNCH-first-edit-pass
+    name: first-edit-pass 完了
     artifact_name: 全ドメイン
-    after_phase_sets: [first-pass, research-first-pass] # prj-comparison-of-alternatives は research-first-pass を使用
+    after_phase_sets: [first-edit-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-project-definition
+        - prj-0001:dct-project-management
+
+  - id: G-LAUNCH-alignment-edit-pass
+    name: alignment-edit-pass 完了
+    artifact_name: 全ドメイン
+    after_phase_sets: [alignment-edit-pass]
     owner: PM
     scope:
       catalogs:
@@ -212,7 +296,7 @@ group_milestones:
       owner: PM
 
 # catalog の depends_on を補完するドメイン間依存
-# ゲート前の順序を定義する: dependent の draft タスクは requires の first-pass (review) 完了後に着手する
+# ゲート前の順序を定義する: dependent の draft タスクは requires の編集パス完了後に着手する
 # 完了済み成果物（initial_state）は 000 タスクにフォールバックする
 cross_domain_dependencies:
   - dependent: pm-organization
