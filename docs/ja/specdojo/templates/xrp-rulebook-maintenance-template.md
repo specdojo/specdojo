@@ -27,13 +27,26 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 ## 4. 進め方
 
-- 確認の向きを「成果物 → rulebook」に切り替える。
-- 対象成果物に紐づく rulebook の見直し内容が妥当かを、複数の成果物、review result、対象領域の慣行と照らして確認する。
-- 章構成・必須項目・禁止事項・判定基準が成果物の実態と整合しているか確認する。
-- recipe / sample / template と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
-- 判断の根拠を review result に残す。
+確認の向きを「成果物 → rulebook」に切り替え、対象成果物に紐づく rulebook の見直し内容が妥当かを確認する。根拠となる成果物・review result・対象領域の慣行は、いずれも実際に読み込んだうえで照合する。読み込まずに記憶や推測で代替しない。レビューでは rulebook を編集するのではなく、見直し内容が妥当かを照合する。
 
-詳細は [[specdojo-reference-materials-guide]] を参照する。
+1. 見直し対象の rulebook を読み込み、改訂後の章構成・必須項目・禁止事項・判定基準を把握する。
+2. 複数の成果物・review result・対象領域の慣行と照らし、それらが成果物の実態と整合しているかを確認する。
+3. recipe / sample / template と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+
+approach 全体の定義は [[specdojo-reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンス確認の方針は、このセクションで完結する。
+
+### 4.1. 見直しの根拠が不足する場合
+
+- 見直しの根拠とできる成果物・review result が不足し、改訂の妥当性を判定できない場合は、観点を unclear のまま放置せず、その事実と判断を review result の `参考資料との整合確認` セクションに記録する。
+- 根拠不足のまま改訂が正当化できない箇所は findings に挙げる。
+
+### 4.2. 判断根拠の記録
+
+確認の根拠とした成果物・review result と判断根拠を review result に残す。記録先は次のとおり。
+
+- レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
+- 根拠とした成果物・review result、改訂内容の妥当性判断、矛盾時に rulebook を正とした箇所: review result の `参考資料との整合確認` セクション。
+- 検出した問題点・指摘事項: review result の `findings` セクション。
 
 ## 5. 完了手順
 
