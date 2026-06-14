@@ -216,12 +216,14 @@ function loadIndexConfig(repoRoot: string, configPath?: string): IndexConfig {
 
 // ---- public API --------------------------------------------------------
 
-export function buildDocIndex(
+// Scans docs and returns the id → path entries without writing a file.
+// Used both by buildDocIndex and by validators that need a fresh ID universe
+// (avoids depending on a possibly-stale .specdojo/doc-index.json).
+export function collectDocIndexEntries(
   rootDir: string,
-  outputPath: string,
   repoRoot: string,
   configPath?: string,
-): { count: number } {
+): Record<string, string> {
   const config = loadIndexConfig(repoRoot, configPath)
 
   // Build nested map: scan-root-relative path → collect_from specs
@@ -237,6 +239,16 @@ export function buildDocIndex(
 
   const entries: Record<string, string> = {}
   walkDir(rootDir, rootDir, repoRoot, entries, nestedMap)
+  return entries
+}
+
+export function buildDocIndex(
+  rootDir: string,
+  outputPath: string,
+  repoRoot: string,
+  configPath?: string,
+): { count: number } {
+  const entries = collectDocIndexEntries(rootDir, repoRoot, configPath)
 
   const index: DocIndex = {
     version: 1,

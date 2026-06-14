@@ -3,7 +3,13 @@ import { join, resolve } from 'node:path'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
 import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
-import { buildCatalog, validateDctDoc } from './catalog-build.js'
+import {
+  buildCatalog,
+  collectCatalogLocalIds,
+  validateBasedOn,
+  validateDctDoc,
+} from './catalog-build.js'
+import { collectDocIndexEntries } from './doc-index.js'
 import { runScaffold, type ProjectSize } from './catalog-scaffold.js'
 import type { DctDoc } from './catalog-types.js'
 
@@ -92,13 +98,14 @@ export function registerCatalogCommands(program: Command): void {
         return
       }
 
+      const knownLocalIds = collectCatalogLocalIds(catalogPath)
       let allOk = true
       for (const f of files) {
         const filePath = `${catalogPath}/${f}`
         try {
           const raw = readFileSync(filePath, 'utf8')
           const doc = yaml.load(raw) as DctDoc
-          const result = validateDctDoc(doc, filePath)
+          const result = validateDctDoc(doc, filePath, knownLocalIds)
           for (const err of result.errors) {
             process.stdout.write(`ERROR: ${err}\n`)
           }
@@ -116,6 +123,24 @@ export function registerCatalogCommands(program: Command): void {
           )
           allOk = false
         }
+      }
+
+      // Cross-check: same-project based_on must be within the depends_on closure.
+      // Build a fresh document-id universe so resolve-or-error does not depend on
+      // a possibly-stale .specdojo/doc-index.json.
+      const repoRoot = specdojoRootDir()
+      const knownIds = new Set(
+        Object.keys(collectDocIndexEntries(resolve(repoRoot, 'docs'), repoRoot))
+      )
+      const basedOnResult = validateBasedOn(catalogPath, repoRoot, knownIds)
+      for (const err of basedOnResult.errors) {
+        process.stdout.write(`ERROR: ${err}\n`)
+      }
+      for (const warn of basedOnResult.warnings) {
+        process.stdout.write(`WARN:  ${warn}\n`)
+      }
+      if (!basedOnResult.ok) {
+        allOk = false
       }
 
       process.exitCode = allOk ? 0 : 1

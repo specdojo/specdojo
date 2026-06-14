@@ -4,6 +4,7 @@ type: project
 status: draft
 rulebook: pm-organization-rulebook
 based_on:
+  - prj-overview
   - people-and-organization-definition-standard
 ---
 
@@ -23,20 +24,20 @@ Role、Member、Task owner、Executor、RACI の共通定義と使い分けは [
 
 ## 2. 関連ドキュメント
 
-| ドキュメント | 役割 |
-| ------------ | ---- |
-| [pm-roles.yaml](pm-roles.yaml) | プロジェクトで使用する全ロールを machine-readable な YAML として一覧化する |
-| [pm-members.yaml](pm-members.yaml) | 実際に作業する人間または agent と担当ロールの対応を定義する |
-| [pm-raci.md](pm-raci.md) | 必要時に成果物・プロセスごとの責任分担を定義する |
-| [人と組織の定義標準](../../../../specdojo/standards/people-and-organization-definition-standard.md) | Role、Member、Task owner、Executor、RACI の共通ルールを定義する |
+| ドキュメント                                                                                        | 役割                                                                       |
+| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [pm-roles.yaml](pm-roles.yaml)                                                                      | プロジェクトで使用する全ロールを machine-readable な YAML として一覧化する |
+| [pm-members.yaml](pm-members.yaml)                                                                  | 実際に作業する人間または agent と担当ロールの対応を定義する                |
+| [pm-raci.md](pm-raci.md)                                                                            | 必要時に成果物・プロセスごとの責任分担を定義する                           |
+| [人と組織の定義標準](../../../../specdojo/standards/people-and-organization-definition-standard.md) | Role、Member、Task owner、Executor、RACI の共通ルールを定義する            |
 
 ## 3. 見直し条件
 
-| 更新トリガー | 見直し内容 |
-| ------------ | ---------- |
-| 複数人での継続運用を開始した | 兼務構成を解消し、専任メンバーを `pm-members.yaml` に追加する |
-| 実装・公開・運用タスクが増えた | `DEV`・`OPS` を担う専任メンバーの追加を検討する |
-| `pm-roles.yaml` 未掲載のロールが Schedule に必要になった | `pm-roles.yaml` へのロール追加を検討する |
+| 更新トリガー                                             | 見直し内容                                                    |
+| -------------------------------------------------------- | ------------------------------------------------------------- |
+| 複数人での継続運用を開始した                             | 兼務構成を解消し、専任メンバーを `pm-members.yaml` に追加する |
+| 実装・公開・運用タスクが増えた                           | `DEV`・`OPS` を担う専任メンバーの追加を検討する               |
+| `pm-roles.yaml` 未掲載のロールが Schedule に必要になった | `pm-roles.yaml` へのロール追加を検討する                      |
 
 ## 4. 禁止事項
 

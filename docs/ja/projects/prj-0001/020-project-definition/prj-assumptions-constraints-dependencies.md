@@ -5,7 +5,6 @@ status: draft
 rulebook: prj-assumptions-constraints-dependencies-rulebook
 based_on:
   - prj-0001:prj-overview
-  - prj-0001:prj-charter
   - prj-0001:prj-scope
 supersedes: []
 ---

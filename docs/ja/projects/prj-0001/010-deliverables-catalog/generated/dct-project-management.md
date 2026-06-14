@@ -19,7 +19,7 @@ rulebook: dct-rulebook
 <!-- prettier-ignore -->
 | local-id | 成果物名 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
-| `pm-plan` | プロジェクト管理計画 | work | - | プロジェクト全体の管理方針・プロセスを定義 |
+| `pm-plan` | プロジェクト管理計画 | work | `pm-organization`, `pm-roles` | プロジェクト全体の管理方針・プロセスを定義 |
 | `pm-communication-plan` | コミュニケーション計画 | work | `pm-plan` | 報告・連絡・会議体の計画を定義 |
 | `pm-quality-management-plan` | 品質管理計画 | work | `pm-plan` | 品質目標・レビュー方針・品質基準を定義 |
 

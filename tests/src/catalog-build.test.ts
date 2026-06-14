@@ -198,6 +198,27 @@ describe('validateDctDoc', () => {
       expect(result.ok).toBe(true)
       expect(result.warnings).toHaveLength(0)
     })
+
+    it('knownLocalIds に含まれていれば別ファイルの depends_on でも警告にならない', () => {
+      const item = makeWorkItem({ local_id: 'item-a', depends_on: ['cross-file-dep'] })
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] })
+      const known = new Set(['item-a', 'cross-file-dep'])
+
+      const result = validateDctDoc(doc, '/dummy/dct.yaml', known)
+
+      expect(result.ok).toBe(true)
+      expect(result.warnings).toHaveLength(0)
+    })
+
+    it('knownLocalIds を渡してもカタログ全体に無い depends_on は警告を返す', () => {
+      const item = makeWorkItem({ local_id: 'item-a', depends_on: ['ghost'] })
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] })
+      const known = new Set(['item-a'])
+
+      const result = validateDctDoc(doc, '/dummy/dct.yaml', known)
+
+      expect(result.warnings.some(w => w.includes('ghost') && w.includes('catalog'))).toBe(true)
+    })
   })
 })
 

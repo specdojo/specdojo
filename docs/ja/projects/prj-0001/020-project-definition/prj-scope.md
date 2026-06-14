@@ -5,7 +5,6 @@ status: draft
 rulebook: prj-scope-rulebook
 based_on:
   - prj-0001:prj-overview
-  - prj-0001:prj-charter
 supersedes: []
 ---
 

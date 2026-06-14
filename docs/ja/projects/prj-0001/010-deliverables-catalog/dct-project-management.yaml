@@ -13,7 +13,7 @@ groups:
       - local_id: pm-plan
         name: プロジェクト管理計画
         kind: work
-        depends_on: []
+        depends_on: [pm-organization, pm-roles]
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
         rulebook: pm-plan-rulebook

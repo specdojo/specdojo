@@ -31,6 +31,10 @@ pre-commit:
       run: npx tsx src/specdojo.ts catalog build
       stage_fixed: true
 
+    catalog-validate:
+      glob: "docs/ja/projects/**"
+      run: npx tsx src/specdojo.ts catalog validate
+
     exec-build:
       glob: "docs/**/sch-*.yaml"
       run: npx tsx src/specdojo.ts exec build
