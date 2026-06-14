@@ -8,18 +8,21 @@ status: draft
 
 Rulebook Structure Standard
 
-`docs/ja/specdojo/rulebooks/` 配下の各 `*-rulebook.md` が従うべき共通の章立てルールを定義します。ドキュメント種別ごとの詳細ルールは各ファイルに記載し、本書は章構成と見出しレベルの統一だけを扱います。
+`docs/ja/specdojo/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立てと記述ルールを定義します。Frontmatter（メタ情報）の規約は [rulebook-metadata-standard.md](rulebook-metadata-standard.md) を正本とし、本書では扱いません。
 
 ## 1. 適用範囲
 
 - 対象: `docs/ja/specdojo/rulebooks/` 配下のすべての `*-rulebook.md`
-- 目的: 章構成と見出しレベルを統一し、参照・保守を容易にする
+- 目的: 章構成・見出しレベル・記述品質を統一し、参照・保守を容易にする
+- Frontmatter 規約の正本: [rulebook-metadata-standard.md](rulebook-metadata-standard.md)
+- ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 
 ## 2. 見出しレベルと章番号の原則
 
 - `#` はタイトルのみ。章は `##` から開始する。
 - 章番号は 1 始まりの連番。スキップしない（例: `## 1.`, 次は `## 2.`）。
-- 章番号を参照する本文がある場合、章の追加・削除に合わせて参照も更新する。
+- 章番号末尾には必ず `.` を付ける。
+- 章への参照は章番号ではなく章タイトルで記載する（例: `本文構成（標準テンプレ）`）。
 - タイトル直下に **英語名（1行）** を置き、その直下に **目的・概要（1〜3文）** を置く。
 
 ## 3. 標準章構成（`*-rulebook.md`）
@@ -43,8 +46,47 @@ Rulebook Structure Standard
 - 記述ガイドには、章ごとの書き方と例（表・サンプル）を置き、重複を避けるため共通事項は上位（index）を SSOT とする方針を記載する。
 - サンプルを用意する場合、対応する `../samples/*-sample.md` へのリンクを記載する。
 
-## 4. 運用ルール
+## 4. 記述ガイド
+
+- 各章は「何を定義する章か」が判定できる粒度で記述する。
+- `本文構成（標準テンプレ）` には、対象ドキュメントの章構成を表で示し、必須/任意を明示する。
+- `記述ガイド` には、章ごとの書き方、推奨表、記載例を置く。
+- 共通事項は上位ドキュメントを SSOT とし、重複記載を避ける。
+- 用語はファイル内で統一し、`index` / `overview` などの命名ゆれを持ち込まない。
+- `推奨 Frontmatter 項目` の記述は [deliverable-metadata-standard.md](deliverable-metadata-standard.md) に従う。
+- `ファイル命名・ID規則` は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う。
+- `target_format` がある場合は、本文ルール・サンプルリンク・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（[rulebook-metadata-standard.md](rulebook-metadata-standard.md) 参照）。
+- `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。
+- 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
+  - `_TODO_:` 後で人または生成 AI が確認・追記・修正する必要がある事項
+  - `_UNDECIDED_:` 情報不足ではなく、意思決定が未了で未確定の事項
+  - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
+- `サンプル` には、ファイルが存在する場合は `target_format` に合わせて次のいずれかでリンクを記載する。存在しない場合は「サンプル未作成。作成後にリンクを追記する」と記載する。
+  - Markdown の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.md)`
+  - YAML の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.yaml)`
+  - JSON の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.json)`
+
+## 5. 内容充実化（薄いドキュメント防止）
+
+- 各必須章には、最低 3 つ以上の具体項目（箇条書きまたは表項目）を置く。
+- 「適切に」「十分に」などの抽象語だけで終わらせず、判断可能な条件を書く。
+- 少なくとも 1 つは、推奨表のカラム定義（例: ID、目的、条件、判定基準、担当）を提示する。
+- 要求、品質特性、テスト/受入、運用/保守、トレーサビリティの欠落有無を確認する。
+- docs-contents-guide の記述が短い場合でも、類似 rulebook、一般的開発知見、PMBOK 成果物観点で必要観点を補完する。
+- ただし、実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）には踏み込まない。
+
+## 6. 禁止事項
+
+- 章番号なし見出し（例: `## 全体方針`）を使用しない。
+- 章番号末尾の `.` を省略しない。
+- 章参照を番号のみ（例: `§5` / `第5章`）で記述しない。
+- rulebook 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
+- 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
+- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- 確定済みの内容をラベル付きのまま放置したり、ラベルを本文の代替として多用したりしない。
+
+## 7. 運用ルール
 
 - 章構成を変更する際は、本書の表を更新し、既存の `*-rulebook.md` と整合させる。
-- 実データや大量のケース列挙は `rules` ではなく対象ドキュメント側に置く。ルールでは「書き方・構成」を定義する。
+- 実データや大量のケース列挙は本書ではなく対象ドキュメント側に置く。本書では「書き方・構成」を定義する。
 - 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
