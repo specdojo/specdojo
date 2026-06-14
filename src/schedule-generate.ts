@@ -2,6 +2,12 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { readYaml } from './exec-shared.js'
 import type { DctDoc, DctSection } from './catalog-types.js'
+import {
+  expandPhaseSetSelection,
+  normalizePhaseSetSelection,
+  taskIterationSuffix,
+  type PhaseSetSelection,
+} from './schedule-phase-sets.js'
 
 // --- Strategy file types ---
 
@@ -21,7 +27,7 @@ type StrategyPhase = {
 type OwnerRule = {
   local_ids: string[]
   owner: string
-  phase_sets?: string[]
+  phase_sets?: PhaseSetSelection
   phase_set?: string
 }
 
@@ -69,14 +75,14 @@ type StrategyDoc = {
   settings?: { start_date?: string }
   scope: StrategyScope
   phase_sets: Record<string, StrategyPhase[]>
-  default_phase_sets?: string[]
+  default_phase_sets?: PhaseSetSelection
   default_phase_set?: string
   owner_rules: OwnerRule[]
   cross_domain_dependencies?: CrossDomainDep[]
   phase_gates?: PhaseGate[]
   group_milestones?: GroupMilestone[]
   initial_state?: {
-    completed_deliverables?: Array<{ local_id: string }>
+    completed_deliverables?: Array<{ local_id: string; completed_through?: unknown }>
   }
 }
 
@@ -95,6 +101,10 @@ type DeliverableInfo = {
 export type GeneratedTask = {
   local_id?: string
   phase_suffix?: string
+  phase_set?: string
+  phase_id?: string
+  cycle?: number
+  iteration?: number
   name: string
   duration_days: number
   depends_on: string[]
@@ -178,8 +188,14 @@ function resolveGateScope(scope: PhaseGateScope, sorted: DeliverableInfo[]): str
   return [...result]
 }
 
-function buildTaskId(track: string, localId: string, phaseSuffix: string): string {
-  return `T-${track.toUpperCase()}-${localId}-${phaseSuffix}`
+function buildTaskId(
+  track: string,
+  localId: string,
+  phaseSuffix: string,
+  cycle?: number,
+  iteration?: number
+): string {
+  return `T-${track.toUpperCase()}-${localId}-${phaseSuffix}${taskIterationSuffix(cycle, iteration)}`
 }
 
 function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]): DeliverableInfo[] {
@@ -262,25 +278,35 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
   }
 
-  // Resolve default phase set names
-  const defaultPhaseSetNames: string[] =
-    strategy.default_phase_sets ??
-    (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
+  const fallbackPhaseSets = strategy.default_phase_set
+    ? [strategy.default_phase_set]
+    : Object.keys(strategy.phase_sets)
+  let defaultPhaseSets
+  try {
+    defaultPhaseSets = normalizePhaseSetSelection(strategy.default_phase_sets, fallbackPhaseSets)
+  } catch (err) {
+    errors.push(err instanceof Error ? err.message : String(err))
+    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+  }
 
   // Completed deliverables: generate a single 000 task instead of full phase expansion
   const completedLocalIds = new Set(
-    (strategy.initial_state?.completed_deliverables ?? []).map(
-      (c: { local_id: string }) => c.local_id
-    )
+    (strategy.initial_state?.completed_deliverables ?? [])
+      .filter(c => c.completed_through === undefined)
+      .map(c => c.local_id)
   )
 
   // Map local_id → finalize task ID for dependency resolution
   const finalizeTaskId = new Map<string, string>()
-  // Track phase boundary (last pre-finalize task / first finalize task) per deliverable
-  type Boundary = { lastPreFinalizeId: string | null; firstFinalizeId: string | null }
+  type CycleBoundary = {
+    lastPreFinalizeId: string | null
+    firstFinalizeId: string | null
+  }
+  type Boundary = {
+    cycles: number
+    byCycle: Map<number, CycleBoundary>
+  }
   const boundaries = new Map<string, Boundary>()
-  // Track first-task deps per deliverable (used for phase gate cycle detection)
-  const firstTaskDepsMap = new Map<string, Set<string>>()
   // Use a Map to allow post-generation patching for phase gates
   const taskMap = new Map<string, GeneratedTask>()
 
@@ -298,7 +324,6 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         const fin = finalizeTaskId.get(cd.requires)
         if (fin) firstDeps.add(fin)
       }
-      firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
       const taskId = buildTaskId(track, d.local_id, '000')
       taskMap.set(taskId, {
         local_id: d.local_id,
@@ -310,19 +335,29 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
         tags: ['initial-complete'],
       })
       finalizeTaskId.set(d.local_id, taskId)
-      boundaries.set(d.local_id, { lastPreFinalizeId: null, firstFinalizeId: null })
+      boundaries.set(d.local_id, {
+        cycles: 1,
+        byCycle: new Map([[1, { lastPreFinalizeId: null, firstFinalizeId: null }]]),
+      })
       continue
     }
 
     const ownerRule = strategy.owner_rules.find(r => r.local_ids.includes(d.local_id))
-    const phaseSetNames: string[] =
-      ownerRule?.phase_sets ??
-      (ownerRule?.phase_set ? [ownerRule.phase_set] : null) ??
-      defaultPhaseSetNames
-    const phases = phaseSetNames.flatMap(name => strategy.phase_sets[name] ?? [])
-    if (phases.length === 0) {
+    let selection
+    try {
+      selection = ownerRule?.phase_sets
+        ? normalizePhaseSetSelection(ownerRule.phase_sets, [])
+        : ownerRule?.phase_set
+          ? normalizePhaseSetSelection([ownerRule.phase_set], [])
+          : defaultPhaseSets
+    } catch (err) {
+      errors.push(`${d.local_id}: ${err instanceof Error ? err.message : String(err)}`)
+      continue
+    }
+    const expandedPhases = expandPhaseSetSelection(selection, strategy.phase_sets)
+    if (expandedPhases.length === 0) {
       warnings.push(
-        `No phases resolved for '${d.local_id}' (phase_sets: ${phaseSetNames.join(', ')}) — skipping`
+        `No phases resolved for '${d.local_id}' (phase_sets: ${selection.sequence.map(ref => ref.phaseSet).join(', ')}) — skipping`
       )
       continue
     }
@@ -333,11 +368,7 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       continue
     }
 
-    // Compute the set of suffixes belonging to the last phase_set (= finalize-pass)
-    const lastPhaseSetName = phaseSetNames[phaseSetNames.length - 1]
-    const lastPhaseSetSuffixes = new Set(
-      (strategy.phase_sets[lastPhaseSetName] ?? []).map(p => p.task_suffix)
-    )
+    const lastPhaseSetIndex = selection.sequence.length - 1
 
     // First phase: depends on the last first-pass task (before gate) of catalog deps
     // and cross_domain_dependencies. These define ordering within first-pass, not
@@ -345,42 +376,63 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     // (which have no lastPreFinalizeId).
     const firstDeps = new Set<string>()
     for (const dep of d.depends_on) {
-      const depId = boundaries.get(dep)?.lastPreFinalizeId ?? finalizeTaskId.get(dep)
+      const depBoundary = boundaries.get(dep)
+      const depId = depBoundary?.byCycle.get(1)?.lastPreFinalizeId ?? finalizeTaskId.get(dep)
       if (depId) firstDeps.add(depId)
     }
     for (const cd of crossDeps) {
       if (cd.dependent !== d.local_id) continue
       const depId =
-        boundaries.get(cd.requires)?.lastPreFinalizeId ?? finalizeTaskId.get(cd.requires)
+        boundaries.get(cd.requires)?.byCycle.get(1)?.lastPreFinalizeId ??
+        finalizeTaskId.get(cd.requires)
       if (depId) firstDeps.add(depId)
     }
-    firstTaskDepsMap.set(d.local_id, new Set(firstDeps))
-
     let prevId: string | null = null
-    let lastPreFinalizeId: string | null = null
-    let firstFinalizeId: string | null = null
+    const byCycle = new Map<number, CycleBoundary>()
 
-    for (let i = 0; i < phases.length; i++) {
-      const phase = phases[i]
-      const taskId = buildTaskId(track, d.local_id, phase.task_suffix)
+    for (let i = 0; i < expandedPhases.length; i++) {
+      const expanded = expandedPhases[i]
+      const phase = expanded.phase
+      const taskId = buildTaskId(
+        track,
+        d.local_id,
+        phase.task_suffix,
+        expanded.cycle,
+        expanded.iteration
+      )
+      if (taskMap.has(taskId)) {
+        errors.push(
+          `Duplicate generated task ID '${taskId}'. Use iterations instead of repeating the same phase_set reference.`
+        )
+        continue
+      }
       taskMap.set(taskId, {
         local_id: d.local_id,
         phase_suffix: phase.task_suffix,
+        phase_set: expanded.phaseSet,
+        phase_id: phase.id,
+        ...(expanded.cycle !== undefined ? { cycle: expanded.cycle } : {}),
+        ...(expanded.iteration !== undefined ? { iteration: expanded.iteration } : {}),
         name: phase.name,
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,
         ...(phase.description ? { description: phase.description } : {}),
       })
-      if (!lastPhaseSetSuffixes.has(phase.task_suffix)) {
-        lastPreFinalizeId = taskId
-      } else if (firstFinalizeId === null) {
-        firstFinalizeId = taskId
+      const boundary = byCycle.get(expanded.cycleNumber) ?? {
+        lastPreFinalizeId: null,
+        firstFinalizeId: null,
       }
+      if (expanded.phaseSetIndex < lastPhaseSetIndex) {
+        boundary.lastPreFinalizeId = taskId
+      } else if (boundary.firstFinalizeId === null) {
+        boundary.firstFinalizeId = taskId
+      }
+      byCycle.set(expanded.cycleNumber, boundary)
       prevId = taskId
     }
     if (prevId) finalizeTaskId.set(d.local_id, prevId)
-    boundaries.set(d.local_id, { lastPreFinalizeId, firstFinalizeId })
+    boundaries.set(d.local_id, { cycles: selection.cycles, byCycle })
   }
 
   if (errors.length > 0)
@@ -396,53 +448,36 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
       continue
     }
 
-    // Build set of finalize task IDs (050) for all scoped deliverables.
-    // A deliverable whose first task depends on another scoped deliverable's finalize task
-    // cannot feed into the gate without creating a cycle:
-    //   GATE → A-finalize → B-first-pass → ... → B-030 → GATE
-    // Such deliverables are excluded from gateDeps but still blocked by the gate on their 040.
-    const scopedFinalizeIds = new Set<string>()
-    for (const localId of scopedLocalIds) {
-      const fin = finalizeTaskId.get(localId)
-      if (fin) scopedFinalizeIds.add(fin)
-    }
+    const maxCycles = Math.max(...scopedLocalIds.map(id => boundaries.get(id)?.cycles ?? 1))
+    for (let cycleNumber = 1; cycleNumber <= maxCycles; cycleNumber++) {
+      const gateId =
+        maxCycles > 1 ? `${gate.id}-C${String(cycleNumber).padStart(2, '0')}` : gate.id
+      const gateDeps = scopedLocalIds
+        .map(id => boundaries.get(id)?.byCycle.get(cycleNumber)?.lastPreFinalizeId)
+        .filter((id): id is string => id !== null && id !== undefined)
 
-    const independentIds = scopedLocalIds.filter(id => {
-      const deps = firstTaskDepsMap.get(id) ?? new Set<string>()
-      return ![...deps].some(dep => scopedFinalizeIds.has(dep))
-    })
+      if (gateDeps.length === 0) {
+        warnings.push(`phase_gate ${gateId}: no pre-finalize tasks found in scope`)
+        continue
+      }
 
-    const dependentIds = scopedLocalIds.filter(id => !independentIds.includes(id))
-    if (dependentIds.length > 0) {
-      warnings.push(
-        `phase_gate ${gate.id}: excluded from depends_on to avoid cycle (first-pass depends on scoped finalize): ${dependentIds.join(', ')}`
-      )
-    }
+      milestones.push({
+        id: gateId,
+        name: maxCycles > 1 ? `${gate.name} (cycle ${cycleNumber})` : gate.name,
+        ...(gate.artifact_name !== undefined ? { artifact_name: gate.artifact_name } : {}),
+        depends_on: gateDeps,
+        owner: gate.owner,
+      })
 
-    const gateDeps = independentIds
-      .map(id => boundaries.get(id)?.lastPreFinalizeId)
-      .filter((id): id is string => id !== null && id !== undefined)
-
-    if (gateDeps.length === 0) {
-      warnings.push(`phase_gate ${gate.id}: no pre-finalize tasks found in scope`)
-      continue
-    }
-
-    milestones.push({
-      id: gate.id,
-      name: gate.name,
-      ...(gate.artifact_name !== undefined ? { artifact_name: gate.artifact_name } : {}),
-      depends_on: gateDeps,
-      owner: gate.owner,
-    })
-
-    // Patch first finalize-pass tasks for ALL scoped deliverables (including dependent ones)
-    for (const localId of scopedLocalIds) {
-      const firstFinalizeId = boundaries.get(localId)?.firstFinalizeId
-      if (!firstFinalizeId) continue
-      const task = taskMap.get(firstFinalizeId)
-      if (!task || task.depends_on.includes(gate.id)) continue
-      task.depends_on.push(gate.id)
+      for (const localId of scopedLocalIds) {
+        const firstFinalizeId = boundaries
+          .get(localId)
+          ?.byCycle.get(cycleNumber)?.firstFinalizeId
+        if (!firstFinalizeId) continue
+        const task = taskMap.get(firstFinalizeId)
+        if (!task || task.depends_on.includes(gateId)) continue
+        task.depends_on.push(gateId)
+      }
     }
   }
 

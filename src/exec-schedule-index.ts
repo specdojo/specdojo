@@ -253,9 +253,16 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       const taskLocalId = typeof tv['local_id'] === 'string' ? tv['local_id'] : undefined
       const taskPhaseSuffix =
         typeof tv['phase_suffix'] === 'string' ? tv['phase_suffix'] : undefined
+      const taskPhaseSet = typeof tv['phase_set'] === 'string' ? tv['phase_set'] : undefined
+      const taskPhaseId = typeof tv['phase_id'] === 'string' ? tv['phase_id'] : undefined
+      const taskCycle = typeof tv['cycle'] === 'number' ? tv['cycle'] : undefined
+      const taskIteration = typeof tv['iteration'] === 'number' ? tv['iteration'] : undefined
       let id = String(tv['id'] ?? '').trim()
       if (!id && taskLocalId && taskPhaseSuffix && docTrackName) {
-        id = `T-${docTrackName.toUpperCase()}-${taskLocalId}-${taskPhaseSuffix}`
+        const cycleSuffix = taskCycle !== undefined ? `-C${String(taskCycle).padStart(2, '0')}` : ''
+        const iterationSuffix =
+          taskIteration !== undefined ? `-I${String(taskIteration).padStart(2, '0')}` : ''
+        id = `T-${docTrackName.toUpperCase()}-${taskLocalId}-${taskPhaseSuffix}${cycleSuffix}${iterationSuffix}`
       }
       if (!id) continue
       const taskTags = Array.isArray(tv['tags']) ? tv['tags'].map(String) : undefined
@@ -265,6 +272,10 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
         ...(taskPhaseSuffix ? { phase_suffix: taskPhaseSuffix } : {}),
+        ...(taskPhaseSet ? { phase_set: taskPhaseSet } : {}),
+        ...(taskPhaseId ? { phase_id: taskPhaseId } : {}),
+        ...(taskCycle !== undefined ? { cycle: taskCycle } : {}),
+        ...(taskIteration !== undefined ? { iteration: taskIteration } : {}),
         ...(taskArtifactName ? { artifact_name: taskArtifactName } : {}),
         name: typeof tv['name'] === 'string' ? tv['name'] : undefined,
         owner: typeof tv['owner'] === 'string' ? tv['owner'] : undefined,

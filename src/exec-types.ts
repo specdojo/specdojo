@@ -70,6 +70,10 @@ export type ScheduleNode = {
   id: string
   local_id?: string
   phase_suffix?: string
+  phase_set?: string
+  phase_id?: string
+  cycle?: number
+  iteration?: number
   artifact_name?: string
   name?: string
   owner?: string
@@ -143,6 +147,11 @@ export type SchedulerLockOptions = {
 export type ReadyTaskView = {
   id: string
   local_id?: string
+  phase_suffix?: string
+  phase_set?: string
+  phase_id?: string
+  cycle?: number
+  iteration?: number
   name?: string
   owner?: string
   mode?: TaskMode

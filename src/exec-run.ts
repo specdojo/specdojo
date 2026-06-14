@@ -24,6 +24,13 @@ import {
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
 import type { Proficiency } from './exec-types.js'
 import { replaceDocIndexRefs } from './doc-index.js'
+import {
+  extractLocalId,
+  extractPhaseSuffix,
+  normalizePhaseSetSelection,
+  phaseSetNames,
+  type PhaseSetSelection,
+} from './schedule-phase-sets.js'
 import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
@@ -52,13 +59,13 @@ type StrategyOwnerRule = {
   local_ids: string[]
   owner: string
   phase_set?: string
-  phase_sets?: string[]
+  phase_sets?: PhaseSetSelection
 }
 
 type StrategyFile = {
   phase_sets: Record<string, StrategyPhase[]>
   default_phase_set?: string
-  default_phase_sets?: string[] // array form used in sch-strategy files
+  default_phase_sets?: PhaseSetSelection
   owner_rules: StrategyOwnerRule[]
 }
 
@@ -121,9 +128,17 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
     if (!strategy?.phase_sets || !Array.isArray(strategy.owner_rules)) continue
 
-    const defaultPhaseSets =
-      strategy.default_phase_sets ??
-      (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
+    let defaultPhaseSets: string[]
+    try {
+      defaultPhaseSets = phaseSetNames(
+        normalizePhaseSetSelection(
+          strategy.default_phase_sets,
+          strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets)
+        )
+      )
+    } catch {
+      continue
+    }
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
       for (const phase of phases) {
@@ -132,7 +147,16 @@ export function buildTaskPhaseMap(schedulePath: string): {
     }
 
     for (const rule of strategy.owner_rules) {
-      const phaseSets = rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : defaultPhaseSets)
+      let phaseSets: string[]
+      try {
+        phaseSets = rule.phase_sets
+          ? phaseSetNames(normalizePhaseSetSelection(rule.phase_sets, []))
+          : rule.phase_set
+            ? [rule.phase_set]
+            : defaultPhaseSets
+      } catch {
+        continue
+      }
       for (const localId of rule.local_ids) {
         localIdToPhaseSets.set(localId, phaseSets)
       }
@@ -150,14 +174,17 @@ export function resolveTaskPhaseContext(
   const localId = task.local_id
   if (!localId) return null
 
+  const suffix = task.phase_suffix ?? extractPhaseSuffix(task.id)
+  if (!suffix) return null
+
+  if (task.phase_set && task.phase_id) {
+    return { localId, phaseSet: task.phase_set, phaseId: task.phase_id }
+  }
+
   const phaseSets = localIdToPhaseSets.get(localId)
   if (!phaseSets) return null
 
-  const parts = task.id.split('-')
-  const suffix = parts[parts.length - 1]
-  if (!/^\d{3}$/.test(suffix)) return null
-
-  for (const phaseSet of phaseSets) {
+  for (const phaseSet of task.phase_set ? [task.phase_set] : phaseSets) {
     const phaseId = phaseSetSuffixToId.get(`${phaseSet}:${suffix}`)
     if (phaseId) return { localId, phaseSet, phaseId }
   }
@@ -851,15 +878,15 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     if (found) task = found
   }
   // If task not in ready.json (e.g. already "doing"), derive local_id from task id pattern.
-  // Task ID format: T-<TRACK>-<local_id>-<phase_suffix>
   if (!task.local_id) {
     const parts = taskId.split('-')
-    if (parts.length >= 4 && parts[0] === 'T') {
+    const localId = extractLocalId(taskId)
+    if (localId && parts[0] === 'T' && parts[1]) {
       const track = parts[1]
-      const localId = parts.slice(2, parts.length - 1).join('-')
       task = {
         ...task,
         local_id: localId,
+        phase_suffix: extractPhaseSuffix(taskId),
         schedule_file: `sch-track-${track.toLowerCase()}.yaml`,
       }
     }
@@ -867,16 +894,41 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   if (task.local_id) {
     task = {
       ...task,
-      mode: task.mode ?? resolveTaskMode(task.local_id, task.id, phaseModeIndex),
-      execution: task.execution ?? resolveTaskExecution(task.local_id, task.id, phaseModeIndex),
-      approach: task.approach ?? resolveApproach(task.local_id, task.id, phaseModeIndex),
+      mode:
+        task.mode ??
+        resolveTaskMode(task.local_id, task.id, phaseModeIndex, task.phase_suffix, task.phase_set),
+      execution:
+        task.execution ??
+        resolveTaskExecution(
+          task.local_id,
+          task.id,
+          phaseModeIndex,
+          task.phase_suffix,
+          task.phase_set
+        ),
+      approach:
+        task.approach ??
+        resolveApproach(task.local_id, task.id, phaseModeIndex, task.phase_suffix, task.phase_set),
     }
     if (!task.capabilities) {
-      const capabilities = resolveTaskCapabilities(task.local_id, task.id, phaseModeIndex)
+      const capabilities = resolveTaskCapabilities(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set
+      )
       if (capabilities.length > 0) task.capabilities = capabilities
     }
     task.proficiency =
-      task.proficiency ?? resolveTaskProficiency(task.local_id, task.id, phaseModeIndex)
+      task.proficiency ??
+      resolveTaskProficiency(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set
+      )
   }
 
   // If the task is already in "doing" state and --by/--agent-cmd are not specified,

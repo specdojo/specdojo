@@ -329,10 +329,23 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
     }
     const out = writeEventFile(schedulePath, event)
     if (action.type === 'claim') {
-      const localId = state.schedule.nodes.get(taskId)?.local_id
+      const scheduleNode = state.schedule.nodes.get(taskId)
+      const localId = scheduleNode?.local_id
       const phaseModeIndex = buildPhaseModeIndex(schedulePath)
-      const mode = resolveTaskMode(localId, taskId, phaseModeIndex)
-      const approach = resolveApproach(localId, taskId, phaseModeIndex)
+      const mode = resolveTaskMode(
+        localId,
+        taskId,
+        phaseModeIndex,
+        scheduleNode?.phase_suffix,
+        scheduleNode?.phase_set
+      )
+      const approach = resolveApproach(
+        localId,
+        taskId,
+        phaseModeIndex,
+        scheduleNode?.phase_suffix,
+        scheduleNode?.phase_set
+      )
       scaffoldResult({
         executionPath,
         taskId,

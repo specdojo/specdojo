@@ -58,6 +58,11 @@ export function buildReadySnapshot(
     return {
       id,
       ...(node?.local_id ? { local_id: node.local_id } : {}),
+      ...(node?.phase_suffix ? { phase_suffix: node.phase_suffix } : {}),
+      ...(node?.phase_set ? { phase_set: node.phase_set } : {}),
+      ...(node?.phase_id ? { phase_id: node.phase_id } : {}),
+      ...(node?.cycle !== undefined ? { cycle: node.cycle } : {}),
+      ...(node?.iteration !== undefined ? { iteration: node.iteration } : {}),
       name: node?.name,
       owner: node?.owner,
       schedule_file: node?.schedule_file ? toScheduleFilePath(projectPath, node.schedule_file) : '',

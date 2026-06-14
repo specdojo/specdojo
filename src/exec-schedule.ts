@@ -244,12 +244,42 @@ export function writeGeneratedCore(
   const readySnapshot = buildReadySnapshot(projectPath, schedule, ready, cpm)
   const phaseModeIndex = buildPhaseModeIndex(projectPath)
   for (const task of readySnapshot.tasks) {
-    task.mode = resolveTaskMode(task.local_id, task.id, phaseModeIndex)
-    task.execution = resolveTaskExecution(task.local_id, task.id, phaseModeIndex)
-    task.approach = resolveApproach(task.local_id, task.id, phaseModeIndex)
-    const capabilities = resolveTaskCapabilities(task.local_id, task.id, phaseModeIndex)
+    task.mode = resolveTaskMode(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set
+    )
+    task.execution = resolveTaskExecution(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set
+    )
+    task.approach = resolveApproach(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set
+    )
+    const capabilities = resolveTaskCapabilities(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set
+    )
     if (capabilities.length > 0) task.capabilities = capabilities
-    const proficiency = resolveTaskProficiency(task.local_id, task.id, phaseModeIndex)
+    const proficiency = resolveTaskProficiency(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set
+    )
     if (proficiency !== undefined) task.proficiency = proficiency
   }
   writeReadyFiles(projectPath, readySnapshot)

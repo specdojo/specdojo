@@ -39,6 +39,7 @@ import {
   type ExecWorktree,
 } from './exec-worktree.js'
 import { loadConfig, specdojoRootDir } from './specdojo-config.js'
+import { extractLocalId, extractPhaseSuffix } from './schedule-phase-sets.js'
 
 type CommonOpts = {
   project?: string
@@ -223,6 +224,11 @@ function taskView(schedulePath: string, executionPath: string, taskId: string): 
   let task: ReadyTaskView = {
     id: taskId,
     local_id: node.local_id,
+    phase_suffix: node.phase_suffix,
+    phase_set: node.phase_set,
+    phase_id: node.phase_id,
+    cycle: node.cycle,
+    iteration: node.iteration,
     name: node.name,
     owner: node.owner,
     schedule_file: node.schedule_file,
@@ -235,20 +241,26 @@ function taskView(schedulePath: string, executionPath: string, taskId: string): 
     task = ready.tasks.find(item => item.id === taskId) ?? task
   }
   if (!task.local_id) {
-    const parts = taskId.split('-')
-    if (parts.length >= 4 && parts[0] === 'T') {
-      task.local_id = parts.slice(2, parts.length - 1).join('-')
-    }
+    task.local_id = extractLocalId(taskId)
+    task.phase_suffix = extractPhaseSuffix(taskId)
   }
   if (task.local_id) {
     const phaseIndex = buildPhaseModeIndex(schedulePath)
-    task.mode = task.mode ?? resolveTaskMode(task.local_id, task.id, phaseIndex)
-    task.execution = task.execution ?? resolveTaskExecution(task.local_id, task.id, phaseIndex)
-    task.approach = task.approach ?? resolveApproach(task.local_id, task.id, phaseIndex)
+    task.mode =
+      task.mode ??
+      resolveTaskMode(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set)
+    task.execution =
+      task.execution ??
+      resolveTaskExecution(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set)
+    task.approach =
+      task.approach ??
+      resolveApproach(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set)
     task.capabilities =
-      task.capabilities ?? resolveTaskCapabilities(task.local_id, task.id, phaseIndex)
+      task.capabilities ??
+      resolveTaskCapabilities(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set)
     task.proficiency =
-      task.proficiency ?? resolveTaskProficiency(task.local_id, task.id, phaseIndex)
+      task.proficiency ??
+      resolveTaskProficiency(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set)
   }
   return task
 }

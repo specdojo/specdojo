@@ -1,5 +1,11 @@
 import { listFilesRecursive, readYaml } from './exec-shared.js'
 import type { Approach, Proficiency, TaskMode } from './exec-types.js'
+import {
+  extractPhaseSuffix,
+  normalizePhaseSetSelection,
+  phaseSetNames,
+  type PhaseSetSelection,
+} from './schedule-phase-sets.js'
 
 type StrategyPhaseMinimal = {
   id: string
@@ -22,11 +28,11 @@ type StrategyPhaseOverrideMinimal = {
 
 type StrategyMinimal = {
   phase_sets?: Record<string, StrategyPhaseMinimal[]>
-  default_phase_sets?: string[]
+  default_phase_sets?: PhaseSetSelection
   default_phase_set?: string
   owner_rules?: Array<{
     local_ids: string[]
-    phase_sets?: string[]
+    phase_sets?: PhaseSetSelection
     phase_set?: string
     phase_overrides?: StrategyPhaseOverrideMinimal[]
   }>
@@ -119,9 +125,17 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     }
     if (!strategy?.phase_sets) continue
 
-    const defaultPhaseSetNames: string[] =
-      strategy.default_phase_sets ??
-      (strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets))
+    let defaultPhaseSetNames: string[]
+    try {
+      defaultPhaseSetNames = phaseSetNames(
+        normalizePhaseSetSelection(
+          strategy.default_phase_sets,
+          strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets)
+        )
+      )
+    } catch {
+      continue
+    }
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
       if (!Array.isArray(phases)) continue
@@ -157,11 +171,19 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
 
     if (Array.isArray(strategy.owner_rules)) {
       for (const rule of strategy.owner_rules) {
-        const phaseSetNames =
-          rule.phase_sets ?? (rule.phase_set ? [rule.phase_set] : null) ?? defaultPhaseSetNames
+        let rulePhaseSetNames: string[]
+        try {
+          rulePhaseSetNames = rule.phase_sets
+            ? phaseSetNames(normalizePhaseSetSelection(rule.phase_sets, []))
+            : rule.phase_set
+              ? [rule.phase_set]
+              : defaultPhaseSetNames
+        } catch {
+          continue
+        }
         const localIds = rule.local_ids ?? []
         for (const localId of localIds) {
-          localIdToPhaseSets.set(localId, phaseSetNames)
+          localIdToPhaseSets.set(localId, rulePhaseSetNames)
         }
 
         for (const override of rule.phase_overrides ?? []) {
@@ -182,7 +204,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           )
             continue
 
-          for (const phaseSetName of phaseSetNames) {
+          for (const phaseSetName of rulePhaseSetNames) {
             const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`)
             if (!suffix) continue
             for (const localId of localIds) {
@@ -236,16 +258,18 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
 export function resolveApproach(
   localId: string | undefined,
   taskId: string,
-  index: PhaseModeIndex
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string
 ): Approach | undefined {
   if (!localId) return undefined
-  const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return undefined
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+  if (!suffix) return undefined
 
   const overridden = index.localIdSuffixToApproach.get(`${localId}:${suffix}`)
   if (overridden !== undefined) return overridden
 
-  const phaseSets = index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
       const approach = index.phaseSetSuffixToApproach.get(`${phaseSet}:${suffix}`)
@@ -265,18 +289,20 @@ export function resolveApproach(
 export function resolveTaskMode(
   localId: string | undefined,
   taskId: string,
-  index: PhaseModeIndex
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string
 ): TaskMode {
   if (localId) {
-    const suffix = taskId.split('-').pop() ?? ''
-    if (/^\d{3}$/.test(suffix)) {
+    const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+    if (suffix) {
       const overridden = index.localIdSuffixToMode.get(`${localId}:${suffix}`)
       if (overridden !== undefined) return overridden
     }
 
-    const phaseSets = index.localIdToPhaseSets.get(localId)
+    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
     if (phaseSets) {
-      if (/^\d{3}$/.test(suffix)) {
+      if (suffix) {
         for (const phaseSet of phaseSets) {
           const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`)
           if (mode !== undefined) return mode
@@ -297,16 +323,18 @@ export function resolveTaskMode(
 export function resolveTaskCapabilities(
   localId: string | undefined,
   taskId: string,
-  index: PhaseModeIndex
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string
 ): string[] {
   if (!localId) return []
-  const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return []
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+  if (!suffix) return []
 
   const overridden = index.localIdSuffixToCapabilities.get(`${localId}:${suffix}`)
   if (overridden !== undefined) return overridden
 
-  const phaseSets = index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
       const capabilities = index.phaseSetSuffixToCapabilities.get(`${phaseSet}:${suffix}`)
@@ -326,16 +354,18 @@ export function resolveTaskCapabilities(
 export function resolveTaskProficiency(
   localId: string | undefined,
   taskId: string,
-  index: PhaseModeIndex
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string
 ): Proficiency | undefined {
   if (!localId) return undefined
-  const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return undefined
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+  if (!suffix) return undefined
 
   const overridden = index.localIdSuffixToProficiency.get(`${localId}:${suffix}`)
   if (overridden !== undefined) return overridden
 
-  const phaseSets = index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
       const proficiency = index.phaseSetSuffixToProficiency.get(`${phaseSet}:${suffix}`)
@@ -353,10 +383,12 @@ export function resolveTaskProficiency(
 export function resolveTaskExecution(
   localId: string | undefined,
   taskId: string,
-  index: PhaseModeIndex
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string
 ): 'agent' | 'human' {
-  const suffix = taskId.split('-').pop() ?? ''
-  if (!/^\d{3}$/.test(suffix)) return 'agent'
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+  if (!suffix) return 'agent'
 
   if (localId) {
     const overridden = index.localIdSuffixToExecution.get(`${localId}:${suffix}`)
@@ -365,7 +397,7 @@ export function resolveTaskExecution(
 
   // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set(s))
   if (localId) {
-    const phaseSets = index.localIdToPhaseSets.get(localId)
+    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
     if (phaseSets) {
       for (const phaseSet of phaseSets) {
         const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`)

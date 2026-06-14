@@ -11,12 +11,13 @@ $defs:
   Id:
     type: string
     minLength: 1
+    maxLength: 128
     description: >
       Globally unique identifier across all schedule files in the project.
       Recommended examples:
         - T-AUTH-API-010
         - M-RELEASE-010
-    pattern: "^[A-Za-z0-9][A-Za-z0-9_-]{1,63}$"
+    pattern: "^[A-Za-z0-9][A-Za-z0-9_-]{1,127}$"
 
   Date:
     type: string
@@ -145,6 +146,22 @@ $defs:
         type: string
         pattern: "^[0-9]{3}$"
         description: "3-digit phase suffix (e.g., 010, 020). Identifies the phase step within a deliverable's workflow."
+      phase_set:
+        type: string
+        minLength: 1
+        description: "Named phase_set from sch-strategy that produced this task."
+      phase_id:
+        type: string
+        minLength: 1
+        description: "Phase id within phase_set that produced this task."
+      cycle:
+        type: integer
+        minimum: 1
+        description: "1-based phase_sets cycle number. Present only when cycles is greater than 1."
+      iteration:
+        type: integer
+        minimum: 1
+        description: "1-based phase_set iteration number. Present only when iterations is greater than 1."
       name:
         type: string
         minLength: 1

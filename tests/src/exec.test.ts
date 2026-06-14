@@ -3,7 +3,11 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { resolveClaimOwner } from '../../src/exec.js'
-import { buildTaskPhaseMap, expandPromptRefs } from '../../src/exec-run.js'
+import {
+  buildTaskPhaseMap,
+  expandPromptRefs,
+  resolveTaskPhaseContext,
+} from '../../src/exec-run.js'
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -103,6 +107,10 @@ describe('exec strategy metadata resolution', () => {
       expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-020', index)).toBe('expert')
       expect(resolveTaskMode('doc', 'T-LAUNCH-doc-030', index)).toBe('review')
       expect(resolveTaskProficiency('doc', 'T-LAUNCH-doc-030', index)).toBe('normal')
+      expect(resolveTaskMode('doc', 'T-LAUNCH-doc-020-C01-I02', index)).toBe('edit')
+      expect(resolveTaskCapabilities('doc', 'T-LAUNCH-doc-020-C01-I02', index)).toEqual([
+        'web_search',
+      ])
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
@@ -134,6 +142,49 @@ describe('exec strategy metadata resolution', () => {
 
       expect(localIdToPhaseSets.get('doc')).toEqual(['first-pass', 'finalize-pass'])
       expect(phaseSetSuffixToId.get('finalize-pass:040')).toBe('align')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('exec run phase map expands object-form phase_sets and resolves repeated task IDs', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-exec-run-repeat-'))
+    try {
+      writeFileSync(
+        join(dir, 'sch-strategy-test.yaml'),
+        [
+          'phase_sets:',
+          '  first-pass:',
+          '    - id: draft',
+          '      task_suffix: "010"',
+          'default_phase_sets:',
+          '  cycles: 2',
+          '  sequence:',
+          '    - phase_set: first-pass',
+          '      iterations: 2',
+          'owner_rules:',
+          '  - local_ids: [doc]',
+          '    owner: BA',
+          '',
+        ].join('\n'),
+        'utf8'
+      )
+
+      const maps = buildTaskPhaseMap(dir)
+      expect(maps.localIdToPhaseSets.get('doc')).toEqual(['first-pass'])
+      expect(
+        resolveTaskPhaseContext(
+          {
+            id: 'T-LAUNCH-doc-010-C02-I02',
+            local_id: 'doc',
+            schedule_file: 'sch-track-launch.yaml',
+            fifo_rank: 1,
+            critical_first_rank: 1,
+          },
+          maps.localIdToPhaseSets,
+          maps.phaseSetSuffixToId
+        )
+      ).toEqual({ localId: 'doc', phaseSet: 'first-pass', phaseId: 'draft' })
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }

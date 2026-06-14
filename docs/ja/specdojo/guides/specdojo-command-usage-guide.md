@@ -358,8 +358,6 @@ T-LAUNCH-prj-overview-010-C01-I01
 
 #### 6.1.4. `phase_sets` の反復
 
-> この節は反復展開の仕様を定める。スキーマとジェネレータへの実装が完了するまでは、反復指定を実際の `sch-strategy-<track>.yaml` に使用しないこと。
-
 個別の `phase_set` を反復する場合は、その参照に `iterations` を指定する。`iterations` は追加回数ではなく総実行回数を表し、省略時は `1` とする。
 
 ```yaml
@@ -411,9 +409,21 @@ default_phase_sets: [first-pass, finalize-pass]
 
 これは `cycles: 1`、各 `iterations: 1` の完全形と等価である。`cycles` と `iterations` は `1` 以上の整数とし、`loop` や `repeat` は `exec run --loop` や追加回数との混同を避けるため使用しない。
 
-生成順序は cycle 内の sequence、phase_set 内の iteration、phase_set 内の phase の順とする。次の cycle は前の cycle の最終タスクに依存する。`phase_gates` は各 cycle 内で、対象 `phase_set` の最終 iteration 後に適用する。
+生成順序は cycle 内の sequence、phase_set 内の iteration、phase_set 内の phase の順とする。次の cycle は前の cycle の最終タスクに依存する。`phase_gates` は各 cycle 内で、対象 `phase_set` の最終 iteration 後に適用する。複数 cycle ではゲート ID に `-C01`、`-C02` のような cycle 識別子を付ける。
 
 生成タスクには ID とは別に `phase_suffix` を保持し、該当する場合だけ `cycle` と `iteration` を保持する。フェーズ解決ではタスク ID の末尾を `phase_suffix` とみなさず、これらの明示フィールドを使用する。
+
+反復途中までを `initial_state.completed_through` で完了済みにする場合は、`phase_set`・`phase` と必要な反復番号を指定する。
+
+```yaml
+completed_through:
+  phase_set: first-pass
+  phase: review
+  cycle: 1
+  iteration: 2
+```
+
+反復しないワークフローでは、従来どおり `completed_through: review` の簡略記法も使用できる。
 
 #### 6.1.5. フェーズ実行要件
 
