@@ -31,7 +31,8 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 1. 見直し対象の sample を読み込み、改訂後の粒度・文体・表の書き方を把握する。
 2. 複数の成果物・review result・対象領域の慣行と照らし、それらが完成例として適切か、実成果物の丸写しになっていないかを確認する。
-3. rulebook / recipe と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+3. 見直し内容が [[sample-authoring-standard]]（構成・記述ルール・禁止事項の正本）に従っているか確認する。
+4. rulebook / recipe と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 
 approach 全体の定義は [[specdojo-reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な sample メンテナンス確認の方針は、このセクションで完結する。
 

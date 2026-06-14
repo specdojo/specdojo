@@ -31,7 +31,8 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 1. 見直し対象の rulebook を読み込み、改訂後の章構成・必須項目・禁止事項・判定基準を把握する。
 2. 複数の成果物・review result・対象領域の慣行と照らし、それらが成果物の実態と整合しているかを確認する。
-3. recipe / sample / template と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+3. 見直し内容が [[rulebook-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従っているか確認する。
+4. recipe / sample / template と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 
 approach 全体の定義は [[specdojo-reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンス確認の方針は、このセクションで完結する。
 

@@ -31,7 +31,8 @@ _REVIEW_VIEWPOINT_DETAILS_
 
 1. 見直し対象の template を読み込み、改訂後の章構成の骨組みとプレースホルダの配置・網羅性を把握する。
 2. 複数の成果物・review result・対象領域の慣行と照らし、それらが成果物作成の開始点として適切かを確認する。
-3. rulebook / recipe / sample と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+3. 見直し内容が [[template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従っているか確認する。
+4. rulebook / recipe / sample と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 
 approach 全体の定義は [[specdojo-reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な template メンテナンス確認の方針は、このセクションで完結する。
 
