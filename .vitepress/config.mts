@@ -570,5 +570,12 @@ export default defineConfig({
 
   vite: {
     plugins: [mermaidSvgAutoGenerate()],
+    build: {
+      // 最大のチャンクはローカル検索インデックス（@localSearchIndex*）で、
+      // 検索モーダルを開いたときだけ動的 import される遅延ロード対象。
+      // ドキュメント増加に伴い 500kB を超えるが初期表示には影響しないため、
+      // 警告しきい値を引き上げて誤検知を抑制する。
+      chunkSizeWarningLimit: 3000,
+    },
   },
 })
