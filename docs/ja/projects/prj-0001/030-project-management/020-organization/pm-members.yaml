@@ -169,45 +169,76 @@ members:
   # codex members
   #
   - nickname: codex-edit-agent
+    priority: 1
     display_name: Codex Edit Agent
+    email: null
+    roles: []
     type: agent
     mode: edit
-    roles: []
-    capabilities: [web_search]
     proficiency: normal
-    priority: 1
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c model_reasoning_effort="medium"'
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+    capabilities: [web_search]
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
+    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultを更新する。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-review-agent
+    priority: 1
     display_name: Codex Review Agent
+    email: null
+    roles: []
     type: agent
     mode: review
-    roles: []
-    capabilities: [web_search]
     proficiency: normal
-    priority: 1
-    command: 'codex exec --ephemeral --sandbox read-only --model gpt-5.4-mini -c model_reasoning_effort="medium"'
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: [web_search]
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
+    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-edit-agent
+    priority: 2
     display_name: Codex Expert Edit Agent
+    email: null
+    roles: []
     type: agent
     mode: edit
-    roles: []
-    capabilities: [web_search]
     proficiency: expert
-    priority: 2
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c model_reasoning_effort="high"'
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - complex-analysis
+      - architecture-judgment
+    capabilities: [web_search]
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
+    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planを担当する。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-review-agent
+    priority: 2
     display_name: Codex Expert Review Agent
+    email: null
+    roles: []
     type: agent
     mode: review
-    roles: []
-    capabilities: [web_search]
     proficiency: expert
-    priority: 2
-    command: 'codex exec --ephemeral --sandbox read-only --model gpt-5.5 -c model_reasoning_effort="high"'
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities: [web_search]
+    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
+    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを行い、成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
