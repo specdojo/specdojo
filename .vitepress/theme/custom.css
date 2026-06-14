@@ -17,24 +17,29 @@
   cursor: zoom-in; /* クリックで拡大できそうなカーソル */
 }
 
-/* ▼ 全画面オーバーレイ（前に作ったライトボックス） */
+/* ▼ 全画面オーバーレイ */
 .mermaid-lightbox {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
   display: none;
-  align-items: center;
-  justify-content: center;
+  overflow-y: auto;
+  padding: 2.5vh 2.5vw;
+  box-sizing: border-box;
   z-index: 9999;
 }
 
 .mermaid-lightbox.is-active {
-  display: flex;
+  display: block;
 }
 
 .mermaid-lightbox__img {
-  max-width: 95vw;
-  max-height: 95vh;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0 auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
   background: #fff;
   cursor: zoom-out;
