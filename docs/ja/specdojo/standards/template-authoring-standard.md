@@ -8,14 +8,14 @@ status: draft
 
 Template Authoring Standard
 
-`docs/ja/specdojo/templates/` 配下の各 `*-template.(md|yaml)` が従うべき構成・プレースホルダ規約・禁止事項・運用ルールを定義します。プレースホルダを埋めた結果が満たすべき Frontmatter 規約は [deliverable-metadata-standard.md](deliverable-metadata-standard.md) を正本とし、本書では雛形側の記述方法を定義します。
+`docs/ja/specdojo/templates/` 配下の各 `*-template.(md|yaml)` が従うべき構成・プレースホルダ規約・禁止事項・運用ルールを定義します。プレースホルダを埋めた結果が満たすべき Frontmatter 規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では雛形側の記述方法を定義します。
 
 ## 1. 適用範囲
 
 - 対象: `docs/ja/specdojo/templates/` 配下のすべての `*-template.(md|yaml)`
 - 目的: テンプレートの構成・プレースホルダ記法を統一し、埋めるだけで成果物の雛形が完成する状態を提供する
 - 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
-- 完成後の Frontmatter 規約の正本: [deliverable-metadata-standard.md](deliverable-metadata-standard.md)
+- 完成後の Frontmatter 規約の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 
 ## 2. 出力フォーマットと命名
@@ -44,7 +44,7 @@ Template Authoring Standard
 - Markdown の見出しは `##` から開始し、章番号は 1 始まりの連番、末尾に `.` を付ける。
 - 章構成は対応成果物の rulebook が定める本文構成に対応させ、テンプレート独自の章立てを作らない。
 - YAML はキー構造・必須キー・型制約を、対象成果物の schema と整合する形で示す。
-- 埋めた結果が対象 `type` のメタ情報標準（[deliverable-metadata-standard.md](deliverable-metadata-standard.md)）を満たすようにする。
+- 埋めた結果が対象 `type` のメタ情報標準（[document-metadata-standard.md](document-metadata-standard.md)）を満たすようにする。
 
 ## 5. 記述ガイド
 

@@ -47,7 +47,7 @@ Migration Plan (MIP) Documentation Rules
 
 ### 4.1. 設定内容
 
-Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)）。
+Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
 
 | 項目       | 説明                                         | 必須 |
 | ---------- | -------------------------------------------- | ---- |

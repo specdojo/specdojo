@@ -214,7 +214,6 @@ export const specdojoSidebarItems = [
     items: [
       standard('ドキュメントID・ファイル命名', 'id-and-file-naming-standard'),
       standard('ドキュメントメタ情報', 'document-metadata-standard'),
-      standard('成果物メタ情報', 'deliverable-metadata-standard'),
       standard('ルールブック記述', 'rulebook-authoring-standard'),
       standard('レシピ記述', 'recipe-authoring-standard'),
       standard('サンプル記述', 'sample-authoring-standard'),

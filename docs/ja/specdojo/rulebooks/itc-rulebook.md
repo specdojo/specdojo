@@ -61,7 +61,7 @@ flowchart BT
 Frontmatter は共通スキーマに従います（あわせてドキュメントのメタ情報の記述ルールも参照）。
 
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
-- メタ情報標準: [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)
+- メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
 | 項目       | 説明                                                                             | 必須 |
 | ---------- | -------------------------------------------------------------------------------- | ---- |

@@ -36,7 +36,7 @@ Requirements Traceability (Requirements to Specs) Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-[deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md) に準拠し、以下を推奨する。
+[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
 | 項目       | 説明                                 | 必須 |
 | ---------- | ------------------------------------ | ---- |

@@ -74,7 +74,7 @@ flowchart LR
 
 - プロジェクトスコープでも、機械可読性が必要な場合は YAML Frontmatter を付与します。
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
-- メタ情報標準: [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md)
+- メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
 | 項目       | 説明                                   | 必須 |
 | ---------- | -------------------------------------- | ---- |

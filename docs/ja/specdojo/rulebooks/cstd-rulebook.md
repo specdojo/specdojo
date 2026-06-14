@@ -41,7 +41,7 @@ Mermaid 記法そのもののルールは [cstd-mermaid-rulebook.md](cstd-mermai
 
 ## 4. 推奨 Frontmatter 項目
 
-Frontmatter の共通ルールは [deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md) に従います。
+Frontmatter の共通ルールは [document-metadata-standard.md](../standards/document-metadata-standard.md) に従います。
 
 | 項目       | 説明                                        | 必須 |
 | ---------- | ------------------------------------------- | ---- |

@@ -8,14 +8,14 @@ status: draft
 
 Sample Authoring Standard
 
-`docs/ja/specdojo/samples/` 配下の各 `*-sample.(md|yaml|json)` が従うべき構成・記述ルール・禁止事項・運用ルールを定義します。Frontmatter（メタ情報）の規約は [deliverable-metadata-standard.md](deliverable-metadata-standard.md) を正本とし、本書では扱いません。
+`docs/ja/specdojo/samples/` 配下の各 `*-sample.(md|yaml|json)` が従うべき構成・記述ルール・禁止事項・運用ルールを定義します。Frontmatter（メタ情報）の規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では扱いません。
 
 ## 1. 適用範囲
 
 - 対象: `docs/ja/specdojo/samples/` 配下のすべての `*-sample.(md|yaml|json)`
 - 目的: sample の構成・記述品質を統一し、粒度・文体・表の書き方を確認できる完成最小例を提供する
 - 一次根拠: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
-- Frontmatter 規約の正本: [deliverable-metadata-standard.md](deliverable-metadata-standard.md)
+- Frontmatter 規約の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - 共通の業務文脈: `.github/instructions/sample.instructions.md` の `想定するプロジェクトの業務文脈`
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 

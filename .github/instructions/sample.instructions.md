@@ -14,7 +14,7 @@ applyTo: 'docs/ja/specdojo/samples/**/*-sample.md'
 ## 2. 入力情報
 
 - 構成・記述ルールの正本: `docs/ja/specdojo/standards/sample-authoring-standard.md`
-- Frontmatter 規約の正本: `docs/ja/specdojo/standards/deliverable-metadata-standard.md`
+- Frontmatter 規約の正本: `docs/ja/specdojo/standards/document-metadata-standard.md`
 - 一次根拠: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
 
 ### 2.1. 想定するプロジェクトの業務文脈
@@ -61,7 +61,7 @@ applyTo: 'docs/ja/specdojo/samples/**/*-sample.md'
 ## 3. 記述ルール
 
 - 構成・記述ルール・禁止事項は `docs/ja/specdojo/standards/sample-authoring-standard.md` に従う。
-- Frontmatter は `docs/ja/specdojo/standards/deliverable-metadata-standard.md` に従う。
+- Frontmatter は `docs/ja/specdojo/standards/document-metadata-standard.md` に従う。
 - 業務文脈は `想定するプロジェクトの業務文脈` に統一する。前提が不足する場合は駄菓子屋文脈で合理的に仮定する。
 
 ## 4. 最終チェック

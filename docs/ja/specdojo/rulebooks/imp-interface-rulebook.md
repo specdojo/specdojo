@@ -37,7 +37,7 @@ Impact Analysis (Interface) Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-影響調査（I/F）ドキュメントでは、[deliverable-metadata-standard.md](../standards/deliverable-metadata-standard.md) に準拠し、以下を推奨する。
+影響調査（I/F）ドキュメントでは、[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
 | 項目       | 説明                                   | 必須 |
 | ---------- | -------------------------------------- | ---- |

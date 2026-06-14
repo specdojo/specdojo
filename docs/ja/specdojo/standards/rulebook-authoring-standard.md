@@ -84,7 +84,7 @@ status: draft
 - `記述ガイド` には、章ごとの書き方、推奨表、記載例を置く。
 - 共通事項は上位ドキュメントを SSOT とし、重複記載を避ける。
 - 用語はファイル内で統一し、`index` / `overview` などの命名ゆれを持ち込まない。
-- `推奨 Frontmatter 項目` の記述は [deliverable-metadata-standard.md](deliverable-metadata-standard.md) に従う。
+- `推奨 Frontmatter 項目` の記述は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `ファイル命名・ID規則` は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う。
 - `target_format` がある場合は、本文ルール・サンプルリンク・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
 - `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。
