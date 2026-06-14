@@ -4,7 +4,7 @@ type: rulebook
 status: draft
 target_format: markdown
 based_on:
-  - rulebook-structure-standard
+  - rulebook-authoring-standard
 supersedes: []
 ---
 

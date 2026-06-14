@@ -24,6 +24,7 @@
     {
       "id": "T-LAUNCH-prj-overview-030",
       "local_id": "prj-overview",
+      "phase_suffix": "030",
       "name": "一次版レビュー",
       "owner": "BA",
       "schedule_file": "sch-track-launch.yaml",
@@ -43,6 +44,7 @@
     {
       "id": "T-LAUNCH-pm-plan-010",
       "local_id": "pm-plan",
+      "phase_suffix": "010",
       "name": "たたき台作成",
       "owner": "PM",
       "schedule_file": "sch-track-launch.yaml",

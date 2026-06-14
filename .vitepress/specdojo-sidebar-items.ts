@@ -216,7 +216,7 @@ export const specdojoSidebarItems = [
       standard('ドキュメントメタ情報', 'document-metadata-standard'),
       standard('成果物メタ情報', 'deliverable-metadata-standard'),
       standard('ルールブックメタ情報', 'rulebook-metadata-standard'),
-      standard('ルールブック構造', 'rulebook-structure-standard'),
+      standard('ルールブック記述', 'rulebook-authoring-standard'),
       standard('人・組織定義', 'people-and-organization-definition-standard'),
       standard('テスト文書スコープ', 'test-document-scope-standard'),
     ],

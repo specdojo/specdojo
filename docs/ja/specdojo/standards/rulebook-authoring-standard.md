@@ -1,14 +1,14 @@
 ---
-id: rulebook-structure-standard
+id: rulebook-authoring-standard
 type: standard
 status: draft
 ---
 
-# Rulebook 章立て標準
+# Rulebook 記述標準
 
-Rulebook Structure Standard
+Rulebook Authoring Standard
 
-`docs/ja/specdojo/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立てと記述ルールを定義します。Frontmatter（メタ情報）の規約は [rulebook-metadata-standard.md](rulebook-metadata-standard.md) を正本とし、本書では扱いません。
+`docs/ja/specdojo/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。Frontmatter（メタ情報）の規約は [rulebook-metadata-standard.md](rulebook-metadata-standard.md) を正本とし、本書では扱いません。
 
 ## 1. 適用範囲
 

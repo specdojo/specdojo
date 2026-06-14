@@ -21,7 +21,7 @@ owner: PM
 ## 2. 対象成果物
 
 - `name`: プロジェクト管理計画
-- `depends_on`: -
+- `depends_on`: `pm-organization`, `pm-roles`
 - `overview`: プロジェクト全体の管理方針・プロセスを定義
 - `path`: `/docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-plan.md`
 - `result`: `/docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-plan-010-result.md`
