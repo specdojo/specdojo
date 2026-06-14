@@ -1,5 +1,5 @@
-import { existsSync, writeFileSync } from 'node:fs'
-import { extname, join } from 'node:path'
+import { existsSync, statSync, writeFileSync } from 'node:fs'
+import { basename, extname, join } from 'node:path'
 import {
   type CpmResult,
   type ExecEventV1,
@@ -45,6 +45,41 @@ import {
   resolveTaskProficiency,
 } from './exec-strategy.js'
 
+export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
+  const files = listFilesRecursive(projectPath)
+  const trackFiles = new Map<string, string>()
+
+  for (const file of files) {
+    const match = basename(file).match(/^sch-track-(.+)\.yaml$/)
+    if (match) trackFiles.set(match[1], file)
+  }
+
+  const warnings: string[] = []
+  for (const strategyFile of files) {
+    const match = basename(strategyFile).match(/^sch-strategy-(.+)\.yaml$/)
+    if (!match) continue
+
+    const track = match[1]
+    const trackFile = trackFiles.get(track)
+    if (!trackFile) {
+      warnings.push(
+        `${basename(strategyFile)} has no generated sch-track-${track}.yaml. ` +
+          `Run: specdojo schedule generate --track ${track}`
+      )
+      continue
+    }
+
+    if (statSync(strategyFile).mtimeMs > statSync(trackFile).mtimeMs) {
+      warnings.push(
+        `${basename(strategyFile)} is newer than ${basename(trackFile)}. ` +
+          `Run: specdojo schedule generate --track ${track} --force before exec build.`
+      )
+    }
+  }
+
+  return warnings
+}
+
 export function validateAll(projectPath: string): ValidateResult {
   const errors: string[] = []
   const warnings: string[] = []
@@ -55,6 +90,7 @@ export function validateAll(projectPath: string): ValidateResult {
   if (schedule.nodes.size === 0) {
     warnings.push(`No schedule nodes loaded from sch-*.yaml under: ${projectPath}`)
   }
+  warnings.push(...findStaleGeneratedTrackWarnings(projectPath))
 
   for (const node of schedule.nodes.values()) {
     for (const dep of node.depends_on) {
@@ -89,7 +125,10 @@ export function validateAll(projectPath: string): ValidateResult {
       parsedEvents++
       const ev = obj as ExecEventV1
       if (!scheduleIds.has(ev.task_id))
-        errors.push(`${f}: task_id ${ev.task_id} not found in sch-*.yaml`)
+        warnings.push(
+          `${f}: task_id ${ev.task_id} not found in current sch-*.yaml; ` +
+            `the historical event will be ignored when building state`
+        )
     }
   }
 

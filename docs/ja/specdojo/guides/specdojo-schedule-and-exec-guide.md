@@ -44,9 +44,13 @@ Schedule は用途別に 4 種類のファイルで管理する。
         ↓
 sch-strategy-<track>.yaml（スコープ・フェーズ・owner ルール定義）
         ↓
-specdojo exec build（または sch コードジェネレータ）
+specdojo schedule generate --track <track> --force
         ↓
 sch-track-<track>.yaml（Task / Milestone が展開された実行スケジュール）
+        ↓
+specdojo exec build
+        ↓
+generated/timeline.svg・ready.json・exec/plans/ など
 ```
 
 `sch-strategy-<track>.yaml` には成果物の `local_id` 単位で `phase` と `owner` を定義する。個別 `phase_set` の反復は `iterations`、選択した `phase_sets` シーケンス全体の反復は `cycles` で指定する。
@@ -93,6 +97,8 @@ default_phase_sets: [first-pass, finalize-pass]
 ```
 
 `cycles` と `iterations` は `1` 以上の整数であり、いずれも追加回数ではなく総実行回数を表す。生成順序は cycle 内の sequence、phase_set 内の iteration、phase_set 内の phase の順とする。次の cycle は前の cycle の最終タスクに依存し、`phase_gates` は各 cycle 内の対象 `phase_set` の最終 iteration 後に適用する。複数 cycle のゲート ID には `-C01`、`-C02` のような cycle 識別子を付ける。
+
+カタログまたは `cross_domain_dependencies` による成果物間依存は、両成果物に共通する最初の `phase_gate` の内側で解決する。たとえば first-edit と alignment の間にゲートがある場合、後続成果物の先頭タスクは前提成果物の first-edit 完了を待ち、alignment 完了までは待たない。これにより、ゲートが全成果物の first-edit 完了を待つ構成でも循環依存を作らない。
 
 反復途中までを初期完了状態にする場合は、位置を完全形で指定する。
 
@@ -173,7 +179,14 @@ ready.json のタスク（phase_set / phaseId / cycle / iteration / mode / appro
     → auto モードではスキップ（人間の実行待ち）
 ```
 
-`sch-strategy-<track>.yaml` は生成後も参照され続けるため、フェーズ定義を変更した場合は `sch-track-<track>.yaml` を再生成しなくても exec の挙動に即時反映される。
+`sch-strategy-<track>.yaml` は生成後も参照され続けるが、`exec build` は既存の `sch-track-<track>.yaml` に含まれるタスクを入力とし、トラック自体は再生成しない。`mode`・`approach`・`execution`・`capabilities`・`proficiency` だけを変更した場合は plan やエージェント選択へ反映される。一方、`phase_sets`・`cycles`・`iterations`・フェーズの追加削除・`phase_suffix`・依存関係・ゲートを変更した場合は、先に次を実行する。
+
+```sh
+specdojo schedule generate --project <project-id> --track <track> --force
+specdojo exec build --project <project-id>
+```
+
+strategy が対応する track より新しい場合、`exec validate` と `exec build` は再生成を促す警告を表示する。
 
 ### 4.2. エージェント選択フロー
 

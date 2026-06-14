@@ -279,6 +279,13 @@ generated/
 specdojo schedule generate --project prj-0001 --track launch
 ```
 
+既存の strategy を変更して track を更新する場合は `--force` を指定する。`exec build` は track を自動再生成しないため、タイムライン等まで反映するには二つのコマンドを順に実行する。
+
+```bash
+specdojo schedule generate --project prj-0001 --track launch --force
+specdojo exec build --project prj-0001
+```
+
 オプション:
 
 | オプション  | 説明                                                                            | デフォルト |
@@ -1229,9 +1236,11 @@ specdojo exec validate --project prj-0001
 - スケジュール依存関係
 - 循環依存
 - イベントJSON構造
-- task_id存在チェック
+- event の task_id 存在チェック。現行スケジュールから削除された task の履歴イベントは警告し、state 計算から除外する
 
 ### 8.6. 生成
+
+`exec build` は生成済みの `sch-track-<track>.yaml` を入力として実行情報を生成する。`sch-strategy-<track>.yaml` の `phase_sets`・反復回数・フェーズ構成・依存関係等を変更した場合は、先に `schedule generate --force` で track を更新する。
 
 ```bash
 specdojo exec build --project prj-0001

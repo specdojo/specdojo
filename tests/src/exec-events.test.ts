@@ -228,6 +228,16 @@ describe('foldEventsToState', () => {
     const snapshot = foldEventsToState(events, schedule, '/dummy')
     expect(snapshot.tasks['T-001'].state).toBe('cancelled')
   })
+
+  it('現行スケジュールに存在しない履歴イベントを state から除外する', () => {
+    const schedule = makeSchedule([{ id: 'T-CURRENT' }])
+    const event = makeEvent({ type: 'complete', task_id: 'T-RETIRED', by: 'agent-1' })
+
+    const snapshot = foldEventsToState([{ path: 'e.json', event }], schedule, '/dummy')
+
+    expect(snapshot.tasks['T-RETIRED']).toBeUndefined()
+    expect(snapshot.tasks['T-CURRENT'].state).toBe('todo')
+  })
 })
 
 // ---- isDependencySatisfied ---------------------------------------------

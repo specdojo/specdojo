@@ -6,42 +6,62 @@ version: 1
 project_id: prj-0001
 settings: {}
 milestones:
+  - id: G-LAUNCH-first-edit-pass
+    name: first-edit-pass 完了
+    artifact_name: 全ドメイン
+    depends_on:
+      - T-LAUNCH-prj-overview-060-I03
+      - T-LAUNCH-prj-scope-060-I03
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060-I03
+      - T-LAUNCH-prj-stakeholder-register-060-I03
+      - T-LAUNCH-prj-charter-060-I03
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-060-I03
+      - T-LAUNCH-prj-issues-and-approach-060-I03
+      - T-LAUNCH-prj-comparison-of-alternatives-060-I03
+      - T-LAUNCH-pm-organization-060-I03
+      - T-LAUNCH-pm-roles-060-I03
+      - T-LAUNCH-pm-plan-060-I03
+      - T-LAUNCH-pm-communication-plan-060-I03
+      - T-LAUNCH-pm-quality-management-plan-060-I03
+      - T-LAUNCH-pm-members-060-I03
+      - T-LAUNCH-pm-raci-060-I03
+    owner: PM
+  - id: G-LAUNCH-alignment-edit-pass
+    name: alignment-edit-pass 完了
+    artifact_name: 全ドメイン
+    depends_on:
+      - T-LAUNCH-prj-overview-110-I03
+      - T-LAUNCH-prj-scope-110-I03
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110-I03
+      - T-LAUNCH-prj-stakeholder-register-110-I03
+      - T-LAUNCH-prj-charter-110-I03
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-110-I03
+      - T-LAUNCH-prj-issues-and-approach-110-I03
+      - T-LAUNCH-prj-comparison-of-alternatives-110-I03
+      - T-LAUNCH-pm-organization-110-I03
+      - T-LAUNCH-pm-roles-110-I03
+      - T-LAUNCH-pm-plan-110-I03
+      - T-LAUNCH-pm-communication-plan-110-I03
+      - T-LAUNCH-pm-quality-management-plan-110-I03
+      - T-LAUNCH-pm-members-110-I03
+      - T-LAUNCH-pm-raci-110-I03
+    owner: PM
   - id: M-LAUNCH-project-definition
     name: ドメイン完了
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050
-      - T-LAUNCH-prj-charter-050
-      - T-LAUNCH-prj-comparison-of-alternatives-050
-    owner: PM
     artifact_name: プロジェクト定義
+    depends_on:
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130
+      - T-LAUNCH-prj-charter-130
+      - T-LAUNCH-prj-comparison-of-alternatives-130
+    owner: PM
   - id: M-LAUNCH-project-management
     name: ドメイン完了
+    artifact_name: プロジェクト・マネジメント
     depends_on:
-      - T-LAUNCH-pm-communication-plan-050
-      - T-LAUNCH-pm-quality-management-plan-050
-      - T-LAUNCH-pm-members-050
-      - T-LAUNCH-pm-raci-050
+      - T-LAUNCH-pm-communication-plan-130
+      - T-LAUNCH-pm-quality-management-plan-130
+      - T-LAUNCH-pm-members-130
+      - T-LAUNCH-pm-raci-130
       - T-LAUNCH-sch-defaults-000
       - T-LAUNCH-sch-strategy-launch-000
     owner: PM
-    artifact_name: プロジェクト・マネジメント
-  - id: G-LAUNCH-first-pass
-    name: first-pass 完了
-    depends_on:
-      - T-LAUNCH-prj-overview-030
-      - T-LAUNCH-prj-scope-030
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030
-      - T-LAUNCH-prj-stakeholder-register-030
-      - T-LAUNCH-prj-charter-030
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-030
-      - T-LAUNCH-prj-issues-and-approach-030
-      - T-LAUNCH-prj-comparison-of-alternatives-030
-      - T-LAUNCH-pm-plan-030
-      - T-LAUNCH-pm-communication-plan-030
-      - T-LAUNCH-pm-quality-management-plan-030
-      - T-LAUNCH-pm-organization-030
-      - T-LAUNCH-pm-roles-030
-      - T-LAUNCH-pm-members-030
-      - T-LAUNCH-pm-raci-030
-    owner: PM
-    artifact_name: 全ドメイン

@@ -156,6 +156,7 @@ export function foldEventsToState(
   }
 
   for (const { event } of events) {
+    if (!schedule.nodes.has(event.task_id)) continue
     const cur = ensure(event.task_id)
     cur.last_ts = event.ts
     cur.last_by = event.by

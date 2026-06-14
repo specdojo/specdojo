@@ -49,6 +49,76 @@ function writeTrack(dir: string, tasks: unknown[]): void {
 }
 
 describe('generateScheduleTrack phase set repetition', () => {
+  it('keeps catalog dependencies inside the earliest shared phase gate', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-gate-dependency-'))
+    try {
+      writeFileSync(
+        join(dir, 'catalog.yaml'),
+        yaml.dump({
+          groups: [
+            {
+              name: 'sample',
+              deliverables: [
+                { local_id: 'a', name: 'A', kind: 'work', path: 'a.md', depends_on: [] },
+                { local_id: 'b', name: 'B', kind: 'work', path: 'b.md', depends_on: ['a'] },
+              ],
+            },
+          ],
+        }),
+        'utf8'
+      )
+      const strategyPath = join(dir, 'sch-strategy-test.yaml')
+      writeFileSync(
+        strategyPath,
+        yaml.dump({
+          kind: 'strategy',
+          id: 'prj-test:sch-strategy-test',
+          type: 'project',
+          status: 'draft',
+          track: 'test',
+          scope: {
+            catalogs: [{ id: 'prj-test:catalog', path: '/catalog.yaml' }],
+            include_kinds: ['work'],
+          },
+          phase_sets: {
+            first: [{ id: 'draft', name: 'Draft', task_suffix: '010', duration_days: 1 }],
+            align: [{ id: 'align', name: 'Align', task_suffix: '020', duration_days: 1 }],
+            review: [{ id: 'review', name: 'Review', task_suffix: '030', duration_days: 1 }],
+          },
+          default_phase_sets: ['first', 'align', 'review'],
+          owner_rules: [{ local_ids: ['a', 'b'], owner: 'BA' }],
+          phase_gates: [
+            {
+              id: 'G-TEST-first',
+              name: 'First complete',
+              after_phase_sets: ['first'],
+              owner: 'BA',
+              scope: { local_ids: ['a', 'b'] },
+            },
+            {
+              id: 'G-TEST-align',
+              name: 'Align complete',
+              after_phase_sets: ['align'],
+              owner: 'BA',
+              scope: { local_ids: ['a', 'b'] },
+            },
+          ],
+        }),
+        'utf8'
+      )
+
+      const result = generateScheduleTrack(strategyPath, dir)
+
+      expect(result.errors).toEqual([])
+      const bFirst = result.tasks.find(task => task.local_id === 'b' && task.phase_suffix === '010')
+      expect(bFirst?.depends_on).toEqual(['T-TEST-a-010'])
+      expect(result.tasks.find(task => task.local_id === 'a' && task.phase_suffix === '020')?.depends_on)
+        .toContain('G-TEST-first')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
   it('expands cycles and iterations and creates a gate for each cycle', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-repeat-'))
     try {

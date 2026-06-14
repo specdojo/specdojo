@@ -16,6 +16,7 @@ module.exports = {
         'ci', // CI設定変更
         'chore', // その他の変更
         'revert', // 変更の取り消し
+        'exec', // taskの実行
       ],
     ],
     // Disabled: subjects may contain uppercase template placeholders (e.g., pjr-NNNN-TERM, YYYY-MM-DD)

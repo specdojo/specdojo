@@ -312,6 +312,37 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
     byCycle: Map<number, CycleBoundary>
   }
   const boundaries = new Map<string, Boundary>()
+  const gateScopes = (strategy.phase_gates ?? []).map(gate => ({
+    gate,
+    localIds: new Set(resolveGateScope(gate.scope, sorted)),
+  }))
+
+  function resolveDependencyTaskId(dependent: string, required: string): string | undefined {
+    const boundary = boundaries.get(required)?.byCycle.get(1)
+    if (!boundary) return finalizeTaskId.get(required)
+
+    const commonGateBoundaries = gateScopes
+      .filter(({ localIds }) => localIds.has(dependent) && localIds.has(required))
+      .map(({ gate }) => {
+        let match: { index: number; taskId: string } | null = null
+        for (let i = 0; i < boundary.phaseSets.length; i++) {
+          const phaseSet = boundary.phaseSets[i]
+          if (gate.after_phase_sets.includes(phaseSet.phaseSet)) {
+            match = { index: i, taskId: phaseSet.lastTaskId }
+          }
+        }
+        return match
+      })
+      .filter((match): match is { index: number; taskId: string } => match !== null)
+      .sort((a, b) => a.index - b.index)
+
+    return (
+      commonGateBoundaries[0]?.taskId ??
+      boundary.lastPreFinalizeId ??
+      finalizeTaskId.get(required)
+    )
+  }
+
   // Use a Map to allow post-generation patching for phase gates
   const taskMap = new Map<string, GeneratedTask>()
 
@@ -375,19 +406,17 @@ export function generateScheduleTrack(strategyPath: string, baseDir: string): Ge
 
     const lastPhaseSetIndex = selection.sequence.length - 1
 
-    // The first task depends on the last task before the prerequisite's final phase_set.
-    // Completed deliverables have no expanded phase boundary, so fall back to their 000 task.
+    // Keep dependencies inside the earliest phase gate shared by both deliverables.
+    // Otherwise a pre-gate task could wait on a post-gate task and create a cycle.
+    // Completed deliverables have no expanded boundary, so fall back to their 000 task.
     const firstDeps = new Set<string>()
     for (const dep of d.depends_on) {
-      const depBoundary = boundaries.get(dep)
-      const depId = depBoundary?.byCycle.get(1)?.lastPreFinalizeId ?? finalizeTaskId.get(dep)
+      const depId = resolveDependencyTaskId(d.local_id, dep)
       if (depId) firstDeps.add(depId)
     }
     for (const cd of crossDeps) {
       if (cd.dependent !== d.local_id) continue
-      const depId =
-        boundaries.get(cd.requires)?.byCycle.get(1)?.lastPreFinalizeId ??
-        finalizeTaskId.get(cd.requires)
+      const depId = resolveDependencyTaskId(d.local_id, cd.requires)
       if (depId) firstDeps.add(depId)
     }
     let prevId: string | null = null
