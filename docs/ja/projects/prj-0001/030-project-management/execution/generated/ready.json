@@ -38,8 +38,10 @@
         "slack": 0
       },
       "description": "担当ロールが補強後の内容を確認し、承認・修正指示・差し戻しを判断する。\n修正が軽微な場合は直接編集して承認とみなす。\n差し戻しの場合は修正箇所と理由を明記する。\n",
-      "mode": "review",
-      "execution": "human"
+      "mode": "edit",
+      "execution": "agent",
+      "approach": "recipe-maintenance",
+      "proficiency": "normal"
     },
     {
       "id": "T-LAUNCH-pm-plan-010",
@@ -59,7 +61,9 @@
       },
       "description": "担当ロールが成果物の初版を作成する。\n章構成・記載項目を決め、現時点で把握している情報を埋める。\n調査・確認が必要な箇所は TODO として明示したまま残す。\n",
       "mode": "edit",
-      "execution": "human"
+      "execution": "agent",
+      "approach": "freeform",
+      "proficiency": "expert"
     }
   ]
 }

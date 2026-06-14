@@ -125,7 +125,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 sonnet モデルを使用する標準 edit エージェント。plan を読んでタスクを実装し、result ファイルに done_criteria の確認結果を記入する。
 
-実際のファイル: `.claude/agents/claude-edit-agent.md`
+実際のファイル: `/.claude/agents/claude-edit-agent.md`
 
 ### 8.3. `claude-review-agent.md`
 
