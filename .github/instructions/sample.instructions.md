@@ -4,15 +4,17 @@ applyTo: 'docs/ja/specdojo/samples/**/*-sample.md'
 
 # Sample 記述ルール
 
-`docs/ja/specdojo/samples` 配下の `*-sample.md` を作成/更新するための記述ルールです。
+`docs/ja/specdojo/samples` 配下の `*-sample.md` を作成/更新するための作業手順です。構成・記述品質・禁止事項の規範は standards を正本とし、本書は作業の進め方と共通の業務文脈を定義します。
 
 ## 1. 目的と適用範囲
 
-- 目的は、sample の章構成と記述品質を統一し、再現可能な記述例を作成すること
+- 目的は、`*-sample.md` を SSOT の standards に準拠させて作成/更新すること
 - 本ルールは `docs/ja/specdojo/samples/` 配下の `*-sample.md` に適用する
 
 ## 2. 入力情報
 
+- 構成・記述ルールの正本: `docs/ja/specdojo/standards/sample-authoring-standard.md`
+- Frontmatter 規約の正本: `docs/ja/specdojo/standards/deliverable-metadata-standard.md`
 - 一次根拠: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
 
 ### 2.1. 想定するプロジェクトの業務文脈
@@ -56,32 +58,13 @@ applyTo: 'docs/ja/specdojo/samples/**/*-sample.md'
 - 店主が最終的な業務判断を行い、開発リーダーが実現方法と優先順位を整理する
 - 具体的なリリース日程と費用上限は別途プロジェクト計画で確定する
 
-## 3. 出力仕様（Frontmatter と命名）
+## 3. 記述ルール
 
-- ファイル名は `<prefix>-sample.md` とする
-- ファイル先頭に YAML Frontmatter を置き、最低限 `id` / `type` / `status` / `rulebook` を含める
-- `id` は英小文字・数字・ハイフンのみを使用し、一意にする
-- H1 はファイル内で 1 つだけとする
+- 構成・記述ルール・禁止事項は `docs/ja/specdojo/standards/sample-authoring-standard.md` に従う。
+- Frontmatter は `docs/ja/specdojo/standards/deliverable-metadata-standard.md` に従う。
+- 業務文脈は `想定するプロジェクトの業務文脈` に統一する。前提が不足する場合は駄菓子屋文脈で合理的に仮定する。
 
-## 4. 記述ルール
-
-- sample は対応 rulebook を一次根拠として記述する
-- rulebook を丸写しせず、必須要件を満たす最小記述例に再構成する
-- 用語は参照元と整合させ、命名ゆれを持ち込まない
-- 曖昧語を避け、判定可能な記述にする
-- 業務文脈は `2.1. 想定するプロジェクトの業務文脈` に記載されている内容に統一する
-- 必要な前提が不足している場合は、駄菓子屋文脈で合理的な内容を仮定して記述する
-- 実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）は記載しない
-- リンクはファイルがある場合は記述し、ファイルがない場合はバッククォートで仮置きする
-
-## 5. 禁止事項
-
-- 駄菓子屋以外の業種題材を混在させない
-- rulebook の本文をそのまま複製しない
-- 禁止事項に抵触する記述を sample に含めない
-- デッドリンクを記載しない
-
-## 6. 最終チェック
+## 4. 最終チェック
 
 - [ ] Frontmatter に `id` / `type` / `status` / `rulebook` が含まれている
 - [ ] H1 が 1 つだけ存在する

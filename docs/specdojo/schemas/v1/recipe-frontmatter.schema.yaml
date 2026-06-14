@@ -1,0 +1,21 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Recipe Front Matter
+type: object
+unevaluatedProperties: false
+allOf:
+  - $ref: "./common-frontmatter.schema.yaml"
+  - type: object
+    required:
+      - rulebook
+    properties:
+      type:
+        type: string
+        const: recipe
+        description: "ドキュメント種別（recipe 固定）"
+      rulebook:
+        $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
+        description: "構造の正本となる rulebook の ID。該当がない場合は none。"
+      sample:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]*-sample$"
+        description: "粒度・文体の参照となる sample の ID。"

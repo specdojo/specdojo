@@ -13,7 +13,8 @@ Document Metadata Standard
 本書は、Frontmatter ルールの共通原則のみを定義するハブです。各ドキュメント種別の詳細ルールは、以下のファイルを正とします。
 
 - 成果物（deliverable）: [deliverable-metadata-standard.md](deliverable-metadata-standard.md)
-- rulebook: [rulebook-metadata-standard.md](rulebook-metadata-standard.md)
+- rulebook: [rulebook-authoring-standard.md](rulebook-authoring-standard.md) の `Frontmatter 規約`
+- recipe: [recipe-authoring-standard.md](recipe-authoring-standard.md) の `Frontmatter 規約`
 - standard: [docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml](../../../specdojo/schemas/v1/standard-frontmatter.schema.yaml)
 
 ## 2. 共通原則

@@ -14,8 +14,7 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 ## 2. 入力情報
 
 - 対象ファイル: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
-- 章立て・記述ルールの正本: `docs/ja/specdojo/standards/rulebook-authoring-standard.md`
-- Frontmatter 規約の正本: `docs/ja/specdojo/standards/rulebook-metadata-standard.md`
+- 章立て・記述ルール・Frontmatter 規約の正本: `docs/ja/specdojo/standards/rulebook-authoring-standard.md`
 - ファイル名・ディレクトリ構成基準: `docs/ja/specdojo/guides/docs-structure-guide.md`
 - Frontmatter スキーマ: `docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml`
 - 参照先（必要に応じて）: `[*-sample](../samples/*-sample.md)`
@@ -23,14 +22,14 @@ applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
 ## 3. 作成・更新手順
 
 1. 対象 `*-rulebook.md` を特定し、既存ファイル有無を確認する。
-2. 章立て・記述ルールは `rulebook-authoring-standard.md`、Frontmatter は `rulebook-metadata-standard.md` と差分を洗い出す。
+2. 章立て・記述ルール・Frontmatter を `rulebook-authoring-standard.md` と差分を洗い出す。
 3. 新規作成またはアップサートで章構成・記述・Frontmatter を反映する。
 4. sample ファイルが存在する場合は、サンプルリンクを更新する。
 5. 変更点を要約し、最終チェック結果を記録する。
 
 ## 4. 最終チェック
 
-- Frontmatter が `rulebook-metadata-standard.md` の要件（`id` / `type` / `status`）を満たしている。
+- Frontmatter が `rulebook-authoring-standard.md` の `Frontmatter 規約`（`id` / `type` / `status`）を満たしている。
 - 章構成が `rulebook-authoring-standard.md` に準拠し、`## 1.` からの連番で必須章が欠落していない。
 - `rulebook-authoring-standard.md` の禁止事項に該当する記述がない。
 - `サンプル` が存在し、リンクが有効。

@@ -32,6 +32,8 @@ plugins:
           schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/standards/**/*.md
           schema: docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/recipes/**/*.md
+          schema: docs/specdojo/schemas/v1/recipe-frontmatter.schema.yaml
         - glob: docs/ja/product/**/*.md
           schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/*.md
