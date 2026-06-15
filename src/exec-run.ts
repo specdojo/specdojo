@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
-import { dirname, join, relative, resolve, sep } from 'node:path'
+import { existsSync } from 'node:fs'
+import { join, relative, resolve, sep } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
 import {
@@ -34,11 +34,16 @@ import {
 import { loadPlan } from './exec-plans.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
-  ensureExecWorktree,
   resolveWorktreeBase,
   worktreeNameFromTaskId,
   type ExecWorktree,
 } from './exec-worktree.js'
+import {
+  checkpointAndEnsureWorktree,
+  commitWorktreeChanges,
+  mergeWorktreeIntoCurrent,
+  removeWorktree,
+} from './exec-worktree-ops.js'
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -424,30 +429,6 @@ function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: 
   return resolve(worktreePath, repoRelative)
 }
 
-function copyTaskFileToWorktree(
-  repoRoot: string,
-  worktreePath: string,
-  sourcePath: string,
-  overwrite: boolean
-): void {
-  if (!existsSync(sourcePath)) return
-  const destination = pathInsideWorktree(repoRoot, worktreePath, sourcePath)
-  if (!overwrite && existsSync(destination)) return
-  mkdirSync(dirname(destination), { recursive: true })
-  copyFileSync(sourcePath, destination)
-}
-
-function copyTaskFileFromWorktree(
-  repoRoot: string,
-  worktreePath: string,
-  destinationPath: string
-): void {
-  const source = pathInsideWorktree(repoRoot, worktreePath, destinationPath)
-  if (!existsSync(source)) return
-  mkdirSync(dirname(destinationPath), { recursive: true })
-  copyFileSync(source, destinationPath)
-}
-
 function agentEnvironment(
   repoRoot: string,
   worktreePath: string,
@@ -459,6 +440,13 @@ function agentEnvironment(
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
   }
+}
+
+function findClaimEventPath(schedulePath: string, taskId: string): string | null {
+  const claims = readAllEventFiles(schedulePath).filter(
+    item => item.event.task_id === taskId && item.event.type === 'claim'
+  )
+  return claims[claims.length - 1]?.path ?? null
 }
 
 function prepareSingleTask(
@@ -540,19 +528,15 @@ function prepareSingleTask(
   }
 
   const worktreeName = worktreeNameFromTaskId(task.id)
-  const worktree = dryRun
-    ? {
-        path: join(worktreeBase, worktreeName),
-        branch: `exec/${worktreeName}`,
-        name: worktreeName,
-        created: false,
-      }
-    : ensureExecWorktree({ repoRoot, worktreeBase, taskId: task.id })
-
-  const setupAction = dryRun ? 'would setup' : worktree.created ? 'setup' : 'reuse'
-  process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`)
 
   if (dryRun) {
+    const worktree: ExecWorktree = {
+      path: join(worktreeBase, worktreeName),
+      branch: `exec/${worktreeName}`,
+      name: worktreeName,
+      created: false,
+    }
+    process.stdout.write(`  [run] would setup: worktree ${worktree.path} (${worktree.branch})\n`)
     const claimMsg = skipClaim
       ? `  [dry-run] already claimed: ${task.id} as ${actor} (skip claim)`
       : `  [dry-run] would claim: ${task.id} as ${actor}`
@@ -592,13 +576,25 @@ function prepareSingleTask(
     ...(task.approach ? { approach: task.approach } : {}),
   })
 
-  copyTaskFileToWorktree(
-    repoRoot,
-    worktree.path,
-    join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
-    true
-  )
-  copyTaskFileToWorktree(repoRoot, worktree.path, resultPath, false)
+  // Commit the execution checkpoint (plan/result/claim event) to root HEAD, then create the
+  // worktree from that commit. This lets the agent's deliverable changes be committed and merged
+  // back (see runPreparedTask), so later tasks branch from a HEAD that includes prior results.
+  const claimEventPath = findClaimEventPath(schedulePath, task.id)
+  if (!claimEventPath) {
+    process.stdout.write(`  Claim event not found for ${task.id}\n`)
+    return 'failure'
+  }
+
+  const worktree = checkpointAndEnsureWorktree({
+    context: { repoRoot, schedulePath, executionPath },
+    taskId: task.id,
+    base: worktreeBase,
+    planPath: join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
+    resultPath,
+    claimEventPath,
+  })
+  const setupAction = worktree.created ? 'setup' : 'reuse'
+  process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`)
 
   return {
     task,
@@ -634,21 +630,38 @@ async function runPreparedTask(
   )
 
   const completedAt = new Date().toISOString()
-  if (prepared.resultPath) {
-    copyTaskFileFromWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
-  }
+  const context = { repoRoot, schedulePath, executionPath }
+  const worktreeResultPath = prepared.resultPath
+    ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
+    : undefined
+
   if (result === 'success') {
-    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'complete', completedAt)
+    // Record completion in the worktree result, then commit (result + deliverables) onto the
+    // exec branch and merge it into the current root branch so the changes are integrated.
+    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'complete', completedAt)
+    commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id })
+    mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id })
+    removeWorktree({
+      context,
+      worktree: prepared.worktree,
+      taskId: prepared.task.id,
+      deleteBranch: true,
+    })
     spawnComplete(projectId, prepared.task.id, prepared.actor)
     process.stdout.write(`  Done: ${prepared.task.id}\n`)
   } else if (result === 'rate_limit') {
-    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+    // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
+    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt)
     spawnBlock(projectId, prepared.task.id, prepared.actor, 'rate limit reached')
-    process.stdout.write(`  Rate limited: ${prepared.task.id}\n`)
+    process.stdout.write(
+      `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
+    )
   } else {
-    if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt)
     spawnBlock(projectId, prepared.task.id, prepared.actor, 'agent exited with non-zero code')
-    process.stdout.write(`  Failed: ${prepared.task.id}\n`)
+    process.stdout.write(
+      `  Failed: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
+    )
   }
 
   return result

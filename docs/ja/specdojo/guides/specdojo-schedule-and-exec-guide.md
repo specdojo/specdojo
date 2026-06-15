@@ -255,11 +255,16 @@ exec run --auto [--loop]
   → phase の capabilities / proficiency と pm-members.yaml でエージェントを解決
   → exec claim でタスクを claim する
     （claim と同時に exec/results/<task-id>-result.md を scaffold 生成）
-  → exec/plans/<task-id>-plan.md を読み込み、pm-members.yaml の command フィールドの agent コマンドに plan を渡して実行
-  → 終了コード 0 → exec complete（result の status を complete に更新）
-  → 終了コード 1 → exec block（result の status を blocked に更新）
+  → plan / result / claim event を実行開始 checkpoint として root に commit し、その commit から worktree を作成
+  → worktree 内で agent コマンドに plan を渡して実行
+  → 終了コード 0
+      → result の status を complete に更新
+      → result と成果物を exec ブランチへ commit し、現在ブランチへ merge
+      → worktree を削除し exec complete
+  → 終了コード 1
+      → result の status を blocked に更新し exec block（worktree は調査用に保持）
 exec build（再実行）
-  → 状態を更新して次の Ready タスクを計算
+  → 状態を更新して次の Ready タスクを計算（直前の merge を含む root から次タスクが分岐）
 ```
 
 人間による実行が必要なタスクは `execution: human` を指定する。

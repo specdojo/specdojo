@@ -43,6 +43,13 @@ export default tseslint.config(
     rules: sharedRules,
   },
 
+  // tools/e2e (on-demand scripts run via tsx; no typed project needed)
+  {
+    files: ['tools/e2e/**/*.ts'],
+    extends: tseslint.configs.recommended,
+    rules: sharedRules,
+  },
+
   // Prettier compatibility — disables formatting rules that conflict
   prettierConfig,
 )
