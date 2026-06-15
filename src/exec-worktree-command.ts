@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { join, relative, resolve, sep } from 'node:path'
+import { join, resolve } from 'node:path'
 import { type Command } from 'commander'
 import {
   acquireSchedulerLock,
@@ -29,8 +29,6 @@ import {
 } from './exec-strategy.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
 import {
-  ensureExecWorktree,
-  execBranchExists,
   findExecWorktree,
   gitOutput,
   gitResult,
@@ -38,8 +36,18 @@ import {
   worktreeNameFromTaskId,
   type ExecWorktree,
 } from './exec-worktree.js'
+import {
+  checkpointAndEnsureWorktree,
+  commitWorktreeChanges,
+  mergeWorktreeIntoCurrent,
+  removeWorktree,
+  taskPaths,
+  worktreeStatusPaths,
+} from './exec-worktree-ops.js'
 import { loadConfig, specdojoRootDir } from './specdojo-config.js'
 import { extractLocalId, extractPhaseSuffix } from './schedule-phase-sets.js'
+
+export { isCommitTargetPath, stabilizeCommitTargets } from './exec-worktree-ops.js'
 
 type CommonOpts = {
   project?: string
@@ -78,7 +86,6 @@ type ProjectContext = ReturnType<typeof resolveProjectPaths> & {
 
 const DEFAULT_LOCK_TIMEOUT_MS = 10_000
 const DEFAULT_LOCK_STALE_MS = 300_000
-const MAX_COMMIT_STABILIZATION_ATTEMPTS = 3
 
 function commandError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error)
@@ -90,14 +97,6 @@ function resolveContext(opts: { project?: string }): ProjectContext {
   const paths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(paths)
   return { ...paths, repoRoot: specdojoRootDir() }
-}
-
-function repoRelative(repoRoot: string, path: string): string {
-  const value = relative(repoRoot, path)
-  if (!value || value === '..' || value.startsWith(`..${sep}`)) {
-    throw new Error(`Path is outside repository root: ${path}`)
-  }
-  return value.split(sep).join('/')
 }
 
 function configuredWorktreeBase(schedulePath: string): string | undefined {
@@ -138,12 +137,6 @@ function requireDoingTask(schedulePath: string, taskId: string): Required<TaskEx
   return state as Required<TaskExecutionState>
 }
 
-function currentBranch(repoRoot: string): string {
-  const branch = gitOutput(repoRoot, ['branch', '--show-current']).trim()
-  if (!branch) throw new Error('Detached HEAD is not supported for exec worktree commands.')
-  return branch
-}
-
 function requireWorktree(repoRoot: string, taskId: string): ExecWorktree {
   const worktree = findExecWorktree(repoRoot, taskId)
   if (!worktree) throw new Error(`Worktree is not prepared for task: ${taskId}`)
@@ -157,91 +150,6 @@ function requireInsideWorktree(repoRoot: string, worktree: ExecWorktree): void {
   if (resolve(repoRoot) !== resolve(worktree.path)) {
     throw new Error(`Run this command inside the task worktree: ${worktree.path}`)
   }
-}
-
-function statusPaths(repoRoot: string): string[] {
-  const output = gitOutput(repoRoot, ['status', '--porcelain=v1', '-z', '--untracked-files=all'])
-  const records = output.split('\0').filter(Boolean)
-  const paths: string[] = []
-  for (let index = 0; index < records.length; index++) {
-    const record = records[index]
-    if (record.length < 4) continue
-    const status = record.slice(0, 2)
-    paths.push(record.slice(3))
-    if ((status.includes('R') || status.includes('C')) && records[index + 1]) {
-      paths.push(records[++index])
-    }
-  }
-  return paths
-}
-
-function taskPaths(context: ProjectContext, taskId: string): {
-  planRel: string
-  resultRel: string
-  executionRel: string
-} {
-  const executionRel = repoRelative(context.repoRoot, context.executionPath)
-  return {
-    executionRel,
-    planRel: `${executionRel}/exec/plans/${taskId}-plan.md`,
-    resultRel: `${executionRel}/exec/results/${taskId}-result.md`,
-  }
-}
-
-export function isCommitTargetPath(path: string, executionRel: string, resultRel: string): boolean {
-  const normalized = path.replaceAll('\\', '/')
-  if (normalized === resultRel) return true
-  if (normalized.startsWith(`${executionRel}/exec/plans/`)) return false
-  if (normalized.startsWith(`${executionRel}/exec/results/`)) return false
-  if (normalized.startsWith(`${executionRel}/exec/events/`)) return false
-  if (normalized.startsWith(`${executionRel}/generated/`)) return false
-  return true
-}
-
-function commitTargetPaths(context: ProjectContext, worktree: ExecWorktree, taskId: string): string[] {
-  const { executionRel, resultRel } = taskPaths(context, taskId)
-  return statusPaths(worktree.path).filter(path =>
-    isCommitTargetPath(path, executionRel, resultRel)
-  )
-}
-
-export function stabilizeCommitTargets(
-  repoRoot: string,
-  listRemainingPaths: () => string[],
-  maxAttempts = MAX_COMMIT_STABILIZATION_ATTEMPTS
-): void {
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const paths = listRemainingPaths()
-    if (paths.length === 0) return
-
-    gitOutput(repoRoot, ['add', '-A', '--', ...paths])
-    const staged = gitResult(repoRoot, ['diff', '--cached', '--quiet', '--', ...paths])
-    if (staged.status === 0) {
-      throw new Error(`Failed to stage post-hook commit-target changes: ${paths.join(', ')}`)
-    }
-    if (staged.status !== 1) throw new Error('Failed to inspect post-hook worktree changes.')
-
-    gitOutput(repoRoot, ['commit', '--amend', '--no-edit', '--', ...paths])
-  }
-
-  const dirty = listRemainingPaths()
-  if (dirty.length > 0) {
-    throw new Error(
-      `Pre-commit hooks kept changing commit-target files: ${dirty.join(', ')}`
-    )
-  }
-}
-
-function zeroSeparatedPaths(repoRoot: string, args: string[]): string[] {
-  return gitOutput(repoRoot, args).split('\0').filter(Boolean)
-}
-
-function rootDirtyPaths(repoRoot: string): Set<string> {
-  return new Set([
-    ...zeroSeparatedPaths(repoRoot, ['diff', '--no-renames', '--name-only', '-z']),
-    ...zeroSeparatedPaths(repoRoot, ['diff', '--cached', '--no-renames', '--name-only', '-z']),
-    ...zeroSeparatedPaths(repoRoot, ['ls-files', '--others', '--exclude-standard', '-z']),
-  ])
 }
 
 function taskView(schedulePath: string, executionPath: string, taskId: string): ReadyTaskView {
@@ -382,42 +290,14 @@ function prepare(opts: CommonOpts): void {
     for (const path of [planPath, resultPath, lockedState.claimEventPath]) {
       if (!existsSync(path)) throw new Error(`Required execution file not found: ${path}`)
     }
-    const existing = findExecWorktree(context.repoRoot, opts.task)
-    if (existing) {
-      printWorktree(existing)
-      return
-    }
 
-    if (!execBranchExists(context.repoRoot, opts.task)) {
-      if (currentBranch(context.repoRoot) === branch) {
-        throw new Error(`Prepare must run from a branch other than ${branch}.`)
-      }
-      const staged = gitResult(context.repoRoot, ['diff', '--cached', '--quiet'])
-      if (staged.status === 1) throw new Error('Root index has staged changes; commit or unstage them first.')
-      if (staged.status !== 0) throw new Error('Failed to inspect staged changes in root worktree.')
-
-      const paths = [planPath, resultPath, lockedState.claimEventPath].map(path =>
-        repoRelative(context.repoRoot, path)
-      )
-      gitOutput(context.repoRoot, ['add', '--', ...paths])
-      const checkpoint = gitResult(context.repoRoot, ['diff', '--cached', '--quiet', '--', ...paths])
-      if (checkpoint.status === 1) {
-        gitOutput(context.repoRoot, [
-          'commit',
-          '-m',
-          `exec(${opts.task}): prepare execution`,
-          '--',
-          ...paths,
-        ])
-      } else if (checkpoint.status !== 0) {
-        throw new Error('Failed to inspect execution checkpoint changes.')
-      }
-    }
-
-    const worktree = ensureExecWorktree({
-      repoRoot: context.repoRoot,
-      worktreeBase: base,
+    const worktree = checkpointAndEnsureWorktree({
+      context,
       taskId: opts.task,
+      base,
+      planPath,
+      resultPath,
+      claimEventPath: lockedState.claimEventPath,
     })
     printWorktree(worktree)
   } finally {
@@ -459,7 +339,7 @@ function status(opts: CommonOpts): void {
   process.stdout.write(`plan: ${existsSync(resolve(worktree.path, planRel)) ? 'present' : 'missing'}\n`)
   process.stdout.write(`result: ${existsSync(resolve(worktree.path, resultRel)) ? 'present' : 'missing'}\n`)
   process.stdout.write(`result-changed: ${resultChanged ? 'yes' : 'no'}\n`)
-  const changes = statusPaths(worktree.path)
+  const changes = worktreeStatusPaths(worktree.path)
   process.stdout.write(`uncommitted: ${changes.length > 0 ? changes.join(', ') : 'none'}\n`)
   process.stdout.write(`merged-into-current: ${merged ? 'yes' : 'no'}\n`)
 }
@@ -500,126 +380,38 @@ function commit(opts: CommitOpts): void {
   requireDoingTask(context.schedulePath, opts.task)
   const worktree = requireWorktree(context.repoRoot, opts.task)
   requireInsideWorktree(context.repoRoot, worktree)
-  const paths = commitTargetPaths(context, worktree, opts.task)
-  if (paths.length === 0) {
-    process.stdout.write('No commit-target changes.\n')
-    return
-  }
-  process.stdout.write(`commit-targets:\n${paths.map(path => `  ${path}`).join('\n')}\n`)
-  if (opts.dryRun) return
-
-  gitOutput(worktree.path, ['add', '-A', '--', ...paths])
-  const staged = gitResult(worktree.path, ['diff', '--cached', '--quiet', '--', ...paths])
-  if (staged.status === 0) {
-    process.stdout.write('No staged commit-target changes.\n')
-    return
-  }
-  if (staged.status !== 1) throw new Error('Failed to inspect staged worktree changes.')
-  gitOutput(worktree.path, [
-    'commit',
-    '-m',
-    opts.message?.trim() || `exec(${opts.task}): apply task changes`,
-    '--',
-    ...paths,
-  ])
-  stabilizeCommitTargets(worktree.path, () => commitTargetPaths(context, worktree, opts.task))
+  commitWorktreeChanges({
+    context,
+    worktree,
+    taskId: opts.task,
+    message: opts.message,
+    dryRun: opts.dryRun,
+  })
 }
 
 function merge(opts: MergeOpts): void {
   const context = resolveContext(opts)
   const worktree = requireWorktree(context.repoRoot, opts.task)
-  const targetBranch = currentBranch(context.repoRoot)
-  if (targetBranch === worktree.branch) {
-    throw new Error(`Merge must run from a branch other than ${worktree.branch}.`)
-  }
-  let lockDir = ''
-  try {
-    if (!opts.dryRun) {
-      lockDir = acquireSchedulerLock(context.schedulePath, {
-        actor: `worktree-merge:${targetBranch}`,
-        lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
-        lockStaleMs: DEFAULT_LOCK_STALE_MS,
-      })
-    }
-    const dirty = commitTargetPaths(context, worktree, opts.task)
-    if (dirty.length > 0) {
-      throw new Error(`Worktree has uncommitted commit-target changes: ${dirty.join(', ')}`)
-    }
-    const compareBase = gitOutput(context.repoRoot, ['merge-base', 'HEAD', worktree.branch]).trim()
-    const count = Number.parseInt(
-      gitOutput(context.repoRoot, [
-        'rev-list',
-        '--count',
-        `${compareBase}..${worktree.branch}`,
-      ]).trim(),
-      10
-    )
-    if (!Number.isFinite(count) || count < 1) {
-      throw new Error(`No commits to merge from ${worktree.branch}.`)
-    }
-    const mergePaths = new Set(
-      zeroSeparatedPaths(context.repoRoot, [
-        'diff',
-        '--no-renames',
-        '--name-only',
-        '-z',
-        `${compareBase}..${worktree.branch}`,
-      ])
-    )
-    const overlap = [...rootDirtyPaths(context.repoRoot)].filter(path => mergePaths.has(path))
-    if (overlap.length > 0) {
-      throw new Error(`Current worktree changes overlap merge paths: ${overlap.join(', ')}`)
-    }
-    if (opts.dryRun) {
-      process.stdout.write(
-        `[dry-run] git merge ${opts.ffOnly ? '--ff-only' : '--no-ff --no-edit'} ${worktree.branch}\n`
-      )
-      return
-    }
-    gitOutput(
-      context.repoRoot,
-      opts.ffOnly
-        ? ['merge', '--ff-only', worktree.branch]
-        : ['merge', '--no-ff', '--no-edit', worktree.branch]
-    )
-  } finally {
-    if (lockDir) releaseSchedulerLock(lockDir)
-  }
+  mergeWorktreeIntoCurrent({
+    context,
+    worktree,
+    taskId: opts.task,
+    ffOnly: opts.ffOnly,
+    dryRun: opts.dryRun,
+  })
 }
 
 function remove(opts: RemoveOpts): void {
   const context = resolveContext(opts)
   const worktree = requireWorktree(context.repoRoot, opts.task)
-  if (resolve(context.repoRoot) === resolve(worktree.path)) {
-    throw new Error('Run remove from the merge-target worktree, not the task worktree.')
-  }
-  const dirty = commitTargetPaths(context, worktree, opts.task)
-  const merged =
-    gitResult(context.repoRoot, ['merge-base', '--is-ancestor', worktree.branch, 'HEAD']).status === 0
-  if (!opts.force && dirty.length > 0) {
-    throw new Error(`Worktree has uncommitted commit-target changes: ${dirty.join(', ')}`)
-  }
-  if (!opts.force && !merged) {
-    throw new Error(`Exec branch is not merged into current HEAD: ${worktree.branch}`)
-  }
-  if (opts.force) {
-    process.stderr.write('Warning: forcing worktree removal; uncommitted changes may be lost.\n')
-  }
-  if (opts.dryRun) {
-    process.stdout.write(
-      `[dry-run] git worktree remove${opts.force ? ' --force' : ''} ${worktree.path}\n`
-    )
-    if (opts.deleteBranch) process.stdout.write(`[dry-run] git branch -d ${worktree.branch}\n`)
-    return
-  }
-
-  gitOutput(context.repoRoot, [
-    'worktree',
-    'remove',
-    ...(opts.force ? ['--force'] : []),
-    worktree.path,
-  ])
-  if (opts.deleteBranch) gitOutput(context.repoRoot, ['branch', '-d', worktree.branch])
+  removeWorktree({
+    context,
+    worktree,
+    taskId: opts.task,
+    force: opts.force,
+    deleteBranch: opts.deleteBranch,
+    dryRun: opts.dryRun,
+  })
 }
 
 function addCommonOptions(command: Command): Command {

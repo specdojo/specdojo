@@ -58,6 +58,7 @@
     "prj-0001:pjr-index": "docs/ja/projects/prj-0001/030-project-management/controls/project-register/pjr-index.md",
     "prj-0001:xep-t-launch-prj-overview-020-i01": "docs/ja/projects/prj-0001/030-project-management/execution/exec/plans/T-LAUNCH-prj-overview-020-I01-plan.md",
     "xer-t-launch-prj-overview-010-i01": "docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-010-I01-result.md",
+    "prj-0001:xer-t-launch-prj-overview-020-i01": "docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-overview-020-I01-result.md",
     "prj-0001:sch-defaults": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-defaults.yaml",
     "prj-0001:sch-milestones": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-milestones.yaml",
     "prj-0001:sch-strategy-launch": "docs/ja/projects/prj-0001/030-project-management/schedule/sch-strategy-launch.yaml",
