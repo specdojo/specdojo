@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-06-15T10:26:21Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-overview-020-I01",
+  "by": "opencode-edit-agent",
+  "msg": "auto-claim",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA",
+    "scheduler_strategy": "critical-first",
+    "claimed_via": "dojo-exec-scheduler"
+  }
+}
