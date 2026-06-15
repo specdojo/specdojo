@@ -437,6 +437,93 @@ function buildPlanIndexMarkdown(tasks: PlanTask[]): string {
 // Public entry point
 // ---------------------------------------------------------------------------
 
+// Shared per-task plan rendering. Used by the full generatePlans loop and the
+// single-task generateSinglePlan (manual re-run support).
+type PlanGenContext = {
+  plansDir: string
+  executionPath: string
+  projectId: string
+  catalogPath: string
+  vpMap: Map<string, ReviewViewpoint>
+  roleMap: Map<string, RoleDefinition>
+  vpRef: string
+  templateCache: Map<string, string>
+}
+
+function writeTaskPlan(ctx: PlanGenContext, task: PlanTask): string {
+  const mode: TaskMode = task.mode ?? 'edit'
+  const localId = task.local_id
+  const deliverable =
+    localId && ctx.catalogPath ? findDeliverableInfo(ctx.catalogPath, localId) : null
+  const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${task.id}-result.md`
+  const outPath = join(ctx.plansDir, `${task.id}-plan.md`)
+  const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
+  const planTask: PlanTask = { ...task, mode }
+  const template = loadPlanTemplate(mode, task.approach, ctx.templateCache)
+
+  const content =
+    mode === 'review'
+      ? buildReviewPlanMarkdown(
+          template,
+          loadViewpointDetailTemplate(ctx.templateCache),
+          planTask,
+          deliverable,
+          criteria,
+          ctx.vpMap,
+          ctx.projectId,
+          ctx.vpRef,
+          resultRef
+        )
+      : buildEditPlanMarkdown(
+          template,
+          loadViewpointDetailTemplate(ctx.templateCache),
+          planTask,
+          deliverable,
+          ctx.roleMap,
+          ctx.vpMap,
+          ctx.projectId,
+          ctx.vpRef,
+          resultRef
+        )
+
+  writeFileSync(outPath, content, 'utf8')
+  return outPath
+}
+
+// Regenerate the plan for a single task without touching other plan files,
+// the index, or task state. Intended for manually re-running a completed task:
+// `exec build` deletes done-task plans, so this rebuilds just the one plan on demand.
+export function generateSinglePlan(opts: {
+  executionPath: string
+  projectId: string
+  catalogPath: string
+  rolesPath?: string
+  viewpointsPath?: string
+  task: ReadyTaskView
+}): string {
+  const plansDir = join(opts.executionPath, 'exec', 'plans')
+  mkdirSync(plansDir, { recursive: true })
+
+  const vpMap = opts.viewpointsPath
+    ? loadViewpoints(opts.viewpointsPath)
+    : new Map<string, ReviewViewpoint>()
+  const roleMap = loadRoles(opts.rolesPath)
+  const vpRef = opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : ''
+
+  const ctx: PlanGenContext = {
+    plansDir,
+    executionPath: opts.executionPath,
+    projectId: opts.projectId,
+    catalogPath: opts.catalogPath,
+    vpMap,
+    roleMap,
+    vpRef,
+    templateCache: new Map<string, string>(),
+  }
+
+  return writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? 'edit' })
+}
+
 export function generatePlans(
   executionPath: string,
   projectId: string,
@@ -481,44 +568,19 @@ export function generatePlans(
   const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
   const roleMap = loadRoles(rolesPath)
   const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
-  const templateCache = new Map<string, string>()
+  const ctx: PlanGenContext = {
+    plansDir,
+    executionPath,
+    projectId,
+    catalogPath,
+    vpMap,
+    roleMap,
+    vpRef,
+    templateCache: new Map<string, string>(),
+  }
 
   for (const task of tasks) {
-    const mode: TaskMode = task.mode ?? 'edit'
-    const localId = task.local_id
-    const deliverable = localId && catalogPath ? findDeliverableInfo(catalogPath, localId) : null
-    const resultRef = `${repoRelativePath(executionPath)}/exec/results/${task.id}-result.md`
-    const outPath = join(plansDir, `${task.id}-plan.md`)
-    const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
-    const planTask: PlanTask = { ...task, mode }
-    const template = loadPlanTemplate(mode, task.approach, templateCache)
-
-    const content =
-      mode === 'review'
-        ? buildReviewPlanMarkdown(
-            template,
-            loadViewpointDetailTemplate(templateCache),
-            planTask,
-            deliverable,
-            criteria,
-            vpMap,
-            projectId,
-            vpRef,
-            resultRef
-          )
-        : buildEditPlanMarkdown(
-            template,
-            loadViewpointDetailTemplate(templateCache),
-            planTask,
-            deliverable,
-            roleMap,
-            vpMap,
-            projectId,
-            vpRef,
-            resultRef
-          )
-
-    writeFileSync(outPath, content, 'utf8')
+    writeTaskPlan(ctx, { ...task, mode: task.mode ?? 'edit' })
   }
 
   writeFileSync(

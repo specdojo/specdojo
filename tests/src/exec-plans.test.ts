@@ -2,7 +2,13 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { generatePlans, ownerRoleFields, reviewViewpointDetails } from '../../src/exec-plans.js'
+import { existsSync } from 'node:fs'
+import {
+  generatePlans,
+  generateSinglePlan,
+  ownerRoleFields,
+  reviewViewpointDetails,
+} from '../../src/exec-plans.js'
 import type { CriteriaItem } from '../../src/catalog-types.js'
 import type { RoleDefinition } from '../../src/role-types.js'
 import type { ReviewViewpoint } from '../../src/review-types.js'
@@ -249,6 +255,105 @@ describe('generatePlans edit self review', () => {
       )
       expect(maintenancePlan).not.toContain('viewpoints_ref:')
       expect(maintenancePlan).not.toContain('全 role 観点による自己レビュー')
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('generateSinglePlan', () => {
+  function writeCatalog(catalogPath: string): void {
+    mkdirSync(catalogPath, { recursive: true })
+    writeFileSync(
+      join(catalogPath, 'dct-test.yaml'),
+      [
+        'id: test:dct',
+        'type: project',
+        'status: draft',
+        'project_id: test',
+        'domain: test',
+        'base_path: /docs/test',
+        'groups:',
+        '  - deliverables:',
+        '      - local_id: overview',
+        '        name: Overview',
+        '        kind: work',
+        '        overview: Test overview',
+        '        path: overview.md',
+        '        done_criteria:',
+        '          - text: Business value is clear',
+        '            roles: [BA]',
+        '            viewpoint: vp-ba-business-value',
+      ].join('\n')
+    )
+  }
+
+  it('対象タスクの plan を再生成し、他の plan や index には触れない', () => {
+    const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
+    const executionPath = join(root, 'execution')
+    const catalogPath = join(root, 'catalog')
+    const plansDir = join(executionPath, 'exec', 'plans')
+
+    try {
+      writeCatalog(catalogPath)
+      // Pre-existing sibling artifacts that must survive a single-task regeneration.
+      mkdirSync(plansDir, { recursive: true })
+      writeFileSync(join(plansDir, 'T-TEST-overview-099-plan.md'), 'keep me\n', 'utf8')
+      writeFileSync(join(plansDir, 'index.md'), '# existing index\n', 'utf8')
+
+      const outPath = generateSinglePlan({
+        executionPath,
+        projectId: 'test',
+        catalogPath,
+        task: {
+          id: 'T-TEST-overview-020',
+          local_id: 'overview',
+          name: '補強',
+          owner: 'BA',
+          mode: 'edit',
+          schedule_file: 'sch-track-test.yaml',
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      })
+
+      expect(outPath).toBe(join(plansDir, 'T-TEST-overview-020-plan.md'))
+      const plan = readFileSync(outPath, 'utf8')
+      expect(plan).toContain('task_id: T-TEST-overview-020')
+      expect(plan).toContain('Business value is clear')
+
+      // Sibling plan and index are untouched (generatePlans would have wiped them).
+      expect(readFileSync(join(plansDir, 'T-TEST-overview-099-plan.md'), 'utf8')).toBe('keep me\n')
+      expect(readFileSync(join(plansDir, 'index.md'), 'utf8')).toBe('# existing index\n')
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+
+  it('plans ディレクトリが無くても作成して書き込む', () => {
+    const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
+    const executionPath = join(root, 'execution')
+    const catalogPath = join(root, 'catalog')
+
+    try {
+      writeCatalog(catalogPath)
+      expect(existsSync(join(executionPath, 'exec', 'plans'))).toBe(false)
+
+      const outPath = generateSinglePlan({
+        executionPath,
+        projectId: 'test',
+        catalogPath,
+        task: {
+          id: 'T-TEST-overview-020',
+          local_id: 'overview',
+          mode: 'edit',
+          schedule_file: 'sch-track-test.yaml',
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      })
+
+      expect(existsSync(outPath)).toBe(true)
     } finally {
       rmSync(root, { recursive: true, force: true })
     }

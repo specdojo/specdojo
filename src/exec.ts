@@ -43,11 +43,12 @@ import {
 } from './exec-schedule.js'
 import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot } from './exec-types.js'
 import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
-import { generatePlans } from './exec-plans.js'
+import { generatePlans, generateSinglePlan } from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { registerRunCommand } from './exec-run.js'
-import { registerExecWorktreeCommands } from './exec-worktree-command.js'
+import { registerRerunCommand } from './exec-rerun.js'
+import { buildTaskView, registerExecWorktreeCommands } from './exec-worktree-command.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { buildPhaseModeIndex, resolveApproach, resolveTaskMode } from './exec-strategy.js'
 
@@ -510,6 +511,34 @@ export function registerExecCommands(program: Command): void {
     }
   })
 
+  const replanCmd = exec
+    .command('replan')
+    .description(
+      'Regenerate the plan file for one task (manual re-run support; does not change task state or events)'
+    )
+  addProjectOptions(replanCmd)
+  replanCmd.requiredOption('--task <taskId>', 'Task ID to regenerate the plan for')
+  replanCmd.action(opts => {
+    try {
+      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
+        resolveProjectContext(opts)
+      const taskId = requireNonEmpty('task', opts.task)
+      const task = buildTaskView(schedulePath, executionPath, taskId)
+      const outPath = generateSinglePlan({
+        executionPath,
+        projectId: resolveProjectId(opts),
+        catalogPath: catalogPath ?? '',
+        rolesPath,
+        viewpointsPath,
+        task,
+      })
+      process.stdout.write(`Generated: ${outPath}\n`)
+      exitWithCode(true)
+    } catch (error) {
+      printCommandError(error, false)
+    }
+  })
+
   const scmd = exec
     .command('scheduler')
     .description('Auto-claim next task safely (with project-level lock).')
@@ -681,6 +710,7 @@ export function registerExecCommands(program: Command): void {
   })
 
   registerRunCommand(exec)
+  registerRerunCommand(exec)
   registerExecWorktreeCommands(exec)
 
   // exec scaffold: creates project setup files (viewpoints etc.)

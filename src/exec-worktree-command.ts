@@ -152,7 +152,11 @@ function requireInsideWorktree(repoRoot: string, worktree: ExecWorktree): void {
   }
 }
 
-function taskView(schedulePath: string, executionPath: string, taskId: string): ReadyTaskView {
+export function buildTaskView(
+  schedulePath: string,
+  executionPath: string,
+  taskId: string
+): ReadyTaskView {
   const schedule = buildScheduleIndex(schedulePath)
   const node = schedule.nodes.get(taskId)
   if (!node || node.kind !== 'task') throw new Error(`Task not found in schedule: ${taskId}`)
@@ -210,7 +214,7 @@ function resolveAgent(context: ProjectContext, taskId: string, opts: AgentOpts):
   if (opts.by && opts.by !== state.actor) {
     throw new Error(`--by ${opts.by} does not match claim actor ${state.actor}.`)
   }
-  const task = taskView(context.schedulePath, context.executionPath, taskId)
+  const task = buildTaskView(context.schedulePath, context.executionPath, taskId)
   const roster = loadRosterForExecutionPath(context.executionPath)
   let command = opts.agentCmd?.trim() ?? ''
 
