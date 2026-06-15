@@ -271,18 +271,18 @@ generated/
 
 `specdojo schedule` は、`sch-strategy-<track>.yaml` と成果物カタログから `sch-track-<track>.yaml` を生成するコマンド群です。
 
-### 6.1. schedule generate
+### 6.1. schedule build
 
 成果物カタログ（`dct-*.yaml`）と `sch-strategy-<track>.yaml` を入力として、`sch-track-<track>.yaml` を生成します。
 
 ```bash
-specdojo schedule generate --project prj-0001 --track launch
+specdojo schedule build --project prj-0001 --track launch
 ```
 
 既存の strategy を変更して track を更新する場合は `--force` を指定する。`exec build` は track を自動再生成しないため、タイムライン等まで反映するには二つのコマンドを順に実行する。
 
 ```bash
-specdojo schedule generate --project prj-0001 --track launch --force
+specdojo schedule build --project prj-0001 --track launch --force
 specdojo exec build --project prj-0001
 ```
 
@@ -1240,7 +1240,7 @@ specdojo exec validate --project prj-0001
 
 ### 8.6. 生成
 
-`exec build` は生成済みの `sch-track-<track>.yaml` を入力として実行情報を生成する。`sch-strategy-<track>.yaml` の `phase_sets`・反復回数・フェーズ構成・依存関係等を変更した場合は、先に `schedule generate --force` で track を更新する。
+`exec build` は生成済みの `sch-track-<track>.yaml` を入力として実行情報を生成する。`sch-strategy-<track>.yaml` の `phase_sets`・反復回数・フェーズ構成・依存関係等を変更した場合は、先に `schedule build --force` で track を更新する。
 
 ```bash
 specdojo exec build --project prj-0001
@@ -2205,7 +2205,7 @@ agent-test
 - timeline
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
-- スケジュールトラック生成（`schedule generate`）
+- スケジュールトラック生成（`schedule build`）
 - exec plan / result 生成と実行（`exec scaffold` / `exec build` / `exec run`）
 - プロジェクト登録簿 scaffold・登録項目追加・ステータス変更・派生ビュー生成（`register scaffold` / `register add` / `register update` / `register start` / `register wait` / `register review` / `register close` / `register reject` / `register defer` / `register reopen` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）

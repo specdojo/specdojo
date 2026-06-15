@@ -34,7 +34,7 @@ describe('validateAll schedule generation warnings', () => {
 
     expect(warnings).toContain(
       'sch-strategy-launch.yaml is newer than sch-track-launch.yaml. ' +
-        'Run: specdojo schedule generate --track launch --force before exec build.'
+        'Run: specdojo schedule build --track launch --force before exec build.'
     )
   })
 })

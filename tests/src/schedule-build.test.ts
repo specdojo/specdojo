@@ -5,7 +5,7 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 import { buildInitialStateFromStrategy } from '../../src/exec-schedule-initial.js'
 import { buildScheduleIndex } from '../../src/exec-schedule-index.js'
-import { generateScheduleTrack } from '../../src/schedule-generate.js'
+import { buildScheduleTrack } from '../../src/schedule-build.js'
 
 function writeCatalog(dir: string): void {
   writeFileSync(
@@ -48,7 +48,7 @@ function writeTrack(dir: string, tasks: unknown[]): void {
   )
 }
 
-describe('generateScheduleTrack phase set repetition', () => {
+describe('buildScheduleTrack phase set repetition', () => {
   it('keeps catalog dependencies inside the earliest shared phase gate', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-gate-dependency-'))
     try {
@@ -107,7 +107,7 @@ describe('generateScheduleTrack phase set repetition', () => {
         'utf8'
       )
 
-      const result = generateScheduleTrack(strategyPath, dir)
+      const result = buildScheduleTrack(strategyPath, dir)
 
       expect(result.errors).toEqual([])
       const bFirst = result.tasks.find(task => task.local_id === 'b' && task.phase_suffix === '010')
@@ -176,7 +176,7 @@ describe('generateScheduleTrack phase set repetition', () => {
         'utf8'
       )
 
-      const result = generateScheduleTrack(strategyPath, dir)
+      const result = buildScheduleTrack(strategyPath, dir)
       expect(result.errors).toEqual([])
       expect(result.tasks).toHaveLength(8)
       expect(result.tasks.map(task => [task.phase_suffix, task.cycle, task.iteration])).toEqual([
@@ -260,7 +260,7 @@ describe('generateScheduleTrack phase set repetition', () => {
         'utf8'
       )
 
-      const result = generateScheduleTrack(strategyPath, dir)
+      const result = buildScheduleTrack(strategyPath, dir)
       expect(result.errors).toEqual([])
       expect(result.tasks.every(task => task.cycle === undefined)).toBe(true)
       expect(result.tasks.every(task => task.iteration === undefined)).toBe(true)
@@ -322,7 +322,7 @@ describe('generateScheduleTrack phase set repetition', () => {
         'utf8'
       )
 
-      const result = generateScheduleTrack(strategyPath, dir)
+      const result = buildScheduleTrack(strategyPath, dir)
       expect(result.errors).toEqual([])
       expect(result.tasks).toHaveLength(6)
       writeTrack(dir, result.tasks)

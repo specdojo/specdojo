@@ -191,7 +191,7 @@ Schedule ファイルは `kind` で種別を区別する。
 - `sch-milestones.yaml` は、プロジェクト全体の主要ゲート・承認・リリース地点を管理する。
 - `sch-defaults.yaml` は、全 Schedule ファイルに共通するカレンダーと開始日などのデフォルトだけを管理する。
 - `sch-track-<track>.yaml` は、トラックごとの Task / Milestone を管理する。実行順序・依存関係・担当・`agent_mode` をこのファイルで完結させる。
-- `sch-strategy-<track>.yaml` は、コードジェネレータへの入力として使い、`sch-track-<track>.yaml` を生成する。生成後は `sch-track-<track>.yaml` を正とし、`sch-strategy-<track>.yaml` は生成ルールの管理に留める。
+- `sch-strategy-<track>.yaml` が存在するトラックでは、strategy と成果物カタログを SSOT とし、`sch-track-<track>.yaml` は `specdojo schedule build` で再生成可能なビルド成果物として扱う。生成後の track を直接編集しない。
 
 ### 6.2. 成果物カタログとタスクの対応
 

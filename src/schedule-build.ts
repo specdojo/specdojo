@@ -123,7 +123,7 @@ export type GeneratedMilestone = {
   tags?: string[]
 }
 
-export type GenerateResult = {
+export type BuildResult = {
   projectId: string
   track: string
   startDate: string | null
@@ -234,7 +234,7 @@ function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]):
 
 // --- Main export ---
 
-export function generateScheduleTrack(strategyPath: string, baseDir: string): GenerateResult {
+export function buildScheduleTrack(strategyPath: string, baseDir: string): BuildResult {
   const errors: string[] = []
   const warnings: string[] = []
 

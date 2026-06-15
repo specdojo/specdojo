@@ -64,7 +64,7 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
     if (!trackFile) {
       warnings.push(
         `${basename(strategyFile)} has no generated sch-track-${track}.yaml. ` +
-          `Run: specdojo schedule generate --track ${track}`
+          `Run: specdojo schedule build --track ${track}`
       )
       continue
     }
@@ -72,7 +72,7 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
     if (statSync(strategyFile).mtimeMs > statSync(trackFile).mtimeMs) {
       warnings.push(
         `${basename(strategyFile)} is newer than ${basename(trackFile)}. ` +
-          `Run: specdojo schedule generate --track ${track} --force before exec build.`
+          `Run: specdojo schedule build --track ${track} --force before exec build.`
       )
     }
   }

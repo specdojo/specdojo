@@ -44,7 +44,7 @@ Schedule は用途別に 4 種類のファイルで管理する。
         ↓
 sch-strategy-<track>.yaml（スコープ・フェーズ・owner ルール定義）
         ↓
-specdojo schedule generate --track <track> --force
+specdojo schedule build --track <track> --force
         ↓
 sch-track-<track>.yaml（Task / Milestone が展開された実行スケジュール）
         ↓
@@ -182,7 +182,7 @@ ready.json のタスク（phase_set / phaseId / cycle / iteration / mode / appro
 `sch-strategy-<track>.yaml` は生成後も参照され続けるが、`exec build` は既存の `sch-track-<track>.yaml` に含まれるタスクを入力とし、トラック自体は再生成しない。`mode`・`approach`・`execution`・`capabilities`・`proficiency` だけを変更した場合は plan やエージェント選択へ反映される。一方、`phase_sets`・`cycles`・`iterations`・フェーズの追加削除・`phase_suffix`・依存関係・ゲートを変更した場合は、先に次を実行する。
 
 ```sh
-specdojo schedule generate --project <project-id> --track <track> --force
+specdojo schedule build --project <project-id> --track <track> --force
 specdojo exec build --project <project-id>
 ```
 
