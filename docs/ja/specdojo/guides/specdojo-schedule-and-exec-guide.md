@@ -810,30 +810,24 @@ specdojo exec run --project <project-id> --auto --loop
 
 ### 9.9. 完了済みタスクを再実行する
 
-完了済み（`done`）タスクの plan ファイルは `exec build` で削除されるため、同じ内容をやり直したいときは plan を再生成してから実行する。状態機械（claim/complete）には触れず、手動実行を支援するためのコマンドとして `exec rerun` と `exec replan` を用意している。
-
-`exec rerun` は plan の再生成からエージェント実行までを 1 コマンドで行う。
+完了済み（`done`）タスクをやり直したいときは plan を再生成してから実行する。再設計後は専用コマンドを設けず、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でやり直す。plan・result は git 管理対象で、完了後の plan は `exec/plans/done/` へアーカイブされる（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
 ```sh
-specdojo exec rerun --project <project-id> --task <task-id>
+# plan を再生成してカレントで再実行する（状態は変更しない）
+specdojo exec run --project <project-id> --task <task-id>
 ```
 
-`exec rerun` の挙動は次のとおり。
+`exec run` の軽量実行はタスクの状態（`done`/`doing` など）を前提にせず、claim/complete などのイベントも書かない。plan が無ければ内部で再生成し、エージェントをカレントリポジトリで実行する。worktree 隔離は行わず、変更は作業ツリーに残るため、差分の確認とコミットは手動で行う。詳細は `specdojo-command-usage-guide.md` の `exec run`・`exec plan` を参照する。
 
-- schedule とカタログから plan を一時生成し、展開した plan を prompt としてエージェントを repo ルートでその場実行する。
-- タスクの状態（`done`/`doing` など）を一切確認しない。claim/complete などのイベントも書かない。
-- 実行後に再生成した plan ファイルを削除する。`--keep-plan` で保持できる。
-- worktree による隔離は行わず、変更は現在の作業ツリーに直接反映される。差分の確認とコミットは手動で行う。
-
-エージェントは `--agent-cmd` で明示するか、未指定時はタスクの mode・capabilities に一致するメンバーを `--by` または自動選択で解決する。
-
-plan の生成だけを行い、実行は自分で行いたい場合は `exec replan` を使う。
+plan の生成だけを行い、実行は自分で行いたい場合は `exec plan` を使う。
 
 ```sh
-specdojo exec replan --project <project-id> --task <task-id>
+specdojo exec plan --project <project-id> --task <task-id>
 ```
 
-`exec replan` は対象タスクの plan を `exec/plans/<task-id>-plan.md` に再生成するだけで、状態・イベント・他タスクの plan・`index.md` は変更しない。生成した plan を使って手動で再実行する。いずれの場合も `exec build` を再実行すると `done` タスクの plan は再び削除されるため、再実行の直前に生成する。
+`exec plan` は対象タスクの plan を `exec/plans/<task-id>-plan.md` に再生成するだけで、状態・イベント・他タスクの plan・`index.md` は変更しない。`exec build` は plan を削除しないため、生成した plan はやり直しまで保持される。
+
+> 暫定的に追加した `exec rerun` / `exec replan` は本再設計で `exec run` / `exec plan` に統合され、廃止される。
 
 ## 10. レートリミット対応
 

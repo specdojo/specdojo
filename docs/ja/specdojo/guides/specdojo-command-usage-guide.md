@@ -1136,6 +1136,22 @@ npm run validate:schema:pjr-index
 - CPM（クリティカルパス法）による優先タスク計算
 - Agent による安全な排他実行（ロック機構）
 
+従来 `exec run` は plan 生成・状態追跡・worktree 隔離・スケジューリングを 1 経路に束ねており、単発のタスク実行にも重い手順を要求していた。再設計では、これらを次の 4 つの独立した関心事として分離し、軽量な手動実行を既定とする。
+
+| 関心事           | 内容                                                | 必要になる場面                       |
+| ---------------- | --------------------------------------------------- | ------------------------------------ |
+| 生成源           | plan を schedule から作るか catalog から直接作るか  | 常に必要                             |
+| 状態追跡         | claim/complete イベントを記録するか                 | スケジュール進捗へ反映したいとき     |
+| 隔離             | worktree を作るか、カレントリポジトリで実行するか   | 自動・並列実行のとき                 |
+| スケジューリング | CPM・strategy で次タスクを選ぶか                    | `--auto` のとき                      |
+
+この分離により、コマンドを次の 2 層に整理する。
+
+- 軽量層: `exec plan`（生成源のみ）と既定の `exec run`（カレント実行・状態追跡なし・worktree なし）。単発の作成・やり直しを最小手順で行う。
+- オーケストレーション層: `exec run --auto`（スケジューリング + worktree + 状態追跡）と `exec scheduler` / `exec build` / `exec worktree`。並列・自動実行を担う。
+
+既定の `exec run` はカレントリポジトリで実行し、worktree は `--auto`・`--parallel` 2 以上・`--worktree` を指定したときだけ作成する。状態イベントは `--track-state`（`--auto` では既定で有効）を指定したときだけ記録する。
+
 ### 8.1. スケジュールファイル
 
 スケジュールは YAML で管理します。
@@ -1202,9 +1218,10 @@ generated/
 ├─ timeline.svg
 └─ metadata.json
 exec/
-├─ plans/        （exec build が生成する edit-plan / review-plan）
-│  └─ <task-id>-plan.md
-├─ results/      （exec claim が scaffold 生成し、exec run / 人が更新する実行結果）
+├─ plans/        （exec plan / exec run が生成する edit-plan / review-plan）
+│  ├─ <slug>-plan.md
+│  └─ done/       （完了後にアーカイブされた plan）
+├─ results/      （exec claim / exec run が scaffold 生成し、agent / 人が更新する実行結果。恒久保持）
 │  └─ <task-id>-result.md
 └─ events/
 ```
@@ -1256,7 +1273,8 @@ specdojo exec build --project prj-0001
 - schedule diff
 - task catalog
 - timeline
-- `exec/plans/<task-id>-plan.md`（Frontmatter+Markdown 形式の edit-plan / review-plan）
+
+`exec build` は `generated/` 配下と ready 情報の更新に専念し、plan ファイルは生成・削除しない。plan の生成は `exec plan` / `exec run` が担う（`exec plan`・`plan / result のライフサイクル` を参照）。
 
 `ready.md` は人間向けの ready 一覧で、`critical-first` の順序と `fifo` の順序を併記します。
 
@@ -1306,7 +1324,7 @@ specdojo exec build --project prj-0001
 
 #### 8.6.3. 展開
 
-`specdojo exec build` は、各タスクの plan を生成する際、タスクの `mode`（edit / review）と `approach` に対応するテンプレートファイルを読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。対応する `<prefix>-<approach>-template.md` が存在しない場合は、標準テンプレート（`xep-template.md` / `xrp-template.md`）を使用する。
+`exec plan` / `exec run` は、各タスクの plan を生成する際、タスクの `mode`（edit / review）と `approach` に対応するテンプレートファイルを読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。対応する `<prefix>-<approach>-template.md` が存在しない場合は、標準テンプレート（`xep-template.md` / `xrp-template.md`）を使用する。
 
 「進め方」「完了手順」「異常終了の条件」のように内容が共通するセクションも、plan 全体をテンプレート化する方針上、テンプレートに直接記述する。`approach` ごとに進め方を分ける場合は、影響する `xep-` / `xrp-` テンプレートをあわせて更新する。
 
@@ -1476,17 +1494,19 @@ blocked --> todo : cancel (abandon)
 
 ### 8.11. 推奨ワークフロー
 
-手動でタスクを1件実行する場合:
+単発のタスクを手動で作成・実行する場合（軽量層）。`exec run` は plan を生成し、カレントリポジトリでエージェントを実行する。状態イベントや worktree は作らない。
 
 ```bash
-specdojo exec validate
-specdojo exec build
-specdojo exec scheduler --by agent-1
-specdojo exec complete ...
-specdojo exec build
+# scheduled タスクを 1 件、カレントで実行
+specdojo exec run --project prj-0001 --task T-AUTH-auth-api-020
+
+# schedule に無い成果物を catalog から直接 plan 化して実行
+specdojo exec run --project prj-0001 --deliverable auth-api
 ```
 
-`exec run` を使うとワークツリーのセットアップからエージェント起動まで一括で実行できる（詳細は `exec run` を参照）。`--auto` を使うと `sch-strategy-<track>.yaml` の phase に定義された `capabilities`・`proficiency` に基づいてエージェントを自動選択できる。デフォルトは1バッチ実行で終了し、`--loop` を付けると ready タスクがなくなるまで繰り返す:
+スケジュール進捗へ反映したい場合は `--track-state` を付けて claim/complete を記録する。成果物の変更は作業ツリーに残るため、差分の確認とコミットは手動で行う。
+
+並列・自動でタスク群を実行する場合（オーケストレーション層）。`--auto` は worktree 隔離と状態追跡を含み、`sch-strategy-<track>.yaml` の phase に定義された `capabilities`・`proficiency` に基づいてエージェントを自動選択する。デフォルトは1バッチ実行で終了し、`--loop` を付けると ready タスクがなくなるまで繰り返す。
 
 ```bash
 # 1バッチ実行して終了（デフォルト）
@@ -1499,39 +1519,44 @@ specdojo exec run --project prj-0001 --auto --loop --parallel 5
 specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 2
 ```
 
+低レベルに段階実行したい場合は `exec build` → `exec scheduler` → `exec worktree prepare … remove` → `exec complete` を個別に実行する。
+
 ### 8.12. exec run
 
-ワークツリーのセットアップ・エージェント起動・完了を一括で行う。`specdojo.config.json` の `run.agent_commands` に登録したコマンドを `--cmd` で切り替えることで、opencode / Claude Code など複数のエージェントツールに対応する。
+対象タスクの plan を用意し、エージェントを実行する。既定はカレントリポジトリ実行で、状態イベントや worktree は作らない。`--auto`・`--parallel` 2 以上・`--worktree` を指定したときだけ worktree 隔離と統合（commit→merge→remove）を行う。`specdojo.config.json` の `run.agent_commands` に登録したコマンドを `--cmd` で切り替えることで、opencode / Claude Code など複数のエージェントツールに対応する。
+
+実行対象は `--task` / `--deliverable` / `--plan` / `--auto` のいずれか 1 つを指定する。
 
 ```bash
-specdojo exec run \
-  --project prj-0001 \
-  --cmd opencode-edit \
-  --by edit-agent \
-  --parallel 2
-```
+# scheduled タスクをカレントで実行（軽量）
+specdojo exec run --project prj-0001 --task T-AUTH-auth-api-020
 
-```bash
-# Claude Code を使う場合
-specdojo exec run \
-  --project prj-0001 \
-  --cmd claude-edit \
-  --by edit-agent
+# catalog の成果物から直接 plan 化して実行（schedule 非依存）
+specdojo exec run --project prj-0001 --deliverable auth-api
+
+# worktree 隔離・状態追跡を伴う自動実行
+specdojo exec run --project prj-0001 --auto --parallel 5
 ```
 
 オプション:
 
-| オプション        | 説明                                                                                                            | デフォルト                   |
-| ----------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `--project`       | プロジェクト ID（`specdojo.config.json` から解決）                                                              | 省略可                       |
-| `--cmd`           | agent コマンド文字列を直接指定。`--auto` と排他                                                                 | `--auto` 時は省略可          |
-| `--auto`          | phase の `capabilities`・`proficiency` を使い `pm-members` からエージェントを自動選択                           | `false`                      |
-| `--by`            | タスク claim 時のアクター識別子                                                                                 | 解決された agent の nickname |
-| `--parallel`      | 並列実行数                                                                                                      | `1`                          |
-| `--loop`          | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する。`--max-rounds` と併用可 | `false`                      |
-| `--max-rounds`    | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                                    | なし                         |
-| `--worktree-base` | worktree 配置先パスの上書き                                                                                     | `run.worktree_base`          |
-| `--dry-run`       | 実行せず、実行予定を標準出力に表示                                                                              | `false`                      |
+| オプション               | 説明                                                                                       | デフォルト                              |
+| ------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------- |
+| `--project`              | プロジェクト ID（`specdojo.config.json` から解決）                                         | 省略可                                  |
+| `--task <id>`            | scheduled タスクを対象にする                                                               | —                                       |
+| `--deliverable <id>`     | catalog の成果物（`local_id`）を対象にする。schedule 非依存                                 | —                                       |
+| `--plan <path>`          | 既存の plan ファイルを使う（生成しない）                                                   | —                                       |
+| `--auto`                 | scheduler で次の ready タスクを選ぶ。worktree 隔離と状態追跡を含む。`--cmd` と排他          | `false`                                 |
+| `--cmd <command>`        | agent コマンド文字列を直接指定                                                             | `--auto` 時は自動選択                   |
+| `--by <actor>`           | claim actor / 実行者識別子                                                                 | 解決された agent の nickname            |
+| `--worktree`             | worktree 隔離と統合（commit→merge→remove）を行う                                           | `false`（`--auto`・`--parallel`≥2 で真）|
+| `--track-state`          | claim/complete イベントを記録する                                                          | `false`（隔離モードで真）               |
+| `--parallel <n>`         | 並列実行数。2 以上で worktree 隔離になる                                                   | `1`                                     |
+| `--loop`                 | ready タスクがなくなるまでラウンドを繰り返す。各ラウンド間で `exec build` を再実行する      | `false`                                 |
+| `--max-rounds <n>`       | `--loop` 時の最大ラウンド数。省略時は上限なし（`--loop` なしでは無視される）                | なし                                    |
+| `--worktree-base <path>` | worktree 配置先パスの上書き                                                                | `run.worktree_base`                     |
+| `--archive-on-success`   | カレント実行の成功時、生成した plan を `exec/plans/done/` へ移動する                        | `false`                                 |
+| `--dry-run`              | 実行せず、実行予定を標準出力に表示                                                          | `false`                                 |
 
 #### 8.12.1. `run` 設定（`specdojo.config.json` と `exec-defaults.yaml`）
 
@@ -1565,21 +1590,32 @@ rate_limit_detection:
 
 #### 8.12.2. 実行フロー
 
-1. `run.worktree_base`（または `--worktree-base`）を解決する。
-2. `exec validate --project <id>` を実行し、スケジュール整合性を確認する。
-3. `exec build --project <id>` を実行し、state・ready 情報・plan ファイルを最新化する。
-4. `--parallel` の数だけ並列で以下を実行する：
-   a. task_id の `:` を `-` に置換した `<task-id-slug>` を求める。
-   b. worktree `<worktree_base>/<task-id-slug>` が存在しない場合、`git worktree add <worktree_base>/<task-id-slug> -b exec/<task-id-slug>` でブランチを作成する。
-   c. 作成した worktree に移動する。
-   d. `exec claim` でタスクを claim する（claim と同時に `exec/results/<task-id>-result.md` を scaffold 生成する）。
-   e. `exec/plans/<task-id>-plan.md` を読み込み、agent commandへ標準入力で渡して実行する。
-   f. 終了コード 0 → `exec complete`（result の status を `complete` に更新）、終了コード 1 → `exec block`（result の status を `blocked` に更新）を記録する。
-5. 全インスタンスの終了を待つ。`--loop` を指定していない場合はここで終了する。
+`exec run` は対象に応じて plan を用意し、エージェントを実行する。隔離オプションの有無で 2 つのモードに分かれる。
 
-`--loop` を指定した場合は、ready タスクが 0 件になるか `--max-rounds` に達するまでステップ 3 に戻ってラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によってアンロックされた後続タスクを反映する。
+共通の準備:
 
-エージェントコマンドには `exec/plans/<task-id>-plan.md` の内容が標準入力として渡される。planには以下が含まれる。
+1. 実行対象を解決する（`--task` / `--deliverable` / `--plan` / `--auto`）。
+2. plan が無い場合は `exec plan` 相当で生成し、`[[id]]` を Markdown 形式へ展開して prompt とする。`--plan` 指定時は持ち込んだファイルを使う。
+3. エージェントを解決する（`--cmd` / `--auto` の自動選択 / claim actor）。
+
+カレント実行（既定）:
+
+1. カレントリポジトリをカレントディレクトリとしてエージェントを起動し、prompt を標準入力へ渡す。
+2. 成果物の変更は作業ツリーに残す。commit・merge は行わない。
+3. `--track-state` 指定時のみ、実行前に `exec claim`、終了コードに応じて `exec complete` / `exec block` を記録する。未指定時はイベントを記録しない。
+4. 生成した plan は git 管理対象として保持する。`--archive-on-success` 指定時のみ、成功後に `exec/plans/done/` へ移動する（ライフサイクルは `plan / result のライフサイクル` を参照）。
+
+worktree 隔離（`--worktree` / `--auto` / `--parallel` 2 以上）:
+
+1. `run.worktree_base`（または `--worktree-base`）を解決し、`exec validate` と `exec build` で state・ready 情報を最新化する。plan は各タスクの実行直前に `exec plan` 相当で生成する。
+2. `--parallel` の数だけ並列で、task worktree 作成 → `exec claim` → エージェント実行を行う。
+3. 終了コード 0 → `exec complete`、0 以外 → `exec block` を記録し、result の status を更新する。
+4. 成功時は result と成果物を exec ブランチへ commit し、現在のブランチへ merge して worktree を削除する。
+5. `--loop` 指定時は、ready タスクが 0 件になるか `--max-rounds` に達するまでラウンドを繰り返す。各ラウンド冒頭の `exec build` で前ラウンドの complete によりアンロックされた後続タスクを反映する。
+
+隔離モードでは状態追跡を常に行う（claim/complete が前提）。`--worktree` を単独指定した場合も claim/complete を記録する。
+
+エージェントコマンドには plan の内容が標準入力として渡される。plan には以下が含まれる。
 
 - タスク概要（`task_id`・`name`・`owner`・`duration_days`）
 - 実施内容と対象成果物のパス・`done_criteria`
@@ -1587,7 +1623,7 @@ rate_limit_detection:
 - 実施手順（成果物の特定・更新・検証・lint）
 - 異常終了の条件（依存未解決・lint 未解消など）
 
-claim・complete・block はすべて `exec run` が制御する。エージェントは成果物の実装だけに集中し、終了コードで成否を伝える。
+隔離モードでは claim・complete・block を `exec run` が制御する。エージェントは成果物の実装だけに集中し、終了コードで成否を伝える。
 
 #### 8.12.3. 出力フォーマット
 
@@ -1809,6 +1845,93 @@ specdojo exec scaffold --project prj-0001
 - `viewpoints_path` に `pm-review-viewpoints.yaml`（`docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml` をもとに `project_id` を置換して出力）
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
+
+### 8.16. exec plan
+
+schedule にとらわれず、対象成果物の plan を生成する。生成源は成果物カタログ（`done_criteria`・`rulebook`・`overview` 等）で、`--task` を渡したときだけ schedule から `mode`・`approach`・`owner`・CPM を補完する。`exec build` のような全タスク一括生成や `ready.json` への依存はない。
+
+```bash
+# catalog の成果物から直接 plan を生成（schedule 非依存）
+specdojo exec plan --project prj-0001 --deliverable auth-api
+
+# scheduled タスクの plan を 1 件だけ再生成
+specdojo exec plan --project prj-0001 --task T-AUTH-auth-api-020
+```
+
+オプション:
+
+| オプション           | 説明                                                       | デフォルト |
+| -------------------- | ---------------------------------------------------------- | ---------- |
+| `--project`          | プロジェクト ID（`specdojo.config.json` から解決）         | 省略可     |
+| `--task <id>`        | scheduled タスクの plan を生成する                         | —          |
+| `--deliverable <id>` | catalog の成果物（`local_id`）から plan を生成する         | —          |
+| `--mode <mode>`      | `edit` / `review`（`--deliverable` 時に使用）              | `edit`     |
+| `--approach <a>`     | 進め方テンプレートの選択（`--deliverable` 時に使用）       | 省略可     |
+| `--out <path>`       | 出力先の上書き                                             | 既定パス   |
+
+挙動:
+
+- `exec/plans/<slug>-plan.md` を生成する。slug は `--task` 指定時は task ID、`--deliverable` 指定時は `local_id`。
+- タスクの状態・イベント・他タスクの plan・`index.md` は変更しない。
+- 生成した plan は git 管理対象として保持し、完了後は `exec/plans/done/` へアーカイブする（`plan / result のライフサイクル` を参照）。`exec build` は plan を削除しない。
+
+`exec run` は plan が無ければ内部で `exec plan` 相当を実行するため、通常は `exec run` だけでよい。plan を確認・編集してから実行したいときに `exec plan` を使う。
+
+### 8.17. 移行と破壊的変更
+
+再設計に伴う非互換と移行手順を示す。
+
+破壊的変更:
+
+- `exec run --task` の既定が worktree 隔離からカレントリポジトリ実行に変わる。隔離が必要な場合は `--worktree` を付ける。`--auto` は従来どおり worktree を作る。
+- `exec run` は既定で claim/complete を記録しない。記録するには `--track-state` を付ける（`--auto` では既定で有効）。
+- plan 生成の単発コマンドは `exec plan` に統一する。完了タスクのやり直しは `exec run --task <id>`（状態を見ない軽量実行）で行う。
+- `exec build` は plan を生成・削除しなくなる。plan の生成は `exec plan` / `exec run` が担い、完了後は `exec/plans/done/` へアーカイブする（`plan / result のライフサイクル` を参照）。result は `exec/results/` に据え置く。
+
+移行手順:
+
+1. 既存の自動実行（`exec run --auto …`）はそのまま動作する。worktree・状態追跡は維持される。
+2. 手動の単発実行は `exec run --task <id>`（カレント実行）へ置き換える。従来の隔離挙動が必要なら `--worktree --track-state` を付ける。
+3. plan だけを作る用途は `exec plan` を使う。
+
+暫定的に追加した `exec rerun` / `exec replan` は本再設計で `exec run` / `exec plan` に統合し、廃止する。
+
+### 8.18. plan / result のライフサイクル
+
+plan・result はいずれも git 管理対象の通常ファイルとして扱う（`generated/` のような無視対象にはしない）。状態追跡や隔離の有無にかかわらず、作業の入力（plan）と記録（result）はリポジトリ履歴に残す。
+
+生成:
+
+- plan は `exec plan` / `exec run` がオンデマンドで生成する。`exec build` は plan を生成・削除せず、`generated/`（state・ready・CPM 等）の更新に専念する。
+- result は `exec run`（`--track-state` 時）または `exec claim` が scaffold 生成し、エージェントが追記する。
+
+配置:
+
+- 作業中: `exec/plans/<slug>-plan.md`、`exec/results/<task-id>-result.md`。slug は `--task` 指定時は task ID、`--deliverable` 指定時は `local_id`。作業中の plan は対象ごとに 1 つだけ持ち、再生成は上書きする（`exec run` / `exec plan` / `--plan` が対象を一意に指せるようにするため）。
+- 完了後: plan は `exec/plans/done/` へ移動する。移動時に UTC タイムスタンプ（例: `20260305T031000Z`）と短い乱数を付与し、`exec/plans/done/<slug>-<UTC>-<rand>-plan.md` とする（event ファイルと同じ命名規約）。同一対象を複数回完了しても衝突せず、完了時刻が名前に残る。
+- result は `exec/results/` に据え置く（完了記録であり、review から参照されるため移動しない）。
+
+`--deliverable` の `local_id` が複数カタログに重複する場合、対象の特定とファイル名が曖昧になる。これは命名では解決できないため、`--deliverable` の対象指定を `domain` 等で限定修飾する仕様は別途定義する（現時点の制約）。
+
+アーカイブのトリガー:
+
+- 状態追跡あり（`exec complete`、または `exec run --track-state` の成功時）→ 対象 plan を `exec/plans/done/` へ自動移動する。
+- 軽量実行（状態追跡なし）→ `exec archive --task <id>`（または `--deliverable <id>`）で明示的に移動する。`exec run --archive-on-success` を付けると成功時に自動移動する。
+
+不要な plan は `done/` へ移動せず削除してもよい。plan は catalog+schedule から再生成でき、result が記録として残るためである。
+
+`exec archive` は完了済みの plan を `done/` へ移動するコマンドである。
+
+```bash
+specdojo exec archive --project prj-0001 --task T-AUTH-auth-api-020
+```
+
+| オプション           | 説明                                                       | デフォルト |
+| -------------------- | ---------------------------------------------------------- | ---------- |
+| `--project`          | プロジェクト ID（`specdojo.config.json` から解決）         | 省略可     |
+| `--task <id>`        | scheduled タスクの plan をアーカイブする                   | —          |
+| `--deliverable <id>` | catalog 由来（`local_id`）の plan をアーカイブする         | —          |
+| `--delete`           | `done/` へ移動せず plan を削除する                         | `false`    |
 
 ## 9. index コマンド
 
@@ -2206,7 +2329,7 @@ agent-test
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule build`）
-- exec plan / result 生成と実行（`exec scaffold` / `exec build` / `exec run`）
+- exec plan / result 生成と実行（`exec plan` / `exec run` / `exec build` / `exec archive`）
 - プロジェクト登録簿 scaffold・登録項目追加・ステータス変更・派生ビュー生成（`register scaffold` / `register add` / `register update` / `register start` / `register wait` / `register review` / `register close` / `register reject` / `register defer` / `register reopen` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）
 - 全生成物の一括再生成（`build`）
