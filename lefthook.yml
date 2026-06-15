@@ -13,10 +13,6 @@ pre-commit:
       run: npx markdownlint --fix {staged_files}
       stage_fixed: true
 
-    lint-markdown:
-      glob: "*.md"
-      run: npx markdownlint {staged_files}
-
     test:
       glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
       run: npm test
