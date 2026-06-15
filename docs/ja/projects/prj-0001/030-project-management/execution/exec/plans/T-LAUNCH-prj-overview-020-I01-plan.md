@@ -33,8 +33,6 @@ viewpoints_ref: /docs/ja/projects/prj-0001/030-project-management/010-management
 
 - プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
 - プロジェクトの目的・スコープを承認できる情報が含まれていること
-- 技術的前提・制約を読み取れる情報が含まれていること
-- 成功判定の輪郭が確認できること
 - プロジェクトの目的・スコープを計画立案の基礎として確認できること
 
 ## 3. owner ロールとしての記述ポイント
@@ -91,9 +89,7 @@ rulebook / sample / template は未成熟と判断されているため、存在
 |---|---|---|---|
 | RVP-001 | BA | vp-ba-business-value | プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること |
 | RVP-002 | PO | vp-po-purpose-alignment | プロジェクトの目的・スコープを承認できる情報が含まれていること |
-| RVP-003 | ARC | vp-arc-technical-constraints | 技術的前提・制約を読み取れる情報が含まれていること |
-| RVP-004 | QE | vp-qe-verifiability | 成功判定の輪郭が確認できること |
-| RVP-005 | PM | vp-pm-plan-feasibility | プロジェクトの目的・スコープを計画立案の基礎として確認できること |
+| RVP-003 | PM | vp-pm-plan-feasibility | プロジェクトの目的・スコープを計画立案の基礎として確認できること |
 <!-- markdownlint-enable MD055 MD056 -->
 
 ### RVP-001（BA: vp-ba-business-value）
@@ -126,37 +122,7 @@ rulebook / sample / template は未成熟と判断されているため、存在
 
 **エビデンス例:** 目的、対象範囲、対象外、判断理由、関連成果物への参照。
 
-### RVP-003（ARC: vp-arc-technical-constraints）
-
-**確認基準**: 技術的前提・制約を読み取れる情報が含まれていること
-
-**coverage_required:**
-
-- scope_boundary
-- data
-- integration
-- non_functional
-
-**チェック観点:** 技術的な前提、制約、外部依存、構成判断が必要な範囲で明示されているか。
-
-**エビデンス例:** 技術制約、外部依存、schema、validate 手順、構成方針。
-
-### RVP-004（QE: vp-qe-verifiability）
-
-**確認基準**: 成功判定の輪郭が確認できること
-
-**coverage_required:**
-
-- exception_case
-- state_transition
-- non_functional
-- acceptance
-
-**チェック観点:** 成功基準、受入条件、品質基準、設定値が pass / fail を判定できる表現になっているか。
-
-**エビデンス例:** 判定条件、数値、状態、必須項目、チェック手順。
-
-### RVP-005（PM: vp-pm-plan-feasibility）
+### RVP-003（PM: vp-pm-plan-feasibility）
 
 **確認基準**: プロジェクトの目的・スコープを計画立案の基礎として確認できること
 

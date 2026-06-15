@@ -32,6 +32,19 @@
         "planned_owner": "BA"
       }
     },
+    "T-LAUNCH-prj-overview-020-I01": {
+      "state": "todo",
+      "last_ts": "2026-06-15T12:54:42Z",
+      "last_by": "opencode-edit-agent",
+      "last_type": "cancel",
+      "last_msg": "done_criteriaのARC観点(RVP-003)削除に伴いplan再生成のため取消",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "BA",
+        "scheduler_strategy": "critical-first",
+        "claimed_via": "dojo-exec-scheduler"
+      }
+    },
     "G-LAUNCH-first-edit-pass": {
       "state": "todo"
     },
@@ -42,9 +55,6 @@
       "state": "todo"
     },
     "M-LAUNCH-project-management": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-020-I01": {
       "state": "todo"
     },
     "T-LAUNCH-prj-overview-030-I01": {
