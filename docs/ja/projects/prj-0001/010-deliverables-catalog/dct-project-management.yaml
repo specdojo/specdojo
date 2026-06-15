@@ -20,19 +20,13 @@ groups:
         done_criteria:
           - text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
             roles: [PO]
-            viewpoint: vp-po-purpose-alignment
-          - text: 計画・進捗・リスク管理の方針が記述されていること
+            viewpoint: vp-po-decision-readiness
+          - text: 計画・進捗・リスク・変更管理の方針が計画運用に使える粒度で記述されていること
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
-          - text: 業務プロセスとの整合が確認できること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
-          - text: 構成管理・技術管理の観点が含まれていること
+          - text: 憲章・組織定義・RACI と整合していること
             roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: レビュー方針・品質基準への参照が確認できること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
+            viewpoint: vp-arc-cross-document-consistency
       - local_id: pm-communication-plan
         name: コミュニケーション計画
         kind: work
@@ -48,15 +42,9 @@ groups:
           - text: 進捗・課題・リスクの報告経路が定義されていること
             roles: [PM]
             viewpoint: vp-pm-control-reporting
-          - text: 業務観点のコミュニケーション要件が含まれていること
+          - text: 関係者ごとの情報要求・関与方針が業務観点で確認できること
             roles: [BA]
             viewpoint: vp-ba-stakeholder-clarity
-          - text: 技術チームへの連絡経路が識別されていること
-            roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: 品質関連の報告経路が確認できること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
       - local_id: pm-quality-management-plan
         name: 品質管理計画
         kind: work
@@ -72,13 +60,7 @@ groups:
           - text: 品質管理プロセスが全体計画と整合していること
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
-          - text: 業務品質基準との整合が確認できること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
-          - text: コードレビュー・設計レビューなど技術品質基準が含まれていること
-            roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: 実施可能な検証・レビュー手順が記述されていること
+          - text: 品質メトリクス（算出方法・閾値・計測頻度）と検証・レビュー手順が判定可能な形で記述されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
   - name: 組織体制
@@ -95,16 +77,13 @@ groups:
         done_criteria:
           - text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
             roles: [PO]
-            viewpoint: vp-po-purpose-alignment
+            viewpoint: vp-po-decision-readiness
           - text: pm-roles.yaml と pm-members.yaml への導線が整備されていること
             roles: [BA]
             viewpoint: vp-ba-stakeholder-clarity
           - text: pm-roles.yaml と pm-members.yaml との構造整合が取れていること
             roles: [ARC]
             viewpoint: vp-arc-cross-document-consistency
-          - text: 禁止事項・見直し条件が実施可能な粒度で記述されていること
-            roles: [QE]
-            viewpoint: vp-qe-verifiability
       - local_id: pm-roles
         name: ロール定義
         kind: work
@@ -116,28 +95,13 @@ groups:
         done_criteria:
           - text: 全ロールコードとプロジェクト固有メモを承認できること
             roles: [PO]
-            viewpoint: vp-po-purpose-alignment
-          - text: PM ロールが定義されていること
-            roles: [PM]
-            viewpoint: vp-pm-plan-feasibility
-          - text: BA ロールが定義されていること
-            roles: [BA]
-            viewpoint: vp-ba-stakeholder-clarity
-          - text: ARC ロールが定義されていること
+            viewpoint: vp-po-decision-readiness
+          - text: Role code が schema 構造に沿って定義され、owner 語彙として機能すること
             roles: [ARC]
             viewpoint: vp-arc-document-structure
-          - text: DEV ロールが定義されていること
-            roles: [DEV]
-            viewpoint: vp-dev-implementation-readiness
-          - text: QE ロールが定義されていること
+          - text: 必要な全ロール（PM/BA/ARC/DEV/QE/UX/OPS）が過不足・重複なく定義されていること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-          - text: UX ロールが定義されていること
-            roles: [UX]
-            viewpoint: vp-ux-readability
-          - text: OPS ロールが定義されていること
-            roles: [OPS]
-            viewpoint: vp-ops-operability
       - local_id: pm-members
         name: メンバー定義
         kind: work
@@ -150,17 +114,11 @@ groups:
         done_criteria:
           - text: 実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
             roles: [PO]
-            viewpoint: vp-po-purpose-alignment
-          - text: PM ロールを担う member または兼務設定が確認できること
-            roles: [PM]
-            viewpoint: vp-pm-plan-feasibility
-          - text: BA ロールを担う member が定義されていること
-            roles: [BA]
-            viewpoint: vp-ba-stakeholder-clarity
-          - text: ARC ロールを担う member が定義されていること
+            viewpoint: vp-po-decision-readiness
+          - text: pm-roles.yaml の Role code 語彙と member の roles が整合していること
             roles: [ARC]
             viewpoint: vp-arc-cross-document-consistency
-          - text: QE ロールを担う member が定義されていること
+          - text: 必要なロールを担う member が過不足なく定義されていること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: pm-raci
@@ -175,13 +133,13 @@ groups:
           - text: 成果物・プロセスごとの責任分担マトリクスを承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
-          - text: 業務観点での責任分担が確認できること
+          - text: 確認者・合意対象など業務観点での責任分担が読み取れること
             roles: [BA]
             viewpoint: vp-ba-stakeholder-clarity
-          - text: 技術観点での責任分担が確認できること
+          - text: RACI の Role code が組織定義の採用ロールと整合していること
             roles: [ARC]
             viewpoint: vp-arc-cross-document-consistency
-          - text: 品質観点での責任分担が確認できること
+          - text: A の集約（1 成果物 1 Accountable）と R/C の抜け漏れがないこと
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
   - name: 管理台帳
@@ -282,13 +240,13 @@ groups:
           - text: プロジェクト全体のマイルストーンを承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
+          - text: マイルストーンの時期・順序が計画立案に使える粒度で定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
           - text: ビジネスマイルストーンが含まれていること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: 技術マイルストーンが含まれていること
-            roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
-          - text: 品質ゲートが含まれていること
+          - text: 品質ゲートが判定可能な形で含まれていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
       - local_id: sch-defaults
@@ -302,9 +260,9 @@ groups:
           - text: カレンダー・開始日などのデフォルト設定を承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
-          - text: 業務稼働日・休日設定が確認できること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
+          - text: 稼働日・休日などスケジュール前提の設定が確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
           - text: validate:schema を通過していること
             roles: [ARC]
             viewpoint: vp-arc-document-structure
@@ -322,12 +280,12 @@ groups:
           - text: Launch フェーズのタスク・マイルストーン計画を承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
-          - text: ビジネスタスクの順序・依存関係が確認できること
-            roles: [BA]
-            viewpoint: vp-ba-business-value
-          - text: 技術タスクのスコープと順序が確認できること
+          - text: タスクの順序・依存関係が計画立案に使える粒度で定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: schema 構造に沿ってタスクが定義されていること
             roles: [ARC]
-            viewpoint: vp-arc-technical-constraints
+            viewpoint: vp-arc-document-structure
           - text: 品質ゲート・レビュータスクが含まれていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
