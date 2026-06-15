@@ -136,15 +136,22 @@ function loadRosterForOpts(opts: { project?: string }) {
   const { config } = loadConfig()
   if (!config) return null
 
-  const projectId =
-    opts.project?.trim() ||
-    process.env.SPECDOJO_PROJECT?.trim() ||
-    Object.keys(config.projects)[0] ||
-    ''
+  const projectId = resolveProjectId(opts)
   const project = config.projects[projectId]
   if (!project) return null
 
   return loadMemberRoster(specdojoRootDir(), project)
+}
+
+function resolveProjectId(opts: { project?: string }): string {
+  const { config } = loadConfig()
+  return (
+    opts.project?.trim() ||
+    process.env.SPECDOJO_PROJECT?.trim() ||
+    config?.current_project?.trim() ||
+    Object.keys(config?.projects ?? {})[0] ||
+    ''
+  )
 }
 
 function findRosterMember(roster: ReturnType<typeof loadRosterForOpts>, actor: string) {
@@ -253,6 +260,44 @@ function ensureActorCanClaimNext(
   return false
 }
 
+function scaffoldClaimResult(opts: {
+  schedulePath: string
+  executionPath: string
+  state: LoadedExecState
+  taskId: string
+  projectId: string
+  actor: string
+  startedAt: string
+}): void {
+  const scheduleNode = opts.state.schedule.nodes.get(opts.taskId)
+  const localId = scheduleNode?.local_id
+  const phaseModeIndex = buildPhaseModeIndex(opts.schedulePath)
+  const mode = resolveTaskMode(
+    localId,
+    opts.taskId,
+    phaseModeIndex,
+    scheduleNode?.phase_suffix,
+    scheduleNode?.phase_set
+  )
+  const approach = resolveApproach(
+    localId,
+    opts.taskId,
+    phaseModeIndex,
+    scheduleNode?.phase_suffix,
+    scheduleNode?.phase_set
+  )
+  scaffoldResult({
+    executionPath: opts.executionPath,
+    taskId: opts.taskId,
+    mode,
+    projectId: opts.projectId,
+    planRef: `exec/plans/${opts.taskId}-plan.md`,
+    agent: opts.actor,
+    startedAt: opts.startedAt,
+    ...(approach ? { approach } : {}),
+  })
+}
+
 function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void {
   try {
     const { schedulePath } = resolveProjectContext(opts)
@@ -329,32 +374,14 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
     }
     const out = writeEventFile(schedulePath, event)
     if (action.type === 'claim') {
-      const scheduleNode = state.schedule.nodes.get(taskId)
-      const localId = scheduleNode?.local_id
-      const phaseModeIndex = buildPhaseModeIndex(schedulePath)
-      const mode = resolveTaskMode(
-        localId,
-        taskId,
-        phaseModeIndex,
-        scheduleNode?.phase_suffix,
-        scheduleNode?.phase_set
-      )
-      const approach = resolveApproach(
-        localId,
-        taskId,
-        phaseModeIndex,
-        scheduleNode?.phase_suffix,
-        scheduleNode?.phase_set
-      )
-      scaffoldResult({
+      scaffoldClaimResult({
+        schedulePath,
         executionPath,
         taskId,
-        mode,
-        projectId: opts.project ?? '',
-        planRef: `exec/plans/${taskId}-plan.md`,
-        agent: actor,
+        state,
+        projectId: resolveProjectId(opts),
+        actor,
         startedAt: new Date().toISOString(),
-        ...(approach ? { approach } : {}),
       })
     }
     process.stdout.write(out + '\n')
@@ -501,7 +528,7 @@ export function registerExecCommands(program: Command): void {
     let lockDir = ''
 
     try {
-      const { schedulePath } = resolveProjectContext(opts)
+      const { schedulePath, executionPath } = resolveProjectContext(opts)
       const actor = requireNonEmpty('by', opts.by)
       const roster = loadRosterForOpts(opts)
       assertValidActor(actor, roster)
@@ -629,6 +656,15 @@ export function registerExecCommands(program: Command): void {
       }
 
       const out = writeEventFile(schedulePath, ev)
+      scaffoldClaimResult({
+        schedulePath,
+        executionPath,
+        state,
+        taskId: next,
+        projectId: resolveProjectId(opts),
+        actor,
+        startedAt: ev.ts,
+      })
       process.stdout.write(out + '\n')
       exitWithCode(true)
     } catch (error) {
