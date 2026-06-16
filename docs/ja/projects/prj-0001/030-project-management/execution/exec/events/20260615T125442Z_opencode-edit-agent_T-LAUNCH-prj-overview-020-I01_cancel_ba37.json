@@ -1,8 +1,0 @@
-{
-  "v": 1,
-  "ts": "2026-06-15T12:54:42Z",
-  "type": "cancel",
-  "task_id": "T-LAUNCH-prj-overview-020-I01",
-  "by": "opencode-edit-agent",
-  "msg": "done_criteriaのARC観点(RVP-003)削除に伴いplan再生成のため取消"
-}

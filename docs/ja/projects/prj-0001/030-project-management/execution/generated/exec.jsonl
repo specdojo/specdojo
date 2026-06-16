@@ -1,4 +1,0 @@
-{"v":1,"ts":"2026-06-14T13:30:40Z","type":"claim","task_id":"T-LAUNCH-prj-overview-010-I01","by":"codex-expert-edit-agent","msg":"manual run","meta":{"claim_owner":"","planned_owner":"BA"}}
-{"v":1,"ts":"2026-06-14T14:02:23Z","type":"complete","task_id":"T-LAUNCH-prj-overview-010-I01","by":"codex-expert-edit-agent","msg":"manual run done"}
-{"v":1,"ts":"2026-06-15T10:26:21Z","type":"claim","task_id":"T-LAUNCH-prj-overview-020-I01","by":"opencode-edit-agent","msg":"auto-claim","meta":{"claim_owner":"","planned_owner":"BA","scheduler_strategy":"critical-first","claimed_via":"dojo-exec-scheduler"}}
-{"v":1,"ts":"2026-06-15T12:54:42Z","type":"cancel","task_id":"T-LAUNCH-prj-overview-020-I01","by":"opencode-edit-agent","msg":"done_criteriaのARC観点(RVP-003)削除に伴いplan再生成のため取消"}
