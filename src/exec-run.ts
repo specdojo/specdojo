@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
 import { type Command } from 'commander'
 import { selfRunArgs } from './spawn-self.js'
@@ -31,7 +31,14 @@ import {
   phaseSetNames,
   type PhaseSetSelection,
 } from './schedule-phase-sets.js'
-import { loadPlan } from './exec-plans.js'
+import {
+  archivePlan,
+  generateDeliverablePlan,
+  generateSinglePlan,
+  loadPlan,
+  resolveDeliverableTarget,
+} from './exec-plans.js'
+import { buildTaskView } from './exec-task-view.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
   resolveWorktreeBase,
@@ -89,6 +96,11 @@ type RunOpts = {
   dryRun?: boolean
   auto?: boolean
   task?: string
+  deliverable?: string
+  plan?: string
+  worktree?: boolean
+  trackState?: boolean
+  archiveOnSuccess?: boolean
   agentCmd?: string
   cmd?: string
   loop?: boolean
@@ -1012,6 +1024,173 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   if (result === 'failure') process.exitCode = 1
 }
 
+// Resolve the agent command for an in-place run, ignoring task state. Unlike the
+// worktree flow, this never requires the task to be claimable.
+function resolveInPlaceCommand(
+  task: ReadyTaskView | null,
+  roster: MemberRoster | null,
+  opts: RunOpts
+): string {
+  const override = (opts.agentCmd ?? opts.cmd)?.trim()
+  if (override) {
+    const member = roster?.members.find(
+      m => m.type === 'agent' && m.command && m.nickname === override
+    )
+    return member?.command ?? override
+  }
+
+  if (task && (task.execution ?? 'agent') === 'human') {
+    throw new Error(`Task requires human execution. Use --cmd to override: ${task.id}`)
+  }
+
+  const by = opts.by?.trim()
+  if (by) {
+    const member = roster?.members.find(
+      m => m.nickname === by && m.type === 'agent' && m.command
+    )
+    if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`)
+    return member.command
+  }
+
+  const candidates = selectCandidates(
+    { capabilities: task?.capabilities ?? [], proficiency: task?.proficiency },
+    roster,
+    task?.mode ?? 'edit'
+  )
+  const command = candidates[0]?.command
+  if (!command) throw new Error('No agent found. Specify --cmd <command>.')
+  return command
+}
+
+async function spawnAgentInPlace(
+  command: string,
+  prompt: string,
+  cwd: string,
+  schedulePath: string,
+  executionPath: string
+): Promise<number> {
+  const child = spawn(command, {
+    cwd,
+    env: {
+      ...process.env,
+      SPECDOJO_SCHEDULE_PATH: schedulePath,
+      SPECDOJO_EXECUTION_PATH: executionPath,
+    },
+    shell: true,
+    stdio: ['pipe', 'inherit', 'inherit'],
+  })
+  child.stdin.end(prompt)
+  return new Promise<number>(resolveExit => {
+    child.once('error', () => resolveExit(1))
+    child.once('close', code => resolveExit(code ?? 1))
+  })
+}
+
+// Default run path: generate the plan on demand and run the agent in the current
+// repository. No worktree, and no claim/complete events unless --track-state.
+async function runInPlaceMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project })
+  activateResolvedProjectPaths(resolvedPaths)
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  const repoRoot = specdojoRootDir()
+  const projectId = opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
+  const roster = loadRosterForExecutionPath(executionPath)
+
+  const plansDir = join(executionPath, 'exec', 'plans')
+  let planPath: string
+  let slug: string | undefined
+  let task: ReadyTaskView | null = null
+  // null target = bring-your-own --plan (not generated, not archived).
+  let target: ReturnType<typeof resolveDeliverableTarget> | null = null
+
+  if (opts.plan) {
+    planPath = resolve(opts.plan)
+    if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`)
+  } else if (opts.task) {
+    const taskId = opts.task.trim()
+    task = buildTaskView(schedulePath, executionPath, taskId)
+    slug = taskId
+    planPath = join(plansDir, `${taskId}-plan.md`)
+  } else {
+    target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
+    slug = target.slug
+    planPath = join(plansDir, `${slug}-plan.md`)
+    task = {
+      id: slug,
+      local_id: target.localId,
+      mode: 'edit',
+      schedule_file: '',
+      fifo_rank: 0,
+      critical_first_rank: 0,
+    }
+  }
+
+  const command = resolveInPlaceCommand(task, roster, opts)
+  const label = slug ?? planPath
+
+  if (opts.dryRun) {
+    process.stdout.write(`[dry-run] target: ${label} (state ignored)\n`)
+    process.stdout.write(`[dry-run] command: ${command}\n`)
+    process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`)
+    process.stdout.write(`[dry-run] plan: ${planPath}\n`)
+    return
+  }
+
+  // Generate the plan on demand (skip for bring-your-own --plan).
+  const generatedPlan = !opts.plan
+  if (opts.task && task) {
+    generateSinglePlan({
+      executionPath,
+      projectId,
+      catalogPath: catalogPath ?? '',
+      rolesPath,
+      viewpointsPath,
+      task,
+    })
+  } else if (target) {
+    generateDeliverablePlan({
+      executionPath,
+      projectId,
+      catalogPath: catalogPath ?? '',
+      rolesPath,
+      viewpointsPath,
+      target,
+    })
+  }
+
+  const prompt = expandPromptRefs(readFileSync(planPath, 'utf8'))
+
+  const trackState = !!opts.trackState
+  const actor = opts.by?.trim() ?? ''
+  if (trackState) {
+    if (!opts.task) throw new Error('--track-state requires --task.')
+    if (!actor) throw new Error('--track-state requires --by <actor>.')
+    if (!spawnClaim(projectId, opts.task.trim(), actor)) {
+      throw new Error(`Claim failed for ${opts.task.trim()} (omit --track-state to run without state).`)
+    }
+  }
+
+  process.stdout.write(`Running ${label} in place: ${command}\n`)
+  const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath)
+
+  if (trackState && opts.task) {
+    if (exitCode === 0) spawnComplete(projectId, opts.task.trim(), actor)
+    else spawnBlock(projectId, opts.task.trim(), actor, 'agent exited with non-zero code')
+  }
+
+  if (exitCode !== 0) {
+    process.exitCode = exitCode
+    process.stdout.write(`run failed: ${label} (exit ${exitCode})\n`)
+    return
+  }
+
+  if (opts.archiveOnSuccess && generatedPlan && slug) {
+    const archived = archivePlan({ executionPath, slug })
+    if (archived.to) process.stdout.write(`Archived plan: ${archived.to}\n`)
+  }
+  process.stdout.write(`run done: ${label}\n`)
+}
+
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
     .command('run')
@@ -1021,9 +1200,22 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option('--by <actor>', 'Actor / agent nickname (informational)')
   rcmd.option('--auto', 'Automatically select and run next ready task', false)
   rcmd.option('--task <taskId>', 'Task ID to run (manual selection)')
+  rcmd.option('--deliverable <id>', 'Catalog deliverable target: <local_id> or <domain>/<local_id>')
+  rcmd.option('--plan <path>', 'Run an existing plan file (in-place; no generation)')
+  rcmd.option(
+    '--worktree',
+    'Isolate execution in a git worktree and integrate back (requires --task)',
+    false
+  )
+  rcmd.option('--track-state', 'Record claim/complete events (requires --task and --by)', false)
+  rcmd.option(
+    '--archive-on-success',
+    'Archive the generated plan to exec/plans/done/ after a successful in-place run',
+    false
+  )
   rcmd.option(
     '--cmd <command>',
-    'Agent nickname or command string (selects a ready-task batch unless --task is used)'
+    'Agent nickname or command string (selects a ready-task batch unless a manual target is used)'
   )
   rcmd.option('--parallel <n>', 'Number of worktree instances to run in parallel', '1')
   rcmd.option('--worktree-base <path>', 'Override worktree base directory')
@@ -1054,16 +1246,25 @@ export function registerRunCommand(exec: Command): void {
   rcmd.action(async (opts: RunOpts) => {
     try {
       const isAuto = !!opts.auto
-      const isManual = !!opts.task
+      const hasTask = !!opts.task
+      const hasDeliverable = !!opts.deliverable
+      const hasPlan = !!opts.plan
+      const isManual = hasTask || hasDeliverable || hasPlan
       const hasCommand = !!opts.cmd
+      const isBatch = isAuto || (!isManual && hasCommand)
 
       if (!isAuto && !isManual && !hasCommand) {
-        process.stdout.write('Specify --auto, --cmd <command>, or --task <taskId>.\n')
+        process.stdout.write('Specify --auto, --cmd, --task, --deliverable, or --plan.\n')
+        process.exitCode = 1
+        return
+      }
+      if ([hasTask, hasDeliverable, hasPlan].filter(Boolean).length > 1) {
+        process.stdout.write('Specify at most one of --task, --deliverable, --plan.\n')
         process.exitCode = 1
         return
       }
       if (isAuto && isManual) {
-        process.stdout.write('Specify either --auto or --task, not both.\n')
+        process.stdout.write('Specify either --auto or a manual target, not both.\n')
         process.exitCode = 1
         return
       }
@@ -1073,13 +1274,25 @@ export function registerRunCommand(exec: Command): void {
         return
       }
       if (opts.agentCmd && !isManual) {
-        process.stdout.write('--agent-cmd requires --task. Use --cmd for batch execution.\n')
+        process.stdout.write('--agent-cmd requires a manual target. Use --cmd for batch execution.\n')
+        process.exitCode = 1
+        return
+      }
+      if (opts.worktree && !hasTask) {
+        process.stdout.write('--worktree requires --task.\n')
         process.exitCode = 1
         return
       }
       if (isManual && parseParallel(opts.parallel) !== 1) {
-        process.stdout.write('--parallel cannot be used with --task.\n')
+        process.stdout.write('--parallel cannot be used with a manual target.\n')
         process.exitCode = 1
+        return
+      }
+
+      // In-place manual run (default): generate the plan on demand and run in the
+      // current repository. No validate/build pass — that is orchestration only.
+      if (isManual && !opts.worktree) {
+        await runInPlaceMode(opts)
         return
       }
 
@@ -1097,7 +1310,7 @@ export function registerRunCommand(exec: Command): void {
       }
       process.stdout.write('[run] build: ok\n')
 
-      if (isAuto || (!isManual && hasCommand)) {
+      if (isBatch) {
         await runBatchMode(opts)
       } else {
         await runManualMode(opts)

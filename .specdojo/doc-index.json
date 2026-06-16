@@ -1,6 +1,7 @@
 {
   "version": 1,
   "entries": {
+    "tsd-home-mac-dev-server": "docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md",
     "tsd-index": "docs/ja/specdojo/samples/tsd-index-sample.md",
     "tsd-ollama-opencode": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md",
     "tsd-ollama": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",

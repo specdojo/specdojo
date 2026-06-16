@@ -154,6 +154,7 @@ function run(): void {
       'test',
       '--task',
       TASK_ID,
+      '--worktree',
       '--agent-cmd',
       `node ${agentScript}`,
     ])

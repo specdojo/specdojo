@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Command } from 'commander'
@@ -17,19 +25,17 @@ function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key]
 }
 
-async function runExecRerun(args: string[]): Promise<void> {
+async function runExec(args: string[]): Promise<void> {
   clearProjectEnv()
   process.exitCode = undefined
   const program = new Command()
   program.exitOverride()
   registerExecCommands(program)
-  await program.parseAsync(['node', 'specdojo', 'exec', 'rerun', ...args])
+  await program.parseAsync(['node', 'specdojo', 'exec', ...args])
 }
 
-function setupRepository(): { repo: string; taskId: string; planPath: string } {
-  const repo = mkdtempSync(join(tmpdir(), 'specdojo-rerun-repo-'))
-  const taskId = 'T-TEST-doc-010'
-
+function setupRepository(): { repo: string; executionPath: string } {
+  const repo = mkdtempSync(join(tmpdir(), 'specdojo-run-inplace-'))
   mkdirSync(join(repo, '.specdojo'), { recursive: true })
   mkdirSync(join(repo, 'schedule'), { recursive: true })
   mkdirSync(join(repo, 'catalog'), { recursive: true })
@@ -43,11 +49,7 @@ function setupRepository(): { repo: string; taskId: string; planPath: string } {
         version: 1,
         current_project: 'test',
         projects: {
-          test: {
-            schedule_path: 'schedule',
-            execution_path: 'execution',
-            catalog_path: 'catalog',
-          },
+          test: { schedule_path: 'schedule', execution_path: 'execution', catalog_path: 'catalog' },
         },
       },
       null,
@@ -100,7 +102,6 @@ function setupRepository(): { repo: string; taskId: string; planPath: string } {
     ].join('\n'),
     'utf8'
   )
-  // Minimal templates so plan generation succeeds without the full repo docs.
   writeFileSync(
     join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xep-template.md'),
     '_FRONTMATTER_\n\n# Edit Plan: _TASK_ID_\n\n_DONE_CRITERIA_ITEMS_\n',
@@ -111,19 +112,8 @@ function setupRepository(): { repo: string; taskId: string; planPath: string } {
     '### _VP_ID_\n\n_VP_CHECK_\n',
     'utf8'
   )
-  // A completed claim/complete history: rerun must ignore this `done` state.
-  writeFileSync(
-    join(repo, 'execution', 'exec', 'events', '20260101T000000Z_dev_T-TEST-doc-010_complete.json'),
-    JSON.stringify(
-      { v: 1, ts: '2026-01-01T00:00:00Z', type: 'complete', task_id: taskId, by: 'dev', msg: 'done' },
-      null,
-      2
-    ) + '\n',
-    'utf8'
-  )
 
-  const planPath = join(repo, 'execution', 'exec', 'plans', `${taskId}-plan.md`)
-  return { repo, taskId, planPath }
+  return { repo, executionPath: join(repo, 'execution') }
 }
 
 afterEach(() => {
@@ -137,28 +127,21 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('exec rerun', () => {
-  it('regenerates the plan, runs the agent with it, and removes the plan afterward', async () => {
-    const { repo, taskId, planPath } = setupRepository()
+describe('exec run (in-place, default)', () => {
+  it('runs --task in the current repo with the generated plan and writes no events', async () => {
+    const { repo, executionPath } = setupRepository()
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     try {
       process.chdir(repo)
-      await runExecRerun([
-        '--project',
-        'test',
-        '--task',
-        taskId,
-        '--agent-cmd',
-        FAKE_AGENT_CMD,
-      ])
+      await runExec(['run', '--project', 'test', '--task', 'T-TEST-doc-010', '--cmd', FAKE_AGENT_CMD])
 
-      // The agent received the regenerated plan as its prompt.
       const received = readFileSync(join(repo, 'agent-ran.txt'), 'utf8')
-      expect(received).toContain(`# Edit Plan: ${taskId}`)
+      expect(received).toContain('# Edit Plan: T-TEST-doc-010')
       expect(received).toContain('Content is complete')
 
-      // Plan is a transient artifact and is deleted after a successful run.
-      expect(existsSync(planPath)).toBe(false)
+      // Default in-place run keeps the plan, creates no worktree, and writes no events.
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'T-TEST-doc-010-plan.md'))).toBe(true)
+      expect(readdirSync(join(executionPath, 'exec', 'events'))).toHaveLength(0)
       expect(process.exitCode).toBeUndefined()
     } finally {
       process.chdir(originalCwd)
@@ -166,31 +149,49 @@ describe('exec rerun', () => {
     }
   })
 
-  it('keeps the plan file when --keep-plan is set', async () => {
-    const { repo, taskId, planPath } = setupRepository()
+  it('runs --deliverable from the catalog (schedule-independent)', async () => {
+    const { repo, executionPath } = setupRepository()
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     try {
       process.chdir(repo)
-      await runExecRerun([
-        '--project',
-        'test',
-        '--task',
-        taskId,
-        '--agent-cmd',
-        FAKE_AGENT_CMD,
-        '--keep-plan',
-      ])
+      await runExec(['run', '--project', 'test', '--deliverable', 'test/doc', '--cmd', FAKE_AGENT_CMD])
 
-      expect(existsSync(planPath)).toBe(true)
-      expect(readFileSync(planPath, 'utf8')).toContain(`# Edit Plan: ${taskId}`)
+      expect(readFileSync(join(repo, 'agent-ran.txt'), 'utf8')).toContain('Content is complete')
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(true)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
     }
   })
 
-  it('dry-run prints the resolved command without executing the agent', async () => {
-    const { repo, taskId, planPath } = setupRepository()
+  it('archives the plan to done/ with --archive-on-success', async () => {
+    const { repo, executionPath } = setupRepository()
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec([
+        'run',
+        '--project',
+        'test',
+        '--deliverable',
+        'test/doc',
+        '--cmd',
+        FAKE_AGENT_CMD,
+        '--archive-on-success',
+      ])
+
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(false)
+      const doneFiles = readdirSync(join(executionPath, 'exec', 'plans', 'done'))
+      expect(doneFiles).toHaveLength(1)
+      expect(doneFiles[0]).toMatch(/^test-doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+
+  it('dry-run resolves without generating a plan or running the agent', async () => {
+    const { repo, executionPath } = setupRepository()
     const lines: string[] = []
     vi.spyOn(process.stdout, 'write').mockImplementation((chunk: string | Uint8Array) => {
       lines.push(String(chunk))
@@ -198,22 +199,34 @@ describe('exec rerun', () => {
     })
     try {
       process.chdir(repo)
-      await runExecRerun([
+      await runExec([
+        'run',
         '--project',
         'test',
-        '--task',
-        taskId,
-        '--agent-cmd',
+        '--deliverable',
+        'test/doc',
+        '--cmd',
         FAKE_AGENT_CMD,
         '--dry-run',
       ])
 
-      const output = lines.join('')
-      expect(output).toContain('[dry-run]')
-      expect(output).toContain('state ignored')
-      // The agent never ran and the transient plan is cleaned up.
+      expect(lines.join('')).toContain('[dry-run]')
       expect(existsSync(join(repo, 'agent-ran.txt'))).toBe(false)
-      expect(existsSync(planPath)).toBe(false)
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(false)
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+
+  it('rejects --worktree without --task', async () => {
+    const { repo } = setupRepository()
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec(['run', '--project', 'test', '--deliverable', 'test/doc', '--worktree'])
+
+      expect(process.exitCode).toBe(1)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
