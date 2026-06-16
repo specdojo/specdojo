@@ -41,9 +41,15 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
-import { type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot } from './exec-types.js'
+import { type Approach, type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot, type TaskMode } from './exec-types.js'
 import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
-import { generatePlans, generateSinglePlan } from './exec-plans.js'
+import {
+  archivePlan,
+  generateDeliverablePlan,
+  generatePlans,
+  generateSinglePlan,
+  resolveDeliverableTarget,
+} from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
 import { registerRunCommand } from './exec-run.js'
@@ -54,6 +60,34 @@ import { buildPhaseModeIndex, resolveApproach, resolveTaskMode } from './exec-st
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
+
+const KNOWN_APPROACHES = [
+  'fully-guided',
+  'recipe-guided',
+  'freeform',
+  'rulebook-maintenance',
+  'recipe-maintenance',
+  'sample-maintenance',
+  'template-maintenance',
+] as const
+
+function parseTaskMode(value: unknown): TaskMode {
+  const mode = typeof value === 'string' ? value.trim().toLowerCase() : 'edit'
+  if (mode !== 'edit' && mode !== 'review') {
+    throw new Error(`Invalid --mode value: ${mode}. Use one of: edit|review.`)
+  }
+  return mode
+}
+
+function parseApproach(value: unknown): Approach {
+  const approach = typeof value === 'string' ? value.trim().toLowerCase() : ''
+  if (!KNOWN_APPROACHES.includes(approach as Approach)) {
+    throw new Error(
+      `Invalid --approach value: ${approach}. Use one of: ${KNOWN_APPROACHES.join('|')}.`
+    )
+  }
+  return approach as Approach
+}
 
 type ExecCommandOpts = {
   project?: string
@@ -511,28 +545,85 @@ export function registerExecCommands(program: Command): void {
     }
   })
 
-  const replanCmd = exec
-    .command('replan')
+  const planCmd = exec
+    .command('plan')
     .description(
-      'Regenerate the plan file for one task (manual re-run support; does not change task state or events)'
+      'Generate a plan for a task or catalog deliverable (schedule-independent; does not change state or events)'
     )
-  addProjectOptions(replanCmd)
-  replanCmd.requiredOption('--task <taskId>', 'Task ID to regenerate the plan for')
-  replanCmd.action(opts => {
+  addProjectOptions(planCmd)
+  planCmd.option('--task <taskId>', 'Scheduled task ID to generate the plan for')
+  planCmd.option('--deliverable <id>', 'Catalog deliverable: <local_id> or <domain>/<local_id>')
+  planCmd.option('--mode <mode>', 'edit|review (deliverable target)', 'edit')
+  planCmd.option('--approach <approach>', 'Approach template (deliverable target)')
+  planCmd.option('--out <path>', 'Override output path')
+  planCmd.action(opts => {
     try {
       const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
         resolveProjectContext(opts)
-      const taskId = requireNonEmpty('task', opts.task)
-      const task = buildTaskView(schedulePath, executionPath, taskId)
-      const outPath = generateSinglePlan({
-        executionPath,
-        projectId: resolveProjectId(opts),
-        catalogPath: catalogPath ?? '',
-        rolesPath,
-        viewpointsPath,
-        task,
-      })
+      const hasTask = typeof opts.task === 'string' && opts.task.trim() !== ''
+      const hasDeliverable = typeof opts.deliverable === 'string' && opts.deliverable.trim() !== ''
+      if (hasTask === hasDeliverable) {
+        throw new Error('Specify exactly one of --task or --deliverable.')
+      }
+      const projectId = resolveProjectId(opts)
+      const outOverride = typeof opts.out === 'string' && opts.out.trim() ? opts.out.trim() : undefined
+
+      let outPath: string
+      if (hasTask) {
+        const task = buildTaskView(schedulePath, executionPath, (opts.task as string).trim())
+        outPath = generateSinglePlan({
+          executionPath,
+          projectId,
+          catalogPath: catalogPath ?? '',
+          rolesPath,
+          viewpointsPath,
+          task,
+          ...(outOverride ? { outPath: outOverride } : {}),
+        })
+      } else {
+        const target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
+        outPath = generateDeliverablePlan({
+          executionPath,
+          projectId,
+          catalogPath: catalogPath ?? '',
+          rolesPath,
+          viewpointsPath,
+          target,
+          mode: parseTaskMode(opts.mode),
+          ...(opts.approach ? { approach: parseApproach(opts.approach) } : {}),
+          ...(outOverride ? { outPath: outOverride } : {}),
+        })
+      }
       process.stdout.write(`Generated: ${outPath}\n`)
+      exitWithCode(true)
+    } catch (error) {
+      printCommandError(error, false)
+    }
+  })
+
+  const archiveCmd = exec
+    .command('archive')
+    .description('Archive a completed plan to exec/plans/done/ (or delete it)')
+  addProjectOptions(archiveCmd)
+  archiveCmd.option('--task <taskId>', 'Scheduled task ID whose plan to archive')
+  archiveCmd.option('--deliverable <id>', 'Catalog deliverable: <local_id> or <domain>/<local_id>')
+  archiveCmd.option('--delete', 'Delete the plan instead of moving it to done/', false)
+  archiveCmd.action(opts => {
+    try {
+      const { executionPath, catalogPath } = resolveProjectContext(opts)
+      const hasTask = typeof opts.task === 'string' && opts.task.trim() !== ''
+      const hasDeliverable = typeof opts.deliverable === 'string' && opts.deliverable.trim() !== ''
+      if (hasTask === hasDeliverable) {
+        throw new Error('Specify exactly one of --task or --deliverable.')
+      }
+      const slug = hasTask
+        ? (opts.task as string).trim()
+        : resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim()).slug
+
+      const result = archivePlan({ executionPath, slug, delete: !!opts.delete })
+      process.stdout.write(
+        result.deleted ? `Deleted: ${result.from}\n` : `Archived: ${result.from} -> ${result.to}\n`
+      )
       exitWithCode(true)
     } catch (error) {
       printCommandError(error, false)

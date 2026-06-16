@@ -187,6 +187,34 @@ export function collectCatalogLocalIds(catalogPath: string): Set<string> {
   return ids
 }
 
+// Cross-file check: each `domain` must be unique across the project's catalogs
+// so that `--deliverable <domain>/<local_id>` resolves to a single deliverable.
+export function validateCatalogDomains(catalogPath: string): DctValidationResult {
+  const errors: string[] = []
+  const seen = new Map<string, string>()
+  const files = readdirSync(catalogPath)
+    .filter(f => /^dct-.+\.yaml$/.test(f))
+    .sort()
+  for (const f of files) {
+    const filePath = join(catalogPath, f)
+    let doc: DctDoc
+    try {
+      doc = yaml.load(readFileSync(filePath, 'utf8')) as DctDoc
+    } catch {
+      continue
+    }
+    const domain = doc?.domain
+    if (!domain) continue
+    const prev = seen.get(domain)
+    if (prev) {
+      errors.push(`duplicate domain '${domain}': ${prev} and ${filePath}`)
+    } else {
+      seen.set(domain, filePath)
+    }
+  }
+  return { ok: errors.length === 0, errors, warnings: [] }
+}
+
 // When knownLocalIds is provided, depends_on references are resolved against the
 // whole catalog (all dct-*.yaml of the project), so cross-file dependencies do
 // not warn. When omitted, resolution falls back to same-file local_ids only.

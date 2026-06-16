@@ -1,8 +1,23 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
-import { expandTemplate, listFilesRecursive, readJson } from './exec-shared.js'
+import {
+  expandTemplate,
+  listFilesRecursive,
+  nowUtcIsoSeconds,
+  randomHex,
+  readJson,
+  tsForFilenameUtc,
+} from './exec-shared.js'
 import type {
   Approach,
   ExecPlanMeta,
@@ -81,6 +96,72 @@ function findDeliverableInfo(catalogPath: string, localId: string): DeliverableI
     if (found) return found
   }
   return null
+}
+
+export type ResolvedDeliverable = {
+  domain: string
+  localId: string
+  // Filename slug for ad-hoc plans: `<domain>-<local_id>` (unique across catalogs).
+  slug: string
+  info: DeliverableInfo
+}
+
+function loadCatalogDocs(catalogPath: string): DctDoc[] {
+  if (!catalogPath || !existsSync(catalogPath)) return []
+  const files = listFilesRecursive(catalogPath)
+    .filter(f => /^dct-.+\.ya?ml$/i.test(f.split('/').pop() ?? ''))
+    .sort()
+
+  const docs: DctDoc[] = []
+  for (const filePath of files) {
+    try {
+      docs.push(load(readFileSync(filePath, 'utf8')) as DctDoc)
+    } catch {
+      continue
+    }
+  }
+  return docs
+}
+
+// Resolve a `--deliverable` identifier to a catalog deliverable. Accepts a bare
+// `local_id` (which must be unique across catalogs) or a `<domain>/<local_id>`
+// qualifier. Ambiguous bare ids are an error rather than a silent first match.
+export function resolveDeliverableTarget(catalogPath: string, value: string): ResolvedDeliverable {
+  const raw = value.trim()
+  if (!raw) throw new Error('deliverable identifier is empty')
+  const docs = loadCatalogDocs(catalogPath)
+
+  const slashIndex = raw.indexOf('/')
+  if (slashIndex !== -1) {
+    const domain = raw.slice(0, slashIndex)
+    const localId = raw.slice(slashIndex + 1)
+    if (!domain || !localId) {
+      throw new Error(`invalid deliverable identifier: ${raw} (expected <domain>/<local_id>)`)
+    }
+    const domainDocs = docs.filter(doc => doc.domain === domain)
+    if (domainDocs.length === 0) throw new Error(`deliverable domain not found: ${domain}`)
+    for (const doc of domainDocs) {
+      const info = searchSections(doc.groups, doc.base_path ?? '', localId)
+      if (info) return { domain, localId, slug: `${domain}-${localId}`, info }
+    }
+    throw new Error(`deliverable not found: ${domain}/${localId}`)
+  }
+
+  const localId = raw
+  const matches: ResolvedDeliverable[] = []
+  for (const doc of docs) {
+    const info = searchSections(doc.groups, doc.base_path ?? '', localId)
+    if (info) matches.push({ domain: doc.domain, localId, slug: `${doc.domain}-${localId}`, info })
+  }
+  if (matches.length === 0) throw new Error(`deliverable not found: ${localId}`)
+  if (matches.length > 1) {
+    const domains = matches.map(m => m.domain).join(', ')
+    throw new Error(
+      `ambiguous deliverable: ${localId} (matches domains: ${domains}). ` +
+        `Qualify as <domain>/${localId}.`
+    )
+  }
+  return matches[0]
 }
 
 function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
@@ -450,13 +531,21 @@ type PlanGenContext = {
   templateCache: Map<string, string>
 }
 
-function writeTaskPlan(ctx: PlanGenContext, task: PlanTask): string {
+function writeTaskPlan(
+  ctx: PlanGenContext,
+  task: PlanTask,
+  override?: { deliverable?: DeliverableInfo | null; outPath?: string }
+): string {
   const mode: TaskMode = task.mode ?? 'edit'
   const localId = task.local_id
   const deliverable =
-    localId && ctx.catalogPath ? findDeliverableInfo(ctx.catalogPath, localId) : null
+    override?.deliverable !== undefined
+      ? override.deliverable
+      : localId && ctx.catalogPath
+        ? findDeliverableInfo(ctx.catalogPath, localId)
+        : null
   const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${task.id}-result.md`
-  const outPath = join(ctx.plansDir, `${task.id}-plan.md`)
+  const outPath = override?.outPath ?? join(ctx.plansDir, `${task.id}-plan.md`)
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
   const planTask: PlanTask = { ...task, mode }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache)
@@ -500,28 +589,66 @@ export function generateSinglePlan(opts: {
   rolesPath?: string
   viewpointsPath?: string
   task: ReadyTaskView
+  outPath?: string
 }): string {
+  const ctx = newPlanGenContext(opts)
+  return writeTaskPlan(
+    ctx,
+    { ...opts.task, mode: opts.task.mode ?? 'edit' },
+    opts.outPath ? { outPath: opts.outPath } : undefined
+  )
+}
+
+// Generate a plan directly from a catalog deliverable, independent of the
+// schedule. The slug (`<domain>-<local_id>`) names the plan unless `outPath`
+// overrides it. owner/CPM are absent for ad-hoc targets.
+export function generateDeliverablePlan(opts: {
+  executionPath: string
+  projectId: string
+  catalogPath: string
+  rolesPath?: string
+  viewpointsPath?: string
+  target: ResolvedDeliverable
+  mode?: TaskMode
+  approach?: Approach
+  outPath?: string
+}): string {
+  const ctx = newPlanGenContext(opts)
+  const task: PlanTask = {
+    id: opts.target.slug,
+    local_id: opts.target.localId,
+    name: opts.target.info.deliverable.name,
+    mode: opts.mode ?? 'edit',
+    ...(opts.approach ? { approach: opts.approach } : {}),
+    schedule_file: '',
+    fifo_rank: 0,
+    critical_first_rank: 0,
+  }
+  return writeTaskPlan(ctx, task, { deliverable: opts.target.info, outPath: opts.outPath })
+}
+
+function newPlanGenContext(opts: {
+  executionPath: string
+  projectId: string
+  catalogPath: string
+  rolesPath?: string
+  viewpointsPath?: string
+}): PlanGenContext {
   const plansDir = join(opts.executionPath, 'exec', 'plans')
   mkdirSync(plansDir, { recursive: true })
 
-  const vpMap = opts.viewpointsPath
-    ? loadViewpoints(opts.viewpointsPath)
-    : new Map<string, ReviewViewpoint>()
-  const roleMap = loadRoles(opts.rolesPath)
-  const vpRef = opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : ''
-
-  const ctx: PlanGenContext = {
+  return {
     plansDir,
     executionPath: opts.executionPath,
     projectId: opts.projectId,
     catalogPath: opts.catalogPath,
-    vpMap,
-    roleMap,
-    vpRef,
+    vpMap: opts.viewpointsPath
+      ? loadViewpoints(opts.viewpointsPath)
+      : new Map<string, ReviewViewpoint>(),
+    roleMap: loadRoles(opts.rolesPath),
+    vpRef: opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : '',
     templateCache: new Map<string, string>(),
   }
-
-  return writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? 'edit' })
 }
 
 export function generatePlans(
@@ -590,6 +717,31 @@ export function generatePlans(
   )
 
   process.stdout.write(`Generated: ${plansDir}\n`)
+}
+
+// Move a completed plan to exec/plans/done/ with a unique UTC + random suffix
+// (same convention as event filenames), or delete it. The plan is regenerable
+// from the catalog, so deletion is safe; the result remains as the record.
+export function archivePlan(opts: {
+  executionPath: string
+  slug: string
+  delete?: boolean
+}): { from: string; to?: string; deleted: boolean } {
+  const plansDir = join(opts.executionPath, 'exec', 'plans')
+  const from = join(plansDir, `${opts.slug}-plan.md`)
+  if (!existsSync(from)) throw new Error(`plan not found: ${from}`)
+
+  if (opts.delete) {
+    rmSync(from, { force: true })
+    return { from, deleted: true }
+  }
+
+  const doneDir = join(plansDir, 'done')
+  mkdirSync(doneDir, { recursive: true })
+  const stamp = tsForFilenameUtc(nowUtcIsoSeconds())
+  const to = join(doneDir, `${opts.slug}-${stamp}-${randomHex(2)}-plan.md`)
+  renameSync(from, to)
+  return { from, to, deleted: false }
 }
 
 export function planPathForTask(executionPath: string, taskId: string): string {
