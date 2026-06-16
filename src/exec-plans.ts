@@ -85,7 +85,8 @@ function findDeliverableInfo(catalogPath: string, localId: string): DeliverableI
 export type ResolvedDeliverable = {
   domain: string
   localId: string
-  // Filename slug for ad-hoc plans: `<domain>-<local_id>` (unique across catalogs).
+  // Filename slug for ad-hoc plans. `local_id` is unique project-wide (catalog
+  // validate warns otherwise), so the bare local_id is used.
   slug: string
   info: DeliverableInfo
 }
@@ -107,42 +108,25 @@ function loadCatalogDocs(catalogPath: string): DctDoc[] {
   return docs
 }
 
-// Resolve a `--deliverable` identifier to a catalog deliverable. Accepts a bare
-// `local_id` (which must be unique across catalogs) or a `<domain>/<local_id>`
-// qualifier. Ambiguous bare ids are an error rather than a silent first match.
+// Resolve a `--deliverable` identifier (a bare `local_id`) to a catalog deliverable.
+// `local_id` is unique project-wide (catalog validate warns otherwise); an ambiguous
+// match is an error rather than a silent first match.
 export function resolveDeliverableTarget(catalogPath: string, value: string): ResolvedDeliverable {
-  const raw = value.trim()
-  if (!raw) throw new Error('deliverable identifier is empty')
+  const localId = value.trim()
+  if (!localId) throw new Error('deliverable identifier is empty')
   const docs = loadCatalogDocs(catalogPath)
 
-  const slashIndex = raw.indexOf('/')
-  if (slashIndex !== -1) {
-    const domain = raw.slice(0, slashIndex)
-    const localId = raw.slice(slashIndex + 1)
-    if (!domain || !localId) {
-      throw new Error(`invalid deliverable identifier: ${raw} (expected <domain>/<local_id>)`)
-    }
-    const domainDocs = docs.filter(doc => doc.domain === domain)
-    if (domainDocs.length === 0) throw new Error(`deliverable domain not found: ${domain}`)
-    for (const doc of domainDocs) {
-      const info = searchSections(doc.groups, doc.base_path ?? '', localId)
-      if (info) return { domain, localId, slug: `${domain}-${localId}`, info }
-    }
-    throw new Error(`deliverable not found: ${domain}/${localId}`)
-  }
-
-  const localId = raw
   const matches: ResolvedDeliverable[] = []
   for (const doc of docs) {
     const info = searchSections(doc.groups, doc.base_path ?? '', localId)
-    if (info) matches.push({ domain: doc.domain, localId, slug: `${doc.domain}-${localId}`, info })
+    if (info) matches.push({ domain: doc.domain, localId, slug: localId, info })
   }
   if (matches.length === 0) throw new Error(`deliverable not found: ${localId}`)
   if (matches.length > 1) {
     const domains = matches.map(m => m.domain).join(', ')
     throw new Error(
-      `ambiguous deliverable: ${localId} (matches domains: ${domains}). ` +
-        `Qualify as <domain>/${localId}.`
+      `ambiguous deliverable: ${localId} (defined in domains: ${domains}). ` +
+        `local_id must be unique project-wide; run catalog validate.`
     )
   }
   return matches[0]

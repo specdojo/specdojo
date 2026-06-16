@@ -215,6 +215,47 @@ export function validateCatalogDomains(catalogPath: string): DctValidationResult
   return { ok: errors.length === 0, errors, warnings: [] }
 }
 
+// Cross-file check: each `local_id` must be unique across the project's catalogs,
+// so that a bare `local_id` (in `--deliverable` or a scheduled task) resolves to a
+// single deliverable. Returns warnings (not errors); per-file duplicates are caught
+// as errors by validateDctDoc.
+export function validateCatalogLocalIds(catalogPath: string): DctValidationResult {
+  const warnings: string[] = []
+  const seen = new Map<string, string>()
+  const reported = new Set<string>()
+  const files = readdirSync(catalogPath)
+    .filter(f => /^dct-.+\.yaml$/.test(f))
+    .sort()
+  for (const f of files) {
+    const filePath = join(catalogPath, f)
+    let doc: DctDoc
+    try {
+      doc = yaml.load(readFileSync(filePath, 'utf8')) as DctDoc
+    } catch {
+      continue
+    }
+    if (!doc || !Array.isArray(doc.groups)) continue
+    const walk = (sections: DctSection[]): void => {
+      for (const section of sections) {
+        for (const item of section.deliverables ?? []) {
+          const prev = seen.get(item.local_id)
+          if (prev === undefined) {
+            seen.set(item.local_id, filePath)
+          } else if (prev !== filePath && !reported.has(item.local_id)) {
+            reported.add(item.local_id)
+            warnings.push(
+              `local_id '${item.local_id}' is defined in multiple catalogs: ${prev}, ${filePath}`
+            )
+          }
+        }
+        if (section.groups) walk(section.groups)
+      }
+    }
+    walk(doc.groups)
+  }
+  return { ok: true, errors: [], warnings }
+}
+
 // When knownLocalIds is provided, depends_on references are resolved against the
 // whole catalog (all dct-*.yaml of the project), so cross-file dependencies do
 // not warn. When omitted, resolution falls back to same-file local_ids only.

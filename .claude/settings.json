@@ -10,7 +10,10 @@
       "Bash(npm run *)",
       "Read(**)",
       "WebSearch",
-      "WebFetch"
+      "WebFetch",
+      "Bash(echo \"tsc:$?\")",
+      "Bash(echo \"build:$?\")",
+      "Bash(echo \"lint:$?\")"
     ],
     "deny": [
       "Read(./.env)",

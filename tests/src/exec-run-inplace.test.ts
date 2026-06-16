@@ -154,10 +154,10 @@ describe('exec run (in-place, default)', () => {
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     try {
       process.chdir(repo)
-      await runExec(['run', '--project', 'test', '--deliverable', 'test/doc', '--cmd', FAKE_AGENT_CMD])
+      await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--cmd', FAKE_AGENT_CMD])
 
       expect(readFileSync(join(repo, 'agent-ran.txt'), 'utf8')).toContain('Content is complete')
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(true)
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(true)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
@@ -174,16 +174,16 @@ describe('exec run (in-place, default)', () => {
         '--project',
         'test',
         '--deliverable',
-        'test/doc',
+        'doc',
         '--cmd',
         FAKE_AGENT_CMD,
         '--archive-on-success',
       ])
 
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(false)
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(false)
       const doneFiles = readdirSync(join(executionPath, 'exec', 'plans', 'done'))
       expect(doneFiles).toHaveLength(1)
-      expect(doneFiles[0]).toMatch(/^test-doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
@@ -204,7 +204,7 @@ describe('exec run (in-place, default)', () => {
         '--project',
         'test',
         '--deliverable',
-        'test/doc',
+        'doc',
         '--cmd',
         FAKE_AGENT_CMD,
         '--dry-run',
@@ -212,7 +212,7 @@ describe('exec run (in-place, default)', () => {
 
       expect(lines.join('')).toContain('[dry-run]')
       expect(existsSync(join(repo, 'agent-ran.txt'))).toBe(false)
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'test-doc-plan.md'))).toBe(false)
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(false)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
@@ -224,7 +224,7 @@ describe('exec run (in-place, default)', () => {
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     try {
       process.chdir(repo)
-      await runExec(['run', '--project', 'test', '--deliverable', 'test/doc', '--worktree'])
+      await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--worktree'])
 
       expect(process.exitCode).toBe(1)
     } finally {

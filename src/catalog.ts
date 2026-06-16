@@ -8,6 +8,7 @@ import {
   collectCatalogLocalIds,
   validateBasedOn,
   validateCatalogDomains,
+  validateCatalogLocalIds,
   validateDctDoc,
 } from './catalog-build.js'
 import { collectDocIndexEntries } from './doc-index.js'
@@ -144,13 +145,19 @@ export function registerCatalogCommands(program: Command): void {
         allOk = false
       }
 
-      // Cross-file: domain must be unique so --deliverable <domain>/<local_id> is unambiguous.
+      // Cross-file: domain must be unique (catalog build output is keyed by domain).
       const domainResult = validateCatalogDomains(catalogPath)
       for (const err of domainResult.errors) {
         process.stdout.write(`ERROR: ${err}\n`)
       }
       if (!domainResult.ok) {
         allOk = false
+      }
+
+      // Cross-file: local_id must be unique project-wide so a bare local_id resolves
+      // to one deliverable (scheduled tasks and --deliverable).
+      for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
+        process.stdout.write(`WARN:  ${warn}\n`)
       }
 
       process.exitCode = allOk ? 0 : 1

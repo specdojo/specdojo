@@ -7,7 +7,7 @@ import {
   generateDeliverablePlan,
   resolveDeliverableTarget,
 } from '../../src/exec-plans.js'
-import { validateCatalogDomains } from '../../src/catalog-build.js'
+import { validateCatalogDomains, validateCatalogLocalIds } from '../../src/catalog-build.js'
 
 let root: string
 
@@ -62,7 +62,7 @@ describe('resolveDeliverableTarget', () => {
 
     expect(result.domain).toBe('alpha')
     expect(result.localId).toBe('only-a')
-    expect(result.slug).toBe('alpha-only-a')
+    expect(result.slug).toBe('only-a')
     expect(result.info.deliverable.name).toBe('Name only-a')
   })
 
@@ -74,28 +74,15 @@ describe('resolveDeliverableTarget', () => {
     )
   })
 
-  it('resolves a domain-qualified id to the correct catalog', () => {
+  it('errors when the local_id is not found', () => {
     const catalogPath = setupCatalog()
 
-    expect(resolveDeliverableTarget(catalogPath, 'beta/shared').domain).toBe('beta')
-    expect(resolveDeliverableTarget(catalogPath, 'alpha/shared').slug).toBe('alpha-shared')
-  })
-
-  it('errors when the domain or local_id is not found', () => {
-    const catalogPath = setupCatalog()
-
-    expect(() => resolveDeliverableTarget(catalogPath, 'gamma/shared')).toThrow(
-      /deliverable domain not found: gamma/
-    )
-    expect(() => resolveDeliverableTarget(catalogPath, 'alpha/nope')).toThrow(
-      /deliverable not found: alpha\/nope/
-    )
     expect(() => resolveDeliverableTarget(catalogPath, 'nope')).toThrow(/deliverable not found: nope/)
   })
 })
 
 describe('generateDeliverablePlan', () => {
-  it('writes <domain>-<local_id>-plan.md from a catalog deliverable', () => {
+  it('writes <local_id>-plan.md from a catalog deliverable', () => {
     const catalogPath = setupCatalog()
     const executionPath = join(root, 'execution')
 
@@ -107,9 +94,9 @@ describe('generateDeliverablePlan', () => {
       target,
     })
 
-    expect(outPath).toBe(join(executionPath, 'exec', 'plans', 'alpha-only-a-plan.md'))
+    expect(outPath).toBe(join(executionPath, 'exec', 'plans', 'only-a-plan.md'))
     const plan = readFileSync(outPath, 'utf8')
-    expect(plan).toContain('task_id: alpha-only-a')
+    expect(plan).toContain('task_id: only-a')
     expect(plan).toContain('criterion for only-a')
   })
 })
@@ -177,5 +164,29 @@ describe('validateCatalogDomains', () => {
     const catalogPath = setupCatalog()
 
     expect(validateCatalogDomains(catalogPath)).toEqual({ ok: true, errors: [], warnings: [] })
+  })
+})
+
+describe('validateCatalogLocalIds', () => {
+  it('warns when a local_id is defined in multiple catalogs', () => {
+    // setupCatalog defines `shared` in both alpha and beta catalogs.
+    const catalogPath = setupCatalog()
+
+    const result = validateCatalogLocalIds(catalogPath)
+
+    expect(result.ok).toBe(true)
+    expect(result.warnings.some(w => /local_id 'shared' is defined in multiple catalogs/.test(w))).toBe(
+      true
+    )
+  })
+
+  it('passes with no warnings when every local_id is project-wide unique', () => {
+    root = mkdtempSync(join(tmpdir(), 'specdojo-localid-'))
+    const catalogPath = join(root, 'catalog')
+    mkdirSync(catalogPath, { recursive: true })
+    writeFileSync(join(catalogPath, 'dct-alpha.yaml'), dctYaml('alpha', ['a', 'b']), 'utf8')
+    writeFileSync(join(catalogPath, 'dct-beta.yaml'), dctYaml('beta', ['c', 'd']), 'utf8')
+
+    expect(validateCatalogLocalIds(catalogPath).warnings).toEqual([])
   })
 })

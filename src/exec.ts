@@ -1,6 +1,7 @@
 import { type Command } from 'commander'
 import { existsSync } from 'node:fs'
 import { join, resolve as pathResolve } from 'node:path'
+import { validateCatalogLocalIds } from './catalog-build.js'
 import {
   acquireSchedulerLock,
   buildEvent,
@@ -498,9 +499,16 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(vcmd)
   vcmd.action(opts => {
     try {
-      const { schedulePath } = resolveProjectContext(opts)
+      const { schedulePath, catalogPath } = resolveProjectContext(opts)
       const res = validateAll(schedulePath)
       printValidateResult(res)
+      // Scheduled tasks resolve their deliverable by bare local_id, so warn when a
+      // local_id is not unique project-wide across the catalogs.
+      if (catalogPath && existsSync(catalogPath)) {
+        for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
+          process.stdout.write(`WARN:  ${warn}\n`)
+        }
+      }
       exitWithCode(res.ok)
     } catch (error) {
       printCommandError(error, false)
