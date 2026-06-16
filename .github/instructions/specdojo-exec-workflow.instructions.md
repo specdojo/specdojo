@@ -1,3 +1,7 @@
+---
+applyTo: 'docs/ja/projects/**'
+---
+
 # SpecDojo Exec ワークフロー
 
 `docs/ja/projects/` 配下のプロジェクト成果物に対する SpecDojo exec タスク（claim・実装・レビュー）を実行する際の共通手順です。

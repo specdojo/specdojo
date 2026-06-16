@@ -72,6 +72,9 @@ CLAUDE.local.md
 .codex/auth.json
 .codex/sessions/
 
+# Copilot local
+.github/copilot/settings.local.json
+
 # OpenCode local
 .opencode/auth.json
 .opencode/sessions/
