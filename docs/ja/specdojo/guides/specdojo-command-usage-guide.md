@@ -1139,7 +1139,7 @@ npm run validate:schema:pjr-index
 - CPM（クリティカルパス法）による優先タスク計算
 - Agent による安全な排他実行（ロック機構）
 
-従来 `exec run` は plan 生成・状態追跡・worktree 隔離・スケジューリングを 1 経路に束ねており、単発のタスク実行にも重い手順を要求していた。再設計では、これらを次の 4 つの独立した関心事として分離し、軽量な手動実行を既定とする。
+`exec` は plan 生成・状態追跡・worktree 隔離・スケジューリングという 4 つの独立した関心事を分離し、軽量な手動実行を既定とする。
 
 | 関心事           | 内容                                                | 必要になる場面                       |
 | ---------------- | --------------------------------------------------- | ------------------------------------ |
@@ -1875,7 +1875,7 @@ specdojo exec plan --project prj-0001 --task T-AUTH-auth-api-020
 挙動:
 
 - `exec/plans/<slug>-plan.md` を生成する。slug は `--task` 指定時は task ID、`--deliverable` 指定時は `local_id`（`--deliverable の識別子解決` を参照）。
-- タスクの状態・イベント・他タスクの plan・`index.md` は変更しない。
+- タスクの状態・イベント・他タスクの plan は変更しない。
 - 生成した plan は git 管理対象として保持し、完了後は `exec/plans/done/` へアーカイブする（`plan / result のライフサイクル` を参照）。`exec build` は plan を削除しない。
 
 `exec run` は plan が無ければ内部で `exec plan` 相当を実行するため、通常は `exec run` だけでよい。plan を確認・編集してから実行したいときに `exec plan` を使う。
@@ -1894,27 +1894,7 @@ specdojo exec plan --project prj-0001 --task T-AUTH-auth-api-020
 
 解決された成果物は、plan ファイル名の slug（`= local_id`、`plan / result のライフサイクル` を参照）と `_DELIVERABLE_*_` プレースホルダの算出に用いる。`exec run` / `exec archive` の `--deliverable` も本節の規則で解決する。
 
-### 8.17. 移行と破壊的変更
-
-再設計に伴う非互換と移行手順を示す。
-
-破壊的変更:
-
-- `exec run --task` の既定が worktree 隔離からカレントリポジトリ実行に変わる。隔離が必要な場合は `--worktree` を付ける。`--auto` は従来どおり worktree を作る。
-- `exec run` は既定で claim/complete を記録しない。記録するには `--track-state` を付ける（`--auto` では既定で有効）。
-- plan 生成の単発コマンドは `exec plan` に統一する。完了タスクのやり直しは `exec run --task <id>`（状態を見ない軽量実行）で行う。
-- `exec build` は plan を生成・削除しなくなる。plan の生成は `exec plan` / `exec run` が担い、完了後は `exec/plans/done/` へアーカイブする（`plan / result のライフサイクル` を参照）。result は `exec/results/` に据え置く。
-- `local_id` はプロジェクト全体で一意とする。`--deliverable` は bare `local_id` のみで解決し、`<domain>/<local_id>` 修飾子は廃止する。重複時は先頭一致での暗黙選択をやめエラーにし、`catalog validate` / `exec validate` が重複を警告する（`--deliverable の識別子解決` を参照）。
-
-移行手順:
-
-1. 既存の自動実行（`exec run --auto …`）はそのまま動作する。worktree・状態追跡は維持される。
-2. 手動の単発実行は `exec run --task <id>`（カレント実行）へ置き換える。従来の隔離挙動が必要なら `--worktree --track-state` を付ける。
-3. plan だけを作る用途は `exec plan` を使う。
-
-暫定的に追加した `exec rerun` / `exec replan` は本再設計で `exec run` / `exec plan` に統合し、廃止する。
-
-### 8.18. plan / result のライフサイクル
+### 8.17. plan / result のライフサイクル
 
 plan・result はいずれも git 管理対象の通常ファイルとして扱う（`generated/` のような無視対象にはしない）。状態追跡や隔離の有無にかかわらず、作業の入力（plan）と記録（result）はリポジトリ履歴に残す。
 
