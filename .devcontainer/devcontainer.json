@@ -20,7 +20,7 @@
     "ghcr.io/va-h/devcontainers-features/uv:1": {},
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "ripgrep,fd-find,gh,fzf,yq,shellcheck,shfmt",
+      "packages": "ripgrep,fd-find,gh,fzf,yq,shellcheck,shfmt,tmux",
       "upgradePackages": false
     }
   },
