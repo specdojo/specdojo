@@ -1775,7 +1775,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `merge`      | `--ff-only`、`--dry-run`                                               |
 | `remove`     | `--delete-branch`、`--force`、`--dry-run`                              |
 
-`prepare` は task state が `doing` であることを確認し、scheduler と同じプロジェクトロックを取得する。root index に stage 済み変更がある場合は停止し、対象 task の plan、result、claim event だけを `exec(<task-id>): prepare execution` で commit してから `exec/<task-id-slug>` を作成する。登録済み worktree または既存 exec ブランチは再利用する。
+`prepare` は task state が `doing` であることを確認し、scheduler と同じプロジェクトロックを取得する。plan が存在しない場合は `exec plan` 相当でオンデマンド生成する（既存の plan は上書きしない）。root index に stage 済み変更がある場合は停止し、対象 task の plan、result、claim event だけを `exec(<task-id>): prepare execution` で commit してから `exec/<task-id-slug>` を作成する。登録済み worktree または既存 exec ブランチは再利用する。
 
 `agent` は claim actor と `pm-members.yaml` の定義から command を解決する。plan 内の `[[id]]` は `index replace --format markdown --missing keep` 相当で展開し、task worktree をカレントディレクトリとして agent を1回だけ起動する。リトライ、fallback、commit、イベント更新は行わず、agent の終了コードをそのまま返す。
 

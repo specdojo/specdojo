@@ -125,6 +125,12 @@ type PreparedTask = {
   resultPath?: string
 }
 
+type PlanGenPaths = {
+  catalogPath?: string
+  rolesPath?: string
+  viewpointsPath?: string
+}
+
 export function buildTaskPhaseMap(schedulePath: string): {
   localIdToPhaseSets: Map<string, string[]>
   phaseSetSuffixToId: Map<string, string>
@@ -474,7 +480,8 @@ function prepareSingleTask(
   actorOverride: string | undefined,
   dryRun: boolean,
   skipClaim: boolean,
-  worktreeBase: string
+  worktreeBase: string,
+  planGenPaths: PlanGenPaths
 ): PreparedTask | RunResult {
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
@@ -533,9 +540,19 @@ function prepareSingleTask(
     )
   }
 
+  // Plans are generated on demand here; `exec build` no longer manages them.
+  generateSinglePlan({
+    executionPath,
+    projectId: projectId ?? '',
+    catalogPath: planGenPaths.catalogPath ?? '',
+    rolesPath: planGenPaths.rolesPath,
+    viewpointsPath: planGenPaths.viewpointsPath,
+    task,
+  })
+
   const prompt = loadPrompt(executionPath, task.id)
   if (!prompt) {
-    process.stdout.write(`  Plan not found for ${task.id}. Run: specdojo exec build\n`)
+    process.stdout.write(`  Plan not found for ${task.id}.\n`)
     return 'failure'
   }
 
@@ -733,7 +750,8 @@ function spawnBlock(
 async function runBatchMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
-  const { schedulePath, executionPath } = resolvedPaths
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath }
   const repoRoot = specdojoRootDir()
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -802,7 +820,8 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           opts.by,
           dryRun,
           false,
-          worktreeBase
+          worktreeBase,
+          planGenPaths
         )
         if (typeof prepared !== 'string') preparedTasks.push(prepared)
       } catch (error) {
@@ -879,7 +898,8 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   const taskId = opts.task as string
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
-  const { schedulePath, executionPath } = resolvedPaths
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath }
   const repoRoot = specdojoRootDir()
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -1004,7 +1024,8 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     actorOverride,
     !!opts.dryRun,
     alreadyClaimed,
-    worktreeBase
+    worktreeBase,
+    planGenPaths
   )
 
   if (typeof prepared === 'string') {

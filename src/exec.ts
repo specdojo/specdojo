@@ -46,7 +46,6 @@ import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
 import {
   archivePlan,
   generateDeliverablePlan,
-  generatePlans,
   generateSinglePlan,
   resolveDeliverableTarget,
 } from './exec-plans.js'
@@ -512,8 +511,7 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(bcmd)
   bcmd.action(opts => {
     try {
-      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
-        resolveProjectContext(opts)
+      const { schedulePath } = resolveProjectContext(opts)
 
       const res = validateAll(schedulePath)
       printValidateResult(res)
@@ -526,17 +524,10 @@ export function registerExecCommands(program: Command): void {
       const events = readAllEventFiles(schedulePath)
       const cpm = computeCpm(schedule, schedulePath)
 
+      // Plans are generated on demand by `exec plan` / `exec run`, not by build.
       const snapshot = writeGeneratedCore(schedulePath, events, schedule, cpm)
       writeScheduleHashAndDiff(schedulePath, schedule)
       writeCpmFiles(schedulePath, cpm, snapshot)
-      generatePlans(
-        executionPath,
-        opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
-        catalogPath ?? '',
-        rolesPath,
-        viewpointsPath,
-        snapshot
-      )
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`)
       exitWithCode(true)

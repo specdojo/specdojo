@@ -18,6 +18,7 @@ import {
 } from './exec-run.js'
 import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
+import { generateSinglePlan } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
 import {
   findExecWorktree,
@@ -228,6 +229,20 @@ function prepare(opts: CommonOpts): void {
     const lockedState = requireDoingTask(context.schedulePath, opts.task)
     const planPath = join(context.executionPath, 'exec', 'plans', `${opts.task}-plan.md`)
     const resultPath = join(context.executionPath, 'exec', 'results', `${opts.task}-result.md`)
+
+    // Plans are generated on demand (exec build no longer manages them). Generate
+    // one if absent; keep an existing plan so a hand-edited plan is not clobbered.
+    if (!existsSync(planPath)) {
+      generateSinglePlan({
+        executionPath: context.executionPath,
+        projectId: opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
+        catalogPath: context.catalogPath ?? '',
+        rolesPath: context.rolesPath,
+        viewpointsPath: context.viewpointsPath,
+        task: buildTaskView(context.schedulePath, context.executionPath, opts.task),
+      })
+    }
+
     for (const path of [planPath, resultPath, lockedState.claimEventPath]) {
       if (!existsSync(path)) throw new Error(`Required execution file not found: ${path}`)
     }

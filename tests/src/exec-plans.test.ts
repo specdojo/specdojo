@@ -4,7 +4,6 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { existsSync } from 'node:fs'
 import {
-  generatePlans,
   generateSinglePlan,
   ownerRoleFields,
   reviewViewpointDetails,
@@ -143,41 +142,16 @@ describe('reviewViewpointDetails', () => {
   })
 })
 
-describe('generatePlans edit self review', () => {
+describe('plan generation (edit self review)', () => {
   it('通常 edit plan に全 role の RVP を展開し maintenance plan には展開しない', () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-exec-plans-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
-    const generatedPath = join(executionPath, 'generated')
     const rolesPath = join(root, 'pm-roles.yaml')
     const viewpointsPath = join(root, 'pm-review-viewpoints.yaml')
 
     try {
-      mkdirSync(generatedPath, { recursive: true })
       mkdirSync(catalogPath, { recursive: true })
-      writeFileSync(
-        join(generatedPath, 'ready.json'),
-        JSON.stringify({
-          tasks: [
-            {
-              id: 'T-TEST-overview-020',
-              local_id: 'overview',
-              name: '補強',
-              owner: 'BA',
-              mode: 'edit',
-              approach: 'recipe-guided',
-            },
-            {
-              id: 'T-TEST-overview-030',
-              local_id: 'overview',
-              name: 'Recipe メンテナンス',
-              owner: 'BA',
-              mode: 'edit',
-              approach: 'recipe-maintenance',
-            },
-          ],
-        })
-      )
       writeFileSync(
         join(catalogPath, 'dct-test.yaml'),
         [
@@ -236,7 +210,35 @@ describe('generatePlans edit self review', () => {
         ].join('\n')
       )
 
-      generatePlans(executionPath, 'test', catalogPath, rolesPath, viewpointsPath, null)
+      const base = { executionPath, projectId: 'test', catalogPath, rolesPath, viewpointsPath }
+      generateSinglePlan({
+        ...base,
+        task: {
+          id: 'T-TEST-overview-020',
+          local_id: 'overview',
+          name: '補強',
+          owner: 'BA',
+          mode: 'edit',
+          approach: 'recipe-guided',
+          schedule_file: '',
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      })
+      generateSinglePlan({
+        ...base,
+        task: {
+          id: 'T-TEST-overview-030',
+          local_id: 'overview',
+          name: 'Recipe メンテナンス',
+          owner: 'BA',
+          mode: 'edit',
+          approach: 'recipe-maintenance',
+          schedule_file: '',
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      })
 
       const editPlan = readFileSync(
         join(executionPath, 'exec/plans/T-TEST-overview-020-plan.md'),
@@ -322,7 +324,7 @@ describe('generateSinglePlan', () => {
       expect(plan).toContain('task_id: T-TEST-overview-020')
       expect(plan).toContain('Business value is clear')
 
-      // Sibling plan and index are untouched (generatePlans would have wiped them).
+      // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, 'T-TEST-overview-099-plan.md'), 'utf8')).toBe('keep me\n')
       expect(readFileSync(join(plansDir, 'index.md'), 'utf8')).toBe('# existing index\n')
     } finally {

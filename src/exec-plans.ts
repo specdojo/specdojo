@@ -1,12 +1,4 @@
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  renameSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
@@ -15,17 +7,9 @@ import {
   listFilesRecursive,
   nowUtcIsoSeconds,
   randomHex,
-  readJson,
   tsForFilenameUtc,
 } from './exec-shared.js'
-import type {
-  Approach,
-  ExecPlanMeta,
-  ReadySnapshot,
-  ReadyTaskView,
-  StateSnapshot,
-  TaskMode,
-} from './exec-types.js'
+import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from './exec-types.js'
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
 import type { ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
 import type { RoleDefinition, RolesDoc } from './role-types.js'
@@ -491,30 +475,6 @@ function buildReviewPlanMarkdown(
 }
 
 // ---------------------------------------------------------------------------
-// Index builder
-// ---------------------------------------------------------------------------
-
-function buildPlanIndexMarkdown(tasks: PlanTask[]): string {
-  const lines: string[] = []
-  lines.push('# Exec Plan Index')
-  lines.push('')
-  lines.push('exec build が生成した実行プラン一覧。各プランは非正本であり、進捗は保持しない。')
-  lines.push('')
-  lines.push(`- plan_count: \`${tasks.length}\``)
-  lines.push('')
-  lines.push('| id | mode | owner | name | plan |')
-  lines.push('|---|---|---|---|---|')
-  for (const task of tasks) {
-    const name = (task.name ?? task.id).replace(/\|/g, '\\|')
-    lines.push(
-      `| \`${task.id}\` | ${task.mode} | ${task.owner ?? '-'} | ${name} | [${task.id}-plan.md](./${task.id}-plan.md) |`
-    )
-  }
-  lines.push('')
-  return lines.join('\n')
-}
-
-// ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
 
@@ -649,74 +609,6 @@ function newPlanGenContext(opts: {
     vpRef: opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : '',
     templateCache: new Map<string, string>(),
   }
-}
-
-export function generatePlans(
-  executionPath: string,
-  projectId: string,
-  catalogPath: string,
-  rolesPath: string | undefined,
-  viewpointsPath: string | undefined,
-  stateSnapshot: StateSnapshot | null
-): void {
-  const generatedDir = join(executionPath, 'generated')
-  const readyJsonPath = join(generatedDir, 'ready.json')
-  if (!existsSync(readyJsonPath)) return
-
-  const ready = readJson(readyJsonPath) as ReadySnapshot
-  const tasks = (Array.isArray(ready.tasks) ? ready.tasks : []) as PlanTask[]
-
-  const plansDir = join(executionPath, 'exec', 'plans')
-
-  // Preserve plan files for doing/blocked tasks so they remain accessible
-  // after exec build without a separate claims snapshot.
-  const activeTaskIds = new Set<string>()
-  if (stateSnapshot) {
-    for (const [taskId, state] of Object.entries(stateSnapshot.tasks)) {
-      if (state.state === 'doing' || state.state === 'blocked') {
-        activeTaskIds.add(taskId)
-      }
-    }
-  }
-
-  if (existsSync(plansDir)) {
-    for (const entry of readdirSync(plansDir)) {
-      if (entry === 'index.md') {
-        rmSync(join(plansDir, entry))
-        continue
-      }
-      const taskId = entry.replace(/-plan\.md$/, '')
-      if (activeTaskIds.has(taskId)) continue
-      rmSync(join(plansDir, entry), { recursive: true, force: true })
-    }
-  }
-  mkdirSync(plansDir, { recursive: true })
-
-  const vpMap = viewpointsPath ? loadViewpoints(viewpointsPath) : new Map<string, ReviewViewpoint>()
-  const roleMap = loadRoles(rolesPath)
-  const vpRef = viewpointsPath ? repoRelativePath(viewpointsPath) : ''
-  const ctx: PlanGenContext = {
-    plansDir,
-    executionPath,
-    projectId,
-    catalogPath,
-    vpMap,
-    roleMap,
-    vpRef,
-    templateCache: new Map<string, string>(),
-  }
-
-  for (const task of tasks) {
-    writeTaskPlan(ctx, { ...task, mode: task.mode ?? 'edit' })
-  }
-
-  writeFileSync(
-    join(plansDir, 'index.md'),
-    buildPlanIndexMarkdown(tasks.map(t => ({ ...t, mode: t.mode ?? 'edit' }))),
-    'utf8'
-  )
-
-  process.stdout.write(`Generated: ${plansDir}\n`)
 }
 
 // Move a completed plan to exec/plans/done/ with a unique UTC + random suffix

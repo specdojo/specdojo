@@ -12,6 +12,7 @@
     "sysd-agent-settings": "docs/ja/product/040-system-design/sysd-agent-settings.md",
     "sysd-claude-agent-settings": "docs/ja/product/040-system-design/sysd-claude-agent-settings.md",
     "sysd-codex-agent-settings": "docs/ja/product/040-system-design/sysd-codex-agent-settings.md",
+    "sysd-github-copilot-agent-settings": "docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md",
     "sysd-opencode-agent-settings": "docs/ja/product/040-system-design/sysd-opencode-agent-settings.md",
     "prj-0001:dct-index": "docs/ja/specdojo/samples/dct-index-sample.md",
     "prj-0001:dct-project-definition": "docs/ja/specdojo/samples/dct-sample.yaml",
