@@ -14,10 +14,6 @@ _PHASE_DESCRIPTION_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`
 
-**done_criteria:**
-
-_DONE_CRITERIA_ITEMS_
-
 ## 3. owner ロールとしての記述ポイント
 
 frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。

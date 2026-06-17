@@ -245,6 +245,7 @@ describe('plan generation (edit self review)', () => {
         'utf8'
       )
       expect(editPlan).toContain('viewpoints_ref:')
+      expect(editPlan).not.toContain('**done_criteria:**')
       expect(editPlan).toContain('## 5. 全 role 観点による自己レビュー')
       expect(editPlan).toContain('| RVP-001 | BA | vp-ba-business-value |')
       expect(editPlan).toContain('| RVP-002 | PO | vp-po-purpose-alignment |')
