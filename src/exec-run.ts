@@ -1221,7 +1221,7 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option('--by <actor>', 'Actor / agent nickname (informational)')
   rcmd.option('--auto', 'Automatically select and run next ready task', false)
   rcmd.option('--task <taskId>', 'Task ID to run (manual selection)')
-  rcmd.option('--deliverable <id>', 'Catalog deliverable target: <local_id> or <domain>/<local_id>')
+  rcmd.option('--deliverable <localId>', 'Catalog deliverable local_id target (unique project-wide)')
   rcmd.option('--plan <path>', 'Run an existing plan file (in-place; no generation)')
   rcmd.option(
     '--worktree',

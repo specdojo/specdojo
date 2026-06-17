@@ -551,7 +551,7 @@ export function registerExecCommands(program: Command): void {
     )
   addProjectOptions(planCmd)
   planCmd.option('--task <taskId>', 'Scheduled task ID to generate the plan for')
-  planCmd.option('--deliverable <id>', 'Catalog deliverable: <local_id> or <domain>/<local_id>')
+  planCmd.option('--deliverable <localId>', 'Catalog deliverable local_id (unique project-wide)')
   planCmd.option('--mode <mode>', 'edit|review (deliverable target)', 'edit')
   planCmd.option('--approach <approach>', 'Approach template (deliverable target)')
   planCmd.option('--out <path>', 'Override output path')
@@ -605,7 +605,7 @@ export function registerExecCommands(program: Command): void {
     .description('Archive a completed plan to exec/plans/done/ (or delete it)')
   addProjectOptions(archiveCmd)
   archiveCmd.option('--task <taskId>', 'Scheduled task ID whose plan to archive')
-  archiveCmd.option('--deliverable <id>', 'Catalog deliverable: <local_id> or <domain>/<local_id>')
+  archiveCmd.option('--deliverable <localId>', 'Catalog deliverable local_id (unique project-wide)')
   archiveCmd.option('--delete', 'Delete the plan instead of moving it to done/', false)
   archiveCmd.action(opts => {
     try {

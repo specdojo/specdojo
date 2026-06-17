@@ -188,7 +188,7 @@ export function collectCatalogLocalIds(catalogPath: string): Set<string> {
 }
 
 // Cross-file check: each `domain` must be unique across the project's catalogs
-// so that `--deliverable <domain>/<local_id>` resolves to a single deliverable.
+// (catalog build output is keyed by domain).
 export function validateCatalogDomains(catalogPath: string): DctValidationResult {
   const errors: string[] = []
   const seen = new Map<string, string>()
