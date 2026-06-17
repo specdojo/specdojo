@@ -1191,8 +1191,31 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     }
   }
 
+  // Scaffold the result so the agent fills in a frontmatter-complete file (mirrors on-demand plan
+  // generation). Skipped for bring-your-own --plan, where no managed task identity exists.
+  // Idempotent: never clobbers an existing result (e.g. one created by claim above).
+  let resultPath: string | undefined
+  if (task && slug) {
+    resultPath = scaffoldResult({
+      executionPath,
+      taskId: slug,
+      mode: task.mode ?? 'edit',
+      projectId,
+      planRef: `exec/plans/${slug}-plan.md`,
+      agent: actor,
+      startedAt: new Date().toISOString(),
+      ...(task.approach ? { approach: task.approach } : {}),
+    }).resultPath
+  }
+
   process.stdout.write(`Running ${label} in place: ${command}\n`)
   const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath)
+
+  // In-place runs do not write claim/complete events unless --track-state, but the result file's
+  // own status is a file-level field, so reflect the exit code into it regardless.
+  if (resultPath) {
+    updateResultStatus(resultPath, exitCode === 0 ? 'complete' : 'blocked', new Date().toISOString())
+  }
 
   if (trackState && opts.task) {
     if (exitCode === 0) spawnComplete(projectId, opts.task.trim(), actor)

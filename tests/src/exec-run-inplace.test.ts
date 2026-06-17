@@ -108,6 +108,11 @@ function setupRepository(): { repo: string; executionPath: string } {
     'utf8'
   )
   writeFileSync(
+    join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xer-template.md'),
+    '_FRONTMATTER_\n\n## 1. done_criteria 確認\n',
+    'utf8'
+  )
+  writeFileSync(
     join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xrp-viewpoint-detail-template.md'),
     '### _VP_ID_\n\n_VP_CHECK_\n',
     'utf8'
@@ -143,6 +148,15 @@ describe('exec run (in-place, default)', () => {
       expect(existsSync(join(executionPath, 'exec', 'plans', 'T-TEST-doc-010-plan.md'))).toBe(true)
       expect(readdirSync(join(executionPath, 'exec', 'events'))).toHaveLength(0)
       expect(process.exitCode).toBeUndefined()
+
+      // The result is scaffolded so the agent fills a frontmatter-complete file (incl. mode),
+      // and its status reflects the successful exit even without --track-state events.
+      const result = readFileSync(
+        join(executionPath, 'exec', 'results', 'T-TEST-doc-010-result.md'),
+        'utf8'
+      )
+      expect(result).toContain('mode: edit')
+      expect(result).toContain('status: complete')
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })

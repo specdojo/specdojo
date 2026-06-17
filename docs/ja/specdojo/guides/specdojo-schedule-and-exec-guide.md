@@ -802,15 +802,15 @@ specdojo exec build --project <project-id>
 
 | ユースケース           | 代表コマンド                         | plan       | result            | done 保存                 |
 | ---------------------- | ------------------------------------ | ---------- | ----------------- | ------------------------- |
-| 9.8.1 カレント・記録なし | `exec run --task`                    | 生成・保持 | scaffold しない   | △ `--archive-on-success`  |
-| 9.8.2 カレント・記録あり | `exec run --task --by --track-state` | 生成・保持 | claim が scaffold | △ `--archive-on-success`  |
+| 9.8.1 カレント・記録なし | `exec run --task`                    | 生成・保持 | scaffold + 完了更新 | △ `--archive-on-success`  |
+| 9.8.2 カレント・記録あり | `exec run --task --by --track-state` | 生成・保持 | scaffold + 完了更新 | △ `--archive-on-success`  |
 | 9.8.3 worktree         | `exec run --task --worktree`         | 生成・保持 | scaffold + 完了更新 | —                         |
 | 9.8.4 auto（順次）     | `exec run --auto`                    | 生成・保持 | scaffold + 完了更新 | —                         |
 | 9.8.5 plan 先生成→実行 | `exec plan` → `exec run --plan`      | exec plan で生成 | scaffold しない | —                         |
 
 - plan は `exec/plans/<slug>-plan.md` に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
 - `--archive-on-success`（done 保存）はカレント実行（in-place）でのみ有効。`--worktree` / `--auto` では plan は `exec/plans/` に残る。
-- result（`exec/results/<task-id>-result.md`）は claim 時に scaffold される。記録なしの実行（claim しない）では scaffold されないため、result を残すには `--track-state` か手動の `exec claim` を使う。
+- result（`exec/results/<task-id>-result.md`）は、`--task` / `--deliverable` を対象とする `exec run` であれば記録の有無にかかわらず scaffold され、実行後に終了コードへ応じて `status` を complete / blocked に更新する。これは plan のオンデマンド生成と対になる挙動で、エージェントは常に frontmatter（`mode` を含む）が整った result を埋めるだけでよい。既存ファイルがある場合は上書きしない。task identity を持たない持ち込み `--plan` 実行（9.8.5）だけは scaffold しない。claim も従来どおり result を scaffold する（冪等）。
 
 #### 9.8.1. 1 task をカレントリポジトリで実行（記録なし）
 
@@ -822,7 +822,7 @@ specdojo exec run --project <project-id> --task <task-id>
 
 エージェントは phase の `capabilities` / `mode` から自動選択する。明示する場合は `pm-members.yaml` の nickname を `--cmd` で指定する（例: `--cmd opencode-edit-agent`、`--cmd claude-edit-agent`）。
 
-実行後に result（記録）を残したくなった場合は、`exec claim` で `exec/results/<task-id>-result.md` を scaffold し、必要に応じて記入してから `exec complete` で完了を記録する。`claim` はタスクが `todo`（依存解決済み）であることが前提で、result が既にあれば上書きしない。
+result（`exec/results/<task-id>-result.md`）はこの実行でも scaffold され、エージェントが記入する。実行後は終了コードに応じて `status` が complete / blocked に更新される。ただし claim/complete イベントは書かないため、スケジュール進捗へ反映したい場合は `exec complete` で完了を記録する（state を `done` にしたい場合は事前に `exec claim` で `doing` にしておく）。
 
 ```sh
 specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "record run"
