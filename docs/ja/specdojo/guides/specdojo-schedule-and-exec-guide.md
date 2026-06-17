@@ -377,7 +377,7 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 specdojo exec run \
   --project <project-id> \
   --task <task-id> \
-  --agent-cmd "opencode run --agent edit-agent"
+  --agent-cmd "opencode run --agent opencode-edit-agent"
 ```
 
 #### 9.5.1. worktree を作成してエージェントを手動実行する
@@ -549,7 +549,7 @@ specdojo exec worktree agent \
   --project <project-id> \
   --task <task-id> \
   --by <actor> \
-  --agent-cmd "opencode run --agent edit-agent"
+  --agent-cmd "opencode run --agent opencode-edit-agent"
 ```
 
 `agent` はrate limit時のリトライ、別agentへのfallback、commit、merge、イベント更新を行わない。終了コードはagent commandの終了コードをそのまま返すため、失敗後も内容を確認して同じコマンドを再実行できる。
@@ -564,7 +564,7 @@ specdojo index replace --format markdown --missing keep \
     cd "${WORKTREE}"
     export SPECDOJO_SCHEDULE_PATH="${WORKTREE}/${SCHEDULE_REL}"
     export SPECDOJO_EXECUTION_PATH="${WORKTREE}/${EXECUTION_REL}"
-    exec opencode run --agent edit-agent
+    exec opencode run --agent opencode-edit-agent
   )
 ```
 
@@ -794,29 +794,117 @@ specdojo exec build --project <project-id>
 
 完了したタスクの後続タスクが新たに Ready になり、`ready.json`、`claim-next.json`、`ready.md` が更新される。
 
-### 9.8. 最小コマンド例
+### 9.8. ユースケース別 実行例
 
-`exec run` で次のReadyタスクを1件だけ実行する最小例。各段階を個別に確認する場合は9.5.1の分割コマンドを使う。
+`exec plan` / `exec run` の代表的なユースケースとコマンド例を示す。隔離（worktree の有無）と状態追跡（claim/complete の記録）の組み合わせで選ぶ。どのコマンドも `--dry-run` を付けると、解決されたエージェントコマンドや対象を表示して実行しない。
+
+各ユースケースで plan / result が作成されるか、成功後に plan が `exec/plans/done/` へアーカイブされるかは次のとおり。
+
+| ユースケース           | 代表コマンド                         | plan       | result            | done 保存                 |
+| ---------------------- | ------------------------------------ | ---------- | ----------------- | ------------------------- |
+| 9.8.1 カレント・記録なし | `exec run --task`                    | 生成・保持 | scaffold しない   | △ `--archive-on-success`  |
+| 9.8.2 カレント・記録あり | `exec run --task --by --track-state` | 生成・保持 | claim が scaffold | △ `--archive-on-success`  |
+| 9.8.3 worktree         | `exec run --task --worktree`         | 生成・保持 | scaffold + 完了更新 | —                         |
+| 9.8.4 auto（順次）     | `exec run --auto`                    | 生成・保持 | scaffold + 完了更新 | —                         |
+| 9.8.5 plan 先生成→実行 | `exec plan` → `exec run --plan`      | exec plan で生成 | scaffold しない | —                         |
+
+- plan は `exec/plans/<slug>-plan.md` に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
+- `--archive-on-success`（done 保存）はカレント実行（in-place）でのみ有効。`--worktree` / `--auto` では plan は `exec/plans/` に残る。
+- result（`exec/results/<task-id>-result.md`）は claim 時に scaffold される。記録なしの実行（claim しない）では scaffold されないため、result を残すには `--track-state` か手動の `exec claim` を使う。
+
+#### 9.8.1. 1 task をカレントリポジトリで実行（記録なし）
+
+plan を自動生成し、エージェントをカレントリポジトリで1回実行する。worktree もイベント（claim/complete）も作らない。変更は作業ツリーに残るので、確認とコミットは手動で行う。タスクの状態（todo/doing/done）は問わないため、`done` のやり直しもこれでよい。
 
 ```sh
-specdojo exec build --project <project-id>
-task_id=$(specdojo exec scheduler --project <project-id> --by <actor> --dry-run)
-specdojo exec run --project <project-id> --task "$task_id" --dry-run
-specdojo exec scheduler --project <project-id> --by <actor> --msg "manual run"
-specdojo exec run --project <project-id> --task "$task_id"
-specdojo exec complete --project <project-id> --task "$task_id" --by <actor> --msg "manual run done"
-specdojo exec build --project <project-id>
+specdojo exec run --project <project-id> --task <task-id>
 ```
 
-完全自動でよい場合は、上記を個別に実行せず `exec run --auto` を使う。
+エージェントは phase の `capabilities` / `mode` から自動選択する。明示する場合は `pm-members.yaml` の nickname を `--cmd` で指定する（例: `--cmd opencode-edit-agent`、`--cmd claude-edit-agent`）。
+
+実行後に result（記録）を残したくなった場合は、`exec claim` で `exec/results/<task-id>-result.md` を scaffold し、必要に応じて記入してから `exec complete` で完了を記録する。`claim` はタスクが `todo`（依存解決済み）であることが前提で、result が既にあれば上書きしない。
 
 ```sh
-# 1バッチ実行して終了
-specdojo exec run --project <project-id> --auto
-
-# ready タスクがなくなるまで繰り返す
-specdojo exec run --project <project-id> --auto --loop
+specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "record run"
+specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "done"
 ```
+
+生成した plan を `exec/plans/done/` へ退避（アーカイブ）したい場合は `exec archive` を使う（`--archive-on-success` を付けずに後から行う手動版）。`--delete` を付けると移動せず削除する。
+
+```sh
+specdojo exec archive --project <project-id> --task <task-id>
+```
+
+#### 9.8.2. 1 task をカレントリポジトリで実行（状態追跡あり）
+
+カレントで実行しつつ、スケジュール進捗へ反映するため claim/complete を記録する。`--track-state` は `--task` と `--by` を要求し、実行前に claim、終了コードに応じて complete / block を記録する。worktree は作らない。
+
+```sh
+specdojo exec run --project <project-id> --task <task-id> --by <actor> --track-state
+```
+
+claim・実行・complete を個別コマンドに分けたい場合は次のようにする。
+
+```sh
+specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "manual run"
+specdojo exec run --project <project-id> --task <task-id>
+specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "done"
+```
+
+#### 9.8.3. 1 task を worktree で隔離実行
+
+worktree を作って隔離実行し、成功時に成果物を現在ブランチへ merge、worktree 削除、complete まで一括で行う。`--worktree` は `--task` が前提で、状態追跡は常に有効になる。
+
+```sh
+specdojo exec run --project <project-id> --task <task-id> --worktree
+```
+
+各段階を人が確認しながら進める場合は、9.5.1 の `exec worktree` 分割コマンドを使う。
+
+#### 9.8.4. auto でスケジュール順に順次実行（worktree）
+
+`ready.json` の順序でタスクを選び、worktree + 状態追跡で順次実行する。エージェントは phase 要件と `pm-members.yaml` から自動選択する。`exec run` は内部で validate と build を実行するため、事前の `exec build` は必須ではない。
+
+```sh
+# 1 バッチ実行して終了
+specdojo exec run --project <project-id> --auto --parallel 5
+
+# ready タスクがなくなるまで繰り返す（ラウンド間で exec build）
+specdojo exec run --project <project-id> --auto --loop --parallel 5
+```
+
+選択戦略は既定 `critical-first`。FIFO 順にする場合は `--strategy fifo` を付ける。
+
+#### 9.8.5. plan を作ってから手動で実行
+
+plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。
+
+```sh
+# scheduled タスクの plan を生成
+specdojo exec plan --project <project-id> --task <task-id>
+
+# 内容を確認・編集後、その plan で実行する（plan は再生成しない）
+specdojo exec run --project <project-id> --plan <plan-path>
+```
+
+specdojo を介さず自分のエージェントへ直接渡すこともできる（`[[id]]` 参照を展開して標準入力へ）。
+
+```sh
+specdojo index replace --format markdown --missing keep <plan-path> \
+  | opencode run --agent opencode-edit-agent
+```
+
+schedule に無い成果物をカタログから直接 plan 化する場合は `--deliverable <local_id>` を使う。
+
+```sh
+specdojo exec plan --project <project-id> --deliverable <local_id>
+```
+
+#### 9.8.6. その他
+
+- schedule 非依存で catalog の成果物を直接実行する: `exec run --project <project-id> --deliverable <local_id>`（plan 生成 → カレント実行）。
+- カレント実行（in-place; `--task` / `--deliverable`）で `--archive-on-success` を付けると、成功後に plan を `exec/plans/done/` へアーカイブする（`--worktree` / `--auto` では無効）。
+- 段階確認しながら worktree 実行する: 9.5.1 の `exec worktree prepare … remove`。
 
 ### 9.9. 完了済みタスクを再実行する
 

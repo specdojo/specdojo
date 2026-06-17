@@ -1518,15 +1518,15 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 # ready タスクがなくなるまで繰り返す（--loop）
 specdojo exec run --project prj-0001 --auto --loop --parallel 5
 
-# agent を明示する場合
-specdojo exec run --project prj-0001 --cmd opencode-edit --by edit-agent --parallel 2
+# agent を明示する場合（pm-members.yaml の nickname を指定）
+specdojo exec run --project prj-0001 --cmd opencode-edit-agent --parallel 2
 ```
 
 低レベルに段階実行したい場合は `exec build` → `exec scheduler` → `exec worktree prepare … remove` → `exec complete` を個別に実行する。
 
 ### 8.12. exec run
 
-対象タスクの plan を用意し、エージェントを実行する。既定はカレントリポジトリ実行で、状態イベントや worktree は作らない。`--auto`・`--parallel` 2 以上・`--worktree` を指定したときだけ worktree 隔離と統合（commit→merge→remove）を行う。`specdojo.config.json` の `run.agent_commands` に登録したコマンドを `--cmd` で切り替えることで、opencode / Claude Code など複数のエージェントツールに対応する。
+対象タスクの plan を用意し、エージェントを実行する。既定はカレントリポジトリ実行で、状態イベントや worktree は作らない。`--auto`・`--parallel` 2 以上・`--worktree` を指定したときだけ worktree 隔離と統合（commit→merge→remove）を行う。`pm-members.yaml` に登録したエージェントの nickname（例: `opencode-edit-agent`、`claude-edit-agent`、`codex-edit-agent`）を `--cmd` で指定することで、opencode / Claude Code / Codex など複数のエージェントツールに切り替えられる。
 
 実行対象は `--task` / `--deliverable` / `--plan` / `--auto` のいずれか 1 つを指定する。
 
@@ -1550,7 +1550,7 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 | `--deliverable <id>`     | catalog の成果物を `local_id` で対象にする。schedule 非依存                                 | —                                       |
 | `--plan <path>`          | 既存の plan ファイルを使う（生成しない）                                                   | —                                       |
 | `--auto`                 | scheduler で次の ready タスクを選ぶ。worktree 隔離と状態追跡を含む。`--cmd` と排他          | `false`                                 |
-| `--cmd <command>`        | agent コマンド文字列を直接指定                                                             | `--auto` 時は自動選択                   |
+| `--cmd <agent>`          | `pm-members.yaml` の agent nickname（例: `opencode-edit-agent`）またはコマンド文字列を指定 | `--auto` 時は自動選択                   |
 | `--by <actor>`           | claim actor / 実行者識別子                                                                 | 解決された agent の nickname            |
 | `--worktree`             | worktree 隔離と統合（commit→merge→remove）を行う                                           | `false`（`--auto`・`--parallel`≥2 で真）|
 | `--track-state`          | claim/complete イベントを記録する                                                          | `false`（隔離モードで真）               |
@@ -1721,9 +1721,9 @@ rate_limit_policy:
 出力例:
 
 ```text
-[run] rate-limit: edit-agent-1 (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 1/3, wait 60s)
-[run] rate-limit: edit-agent-1 (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 2/3, wait 180s)
-[run] rate-limit: edit-agent-2 (task T-LAUNCH-bdd-010, slack=2) → skip (non-critical)
+[run] rate-limit: opencode-edit-agent (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 1/3, wait 60s)
+[run] rate-limit: claude-edit-agent (task T-LAUNCH-prj-overview-010, slack=0) → try next candidate (attempt 2/3, wait 180s)
+[run] rate-limit: opencode-edit-agent (task T-LAUNCH-bdd-010, slack=2) → skip (non-critical)
 ```
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。

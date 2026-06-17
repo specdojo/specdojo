@@ -13,7 +13,8 @@
       "WebFetch",
       "Bash(echo \"tsc:$?\")",
       "Bash(echo \"build:$?\")",
-      "Bash(echo \"lint:$?\")"
+      "Bash(echo \"lint:$?\")",
+      "Bash(echo \"lint:md exit:$?\")"
     ],
     "deny": [
       "Read(./.env)",
