@@ -900,6 +900,12 @@ schedule に無い成果物をカタログから直接 plan 化する場合は `
 specdojo exec plan --project <project-id> --deliverable <local_id>
 ```
 
+plan の「owner ロールとしての記述ポイント」を埋めたい場合は `--track <track>` を付ける。`sch-strategy-<track>.yaml` の `owner_rules` から成果物の `owner` を解決する（省略時は owner 未設定）。
+
+```sh
+specdojo exec plan --project <project-id> --deliverable <local_id> --track <track>
+```
+
 #### 9.8.6. その他
 
 - schedule 非依存で catalog の成果物を直接実行する: `exec run --project <project-id> --deliverable <local_id>`（plan 生成 → カレント実行）。

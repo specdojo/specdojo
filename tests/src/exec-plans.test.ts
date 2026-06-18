@@ -28,6 +28,7 @@ const PO_VIEWPOINTS: ReviewViewpoint[] = [
     title: '目的・スコープとの整合',
     check: '目的、スコープ、優先順位、公開方針と矛盾していないか。',
     evidence: '目的、対象範囲、判断理由。',
+    coverage_types: ['business_goal', 'scope_boundary'],
     default_severity: 'major',
   },
   {
@@ -90,8 +91,8 @@ const DETAIL_TEMPLATE = [
   '### _VP_ID_（_VP_ROLES_: _VP_VIEWPOINT_）',
   '',
   'criterion: _VP_CRITERION_',
-  'coverage: _VP_COVERAGE_',
-  'check: _VP_CHECK_',
+  '',
+  '_VP_COVERAGE_check: _VP_CHECK_',
   'evidence: _VP_EVIDENCE_',
 ].join('\n')
 
@@ -112,13 +113,25 @@ describe('reviewViewpointDetails', () => {
     expect(actual).toContain('evidence: 目的、対象範囲、判断理由。')
   })
 
-  it('coverage_types が無い観点は coverage を MISSING にする', () => {
+  it('coverage_types を持つ観点は coverage_required ブロックを出力する', () => {
     const criteria: CriteriaItem[] = [
       { text: 't', roles: ['PO'], viewpoint: 'vp-po-purpose-alignment' },
     ]
     const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE)
 
-    expect(actual).toContain('coverage: _MISSING_')
+    expect(actual).toContain('**coverage_required:**')
+    expect(actual).toContain('- business_goal')
+    expect(actual).toContain('- scope_boundary')
+  })
+
+  it('coverage_types が無い観点は coverage_required ブロックごと省略する', () => {
+    const criteria: CriteriaItem[] = [
+      { text: 't', roles: ['BA'], viewpoint: 'vp-ba-business-value' },
+    ]
+    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE)
+
+    expect(actual).not.toContain('coverage_required')
+    expect(actual).not.toContain('_MISSING_')
   })
 
   it('viewpoint が map に無い場合は check / evidence を MISSING にする', () => {

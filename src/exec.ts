@@ -56,7 +56,12 @@ import { registerRunCommand } from './exec-run.js'
 import { buildTaskView } from './exec-task-view.js'
 import { registerExecWorktreeCommands } from './exec-worktree-command.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
-import { buildPhaseModeIndex, resolveApproach, resolveTaskMode } from './exec-strategy.js'
+import {
+  buildPhaseModeIndex,
+  resolveApproach,
+  resolveOwnerForLocalId,
+  resolveTaskMode,
+} from './exec-strategy.js'
 
 const KNOWN_OWNER_LABELS = ['PO', 'PM', 'BA', 'ARC', 'DEV', 'QE', 'UX', 'OPS'] as const
 const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join('|')
@@ -554,6 +559,10 @@ export function registerExecCommands(program: Command): void {
   planCmd.option('--deliverable <localId>', 'Catalog deliverable local_id (unique project-wide)')
   planCmd.option('--mode <mode>', 'edit|review (deliverable target)', 'edit')
   planCmd.option('--approach <approach>', 'Approach template (deliverable target)')
+  planCmd.option(
+    '--track <track>',
+    'Track to resolve the owner role from sch-strategy owner_rules (deliverable target)'
+  )
   planCmd.option('--out <path>', 'Override output path')
   planCmd.action(opts => {
     try {
@@ -581,6 +590,8 @@ export function registerExecCommands(program: Command): void {
         })
       } else {
         const target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
+        const track = typeof opts.track === 'string' && opts.track.trim() ? opts.track.trim() : undefined
+        const owner = resolveOwnerForLocalId(schedulePath, target.localId, track)
         outPath = generateDeliverablePlan({
           executionPath,
           projectId,
@@ -590,6 +601,7 @@ export function registerExecCommands(program: Command): void {
           target,
           mode: parseTaskMode(opts.mode),
           ...(opts.approach ? { approach: parseApproach(opts.approach) } : {}),
+          ...(owner ? { owner } : {}),
           ...(outOverride ? { outPath: outOverride } : {}),
         })
       }

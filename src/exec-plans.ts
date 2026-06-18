@@ -279,11 +279,6 @@ function rulebookRef(deliverable: DeliverableInfo | null): string {
   return rulebook ? `/docs/ja/specdojo/rulebooks/${rulebook}.md` : MISSING
 }
 
-function doneCriteriaItems(criteria: CriteriaItem[]): string {
-  if (criteria.length === 0) return MISSING
-  return criteria.map(c => `- ${c.text}`).join('\n')
-}
-
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
   if (criteria.length === 0) return MISSING
   const lines: string[] = []
@@ -294,9 +289,13 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
   return lines.join('\n')
 }
 
+// coverage_types はビューポート任意項目。持たない観点では coverage_required ブロック
+// ごと省略し、持つ観点では見出し付きブロックを返す。末尾の空行で後続の `**チェック観点:**`
+// と段落を分離する。
 function viewpointCoverage(vp: ReviewViewpoint | undefined): string {
-  if (!vp?.coverage_types || vp.coverage_types.length === 0) return MISSING
-  return vp.coverage_types.map(ct => `- ${ct}`).join('\n')
+  if (!vp?.coverage_types || vp.coverage_types.length === 0) return ''
+  const items = vp.coverage_types.map(ct => `- ${ct}`).join('\n')
+  return `**coverage_required:**\n\n${items}\n\n`
 }
 
 // レビュー観点ごとに detail 断片テンプレートを展開して結合する。prose ラベルは
@@ -403,7 +402,6 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
-    _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
@@ -545,7 +543,8 @@ export function generateSinglePlan(opts: {
 
 // Generate a plan directly from a catalog deliverable, independent of the
 // schedule. The slug (`<domain>-<local_id>`) names the plan unless `outPath`
-// overrides it. owner/CPM are absent for ad-hoc targets.
+// overrides it. CPM is absent for ad-hoc targets; owner is absent unless the
+// caller resolves it (e.g. from sch-strategy owner_rules via a track).
 export function generateDeliverablePlan(opts: {
   executionPath: string
   projectId: string
@@ -555,6 +554,7 @@ export function generateDeliverablePlan(opts: {
   target: ResolvedDeliverable
   mode?: TaskMode
   approach?: Approach
+  owner?: string
   outPath?: string
 }): string {
   const ctx = newPlanGenContext(opts)
@@ -564,6 +564,7 @@ export function generateDeliverablePlan(opts: {
     name: opts.target.info.deliverable.name,
     mode: opts.mode ?? 'edit',
     ...(opts.approach ? { approach: opts.approach } : {}),
+    ...(opts.owner ? { owner: opts.owner } : {}),
     schedule_file: '',
     fifo_rank: 0,
     critical_first_rank: 0,

@@ -27,11 +27,13 @@ type StrategyPhaseOverrideMinimal = {
 }
 
 type StrategyMinimal = {
+  track?: string
   phase_sets?: Record<string, StrategyPhaseMinimal[]>
   default_phase_sets?: PhaseSetSelection
   default_phase_set?: string
   owner_rules?: Array<{
     local_ids: string[]
+    owner?: string
     phase_sets?: PhaseSetSelection
     phase_set?: string
     phase_overrides?: StrategyPhaseOverrideMinimal[]
@@ -245,6 +247,39 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     localIdSuffixToProficiency,
     defaultMode,
   }
+}
+
+/**
+ * Resolves the owner role for a deliverable's local_id from sch-strategy owner_rules.
+ * When `track` is given, only strategy files whose `track` field matches are consulted;
+ * otherwise all sch-strategy files are searched and the first matching rule wins.
+ * Returns undefined when no rule covers the local_id (callers fall back to MISSING).
+ */
+export function resolveOwnerForLocalId(
+  schedulePath: string,
+  localId: string,
+  track?: string
+): string | undefined {
+  const strategyFiles = listFilesRecursive(schedulePath)
+    .filter(f => /sch-strategy-.*\.(yaml|yml)$/.test(f))
+    .sort()
+
+  for (const filePath of strategyFiles) {
+    let strategy: StrategyMinimal
+    try {
+      strategy = readYaml(filePath) as StrategyMinimal
+    } catch {
+      continue
+    }
+    if (track && strategy.track !== track) continue
+    if (!Array.isArray(strategy.owner_rules)) continue
+    for (const rule of strategy.owner_rules) {
+      const owner = typeof rule.owner === 'string' ? rule.owner.trim() : ''
+      if (!owner) continue
+      if ((rule.local_ids ?? []).includes(localId)) return owner
+    }
+  }
+  return undefined
 }
 
 /**

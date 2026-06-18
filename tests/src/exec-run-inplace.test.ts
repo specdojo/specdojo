@@ -104,12 +104,12 @@ function setupRepository(): { repo: string; executionPath: string } {
   )
   writeFileSync(
     join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xep-template.md'),
-    '_FRONTMATTER_\n\n# Edit Plan: _TASK_ID_\n\n_DONE_CRITERIA_ITEMS_\n',
+    '_FRONTMATTER_\n\n# Edit Plan: _TASK_ID_\n\n_REVIEW_VIEWPOINT_ROWS_\n',
     'utf8'
   )
   writeFileSync(
     join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xer-template.md'),
-    '_FRONTMATTER_\n\n## 1. done_criteria 確認\n',
+    '_FRONTMATTER_\n\n## 1. 自己レビュー結果\n',
     'utf8'
   )
   writeFileSync(
