@@ -103,7 +103,17 @@ ssh <mac-login-user>@home-mbp.<tailnet-name>.ts.net
 
 ### 4.2. Tailscale
 
-MacBook Pro と接続元端末の両方を同じ tailnet に参加させる。Mac 側では Tailscale をログイン時に起動する設定にし、再起動後も tailnet に戻ることを確認する。
+Tailscale は macOS 版の Standalone variant を標準とする。Mac App Store 版は、Standalone variant を導入できない場合や、組織の配布方針として App Store 管理が必要な場合だけ選ぶ。Standalone variant と Mac App Store 版を同じ Mac に同時導入しない。
+
+Mac 側のインストール:
+
+1. [Tailscale macOS download](https://tailscale.com/download/mac) から macOS 用 installer を取得する。
+2. installer を実行し、`Tailscale.app` を起動する。
+3. macOS から VPN / System Extension の許可を求められた場合は許可する。
+4. Tailscale にサインインし、対象 tailnet に参加する。
+5. Tailscale をログイン時に起動する設定にする。
+
+MacBook Pro と接続元端末の両方を同じ tailnet に参加させる。接続元端末にも Tailscale を入れ、同じアカウントまたは許可済みユーザーでサインインする。Mac 側では再起動後も tailnet に戻ることを確認する。
 
 確認:
 
@@ -341,6 +351,15 @@ brew install tmux
 Host Mac 側 tmux は Docker Desktop、Tailscale、Ollama のログ確認用途に留め、SpecDojo の編集・実行は devcontainer 内 tmux に寄せる。
 
 ### 4.10. Amphetamine
+
+Amphetamine は Mac App Store から導入する。Home MacBook Pro の sleep 抑止用途では、アプリ本体だけを使い、追加の常駐スクリプトや非公式配布物は初期構成に含めない。
+
+インストール:
+
+1. Mac 側で [Amphetamine App Store](https://apps.apple.com/us/app/amphetamine/id937984704) を開く。
+2. Amphetamine をインストールする。
+3. `Applications` から Amphetamine を起動する。
+4. メニューバーに Amphetamine が表示されることを確認する。
 
 Amphetamine はログイン時に起動し、MacBook Pro が電源接続中の間だけ system sleep を抑止する設定にする。
 
