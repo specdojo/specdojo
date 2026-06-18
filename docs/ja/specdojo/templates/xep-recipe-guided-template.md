@@ -29,6 +29,8 @@ _OWNER_ROLE_VIEWPOINTS_
 
 対象成果物に紐づく recipe を、指定されたファイルを実際に読み込んだうえで主な基準として参照する。読み込まずに記憶や推測で代替しない。
 
+主な基準とする recipe（rulebook frontmatter から解決）: `_RECIPE_REF_`（`_MISSING_` の場合は「recipe が存在しない・内容が薄い場合」に従う）。
+
 1. recipe: 指定された recipe を読み込み、示された構成・問い・観点・深掘り手順に沿って成果物を組み立てる。
 2. recipe が答えを示さない箇所は、`depends_on` 成果物・類似成果物・プロジェクト文脈との整合で補う。
 

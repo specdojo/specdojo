@@ -40,10 +40,14 @@ Rulebook Authoring Standard
 | type          | ○    | `rulebook` 固定                                             |
 | status        | ○    | `draft` / `ready` / `deprecated`                           |
 | target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
+| recipe        | 任意 | 対応する recipe の ID（`<prefix>-recipe`）。該当なしは `none` |
+| sample        | 任意 | 対応する sample の ID（`<prefix>-sample`）。該当なしは `none` |
+| template      | 任意 | 対応する template の ID（`<prefix>-template`）。該当なしは `none` |
 | based_on      | 任意 | 上位規約や根拠ドキュメント                                  |
 | supersedes    | 任意 | 置き換え関係                                                |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
+- `recipe` / `sample` / `template` は ID 参照であり、`fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
 - 機械検証は [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml) を SSOT とする。
 
 記述例:

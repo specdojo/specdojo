@@ -1,7 +1,7 @@
 import { type Command } from 'commander'
 import { existsSync } from 'node:fs'
 import { join, resolve as pathResolve } from 'node:path'
-import { validateCatalogLocalIds } from './catalog-build.js'
+import { validateCatalogLocalIds, validateRulebookReferenceMaterials } from './catalog-build.js'
 import {
   acquireSchedulerLock,
   buildEvent,
@@ -511,6 +511,10 @@ export function registerExecCommands(program: Command): void {
       // local_id is not unique project-wide across the catalogs.
       if (catalogPath && existsSync(catalogPath)) {
         for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
+          process.stdout.write(`WARN:  ${warn}\n`)
+        }
+        // Warn when a rulebook declares recipe/sample/template that do not exist.
+        for (const warn of validateRulebookReferenceMaterials(catalogPath).warnings) {
           process.stdout.write(`WARN:  ${warn}\n`)
         }
       }

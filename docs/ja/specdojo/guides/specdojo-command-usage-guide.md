@@ -1311,7 +1311,10 @@ specdojo exec build --project prj-0001
 | `_DELIVERABLE_OVERVIEW_`       | 成果物カタログの概要（カタログ未登録の場合は `_MISSING_`）                                                    |  ○   |   ○    |
 | `_DELIVERABLE_PATH_`           | 対象成果物の path（カタログ未登録の場合は `_MISSING_`）                                                       |  ○   |   ○    |
 | `_RESULT_REF_`                 | result ファイルへの参照                                                                                       |  ○   |   ○    |
-| `_RULEBOOK_REF_`               | 対象成果物の rulebook 参照（無い場合は `_MISSING_`）                                                          |      |   ○    |
+| `_RULEBOOK_REF_`               | 対象成果物の rulebook 参照パス（`dct` の `rulebook` から解決。無い場合は `_MISSING_`）                        |  ○   |   ○    |
+| `_RECIPE_REF_`                 | recipe 参照パス（rulebook frontmatter の `recipe` から解決。無い場合は `_MISSING_`）                          |  ○   |   ○    |
+| `_SAMPLE_REF_`                 | sample 参照パス（rulebook frontmatter の `sample` から解決。`target_format` で拡張子決定。無い場合は `_MISSING_`） |  ○   |   ○    |
+| `_TEMPLATE_REF_`               | template 参照パス（rulebook frontmatter の `template` から解決。無い場合は `_MISSING_`）                      |  ○   |   ○    |
 | `_OWNER_ROLE_LABEL_`           | owner の Role code と名称                                                                                     |  ○   |        |
 | `_OWNER_ROLE_NOTE_`            | owner role の責務                                                                                             |  ○   |        |
 | `_OWNER_ROLE_VIEWPOINTS_`      | owner role に紐づくレビュー観点                                                                               |  ○   |        |
@@ -1327,6 +1330,8 @@ specdojo exec build --project prj-0001
 #### 8.6.3. 展開
 
 `exec plan` / `exec run` は、各タスクの plan を生成する際、タスクの `mode`（edit / review）と `approach` に対応するテンプレートファイルを読み込み、プレースホルダをタスクごとに算出した内容に置換して plan を生成する。対応する `<prefix>-<approach>-template.md` が存在しない場合は、標準テンプレート（`xep-template.md` / `xrp-template.md`）を使用する。
+
+参考資料の参照先（`_RULEBOOK_REF_` / `_RECIPE_REF_` / `_SAMPLE_REF_` / `_TEMPLATE_REF_`）は、対象成果物の `rulebook`（`dct` で指定）を起点に解決する。`rulebook` ファイルの frontmatter にある `recipe` / `sample` / `template`（ID 参照）を正とし、命名規約ではなく宣言に従って明示パスへ展開する。`fully-guided` / `recipe-guided` の plan はこの参照先を本文に注入するため、agent は規約を推測せず明示パスのファイルを読み込める。宣言が無い・rulebook 未整備の項目は `_MISSING_` になる。宣言された参照先ファイルが存在しない場合は `exec validate` が警告する。
 
 「進め方」「完了手順」「異常終了の条件」のように内容が共通するセクションも、plan 全体をテンプレート化する方針上、テンプレートに直接記述する。`approach` ごとに進め方を分ける場合は、影響する `xep-` / `xrp-` テンプレートをあわせて更新する。
 

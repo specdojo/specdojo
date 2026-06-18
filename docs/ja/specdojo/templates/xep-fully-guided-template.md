@@ -29,6 +29,13 @@ _OWNER_ROLE_VIEWPOINTS_
 
 対象成果物に紐づく rulebook / recipe / sample / template は、いずれも指定されたファイルを実際に読み込んだうえで、次の役割に沿って参照する。読み込まずに記憶や推測で代替しない。
 
+参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備のため「参考資料が存在しない・内容が薄い場合」に従う）:
+
+- rulebook: `_RULEBOOK_REF_`
+- recipe: `_RECIPE_REF_`
+- sample: `_SAMPLE_REF_`
+- template: `_TEMPLATE_REF_`
+
 1. rulebook: 指定された rulebook を読み込み、成果物が必須要素をすべて満たし、禁止事項に抵触していないかを構造面の基準として確認する。
 2. recipe: 指定された recipe を読み込み、示された問い・観点・深掘り手順に沿って内容を組み立てる。
 3. sample: 指定された sample を読み込み、粒度・文体・表現・表の書き方を合わせる。

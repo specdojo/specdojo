@@ -8,6 +8,7 @@ import type {
   DctSection,
   DctValidationResult,
 } from './catalog-types.js'
+import { declaredReferences } from './reference-materials.js'
 
 // leading "/" = absolute from repo root (strip "/"); otherwise join with parent
 function resolveBasePath(parentBase: string, childBase: string | undefined): string {
@@ -246,6 +247,46 @@ export function validateCatalogLocalIds(catalogPath: string): DctValidationResul
             warnings.push(
               `local_id '${item.local_id}' is defined in multiple catalogs: ${prev}, ${filePath}`
             )
+          }
+        }
+        if (section.groups) walk(section.groups)
+      }
+    }
+    walk(doc.groups)
+  }
+  return { ok: true, errors: [], warnings }
+}
+
+// Cross-file check: each rulebook referenced by a catalog deliverable that declares
+// recipe / sample / template in its frontmatter must point at files that exist.
+// Returns warnings (not errors); a declared-but-missing reference is a soft signal
+// to author the asset, not a build blocker. Each rulebook is checked once.
+export function validateRulebookReferenceMaterials(catalogPath: string): DctValidationResult {
+  const warnings: string[] = []
+  const checked = new Set<string>()
+  const files = readdirSync(catalogPath)
+    .filter(f => /^dct-.+\.yaml$/.test(f))
+    .sort()
+  for (const f of files) {
+    let doc: DctDoc
+    try {
+      doc = yaml.load(readFileSync(join(catalogPath, f), 'utf8')) as DctDoc
+    } catch {
+      continue
+    }
+    if (!doc || !Array.isArray(doc.groups)) continue
+    const walk = (sections: DctSection[]): void => {
+      for (const section of sections) {
+        for (const item of section.deliverables ?? []) {
+          const rulebookId = item.rulebook
+          if (!rulebookId || rulebookId === 'none' || checked.has(rulebookId)) continue
+          checked.add(rulebookId)
+          for (const ref of declaredReferences(rulebookId)) {
+            if (!existsSync(ref.fsPath)) {
+              warnings.push(
+                `rulebook '${rulebookId}' declares ${ref.kind} '${ref.id}' but the file is missing: ${ref.fsPath}`
+              )
+            }
           }
         }
         if (section.groups) walk(section.groups)

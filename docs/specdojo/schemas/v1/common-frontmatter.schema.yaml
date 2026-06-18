@@ -23,6 +23,27 @@ $defs:
       - type: string
         pattern: "^[a-z0-9][a-z0-9-]*-rulebook$"
     description: "準拠する rulebook の ID。該当がない場合は none。"
+  recipeRef:
+    oneOf:
+      - type: string
+        const: none
+      - type: string
+        pattern: "^[a-z0-9][a-z0-9-]*-recipe$"
+    description: "対応する recipe の ID。該当がない場合は none。"
+  sampleRef:
+    oneOf:
+      - type: string
+        const: none
+      - type: string
+        pattern: "^[a-z0-9][a-z0-9-]*-sample$"
+    description: "対応する sample の ID。該当がない場合は none。"
+  templateRef:
+    oneOf:
+      - type: string
+        const: none
+      - type: string
+        pattern: "^[a-z0-9][a-z0-9-]*-template$"
+    description: "対応する template の ID。該当がない場合は none。"
 properties:
   id:
     $ref: "#/$defs/idRef"

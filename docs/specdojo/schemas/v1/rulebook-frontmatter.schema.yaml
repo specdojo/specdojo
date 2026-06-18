@@ -17,3 +17,12 @@ allOf:
           - json
           - markdown
         description: "ルールの対象となるドキュメントのフォーマット"
+      recipe:
+        $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
+        description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
+      sample:
+        $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
+        description: "対応する sample の ID（fully-guided の参照解決に使う）。"
+      template:
+        $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
+        description: "対応する template の ID（fully-guided の参照解決に使う）。"

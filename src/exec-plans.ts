@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
+import { resolveReferenceMaterialRefs } from './reference-materials.js'
 import {
   expandTemplate,
   listFilesRecursive,
@@ -272,13 +273,6 @@ function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING
 }
 
-// dct の rulebook フィールドは ID（例: prj-overview-rulebook）。docs-structure-guide の
-// 規約に従い、ファイル未作成でも一意に定まる固定パスへ展開する。
-function rulebookRef(deliverable: DeliverableInfo | null): string {
-  const rulebook = deliverable?.deliverable.rulebook
-  return rulebook ? `/docs/ja/specdojo/rulebooks/${rulebook}.md` : MISSING
-}
-
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
   if (criteria.length === 0) return MISSING
   const lines: string[] = []
@@ -393,6 +387,7 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap)
+  const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook)
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -402,6 +397,10 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
+    _RULEBOOK_REF_: refs.rulebook,
+    _RECIPE_REF_: refs.recipe,
+    _SAMPLE_REF_: refs.sample,
+    _TEMPLATE_REF_: refs.template,
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
@@ -440,6 +439,7 @@ function buildReviewPlanMarkdown(
     viewpoints_ref: viewpointsRef,
   }
 
+  const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook)
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -449,7 +449,10 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
-    _RULEBOOK_REF_: rulebookRef(deliverable),
+    _RULEBOOK_REF_: refs.rulebook,
+    _RECIPE_REF_: refs.recipe,
+    _SAMPLE_REF_: refs.sample,
+    _TEMPLATE_REF_: refs.template,
     _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
     _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate),
   }
