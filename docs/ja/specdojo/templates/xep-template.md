@@ -41,7 +41,7 @@ _OWNER_ROLE_VIEWPOINTS_
 
 ## 5. 全 role 観点による自己レビュー
 
-成果物の更新後、owner の観点だけでなく、done_criteria に割り当てられたすべての role の観点で自己レビューする。この自己レビューは edit task 内で成果物の完成度を高めるために行うものであり、後続の独立した review task を代替しない。
+成果物の更新後、owner の観点だけでなく、レビュー観点に割り当てられたすべての role の観点で自己レビューする。この自己レビューは edit task 内で成果物の完成度を高めるために行うものであり、後続の独立した review task を代替しない。
 
 <!-- markdownlint-disable MD055 MD056 -->
 | ID | ロール | viewpoint_id | 確認基準 |
@@ -64,7 +64,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 1. 「このフェーズで行うこと」に従って成果物を更新する。
 2. 「全 role 観点による自己レビュー」に従って、必要な修正と再確認を行う。
 3. 必要な検証と lint を実行する。
-4. result の「done_criteria 確認」と「自己レビュー結果」を記入する。
+4. result の「自己レビュー結果」を記入する。
 
 ## 7. 異常終了の条件
 
