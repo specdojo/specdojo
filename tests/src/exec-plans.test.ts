@@ -10,7 +10,7 @@ import {
 } from '../../src/exec-plans.js'
 import type { CriteriaItem } from '../../src/catalog-types.js'
 import type { RoleDefinition } from '../../src/role-types.js'
-import type { ReviewViewpoint } from '../../src/review-types.js'
+import type { CoverageType, ReviewViewpoint } from '../../src/review-types.js'
 
 function roleMapOf(roles: RoleDefinition[]): Map<string, RoleDefinition> {
   return new Map(roles.map(role => [role.code, role]))
@@ -122,6 +122,25 @@ describe('reviewViewpointDetails', () => {
     expect(actual).toContain('**coverage_required:**')
     expect(actual).toContain('- business_goal')
     expect(actual).toContain('- scope_boundary')
+  })
+
+  it('coverageMap がある場合は coverage_required を id: description に展開する', () => {
+    const criteria: CriteriaItem[] = [
+      { text: 't', roles: ['PO'], viewpoint: 'vp-po-purpose-alignment' },
+    ]
+    const coverageMap = new Map<string, CoverageType>([
+      ['business_goal', { id: 'business_goal', description: '業務目的との対応が説明できるか。' }],
+    ])
+    const actual = reviewViewpointDetails(
+      criteria,
+      vpMapOf(PO_VIEWPOINTS),
+      DETAIL_TEMPLATE,
+      coverageMap
+    )
+
+    expect(actual).toContain('- business_goal: 業務目的との対応が説明できるか。')
+    // 定義に無い id は説明なしのまま id だけを出力する
+    expect(actual).toContain('- scope_boundary\n')
   })
 
   it('coverage_types が無い観点は coverage_required ブロックごと省略する', () => {

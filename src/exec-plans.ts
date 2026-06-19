@@ -12,7 +12,7 @@ import {
 } from './exec-shared.js'
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from './exec-types.js'
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from './catalog-types.js'
-import type { ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
+import type { CoverageType, ReviewViewpoint, ReviewViewpointsDoc } from './review-types.js'
 import type { RoleDefinition, RolesDoc } from './role-types.js'
 
 // ---------------------------------------------------------------------------
@@ -138,6 +138,16 @@ function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
   try {
     const doc = load(readFileSync(viewpointsPath, 'utf8')) as ReviewViewpointsDoc
     return new Map((doc.viewpoints ?? []).map(vp => [vp.id, vp]))
+  } catch {
+    return new Map()
+  }
+}
+
+function loadCoverageTypes(viewpointsPath: string): Map<string, CoverageType> {
+  if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map()
+  try {
+    const doc = load(readFileSync(viewpointsPath, 'utf8')) as ReviewViewpointsDoc
+    return new Map((doc.coverage_types ?? []).map(ct => [ct.id, ct]))
   } catch {
     return new Map()
   }
@@ -285,10 +295,19 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
 
 // coverage_types はビューポート任意項目。持たない観点では coverage_required ブロック
 // ごと省略し、持つ観点では見出し付きブロックを返す。末尾の空行で後続の `**チェック観点:**`
-// と段落を分離する。
-function viewpointCoverage(vp: ReviewViewpoint | undefined): string {
+// と段落を分離する。各項目は `id: description` 形式で展開し、id 単独では意味が読み取れない
+// 問題を避ける。pm-review-viewpoints.yaml の coverage_types 定義に説明が無い id は id のみ出力する。
+function viewpointCoverage(
+  vp: ReviewViewpoint | undefined,
+  coverageMap: Map<string, CoverageType>
+): string {
   if (!vp?.coverage_types || vp.coverage_types.length === 0) return ''
-  const items = vp.coverage_types.map(ct => `- ${ct}`).join('\n')
+  const items = vp.coverage_types
+    .map(ct => {
+      const description = coverageMap.get(ct)?.description
+      return description ? `- ${ct}: ${description}` : `- ${ct}`
+    })
+    .join('\n')
   return `**coverage_required:**\n\n${items}\n\n`
 }
 
@@ -298,7 +317,8 @@ function viewpointCoverage(vp: ReviewViewpoint | undefined): string {
 export function reviewViewpointDetails(
   criteria: CriteriaItem[],
   vpMap: Map<string, ReviewViewpoint>,
-  detailTemplate: string
+  detailTemplate: string,
+  coverageMap: Map<string, CoverageType> = new Map()
 ): string {
   if (criteria.length === 0) return MISSING
   return criteria
@@ -310,7 +330,7 @@ export function reviewViewpointDetails(
         _VP_ROLES_: c.roles.join(', '),
         _VP_VIEWPOINT_: c.viewpoint,
         _VP_CRITERION_: c.text,
-        _VP_COVERAGE_: viewpointCoverage(vp),
+        _VP_COVERAGE_: viewpointCoverage(vp, coverageMap),
         _VP_CHECK_: vp?.check ?? MISSING,
         _VP_EVIDENCE_: vp?.evidence ?? MISSING,
       }).trimEnd()
@@ -361,6 +381,7 @@ function buildEditPlanMarkdown(
   deliverable: DeliverableInfo | null,
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
+  coverageMap: Map<string, CoverageType>,
   projectId: string,
   viewpointsRef: string,
   resultRef: string
@@ -405,7 +426,7 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
     _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate, coverageMap),
   }
   return expandTemplate(template, values)
 }
@@ -417,6 +438,7 @@ function buildReviewPlanMarkdown(
   deliverable: DeliverableInfo | null,
   criteria: CriteriaItem[],
   vpMap: Map<string, ReviewViewpoint>,
+  coverageMap: Map<string, CoverageType>,
   projectId: string,
   viewpointsRef: string,
   resultRef: string
@@ -454,7 +476,7 @@ function buildReviewPlanMarkdown(
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
     _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate, coverageMap),
   }
   return expandTemplate(template, values)
 }
@@ -471,6 +493,7 @@ type PlanGenContext = {
   projectId: string
   catalogPath: string
   vpMap: Map<string, ReviewViewpoint>
+  coverageMap: Map<string, CoverageType>
   roleMap: Map<string, RoleDefinition>
   vpRef: string
   templateCache: Map<string, string>
@@ -504,6 +527,7 @@ function writeTaskPlan(
           deliverable,
           criteria,
           ctx.vpMap,
+          ctx.coverageMap,
           ctx.projectId,
           ctx.vpRef,
           resultRef
@@ -515,6 +539,7 @@ function writeTaskPlan(
           deliverable,
           ctx.roleMap,
           ctx.vpMap,
+          ctx.coverageMap,
           ctx.projectId,
           ctx.vpRef,
           resultRef
@@ -593,6 +618,9 @@ function newPlanGenContext(opts: {
     vpMap: opts.viewpointsPath
       ? loadViewpoints(opts.viewpointsPath)
       : new Map<string, ReviewViewpoint>(),
+    coverageMap: opts.viewpointsPath
+      ? loadCoverageTypes(opts.viewpointsPath)
+      : new Map<string, CoverageType>(),
     roleMap: loadRoles(opts.rolesPath),
     vpRef: opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : '',
     templateCache: new Map<string, string>(),

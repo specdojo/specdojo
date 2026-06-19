@@ -9,11 +9,19 @@ export type ReviewViewpoint = {
   default_severity: string
 }
 
+export type CoverageType = {
+  id: string
+  name?: string
+  description?: string
+  applies_to?: string[]
+}
+
 export type ReviewViewpointsDoc = {
   id: string
   type: string
   status: string
   project_id: string
   viewpoints: ReviewViewpoint[]
+  coverage_types?: CoverageType[]
   [key: string]: unknown
 }
