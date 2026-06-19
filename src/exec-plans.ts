@@ -216,15 +216,6 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
   return `${templatePrefix(mode)}-${approach}-template.md`
 }
 
-function usesDeliverableSelfReview(approach: Approach | undefined): boolean {
-  return (
-    approach === undefined ||
-    approach === 'fully-guided' ||
-    approach === 'recipe-guided' ||
-    approach === 'freeform'
-  )
-}
-
 // Selects <prefix>-<approach>-template.md when it exists, otherwise falls back
 // to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
 function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
@@ -281,6 +272,13 @@ function deliverableDependsOn(deliverable: DeliverableInfo | null): string {
 
 function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING
+}
+
+// edit plan の「完了の狙い」用。done_criteria を観点・coverage 抜きの素の箇条書きにする。
+// 観点別の自己レビューは edit plan では行わず、多観点検証は独立した review plan に委ねる。
+function doneCriteriaGoals(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) return MISSING
+  return criteria.map(c => `- ${c.text}`).join('\n')
 }
 
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
@@ -374,16 +372,16 @@ export function ownerRoleFields(
   return { label, note, viewpoints }
 }
 
+// edit plan は観点別の自己レビューを行わない。done_criteria は §3 の owner 視点とは別に
+// 「完了の狙い」として素の箇条書きで提示し、多観点検証は独立した review plan に委ねる。
+// そのため viewpoints_ref（自己レビュー用の参照）は edit plan の frontmatter に含めない。
 function buildEditPlanMarkdown(
   template: string,
-  detailTemplate: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
-  coverageMap: Map<string, CoverageType>,
   projectId: string,
-  viewpointsRef: string,
   resultRef: string
 ): string {
   const cpm = task.cpm
@@ -401,9 +399,6 @@ function buildEditPlanMarkdown(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
-    ...(usesDeliverableSelfReview(task.approach) && viewpointsRef
-      ? { viewpoints_ref: viewpointsRef }
-      : {}),
   }
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
@@ -425,8 +420,7 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
-    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate, coverageMap),
+    _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria),
   }
   return expandTemplate(template, values)
 }
@@ -534,14 +528,11 @@ function writeTaskPlan(
         )
       : buildEditPlanMarkdown(
           template,
-          loadViewpointDetailTemplate(ctx.templateCache),
           planTask,
           deliverable,
           ctx.roleMap,
           ctx.vpMap,
-          ctx.coverageMap,
           ctx.projectId,
-          ctx.vpRef,
           resultRef
         )
 

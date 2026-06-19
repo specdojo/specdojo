@@ -174,8 +174,8 @@ describe('reviewViewpointDetails', () => {
   })
 })
 
-describe('plan generation (edit self review)', () => {
-  it('通常 edit plan に全 role の RVP を展開し maintenance plan には展開しない', () => {
+describe('plan generation (edit done_criteria goals)', () => {
+  it('通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない', () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-exec-plans-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
@@ -276,13 +276,13 @@ describe('plan generation (edit self review)', () => {
         join(executionPath, 'exec/plans/T-TEST-overview-020-plan.md'),
         'utf8'
       )
-      expect(editPlan).toContain('viewpoints_ref:')
-      expect(editPlan).not.toContain('**done_criteria:**')
-      expect(editPlan).toContain('## 5. 全 role 観点による自己レビュー')
-      expect(editPlan).toContain('| RVP-001 | BA | vp-ba-business-value |')
-      expect(editPlan).toContain('| RVP-002 | PO | vp-po-purpose-alignment |')
-      expect(editPlan).toContain('### RVP-002（PO: vp-po-purpose-alignment）')
-      expect(editPlan).toContain('自己レビューは初回を含めて最大3回まで行う')
+      expect(editPlan).not.toContain('viewpoints_ref:')
+      expect(editPlan).toContain('## 5. 完了の狙い')
+      expect(editPlan).toContain('- Business value is clear')
+      expect(editPlan).toContain('- Purpose is approved')
+      expect(editPlan).not.toContain('全 role 観点による自己レビュー')
+      expect(editPlan).not.toContain('RVP-001')
+      expect(editPlan).not.toContain('自己レビューは初回を含めて最大3回まで行う')
 
       const maintenancePlan = readFileSync(
         join(executionPath, 'exec/plans/T-TEST-overview-030-plan.md'),

@@ -163,16 +163,15 @@ review plan は「今回のレビューで何を見るか」を固定する。re
 
 review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくする。
 
-### 7.1. edit plan 内の自己レビュー
+### 7.1. edit plan の完了の狙い
 
-通常の成果物編集を行う edit plan は、成果物の更新後に、done_criteria から展開された全 `RVP-NNN` を使って自己レビューする。owner role の観点だけでなく、done_criteria に割り当てられた他 role の観点も対象とする。
+通常の成果物編集を行う edit plan は、観点別の自己レビューを行わない。代わりに、`done_criteria` を「完了の狙い」として素の箇条書き（観点・coverage なし）で提示し、編集者は rulebook / recipe / sample / template と「進め方」に沿って記述する中で、その狙いを満たすことを目指す。
 
-- 各観点を pass / fail / unclear で判定し、fail / unclear は成果物を修正して再確認する。
-- 修正によって新しい矛盾や抜けが発生していないか、全観点を再確認する。
-- 自己レビューは初回を含めて最大3回とし、未解消事項は edit result の「自己レビュー結果」と「申し送り」に残す。
-- maintenance 系 approach は対象と判定基準が異なるため、この自己レビューの対象外とする。
+- 品質の担保は rulebook（必須項目・禁止事項）・recipe（書き方・レビュー観点・仕上げチェック）・sample・template が担う。
+- `done_criteria` を満たしているかの多観点での最終判定は、後続の独立した review plan / review result が行う。
+- maintenance 系 approach は対象と判定基準が異なるため、完了の狙いの提示は行わない。
 
-edit plan 内の自己レビューは成果物の完成度を高める内部確認であり、独立した review plan / review result を代替しない。review task では成果物を修正せず、第三者的な立場で判定と証跡を残す。
+edit plan で観点別の自己レビューを行わないのは、各観点を満たそうとして成果物へ過剰な記述を挿入する副作用を避けるためである。多観点での判定と証跡は review task に集約し、review task では成果物を修正せず第三者的な立場で残す。
 
 ### 7.2. review plan の生成
 
