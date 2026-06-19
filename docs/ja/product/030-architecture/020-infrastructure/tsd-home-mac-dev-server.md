@@ -162,7 +162,7 @@ ssh <mac-login-user>@home-mbp
 
 接続元端末の `~/.ssh/config` に、開発用 host を定義する。
 
-```sshconfig
+```ssh-config
 Host home-mbp
   HostName home-mbp
   User <mac-login-user>
@@ -175,7 +175,7 @@ Host home-mbp
 
 外部端末上の CLI から Host Mac の LLM API を直接使う場合だけ、次の local forwarding を追加する。VS Code Remote SSH + devcontainer だけで開発する場合は不要である。
 
-```sshconfig
+```ssh-config
   LocalForward 11434 127.0.0.1:11434
 ```
 
@@ -199,7 +199,7 @@ C:\Users\<windows-user>\.ssh\config
 
 設定例:
 
-```sshconfig
+```ssh-config
 Host home-mbp
   HostName home-mbp
   User <mac-login-user>
@@ -235,7 +235,7 @@ Mac の SSH config は次のパスに置く。
 
 設定例:
 
-```sshconfig
+```ssh-config
 Host home-mbp
   HostName home-mbp
   User <mac-login-user>
@@ -347,7 +347,7 @@ specdojo exec run --auto --loop --parallel 3
 
 最小例:
 
-```tmux
+```text
 set -g history-limit 50000
 set -g mouse on
 set -g status-interval 5
