@@ -268,7 +268,7 @@ groups:
             viewpoint: vp-arc-document-structure
           - text: 設定値の妥当性が確認できること
             roles: [QE]
-            viewpoint: vp-qe-verifiability
+            viewpoint: vp-qe-config-validity
       - local_id: sch-track-launch
         name: Launch スケジュール定義
         kind: generated
@@ -288,7 +288,7 @@ groups:
             viewpoint: vp-arc-document-structure
           - text: 品質ゲート・レビュータスクが含まれていること
             roles: [QE]
-            viewpoint: vp-qe-verifiability
+            viewpoint: vp-qe-omissions-consistency
       - local_id: sch-strategy-launch
         name: Launch スケジュール戦略定義
         kind: work
@@ -308,7 +308,7 @@ groups:
             viewpoint: vp-arc-document-structure
           - text: phases・owner_rules・initial_state の各設定値の妥当性が確認できること
             roles: [QE]
-            viewpoint: vp-qe-verifiability
+            viewpoint: vp-qe-config-validity
   - name: レポート
     groups:
       - name: 進捗報告

@@ -223,11 +223,11 @@ viewpoints:
     title: 業務価値との対応
     check: 成果物の記述が業務目的、利用者、業務課題、期待効果と対応しているか。
     evidence: 背景、目的、利用者、業務フロー、価値、成功基準。
+    # 業務価値との対応を確認する観点であり、業務目的・価値と上位目的への追跡可能性に絞る。
+    # 利用者像・利用シーン・業務イベントの列挙は、それぞれ vp-ba-stakeholder-clarity /
+    # vp-ba-requirements-completeness の責務とし、概要・憲章などへの過剰な詳細流入を避ける。
     coverage_types:
-      - stakeholder
       - business_goal
-      - use_case
-      - business_event
       - traceability
     default_severity: major
   - id: vp-ba-requirements-completeness
@@ -348,21 +348,19 @@ viewpoints:
     title: 抜け漏れ・矛盾
     check: 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。
     evidence: rulebook、schema、関連文書、禁止事項、レビュー履歴。
-    coverage_types:
-      - stakeholder
-      - scope_boundary
-      - use_case
-      - business_event
-      - exception_case
-      - permission
-      - state_transition
-      - data
-      - integration
-      - non_functional
-      - operations
-      - auditability
-      - acceptance
-      - traceability
+    # 構造・整合の抜け漏れを見る観点であり、特定の業務 coverage 次元の網羅は要求しない。
+    # 必須要素の充足は check / evidence と各成果物の rulebook・schema で判定し、
+    # 構造系成果物（pm-roles / pm-members / pm-raci など）への無関係な詳細流入を避ける。
+    default_severity: major
+  - id: vp-qe-config-validity
+    role: QE
+    category: quality
+    title: 設定値の妥当性
+    check: 設定値・必須キー・参照が schema と整合し、妥当な値で過不足なく定義されているか。
+    evidence: schema、必須キー、設定値、デフォルト値、validate 結果。
+    # 設定 YAML（スケジュール定義・デフォルト等）向けの軽量観点。挙動仕様向けの
+    # coverage（exception_case / state_transition / non_functional）を要求せず、
+    # 設定値の妥当性と schema 整合に絞る。
     default_severity: major
   - id: vp-ux-readability
     role: UX
@@ -450,6 +448,7 @@ role_viewpoint_sets:
       - vp-qe-done-criteria
       - vp-qe-verifiability
       - vp-qe-omissions-consistency
+      - vp-qe-config-validity
   - role: UX
     viewpoints:
       - vp-ux-readability
