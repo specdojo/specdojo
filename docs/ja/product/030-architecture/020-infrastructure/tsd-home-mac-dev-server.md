@@ -103,15 +103,28 @@ ssh <mac-login-user>@home-mbp.<tailnet-name>.ts.net
 
 ### 4.2. Tailscale
 
-Tailscale は macOS 版の Standalone variant を標準とする。Mac App Store 版は、Standalone variant を導入できない場合や、組織の配布方針として App Store 管理が必要な場合だけ選ぶ。Standalone variant と Mac App Store 版を同じ Mac に同時導入しない。
+Tailscale は Homebrew cask の `tailscale-app` で macOS 版の Standalone variant を導入する。Mac App Store 版は、Homebrew cask を導入できない場合や、組織の配布方針として App Store 管理が必要な場合だけ選ぶ。Standalone variant と Mac App Store 版を同じ Mac に同時導入しない。
+
+Homebrew の `tailscale` formula は CLI / daemon 用であり、本構成の標準インストール手順では使わない。
 
 Mac 側のインストール:
 
-1. [Tailscale macOS download](https://tailscale.com/download/mac) から macOS 用 installer を取得する。
-2. installer を実行し、`Tailscale.app` を起動する。
-3. macOS から VPN / System Extension の許可を求められた場合は許可する。
-4. Tailscale にサインインし、対象 tailnet に参加する。
-5. Tailscale をログイン時に起動する設定にする。
+1. Homebrew が未導入の場合は、先に Homebrew を導入する。
+2. Mac 側で Tailscale app を Homebrew cask からインストールする。
+
+   ```bash
+   brew install --cask tailscale-app
+   ```
+
+3. `Tailscale.app` を起動する。
+
+   ```bash
+   open -a Tailscale
+   ```
+
+4. macOS から VPN / System Extension の許可を求められた場合は許可する。
+5. Tailscale にサインインし、対象 tailnet に参加する。
+6. Tailscale をログイン時に起動する設定にする。
 
 MacBook Pro と接続元端末の両方を同じ tailnet に参加させる。接続元端末にも Tailscale を入れ、同じアカウントまたは許可済みユーザーでサインインする。Mac 側では再起動後も tailnet に戻ることを確認する。
 
