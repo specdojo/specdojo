@@ -72,7 +72,7 @@ function findDeliverableInfo(catalogPath: string, localId: string): DeliverableI
     } catch {
       continue
     }
-    const found = searchSections(doc.groups, doc.base_path ?? '', localId)
+    const found = searchSections(doc.groups, resolveBasePath('', doc.base_path), localId)
     if (found) return found
   }
   return null
@@ -114,7 +114,7 @@ export function resolveDeliverableTarget(catalogPath: string, value: string): Re
 
   const matches: ResolvedDeliverable[] = []
   for (const doc of docs) {
-    const info = searchSections(doc.groups, doc.base_path ?? '', localId)
+    const info = searchSections(doc.groups, resolveBasePath('', doc.base_path), localId)
     if (info) matches.push({ domain: doc.domain, localId, slug: localId, info })
   }
   if (matches.length === 0) throw new Error(`deliverable not found: ${localId}`)

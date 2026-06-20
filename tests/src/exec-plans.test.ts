@@ -276,6 +276,11 @@ describe('plan generation (edit done_criteria goals)', () => {
         join(executionPath, 'exec/plans/T-TEST-overview-020-plan.md'),
         'utf8'
       )
+      // Catalog base_path is root-anchored (/docs/test) but the emitted deliverable path
+      // must be canonical repo-relative (no leading slash) so the agent resolves it from
+      // the run CWD.
+      expect(editPlan).toContain('`path`: `docs/test/overview.md`')
+      expect(editPlan).not.toContain('/docs/test')
       expect(editPlan).not.toContain('viewpoints_ref:')
       expect(editPlan).toContain('## 5. 完了の狙い')
       expect(editPlan).toContain('- Business value is clear')

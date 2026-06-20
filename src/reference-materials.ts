@@ -61,7 +61,9 @@ function sampleExt(targetFormat: string | undefined): string {
 }
 
 function repoRef(kind: ReferenceMaterialKind, id: string | undefined, ext: string): string {
-  return id && id !== 'none' ? `/${DOCS_BASE}/${KIND_DIR[kind]}/${id}.${ext}` : MISSING
+  // Canonical repo-root-relative path (no leading slash): the agent opens these files
+  // from the run CWD (repo root or worktree root).
+  return id && id !== 'none' ? `${DOCS_BASE}/${KIND_DIR[kind]}/${id}.${ext}` : MISSING
 }
 
 // 成果物の rulebook ID を起点に、recipe / sample / template の repo 相対パスを解決する。
@@ -73,7 +75,7 @@ export function resolveReferenceMaterialRefs(rulebookId: string | undefined): Re
   }
   const fm = loadRulebookRefs(rulebookId)
   return {
-    rulebook: `/${DOCS_BASE}/rulebooks/${rulebookId}.md`,
+    rulebook: `${DOCS_BASE}/rulebooks/${rulebookId}.md`,
     recipe: repoRef('recipe', fm.recipe, 'md'),
     sample: repoRef('sample', fm.sample, sampleExt(fm.target_format)),
     template: repoRef('template', fm.template, 'md'),

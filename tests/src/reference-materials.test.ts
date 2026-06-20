@@ -59,10 +59,10 @@ describe('reference-materials', () => {
       const refs = resolveReferenceMaterialRefs('prj-overview-rulebook')
 
       expect(refs).toEqual({
-        rulebook: '/docs/ja/specdojo/rulebooks/prj-overview-rulebook.md',
-        recipe: '/docs/ja/specdojo/recipes/prj-overview-recipe.md',
-        sample: '/docs/ja/specdojo/samples/prj-overview-sample.md',
-        template: '/docs/ja/specdojo/templates/prj-overview-template.md',
+        rulebook: 'docs/ja/specdojo/rulebooks/prj-overview-rulebook.md',
+        recipe: 'docs/ja/specdojo/recipes/prj-overview-recipe.md',
+        sample: 'docs/ja/specdojo/samples/prj-overview-sample.md',
+        template: 'docs/ja/specdojo/templates/prj-overview-template.md',
       })
     })
 
@@ -79,7 +79,7 @@ describe('reference-materials', () => {
       )
 
       expect(resolveReferenceMaterialRefs('dct-rulebook').sample).toBe(
-        '/docs/ja/specdojo/samples/dct-sample.yaml'
+        'docs/ja/specdojo/samples/dct-sample.yaml'
       )
     })
 
@@ -100,7 +100,7 @@ describe('reference-materials', () => {
 
       const refs = resolveReferenceMaterialRefs('minimal-rulebook')
 
-      expect(refs.rulebook).toBe('/docs/ja/specdojo/rulebooks/minimal-rulebook.md')
+      expect(refs.rulebook).toBe('docs/ja/specdojo/rulebooks/minimal-rulebook.md')
       expect(refs.recipe).toBe('_MISSING_')
       expect(refs.sample).toBe('_MISSING_')
       expect(refs.template).toBe('_MISSING_')
