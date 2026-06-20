@@ -36,6 +36,7 @@ import {
   generateDeliverablePlan,
   generateSinglePlan,
   loadPlan,
+  parsePlanTaskIdentity,
   resolveDeliverableTarget,
 } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
@@ -1124,9 +1125,26 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // null target = bring-your-own --plan (not generated, not archived).
   let target: ReturnType<typeof resolveDeliverableTarget> | null = null
 
+  let planProjectId = ''
   if (opts.plan) {
     planPath = resolve(opts.plan)
     if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`)
+    // Recover task identity from the plan frontmatter so the result is scaffolded
+    // with complete frontmatter (id/mode/plan_ref/started_at), matching the --task
+    // path. Ad-hoc plans without a task_id keep the previous no-scaffold behavior.
+    const identity = parsePlanTaskIdentity(readFileSync(planPath, 'utf8'))
+    if (identity) {
+      slug = identity.taskId
+      planProjectId = identity.projectId
+      task = {
+        id: identity.taskId,
+        mode: identity.mode,
+        approach: identity.approach,
+        schedule_file: '',
+        fifo_rank: 0,
+        critical_first_rank: 0,
+      }
+    }
   } else if (opts.task) {
     const taskId = opts.task.trim()
     task = buildTaskView(schedulePath, executionPath, taskId)
@@ -1200,7 +1218,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       executionPath,
       taskId: slug,
       mode: task.mode ?? 'edit',
-      projectId,
+      projectId: projectId || planProjectId,
       planRef: `exec/plans/${slug}-plan.md`,
       agent: actor,
       startedAt: new Date().toISOString(),

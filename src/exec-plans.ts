@@ -652,3 +652,49 @@ export function loadPlan(executionPath: string, taskId: string): string | null {
   if (existsSync(planPath)) return readFileSync(planPath, 'utf8')
   return null
 }
+
+// Task identity recovered from a plan file's frontmatter, used to scaffold a
+// result when running a bring-your-own --plan (no managed task identity exists).
+export type PlanTaskIdentity = {
+  taskId: string
+  mode: TaskMode
+  projectId: string
+  approach?: Approach
+}
+
+const PLAN_APPROACHES: readonly Approach[] = [
+  'fully-guided',
+  'recipe-guided',
+  'freeform',
+  'rulebook-maintenance',
+  'recipe-maintenance',
+  'sample-maintenance',
+  'template-maintenance',
+]
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+// Parse an exec-plan file's frontmatter to recover the task identity. Returns
+// null when the frontmatter is missing or has no usable task_id, in which case
+// the caller treats the plan as an ad-hoc plan with no managed identity.
+export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | null {
+  const match = planContent.match(/^---\n([\s\S]*?)\n---/)
+  if (!match) return null
+  const parsed = load(match[1])
+  if (!isRecord(parsed)) return null
+
+  const taskId = typeof parsed.task_id === 'string' ? parsed.task_id.trim() : ''
+  if (!taskId) return null
+
+  const mode: TaskMode = parsed.mode === 'review' ? 'review' : 'edit'
+  const projectId = typeof parsed.project_id === 'string' ? parsed.project_id.trim() : ''
+  const approach =
+    typeof parsed.approach === 'string' &&
+    (PLAN_APPROACHES as readonly string[]).includes(parsed.approach)
+      ? (parsed.approach as Approach)
+      : undefined
+
+  return { taskId, mode, projectId, approach }
+}
