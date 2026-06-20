@@ -46,8 +46,29 @@ function entryToUri(entry: string): vscode.Uri | undefined {
   return lineNumber > 0 ? uri.with({ fragment: `L${lineNumber + 1}` }) : uri
 }
 
-function resolveToUri(id: string): vscode.Uri | undefined {
-  const entry = _index[id]
+// The namespace prefix of the containing document's own id (e.g. `prj-0001` from
+// `prj-0001:xrr-prj-overview`). Used to expand a bare `[[id]]` to `<namespace>:<id>`.
+// Reads the first top-level `id:` line, which covers both Markdown frontmatter and
+// top-level YAML documents.
+function documentNamespace(text: string): string | undefined {
+  const match = text.match(/^id:[ \t]*(\S+)/m)
+  if (!match) return undefined
+  const colon = match[1].indexOf(':')
+  return colon > 0 ? match[1].slice(0, colon) : undefined
+}
+
+// Resolve a wikilink id to an index entry. An exact match wins; otherwise, when the id
+// has no namespace, retry with the containing document's namespace so a bare local id
+// (e.g. `prj-overview`) resolves within the same project (`prj-0001:prj-overview`).
+function resolveEntry(id: string, namespace: string | undefined): string | undefined {
+  const exact = _index[id]
+  if (exact) return exact
+  if (namespace && !id.includes(':')) return _index[`${namespace}:${id}`]
+  return undefined
+}
+
+function resolveToUri(id: string, namespace?: string): vscode.Uri | undefined {
+  const entry = resolveEntry(id, namespace)
   if (!entry) return undefined
   return entryToUri(entry)
 }
@@ -69,13 +90,14 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
   provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const links: vscode.DocumentLink[] = []
     const text = document.getText()
+    const namespace = documentNamespace(text)
 
     let m: RegExpExecArray | null
     WIKILINK_RE.lastIndex = 0
     while ((m = WIKILINK_RE.exec(text)) !== null) {
       const id = m[1]
       const alt = m[2]
-      const target = resolveToUri(id)
+      const target = resolveToUri(id, namespace)
       if (target) {
         // [[id|alt]] → alt をクリック可能領域にする。[[id]] → id をクリック可能領域にする
         const linkStart = alt !== undefined
@@ -92,7 +114,7 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
       YAML_SINGLE_KEY_RE.lastIndex = 0
       while ((m = YAML_SINGLE_KEY_RE.exec(text)) !== null) {
         const id = m[2]
-        const target = resolveToUri(id)
+        const target = resolveToUri(id, namespace)
         if (target) {
           const idStart = m.index + m[1].length
           const start = document.positionAt(idStart)
@@ -104,7 +126,7 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
       YAML_LIST_ITEM_RE.lastIndex = 0
       while ((m = YAML_LIST_ITEM_RE.exec(text)) !== null) {
         const id = m[2]
-        const target = resolveToUri(id)
+        const target = resolveToUri(id, namespace)
         if (target) {
           const idStart = m.index + m[1].length
           const start = document.positionAt(idStart)
@@ -178,9 +200,12 @@ export function extendMarkdownIt(md: any): any {
   // VS Code calls md.parse() directly (not md.render()).
   // Wrapping md.parse lets us identify the source document before inline rules fire.
   let _currentRenderFsPath = ''
+  let _currentNamespace: string | undefined
   const origParse = md.parse.bind(md)
   md.parse = (src: string, env: any) => {
     _currentRenderFsPath = ''
+    // Namespace of the document being rendered, so a bare [[id]] expands to <namespace>:<id>.
+    _currentNamespace = documentNamespace(src)
     for (const doc of vscode.workspace.textDocuments) {
       if (doc.languageId === 'markdown' && doc.getText() === src) {
         _currentRenderFsPath = doc.uri.fsPath
@@ -209,7 +234,7 @@ export function extendMarkdownIt(md: any): any {
     if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false
 
     if (!silent) {
-      const entry = _wsUri ? _index[id] : undefined
+      const entry = _wsUri ? resolveEntry(id, _currentNamespace) : undefined
 
       if (entry) {
         const colonIdx = entry.lastIndexOf(':')
