@@ -76,8 +76,9 @@ describe('replaceDocIndexRefs', () => {
         indexPath
       )
 
+      // markdown format emits root-relative links (leading slash) for site-root resolution.
       expect(result.content).toBe(
-        'See [sample-doc](docs/sample.md) and [nested-id](docs/viewpoints.yaml:12).'
+        'See [sample-doc](/docs/sample.md) and [nested-id](/docs/viewpoints.yaml:12).'
       )
       expect(result.missingIds).toEqual([])
     } finally {
@@ -105,7 +106,7 @@ describe('replaceDocIndexRefs', () => {
       const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
       const result = replaceDocIndexRefs('See [[sample-doc|Sample Document]].', indexPath)
 
-      expect(result.content).toBe('See [Sample Document](docs/sample.md).')
+      expect(result.content).toBe('See [Sample Document](/docs/sample.md).')
       expect(result.missingIds).toEqual([])
     } finally {
       rmSync(dir, { recursive: true, force: true })
@@ -137,7 +138,7 @@ describe('replaceDocIndexRefs', () => {
       )
 
       expect(result.content).toBe(
-        'See [known-doc](docs/known.md), [[missing-doc]], [[missing-doc]].'
+        'See [known-doc](/docs/known.md), [[missing-doc]], [[missing-doc]].'
       )
       expect(result.missingIds).toEqual(['missing-doc'])
     } finally {

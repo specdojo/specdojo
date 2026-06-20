@@ -3,6 +3,7 @@ import { join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { resolveReferenceMaterialRefs } from './reference-materials.js'
+import { resolveBasePath, resolveDeliverablePath } from './catalog-paths.js'
 import {
   expandTemplate,
   listFilesRecursive,
@@ -37,24 +38,18 @@ function execDocId(projectId: string, prefix: 'xep' | 'xrp', taskId: string): st
 // Catalog helpers
 // ---------------------------------------------------------------------------
 
-function joinBasePath(parent: string, child: string | undefined): string {
-  if (!child) return parent
-  if (child.startsWith('/')) return child
-  return parent ? `${parent}/${child}` : `/${child}`
-}
-
 function searchSections(
   sections: DctSection[],
   parentBase: string,
   localId: string
 ): DeliverableInfo | null {
   for (const section of sections) {
-    const sectionBase = joinBasePath(parentBase, section.base_path)
+    const sectionBase = resolveBasePath(parentBase, section.base_path)
     for (const d of section.deliverables ?? []) {
       if (d.local_id === localId) {
         return {
           deliverable: d,
-          resolvedPath: d.path ? `${sectionBase}/${d.path}` : sectionBase,
+          resolvedPath: resolveDeliverablePath(sectionBase, d.path),
         }
       }
     }
@@ -170,13 +165,6 @@ function repoRelativePath(absPath: string): string {
   return relative(specdojoRootDir(), absPath).replace(/\\/g, '/')
 }
 
-// Normalize a catalog-derived path for emission into an agent-consumed plan. Catalog
-// base_path values are written root-absolute (e.g. /docs/...); strip the leading slash
-// so the path matches the canonical repo-relative form. Does not alter catalog files.
-function toRepoRelativePath(path: string): string {
-  return path.replace(/^\/+/, '')
-}
-
 // ---------------------------------------------------------------------------
 // Markdown builders
 // ---------------------------------------------------------------------------
@@ -264,8 +252,7 @@ function phaseDescriptionText(task: PlanTask): string {
 }
 
 function deliverablePath(deliverable: DeliverableInfo | null): string {
-  if (!deliverable) return MISSING
-  return toRepoRelativePath(deliverable.resolvedPath)
+  return deliverable?.resolvedPath ?? MISSING
 }
 
 function deliverableName(deliverable: DeliverableInfo | null): string {

@@ -9,13 +9,7 @@ import type {
   DctValidationResult,
 } from './catalog-types.js'
 import { declaredReferences } from './reference-materials.js'
-
-// leading "/" = absolute from repo root (strip "/"); otherwise join with parent
-function resolveBasePath(parentBase: string, childBase: string | undefined): string {
-  if (!childBase) return parentBase
-  if (childBase.startsWith('/')) return childBase.slice(1)
-  return parentBase ? `${parentBase}/${childBase}` : childBase
-}
+import { resolveBasePath, resolveDeliverablePath } from './catalog-paths.js'
 
 function formatDependsOn(deps: string[] | undefined): string {
   if (!deps || deps.length === 0) return '-'
@@ -400,14 +394,7 @@ function collectResolvedDeliverables(
   for (const section of sections) {
     const sectionBase = resolveBasePath(parentBase, section.base_path)
     for (const item of section.deliverables ?? []) {
-      const resolvedPath = !item.path
-        ? sectionBase
-        : item.path.startsWith('/')
-          ? item.path.slice(1)
-          : sectionBase
-            ? `${sectionBase}/${item.path}`
-            : item.path
-      out.push({ item, resolvedPath })
+      out.push({ item, resolvedPath: resolveDeliverablePath(sectionBase, item.path) })
     }
     if (section.groups) collectResolvedDeliverables(section.groups, sectionBase, out)
   }

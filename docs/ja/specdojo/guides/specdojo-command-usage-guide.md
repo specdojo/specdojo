@@ -1784,7 +1784,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `prepare` は task state が `doing` であることを確認し、scheduler と同じプロジェクトロックを取得する。plan が存在しない場合は `exec plan` 相当でオンデマンド生成する（既存の plan は上書きしない）。root index に stage 済み変更がある場合は停止し、対象 task の plan、result、claim event だけを `exec(<task-id>): prepare execution` で commit してから `exec/<task-id-slug>` を作成する。登録済み worktree または既存 exec ブランチは再利用する。
 
-`agent` は claim actor と `pm-members.yaml` の定義から command を解決する。plan 内の `[[id]]` は `index replace --format markdown --missing keep` 相当で展開し、task worktree をカレントディレクトリとして agent を1回だけ起動する。リトライ、fallback、commit、イベント更新は行わず、agent の終了コードをそのまま返す。
+`agent` は claim actor と `pm-members.yaml` の定義から command を解決する。plan 内の `[[id]]` は `index replace --format path --missing keep` 相当で展開し、task worktree をカレントディレクトリとして agent を1回だけ起動する。リトライ、fallback、commit、イベント更新は行わず、agent の終了コードをそのまま返す。
 
 `commit` は `exec/plans/`、対象 task 以外の `exec/results/`、`exec/events/`、`generated/` を除外し、対象 result と成果物だけを commit する。デフォルトメッセージは `exec(<task-id>): apply task changes` である。
 
@@ -2045,14 +2045,14 @@ specdojo index replace --build docs/ja/projects/prj-0001/030-project-management/
 詳細は [[specdojo-reference-materials-guide|参考資料ガイド]] を参照する。
 ```
 
-`--format markdown`（デフォルト）:
+`--format markdown`（デフォルト、人間が読む文書向け）。リンク先はリポジトリルート起点の root 相対パス（先頭 `/`）で出力する。ネストした文書からでもサイトルート基準で解決でき、VitePress でもリンク切れにならない。
 
 ```md
-詳細は [specdojo-reference-materials-guide](docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
-詳細は [参考資料ガイド](docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
+詳細は [specdojo-reference-materials-guide](/docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
+詳細は [参考資料ガイド](/docs/ja/specdojo/guides/specdojo-reference-materials-guide.md) を参照する。
 ```
 
-`--format path`:
+`--format path`（agent / ツールが開く生パス向け）。リポジトリルート相対パス（先頭スラッシュなし）で出力し、実行時のカレントディレクトリ（リポジトリルートまたは worktree ルート）から解決できる。
 
 ```md
 詳細は docs/ja/specdojo/guides/specdojo-reference-materials-guide.md を参照する。
@@ -2068,7 +2068,7 @@ specdojo index replace --build docs/ja/projects/prj-0001/030-project-management/
 | `--index <path>`  | インデックスファイルパス                                             | `.specdojo/doc-index.json` |
 | `--build`         | 置換前に `specdojo index build` 相当の処理でインデックスを更新する   | `false`                    |
 | `--root <path>`   | `--build` 使用時のスキャン対象ルートディレクトリ                     | `docs`                     |
-| `--format <type>` | 置換形式。`markdown` は `[id](path)`、`path` は path のみに置換する   | `markdown`                 |
+| `--format <type>` | 置換形式。`markdown` は root 相対リンク `[id](/path)`、`path` は repo ルート相対パス（先頭スラッシュなし）のみに置換する | `markdown`                 |
 | `--missing <mode>` | 未解決 ID の扱い。`keep` は `[[id]]` を残し、`marker` は `_MISSING_` に置換する | `keep`                     |
 | `--write`         | 標準出力ではなく入力ファイルを書き換える。通常の exec plan 生成では使わない | `false`                    |
 
@@ -2076,7 +2076,7 @@ specdojo index replace --build docs/ja/projects/prj-0001/030-project-management/
 
 未解決 ID がある場合は、`--missing` の設定に従って本文を出力し、stderr に警告を出す。
 
-`exec run` では、plan ファイルそのものは `[[id]]` のまま保持し、agent に渡す prompt を作る直前に `index replace --format markdown --missing keep` 相当の処理を適用する。
+`exec run` では、plan ファイルそのものは `[[id]]` のまま保持し、agent に渡す prompt を作る直前に `index replace --format path --missing keep` 相当の処理を適用する。agent は参照先ファイルを直接開くため、リンクではなく開ける生パス（`path` 形式）で展開する。
 
 ### 9.4. VSCode 拡張（vscode-specdojo）
 

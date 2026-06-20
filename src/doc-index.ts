@@ -281,8 +281,13 @@ function replacementForResolvedRef(
   path: string,
   format: DocIndexReplaceFormat
 ): string {
+  // path format: emit the canonical repo-relative path verbatim (tools/agents open it
+  // from the run CWD). markdown format: emit a root-relative link (leading slash) so it
+  // resolves against the site/repo root from any file depth (VitePress resolves a leading
+  // slash against srcDir); a bare relative link would break from nested documents.
   if (format === 'path') return path
-  return `[${title ?? id}](${path})`
+  const href = path.startsWith('/') ? path : `/${path}`
+  return `[${title ?? id}](${href})`
 }
 
 function parseWikiRef(rawRef: string): { id: string; title?: string } {

@@ -540,7 +540,7 @@ specdojo exec worktree agent \
   --task <task-id>
 ```
 
-このコマンドはphase要件と `pm-members.yaml` から、claim actorに対応するagent commandを解決する。plan内の `[[id]]` は `index replace --format markdown --missing keep` 相当の処理で展開し、標準入力へ渡す。worktree内のscheduleとexecutionの絶対パスを `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` に設定する。
+このコマンドはphase要件と `pm-members.yaml` から、claim actorに対応するagent commandを解決する。plan内の `[[id]]` は `index replace --format path --missing keep` 相当の処理で展開し、標準入力へ渡す。`path` 形式は agent がそのまま開ける repo ルート相対パス（先頭スラッシュなし）に解決する。worktree内のscheduleとexecutionの絶対パスを `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` に設定する。
 
 agent commandを明示する場合は `--agent-cmd` を使う。`--by` を指定した場合はclaim actorとの一致を検証する。
 
@@ -559,7 +559,7 @@ OpenCodeを使う場合、内部で行う処理は次のコマンドに相当す
 ```sh
 set -o pipefail
 
-specdojo index replace --format markdown --missing keep \
+specdojo index replace --format path --missing keep \
   "${WORKTREE}/${PLAN_REL}" | (
     cd "${WORKTREE}"
     export SPECDOJO_SCHEDULE_PATH="${WORKTREE}/${SCHEDULE_REL}"
@@ -573,7 +573,7 @@ Claude Codeを使う場合は、標準入力の渡し先だけが異なる。
 ```sh
 set -o pipefail
 
-specdojo index replace --format markdown --missing keep \
+specdojo index replace --format path --missing keep \
   "${WORKTREE}/${PLAN_REL}" | (
     cd "${WORKTREE}"
     export SPECDOJO_SCHEDULE_PATH="${WORKTREE}/${SCHEDULE_REL}"
@@ -890,7 +890,7 @@ specdojo exec run --project <project-id> --plan <plan-path>
 specdojo を介さず自分のエージェントへ直接渡すこともできる（`[[id]]` 参照を展開して標準入力へ）。
 
 ```sh
-specdojo index replace --format markdown --missing keep <plan-path> \
+specdojo index replace --format path --missing keep <plan-path> \
   | opencode run --agent opencode-edit-agent
 ```
 
