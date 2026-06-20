@@ -49,6 +49,7 @@ import {
   generateDeliverablePlan,
   generateSinglePlan,
   resolveDeliverableTarget,
+  reviewResultSectionsForDeliverable,
 } from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
@@ -303,6 +304,7 @@ function ensureActorCanClaimNext(
 function scaffoldClaimResult(opts: {
   schedulePath: string
   executionPath: string
+  catalogPath?: string
   state: LoadedExecState
   taskId: string
   projectId: string
@@ -326,6 +328,10 @@ function scaffoldClaimResult(opts: {
     scheduleNode?.phase_suffix,
     scheduleNode?.phase_set
   )
+  const reviewSections =
+    mode === 'review'
+      ? reviewResultSectionsForDeliverable(opts.catalogPath ?? '', localId)
+      : undefined
   scaffoldResult({
     executionPath: opts.executionPath,
     taskId: opts.taskId,
@@ -335,6 +341,7 @@ function scaffoldClaimResult(opts: {
     agent: opts.actor,
     startedAt: opts.startedAt,
     ...(approach ? { approach } : {}),
+    ...(reviewSections ? { reviewSections } : {}),
   })
 }
 
@@ -362,7 +369,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
   let lockDir = ''
 
   try {
-    const { schedulePath, executionPath } = resolveProjectContext(opts)
+    const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts)
     const actor = requireNonEmpty('by', opts.by)
     const roster = loadRosterForOpts(opts)
     assertValidActor(actor, roster)
@@ -417,6 +424,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
       scaffoldClaimResult({
         schedulePath,
         executionPath,
+        catalogPath,
         taskId,
         state,
         projectId: resolveProjectId(opts),

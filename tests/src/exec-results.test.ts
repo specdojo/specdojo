@@ -37,4 +37,38 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(frontmatter).toContain('status: complete')
     expect(frontmatter).toContain('id: prj-0001:xer-prj-overview')
   })
+
+  it('expands the review result sections placeholder when reviewSections is provided', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'review',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'codex-review-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+      reviewSections: '### RVP-001（BA: vp-ba-business-value）\n\n**確認基準**: x',
+    })
+
+    const body = readFileSync(resultPath, 'utf8')
+    expect(body).toContain('### RVP-001（BA: vp-ba-business-value）')
+    expect(body).not.toContain('_REVIEW_RESULT_SECTIONS_')
+  })
+
+  it('falls back to a language-neutral _TODO_ marker when a review result has no reviewSections', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'review',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'codex-review-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    const body = readFileSync(resultPath, 'utf8')
+    // The placeholder is replaced; no Japanese fallback prose is hardcoded in code.
+    expect(body).not.toContain('_REVIEW_RESULT_SECTIONS_')
+    expect(body).toContain('## 1. レビュー観点別結果')
+  })
 })

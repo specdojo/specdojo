@@ -6,6 +6,7 @@ import { existsSync } from 'node:fs'
 import {
   generateSinglePlan,
   ownerRoleFields,
+  reviewResultSections,
   reviewViewpointDetails,
 } from '../../src/exec-plans.js'
 import type { CriteriaItem } from '../../src/catalog-types.js'
@@ -95,6 +96,36 @@ const DETAIL_TEMPLATE = [
   '_VP_COVERAGE_check: _VP_CHECK_',
   'evidence: _VP_EVIDENCE_',
 ].join('\n')
+
+describe('reviewResultSections', () => {
+  // Prose labels come from the detail template; the test supplies a minimal one and asserts
+  // that code injects only the data values (id / roles / viewpoint / criterion).
+  const DETAIL_TEMPLATE = [
+    '### _VP_ID_（_VP_ROLES_: _VP_VIEWPOINT_）',
+    '',
+    '基準: _VP_CRITERION_',
+    '',
+    '- result: _TODO_',
+  ].join('\n')
+
+  it('criteria が空の場合は MISSING を返す', () => {
+    expect(reviewResultSections([], DETAIL_TEMPLATE)).toBe('_MISSING_')
+  })
+
+  it('各 RVP に role / viewpoint_id / criterion を展開する', () => {
+    const criteria: CriteriaItem[] = [
+      { text: '業務価値が確認できる', roles: ['BA'], viewpoint: 'vp-ba-business-value' },
+      { text: 'スコープが承認できる', roles: ['PO'], viewpoint: 'vp-po-purpose-alignment' },
+    ]
+
+    const actual = reviewResultSections(criteria, DETAIL_TEMPLATE)
+
+    expect(actual).toContain('### RVP-001（BA: vp-ba-business-value）')
+    expect(actual).toContain('基準: 業務価値が確認できる')
+    expect(actual).toContain('### RVP-002（PO: vp-po-purpose-alignment）')
+    expect(actual).toContain('- result: _TODO_')
+  })
+})
 
 describe('reviewViewpointDetails', () => {
   it('criteria が空の場合は MISSING を返す', () => {

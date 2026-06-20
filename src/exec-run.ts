@@ -38,6 +38,7 @@ import {
   loadPlan,
   parsePlanTaskIdentity,
   resolveDeliverableTarget,
+  reviewResultSectionsForDeliverable,
 } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
@@ -598,6 +599,10 @@ function prepareSingleTask(
 
   const planRef = `exec/plans/${task.id}-plan.md`
   const startedAt = new Date().toISOString()
+  const reviewSections =
+    (task.mode ?? 'edit') === 'review'
+      ? reviewResultSectionsForDeliverable(planGenPaths.catalogPath ?? '', task.local_id)
+      : undefined
   const { resultPath } = scaffoldResult({
     executionPath,
     taskId: task.id,
@@ -607,6 +612,7 @@ function prepareSingleTask(
     agent: actor,
     startedAt,
     ...(task.approach ? { approach: task.approach } : {}),
+    ...(reviewSections ? { reviewSections } : {}),
   })
 
   // Commit the execution checkpoint (plan/result/claim event) to root HEAD, then create the
@@ -1141,6 +1147,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       planProjectId = identity.projectId
       task = {
         id: identity.taskId,
+        // Derive the catalog local_id so a review result can resolve done_criteria. A scheduled
+        // task id (T-<track>-<local_id>-NNN) yields the local_id; a deliverable plan's task_id is
+        // already the local_id (slug).
+        local_id: extractLocalId(identity.taskId) ?? identity.taskId,
         mode: identity.mode,
         approach: identity.approach,
         schedule_file: '',
@@ -1217,6 +1227,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // Idempotent: never clobbers an existing result (e.g. one created by claim above).
   let resultPath: string | undefined
   if (task && slug) {
+    const reviewSections =
+      (task.mode ?? 'edit') === 'review'
+        ? reviewResultSectionsForDeliverable(catalogPath ?? '', task.local_id)
+        : undefined
     resultPath = scaffoldResult({
       executionPath,
       taskId: slug,
@@ -1226,6 +1240,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       agent: actor,
       startedAt: new Date().toISOString(),
       ...(task.approach ? { approach: task.approach } : {}),
+      ...(reviewSections ? { reviewSections } : {}),
     }).resultPath
   }
 

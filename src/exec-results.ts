@@ -86,6 +86,7 @@ export function scaffoldResult(opts: {
   agent: string
   startedAt: string
   approach?: Approach
+  reviewSections?: string
 }): { resultPath: string; created: boolean } {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts
   const resultPath = resultPathForTask(executionPath, taskId)
@@ -113,7 +114,14 @@ export function scaffoldResult(opts: {
     ...(approach ? { approach } : {}),
   }
 
-  const content = expandTemplate(template, { _FRONTMATTER_: serializeFrontmatter(meta) })
+  const values: Record<string, string> = { _FRONTMATTER_: serializeFrontmatter(meta) }
+  // Review results pre-expand per-RVP sections (role / viewpoint_id / criterion) so the result
+  // is self-contained. When the caller cannot resolve them, leave a language-neutral _TODO_
+  // marker; the result template's own prose explains how to fill the sections.
+  if (mode === 'review') {
+    values._REVIEW_RESULT_SECTIONS_ = opts.reviewSections ?? '_TODO_'
+  }
+  const content = expandTemplate(template, values)
 
   writeFileSync(resultPath, content, 'utf8')
   return { resultPath, created: true }

@@ -2,15 +2,9 @@ _FRONTMATTER_
 
 ## 1. レビュー観点別結果
 
-_TODO_: プランの各 RVP-XXX セクションに対して結果を記入する。
+各 RVP セクションの `result` / `evidence` / `notes` を記入する。`evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
 
-<!-- 各観点の記入例:
-### RVP-001
-
-- result: pass | fail | unclear
-- evidence: （根拠・参照箇所）
-- notes: （補足）
--->
+_REVIEW_RESULT_SECTIONS_
 
 ## 2. findings
 

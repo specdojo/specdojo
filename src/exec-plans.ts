@@ -197,6 +197,10 @@ function frontmatter(meta: ExecPlanMeta): string {
 // 言語別 docs/<lang>/.../templates のこの断片に置き、コードは値のみを供給する。
 const REVIEW_VIEWPOINT_DETAIL_TEMPLATE = 'xrp-viewpoint-detail-template.md'
 
+// Per-RVP fragment for a review *result* (section 1). Prose labels for result/evidence/notes
+// live here; code supplies only data values.
+const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = 'xrr-viewpoint-detail-template.md'
+
 function templatesDir(): string {
   return join(specdojoRootDir(), 'docs/ja/specdojo/templates')
 }
@@ -286,6 +290,43 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
     lines.push(`| ${vpId} | ${c.roles.join(', ')} | ${c.viewpoint} | ${c.text} |`)
   })
   return lines.join('\n')
+}
+
+// Per-RVP skeleton for a review result's section 1. Each block carries the role,
+// viewpoint_id and criterion as context so the result is self-contained, and leaves
+// result / evidence / notes as _TODO_ for the agent to fill. Prose labels live in the
+// detailTemplate (language-specific docs/<lang>/.../templates); code supplies only values.
+export function reviewResultSections(criteria: CriteriaItem[], detailTemplate: string): string {
+  if (criteria.length === 0) return MISSING
+  return criteria
+    .map((c, i) => {
+      const vpId = `RVP-${String(i + 1).padStart(3, '0')}`
+      return expandTemplate(detailTemplate, {
+        _VP_ID_: vpId,
+        _VP_ROLES_: c.roles.join(', '),
+        _VP_VIEWPOINT_: c.viewpoint,
+        _VP_CRITERION_: c.text,
+      }).trimEnd()
+    })
+    .join('\n\n')
+}
+
+// Resolve the review result sections for a deliverable by local_id. Returns undefined when
+// the catalog, deliverable, or its done_criteria cannot be resolved; the caller then falls
+// back to a generic result body.
+export function reviewResultSectionsForDeliverable(
+  catalogPath: string,
+  localId: string | undefined
+): string | undefined {
+  if (!catalogPath || !localId) return undefined
+  const info = findDeliverableInfo(catalogPath, localId)
+  const criteria = info?.deliverable.done_criteria ?? []
+  if (criteria.length === 0) return undefined
+  const detailTemplate = readTemplate(
+    join(templatesDir(), REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
+    new Map<string, string>()
+  )
+  return reviewResultSections(criteria, detailTemplate)
 }
 
 // coverage_types はビューポート任意項目。持たない観点では coverage_required ブロック
