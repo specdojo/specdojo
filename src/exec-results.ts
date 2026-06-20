@@ -27,6 +27,14 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   return lines.join('\n')
 }
 
+// Strip one surrounding pair of double quotes so re-serialization does not nest them
+// (timestamp fields are written quoted; reading them back must yield the raw value).
+function unquote(value: string): string {
+  return value.length >= 2 && value.startsWith('"') && value.endsWith('"')
+    ? value.slice(1, -1)
+    : value
+}
+
 function parseFrontmatter(content: string): { meta: Record<string, string>; body: string } {
   const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
   if (!match) return { meta: {}, body: content }
@@ -34,7 +42,7 @@ function parseFrontmatter(content: string): { meta: Record<string, string>; body
   for (const line of match[1].split('\n')) {
     const idx = line.indexOf(':')
     if (idx === -1) continue
-    meta[line.slice(0, idx).trim()] = line.slice(idx + 1).trim()
+    meta[line.slice(0, idx).trim()] = unquote(line.slice(idx + 1).trim())
   }
   return { meta, body: match[2] }
 }
