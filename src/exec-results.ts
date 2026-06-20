@@ -55,9 +55,9 @@ function templateFileName(mode: TaskMode): string {
   return mode === 'review' ? 'xrr-template.md' : 'xer-template.md'
 }
 
-function execResultDocId(projectId: string, mode: TaskMode, taskId: string): string {
+function execResultDocId(projectId: string, mode: TaskMode, localBase: string): string {
   const prefix = mode === 'review' ? 'xrr' : 'xer'
-  const localId = `${prefix}-${taskId.toLowerCase()}`
+  const localId = `${prefix}-${localBase.toLowerCase()}`
   return projectId ? `${projectId}:${localId}` : localId
 }
 
@@ -73,8 +73,8 @@ function loadResultTemplate(mode: TaskMode): string {
 // Public API
 // ---------------------------------------------------------------------------
 
-export function resultPathForTask(executionPath: string, taskId: string): string {
-  return join(executionPath, 'exec', 'results', `${taskId}-result.md`)
+export function resultPathForTask(executionPath: string, nameBase: string): string {
+  return join(executionPath, 'exec', 'results', `${nameBase}-result.md`)
 }
 
 export function scaffoldResult(opts: {
@@ -87,9 +87,13 @@ export function scaffoldResult(opts: {
   startedAt: string
   approach?: Approach
   reviewSections?: string
+  // Shared plan/result stem. Defaults to taskId (fixed-name worktree/claim flow); in-place
+  // callers pass a unique stem so file name and doc id stay unique and the result is tied to its plan.
+  stem?: string
 }): { resultPath: string; created: boolean } {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts
-  const resultPath = resultPathForTask(executionPath, taskId)
+  const stem = opts.stem ?? taskId
+  const resultPath = resultPathForTask(executionPath, stem)
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
   if (existsSync(resultPath)) {
@@ -102,7 +106,7 @@ export function scaffoldResult(opts: {
   const template = loadResultTemplate(mode)
 
   const meta: ExecResultMeta = {
-    id: execResultDocId(projectId, mode, taskId),
+    id: execResultDocId(projectId, mode, stem),
     type: 'exec-result',
     task_id: taskId,
     mode,

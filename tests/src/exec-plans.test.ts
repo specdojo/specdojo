@@ -4,10 +4,12 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { existsSync } from 'node:fs'
 import {
+  buildInPlaceStem,
   generateSinglePlan,
   ownerRoleFields,
   reviewResultSections,
   reviewViewpointDetails,
+  stemFromPlanPath,
 } from '../../src/exec-plans.js'
 import type { CriteriaItem } from '../../src/catalog-types.js'
 import type { RoleDefinition } from '../../src/role-types.js'
@@ -205,6 +207,24 @@ describe('reviewViewpointDetails', () => {
   })
 })
 
+describe('buildInPlaceStem / stemFromPlanPath', () => {
+  it('builds a stem prefixed by the slug and unique across calls', () => {
+    const a = buildInPlaceStem('prj-overview')
+    const b = buildInPlaceStem('prj-overview')
+
+    expect(a.startsWith('prj-overview-')).toBe(true)
+    // Two generations of the same slug must not collide (UTC + random suffix).
+    expect(a).not.toBe(b)
+  })
+
+  it('recovers the stem from a plan path (round-trips with the plan file name)', () => {
+    const stem = buildInPlaceStem('overview')
+
+    expect(stemFromPlanPath(`/repo/exec/plans/${stem}-plan.md`)).toBe(stem)
+    expect(stemFromPlanPath('prj-overview-result-plan.md')).toBe('prj-overview-result')
+  })
+})
+
 describe('plan generation (edit done_criteria goals)', () => {
   it('通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない', () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-exec-plans-'))
@@ -396,6 +416,46 @@ describe('generateSinglePlan', () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, 'T-TEST-overview-099-plan.md'), 'utf8')).toBe('keep me\n')
       expect(readFileSync(join(plansDir, 'index.md'), 'utf8')).toBe('# existing index\n')
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+
+  it('stem を渡すとユニーク名でファイル・id・result 参照を出力し task_id は保持する', () => {
+    const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
+    const executionPath = join(root, 'execution')
+    const catalogPath = join(root, 'catalog')
+    const stem = 'overview-20260620t125519z-0328'
+
+    try {
+      writeCatalog(catalogPath)
+
+      const outPath = generateSinglePlan({
+        executionPath,
+        projectId: 'test',
+        catalogPath,
+        stem,
+        task: {
+          id: 'T-TEST-overview-020',
+          local_id: 'overview',
+          mode: 'edit',
+          schedule_file: 'sch-track-test.yaml',
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      })
+
+      // File name uses the stem; the fixed-name plan must not also be written.
+      expect(outPath).toBe(join(executionPath, 'exec', 'plans', `${stem}-plan.md`))
+      expect(existsSync(join(executionPath, 'exec', 'plans', 'T-TEST-overview-020-plan.md'))).toBe(
+        false
+      )
+
+      const plan = readFileSync(outPath, 'utf8')
+      // id is unique per stem; the embedded result ref shares the stem; task_id stays the task id.
+      expect(plan).toContain(`id: test:xep-${stem}`)
+      expect(plan).toContain(`exec/results/${stem}-result.md`)
+      expect(plan).toContain('task_id: T-TEST-overview-020')
     } finally {
       rmSync(root, { recursive: true, force: true })
     }

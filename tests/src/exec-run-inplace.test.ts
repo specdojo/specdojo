@@ -144,17 +144,25 @@ describe('exec run (in-place, default)', () => {
       expect(received).toContain('# Edit Plan: T-TEST-doc-010')
       expect(received).toContain('Content is complete')
 
-      // Default in-place run keeps the plan, creates no worktree, and writes no events.
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'T-TEST-doc-010-plan.md'))).toBe(true)
+      // Default lightweight in-place run keeps a unique-named plan (no worktree, no events).
+      const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      expect(planFiles).toHaveLength(1)
+      expect(planFiles[0]).toMatch(/^T-TEST-doc-010-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
       expect(readdirSync(join(executionPath, 'exec', 'events'))).toHaveLength(0)
       expect(process.exitCode).toBeUndefined()
 
       // The result is scaffolded so the agent fills a frontmatter-complete file (incl. mode),
-      // and its status reflects the successful exit even without --track-state events.
-      const result = readFileSync(
-        join(executionPath, 'exec', 'results', 'T-TEST-doc-010-result.md'),
-        'utf8'
+      // shares the plan's stem, and its status reflects the successful exit even without events.
+      const resultFiles = readdirSync(join(executionPath, 'exec', 'results')).filter(f =>
+        f.endsWith('-result.md')
       )
+      expect(resultFiles).toHaveLength(1)
+      expect(resultFiles[0]).toMatch(/^T-TEST-doc-010-\d{8}T\d{6}Z-[0-9a-f]{4}-result\.md$/)
+      // Plan and result share one stem (1:1 linkage).
+      expect(resultFiles[0].replace(/-result\.md$/, '')).toBe(planFiles[0].replace(/-plan\.md$/, ''))
+      const result = readFileSync(join(executionPath, 'exec', 'results', resultFiles[0]), 'utf8')
       expect(result).toContain('mode: edit')
       expect(result).toContain('status: complete')
     } finally {
@@ -171,7 +179,35 @@ describe('exec run (in-place, default)', () => {
       await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--cmd', FAKE_AGENT_CMD])
 
       expect(readFileSync(join(repo, 'agent-ran.txt'), 'utf8')).toContain('Content is complete')
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(true)
+      const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      expect(planFiles).toHaveLength(1)
+      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+
+  it('accumulates a distinct plan+result per lightweight run (audit trail)', async () => {
+    const { repo, executionPath } = setupRepository()
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--cmd', FAKE_AGENT_CMD])
+      await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--cmd', FAKE_AGENT_CMD])
+
+      const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      const resultFiles = readdirSync(join(executionPath, 'exec', 'results')).filter(f =>
+        f.endsWith('-result.md')
+      )
+      // Each run leaves its own plan and result; nothing is overwritten (the trail is preserved).
+      expect(planFiles).toHaveLength(2)
+      expect(resultFiles).toHaveLength(2)
+      expect(new Set(resultFiles).size).toBe(2)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
@@ -194,10 +230,14 @@ describe('exec run (in-place, default)', () => {
         '--archive-on-success',
       ])
 
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(false)
+      // The unique-named plan is moved out of plans/ into done/.
+      const remaining = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      expect(remaining).toHaveLength(0)
       const doneFiles = readdirSync(join(executionPath, 'exec', 'plans', 'done'))
       expect(doneFiles).toHaveLength(1)
-      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-.*-plan\.md$/)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })
@@ -226,7 +266,11 @@ describe('exec run (in-place, default)', () => {
 
       expect(lines.join('')).toContain('[dry-run]')
       expect(existsSync(join(repo, 'agent-ran.txt'))).toBe(false)
-      expect(existsSync(join(executionPath, 'exec', 'plans', 'doc-plan.md'))).toBe(false)
+      const plansDir = join(executionPath, 'exec', 'plans')
+      const planFiles = existsSync(plansDir)
+        ? readdirSync(plansDir).filter(f => f.endsWith('-plan.md'))
+        : []
+      expect(planFiles).toHaveLength(0)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })

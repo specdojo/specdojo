@@ -71,4 +71,26 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(body).not.toContain('_REVIEW_RESULT_SECTIONS_')
     expect(body).toContain('## 1. レビュー観点別結果')
   })
+
+  it('uses the stem for the result file name and doc id while keeping task_id', () => {
+    const stem = 'prj-overview-20260620t125519z-0328'
+    const { resultPath, created } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      stem,
+      mode: 'review',
+      projectId: 'prj-0001',
+      planRef: `exec/plans/${stem}-plan.md`,
+      agent: 'codex-review-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    expect(created).toBe(true)
+    expect(resultPath.endsWith(`${stem}-result.md`)).toBe(true)
+    const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
+    // id is unique per stem (no doc-index collision); task_id stays the bare task id.
+    expect(frontmatter).toContain(`id: prj-0001:xrr-${stem}`)
+    expect(frontmatter).toContain('task_id: prj-overview')
+    expect(frontmatter).toContain(`plan_ref: exec/plans/${stem}-plan.md`)
+  })
 })

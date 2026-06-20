@@ -33,12 +33,14 @@ import {
 } from './schedule-phase-sets.js'
 import {
   archivePlan,
+  buildInPlaceStem,
   generateDeliverablePlan,
   generateSinglePlan,
   loadPlan,
   parsePlanTaskIdentity,
   resolveDeliverableTarget,
   reviewResultSectionsForDeliverable,
+  stemFromPlanPath,
 } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
 import { scaffoldResult, updateResultStatus } from './exec-results.js'
@@ -1127,9 +1129,18 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const projectId = opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
   const roster = loadRosterForExecutionPath(executionPath)
 
+  // --track-state participates in the claim/complete event model, which keys on the fixed
+  // `<task-id>` name; keep fixed naming there. Lightweight in-place runs use a unique stem so
+  // each run keeps a distinct plan/result (audit trail) without doc-index id collisions.
+  const trackState = !!opts.trackState
+
   const plansDir = join(executionPath, 'exec', 'plans')
   let planPath: string
   let slug: string | undefined
+  // Shared plan/result stem. For generated lightweight in-place plans it is unique per run
+  // (`<slug>-<UTC>-<rand>`); for bring-your-own --plan it is recovered from the plan filename so
+  // re-running the same plan overwrites the tied result; for --track-state it stays the task id.
+  let stem: string | undefined
   let task: ReadyTaskView | null = null
   // null target = bring-your-own --plan (not generated, not archived).
   let target: ReturnType<typeof resolveDeliverableTarget> | null = null
@@ -1138,6 +1149,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   if (opts.plan) {
     planPath = resolve(opts.plan)
     if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`)
+    stem = stemFromPlanPath(planPath)
     // Recover task identity from the plan frontmatter so the result is scaffolded
     // with complete frontmatter (id/mode/plan_ref/started_at), matching the --task
     // path. Ad-hoc plans without a task_id keep the previous no-scaffold behavior.
@@ -1162,11 +1174,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     const taskId = opts.task.trim()
     task = buildTaskView(schedulePath, executionPath, taskId)
     slug = taskId
-    planPath = join(plansDir, `${taskId}-plan.md`)
+    stem = trackState ? taskId : buildInPlaceStem(taskId)
+    planPath = join(plansDir, `${stem}-plan.md`)
   } else {
     target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
     slug = target.slug
-    planPath = join(plansDir, `${slug}-plan.md`)
+    stem = buildInPlaceStem(slug)
+    planPath = join(plansDir, `${stem}-plan.md`)
     task = {
       id: slug,
       local_id: target.localId,
@@ -1198,6 +1212,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       rolesPath,
       viewpointsPath,
       task,
+      ...(stem ? { stem } : {}),
     })
   } else if (target) {
     generateDeliverablePlan({
@@ -1207,12 +1222,12 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       rolesPath,
       viewpointsPath,
       target,
+      ...(stem ? { stem } : {}),
     })
   }
 
   const prompt = expandPromptRefs(readFileSync(planPath, 'utf8'))
 
-  const trackState = !!opts.trackState
   const actor = opts.by?.trim() ?? ''
   if (trackState) {
     if (!opts.task) throw new Error('--track-state requires --task.')
@@ -1236,9 +1251,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       taskId: slug,
       mode: task.mode ?? 'edit',
       projectId: projectId || planProjectId,
-      planRef: `exec/plans/${slug}-plan.md`,
+      planRef: `exec/plans/${stem ?? slug}-plan.md`,
       agent: actor,
       startedAt: new Date().toISOString(),
+      ...(stem ? { stem } : {}),
       ...(task.approach ? { approach: task.approach } : {}),
       ...(reviewSections ? { reviewSections } : {}),
     }).resultPath
@@ -1264,8 +1280,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     return
   }
 
-  if (opts.archiveOnSuccess && generatedPlan && slug) {
-    const archived = archivePlan({ executionPath, slug })
+  if (opts.archiveOnSuccess && generatedPlan && (stem ?? slug)) {
+    const archived = archivePlan({ executionPath, slug: stem ?? (slug as string) })
     if (archived.to) process.stdout.write(`Archived plan: ${archived.to}\n`)
   }
   process.stdout.write(`run done: ${label}\n`)

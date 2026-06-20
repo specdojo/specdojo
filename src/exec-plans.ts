@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
-import { join, relative } from 'node:path'
+import { basename, join, relative } from 'node:path'
 import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { resolveReferenceMaterialRefs } from './reference-materials.js'
@@ -29,9 +29,22 @@ type DeliverableInfo = {
 
 const MISSING = '_MISSING_'
 
-function execDocId(projectId: string, prefix: 'xep' | 'xrp', taskId: string): string {
-  const localId = `${prefix}-${taskId.toLowerCase()}`
+function execDocId(projectId: string, prefix: 'xep' | 'xrp', localBase: string): string {
+  const localId = `${prefix}-${localBase.toLowerCase()}`
   return projectId ? `${projectId}:${localId}` : localId
+}
+
+// In-place plan/result share one unique stem (`<slug>-<UTC>-<rand>`) so each run keeps a
+// distinct file and id (no doc-index collision) and the result name is derivable from the
+// plan. Mirrors the done/ archive naming convention (tsForFilenameUtc + randomHex).
+export function buildInPlaceStem(slug: string): string {
+  return `${slug}-${tsForFilenameUtc(nowUtcIsoSeconds())}-${randomHex(2)}`
+}
+
+// Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.
+// Used when re-running `--plan <path>` so the tied result is overwritten in place.
+export function stemFromPlanPath(planPath: string): string {
+  return basename(planPath).replace(/-plan\.md$/, '')
 }
 
 // ---------------------------------------------------------------------------
@@ -420,13 +433,14 @@ function buildEditPlanMarkdown(
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
-  resultRef: string
+  resultRef: string,
+  stem: string
 ): string {
   const cpm = task.cpm
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
 
   const meta: ExecPlanMeta = {
-    id: execDocId(projectId, 'xep', task.id),
+    id: execDocId(projectId, 'xep', stem),
     type: 'exec-plan',
     rulebook: 'xep-rulebook',
     task_id: task.id,
@@ -473,13 +487,14 @@ function buildReviewPlanMarkdown(
   coverageMap: Map<string, CoverageType>,
   projectId: string,
   viewpointsRef: string,
-  resultRef: string
+  resultRef: string,
+  stem: string
 ): string {
   const cpm = task.cpm
   const onCriticalPath = cpm !== undefined && cpm.slack === 0
 
   const meta: ExecPlanMeta = {
-    id: execDocId(projectId, 'xrp', task.id),
+    id: execDocId(projectId, 'xrp', stem),
     type: 'exec-plan',
     rulebook: 'xep-rulebook',
     task_id: task.id,
@@ -534,7 +549,7 @@ type PlanGenContext = {
 function writeTaskPlan(
   ctx: PlanGenContext,
   task: PlanTask,
-  override?: { deliverable?: DeliverableInfo | null; outPath?: string }
+  override?: { deliverable?: DeliverableInfo | null; outPath?: string; stem?: string }
 ): string {
   const mode: TaskMode = task.mode ?? 'edit'
   const localId = task.local_id
@@ -544,8 +559,11 @@ function writeTaskPlan(
       : localId && ctx.catalogPath
         ? findDeliverableInfo(ctx.catalogPath, localId)
         : null
-  const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${task.id}-result.md`
-  const outPath = override?.outPath ?? join(ctx.plansDir, `${task.id}-plan.md`)
+  // The stem links a plan to its result (both share `<stem>-{plan,result}.md` and the doc id).
+  // Defaults to the task id (fixed-name worktree/claim flow); in-place callers pass a unique stem.
+  const stem = override?.stem ?? task.id
+  const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${stem}-result.md`
+  const outPath = override?.outPath ?? join(ctx.plansDir, `${stem}-plan.md`)
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? []
   const planTask: PlanTask = { ...task, mode }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache)
@@ -562,7 +580,8 @@ function writeTaskPlan(
           ctx.coverageMap,
           ctx.projectId,
           ctx.vpRef,
-          resultRef
+          resultRef,
+          stem
         )
       : buildEditPlanMarkdown(
           template,
@@ -571,7 +590,8 @@ function writeTaskPlan(
           ctx.roleMap,
           ctx.vpMap,
           ctx.projectId,
-          resultRef
+          resultRef,
+          stem
         )
 
   writeFileSync(outPath, content, 'utf8')
@@ -589,13 +609,17 @@ export function generateSinglePlan(opts: {
   viewpointsPath?: string
   task: ReadyTaskView
   outPath?: string
+  stem?: string
 }): string {
   const ctx = newPlanGenContext(opts)
-  return writeTaskPlan(
-    ctx,
-    { ...opts.task, mode: opts.task.mode ?? 'edit' },
-    opts.outPath ? { outPath: opts.outPath } : undefined
-  )
+  const override =
+    opts.outPath || opts.stem
+      ? {
+          ...(opts.outPath ? { outPath: opts.outPath } : {}),
+          ...(opts.stem ? { stem: opts.stem } : {}),
+        }
+      : undefined
+  return writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? 'edit' }, override)
 }
 
 // Generate a plan directly from a catalog deliverable, independent of the
@@ -613,6 +637,7 @@ export function generateDeliverablePlan(opts: {
   approach?: Approach
   owner?: string
   outPath?: string
+  stem?: string
 }): string {
   const ctx = newPlanGenContext(opts)
   const task: PlanTask = {
@@ -626,7 +651,11 @@ export function generateDeliverablePlan(opts: {
     fifo_rank: 0,
     critical_first_rank: 0,
   }
-  return writeTaskPlan(ctx, task, { deliverable: opts.target.info, outPath: opts.outPath })
+  return writeTaskPlan(ctx, task, {
+    deliverable: opts.target.info,
+    ...(opts.outPath ? { outPath: opts.outPath } : {}),
+    ...(opts.stem ? { stem: opts.stem } : {}),
+  })
 }
 
 function newPlanGenContext(opts: {

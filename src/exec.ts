@@ -46,10 +46,12 @@ import { type Approach, type ExecEventType, type ExecEventV1, type ReadySnapshot
 import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
 import {
   archivePlan,
+  buildInPlaceStem,
   generateDeliverablePlan,
   generateSinglePlan,
   resolveDeliverableTarget,
   reviewResultSectionsForDeliverable,
+  stemFromPlanPath,
 } from './exec-plans.js'
 import { scaffoldResult } from './exec-results.js'
 import { scaffoldViewpoints } from './review-plan.js'
@@ -588,9 +590,13 @@ export function registerExecCommands(program: Command): void {
       const projectId = resolveProjectId(opts)
       const outOverride = typeof opts.out === 'string' && opts.out.trim() ? opts.out.trim() : undefined
 
+      // Filename specified (--out) → overwrite that file, deriving the stem from its name.
+      // Not specified → new unique stem per generation, so each plan/result is distinct and the
+      // result name is derivable from the plan (see exec run --plan).
       let outPath: string
       if (hasTask) {
         const task = buildTaskView(schedulePath, executionPath, (opts.task as string).trim())
+        const stem = outOverride ? stemFromPlanPath(outOverride) : buildInPlaceStem((opts.task as string).trim())
         outPath = generateSinglePlan({
           executionPath,
           projectId,
@@ -598,12 +604,14 @@ export function registerExecCommands(program: Command): void {
           rolesPath,
           viewpointsPath,
           task,
+          stem,
           ...(outOverride ? { outPath: outOverride } : {}),
         })
       } else {
         const target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
         const track = typeof opts.track === 'string' && opts.track.trim() ? opts.track.trim() : undefined
         const owner = resolveOwnerForLocalId(schedulePath, target.localId, track)
+        const stem = outOverride ? stemFromPlanPath(outOverride) : buildInPlaceStem(target.slug)
         outPath = generateDeliverablePlan({
           executionPath,
           projectId,
@@ -614,6 +622,7 @@ export function registerExecCommands(program: Command): void {
           mode: parseTaskMode(opts.mode),
           ...(opts.approach ? { approach: parseApproach(opts.approach) } : {}),
           ...(owner ? { owner } : {}),
+          stem,
           ...(outOverride ? { outPath: outOverride } : {}),
         })
       }
@@ -630,18 +639,24 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(archiveCmd)
   archiveCmd.option('--task <taskId>', 'Scheduled task ID whose plan to archive')
   archiveCmd.option('--deliverable <localId>', 'Catalog deliverable local_id (unique project-wide)')
+  archiveCmd.option('--plan <path>', 'Plan file to archive (for unique-named in-place plans)')
   archiveCmd.option('--delete', 'Delete the plan instead of moving it to done/', false)
   archiveCmd.action(opts => {
     try {
       const { executionPath, catalogPath } = resolveProjectContext(opts)
       const hasTask = typeof opts.task === 'string' && opts.task.trim() !== ''
       const hasDeliverable = typeof opts.deliverable === 'string' && opts.deliverable.trim() !== ''
-      if (hasTask === hasDeliverable) {
-        throw new Error('Specify exactly one of --task or --deliverable.')
+      const hasPlan = typeof opts.plan === 'string' && opts.plan.trim() !== ''
+      if ([hasTask, hasDeliverable, hasPlan].filter(Boolean).length !== 1) {
+        throw new Error('Specify exactly one of --task, --deliverable, or --plan.')
       }
-      const slug = hasTask
-        ? (opts.task as string).trim()
-        : resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim()).slug
+      // `archivePlan` rebuilds `<slug>-plan.md`; for --plan the stem recovered from the filename
+      // is that slug, so a unique-named in-place plan archives to done/ like a fixed-name one.
+      const slug = hasPlan
+        ? stemFromPlanPath((opts.plan as string).trim())
+        : hasTask
+          ? (opts.task as string).trim()
+          : resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim()).slug
 
       const result = archivePlan({ executionPath, slug, delete: !!opts.delete })
       process.stdout.write(

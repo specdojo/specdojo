@@ -877,13 +877,13 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 #### 9.8.5. plan を作ってから手動で実行
 
-plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。
+plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。`--out` 未指定なら毎回ユニーク名（`<slug>-<UTC>-<rand>-plan.md`）で生成され、`exec run --plan` がそのファイル名から result 名を導出する。同じ plan ファイルを再実行すると、対応する result を上書きする（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
 ```sh
-# scheduled タスクの plan を生成
+# タスクの plan を生成（毎回ユニーク名。--out でファイル名を固定して上書きも可能）
 specdojo exec plan --project <project-id> --task <task-id>
 
-# 内容を確認・編集後、その plan で実行する（plan は再生成しない）
+# 内容を確認・編集後、その plan で実行する（plan は再生成しない。result は plan 名から導出）
 specdojo exec run --project <project-id> --plan <plan-path>
 ```
 
@@ -914,7 +914,7 @@ specdojo exec plan --project <project-id> --deliverable <local_id> --track <trac
 
 ### 9.9. 完了済みタスクを再実行する
 
-完了済み（`done`）タスクをやり直したいときは、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でそのままやり直す。専用コマンドは不要で、`exec run` が plan を再生成してから実行する。plan・result は git 管理対象で、完了後の plan は `exec/plans/done/` へアーカイブされる（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
+完了済み（`done`）タスクをやり直したいときは、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でそのままやり直す。専用コマンドは不要で、`exec run` が plan を再生成してから実行する。軽量 in-place ではやり直しのたびにユニーク名の plan・result が新規に作られ、過去の result が証跡として残る（同じ result を上書きしたい場合は `exec run --plan <plan-path>` でファイルを指定する）。plan・result は git 管理対象で、不要な plan は `exec/plans/done/` へアーカイブしてよい（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
 ```sh
 # plan を再生成してカレントで再実行する（状態は変更しない）
