@@ -88,9 +88,3 @@ properties:
       Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
       Used for template selection and to convey work intent to the agent.
       Omitted when not declared for this phase.
-
-  viewpoints_ref:
-    type: string
-    description: >
-      Path to pm-review-viewpoints.yaml. Present for review plans and for regular edit plans
-      that use all-role viewpoints in deliverable self-review.

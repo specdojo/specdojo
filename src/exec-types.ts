@@ -223,7 +223,6 @@ export type ExecPlanMeta = {
   on_critical_path?: true
   agent?: string
   approach?: Approach
-  viewpoints_ref?: string
 }
 
 export type ExecResultMeta = {

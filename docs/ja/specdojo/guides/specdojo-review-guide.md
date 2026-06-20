@@ -211,7 +211,6 @@ status: ready
 project_id: <project_id>
 owner: <Role code>
 on_critical_path: true | false
-viewpoints_ref: <pm-review-viewpoints.yaml のパス>
 ```
 
 | セクション | 内容 |

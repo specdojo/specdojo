@@ -197,7 +197,6 @@ function frontmatter(meta: ExecPlanMeta): string {
   if (meta.owner) lines.push(`owner: ${meta.owner}`)
   if (meta.on_critical_path) lines.push(`on_critical_path: true`)
   if (meta.approach) lines.push(`approach: ${meta.approach}`)
-  if (meta.viewpoints_ref) lines.push(`viewpoints_ref: ${meta.viewpoints_ref}`)
   lines.push('---')
   return lines.join('\n')
 }
@@ -425,7 +424,6 @@ export function ownerRoleFields(
 
 // edit plan は観点別の自己レビューを行わない。done_criteria は §3 の owner 視点とは別に
 // 「完了の狙い」として素の箇条書きで提示し、多観点検証は独立した review plan に委ねる。
-// そのため viewpoints_ref（自己レビュー用の参照）は edit plan の frontmatter に含めない。
 function buildEditPlanMarkdown(
   template: string,
   task: PlanTask,
@@ -486,7 +484,6 @@ function buildReviewPlanMarkdown(
   vpMap: Map<string, ReviewViewpoint>,
   coverageMap: Map<string, CoverageType>,
   projectId: string,
-  viewpointsRef: string,
   resultRef: string,
   stem: string
 ): string {
@@ -505,7 +502,6 @@ function buildReviewPlanMarkdown(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
-    viewpoints_ref: viewpointsRef,
   }
 
   const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook)
@@ -542,7 +538,6 @@ type PlanGenContext = {
   vpMap: Map<string, ReviewViewpoint>
   coverageMap: Map<string, CoverageType>
   roleMap: Map<string, RoleDefinition>
-  vpRef: string
   templateCache: Map<string, string>
 }
 
@@ -579,7 +574,6 @@ function writeTaskPlan(
           ctx.vpMap,
           ctx.coverageMap,
           ctx.projectId,
-          ctx.vpRef,
           resultRef,
           stem
         )
@@ -680,7 +674,6 @@ function newPlanGenContext(opts: {
       ? loadCoverageTypes(opts.viewpointsPath)
       : new Map<string, CoverageType>(),
     roleMap: loadRoles(opts.rolesPath),
-    vpRef: opts.viewpointsPath ? repoRelativePath(opts.viewpointsPath) : '',
     templateCache: new Map<string, string>(),
   }
 }
