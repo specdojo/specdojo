@@ -320,8 +320,11 @@ export function expandPromptRefs(
 ): string {
   if (!existsSync(indexPath)) return prompt
 
+  // Agents open the referenced files directly, so resolve [[id]] refs to canonical
+  // repo-relative paths (no leading slash) rather than markdown links. This keeps every
+  // path in the agent-consumed plan in one form that resolves from the run CWD.
   const result = replaceDocIndexRefs(prompt, indexPath, {
-    format: 'markdown',
+    format: 'path',
     missing: 'keep',
   })
   if (result.missingIds.length > 0) {

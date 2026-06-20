@@ -163,9 +163,18 @@ function loadRoles(rolesPath: string | undefined): Map<string, RoleDefinition> {
   }
 }
 
+// Canonical repo-root-relative path: POSIX separators, no leading slash. Agents and
+// tools resolve it from the run CWD (repo root for in-place, worktree root otherwise),
+// so a leading slash (filesystem-absolute) must not be emitted.
 function repoRelativePath(absPath: string): string {
-  const rel = relative(specdojoRootDir(), absPath)
-  return rel.startsWith('/') ? rel : `/${rel}`
+  return relative(specdojoRootDir(), absPath).replace(/\\/g, '/')
+}
+
+// Normalize a catalog-derived path for emission into an agent-consumed plan. Catalog
+// base_path values are written root-absolute (e.g. /docs/...); strip the leading slash
+// so the path matches the canonical repo-relative form. Does not alter catalog files.
+function toRepoRelativePath(path: string): string {
+  return path.replace(/^\/+/, '')
 }
 
 // ---------------------------------------------------------------------------
@@ -255,7 +264,8 @@ function phaseDescriptionText(task: PlanTask): string {
 }
 
 function deliverablePath(deliverable: DeliverableInfo | null): string {
-  return deliverable?.resolvedPath ?? MISSING
+  if (!deliverable) return MISSING
+  return toRepoRelativePath(deliverable.resolvedPath)
 }
 
 function deliverableName(deliverable: DeliverableInfo | null): string {

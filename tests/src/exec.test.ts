@@ -223,7 +223,7 @@ describe('exec strategy metadata resolution', () => {
 })
 
 describe('expandPromptRefs', () => {
-  it('exec run が [[id]] を Markdown リンク形式に展開する', () => {
+  it('exec run が [[id]] を agent が開ける repo 相対パスへ展開する', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-exec-prompt-'))
     try {
       const indexPath = join(dir, 'doc-index.json')
@@ -238,9 +238,9 @@ describe('expandPromptRefs', () => {
         'utf8'
       )
 
-      expect(expandPromptRefs('See [[sample-doc]].', indexPath)).toBe(
-        'See [sample-doc](docs/sample.md).'
-      )
+      // Agents open the file directly, so the ref resolves to the canonical
+      // repo-relative path (no leading slash, not a markdown link).
+      expect(expandPromptRefs('See [[sample-doc]].', indexPath)).toBe('See docs/sample.md.')
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
