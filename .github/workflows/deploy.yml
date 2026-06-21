@@ -25,10 +25,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome for puppeteer (mermaid)
+      - name: Resolve system Chrome for puppeteer (mermaid)
         run: |
-          rm -rf ~/.cache/puppeteer
-          npx puppeteer browsers install chrome
+          chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium-browser || command -v chromium || true)"
+          if [ -z "$chrome_path" ]; then
+            echo "No system Chrome/Chromium found on the runner" >&2
+            exit 1
+          fi
+          echo "Using Chrome: $chrome_path"
+          echo "PUPPETEER_SKIP_DOWNLOAD=true" >> "$GITHUB_ENV"
+          echo "PUPPETEER_EXECUTABLE_PATH=$chrome_path" >> "$GITHUB_ENV"
 
       - name: Build VitePress site
         run: npm run docs:build
