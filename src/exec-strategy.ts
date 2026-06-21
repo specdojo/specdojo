@@ -65,6 +65,7 @@ function isApproach(value: unknown): value is Approach {
     value === 'fully-guided' ||
     value === 'recipe-guided' ||
     value === 'freeform' ||
+    value === 'bootstrap' ||
     value === 'rulebook-maintenance' ||
     value === 'recipe-maintenance' ||
     value === 'sample-maintenance' ||

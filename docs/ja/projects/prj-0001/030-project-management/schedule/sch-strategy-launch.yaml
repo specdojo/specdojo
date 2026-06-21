@@ -44,102 +44,31 @@ scope:
 #   - 凍結後の磨き込みは保守的な fully-guided（既存記述を尊重し最小修正）で収束させる。
 #
 # フローは bootstrap-pass → refine-pass → review-pass の3段階。
-#   bootstrap-pass: たたき台作成・補強の後、参考資料一式を整備する（既存は評価して維持/修正/作り直し、無ければ新規作成）（1回）。
+#   bootstrap-pass: 成果物と参考資料一式を専用 approach で一括整備する（既存は評価して維持/修正/作り直し、無ければ新規作成）（1回）。
 #   refine-pass   : 凍結した参考資料に沿って fully-guided で保守的に磨き込み、整合を取る（2回）。
 #   review-pass   : 完成版をレビューし、参考資料を最終調整した後、人が確定する（1回）。
 phase_sets:
-  # ブートストラップ: エージェントがたたき台を作り、補強した成果物から参考資料一式を整備する。
-  # 既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
-  # freeform と参考資料の整備はこの 1 回だけ実行し、以降は凍結する。
+  # ブートストラップ: 専用 approach で、成果物とその参考資料一式（rulebook/recipe/sample/template）を
+  # 一貫した一組として 1 タスクで作成・整備する。既存があれば評価し、維持/修正/作り直しを判断する。
+  # 無ければ新規作成する。整備した参考資料はこの 1 回だけ編集し、以降は凍結する。
   bootstrap-pass:
-    - id: draft
-      name: たたき台作成・見直し
+    - id: bootstrap
+      name: 一括整備（成果物＋参考資料）
       execution: agent
       mode: edit
-      approach: freeform
+      approach: bootstrap
+      capabilities: [web_search]
       proficiency: expert
       task_suffix: "010"
-      duration_days: 0.25 # 1〜2h 相当
+      duration_days: 1.0 # 4〜8h 相当（成果物＋参考資料4種を一括）
       description: |
-        エージェントが成果物のたたき台を用意する。
-        既存の記述があれば内容を評価し、活かせる部分は維持、古い・矛盾する部分は修正、
-        全体が前提と合わない場合は作り直す。既存が無ければ新規に作成する。
-        章構成・記載項目を決め、現時点で把握している情報を埋め、確認が必要な箇所は TODO として残す。
-        既存記述の破棄を伴う作り直しを許すのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-    - id: enrich
-      name: 調査・補強
-      execution: agent
-      mode: edit
-      approach: freeform
-      capabilities: [web_search]
-      proficiency: normal
-      task_suffix: "020"
-      duration_days: 0.5 # 2〜4h 相当（外部調査込み）
-      description: |
-        エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-        既存記述は評価したうえで、矛盾・抜け漏れ・陳腐化を修正・追記する。
-        調査結果は出典・根拠とともに記載する。
-        この時点では参考資料が未整備のため freeform で進める。
-    - id: recipe-bootstrap
-      name: Recipe 整備
-      execution: agent
-      mode: edit
-      approach: recipe-maintenance
-      proficiency: normal
-      task_suffix: "030"
-      duration_days: 0.25 # 1〜2h 相当
-      description: |
-        補強後の成果物を根拠に recipe を整備する。
-        既存の recipe があれば評価し、有効な部分は維持、過不足や陳腐化は修正、
-        作成手順として機能しない場合は作り直す。既存が無ければ新規に作成する。
-        問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-        成果物固有の事情は一般化し、recipe に持ち込まない。
-        整備した recipe は refine-pass では凍結し、編集しない。
-    - id: rulebook-bootstrap
-      name: Rulebook 整備
-      execution: agent
-      mode: edit
-      approach: rulebook-maintenance
-      proficiency: normal
-      task_suffix: "040"
-      duration_days: 0.25 # 1〜2h 相当
-      description: |
-        補強後の成果物を根拠に rulebook を整備する。
-        既存の rulebook があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
-        規定として機能しない場合は作り直す。既存が無ければ新規に作成する。
-        章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-        成果物固有の事情は一般化し、rulebook に持ち込まない。
-        整備した rulebook は refine-pass では凍結し、編集しない。
-    - id: sample-bootstrap
-      name: Sample 整備
-      execution: agent
-      mode: edit
-      approach: sample-maintenance
-      proficiency: normal
-      task_suffix: "050"
-      duration_days: 0.25 # 1〜2h 相当
-      description: |
-        補強後の成果物を根拠に sample を整備する。
-        既存の sample があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
-        完成例として機能しない場合は作り直す。既存が無ければ新規に作成する。
-        粒度・文体・表の書き方と、完成例としての妥当性を整える。
-        プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-        整備した sample は refine-pass では凍結し、編集しない。
-    - id: template-bootstrap
-      name: Template 整備
-      execution: agent
-      mode: edit
-      approach: template-maintenance
-      proficiency: normal
-      task_suffix: "060"
-      duration_days: 0.25 # 1〜2h 相当
-      description: |
-        補強後の成果物を根拠に template を整備する。
-        既存の template があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
-        雛形として機能しない場合は作り直す。既存が無ければ新規に作成する。
-        章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-        成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-        整備した template は refine-pass では凍結し、編集しない。
+        エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+        一貫した一組として作成・整備する。
+        既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+        必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+        成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+        構造・必須項目・禁止事項は rulebook を正とする。
+        ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
 
   # 磨き込み: 凍結した参考資料に沿って fully-guided で保守的に磨き込み、成果物間の整合を取る。
   # 参考資料の編集（maintenance）は含めない（凍結）。fully-guided は既存記述を尊重し最小修正する。

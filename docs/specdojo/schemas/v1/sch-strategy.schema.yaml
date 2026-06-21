@@ -451,6 +451,7 @@ $defs:
         "fully-guided",
         "recipe-guided",
         "freeform",
+        "bootstrap",
         "rulebook-maintenance",
         "recipe-maintenance",
         "sample-maintenance",
@@ -462,6 +463,9 @@ $defs:
       fully-guided: rulebook/recipe/sample/template are mature; follow them.
       recipe-guided: rulebook/sample are immature; use only the recipe's structure/questions/perspectives.
       freeform: not bound by reference materials; prioritize deliverable examples and project context.
+      bootstrap: author the deliverable and its full reference set (rulebook/recipe/sample/template)
+      together in one task as a mutually consistent whole; used to initially establish a deliverable and
+      its reference materials. Must be declared explicitly in phase_sets.
       The *-maintenance values improve the named reference material (rulebook/recipe/sample/template)
       based on deliverables (reference direction is reversed); they must be declared explicitly in
       phase_sets and are never auto-injected.

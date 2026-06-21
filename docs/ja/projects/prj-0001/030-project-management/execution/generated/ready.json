@@ -40,7 +40,10 @@
       "description": "エージェントが成果物の初版を作成する。\n章構成・記載項目を決め、現時点で把握している情報を埋める。\n調査・確認が必要な箇所は TODO として明示したまま残す。\nfreeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。\n",
       "mode": "edit",
       "execution": "agent",
-      "approach": "freeform",
+      "approach": "bootstrap",
+      "capabilities": [
+        "web_search"
+      ],
       "proficiency": "expert"
     }
   ]

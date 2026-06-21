@@ -73,6 +73,7 @@ const KNOWN_APPROACHES = [
   'fully-guided',
   'recipe-guided',
   'freeform',
+  'bootstrap',
   'rulebook-maintenance',
   'recipe-maintenance',
   'sample-maintenance',
