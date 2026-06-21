@@ -6,62 +6,62 @@ version: 1
 project_id: prj-0001
 settings: {}
 milestones:
-  - id: G-LAUNCH-first-edit-pass
-    name: first-edit-pass 完了
-    artifact_name: 全ドメイン
-    depends_on:
-      - T-LAUNCH-prj-overview-060-I03
-      - T-LAUNCH-prj-scope-060-I03
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060-I03
-      - T-LAUNCH-prj-stakeholder-register-060-I03
-      - T-LAUNCH-prj-charter-060-I03
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-060-I03
-      - T-LAUNCH-prj-issues-and-approach-060-I03
-      - T-LAUNCH-prj-comparison-of-alternatives-060-I03
-      - T-LAUNCH-pm-organization-060-I03
-      - T-LAUNCH-pm-roles-060-I03
-      - T-LAUNCH-pm-plan-060-I03
-      - T-LAUNCH-pm-communication-plan-060-I03
-      - T-LAUNCH-pm-quality-management-plan-060-I03
-      - T-LAUNCH-pm-members-060-I03
-      - T-LAUNCH-pm-raci-060-I03
-    owner: PM
-  - id: G-LAUNCH-alignment-edit-pass
-    name: alignment-edit-pass 完了
-    artifact_name: 全ドメイン
-    depends_on:
-      - T-LAUNCH-prj-overview-110-I03
-      - T-LAUNCH-prj-scope-110-I03
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110-I03
-      - T-LAUNCH-prj-stakeholder-register-110-I03
-      - T-LAUNCH-prj-charter-110-I03
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-110-I03
-      - T-LAUNCH-prj-issues-and-approach-110-I03
-      - T-LAUNCH-prj-comparison-of-alternatives-110-I03
-      - T-LAUNCH-pm-organization-110-I03
-      - T-LAUNCH-pm-roles-110-I03
-      - T-LAUNCH-pm-plan-110-I03
-      - T-LAUNCH-pm-communication-plan-110-I03
-      - T-LAUNCH-pm-quality-management-plan-110-I03
-      - T-LAUNCH-pm-members-110-I03
-      - T-LAUNCH-pm-raci-110-I03
-    owner: PM
   - id: M-LAUNCH-project-definition
     name: ドメイン完了
     artifact_name: プロジェクト定義
     depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130
-      - T-LAUNCH-prj-charter-130
-      - T-LAUNCH-prj-comparison-of-alternatives-130
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-140
+      - T-LAUNCH-prj-charter-140
+      - T-LAUNCH-prj-comparison-of-alternatives-140
     owner: PM
   - id: M-LAUNCH-project-management
     name: ドメイン完了
     artifact_name: プロジェクト・マネジメント
     depends_on:
-      - T-LAUNCH-pm-communication-plan-130
-      - T-LAUNCH-pm-quality-management-plan-130
-      - T-LAUNCH-pm-members-130
-      - T-LAUNCH-pm-raci-130
+      - T-LAUNCH-pm-communication-plan-140
+      - T-LAUNCH-pm-quality-management-plan-140
+      - T-LAUNCH-pm-members-140
+      - T-LAUNCH-pm-raci-140
       - T-LAUNCH-sch-defaults-000
       - T-LAUNCH-sch-strategy-launch-000
+    owner: PM
+  - id: G-LAUNCH-bootstrap-pass
+    name: bootstrap-pass 完了
+    artifact_name: 全ドメイン
+    depends_on:
+      - T-LAUNCH-prj-overview-060
+      - T-LAUNCH-prj-scope-060
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060
+      - T-LAUNCH-prj-stakeholder-register-060
+      - T-LAUNCH-prj-charter-060
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-060
+      - T-LAUNCH-prj-issues-and-approach-060
+      - T-LAUNCH-prj-comparison-of-alternatives-060
+      - T-LAUNCH-pm-organization-060
+      - T-LAUNCH-pm-roles-060
+      - T-LAUNCH-pm-plan-060
+      - T-LAUNCH-pm-communication-plan-060
+      - T-LAUNCH-pm-quality-management-plan-060
+      - T-LAUNCH-pm-members-060
+      - T-LAUNCH-pm-raci-060
+    owner: PM
+  - id: G-LAUNCH-refine-pass
+    name: refine-pass 完了
+    artifact_name: 全ドメイン
+    depends_on:
+      - T-LAUNCH-prj-overview-080-I02
+      - T-LAUNCH-prj-scope-080-I02
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02
+      - T-LAUNCH-prj-stakeholder-register-080-I02
+      - T-LAUNCH-prj-charter-080-I02
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-080-I02
+      - T-LAUNCH-prj-issues-and-approach-080-I02
+      - T-LAUNCH-prj-comparison-of-alternatives-080-I02
+      - T-LAUNCH-pm-organization-080-I02
+      - T-LAUNCH-pm-roles-080-I02
+      - T-LAUNCH-pm-plan-080-I02
+      - T-LAUNCH-pm-communication-plan-080-I02
+      - T-LAUNCH-pm-quality-management-plan-080-I02
+      - T-LAUNCH-pm-members-080-I02
+      - T-LAUNCH-pm-raci-080-I02
     owner: PM

@@ -1,0 +1,26 @@
+{
+  "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+  "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
+  "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
+  "schedule_files": [
+    "sch-milestones.yaml",
+    "sch-track-launch.yaml"
+  ],
+  "event_files_count": 0,
+  "default_scheduler_strategy": "critical-first",
+  "derived_files": [
+    "claim-next.json",
+    "cpm.json",
+    "cpm.md",
+    "critical-path.md",
+    "exec.jsonl",
+    "metadata.json",
+    "ready.json",
+    "ready.md",
+    "schedule-diff.md",
+    "schedule-hash.json",
+    "state.json",
+    "timeline.md",
+    "timeline.svg"
+  ]
+}

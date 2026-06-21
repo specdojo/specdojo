@@ -39,20 +39,21 @@ scope:
 #
 # 設計方針: 成果物・参考資料の意図しない作り直し（churn）を避けるため、
 #   - freeform（既存記述の破棄を許す approach）は最初のたたき台 1 回だけに限定する。
-#   - 参考資料（recipe/rulebook/sample/template）は bootstrap で 1 回だけ成果物から新規作成して
-#     凍結し、磨き込み中は編集しない。最終調整は review 後にもう 1 回だけ行う。
+#   - 参考資料（recipe/rulebook/sample/template）は bootstrap で 1 回だけ整備し（既存は評価して
+#     維持/修正/作り直し、無ければ新規作成）凍結する。磨き込み中は編集せず、最終調整は review 後に 1 回だけ行う。
 #   - 凍結後の磨き込みは保守的な fully-guided（既存記述を尊重し最小修正）で収束させる。
 #
 # フローは bootstrap-pass → refine-pass → review-pass の3段階。
-#   bootstrap-pass: たたき台作成・補強の後、参考資料一式を成果物から新規作成する（1回）。
+#   bootstrap-pass: たたき台作成・補強の後、参考資料一式を整備する（既存は評価して維持/修正/作り直し、無ければ新規作成）（1回）。
 #   refine-pass   : 凍結した参考資料に沿って fully-guided で保守的に磨き込み、整合を取る（2回）。
 #   review-pass   : 完成版をレビューし、参考資料を最終調整した後、人が確定する（1回）。
 phase_sets:
-  # ブートストラップ: エージェントがたたき台を作り、補強した成果物から参考資料一式を新規作成する。
-  # freeform と参考資料の新規作成はこの 1 回だけ実行し、以降は凍結する。
+  # ブートストラップ: エージェントがたたき台を作り、補強した成果物から参考資料一式を整備する。
+  # 既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+  # freeform と参考資料の整備はこの 1 回だけ実行し、以降は凍結する。
   bootstrap-pass:
     - id: draft
-      name: たたき台作成
+      name: たたき台作成・見直し
       execution: agent
       mode: edit
       approach: freeform
@@ -60,10 +61,11 @@ phase_sets:
       task_suffix: "010"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        エージェントが成果物の初版を作成する。
-        章構成・記載項目を決め、現時点で把握している情報を埋める。
-        調査・確認が必要な箇所は TODO として明示したまま残す。
-        freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
+        エージェントが成果物のたたき台を用意する。
+        既存の記述があれば内容を評価し、活かせる部分は維持、古い・矛盾する部分は修正、
+        全体が前提と合わない場合は作り直す。既存が無ければ新規に作成する。
+        章構成・記載項目を決め、現時点で把握している情報を埋め、確認が必要な箇所は TODO として残す。
+        既存記述の破棄を伴う作り直しを許すのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
     - id: enrich
       name: 調査・補強
       execution: agent
@@ -75,11 +77,11 @@ phase_sets:
       duration_days: 0.5 # 2〜4h 相当（外部調査込み）
       description: |
         エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-        既存記述との矛盾・抜け漏れも確認し、修正・追記する。
+        既存記述は評価したうえで、矛盾・抜け漏れ・陳腐化を修正・追記する。
         調査結果は出典・根拠とともに記載する。
         この時点では参考資料が未整備のため freeform で進める。
     - id: recipe-bootstrap
-      name: Recipe 新規作成
+      name: Recipe 整備
       execution: agent
       mode: edit
       approach: recipe-maintenance
@@ -87,12 +89,14 @@ phase_sets:
       task_suffix: "030"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
+        補強後の成果物を根拠に recipe を整備する。
+        既存の recipe があれば評価し、有効な部分は維持、過不足や陳腐化は修正、
+        作成手順として機能しない場合は作り直す。既存が無ければ新規に作成する。
         問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
         成果物固有の事情は一般化し、recipe に持ち込まない。
-        ここで作成した recipe は refine-pass では凍結し、編集しない。
+        整備した recipe は refine-pass では凍結し、編集しない。
     - id: rulebook-bootstrap
-      name: Rulebook 新規作成
+      name: Rulebook 整備
       execution: agent
       mode: edit
       approach: rulebook-maintenance
@@ -100,12 +104,14 @@ phase_sets:
       task_suffix: "040"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
+        補強後の成果物を根拠に rulebook を整備する。
+        既存の rulebook があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
+        規定として機能しない場合は作り直す。既存が無ければ新規に作成する。
         章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
         成果物固有の事情は一般化し、rulebook に持ち込まない。
-        ここで作成した rulebook は refine-pass では凍結し、編集しない。
+        整備した rulebook は refine-pass では凍結し、編集しない。
     - id: sample-bootstrap
-      name: Sample 新規作成
+      name: Sample 整備
       execution: agent
       mode: edit
       approach: sample-maintenance
@@ -113,12 +119,14 @@ phase_sets:
       task_suffix: "050"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
+        補強後の成果物を根拠に sample を整備する。
+        既存の sample があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
+        完成例として機能しない場合は作り直す。既存が無ければ新規に作成する。
         粒度・文体・表の書き方と、完成例としての妥当性を整える。
         プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-        ここで作成した sample は refine-pass では凍結し、編集しない。
+        整備した sample は refine-pass では凍結し、編集しない。
     - id: template-bootstrap
-      name: Template 新規作成
+      name: Template 整備
       execution: agent
       mode: edit
       approach: template-maintenance
@@ -126,10 +134,12 @@ phase_sets:
       task_suffix: "060"
       duration_days: 0.25 # 1〜2h 相当
       description: |
-        補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
+        補強後の成果物を根拠に template を整備する。
+        既存の template があれば評価し、妥当な部分は維持、過不足や陳腐化は修正、
+        雛形として機能しない場合は作り直す。既存が無ければ新規に作成する。
         章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
         成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-        ここで作成した template は refine-pass では凍結し、編集しない。
+        整備した template は refine-pass では凍結し、編集しない。
 
   # 磨き込み: 凍結した参考資料に沿って fully-guided で保守的に磨き込み、成果物間の整合を取る。
   # 参考資料の編集（maintenance）は含めない（凍結）。fully-guided は既存記述を尊重し最小修正する。

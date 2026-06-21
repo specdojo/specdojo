@@ -1,0 +1,20 @@
+{
+  "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
+  "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
+  "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
+  "default_strategy": "critical-first",
+  "strategies": {
+    "critical-first": {
+      "next_task_id": "T-LAUNCH-prj-overview-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-010"
+      ]
+    },
+    "fifo": {
+      "next_task_id": "T-LAUNCH-prj-overview-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-prj-overview-010"
+      ]
+    }
+  }
+}
