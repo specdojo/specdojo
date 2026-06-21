@@ -334,8 +334,12 @@ describe('plan generation (edit done_criteria goals)', () => {
       expect(editPlan).not.toContain('/docs/test')
       expect(editPlan).not.toContain('viewpoints_ref:')
       expect(editPlan).toContain('## 5. 完了の狙い')
+      // owner（BA）の done_criteria は作成目標として素の箇条書きで提示する。
+      expect(editPlan).toContain('owner として達成する狙い')
       expect(editPlan).toContain('- Business value is clear')
-      expect(editPlan).toContain('- Purpose is approved')
+      // 下流ロール（PO）の done_criteria は role タグ付きで入力適合として提示する。
+      expect(editPlan).toContain('下流ロールの入力適合')
+      expect(editPlan).toContain('- [PO] Purpose is approved')
       expect(editPlan).not.toContain('全 role 観点による自己レビュー')
       expect(editPlan).not.toContain('RVP-001')
       expect(editPlan).not.toContain('自己レビューは初回を含めて最大3回まで行う')

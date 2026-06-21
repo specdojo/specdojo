@@ -287,11 +287,29 @@ function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING
 }
 
-// edit plan の「完了の狙い」用。done_criteria を観点・coverage 抜きの素の箇条書きにする。
-// 観点別の自己レビューは edit plan では行わず、多観点検証は独立した review plan に委ねる。
-function doneCriteriaGoals(criteria: CriteriaItem[]): string {
+// edit plan の「完了の狙い」用。一文書一責務のため、done_criteria を owner ロールの狙いと
+// 下流ロールの入力適合に分けて提示する。owner の狙いを作成目標とし、下流は入力として最低限
+// 成立させる範囲にとどめる（各ロールの内容を作り込まない）。下流の適合性検証や観点別の自己
+// レビューは edit plan では行わず、多観点検証は独立した review plan に委ねる。
+// owner が done_criteria に現れない場合は分割せず全件を素の箇条書きにフォールバックする。
+function doneCriteriaGoals(criteria: CriteriaItem[], owner: string | undefined): string {
   if (criteria.length === 0) return MISSING
-  return criteria.map(c => `- ${c.text}`).join('\n')
+  const ownerCriteria = owner ? criteria.filter(c => c.roles.includes(owner)) : []
+  if (ownerCriteria.length === 0) {
+    return criteria.map(c => `- ${c.text}`).join('\n')
+  }
+  const downstream = criteria.filter(c => !c.roles.includes(owner as string))
+  const lines: string[] = ['owner として達成する狙い:', '']
+  for (const c of ownerCriteria) lines.push(`- ${c.text}`)
+  if (downstream.length > 0) {
+    lines.push('')
+    lines.push(
+      '下流ロールの入力適合（最低ライン。各ロールの内容は作り込まず、入力として成立させる）:'
+    )
+    lines.push('')
+    for (const c of downstream) lines.push(`- [${c.roles.join(', ')}] ${c.text}`)
+  }
+  return lines.join('\n')
 }
 
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
@@ -470,7 +488,7 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
-    _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria),
+    _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
   }
   return expandTemplate(template, values)
 }

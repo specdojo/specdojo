@@ -25,6 +25,8 @@ _REVIEW_VIEWPOINT_ROWS_
 
 _REVIEW_VIEWPOINT_DETAILS_
 
+owner ロールの観点は、成果物がその責務を果たしているかを確認する。owner 以外のロールの観点は、その文書から各ロールが自分の責務の成果物を作成できるかという入力適合性の最低限の確認とし、各ロールの内容まで踏み込む過剰な再レビューはしない（一文書一責務）。
+
 ## 4. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
