@@ -63,8 +63,9 @@ _REVIEW_VIEWPOINT_DETAILS_
 ## 5. 完了手順
 
 1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
-2. result の各レビュー観点セクションに記入する。
-3. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
+2. result の各レビュー観点セクションに記入する。result には各 RVP の `### RVP-NNN（ロール: viewpoint_id）` と `確認基準` が展開済みなので、`result` / `evidence` / `notes` を埋める。
+3. `evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
+4. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
 
 ## 6. 異常終了の条件
 

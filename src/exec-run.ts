@@ -408,21 +408,22 @@ async function runWithRetry(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv
-): Promise<RunResult> {
+): Promise<{ result: RunResult; stderr: string }> {
   const detection = execDefaults.rate_limit_detection
   const policy = execDefaults.rate_limit_policy
 
   const first = await executeAgent(agentCommands[0], prompt, detection, cwd, env)
-  if (first.result !== 'rate_limit') return first.result
+  if (first.result !== 'rate_limit') return { result: first.result, stderr: first.stderr }
 
   if (!isOnCriticalPath || !policy) {
     process.stdout.write(`Rate limit detected (non-critical). Skipping task.\n`)
-    return 'rate_limit'
+    return { result: 'rate_limit', stderr: first.stderr }
   }
 
   const { retry } = policy.on_critical
   let waitSeconds = retry.initial_wait_seconds
   let attemptCount = 1
+  let lastStderr = first.stderr
 
   for (let idx = 1; idx < agentCommands.length; idx++) {
     if (attemptCount >= retry.max_attempts) break
@@ -435,7 +436,8 @@ async function runWithRetry(
     attemptCount++
 
     const result = await executeAgent(agentCommands[idx], prompt, detection, cwd, env)
-    if (result.result !== 'rate_limit') return result.result
+    lastStderr = result.stderr
+    if (result.result !== 'rate_limit') return { result: result.result, stderr: result.stderr }
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds)
   }
@@ -443,7 +445,7 @@ async function runWithRetry(
   process.stdout.write(
     `Rate limit: all ${agentCommands.length} member(s) exhausted after ${attemptCount} attempt(s).\n`
   )
-  return 'rate_limit'
+  return { result: 'rate_limit', stderr: lastStderr }
 }
 
 function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: string): string {
@@ -661,7 +663,7 @@ async function runPreparedTask(
   process.stdout.write(`  Running: ${prepared.agentCommands[0]}\n`)
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`)
   const isOnCriticalPath = (prepared.task.cpm?.slack ?? 1) === 0
-  const result = await runWithRetry(
+  const { result, stderr } = await runWithRetry(
     prepared.agentCommands,
     prepared.prompt,
     isOnCriticalPath,
@@ -692,14 +694,17 @@ async function runPreparedTask(
     process.stdout.write(`  Done: ${prepared.task.id}\n`)
   } else if (result === 'rate_limit') {
     // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
-    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt)
+    if (worktreeResultPath)
+      updateResultStatus(worktreeResultPath, 'blocked', completedAt, 'rate limit reached')
     spawnBlock(projectId, prepared.task.id, prepared.actor, 'rate limit reached')
     process.stdout.write(
       `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
     )
   } else {
-    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt)
-    spawnBlock(projectId, prepared.task.id, prepared.actor, 'agent exited with non-zero code')
+    const blockReason = extractBlockReason(stderr)
+    if (worktreeResultPath)
+      updateResultStatus(worktreeResultPath, 'blocked', completedAt, blockReason)
+    spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason)
     process.stdout.write(
       `  Failed: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
     )
@@ -746,6 +751,26 @@ function spawnComplete(projectId: string | undefined, taskId: string, by: string
   const args = ['exec', 'complete', '--task', taskId, '--by', by, '--msg', 'auto-complete']
   if (projectId) args.push('--project', projectId)
   spawnSelf(args)
+}
+
+// block 上限。block イベントログを読みやすく保つため、stderr から取り出した理由を切り詰める。
+const MAX_BLOCK_REASON_LENGTH = 500
+
+// agent の stderr から block イベント用の簡潔な理由を取り出す。テンプレートは異常終了時に
+// `blocked: <reason>; need=...; ref=...`（review は `review-blocked: ...`）を出力させるため、
+// その行を優先する。無ければ最後の非空行、それも無ければ汎用メッセージにフォールバックする。
+export function extractBlockReason(stderr: string): string {
+  const fallback = 'agent exited with non-zero code'
+  const lines = stderr
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+  const tagged = lines.find(line => /^(blocked|review-blocked):/i.test(line))
+  const reason = tagged ?? lines.at(-1)
+  if (!reason) return fallback
+  const trimmed =
+    reason.length > MAX_BLOCK_REASON_LENGTH ? `${reason.slice(0, MAX_BLOCK_REASON_LENGTH)}…` : reason
+  return `${fallback}: ${trimmed}`
 }
 
 function spawnBlock(

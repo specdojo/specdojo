@@ -237,4 +237,6 @@ export type ExecResultMeta = {
   completed_at?: string
   agent?: string
   approach?: Approach
+  // status が blocked のとき、runner が記録する異常終了理由（block イベントと同じ抽出文字列）。
+  block_reason?: string
 }

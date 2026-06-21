@@ -23,6 +23,11 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`)
   if (meta.agent) lines.push(`agent: ${meta.agent}`)
   if (meta.approach) lines.push(`approach: ${meta.approach}`)
+  // reason は agent stderr 由来で任意文字を含みうる。YAML として安全にするため二重引用符内へ
+  // 収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は単一行を返すため改行は無い）。
+  if (meta.block_reason) {
+    lines.push(`block_reason: "${meta.block_reason.replace(/"/g, "'")}"`)
+  }
   lines.push('---')
   return lines.join('\n')
 }
@@ -134,12 +139,18 @@ export function scaffoldResult(opts: {
 export function updateResultStatus(
   resultPath: string,
   status: 'complete' | 'blocked',
-  completedAt: string
+  completedAt: string,
+  reason?: string
 ): void {
   if (!existsSync(resultPath)) return
 
   const content = readFileSync(resultPath, 'utf8')
   const { meta: existingMeta, body } = parseFrontmatter(content)
+
+  // block 理由は blocked のときのみ保持する。新しい reason を優先し、無ければ既存値を残す。
+  // complete へ遷移した場合は理由を消す。
+  const blockReason =
+    status === 'blocked' ? (reason ?? existingMeta.block_reason ?? undefined) : undefined
 
   const updatedMeta: ExecResultMeta = {
     id: existingMeta.id ?? '',
@@ -153,6 +164,7 @@ export function updateResultStatus(
     completed_at: completedAt,
     agent: existingMeta.agent,
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
+    ...(blockReason ? { block_reason: blockReason } : {}),
   }
 
   writeFileSync(resultPath, serializeFrontmatter(updatedMeta) + body, 'utf8')

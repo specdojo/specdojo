@@ -38,6 +38,68 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(frontmatter).toContain('id: prj-0001:xer-prj-overview')
   })
 
+  it('records block_reason in frontmatter when blocked with a reason', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'edit',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'opencode-edit-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    updateResultStatus(
+      resultPath,
+      'blocked',
+      '2026-06-20T00:01:00.000Z',
+      'agent exited with non-zero code: blocked: dep unresolved; need=resolve; ref=docs/foo.md'
+    )
+
+    const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
+    expect(frontmatter).toContain('status: blocked')
+    expect(frontmatter).toContain(
+      'block_reason: "agent exited with non-zero code: blocked: dep unresolved; need=resolve; ref=docs/foo.md"'
+    )
+  })
+
+  it('escapes embedded double quotes in block_reason to keep frontmatter valid', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'edit',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'opencode-edit-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    updateResultStatus(resultPath, 'blocked', '2026-06-20T00:01:00.000Z', 'cannot read "config.yaml"')
+
+    const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
+    expect(frontmatter).toContain("block_reason: \"cannot read 'config.yaml'\"")
+    expect(frontmatter).not.toContain('""')
+  })
+
+  it('clears block_reason when a previously blocked result transitions to complete', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'edit',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'opencode-edit-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    updateResultStatus(resultPath, 'blocked', '2026-06-20T00:01:00.000Z', 'transient failure')
+    updateResultStatus(resultPath, 'complete', '2026-06-20T00:02:00.000Z')
+
+    const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
+    expect(frontmatter).toContain('status: complete')
+    expect(frontmatter).not.toContain('block_reason:')
+  })
+
   it('expands the review result sections placeholder when reviewSections is provided', () => {
     const { resultPath } = scaffoldResult({
       executionPath,
