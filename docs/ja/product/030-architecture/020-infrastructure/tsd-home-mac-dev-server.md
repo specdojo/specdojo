@@ -52,7 +52,7 @@ Tailscale tailnet
 
 Home MacBook Pro
   ├─ macOS Remote Login (sshd)
-  ├─ VS Code Server
+  ├─ VS Code Server (Remote SSH が自動管理)
   ├─ Docker Desktop
   ├─ devcontainer
   │  ├─ specdojo CLI
@@ -389,6 +389,8 @@ curl http://localhost:11434/v1/models
 ### 4.9. VS Code Remote SSH と Dev Containers
 
 接続元端末に VS Code の Remote - SSH 拡張と Dev Containers 拡張を入れ、`home-mbp` host に接続する。クライアント側に Docker は不要であり、Docker Desktop は Host Mac 上で動かす。
+
+VS Code Server を Host Mac で手動起動・常駐設定する必要はない。`Remote-SSH: Connect to Host...` の初回接続時に、接続元の VS Code が対応する VS Code Server を Mac 側のユーザーディレクトリへ自動導入して起動する。VS Code を更新した場合も、次回接続時に必要な Server 版へ自動更新される。
 
 接続手順:
 
