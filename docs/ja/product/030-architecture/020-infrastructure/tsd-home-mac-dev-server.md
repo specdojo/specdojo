@@ -624,110 +624,21 @@ tmux new-session -A -s specdojo
 
 ## 5. SpecDojo agent 実行
 
-SpecDojo の agent 実行は、必ず devcontainer 内の terminal から行う。外部端末の shell、Mac 側の通常 shell、devcontainer 内 shell が混在すると、認証ストア、Node.js、CLI バージョン、Git 設定がずれやすい。
-
-基本実行:
+SpecDojo の agent 実行は、必ず devcontainer 内の terminal から行う。外部端末の shell や Host Mac の通常 shell と混在させない。長時間実行は devcontainer 内の tmux session で開始する。
 
 ```bash
-tmux new -s specdojo-exec
+tmux new-session -A -s specdojo
 specdojo exec run --auto --parallel 3
-specdojo exec run --auto --loop --parallel 3
-specdojo exec run --by opencode-edit-agent
 ```
 
-`specdojo exec run --auto --loop` のような長時間実行は tmux 内で起動する。`pm-members.yaml` の `command` は、devcontainer 内で実行できるコマンドだけを指定する。plan は `specdojo exec run` から stdin で渡されるため、command へ plan 本文を埋め込まない。
+agent の責務分担、`pm-members.yaml`、実行コマンド、モデル、認証、権限は次を正本とする。認証状態は devcontainer の named volume に保存し、API key や token をリポジトリや設定ファイルに記載しない。
 
-### 5.1. Agent CLI の認証
-
-各 CLI は devcontainer 内でログインし、認証状態を named volume に保持する。
-
-| CLI                | 初回確認             | 認証状態の保存先                                   | 用途                      |
-| ------------------ | -------------------- | -------------------------------------------------- | ------------------------- |
-| OpenCode           | `opencode --version` | `/home/node/.config/opencode`                      | ローカル LLM agent        |
-| Claude Code        | `claude --version`   | `/home/node/.claude` と `/home/node/.claude-state` | Claude agent              |
-| Codex              | `codex --version`    | `/home/node/.codex`                                | Codex agent               |
-| GitHub Copilot CLI | `copilot --version`  | `/home/node/.copilot`                              | Copilot CLI agent         |
-| GitHub CLI         | `gh auth status`     | `/home/node/.config/gh`                            | Copilot / GitHub 操作補助 |
-
-API key や token はリポジトリ、`.devcontainer/devcontainer.json`、`pm-members.yaml` に書かない。
-
-### 5.2. `pm-members.yaml` の配置方針
-
-OpenCode / Claude Code / Codex の member は、それぞれの SYSD に従う。devcontainer 前提では、command の実行場所が devcontainer 内であることだけを追加前提にする。
-
-例:
-
-```yaml
-members:
-  - nickname: opencode-edit-agent
-    type: agent
-    mode: edit
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 4
-    command: 'opencode run --agent opencode-edit-agent'
-    scheduler_strategy: critical-first
-
-  - nickname: claude-edit-agent
-    type: agent
-    mode: edit
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 3
-    command: 'claude -p --agent claude-edit-agent'
-    scheduler_strategy: critical-first
-
-  - nickname: codex-edit-agent
-    type: agent
-    mode: edit
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 2
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
-    scheduler_strategy: critical-first
-```
-
-優先順位は、クラウドモデルを主系にするか、ローカル LLM を主系にするかで調整する。ローカル LLM を節約・オフライン寄りの主系にする場合は OpenCode の priority を小さくし、品質優先の場合は Codex / Claude / Copilot の priority を小さくする。
-
-### 5.3. GitHub Copilot CLI を SpecDojo から使う場合
-
-GitHub Copilot CLI の agent 定義、custom instructions、モデル、権限、`pm-members.yaml` の command は [sysd-github-copilot-agent-settings](../../040-system-design/sysd-github-copilot-agent-settings.md) を正本とする。
-
-SpecDojo から使う場合は、`pm-members.yaml` の `command` に `copilot -p --agent <name>` を直接定義する。plan 本文は `specdojo exec run` から stdin で渡されるため、command へ plan 本文を埋め込まない。非対話実行では `--no-ask-user` を指定し、必要な権限は `--allow-tool` / `--deny-tool` で最小化する。
-
-設定例:
-
-```yaml
-members:
-  - nickname: copilot-edit-agent
-    type: agent
-    mode: edit
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 4
-    command: 'copilot -p --agent copilot-edit-agent --model claude-sonnet-4.6 --reasoning-effort medium -s --no-ask-user --allow-tool="read,write,shell(npm:*),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)" --deny-tool="read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"'
-    scheduler_strategy: critical-first
-```
-
-Copilot CLI はファイル変更や shell 実行を行えるため、`--allow-all`、`--allow-all-tools`、`--allow-all-paths`、`--yolo` は通常運用では使わない。GitHub.com 上で PR 作成や push まで行わせる運用も、SpecDojo の通常実行では対象外にし、必要な場合は人間が明示的に手動実行する。
-
-### 5.4. 導入確認
-
-devcontainer 内で次を確認する。
-
-```bash
-pwd
-git status --short
-specdojo --version
-opencode --version
-claude --version
-codex --version
-copilot --version
-tmux -V
-curl http://host.docker.internal:11434/v1/models
-```
-
-Ollama が応答することを確認する。
+- [エージェント共通設定](../../040-system-design/sysd-agent-settings.md)
+- [OpenCode エージェント設定](../../040-system-design/sysd-opencode-agent-settings.md)
+- [Claude Code エージェント設定](../../040-system-design/sysd-claude-agent-settings.md)
+- [Codex エージェント設定](../../040-system-design/sysd-codex-agent-settings.md)
+- [GitHub Copilot エージェント設定](../../040-system-design/sysd-github-copilot-agent-settings.md)
+- [Ollama 構成](tsd-ollama.md)
 
 ## 6. 運用確認
 
