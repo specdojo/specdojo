@@ -462,6 +462,8 @@ tmux -V
 tmux new-session -A -s specdojo
 ```
 
+`-s specdojo` は session 名を `specdojo` に指定する。`-A` は同名の session があれば attach し、なければ新規作成する。そのため、再接続時も同じコマンドを使える。
+
 既存セッションへ戻る。
 
 ```bash
@@ -501,6 +503,15 @@ brew install tmux
 ```
 
 Host Mac 側 tmux は Docker Desktop、Tailscale、Ollama のログ確認用途に留め、SpecDojo の編集・実行は devcontainer 内 tmux に寄せる。
+
+Windows Terminal または別の Mac の terminal から Host Mac 側 tmux に接続する場合は、まず Host Mac へ SSH 接続してから `host-mac` session を作成または再接続する。
+
+```bash
+ssh -t home-mbp
+tmux new-session -A -s host-mac
+```
+
+切断後も session は Host Mac 上に残る。再接続時も同じ2行を実行する。`home-mbp-tmux` は後述する devcontainer 内 tmux 専用の alias であり、Host Mac 側 tmux には使用しない。
 
 #### 4.11.1. 接続先 Mac の tmux attach helper
 
