@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Chrome for puppeteer (mermaid)
+        run: npx puppeteer browsers install chrome
+
       - name: Build VitePress site
         run: npm run docs:build
 
