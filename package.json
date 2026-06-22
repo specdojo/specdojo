@@ -47,6 +47,7 @@
     "start": "node dist/specdojo.js",
     "prepack": "npm run build",
     "specdojo:build": "npm run build",
+    "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
     "lint:ts": "eslint 'src/**/*.ts' 'tests/**/*.ts' 'tools/docs/src/**/*.ts' 'tools/e2e/**/*.ts'",
     "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'tools/docs/src/**/*.ts' 'tools/e2e/**/*.ts'",
     "lint:md": "markdownlint '**/*.md'",
