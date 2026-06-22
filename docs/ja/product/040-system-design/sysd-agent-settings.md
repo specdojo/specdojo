@@ -188,7 +188,7 @@ rate_limit_policy:
 
 ### 7.1. SSH 経由で実行中の devcontainer を更新する
 
-[自宅 MacBook Pro 開発サーバ技術スタック定義](../030-architecture/020-infrastructure/tsd-home-mac-dev-server.md) の `home-mbp-tmux` を設定済みであれば、接続元端末から次で devcontainer 内の `specdojo` tmux session に入る。
+[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.11.2 で `home-mbp-tmux` を設定済みであれば、接続元端末から次で devcontainer 内の `specdojo` tmux session に入る。
 
 ```bash
 ssh home-mbp-tmux
