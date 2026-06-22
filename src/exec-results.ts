@@ -136,6 +136,25 @@ export function scaffoldResult(opts: {
   return { resultPath, created: true }
 }
 
+// 必須節が未記入（テンプレートのプレースホルダのまま）かを検知するためのマーカー。
+// result テンプレート（xer-template.md / xrr-template.md）の必須節プレースホルダに対応する。
+// テンプレート文言を変えた場合はここも合わせて更新する。
+const MANDATORY_PLACEHOLDERS: Record<TaskMode, readonly string[]> = {
+  edit: ['_TODO_: 実施した内容', '_TODO_: 変更したファイル'],
+  review: ['recommendation: _TODO_'],
+}
+
+// in-place 実行後の result が「scaffold のまま（必須節が未記入）」かを判定する。
+// agent プロセスの終了コードだけでは block を検知できない（例えば claude -p は
+// モデルが「blocked」と結論してもターン正常終了で 0 を返す）ため、agent 本来の責務で
+// ある result 必須節の記入が行われたかを内容から確認する補助に使う。
+// 必須節のプレースホルダが 1 つでも残っていれば未記入とみなす。
+export function isResultUnfilled(resultPath: string, mode: TaskMode): boolean {
+  if (!existsSync(resultPath)) return false
+  const { body } = parseFrontmatter(readFileSync(resultPath, 'utf8'))
+  return MANDATORY_PLACEHOLDERS[mode].some(marker => body.includes(marker))
+}
+
 export function updateResultStatus(
   resultPath: string,
   status: 'complete' | 'blocked',

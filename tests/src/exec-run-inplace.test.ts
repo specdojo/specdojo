@@ -322,6 +322,49 @@ describe('exec run (in-place, default)', () => {
     }
   })
 
+  it('marks the result blocked (exit 1) when the agent exits 0 but leaves the result unfilled', async () => {
+    const { repo, executionPath } = setupRepository()
+    // Use the real result template placeholders so the unfilled-result check can fire.
+    // The fake agent never fills the result, mirroring an agent (e.g. claude -p) that
+    // concludes "blocked" yet still exits 0.
+    writeFileSync(
+      join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xer-template.md'),
+      [
+        '_FRONTMATTER_',
+        '',
+        '## 1. 実施内容',
+        '',
+        '_TODO_: 実施した内容の要約を記入する。',
+        '',
+        '## 2. 変更ファイル',
+        '',
+        '_TODO_: 変更したファイルのパスを記入する。',
+        '',
+      ].join('\n'),
+      'utf8'
+    )
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec(['run', '--project', 'test', '--task', 'T-TEST-doc-010', '--cmd', FAKE_AGENT_CMD])
+
+      // The agent ran (exit 0) but produced no result content.
+      expect(existsSync(join(repo, 'agent-ran.txt'))).toBe(true)
+      expect(process.exitCode).toBe(1)
+
+      const resultFiles = readdirSync(join(executionPath, 'exec', 'results')).filter(f =>
+        f.endsWith('-result.md')
+      )
+      expect(resultFiles).toHaveLength(1)
+      const result = readFileSync(join(executionPath, 'exec', 'results', resultFiles[0]), 'utf8')
+      expect(result).toContain('status: blocked')
+      expect(result).toContain('block_reason:')
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+
   it('rejects --worktree without --task', async () => {
     const { repo } = setupRepository()
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)

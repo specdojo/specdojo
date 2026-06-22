@@ -43,7 +43,7 @@ import {
   stemFromPlanPath,
 } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
-import { scaffoldResult, updateResultStatus } from './exec-results.js'
+import { isResultUnfilled, scaffoldResult, updateResultStatus } from './exec-results.js'
 import {
   resolveWorktreeBase,
   worktreeNameFromTaskId,
@@ -1288,20 +1288,37 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   process.stdout.write(`Running ${label} in place: ${command}\n`)
   const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath)
 
+  // Some agents (notably `claude -p`) exit 0 even when they conclude they are blocked: a
+  // permission-denied tool call is fed back as a tool error and the model ends its turn
+  // normally. The agent's core duty is to fill the result, so treat a still-scaffold result
+  // (mandatory sections left as _TODO_) as a block even on exit 0.
+  let effectiveExit = exitCode
+  let blockReason: string | undefined
+  if (exitCode === 0 && resultPath && task && isResultUnfilled(resultPath, task.mode ?? 'edit')) {
+    effectiveExit = 1
+    blockReason = 'agent exited 0 but result mandatory sections remain unfilled (treated as blocked)'
+    process.stdout.write(`run blocked: ${label} (result not filled despite exit 0)\n`)
+  }
+
   // In-place runs do not write claim/complete events unless --track-state, but the result file's
-  // own status is a file-level field, so reflect the exit code into it regardless.
+  // own status is a file-level field, so reflect the outcome into it regardless.
   if (resultPath) {
-    updateResultStatus(resultPath, exitCode === 0 ? 'complete' : 'blocked', new Date().toISOString())
+    updateResultStatus(
+      resultPath,
+      effectiveExit === 0 ? 'complete' : 'blocked',
+      new Date().toISOString(),
+      blockReason
+    )
   }
 
   if (trackState && opts.task) {
-    if (exitCode === 0) spawnComplete(projectId, opts.task.trim(), actor)
-    else spawnBlock(projectId, opts.task.trim(), actor, 'agent exited with non-zero code')
+    if (effectiveExit === 0) spawnComplete(projectId, opts.task.trim(), actor)
+    else spawnBlock(projectId, opts.task.trim(), actor, blockReason ?? 'agent exited with non-zero code')
   }
 
-  if (exitCode !== 0) {
-    process.exitCode = exitCode
-    process.stdout.write(`run failed: ${label} (exit ${exitCode})\n`)
+  if (effectiveExit !== 0) {
+    process.exitCode = effectiveExit
+    process.stdout.write(`run failed: ${label} (exit ${effectiveExit})\n`)
     return
   }
 

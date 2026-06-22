@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { scaffoldResult, updateResultStatus } from '../../src/exec-results.js'
+import { isResultUnfilled, scaffoldResult, updateResultStatus } from '../../src/exec-results.js'
 
 describe('scaffoldResult + updateResultStatus round-trip', () => {
   let executionPath: string
@@ -132,6 +132,64 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     // The placeholder is replaced; no Japanese fallback prose is hardcoded in code.
     expect(body).not.toContain('_REVIEW_RESULT_SECTIONS_')
     expect(body).toContain('## 1. レビュー観点別結果')
+  })
+
+  it('treats a freshly scaffolded edit result as unfilled', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'edit',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'claude-edit-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    expect(isResultUnfilled(resultPath, 'edit')).toBe(true)
+  })
+
+  it('treats an edit result as filled once the mandatory sections are written', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'edit',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'claude-edit-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+    const filled = readFileSync(resultPath, 'utf8')
+      .replace('_TODO_: 実施した内容の要約を記入する。', '組織定義を整備した。')
+      .replace('_TODO_: 変更したファイルのパスを記入する。', '- docs/foo.md')
+    writeFileSync(resultPath, filled, 'utf8')
+
+    expect(isResultUnfilled(resultPath, 'edit')).toBe(false)
+  })
+
+  it('treats a review result with an undecided recommendation as unfilled', () => {
+    const { resultPath } = scaffoldResult({
+      executionPath,
+      taskId: 'prj-overview',
+      mode: 'review',
+      projectId: 'prj-0001',
+      planRef: 'exec/plans/prj-overview-plan.md',
+      agent: 'claude-review-agent',
+      startedAt: '2026-06-20T00:00:00.000Z',
+    })
+
+    expect(isResultUnfilled(resultPath, 'review')).toBe(true)
+
+    const decided = readFileSync(resultPath, 'utf8').replace(
+      'recommendation: _TODO_',
+      'recommendation: approve'
+    )
+    writeFileSync(resultPath, decided, 'utf8')
+
+    expect(isResultUnfilled(resultPath, 'review')).toBe(false)
+  })
+
+  it('returns false for a missing result path', () => {
+    expect(isResultUnfilled(join(executionPath, 'nope-result.md'), 'edit')).toBe(false)
   })
 
   it('uses the stem for the result file name and doc id while keeping task_id', () => {
