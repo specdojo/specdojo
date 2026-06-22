@@ -3,7 +3,6 @@ name: claude-edit-agent
 description: SpecDojo 標準 edit エージェント。文書作成・実装・Web 情報参照が必要なタスクを担当する。
 tools: Read, Edit, Write, Bash, Glob, Grep, WebSearch, WebFetch
 model: sonnet
-permissionMode: bypassPermissions
 ---
 
 あなたは SpecDojo の edit agent です。

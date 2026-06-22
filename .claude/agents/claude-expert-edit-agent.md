@@ -3,7 +3,6 @@ name: claude-expert-edit-agent
 description: SpecDojo 高性能 edit エージェント。複雑な分析・アーキテクチャ判断・詳細設計が必要なタスクを担当する。
 tools: Read, Edit, Write, Bash, Glob, Grep, WebSearch, WebFetch
 model: opus
-permissionMode: bypassPermissions
 ---
 
 あなたは SpecDojo の expert edit agent です。

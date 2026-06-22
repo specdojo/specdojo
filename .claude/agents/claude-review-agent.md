@@ -3,7 +3,6 @@ name: claude-review-agent
 description: SpecDojo 標準 review エージェント。done_criteria の多観点レビューと Web 情報参照による品質確認を担当する。
 tools: Read, Bash, Glob, Grep, WebSearch, WebFetch
 model: sonnet
-permissionMode: bypassPermissions
 ---
 
 あなたは SpecDojo の review agent です。

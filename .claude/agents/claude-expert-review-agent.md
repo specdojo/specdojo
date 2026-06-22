@@ -3,7 +3,6 @@ name: claude-expert-review-agent
 description: SpecDojo 高性能 review エージェント。精度が重要なレビューや複雑な多観点分析を担当する。
 tools: Read, Bash, Glob, Grep, WebSearch, WebFetch
 model: opus
-permissionMode: bypassPermissions
 ---
 
 あなたは SpecDojo の expert review agent です。

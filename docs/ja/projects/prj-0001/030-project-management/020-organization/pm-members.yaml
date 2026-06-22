@@ -107,7 +107,7 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: "claude -p --agent claude-edit-agent"
+    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-edit-agent"
     scheduler_strategy: critical-first
     note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
 
@@ -125,7 +125,7 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: "claude -p --agent claude-review-agent"
+    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-review-agent"
     scheduler_strategy: fifo
     note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
 
@@ -145,7 +145,7 @@ members:
       - complex-analysis
       - architecture-judgment
     capabilities: [web_search]
-    command: "claude -p --agent claude-expert-edit-agent"
+    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-edit-agent"
     scheduler_strategy: critical-first
     note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
 
@@ -164,7 +164,7 @@ members:
       - quality-assurance
       - complex-analysis
     capabilities: [web_search]
-    command: "claude -p --agent claude-expert-review-agent"
+    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-review-agent"
     scheduler_strategy: fifo
     note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-expert-review-agent.md で定義。
 
