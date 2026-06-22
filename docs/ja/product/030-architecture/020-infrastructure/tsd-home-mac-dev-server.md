@@ -538,14 +538,14 @@ devcontainer --version
 
 VS Code の Command Palette から `Dev Containers: Install devcontainer CLI` を実行して導入してもよい。Docker Desktop は helper 実行前に起動済みでなければならない。helper から Docker Desktop の GUI 起動は行わない。
 
-`ssh` の `RemoteCommand` は非対話実行のため、Mac の通常 terminal で読み込まれる `.zshrc` の Node.js バージョン管理ツール設定が反映されないことがある。その場合、`devcontainer` はインストール済みでも helper から見つからない。接続先 Mac の通常 terminal で、Node.js と Dev Container CLI の配置先を確認する。
+`ssh` の `RemoteCommand` は非対話実行のため、Mac の通常 terminal で読み込まれる `.zshrc` の Node.js バージョン管理ツール設定が反映されないことがある。その場合、`devcontainer` はインストール済みでも helper から見つからない。接続先 Mac の通常 terminal で、Node.js と Dev Container CLI が同じディレクトリにあることを確認する。
 
 ```bash
 dirname "$(command -v node)"
 dirname "$(command -v devcontainer)"
 ```
 
-Homebrew の Node.js では通常どちらも `/opt/homebrew/bin`（Intel Mac では `/usr/local/bin`）になる。nvm、fnm、mise などを使う場合は、表示された version 固有のディレクトリを次の helper の `node_bin_dir` と `devcontainer_bin_dir` に設定する。`ssh -t` は TTY を割り当てるだけであり、この `PATH` の問題を解決しない。
+Homebrew の Node.js では通常どちらも `/opt/homebrew/bin`（Intel Mac では `/usr/local/bin`）になる。nvm、fnm、mise などを使う場合は、表示された version 固有の共通ディレクトリを次の helper の `node_bin_dir` に設定する。Dev Container CLI はその Node.js 環境の `npm install -g @devcontainers/cli` で導入し、`node_bin_dir` に置かれることを前提とする。`ssh -t` は TTY を割り当てるだけであり、この `PATH` の問題を解決しない。
 
 `~/bin` がない場合は作成する。
 
@@ -559,14 +559,16 @@ mkdir -p ~/bin
 #!/usr/bin/env bash
 set -euo pipefail
 
-workspace_dir="$HOME/workspaces/specdojo-workspace/specdojo"
 container_workspace_dir="/workspaces/specdojo-workspace/specdojo"
+workspace_dir="$HOME$container_workspace_dir"
+
 # Mac の通常 terminal で確認した実際のディレクトリへ置き換える。
 # Homebrew の例: node_bin_dir="/opt/homebrew/bin"
 # nvm の例: node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"
+# mise の例: node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"
+# node と Dev Container CLI は同じ node_bin_dir にあることを前提とする。
 node_bin_dir="/absolute/path/to/node/bin"
-devcontainer_bin_dir="/absolute/path/to/devcontainer/bin"
-export PATH="$node_bin_dir:$devcontainer_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"
+export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 find_container() {
   docker ps --format '{{.Names}}\t{{.Image}}' | awk '$2 ~ /^vsc-specdojo/ {print $1; exit}'
@@ -601,7 +603,7 @@ if [ -z "$container_name" ]; then
   exit 1
 fi
 
-exec docker exec -it -w "$container_workspace_dir" "$container_name" tmux new-session -A -s specdojo
+exec docker exec -it --detach-keys="ctrl-]" -w "$container_workspace_dir" "$container_name" tmux new-session -A -s specdojo
 ```
 
 実行権限を付ける。
@@ -610,7 +612,7 @@ exec docker exec -it -w "$container_workspace_dir" "$container_name" tmux new-se
 chmod +x ~/bin/specdojo-tmux
 ```
 
-`workspace_dir` はこの文書で推奨する `~/workspaces/specdojo-workspace/specdojo`、`container_workspace_dir` は devcontainer 内の `/workspaces/specdojo-workspace/specdojo` を前提にしている。リポジトリを別の場所に置いた場合は、helper 内の両方の値を実際のパスへ変更する。`node_bin_dir` と `devcontainer_bin_dir` も、上記の確認結果で置き換える。同じディレクトリにある場合は、両方へ同じ値を指定してよい。tmux session を新規作成する場合は `container_workspace_dir` で開始する。既存 session に attach する場合は、session 内で最後にいたディレクトリを維持する。初回起動や devcontainer 再作成時は image build、Feature 導入、lifecycle command の実行に時間がかかることがある。
+`container_workspace_dir` は devcontainer 内の `/workspaces/specdojo-workspace/specdojo` を前提にし、`workspace_dir` はそのパスに `$HOME` を付けて Host Mac 側の `~/workspaces/specdojo-workspace/specdojo` としている。リポジトリを別の場所に置いた場合は、`container_workspace_dir` を実際のコンテナ内パスに変更し、Host Mac 側のパスが `$HOME$container_workspace_dir` と一致しないときは `workspace_dir` を実際のパスへ直接設定する。`node_bin_dir` は、上記の確認結果で Node.js と Dev Container CLI が共通して置かれているディレクトリに変更する。`--detach-keys="ctrl-]"` は Docker の標準 detach キーである `Ctrl-P Ctrl-Q` を変更し、container 内の bash や tmux で `Ctrl-P` を1回で使えるようにする。Docker から切断する場合は `Ctrl-]` を入力する。tmux session を新規作成する場合は `container_workspace_dir` で開始する。既存 session に attach する場合は、session 内で最後にいたディレクトリを維持する。初回起動や devcontainer 再作成時は image build、Feature 導入、lifecycle command の実行に時間がかかることがある。
 
 helper の作成後は、4.11.2 の手順で terminal から tmux session に接続する。
 
@@ -728,7 +730,7 @@ VS Code の接続順序は、Remote SSH で Mac に入ってから Dev Container
 ssh home-mbp 'printf "PATH=%s\\n" "$PATH"; command -v node || true; command -v devcontainer || true'
 ```
 
-その後、`~/bin/specdojo-tmux` の `node_bin_dir` と `devcontainer_bin_dir` を接続先 Mac の通常 terminal で確認した値へ変更する。`devcontainer.json was not found` と表示された場合は、`workspace_dir` をリポジトリの配置先に合わせる。
+その後、`~/bin/specdojo-tmux` の `node_bin_dir` を接続先 Mac の通常 terminal で確認した Node.js と Dev Container CLI の共通ディレクトリへ変更する。両者が同じディレクトリにない場合は、使用する Node.js 環境の `npm install -g @devcontainers/cli` を実行し直してから確認する。`devcontainer.json was not found` と表示された場合は、`workspace_dir` をリポジトリの配置先に合わせる。
 
 ### 8.4. Windows から SSH できない
 
