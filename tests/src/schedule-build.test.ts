@@ -391,3 +391,67 @@ describe('buildScheduleTrack status propagation', () => {
     }
   })
 })
+
+describe('buildScheduleIndex start_date precedence', () => {
+  function writeDefaults(dir: string, defaultStartDate: string): void {
+    writeFileSync(
+      join(dir, 'sch-defaults.yaml'),
+      yaml.dump({
+        kind: 'defaults',
+        id: 'prj-test:sch-defaults',
+        type: 'project',
+        status: 'ready',
+        version: 1,
+        calendar: { timezone: 'Asia/Tokyo', work_hours_per_day: 8 },
+        settings: { default_start_date: defaultStartDate },
+      }),
+      'utf8'
+    )
+  }
+
+  function writeTrackWithStartDate(dir: string, startDate: string | null): void {
+    writeFileSync(
+      join(dir, 'sch-track-test.yaml'),
+      yaml.dump({
+        kind: 'track',
+        id: 'prj-test:sch-track-test',
+        type: 'project',
+        status: 'ready',
+        version: 1,
+        project_id: 'prj-test',
+        track: 'test',
+        settings: startDate !== null ? { start_date: startDate } : {},
+        tasks: [{ id: 'T-TEST-doc-010', name: 'Doc', duration_days: 1, depends_on: [], owner: 'BA' }],
+      }),
+      'utf8'
+    )
+  }
+
+  it("prefers the track's explicit start_date over an earlier default_start_date", () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-startdate-'))
+    try {
+      writeDefaults(dir, '2026-05-24')
+      writeTrackWithStartDate(dir, '2026-06-15')
+
+      const schedule = buildScheduleIndex(dir)
+
+      expect(schedule.start_date).toBe('2026-06-15')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('falls back to default_start_date when no track specifies start_date', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-startdate-fallback-'))
+    try {
+      writeDefaults(dir, '2026-05-24')
+      writeTrackWithStartDate(dir, null)
+
+      const schedule = buildScheduleIndex(dir)
+
+      expect(schedule.start_date).toBe('2026-05-24')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
