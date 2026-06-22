@@ -69,18 +69,18 @@ LLM API は原則として Host Mac の `localhost` に閉じる。devcontainer 
 
 ## 3. 採用設定
 
-| 領域           | 採用技術 / 設定                                     | 方針                                                                                              |
-| -------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| 常時起動       | Amphetamine                                         | 電源接続中に system sleep を抑止する。display sleep は許可してよい                                |
-| 閉域接続       | Tailscale                                           | tailnet 内の MagicDNS 名または Tailscale IP で Mac に到達する                                     |
-| SSH            | macOS Remote Login                                  | Tailscale SSH 機能ではなく、macOS 標準 sshd を tailnet 経由で使う                                 |
-| エディタ       | VS Code Remote SSH + Dev Containers                 | SSH 接続先の Mac 上で VS Code Server と devcontainer を起動する                                   |
-| 作業環境       | `.devcontainer/devcontainer.json`                   | agent CLI、VS Code 拡張、認証用 named volume を定義する                                           |
-| 端末セッション | tmux                                                | devcontainer 内の長時間実行、切断復帰、ログ確認を安定させる                                       |
-| SpecDojo 実行  | `specdojo exec run`                                 | devcontainer 内から agent CLI を非対話起動する                                                    |
-| Agent CLI      | OpenCode / Claude Code / Codex / GitHub Copilot CLI | `pm-members.yaml` の member として起動方法を管理する                                              |
+| 領域           | 採用技術 / 設定                                     | 方針                                                                                 |
+| -------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 常時起動       | Amphetamine                                         | 電源接続中に system sleep を抑止する。display sleep は許可してよい                   |
+| 閉域接続       | Tailscale                                           | tailnet 内の MagicDNS 名または Tailscale IP で Mac に到達する                        |
+| SSH            | macOS Remote Login                                  | Tailscale SSH 機能ではなく、macOS 標準 sshd を tailnet 経由で使う                    |
+| エディタ       | VS Code Remote SSH + Dev Containers                 | SSH 接続先の Mac 上で VS Code Server と devcontainer を起動する                      |
+| 作業環境       | `.devcontainer/devcontainer.json`                   | agent CLI、VS Code 拡張、認証用 named volume を定義する                              |
+| 端末セッション | tmux                                                | devcontainer 内の長時間実行、切断復帰、ログ確認を安定させる                          |
+| SpecDojo 実行  | `specdojo exec run`                                 | devcontainer 内から agent CLI を非対話起動する                                       |
+| Agent CLI      | OpenCode / Claude Code / Codex / GitHub Copilot CLI | `pm-members.yaml` の member として起動方法を管理する                                 |
 | LLM Serving    | Ollama                                              | [[tsd-ollama]] の起動方式に従い、devcontainer から `host.docker.internal` で接続する |
-| 外部公開       | なし                                                | ルータのポート開放、Tailscale Funnel、Tailscale Serve は使わない                                  |
+| 外部公開       | なし                                                | ルータのポート開放、Tailscale Funnel、Tailscale Serve は使わない                     |
 
 Tailscale SSH 機能そのものは、macOS では利用条件が標準の Tailscale アプリ構成と異なる場合がある。そのため本構成では、macOS の Remote Login を有効化し、Tailscale を安全なネットワーク経路として使う。
 
@@ -263,7 +263,7 @@ Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 ssh -V
 ```
 
-鍵認証の設定は 4.8.1〜4.8.5 に従う。秘密鍵や passphrase はリポジトリ、VS Code 設定、tmux の scrollback に記録しない。
+鍵認証の設定は 4.8.1〜4.8.6 に従う。秘密鍵や passphrase はリポジトリ、VS Code 設定、tmux の scrollback に記録しない。
 
 ### 4.7. 接続元が Mac の場合
 
@@ -347,17 +347,60 @@ ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no -o KbdInt
 
 `<mac-login-user>@home-mbp's password:` が表示されず、鍵の passphrase 入力後に接続できれば鍵認証への移行は完了である。接続できない場合は、`ssh -vvv home-mbp` で使用鍵と拒否理由を確認し、4.8.2 のユーザー、公開鍵内容、ファイル権限を見直す。
 
-#### 4.8.4. パスワード認証を無効にする（任意）
+#### 4.8.4. 接続元の SSH agent に秘密鍵を記憶させる（任意）
+
+秘密鍵の passphrase は接続先 Mac のログインパスワードとは別物であり、秘密鍵ファイルを保護するためのものである。passphrase を空にせず、接続元の SSH agent に記憶させる。SSH agent forwarding は有効化せず、4.8.3 の `ForwardAgent no` を維持する。
+
+##### Windows
+
+Windows の OpenSSH `ssh-agent` service は既定で無効な場合がある。初回だけ、管理者として開いた PowerShell で service を自動起動に設定して開始する。
+
+```powershell
+Get-Service ssh-agent | Set-Service -StartupType Automatic
+Start-Service ssh-agent
+Get-Service ssh-agent
+```
+
+`Status` が `Running` であることを確認した後、通常の PowerShell で秘密鍵を agent に追加する。初回の追加時だけ秘密鍵の passphrase を入力する。
+
+```powershell
+ssh-add "$env:USERPROFILE\.ssh\id_ed25519"
+ssh-add -l
+```
+
+`ssh-add -l` に鍵の fingerprint が表示されれば、以後の `ssh home-mbp` では passphrase の入力を通常は要求されない。接続元 PC を共有しないこと、画面ロックを有効にすること、秘密鍵ファイルを安全にバックアップすることを前提とする。
+
+##### macOS
+
+macOS では接続元 Mac の SSH agent と Keychain を使う。接続元 Mac の terminal で一度だけ次を実行する。
+
+```bash
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+ssh-add -l
+```
+
+同じ接続元 Mac の `~/.ssh/config` にある `Host home-mbp` へ次を追加する。
+
+```ssh-config
+  AddKeysToAgent yes
+  UseKeychain yes
+```
+
+`ssh-add -l` に鍵の fingerprint が表示され、`ssh home-mbp` で接続できることを確認する。Keychain に保存された passphrase の利用には接続元 Mac のログイン状態が必要であるため、接続元 Mac のアカウントと画面ロックを保護する。
+
+agent を利用しても、秘密鍵ファイルを無保護にする必要はない。passphrase を削除する場合は `ssh-keygen -p -f <private-key-path>` で変更できるが、秘密鍵がコピー・窃取された時点で利用可能になるため、本構成では推奨しない。
+
+#### 4.8.5. パスワード認証を無効にする（任意）
 
 パスワード認証を止めるのは、4.8.3 の鍵認証が別 terminal から成功し、接続先 Mac の物理 console にもアクセスできることを確認してからにする。設定を誤ると SSH で復旧できなくなるため、鍵認証が未確認の段階では実施しない。
 
 まず、接続先 Mac の `/etc/ssh/sshd_config` が drop-in 設定を読み込むか確認する。
 
 ```bash
-sudo grep -n '^Include' /etc/ssh/sshd_config
+sudo grep -nE '^[[:space:]]*Include[[:space:]]+' /etc/ssh/sshd_config
 ```
 
-`/etc/ssh/sshd_config.d/*` を読み込む `Include` が表示された場合だけ、次の drop-in を作成する。
+`/etc/ssh/sshd_config.d/*` を読み込む `Include` が表示された場合は、次の drop-in を作成する。
 
 ```bash
 sudo mkdir -p /etc/ssh/sshd_config.d
@@ -366,13 +409,53 @@ PubkeyAuthentication yes
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 EOF
-sudo sshd -t
+```
+
+`Include` が表示されない場合は、drop-in を作成しても sshd は読み込まない。`/etc/ssh/sshd_config` を直接編集する。このときは、既存の global scope の `PubkeyAuthentication`、`PasswordAuthentication`、`KbdInteractiveAuthentication` を次の値へ変更するか、最初の有効な同名設定より前かつ最初の `Match` 行より前に追加する。同じキーワードは原則として最初に得た値が使われるため、同じ設定をファイル末尾へ重複追加しても無効化できない場合がある。
+
+```text
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+```
+
+直接編集する場合も、編集前のバックアップを作り、`sudoedit` で編集する。
+
+```bash
+sudo cp -p /etc/ssh/sshd_config /etc/ssh/sshd_config.before-key-only
+sudoedit /etc/ssh/sshd_config
+```
+
+設定後は、sshd の構文と有効値を確認する。`sshd -t` は構文検査だけであり、パスワード認証が実際に無効になったことは `sshd -T` の出力で確認する。
+
+```bash
+sudo /usr/sbin/sshd -t
+sudo /usr/sbin/sshd -T | grep -E '^(passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication) '
+```
+
+出力に含まれる各設定値が、次と一致しなければならない。
+
+```text
+passwordauthentication no
+kbdinteractiveauthentication no
+pubkeyauthentication yes
+```
+
+`Match` 条件を使っている場合は、接続ユーザーと Tailscale IP を指定して有効値を確認する。
+
+```bash
+sudo /usr/sbin/sshd -T -C user=<mac-login-user>,host=home-mbp,addr=<tailscale-ip> | grep -E '^(passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication) '
+```
+
+期待値を確認できてから sshd を再起動する。
+
+```bash
 sudo launchctl kickstart -k system/com.openssh.sshd
 ```
 
-この操作後も、現在の SSH session は閉じずに残す。新しい terminal から 4.8.3 の鍵限定コマンドを再実行して成功を確認する。失敗した場合は Mac の物理 console から `99-key-only.conf` を削除し、`sudo launchctl kickstart -k system/com.openssh.sshd` で戻す。
+この操作後も、現在の SSH session は閉じずに残す。新しい terminal から 4.8.3 の鍵限定コマンドを再実行して成功を確認する。`Enter passphrase for key ...` は接続元の秘密鍵の passphrase であり、パスワード認証ではない。`<mac-login-user>@home-mbp's password:` が表示される場合は、sshd の有効値が期待どおりでないか、接続先が想定と異なる。`sshd -T` の出力、`ssh -G home-mbp | grep -E '^(hostname|passwordauthentication|kbdinteractiveauthentication) '`、`ssh -vvv home-mbp` で確認する。失敗した場合は Mac の物理 console から `99-key-only.conf` を削除するか、直接編集のバックアップを復元してから、`sudo launchctl kickstart -k system/com.openssh.sshd` で戻す。
 
-#### 4.8.5. ローカル LLM API を接続元端末から使う場合（任意）
+#### 4.8.6. ローカル LLM API を接続元端末から使う場合（任意）
 
 外部端末上の CLI から Host Mac の Ollama API を直接使う場合だけ、`Host home-mbp` の設定へ次を追加する。VS Code Remote SSH + devcontainer だけで開発する場合は不要である。
 
