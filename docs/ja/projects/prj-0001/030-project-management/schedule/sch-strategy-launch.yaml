@@ -16,7 +16,7 @@ track: launch
 # exec run --auto が pm-members.yaml のエージェントにマッピングする。
 
 settings:
-  start_date: "2026-05-24"
+  start_date: "2026-06-15"
 
 scope:
   catalogs:
@@ -275,10 +275,14 @@ cross_domain_dependencies:
 initial_state:
   completed_deliverables:
     - local_id: sch-defaults
-      completed_on: "2026-05-23"
+      completed_on: "2026-06-14"
       by: indie
       note: 初期投入時点で作成済み
     - local_id: sch-strategy-launch
-      completed_on: "2026-05-23"
+      completed_on: "2026-06-14"
+      by: indie
+      note: 初期投入時点で作成済み
+    - local_id: prj-overview
+      completed_on: "2026-06-14"
       by: indie
       note: 初期投入時点で作成済み

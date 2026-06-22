@@ -76,15 +76,18 @@ properties:
         "fully-guided",
         "recipe-guided",
         "freeform",
+        "bootstrap",
         "rulebook-maintenance",
         "recipe-maintenance",
         "sample-maintenance",
         "template-maintenance",
       ]
     description: >
-      How the task is carried out. The first three values describe how strictly the agent
-      follows reference materials (rulebook/recipe/sample/template) when working on a deliverable;
-      the *-maintenance values improve the named reference material based on deliverables.
+      How the task is carried out. fully-guided/recipe-guided/freeform describe how strictly the
+      agent follows reference materials (rulebook/recipe/sample/template) when working on a
+      deliverable; bootstrap creates the deliverable and its full set of reference materials as one
+      consistent unit in the same task (initial setup only); the *-maintenance values improve the
+      named reference material based on deliverables.
       Carried from the phase or owner_rules[].phase_overrides definition in sch-strategy.
       Used for template selection and to convey work intent to the agent.
       Omitted when not declared for this phase.

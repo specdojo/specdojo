@@ -105,6 +105,49 @@ describe('reference-materials', () => {
       expect(refs.sample).toBe('_MISSING_')
       expect(refs.template).toBe('_MISSING_')
     })
+
+    it('未宣言でも規定ディレクトリに慣例ファイルがあればそのパスを返す', () => {
+      writeRulebook(
+        'pm-organization-rulebook',
+        [
+          'id: pm-organization-rulebook',
+          'type: rulebook',
+          'status: draft',
+          'target_format: markdown',
+        ].join('\n')
+      )
+      // sample のみ慣例ファイル名で実在し、recipe / template は存在しない。
+      writeFileSync(
+        join(root, SPECDOJO, 'samples', 'pm-organization-sample.md'),
+        '# sample\n',
+        'utf8'
+      )
+
+      const refs = resolveReferenceMaterialRefs('pm-organization-rulebook')
+
+      expect(refs.sample).toBe('docs/ja/specdojo/samples/pm-organization-sample.md')
+      expect(refs.recipe).toBe('_MISSING_')
+      expect(refs.template).toBe('_MISSING_')
+    })
+
+    it("宣言が 'none' なら慣例ファイルが存在しても MISSING にする", () => {
+      writeRulebook(
+        'opt-out-rulebook',
+        [
+          'id: opt-out-rulebook',
+          'type: rulebook',
+          'status: draft',
+          'sample: none',
+        ].join('\n')
+      )
+      writeFileSync(
+        join(root, SPECDOJO, 'samples', 'opt-out-sample.md'),
+        '# sample\n',
+        'utf8'
+      )
+
+      expect(resolveReferenceMaterialRefs('opt-out-rulebook').sample).toBe('_MISSING_')
+    })
   })
 
   describe('declaredReferences', () => {

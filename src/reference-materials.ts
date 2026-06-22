@@ -60,15 +60,38 @@ function sampleExt(targetFormat: string | undefined): string {
   return targetFormat === 'yaml' ? 'yaml' : targetFormat === 'json' ? 'json' : 'md'
 }
 
-function repoRef(kind: ReferenceMaterialKind, id: string | undefined, ext: string): string {
-  // Canonical repo-root-relative path (no leading slash): the agent opens these files
-  // from the run CWD (repo root or worktree root).
-  return id && id !== 'none' ? `${DOCS_BASE}/${KIND_DIR[kind]}/${id}.${ext}` : MISSING
+// Canonical repo-root-relative path (no leading slash): the agent opens these files
+// from the run CWD (repo root or worktree root).
+function repoPath(kind: ReferenceMaterialKind, id: string, ext: string): string {
+  return `${DOCS_BASE}/${KIND_DIR[kind]}/${id}.${ext}`
+}
+
+// rulebook 未宣言時の慣例 ID（<rulebook-prefix>-<kind>）。
+// 例: rulebook `pm-organization-rulebook` → sample `pm-organization-sample`。
+function conventionalRefId(rulebookId: string, kind: ReferenceMaterialKind): string {
+  return `${rulebookId.replace(/-rulebook$/, '')}-${kind}`
+}
+
+// recipe / sample / template を 1 件解決する。
+// 宣言があればそれを正とする。'none' は明示的な無効化として MISSING を返す。
+// 未宣言の場合は規定ディレクトリ上の慣例ファイルを探し、実在すればそのパスを返す。
+function resolveRef(
+  kind: ReferenceMaterialKind,
+  declaredId: string | undefined,
+  rulebookId: string,
+  ext: string,
+): string {
+  if (declaredId === 'none') return MISSING
+  if (declaredId) return repoPath(kind, declaredId, ext)
+  const fallbackId = conventionalRefId(rulebookId, kind)
+  const fsPath = join(specdojoRootDir(), DOCS_BASE, KIND_DIR[kind], `${fallbackId}.${ext}`)
+  return existsSync(fsPath) ? repoPath(kind, fallbackId, ext) : MISSING
 }
 
 // 成果物の rulebook ID を起点に、recipe / sample / template の repo 相対パスを解決する。
-// recipe / sample / template は rulebook frontmatter の宣言を正とする。
-// rulebook 未指定・該当なしの項目は MISSING を返し、表示構造はテンプレート側に委ねる。
+// recipe / sample / template は rulebook frontmatter の宣言を正とし、未宣言なら規定
+// ディレクトリ上の慣例ファイルの実在を確認してパスを補う。
+// 該当なしの項目は MISSING を返し、表示構造はテンプレート側に委ねる。
 export function resolveReferenceMaterialRefs(rulebookId: string | undefined): ReferenceMaterialRefs {
   if (!rulebookId || rulebookId === 'none') {
     return { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING }
@@ -76,9 +99,9 @@ export function resolveReferenceMaterialRefs(rulebookId: string | undefined): Re
   const fm = loadRulebookRefs(rulebookId)
   return {
     rulebook: `${DOCS_BASE}/rulebooks/${rulebookId}.md`,
-    recipe: repoRef('recipe', fm.recipe, 'md'),
-    sample: repoRef('sample', fm.sample, sampleExt(fm.target_format)),
-    template: repoRef('template', fm.template, 'md'),
+    recipe: resolveRef('recipe', fm.recipe, rulebookId, 'md'),
+    sample: resolveRef('sample', fm.sample, rulebookId, sampleExt(fm.target_format)),
+    template: resolveRef('template', fm.template, rulebookId, 'md'),
   }
 }
 
