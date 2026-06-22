@@ -1,7 +1,7 @@
 ---
 id: rulebook-authoring-standard
 type: standard
-status: draft
+status: ready
 ---
 
 # Rulebook 記述標準
@@ -34,17 +34,17 @@ Rulebook Authoring Standard
 - `id` は英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目          | 必須 | 説明                                                          |
-| ------------- | ---- | ----------------------------------------------------------- |
-| id            | ○    | `<prefix>-rulebook` 形式の一意 ID                           |
-| type          | ○    | `rulebook` 固定                                             |
-| status        | ○    | `draft` / `ready` / `deprecated`                           |
-| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
-| recipe        | 任意 | 対応する recipe の ID（`<prefix>-recipe`）。該当なしは `none` |
-| sample        | 任意 | 対応する sample の ID（`<prefix>-sample`）。該当なしは `none` |
+| 項目          | 必須 | 説明                                                              |
+| ------------- | ---- | ----------------------------------------------------------------- |
+| id            | ○    | `<prefix>-rulebook` 形式の一意 ID                                 |
+| type          | ○    | `rulebook` 固定                                                   |
+| status        | ○    | `draft` / `ready` / `deprecated`                                  |
+| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`）    |
+| recipe        | 任意 | 対応する recipe の ID（`<prefix>-recipe`）。該当なしは `none`     |
+| sample        | 任意 | 対応する sample の ID（`<prefix>-sample`）。該当なしは `none`     |
 | template      | 任意 | 対応する template の ID（`<prefix>-template`）。該当なしは `none` |
-| based_on      | 任意 | 上位規約や根拠ドキュメント                                  |
-| supersedes    | 任意 | 置き換え関係                                                |
+| based_on      | 任意 | 上位規約や根拠ドキュメント                                        |
+| supersedes    | 任意 | 置き換え関係                                                      |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
 - `recipe` / `sample` / `template` は ID 参照であり、`fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
@@ -64,22 +64,26 @@ status: draft
 
 章構成は以下を原則とする。不要な章は省略可だが、省略理由を記載することを推奨する。
 
-| 章番号 | 章タイトル               | 必須 | 説明                                                                                               |
-| ------ | ------------------------ | ---- | -------------------------------------------------------------------------------------------------- |
-| 1      | 全体方針                 | ○    | 目的・適用範囲・記載レベルの方針をまとめる                                                         |
-| 2      | 位置づけと用語定義       | 任意 | Mermaid などで関係を示し、必要なら用語定義を置く。用語定義がない場合は章タイトルは`位置づけ`とする |
-| 3      | ファイル命名・ID規則     | ○    | id / ファイル名 / 命名規則                                                                         |
-| 4      | 推奨 Frontmatter 項目    | 任意 | スキーマと必須/任意の項目                                                                          |
-| 5      | 本文構成（標準テンプレ） | ○    | 対象ドキュメントの標準章構成                                                                       |
-| 6      | 記述ガイド               | ○    | 各章の書き方、推奨表、例など                                                                       |
-| 7      | 禁止事項                 | ○    | してはいけない記述、スキーマ違反など                                                               |
-| 8      | サンプル                 | ○    | 最小例のsample へのリンクを示す                                                                    |
+| 章番号 | 章タイトル               | 必須 | 説明                                                                                                               |
+| ------ | ------------------------ | ---- | ------------------------------------------------------------------------------------------------------------------ |
+| 1      | 全体方針                 | ○    | 目的・適用範囲・記載レベルの方針をまとめる                                                                         |
+| 2      | 位置づけと用語定義       | 任意 | Mermaid などで関係を示し、複数の解釈を防ぐ必要がある用語だけを定義する。用語定義が不要な場合は章を`位置づけ`とする |
+| 3      | ファイル命名・ID規則     | ○    | id / ファイル名 / 命名規則                                                                                         |
+| 4      | 推奨 Frontmatter 項目    | 任意 | スキーマと必須/任意の項目                                                                                          |
+| 5      | 本文構成（標準テンプレ） | ○    | 対象ドキュメントの標準章構成                                                                                       |
+| 6      | 記述ガイド               | ○    | 各章の書き方、推奨表、例など                                                                                       |
+| 7      | 禁止事項                 | ○    | してはいけない記述、スキーマ違反など                                                                               |
+| 8      | サンプル                 | ○    | 最小例のsample へのリンクを示す                                                                                    |
+| 9      | 作成レシピ               | 任意 | 対応する recipe へのリンクを示す                                                                                   |
+| 10     | テンプレート             | 任意 | 対応する template へのリンクを示す                                                                                 |
 
 補足:
 
 - 本文構成（標準テンプレ）は、対象ドキュメント（例: `uts-index`, `utd-<term>`）の章構成を表で示し、必須/任意も明示する。
 - 記述ガイドには、章ごとの書き方と例（表・サンプル）を置き、重複を避けるため共通事項は上位（index）を SSOT とする方針を記載する。
 - サンプルを用意する場合、対応する `../samples/*-sample.md` へのリンクを記載する。
+- Frontmatter の `template` に template ID を宣言し、対応する template が存在する場合は、末尾に `テンプレート` 章を設けて `[[<prefix>-template]]` 形式で参照する。
+- 用語定義は、ドメイン固有語や同じ語に複数の解釈がある場合だけ置く。本文構成（標準テンプレ）や記述ガイドで見出し・用語の意味を十分に定義できる場合は、重複を避けて用語定義を省略する。
 
 ## 5. 記述ガイド
 
@@ -88,6 +92,7 @@ status: draft
 - `記述ガイド` には、章ごとの書き方、推奨表、記載例を置く。
 - 共通事項は上位ドキュメントを SSOT とし、重複記載を避ける。
 - 用語はファイル内で統一し、`index` / `overview` などの命名ゆれを持ち込まない。
+- 用語定義を置く場合は、本文構成の見出し名や記述ガイドを単に言い換えて重複させない。重複になる場合は用語定義を省略する。
 - `推奨 Frontmatter 項目` の記述は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `ファイル命名・ID規則` は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う。
 - `target_format` がある場合は、本文ルール・サンプルリンク・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
@@ -100,6 +105,7 @@ status: draft
   - Markdown の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.md)`
   - YAML の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.yaml)`
   - JSON の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.json)`
+- `template` を宣言した場合は、対応ファイルが存在することを確認し、`テンプレート` 章に `- 参照: [[<prefix>-template]]` を記載する。template がない場合は、章と Frontmatter の `template` を省略するか `none` を宣言する。
 
 ## 6. 内容充実化（薄いドキュメント防止）
 
