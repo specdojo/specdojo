@@ -1,7 +1,7 @@
 ---
 id: _PROJECT_ID_:prj-overview
 type: project
-status: draft
+status: ready
 rulebook: prj-overview-rulebook
 based_on: []
 supersedes: []
@@ -41,6 +41,8 @@ _TODO_: 整備・提供したい成果や状態を箇条書きで記述する。
 ## 5. 期待効果
 
 _TODO_: 短期的に判定できる効果と、公開後に追跡する中長期的な効果を分けて記述する。数値目標は、初期公開時点で判定する値か、ベースライン確定後に判定する値か、初期仮説か確定値かを明示する。確定管理する成功判定・受入条件は `prj-success-criteria-and-acceptance-criteria` に委譲する。
+
+<!-- 短期指標・中長期指標は任意である。該当する指標を置かない場合は、対応する見出しと表をまとめて削除する。-->
 
 ### 5.1. 短期指標
 
