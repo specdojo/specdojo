@@ -337,3 +337,57 @@ describe('buildScheduleTrack phase set repetition', () => {
     }
   })
 })
+
+describe('buildScheduleTrack status propagation', () => {
+  function writeStrategy(dir: string, status: string | undefined): string {
+    const strategyPath = join(dir, 'sch-strategy-test.yaml')
+    const doc: Record<string, unknown> = {
+      kind: 'strategy',
+      id: 'prj-test:sch-strategy-test',
+      type: 'project',
+      track: 'test',
+      scope: {
+        catalogs: [{ id: 'prj-test:catalog', path: '/catalog.yaml' }],
+        include_kinds: ['work'],
+      },
+      phase_sets: {
+        first: [{ id: 'draft', name: 'Draft', task_suffix: '010', duration_days: 1 }],
+      },
+      default_phase_sets: ['first'],
+      owner_rules: [{ local_ids: ['doc'], owner: 'BA' }],
+    }
+    if (status !== undefined) doc.status = status
+    writeFileSync(strategyPath, yaml.dump(doc), 'utf8')
+    return strategyPath
+  }
+
+  it('carries the strategy status into the build result', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-status-'))
+    try {
+      writeCatalog(dir)
+      const strategyPath = writeStrategy(dir, 'ready')
+
+      const result = buildScheduleTrack(strategyPath, dir)
+
+      expect(result.errors).toEqual([])
+      expect(result.status).toBe('ready')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('falls back to draft when the strategy omits status', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-schedule-status-default-'))
+    try {
+      writeCatalog(dir)
+      const strategyPath = writeStrategy(dir, undefined)
+
+      const result = buildScheduleTrack(strategyPath, dir)
+
+      expect(result.errors).toEqual([])
+      expect(result.status).toBe('draft')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})

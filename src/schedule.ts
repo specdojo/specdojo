@@ -43,6 +43,7 @@ function updateMilestonesFile(
   schedulePath: string,
   projectId: string,
   newMilestones: GeneratedMilestone[],
+  status: string,
   dryRun: boolean
 ): { added: string[]; updated: string[]; removed: string[]; fileCreated: boolean } {
   if (newMilestones.length === 0) return { added: [], updated: [], removed: [], fileCreated: false }
@@ -66,7 +67,7 @@ function updateMilestonesFile(
       kind: 'milestones',
       id: `${projectId}:sch-milestones`,
       type: 'project',
-      status: 'draft',
+      status,
       version: 1,
       project_id: projectId,
       settings: {},
@@ -74,6 +75,10 @@ function updateMilestonesFile(
     }
     fileCreated = true
   }
+
+  // sch-milestones.yaml is fully managed by schedule build, so its status
+  // tracks the strategy status on every build (not only on creation).
+  doc.status = status
 
   const list = doc.milestones as Array<Record<string, unknown>>
 
@@ -192,10 +197,8 @@ export function registerScheduleCommands(program: Command): void {
         )
       }
 
-      const { projectId, startDate, tasks, milestones, errors, warnings } = buildScheduleTrack(
-        strategyFile,
-        baseDir
-      )
+      const { projectId, status, startDate, tasks, milestones, errors, warnings } =
+        buildScheduleTrack(strategyFile, baseDir)
 
       for (const w of warnings) process.stdout.write(`WARN: ${w}\n`)
       for (const e of errors) process.stdout.write(`ERROR: ${e}\n`)
@@ -209,7 +212,7 @@ export function registerScheduleCommands(program: Command): void {
         kind: 'track',
         id: `${projectId}:sch-track-${track}`,
         type: 'project',
-        status: 'draft',
+        status,
         version: 1,
         project_id: projectId,
         track,
@@ -228,7 +231,7 @@ export function registerScheduleCommands(program: Command): void {
         process.stdout.write(outYaml)
         process.stdout.write(`\n# dry-run: ${tasks.length} tasks — not written to disk\n`)
         if (milestones.length > 0) {
-          updateMilestonesFile(schedulePath, projectId, milestones, true)
+          updateMilestonesFile(schedulePath, projectId, milestones, status, true)
         }
         return
       }
@@ -241,6 +244,7 @@ export function registerScheduleCommands(program: Command): void {
           schedulePath,
           projectId,
           milestones,
+          status,
           false
         )
         const milestonesFile = join(schedulePath, 'sch-milestones.yaml')

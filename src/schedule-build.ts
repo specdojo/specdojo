@@ -126,6 +126,7 @@ export type GeneratedMilestone = {
 export type BuildResult = {
   projectId: string
   track: string
+  status: string
   startDate: string | null
   tasks: GeneratedTask[]
   milestones: GeneratedMilestone[]
@@ -244,6 +245,8 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
   }
 
   const track = String(strategy.track ?? '')
+  // 生成物（track / milestones）には strategy の status を引き継ぐ。
+  const status = String(strategy.status ?? 'draft')
 
   const projectId = String(strategy.id ?? '').split(':')[0] ?? 'unknown'
   const startDate = strategy.settings?.start_date ?? null
@@ -266,7 +269,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
   }
 
   if (errors.length > 0)
-    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+    return { projectId, track, status, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Topological sort
   const crossDeps = strategy.cross_domain_dependencies ?? []
@@ -275,7 +278,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
     sorted = topoSort(allDeliverables, crossDeps)
   } catch (err) {
     errors.push(err instanceof Error ? err.message : String(err))
-    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+    return { projectId, track, status, startDate, tasks: [], milestones: [], errors, warnings }
   }
 
   const fallbackPhaseSets = strategy.default_phase_set
@@ -286,7 +289,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
     defaultPhaseSets = normalizePhaseSetSelection(strategy.default_phase_sets, fallbackPhaseSets)
   } catch (err) {
     errors.push(err instanceof Error ? err.message : String(err))
-    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+    return { projectId, track, status, startDate, tasks: [], milestones: [], errors, warnings }
   }
 
   // Completed deliverables: generate a single 000 task instead of full phase expansion
@@ -482,7 +485,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
   }
 
   if (errors.length > 0)
-    return { projectId, track, startDate, tasks: [], milestones: [], errors, warnings }
+    return { projectId, track, status, startDate, tasks: [], milestones: [], errors, warnings }
 
   // Process phase gates and block the phase_set immediately following each configured boundary.
   const milestones: GeneratedMilestone[] = []
@@ -582,5 +585,5 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
     })
   }
 
-  return { projectId, track, startDate, tasks, milestones, errors, warnings }
+  return { projectId, track, status, startDate, tasks, milestones, errors, warnings }
 }
