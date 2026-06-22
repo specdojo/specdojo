@@ -92,7 +92,7 @@ Tailscale SSH 機能そのものは、macOS では利用条件が標準の Tails
 2. 接続元端末を準備する。Windows は 4.6、Mac は 4.7 だけを実施する。
 3. SSH 鍵認証と必要に応じた local forwarding を設定する（4.8）。
 4. VS Code Remote SSH から devcontainer を起動する（4.9〜4.10）。
-5. devcontainer 内 tmux と terminal からの再接続を設定する（4.11）。
+5. devcontainer 内 tmux と terminal からの再接続を設定し、利用経路を確認する（4.11〜4.12）。
 
 ### 4.1. 接続先 Mac に Tailscale を導入する
 
@@ -612,7 +612,12 @@ exec docker exec -it --detach-keys="ctrl-]" -w "$container_workspace_dir" "$cont
 chmod +x ~/bin/specdojo-tmux
 ```
 
-`container_workspace_dir` は devcontainer 内の `/workspaces/specdojo-workspace/specdojo` を前提にし、`workspace_dir` はそのパスに `$HOME` を付けて Host Mac 側の `~/workspaces/specdojo-workspace/specdojo` としている。リポジトリを別の場所に置いた場合は、`container_workspace_dir` を実際のコンテナ内パスに変更し、Host Mac 側のパスが `$HOME$container_workspace_dir` と一致しないときは `workspace_dir` を実際のパスへ直接設定する。`node_bin_dir` は、上記の確認結果で Node.js と Dev Container CLI が共通して置かれているディレクトリに変更する。`--detach-keys="ctrl-]"` は Docker の標準 detach キーである `Ctrl-P Ctrl-Q` を変更し、container 内の bash や tmux で `Ctrl-P` を1回で使えるようにする。Docker から切断する場合は `Ctrl-]` を入力する。tmux session を新規作成する場合は `container_workspace_dir` で開始する。既存 session に attach する場合は、session 内で最後にいたディレクトリを維持する。初回起動や devcontainer 再作成時は image build、Feature 導入、lifecycle command の実行に時間がかかることがある。
+- `container_workspace_dir` は devcontainer 内の `/workspaces/specdojo-workspace/specdojo` を前提にし、`workspace_dir` はそのパスに `$HOME` を付けて Host Mac 側の `~/workspaces/specdojo-workspace/specdojo` としている。
+- リポジトリを別の場所に置いた場合は、`container_workspace_dir` を実際のコンテナ内パスに変更し、Host Mac 側のパスが `$HOME$container_workspace_dir` と一致しないときは `workspace_dir` を実際のパスへ直接設定する。
+- `node_bin_dir` は、上記の確認結果で Node.js と Dev Container CLI が共通して置かれているディレクトリに変更する。
+- `--detach-keys="ctrl-]"` は Docker の標準 detach キーである `Ctrl-P Ctrl-Q` を変更し、container 内の bash や tmux で `Ctrl-P` を1回で使えるようにする。
+- Docker から切断する場合は `Ctrl-]` を入力する。tmux session を新規作成する場合は `container_workspace_dir` で開始する。
+- 既存 session に attach する場合は、session 内で最後にいたディレクトリを維持する。初回起動や devcontainer 再作成時は image build、Feature 導入、lifecycle command の実行に時間がかかることがある。
 
 helper の作成後は、4.11.2 の手順で terminal から tmux session に接続する。
 
@@ -646,6 +651,81 @@ VS Code から接続した場合は、Remote SSH で Mac に入り `Dev Containe
 ```bash
 tmux new-session -A -s specdojo
 ```
+
+### 4.12. tmux の利用ユースケース
+
+以下では「ローカル」を接続先の Home MacBook Pro を直接操作する状態、「リモート」を Tailscale 経由で別の端末から接続する状態として区別する。いずれの場合も作業対象の tmux は devcontainer 内の `specdojo` session とし、Host Mac 側の `host-mac` session と混同しない。
+
+tmux を detach するときは、session 内で `Ctrl-b`、続けて `d` を入力する。SSH や VS Code の terminal をそのまま閉じても session は残るが、長時間実行を意図して離席する前には明示的に detach する。複数の端末から同じ session に同時 attach することもできるが、同じ shell と pane を共有するため、通常は先の端末で detach してから引き継ぐ。
+
+#### 4.12.1. リモートから devcontainer 内 tmux に接続し、切断後に再接続する
+
+外出先などのリモート端末から長時間の build、test、`specdojo exec run` を開始し、ネットワーク切断や端末の移動後に同じ作業へ戻るケースである。
+
+1. 接続元端末を Tailscale に接続し、devcontainer 内 tmux 専用 alias で Home MacBook Pro へ入る。
+
+   ```bash
+   ssh home-mbp-tmux
+   ```
+
+   alias を設定していない場合は、同等の helper を明示して実行する。
+
+   ```bash
+   ssh -t home-mbp ~/bin/specdojo-tmux
+   ```
+
+2. 初回は helper が devcontainer を起動し、container 内で `tmux new-session -A -s specdojo` を実行する。既存 session がある場合はそのまま attach されるため、必要なコマンドを開始または状態を確認する。
+
+   ```bash
+   specdojo exec run --auto --loop --parallel 3
+   ```
+
+3. 離席前は `Ctrl-b`、`d` で detach してから SSH を終了する。通信が不意に切れた場合も tmux session とその中のプロセスは devcontainer 内に残る。
+4. 再接続後、同じ `ssh home-mbp-tmux` を実行する。helper が既存の `specdojo` session に attach するため、実行中の出力、終了結果、ログを確認できる。進行中だった対話型 agent 応答そのものが自動再開するわけではないため、必要に応じて各 CLI の resume 機能を使う。
+
+#### 4.12.2. ローカルで devcontainer の tmux に接続し、その後リモートから再接続する
+
+Home MacBook Pro の前で作業を開始し、外出後に別端末から同じ session を引き継ぐケースである。ローカルで VS Code を使う場合も、リポジトリを devcontainer として開き、Host Mac の terminal ではなく devcontainer terminal で tmux を起動する。
+
+1. Home MacBook Pro 上で VS Code から対象リポジトリを開き、`Dev Containers: Reopen in Container` を実行する。
+2. VS Code の devcontainer terminal で session を作成または attach する。
+
+   ```bash
+   tmux new-session -A -s specdojo
+   ```
+
+3. build、test、agent 実行などを開始する。リモートへ引き継ぐ前に `Ctrl-b`、`d` で session を detach する。devcontainer の再作成や Docker Desktop の再起動をしない限り、session は残る。
+4. リモート端末を Tailscale に接続し、`ssh home-mbp-tmux` を実行する。4.11.1 の helper が同じ devcontainer を見つけ、既存の `specdojo` session に attach する。
+5. リモート側で作業を終えたら、同様に detach する。Home MacBook Pro に戻った後は、devcontainer terminal で `tmux new-session -A -s specdojo` を実行すれば再び同じ session に戻れる。
+
+#### 4.12.3. リモートからローカルの tmux に接続し、その後 devcontainer 内 tmux に接続する
+
+Docker Desktop、Tailscale、Ollama など Host Mac 側の状態を調べてから、実際の SpecDojo 作業を devcontainer で行うケースである。この経路では Host Mac 側と devcontainer 側で別々の tmux session を使う。
+
+1. リモート端末から Host Mac 側の運用確認用 session へ接続する。
+
+   ```bash
+   ssh -t home-mbp
+   tmux new-session -A -s host-mac
+   ```
+
+2. `host-mac` session で Docker Desktop や Tailscale の状態を確認する。ここでは SpecDojo の編集・test・agent 実行は開始しない。
+
+   ```bash
+   docker info
+   tailscale status
+   ```
+
+3. Host Mac 側の確認が済んだら、`host-mac` session の shell から helper を直接実行する。
+
+   ```bash
+   ~/bin/specdojo-tmux
+   ```
+
+4. helper は devcontainer を起動済みならその container を使い、停止中なら起動してから `specdojo` session に attach する。以後の編集、test、`specdojo exec run` はこの devcontainer 内 session で行う。これは Host Mac 側の `host-mac` tmux の pane 内に devcontainer 側の `specdojo` tmux を attach する二段構成になる。
+5. devcontainer 側の作業を離れるときは、まず内側の `specdojo` session で `Ctrl-b`、`d` を入力して `host-mac` の shell へ戻る。続けて外側の `host-mac` session でも `Ctrl-b`、`d` を入力して detach し、SSH を終了する。SSH が不意に切れた場合も両方の session は残る。
+
+Host Mac 上の `host-mac` と devcontainer 内の `specdojo` は実行場所もファイルシステムも異なる。`host-mac` に attach したまま `tmux attach -t specdojo` を実行しても devcontainer 側の session には到達できないため、必ず `~/bin/specdojo-tmux` を経由する。
 
 ## 5. SpecDojo agent 実行
 

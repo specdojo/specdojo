@@ -171,7 +171,74 @@ rate_limit_policy:
 
 検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なる。子設計には provider 固有のシグナルと運用上の注意だけを記述する。
 
-## 7. worktree 分離
+## 7. 外部エージェント CLI の更新
+
+外部エージェント CLI はすべて devcontainer 内で使用する。Host Mac や接続元端末にはインストールせず、更新も devcontainer 内で行う。対象と導入方法は次のとおりである。
+
+| CLI                | devcontainer 内の導入方法                               | 実行中コンテナを最新化するコマンド                         |
+| ------------------ | -------------------------------------------------------- | ---------------------------------------------------------- |
+| Codex              | `.devcontainer/Dockerfile` の npm global install         | `sudo npm install -g @openai/codex@latest`                 |
+| OpenCode           | `.devcontainer/Dockerfile` の npm global install         | `sudo npm install -g opencode-ai@latest`                   |
+| Claude Code        | `claude-code` Dev Container Feature                      | `claude update`                                            |
+| GitHub Copilot CLI | `copilot-cli` Dev Container Feature                      | `copilot update`                                           |
+
+更新コマンドの詳細は、[Codex CLI](https://github.com/openai/codex#installing-and-running-codex-cli)、[OpenCode CLI](https://dev.opencode.ai/docs/cli/)、[Claude Code CLI reference](https://code.claude.com/docs/en/cli-usage)、[GitHub Copilot CLI command reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference) を参照する。
+
+更新前に、`specdojo exec run`、build、test、対話中の agent CLI が実行中でないことを確認する。更新済みバイナリは新たに開始する CLI プロセスから使用されるため、実行中の agent を更新して再開する運用は行わない。
+
+### 7.1. SSH 経由で実行中の devcontainer を更新する
+
+[自宅 MacBook Pro 開発サーバ技術スタック定義](../030-architecture/020-infrastructure/tsd-home-mac-dev-server.md) の `home-mbp-tmux` を設定済みであれば、接続元端末から次で devcontainer 内の `specdojo` tmux session に入る。
+
+```bash
+ssh home-mbp-tmux
+```
+
+tmux 内で、必要な CLI だけを更新する。Codex と OpenCode は Dockerfile で root により npm global install されるため、`node` ユーザーからは `sudo` を付ける。
+
+```bash
+# Codex / OpenCode
+sudo npm install -g @openai/codex@latest opencode-ai@latest
+
+# Claude Code / GitHub Copilot CLI
+claude update
+copilot update
+```
+
+更新後は、同じ devcontainer 内でバージョンを確認する。
+
+```bash
+codex --version
+opencode --version
+claude --version
+copilot version
+```
+
+`claude update`、`copilot update`、OpenCode の `opencode upgrade` は各 CLI の公式更新コマンドである。ただし本構成の Codex / OpenCode は npm で導入しているため、導入方法と一致する npm コマンドで更新する。認証、設定、会話履歴は named volume に置かれており、これらの更新コマンドで削除しない。
+
+### 7.2. コンテナ再作成後も維持する更新
+
+7.1 の更新は実行中のコンテナだけに反映される。`Dev Containers: Rebuild Container`、`devcontainer up --remove-existing-container`、Docker Desktop の再作成などでコンテナを作り直すと失われるため、通常は以下の手順で devcontainer image と Feature lockfile を更新する。
+
+接続元端末から Host Mac に SSH 接続し、Host Mac 側で実行する。
+
+```bash
+ssh -t home-mbp
+cd ~/workspaces/specdojo-workspace/specdojo
+
+# 現在の lockfile で更新可能な Feature を確認する。
+devcontainer outdated --workspace-folder .
+
+# Claude Code / GitHub Copilot CLI を導入する Feature の lockfile を更新する。
+devcontainer upgrade --workspace-folder .
+
+# Dockerfile の npm global install も再実行するため、キャッシュなしで作り直す。
+devcontainer up --workspace-folder . --remove-existing-container --build-no-cache
+```
+
+`devcontainer upgrade` は `.devcontainer/devcontainer-lock.json` を変更する。差分を確認し、通常のリポジトリ変更としてレビューしてコミットする。`--remove-existing-container` は devcontainer 内の tmux session を終了させるが、認証・設定を保持する named volume は削除しない。再構築完了後は 7.1 のバージョン確認を行い、`ssh home-mbp-tmux` で tmux session を作り直す。
+
+## 8. worktree 分離
 
 複数の edit agent を並列実行する場合は、タスクごとに worktree とブランチを作成して Git working tree の競合を防ぐ。review agent が成果物を変更しない場合、review task の worktree 分離は不要とする。
 
