@@ -5,15 +5,19 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-prj-overview-010",
+      "next_task_id": "T-LAUNCH-pm-organization-010",
       "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-010"
+        "T-LAUNCH-pm-organization-010",
+        "T-LAUNCH-prj-scope-010",
+        "T-LAUNCH-prj-stakeholder-register-010"
       ]
     },
     "fifo": {
-      "next_task_id": "T-LAUNCH-prj-overview-010",
+      "next_task_id": "T-LAUNCH-pm-organization-010",
       "ordered_task_ids": [
-        "T-LAUNCH-prj-overview-010"
+        "T-LAUNCH-pm-organization-010",
+        "T-LAUNCH-prj-scope-010",
+        "T-LAUNCH-prj-stakeholder-register-010"
       ]
     }
   }

@@ -1,7 +1,7 @@
 kind: milestones
 id: prj-0001:sch-milestones
 type: project
-status: draft
+status: ready
 version: 1
 project_id: prj-0001
 settings: {}
@@ -29,27 +29,25 @@ milestones:
     name: bootstrap-pass 完了
     artifact_name: 全ドメイン
     depends_on:
-      - T-LAUNCH-prj-overview-060
-      - T-LAUNCH-prj-scope-060
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060
-      - T-LAUNCH-prj-stakeholder-register-060
-      - T-LAUNCH-prj-charter-060
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-060
-      - T-LAUNCH-prj-issues-and-approach-060
-      - T-LAUNCH-prj-comparison-of-alternatives-060
-      - T-LAUNCH-pm-organization-060
-      - T-LAUNCH-pm-roles-060
-      - T-LAUNCH-pm-plan-060
-      - T-LAUNCH-pm-communication-plan-060
-      - T-LAUNCH-pm-quality-management-plan-060
-      - T-LAUNCH-pm-members-060
-      - T-LAUNCH-pm-raci-060
+      - T-LAUNCH-prj-scope-010
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
+      - T-LAUNCH-prj-stakeholder-register-010
+      - T-LAUNCH-prj-charter-010
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-010
+      - T-LAUNCH-prj-issues-and-approach-010
+      - T-LAUNCH-prj-comparison-of-alternatives-010
+      - T-LAUNCH-pm-organization-010
+      - T-LAUNCH-pm-roles-010
+      - T-LAUNCH-pm-plan-010
+      - T-LAUNCH-pm-communication-plan-010
+      - T-LAUNCH-pm-quality-management-plan-010
+      - T-LAUNCH-pm-members-010
+      - T-LAUNCH-pm-raci-010
     owner: PM
   - id: G-LAUNCH-refine-pass
     name: refine-pass 完了
     artifact_name: 全ドメイン
     depends_on:
-      - T-LAUNCH-prj-overview-080-I02
       - T-LAUNCH-prj-scope-080-I02
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02
       - T-LAUNCH-prj-stakeholder-register-080-I02

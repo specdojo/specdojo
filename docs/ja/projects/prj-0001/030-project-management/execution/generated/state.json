@@ -3,7 +3,7 @@
   "tasks": {
     "T-LAUNCH-sch-defaults-000": {
       "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
+      "last_ts": "2026-06-14T00:00:00Z",
       "last_by": "indie",
       "last_type": "complete",
       "last_msg": "初期投入時点で作成済み",
@@ -13,7 +13,17 @@
     },
     "T-LAUNCH-sch-strategy-launch-000": {
       "state": "done",
-      "last_ts": "2026-05-23T00:00:00Z",
+      "last_ts": "2026-06-14T00:00:00Z",
+      "last_by": "indie",
+      "last_type": "complete",
+      "last_msg": "初期投入時点で作成済み",
+      "meta": {
+        "initial_state": true
+      }
+    },
+    "T-LAUNCH-prj-overview-000": {
+      "state": "done",
+      "last_ts": "2026-06-14T00:00:00Z",
       "last_by": "indie",
       "last_type": "complete",
       "last_msg": "初期投入時点で作成済み",
@@ -33,70 +43,7 @@
     "G-LAUNCH-refine-pass": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-overview-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-060": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-070-I01": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-080-I01": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-070-I02": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-080-I02": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-090": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-100": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-110": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-120": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-130": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-overview-140": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-scope-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-scope-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-scope-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-scope-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-scope-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-scope-060": {
       "state": "todo"
     },
     "T-LAUNCH-prj-scope-070-I01": {
@@ -132,21 +79,6 @@
     "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I01": {
       "state": "todo"
     },
@@ -178,21 +110,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-stakeholder-register-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-stakeholder-register-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-stakeholder-register-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-stakeholder-register-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-stakeholder-register-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-stakeholder-register-060": {
       "state": "todo"
     },
     "T-LAUNCH-prj-stakeholder-register-070-I01": {
@@ -228,21 +145,6 @@
     "T-LAUNCH-prj-charter-010": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-charter-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-charter-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-charter-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-charter-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-charter-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-charter-070-I01": {
       "state": "todo"
     },
@@ -274,21 +176,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-060": {
       "state": "todo"
     },
     "T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01": {
@@ -324,21 +211,6 @@
     "T-LAUNCH-prj-issues-and-approach-010": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-issues-and-approach-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-issues-and-approach-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-issues-and-approach-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-issues-and-approach-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-issues-and-approach-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-issues-and-approach-070-I01": {
       "state": "todo"
     },
@@ -370,21 +242,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-comparison-of-alternatives-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-060": {
       "state": "todo"
     },
     "T-LAUNCH-prj-comparison-of-alternatives-070-I01": {
@@ -420,21 +277,6 @@
     "T-LAUNCH-pm-organization-010": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-organization-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-organization-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-organization-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-organization-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-organization-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-organization-070-I01": {
       "state": "todo"
     },
@@ -466,21 +308,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-roles-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-060": {
       "state": "todo"
     },
     "T-LAUNCH-pm-roles-070-I01": {
@@ -516,21 +343,6 @@
     "T-LAUNCH-pm-plan-010": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-plan-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-plan-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-plan-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-plan-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-plan-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-plan-070-I01": {
       "state": "todo"
     },
@@ -562,21 +374,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-communication-plan-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-060": {
       "state": "todo"
     },
     "T-LAUNCH-pm-communication-plan-070-I01": {
@@ -612,21 +409,6 @@
     "T-LAUNCH-pm-quality-management-plan-010": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-quality-management-plan-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-quality-management-plan-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-quality-management-plan-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-quality-management-plan-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-quality-management-plan-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-quality-management-plan-070-I01": {
       "state": "todo"
     },
@@ -660,21 +442,6 @@
     "T-LAUNCH-pm-members-010": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-members-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-members-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-members-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-members-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-members-060": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-members-070-I01": {
       "state": "todo"
     },
@@ -706,21 +473,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-raci-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-020": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-030": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-040": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-050": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-060": {
       "state": "todo"
     },
     "T-LAUNCH-pm-raci-070-I01": {

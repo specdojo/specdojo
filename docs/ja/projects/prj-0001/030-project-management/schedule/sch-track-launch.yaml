@@ -1,315 +1,38 @@
 kind: track
 id: prj-0001:sch-track-launch
 type: project
-status: draft
+status: ready
 version: 1
 project_id: prj-0001
 track: launch
 settings:
-  start_date: "2026-05-24"
+  start_date: "2026-06-15"
 tasks:
   - local_id: prj-overview
-    phase_suffix: "010"
-    phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_suffix: "000"
+    name: 完了済み
+    duration_days: 0.001
     depends_on: []
     owner: BA
-    description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-overview
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-overview-010
-    owner: BA
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-overview
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-020
-    owner: BA
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-overview
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-030
-    owner: BA
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-overview
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-040
-    owner: BA
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-overview
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-050
-    owner: BA
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
-  - local_id: prj-overview
-    phase_suffix: "070"
-    phase_set: refine-pass
-    phase_id: refine
-    iteration: 1
-    name: 磨き込み
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-060
-      - G-LAUNCH-bootstrap-pass
-    owner: BA
-    description: |
-      エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
-      既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
-      done_criteria を満たしているかを確認し、満たさない箇所を補う。
-  - local_id: prj-overview
-    phase_suffix: "080"
-    phase_set: refine-pass
-    phase_id: align
-    iteration: 1
-    name: 整合性確認・修正
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-070-I01
-    owner: BA
-    description: |
-      エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
-      矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
-      他成果物への修正提案が必要な場合は、該当成果物の担当ロールへ差し戻しを起票する。
-  - local_id: prj-overview
-    phase_suffix: "070"
-    phase_set: refine-pass
-    phase_id: refine
-    iteration: 2
-    name: 磨き込み
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-080-I01
-    owner: BA
-    description: |
-      エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
-      既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
-      done_criteria を満たしているかを確認し、満たさない箇所を補う。
-  - local_id: prj-overview
-    phase_suffix: "080"
-    phase_set: refine-pass
-    phase_id: align
-    iteration: 2
-    name: 整合性確認・修正
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-070-I02
-    owner: BA
-    description: |
-      エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
-      矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
-      他成果物への修正提案が必要な場合は、該当成果物の担当ロールへ差し戻しを起票する。
-  - local_id: prj-overview
-    phase_suffix: "090"
-    phase_set: review-pass
-    phase_id: review
-    name: 完成版レビュー
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-080-I02
-      - G-LAUNCH-refine-pass
-    owner: BA
-    description: |
-      レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
-      成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
-      差し戻しの場合は修正箇所と理由を明記する。
-  - local_id: prj-overview
-    phase_suffix: "100"
-    phase_set: review-pass
-    phase_id: recipe-consolidate
-    name: Recipe 最終調整
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-090
-    owner: BA
-    description: |
-      レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
-      完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-  - local_id: prj-overview
-    phase_suffix: "110"
-    phase_set: review-pass
-    phase_id: rulebook-consolidate
-    name: Rulebook 最終調整
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-100
-    owner: BA
-    description: |
-      レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
-      章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-  - local_id: prj-overview
-    phase_suffix: "120"
-    phase_set: review-pass
-    phase_id: sample-consolidate
-    name: Sample 最終調整
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-110
-    owner: BA
-    description: |
-      レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
-      粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-  - local_id: prj-overview
-    phase_suffix: "130"
-    phase_set: review-pass
-    phase_id: template-consolidate
-    name: Template 最終調整
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-overview-120
-    owner: BA
-    description: |
-      レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-  - local_id: prj-overview
-    phase_suffix: "140"
-    phase_set: review-pass
-    phase_id: finalize
-    name: 完成版確定
-    duration_days: 0.125
-    depends_on:
-      - T-LAUNCH-prj-overview-130
-    owner: BA
-    description: |
-      担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+    tags:
+      - initial-complete
   - local_id: prj-scope
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-overview-060
+      - T-LAUNCH-prj-overview-000
     owner: BA
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-scope
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-scope-010
-    owner: BA
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-scope
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-scope-020
-    owner: BA
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-scope
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-scope-030
-    owner: BA
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-scope
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-scope-040
-    owner: BA
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-scope
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-scope-050
-    owner: BA
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-scope
     phase_suffix: "070"
     phase_set: refine-pass
@@ -318,7 +41,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-scope-060
+      - T-LAUNCH-prj-scope-010
       - G-LAUNCH-bootstrap-pass
     owner: BA
     description: |
@@ -448,87 +171,20 @@ tasks:
   - local_id: prj-success-criteria-and-acceptance-criteria
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-scope-060
+      - T-LAUNCH-prj-scope-010
     owner: BA
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-success-criteria-and-acceptance-criteria
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
-    owner: BA
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-success-criteria-and-acceptance-criteria
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-020
-    owner: BA
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-success-criteria-and-acceptance-criteria
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-030
-    owner: BA
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-success-criteria-and-acceptance-criteria
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-040
-    owner: BA
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-success-criteria-and-acceptance-criteria
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-050
-    owner: BA
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-success-criteria-and-acceptance-criteria
     phase_suffix: "070"
     phase_set: refine-pass
@@ -537,7 +193,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-060
+      - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
       - G-LAUNCH-bootstrap-pass
     owner: BA
     description: |
@@ -667,87 +323,20 @@ tasks:
   - local_id: prj-stakeholder-register
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-overview-060
+      - T-LAUNCH-prj-overview-000
     owner: BA
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-stakeholder-register
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-stakeholder-register-010
-    owner: BA
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-stakeholder-register
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-stakeholder-register-020
-    owner: BA
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-stakeholder-register
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-stakeholder-register-030
-    owner: BA
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-stakeholder-register
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-stakeholder-register-040
-    owner: BA
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-stakeholder-register
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-stakeholder-register-050
-    owner: BA
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-stakeholder-register
     phase_suffix: "070"
     phase_set: refine-pass
@@ -756,7 +345,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-stakeholder-register-060
+      - T-LAUNCH-prj-stakeholder-register-010
       - G-LAUNCH-bootstrap-pass
     owner: BA
     description: |
@@ -886,88 +475,21 @@ tasks:
   - local_id: prj-charter
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-overview-060
-      - T-LAUNCH-prj-stakeholder-register-060
+      - T-LAUNCH-prj-overview-000
+      - T-LAUNCH-prj-stakeholder-register-010
     owner: PO
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-charter
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-charter-010
-    owner: PO
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-charter
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-charter-020
-    owner: PO
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-charter
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-charter-030
-    owner: PO
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-charter
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-charter-040
-    owner: PO
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-charter
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-charter-050
-    owner: PO
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-charter
     phase_suffix: "070"
     phase_set: refine-pass
@@ -976,7 +498,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-charter-060
+      - T-LAUNCH-prj-charter-010
       - G-LAUNCH-bootstrap-pass
     owner: PO
     description: |
@@ -1106,87 +628,20 @@ tasks:
   - local_id: prj-assumptions-constraints-dependencies
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-scope-060
+      - T-LAUNCH-prj-scope-010
     owner: ARC
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-assumptions-constraints-dependencies
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-010
-    owner: ARC
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-assumptions-constraints-dependencies
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-020
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-assumptions-constraints-dependencies
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-030
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-assumptions-constraints-dependencies
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-040
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-assumptions-constraints-dependencies
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-050
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-assumptions-constraints-dependencies
     phase_suffix: "070"
     phase_set: refine-pass
@@ -1195,7 +650,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-060
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-010
       - G-LAUNCH-bootstrap-pass
     owner: ARC
     description: |
@@ -1325,88 +780,21 @@ tasks:
   - local_id: prj-issues-and-approach
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-scope-060
-      - T-LAUNCH-prj-assumptions-constraints-dependencies-060
+      - T-LAUNCH-prj-scope-010
+      - T-LAUNCH-prj-assumptions-constraints-dependencies-010
     owner: BA
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-issues-and-approach
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-issues-and-approach-010
-    owner: BA
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-issues-and-approach
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-issues-and-approach-020
-    owner: BA
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-issues-and-approach
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-issues-and-approach-030
-    owner: BA
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-issues-and-approach
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-issues-and-approach-040
-    owner: BA
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-issues-and-approach
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-issues-and-approach-050
-    owner: BA
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-issues-and-approach
     phase_suffix: "070"
     phase_set: refine-pass
@@ -1415,7 +803,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-issues-and-approach-060
+      - T-LAUNCH-prj-issues-and-approach-010
       - G-LAUNCH-bootstrap-pass
     owner: BA
     description: |
@@ -1545,88 +933,21 @@ tasks:
   - local_id: prj-comparison-of-alternatives
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-scope-060
-      - T-LAUNCH-prj-issues-and-approach-060
+      - T-LAUNCH-prj-scope-010
+      - T-LAUNCH-prj-issues-and-approach-010
     owner: ARC
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: prj-comparison-of-alternatives
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-010
-    owner: ARC
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: prj-comparison-of-alternatives
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-020
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: prj-comparison-of-alternatives
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-030
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: prj-comparison-of-alternatives
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-040
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: prj-comparison-of-alternatives
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-050
-    owner: ARC
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: prj-comparison-of-alternatives
     phase_suffix: "070"
     phase_set: refine-pass
@@ -1635,7 +956,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-prj-comparison-of-alternatives-060
+      - T-LAUNCH-prj-comparison-of-alternatives-010
       - G-LAUNCH-bootstrap-pass
     owner: ARC
     description: |
@@ -1765,87 +1086,20 @@ tasks:
   - local_id: pm-organization
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-prj-overview-060
+      - T-LAUNCH-prj-overview-000
     owner: PO
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-organization
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-organization-010
-    owner: PO
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-organization
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-organization-020
-    owner: PO
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-organization
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-organization-030
-    owner: PO
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-organization
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-organization-040
-    owner: PO
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-organization
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-organization-050
-    owner: PO
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-organization
     phase_suffix: "070"
     phase_set: refine-pass
@@ -1854,7 +1108,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-organization-060
+      - T-LAUNCH-pm-organization-010
       - G-LAUNCH-bootstrap-pass
     owner: PO
     description: |
@@ -1984,87 +1238,20 @@ tasks:
   - local_id: pm-roles
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-organization-060
+      - T-LAUNCH-pm-organization-010
     owner: PO
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-roles
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-roles-010
-    owner: PO
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-roles
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-roles-020
-    owner: PO
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-roles
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-roles-030
-    owner: PO
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-roles
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-roles-040
-    owner: PO
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-roles
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-roles-050
-    owner: PO
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-roles
     phase_suffix: "070"
     phase_set: refine-pass
@@ -2073,7 +1260,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-roles-060
+      - T-LAUNCH-pm-roles-010
       - G-LAUNCH-bootstrap-pass
     owner: PO
     description: |
@@ -2203,88 +1390,21 @@ tasks:
   - local_id: pm-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-organization-060
-      - T-LAUNCH-pm-roles-060
+      - T-LAUNCH-pm-organization-010
+      - T-LAUNCH-pm-roles-010
     owner: PM
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-plan
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-plan-010
-    owner: PM
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-plan
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-plan-020
-    owner: PM
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-plan
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-plan-030
-    owner: PM
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-plan
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-plan-040
-    owner: PM
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-plan
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-plan-050
-    owner: PM
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-plan
     phase_suffix: "070"
     phase_set: refine-pass
@@ -2293,7 +1413,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-plan-060
+      - T-LAUNCH-pm-plan-010
       - G-LAUNCH-bootstrap-pass
     owner: PM
     description: |
@@ -2423,87 +1543,20 @@ tasks:
   - local_id: pm-communication-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-plan-060
+      - T-LAUNCH-pm-plan-010
     owner: PM
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-communication-plan
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-010
-    owner: PM
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-communication-plan
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-020
-    owner: PM
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-communication-plan
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-030
-    owner: PM
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-communication-plan
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-040
-    owner: PM
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-communication-plan
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-communication-plan-050
-    owner: PM
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-communication-plan
     phase_suffix: "070"
     phase_set: refine-pass
@@ -2512,7 +1565,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-communication-plan-060
+      - T-LAUNCH-pm-communication-plan-010
       - G-LAUNCH-bootstrap-pass
     owner: PM
     description: |
@@ -2642,87 +1695,20 @@ tasks:
   - local_id: pm-quality-management-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-plan-060
+      - T-LAUNCH-pm-plan-010
     owner: PM
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-quality-management-plan
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-quality-management-plan-010
-    owner: PM
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-quality-management-plan
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-quality-management-plan-020
-    owner: PM
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-quality-management-plan
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-quality-management-plan-030
-    owner: PM
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-quality-management-plan
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-quality-management-plan-040
-    owner: PM
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-quality-management-plan
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-quality-management-plan-050
-    owner: PM
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-quality-management-plan
     phase_suffix: "070"
     phase_set: refine-pass
@@ -2731,7 +1717,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-quality-management-plan-060
+      - T-LAUNCH-pm-quality-management-plan-010
       - G-LAUNCH-bootstrap-pass
     owner: PM
     description: |
@@ -2861,88 +1847,21 @@ tasks:
   - local_id: pm-members
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-organization-060
-      - T-LAUNCH-pm-roles-060
+      - T-LAUNCH-pm-organization-010
+      - T-LAUNCH-pm-roles-010
     owner: PO
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-members
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-members-010
-    owner: PO
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-members
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-members-020
-    owner: PO
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-members
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-members-030
-    owner: PO
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-members
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-members-040
-    owner: PO
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-members
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-members-050
-    owner: PO
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-members
     phase_suffix: "070"
     phase_set: refine-pass
@@ -2951,7 +1870,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-members-060
+      - T-LAUNCH-pm-members-010
       - G-LAUNCH-bootstrap-pass
     owner: PO
     description: |
@@ -3081,87 +2000,20 @@ tasks:
   - local_id: pm-raci
     phase_suffix: "010"
     phase_set: bootstrap-pass
-    phase_id: draft
-    name: たたき台作成
-    duration_days: 0.25
+    phase_id: bootstrap
+    name: 一括整備（成果物＋参考資料）
+    duration_days: 1
     depends_on:
-      - T-LAUNCH-pm-organization-060
+      - T-LAUNCH-pm-organization-010
     owner: PM
     description: |
-      エージェントが成果物の初版を作成する。
-      章構成・記載項目を決め、現時点で把握している情報を埋める。
-      調査・確認が必要な箇所は TODO として明示したまま残す。
-      freeform で自由に作成してよいのはこのたたき台フェーズだけで、以降は既存記述を尊重する。
-  - local_id: pm-raci
-    phase_suffix: "020"
-    phase_set: bootstrap-pass
-    phase_id: enrich
-    name: 調査・補強
-    duration_days: 0.5
-    depends_on:
-      - T-LAUNCH-pm-raci-010
-    owner: PM
-    description: |
-      エージェントが外部情報・関連ドキュメントを調査し、たたき台の TODO を埋めて内容を補強する。
-      既存記述との矛盾・抜け漏れも確認し、修正・追記する。
-      調査結果は出典・根拠とともに記載する。
-      この時点では参考資料が未整備のため freeform で進める。
-  - local_id: pm-raci
-    phase_suffix: "030"
-    phase_set: bootstrap-pass
-    phase_id: recipe-bootstrap
-    name: Recipe 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-raci-020
-    owner: PM
-    description: |
-      補強後の成果物を根拠に recipe を新規作成する（既存があれば見直す）。
-      問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-      成果物固有の事情は一般化し、recipe に持ち込まない。
-      ここで作成した recipe は refine-pass では凍結し、編集しない。
-  - local_id: pm-raci
-    phase_suffix: "040"
-    phase_set: bootstrap-pass
-    phase_id: rulebook-bootstrap
-    name: Rulebook 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-raci-030
-    owner: PM
-    description: |
-      補強後の成果物を根拠に rulebook を新規作成する（既存があれば見直す）。
-      章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
-      成果物固有の事情は一般化し、rulebook に持ち込まない。
-      ここで作成した rulebook は refine-pass では凍結し、編集しない。
-  - local_id: pm-raci
-    phase_suffix: "050"
-    phase_set: bootstrap-pass
-    phase_id: sample-bootstrap
-    name: Sample 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-raci-040
-    owner: PM
-    description: |
-      補強後の成果物を根拠に sample を新規作成する（既存があれば見直す）。
-      粒度・文体・表の書き方と、完成例としての妥当性を整える。
-      プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
-      ここで作成した sample は refine-pass では凍結し、編集しない。
-  - local_id: pm-raci
-    phase_suffix: "060"
-    phase_set: bootstrap-pass
-    phase_id: template-bootstrap
-    name: Template 新規作成
-    duration_days: 0.25
-    depends_on:
-      - T-LAUNCH-pm-raci-050
-    owner: PM
-    description: |
-      補強後の成果物を根拠に template を新規作成する（既存があれば見直す）。
-      章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を整える。
-      成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
-      ここで作成した template は refine-pass では凍結し、編集しない。
+      エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
+      一貫した一組として作成・整備する。
+      既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+      必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。
+      成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。
+      構造・必須項目・禁止事項は rulebook を正とする。
+      ここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。
   - local_id: pm-raci
     phase_suffix: "070"
     phase_set: refine-pass
@@ -3170,7 +2022,7 @@ tasks:
     name: 磨き込み
     duration_days: 0.25
     depends_on:
-      - T-LAUNCH-pm-raci-060
+      - T-LAUNCH-pm-raci-010
       - G-LAUNCH-bootstrap-pass
     owner: PM
     description: |
