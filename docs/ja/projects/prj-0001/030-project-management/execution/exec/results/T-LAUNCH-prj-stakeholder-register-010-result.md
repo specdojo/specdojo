@@ -3,14 +3,14 @@ id: prj-0001:xer-t-launch-prj-stakeholder-register-010
 type: exec-result
 task_id: T-LAUNCH-prj-stakeholder-register-010
 mode: edit
-status: in_progress
+status: blocked
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-stakeholder-register-010-plan.md
 started_at: "2026-06-23T15:33:00.389Z"
+completed_at: "2026-06-23T15:42:15.947Z"
 agent: codex-expert-edit-agent
 approach: bootstrap
 ---
-
 ## 1. 実施内容
 
 _TODO_: 実施した内容の要約を記入する。

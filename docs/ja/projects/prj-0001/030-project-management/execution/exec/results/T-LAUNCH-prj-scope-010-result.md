@@ -3,14 +3,14 @@ id: prj-0001:xer-t-launch-prj-scope-010
 type: exec-result
 task_id: T-LAUNCH-prj-scope-010
 mode: edit
-status: in_progress
+status: blocked
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-scope-010-plan.md
 started_at: "2026-06-23T15:24:31.029Z"
+completed_at: "2026-06-23T15:33:00.086Z"
 agent: codex-expert-edit-agent
 approach: bootstrap
 ---
-
 ## 1. 実施内容
 
 _TODO_: 実施した内容の要約を記入する。
