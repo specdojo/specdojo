@@ -591,13 +591,14 @@ export function registerExecCommands(program: Command): void {
       const projectId = resolveProjectId(opts)
       const outOverride = typeof opts.out === 'string' && opts.out.trim() ? opts.out.trim() : undefined
 
-      // Filename specified (--out) → overwrite that file, deriving the stem from its name.
-      // Not specified → new unique stem per generation, so each plan/result is distinct and the
-      // result name is derivable from the plan (see exec run --plan).
+      // Stem priority: --out → derive from the given filename (overwrite it); else --task → the
+      // fixed task id, so the plan/result share one canonical name with claim / run --track-state
+      // and an in-place run can be adopted without renaming; else --deliverable → a new unique stem
+      // per generation (no task identity; avoids doc-index id collisions).
       let outPath: string
       if (hasTask) {
         const task = buildTaskView(schedulePath, executionPath, (opts.task as string).trim())
-        const stem = outOverride ? stemFromPlanPath(outOverride) : buildInPlaceStem((opts.task as string).trim())
+        const stem = outOverride ? stemFromPlanPath(outOverride) : (opts.task as string).trim()
         outPath = generateSinglePlan({
           executionPath,
           projectId,

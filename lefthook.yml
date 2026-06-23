@@ -3,11 +3,9 @@ pre-commit:
   piped: false
   parallel: true
   commands:
-    docs-build:
-      glob: "docs/**"
-      run: npx tsx tools/docs/src/lefthook-docs-build.ts
-      stage_fixed: true
-
+    # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
+    # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
+    # フルビルドの検証は CI 側で実行する想定。
     format-markdown:
       glob: "*.md"
       run: npx markdownlint --fix {staged_files}

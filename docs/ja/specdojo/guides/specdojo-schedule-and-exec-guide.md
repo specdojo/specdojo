@@ -809,9 +809,9 @@ specdojo exec build --project <project-id>
 | 9.8.5 plan 先生成→実行 | `exec plan` → `exec run --plan`      | exec plan で生成 | scaffold しない | —                         |
 | 9.8.6 plan を手動確認して完了 | `claim` → `plan` → `run --plan` → `complete` | 固定名で生成・保持 | claim で scaffold | 任意 |
 
-- plan は `exec/plans/<slug>-plan.md` に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
+- plan は `--task` 実行なら `exec/plans/<task-id>-plan.md`、`--deliverable` / ad-hoc ならユニーク名に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
 - `--archive-on-success`（done 保存）はカレント実行（in-place）でのみ有効。`--worktree` / `--auto` では plan は `exec/plans/` に残る。
-- result（`exec/results/<task-id>-result.md`）は、`--task` / `--deliverable` を対象とする `exec run` であれば記録の有無にかかわらず scaffold され、実行後に終了コードへ応じて `status` を complete / blocked に更新する。これは plan のオンデマンド生成と対になる挙動で、エージェントは常に frontmatter（`mode` を含む）が整った result を埋めるだけでよい。既存ファイルがある場合は上書きしない。task identity を持たない持ち込み `--plan` 実行（9.8.5）だけは scaffold しない。claim も従来どおり result を scaffold する（冪等）。
+- result（`exec/results/<task-id>-result.md`）は、`--task` / `--deliverable` を対象とする `exec run` であれば記録の有無にかかわらず scaffold され、実行後に終了コードへ応じて `status` を complete / blocked に更新する。これは plan のオンデマンド生成と対になる挙動で、エージェントは常に frontmatter（`mode` を含む）が整った result を埋めるだけでよい。既存ファイルがある場合は上書きしない。`task_id` frontmatter を持たない持ち込み `--plan` 実行だけは scaffold しない（task identity を持つ plan なら `--plan` でも scaffold する）。claim も従来どおり result を scaffold する（冪等）。
 
 #### 9.8.1. 1 task をカレントリポジトリで実行（記録なし）
 
@@ -884,10 +884,10 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 #### 9.8.5. plan を作ってから手動で実行
 
-plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。`--out` 未指定なら毎回ユニーク名（`<slug>-<UTC>-<rand>-plan.md`）で生成され、`exec run --plan` がそのファイル名から result 名を導出する。同じ plan ファイルを再実行すると、対応する result を上書きする（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
+plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。`--task <task-id>` 指定時は固定名 `<task-id>-plan.md` を生成し、task identity の無い `--deliverable` / ad-hoc ではユニーク名（`<slug>-<UTC>-<rand>-plan.md`）になる。`exec run --plan` はそのファイル名から result 名を導出するため、同じ plan ファイルを再実行すると対応する result を上書きする（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
 ```sh
-# タスクの plan を生成（毎回ユニーク名。--out でファイル名を固定して上書きも可能）
+# タスクの plan を生成（--task は固定名 <task-id>-plan.md。--out で別名も可）
 specdojo exec plan --project <project-id> --task <task-id>
 
 # 内容を確認・編集後、その plan で実行する（plan は再生成しない。result は plan 名から導出）
@@ -927,15 +927,14 @@ specdojo exec claim \
   --msg "manual plan review and execution"
 ```
 
-同じ task ID の固定名 plan を作成する。固定名にすることで、手動実行時の result も claim 時に作成した `<task-id>-result.md` に対応する。
+plan を作成する。`exec plan --task` は固定名 `<task-id>-plan.md` を生成するため、`exec run --plan` がそこから導出する result も claim 時に作成した `<task-id>-result.md` に一致し、`--out` でファイル名を揃える必要はない。
 
 ```sh
 specdojo exec plan \
   --project <project-id> \
-  --task <task-id> \
-  --out <execution-path>/exec/plans/<task-id>-plan.md
+  --task <task-id>
 
-# plan の対象・完了条件・手順を確認し、必要なら編集する
+# 既定の生成先。plan の対象・完了条件・手順を確認し、必要なら編集する
 <editor> <execution-path>/exec/plans/<task-id>-plan.md
 ```
 
@@ -977,7 +976,7 @@ specdojo exec build --project <project-id>
 
 ### 9.9. 完了済みタスクを再実行する
 
-完了済み（`done`）タスクをやり直したいときは、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でそのままやり直す。専用コマンドは不要で、`exec run` が plan を再生成してから実行する。軽量 in-place ではやり直しのたびにユニーク名の plan・result が新規に作られ、過去の result が証跡として残る（同じ result を上書きしたい場合は `exec run --plan <plan-path>` でファイルを指定する）。plan・result は git 管理対象で、不要な plan は `exec/plans/done/` へアーカイブしてよい（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
+完了済み（`done`）タスクをやり直したいときは、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でそのままやり直す。専用コマンドは不要で、`exec run` が plan を再生成してから実行する。`--task` 指定では固定名 `<task-id>-plan.md` / `<task-id>-result.md` を上書きし、過去内容は git 履歴に残る（完了の事実は claim/complete イベントが担う）。plan・result は git 管理対象で、不要な plan は `exec/plans/done/` へアーカイブしてよい（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
 ```sh
 # plan を再生成してカレントで再実行する（状態は変更しない）

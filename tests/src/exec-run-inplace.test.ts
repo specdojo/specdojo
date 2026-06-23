@@ -144,12 +144,13 @@ describe('exec run (in-place, default)', () => {
       expect(received).toContain('# Edit Plan: T-TEST-doc-010')
       expect(received).toContain('Content is complete')
 
-      // Default lightweight in-place run keeps a unique-named plan (no worktree, no events).
+      // --task is task identity, so the plan uses the fixed `<task-id>` name (shared with the
+      // claim / run --track-state path), even without worktree or events.
       const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
         f.endsWith('-plan.md')
       )
       expect(planFiles).toHaveLength(1)
-      expect(planFiles[0]).toMatch(/^T-TEST-doc-010-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+      expect(planFiles[0]).toBe('T-TEST-doc-010-plan.md')
       expect(readdirSync(join(executionPath, 'exec', 'events'))).toHaveLength(0)
       expect(process.exitCode).toBeUndefined()
 
@@ -159,7 +160,7 @@ describe('exec run (in-place, default)', () => {
         f.endsWith('-result.md')
       )
       expect(resultFiles).toHaveLength(1)
-      expect(resultFiles[0]).toMatch(/^T-TEST-doc-010-\d{8}T\d{6}Z-[0-9a-f]{4}-result\.md$/)
+      expect(resultFiles[0]).toBe('T-TEST-doc-010-result.md')
       // Plan and result share one stem (1:1 linkage).
       expect(resultFiles[0].replace(/-result\.md$/, '')).toBe(planFiles[0].replace(/-plan\.md$/, ''))
       const result = readFileSync(join(executionPath, 'exec', 'results', resultFiles[0]), 'utf8')
@@ -373,6 +374,47 @@ describe('exec run (in-place, default)', () => {
       await runExec(['run', '--project', 'test', '--deliverable', 'doc', '--worktree'])
 
       expect(process.exitCode).toBe(1)
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('exec plan (command naming)', () => {
+  it('generates a fixed `<task-id>-plan.md` for --task (no --out)', async () => {
+    const { repo, executionPath } = setupRepository()
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec(['plan', '--project', 'test', '--task', 'T-TEST-doc-010'])
+
+      // task identity → the fixed name shared with claim / run --track-state, so a later
+      // claim/complete adopts this plan/result without renaming.
+      const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      expect(planFiles).toEqual(['T-TEST-doc-010-plan.md'])
+      expect(process.exitCode).toBe(0)
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(repo, { recursive: true, force: true })
+    }
+  })
+
+  it('generates a unique-named plan for --deliverable (no task identity)', async () => {
+    const { repo, executionPath } = setupRepository()
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+    try {
+      process.chdir(repo)
+      await runExec(['plan', '--project', 'test', '--deliverable', 'doc'])
+
+      const planFiles = readdirSync(join(executionPath, 'exec', 'plans')).filter(f =>
+        f.endsWith('-plan.md')
+      )
+      expect(planFiles).toHaveLength(1)
+      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/)
+      expect(process.exitCode).toBe(0)
     } finally {
       process.chdir(originalCwd)
       rmSync(repo, { recursive: true, force: true })

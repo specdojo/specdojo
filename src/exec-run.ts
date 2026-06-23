@@ -1157,17 +1157,19 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const projectId = opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
   const roster = loadRosterForExecutionPath(executionPath)
 
-  // --track-state participates in the claim/complete event model, which keys on the fixed
-  // `<task-id>` name; keep fixed naming there. Lightweight in-place runs use a unique stem so
-  // each run keeps a distinct plan/result (audit trail) without doc-index id collisions.
+  // --track-state controls whether this run records claim/complete events; it no longer affects
+  // file naming. Task-identity runs (--task) always use the fixed `<task-id>` stem (shared with
+  // claim / run --track-state), so an in-place result can be adopted by claim/complete without
+  // renaming; re-runs overwrite the same plan/result and git history is the audit trail. Only
+  // --deliverable / ad-hoc runs (no task identity) use a unique stem to avoid id collisions.
   const trackState = !!opts.trackState
 
   const plansDir = join(executionPath, 'exec', 'plans')
   let planPath: string
   let slug: string | undefined
-  // Shared plan/result stem. For generated lightweight in-place plans it is unique per run
-  // (`<slug>-<UTC>-<rand>`); for bring-your-own --plan it is recovered from the plan filename so
-  // re-running the same plan overwrites the tied result; for --track-state it stays the task id.
+  // Shared plan/result stem. For --task it is the fixed task id; for bring-your-own --plan it is
+  // recovered from the plan filename so re-running the same plan overwrites the tied result; for
+  // --deliverable it is unique per run (`<slug>-<UTC>-<rand>`).
   let stem: string | undefined
   let task: ReadyTaskView | null = null
   // null target = bring-your-own --plan (not generated, not archived).
@@ -1202,7 +1204,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     const taskId = opts.task.trim()
     task = buildTaskView(schedulePath, executionPath, taskId)
     slug = taskId
-    stem = trackState ? taskId : buildInPlaceStem(taskId)
+    stem = taskId
     planPath = join(plansDir, `${stem}-plan.md`)
   } else {
     target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
