@@ -5,6 +5,9 @@ CLAUDE_JSON="/home/node/.claude.json"
 CLAUDE_STATE_JSON="/home/node/.claude-state/.claude.json"
 GIT_CONFIG_DIR="/home/node/.config/git"
 GIT_CONFIG_FILE="${GIT_CONFIG_GLOBAL:-/home/node/.config/git/config}"
+WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+TMUX_CONF_SOURCE="${WORKSPACE_DIR}/.devcontainer/tmux.conf"
+TMUX_CONF_TARGET="${HOME}/.tmux.conf"
 
 sudo mkdir -p \
   /home/node/.config \
@@ -50,6 +53,10 @@ fi
 
 ln -sfn "$CLAUDE_STATE_JSON" "$CLAUDE_JSON"
 
+if [ -f "$TMUX_CONF_SOURCE" ]; then
+  ln -sfn "$TMUX_CONF_SOURCE" "$TMUX_CONF_TARGET"
+fi
+
 echo "Checking tools..."
 command -v claude >/dev/null 2>&1 && claude --version || true
 command -v codex >/dev/null 2>&1 && codex --version || true
@@ -63,7 +70,6 @@ ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 
 echo "Installing SpecDojo VSCode extension..."
-WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 VSIX=$(ls -t "${WORKSPACE_DIR}/tools/vscode-specdojo/"*.vsix 2>/dev/null | head -n 1)
 if [ -n "$VSIX" ]; then
   code --install-extension "$VSIX" --force || true

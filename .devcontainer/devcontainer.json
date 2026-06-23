@@ -9,6 +9,16 @@
   "workspaceFolder": "/workspaces/specdojo-workspace/specdojo",
   "shutdownAction": "none",
 
+  // docs:build（vitepress build）の rendering pages が 8GB ではメモリ不足で
+  // OOM (exit 137) になるため、必要メモリを宣言する。
+  // Codespaces ではマシンサイズ選択に反映され、ローカル Docker Desktop では
+  // 未達時に警告が出る（実際の割り当ては Docker Desktop の Resources 設定で行う）。
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "12gb",
+    "storage": "32gb"
+  },
+
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
