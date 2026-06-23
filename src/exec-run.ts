@@ -91,7 +91,7 @@ export type TaskPhaseContext = {
   phaseId: string
 }
 
-type RunOpts = {
+export type RunOpts = {
   project?: string
   by?: string
   strategy?: string
@@ -1082,32 +1082,35 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   if (result === 'failure') process.exitCode = 1
 }
 
-// Resolve the agent command for an in-place run, ignoring task state. Unlike the
-// worktree flow, this never requires the task to be claimable.
-function resolveInPlaceCommand(
+// Resolve the agent command and the actor for an in-place run, ignoring task state. Unlike the
+// worktree flow, this never requires the task to be claimable. The actor is derived the same way
+// as the worktree path (`prepareTask`): explicit --by wins, otherwise the resolved member's
+// nickname, falling back to the `auto-agent` placeholder for raw command strings. This lets
+// --track-state record events without forcing --by.
+export function resolveInPlaceCommand(
   task: ReadyTaskView | null,
   roster: MemberRoster | null,
   opts: RunOpts
-): string {
+): { command: string; actor: string } {
+  const by = opts.by?.trim()
   const override = (opts.agentCmd ?? opts.cmd)?.trim()
   if (override) {
     const member = roster?.members.find(
       m => m.type === 'agent' && m.command && m.nickname === override
     )
-    return member?.command ?? override
+    return { command: member?.command ?? override, actor: by || member?.nickname || 'auto-agent' }
   }
 
   if (task && (task.execution ?? 'agent') === 'human') {
     throw new Error(`Task requires human execution. Use --cmd to override: ${task.id}`)
   }
 
-  const by = opts.by?.trim()
   if (by) {
     const member = roster?.members.find(
       m => m.nickname === by && m.type === 'agent' && m.command
     )
     if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`)
-    return member.command
+    return { command: member.command, actor: by }
   }
 
   const candidates = selectCandidates(
@@ -1115,9 +1118,9 @@ function resolveInPlaceCommand(
     roster,
     task?.mode ?? 'edit'
   )
-  const command = candidates[0]?.command
-  if (!command) throw new Error('No agent found. Specify --cmd <command>.')
-  return command
+  const candidate = candidates[0]
+  if (!candidate?.command) throw new Error('No agent found. Specify --cmd <command>.')
+  return { command: candidate.command, actor: candidate.nickname }
 }
 
 async function spawnAgentInPlace(
@@ -1216,7 +1219,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     }
   }
 
-  const command = resolveInPlaceCommand(task, roster, opts)
+  const { command, actor } = resolveInPlaceCommand(task, roster, opts)
   const label = slug ?? planPath
 
   if (opts.dryRun) {
@@ -1253,10 +1256,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   const prompt = expandPromptRefs(readFileSync(planPath, 'utf8'))
 
-  const actor = opts.by?.trim() ?? ''
   if (trackState) {
     if (!opts.task) throw new Error('--track-state requires --task.')
-    if (!actor) throw new Error('--track-state requires --by <actor>.')
     if (!spawnClaim(projectId, opts.task.trim(), actor)) {
       throw new Error(`Claim failed for ${opts.task.trim()} (omit --track-state to run without state).`)
     }
@@ -1345,7 +1346,11 @@ export function registerRunCommand(exec: Command): void {
     'Isolate execution in a git worktree and integrate back (requires --task)',
     false
   )
-  rcmd.option('--track-state', 'Record claim/complete events (requires --task and --by)', false)
+  rcmd.option(
+    '--track-state',
+    'Record claim/complete events (requires --task; --by optional, actor auto-derived from the resolved agent)',
+    false
+  )
   rcmd.option(
     '--archive-on-success',
     'Archive the generated plan to exec/plans/done/ after a successful in-place run',
