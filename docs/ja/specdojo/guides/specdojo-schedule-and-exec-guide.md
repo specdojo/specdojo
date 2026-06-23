@@ -794,26 +794,26 @@ specdojo exec build --project <project-id>
 
 完了したタスクの後続タスクが新たに Ready になり、`ready.json`、`claim-next.json`、`ready.md` が更新される。
 
-### 9.8. ユースケース別 実行例
+## 10. ユースケース別 実行例
 
 `exec plan` / `exec run` の代表的なユースケースとコマンド例を示す。隔離（worktree の有無）と状態追跡（claim/complete の記録）の組み合わせで選ぶ。どのコマンドも `--dry-run` を付けると、解決されたエージェントコマンドや対象を表示して実行しない。
 
 各ユースケースで plan / result が作成されるか、成功後に plan が `exec/plans/done/` へアーカイブされるかは次のとおり。
 
-| ユースケース           | 代表コマンド                         | plan       | result            | done 保存                 |
-| ---------------------- | ------------------------------------ | ---------- | ----------------- | ------------------------- |
-| 9.8.1 カレント・記録なし | `exec run --task`                    | 生成・保持 | scaffold + 完了更新 | △ `--archive-on-success`  |
-| 9.8.2 カレント・記録あり | `exec run --task --by --track-state` | 生成・保持 | scaffold + 完了更新 | △ `--archive-on-success`  |
-| 9.8.3 worktree         | `exec run --task --worktree`         | 生成・保持 | scaffold + 完了更新 | —                         |
-| 9.8.4 auto（順次）     | `exec run --auto`                    | 生成・保持 | scaffold + 完了更新 | —                         |
-| 9.8.5 plan 先生成→実行 | `exec plan` → `exec run --plan`      | exec plan で生成 | scaffold しない | —                         |
-| 9.8.6 plan を手動確認して完了 | `claim` → `plan` → `run --plan` → `complete` | 固定名で生成・保持 | claim で scaffold | 任意 |
+| ユースケース                 | 代表コマンド                                 | plan               | result              | done 保存                |
+| ---------------------------- | -------------------------------------------- | ------------------ | ------------------- | ------------------------ |
+| 10.1 カレント・記録なし      | `exec run --task`                            | 生成・保持         | scaffold + 完了更新 | △ `--archive-on-success` |
+| 10.2 カレント・記録あり      | `exec run --task --by --track-state`         | 生成・保持         | scaffold + 完了更新 | △ `--archive-on-success` |
+| 10.3 worktree                | `exec run --task --worktree`                 | 生成・保持         | scaffold + 完了更新 | —                        |
+| 10.4 auto（順次）            | `exec run --auto`                            | 生成・保持         | scaffold + 完了更新 | —                        |
+| 10.5 plan 先生成→実行        | `exec plan` → `exec run --plan`              | exec plan で生成   | scaffold しない     | —                        |
+| 10.6 plan を手動確認して完了 | `claim` → `plan` → `run --plan` → `complete` | 固定名で生成・保持 | claim で scaffold   | 任意                     |
 
 - plan は `--task` 実行なら `exec/plans/<task-id>-plan.md`、`--deliverable` / ad-hoc ならユニーク名に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
 - `--archive-on-success`（done 保存）はカレント実行（in-place）でのみ有効。`--worktree` / `--auto` では plan は `exec/plans/` に残る。
 - result（`exec/results/<task-id>-result.md`）は、`--task` / `--deliverable` を対象とする `exec run` であれば記録の有無にかかわらず scaffold され、実行後に終了コードへ応じて `status` を complete / blocked に更新する。これは plan のオンデマンド生成と対になる挙動で、エージェントは常に frontmatter（`mode` を含む）が整った result を埋めるだけでよい。既存ファイルがある場合は上書きしない。`task_id` frontmatter を持たない持ち込み `--plan` 実行だけは scaffold しない（task identity を持つ plan なら `--plan` でも scaffold する）。claim も従来どおり result を scaffold する（冪等）。
 
-#### 9.8.1. 1 task をカレントリポジトリで実行（記録なし）
+### 10.1. 1 task をカレントリポジトリで実行（記録なし）
 
 plan を自動生成し、エージェントをカレントリポジトリで1回実行する。worktree もイベント（claim/complete）も作らない。変更は作業ツリーに残るので、確認とコミットは手動で行う。タスクの状態（todo/doing/done）は問わないため、`done` のやり直しもこれでよい。
 
@@ -836,7 +836,7 @@ specdojo exec complete --project <project-id> --task <task-id> --by <actor> --ms
 specdojo exec archive --project <project-id> --task <task-id>
 ```
 
-#### 9.8.2. 1 task をカレントリポジトリで実行（状態追跡あり）
+### 10.2. 1 task をカレントリポジトリで実行（状態追跡あり）
 
 カレントで実行しつつ、スケジュール進捗へ反映するため claim/complete を記録する。`--track-state` は `--task` を要求し、実行前に claim、終了コードに応じて complete / block を記録する。worktree は作らない。
 
@@ -844,7 +844,7 @@ specdojo exec archive --project <project-id> --task <task-id>
 specdojo exec run --project <project-id> --task <task-id> --by <actor> --track-state
 ```
 
-`--by` は省略でき、その場合は worktree 実行（9.8.3）や auto 実行（9.8.4）と同様に、解決したエージェントの nickname が actor として自動導出される（`--cmd` で nickname を指定すればその nickname、capabilities から自動選択した場合は候補先頭の nickname）。actor を明示的に記録したい場合や、`--cmd` に生のコマンド文字列を渡す場合（actor は `auto-agent` になる）は `--by <actor>` を指定する。
+`--by` は省略でき、その場合は worktree 実行（10.3）や auto 実行（10.4）と同様に、解決したエージェントの nickname が actor として自動導出される（`--cmd` で nickname を指定すればその nickname、capabilities から自動選択した場合は候補先頭の nickname）。actor を明示的に記録したい場合や、`--cmd` に生のコマンド文字列を渡す場合（actor は `auto-agent` になる）は `--by <actor>` を指定する。
 
 ```sh
 specdojo exec run --project <project-id> --task <task-id> --track-state
@@ -858,7 +858,7 @@ specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "done"
 ```
 
-#### 9.8.3. 1 task を worktree で隔離実行
+### 10.3. 1 task を worktree で隔離実行
 
 worktree を作って隔離実行し、成功時に成果物を現在ブランチへ merge、worktree 削除、complete まで一括で行う。`--worktree` は `--task` が前提で、状態追跡は常に有効になる。
 
@@ -868,7 +868,7 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 
 各段階を人が確認しながら進める場合は、9.5.1 の `exec worktree` 分割コマンドを使う。
 
-#### 9.8.4. auto でスケジュール順に順次実行（worktree）
+### 10.4. auto でスケジュール順に順次実行（worktree）
 
 `ready.json` の順序でタスクを選び、worktree + 状態追跡で順次実行する。エージェントは phase 要件と `pm-members.yaml` から自動選択する。`exec run` は内部で validate と build を実行するため、事前の `exec build` は必須ではない。
 
@@ -882,7 +882,7 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 選択戦略は既定 `critical-first`。FIFO 順にする場合は `--strategy fifo` を付ける。
 
-#### 9.8.5. plan を作ってから手動で実行
+### 10.5. plan を作ってから手動で実行
 
 plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。`--task <task-id>` 指定時は固定名 `<task-id>-plan.md` を生成し、task identity の無い `--deliverable` / ad-hoc ではユニーク名（`<slug>-<UTC>-<rand>-plan.md`）になる。`exec run --plan` はそのファイル名から result 名を導出するため、同じ plan ファイルを再実行すると対応する result を上書きする（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
@@ -913,7 +913,7 @@ plan の「owner ロールとしての記述ポイント」を埋めたい場合
 specdojo exec plan --project <project-id> --deliverable <local_id> --track <track>
 ```
 
-#### 9.8.6. task の plan を手動確認・実行し、成果物を確認して元 task を完了する
+### 10.6. task の plan を手動確認・実行し、成果物を確認して元 task を完了する
 
 生成した plan を確認・必要に応じて補正してから実行し、成果物の差分と検証結果を人が確認したうえで、元の scheduled task を完了にする手順である。`exec run --plan` は plan を実行するだけで claim / complete イベントを記録しないため、元 task の状態はこの手順で明示的に管理する。
 
@@ -968,13 +968,13 @@ specdojo exec build --project <project-id>
 
 `complete` の後は、`exec status --state done` または更新された `generated/ready.md` で完了と後続 task の Ready 化を確認する。完了条件を満たせない場合は `complete` せず、result に状況を記録して `exec block` を使う。
 
-#### 9.8.7. その他
+### 10.7. その他
 
 - schedule 非依存で catalog の成果物を直接実行する: `exec run --project <project-id> --deliverable <local_id>`（plan 生成 → カレント実行）。
 - カレント実行（in-place; `--task` / `--deliverable`）で `--archive-on-success` を付けると、成功後に plan を `exec/plans/done/` へアーカイブする（`--worktree` / `--auto` では無効）。
 - 段階確認しながら worktree 実行する: 9.5.1 の `exec worktree prepare … remove`。
 
-### 9.9. 完了済みタスクを再実行する
+### 10.8. 完了済みタスクを再実行する
 
 完了済み（`done`）タスクをやり直したいときは、既定の `exec run`（カレント実行・状態追跡なし・worktree なし）でそのままやり直す。専用コマンドは不要で、`exec run` が plan を再生成してから実行する。`--task` 指定では固定名 `<task-id>-plan.md` / `<task-id>-result.md` を上書きし、過去内容は git 履歴に残る（完了の事実は claim/complete イベントが担う）。plan・result は git 管理対象で、不要な plan は `exec/plans/done/` へアーカイブしてよい（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。
 
@@ -993,7 +993,7 @@ specdojo exec plan --project <project-id> --task <task-id>
 
 `exec plan` は対象タスクの plan を `exec/plans/<task-id>-plan.md` に再生成するだけで、状態・イベント・他タスクの plan は変更しない。`exec build` は plan を削除しないため、生成した plan はやり直しまで保持される。
 
-## 10. レートリミット対応
+## 11. レートリミット対応
 
 AI モデルのレートリミットに達した場合、`exec run` は `exec-defaults.yaml` の `rate_limit_policy` に従って自動対応する。
 
@@ -1005,7 +1005,7 @@ AI モデルのレートリミットに達した場合、`exec run` は `exec-de
 クリティカルパス上のタスクはスキップせず、必ず完了させることでプロジェクト完了日への影響を防ぐ。
 設定の詳細は `specdojo-command-usage-guide.md` の `exec run` セクションを参照すること。
 
-## 11. Anti-patterns
+## 12. Anti-patterns
 
 | Anti-pattern                       | 問題点                                                                                        |
 | ---------------------------------- | --------------------------------------------------------------------------------------------- |
