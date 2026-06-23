@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-23T15:24:29Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-organization-010",
+  "by": "codex-expert-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PO"
+  }
+}
