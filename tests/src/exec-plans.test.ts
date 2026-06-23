@@ -343,6 +343,12 @@ describe('plan generation (edit done_criteria goals)', () => {
       expect(editPlan).not.toContain('全 role 観点による自己レビュー')
       expect(editPlan).not.toContain('RVP-001')
       expect(editPlan).not.toContain('自己レビューは初回を含めて最大3回まで行う')
+      // 共通記法規約（リンク記法）が全 plan へ注入される。見出し文言ではなく安定した本文で検証。
+      expect(editPlan).toContain('`[[id|title]]` 形式')
+      // 配置制御: テンプレートの _COMMON_CONVENTIONS_ 位置（末尾・異常終了の条件の後）に入る。
+      expect(editPlan.indexOf('`[[id|title]]` 形式')).toBeGreaterThan(
+        editPlan.indexOf('異常終了の条件')
+      )
 
       const maintenancePlan = readFileSync(
         join(executionPath, 'exec/plans/T-TEST-overview-030-plan.md'),
@@ -350,6 +356,8 @@ describe('plan generation (edit done_criteria goals)', () => {
       )
       expect(maintenancePlan).not.toContain('viewpoints_ref:')
       expect(maintenancePlan).not.toContain('全 role 観点による自己レビュー')
+      // approach 違い（recipe-maintenance）の plan にも同じ共通規約が注入される。
+      expect(maintenancePlan).toContain('`[[id|title]]` 形式')
     } finally {
       rmSync(root, { recursive: true, force: true })
     }

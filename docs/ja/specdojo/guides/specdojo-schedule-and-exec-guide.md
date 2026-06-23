@@ -807,7 +807,7 @@ specdojo exec build --project <project-id>
 | 10.3 worktree                | `exec run --task --worktree`                 | 生成・保持         | scaffold + 完了更新 | —                        |
 | 10.4 auto（順次）            | `exec run --auto`                            | 生成・保持         | scaffold + 完了更新 | —                        |
 | 10.5 plan 先生成→実行        | `exec plan` → `exec run --plan`              | exec plan で生成   | scaffold しない     | —                        |
-| 10.6 plan を手動確認して完了 | `claim` → `plan` → `run --plan` → `complete` | 固定名で生成・保持 | claim で scaffold   | 任意                     |
+| 10.6 plan を手動確認して完了 | `plan` → `claim` → `run --plan` → `complete` | 固定名で生成・保持 | claim で scaffold   | 任意                     |
 
 - plan は `--task` 実行なら `exec/plans/<task-id>-plan.md`、`--deliverable` / ad-hoc ならユニーク名に生成され、`exec build` では削除されない。「done 保存」は完了した plan を `exec/plans/done/` へ移動することを指す。
 - `--archive-on-success`（done 保存）はカレント実行（in-place）でのみ有効。`--worktree` / `--auto` では plan は `exec/plans/` に残る。
@@ -915,19 +915,9 @@ specdojo exec plan --project <project-id> --deliverable <local_id> --track <trac
 
 ### 10.6. task の plan を手動確認・実行し、成果物を確認して元 task を完了する
 
-生成した plan を確認・必要に応じて補正してから実行し、成果物の差分と検証結果を人が確認したうえで、元の scheduled task を完了にする手順である。`exec run --plan` は plan を実行するだけで claim / complete イベントを記録しないため、元 task の状態はこの手順で明示的に管理する。
+生成した plan を確認・必要に応じて補正してから実行し、成果物の差分と検証結果を人が確認したうえで、元の scheduled task を完了にする手順である。`exec plan` は状態を変更しないため、claim 前に内容を確認できる。`exec run --plan` は plan を実行するだけで claim / complete イベントを記録しないため、**実作業を開始する前に必ず claim し**、元 task の状態はこの手順で明示的に管理する。
 
-まず元 task を claim する。これにより task は `doing` になり、固定名の result（`exec/results/<task-id>-result.md`）が作成される。
-
-```sh
-specdojo exec claim \
-  --project <project-id> \
-  --task <task-id> \
-  --by <actor> \
-  --msg "manual plan review and execution"
-```
-
-plan を作成する。`exec plan --task` は固定名 `<task-id>-plan.md` を生成するため、`exec run --plan` がそこから導出する result も claim 時に作成した `<task-id>-result.md` に一致し、`--out` でファイル名を揃える必要はない。
+まず plan を作成する。`exec plan --task` は固定名 `<task-id>-plan.md` を生成する。plan の対象・完了条件・手順を確認し、必要なら編集する。この段階では task の予約や状態変更は行われない。
 
 ```sh
 specdojo exec plan \
@@ -937,6 +927,18 @@ specdojo exec plan \
 # 既定の生成先。plan の対象・完了条件・手順を確認し、必要なら編集する
 <editor> <execution-path>/exec/plans/<task-id>-plan.md
 ```
+
+内容を確認したら、`run --plan` の**前**に元 task を claim する。これにより task は `doing` になり、固定名の result（`exec/results/<task-id>-result.md`）が作成される。他の actor による同一 task の着手を防ぎ、失敗時には `block` を正しい実行主体で記録できるようになる。
+
+```sh
+specdojo exec claim \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "manual plan review and execution"
+```
+
+`exec plan --task` と claim はいずれも task ID を基準に固定名を使うため、`exec run --plan` が導出する result は claim 時に作成した `<task-id>-result.md` に一致する。`--out` でファイル名を揃える必要はない。
 
 確認・補正後の plan をカレントリポジトリで実行する。`--plan` 指定時は plan を再生成しないため、編集内容がそのままエージェントへ渡る。
 

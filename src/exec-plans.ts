@@ -213,6 +213,12 @@ const REVIEW_VIEWPOINT_DETAIL_TEMPLATE = 'xrp-viewpoint-detail-template.md'
 // live here; code supplies only data values.
 const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = 'xrr-viewpoint-detail-template.md'
 
+// Shared conventions (link notation など) appended to every generated plan. The plan is the
+// only context guaranteed to reach the executing agent regardless of tool (it is piped via
+// stdin), so cross-tool rules must travel with the plan rather than tool-specific instruction
+// files. Kept as a single fragment to avoid duplicating the rule across every plan template.
+const COMMON_CONVENTIONS_TEMPLATE = 'xep-common-conventions-template.md'
+
 function templatesDir(): string {
   return join(specdojoRootDir(), 'docs/ja/specdojo/templates')
 }
@@ -260,6 +266,21 @@ function loadPlanTemplate(
 
 function loadViewpointDetailTemplate(cache: Map<string, string>): string {
   return readTemplate(join(templatesDir(), REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache)
+}
+
+// Marker a plan template places to control where the shared conventions fragment lands.
+const COMMON_CONVENTIONS_PLACEHOLDER = '_COMMON_CONVENTIONS_'
+
+// Injects the shared conventions fragment into a built plan body so every generated plan carries
+// the same rules (e.g. link notation) in its own text, independent of the executing tool. A
+// template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates without the
+// marker get the block appended so the rules are never silently dropped.
+function injectCommonConventions(body: string, cache: Map<string, string>): string {
+  const conventions = readTemplate(join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE), cache).trimEnd()
+  if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
+    return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions)
+  }
+  return `${body.trimEnd()}\n\n${conventions}\n`
 }
 
 function phaseDescriptionText(task: PlanTask): string {
@@ -581,7 +602,7 @@ function writeTaskPlan(
   const planTask: PlanTask = { ...task, mode }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache)
 
-  const content =
+  const body =
     mode === 'review'
       ? buildReviewPlanMarkdown(
           template,
@@ -605,6 +626,7 @@ function writeTaskPlan(
           resultRef,
           stem
         )
+  const content = injectCommonConventions(body, ctx.templateCache)
 
   writeFileSync(outPath, content, 'utf8')
   return outPath

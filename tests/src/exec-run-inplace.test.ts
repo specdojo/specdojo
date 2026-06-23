@@ -117,6 +117,11 @@ function setupRepository(): { repo: string; executionPath: string } {
     '### _VP_ID_\n\n_VP_CHECK_\n',
     'utf8'
   )
+  writeFileSync(
+    join(repo, 'docs', 'ja', 'specdojo', 'templates', 'xep-common-conventions-template.md'),
+    '## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n',
+    'utf8'
+  )
 
   return { repo, executionPath: join(repo, 'execution') }
 }
