@@ -1,5 +1,14 @@
 import { execFileSync } from 'node:child_process'
-import { chmodSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  chmodSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readlinkSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { describe, expect, it } from 'vitest'
@@ -72,6 +81,46 @@ describe('exec worktree', () => {
         taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
       })
       expect(reused).toEqual({ ...created, created: false })
+    } finally {
+      rmSync(repo, { recursive: true, force: true })
+      rmSync(base, { recursive: true, force: true })
+    }
+  })
+
+  it('links the repository node_modules into a newly created worktree', () => {
+    const repo = createGitRepository()
+    const base = mkdtempSync(join(tmpdir(), 'specdojo-worktree-base-'))
+    try {
+      mkdirSync(join(repo, 'node_modules'))
+      writeFileSync(join(repo, 'node_modules', 'marker.txt'), 'ok\n', 'utf8')
+
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
+      })
+
+      const linkPath = join(created.path, 'node_modules')
+      expect(lstatSync(linkPath).isSymbolicLink()).toBe(true)
+      expect(resolve(created.path, readlinkSync(linkPath))).toBe(resolve(repo, 'node_modules'))
+      expect(existsSync(join(linkPath, 'marker.txt'))).toBe(true)
+    } finally {
+      rmSync(repo, { recursive: true, force: true })
+      rmSync(base, { recursive: true, force: true })
+    }
+  })
+
+  it('skips the node_modules link when the repository has none', () => {
+    const repo = createGitRepository()
+    const base = mkdtempSync(join(tmpdir(), 'specdojo-worktree-base-'))
+    try {
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: 'prj-0001:T-LAUNCH-pm-plan-010',
+      })
+
+      expect(existsSync(join(created.path, 'node_modules'))).toBe(false)
     } finally {
       rmSync(repo, { recursive: true, force: true })
       rmSync(base, { recursive: true, force: true })

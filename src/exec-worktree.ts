@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync } from 'node:fs'
+import { existsSync, lstatSync, mkdirSync, symlinkSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 
 export type ExecWorktree = {
@@ -111,6 +111,26 @@ export function execBranchExists(repoRoot: string, taskId: string): boolean {
   return gitResult(repoRoot, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).status === 0
 }
 
+function pathEntryExists(target: string): boolean {
+  try {
+    lstatSync(target)
+    return true
+  } catch {
+    return false
+  }
+}
+
+// Git worktree は独自の作業ツリーを持つだけで node_modules は引き継がないため、
+// pre-commit フック（vitest / tsx 等）が依存解決できず commit が失敗する。
+// 同一マシン・同一プラットフォーム前提で、リポジトリの node_modules を共有リンクする。
+export function ensureNodeModulesLink(repoRoot: string, worktreePath: string): void {
+  const source = join(repoRoot, 'node_modules')
+  if (!existsSync(source)) return
+  const target = join(worktreePath, 'node_modules')
+  if (pathEntryExists(target)) return
+  symlinkSync(source, target, 'dir')
+}
+
 export function ensureExecWorktree(opts: {
   repoRoot: string
   worktreeBase: string
@@ -136,6 +156,7 @@ export function ensureExecWorktree(opts: {
         `Worktree ${worktreePath} uses branch ${registeredAtPath.branch ?? '(detached)'}; expected ${branch}`
       )
     }
+    ensureNodeModulesLink(repoRoot, worktreePath)
     return { path: worktreePath, branch, name, created: false }
   }
 
@@ -151,5 +172,6 @@ export function ensureExecWorktree(opts: {
     : ['worktree', 'add', worktreePath, '-b', branch]
   gitOutput(repoRoot, args)
 
+  ensureNodeModulesLink(repoRoot, worktreePath)
   return { path: worktreePath, branch, name, created: true }
 }
