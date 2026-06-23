@@ -2,17 +2,107 @@
   "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
   "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
   "generated_dir": "docs/ja/projects/prj-0001/030-project-management/execution/generated",
-  "ready_count": 0,
+  "ready_count": 3,
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-pm-organization-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-pm-organization-010",
+        "T-LAUNCH-prj-scope-010",
+        "T-LAUNCH-prj-stakeholder-register-010"
+      ]
     },
     "fifo": {
-      "next_task_id": null,
-      "ordered_task_ids": []
+      "next_task_id": "T-LAUNCH-pm-organization-010",
+      "ordered_task_ids": [
+        "T-LAUNCH-pm-organization-010",
+        "T-LAUNCH-prj-scope-010",
+        "T-LAUNCH-prj-stakeholder-register-010"
+      ]
     }
   },
-  "tasks": []
+  "tasks": [
+    {
+      "id": "T-LAUNCH-pm-organization-010",
+      "local_id": "pm-organization",
+      "phase_suffix": "010",
+      "phase_set": "bootstrap-pass",
+      "phase_id": "bootstrap",
+      "name": "一括整備（成果物＋参考資料）",
+      "owner": "PO",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 1,
+      "critical_first_rank": 1,
+      "cpm": {
+        "es": 0.001,
+        "ef": 1.001,
+        "ls": 0.0009999999999994458,
+        "lf": 1.0009999999999994,
+        "slack": -5.542441505745899e-16
+      },
+      "description": "エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を\n一貫した一組として作成・整備する。\n既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。\n必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。\n成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。\n構造・必須項目・禁止事項は rulebook を正とする。\nここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。\n",
+      "mode": "edit",
+      "execution": "agent",
+      "approach": "bootstrap",
+      "capabilities": [
+        "web_search"
+      ],
+      "proficiency": "expert"
+    },
+    {
+      "id": "T-LAUNCH-prj-scope-010",
+      "local_id": "prj-scope",
+      "phase_suffix": "010",
+      "phase_set": "bootstrap-pass",
+      "phase_id": "bootstrap",
+      "name": "一括整備（成果物＋参考資料）",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 2,
+      "critical_first_rank": 2,
+      "cpm": {
+        "es": 0.001,
+        "ef": 1.001,
+        "ls": 0.0009999999999994458,
+        "lf": 1.0009999999999994,
+        "slack": -5.542441505745899e-16
+      },
+      "description": "エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を\n一貫した一組として作成・整備する。\n既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。\n必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。\n成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。\n構造・必須項目・禁止事項は rulebook を正とする。\nここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。\n",
+      "mode": "edit",
+      "execution": "agent",
+      "approach": "bootstrap",
+      "capabilities": [
+        "web_search"
+      ],
+      "proficiency": "expert"
+    },
+    {
+      "id": "T-LAUNCH-prj-stakeholder-register-010",
+      "local_id": "prj-stakeholder-register",
+      "phase_suffix": "010",
+      "phase_set": "bootstrap-pass",
+      "phase_id": "bootstrap",
+      "name": "一括整備（成果物＋参考資料）",
+      "owner": "BA",
+      "schedule_file": "sch-track-launch.yaml",
+      "fifo_rank": 3,
+      "critical_first_rank": 3,
+      "cpm": {
+        "es": 0.001,
+        "ef": 1.001,
+        "ls": 2.0009999999999994,
+        "lf": 3.0009999999999994,
+        "slack": 1.9999999999999996
+      },
+      "description": "エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を\n一貫した一組として作成・整備する。\n既存の成果物・参考資料があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。\n必要に応じて外部情報・関連ドキュメントを調査し、出典とともに反映する。\n成果物は owner ロールの責務に集中して記述し、参考資料は丸写しを避け一般化して相互に整合させる。\n構造・必須項目・禁止事項は rulebook を正とする。\nここで整備した参考資料は refine-pass では凍結し、保守的に磨き込む。\n",
+      "mode": "edit",
+      "execution": "agent",
+      "approach": "bootstrap",
+      "capabilities": [
+        "web_search"
+      ],
+      "proficiency": "expert"
+    }
+  ]
 }

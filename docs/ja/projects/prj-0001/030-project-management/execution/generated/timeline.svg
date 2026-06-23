@@ -102,17 +102,17 @@
 <text class="label-artifact" x="126" y="304" clip-path="url(#clip-col2)">組織定義</text>
 <text class="label" x="298" y="304" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="312" x2="928" y2="312" />
-<rect x="440" y="290" width="56" height="12" rx="4" fill="#f59e0b" stroke="#b45309" stroke-width="0.75" opacity="0.94" />
+<rect x="440" y="290" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="328" clip-path="url(#clip-col1)">prj-scope-010</text>
 <text class="label-artifact" x="126" y="328" clip-path="url(#clip-col2)">プロジェクトスコープ</text>
 <text class="label" x="298" y="328" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="336" x2="928" y2="336" />
-<rect x="440" y="314" width="56" height="12" rx="4" fill="#f59e0b" stroke="#b45309" stroke-width="0.75" opacity="0.94" />
+<rect x="440" y="314" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="352" clip-path="url(#clip-col1)">prj-stakeholder-register-010</text>
 <text class="label-artifact" x="126" y="352" clip-path="url(#clip-col2)">ステークホルダー登録簿</text>
 <text class="label" x="298" y="352" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="360" x2="928" y2="360" />
-<rect x="440" y="338" width="56" height="12" rx="4" fill="#f59e0b" stroke="#b45309" stroke-width="0.75" opacity="0.94" />
+<rect x="440" y="338" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="376" clip-path="url(#clip-col1)">pm-raci-010</text>
 <text class="label-artifact" x="126" y="376" clip-path="url(#clip-col2)">RACI</text>
 <text class="label" x="298" y="376" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
