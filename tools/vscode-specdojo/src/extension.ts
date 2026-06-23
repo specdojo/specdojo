@@ -9,8 +9,10 @@ interface DocIndex {
 
 const INDEX_REL = '.specdojo/doc-index.json'
 
-// [[id]] or [[id|alt]] in any file — group1=id, group2=alt (undefined when absent)
-const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)(?:\|([^\]]*))?\]\]/g
+// [[id]] / [[id|alt]] / [[id\|alt]] in any file — group1=id, group2=separator
+// (`|` or table-escaped `\|`, undefined when absent), group3=alt (undefined when absent).
+// The separator is captured so its length can offset the alt's start position.
+const WIKILINK_RE = /\[\[([a-z][a-z0-9:_-]+)(?:(\\?\|)([^\]]*))?\]\]/g
 
 // YAML single-value keys where the value is a document ID
 const YAML_SINGLE_KEY_RE =
@@ -96,12 +98,13 @@ class SpecdojoLinkProvider implements vscode.DocumentLinkProvider {
     WIKILINK_RE.lastIndex = 0
     while ((m = WIKILINK_RE.exec(text)) !== null) {
       const id = m[1]
-      const alt = m[2]
+      const separator = m[2]
+      const alt = m[3]
       const target = resolveToUri(id, namespace)
       if (target) {
         // [[id|alt]] → alt をクリック可能領域にする。[[id]] → id をクリック可能領域にする
         const linkStart = alt !== undefined
-          ? m.index + 2 + id.length + 1  // skip past [[id|
+          ? m.index + 2 + id.length + separator.length  // skip past [[id| or [[id\|
           : m.index + 2
         const linkText = alt !== undefined ? alt : id
         const start = document.positionAt(linkStart)
