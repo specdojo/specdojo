@@ -75,6 +75,9 @@ export function taskPaths(
 export function isCommitTargetPath(path: string, executionRel: string, resultRel: string): boolean {
   const normalized = path.replaceAll('\\', '/')
   if (normalized === resultRel) return true
+  // doc-index は root と worktree の双方で再生成される生成物。commit-target に含めると
+  // merge 時の overlap ガードで衝突するため除外する。
+  if (normalized === '.specdojo/doc-index.json') return false
   if (normalized.startsWith(`${executionRel}/exec/plans/`)) return false
   if (normalized.startsWith(`${executionRel}/exec/results/`)) return false
   if (normalized.startsWith(`${executionRel}/exec/events/`)) return false
