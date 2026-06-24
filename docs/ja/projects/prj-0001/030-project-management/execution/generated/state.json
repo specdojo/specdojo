@@ -33,10 +33,10 @@
     },
     "T-LAUNCH-pm-organization-010": {
       "state": "todo",
-      "last_ts": "2026-06-23T23:06:07Z",
-      "last_by": "indie",
+      "last_ts": "2026-06-24T14:02:16Z",
+      "last_by": "codex-expert-edit-agent",
       "last_type": "cancel",
-      "last_msg": "todoへ戻して再claim可能化",
+      "last_msg": "manual cancel",
       "meta": {
         "claim_owner": "",
         "planned_owner": "PO"

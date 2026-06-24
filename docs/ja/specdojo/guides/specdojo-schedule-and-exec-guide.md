@@ -408,10 +408,10 @@ specdojo exec run \
 
 分割コマンドは独自のJSONや状態ファイルを作成しない。後続コマンドに必要な情報は、毎回次の標準情報から導出する。
 
-| 情報                 | 導出元                                                       |
-| -------------------- | ------------------------------------------------------------ |
-| worktree名・ブランチ | task IDから `<task-id-slug>` と `exec/<task-id-slug>` を導出 |
-| worktreeパス         | `git worktree list --porcelain` からexecブランチを検索       |
+| 情報                 | 導出元                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| worktree名・ブランチ | project 修飾 task ID `<project-id>:<task-id>` から `<slug>` と `exec/<slug>` を導出    |
+| worktreeパス         | `git worktree list --porcelain` からexecブランチを検索                                |
 | plan/resultパス      | SpecDojoのproject設定とtask IDから導出                       |
 | claim actor          | `exec/events/` のclaim eventから導出                         |
 | 比較起点commit       | `git merge-base HEAD <exec-branch>` で都度導出               |
@@ -440,9 +440,11 @@ specdojo exec worktree prepare \
 3. 対象タスクのplan、result、claim eventを確認する。plan が無ければ `exec plan` 相当でオンデマンド生成する（既存のplanは上書きしない）。
 4. rootのindexにstage済み変更がないことを確認する。
 5. plan、result、claim eventに未commit変更があれば、実行開始checkpointとしてcommitする。
-6. task IDから `<task-id-slug>` と `exec/<task-id-slug>` ブランチを導出する。
-7. checkpoint commitである現在の `HEAD` を起点に `<worktree-base>/<task-id-slug>` を作成する。登録済みの場合は同じブランチであることを確認して再利用する。
+6. project 修飾 task ID `<project-id>:<task-id>` から `<slug>` と `exec/<slug>` ブランチを導出する。
+7. checkpoint commitである現在の `HEAD` を起点に `<worktree-base>/<slug>` を作成する。登録済みの場合は同じブランチであることを確認して再利用する。
 8. ロックを解放し、worktreeパスとexecブランチを表示する。
+
+worktree名・ブランチは project 横断で一意にするため project 修飾 task ID から導出する。`<slug>` は worktree 名・Git ブランチに使えない文字（`:` を含む）を `-` に正規化した値で、例えば `prj-0001:T-LAUNCH-prj-scope-010` は `exec/prj-0001-T-LAUNCH-prj-scope-010` になる。project が解決できない実行（環境変数でscheduleパスとexecutionパスを直接指定した場合など）は、後方互換のため修飾なしの `<task-id>` から導出する。
 
 checkpoint commitは対象タスクの実行管理ファイルだけを含める。rootにある無関係な未commit変更はcommitしない。commit messageのデフォルトは `exec(<task-id>): prepare execution` とする。
 
