@@ -199,7 +199,7 @@ Frontmatter は共通スキーマに従います。
 
 ## 8. サンプル
 
-- 参照: [[prj-scope-sample]]
+- 参照先: [prj-scope-sample](../samples/prj-scope-sample.md)
 
 ## 9. 作成レシピ
 
