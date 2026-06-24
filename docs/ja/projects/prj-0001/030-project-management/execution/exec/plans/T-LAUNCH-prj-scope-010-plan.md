@@ -37,9 +37,9 @@ approach: bootstrap
 参考資料（rulebook frontmatter から解決。`_MISSING_` は未宣言・未整備のため新規作成する）:
 
 - rulebook: `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md`
-- recipe: `_MISSING_`
+- recipe: `docs/ja/specdojo/recipes/prj-scope-recipe.md`
 - sample: `docs/ja/specdojo/samples/prj-scope-sample.md`
-- template: `_MISSING_`
+- template: `docs/ja/specdojo/templates/prj-scope-template.md`
 
 result: `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-scope-010-result.md`
 
