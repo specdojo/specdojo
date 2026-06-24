@@ -19,6 +19,7 @@ import {
 import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { generateSinglePlan } from './exec-plans.js'
+import { qualifyTaskId } from './exec-shared.js'
 import { buildTaskView } from './exec-task-view.js'
 import {
   findExecWorktree,
@@ -128,9 +129,9 @@ function requireDoingTask(schedulePath: string, taskId: string): Required<TaskEx
   return state as Required<TaskExecutionState>
 }
 
-function requireWorktree(repoRoot: string, taskId: string): ExecWorktree {
-  const worktree = findExecWorktree(repoRoot, taskId)
-  if (!worktree) throw new Error(`Worktree is not prepared for task: ${taskId}`)
+function requireWorktree(repoRoot: string, worktreeTaskId: string): ExecWorktree {
+  const worktree = findExecWorktree(repoRoot, worktreeTaskId)
+  if (!worktree) throw new Error(`Worktree is not prepared for task: ${worktreeTaskId}`)
   if (!existsSync(worktree.path)) {
     throw new Error(`Registered worktree path does not exist: ${worktree.path}`)
   }
@@ -198,7 +199,8 @@ function printWorktree(worktree: ExecWorktree): void {
 function prepare(opts: CommonOpts): void {
   const context = resolveContext(opts)
   const state = requireDoingTask(context.schedulePath, opts.task)
-  const name = worktreeNameFromTaskId(opts.task)
+  const worktreeTaskId = qualifyTaskId(context.projectId, opts.task)
+  const name = worktreeNameFromTaskId(worktreeTaskId)
   const branch = `exec/${name}`
   const base = resolveWorktreeBase(
     context.repoRoot,
@@ -215,7 +217,7 @@ function prepare(opts: CommonOpts): void {
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] claim actor: ${state.actor}\n`)
     process.stdout.write(`[dry-run] checkpoint: exec(${opts.task}): prepare execution\n`)
-    printWorktree(findExecWorktree(context.repoRoot, opts.task) ?? planned)
+    printWorktree(findExecWorktree(context.repoRoot, worktreeTaskId) ?? planned)
     return
   }
 
@@ -250,6 +252,7 @@ function prepare(opts: CommonOpts): void {
     const worktree = checkpointAndEnsureWorktree({
       context,
       taskId: opts.task,
+      worktreeTaskId,
       base,
       planPath,
       resultPath,
@@ -264,8 +267,9 @@ function prepare(opts: CommonOpts): void {
 function status(opts: CommonOpts): void {
   const context = resolveContext(opts)
   const state = taskExecutionState(context.schedulePath, opts.task)
-  const worktree = findExecWorktree(context.repoRoot, opts.task)
-  const branch = `exec/${worktreeNameFromTaskId(opts.task)}`
+  const worktreeTaskId = qualifyTaskId(context.projectId, opts.task)
+  const worktree = findExecWorktree(context.repoRoot, worktreeTaskId)
+  const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`
   process.stdout.write(`task: ${opts.task}\nstate: ${state.state}\n`)
   process.stdout.write(`claim-actor: ${state.actor ?? 'not found'}\n`)
   if (!worktree) {
@@ -274,7 +278,7 @@ function status(opts: CommonOpts): void {
       opts.worktreeBase,
       configuredWorktreeBase(context.schedulePath)
     )
-    process.stdout.write(`worktree: not prepared (expected ${resolve(base, worktreeNameFromTaskId(opts.task))})\n`)
+    process.stdout.write(`worktree: not prepared (expected ${resolve(base, worktreeNameFromTaskId(worktreeTaskId))})\n`)
     process.stdout.write(`branch: ${branch}\n`)
     return
   }
@@ -302,7 +306,7 @@ function status(opts: CommonOpts): void {
 
 async function agent(opts: AgentOpts): Promise<void> {
   const context = resolveContext(opts)
-  const worktree = requireWorktree(context.repoRoot, opts.task)
+  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task))
   requireInsideWorktree(context.repoRoot, worktree)
   const resolved = resolveAgent(context, opts.task, opts)
   if (opts.dryRun) {
@@ -334,7 +338,7 @@ async function agent(opts: AgentOpts): Promise<void> {
 function commit(opts: CommitOpts): void {
   const context = resolveContext(opts)
   requireDoingTask(context.schedulePath, opts.task)
-  const worktree = requireWorktree(context.repoRoot, opts.task)
+  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task))
   requireInsideWorktree(context.repoRoot, worktree)
   commitWorktreeChanges({
     context,
@@ -347,7 +351,7 @@ function commit(opts: CommitOpts): void {
 
 function merge(opts: MergeOpts): void {
   const context = resolveContext(opts)
-  const worktree = requireWorktree(context.repoRoot, opts.task)
+  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task))
   mergeWorktreeIntoCurrent({
     context,
     worktree,
@@ -359,7 +363,7 @@ function merge(opts: MergeOpts): void {
 
 function remove(opts: RemoveOpts): void {
   const context = resolveContext(opts)
-  const worktree = requireWorktree(context.repoRoot, opts.task)
+  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task))
   removeWorktree({
     context,
     worktree,

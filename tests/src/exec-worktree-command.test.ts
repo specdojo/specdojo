@@ -130,14 +130,18 @@ afterEach(() => {
 describe('exec worktree commands', () => {
   it('prepares, commits, merges, and removes a task worktree', async () => {
     const { repo, worktreeBase, taskId } = setupRepository()
+    const worktreeTaskId = `test:${taskId}`
     vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
     vi.spyOn(process.stderr, 'write').mockImplementation(() => true)
     try {
       process.chdir(repo)
       await runExecWorktree(['prepare', '--project', 'test', '--task', taskId])
 
-      const worktree = findExecWorktree(repo, taskId)
+      const worktree = findExecWorktree(repo, worktreeTaskId)
       expect(worktree).not.toBeNull()
+      // Branch is project-qualified; the bare task id no longer resolves a worktree.
+      expect(worktree!.branch).toBe('exec/test-T-TEST-doc-010')
+      expect(findExecWorktree(repo, taskId)).toBeNull()
       expect(git(repo, 'log', '-1', '--pretty=%s')).toBe(`exec(${taskId}): prepare execution`)
 
       process.chdir(worktree!.path)
@@ -178,11 +182,11 @@ describe('exec worktree commands', () => {
         taskId,
         '--delete-branch',
       ])
-      expect(findExecWorktree(repo, taskId)).toBeNull()
+      expect(findExecWorktree(repo, worktreeTaskId)).toBeNull()
       expect(() => git(repo, 'show-ref', '--verify', `refs/heads/${worktree!.branch}`)).toThrow()
     } finally {
       process.chdir(originalCwd)
-      const worktree = findExecWorktree(repo, taskId)
+      const worktree = findExecWorktree(repo, worktreeTaskId)
       if (worktree) git(repo, 'worktree', 'remove', '--force', worktree.path)
       rmSync(repo, { recursive: true, force: true })
       rmSync(worktreeBase, { recursive: true, force: true })

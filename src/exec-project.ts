@@ -85,6 +85,7 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
       throw new Error(`Unknown ${source} value: ${projectId} (check ${configPath})`)
     }
     return {
+      projectId,
       schedulePath: resolveProjectRelative(baseDir, getProjectSchedulePath(project)),
       executionPath: resolveProjectRelative(baseDir, getProjectExecutionPath(project)),
       catalogPath: project.catalog_path

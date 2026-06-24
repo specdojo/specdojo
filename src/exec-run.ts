@@ -13,7 +13,7 @@ import { activateResolvedProjectPaths, resolveProjectPaths } from './exec-projec
 import { readAllEventFiles, foldEventsToState } from './exec-events.js'
 import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
-import { listFilesRecursive, readJson, readYaml } from './exec-shared.js'
+import { listFilesRecursive, qualifyTaskId, readJson, readYaml } from './exec-shared.js'
 import {
   loadConfig,
   loadMemberRoster,
@@ -565,7 +565,8 @@ function prepareSingleTask(
     return 'failure'
   }
 
-  const worktreeName = worktreeNameFromTaskId(task.id)
+  const worktreeTaskId = qualifyTaskId(projectId, task.id)
+  const worktreeName = worktreeNameFromTaskId(worktreeTaskId)
 
   if (dryRun) {
     const worktree: ExecWorktree = {
@@ -631,6 +632,7 @@ function prepareSingleTask(
   const worktree = checkpointAndEnsureWorktree({
     context: { repoRoot, schedulePath, executionPath },
     taskId: task.id,
+    worktreeTaskId,
     base: worktreeBase,
     planPath: join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
     resultPath,

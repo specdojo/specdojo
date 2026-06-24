@@ -114,11 +114,12 @@ function scaffoldTask(
   return { planPath, resultPath, claimEventPath }
 }
 
-function prepare(fixture: Fixture, taskId: string): ExecWorktree {
+function prepare(fixture: Fixture, taskId: string, worktreeTaskId: string = taskId): ExecWorktree {
   const { planPath, resultPath, claimEventPath } = scaffoldTask(fixture, taskId)
   return checkpointAndEnsureWorktree({
     context: fixture.context,
     taskId,
+    worktreeTaskId,
     base: fixture.worktreeBase,
     planPath,
     resultPath,
@@ -224,6 +225,25 @@ describe('exec worktree ops', () => {
     const stillDirty = git(worktree.path, 'status', '--porcelain')
     expect(stillDirty).toContain(`execution/exec/plans/${taskId}-plan.md`)
     expect(stillDirty).toContain('execution/generated/')
+  })
+
+  it('namespaces the branch and worktree by project while keeping the bare task id for the checkpoint', () => {
+    const fixture = setupRepository()
+    const taskId = 'T-T-doc-010'
+    const worktreeTaskId = `prj-0001:${taskId}`
+
+    const worktree = prepare(fixture, taskId, worktreeTaskId)
+
+    // Branch and worktree name are project-qualified (`:` normalized to `-`).
+    expect(worktree.branch).toBe('exec/prj-0001-T-T-doc-010')
+    expect(worktree.name).toBe('prj-0001-T-T-doc-010')
+
+    // The checkpoint commit and lookup keep the bare task id.
+    expect(git(fixture.repo, 'log', '-1', '--pretty=%s')).toBe(
+      `exec(${taskId}): prepare execution`
+    )
+    expect(findExecWorktree(fixture.repo, worktreeTaskId)).toEqual({ ...worktree, created: false })
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull()
   })
 
   it('removes a merged worktree and deletes its exec branch', () => {

@@ -278,18 +278,19 @@ export function removeWorktree(params: {
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext
   taskId: string
+  worktreeTaskId: string
   base: string
   planPath: string
   resultPath: string
   claimEventPath: string
 }): ExecWorktree {
-  const { context, taskId, base } = params
-  const branch = `exec/${worktreeNameFromTaskId(taskId)}`
+  const { context, taskId, worktreeTaskId, base } = params
+  const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`
 
-  const existing = findExecWorktree(context.repoRoot, taskId)
+  const existing = findExecWorktree(context.repoRoot, worktreeTaskId)
   if (existing) return existing
 
-  if (!execBranchExists(context.repoRoot, taskId)) {
+  if (!execBranchExists(context.repoRoot, worktreeTaskId)) {
     if (currentBranch(context.repoRoot) === branch) {
       throw new Error(`Prepare must run from a branch other than ${branch}.`)
     }
@@ -317,5 +318,5 @@ export function checkpointAndEnsureWorktree(params: {
     }
   }
 
-  return ensureExecWorktree({ repoRoot: context.repoRoot, worktreeBase: base, taskId })
+  return ensureExecWorktree({ repoRoot: context.repoRoot, worktreeBase: base, taskId: worktreeTaskId })
 }

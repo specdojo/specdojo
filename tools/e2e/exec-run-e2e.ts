@@ -33,7 +33,9 @@ const cliPath = join(projectRoot, 'dist', 'specdojo.js')
 const templatesDir = join(projectRoot, 'docs', 'ja', 'specdojo', 'templates')
 
 const TASK_ID = 'T-TEST-doc-010'
-const EXEC_BRANCH = `exec/${TASK_ID}`
+const PROJECT_ID = 'test'
+// Worktree branches are project-qualified (`<projectId>:<taskId>` normalized to `-`).
+const EXEC_BRANCH = `exec/${PROJECT_ID}-${TASK_ID}`
 const DELIVERABLE_REL = join('docs', 'project', 'out.md')
 const EDITED_CONTENT = '# Edited by agent\n'
 

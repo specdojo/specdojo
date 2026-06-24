@@ -206,6 +206,7 @@ export type ClaimNextSnapshot = {
 }
 
 export type ResolvedProjectPaths = {
+  projectId?: string
   schedulePath: string
   executionPath: string
   catalogPath?: string

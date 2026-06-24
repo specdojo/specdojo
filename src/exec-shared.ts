@@ -16,6 +16,13 @@ export function tsForFilenameUtc(ts: string): string {
   return ts.replace(/[-:]/g, '').replace('T', 'T')
 }
 
+// worktree/branch 生成専用。project 修飾した task ID（`<projectId>:<taskId>`）を返す。
+// projectId が未解決（env path override 等）の場合は bare のままにして後方互換を保つ。
+// schedule 検索・plan/result ファイル名・claim には使わない（bare の task ID を使う）。
+export function qualifyTaskId(projectId: string | undefined, taskId: string): string {
+  return projectId ? `${projectId}:${taskId}` : taskId
+}
+
 export function safeSlug(s: string): string {
   return s
     .trim()
