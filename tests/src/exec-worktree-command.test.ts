@@ -5,14 +5,14 @@ import { join } from 'node:path'
 import { Command } from 'commander'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { registerExecCommands } from '../../src/exec.js'
-import { findExecWorktree } from '../../src/exec-worktree.js'
+import { findExecWorktree, gitEnvironment } from '../../src/exec-worktree.js'
 
 const originalCwd = process.cwd()
 const ENV_KEYS = ['SPECDOJO_PROJECT', 'SPECDOJO_SCHEDULE_PATH', 'SPECDOJO_EXECUTION_PATH']
 const originalEnv = Object.fromEntries(ENV_KEYS.map(key => [key, process.env[key]]))
 
 function git(cwd: string, ...args: string[]): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
+  return execFileSync('git', args, { cwd, encoding: 'utf8', env: gitEnvironment() }).trim()
 }
 
 function clearProjectEnv(): void {

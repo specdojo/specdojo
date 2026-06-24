@@ -29,7 +29,7 @@ const GIT_LOCAL_ENV_VARS = [
   'GIT_WORK_TREE',
 ] as const
 
-function gitEnvironment(): NodeJS.ProcessEnv {
+export function gitEnvironment(): NodeJS.ProcessEnv {
   const env = { ...process.env }
   for (const name of GIT_LOCAL_ENV_VARS) delete env[name]
   return env
