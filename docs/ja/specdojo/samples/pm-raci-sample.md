@@ -1,78 +1,82 @@
 ---
-id: prj-0001:pm-raci
+id: pm-raci-sample
 type: project
-status: draft
+status: ready
 rulebook: pm-raci-rulebook
 based_on:
-  - people-and-organization-definition-standard
-  - prj-0001:pm-organization
+  - pm-organization-sample
 ---
 
 # RACI: 駄菓子屋きぬや 販売管理システム
 
+本書は、駄菓子屋きぬや販売管理システム構築プロジェクトにおける主要成果物と主要プロセスの責任分担を、PM が計画化、進捗確認、課題・リスク管理に使える粒度で定義する。
+
 ## 1. 目的
 
-本書は、駄菓子屋きぬや 販売管理システム構築プロジェクトにおける主要成果物・主要プロセスの責任分担を定義する。
+本 RACI は、販売、在庫、つけ管理の初期リリースに向けて、成果物作成、レビュー、承認、変更判断の責務境界を明確にするために使用する。
 
-採用ロールの定義は `pm-organization` を正とし、RACI の列には採用済み Role code（`PO`・`BA`・`ARC`・`QE`）のみを使用する。
+採用する Role code の語彙は `pm-organization.md` を正とする。RACI は実行主体や兼務割り当てを複製せず、成果物・プロセス単位の責任分担だけを扱う。
 
 ## 2. 適用方針
 
-- RACI 列に使う Role code: `PO`・`BA`・`ARC`・`QE`（`pm-organization` 採用ロールのみ）
-- `A` は原則として `PO` に集約する。技術判断は `ARC`、品質基準は `QE` が `A` を持つ場合がある。
-- Agent は `R`・`C` を担ってよいが、`A` は担わない。
-- member nickname・人名・agent 名を RACI 列に使わない。
+- RACI 列には、`pm-organization.md` で採用済みの Role code のみを使用する。
+- 小規模運用で同じ人が複数責務を兼務する場合でも、`PO` と `PM` の責務境界は分けて記載する。
+- `A` は 1 成果物・1 プロセスにつき 1 Role code に限定する。
+- Agent は `R`、`C` の支援を行ってよいが、`A` は担わない。
+- 実際の member、agent、兼務割り当ては `pm-members.yaml` を正本とする。
 
 ## 3. RACI の定義
 
-RACI 記号の定義は `people-and-organization-definition-standard` を参照する。
-
-| 記号 | 説明                     |
-| ---- | ------------------------ |
-| R    | 実作業を担当する         |
-| A    | 最終責任を持ち、承認する |
-| C    | 相談・レビューに参加する |
-| I    | 結果の共有を受ける       |
+| 記号 | 意味 | 説明 |
+| --- | --- | --- |
+| R | Responsible | 実作業を担当する |
+| A | Accountable | 最終責任を持ち、承認または判断する |
+| C | Consulted | 作成前または判断前に相談・レビューへ参加する |
+| I | Informed | 結果、変更、決定の共有を受ける |
 
 ## 4. 成果物別 RACI
 
-| 成果物                                         | PO  | BA  | ARC | QE  |
-| ---------------------------------------------- | --- | --- | --- | --- |
-| `prj-overview`                                 | A/R | C   | I   | I   |
-| `prj-stakeholder-register`                     | A   | R   | C   | I   |
-| `prj-charter`                                  | A/R | C   | C   | I   |
-| `pm-organization`                              | A   | R   | C   | I   |
-| `pm-roles.yaml`                                | I   | R   | A/C | C   |
-| `pm-members.yaml`                              | I   | R   | A/C | C   |
-| `pm-raci`                                      | A   | C   | R   | C   |
-| `pm-plan`                                      | A   | C   | R   | C   |
-| `prj-scope`                                    | A   | R   | C   | C   |
-| `prj-deliverables-catalog`                     | A   | R   | C   | C   |
-| `prj-success-criteria-and-acceptance-criteria` | A   | R   | C   | C   |
+| 成果物 | PO | PM | BA | ARC | DEV | QE | UX | OPS |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `prj-overview` | A | C | R | C | I | C | C | I |
+| `prj-scope` | A | C | R | C | I | C | C | I |
+| `pm-organization` | A | R | C | C | I | C | I | I |
+| `pm-raci` | C | A/R | C | C | I | C | I | I |
+| `pm-plan` | C | A/R | C | C | I | C | I | C |
+| `pm-risk-register` | C | A/R | C | C | C | C | C | C |
+| `pm-quality-management-plan` | C | C | C | C | I | A/R | C | I |
+| Schedule | C | A/R | C | C | C | C | C | C |
+| `dct-index` / 成果物カタログ | C | C | C | A/R | I | C | I | I |
 
 ## 5. プロセス別 RACI
 
-本プロジェクトは小規模運用のため、プロセス別 RACI は主要プロセスのみを対象とする。
-
-| プロセス             | PO  | BA  | ARC | QE  |
-| -------------------- | --- | --- | --- | --- |
-| 要件ヒアリング・確認 | C   | A/R | C   | I   |
-| スコープ変更判断     | A   | C   | R   | C   |
-| 成果物レビュー       | A   | C   | C   | R   |
-| GO / Not GO 判断     | A   | C   | C   | C   |
-| リリース承認         | A   | I   | C   | C   |
+| プロセス | PO | PM | BA | ARC | DEV | QE | UX | OPS |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 初期リリース範囲の判断 | A | R | C | C | I | C | C | I |
+| 成果物作成の計画化・順序付け | C | A/R | C | C | C | C | C | C |
+| 成果物草案作成 | C | A | R | R | R | C | R | C |
+| 進捗確認・報告 | I | A/R | C | C | C | C | C | C |
+| 課題・リスクの識別と登録 | C | A/R | C | C | C | C | C | C |
+| 成果物レビュー | C | C | C | C | C | A/R | C | I |
+| 変更要求の起票・影響整理 | C | A/R | C | C | C | C | C | C |
+| 変更要求の採否判断 | A | R | C | C | I | C | C | C |
+| 公開可否判断 | A | C | C | C | I | C | C | R |
 
 ## 6. 見直し条件
 
-| 更新トリガー                                                 | 見直し内容                                           |
-| ------------------------------------------------------------ | ---------------------------------------------------- |
-| `pm-organization` の採用ロールが変更された                   | RACI の列構成を更新し、全行の `A` を再確認する       |
-| 成果物カタログ（`prj-deliverables-catalog`）が大幅変更された | 成果物別 RACI に行を追加・削除する                   |
-| プロジェクト体制が変わり、兼務ロールが独立化した             | 対象ロールの行・列を更新し、`A` の集約先を再確認する |
+| 更新トリガー | 見直し内容 |
+| --- | --- |
+| `pm-organization.md` の採用 Role code が変更された | RACI 列、全行の `A`、Schedule の `owner` との整合を確認する |
+| `pm-members.yaml` の兼務割り当てが変更された | 実行主体の変更が RACI の責務境界を変えないか確認する |
+| 成果物カタログまたは WBS が大幅変更された | 成果物別 RACI の行を追加、削除、統合する |
+| 進捗遅延、課題滞留、リスク顕在化が継続した | `PM` の `R` と `A`、エスカレーション先、報告対象を見直す |
+| 公開判断または変更要求の頻度が増えた | `PO`、`PM`、`OPS`、`QE` の判断・実行・確認責任を見直す |
 
 ## 7. 禁止事項
 
-- `pm-organization` で未採用の Role code（`PM`・`DEV`・`UX`・`OPS`）を RACI 列に使わない。
-- member nickname（`po`・`ba-agent` 等）・人名・agent 名を RACI 列に使わない。
+- `pm-organization.md` で採用していない Role code を RACI 列に使わない。
+- member nickname、人名、agent 名を RACI 列に使わない。
 - Agent に `A` を割り当てない。
 - 各行の `A` を省略しない。
+- 1 行に複数の `A` を置かない。
+- Schedule の `owner`、課題・リスク・変更要求の管理単位と矛盾する責任分担を記載しない。
