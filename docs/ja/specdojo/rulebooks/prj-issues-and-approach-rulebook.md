@@ -1,7 +1,14 @@
 ---
 id: prj-issues-and-approach-rulebook
 type: rulebook
-status: draft
+status: ready
+target_format: markdown
+recipe: prj-issues-and-approach-recipe
+sample: prj-issues-and-approach-sample
+template: prj-issues-and-approach-template
+based_on:
+  - rulebook-authoring-standard
+supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ 作成ルール
@@ -207,6 +214,14 @@ supersedes: []
 | 候補を 1 案しか出さない                               | 判断とトレードオフが不透明になる           |
 | 理由のない採用（判断軸が書かれていない）              | 後から説明できず、意思決定がやり直しになる |
 
-## 8. サンプル（最小でも可）
+## 8. サンプル
 
-- 参照: [prj-issues-and-approach-sample.md](../samples/prj-issues-and-approach-sample.md)
+- 参照先: [prj-issues-and-approach-sample](../samples/prj-issues-and-approach-sample.md)
+
+## 9. 作成レシピ
+
+- 参照: [[prj-issues-and-approach-recipe]]
+
+## 10. テンプレート
+
+- 参照: [[prj-issues-and-approach-template]]
