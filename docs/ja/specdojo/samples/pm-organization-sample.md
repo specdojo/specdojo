@@ -1,46 +1,55 @@
 ---
-id: prj-0001:pm-organization
+id: pm-organization-sample
 type: project
-status: draft
+status: ready
 rulebook: pm-organization-rulebook
 based_on:
-  - people-and-organization-definition-standard
+  - prj-overview-sample
 ---
 
 # 組織定義
 
+本書は、駄菓子屋きぬや販売管理システム構築プロジェクトにおけるロール・メンバー構成の方針と設計根拠を定義する。単一店舗の販売・在庫・つけ管理を小規模に開始し、最終判断を人間の PO に集約する。
+
 ## 1. 基本方針
 
-駄菓子屋きぬや販売管理システム構築プロジェクトは、店主代表と生成 AI 支援 agent を中心に進める個人・小規模運用とする。単一店舗、店頭タブレット 1 台、販売・在庫・つけ管理の初期リリースを前提に、判断責任を人間の `po` に集約する。
+- 本プロジェクトは、店主代表、開発担当、生成 AI 支援 agent が協働する個人・小規模運用から開始する。
+- 初期リリースでは、単一店舗、店頭タブレット 1 台、販売・在庫・つけ管理の記録継続を優先する。
+- 人間の PO は、目的、優先順位、公開可否、運用上の最終判断を担う。
+- AI Agent は、草案作成、記録整理、レビュー支援を担う。最終判断、公開可否、説明責任は人間の PO が担う。
+- Role code の語彙、実行主体、具体的な兼務割り当ては本書に複製せず、関連ドキュメントを正本とする。
 
-`pm-roles.yaml` は、Schedule の `owner` と `pm-members.yaml` の `members[].roles` で使用できる Role code の語彙一覧を管理する。`pm-members.yaml` は、人間または agent の実行主体と対応 Role code を管理する。本書は、そのロール・メンバー構成を採用する理由と見直し条件を記録する。
+## 2. 採用ロールと owner 語彙
 
-小規模運用のため、`PO` が目的、優先順位、進捗管理、公開判断、初期運用判断を兼務する。要件整理は `BA`、構成方針と実装関連の整理は `ARC` と `DEV`、品質確認は `QE` の観点で分け、実行主体の具体的な対応 Role code は `pm-members.yaml` に委ねる。agent は草案作成とレビュー支援を担うが、最終判断、公開可否判断、説明責任は人間の `po` が担う。
+`pm-roles.yaml` に定義した Role code を、本プロジェクトで使用可能な責務語彙として採用する。採用は Schedule の `owner` や RACI の列として使える語彙を定めることであり、すべての Role に専任 member を置くことではない。
 
-## 2. 関連ドキュメント
+初期運用では、人間の最終判断主体が複数の責務を兼務できる構成とする。実際の実行主体、対応 Role code、agent の扱いは `pm-members.yaml` で管理する。
+
+Schedule の `owner` に使える値は、`pm-roles.yaml` の `roles[].code` に存在する Role code に限定する。member nickname、agent 名、個人名、未定義の独自 Role code は `owner` として扱わない。
+
+## 3. 関連ドキュメント
 
 | ドキュメント | 役割 |
-| ------------ | ---- |
-| `pm-roles.yaml` | 本プロジェクトで使用する Role code の語彙一覧を管理する |
-| `pm-members.yaml` | 実行主体と対応 Role code を管理し、`specdojo exec --by <nickname>` の指定候補を定義する |
-| `pm-raci.md` | 必要時に主要成果物・プロセスごとの責任分担を定義する |
-| [people-and-organization-definition-standard.md](../standards/people-and-organization-definition-standard.md) | Role、Member、Task owner、Executor、RACI の共通定義を参照する |
+| --- | --- |
+| `prj-overview.md` | 組織設計が支える目的、優先順位、公開方針の前提を定義する |
+| `pm-roles.yaml` | Schedule の `owner` と RACI で使用できる Role code の語彙を正本として管理する |
+| `pm-members.yaml` | 実行主体、対応 Role code、兼務割り当てを正本として管理する |
+| `pm-raci.md` | 必要時に成果物・プロセスごとの責任分担を定義する |
 
-## 3. 見直し条件
+## 4. 見直し条件
 
-| 更新トリガー | 見直し内容 |
-| ------------ | ---------- |
-| 外部開発メンバーが継続参加し、実装タスクの判断責任を分離する必要が出た | `DEV` の位置づけ、`pm-members.yaml` の対応 Role code、RACI の列構成を見直す |
-| 店頭運用の説明、画面文言、操作導線の改善タスクが継続的に増えた | `UX` を独立させるか、`BA` が兼務する範囲に留めるかを判断する |
-| リリース手順、障害一次対応、変更管理を定常運用する必要が出た | `OPS` の独立要否と、運用関連文書の追加要否を見直す |
-| 週次の進捗・課題・リスク管理が `PO` 兼務では滞る状態になった | `PM` を独立させるか、`PO` 兼務を継続するかを見直す |
-| `pm-roles.yaml` に Role code を追加または削除した | `pm-members.yaml`、Schedule の `owner`、必要に応じて `pm-raci.md` を更新する |
+| 更新トリガー | PO が確認する影響範囲 | 更新対象 |
+| --- | --- | --- |
+| 初期リリース範囲が販売・在庫・つけ管理以外へ広がった | 必要な責務語彙、兼務継続の妥当性、公開判断の集約先 | 本書、`pm-roles.yaml`、必要に応じて `pm-members.yaml` |
+| 継続的に参加する人または AI Agent が増えた | 専任化が必要な責務、実行主体と Role code の対応、RACI の必要性 | `pm-members.yaml`、必要に応じて `pm-raci.md` |
+| 進捗管理、品質確認、公開準備が PO 兼務で継続的に滞留した | PM、QE、OPS などの責務を分離する必要性と承認責任の残し方 | 本書、`pm-roles.yaml`、`pm-members.yaml` |
+| 新しい Role code が必要になった | 標準 Role code で代替できるか、独自 Role が文書の再利用性を損なわないか | 本書、`pm-roles.yaml`、Schedule、必要に応じて `pm-raci.md` |
+| 公開対象に個人情報、非公開情報、アクセス情報が含まれる可能性が出た | 公開可否、匿名化または削除の要否、説明責任の所在 | 本書、`pm-members.yaml`、公開前レビュー対象 |
 
-## 4. 禁止事項
+## 5. 禁止事項
 
-- 全 Role code の一覧を本書に複製しない。
-- 具体的な member 一覧や兼務の割り当てを本書に複製しない。
-- `owner` / `roles` / `--by` の共通定義表を本書に再掲しない。
-- 個人名、member nickname、agent 名を Schedule の `owner` として使えるように記述しない。
-- `pm-roles.yaml` 未掲載の Role code を Schedule の `owner` に使えるように記述しない。
-- agent に最終判断、公開可否判断、説明責任を委ねない。
+- Role code の一覧、具体的な member、兼務の割り当てを本書に複製しない。
+- 個人名、member nickname、agent 名を Schedule の `owner` として扱わない。
+- `pm-roles.yaml` にない Role code を Schedule の `owner` として扱わない。
+- AI Agent に最終承認、公開可否、説明責任を委ねない。
+- 公開文書に不要な個人情報、連絡先、非公開組織情報、アクセス情報を記載しない。
