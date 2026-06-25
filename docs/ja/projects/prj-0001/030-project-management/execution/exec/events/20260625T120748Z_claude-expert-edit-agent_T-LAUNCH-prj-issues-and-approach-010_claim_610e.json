@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-25T12:07:48Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-issues-and-approach-010",
+  "by": "claude-expert-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
