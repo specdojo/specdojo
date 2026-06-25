@@ -1,0 +1,39 @@
+# Template: project role definition
+# Placeholder _PRJ-0000_ is replaced with the actual project_id on scaffold.
+# On scaffold, set id to <project_id>:pm-roles and type to project.
+id: pm-roles-template
+type: template
+status: draft
+based_on:
+  - _PRJ-0000_:pm-organization
+version: 1
+project_id: _PRJ-0000_
+
+# Role code の採用方針・根拠は pm-organization.md を参照する。
+# 実行主体、member nickname、兼務の割り当ては pm-members.yaml で管理する。
+
+roles:
+  - code: PO
+    name: Project Owner
+    project_note: "_TODO_: 最終判断、スコープ、優先順位、公開方針に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: PM
+    name: Project Manager
+    project_note: "_TODO_: 計画、進捗、課題、リスク管理に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: BA
+    name: Business Analyst
+    project_note: "_TODO_: 業務整理、利用者視点、受入条件に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: ARC
+    name: Architect
+    project_note: "_TODO_: 構成方針、技術制約、成果物間整合に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: DEV
+    name: Developer
+    project_note: "_TODO_: 実装、設定、技術的変更作業に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: QE
+    name: Quality Engineer
+    project_note: "_TODO_: 品質基準、レビュー観点、整合性確認に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: UX
+    name: UX / Documentation Designer
+    project_note: "_TODO_: 利用者導線、説明、文書体験に関するプロジェクト固有の扱いを 1 行で記述する。"
+  - code: OPS
+    name: Operations / Release Manager
+    project_note: "_TODO_: リリース、公開、配布、変更管理に関するプロジェクト固有の扱いを 1 行で記述する。"

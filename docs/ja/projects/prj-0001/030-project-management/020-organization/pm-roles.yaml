@@ -17,7 +17,7 @@ roles:
     project_note: 最終判断・スコープ・優先順位・公開方針を担う。
   - code: PM
     name: Project Manager
-    project_note: 計画・進捗・課題・リスク管理を担う。小規模運用では po が兼務する。
+    project_note: 計画・進捗・課題・リスク管理を担う。小規模運用では専任化せず、実行主体の割り当ては pm-members.yaml で管理する。
   - code: BA
     name: Business Analyst
     project_note: 要件、利用者視点、受入条件を整理する。
@@ -32,7 +32,7 @@ roles:
     project_note: 品質基準、レビュー観点、整合性を確認する。
   - code: UX
     name: UX / Documentation Designer
-    project_note: 利用者導線・説明・文書体験を担う。小規模運用では ba-agent が兼務する。
+    project_note: 利用者導線・説明・文書体験を担う。小規模運用では BA 観点と合わせて扱い、必要時に専任化を検討する。
   - code: OPS
     name: Operations / Release Manager
-    project_note: リリース・公開・配布・変更管理を担う。小規模運用では po が兼務する。
+    project_note: リリース・公開・配布・変更管理を担う。公開可否の最終判断は PO に残し、実行主体の割り当ては pm-members.yaml で管理する。
