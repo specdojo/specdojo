@@ -261,4 +261,21 @@ describe('exec worktree ops', () => {
       git(fixture.repo, 'show-ref', '--verify', `refs/heads/${worktree.branch}`)
     ).toThrow()
   })
+
+  it('removes a merged worktree even when only regenerated bookkeeping is dirty', () => {
+    const fixture = setupRepository()
+    const taskId = 'T-T-doc-010'
+    const worktree = prepare(fixture, taskId)
+    writeFile(join(worktree.path, 'docs', 'a.md'), 'deliverable\n')
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId })
+    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId })
+
+    // A regenerated, non-commit-target file (e.g. doc-index) left dirty in the worktree must not
+    // block removal: git would refuse without --force, but the tool forces past it automatically.
+    writeFile(join(worktree.path, '.specdojo', 'doc-index.json'), '{"regenerated":true}\n')
+
+    removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true })
+
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull()
+  })
 })

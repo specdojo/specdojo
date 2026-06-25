@@ -256,12 +256,20 @@ export function removeWorktree(params: {
   if (!params.force && !merged) {
     throw new Error(`Exec branch is not merged into current HEAD: ${worktree.branch}`)
   }
+  // Past the guards, any remaining uncommitted files are non-commit-target bookkeeping
+  // (doc-index, generated/, events) that were intentionally excluded from the task commit.
+  // git refuses to remove a worktree while those are dirty, so force past them: they are
+  // regenerable, and the tool already judged the worktree removable.
+  const leftover = worktreeStatusPaths(worktree.path)
+  const forceGit = params.force || leftover.length > 0
   if (params.force) {
     process.stderr.write('Warning: forcing worktree removal; uncommitted changes may be lost.\n')
+  } else if (leftover.length > 0) {
+    process.stderr.write(`Discarding regenerated files in worktree: ${leftover.join(', ')}\n`)
   }
   if (params.dryRun) {
     process.stdout.write(
-      `[dry-run] git worktree remove${params.force ? ' --force' : ''} ${worktree.path}\n`
+      `[dry-run] git worktree remove${forceGit ? ' --force' : ''} ${worktree.path}\n`
     )
     if (params.deleteBranch) process.stdout.write(`[dry-run] git branch -d ${worktree.branch}\n`)
     return
@@ -270,7 +278,7 @@ export function removeWorktree(params: {
   gitOutput(context.repoRoot, [
     'worktree',
     'remove',
-    ...(params.force ? ['--force'] : []),
+    ...(forceGit ? ['--force'] : []),
     worktree.path,
   ])
   if (params.deleteBranch) gitOutput(context.repoRoot, ['branch', '-d', worktree.branch])
