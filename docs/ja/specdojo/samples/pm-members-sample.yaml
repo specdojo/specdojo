@@ -4,9 +4,11 @@ status: draft
 rulebook: pm-members-rulebook
 based_on:
   - people-and-organization-definition-standard
+  - prj-0001:pm-organization
   - prj-0001:pm-roles
 version: 1
 project_id: prj-0001
+
 members:
   - nickname: po
     display_name: 店主代表
@@ -16,62 +18,76 @@ members:
       - PM
       - OPS
     type: human
-    note: 目的・優先順位・公開可否の最終判断を担う。小規模運用のため管理とリリース判断も兼務する
-  - nickname: ba-agent
-    display_name: BA エージェント
+    persona: final-decision-maker
+    focus:
+      - 目的・優先順位・公開可否の最終判断
+      - 店頭運用を変えすぎないスコープ管理
+      - agent 支援結果の承認判断
+    scheduler_strategy: critical-first
+    note: 人間の最終判断主体。小規模運用のため管理と公開判断を兼務し、agent に承認責任を委ねない。
+
+  - nickname: ba-edit-agent
+    priority: 1
+    display_name: BA Edit Agent
     email: null
     roles:
       - BA
     type: agent
+    mode: edit
+    proficiency: normal
     persona: requirements-navigator
     focus:
       - 販売・在庫・つけ管理の業務フロー整理
       - 利用者視点の受入条件確認
       - 要件の抜け漏れ確認
+    capabilities:
+      - web_search
+    command: "specdojo-agent run --profile ba-edit"
     scheduler_strategy: dependency-first
-    note: 要件整理と受入条件草案を支援する。最終判断は人間の PO が行う
-  - nickname: arc-agent
-    display_name: ARC エージェント
-    email: null
-    roles:
-      - ARC
-      - DEV
-    type: agent
-    persona: spec-navigator
-    focus:
-      - タブレット前提の構成方針確認
-      - データ管理方針の整合性確認
-      - 成果物間の依存関係確認
-    scheduler_strategy: dependency-first
-    note: 構成方針・技術観点・実装関連成果物の草案確認を支援する。承認責任は持たない
-  - nickname: qe-agent
-    display_name: QE エージェント
+    note: 要件整理と受入条件草案を支援する。最終判断は人間の PO が行う。
+
+  - nickname: qe-review-agent
+    priority: 1
+    display_name: QE Review Agent
     email: null
     roles:
       - QE
     type: agent
+    mode: review
+    proficiency: normal
     persona: risk-averse-reviewer
     focus:
       - 受入条件の検証可能性確認
       - 欠品・会計ミス防止観点のレビュー
       - 禁止事項・ルール準拠の確認
-    scheduler_strategy: critical-first
-    note: 品質基準・レビュー観点・確認手順の草案確認を支援する。公開可否判断は行わない
-  - nickname: copilot
-    display_name: 汎用支援エージェント
+    capabilities:
+      - web_search
+    command: "specdojo-agent run --profile qe-review"
+    scheduler_strategy: fifo
+    note: 品質観点のレビューを支援する。成果物の公開可否判断は行わない。
+
+  - nickname: general-agent
+    priority: 2
+    display_name: General Support Agent
     email: null
     roles: []
     type: agent
+    mode: edit
+    proficiency: low
     persona: general-assistant
     focus:
       - 草案作成支援
       - 表記ゆれ確認
       - 成果物間の軽微な整合性確認
+    capabilities: []
+    command: "specdojo-agent run --profile general"
     scheduler_strategy: manual
-    note: 特定 Role に固定しない汎用支援 agent。実行時のタスク owner または文脈で対象 Role を明示する
+    note: 特定 Role に固定しない汎用支援 agent。実行時のタスク owner または plan で対象 Role を明示する。
+
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
   - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
   - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。

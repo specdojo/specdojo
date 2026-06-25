@@ -1,6 +1,7 @@
 id: prj-0001:pm-members
 type: project
 status: draft
+rulebook: pm-members-rulebook
 based_on:
   - people-and-organization-definition-standard
   - prj-0001:pm-organization
@@ -245,3 +246,12 @@ members:
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
     note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを行い、成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+
+rules:
+  - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
+  - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
+  - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
+  - 汎用 agent の roles は空配列とし、実行時のタスク owner または plan で対象 Role を補う。
+  - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+  - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。
