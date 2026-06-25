@@ -32,33 +32,55 @@
       }
     },
     "T-LAUNCH-pm-organization-010": {
-      "state": "todo",
-      "last_ts": "2026-06-24T14:02:16Z",
+      "state": "done",
+      "last_ts": "2026-06-25T10:03:46Z",
       "last_by": "codex-expert-edit-agent",
-      "last_type": "cancel",
-      "last_msg": "manual cancel",
+      "last_type": "complete",
+      "last_msg": "pm-organization 完了",
       "meta": {
         "claim_owner": "",
         "planned_owner": "PO"
       }
     },
     "T-LAUNCH-prj-scope-010": {
-      "state": "todo",
-      "last_ts": "2026-06-23T23:06:07Z",
-      "last_by": "indie",
-      "last_type": "cancel",
-      "last_msg": "todoへ戻して再claim可能化",
+      "state": "done",
+      "last_ts": "2026-06-24T14:41:06Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
       "meta": {
         "claim_owner": "",
         "planned_owner": "BA"
       }
     },
     "T-LAUNCH-prj-stakeholder-register-010": {
-      "state": "todo",
-      "last_ts": "2026-06-23T23:06:07Z",
-      "last_by": "indie",
-      "last_type": "cancel",
-      "last_msg": "todoへ戻して再claim可能化",
+      "state": "done",
+      "last_ts": "2026-06-24T22:46:10Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "recovery: merged completed work (status complete on branch)",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "BA"
+      }
+    },
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
+      "state": "done",
+      "last_ts": "2026-06-24T22:45:58Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "recovery: merged completed work (status complete on branch)",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "ARC"
+      }
+    },
+    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010": {
+      "state": "done",
+      "last_ts": "2026-06-24T22:46:12Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "recovery: merged completed work (status complete on branch)",
       "meta": {
         "claim_owner": "",
         "planned_owner": "BA"
@@ -104,9 +126,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-scope-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010": {
       "state": "todo"
     },
     "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I01": {
@@ -200,9 +219,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-charter-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
       "state": "todo"
     },
     "T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01": {

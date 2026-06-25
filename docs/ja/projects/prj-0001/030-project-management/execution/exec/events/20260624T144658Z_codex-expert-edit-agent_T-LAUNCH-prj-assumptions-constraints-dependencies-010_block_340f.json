@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-06-24T14:46:58Z",
+  "type": "block",
+  "task_id": "T-LAUNCH-prj-assumptions-constraints-dependencies-010",
+  "by": "codex-expert-edit-agent",
+  "msg": "runner error: Current worktree changes overlap merge paths: .specdojo/doc-index.json"
+}

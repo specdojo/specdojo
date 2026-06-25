@@ -6,7 +6,7 @@
     "sch-milestones.yaml",
     "sch-track-launch.yaml"
   ],
-  "event_files_count": 14,
+  "event_files_count": 32,
   "default_scheduler_strategy": "critical-first",
   "derived_files": [
     "claim-next.json",

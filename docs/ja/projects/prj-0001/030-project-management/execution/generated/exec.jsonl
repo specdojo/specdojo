@@ -12,3 +12,21 @@
 {"v":1,"ts":"2026-06-23T23:06:07Z","type":"cancel","task_id":"T-LAUNCH-prj-stakeholder-register-010","by":"indie","msg":"todoへ戻して再claim可能化"}
 {"v":1,"ts":"2026-06-23T23:07:18Z","type":"claim","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"PO"}}
 {"v":1,"ts":"2026-06-24T14:02:16Z","type":"cancel","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"manual cancel"}
+{"v":1,"ts":"2026-06-24T14:28:21Z","type":"claim","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"PO"}}
+{"v":1,"ts":"2026-06-24T14:36:23Z","type":"block","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"rate limit reached"}
+{"v":1,"ts":"2026-06-24T14:36:24Z","type":"claim","task_id":"T-LAUNCH-prj-scope-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-24T14:41:06Z","type":"complete","task_id":"T-LAUNCH-prj-scope-010","by":"codex-expert-edit-agent","msg":"auto-complete"}
+{"v":1,"ts":"2026-06-24T14:41:07Z","type":"claim","task_id":"T-LAUNCH-prj-assumptions-constraints-dependencies-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"ARC"}}
+{"v":1,"ts":"2026-06-24T14:46:58Z","type":"claim","task_id":"T-LAUNCH-prj-stakeholder-register-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-24T14:46:58Z","type":"block","task_id":"T-LAUNCH-prj-assumptions-constraints-dependencies-010","by":"codex-expert-edit-agent","msg":"runner error: Current worktree changes overlap merge paths: .specdojo/doc-index.json"}
+{"v":1,"ts":"2026-06-24T14:55:06Z","type":"block","task_id":"T-LAUNCH-prj-stakeholder-register-010","by":"codex-expert-edit-agent","msg":"runner error: Current worktree changes overlap merge paths: .specdojo/doc-index.json"}
+{"v":1,"ts":"2026-06-24T14:55:07Z","type":"claim","task_id":"T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010","by":"codex-expert-edit-agent","msg":"auto-run","meta":{"claim_owner":"","planned_owner":"BA"}}
+{"v":1,"ts":"2026-06-24T15:02:07Z","type":"block","task_id":"T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010","by":"codex-expert-edit-agent","msg":"runner error: Current worktree changes overlap merge paths: .specdojo/doc-index.json"}
+{"v":1,"ts":"2026-06-24T22:45:38Z","type":"unblock","task_id":"T-LAUNCH-prj-assumptions-constraints-dependencies-010","by":"codex-expert-edit-agent","msg":"recovery: doc-index overlap fixed (commit-target excluded)"}
+{"v":1,"ts":"2026-06-24T22:45:58Z","type":"complete","task_id":"T-LAUNCH-prj-assumptions-constraints-dependencies-010","by":"codex-expert-edit-agent","msg":"recovery: merged completed work (status complete on branch)"}
+{"v":1,"ts":"2026-06-24T22:46:09Z","type":"unblock","task_id":"T-LAUNCH-prj-stakeholder-register-010","by":"codex-expert-edit-agent","msg":"recovery: doc-index overlap fixed (commit-target excluded)"}
+{"v":1,"ts":"2026-06-24T22:46:10Z","type":"complete","task_id":"T-LAUNCH-prj-stakeholder-register-010","by":"codex-expert-edit-agent","msg":"recovery: merged completed work (status complete on branch)"}
+{"v":1,"ts":"2026-06-24T22:46:11Z","type":"unblock","task_id":"T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010","by":"codex-expert-edit-agent","msg":"recovery: doc-index overlap fixed (commit-target excluded)"}
+{"v":1,"ts":"2026-06-24T22:46:12Z","type":"complete","task_id":"T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010","by":"codex-expert-edit-agent","msg":"recovery: merged completed work (status complete on branch)"}
+{"v":1,"ts":"2026-06-25T09:43:53Z","type":"unblock","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"resume: rate limit中断分を再開"}
+{"v":1,"ts":"2026-06-25T10:03:46Z","type":"complete","task_id":"T-LAUNCH-pm-organization-010","by":"codex-expert-edit-agent","msg":"pm-organization 完了"}

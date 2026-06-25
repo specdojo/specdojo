@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-06-24T14:55:06Z",
+  "type": "block",
+  "task_id": "T-LAUNCH-prj-stakeholder-register-010",
+  "by": "codex-expert-edit-agent",
+  "msg": "runner error: Current worktree changes overlap merge paths: .specdojo/doc-index.json"
+}
