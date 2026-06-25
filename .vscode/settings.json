@@ -221,5 +221,9 @@
       "approve": true,
       "matchCommandLine": true
     }
-  }
+  },
+
+  "terminal.integrated.enablePersistentSessions": true,
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+  "terminal.integrated.hideOnStartup": "whenEmpty"
 }
