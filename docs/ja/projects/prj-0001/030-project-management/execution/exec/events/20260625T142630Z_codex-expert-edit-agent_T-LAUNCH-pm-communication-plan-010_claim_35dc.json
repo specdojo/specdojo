@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-25T14:26:30Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-communication-plan-010",
+  "by": "codex-expert-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
