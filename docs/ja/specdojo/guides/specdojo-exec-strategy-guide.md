@@ -86,28 +86,38 @@ members:
     command: "opencode run --agent expert-web-agent"
 ```
 
-`exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にする。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含める。候補は `priority` 昇順、同 priority 内では余剰 capabilities 数の少ない順に並ぶ。
+`exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にする。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含める。候補のソートキーは次の順に評価する。
+
+1. busy 状態（イベントログ上で `doing` のタスクを担当中の agent）を最後尾に置く。`--parallel` 実行で同じ最上位 agent に集中して rate limit に陥るのを避けるため。
+2. `priority` 昇順（同値なら次へ）。
+3. 余剰 capabilities 数の少ない順。
 
 ## 4. 実行フロー
+
+rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行する（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返す。この再試行は critical / non-critical を問わず全タスクに適用する。
 
 ```mermaid
 flowchart LR
   T["ready task\nmode / capabilities / proficiency"]
   F1["pm-members\ncapabilities フィルタ"]
   F2["proficiency フィルタ\n（指定あれば）"]
-  S["priority → 余剰数\nでソート"]
-  M0["candidates[0]\ncommand 実行"]
+  S["busy 最後尾 → priority → 余剰数\nでソート"]
+  M0["candidates[i]\ncommand 実行"]
   RL{"rate limit?"}
   OK(["complete"])
-  SK(["skip & block"])
-  MN["candidates[n+1]\n再試行"]
+  NX{"次候補あり?"}
+  MN["candidates[i+1]\n即時切替"]
+  WT{"再パス上限?"}
+  WB["wait+backoff\n後に再パス"]
   BL(["block & log"])
 
   T --> F1 --> F2 --> S --> M0 --> RL
   RL -->|No| OK
-  RL -->|Yes, non-critical| SK
-  RL -->|Yes, critical| MN --> RL
-  MN --> BL
+  RL -->|Yes| NX
+  NX -->|Yes| MN --> M0
+  NX -->|No| WT
+  WT -->|未達| WB --> M0
+  WT -->|到達| BL
 ```
 
 ## 5. exec-defaults

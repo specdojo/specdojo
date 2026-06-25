@@ -222,7 +222,8 @@ export function resolveTaskPhaseContext(
 export function selectCandidates(
   requirements: ResolvedRequirements,
   roster: MemberRoster | null,
-  taskMode?: string
+  taskMode?: string,
+  busyActors?: ReadonlySet<string>
 ): ProjectMember[] {
   if (!roster) return []
   const { capabilities: required, proficiency } = requirements
@@ -238,15 +239,40 @@ export function selectCandidates(
       return true
     })
     .sort((a, b) => {
-      // Primary: priority (lower number = tried first)
+      // Primary: agents already busy on a "doing" task sort last. This spreads parallel runs
+      // across agents instead of piling every task onto the same top-priority command and
+      // hitting its rate limit.
+      const aBusy = busyActors?.has(a.nickname) ? 1 : 0
+      const bBusy = busyActors?.has(b.nickname) ? 1 : 0
+      if (aBusy !== bBusy) return aBusy - bBusy
+      // Secondary: priority (lower number = tried first)
       const aPriority = a.priority ?? 999
       const bPriority = b.priority ?? 999
       if (aPriority !== bPriority) return aPriority - bPriority
-      // Secondary: fewest extra capabilities (tie-breaker within same priority)
+      // Tertiary: fewest extra capabilities (tie-breaker within same priority)
       const aExtra = (a.capabilities?.length ?? 0) - required.length
       const bExtra = (b.capabilities?.length ?? 0) - required.length
       return aExtra - bExtra
     })
+}
+
+// Collect the nicknames of actors currently working a "doing" task, derived from the event log
+// (not the state.json cache) so freshly claimed tasks within the same parallel round are seen.
+// Used to deprioritize busy agents during auto-selection. Failures degrade to "no busy info".
+function collectBusyActors(schedulePath: string): Set<string> {
+  const busy = new Set<string>()
+  try {
+    const sch = buildScheduleIndex(schedulePath)
+    const evts = readAllEventFiles(schedulePath)
+    const initTasks = buildInitialStateFromStrategy(schedulePath, sch)
+    const snap = foldEventsToState(evts, sch, schedulePath, initTasks)
+    for (const taskState of Object.values(snap.tasks ?? {})) {
+      if (taskState?.state === 'doing' && taskState.last_by) busy.add(taskState.last_by)
+    }
+  } catch {
+    // ignore; selection falls back to priority-only ordering
+  }
+  return busy
 }
 
 function isRateLimitError(
@@ -401,10 +427,14 @@ async function executeAgent(
   return { result: 'success', exitCode: 0, stderr: '' }
 }
 
+// Run the task's agent command, falling back through the remaining candidates on rate limit.
+// The next-priority candidate is assumed to be a different account/provider, so we switch to it
+// immediately (no wait). Only after every candidate is rate-limited do we wait+backoff and run
+// another full pass, bounded by rate_limit_policy.on_critical.retry.max_attempts. Applies to all
+// tasks (critical and non-critical) so a rate limit no longer stops the run outright.
 async function runWithRetry(
   agentCommands: string[],
   prompt: string,
-  isOnCriticalPath: boolean,
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv
@@ -412,38 +442,52 @@ async function runWithRetry(
   const detection = execDefaults.rate_limit_detection
   const policy = execDefaults.rate_limit_policy
 
-  const first = await executeAgent(agentCommands[0], prompt, detection, cwd, env)
-  if (first.result !== 'rate_limit') return { result: first.result, stderr: first.stderr }
+  // One pass tries every candidate in priority order with no wait between switches.
+  const runPass = async (): Promise<{ result: RunResult; stderr: string }> => {
+    let lastStderr = ''
+    for (let idx = 0; idx < agentCommands.length; idx++) {
+      if (idx > 0) {
+        process.stdout.write(
+          `Rate limit detected. Switching to next agent (${idx + 1}/${agentCommands.length})...\n`
+        )
+      }
+      const attempt = await executeAgent(agentCommands[idx], prompt, detection, cwd, env)
+      lastStderr = attempt.stderr
+      if (attempt.result !== 'rate_limit') return { result: attempt.result, stderr: attempt.stderr }
+    }
+    return { result: 'rate_limit', stderr: lastStderr }
+  }
 
-  if (!isOnCriticalPath || !policy) {
-    process.stdout.write(`Rate limit detected (non-critical). Skipping task.\n`)
-    return { result: 'rate_limit', stderr: first.stderr }
+  const firstPass = await runPass()
+  if (firstPass.result !== 'rate_limit') return firstPass
+
+  // Every candidate is rate-limited. Without a policy we cannot bound further retries, so stop.
+  if (!policy) {
+    process.stdout.write(`Rate limit: all ${agentCommands.length} agent(s) exhausted.\n`)
+    return firstPass
   }
 
   const { retry } = policy.on_critical
   let waitSeconds = retry.initial_wait_seconds
-  let attemptCount = 1
-  let lastStderr = first.stderr
+  let lastStderr = firstPass.stderr
 
-  for (let idx = 1; idx < agentCommands.length; idx++) {
-    if (attemptCount >= retry.max_attempts) break
-
+  // First pass counts as attempt 1; remaining passes wait+backoff before retrying all candidates.
+  for (let pass = 2; pass <= retry.max_attempts; pass++) {
     const actualWait = Math.min(waitSeconds, retry.max_wait_seconds)
     process.stdout.write(
-      `Rate limit on critical path (attempt ${attemptCount}/${retry.max_attempts}). Waiting ${actualWait}s, trying next member...\n`
+      `Rate limit: all agents exhausted (attempt ${pass}/${retry.max_attempts}). Waiting ${actualWait}s before retry...\n`
     )
     await delay(actualWait * 1000)
-    attemptCount++
 
-    const result = await executeAgent(agentCommands[idx], prompt, detection, cwd, env)
+    const result = await runPass()
     lastStderr = result.stderr
-    if (result.result !== 'rate_limit') return { result: result.result, stderr: result.stderr }
+    if (result.result !== 'rate_limit') return result
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds)
   }
 
   process.stdout.write(
-    `Rate limit: all ${agentCommands.length} member(s) exhausted after ${attemptCount} attempt(s).\n`
+    `Rate limit: all ${agentCommands.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`
   )
   return { result: 'rate_limit', stderr: lastStderr }
 }
@@ -532,7 +576,8 @@ function prepareSingleTask(
       proficiency: task.proficiency,
     }
 
-    const candidates = selectCandidates(requirements, roster, mode)
+    const busyActors = collectBusyActors(schedulePath)
+    const candidates = selectCandidates(requirements, roster, mode, busyActors)
     if (candidates.length === 0) {
       process.stdout.write(
         `  No agents found for mode: ${mode}, capabilities: [${requirements.capabilities.join(', ')}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ''}\n`
@@ -664,11 +709,9 @@ async function runPreparedTask(
 
   process.stdout.write(`  Running: ${prepared.agentCommands[0]}\n`)
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`)
-  const isOnCriticalPath = (prepared.task.cpm?.slack ?? 1) === 0
   const { result, stderr } = await runWithRetry(
     prepared.agentCommands,
     prepared.prompt,
-    isOnCriticalPath,
     execDefaults,
     prepared.worktree.path,
     agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath)

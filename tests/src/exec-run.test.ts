@@ -1,5 +1,23 @@
 import { describe, expect, it } from 'vitest'
-import { extractBlockReason } from '../../src/exec-run.js'
+import { extractBlockReason, selectCandidates } from '../../src/exec-run.js'
+import type { MemberRoster, ProjectMember } from '../../src/specdojo-config.js'
+
+function agent(overrides: Partial<ProjectMember> & { nickname: string }): ProjectMember {
+  return {
+    display_name: overrides.nickname,
+    email: null,
+    roles: [],
+    type: 'agent',
+    capabilities: ['web_search'],
+    command: `run --agent ${overrides.nickname}`,
+    mode: 'edit',
+    ...overrides,
+  }
+}
+
+function roster(members: ProjectMember[]): MemberRoster {
+  return { version: 1, project_id: 'test', members }
+}
 
 describe('extractBlockReason', () => {
   it('prefers the tagged `blocked:` line from edit agents', () => {
@@ -46,5 +64,51 @@ describe('extractBlockReason', () => {
     expect(actual.endsWith('…')).toBe(true)
     // prefix + first 500 chars of the reason + ellipsis
     expect(actual.length).toBe('agent exited with non-zero code: '.length + 500 + 1)
+  })
+})
+
+describe('selectCandidates', () => {
+  const requirements = { capabilities: ['web_search'] }
+
+  it('orders candidates by priority ascending, then fewest extra capabilities', () => {
+    const members = roster([
+      agent({ nickname: 'high', priority: 2 }),
+      agent({ nickname: 'low', priority: 1 }),
+      agent({ nickname: 'low-extra', priority: 1, capabilities: ['web_search', 'extra'] }),
+    ])
+
+    const actual = selectCandidates(requirements, members, 'edit').map(m => m.nickname)
+
+    expect(actual).toEqual(['low', 'low-extra', 'high'])
+  })
+
+  it('sorts busy agents last so parallel runs spread across agents', () => {
+    const members = roster([
+      agent({ nickname: 'top', priority: 1 }),
+      agent({ nickname: 'next', priority: 2 }),
+    ])
+
+    const actual = selectCandidates(requirements, members, 'edit', new Set(['top'])).map(
+      m => m.nickname
+    )
+
+    // `top` has the best priority but is busy, so it drops behind the idle `next`.
+    expect(actual).toEqual(['next', 'top'])
+  })
+
+  it('keeps priority order among busy agents when all candidates are busy', () => {
+    const members = roster([
+      agent({ nickname: 'high', priority: 2 }),
+      agent({ nickname: 'low', priority: 1 }),
+    ])
+
+    const actual = selectCandidates(
+      requirements,
+      members,
+      'edit',
+      new Set(['high', 'low'])
+    ).map(m => m.nickname)
+
+    expect(actual).toEqual(['low', 'high'])
   })
 })
