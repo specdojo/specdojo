@@ -5,21 +5,39 @@
   "default_strategy": "critical-first",
   "strategies": {
     "critical-first": {
-      "next_task_id": "T-LAUNCH-pm-roles-010",
+      "next_task_id": "T-LAUNCH-pm-roles-070-I01",
       "ordered_task_ids": [
-        "T-LAUNCH-pm-roles-010",
-        "T-LAUNCH-prj-issues-and-approach-010",
-        "T-LAUNCH-pm-raci-010",
-        "T-LAUNCH-prj-charter-010"
+        "T-LAUNCH-pm-roles-070-I01",
+        "T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01",
+        "T-LAUNCH-prj-charter-070-I01",
+        "T-LAUNCH-prj-comparison-of-alternatives-070-I01",
+        "T-LAUNCH-prj-issues-and-approach-070-I01",
+        "T-LAUNCH-prj-scope-070-I01",
+        "T-LAUNCH-prj-stakeholder-register-070-I01",
+        "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I01",
+        "T-LAUNCH-pm-communication-plan-080-I01",
+        "T-LAUNCH-pm-members-080-I01",
+        "T-LAUNCH-pm-organization-080-I01",
+        "T-LAUNCH-pm-plan-080-I01",
+        "T-LAUNCH-pm-quality-management-plan-080-I01"
       ]
     },
     "fifo": {
-      "next_task_id": "T-LAUNCH-pm-raci-010",
+      "next_task_id": "T-LAUNCH-pm-communication-plan-080-I01",
       "ordered_task_ids": [
-        "T-LAUNCH-pm-raci-010",
-        "T-LAUNCH-pm-roles-010",
-        "T-LAUNCH-prj-charter-010",
-        "T-LAUNCH-prj-issues-and-approach-010"
+        "T-LAUNCH-pm-communication-plan-080-I01",
+        "T-LAUNCH-pm-members-080-I01",
+        "T-LAUNCH-pm-organization-080-I01",
+        "T-LAUNCH-pm-plan-080-I01",
+        "T-LAUNCH-pm-quality-management-plan-080-I01",
+        "T-LAUNCH-pm-roles-070-I01",
+        "T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01",
+        "T-LAUNCH-prj-charter-070-I01",
+        "T-LAUNCH-prj-comparison-of-alternatives-070-I01",
+        "T-LAUNCH-prj-issues-and-approach-070-I01",
+        "T-LAUNCH-prj-scope-070-I01",
+        "T-LAUNCH-prj-stakeholder-register-070-I01",
+        "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I01"
       ]
     }
   }

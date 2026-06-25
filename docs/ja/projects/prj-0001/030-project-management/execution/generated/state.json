@@ -86,6 +86,171 @@
         "planned_owner": "BA"
       }
     },
+    "T-LAUNCH-pm-roles-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T12:21:45Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PO"
+      }
+    },
+    "T-LAUNCH-prj-issues-and-approach-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T12:15:24Z",
+      "last_by": "claude-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "BA"
+      }
+    },
+    "T-LAUNCH-pm-raci-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T12:19:02Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-plan-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T14:26:30Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-prj-comparison-of-alternatives-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T14:58:41Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "ARC"
+      }
+    },
+    "T-LAUNCH-pm-members-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:06:27Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PO"
+      }
+    },
+    "T-LAUNCH-prj-charter-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T12:59:09Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PO"
+      }
+    },
+    "T-LAUNCH-pm-communication-plan-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T14:38:11Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-quality-management-plan-010": {
+      "state": "done",
+      "last_ts": "2026-06-25T14:51:49Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-communication-plan-070-I01": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:10:28Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-members-070-I01": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:12:55Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PO"
+      }
+    },
+    "T-LAUNCH-pm-organization-070-I01": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:18:22Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PO"
+      }
+    },
+    "T-LAUNCH-pm-plan-070-I01": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:22:00Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-quality-management-plan-070-I01": {
+      "state": "done",
+      "last_ts": "2026-06-25T15:25:40Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "complete",
+      "last_msg": "auto-complete",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
+    "T-LAUNCH-pm-raci-070-I01": {
+      "state": "blocked",
+      "last_ts": "2026-06-25T15:31:31Z",
+      "last_by": "codex-expert-edit-agent",
+      "last_type": "block",
+      "last_msg": "rate limit reached",
+      "meta": {
+        "claim_owner": "",
+        "planned_owner": "PM"
+      }
+    },
     "M-LAUNCH-project-definition": {
       "state": "todo"
     },
@@ -188,9 +353,6 @@
     "T-LAUNCH-prj-stakeholder-register-140": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-charter-010": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-charter-070-I01": {
       "state": "todo"
     },
@@ -251,9 +413,6 @@
     "T-LAUNCH-prj-assumptions-constraints-dependencies-140": {
       "state": "todo"
     },
-    "T-LAUNCH-prj-issues-and-approach-010": {
-      "state": "todo"
-    },
     "T-LAUNCH-prj-issues-and-approach-070-I01": {
       "state": "todo"
     },
@@ -282,9 +441,6 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-issues-and-approach-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-prj-comparison-of-alternatives-010": {
       "state": "todo"
     },
     "T-LAUNCH-prj-comparison-of-alternatives-070-I01": {
@@ -317,9 +473,6 @@
     "T-LAUNCH-prj-comparison-of-alternatives-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-organization-070-I01": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-organization-080-I01": {
       "state": "todo"
     },
@@ -345,9 +498,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-organization-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-roles-010": {
       "state": "todo"
     },
     "T-LAUNCH-pm-roles-070-I01": {
@@ -380,12 +530,6 @@
     "T-LAUNCH-pm-roles-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-plan-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-plan-070-I01": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-plan-080-I01": {
       "state": "todo"
     },
@@ -411,12 +555,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-plan-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-communication-plan-070-I01": {
       "state": "todo"
     },
     "T-LAUNCH-pm-communication-plan-080-I01": {
@@ -446,12 +584,6 @@
     "T-LAUNCH-pm-communication-plan-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-quality-management-plan-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-quality-management-plan-070-I01": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-quality-management-plan-080-I01": {
       "state": "todo"
     },
@@ -479,12 +611,6 @@
     "T-LAUNCH-pm-quality-management-plan-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-members-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-members-070-I01": {
-      "state": "todo"
-    },
     "T-LAUNCH-pm-members-080-I01": {
       "state": "todo"
     },
@@ -510,12 +636,6 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-members-140": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-010": {
-      "state": "todo"
-    },
-    "T-LAUNCH-pm-raci-070-I01": {
       "state": "todo"
     },
     "T-LAUNCH-pm-raci-080-I01": {

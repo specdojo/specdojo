@@ -117,12 +117,12 @@
 <text class="label-artifact" x="126" y="376" clip-path="url(#clip-col2)">RACI</text>
 <text class="label" x="298" y="376" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="384" x2="928" y2="384" />
-<rect x="496" y="362" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="496" y="362" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="400" clip-path="url(#clip-col1)">pm-roles-010</text>
 <text class="label-artifact" x="126" y="400" clip-path="url(#clip-col2)">ロール定義</text>
 <text class="label" x="298" y="400" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="408" x2="928" y2="408" />
-<rect x="496" y="386" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="496" y="386" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="424" clip-path="url(#clip-col1)">prj-assumptions-constraints-dependencies-010</text>
 <text class="label-artifact" x="126" y="424" clip-path="url(#clip-col2)">前提・制約・依存関係</text>
 <text class="label" x="298" y="424" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
@@ -132,7 +132,7 @@
 <text class="label-artifact" x="126" y="448" clip-path="url(#clip-col2)">プロジェクト憲章</text>
 <text class="label" x="298" y="448" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="456" x2="928" y2="456" />
-<rect x="496" y="434" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="496" y="434" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="472" clip-path="url(#clip-col1)">prj-success-criteria-and-acceptance-criteria-010</text>
 <text class="label-artifact" x="126" y="472" clip-path="url(#clip-col2)">成功基準と受入条件</text>
 <text class="label" x="298" y="472" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
@@ -142,32 +142,32 @@
 <text class="label-artifact" x="126" y="496" clip-path="url(#clip-col2)">メンバー定義</text>
 <text class="label" x="298" y="496" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="504" x2="928" y2="504" />
-<rect x="552" y="482" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="552" y="482" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="520" clip-path="url(#clip-col1)">pm-plan-010</text>
 <text class="label-artifact" x="126" y="520" clip-path="url(#clip-col2)">プロジェクト管理計画</text>
 <text class="label" x="298" y="520" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="528" x2="928" y2="528" />
-<rect x="552" y="506" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="552" y="506" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="544" clip-path="url(#clip-col1)">prj-issues-and-approach-010</text>
 <text class="label-artifact" x="126" y="544" clip-path="url(#clip-col2)">プロジェクト課題と解決アプローチ</text>
 <text class="label" x="298" y="544" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="552" x2="928" y2="552" />
-<rect x="552" y="530" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="552" y="530" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="568" clip-path="url(#clip-col1)">pm-communication-plan-010</text>
 <text class="label-artifact" x="126" y="568" clip-path="url(#clip-col2)">コミュニケーション計画</text>
 <text class="label" x="298" y="568" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="576" x2="928" y2="576" />
-<rect x="608" y="554" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="608" y="554" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="592" clip-path="url(#clip-col1)">pm-quality-management-plan-010</text>
 <text class="label-artifact" x="126" y="592" clip-path="url(#clip-col2)">品質管理計画</text>
 <text class="label" x="298" y="592" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="600" x2="928" y2="600" />
-<rect x="608" y="578" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="608" y="578" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="616" clip-path="url(#clip-col1)">prj-comparison-of-alternatives-010</text>
 <text class="label-artifact" x="126" y="616" clip-path="url(#clip-col2)">代替案比較</text>
 <text class="label" x="298" y="616" clip-path="url(#clip-col3)">一括整備（成果物＋参考資料）</text>
 <line class="row-grid" x1="0" y1="624" x2="928" y2="624" />
-<rect x="608" y="602" width="56" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="608" y="602" width="56" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <rect x="0" y="626" width="928" height="24" fill="#f3e8ff" />
 <text class="label-id" x="8" y="640" clip-path="url(#clip-col1)">G-LAUNCH-bootstrap-pass</text>
 <text class="label-artifact" x="126" y="640" clip-path="url(#clip-col2)">全ドメイン</text>
@@ -180,32 +180,32 @@
 <text class="label-artifact" x="126" y="664" clip-path="url(#clip-col2)">コミュニケーション計画</text>
 <text class="label" x="298" y="664" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="672" x2="928" y2="672" />
-<rect x="664" y="650" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="650" width="14" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="688" clip-path="url(#clip-col1)">pm-members-070</text>
 <text class="label-artifact" x="126" y="688" clip-path="url(#clip-col2)">メンバー定義</text>
 <text class="label" x="298" y="688" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="696" x2="928" y2="696" />
-<rect x="664" y="674" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="674" width="14" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="712" clip-path="url(#clip-col1)">pm-organization-070</text>
 <text class="label-artifact" x="126" y="712" clip-path="url(#clip-col2)">組織定義</text>
 <text class="label" x="298" y="712" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="720" x2="928" y2="720" />
-<rect x="664" y="698" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="698" width="14" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="736" clip-path="url(#clip-col1)">pm-plan-070</text>
 <text class="label-artifact" x="126" y="736" clip-path="url(#clip-col2)">プロジェクト管理計画</text>
 <text class="label" x="298" y="736" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="744" x2="928" y2="744" />
-<rect x="664" y="722" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="722" width="14" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="760" clip-path="url(#clip-col1)">pm-quality-management-plan-070</text>
 <text class="label-artifact" x="126" y="760" clip-path="url(#clip-col2)">品質管理計画</text>
 <text class="label" x="298" y="760" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="768" x2="928" y2="768" />
-<rect x="664" y="746" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="746" width="14" height="12" rx="4" fill="#16a34a" stroke="#334155" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="784" clip-path="url(#clip-col1)">pm-raci-070</text>
 <text class="label-artifact" x="126" y="784" clip-path="url(#clip-col2)">RACI</text>
 <text class="label" x="298" y="784" clip-path="url(#clip-col3)">磨き込み</text>
 <line class="row-grid" x1="0" y1="792" x2="928" y2="792" />
-<rect x="664" y="770" width="14" height="12" rx="4" fill="#d1d5db" stroke="#9ca3af" stroke-width="0.75" opacity="0.94" />
+<rect x="664" y="770" width="14" height="12" rx="4" fill="#f59e0b" stroke="#b45309" stroke-width="0.75" opacity="0.94" />
 <text class="label-id" x="8" y="808" clip-path="url(#clip-col1)">pm-roles-070</text>
 <text class="label-artifact" x="126" y="808" clip-path="url(#clip-col2)">ロール定義</text>
 <text class="label" x="298" y="808" clip-path="url(#clip-col3)">磨き込み</text>
