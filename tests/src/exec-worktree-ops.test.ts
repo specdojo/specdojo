@@ -7,6 +7,7 @@ import { findExecWorktree, type ExecWorktree } from '../../src/exec-worktree.js'
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
+  deliverableStatus,
   mergeWorktreeIntoCurrent,
   removeWorktree,
   type WorktreeOpsContext,
@@ -262,6 +263,52 @@ describe('exec worktree ops', () => {
     ).toThrow()
   })
 
+  it('blocks committing when an agent promotes a new deliverable to "ready"', () => {
+    const fixture = setupRepository()
+    const taskId = 'T-T-doc-010'
+    const worktree = prepare(fixture, taskId)
+
+    // Agent creates a deliverable already promoted to ready (ready is a human-only gate).
+    writeFile(join(worktree.path, 'docs', 'd.yaml'), 'id: d\ntype: spec\nstatus: ready\n')
+
+    expect(() =>
+      commitWorktreeChanges({ context: fixture.context, worktree, taskId })
+    ).toThrow(/promotion to "ready" is human-only.*docs\/d\.yaml/)
+
+    // Nothing was committed: the worktree HEAD is still the prepare checkpoint.
+    expect(git(worktree.path, 'log', '-1', '--pretty=%s')).toBe(
+      `exec(${taskId}): prepare execution`
+    )
+  })
+
+  it('blocks committing when an agent flips an existing deliverable from draft to "ready"', () => {
+    const fixture = setupRepository()
+    // A draft deliverable exists at root before the task runs.
+    writeFile(join(fixture.repo, 'docs', 'd.yaml'), 'id: d\ntype: spec\nstatus: draft\n')
+    git(fixture.repo, 'add', 'docs/d.yaml')
+    git(fixture.repo, 'commit', '-m', 'add draft deliverable')
+
+    const taskId = 'T-T-doc-010'
+    const worktree = prepare(fixture, taskId)
+    writeFile(join(worktree.path, 'docs', 'd.yaml'), 'id: d\ntype: spec\nstatus: ready\n')
+
+    expect(() =>
+      commitWorktreeChanges({ context: fixture.context, worktree, taskId })
+    ).toThrow(/promotion to "ready" is human-only/)
+  })
+
+  it('allows committing deliverable edits that keep the status unpromoted', () => {
+    const fixture = setupRepository()
+    const taskId = 'T-T-doc-010'
+    const worktree = prepare(fixture, taskId)
+
+    writeFile(join(worktree.path, 'docs', 'd.yaml'), 'id: d\ntype: spec\nstatus: draft\nbody: edited\n')
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId })
+    expect(committed.committed).toBe(true)
+    expect(committed.targets).toContain('docs/d.yaml')
+  })
+
   it('removes a merged worktree even when only regenerated bookkeeping is dirty', () => {
     const fixture = setupRepository()
     const taskId = 'T-T-doc-010'
@@ -277,5 +324,24 @@ describe('exec worktree ops', () => {
     removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true })
 
     expect(findExecWorktree(fixture.repo, taskId)).toBeNull()
+  })
+})
+
+describe('deliverableStatus', () => {
+  it('reads status from markdown frontmatter', () => {
+    expect(deliverableStatus('---\nid: d\nstatus: ready\n---\n\n# Title\n', 'docs/d.md')).toBe('ready')
+  })
+
+  it('reads top-level status from yaml deliverables', () => {
+    expect(deliverableStatus('id: d\nstatus: draft\n', 'docs/d.yaml')).toBe('draft')
+  })
+
+  it('reads top-level status from json deliverables', () => {
+    expect(deliverableStatus('{"id":"d","status":"ready"}', 'docs/d.json')).toBe('ready')
+  })
+
+  it('returns undefined when status is absent or content is unparsable', () => {
+    expect(deliverableStatus('# Title only\n', 'docs/d.md')).toBeUndefined()
+    expect(deliverableStatus('id: d\n', 'docs/d.yaml')).toBeUndefined()
   })
 })

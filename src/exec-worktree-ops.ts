@@ -1,4 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs'
 import { relative, resolve, sep } from 'node:path'
+import { load } from 'js-yaml'
 import { acquireSchedulerLock, releaseSchedulerLock } from './exec-events.js'
 import {
   ensureExecWorktree,
@@ -85,6 +87,58 @@ export function isCommitTargetPath(path: string, executionRel: string, resultRel
   return true
 }
 
+// Reads a deliverable's frontmatter `status`. Markdown deliverables carry it in the
+// leading `---` frontmatter block; yaml/json deliverables carry it as a top-level field.
+// Returns undefined when absent or unparsable (treated as "not ready").
+export function deliverableStatus(content: string, relPath: string): string | undefined {
+  let source = content
+  if (/\.md$/i.test(relPath)) {
+    const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+    if (!fm) return undefined
+    source = fm[1]
+  }
+  let parsed: unknown
+  try {
+    parsed = load(source)
+  } catch {
+    return undefined
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return undefined
+  const status = (parsed as Record<string, unknown>).status
+  return typeof status === 'string' ? status : undefined
+}
+
+// Promotion of a deliverable's frontmatter status to "ready" is a human-only gate.
+// Agents commit their changes through commitWorktreeChanges, so reject (block) any run
+// that transitions a deliverable to "ready" here; humans promote out-of-band via a direct
+// edit and git commit, which never passes through this path.
+function assertNoAgentReadyPromotion(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+  paths: string[]
+): void {
+  const { resultRel } = taskPaths(context, taskId)
+  const promoted: string[] = []
+  for (const relPath of paths) {
+    if (relPath === resultRel) continue
+    const absPath = resolve(worktree.path, relPath)
+    if (!existsSync(absPath)) continue // deletion is not a promotion
+    if (deliverableStatus(readFileSync(absPath, 'utf8'), relPath) !== 'ready') continue
+    const base = gitResult(worktree.path, ['show', `HEAD:${relPath}`])
+    const baseStatus =
+      base.status === 0 && typeof base.stdout === 'string'
+        ? deliverableStatus(base.stdout, relPath)
+        : undefined
+    if (baseStatus !== 'ready') promoted.push(relPath)
+  }
+  if (promoted.length > 0) {
+    throw new Error(
+      `Deliverable status promotion to "ready" is human-only and must not be done by an agent run: ${promoted.join(', ')}`
+    )
+  }
+}
+
 export function commitTargetPaths(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
@@ -148,6 +202,7 @@ export function commitWorktreeChanges(params: {
     process.stdout.write('No commit-target changes.\n')
     return { targets: [], committed: false }
   }
+  assertNoAgentReadyPromotion(context, worktree, taskId, paths)
   process.stdout.write(`commit-targets:\n${paths.map(path => `  ${path}`).join('\n')}\n`)
   if (params.dryRun) return { targets: paths, committed: false }
 

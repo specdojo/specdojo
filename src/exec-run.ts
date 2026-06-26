@@ -786,9 +786,23 @@ async function runPreparedTask(
   if (result === 'success') {
     // Record completion in the worktree result, then commit (result + deliverables) onto the
     // exec branch and merge it into the current root branch so the changes are integrated.
+    // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
+    // a rejection as a block so the agent's run does not silently land or crash the loop.
     if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'complete', completedAt)
-    commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id })
-    mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id })
+    try {
+      commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id })
+      mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id })
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error)
+      if (worktreeResultPath)
+        updateResultStatus(worktreeResultPath, 'blocked', completedAt, reason)
+      spawnBlock(projectId, prepared.task.id, prepared.actor, reason)
+      process.stderr.write(`${reason}\n`)
+      process.stdout.write(
+        `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
+      )
+      return 'failure'
+    }
     removeWorktree({
       context,
       worktree: prepared.worktree,
