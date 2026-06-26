@@ -273,6 +273,21 @@ exec build（再実行）
 
 人間による実行が必要なタスクは `execution: human` を指定する。
 
+`--auto`（および `--loop`）の実行中は、タスクごとに root の現在ブランチへ checkpoint commit と merge を繰り返す。同じ作業ツリーとインデックスを操作するため、ループ実行と並行して同じ repoRoot のコードを手作業で編集すると、次の安全ガードに抵触してループが停止することがある。
+
+- checkpoint 時に root index に stage 済み変更があると停止する（`Root index has staged changes; commit or unstage them first.`）。checkpoint は plan / result / claim event の特定パスだけを stage するため、未 stage の編集が勝手に commit されることはないが、`git add` した時点で次タスクが失敗する。
+- merge 時に root の未 commit 変更パスと merge 対象パスが重複すると停止する（`Current worktree changes overlap merge paths`）。
+
+加えて merge 先は merge 実行時点の root のカレントブランチであり、手作業の commit はループの checkpoint commit や merge commit と同じブランチ上で混在する。
+
+このため、ループ実行と並行して repoRoot のコードを修正したい場合は、別ブランチの worktree を作成してそこで編集する。`git worktree` は同一ブランチを2つの worktree で同時に checkout できないため、編集用 worktree は必ず別ブランチになる。これにより index・作業ツリー・ブランチ履歴がループから隔離され、上記の安全ガードを回避できる。編集が完了したら、ループ終了後にその別ブランチを root のブランチへ merge / rebase して取り込む。
+
+```sh
+# ループとは別ブランチの worktree を作成して編集する
+git worktree add ../specdojo-edit -b <edit-branch>
+# ../specdojo-edit 側で編集・commit し、ループ終了後に統合する
+```
+
 ## 9. 手動実行手順
 
 `specdojo exec run --auto` が行う処理を、コマンドを使ってステップバイステップで再現する手順を示す。
