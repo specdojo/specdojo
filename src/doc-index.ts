@@ -299,6 +299,13 @@ function parseWikiRef(rawRef: string): { id: string; title?: string } {
   return title ? { id, title } : { id }
 }
 
+// Matches, in priority order: a fenced code block (3+ backticks/tildes), an
+// inline code span (1+ backticks), or a [[id]] wiki reference. Code constructs
+// are captured so [[id]] examples inside them stay literal (a rulebook may show
+// the [[id|title]] syntax in backticks; those are not real references).
+const DOC_REF_OR_CODE =
+  /(?<fence>(?<fenceMarker>`{3,}|~{3,})[\s\S]*?\k<fenceMarker>)|(?<inline>(?<inlineMarker>`+)[\s\S]*?\k<inlineMarker>)|\[\[(?<ref>[^\]\n]+)\]\]/g
+
 export function replaceDocIndexRefs(
   content: string,
   indexPath: string,
@@ -310,8 +317,13 @@ export function replaceDocIndexRefs(
   const index = readDocIndex(indexPath)
   const missingIds = new Set<string>()
 
-  const replaced = content.replace(/\[\[([^\]\n]+)\]\]/g, (match, rawId: string) => {
-    const { id, title } = parseWikiRef(rawId)
+  const replaced = content.replace(DOC_REF_OR_CODE, (match, ...args) => {
+    const groups = args[args.length - 1] as Record<string, string | undefined>
+    // Code regions: keep verbatim so [[id]] inside them is neither rewritten nor
+    // reported as missing.
+    if (groups.ref === undefined) return match
+
+    const { id, title } = parseWikiRef(groups.ref)
     const path = index?.entries[id]
     if (path) return replacementForResolvedRef(id, title, path, format)
 

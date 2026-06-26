@@ -159,6 +159,41 @@ describe('replaceDocIndexRefs', () => {
     }
   })
 
+  it('インラインコード内の [[id]] は参照として扱わず素通しする', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
+      const result = replaceDocIndexRefs(
+        'リンクは `[[id|title]]` 形式で書き、未作成なら `[[...]]` を使わない。実体は [[sample-doc]]。',
+        indexPath,
+        { format: 'path' }
+      )
+
+      expect(result.content).toBe(
+        'リンクは `[[id|title]]` 形式で書き、未作成なら `[[...]]` を使わない。実体は docs/sample.md。'
+      )
+      expect(result.missingIds).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('コードフェンス内の [[id]] は参照として扱わず素通しする', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
+    try {
+      const indexPath = writeIndex(dir, { 'sample-doc': 'docs/sample.md' })
+      const input = ['例:', '```text', '[[missing-doc]]', '```', '本文 [[sample-doc]]。'].join('\n')
+      const result = replaceDocIndexRefs(input, indexPath, { format: 'path' })
+
+      expect(result.content).toBe(
+        ['例:', '```text', '[[missing-doc]]', '```', '本文 docs/sample.md。'].join('\n')
+      )
+      expect(result.missingIds).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
   it('missing: marker の場合は未解決 ID を _MISSING_ に置換する', () => {
     const dir = mkdtempSync(join(tmpdir(), 'specdojo-test-'))
     try {
