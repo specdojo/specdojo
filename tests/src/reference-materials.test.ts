@@ -83,6 +83,23 @@ describe('reference-materials', () => {
       )
     })
 
+    it('template の拡張子も target_format に従う', () => {
+      writeRulebook(
+        'pm-roles-rulebook',
+        [
+          'id: pm-roles-rulebook',
+          'type: rulebook',
+          'status: draft',
+          'target_format: yaml',
+          'template: pm-roles-template',
+        ].join('\n')
+      )
+
+      expect(resolveReferenceMaterialRefs('pm-roles-rulebook').template).toBe(
+        'docs/ja/specdojo/templates/pm-roles-template.yaml'
+      )
+    })
+
     it('rulebook が未指定なら全項目を MISSING にする', () => {
       expect(resolveReferenceMaterialRefs(undefined)).toEqual({
         rulebook: '_MISSING_',

@@ -55,8 +55,8 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
   }
 }
 
-// sample は対象成果物のフォーマットに合わせて拡張子が変わる。
-function sampleExt(targetFormat: string | undefined): string {
+// sample / template は対象成果物のフォーマットに合わせて拡張子が変わる。
+function formatExt(targetFormat: string | undefined): string {
   return targetFormat === 'yaml' ? 'yaml' : targetFormat === 'json' ? 'json' : 'md'
 }
 
@@ -100,8 +100,8 @@ export function resolveReferenceMaterialRefs(rulebookId: string | undefined): Re
   return {
     rulebook: `${DOCS_BASE}/rulebooks/${rulebookId}.md`,
     recipe: resolveRef('recipe', fm.recipe, rulebookId, 'md'),
-    sample: resolveRef('sample', fm.sample, rulebookId, sampleExt(fm.target_format)),
-    template: resolveRef('template', fm.template, rulebookId, 'md'),
+    sample: resolveRef('sample', fm.sample, rulebookId, formatExt(fm.target_format)),
+    template: resolveRef('template', fm.template, rulebookId, formatExt(fm.target_format)),
   }
 }
 
@@ -123,7 +123,7 @@ export function declaredReferences(rulebookId: string): DeclaredReference[] {
     }
   }
   add('recipe', fm.recipe, 'md')
-  add('sample', fm.sample, sampleExt(fm.target_format))
-  add('template', fm.template, 'md')
+  add('sample', fm.sample, formatExt(fm.target_format))
+  add('template', fm.template, formatExt(fm.target_format))
   return out
 }
