@@ -36,7 +36,7 @@ status: draft
 ```text
 repo-root/
 ├─ specdojo.config.json
-├─ .env
+├─ .env  （任意; current_project を使う場合は通常不要）
 ├─ docs/
 │  ├─ specdojo/
 │  │  └─ schemas/
@@ -90,15 +90,15 @@ repo-root/
   "current_project": "prj-0001",
   "projects": {
     "prj-0001": {
-      "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
-      "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
-      "execution_path": "docs/ja/projects/prj-0001/070-execution",
-      "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register",
-      "members_path": "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml",
-      "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
-      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
+      "base_path": "docs/ja/projects/prj-0001",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "030-project-management/schedule",
+      "execution_path": "030-project-management/execution",
+      "project_register_path": "030-project-management/controls/project-register",
+      "members_path": "030-project-management/020-organization/pm-members.yaml",
+      "reviews_path": "030-project-management/controls/reviews",
+      "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
       "run": {
-        "worktree_base": "../worktrees",
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
     }
@@ -106,23 +106,27 @@ repo-root/
 }
 ```
 
-`current_project` に作業中のプロジェクト ID を記載します。git で管理されているため、worktree を分離しても自動的に引き継がれます。`--project` フラグや `SPECDOJO_PROJECT` 環境変数で上書きできます。
+`current_project` に作業中のプロジェクト ID を記載します。git で管理されているため、worktree を分離しても自動的に引き継がれます。`--project` フラグで上書きできます。
 
 `projects.<id>` には `schedule_path`、`execution_path` を指定します。必要に応じて `catalog_path`、`project_register_path`、`members_path`、`reviews_path`、`viewpoints_path`、`run` を指定します。`run.exec_defaults` に `exec-defaults.yaml` のパスを指定すると、`exec run --auto` で `sch-strategy-<track>.yaml` の phase に定義された `capabilities`・`proficiency` と、`pm-members.yaml` の `capabilities`・`proficiency`・`priority` に基づいて agent を自動選択できます。
 
-### 3.2. `.env`（任意）
+`base_path` を指定すると、上記の文書パス（`catalog_path` / `schedule_path` / `execution_path` / `members_path` / `reviews_path` / `roles_path` / `viewpoints_path` / `project_register_path`）を `base_path` からの相対パスとして記述でき、共通の接頭辞の重複を省けます。`run.*`（`exec_defaults` / `worktree_base`）は `base_path` の対象外でリポジトリルート相対のままです。`base_path` を省略すると各パスは従来どおりルート相対として扱われます（後方互換）。
 
-`current_project` を `specdojo.config.json` で管理している場合、`.env` は通常不要です。一時的にプロジェクトを切り替えたい場合や、config を変更せずに上書きしたい場合のみ使います。
+### 3.2. プロジェクト選択（`.env` は通常不要）
+
+プロジェクトの選択は `specdojo.config.json` の `current_project` で行うため、`.env` は通常不要です。`project/<project-id>/*` のようにブランチ系列ごとに `current_project` を設定しておけば、git 管理されているので worktree やブランチ切替で自動的に引き継がれ、`.env` のコピーや環境変数の手動設定は要りません。
+
+一時的に config を変更せず別プロジェクトを対象にしたい場合は、`--project <id>` フラグ、または `SPECDOJO_PROJECT` 環境変数で上書きできます（CI やスクリプトでの一時上書き向け）。
 
 ```bash
 SPECDOJO_PROJECT=prj-0001
 ```
 
-パス直接指定が必要な場合（config なし環境など）：
+config が無い環境などでパスを直接指定する場合は、`SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` を両方セットで指定します（この場合はプロジェクト ID が解決されないため、worktree のブランチ名は project 修飾されません）。
 
 ```bash
 SPECDOJO_SCHEDULE_PATH=docs/ja/projects/prj-0001/030-project-management/schedule
-SPECDOJO_EXECUTION_PATH=docs/ja/projects/prj-0001/070-execution
+SPECDOJO_EXECUTION_PATH=docs/ja/projects/prj-0001/030-project-management/execution
 ```
 
 ### 3.3. プロジェクト解決順序
