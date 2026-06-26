@@ -37,7 +37,7 @@ import {
   taskPaths,
   worktreeStatusPaths,
 } from './exec-worktree-ops.js'
-import { loadConfig, specdojoRootDir } from './specdojo-config.js'
+import { getProjectSchedulePath, loadConfig, specdojoRootDir } from './specdojo-config.js'
 
 export { isCommitTargetPath, stabilizeCommitTargets } from './exec-worktree-ops.js'
 
@@ -96,7 +96,7 @@ function configuredWorktreeBase(schedulePath: string): string | undefined {
   if (!config) return undefined
   const rootDir = specdojoRootDir()
   for (const project of Object.values(config.projects)) {
-    if (resolve(rootDir, project.schedule_path.trim()) === schedulePath) {
+    if (resolve(rootDir, getProjectSchedulePath(project)) === schedulePath) {
       return project.run?.worktree_base
     }
   }

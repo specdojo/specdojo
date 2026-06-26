@@ -1572,20 +1572,42 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 
 `projects.<id>.run` に worktree 配置先と `exec-defaults.yaml` のパスを指定する。`exec-defaults.yaml` はグローバルな rate limit 検出条件と rate limit 発生時の共通ポリシーを持つ。エージェント選択に使う作業要件（mode・capabilities・proficiency）は `sch-strategy-<track>.yaml` の phase に、エージェント定義（command・capabilities・proficiency）は `pm-members.yaml` に集約する。
 
-`specdojo.config.json`:
+実行対象の project は `--project` / `SPECDOJO_PROJECT` / `current_project` の順で解決する。複数 project を 1 リポジトリで扱う場合は、`projects` に全 project を登録したうえで `current_project` をブランチ系列ごとに切り替える運用を推奨する。これにより project 選択がコミットされブランチに付随し、`.env` などの未追跡状態に依存しなくなる。worktree のブランチ名・ディレクトリ名は project 修飾されるため（`exec/<project>-<task>`）、共有の `worktree_base`（既定 `../worktrees`）でも複数 project の worktree が衝突せず、prefix で project ごとに並ぶ。`run.worktree_base` を project ごとに分ける必要は通常なく、OS レベルでフォルダ分離したい場合だけ指定する。
+
+各 project の文書パスが共通の接頭辞を持つ場合は `base_path` にまとめると記述が短くなる。`base_path` を設定すると、`catalog_path` / `schedule_path` / `execution_path` / `members_path` / `reviews_path` / `roles_path` / `viewpoints_path` / `project_register_path` は `base_path` からの相対パスとして解釈される。`run.*`（`exec_defaults` / `worktree_base`）は `base_path` の対象外でリポジトリルート相対のまま。`base_path` を省略すると各パスは従来どおりルート相対として扱われる（後方互換）。
+
+`specdojo.config.json`（全 project 登録 + `current_project` 切替 + `base_path`）:
 
 ```json
 {
+  "version": 1,
+  "current_project": "prj-0001",
   "projects": {
     "prj-0001": {
+      "base_path": "docs/ja/projects/prj-0001",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "030-project-management/schedule",
+      "execution_path": "030-project-management/execution",
+      "members_path": "030-project-management/020-organization/pm-members.yaml",
       "run": {
-        "worktree_base": "../worktrees",
+        "exec_defaults": ".specdojo/exec-defaults.yaml"
+      }
+    },
+    "prj-0002": {
+      "base_path": "docs/ja/projects/prj-0002",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "030-project-management/schedule",
+      "execution_path": "030-project-management/execution",
+      "members_path": "030-project-management/020-organization/pm-members.yaml",
+      "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
     }
   }
 }
 ```
+
+`current_project` は `--project` も `SPECDOJO_PROJECT` も指定しないときの既定 project を決める。`project/prj-0001/*` 系のブランチでは `current_project: prj-0001`、`project/prj-0002/*` 系では `current_project: prj-0002` のように、ブランチ系列ごとに 1 行だけ変える。共有 main では project の `exec run` を実行しないため `current_project` の値は実質的に無害だが、複数 project ブランチを main へ合流させると同一行の競合が出る。main 側を正準値に固定し、競合時は main 側で解決する運用にしておくと安定する。
 
 `.specdojo/exec-defaults.yaml`:
 

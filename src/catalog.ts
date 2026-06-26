@@ -2,7 +2,12 @@ import { type Command } from 'commander'
 import { join, resolve } from 'node:path'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
-import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
+import {
+  getProjectCatalogPath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from './specdojo-config.js'
 import {
   buildCatalog,
   collectCatalogLocalIds,
@@ -50,15 +55,15 @@ function resolveCatalogPath(opts: { project?: string }): string {
     throw new Error(`Unknown project: ${projectId} (check ${configPath})`)
   }
 
-  const catalogPath = project.catalog_path
-  if (!catalogPath || !catalogPath.trim()) {
+  const catalogPath = getProjectCatalogPath(project)
+  if (!catalogPath) {
     throw new Error(
       `catalog_path not set for project '${projectId}' in ${configPath}.\n` +
         `Add "catalog_path": "<path>" to the project config.`
     )
   }
 
-  return resolve(baseDir, catalogPath.trim())
+  return resolve(baseDir, catalogPath)
 }
 
 function printCommandError(error: unknown): void {

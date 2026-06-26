@@ -13,6 +13,14 @@ export type SpecDojoRunConfig = {
 }
 
 export type SpecDojoProjectConfig = {
+  /**
+   * Optional repo-root-relative prefix shared by every project document path below
+   * (catalog/schedule/execution/members/reviews/roles/viewpoints/project_register). When set, those
+   * fields are interpreted relative to `base_path`. `run.*` paths are NOT affected and stay
+   * repo-root relative. Resolve project paths via the getProject*Path accessors so base_path is
+   * applied consistently.
+   */
+  base_path?: string
   catalog_path?: string
   schedule_path: string
   execution_path: string
@@ -91,26 +99,62 @@ export function defaultConfigPath(): string {
   return join(specdojoRootDir(), '.specdojo', 'specdojo.config.json')
 }
 
+// Join a project document path with the project's base_path, returning a repo-root-relative path.
+// An empty/undefined base_path leaves the path unchanged (full backward compatibility).
+function withBasePath(project: SpecDojoProjectConfig, relPath: string): string {
+  const base = project.base_path?.trim()
+  const rel = relPath.trim()
+  return base ? join(base, rel) : rel
+}
+
+function withOptionalBasePath(
+  project: SpecDojoProjectConfig,
+  relPath: string | undefined
+): string | undefined {
+  if (!relPath || !relPath.trim()) return undefined
+  return withBasePath(project, relPath)
+}
+
 export function getProjectSchedulePath(project: SpecDojoProjectConfig): string {
-  return project.schedule_path
+  return withBasePath(project, project.schedule_path)
 }
 
 export function getProjectExecutionPath(project: SpecDojoProjectConfig): string {
-  return project.execution_path
+  return withBasePath(project, project.execution_path)
 }
 
 export function getProjectMembersPath(project: SpecDojoProjectConfig): string | undefined {
-  return project.members_path
+  return withOptionalBasePath(project, project.members_path)
+}
+
+export function getProjectCatalogPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.catalog_path)
+}
+
+export function getProjectReviewsPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.reviews_path)
+}
+
+export function getProjectRolesPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.roles_path)
+}
+
+export function getProjectViewpointsPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.viewpoints_path)
+}
+
+export function getProjectRegisterPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.project_register_path)
 }
 
 export function loadMemberRoster(
   baseDir: string,
   project: SpecDojoProjectConfig
 ): MemberRoster | null {
-  const membersPath = project.members_path
-  if (!membersPath || !membersPath.trim()) return null
+  const membersPath = getProjectMembersPath(project)
+  if (!membersPath) return null
 
-  const fullPath = resolve(baseDir, membersPath.trim())
+  const fullPath = resolve(baseDir, membersPath)
   if (!existsSync(fullPath)) {
     throw new Error(`members_path not found: ${fullPath}`)
   }

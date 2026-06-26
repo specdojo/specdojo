@@ -1,7 +1,12 @@
 import { type Command } from 'commander'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
-import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
+import {
+  getProjectRegisterPath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from './specdojo-config.js'
 
 // ================================
 // Types
@@ -87,15 +92,15 @@ function resolveRegisterPaths(opts: { project?: string }): RegisterPaths {
     throw new Error(`Unknown project: ${projectId} (check ${configPath})`)
   }
 
-  const rawRegisterPath = project.project_register_path?.trim()
-  if (!rawRegisterPath) {
+  const registerPath = getProjectRegisterPath(project)
+  if (!registerPath) {
     throw new Error(
       `project_register_path not set for project '${projectId}' in ${configPath}.\n` +
         `Add "project_register_path": "<path>" to the project config.`
     )
   }
 
-  const absRegisterPath = resolve(baseDir, rawRegisterPath)
+  const absRegisterPath = resolve(baseDir, registerPath)
   return {
     projectId,
     projectRegisterPath: absRegisterPath,

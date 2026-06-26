@@ -2,7 +2,12 @@ import { type Command } from 'commander'
 import { join, resolve } from 'node:path'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import yaml from 'js-yaml'
-import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
+import {
+  getProjectSchedulePath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from './specdojo-config.js'
 import { buildScheduleTrack, type GeneratedMilestone } from './schedule-build.js'
 import { readYaml } from './exec-shared.js'
 
@@ -31,12 +36,11 @@ function resolveSchedulePath(opts: { project?: string }): {
     throw new Error(`Unknown project: ${projectId} (check ${configPath})`)
   }
 
-  const rawPath = project.schedule_path
-  if (!rawPath?.trim()) {
+  if (!project.schedule_path?.trim()) {
     throw new Error(`schedule_path not set for project '${projectId}' in ${configPath}.`)
   }
 
-  return { schedulePath: resolve(baseDir, rawPath.trim()), baseDir }
+  return { schedulePath: resolve(baseDir, getProjectSchedulePath(project)), baseDir }
 }
 
 function updateMilestonesFile(

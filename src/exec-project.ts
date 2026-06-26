@@ -1,7 +1,10 @@
 import { join, resolve } from 'node:path'
 import {
+  getProjectCatalogPath,
   getProjectExecutionPath,
+  getProjectRolesPath,
   getProjectSchedulePath,
+  getProjectViewpointsPath,
   loadConfig,
   loadEnv,
   specdojoRootDir,
@@ -84,18 +87,17 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
     if (!project) {
       throw new Error(`Unknown ${source} value: ${projectId} (check ${configPath})`)
     }
+    const catalogPath = getProjectCatalogPath(project)
+    const rolesPath = getProjectRolesPath(project)
+    const viewpointsPath = getProjectViewpointsPath(project)
     return {
       projectId,
       schedulePath: resolveProjectRelative(baseDir, getProjectSchedulePath(project)),
       executionPath: resolveProjectRelative(baseDir, getProjectExecutionPath(project)),
-      catalogPath: project.catalog_path
-        ? resolveProjectRelative(baseDir, project.catalog_path)
-        : undefined,
-      rolesPath: project.roles_path
-        ? resolveProjectRelative(baseDir, project.roles_path)
-        : undefined,
-      viewpointsPath: project.viewpoints_path
-        ? resolveProjectRelative(baseDir, project.viewpoints_path)
+      catalogPath: catalogPath ? resolveProjectRelative(baseDir, catalogPath) : undefined,
+      rolesPath: rolesPath ? resolveProjectRelative(baseDir, rolesPath) : undefined,
+      viewpointsPath: viewpointsPath
+        ? resolveProjectRelative(baseDir, viewpointsPath)
         : undefined,
     }
   }

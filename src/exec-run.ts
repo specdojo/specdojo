@@ -15,6 +15,8 @@ import { buildScheduleIndex } from './exec-schedule.js'
 import { buildInitialStateFromStrategy } from './exec-schedule-initial.js'
 import { listFilesRecursive, qualifyTaskId, readJson, readYaml } from './exec-shared.js'
 import {
+  getProjectExecutionPath,
+  getProjectSchedulePath,
   loadConfig,
   loadMemberRoster,
   specdojoRootDir,
@@ -356,7 +358,7 @@ function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {
   if (config) {
     const rootDir = specdojoRootDir()
     for (const project of Object.values(config.projects)) {
-      const projSchedulePath = resolve(rootDir, project.schedule_path.trim())
+      const projSchedulePath = resolve(rootDir, getProjectSchedulePath(project))
       if (projSchedulePath === schedulePath && project.run?.exec_defaults) {
         return resolve(rootDir, project.run.exec_defaults)
       }
@@ -375,7 +377,7 @@ function configuredWorktreeBase(schedulePath: string): string | undefined {
 
   const rootDir = specdojoRootDir()
   for (const project of Object.values(config.projects)) {
-    if (resolve(rootDir, project.schedule_path.trim()) === schedulePath) {
+    if (resolve(rootDir, getProjectSchedulePath(project)) === schedulePath) {
       return project.run?.worktree_base
     }
   }
@@ -428,7 +430,7 @@ export function loadRosterForExecutionPath(executionPath: string): MemberRoster 
 
   const rootDir = specdojoRootDir()
   for (const project of Object.values(config.projects)) {
-    const projExecPath = resolve(rootDir, project.execution_path.trim())
+    const projExecPath = resolve(rootDir, getProjectExecutionPath(project))
     if (projExecPath === executionPath) {
       try {
         return loadMemberRoster(rootDir, project)
@@ -891,6 +893,9 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  // Use the resolved project id (which honors current_project / SPECDOJO_PROJECT), not the raw
+  // --project flag. This keeps worktree branches project-qualified even when --project is omitted.
+  const projectId = resolvedPaths.projectId ?? opts.project
   const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath }
   const repoRoot = specdojoRootDir()
   const worktreeBase = resolveWorktreeBase(
@@ -949,7 +954,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       try {
         const prepared = prepareSingleTask(
           task,
-          opts.project,
+          projectId,
           repoRoot,
           schedulePath,
           executionPath,
@@ -981,7 +986,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       preparedTasks.map(prepared =>
         runPreparedTask(
           prepared,
-          opts.project,
+          projectId,
           repoRoot,
           schedulePath,
           executionPath,
@@ -999,7 +1004,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       if (!dryRun) {
         const completedAt = new Date().toISOString()
         if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
-        spawnBlock(opts.project, prepared.task.id, prepared.actor, `runner error: ${message}`)
+        spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`)
       }
       return 'failure'
     })
@@ -1027,7 +1032,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
 
     const nextRoundSuffix = ` (round ${round + 1}${maxRounds !== null ? `/${maxRounds}` : '/-'})`
     process.stdout.write(`[run] exec build${nextRoundSuffix}...\n`)
-    if (!spawnBuild(opts.project)) {
+    if (!spawnBuild(projectId)) {
       process.stdout.write('[run] exec build failed — exit\n')
       process.exitCode = 1
       return
@@ -1040,6 +1045,9 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  // Use the resolved project id (which honors current_project / SPECDOJO_PROJECT), not the raw
+  // --project flag. This keeps worktree branches project-qualified even when --project is omitted.
+  const projectId = resolvedPaths.projectId ?? opts.project
   const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath }
   const repoRoot = specdojoRootDir()
   const worktreeBase = resolveWorktreeBase(
@@ -1154,7 +1162,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
 
   const prepared = prepareSingleTask(
     task,
-    opts.project,
+    projectId,
     repoRoot,
     schedulePath,
     executionPath,
@@ -1177,7 +1185,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
 
   const result = await runPreparedTask(
     prepared,
-    opts.project,
+    projectId,
     repoRoot,
     schedulePath,
     executionPath,
@@ -1259,7 +1267,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   activateResolvedProjectPaths(resolvedPaths)
   const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
   const repoRoot = specdojoRootDir()
-  const projectId = opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
+  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? ''
   const roster = loadRosterForExecutionPath(executionPath)
 
   // --track-state controls whether this run records claim/complete events; it no longer affects

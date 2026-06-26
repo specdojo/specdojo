@@ -3,7 +3,15 @@ import { watch as fsWatch, existsSync, readdirSync } from 'node:fs'
 import type { FSWatcher } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { join, resolve } from 'node:path'
-import { loadConfig, loadEnv, specdojoRootDir } from './specdojo-config.js'
+import {
+  getProjectCatalogPath,
+  getProjectExecutionPath,
+  getProjectRegisterPath,
+  getProjectSchedulePath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from './specdojo-config.js'
 import { selfRunArgs } from './spawn-self.js'
 
 // ================================
@@ -63,18 +71,18 @@ function resolveWatchContext(opts: { project?: string }): WatchContext {
     throw new Error(`Unknown project: ${projectId} (check ${configPath})`)
   }
 
-  const executionPath = project.execution_path
-    ? resolve(baseDir, project.execution_path)
-    : undefined
+  const executionRel = getProjectExecutionPath(project)
+  const executionPath = executionRel ? resolve(baseDir, executionRel) : undefined
+  const scheduleRel = getProjectSchedulePath(project)
+  const catalogRel = getProjectCatalogPath(project)
+  const projectRegisterRel = getProjectRegisterPath(project)
 
   return {
     projectId,
-    schedulePath: project.schedule_path ? resolve(baseDir, project.schedule_path) : undefined,
+    schedulePath: scheduleRel ? resolve(baseDir, scheduleRel) : undefined,
     eventsPath: executionPath ? join(executionPath, 'exec', 'events') : undefined,
-    catalogPath: project.catalog_path ? resolve(baseDir, project.catalog_path) : undefined,
-    projectRegisterPath: project.project_register_path
-      ? resolve(baseDir, project.project_register_path)
-      : undefined,
+    catalogPath: catalogRel ? resolve(baseDir, catalogRel) : undefined,
+    projectRegisterPath: projectRegisterRel ? resolve(baseDir, projectRegisterRel) : undefined,
     docsRootPath,
   }
 }

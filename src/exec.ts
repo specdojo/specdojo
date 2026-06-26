@@ -27,6 +27,7 @@ import {
 } from './exec-project.js'
 import {
   assertValidActor,
+  getProjectViewpointsPath,
   loadConfig,
   loadMemberRoster,
   specdojoRootDir,
@@ -875,8 +876,9 @@ export function registerExecCommands(program: Command): void {
         'pm-review-viewpoints-template.yaml'
       )
 
-      if (project.viewpoints_path) {
-        const outputPath = pathResolve(baseDir, project.viewpoints_path.trim())
+      const viewpointsRel = getProjectViewpointsPath(project)
+      if (viewpointsRel) {
+        const outputPath = pathResolve(baseDir, viewpointsRel)
         const result = scaffoldViewpoints({
           templatePath,
           projectId,

@@ -3,14 +3,15 @@
   "current_project": "prj-0001",
   "projects": {
     "prj-0001": {
-      "catalog_path": "docs/ja/projects/prj-0001/010-deliverables-catalog",
-      "schedule_path": "docs/ja/projects/prj-0001/030-project-management/schedule",
-      "execution_path": "docs/ja/projects/prj-0001/030-project-management/execution",
-      "members_path": "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml",
-      "reviews_path": "docs/ja/projects/prj-0001/030-project-management/controls/reviews",
-      "roles_path": "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-roles.yaml",
-      "viewpoints_path": "docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml",
-      "project_register_path": "docs/ja/projects/prj-0001/030-project-management/controls/project-register",
+      "base_path": "docs/ja/projects/prj-0001",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "030-project-management/schedule",
+      "execution_path": "030-project-management/execution",
+      "members_path": "030-project-management/020-organization/pm-members.yaml",
+      "reviews_path": "030-project-management/controls/reviews",
+      "roles_path": "030-project-management/020-organization/pm-roles.yaml",
+      "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
+      "project_register_path": "030-project-management/controls/project-register",
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
