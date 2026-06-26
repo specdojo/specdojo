@@ -1,7 +1,7 @@
 ---
 id: prj-0001:pm-raci
 type: project
-status: draft
+status: ready
 rulebook: pm-raci-rulebook
 based_on:
   - people-and-organization-definition-standard
