@@ -38,3 +38,5 @@ agent 自身で claim / complete / block を実行せず、プロジェクトの
 - 一時ファイルやスクリプトを `/tmp` などの作業ディレクトリ外に作成しない（`external_directory: deny` のため拒否される）。必要な場合は作業ディレクトリ（worktree）配下に作成し、使用後に削除する。
 - YAML / JSON / Frontmatter / スキーマの検証は、手書きの `python3 -c "..."` ではなくプロジェクト標準スクリプトを使う（例: `npm run validate:schema:file -- --schema <schema-path> --data <data-path>`、`npm run lint:fm`、`npm run lint:md`）。
 - 入れ子のクォートを含む複雑なシェルのワンライナー（特に `python3 -c "..."`）を避ける。複数行の処理が必要な場合は heredoc か作業ディレクトリ内のスクリプトファイルにまとめて実行し、クォート崩れによる失敗を防ぐ。
+- Edit ツールの `old_string` はファイル内で一意になるよう、前後の固有な文脈を含める。`---` や `| --- | --- |` のような頻出行を単独アンカーにしない（複数マッチで失敗する）。
+- 成果物や result が既に意図どおりに書けていれば、確認のためだけの追加 Edit を行わない。不要な再編集は複数マッチ失敗などの無用なエラーを招く。

@@ -44,3 +44,4 @@ permission:
 - 一時ファイルやスクリプトを `/tmp` などの作業ディレクトリ外に作成しない（`external_directory: deny` のため拒否される）。レビューでは原則として一時ファイルを作らず、`result` 以外の成果物も変更しない。
 - YAML / JSON / Frontmatter / スキーマの検証は、手書きの `python3 -c "..."` ではなく許可済みのプロジェクト標準スクリプトを使う（`npm run validate:schema:file -- --schema <schema-path> --data <data-path>`、`npm run lint:fm`、`npm run lint:md`）。
 - 入れ子のクォートを含む複雑なシェルのワンライナー（特に `python3 -c "..."`）を避ける。検証は上記の標準スクリプトに委ね、クォート崩れによる失敗を防ぐ。
+- `result` を Edit する際の `old_string` はファイル内で一意になるよう、前後の固有な文脈を含める。`---` や `| --- | --- |` のような頻出行を単独アンカーにしない（複数マッチで失敗する）。
