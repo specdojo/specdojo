@@ -1556,6 +1556,8 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 | `--plan <path>`          | 既存の plan ファイルを使う（生成しない）                                                   | —                                       |
 | `--auto`                 | scheduler で次の ready タスクを選ぶ。worktree 隔離と状態追跡を含む。`--cmd` と排他          | `false`                                 |
 | `--cmd <agent>`          | `pm-members.yaml` の agent nickname（例: `opencode-edit-agent`）またはコマンド文字列を指定 | `--auto` 時は自動選択                   |
+| `--edit-agent <nickname>`   | edit mode タスクに使う `pm-members.yaml` の agent nickname。command は `pm-members.yaml` から解決する。自動選択を上書きする | edit mode は自動選択 |
+| `--review-agent <nickname>` | review mode タスクに使う `pm-members.yaml` の agent nickname。command は `pm-members.yaml` から解決する。自動選択を上書きする | review mode は自動選択 |
 | `--by <actor>`           | claim actor / 実行者識別子                                                                 | 解決された agent の nickname            |
 | `--worktree`             | worktree 隔離と統合（commit→merge→remove）を行う                                           | `false`（`--auto`・`--parallel`≥2 で真）|
 | `--track-state`          | claim/complete イベントを記録する                                                          | `false`（隔離モードで真）               |
@@ -1686,7 +1688,27 @@ specdojo exec run --project prj-0001 --auto --loop --max-rounds 3 --parallel 5
 
 `execution: agent` のタスクに必要な `capabilities`・`proficiency` 条件を満たす agent がいない場合は `[run] skip: no eligible agent — skipping task` を出力して当該タスクをスキップする。`proficiency` が未指定の場合は、全水準の agent を候補に含める。
 
-#### 8.12.5. レートリミット対応
+#### 8.12.5. `--edit-agent` / `--review-agent` による mode 別エージェント指定
+
+`--auto` の自動選択を、タスクの `mode`（edit / review）ごとに固定エージェントへ上書きする。`--edit-agent <nickname>` は edit mode タスク、`--review-agent <nickname>` は review mode タスクに適用する。いずれも `pm-members.yaml` の agent nickname を受け取り、command は `pm-members.yaml` から解決する（生のコマンド文字列は受け付けない）。指定した nickname が `pm-members.yaml` に存在しない、または `command` を持たない場合は、当該タスクを失敗として扱う。
+
+夜間に opencode のローカル LLM で実行する場合など、roster 設定を変更せずに edit / review を別エージェントへ振り分けたいときに使う。
+
+```sh
+specdojo exec run --project prj-0001 --auto --loop \
+  --edit-agent opencode-edit-agent \
+  --review-agent opencode-review-agent
+```
+
+優先順位とフォールバックは次のとおり。
+
+- `--cmd` / `--agent-cmd`（単一上書き）が指定されている場合は、それが mode を問わず最優先になる。
+- `--edit-agent` / `--review-agent` は、上記の単一上書きが無いときに mode に応じて適用する。
+- 指定の無い mode のタスクは、従来どおり `capabilities`・`proficiency`・`priority` による自動選択にフォールバックする（例: `--edit-agent` だけ指定すると review mode は自動選択）。
+
+`--edit-agent` / `--review-agent` は `--auto` だけでなく、`--cmd` によるバッチ実行や `--task` による手動実行でも利用できる。
+
+#### 8.12.6. レートリミット対応
 
 `exec-defaults.yaml` の `rate_limit_policy` でレートリミット発生時の挙動を制御する。
 

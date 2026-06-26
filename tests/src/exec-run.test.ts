@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { extractBlockReason, selectCandidates } from '../../src/exec-run.js'
+import {
+  extractBlockReason,
+  resolveAgentOverride,
+  selectCandidates,
+} from '../../src/exec-run.js'
 import type { MemberRoster, ProjectMember } from '../../src/specdojo-config.js'
 
 function agent(overrides: Partial<ProjectMember> & { nickname: string }): ProjectMember {
@@ -110,5 +114,79 @@ describe('selectCandidates', () => {
     ).map(m => m.nickname)
 
     expect(actual).toEqual(['low', 'high'])
+  })
+})
+
+describe('resolveAgentOverride', () => {
+  const members = roster([
+    agent({ nickname: 'opencode-edit', command: 'opencode run --agent edit', mode: 'edit' }),
+    agent({ nickname: 'opencode-review', command: 'opencode run --agent review', mode: 'review' }),
+  ])
+
+  it('resolves the edit nickname to its pm-members command for edit-mode tasks', () => {
+    const actual = resolveAgentOverride(
+      'edit',
+      undefined,
+      { edit: 'opencode-edit', review: 'opencode-review' },
+      members
+    )
+
+    expect(actual).toEqual({
+      kind: 'command',
+      command: 'opencode run --agent edit',
+      actor: 'opencode-edit',
+    })
+  })
+
+  it('resolves the review nickname to its pm-members command for review-mode tasks', () => {
+    const actual = resolveAgentOverride(
+      'review',
+      undefined,
+      { edit: 'opencode-edit', review: 'opencode-review' },
+      members
+    )
+
+    expect(actual).toEqual({
+      kind: 'command',
+      command: 'opencode run --agent review',
+      actor: 'opencode-review',
+    })
+  })
+
+  it('returns none when the mode has no override', () => {
+    const actual = resolveAgentOverride('review', undefined, { edit: 'opencode-edit' }, members)
+
+    expect(actual).toEqual({ kind: 'none' })
+  })
+
+  it('returns an error when the nickname is not in pm-members', () => {
+    const actual = resolveAgentOverride('edit', undefined, { edit: 'ghost-agent' }, members)
+
+    expect(actual.kind).toBe('error')
+    if (actual.kind === 'error') {
+      expect(actual.message).toContain('--edit-agent')
+      expect(actual.message).toContain('ghost-agent')
+    }
+  })
+
+  it('lets a single explicit override win over the mode-specific override', () => {
+    const actual = resolveAgentOverride(
+      'edit',
+      'opencode-review',
+      { edit: 'opencode-edit', review: 'opencode-review' },
+      members
+    )
+
+    expect(actual).toEqual({
+      kind: 'command',
+      command: 'opencode run --agent review',
+      actor: 'opencode-review',
+    })
+  })
+
+  it('treats an unknown explicit override as a raw command string', () => {
+    const actual = resolveAgentOverride('edit', 'some custom --cmd', {}, members)
+
+    expect(actual).toEqual({ kind: 'command', command: 'some custom --cmd', actor: undefined })
   })
 })

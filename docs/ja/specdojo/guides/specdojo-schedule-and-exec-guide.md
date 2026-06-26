@@ -884,6 +884,16 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 選択戦略は既定 `critical-first`。FIFO 順にする場合は `--strategy fifo` を付ける。
 
+edit / review を別エージェントへ振り分けたい場合は、`--edit-agent <nickname>` と `--review-agent <nickname>` で mode ごとに `pm-members.yaml` の agent nickname を指定する。command は `pm-members.yaml` から解決し、指定の無い mode は自動選択にフォールバックする。夜間に opencode のローカル LLM で実行する場合などに使う。
+
+```sh
+specdojo exec run --project <project-id> --auto --loop \
+  --edit-agent opencode-edit-agent \
+  --review-agent opencode-review-agent
+```
+
+詳細は `specdojo-command-usage-guide.md` の `exec run` の `--edit-agent` / `--review-agent` を参照する。
+
 ### 10.5. plan を作ってから手動で実行
 
 plan を先に生成して内容を確認・編集してから実行する。`exec plan` は plan を生成するだけで、状態・イベントは変えない。`--task <task-id>` 指定時は固定名 `<task-id>-plan.md` を生成し、task identity の無い `--deliverable` / ad-hoc ではユニーク名（`<slug>-<UTC>-<rand>-plan.md`）になる。`exec run --plan` はそのファイル名から result 名を導出するため、同じ plan ファイルを再実行すると対応する result を上書きする（`specdojo-command-usage-guide.md` の `plan / result のライフサイクル` を参照）。

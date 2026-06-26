@@ -106,6 +106,8 @@ export type RunOpts = {
   trackState?: boolean
   archiveOnSuccess?: boolean
   agentCmd?: string
+  editAgent?: string
+  reviewAgent?: string
   cmd?: string
   loop?: boolean
   maxRounds?: string
@@ -114,6 +116,59 @@ export type RunOpts = {
 }
 
 type RunResult = 'success' | 'rate_limit' | 'failure'
+
+// Mode-specific agent overrides from --edit-agent / --review-agent. Each value is an agent
+// nickname (not a raw command); the command is resolved from pm-members.yaml. undefined means
+// "auto-select for that mode".
+export type ModeAgentOverrides = {
+  edit?: string
+  review?: string
+}
+
+// Outcome of resolving a per-task agent override.
+//   none    — no override applies; fall back to auto-selection
+//   command — resolved to a concrete command (with the actor nickname when known)
+//   error   — an override was requested but could not be resolved (caller should fail the task)
+export type AgentOverrideResolution =
+  | { kind: 'none' }
+  | { kind: 'command'; command: string; actor?: string }
+  | { kind: 'error'; message: string }
+
+// Resolve the agent override for a task's mode. A single explicit override (--cmd / --agent-cmd)
+// wins for every mode and accepts a nickname or a raw command string. Otherwise the mode-specific
+// override (--edit-agent / --review-agent) applies; it accepts an agent nickname only and resolves
+// the command from pm-members.yaml, failing if the nickname is unknown.
+export function resolveAgentOverride(
+  mode: 'edit' | 'review',
+  agentCmdOverride: string | undefined,
+  modeAgentOverrides: ModeAgentOverrides,
+  roster: MemberRoster | null
+): AgentOverrideResolution {
+  if (agentCmdOverride) {
+    const member = roster?.members.find(
+      m =>
+        m.type === 'agent' &&
+        m.command &&
+        (m.nickname === agentCmdOverride || m.command === agentCmdOverride)
+    )
+    return { kind: 'command', command: member?.command ?? agentCmdOverride, actor: member?.nickname }
+  }
+
+  const nickname = mode === 'review' ? modeAgentOverrides.review : modeAgentOverrides.edit
+  if (!nickname) return { kind: 'none' }
+
+  const member = roster?.members.find(
+    m => m.type === 'agent' && m.command && m.nickname === nickname
+  )
+  if (!member?.command) {
+    const flag = mode === 'review' ? '--review-agent' : '--edit-agent'
+    return {
+      kind: 'error',
+      message: `${flag} agent nickname not found in pm-members.yaml (or has no command): ${nickname}`,
+    }
+  }
+  return { kind: 'command', command: member.command, actor: member.nickname }
+}
 
 export type ResolvedRequirements = {
   capabilities: string[]
@@ -530,6 +585,7 @@ function prepareSingleTask(
   localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>,
   agentCmdOverride: string | undefined,
+  modeAgentOverrides: ModeAgentOverrides,
   actorOverride: string | undefined,
   dryRun: boolean,
   skipClaim: boolean,
@@ -539,19 +595,21 @@ function prepareSingleTask(
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
 
-  const explicitMember = agentCmdOverride
-    ? roster?.members.find(
-        member =>
-          member.type === 'agent' &&
-          member.command &&
-          (member.nickname === agentCmdOverride || member.command === agentCmdOverride)
-      )
-    : undefined
-  const agentCommands: string[] = agentCmdOverride
-    ? [explicitMember?.command ?? agentCmdOverride]
-    : []
+  // Mode-specific overrides (--edit-agent / --review-agent) let nightly batch runs route edit and
+  // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
+  // nickname whose command is resolved from pm-members.yaml; a mode without an override falls back
+  // to normal auto-selection.
+  const overrideResolution = resolveAgentOverride(mode, agentCmdOverride, modeAgentOverrides, roster)
+  if (overrideResolution.kind === 'error') {
+    process.stdout.write(`  ${overrideResolution.message}\n`)
+    return 'failure'
+  }
+  const agentCommands: string[] =
+    overrideResolution.kind === 'command' ? [overrideResolution.command] : []
   let actor = actorOverride ?? 'auto-agent'
-  if (!actorOverride && explicitMember) actor = explicitMember.nickname
+  if (!actorOverride && overrideResolution.kind === 'command' && overrideResolution.actor) {
+    actor = overrideResolution.actor
+  }
 
   if (agentCommands.length === 0) {
     // Human tasks cannot be run automatically without explicit --agent-cmd override.
@@ -899,6 +957,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           localIdToPhaseSets,
           phaseSetSuffixToId,
           opts.cmd,
+          { edit: opts.editAgent, review: opts.reviewAgent },
           opts.by,
           dryRun,
           false,
@@ -1103,6 +1162,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     localIdToPhaseSets,
     phaseSetSuffixToId,
     agentCmdOverride,
+    { edit: opts.editAgent, review: opts.reviewAgent },
     actorOverride,
     !!opts.dryRun,
     alreadyClaimed,
@@ -1430,6 +1490,14 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option(
     '--agent-cmd <command>',
     'Override agent command string, e.g. "opencode run --agent edit-agent" (--task mode only)'
+  )
+  rcmd.option(
+    '--edit-agent <nickname>',
+    'pm-members.yaml agent nickname for edit-mode tasks (overrides auto-selection; --cmd/--agent-cmd take precedence)'
+  )
+  rcmd.option(
+    '--review-agent <nickname>',
+    'pm-members.yaml agent nickname for review-mode tasks (overrides auto-selection; --cmd/--agent-cmd take precedence)'
   )
   rcmd.option('--dry-run', 'Print resolved command without executing', false)
 
