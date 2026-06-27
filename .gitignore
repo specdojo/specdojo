@@ -87,3 +87,4 @@ tools/vscode-specdojo/out/
 # commit すると exec の merge で衝突するため tracking しない。
 .specdojo/doc-index.json
 /*.log
+/logs/*.log
