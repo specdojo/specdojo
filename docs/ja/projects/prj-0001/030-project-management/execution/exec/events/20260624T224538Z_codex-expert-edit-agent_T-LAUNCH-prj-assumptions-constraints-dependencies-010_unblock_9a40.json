@@ -1,8 +1,0 @@
-{
-  "v": 1,
-  "ts": "2026-06-24T22:45:38Z",
-  "type": "unblock",
-  "task_id": "T-LAUNCH-prj-assumptions-constraints-dependencies-010",
-  "by": "codex-expert-edit-agent",
-  "msg": "recovery: doc-index overlap fixed (commit-target excluded)"
-}

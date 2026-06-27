@@ -42,67 +42,12 @@
         "planned_owner": "PO"
       }
     },
-    "T-LAUNCH-prj-scope-010": {
-      "state": "done",
-      "last_ts": "2026-06-24T14:41:06Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "BA"
-      }
-    },
-    "T-LAUNCH-prj-stakeholder-register-010": {
-      "state": "done",
-      "last_ts": "2026-06-24T22:46:10Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "recovery: merged completed work (status complete on branch)",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "BA"
-      }
-    },
-    "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
-      "state": "done",
-      "last_ts": "2026-06-24T22:45:58Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "recovery: merged completed work (status complete on branch)",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "ARC"
-      }
-    },
     "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010": {
       "state": "done",
       "last_ts": "2026-06-24T22:46:12Z",
       "last_by": "codex-expert-edit-agent",
       "last_type": "complete",
       "last_msg": "recovery: merged completed work (status complete on branch)",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "BA"
-      }
-    },
-    "T-LAUNCH-pm-roles-010": {
-      "state": "done",
-      "last_ts": "2026-06-25T12:21:45Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "PO"
-      }
-    },
-    "T-LAUNCH-prj-issues-and-approach-010": {
-      "state": "done",
-      "last_ts": "2026-06-25T12:15:24Z",
-      "last_by": "claude-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
       "meta": {
         "claim_owner": "",
         "planned_owner": "BA"
@@ -139,17 +84,6 @@
       "meta": {
         "claim_owner": "",
         "planned_owner": "ARC"
-      }
-    },
-    "T-LAUNCH-pm-members-010": {
-      "state": "done",
-      "last_ts": "2026-06-25T15:06:27Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "PO"
       }
     },
     "T-LAUNCH-prj-charter-010": {
@@ -207,10 +141,10 @@
         "planned_owner": "PO"
       }
     },
-    "T-LAUNCH-pm-organization-070-I01": {
+    "T-LAUNCH-pm-roles-070-I01": {
       "state": "done",
-      "last_ts": "2026-06-25T15:18:22Z",
-      "last_by": "codex-expert-edit-agent",
+      "last_ts": "2026-06-26T13:12:22Z",
+      "last_by": "opencode-edit-agent",
       "last_type": "complete",
       "last_msg": "auto-complete",
       "meta": {
@@ -218,37 +152,15 @@
         "planned_owner": "PO"
       }
     },
-    "T-LAUNCH-pm-plan-070-I01": {
-      "state": "done",
-      "last_ts": "2026-06-25T15:22:00Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
+    "T-LAUNCH-pm-organization-080-I01": {
+      "state": "doing",
+      "last_ts": "2026-06-27T05:29:55Z",
+      "last_by": "opencode-edit-agent",
+      "last_type": "claim",
+      "last_msg": "auto-run",
       "meta": {
         "claim_owner": "",
-        "planned_owner": "PM"
-      }
-    },
-    "T-LAUNCH-pm-quality-management-plan-070-I01": {
-      "state": "done",
-      "last_ts": "2026-06-25T15:25:40Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "complete",
-      "last_msg": "auto-complete",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "PM"
-      }
-    },
-    "T-LAUNCH-pm-raci-070-I01": {
-      "state": "blocked",
-      "last_ts": "2026-06-25T15:31:31Z",
-      "last_by": "codex-expert-edit-agent",
-      "last_type": "block",
-      "last_msg": "rate limit reached",
-      "meta": {
-        "claim_owner": "",
-        "planned_owner": "PM"
+        "planned_owner": "PO"
       }
     },
     "M-LAUNCH-project-definition": {
@@ -261,6 +173,9 @@
       "state": "todo"
     },
     "G-LAUNCH-refine-pass": {
+      "state": "todo"
+    },
+    "T-LAUNCH-prj-scope-010": {
       "state": "todo"
     },
     "T-LAUNCH-prj-scope-070-I01": {
@@ -323,6 +238,9 @@
     "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-140": {
       "state": "todo"
     },
+    "T-LAUNCH-prj-stakeholder-register-010": {
+      "state": "todo"
+    },
     "T-LAUNCH-prj-stakeholder-register-070-I01": {
       "state": "todo"
     },
@@ -383,6 +301,9 @@
     "T-LAUNCH-prj-charter-140": {
       "state": "todo"
     },
+    "T-LAUNCH-prj-assumptions-constraints-dependencies-010": {
+      "state": "todo"
+    },
     "T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01": {
       "state": "todo"
     },
@@ -411,6 +332,9 @@
       "state": "todo"
     },
     "T-LAUNCH-prj-assumptions-constraints-dependencies-140": {
+      "state": "todo"
+    },
+    "T-LAUNCH-prj-issues-and-approach-010": {
       "state": "todo"
     },
     "T-LAUNCH-prj-issues-and-approach-070-I01": {
@@ -473,7 +397,7 @@
     "T-LAUNCH-prj-comparison-of-alternatives-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-organization-080-I01": {
+    "T-LAUNCH-pm-organization-070-I01": {
       "state": "todo"
     },
     "T-LAUNCH-pm-organization-070-I02": {
@@ -500,7 +424,7 @@
     "T-LAUNCH-pm-organization-140": {
       "state": "todo"
     },
-    "T-LAUNCH-pm-roles-070-I01": {
+    "T-LAUNCH-pm-roles-010": {
       "state": "todo"
     },
     "T-LAUNCH-pm-roles-080-I01": {
@@ -528,6 +452,9 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-roles-140": {
+      "state": "todo"
+    },
+    "T-LAUNCH-pm-plan-070-I01": {
       "state": "todo"
     },
     "T-LAUNCH-pm-plan-080-I01": {
@@ -584,6 +511,9 @@
     "T-LAUNCH-pm-communication-plan-140": {
       "state": "todo"
     },
+    "T-LAUNCH-pm-quality-management-plan-070-I01": {
+      "state": "todo"
+    },
     "T-LAUNCH-pm-quality-management-plan-080-I01": {
       "state": "todo"
     },
@@ -611,6 +541,9 @@
     "T-LAUNCH-pm-quality-management-plan-140": {
       "state": "todo"
     },
+    "T-LAUNCH-pm-members-010": {
+      "state": "todo"
+    },
     "T-LAUNCH-pm-members-080-I01": {
       "state": "todo"
     },
@@ -636,6 +569,9 @@
       "state": "todo"
     },
     "T-LAUNCH-pm-members-140": {
+      "state": "todo"
+    },
+    "T-LAUNCH-pm-raci-070-I01": {
       "state": "todo"
     },
     "T-LAUNCH-pm-raci-080-I01": {
