@@ -46,11 +46,7 @@ import {
 } from './exec-plans.js'
 import { buildTaskView } from './exec-task-view.js'
 import { isResultUnfilled, scaffoldResult, updateResultStatus } from './exec-results.js'
-import {
-  resolveWorktreeBase,
-  worktreeNameFromTaskId,
-  type ExecWorktree,
-} from './exec-worktree.js'
+import { resolveWorktreeBase, worktreeNameFromTaskId, type ExecWorktree } from './exec-worktree.js'
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
@@ -153,7 +149,11 @@ export function resolveAgentOverride(
         m.command &&
         (m.nickname === agentCmdOverride || m.command === agentCmdOverride)
     )
-    return { kind: 'command', command: member?.command ?? agentCmdOverride, actor: member?.nickname }
+    return {
+      kind: 'command',
+      command: member?.command ?? agentCmdOverride,
+      actor: member?.nickname,
+    }
   }
 
   const nickname = mode === 'review' ? modeAgentOverrides.review : modeAgentOverrides.edit
@@ -217,7 +217,9 @@ export function buildTaskPhaseMap(schedulePath: string): {
       defaultPhaseSets = phaseSetNames(
         normalizePhaseSetSelection(
           strategy.default_phase_sets,
-          strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets)
+          strategy.default_phase_set
+            ? [strategy.default_phase_set]
+            : Object.keys(strategy.phase_sets)
         )
       )
     } catch {
@@ -601,7 +603,12 @@ function prepareSingleTask(
   // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
   // nickname whose command is resolved from pm-members.yaml; a mode without an override falls back
   // to normal auto-selection.
-  const overrideResolution = resolveAgentOverride(mode, agentCmdOverride, modeAgentOverrides, roster)
+  const overrideResolution = resolveAgentOverride(
+    mode,
+    agentCmdOverride,
+    modeAgentOverrides,
+    roster
+  )
   if (overrideResolution.kind === 'error') {
     process.stdout.write(`  ${overrideResolution.message}\n`)
     return 'failure'
@@ -734,15 +741,27 @@ function prepareSingleTask(
     return 'failure'
   }
 
-  const worktree = checkpointAndEnsureWorktree({
-    context: { repoRoot, schedulePath, executionPath },
-    taskId: task.id,
-    worktreeTaskId,
-    base: worktreeBase,
-    planPath: join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
-    resultPath,
-    claimEventPath,
-  })
+  let worktree: ExecWorktree
+  try {
+    worktree = checkpointAndEnsureWorktree({
+      context: { repoRoot, schedulePath, executionPath },
+      taskId: task.id,
+      worktreeTaskId,
+      base: worktreeBase,
+      planPath: join(executionPath, 'exec', 'plans', `${task.id}-plan.md`),
+      resultPath,
+      claimEventPath,
+    })
+  } catch (error) {
+    // We claimed this task in this call (skipClaim is false); the checkpoint failed, so release the
+    // claim (doing → todo). Otherwise the task is stranded in "doing" with no worktree and drops out
+    // of ready.json. Resumed tasks (skipClaim) were already doing, so leave their state untouched.
+    if (!skipClaim) {
+      spawnCancel(projectId, task.id, actor, 'rollback: checkpoint failed')
+      process.stdout.write(`  Claim rolled back (checkpoint failed): ${task.id}\n`)
+    }
+    throw error
+  }
   const setupAction = worktree.created ? 'setup' : 'reuse'
   process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`)
 
@@ -817,8 +836,7 @@ async function runPreparedTask(
       mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id })
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error)
-      if (worktreeResultPath)
-        updateResultStatus(worktreeResultPath, 'blocked', completedAt, reason)
+      if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt, reason)
       spawnBlock(projectId, prepared.task.id, prepared.actor, reason)
       process.stderr.write(`${reason}\n`)
       process.stdout.write(
@@ -897,6 +915,29 @@ function spawnComplete(projectId: string | undefined, taskId: string, by: string
   spawnSelf(args)
 }
 
+// Release a just-made claim (doing → todo) when setup fails after the claim, so the task is not
+// stranded in "doing" with no worktree. Uses the claiming actor, so no cross-actor override needed.
+function spawnCancel(
+  projectId: string | undefined,
+  taskId: string,
+  by: string,
+  reason: string
+): void {
+  const args = [
+    'exec',
+    'cancel',
+    '--task',
+    taskId,
+    '--by',
+    by,
+    '--msg',
+    reason,
+    '--allow-multiple-doing',
+  ]
+  if (projectId) args.push('--project', projectId)
+  spawnSelf(args)
+}
+
 // block 上限。block イベントログを読みやすく保つため、stderr から取り出した理由を切り詰める。
 const MAX_BLOCK_REASON_LENGTH = 500
 
@@ -913,7 +954,9 @@ export function extractBlockReason(stderr: string): string {
   const reason = tagged ?? lines.at(-1)
   if (!reason) return fallback
   const trimmed =
-    reason.length > MAX_BLOCK_REASON_LENGTH ? `${reason.slice(0, MAX_BLOCK_REASON_LENGTH)}…` : reason
+    reason.length > MAX_BLOCK_REASON_LENGTH
+      ? `${reason.slice(0, MAX_BLOCK_REASON_LENGTH)}…`
+      : reason
   return `${fallback}: ${trimmed}`
 }
 
@@ -1206,7 +1249,12 @@ async function runManualMode(opts: RunOpts): Promise<void> {
       const evts = readAllEventFiles(schedulePath)
       const initTasks = buildInitialStateFromStrategy(schedulePath, sch)
       const snap = foldEventsToState(evts, sch, schedulePath, initTasks)
-      const resolved = resolveClaimingActor(snap.tasks?.[taskId], roster, undefined, agentCmdOverride)
+      const resolved = resolveClaimingActor(
+        snap.tasks?.[taskId],
+        roster,
+        undefined,
+        agentCmdOverride
+      )
       actorOverride = resolved.actor
       agentCmdOverride = resolved.agentCmd
       alreadyClaimed = resolved.resumed
@@ -1274,9 +1322,7 @@ export function resolveInPlaceCommand(
   }
 
   if (by) {
-    const member = roster?.members.find(
-      m => m.nickname === by && m.type === 'agent' && m.command
-    )
+    const member = roster?.members.find(m => m.nickname === by && m.type === 'agent' && m.command)
     if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`)
     return { command: member.command, actor: by }
   }
@@ -1429,7 +1475,9 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   if (trackState) {
     if (!opts.task) throw new Error('--track-state requires --task.')
     if (!spawnClaim(projectId, opts.task.trim(), actor)) {
-      throw new Error(`Claim failed for ${opts.task.trim()} (omit --track-state to run without state).`)
+      throw new Error(
+        `Claim failed for ${opts.task.trim()} (omit --track-state to run without state).`
+      )
     }
   }
 
@@ -1467,7 +1515,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let blockReason: string | undefined
   if (exitCode === 0 && resultPath && task && isResultUnfilled(resultPath, task.mode ?? 'edit')) {
     effectiveExit = 1
-    blockReason = 'agent exited 0 but result mandatory sections remain unfilled (treated as blocked)'
+    blockReason =
+      'agent exited 0 but result mandatory sections remain unfilled (treated as blocked)'
     process.stdout.write(`run blocked: ${label} (result not filled despite exit 0)\n`)
   }
 
@@ -1484,7 +1533,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   if (trackState && opts.task) {
     if (effectiveExit === 0) spawnComplete(projectId, opts.task.trim(), actor)
-    else spawnBlock(projectId, opts.task.trim(), actor, blockReason ?? 'agent exited with non-zero code')
+    else
+      spawnBlock(
+        projectId,
+        opts.task.trim(),
+        actor,
+        blockReason ?? 'agent exited with non-zero code'
+      )
   }
 
   if (effectiveExit !== 0) {
@@ -1509,7 +1564,10 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option('--by <actor>', 'Actor / agent nickname (informational)')
   rcmd.option('--auto', 'Automatically select and run next ready task', false)
   rcmd.option('--task <taskId>', 'Task ID to run (manual selection)')
-  rcmd.option('--deliverable <localId>', 'Catalog deliverable local_id target (unique project-wide)')
+  rcmd.option(
+    '--deliverable <localId>',
+    'Catalog deliverable local_id target (unique project-wide)'
+  )
   rcmd.option('--plan <path>', 'Run an existing plan file (in-place; no generation)')
   rcmd.option(
     '--worktree',
@@ -1595,7 +1653,9 @@ export function registerRunCommand(exec: Command): void {
         return
       }
       if (opts.agentCmd && !isManual) {
-        process.stdout.write('--agent-cmd requires a manual target. Use --cmd for batch execution.\n')
+        process.stdout.write(
+          '--agent-cmd requires a manual target. Use --cmd for batch execution.\n'
+        )
         process.exitCode = 1
         return
       }
