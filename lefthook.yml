@@ -36,8 +36,7 @@ pre-commit:
 
     index-build:
       glob: "docs/**"
-      run: npx tsx src/specdojo.ts index build
-      stage_fixed: true
+      run: npx tsx src/specdojo.ts index build && git add .specdojo/doc-index.json
 
 commit-msg:
   commands:
