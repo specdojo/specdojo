@@ -278,6 +278,13 @@ exec build（再実行）
 - checkpoint 時に root index に stage 済み変更があると停止する（`Root index has staged changes; commit or unstage them first.`）。checkpoint は plan / result / claim event の特定パスだけを stage するため、未 stage の編集が勝手に commit されることはないが、`git add` した時点で次タスクが失敗する。
 - merge 時に root の未 commit 変更パスと merge 対象パスが重複すると停止する（`Current worktree changes overlap merge paths`）。
 
+安全ガードやレートリミット、プロセス中断でループが停止すると、claim 済みのタスクが `doing` のまま残る。`--auto` は ready から `doing` を除外するため次回の `--auto` では再開されない。この場合は `exec resume` で既存 worktree 上から継続する（`exec resume` を参照）。
+
+```sh
+# 中断で doing のまま残ったタスクを再開する
+specdojo exec resume --project prj-0001
+```
+
 加えて merge 先は merge 実行時点の root のカレントブランチであり、手作業の commit はループの checkpoint commit や merge commit と同じブランチ上で混在する。
 
 このため、ループ実行と並行して repoRoot のコードを修正したい場合は、別ブランチの worktree を作成してそこで編集する。`git worktree` は同一ブランチを2つの worktree で同時に checkout できないため、編集用 worktree は必ず別ブランチになる。これにより index・作業ツリー・ブランチ履歴がループから隔離され、上記の安全ガードを回避できる。編集が完了したら、ループ終了後にその別ブランチを root のブランチへ merge / rebase して取り込む。

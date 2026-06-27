@@ -1544,6 +1544,13 @@ specdojo exec run --project prj-0001 --auto --loop --parallel 5
 specdojo exec run --project prj-0001 --cmd opencode-edit-agent --parallel 2
 ```
 
+`--auto` / `--loop` 実行が中断され `doing` のまま残ったタスクは、`--auto` の選択対象（ready）に含まれないため次回の `--auto` では再開されない。`exec resume` で既存 worktree 上から継続する。
+
+```bash
+# 中断で doing のまま残ったタスクを再開する
+specdojo exec resume --project prj-0001
+```
+
 低レベルに段階実行したい場合は `exec build` → `exec scheduler` → `exec worktree prepare … remove` → `exec complete` を個別に実行する。
 
 ### 8.12. exec run
@@ -1794,7 +1801,50 @@ rate_limit_policy:
 
 `rate_limit_policy` を省略した場合、レートリミットはエージェントの通常エラーとして扱われ、出力にログを記録して当該インスタンスを終了する。
 
-### 8.13. exec worktree
+### 8.13. exec resume
+
+中断した `exec run --auto` / `--worktree` 実行で `doing` のまま残ったタスクを、既存の worktree 上で再開する。`exec run --auto` は `ready.json` からタスクを選ぶが、ready は `doing`・`blocked` を構造的に除外する（`状態遷移` を参照）ため、`--auto` / `--loop` では `doing` のタスクを拾えない。`exec resume` はイベントログから `doing` のタスクを直接発見して再実行する。
+
+`exec run --task <id>` も単一タスクの再開に使えるが、`exec resume` は引数なしで `doing` のタスクを一括検出する点が異なる。
+
+```bash
+# doing のタスクをすべて再開する
+specdojo exec resume --project prj-0001
+
+# 特定タスクだけ再開する
+specdojo exec resume --project prj-0001 --task T-AUTH-auth-api-020
+
+# 並列で再開する
+specdojo exec resume --project prj-0001 --parallel 5
+```
+
+オプション:
+
+| オプション                  | 説明                                                                        | デフォルト                   |
+| --------------------------- | --------------------------------------------------------------------------- | ---------------------------- |
+| `--project`                 | プロジェクト ID（`specdojo.config.json` から解決）                          | 省略可                       |
+| `--task <id>`               | このタスクだけ再開する（`doing` 状態である必要がある）                      | 全 `doing` タスク            |
+| `--by <actor>`              | actor を上書きする                                                          | claim した actor（`last_by`）|
+| `--cmd <agent>`             | agent nickname またはコマンド文字列を上書きする                             | claim した actor のコマンド  |
+| `--agent-cmd <command>`     | コマンド文字列の上書き（resume では `--cmd` の別名）                        | —                            |
+| `--edit-agent <nickname>`   | edit mode タスクに使う agent nickname。claim した actor を上書きする        | claim した actor             |
+| `--review-agent <nickname>` | review mode タスクに使う agent nickname。claim した actor を上書きする      | claim した actor             |
+| `--parallel <n>`            | 並列で再開する数                                                            | `1`                          |
+| `--worktree-base <path>`    | worktree 配置先パスの上書き                                                  | `run.worktree_base`          |
+| `--exec-defaults <path>`    | `exec-defaults.yaml` のパス                                                  | `.specdojo/exec-defaults.yaml`|
+| `--dry-run`                 | 実行せず、実行予定を標準出力に表示                                          | `false`                      |
+
+挙動の要点:
+
+- 対象選択は `state.json` キャッシュではなくイベントログを fold して行うため、`exec build` 前でも最新の `doing` を反映する。
+- claim した actor（`last_by`）とそのコマンドを引き継いで再実行する。`--by` / `--cmd` で上書きできる。
+- 既存の worktree と exec ブランチを再利用し、既に `doing` のため claim は再発行しない。
+- result ファイルは上書きしない（scaffold はべき等）。commit 済みの途中成果は worktree に保持される。plan は実行直前に再生成する。
+- `--auto` と異なり validate / build を実行しないため `generated/` を更新しない。
+
+`cancel` との違いは、`cancel` が `doing` を `todo` に戻して claim を放棄し最初からやり直す操作（`状態遷移` を参照）であるのに対し、`exec resume` は claim を保持したまま同じ actor で作業を継続する点にある。
+
+### 8.14. exec worktree
 
 claim 済みタスクを人が段階ごとに確認しながら実行するため、worktree の準備、agent 起動、commit、merge、削除を分割して行う。`exec run` と異なり、`claim`、`complete`、`block` は暗黙に実行しない。
 
@@ -1855,7 +1905,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 詳細な Git 操作と安全条件は `specdojo-schedule-and-exec-guide.md` の「9.5.1. worktree を作成してエージェントを手動実行する」を参照する。
 
-### 8.14. exec status
+### 8.15. exec status
 
 現在の実行状態でタスクを絞り込んで表示する。`--state` を省略すると doing（クレーム中）のタスクを表示する。イベントファイルから直接計算するため、`exec build` 前でも最新の状態が表示される。
 
@@ -1894,7 +1944,7 @@ specdojo exec status --project <project-id>
 specdojo exec status --project <project-id> --by <actor> --state blocked
 ```
 
-### 8.15. exec scaffold
+### 8.16. exec scaffold
 
 プロジェクトのセットアップファイル（`pm-review-viewpoints.yaml` など）を生成する。`review scaffold` コマンドから viewpoints 生成機能を引き継いだサブコマンドです。
 
@@ -1915,7 +1965,7 @@ specdojo exec scaffold --project prj-0001
 
 既存ファイルはデフォルトでスキップされます（`--force` で上書き可能）。
 
-### 8.16. exec plan
+### 8.17. exec plan
 
 schedule にとらわれず、対象成果物の plan を生成する。生成源は成果物カタログ（`done_criteria`・`rulebook`・`overview` 等）で、`--task` を渡したときは schedule から `mode`・`approach`・`owner`・CPM を補完する。`--deliverable` の場合は `--track <track>` を渡すと `sch-strategy-<track>.yaml` の `owner_rules` から `owner`（plan の「owner ロールとしての記述ポイント」）を解決する。`--track` 省略時や該当ルールが無い場合は owner 未設定のままとなる。`exec build` のような全タスク一括生成や `ready.json` への依存はない。
 
@@ -1950,7 +2000,7 @@ specdojo exec plan --project prj-0001 --task T-AUTH-auth-api-020
 
 `exec run` は plan が無ければ内部で `exec plan` 相当を実行するため、通常は `exec run` だけでよい。plan を確認・編集してから実行したいときに `exec plan` を使う。
 
-#### 8.16.1. `--deliverable` の識別子解決
+#### 8.17.1. `--deliverable` の識別子解決
 
 `--deliverable` は成果物カタログ（`dct-*.yaml`）の成果物を `local_id` で指定する。`local_id` はプロジェクト全体で一意であることを前提とし（`catalog validate` / `exec validate` が重複を警告する）、bare の `local_id` で全カタログから一意に解決する。scheduled タスクも同じ前提で `local_id` から成果物を引き当てる。
 
@@ -1964,7 +2014,7 @@ specdojo exec plan --project prj-0001 --task T-AUTH-auth-api-020
 
 解決された成果物は、plan ファイル名の slug（`= local_id`、`plan / result のライフサイクル` を参照）と `_DELIVERABLE_*_` プレースホルダの算出に用いる。`exec run` / `exec archive` の `--deliverable` も本節の規則で解決する。
 
-### 8.17. plan / result のライフサイクル
+### 8.18. plan / result のライフサイクル
 
 plan・result はいずれも git 管理対象の通常ファイルとして扱う（`generated/` のような無視対象にはしない）。状態追跡や隔離の有無にかかわらず、作業の入力（plan）と記録（result）はリポジトリ履歴に残す。
 
@@ -2409,7 +2459,7 @@ agent-test
 - AI Agent向けタスク取得
 - 成果物カタログ scaffold・検証・Markdown 生成（`catalog scaffold/validate/build`）
 - スケジュールトラック生成（`schedule build`）
-- exec plan / result 生成と実行（`exec plan` / `exec run` / `exec build` / `exec archive`）
+- exec plan / result 生成と実行（`exec plan` / `exec run` / `exec resume` / `exec build` / `exec archive`）
 - プロジェクト登録簿 scaffold・登録項目追加・ステータス変更・派生ビュー生成（`register scaffold` / `register add` / `register update` / `register start` / `register wait` / `register review` / `register close` / `register reject` / `register defer` / `register reopen` / `register build`）
 - ファイル変更の自動検出とビルド実行（`watch`）
 - 全生成物の一括再生成（`build`）

@@ -24,7 +24,7 @@ import {
   type ProjectMember,
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
-import type { Proficiency } from './exec-types.js'
+import type { CurrentState, Proficiency } from './exec-types.js'
 import { replaceDocIndexRefs } from './doc-index.js'
 import {
   extractLocalId,
@@ -1054,6 +1054,36 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
   }
 }
 
+// For a task already in "doing" state, resume with the actor who claimed it (and their command)
+// so a re-run does not reselect a different agent. An explicit --by always wins; --cmd/--agent-cmd
+// override the resolved command. `resumed` is true only when the claiming actor was adopted, which
+// the callers use to skip a redundant claim.
+export function resolveClaimingActor(
+  taskState: CurrentState | undefined,
+  roster: MemberRoster | null,
+  byOverride: string | undefined,
+  cmdOverride: string | undefined
+): { actor: string | undefined; agentCmd: string | undefined; resumed: boolean } {
+  if (byOverride) return { actor: byOverride, agentCmd: cmdOverride, resumed: false }
+  if (taskState?.state !== 'doing' || !taskState.last_by) {
+    return { actor: byOverride, agentCmd: cmdOverride, resumed: false }
+  }
+  const actor = taskState.last_by
+  let agentCmd = cmdOverride
+  if (!agentCmd && roster) {
+    const claimingMember = roster.members.find(
+      m => m.nickname === actor && m.type === 'agent' && m.command
+    )
+    if (claimingMember?.command) agentCmd = claimingMember.command
+  }
+  process.stdout.write(
+    agentCmd
+      ? `  Resuming with claiming actor: ${actor} (${agentCmd})\n`
+      : `  Resuming with claiming actor: ${actor}\n`
+  )
+  return { actor, agentCmd, resumed: true }
+}
+
 async function runManualMode(opts: RunOpts): Promise<void> {
   const taskId = opts.task as string
   const resolvedPaths = resolveProjectPaths({ project: opts.project })
@@ -1151,24 +1181,10 @@ async function runManualMode(opts: RunOpts): Promise<void> {
       const evts = readAllEventFiles(schedulePath)
       const initTasks = buildInitialStateFromStrategy(schedulePath, sch)
       const snap = foldEventsToState(evts, sch, schedulePath, initTasks)
-      const taskState = snap.tasks?.[taskId]
-      if (taskState?.state === 'doing' && taskState.last_by) {
-        actorOverride = taskState.last_by
-        alreadyClaimed = true
-        if (!agentCmdOverride && roster) {
-          const claimingMember = roster.members.find(
-            m => m.nickname === actorOverride && m.type === 'agent' && m.command
-          )
-          if (claimingMember?.command) {
-            agentCmdOverride = claimingMember.command
-            process.stdout.write(
-              `  Resuming with claiming actor: ${actorOverride} (${agentCmdOverride})\n`
-            )
-          } else {
-            process.stdout.write(`  Resuming with claiming actor: ${actorOverride}\n`)
-          }
-        }
-      }
+      const resolved = resolveClaimingActor(snap.tasks?.[taskId], roster, undefined, agentCmdOverride)
+      actorOverride = resolved.actor
+      agentCmdOverride = resolved.agentCmd
+      alreadyClaimed = resolved.resumed
     } catch {
       // ignore errors reading state; fall through to normal agent selection
     }
@@ -1595,6 +1611,172 @@ export function registerRunCommand(exec: Command): void {
       } else {
         await runManualMode(opts)
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      process.stdout.write(message + '\n')
+      process.exitCode = 1
+    }
+  })
+}
+
+// Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
+// ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
+// in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
+// partially-filled result (scaffoldResult is idempotent; the worktree is reused). No validate/build
+// pass — selection comes from events, not the generated cache.
+async function runResumeMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project })
+  activateResolvedProjectPaths(resolvedPaths)
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths
+  const projectId = resolvedPaths.projectId ?? opts.project
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath }
+  const repoRoot = specdojoRootDir()
+  const worktreeBase = resolveWorktreeBase(
+    repoRoot,
+    opts.worktreeBase,
+    configuredWorktreeBase(schedulePath)
+  )
+  const parallel = parseParallel(opts.parallel)
+  const dryRun = !!opts.dryRun
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath
+  )
+  const roster = loadRosterForExecutionPath(executionPath)
+  const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(schedulePath)
+
+  // Resolve current state from the event log (not the state.json cache) so freshly claimed/blocked
+  // tasks within a just-interrupted run are reflected.
+  const schedule = buildScheduleIndex(schedulePath)
+  const events = readAllEventFiles(schedulePath)
+  const initTasks = buildInitialStateFromStrategy(schedulePath, schedule)
+  const snapshot = foldEventsToState(events, schedule, schedulePath, initTasks)
+
+  let doingIds = Object.entries(snapshot.tasks)
+    .filter(([, st]) => st.state === 'doing')
+    .map(([id]) => id)
+    .sort()
+
+  if (opts.task) {
+    const state = snapshot.tasks[opts.task]?.state
+    if (state !== 'doing') {
+      process.stdout.write(
+        `[resume] ${opts.task} is not in "doing" state (state: ${state ?? 'unknown'}) — nothing to resume.\n`
+      )
+      process.exitCode = 1
+      return
+    }
+    doingIds = [opts.task]
+  }
+
+  if (doingIds.length === 0) {
+    process.stdout.write('[resume] no "doing" tasks to resume — exit\n')
+    return
+  }
+
+  process.stdout.write(`[resume] ${doingIds.length} doing task(s): ${doingIds.join(', ')}\n`)
+
+  for (let offset = 0; offset < doingIds.length; offset += parallel) {
+    const batch = doingIds.slice(offset, offset + parallel)
+    const preparedTasks: PreparedTask[] = []
+    for (const taskId of batch) {
+      try {
+        const task = buildTaskView(schedulePath, executionPath, taskId)
+        const resolved = resolveClaimingActor(
+          snapshot.tasks[taskId],
+          roster,
+          opts.by,
+          opts.agentCmd ?? opts.cmd
+        )
+        const prepared = prepareSingleTask(
+          task,
+          projectId,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          roster,
+          localIdToPhaseSets,
+          phaseSetSuffixToId,
+          resolved.agentCmd,
+          { edit: opts.editAgent, review: opts.reviewAgent },
+          resolved.actor,
+          dryRun,
+          true, // skipClaim: the task is already "doing" and remains claimed
+          worktreeBase,
+          planGenPaths
+        )
+        if (typeof prepared !== 'string') preparedTasks.push(prepared)
+        else if (prepared === 'failure') process.exitCode = 1
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        process.stderr.write(`[resume] setup error for ${taskId}: ${message}\n`)
+        process.exitCode = 1
+      }
+    }
+
+    if (preparedTasks.length === 0) continue
+
+    const settled = await Promise.allSettled(
+      preparedTasks.map(prepared =>
+        runPreparedTask(
+          prepared,
+          projectId,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          execDefaults,
+          dryRun
+        )
+      )
+    )
+    settled.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        const prepared = preparedTasks[index]
+        const message =
+          result.reason instanceof Error ? result.reason.message : String(result.reason)
+        process.stderr.write(`[resume] error: ${prepared.worktree.name}: ${message}\n`)
+        if (!dryRun) {
+          const completedAt = new Date().toISOString()
+          if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+          spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`)
+        }
+        process.exitCode = 1
+      } else if (result.value === 'failure') {
+        process.exitCode = 1
+      }
+    })
+  }
+}
+
+export function registerResumeCommand(exec: Command): void {
+  const cmd = exec
+    .command('resume')
+    .description('Resume tasks left in "doing" state on their existing worktrees')
+
+  cmd.option('--project <projectId>', 'Project id in .specdojo/specdojo.config.json')
+  cmd.option('--task <taskId>', 'Resume only this task (must be in "doing" state)')
+  cmd.option('--by <actor>', 'Override the actor (default: the actor that claimed the task)')
+  cmd.option('--cmd <command>', 'Agent nickname or command string override')
+  cmd.option('--agent-cmd <command>', 'Override agent command string (alias of --cmd for resume)')
+  cmd.option(
+    '--edit-agent <nickname>',
+    'pm-members.yaml agent nickname for edit-mode tasks (overrides the claiming actor)'
+  )
+  cmd.option(
+    '--review-agent <nickname>',
+    'pm-members.yaml agent nickname for review-mode tasks (overrides the claiming actor)'
+  )
+  cmd.option('--parallel <n>', 'Number of tasks to resume in parallel', '1')
+  cmd.option('--worktree-base <path>', 'Override worktree base directory')
+  cmd.option(
+    '--exec-defaults <path>',
+    'Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)'
+  )
+  cmd.option('--dry-run', 'Print resolved commands without executing', false)
+
+  cmd.action(async (opts: RunOpts) => {
+    try {
+      await runResumeMode(opts)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       process.stdout.write(message + '\n')
