@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { specdojoRootDir } from './specdojo-config.js'
 import { expandTemplate } from './exec-shared.js'
+import { formatMarkdownFile } from './exec-format.js'
 import type { Approach, ExecResultMeta, TaskMode } from './exec-types.js'
 
 // ---------------------------------------------------------------------------
@@ -50,6 +51,10 @@ function parseFrontmatter(content: string): { meta: Record<string, string>; body
     meta[line.slice(0, idx).trim()] = unquote(line.slice(idx + 1).trim())
   }
   return { meta, body: match[2] }
+}
+
+function frontmatterWithBody(frontmatter: string, body: string): string {
+  return `${frontmatter}\n\n${body.replace(/^\n+/, '')}`
 }
 
 // ---------------------------------------------------------------------------
@@ -133,6 +138,7 @@ export function scaffoldResult(opts: {
   const content = expandTemplate(template, values)
 
   writeFileSync(resultPath, content, 'utf8')
+  formatMarkdownFile(resultPath)
   return { resultPath, created: true }
 }
 
@@ -186,5 +192,6 @@ export function updateResultStatus(
     ...(blockReason ? { block_reason: blockReason } : {}),
   }
 
-  writeFileSync(resultPath, serializeFrontmatter(updatedMeta) + body, 'utf8')
+  writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), 'utf8')
+  formatMarkdownFile(resultPath)
 }

@@ -4,6 +4,7 @@ import { load } from 'js-yaml'
 import { specdojoRootDir } from './specdojo-config.js'
 import { resolveReferenceMaterialRefs } from './reference-materials.js'
 import { resolveBasePath, resolveDeliverablePath } from './catalog-paths.js'
+import { formatMarkdownFile } from './exec-format.js'
 import {
   expandTemplate,
   listFilesRecursive,
@@ -643,6 +644,7 @@ function writeTaskPlan(
   const content = injectCommonConventions(body, ctx.templateCache)
 
   writeFileSync(outPath, content, 'utf8')
+  formatMarkdownFile(outPath)
   return outPath
 }
 
