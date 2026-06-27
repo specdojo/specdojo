@@ -114,6 +114,7 @@ type ExecCommandOpts = {
   allowOwnerMismatch?: boolean
   strategy?: string
   dryRun?: boolean
+  force?: boolean
 }
 
 type LoadedExecState = {
@@ -142,6 +143,14 @@ function addLockOptions(cmd: Command): Command {
     .option('--allow-multiple-doing', 'Allow this actor to hold multiple doing tasks', false)
     .option('--lock-timeout-ms <ms>', 'Lock acquisition timeout in ms', '10000')
     .option('--lock-stale-ms <ms>', 'Lock stale threshold in ms', '300000')
+}
+
+function addForceOption(cmd: Command): Command {
+  return cmd.option(
+    '--force',
+    'Human actor only: override the guard on a task held by another actor',
+    false
+  )
 }
 
 function addOwnerOptions(cmd: Command): Command {
@@ -201,6 +210,16 @@ function resolveProjectId(opts: { project?: string }): string {
 
 function findRosterMember(roster: ReturnType<typeof loadRosterForOpts>, actor: string) {
   return roster?.members.find(member => member.nickname === actor) ?? null
+}
+
+// The --force override is honored only for actors registered as humans in the
+// roster, so agents cannot steal a task another actor is working on.
+function resolveForceOverride(
+  opts: ExecCommandOpts,
+  actor: string
+): { isHuman: boolean; force: boolean } {
+  const isHuman = findRosterMember(loadRosterForOpts(opts), actor)?.type === 'human'
+  return { isHuman, force: !!opts.force }
 }
 
 export function resolveClaimOwner(
@@ -468,13 +487,13 @@ export function registerExecCommands(program: Command): void {
     },
     complete: {
       type: 'complete',
-      check: ({ schedule, snapshot }, taskId, actor) =>
-        canCompleteTask(schedule, snapshot, taskId, actor),
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canCompleteTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
     },
     block: {
       type: 'block',
-      check: ({ schedule, snapshot }, taskId, actor) =>
-        canBlockTask(schedule, snapshot, taskId, actor),
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canBlockTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
     },
     unblock: {
       type: 'unblock',
@@ -482,8 +501,8 @@ export function registerExecCommands(program: Command): void {
     },
     cancel: {
       type: 'cancel',
-      check: ({ schedule, snapshot }, taskId, actor) =>
-        canCancelTask(schedule, snapshot, taskId, actor),
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canCancelTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
     },
   }
 
@@ -504,6 +523,7 @@ export function registerExecCommands(program: Command): void {
 
     if (t in lockedActions) addLockOptions(cmd)
     if (t === 'claim') addOwnerOptions(cmd)
+    if (t === 'complete' || t === 'block' || t === 'cancel') addForceOption(cmd)
 
     if (t in lockedActions) {
       cmd.action(opts => runLockedEventCommand(opts, lockedActions[t as LockedEventAction['type']]))

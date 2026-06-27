@@ -411,6 +411,22 @@ describe('canCompleteTask', () => {
     expect(canCompleteTask(schedule, snapshot, 'T-001', 'agent-2').ok).toBe(false)
   })
 
+  it('human が --force を付ければ別 actor のタスクを complete できる', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canCompleteTask(schedule, snapshot, 'T-001', 'indie', { isHuman: true, force: true }).ok
+    ).toBe(true)
+  })
+
+  it('agent は --force を付けても別 actor のタスクを complete できない', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canCompleteTask(schedule, snapshot, 'T-001', 'agent-2', { isHuman: false, force: true }).ok
+    ).toBe(false)
+  })
+
   it('done 状態のタスクは complete できない', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const snapshot = makeSnapshot({ 'T-001': { state: 'done' } })
@@ -443,6 +459,22 @@ describe('canBlockTask', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
     expect(canBlockTask(schedule, snapshot, 'T-001', 'agent-2').ok).toBe(false)
+  })
+
+  it('human が --force を付ければ別 actor のタスクを block できる', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canBlockTask(schedule, snapshot, 'T-001', 'indie', { isHuman: true, force: true }).ok
+    ).toBe(true)
+  })
+
+  it('agent は --force を付けても別 actor のタスクを block できない', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canBlockTask(schedule, snapshot, 'T-001', 'agent-2', { isHuman: false, force: true }).ok
+    ).toBe(false)
   })
 
   it('すでに blocked のタスクは block できない', () => {
@@ -505,6 +537,33 @@ describe('canCancelTask', () => {
     const schedule = makeSchedule([{ id: 'T-001' }])
     const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
     expect(canCancelTask(schedule, snapshot, 'T-001', 'agent-2').ok).toBe(false)
+  })
+
+  it('doing のとき human が --force を付ければ別 actor のタスクも cancel できる', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canCancelTask(schedule, snapshot, 'T-001', 'indie', { isHuman: true, force: true }).ok
+    ).toBe(true)
+  })
+
+  it('doing のとき human でも --force なしでは別 actor のタスクを cancel できない', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    expect(
+      canCancelTask(schedule, snapshot, 'T-001', 'indie', { isHuman: true, force: false }).ok
+    ).toBe(false)
+  })
+
+  it('doing のとき agent は --force を付けても別 actor のタスクを cancel できない', () => {
+    const schedule = makeSchedule([{ id: 'T-001' }])
+    const snapshot = makeSnapshot({ 'T-001': { state: 'doing', last_by: 'agent-1' } })
+    const result = canCancelTask(schedule, snapshot, 'T-001', 'agent-2', {
+      isHuman: false,
+      force: true,
+    })
+    expect(result.ok).toBe(false)
+    expect(result.reason).toMatch(/a human may override with --force/)
   })
 
   it('done 状態のタスクは cancel できない', () => {

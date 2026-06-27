@@ -268,11 +268,31 @@ export function canClaimTask(
   return { ok: true }
 }
 
+// A human actor may override the "owned by another actor" guard by passing
+// --force, e.g. to release/complete/block a task held by a stuck agent.
+// Agents never get this exception, preserving claim-stealing protection.
+export type ForceOverride = {
+  isHuman?: boolean
+  force?: boolean
+}
+
+function canOverrideCrossActor(override?: ForceOverride): boolean {
+  return !!override?.isHuman && !!override?.force
+}
+
+function crossActorReason(lastBy: string | undefined): string {
+  return (
+    `task is being worked on by another actor: ${lastBy ?? '(unknown)'}` +
+    ` (a human may override with --force)`
+  )
+}
+
 export function canCompleteTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
-  actor: string
+  actor: string,
+  override?: ForceOverride
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId)
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` }
@@ -287,11 +307,8 @@ export function canCompleteTask(
   if (state === 'cancelled') return { ok: false, reason: `task cancelled: ${taskId}` }
 
   if (state !== 'doing') return { ok: false, reason: `task is not doing: ${taskId}` }
-  if (cur?.last_by !== actor) {
-    return {
-      ok: false,
-      reason: `task is being worked on by another actor: ${cur?.last_by ?? '(unknown)'}`,
-    }
+  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(cur?.last_by) }
   }
 
   return { ok: true }
@@ -301,7 +318,8 @@ export function canBlockTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
-  actor: string
+  actor: string,
+  override?: ForceOverride
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId)
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` }
@@ -316,11 +334,8 @@ export function canBlockTask(
   if (state === 'cancelled') return { ok: false, reason: `task cancelled: ${taskId}` }
 
   if (state !== 'doing') return { ok: false, reason: `task is not doing: ${taskId}` }
-  if (cur?.last_by !== actor) {
-    return {
-      ok: false,
-      reason: `task is being worked on by another actor: ${cur?.last_by ?? '(unknown)'}`,
-    }
+  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(cur?.last_by) }
   }
 
   return { ok: true }
@@ -352,7 +367,8 @@ export function canCancelTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
-  actor: string
+  actor: string,
+  override?: ForceOverride
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId)
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` }
@@ -364,12 +380,10 @@ export function canCancelTask(
   if (state === 'done') return { ok: false, reason: `task already done: ${taskId}` }
   if (state === 'cancelled') return { ok: false, reason: `task already cancelled: ${taskId}` }
 
-  // For doing state: only the actor who claimed it can cancel (release the claim).
-  if (state === 'doing' && cur?.last_by !== actor) {
-    return {
-      ok: false,
-      reason: `task is being worked on by another actor: ${cur?.last_by ?? '(unknown)'}`,
-    }
+  // For doing state: only the actor who claimed it can cancel (release the claim),
+  // unless a human overrides the guard with --force.
+  if (state === 'doing' && cur?.last_by !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(cur?.last_by) }
   }
 
   return { ok: true }

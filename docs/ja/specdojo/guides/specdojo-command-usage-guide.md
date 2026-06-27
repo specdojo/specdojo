@@ -1396,6 +1396,19 @@ specdojo exec cancel \
   --msg "scope removed"
 ```
 
+`doing` 状態のタスクは、通常は claim した本人（`last_by`）だけが `complete` / `block` / `cancel` できる。別 actor が claim 中のタスクを操作しようとすると、`task is being worked on by another actor` で拒否される。
+
+スタックしたエージェントのタスクを止めたい場合など、roster で `type: human` に登録された actor は `--force` を付けることで、別 actor が claim 中の `doing` タスクに対しても `complete` / `block` / `cancel` を実行できる。`type: agent` の actor は `--force` を付けても拒否され、エージェント同士の横取りは防止される。
+
+```bash
+specdojo exec cancel \
+  --project prj-0001 \
+  --task T-AUTH-auth-api-020 \
+  --by indie \
+  --msg "force-cancel this task" \
+  --force
+```
+
 #### 8.7.6. note / link / estimate
 
 ```bash
