@@ -1,0 +1,23 @@
+# 依存・生成物
+node_modules
+dist
+build
+coverage
+
+# vitepress build / cache
+.vitepress/dist
+.vitepress/cache
+.vitepress/.temp
+public/mermaid
+
+# specdojo 生成物
+.specdojo/doc-index.json
+
+# vscode extension build
+tools/vscode-specdojo/node_modules
+tools/vscode-specdojo/out
+
+# pnpm/yarn lock など（prettier に整形させない）
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

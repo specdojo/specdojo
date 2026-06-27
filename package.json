@@ -55,6 +55,8 @@
     "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'tools/docs/src/**/*.ts' 'tools/e2e/**/*.ts'",
     "lint:md": "markdownlint '**/*.md'",
     "lint:md:fix": "markdownlint --fix '**/*.md'",
+    "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "format:check": "prettier --check '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
     "docs:dev": "vitepress dev . --host 0.0.0.0 --port 5173",
     "docs:build:mermaid": "tsx tools/docs/src/gen-mermaid-svg.ts",
     "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",

@@ -6,36 +6,46 @@ pre-commit:
     # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
     # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
     # フルビルドの検証は CI 側で実行する想定。
-    format-markdown:
-      glob: "*.md"
-      run: npx markdownlint --fix {staged_files}
+    # 整形は prettier に一本化する。
+    # md 以外（ts/js/json/yaml）は prettier で整形する。
+    format:
+      glob: '*.{ts,js,mjs,cjs,json,yaml,yml}'
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+
+    # md は prettier で整形してから markdownlint でルール検査する。
+    # 別コマンドかつ parallel:true だと「整形前の内容を検査して誤ブロック」する
+    # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
+    markdown:
+      glob: '*.md'
+      run: npx prettier --write {staged_files} && npx markdownlint {staged_files}
       stage_fixed: true
 
     test:
-      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
+      glob: '{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}'
       run: npm test
 
     register-build:
-      glob: "docs/**/pjr-index.md"
+      glob: 'docs/**/pjr-index.md'
       run: npx tsx src/specdojo.ts register build
       stage_fixed: true
 
     catalog-build:
-      glob: "docs/**/dct-*.yaml"
+      glob: 'docs/**/dct-*.yaml'
       run: npx tsx src/specdojo.ts catalog build
       stage_fixed: true
 
     catalog-validate:
-      glob: "docs/ja/projects/**"
+      glob: 'docs/ja/projects/**'
       run: npx tsx src/specdojo.ts catalog validate
 
     exec-build:
-      glob: "docs/**/sch-*.yaml"
+      glob: 'docs/**/sch-*.yaml'
       run: npx tsx src/specdojo.ts exec build
       stage_fixed: true
 
     index-build:
-      glob: "docs/**"
+      glob: 'docs/**'
       # doc-index.json は gitignore 済みの生成物。ここでは再生成のみ行い、
       # commit には含めない（含めると exec の merge で衝突するため）。
       run: npx tsx src/specdojo.ts index build
