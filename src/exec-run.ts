@@ -24,7 +24,7 @@ import {
   type ProjectMember,
 } from './specdojo-config.js'
 import { type ReadySnapshot, type ReadyTaskView } from './exec-types.js'
-import type { CurrentState, Proficiency } from './exec-types.js'
+import type { CurrentState, Proficiency, TaskMode } from './exec-types.js'
 import { replaceDocIndexRefs } from './doc-index.js'
 import {
   extractLocalId,
@@ -756,6 +756,23 @@ function prepareSingleTask(
   }
 }
 
+// An agent can exit 0 without doing the work (e.g. a permission-denied tool call is fed back as a
+// tool error and the model ends its turn normally). The agent's core duty is to fill the result, so
+// treat a still-scaffold result (mandatory sections left as _TODO_) as a block even on exit 0. This
+// mirrors the in-place guard in runInPlaceMode; on the worktree path it also prevents an empty task
+// from being committed, merged, and unblocking downstream tasks. Only a successful run is reconsidered;
+// rate-limit and failure outcomes pass through unchanged.
+export function downgradeUnfilledResult(
+  agentResult: RunResult,
+  resultPath: string | undefined,
+  mode: TaskMode
+): { result: RunResult; unfilledBlock: boolean } {
+  if (agentResult === 'success' && resultPath && isResultUnfilled(resultPath, mode)) {
+    return { result: 'failure', unfilledBlock: true }
+  }
+  return { result: agentResult, unfilledBlock: false }
+}
+
 async function runPreparedTask(
   prepared: PreparedTask,
   projectId: string | undefined,
@@ -783,7 +800,13 @@ async function runPreparedTask(
     ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
     : undefined
 
-  if (result === 'success') {
+  const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
+    result,
+    worktreeResultPath,
+    prepared.task.mode ?? 'edit'
+  )
+
+  if (effectiveResult === 'success') {
     // Record completion in the worktree result, then commit (result + deliverables) onto the
     // exec branch and merge it into the current root branch so the changes are integrated.
     // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
@@ -811,7 +834,7 @@ async function runPreparedTask(
     })
     spawnComplete(projectId, prepared.task.id, prepared.actor)
     process.stdout.write(`  Done: ${prepared.task.id}\n`)
-  } else if (result === 'rate_limit') {
+  } else if (effectiveResult === 'rate_limit') {
     // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
     if (worktreeResultPath)
       updateResultStatus(worktreeResultPath, 'blocked', completedAt, 'rate limit reached')
@@ -820,16 +843,18 @@ async function runPreparedTask(
       `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
     )
   } else {
-    const blockReason = extractBlockReason(stderr)
+    const blockReason = unfilledBlock
+      ? 'agent exited 0 but result mandatory sections remain unfilled (treated as blocked)'
+      : extractBlockReason(stderr)
     if (worktreeResultPath)
       updateResultStatus(worktreeResultPath, 'blocked', completedAt, blockReason)
     spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason)
     process.stdout.write(
-      `  Failed: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
+      `  ${unfilledBlock ? 'Blocked (result not filled)' : 'Failed'}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
     )
   }
 
-  return result
+  return effectiveResult
 }
 
 function spawnSelf(args: string[]): boolean {
