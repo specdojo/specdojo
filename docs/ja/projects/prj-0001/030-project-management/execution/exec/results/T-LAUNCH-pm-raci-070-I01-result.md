@@ -7,11 +7,10 @@ status: complete
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-pm-raci-070-I01-plan.md
 started_at: "2026-06-25T15:25:40.415Z"
-completed_at: "2026-06-27T02:01:17.747Z"
+completed_at: "2026-06-27T04:35:48.828Z"
 agent: codex-expert-edit-agent
 approach: fully-guided
----
-## 1. 実施内容
+---## 1. 実施内容
 
 exec plan `T-LAUNCH-pm-raci-070-I01` の「磨き込み」フェーズに従って、既存の `pm-raci.md` が rulebook / recipe / sample / template および depends_on(`prj-0001:pm-organization`) と照合した上で不足や不整合を補強する処理を行った。
 
