@@ -7,11 +7,10 @@ status: complete
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01-plan.md
 started_at: "2026-06-26T13:12:22.794Z"
-completed_at: "2026-06-27T02:26:47.333Z"
+completed_at: "2026-06-27T04:38:23.236Z"
 agent: opencode-edit-agent
 approach: fully-guided
----
-## 1. 実施内容
+---## 1. 実施内容
 
 既存の `prj-assumptions-constraints-dependencies.md` を基礎として、rulebook / recipe / sample / template と矛盾する箇所を最小限修正した。具体的に変更は以下の1点のみ：
 
