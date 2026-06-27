@@ -3,14 +3,14 @@ id: prj-0001:xer-t-launch-prj-stakeholder-register-070-i01
 type: exec-result
 task_id: T-LAUNCH-prj-stakeholder-register-070-I01
 mode: edit
-status: in_progress
+status: complete
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-stakeholder-register-070-I01-plan.md
 started_at: "2026-06-27T04:58:18.569Z"
+completed_at: "2026-06-27T05:00:34.708Z"
 agent: opencode-edit-agent
 approach: fully-guided
 ---
-
 ## 1. 実施内容
 
 _TODO_: 実施した内容の要約を記入する。
