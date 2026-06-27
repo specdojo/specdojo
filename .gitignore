@@ -82,3 +82,7 @@ CLAUDE.local.md
 # specdojo VSCode extension
 tools/vscode-specdojo/node_modules/
 tools/vscode-specdojo/out/
+
+# specdojo doc-index は root/worktree で都度再生成される生成物。
+# commit すると exec の merge で衝突するため tracking しない。
+.specdojo/doc-index.json

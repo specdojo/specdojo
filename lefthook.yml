@@ -36,7 +36,9 @@ pre-commit:
 
     index-build:
       glob: "docs/**"
-      run: npx tsx src/specdojo.ts index build && git add .specdojo/doc-index.json
+      # doc-index.json は gitignore 済みの生成物。ここでは再生成のみ行い、
+      # commit には含めない（含めると exec の merge で衝突するため）。
+      run: npx tsx src/specdojo.ts index build
 
 commit-msg:
   commands:
