@@ -1,6 +1,6 @@
 # sch-strategy.schema.yaml
-$schema: "https://json-schema.org/draft/2020-12/schema"
-title: "SpecDojo Schedule strategy schema"
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: 'SpecDojo Schedule strategy schema'
 description: >
   Defines generation rules for sch-track-<track>.yaml.
   Used as input to the code generator; not a runtime schedule file.
@@ -24,23 +24,23 @@ required:
 
 properties:
   kind:
-    const: "strategy"
+    const: 'strategy'
     description: "File kind identifier. Must be 'strategy'."
 
   id:
     type: string
     minLength: 1
-    description: "Deliverable ID (e.g., prj-0001:sch-strategy-launch)."
+    description: 'Deliverable ID (e.g., prj-0001:sch-strategy-launch).'
 
   type:
-    const: "project"
+    const: 'project'
 
   status:
     type: string
-    enum: ["draft", "ready", "deprecated"]
+    enum: ['draft', 'ready', 'deprecated']
 
   track:
-    $ref: "./sch-common.schema.yaml#/$defs/Track"
+    $ref: './sch-common.schema.yaml#/$defs/Track'
 
   scope:
     type: object
@@ -52,7 +52,7 @@ properties:
       catalogs:
         type: array
         minItems: 1
-        description: "Target deliverables catalog files."
+        description: 'Target deliverables catalog files.'
         items:
           type: object
           additionalProperties: false
@@ -63,18 +63,18 @@ properties:
             id:
               type: string
               minLength: 1
-              description: "Catalog document ID (e.g., prj-0001:dct-project-definition)."
+              description: 'Catalog document ID (e.g., prj-0001:dct-project-definition).'
             path:
               type: string
-              pattern: "^/"
-              description: "Absolute path to the catalog YAML file."
+              pattern: '^/'
+              description: 'Absolute path to the catalog YAML file.'
       include_kinds:
         type: array
         minItems: 1
-        description: "Deliverable kinds to include in generation (typically [work])."
+        description: 'Deliverable kinds to include in generation (typically [work]).'
         items:
           type: string
-          enum: ["work", "control", "generated"]
+          enum: ['work', 'control', 'generated']
 
   phase_sets:
     type: object
@@ -88,7 +88,7 @@ properties:
       type: array
       minItems: 1
       items:
-        $ref: "#/$defs/Phase"
+        $ref: '#/$defs/Phase'
 
   default_phase_set:
     type: string
@@ -99,7 +99,7 @@ properties:
       Use default_phase_sets (plural) instead when deliverables should run multiple phase sets in sequence.
 
   default_phase_sets:
-    $ref: "#/$defs/PhaseSetSelection"
+    $ref: '#/$defs/PhaseSetSelection'
     description: >
       Ordered phase set selection applied to deliverables whose owner_rule omits phase_sets (plural).
       The array shorthand runs one cycle. The object form supports cycles for the whole sequence.
@@ -109,7 +109,7 @@ properties:
   owner_rules:
     type: array
     minItems: 1
-    description: "Mapping from deliverable local_id list to owner role and phase set."
+    description: 'Mapping from deliverable local_id list to owner role and phase set.'
     items:
       type: object
       additionalProperties: false
@@ -121,12 +121,12 @@ properties:
           type: array
           minItems: 1
           uniqueItems: true
-          description: "Deliverable local_ids covered by this rule."
+          description: 'Deliverable local_ids covered by this rule.'
           items:
             type: string
             minLength: 1
         owner:
-          $ref: "./sch-common.schema.yaml#/$defs/Owner"
+          $ref: './sch-common.schema.yaml#/$defs/Owner'
         phase_set:
           type: string
           minLength: 1
@@ -136,7 +136,7 @@ properties:
             Falls back to default_phase_set when omitted.
             Use phase_sets (plural) instead when multiple phase sets should run in sequence.
         phase_sets:
-          $ref: "#/$defs/PhaseSetSelection"
+          $ref: '#/$defs/PhaseSetSelection'
           description: >
             Ordered phase set selection to apply to these deliverables.
             The array shorthand runs one cycle. The object form supports cycles for the whole sequence.
@@ -157,17 +157,17 @@ properties:
               phase:
                 type: string
                 minLength: 1
-                description: "Phase id to override (must exist in the referenced phase_set)."
+                description: 'Phase id to override (must exist in the referenced phase_set).'
               execution:
-                $ref: "#/$defs/Execution"
+                $ref: '#/$defs/Execution'
               mode:
-                $ref: "#/$defs/TaskMode"
+                $ref: './exec-common.schema.yaml#/$defs/TaskMode'
               approach:
-                $ref: "#/$defs/Approach"
+                $ref: './exec-common.schema.yaml#/$defs/Approach'
               capabilities:
-                $ref: "#/$defs/Capabilities"
+                $ref: '#/$defs/Capabilities'
               proficiency:
-                $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+                $ref: './exec-common.schema.yaml#/$defs/Proficiency'
 
   group_milestones:
     type: array
@@ -186,11 +186,11 @@ properties:
         catalog_id:
           type: string
           minLength: 1
-          description: "Catalog ID to scope (must match one of scope.catalogs[].id)."
+          description: 'Catalog ID to scope (must match one of scope.catalogs[].id).'
         group:
           type: string
           minLength: 1
-          description: "Top-level group name. Omit for unnamed/single groups."
+          description: 'Top-level group name. Omit for unnamed/single groups.'
         milestone:
           type: object
           additionalProperties: false
@@ -202,19 +202,19 @@ properties:
             id:
               type: string
               minLength: 1
-              description: "Milestone ID (e.g., M-LAUNCH-PJD-900)."
+              description: 'Milestone ID (e.g., M-LAUNCH-PJD-900).'
             name:
               type: string
               minLength: 1
-              description: "Milestone display name."
+              description: 'Milestone display name.'
             artifact_name:
               type: string
               minLength: 1
-              description: "Human-readable artifact/domain name displayed in timeline col2 (e.g., プロジェクト定義)."
+              description: 'Human-readable artifact/domain name displayed in timeline col2 (e.g., プロジェクト定義).'
             owner:
-              $ref: "./sch-common.schema.yaml#/$defs/Owner"
+              $ref: './sch-common.schema.yaml#/$defs/Owner'
             date_hint:
-              $ref: "./sch-common.schema.yaml#/$defs/Date"
+              $ref: './sch-common.schema.yaml#/$defs/Date'
             tags:
               type: array
               items:
@@ -225,11 +225,11 @@ properties:
   settings:
     type: object
     additionalProperties: false
-    description: "Track-level schedule settings. start_date overrides defaults.settings.default_start_date."
+    description: 'Track-level schedule settings. start_date overrides defaults.settings.default_start_date.'
     properties:
       start_date:
-        $ref: "./sch-common.schema.yaml#/$defs/Date"
-        description: "Track start date. Overrides sch-defaults.yaml default_start_date when specified."
+        $ref: './sch-common.schema.yaml#/$defs/Date'
+        description: 'Track start date. Overrides sch-defaults.yaml default_start_date when specified.'
       notes:
         type: string
 
@@ -250,16 +250,16 @@ properties:
         - scope
       properties:
         id:
-          $ref: "./sch-common.schema.yaml#/$defs/Id"
-          description: "Gate milestone ID (e.g., G-LAUNCH-PJD-FP)."
+          $ref: './sch-common.schema.yaml#/$defs/Id'
+          description: 'Gate milestone ID (e.g., G-LAUNCH-PJD-FP).'
         name:
           type: string
           minLength: 1
-          description: "Gate display name."
+          description: 'Gate display name.'
         artifact_name:
           type: string
           minLength: 1
-          description: "Human-readable name displayed in timeline col2 for this gate (e.g., 全ドメイン)."
+          description: 'Human-readable name displayed in timeline col2 for this gate (e.g., 全ドメイン).'
         after_phase_sets:
           type: array
           minItems: 1
@@ -272,22 +272,22 @@ properties:
             type: string
             minLength: 1
         owner:
-          $ref: "./sch-common.schema.yaml#/$defs/Owner"
+          $ref: './sch-common.schema.yaml#/$defs/Owner'
         scope:
           type: object
           additionalProperties: false
-          description: "Deliverables covered by this gate. Union of catalogs, groups, and local_ids."
+          description: 'Deliverables covered by this gate. Union of catalogs, groups, and local_ids.'
           properties:
             catalogs:
               type: array
-              description: "All deliverables in these catalog IDs."
+              description: 'All deliverables in these catalog IDs.'
               items:
                 type: string
                 minLength: 1
               uniqueItems: true
             groups:
               type: array
-              description: "All deliverables in these catalog+group combinations."
+              description: 'All deliverables in these catalog+group combinations.'
               items:
                 type: object
                 additionalProperties: false
@@ -303,7 +303,7 @@ properties:
                     minLength: 1
             local_ids:
               type: array
-              description: "Specific deliverable local_ids."
+              description: 'Specific deliverable local_ids.'
               items:
                 type: string
                 minLength: 1
@@ -325,23 +325,23 @@ properties:
         dependent:
           type: string
           minLength: 1
-          description: "local_id of the dependent deliverable."
+          description: 'local_id of the dependent deliverable.'
         requires:
           type: string
           minLength: 1
-          description: "local_id of the prerequisite deliverable."
+          description: 'local_id of the prerequisite deliverable.'
         note:
           type: string
-          description: "Optional explanation."
+          description: 'Optional explanation.'
 
   initial_state:
     type: object
     additionalProperties: false
-    description: "Initial state overrides for deliverables already complete at project start."
+    description: 'Initial state overrides for deliverables already complete at project start.'
     properties:
       completed_deliverables:
         type: array
-        description: "Deliverables completed before the track start date."
+        description: 'Deliverables completed before the track start date.'
         items:
           type: object
           additionalProperties: false
@@ -353,7 +353,7 @@ properties:
             local_id:
               type: string
               minLength: 1
-              description: "Deliverable local_id (must exist in scope catalogs)."
+              description: 'Deliverable local_id (must exist in scope catalogs).'
             completed_through:
               oneOf:
                 - type: string
@@ -381,15 +381,15 @@ properties:
                 The string shorthand is supported for non-repeated workflows.
                 Omit to mark all phases as done.
             completed_on:
-              $ref: "./sch-common.schema.yaml#/$defs/Date"
-              description: "Date the deliverable was completed."
+              $ref: './sch-common.schema.yaml#/$defs/Date'
+              description: 'Date the deliverable was completed.'
             by:
               type: string
               minLength: 1
-              description: "Nickname of the completing member (must exist in pm-members.yaml)."
+              description: 'Nickname of the completing member (must exist in pm-members.yaml).'
             note:
               type: string
-              description: "Optional explanation of the initial state."
+              description: 'Optional explanation of the initial state.'
 
 $defs:
   PhaseSetReference:
@@ -412,11 +412,11 @@ $defs:
     type: array
     minItems: 1
     items:
-      $ref: "#/$defs/PhaseSetReference"
+      $ref: '#/$defs/PhaseSetReference'
 
   PhaseSetSelection:
     oneOf:
-      - $ref: "#/$defs/PhaseSetSequence"
+      - $ref: '#/$defs/PhaseSetSequence'
       - type: object
         additionalProperties: false
         required:
@@ -426,49 +426,15 @@ $defs:
             type: integer
             minimum: 1
           sequence:
-            $ref: "#/$defs/PhaseSetSequence"
+            $ref: '#/$defs/PhaseSetSequence'
 
   Execution:
     type: string
-    enum: ["agent", "human"]
+    enum: ['agent', 'human']
     description: >
       Execution mode for a phase.
       agent: agent executes the phase; phase capabilities/proficiency select the agent.
       human: no agent is launched; the phase is recorded as pending human action.
-
-  TaskMode:
-    type: string
-    enum: ["edit", "review"]
-    description: >
-      Work mode for generated plan/result files.
-      edit: deliverable creation or update.
-      review: deliverable review.
-
-  Approach:
-    type: string
-    enum:
-      [
-        "fully-guided",
-        "recipe-guided",
-        "freeform",
-        "bootstrap",
-        "rulebook-maintenance",
-        "recipe-maintenance",
-        "sample-maintenance",
-        "template-maintenance",
-      ]
-    description: >
-      How the task is carried out in a phase. The first three values describe how strictly
-      the agent follows reference materials (rulebook/recipe/sample/template) when working on a deliverable.
-      fully-guided: rulebook/recipe/sample/template are mature; follow them.
-      recipe-guided: rulebook/sample are immature; use only the recipe's structure/questions/perspectives.
-      freeform: not bound by reference materials; prioritize deliverable examples and project context.
-      bootstrap: author the deliverable and its full reference set (rulebook/recipe/sample/template)
-      together in one task as a mutually consistent whole; used to initially establish a deliverable and
-      its reference materials. Must be declared explicitly in phase_sets.
-      The *-maintenance values improve the named reference material (rulebook/recipe/sample/template)
-      based on deliverables (reference direction is reversed); they must be declared explicitly in
-      phase_sets and are never auto-injected.
 
   Phase:
     type: object
@@ -482,45 +448,45 @@ $defs:
       id:
         type: string
         minLength: 1
-        description: "Phase identifier (e.g., draft, validate, review, finalize)."
+        description: 'Phase identifier (e.g., draft, validate, review, finalize).'
       name:
         type: string
         minLength: 1
-        description: "Phase display name."
+        description: 'Phase display name.'
       task_suffix:
         type: string
-        pattern: "^[0-9]{3}$"
-        description: "3-digit numeric suffix appended to the generated task ID."
+        pattern: '^[0-9]{3}$'
+        description: '3-digit numeric suffix appended to the generated task ID.'
       duration_days:
         type: number
         exclusiveMinimum: 0
-        description: "Default task duration in working days for this phase."
+        description: 'Default task duration in working days for this phase.'
       execution:
-        $ref: "#/$defs/Execution"
+        $ref: '#/$defs/Execution'
         description: >
           Default execution mode for this phase across all deliverables using this phase_set.
           Omit to default to agent.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       mode:
-        $ref: "#/$defs/TaskMode"
+        $ref: './exec-common.schema.yaml#/$defs/TaskMode'
         description: >
           Default mode for this phase across all deliverables using this phase_set.
           Omit to default to edit.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       approach:
-        $ref: "#/$defs/Approach"
+        $ref: './exec-common.schema.yaml#/$defs/Approach'
         description: >
           Default approach for this phase across all deliverables using this phase_set.
           Carried into task frontmatter and used for template selection.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       capabilities:
-        $ref: "#/$defs/Capabilities"
+        $ref: '#/$defs/Capabilities'
         description: >
           Required tool capabilities for execution: agent phases.
           Agents must have all listed capabilities. Omit when no special tools are needed.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       proficiency:
-        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        $ref: './exec-common.schema.yaml#/$defs/Proficiency'
         description: >
           Required agent proficiency for execution: agent phases.
           Omit to accept agents of any proficiency level.
@@ -535,6 +501,6 @@ $defs:
     type: array
     minItems: 1
     uniqueItems: true
-    description: "Required agent tool capabilities."
+    description: 'Required agent tool capabilities.'
     items:
-      $ref: "./exec-common.schema.yaml#/$defs/Capability"
+      $ref: './exec-common.schema.yaml#/$defs/Capability'

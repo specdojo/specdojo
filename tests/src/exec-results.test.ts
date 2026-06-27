@@ -36,6 +36,9 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(frontmatter).toContain('completed_at: "2026-06-20T00:01:00.000Z"')
     expect(frontmatter).toContain('status: complete')
     expect(frontmatter).toContain('id: prj-0001:xer-prj-overview')
+
+    const content = readFileSync(resultPath, 'utf8')
+    expect(content).toContain('---\n\n# Edit Result')
   })
 
   it('records block_reason in frontmatter when blocked with a reason', () => {
@@ -74,10 +77,15 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
       startedAt: '2026-06-20T00:00:00.000Z',
     })
 
-    updateResultStatus(resultPath, 'blocked', '2026-06-20T00:01:00.000Z', 'cannot read "config.yaml"')
+    updateResultStatus(
+      resultPath,
+      'blocked',
+      '2026-06-20T00:01:00.000Z',
+      'cannot read "config.yaml"'
+    )
 
     const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
-    expect(frontmatter).toContain("block_reason: \"cannot read 'config.yaml'\"")
+    expect(frontmatter).toContain('block_reason: "cannot read \'config.yaml\'"')
     expect(frontmatter).not.toContain('""')
   })
 

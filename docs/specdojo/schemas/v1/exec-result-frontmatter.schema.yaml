@@ -1,6 +1,6 @@
 # exec-result-frontmatter.schema.yaml
-$schema: "https://json-schema.org/draft/2020-12/schema"
-title: "SpecDojo Exec Result frontmatter schema"
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: 'SpecDojo Exec Result frontmatter schema'
 description: >
   Validates the YAML frontmatter of exec result files (edit-result and review-result).
   Result files are Markdown documents with YAML frontmatter created by exec run.
@@ -24,26 +24,24 @@ properties:
   id:
     type: string
     minLength: 1
-    description: "Unique document ID. Format: <project-id>:xer-<stem> (edit) or <project-id>:xrr-<stem> (review). For fixed-name results the stem is the task id; for unique-named in-place results it is <slug>-<UTC>-<rand>, shared with the tied plan."
+    description: 'Unique document ID. Format: <project-id>:xer-<stem> (edit) or <project-id>:xrr-<stem> (review). For fixed-name results the stem is the task id; for unique-named in-place results it is <slug>-<UTC>-<rand>, shared with the tied plan.'
 
   type:
     type: string
-    const: "exec-result"
+    const: 'exec-result'
     description: "Document type. Always 'exec-result'."
 
   task_id:
-    type: string
-    minLength: 1
-    description: "Task ID this result belongs to (e.g., T-LAUNCH-prj-overview-020)."
+    $ref: './exec-common.schema.yaml#/$defs/TaskId'
+    description: 'Task ID this result belongs to.'
 
   mode:
-    type: string
-    enum: ["edit", "review"]
-    description: "Work type. Matches the corresponding plan mode."
+    $ref: './exec-common.schema.yaml#/$defs/TaskMode'
+    description: 'Work type. Matches the corresponding plan mode.'
 
   status:
     type: string
-    enum: ["in_progress", "complete", "blocked"]
+    enum: ['in_progress', 'complete', 'blocked']
     description: >
       Lifecycle status managed by exec run harness.
       in_progress: scaffold created, agent running.
@@ -51,43 +49,28 @@ properties:
       blocked: agent exited non-zero, exec block recorded.
 
   project_id:
-    type: string
-    minLength: 1
-    description: "Project ID (e.g., prj-0001)."
+    $ref: './exec-common.schema.yaml#/$defs/ProjectId'
 
   plan_ref:
     type: string
     minLength: 1
-    description: "Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md)."
+    description: 'Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md).'
 
   started_at:
     type: string
     format: date-time
-    description: "ISO 8601 timestamp when exec run scaffolded this result and started the agent."
+    description: 'ISO 8601 timestamp when exec run scaffolded this result and started the agent.'
 
   completed_at:
     type: string
     format: date-time
-    description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
+    description: 'ISO 8601 timestamp when the agent exited. Set by exec run harness.'
 
   agent:
-    type: string
-    description: "Agent nickname that executed this task."
+    $ref: './exec-common.schema.yaml#/$defs/AgentNickname'
+    description: 'Agent nickname that executed this task.'
 
   approach:
-    type: string
-    enum:
-      [
-        "fully-guided",
-        "recipe-guided",
-        "freeform",
-        "rulebook-maintenance",
-        "recipe-maintenance",
-        "sample-maintenance",
-        "template-maintenance",
-      ]
+    $ref: './exec-common.schema.yaml#/$defs/Approach'
     description: >
-      How the task is carried out. The first three values describe how strictly the agent
-      follows reference materials (rulebook/recipe/sample/template) when working on a deliverable;
-      the *-maintenance values improve the named reference material based on deliverables.
       Carried from the corresponding plan. Omitted when not declared for this phase.

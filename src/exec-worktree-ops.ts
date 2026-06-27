@@ -253,7 +253,11 @@ export function mergeWorktreeIntoCurrent(params: {
     }
     const compareBase = gitOutput(context.repoRoot, ['merge-base', 'HEAD', worktree.branch]).trim()
     const count = Number.parseInt(
-      gitOutput(context.repoRoot, ['rev-list', '--count', `${compareBase}..${worktree.branch}`]).trim(),
+      gitOutput(context.repoRoot, [
+        'rev-list',
+        '--count',
+        `${compareBase}..${worktree.branch}`,
+      ]).trim(),
       10
     )
     if (!Number.isFinite(count) || count < 1) {
@@ -304,7 +308,8 @@ export function removeWorktree(params: {
   }
   const dirty = commitTargetPaths(context, worktree, taskId)
   const merged =
-    gitResult(context.repoRoot, ['merge-base', '--is-ancestor', worktree.branch, 'HEAD']).status === 0
+    gitResult(context.repoRoot, ['merge-base', '--is-ancestor', worktree.branch, 'HEAD']).status ===
+    0
   if (!params.force && dirty.length > 0) {
     throw new Error(`Worktree has uncommitted commit-target changes: ${dirty.join(', ')}`)
   }
@@ -362,7 +367,10 @@ export function checkpointAndEnsureWorktree(params: {
     }
     const staged = gitResult(context.repoRoot, ['diff', '--cached', '--quiet'])
     if (staged.status === 1) {
-      throw new Error('Root index has staged changes; commit or unstage them first.')
+      const stagedFiles = gitOutput(context.repoRoot, ['diff', '--cached', '--name-only']).trim()
+      throw new Error(
+        `Root index has staged changes; commit or unstage them first:\n${stagedFiles}`
+      )
     }
     if (staged.status !== 0) throw new Error('Failed to inspect staged changes in root worktree.')
 
@@ -372,17 +380,35 @@ export function checkpointAndEnsureWorktree(params: {
     gitOutput(context.repoRoot, ['add', '--', ...paths])
     const checkpoint = gitResult(context.repoRoot, ['diff', '--cached', '--quiet', '--', ...paths])
     if (checkpoint.status === 1) {
-      gitOutput(context.repoRoot, [
+      const committed = gitResult(context.repoRoot, [
         'commit',
         '-m',
         `exec(${taskId}): prepare execution`,
         '--',
         ...paths,
       ])
+      if (committed.status !== 0) {
+        // A failing git hook (pre-commit / commit-msg) aborts the commit but leaves the staged
+        // paths in the index. Unstage everything so the residue does not trip the staged-changes
+        // guard for every subsequent task and abort the whole loop. The index was verified clean
+        // above, so a full reset only drops what this checkpoint (and its hooks) staged.
+        gitResult(context.repoRoot, ['reset', '--quiet'])
+        const detail = [committed.stdout, committed.stderr]
+          .map(part => (typeof part === 'string' ? part.trim() : ''))
+          .filter(Boolean)
+          .join('\n')
+        throw new Error(
+          `Checkpoint commit failed for ${taskId}; staged changes rolled back (likely a failing git hook):\n${detail}`
+        )
+      }
     } else if (checkpoint.status !== 0) {
       throw new Error('Failed to inspect execution checkpoint changes.')
     }
   }
 
-  return ensureExecWorktree({ repoRoot: context.repoRoot, worktreeBase: base, taskId: worktreeTaskId })
+  return ensureExecWorktree({
+    repoRoot: context.repoRoot,
+    worktreeBase: base,
+    taskId: worktreeTaskId,
+  })
 }

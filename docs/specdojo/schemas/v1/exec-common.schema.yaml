@@ -1,14 +1,60 @@
 # exec-common.schema.yaml
-$schema: "https://json-schema.org/draft/2020-12/schema"
-title: "SpecDojo Exec common definitions"
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: 'SpecDojo Exec common definitions'
 description: >
-  Shared type definitions for sch-strategy, exec-defaults, and pm-members.yaml.
-  Centralizes Proficiency and Capability so their enums and descriptions stay consistent.
+  Shared type definitions for sch-strategy, exec-defaults, pm-members.yaml, and exec
+  plan/result frontmatter. Centralizes common execution enums and field definitions
+  so task metadata stays consistent.
 
 $defs:
+  TaskId:
+    type: string
+    minLength: 1
+    description: 'Task ID generated from the schedule (e.g., T-LAUNCH-prj-overview-020).'
+
+  ProjectId:
+    type: string
+    minLength: 1
+    description: 'Project ID (e.g., prj-0001).'
+
+  TaskMode:
+    type: string
+    enum: ['edit', 'review']
+    description: >
+      Work mode for generated plan/result files.
+      edit: deliverable creation or update.
+      review: deliverable review.
+
+  AgentNickname:
+    type: string
+    description: 'Agent nickname assigned to this task.'
+
+  Approach:
+    type: string
+    enum:
+      [
+        'fully-guided',
+        'recipe-guided',
+        'freeform',
+        'bootstrap',
+        'rulebook-maintenance',
+        'recipe-maintenance',
+        'sample-maintenance',
+        'template-maintenance',
+      ]
+    description: >
+      How the task is carried out. fully-guided/recipe-guided/freeform describe how strictly
+      the agent follows reference materials (rulebook/recipe/sample/template) when working on
+      a deliverable. bootstrap authors the deliverable and its full reference set
+      (rulebook/recipe/sample/template) together in one task as a mutually consistent whole;
+      it is used to initially establish a deliverable and its reference materials. The
+      *-maintenance values improve the named reference material based on deliverables
+      (reference direction is reversed). Explicit phase or owner rule settings carry this value
+      into task frontmatter and plan/result files.
+
   Proficiency:
     type: string
-    enum: ["low", "normal", "high", "expert"]
+    enum: ['low', 'normal', 'high', 'expert']
     description: >
       Agent proficiency level used for task assignment and brief generation.
       low:    lightweight tasks such as formatting or template filling.
