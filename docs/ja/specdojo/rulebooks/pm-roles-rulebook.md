@@ -29,19 +29,19 @@ Project Role Definition Documentation Rulebook
 
 `pm-roles.yaml` は、ロール定義の YAML 成果物として次の位置に置かれる。
 
-| 文書 | 役割 | 正本とする内容 |
-| --- | --- | --- |
-| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する | 採用方針、最終判断の集約先、見直し条件 |
-| `pm-roles.yaml` | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
-| `pm-members.yaml` | 実行主体と対応する Role code の対応を管理する | member nickname、agent、人間、兼務割り当て |
-| `pm-raci.md` | 必要時の責任分担を記述する | 成果物・プロセスごとの責任分担 |
+| 文書                 | 役割                                                            | 正本とする内容                                   |
+| -------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する                  | 採用方針、最終判断の集約先、見直し条件           |
+| `pm-roles.yaml`      | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
+| `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、agent、人間、兼務割り当て       |
+| `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                   |
 
 用語は次のように使い分ける。
 
-| 用語 | 意味 | `pm-roles.yaml` での扱い |
-| --- | --- | --- |
-| Role code | 責務・判断権限・専門性を表す短い識別子 | `roles[].code` に列挙する |
-| Role name | Role code の正式名称 | `roles[].name` に記載する |
+| 用語         | 意味                                                   | `pm-roles.yaml` での扱い                 |
+| ------------ | ------------------------------------------------------ | ---------------------------------------- |
+| Role code    | 責務・判断権限・専門性を表す短い識別子                 | `roles[].code` に列挙する                |
+| Role name    | Role code の正式名称                                   | `roles[].name` に記載する                |
 | Project note | 当該プロジェクトでの扱い、専任化条件、公開判断上の注意 | `roles[].project_note` に 1 行で記載する |
 
 ## 3. ファイル命名・ID規則
@@ -56,15 +56,16 @@ Project Role Definition Documentation Rulebook
 ## 4. 推奨メタ項目
 
 YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ項目として記載する。
+機械検証は `docs/specdojo/schemas/v1/pm-roles.schema.yaml` を正本とする。
 
-| 項目 | 説明 | 必須 |
-| --- | --- | --- |
-| `id` | `<project-id>:pm-roles` 形式の成果物 ID | ○ |
-| `type` | `project` 固定 | ○ |
-| `status` | `draft` / `ready` / `deprecated` | ○ |
-| `based_on` | 根拠ドキュメント ID の配列 | 任意 |
-| `version` | データバージョン。初期値は `1` | ○ |
-| `project_id` | プロジェクト ID | ○ |
+| 項目         | 説明                                    | 必須 |
+| ------------ | --------------------------------------- | ---- |
+| `id`         | `<project-id>:pm-roles` 形式の成果物 ID | ○    |
+| `type`       | `project` 固定                          | ○    |
+| `status`     | `draft` / `ready` / `deprecated`        | ○    |
+| `based_on`   | 根拠ドキュメント ID の配列              | 任意 |
+| `version`    | データバージョン。初期値は `1`          | ○    |
+| `project_id` | プロジェクト ID                         | ○    |
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -82,10 +83,10 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 `roles[]` は次のフィールドを標準とする。
 
-| フィールド     | 必須 | 内容                                                                                       |
-| -------------- | ---- | ------------------------------------------------------------------------------------------ |
-| `code`         | ○    | Role code。標準 Role code を使う |
-| `name`         | ○    | Role の正式名称 |
+| フィールド     | 必須 | 内容                                                                  |
+| -------------- | ---- | --------------------------------------------------------------------- |
+| `code`         | ○    | Role code。標準 Role code を使う                                      |
+| `name`         | ○    | Role の正式名称                                                       |
 | `project_note` | 任意 | プロジェクト固有の扱い、専任化条件、公開判断上の注意を 1 行で記述する |
 
 ## 6. 記述ガイド
@@ -120,18 +121,18 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 ## 7. 禁止事項
 
-| 禁止事項 | 理由 |
-| --- | --- |
-| 標準にない独自 Role code を追加する | Schedule、RACI、member 定義との接続が壊れるため |
-| `roles[].code` に member nickname、agent 名、個人名、stakeholder ID を書く | Role と実行主体が混同されるため |
-| 兼務の割り当てや実行主体を本ファイルに記載する | `pm-members.yaml` の責務であり重複管理になるため |
-| ロール採用の根拠・方針・見直し条件を長く記載する | `pm-organization.md` の責務であり重複管理になるため |
-| 公開できない個人情報、連絡先、非公開組織情報、アクセス情報を記載する | PO の公開可否判断と説明責任を損なうため |
-| AI Agent に最終承認、公開可否、説明責任を持たせる記述を置く | 人間の PO が最終判断を担う前提に反するため |
+| 禁止事項                                                                   | 理由                                                |
+| -------------------------------------------------------------------------- | --------------------------------------------------- |
+| 標準にない独自 Role code を追加する                                        | Schedule、RACI、member 定義との接続が壊れるため     |
+| `roles[].code` に member nickname、agent 名、個人名、stakeholder ID を書く | Role と実行主体が混同されるため                     |
+| 兼務の割り当てや実行主体を本ファイルに記載する                             | `pm-members.yaml` の責務であり重複管理になるため    |
+| ロール採用の根拠・方針・見直し条件を長く記載する                           | `pm-organization.md` の責務であり重複管理になるため |
+| 公開できない個人情報、連絡先、非公開組織情報、アクセス情報を記載する       | PO の公開可否判断と説明責任を損なうため             |
+| AI Agent に最終承認、公開可否、説明責任を持たせる記述を置く                | 人間の PO が最終判断を担う前提に反するため          |
 
 ## 8. サンプル
 
-- 参照: [[pm-roles-sample|ロール定義 sample]]
+- 参照先: [pm-roles-sample](../samples/pm-roles-sample.yaml)
 
 ## 9. 作成レシピ
 
