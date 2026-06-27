@@ -147,16 +147,16 @@ function getValidator(workspaceRoot, schemaPath, strictMode) {
   })
   addFormats(ajv)
 
-  const commonRef = './common-frontmatter.schema.yaml'
-  const schemaText = JSON.stringify(schema)
-  if (schemaText.includes(commonRef)) {
-    const commonAbsolutePath = path.resolve(path.dirname(absoluteSchemaPath), commonRef)
-    const commonSchema = load(fs.readFileSync(commonAbsolutePath, 'utf8'))
-    if (commonSchema && typeof commonSchema === 'object' && !Array.isArray(commonSchema)) {
-      const commonId = commonSchema.$id || pathToFileURL(commonAbsolutePath).href
-      if (!commonSchema.$id) commonSchema.$id = commonId
-      ajv.addSchema(commonSchema, commonId)
-    }
+  const schemaDir = path.dirname(absoluteSchemaPath)
+  for (const entry of fs.readdirSync(schemaDir)) {
+    if (!entry.endsWith('.schema.yaml') || entry === path.basename(absoluteSchemaPath)) continue
+    const siblingAbsolutePath = path.join(schemaDir, entry)
+    const siblingSchema = load(fs.readFileSync(siblingAbsolutePath, 'utf8'))
+    if (!siblingSchema || typeof siblingSchema !== 'object' || Array.isArray(siblingSchema))
+      continue
+    const siblingId = siblingSchema.$id || pathToFileURL(siblingAbsolutePath).href
+    if (!siblingSchema.$id) siblingSchema.$id = siblingId
+    ajv.addSchema(siblingSchema, siblingId)
   }
 
   const validate = ajv.compile(schema)

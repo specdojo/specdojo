@@ -9,7 +9,7 @@ _PHASE_DESCRIPTION_
 ## 2. 対象成果物
 
 - `name`: _DELIVERABLE_NAME_
-- `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `depends_on`:_DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`

@@ -13,7 +13,7 @@ _PHASE_DESCRIPTION_
 成果物（主対象）:
 
 - `name`: _DELIVERABLE_NAME_
-- `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `depends_on`:_DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 

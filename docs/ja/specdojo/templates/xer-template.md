@@ -1,5 +1,7 @@
 _FRONTMATTER_
 
+# Edit Result
+
 ## 1. 実施内容
 
 _TODO_: 実施した内容の要約を記入する。
