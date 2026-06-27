@@ -276,7 +276,10 @@ const COMMON_CONVENTIONS_PLACEHOLDER = '_COMMON_CONVENTIONS_'
 // template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates without the
 // marker get the block appended so the rules are never silently dropped.
 function injectCommonConventions(body: string, cache: Map<string, string>): string {
-  const conventions = readTemplate(join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE), cache).trimEnd()
+  const conventions = readTemplate(
+    join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE),
+    cache
+  ).trimEnd()
   if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
     return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions)
   }
@@ -296,12 +299,18 @@ function deliverableName(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.name ?? MISSING
 }
 
-// dct の生成ビュー（catalog-build.ts）の「根拠」列と同じ表記に合わせる。
-function deliverableDependsOn(deliverable: DeliverableInfo | null): string {
-  if (!deliverable) return MISSING
+// 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
+// id は project 修飾 doc id（<projectId>:<local_id>）にする。素の local_id は doc-index で
+// 解決しないため。agent へ plan を渡すときに expandPromptRefs（src/exec-run.ts, format:'path'）が
+// この [[id]] を doc-index 経由でリポジトリ相対パスへ展開し、agent が先行成果物を直接開ける。
+// テンプレート側はラベル直後にこの値を差し込むため、件数 0・成果物未解決時は先頭スペース付きの
+// インライン値、依存ありの場合は改行始まりの入れ子リストを返す。
+function deliverableDependsOn(deliverable: DeliverableInfo | null, projectId: string): string {
+  if (!deliverable) return ` ${MISSING}`
   const deps = deliverable.deliverable.depends_on ?? []
-  if (deps.length === 0) return '-'
-  return deps.map(d => `\`${d}\``).join(', ')
+  if (deps.length === 0) return ' -'
+  const lines = deps.map(dep => `  - [[${projectId ? `${projectId}:${dep}` : dep}]]`)
+  return `\n${lines.join('\n')}`
 }
 
 function deliverableOverview(deliverable: DeliverableInfo | null): string {
@@ -498,7 +507,7 @@ function buildEditPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
@@ -549,7 +558,7 @@ function buildReviewPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
@@ -558,7 +567,12 @@ function buildReviewPlanMarkdown(
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
     _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(criteria, vpMap, detailTemplate, coverageMap),
+    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(
+      criteria,
+      vpMap,
+      detailTemplate,
+      coverageMap
+    ),
   }
   return expandTemplate(template, values)
 }
@@ -721,11 +735,11 @@ function newPlanGenContext(opts: {
 // Move a completed plan to exec/plans/done/ with a unique UTC + random suffix
 // (same convention as event filenames), or delete it. The plan is regenerable
 // from the catalog, so deletion is safe; the result remains as the record.
-export function archivePlan(opts: {
-  executionPath: string
-  slug: string
-  delete?: boolean
-}): { from: string; to?: string; deleted: boolean } {
+export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {
+  from: string
+  to?: string
+  deleted: boolean
+} {
   const plansDir = join(opts.executionPath, 'exec', 'plans')
   const from = join(plansDir, `${opts.slug}-plan.md`)
   if (!existsSync(from)) throw new Error(`plan not found: ${from}`)

@@ -9,7 +9,7 @@ _PHASE_DESCRIPTION_
 ## 2. 対象成果物
 
 - `name`: _DELIVERABLE_NAME_
-- `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `depends_on`:_DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 - `rulebook`: `_RULEBOOK_REF_`
@@ -18,9 +18,12 @@ _PHASE_DESCRIPTION_
 ## 3. レビュー観点
 
 <!-- markdownlint-disable MD055 MD056 -->
-| ID | ロール | viewpoint_id | 確認基準 |
-|---|---|---|---|
+
+| ID  | ロール | viewpoint_id | 確認基準 |
+| --- | ------ | ------------ | -------- |
+
 _REVIEW_VIEWPOINT_ROWS_
+
 <!-- markdownlint-enable MD055 MD056 -->
 
 _REVIEW_VIEWPOINT_DETAILS_

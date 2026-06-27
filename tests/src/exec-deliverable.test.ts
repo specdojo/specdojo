@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -77,7 +85,9 @@ describe('resolveDeliverableTarget', () => {
   it('errors when the local_id is not found', () => {
     const catalogPath = setupCatalog()
 
-    expect(() => resolveDeliverableTarget(catalogPath, 'nope')).toThrow(/deliverable not found: nope/)
+    expect(() => resolveDeliverableTarget(catalogPath, 'nope')).toThrow(
+      /deliverable not found: nope/
+    )
   })
 })
 
@@ -98,6 +108,51 @@ describe('generateDeliverablePlan', () => {
     const plan = readFileSync(outPath, 'utf8')
     expect(plan).toContain('task_id: only-a')
     expect(plan).toContain('criterion for only-a')
+  })
+
+  it('renders depends_on as project-qualified [[id]] refs for path expansion', () => {
+    root = mkdtempSync(join(tmpdir(), 'specdojo-deliverable-deps-'))
+    const catalogPath = join(root, 'catalog')
+    mkdirSync(catalogPath, { recursive: true })
+    const yaml = [
+      'id: prj-test:dct-gamma',
+      'type: project',
+      'status: draft',
+      'project_id: prj-test',
+      'domain: gamma',
+      'base_path: /docs/gamma',
+      'groups:',
+      '  - deliverables:',
+      '      - local_id: base-doc',
+      '        name: Name base-doc',
+      '        kind: work',
+      '        overview: overview base-doc',
+      '        path: base-doc.md',
+      '      - local_id: dependent',
+      '        name: Name dependent',
+      '        kind: work',
+      '        overview: overview dependent',
+      '        path: dependent.md',
+      '        depends_on: [base-doc]',
+      '        done_criteria:',
+      '          - text: criterion for dependent',
+      '            roles: [DEV]',
+      '            viewpoint: vp-dev-quality',
+      '',
+    ].join('\n')
+    writeFileSync(join(catalogPath, 'dct-gamma.yaml'), yaml, 'utf8')
+    const executionPath = join(root, 'execution')
+
+    const target = resolveDeliverableTarget(catalogPath, 'dependent')
+    const outPath = generateDeliverablePlan({
+      executionPath,
+      projectId: 'prj-test',
+      catalogPath,
+      target,
+    })
+
+    const plan = readFileSync(outPath, 'utf8')
+    expect(plan).toContain('- `depends_on`:\n  - [[prj-test:base-doc]]')
   })
 })
 
@@ -175,9 +230,9 @@ describe('validateCatalogLocalIds', () => {
     const result = validateCatalogLocalIds(catalogPath)
 
     expect(result.ok).toBe(true)
-    expect(result.warnings.some(w => /local_id 'shared' is defined in multiple catalogs/.test(w))).toBe(
-      true
-    )
+    expect(
+      result.warnings.some(w => /local_id 'shared' is defined in multiple catalogs/.test(w))
+    ).toBe(true)
   })
 
   it('passes with no warnings when every local_id is project-wide unique', () => {
