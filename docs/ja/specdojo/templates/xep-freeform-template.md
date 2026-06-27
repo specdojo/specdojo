@@ -9,7 +9,7 @@ _PHASE_DESCRIPTION_
 ## 2. 対象成果物
 
 - `name`: _DELIVERABLE_NAME_
-- `depends_on`:_DELIVERABLE_DEPENDS_ON_
+- `depends_on`: _DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`
@@ -60,7 +60,7 @@ _DONE_CRITERIA_GOALS_
 
 1. 「このフェーズで行うこと」と「進め方」に従って成果物を更新する。
 2. 「完了の狙い」を満たしているかを確認し、不足があれば加筆・補強する（観点別の自己レビューや再確認ループは行わない）。
-3. 必要な検証と lint を実行する。
+3. 共通規約に従って、必要な整形・静的検査を実行する。
 4. result に実施内容・変更ファイル・参考資料の活用を記入する。
 
 ## 7. 異常終了の条件
