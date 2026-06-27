@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-27T06:58:27Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-scope-010",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
