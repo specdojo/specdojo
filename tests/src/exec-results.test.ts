@@ -16,8 +16,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     rmSync(executionPath, { recursive: true, force: true })
   })
 
-  it('keeps started_at single-quoted after the status update re-serializes frontmatter', () => {
-    const { resultPath } = scaffoldResult({
+  it('keeps started_at single-quoted after the status update re-serializes frontmatter', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -27,7 +27,7 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
       startedAt: '2026-06-20T00:00:00.000Z',
     })
 
-    updateResultStatus(resultPath, 'complete', '2026-06-20T00:01:00.000Z')
+    await updateResultStatus(resultPath, 'complete', '2026-06-20T00:01:00.000Z')
 
     const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
     // Re-serialization must not nest the quotes that scaffoldResult wrote.
@@ -41,8 +41,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(content).toContain('---\n\n# Edit Result')
   })
 
-  it('records block_reason in frontmatter when blocked with a reason', () => {
-    const { resultPath } = scaffoldResult({
+  it('records block_reason in frontmatter when blocked with a reason', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -52,7 +52,7 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
       startedAt: '2026-06-20T00:00:00.000Z',
     })
 
-    updateResultStatus(
+    await updateResultStatus(
       resultPath,
       'blocked',
       '2026-06-20T00:01:00.000Z',
@@ -66,8 +66,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     )
   })
 
-  it('escapes embedded double quotes in block_reason to keep frontmatter valid', () => {
-    const { resultPath } = scaffoldResult({
+  it('escapes embedded double quotes in block_reason to keep frontmatter valid', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -77,7 +77,7 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
       startedAt: '2026-06-20T00:00:00.000Z',
     })
 
-    updateResultStatus(
+    await updateResultStatus(
       resultPath,
       'blocked',
       '2026-06-20T00:01:00.000Z',
@@ -89,8 +89,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(frontmatter).not.toContain('""')
   })
 
-  it('clears block_reason when a previously blocked result transitions to complete', () => {
-    const { resultPath } = scaffoldResult({
+  it('clears block_reason when a previously blocked result transitions to complete', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -100,16 +100,16 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
       startedAt: '2026-06-20T00:00:00.000Z',
     })
 
-    updateResultStatus(resultPath, 'blocked', '2026-06-20T00:01:00.000Z', 'transient failure')
-    updateResultStatus(resultPath, 'complete', '2026-06-20T00:02:00.000Z')
+    await updateResultStatus(resultPath, 'blocked', '2026-06-20T00:01:00.000Z', 'transient failure')
+    await updateResultStatus(resultPath, 'complete', '2026-06-20T00:02:00.000Z')
 
     const frontmatter = readFileSync(resultPath, 'utf8').split('\n---')[0]
     expect(frontmatter).toContain('status: complete')
     expect(frontmatter).not.toContain('block_reason:')
   })
 
-  it('expands the review result sections placeholder when reviewSections is provided', () => {
-    const { resultPath } = scaffoldResult({
+  it('expands the review result sections placeholder when reviewSections is provided', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'review',
@@ -125,8 +125,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(body).not.toContain('_REVIEW_RESULT_SECTIONS_')
   })
 
-  it('falls back to a language-neutral _TODO_ marker when a review result has no reviewSections', () => {
-    const { resultPath } = scaffoldResult({
+  it('falls back to a language-neutral _TODO_ marker when a review result has no reviewSections', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'review',
@@ -142,8 +142,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(body).toContain('## 1. レビュー観点別結果')
   })
 
-  it('treats a freshly scaffolded edit result as unfilled', () => {
-    const { resultPath } = scaffoldResult({
+  it('treats a freshly scaffolded edit result as unfilled', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -156,8 +156,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(isResultUnfilled(resultPath, 'edit')).toBe(true)
   })
 
-  it('treats an edit result as filled once the mandatory sections are written', () => {
-    const { resultPath } = scaffoldResult({
+  it('treats an edit result as filled once the mandatory sections are written', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'edit',
@@ -174,8 +174,8 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(isResultUnfilled(resultPath, 'edit')).toBe(false)
   })
 
-  it('treats a review result with an undecided recommendation as unfilled', () => {
-    const { resultPath } = scaffoldResult({
+  it('treats a review result with an undecided recommendation as unfilled', async () => {
+    const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       mode: 'review',
@@ -200,9 +200,9 @@ describe('scaffoldResult + updateResultStatus round-trip', () => {
     expect(isResultUnfilled(join(executionPath, 'nope-result.md'), 'edit')).toBe(false)
   })
 
-  it('uses the stem for the result file name and doc id while keeping task_id', () => {
+  it('uses the stem for the result file name and doc id while keeping task_id', async () => {
     const stem = 'prj-overview-20260620t125519z-0328'
-    const { resultPath, created } = scaffoldResult({
+    const { resultPath, created } = await scaffoldResult({
       executionPath,
       taskId: 'prj-overview',
       stem,

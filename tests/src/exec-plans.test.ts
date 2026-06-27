@@ -226,7 +226,7 @@ describe('buildInPlaceStem / stemFromPlanPath', () => {
 })
 
 describe('plan generation (edit done_criteria goals)', () => {
-  it('通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない', () => {
+  it('通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない', async () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-exec-plans-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
@@ -294,7 +294,7 @@ describe('plan generation (edit done_criteria goals)', () => {
       )
 
       const base = { executionPath, projectId: 'test', catalogPath, rolesPath, viewpointsPath }
-      generateSinglePlan({
+      await generateSinglePlan({
         ...base,
         task: {
           id: 'T-TEST-overview-020',
@@ -308,7 +308,7 @@ describe('plan generation (edit done_criteria goals)', () => {
           critical_first_rank: 0,
         },
       })
-      generateSinglePlan({
+      await generateSinglePlan({
         ...base,
         task: {
           id: 'T-TEST-overview-030',
@@ -391,7 +391,7 @@ describe('generateSinglePlan', () => {
     )
   }
 
-  it('対象タスクの plan を再生成し、他の plan や index には触れない', () => {
+  it('対象タスクの plan を再生成し、他の plan や index には触れない', async () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
@@ -404,7 +404,7 @@ describe('generateSinglePlan', () => {
       writeFileSync(join(plansDir, 'T-TEST-overview-099-plan.md'), 'keep me\n', 'utf8')
       writeFileSync(join(plansDir, 'index.md'), '# existing index\n', 'utf8')
 
-      const outPath = generateSinglePlan({
+      const outPath = await generateSinglePlan({
         executionPath,
         projectId: 'test',
         catalogPath,
@@ -433,7 +433,7 @@ describe('generateSinglePlan', () => {
     }
   })
 
-  it('stem を渡すとユニーク名でファイル・id・result 参照を出力し task_id は保持する', () => {
+  it('stem を渡すとユニーク名でファイル・id・result 参照を出力し task_id は保持する', async () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
@@ -442,7 +442,7 @@ describe('generateSinglePlan', () => {
     try {
       writeCatalog(catalogPath)
 
-      const outPath = generateSinglePlan({
+      const outPath = await generateSinglePlan({
         executionPath,
         projectId: 'test',
         catalogPath,
@@ -473,7 +473,7 @@ describe('generateSinglePlan', () => {
     }
   })
 
-  it('plans ディレクトリが無くても作成して書き込む', () => {
+  it('plans ディレクトリが無くても作成して書き込む', async () => {
     const root = mkdtempSync(join(tmpdir(), 'specdojo-single-plan-'))
     const executionPath = join(root, 'execution')
     const catalogPath = join(root, 'catalog')
@@ -482,7 +482,7 @@ describe('generateSinglePlan', () => {
       writeCatalog(catalogPath)
       expect(existsSync(join(executionPath, 'exec', 'plans'))).toBe(false)
 
-      const outPath = generateSinglePlan({
+      const outPath = await generateSinglePlan({
         executionPath,
         projectId: 'test',
         catalogPath,

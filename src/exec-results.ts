@@ -87,7 +87,7 @@ export function resultPathForTask(executionPath: string, nameBase: string): stri
   return join(executionPath, 'exec', 'results', `${nameBase}-result.md`)
 }
 
-export function scaffoldResult(opts: {
+export async function scaffoldResult(opts: {
   executionPath: string
   taskId: string
   mode: TaskMode
@@ -100,7 +100,7 @@ export function scaffoldResult(opts: {
   // Shared plan/result stem. Defaults to taskId (fixed-name worktree/claim flow); in-place
   // callers pass a unique stem so file name and doc id stay unique and the result is tied to its plan.
   stem?: string
-}): { resultPath: string; created: boolean } {
+}): Promise<{ resultPath: string; created: boolean }> {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts
   const stem = opts.stem ?? taskId
   const resultPath = resultPathForTask(executionPath, stem)
@@ -138,7 +138,7 @@ export function scaffoldResult(opts: {
   const content = expandTemplate(template, values)
 
   writeFileSync(resultPath, content, 'utf8')
-  formatMarkdownFile(resultPath)
+  await formatMarkdownFile(resultPath)
   return { resultPath, created: true }
 }
 
@@ -161,12 +161,12 @@ export function isResultUnfilled(resultPath: string, mode: TaskMode): boolean {
   return MANDATORY_PLACEHOLDERS[mode].some(marker => body.includes(marker))
 }
 
-export function updateResultStatus(
+export async function updateResultStatus(
   resultPath: string,
   status: 'complete' | 'blocked',
   completedAt: string,
   reason?: string
-): void {
+): Promise<void> {
   if (!existsSync(resultPath)) return
 
   const content = readFileSync(resultPath, 'utf8')
@@ -193,5 +193,5 @@ export function updateResultStatus(
   }
 
   writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), 'utf8')
-  formatMarkdownFile(resultPath)
+  await formatMarkdownFile(resultPath)
 }

@@ -595,11 +595,11 @@ type PlanGenContext = {
   templateCache: Map<string, string>
 }
 
-function writeTaskPlan(
+async function writeTaskPlan(
   ctx: PlanGenContext,
   task: PlanTask,
   override?: { deliverable?: DeliverableInfo | null; outPath?: string; stem?: string }
-): string {
+): Promise<string> {
   const mode: TaskMode = task.mode ?? 'edit'
   const localId = task.local_id
   const deliverable =
@@ -644,14 +644,14 @@ function writeTaskPlan(
   const content = injectCommonConventions(body, ctx.templateCache)
 
   writeFileSync(outPath, content, 'utf8')
-  formatMarkdownFile(outPath)
+  await formatMarkdownFile(outPath)
   return outPath
 }
 
 // Regenerate the plan for a single task without touching other plan files,
 // the index, or task state. Intended for manually re-running a completed task:
 // `exec build` deletes done-task plans, so this rebuilds just the one plan on demand.
-export function generateSinglePlan(opts: {
+export async function generateSinglePlan(opts: {
   executionPath: string
   projectId: string
   catalogPath: string
@@ -660,7 +660,7 @@ export function generateSinglePlan(opts: {
   task: ReadyTaskView
   outPath?: string
   stem?: string
-}): string {
+}): Promise<string> {
   const ctx = newPlanGenContext(opts)
   const override =
     opts.outPath || opts.stem
@@ -669,14 +669,14 @@ export function generateSinglePlan(opts: {
           ...(opts.stem ? { stem: opts.stem } : {}),
         }
       : undefined
-  return writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? 'edit' }, override)
+  return await writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? 'edit' }, override)
 }
 
 // Generate a plan directly from a catalog deliverable, independent of the
 // schedule. The slug (`<domain>-<local_id>`) names the plan unless `outPath`
 // overrides it. CPM is absent for ad-hoc targets; owner is absent unless the
 // caller resolves it (e.g. from sch-strategy owner_rules via a track).
-export function generateDeliverablePlan(opts: {
+export async function generateDeliverablePlan(opts: {
   executionPath: string
   projectId: string
   catalogPath: string
@@ -688,7 +688,7 @@ export function generateDeliverablePlan(opts: {
   owner?: string
   outPath?: string
   stem?: string
-}): string {
+}): Promise<string> {
   const ctx = newPlanGenContext(opts)
   const task: PlanTask = {
     id: opts.target.slug,
@@ -701,7 +701,7 @@ export function generateDeliverablePlan(opts: {
     fifo_rank: 0,
     critical_first_rank: 0,
   }
-  return writeTaskPlan(ctx, task, {
+  return await writeTaskPlan(ctx, task, {
     deliverable: opts.target.info,
     ...(opts.outPath ? { outPath: opts.outPath } : {}),
     ...(opts.stem ? { stem: opts.stem } : {}),

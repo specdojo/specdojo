@@ -579,7 +579,7 @@ function findClaimEventPath(schedulePath: string, taskId: string): string | null
   return claims[claims.length - 1]?.path ?? null
 }
 
-function prepareSingleTask(
+async function prepareSingleTask(
   task: ReadyTaskView,
   projectId: string | undefined,
   repoRoot: string,
@@ -595,7 +595,7 @@ function prepareSingleTask(
   skipClaim: boolean,
   worktreeBase: string,
   planGenPaths: PlanGenPaths
-): PreparedTask | RunResult {
+): Promise<PreparedTask | RunResult> {
   const mode = task.mode ?? 'edit'
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ''}  [${mode}]\n`)
 
@@ -662,7 +662,7 @@ function prepareSingleTask(
   }
 
   // Plans are generated on demand here; `exec build` no longer manages them.
-  generateSinglePlan({
+  await generateSinglePlan({
     executionPath,
     projectId: projectId ?? '',
     catalogPath: planGenPaths.catalogPath ?? '',
@@ -720,7 +720,7 @@ function prepareSingleTask(
     (task.mode ?? 'edit') === 'review'
       ? reviewResultSectionsForDeliverable(planGenPaths.catalogPath ?? '', task.local_id)
       : undefined
-  const { resultPath } = scaffoldResult({
+  const { resultPath } = await scaffoldResult({
     executionPath,
     taskId: task.id,
     mode: task.mode ?? 'edit',
@@ -830,13 +830,14 @@ async function runPreparedTask(
     // exec branch and merge it into the current root branch so the changes are integrated.
     // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
     // a rejection as a block so the agent's run does not silently land or crash the loop.
-    if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'complete', completedAt)
+    if (worktreeResultPath) await updateResultStatus(worktreeResultPath, 'complete', completedAt)
     try {
       commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id })
       mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id })
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error)
-      if (worktreeResultPath) updateResultStatus(worktreeResultPath, 'blocked', completedAt, reason)
+      if (worktreeResultPath)
+        await updateResultStatus(worktreeResultPath, 'blocked', completedAt, reason)
       spawnBlock(projectId, prepared.task.id, prepared.actor, reason)
       process.stderr.write(`${reason}\n`)
       process.stdout.write(
@@ -855,7 +856,7 @@ async function runPreparedTask(
   } else if (effectiveResult === 'rate_limit') {
     // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
     if (worktreeResultPath)
-      updateResultStatus(worktreeResultPath, 'blocked', completedAt, 'rate limit reached')
+      await updateResultStatus(worktreeResultPath, 'blocked', completedAt, 'rate limit reached')
     spawnBlock(projectId, prepared.task.id, prepared.actor, 'rate limit reached')
     process.stdout.write(
       `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
@@ -865,7 +866,7 @@ async function runPreparedTask(
       ? 'agent exited 0 but result mandatory sections remain unfilled (treated as blocked)'
       : extractBlockReason(stderr)
     if (worktreeResultPath)
-      updateResultStatus(worktreeResultPath, 'blocked', completedAt, blockReason)
+      await updateResultStatus(worktreeResultPath, 'blocked', completedAt, blockReason)
     spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason)
     process.stdout.write(
       `  ${unfilledBlock ? 'Blocked (result not filled)' : 'Failed'}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`
@@ -1034,7 +1035,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       if (!task) continue
 
       try {
-        const prepared = prepareSingleTask(
+        const prepared = await prepareSingleTask(
           task,
           projectId,
           repoRoot,
@@ -1077,19 +1078,24 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
         )
       )
     )
-    const results: RunResult[] = settledResults.map((settled, index) => {
-      if (settled.status === 'fulfilled') return settled.value
+    const results: RunResult[] = []
+    for (const [index, settled] of settledResults.entries()) {
+      if (settled.status === 'fulfilled') {
+        results.push(settled.value)
+        continue
+      }
       const prepared = preparedTasks[index]
       const message =
         settled.reason instanceof Error ? settled.reason.message : String(settled.reason)
       process.stderr.write(`[run] error: ${prepared.worktree.name}: ${message}\n`)
       if (!dryRun) {
         const completedAt = new Date().toISOString()
-        if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+        if (prepared.resultPath)
+          await updateResultStatus(prepared.resultPath, 'blocked', completedAt)
         spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`)
       }
-      return 'failure'
-    })
+      results.push('failure')
+    }
     const completed = results.filter(result => result === 'success').length
     process.stdout.write(`[run] all ${completed} instance(s) completed${roundSuffix}\n`)
 
@@ -1263,7 +1269,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     }
   }
 
-  const prepared = prepareSingleTask(
+  const prepared = await prepareSingleTask(
     task,
     projectId,
     repoRoot,
@@ -1449,7 +1455,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // Generate the plan on demand (skip for bring-your-own --plan).
   const generatedPlan = !opts.plan
   if (opts.task && task) {
-    generateSinglePlan({
+    await generateSinglePlan({
       executionPath,
       projectId,
       catalogPath: catalogPath ?? '',
@@ -1459,7 +1465,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       ...(stem ? { stem } : {}),
     })
   } else if (target) {
-    generateDeliverablePlan({
+    await generateDeliverablePlan({
       executionPath,
       projectId,
       catalogPath: catalogPath ?? '',
@@ -1490,18 +1496,20 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       (task.mode ?? 'edit') === 'review'
         ? reviewResultSectionsForDeliverable(catalogPath ?? '', task.local_id)
         : undefined
-    resultPath = scaffoldResult({
-      executionPath,
-      taskId: slug,
-      mode: task.mode ?? 'edit',
-      projectId: projectId || planProjectId,
-      planRef: `exec/plans/${stem ?? slug}-plan.md`,
-      agent: actor,
-      startedAt: new Date().toISOString(),
-      ...(stem ? { stem } : {}),
-      ...(task.approach ? { approach: task.approach } : {}),
-      ...(reviewSections ? { reviewSections } : {}),
-    }).resultPath
+    resultPath = (
+      await scaffoldResult({
+        executionPath,
+        taskId: slug,
+        mode: task.mode ?? 'edit',
+        projectId: projectId || planProjectId,
+        planRef: `exec/plans/${stem ?? slug}-plan.md`,
+        agent: actor,
+        startedAt: new Date().toISOString(),
+        ...(stem ? { stem } : {}),
+        ...(task.approach ? { approach: task.approach } : {}),
+        ...(reviewSections ? { reviewSections } : {}),
+      })
+    ).resultPath
   }
 
   process.stdout.write(`Running ${label} in place: ${command}\n`)
@@ -1523,7 +1531,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // In-place runs do not write claim/complete events unless --track-state, but the result file's
   // own status is a file-level field, so reflect the outcome into it regardless.
   if (resultPath) {
-    updateResultStatus(
+    await updateResultStatus(
       resultPath,
       effectiveExit === 0 ? 'complete' : 'blocked',
       new Date().toISOString(),
@@ -1773,7 +1781,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           opts.by,
           opts.agentCmd ?? opts.cmd
         )
-        const prepared = prepareSingleTask(
+        const prepared = await prepareSingleTask(
           task,
           projectId,
           repoRoot,
@@ -1814,7 +1822,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
         )
       )
     )
-    settled.forEach((result, index) => {
+    for (const [index, result] of settled.entries()) {
       if (result.status === 'rejected') {
         const prepared = preparedTasks[index]
         const message =
@@ -1822,14 +1830,15 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
         process.stderr.write(`[resume] error: ${prepared.worktree.name}: ${message}\n`)
         if (!dryRun) {
           const completedAt = new Date().toISOString()
-          if (prepared.resultPath) updateResultStatus(prepared.resultPath, 'blocked', completedAt)
+          if (prepared.resultPath)
+            await updateResultStatus(prepared.resultPath, 'blocked', completedAt)
           spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`)
         }
         process.exitCode = 1
       } else if (result.value === 'failure') {
         process.exitCode = 1
       }
-    })
+    }
   }
 }
 
