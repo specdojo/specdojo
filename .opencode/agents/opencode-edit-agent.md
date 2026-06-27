@@ -1,24 +1,24 @@
 ---
 description: SpecDojo 標準 edit エージェント。文書作成・実装を伴う通常タスクを1件実行する。
 mode: primary
-model: ollama-local/qwen3.6:27b-mlx-work-32k
+model: ollama-local/qwen3.6:27b-mlx-work-64k
 temperature: 0.2
 permission:
   read:
-    "*": allow
-    "*.env": deny
-    "*.env.*": deny
-    "secrets/**": deny
-    "**/secrets/**": deny
+    '*': allow
+    '*.env': deny
+    '*.env.*': deny
+    'secrets/**': deny
+    '**/secrets/**': deny
   glob: allow
   grep: allow
   list: allow
   bash:
-    "*": allow
-    "git push*": deny
-    "git reset --hard*": deny
-    "git clean*": deny
-    "rm *": deny
+    '*': allow
+    'git push*': deny
+    'git reset --hard*': deny
+    'git clean*': deny
+    'rm *': deny
   edit: allow
   task: deny
   webfetch: allow

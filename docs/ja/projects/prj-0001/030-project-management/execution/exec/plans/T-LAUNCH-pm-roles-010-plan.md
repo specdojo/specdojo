@@ -1,12 +1,12 @@
 ---
-id: xep-t-launch-pm-roles-010
+id: prj-0001:xep-t-launch-pm-roles-010
 type: exec-plan
 rulebook: xep-rulebook
 task_id: T-LAUNCH-pm-roles-010
 name: 一括整備（成果物＋参考資料）
 mode: edit
 status: ready
-project_id: 
+project_id: prj-0001
 owner: PO
 approach: bootstrap
 ---
@@ -37,9 +37,9 @@ approach: bootstrap
 参考資料（rulebook frontmatter から解決。`_MISSING_` は未宣言・未整備のため新規作成する）:
 
 - rulebook: `docs/ja/specdojo/rulebooks/pm-roles-rulebook.md`
-- recipe: `_MISSING_`
+- recipe: `docs/ja/specdojo/recipes/pm-roles-recipe.md`
 - sample: `docs/ja/specdojo/samples/pm-roles-sample.yaml`
-- template: `_MISSING_`
+- template: `docs/ja/specdojo/templates/pm-roles-template.yaml`
 
 result: `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-roles-010-result.md`
 
@@ -120,9 +120,10 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
-## 共通: 記法・リンク規約
+## 共通: 記法・成果物規約
 
-この規約は、生成される全 exec plan に共通で適用される。成果物および result 内で他文書を参照する際のリンク記法を統一する。
+この規約は、生成される全 exec plan に共通で適用される。他文書を参照する際のリンク記法と、成果物の状態（status）の扱いを統一する。
 
 - 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
 - まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。

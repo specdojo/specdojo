@@ -9,11 +9,11 @@
         "apiKey": "not-needed"
       },
       "models": {
-        "qwen3.6:27b-mlx-work-32k": {
-          "name": "Qwen3.6 27B-MLX 通常作業用 (32k)"
+        "qwen3.6:27b-mlx-work-64k": {
+          "name": "Qwen3.6 27B-MLX Work (64k)"
         }
       }
     }
   },
-  "model": "ollama-local/qwen3.6:27b-mlx-work-32k"
+  "model": "ollama-local/qwen3.6:27b-mlx-work-64k"
 }

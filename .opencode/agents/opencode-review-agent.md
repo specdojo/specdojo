@@ -1,31 +1,31 @@
 ---
 description: SpecDojo 標準 review エージェント。done_criteria を多観点で検証し、result にレビュー結果を記録する。
 mode: primary
-model: ollama-local/qwen3.6:27b-mlx-work-32k
+model: ollama-local/qwen3.6:27b-mlx-work-64k
 temperature: 0.1
 permission:
   read:
-    "*": allow
-    "*.env": deny
-    "*.env.*": deny
-    "secrets/**": deny
-    "**/secrets/**": deny
+    '*': allow
+    '*.env': deny
+    '*.env.*': deny
+    'secrets/**': deny
+    '**/secrets/**': deny
   glob: allow
   grep: allow
   list: allow
   bash:
-    "*": deny
-    "git diff*": allow
-    "git status*": allow
-    "git log*": allow
-    "git show*": allow
-    "npm run lint:md*": allow
-    "npm run lint:fm*": allow
-    "npm run validate:schema:file*": allow
-    "specdojo exec validate*": allow
+    '*': deny
+    'git diff*': allow
+    'git status*': allow
+    'git log*': allow
+    'git show*': allow
+    'npm run lint:md*': allow
+    'npm run lint:fm*': allow
+    'npm run validate:schema:file*': allow
+    'specdojo exec validate*': allow
   edit:
-    "*": deny
-    "docs/ja/projects/**/execution/exec/results/**": allow
+    '*': deny
+    'docs/ja/projects/**/execution/exec/results/**': allow
   task: deny
   webfetch: allow
   websearch: allow
