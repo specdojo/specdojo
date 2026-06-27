@@ -43,7 +43,15 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from './exec-schedule.js'
-import { type Approach, type ExecEventType, type ExecEventV1, type ReadySnapshot, type SchedulerStrategy, type StateSnapshot, type TaskMode } from './exec-types.js'
+import {
+  type Approach,
+  type ExecEventType,
+  type ExecEventV1,
+  type ReadySnapshot,
+  type SchedulerStrategy,
+  type StateSnapshot,
+  type TaskMode,
+} from './exec-types.js'
 import { nowUtcIsoSeconds, readJson, requireNonEmpty } from './exec-shared.js'
 import {
   archivePlan,
@@ -237,13 +245,16 @@ export function resolveClaimOwner(
   // For multi-role actors, prefer the role matching the task's planned owner.
   const matchedRole =
     taskOwner && rosterMemberRoles.length > 1
-      ? rosterMemberRoles.find(
-          r =>
-            r.trim().toUpperCase() === taskOwner.toUpperCase() &&
-            KNOWN_OWNER_LABELS.includes(
-              r.trim().toUpperCase() as (typeof KNOWN_OWNER_LABELS)[number]
-            )
-        )?.trim().toUpperCase() ?? ''
+      ? (rosterMemberRoles
+          .find(
+            r =>
+              r.trim().toUpperCase() === taskOwner.toUpperCase() &&
+              KNOWN_OWNER_LABELS.includes(
+                r.trim().toUpperCase() as (typeof KNOWN_OWNER_LABELS)[number]
+              )
+          )
+          ?.trim()
+          .toUpperCase() ?? '')
       : ''
   const rosterOwner =
     Array.isArray(rosterMemberRoles) && rosterMemberRoles.length > 0
@@ -324,7 +335,7 @@ function ensureActorCanClaimNext(
   return false
 }
 
-function scaffoldClaimResult(opts: {
+async function scaffoldClaimResult(opts: {
   schedulePath: string
   executionPath: string
   catalogPath?: string
@@ -333,7 +344,7 @@ function scaffoldClaimResult(opts: {
   projectId: string
   actor: string
   startedAt: string
-}): void {
+}): Promise<void> {
   const scheduleNode = opts.state.schedule.nodes.get(opts.taskId)
   const localId = scheduleNode?.local_id
   const phaseModeIndex = buildPhaseModeIndex(opts.schedulePath)
@@ -355,7 +366,7 @@ function scaffoldClaimResult(opts: {
     mode === 'review'
       ? reviewResultSectionsForDeliverable(opts.catalogPath ?? '', localId)
       : undefined
-  scaffoldResult({
+  await scaffoldResult({
     executionPath: opts.executionPath,
     taskId: opts.taskId,
     mode,
@@ -388,7 +399,10 @@ function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void
   }
 }
 
-function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction): void {
+async function runLockedEventCommand(
+  opts: ExecCommandOpts,
+  action: LockedEventAction
+): Promise<void> {
   let lockDir = ''
 
   try {
@@ -444,7 +458,7 @@ function runLockedEventCommand(opts: ExecCommandOpts, action: LockedEventAction)
     }
     const out = writeEventFile(schedulePath, event)
     if (action.type === 'claim') {
-      scaffoldClaimResult({
+      await scaffoldClaimResult({
         schedulePath,
         executionPath,
         catalogPath,
@@ -526,7 +540,9 @@ export function registerExecCommands(program: Command): void {
     if (t === 'complete' || t === 'block' || t === 'cancel') addForceOption(cmd)
 
     if (t in lockedActions) {
-      cmd.action(opts => runLockedEventCommand(opts, lockedActions[t as LockedEventAction['type']]))
+      cmd.action(async opts =>
+        runLockedEventCommand(opts, lockedActions[t as LockedEventAction['type']])
+      )
     } else {
       cmd.action(opts => runSimpleEventCommand(opts, t))
     }
@@ -600,7 +616,7 @@ export function registerExecCommands(program: Command): void {
     'Track to resolve the owner role from sch-strategy owner_rules (deliverable target)'
   )
   planCmd.option('--out <path>', 'Override output path')
-  planCmd.action(opts => {
+  planCmd.action(async opts => {
     try {
       const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
         resolveProjectContext(opts)
@@ -610,7 +626,8 @@ export function registerExecCommands(program: Command): void {
         throw new Error('Specify exactly one of --task or --deliverable.')
       }
       const projectId = resolveProjectId(opts)
-      const outOverride = typeof opts.out === 'string' && opts.out.trim() ? opts.out.trim() : undefined
+      const outOverride =
+        typeof opts.out === 'string' && opts.out.trim() ? opts.out.trim() : undefined
 
       // Stem priority: --out → derive from the given filename (overwrite it); else --task → the
       // fixed task id, so the plan/result share one canonical name with claim / run --track-state
@@ -620,7 +637,7 @@ export function registerExecCommands(program: Command): void {
       if (hasTask) {
         const task = buildTaskView(schedulePath, executionPath, (opts.task as string).trim())
         const stem = outOverride ? stemFromPlanPath(outOverride) : (opts.task as string).trim()
-        outPath = generateSinglePlan({
+        outPath = await generateSinglePlan({
           executionPath,
           projectId,
           catalogPath: catalogPath ?? '',
@@ -631,11 +648,15 @@ export function registerExecCommands(program: Command): void {
           ...(outOverride ? { outPath: outOverride } : {}),
         })
       } else {
-        const target = resolveDeliverableTarget(catalogPath ?? '', (opts.deliverable as string).trim())
-        const track = typeof opts.track === 'string' && opts.track.trim() ? opts.track.trim() : undefined
+        const target = resolveDeliverableTarget(
+          catalogPath ?? '',
+          (opts.deliverable as string).trim()
+        )
+        const track =
+          typeof opts.track === 'string' && opts.track.trim() ? opts.track.trim() : undefined
         const owner = resolveOwnerForLocalId(schedulePath, target.localId, track)
         const stem = outOverride ? stemFromPlanPath(outOverride) : buildInPlaceStem(target.slug)
-        outPath = generateDeliverablePlan({
+        outPath = await generateDeliverablePlan({
           executionPath,
           projectId,
           catalogPath: catalogPath ?? '',
@@ -739,17 +760,21 @@ export function registerExecCommands(program: Command): void {
 
       // Collect all valid owner labels for this actor.
       // Single-role actors use claimOwner; multi-role actors (e.g. indie) check every role.
-      const actorAllRoles = findRosterMember(roster, actor)
-        ?.roles
-        ?.map(r => r.trim().toUpperCase())
-        .filter(r => KNOWN_OWNER_LABELS.includes(r as (typeof KNOWN_OWNER_LABELS)[number])) ?? []
+      const actorAllRoles =
+        findRosterMember(roster, actor)
+          ?.roles?.map(r => r.trim().toUpperCase())
+          .filter(r => KNOWN_OWNER_LABELS.includes(r as (typeof KNOWN_OWNER_LABELS)[number])) ?? []
       const ownerCandidates =
-        actorAllRoles.length > 1 ? actorAllRoles : (claimOwner ? [claimOwner] : [])
+        actorAllRoles.length > 1 ? actorAllRoles : claimOwner ? [claimOwner] : []
 
       const readyForOwner = ready.filter(taskId => {
         if (ownerCandidates.length === 0) {
           return canClaimTask(
-            state.schedule, state.snapshot, taskId, claimOwner, allowOwnerMismatch
+            state.schedule,
+            state.snapshot,
+            taskId,
+            claimOwner,
+            allowOwnerMismatch
           ).ok
         }
         // Pass if any of the actor's roles can claim the task
@@ -768,9 +793,7 @@ export function registerExecCommands(program: Command): void {
         const readyJsonPath = join(generatedDirForProject(schedulePath), 'ready.json')
         if (existsSync(readyJsonPath)) {
           const readySnapshot = readJson(readyJsonPath) as ReadySnapshot
-          const taskInfoMap = new Map(
-            (readySnapshot.tasks ?? []).map(t => [t.id, t])
-          )
+          const taskInfoMap = new Map((readySnapshot.tasks ?? []).map(t => [t.id, t]))
           readyForMode = readyForOwner.filter(taskId => {
             const taskInfo = taskInfoMap.get(taskId)
             if (!taskInfo) return true
@@ -921,9 +944,7 @@ export function registerExecCommands(program: Command): void {
     }
   })
 
-  const statusCmd = exec
-    .command('status')
-    .description('Show tasks filtered by state and actor')
+  const statusCmd = exec.command('status').description('Show tasks filtered by state and actor')
   addProjectOptions(statusCmd)
   statusCmd.option('--by <actor>', 'Filter by actor nickname')
   statusCmd.option(
@@ -958,8 +979,12 @@ export function registerExecCommands(program: Command): void {
 
       const byMsg = filterBy ? ` for ${filterBy}` : ''
       process.stdout.write(`${filterState} tasks${byMsg}:\n\n`)
-      process.stdout.write(`  ${'task_id'.padEnd(40)} ${'name'.padEnd(20)} by            claimed_at\n`)
-      process.stdout.write(`  ${'-'.repeat(40)} ${'-'.repeat(20)} ${'-'.repeat(14)} --------------------\n`)
+      process.stdout.write(
+        `  ${'task_id'.padEnd(40)} ${'name'.padEnd(20)} by            claimed_at\n`
+      )
+      process.stdout.write(
+        `  ${'-'.repeat(40)} ${'-'.repeat(20)} ${'-'.repeat(14)} --------------------\n`
+      )
       for (const [taskId, cs] of entries) {
         const node = schedule.nodes.get(taskId)
         const name = (node?.name ?? '-').slice(0, 18)

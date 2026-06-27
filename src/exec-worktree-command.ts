@@ -144,7 +144,11 @@ function requireInsideWorktree(repoRoot: string, worktree: ExecWorktree): void {
   }
 }
 
-function resolveAgent(context: ProjectContext, taskId: string, opts: AgentOpts): {
+function resolveAgent(
+  context: ProjectContext,
+  taskId: string,
+  opts: AgentOpts
+): {
   actor: string
   command: string
   prompt: string
@@ -196,7 +200,7 @@ function printWorktree(worktree: ExecWorktree): void {
   process.stdout.write(`worktree: ${worktree.path}\nbranch: ${worktree.branch}\n`)
 }
 
-function prepare(opts: CommonOpts): void {
+async function prepare(opts: CommonOpts): Promise<void> {
   const context = resolveContext(opts)
   const state = requireDoingTask(context.schedulePath, opts.task)
   const worktreeTaskId = qualifyTaskId(context.projectId, opts.task)
@@ -235,7 +239,7 @@ function prepare(opts: CommonOpts): void {
     // Plans are generated on demand (exec build no longer manages them). Generate
     // one if absent; keep an existing plan so a hand-edited plan is not clobbered.
     if (!existsSync(planPath)) {
-      generateSinglePlan({
+      await generateSinglePlan({
         executionPath: context.executionPath,
         projectId: opts.project ?? process.env.SPECDOJO_PROJECT ?? '',
         catalogPath: context.catalogPath ?? '',
@@ -278,14 +282,17 @@ function status(opts: CommonOpts): void {
       opts.worktreeBase,
       configuredWorktreeBase(context.schedulePath)
     )
-    process.stdout.write(`worktree: not prepared (expected ${resolve(base, worktreeNameFromTaskId(worktreeTaskId))})\n`)
+    process.stdout.write(
+      `worktree: not prepared (expected ${resolve(base, worktreeNameFromTaskId(worktreeTaskId))})\n`
+    )
     process.stdout.write(`branch: ${branch}\n`)
     return
   }
 
   const { planRel, resultRel } = taskPaths(context, opts.task)
   const compareBase = gitOutput(context.repoRoot, ['merge-base', 'HEAD', branch]).trim()
-  const merged = gitResult(context.repoRoot, ['merge-base', '--is-ancestor', branch, 'HEAD']).status === 0
+  const merged =
+    gitResult(context.repoRoot, ['merge-base', '--is-ancestor', branch, 'HEAD']).status === 0
   const resultChanged =
     gitResult(worktree.path, ['diff', '--quiet', compareBase, '--', resultRel]).status === 1
   let agentCommand = 'unavailable'
@@ -296,8 +303,12 @@ function status(opts: CommonOpts): void {
   printWorktree(worktree)
   process.stdout.write(`compare-base: ${compareBase}\n`)
   process.stdout.write(`agent-command: ${agentCommand}\n`)
-  process.stdout.write(`plan: ${existsSync(resolve(worktree.path, planRel)) ? 'present' : 'missing'}\n`)
-  process.stdout.write(`result: ${existsSync(resolve(worktree.path, resultRel)) ? 'present' : 'missing'}\n`)
+  process.stdout.write(
+    `plan: ${existsSync(resolve(worktree.path, planRel)) ? 'present' : 'missing'}\n`
+  )
+  process.stdout.write(
+    `result: ${existsSync(resolve(worktree.path, resultRel)) ? 'present' : 'missing'}\n`
+  )
   process.stdout.write(`result-changed: ${resultChanged ? 'yes' : 'no'}\n`)
   const changes = worktreeStatusPaths(worktree.path)
   process.stdout.write(`uncommitted: ${changes.length > 0 ? changes.join(', ') : 'none'}\n`)
@@ -388,9 +399,9 @@ export function registerExecWorktreeCommands(exec: Command): void {
   )
   prepareCommand.option('--worktree-base <path>', 'Override worktree base directory')
   prepareCommand.option('--dry-run', 'Print planned operations without changing files', false)
-  prepareCommand.action((opts: CommonOpts) => {
+  prepareCommand.action(async (opts: CommonOpts) => {
     try {
-      prepare(opts)
+      await prepare(opts)
     } catch (error) {
       commandError(error)
     }

@@ -92,12 +92,12 @@ describe('resolveDeliverableTarget', () => {
 })
 
 describe('generateDeliverablePlan', () => {
-  it('writes <local_id>-plan.md from a catalog deliverable', () => {
+  it('writes <local_id>-plan.md from a catalog deliverable', async () => {
     const catalogPath = setupCatalog()
     const executionPath = join(root, 'execution')
 
     const target = resolveDeliverableTarget(catalogPath, 'only-a')
-    const outPath = generateDeliverablePlan({
+    const outPath = await generateDeliverablePlan({
       executionPath,
       projectId: 'prj-test',
       catalogPath,
@@ -110,7 +110,7 @@ describe('generateDeliverablePlan', () => {
     expect(plan).toContain('criterion for only-a')
   })
 
-  it('renders depends_on as project-qualified [[id]] refs for path expansion', () => {
+  it('renders depends_on as project-qualified [[id]] refs for path expansion', async () => {
     root = mkdtempSync(join(tmpdir(), 'specdojo-deliverable-deps-'))
     const catalogPath = join(root, 'catalog')
     mkdirSync(catalogPath, { recursive: true })
@@ -144,7 +144,7 @@ describe('generateDeliverablePlan', () => {
     const executionPath = join(root, 'execution')
 
     const target = resolveDeliverableTarget(catalogPath, 'dependent')
-    const outPath = generateDeliverablePlan({
+    const outPath = await generateDeliverablePlan({
       executionPath,
       projectId: 'prj-test',
       catalogPath,

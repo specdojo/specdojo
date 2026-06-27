@@ -1,12 +1,12 @@
 ---
-id: xep-t-launch-prj-assumptions-constraints-dependencies-010
+id: prj-0001:xep-t-launch-prj-assumptions-constraints-dependencies-010
 type: exec-plan
 rulebook: xep-rulebook
 task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
 name: 一括整備（成果物＋参考資料）
 mode: edit
 status: ready
-project_id: 
+project_id: prj-0001
 owner: ARC
 approach: bootstrap
 ---
@@ -30,16 +30,17 @@ approach: bootstrap
 成果物（主対象）:
 
 - `name`: 前提・制約・依存関係
-- `depends_on`: `prj-scope`
+- `depends_on`:
+  - [[prj-0001:prj-scope]]
 - `overview`: 前提条件・制約事項・外部依存を整理
 - `path`: `docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md`
 
 参考資料（rulebook frontmatter から解決。`_MISSING_` は未宣言・未整備のため新規作成する）:
 
 - rulebook: `docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md`
-- recipe: `_MISSING_`
+- recipe: `docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md`
 - sample: `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md`
-- template: `_MISSING_`
+- template: `docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md`
 
 result: `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-assumptions-constraints-dependencies-010-result.md`
 
@@ -61,10 +62,10 @@ result: `docs/ja/projects/prj-0001/030-project-management/execution/exec/results
 成果物とその参考資料一式を、相互に矛盾しない一組として作成・整備する。成果物を主対象とし、そこから一般化した規定・作り方・例・雛形を参考資料に反映する。各対象は実際に読み込んだうえで、既存があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
 
 1. 成果物（主対象）: `depends_on` の決定事項・用語・制約と整合させ、owner ロールの責務に集中して記述する。既存記述があれば内容を評価し、活かせる部分は維持、古い・矛盾する部分は修正、前提と合わない場合は作り直す。内部情報だけで判断できない一般的な観点・用語・標準があり、実行 agent が Web 検索能力を持つ場合は、関連情報を取得して出典を添える。
-2. rulebook: 成果物の構造を一般化し、章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。
+2. rulebook: 成果物の構造を一般化し、章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。rulebook は [[rulebook-authoring-standard]]（章立て・Frontmatter 規約・記述ルール・禁止事項の正本）に従う。
 3. recipe: 良い成果物を作るための問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-4. sample: 粒度・文体・表の書き方が伝わる最小の完成例にする。プロジェクト固有の値は一般化またはプレースホルダ化する。
-5. template: 章構成の骨組みとプレースホルダを配置した雛形にする。成果物固有の内容は持ち込まない。
+4. sample: 粒度・文体・表の書き方が伝わる最小の完成例にする。プロジェクト固有の値は一般化またはプレースホルダ化する。sample は [[sample-authoring-standard]]（構成・記述ルール・共通サンプル文脈・禁止事項の正本）に従い、rulebook / recipe と矛盾しないように作成する。
+5. template: 章構成の骨組みとプレースホルダを配置した雛形にする。成果物固有の内容は持ち込まない。template は [[template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従い、埋めた結果が rulebook の本文構成と矛盾しないように作成する。
 
 参考資料は成果物の丸写しにせず、同種成果物に再利用できる形に一般化する。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template は rulebook と矛盾しないように揃える。
 
@@ -112,7 +113,7 @@ owner として達成する狙い:
 1. 「このフェーズで行うこと」と「進め方」に従って、成果物と rulebook / recipe / sample / template を更新する。
 2. 「完了の狙い」を満たしているかを確認し、不足があれば加筆・補強する（観点別の自己レビューや再確認ループは行わない）。
 3. 成果物と各参考資料が相互に矛盾していないかを確認する（構造・必須項目・禁止事項は rulebook を正とする）。
-4. 必要な検証と lint を実行する。
+4. 共通規約に従って、必要な整形・静的検査を実行する。
 5. result に実施内容・変更ファイル・参考資料の活用を記入する。
 
 ## 7. 異常終了の条件
@@ -121,9 +122,13 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
-## 共通: 記法・リンク規約
+## 共通: 記法・成果物規約
 
-この規約は、生成される全 exec plan に共通で適用される。成果物および result 内で他文書を参照する際のリンク記法を統一する。
+この規約は、生成される全 exec plan に共通で適用される。他文書を参照する際のリンク記法と、成果物の状態（status）の扱いを統一する。
 
 - 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
 - まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドだけを実行する。plan に未記載の追加 test / build / schema 検証を独自に実行しない。追加検証が必要と判断した場合は、実行せず result の申し送りに残す。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- YAML 成果物を編集した後は、対象 rulebook / plan に記載された対応 schema に従って記述し、`npm run validate:schema:file -- --schema <schema.yaml> --data <対象ファイル>` で schema 検査を実施する。検査でエラーが出た場合は修正してから完了とする。
