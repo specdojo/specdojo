@@ -69,6 +69,11 @@ const safeWorktreeName =
 const hash = crypto.createHash('sha1').update(absoluteWorktreePath).digest('hex').slice(0, 8)
 const workspaceFile = path.join(localDir, `${color}-${safeWorktreeName}-${hash}.code-workspace`)
 
+if (fs.existsSync(workspaceFile)) {
+  process.stdout.write(workspaceFile)
+  process.exit(0)
+}
+
 workspace.folders = [
   {
     name: worktreeName,
