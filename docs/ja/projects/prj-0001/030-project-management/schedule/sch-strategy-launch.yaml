@@ -16,7 +16,7 @@ track: launch
 # exec run --auto が pm-members.yaml のエージェントにマッピングする。
 
 settings:
-  start_date: "2026-06-15"
+  start_date: '2026-06-15'
 
 scope:
   catalogs:
@@ -59,7 +59,7 @@ phase_sets:
       approach: bootstrap
       capabilities: [web_search]
       proficiency: expert
-      task_suffix: "010"
+      task_suffix: '010'
       duration_days: 1.0 # 4〜8h 相当（成果物＋参考資料4種を一括）
       description: |
         エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
@@ -78,8 +78,8 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: expert
-      task_suffix: "070"
+      proficiency: normal
+      task_suffix: '070'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -90,8 +90,8 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: expert
-      task_suffix: "080"
+      proficiency: normal
+      task_suffix: '080'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
@@ -107,7 +107,7 @@ phase_sets:
       mode: review
       approach: fully-guided
       proficiency: normal
-      task_suffix: "090"
+      task_suffix: '090'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
@@ -119,7 +119,7 @@ phase_sets:
       mode: edit
       approach: recipe-maintenance
       proficiency: normal
-      task_suffix: "100"
+      task_suffix: '100'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
@@ -131,7 +131,7 @@ phase_sets:
       mode: edit
       approach: rulebook-maintenance
       proficiency: normal
-      task_suffix: "110"
+      task_suffix: '110'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
@@ -143,7 +143,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       proficiency: normal
-      task_suffix: "120"
+      task_suffix: '120'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
@@ -155,7 +155,7 @@ phase_sets:
       mode: edit
       approach: template-maintenance
       proficiency: normal
-      task_suffix: "130"
+      task_suffix: '130'
       duration_days: 0.25 # 1〜2h 相当
       description: |
         レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
@@ -165,7 +165,7 @@ phase_sets:
       name: 完成版確定
       execution: human
       mode: edit
-      task_suffix: "140"
+      task_suffix: '140'
       duration_days: 0.125 # 0.5〜1h 相当
       description: |
         担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
@@ -275,14 +275,14 @@ cross_domain_dependencies:
 initial_state:
   completed_deliverables:
     - local_id: sch-defaults
-      completed_on: "2026-06-14"
+      completed_on: '2026-06-14'
       by: indie
       note: 初期投入時点で作成済み
     - local_id: sch-strategy-launch
-      completed_on: "2026-06-14"
+      completed_on: '2026-06-14'
       by: indie
       note: 初期投入時点で作成済み
     - local_id: prj-overview
-      completed_on: "2026-06-14"
+      completed_on: '2026-06-14'
       by: indie
       note: 初期投入時点で作成済み
