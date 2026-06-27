@@ -86,4 +86,11 @@ tools/vscode-specdojo/out/
 # specdojo doc-index は root/worktree で都度再生成される生成物。
 # commit すると exec の merge で衝突するため tracking しない。
 .specdojo/doc-index.json
+
+# specdojo build の生成物（generated/ 配下）。
+# catalog/register/exec build が出力する派生ファイルで、timestamp 等で内容が変わる。
+# VitePress build 時（docs:build の前段 docs:generate）に再生成するため tracking しない。
+# ただし空ディレクトリを保持するための .gitkeep は追跡対象に残す。
+docs/**/generated/*
+!docs/**/generated/.gitkeep
 /*.log
