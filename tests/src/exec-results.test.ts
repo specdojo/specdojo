@@ -41,6 +41,39 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(content).toContain("---\n\n# Edit Result");
   });
 
+  it("normalizes foreign single-quoted timestamps to double quotes on the status update", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "opencode-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+
+    // Simulate a result written by other tooling that single-quotes the timestamp. Reading it back
+    // and re-serializing must not preserve or nest the single quotes (the cause of `"'...'"`).
+    const scaffolded = readFileSync(resultPath, "utf8");
+    writeFileSync(
+      resultPath,
+      scaffolded.replace(
+        'started_at: "2026-06-20T00:00:00.000Z"',
+        "started_at: '2026-06-20T00:00:00.000Z'",
+      ),
+      "utf8",
+    );
+
+    await updateResultStatus(resultPath, "complete", "2026-06-20T00:01:00.000Z");
+
+    const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
+    expect(frontmatter).toContain('started_at: "2026-06-20T00:00:00.000Z"');
+    expect(frontmatter).toContain('completed_at: "2026-06-20T00:01:00.000Z"');
+    // No single quotes around timestamps and no double-wrapped nesting remain.
+    expect(frontmatter).not.toContain("'2026-06-20T00:00:00.000Z'");
+    expect(frontmatter).not.toContain("\"'");
+  });
+
   it("records block_reason in frontmatter when blocked with a reason", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,

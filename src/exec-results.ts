@@ -33,12 +33,22 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   return lines.join("\n");
 }
 
-// Strip one surrounding pair of double quotes so re-serialization does not nest them
-// (timestamp fields are written quoted; reading them back must yield the raw value).
+// Strip surrounding quote pairs so re-serialization does not nest them or carry over a foreign
+// quoting style. Timestamp fields are written double-quoted; reading them back must yield the raw
+// value. Values written by other tooling can arrive single-quoted (`'...'`), and an earlier
+// read-modify-write of such a value could leave it double-wrapped around single quotes (`"'...'"`).
+// Peel each matching outer pair (double or single) so any of these forms normalizes to the raw
+// value, which serializeFrontmatter then re-emits with double quotes only.
 function unquote(value: string): string {
-  return value.length >= 2 && value.startsWith('"') && value.endsWith('"')
-    ? value.slice(1, -1)
-    : value;
+  let result = value;
+  while (
+    result.length >= 2 &&
+    ((result.startsWith('"') && result.endsWith('"')) ||
+      (result.startsWith("'") && result.endsWith("'")))
+  ) {
+    result = result.slice(1, -1);
+  }
+  return result;
 }
 
 function parseFrontmatter(content: string): { meta: Record<string, string>; body: string } {
