@@ -130,6 +130,13 @@ $defs:
           (e.g., GitHub Copilot)."
         enum: ["human", "agent"]
 
+      provider:
+        type: string
+        description: >
+          Agent runtime provider family. Use this to identify which external CLI
+          executes the member command.
+        enum: ["opencode", "claude", "codex", "copilot", "custom"]
+
       persona:
         type: string
         minLength: 1
@@ -196,3 +203,16 @@ $defs:
         type: string
         description: "Optional free-text note (e.g., availability, timezone,
           responsibilities)."
+
+    allOf:
+      - if:
+          properties:
+            type:
+              const: agent
+        then:
+          required:
+            - provider
+            - capabilities
+            - proficiency
+            - priority
+            - command

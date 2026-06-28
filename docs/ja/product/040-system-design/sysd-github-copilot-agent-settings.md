@@ -19,6 +19,7 @@ GitHub Copilot は GitHub アカウント、Copilot CLI、GitHub.com の cloud a
 
 - **非対話実行は `copilot -p`**: TUI を起動せず、タスクプロンプトを渡して応答後に終了する。`--no-ask-user` を指定し、追加質問を待たずに自動実行する。
 - **用途別モデル分担**: 標準作業を汎用モデル、複雑な設計判断を高性能モデルで分担する。
+- **usage と quota は分けて扱う**: JSONL、`/usage`、OTel で usage / cost / AIU は観測できるが、premium request の残量や reset 時刻を共通 API として前提にしない。
 - **リポジトリ共通指示は `.github/copilot-instructions.md`**: Copilot Chat、Copilot CLI、cloud agent、code review が共有するプロジェクト概要、検証コマンド、安全規則を定義する。
 - **パス別指示は `.github/instructions/*.instructions.md`**: Markdown、TypeScript、Vitest、SpecDojo exec workflow など、対象ファイルに応じたルールを定義する。
 - **custom agent は `.github/agents/*.md`**: Copilot CLI / cloud agent で明示的に選択する agent profile として使用する。
@@ -233,6 +234,8 @@ phase の共通契約は親設計に従う。Copilot の Web 検索または Git
 
 共通の retry / fallback / block 方針は親設計に従う。Copilot の rate limit は `429`、`rate limit`、quota / premium request 上限を示すメッセージとして検出する。
 
+Copilot では quota / premium request 上限に関する文言が返る場合があるが、残量や reset 時刻を安定取得する共通非対話 API は前提にしない。stderr message、JSONL error、または OTel の error 情報から `limited` を判定し、詳細は provider 固有 signal として保持する。
+
 実際のファイル: `.specdojo/exec-defaults.yaml`
 
 ### 9.4. `exec run` による実行
@@ -249,6 +252,8 @@ specdojo exec run --cmd copilot-expert-review-agent
 ## 10. 非対話実行と出力
 
 `copilot -p` は prompt mode で実行し、完了後に終了する。`-s` / `--silent` は session metadata を抑制し、標準出力をスクリプトで扱いやすくする。`--output-format=json` を指定すると JSONL 出力を利用できる。
+
+Copilot CLI には `/usage` と OpenTelemetry monitoring があり、token usage、cost、AIU、session shutdown 時の集計値を観測できる。これらは実績値の可観測性として扱い、残り quota や premium request 残数の真値とは分離する。
 
 ```bash
 copilot -p "SpecDojo task を1件実行してください" \

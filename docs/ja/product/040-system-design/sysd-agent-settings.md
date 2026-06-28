@@ -32,6 +32,7 @@ SpecDojo CLI、agent、`specdojo exec run` の3層に責務を分割する。
 - 複数の edit agent を並列実行する場合は、タスクごとに worktree を割り当てる。
 - 認証情報は環境または各 CLI の認証ストアから注入し、リポジトリへ保存しない。
 - CLI 固有の権限機構を使用し、無制限のファイル操作や確認回避を通常運用に含めない。
+- rate limit、session limit、quota、timeout などの失敗理由は、共通層では正規化した状態に写像し、元の CLI 固有シグナルは別フィールドで保持する。
 
 ## 2. 責務分担
 
@@ -170,6 +171,28 @@ rate_limit_policy:
 ```
 
 検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なる。子設計には provider 固有のシグナルと運用上の注意だけを記述する。
+
+### 6.3. 制限情報と使用量の共通設計
+
+4系統の agent CLI で共通取得できるのは、主に「今回の実行が継続可能か」「再試行価値があるか」という実行状態である。rate limit、session limit、quota 残量、premium request 残数、reset 時刻は CLI ごとに露出の粒度と取得方法が異なるため、共通 API で同一意味にそろえる前提を置かない。
+
+共通層では次の正規化結果を扱う。
+
+| フィールド                | 用途                            | 値の例                                                                                |
+| ------------------------- | ------------------------------- | ------------------------------------------------------------------------------------- |
+| `availability_state`      | 次の制御判断に使う共通状態      | `available` / `limited` / `transient_failure` / `fatal_failure`                       |
+| `retryable`               | wait や別 member への切替対象か | `true` / `false`                                                                      |
+| `provider_signal.kind`    | CLI 固有の元理由                | `rate_limit` / `session_limit` / `quota_exhausted` / `overloaded` / `timeout` / `oom` |
+| `provider_signal.message` | stderr や JSON event の原文     | 例: `You've hit your session limit`                                                   |
+| `observed_usage`          | 取得できた usage 情報だけを保持 | token usage、cost、AIU、session stats など                                            |
+
+この設計での原則は次のとおりとする。
+
+- 共通層は raw message を解釈して `availability_state` を返すが、CLI ごとの語彙差を吸収しすぎない。
+- `session limit` は `rate limit` に畳み込まず、`provider_signal.kind` では区別して保持する。
+- quota の残量や reset 時刻は、取得できる CLI だけ `observed_usage` や `provider_signal.metadata` に保持する。
+- 取得できない値は推定しない。`unknown` として扱い、message pattern と exit code に基づいて制御する。
+- retry / fallback / block の判断は共通層で行い、残量表示や診断 UI は CLI 固有情報を参照して補足表示する。
 
 ## 7. 外部エージェント CLI の更新
 

@@ -94,6 +94,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `email`              | 任意       | 公開可能な連絡先。非公開または不要なら `null`       |
 | `roles`              | ○          | 対応する Role code のリスト。汎用 agent は `[]` 可  |
 | `type`               | ○          | `human` または `agent`                              |
+| `provider`           | agent 必須 | agent を実行する CLI 種別（`opencode` など）        |
 | `priority`           | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |
 | `mode`               | agent 推奨 | `edit` または `review`。担当できる実行モードを表す  |
 | `proficiency`        | agent 推奨 | `normal` / `expert` などの品質 tier                 |
@@ -130,6 +131,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 ### 6.4. `members[].type` と agent 用フィールド
 
 - 人間の実行主体は `human`、自動化または生成 AI 支援主体は `agent` とする。
+- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`custom` から選ぶ。
 - `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities`、`command` を記載する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
 - `command` には実行に必要なコマンドを記載するが、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。

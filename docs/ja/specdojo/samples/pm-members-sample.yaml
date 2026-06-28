@@ -33,6 +33,7 @@ members:
     roles:
       - BA
     type: agent
+    provider: custom
     mode: edit
     proficiency: normal
     persona: requirements-navigator
@@ -53,6 +54,7 @@ members:
     roles:
       - QE
     type: agent
+    provider: custom
     mode: review
     proficiency: normal
     persona: risk-averse-reviewer
@@ -72,6 +74,7 @@ members:
     email: null
     roles: []
     type: agent
+    provider: custom
     mode: edit
     proficiency: low
     persona: general-assistant
