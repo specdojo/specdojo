@@ -2,7 +2,11 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { declaredReferences, resolveReferenceMaterialRefs } from "../../src/reference-materials.js";
+import {
+  declaredReferences,
+  resolveDeliverableSchemaRef,
+  resolveReferenceMaterialRefs,
+} from "../../src/reference-materials.js";
 import { validateRulebookReferenceMaterials } from "../../src/catalog-build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して
@@ -152,6 +156,107 @@ describe("reference-materials", () => {
       writeFileSync(join(root, SPECDOJO, "samples", "opt-out-sample.md"), "# sample\n", "utf8");
 
       expect(resolveReferenceMaterialRefs("opt-out-rulebook").sample).toBe("_MISSING_");
+    });
+  });
+
+  describe("resolveDeliverableSchemaRef", () => {
+    const SCHEMA_DIR = "docs/specdojo/schemas/v1";
+
+    function writeSchema(stem: string): void {
+      mkdirSync(join(root, SCHEMA_DIR), { recursive: true });
+      writeFileSync(join(root, SCHEMA_DIR, `${stem}.schema.yaml`), "type: object\n", "utf8");
+    }
+
+    it("frontmatter の schema 宣言を正としてパスを解決する", () => {
+      writeRulebook(
+        "pm-roles-rulebook",
+        [
+          "id: pm-roles-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+          "schema: pm-roles",
+        ].join("\n"),
+      );
+
+      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe(
+        "docs/specdojo/schemas/v1/pm-roles.schema.yaml",
+      );
+    });
+
+    it("未宣言なら local_id の慣例 schema を実在確認して返す", () => {
+      writeRulebook(
+        "pm-roles-rulebook",
+        ["id: pm-roles-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join(
+          "\n",
+        ),
+      );
+      writeSchema("pm-roles");
+
+      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe(
+        "docs/specdojo/schemas/v1/pm-roles.schema.yaml",
+      );
+    });
+
+    it("local_id の schema が無ければ rulebook prefix の schema にフォールバックする", () => {
+      writeRulebook(
+        "bdd-rulebook",
+        ["id: bdd-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join("\n"),
+      );
+      // 共有型インスタンス: bdd-purchase.schema.yaml は無く、型 schema bdd.schema.yaml のみ実在。
+      writeSchema("bdd");
+
+      expect(resolveDeliverableSchemaRef("bdd-rulebook", "bdd-purchase")).toBe(
+        "docs/specdojo/schemas/v1/bdd.schema.yaml",
+      );
+    });
+
+    it("target_format が yaml 以外なら MISSING にする", () => {
+      writeRulebook(
+        "prj-overview-rulebook",
+        [
+          "id: prj-overview-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: markdown",
+        ].join("\n"),
+      );
+      writeSchema("prj-overview");
+
+      expect(resolveDeliverableSchemaRef("prj-overview-rulebook", "prj-overview")).toBe(
+        "_MISSING_",
+      );
+    });
+
+    it("schema 宣言が 'none' なら慣例ファイルが存在しても MISSING にする", () => {
+      writeRulebook(
+        "pm-roles-rulebook",
+        [
+          "id: pm-roles-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+          "schema: none",
+        ].join("\n"),
+      );
+      writeSchema("pm-roles");
+
+      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe("_MISSING_");
+    });
+
+    it("該当 schema が無ければ MISSING にする", () => {
+      writeRulebook(
+        "pm-roles-rulebook",
+        ["id: pm-roles-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join(
+          "\n",
+        ),
+      );
+
+      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe("_MISSING_");
+    });
+
+    it("rulebook 未指定なら MISSING にする", () => {
+      expect(resolveDeliverableSchemaRef(undefined, "pm-roles")).toBe("_MISSING_");
     });
   });
 

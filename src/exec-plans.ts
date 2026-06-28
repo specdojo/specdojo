@@ -2,7 +2,10 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { basename, join, relative } from "node:path";
 import { load } from "js-yaml";
 import { specdojoRootDir } from "./specdojo-config.js";
-import { resolveReferenceMaterialRefs } from "./reference-materials.js";
+import {
+  resolveDeliverableSchemaRef,
+  resolveReferenceMaterialRefs,
+} from "./reference-materials.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import {
@@ -271,16 +274,33 @@ function loadViewpointDetailTemplate(cache: Map<string, string>): string {
 
 // Marker a plan template places to control where the shared conventions fragment lands.
 const COMMON_CONVENTIONS_PLACEHOLDER = "_COMMON_CONVENTIONS_";
+// Placeholder in the conventions fragment for the resolved schema path. The agent cannot derive
+// the schema path on its own (it would have to hunt for it and risks burning its turn before
+// filling the result), so the generator resolves it deterministically and bakes it in here.
+const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 
 // Injects the shared conventions fragment into a built plan body so every generated plan carries
 // the same rules (e.g. link notation) in its own text, independent of the executing tool. A
 // template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates without the
 // marker get the block appended so the rules are never silently dropped.
-function injectCommonConventions(body: string, cache: Map<string, string>): string {
-  const conventions = readTemplate(
+// schemaRef is the resolved schema path: when MISSING (non-yaml deliverable or no schema), the
+// schema-validation bullet is dropped so the plan never asks for a check it cannot specify.
+function injectCommonConventions(
+  body: string,
+  schemaRef: string,
+  cache: Map<string, string>,
+): string {
+  let conventions = readTemplate(
     join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE),
     cache,
   ).trimEnd();
+  conventions =
+    schemaRef === MISSING
+      ? conventions
+          .split("\n")
+          .filter((line) => !line.includes(SCHEMA_REF_PLACEHOLDER))
+          .join("\n")
+      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(schemaRef);
   if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
     return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions);
   }
@@ -641,7 +661,11 @@ async function writeTaskPlan(
           resultRef,
           stem,
         );
-  const content = injectCommonConventions(body, ctx.templateCache);
+  const schemaRef = resolveDeliverableSchemaRef(
+    deliverable?.deliverable.rulebook,
+    deliverable?.deliverable.local_id,
+  );
+  const content = injectCommonConventions(body, schemaRef, ctx.templateCache);
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);

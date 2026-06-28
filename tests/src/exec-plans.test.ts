@@ -349,6 +349,10 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan.indexOf("`[[id|title]]` 形式")).toBeGreaterThan(
         editPlan.indexOf("異常終了の条件"),
       );
+      // markdown 成果物（rulebook/schema 無し）の plan からは YAML schema 検証行が落ち、
+      // プレースホルダ（_SCHEMA_REF_）も漏れない。
+      expect(editPlan).not.toContain("validate:schema:file");
+      expect(editPlan).not.toContain("_SCHEMA_REF_");
 
       const maintenancePlan = readFileSync(
         join(executionPath, "exec/plans/T-TEST-overview-030-plan.md"),

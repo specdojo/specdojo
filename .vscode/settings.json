@@ -194,7 +194,9 @@
     "./docs/specdojo/schemas/v1/sch-milestones.schema.yaml": ["docs/ja/**/sch-milestones*.yaml"],
     "./docs/specdojo/schemas/v1/sch-track.schema.yaml": ["docs/ja/**/sch-track-*.yaml"],
     "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": ["docs/ja/**/sch-strategy-*.yaml"],
-    "./docs/specdojo/schemas/v1/dct.schema.yaml": ["docs/**/dct-*.yaml"]
+    "./docs/specdojo/schemas/v1/dct.schema.yaml": ["docs/**/dct-*.yaml"],
+    "./docs/specdojo/schemas/v1/pm-roles.schema.yaml": ["docs/ja/**/pm-roles.yaml"],
+    "./docs/specdojo/schemas/v1/pm-members.schema.yaml": ["docs/ja/**/pm-members.yaml"]
   },
 
   "files.associations": {

@@ -8,6 +8,8 @@ import { specdojoRootDir } from "./specdojo-config.js";
 
 const MISSING = "_MISSING_";
 const DOCS_BASE = "docs/ja/specdojo";
+// schema は言語非依存の正本資産（docs/ja/* の下ではない）。
+const SCHEMA_BASE = "docs/specdojo/schemas/v1";
 
 export type ReferenceMaterialKind = "recipe" | "sample" | "template";
 
@@ -23,6 +25,7 @@ type RulebookRefs = {
   sample?: string;
   template?: string;
   target_format?: string;
+  schema?: string;
 };
 
 const KIND_DIR: Record<ReferenceMaterialKind, string> = {
@@ -52,6 +55,7 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
     sample: str(fm.sample),
     template: str(fm.template),
     target_format: str(fm.target_format),
+    schema: str(fm.schema),
   };
 }
 
@@ -105,6 +109,34 @@ export function resolveReferenceMaterialRefs(
     sample: resolveRef("sample", fm.sample, rulebookId, formatExt(fm.target_format)),
     template: resolveRef("template", fm.template, rulebookId, formatExt(fm.target_format)),
   };
+}
+
+// schema ファイル（docs/specdojo/schemas/v1/<id>.schema.yaml）の repo 相対パス。
+function schemaRepoPath(id: string): string {
+  return `${SCHEMA_BASE}/${id}.schema.yaml`;
+}
+
+// 成果物を検証する schema の repo 相対パスを解決する。
+// rulebook frontmatter の `schema` 宣言を正とし（`none` は検証無効）、未宣言なら
+// <local_id>.schema.yaml → <rulebook-prefix>.schema.yaml の順で実在を確認して補う。
+// target_format が yaml 以外、または該当 schema が無い場合は MISSING を返す。
+// 決定論的に解決できるため、plan 生成時にこの具体パスを焼き込み、agent には探索させない。
+export function resolveDeliverableSchemaRef(
+  rulebookId: string | undefined,
+  localId: string | undefined,
+): string {
+  if (!rulebookId || rulebookId === "none") return MISSING;
+  const fm = loadRulebookRefs(rulebookId);
+  if (fm.target_format !== "yaml") return MISSING;
+  if (fm.schema === "none") return MISSING;
+  if (fm.schema) return schemaRepoPath(fm.schema);
+  const prefix = rulebookId.replace(/-rulebook$/, "");
+  const root = specdojoRootDir();
+  for (const id of [localId, prefix]) {
+    if (!id) continue;
+    if (existsSync(join(root, SCHEMA_BASE, `${id}.schema.yaml`))) return schemaRepoPath(id);
+  }
+  return MISSING;
 }
 
 export type DeclaredReference = {

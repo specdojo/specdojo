@@ -26,3 +26,9 @@ allOf:
       template:
         $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
         description: "対応する template の ID（fully-guided の参照解決に使う）。"
+      schema:
+        type: string
+        description: >-
+          対象成果物（target_format: yaml）を検証する JSON Schema のファイル名 stem。
+          docs/specdojo/schemas/v1/<schema>.schema.yaml に解決される。'none' で検証を無効化。
+          未宣言時は <local_id>.schema.yaml → <prefix>.schema.yaml の順に慣例解決する。
