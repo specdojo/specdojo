@@ -45,3 +45,4 @@ permission:
 - YAML / JSON / Frontmatter / スキーマの検証は、手書きの `python3 -c "..."` ではなく許可済みのプロジェクト標準スクリプトを使う（`npm run validate:schema:file -- --schema <schema-path> --data <data-path>`、`npm run lint:fm`、`npm run lint:md`）。
 - 入れ子のクォートを含む複雑なシェルのワンライナー（特に `python3 -c "..."`）を避ける。検証は上記の標準スクリプトに委ね、クォート崩れによる失敗を防ぐ。
 - `result` を Edit する際の `old_string` はファイル内で一意になるよう、前後の固有な文脈を含める。`---` や `| --- | --- |` のような頻出行を単独アンカーにしない（複数マッチで失敗する）。
+- ファイル内容の確認に `cat -A` を使わない。`cat -A` は 0x80 以上のバイトを `M-x` 形式で表示するため、正常な UTF-8 の日本語が文字化けのように見え、エンコーディング破損と誤認する原因になる。中身の確認は Read ツールか素の `cat` を使う。
