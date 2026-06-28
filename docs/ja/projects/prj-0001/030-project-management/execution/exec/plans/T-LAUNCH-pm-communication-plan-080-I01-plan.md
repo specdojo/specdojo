@@ -8,7 +8,6 @@ mode: edit
 status: ready
 project_id: prj-0001
 owner: PM
-on_critical_path: true
 approach: fully-guided
 ---
 
@@ -16,9 +15,7 @@ approach: fully-guided
 
 ## 1. このフェーズで行うこと
 
-エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
-矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
-他成果物への修正提案が必要な場合は、該当成果物の担当ロールへ差し戻しを起票する。
+整合性確認・修正
 
 ## 2. 対象成果物
 
