@@ -14,25 +14,25 @@ project_id: prj-0001
 roles:
   - code: PO
     name: Project Owner
-    project_note: 最終判断・スコープ・優先順位・公開方針を担う。
+    project_note: 公開可能な SpecDojo 文書基盤としての目的・スコープ・優先順位・公開方針を最終判断する。
   - code: PM
     name: Project Manager
-    project_note: 計画・進捗・課題・リスク管理を担う。小規模運用では専任化せず、実行主体の割り当ては pm-members.yaml で管理する。
+    project_note: 参考資料整備と成果物作成の計画・進捗・課題・リスクを管理する。小規模運用では専任化せず、実行主体は pm-members.yaml で管理する。
   - code: BA
     name: Business Analyst
-    project_note: 要件、利用者視点、受入条件を整理する。
+    project_note: 仕様を書く人と読む人の利用者視点から、文書体系への要求、利用場面、受入条件を整理する。
   - code: ARC
     name: Architect
-    project_note: 文書体系、構成方針、技術制約を整理する。
+    project_note: rulebook、recipe、sample、template、成果物カタログの構造整合と技術制約を整理する。
   - code: DEV
     name: Developer
-    project_note: 実装・設定・技術的変更作業を担う。実装タスクが増えた場合に専任メンバーを追加する。
+    project_note: CLI、schema、生成・検証処理などの実装・設定・技術的変更作業を担う。実装タスクが継続増加した場合に専任化を検討する。
   - code: QE
     name: Quality Engineer
-    project_note: 品質基準、レビュー観点、整合性を確認する。
+    project_note: 成果物と参考資料の品質基準、レビュー観点、schema 適合、文書間整合を確認する。
   - code: UX
     name: UX / Documentation Designer
-    project_note: 利用者導線・説明・文書体験を担う。小規模運用では BA 観点と合わせて扱い、必要時に専任化を検討する。
+    project_note: 仕様作成者が迷わず使える導線、説明、文書体験を担う。小規模運用では BA 観点と合わせて扱い、必要時に専任化を検討する。
   - code: OPS
     name: Operations / Release Manager
-    project_note: リリース・公開・配布・変更管理を担う。公開可否の最終判断は PO に残し、実行主体の割り当ては pm-members.yaml で管理する。
+    project_note: 文書群とツールのリリース・公開・配布・変更管理を担う。公開可否の最終判断は PO に残し、実行主体は pm-members.yaml で管理する。

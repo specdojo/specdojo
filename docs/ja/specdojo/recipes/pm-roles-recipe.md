@@ -17,6 +17,7 @@ Project Role Definition Writing Recipe
 - 最初に、組織定義から採用する責務語彙、最終判断の集約先、公開方針を確認する。
 - 次に、`pm-roles.yaml` に列挙する Role code を、Schedule の `owner` や RACI の列として使える粒度で整理する。
 - 最後に、member nickname、agent 名、個人名、兼務割り当てを混ぜず、プロジェクト固有メモだけを残す。
+- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。
 
 | 種別     | 役割                           | 使いどころ                                 |
 | -------- | ------------------------------ | ------------------------------------------ |
@@ -35,6 +36,7 @@ Project Role Definition Writing Recipe
 | Role name            | 各 Role code の正式名称                                      |
 | プロジェクト固有メモ | 当該プロジェクトで強調する責務、専任化条件、公開判断上の注意 |
 | 下流文書             | `pm-members.yaml`、Schedule、RACI が参照する Role code       |
+| schema               | `pm-roles.yaml` に許可されるメタ項目、Role code、型制約      |
 | 公開制約             | 個人情報、連絡先、非公開組織情報を含めない条件               |
 
 ## 3. 全体の作成手順
@@ -44,7 +46,8 @@ Project Role Definition Writing Recipe
 3. `roles` に、プロジェクトで使用する Role code を標準順で列挙する。
 4. 各 Role に `code` と `name` を記載し、必要な場合だけ `project_note` を 1 行で添える。
 5. `project_note` から member nickname、agent 名、個人名、具体的な兼務割り当てを除く。
-6. PO が承認できるよう、全 Role code の過不足、公開可否、下流文書への入力適合を確認する。
+6. schema にないキー、重複 Role code、標準外 Role code がないことを確認する。
+7. PO が承認できるよう、全 Role code の過不足、公開可否、下流文書への入力適合を確認する。
 
 ## 4. 各要素の書き方
 
@@ -61,6 +64,7 @@ Project Role Definition Writing Recipe
 - `type` は `project`、`version` は整数で記載する。
 - `status` は現時点の成果物状態を示す。
 - 根拠 ID は、内容を実際に確認した文書だけを記載する。
+- `rulebook` など schema が許可しないキーを追加しない。
 
 ### 4.2. `roles`
 
@@ -75,6 +79,7 @@ Project Role Definition Writing Recipe
 - 標準順に `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を並べる。
 - 独自 Role code は追加しない。
 - `roles` は責務語彙の一覧であり、実行主体の一覧ではないことを意識する。
+- 下流の `pm-members.yaml` や Schedule が参照する Role code を後から推測しなくてよいよう、採用する責務語彙を明示する。
 
 ### 4.3. `roles[].project_note`
 
@@ -108,6 +113,7 @@ Project Role Definition Writing Recipe
 | プロジェクト固有メモ | 小規模運用では専任化せず、滞留時に見直す          | 必要に応じて対応する              |
 | 公開可否             | 公開判断は PO に残す                              | agent が公開可否を判断する        |
 | 下流入力             | `roles[].code` を Schedule の `owner` に使う      | `owner` に member nickname を使う |
+| schema 適合          | メタ項目は schema が許可するキーだけにする        | `rulebook: pm-roles-rulebook`     |
 
 ## 7. レビュー観点
 
