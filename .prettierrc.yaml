@@ -28,4 +28,9 @@ endOfLine: "lf"
 
 # 対象にするファイル（必要なら調整）
 overrides:
-  - files: "*.md"
+  # YAML は二重引用符に統一する。
+  # 二重引用符は任意の文字列（改行・エスケープを含む）を表現でき、prettier の既定でもある。
+  # singleQuote: true だとエスケープが必要な値だけ二重に切り替わり、ファイル内で混在するため。
+  - files: ["*.yaml", "*.yml"]
+    options:
+      singleQuote: false
