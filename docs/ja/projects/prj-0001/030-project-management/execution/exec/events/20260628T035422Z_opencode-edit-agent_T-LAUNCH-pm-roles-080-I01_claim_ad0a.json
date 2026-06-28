@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-28T03:54:22Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-roles-080-I01",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PO"
+  }
+}
