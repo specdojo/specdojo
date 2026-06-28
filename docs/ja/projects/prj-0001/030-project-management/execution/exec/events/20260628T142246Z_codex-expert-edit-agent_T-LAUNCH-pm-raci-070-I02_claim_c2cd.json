@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-28T14:22:46Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-raci-070-I02",
+  "by": "codex-expert-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
