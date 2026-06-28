@@ -253,6 +253,30 @@ describe("exec worktree ops", () => {
     );
   });
 
+  it("aborts a conflicting merge so the tree is not left mid-merge", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    // Root and the exec branch both add the same deliverable with different content: an add/add
+    // conflict that git cannot auto-resolve.
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "root version\n");
+    git(fixture.repo, "add", "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "root edits conflict.md");
+
+    writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(() =>
+      mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId }),
+    ).toThrow();
+
+    // The failed merge must be rolled back: no merge in progress and the working tree is clean.
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(git(fixture.repo, "status", "--porcelain")).toBe("");
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
+  });
+
   it("excludes plans, events, and generated files from the task commit", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";

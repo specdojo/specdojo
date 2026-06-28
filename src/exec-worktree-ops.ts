@@ -282,12 +282,21 @@ export function mergeWorktreeIntoCurrent(params: {
       );
       return;
     }
-    gitOutput(
-      context.repoRoot,
-      params.ffOnly
-        ? ["merge", "--ff-only", worktree.branch]
-        : ["merge", "--no-ff", "--no-edit", worktree.branch],
-    );
+    try {
+      gitOutput(
+        context.repoRoot,
+        params.ffOnly
+          ? ["merge", "--ff-only", worktree.branch]
+          : ["merge", "--no-ff", "--no-edit", worktree.branch],
+      );
+    } catch (error) {
+      // A failed merge (content conflict, or a pre-commit hook that aborts the merge commit) leaves
+      // the repository mid-merge: MERGE_HEAD set and conflict markers staged in the working tree.
+      // Roll back so the tree returns to a clean state instead of staying stuck, then rethrow.
+      // `git merge --abort` is a no-op error when no merge is in progress, so swallow its status.
+      gitResult(context.repoRoot, ["merge", "--abort"]);
+      throw error;
+    }
   } finally {
     if (lockDir) releaseSchedulerLock(lockDir);
   }
