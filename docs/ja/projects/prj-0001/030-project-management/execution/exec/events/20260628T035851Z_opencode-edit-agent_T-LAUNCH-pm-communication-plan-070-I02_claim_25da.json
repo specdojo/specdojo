@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-28T03:58:51Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-communication-plan-070-I02",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
