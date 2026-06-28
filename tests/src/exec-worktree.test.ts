@@ -17,6 +17,7 @@ import {
   execBranchExists,
   findExecWorktree,
   gitEnvironment,
+  isGitIndexLockContention,
   listRegisteredWorktrees,
   resolveWorktreeBase,
   worktreeNameFromTaskId,
@@ -37,6 +38,28 @@ function createGitRepository(): string {
   git(repo, "commit", "-m", "initial");
   return repo;
 }
+
+describe("isGitIndexLockContention", () => {
+  it("detects the index.lock contention message git prints under parallel access", () => {
+    const stderr =
+      "fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': File exists.";
+
+    expect(isGitIndexLockContention(stderr)).toBe(true);
+  });
+
+  it("detects the secondary 'Another git process seems to be running' notice", () => {
+    expect(
+      isGitIndexLockContention("Another git process seems to be running in this repository"),
+    ).toBe(true);
+  });
+
+  it("does not treat ordinary git failures as lock contention", () => {
+    expect(isGitIndexLockContention("error: pathspec 'missing.md' did not match any file(s)")).toBe(
+      false,
+    );
+    expect(isGitIndexLockContention("")).toBe(false);
+  });
+});
 
 describe("exec worktree", () => {
   it("resolves override, configured, and default worktree bases", () => {

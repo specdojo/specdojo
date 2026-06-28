@@ -35,12 +35,44 @@ export function gitEnvironment(): NodeJS.ProcessEnv {
   return env;
 }
 
+// git serializes index access through .git/index.lock and fails immediately (no wait) when it
+// cannot acquire it. Under `exec run --parallel`, the parent's root-index operations and the
+// concurrent worktree commits (each firing lefthook pre-commit hooks that invoke git) contend
+// for that lock, surfacing as "Unable to create '.../index.lock'". A failed lock acquisition
+// happens before git mutates anything, so retrying the same command is safe and idempotent.
+const INDEX_LOCK_RETRY_ATTEMPTS = 5;
+const INDEX_LOCK_RETRY_BASE_MS = 50;
+
+export function isGitIndexLockContention(stderr: string): boolean {
+  return (
+    /Unable to create '[^']*index\.lock'/.test(stderr) ||
+    /Another git process seems to be running/.test(stderr)
+  );
+}
+
+// Synchronously block the thread. gitResult is intentionally spawnSync-based (blocking), and we
+// want to wait for a contended index.lock to be released before retrying rather than busy-loop.
+function sleepSync(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
 export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
-  return spawnSync("git", ["-C", repoRoot, ...args], {
-    encoding: "utf8",
-    env: gitEnvironment(),
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const run = (): ReturnType<typeof spawnSync> =>
+    spawnSync("git", ["-C", repoRoot, ...args], {
+      encoding: "utf8",
+      env: gitEnvironment(),
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+  let result = run();
+  for (let attempt = 1; attempt <= INDEX_LOCK_RETRY_ATTEMPTS; attempt++) {
+    if (result.status === 0) break;
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    if (!isGitIndexLockContention(stderr)) break;
+    sleepSync(INDEX_LOCK_RETRY_BASE_MS * attempt); // 50, 100, 150, 200, 250 ms
+    result = run();
+  }
+  return result;
 }
 
 export function gitOutput(repoRoot: string, args: string[]): string {
