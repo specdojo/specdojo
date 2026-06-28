@@ -17,6 +17,10 @@ rate_limit_detection:
   # stderr_patterns に寄せる）。グローバル exit 1 は override の無い provider 向けの
   # 後方互換フォールバックとして残す。
   exit_codes: [1]
+  # stderr_patterns は既定で「プロセスが非ゼロ終了した場合のみ」rate limit とみなす
+  # （stderr_requires_nonzero_exit の既定は true）。成果物本文に "rate limit" 等の
+  # 語が含まれ、agent が成功（exit 0）したままその差分を stderr に出力しても誤検出
+  # しない。終了コードに依らず stderr のみで判定したい場合は false を明示する。
   stderr_patterns:
     - "rate limit"
     - "429"

@@ -75,6 +75,13 @@ $defs:
         items:
           type: string
           minLength: 1
+      stderr_requires_nonzero_exit:
+        type: boolean
+        description: >
+          Optional. When true (the default), stderr_patterns only count as a rate-limit
+          signal if the agent process also exited non-zero. This avoids false positives
+          where a successful run echoes a pattern phrase (e.g. an agent editing a file that
+          contains the literal text "rate limit"). Set to false to match regardless of exit code.
 
   RateLimitPolicy:
     type: object

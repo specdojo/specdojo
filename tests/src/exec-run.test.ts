@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { extractBlockReason, resolveAgentOverride, selectCandidates } from "../../src/exec-run.js";
+import {
+  extractBlockReason,
+  isRateLimitError,
+  resolveAgentOverride,
+  selectCandidates,
+} from "../../src/exec-run.js";
+import type { RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
 function agent(overrides: Partial<ProjectMember> & { nickname: string }): ProjectMember {
@@ -119,6 +125,50 @@ describe("selectCandidates", () => {
     const actual = selectCandidates(requirements, members, "edit").map((m) => m.nickname);
 
     expect(actual).toEqual(["codex", "opencode"]);
+  });
+});
+
+describe("isRateLimitError", () => {
+  const detection: RateLimitDetection = {
+    exit_codes: [],
+    stderr_patterns: ["rate limit", "429"],
+  };
+
+  it("does not flag a successful run that merely echoes the pattern in its output", () => {
+    // The pm-members editing task printed file content containing "rate limit" but exited 0.
+    const actual = isRateLimitError(0, "updated comment: rate limit fallback\n", detection);
+
+    expect(actual).toBe(false);
+  });
+
+  it("flags a stderr pattern when the process exited non-zero", () => {
+    const actual = isRateLimitError(1, "error: rate limit reached\n", detection);
+
+    expect(actual).toBe(true);
+  });
+
+  it("treats a null exit (crash) as non-success so patterns still apply", () => {
+    const actual = isRateLimitError(null, "429 too many requests\n", detection);
+
+    expect(actual).toBe(true);
+  });
+
+  it("matches stderr regardless of exit code when the gate is disabled", () => {
+    const ungated: RateLimitDetection = { ...detection, stderr_requires_nonzero_exit: false };
+
+    const actual = isRateLimitError(0, "rate limit\n", ungated);
+
+    expect(actual).toBe(true);
+  });
+
+  it("flags a configured exit code on its own even on a successful-looking stream", () => {
+    const byCode: RateLimitDetection = { exit_codes: [42], stderr_patterns: [] };
+
+    expect(isRateLimitError(42, "no pattern here\n", byCode)).toBe(true);
+  });
+
+  it("returns false when there is no detection config", () => {
+    expect(isRateLimitError(1, "rate limit\n", undefined)).toBe(false);
   });
 });
 

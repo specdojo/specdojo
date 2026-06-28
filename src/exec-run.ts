@@ -351,19 +351,28 @@ function collectBusyActors(schedulePath: string): Set<string> {
   return busy;
 }
 
-function isRateLimitError(
+export function isRateLimitError(
   exitCode: number | null,
   stderr: string,
   detection: RateLimitDetection | undefined,
 ): boolean {
   if (!detection) return false;
+  // exit_codes is a standalone signal: an exact configured code identifies a rate limit
+  // on its own. Keep this list minimal (see exec-defaults.yaml) since generic codes like 1
+  // also mean ordinary failure.
   if (detection.exit_codes && exitCode !== null && detection.exit_codes.includes(exitCode)) {
     return true;
   }
   if (detection.stderr_patterns) {
-    const lower = stderr.toLowerCase();
-    for (const pattern of detection.stderr_patterns) {
-      if (lower.includes(pattern.toLowerCase())) return true;
+    // By default, a stderr pattern only counts when the process also failed (non-zero or
+    // null exit). A successful run (exit 0) that merely echoes the phrase — e.g. an agent
+    // editing a file containing the literal text "rate limit" — is not a rate limit.
+    const requireNonzeroExit = detection.stderr_requires_nonzero_exit ?? true;
+    if (!requireNonzeroExit || exitCode !== 0) {
+      const lower = stderr.toLowerCase();
+      for (const pattern of detection.stderr_patterns) {
+        if (lower.includes(pattern.toLowerCase())) return true;
+      }
     }
   }
   return false;

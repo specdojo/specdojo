@@ -197,6 +197,8 @@ providers:
 
 検出条件には汎用的な `exit_codes: [1]` を使わない。多くの agent CLI は通常失敗と agent 自身の block も exit 1 で返すため、素の exit 1 だけでは rate limit と block を区別できない（`非対話実行` の終了契約を参照）。検出は provider 固有の `stderr_patterns` に寄せ、グローバルの `exit_codes: [1]` は上書きの無い provider 向けの後方互換フォールバックとして最小限にとどめる。
 
+`stderr_patterns` は終了コードと併用して判定する。`stderr_requires_nonzero_exit` が `true`（既定）のとき、stderr pattern はプロセスが非ゼロ終了（または異常終了）した場合にのみ rate limit シグナルとして扱う。agent が成功（exit 0）したまま、編集対象ファイルに含まれる `rate limit` 等の語を stderr へ出力しても誤検出しない。`exit_codes` に列挙したコードは従来どおり単独でシグナルとして成立する。終了コードに依らず stderr のみで判定したい provider は `stderr_requires_nonzero_exit: false` を明示する。
+
 子設計には、その provider 固有のシグナルと、`providers.<provider>` に置く上書きの内容・運用上の注意だけを記述する。
 
 ### 6.3. 制限情報と使用量の共通設計

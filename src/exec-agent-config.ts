@@ -8,6 +8,11 @@ import { specdojoRootDir, type AgentProvider } from "./specdojo-config.js";
 export type RateLimitDetection = {
   exit_codes?: number[];
   stderr_patterns?: string[];
+  // When true (the default), stderr_patterns only count as a rate-limit signal if the
+  // agent process also exited non-zero. This avoids false positives where a successful
+  // run merely echoes a pattern phrase (e.g. an agent editing a file that contains the
+  // literal text "rate limit"). Set to false to match stderr patterns regardless of exit code.
+  stderr_requires_nonzero_exit?: boolean;
 };
 
 export type RateLimitRetry = {
