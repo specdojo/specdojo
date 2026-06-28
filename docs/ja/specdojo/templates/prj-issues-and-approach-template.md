@@ -4,8 +4,8 @@ type: project
 status: draft
 rulebook: prj-issues-and-approach-rulebook
 based_on:
-  - _PROJECT_ID_:prj-overview
   - _PROJECT_ID_:prj-scope
+  - _PROJECT_ID_:prj-assumptions-constraints-dependencies
 supersedes: []
 ---
 

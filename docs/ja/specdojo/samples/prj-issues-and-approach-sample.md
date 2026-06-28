@@ -5,12 +5,13 @@ status: ready
 rulebook: prj-issues-and-approach-rulebook
 based_on:
   - prj-scope-sample
+  - prj-assumptions-constraints-dependencies-sample
 supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ: 駄菓子屋きぬや 販売管理システム
 
-本書は、単一店舗の店頭販売を継続しやすくするための主要課題と解決アプローチを示す最小の完成例である。
+本書は、単一店舗の店頭販売を継続しやすくするための主要課題と解決アプローチを示す最小の完成例である。店頭販売・在庫・つけ管理を初期対象とするスコープと、単一店舗・タブレット 1 台・店主の最終判断という前提を踏まえて記述する。
 
 ## 1. 課題一覧
 
