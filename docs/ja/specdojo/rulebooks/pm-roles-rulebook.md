@@ -19,11 +19,13 @@ Project Role Definition Documentation Rulebook
 ## 1. 全体方針
 
 - `pm-roles.yaml` には、プロジェクトで使用する全 Role code を記載する。現時点で専任 member が存在しない Role code も、Schedule の `owner` 語彙として必要なら含める。
+- 標準 Role code は `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を基本セットとし、プロジェクト内で採用する責務語彙をこの集合から選ぶ。
 - Role code の共通定義・責務・規模別パターンは上位標準を参照し、本ファイルに再掲しない。
 - 兼務の割り当て、member nickname、agent 名、個人名は `pm-members.yaml` で管理し、本ファイルに記載しない。
 - ロール採用の方針・根拠、最終判断の集約先、見直し条件は `pm-organization.md` を参照し、本ファイルに重複して記載しない。
 - `pm-roles.yaml` の `roles[].code` は、Schedule の `owner` および `pm-members.yaml` の `members[].roles` で使用できる Role code の語彙一覧として機能する。
 - PO が全 Role code とプロジェクト固有メモを承認できるよう、各 `project_note` は公開可能な内容だけで簡潔に記載する。
+- AI Agent が作成・検証を支援する場合でも、最終判断、公開可否、説明責任は人間の PO に残す前提で記載する。
 
 ## 2. 位置づけと用語定義
 
@@ -67,6 +69,8 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `version`    | データバージョン。初期値は `1`          | ○    |
 | `project_id` | プロジェクト ID                         | ○    |
 
+`rulebook` など schema に定義されていないメタ項目は `pm-roles.yaml` には追加しない。参照する rulebook は成果物カタログや計画側で管理する。
+
 ## 5. 本文構成（標準テンプレ）
 
 `pm-roles.yaml` は次のルート構造を標準とする。
@@ -97,6 +101,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 - 記載順は標準ロールの定義順（`PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS`）に揃えることを推奨する。
 - 標準 Role code のみを使用し、プロジェクト固有の独自コードを追加しない。
 - `roles[].code` は重複させない。
+- 専任 member がいない Role code でも、Schedule の `owner`、RACI、レビュー観点、下流文書で責務語彙として使う場合は残す。
 
 ### 6.2. `roles[].code`
 
@@ -117,6 +122,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 - 標準に記載済みの一般的な責務を長く再掲しない。
 - member nickname、agent 名、個人名、具体的な兼務割り当ては書かない。
 - PO が承認、保留、差し戻しを判断できるよう、未決事項がある場合は `_UNDECIDED_:` または `_TODO_:` として残す。
+- 公開文書として再利用できる粒度にし、個別組織の内部事情や非公開運用を含めない。
 - 記載すべき内容がない場合は省略してよい。
 
 ## 7. 禁止事項
@@ -129,6 +135,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | ロール採用の根拠・方針・見直し条件を長く記載する                           | `pm-organization.md` の責務であり重複管理になるため |
 | 公開できない個人情報、連絡先、非公開組織情報、アクセス情報を記載する       | PO の公開可否判断と説明責任を損なうため             |
 | AI Agent に最終承認、公開可否、説明責任を持たせる記述を置く                | 人間の PO が最終判断を担う前提に反するため          |
+| schema にない任意メタ項目を追加する                                        | 機械検証と下流処理の互換性が壊れるため              |
 
 ## 8. サンプル
 
