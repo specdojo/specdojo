@@ -2,7 +2,6 @@
 id: sysd-critical-flows-rules
 type: rulebook
 status: draft
-
 ---
 
 # システム設計 重要フロー 作成ルール

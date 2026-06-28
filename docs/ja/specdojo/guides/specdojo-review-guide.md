@@ -14,12 +14,12 @@ status: draft
 
 SpecDojo のレビューは次を扱う。
 
-| 項目 | 内容 |
-| ---- | ---- |
-| 完全性 | 要求、要件、仕様、設計、運用に抜けがないか |
-| 整合性 | 成果物間で目的、用語、状態、責務、制約が矛盾していないか |
-| 妥当性 | 上位目的、業務価値、制約、判断方針に合っているか |
-| 検証可能性 | pass / fail を判断できる完了条件、受入条件、証跡があるか |
+| 項目       | 内容                                                               |
+| ---------- | ------------------------------------------------------------------ |
+| 完全性     | 要求、要件、仕様、設計、運用に抜けがないか                         |
+| 整合性     | 成果物間で目的、用語、状態、責務、制約が矛盾していないか           |
+| 妥当性     | 上位目的、業務価値、制約、判断方針に合っているか                   |
+| 検証可能性 | pass / fail を判断できる完了条件、受入条件、証跡があるか           |
 | 追跡可能性 | 上位目的から要求、要件、仕様、設計、テスト、運用まで対応を追えるか |
 
 レビューの合格条件は、対象プロジェクトの成果物カタログに定義された `done_criteria` を正とする。
@@ -28,15 +28,15 @@ SpecDojo のレビューは次を扱う。
 
 レビューでは次を入力として扱う。
 
-| 入力 | 役割 |
-| ---- | ---- |
-| 対象成果物 | レビュー対象の Markdown / YAML / JSON など |
-| 成果物カタログ | `done_criteria`、依存関係、成果物の位置づけ |
-| rulebook | 必須章、必須キー、禁止事項、構造ルール |
-| sample | 期待する成果物の具体例 |
+| 入力              | 役割                                                  |
+| ----------------- | ----------------------------------------------------- |
+| 対象成果物        | レビュー対象の Markdown / YAML / JSON など            |
+| 成果物カタログ    | `done_criteria`、依存関係、成果物の位置づけ           |
+| rulebook          | 必須章、必須キー、禁止事項、構造ルール                |
+| sample            | 期待する成果物の具体例                                |
 | review viewpoints | Role code 別の観点、severity、verdict、coverage_types |
-| 関連成果物 | 上位・下位・隣接成果物、Schedule、RACI、PJR |
-| 機械検証結果 | lint、schema validation、生成確認、リンク確認 |
+| 関連成果物        | 上位・下位・隣接成果物、Schedule、RACI、PJR           |
+| 機械検証結果      | lint、schema validation、生成確認、リンク確認         |
 
 ## 3. レビューの基本パス
 
@@ -107,28 +107,28 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 要求、要件、仕様のヌケモレや間違いは、成果物単体だけでは検出しにくい。必ず隣接成果物との対応を確認する。
 
-| 対象 | 主な確認 |
-| ---- | -------- |
+| 対象 | 主な確認                                                                         |
+| ---- | -------------------------------------------------------------------------------- |
 | 要求 | 業務目的、利用者、業務イベント、制約、成功条件、非機能、運用要求が抜けていないか |
-| 要件 | 要求から機能・非機能・権限・データ・受入条件へ展開されているか |
-| 仕様 | 要件に対する画面、API、状態、業務ルール、例外、データ、検証条件が明確か |
-| 設計 | 仕様を実現する構造、制約、責務、データ、外部依存、運用方法が明確か |
-| 運用 | 公開後の変更、問い合わせ、障害対応、監査、保守の扱いが明確か |
+| 要件 | 要求から機能・非機能・権限・データ・受入条件へ展開されているか                   |
+| 仕様 | 要件に対する画面、API、状態、業務ルール、例外、データ、検証条件が明確か          |
+| 設計 | 仕様を実現する構造、制約、責務、データ、外部依存、運用方法が明確か               |
+| 運用 | 公開後の変更、問い合わせ、障害対応、監査、保守の扱いが明確か                     |
 
 ## 6. 機械検証とレビューの分担
 
 機械で確認できることは、レビュー判断の前に検証する。
 
-| 確認対象 | 主な方法 |
-| -------- | -------- |
-| YAML / JSON の必須キー | JSON Schema |
-| 型、enum、ID形式 | JSON Schema |
-| Markdown の基本構造 | lint、custom validator |
-| リンク、参照先 | custom validator |
-| IDの一意性 | custom validator |
-| 生成物の同期 | generate command、diff |
-| 意味の妥当性 | agent / human review |
-| 判断責任 | human approver |
+| 確認対象               | 主な方法               |
+| ---------------------- | ---------------------- |
+| YAML / JSON の必須キー | JSON Schema            |
+| 型、enum、ID形式       | JSON Schema            |
+| Markdown の基本構造    | lint、custom validator |
+| リンク、参照先         | custom validator       |
+| IDの一意性             | custom validator       |
+| 生成物の同期           | generate command、diff |
+| 意味の妥当性           | agent / human review   |
+| 判断責任               | human approver         |
 
 機械検証で失敗した成果物は、意味レビューの前に修正する。ただし、検証不能な前提や設計判断は review result に残してよい。
 
@@ -156,10 +156,10 @@ PJR / 修正 / 再レビュー
 
 review plan は「今回のレビューで何を見るか」を固定する。review result は「実際に何を見て、何が分かり、何を未確認として残したか」を記録する。
 
-| 成果物 | 役割 |
-| ------ | ---- |
-| review plan | 対象成果物、Role code、viewpoint、coverage_required、エビデンス例、完了手順を定義する |
-| review result | レビュー観点ごとの判定（pass / fail / unclear）、根拠、findings、decision を記録する |
+| 成果物        | 役割                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------- |
+| review plan   | 対象成果物、Role code、viewpoint、coverage_required、エビデンス例、完了手順を定義する |
+| review result | レビュー観点ごとの判定（pass / fail / unclear）、根拠、findings、decision を記録する  |
 
 review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくする。
 
@@ -213,13 +213,13 @@ owner: <Role code>
 on_critical_path: true | false
 ```
 
-| セクション | 内容 |
-| ---------- | ---- |
-| このフェーズで行うこと | 担当ロールが何を判断するか（承認・修正指示・差し戻し） |
-| 対象成果物 | 対象パス、rulebook、対応する review result のパス |
-| レビュー観点 | `RVP-NNN` 単位の Role code、viewpoint_id、確認基準、coverage_required、チェック観点、エビデンス例 |
-| 完了手順 | レビュー観点ごとの判定方法と review result への記入手順 |
-| 異常終了の条件 | done_criteria を満たさない場合などに block を記録する条件 |
+| セクション             | 内容                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------- |
+| このフェーズで行うこと | 担当ロールが何を判断するか（承認・修正指示・差し戻し）                                            |
+| 対象成果物             | 対象パス、rulebook、対応する review result のパス                                                 |
+| レビュー観点           | `RVP-NNN` 単位の Role code、viewpoint_id、確認基準、coverage_required、チェック観点、エビデンス例 |
+| 完了手順               | レビュー観点ごとの判定方法と review result への記入手順                                           |
+| 異常終了の条件         | done_criteria を満たさない場合などに block を記録する条件                                         |
 
 ### 7.5. review execution
 
@@ -252,11 +252,11 @@ completed_at: <ISO8601>
 agent: <member nickname>
 ```
 
-| セクション | 内容 |
-| ---------- | ---- |
+| セクション         | 内容                                                                    |
+| ------------------ | ----------------------------------------------------------------------- |
 | レビュー観点別結果 | `RVP-NNN` ごとの `result`（pass / fail / unclear）、`evidence`、`notes` |
-| findings | 指摘事項（severity、対象箇所、概要、修正方針を含めて記述する） |
-| decision | `recommendation`（approve / revise / reject）と承認要否 |
+| findings           | 指摘事項（severity、対象箇所、概要、修正方針を含めて記述する）          |
+| decision           | `recommendation`（approve / revise / reject）と承認要否                 |
 
 ## 8. レビュー結果の残し方
 
@@ -264,34 +264,34 @@ agent: <member nickname>
 
 `レビュー観点別結果` セクションには、`RVP-NNN` ごとに次を記入する。
 
-| 項目 | 内容 |
-| ---- | ---- |
-| result | `pass` / `fail` / `unclear` |
-| evidence | 確認した根拠（参照箇所、具体的な記述） |
-| notes | 判定根拠の補足、coverage_required のうち確認できた範囲とできなかった範囲 |
+| 項目     | 内容                                                                     |
+| -------- | ------------------------------------------------------------------------ |
+| result   | `pass` / `fail` / `unclear`                                              |
+| evidence | 確認した根拠（参照箇所、具体的な記述）                                   |
+| notes    | 判定根拠の補足、coverage_required のうち確認できた範囲とできなかった範囲 |
 
 `findings` セクションには、確認した中で見つかった指摘事項を次の観点で記述する。
 
-| 項目 | 内容 |
-| ---- | ---- |
-| severity | `blocker` / `major` / `minor` / `note` |
-| category | `purpose` / `planning` / `business` / `architecture` / `implementation` / `quality` / `usability` / `operations` / `consistency` |
-| location | 見出し、行、キー、またはファイル全体 |
-| summary | 指摘概要 |
-| recommendation | 修正方針 |
+| 項目           | 内容                                                                                                                             |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| severity       | `blocker` / `major` / `minor` / `note`                                                                                           |
+| category       | `purpose` / `planning` / `business` / `architecture` / `implementation` / `quality` / `usability` / `operations` / `consistency` |
+| location       | 見出し、行、キー、またはファイル全体                                                                                             |
+| summary        | 指摘概要                                                                                                                         |
+| recommendation | 修正方針                                                                                                                         |
 
 `decision` セクションには、レビュー全体としての判断（`approve` / `revise` / `reject`）と、PO 判断が必要かどうかを記述する。
 
 ## 9. finding の分類
 
-| 種別 | 内容 |
-| ---- | ---- |
-| missing | 必要な要求、要件、仕様、章、キー、参照がない |
-| inconsistency | 成果物間で矛盾している |
-| unsupported | 上位根拠のない記述がある |
-| ambiguous | 判断、実装、検証に必要な具体性が不足している |
-| unverifiable | pass / fail を判断できない |
-| risk | 後続作業、公開、運用で問題になる可能性がある |
+| 種別             | 内容                                             |
+| ---------------- | ------------------------------------------------ |
+| missing          | 必要な要求、要件、仕様、章、キー、参照がない     |
+| inconsistency    | 成果物間で矛盾している                           |
+| unsupported      | 上位根拠のない記述がある                         |
+| ambiguous        | 判断、実装、検証に必要な具体性が不足している     |
+| unverifiable     | pass / fail を判断できない                       |
+| risk             | 後続作業、公開、運用で問題になる可能性がある     |
 | policy_violation | 禁止事項、承認責任、agent 委任境界に違反している |
 
 ## 10. PJR への転記
@@ -362,9 +362,9 @@ review plan に従って対象成果物をレビューしてください。
 
 ## 14. 関連ドキュメント
 
-| ドキュメント | 役割 |
-| ------------ | ---- |
-| `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する |
-| `dct-*.yaml` | 成果物、依存関係、done_criteria（text / roles / viewpoint）を定義する |
-| `*-rulebook.md` | 成果物ごとの構造、必須項目、禁止事項を定義する |
-| `pjr-index.md` | プロジェクト管理対象の未解決事項、課題、リスク、変更要求、決定を管理する |
+| ドキュメント                | 役割                                                                     |
+| --------------------------- | ------------------------------------------------------------------------ |
+| `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する         |
+| `dct-*.yaml`                | 成果物、依存関係、done_criteria（text / roles / viewpoint）を定義する    |
+| `*-rulebook.md`             | 成果物ごとの構造、必須項目、禁止事項を定義する                           |
+| `pjr-index.md`              | プロジェクト管理対象の未解決事項、課題、リスク、変更要求、決定を管理する |

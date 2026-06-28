@@ -102,26 +102,26 @@ Business Process Specification (BPS) Documentation Rules
 ```ts
 // トリガー: bes-stock-amount-updated「在庫数更新」イベント
 type 在庫数更新イベント = {
-  商品ID: string
-  新在庫数: number
-}
+  商品ID: string;
+  新在庫数: number;
+};
 
 function 在庫数更新イベントを処理する(イベント: 在庫数更新イベント) {
-  const 商品 = 商品を取得する(イベント.商品ID) // 概念レベルでOK
-  const 在庫 = 在庫を取得する(イベント.商品ID)
+  const 商品 = 商品を取得する(イベント.商品ID); // 概念レベルでOK
+  const 在庫 = 在庫を取得する(イベント.商品ID);
   if (!商品.定番商品フラグ) {
-    return // 定番以外は自動発注対象外
+    return; // 定番以外は自動発注対象外
   }
 
   // 以下はサンプルでビジネスルールを直書き
-  const 発注数量 = 商品.発注点 - 在庫.現在在庫数
+  const 発注数量 = 商品.発注点 - 在庫.現在在庫数;
   if (発注数量 > 0) {
     const 発注候補 = {
       商品ID: 商品.商品ID,
       発注数量: 発注数量,
-    }
+    };
     // 出力: bes-order-candidate-generated「発注候補生成」イベント発火
-    発注候補生成イベントを発火する(発注候補)
+    発注候補生成イベントを発火する(発注候補);
   }
 }
 ```
@@ -220,26 +220,26 @@ based_on: [bes-stock-amount-updated]
 // 例外処理は省略
 // トリガー: bes-stock-amount-updated「在庫数更新」イベント
 type 在庫数更新イベント = {
-  商品ID: string
-  新在庫数: number
-}
+  商品ID: string;
+  新在庫数: number;
+};
 
 function 在庫数更新イベントを処理する(イベント: 在庫数更新イベント) {
-  const 商品 = 商品を取得する(イベント.商品ID)
-  const 在庫 = 在庫を取得する(イベント.商品ID)
+  const 商品 = 商品を取得する(イベント.商品ID);
+  const 在庫 = 在庫を取得する(イベント.商品ID);
   if (!商品.定番商品フラグ) {
-    return // 定番以外は自動発注対象外
+    return; // 定番以外は自動発注対象外
   }
 
   // 以下はサンプルでビジネスルールを直書き
-  const 発注数量 = 商品.発注点 - 在庫.現在在庫数
+  const 発注数量 = 商品.発注点 - 在庫.現在在庫数;
   if (発注数量 > 0) {
     const 発注候補 = {
       商品ID: 商品.商品ID,
       発注数量: 発注数量,
-    }
+    };
     // 出力: bes-order-candidate-generated「発注候補生成」イベント発火
-    発注候補生成イベントを発火する(発注候補)
+    発注候補生成イベントを発火する(発注候補);
   }
 }
 ```

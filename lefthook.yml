@@ -9,7 +9,7 @@ pre-commit:
     # 整形は prettier に一本化する。
     # md 以外（ts/js/json/yaml）は prettier で整形する。
     format:
-      glob: '*.{ts,js,mjs,cjs,json,yaml,yml}'
+      glob: "*.{ts,js,mjs,cjs,json,yaml,yml}"
       run: npx prettier --write {staged_files}
       stage_fixed: true
 
@@ -17,12 +17,12 @@ pre-commit:
     # 別コマンドかつ parallel:true だと「整形前の内容を検査して誤ブロック」する
     # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
     markdown:
-      glob: '*.md'
+      glob: "*.md"
       run: npx prettier --write {staged_files} && npx markdownlint {staged_files}
       stage_fixed: true
 
     test:
-      glob: '{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}'
+      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
       run: npm test
 
     # *-build 系は generated/ 配下を出力するが、generated/ は gitignore 済みの生成物
@@ -30,23 +30,23 @@ pre-commit:
     # commit には含めない（stage_fixed しない）。ローカル作業ツリーを最新化しつつ、
     # 入力変更でビルドが壊れていないことの確認も兼ねる。
     register-build:
-      glob: 'docs/**/pjr-index.md'
+      glob: "docs/**/pjr-index.md"
       run: npx tsx src/specdojo.ts register build
 
     catalog-build:
-      glob: 'docs/**/dct-*.yaml'
+      glob: "docs/**/dct-*.yaml"
       run: npx tsx src/specdojo.ts catalog build
 
     catalog-validate:
-      glob: 'docs/ja/projects/**'
+      glob: "docs/ja/projects/**"
       run: npx tsx src/specdojo.ts catalog validate
 
     exec-build:
-      glob: 'docs/**/sch-*.yaml'
+      glob: "docs/**/sch-*.yaml"
       run: npx tsx src/specdojo.ts exec build
 
     index-build:
-      glob: 'docs/**'
+      glob: "docs/**"
       # doc-index.json も gitignore 済みの生成物。再生成のみ行い commit に含めない。
       run: npx tsx src/specdojo.ts index build
 

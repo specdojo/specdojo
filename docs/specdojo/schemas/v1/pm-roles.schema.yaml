@@ -32,7 +32,7 @@ properties:
 
   status:
     type: string
-    enum: [ draft, ready, deprecated ]
+    enum: [draft, ready, deprecated]
     description: "Document status."
 
   based_on:
@@ -81,7 +81,7 @@ $defs:
         type: string
         description: "Role code used in WBS / Schedule owner and pm-members.yaml role
           fields."
-        enum: [ "PO", "PM", "BA", "ARC", "DEV", "QE", "UX", "OPS" ]
+        enum: ["PO", "PM", "BA", "ARC", "DEV", "QE", "UX", "OPS"]
 
       name:
         type: string

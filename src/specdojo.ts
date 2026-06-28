@@ -1,30 +1,30 @@
 #!/usr/bin/env node
-import { Command } from 'commander'
-import { registerConfigCommands, registerProjectCommands } from './specdojo-config.js'
-import { registerExecCommands } from './exec.js'
-import { registerCatalogCommands } from './catalog.js'
-import { registerScheduleCommands } from './schedule.js'
-import { registerIndexCommands } from './index-command.js'
-import { registerRegisterCommands } from './register.js'
-import { registerWatchCommand } from './watch.js'
-import { registerBuildCommand } from './build-command.js'
+import { Command } from "commander";
+import { registerConfigCommands, registerProjectCommands } from "./specdojo-config.js";
+import { registerExecCommands } from "./exec.js";
+import { registerCatalogCommands } from "./catalog.js";
+import { registerScheduleCommands } from "./schedule.js";
+import { registerIndexCommands } from "./index-command.js";
+import { registerRegisterCommands } from "./register.js";
+import { registerWatchCommand } from "./watch.js";
+import { registerBuildCommand } from "./build-command.js";
 
 async function main(): Promise<void> {
-  const program = new Command()
+  const program = new Command();
 
-  program.name('specdojo').description('SpecDojo helper CLI').version('0.4.0')
+  program.name("specdojo").description("SpecDojo helper CLI").version("0.4.0");
 
-  registerConfigCommands(program)
-  registerProjectCommands(program)
-  registerExecCommands(program)
-  registerCatalogCommands(program)
-  registerScheduleCommands(program)
-  registerIndexCommands(program)
-  registerRegisterCommands(program)
-  registerWatchCommand(program)
-  registerBuildCommand(program)
+  registerConfigCommands(program);
+  registerProjectCommands(program);
+  registerExecCommands(program);
+  registerCatalogCommands(program);
+  registerScheduleCommands(program);
+  registerIndexCommands(program);
+  registerRegisterCommands(program);
+  registerWatchCommand(program);
+  registerBuildCommand(program);
 
-  await program.parseAsync(process.argv)
+  await program.parseAsync(process.argv);
 }
 
-void main()
+void main();

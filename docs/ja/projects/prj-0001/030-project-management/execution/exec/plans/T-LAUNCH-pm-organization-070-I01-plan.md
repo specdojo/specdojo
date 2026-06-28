@@ -6,7 +6,7 @@ task_id: T-LAUNCH-pm-organization-070-I01
 name: 磨き込み
 mode: edit
 status: ready
-project_id: 
+project_id: prj-0001
 owner: PO
 on_critical_path: true
 approach: fully-guided

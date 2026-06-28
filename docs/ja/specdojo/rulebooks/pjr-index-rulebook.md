@@ -112,13 +112,13 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 
 「派生ビュー」章には、必要に応じて以下のリンク群を含める。
 
-| 区分                        | リンク先例                              | 必須 |
-| --------------------------- | --------------------------------------- | ---- |
-| 登録簿内の台帳ビュー（状態別・優先度別・担当者別） | `./generated/pjr-views.md` | 任意 |
-| controls 全体のリスク登録簿 | `../generated/pm-risk-register.md`      | 任意 |
-| controls 全体の課題ログ     | `../generated/pm-issue-log.md`          | 任意 |
-| controls 全体の変更要求ログ | `../generated/pm-change-request-log.md` | 任意 |
-| controls 全体の決定記録     | `../generated/pm-decision-log.md`       | 任意 |
+| 区分                                               | リンク先例                              | 必須 |
+| -------------------------------------------------- | --------------------------------------- | ---- |
+| 登録簿内の台帳ビュー（状態別・優先度別・担当者別） | `./generated/pjr-views.md`              | 任意 |
+| controls 全体のリスク登録簿                        | `../generated/pm-risk-register.md`      | 任意 |
+| controls 全体の課題ログ                            | `../generated/pm-issue-log.md`          | 任意 |
+| controls 全体の変更要求ログ                        | `../generated/pm-change-request-log.md` | 任意 |
+| controls 全体の決定記録                            | `../generated/pm-decision-log.md`       | 任意 |
 
 ## 6. 記述ガイド
 

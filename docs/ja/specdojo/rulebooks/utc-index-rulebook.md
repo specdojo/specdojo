@@ -2,7 +2,6 @@
 id: utc-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # 単体テストカタログ概要 作成ルール

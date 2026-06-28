@@ -79,14 +79,14 @@ flowchart LR
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 - メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
-| 項目       | 説明                                                                                          | 必須 |
-| ---------- | --------------------------------------------------------------------------------------------- | ---- |
-| id         | `<project-id>:prj-comparison-of-alternatives`                                                 | ○    |
-| type       | `project` 固定                                                                                | ○    |
-| status     | `draft` / `ready` / `deprecated`                                                              | ○    |
-| rulebook   | `prj-comparison-of-alternatives-rulebook`                                                     | ○    |
+| 項目       | 説明                                                                          | 必須 |
+| ---------- | ----------------------------------------------------------------------------- | ---- |
+| id         | `<project-id>:prj-comparison-of-alternatives`                                 | ○    |
+| type       | `project` 固定                                                                | ○    |
+| status     | `draft` / `ready` / `deprecated`                                              | ○    |
+| rulebook   | `prj-comparison-of-alternatives-rulebook`                                     | ○    |
 | based_on   | 比較判断に直接使用するスコープ、課題と解決アプローチ、前提・制約などの文書 ID | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                                                                       | 任意 |
+| supersedes | 置き換え対象の旧文書 ID                                                       | 任意 |
 
 ### 4.2. 推奨ルール
 

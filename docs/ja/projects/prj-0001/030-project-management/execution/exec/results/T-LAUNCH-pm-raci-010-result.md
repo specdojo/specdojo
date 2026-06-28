@@ -11,6 +11,7 @@ completed_at: "2026-06-25T12:18:58.817Z"
 agent: codex-expert-edit-agent
 approach: bootstrap
 ---
+
 ## 1. 実施内容
 
 - `pm-raci.md` を、PM が計画化、進捗確認、課題・リスク管理、変更要求、決定記録への接続に使える RACI として更新した。

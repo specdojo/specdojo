@@ -5,7 +5,6 @@ status: draft # draft | ready | deprecated
 part_of: [] # 分割している場合の上位ドキュメント
 based_on: [] # 技術的・定義的な土台（根拠）へのリンク
 supersedes: [] # 置き換え関係（古仕様→新仕様）
-
 ---
 
 # 商品の概念状態遷移図 (AS-IS)

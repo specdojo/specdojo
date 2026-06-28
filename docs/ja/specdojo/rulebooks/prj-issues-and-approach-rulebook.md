@@ -86,14 +86,14 @@ flowchart LR
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 - メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
-| 項目       | 説明                                               | 必須 |
-| ---------- | -------------------------------------------------- | ---- |
-| id         | `<project-id>:prj-issues-and-approach`             | ○    |
-| type       | `project` 固定                                     | ○    |
-| status     | `draft` / `ready` / `deprecated`                   | ○    |
-| rulebook   | `prj-issues-and-approach-rulebook`                 | ○    |
-| based_on   | プロジェクト概要、スコープ、上位方針など           | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                            | 任意 |
+| 項目       | 説明                                     | 必須 |
+| ---------- | ---------------------------------------- | ---- |
+| id         | `<project-id>:prj-issues-and-approach`   | ○    |
+| type       | `project` 固定                           | ○    |
+| status     | `draft` / `ready` / `deprecated`         | ○    |
+| rulebook   | `prj-issues-and-approach-rulebook`       | ○    |
+| based_on   | プロジェクト概要、スコープ、上位方針など | 任意 |
+| supersedes | 置き換え対象の旧文書 ID                  | 任意 |
 
 ### 4.2. 推奨ルール
 
@@ -168,8 +168,8 @@ supersedes: []
 
 推奨（解決策候補表）:
 
-| 案ID | 案 | 概要 | 期待できる効果 |
-| ---- | -- | ---- | -------------- |
+| 案ID | 案  | 概要 | 期待できる効果 |
+| ---- | --- | ---- | -------------- |
 
 ### 6.5. 採用アプローチと理由
 

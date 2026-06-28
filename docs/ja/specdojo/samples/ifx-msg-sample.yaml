@@ -49,7 +49,7 @@ components:
       properties:
         specversion:
           type: string
-          enum: [ "1.0" ]
+          enum: ["1.0"]
         type:
           type: string
           example: com.kinuya.stock.changed.v1
@@ -75,7 +75,7 @@ components:
     StockChangedData:
       type: object
       additionalProperties: false
-      required: [ product_id, delta, current_quantity ]
+      required: [product_id, delta, current_quantity]
       properties:
         product_id:
           type: string

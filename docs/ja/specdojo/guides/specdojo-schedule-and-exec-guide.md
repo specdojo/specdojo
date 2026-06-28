@@ -430,14 +430,14 @@ specdojo exec run \
 
 分割コマンドは独自のJSONや状態ファイルを作成しない。後続コマンドに必要な情報は、毎回次の標準情報から導出する。
 
-| 情報                 | 導出元                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| worktree名・ブランチ | project 修飾 task ID `<project-id>:<task-id>` から `<slug>` と `exec/<slug>` を導出    |
-| worktreeパス         | `git worktree list --porcelain` からexecブランチを検索                                |
-| plan/resultパス      | SpecDojoのproject設定とtask IDから導出                       |
-| claim actor          | `exec/events/` のclaim eventから導出                         |
-| 比較起点commit       | `git merge-base HEAD <exec-branch>` で都度導出               |
-| merge先              | `worktree merge` を実行した現在のブランチ                    |
+| 情報                 | 導出元                                                                              |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| worktree名・ブランチ | project 修飾 task ID `<project-id>:<task-id>` から `<slug>` と `exec/<slug>` を導出 |
+| worktreeパス         | `git worktree list --porcelain` からexecブランチを検索                              |
+| plan/resultパス      | SpecDojoのproject設定とtask IDから導出                                              |
+| claim actor          | `exec/events/` のclaim eventから導出                                                |
+| 比較起点commit       | `git merge-base HEAD <exec-branch>` で都度導出                                      |
+| merge先              | `worktree merge` を実行した現在のブランチ                                           |
 
 比較起点commitは保存しない。rootブランチが別タスクのcheckpoint commitやmergeによって進んだ場合も、現在のrootブランチとexecブランチの共通祖先を `git merge-base` で再計算する。
 

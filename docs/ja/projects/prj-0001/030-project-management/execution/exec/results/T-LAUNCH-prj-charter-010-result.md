@@ -11,6 +11,7 @@ completed_at: "2026-06-25T12:59:05.727Z"
 agent: codex
 approach: bootstrap
 ---
+
 ## 1. 実施内容
 
 - `prj-charter` を [[prj-0001:prj-overview|プロジェクト概要]] と [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]] に照合し、PO が立ち上げ認可、権限委譲、公開判断、予算枠を判断できる構成へ再整理した。

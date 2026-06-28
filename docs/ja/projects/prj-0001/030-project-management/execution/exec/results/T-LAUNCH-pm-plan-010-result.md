@@ -9,7 +9,9 @@ plan_ref: exec/plans/T-LAUNCH-pm-plan-010-plan.md
 started_at: "2026-06-25T12:25:22.402Z"
 completed_at: "2026-06-25T14:26:26.329Z"
 agent: codex-expert-edit-agent
----## 1. 実施内容
+---
+
+## 1. 実施内容
 
 - `pm-plan.md` を、PM が計画化、進捗確認、課題・リスク管理、変更管理に使う上位計画として更新した。
 - `pm-organization.md` と `pm-roles.yaml` に合わせ、採用 Role code と実行主体の割り当てを分離した。

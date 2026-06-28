@@ -1,36 +1,8 @@
-# セミコロンを付けない（JS/TS の話なので Markdown にはあまり影響なし）
-semi: false
+# 整形は原則 Prettier のデフォルトに従う（オプションを増やさない方針）。
+# 既定では JS/TS/YAML/frontmatter/JSON すべて二重引用符・セミコロンありに統一される。
 
-# 文字列はシングルクォート（これも主に JS/TS 用）
-singleQuote: true
-
-# 1 行の最大幅
-# Markdown の proseWrap を preserve にしているので、
-# 主にコードブロックやオブジェクトリテラルに効きます
-printWidth: 100
-
-# インデント
-tabWidth: 2
-useTabs: false
-
-# 末尾のカンマをつける範囲
-trailingComma: "es5"
-
-# アロー関数引数のカッコ
-arrowParens: "avoid"
-
-# Markdown の文章の折り返しを勝手に変えない
-# → 日本語文章だと勝手に改行されると読みにくくなるので "preserve" 推奨
+# 日本語の文章を勝手に折り返さない（既定値だが意図を明示）。
 proseWrap: "preserve"
 
-# 改行コード
-endOfLine: "lf"
-
-# 対象にするファイル（必要なら調整）
-overrides:
-  # YAML は二重引用符に統一する。
-  # 二重引用符は任意の文字列（改行・エスケープを含む）を表現でき、prettier の既定でもある。
-  # singleQuote: true だとエスケープが必要な値だけ二重に切り替わり、ファイル内で混在するため。
-  - files: ["*.yaml", "*.yml"]
-    options:
-      singleQuote: false
+# 1 行の最大幅だけは好みで広げる（不要なら削除＝既定 80）。
+printWidth: 100

@@ -1,6 +1,6 @@
 ---
 paths:
-  - 'tests/**/*.test.ts'
+  - "tests/**/*.test.ts"
 ---
 
 # Vitest Rules

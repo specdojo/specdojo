@@ -2,7 +2,6 @@
 id: etc-rules
 type: rulebook
 status: draft
-
 ---
 
 # 外部結合テストカタログ 対象別 作成ルール

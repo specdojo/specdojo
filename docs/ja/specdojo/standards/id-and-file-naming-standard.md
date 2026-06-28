@@ -181,7 +181,7 @@ prj-0001:prj-overview
 YAML frontmatter では、コロンを含むIDはクォートで囲む。
 
 ```yaml
-id: 'prj-0001:prj-overview'
+id: "prj-0001:prj-overview"
 ```
 
 ### 3.3. ファイル名
@@ -192,12 +192,12 @@ id: 'prj-0001:prj-overview'
 
 例:
 
-| 種別             | ドキュメントID                     | ファイル名                     |
-| ---------------- | ---------------------------------- | ------------------------------ |
-| プロダクト文書   | `bdd-sales-management`             | `bdd-sales-management.md`      |
-| プロダクト文書   | `sysd-index`                       | `sysd-index.md`                |
-| プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
-| プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
+| 種別             | ドキュメントID                          | ファイル名                          |
+| ---------------- | --------------------------------------- | ----------------------------------- |
+| プロダクト文書   | `bdd-sales-management`                  | `bdd-sales-management.md`           |
+| プロダクト文書   | `sysd-index`                            | `sysd-index.md`                     |
+| プロジェクト文書 | `prj-0001:prj-overview`                 | `prj-overview.md`                   |
+| プロジェクト文書 | `prj-0001:prj-charter`                  | `prj-charter.md`                    |
 | プロジェクト文書 | `prj-0001:sch-track-project-definition` | `sch-track-project-definition.yaml` |
 
 ### 3.4. 参照ルール
@@ -213,10 +213,10 @@ id: 'prj-0001:prj-overview'
 
 ```yaml
 ---
-id: 'prj-0001:prj-charter'
+id: "prj-0001:prj-charter"
 based_on:
-  - 'prj-overview' # prj-0001:prj-overview として解決
-  - 'sysd-index' # プロダクト文書ID
+  - "prj-overview" # prj-0001:prj-overview として解決
+  - "sysd-index" # プロダクト文書ID
 ---
 ```
 
@@ -392,14 +392,14 @@ SpecDojo では、frontmatter の `id` には正規IDを使用する。
 #### 5.1.1. 正規ID
 
 ```yaml
-id: 'prj-0001:prj-charter'
+id: "prj-0001:prj-charter"
 ```
 
 #### 5.1.2. ローカル参照
 
 ```yaml
 based_on:
-  - 'prj-overview'
+  - "prj-overview"
 ```
 
 この場合、参照元が `prj-0001` に属していれば、次のIDとして解決する。
@@ -425,9 +425,9 @@ prj-0001:prj-overview
 
 ```yaml
 ---
-id: 'prj-0001:prj-charter'
+id: "prj-0001:prj-charter"
 based_on:
-  - 'prj-overview'
+  - "prj-overview"
 ---
 ```
 
@@ -437,7 +437,7 @@ based_on:
 
 ```yaml
 based_on:
-  - 'prj-0002:prj-overview'
+  - "prj-0002:prj-overview"
 ```
 
 ### 5.5. プロダクト文書への参照
@@ -446,8 +446,8 @@ based_on:
 
 ```yaml
 based_on:
-  - 'bdd-sales-management'
-  - 'sysd-index'
+  - "bdd-sales-management"
+  - "sysd-index"
 ```
 
 ### 5.6. 生成物・検証結果での参照
@@ -458,14 +458,14 @@ based_on:
 
 ```yaml
 based_on:
-  - 'prj-overview'
+  - "prj-overview"
 ```
 
 生成物・検証結果での正規化後:
 
 ```yaml
 based_on:
-  - 'prj-0001:prj-overview'
+  - "prj-0001:prj-overview"
 ```
 
 ## 6. ファイル命名ルール
@@ -487,13 +487,13 @@ based_on:
 
 例:
 
-| 種別             | ドキュメントID                     | 既定のファイル名               |
-| ---------------- | ---------------------------------- | ------------------------------ |
-| プロダクト文書   | `sysd-index`                       | `sysd-index.md`                |
-| プロダクト文書   | `bdd-common`                       | `bdd-common.md`                |
-| プロジェクト文書 | `prj-0001:prj-overview`            | `prj-overview.md`              |
-| プロジェクト文書 | `prj-0001:prj-charter`             | `prj-charter.md`               |
-| 成果物カタログ   | `prj-0001:dct-index`               | `dct-index.md`                 |
+| 種別             | ドキュメントID                          | 既定のファイル名                    |
+| ---------------- | --------------------------------------- | ----------------------------------- |
+| プロダクト文書   | `sysd-index`                            | `sysd-index.md`                     |
+| プロダクト文書   | `bdd-common`                            | `bdd-common.md`                     |
+| プロジェクト文書 | `prj-0001:prj-overview`                 | `prj-overview.md`                   |
+| プロジェクト文書 | `prj-0001:prj-charter`                  | `prj-charter.md`                    |
+| 成果物カタログ   | `prj-0001:dct-index`                    | `dct-index.md`                      |
 | プロジェクト文書 | `prj-0001:sch-track-project-definition` | `sch-track-project-definition.yaml` |
 
 ### 6.3. namespace とディレクトリの関係
@@ -510,7 +510,7 @@ frontmatter:
 
 ```yaml
 ---
-id: 'prj-0001:prj-overview'
+id: "prj-0001:prj-overview"
 type: project
 status: draft
 ---
@@ -539,7 +539,7 @@ prj-0001:prj-overview.md
 
 ```yaml
 ---
-id: 'prj-0001:prj-overview'
+id: "prj-0001:prj-overview"
 ---
 ```
 
@@ -590,7 +590,7 @@ OK:
 NG:
 
 ```yaml
-id: 'prj-0001:010-prj-overview'
+id: "prj-0001:010-prj-overview"
 ```
 
 ## 7. IDとファイル名の対応ルール
@@ -630,7 +630,7 @@ id: 'prj-0001:010-prj-overview'
 
 ```yaml
 supersedes:
-  - 'prj-0001:api-order-get-v1'
+  - "prj-0001:api-order-get-v1"
 ```
 
 ## 10. NGパターン
@@ -673,12 +673,12 @@ supersedes:
 
 ### 12.1. 予約語と日本語名称との対応（更新）
 
-| 予約語          | 日本語名称           | 意味・役割                         |
-| --------------- | -------------------- | ---------------------------------- |
-| **index**       | **入口（全体）**     | 系列の入口（要点SSOT＋関連リンク） |
-| **common**      | **共通**             | 横断的・共有定義                   |
-| **rules**       | **ルール**           | 強制ルール・規約（逸脱不可）       |
-| **guide**       | **ガイド**           | 案内・読み物・使い方               |
+| 予約語     | 日本語名称       | 意味・役割                         |
+| ---------- | ---------------- | ---------------------------------- |
+| **index**  | **入口（全体）** | 系列の入口（要点SSOT＋関連リンク） |
+| **common** | **共通**         | 横断的・共有定義                   |
+| **rules**  | **ルール**       | 強制ルール・規約（逸脱不可）       |
+| **guide**  | **ガイド**       | 案内・読み物・使い方               |
 
 ## 13. 主要な英語用語と日本語用語との対応
 

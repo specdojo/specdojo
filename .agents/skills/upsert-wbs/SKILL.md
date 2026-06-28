@@ -1,6 +1,6 @@
 ---
 name: upsert-wbs
-description: '`wbs-strategy-<domain>.md` を入力として `wbs-<domain>.yaml` を新規作成または更新する Skill です。'
+description: "`wbs-strategy-<domain>.md` を入力として `wbs-<domain>.yaml` を新規作成または更新する Skill です。"
 ---
 
 # SKILL: upsert-wbs

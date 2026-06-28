@@ -1,99 +1,92 @@
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs'
-import { dirname, join, relative } from 'node:path'
-import yaml from 'js-yaml'
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+import yaml from "js-yaml";
 
 export interface DocIndex {
-  version: number
+  version: number;
   // id → path  or  id → "path:line" (1-based line number)
-  entries: Record<string, string>
+  entries: Record<string, string>;
 }
 
-export type DocIndexReplaceFormat = 'markdown' | 'path'
-export type DocIndexMissingMode = 'keep' | 'marker'
+export type DocIndexReplaceFormat = "markdown" | "path";
+export type DocIndexMissingMode = "keep" | "marker";
 
 export interface ReplaceDocIndexRefsOptions {
-  format?: DocIndexReplaceFormat
-  missing?: DocIndexMissingMode
-  missingMarker?: string
+  format?: DocIndexReplaceFormat;
+  missing?: DocIndexMissingMode;
+  missingMarker?: string;
 }
 
 export interface ReplaceDocIndexRefsResult {
-  content: string
-  missingIds: string[]
+  content: string;
+  missingIds: string[];
 }
 
 export interface CollectFromSpec {
-  field: string       // dot-separated path to the target field (arrays auto-expanded)
-                      // e.g. "viewpoints", "groups.deliverables"
-  id_field?: string   // field name for the document ID within each item (default: 'id')
-  path_field?: string // field name for the referenced path within each item (default: 'path')
+  field: string; // dot-separated path to the target field (arrays auto-expanded)
+  // e.g. "viewpoints", "groups.deliverables"
+  id_field?: string; // field name for the document ID within each item (default: 'id')
+  path_field?: string; // field name for the referenced path within each item (default: 'path')
 }
 
 export interface NestedIdFile {
-  file: string                   // relative to repo root
-  collect_from: CollectFromSpec[]
+  file: string; // relative to repo root
+  collect_from: CollectFromSpec[];
 }
 
 export interface IndexConfig {
-  nested_id_files?: NestedIdFile[]
+  nested_id_files?: NestedIdFile[];
 }
 
-const SKIP_DIRS = new Set(['node_modules', 'dist', '.vitepress', 'out'])
-const FILE_RE = /\.(md|yaml|yml)$/
-const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/
+const SKIP_DIRS = new Set(["node_modules", "dist", ".vitepress", "out"]);
+const FILE_RE = /\.(md|yaml|yml)$/;
+const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
 
 // ---- Markdown frontmatter ----------------------------------------------
 
 function extractIdFromMarkdown(content: string): string | undefined {
-  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!fm) return undefined
-  const m = fm[1].match(/^id:\s*(.+)$/m)
-  return m?.[1]?.trim()
+  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!fm) return undefined;
+  const m = fm[1].match(/^id:\s*(.+)$/m);
+  return m?.[1]?.trim();
 }
 
 // ---- YAML top-level id -------------------------------------------------
 
 function extractTopLevelId(parsed: unknown): string | undefined {
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return undefined
-  const id = (parsed as Record<string, unknown>)['id']
-  if (typeof id === 'string' && DOC_ID_RE.test(id)) return id
-  return undefined
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return undefined;
+  const id = (parsed as Record<string, unknown>)["id"];
+  if (typeof id === "string" && DOC_ID_RE.test(id)) return id;
+  return undefined;
 }
 
 // ---- dot-path resolution (arrays auto-expanded) ------------------------
 
 function resolveItems(obj: unknown, fieldPath: string[]): unknown[] {
   if (fieldPath.length === 0) {
-    if (Array.isArray(obj)) return obj
-    return obj !== undefined && obj !== null ? [obj] : []
+    if (Array.isArray(obj)) return obj;
+    return obj !== undefined && obj !== null ? [obj] : [];
   }
   if (Array.isArray(obj)) {
-    return obj.flatMap(item => resolveItems(item, fieldPath))
+    return obj.flatMap((item) => resolveItems(item, fieldPath));
   }
-  if (!obj || typeof obj !== 'object') return []
-  const [head, ...rest] = fieldPath
-  return resolveItems((obj as Record<string, unknown>)[head], rest)
+  if (!obj || typeof obj !== "object") return [];
+  const [head, ...rest] = fieldPath;
+  return resolveItems((obj as Record<string, unknown>)[head], rest);
 }
 
 // ---- line number lookup ------------------------------------------------
 
-function findIdLine(lines: string[], id: string, idKey: string = 'id'): number {
-  const escaped = idKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const re = new RegExp(`^\\s*(?:-\\s+)?${escaped}:\\s*(.+)$`)
+function findIdLine(lines: string[], id: string, idKey: string = "id"): number {
+  const escaped = idKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`^\\s*(?:-\\s+)?${escaped}:\\s*(.+)$`);
   for (let i = 0; i < lines.length; i++) {
-    const m = lines[i].match(re)
+    const m = lines[i].match(re);
     if (m && m[1].trim() === id) {
-      return i + 1 // 1-based
+      return i + 1; // 1-based
     }
   }
-  return 1
+  return 1;
 }
 
 // ---- nested id collection ----------------------------------------------
@@ -105,29 +98,29 @@ function collectFromFields(
   content: string,
   entries: Record<string, string>,
 ): void {
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return
-  const lines = content.split('\n')
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return;
+  const lines = content.split("\n");
 
   for (const spec of specs) {
-    const idKey = spec.id_field ?? 'id'
-    const pathKey = spec.path_field ?? 'path'
-    const fieldPath = spec.field.split('.')
-    const items = resolveItems(parsed, fieldPath)
+    const idKey = spec.id_field ?? "id";
+    const pathKey = spec.path_field ?? "path";
+    const fieldPath = spec.field.split(".");
+    const items = resolveItems(parsed, fieldPath);
 
     for (const item of items) {
-      if (!item || typeof item !== 'object' || Array.isArray(item)) continue
-      const itemRec = item as Record<string, unknown>
-      const id = itemRec[idKey]
-      if (typeof id !== 'string' || !DOC_ID_RE.test(id)) continue
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const itemRec = item as Record<string, unknown>;
+      const id = itemRec[idKey];
+      if (typeof id !== "string" || !DOC_ID_RE.test(id)) continue;
 
-      const pathVal = itemRec[pathKey]
-      if (typeof pathVal === 'string' && pathVal.trim()) {
+      const pathVal = itemRec[pathKey];
+      if (typeof pathVal === "string" && pathVal.trim()) {
         // item has a path field → use it as the index target (no line number)
-        entries[id] = pathVal.trim()
+        entries[id] = pathVal.trim();
       } else {
         // no path → use file:line
-        const lineNum = findIdLine(lines, id, idKey)
-        entries[id] = `${fileRelPath}:${lineNum}`
+        const lineNum = findIdLine(lines, id, idKey);
+        entries[id] = `${fileRelPath}:${lineNum}`;
       }
     }
   }
@@ -143,22 +136,22 @@ function scanFile(
   nestedMap: Map<string, CollectFromSpec[]>,
 ): void {
   // nestedMap keys are rootDir-relative; entry values are repoRoot-relative
-  const scanRelPath = relative(rootDir, fullPath).replace(/\\/g, '/')
-  const entryPath = relative(repoRoot, fullPath).replace(/\\/g, '/')
-  const isYaml = !fullPath.endsWith('.md')
+  const scanRelPath = relative(rootDir, fullPath).replace(/\\/g, "/");
+  const entryPath = relative(repoRoot, fullPath).replace(/\\/g, "/");
+  const isYaml = !fullPath.endsWith(".md");
   try {
-    const content = readFileSync(fullPath, 'utf8')
+    const content = readFileSync(fullPath, "utf8");
     if (isYaml) {
-      const parsed = yaml.load(content)
-      const topId = extractTopLevelId(parsed)
-      if (topId) entries[topId] = entryPath
-      const specs = nestedMap.get(scanRelPath)
+      const parsed = yaml.load(content);
+      const topId = extractTopLevelId(parsed);
+      if (topId) entries[topId] = entryPath;
+      const specs = nestedMap.get(scanRelPath);
       if (specs && specs.length > 0) {
-        collectFromFields(parsed, specs, entryPath, content, entries)
+        collectFromFields(parsed, specs, entryPath, content, entries);
       }
     } else {
-      const id = extractIdFromMarkdown(content)
-      if (id && DOC_ID_RE.test(id)) entries[id] = entryPath
+      const id = extractIdFromMarkdown(content);
+      if (id && DOC_ID_RE.test(id)) entries[id] = entryPath;
     }
   } catch {
     // ignore unreadable / unparseable files
@@ -172,46 +165,46 @@ function walkDir(
   entries: Record<string, string>,
   nestedMap: Map<string, CollectFromSpec[]>,
 ): void {
-  let items: string[]
+  let items: string[];
   try {
-    items = readdirSync(dir)
+    items = readdirSync(dir);
   } catch {
-    return
+    return;
   }
   for (const item of items) {
-    if (item.startsWith('.')) continue
-    if (SKIP_DIRS.has(item) || item === 'generated') continue
-    const full = join(dir, item)
-    let st
+    if (item.startsWith(".")) continue;
+    if (SKIP_DIRS.has(item) || item === "generated") continue;
+    const full = join(dir, item);
+    let st;
     try {
-      st = statSync(full)
+      st = statSync(full);
     } catch {
-      continue
+      continue;
     }
     if (st.isDirectory()) {
-      walkDir(full, rootDir, repoRoot, entries, nestedMap)
+      walkDir(full, rootDir, repoRoot, entries, nestedMap);
     } else if (FILE_RE.test(item)) {
-      scanFile(full, rootDir, repoRoot, entries, nestedMap)
+      scanFile(full, rootDir, repoRoot, entries, nestedMap);
     }
   }
 }
 
 // ---- config loading ----------------------------------------------------
 
-const DEFAULT_CONFIG_REL = '.specdojo/index-config.yaml'
+const DEFAULT_CONFIG_REL = ".specdojo/index-config.yaml";
 
 function loadIndexConfig(repoRoot: string, configPath?: string): IndexConfig {
-  const p = join(repoRoot, configPath ?? DEFAULT_CONFIG_REL)
-  if (!existsSync(p)) return {}
+  const p = join(repoRoot, configPath ?? DEFAULT_CONFIG_REL);
+  if (!existsSync(p)) return {};
   try {
-    const parsed = yaml.load(readFileSync(p, 'utf8'))
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-      return parsed as IndexConfig
+    const parsed = yaml.load(readFileSync(p, "utf8"));
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      return parsed as IndexConfig;
     }
   } catch {
     // ignore
   }
-  return {}
+  return {};
 }
 
 // ---- public API --------------------------------------------------------
@@ -224,22 +217,22 @@ export function collectDocIndexEntries(
   repoRoot: string,
   configPath?: string,
 ): Record<string, string> {
-  const config = loadIndexConfig(repoRoot, configPath)
+  const config = loadIndexConfig(repoRoot, configPath);
 
   // Build nested map: scan-root-relative path → collect_from specs
   // Config `file` values are repo-root-relative; convert to scan-root-relative
-  const nestedMap = new Map<string, CollectFromSpec[]>()
+  const nestedMap = new Map<string, CollectFromSpec[]>();
   for (const entry of config.nested_id_files ?? []) {
     if (entry.file && Array.isArray(entry.collect_from)) {
-      const absPath = join(repoRoot, entry.file)
-      const scanRelPath = relative(rootDir, absPath).replace(/\\/g, '/')
-      nestedMap.set(scanRelPath, entry.collect_from)
+      const absPath = join(repoRoot, entry.file);
+      const scanRelPath = relative(rootDir, absPath).replace(/\\/g, "/");
+      nestedMap.set(scanRelPath, entry.collect_from);
     }
   }
 
-  const entries: Record<string, string> = {}
-  walkDir(rootDir, rootDir, repoRoot, entries, nestedMap)
-  return entries
+  const entries: Record<string, string> = {};
+  walkDir(rootDir, rootDir, repoRoot, entries, nestedMap);
+  return entries;
 }
 
 export function buildDocIndex(
@@ -248,55 +241,52 @@ export function buildDocIndex(
   repoRoot: string,
   configPath?: string,
 ): { count: number } {
-  const entries = collectDocIndexEntries(rootDir, repoRoot, configPath)
+  const entries = collectDocIndexEntries(rootDir, repoRoot, configPath);
 
   const index: DocIndex = {
     version: 1,
     entries,
-  }
+  };
 
-  const outDir = dirname(outputPath)
-  if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
-  writeFileSync(outputPath, JSON.stringify(index, null, 2), 'utf8')
-  return { count: Object.keys(entries).length }
+  const outDir = dirname(outputPath);
+  if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
+  writeFileSync(outputPath, JSON.stringify(index, null, 2), "utf8");
+  return { count: Object.keys(entries).length };
 }
 
-export function lookupDocIndex(
-  id: string,
-  indexPath: string,
-): string | undefined {
-  if (!existsSync(indexPath)) return undefined
-  const data = JSON.parse(readFileSync(indexPath, 'utf8')) as DocIndex
-  return data.entries[id]
+export function lookupDocIndex(id: string, indexPath: string): string | undefined {
+  if (!existsSync(indexPath)) return undefined;
+  const data = JSON.parse(readFileSync(indexPath, "utf8")) as DocIndex;
+  return data.entries[id];
 }
 
 function readDocIndex(indexPath: string): DocIndex | null {
-  if (!existsSync(indexPath)) return null
-  return JSON.parse(readFileSync(indexPath, 'utf8')) as DocIndex
+  if (!existsSync(indexPath)) return null;
+  return JSON.parse(readFileSync(indexPath, "utf8")) as DocIndex;
 }
 
 function replacementForResolvedRef(
   id: string,
   title: string | undefined,
   path: string,
-  format: DocIndexReplaceFormat
+  format: DocIndexReplaceFormat,
 ): string {
   // path format: emit the canonical repo-relative path verbatim (tools/agents open it
   // from the run CWD). markdown format: emit a root-relative link (leading slash) so it
   // resolves against the site/repo root from any file depth (VitePress resolves a leading
   // slash against srcDir); a bare relative link would break from nested documents.
-  if (format === 'path') return path
-  const href = path.startsWith('/') ? path : `/${path}`
-  return `[${title ?? id}](${href})`
+  if (format === "path") return path;
+  const href = path.startsWith("/") ? path : `/${path}`;
+  return `[${title ?? id}](${href})`;
 }
 
 function parseWikiRef(rawRef: string): { id: string; title?: string } {
-  const separatorIndex = rawRef.indexOf('|')
-  if (separatorIndex === -1) return { id: rawRef.trim() }
+  const separatorIndex = rawRef.indexOf("|");
+  if (separatorIndex === -1) return { id: rawRef.trim() };
 
-  const id = rawRef.slice(0, separatorIndex).trim()
-  const title = rawRef.slice(separatorIndex + 1).trim()
-  return title ? { id, title } : { id }
+  const id = rawRef.slice(0, separatorIndex).trim();
+  const title = rawRef.slice(separatorIndex + 1).trim();
+  return title ? { id, title } : { id };
 }
 
 // Matches, in priority order: a fenced code block (3+ backticks/tildes), an
@@ -304,35 +294,35 @@ function parseWikiRef(rawRef: string): { id: string; title?: string } {
 // are captured so [[id]] examples inside them stay literal (a rulebook may show
 // the [[id|title]] syntax in backticks; those are not real references).
 const DOC_REF_OR_CODE =
-  /(?<fence>(?<fenceMarker>`{3,}|~{3,})[\s\S]*?\k<fenceMarker>)|(?<inline>(?<inlineMarker>`+)[\s\S]*?\k<inlineMarker>)|\[\[(?<ref>[^\]\n]+)\]\]/g
+  /(?<fence>(?<fenceMarker>`{3,}|~{3,})[\s\S]*?\k<fenceMarker>)|(?<inline>(?<inlineMarker>`+)[\s\S]*?\k<inlineMarker>)|\[\[(?<ref>[^\]\n]+)\]\]/g;
 
 export function replaceDocIndexRefs(
   content: string,
   indexPath: string,
-  options: ReplaceDocIndexRefsOptions = {}
+  options: ReplaceDocIndexRefsOptions = {},
 ): ReplaceDocIndexRefsResult {
-  const format = options.format ?? 'markdown'
-  const missing = options.missing ?? 'keep'
-  const missingMarker = options.missingMarker ?? '_MISSING_'
-  const index = readDocIndex(indexPath)
-  const missingIds = new Set<string>()
+  const format = options.format ?? "markdown";
+  const missing = options.missing ?? "keep";
+  const missingMarker = options.missingMarker ?? "_MISSING_";
+  const index = readDocIndex(indexPath);
+  const missingIds = new Set<string>();
 
   const replaced = content.replace(DOC_REF_OR_CODE, (match, ...args) => {
-    const groups = args[args.length - 1] as Record<string, string | undefined>
+    const groups = args[args.length - 1] as Record<string, string | undefined>;
     // Code regions: keep verbatim so [[id]] inside them is neither rewritten nor
     // reported as missing.
-    if (groups.ref === undefined) return match
+    if (groups.ref === undefined) return match;
 
-    const { id, title } = parseWikiRef(groups.ref)
-    const path = index?.entries[id]
-    if (path) return replacementForResolvedRef(id, title, path, format)
+    const { id, title } = parseWikiRef(groups.ref);
+    const path = index?.entries[id];
+    if (path) return replacementForResolvedRef(id, title, path, format);
 
-    missingIds.add(id)
-    return missing === 'marker' ? missingMarker : match
-  })
+    missingIds.add(id);
+    return missing === "marker" ? missingMarker : match;
+  });
 
   return {
     content: replaced,
     missingIds: [...missingIds],
-  }
+  };
 }

@@ -2,7 +2,6 @@
 id: utc-rules
 type: rulebook
 status: draft
-
 ---
 
 # 単体テストカタログ 対象別 作成ルール

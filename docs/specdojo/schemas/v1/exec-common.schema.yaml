@@ -1,6 +1,6 @@
 # exec-common.schema.yaml
-$schema: 'https://json-schema.org/draft/2020-12/schema'
-title: 'SpecDojo Exec common definitions'
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Exec common definitions"
 description: >
   Shared type definitions for sch-strategy, exec-defaults, pm-members.yaml, and exec
   plan/result frontmatter. Centralizes common execution enums and field definitions
@@ -10,16 +10,16 @@ $defs:
   TaskId:
     type: string
     minLength: 1
-    description: 'Task ID generated from the schedule (e.g., T-LAUNCH-prj-overview-020).'
+    description: "Task ID generated from the schedule (e.g., T-LAUNCH-prj-overview-020)."
 
   ProjectId:
     type: string
     minLength: 1
-    description: 'Project ID (e.g., prj-0001).'
+    description: "Project ID (e.g., prj-0001)."
 
   TaskMode:
     type: string
-    enum: ['edit', 'review']
+    enum: ["edit", "review"]
     description: >
       Work mode for generated plan/result files.
       edit: deliverable creation or update.
@@ -27,20 +27,20 @@ $defs:
 
   AgentNickname:
     type: string
-    description: 'Agent nickname assigned to this task.'
+    description: "Agent nickname assigned to this task."
 
   Approach:
     type: string
     enum:
       [
-        'fully-guided',
-        'recipe-guided',
-        'freeform',
-        'bootstrap',
-        'rulebook-maintenance',
-        'recipe-maintenance',
-        'sample-maintenance',
-        'template-maintenance',
+        "fully-guided",
+        "recipe-guided",
+        "freeform",
+        "bootstrap",
+        "rulebook-maintenance",
+        "recipe-maintenance",
+        "sample-maintenance",
+        "template-maintenance",
       ]
     description: >
       How the task is carried out. fully-guided/recipe-guided/freeform describe how strictly
@@ -54,7 +54,7 @@ $defs:
 
   Proficiency:
     type: string
-    enum: ['low', 'normal', 'high', 'expert']
+    enum: ["low", "normal", "high", "expert"]
     description: >
       Agent proficiency level used for task assignment and brief generation.
       low:    lightweight tasks such as formatting or template filling.

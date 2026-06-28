@@ -2,7 +2,6 @@
 id: stc-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # 総合テストカタログ 概要 作成ルール

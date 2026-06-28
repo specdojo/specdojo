@@ -30,7 +30,7 @@ phase_sets:
     - id: enrich
       name: 調査・補強
       execution: agent
-      task_suffix: '020'
+      task_suffix: "020"
       mode: edit
       proficiency: normal
 
@@ -38,7 +38,7 @@ phase_sets:
     - id: enrich
       name: 調査・深掘り
       execution: agent
-      task_suffix: '020'
+      task_suffix: "020"
       mode: edit
       capabilities: [web_search]
       proficiency: expert
@@ -47,7 +47,7 @@ phase_sets:
     - id: review
       name: レビュー
       execution: human
-      task_suffix: '030'
+      task_suffix: "030"
       mode: review
 ```
 
@@ -73,7 +73,7 @@ members:
     capabilities: []
     proficiency: normal
     priority: 10
-    command: 'opencode run --agent edit-agent'
+    command: "opencode run --agent edit-agent"
 
   - nickname: expert-web-agent
     display_name: Expert Web Agent
@@ -83,7 +83,7 @@ members:
     capabilities: [web_search]
     proficiency: expert
     priority: 10
-    command: 'opencode run --agent expert-web-agent'
+    command: "opencode run --agent expert-web-agent"
 ```
 
 `exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にする。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含める。候補のソートキーは次の順に評価する。
@@ -128,8 +128,8 @@ flowchart LR
 rate_limit_detection:
   exit_codes: [1]
   stderr_patterns:
-    - 'rate limit'
-    - '429'
+    - "rate limit"
+    - "429"
 
 rate_limit_policy:
   on_non_critical:

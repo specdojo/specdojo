@@ -15,25 +15,25 @@ project_id: _PROJECT_ID_
 roles:
   - code: PO
     name: Project Owner
-    project_note: '_TODO_: 最終判断、スコープ、優先順位、公開方針に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 最終判断、スコープ、優先順位、公開方針に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: PM
     name: Project Manager
-    project_note: '_TODO_: 計画、進捗、課題、リスク管理に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 計画、進捗、課題、リスク管理に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: BA
     name: Business Analyst
-    project_note: '_TODO_: 業務整理、利用者視点、受入条件に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 業務整理、利用者視点、受入条件に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: ARC
     name: Architect
-    project_note: '_TODO_: 構成方針、技術制約、成果物間整合に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 構成方針、技術制約、成果物間整合に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: DEV
     name: Developer
-    project_note: '_TODO_: 実装、設定、技術的変更作業に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 実装、設定、技術的変更作業に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: QE
     name: Quality Engineer
-    project_note: '_TODO_: 品質基準、レビュー観点、整合性確認に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 品質基準、レビュー観点、整合性確認に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: UX
     name: UX / Documentation Designer
-    project_note: '_TODO_: 利用者導線、説明、文書体験に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: 利用者導線、説明、文書体験に関するプロジェクト固有の扱いを 1 行で記述する。"
   - code: OPS
     name: Operations / Release Manager
-    project_note: '_TODO_: リリース、公開、配布、変更管理に関するプロジェクト固有の扱いを 1 行で記述する。'
+    project_note: "_TODO_: リリース、公開、配布、変更管理に関するプロジェクト固有の扱いを 1 行で記述する。"

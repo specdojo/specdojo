@@ -8,16 +8,16 @@
 // Combine a parent base_path with a section's base_path. A child starting with `/`
 // re-anchors at the repo root (parent is discarded), otherwise it is appended.
 export function resolveBasePath(parentBase: string, childBase: string | undefined): string {
-  if (!childBase) return parentBase
-  if (childBase.startsWith('/')) return childBase.slice(1)
-  return parentBase ? `${parentBase}/${childBase}` : childBase
+  if (!childBase) return parentBase;
+  if (childBase.startsWith("/")) return childBase.slice(1);
+  return parentBase ? `${parentBase}/${childBase}` : childBase;
 }
 
 // Resolve a deliverable item's document path against its section base_path. An item
 // without a path resolves to the section base; an item path starting with `/` re-anchors
 // at the repo root.
 export function resolveDeliverablePath(sectionBase: string, itemPath: string | undefined): string {
-  if (!itemPath) return sectionBase
-  if (itemPath.startsWith('/')) return itemPath.slice(1)
-  return sectionBase ? `${sectionBase}/${itemPath}` : itemPath
+  if (!itemPath) return sectionBase;
+  if (itemPath.startsWith("/")) return itemPath.slice(1);
+  return sectionBase ? `${sectionBase}/${itemPath}` : itemPath;
 }

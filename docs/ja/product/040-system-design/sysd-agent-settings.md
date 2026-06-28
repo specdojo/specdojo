@@ -35,11 +35,11 @@ SpecDojo CLI、agent、`specdojo exec run` の3層に責務を分割する。
 
 ## 2. 責務分担
 
-| 層                  | 責務                                                                                                                  | 責務外                             |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| SpecDojo CLI        | validate / build / ready 抽出 / claim / complete / block / lock / CPM / plan・result・event 管理                      | タスク内容の理解・成果物の編集     |
-| agent               | plan の解釈・関連文書の読解・成果物の編集またはレビュー・done criteria の確認・result の記録                         | タスク取得の排他制御・並列起動制御 |
-| `specdojo exec run` | member 選択・フェーズ順序・並列数・worktree 割り当て・agent 起動・終了状態の反映・フォールバック                     | タスク内容の判断・成果物の編集     |
+| 層                  | 責務                                                                                             | 責務外                             |
+| ------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| SpecDojo CLI        | validate / build / ready 抽出 / claim / complete / block / lock / CPM / plan・result・event 管理 | タスク内容の理解・成果物の編集     |
+| agent               | plan の解釈・関連文書の読解・成果物の編集またはレビュー・done criteria の確認・result の記録     | タスク取得の排他制御・並列起動制御 |
+| `specdojo exec run` | member 選択・フェーズ順序・並列数・worktree 割り当て・agent 起動・終了状態の反映・フォールバック | タスク内容の判断・成果物の編集     |
 
 各 agent CLI の設定ファイル、モデル、権限、非対話コマンドは子設計の責務とする。
 
@@ -90,15 +90,15 @@ agent CLI 固有のプロジェクト設定と agent 定義の配置は子設計
 
 `pm-members.yaml` の member は、少なくとも次の属性で実行方法と選択条件を定義する。
 
-| 項目                 | 用途                                                        |
-| -------------------- | ----------------------------------------------------------- |
-| `nickname`           | event、result、`--by` で使用する member 識別子              |
-| `type`               | agent member は `agent`                                     |
-| `mode`               | `edit` または `review`                                      |
-| `capabilities`       | Web 検索など、その member が提供できる能力                  |
-| `proficiency`        | `normal` または `expert`                                    |
-| `priority`           | 同じ要件に適合する member 間の優先順位                      |
-| `command`            | `specdojo exec run` が起動する非対話コマンド                |
+| 項目                 | 用途                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| `nickname`           | event、result、`--by` で使用する member 識別子               |
+| `type`               | agent member は `agent`                                      |
+| `mode`               | `edit` または `review`                                       |
+| `capabilities`       | Web 検索など、その member が提供できる能力                   |
+| `proficiency`        | `normal` または `expert`                                     |
+| `priority`           | 同じ要件に適合する member 間の優先順位                       |
+| `command`            | `specdojo exec run` が起動する非対話コマンド                 |
 | `scheduler_strategy` | ready task の選択順序。edit は `critical-first` を基本とする |
 
 `command` には agent CLI と実行オプションだけを定義する。plan 本文はコマンド文字列へ埋め込まず、`specdojo exec run` から標準入力で渡す。
@@ -175,12 +175,12 @@ rate_limit_policy:
 
 外部エージェント CLI はすべて devcontainer 内で使用する。Host Mac や接続元端末にはインストールせず、更新も devcontainer 内で行う。対象と導入方法は次のとおりである。
 
-| CLI                | devcontainer 内の導入方法                               | 実行中コンテナを最新化するコマンド                         |
-| ------------------ | -------------------------------------------------------- | ---------------------------------------------------------- |
-| Codex              | `.devcontainer/Dockerfile` の npm global install         | `sudo npm install -g @openai/codex@latest`                 |
-| OpenCode           | `.devcontainer/Dockerfile` の npm global install         | `sudo npm install -g opencode-ai@latest`                   |
-| Claude Code        | `claude-code` Dev Container Feature                      | `claude update`                                            |
-| GitHub Copilot CLI | `copilot-cli` Dev Container Feature                      | `copilot update`                                           |
+| CLI                | devcontainer 内の導入方法                        | 実行中コンテナを最新化するコマンド         |
+| ------------------ | ------------------------------------------------ | ------------------------------------------ |
+| Codex              | `.devcontainer/Dockerfile` の npm global install | `sudo npm install -g @openai/codex@latest` |
+| OpenCode           | `.devcontainer/Dockerfile` の npm global install | `sudo npm install -g opencode-ai@latest`   |
+| Claude Code        | `claude-code` Dev Container Feature              | `claude update`                            |
+| GitHub Copilot CLI | `copilot-cli` Dev Container Feature              | `copilot update`                           |
 
 更新コマンドの詳細は、[Codex CLI](https://github.com/openai/codex#installing-and-running-codex-cli)、[OpenCode CLI](https://dev.opencode.ai/docs/cli/)、[Claude Code CLI reference](https://code.claude.com/docs/en/cli-usage)、[GitHub Copilot CLI command reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference) を参照する。
 

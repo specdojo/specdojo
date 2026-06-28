@@ -2,7 +2,6 @@
 id: sysd-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # システム設計-全体構成 作成ルール

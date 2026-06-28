@@ -8,16 +8,16 @@ description: "pjr-index.md の本文構造を検証するスキーマ"
 # 正準（英語）列名をキーとし、許容するエイリアスの配列を値とする。
 # テーブルヘッダーがエイリアスに一致する場合、対応する英語名として扱う。
 column_aliases:
-  status:      [ステータス]
-  title:       [タイトル]
+  status: [ステータス]
+  title: [タイトル]
   description: [説明]
-  type:        [分類]
-  priority:    [優先度]
-  owner:       [担当]
-  due:         [期限]
-  completed:   [完了日]
-  conclusion:  [結論]
-  ticket:      [個票]
+  type: [分類]
+  priority: [優先度]
+  owner: [担当]
+  due: [期限]
+  completed: [完了日]
+  conclusion: [結論]
+  ticket: [個票]
 
 sections:
   - heading:

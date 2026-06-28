@@ -24,7 +24,7 @@ properties:
 
   status:
     type: string
-    enum: [ "draft", "ready", "deprecated" ]
+    enum: ["draft", "ready", "deprecated"]
 
   version:
     type: string
@@ -177,7 +177,7 @@ properties:
               type: array
             fields:
               type: array
-          required: [ "key_fields", "fields" ]
+          required: ["key_fields", "fields"]
           allOf:
             # key_fields の各値が fields[].physical_name に存在すること
             - $comment: "Check each key_field is present in fields[].physical_name"
@@ -194,7 +194,7 @@ properties:
                     properties:
                       physical_name:
                         type: string
-              required: [ "key_fields", "fields" ]
+              required: ["key_fields", "fields"]
               allOf:
                 - $comment: "Ensure each key_fields item is contained in fields[].physical_name"
                   properties:
@@ -202,7 +202,7 @@ properties:
                       type: array
                       items:
                         type: string
-                  required: [ "key_fields" ]
+                  required: ["key_fields"]
                   allOf:
                     - $comment: "for each key in key_fields check membership"
                       type: object
@@ -222,4 +222,4 @@ properties:
                         properties:
                           physical_name:
                             type: string
-                  required: [ "fields" ]
+                  required: ["fields"]

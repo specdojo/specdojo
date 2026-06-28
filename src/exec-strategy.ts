@@ -1,90 +1,90 @@
-import { listFilesRecursive, readYaml } from './exec-shared.js'
-import type { Approach, Proficiency, TaskMode } from './exec-types.js'
+import { listFilesRecursive, readYaml } from "./exec-shared.js";
+import type { Approach, Proficiency, TaskMode } from "./exec-types.js";
 import {
   extractPhaseSuffix,
   normalizePhaseSetSelection,
   phaseSetNames,
   type PhaseSetSelection,
-} from './schedule-phase-sets.js'
+} from "./schedule-phase-sets.js";
 
 type StrategyPhaseMinimal = {
-  id: string
-  task_suffix: string
-  execution?: 'agent' | 'human'
-  mode?: unknown
-  approach?: unknown
-  capabilities?: unknown
-  proficiency?: unknown
-}
+  id: string;
+  task_suffix: string;
+  execution?: "agent" | "human";
+  mode?: unknown;
+  approach?: unknown;
+  capabilities?: unknown;
+  proficiency?: unknown;
+};
 
 type StrategyPhaseOverrideMinimal = {
-  phase: string
-  execution?: 'agent' | 'human'
-  mode?: unknown
-  approach?: unknown
-  capabilities?: unknown
-  proficiency?: unknown
-}
+  phase: string;
+  execution?: "agent" | "human";
+  mode?: unknown;
+  approach?: unknown;
+  capabilities?: unknown;
+  proficiency?: unknown;
+};
 
 type StrategyMinimal = {
-  track?: string
-  phase_sets?: Record<string, StrategyPhaseMinimal[]>
-  default_phase_sets?: PhaseSetSelection
-  default_phase_set?: string
+  track?: string;
+  phase_sets?: Record<string, StrategyPhaseMinimal[]>;
+  default_phase_sets?: PhaseSetSelection;
+  default_phase_set?: string;
   owner_rules?: Array<{
-    local_ids: string[]
-    owner?: string
-    phase_sets?: PhaseSetSelection
-    phase_set?: string
-    phase_overrides?: StrategyPhaseOverrideMinimal[]
-  }>
-}
+    local_ids: string[];
+    owner?: string;
+    phase_sets?: PhaseSetSelection;
+    phase_set?: string;
+    phase_overrides?: StrategyPhaseOverrideMinimal[];
+  }>;
+};
 
 export type PhaseModeIndex = {
-  localIdToPhaseSets: Map<string, string[]>
-  phaseSetSuffixToMode: Map<string, TaskMode>
-  phaseSetSuffixToExecution: Map<string, 'agent' | 'human'>
-  suffixToExecution: Map<string, 'agent' | 'human'>
-  phaseSetSuffixToApproach: Map<string, Approach>
-  phaseSetSuffixToCapabilities: Map<string, string[]>
-  phaseSetSuffixToProficiency: Map<string, Proficiency>
-  localIdSuffixToExecution: Map<string, 'agent' | 'human'>
-  localIdSuffixToMode: Map<string, TaskMode>
-  localIdSuffixToApproach: Map<string, Approach>
-  localIdSuffixToCapabilities: Map<string, string[]>
-  localIdSuffixToProficiency: Map<string, Proficiency>
-  defaultMode: TaskMode
-}
+  localIdToPhaseSets: Map<string, string[]>;
+  phaseSetSuffixToMode: Map<string, TaskMode>;
+  phaseSetSuffixToExecution: Map<string, "agent" | "human">;
+  suffixToExecution: Map<string, "agent" | "human">;
+  phaseSetSuffixToApproach: Map<string, Approach>;
+  phaseSetSuffixToCapabilities: Map<string, string[]>;
+  phaseSetSuffixToProficiency: Map<string, Proficiency>;
+  localIdSuffixToExecution: Map<string, "agent" | "human">;
+  localIdSuffixToMode: Map<string, TaskMode>;
+  localIdSuffixToApproach: Map<string, Approach>;
+  localIdSuffixToCapabilities: Map<string, string[]>;
+  localIdSuffixToProficiency: Map<string, Proficiency>;
+  defaultMode: TaskMode;
+};
 
 function isTaskMode(value: unknown): value is TaskMode {
-  return value === 'edit' || value === 'review'
+  return value === "edit" || value === "review";
 }
 
 function isApproach(value: unknown): value is Approach {
   return (
-    value === 'fully-guided' ||
-    value === 'recipe-guided' ||
-    value === 'freeform' ||
-    value === 'bootstrap' ||
-    value === 'rulebook-maintenance' ||
-    value === 'recipe-maintenance' ||
-    value === 'sample-maintenance' ||
-    value === 'template-maintenance'
-  )
+    value === "fully-guided" ||
+    value === "recipe-guided" ||
+    value === "freeform" ||
+    value === "bootstrap" ||
+    value === "rulebook-maintenance" ||
+    value === "recipe-maintenance" ||
+    value === "sample-maintenance" ||
+    value === "template-maintenance"
+  );
 }
 
 function isProficiency(value: unknown): value is Proficiency {
-  return value === 'low' || value === 'normal' || value === 'high' || value === 'expert'
+  return value === "low" || value === "normal" || value === "high" || value === "expert";
 }
 
-function isExecution(value: unknown): value is 'agent' | 'human' {
-  return value === 'agent' || value === 'human'
+function isExecution(value: unknown): value is "agent" | "human" {
+  return value === "agent" || value === "human";
 }
 
 function asCapabilityList(value: unknown): string[] | undefined {
-  if (!Array.isArray(value)) return undefined
-  const caps = value.filter((item): item is string => typeof item === 'string' && item.length > 0)
-  return caps.length === value.length ? caps : undefined
+  if (!Array.isArray(value)) return undefined;
+  const caps = value.filter((item): item is string => typeof item === "string" && item.length > 0);
+  return caps.length === value.length ? caps : undefined;
 }
 
 /**
@@ -94,79 +94,81 @@ function asCapabilityList(value: unknown): string[] | undefined {
  * capabilities, and proficiency.
  */
 export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
-  const localIdToPhaseSets = new Map<string, string[]>()
+  const localIdToPhaseSets = new Map<string, string[]>();
   // phaseSet:phaseId → suffix (used to cross-reference phase_overrides)
-  const phaseSetPhaseIdToSuffix = new Map<string, string>()
-  const phaseSetSuffixToMode = new Map<string, TaskMode>()
-  const phaseSetSuffixToExecution = new Map<string, 'agent' | 'human'>()
+  const phaseSetPhaseIdToSuffix = new Map<string, string>();
+  const phaseSetSuffixToMode = new Map<string, TaskMode>();
+  const phaseSetSuffixToExecution = new Map<string, "agent" | "human">();
   // Global suffix → execution: suffixes are unique within a track across all phase sets.
-  const suffixToExecution = new Map<string, 'agent' | 'human'>()
+  const suffixToExecution = new Map<string, "agent" | "human">();
   // phaseSet:suffix → approach declared on the phase definition (phase_sets[phaseSet][phase])
-  const phaseSetSuffixToApproach = new Map<string, Approach>()
-  const phaseSetSuffixToCapabilities = new Map<string, string[]>()
-  const phaseSetSuffixToProficiency = new Map<string, Proficiency>()
+  const phaseSetSuffixToApproach = new Map<string, Approach>();
+  const phaseSetSuffixToCapabilities = new Map<string, string[]>();
+  const phaseSetSuffixToProficiency = new Map<string, Proficiency>();
   // localId:suffix → metadata declared on owner_rules[].phase_overrides (takes precedence)
-  const localIdSuffixToExecution = new Map<string, 'agent' | 'human'>()
-  const localIdSuffixToMode = new Map<string, TaskMode>()
-  const localIdSuffixToApproach = new Map<string, Approach>()
-  const localIdSuffixToCapabilities = new Map<string, string[]>()
-  const localIdSuffixToProficiency = new Map<string, Proficiency>()
+  const localIdSuffixToExecution = new Map<string, "agent" | "human">();
+  const localIdSuffixToMode = new Map<string, TaskMode>();
+  const localIdSuffixToApproach = new Map<string, Approach>();
+  const localIdSuffixToCapabilities = new Map<string, string[]>();
+  const localIdSuffixToProficiency = new Map<string, Proficiency>();
 
-  const defaultMode: TaskMode = 'edit'
+  const defaultMode: TaskMode = "edit";
 
   // Step 1: Read sch-strategy files to build phase maps and phase metadata.
-  const strategyFiles = listFilesRecursive(schedulePath).filter(f =>
-    /sch-strategy-.*\.(yaml|yml)$/.test(f)
-  )
+  const strategyFiles = listFilesRecursive(schedulePath).filter((f) =>
+    /sch-strategy-.*\.(yaml|yml)$/.test(f),
+  );
 
   for (const filePath of strategyFiles) {
-    let strategy: StrategyMinimal
+    let strategy: StrategyMinimal;
     try {
-      strategy = readYaml(filePath) as StrategyMinimal
+      strategy = readYaml(filePath) as StrategyMinimal;
     } catch {
-      continue
+      continue;
     }
-    if (!strategy?.phase_sets) continue
+    if (!strategy?.phase_sets) continue;
 
-    let defaultPhaseSetNames: string[]
+    let defaultPhaseSetNames: string[];
     try {
       defaultPhaseSetNames = phaseSetNames(
         normalizePhaseSetSelection(
           strategy.default_phase_sets,
-          strategy.default_phase_set ? [strategy.default_phase_set] : Object.keys(strategy.phase_sets)
-        )
-      )
+          strategy.default_phase_set
+            ? [strategy.default_phase_set]
+            : Object.keys(strategy.phase_sets),
+        ),
+      );
     } catch {
-      continue
+      continue;
     }
 
     for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
-      if (!Array.isArray(phases)) continue
+      if (!Array.isArray(phases)) continue;
       for (const phase of phases) {
-        if (!phase || typeof phase !== 'object') continue
-        const p = phase as Record<string, unknown>
-        const suffix = String(p.task_suffix ?? '')
-        const phaseId = String(p.id ?? '')
+        if (!phase || typeof phase !== "object") continue;
+        const p = phase as Record<string, unknown>;
+        const suffix = String(p.task_suffix ?? "");
+        const phaseId = String(p.id ?? "");
         if (suffix && phaseId) {
-          phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix)
+          phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix);
           phaseSetSuffixToMode.set(
             `${phaseSetName}:${suffix}`,
-            isTaskMode(p.mode) ? p.mode : defaultMode
-          )
+            isTaskMode(p.mode) ? p.mode : defaultMode,
+          );
           // execution: human or agent (default: agent)
-          const execution = p.execution === 'human' ? 'human' : 'agent'
-          phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution)
+          const execution = p.execution === "human" ? "human" : "agent";
+          phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution);
           // Global map: suffix is unique within a track across all phase sets
-          suffixToExecution.set(suffix, execution)
+          suffixToExecution.set(suffix, execution);
           if (isApproach(p.approach)) {
-            phaseSetSuffixToApproach.set(`${phaseSetName}:${suffix}`, p.approach)
+            phaseSetSuffixToApproach.set(`${phaseSetName}:${suffix}`, p.approach);
           }
-          const capabilities = asCapabilityList(p.capabilities)
+          const capabilities = asCapabilityList(p.capabilities);
           if (capabilities !== undefined) {
-            phaseSetSuffixToCapabilities.set(`${phaseSetName}:${suffix}`, capabilities)
+            phaseSetSuffixToCapabilities.set(`${phaseSetName}:${suffix}`, capabilities);
           }
           if (isProficiency(p.proficiency)) {
-            phaseSetSuffixToProficiency.set(`${phaseSetName}:${suffix}`, p.proficiency)
+            phaseSetSuffixToProficiency.set(`${phaseSetName}:${suffix}`, p.proficiency);
           }
         }
       }
@@ -174,30 +176,32 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
 
     if (Array.isArray(strategy.owner_rules)) {
       for (const rule of strategy.owner_rules) {
-        let rulePhaseSetNames: string[]
+        let rulePhaseSetNames: string[];
         try {
           rulePhaseSetNames = rule.phase_sets
             ? phaseSetNames(normalizePhaseSetSelection(rule.phase_sets, []))
             : rule.phase_set
               ? [rule.phase_set]
-              : defaultPhaseSetNames
+              : defaultPhaseSetNames;
         } catch {
-          continue
+          continue;
         }
-        const localIds = rule.local_ids ?? []
+        const localIds = rule.local_ids ?? [];
         for (const localId of localIds) {
-          localIdToPhaseSets.set(localId, rulePhaseSetNames)
+          localIdToPhaseSets.set(localId, rulePhaseSetNames);
         }
 
         for (const override of rule.phase_overrides ?? []) {
-          if (!override || typeof override !== 'object') continue
-          const overrideExecution = isExecution(override.execution) ? override.execution : undefined
-          const overrideMode = isTaskMode(override.mode) ? override.mode : undefined
-          const overrideApproach = isApproach(override.approach) ? override.approach : undefined
-          const overrideCapabilities = asCapabilityList(override.capabilities)
+          if (!override || typeof override !== "object") continue;
+          const overrideExecution = isExecution(override.execution)
+            ? override.execution
+            : undefined;
+          const overrideMode = isTaskMode(override.mode) ? override.mode : undefined;
+          const overrideApproach = isApproach(override.approach) ? override.approach : undefined;
+          const overrideCapabilities = asCapabilityList(override.capabilities);
           const overrideProficiency = isProficiency(override.proficiency)
             ? override.proficiency
-            : undefined
+            : undefined;
           if (
             overrideExecution === undefined &&
             overrideMode === undefined &&
@@ -205,26 +209,26 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
             overrideCapabilities === undefined &&
             overrideProficiency === undefined
           )
-            continue
+            continue;
 
           for (const phaseSetName of rulePhaseSetNames) {
-            const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`)
-            if (!suffix) continue
+            const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`);
+            if (!suffix) continue;
             for (const localId of localIds) {
               if (overrideExecution !== undefined) {
-                localIdSuffixToExecution.set(`${localId}:${suffix}`, overrideExecution)
+                localIdSuffixToExecution.set(`${localId}:${suffix}`, overrideExecution);
               }
               if (overrideMode !== undefined) {
-                localIdSuffixToMode.set(`${localId}:${suffix}`, overrideMode)
+                localIdSuffixToMode.set(`${localId}:${suffix}`, overrideMode);
               }
               if (overrideApproach !== undefined) {
-                localIdSuffixToApproach.set(`${localId}:${suffix}`, overrideApproach)
+                localIdSuffixToApproach.set(`${localId}:${suffix}`, overrideApproach);
               }
               if (overrideCapabilities !== undefined) {
-                localIdSuffixToCapabilities.set(`${localId}:${suffix}`, overrideCapabilities)
+                localIdSuffixToCapabilities.set(`${localId}:${suffix}`, overrideCapabilities);
               }
               if (overrideProficiency !== undefined) {
-                localIdSuffixToProficiency.set(`${localId}:${suffix}`, overrideProficiency)
+                localIdSuffixToProficiency.set(`${localId}:${suffix}`, overrideProficiency);
               }
             }
           }
@@ -247,7 +251,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     localIdSuffixToCapabilities,
     localIdSuffixToProficiency,
     defaultMode,
-  }
+  };
 }
 
 /**
@@ -259,28 +263,28 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
 export function resolveOwnerForLocalId(
   schedulePath: string,
   localId: string,
-  track?: string
+  track?: string,
 ): string | undefined {
   const strategyFiles = listFilesRecursive(schedulePath)
-    .filter(f => /sch-strategy-.*\.(yaml|yml)$/.test(f))
-    .sort()
+    .filter((f) => /sch-strategy-.*\.(yaml|yml)$/.test(f))
+    .sort();
 
   for (const filePath of strategyFiles) {
-    let strategy: StrategyMinimal
+    let strategy: StrategyMinimal;
     try {
-      strategy = readYaml(filePath) as StrategyMinimal
+      strategy = readYaml(filePath) as StrategyMinimal;
     } catch {
-      continue
+      continue;
     }
-    if (track && strategy.track !== track) continue
-    if (!Array.isArray(strategy.owner_rules)) continue
+    if (track && strategy.track !== track) continue;
+    if (!Array.isArray(strategy.owner_rules)) continue;
     for (const rule of strategy.owner_rules) {
-      const owner = typeof rule.owner === 'string' ? rule.owner.trim() : ''
-      if (!owner) continue
-      if ((rule.local_ids ?? []).includes(localId)) return owner
+      const owner = typeof rule.owner === "string" ? rule.owner.trim() : "";
+      if (!owner) continue;
+      if ((rule.local_ids ?? []).includes(localId)) return owner;
     }
   }
-  return undefined
+  return undefined;
 }
 
 /**
@@ -296,23 +300,23 @@ export function resolveApproach(
   taskId: string,
   index: PhaseModeIndex,
   phaseSuffix?: string,
-  phaseSet?: string
+  phaseSet?: string,
 ): Approach | undefined {
-  if (!localId) return undefined
-  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
-  if (!suffix) return undefined
+  if (!localId) return undefined;
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return undefined;
 
-  const overridden = index.localIdSuffixToApproach.get(`${localId}:${suffix}`)
-  if (overridden !== undefined) return overridden
+  const overridden = index.localIdSuffixToApproach.get(`${localId}:${suffix}`);
+  if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const approach = index.phaseSetSuffixToApproach.get(`${phaseSet}:${suffix}`)
-      if (approach !== undefined) return approach
+      const approach = index.phaseSetSuffixToApproach.get(`${phaseSet}:${suffix}`);
+      if (approach !== undefined) return approach;
     }
   }
-  return undefined
+  return undefined;
 }
 
 /**
@@ -327,26 +331,26 @@ export function resolveTaskMode(
   taskId: string,
   index: PhaseModeIndex,
   phaseSuffix?: string,
-  phaseSet?: string
+  phaseSet?: string,
 ): TaskMode {
   if (localId) {
-    const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
+    const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
     if (suffix) {
-      const overridden = index.localIdSuffixToMode.get(`${localId}:${suffix}`)
-      if (overridden !== undefined) return overridden
+      const overridden = index.localIdSuffixToMode.get(`${localId}:${suffix}`);
+      if (overridden !== undefined) return overridden;
     }
 
-    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
+    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
     if (phaseSets) {
       if (suffix) {
         for (const phaseSet of phaseSets) {
-          const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`)
-          if (mode !== undefined) return mode
+          const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`);
+          if (mode !== undefined) return mode;
         }
       }
     }
   }
-  return index.defaultMode
+  return index.defaultMode;
 }
 
 /**
@@ -361,23 +365,23 @@ export function resolveTaskCapabilities(
   taskId: string,
   index: PhaseModeIndex,
   phaseSuffix?: string,
-  phaseSet?: string
+  phaseSet?: string,
 ): string[] {
-  if (!localId) return []
-  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
-  if (!suffix) return []
+  if (!localId) return [];
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return [];
 
-  const overridden = index.localIdSuffixToCapabilities.get(`${localId}:${suffix}`)
-  if (overridden !== undefined) return overridden
+  const overridden = index.localIdSuffixToCapabilities.get(`${localId}:${suffix}`);
+  if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const capabilities = index.phaseSetSuffixToCapabilities.get(`${phaseSet}:${suffix}`)
-      if (capabilities !== undefined) return capabilities
+      const capabilities = index.phaseSetSuffixToCapabilities.get(`${phaseSet}:${suffix}`);
+      if (capabilities !== undefined) return capabilities;
     }
   }
-  return []
+  return [];
 }
 
 /**
@@ -392,23 +396,23 @@ export function resolveTaskProficiency(
   taskId: string,
   index: PhaseModeIndex,
   phaseSuffix?: string,
-  phaseSet?: string
+  phaseSet?: string,
 ): Proficiency | undefined {
-  if (!localId) return undefined
-  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
-  if (!suffix) return undefined
+  if (!localId) return undefined;
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return undefined;
 
-  const overridden = index.localIdSuffixToProficiency.get(`${localId}:${suffix}`)
-  if (overridden !== undefined) return overridden
+  const overridden = index.localIdSuffixToProficiency.get(`${localId}:${suffix}`);
+  if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const proficiency = index.phaseSetSuffixToProficiency.get(`${phaseSet}:${suffix}`)
-      if (proficiency !== undefined) return proficiency
+      const proficiency = index.phaseSetSuffixToProficiency.get(`${phaseSet}:${suffix}`);
+      if (proficiency !== undefined) return proficiency;
     }
   }
-  return undefined
+  return undefined;
 }
 
 /**
@@ -421,26 +425,26 @@ export function resolveTaskExecution(
   taskId: string,
   index: PhaseModeIndex,
   phaseSuffix?: string,
-  phaseSet?: string
-): 'agent' | 'human' {
-  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId)
-  if (!suffix) return 'agent'
+  phaseSet?: string,
+): "agent" | "human" {
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return "agent";
 
   if (localId) {
-    const overridden = index.localIdSuffixToExecution.get(`${localId}:${suffix}`)
-    if (overridden !== undefined) return overridden
+    const overridden = index.localIdSuffixToExecution.get(`${localId}:${suffix}`);
+    if (overridden !== undefined) return overridden;
   }
 
   // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set(s))
   if (localId) {
-    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId)
+    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
     if (phaseSets) {
       for (const phaseSet of phaseSets) {
-        const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`)
-        if (execution !== undefined) return execution
+        const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`);
+        if (execution !== undefined) return execution;
       }
     }
   }
   // Fallback: global suffix map (covers default_phase_sets case)
-  return index.suffixToExecution.get(suffix) ?? 'agent'
+  return index.suffixToExecution.get(suffix) ?? "agent";
 }

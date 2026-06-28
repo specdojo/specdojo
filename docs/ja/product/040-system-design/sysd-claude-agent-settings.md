@@ -175,7 +175,7 @@ members:
     capabilities: [web_search]
     proficiency: normal
     priority: 3
-    command: 'claude -p --agent claude-edit-agent'
+    command: "claude -p --agent claude-edit-agent"
     scheduler_strategy: critical-first
     note: Sonnet モデルを使用する標準エージェント。外部 Web 情報参照が必要なタスクを担当する。
 
@@ -186,7 +186,7 @@ members:
     capabilities: [web_search]
     proficiency: normal
     priority: 3
-    command: 'claude -p --agent claude-review-agent'
+    command: "claude -p --agent claude-review-agent"
     scheduler_strategy: fifo
     note: Sonnet モデルを使用するレビューエージェント。done_criteria を多観点で検証する。
 
@@ -197,7 +197,7 @@ members:
     capabilities: [web_search]
     proficiency: expert
     priority: 2
-    command: 'claude -p --agent claude-expert-edit-agent'
+    command: "claude -p --agent claude-expert-edit-agent"
     scheduler_strategy: critical-first
     note: Opus モデルを使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
 
@@ -208,7 +208,7 @@ members:
     capabilities: [web_search]
     proficiency: expert
     priority: 2
-    command: 'claude -p --agent claude-expert-review-agent'
+    command: "claude -p --agent claude-expert-review-agent"
     scheduler_strategy: fifo
     note: Opus モデルを使用する高性能レビューエージェント。精度が重要なレビュータスクを担当する。
 ```

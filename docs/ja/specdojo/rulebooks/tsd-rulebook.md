@@ -22,9 +22,9 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 
 `tsd-<term>` は `tsd-index` から参照され、特定領域の詳細を補完する：
 
-| ドキュメント | 役割                     | 例                 |
-| ------------ | ------------------------ | ------------------ |
-| `tsd-index`  | 全体インベントリ（入口） | `tsd-index.md`     |
+| ドキュメント | 役割                     | 例              |
+| ------------ | ------------------------ | --------------- |
+| `tsd-index`  | 全体インベントリ（入口） | `tsd-index.md`  |
 | `tsd-<term>` | 特定技術領域の詳細定義   | `tsd-ollama.md` |
 
 ## 3. ファイル命名・ID規則
@@ -36,14 +36,14 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目       | 値                                  | 必須 |
-| ---------- | ----------------------------------- | ---- |
+| 項目       | 値                               | 必須 |
+| ---------- | -------------------------------- | ---- |
 | `id`       | `tsd-<term>`（例: `tsd-ollama`） | ○    |
-| `type`     | `architecture`                      | ○    |
-| `status`   | `draft` / `ready` / `deprecated`    | ○    |
-| `part_of`  | `tsd-index`                         | ○    |
-| `rulebook` | `tsd-rulebook`                      | 推奨 |
-| `based_on` | 根拠となる仕様 ID（配列）           | 任意 |
+| `type`     | `architecture`                   | ○    |
+| `status`   | `draft` / `ready` / `deprecated` | ○    |
+| `part_of`  | `tsd-index`                      | ○    |
+| `rulebook` | `tsd-rulebook`                   | 推奨 |
+| `based_on` | 根拠となる仕様 ID（配列）        | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

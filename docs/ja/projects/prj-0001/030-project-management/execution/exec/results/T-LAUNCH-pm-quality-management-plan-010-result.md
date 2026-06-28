@@ -10,6 +10,7 @@ started_at: "2026-06-25T14:38:12.171Z"
 completed_at: "2026-06-25T14:51:44.960Z"
 agent: codex-expert-edit-agent
 ---
+
 ## 1. 実施内容
 
 - 品質管理計画を `pm-plan`、組織定義、ロール定義、RACI と整合する形で更新した。

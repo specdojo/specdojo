@@ -6,25 +6,25 @@ status: draft
 terms:
   - id: tm-reorder-point
     term: 発注点
-    aliases: [ 発注基準点 ]
+    aliases: [発注基準点]
     definition: 在庫数量がこの値を下回ったときに、発注候補とみなす基準数量。
     notes: 商品ごとに設定。定番商品でのみ利用する。
     category: tm-inventory
-    relatedTerms: [ tm-safety-stock ]
+    relatedTerms: [tm-safety-stock]
     source: https://example.com
     status: official
     example: "発注点を下回ったため、追加発注を行う。"
 
   - id: tm-standard-product
     term: 定番商品
-    aliases: [ レギュラー商品, 人気商品, 定番 ]
+    aliases: [レギュラー商品, 人気商品, 定番]
     definition: 常に棚に置いておきたい、よく売れる商品。
     notes: 発注点・最低在庫数などを設定する対象。
     category: tm-inventory
 
   - id: tm-accounts-receivable
     term: つけ
-    aliases: [ ツケ ]
+    aliases: [ツケ]
     definition: 顧客が代金を後払いにする販売形態。
     notes: 顧客単位で残高と限度額を管理する。
     category: tm-sales

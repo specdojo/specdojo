@@ -11,6 +11,7 @@ completed_at: "2026-06-24T15:02:03.195Z"
 agent: codex-expert-edit-agent
 approach: bootstrap
 ---
+
 ## 1. 実施内容
 
 - `prj-scope` の対象・対象外と整合させ、成功基準と受入条件を業務価値（BV）に対応付けた。各条件には、判定基準、測定方法または合格基準、証跡、確認者、承認者を明記した。

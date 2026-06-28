@@ -11,6 +11,7 @@ completed_at: "2026-06-25T15:12:52.327Z"
 agent: codex-expert-edit-agent
 approach: fully-guided
 ---
+
 ## 1. 実施内容
 
 - `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml` を、指定された rulebook / recipe / sample / template と depends_on 成果物に照らして確認した。

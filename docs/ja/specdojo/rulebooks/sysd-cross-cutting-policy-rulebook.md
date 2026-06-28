@@ -2,7 +2,6 @@
 id: sysd-cross-cutting-policy-rules
 type: rulebook
 status: draft
-
 ---
 
 # システム設計 / 横断ルール 作成ルール

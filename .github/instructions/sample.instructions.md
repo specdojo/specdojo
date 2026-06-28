@@ -1,5 +1,5 @@
 ---
-applyTo: 'docs/ja/specdojo/samples/**/*-sample.md'
+applyTo: "docs/ja/specdojo/samples/**/*-sample.md"
 ---
 
 # Sample 記述ルール

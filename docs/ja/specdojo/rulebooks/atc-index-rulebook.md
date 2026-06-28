@@ -2,7 +2,6 @@
 id: atc-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # 受入テストカタログ 概要 作成ルール

@@ -32,7 +32,7 @@ properties:
 
   status:
     type: string
-    enum: [ draft, ready, deprecated ]
+    enum: [draft, ready, deprecated]
     description: "Document status."
 
   rulebook:
@@ -128,7 +128,7 @@ $defs:
         type: string
         description: "Actor type: human for a person, agent for an automated agent
           (e.g., GitHub Copilot)."
-        enum: [ "human", "agent" ]
+        enum: ["human", "agent"]
 
       persona:
         type: string
@@ -190,7 +190,7 @@ $defs:
         type: string
         description: "Optional default scheduler strategy used when this member runs
           `specdojo exec scheduler` without `--strategy`."
-        enum: [ "critical-first", "dependency-first", "fifo", "manual" ]
+        enum: ["critical-first", "dependency-first", "fifo", "manual"]
 
       note:
         type: string

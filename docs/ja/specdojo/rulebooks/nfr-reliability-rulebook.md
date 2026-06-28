@@ -2,7 +2,6 @@
 id: nfr-reliability-rules
 type: rulebook
 status: draft
-
 ---
 
 # 非機能要件 / 信頼性 作成ルール

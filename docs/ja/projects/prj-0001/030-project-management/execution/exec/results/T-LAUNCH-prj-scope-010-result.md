@@ -11,6 +11,7 @@ completed_at: "2026-06-27T07:11:17.488Z"
 agent: opencode-edit-agent
 approach: bootstrap
 ---
+
 ## 1. 実施内容
 
 `approach: bootstrap` に従い、成果物（prj-scope.md）と参考資料一式（rulebook / recipe / sample / template）を一貫した一組として評価・整備を行った。
@@ -28,13 +29,13 @@ approach: bootstrap
 
 本タスクでは実質的な変更なし（すべて維持判断）。確認・検証のため読み込みを実施したのみ。
 
-| ファイル                                     | 種別       | アクション |
-| ------------------------------------------- | ---------- | --------- |
-| `docs/ja/projects/prj-0001/020-project-definition/prj-scope.md` | 成果物     | 維持      |
-| `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md`          | rulebook   | 維持      |
-| `docs/ja/specdojo/recipes/prj-scope-recipe.md`             | recipe     | 維持      |
-| `docs/ja/specdojo/samples/prj-scope-sample.md`           | sample     | 維持      |
-| `docs/ja/specdojo/templates/prj-scope-template.md`          | template   | 維持      |
+| ファイル                                                        | 種別     | アクション |
+| --------------------------------------------------------------- | -------- | ---------- |
+| `docs/ja/projects/prj-0001/020-project-definition/prj-scope.md` | 成果物   | 維持       |
+| `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md`              | rulebook | 維持       |
+| `docs/ja/specdojo/recipes/prj-scope-recipe.md`                  | recipe   | 維持       |
+| `docs/ja/specdojo/samples/prj-scope-sample.md`                  | sample   | 維持       |
+| `docs/ja/specdojo/templates/prj-scope-template.md`              | template | 維持       |
 
 ## 3. 申し送り
 

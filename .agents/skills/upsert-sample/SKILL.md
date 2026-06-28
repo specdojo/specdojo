@@ -1,6 +1,6 @@
 ---
 name: upsert-sample
-description: '`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を新規作成または更新する Skill です。'
+description: "`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を新規作成または更新する Skill です。"
 ---
 
 # SKILL: upsert-sample

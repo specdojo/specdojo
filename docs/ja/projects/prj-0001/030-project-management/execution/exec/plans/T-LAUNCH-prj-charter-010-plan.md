@@ -6,7 +6,7 @@ task_id: T-LAUNCH-prj-charter-010
 name: 一括整備（成果物＋参考資料）
 mode: edit
 status: ready
-project_id: 
+project_id:
 owner: PO
 approach: bootstrap
 ---

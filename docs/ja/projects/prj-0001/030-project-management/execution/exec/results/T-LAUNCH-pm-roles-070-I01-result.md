@@ -11,6 +11,7 @@ completed_at: "2026-06-26T13:12:18.544Z"
 agent: opencode-edit-agent
 approach: fully-guided
 ---
+
 ## 1. 実施内容
 
 `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-roles.yaml` を、rulebook / recipe / sample に沿って磨き込み検証した。
@@ -26,8 +27,8 @@ approach: fully-guided
 
 ## 2. 変更ファイル
 
-| ファイル | 変更種別 |
-| --- | --- |
+| ファイル                                                                                                      | 変更種別          |
+| ------------------------------------------------------------------------------------------------------------- | ----------------- |
 | `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-roles-070-I01-result.md` | 更新（本 result） |
 
 ## 3. 申し送り
@@ -38,19 +39,19 @@ approach: fully-guided
 
 **approach:** `fully-guided` に従って、rulebook / recipe / sample を順次参照した。template は欠落していたため、その事実をここに記録する。
 
-| 参考資料 | 状態 | 使い方 |
-| --- | --- | --- |
-| rulebook (`pm-roles-rulebook.md`) | 存在・有効 | 必須要素 (§4-5)、禁止事項 (§7) の構造面での適合検証基準として使用 |
-| recipe (`pm-roles-recipe.md`) | 存在・有効 | レビュー観点 (§7) を項目ごとに検証、既存記述の深掘り手順 (§6) で分析 |
-| sample (`pm-roles-sample.yaml`) | 存在・有効 | 粒度・文体・YAML の書き方を比較基準とした。sample は領域固有内容を含むため、既存の成果物の汎用的な project_note と差異がある点は正常と判断 |
-| template (`pm-roles-template.md`) | **欠落** | ルールブック §4.1 に従い、template 欠落と記録。rulebook の構造 (§5) を骨組みとして代替使用 |
+| 参考資料                          | 状態       | 使い方                                                                                                                                     |
+| --------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| rulebook (`pm-roles-rulebook.md`) | 存在・有効 | 必須要素 (§4-5)、禁止事項 (§7) の構造面での適合検証基準として使用                                                                          |
+| recipe (`pm-roles-recipe.md`)     | 存在・有効 | レビュー観点 (§7) を項目ごとに検証、既存記述の深掘り手順 (§6) で分析                                                                       |
+| sample (`pm-roles-sample.yaml`)   | 存在・有効 | 粒度・文体・YAML の書き方を比較基準とした。sample は領域固有内容を含むため、既存の成果物の汎用的な project_note と差異がある点は正常と判断 |
+| template (`pm-roles-template.md`) | **欠落**   | ルールブック §4.1 に従い、template 欠落と記録。rulebook の構造 (§5) を骨組みとして代替使用                                                 |
 
 **既存記述の扱い:** 既存の成果物は bootstrap フェーズで凍結された内容であり、rulebook / recipe / sample および依存文書 `prj-0001:pm-organization` と矛盾しないことを確認した。加筆・補強を要する箇所は見当たらず、修正は行わなかった。
 
 **done_criteria 達成状況:**
 
-| done_criteria | 状態 |
-| --- | --- |
-| PO が全 Role code とプロジェクト固有メモを承認できる | ✓ 8 ロールすべて網羅済み |
-| [ARC] schema 適合 | ✓ 必須メタ項目5件、roles[].code/name/project_note の構造 rulebook §4-5 に適合 |
-| [QE] PM/BA/ARC/DEV/QE/UX/OPS が過不足・重複なく定義されている | ✓ 8 ロールすべて存在し、コード重複なし（PO,PM,BA,ARC,DEV,QE,UX,OPS） |
+| done_criteria                                                 | 状態                                                                          |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| PO が全 Role code とプロジェクト固有メモを承認できる          | ✓ 8 ロールすべて網羅済み                                                      |
+| [ARC] schema 適合                                             | ✓ 必須メタ項目5件、roles[].code/name/project_note の構造 rulebook §4-5 に適合 |
+| [QE] PM/BA/ARC/DEV/QE/UX/OPS が過不足・重複なく定義されている | ✓ 8 ロールすべて存在し、コード重複なし（PO,PM,BA,ARC,DEV,QE,UX,OPS）          |

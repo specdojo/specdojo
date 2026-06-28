@@ -82,11 +82,11 @@ Business Rule (BR) Documentation Rules
 擬似コード例：
 
 ```ts
-type 商品 = { 商品ID: string; 定番: boolean; 発注点: number }
-type 在庫 = { 商品ID: string; 在庫数: number; 予約数: number }
+type 商品 = { 商品ID: string; 定番: boolean; 発注点: number };
+type 在庫 = { 商品ID: string; 在庫数: number; 予約数: number };
 
 function 在庫不足判定(商品: 商品, 在庫: 在庫): boolean {
-  return 在庫.在庫数 - 在庫.予約数 < 商品.発注点
+  return 在庫.在庫数 - 在庫.予約数 < 商品.発注点;
 }
 ```
 

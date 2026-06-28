@@ -179,7 +179,7 @@ members:
     proficiency: normal
     priority: 1
     capabilities: [web_search]
-    command: 'opencode run --agent opencode-edit-agent'
+    command: "opencode run --agent opencode-edit-agent"
     scheduler_strategy: critical-first
 
   - nickname: opencode-review-agent
@@ -188,7 +188,7 @@ members:
     proficiency: normal
     priority: 1
     capabilities: [web_search]
-    command: 'opencode run --agent opencode-review-agent'
+    command: "opencode run --agent opencode-review-agent"
     scheduler_strategy: fifo
 ```
 

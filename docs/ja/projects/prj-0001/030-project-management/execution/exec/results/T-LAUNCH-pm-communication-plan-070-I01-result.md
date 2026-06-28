@@ -11,6 +11,7 @@ completed_at: "2026-06-25T15:10:25.155Z"
 agent: codex-expert-edit-agent
 approach: fully-guided
 ---
+
 ## 1. 実施内容
 
 - `pm-communication-plan.md` を、指定された rulebook / recipe / sample / template と依存成果物 `pm-plan.md` に照らして確認した。

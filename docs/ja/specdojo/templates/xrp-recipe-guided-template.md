@@ -18,9 +18,12 @@ _PHASE_DESCRIPTION_
 ## 3. レビュー観点
 
 <!-- markdownlint-disable MD055 MD056 -->
-| ID | ロール | viewpoint_id | 確認基準 |
-|---|---|---|---|
+
+| ID  | ロール | viewpoint_id | 確認基準 |
+| --- | ------ | ------------ | -------- |
+
 _REVIEW_VIEWPOINT_ROWS_
+
 <!-- markdownlint-enable MD055 MD056 -->
 
 _REVIEW_VIEWPOINT_DETAILS_

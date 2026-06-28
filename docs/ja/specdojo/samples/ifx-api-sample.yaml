@@ -64,7 +64,7 @@ components:
     CreatePaymentRequest:
       type: object
       additionalProperties: false
-      required: [ amount, currency, order_id ]
+      required: [amount, currency, order_id]
       properties:
         amount:
           type: integer
@@ -79,18 +79,18 @@ components:
     CreatePaymentResponse:
       type: object
       additionalProperties: false
-      required: [ payment_id, status ]
+      required: [payment_id, status]
       properties:
         payment_id:
           type: string
         status:
           type: string
-          enum: [ PENDING, PAID, FAILED ]
+          enum: [PENDING, PAID, FAILED]
 
     ErrorResponse:
       type: object
       additionalProperties: false
-      required: [ code, message ]
+      required: [code, message]
       properties:
         code:
           type: string

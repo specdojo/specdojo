@@ -1,5 +1,5 @@
 ---
-applyTo: 'docs/ja/projects/**'
+applyTo: "docs/ja/projects/**"
 ---
 
 # SpecDojo Exec ワークフロー

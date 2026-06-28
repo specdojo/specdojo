@@ -16,20 +16,14 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
     },
     "extends": {
       "description": "Path to configuration file to extend",
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "default": null
     },
     "MD001": {
@@ -39,10 +33,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -56,10 +47,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "front_matter_title": {
@@ -79,10 +67,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -96,10 +81,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "front_matter_title": {
@@ -119,10 +101,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -136,10 +115,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -167,10 +143,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -184,10 +157,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -215,10 +185,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -232,22 +199,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "List style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "plus",
-                "dash",
-                "sublist"
-              ],
+              "enum": ["consistent", "asterisk", "plus", "dash", "sublist"],
               "default": "consistent"
             }
           }
@@ -262,10 +220,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -279,22 +234,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "List style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "plus",
-                "dash",
-                "sublist"
-              ],
+              "enum": ["consistent", "asterisk", "plus", "dash", "sublist"],
               "default": "consistent"
             }
           }
@@ -309,10 +255,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -326,10 +269,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -344,10 +284,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -361,10 +298,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -379,10 +313,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -396,10 +327,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "indent": {
@@ -431,10 +359,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -448,10 +373,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "indent": {
@@ -483,10 +405,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -500,10 +419,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "br_spaces": {
@@ -539,10 +455,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -556,10 +469,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "br_spaces": {
@@ -595,10 +505,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -612,10 +519,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "code_blocks": {
@@ -649,10 +553,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -666,10 +567,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "code_blocks": {
@@ -703,10 +601,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -720,10 +615,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -738,10 +630,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -755,10 +644,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -773,10 +659,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -790,10 +673,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "maximum": {
@@ -814,10 +694,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -831,10 +708,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "maximum": {
@@ -855,10 +729,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -872,10 +743,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "line_length": {
@@ -933,10 +801,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -950,10 +815,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "line_length": {
@@ -1011,10 +873,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1028,10 +887,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1046,10 +902,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1063,10 +916,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1081,10 +931,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1098,10 +945,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1116,10 +960,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1133,10 +974,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1151,10 +989,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1168,10 +1003,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1186,10 +1018,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1203,10 +1032,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1221,10 +1047,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1238,10 +1061,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1256,10 +1076,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1273,10 +1090,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1291,10 +1105,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1308,10 +1119,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1326,10 +1134,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1343,10 +1148,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1361,10 +1163,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1378,18 +1177,12 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "lines_above": {
               "description": "Blank lines above heading",
-              "type": [
-                "integer",
-                "array"
-              ],
+              "type": ["integer", "array"],
               "items": {
                 "type": "integer"
               },
@@ -1398,10 +1191,7 @@
             },
             "lines_below": {
               "description": "Blank lines below heading",
-              "type": [
-                "integer",
-                "array"
-              ],
+              "type": ["integer", "array"],
               "items": {
                 "type": "integer"
               },
@@ -1420,10 +1210,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1437,18 +1224,12 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "lines_above": {
               "description": "Blank lines above heading",
-              "type": [
-                "integer",
-                "array"
-              ],
+              "type": ["integer", "array"],
               "items": {
                 "type": "integer"
               },
@@ -1457,10 +1238,7 @@
             },
             "lines_below": {
               "description": "Blank lines below heading",
-              "type": [
-                "integer",
-                "array"
-              ],
+              "type": ["integer", "array"],
               "items": {
                 "type": "integer"
               },
@@ -1479,10 +1257,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1496,10 +1271,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1514,10 +1286,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1531,10 +1300,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1549,10 +1315,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1566,10 +1329,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "siblings_only": {
@@ -1589,10 +1349,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1606,10 +1363,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "siblings_only": {
@@ -1629,10 +1383,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1646,10 +1397,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "front_matter_title": {
@@ -1676,10 +1424,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1693,10 +1438,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "front_matter_title": {
@@ -1723,10 +1465,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1740,10 +1479,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "front_matter_title": {
@@ -1770,10 +1506,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1787,10 +1520,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "punctuation": {
@@ -1810,10 +1540,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1827,10 +1554,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "punctuation": {
@@ -1850,10 +1574,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1867,10 +1588,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "list_items": {
@@ -1890,10 +1608,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1907,10 +1622,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "list_items": {
@@ -1930,10 +1642,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1947,10 +1656,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -1965,10 +1671,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -1982,10 +1685,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2000,10 +1700,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2017,21 +1714,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "List style",
               "type": "string",
-              "enum": [
-                "one",
-                "ordered",
-                "one_or_ordered",
-                "zero"
-              ],
+              "enum": ["one", "ordered", "one_or_ordered", "zero"],
               "default": "one_or_ordered"
             }
           }
@@ -2046,10 +1735,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2063,21 +1749,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "List style",
               "type": "string",
-              "enum": [
-                "one",
-                "ordered",
-                "one_or_ordered",
-                "zero"
-              ],
+              "enum": ["one", "ordered", "one_or_ordered", "zero"],
               "default": "one_or_ordered"
             }
           }
@@ -2092,10 +1770,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2109,10 +1784,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ul_single": {
@@ -2151,10 +1823,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2168,10 +1837,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ul_single": {
@@ -2210,10 +1876,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2227,10 +1890,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "list_items": {
@@ -2250,10 +1910,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2267,10 +1924,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "list_items": {
@@ -2290,10 +1944,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2307,10 +1958,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2325,10 +1973,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2342,10 +1987,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2360,10 +2002,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2377,10 +2016,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allowed_elements": {
@@ -2411,10 +2047,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2428,10 +2061,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allowed_elements": {
@@ -2462,10 +2092,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2479,10 +2106,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2497,10 +2121,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2514,10 +2135,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2532,10 +2150,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2549,10 +2164,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -2572,10 +2184,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2589,10 +2198,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -2612,10 +2218,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2629,10 +2232,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "punctuation": {
@@ -2652,10 +2252,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2669,10 +2266,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "punctuation": {
@@ -2692,10 +2286,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2709,10 +2300,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2727,10 +2315,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2744,10 +2329,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2762,10 +2344,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2779,10 +2358,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2797,10 +2373,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2814,10 +2387,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2832,10 +2402,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2849,10 +2416,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2867,10 +2431,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2884,10 +2445,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -2902,10 +2460,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2919,10 +2474,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allowed_languages": {
@@ -2950,10 +2502,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -2967,10 +2516,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allowed_languages": {
@@ -2998,10 +2544,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3015,10 +2558,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allow_preamble": {
@@ -3050,10 +2590,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3067,10 +2604,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allow_preamble": {
@@ -3102,10 +2636,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3119,10 +2650,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "allow_preamble": {
@@ -3154,10 +2682,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3171,10 +2696,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3189,10 +2711,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3206,10 +2725,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3224,10 +2740,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3241,10 +2754,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "headings": {
@@ -3273,10 +2783,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3290,10 +2797,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "headings": {
@@ -3322,10 +2826,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3339,10 +2840,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "names": {
@@ -3375,10 +2873,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3392,10 +2887,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "names": {
@@ -3428,10 +2920,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3445,10 +2934,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3463,10 +2949,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3480,10 +2963,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3498,10 +2978,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3515,20 +2992,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Block style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "fenced",
-                "indented"
-              ],
+              "enum": ["consistent", "fenced", "indented"],
               "default": "consistent"
             }
           }
@@ -3543,10 +3013,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3560,20 +3027,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Block style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "fenced",
-                "indented"
-              ],
+              "enum": ["consistent", "fenced", "indented"],
               "default": "consistent"
             }
           }
@@ -3588,10 +3048,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3605,10 +3062,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3623,10 +3077,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3640,10 +3091,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -3658,10 +3106,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3675,20 +3120,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Code fence style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "backtick",
-                "tilde"
-              ],
+              "enum": ["consistent", "backtick", "tilde"],
               "default": "consistent"
             }
           }
@@ -3703,10 +3141,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3720,20 +3155,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Code fence style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "backtick",
-                "tilde"
-              ],
+              "enum": ["consistent", "backtick", "tilde"],
               "default": "consistent"
             }
           }
@@ -3748,10 +3176,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3765,20 +3190,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Emphasis style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "underscore"
-              ],
+              "enum": ["consistent", "asterisk", "underscore"],
               "default": "consistent"
             }
           }
@@ -3793,10 +3211,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3810,20 +3225,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Emphasis style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "underscore"
-              ],
+              "enum": ["consistent", "asterisk", "underscore"],
               "default": "consistent"
             }
           }
@@ -3838,10 +3246,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3855,20 +3260,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Strong style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "underscore"
-              ],
+              "enum": ["consistent", "asterisk", "underscore"],
               "default": "consistent"
             }
           }
@@ -3883,10 +3281,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3900,20 +3295,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Strong style",
               "type": "string",
-              "enum": [
-                "consistent",
-                "asterisk",
-                "underscore"
-              ],
+              "enum": ["consistent", "asterisk", "underscore"],
               "default": "consistent"
             }
           }
@@ -3928,10 +3316,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3945,10 +3330,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignore_case": {
@@ -3973,10 +3355,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -3990,10 +3369,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignore_case": {
@@ -4018,10 +3394,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4035,10 +3408,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignored_labels": {
@@ -4047,9 +3417,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "x"
-              ]
+              "default": ["x"]
             },
             "shortcut_syntax": {
               "description": "Include shortcut syntax",
@@ -4068,10 +3436,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4085,10 +3450,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignored_labels": {
@@ -4097,9 +3459,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "x"
-              ]
+              "default": ["x"]
             },
             "shortcut_syntax": {
               "description": "Include shortcut syntax",
@@ -4118,10 +3478,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4135,10 +3492,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignored_definitions": {
@@ -4147,9 +3501,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "//"
-              ]
+              "default": ["//"]
             }
           }
         }
@@ -4163,10 +3515,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4180,10 +3529,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "ignored_definitions": {
@@ -4192,9 +3538,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "//"
-              ]
+              "default": ["//"]
             }
           }
         }
@@ -4208,10 +3552,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4225,10 +3566,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "autolink": {
@@ -4273,10 +3611,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4290,10 +3625,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "autolink": {
@@ -4338,10 +3670,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4355,10 +3684,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -4385,10 +3711,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4402,10 +3725,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
@@ -4432,10 +3752,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4449,10 +3766,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -4467,10 +3781,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4484,10 +3795,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -4502,10 +3810,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4519,10 +3824,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -4537,10 +3839,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4554,10 +3853,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             }
           }
@@ -4572,10 +3868,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4589,10 +3882,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "prohibited_texts": {
@@ -4601,12 +3891,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "click here",
-                "here",
-                "link",
-                "more"
-              ]
+              "default": ["click here", "here", "link", "more"]
             }
           }
         }
@@ -4620,10 +3905,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4637,10 +3919,7 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "prohibited_texts": {
@@ -4649,12 +3928,7 @@
               "items": {
                 "type": "string"
               },
-              "default": [
-                "click here",
-                "here",
-                "link",
-                "more"
-              ]
+              "default": ["click here", "here", "link", "more"]
             }
           }
         }
@@ -4668,10 +3942,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4685,21 +3956,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Table column style",
               "type": "string",
-              "enum": [
-                "any",
-                "aligned",
-                "compact",
-                "tight"
-              ],
+              "enum": ["any", "aligned", "compact", "tight"],
               "default": "any"
             },
             "aligned_delimiter": {
@@ -4719,10 +3982,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         },
         {
           "type": "object",
@@ -4736,21 +3996,13 @@
             "severity": {
               "description": "Rule severity",
               "type": "string",
-              "enum": [
-                "error",
-                "warning"
-              ],
+              "enum": ["error", "warning"],
               "default": "error"
             },
             "style": {
               "description": "Table column style",
               "type": "string",
-              "enum": [
-                "any",
-                "aligned",
-                "compact",
-                "tight"
-              ],
+              "enum": ["any", "aligned", "compact", "tight"],
               "default": "any"
             },
             "aligned_delimiter": {
@@ -4770,10 +4022,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4785,10 +4034,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4800,10 +4046,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4815,10 +4058,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4830,10 +4070,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4845,10 +4082,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4860,10 +4094,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4875,10 +4106,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4890,10 +4118,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4905,10 +4130,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4920,10 +4142,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4935,10 +4154,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4950,10 +4166,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4965,10 +4178,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4980,10 +4190,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -4995,10 +4202,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5010,10 +4214,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5025,10 +4226,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5040,10 +4238,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5055,10 +4250,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5070,10 +4262,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5085,10 +4274,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5100,10 +4286,7 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
@@ -5115,19 +4298,13 @@
           "type": "boolean"
         },
         {
-          "enum": [
-            "error",
-            "warning"
-          ]
+          "enum": ["error", "warning"]
         }
       ],
       "default": true
     }
   },
   "additionalProperties": {
-    "type": [
-      "boolean",
-      "object"
-    ]
+    "type": ["boolean", "object"]
   }
 }

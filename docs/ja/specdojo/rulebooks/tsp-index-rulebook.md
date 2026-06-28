@@ -2,7 +2,6 @@
 id: tsp-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # テスト戦略・方針 作成ルール

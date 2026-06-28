@@ -6,7 +6,7 @@ mode: edit
 status: in_progress
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-010-plan.md
-started_at: '2026-06-27T14:28:05.884Z'
+started_at: "2026-06-27T14:28:05.884Z"
 agent: codex-expert-edit-agent
 approach: bootstrap
 ---

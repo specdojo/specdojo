@@ -9,7 +9,9 @@ plan_ref: exec/plans/T-LAUNCH-prj-comparison-of-alternatives-010-plan.md
 started_at: "2026-06-25T12:25:24.736Z"
 completed_at: "2026-06-25T14:58:36.748Z"
 agent: codex-expert-edit-agent
----## 1. 実施内容
+---
+
+## 1. 実施内容
 
 成果物「代替案比較」と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を、bootstrap として相互に整合する一組へ整備した（owner: ARC）。
 

@@ -28,22 +28,22 @@ System Functions Index Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目 | 値 | 必須 |
-| --- | --- | --- |
-| id | 一意なID | ○ |
-| type | project / spec / test / architecture / operations | ○ |
-| status | draft / ready / deprecated | ○ |
-| rulebook | `sf-index-rulebook` | 任意 |
+| 項目     | 値                                                | 必須 |
+| -------- | ------------------------------------------------- | ---- |
+| id       | 一意なID                                          | ○    |
+| type     | project / spec / test / architecture / operations | ○    |
+| status   | draft / ready / deprecated                        | ○    |
+| rulebook | `sf-index-rulebook`                               | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 
-| 章 | 必須 | 内容 |
-| --- | --- | --- |
-| 1. 目的と適用範囲 | ○ | 対象、目的、適用境界 |
-| 2. 入力情報 | ○ | 前提、参照元、制約 |
-| 3. 記述内容 | ○ | 主要項目、構成、記述順 |
-| 4. 検証観点 | ○ | 完了条件、確認観点 |
-| 5. 未解決事項 | 任意 | 課題、決定期限、担当 |
+| 章                | 必須 | 内容                   |
+| ----------------- | ---- | ---------------------- |
+| 1. 目的と適用範囲 | ○    | 対象、目的、適用境界   |
+| 2. 入力情報       | ○    | 前提、参照元、制約     |
+| 3. 記述内容       | ○    | 主要項目、構成、記述順 |
+| 4. 検証観点       | ○    | 完了条件、確認観点     |
+| 5. 未解決事項     | 任意 | 課題、決定期限、担当   |
 
 ## 6. 記述ガイド
 

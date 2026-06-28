@@ -464,7 +464,7 @@ phase_sets:
     - id: enrich
       name: 調査・補強
       execution: agent
-      task_suffix: '020'
+      task_suffix: "020"
       mode: edit
       proficiency: normal
       description: |
@@ -473,7 +473,7 @@ phase_sets:
     - id: review
       name: 一次版レビュー
       execution: human
-      task_suffix: '030'
+      task_suffix: "030"
       mode: review
       description: |
         担当ロールが補強後の内容を確認する。
@@ -482,7 +482,7 @@ phase_sets:
     - id: enrich
       name: 調査・深掘り
       execution: agent
-      task_suffix: '020'
+      task_suffix: "020"
       mode: edit
       capabilities: [web_search]
       proficiency: expert
@@ -501,17 +501,17 @@ version: 1
 project_id: prj-0001
 track: launch
 settings:
-  start_date: '2026-05-24'
+  start_date: "2026-05-24"
 tasks:
   - local_id: prj-overview
-    phase_suffix: '010'
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on: []
     owner: BA
 
   - local_id: prj-overview
-    phase_suffix: '020'
+    phase_suffix: "020"
     name: 調査・補強
     duration_days: 0.5
     depends_on:
@@ -519,7 +519,7 @@ tasks:
     owner: BA
 
   - local_id: pm-organization
-    phase_suffix: '010'
+    phase_suffix: "010"
     name: たたき台作成
     duration_days: 0.25
     depends_on:
@@ -1175,7 +1175,7 @@ sch-auth-api.yaml
 ```yaml
 tasks:
   - local_id: auth-api
-    phase_suffix: '020'
+    phase_suffix: "020"
     name: implement login api
     duration_days: 2
     depends_on:
@@ -1645,8 +1645,8 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 rate_limit_detection:
   exit_codes: [1]
   stderr_patterns:
-    - 'rate limit'
-    - '429'
+    - "rate limit"
+    - "429"
 ```
 
 #### 8.12.2. 実行フロー
@@ -1771,8 +1771,8 @@ specdojo exec run --project prj-0001 --auto --loop \
 rate_limit_detection:
   exit_codes: [1]
   stderr_patterns:
-    - 'rate limit'
-    - '429'
+    - "rate limit"
+    - "429"
 
 rate_limit_policy:
   on_non_critical: # cpm.slack > 0 のタスク

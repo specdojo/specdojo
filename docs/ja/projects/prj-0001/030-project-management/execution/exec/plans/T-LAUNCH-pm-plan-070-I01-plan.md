@@ -6,7 +6,7 @@ task_id: T-LAUNCH-pm-plan-070-I01
 name: 磨き込み
 mode: edit
 status: ready
-project_id: 
+project_id:
 owner: PM
 on_critical_path: true
 approach: fully-guided

@@ -1,5 +1,5 @@
 ---
-applyTo: 'docs/ja/specdojo/rulebooks/**/*-rulebook.md'
+applyTo: "docs/ja/specdojo/rulebooks/**/*-rulebook.md"
 ---
 
 # Rulebook 記述ルール

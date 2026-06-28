@@ -65,7 +65,7 @@ properties:
     # draft: 作成中
     # ready: 公開済み
     # deprecated: 廃止済み
-    enum: [ "draft", "ready", "deprecated" ]
+    enum: ["draft", "ready", "deprecated"]
   part_of:
     $ref: "#/$defs/idRefArray"
     default: []

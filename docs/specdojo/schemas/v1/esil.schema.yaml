@@ -38,7 +38,7 @@ properties:
     minLength: 1
   status:
     type: string
-    enum: [ "draft", "ready", "deprecated" ]
+    enum: ["draft", "ready", "deprecated"]
   version:
     $ref: "#/$defs/semver"
   owners:

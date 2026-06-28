@@ -2,7 +2,6 @@
 id: itc-index-rules
 type: rulebook
 status: draft
-
 ---
 
 # 内部結合テストカタログ概要 作成ルール

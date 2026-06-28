@@ -9,8 +9,8 @@ entities:
     physical_name: product
     description: 駄菓子屋で販売する個々の商品
     glossary_term_id: tm-product
-    related_terms: [ tm-price, tm-stock ]
-    key_fields: [ product_code ]
+    related_terms: [tm-price, tm-stock]
+    key_fields: [product_code]
     fields:
       - logical_name: 商品コード
         physical_name: product_code
@@ -43,7 +43,7 @@ entities:
     physical_name: payment
     description: 顧客からの支払い情報
     glossary_term_id: tm-payment
-    key_fields: [ payment_id ]
+    key_fields: [payment_id]
     fields:
       - logical_name: 支払いID
         physical_name: payment_id
