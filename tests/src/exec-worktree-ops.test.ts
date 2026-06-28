@@ -8,6 +8,7 @@ import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   deliverableStatus,
+  discardStaleExecWorktree,
   mergeWorktreeIntoCurrent,
   removeWorktree,
   type WorktreeOpsContext,
@@ -187,6 +188,47 @@ describe("exec worktree ops", () => {
         "utf8",
       ),
     ).toContain("status: complete");
+  });
+
+  it("discards a stale worktree/branch left by a prior lifecycle so a fresh claim checkpoints cleanly", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // Prior lifecycle: the task was prepared (worktree + exec branch) but ended blocked and was
+    // never merged. Rewind root HEAD so the checkpoint commit is gone but the exec branch remains,
+    // exactly the residue a re-claim faces.
+    const stale = prepare(fixture, taskId);
+    expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
+    git(fixture.repo, "reset", "--hard", "HEAD~1");
+
+    // Fresh claim rewrites the root scaffold as untracked files.
+    scaffoldTask(fixture, taskId);
+
+    const discarded = discardStaleExecWorktree({
+      context: fixture.context,
+      worktreeTaskId: taskId,
+    });
+
+    expect(discarded).toBe(stale.branch);
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+    expect(() =>
+      git(fixture.repo, "rev-parse", "--verify", `refs/heads/${stale.branch}`),
+    ).toThrow();
+
+    // Re-preparing now creates a fresh worktree and commits the root scaffold as a new checkpoint.
+    const worktree = prepare(fixture, taskId);
+    expect(worktree.created).toBe(true);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("returns null when no stale worktree or branch exists for the task", () => {
+    const fixture = setupRepository();
+
+    expect(
+      discardStaleExecWorktree({ context: fixture.context, worktreeTaskId: "T-T-doc-999" }),
+    ).toBeNull();
   });
 
   it("makes a merged task deliverable visible to the next task worktree", () => {

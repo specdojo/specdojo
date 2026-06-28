@@ -344,6 +344,36 @@ export function removeWorktree(params: {
   if (params.deleteBranch) gitOutput(context.repoRoot, ["branch", "-d", worktree.branch]);
 }
 
+// A fresh claim of a task that still owns an exec worktree/branch means a prior lifecycle
+// (e.g. blocked or cancelled, then reset to todo) left residue behind. The scheduler has abandoned
+// that branch, so discard it before re-preparing: otherwise checkpointAndEnsureWorktree reuses the
+// stale worktree, skips the checkpoint commit, and the freshly-scaffolded root plan/result/claim
+// files stay untracked until the merge-back guard rejects them as overlapping changes. Returns the
+// discarded branch name for logging, or null when no residue existed.
+export function discardStaleExecWorktree(params: {
+  context: WorktreeOpsContext;
+  worktreeTaskId: string;
+}): string | null {
+  const { context, worktreeTaskId } = params;
+  const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
+  const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
+  if (!existing && !execBranchExists(context.repoRoot, worktreeTaskId)) return null;
+  if (existing) {
+    if (resolve(context.repoRoot) === resolve(existing.path)) {
+      throw new Error(`Refusing to discard the merge-target worktree as stale residue: ${branch}`);
+    }
+    // Force past any uncommitted/blocked state in the abandoned worktree; its branch is discarded
+    // next, so nothing here is worth preserving.
+    gitOutput(context.repoRoot, ["worktree", "remove", "--force", existing.path]);
+  }
+  // The branch is unmerged (the scheduler reset the task to todo), so a safe `-d` would fail; use
+  // `-D` to drop it deliberately.
+  if (execBranchExists(context.repoRoot, worktreeTaskId)) {
+    gitOutput(context.repoRoot, ["branch", "-D", branch]);
+  }
+  return branch;
+}
+
 // Commit the execution checkpoint (plan/result/claim event) onto root HEAD, then create
 // the task worktree from that commit. Reuses an existing worktree or exec branch when present.
 export function checkpointAndEnsureWorktree(params: {

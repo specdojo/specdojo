@@ -50,6 +50,7 @@ import { resolveWorktreeBase, worktreeNameFromTaskId, type ExecWorktree } from "
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
+  discardStaleExecWorktree,
   mergeWorktreeIntoCurrent,
   removeWorktree,
 } from "./exec-worktree-ops.js";
@@ -740,6 +741,19 @@ async function prepareSingleTask(
   if (!claimEventPath) {
     process.stdout.write(`  Claim event not found for ${task.id}\n`);
     return "failure";
+  }
+
+  // A fresh claim (not a resume) of a task that still owns an exec worktree/branch means a prior
+  // lifecycle left residue. Discard it so the checkpoint commit below runs and the root scaffold is
+  // committed instead of stranded as untracked changes that later trip the merge-back guard.
+  if (!skipClaim) {
+    const discarded = discardStaleExecWorktree({
+      context: { repoRoot, schedulePath, executionPath },
+      worktreeTaskId,
+    });
+    if (discarded) {
+      process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
+    }
   }
 
   let worktree: ExecWorktree;
