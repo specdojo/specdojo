@@ -78,7 +78,7 @@ members:
     capabilities: [web_search]
     command: "opencode run --agent opencode-edit-agent"
     scheduler_strategy: critical-first
-    note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を担当し、タスクの owner フィールドからロール文脈を判断して作業する。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
+    note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を支援し、タスクの owner フィールドからロール文脈を判断して作業する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
 
   - nickname: opencode-review-agent
     disabled: true
@@ -98,7 +98,7 @@ members:
     capabilities: [web_search]
     command: "opencode run --agent opencode-review-agent"
     scheduler_strategy: fifo
-    note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物をレビューし、成果物は変更せず result のみ更新する。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
+    note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物レビューを支援し、成果物は変更せず result のみ更新する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
 
   #
   # claude code members
@@ -122,7 +122,7 @@ members:
     capabilities: [web_search]
     command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-edit-agent"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
+    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
 
   - nickname: claude-review-agent
     disabled: true
@@ -142,7 +142,7 @@ members:
     capabilities: [web_search]
     command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-review-agent"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
+    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
 
   - nickname: claude-expert-edit-agent
     disabled: true
@@ -164,7 +164,7 @@ members:
     capabilities: [web_search]
     command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-edit-agent"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
+    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
 
   - nickname: claude-expert-review-agent
     disabled: true
@@ -185,7 +185,7 @@ members:
     capabilities: [web_search]
     command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-review-agent"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-expert-review-agent.md で定義。
+    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-expert-review-agent.md で定義。
 
   #
   # codex members
@@ -208,7 +208,7 @@ members:
     capabilities: [web_search]
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultを更新する。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultの更新を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-review-agent
     disabled: false
@@ -228,7 +228,7 @@ members:
     capabilities: [web_search]
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
-    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-edit-agent
     disabled: false
@@ -250,7 +250,7 @@ members:
     capabilities: [web_search]
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planを担当する。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-review-agent
     disabled: false
@@ -271,7 +271,7 @@ members:
     capabilities: [web_search]
     command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
-    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを行い、成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
@@ -280,4 +280,4 @@ rules:
   - 汎用 agent の roles は空配列とし、実行時のタスク owner または plan で対象 Role を補う。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
   - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
-  - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。
+  - 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
