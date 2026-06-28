@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-06-28T05:50:17Z",
+  "type": "cancel",
+  "task_id": "T-LAUNCH-pm-roles-080-I01",
+  "by": "indie",
+  "msg": "force-cancel this task"
+}
