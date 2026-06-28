@@ -220,13 +220,35 @@ phase の共通契約は親設計に従う。Claude Code を必要とする phas
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針は親設計に従う。`exit_codes` と `stderr_patterns` でレートリミットを検出し、`overloaded` は Anthropic API でモデル負荷が高い場合に返るメッセージである。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Claude 固有の検出条件は `providers.claude.rate_limit_detection` に置き、`pm-members.yaml` で `provider: claude` の member に適用する。
+
+```yaml
+providers:
+  claude:
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "overloaded"
+        - "session limit"
+```
+
+`429 Too Many Requests` が Anthropic API の rate limit シグナル、`overloaded` はモデル負荷が高い場合に返るメッセージである。`session limit` は実行ログ（`logs/exec-auto.log`）で `You've hit your session limit · resets 4:10am (UTC)` として観測した実文言で、`rate limit` / `429` を含まない。この事例は現状 `exit_codes: [1]` で偶発的に検出されていたが、exit 1 は agent 自身の block 終了と区別できないため、汎用的な `exit_codes: [1]` は使わず、この stderr 文言で明示的に検出する。
 
 実際のファイル: [exec-defaults.yaml](../../../../.specdojo/exec-defaults.yaml)
 
-Anthropic API では `429 Too Many Requests` が rate limit のシグナル。`try_next` でフォールバックメンバー（`claude-expert-edit-agent` など）に切り替えることで継続実行できる。
+`try_next` でフォールバックメンバー（`claude-expert-edit-agent` など）に切り替えることで継続実行できる。
 
-Claude Code では `claude auth status` により認証状態は JSON で取得できるが、provider quota の残量、session limit、reset 時刻を返す共通 CLI は前提にしない。これらは error message と exit code に基づいて `limited` または `transient_failure` として正規化する。
+Claude Code の limit は次の種類があり、reset horizon が異なるため正規化と回復戦略を変える。共通モデルへの写像は親設計の limit 表に従う。
+
+| limit               | 概要                                                                                                            | reset horizon          | `provider_signal.kind` | 扱い                                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
+| rate limit（`429`） | API リクエスト過多による一時制限                                                                                | 秒〜分                 | `rate_limit`           | `limited` / retryable。wait+backoff か try_next                                                 |
+| `overloaded`        | モデル負荷が高い場合のメッセージ                                                                                | 秒〜分                 | `overloaded`           | `transient_failure` / retryable。wait+backoff                                                   |
+| 5時間枠（session）  | 最初のメッセージから300分のローリング枠で token を集計。stderr に reset 時刻を含む（例: `resets 4:10am (UTC)`） | 時間（初回 prompt+5h） | `session_limit`        | `limited`。別 provider への try_next を優先。reset 時刻は `provider_signal.metadata` へ取り込む |
+| 週次上限            | ローリング7日の computing-hour 予算。5時間枠とは別に上限化                                                      | 日〜週                 | `quota_exhausted`      | `limited` だが run 内回復は不可。try_next か block                                              |
+
+`claude auth status` で認証状態は JSON で取得できるが、provider quota の残量、session limit、reset 時刻を返す共通 CLI は前提にしない。残量や reset 時刻は `claude /usage` / `/status` で人が確認する補助情報とし、自動制御は error message と exit code に基づく正規化で行う。
 
 ### 9.4. `exec run` による実行
 

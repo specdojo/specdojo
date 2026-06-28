@@ -32,12 +32,17 @@ export type SpecDojoProjectConfig = {
   run?: SpecDojoRunConfig;
 };
 
+// Agent runtime provider family. Selects which providers.<name> override in
+// exec-defaults.yaml applies to a member's failure handling.
+export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
+
 export type ProjectMember = {
   nickname: string;
   display_name: string;
   email: string | null;
   roles: string[];
   type: "human" | "agent";
+  provider?: AgentProvider; // agent only: runtime CLI that executes the command
   persona?: string;
   focus?: string[];
   capabilities?: string[]; // agent only: tool access (e.g. web_search)

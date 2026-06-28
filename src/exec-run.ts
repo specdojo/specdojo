@@ -6,6 +6,8 @@ import { selfRunArgs } from "./spawn-self.js";
 import {
   defaultExecDefaultsPath,
   loadExecDefaultsConfig,
+  resolveRateLimitDetection,
+  resolveRateLimitPolicy,
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "./exec-agent-config.js";
@@ -20,6 +22,7 @@ import {
   loadConfig,
   loadMemberRoster,
   specdojoRootDir,
+  type AgentProvider,
   type MemberRoster,
   type ProjectMember,
 } from "./specdojo-config.js";
@@ -130,8 +133,12 @@ export type ModeAgentOverrides = {
 //   error   — an override was requested but could not be resolved (caller should fail the task)
 export type AgentOverrideResolution =
   | { kind: "none" }
-  | { kind: "command"; command: string; actor?: string }
+  | { kind: "command"; command: string; actor?: string; provider?: AgentProvider }
   | { kind: "error"; message: string };
+
+// A runnable agent candidate: the shell command plus the provider it belongs to.
+// The provider selects the per-provider failure-handling override in exec-defaults.yaml.
+type AgentRunCandidate = { command: string; provider?: AgentProvider };
 
 // Resolve the agent override for a task's mode. A single explicit override (--cmd / --agent-cmd)
 // wins for every mode and accepts a nickname or a raw command string. Otherwise the mode-specific
@@ -154,6 +161,7 @@ export function resolveAgentOverride(
       kind: "command",
       command: member?.command ?? agentCmdOverride,
       actor: member?.nickname,
+      provider: member?.provider,
     };
   }
 
@@ -170,7 +178,12 @@ export function resolveAgentOverride(
       message: `${flag} agent nickname not found in pm-members.yaml (or has no command): ${nickname}`,
     };
   }
-  return { kind: "command", command: member.command, actor: member.nickname };
+  return {
+    kind: "command",
+    command: member.command,
+    actor: member.nickname,
+    provider: member.provider,
+  };
 }
 
 export type ResolvedRequirements = {
@@ -181,7 +194,7 @@ export type ResolvedRequirements = {
 type PreparedTask = {
   task: ReadyTaskView;
   actor: string;
-  agentCommands: string[];
+  agentCandidates: AgentRunCandidate[];
   prompt: string;
   worktree: ExecWorktree;
   resultPath?: string;
@@ -492,26 +505,30 @@ async function executeAgent(
 // immediately (no wait). Only after every candidate is rate-limited do we wait+backoff and run
 // another full pass, bounded by rate_limit_policy.on_critical.retry.max_attempts. Applies to all
 // tasks (critical and non-critical) so a rate limit no longer stops the run outright.
+//
+// Detection is resolved per candidate from its provider (e.g. claude's "session limit" vs
+// opencode's "timeout"/"out of memory"); the run-level retry/backoff policy is governed by the
+// primary (highest-priority) candidate's provider.
 async function runWithRetry(
-  agentCommands: string[],
+  candidates: AgentRunCandidate[],
   prompt: string,
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv,
 ): Promise<{ result: RunResult; stderr: string }> {
-  const detection = execDefaults.rate_limit_detection;
-  const policy = execDefaults.rate_limit_policy;
+  const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
 
   // One pass tries every candidate in priority order with no wait between switches.
   const runPass = async (): Promise<{ result: RunResult; stderr: string }> => {
     let lastStderr = "";
-    for (let idx = 0; idx < agentCommands.length; idx++) {
+    for (let idx = 0; idx < candidates.length; idx++) {
       if (idx > 0) {
         process.stdout.write(
-          `Rate limit detected. Switching to next agent (${idx + 1}/${agentCommands.length})...\n`,
+          `Rate limit detected. Switching to next agent (${idx + 1}/${candidates.length})...\n`,
         );
       }
-      const attempt = await executeAgent(agentCommands[idx], prompt, detection, cwd, env);
+      const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
+      const attempt = await executeAgent(candidates[idx].command, prompt, detection, cwd, env);
       lastStderr = attempt.stderr;
       if (attempt.result !== "rate_limit")
         return { result: attempt.result, stderr: attempt.stderr };
@@ -524,7 +541,7 @@ async function runWithRetry(
 
   // Every candidate is rate-limited. Without a policy we cannot bound further retries, so stop.
   if (!policy) {
-    process.stdout.write(`Rate limit: all ${agentCommands.length} agent(s) exhausted.\n`);
+    process.stdout.write(`Rate limit: all ${candidates.length} agent(s) exhausted.\n`);
     return firstPass;
   }
 
@@ -548,7 +565,7 @@ async function runWithRetry(
   }
 
   process.stdout.write(
-    `Rate limit: all ${agentCommands.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`,
+    `Rate limit: all ${candidates.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`,
   );
   return { result: "rate_limit", stderr: lastStderr };
 }
@@ -615,14 +632,16 @@ async function prepareSingleTask(
     process.stdout.write(`  ${overrideResolution.message}\n`);
     return "failure";
   }
-  const agentCommands: string[] =
-    overrideResolution.kind === "command" ? [overrideResolution.command] : [];
+  const agentCandidates: AgentRunCandidate[] =
+    overrideResolution.kind === "command"
+      ? [{ command: overrideResolution.command, provider: overrideResolution.provider }]
+      : [];
   let actor = actorOverride ?? "auto-agent";
   if (!actorOverride && overrideResolution.kind === "command" && overrideResolution.actor) {
     actor = overrideResolution.actor;
   }
 
-  if (agentCommands.length === 0) {
+  if (agentCandidates.length === 0) {
     // Human tasks cannot be run automatically without explicit --agent-cmd override.
     if ((task.execution ?? "agent") === "human") {
       process.stdout.write(
@@ -655,7 +674,7 @@ async function prepareSingleTask(
     }
 
     for (const candidate of candidates) {
-      agentCommands.push(candidate.command!);
+      agentCandidates.push({ command: candidate.command!, provider: candidate.provider });
     }
     if (!actorOverride) actor = candidates[0].nickname;
     process.stdout.write(
@@ -694,13 +713,13 @@ async function prepareSingleTask(
       ? `  [dry-run] already claimed: ${task.id} as ${actor} (skip claim)`
       : `  [dry-run] would claim: ${task.id} as ${actor}`;
     process.stdout.write(claimMsg + "\n");
-    process.stdout.write(`  [dry-run] Command: ${agentCommands[0]}\n`);
+    process.stdout.write(`  [dry-run] Command: ${agentCandidates[0]?.command ?? ""}\n`);
     process.stdout.write(`  [dry-run] CWD: ${worktree.path}\n`);
     process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`);
     return {
       task,
       actor,
-      agentCommands,
+      agentCandidates,
       prompt,
       worktree,
     };
@@ -783,7 +802,7 @@ async function prepareSingleTask(
   return {
     task,
     actor,
-    agentCommands,
+    agentCandidates,
     prompt,
     worktree,
     resultPath,
@@ -818,10 +837,10 @@ async function runPreparedTask(
 ): Promise<RunResult> {
   if (dryRun) return "success";
 
-  process.stdout.write(`  Running: ${prepared.agentCommands[0]}\n`);
+  process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
   const { result, stderr } = await runWithRetry(
-    prepared.agentCommands,
+    prepared.agentCandidates,
     prepared.prompt,
     execDefaults,
     prepared.worktree.path,

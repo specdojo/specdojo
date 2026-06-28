@@ -201,9 +201,41 @@ phase の共通契約は親設計に従う。外部Web検索が必要なphaseは
 
 ### 8.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針は親設計に従う。Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になる。待機時間を延長する場合や `try_next` を有効にする場合は、同じ mode と proficiency に適合する代替 member を定義する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になるため、OpenCode 固有の検出条件とポリシーを `providers.opencode` に置き、`pm-members.yaml` で `provider: opencode` の member に適用する。
 
-グローバルな rate limit 検出設定は `.specdojo/exec-defaults.yaml` に定義する。現在は `rate limit` と `429` を検出する。Ollama のタイムアウトをフォールバック対象にする場合は、誤検出範囲を確認してから stderr pattern を追加する。
+```yaml
+providers:
+  opencode:
+    rate_limit_detection:
+      exit_codes: [] # ローカル実行では exit 1 は実失敗。stderr で判定する
+      stderr_patterns:
+        - "timeout"
+        - "connection refused"
+        - "out of memory"
+        - "model is loading"
+    rate_limit_policy:
+      on_non_critical:
+        action: skip
+      on_critical:
+        action: try_next
+        retry:
+          max_attempts: 3
+          initial_wait_seconds: 120 # モデル再ロード/メモリ解放に時間がかかるため長め
+          backoff_multiplier: 2
+          max_wait_seconds: 600
+        on_exhausted: block
+```
+
+同一ホスト・単一モデルを共有するため、別 opencode member への `try_next` では復旧しない。復旧手段は wait+backoff の再試行であり、初回待機をモデル再ロード/メモリ解放にかかる時間に合わせて長めに取る。グローバルの `rate limit` / `429` パターンは Ollama の主たる失敗要因と一致しないため、上書きで OpenCode 固有のシグナルに置き換える。誤検出範囲を確認してから stderr pattern を追加・調整する。
+
+ローカル Ollama を provider とする本構成では、アカウントベースの limit という考え方が他 provider と根本的に異なる。クラウド provider のような rate limit（秒〜分で回復）、session limit（5時間枠など）、quota（週次・月次の利用枠）は存在しない。失敗要因はローカル資源で、すべて reset horizon が秒〜分の `transient_failure` として wait+retry で扱う。共通モデルへの写像は親設計の limit 表に従う。
+
+| 失敗要因           | 概要                                      | `provider_signal.kind` | 扱い                                   |
+| ------------------ | ----------------------------------------- | ---------------------- | -------------------------------------- |
+| モデルロード待ち   | 初回ロードやアンロード後の再ロード        | `timeout`              | `transient_failure`。wait+retry        |
+| メモリ不足         | KV キャッシュ等でホストの空きメモリが不足 | `oom`                  | `transient_failure`。wait+retry        |
+| 接続タイムアウト   | ホスト側 Ollama への接続不可・応答遅延    | `timeout`              | `transient_failure`。wait+retry        |
+| コンテキスト長超過 | 作業セットが設定コンテキスト長を超える    | `fatal_failure`        | run 内回復不可。block して設計を見直す |
 
 OpenCode は provider 抽象化層であるため、quota 残量、session limit、reset 時刻のような利用枠情報を OpenCode 共通仕様として前提にしない。必要なら OpenCode 自体の event 出力とは別に、接続先 provider 固有の診断方法を採用する。
 

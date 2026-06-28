@@ -5,27 +5,68 @@ description: >
   Defines global defaults for specdojo exec run.
   Agent selection requirements are declared on sch-strategy phases; this file only
   contains runtime defaults shared across tracks, such as rate-limit detection and retry policy.
+  Detection signals, exit codes, and wait times differ per agent runtime provider, so the
+  top-level rate_limit_detection / rate_limit_policy act as global defaults and providers.<name>
+  supplies per-provider overrides keyed by pm-members[].provider.
 type: object
 additionalProperties: false
 
 properties:
   rate_limit_detection:
     $ref: "#/$defs/RateLimitDetection"
-    description: "Signals used to detect agent rate-limit failures."
+    description: >
+      Global default signals used to detect agent rate-limit / transient failures.
+      Used for members whose provider has no override under providers.<name>.
 
   rate_limit_policy:
     $ref: "#/$defs/RateLimitPolicy"
-    description: "Behavior when an agent hits a rate limit during exec run."
+    description: >
+      Global default behavior when an agent hits a rate limit during exec run.
+      Used for members whose provider has no override under providers.<name>.
+
+  providers:
+    type: object
+    description: >
+      Per-provider overrides of rate_limit_detection and rate_limit_policy. The key
+      matches pm-members[].provider (the agent runtime that executes the member command).
+      For a given member, exec run resolves detection and policy from its provider override
+      when present, otherwise from the top-level (global) values. This keeps provider-specific
+      signals (e.g. opencode load wait / timeout, claude overloaded, copilot quota) from
+      leaking across providers.
+    propertyNames:
+      enum: ["opencode", "claude", "codex", "copilot", "custom"]
+    additionalProperties:
+      $ref: "#/$defs/ProviderOverride"
 
 $defs:
+  ProviderOverride:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    description: >
+      Provider-scoped override. Each present key fully replaces the matching top-level
+      (global) value for members of this provider; absent keys fall back to the global value.
+    properties:
+      rate_limit_detection:
+        $ref: "#/$defs/RateLimitDetection"
+        description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
+      rate_limit_policy:
+        $ref: "#/$defs/RateLimitPolicy"
+        description: "Provider-specific retry / fallback / block policy."
+
   RateLimitDetection:
     type: object
     additionalProperties: false
-    description: "Exit codes and stderr patterns that identify rate-limit failures."
+    description: "Exit codes and stderr patterns that identify rate-limit / transient failures."
     properties:
       exit_codes:
         type: array
         uniqueItems: true
+        description: >
+          Exit codes treated as a rate-limit / transient signal. Avoid generic codes such as 1:
+          most agent CLIs also use exit 1 for ordinary failure and for the agent's own block
+          signal, so a bare exit 1 cannot be distinguished from a rate limit. Prefer stderr_patterns,
+          or set provider-specific codes under providers.<name>.
         items:
           type: integer
       stderr_patterns:

@@ -232,9 +232,29 @@ phase の共通契約は親設計に従う。Copilot の Web 検索または Git
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針は親設計に従う。Copilot の rate limit は `429`、`rate limit`、quota / premium request 上限を示すメッセージとして検出する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Copilot 固有の検出条件は `providers.copilot.rate_limit_detection` に置き、`pm-members.yaml` で `provider: copilot` の member に適用する。
 
-Copilot では quota / premium request 上限に関する文言が返る場合があるが、残量や reset 時刻を安定取得する共通非対話 API は前提にしない。stderr message、JSONL error、または OTel の error 情報から `limited` を判定し、詳細は provider 固有 signal として保持する。
+```yaml
+providers:
+  copilot:
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "premium request"
+```
+
+Copilot の limit は、消費量ベースの premium request クォータと、需要調整の rate limit で考え方が異なる。共通モデルへの写像は親設計の limit 表に従う。
+
+| limit                        | 概要                                                                                                                | reset horizon             | `provider_signal.kind` | 扱い                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| rate limit                   | 高需要時の公平利用のためのスロットリング                                                                            | 秒〜分                    | `rate_limit`           | `limited` / retryable。wait+backoff か try_next                                                                |
+| premium request 月次クォータ | 消費量ベースの月次枠（例: Pro 300 / Pro+ 1500）。毎月1日 00:00 UTC リセット、繰越なし。CLI は1プロンプトで1以上消費 | 月次（毎月1日 00:00 UTC） | `quota_exhausted`      | `limited`。超過後は included model に degrade して継続可だが throttle 対象。run 継続不可なら try_next か block |
+
+`429` / `rate limit` を rate limit シグナルとして検出する。quota / premium request 上限を示すメッセージは `quota_exhausted` として検出する。premium 超過後も Copilot 側で included model にフォールバックして継続する場合があるため、共通層では `limited` として扱いつつ、継続失敗時にのみ try_next / block へ進む。残量や reset 時刻を安定取得する共通非対話 API は前提にせず、`/usage` を人が確認する補助情報とし、自動制御は stderr message / JSONL error / OTel の error 情報に基づく。汎用的な `exit_codes: [1]` は使わず stderr で判定する。
+
+stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
 
 実際のファイル: `.specdojo/exec-defaults.yaml`
 

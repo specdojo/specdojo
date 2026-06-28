@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir, type AgentProvider } from "./specdojo-config.js";
 
-// ── Types for .specdojo/exec-defaults.yaml (global) ───────────────────────────
+// ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
 export type RateLimitDetection = {
   exit_codes?: number[];
@@ -28,10 +28,38 @@ export type RateLimitPolicy = {
   };
 };
 
-export type ExecDefaultsConfig = {
+// Per-provider override. Each present key fully replaces the matching global
+// value for members of this provider; absent keys fall back to the global value.
+export type ProviderOverride = {
   rate_limit_detection?: RateLimitDetection;
   rate_limit_policy?: RateLimitPolicy;
 };
+
+export type ExecDefaultsConfig = {
+  rate_limit_detection?: RateLimitDetection;
+  rate_limit_policy?: RateLimitPolicy;
+  providers?: Partial<Record<AgentProvider, ProviderOverride>>;
+};
+
+// ── Provider resolution ─────────────────────────────────────────────────────
+// Detection and policy are resolved independently: a provider override for one
+// key does not drop the global value for the other.
+
+export function resolveRateLimitDetection(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): RateLimitDetection | undefined {
+  const override = provider ? config.providers?.[provider]?.rate_limit_detection : undefined;
+  return override ?? config.rate_limit_detection;
+}
+
+export function resolveRateLimitPolicy(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): RateLimitPolicy | undefined {
+  const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
+  return override ?? config.rate_limit_policy;
+}
 
 // ── Loaders ───────────────────────────────────────────────────────────────────
 

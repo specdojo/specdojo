@@ -3,8 +3,19 @@
 #
 # エージェント選択に使う作業要件（mode / capabilities / proficiency）は
 # sch-strategy-<track>.yaml の phase に定義する。
+#
+# rate_limit_detection / rate_limit_policy は全 provider 共通のグローバル既定値。
+# 検出シグナル・終了コード・待機時間は provider ごとに異なるため、provider 別の
+# 上書きは providers.<provider> に置く（キーは pm-members[].provider に対応）。
+# member ごとに、対応する provider ブロックがあればそれを、なければ下のグローバル
+# 既定を使う。検出は候補ごとに provider で解決し、retry/backoff の policy は最優先
+# 候補（candidates[0]）の provider で解決する。
 
 rate_limit_detection:
+  # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
+  # exit 1 で返すため、素の exit 1 は rate limit と区別できない（providers.<name> で
+  # stderr_patterns に寄せる）。グローバル exit 1 は override の無い provider 向けの
+  # 後方互換フォールバックとして残す。
   exit_codes: [1]
   stderr_patterns:
     - "rate limit"
@@ -21,3 +32,68 @@ rate_limit_policy:
       backoff_multiplier: 3 # 60s -> 180s -> 540s
       max_wait_seconds: 600
     on_exhausted: block # 全候補試行後はブロックして人間に委ねる
+
+# provider 別の検出・ポリシー上書き。各 provider ブロックの rate_limit_detection を
+# 与えた場合、その provider の member ではグローバル rate_limit_detection を完全に
+# 置き換える（exit_codes を省略すれば exit code 起因の誤検出を避けられる）。
+#
+# limit の種類は provider ごとに異なる（rate limit / session limit / 週次・月次 quota）。
+# reset horizon により retryable と回復戦略が変わるため、詳細は各 provider 設計書の
+# limit 表を参照する。stderr の実文言は CLI バージョンで変わりうるため、下記 pattern は
+# 実際の出力で検証してから確定する。
+providers:
+  claude:
+    # Anthropic API: 429 / rate limit に加え、モデル高負荷時の overloaded を検出。
+    # session limit は logs/exec-auto.log で実観測:
+    #   "You've hit your session limit · resets 4:10am (UTC)"
+    # （rate limit / 429 を含まないため exit 1 ではなくこの文言で検出する必要がある）
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "overloaded"
+        - "session limit"
+
+  copilot:
+    # Copilot: 429 / rate limit に加え、quota / premium request 上限の文言を検出。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "premium request"
+
+  codex:
+    # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
+    # と週次上限（weekly / usage limit）がスタックする。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "session limit"
+        - "weekly limit"
+        - "usage limit"
+
+  opencode:
+    # ローカル Ollama: API rate limit より、モデルロード待ち・メモリ不足・接続
+    # タイムアウトが主な失敗要因。exit 1 は実失敗なので exit_codes は空にする。
+    rate_limit_detection:
+      exit_codes: []
+      stderr_patterns:
+        - "timeout"
+        - "connection refused"
+        - "out of memory"
+        - "model is loading"
+    # 同一ホスト・単一モデル共有のため、別 opencode member への try_next では解消
+    # しない。復旧は wait+backoff の再試行に依存するため初回待機を長めに取る。
+    rate_limit_policy:
+      on_non_critical:
+        action: skip
+      on_critical:
+        action: try_next
+        retry:
+          max_attempts: 3
+          initial_wait_seconds: 120 # モデル再ロード/メモリ解放に時間がかかるため長め
+          backoff_multiplier: 2 # 120s -> 240s -> 480s
+          max_wait_seconds: 600
+        on_exhausted: block

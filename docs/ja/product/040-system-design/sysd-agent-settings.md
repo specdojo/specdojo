@@ -91,16 +91,17 @@ agent CLI 固有のプロジェクト設定と agent 定義の配置は子設計
 
 `pm-members.yaml` の member は、少なくとも次の属性で実行方法と選択条件を定義する。
 
-| 項目                 | 用途                                                         |
-| -------------------- | ------------------------------------------------------------ |
-| `nickname`           | event、result、`--by` で使用する member 識別子               |
-| `type`               | agent member は `agent`                                      |
-| `mode`               | `edit` または `review`                                       |
-| `capabilities`       | Web 検索など、その member が提供できる能力                   |
-| `proficiency`        | `normal` または `expert`                                     |
-| `priority`           | 同じ要件に適合する member 間の優先順位                       |
-| `command`            | `specdojo exec run` が起動する非対話コマンド                 |
-| `scheduler_strategy` | ready task の選択順序。edit は `critical-first` を基本とする |
+| 項目                 | 用途                                                                |
+| -------------------- | ------------------------------------------------------------------- |
+| `nickname`           | event、result、`--by` で使用する member 識別子                      |
+| `type`               | agent member は `agent`                                             |
+| `provider`           | member を起動する agent runtime（失敗処理の provider 別解決に使う） |
+| `mode`               | `edit` または `review`                                              |
+| `capabilities`       | Web 検索など、その member が提供できる能力                          |
+| `proficiency`        | `normal` または `expert`                                            |
+| `priority`           | 同じ要件に適合する member 間の優先順位                              |
+| `command`            | `specdojo exec run` が起動する非対話コマンド                        |
+| `scheduler_strategy` | ready task の選択順序。edit は `critical-first` を基本とする        |
 
 `command` には agent CLI と実行オプションだけを定義する。plan 本文はコマンド文字列へ埋め込まず、`specdojo exec run` から標準入力で渡す。
 
@@ -154,9 +155,23 @@ specdojo exec run --by <member-nickname>
 
 ### 6.2. `.specdojo/exec-defaults.yaml`
 
-rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で一元管理する。
+rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で管理する。検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なるため、共通設計はグローバル既定値と provider 別上書きの2層で構成する。
+
+- グローバル既定: top-level の `rate_limit_detection` / `rate_limit_policy`。provider 別上書きを持たない member に適用する。
+- provider 別上書き: `providers.<provider>` 配下に `rate_limit_detection` / `rate_limit_policy` を置く。キーは `pm-members.yaml` の `provider` と一致させる。
+
+`specdojo exec run` は、対象 member の `provider` に一致する上書きがあればそれを、なければグローバル既定を解決して使用する。上書きで与えたキーは、その provider の member に対してグローバルの同名キーを丸ごと置き換える（与えなかったキーはグローバルにフォールバックする）。`rate_limit_detection` と `rate_limit_policy` は独立に解決するため、一方だけ上書きしても他方はグローバルに残る。これにより、ある provider 固有のシグナル（例: OpenCode のロード待ちや timeout）が他 provider の検出へ混入しない。
+
+解決の粒度は次のとおり。検出条件はフォールバック候補ごとに各 member の `provider` で解決する（候補が provider をまたぐ場合に各々の正しいパターンで判定する）。run 単位の retry / backoff の policy は、最優先候補（先頭候補）の `provider` で解決する。
 
 ```yaml
+# グローバル既定（上書きの無い provider 向け）
+rate_limit_detection:
+  exit_codes: [1]
+  stderr_patterns:
+    - "rate limit"
+    - "429"
+
 rate_limit_policy:
   on_non_critical:
     action: skip
@@ -164,13 +179,25 @@ rate_limit_policy:
     action: try_next
     retry:
       max_attempts: 3
-      initial_wait_seconds: 30
-      backoff_multiplier: 2
-      max_wait_seconds: 300
+      initial_wait_seconds: 60
+      backoff_multiplier: 3 # 60s -> 180s -> 540s
+      max_wait_seconds: 600
     on_exhausted: block
+
+# provider 別上書き（キーは pm-members[].provider）
+providers:
+  opencode:
+    rate_limit_detection:
+      exit_codes: [] # ローカル実行では exit 1 は実失敗。stderr で判定する
+      stderr_patterns:
+        - "timeout"
+        - "out of memory"
+        - "model is loading"
 ```
 
-検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なる。子設計には provider 固有のシグナルと運用上の注意だけを記述する。
+検出条件には汎用的な `exit_codes: [1]` を使わない。多くの agent CLI は通常失敗と agent 自身の block も exit 1 で返すため、素の exit 1 だけでは rate limit と block を区別できない（`非対話実行` の終了契約を参照）。検出は provider 固有の `stderr_patterns` に寄せ、グローバルの `exit_codes: [1]` は上書きの無い provider 向けの後方互換フォールバックとして最小限にとどめる。
+
+子設計には、その provider 固有のシグナルと、`providers.<provider>` に置く上書きの内容・運用上の注意だけを記述する。
 
 ### 6.3. 制限情報と使用量の共通設計
 
@@ -189,10 +216,24 @@ rate_limit_policy:
 この設計での原則は次のとおりとする。
 
 - 共通層は raw message を解釈して `availability_state` を返すが、CLI ごとの語彙差を吸収しすぎない。
+- 検出パターンとポリシーは provider 別に `providers.<provider>` で宣言し、member の `provider` で解決する。グローバル既定は上書きの無い provider のフォールバックとして使う。
 - `session limit` は `rate limit` に畳み込まず、`provider_signal.kind` では区別して保持する。
 - quota の残量や reset 時刻は、取得できる CLI だけ `observed_usage` や `provider_signal.metadata` に保持する。
 - 取得できない値は推定しない。`unknown` として扱い、message pattern と exit code に基づいて制御する。
 - retry / fallback / block の判断は共通層で行い、残量表示や診断 UI は CLI 固有情報を参照して補足表示する。
+- `try_next` は次候補が別 provider / 別アカウントである場合に即時切替として有効に働く。OpenCode のように同一ホスト・単一モデルを共有する provider では、同 provider 内の `try_next` だけでは復旧しないため、`providers.<provider>` の policy で wait+backoff の再試行を主たる回復手段に設定する。
+
+limit は provider ごとに種類とリセット周期（reset horizon）が異なる。同じ `availability_state: limited` でも、rate limit のように数分で回復するものと、週次・月次の利用枠のように run 内では回復しないものがあるため、`retryable` と回復戦略は `provider_signal.kind` と reset horizon で判断する。
+
+| `provider_signal.kind` | reset horizon | `availability_state` | `retryable` | 主な回復戦略                                                 |
+| ---------------------- | ------------- | -------------------- | ----------- | ------------------------------------------------------------ |
+| `rate_limit`           | 秒〜分        | `limited`            | true        | wait+backoff、または別 provider への `try_next`              |
+| `overloaded`           | 秒〜分        | `transient_failure`  | true        | wait+backoff                                                 |
+| `timeout` / `oom`      | 秒〜分        | `transient_failure`  | true        | 同 member で wait+retry                                      |
+| `session_limit`        | 時間          | `limited`            | 条件付き    | 別 provider / 別アカウントへ `try_next`。reset 間近なら wait |
+| `quota_exhausted`      | 日〜月        | `limited`            | false       | 別 provider へ `try_next`、無ければ block して人間に委ねる   |
+
+どの `kind` が存在するかは provider ごとに異なり、子設計の limit 表に従う。reset 時刻が取得できる場合のみ `observed_usage` / `provider_signal.metadata` に保持し、取得できない場合は推定せず message pattern と exit code で制御する。
 
 ## 7. 外部エージェント CLI の更新
 

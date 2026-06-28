@@ -286,9 +286,31 @@ phase の共通契約は親設計に従う。Codex の Web 検索が必要な ph
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針は親設計に従う。OpenAI API の rate limit は `429` または rate limit を示すメッセージとして検出する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Codex 固有の検出条件は `providers.codex.rate_limit_detection` に置き、`pm-members.yaml` で `provider: codex` の member に適用する。
 
-Codex では session limit も CLI の stderr message として現れうる。共通層では `limited` として扱うが、provider 固有シグナルでは `session_limit` と `rate_limit` を区別して保持する。
+```yaml
+providers:
+  codex:
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "session limit"
+        - "weekly limit"
+        - "usage limit"
+```
+
+Codex は API 利用と ChatGPT プラン利用で limit の考え方が異なり、複数の limit がスタックする。共通モデルへの写像は親設計の limit 表に従う。
+
+| limit               | 概要                                                                        | reset horizon | `provider_signal.kind` | 扱い                                                    |
+| ------------------- | --------------------------------------------------------------------------- | ------------- | ---------------------- | ------------------------------------------------------- |
+| rate limit（`429`） | API リクエスト過多による一時制限                                            | 秒〜分        | `rate_limit`           | `limited` / retryable。wait+backoff か try_next         |
+| 5時間枠（session）  | ChatGPT プランのローリング5時間枠。ローカルメッセージとクラウドタスクで共有 | 時間          | `session_limit`        | `limited`。別 provider / 別アカウントへ try_next を優先 |
+| 週次上限            | 5時間枠とは別にスタックする週次上限。5時間枠の reset では回復しない         | 日〜週        | `quota_exhausted`      | `limited` だが run 内回復は不可。try_next か block      |
+
+`429` または rate limit を示すメッセージを rate limit シグナルとして検出する。session limit / weekly limit も CLI の stderr message として現れうるため検出対象に含める。共通層では `limited` として扱うが、provider 固有シグナルでは `rate_limit` / `session_limit` / `quota_exhausted` を区別して保持する。残量と reset 時刻は `codex` の `/status` で人が確認する補助情報とし、自動制御は message pattern と exit code に基づく。汎用的な `exit_codes: [1]` は使わず stderr で判定する。
+
+stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
 
 実際のファイル: `.specdojo/exec-defaults.yaml`
 
