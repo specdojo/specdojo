@@ -303,6 +303,9 @@ export function selectCandidates(
   return roster.members
     .filter((m) => {
       if (m.type !== "agent" || !m.command) return false;
+      // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
+      // are skipped during auto-selection.
+      if (m.disabled === true) return false;
       const caps = m.capabilities ?? [];
       if (!required.every((c) => caps.includes(c))) return false;
       if (proficiency !== undefined && m.proficiency !== proficiency) return false;

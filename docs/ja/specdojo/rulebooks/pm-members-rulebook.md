@@ -102,6 +102,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `focus`              | 任意       | 重視する観点の配列                                  |
 | `capabilities`       | agent 推奨 | `web_search` などのツール能力                       |
 | `command`            | agent 推奨 | `exec run` が呼び出すシェルコマンド                 |
+| `disabled`           | 任意       | `true` で `exec run --auto` の候補から一時除外する  |
 | `scheduler_strategy` | 任意       | 既定の scheduler 戦略                               |
 | `note`               | 任意       | 補足。責務境界や公開上の注意を簡潔に書く            |
 
@@ -135,6 +136,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 - `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities`、`command` を記載する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
 - `command` には実行に必要なコマンドを記載するが、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
+- `disabled: true` を指定した agent は `exec run --auto` の候補選択（rate limit 時のフォールバックを含む）から一時的に除外される。特定 provider の挙動（例: rate limit）をテストする際に、member 定義を削除せずに他 agent を止める用途で使う。省略時または `false` は通常どおり選択対象になる。
 
 ### 6.5. `persona`、`focus`、`scheduler_strategy`
 

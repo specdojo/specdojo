@@ -193,6 +193,15 @@ $defs:
           When set, exec run only selects this agent for tasks whose assignment_rule
           has a matching mode (or no mode specified). Omit to handle all modes.
 
+      disabled:
+        type: boolean
+        description: >
+          Optional. When true, this agent is temporarily excluded from
+          exec run --auto candidate selection (including rate-limit fallback).
+          Use to isolate a single provider during testing (e.g. verifying one
+          agent's rate-limit handling) without deleting the member definition.
+          Absent or false means the agent is selectable as usual.
+
       scheduler_strategy:
         type: string
         description: "Optional default scheduler strategy used when this member runs

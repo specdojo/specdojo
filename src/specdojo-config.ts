@@ -50,6 +50,7 @@ export type ProjectMember = {
   priority?: number; // agent only: tiebreaker within same profile (lower = tried first)
   command?: string; // agent only: shell command executed by exec run
   mode?: "edit" | "review"; // agent only: work mode this agent handles (edit or review)
+  disabled?: boolean; // agent only: when true, excluded from exec run --auto candidate selection
   scheduler_strategy?: SchedulerStrategy;
   note?: string;
 };

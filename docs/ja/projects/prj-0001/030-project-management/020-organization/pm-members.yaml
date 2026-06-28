@@ -22,6 +22,11 @@ project_id: prj-0001
 # priority は、mode・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
 #   normal                  : OpenCode -> Codex -> Claude
 #   expert                  : Codex -> Claude
+#
+# disabled: true を指定した agent は exec run --auto の候補選択（rate limit 時の
+# フォールバックを含む）から一時的に除外される。member 定義を削除せずに特定 provider
+# だけを残してテストしたい場合（例: codex の rate limit 動作確認時に他 agent を止める）
+# に使う。省略時または false は通常どおり選択対象になる。
 
 members:
   #
@@ -56,6 +61,7 @@ members:
   #
 
   - nickname: opencode-edit-agent
+    disabled: false
     priority: 1
     display_name: OpenCode Edit Agent
     email: null
@@ -75,6 +81,7 @@ members:
     note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を担当し、タスクの owner フィールドからロール文脈を判断して作業する。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
 
   - nickname: opencode-review-agent
+    disabled: false
     priority: 1
     display_name: OpenCode Review Agent
     email: null
@@ -98,6 +105,7 @@ members:
   #
 
   - nickname: claude-edit-agent
+    disabled: false
     priority: 3
     display_name: Claude Edit Agent
     email: null
@@ -117,6 +125,7 @@ members:
     note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
 
   - nickname: claude-review-agent
+    disabled: false
     priority: 3
     display_name: Claude Review Agent
     email: null
@@ -136,6 +145,7 @@ members:
     note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物をレビューする。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
 
   - nickname: claude-expert-edit-agent
+    disabled: false
     priority: 2
     display_name: Claude Expert Edit Agent
     email: null
@@ -157,6 +167,7 @@ members:
     note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
 
   - nickname: claude-expert-review-agent
+    disabled: false
     priority: 2
     display_name: Claude Expert Review Agent
     email: null
@@ -180,6 +191,7 @@ members:
   # codex members
   #
   - nickname: codex-edit-agent
+    disabled: false
     priority: 2
     display_name: Codex Edit Agent
     email: null
@@ -199,6 +211,7 @@ members:
     note: Codex CLI を使用する標準worker。edit planに従って成果物とresultを更新する。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-review-agent
+    disabled: false
     priority: 2
     display_name: Codex Review Agent
     email: null
@@ -218,6 +231,7 @@ members:
     note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-edit-agent
+    disabled: false
     priority: 1
     display_name: Codex Expert Edit Agent
     email: null
@@ -239,6 +253,7 @@ members:
     note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planを担当する。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
   - nickname: codex-expert-review-agent
+    disabled: false
     priority: 1
     display_name: Codex Expert Review Agent
     email: null

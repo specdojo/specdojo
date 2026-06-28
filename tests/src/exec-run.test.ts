@@ -108,6 +108,18 @@ describe("selectCandidates", () => {
 
     expect(actual).toEqual(["low", "high"]);
   });
+
+  it("excludes agents marked disabled so a single provider can be isolated for testing", () => {
+    const members = roster([
+      agent({ nickname: "codex", priority: 1 }),
+      agent({ nickname: "claude", priority: 2, disabled: true }),
+      agent({ nickname: "opencode", priority: 3, disabled: false }),
+    ]);
+
+    const actual = selectCandidates(requirements, members, "edit").map((m) => m.nickname);
+
+    expect(actual).toEqual(["codex", "opencode"]);
+  });
 });
 
 describe("resolveAgentOverride", () => {
