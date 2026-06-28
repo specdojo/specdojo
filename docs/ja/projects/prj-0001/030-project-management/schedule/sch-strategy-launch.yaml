@@ -78,7 +78,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: normal
+      proficiency: expert
       task_suffix: "070"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -90,7 +90,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: normal
+      proficiency: expert
       task_suffix: "080"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -106,7 +106,7 @@ phase_sets:
       execution: agent
       mode: review
       approach: fully-guided
-      proficiency: normal
+      proficiency: expert
       task_suffix: "090"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -118,7 +118,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: recipe-maintenance
-      proficiency: normal
+      proficiency: expert
       task_suffix: "100"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -130,7 +130,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: rulebook-maintenance
-      proficiency: normal
+      proficiency: expert
       task_suffix: "110"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -142,7 +142,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: sample-maintenance
-      proficiency: normal
+      proficiency: expert
       task_suffix: "120"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -154,7 +154,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: template-maintenance
-      proficiency: normal
+      proficiency: expert
       task_suffix: "130"
       duration_days: 0.25 # 1〜2h 相当
       description: |
