@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-29T17:29:47Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-100",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
