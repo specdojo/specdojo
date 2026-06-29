@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-29T16:56:32Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-assumptions-constraints-dependencies-100",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
