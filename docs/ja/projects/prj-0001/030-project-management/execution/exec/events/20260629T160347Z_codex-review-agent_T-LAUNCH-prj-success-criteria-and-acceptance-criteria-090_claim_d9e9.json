@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-29T16:03:47Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090",
+  "by": "codex-review-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
