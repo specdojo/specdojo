@@ -19,10 +19,11 @@ _PHASE_DESCRIPTION_
 
 <!-- markdownlint-disable MD055 MD056 -->
 
+<!-- prettier-ignore-start -->
 | ID  | ロール | viewpoint_id | 確認基準 |
 | --- | ------ | ------------ | -------- |
-
 _REVIEW_VIEWPOINT_ROWS_
+<!-- prettier-ignore-end -->
 
 <!-- markdownlint-enable MD055 MD056 -->
 

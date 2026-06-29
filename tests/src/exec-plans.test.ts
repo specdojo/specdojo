@@ -1,6 +1,7 @@
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
@@ -368,6 +369,34 @@ describe("plan generation (edit done_criteria goals)", () => {
   });
 });
 
+describe("review plan templates", () => {
+  const reviewTemplates = [
+    "xrp-template.md",
+    "xrp-fully-guided-template.md",
+    "xrp-recipe-guided-template.md",
+    "xrp-freeform-template.md",
+    "xrp-rulebook-maintenance-template.md",
+    "xrp-recipe-maintenance-template.md",
+    "xrp-sample-maintenance-template.md",
+    "xrp-template-maintenance-template.md",
+  ];
+
+  it("Prettier 保存後もレビュー観点テーブルと行プレースホルダの間に空行を入れない", async () => {
+    for (const template of reviewTemplates) {
+      const path = join("docs/ja/specdojo/templates", template);
+      const source = readFileSync(path, "utf8");
+      const formatted = await format(source, { parser: "markdown" });
+
+      expect(formatted, template).toContain(
+        "| --- | ------ | ------------ | -------- |\n_REVIEW_VIEWPOINT_ROWS_",
+      );
+      expect(formatted, template).not.toContain(
+        "| --- | ------ | ------------ | -------- |\n\n_REVIEW_VIEWPOINT_ROWS_",
+      );
+    }
+  });
+});
+
 describe("generateSinglePlan", () => {
   function writeCatalog(catalogPath: string): void {
     mkdirSync(catalogPath, { recursive: true });
@@ -501,6 +530,36 @@ describe("generateSinglePlan", () => {
       });
 
       expect(existsSync(outPath)).toBe(true);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("review plan のレビュー観点テーブルは区切り行の直後に RVP 行を出力する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-090",
+          local_id: "overview",
+          mode: "review",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| RVP-001 |");
+      expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| RVP-001 |");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
