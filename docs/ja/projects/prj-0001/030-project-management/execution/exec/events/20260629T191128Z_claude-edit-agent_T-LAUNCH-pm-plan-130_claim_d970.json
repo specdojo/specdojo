@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-29T19:11:28Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-plan-130",
+  "by": "claude-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
