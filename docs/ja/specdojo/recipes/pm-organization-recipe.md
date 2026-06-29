@@ -37,6 +37,7 @@ Organization Definition Writing Recipe
 | 兼務の根拠         | 兼務しても判断・実行が滞らない範囲                       |
 | 分離が必要な兆候   | 判断の滞留、継続運用、公開・運用責任の増加               |
 | 下流文書           | Role code の正本、実行主体の対応、必要な責任分担の記録先 |
+| 参照範囲の限界     | 依存文書のうち、今回の作成で実際に確認できる範囲         |
 
 ## 3. 全体の作成手順
 
@@ -76,6 +77,7 @@ Organization Definition Writing Recipe
 
 - Role code の一覧そのものではなく、正本となる `pm-roles.yaml` と使い方を示す。
 - 採用は責務語彙の採用であり、member の専任配置や兼務割り当ては `pm-members.yaml` に委譲すると書く。
+- 依存文書の参照範囲内で Role code の実体一覧を確認できない場合は、一覧を推測で埋めず、語彙の正本と使い方だけを記述する。
 - member nickname、agent 名、個人名、未定義 Role code を `owner` にしないことを明記する。
 
 ### 4.3. 関連ドキュメント
@@ -147,6 +149,7 @@ Organization Definition Writing Recipe
 | 目的・スコープとの整合 | プロジェクトの目的、スコープ、優先順位、公開方針を支える構成か        |
 | 承認判断               | PO が承認、保留、差し戻しを判断する論点、未決事項、影響範囲が分かるか |
 | owner 語彙             | Schedule の `owner` に使える値が `pm-roles.yaml` と整合しているか     |
+| 参照範囲               | 依存文書の参照範囲外の内容を推測で補っていないか                      |
 | 正本の分離             | Role code、実行主体、責任分担を正本へ委譲できているか                 |
 | 公開可否               | 個人情報・非公開情報を含まず、公開判断が人間の PO に残るか            |
 | 下流入力               | `pm-roles.yaml` と `pm-members.yaml` を作成・更新できる導線があるか   |
@@ -157,5 +160,6 @@ Organization Definition Writing Recipe
 - [[pm-organization-sample|組織定義 sample]] と同程度の粒度で、具体的な割り当てを複製していない。
 - `pm-roles.yaml` と `pm-members.yaml` への導線がある。
 - Schedule の `owner` に使える値の正本が明記されている。
+- 依存文書の参照範囲外の内容を推測で補っていない。
 - PO の最終判断、公開可否、説明責任が明記されている。
 - 見直し条件に、トリガー、影響範囲、更新対象がある。
