@@ -52,7 +52,7 @@ import {
   type StateSnapshot,
   type TaskMode,
 } from "./exec-types.js";
-import { nowUtcIsoSeconds, readJson, requireNonEmpty } from "./exec-shared.js";
+import { nowUtcIsoSeconds, qualifyTaskId, readJson, requireNonEmpty } from "./exec-shared.js";
 import {
   archivePlan,
   buildInPlaceStem,
@@ -67,6 +67,7 @@ import { scaffoldViewpoints } from "./review-plan.js";
 import { registerResumeCommand, registerRunCommand } from "./exec-run.js";
 import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
+import { discardStaleExecWorktree } from "./exec-worktree-ops.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import {
   buildPhaseModeIndex,
@@ -123,6 +124,7 @@ type ExecCommandOpts = {
   strategy?: string;
   dryRun?: boolean;
   force?: boolean;
+  resetWorktree?: boolean;
 };
 
 type LoadedExecState = {
@@ -453,6 +455,10 @@ async function runLockedEventCommand(
     }
     if (opts.dryRun) {
       process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
+      if (action.type === "cancel" && opts.resetWorktree) {
+        const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
+        process.stdout.write(`[dry-run] reset worktree: discard exec/${worktreeTaskId}\n`);
+      }
       exitWithCode(true);
       return;
     }
@@ -468,6 +474,21 @@ async function runLockedEventCommand(
         actor,
         startedAt: new Date().toISOString(),
       });
+    }
+    // The cancel event has been persisted (the task is now todo/cancelled), so a retained exec
+    // worktree is stale residue. --reset-worktree discards it eagerly instead of waiting for the
+    // next claim to clean it up via discardStaleExecWorktree.
+    if (action.type === "cancel" && opts.resetWorktree) {
+      const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
+      const discarded = discardStaleExecWorktree({
+        context: { repoRoot: specdojoRootDir(), schedulePath, executionPath },
+        worktreeTaskId,
+      });
+      process.stdout.write(
+        discarded
+          ? `reset worktree: discarded ${discarded}\n`
+          : `reset worktree: no worktree or branch for ${worktreeTaskId}\n`,
+      );
     }
     process.stdout.write(out + "\n");
     exitWithCode(true);
@@ -538,6 +559,13 @@ export function registerExecCommands(program: Command): void {
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
     if (t === "complete" || t === "block" || t === "cancel") addForceOption(cmd);
+    if (t === "cancel") {
+      cmd.option(
+        "--reset-worktree",
+        "Discard the task's exec worktree and branch after cancelling (force removal)",
+        false,
+      );
+    }
 
     if (t in lockedActions) {
       cmd.action(async (opts) =>

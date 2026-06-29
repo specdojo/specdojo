@@ -295,6 +295,56 @@ git worktree add ../specdojo-edit -b <edit-branch>
 # ../specdojo-edit 側で編集・commit し、ループ終了後に統合する
 ```
 
+### 8.1. blocked タスクの復帰
+
+`--auto` / `--loop` 実行中にエージェントが終了コード 1 で終わると、該当タスクは `block` イベントで `blocked` になり、worktree は調査用に保持される。`blocked` は「人の判断・外部対応が必要な本物の障害」を表すため、`--auto` は ready 選択から `blocked` を除外する。ループは他の Ready タスクを進め、Ready が尽きると停止する。`--loop` 自身は blocked を自動で復帰させない（自動リセットは再実行 → 再 block のループを招くため、復帰は人が判断する）。
+
+原因を確認したら、状況に応じて次のいずれかで再実行可能にする。
+
+| 状況                                    | コマンド       | 結果                                         |
+| --------------------------------------- | -------------- | -------------------------------------------- |
+| 中断で `doing` のまま（block ではない） | `exec resume`  | 既存 worktree 上で同じ actor が継続          |
+| 障害を解消し、同じ試行を続ける          | `exec unblock` | `blocked → doing`（block 直前の作業を再開）  |
+| 試行を破棄して最初からやり直す          | `exec cancel`  | `blocked → todo`（次の `--auto` で再 claim） |
+
+`unblock` と `cancel` の `blocked` からの遷移先は対になっている。`unblock` は block 直前の状態（`doing`）へ戻して中断した試行をそのまま続け、`cancel` は試行自体を破棄して `todo` へ戻す。
+
+`cancel` は現在の state によって意味が変わる点に注意する。
+
+| cancel 実行時の state | 遷移先      | 意味                             |
+| --------------------- | ----------- | -------------------------------- |
+| `todo`                | `cancelled` | タスクを恒久的に中止する         |
+| `doing`               | `todo`      | claim を解放して再実行可能にする |
+| `blocked`             | `todo`      | 試行を破棄して再実行可能にする   |
+
+`blocked` を `todo` に戻してループへ戻す例を示す。`cancel` は `--task` / `--by` / `--msg` を必須とする。`blocked` からの cancel は claim actor に限定されないため、`--by` には復帰操作を行う実行主体を記録すればよい。
+
+```sh
+specdojo exec cancel \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "abandon blocked attempt; reset to todo"
+
+specdojo exec build --project <project-id>
+specdojo exec run --project <project-id> --auto --loop --parallel 5
+```
+
+`cancel` でタスクを `todo` に戻した後、調査用に保持されていた exec worktree とブランチは、次回 claim 時に自動破棄されて checkpoint commit から作り直される。手動で worktree を消す必要は基本ない。
+
+調査が不要で即座に worktree とブランチも片付けたい場合は、`cancel` に `--reset-worktree` を付ける。`cancel` イベントを書き込んだ直後に、対象タスクの exec worktree とブランチを強制削除（`git worktree remove --force` と `git branch -D` 相当）する。残骸が無い場合は何もせず、その旨を表示する。
+
+```sh
+specdojo exec cancel \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "abandon blocked attempt; reset to todo" \
+  --reset-worktree
+```
+
+`--reset-worktree` は worktree を強制削除するため、未 commit の result や成果物変更が残っていても破棄する。worktree の内容を確認してから消したい場合は、フラグを付けずに `cancel` し、必要に応じて `exec worktree remove`（安全条件を確認する）を使う。対象タスクの worktree 内（カレントディレクトリがその worktree）で `--reset-worktree` を実行することはできない。root へ戻ってから実行する。
+
 ## 9. 手動実行手順
 
 `specdojo exec run --auto` が行う処理を、コマンドを使ってステップバイステップで再現する手順を示す。

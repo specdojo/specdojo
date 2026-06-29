@@ -1412,6 +1412,19 @@ specdojo exec cancel \
   --force
 ```
 
+`--reset-worktree` を付けると、`cancel` イベントを書き込んだ直後に、対象タスクの exec worktree とブランチを強制削除する（`git worktree remove --force` と `git branch -D` 相当）。`blocked` / `doing` を `todo` に戻して `--auto` / `--loop` をやり直す際に、調査用に保持された worktree を即座に片付けたい場合に使う。残骸が無い場合は何もせず、その旨を表示する。worktree を強制削除するため、未 commit の result や成果物変更は破棄される。対象タスクの worktree 内では実行できないため、root へ戻ってから実行する。
+
+```bash
+specdojo exec cancel \
+  --project prj-0001 \
+  --task T-AUTH-auth-api-020 \
+  --by agent-1 \
+  --msg "abandon blocked attempt; reset to todo" \
+  --reset-worktree
+```
+
+`blocked` からの復帰フロー全体は `specdojo-schedule-and-exec-guide.md` の `blocked タスクの復帰` を参照する。
+
 #### 8.7.6. note / link / estimate
 
 ```bash
