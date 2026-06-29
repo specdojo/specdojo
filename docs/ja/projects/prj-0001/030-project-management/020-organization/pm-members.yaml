@@ -61,7 +61,7 @@ members:
   #
 
   - nickname: opencode-edit-agent
-    disabled: true
+    disabled: false
     priority: 1
     display_name: OpenCode Edit Agent
     email: null
@@ -81,7 +81,7 @@ members:
     note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を支援し、タスクの owner フィールドからロール文脈を判断して作業する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
 
   - nickname: opencode-review-agent
-    disabled: true
+    disabled: false
     priority: 1
     display_name: OpenCode Review Agent
     email: null
@@ -105,7 +105,7 @@ members:
   #
 
   - nickname: claude-edit-agent
-    disabled: true
+    disabled: false
     priority: 3
     display_name: Claude Edit Agent
     email: null
@@ -125,7 +125,7 @@ members:
     note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
 
   - nickname: claude-review-agent
-    disabled: true
+    disabled: false
     priority: 3
     display_name: Claude Review Agent
     email: null
@@ -145,7 +145,7 @@ members:
     note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
 
   - nickname: claude-expert-edit-agent
-    disabled: true
+    disabled: false
     priority: 2
     display_name: Claude Expert Edit Agent
     email: null
@@ -167,7 +167,7 @@ members:
     note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
 
   - nickname: claude-expert-review-agent
-    disabled: true
+    disabled: false
     priority: 2
     display_name: Claude Expert Review Agent
     email: null
