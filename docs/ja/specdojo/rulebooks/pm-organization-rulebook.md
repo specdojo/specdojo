@@ -6,6 +6,8 @@ target_format: markdown
 recipe: pm-organization-recipe
 sample: pm-organization-sample
 template: pm-organization-template
+based_on:
+  - people-and-organization-definition-standard
 ---
 
 # 組織定義 作成ルール
@@ -27,13 +29,14 @@ Organization Definition Documentation Rulebook
 
 `pm-organization.md` は、プロジェクトにおける組織設計の方針・根拠文書である。役割と実行主体の詳細を分離して管理し、構成を見直す判断を可能にする。
 
-| 文書                 | 役割                                     | 正本とする内容                                            |
-| -------------------- | ---------------------------------------- | --------------------------------------------------------- |
-| `prj-overview.md`    | 目的、優先順位、公開方針の前提を定義する | 組織設計が支える目的と制約                                |
-| `pm-organization.md` | 組織構成の方針と根拠を記述する           | 構成の採用理由、`owner` 語彙の扱い、最終判断、見直し条件  |
-| `pm-roles.yaml`      | 使用する Role code を管理する            | Schedule の `owner` や RACI で使用できる Role code の語彙 |
-| `pm-members.yaml`    | 実行主体と Role code の対応を管理する    | 具体的な member、兼務、agent の対応                       |
-| `pm-raci.md`         | 必要時の責任分担を定義する               | 成果物・プロセスごとの責任分担                            |
+| 文書                                          | 役割                                       | 正本とする内容                                            |
+| --------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- |
+| `people-and-organization-definition-standard` | Role、Member、owner、RACI の共通定義を示す | 共通概念、Schedule への展開ルール、標準ロールの扱い       |
+| `prj-overview.md`                             | 目的、優先順位、公開方針の前提を定義する   | 組織設計が支える目的と制約                                |
+| `pm-organization.md`                          | 組織構成の方針と根拠を記述する             | 構成の採用理由、`owner` 語彙の扱い、最終判断、見直し条件  |
+| `pm-roles.yaml`                               | 使用する Role code を管理する              | Schedule の `owner` や RACI で使用できる Role code の語彙 |
+| `pm-members.yaml`                             | 実行主体と Role code の対応を管理する      | 具体的な member、兼務、agent の対応                       |
+| `pm-raci.md`                                  | 必要時の責任分担を定義する                 | 成果物・プロセスごとの責任分担                            |
 
 用語は、プロジェクト固有の意味を追加する場合だけ定義する。本文構成と記述ガイドで意味が明確な場合は、重複する用語定義を置かない。
 
