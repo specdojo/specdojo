@@ -803,7 +803,7 @@ async function prepareSingleTask(
     // claim (doing → todo). Otherwise the task is stranded in "doing" with no worktree and drops out
     // of ready.json. Resumed tasks (skipClaim) were already doing, so leave their state untouched.
     if (!skipClaim) {
-      spawnCancel(projectId, task.id, actor, "rollback: checkpoint failed");
+      spawnRelease(projectId, task.id, actor, "rollback: checkpoint failed");
       process.stdout.write(`  Claim rolled back (checkpoint failed): ${task.id}\n`);
     }
     throw error;
@@ -964,7 +964,7 @@ function spawnComplete(projectId: string | undefined, taskId: string, by: string
 
 // Release a just-made claim (doing → todo) when setup fails after the claim, so the task is not
 // stranded in "doing" with no worktree. Uses the claiming actor, so no cross-actor override needed.
-function spawnCancel(
+function spawnRelease(
   projectId: string | undefined,
   taskId: string,
   by: string,
@@ -972,7 +972,7 @@ function spawnCancel(
 ): void {
   const args = [
     "exec",
-    "cancel",
+    "release",
     "--task",
     taskId,
     "--by",

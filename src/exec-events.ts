@@ -50,6 +50,7 @@ export function validateEventShape(obj: unknown, source: string): string[] {
     "block",
     "unblock",
     "complete",
+    "release",
     "cancel",
     "link",
     "estimate",
@@ -94,6 +95,7 @@ export function readAllEventFiles(projectPath: string): { path: string; event: E
     estimate: 3,
     link: 3,
     unblock: 4,
+    release: 5,
     cancel: 5,
   };
   items.sort((a, b) => {
@@ -170,11 +172,19 @@ export function foldEventsToState(
     else if (event.type === "unblock")
       cur.state = "doing"; // resume work; same actor continues
     else if (event.type === "complete") cur.state = "done";
-    else if (event.type === "cancel") {
-      // cancel semantics depend on the current state:
+    else if (event.type === "release") {
+      // release returns an in-flight attempt to todo so the task can be re-executed.
+      //   doing   → todo (claim released)
+      //   blocked → todo (blocked attempt abandoned)
+      // Other states are left untouched (the command guard prevents emitting them).
+      if (cur.state === "doing" || cur.state === "blocked") cur.state = "todo";
+    } else if (event.type === "cancel") {
+      // Legacy cancel is state-dependent, kept for backward compatibility with events written
+      // before `release` existed. New cancel commands run only from todo (→ cancelled); the
+      // doing/blocked → todo transitions are now recorded as `release` events.
       //   todo    → cancelled (task permanently abandoned)
-      //   doing   → todo     (claim released; task available for re-execution)
-      //   blocked → todo     (attempt abandoned; task available for re-execution)
+      //   doing   → todo      (legacy: claim released)
+      //   blocked → todo      (legacy: attempt abandoned)
       if (cur.state === "todo") cur.state = "cancelled";
       else if (cur.state === "doing" || cur.state === "blocked") cur.state = "todo";
       else cur.state = "cancelled";
@@ -367,12 +377,43 @@ export function canUnblockTask(
   return { ok: true };
 }
 
-export function canCancelTask(
+// release returns a doing/blocked task to todo for re-execution. Only the claiming actor may
+// release it (a human may override with --force), mirroring complete/block so an agent cannot
+// reset another actor's in-flight work.
+export function canReleaseTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
   actor: string,
   override?: ForceOverride,
+): { ok: boolean; reason?: string } {
+  const node = schedule.nodes.get(taskId);
+  if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
+  if (node.kind !== "task") return { ok: false, reason: `cannot release non-task node: ${taskId}` };
+
+  const cur = snapshot.tasks[taskId];
+  const state = cur?.state ?? "todo";
+
+  if (state === "todo") return { ok: false, reason: `task not started: ${taskId}` };
+  if (state === "done") return { ok: false, reason: `task already done: ${taskId}` };
+  if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
+
+  if (state !== "doing" && state !== "blocked") {
+    return { ok: false, reason: `task is not doing or blocked: ${taskId}` };
+  }
+  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  }
+
+  return { ok: true };
+}
+
+// cancel permanently terminates a not-yet-started task (todo → cancelled). In-flight tasks
+// (doing/blocked) are returned to todo with `release`, not cancel.
+export function canCancelTask(
+  schedule: ScheduleIndex,
+  snapshot: StateSnapshot,
+  taskId: string,
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId);
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
@@ -383,11 +424,11 @@ export function canCancelTask(
 
   if (state === "done") return { ok: false, reason: `task already done: ${taskId}` };
   if (state === "cancelled") return { ok: false, reason: `task already cancelled: ${taskId}` };
-
-  // For doing state: only the actor who claimed it can cancel (release the claim),
-  // unless a human overrides the guard with --force.
-  if (state === "doing" && cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (state === "doing" || state === "blocked") {
+    return {
+      ok: false,
+      reason: `task is ${state}; use \`release\` to return it to todo: ${taskId}`,
+    };
   }
 
   return { ok: true };

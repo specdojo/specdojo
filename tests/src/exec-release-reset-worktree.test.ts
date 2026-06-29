@@ -128,8 +128,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("exec cancel --reset-worktree", () => {
-  it("discards the prepared worktree and branch after cancelling a doing task", async () => {
+describe("exec release --reset-worktree", () => {
+  it("discards the prepared worktree and branch after releasing a doing task", async () => {
     const { repo, worktreeBase, taskId } = setupRepository();
     const worktreeTaskId = `test:${taskId}`;
     const stdout: string[] = [];
@@ -147,7 +147,7 @@ describe("exec cancel --reset-worktree", () => {
 
       stdout.length = 0;
       await runExec([
-        "cancel",
+        "release",
         "--project",
         "test",
         "--task",
@@ -161,7 +161,7 @@ describe("exec cancel --reset-worktree", () => {
 
       const output = stdout.join("");
       expect(output).toContain("reset worktree: discarded exec/test-T-TEST-doc-010");
-      expect(output).toContain("_cancel_");
+      expect(output).toContain("_release_");
       // The worktree and its branch are gone.
       expect(findExecWorktree(repo, worktreeTaskId)).toBeNull();
       expect(() =>
@@ -187,7 +187,7 @@ describe("exec cancel --reset-worktree", () => {
     try {
       process.chdir(repo);
       await runExec([
-        "cancel",
+        "release",
         "--project",
         "test",
         "--task",
@@ -201,7 +201,7 @@ describe("exec cancel --reset-worktree", () => {
 
       const output = stdout.join("");
       expect(output).toContain("reset worktree: no worktree or branch for test:T-TEST-doc-010");
-      expect(output).toContain("_cancel_");
+      expect(output).toContain("_release_");
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
@@ -225,7 +225,7 @@ describe("exec cancel --reset-worktree", () => {
 
       stdout.length = 0;
       await runExec([
-        "cancel",
+        "release",
         "--project",
         "test",
         "--task",

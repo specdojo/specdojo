@@ -9,6 +9,7 @@ import {
   canCancelTask,
   canClaimTask,
   canCompleteTask,
+  canReleaseTask,
   canUnblockTask,
   collectRepeatable,
   computeReadyIds,
@@ -134,7 +135,7 @@ type LoadedExecState = {
 };
 
 type LockedEventAction = {
-  type: "claim" | "complete" | "block" | "unblock" | "cancel";
+  type: "claim" | "complete" | "block" | "unblock" | "release" | "cancel";
   check: (
     state: LoadedExecState,
     taskId: string,
@@ -455,7 +456,7 @@ async function runLockedEventCommand(
     }
     if (opts.dryRun) {
       process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
-      if (action.type === "cancel" && opts.resetWorktree) {
+      if (action.type === "release" && opts.resetWorktree) {
         const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
         process.stdout.write(`[dry-run] reset worktree: discard exec/${worktreeTaskId}\n`);
       }
@@ -475,10 +476,10 @@ async function runLockedEventCommand(
         startedAt: new Date().toISOString(),
       });
     }
-    // The cancel event has been persisted (the task is now todo/cancelled), so a retained exec
-    // worktree is stale residue. --reset-worktree discards it eagerly instead of waiting for the
-    // next claim to clean it up via discardStaleExecWorktree.
-    if (action.type === "cancel" && opts.resetWorktree) {
+    // The release event has been persisted (the task is now todo), so a retained exec worktree is
+    // stale residue. --reset-worktree discards it eagerly instead of waiting for the next claim to
+    // clean it up via discardStaleExecWorktree.
+    if (action.type === "release" && opts.resetWorktree) {
       const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
       const discarded = discardStaleExecWorktree({
         context: { repoRoot: specdojoRootDir(), schedulePath, executionPath },
@@ -534,10 +535,14 @@ export function registerExecCommands(program: Command): void {
       type: "unblock",
       check: ({ schedule, snapshot }, taskId) => canUnblockTask(schedule, snapshot, taskId),
     },
+    release: {
+      type: "release",
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canReleaseTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
+    },
     cancel: {
       type: "cancel",
-      check: ({ schedule, snapshot }, taskId, actor, opts) =>
-        canCancelTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
+      check: ({ schedule, snapshot }, taskId) => canCancelTask(schedule, snapshot, taskId),
     },
   };
 
@@ -547,6 +552,7 @@ export function registerExecCommands(program: Command): void {
     "block",
     "unblock",
     "complete",
+    "release",
     "cancel",
     "link",
     "estimate",
@@ -558,11 +564,11 @@ export function registerExecCommands(program: Command): void {
 
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
-    if (t === "complete" || t === "block" || t === "cancel") addForceOption(cmd);
-    if (t === "cancel") {
+    if (t === "complete" || t === "block" || t === "release") addForceOption(cmd);
+    if (t === "release") {
       cmd.option(
         "--reset-worktree",
-        "Discard the task's exec worktree and branch after cancelling (force removal)",
+        "Discard the task's exec worktree and branch after releasing (force removal)",
         false,
       );
     }

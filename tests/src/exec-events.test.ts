@@ -5,6 +5,7 @@ import {
   canCancelTask,
   canClaimTask,
   canCompleteTask,
+  canReleaseTask,
   canUnblockTask,
   computeReadyIds,
   foldEventsToState,
@@ -217,7 +218,7 @@ describe("foldEventsToState", () => {
     expect(snapshot.tasks["T-001"].state).toBe("doing");
   });
 
-  it("cancel で cancelled に遷移する", () => {
+  it("cancel で todo から cancelled に遷移する", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const events = [
       {
@@ -227,6 +228,58 @@ describe("foldEventsToState", () => {
     ];
     const snapshot = foldEventsToState(events, schedule, "/dummy");
     expect(snapshot.tasks["T-001"].state).toBe("cancelled");
+  });
+
+  it("release で doing から todo に戻る", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      {
+        path: "1.json",
+        event: makeEvent({ type: "claim", task_id: "T-001", by: "agent-1", msg: "start" }),
+      },
+      {
+        path: "2.json",
+        event: makeEvent({ type: "release", task_id: "T-001", by: "agent-1", msg: "rollback" }),
+      },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
+  });
+
+  it("release で blocked から todo に戻る", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      {
+        path: "1.json",
+        event: makeEvent({ type: "claim", task_id: "T-001", by: "agent-1", msg: "start" }),
+      },
+      {
+        path: "2.json",
+        event: makeEvent({ type: "block", task_id: "T-001", by: "agent-1", msg: "blocked" }),
+      },
+      {
+        path: "3.json",
+        event: makeEvent({ type: "release", task_id: "T-001", by: "agent-1", msg: "abandon" }),
+      },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
+  });
+
+  it("legacy cancel は doing から todo に戻る（後方互換）", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      {
+        path: "1.json",
+        event: makeEvent({ type: "claim", task_id: "T-001", by: "agent-1", msg: "start" }),
+      },
+      {
+        path: "2.json",
+        event: makeEvent({ type: "cancel", task_id: "T-001", by: "agent-1", msg: "legacy" }),
+      },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
   });
 
   it("現行スケジュールに存在しない履歴イベントを state から除外する", () => {
@@ -515,50 +568,80 @@ describe("canUnblockTask", () => {
 // ---- canCancelTask -----------------------------------------------------
 
 describe("canCancelTask", () => {
-  it("todo 状態のタスクは任意の actor が cancel できる", () => {
+  it("todo 状態のタスクは cancel できる（→ cancelled）", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "todo" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(true);
+    expect(canCancelTask(schedule, snapshot, "T-001").ok).toBe(true);
   });
 
-  it("blocked 状態のタスクは任意の actor が cancel できる", () => {
+  it("doing 状態のタスクは cancel できず release を案内する", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
+    const result = canCancelTask(schedule, snapshot, "T-001");
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/use `release`/);
+  });
+
+  it("blocked 状態のタスクは cancel できず release を案内する", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "blocked", last_by: "agent-1" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-2").ok).toBe(true);
+    const result = canCancelTask(schedule, snapshot, "T-001");
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/use `release`/);
   });
 
-  it("doing かつ同一 actor で cancel できる", () => {
+  it("done 状態のタスクは cancel できない", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
-    const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(true);
+    const snapshot = makeSnapshot({ "T-001": { state: "done" } });
+    expect(canCancelTask(schedule, snapshot, "T-001").ok).toBe(false);
   });
 
-  it("doing のとき別の actor は cancel できない", () => {
+  it("すでに cancelled のタスクは cancel できない", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "cancelled" } });
+    expect(canCancelTask(schedule, snapshot, "T-001").ok).toBe(false);
+  });
+});
+
+// ---- canReleaseTask ----------------------------------------------------
+
+describe("canReleaseTask", () => {
+  it("doing かつ同一 actor で release できる", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-2").ok).toBe(false);
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(true);
   });
 
-  it("doing のとき human が --force を付ければ別 actor のタスクも cancel できる", () => {
+  it("blocked かつ同一 actor で release できる", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "blocked", last_by: "agent-1" } });
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(true);
+  });
+
+  it("doing のとき別の actor は release できない", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-2").ok).toBe(false);
+  });
+
+  it("blocked のとき別の actor は release できない", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "blocked", last_by: "agent-1" } });
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-2").ok).toBe(false);
+  });
+
+  it("human が --force を付ければ別 actor のタスクも release できる", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "blocked", last_by: "agent-1" } });
     expect(
-      canCancelTask(schedule, snapshot, "T-001", "indie", { isHuman: true, force: true }).ok,
+      canReleaseTask(schedule, snapshot, "T-001", "indie", { isHuman: true, force: true }).ok,
     ).toBe(true);
   });
 
-  it("doing のとき human でも --force なしでは別 actor のタスクを cancel できない", () => {
+  it("agent は --force を付けても別 actor のタスクを release できない", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
-    expect(
-      canCancelTask(schedule, snapshot, "T-001", "indie", { isHuman: true, force: false }).ok,
-    ).toBe(false);
-  });
-
-  it("doing のとき agent は --force を付けても別 actor のタスクを cancel できない", () => {
-    const schedule = makeSchedule([{ id: "T-001" }]);
-    const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
-    const result = canCancelTask(schedule, snapshot, "T-001", "agent-2", {
+    const result = canReleaseTask(schedule, snapshot, "T-001", "agent-2", {
       isHuman: false,
       force: true,
     });
@@ -566,15 +649,15 @@ describe("canCancelTask", () => {
     expect(result.reason).toMatch(/a human may override with --force/);
   });
 
-  it("done 状態のタスクは cancel できない", () => {
+  it("todo 状態のタスクは release できない", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
-    const snapshot = makeSnapshot({ "T-001": { state: "done" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
+    const snapshot = makeSnapshot({ "T-001": { state: "todo" } });
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
   });
 
-  it("すでに cancelled のタスクは cancel できない", () => {
+  it("done 状態のタスクは release できない", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
-    const snapshot = makeSnapshot({ "T-001": { state: "cancelled" } });
-    expect(canCancelTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
+    const snapshot = makeSnapshot({ "T-001": { state: "done", last_by: "agent-1" } });
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
   });
 });

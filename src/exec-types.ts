@@ -22,6 +22,7 @@ export type ExecEventType =
   | "block"
   | "unblock"
   | "complete"
+  | "release"
   | "cancel"
   | "link"
   | "estimate";
