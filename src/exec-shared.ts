@@ -48,6 +48,48 @@ export function collectRepeatable(value: string, previous: string[]): string[] {
   return previous.concat([value]);
 }
 
+// East Asian Wide / Fullwidth code point ranges. Characters in these ranges occupy two terminal
+// columns, so they must count as 2 when aligning columns (e.g. Japanese task names in `exec status`).
+const WIDE_CODE_POINT_RANGES: ReadonlyArray<readonly [number, number]> = [
+  [0x1100, 0x115f], // Hangul Jamo
+  [0x2329, 0x232a], // angle brackets
+  [0x2e80, 0x303e], // CJK radicals, Kangxi, CJK symbols and punctuation
+  [0x3041, 0x33ff], // Hiragana, Katakana, CJK symbols, enclosed CJK
+  [0x3400, 0x4dbf], // CJK Unified Ideographs Extension A
+  [0x4e00, 0x9fff], // CJK Unified Ideographs
+  [0xa000, 0xa4cf], // Yi
+  [0xac00, 0xd7a3], // Hangul Syllables
+  [0xf900, 0xfaff], // CJK Compatibility Ideographs
+  [0xfe10, 0xfe19], // Vertical forms
+  [0xfe30, 0xfe6f], // CJK Compatibility Forms, Small Form Variants
+  [0xff00, 0xff60], // Fullwidth Forms
+  [0xffe0, 0xffe6], // Fullwidth signs
+  [0x1f300, 0x1faff], // Emoji and pictographs
+  [0x20000, 0x3fffd], // CJK Unified Ideographs Extension B and beyond
+];
+
+function isWideCodePoint(cp: number): boolean {
+  return WIDE_CODE_POINT_RANGES.some(([start, end]) => cp >= start && cp <= end);
+}
+
+// Returns the terminal display width of a string, counting East Asian Wide / Fullwidth characters
+// as 2 columns and everything else as 1. Iterates by code point so surrogate pairs count once.
+export function displayWidth(text: string): number {
+  let width = 0;
+  for (const ch of text) {
+    width += isWideCodePoint(ch.codePointAt(0) ?? 0) ? 2 : 1;
+  }
+  return width;
+}
+
+// Pads a string on the right with spaces until it reaches the given display width. Uses
+// displayWidth so full-width characters are accounted for; returns the string unchanged if it is
+// already at least that wide.
+export function padEndDisplay(text: string, width: number): string {
+  const pad = width - displayWidth(text);
+  return pad > 0 ? text + " ".repeat(pad) : text;
+}
+
 export function expandTemplate(template: string, values: Record<string, string>): string {
   let result = template;
   for (const [placeholder, value] of Object.entries(values)) {

@@ -53,7 +53,14 @@ import {
   type StateSnapshot,
   type TaskMode,
 } from "./exec-types.js";
-import { nowUtcIsoSeconds, qualifyTaskId, readJson, requireNonEmpty } from "./exec-shared.js";
+import {
+  displayWidth,
+  nowUtcIsoSeconds,
+  padEndDisplay,
+  qualifyTaskId,
+  readJson,
+  requireNonEmpty,
+} from "./exec-shared.js";
 import {
   archivePlan,
   buildInPlaceStem,
@@ -1158,20 +1165,33 @@ export function registerExecCommands(program: Command): void {
 
       const byMsg = filterBy ? ` for ${filterBy}` : "";
       process.stdout.write(`${filterState} tasks${byMsg}:\n\n`);
+
+      const rows = entries.map(([taskId, cs]) => ({
+        taskId,
+        name: schedule.nodes.get(taskId)?.name ?? "-",
+        by: cs.last_by ?? "-",
+        ts: cs.last_ts ?? "-",
+      }));
+
+      // Size every column to its longest value (including the header) so nothing is truncated.
+      // displayWidth counts full-width (CJK) characters as 2 columns so the table stays aligned.
+      const taskWidth = Math.max("task_id".length, ...rows.map((r) => displayWidth(r.taskId)));
+      const nameWidth = Math.max("name".length, ...rows.map((r) => displayWidth(r.name)));
+      const byWidth = Math.max("by".length, ...rows.map((r) => displayWidth(r.by)));
+      const tsWidth = Math.max("claimed_at".length, ...rows.map((r) => displayWidth(r.ts)));
+
       process.stdout.write(
-        `  ${"task_id".padEnd(40)} ${"name".padEnd(20)} by            claimed_at\n`,
+        `  ${padEndDisplay("task_id", taskWidth)} ${padEndDisplay("name", nameWidth)} ${padEndDisplay("by", byWidth)} claimed_at\n`,
       );
       process.stdout.write(
-        `  ${"-".repeat(40)} ${"-".repeat(20)} ${"-".repeat(14)} --------------------\n`,
+        `  ${"-".repeat(taskWidth)} ${"-".repeat(nameWidth)} ${"-".repeat(byWidth)} ${"-".repeat(tsWidth)}\n`,
       );
-      for (const [taskId, cs] of entries) {
-        const node = schedule.nodes.get(taskId);
-        const name = (node?.name ?? "-").slice(0, 18);
-        const by = (cs.last_by ?? "-").slice(0, 12);
-        const ts = cs.last_ts ?? "-";
-        process.stdout.write(`  ${taskId.padEnd(40)} ${name.padEnd(20)} ${by.padEnd(14)} ${ts}\n`);
+      for (const r of rows) {
+        // The trailing claimed_at column is left unpadded to avoid stray trailing whitespace.
+        process.stdout.write(
+          `  ${padEndDisplay(r.taskId, taskWidth)} ${padEndDisplay(r.name, nameWidth)} ${padEndDisplay(r.by, byWidth)} ${r.ts}\n`,
+        );
       }
-      process.stdout.write("");
       exitWithCode(true);
     } catch (error) {
       printCommandError(error, false);
