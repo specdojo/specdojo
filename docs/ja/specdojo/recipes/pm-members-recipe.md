@@ -27,15 +27,15 @@ Project Member Roster Writing Recipe
 
 ## 2. 作成前に集める情報
 
-| 項目            | 集める情報                                               |
-| --------------- | -------------------------------------------------------- |
-| 組織定義        | 最終判断の集約先、agent 委任範囲、公開方針               |
-| ロール定義      | `members[].roles` に使える Role code の一覧              |
-| プロジェクト ID | `project_id` と `id` に使う値                            |
-| 人間 member     | 最終判断を担う人間、兼務する Role code、公開可能な表示名 |
-| agent member    | 実行モード、能力、実行コマンド、優先度、品質 tier        |
-| 実行ログ        | 既に使われた nickname と、変更してはいけない値           |
-| 公開制約        | 個人情報、連絡先、非公開組織情報、認証情報を含めない条件 |
+| 項目            | 集める情報                                                  |
+| --------------- | ----------------------------------------------------------- |
+| 組織定義        | 最終判断の集約先、agent 委任範囲、公開方針                  |
+| ロール定義      | `members[].roles` に使える Role code の一覧                 |
+| プロジェクト ID | `project_id` と `id` に使う値                               |
+| 人間 member     | 最終判断を担う人間、兼務する Role code、公開可能な表示名    |
+| agent member    | 実行モード、provider、能力、実行コマンド、優先度、品質 tier |
+| 実行ログ        | 既に使われた nickname と、変更してはいけない値              |
+| 公開制約        | 個人情報、連絡先、非公開組織情報、認証情報を含めない条件    |
 
 ## 3. 全体の作成手順
 
@@ -75,7 +75,7 @@ Project Member Roster Writing Recipe
 
 - 人間 member と agent member を混在させてよいが、`type` で必ず区別する。
 - 最終判断を担う人間は、`note` に承認・公開可否・説明責任の扱いを記載する。
-- agent は、支援範囲を `persona`、`focus`、`capabilities`、`mode` で表す。
+- agent は、支援範囲を `provider`、`persona`、`focus`、`capabilities`、`mode` で表す。
 
 ### 4.3. `members[].roles`
 
@@ -102,6 +102,7 @@ Project Member Roster Writing Recipe
 書き方:
 
 - `command` は runner が実行できるコマンドを 1 行で記載する。
+- `provider` は実行する CLI 種別を表すため、`command` と合わせて実行主体を判別できる値にする。
 - `capabilities` は `web_search` などのツール能力に限定する。
 - agent の `note` には、最終判断を持たないことを明示する。
 
@@ -111,20 +112,21 @@ Project Member Roster Writing Recipe
 2. ロール定義から、`members[].roles` に使える Role code を一覧化する。
 3. 実行ログ、Schedule、既存 event から、使われている nickname を確認する。
 4. 各 member を「人間の最終判断主体」「Role 固定 agent」「汎用 agent」「review agent」に分類する。
-5. agent ごとに、mode、proficiency、priority、capabilities、command の不足を確認する。
+5. agent ごとに、mode、provider、proficiency、priority、capabilities、command の不足を確認する。
 6. 公開文書に残してよい表示名、連絡先、コマンドだけになっているか確認する。
 7. PO 以外に最終承認、公開可否、説明責任が移っていないことを確認する。
 
 ## 6. 良い例 / 悪い例
 
-| 観点         | 良い例                                           | 悪い例                                   |
-| ------------ | ------------------------------------------------ | ---------------------------------------- |
-| nickname     | `codex-edit-agent`                               | `Codex Expert Edit Agent`                |
-| roles        | `roles: [PO, PM, OPS]`                           | `owner: po`                              |
-| 汎用 agent   | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする |
-| agent の責務 | 草案作成と整合確認を支援し、承認しない           | agent が公開可否を判断する               |
-| command      | 認証情報を含まない CLI コマンド                  | トークンや秘密鍵を含むコマンド           |
-| 公開可否     | `email: null` とし、公開不要な個人情報を出さない | 私用メールアドレスを公開する             |
+| 観点         | 良い例                                           | 悪い例                                    |
+| ------------ | ------------------------------------------------ | ----------------------------------------- |
+| nickname     | `codex-edit-agent`                               | `Codex Expert Edit Agent`                 |
+| roles        | `roles: [PO, PM, OPS]`                           | `owner: po`                               |
+| 汎用 agent   | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする  |
+| agent の責務 | 草案作成と整合確認を支援し、承認しない           | agent が公開可否を判断する                |
+| provider     | `provider: custom` のように実行種別が分かる      | `provider` を省略して実行主体が曖昧になる |
+| command      | 認証情報を含まない CLI コマンド                  | トークンや秘密鍵を含むコマンド            |
+| 公開可否     | `email: null` とし、公開不要な個人情報を出さない | 私用メールアドレスを公開する              |
 
 ## 7. レビュー観点
 
@@ -133,6 +135,7 @@ Project Member Roster Writing Recipe
 | 目的・スコープとの整合 | 組織定義で採用した運用規模と agent 委任方針に合っているか                   |
 | 承認判断               | PO が実行主体、兼務、agent 支援範囲を承認、保留、差し戻しできるか           |
 | Role code 整合         | `members[].roles` が `pm-roles.yaml` の `roles[].code` に存在するか         |
+| provider 整合          | agent の `provider` と `command` が実行可能な組み合わせになっているか       |
 | 実行可能性             | `--by` に指定する nickname と、agent 実行に必要な情報が揃っているか         |
 | 公開可否               | 個人情報、非公開情報、認証情報、agent への最終判断委任が含まれていないか    |
 | 下流入力               | scheduler、exec run、実行ログが参照できる安定した member 台帳になっているか |
@@ -142,6 +145,7 @@ Project Member Roster Writing Recipe
 - [[pm-members-rulebook|メンバー定義 作成ルール]] の本文構成と禁止事項に従っている。
 - [[pm-members-sample|メンバー定義 sample]] と同程度の粒度で、人間と agent の違いが分かる。
 - `members[].roles` に未定義 Role code、member nickname、人名、agent 名が混ざっていない。
+- agent の `provider`、`mode`、`command` が揃っており、実行主体を再構成できる。
 - agent の `command` に秘密情報や個人環境に閉じた値が含まれていない。
 - `pm-organization.md` と `pm-roles.yaml` の方針と矛盾していない。
 - 公開してよい情報だけで構成され、最終判断と説明責任が人間の PO に残っている。
