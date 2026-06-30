@@ -42,7 +42,8 @@
     "source=specdojo-codex,target=/home/node/.codex,type=volume",
     "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
     "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
-    "source=specdojo-gh,target=/home/node/.config/gh,type=volume"
+    "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
+    "source=${localEnv:HOME}/dotfiles/.emacs.d,target=/home/node/.emacs.d,type=bind"
   ],
 
   "containerEnv": {

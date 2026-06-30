@@ -30,7 +30,19 @@ RUN sed -i 's/^# *\(ja_JP.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
     sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
     locale-gen
 
-# ターミナル・各種 CLI が UTF-8 / 日本語を前提に動作するようロケールを設定。
+# emacsとよく使われるツールをインストール
+RUN apt-get update && apt-get install -y \
+    emacs-nox \
+    ripgrep \
+    fd-find \
+    git \
+    unzip \
+    curl \
+    sqlite3 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+    # ターミナル・各種 CLI が UTF-8 / 日本語を前提に動作するようロケールを設定。
 # LC_ALL はあえて設定せず、必要に応じてツールごとに上書きできるようにする。
 ENV LANG=ja_JP.UTF-8 \
     LANGUAGE=ja_JP:ja
