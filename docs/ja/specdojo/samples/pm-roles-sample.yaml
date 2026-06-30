@@ -6,28 +6,33 @@ based_on:
   - prj-0001:pm-organization
 version: 1
 project_id: prj-0001
+
+# ロール一覧。Role code の共通定義・責務は people-and-organization-definition-standard を参照する。
+# 兼務の割り当ては pm-members.yaml の roles フィールドで管理する。
+# ロール採用の方針・根拠は pm-organization.md を参照する。
+
 roles:
   - code: PO
     name: Project Owner
-    project_note: 初期リリースの目的、優先順位、公開可否を最終判断し、店頭運用を変えすぎない方針を承認する
+    project_note: 初期リリースの目的、優先順位、公開可否を最終判断し、店頭運用を変えすぎない方針を承認する。
   - code: PM
     name: Project Manager
-    project_note: 計画・進捗・課題・リスク管理を担う。週次管理が継続的に滞る場合に専任化を検討する
+    project_note: 計画・進捗・課題・リスク管理を担う。週次管理が継続的に滞る場合に専任化を検討する。
   - code: BA
     name: Business Analyst
-    project_note: 販売・在庫・つけ管理の業務整理と、店主・家族店番の利用者視点を反映した受入条件整理を担う
+    project_note: 販売・在庫・つけ管理の業務整理と、店主・家族店番の利用者視点を反映した受入条件整理を担う。
   - code: ARC
     name: Architect
-    project_note: 店頭タブレット 1 台での利用を前提に、構成方針、データ管理方針、成果物間の整合を整理する
+    project_note: 店頭タブレット 1 台での利用を前提に、構成方針、データ管理方針、成果物間の整合を整理する。
   - code: DEV
     name: Developer
-    project_note: 実装・設定・技術的変更作業を担う。実装タスクが継続増加した場合に専任化を検討する
+    project_note: 実装・設定・技術的変更作業を担う。実装タスクが継続増加した場合に専任化を検討する。
   - code: QE
     name: Quality Engineer
-    project_note: 欠品削減、つけ残高の記録漏れ防止、店頭操作の受入確認観点を管理する
+    project_note: 欠品削減、つけ残高の記録漏れ防止、店頭操作の受入確認観点を管理する。
   - code: UX
     name: UX / Documentation Designer
-    project_note: 家族店番向け説明や画面文言改善を担う。利用者導線の改善が増えた場合に専任化を検討する
+    project_note: 家族店番向け説明や画面文言改善を担う。利用者導線の改善が増えた場合に専任化を検討する。
   - code: OPS
     name: Operations / Release Manager
-    project_note: リリース・公開・配布・変更管理を担う。公開可否の最終判断は人間の PO に残す
+    project_note: リリース・公開・配布・変更管理を担う。公開可否の最終判断は人間の PO に残す。
