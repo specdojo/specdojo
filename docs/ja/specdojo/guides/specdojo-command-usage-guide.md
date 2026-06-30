@@ -1423,6 +1423,17 @@ specdojo exec release \
   --reset-worktree
 ```
 
+`--all-blocked` を付けると、`--task` を指定する代わりにプロジェクト内の `blocked` タスクをまとめて `todo` に戻す。`--auto` / `--loop` で多数のタスクが `blocked` で止まったあと、一括で再実行可能にしたい場合に使う。`--task` は無視される。`--reset-worktree` と併用すると、戻した各タスクの exec worktree も同時に破棄する。別 actor が claim した `blocked` タスクは `release` の guard によりスキップされ（`type: human` の actor は `--force` で対象にできる）、スキップ理由を一覧表示する。処理後に「戻した件数」と「スキップ件数」を集計表示する。`--dry-run` を付けると書き込みを行わず、対象を確認できる。
+
+```bash
+specdojo exec release \
+  --project prj-0001 \
+  --by agent-1 \
+  --msg "reset all blocked tasks to todo" \
+  --all-blocked \
+  --reset-worktree
+```
+
 `blocked` からの復帰フロー全体は `specdojo-schedule-and-exec-guide.md` の `blocked タスクの復帰` を参照する。
 
 #### 8.7.6. cancel

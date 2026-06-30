@@ -251,4 +251,71 @@ describe("exec release --reset-worktree", () => {
       rmSync(worktreeBase, { recursive: true, force: true });
     }
   });
+
+  it("discards worktrees for blocked tasks released via --all-blocked", async () => {
+    const { repo, worktreeBase, taskId } = setupRepository();
+    const worktreeTaskId = `test:${taskId}`;
+    const stdout: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk: string | Uint8Array) => {
+      stdout.push(typeof chunk === "string" ? chunk : Buffer.from(chunk).toString("utf8"));
+      return true;
+    });
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      // setupRepository leaves the task doing; prepare the worktree, then block it so
+      // --all-blocked picks it up while a stale worktree still exists.
+      await runExec(["worktree", "prepare", "--project", "test", "--task", taskId]);
+      expect(findExecWorktree(repo, worktreeTaskId)).not.toBeNull();
+      writeFileSync(
+        join(
+          repo,
+          "execution",
+          "exec",
+          "events",
+          "20260613T000100Z_agent_T-TEST-doc-010_block.json",
+        ),
+        JSON.stringify(
+          {
+            v: 1,
+            ts: "2026-06-13T00:01:00Z",
+            type: "block",
+            task_id: taskId,
+            by: "edit-agent",
+            msg: "blocked",
+          },
+          null,
+          2,
+        ) + "\n",
+        "utf8",
+      );
+
+      stdout.length = 0;
+      await runExec([
+        "release",
+        "--project",
+        "test",
+        "--by",
+        "edit-agent",
+        "--msg",
+        "reset all blocked",
+        "--all-blocked",
+        "--reset-worktree",
+      ]);
+
+      const output = stdout.join("");
+      expect(output).toContain("Released 1 blocked task(s); skipped 0.");
+      expect(output).toContain("reset worktree: discarded exec/test-T-TEST-doc-010");
+      expect(findExecWorktree(repo, worktreeTaskId)).toBeNull();
+      expect(() =>
+        git(repo, "show-ref", "--verify", "refs/heads/exec/test-T-TEST-doc-010"),
+      ).toThrow();
+    } finally {
+      process.chdir(originalCwd);
+      const worktree = findExecWorktree(repo, worktreeTaskId);
+      if (worktree) git(repo, "worktree", "remove", "--force", worktree.path);
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(worktreeBase, { recursive: true, force: true });
+    }
+  });
 });

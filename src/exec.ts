@@ -126,6 +126,7 @@ type ExecCommandOpts = {
   dryRun?: boolean;
   force?: boolean;
   resetWorktree?: boolean;
+  allBlocked?: boolean;
 };
 
 type LoadedExecState = {
@@ -173,10 +174,17 @@ function addOwnerOptions(cmd: Command): Command {
     .option("--allow-owner-mismatch", "Allow claiming a task assigned to a different owner", false);
 }
 
-function addCommonAddOptions(cmd: Command): Command {
+function addCommonAddOptions(cmd: Command, options?: { requireTask?: boolean }): Command {
   addProjectOptions(cmd);
+  // `release --all-blocked` operates on every blocked task instead of a single --task, so the task
+  // option must be optional for that command. The single-task path still validates it via
+  // requireNonEmpty before building the event.
+  if (options?.requireTask === false) {
+    cmd.option("--task <taskId>", "Task/Milestone ID");
+  } else {
+    cmd.requiredOption("--task <taskId>", "Task/Milestone ID");
+  }
   return cmd
-    .requiredOption("--task <taskId>", "Task/Milestone ID")
     .requiredOption("--by <actor>", "Actor (human/agent)")
     .requiredOption("--msg <message>", "Short message")
     .option("--run-id <id>", "Correlation id")
@@ -457,8 +465,13 @@ async function runLockedEventCommand(
     if (opts.dryRun) {
       process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
       if (action.type === "release" && opts.resetWorktree) {
-        const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
-        process.stdout.write(`[dry-run] reset worktree: discard exec/${worktreeTaskId}\n`);
+        resetExecWorktreeForTask({
+          projectId: resolveProjectId(opts),
+          taskId,
+          schedulePath,
+          executionPath,
+          dryRun: true,
+        });
       }
       exitWithCode(true);
       return;
@@ -480,18 +493,135 @@ async function runLockedEventCommand(
     // stale residue. --reset-worktree discards it eagerly instead of waiting for the next claim to
     // clean it up via discardStaleExecWorktree.
     if (action.type === "release" && opts.resetWorktree) {
-      const worktreeTaskId = qualifyTaskId(resolveProjectId(opts), taskId);
-      const discarded = discardStaleExecWorktree({
-        context: { repoRoot: specdojoRootDir(), schedulePath, executionPath },
-        worktreeTaskId,
+      resetExecWorktreeForTask({
+        projectId: resolveProjectId(opts),
+        taskId,
+        schedulePath,
+        executionPath,
+        dryRun: false,
       });
-      process.stdout.write(
-        discarded
-          ? `reset worktree: discarded ${discarded}\n`
-          : `reset worktree: no worktree or branch for ${worktreeTaskId}\n`,
-      );
     }
     process.stdout.write(out + "\n");
+    exitWithCode(true);
+  } catch (error) {
+    printCommandError(error);
+  } finally {
+    if (lockDir) {
+      try {
+        releaseSchedulerLock(lockDir);
+      } catch {}
+    }
+  }
+}
+
+// Discards the exec worktree and branch left behind by a now-released task. A released task is back
+// in todo, so any retained worktree is stale residue. `dryRun` only prints what would be discarded.
+function resetExecWorktreeForTask(args: {
+  projectId: string;
+  taskId: string;
+  schedulePath: string;
+  executionPath: string;
+  dryRun: boolean;
+}): void {
+  const worktreeTaskId = qualifyTaskId(args.projectId, args.taskId);
+  if (args.dryRun) {
+    process.stdout.write(`[dry-run] reset worktree: discard exec/${worktreeTaskId}\n`);
+    return;
+  }
+  const discarded = discardStaleExecWorktree({
+    context: {
+      repoRoot: specdojoRootDir(),
+      schedulePath: args.schedulePath,
+      executionPath: args.executionPath,
+    },
+    worktreeTaskId,
+  });
+  process.stdout.write(
+    discarded
+      ? `reset worktree: discarded ${discarded}\n`
+      : `reset worktree: no worktree or branch for ${worktreeTaskId}\n`,
+  );
+}
+
+// `release --all-blocked`: return every blocked task in the project to todo under a single scheduler
+// lock. Tasks blocked by a different actor are skipped unless --force is given (humans only); each
+// skip is reported with its reason. --reset-worktree discards each released task's stale worktree.
+async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void> {
+  let lockDir = "";
+
+  try {
+    const { schedulePath, executionPath } = resolveProjectContext(opts);
+    const actor = requireNonEmpty("by", opts.by);
+    const roster = loadRosterForOpts(opts);
+    assertValidActor(actor, roster);
+    requireNonEmpty("msg", opts.msg);
+    if (opts.task) {
+      process.stdout.write("Note: --all-blocked ignores --task.\n");
+    }
+    const lockTimeoutMs = Number(opts.lockTimeoutMs);
+    const lockStaleMs = Number(opts.lockStaleMs);
+
+    lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+
+    const state = loadValidatedExecState(schedulePath);
+    if (!state) return;
+
+    const projectId = resolveProjectId(opts);
+    const blockedTaskIds = Object.entries(state.snapshot.tasks)
+      .filter(([, cs]) => cs.state === "blocked")
+      .map(([taskId]) => taskId)
+      .sort((a, b) => a.localeCompare(b));
+
+    if (blockedTaskIds.length === 0) {
+      process.stdout.write("No blocked tasks to release.\n");
+      exitWithCode(true);
+      return;
+    }
+
+    const released: string[] = [];
+    const skipped: { taskId: string; reason: string }[] = [];
+    const override = resolveForceOverride(opts, actor);
+
+    // Releasing one task does not change another task's releasability, so a single snapshot read is
+    // sufficient even though the in-memory snapshot is not re-folded after each write.
+    for (const taskId of blockedTaskIds) {
+      const check = canReleaseTask(state.schedule, state.snapshot, taskId, actor, override);
+      if (!check.ok) {
+        skipped.push({ taskId, reason: check.reason ?? "not releasable" });
+        continue;
+      }
+
+      const event = buildEvent("release", { ...opts, task: taskId });
+      if (opts.dryRun) {
+        process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
+        if (opts.resetWorktree) {
+          resetExecWorktreeForTask({
+            projectId,
+            taskId,
+            schedulePath,
+            executionPath,
+            dryRun: true,
+          });
+        }
+        released.push(taskId);
+        continue;
+      }
+
+      const out = writeEventFile(schedulePath, event);
+      if (opts.resetWorktree) {
+        resetExecWorktreeForTask({ projectId, taskId, schedulePath, executionPath, dryRun: false });
+      }
+      process.stdout.write(out + "\n");
+      released.push(taskId);
+    }
+
+    const dryRunSuffix = opts.dryRun ? " (dry-run)" : "";
+    process.stdout.write(
+      `\nReleased ${released.length} blocked task(s)${dryRunSuffix}; skipped ${skipped.length}.\n`,
+    );
+    for (const s of skipped) {
+      process.stdout.write(`  skip ${s.taskId}: ${s.reason}\n`);
+    }
     exitWithCode(true);
   } catch (error) {
     printCommandError(error);
@@ -560,7 +690,7 @@ export function registerExecCommands(program: Command): void {
 
   for (const t of types) {
     const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
-    addCommonAddOptions(cmd);
+    addCommonAddOptions(cmd, { requireTask: t !== "release" });
 
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
@@ -571,12 +701,22 @@ export function registerExecCommands(program: Command): void {
         "Discard the task's exec worktree and branch after releasing (force removal)",
         false,
       );
+      cmd.option(
+        "--all-blocked",
+        "Release every blocked task in the project back to todo (ignores --task)",
+        false,
+      );
     }
 
     if (t in lockedActions) {
-      cmd.action(async (opts) =>
-        runLockedEventCommand(opts, lockedActions[t as LockedEventAction["type"]]),
-      );
+      const action = lockedActions[t as LockedEventAction["type"]];
+      cmd.action(async (opts) => {
+        if (action.type === "release" && opts.allBlocked) {
+          await runReleaseAllBlocked(opts);
+          return;
+        }
+        await runLockedEventCommand(opts, action);
+      });
     } else {
       cmd.action((opts) => runSimpleEventCommand(opts, t));
     }
