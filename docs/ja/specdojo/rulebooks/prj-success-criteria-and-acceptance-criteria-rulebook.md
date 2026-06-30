@@ -57,7 +57,7 @@ flowchart LR
 
 ### 3.1. 配置（推奨）
 
-- `docs/ja/projects/<project-id>/020-プロジェクトスコープ/` 配下への配置を推奨します。
+- `docs/ja/projects/<project-id>/020-project-definition/prj-success-criteria-and-acceptance-criteria.md` へ配置します。
 - 判定結果の証跡（評価表、受入記録）は参照可能な場所に配置します。
 
 ### 3.2. ドキュメントID（推奨）
