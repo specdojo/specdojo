@@ -1090,6 +1090,8 @@ AI モデルのレートリミットに達した場合、`exec run` は `exec-de
 クリティカルパス上のタスクはスキップせず、必ず完了させることでプロジェクト完了日への影響を防ぐ。
 設定の詳細は `specdojo-command-usage-guide.md` の `exec run` セクションを参照すること。
 
+同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）は、複数同時起動でメモリ競合・モデルロード待ちにより不安定になる。`exec-defaults.yaml` の `providers.<provider>.max_concurrency` を設定すると、グローバルな `--parallel` を下げずにその provider だけを 1 ラウンドあたりの同時起動数で制限できる。上限に達した provider しか候補にいないタスクは、claim せず次ラウンドへ繰り延べられる。詳細は `実行設定ガイド` を参照すること。
+
 ## 12. Anti-patterns
 
 | Anti-pattern                       | 問題点                                                                                        |

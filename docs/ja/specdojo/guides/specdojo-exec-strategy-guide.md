@@ -16,7 +16,7 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 | ------------------------------ | -------------------------------------------------------------- | ------------ |
 | `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・`capabilities`・`proficiency` | トラック     |
 | `pm-members.yaml`              | 誰が作業するか（identity・command・capabilities・proficiency） | プロジェクト |
-| `.specdojo/exec-defaults.yaml` | rate limit 検出条件・リトライポリシー                          | システム     |
+| `.specdojo/exec-defaults.yaml` | rate limit 検出条件・リトライポリシー・provider 別同時実行上限 | システム     |
 
 `sch-strategy` は agent 個体を指定しない。phase に「どんな能力が必要か」を書き、`pm-members.yaml` に「誰がその能力を持つか」を書く。
 
@@ -92,6 +92,8 @@ members:
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、同一ラウンドで既に上限数の agent を確保済みであれば、その provider の候補を除外する。別 provider の候補が残ればそれを実行者に繰り上げる。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを次ラウンドへ繰り延べる（タスクは `todo` のまま保持され、取りこぼさない）。`--loop` 実行では、この繰り延べにより上限付き provider が自然に直列化される。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持する。`max_concurrency` は auto 選択のみに適用し、`--agent-cmd` / `--edit-agent` / `--review-agent` などの明示指定や resume 実行には適用しない。
+
 ## 4. 実行フロー
 
 rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行する（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返す。この再試行は critical / non-critical を問わず全タスクに適用する。
@@ -142,6 +144,21 @@ rate_limit_policy:
       backoff_multiplier: 3
       max_wait_seconds: 600
     on_exhausted: block
+```
+
+provider ごとに挙動が異なる設定は `providers.<provider>` に置く。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックする。`<provider>` は `pm-members[].provider` に対応する。指定できるキーは次のとおり。
+
+- `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先する）。
+- `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
+- `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱う。
+
+`max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使う。グローバルな `--parallel` を下げずに、その provider だけを直列化できる。
+
+```yaml
+providers:
+  opencode:
+    # opencode は 1 ラウンドで同時 1 つに制限する（他 provider は --parallel のまま並列）。
+    max_concurrency: 1
 ```
 
 ## 6. 変更手順

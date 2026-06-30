@@ -38,6 +38,11 @@ export type RateLimitPolicy = {
 export type ProviderOverride = {
   rate_limit_detection?: RateLimitDetection;
   rate_limit_policy?: RateLimitPolicy;
+  // Maximum number of this provider's agents allowed to run concurrently within a single
+  // `exec run` round. Caps a provider that shares a constrained resource (e.g. opencode's
+  // local single-model Ollama host) without lowering the global `--parallel` for other
+  // providers. Absent or non-positive means no per-provider limit.
+  max_concurrency?: number;
 };
 
 export type ExecDefaultsConfig = {
@@ -64,6 +69,43 @@ export function resolveRateLimitPolicy(
 ): RateLimitPolicy | undefined {
   const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
   return override ?? config.rate_limit_policy;
+}
+
+// Resolve a provider's concurrency cap, validating the YAML-sourced value. A missing,
+// non-integer, or non-positive value means "no limit" (returns undefined).
+export function resolveMaxConcurrency(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): number | undefined {
+  if (!provider) return undefined;
+  const raw = config.providers?.[provider]?.max_concurrency;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw <= 0) return undefined;
+  return raw;
+}
+
+// Tracks how many agents of each provider have been reserved within a single `exec run`
+// round, so the scheduler can keep a capped provider (e.g. opencode) from launching more
+// than its `max_concurrency` instances at once. A fresh tracker is created per round.
+export type ProviderCapacityTracker = {
+  // Whether another agent of this provider may start now (true when uncapped or below cap).
+  hasCapacity: (provider?: AgentProvider) => boolean;
+  // Record that one agent of this provider has been reserved for the current round.
+  reserve: (provider?: AgentProvider) => void;
+};
+
+export function createProviderCapacityTracker(config: ExecDefaultsConfig): ProviderCapacityTracker {
+  const counts = new Map<AgentProvider, number>();
+  return {
+    hasCapacity(provider?: AgentProvider): boolean {
+      const cap = resolveMaxConcurrency(config, provider);
+      if (cap === undefined || !provider) return true;
+      return (counts.get(provider) ?? 0) < cap;
+    },
+    reserve(provider?: AgentProvider): void {
+      if (!provider) return;
+      counts.set(provider, (counts.get(provider) ?? 0) + 1);
+    },
+  };
 }
 
 // ── Loaders ───────────────────────────────────────────────────────────────────

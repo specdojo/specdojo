@@ -5,6 +5,7 @@ import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
   defaultExecDefaultsPath,
+  createProviderCapacityTracker,
   loadExecDefaultsConfig,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -626,7 +627,8 @@ async function prepareSingleTask(
   skipClaim: boolean,
   worktreeBase: string,
   planGenPaths: PlanGenPaths,
-): Promise<PreparedTask | RunResult> {
+  hasProviderCapacity?: (provider?: AgentProvider) => boolean,
+): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ""}  [${mode}]\n`);
 
@@ -685,12 +687,26 @@ async function prepareSingleTask(
       return "failure";
     }
 
-    for (const candidate of candidates) {
+    // Per-provider concurrency caps (exec-defaults providers.<name>.max_concurrency) drop any
+    // candidate whose provider already reached its limit this round. If a non-capped provider
+    // remains it becomes the primary; if every candidate's provider is at capacity, defer the
+    // task to a later round before claiming or setting up its worktree.
+    const available = hasProviderCapacity
+      ? candidates.filter((c) => hasProviderCapacity(c.provider))
+      : candidates;
+    if (available.length === 0) {
+      process.stdout.write(
+        `  [run] deferred: ${task.id} — all candidate providers at concurrency cap this round\n`,
+      );
+      return "deferred";
+    }
+
+    for (const candidate of available) {
       agentCandidates.push({ command: candidate.command!, provider: candidate.provider });
     }
-    if (!actorOverride) actor = candidates[0].nickname;
+    if (!actorOverride) actor = available[0].nickname;
     process.stdout.write(
-      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Mode: ${mode}  Agent: ${candidates[0].nickname}\n`,
+      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Mode: ${mode}  Agent: ${available[0].nickname}\n`,
     );
   }
 
@@ -1074,6 +1090,8 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       : "";
     const taskMap = new Map(readySnapshot.tasks.map((t) => [t.id, t]));
     const preparedTasks: PreparedTask[] = [];
+    // Fresh per round: caps how many agents of a capped provider start together this round.
+    const capacity = createProviderCapacityTracker(execDefaults);
 
     for (const taskId of orderedIds) {
       if (preparedTasks.length >= parallel) break;
@@ -1097,8 +1115,14 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           false,
           worktreeBase,
           planGenPaths,
+          capacity.hasCapacity,
         );
-        if (typeof prepared !== "string") preparedTasks.push(prepared);
+        // "deferred": every candidate provider is at its cap this round; try it again next round.
+        if (prepared === "deferred") continue;
+        if (typeof prepared !== "string") {
+          preparedTasks.push(prepared);
+          capacity.reserve(prepared.agentCandidates[0]?.provider);
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`);

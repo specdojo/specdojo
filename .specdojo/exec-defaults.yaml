@@ -79,6 +79,10 @@ providers:
         - "usage limit"
 
   opencode:
+    # 同一ホストの単一 Ollama モデルを共有するため、複数の opencode agent を同時起動
+    # するとメモリ競合・モデルロード待ちで不安定になる。1 ラウンドで同時に走る opencode
+    # を 1 つに制限する（他 provider のグローバル --parallel は下げない）。
+    max_concurrency: 1
     # ローカル Ollama: API rate limit より、モデルロード待ち・メモリ不足・接続
     # タイムアウトが主な失敗要因。exit 1 は実失敗なので exit_codes は空にする。
     rate_limit_detection:

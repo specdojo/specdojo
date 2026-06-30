@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  createProviderCapacityTracker,
+  resolveMaxConcurrency,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
@@ -33,6 +35,7 @@ const config: ExecDefaultsConfig = {
       },
     },
     opencode: {
+      max_concurrency: 1,
       rate_limit_detection: {
         exit_codes: [],
         stderr_patterns: ["timeout", "out of memory"],
@@ -99,5 +102,66 @@ describe("resolveRateLimitPolicy", () => {
     const actual = resolveRateLimitPolicy(config, "codex");
 
     expect(actual).toBe(globalPolicy);
+  });
+});
+
+describe("resolveMaxConcurrency", () => {
+  it("returns the provider cap when set to a positive integer", () => {
+    expect(resolveMaxConcurrency(config, "opencode")).toBe(1);
+  });
+
+  it("returns undefined for a provider without a cap", () => {
+    expect(resolveMaxConcurrency(config, "claude")).toBeUndefined();
+  });
+
+  it("returns undefined when no provider is given", () => {
+    expect(resolveMaxConcurrency(config, undefined)).toBeUndefined();
+  });
+
+  it("treats a non-positive or non-integer cap as no limit", () => {
+    const bad: ExecDefaultsConfig = {
+      providers: {
+        opencode: { max_concurrency: 0 },
+        codex: { max_concurrency: 2.5 },
+      },
+    };
+
+    expect(resolveMaxConcurrency(bad, "opencode")).toBeUndefined();
+    expect(resolveMaxConcurrency(bad, "codex")).toBeUndefined();
+  });
+});
+
+describe("createProviderCapacityTracker", () => {
+  it("stops granting capacity once a capped provider reaches its limit", () => {
+    const tracker = createProviderCapacityTracker(config);
+
+    expect(tracker.hasCapacity("opencode")).toBe(true);
+    tracker.reserve("opencode");
+
+    expect(tracker.hasCapacity("opencode")).toBe(false);
+  });
+
+  it("never limits a provider that has no cap", () => {
+    const tracker = createProviderCapacityTracker(config);
+
+    tracker.reserve("claude");
+    tracker.reserve("claude");
+
+    expect(tracker.hasCapacity("claude")).toBe(true);
+  });
+
+  it("tracks each provider independently", () => {
+    const tracker = createProviderCapacityTracker(config);
+
+    tracker.reserve("opencode");
+
+    expect(tracker.hasCapacity("opencode")).toBe(false);
+    expect(tracker.hasCapacity("codex")).toBe(true);
+  });
+
+  it("grants capacity when the provider is undefined", () => {
+    const tracker = createProviderCapacityTracker(config);
+
+    expect(tracker.hasCapacity(undefined)).toBe(true);
   });
 });

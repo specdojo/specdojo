@@ -53,6 +53,15 @@ $defs:
       rate_limit_policy:
         $ref: "#/$defs/RateLimitPolicy"
         description: "Provider-specific retry / fallback / block policy."
+      max_concurrency:
+        type: integer
+        minimum: 1
+        description: >
+          Maximum number of this provider's agents allowed to run concurrently within a single
+          exec run round. Caps a provider that shares a constrained resource (e.g. opencode's
+          local single-model Ollama host) without lowering the global --parallel for other
+          providers. When a round would exceed this, the extra tasks are deferred to a later
+          round. Absent means no per-provider limit.
 
   RateLimitDetection:
     type: object
