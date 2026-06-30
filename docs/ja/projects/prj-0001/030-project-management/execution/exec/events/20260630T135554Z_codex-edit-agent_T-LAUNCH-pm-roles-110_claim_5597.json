@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T13:55:54Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-roles-110",
+  "by": "codex-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PO"
+  }
+}
