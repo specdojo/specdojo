@@ -21,14 +21,17 @@ _TODO_: 本書が、立ち上げ認可と権限委譲を記録する憲章であ
 
 ## 2. 認可対象
 
-| 項目            | 内容                   |
-| --------------- | ---------------------- |
-| プロジェクト名  | _PROJECT_NAME_         |
-| プロジェクト ID | `_PROJECT_ID_`         |
-| 認可対象        | _AUTHORIZED_SCOPE_     |
-| 認可しない範囲  | _NOT_AUTHORIZED_SCOPE_ |
-| 直接根拠        | _BASIS_DOCUMENTS_      |
-| 承認責任        | _APPROVER_ROLE_        |
+| 項目            | 内容                              |
+| --------------- | --------------------------------- |
+| プロジェクト名  | _PROJECT_NAME_                    |
+| プロジェクト ID | `_PROJECT_ID_`                    |
+| 認可対象        | _AUTHORIZED_SCOPE_                |
+| 認可しない範囲  | _NOT_AUTHORIZED_SCOPE_            |
+| 直接根拠        | _BASIS_DOCUMENTS_                 |
+| 承認責任        | _APPROVER_ROLE_                   |
+| 認可条件        | _AUTHORIZATION_CONDITION_OR_NONE_ |
+
+_TODO_: 承認に条件を付ける場合のみ「認可条件」行を残し、条件がない場合は行ごと削除する。
 
 ## 3. プロジェクトの目的
 
@@ -81,9 +84,11 @@ _TODO_: 関係者の詳細を正とするステークホルダー登録簿を記
 
 _TODO_: PO またはスポンサーの承認を必要とする事項を箇条書きで記述する。
 
+- _TODO_: 予算枠の新設・確定・増額
+- _TODO_: 公開可否
+- _TODO_: ライセンス方針の確定
 - _TODO_: 主要スコープ変更
-- _TODO_: 予算枠の確定または増額
-- _TODO_: 本格実行開始または公開可否
+- _TODO_: GO / Not GO 判断
 
 ## 9. 主要前提・制約
 
@@ -95,18 +100,25 @@ _TODO_: PO またはスポンサーの承認を必要とする事項を箇条書
 
 ## 10. 後続で作成・詳細化する文書
 
-| 文書                                           | 目的   |
-| ---------------------------------------------- | ------ |
-| `prj-scope`                                    | _TODO_ |
-| `prj-success-criteria-and-acceptance-criteria` | _TODO_ |
-| `prj-assumptions-constraints-dependencies`     | _TODO_ |
-| `pm-plan`                                      | _TODO_ |
+| 文書                                                      | 目的                                             |
+| --------------------------------------------------------- | ------------------------------------------------ |
+| `dct-index` / `dct-project-definition`                    | 成果物一覧、配置、生成元、派生関係を整理する     |
+| `prj-scope`                                               | 対象範囲、対象外、境界判断を定義する             |
+| `prj-success-criteria-and-acceptance-criteria`            | 成功基準、完了定義、受入条件、判定方法を定義する |
+| `prj-assumptions-constraints-dependencies`                | 実行上の前提条件、制約事項、外部依存を明示する   |
+| `prj-issues-and-approach`                                 | 主要課題と解決アプローチを整理する               |
+| `pm-plan`                                                 | プロジェクト全体の管理方針と実行計画を定義する   |
+| `pm-organization` / `pm-roles` / `pm-members` / `pm-raci` | ロール、実行主体、責任分担を定義する             |
+| `pm-quality-management-plan` / `pm-communication-plan`    | 品質管理とコミュニケーション方針を定義する       |
+
+_TODO_: プロジェクトの成果物体系に合わせて、上記の文書一覧を過不足なく調整する。
 
 ## 11. 本格実行開始の GO / Not GO 判断
 
 | 判断観点 | 確認内容              | 記録先              |
 | -------- | --------------------- | ------------------- |
 | 目的整合 | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
+| 公開適性 | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
 | 予算枠   | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
 | 体制     | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
 | 品質     | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
