@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T15:33:16Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-scope-130",
+  "by": "codex-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
