@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T15:03:43Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-issues-and-approach-120",
+  "by": "codex-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
