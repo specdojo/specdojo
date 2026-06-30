@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T13:55:56Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-assumptions-constraints-dependencies-110",
+  "by": "claude-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
