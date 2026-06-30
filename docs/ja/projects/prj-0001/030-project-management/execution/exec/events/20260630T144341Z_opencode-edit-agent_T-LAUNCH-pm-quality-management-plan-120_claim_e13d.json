@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T14:43:41Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-quality-management-plan-120",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
