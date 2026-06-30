@@ -77,8 +77,10 @@
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
     "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
     "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it --detach-keys=\"ctrl-]\" -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -u node \"$name\" bash -lc \"cd /workspaces/specdojo-workspace/specdojo && exec bash\" || echo \"matching container not found\"'",
-    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-agent opencode-edit-agent --review-agent opencode-review-agent > logs/exec-opencode.log 2>&1",
-    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.log 2>&1"
+    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-agent opencode-edit-agent --review-agent opencode-review-agent > logs/exec-opencode.stdout.log 2> logs/exec-opencode.stderr.log",
+    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto2": "specdojo exec run --auto --loop --parallel 2 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log"
   },
   "dependencies": {
     "commander": "^15.0.0",
