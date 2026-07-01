@@ -3,10 +3,11 @@ id: prj-0001:xer-t-launch-pm-communication-plan-130
 type: exec-result
 task_id: T-LAUNCH-pm-communication-plan-130
 mode: edit
-status: in_progress
+status: complete
 project_id: prj-0001
 plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-130-plan.md
 started_at: "2026-07-01T15:23:15.122Z"
+completed_at: "2026-07-01T15:35:20.087Z"
 agent: opencode-edit-agent
 approach: template-maintenance
 ---
@@ -15,16 +16,26 @@ approach: template-maintenance
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+レビュー済みの完成版成果物 `prj-0001:pm-communication-plan` と review result を根拠に、`pm-communication-plan-template.md` を最終調整した。
+共通定型部分の本文への取り込みと、可変部分（Role code 等）のプレースホルダ化を行い、雛形としての妥当性を向上させた。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- docs/ja/specdojo/templates/pm-communication-plan-template.md
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+特になし。
 
 ## 4. 参考資料の活用
 
-_TODO_: `approach` に従ってどう進めたか（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で参考資料より優先した実例やプロジェクト文脈、`rulebook-maintenance` などの maintenance 系で見直した参考資料とその根拠、など）を記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+以下の成果物および基準を根拠に template を調整した。
+
+- 根拠とした成果物: `docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-communication-plan.md`
+- 判断根拠:
+  - 導入部および概要セクションの記述は、プロジェクト共通の管理方針であるため template 本文に取り込んだ。
+  - ロール別コミュニケーション分類の Role code リスト（PO, PM, BA, ARC, QE, OPS）は、標準的な体制であるため雛形に含め、必要に応じて追加・変更できるよう `_ROLE_CODE_` プレースホルダを維持した。
+  - 会議体計画、報告計画、連絡チャネル、エスカレーション条件の定義内容は、実例に基づき具体的かつ網羅的に構成した。
+  - 証跡管理および公開情報の扱いに関するガイドラインは、プロジェクト標準の禁止事項および管理方針に準拠させた。
+  - 関連ドキュメントの導線（`_PROJECT_ID_:pm-plan` 等）を `_PROJECT_ID_` プレースホルダを用いて汎用化した。
+- 矛盾時の対応: 特になวนい。
