@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-01T15:47:56Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-comparison-of-alternatives-130",
+  "by": "opencode-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
