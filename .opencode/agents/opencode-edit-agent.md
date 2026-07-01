@@ -1,7 +1,7 @@
 ---
 description: SpecDojo 標準 edit エージェント。文書作成・実装を伴う通常タスクを1件実行する。
 mode: primary
-model: ollama-local/qwen3.6:27b-mlx-work-64k
+model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.2
 permission:
   read:

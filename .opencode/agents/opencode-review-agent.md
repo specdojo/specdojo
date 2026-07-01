@@ -1,7 +1,7 @@
 ---
 description: SpecDojo 標準 review エージェント。done_criteria を多観点で検証し、result にレビュー結果を記録する。
 mode: primary
-model: ollama-local/qwen3.6:27b-mlx-work-64k
+model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.1
 permission:
   read:
