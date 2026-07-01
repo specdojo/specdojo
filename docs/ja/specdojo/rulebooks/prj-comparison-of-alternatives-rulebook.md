@@ -176,9 +176,9 @@ flowchart LR
 | Agent に採択案の最終判断を委ねる                               | 人間の判断責任を代替してしまうため |
 | 公開リポジトリに個人名・個人連絡先・非公開の組織情報を記載する | 公開範囲とプライバシーに反するため |
 
-## 8. サンプル（最小でも可）
+## 8. サンプル
 
-- 参照: [prj-comparison-of-alternatives-sample](../samples/prj-comparison-of-alternatives-sample.md)
+- 参照先: [prj-comparison-of-alternatives-sample](../samples/prj-comparison-of-alternatives-sample.md)
 
 ## 9. 作成レシピ
 
