@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-01T14:49:11Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-quality-management-plan-120",
+  "by": "claude-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
