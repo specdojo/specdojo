@@ -11,7 +11,7 @@ project_id: prj-0001
 
 members:
   - nickname: po
-    display_name: 店主代表
+    display_name: Project Owner
     email: null
     roles:
       - PO
@@ -20,15 +20,15 @@ members:
     type: human
     persona: final-decision-maker
     focus:
-      - 目的・優先順位・公開可否の最終判断
-      - 店頭運用を変えすぎないスコープ管理
+      - 目的、優先順位、公開可否の最終判断
+      - 既存運用を変えすぎない範囲管理
       - agent 支援結果の承認判断
     scheduler_strategy: critical-first
-    note: 人間の最終判断主体。小規模運用のため管理と公開判断を兼務し、agent に承認責任を委ねない。
+    note: 人間の最終判断主体。小規模運用では管理と公開判断を兼務し、agent に承認責任を委ねない。
 
   - nickname: ba-edit-agent
     priority: 1
-    display_name: BA Edit Agent
+    display_name: Business Analyst Agent
     email: null
     roles:
       - BA
@@ -38,7 +38,7 @@ members:
     proficiency: normal
     persona: requirements-navigator
     focus:
-      - 販売・在庫・つけ管理の業務フロー整理
+      - 販売、在庫、つけ管理の業務フロー整理
       - 利用者視点の受入条件確認
       - 要件の抜け漏れ確認
     capabilities:
@@ -49,7 +49,7 @@ members:
 
   - nickname: qe-review-agent
     priority: 1
-    display_name: QE Review Agent
+    display_name: Quality Review Agent
     email: null
     roles:
       - QE
@@ -60,8 +60,8 @@ members:
     persona: risk-averse-reviewer
     focus:
       - 受入条件の検証可能性確認
-      - 欠品・会計ミス防止観点のレビュー
-      - 禁止事項・ルール準拠の確認
+      - 欠品、会計ミス防止観点のレビュー
+      - 禁止事項とルール準拠の確認
     capabilities:
       - web_search
     command: "specdojo-agent run --profile qe-review"
