@@ -25,62 +25,63 @@ members:
     type: human
     persona: final-decision-maker
     focus:
-      - _TODO_: 人間の最終判断主体が重視する観点を記述する。
+      - _TODO_: 目的、スコープ、優先順位、公開方針に照らして重視する観点を記述する。
     scheduler_strategy: critical-first
     note: "_TODO_: 最終判断、公開可否、説明責任の扱いを 1 行で記述する。"
 
   - nickname: _EDIT_AGENT_NICKNAME_
-    priority: 1
+    priority: _EDIT_AGENT_PRIORITY_
     display_name: _EDIT_AGENT_DISPLAY_NAME_
     email: null
     roles:
-      - _ROLE_CODE_
+      - _EDIT_AGENT_ROLE_CODE_
     type: agent
     mode: edit
-    proficiency: normal
+    proficiency: _EDIT_AGENT_PROFICIENCY_
     persona: _AGENT_PERSONA_
     focus:
       - _TODO_: edit agent が重視する観点を記述する。
     capabilities:
-      - web_search
+      - _EDIT_AGENT_CAPABILITY_
     command: "_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
-    scheduler_strategy: critical-first
+    scheduler_strategy: _EDIT_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: 草案作成・整合確認などの支援範囲を記述し、承認責任を持たないことを明記する。"
 
   - nickname: _REVIEW_AGENT_NICKNAME_
-    priority: 1
+    priority: _REVIEW_AGENT_PRIORITY_
     display_name: _REVIEW_AGENT_DISPLAY_NAME_
     email: null
     roles:
-      - _ROLE_CODE_
+      - _REVIEW_AGENT_ROLE_CODE_
     type: agent
     mode: review
-    proficiency: normal
+    proficiency: _REVIEW_AGENT_PROFICIENCY_
     persona: _REVIEW_AGENT_PERSONA_
     focus:
       - _TODO_: review agent が重視する観点を記述する。
-    capabilities: []
+    capabilities:
+      - _REVIEW_AGENT_CAPABILITY_
     command: "_REVIEW_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
-    scheduler_strategy: fifo
+    scheduler_strategy: _REVIEW_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: レビュー支援範囲を記述し、公開可否判断を行わないことを明記する。"
 
   - nickname: _GENERAL_AGENT_NICKNAME_
-    priority: 2
+    priority: _GENERAL_AGENT_PRIORITY_
     display_name: _GENERAL_AGENT_DISPLAY_NAME_
     email: null
     roles: []
     type: agent
     mode: edit
-    proficiency: low
+    proficiency: _GENERAL_AGENT_PROFICIENCY_
     persona: general-assistant
     focus:
       - _TODO_: 汎用支援 agent が重視する観点を記述する。
     capabilities: []
     command: "_GENERAL_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
-    scheduler_strategy: manual
+    scheduler_strategy: _GENERAL_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: 特定 Role に固定しない場合は、実行時の owner または plan で対象 Role を補うことを記述する。"
 
 rules:
