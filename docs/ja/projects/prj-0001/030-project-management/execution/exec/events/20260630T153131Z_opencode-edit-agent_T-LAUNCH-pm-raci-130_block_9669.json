@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-06-30T15:31:31Z",
+  "type": "block",
+  "task_id": "T-LAUNCH-pm-raci-130",
+  "by": "opencode-edit-agent",
+  "msg": "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
+}
