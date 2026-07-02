@@ -32,13 +32,17 @@ Document Metadata Standard
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
 
-### 2.1. テンプレートのプレースホルダ
+### 2.1. テンプレート自身のメタ情報と生成物 Frontmatter の分離
 
-テンプレートでは、生成時に置換する値を `_UPPER_SNAKE_` 形式のプレースホルダで表現できます。ただし、`type: template` であることを理由に、すべての Frontmatter 項目や ID で大文字・アンダースコアを使用できるわけではありません。
+テンプレートファイル自身のメタ情報と、テンプレートから生成される成果物の Frontmatter は明確に分離する。
 
-- テンプレートファイル自身の `id` / `type` / `status` は実値で記述し、通常のメタ情報制約に従う。例: `id: dct-project-management-template`。
-- プレースホルダは、個別スキーマが許可したフィールドだけで使用する。
-- 個別スキーマがプレースホルダを許可していないフィールドでは、共通スキーマや成果物スキーマの通常の値制約を適用する。
+- テンプレートファイル自身の `id` / `type` / `status` は実値で記述し、通常のメタ情報制約に従う。例: `id: dct-project-management-template`、`type: template`、`status: draft`。
+- 生成される成果物の Frontmatter は、テンプレート自身の Frontmatter とは別に、生成物側の雛形として表現する。表現方法はテンプレート種別ごとに次のいずれかとする。
+  - Markdown 成果物テンプレートは、自身 Frontmatter 内の `frontmatter_template` フィールドに生成物 Frontmatter の雛形を記述する（本標準 `生成物 Frontmatter 雛形`）。
+  - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が Frontmatter を注入する。
+  - YAML catalog テンプレート（`dct-*` 等）は、生成物側フィールドを平坦に記述し、生成処理が `id` / `type` などを変換する。
+- 生成時に置換する値は `_UPPER_SNAKE_` 形式のプレースホルダで表す。ただし `type: template` を理由に、すべての Frontmatter 項目や ID で大文字・アンダースコアを使用できるわけではない。
+- プレースホルダは、個別スキーマが許可したフィールドだけで使用する。許可していないフィールドでは、共通スキーマや成果物スキーマの通常の値制約を適用する。
 - プレースホルダを置換して生成した成果物は、生成後のドキュメント種別に対応する通常のスキーマを満たさなければならない。
 
 例えば [dct.schema.yaml](../../../specdojo/schemas/v1/dct.schema.yaml) は、テンプレートの `part_of` などで参照する `DocId` に大文字とアンダースコアを許可し、`local_id` では `_NNNN_` や `_TERM_` を含む値を許可しています。一方、生成後の project 文書には `StrictDocId` と kebab-case の `local_id` が適用されます。
@@ -52,6 +56,43 @@ part_of:
 ```
 
 プレースホルダの命名と雛形での使い方は [template-authoring-standard.md](template-authoring-standard.md) を参照してください。
+
+### 2.2. 生成物 Frontmatter 雛形（`frontmatter_template`）
+
+Markdown 成果物テンプレートは、生成物の Frontmatter を自身 Frontmatter 内の `frontmatter_template` フィールドに雛形として記述する。
+
+- `frontmatter_template` の内容は、生成物のドキュメント種別に対応するスキーマ（成果物なら [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)）を満たす形にする。
+- 生成時に置換する値には生成時プレースホルダ（本標準 `生成時プレースホルダと記入プレースホルダ`）を使う。
+- 生成処理は、`frontmatter_template` の生成時プレースホルダを置換した結果を生成物の Frontmatter として出力し、テンプレート自身の Frontmatter（`id: *-template` 等）は出力しない。
+
+```yaml
+---
+id: pm-plan-template
+type: template
+status: draft
+frontmatter_template:
+  id: _PROJECT_ID_:pm-plan
+  type: project
+  status: ready
+  rulebook: pm-plan-rulebook
+  based_on:
+    - _PROJECT_ID_:pm-organization
+    - _PROJECT_ID_:pm-roles
+  supersedes: []
+---
+```
+
+### 2.3. 生成時プレースホルダと記入プレースホルダ
+
+プレースホルダは、置換される時点で 2 種類に分ける。
+
+| 区分                 | 置換する主体         | 置換タイミング               | 例                       |
+| -------------------- | -------------------- | ---------------------------- | ------------------------ |
+| 生成時プレースホルダ | 生成（scaffold）処理 | テンプレート展開時に機械置換 | `_PROJECT_ID_`           |
+| 記入プレースホルダ   | 作成者 / AI Agent    | 生成後の本文記入時           | `_TODO_`, `_RISK_TITLE_` |
+
+- 生成時プレースホルダは `frontmatter_template` と本文の相互参照の両方に現れ、生成処理が一括置換する。
+- 記入プレースホルダは生成物に残し、recipe に従って作成者が埋める。生成処理は置換しない。
 
 ## 3. 成果物の必須項目
 
