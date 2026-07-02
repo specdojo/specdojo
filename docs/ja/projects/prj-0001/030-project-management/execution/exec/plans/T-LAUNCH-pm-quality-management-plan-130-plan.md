@@ -8,6 +8,7 @@ mode: edit
 status: ready
 project_id: prj-0001
 owner: PM
+on_critical_path: true
 approach: template-maintenance
 ---
 
@@ -15,7 +16,9 @@ approach: template-maintenance
 
 ## 1. このフェーズで行うこと
 
-Template 最終調整
+レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
+章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
+成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
 
 ## 2. 対象成果物
 
