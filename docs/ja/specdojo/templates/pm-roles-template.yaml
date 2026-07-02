@@ -11,6 +11,7 @@ project_id: _PROJECT_ID_
 
 # Role code の採用方針・根拠は pm-organization.md を参照する。
 # 実行主体、member nickname、兼務の割り当ては pm-members.yaml で管理する。
+# `project_note` は PO が承認判断できる公開可能な一行メモとして記述する。
 # rulebook など schema にないメタ項目は追加しない。
 
 roles:
