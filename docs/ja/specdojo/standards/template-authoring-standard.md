@@ -38,7 +38,7 @@ Template Authoring Standard
 | `_UPPER_SNAKE_`        | 埋めるべき可変項目（記入プレースホルダ）                                  | `_RISK_TITLE_`         |
 | `_TODO_`               | 後で記入・判断する箇所（記入プレースホルダ）                              | 担当 / 期限など        |
 | `_PROJECT_ID_`         | 生成時に置換するプロジェクト ID（生成時プレースホルダ）                   | `_PROJECT_ID_:pm-plan` |
-| `frontmatter_template` | 生成物 Frontmatter 雛形（Markdown 成果物テンプレート自身 Frontmatter 内） | 本標準 `構成の原則`    |
+| `frontmatter_template` | 生成物 Frontmatter 雛形（Markdown 成果物テンプレート自身 Frontmatter 内） | —                      |
 | `_FRONTMATTER_`        | 生成処理が注入する Frontmatter（exec / result テンプレート本文先頭）      | —                      |
 
 ## 4. 構成の原則
