@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-07-02T12:16:06Z",
+  "type": "release",
+  "task_id": "T-LAUNCH-pm-roles-130",
+  "by": "indie",
+  "msg": "reset all blocked tasks to todo"
+}
