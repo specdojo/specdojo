@@ -910,7 +910,7 @@ export function registerExecCommands(program: Command): void {
   scmd.option("--msg <message>", "Claim message", "auto-claim");
   addLockOptions(scmd);
 
-  scmd.action((opts) => {
+  scmd.action(async (opts) => {
     let lockDir = "";
 
     try {
@@ -1046,7 +1046,10 @@ export function registerExecCommands(program: Command): void {
       }
 
       const out = writeEventFile(schedulePath, ev);
-      scaffoldClaimResult({
+      // Await the scaffold (it formats the result with Prettier asynchronously). Firing it without
+      // awaiting leaks a promise that can read/write the result after the caller tears down its
+      // working directory, surfacing as an ENOENT unhandled rejection.
+      await scaffoldClaimResult({
         schedulePath,
         executionPath,
         state,

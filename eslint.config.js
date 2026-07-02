@@ -27,7 +27,14 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    rules: sharedRules,
+    rules: {
+      ...sharedRules,
+      // Type-aware: catch un-awaited async calls (e.g. an async scaffold fired without await in a
+      // sync command action leaks a promise that can reject after teardown). Requires the typed
+      // project above. Only enabled here where parserOptions.project is set (not tools/e2e).
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": "error",
+    },
   },
 
   // tools/docs

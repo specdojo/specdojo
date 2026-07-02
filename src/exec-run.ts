@@ -354,7 +354,7 @@ function collectBusyActors(schedulePath: string): Set<string> {
 
 export function isRateLimitError(
   exitCode: number | null,
-  stderr: string,
+  output: string,
   detection: RateLimitDetection | undefined,
 ): boolean {
   if (!detection) return false;
@@ -365,12 +365,14 @@ export function isRateLimitError(
     return true;
   }
   if (detection.stderr_patterns) {
-    // By default, a stderr pattern only counts when the process also failed (non-zero or
-    // null exit). A successful run (exit 0) that merely echoes the phrase — e.g. an agent
+    // `output` is the agent's combined stdout+stderr: some CLIs print the limit notice to
+    // stdout, not stderr (e.g. claude's "You've hit your session limit"), so scanning stderr
+    // alone misses it. By default a pattern only counts when the process also failed (non-zero
+    // or null exit). A successful run (exit 0) that merely echoes the phrase — e.g. an agent
     // editing a file containing the literal text "rate limit" — is not a rate limit.
     const requireNonzeroExit = detection.stderr_requires_nonzero_exit ?? true;
     if (!requireNonzeroExit || exitCode !== 0) {
-      const lower = stderr.toLowerCase();
+      const lower = output.toLowerCase();
       for (const pattern of detection.stderr_patterns) {
         if (lower.includes(pattern.toLowerCase())) return true;
       }
@@ -482,13 +484,22 @@ async function executeAgent(
     return { result: "failure", exitCode: null, stderr: "Empty agent command" };
   }
 
+  // stdout is piped (not inherited) so it can be scanned for rate-limit signals: some CLIs print
+  // the limit notice to stdout, not stderr (e.g. claude's "session limit"). Each chunk is teed to
+  // the parent's stdout so live output/logging is preserved.
   const child = spawn(agentCommand, {
     cwd,
     env,
     shell: true,
-    stdio: ["pipe", "inherit", "pipe"],
+    stdio: ["pipe", "pipe", "pipe"],
   });
+  let stdout = "";
   let stderr = "";
+  child.stdout.setEncoding("utf8");
+  child.stdout.on("data", (chunk: string) => {
+    stdout += chunk;
+    process.stdout.write(chunk);
+  });
   child.stderr.setEncoding("utf8");
   child.stderr.on("data", (chunk: string) => {
     stderr += chunk;
@@ -504,7 +515,7 @@ async function executeAgent(
     child.once("close", (code) => resolveExit(code));
   });
 
-  if (isRateLimitError(exitCode, stderr, detection)) {
+  if (isRateLimitError(exitCode, `${stdout}\n${stderr}`, detection)) {
     return { result: "rate_limit", exitCode, stderr };
   }
   if (exitCode !== 0) {

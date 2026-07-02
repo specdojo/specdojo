@@ -153,6 +153,20 @@ describe("isRateLimitError", () => {
     expect(actual).toBe(true);
   });
 
+  it("flags a session-limit notice that the CLI printed to stdout, not stderr", () => {
+    // claude emits "You've hit your session limit" on stdout while exiting non-zero; the caller
+    // passes the combined stdout+stderr so the pattern still matches.
+    const claude: RateLimitDetection = { exit_codes: [], stderr_patterns: ["session limit"] };
+
+    const actual = isRateLimitError(
+      1,
+      "You've hit your session limit · resets 5:50pm (UTC)\n",
+      claude,
+    );
+
+    expect(actual).toBe(true);
+  });
+
   it("matches stderr regardless of exit code when the gate is disabled", () => {
     const ungated: RateLimitDetection = { ...detection, stderr_requires_nonzero_exit: false };
 
