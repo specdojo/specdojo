@@ -2,6 +2,7 @@ import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
+import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 
 // ================================
 // Types
@@ -283,6 +284,7 @@ function generateTicket(opts: {
   }
 
   let content = readFileSync(opts.templatePath, "utf8");
+  content = flattenTemplateFrontmatter(content);
   const pjrLower = opts.displayId.toLowerCase();
 
   // Replace frontmatter id pattern first to keep it lowercase
@@ -650,6 +652,7 @@ export function registerRegisterCommands(program: Command): void {
       }
 
       let content = readFileSync(templatePath, "utf8");
+      content = flattenTemplateFrontmatter(content);
       content = content.replace(/_PRJ-0000_/g, embedId);
 
       if (opts.dryRun) {

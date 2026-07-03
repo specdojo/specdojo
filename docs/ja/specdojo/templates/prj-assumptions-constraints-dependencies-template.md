@@ -1,11 +1,15 @@
 ---
-id: _PROJECT_ID_:prj-assumptions-constraints-dependencies
-type: project
+id: prj-assumptions-constraints-dependencies-template
+type: template
 status: draft
-rulebook: prj-assumptions-constraints-dependencies-rulebook
-based_on:
-  - _PROJECT_ID_:prj-scope
-supersedes: []
+frontmatter_template:
+  id: _PROJECT_ID_:prj-assumptions-constraints-dependencies
+  type: project
+  status: draft
+  rulebook: prj-assumptions-constraints-dependencies-rulebook
+  based_on:
+    - _PROJECT_ID_:prj-scope
+  supersedes: []
 ---
 
 # 前提・制約・依存関係: _PROJECT_NAME_

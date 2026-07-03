@@ -1,9 +1,13 @@
 ---
-id: _PRJ-0000_:_PJR-XXXX_
-type: project
+id: pjr-dependency-template
+type: template
 status: draft
-rulebook: pjr-index-rulebook
-item_type: dependency
+frontmatter_template:
+  id: _PRJ-0000_:_PJR-XXXX_
+  type: project
+  status: draft
+  rulebook: pjr-index-rulebook
+  item_type: dependency
 ---
 
 # _PJR-XXXX_ _DEPENDENCY_TITLE_

@@ -1,11 +1,15 @@
 ---
-id: _PROJECT_ID_:pm-communication-plan
-type: project
-status: ready
-rulebook: pm-communication-plan-rulebook
-based_on:
-  - _PROJECT_ID_:pm-plan
-supersedes: []
+id: pm-communication-plan-template
+type: template
+status: draft
+frontmatter_template:
+  id: _PROJECT_ID_:pm-communication-plan
+  type: project
+  status: ready
+  rulebook: pm-communication-plan-rulebook
+  based_on:
+    - _PROJECT_ID_:pm-plan
+  supersedes: []
 ---
 
 # コミュニケーション計画

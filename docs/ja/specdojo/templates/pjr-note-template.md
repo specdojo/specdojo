@@ -1,9 +1,13 @@
 ---
-id: _PRJ-0000_:_PJR-XXXX_
-type: project
+id: pjr-note-template
+type: template
 status: draft
-rulebook: pjr-index-rulebook
-item_type: note
+frontmatter_template:
+  id: _PRJ-0000_:_PJR-XXXX_
+  type: project
+  status: draft
+  rulebook: pjr-index-rulebook
+  item_type: note
 ---
 
 # _PJR-XXXX_ _NOTE_TITLE_

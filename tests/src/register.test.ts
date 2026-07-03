@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { load } from "js-yaml";
 import fg from "fast-glob";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
+import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
 
 function extractFrontmatter(content: string, filePath: string): string {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -27,14 +28,17 @@ const PJR_FILES = fg
 
 describe("register add — pjr テンプレート frontmatter スキーマ適合検証", () => {
   it.each(PJR_FILES)(
-    "%s の frontmatter が deliverable-frontmatter スキーマに適合する",
+    "%s の生成物 frontmatter が deliverable-frontmatter スキーマに適合する",
     (filePath) => {
       const validator = buildValidator(
         "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
       );
       const raw = readFileSync(resolve(filePath), "utf8");
+      // テンプレート自身の frontmatter ではなく、生成物形（frontmatter_template を
+      // 展開した出力 Frontmatter）を検証する。register が実際に生成する形に一致する。
+      const flattened = flattenTemplateFrontmatter(raw);
       const data = load(
-        applySubstitutions(extractFrontmatter(raw, filePath), PJR_SUBSTITUTIONS),
+        applySubstitutions(extractFrontmatter(flattened, filePath), PJR_SUBSTITUTIONS),
       ) as Record<string, unknown>;
 
       expect(validator(data), formatErrors(validator.errors)).toBe(true);

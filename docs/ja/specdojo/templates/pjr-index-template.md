@@ -1,8 +1,12 @@
 ---
-id: _PRJ-0000_:pjr-index
-type: project
+id: pjr-index-template
+type: template
 status: draft
-rulebook: pjr-index-rulebook
+frontmatter_template:
+  id: _PRJ-0000_:pjr-index
+  type: project
+  status: draft
+  rulebook: pjr-index-rulebook
 ---
 
 # プロジェクト登録簿

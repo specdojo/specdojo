@@ -25,8 +25,6 @@ Project Management Plan Writing Recipe
 | sample   | 完成例                         | 粒度、文体、表の書き方を確認する         |
 | template | 記入の骨組み                   | 新規作成時に章とプレースホルダを用意する |
 
-- Frontmatter は template 自身の frontmatter をコピーせず、template の `frontmatter_template` フィールドの内容を生成物の Frontmatter として使う。`_PROJECT_ID_` を対象プロジェクト ID に置換し、`_TODO_` などの記入プレースホルダは本文と同様に埋める。詳細は [document-metadata-standard.md](../standards/document-metadata-standard.md) の `生成物 Frontmatter 雛形` を参照する。
-
 ## 2. 作成前に集める情報
 
 | 項目                 | 集める情報                                                                                                                                                       |

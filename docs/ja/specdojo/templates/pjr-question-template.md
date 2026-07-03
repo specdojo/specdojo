@@ -1,9 +1,13 @@
 ---
-id: _PRJ-0000_:_PJR-XXXX_
-type: project
+id: pjr-question-template
+type: template
 status: draft
-rulebook: pjr-index-rulebook
-item_type: question
+frontmatter_template:
+  id: _PRJ-0000_:_PJR-XXXX_
+  type: project
+  status: draft
+  rulebook: pjr-index-rulebook
+  item_type: question
 ---
 
 # _PJR-XXXX_ _QUESTION_TITLE_

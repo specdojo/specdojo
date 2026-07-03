@@ -1,11 +1,15 @@
 ---
-id: _PROJECT_ID_:prj-success-criteria-and-acceptance-criteria
-type: project
+id: prj-success-criteria-and-acceptance-criteria-template
+type: template
 status: draft
-rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
-based_on:
-  - _PROJECT_ID_:prj-scope
-supersedes: []
+frontmatter_template:
+  id: _PROJECT_ID_:prj-success-criteria-and-acceptance-criteria
+  type: project
+  status: draft
+  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+  based_on:
+    - _PROJECT_ID_:prj-scope
+  supersedes: []
 ---
 
 # 成功基準と受入条件: _PROJECT_NAME_

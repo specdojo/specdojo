@@ -16,6 +16,7 @@ Recipe Authoring Standard
 - 目的: recipe の章構成・記述品質を統一し、書き手が良い内容を再現可能に作成できるようにする
 - 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
+- 成果物 Frontmatter の構築: template の `frontmatter_template` から構築する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物 Frontmatter 雛形`）。この手順を recipe 本文に複製しない。
 - 参照スキーマ: [recipe-frontmatter.schema.yaml](../../../specdojo/schemas/v1/recipe-frontmatter.schema.yaml)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 

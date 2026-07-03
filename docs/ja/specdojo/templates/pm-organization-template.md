@@ -1,10 +1,14 @@
 ---
-id: _PROJECT_ID_:pm-organization
-type: project
-status: ready
-rulebook: pm-organization-rulebook
-based_on:
-  - _PROJECT_ID_:prj-overview
+id: pm-organization-template
+type: template
+status: draft
+frontmatter_template:
+  id: _PROJECT_ID_:pm-organization
+  type: project
+  status: ready
+  rulebook: pm-organization-rulebook
+  based_on:
+    - _PROJECT_ID_:prj-overview
 ---
 
 # 組織定義

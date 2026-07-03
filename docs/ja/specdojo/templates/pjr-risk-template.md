@@ -1,9 +1,13 @@
 ---
-id: _PRJ-0000_:_PJR-XXXX_
-type: project
+id: pjr-risk-template
+type: template
 status: draft
-rulebook: pjr-index-rulebook
-item_type: risk
+frontmatter_template:
+  id: _PRJ-0000_:_PJR-XXXX_
+  type: project
+  status: draft
+  rulebook: pjr-index-rulebook
+  item_type: risk
 ---
 
 # _PJR-XXXX_ _RISK_TITLE_

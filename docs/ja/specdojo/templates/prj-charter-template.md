@@ -1,12 +1,16 @@
 ---
-id: _PROJECT_ID_:prj-charter
-type: project
-status: ready
-rulebook: prj-charter-rulebook
-based_on:
-  - _PROJECT_ID_:prj-overview
-  - _PROJECT_ID_:prj-stakeholder-register
-supersedes: []
+id: prj-charter-template
+type: template
+status: draft
+frontmatter_template:
+  id: _PROJECT_ID_:prj-charter
+  type: project
+  status: ready
+  rulebook: prj-charter-rulebook
+  based_on:
+    - _PROJECT_ID_:prj-overview
+    - _PROJECT_ID_:prj-stakeholder-register
+  supersedes: []
 ---
 
 # プロジェクト憲章: _PROJECT_NAME_
