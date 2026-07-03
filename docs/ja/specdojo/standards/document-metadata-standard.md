@@ -52,7 +52,7 @@ id: dct-project-management-template
 type: template
 status: draft
 part_of:
-  - _PRJ-0000_:dct-index
+  - _PROJECT_ID_:dct-index
 ```
 
 プレースホルダの命名と雛形での使い方は [template-authoring-standard.md](template-authoring-standard.md) を参照してください。

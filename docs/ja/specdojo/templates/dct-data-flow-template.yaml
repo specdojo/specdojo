@@ -1,5 +1,5 @@
 # Template: data flow deliverables catalog
-# Placeholder _PRJ-0000_ is not used for product-level templates.
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
 # base_path is fixed to the product document directory.
 id: dct-data-flow-template
 type: template

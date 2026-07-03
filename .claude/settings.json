@@ -14,7 +14,12 @@
       "Bash(echo \"tsc:$?\")",
       "Bash(echo \"build:$?\")",
       "Bash(echo \"lint:$?\")",
-      "Bash(echo \"lint:md exit:$?\")"
+      "Bash(echo \"lint:md exit:$?\")",
+      "Bash(grep -v \"^\\\\s*$\")",
+      "Bash(echo \" quiet --frail exit=$?\")",
+      "Bash(grep -E \"^\\\\S.*\\\\.\\(md|mdx\\)$\")",
+      "Bash(grep -E \"\\\\.md$\")",
+      "Bash(awk '{print $2}')"
     ],
     "deny": [
       "Read(./.env)",

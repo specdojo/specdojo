@@ -76,7 +76,7 @@ export function scaffoldDoc(
   projectId: string,
   size: ProjectSize,
 ): DctDoc {
-  const PLACEHOLDER = "_PRJ-0000_";
+  const PLACEHOLDER = "_PROJECT_ID_";
   const replace = (s: string) => s.replaceAll(PLACEHOLDER, projectId);
 
   const groups = template.groups

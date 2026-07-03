@@ -577,7 +577,7 @@ track-files:
 
 ### 7.1. register scaffold
 
-`project_register_path` に `pjr-index.md` を新規生成する。`docs/ja/specdojo/templates/pjr-index-template.md` をもとに `_PRJ-0000_` をプロジェクト ID に置換して出力し、最後に `register build --scope all` 相当を実行して派生ビューも生成する。
+`project_register_path` に `pjr-index.md` を新規生成する。`docs/ja/specdojo/templates/pjr-index-template.md` をもとに `_PROJECT_ID_` をプロジェクト ID に置換して出力し、最後に `register build --scope all` 相当を実行して派生ビューも生成する。
 
 ```bash
 specdojo register scaffold --project prj-0001
@@ -599,7 +599,7 @@ specdojo register scaffold --project prj-0001
 1. `--project` で指定したプロジェクト ID を `specdojo.config.json` から解決する。
 2. `projects.<id>.project_register_path` を出力先ディレクトリとして解決する。
 3. `docs/ja/specdojo/templates/pjr-index-template.md` を読み込む。
-4. `_PRJ-0000_` を `--project-id` または `--project` の値に置換する。
+4. `_PROJECT_ID_` を `--project-id` または `--project` の値に置換する。
 5. `project_register_path/pjr-index.md` に出力する。
 6. `project_register_path/generated/` と `controls/generated/` を作成する。
 7. `register build --scope all` 相当を実行し、登録簿内の補助一覧と controls 全体の type 別管理ビューを生成する。
@@ -757,7 +757,7 @@ rulebook: pjr-index-rulebook
 item_type: risk
 ```
 
-テンプレート内の `_PRJ-0000_`、`_PJR-XXXX_`、`_<TYPE>_TITLE_` 相当のプレースホルダーは、プロジェクト ID、表示 ID、タイトルで置換する。
+テンプレート内の `_PROJECT_ID_`、`_PJR-XXXX_`、`_<TYPE>_TITLE_` 相当のプレースホルダーは、プロジェクト ID、表示 ID、タイトルで置換する。
 
 #### 7.2.4. 検証
 

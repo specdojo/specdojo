@@ -18,8 +18,8 @@ function applySubstitutions(text: string, subs: Array<[string, string]>): string
 
 // register add が生成するファイルのプレースホルダと同じ置換ルール
 const PJR_SUBSTITUTIONS: Array<[string, string]> = [
-  ["_PRJ-0000_:_PJR-XXXX_", "prj-test-0001:pjr-0001"],
-  ["_PRJ-0000_", "prj-test-0001"],
+  ["_PROJECT_ID_:_PJR-XXXX_", "prj-test-0001:pjr-0001"],
+  ["_PROJECT_ID_", "prj-test-0001"],
 ];
 
 const PJR_FILES = fg

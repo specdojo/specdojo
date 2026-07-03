@@ -3,7 +3,7 @@ id: pjr-index-template
 type: template
 status: draft
 frontmatter_template:
-  id: _PRJ-0000_:pjr-index
+  id: _PROJECT_ID_:pjr-index
   type: project
   status: draft
   rulebook: pjr-index-rulebook
@@ -13,7 +13,7 @@ frontmatter_template:
 
 Project Register
 
-この文書は、_PRJ-0000_ プロジェクトのプロジェクト登録簿です。
+この文書は、_PROJECT_ID_ プロジェクトのプロジェクト登録簿です。
 
 プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
 

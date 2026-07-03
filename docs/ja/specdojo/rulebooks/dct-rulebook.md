@@ -175,7 +175,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 - `type: template` のファイルでのみ `min_size`（`small` / `medium` / `large`）を使用できる。
 - `min_size` は規模に応じた取捨選択のための項目であり、scaffold 時に除去される。
-- テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PRJ-0000_:dct-index`）を使用できる。
+- テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。
 
 ## 7. 禁止事項
 

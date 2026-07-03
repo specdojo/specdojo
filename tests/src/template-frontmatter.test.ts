@@ -10,7 +10,7 @@ describe("flattenTemplateFrontmatter", () => {
       "type: template",
       "status: draft",
       "frontmatter_template:",
-      "  id: _PRJ-0000_:_PJR-XXXX_",
+      "  id: _PROJECT_ID_:_PJR-XXXX_",
       "  type: project",
       "  status: draft",
       "  rulebook: pjr-index-rulebook",
@@ -28,7 +28,7 @@ describe("flattenTemplateFrontmatter", () => {
     expect(actual).toBe(
       [
         "---",
-        "id: _PRJ-0000_:_PJR-XXXX_",
+        "id: _PROJECT_ID_:_PJR-XXXX_",
         "type: project",
         "status: draft",
         "rulebook: pjr-index-rulebook",
@@ -92,20 +92,20 @@ describe("flattenTemplateFrontmatter", () => {
       "type: template",
       "status: draft",
       "frontmatter_template:",
-      "  id: _PRJ-0000_:pjr-index",
+      "  id: _PROJECT_ID_:pjr-index",
       "  type: project",
       "  status: draft",
       "  rulebook: pjr-index-rulebook",
       "---",
       "",
-      "# _PRJ-0000_ プロジェクト登録簿",
+      "# _PROJECT_ID_ プロジェクト登録簿",
       "",
     ].join("\n");
 
     const actual = flattenTemplateFrontmatter(template);
 
-    expect(actual).toContain("id: _PRJ-0000_:pjr-index");
-    expect(actual).toContain("# _PRJ-0000_ プロジェクト登録簿");
+    expect(actual).toContain("id: _PROJECT_ID_:pjr-index");
+    expect(actual).toContain("# _PROJECT_ID_ プロジェクト登録簿");
     expect(actual).not.toContain("pjr-index-template");
   });
 

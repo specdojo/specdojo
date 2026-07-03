@@ -126,7 +126,7 @@ $defs:
     pattern: "^[a-zA-Z0-9_][a-zA-Z0-9_:-]*$"
     description: >
       Permissive document ID. Allows _PLACEHOLDER_ style for templates
-      (e.g., _PRJ-0000_:dct-index). Applied to both template and project documents
+      (e.g., _PROJECT_ID_:dct-index). Applied to both template and project documents
       via the base schema; project documents additionally enforce StrictDocId.
 
   StrictDocId:

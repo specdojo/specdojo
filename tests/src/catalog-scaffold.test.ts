@@ -12,7 +12,7 @@ const MINIMAL_TEMPLATE: DctTemplateDoc = {
   type: "template",
   status: "draft",
   domain: "test",
-  base_path: "/docs/ja/projects/_PRJ-0000_/010-sample",
+  base_path: "/docs/ja/projects/_PROJECT_ID_/010-sample",
   groups: [
     {
       deliverables: [
@@ -47,15 +47,15 @@ describe("scaffoldDoc — プレースホルダ置換", () => {
     expect(doc.project_id).toBe("prj-0001");
   });
 
-  it("base_path の _PRJ-0000_ を projectId に置き換える", () => {
+  it("base_path の _PROJECT_ID_ を projectId に置き換える", () => {
     const doc = scaffoldDoc(MINIMAL_TEMPLATE, "prj-0001", "large");
     expect(doc.base_path).toBe("/docs/ja/projects/prj-0001/010-sample");
   });
 
-  it("part_of の _PRJ-0000_ を projectId に置き換える", () => {
+  it("part_of の _PROJECT_ID_ を projectId に置き換える", () => {
     const template: DctTemplateDoc = {
       ...MINIMAL_TEMPLATE,
-      part_of: ["_PRJ-0000_:dct-index"],
+      part_of: ["_PROJECT_ID_:dct-index"],
     };
     const doc = scaffoldDoc(template, "prj-0001", "large");
     expect(doc.part_of).toEqual(["prj-0001:dct-index"]);

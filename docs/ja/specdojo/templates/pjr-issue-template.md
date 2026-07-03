@@ -3,7 +3,7 @@ id: pjr-issue-template
 type: template
 status: draft
 frontmatter_template:
-  id: _PRJ-0000_:_PJR-XXXX_
+  id: _PROJECT_ID_:_PJR-XXXX_
   type: project
   status: draft
   rulebook: pjr-index-rulebook

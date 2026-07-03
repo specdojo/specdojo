@@ -288,9 +288,9 @@ function generateTicket(opts: {
   const pjrLower = opts.displayId.toLowerCase();
 
   // Replace frontmatter id pattern first to keep it lowercase
-  content = content.replace(/_PRJ-0000_:_PJR-XXXX_/g, `${opts.projectId}:${pjrLower}`);
+  content = content.replace(/_PROJECT_ID_:_PJR-XXXX_/g, `${opts.projectId}:${pjrLower}`);
   // Replace remaining project id placeholder
-  content = content.replace(/_PRJ-0000_/g, opts.projectId);
+  content = content.replace(/_PROJECT_ID_/g, opts.projectId);
   // Replace display id placeholder with uppercase
   content = content.replace(/_PJR-XXXX_/g, opts.displayId);
   // Replace type-specific title placeholder
@@ -653,7 +653,7 @@ export function registerRegisterCommands(program: Command): void {
 
       let content = readFileSync(templatePath, "utf8");
       content = flattenTemplateFrontmatter(content);
-      content = content.replace(/_PRJ-0000_/g, embedId);
+      content = content.replace(/_PROJECT_ID_/g, embedId);
 
       if (opts.dryRun) {
         process.stdout.write(content);
