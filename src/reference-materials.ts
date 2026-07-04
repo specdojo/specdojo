@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { load } from "js-yaml";
 import { specdojoRootDir } from "./specdojo-config.js";
+import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
 // 参考資料（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。
@@ -43,11 +43,8 @@ function rulebookFsPath(rulebookId: string): string {
 export function loadRulebookRefs(rulebookId: string): RulebookRefs {
   const fsPath = rulebookFsPath(rulebookId);
   if (!existsSync(fsPath)) return {};
-  const match = readFileSync(fsPath, "utf8").match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return {};
-  const data = load(match[1]);
-  if (typeof data !== "object" || data === null) return {};
-  const fm = data as Record<string, unknown>;
+  // rulebook frontmatter は `specdojo:` 名前空間配下にある。
+  const fm = readSpecdojoNamespace(readFileSync(fsPath, "utf8"));
   const str = (value: unknown): string | undefined =>
     typeof value === "string" && value !== "" ? value : undefined;
   return {

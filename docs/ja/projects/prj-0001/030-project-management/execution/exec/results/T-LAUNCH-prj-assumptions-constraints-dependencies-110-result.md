@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-assumptions-constraints-dependencies-110
-type: exec-result
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-110
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-110-plan.md
-started_at: "2026-06-29T17:56:29.645Z"
-completed_at: "2026-06-30T14:00:07.564Z"
-agent: claude-edit-agent
-approach: rulebook-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-assumptions-constraints-dependencies-110
+  type: exec-result
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-110
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-110-plan.md
+  started_at: "2026-06-29T17:56:29.645Z"
+  completed_at: "2026-06-30T14:00:07.564Z"
+  agent: claude-edit-agent
+  approach: rulebook-maintenance
 ---
 
 # Edit Result

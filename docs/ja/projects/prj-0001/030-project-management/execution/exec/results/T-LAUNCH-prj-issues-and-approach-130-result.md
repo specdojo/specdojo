@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-issues-and-approach-130
-type: exec-result
-task_id: T-LAUNCH-prj-issues-and-approach-130
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-130-plan.md
-started_at: "2026-06-30T15:33:13.235Z"
-completed_at: "2026-06-30T15:46:34.460Z"
-agent: opencode-edit-agent
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-issues-and-approach-130
+  type: exec-result
+  task_id: T-LAUNCH-prj-issues-and-approach-130
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-130-plan.md
+  started_at: "2026-06-30T15:33:13.235Z"
+  completed_at: "2026-06-30T15:46:34.460Z"
+  agent: opencode-edit-agent
+  approach: template-maintenance
 ---
 
 # Edit Result

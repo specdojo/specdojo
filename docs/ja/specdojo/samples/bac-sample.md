@@ -1,8 +1,9 @@
 ---
-id: bac
-type: project
-status: draft
-rulebook: bac-rulebook
+specdojo:
+  id: bac
+  type: project
+  status: draft
+  rulebook: bac-rulebook
 ---
 
 # [業務受入条件](../rulebooks/bac-rulebook.md) サンプル

@@ -1,7 +1,8 @@
 ---
-id: standard-authoring-standard
-type: standard
-status: draft
+specdojo:
+  id: standard-authoring-standard
+  type: standard
+  status: draft
 ---
 
 # Standard 記述標準
@@ -49,9 +50,10 @@ Standard Authoring Standard
 
 ```yaml
 ---
-id: id-and-file-naming-standard
-type: standard
-status: draft
+specdojo:
+  id: id-and-file-naming-standard
+  type: standard
+  status: draft
 ---
 ```
 

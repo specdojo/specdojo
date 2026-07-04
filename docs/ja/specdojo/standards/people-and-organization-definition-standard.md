@@ -1,7 +1,8 @@
 ---
-id: people-and-organization-definition-standard
-type: standard
-status: draft
+specdojo:
+  id: people-and-organization-definition-standard
+  type: standard
+  status: draft
 ---
 
 # 人と組織の定義標準

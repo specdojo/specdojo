@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-120
-type: exec-result
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120-plan.md
-started_at: "2026-06-30T15:10:48.253Z"
-completed_at: "2026-06-30T15:14:12.373Z"
-agent: codex-edit-agent
-approach: sample-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-120
+  type: exec-result
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120-plan.md
+  started_at: "2026-06-30T15:10:48.253Z"
+  completed_at: "2026-06-30T15:14:12.373Z"
+  agent: codex-edit-agent
+  approach: sample-maintenance
 ---
 
 # Edit Result

@@ -1,8 +1,9 @@
 ---
-id: br
-type: project
-status: draft
-rulebook: br-rulebook
+specdojo:
+  id: br
+  type: project
+  status: draft
+  rulebook: br-rulebook
 ---
 
 # [ビジネスルール](../rulebooks/br-rulebook.md) サンプル

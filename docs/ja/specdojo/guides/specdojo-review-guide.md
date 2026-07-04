@@ -1,7 +1,8 @@
 ---
-id: specdojo-review-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-review-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo レビューガイド
@@ -201,16 +202,17 @@ exec/plans/T-LAUNCH-prj-overview-030-plan.md
 review plan は Frontmatter と本文セクションで構成する。
 
 ```yaml
-id: <project-id>:xrp-<task-id>
-type: exec-plan
-rulebook: xep-rulebook
-task_id: <task-id>
-name: <フェーズ名>
-mode: review
-status: ready
-project_id: <project_id>
-owner: <Role code>
-on_critical_path: true | false
+specdojo:
+  id: <project-id>:xrp-<task-id>
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: <task-id>
+  name: <フェーズ名>
+  mode: review
+  status: ready
+  project_id: <project_id>
+  owner: <Role code>
+  on_critical_path: true | false
 ```
 
 | セクション             | 内容                                                                                              |
@@ -240,16 +242,17 @@ on_critical_path: true | false
 review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新する。
 
 ```yaml
-id: <project-id>:xrr-<task-id>
-type: exec-result
-task_id: <task-id>
-mode: review
-status: in_progress | complete | blocked
-project_id: <project_id>
-plan_ref: exec/plans/<task-id>-plan.md
-started_at: <ISO8601>
-completed_at: <ISO8601>
-agent: <member nickname>
+specdojo:
+  id: <project-id>:xrr-<task-id>
+  type: exec-result
+  task_id: <task-id>
+  mode: review
+  status: in_progress | complete | blocked
+  project_id: <project_id>
+  plan_ref: exec/plans/<task-id>-plan.md
+  started_at: <ISO8601>
+  completed_at: <ISO8601>
+  agent: <member nickname>
 ```
 
 | セクション         | 内容                                                                    |

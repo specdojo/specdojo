@@ -1,7 +1,8 @@
 ---
-id: pm-change-request-log-rules
-type: rulebook
-status: draft
+specdojo:
+  id: pm-change-request-log-rules
+  type: rulebook
+  status: draft
 ---
 
 # 変更要求ログ 作成ルール

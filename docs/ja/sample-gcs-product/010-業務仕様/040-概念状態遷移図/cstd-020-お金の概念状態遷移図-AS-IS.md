@@ -1,10 +1,11 @@
 ---
-id: money-cstd-as-is # 一意なID
-type: data # screen | api | domain | data | test | flow | rule
-status: draft # draft | ready | deprecated
-part_of: [] # 分割している場合の上位ドキュメント
-based_on: [] # 技術的・定義的な土台（根拠）へのリンク
-supersedes: [] # 置き換え関係（古仕様→新仕様）
+specdojo:
+  id: money-cstd-as-is # 一意なID
+  type: data # screen | api | domain | data | test | flow | rule
+  status: draft # draft | ready | deprecated
+  part_of: [] # 分割している場合の上位ドキュメント
+  based_on: [] # 技術的・定義的な土台（根拠）へのリンク
+  supersedes: [] # 置き換え関係（古仕様→新仕様）
 ---
 
 # お金の概念状態遷移図 (AS-IS)

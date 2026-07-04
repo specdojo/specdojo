@@ -1,7 +1,8 @@
 ---
-id: test-document-scope-standard
-type: standard
-status: draft
+specdojo:
+  id: test-document-scope-standard
+  type: standard
+  status: draft
 ---
 
 # テストドキュメントスコープ定義標準

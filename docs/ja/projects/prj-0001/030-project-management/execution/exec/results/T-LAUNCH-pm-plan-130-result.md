@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-plan-130
-type: exec-result
-task_id: T-LAUNCH-pm-plan-130
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-plan-130-plan.md
-started_at: "2026-06-29T19:11:28.875Z"
-completed_at: "2026-06-30T15:14:57.296Z"
-agent: claude-edit-agent
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-plan-130
+  type: exec-result
+  task_id: T-LAUNCH-pm-plan-130
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-plan-130-plan.md
+  started_at: "2026-06-29T19:11:28.875Z"
+  completed_at: "2026-06-30T15:14:57.296Z"
+  agent: claude-edit-agent
+  approach: template-maintenance
 ---
 
 # Edit Result

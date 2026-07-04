@@ -1,13 +1,14 @@
 ---
-id: prj-0001:xrr-t-launch-pm-communication-plan-100-result
-type: exec-result
-task_id: T-LAUNCH-pm-communication-plan-100
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref:
-started_at: ""
-completed_at: "2026-07-01T14:48:58.107Z"
+specdojo:
+  id: prj-0001:xrr-t-launch-pm-communication-plan-100-result
+  type: exec-result
+  task_id: T-LAUNCH-pm-communication-plan-100
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref:
+  started_at: ""
+  completed_at: "2026-07-01T14:48:58.107Z"
 ---
 
 # Execution Result

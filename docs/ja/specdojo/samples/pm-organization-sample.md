@@ -1,10 +1,11 @@
 ---
-id: pm-organization-sample
-type: project
-status: ready
-rulebook: pm-organization-rulebook
-based_on:
-  - prj-overview-sample
+specdojo:
+  id: pm-organization-sample
+  type: project
+  status: ready
+  rulebook: pm-organization-rulebook
+  based_on:
+    - prj-overview-sample
 ---
 
 # 組織定義

@@ -1,8 +1,9 @@
 ---
-id: tsd-vllm-mlx
-type: architecture
-status: draft
-rulebook: tsd-rulebook
+specdojo:
+  id: tsd-vllm-mlx
+  type: architecture
+  status: draft
+  rulebook: tsd-rulebook
 ---
 
 # vllm-mlx 技術スタック定義

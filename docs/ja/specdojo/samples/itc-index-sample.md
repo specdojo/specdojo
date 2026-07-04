@@ -1,8 +1,9 @@
 ---
-id: itc-index
-type: project
-status: draft
-rulebook: itc-index-rulebook
+specdojo:
+  id: itc-index
+  type: project
+  status: draft
+  rulebook: itc-index-rulebook
 ---
 
 # [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル

@@ -1,8 +1,9 @@
 ---
-id: pr-2026-04-19-01
-type: project
-status: draft
-rulebook: pr-rulebook
+specdojo:
+  id: pr-2026-04-19-01
+  type: project
+  status: draft
+  rulebook: pr-rulebook
 ---
 
 # 進捗報告 サンプル

@@ -1,11 +1,12 @@
 ---
-id: prj-0001:pm-communication-plan
-type: project
-status: draft
-rulebook: pm-communication-plan-rulebook
-based_on:
-  - prj-0001:pm-plan
-supersedes: []
+specdojo:
+  id: prj-0001:pm-communication-plan
+  type: project
+  status: draft
+  rulebook: pm-communication-plan-rulebook
+  based_on:
+    - prj-0001:pm-plan
+  supersedes: []
 ---
 
 # コミュニケーション計画

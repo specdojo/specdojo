@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-110
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110
-name: Rulebook 最終調整
-mode: edit
-status: ready
-project_id: prj-0001
-owner: BA
-on_critical_path: true
-approach: rulebook-maintenance
+specdojo:
+  id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-110
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110
+  name: Rulebook 最終調整
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: BA
+  on_critical_path: true
+  approach: rulebook-maintenance
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110

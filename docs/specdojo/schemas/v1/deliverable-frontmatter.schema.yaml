@@ -1,47 +1,54 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: Deliverables Front Matter
+# SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
+# トップレベルは第三者ツール（VitePress 等）のキーを許容するため制限しない。
 type: object
-unevaluatedProperties: false
-allOf:
-  - $ref: "./common-frontmatter.schema.yaml"
-  - type: object
-    required:
-      - rulebook
-    properties:
-      type:
-        type: string
-        enum:
-          # SpecDojo基盤文書（専用スキーマを持たないもの）
-          - template # 文書テンプレート（雛形）
-          - sample # 記述例
-          # プロジェクト文書
-          - project # プロジェクト文書全般
-          # プロダクト仕様文書
-          - flow # 業務フロー・プロセス仕様
-          - rule # 業務ルール仕様
-          - data # データ仕様
-          - ui # 画面・帳票仕様
-          - api # API・外部I/F仕様
-          - architecture # アーキテクチャ設計
-          - test # テスト仕様・設計
-          - operations # 運用設計・手順
-        description: "仕様の種別（rulebook/guide/standard は各専用スキーマを使用）"
-      rulebook:
-        $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
-        description: "準拠する rulebook の ID。該当がない場合は none。"
-      item_type:
-        type: string
-        enum:
-          - todo
-          - risk
-          - issue
-          - question
-          - decision
-          - dependency
-          - note
-          - change-request
-        description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
-      size:
-        type: string
-        enum: ["small", "medium", "large"]
-        description: "scaffold 時に選択したプロジェクトサイズ。dct-index に記録し、テンプレートの min_size フィルタの根拠とする。"
+required:
+  - specdojo
+properties:
+  specdojo:
+    type: object
+    unevaluatedProperties: false
+    allOf:
+      - $ref: "./common-frontmatter.schema.yaml"
+      - type: object
+        required:
+          - rulebook
+        properties:
+          type:
+            type: string
+            enum:
+              # SpecDojo基盤文書（専用スキーマを持たないもの）
+              - template # 文書テンプレート（雛形）
+              - sample # 記述例
+              # プロジェクト文書
+              - project # プロジェクト文書全般
+              # プロダクト仕様文書
+              - flow # 業務フロー・プロセス仕様
+              - rule # 業務ルール仕様
+              - data # データ仕様
+              - ui # 画面・帳票仕様
+              - api # API・外部I/F仕様
+              - architecture # アーキテクチャ設計
+              - test # テスト仕様・設計
+              - operations # 運用設計・手順
+            description: "仕様の種別（rulebook/guide/standard は各専用スキーマを使用）"
+          rulebook:
+            $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
+            description: "準拠する rulebook の ID。該当がない場合は none。"
+          item_type:
+            type: string
+            enum:
+              - todo
+              - risk
+              - issue
+              - question
+              - decision
+              - dependency
+              - note
+              - change-request
+            description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
+          size:
+            type: string
+            enum: ["small", "medium", "large"]
+            description: "scaffold 時に選択したプロジェクトサイズ。dct-index に記録し、テンプレートの min_size フィルタの根拠とする。"

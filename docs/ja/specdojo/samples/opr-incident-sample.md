@@ -1,10 +1,11 @@
 ---
-id: opr-incident
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: [opd-incident-management]
-supersedes: []
+specdojo:
+  id: opr-incident
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: [opd-incident-management]
+  supersedes: []
 ---
 
 # 運用手順: 障害対応 サンプル

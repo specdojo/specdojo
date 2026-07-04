@@ -1,7 +1,8 @@
 ---
-id: id-and-file-naming-standard
-type: standard
-status: draft
+specdojo:
+  id: id-and-file-naming-standard
+  type: standard
+  status: draft
 ---
 
 # ドキュメントIDおよびファイル命名標準
@@ -213,10 +214,11 @@ id: "prj-0001:prj-overview"
 
 ```yaml
 ---
-id: "prj-0001:prj-charter"
-based_on:
-  - "prj-overview" # prj-0001:prj-overview として解決
-  - "sysd-index" # プロダクト文書ID
+specdojo:
+  id: "prj-0001:prj-charter"
+  based_on:
+    - "prj-overview" # prj-0001:prj-overview として解決
+    - "sysd-index" # プロダクト文書ID
 ---
 ```
 
@@ -425,9 +427,10 @@ prj-0001:prj-overview
 
 ```yaml
 ---
-id: "prj-0001:prj-charter"
-based_on:
-  - "prj-overview"
+specdojo:
+  id: "prj-0001:prj-charter"
+  based_on:
+    - "prj-overview"
 ---
 ```
 
@@ -510,9 +513,10 @@ frontmatter:
 
 ```yaml
 ---
-id: "prj-0001:prj-overview"
-type: project
-status: draft
+specdojo:
+  id: "prj-0001:prj-overview"
+  type: project
+  status: draft
 ---
 ```
 
@@ -539,7 +543,8 @@ prj-0001:prj-overview.md
 
 ```yaml
 ---
-id: "prj-0001:prj-overview"
+specdojo:
+  id: "prj-0001:prj-overview"
 ---
 ```
 

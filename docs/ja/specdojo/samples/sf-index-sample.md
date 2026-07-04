@@ -1,8 +1,9 @@
 ---
-id: sf-index
-type: project
-status: draft
-rulebook: sf-index-rulebook
+specdojo:
+  id: sf-index
+  type: project
+  status: draft
+  rulebook: sf-index-rulebook
 ---
 
 # [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) サンプル

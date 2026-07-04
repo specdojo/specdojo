@@ -1,8 +1,9 @@
 ---
-id: ntp
-type: project
-status: draft
-rulebook: ntp-rulebook
+specdojo:
+  id: ntp
+  type: project
+  status: draft
+  rulebook: ntp-rulebook
 ---
 
 # 移行テスト計画（リハーサル計画） サンプル

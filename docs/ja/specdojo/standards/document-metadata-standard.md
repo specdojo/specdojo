@@ -1,7 +1,8 @@
 ---
-id: document-metadata-standard
-type: standard
-status: draft
+specdojo:
+  id: document-metadata-standard
+  type: standard
+  status: draft
 ---
 
 # ドキュメントメタ情報標準
@@ -26,21 +27,33 @@ Document Metadata Standard
 ## 2. 共通原則
 
 - Markdown はファイル先頭に YAML Frontmatter を置く。
-- `id` / `type` / `status` は全種別で必須とする。
+- SpecDojo が所有する項目はすべて `specdojo:` 名前空間（ネストしたオブジェクト）配下に置く。トップレベルは他フレームワーク（VitePress 等）の項目に明け渡し、SpecDojo は直接使わない。
+- `id` / `type` / `status` は全種別で必須とし、`specdojo:` 配下に置く。
 - `id` は共通スキーマの `idRef` に従い、`^[a-z0-9][a-z0-9-:]*$` に一致させる。
 - `type` は各ドキュメント種別のスキーマに定義された値を使用する。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
+- `specdojo:` 名前空間の対象は Markdown Frontmatter のみとする。独立 YAML データファイル（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` など）は Markdown ではなく他ツールとの同居も無いため、名前空間化せずトップレベルに項目を置く。
+
+```yaml
+---
+specdojo:
+  id: prj-scope
+  type: project
+  status: ready
+  rulebook: prj-scope-rulebook
+---
+```
 
 ### 2.1. テンプレート自身のメタ情報と生成物 Frontmatter の分離
 
 テンプレートファイル自身のメタ情報と、テンプレートから生成される成果物の Frontmatter は明確に分離する。
 
-- テンプレートファイル自身の `id` / `type` / `status` は実値で記述し、通常のメタ情報制約に従う。例: `id: dct-project-management-template`、`type: template`、`status: draft`。
+- テンプレートファイル自身のメタ情報も `specdojo:` 配下に置き、`id` / `type` / `status` は実値で記述して通常のメタ情報制約に従う。例: `specdojo.id: dct-project-management-template`、`specdojo.type: template`、`specdojo.status: draft`。
 - 生成される成果物の Frontmatter は、テンプレート自身の Frontmatter とは別に、生成物側の雛形として表現する。表現方法はテンプレート種別ごとに次のいずれかとする。
-  - Markdown 成果物テンプレートは、自身 Frontmatter 内の `frontmatter_template` フィールドに生成物 Frontmatter の雛形を記述する（本標準 `生成物 Frontmatter 雛形`）。
-  - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が Frontmatter を注入する。
-  - YAML catalog テンプレート（`dct-*` 等）は、生成物側フィールドを平坦に記述し、生成処理が `id` / `type` などを変換する。
+  - Markdown 成果物テンプレートは、自身 Frontmatter の `specdojo:` 配下に置いた `frontmatter_template` フィールドに、生成物 Frontmatter の雛形（`specdojo:` ラッパー込み）を記述する（本標準 `生成物 Frontmatter 雛形`）。
+  - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
+  - YAML catalog テンプレート（`dct-*` 等）は独立 YAML データファイルであり名前空間化しない。生成物側フィールドを平坦に記述し、生成処理が `id` / `type` などを変換する。
 - 生成時に置換する値は `_UPPER_SNAKE_` 形式のプレースホルダで表す。ただし `type: template` を理由に、すべての Frontmatter 項目や ID で大文字・アンダースコアを使用できるわけではない。
 - プレースホルダは、個別スキーマが許可したフィールドだけで使用する。許可していないフィールドでは、共通スキーマや成果物スキーマの通常の値制約を適用する。
 - プレースホルダを置換して生成した成果物は、生成後のドキュメント種別に対応する通常のスキーマを満たさなければならない。
@@ -59,26 +72,28 @@ part_of:
 
 ### 2.2. 生成物 Frontmatter 雛形（`frontmatter_template`）
 
-Markdown 成果物テンプレートは、生成物の Frontmatter を自身 Frontmatter 内の `frontmatter_template` フィールドに雛形として記述する。
+Markdown 成果物テンプレートは、生成物の Frontmatter を自身 Frontmatter の `specdojo:` 配下に置いた `frontmatter_template` フィールドに雛形として記述する。
 
-- `frontmatter_template` の内容は、生成物のドキュメント種別に対応するスキーマ（成果物なら [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)）を満たす形にする。
+- `frontmatter_template` の内容は、生成物の Frontmatter そのもの（`specdojo:` ラッパー込み）とし、生成物のドキュメント種別に対応するスキーマ（成果物なら [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)）を満たす形にする。
 - 生成時に置換する値には生成時プレースホルダ（本標準 `生成時プレースホルダと記入プレースホルダ`）を使う。
-- 生成処理は、`frontmatter_template` の生成時プレースホルダを置換した結果を生成物の Frontmatter として出力し、テンプレート自身の Frontmatter（`id: *-template` 等）は出力しない。
+- 生成処理は、`frontmatter_template` の生成時プレースホルダを置換した結果を生成物の Frontmatter として出力し、テンプレート自身の Frontmatter（`specdojo.id: *-template` 等）は出力しない。
 
 ```yaml
 ---
-id: pm-plan-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:pm-plan
-  type: project
-  status: ready
-  rulebook: pm-plan-rulebook
-  based_on:
-    - _PROJECT_ID_:pm-organization
-    - _PROJECT_ID_:pm-roles
-  supersedes: []
+specdojo:
+  id: pm-plan-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:pm-plan
+      type: project
+      status: ready
+      rulebook: pm-plan-rulebook
+      based_on:
+        - _PROJECT_ID_:pm-organization
+        - _PROJECT_ID_:pm-roles
+      supersedes: []
 ---
 ```
 
@@ -119,7 +134,7 @@ frontmatter_template:
 ## 5. 成果物の値制約
 
 - `type` は `適用範囲` に列挙した成果物種別のいずれかとする。
-- 未定義プロパティは使用しない。
+- `specdojo:` 配下では未定義プロパティを使用しない（`unevaluatedProperties: false`）。トップレベルには他フレームワークの項目を置いてよい。
 - 配列項目は重複させない。
 - 項目ごとの型、列挙値、パターンは成果物スキーマに従う。
 
@@ -127,13 +142,14 @@ frontmatter_template:
 
 ```yaml
 ---
-id: imp-business
-type: project
-status: draft
-rulebook: imp-business-rulebook
-part_of: []
-based_on: []
-supersedes: []
+specdojo:
+  id: imp-business
+  type: project
+  status: draft
+  rulebook: imp-business-rulebook
+  part_of: []
+  based_on: []
+  supersedes: []
 ---
 ```
 

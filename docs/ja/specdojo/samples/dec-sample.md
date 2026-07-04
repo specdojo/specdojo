@@ -1,8 +1,9 @@
 ---
-id: dec-0001-auth-policy
-type: project
-status: draft
-rulebook: dec-rulebook
+specdojo:
+  id: dec-0001-auth-policy
+  type: project
+  status: draft
+  rulebook: dec-rulebook
 ---
 
 # [決定記録](../rulebooks/dec-rulebook.md) サンプル

@@ -1,10 +1,11 @@
 ---
-id: pm-communication-plan-sample
-type: project
-status: ready
-rulebook: pm-communication-plan-rulebook
-based_on:
-  - pm-plan-sample
+specdojo:
+  id: pm-communication-plan-sample
+  type: project
+  status: ready
+  rulebook: pm-communication-plan-rulebook
+  based_on:
+    - pm-plan-sample
 ---
 
 # コミュニケーション計画 サンプル

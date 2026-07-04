@@ -1,8 +1,9 @@
 ---
-id: atc-index
-type: project
-status: draft
-rulebook: atc-index-rulebook
+specdojo:
+  id: atc-index
+  type: project
+  status: draft
+  rulebook: atc-index-rulebook
 ---
 
 # [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル

@@ -1,7 +1,8 @@
 ---
-id: nfr-maintainability-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-maintainability-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 保守性 作成ルール

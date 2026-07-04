@@ -1,7 +1,8 @@
 ---
-id: nfr-usability-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-usability-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 操作性 作成ルール

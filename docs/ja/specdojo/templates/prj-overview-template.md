@@ -1,14 +1,16 @@
 ---
-id: prj-overview-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:prj-overview
-  type: project
-  status: ready
-  rulebook: prj-overview-rulebook
-  based_on: []
-  supersedes: []
+specdojo:
+  id: prj-overview-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:prj-overview
+      type: project
+      status: ready
+      rulebook: prj-overview-rulebook
+      based_on: []
+      supersedes: []
 ---
 
 # プロジェクト概要: _PROJECT_NAME_

@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
+import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { expandTemplate } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode } from "./exec-types.js";
@@ -10,8 +11,7 @@ import type { Approach, ExecResultMeta, TaskMode } from "./exec-types.js";
 // ---------------------------------------------------------------------------
 
 function serializeFrontmatter(meta: ExecResultMeta): string {
-  const lines = [
-    "---",
+  const inner = [
     `id: ${meta.id}`,
     `type: ${meta.type}`,
     `task_id: ${meta.task_id}`,
@@ -21,46 +21,27 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     `plan_ref: ${meta.plan_ref}`,
     `started_at: "${meta.started_at}"`,
   ];
-  if (meta.completed_at) lines.push(`completed_at: "${meta.completed_at}"`);
-  if (meta.agent) lines.push(`agent: ${meta.agent}`);
-  if (meta.approach) lines.push(`approach: ${meta.approach}`);
+  if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
+  if (meta.agent) inner.push(`agent: ${meta.agent}`);
+  if (meta.approach) inner.push(`approach: ${meta.approach}`);
   // reason は agent stderr 由来で任意文字を含みうる。YAML として安全にするため二重引用符内へ
   // 収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は単一行を返すため改行は無い）。
   if (meta.block_reason) {
-    lines.push(`block_reason: "${meta.block_reason.replace(/"/g, "'")}"`);
+    inner.push(`block_reason: "${meta.block_reason.replace(/"/g, "'")}"`);
   }
-  lines.push("---");
-  return lines.join("\n");
+  return buildSpecdojoFrontmatter(inner);
 }
 
-// Strip surrounding quote pairs so re-serialization does not nest them or carry over a foreign
-// quoting style. Timestamp fields are written double-quoted; reading them back must yield the raw
-// value. Values written by other tooling can arrive single-quoted (`'...'`), and an earlier
-// read-modify-write of such a value could leave it double-wrapped around single quotes (`"'...'"`).
-// Peel each matching outer pair (double or single) so any of these forms normalizes to the raw
-// value, which serializeFrontmatter then re-emits with double quotes only.
-function unquote(value: string): string {
-  let result = value;
-  while (
-    result.length >= 2 &&
-    ((result.startsWith('"') && result.endsWith('"')) ||
-      (result.startsWith("'") && result.endsWith("'")))
-  ) {
-    result = result.slice(1, -1);
-  }
-  return result;
-}
-
+// exec-result frontmatter は `specdojo:` 名前空間配下にある。YAML パース後、スカラー値を
+// 文字列へ寄せて Record<string, string> として返す（引用符の正規化は js-yaml が行う）。
 function parseFrontmatter(content: string): { meta: Record<string, string>; body: string } {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!match) return { meta: {}, body: content };
+  const { data, body } = parseSpecdojoDocument(content);
   const meta: Record<string, string> = {};
-  for (const line of match[1].split("\n")) {
-    const idx = line.indexOf(":");
-    if (idx === -1) continue;
-    meta[line.slice(0, idx).trim()] = unquote(line.slice(idx + 1).trim());
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === "string") meta[key] = value;
+    else if (typeof value === "number" || typeof value === "boolean") meta[key] = String(value);
   }
-  return { meta, body: match[2] };
+  return { meta, body };
 }
 
 function frontmatterWithBody(frontmatter: string, body: string): string {

@@ -1,7 +1,8 @@
 ---
-id: specdojo-reference-materials-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-reference-materials-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo 参考資料活用ガイド

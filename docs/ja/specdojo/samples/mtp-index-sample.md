@@ -1,8 +1,9 @@
 ---
-id: mtp-index
-type: project
-status: draft
-rulebook: mtp-rulebook
+specdojo:
+  id: mtp-index
+  type: project
+  status: draft
+  rulebook: mtp-rulebook
 ---
 
 # 移行テスト計画（リハーサル計画） サンプル

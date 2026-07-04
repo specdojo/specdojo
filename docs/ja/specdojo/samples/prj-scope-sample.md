@@ -1,11 +1,12 @@
 ---
-id: prj-scope-sample
-type: project
-status: ready
-rulebook: prj-scope-rulebook
-based_on:
-  - prj-overview-sample
-supersedes: []
+specdojo:
+  id: prj-scope-sample
+  type: project
+  status: ready
+  rulebook: prj-scope-rulebook
+  based_on:
+    - prj-overview-sample
+  supersedes: []
 ---
 
 # プロジェクトスコープ: 駄菓子屋きぬや 販売管理システム

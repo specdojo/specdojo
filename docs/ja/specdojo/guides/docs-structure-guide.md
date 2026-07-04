@@ -1,7 +1,8 @@
 ---
-id: docs-structure-guide
-type: guide
-status: draft
+specdojo:
+  id: docs-structure-guide
+  type: guide
+  status: draft
 ---
 
 # ドキュメント構成ガイド

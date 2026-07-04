@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-communication-plan-070-i02
-type: exec-result
-task_id: T-LAUNCH-pm-communication-plan-070-I02
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-070-I02-plan.md
-started_at: "2026-06-28T03:58:51.079Z"
-completed_at: "2026-06-28T04:06:59.620Z"
-agent: opencode-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-communication-plan-070-i02
+  type: exec-result
+  task_id: T-LAUNCH-pm-communication-plan-070-I02
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-070-I02-plan.md
+  started_at: "2026-06-28T03:58:51.079Z"
+  completed_at: "2026-06-28T04:06:59.620Z"
+  agent: opencode-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

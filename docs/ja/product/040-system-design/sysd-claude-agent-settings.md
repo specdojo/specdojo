@@ -1,10 +1,11 @@
 ---
-id: sysd-claude-agent-settings
-type: project
-status: draft
-rulebook: sysd-rulebook
-part_of:
-  - sysd-agent-settings
+specdojo:
+  id: sysd-claude-agent-settings
+  type: project
+  status: draft
+  rulebook: sysd-rulebook
+  part_of:
+    - sysd-agent-settings
 ---
 
 # Claude Code エージェント設定

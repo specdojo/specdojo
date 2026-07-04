@@ -1,7 +1,8 @@
 ---
-id: specdojo-documentation-policy-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-documentation-policy-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo ドキュメンテーション ポリシーガイド

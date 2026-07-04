@@ -1,7 +1,8 @@
 ---
-id: otp-rules
-type: rulebook
-status: draft
+specdojo:
+  id: otp-rules
+  type: rulebook
+  status: draft
 ---
 
 # 運用切替計画 作成ルール

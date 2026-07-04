@@ -91,8 +91,9 @@ export function isCommitTargetPath(path: string, executionRel: string, resultRel
 // leading `---` frontmatter block; yaml/json deliverables carry it as a top-level field.
 // Returns undefined when absent or unparsable (treated as "not ready").
 export function deliverableStatus(content: string, relPath: string): string | undefined {
+  const isMarkdown = /\.md$/i.test(relPath);
   let source = content;
-  if (/\.md$/i.test(relPath)) {
+  if (isMarkdown) {
     const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!fm) return undefined;
     source = fm[1];
@@ -104,7 +105,13 @@ export function deliverableStatus(content: string, relPath: string): string | un
     return undefined;
   }
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return undefined;
-  const status = (parsed as Record<string, unknown>).status;
+  // Markdown deliverables carry status in the `specdojo:` namespace; yaml/json data
+  // files carry it as a top-level field.
+  const container = isMarkdown
+    ? (parsed as Record<string, unknown>).specdojo
+    : (parsed as Record<string, unknown>);
+  if (!container || typeof container !== "object" || Array.isArray(container)) return undefined;
+  const status = (container as Record<string, unknown>).status;
   return typeof status === "string" ? status : undefined;
 }
 

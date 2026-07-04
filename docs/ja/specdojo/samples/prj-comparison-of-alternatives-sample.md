@@ -1,12 +1,13 @@
 ---
-id: prj-comparison-of-alternatives-sample
-type: project
-status: ready
-rulebook: prj-comparison-of-alternatives-rulebook
-based_on:
-  - prj-scope-sample
-  - prj-issues-and-approach-sample
-supersedes: []
+specdojo:
+  id: prj-comparison-of-alternatives-sample
+  type: project
+  status: ready
+  rulebook: prj-comparison-of-alternatives-rulebook
+  based_on:
+    - prj-scope-sample
+    - prj-issues-and-approach-sample
+  supersedes: []
 ---
 
 # 代替案比較: 駄菓子屋きぬや 販売管理システム

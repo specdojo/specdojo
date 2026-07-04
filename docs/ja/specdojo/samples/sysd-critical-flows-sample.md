@@ -1,8 +1,9 @@
 ---
-id: sysd-critical-flows
-type: project
-status: draft
-rulebook: sysd-critical-flows-rulebook
+specdojo:
+  id: sysd-critical-flows
+  type: project
+  status: draft
+  rulebook: sysd-critical-flows-rulebook
 ---
 
 # 重要フロー サンプル

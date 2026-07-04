@@ -1,7 +1,8 @@
 ---
-id: atc-rules
-type: rulebook
-status: draft
+specdojo:
+  id: atc-rules
+  type: rulebook
+  status: draft
 ---
 
 # 受入テストカタログ 対象別 作成ルール

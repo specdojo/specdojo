@@ -1,8 +1,9 @@
 ---
-id: bps
-type: project
-status: draft
-rulebook: bps-rulebook
+specdojo:
+  id: bps
+  type: project
+  status: draft
+  rulebook: bps-rulebook
 ---
 
 # [業務プロセス仕様](../rulebooks/bps-rulebook.md) サンプル

@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-quality-management-plan-110
-type: exec-result
-task_id: T-LAUNCH-pm-quality-management-plan-110
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-110-plan.md
-started_at: "2026-06-29T17:37:50.630Z"
-completed_at: "2026-06-29T17:56:25.151Z"
-agent: opencode-edit-agent
-approach: rulebook-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-quality-management-plan-110
+  type: exec-result
+  task_id: T-LAUNCH-pm-quality-management-plan-110
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-110-plan.md
+  started_at: "2026-06-29T17:37:50.630Z"
+  completed_at: "2026-06-29T17:56:25.151Z"
+  agent: opencode-edit-agent
+  approach: rulebook-maintenance
 ---
 
 # Edit Result

@@ -1,8 +1,9 @@
 ---
-id: sysd-agent-settings
-type: project
-status: draft
-rulebook: sysd-rulebook
+specdojo:
+  id: sysd-agent-settings
+  type: project
+  status: draft
+  rulebook: sysd-rulebook
 ---
 
 # エージェント共通設定

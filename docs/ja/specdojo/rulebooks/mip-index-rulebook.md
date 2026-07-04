@@ -1,7 +1,8 @@
 ---
-id: mip-index-rules
-type: rulebook
-status: draft
+specdojo:
+  id: mip-index-rules
+  type: rulebook
+  status: draft
 ---
 
 # 移行計画 作成ルール

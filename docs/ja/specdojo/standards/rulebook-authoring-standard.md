@@ -1,7 +1,8 @@
 ---
-id: rulebook-authoring-standard
-type: standard
-status: ready
+specdojo:
+  id: rulebook-authoring-standard
+  type: standard
+  status: ready
 ---
 
 # Rulebook 記述標準
@@ -54,9 +55,10 @@ Rulebook Authoring Standard
 
 ```yaml
 ---
-id: imp-business-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: imp-business-rulebook
+  type: rulebook
+  status: draft
 ---
 ```
 

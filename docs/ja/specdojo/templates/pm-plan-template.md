@@ -1,16 +1,18 @@
 ---
-id: pm-plan-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:pm-plan
-  type: project
-  status: ready
-  rulebook: pm-plan-rulebook
-  based_on:
-    - _PROJECT_ID_:pm-organization
-    - _PROJECT_ID_:pm-roles
-  supersedes: []
+specdojo:
+  id: pm-plan-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:pm-plan
+      type: project
+      status: ready
+      rulebook: pm-plan-rulebook
+      based_on:
+        - _PROJECT_ID_:pm-organization
+        - _PROJECT_ID_:pm-roles
+      supersedes: []
 ---
 
 # プロジェクト管理計画

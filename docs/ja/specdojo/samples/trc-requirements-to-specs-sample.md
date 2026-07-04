@@ -1,12 +1,13 @@
 ---
-id: trc-requirements-to-specs
-type: project
-status: draft
-rulebook: trc-requirements-to-specs-rulebook
-based_on:
-  - bac-cashier-flow
-  - bes-product-master
-supersedes: []
+specdojo:
+  id: trc-requirements-to-specs
+  type: project
+  status: draft
+  rulebook: trc-requirements-to-specs-rulebook
+  based_on:
+    - bac-cashier-flow
+    - bes-product-master
+  supersedes: []
 ---
 
 # トレーサビリティ（要求→仕様）サンプル

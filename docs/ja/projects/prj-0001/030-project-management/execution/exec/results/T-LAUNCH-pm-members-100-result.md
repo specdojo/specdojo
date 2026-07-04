@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-members-100
-type: exec-result
-task_id: T-LAUNCH-pm-members-100
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-members-100-plan.md
-started_at: "2026-06-29T16:26:29.058Z"
-completed_at: "2026-06-30T13:54:43.964Z"
-agent: opencode-edit-agent
-approach: recipe-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-members-100
+  type: exec-result
+  task_id: T-LAUNCH-pm-members-100
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-members-100-plan.md
+  started_at: "2026-06-29T16:26:29.058Z"
+  completed_at: "2026-06-30T13:54:43.964Z"
+  agent: opencode-edit-agent
+  approach: recipe-maintenance
 ---
 
 # Edit Result

@@ -1,14 +1,15 @@
 ---
-id: prj-issues-and-approach-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-issues-and-approach-recipe
-sample: prj-issues-and-approach-sample
-template: prj-issues-and-approach-template
-based_on:
-  - rulebook-authoring-standard
-supersedes: []
+specdojo:
+  id: prj-issues-and-approach-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-issues-and-approach-recipe
+  sample: prj-issues-and-approach-sample
+  template: prj-issues-and-approach-template
+  based_on:
+    - rulebook-authoring-standard
+  supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ 作成ルール
@@ -108,14 +109,15 @@ flowchart LR
 
 ```yaml
 ---
-id: prj-0001:prj-issues-and-approach
-type: project
-status: draft
-rulebook: prj-issues-and-approach-rulebook
-based_on:
-  - prj-0001:prj-scope
-  - prj-0001:prj-assumptions-constraints-dependencies
-supersedes: []
+specdojo:
+  id: prj-0001:prj-issues-and-approach
+  type: project
+  status: draft
+  rulebook: prj-issues-and-approach-rulebook
+  based_on:
+    - prj-0001:prj-scope
+    - prj-0001:prj-assumptions-constraints-dependencies
+  supersedes: []
 ---
 ```
 

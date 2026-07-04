@@ -1,7 +1,8 @@
 ---
-id: pr-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: pr-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # 進捗報告 作成ルール

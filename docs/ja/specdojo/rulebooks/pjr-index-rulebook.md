@@ -1,11 +1,12 @@
 ---
-id: pjr-index-rulebook
-type: rulebook
-status: draft
-target_format: markdown
-based_on:
-  - rulebook-authoring-standard
-supersedes: []
+specdojo:
+  id: pjr-index-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  based_on:
+    - rulebook-authoring-standard
+  supersedes: []
 ---
 
 # プロジェクト登録簿 作成ルール

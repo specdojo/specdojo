@@ -1,8 +1,9 @@
 ---
-id: tsd-index
-type: architecture
-status: draft
-rulebook: tsd-index-rulebook
+specdojo:
+  id: tsd-index
+  type: architecture
+  status: draft
+  rulebook: tsd-index-rulebook
 ---
 
 # [技術スタック定義（TSD Index）](../rulebooks/tsd-index-rulebook.md) サンプル

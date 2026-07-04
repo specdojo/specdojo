@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrr-t-launch-prj-assumptions-constraints-dependencies-090
-type: exec-result
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-090
-mode: review
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-090-plan.md
-started_at: "2026-06-29T15:37:21.924Z"
-completed_at: "2026-06-29T15:39:18.850Z"
-agent: codex-review-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrr-t-launch-prj-assumptions-constraints-dependencies-090
+  type: exec-result
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-090
+  mode: review
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-090-plan.md
+  started_at: "2026-06-29T15:37:21.924Z"
+  completed_at: "2026-06-29T15:39:18.850Z"
+  agent: codex-review-agent
+  approach: fully-guided
 ---
 
 # Review Result

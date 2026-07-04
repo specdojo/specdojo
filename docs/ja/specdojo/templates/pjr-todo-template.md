@@ -1,13 +1,15 @@
 ---
-id: pjr-todo-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:_PJR-XXXX_
-  type: project
+specdojo:
+  id: pjr-todo-template
+  type: template
   status: draft
-  rulebook: pjr-index-rulebook
-  item_type: todo
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:_PJR-XXXX_
+      type: project
+      status: draft
+      rulebook: pjr-index-rulebook
+      item_type: todo
 ---
 
 # _PJR-XXXX_ _TODO_TITLE_

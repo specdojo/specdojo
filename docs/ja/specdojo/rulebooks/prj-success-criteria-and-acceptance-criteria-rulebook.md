@@ -1,11 +1,12 @@
 ---
-id: prj-success-criteria-and-acceptance-criteria-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-success-criteria-and-acceptance-criteria-recipe
-sample: prj-success-criteria-and-acceptance-criteria-sample
-template: prj-success-criteria-and-acceptance-criteria-template
+specdojo:
+  id: prj-success-criteria-and-acceptance-criteria-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-success-criteria-and-acceptance-criteria-recipe
+  sample: prj-success-criteria-and-acceptance-criteria-sample
+  template: prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # 成功基準と受入条件 作成ルール

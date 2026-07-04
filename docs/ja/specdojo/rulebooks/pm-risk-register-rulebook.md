@@ -1,7 +1,8 @@
 ---
-id: pm-risk-register-rules
-type: rulebook
-status: draft
+specdojo:
+  id: pm-risk-register-rules
+  type: rulebook
+  status: draft
 ---
 
 # リスク登録簿 作成ルール

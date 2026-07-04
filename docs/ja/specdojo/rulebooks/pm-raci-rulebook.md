@@ -1,13 +1,14 @@
 ---
-id: pm-raci-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: pm-raci-recipe
-sample: pm-raci-sample
-template: pm-raci-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-raci-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: pm-raci-recipe
+  sample: pm-raci-sample
+  template: pm-raci-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # RACI 作成ルール

@@ -1,7 +1,8 @@
 ---
-id: specdojo-exec-operation-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-exec-operation-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo exec運用ガイド

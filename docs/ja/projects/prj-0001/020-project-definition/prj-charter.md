@@ -1,12 +1,13 @@
 ---
-id: prj-0001:prj-charter
-type: project
-status: draft
-rulebook: prj-charter-rulebook
-based_on:
-  - prj-0001:prj-overview
-  - prj-0001:prj-stakeholder-register
-supersedes: []
+specdojo:
+  id: prj-0001:prj-charter
+  type: project
+  status: draft
+  rulebook: prj-charter-rulebook
+  based_on:
+    - prj-0001:prj-overview
+    - prj-0001:prj-stakeholder-register
+  supersedes: []
 ---
 
 # プロジェクト憲章: SpecDojo

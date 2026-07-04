@@ -1,12 +1,13 @@
 ---
-id: tsd-ollama-opencode
-type: architecture
-status: draft
-rulebook: tsd-rulebook
-part_of:
-  - tsd-index
-based_on:
-  - tsd-ollama
+specdojo:
+  id: tsd-ollama-opencode
+  type: architecture
+  status: draft
+  rulebook: tsd-rulebook
+  part_of:
+    - tsd-index
+  based_on:
+    - tsd-ollama
 ---
 
 # Ollama の opencode 接続定義

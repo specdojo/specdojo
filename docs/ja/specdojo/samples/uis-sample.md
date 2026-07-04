@@ -1,8 +1,9 @@
 ---
-id: uis
-type: project
-status: draft
-rulebook: uis-rulebook
+specdojo:
+  id: uis
+  type: project
+  status: draft
+  rulebook: uis-rulebook
 ---
 
 # [画面仕様](../rulebooks/uis-rulebook.md) サンプル

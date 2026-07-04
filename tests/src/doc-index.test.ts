@@ -217,7 +217,7 @@ describe("buildDocIndex", () => {
       mkdirSync(join(docsRoot, "ja"), { recursive: true });
       writeFileSync(
         join(docsRoot, "ja", "sample.md"),
-        "---\nid: sample-doc\ntype: guide\nstatus: draft\n---\n\n# Sample\n",
+        "---\nspecdojo:\n  id: sample-doc\n  type: guide\n  status: draft\n---\n\n# Sample\n",
         "utf8",
       );
       writeFileSync(
@@ -246,7 +246,7 @@ describe("buildDocIndex", () => {
       mkdirSync(join(docsRoot, "generated"), { recursive: true });
       writeFileSync(
         join(docsRoot, "generated", "ignored.md"),
-        "---\nid: ignored-doc\ntype: guide\nstatus: draft\n---\n",
+        "---\nspecdojo:\n  id: ignored-doc\n  type: guide\n  status: draft\n---\n",
         "utf8",
       );
       writeFileSync(

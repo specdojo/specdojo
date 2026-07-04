@@ -1,11 +1,12 @@
 ---
-id: prj-0001:prj-stakeholder-register
-type: project
-status: draft
-rulebook: prj-stakeholder-register-rulebook
-based_on:
-  - prj-0001:prj-overview
-supersedes: []
+specdojo:
+  id: prj-0001:prj-stakeholder-register
+  type: project
+  status: draft
+  rulebook: prj-stakeholder-register-rulebook
+  based_on:
+    - prj-0001:prj-overview
+  supersedes: []
 ---
 
 # ステークホルダー登録簿: SpecDojo

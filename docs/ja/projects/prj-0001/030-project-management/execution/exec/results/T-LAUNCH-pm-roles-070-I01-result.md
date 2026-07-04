@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-roles-070-i01
-type: exec-result
-task_id: T-LAUNCH-pm-roles-070-I01
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-roles-070-I01-plan.md
-started_at: "2026-06-26T12:56:54.589Z"
-completed_at: "2026-06-26T13:12:18.544Z"
-agent: opencode-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-roles-070-i01
+  type: exec-result
+  task_id: T-LAUNCH-pm-roles-070-I01
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-roles-070-I01-plan.md
+  started_at: "2026-06-26T12:56:54.589Z"
+  completed_at: "2026-06-26T13:12:18.544Z"
+  agent: opencode-edit-agent
+  approach: fully-guided
 ---
 
 ## 1. 実施内容

@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-charter-070-i01
-type: exec-result
-task_id: T-LAUNCH-prj-charter-070-I01
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-charter-070-I01-plan.md
-started_at: "2026-06-28T12:42:45.253Z"
-completed_at: "2026-06-28T12:44:48.289Z"
-agent: codex-expert-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-prj-charter-070-i01
+  type: exec-result
+  task_id: T-LAUNCH-prj-charter-070-I01
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-charter-070-I01-plan.md
+  started_at: "2026-06-28T12:42:45.253Z"
+  completed_at: "2026-06-28T12:44:48.289Z"
+  agent: codex-expert-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

@@ -1,11 +1,12 @@
 ---
-id: prj-success-criteria-and-acceptance-criteria
-type: project
-status: ready
-rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
-based_on:
-  - prj-scope-sample
-supersedes: []
+specdojo:
+  id: prj-success-criteria-and-acceptance-criteria
+  type: project
+  status: ready
+  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+  based_on:
+    - prj-scope-sample
+  supersedes: []
 ---
 
 # 成功基準と受入条件: 駄菓子屋きぬや 販売管理システム

@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrr-t-launch-prj-issues-and-approach-090
-type: exec-result
-task_id: T-LAUNCH-prj-issues-and-approach-090
-mode: review
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-090-plan.md
-started_at: "2026-06-29T15:50:42.184Z"
-completed_at: "2026-06-29T15:52:55.261Z"
-agent: codex-review-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrr-t-launch-prj-issues-and-approach-090
+  type: exec-result
+  task_id: T-LAUNCH-prj-issues-and-approach-090
+  mode: review
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-090-plan.md
+  started_at: "2026-06-29T15:50:42.184Z"
+  completed_at: "2026-06-29T15:52:55.261Z"
+  agent: codex-review-agent
+  approach: fully-guided
 ---
 
 # Review Result

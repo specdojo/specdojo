@@ -1,9 +1,10 @@
 ---
-id: prj-stakeholder-register-recipe
-type: recipe
-status: ready
-rulebook: prj-stakeholder-register-rulebook
-sample: prj-stakeholder-register-sample
+specdojo:
+  id: prj-stakeholder-register-recipe
+  type: recipe
+  status: ready
+  rulebook: prj-stakeholder-register-rulebook
+  sample: prj-stakeholder-register-sample
 ---
 
 # ステークホルダー登録簿 作成レシピ

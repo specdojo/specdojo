@@ -1,13 +1,14 @@
 ---
-id: pm-plan-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: pm-plan-recipe
-sample: pm-plan-sample
-template: pm-plan-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-plan-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: pm-plan-recipe
+  sample: pm-plan-sample
+  template: pm-plan-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # プロジェクト管理計画 作成ルール

@@ -1,8 +1,9 @@
 ---
-id: stc-index
-type: project
-status: draft
-rulebook: stc-index-rulebook
+specdojo:
+  id: stc-index
+  type: project
+  status: draft
+  rulebook: stc-index-rulebook
 ---
 
 # [総合テスト](../rulebooks/stc-index-rulebook.md) サンプル

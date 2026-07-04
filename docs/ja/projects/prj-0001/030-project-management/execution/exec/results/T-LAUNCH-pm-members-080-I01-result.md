@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-members-080-i01
-type: exec-result
-task_id: T-LAUNCH-pm-members-080-I01
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-members-080-I01-plan.md
-started_at: "2026-06-28T03:38:42.830Z"
-completed_at: "2026-06-28T03:54:18.318Z"
-agent: opencode-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-members-080-i01
+  type: exec-result
+  task_id: T-LAUNCH-pm-members-080-I01
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-members-080-I01-plan.md
+  started_at: "2026-06-28T03:38:42.830Z"
+  completed_at: "2026-06-28T03:54:18.318Z"
+  agent: opencode-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

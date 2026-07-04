@@ -1,15 +1,17 @@
 ---
-id: pm-quality-management-plan-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:pm-quality-management-plan
-  type: project
-  status: ready
-  rulebook: pm-quality-management-plan-rulebook
-  based_on:
-    - _PROJECT_ID_:pm-plan
-  supersedes: []
+specdojo:
+  id: pm-quality-management-plan-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:pm-quality-management-plan
+      type: project
+      status: ready
+      rulebook: pm-quality-management-plan-rulebook
+      based_on:
+        - _PROJECT_ID_:pm-plan
+      supersedes: []
 ---
 
 # 品質管理計画

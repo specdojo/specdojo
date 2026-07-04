@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-080-i01
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I01
-name: 整合性確認・修正
-mode: edit
-status: ready
-project_id: prj-0001
-owner: BA
-on_critical_path: true
-approach: fully-guided
+specdojo:
+  id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-080-i01
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I01
+  name: 整合性確認・修正
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: BA
+  on_critical_path: true
+  approach: fully-guided
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I01

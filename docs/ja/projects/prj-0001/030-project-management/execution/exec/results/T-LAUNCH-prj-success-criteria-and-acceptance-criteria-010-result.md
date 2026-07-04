@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-010
-type: exec-result
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010-plan.md
-started_at: "2026-06-24T14:55:07.181Z"
-completed_at: "2026-06-24T15:02:03.195Z"
-agent: codex-expert-edit-agent
-approach: bootstrap
+specdojo:
+  id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-010
+  type: exec-result
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010-plan.md
+  started_at: "2026-06-24T14:55:07.181Z"
+  completed_at: "2026-06-24T15:02:03.195Z"
+  agent: codex-expert-edit-agent
+  approach: bootstrap
 ---
 
 ## 1. 実施内容

@@ -1,7 +1,8 @@
 ---
-id: sch-rules
-type: rulebook
-status: draft
+specdojo:
+  id: sch-rules
+  type: rulebook
+  status: draft
 ---
 
 # スケジュール作成ルール

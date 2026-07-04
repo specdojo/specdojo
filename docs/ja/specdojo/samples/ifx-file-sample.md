@@ -1,8 +1,9 @@
 ---
-id: ifx-file
-type: project
-status: draft
-rulebook: ifx-file-rulebook
+specdojo:
+  id: ifx-file
+  type: project
+  status: draft
+  rulebook: ifx-file-rulebook
 ---
 
 # [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) サンプル

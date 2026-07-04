@@ -1,9 +1,10 @@
 ---
-id: pm-roles-recipe
-type: recipe
-status: ready
-rulebook: pm-roles-rulebook
-sample: pm-roles-sample
+specdojo:
+  id: pm-roles-recipe
+  type: recipe
+  status: ready
+  rulebook: pm-roles-rulebook
+  sample: pm-roles-sample
 ---
 
 # ロール定義 作成レシピ

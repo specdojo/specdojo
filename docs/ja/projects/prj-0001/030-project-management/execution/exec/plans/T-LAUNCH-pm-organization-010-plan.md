@@ -1,14 +1,15 @@
 ---
-id: xep-t-launch-pm-organization-010
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-pm-organization-010
-name: 一括整備（成果物＋参考資料）
-mode: edit
-status: ready
-project_id:
-owner: PO
-approach: bootstrap
+specdojo:
+  id: xep-t-launch-pm-organization-010
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-pm-organization-010
+  name: 一括整備（成果物＋参考資料）
+  mode: edit
+  status: ready
+  project_id:
+  owner: PO
+  approach: bootstrap
 ---
 
 # Edit Plan: T-LAUNCH-pm-organization-010

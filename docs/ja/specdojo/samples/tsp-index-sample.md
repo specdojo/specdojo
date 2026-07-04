@@ -1,8 +1,9 @@
 ---
-id: tsp-index
-type: project
-status: draft
-rulebook: tsp-index-rulebook
+specdojo:
+  id: tsp-index
+  type: project
+  status: draft
+  rulebook: tsp-index-rulebook
 ---
 
 # [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル

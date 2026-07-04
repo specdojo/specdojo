@@ -1,8 +1,9 @@
 ---
-id: nfr-availability
-type: project
-status: draft
-rulebook: nfr-availability-rulebook
+specdojo:
+  id: nfr-availability
+  type: project
+  status: draft
+  rulebook: nfr-availability-rulebook
 ---
 
 # [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル

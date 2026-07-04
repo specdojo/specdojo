@@ -1,8 +1,9 @@
 ---
-id: bes-index-rulebook
-type: rulebook
-status: draft
-target_format: markdown
+specdojo:
+  id: bes-index-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
 ---
 
 # 業務イベント仕様 全体構成 作成ルール

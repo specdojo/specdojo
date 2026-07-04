@@ -1,10 +1,11 @@
 ---
-id: sysd-github-copilot-agent-settings
-type: project
-status: draft
-rulebook: sysd-rulebook
-part_of:
-  - sysd-agent-settings
+specdojo:
+  id: sysd-github-copilot-agent-settings
+  type: project
+  status: draft
+  rulebook: sysd-rulebook
+  part_of:
+    - sysd-agent-settings
 ---
 
 # GitHub Copilot エージェント設定

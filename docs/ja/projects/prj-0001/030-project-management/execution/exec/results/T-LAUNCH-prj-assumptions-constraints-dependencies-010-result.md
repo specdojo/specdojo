@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-assumptions-constraints-dependencies-010
-type: exec-result
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-010-plan.md
-started_at: "2026-06-28T01:34:29Z"
-completed_at: "2026-06-28T02:18:24.923Z"
-agent: codex
-approach: bootstrap
+specdojo:
+  id: prj-0001:xer-t-launch-prj-assumptions-constraints-dependencies-010
+  type: exec-result
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-assumptions-constraints-dependencies-010-plan.md
+  started_at: "2026-06-28T01:34:29Z"
+  completed_at: "2026-06-28T02:18:24.923Z"
+  agent: codex
+  approach: bootstrap
 ---
 
 # Edit Result

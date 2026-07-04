@@ -1,8 +1,9 @@
 ---
-id: cdsd
-type: project
-status: draft
-rulebook: cdsd-rulebook
+specdojo:
+  id: cdsd
+  type: project
+  status: draft
+  rulebook: cdsd-rulebook
 ---
 
 # [業務データ辞書 / 概念データストア定義](../rulebooks/cdsd-rulebook.md) サンプル

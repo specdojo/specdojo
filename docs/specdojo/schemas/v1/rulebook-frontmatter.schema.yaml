@@ -1,34 +1,40 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: Rulebook Front Matter
+# SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
 type: object
-unevaluatedProperties: false
-allOf:
-  - $ref: "./common-frontmatter.schema.yaml"
-  - type: object
-    properties:
-      type:
-        type: string
-        const: rulebook
-        description: "ドキュメント種別（rulebook 固定）"
-      target_format:
-        type: string
-        enum:
-          - yaml
-          - json
-          - markdown
-        description: "ルールの対象となるドキュメントのフォーマット"
-      recipe:
-        $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
-        description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
-      sample:
-        $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
-        description: "対応する sample の ID（fully-guided の参照解決に使う）。"
-      template:
-        $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
-        description: "対応する template の ID（fully-guided の参照解決に使う）。"
-      schema:
-        type: string
-        description: >-
-          対象成果物（target_format: yaml）を検証する JSON Schema のファイル名 stem。
-          docs/specdojo/schemas/v1/<schema>.schema.yaml に解決される。'none' で検証を無効化。
-          未宣言時は <local_id>.schema.yaml → <prefix>.schema.yaml の順に慣例解決する。
+required:
+  - specdojo
+properties:
+  specdojo:
+    type: object
+    unevaluatedProperties: false
+    allOf:
+      - $ref: "./common-frontmatter.schema.yaml"
+      - type: object
+        properties:
+          type:
+            type: string
+            const: rulebook
+            description: "ドキュメント種別（rulebook 固定）"
+          target_format:
+            type: string
+            enum:
+              - yaml
+              - json
+              - markdown
+            description: "ルールの対象となるドキュメントのフォーマット"
+          recipe:
+            $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
+            description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
+          sample:
+            $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
+            description: "対応する sample の ID（fully-guided の参照解決に使う）。"
+          template:
+            $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
+            description: "対応する template の ID（fully-guided の参照解決に使う）。"
+          schema:
+            type: string
+            description: >-
+              対象成果物（target_format: yaml）を検証する JSON Schema のファイル名 stem。
+              docs/specdojo/schemas/v1/<schema>.schema.yaml に解決される。'none' で検証を無効化。
+              未宣言時は <local_id>.schema.yaml → <prefix>.schema.yaml の順に慣例解決する。

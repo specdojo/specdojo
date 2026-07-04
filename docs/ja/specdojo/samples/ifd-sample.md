@@ -1,8 +1,9 @@
 ---
-id: ifd
-type: project
-status: draft
-rulebook: ifd-mermaid-rulebook
+specdojo:
+  id: ifd
+  type: project
+  status: draft
+  rulebook: ifd-mermaid-rulebook
 ---
 
 # [インフラ構成図](../rulebooks/ifd-mermaid-rulebook.md) サンプル

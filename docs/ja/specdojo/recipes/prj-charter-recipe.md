@@ -1,9 +1,10 @@
 ---
-id: prj-charter-recipe
-type: recipe
-status: ready
-rulebook: prj-charter-rulebook
-sample: prj-charter-sample
+specdojo:
+  id: prj-charter-recipe
+  type: recipe
+  status: ready
+  rulebook: prj-charter-rulebook
+  sample: prj-charter-sample
 ---
 
 # プロジェクト憲章 作成レシピ

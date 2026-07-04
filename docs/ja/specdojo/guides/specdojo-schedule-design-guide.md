@@ -1,7 +1,8 @@
 ---
-id: specdojo-schedule-design-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-schedule-design-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo Schedule設計ガイド

@@ -1,7 +1,8 @@
 ---
-id: nfr-index-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-index-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件インデックス 作成ルール

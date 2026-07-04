@@ -1,8 +1,9 @@
 ---
-id: sll-main
-type: project
-status: draft
-rulebook: sld-rulebook
+specdojo:
+  id: sll-main
+  type: project
+  status: draft
+  rulebook: sld-rulebook
 ---
 
 # [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) サンプル

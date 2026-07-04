@@ -1,8 +1,9 @@
 ---
-id: utc-index
-type: project
-status: draft
-rulebook: utc-index-rulebook
+specdojo:
+  id: utc-index
+  type: project
+  status: draft
+  rulebook: utc-index-rulebook
 ---
 
 # [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル

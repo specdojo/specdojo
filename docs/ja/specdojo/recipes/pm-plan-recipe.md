@@ -1,9 +1,10 @@
 ---
-id: pm-plan-recipe
-type: recipe
-status: ready
-rulebook: pm-plan-rulebook
-sample: pm-plan-sample
+specdojo:
+  id: pm-plan-recipe
+  type: recipe
+  status: ready
+  rulebook: pm-plan-rulebook
+  sample: pm-plan-sample
 ---
 
 # プロジェクト管理計画 作成レシピ

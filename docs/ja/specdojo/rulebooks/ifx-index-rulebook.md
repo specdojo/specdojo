@@ -1,8 +1,9 @@
 ---
-id: ifx-index-rulebook
-type: rulebook
-status: draft
-target_format: markdown
+specdojo:
+  id: ifx-index-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
 ---
 
 # 外部システムI/F一覧 作成ルール

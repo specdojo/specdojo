@@ -1,8 +1,9 @@
 ---
-id: nfr-security-safety
-type: project
-status: draft
-rulebook: nfr-security-safety-rulebook
+specdojo:
+  id: nfr-security-safety
+  type: project
+  status: draft
+  rulebook: nfr-security-safety-rulebook
 ---
 
 # [非機能要件 / 機密性・安全性](../rulebooks/nfr-security-safety-rulebook.md) サンプル

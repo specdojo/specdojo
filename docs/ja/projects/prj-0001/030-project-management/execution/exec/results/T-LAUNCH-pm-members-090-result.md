@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrr-t-launch-pm-members-090
-type: exec-result
-task_id: T-LAUNCH-pm-members-090
-mode: review
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-members-090-plan.md
-started_at: "2026-06-28T14:42:06.746Z"
-completed_at: "2026-06-29T15:10:55.351Z"
-agent: codex-expert-review-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrr-t-launch-pm-members-090
+  type: exec-result
+  task_id: T-LAUNCH-pm-members-090
+  mode: review
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-members-090-plan.md
+  started_at: "2026-06-28T14:42:06.746Z"
+  completed_at: "2026-06-29T15:10:55.351Z"
+  agent: codex-expert-review-agent
+  approach: fully-guided
 ---
 
 # Review Result

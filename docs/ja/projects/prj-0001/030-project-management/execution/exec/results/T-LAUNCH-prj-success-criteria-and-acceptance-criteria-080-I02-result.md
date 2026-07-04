@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-080-i02
-type: exec-result
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02-plan.md
-started_at: "2026-06-28T14:40:27.241Z"
-completed_at: "2026-06-28T14:41:52.250Z"
-agent: codex-expert-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-080-i02
+  type: exec-result
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02-plan.md
+  started_at: "2026-06-28T14:40:27.241Z"
+  completed_at: "2026-06-28T14:41:52.250Z"
+  agent: codex-expert-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

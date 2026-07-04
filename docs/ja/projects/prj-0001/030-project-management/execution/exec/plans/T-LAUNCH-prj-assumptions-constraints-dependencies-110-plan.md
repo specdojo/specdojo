@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-assumptions-constraints-dependencies-110
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-110
-name: Rulebook 最終調整
-mode: edit
-status: ready
-project_id: prj-0001
-owner: ARC
-on_critical_path: true
-approach: rulebook-maintenance
+specdojo:
+  id: prj-0001:xep-t-launch-prj-assumptions-constraints-dependencies-110
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-110
+  name: Rulebook 最終調整
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: ARC
+  on_critical_path: true
+  approach: rulebook-maintenance
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-110

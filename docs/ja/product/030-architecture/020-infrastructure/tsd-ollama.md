@@ -1,8 +1,9 @@
 ---
-id: tsd-ollama
-type: architecture
-status: draft
-rulebook: tsd-rulebook
+specdojo:
+  id: tsd-ollama
+  type: architecture
+  status: draft
+  rulebook: tsd-rulebook
 ---
 
 # Ollama 技術スタック定義

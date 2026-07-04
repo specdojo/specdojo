@@ -1,10 +1,11 @@
 ---
-id: prj-0001:prj-stakeholder-register-sample
-type: sample
-status: draft
-rulebook: prj-stakeholder-register-rulebook
-based_on: []
-supersedes: []
+specdojo:
+  id: prj-0001:prj-stakeholder-register-sample
+  type: sample
+  status: draft
+  rulebook: prj-stakeholder-register-rulebook
+  based_on: []
+  supersedes: []
 ---
 
 # ステークホルダー登録簿（サンプル）: 駄菓子屋きぬや販売管理システム

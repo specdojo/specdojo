@@ -1,8 +1,9 @@
 ---
-id: tsd
-type: project
-status: draft
-rulebook: tsd-rulebook
+specdojo:
+  id: tsd
+  type: project
+  status: draft
+  rulebook: tsd-rulebook
 ---
 
 # [技術スタック一覧](../rulebooks/tsd-rulebook.md) サンプル

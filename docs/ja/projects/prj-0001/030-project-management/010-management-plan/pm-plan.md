@@ -1,12 +1,13 @@
 ---
-id: prj-0001:pm-plan
-type: project
-status: draft
-rulebook: pm-plan-rulebook
-based_on:
-  - prj-0001:pm-organization
-  - prj-0001:pm-roles
-supersedes: []
+specdojo:
+  id: prj-0001:pm-plan
+  type: project
+  status: draft
+  rulebook: pm-plan-rulebook
+  based_on:
+    - prj-0001:pm-organization
+    - prj-0001:pm-roles
+  supersedes: []
 ---
 
 # プロジェクト管理計画

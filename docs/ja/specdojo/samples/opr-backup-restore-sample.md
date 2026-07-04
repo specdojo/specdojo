@@ -1,10 +1,11 @@
 ---
-id: opr-backup-restore
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: [opd-index]
-supersedes: []
+specdojo:
+  id: opr-backup-restore
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: [opd-index]
+  supersedes: []
 ---
 
 # 運用手順: バックアップ確認・リストア サンプル

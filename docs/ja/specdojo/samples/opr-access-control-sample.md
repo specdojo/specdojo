@@ -1,10 +1,11 @@
 ---
-id: opr-access-control
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: [opd-access-control]
-supersedes: []
+specdojo:
+  id: opr-access-control
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: [opd-access-control]
+  supersedes: []
 ---
 
 # 運用手順: アカウント付与・剥奪 サンプル

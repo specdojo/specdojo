@@ -7,70 +7,74 @@ description: >
   They reside at exec/results/<task-id>-result.md under the execution path.
   The harness scaffolds the file before the agent runs and updates status/timestamps after.
   The agent fills in the Markdown body (done_criteria checks, notes, handoff).
+# SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
 type: object
-additionalProperties: true
-
 required:
-  - id
-  - type
-  - task_id
-  - mode
-  - status
-  - project_id
-  - plan_ref
-  - started_at
-
+  - specdojo
 properties:
-  id:
-    type: string
-    minLength: 1
-    description: "Unique document ID. Format: <project-id>:xer-<stem> (edit) or <project-id>:xrr-<stem> (review). For fixed-name results the stem is the task id; for unique-named in-place results it is <slug>-<UTC>-<rand>, shared with the tied plan."
+  specdojo:
+    type: object
+    additionalProperties: true
+    required:
+      - id
+      - type
+      - task_id
+      - mode
+      - status
+      - project_id
+      - plan_ref
+      - started_at
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Unique document ID. Format: <project-id>:xer-<stem> (edit) or <project-id>:xrr-<stem> (review). For fixed-name results the stem is the task id; for unique-named in-place results it is <slug>-<UTC>-<rand>, shared with the tied plan."
 
-  type:
-    type: string
-    const: "exec-result"
-    description: "Document type. Always 'exec-result'."
+      type:
+        type: string
+        const: "exec-result"
+        description: "Document type. Always 'exec-result'."
 
-  task_id:
-    $ref: "./exec-common.schema.yaml#/$defs/TaskId"
-    description: "Task ID this result belongs to."
+      task_id:
+        $ref: "./exec-common.schema.yaml#/$defs/TaskId"
+        description: "Task ID this result belongs to."
 
-  mode:
-    $ref: "./exec-common.schema.yaml#/$defs/TaskMode"
-    description: "Work type. Matches the corresponding plan mode."
+      mode:
+        $ref: "./exec-common.schema.yaml#/$defs/TaskMode"
+        description: "Work type. Matches the corresponding plan mode."
 
-  status:
-    type: string
-    enum: ["in_progress", "complete", "blocked"]
-    description: >
-      Lifecycle status managed by exec run harness.
-      in_progress: scaffold created, agent running.
-      complete: agent exited 0, exec complete recorded.
-      blocked: agent exited non-zero, exec block recorded.
+      status:
+        type: string
+        enum: ["in_progress", "complete", "blocked"]
+        description: >
+          Lifecycle status managed by exec run harness.
+          in_progress: scaffold created, agent running.
+          complete: agent exited 0, exec complete recorded.
+          blocked: agent exited non-zero, exec block recorded.
 
-  project_id:
-    $ref: "./exec-common.schema.yaml#/$defs/ProjectId"
+      project_id:
+        $ref: "./exec-common.schema.yaml#/$defs/ProjectId"
 
-  plan_ref:
-    type: string
-    minLength: 1
-    description: "Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md)."
+      plan_ref:
+        type: string
+        minLength: 1
+        description: "Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md)."
 
-  started_at:
-    type: string
-    format: date-time
-    description: "ISO 8601 timestamp when exec run scaffolded this result and started the agent."
+      started_at:
+        type: string
+        format: date-time
+        description: "ISO 8601 timestamp when exec run scaffolded this result and started the agent."
 
-  completed_at:
-    type: string
-    format: date-time
-    description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
+      completed_at:
+        type: string
+        format: date-time
+        description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
 
-  agent:
-    $ref: "./exec-common.schema.yaml#/$defs/AgentNickname"
-    description: "Agent nickname that executed this task."
+      agent:
+        $ref: "./exec-common.schema.yaml#/$defs/AgentNickname"
+        description: "Agent nickname that executed this task."
 
-  approach:
-    $ref: "./exec-common.schema.yaml#/$defs/Approach"
-    description: >
-      Carried from the corresponding plan. Omitted when not declared for this phase.
+      approach:
+        $ref: "./exec-common.schema.yaml#/$defs/Approach"
+        description: >
+          Carried from the corresponding plan. Omitted when not declared for this phase.

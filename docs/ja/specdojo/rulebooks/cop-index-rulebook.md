@@ -1,7 +1,8 @@
 ---
-id: cop-index-rules
-type: rulebook
-status: draft
+specdojo:
+  id: cop-index-rules
+  type: rulebook
+  status: draft
 ---
 
 # カットオーバー計画（本番切替手順） 作成ルール

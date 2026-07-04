@@ -1,8 +1,9 @@
 ---
-id: nfr-reliability
-type: project
-status: draft
-rulebook: nfr-reliability-rulebook
+specdojo:
+  id: nfr-reliability
+  type: project
+  status: draft
+  rulebook: nfr-reliability-rulebook
 ---
 
 # [非機能要件 / 信頼性](../rulebooks/nfr-reliability-rulebook.md) サンプル

@@ -1,8 +1,9 @@
 ---
-id: utc
-type: project
-status: draft
-rulebook: utc-rulebook
+specdojo:
+  id: utc
+  type: project
+  status: draft
+  rulebook: utc-rulebook
 ---
 
 # [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル

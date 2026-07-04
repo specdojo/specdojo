@@ -1,12 +1,14 @@
 ---
-id: pjr-index-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:pjr-index
-  type: project
+specdojo:
+  id: pjr-index-template
+  type: template
   status: draft
-  rulebook: pjr-index-rulebook
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:pjr-index
+      type: project
+      status: draft
+      rulebook: pjr-index-rulebook
 ---
 
 # プロジェクト登録簿

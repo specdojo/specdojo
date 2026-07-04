@@ -1,12 +1,13 @@
 ---
-id: imp-operations
-type: project
-status: draft
-rulebook: imp-operations-rulebook
-based_on:
-  - cr-2026-004
-part_of:
-  - prj-0001
+specdojo:
+  id: imp-operations
+  type: project
+  status: draft
+  rulebook: imp-operations-rulebook
+  based_on:
+    - cr-2026-004
+  part_of:
+    - prj-0001
 ---
 
 # 影響調査（運用）サンプル

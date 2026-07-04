@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-communication-plan-130
-type: exec-result
-task_id: T-LAUNCH-pm-communication-plan-130
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-130-plan.md
-started_at: "2026-07-01T15:23:15.122Z"
-completed_at: "2026-07-01T15:35:20.087Z"
-agent: opencode-edit-agent
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-communication-plan-130
+  type: exec-result
+  task_id: T-LAUNCH-pm-communication-plan-130
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-130-plan.md
+  started_at: "2026-07-01T15:23:15.122Z"
+  completed_at: "2026-07-01T15:35:20.087Z"
+  agent: opencode-edit-agent
+  approach: template-maintenance
 ---
 
 # Edit Result

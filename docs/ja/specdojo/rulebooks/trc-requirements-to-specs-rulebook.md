@@ -1,7 +1,8 @@
 ---
-id: trc-requirements-to-specs-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: trc-requirements-to-specs-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # トレーサビリティ（要求→仕様）作成ルール

@@ -1,8 +1,9 @@
 ---
-id: nfr-operations
-type: project
-status: draft
-rulebook: nfr-operations-rulebook
+specdojo:
+  id: nfr-operations
+  type: project
+  status: draft
+  rulebook: nfr-operations-rulebook
 ---
 
 # [非機能要件 / 運用](../rulebooks/nfr-operations-rulebook.md) サンプル

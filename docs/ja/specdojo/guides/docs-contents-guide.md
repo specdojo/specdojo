@@ -1,7 +1,8 @@
 ---
-id: docs-contents-guide
-type: guide
-status: draft
+specdojo:
+  id: docs-contents-guide
+  type: guide
+  status: draft
 ---
 
 # ドキュメント内容ガイド

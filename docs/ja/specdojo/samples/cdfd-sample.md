@@ -1,8 +1,9 @@
 ---
-id: cdfd
-type: project
-status: draft
-rulebook: cdfd-rulebook
+specdojo:
+  id: cdfd
+  type: project
+  status: draft
+  rulebook: cdfd-rulebook
 ---
 
 # [概念データフロー図](../rulebooks/cdfd-rulebook.md) サンプル

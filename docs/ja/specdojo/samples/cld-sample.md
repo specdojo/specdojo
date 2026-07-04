@@ -1,8 +1,9 @@
 ---
-id: cld
-type: project
-status: draft
-rulebook: cld-rulebook
+specdojo:
+  id: cld
+  type: project
+  status: draft
+  rulebook: cld-rulebook
 ---
 
 # [業務データ辞書 / 分類定義](../rulebooks/cld-rulebook.md) サンプル

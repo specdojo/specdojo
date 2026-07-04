@@ -1,12 +1,13 @@
 ---
-id: tsd-vllm-mlx-opencode
-type: architecture
-status: draft
-rulebook: tsd-rulebook
-part_of:
-  - tsd-index
-based_on:
-  - tsd-vllm-mlx
+specdojo:
+  id: tsd-vllm-mlx-opencode
+  type: architecture
+  status: draft
+  rulebook: tsd-rulebook
+  part_of:
+    - tsd-index
+  based_on:
+    - tsd-vllm-mlx
 ---
 
 # vllm-mlx の opencode 接続定義

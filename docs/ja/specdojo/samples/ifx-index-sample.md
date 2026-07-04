@@ -1,8 +1,9 @@
 ---
-id: ifx-index
-type: project
-status: draft
-rulebook: ifx-index-rulebook
+specdojo:
+  id: ifx-index
+  type: project
+  status: draft
+  rulebook: ifx-index-rulebook
 ---
 
 # [外部システムI/F一覧](../rulebooks/ifx-index-rulebook.md) サンプル

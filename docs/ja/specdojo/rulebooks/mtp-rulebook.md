@@ -1,7 +1,8 @@
 ---
-id: mtp-rules
-type: rulebook
-status: draft
+specdojo:
+  id: mtp-rules
+  type: rulebook
+  status: draft
 ---
 
 # 移行テスト計画 作成ルール

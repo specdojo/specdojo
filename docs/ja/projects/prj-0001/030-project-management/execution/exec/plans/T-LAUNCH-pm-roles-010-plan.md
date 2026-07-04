@@ -1,14 +1,15 @@
 ---
-id: prj-0001:xep-t-launch-pm-roles-010
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-pm-roles-010
-name: 一括整備（成果物＋参考資料）
-mode: edit
-status: ready
-project_id: prj-0001
-owner: PO
-approach: bootstrap
+specdojo:
+  id: prj-0001:xep-t-launch-pm-roles-010
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-pm-roles-010
+  name: 一括整備（成果物＋参考資料）
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: PO
+  approach: bootstrap
 ---
 
 # Edit Plan: T-LAUNCH-pm-roles-010

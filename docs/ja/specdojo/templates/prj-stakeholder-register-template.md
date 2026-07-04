@@ -1,15 +1,17 @@
 ---
-id: prj-stakeholder-register-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:prj-stakeholder-register
-  type: project
-  status: ready
-  rulebook: prj-stakeholder-register-rulebook
-  based_on:
-    - _PROJECT_ID_:prj-overview
-  supersedes: []
+specdojo:
+  id: prj-stakeholder-register-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:prj-stakeholder-register
+      type: project
+      status: ready
+      rulebook: prj-stakeholder-register-rulebook
+      based_on:
+        - _PROJECT_ID_:prj-overview
+      supersedes: []
 ---
 
 # ステークホルダー登録簿: _PROJECT_NAME_

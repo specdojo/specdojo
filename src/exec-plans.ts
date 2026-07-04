@@ -7,6 +7,7 @@ import {
   resolveReferenceMaterialRefs,
 } from "./reference-materials.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import {
   expandTemplate,
@@ -187,8 +188,7 @@ function repoRelativePath(absPath: string): string {
 // ---------------------------------------------------------------------------
 
 function frontmatter(meta: ExecPlanMeta): string {
-  const lines = [
-    "---",
+  const inner = [
     `id: ${meta.id}`,
     `type: ${meta.type}`,
     `rulebook: ${meta.rulebook}`,
@@ -198,11 +198,10 @@ function frontmatter(meta: ExecPlanMeta): string {
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
   ];
-  if (meta.owner) lines.push(`owner: ${meta.owner}`);
-  if (meta.on_critical_path) lines.push(`on_critical_path: true`);
-  if (meta.approach) lines.push(`approach: ${meta.approach}`);
-  lines.push("---");
-  return lines.join("\n");
+  if (meta.owner) inner.push(`owner: ${meta.owner}`);
+  if (meta.on_critical_path) inner.push(`on_critical_path: true`);
+  if (meta.approach) inner.push(`approach: ${meta.approach}`);
+  return buildSpecdojoFrontmatter(inner);
 }
 
 // ---------------------------------------------------------------------------
@@ -812,19 +811,12 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "template-maintenance",
 ];
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
 // Parse an exec-plan file's frontmatter to recover the task identity. Returns
 // null when the frontmatter is missing or has no usable task_id, in which case
 // the caller treats the plan as an ad-hoc plan with no managed identity.
 export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | null {
-  const match = planContent.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return null;
-  const parsed = load(match[1]);
-  if (!isRecord(parsed)) return null;
-
+  // exec-plan frontmatter は `specdojo:` 名前空間配下にある。
+  const parsed = readSpecdojoNamespace(planContent);
   const taskId = typeof parsed.task_id === "string" ? parsed.task_id.trim() : "";
   if (!taskId) return null;
 

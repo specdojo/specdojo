@@ -1,8 +1,9 @@
 ---
-id: dct-index-rulebook
-type: rulebook
-status: draft
-target_format: markdown
+specdojo:
+  id: dct-index-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
 ---
 
 # 成果物カタログ 作成ルール

@@ -1,9 +1,10 @@
 ---
-id: prj-assumptions-constraints-dependencies-recipe
-type: recipe
-status: ready
-rulebook: prj-assumptions-constraints-dependencies-rulebook
-sample: prj-assumptions-constraints-dependencies-sample
+specdojo:
+  id: prj-assumptions-constraints-dependencies-recipe
+  type: recipe
+  status: ready
+  rulebook: prj-assumptions-constraints-dependencies-rulebook
+  sample: prj-assumptions-constraints-dependencies-sample
 ---
 
 # 前提・制約・依存関係 作成レシピ

@@ -1,13 +1,14 @@
 ---
-id: pm-quality-management-plan-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: pm-quality-management-plan-recipe
-sample: pm-quality-management-plan-sample
-template: pm-quality-management-plan-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-quality-management-plan-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: pm-quality-management-plan-recipe
+  sample: pm-quality-management-plan-sample
+  template: pm-quality-management-plan-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # 品質管理計画 作成ルール

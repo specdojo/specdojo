@@ -1,7 +1,8 @@
 ---
-id: pm-issue-log-rules
-type: rulebook
-status: draft
+specdojo:
+  id: pm-issue-log-rules
+  type: rulebook
+  status: draft
 ---
 
 # 課題ログ 作成ルール

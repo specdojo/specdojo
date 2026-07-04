@@ -1,7 +1,8 @@
 ---
-id: cop-rules
-type: rulebook
-status: draft
+specdojo:
+  id: cop-rules
+  type: rulebook
+  status: draft
 ---
 
 # カットオーバー計画 作成ルール

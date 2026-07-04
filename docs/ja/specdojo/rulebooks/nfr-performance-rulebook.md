@@ -1,7 +1,8 @@
 ---
-id: nfr-performance-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-performance-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 性能 作成ルール

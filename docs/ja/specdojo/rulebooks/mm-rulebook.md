@@ -1,7 +1,8 @@
 ---
-id: mm-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: mm-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # 議事録 作成ルール

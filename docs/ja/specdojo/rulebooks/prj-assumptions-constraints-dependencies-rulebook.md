@@ -1,14 +1,15 @@
 ---
-id: prj-assumptions-constraints-dependencies-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-assumptions-constraints-dependencies-recipe
-sample: prj-assumptions-constraints-dependencies-sample
-template: prj-assumptions-constraints-dependencies-template
-based_on:
-  - rulebook-authoring-standard
-supersedes: []
+specdojo:
+  id: prj-assumptions-constraints-dependencies-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-assumptions-constraints-dependencies-recipe
+  sample: prj-assumptions-constraints-dependencies-sample
+  template: prj-assumptions-constraints-dependencies-template
+  based_on:
+    - rulebook-authoring-standard
+  supersedes: []
 ---
 
 # 前提・制約・依存関係 作成ルール

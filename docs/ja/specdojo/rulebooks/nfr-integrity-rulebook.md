@@ -1,7 +1,8 @@
 ---
-id: nfr-integrity-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-integrity-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 完全性 作成ルール

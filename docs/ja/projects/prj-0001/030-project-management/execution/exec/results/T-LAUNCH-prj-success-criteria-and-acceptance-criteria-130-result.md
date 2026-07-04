@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-130
-type: exec-result
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130-plan.md
-started_at: "2026-06-30T15:46:40.521Z"
-completed_at: "2026-07-01T15:51:14.381Z"
-agent: opencode-edit-agent
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-130
+  type: exec-result
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-130-plan.md
+  started_at: "2026-06-30T15:46:40.521Z"
+  completed_at: "2026-07-01T15:51:14.381Z"
+  agent: opencode-edit-agent
+  approach: template-maintenance
 ---
 
 # Edit Result

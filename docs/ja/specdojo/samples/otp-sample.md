@@ -1,8 +1,9 @@
 ---
-id: otp-hypercare
-type: project
-status: draft
-rulebook: otp-rulebook
+specdojo:
+  id: otp-hypercare
+  type: project
+  status: draft
+  rulebook: otp-rulebook
 ---
 
 # 運用切替計画（ハイパーケア含む） サンプル

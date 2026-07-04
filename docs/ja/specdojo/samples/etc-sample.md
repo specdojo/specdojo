@@ -1,8 +1,9 @@
 ---
-id: etc
-type: project
-status: draft
-rulebook: etc-rulebook
+specdojo:
+  id: etc
+  type: project
+  status: draft
+  rulebook: etc-rulebook
 ---
 
 # [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル

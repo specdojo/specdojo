@@ -1,13 +1,14 @@
 ---
-id: pm-members-rulebook
-type: rulebook
-status: ready
-target_format: yaml
-recipe: pm-members-recipe
-sample: pm-members-sample
-template: pm-members-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-members-rulebook
+  type: rulebook
+  status: ready
+  target_format: yaml
+  recipe: pm-members-recipe
+  sample: pm-members-sample
+  template: pm-members-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # プロジェクトメンバー定義 作成ルール

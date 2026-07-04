@@ -1,7 +1,8 @@
 ---
-id: tsd-index-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: tsd-index-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # 技術スタック定義（TSD Index）作成ルール

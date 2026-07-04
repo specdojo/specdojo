@@ -1,7 +1,8 @@
 ---
-id: nfr-operations-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-operations-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 運用 作成ルール

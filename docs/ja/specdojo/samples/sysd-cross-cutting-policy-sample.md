@@ -1,8 +1,9 @@
 ---
-id: sysd-cross-cutting-policy
-type: project
-status: draft
-rulebook: sysd-cross-cutting-policy-rulebook
+specdojo:
+  id: sysd-cross-cutting-policy
+  type: project
+  status: draft
+  rulebook: sysd-cross-cutting-policy-rulebook
 ---
 
 # 横断ルール サンプル

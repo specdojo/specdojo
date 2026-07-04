@@ -1,8 +1,9 @@
 ---
-id: dct-rulebook
-type: rulebook
-status: draft
-target_format: yaml
+specdojo:
+  id: dct-rulebook
+  type: rulebook
+  status: draft
+  target_format: yaml
 ---
 
 # 成果物カタログ（ドメイン別）作成ルール

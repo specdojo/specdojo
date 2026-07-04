@@ -1,10 +1,11 @@
 ---
-id: opr-batch
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: [opd-index]
-supersedes: []
+specdojo:
+  id: opr-batch
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: [opd-index]
+  supersedes: []
 ---
 
 # 運用手順: バッチ再実行・失敗対応 サンプル

@@ -1,7 +1,8 @@
 ---
-id: specdojo-exec-worktree-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-exec-worktree-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo exec worktreeガイド

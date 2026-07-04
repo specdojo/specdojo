@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-stakeholder-register-120
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-stakeholder-register-120
-name: Sample 最終調整
-mode: edit
-status: ready
-project_id: prj-0001
-owner: BA
-on_critical_path: true
-approach: sample-maintenance
+specdojo:
+  id: prj-0001:xep-t-launch-prj-stakeholder-register-120
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-stakeholder-register-120
+  name: Sample 最終調整
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: BA
+  on_critical_path: true
+  approach: sample-maintenance
 ---
 
 # Edit Plan: T-LAUNCH-prj-stakeholder-register-120

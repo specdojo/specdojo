@@ -1,14 +1,15 @@
 ---
-id: prj-0001:xer-t-launch-pm-organization-010
-type: exec-result
-task_id: T-LAUNCH-pm-organization-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-organization-010-plan.md
-started_at: "2026-06-23T15:24:29.086Z"
-completed_at: "2026-06-25T09:54:45.753Z"
-agent: codex-expert-edit-agent
+specdojo:
+  id: prj-0001:xer-t-launch-pm-organization-010
+  type: exec-result
+  task_id: T-LAUNCH-pm-organization-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-organization-010-plan.md
+  started_at: "2026-06-23T15:24:29.086Z"
+  completed_at: "2026-06-25T09:54:45.753Z"
+  agent: codex-expert-edit-agent
 ---
 
 ## 1. 実施内容

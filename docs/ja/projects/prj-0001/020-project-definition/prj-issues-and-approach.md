@@ -1,12 +1,13 @@
 ---
-id: prj-0001:prj-issues-and-approach
-type: project
-status: draft
-rulebook: prj-issues-and-approach-rulebook
-based_on:
-  - prj-0001:prj-scope
-  - prj-0001:prj-assumptions-constraints-dependencies
-supersedes: []
+specdojo:
+  id: prj-0001:prj-issues-and-approach
+  type: project
+  status: draft
+  rulebook: prj-issues-and-approach-rulebook
+  based_on:
+    - prj-0001:prj-scope
+    - prj-0001:prj-assumptions-constraints-dependencies
+  supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ: SpecDojo

@@ -1,8 +1,9 @@
 ---
-id: dmd-order-data
-type: project
-status: draft
-rulebook: dmd-rulebook
+specdojo:
+  id: dmd-order-data
+  type: project
+  status: draft
+  rulebook: dmd-rulebook
 ---
 
 # データ移行設計 サンプル

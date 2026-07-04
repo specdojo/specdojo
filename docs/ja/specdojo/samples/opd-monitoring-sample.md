@@ -1,10 +1,11 @@
 ---
-id: opd-monitoring
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: []
-supersedes: []
+specdojo:
+  id: opd-monitoring
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: []
+  supersedes: []
 ---
 
 # 運用方針・設計: 監視 サンプル

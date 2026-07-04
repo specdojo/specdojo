@@ -1,17 +1,18 @@
 ---
-id: tsd-home-mac-dev-server
-type: architecture
-status: draft
-rulebook: tsd-rulebook
-part_of:
-  - tsd-index
-based_on:
-  - tsd-ollama
-  - sysd-agent-settings
-  - sysd-opencode-agent-settings
-  - sysd-claude-agent-settings
-  - sysd-codex-agent-settings
-  - sysd-github-copilot-agent-settings
+specdojo:
+  id: tsd-home-mac-dev-server
+  type: architecture
+  status: draft
+  rulebook: tsd-rulebook
+  part_of:
+    - tsd-index
+  based_on:
+    - tsd-ollama
+    - sysd-agent-settings
+    - sysd-opencode-agent-settings
+    - sysd-claude-agent-settings
+    - sysd-codex-agent-settings
+    - sysd-github-copilot-agent-settings
 ---
 
 # 自宅 MacBook Pro 開発サーバ技術スタック定義

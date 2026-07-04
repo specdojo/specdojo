@@ -1,13 +1,15 @@
 ---
-id: pjr-risk-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:_PJR-XXXX_
-  type: project
+specdojo:
+  id: pjr-risk-template
+  type: template
   status: draft
-  rulebook: pjr-index-rulebook
-  item_type: risk
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:_PJR-XXXX_
+      type: project
+      status: draft
+      rulebook: pjr-index-rulebook
+      item_type: risk
 ---
 
 # _PJR-XXXX_ _RISK_TITLE_

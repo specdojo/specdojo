@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrp-t-launch-prj-charter-090
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-charter-090
-name: 完成版レビュー
-mode: review
-status: ready
-project_id: prj-0001
-owner: PO
-on_critical_path: true
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrp-t-launch-prj-charter-090
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-charter-090
+  name: 完成版レビュー
+  mode: review
+  status: ready
+  project_id: prj-0001
+  owner: PO
+  on_critical_path: true
+  approach: fully-guided
 ---
 
 # Review Plan: T-LAUNCH-prj-charter-090

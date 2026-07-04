@@ -1,12 +1,13 @@
 ---
-id: prj-charter-sample
-type: project
-status: ready
-rulebook: prj-charter-rulebook
-based_on:
-  - prj-overview-sample
-  - prj-stakeholder-register-sample
-supersedes: []
+specdojo:
+  id: prj-charter-sample
+  type: project
+  status: ready
+  rulebook: prj-charter-rulebook
+  based_on:
+    - prj-overview-sample
+    - prj-stakeholder-register-sample
+  supersedes: []
 ---
 
 # プロジェクト憲章: 駄菓子屋きぬや 販売管理システム

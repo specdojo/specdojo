@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrr-t-launch-prj-success-criteria-and-acceptance-criteria-090
-type: exec-result
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090
-mode: review
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090-plan.md
-started_at: "2026-06-29T16:03:47.701Z"
-completed_at: "2026-06-29T16:05:15.242Z"
-agent: codex-review-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrr-t-launch-prj-success-criteria-and-acceptance-criteria-090
+  type: exec-result
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090
+  mode: review
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090-plan.md
+  started_at: "2026-06-29T16:03:47.701Z"
+  completed_at: "2026-06-29T16:05:15.242Z"
+  agent: codex-review-agent
+  approach: fully-guided
 ---
 
 # Review Result

@@ -1,8 +1,9 @@
 ---
-id: sac
-type: project
-status: draft
-rulebook: sac-rulebook
+specdojo:
+  id: sac
+  type: project
+  status: draft
+  rulebook: sac-rulebook
 ---
 
 # [システム受入条件](../rulebooks/sac-rulebook.md) サンプル

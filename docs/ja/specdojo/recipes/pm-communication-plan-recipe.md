@@ -1,9 +1,10 @@
 ---
-id: pm-communication-plan-recipe
-type: recipe
-status: ready
-rulebook: pm-communication-plan-rulebook
-sample: pm-communication-plan-sample
+specdojo:
+  id: pm-communication-plan-recipe
+  type: recipe
+  status: ready
+  rulebook: pm-communication-plan-rulebook
+  sample: pm-communication-plan-sample
 ---
 
 # コミュニケーション計画 作成レシピ

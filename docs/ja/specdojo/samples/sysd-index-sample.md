@@ -1,8 +1,9 @@
 ---
-id: sysd-index
-type: project
-status: draft
-rulebook: sysd-index-rulebook
+specdojo:
+  id: sysd-index
+  type: project
+  status: draft
+  rulebook: sysd-index-rulebook
 ---
 
 # 全体構成（リンク集） サンプル

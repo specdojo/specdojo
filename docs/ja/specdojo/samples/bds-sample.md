@@ -1,8 +1,9 @@
 ---
-id: bds
-type: project
-status: draft
-rulebook: bds-rulebook
+specdojo:
+  id: bds
+  type: project
+  status: draft
+  rulebook: bds-rulebook
 ---
 
 # [帳票仕様](../rulebooks/bds-rulebook.md) サンプル

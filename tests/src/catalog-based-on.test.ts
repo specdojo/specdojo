@@ -68,12 +68,18 @@ function setup(files: FileSpec[]): { catalogPath: string } {
     for (const item of file.items) {
       if ((item.kind ?? "work") !== "work") continue;
       const based = item.based_on ?? [];
-      const fm = ["---", `id: ${PROJECT_ID}:${item.local_id}`, "type: project", "status: draft"];
+      const fm = [
+        "---",
+        "specdojo:",
+        `  id: ${PROJECT_ID}:${item.local_id}`,
+        "  type: project",
+        "  status: draft",
+      ];
       if (based.length > 0) {
-        fm.push("based_on:");
-        for (const b of based) fm.push(`  - ${b}`);
+        fm.push("  based_on:");
+        for (const b of based) fm.push(`    - ${b}`);
       } else {
-        fm.push("based_on: []");
+        fm.push("  based_on: []");
       }
       fm.push("---", "", `# ${item.local_id}`, "");
       writeFileSync(join(docsDir, item.path ?? `${item.local_id}.md`), fm.join("\n"), "utf8");

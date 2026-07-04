@@ -1,12 +1,18 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: Standard Front Matter
+# SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
 type: object
-unevaluatedProperties: false
-allOf:
-  - $ref: "./common-frontmatter.schema.yaml"
-  - type: object
-    properties:
-      type:
-        type: string
-        const: standard
-        description: "ドキュメント種別（standard 固定）"
+required:
+  - specdojo
+properties:
+  specdojo:
+    type: object
+    unevaluatedProperties: false
+    allOf:
+      - $ref: "./common-frontmatter.schema.yaml"
+      - type: object
+        properties:
+          type:
+            type: string
+            const: standard
+            description: "ドキュメント種別（standard 固定）"

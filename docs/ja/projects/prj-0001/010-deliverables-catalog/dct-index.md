@@ -1,9 +1,10 @@
 ---
-id: prj-0001:dct-index
-type: project
-status: draft
-size: large
-rulebook: dct-index-rulebook
+specdojo:
+  id: prj-0001:dct-index
+  type: project
+  status: draft
+  size: large
+  rulebook: dct-index-rulebook
 ---
 
 # 成果物カタログ

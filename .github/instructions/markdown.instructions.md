@@ -9,15 +9,17 @@ applyTo: "docs/**/*.md"
 ## 1. ファイル先頭
 
 - ファイルの先頭に Frontmatter（`---` 区切りの YAML ブロック）を置く。
+- SpecDojo が所有する項目は `specdojo:` 名前空間配下に置く。トップレベルは他フレームワークの項目用に空けておく。
 - Frontmatter のすぐ後に、空行を1行空けて H1 見出し（`# タイトル`）を置く。
 - `#` 見出し（H1）はファイル内に1つだけ。タイトルとして使う。
 - Frontmatter に `title:` は書かない。タイトルは H1 に書く。
 
 ```markdown
 ---
-id: my-doc-id
-type: rulebook
-status: draft
+specdojo:
+  id: my-doc-id
+  type: rulebook
+  status: draft
 ---
 
 # ドキュメントタイトル
@@ -107,13 +109,13 @@ OK 例:
 ## 9. Frontmatter 必須フィールド
 
 共通スキーマ（`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`）に従う。
-最低限以下の3フィールドを含める。
+以下のフィールドは `specdojo:` 名前空間配下に置き、最低限この3つを含める。
 
-| フィールド | 値の例                           | 説明               |
-| ---------- | -------------------------------- | ------------------ |
-| `id`       | `my-doc-id`                      | ドキュメント一意ID |
-| `type`     | `rulebook` / `spec` / `project`  | ドキュメント種別   |
-| `status`   | `draft` / `ready` / `deprecated` | 状態               |
+| フィールド        | 値の例                           | 説明               |
+| ----------------- | -------------------------------- | ------------------ |
+| `specdojo.id`     | `my-doc-id`                      | ドキュメント一意ID |
+| `specdojo.type`   | `rulebook` / `spec` / `project`  | ドキュメント種別   |
+| `specdojo.status` | `draft` / `ready` / `deprecated` | 状態               |
 
 ## 10. 禁止事項
 

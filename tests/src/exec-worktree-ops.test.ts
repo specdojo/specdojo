@@ -411,9 +411,9 @@ describe("exec worktree ops", () => {
 
 describe("deliverableStatus", () => {
   it("reads status from markdown frontmatter", () => {
-    expect(deliverableStatus("---\nid: d\nstatus: ready\n---\n\n# Title\n", "docs/d.md")).toBe(
-      "ready",
-    );
+    expect(
+      deliverableStatus("---\nspecdojo:\n  id: d\n  status: ready\n---\n\n# Title\n", "docs/d.md"),
+    ).toBe("ready");
   });
 
   it("reads top-level status from yaml deliverables", () => {

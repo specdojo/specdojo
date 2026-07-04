@@ -1,10 +1,11 @@
 ---
-id: opd-incident-management
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: []
-supersedes: []
+specdojo:
+  id: opd-incident-management
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: []
+  supersedes: []
 ---
 
 # 運用方針・設計: 障害対応 サンプル

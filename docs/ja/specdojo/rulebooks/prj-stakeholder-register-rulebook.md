@@ -1,11 +1,12 @@
 ---
-id: prj-stakeholder-register-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-stakeholder-register-recipe
-sample: prj-stakeholder-register-sample
-template: prj-stakeholder-register-template
+specdojo:
+  id: prj-stakeholder-register-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-stakeholder-register-recipe
+  sample: prj-stakeholder-register-sample
+  template: prj-stakeholder-register-template
 ---
 
 # ステークホルダー登録簿 作成ルール

@@ -1,8 +1,9 @@
 ---
-id: nfr-performance
-type: project
-status: draft
-rulebook: nfr-performance-rulebook
+specdojo:
+  id: nfr-performance
+  type: project
+  status: draft
+  rulebook: nfr-performance-rulebook
 ---
 
 # [非機能要件 / 性能](../rulebooks/nfr-performance-rulebook.md) サンプル

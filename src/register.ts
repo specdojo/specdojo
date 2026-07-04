@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 
 // ================================
 // Types
@@ -328,16 +329,14 @@ function derivedViewNote(): string {
 // pjr-index.md の派生ビュー（pjr-views / pm-risk-register など）の frontmatter。
 // pjr-index.md と整合させ、派生元を part_of で示す（deliverable-frontmatter スキーマに準拠）。
 function derivedViewFrontmatter(projectId: string, localId: string): string {
-  return [
-    "---",
+  return buildSpecdojoFrontmatter([
     `id: ${projectId}:${localId}`,
     "type: project",
     "status: ready",
     "part_of:",
     `  - ${projectId}:pjr-index`,
     "rulebook: pjr-index-rulebook",
-    "---",
-  ].join("\n");
+  ]);
 }
 
 function generateViewsFile(items: PjrItem[], projectId: string): string {

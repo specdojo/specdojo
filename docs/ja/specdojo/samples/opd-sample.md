@@ -1,8 +1,9 @@
 ---
-id: opd-index
-type: project
-status: draft
-rulebook: opd-rulebook
+specdojo:
+  id: opd-index
+  type: project
+  status: draft
+  rulebook: opd-rulebook
 ---
 
 # [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル

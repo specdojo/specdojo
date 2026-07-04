@@ -1,12 +1,13 @@
 ---
-id: sysd-opencode-agent-settings
-type: project
-status: draft
-rulebook: sysd-rulebook
-part_of:
-  - sysd-agent-settings
-based_on:
-  - tsd-ollama-opencode
+specdojo:
+  id: sysd-opencode-agent-settings
+  type: project
+  status: draft
+  rulebook: sysd-rulebook
+  part_of:
+    - sysd-agent-settings
+  based_on:
+    - tsd-ollama-opencode
 ---
 
 # OpenCode エージェント設定（Ollama）

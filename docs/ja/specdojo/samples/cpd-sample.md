@@ -1,8 +1,9 @@
 ---
-id: cpd
-type: project
-status: draft
-rulebook: cpd-mermaid-rulebook
+specdojo:
+  id: cpd
+  type: project
+  status: draft
+  rulebook: cpd-mermaid-rulebook
 ---
 
 # [C4コンポーネント図](../rulebooks/cpd-rulebook.md) サンプル

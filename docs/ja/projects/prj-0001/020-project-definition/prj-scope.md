@@ -1,11 +1,12 @@
 ---
-id: prj-0001:prj-scope
-type: project
-status: draft
-rulebook: prj-scope-rulebook
-based_on:
-  - prj-0001:prj-overview
-supersedes: []
+specdojo:
+  id: prj-0001:prj-scope
+  type: project
+  status: draft
+  rulebook: prj-scope-rulebook
+  based_on:
+    - prj-0001:prj-overview
+  supersedes: []
 ---
 
 # プロジェクトスコープ: SpecDojo

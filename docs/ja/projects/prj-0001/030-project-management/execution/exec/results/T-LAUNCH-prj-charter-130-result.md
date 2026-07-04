@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-charter-130
-type: exec-result
-task_id: T-LAUNCH-prj-charter-130
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-charter-130-plan.md
-started_at: "2026-06-29T19:14:29.129Z"
-completed_at: "2026-06-30T15:33:08.340Z"
-agent: claude-edit-agent
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-charter-130
+  type: exec-result
+  task_id: T-LAUNCH-prj-charter-130
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-charter-130-plan.md
+  started_at: "2026-06-29T19:14:29.129Z"
+  completed_at: "2026-06-30T15:33:08.340Z"
+  agent: claude-edit-agent
+  approach: template-maintenance
 ---
 
 # Edit Result

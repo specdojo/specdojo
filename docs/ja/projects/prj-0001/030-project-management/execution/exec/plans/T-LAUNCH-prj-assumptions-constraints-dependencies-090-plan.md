@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrp-t-launch-prj-assumptions-constraints-dependencies-090
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-090
-name: 完成版レビュー
-mode: review
-status: ready
-project_id: prj-0001
-owner: ARC
-on_critical_path: true
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrp-t-launch-prj-assumptions-constraints-dependencies-090
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-090
+  name: 完成版レビュー
+  mode: review
+  status: ready
+  project_id: prj-0001
+  owner: ARC
+  on_critical_path: true
+  approach: fully-guided
 ---
 
 # Review Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-090

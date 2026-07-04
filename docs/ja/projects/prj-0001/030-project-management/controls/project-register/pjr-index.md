@@ -1,8 +1,9 @@
 ---
-id: prj-0001:pjr-index
-type: project
-status: ready
-rulebook: pjr-index-rulebook
+specdojo:
+  id: prj-0001:pjr-index
+  type: project
+  status: ready
+  rulebook: pjr-index-rulebook
 ---
 
 # プロジェクト登録簿

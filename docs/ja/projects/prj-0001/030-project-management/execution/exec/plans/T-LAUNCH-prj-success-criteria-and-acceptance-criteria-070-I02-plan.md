@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-070-i02
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I02
-name: 磨き込み
-mode: edit
-status: ready
-project_id: prj-0001
-owner: BA
-on_critical_path: true
-approach: fully-guided
+specdojo:
+  id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-070-i02
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I02
+  name: 磨き込み
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: BA
+  on_critical_path: true
+  approach: fully-guided
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I02

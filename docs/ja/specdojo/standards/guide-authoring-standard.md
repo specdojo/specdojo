@@ -1,7 +1,8 @@
 ---
-id: guide-authoring-standard
-type: standard
-status: draft
+specdojo:
+  id: guide-authoring-standard
+  type: standard
+  status: draft
 ---
 
 # Guide 記述標準
@@ -49,9 +50,10 @@ Guide Authoring Standard
 
 ```yaml
 ---
-id: docs-structure-guide
-type: guide
-status: draft
+specdojo:
+  id: docs-structure-guide
+  type: guide
+  status: draft
 ---
 ```
 

@@ -1,8 +1,9 @@
 ---
-id: cop-index
-type: project
-status: draft
-rulebook: cop-index-rulebook
+specdojo:
+  id: cop-index
+  type: project
+  status: draft
+  rulebook: cop-index-rulebook
 ---
 
 # カットオーバー計画（本番切替手順） サンプル

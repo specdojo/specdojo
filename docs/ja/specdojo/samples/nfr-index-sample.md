@@ -1,8 +1,9 @@
 ---
-id: nfr-index
-type: project
-status: draft
-rulebook: nfr-index-rulebook
+specdojo:
+  id: nfr-index
+  type: project
+  status: draft
+  rulebook: nfr-index-rulebook
 ---
 
 # [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル

@@ -1,8 +1,9 @@
 ---
-id: nfr-maintainability
-type: project
-status: draft
-rulebook: nfr-maintainability-rulebook
+specdojo:
+  id: nfr-maintainability
+  type: project
+  status: draft
+  rulebook: nfr-maintainability-rulebook
 ---
 
 # [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) サンプル

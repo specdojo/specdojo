@@ -1,8 +1,9 @@
 ---
-id: cnd
-type: project
-status: draft
-rulebook: cnd-mermaid-rulebook
+specdojo:
+  id: cnd
+  type: project
+  status: draft
+  rulebook: cnd-mermaid-rulebook
 ---
 
 # [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル

@@ -1,8 +1,9 @@
 ---
-id: cstd
-type: project
-status: draft
-rulebook: cstd-mermaid-rulebook
+specdojo:
+  id: cstd
+  type: project
+  status: draft
+  rulebook: cstd-mermaid-rulebook
 ---
 
 # [概念状態遷移図](../rulebooks/cstd-rulebook.md) サンプル

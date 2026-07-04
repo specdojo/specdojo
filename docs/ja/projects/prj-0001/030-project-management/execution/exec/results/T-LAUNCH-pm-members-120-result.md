@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-members-120
-type: exec-result
-task_id: T-LAUNCH-pm-members-120
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-members-120-plan.md
-started_at: "2026-07-01T14:49:08.362Z"
-completed_at: "2026-07-01T14:53:51.761Z"
-agent: codex-edit-agent
-approach: sample-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-members-120
+  type: exec-result
+  task_id: T-LAUNCH-pm-members-120
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-members-120-plan.md
+  started_at: "2026-07-01T14:49:08.362Z"
+  completed_at: "2026-07-01T14:53:51.761Z"
+  agent: codex-edit-agent
+  approach: sample-maintenance
 ---
 
 # Edit Result

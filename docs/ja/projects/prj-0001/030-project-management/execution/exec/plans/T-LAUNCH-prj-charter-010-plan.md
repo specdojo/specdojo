@@ -1,14 +1,15 @@
 ---
-id: xep-t-launch-prj-charter-010
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-charter-010
-name: 一括整備（成果物＋参考資料）
-mode: edit
-status: ready
-project_id:
-owner: PO
-approach: bootstrap
+specdojo:
+  id: xep-t-launch-prj-charter-010
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-charter-010
+  name: 一括整備（成果物＋参考資料）
+  mode: edit
+  status: ready
+  project_id:
+  owner: PO
+  approach: bootstrap
 ---
 
 # Edit Plan: T-LAUNCH-prj-charter-010

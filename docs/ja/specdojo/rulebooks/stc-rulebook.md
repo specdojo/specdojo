@@ -1,7 +1,8 @@
 ---
-id: stc-rules
-type: rulebook
-status: draft
+specdojo:
+  id: stc-rules
+  type: rulebook
+  status: draft
 ---
 
 # 総合テストカタログ 対象別 作成ルール

@@ -1,7 +1,8 @@
 ---
-id: trc-requirements-to-tests-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: trc-requirements-to-tests-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # トレーサビリティ（要求→テスト）作成ルール

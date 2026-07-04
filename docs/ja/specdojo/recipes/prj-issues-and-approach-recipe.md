@@ -1,9 +1,10 @@
 ---
-id: prj-issues-and-approach-recipe
-type: recipe
-status: ready
-rulebook: prj-issues-and-approach-rulebook
-sample: prj-issues-and-approach-sample
+specdojo:
+  id: prj-issues-and-approach-recipe
+  type: recipe
+  status: ready
+  rulebook: prj-issues-and-approach-rulebook
+  sample: prj-issues-and-approach-sample
 ---
 
 # プロジェクト課題と解決アプローチ 作成レシピ

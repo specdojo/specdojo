@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-scope-010
-type: exec-result
-task_id: T-LAUNCH-prj-scope-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-scope-010-plan.md
-started_at: "2026-06-27T06:58:27.946Z"
-completed_at: "2026-06-27T07:11:17.488Z"
-agent: opencode-edit-agent
-approach: bootstrap
+specdojo:
+  id: prj-0001:xer-t-launch-prj-scope-010
+  type: exec-result
+  task_id: T-LAUNCH-prj-scope-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-scope-010-plan.md
+  started_at: "2026-06-27T06:58:27.946Z"
+  completed_at: "2026-06-27T07:11:17.488Z"
+  agent: opencode-edit-agent
+  approach: bootstrap
 ---
 
 ## 1. 実施内容

@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-charter-010
-type: exec-result
-task_id: T-LAUNCH-prj-charter-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-charter-010-plan.md
-started_at: "2026-06-25T12:46:16.663Z"
-completed_at: "2026-06-25T12:59:05.727Z"
-agent: codex
-approach: bootstrap
+specdojo:
+  id: prj-0001:xer-t-launch-prj-charter-010
+  type: exec-result
+  task_id: T-LAUNCH-prj-charter-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-charter-010-plan.md
+  started_at: "2026-06-25T12:46:16.663Z"
+  completed_at: "2026-06-25T12:59:05.727Z"
+  agent: codex
+  approach: bootstrap
 ---
 
 ## 1. 実施内容

@@ -1,13 +1,14 @@
 ---
-id: pm-communication-plan-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: pm-communication-plan-recipe
-sample: pm-communication-plan-sample
-template: pm-communication-plan-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-communication-plan-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: pm-communication-plan-recipe
+  sample: pm-communication-plan-sample
+  template: pm-communication-plan-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # コミュニケーション計画 作成ルール

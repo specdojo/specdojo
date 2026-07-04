@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import yaml from "js-yaml";
+import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
 export interface DocIndex {
   version: number;
@@ -45,10 +46,9 @@ const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
 // ---- Markdown frontmatter ----------------------------------------------
 
 function extractIdFromMarkdown(content: string): string | undefined {
-  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!fm) return undefined;
-  const m = fm[1].match(/^id:\s*(.+)$/m);
-  return m?.[1]?.trim();
+  // Markdown frontmatter の id は `specdojo:` 名前空間配下にある。
+  const id = readSpecdojoNamespace(content).id;
+  return typeof id === "string" ? id.trim() : undefined;
 }
 
 // ---- YAML top-level id -------------------------------------------------

@@ -1,11 +1,12 @@
 ---
-id: prj-assumptions-constraints-dependencies-sample
-type: project
-status: ready
-rulebook: prj-assumptions-constraints-dependencies-rulebook
-based_on:
-  - prj-scope-sample
-supersedes: []
+specdojo:
+  id: prj-assumptions-constraints-dependencies-sample
+  type: project
+  status: ready
+  rulebook: prj-assumptions-constraints-dependencies-rulebook
+  based_on:
+    - prj-scope-sample
+  supersedes: []
 ---
 
 # 前提・制約・依存関係: 駄菓子屋きぬや 販売管理システム

@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-roles-100
-type: exec-result
-task_id: T-LAUNCH-pm-roles-100
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-roles-100-plan.md
-started_at: "2026-06-29T16:45:02.860Z"
-completed_at: "2026-06-29T16:49:04.440Z"
-agent: claude-edit-agent
-approach: recipe-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-roles-100
+  type: exec-result
+  task_id: T-LAUNCH-pm-roles-100
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-roles-100-plan.md
+  started_at: "2026-06-29T16:45:02.860Z"
+  completed_at: "2026-06-29T16:49:04.440Z"
+  agent: claude-edit-agent
+  approach: recipe-maintenance
 ---
 
 # Edit Result

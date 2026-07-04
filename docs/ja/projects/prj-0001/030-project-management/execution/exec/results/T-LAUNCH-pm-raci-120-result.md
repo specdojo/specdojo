@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-raci-120
-type: exec-result
-task_id: T-LAUNCH-pm-raci-120
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-raci-120-plan.md
-started_at: "2026-06-29T18:34:37.278Z"
-completed_at: "2026-06-30T14:49:00.726Z"
-agent: opencode-edit-agent
-approach: sample-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-raci-120
+  type: exec-result
+  task_id: T-LAUNCH-pm-raci-120
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-raci-120-plan.md
+  started_at: "2026-06-29T18:34:37.278Z"
+  completed_at: "2026-06-30T14:49:00.726Z"
+  agent: opencode-edit-agent
+  approach: sample-maintenance
 ---
 
 # Edit Result

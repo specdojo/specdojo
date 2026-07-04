@@ -1,13 +1,14 @@
 ---
-id: pm-roles-rulebook
-type: rulebook
-status: ready
-target_format: yaml
-recipe: pm-roles-recipe
-sample: pm-roles-sample
-template: pm-roles-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-roles-rulebook
+  type: rulebook
+  status: ready
+  target_format: yaml
+  recipe: pm-roles-recipe
+  sample: pm-roles-sample
+  template: pm-roles-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # プロジェクトロール定義 作成ルール

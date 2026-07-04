@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-prj-charter-080-i02
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-charter-080-I02
-name: 整合性確認・修正
-mode: edit
-status: ready
-project_id: prj-0001
-owner: PO
-on_critical_path: true
-approach: fully-guided
+specdojo:
+  id: prj-0001:xep-t-launch-prj-charter-080-i02
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-charter-080-I02
+  name: 整合性確認・修正
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: PO
+  on_critical_path: true
+  approach: fully-guided
 ---
 
 # Edit Plan: T-LAUNCH-prj-charter-080-I02

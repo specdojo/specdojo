@@ -1,8 +1,9 @@
 ---
-id: nfr-usability
-type: project
-status: draft
-rulebook: nfr-usability-rulebook
+specdojo:
+  id: nfr-usability
+  type: project
+  status: draft
+  rulebook: nfr-usability-rulebook
 ---
 
 # [非機能要件 / 操作性](../rulebooks/nfr-usability-rulebook.md) サンプル

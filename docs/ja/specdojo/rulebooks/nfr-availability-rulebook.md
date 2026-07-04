@@ -1,7 +1,8 @@
 ---
-id: nfr-availability-rules
-type: rulebook
-status: draft
+specdojo:
+  id: nfr-availability-rules
+  type: rulebook
+  status: draft
 ---
 
 # 非機能要件 / 可用性 作成ルール

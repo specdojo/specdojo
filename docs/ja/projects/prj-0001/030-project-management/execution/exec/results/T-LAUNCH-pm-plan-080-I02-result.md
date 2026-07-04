@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-plan-080-i02
-type: exec-result
-task_id: T-LAUNCH-pm-plan-080-I02
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-plan-080-I02-plan.md
-started_at: "2026-06-28T14:33:28.161Z"
-completed_at: "2026-06-28T14:35:56.914Z"
-agent: codex-expert-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-plan-080-i02
+  type: exec-result
+  task_id: T-LAUNCH-pm-plan-080-I02
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-plan-080-I02-plan.md
+  started_at: "2026-06-28T14:33:28.161Z"
+  completed_at: "2026-06-28T14:35:56.914Z"
+  agent: codex-expert-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

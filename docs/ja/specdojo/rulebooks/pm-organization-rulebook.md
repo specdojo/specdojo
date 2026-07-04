@@ -1,13 +1,14 @@
 ---
-id: pm-organization-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: pm-organization-recipe
-sample: pm-organization-sample
-template: pm-organization-template
-based_on:
-  - people-and-organization-definition-standard
+specdojo:
+  id: pm-organization-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: pm-organization-recipe
+  sample: pm-organization-sample
+  template: pm-organization-template
+  based_on:
+    - people-and-organization-definition-standard
 ---
 
 # 組織定義 作成ルール

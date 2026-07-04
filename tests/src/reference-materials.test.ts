@@ -35,9 +35,15 @@ describe("reference-materials", () => {
   });
 
   function writeRulebook(id: string, frontmatter: string): void {
+    // SpecDojo frontmatter は `specdojo:` 名前空間配下に置く。フラットな key: value 行を
+    // 2 スペース字下げして名前空間へ入れる。
+    const nested = frontmatter
+      .split("\n")
+      .map((line) => (line.length === 0 ? "" : `  ${line}`))
+      .join("\n");
     writeFileSync(
       join(root, SPECDOJO, "rulebooks", `${id}.md`),
-      `---\n${frontmatter}\n---\n\n# ${id}\n`,
+      `---\nspecdojo:\n${nested}\n---\n\n# ${id}\n`,
       "utf8",
     );
   }

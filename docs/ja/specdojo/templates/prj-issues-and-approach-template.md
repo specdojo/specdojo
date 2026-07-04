@@ -1,16 +1,18 @@
 ---
-id: prj-issues-and-approach-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:prj-issues-and-approach
-  type: project
+specdojo:
+  id: prj-issues-and-approach-template
+  type: template
   status: draft
-  rulebook: prj-issues-and-approach-rulebook
-  based_on:
-    - _PROJECT_ID_:prj-scope
-    - _PROJECT_ID_:prj-assumptions-constraints-dependencies
-  supersedes: []
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:prj-issues-and-approach
+      type: project
+      status: draft
+      rulebook: prj-issues-and-approach-rulebook
+      based_on:
+        - _PROJECT_ID_:prj-scope
+        - _PROJECT_ID_:prj-assumptions-constraints-dependencies
+      supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ: _PROJECT_NAME_

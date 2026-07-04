@@ -1,7 +1,8 @@
 ---
-id: recipe-authoring-standard
-type: standard
-status: draft
+specdojo:
+  id: recipe-authoring-standard
+  type: standard
+  status: draft
 ---
 
 # Recipe 記述標準

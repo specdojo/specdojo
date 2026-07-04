@@ -1,9 +1,10 @@
 ---
-id: pm-members-recipe
-type: recipe
-status: ready
-rulebook: pm-members-rulebook
-sample: pm-members-sample
+specdojo:
+  id: pm-members-recipe
+  type: recipe
+  status: ready
+  rulebook: pm-members-rulebook
+  sample: pm-members-sample
 ---
 
 # メンバー定義 作成レシピ

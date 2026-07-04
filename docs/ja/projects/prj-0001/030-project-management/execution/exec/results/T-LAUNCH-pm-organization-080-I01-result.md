@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-organization-080-i01
-type: exec-result
-task_id: T-LAUNCH-pm-organization-080-I01
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-organization-080-I01-plan.md
-started_at: "2026-06-27T05:29:55.463Z"
-completed_at: "2026-06-28T13:00:05.185Z"
-agent: opencode-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-organization-080-i01
+  type: exec-result
+  task_id: T-LAUNCH-pm-organization-080-I01
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-organization-080-I01-plan.md
+  started_at: "2026-06-27T05:29:55.463Z"
+  completed_at: "2026-06-28T13:00:05.185Z"
+  agent: opencode-edit-agent
+  approach: fully-guided
 ---
 
 ## 1. 実施内容

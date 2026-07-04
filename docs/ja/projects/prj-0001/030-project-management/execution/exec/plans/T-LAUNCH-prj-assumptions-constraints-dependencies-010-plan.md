@@ -1,14 +1,15 @@
 ---
-id: prj-0001:xep-t-launch-prj-assumptions-constraints-dependencies-010
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
-name: 一括整備（成果物＋参考資料）
-mode: edit
-status: ready
-project_id: prj-0001
-owner: ARC
-approach: bootstrap
+specdojo:
+  id: prj-0001:xep-t-launch-prj-assumptions-constraints-dependencies-010
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-prj-assumptions-constraints-dependencies-010
+  name: 一括整備（成果物＋参考資料）
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: ARC
+  approach: bootstrap
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-010

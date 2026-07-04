@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-organization-110
-type: exec-result
-task_id: T-LAUNCH-pm-organization-110
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-organization-110-plan.md
-started_at: "2026-06-29T17:29:50.518Z"
-completed_at: "2026-06-29T17:33:27.447Z"
-agent: codex-edit-agent
-approach: rulebook-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-organization-110
+  type: exec-result
+  task_id: T-LAUNCH-pm-organization-110
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-organization-110-plan.md
+  started_at: "2026-06-29T17:29:50.518Z"
+  completed_at: "2026-06-29T17:33:27.447Z"
+  agent: codex-edit-agent
+  approach: rulebook-maintenance
 ---
 
 # Edit Result

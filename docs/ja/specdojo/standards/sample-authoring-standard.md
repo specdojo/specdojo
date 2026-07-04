@@ -1,7 +1,8 @@
 ---
-id: sample-authoring-standard
-type: standard
-status: draft
+specdojo:
+  id: sample-authoring-standard
+  type: standard
+  status: draft
 ---
 
 # Sample 記述標準

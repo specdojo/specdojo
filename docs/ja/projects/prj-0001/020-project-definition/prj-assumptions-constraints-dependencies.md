@@ -1,11 +1,12 @@
 ---
-id: prj-0001:prj-assumptions-constraints-dependencies
-type: project
-status: draft
-rulebook: prj-assumptions-constraints-dependencies-rulebook
-based_on:
-  - prj-0001:prj-scope
-supersedes: []
+specdojo:
+  id: prj-0001:prj-assumptions-constraints-dependencies
+  type: project
+  status: draft
+  rulebook: prj-assumptions-constraints-dependencies-rulebook
+  based_on:
+    - prj-0001:prj-scope
+  supersedes: []
 ---
 
 # 前提・制約・依存関係

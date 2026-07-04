@@ -1,12 +1,13 @@
 ---
-id: trc-requirements-to-tests
-type: project
-status: draft
-rulebook: trc-requirements-to-tests-rulebook
-based_on:
-  - utc-index
-  - itc-index
-supersedes: []
+specdojo:
+  id: trc-requirements-to-tests
+  type: project
+  status: draft
+  rulebook: trc-requirements-to-tests-rulebook
+  based_on:
+    - utc-index
+    - itc-index
+  supersedes: []
 ---
 
 # トレーサビリティ（要求→テスト）サンプル

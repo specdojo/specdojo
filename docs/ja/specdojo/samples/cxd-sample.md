@@ -1,8 +1,9 @@
 ---
-id: cxd
-type: project
-status: draft
-rulebook: cxd-mermaid-rulebook
+specdojo:
+  id: cxd
+  type: project
+  status: draft
+  rulebook: cxd-mermaid-rulebook
 ---
 
 # [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル

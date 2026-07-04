@@ -12,6 +12,7 @@ import {
   validateDctDoc,
 } from "./catalog-build.js";
 import { collectDocIndexEntries } from "./doc-index.js";
+import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
 import type { DctDoc } from "./catalog-types.js";
 
@@ -19,10 +20,7 @@ function readSizeFromIndex(catalogPath: string): ProjectSize | null {
   const indexPath = join(catalogPath, "dct-index.md");
   if (!existsSync(indexPath)) return null;
   const content = readFileSync(indexPath, "utf8");
-  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!fm) return null;
-  const m = fm[1].match(/^size:\s*(.+)$/m);
-  const size = m?.[1]?.trim();
+  const size = readSpecdojoNamespace(content).size;
   if (size === "small" || size === "medium" || size === "large") return size;
   return null;
 }

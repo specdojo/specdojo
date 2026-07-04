@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-quality-management-plan-080-i01
-type: exec-result
-task_id: T-LAUNCH-pm-quality-management-plan-080-I01
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-080-I01-plan.md
-started_at: "2026-06-28T13:00:23.641Z"
-completed_at: "2026-06-28T13:06:08.142Z"
-agent: codex-expert-edit-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xer-t-launch-pm-quality-management-plan-080-i01
+  type: exec-result
+  task_id: T-LAUNCH-pm-quality-management-plan-080-I01
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-080-I01-plan.md
+  started_at: "2026-06-28T13:00:23.641Z"
+  completed_at: "2026-06-28T13:06:08.142Z"
+  agent: codex-expert-edit-agent
+  approach: fully-guided
 ---
 
 # Edit Result

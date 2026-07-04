@@ -1,8 +1,9 @@
 ---
-id: bdd-rulebook
-type: rulebook
-status: draft
-target_format: yaml
+specdojo:
+  id: bdd-rulebook
+  type: rulebook
+  status: draft
+  target_format: yaml
 ---
 
 # 業務データ辞書 作成ルール

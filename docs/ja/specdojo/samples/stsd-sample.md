@@ -1,8 +1,9 @@
 ---
-id: stl-main
-type: project
-status: draft
-rulebook: stsd-rulebook
+specdojo:
+  id: stl-main
+  type: project
+  status: draft
+  rulebook: stsd-rulebook
 ---
 
 # [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) サンプル

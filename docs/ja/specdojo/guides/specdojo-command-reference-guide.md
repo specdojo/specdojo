@@ -1,7 +1,8 @@
 ---
-id: specdojo-command-reference-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-command-reference-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojoコマンドリファレンス

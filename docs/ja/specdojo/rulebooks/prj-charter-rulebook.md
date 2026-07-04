@@ -1,11 +1,12 @@
 ---
-id: prj-charter-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-charter-recipe
-sample: prj-charter-sample
-template: prj-charter-template
+specdojo:
+  id: prj-charter-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-charter-recipe
+  sample: prj-charter-sample
+  template: prj-charter-template
 ---
 
 # プロジェクト憲章 作成ルール

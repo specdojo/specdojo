@@ -1,10 +1,11 @@
 ---
-id: pm-quality-management-plan-sample
-type: project
-status: ready
-rulebook: pm-quality-management-plan-rulebook
-based_on:
-  - pm-plan-sample
+specdojo:
+  id: pm-quality-management-plan-sample
+  type: project
+  status: ready
+  rulebook: pm-quality-management-plan-rulebook
+  based_on:
+    - pm-plan-sample
 ---
 
 # 品質管理計画 サンプル

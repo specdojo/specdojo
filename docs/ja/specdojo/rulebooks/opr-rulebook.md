@@ -1,8 +1,9 @@
 ---
-id: opr-rulebook
-type: rulebook
-status: draft
-target_format: markdown
+specdojo:
+  id: opr-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
 ---
 
 # 運用手順 作成ルール

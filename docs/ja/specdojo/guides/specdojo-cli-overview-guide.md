@@ -1,7 +1,8 @@
 ---
-id: specdojo-cli-overview-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-cli-overview-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo CLI概要ガイド

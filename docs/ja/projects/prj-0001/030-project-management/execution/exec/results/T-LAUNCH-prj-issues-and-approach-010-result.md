@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-issues-and-approach-010
-type: exec-result
-task_id: T-LAUNCH-prj-issues-and-approach-010
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-010-plan.md
-started_at: "2026-06-28T03:35:41.697Z"
-completed_at: "2026-06-28T03:38:38.269Z"
-agent: codex-expert-edit-agent
-approach: bootstrap
+specdojo:
+  id: prj-0001:xer-t-launch-prj-issues-and-approach-010
+  type: exec-result
+  task_id: T-LAUNCH-prj-issues-and-approach-010
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-issues-and-approach-010-plan.md
+  started_at: "2026-06-28T03:35:41.697Z"
+  completed_at: "2026-06-28T03:38:38.269Z"
+  agent: codex-expert-edit-agent
+  approach: bootstrap
 ---
 
 # Edit Result

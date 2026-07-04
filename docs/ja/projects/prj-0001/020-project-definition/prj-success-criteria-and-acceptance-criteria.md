@@ -1,11 +1,12 @@
 ---
-id: prj-0001:prj-success-criteria-and-acceptance-criteria
-type: project
-status: draft
-rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
-based_on:
-  - prj-0001:prj-scope
-supersedes: []
+specdojo:
+  id: prj-0001:prj-success-criteria-and-acceptance-criteria
+  type: project
+  status: draft
+  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+  based_on:
+    - prj-0001:prj-scope
+  supersedes: []
 ---
 
 # 成功基準と受入条件

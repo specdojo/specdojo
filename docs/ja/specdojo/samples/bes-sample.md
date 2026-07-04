@@ -1,8 +1,9 @@
 ---
-id: bes
-type: project
-status: draft
-rulebook: bes-rulebook
+specdojo:
+  id: bes
+  type: project
+  status: draft
+  rulebook: bes-rulebook
 ---
 
 # [業務イベント / 業務イベント仕様](../rulebooks/bes-rulebook.md) サンプル

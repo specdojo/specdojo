@@ -1,10 +1,11 @@
 ---
-id: opr-index
-type: operations
-status: draft
-rulebook: opd-rulebook
-based_on: []
-supersedes: []
+specdojo:
+  id: opr-index
+  type: operations
+  status: draft
+  rulebook: opd-rulebook
+  based_on: []
+  supersedes: []
 ---
 
 # 運用手順: 全体 サンプル

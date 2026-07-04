@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-pm-quality-management-plan-120
-type: exec-result
-task_id: T-LAUNCH-pm-quality-management-plan-120
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-120-plan.md
-started_at: "2026-06-29T18:23:14.577Z"
-completed_at: "2026-07-01T14:56:51.106Z"
-agent: claude-edit-agent
-approach: sample-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-pm-quality-management-plan-120
+  type: exec-result
+  task_id: T-LAUNCH-pm-quality-management-plan-120
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-pm-quality-management-plan-120-plan.md
+  started_at: "2026-06-29T18:23:14.577Z"
+  completed_at: "2026-07-01T14:56:51.106Z"
+  agent: claude-edit-agent
+  approach: sample-maintenance
 ---
 
 # Edit Result

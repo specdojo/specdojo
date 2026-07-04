@@ -1,16 +1,18 @@
 ---
-id: prj-comparison-of-alternatives-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:prj-comparison-of-alternatives
-  type: project
+specdojo:
+  id: prj-comparison-of-alternatives-template
+  type: template
   status: draft
-  rulebook: prj-comparison-of-alternatives-rulebook
-  based_on:
-    - _PROJECT_ID_:prj-scope
-    - _PROJECT_ID_:prj-issues-and-approach
-  supersedes: []
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:prj-comparison-of-alternatives
+      type: project
+      status: draft
+      rulebook: prj-comparison-of-alternatives-rulebook
+      based_on:
+        - _PROJECT_ID_:prj-scope
+        - _PROJECT_ID_:prj-issues-and-approach
+      supersedes: []
 ---
 
 # 代替案比較: _PROJECT_NAME_

@@ -1,11 +1,12 @@
 ---
-id: pm-plan-sample
-type: project
-status: ready
-rulebook: pm-plan-rulebook
-based_on:
-  - pm-organization-sample
-  - pm-roles-sample
+specdojo:
+  id: pm-plan-sample
+  type: project
+  status: ready
+  rulebook: pm-plan-rulebook
+  based_on:
+    - pm-organization-sample
+    - pm-roles-sample
 ---
 
 # プロジェクト管理計画 サンプル

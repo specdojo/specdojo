@@ -1,12 +1,13 @@
 ---
-id: imp-business
-type: project
-status: draft
-rulebook: imp-business-rulebook
-based_on:
-  - cr-2026-004
-part_of:
-  - prj-0001
+specdojo:
+  id: imp-business
+  type: project
+  status: draft
+  rulebook: imp-business-rulebook
+  based_on:
+    - cr-2026-004
+  part_of:
+    - prj-0001
 ---
 
 # 影響調査（業務）サンプル

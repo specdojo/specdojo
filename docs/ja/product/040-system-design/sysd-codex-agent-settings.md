@@ -1,10 +1,11 @@
 ---
-id: sysd-codex-agent-settings
-type: project
-status: draft
-rulebook: sysd-rulebook
-part_of:
-  - sysd-agent-settings
+specdojo:
+  id: sysd-codex-agent-settings
+  type: project
+  status: draft
+  rulebook: sysd-rulebook
+  part_of:
+    - sysd-agent-settings
 ---
 
 # Codex エージェント設定

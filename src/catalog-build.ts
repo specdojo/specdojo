@@ -10,6 +10,7 @@ import type {
 } from "./catalog-types.js";
 import { declaredReferences } from "./reference-materials.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
 function formatDependsOn(deps: string[] | undefined): string {
   if (!deps || deps.length === 0) return "-";
@@ -121,20 +122,19 @@ function renderSections(
 }
 
 function buildFrontmatter(doc: DctDoc): string[] {
-  const lines: string[] = ["---"];
-  lines.push(`id: ${doc.id}`);
-  lines.push(`type: ${doc.type}`);
-  lines.push(`status: ${doc.status}`);
+  const inner: string[] = [];
+  inner.push(`id: ${doc.id}`);
+  inner.push(`type: ${doc.type}`);
+  inner.push(`status: ${doc.status}`);
   if (doc.part_of && doc.part_of.length > 0) {
-    lines.push("part_of:");
+    inner.push("part_of:");
     for (const p of doc.part_of) {
       const val = p.includes(":") ? `'${p}'` : p;
-      lines.push(`  - ${val}`);
+      inner.push(`  - ${val}`);
     }
   }
-  lines.push("rulebook: dct-rulebook");
-  lines.push("---");
-  return lines;
+  inner.push("rulebook: dct-rulebook");
+  return buildSpecdojoFrontmatter(inner).split("\n");
 }
 
 export function buildMarkdown(doc: DctDoc): string {
@@ -498,16 +498,8 @@ function resolveReference(
 function readBasedOn(docFsPath: string): string[] | null {
   if (!existsSync(docFsPath)) return null;
   const content = readFileSync(docFsPath, "utf8");
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return [];
-  let frontmatter: unknown;
-  try {
-    frontmatter = yaml.load(match[1]);
-  } catch {
-    return [];
-  }
-  if (typeof frontmatter !== "object" || frontmatter === null) return [];
-  const based = (frontmatter as Record<string, unknown>).based_on;
+  // based_on は Markdown frontmatter の `specdojo:` 名前空間配下にある。
+  const based = readSpecdojoNamespace(content).based_on;
   if (!Array.isArray(based)) return [];
   return based.filter((value): value is string => typeof value === "string");
 }

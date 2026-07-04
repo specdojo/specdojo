@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xrr-t-launch-prj-charter-090
-type: exec-result
-task_id: T-LAUNCH-prj-charter-090
-mode: review
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-charter-090-plan.md
-started_at: "2026-06-29T15:37:25.911Z"
-completed_at: "2026-06-29T15:40:02.177Z"
-agent: claude-review-agent
-approach: fully-guided
+specdojo:
+  id: prj-0001:xrr-t-launch-prj-charter-090
+  type: exec-result
+  task_id: T-LAUNCH-prj-charter-090
+  mode: review
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-charter-090-plan.md
+  started_at: "2026-06-29T15:37:25.911Z"
+  completed_at: "2026-06-29T15:40:02.177Z"
+  agent: claude-review-agent
+  approach: fully-guided
 ---
 
 # Review Result

@@ -1,12 +1,13 @@
 ---
-id: imp-interface
-type: project
-status: draft
-rulebook: imp-interface-rulebook
-based_on:
-  - cr-2026-004
-part_of:
-  - prj-0001
+specdojo:
+  id: imp-interface
+  type: project
+  status: draft
+  rulebook: imp-interface-rulebook
+  based_on:
+    - cr-2026-004
+  part_of:
+    - prj-0001
 ---
 
 # 影響調査（I/F）サンプル

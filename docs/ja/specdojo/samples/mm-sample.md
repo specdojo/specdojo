@@ -1,8 +1,9 @@
 ---
-id: mm-2026-04-19-01
-type: project
-status: draft
-rulebook: mm-rulebook
+specdojo:
+  id: mm-2026-04-19-01
+  type: project
+  status: draft
+  rulebook: mm-rulebook
 ---
 
 # 議事録 サンプル

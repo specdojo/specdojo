@@ -1,8 +1,9 @@
 ---
-id: stc
-type: project
-status: draft
-rulebook: stc-rulebook
+specdojo:
+  id: stc
+  type: project
+  status: draft
+  rulebook: stc-rulebook
 ---
 
 # [総合テスト対象別](../rulebooks/stc-rulebook.md) サンプル

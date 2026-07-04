@@ -1,11 +1,12 @@
 ---
-id: prj-scope-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-scope-recipe
-sample: prj-scope-sample
-template: prj-scope-template
+specdojo:
+  id: prj-scope-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-scope-recipe
+  sample: prj-scope-sample
+  template: prj-scope-template
 ---
 
 # プロジェクトスコープ 作成ルール

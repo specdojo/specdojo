@@ -1,10 +1,11 @@
 ---
-id: prj-0001:pm-organization
-type: project
-status: draft
-rulebook: pm-organization-rulebook
-based_on:
-  - prj-0001:prj-overview
+specdojo:
+  id: prj-0001:pm-organization
+  type: project
+  status: draft
+  rulebook: pm-organization-rulebook
+  based_on:
+    - prj-0001:prj-overview
 ---
 
 # 組織定義

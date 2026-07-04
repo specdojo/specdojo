@@ -1,8 +1,9 @@
 ---
-id: dec-rulebook
-type: rulebook
-status: draft
-target_format: markdown
+specdojo:
+  id: dec-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
 ---
 
 # 決定記録 作成ルール

@@ -1,12 +1,13 @@
 ---
-id: prj-issues-and-approach-sample
-type: project
-status: ready
-rulebook: prj-issues-and-approach-rulebook
-based_on:
-  - prj-scope-sample
-  - prj-assumptions-constraints-dependencies-sample
-supersedes: []
+specdojo:
+  id: prj-issues-and-approach-sample
+  type: project
+  status: ready
+  rulebook: prj-issues-and-approach-rulebook
+  based_on:
+    - prj-scope-sample
+    - prj-assumptions-constraints-dependencies-sample
+  supersedes: []
 ---
 
 # プロジェクト課題と解決アプローチ: 駄菓子屋きぬや 販売管理システム

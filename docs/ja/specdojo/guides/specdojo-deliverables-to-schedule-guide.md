@@ -1,7 +1,8 @@
 ---
-id: specdojo-deliverables-to-schedule-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-deliverables-to-schedule-guide
+  type: guide
+  status: draft
 ---
 
 # 成果物カタログからスケジュールへの展開ガイド

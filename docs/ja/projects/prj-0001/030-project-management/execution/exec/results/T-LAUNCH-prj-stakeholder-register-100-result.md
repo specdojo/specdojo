@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xer-t-launch-prj-stakeholder-register-100
-type: exec-result
-task_id: T-LAUNCH-prj-stakeholder-register-100
-mode: edit
-status: complete
-project_id: prj-0001
-plan_ref: exec/plans/T-LAUNCH-prj-stakeholder-register-100-plan.md
-started_at: "2026-06-29T17:11:45.212Z"
-completed_at: "2026-06-29T17:15:08.092Z"
-agent: claude-edit-agent
-approach: recipe-maintenance
+specdojo:
+  id: prj-0001:xer-t-launch-prj-stakeholder-register-100
+  type: exec-result
+  task_id: T-LAUNCH-prj-stakeholder-register-100
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: exec/plans/T-LAUNCH-prj-stakeholder-register-100-plan.md
+  started_at: "2026-06-29T17:11:45.212Z"
+  completed_at: "2026-06-29T17:15:08.092Z"
+  agent: claude-edit-agent
+  approach: recipe-maintenance
 ---
 
 # Edit Result

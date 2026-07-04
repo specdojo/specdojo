@@ -1,8 +1,9 @@
 ---
-id: etc-index
-type: project
-status: draft
-rulebook: etc-index-rulebook
+specdojo:
+  id: etc-index
+  type: project
+  status: draft
+  rulebook: etc-index-rulebook
 ---
 
 # [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル

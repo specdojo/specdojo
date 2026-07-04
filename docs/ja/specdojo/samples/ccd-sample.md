@@ -1,8 +1,9 @@
 ---
-id: ccd
-type: project
-status: draft
-rulebook: ccd-mermaid-rulebook
+specdojo:
+  id: ccd
+  type: project
+  status: draft
+  rulebook: ccd-mermaid-rulebook
 ---
 
 # [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) サンプル

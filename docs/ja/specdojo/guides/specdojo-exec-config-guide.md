@@ -1,7 +1,8 @@
 ---
-id: specdojo-exec-config-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-exec-config-guide
+  type: guide
+  status: draft
 ---
 
 # 実行設定ガイド

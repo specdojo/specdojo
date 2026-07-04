@@ -1,7 +1,8 @@
 ---
-id: sf-index-rules
-type: rulebook
-status: draft
+specdojo:
+  id: sf-index-rules
+  type: rulebook
+  status: draft
 ---
 
 # [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール

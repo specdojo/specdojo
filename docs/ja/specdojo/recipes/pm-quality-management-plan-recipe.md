@@ -1,9 +1,10 @@
 ---
-id: pm-quality-management-plan-recipe
-type: recipe
-status: ready
-rulebook: pm-quality-management-plan-rulebook
-sample: pm-quality-management-plan-sample
+specdojo:
+  id: pm-quality-management-plan-recipe
+  type: recipe
+  status: ready
+  rulebook: pm-quality-management-plan-rulebook
+  sample: pm-quality-management-plan-sample
 ---
 
 # 品質管理計画 作成レシピ

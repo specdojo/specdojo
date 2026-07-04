@@ -1,12 +1,13 @@
 ---
-id: prj-0001:prj-comparison-of-alternatives
-type: project
-status: draft
-rulebook: prj-comparison-of-alternatives-rulebook
-based_on:
-  - prj-0001:prj-scope
-  - prj-0001:prj-issues-and-approach
-supersedes: []
+specdojo:
+  id: prj-0001:prj-comparison-of-alternatives
+  type: project
+  status: draft
+  rulebook: prj-comparison-of-alternatives-rulebook
+  based_on:
+    - prj-0001:prj-scope
+    - prj-0001:prj-issues-and-approach
+  supersedes: []
 ---
 
 # 代替案比較: SpecDojo

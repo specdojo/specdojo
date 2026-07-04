@@ -1,11 +1,12 @@
 ---
-id: prj-overview-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-overview-recipe
-sample: prj-overview-sample
-template: prj-overview-template
+specdojo:
+  id: prj-overview-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-overview-recipe
+  sample: prj-overview-sample
+  template: prj-overview-template
 ---
 
 # プロジェクト概要 作成ルール

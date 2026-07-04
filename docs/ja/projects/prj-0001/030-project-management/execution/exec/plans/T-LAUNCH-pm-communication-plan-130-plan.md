@@ -1,15 +1,16 @@
 ---
-id: prj-0001:xep-t-launch-pm-communication-plan-130
-type: exec-plan
-rulebook: xep-rulebook
-task_id: T-LAUNCH-pm-communication-plan-130
-name: Template 最終調整
-mode: edit
-status: ready
-project_id: prj-0001
-owner: PM
-on_critical_path: true
-approach: template-maintenance
+specdojo:
+  id: prj-0001:xep-t-launch-pm-communication-plan-130
+  type: exec-plan
+  rulebook: xep-rulebook
+  task_id: T-LAUNCH-pm-communication-plan-130
+  name: Template 最終調整
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: PM
+  on_critical_path: true
+  approach: template-maintenance
 ---
 
 # Edit Plan: T-LAUNCH-pm-communication-plan-130

@@ -1,11 +1,12 @@
 ---
-id: prj-0001:pm-quality-management-plan
-type: project
-status: draft
-rulebook: pm-quality-management-plan-rulebook
-based_on:
-  - prj-0001:pm-plan
-supersedes: []
+specdojo:
+  id: prj-0001:pm-quality-management-plan
+  type: project
+  status: draft
+  rulebook: pm-quality-management-plan-rulebook
+  based_on:
+    - prj-0001:pm-plan
+  supersedes: []
 ---
 
 # 品質管理計画

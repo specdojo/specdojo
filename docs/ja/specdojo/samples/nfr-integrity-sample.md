@@ -1,8 +1,9 @@
 ---
-id: nfr-integrity
-type: project
-status: draft
-rulebook: nfr-integrity-rulebook
+specdojo:
+  id: nfr-integrity
+  type: project
+  status: draft
+  rulebook: nfr-integrity-rulebook
 ---
 
 # [非機能要件 / 完全性](../rulebooks/nfr-integrity-rulebook.md) サンプル

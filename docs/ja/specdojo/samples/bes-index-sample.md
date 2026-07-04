@@ -1,8 +1,9 @@
 ---
-id: bes-index
-type: project
-status: draft
-rulebook: bes-index-rulebook
+specdojo:
+  id: bes-index
+  type: project
+  status: draft
+  rulebook: bes-index-rulebook
 ---
 
 # [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル

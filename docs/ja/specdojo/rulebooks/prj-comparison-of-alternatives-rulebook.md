@@ -1,14 +1,15 @@
 ---
-id: prj-comparison-of-alternatives-rulebook
-type: rulebook
-status: ready
-target_format: markdown
-recipe: prj-comparison-of-alternatives-recipe
-sample: prj-comparison-of-alternatives-sample
-template: prj-comparison-of-alternatives-template
-based_on:
-  - rulebook-authoring-standard
-supersedes: []
+specdojo:
+  id: prj-comparison-of-alternatives-rulebook
+  type: rulebook
+  status: ready
+  target_format: markdown
+  recipe: prj-comparison-of-alternatives-recipe
+  sample: prj-comparison-of-alternatives-sample
+  template: prj-comparison-of-alternatives-template
+  based_on:
+    - rulebook-authoring-standard
+  supersedes: []
 ---
 
 # 代替案比較 作成ルール

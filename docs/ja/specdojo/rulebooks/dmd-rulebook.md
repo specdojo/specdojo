@@ -1,7 +1,8 @@
 ---
-id: dmd-rules
-type: rulebook
-status: draft
+specdojo:
+  id: dmd-rules
+  type: rulebook
+  status: draft
 ---
 
 # データ移行設計 作成ルール

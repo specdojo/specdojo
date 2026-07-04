@@ -1,15 +1,17 @@
 ---
-id: pm-raci-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:pm-raci
-  type: project
-  status: ready
-  rulebook: pm-raci-rulebook
-  based_on:
-    - people-and-organization-definition-standard
-    - _PROJECT_ID_:pm-organization
+specdojo:
+  id: pm-raci-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:pm-raci
+      type: project
+      status: ready
+      rulebook: pm-raci-rulebook
+      based_on:
+        - people-and-organization-definition-standard
+        - _PROJECT_ID_:pm-organization
 ---
 
 # RACI

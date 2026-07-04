@@ -1,8 +1,9 @@
 ---
-id: mip-index
-type: project
-status: draft
-rulebook: mip-index-rulebook
+specdojo:
+  id: mip-index
+  type: project
+  status: draft
+  rulebook: mip-index-rulebook
 ---
 
 # 移行計画 サンプル

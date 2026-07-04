@@ -1,7 +1,8 @@
 ---
-id: specdojo-plan-result-lifecycle-guide
-type: guide
-status: draft
+specdojo:
+  id: specdojo-plan-result-lifecycle-guide
+  type: guide
+  status: draft
 ---
 
 # SpecDojo plan/resultライフサイクルガイド

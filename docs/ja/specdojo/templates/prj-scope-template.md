@@ -1,15 +1,17 @@
 ---
-id: prj-scope-template
-type: template
-status: draft
-frontmatter_template:
-  id: _PROJECT_ID_:prj-scope
-  type: project
-  status: ready
-  rulebook: prj-scope-rulebook
-  based_on:
-    - _PROJECT_ID_:prj-overview
-  supersedes: []
+specdojo:
+  id: prj-scope-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:prj-scope
+      type: project
+      status: ready
+      rulebook: prj-scope-rulebook
+      based_on:
+        - _PROJECT_ID_:prj-overview
+      supersedes: []
 ---
 
 # プロジェクトスコープ: _PROJECT_NAME_

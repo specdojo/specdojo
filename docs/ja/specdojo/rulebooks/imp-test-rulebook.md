@@ -1,7 +1,8 @@
 ---
-id: imp-test-rulebook
-type: rulebook
-status: draft
+specdojo:
+  id: imp-test-rulebook
+  type: rulebook
+  status: draft
 ---
 
 # 影響調査（テスト）作成ルール
