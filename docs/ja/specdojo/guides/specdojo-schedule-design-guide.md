@@ -135,7 +135,7 @@ phase_sets:
 | `capabilities` | 必要なツールや能力を示す                 |
 | `proficiency`  | 必要な習熟度を示す                       |
 
-エージェント選択の詳細は [specdojo-exec-strategy-guide.md](specdojo-exec-strategy-guide.md) を参照します。
+エージェント選択の詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
 
 ## 7. exec build時のフェーズ解決
 

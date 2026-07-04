@@ -155,4 +155,4 @@ specdojo build --project prj-0001
 | execを運用する                                       | [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)                     |
 | worktree隔離実行を手動で進める                       | [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md)                       |
 | plan/resultの扱いを確認する                          | [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md)       |
-| エージェント選択と実行設定を変更する                 | [specdojo-exec-strategy-guide.md](specdojo-exec-strategy-guide.md)                       |
+| エージェント選択と実行設定を変更する                 | [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md)                           |

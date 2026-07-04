@@ -194,4 +194,4 @@ AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-d
 | 非クリティカル | skip または block して次へ進む                   |
 | クリティカル   | 次候補 agent へ切り替え、必要に応じて retry する |
 
-provider別の `max_concurrency` や agent 選択は [specdojo-exec-strategy-guide.md](specdojo-exec-strategy-guide.md) を参照します。
+provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。

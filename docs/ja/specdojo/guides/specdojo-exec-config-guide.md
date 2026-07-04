@@ -1,5 +1,5 @@
 ---
-id: specdojo-exec-strategy-guide
+id: specdojo-exec-config-guide
 type: guide
 status: draft
 ---

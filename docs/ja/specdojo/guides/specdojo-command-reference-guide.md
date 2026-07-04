@@ -190,4 +190,4 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | exec運用            | [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)               |
 | worktree隔離実行    | [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md)                 |
 | plan/result         | [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) |
-| エージェント設定    | [specdojo-exec-strategy-guide.md](specdojo-exec-strategy-guide.md)                 |
+| エージェント設定    | [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md)                     |
