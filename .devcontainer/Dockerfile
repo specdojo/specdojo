@@ -4,13 +4,16 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:24-trixie
 
 USER root
 
+ENV TZ=Asia/Tokyo
+
 # mermaid-cli(mmdc) が使う Chromium と、その周辺ライブラリをインストール
 # locales は tmux 等のターミナルで日本語(UTF-8)を正しく表示するために必要
 RUN apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
       chromium \
       fonts-noto-cjk \
       locales \
+      tzdata \
       libnss3 \
       libatk1.0-0 \
       libatk-bridge2.0-0 \
@@ -23,6 +26,10 @@ RUN apt-get update && \
       libasound2 \
       bubblewrap \
     && rm -rf /var/lib/apt/lists/*
+
+# コンテナ全体の既定タイムゾーンを日本時間にする。
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 # 日本語 UTF-8 ロケールを生成する。LANG 未設定だと LC_CTYPE が POSIX になり、
 # tmux が UTF-8 モードにならず日本語(全角)表示が崩れる。
@@ -46,11 +53,6 @@ RUN apt-get update && apt-get install -y \
 # LC_ALL はあえて設定せず、必要に応じてツールごとに上書きできるようにする。
 ENV LANG=ja_JP.UTF-8 \
     LANGUAGE=ja_JP:ja
-
-# Codex / OpenCode
-RUN npm install -g \
-    @openai/codex \
-    opencode-ai
 
 # puppeteer/mermaid-cli に「自前の Chromium を使え」と伝える
 ENV PUPPETEER_SKIP_DOWNLOAD=true \

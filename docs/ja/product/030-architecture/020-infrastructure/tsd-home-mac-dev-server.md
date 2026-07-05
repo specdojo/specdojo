@@ -516,7 +516,7 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
 | `features.copilot-cli`             | GitHub Copilot CLI                                                                       | `copilot` コマンドを devcontainer 内に用意            |
 | `features.claude-code`             | Claude Code                                                                              | `claude` コマンドを devcontainer 内に用意             |
 | `features.apt-packages`            | `tmux` などの補助 CLI                                                                    | 長時間実行、ログ確認、shell 整備                      |
-| `Dockerfile`                       | `@openai/codex` / `opencode-ai` を npm global install                                    | `codex` / `opencode` コマンドを devcontainer 内に用意 |
+| `postCreateCommand`                | `.devcontainer/post-create.sh` で `@openai/codex` / `opencode-ai` を npm global install  | `codex` / `opencode` コマンドを devcontainer 内に用意 |
 | `mounts`                           | `.claude` / `.codex` / `.copilot` / `.config/opencode` / `.config/gh` を named volume 化 | CLI 認証状態をコンテナ再作成後も保持                  |
 | `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                              | devcontainer から Host Mac の LLM API へ接続          |
 | `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                          | VS Code 側の補助機能                                  |

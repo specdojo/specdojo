@@ -242,12 +242,12 @@ limit は provider ごとに種類とリセット周期（reset horizon）が異
 
 外部エージェント CLI はすべて devcontainer 内で使用する。Host Mac や接続元端末にはインストールせず、更新も devcontainer 内で行う。対象と導入方法は次のとおりである。
 
-| CLI                | devcontainer 内の導入方法                        | 実行中コンテナを最新化するコマンド         |
-| ------------------ | ------------------------------------------------ | ------------------------------------------ |
-| Codex              | `.devcontainer/Dockerfile` の npm global install | `sudo npm install -g @openai/codex@latest` |
-| OpenCode           | `.devcontainer/Dockerfile` の npm global install | `sudo npm install -g opencode-ai@latest`   |
-| Claude Code        | `claude-code` Dev Container Feature              | `claude update`                            |
-| GitHub Copilot CLI | `copilot-cli` Dev Container Feature              | `copilot update`                           |
+| CLI                | devcontainer 内の導入方法                            | 実行中コンテナを最新化するコマンド         |
+| ------------------ | ---------------------------------------------------- | ------------------------------------------ |
+| Codex              | `.devcontainer/post-create.sh` の npm global install | `sudo npm install -g @openai/codex@latest` |
+| OpenCode           | `.devcontainer/post-create.sh` の npm global install | `sudo npm install -g opencode-ai@latest`   |
+| Claude Code        | `claude-code` Dev Container Feature                  | `claude update`                            |
+| GitHub Copilot CLI | `copilot-cli` Dev Container Feature                  | `copilot update`                           |
 
 更新コマンドの詳細は、[Codex CLI](https://github.com/openai/codex#installing-and-running-codex-cli)、[OpenCode CLI](https://dev.opencode.ai/docs/cli/)、[Claude Code CLI reference](https://code.claude.com/docs/en/cli-usage)、[GitHub Copilot CLI command reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference) を参照する。
 
@@ -261,7 +261,7 @@ limit は provider ごとに種類とリセット周期（reset horizon）が異
 ssh home-mbp-tmux
 ```
 
-tmux 内で、必要な CLI だけを更新する。Codex と OpenCode は Dockerfile で root により npm global install されるため、`node` ユーザーからは `sudo` を付ける。
+tmux 内で、必要な CLI だけを更新する。Codex と OpenCode は `post-create.sh` で root 権限により npm global install されるため、`node` ユーザーからは `sudo` を付ける。
 
 ```bash
 # Codex / OpenCode
@@ -285,7 +285,7 @@ copilot version
 
 ### 7.2. コンテナ再作成後も維持する更新
 
-7.1 の更新は実行中のコンテナだけに反映される。`Dev Containers: Rebuild Container`、`devcontainer up --remove-existing-container`、Docker Desktop の再作成などでコンテナを作り直すと失われるため、通常は以下の手順で devcontainer image と Feature lockfile を更新する。
+7.1 の更新は実行中のコンテナだけに反映される。`Dev Containers: Rebuild Container`、`devcontainer up --remove-existing-container`、Docker Desktop の再作成などでコンテナを作り直すと失われるため、通常は以下の手順で Feature lockfile を更新し、コンテナ作成時の `post-create.sh` で Codex / OpenCode を再導入する。
 
 接続元端末から Host Mac に SSH 接続し、Host Mac 側で実行する。
 
@@ -299,8 +299,8 @@ devcontainer outdated --workspace-folder .
 # Claude Code / GitHub Copilot CLI を導入する Feature の lockfile を更新する。
 devcontainer upgrade --workspace-folder .
 
-# Dockerfile の npm global install も再実行するため、キャッシュなしで作り直す。
-devcontainer up --workspace-folder . --remove-existing-container --build-no-cache
+# post-create.sh の npm global install も再実行するため、コンテナを作り直す。
+devcontainer up --workspace-folder . --remove-existing-container
 ```
 
 `devcontainer upgrade` は `.devcontainer/devcontainer-lock.json` を変更する。差分を確認し、通常のリポジトリ変更としてレビューしてコミットする。`--remove-existing-container` は devcontainer 内の tmux session を終了させるが、認証・設定を保持する named volume は削除しない。再構築完了後は 7.1 のバージョン確認を行い、`ssh home-mbp-tmux` で tmux session を作り直す。
