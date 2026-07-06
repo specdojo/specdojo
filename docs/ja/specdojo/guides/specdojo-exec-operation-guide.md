@@ -196,3 +196,38 @@ AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-d
 | クリティカル   | 次候補 agent へ切り替え、必要に応じて retry する |
 
 provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
+
+## 10. humanタスクの実行
+
+`execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が直接、最終確認・修正と確定を行います。
+
+plan は `exec build` が自動生成します。対象タスクが Ready になると、`exec build` は未生成の human plan を `exec/plans/<task-id>-plan.md` に作成します。この plan は agent 向けの実行プロトコルを持たず、done_criteria の確認チェックリストと確定手順で構成されます。既存 plan は上書きしません。
+
+実行者に依らず、進捗（Ready・phase gate・CPM）へ反映するため状態イベントを記録します。
+
+```bash
+# 1. plan を生成する（Ready なら build が human plan を作る）
+specdojo exec build --project <project-id>
+
+# 2. claim する
+specdojo exec claim \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "finalize"
+
+# 3. 人が最終確認・修正し、成果物 frontmatter の status を ready に更新する
+#    result の 実施内容 / 変更ファイル に確定判断を記入する
+
+# 4. 完了を記録する
+specdojo exec complete \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --msg "finalized"
+
+# 5. 次の Ready を更新する
+specdojo exec build --project <project-id>
+```
+
+成果物の `status` を `ready` に昇格できるのは人だけです。エージェント実行では、`ready` へ昇格させるコミットは exec のガードで拒否されます。

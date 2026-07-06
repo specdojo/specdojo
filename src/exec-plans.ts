@@ -27,6 +27,10 @@ import type { RoleDefinition, RolesDoc } from "./role-types.js";
 
 type PlanTask = ReadyTaskView & { mode: TaskMode };
 
+// Execution owner of a task: an AI agent (default) or a human. Human tasks (e.g. finalize)
+// get a confirm/finalize plan instead of the agent execution protocol.
+type TaskExecution = "agent" | "human";
+
 type DeliverableInfo = {
   deliverable: DctDeliverableItem;
   resolvedPath: string;
@@ -221,6 +225,11 @@ const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = "xrr-viewpoint-detail-template.m
 // stdin), so cross-tool rules must travel with the plan rather than tool-specific instruction
 // files. Kept as a single fragment to avoid duplicating the rule across every plan template.
 const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
+// Conventions fragment for execution: human plans. Keeps the executor-agnostic rules (link
+// notation, result recording) but inverts the status-promotion rule (a human finalizing the
+// deliverable is the one who promotes status to "ready") and drops the agent-only protocol
+// (exit codes, runner block hand-off, automatic lint/test execution).
+const HUMAN_CONVENTIONS_TEMPLATE = "xep-human-conventions-template.md";
 
 function templatesDir(): string {
   return join(specdojoRootDir(), "docs/ja/specdojo/templates");
@@ -238,9 +247,20 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
   return `${templatePrefix(mode)}-${approach}-template.md`;
 }
 
-// Selects <prefix>-<approach>-template.md when it exists, otherwise falls back
-// to the standard <prefix>-template.md (xep-template.md / xrp-template.md).
-function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
+// Selects the template for a task. execution: human takes priority with
+// <prefix>-human-template.md (a confirm/finalize checklist without the agent
+// execution protocol); otherwise selects <prefix>-<approach>-template.md when it
+// exists, falling back to the standard <prefix>-template.md. Any missing variant
+// falls through to the next candidate so a plan is always produced.
+function resolvePlanTemplatePath(
+  mode: TaskMode,
+  approach: Approach | undefined,
+  execution: TaskExecution,
+): string {
+  if (execution === "human") {
+    const humanPath = join(templatesDir(), `${templatePrefix(mode)}-human-template.md`);
+    if (existsSync(humanPath)) return humanPath;
+  }
   if (approach) {
     const candidatePath = join(templatesDir(), approachTemplateFileName(mode, approach));
     if (existsSync(candidatePath)) return candidatePath;
@@ -262,9 +282,10 @@ function readTemplate(templatePath: string, cache: Map<string, string>): string 
 function loadPlanTemplate(
   mode: TaskMode,
   approach: Approach | undefined,
+  execution: TaskExecution,
   cache: Map<string, string>,
 ): string {
-  return readTemplate(resolvePlanTemplatePath(mode, approach), cache);
+  return readTemplate(resolvePlanTemplatePath(mode, approach, execution), cache);
 }
 
 function loadViewpointDetailTemplate(cache: Map<string, string>): string {
@@ -287,12 +308,12 @@ const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 function injectCommonConventions(
   body: string,
   schemaRef: string,
+  execution: TaskExecution,
   cache: Map<string, string>,
 ): string {
-  let conventions = readTemplate(
-    join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE),
-    cache,
-  ).trimEnd();
+  const conventionsTemplate =
+    execution === "human" ? HUMAN_CONVENTIONS_TEMPLATE : COMMON_CONVENTIONS_TEMPLATE;
+  let conventions = readTemplate(join(templatesDir(), conventionsTemplate), cache).trimEnd();
   conventions =
     schemaRef === MISSING
       ? conventions
@@ -360,6 +381,14 @@ function doneCriteriaGoals(criteria: CriteriaItem[], owner: string | undefined):
     for (const c of downstream) lines.push(`- [${c.roles.join(", ")}] ${c.text}`);
   }
   return lines.join("\n");
+}
+
+// done_criteria を人間の最終確認用チェックリストに整形する。owner/下流の分割はせず、
+// 各項目を `- [ ] <text>` の素のチェック項目にする（human finalize は多観点の作り込みでは
+// なく、完成版が done_criteria を満たすかの確認が目的のため）。criteria が空なら MISSING。
+function doneCriteriaChecklist(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) return MISSING;
+  return criteria.map((c) => `- [ ] ${c.text}`).join("\n");
 }
 
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
@@ -539,6 +568,7 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
     _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
+    _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
   };
   return expandTemplate(template, values);
 }
@@ -633,8 +663,9 @@ async function writeTaskPlan(
   const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${stem}-result.md`;
   const outPath = override?.outPath ?? join(ctx.plansDir, `${stem}-plan.md`);
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
+  const execution: TaskExecution = task.execution ?? "agent";
   const planTask: PlanTask = { ...task, mode };
-  const template = loadPlanTemplate(mode, task.approach, ctx.templateCache);
+  const template = loadPlanTemplate(mode, task.approach, execution, ctx.templateCache);
 
   const body =
     mode === "review"
@@ -664,7 +695,7 @@ async function writeTaskPlan(
     deliverable?.deliverable.rulebook,
     deliverable?.deliverable.local_id,
   );
-  const content = injectCommonConventions(body, schemaRef, ctx.templateCache);
+  const content = injectCommonConventions(body, schemaRef, execution, ctx.templateCache);
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);
@@ -693,6 +724,31 @@ export async function generateSinglePlan(opts: {
         }
       : undefined;
   return await writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? "edit" }, override);
+}
+
+// Generate plans for the Ready tasks that require human execution (e.g. finalize). Agent tasks
+// get their plan at `exec run` time, but human tasks are never launched by the runner, so nothing
+// else produces their plan; `exec build` calls this so a human plan appears as soon as the task is
+// Ready. An existing plan is left untouched to preserve any manual edits. Returns the generated
+// plan paths (sorted) for reporting; tasks in reproducible schedule order for deterministic output.
+export async function generateReadyHumanPlans(opts: {
+  executionPath: string;
+  projectId: string;
+  catalogPath: string;
+  rolesPath?: string;
+  viewpointsPath?: string;
+  tasks: ReadyTaskView[];
+}): Promise<string[]> {
+  const ctx = newPlanGenContext(opts);
+  const generated: string[] = [];
+  for (const task of opts.tasks) {
+    if ((task.execution ?? "agent") !== "human") continue;
+    const planPath = planPathForTask(opts.executionPath, task.id);
+    if (existsSync(planPath)) continue;
+    await writeTaskPlan(ctx, { ...task, mode: task.mode ?? "edit" });
+    generated.push(planPath);
+  }
+  return generated.sort();
 }
 
 // Generate a plan directly from a catalog deliverable, independent of the

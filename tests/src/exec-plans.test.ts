@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
   buildInPlaceStem,
+  generateReadyHumanPlans,
   generateSinglePlan,
   ownerRoleFields,
   reviewResultSections,
@@ -560,6 +561,120 @@ describe("generateSinglePlan", () => {
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| RVP-001 |");
       expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| RVP-001 |");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("execution: human plans", () => {
+  function writeCatalog(catalogPath: string): void {
+    mkdirSync(catalogPath, { recursive: true });
+    writeFileSync(
+      join(catalogPath, "dct-test.yaml"),
+      [
+        "id: test:dct",
+        "type: project",
+        "status: draft",
+        "project_id: test",
+        "domain: test",
+        "base_path: /docs/test",
+        "groups:",
+        "  - deliverables:",
+        "      - local_id: overview",
+        "        name: Overview",
+        "        kind: work",
+        "        overview: Test overview",
+        "        path: overview.md",
+        "        done_criteria:",
+        "          - text: Business value is clear",
+        "            roles: [BA]",
+        "            viewpoint: vp-ba-business-value",
+      ].join("\n"),
+    );
+  }
+
+  it("human finalize タスクの plan は確認チェックリストと人手確定手順を持ち agent 実行プロトコルを含まない", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-140",
+          local_id: "overview",
+          name: "完成版確定",
+          owner: "BA",
+          mode: "edit",
+          execution: "human",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      // human テンプレートが選択される（agent 向け edit テンプレートの見出しではない）。
+      expect(plan).toContain("# Finalize Plan: T-TEST-overview-140");
+      expect(plan).toContain("## 3. 最終確認チェックリスト");
+      // done_criteria はチェックリスト（- [ ]）として提示し、owner/下流の分割はしない。
+      expect(plan).toContain("- [ ] Business value is clear");
+      expect(plan).not.toContain("owner として達成する狙い");
+      // status を ready にすることが完了条件（human 用 conventions が注入される）。
+      expect(plan).toContain("`status` を `ready` に更新することが、この確定タスクの完了条件");
+      // agent 実行プロトコル（異常終了・終了コード・runner 申し送り）は載せない。
+      expect(plan).not.toContain("異常終了の条件");
+      expect(plan).not.toContain("終了コード");
+      expect(plan).not.toContain("runner");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("generateReadyHumanPlans は human タスクのみ生成し agent タスクと既存 plan には触れない", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    const plansDir = join(executionPath, "exec", "plans");
+
+    try {
+      writeCatalog(catalogPath);
+      mkdirSync(plansDir, { recursive: true });
+      // 既存の human plan（着手済み想定）は上書きしない。
+      writeFileSync(join(plansDir, "T-TEST-overview-140-plan.md"), "keep me\n", "utf8");
+
+      const base = {
+        id: "",
+        local_id: "overview",
+        mode: "edit" as const,
+        schedule_file: "sch-track-test.yaml",
+        fifo_rank: 0,
+        critical_first_rank: 0,
+      };
+      const generated = await generateReadyHumanPlans({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        tasks: [
+          { ...base, id: "T-TEST-overview-010", execution: "agent" },
+          { ...base, id: "T-TEST-overview-140", execution: "human", owner: "BA" },
+          { ...base, id: "T-TEST-overview-141", execution: "human", owner: "BA" },
+        ],
+      });
+
+      // agent タスクの plan は生成されない。
+      expect(existsSync(join(plansDir, "T-TEST-overview-010-plan.md"))).toBe(false);
+      // 既存の human plan は上書きされず、生成対象にも含まれない。
+      expect(readFileSync(join(plansDir, "T-TEST-overview-140-plan.md"), "utf8")).toBe("keep me\n");
+      // 未生成の human タスクだけが新規生成される。
+      expect(generated).toEqual([join(plansDir, "T-TEST-overview-141-plan.md")]);
+      expect(existsSync(join(plansDir, "T-TEST-overview-141-plan.md"))).toBe(true);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

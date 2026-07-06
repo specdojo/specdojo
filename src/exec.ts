@@ -65,6 +65,7 @@ import {
   archivePlan,
   buildInPlaceStem,
   generateDeliverablePlan,
+  generateReadyHumanPlans,
   generateSinglePlan,
   resolveDeliverableTarget,
   reviewResultSectionsForDeliverable,
@@ -755,9 +756,10 @@ export function registerExecCommands(program: Command): void {
 
   const bcmd = exec.command("build").description("Generate all files under generated/");
   addProjectOptions(bcmd);
-  bcmd.action((opts) => {
+  bcmd.action(async (opts) => {
     try {
-      const { schedulePath } = resolveProjectContext(opts);
+      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
+        resolveProjectContext(opts);
 
       const res = validateAll(schedulePath);
       printValidateResult(res);
@@ -770,10 +772,28 @@ export function registerExecCommands(program: Command): void {
       const events = readAllEventFiles(schedulePath);
       const cpm = computeCpm(schedule, schedulePath);
 
-      // Plans are generated on demand by `exec plan` / `exec run`, not by build.
+      // Agent task plans are generated on demand by `exec plan` / `exec run`. Human tasks are never
+      // launched by the runner, so build generates their plans from the freshly-written ready.json
+      // (execution already resolved there) so a finalize plan appears as soon as the task is Ready.
       const snapshot = writeGeneratedCore(schedulePath, events, schedule, cpm);
       writeScheduleHashAndDiff(schedulePath, schedule);
       writeCpmFiles(schedulePath, cpm, snapshot);
+
+      const readyJsonPath = join(generatedDirForProject(schedulePath), "ready.json");
+      if (existsSync(readyJsonPath)) {
+        const readySnapshot = readJson(readyJsonPath) as ReadySnapshot;
+        const humanPlans = await generateReadyHumanPlans({
+          executionPath,
+          projectId: resolveProjectId(opts),
+          catalogPath: catalogPath ?? "",
+          rolesPath,
+          viewpointsPath,
+          tasks: readySnapshot.tasks,
+        });
+        for (const planPath of humanPlans) {
+          process.stdout.write(`Generated human plan: ${planPath}\n`);
+        }
+      }
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`);
       exitWithCode(true);
