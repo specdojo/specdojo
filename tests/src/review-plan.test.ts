@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { resolve } from "node:path";
-import { expandViewpointsDoc } from "../../src/review-plan.js";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import yaml from "js-yaml";
+import { expandViewpointsDoc, scaffoldViewpoints } from "../../src/review-plan.js";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 
 const TEMPLATE_PATH = "docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml";
@@ -25,6 +28,69 @@ describe("expandViewpointsDoc", () => {
     const doc = expandViewpointsDoc(resolve(TEMPLATE_PATH), "prj-0001");
     expect(doc).toHaveProperty("categories");
     expect(doc).toHaveProperty("viewpoints");
+  });
+});
+
+describe("scaffoldViewpoints", () => {
+  function withTempDir<T>(fn: (dir: string) => T): T {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      return fn(dir);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+
+  it("出力先が存在しない場合は中間ディレクトリごと作成して書き込む", () => {
+    withTempDir((dir) => {
+      const outputPath = join(dir, "nested", "pm-review-viewpoints.yaml");
+
+      const actual = scaffoldViewpoints({
+        templatePath: resolve(TEMPLATE_PATH),
+        projectId: "prj-0001",
+        outputPath,
+        force: false,
+      });
+
+      expect(actual).toEqual({ written: true, skipped: false });
+      const doc = yaml.load(readFileSync(outputPath, "utf8")) as Record<string, unknown>;
+      expect(doc.id).toBe("prj-0001:pm-review-viewpoints");
+    });
+  });
+
+  it("出力先が既存かつ force なしの場合は skip して上書きしない", () => {
+    withTempDir((dir) => {
+      const outputPath = join(dir, "pm-review-viewpoints.yaml");
+      writeFileSync(outputPath, "existing: true\n", "utf8");
+
+      const actual = scaffoldViewpoints({
+        templatePath: resolve(TEMPLATE_PATH),
+        projectId: "prj-0001",
+        outputPath,
+        force: false,
+      });
+
+      expect(actual).toEqual({ written: false, skipped: true });
+      expect(readFileSync(outputPath, "utf8")).toBe("existing: true\n");
+    });
+  });
+
+  it("出力先が既存でも force ありの場合は上書きする", () => {
+    withTempDir((dir) => {
+      const outputPath = join(dir, "pm-review-viewpoints.yaml");
+      writeFileSync(outputPath, "existing: true\n", "utf8");
+
+      const actual = scaffoldViewpoints({
+        templatePath: resolve(TEMPLATE_PATH),
+        projectId: "prj-0001",
+        outputPath,
+        force: true,
+      });
+
+      expect(actual).toEqual({ written: true, skipped: false });
+      const doc = yaml.load(readFileSync(outputPath, "utf8")) as Record<string, unknown>;
+      expect(doc.project_id).toBe("prj-0001");
+    });
   });
 });
 
