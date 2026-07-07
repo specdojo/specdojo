@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-25T15:10:25.155Z"
   agent: codex-expert-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-communication-plan
 ---
 
 ## 1. 実施内容

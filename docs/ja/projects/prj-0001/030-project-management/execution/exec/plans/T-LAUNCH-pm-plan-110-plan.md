@@ -11,6 +11,9 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-plan
+    - pm-plan-rulebook
 ---
 
 # Edit Plan: T-LAUNCH-pm-plan-110

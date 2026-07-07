@@ -10,6 +10,12 @@ specdojo:
   started_at: "2026-06-25T12:25:22.402Z"
   completed_at: "2026-06-25T14:26:26.329Z"
   agent: codex-expert-edit-agent
+  targets:
+    - prj-0001:pm-plan
+    - pm-plan-rulebook
+    - pm-plan-recipe
+    - pm-plan-sample
+    - pm-plan-template
 ---
 
 ## 1. 実施内容

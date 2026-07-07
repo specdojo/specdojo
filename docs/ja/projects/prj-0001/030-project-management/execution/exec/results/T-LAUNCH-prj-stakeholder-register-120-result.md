@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T15:28:11.365Z"
   agent: opencode-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-sample
 ---
 
 # Edit Result

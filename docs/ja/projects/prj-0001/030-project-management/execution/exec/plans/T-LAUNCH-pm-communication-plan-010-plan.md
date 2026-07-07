@@ -1,15 +1,21 @@
 ---
 specdojo:
-  id: xep-t-launch-pm-communication-plan-010
+  id: prj-0001:xep-t-launch-pm-communication-plan-010
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-pm-communication-plan-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: PM
   approach: bootstrap
+  targets:
+    - prj-0001:pm-communication-plan
+    - pm-communication-plan-rulebook
+    - pm-communication-plan-recipe
+    - pm-communication-plan-sample
+    - pm-communication-plan-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-communication-plan-010

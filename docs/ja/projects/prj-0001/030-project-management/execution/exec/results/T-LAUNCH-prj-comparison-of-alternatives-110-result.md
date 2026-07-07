@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T14:33:56.303Z"
   agent: claude-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-rulebook
 ---
 
 # Edit Result

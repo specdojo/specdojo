@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T13:00:05.185Z"
   agent: opencode-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-organization
 ---
 
 ## 1. 実施内容

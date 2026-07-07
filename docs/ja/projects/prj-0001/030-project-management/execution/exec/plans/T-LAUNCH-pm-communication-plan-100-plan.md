@@ -11,6 +11,9 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: recipe-maintenance
+  targets:
+    - prj-0001:pm-communication-plan
+    - pm-communication-plan-recipe
 ---
 
 # Edit Plan: T-LAUNCH-pm-communication-plan-100

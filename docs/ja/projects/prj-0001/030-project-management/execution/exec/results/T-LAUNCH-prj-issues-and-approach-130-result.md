@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T15:46:34.460Z"
   agent: opencode-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-template
 ---
 
 # Edit Result

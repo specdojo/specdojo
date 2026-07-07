@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-02T12:29:48.086Z"
   agent: claude-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - pm-quality-management-plan-template
 ---
 
 # Edit Result

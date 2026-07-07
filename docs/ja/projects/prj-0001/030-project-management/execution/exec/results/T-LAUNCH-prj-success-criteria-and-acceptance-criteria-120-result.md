@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T15:14:12.373Z"
   agent: codex-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-sample
 ---
 
 # Edit Result

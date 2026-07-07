@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T14:00:07.564Z"
   agent: claude-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-rulebook
 ---
 
 # Edit Result

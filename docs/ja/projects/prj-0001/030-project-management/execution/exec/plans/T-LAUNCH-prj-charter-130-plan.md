@@ -11,6 +11,9 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-charter
+    - prj-charter-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-charter-130

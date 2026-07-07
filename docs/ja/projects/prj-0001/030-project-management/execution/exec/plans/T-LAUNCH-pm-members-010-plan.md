@@ -10,6 +10,12 @@ specdojo:
   project_id: prj-0001
   owner: PO
   approach: bootstrap
+  targets:
+    - prj-0001:pm-members
+    - pm-members-rulebook
+    - pm-members-recipe
+    - pm-members-sample
+    - pm-members-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-members-010

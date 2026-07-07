@@ -11,6 +11,9 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-comparison-of-alternatives-130

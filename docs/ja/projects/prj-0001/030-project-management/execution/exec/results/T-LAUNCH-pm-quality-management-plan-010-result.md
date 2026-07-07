@@ -10,6 +10,12 @@ specdojo:
   started_at: "2026-06-25T14:38:12.171Z"
   completed_at: "2026-06-25T14:51:44.960Z"
   agent: codex-expert-edit-agent
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - pm-quality-management-plan-rulebook
+    - pm-quality-management-plan-recipe
+    - pm-quality-management-plan-sample
+    - pm-quality-management-plan-template
 ---
 
 ## 1. 実施内容

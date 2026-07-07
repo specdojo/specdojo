@@ -11,6 +11,8 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-070-I01

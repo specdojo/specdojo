@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:23:10.362Z"
   agent: opencode-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:pm-communication-plan
+    - pm-communication-plan-sample
 ---
 
 # Edit Result

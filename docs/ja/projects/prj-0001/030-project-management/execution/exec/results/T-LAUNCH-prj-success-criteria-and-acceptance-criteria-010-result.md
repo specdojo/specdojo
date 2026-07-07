@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-24T15:02:03.195Z"
   agent: codex-expert-edit-agent
   approach: bootstrap
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-rulebook
+    - prj-success-criteria-and-acceptance-criteria-recipe
+    - prj-success-criteria-and-acceptance-criteria-sample
+    - prj-success-criteria-and-acceptance-criteria-template
 ---
 
 ## 1. 実施内容

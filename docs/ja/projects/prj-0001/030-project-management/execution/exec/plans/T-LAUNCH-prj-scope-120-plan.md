@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-120

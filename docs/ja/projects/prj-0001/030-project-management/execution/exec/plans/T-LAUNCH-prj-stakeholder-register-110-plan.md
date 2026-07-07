@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-rulebook
 ---
 
 # Edit Plan: T-LAUNCH-prj-stakeholder-register-110

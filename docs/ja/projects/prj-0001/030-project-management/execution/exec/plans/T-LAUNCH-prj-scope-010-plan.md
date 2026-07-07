@@ -10,6 +10,12 @@ specdojo:
   project_id: prj-0001
   owner: BA
   approach: bootstrap
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-rulebook
+    - prj-scope-recipe
+    - prj-scope-sample
+    - prj-scope-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-010

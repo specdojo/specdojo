@@ -11,6 +11,9 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-comparison-of-alternatives-120

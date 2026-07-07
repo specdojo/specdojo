@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120

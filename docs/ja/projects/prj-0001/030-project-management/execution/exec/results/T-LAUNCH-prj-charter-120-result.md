@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T18:39:41.240Z"
   agent: codex-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-charter
+    - prj-charter-sample
 ---
 
 # Edit Result

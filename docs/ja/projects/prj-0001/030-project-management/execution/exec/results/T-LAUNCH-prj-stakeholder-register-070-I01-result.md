@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T13:00:01.794Z"
   agent: codex-expert-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-stakeholder-register
 ---
 
 # Edit Result

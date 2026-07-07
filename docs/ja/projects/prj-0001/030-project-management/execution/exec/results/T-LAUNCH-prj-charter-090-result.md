@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T15:40:02.177Z"
   agent: claude-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-charter
 ---
 
 # Review Result

@@ -24,6 +24,7 @@ properties:
       - project_id
       - plan_ref
       - started_at
+      - targets
     properties:
       id:
         type: string

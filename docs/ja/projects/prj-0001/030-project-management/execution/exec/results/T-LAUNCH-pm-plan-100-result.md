@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T16:31:14.203Z"
   agent: claude-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:pm-plan
+    - pm-plan-recipe
 ---
 
 # Edit Result

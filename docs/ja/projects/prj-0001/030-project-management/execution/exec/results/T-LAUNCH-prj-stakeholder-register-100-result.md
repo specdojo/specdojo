@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:15:08.092Z"
   agent: claude-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-recipe
 ---
 
 # Edit Result

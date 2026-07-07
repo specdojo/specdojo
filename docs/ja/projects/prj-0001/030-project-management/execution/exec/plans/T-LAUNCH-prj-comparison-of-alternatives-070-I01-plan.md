@@ -11,6 +11,8 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
 ---
 
 # Edit Plan: T-LAUNCH-prj-comparison-of-alternatives-070-I01

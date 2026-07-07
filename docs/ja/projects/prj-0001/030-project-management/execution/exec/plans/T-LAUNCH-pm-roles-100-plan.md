@@ -11,6 +11,9 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: recipe-maintenance
+  targets:
+    - prj-0001:pm-roles
+    - pm-roles-recipe
 ---
 
 # Edit Plan: T-LAUNCH-pm-roles-100

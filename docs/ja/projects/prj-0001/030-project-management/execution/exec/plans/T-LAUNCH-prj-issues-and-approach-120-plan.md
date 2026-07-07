@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-issues-and-approach-120

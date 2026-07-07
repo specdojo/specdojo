@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T13:02:31.421Z"
   agent: codex-expert-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-plan
 ---
 
 # Edit Result

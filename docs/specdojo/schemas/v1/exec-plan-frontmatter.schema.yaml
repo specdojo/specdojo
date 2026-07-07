@@ -20,6 +20,7 @@ properties:
       - mode
       - status
       - project_id
+      - targets
     properties:
       id:
         type: string

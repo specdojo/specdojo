@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T18:34:32.437Z"
   agent: opencode-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:pm-organization
+    - pm-organization-sample
 ---
 
 # Edit Result

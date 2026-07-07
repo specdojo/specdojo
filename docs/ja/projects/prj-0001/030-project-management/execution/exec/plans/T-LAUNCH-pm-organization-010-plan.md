@@ -1,15 +1,21 @@
 ---
 specdojo:
-  id: xep-t-launch-pm-organization-010
+  id: prj-0001:xep-t-launch-pm-organization-010
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-pm-organization-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: PO
   approach: bootstrap
+  targets:
+    - prj-0001:pm-organization
+    - pm-organization-rulebook
+    - pm-organization-recipe
+    - pm-organization-sample
+    - pm-organization-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-organization-010

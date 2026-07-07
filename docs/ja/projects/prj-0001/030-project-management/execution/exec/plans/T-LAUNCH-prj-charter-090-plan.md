@@ -11,6 +11,8 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-charter
 ---
 
 # Review Plan: T-LAUNCH-prj-charter-090

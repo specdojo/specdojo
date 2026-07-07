@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-recipe
 ---
 
 # Edit Plan: T-LAUNCH-prj-stakeholder-register-100

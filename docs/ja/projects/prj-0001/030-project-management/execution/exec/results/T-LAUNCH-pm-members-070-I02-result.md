@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T14:22:40.857Z"
   agent: opencode-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-members
 ---
 
 # Edit Result

@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T15:08:27.995Z"
   agent: claude-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-sample
 ---
 
 # Edit Result

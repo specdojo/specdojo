@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-130

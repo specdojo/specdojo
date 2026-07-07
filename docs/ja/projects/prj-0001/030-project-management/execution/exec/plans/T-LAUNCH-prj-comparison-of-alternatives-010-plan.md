@@ -1,15 +1,21 @@
 ---
 specdojo:
-  id: xep-t-launch-prj-comparison-of-alternatives-010
+  id: prj-0001:xep-t-launch-prj-comparison-of-alternatives-010
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-prj-comparison-of-alternatives-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: ARC
   approach: bootstrap
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-rulebook
+    - prj-comparison-of-alternatives-recipe
+    - prj-comparison-of-alternatives-sample
+    - prj-comparison-of-alternatives-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-comparison-of-alternatives-010

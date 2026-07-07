@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T14:50:25.658Z"
   agent: claude-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:pm-roles
+    - pm-roles-sample
 ---
 
 # Edit Result

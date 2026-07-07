@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T15:52:55.261Z"
   agent: codex-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-issues-and-approach
 ---
 
 # Review Result

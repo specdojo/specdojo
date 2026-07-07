@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T15:39:18.850Z"
   agent: codex-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
 ---
 
 # Review Result

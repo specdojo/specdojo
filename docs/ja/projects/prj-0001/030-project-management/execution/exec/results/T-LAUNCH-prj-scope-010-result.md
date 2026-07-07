@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-27T07:11:17.488Z"
   agent: opencode-edit-agent
   approach: bootstrap
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-rulebook
+    - prj-scope-recipe
+    - prj-scope-sample
+    - prj-scope-template
 ---
 
 ## 1. 実施内容

@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T14:24:37.400Z"
   agent: codex-expert-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-quality-management-plan
 ---
 
 # Edit Result

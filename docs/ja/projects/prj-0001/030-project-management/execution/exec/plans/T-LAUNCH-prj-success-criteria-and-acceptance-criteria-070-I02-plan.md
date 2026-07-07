@@ -11,6 +11,8 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-070-I02

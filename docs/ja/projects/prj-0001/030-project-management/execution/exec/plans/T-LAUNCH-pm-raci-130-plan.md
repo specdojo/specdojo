@@ -11,6 +11,9 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-raci
+    - pm-raci-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-raci-130

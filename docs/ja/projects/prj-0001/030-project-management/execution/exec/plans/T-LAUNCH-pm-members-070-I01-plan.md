@@ -1,16 +1,18 @@
 ---
 specdojo:
-  id: xep-t-launch-pm-members-070-i01
+  id: prj-0001:xep-t-launch-pm-members-070-i01
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-pm-members-070-I01
   name: 磨き込み
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: PO
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:pm-members
 ---
 
 # Edit Plan: T-LAUNCH-pm-members-070-I01

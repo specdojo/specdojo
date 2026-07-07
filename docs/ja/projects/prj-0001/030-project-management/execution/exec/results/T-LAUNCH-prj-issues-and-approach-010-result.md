@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-28T03:38:38.269Z"
   agent: codex-expert-edit-agent
   approach: bootstrap
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-rulebook
+    - prj-issues-and-approach-recipe
+    - prj-issues-and-approach-sample
+    - prj-issues-and-approach-template
 ---
 
 # Edit Result

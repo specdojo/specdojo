@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:11:35.875Z"
   agent: opencode-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-recipe
 ---
 
 # Edit Result

@@ -11,6 +11,8 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:pm-organization
 ---
 
 # Edit Plan: T-LAUNCH-pm-organization-070-I02

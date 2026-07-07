@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T16:03:40.436Z"
   agent: opencode-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
 ---
 
 # Review Result

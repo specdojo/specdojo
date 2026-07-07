@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T18:23:04.903Z"
   agent: opencode-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-rulebook
 ---
 
 # Edit Result

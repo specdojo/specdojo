@@ -11,6 +11,8 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:pm-quality-management-plan
 ---
 
 # Edit Plan: T-LAUNCH-pm-quality-management-plan-080-I02

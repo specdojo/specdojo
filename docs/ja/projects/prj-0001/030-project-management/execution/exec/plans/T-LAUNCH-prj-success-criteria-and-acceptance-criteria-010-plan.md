@@ -1,15 +1,21 @@
 ---
 specdojo:
-  id: xep-t-launch-prj-success-criteria-and-acceptance-criteria-010
+  id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-010
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: BA
   approach: bootstrap
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-rulebook
+    - prj-success-criteria-and-acceptance-criteria-recipe
+    - prj-success-criteria-and-acceptance-criteria-sample
+    - prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010

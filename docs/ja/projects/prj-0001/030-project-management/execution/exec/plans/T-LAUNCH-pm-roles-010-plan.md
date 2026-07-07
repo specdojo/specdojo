@@ -10,6 +10,12 @@ specdojo:
   project_id: prj-0001
   owner: PO
   approach: bootstrap
+  targets:
+    - prj-0001:pm-roles
+    - pm-roles-rulebook
+    - pm-roles-recipe
+    - pm-roles-sample
+    - pm-roles-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-roles-010

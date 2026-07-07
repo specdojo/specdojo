@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:59:09.051Z"
   agent: opencode-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-template
 ---
 
 # Edit Result

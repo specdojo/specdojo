@@ -11,6 +11,9 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-roles
+    - pm-roles-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-roles-130

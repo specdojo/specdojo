@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:47:50.871Z"
   agent: opencode-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-raci
+    - pm-raci-template
 ---
 
 # Edit Result

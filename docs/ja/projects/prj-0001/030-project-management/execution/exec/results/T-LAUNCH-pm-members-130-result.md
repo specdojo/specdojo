@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:31:29.208Z"
   agent: codex-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-members
+    - pm-members-template
 ---
 
 # Edit Result

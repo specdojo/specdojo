@@ -10,6 +10,12 @@ specdojo:
   started_at: "2026-06-25T14:26:30.923Z"
   completed_at: "2026-06-25T14:38:07.510Z"
   agent: codex-expert-edit-agent
+  targets:
+    - prj-0001:pm-communication-plan
+    - pm-communication-plan-rulebook
+    - pm-communication-plan-recipe
+    - pm-communication-plan-sample
+    - pm-communication-plan-template
 ---
 
 ## 1. 実施内容

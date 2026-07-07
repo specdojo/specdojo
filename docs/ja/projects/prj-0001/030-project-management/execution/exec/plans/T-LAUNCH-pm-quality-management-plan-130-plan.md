@@ -11,6 +11,9 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - pm-quality-management-plan-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-quality-management-plan-130

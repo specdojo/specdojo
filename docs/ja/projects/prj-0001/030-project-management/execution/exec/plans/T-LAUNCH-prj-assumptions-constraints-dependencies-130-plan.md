@@ -11,6 +11,9 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-130

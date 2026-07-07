@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T16:05:15.242Z"
   agent: codex-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
 ---
 
 # Review Result

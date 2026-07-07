@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T14:56:51.106Z"
   agent: claude-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - pm-quality-management-plan-sample
 ---
 
 # Edit Result

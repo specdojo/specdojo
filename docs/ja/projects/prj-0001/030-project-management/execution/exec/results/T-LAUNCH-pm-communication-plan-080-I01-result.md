@@ -10,6 +10,8 @@ specdojo:
   started_at: "2026-06-28T00:37:03.892Z"
   agent: opencode-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-communication-plan
 ---
 
 # Edit Result

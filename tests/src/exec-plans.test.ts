@@ -848,11 +848,17 @@ describe("execution: human plans", () => {
       expect(targetDocIdsForDeliverable(catalogPath, "overview", "test", "fully-guided")).toEqual([
         "test:overview",
       ]);
-      // 成果物を解決できない場合は undefined。
+      // targets は必須項目のため、catalog で解決できなくても成果物の doc id へフォールバックする。
+      expect(targetDocIdsForDeliverable(catalogPath, "missing", "test", "finalize")).toEqual([
+        "test:missing",
+      ]);
+      expect(targetDocIdsForDeliverable("", "overview", "test", "finalize")).toEqual([
+        "test:overview",
+      ]);
+      // localId 不明の場合のみ undefined。
       expect(
-        targetDocIdsForDeliverable(catalogPath, "missing", "test", "finalize"),
+        targetDocIdsForDeliverable(catalogPath, undefined, "test", "finalize"),
       ).toBeUndefined();
-      expect(targetDocIdsForDeliverable("", "overview", "test", "finalize")).toBeUndefined();
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

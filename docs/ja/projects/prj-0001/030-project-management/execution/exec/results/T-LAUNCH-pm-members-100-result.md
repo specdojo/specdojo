@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T13:54:43.964Z"
   agent: opencode-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:pm-members
+    - pm-members-recipe
 ---
 
 # Edit Result

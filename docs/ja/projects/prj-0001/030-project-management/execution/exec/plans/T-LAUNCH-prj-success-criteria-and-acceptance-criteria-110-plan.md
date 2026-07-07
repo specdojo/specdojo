@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-rulebook
 ---
 
 # Edit Plan: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110

@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T15:22:04.685Z"
   agent: codex-expert-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-communication-plan
 ---
 
 # Review Result

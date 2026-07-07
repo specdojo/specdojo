@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T15:50:35.118Z"
   agent: opencode-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-roles
 ---
 
 # Review Result

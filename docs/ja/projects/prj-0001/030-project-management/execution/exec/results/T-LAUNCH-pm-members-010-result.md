@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-28T04:26:58.581Z"
   agent: codex-expert-edit-agent
   approach: bootstrap
+  targets:
+    - prj-0001:pm-members
+    - pm-members-rulebook
+    - pm-members-recipe
+    - pm-members-sample
+    - pm-members-template
 ---
 
 # Edit Result

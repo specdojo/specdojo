@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:00:57.582Z"
   agent: claude-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-recipe
 ---
 
 # Edit Result

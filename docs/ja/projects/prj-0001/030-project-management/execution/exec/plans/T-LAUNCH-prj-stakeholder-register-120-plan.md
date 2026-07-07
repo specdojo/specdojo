@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-stakeholder-register-120

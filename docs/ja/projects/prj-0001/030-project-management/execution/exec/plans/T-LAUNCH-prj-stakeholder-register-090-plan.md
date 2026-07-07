@@ -11,6 +11,8 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-stakeholder-register
 ---
 
 # Review Plan: T-LAUNCH-prj-stakeholder-register-090

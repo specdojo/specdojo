@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:51:14.381Z"
   agent: opencode-edit-agent
   approach: template-maintenance
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # Edit Result

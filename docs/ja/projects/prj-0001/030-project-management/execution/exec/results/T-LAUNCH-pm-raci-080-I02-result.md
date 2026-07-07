@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-28T14:36:00.088Z"
   agent: codex-expert-edit-agent
   approach: fully-guided
+  targets:
+    - prj-0001:pm-raci
 ---
 
 # Edit Result

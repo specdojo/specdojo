@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-rulebook
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-110

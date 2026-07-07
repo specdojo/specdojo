@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:40:36.304Z"
   agent: codex-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-raci
+    - pm-raci-rulebook
 ---
 
 # Edit Result

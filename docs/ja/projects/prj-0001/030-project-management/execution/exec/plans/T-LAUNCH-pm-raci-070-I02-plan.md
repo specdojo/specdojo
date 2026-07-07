@@ -11,6 +11,8 @@ specdojo:
   owner: PM
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:pm-raci
 ---
 
 # Edit Plan: T-LAUNCH-pm-raci-070-I02

@@ -11,6 +11,9 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: sample-maintenance
+  targets:
+    - prj-0001:pm-organization
+    - pm-organization-sample
 ---
 
 # Edit Plan: T-LAUNCH-pm-organization-120

@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-28T02:18:24.923Z"
   agent: codex
   approach: bootstrap
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-rulebook
+    - prj-assumptions-constraints-dependencies-recipe
+    - prj-assumptions-constraints-dependencies-sample
+    - prj-assumptions-constraints-dependencies-template
 ---
 
 # Edit Result

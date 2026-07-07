@@ -11,6 +11,9 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-recipe
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-100

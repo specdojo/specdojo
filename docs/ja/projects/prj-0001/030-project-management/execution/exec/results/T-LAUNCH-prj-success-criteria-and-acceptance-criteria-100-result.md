@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T13:54:48.988Z"
   agent: claude-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-success-criteria-and-acceptance-criteria
+    - prj-success-criteria-and-acceptance-criteria-recipe
 ---
 
 # Edit Result

@@ -10,6 +10,12 @@ specdojo:
   project_id: prj-0001
   owner: BA
   approach: bootstrap
+  targets:
+    - prj-0001:prj-issues-and-approach
+    - prj-issues-and-approach-rulebook
+    - prj-issues-and-approach-recipe
+    - prj-issues-and-approach-sample
+    - prj-issues-and-approach-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-issues-and-approach-010

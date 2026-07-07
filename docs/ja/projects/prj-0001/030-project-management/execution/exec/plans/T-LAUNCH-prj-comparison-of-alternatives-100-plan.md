@@ -11,6 +11,9 @@ specdojo:
   owner: ARC
   on_critical_path: true
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-comparison-of-alternatives
+    - prj-comparison-of-alternatives-recipe
 ---
 
 # Edit Plan: T-LAUNCH-prj-comparison-of-alternatives-100

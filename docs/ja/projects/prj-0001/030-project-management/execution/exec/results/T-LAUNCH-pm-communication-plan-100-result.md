@@ -6,9 +6,12 @@ specdojo:
   mode: edit
   status: complete
   project_id: prj-0001
-  plan_ref:
-  started_at: ""
+  plan_ref: exec/plans/T-LAUNCH-pm-communication-plan-100-plan.md
+  started_at: "2026-07-01T14:29:41Z"
   completed_at: "2026-07-01T14:48:58.107Z"
+  targets:
+    - prj-0001:pm-communication-plan
+    - pm-communication-plan-recipe
 ---
 
 # Execution Result

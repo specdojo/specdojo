@@ -429,18 +429,26 @@ const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof ReferenceMateri
   "template-maintenance": ["template"],
 };
 
+function qualifiedDocId(projectId: string, localId: string): string {
+  return projectId ? `${projectId}:${localId}` : localId;
+}
+
 // タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
 // 以降は approach に応じて変更・確定しうる参考資料の doc id。いずれも doc-index で
 // パスへ解決できる id にし、schedule やファイル名の命名規約に依存せず対象を機械的に
 // 取得できるようにする。解決できない参考資料（_MISSING_）は含めない。
+// targets は frontmatter の必須項目のため、catalog で成果物を解決できない場合も
+// fallbackLocalId から成果物の doc id だけは組み立てる。
 function targetDocIds(
   projectId: string,
   deliverable: DeliverableInfo | null,
   approach: Approach | undefined,
+  fallbackLocalId?: string,
 ): string[] {
-  if (!deliverable) return [];
-  const localId = deliverable.deliverable.local_id;
-  const ids = [projectId ? `${projectId}:${localId}` : localId];
+  if (!deliverable) {
+    return fallbackLocalId ? [qualifiedDocId(projectId, fallbackLocalId)] : [];
+  }
+  const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
   const refs = resolveReferenceMaterialRefs(deliverable.deliverable.rulebook);
@@ -452,18 +460,17 @@ function targetDocIds(
 }
 
 // Resolve the target doc ids for a deliverable by local_id (result scaffold 用)。
-// catalog や成果物を解決できない場合は undefined を返し、呼び出し側は targets なしで
-// scaffold する。
+// localId が不明な場合のみ undefined を返す。catalog で成果物を解決できない場合は
+// 成果物の doc id 1 件へフォールバックする（targets は必須項目のため）。
 export function targetDocIdsForDeliverable(
   catalogPath: string,
   localId: string | undefined,
   projectId: string,
   approach: Approach | undefined,
 ): string[] | undefined {
-  if (!catalogPath || !localId) return undefined;
-  const info = findDeliverableInfo(catalogPath, localId);
-  if (!info) return undefined;
-  const ids = targetDocIds(projectId, info, approach);
+  if (!localId) return undefined;
+  const info = catalogPath ? findDeliverableInfo(catalogPath, localId) : null;
+  const ids = targetDocIds(projectId, info, approach, localId);
   return ids.length > 0 ? ids : undefined;
 }
 
@@ -664,7 +671,7 @@ function buildEditPlanMarkdown(
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
-  const targets = targetDocIds(projectId, deliverable, task.approach);
+  const targets = targetDocIds(projectId, deliverable, task.approach, task.local_id);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -722,7 +729,7 @@ function buildReviewPlanMarkdown(
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
 
-  const targets = targetDocIds(projectId, deliverable, task.approach);
+  const targets = targetDocIds(projectId, deliverable, task.approach, task.local_id);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xrp", stem),

@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T14:33:29.087Z"
   agent: claude-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-rulebook
 ---
 
 # Edit Result

@@ -1,15 +1,21 @@
 ---
 specdojo:
-  id: xep-t-launch-prj-stakeholder-register-010
+  id: prj-0001:xep-t-launch-prj-stakeholder-register-010
   type: exec-plan
   rulebook: xep-rulebook
   task_id: T-LAUNCH-prj-stakeholder-register-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
   status: ready
-  project_id:
+  project_id: prj-0001
   owner: BA
   approach: bootstrap
+  targets:
+    - prj-0001:prj-stakeholder-register
+    - prj-stakeholder-register-rulebook
+    - prj-stakeholder-register-recipe
+    - prj-stakeholder-register-sample
+    - prj-stakeholder-register-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-stakeholder-register-010

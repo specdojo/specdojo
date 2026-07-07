@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:33:27.447Z"
   agent: codex-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-organization
+    - pm-organization-rulebook
 ---
 
 # Edit Result

@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-25T12:59:05.727Z"
   agent: codex
   approach: bootstrap
+  targets:
+    - prj-0001:prj-charter
+    - prj-charter-rulebook
+    - prj-charter-recipe
+    - prj-charter-sample
+    - prj-charter-template
 ---
 
 ## 1. 実施内容

@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:14:29.508Z"
   agent: codex-edit-agent
   approach: recipe-maintenance
+  targets:
+    - prj-0001:prj-scope
+    - prj-scope-recipe
 ---
 
 # Edit Result

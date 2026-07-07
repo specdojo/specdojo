@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-30T13:58:22.287Z"
   agent: claude-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-roles
+    - pm-roles-rulebook
 ---
 
 # Edit Result

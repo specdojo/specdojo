@@ -11,6 +11,12 @@ specdojo:
   completed_at: "2026-06-25T12:18:58.817Z"
   agent: codex-expert-edit-agent
   approach: bootstrap
+  targets:
+    - prj-0001:pm-raci
+    - pm-raci-rulebook
+    - pm-raci-recipe
+    - pm-raci-sample
+    - pm-raci-template
 ---
 
 ## 1. 実施内容

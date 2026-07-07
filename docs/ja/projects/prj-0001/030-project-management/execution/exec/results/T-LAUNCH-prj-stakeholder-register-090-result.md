@@ -11,6 +11,8 @@ specdojo:
   completed_at: "2026-06-29T16:26:24.619Z"
   agent: opencode-review-agent
   approach: fully-guided
+  targets:
+    - prj-0001:prj-stakeholder-register
 ---
 
 # Review Result

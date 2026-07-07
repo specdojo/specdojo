@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-07-01T15:09:58.636Z"
   agent: codex-edit-agent
   approach: sample-maintenance
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-sample
 ---
 
 # Edit Result

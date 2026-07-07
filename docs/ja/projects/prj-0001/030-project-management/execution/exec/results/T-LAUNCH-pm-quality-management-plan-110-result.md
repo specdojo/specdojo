@@ -11,6 +11,9 @@ specdojo:
   completed_at: "2026-06-29T17:56:25.151Z"
   agent: opencode-edit-agent
   approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - pm-quality-management-plan-rulebook
 ---
 
 # Edit Result

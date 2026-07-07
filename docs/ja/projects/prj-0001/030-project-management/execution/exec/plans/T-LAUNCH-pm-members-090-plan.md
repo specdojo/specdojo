@@ -11,6 +11,8 @@ specdojo:
   owner: PO
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:pm-members
 ---
 
 # Review Plan: T-LAUNCH-pm-members-090

@@ -10,6 +10,12 @@ specdojo:
   project_id: prj-0001
   owner: ARC
   approach: bootstrap
+  targets:
+    - prj-0001:prj-assumptions-constraints-dependencies
+    - prj-assumptions-constraints-dependencies-rulebook
+    - prj-assumptions-constraints-dependencies-recipe
+    - prj-assumptions-constraints-dependencies-sample
+    - prj-assumptions-constraints-dependencies-template
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-010

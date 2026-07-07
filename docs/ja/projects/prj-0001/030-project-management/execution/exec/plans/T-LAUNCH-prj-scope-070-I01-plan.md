@@ -11,6 +11,8 @@ specdojo:
   owner: BA
   on_critical_path: true
   approach: fully-guided
+  targets:
+    - prj-0001:prj-scope
 ---
 
 # Edit Plan: T-LAUNCH-prj-scope-070-I01
