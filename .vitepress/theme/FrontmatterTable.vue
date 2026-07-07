@@ -1,17 +1,44 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useData } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 
-const { frontmatter } = useData()
+const { frontmatter, page } = useData()
 
-const rows = computed(() =>
-  Object.entries(frontmatter.value ?? {})
+interface ValuePart {
+  text: string
+  href?: string
+}
+
+// transformPageData（config.mts）が解決した doc id → href のマップ。
+const docLinks = computed<Record<string, string>>(() => {
+  const pageData = page.value as { frontmatterDocLinks?: Record<string, string> }
+  return pageData.frontmatterDocLinks ?? {}
+})
+
+// ネストしたオブジェクトを `parent.child.grandchild` 形式で展開する最大の深さ。
+const MAX_DEPTH = 5
+
+const rows = computed(() => flattenEntries(frontmatter.value ?? {}, '', 1))
+
+function flattenEntries(
+  record: Record<string, unknown>,
+  keyPrefix: string,
+  depth: number
+): { key: string; parts: ValuePart[] }[] {
+  return Object.entries(record)
     .filter(([, value]) => !isEmpty(value))
-    .map(([key, value]) => ({
-      key,
-      value: formatValue(value),
-    }))
-)
+    .flatMap(([key, value]) => {
+      const fullKey = keyPrefix ? `${keyPrefix}.${key}` : key
+      if (isPlainObject(value) && depth < MAX_DEPTH) {
+        return flattenEntries(value, fullKey, depth + 1)
+      }
+      return [{ key: fullKey, parts: toParts(value) }]
+    })
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
 
 // 空配列（supersedes / part_of など）・空文字・null・空オブジェクトの行は表示しない。
 function isEmpty(value: unknown): boolean {
@@ -22,10 +49,17 @@ function isEmpty(value: unknown): boolean {
   return false
 }
 
-function formatValue(value: unknown): string {
-  if (Array.isArray(value)) return value.join(', ')
-  if (value !== null && typeof value === 'object') return JSON.stringify(value)
-  return String(value)
+function toParts(value: unknown): ValuePart[] {
+  if (Array.isArray(value)) return value.map(item => toPart(item))
+  return [toPart(value)]
+}
+
+// doc id（rulebook / based_on / part_of など）に一致する値はリンクとして表示する。
+function toPart(value: unknown): ValuePart {
+  if (value !== null && typeof value === 'object') return { text: JSON.stringify(value) }
+  const text = String(value)
+  const href = docLinks.value[text]
+  return href ? { text, href: withBase(href) } : { text }
 }
 </script>
 
@@ -42,7 +76,13 @@ function formatValue(value: unknown): string {
       <tbody>
         <tr v-for="row in rows" :key="row.key">
           <td><code>{{ row.key }}</code></td>
-          <td>{{ row.value }}</td>
+          <td>
+            <template v-for="(part, index) in row.parts" :key="index">
+              <span v-if="index > 0">, </span><a v-if="part.href" :href="part.href">{{
+                part.text
+              }}</a><span v-else>{{ part.text }}</span>
+            </template>
+          </td>
         </tr>
       </tbody>
     </table>

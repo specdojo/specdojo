@@ -25,6 +25,57 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
 }
 const docIndex = loadDocIndex(WORKSPACE_ROOT)
 
+// doc id を doc-index で docs ルート相対パス（"ja/..."）へ解決する。Markdown 以外は対象外。
+function resolveDocRelPath(id: string): string | undefined {
+  const entry = docIndex[id]
+  if (!entry) return undefined
+  // 行番号サフィックスを除去（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
+  const colonIndex = entry.lastIndexOf(':')
+  const hasLine = colonIndex > 0 && /^\d+$/.test(entry.slice(colonIndex + 1))
+  const entryPath = hasLine ? entry.slice(0, colonIndex) : entry
+  if (!entryPath.endsWith('.md')) return undefined
+  return entryPath.startsWith('docs/') ? entryPath.slice(5) : entryPath
+}
+
+// frontmatter（FrontmatterTable が展開する五階層まで）の文字列値・文字列配列要素のうち
+// doc-index に存在する id をサイトルート相対の href（doc id → "/ja/....html"）へ解決する。
+// 自ページへの id は除外する。
+const FRONTMATTER_LINK_MAX_DEPTH = 5
+
+function collectFrontmatterDocLinks(
+  frontmatter: Record<string, unknown>,
+  currentRelPath: string
+): Record<string, string> {
+  const links: Record<string, string> = {}
+
+  const addCandidate = (candidate: string): void => {
+    if (links[candidate]) return
+    const docsRelPath = resolveDocRelPath(candidate)
+    if (!docsRelPath || docsRelPath === currentRelPath) return
+    links[candidate] = '/' + docsRelPath.replace(/\.md$/, '.html')
+  }
+
+  const visit = (value: unknown, depth: number): void => {
+    if (typeof value === 'string') {
+      addCandidate(value)
+      return
+    }
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        if (typeof item === 'string') addCandidate(item)
+      }
+      return
+    }
+    if (value !== null && typeof value === 'object' && depth < FRONTMATTER_LINK_MAX_DEPTH) {
+      for (const childValue of Object.values(value)) visit(childValue, depth + 1)
+    }
+  }
+
+  for (const value of Object.values(frontmatter)) visit(value, 1)
+
+  return links
+}
+
 const specdojoItems = {
   ja: {
     text: 'specdojo',
@@ -443,6 +494,17 @@ export default defineConfig({
         langMenuLabel: 'Language',
       },
     },
+  },
+
+  // FrontmatterTable が doc id をリンク表示できるよう、解決済み href を pageData へ載せる。
+  transformPageData(pageData) {
+    const frontmatterDocLinks = collectFrontmatterDocLinks(
+      pageData.frontmatter,
+      pageData.relativePath
+    )
+    if (Object.keys(frontmatterDocLinks).length > 0) {
+      return { frontmatterDocLinks }
+    }
   },
 
   markdown: {
