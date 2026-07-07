@@ -165,11 +165,13 @@ phase_sets:
       name: 完成版確定
       execution: human
       mode: edit
+      approach: bootstrap-finalize
       task_suffix: "140"
       duration_days: 0.125 # 0.5〜1h 相当
       description: |
         担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-        frontmatter の status を ready に更新する。
+        bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+        あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
 
 # owner_rule に phase_sets を省略した場合のデフォルト（適用順）
 default_phase_sets:

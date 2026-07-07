@@ -90,13 +90,15 @@ exec/results/<stem>-result.md
 
 plan は `execution` / `mode` / `approach` に応じたテンプレートから生成します。
 
-| 条件               | 代表テンプレート        |
-| ------------------ | ----------------------- |
-| `mode: edit`       | `xep-template.md`       |
-| `mode: review`     | `xrp-template.md`       |
-| `execution: human` | `xep-human-template.md` |
+| 条件                                                | 代表テンプレート                           |
+| --------------------------------------------------- | ------------------------------------------ |
+| `mode: edit`                                        | `xep-template.md`                          |
+| `mode: review`                                      | `xrp-template.md`                          |
+| `execution: human` + `approach: finalize`           | `xep-human-finalize-template.md`           |
+| `execution: human` + `approach: bootstrap-finalize` | `xep-human-bootstrap-finalize-template.md` |
+| `execution: human`（`approach` なし）               | `xep-human-template.md`                    |
 
-`execution: human` のタスク（finalize など）は最優先で `xep-human-template.md` を使い、agent の実行プロトコル（異常終了・終了コード・runner への申し送り）を持たず、done_criteria の確認チェックリストと確定手順（frontmatter の `status` を `ready` に更新）で構成します。あわせて共通規約も human 用の `xep-human-conventions-template.md` を注入し、`status` を `ready` に昇格させることを完了条件として明示します。
+`execution: human` のタスクは最優先で human 用テンプレートを使い、agent の実行プロトコル（異常終了・終了コード・runner への申し送り）を持ちません。`approach` が指定されていれば `xep-human-<approach>-template.md` を先に探し、無ければ汎用の `xep-human-template.md` へフォールバックします。`finalize` は成果物のみの確定（done_criteria の確認チェックリストと、frontmatter の `status` を `ready` に更新する確定手順）、`bootstrap-finalize` は bootstrap と対になる確定で、成果物に加えて参考資料（rulebook / recipe / sample / template）の確認と `ready` 昇格を含みます。あわせて共通規約も human 用の `xep-human-conventions-template.md` を注入し、確定対象の `status` を `ready` に昇格させることを完了条件として明示します。
 
 `execution: human` でない場合、`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 

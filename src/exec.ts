@@ -97,6 +97,8 @@ const KNOWN_APPROACHES = [
   "recipe-maintenance",
   "sample-maintenance",
   "template-maintenance",
+  "finalize",
+  "bootstrap-finalize",
 ] as const;
 
 function parseTaskMode(value: unknown): TaskMode {

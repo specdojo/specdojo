@@ -247,17 +247,27 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
   return `${templatePrefix(mode)}-${approach}-template.md`;
 }
 
-// Selects the template for a task. execution: human takes priority with
-// <prefix>-human-template.md (a confirm/finalize checklist without the agent
-// execution protocol); otherwise selects <prefix>-<approach>-template.md when it
-// exists, falling back to the standard <prefix>-template.md. Any missing variant
-// falls through to the next candidate so a plan is always produced.
+// Selects the template for a task. execution: human takes priority and looks up
+// <prefix>-human-<approach>-template.md first (approach 別の確定プロファイル。
+// 例: finalize / bootstrap-finalize), then <prefix>-human-template.md (approach
+// なしの human タスク向けの汎用確認テンプレート). Agent 向け approach テンプレートは
+// 実行プロトコル（終了コード・runner への申し送り）を含むため human では選択しない。
+// Otherwise selects <prefix>-<approach>-template.md when it exists, falling back
+// to the standard <prefix>-template.md. Any missing variant falls through to the
+// next candidate so a plan is always produced.
 function resolvePlanTemplatePath(
   mode: TaskMode,
   approach: Approach | undefined,
   execution: TaskExecution,
 ): string {
   if (execution === "human") {
+    if (approach) {
+      const humanApproachPath = join(
+        templatesDir(),
+        `${templatePrefix(mode)}-human-${approach}-template.md`,
+      );
+      if (existsSync(humanApproachPath)) return humanApproachPath;
+    }
     const humanPath = join(templatesDir(), `${templatePrefix(mode)}-human-template.md`);
     if (existsSync(humanPath)) return humanPath;
   }
@@ -861,10 +871,13 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "fully-guided",
   "recipe-guided",
   "freeform",
+  "bootstrap",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",
   "template-maintenance",
+  "finalize",
+  "bootstrap-finalize",
 ];
 
 // Parse an exec-plan file's frontmatter to recover the task identity. Returns

@@ -41,6 +41,8 @@ $defs:
         "recipe-maintenance",
         "sample-maintenance",
         "template-maintenance",
+        "finalize",
+        "bootstrap-finalize",
       ]
     description: >
       How the task is carried out. fully-guided/recipe-guided/freeform describe how strictly
@@ -49,8 +51,11 @@ $defs:
       (rulebook/recipe/sample/template) together in one task as a mutually consistent whole;
       it is used to initially establish a deliverable and its reference materials. The
       *-maintenance values improve the named reference material based on deliverables
-      (reference direction is reversed). Explicit phase or owner rule settings carry this value
-      into task frontmatter and plan/result files.
+      (reference direction is reversed). finalize and bootstrap-finalize are human-executed
+      confirmation profiles: finalize confirms the deliverable alone and promotes its status
+      to ready; bootstrap-finalize pairs with bootstrap and confirms the deliverable together
+      with its reference set, promoting each to ready. Explicit phase or owner rule settings
+      carry this value into task frontmatter and plan/result files.
 
   Proficiency:
     type: string

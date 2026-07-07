@@ -4,6 +4,8 @@ export type TaskMode = "edit" | "review";
 // <kind>-maintenance は成果物を根拠に対象の参考資料を見直す進め方（参照の向きが逆転する）。
 // bootstrap は成果物とその参考資料一式（rulebook/recipe/sample/template）を一貫した一組として
 // 同一タスクで作成・整備する進め方（初期立ち上げ専用）。
+// finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
+// bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
 export type Approach =
   | "fully-guided"
   | "recipe-guided"
@@ -12,7 +14,9 @@ export type Approach =
   | "rulebook-maintenance"
   | "recipe-maintenance"
   | "sample-maintenance"
-  | "template-maintenance";
+  | "template-maintenance"
+  | "finalize"
+  | "bootstrap-finalize";
 
 export type Proficiency = "low" | "normal" | "high" | "expert";
 

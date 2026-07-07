@@ -69,7 +69,9 @@ function isApproach(value: unknown): value is Approach {
     value === "rulebook-maintenance" ||
     value === "recipe-maintenance" ||
     value === "sample-maintenance" ||
-    value === "template-maintenance"
+    value === "template-maintenance" ||
+    value === "finalize" ||
+    value === "bootstrap-finalize"
   );
 }
 

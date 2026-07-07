@@ -203,6 +203,8 @@ provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide
 
 plan は `exec build` が自動生成します。対象タスクが Ready になると、`exec build` は未生成の human plan を `exec/plans/<task-id>-plan.md` に作成します。この plan は agent 向けの実行プロトコルを持たず、done_criteria の確認チェックリストと確定手順で構成されます。既存 plan は上書きしません。
 
+確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。`sch-strategy-<track>.yaml` の finalize フェーズに `approach` を指定すると、対応する human 用テンプレートから plan が生成されます（テンプレート選択は [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) を参照）。
+
 実行者に依らず、進捗（Ready・phase gate・CPM）へ反映するため状態イベントを記録します。
 
 ```bash

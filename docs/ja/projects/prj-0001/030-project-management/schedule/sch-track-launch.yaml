@@ -167,7 +167,8 @@ tasks:
     owner: BA
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-success-criteria-and-acceptance-criteria
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -319,7 +320,8 @@ tasks:
     owner: BA
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-stakeholder-register
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -471,7 +473,8 @@ tasks:
     owner: BA
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-charter
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -624,7 +627,8 @@ tasks:
     owner: PO
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-assumptions-constraints-dependencies
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -776,7 +780,8 @@ tasks:
     owner: ARC
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-issues-and-approach
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -929,7 +934,8 @@ tasks:
     owner: BA
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: prj-comparison-of-alternatives
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1082,7 +1088,8 @@ tasks:
     owner: ARC
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-organization
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1234,7 +1241,8 @@ tasks:
     owner: PO
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-roles
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1386,7 +1394,8 @@ tasks:
     owner: PO
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1539,7 +1548,8 @@ tasks:
     owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-communication-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1691,7 +1701,8 @@ tasks:
     owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-quality-management-plan
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1843,7 +1854,8 @@ tasks:
     owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-members
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -1996,7 +2008,8 @@ tasks:
     owner: PO
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: pm-raci
     phase_suffix: "010"
     phase_set: bootstrap-pass
@@ -2148,7 +2161,8 @@ tasks:
     owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
-      frontmatter の status を ready に更新する。
+      bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
+      あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
   - local_id: sch-defaults
     phase_suffix: "000"
     name: 完了済み

@@ -9,6 +9,7 @@ import {
   generateReadyHumanPlans,
   generateSinglePlan,
   ownerRoleFields,
+  parsePlanTaskIdentity,
   reviewResultSections,
   reviewViewpointDetails,
   stemFromPlanPath,
@@ -224,6 +225,50 @@ describe("buildInPlaceStem / stemFromPlanPath", () => {
 
     expect(stemFromPlanPath(`/repo/exec/plans/${stem}-plan.md`)).toBe(stem);
     expect(stemFromPlanPath("prj-overview-result-plan.md")).toBe("prj-overview-result");
+  });
+});
+
+describe("parsePlanTaskIdentity", () => {
+  function planWithApproach(approach: string): string {
+    return [
+      "---",
+      "specdojo:",
+      "  id: test:xep-t-test-overview-010",
+      "  type: exec-plan",
+      "  task_id: T-TEST-overview-010",
+      "  mode: edit",
+      "  project_id: test",
+      `  approach: ${approach}`,
+      "---",
+      "",
+      "# Edit Plan: T-TEST-overview-010",
+      "",
+    ].join("\n");
+  }
+
+  it.each(["bootstrap", "finalize", "bootstrap-finalize", "fully-guided"])(
+    "approach %s を frontmatter から復元する",
+    (approach) => {
+      const identity = parsePlanTaskIdentity(planWithApproach(approach));
+
+      expect(identity).toEqual({
+        taskId: "T-TEST-overview-010",
+        mode: "edit",
+        projectId: "test",
+        approach,
+      });
+    },
+  );
+
+  it("未知の approach は無視して identity のみ復元する", () => {
+    const identity = parsePlanTaskIdentity(planWithApproach("unknown-approach"));
+
+    expect(identity).toEqual({
+      taskId: "T-TEST-overview-010",
+      mode: "edit",
+      projectId: "test",
+      approach: undefined,
+    });
   });
 });
 
@@ -630,6 +675,85 @@ describe("execution: human plans", () => {
       expect(plan).toContain("`status` を `ready` に更新することが、この確定タスクの完了条件");
       // agent 実行プロトコル（異常終了・終了コード・runner 申し送り）は載せない。
       expect(plan).not.toContain("異常終了の条件");
+      expect(plan).not.toContain("終了コード");
+      expect(plan).not.toContain("runner");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("approach: finalize は human finalize テンプレートを使い approach を frontmatter に記録する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-140",
+          local_id: "overview",
+          name: "完成版確定",
+          owner: "BA",
+          mode: "edit",
+          execution: "human",
+          approach: "finalize",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("approach: finalize");
+      expect(plan).toContain("# Finalize Plan: T-TEST-overview-140");
+      // finalize（成果物のみ）は参考資料セクションを持たない。
+      expect(plan).not.toContain("## 2. 対象成果物と参考資料");
+      expect(plan).not.toContain("終了コード");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("approach: bootstrap-finalize は参考資料一式の確認と ready 昇格を plan に含める", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-140",
+          local_id: "overview",
+          name: "完成版確定",
+          owner: "BA",
+          mode: "edit",
+          execution: "human",
+          approach: "bootstrap-finalize",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("approach: bootstrap-finalize");
+      expect(plan).toContain("## 2. 対象成果物と参考資料");
+      // rulebook 未宣言の成果物では参考資料は _MISSING_ で提示し、スキップを指示する。
+      expect(plan).toContain("- rulebook: `_MISSING_`");
+      expect(plan).toContain(
+        "存在する参考資料それぞれの frontmatter の `status` を `ready` に更新する",
+      );
+      // human plan なので agent 実行プロトコルは含まない。
       expect(plan).not.toContain("終了コード");
       expect(plan).not.toContain("runner");
     } finally {
