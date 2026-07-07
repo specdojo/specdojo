@@ -68,7 +68,9 @@ import {
   generateReadyHumanPlans,
   generateSinglePlan,
   resolveDeliverableTarget,
+  finalizeResultSectionsForDeliverable,
   reviewResultSectionsForDeliverable,
+  targetDocIdsForDeliverable,
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { scaffoldResult } from "./exec-results.js";
@@ -387,6 +389,16 @@ async function scaffoldClaimResult(opts: {
     mode === "review"
       ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId)
       : undefined;
+  const finalizeSections =
+    approach === "finalize" || approach === "bootstrap-finalize"
+      ? finalizeResultSectionsForDeliverable(opts.catalogPath ?? "", localId, approach)
+      : undefined;
+  const targets = targetDocIdsForDeliverable(
+    opts.catalogPath ?? "",
+    localId,
+    opts.projectId,
+    approach,
+  );
   await scaffoldResult({
     executionPath: opts.executionPath,
     taskId: opts.taskId,
@@ -396,7 +408,9 @@ async function scaffoldClaimResult(opts: {
     agent: opts.actor,
     startedAt: opts.startedAt,
     ...(approach ? { approach } : {}),
+    ...(targets ? { targets } : {}),
     ...(reviewSections ? { reviewSections } : {}),
+    ...(finalizeSections ? { finalizeSections } : {}),
   });
 }
 

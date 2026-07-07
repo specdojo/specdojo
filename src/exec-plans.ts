@@ -6,6 +6,7 @@ import {
   resolveDeliverableSchemaRef,
   resolveReferenceMaterialRefs,
 } from "./reference-materials.js";
+import type { ReferenceMaterialRefs } from "./reference-materials.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
@@ -205,6 +206,10 @@ function frontmatter(meta: ExecPlanMeta): string {
   if (meta.owner) inner.push(`owner: ${meta.owner}`);
   if (meta.on_critical_path) inner.push(`on_critical_path: true`);
   if (meta.approach) inner.push(`approach: ${meta.approach}`);
+  if (meta.targets && meta.targets.length > 0) {
+    inner.push("targets:");
+    for (const target of meta.targets) inner.push(`  - ${target}`);
+  }
   return buildSpecdojoFrontmatter(inner);
 }
 
@@ -401,6 +406,67 @@ function doneCriteriaChecklist(criteria: CriteriaItem[]): string {
   return criteria.map((c) => `- [ ] ${c.text}`).join("\n");
 }
 
+// done_criteria を plan 提示用の素の箇条書きに整形する。チェックの記録は result 側の
+// チェックリストで行うため、plan では「何を確認するか」の列挙にとどめる。
+function doneCriteriaItems(criteria: CriteriaItem[]): string {
+  if (criteria.length === 0) return MISSING;
+  return criteria.map((c) => `- ${c.text}`).join("\n");
+}
+
+// 参考資料の doc id を正準パス（docs/ja/specdojo/<kind>s/<id>.<ext>）の basename から導出する。
+// 参考資料の frontmatter id はファイル名と一致する規約（docs-structure-guide）を前提にする。
+function refDocIdFromPath(refPath: string): string {
+  return basename(refPath).replace(/\.(md|yaml|json)$/, "");
+}
+
+// approach ごとに、成果物に加えて変更・確定の対象になる参考資料の種別。
+const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof ReferenceMaterialRefs)[]>> = {
+  bootstrap: ["rulebook", "recipe", "sample", "template"],
+  "bootstrap-finalize": ["rulebook", "recipe", "sample", "template"],
+  "rulebook-maintenance": ["rulebook"],
+  "recipe-maintenance": ["recipe"],
+  "sample-maintenance": ["sample"],
+  "template-maintenance": ["template"],
+};
+
+// タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
+// 以降は approach に応じて変更・確定しうる参考資料の doc id。いずれも doc-index で
+// パスへ解決できる id にし、schedule やファイル名の命名規約に依存せず対象を機械的に
+// 取得できるようにする。解決できない参考資料（_MISSING_）は含めない。
+function targetDocIds(
+  projectId: string,
+  deliverable: DeliverableInfo | null,
+  approach: Approach | undefined,
+): string[] {
+  if (!deliverable) return [];
+  const localId = deliverable.deliverable.local_id;
+  const ids = [projectId ? `${projectId}:${localId}` : localId];
+  const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
+  if (kinds.length === 0) return ids;
+  const refs = resolveReferenceMaterialRefs(deliverable.deliverable.rulebook);
+  for (const kind of kinds) {
+    const refPath = refs[kind];
+    if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));
+  }
+  return ids;
+}
+
+// Resolve the target doc ids for a deliverable by local_id (result scaffold 用)。
+// catalog や成果物を解決できない場合は undefined を返し、呼び出し側は targets なしで
+// scaffold する。
+export function targetDocIdsForDeliverable(
+  catalogPath: string,
+  localId: string | undefined,
+  projectId: string,
+  approach: Approach | undefined,
+): string[] | undefined {
+  if (!catalogPath || !localId) return undefined;
+  const info = findDeliverableInfo(catalogPath, localId);
+  if (!info) return undefined;
+  const ids = targetDocIds(projectId, info, approach);
+  return ids.length > 0 ? ids : undefined;
+}
+
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
   if (criteria.length === 0) return MISSING;
   const lines: string[] = [];
@@ -446,6 +512,61 @@ export function reviewResultSectionsForDeliverable(
     new Map<string, string>(),
   );
   return reviewResultSections(criteria, detailTemplate);
+}
+
+// finalize / bootstrap-finalize の result に焼き込む確認記録セクション。
+export type FinalizeResultSections = {
+  doneCriteriaChecklist: string;
+  targetsChecklist: string;
+};
+
+// done_criteria を確認記録用チェックボックスに整形する。各項目に roles / viewpoint
+// （review-viewpoints の観点 ID）を注記し、どの観点で確認したかが result に残るようにする。
+function doneCriteriaResultChecklist(criteria: CriteriaItem[]): string {
+  return criteria
+    .map((c) => {
+      const annotation = [c.roles.join(", "), c.viewpoint].filter(Boolean).join(" / ");
+      return annotation ? `- [ ] ${c.text}（${annotation}）` : `- [ ] ${c.text}`;
+    })
+    .join("\n");
+}
+
+// 確定対象（status を ready へ昇格する対象）のチェックリスト。成果物を先頭に、
+// bootstrap-finalize では解決できた参考資料（_MISSING_ 以外）を続ける。
+function finalizeTargetsChecklist(deliverable: DeliverableInfo, approach: Approach): string {
+  const lines = [`- [ ] 成果物: \`${deliverablePath(deliverable)}\``];
+  if (approach === "bootstrap-finalize") {
+    const refs = resolveReferenceMaterialRefs(deliverable.deliverable.rulebook);
+    const entries: [string, string][] = [
+      ["rulebook", refs.rulebook],
+      ["recipe", refs.recipe],
+      ["sample", refs.sample],
+      ["template", refs.template],
+    ];
+    for (const [kind, ref] of entries) {
+      if (ref !== MISSING) lines.push(`- [ ] ${kind}: \`${ref}\``);
+    }
+  }
+  return lines.join("\n");
+}
+
+// Resolve the finalize result sections for a deliverable by local_id. Returns undefined when
+// the catalog, deliverable, or its done_criteria cannot be resolved; the caller then falls
+// back to a generic result body (placeholders stay _TODO_).
+export function finalizeResultSectionsForDeliverable(
+  catalogPath: string,
+  localId: string | undefined,
+  approach: Approach,
+): FinalizeResultSections | undefined {
+  if (!catalogPath || !localId) return undefined;
+  const info = findDeliverableInfo(catalogPath, localId);
+  if (!info) return undefined;
+  const criteria = info.deliverable.done_criteria ?? [];
+  if (criteria.length === 0) return undefined;
+  return {
+    doneCriteriaChecklist: doneCriteriaResultChecklist(criteria),
+    targetsChecklist: finalizeTargetsChecklist(info, approach),
+  };
 }
 
 // coverage_types はビューポート任意項目。持たない観点では coverage_required ブロック
@@ -543,6 +664,7 @@ function buildEditPlanMarkdown(
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
+  const targets = targetDocIds(projectId, deliverable, task.approach);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -556,6 +678,7 @@ function buildEditPlanMarkdown(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
+    ...(targets.length > 0 ? { targets } : {}),
   };
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
@@ -579,6 +702,7 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
     _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
+    _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
   };
   return expandTemplate(template, values);
 }
@@ -598,6 +722,8 @@ function buildReviewPlanMarkdown(
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
 
+  const targets = targetDocIds(projectId, deliverable, task.approach);
+
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xrp", stem),
     type: "exec-plan",
@@ -610,6 +736,7 @@ function buildReviewPlanMarkdown(
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
+    ...(targets.length > 0 ? { targets } : {}),
   };
 
   const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook);
@@ -865,6 +992,8 @@ export type PlanTaskIdentity = {
   mode: TaskMode;
   projectId: string;
   approach?: Approach;
+  // plan frontmatter の targets（対象文書の doc id リスト）。先頭は対象成果物。
+  targets?: string[];
 };
 
 const PLAN_APPROACHES: readonly Approach[] = [
@@ -896,6 +1025,9 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
     (PLAN_APPROACHES as readonly string[]).includes(parsed.approach)
       ? (parsed.approach as Approach)
       : undefined;
+  const targets = Array.isArray(parsed.targets)
+    ? parsed.targets.filter((entry): entry is string => typeof entry === "string")
+    : [];
 
-  return { taskId, mode, projectId, approach };
+  return { taskId, mode, projectId, approach, ...(targets.length > 0 ? { targets } : {}) };
 }

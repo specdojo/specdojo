@@ -45,7 +45,9 @@ import {
   loadPlan,
   parsePlanTaskIdentity,
   resolveDeliverableTarget,
+  finalizeResultSectionsForDeliverable,
   reviewResultSectionsForDeliverable,
+  targetDocIdsForDeliverable,
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { buildTaskView } from "./exec-task-view.js";
@@ -780,6 +782,20 @@ async function prepareSingleTask(
     (task.mode ?? "edit") === "review"
       ? reviewResultSectionsForDeliverable(planGenPaths.catalogPath ?? "", task.local_id)
       : undefined;
+  const finalizeSections =
+    task.approach === "finalize" || task.approach === "bootstrap-finalize"
+      ? finalizeResultSectionsForDeliverable(
+          planGenPaths.catalogPath ?? "",
+          task.local_id,
+          task.approach,
+        )
+      : undefined;
+  const targets = targetDocIdsForDeliverable(
+    planGenPaths.catalogPath ?? "",
+    task.local_id,
+    projectId ?? "",
+    task.approach,
+  );
   const { resultPath } = await scaffoldResult({
     executionPath,
     taskId: task.id,
@@ -789,7 +805,9 @@ async function prepareSingleTask(
     agent: actor,
     startedAt,
     ...(task.approach ? { approach: task.approach } : {}),
+    ...(targets ? { targets } : {}),
     ...(reviewSections ? { reviewSections } : {}),
+    ...(finalizeSections ? { finalizeSections } : {}),
   });
 
   // Commit the execution checkpoint (plan/result/claim event) to root HEAD, then create the
@@ -1479,6 +1497,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let target: ReturnType<typeof resolveDeliverableTarget> | null = null;
 
   let planProjectId = "";
+  // bring-your-own --plan の frontmatter から復元した targets。scaffold 時に catalog 再解決より優先する。
+  let planTargets: string[] | undefined;
   if (opts.plan) {
     planPath = resolve(opts.plan);
     if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`);
@@ -1490,6 +1510,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     if (identity) {
       slug = identity.taskId;
       planProjectId = identity.projectId;
+      planTargets = identity.targets;
       task = {
         id: identity.taskId,
         // Derive the catalog local_id so a review result can resolve done_criteria. A scheduled
@@ -1579,6 +1600,18 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       (task.mode ?? "edit") === "review"
         ? reviewResultSectionsForDeliverable(catalogPath ?? "", task.local_id)
         : undefined;
+    const finalizeSections =
+      task.approach === "finalize" || task.approach === "bootstrap-finalize"
+        ? finalizeResultSectionsForDeliverable(catalogPath ?? "", task.local_id, task.approach)
+        : undefined;
+    const targets =
+      planTargets ??
+      targetDocIdsForDeliverable(
+        catalogPath ?? "",
+        task.local_id,
+        projectId || planProjectId,
+        task.approach,
+      );
     resultPath = (
       await scaffoldResult({
         executionPath,
@@ -1590,7 +1623,9 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         startedAt: new Date().toISOString(),
         ...(stem ? { stem } : {}),
         ...(task.approach ? { approach: task.approach } : {}),
+        ...(targets ? { targets } : {}),
         ...(reviewSections ? { reviewSections } : {}),
+        ...(finalizeSections ? { finalizeSections } : {}),
       })
     ).resultPath;
   }

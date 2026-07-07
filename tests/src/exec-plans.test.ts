@@ -6,10 +6,12 @@ import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
   buildInPlaceStem,
+  finalizeResultSectionsForDeliverable,
   generateReadyHumanPlans,
   generateSinglePlan,
   ownerRoleFields,
   parsePlanTaskIdentity,
+  targetDocIdsForDeliverable,
   reviewResultSections,
   reviewViewpointDetails,
   stemFromPlanPath,
@@ -269,6 +271,30 @@ describe("parsePlanTaskIdentity", () => {
       projectId: "test",
       approach: undefined,
     });
+  });
+
+  it("frontmatter の targets を doc id リストとして復元する", () => {
+    const plan = [
+      "---",
+      "specdojo:",
+      "  id: test:xep-t-test-overview-140",
+      "  type: exec-plan",
+      "  task_id: T-TEST-overview-140",
+      "  mode: edit",
+      "  project_id: test",
+      "  approach: bootstrap-finalize",
+      "  targets:",
+      "    - test:overview",
+      "    - overview-rulebook",
+      "---",
+      "",
+      "# Finalize Plan: T-TEST-overview-140",
+      "",
+    ].join("\n");
+
+    const identity = parsePlanTaskIdentity(plan);
+
+    expect(identity?.targets).toEqual(["test:overview", "overview-rulebook"]);
   });
 });
 
@@ -711,6 +737,10 @@ describe("execution: human plans", () => {
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("approach: finalize");
       expect(plan).toContain("# Finalize Plan: T-TEST-overview-140");
+      // 確認項目は素の箇条書きで提示し、チェックの記録は result 側に寄せる。
+      expect(plan).toContain("- Business value is clear");
+      expect(plan).not.toContain("- [ ] Business value is clear");
+      expect(plan).toContain("確認結果は result の「確認チェックリスト」に記録する");
       // finalize（成果物のみ）は参考資料セクションを持たない。
       expect(plan).not.toContain("## 2. 対象成果物と参考資料");
       expect(plan).not.toContain("終了コード");
@@ -747,6 +777,8 @@ describe("execution: human plans", () => {
 
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("approach: bootstrap-finalize");
+      // targets には対象成果物の project 修飾 doc id を焼き込む（rulebook 未宣言のため参考資料は無し）。
+      expect(plan).toContain("targets:\n    - test:overview");
       expect(plan).toContain("## 2. 対象成果物と参考資料");
       // rulebook 未宣言の成果物では参考資料は _MISSING_ で提示し、スキップを指示する。
       expect(plan).toContain("- rulebook: `_MISSING_`");
@@ -756,6 +788,71 @@ describe("execution: human plans", () => {
       // human plan なので agent 実行プロトコルは含まない。
       expect(plan).not.toContain("終了コード");
       expect(plan).not.toContain("runner");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("finalizeResultSectionsForDeliverable は roles/viewpoint 注記付きチェックリストと確定対象を返す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-finalize-sections-"));
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const sections = finalizeResultSectionsForDeliverable(
+        catalogPath,
+        "overview",
+        "bootstrap-finalize",
+      );
+
+      expect(sections?.doneCriteriaChecklist).toBe(
+        "- [ ] Business value is clear（BA / vp-ba-business-value）",
+      );
+      // rulebook 未宣言の成果物では参考資料は解決されず、確定対象は成果物のみになる。
+      expect(sections?.targetsChecklist).toContain("- [ ] 成果物: `");
+      expect(sections?.targetsChecklist).not.toContain("rulebook");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("finalizeResultSectionsForDeliverable は成果物を解決できない場合 undefined を返す", () => {
+    expect(finalizeResultSectionsForDeliverable("", "overview", "finalize")).toBeUndefined();
+    const root = mkdtempSync(join(tmpdir(), "specdojo-finalize-sections-"));
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      expect(
+        finalizeResultSectionsForDeliverable(catalogPath, "missing", "finalize"),
+      ).toBeUndefined();
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("targetDocIdsForDeliverable は成果物の project 修飾 doc id を先頭に返す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-targets-"));
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      // rulebook 未宣言の成果物では参考資料は解決されず、成果物のみになる。
+      expect(
+        targetDocIdsForDeliverable(catalogPath, "overview", "test", "bootstrap-finalize"),
+      ).toEqual(["test:overview"]);
+      // 参考資料を対象にしない approach でも成果物は常に含む。
+      expect(targetDocIdsForDeliverable(catalogPath, "overview", "test", "fully-guided")).toEqual([
+        "test:overview",
+      ]);
+      // 成果物を解決できない場合は undefined。
+      expect(
+        targetDocIdsForDeliverable(catalogPath, "missing", "test", "finalize"),
+      ).toBeUndefined();
+      expect(targetDocIdsForDeliverable("", "overview", "test", "finalize")).toBeUndefined();
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -232,6 +232,9 @@ export type ExecPlanMeta = {
   on_critical_path?: true;
   agent?: string;
   approach?: Approach;
+  // タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
+  // 以降は approach に応じて変更・確定しうる参考資料の doc id。
+  targets?: string[];
 };
 
 export type ExecResultMeta = {
@@ -246,6 +249,8 @@ export type ExecResultMeta = {
   completed_at?: string;
   agent?: string;
   approach?: Approach;
+  // タスクが対象とする文書の doc id リスト（plan と同じ規則）。
+  targets?: string[];
   // status が blocked のとき、runner が記録する異常終了理由（block イベントと同じ抽出文字列）。
   block_reason?: string;
 };

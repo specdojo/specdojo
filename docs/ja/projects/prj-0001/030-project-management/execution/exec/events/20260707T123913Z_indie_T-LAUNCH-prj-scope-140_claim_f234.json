@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-07T12:39:13Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-scope-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "BA",
+    "planned_owner": "BA"
+  }
+}

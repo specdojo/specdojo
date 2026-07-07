@@ -24,6 +24,10 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
   if (meta.agent) inner.push(`agent: ${meta.agent}`);
   if (meta.approach) inner.push(`approach: ${meta.approach}`);
+  if (meta.targets && meta.targets.length > 0) {
+    inner.push("targets:");
+    for (const target of meta.targets) inner.push(`  - ${target}`);
+  }
   // reason は agent stderr 由来で任意文字を含みうる。YAML として安全にするため二重引用符内へ
   // 収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は単一行を返すため改行は無い）。
   if (meta.block_reason) {
@@ -34,14 +38,25 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
 
 // exec-result frontmatter は `specdojo:` 名前空間配下にある。YAML パース後、スカラー値を
 // 文字列へ寄せて Record<string, string> として返す（引用符の正規化は js-yaml が行う）。
-function parseFrontmatter(content: string): { meta: Record<string, string>; body: string } {
+// targets はリスト値のため meta とは別に返し、再シリアライズで欠落しないようにする。
+function parseFrontmatter(content: string): {
+  meta: Record<string, string>;
+  targets?: string[];
+  body: string;
+} {
   const { data, body } = parseSpecdojoDocument(content);
   const meta: Record<string, string> = {};
+  let targets: string[] | undefined;
   for (const [key, value] of Object.entries(data)) {
+    if (key === "targets" && Array.isArray(value)) {
+      const list = value.filter((entry): entry is string => typeof entry === "string");
+      if (list.length > 0) targets = list;
+      continue;
+    }
     if (typeof value === "string") meta[key] = value;
     else if (typeof value === "number" || typeof value === "boolean") meta[key] = String(value);
   }
-  return { meta, body };
+  return { meta, ...(targets ? { targets } : {}), body };
 }
 
 function frontmatterWithBody(frontmatter: string, body: string): string {
@@ -56,18 +71,27 @@ function templateFileName(mode: TaskMode): string {
   return mode === "review" ? "xrr-template.md" : "xer-template.md";
 }
 
+// finalize / bootstrap-finalize は human 確定タスクの approach。result は確認記録
+// （done_criteria チェックリスト・確定対象・確定判断）を持つ専用テンプレートを使う。
+function isFinalizeApproach(approach: Approach | undefined): boolean {
+  return approach === "finalize" || approach === "bootstrap-finalize";
+}
+
 function execResultDocId(projectId: string, mode: TaskMode, localBase: string): string {
   const prefix = mode === "review" ? "xrr" : "xer";
   const localId = `${prefix}-${localBase.toLowerCase()}`;
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-function loadResultTemplate(mode: TaskMode): string {
-  const templatePath = join(
-    specdojoRootDir(),
-    "docs/ja/specdojo/templates",
-    templateFileName(mode),
-  );
+// approach が finalize 系なら xer-human-<approach>-template.md を優先し、無ければ
+// mode 別の標準テンプレートへフォールバックする（plan 側の human × approach 解決と対称）。
+function loadResultTemplate(mode: TaskMode, approach: Approach | undefined): string {
+  const templatesPath = join(specdojoRootDir(), "docs/ja/specdojo/templates");
+  if (mode === "edit" && isFinalizeApproach(approach)) {
+    const finalizePath = join(templatesPath, `xer-human-${approach}-template.md`);
+    if (existsSync(finalizePath)) return readFileSync(finalizePath, "utf8");
+  }
+  const templatePath = join(templatesPath, templateFileName(mode));
   if (!existsSync(templatePath)) {
     throw new Error(`Template not found: ${templatePath}`);
   }
@@ -91,7 +115,11 @@ export async function scaffoldResult(opts: {
   agent: string;
   startedAt: string;
   approach?: Approach;
+  // タスクが対象とする文書の doc id リスト（plan frontmatter の targets と同じ規則）。
+  targets?: string[];
   reviewSections?: string;
+  // finalize / bootstrap-finalize の result に焼き込む確認記録セクション（catalog から解決）。
+  finalizeSections?: { doneCriteriaChecklist: string; targetsChecklist: string };
   // Shared plan/result stem. Defaults to taskId (fixed-name worktree/claim flow); in-place
   // callers pass a unique stem so file name and doc id stay unique and the result is tied to its plan.
   stem?: string;
@@ -108,7 +136,7 @@ export async function scaffoldResult(opts: {
   const resultsDir = join(executionPath, "exec", "results");
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true });
 
-  const template = loadResultTemplate(mode);
+  const template = loadResultTemplate(mode, approach);
 
   const meta: ExecResultMeta = {
     id: execResultDocId(projectId, mode, stem),
@@ -121,6 +149,7 @@ export async function scaffoldResult(opts: {
     started_at: startedAt,
     agent,
     ...(approach ? { approach } : {}),
+    ...(opts.targets && opts.targets.length > 0 ? { targets: opts.targets } : {}),
   };
 
   const values: Record<string, string> = { _FRONTMATTER_: serializeFrontmatter(meta) };
@@ -129,6 +158,13 @@ export async function scaffoldResult(opts: {
   // marker; the result template's own prose explains how to fill the sections.
   if (mode === "review") {
     values._REVIEW_RESULT_SECTIONS_ = opts.reviewSections ?? "_TODO_";
+  }
+  // Finalize results pre-expand the confirmation record (done_criteria checklist and
+  // ready-promotion targets) so every finalize is verified against the same items.
+  // When the caller cannot resolve them, leave _TODO_ markers for manual fill-in.
+  if (isFinalizeApproach(approach)) {
+    values._DONE_CRITERIA_CHECKLIST_ = opts.finalizeSections?.doneCriteriaChecklist ?? "_TODO_";
+    values._FINALIZE_TARGETS_CHECKLIST_ = opts.finalizeSections?.targetsChecklist ?? "_TODO_";
   }
   const content = expandTemplate(template, values);
 
@@ -165,7 +201,7 @@ export async function updateResultStatus(
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
-  const { meta: existingMeta, body } = parseFrontmatter(content);
+  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
 
   // block 理由は blocked のときのみ保持する。新しい reason を優先し、無ければ既存値を残す。
   // complete へ遷移した場合は理由を消す。
@@ -184,6 +220,7 @@ export async function updateResultStatus(
     completed_at: completedAt,
     agent: existingMeta.agent,
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
+    ...(existingTargets ? { targets: existingTargets } : {}),
     ...(blockReason ? { block_reason: blockReason } : {}),
   };
 

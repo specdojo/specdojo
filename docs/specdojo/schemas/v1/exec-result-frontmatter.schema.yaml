@@ -78,3 +78,14 @@ properties:
         $ref: "./exec-common.schema.yaml#/$defs/Approach"
         description: >
           Carried from the corresponding plan. Omitted when not declared for this phase.
+
+      targets:
+        type: array
+        items:
+          type: string
+          minLength: 1
+        minItems: 1
+        description: >
+          Doc ids of the documents this task targets, carried with the same rules as the
+          plan frontmatter targets (first entry: target deliverable, then reference
+          materials the approach may modify or confirm).

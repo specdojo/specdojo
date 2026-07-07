@@ -203,7 +203,7 @@ provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide
 
 plan は `exec build` が自動生成します。対象タスクが Ready になると、`exec build` は未生成の human plan を `exec/plans/<task-id>-plan.md` に作成します。この plan は agent 向けの実行プロトコルを持たず、done_criteria の確認チェックリストと確定手順で構成されます。既存 plan は上書きしません。
 
-確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。`sch-strategy-<track>.yaml` の finalize フェーズに `approach` を指定すると、対応する human 用テンプレートから plan が生成されます（テンプレート選択は [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) を参照）。
+確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。`sch-strategy-<track>.yaml` の finalize フェーズに `approach` を指定すると、対応する human 用テンプレートから plan が生成されます（テンプレート選択は [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) を参照）。
 
 実行者に依らず、進捗（Ready・phase gate・CPM）へ反映するため状態イベントを記録します。
 
@@ -219,7 +219,8 @@ specdojo exec claim \
   --msg "finalize"
 
 # 3. 人が最終確認・修正し、成果物 frontmatter の status を ready に更新する
-#    result の 実施内容 / 変更ファイル に確定判断を記入する
+#    result の 確認チェックリスト / 確定対象 にチェックを付け、
+#    実施内容 / 変更ファイル / 確定判断 を記入する
 
 # 4. 完了を記録する
 specdojo exec complete \
