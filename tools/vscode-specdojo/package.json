@@ -29,7 +29,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "npm run compile && vsce package --allow-missing-repository",
-    "reinstall": "npm run package && code --uninstall-extension specdojo.vscode-specdojo; code --install-extension vscode-specdojo-0.1.0.vsix"
+    "reinstall": "code --uninstall-extension specdojo.vscode-specdojo; code --install-extension vscode-specdojo-0.1.0.vsix",
+    "rebuild": "npm run package && code --uninstall-extension specdojo.vscode-specdojo; code --install-extension vscode-specdojo-0.1.0.vsix"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
