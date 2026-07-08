@@ -28,18 +28,18 @@ Project Register
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0001 | open | _TODO_ | _TODO_ | todo | high | _TODO_ | _TODO_ | - | - | - |
 
-## 4. 派生ビュー
+## 2. 派生ビュー
 
 以下のファイルは、プロジェクト登録簿から生成される補助一覧です。
 正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` とし、派生ビューは正本の内容に従属します。
 
-### 4.1. 登録簿内の補助一覧
+### 2.1. 登録簿内の補助一覧
 
-- `[台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)`
+- [台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)
 
-### 4.2. controls 全体の派生管理ビュー
+### 2.2. controls 全体の派生管理ビュー
 
-- `[リスク登録簿](../generated/pm-risk-register.md)`
-- `[課題ログ](../generated/pm-issue-log.md)`
-- `[変更要求ログ](../generated/pm-change-request-log.md)`
-- `[決定記録](../generated/pm-decision-log.md)`
+- [リスク登録簿](../generated/pm-risk-register.md)
+- [課題ログ](../generated/pm-issue-log.md)
+- [変更要求ログ](../generated/pm-change-request-log.md)
+- [決定記録](../generated/pm-decision-log.md)

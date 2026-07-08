@@ -32,8 +32,8 @@ type 別、担当者別、状態別、優先度別などの派生ビューは `g
 flowchart LR
   PJR_IDX["pjr-index<br>プロジェクト登録簿"]
   PJR_ITEM["pjr-XXXX-&lt;topic&gt;<br>個別登録項目"]
-  PJR_GEN["010-project-register/generated<br>登録簿内の補助一覧"]
-  PM_GEN["020-controls/generated<br>controls 全体の派生管理ビュー"]
+  PJR_GEN["project-register/generated<br>登録簿内の補助一覧"]
+  PM_GEN["controls/generated<br>controls 全体の派生管理ビュー"]
 
   PJR_IDX --> PJR_ITEM
   PJR_IDX --> PJR_GEN
@@ -47,8 +47,8 @@ flowchart LR
 
 - `pjr-index` が project-register の起点となる。
 - `pjr-XXXX-<topic>.md` は個別登録項目の正本として扱う。
-- `010-project-register/generated/` には、登録簿内の補助一覧を置く。
-- `020-controls/generated/` には、controls 全体の type 別管理ビューを置く。
+- `project-register/generated/` には、登録簿内の補助一覧を置く。
+- `controls/generated/` には、controls 全体の type 別管理ビューを置く。
 
 ## 3. ファイル命名・ID規則
 
@@ -67,7 +67,7 @@ flowchart LR
 - プロジェクト登録簿本体は以下に配置する。
 
 ```text
-docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-register/pjr-index.md
+docs/ja/projects/<project-id>/030-project-management/controls/project-register/pjr-index.md
 ```
 
 - 個別登録項目のファイル名は `pjr-XXXX-<topic>.md` 形式とする。
@@ -91,7 +91,7 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 | 章  | 内容         | 必須 |
 | --- | ------------ | ---- |
 | 1   | 登録項目一覧 | ○    |
-| 4   | 派生ビュー   | 任意 |
+| 2   | 派生ビュー   | 任意 |
 
 ### 5.1. 登録項目一覧 の標準列
 
@@ -105,6 +105,8 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 | 優先度     | 対応優先度                                    | ○    |
 | 担当       | 主担当者または役割。未定の場合は `_TODO_`     | 任意 |
 | 期限       | 対応期限または判断期限。未定の場合は `_TODO_` | 任意 |
+| 完了日     | 完了・却下した日付。未完了の場合は `-`        | 任意 |
+| 結論       | 完了・却下・決定時の結果の要約。未定は `-`    | 任意 |
 | 個票       | `pjr-XXXX-<topic>.md` への相対リンク          | 条件 |
 
 `description` と `個票` は、少なくともどちらか一方を記載する。短文で管理できる項目は `description` のみでよい。
@@ -140,6 +142,7 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 - タイトルは1文以内に収め、登録項目の内容を端的に示す。
 - `description` は1〜2文以内に収め、長文化する場合は個票へ分離する。
 - 担当または期限が未定の場合は空欄にせず `_TODO_` と記載する。
+- 完了、却下、決定した項目は、「完了日」に日付を記入し、「結論」に結果を1文で残す。
 - 個票がある一覧行は個別登録項目の要約に留め、判断理由、経緯、対応内容は個別登録項目へ分離する。
 
 ### 6.3. type / status / priority の記述
@@ -153,8 +156,8 @@ docs/ja/projects/<project-id>/030-project-management/020-controls/010-project-re
 
 `generated/` 配下のファイルは、project-register から生成される派生ビューであり、正本ではない。
 
-- `010-project-register/generated/` は、登録簿内の補助一覧を置く。
-- `020-controls/generated/` は、controls 全体の type 別管理ビューを置く。
+- `project-register/generated/` は、登録簿内の補助一覧を置く。
+- `controls/generated/` は、controls 全体の type 別管理ビューを置く。
 - 派生ビューの内容と `pjr-index` または個別登録項目が矛盾する場合は、`pjr-index` または個別登録項目を正とする。
 
 ### 6.5. based_on の記述

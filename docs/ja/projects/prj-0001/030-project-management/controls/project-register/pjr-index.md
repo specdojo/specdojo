@@ -43,7 +43,7 @@ Project Register
 | PJR-0020 | done | prj-comparison-of-alternatives-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | - |
 | PJR-0021 | done | pm-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | - |
 | PJR-0022 | done | pm-communication-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | - |
-| PJR-0023 | done | pm-quality-management-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | - | このtodoはschで管理 | - |
+| PJR-0023 | done | pm-quality-management-plan-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | - |
 | PJR-0024 | done | pm-roles-*作成 | yamlを作る前提でrulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0025 | done | pm-members-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
 | PJR-0026 | done | pm-raci-*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | - |
@@ -93,8 +93,8 @@ Project Register
 | PJR-0071 | done | specdojo buildコマンドの追加 | 生成物の一括ビルドを行うコマンドを追加 | todo | medium | ARC | 2026-05-24 | 2026-05-23 | specdojo buildコマンドを実装 | - |
 | PJR-0072 | done | 単体テストの追加 | specdojoコマンドの単体テストを追加 | todo | medium | ARC | 2026-05-24 | 2026-05-24 | vitestのコードを追加 | - |
 | PJR-0073 | done | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | 2026-06-07 | pm-members.yamlに定義 | - |
-| PJR-0074 | done | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2025-05-24 | 2026-06-07 | pm-members.yamlに定義 | - |
-| PJR-0075 | done | worktreeに合わせたdevcontainer設定の変更 | マウントの変更等を実施 | todo | medium | ARC | 2025-05-24 | 2026-05-24 | specdojo-workspaceに配置するよう見直し | - |
+| PJR-0074 | done | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | 2026-05-24 | 2026-06-07 | pm-members.yamlに定義 | - |
+| PJR-0075 | done | worktreeに合わせたdevcontainer設定の変更 | マウントの変更等を実施 | todo | medium | ARC | 2026-05-24 | 2026-05-24 | specdojo-workspaceに配置するよう見直し | - |
 | PJR-0076 | done | 完了成果物をscheduleへ反映 | specdojo scheduleに完了成果物を反映して初期値をずらす | todo | medium | ARC | 2026-05-26 | 2026-05-30 | 初期値をずらすのとgateの処理を追加 | - |
 | PJR-0077 | done | specdojo exec runの追加 | agentの実行を管理するためのコマンドを追加 | todo | medium | ARC | 2026-05-26 | 2026-05-27 | specdojo exec runコマンドを実装 | - |
 | PJR-0078 | done | scheduleにgateを導入 | first_pass後にsecond_passに進めるよう、phase_gatesを導入 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gatesを導入、yamlとtsを修正 | - |
@@ -138,18 +138,18 @@ Project Register
 | PJR-0116 | done | xrp-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | - |
 | PJR-0117 | done | xrr-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | - |
 
-## 4. 派生ビュー
+## 2. 派生ビュー
 
 以下のファイルは、プロジェクト登録簿から生成される補助一覧です。
 正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` とし、派生ビューは正本の内容に従属します。
 
-### 4.1. 登録簿内の補助一覧
+### 2.1. 登録簿内の補助一覧
 
-- `[台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)`
+- [台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)
 
-### 4.2. controls 全体の派生管理ビュー
+### 2.2. controls 全体の派生管理ビュー
 
-- `[リスク登録簿](../generated/pm-risk-register.md)`
-- `[課題ログ](../generated/pm-issue-log.md)`
-- `[変更要求ログ](../generated/pm-change-request-log.md)`
-- `[決定記録](../generated/pm-decision-log.md)`
+- [リスク登録簿](../generated/pm-risk-register.md)
+- [課題ログ](../generated/pm-issue-log.md)
+- [変更要求ログ](../generated/pm-change-request-log.md)
+- [決定記録](../generated/pm-decision-log.md)

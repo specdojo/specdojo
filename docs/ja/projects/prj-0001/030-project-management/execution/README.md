@@ -1,11 +1,11 @@
 # prj-0001 Execution Layout
 
-このディレクトリは `docs/ja/projects/prj-0001/030-project-management/040-schedule` で定義した schedule を実行するための実行領域である。
+このディレクトリは `docs/ja/projects/prj-0001/030-project-management/schedule` で定義した schedule を実行するための実行領域である。
 
 ## 1. ディレクトリ責務
 
 ```text
-060-execution/
+execution/
 ├─ exec/
 │  ├─ events/
 │  ├─ plans/
@@ -22,7 +22,7 @@
 
 ## 2. 主な generated ファイル
 
-`specdojo exec build --project shj-0001` 実行後、`generated/` に以下が出力される。
+`specdojo exec build --project prj-0001` 実行後、`generated/` に以下が出力される。
 
 - `state.json`: task state snapshot（全 task の現在状態: todo/doing/blocked/done/cancelled）
 - `ready.md`: 人間向け ready 一覧（strategy 別に整形済み）
@@ -67,9 +67,9 @@
 ## 5. 基本コマンド
 
 ```bash
-specdojo exec validate --project shj-0001
-specdojo exec build --project shj-0001
-specdojo exec scheduler --project shj-0001 --by agent-1
+specdojo exec validate --project prj-0001
+specdojo exec build --project prj-0001
+specdojo exec scheduler --project prj-0001 --by agent-1
 ```
 
-`specdojo exec where --project shj-0001` を使うと、schedule と execution の実パスを確認できる。
+`specdojo exec where --project prj-0001` を使うと、schedule と execution の実パスを確認できる。

@@ -423,6 +423,13 @@ export default defineConfig({
     ],
   ],
 
+  // pjr-index-template.md は scaffold 元のため、標準派生ビューへの相対リンクが
+  // テンプレート置き場では解決できない。生成先（各プロジェクトの project-register/）では
+  // specdojo build が生成するファイルであり、この5リンクに限り dead link 検査を除外する。
+  ignoreDeadLinks: [
+    /^\.\/(\.\.\/)?generated\/(pjr-views|pm-risk-register|pm-issue-log|pm-change-request-log|pm-decision-log)$/,
+  ],
+
   // 物理パスは docs/ja, docs/en のままで、
   // 公開URL（および i18n のロケール判定）は /ja/, /en/ に揃える。
   rewrites: {
