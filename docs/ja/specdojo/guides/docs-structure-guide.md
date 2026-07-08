@@ -10,19 +10,20 @@ specdojo:
 Document Structure Guide
 
 SpecDojoで扱うドキュメントの全体構成について、以下のガイドラインを示します。
+ドキュメントの作成順・検討順については [ドキュメント作成順ガイド](docs-authoring-order-guide.md) を参照してください。
 
-## SpecDojoで扱うドキュメントの全体構成
+## 1. SpecDojoで扱うドキュメントの全体構成
 
 - SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメントとプロジェクトドキュメントを含む1つの `docs/` ルートを指します。
 - 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します。
 - 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに `docs/` ルートを分け、それぞれを独立した SpecDojo Unit として扱います。
 - 成果物IDは、原則として SpecDojo Unit 内で一意にします。複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID と成果物IDの組み合わせで識別します。
 
-## 1. ドキュメントの分類
+## 2. ドキュメントの分類
 
 ドキュメントは、プロダクトドキュメントとプロジェクトドキュメントの2種類に分類されます。
 
-### 1.1. プロダクトドキュメント
+### 2.1. プロダクトドキュメント
 
 **プロダクトの最新状況を説明するドキュメントです**。
 
@@ -39,7 +40,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 - プロジェクト固有の判断や経緯は含めず、必要な場合はプロジェクトドキュメントから反映されます。
 - ドキュメントの改定履歴はバージョン管理システムで管理します。
 
-### 1.2. プロジェクトドキュメント
+### 2.2. プロジェクトドキュメント
 
 **プロダクトの構築時や改修時に、プロジェクト毎に作成されるドキュメントです**。
 
@@ -51,7 +52,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 について記載します。プロジェクト完了後はアーカイブされます。
 
-## 2. 前提となる工程のフロー
+## 3. 前提となる工程のフロー
 
 | フェーズ | 用語                   | 5W1H            | このガイドでの意味                        |
 | -------- | ---------------------- | --------------- | ----------------------------------------- |
@@ -61,7 +62,9 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 | 4        | 設計（Design）         | How (方式)      | 構造・方式・構成として**どう実現するか**  |
 | 5        | 実装（Implementation） | How (具現)      | コード・設定としての実現                  |
 
-## 3. ドキュメントオーナー
+各フェーズの詳細は [ドキュメントフェーズ概要](docs-phases-overview.md) を参照してください。
+
+## 4. ドキュメントオーナー
 
 ドキュメントのオーナーは、以下の通りです。
 
@@ -70,9 +73,9 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 | ビジネスオーナー | 🧭   | BO   | 最終的な価値判断の主体     |
 | エンジニア       | ⚙️   | EN   | 技術的実現と品質判断の主体 |
 
-## 4. ドキュメントの構成
+## 5. ドキュメントの構成
 
-### 4.1. 凡例
+### 5.1. 凡例
 
 ```mermaid
 flowchart TB
@@ -86,7 +89,7 @@ flowchart TB
   class プロダクトドキュメント,成果物 productSpec;
 ```
 
-### 4.2. ドキュメント構成図
+### 5.2. ドキュメント構成図
 
 ```mermaid
 flowchart TB
@@ -164,9 +167,9 @@ flowchart TB
 - 図中のアーキテクチャ設計は、個別仕様に先立つ全体構造の設計を表します。
 - 「業務要件を含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
 
-## 5. プロジェクトドキュメントの構成
+## 6. プロジェクトドキュメントの構成
 
-### 5.1. ディレクトリ構成
+### 6.1. ディレクトリ構成
 
 ディレクトリ名とファイル名については、以下のようにfrontmatterで定義されたidと対応させることを推奨します。
 idと対応させない場合（日本語名称を使用する場合等）は、一貫性を保った命名規約を採用してください。
@@ -279,153 +282,6 @@ docs/
 │   └── product/
 │
 └── en/                                           # 将来の英語ドキュメント用ディレクトリ
-```
-
-## 6. ドキュメントの作成順・検討順のガイドライン
-
-> ここで示すドキュメントの関係は、作成順・検討順を表します。
-> Frontmatter の `based_on` とは直接の関係はありません。
-> Frontmatter の `based_on` は各文書を作成する際に直接根拠として参照した文書のみを記載するため、
-> 本図の矢印を `based_on` は一致するわけではありません。
-
-- 成果物カタログ（`dct-<domain>.yaml`）は、
-  プロジェクトで管理対象とする成果物の単一の正本（SSOT）であり、各成果物の作成・更新・管理の起点となる。
-  各類型（プロジェクト定義、プロジェクトマネジメント、プロダクト変更等）の成果物は、
-  本カタログに登録された単位で管理されます。
-- 成果物の類型は次の5つに大別されます。
-  - A. 立ち上げ
-  - B. プロジェクト定義
-  - C. プロジェクトマネジメント
-  - D. プロダクト変更
-  - E. プロダクト成果物（更に詳細な類型に分類）
-- 成果物の作成順は、`A → (C + B) → D → E` が基本になりますが、プロジェクトの状況に応じて柔軟に対応します。
-  特に、`A. 立ち上げ`の成果物（概要・ステークホルダー・憲章）を起点として、
-  `B. プロジェクト定義`（何を作るか）と `C. プロジェクトマネジメント`（どう進めるか）は並行して作成されることが多いです。
-- 図中の成果物カタログ（`dct-<domain>.yaml`）は同一種類の正本文書を表し、各サブグラフでは当該類型に関する登録範囲を示しています。
-- プロジェクトのGO/NOT GOの判断は、以下の３つのゲートを設けることを推奨します;
-  1. **TO-BEの明確化（`A`, `B`, `C`が完了）**: 将来構想が固まった段階
-  2. **TO-BEの実現性が明確化（`D`が完了）**: 将来構想と現状とのギャップと対応策が明確になった段階
-  3. **負荷・期間が明確化（`E`が完了）**: 将来構想を実現するための負荷と工期が明確になった段階
-
-```mermaid
-flowchart TB
-  subgraph INIT["A. 立ち上げ"]
-  direction LR
-    OV["prj-overview<br/>プロジェクト概要"]
-    SR["prj-stakeholder-register<br/>ステークホルダー登録簿"]
-    CH["prj-charter<br/>プロジェクト憲章"]
-    ORG["pm-organization<br/>体制・ロール"]
-    RL["pm-roles<br/>ロール定義"]
-    MEM["pm-members<br/>メンバー"]
-    RAC["pm-raci<br/>RACI"]
-    OV --> ORG
-    OV -.必要時.-> SR -.必要時.-> CH
-    ORG -.必要時.-> CH
-    SR -.必要時.-> ORG --> RL --> MEM
-    ORG --> MEM
-    ORG -.必要時.-> RAC
-  end
-
-
-  subgraph PM["C. プロジェクトマネジメント"]
-  direction LR
-    PM_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクトマネジメント用）"]
-    PM_EXE(["実行・管理"])
-    PL["pm-plan<br/>プロジェクト管理計画"]
-    CP["pm-communication-plan<br/>コミュニケーション計画"]
-    QMP["pm-quality-management-plan<br/>品質管理計画"]
-    PM_DC --> PM_EXE --> PL
-    PL --> CP
-    PL --> QMP
-  end
-
-  subgraph PD["B. プロジェクト定義"]
-  direction LR
-    PD_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクト定義用）"]
-    PD_EXE(["実行・管理"])
-    PS["prj-scope<br/>スコープ"]
-    SC_AC["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入条件"]
-    ACD["prj-assumptions-constraints-dependencies<br/>前提・制約・依存関係"]
-    IA["prj-issues-and-approach<br/>課題とアプローチ"]
-    CA["prj-comparison-of-alternatives<br/>代替案の比較<br/>（必要時）"]
-    PD_DC --> PD_EXE --> PS
-    PS --> SC_AC
-    PS --> ACD
-    PS --> IA
-    PS --> CA
-    ACD --> IA
-    IA --> CA
-  end
-
-  GT1{"GO/NOT GO"}
-  PD --> GT1 --> PC
-
-  subgraph PC["D. プロダクト変更"]
-  direction LR
-    PC_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト変更用）"]
-    PC_EXE(["実行・管理"])
-    AS_IS["As-Is<br/>現状定義"]
-    IMP["Impact<br/>影響範囲"]
-    TRC["Traceability<br/>トレーサビリティ"]
-    MIG["Migration<br/>移行"]
-    PC_DC --> PC_EXE --> AS_IS
-    AS_IS --> IMP
-    AS_IS --> TRC
-    IMP --> TRC
-    TRC --> MIG
-  end
-
-  GT2{"GO/NOT GO"}
-  PC --> GT2 --> DEL
-
-  subgraph DEL["E. プロダクト成果物"]
-  direction LR
-    DEL_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト成果物用）"]
-    DEL_EXE(["実行・管理"])
-    DE["deliverables<br/>成果物"]
-    DEL_DC --> DEL_EXE --> DE
-  end
-
-  INIT --> PM
-  INIT --> PD
-  PM <--> PD
-
-  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef productSpec fill:#d0ebff,stroke:#1c7ed6,color:#000;
-
-  class OV,SR,CH,ORG,MEM,RAC,RL projectWise;
-  class PM_DC,PM_EXE,PL,CP,QMP projectWise;
-  class PD_DC,PD_EXE,PS,SC_AC,ACD,IA,CA projectWise;
-  class PC_DC,PC_EXE,AS_IS,IMP,TRC,MIG projectWise;
-  class DEL_DC,DEL_EXE projectWise;
-  class DE productSpec;
-
-  GT3{"GO/NOT GO"}
-  DEL --> GT3
-
-
-```
-
-図中の成果物カタログからプロジェクトドキュメントを作成する`実行・管理`の流れは以下になります。
-
-```mermaid
-flowchart LR
-
-  PJR["pjr-index / pjr-&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
-  DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ"]
-  SCH["sch-track-&lt;track&gt;.yaml<br/>スケジュール"]
-  EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
-  PV["pjr-views<br/>台帳ビュー（状態別・優先度別・担当者別）"]
-  PRR["pm-risk-register<br/>リスク登録簿"]
-  PL["pm-issue/change-request/decision-log<br/>課題/変更要求/意思決定<br/>ログ"]
-
-  PJR --> DC --> SCH --> EXE
-  PJR --> PV
-  PJR --> PRR
-  PJR --> PL
-
-  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class PJR,DC,SCH,EXE,PV,PRR,PL projectWise;
 ```
 
 ## 7. プロダクトドキュメントの構成

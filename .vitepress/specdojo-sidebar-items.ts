@@ -190,6 +190,7 @@ export const specdojoSidebarItems = [
     collapsed: false,
     items: [
       guide("ドキュメントの構成", "docs-structure-guide"),
+      guide("ドキュメントの作成順", "docs-authoring-order-guide"),
       guide("ドキュメントのフェーズ概要", "docs-phases-overview"),
       guide("ドキュメントの内容", "docs-contents-guide"),
       guide("ドキュメントの書き方", "docs-editing-guide"),

@@ -29,7 +29,7 @@ Project Overview Documentation Rulebook
 
 ## 2. 位置づけ
 
-ドキュメント間の関係は [[docs-structure-guide|ドキュメント構成ガイド]] の立ち上げフロー図を参照してください。本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。
+ドキュメント間の関係は [[docs-authoring-order-guide|ドキュメント作成順ガイド]] の立ち上げフロー図を参照してください。本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。
 
 ## 3. ファイル命名・ID規則
 
