@@ -145,11 +145,11 @@ Project Register
 
 ### 2.1. 登録簿内の補助一覧
 
-- [台帳ビュー（状態別・優先度別・担当者別）](./generated/pjr-views.md)
+- [[pjr-views|台帳ビュー（状態別・優先度別・担当者別）]]
 
 ### 2.2. controls 全体の派生管理ビュー
 
-- [リスク登録簿](../generated/pm-risk-register.md)
-- [課題ログ](../generated/pm-issue-log.md)
-- [変更要求ログ](../generated/pm-change-request-log.md)
-- [決定記録](../generated/pm-decision-log.md)
+- [[pm-risk-register|リスク登録簿]]
+- [[pm-issue-log|課題ログ]]
+- [[pm-change-request-log|変更要求ログ]]
+- [[pm-decision-log|決定記録]]
