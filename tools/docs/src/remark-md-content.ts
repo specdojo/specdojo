@@ -97,7 +97,14 @@ function extractText(node: unknown): string {
   if (typeof node !== "object" || node === null) return "";
   const n = node as Record<string, unknown>;
   if (typeof n.value === "string") return n.value;
-  if (Array.isArray(n.children)) return (n.children as unknown[]).map(extractText).join("");
+  if (Array.isArray(n.children)) {
+    const inner = (n.children as unknown[]).map(extractText).join("");
+    // `_TODO_` のようなプレースホルダは Markdown 上は強調として解釈される。
+    // スキーマの enum / pattern は `_TODO_` を字面どおりの値として扱うため、
+    // 強調マーカーを `_` で復元してから照合する。
+    if (n.type === "emphasis") return `_${inner}_`;
+    return inner;
+  }
   return "";
 }
 
