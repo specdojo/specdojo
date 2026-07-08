@@ -7,10 +7,14 @@ USER root
 ENV TZ=Asia/Tokyo
 
 # mermaid-cli(mmdc) が使う Chromium と、その周辺ライブラリをインストール
+# chromium-headless-shell を使うのは、Debian の chromium 150.0.7871.46-1~deb13u1
+# (arm64 full 版) にヘッドレス描画時クラッシュ (brk #0 / SIGTRAP) の退行があるため。
+# headless-shell は同一バージョンでも影響を受けず、mmdc の用途には軽量で十分。
 # locales は tmux 等のターミナルで日本語(UTF-8)を正しく表示するために必要
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
       chromium \
+      chromium-headless-shell \
       fonts-noto-cjk \
       locales \
       tzdata \
@@ -54,8 +58,9 @@ RUN apt-get update && apt-get install -y \
 ENV LANG=ja_JP.UTF-8 \
     LANGUAGE=ja_JP:ja
 
-# puppeteer/mermaid-cli に「自前の Chromium を使え」と伝える
+# puppeteer/mermaid-cli に「自前の Chromium (headless-shell) を使え」と伝える。
+# full 版 /usr/bin/chromium は上記の退行が直るまで参照しない。
 ENV PUPPETEER_SKIP_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+    PUPPETEER_EXECUTABLE_PATH=/usr/lib/chromium/chromium-headless-shell
 
 USER node
