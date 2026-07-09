@@ -8,7 +8,7 @@ import { selfRunArgs } from "./spawn-self.js";
 // Types
 // ================================
 
-type BuildScope = "exec" | "catalog" | "register" | "index" | "all";
+type BuildScope = "exec" | "catalog" | "register" | "yaml-pages" | "index" | "all";
 
 type StepDef = {
   scope: Exclude<BuildScope, "all">;
@@ -16,7 +16,7 @@ type StepDef = {
   subArgs: string[];
 };
 
-const VALID_SCOPES: BuildScope[] = ["exec", "catalog", "register", "index", "all"];
+const VALID_SCOPES: BuildScope[] = ["exec", "catalog", "register", "yaml-pages", "index", "all"];
 
 // ================================
 // Step Resolution
@@ -26,7 +26,7 @@ function isStepApplicable(
   scope: Exclude<BuildScope, "all">,
   project: SpecDojoProjectConfig | undefined,
 ): boolean {
-  if (scope === "index") return true;
+  if (scope === "index" || scope === "yaml-pages") return true;
   if (!project) return false;
   switch (scope) {
     case "exec":
@@ -60,6 +60,11 @@ function resolveSteps(
       subArgs: ["register", "build", ...projectArgs],
     },
     {
+      scope: "yaml-pages",
+      label: "yaml-pages build",
+      subArgs: ["yaml-pages", "build"],
+    },
+    {
       scope: "index",
       label: "index build",
       subArgs: ["index", "build"],
@@ -90,7 +95,7 @@ function logError(msg: string): void {
 export function registerBuildCommand(program: Command): void {
   program
     .command("build")
-    .description("Run all build steps in sequence (exec → catalog → register → index)")
+    .description("Run all build steps in sequence (exec → catalog → register → yaml-pages → index)")
     .option("--project <id>", "Project ID (specdojo.config.json)")
     .option("--scope <scope>", `Build scope: ${VALID_SCOPES.join(" | ")}`, "all")
     .option("--dry-run", "Print commands without executing", false)

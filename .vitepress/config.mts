@@ -33,16 +33,35 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
 }
 const docIndex = loadDocIndex(WORKSPACE_ROOT);
 
-// doc id を doc-index で docs ルート相対パス（"ja/..."）へ解決する。Markdown 以外は対象外。
+// doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
+function stripEntryLineSuffix(entry: string): string {
+  const colonIndex = entry.lastIndexOf(":");
+  const hasLine = colonIndex > 0 && /^\d+$/.test(entry.slice(colonIndex + 1));
+  return hasLine ? entry.slice(0, colonIndex) : entry;
+}
+
+// エントリパスをページとして表示できる Markdown パスへ解決する。
+// YAML は VitePress のページにならないため、yaml-pages build が生成した
+// 同階層の generated/<name>.md があればそちらへ付け替える。
+function toRenderableEntryPath(entryPath: string): string | undefined {
+  if (entryPath.endsWith(".md")) return entryPath;
+  if (!/\.ya?ml$/.test(entryPath)) return undefined;
+  const pagePath = path.posix.join(
+    path.posix.dirname(entryPath),
+    "generated",
+    path.posix.basename(entryPath).replace(/\.ya?ml$/, ".md"),
+  );
+  return existsSync(path.join(WORKSPACE_ROOT, pagePath)) ? pagePath : undefined;
+}
+
+// doc id を doc-index で docs ルート相対パス（"ja/..."）へ解決する。
+// 表示可能な Markdown（YAML の場合は表示用生成ページ）へ解決できない id は対象外。
 function resolveDocRelPath(id: string): string | undefined {
   const entry = docIndex[id];
   if (!entry) return undefined;
-  // 行番号サフィックスを除去（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
-  const colonIndex = entry.lastIndexOf(":");
-  const hasLine = colonIndex > 0 && /^\d+$/.test(entry.slice(colonIndex + 1));
-  const entryPath = hasLine ? entry.slice(0, colonIndex) : entry;
-  if (!entryPath.endsWith(".md")) return undefined;
-  return entryPath.startsWith("docs/") ? entryPath.slice(5) : entryPath;
+  const renderablePath = toRenderableEntryPath(stripEntryLineSuffix(entry));
+  if (!renderablePath) return undefined;
+  return renderablePath.startsWith("docs/") ? renderablePath.slice(5) : renderablePath;
 }
 
 // frontmatter（FrontmatterTable が展開する五階層まで）の文字列値・文字列配列要素のうち
@@ -609,14 +628,16 @@ export default defineConfig({
         if (!silent) {
           const entry = docIndex[id];
           if (entry) {
-            // Strip line number suffix (e.g. "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml")
-            const colonIdx = entry.lastIndexOf(":");
-            const hasLine = colonIdx > 0 && /^\d+$/.test(entry.slice(colonIdx + 1));
-            const entryPath = hasLine ? entry.slice(0, colonIdx) : entry;
+            const entryPath = stripEntryLineSuffix(entry);
+
+            // YAML は表示用生成ページがあればそちらへ付け替える（なければ元パスのまま）。
+            const renderablePath = toRenderableEntryPath(entryPath) ?? entryPath;
 
             // Index entries are workspace-root-relative ("docs/ja/...").
             // Strip "docs/" to get docs-root-relative path ("ja/...").
-            const docsRelTarget = entryPath.startsWith("docs/") ? entryPath.slice(5) : entryPath;
+            const docsRelTarget = renderablePath.startsWith("docs/")
+              ? renderablePath.slice(5)
+              : renderablePath;
 
             // Compute href relative to the current file (VitePress sets env.relativePath)
             const currentRelPath = state.env?.relativePath as string | undefined;
