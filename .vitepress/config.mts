@@ -1,7 +1,15 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
 import * as crypto from "crypto";
-import { specdojoSidebarItems } from "./specdojo-sidebar-items";
+import {
+  specdojoSidebarItems,
+  PROJECTS_SEGMENT_TEXT,
+  PROJECTS_FILE_TEXT,
+  PROJECTS_FILE_MENU,
+  PROJECTS_GROUP_ORDER,
+  FLATTENED_GROUP_TEXTS,
+} from "./sidebar-config";
+import type { SidebarItem } from "./sidebar-config";
 import type { Plugin } from "vite";
 import { generateMermaidSvgs, generateMermaidSvgsForFile } from "../tools/docs/src/gen-mermaid-svg";
 import * as path from "path";
@@ -89,13 +97,6 @@ const base = "/specdojo/";
 
 const hashCode = (code: string): string =>
   crypto.createHash("md5").update(code).digest("hex").slice(0, 8);
-
-type SidebarItem = {
-  text?: string;
-  link?: string;
-  items?: SidebarItem[];
-  collapsed?: boolean;
-};
 
 const mermaidSvgAutoGenerate = (): Plugin => {
   let timer: NodeJS.Timeout | undefined;
@@ -254,93 +255,6 @@ const normalizeAndPrefixLink = (link: string, locale: Locale): string => {
 
   return hash ? `${prefixedPath}#${hash}` : prefixedPath;
 };
-
-const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
-  projects: "プロジェクト",
-  "010-deliverables-catalog": "成果物カタログ",
-  "020-project-definition": "プロジェクト定義",
-  "030-project-management": "プロジェクトマネジメント",
-  "040-product-change": "プロダクト変更",
-  "010-management-plan": "管理計画",
-  "020-organization": "組織体制",
-  controls: "管理台帳・管理ビュー",
-  "project-register": "プロジェクト登録簿",
-  reporting: "レポート",
-  "progress-reports": "進捗報告",
-  "meeting-minutes": "議事録",
-  execution: "実行管理",
-  exec: "実行ワークスペース",
-  events: "イベントログ",
-  plans: "実行プラン",
-  results: "実行結果",
-  generated: "生成物",
-  reviews: "レビュー",
-  schedule: "スケジュール",
-  "010-as-is": "現状定義",
-  "010-business-specifications": "業務仕様",
-  "020-impact-analysis": "影響調査",
-  "030-traceability": "トレーサビリティ",
-  "040-migration": "移行",
-};
-
-const PROJECTS_FILE_TEXT: Record<string, string> = {
-  index: "一覧",
-  "task-catalog": "タスクカタログ",
-};
-
-// プロジェクト配下の既知ファイルのメニュー表示（標準成果物と生成ビュー）。
-// text: H1 の「タイトル: <プロジェクト名>」形式や英語 H1 より短い固定表示名（H1 より優先）。
-// order: 同一ディレクトリ内での表示順。ファイル名順ではなく作成順・検討順
-// （docs-authoring-order-guide）や参照頻度に合わせる。未登録ファイルはファイル名順で後続に並ぶ。
-// order を省略したファイルは既定の並び（README は先頭）に従う。
-const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }> = {
-  README: { text: "概要" },
-  // 010-deliverables-catalog
-  "dct-index": { text: "成果物カタログの索引", order: 10 },
-  "dct-project-definition": { text: "成果物カタログ（プロジェクト定義）", order: 20 },
-  "dct-project-management": { text: "成果物カタログ（プロジェクトマネジメント）", order: 30 },
-  // 020-project-definition
-  "prj-overview": { text: "プロジェクト概要", order: 10 },
-  "prj-stakeholder-register": { text: "ステークホルダー登録簿", order: 20 },
-  "prj-charter": { text: "プロジェクト憲章", order: 30 },
-  "prj-scope": { text: "プロジェクトスコープ", order: 40 },
-  "prj-success-criteria-and-acceptance-criteria": { text: "成功基準と受入条件", order: 50 },
-  "prj-issues-and-approach": { text: "課題と解決アプローチ", order: 60 },
-  "prj-assumptions-constraints-dependencies": { text: "前提・制約・依存関係", order: 70 },
-  "prj-comparison-of-alternatives": { text: "代替案の比較", order: 80 },
-  // 030-project-management / 010-management-plan
-  "pm-plan": { text: "プロジェクト管理計画", order: 10 },
-  "pm-communication-plan": { text: "コミュニケーション計画", order: 20 },
-  "pm-quality-management-plan": { text: "品質管理計画", order: 30 },
-  // 030-project-management / 020-organization
-  "pm-organization": { text: "組織とロールの定義", order: 10 },
-  "pm-raci": { text: "組織体制とRACI", order: 20 },
-  // 030-project-management / controls
-  "pjr-index": { text: "プロジェクト登録簿", order: 10 },
-  "pm-risk-register": { text: "リスク登録簿", order: 10 },
-  "pm-issue-log": { text: "課題ログ", order: 20 },
-  "pm-change-request-log": { text: "変更要求ログ", order: 30 },
-  "pm-decision-log": { text: "意思決定ログ", order: 40 },
-  // 030-project-management / execution / generated（進捗ビュー）
-  ready: { text: "着手可能タスク", order: 10 },
-  timeline: { text: "タイムライン", order: 20 },
-  "critical-path": { text: "クリティカルパス", order: 30 },
-  cpm: { text: "クリティカルパス分析", order: 40 },
-  "schedule-diff": { text: "スケジュール差分", order: 50 },
-};
-
-// グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。
-// 既定では同一階層の先頭に並ぶため、後ろへ動かしたいグループのみ登録する。
-// 実行プラン・実行結果は大量の項目を含むため、進捗ビューの後ろに置く。
-const PROJECTS_GROUP_ORDER: Record<string, number> = {
-  実行プラン: 90,
-  実行結果: 95,
-};
-
-// グループ化せず、子を親と同一階層へ展開するグループ（メニュー表示名）。
-// 「生成物」（generated フォルダ）は一覧性のため、「実行ワークスペース」（exec フォルダ）は
-// VitePress サイドバーの描画深さ上限を超えて実行プラン・実行結果が表示されなくなるのを防ぐため。
-const FLATTENED_GROUP_TEXTS = new Set(["生成物", "実行ワークスペース"]);
 
 const stripMarkdownFrontmatter = (content: string): string =>
   content.startsWith("---\n") ? content.replace(/^---\n[\s\S]*?\n---\n?/, "") : content;
