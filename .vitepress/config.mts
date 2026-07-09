@@ -331,10 +331,16 @@ const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }> = {
 
 // グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。
 // 既定では同一階層の先頭に並ぶため、後ろへ動かしたいグループのみ登録する。
-// 実行ワークスペースは大量の plan / result を含むため、進捗ビューの後ろに置く。
+// 実行プラン・実行結果は大量の項目を含むため、進捗ビューの後ろに置く。
 const PROJECTS_GROUP_ORDER: Record<string, number> = {
-  実行ワークスペース: 90,
+  実行プラン: 90,
+  実行結果: 95,
 };
+
+// グループ化せず、子を親と同一階層へ展開するグループ（メニュー表示名）。
+// 「生成物」（generated フォルダ）は一覧性のため、「実行ワークスペース」（exec フォルダ）は
+// VitePress サイドバーの描画深さ上限を超えて実行プラン・実行結果が表示されなくなるのを防ぐため。
+const FLATTENED_GROUP_TEXTS = new Set(["生成物", "実行ワークスペース"]);
 
 const stripMarkdownFrontmatter = (content: string): string =>
   content.startsWith("---\n") ? content.replace(/^---\n[\s\S]*?\n---\n?/, "") : content;
@@ -471,9 +477,8 @@ const transformSidebar = (
       return next;
     });
 
-  // 「生成物」グループ（generated フォルダ）はグループ化せず、子を同一階層へ展開する。
   const flattened = transformed.flatMap((it) =>
-    !it.link && it.text === "生成物" && it.items ? it.items : [it],
+    !it.link && it.items && FLATTENED_GROUP_TEXTS.has(it.text ?? "") ? it.items : [it],
   );
 
   flattened.sort((a, b) => {
