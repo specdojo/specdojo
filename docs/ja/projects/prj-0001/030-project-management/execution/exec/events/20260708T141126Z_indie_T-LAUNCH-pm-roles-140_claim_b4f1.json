@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-08T14:11:26Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-roles-140",
+  "by": "indie",
+  "msg": "finalize bootstrap",
+  "meta": {
+    "claim_owner": "PO",
+    "planned_owner": "PO"
+  }
+}
