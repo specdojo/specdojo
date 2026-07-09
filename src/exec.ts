@@ -74,6 +74,7 @@ import {
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { scaffoldResult } from "./exec-results.js";
+import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
 import { scaffoldViewpoints } from "./review-plan.js";
 import { registerResumeCommand, registerRunCommand } from "./exec-run.js";
 import { buildTaskView } from "./exec-task-view.js";
@@ -826,6 +827,7 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(planCmd);
   planCmd.option("--task <taskId>", "Scheduled task ID to generate the plan for");
   planCmd.option("--deliverable <localId>", "Catalog deliverable local_id (unique project-wide)");
+  planCmd.option("--register <pjrId>", "Project register item ID (PJR-XXXX)");
   planCmd.option("--mode <mode>", "edit|review (deliverable target)", "edit");
   planCmd.option("--approach <approach>", "Approach template (deliverable target)");
   planCmd.option(
@@ -839,8 +841,9 @@ export function registerExecCommands(program: Command): void {
         resolveProjectContext(opts);
       const hasTask = typeof opts.task === "string" && opts.task.trim() !== "";
       const hasDeliverable = typeof opts.deliverable === "string" && opts.deliverable.trim() !== "";
-      if (hasTask === hasDeliverable) {
-        throw new Error("Specify exactly one of --task or --deliverable.");
+      const hasRegister = typeof opts.register === "string" && opts.register.trim() !== "";
+      if ([hasTask, hasDeliverable, hasRegister].filter(Boolean).length !== 1) {
+        throw new Error("Specify exactly one of --task, --deliverable, or --register.");
       }
       const projectId = resolveProjectId(opts);
       const outOverride =
@@ -848,10 +851,25 @@ export function registerExecCommands(program: Command): void {
 
       // Stem priority: --out → derive from the given filename (overwrite it); else --task → the
       // fixed task id, so the plan/result share one canonical name with claim / run --track-state
-      // and an in-place run can be adopted without renaming; else --deliverable → a new unique stem
-      // per generation (no task identity; avoids doc-index id collisions).
+      // and an in-place run can be adopted without renaming; else --deliverable / --register → a
+      // new unique stem per generation (no task identity; avoids doc-index id collisions).
       let outPath: string;
-      if (hasTask) {
+      if (hasRegister) {
+        const pjrId = normalizePjrId(opts.register as string);
+        const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+        const stem = outOverride
+          ? stemFromPlanPath(outOverride)
+          : buildInPlaceStem(pjrId.toLowerCase());
+        const generated = await generateRegisterPlan({
+          executionPath,
+          projectId,
+          registerPaths,
+          item,
+          stem,
+          ...(outOverride ? { outPath: outOverride } : {}),
+        });
+        outPath = generated.planPath;
+      } else if (hasTask) {
         const task = buildTaskView(schedulePath, executionPath, (opts.task as string).trim());
         const stem = outOverride ? stemFromPlanPath(outOverride) : (opts.task as string).trim();
         outPath = await generateSinglePlan({

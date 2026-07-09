@@ -29,6 +29,7 @@ export type SpecDojoProjectConfig = {
   roles_path?: string;
   viewpoints_path?: string;
   project_register_path?: string;
+  routines_path?: string;
   run?: SpecDojoRunConfig;
 };
 
@@ -151,6 +152,10 @@ export function getProjectViewpointsPath(project: SpecDojoProjectConfig): string
 
 export function getProjectRegisterPath(project: SpecDojoProjectConfig): string | undefined {
   return withOptionalBasePath(project, project.project_register_path);
+}
+
+export function getProjectRoutinesPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.routines_path);
 }
 
 export function loadMemberRoster(

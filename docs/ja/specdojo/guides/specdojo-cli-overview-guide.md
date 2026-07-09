@@ -22,6 +22,7 @@ SpecDojo CLI Overview Guide
 | 実行イベント               | `exec/events/*.json`       | `exec`       |
 | 実行生成物                 | `generated/*`              | `exec build` |
 | プロジェクト登録簿         | `pjr-index.md`             | `register`   |
+| 定期実行定義               | `rtn-*.yaml`               | `routine`    |
 | ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`      |
 
 ## 2. 標準ディレクトリ構成
@@ -48,6 +49,8 @@ repo-root/
 │           │  │  ├─ sch-defaults.yaml
 │           │  │  ├─ sch-strategy-<track>.yaml
 │           │  │  └─ sch-track-<track>.yaml
+│           │  ├─ routines/
+│           │  │  └─ rtn-*.yaml
 │           │  └─ controls/
 │           │     ├─ project-register/
 │           │     └─ reviews/
@@ -93,6 +96,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
       "schedule_path": "030-project-management/schedule",
       "execution_path": "070-execution",
       "project_register_path": "030-project-management/controls/project-register",
+      "routines_path": "030-project-management/routines",
       "members_path": "030-project-management/020-organization/pm-members.yaml",
       "reviews_path": "030-project-management/controls/reviews",
       "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
@@ -146,7 +150,16 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 specdojo build --project prj-0001
 ```
 
-## 7. 詳細ガイド
+## 7. 定期実行と登録項目の実行
+
+schedule に基づく実行のほかに、次の 2 つの実行経路があります。詳細は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
+
+| 機能                  | 概要                                                                                                                    |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す  |
+| `exec run --register` | 登録簿（`pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
+
+## 8. 詳細ガイド
 
 | 目的                                                 | 参照先                                                                                   |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |

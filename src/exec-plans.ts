@@ -30,14 +30,14 @@ type PlanTask = ReadyTaskView & { mode: TaskMode };
 
 // Execution owner of a task: an AI agent (default) or a human. Human tasks (e.g. finalize)
 // get a confirm/finalize plan instead of the agent execution protocol.
-type TaskExecution = "agent" | "human";
+export type TaskExecution = "agent" | "human";
 
 type DeliverableInfo = {
   deliverable: DctDeliverableItem;
   resolvedPath: string;
 };
 
-const MISSING = "_MISSING_";
+export const MISSING = "_MISSING_";
 
 function execDocId(projectId: string, prefix: "xep" | "xrp", localBase: string): string {
   const localId = `${prefix}-${localBase.toLowerCase()}`;
@@ -236,7 +236,7 @@ const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
 // (exit codes, runner block hand-off, automatic lint/test execution).
 const HUMAN_CONVENTIONS_TEMPLATE = "xep-human-conventions-template.md";
 
-function templatesDir(): string {
+export function templatesDir(): string {
   return join(specdojoRootDir(), "docs/ja/specdojo/templates");
 }
 
@@ -320,7 +320,7 @@ const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 // marker get the block appended so the rules are never silently dropped.
 // schemaRef is the resolved schema path: when MISSING (non-yaml deliverable or no schema), the
 // schema-validation bullet is dropped so the plan never asks for a check it cannot specify.
-function injectCommonConventions(
+export function injectCommonConventions(
   body: string,
   schemaRef: string,
   execution: TaskExecution,

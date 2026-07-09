@@ -1,0 +1,19 @@
+# 登録簿の open な todo を毎日 agent に消化させる routine のサンプル。
+# 外部スケジューラ（cron / CI）から `specdojo routine run --due` を呼び出して発火する。
+# enabled: false のため --due では実行されない。試すときは true にするか
+# `specdojo routine run --id rtn-daily-register-sweep` で明示的に実行する。
+id: rtn-daily-register-sweep
+name: 登録簿 open todo の日次スイープ
+description: 登録簿の open な高優先度 todo を 1 日 1 回 agent に実行させる。
+enabled: false
+interval: 1d
+action:
+  kind: register
+  filter:
+    types:
+      - todo
+    priorities:
+      - high
+    statuses:
+      - open
+  limit: 3

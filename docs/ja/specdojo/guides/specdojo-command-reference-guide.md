@@ -89,6 +89,8 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
 
+登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
+
 ## 6. exec
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
@@ -132,7 +134,12 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 
 # Ready がなくなるまでラウンド実行する
 specdojo exec run --project prj-0001 --auto --loop --parallel 5
+
+# 登録簿の項目を実行する（開始で in-progress、成功で review、失敗で waiting へ遷移）
+specdojo exec run --project prj-0001 --register PJR-0012
 ```
+
+`--register` は登録簿（`pjr-index.md`）の項目を in-place 実行します。type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります（`decision` / `dependency` / `note` は実行対象外）。状態は exec の claim/complete イベントではなく register の状態遷移で追跡し、agent は項目を終端化しません。成功後は人が確認して `register close` します。plan だけ確認する場合は `exec plan --register <PJR-ID>` を使います。
 
 exec運用の詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
 
@@ -182,7 +189,55 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
-## 10. 関連ガイド
+## 10. routine
+
+`routine` は `rtn-*.yaml` の定義に基づき、schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐せず、外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出します。
+
+| コマンド           | 用途                                           | 例                                              |
+| ------------------ | ---------------------------------------------- | ----------------------------------------------- |
+| `routine list`     | 定義・due 状態・最終実行を表示する             | `specdojo routine list --project prj-0001`      |
+| `routine validate` | `rtn-*.yaml` を検証する                        | `specdojo routine validate --project prj-0001`  |
+| `routine run`      | due な routine を実行し、`last_run` を記録する | `specdojo routine run --project prj-0001 --due` |
+| `routine where`    | routine 関連パスを表示する                     | `specdojo routine where --project prj-0001`     |
+
+定義は `specdojo.config.json` の `routines_path` 配下に `rtn-<slug>.yaml`（`id` はファイル名と一致）として置きます。最終実行時刻は `<routines-path>/generated/routine-state.json` に記録され、`interval`（`30m` / `6h` / `1d` / `1w` 形式）の経過で due と判定します。多重起動は lock で防ぎます。
+
+```yaml
+id: rtn-daily-register-sweep
+name: 登録簿 open todo の日次スイープ
+enabled: true
+interval: 1d
+action:
+  kind: register
+  filter:
+    types:
+      - todo
+    priorities:
+      - high
+    statuses:
+      - open
+  limit: 3
+```
+
+`action.kind` は次の 2 種類です。
+
+| kind        | 動作                                                                                                                 |
+| ----------- | -------------------------------------------------------------------------------------------------------------------- |
+| `register`  | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
+| `exec-auto` | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
+
+```bash
+# due な routine をまとめて実行する（cron / CI から呼ぶ想定）
+specdojo routine run --project prj-0001 --due
+
+# 特定の routine を due 判定と無関係に即時実行する
+specdojo routine run --project prj-0001 --id rtn-daily-register-sweep
+
+# 実行内容を確認する（実行も last_run 記録もしない）
+specdojo routine run --project prj-0001 --due --dry-run
+```
+
+## 11. 関連ガイド
 
 | 詳細                | 参照先                                                                             |
 | ------------------- | ---------------------------------------------------------------------------------- |

@@ -51,6 +51,13 @@ import {
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { buildTaskView } from "./exec-task-view.js";
+import {
+  generateRegisterPlan,
+  normalizePjrId,
+  requireRunnableRegisterItem,
+  resolveRegisterRunTarget,
+  sanitizeRegisterConclusion,
+} from "./exec-register.js";
 import { isResultUnfilled, scaffoldResult, updateResultStatus } from "./exec-results.js";
 import { resolveWorktreeBase, worktreeNameFromTaskId, type ExecWorktree } from "./exec-worktree.js";
 import {
@@ -107,6 +114,7 @@ export type RunOpts = {
   task?: string;
   deliverable?: string;
   plan?: string;
+  register?: string;
   worktree?: boolean;
   trackState?: boolean;
   archiveOnSuccess?: boolean;
@@ -495,6 +503,10 @@ async function executeAgent(
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
   });
+  // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
+  // プロセスごと落ちて失敗時の後処理（block 遷移・result 更新）が走らないため無視する。
+  // 実行結果は終了コードで判定する。
+  child.stdin.on("error", () => undefined);
   let stdout = "";
   let stderr = "";
   child.stdout.setEncoding("utf8");
@@ -1461,6 +1473,8 @@ async function spawnAgentInPlace(
     shell: true,
     stdio: ["pipe", "inherit", "inherit"],
   });
+  // executeAgent と同じ理由で、stdin を読まないコマンドの EPIPE は無視する。
+  child.stdin.on("error", () => undefined);
   child.stdin.end(prompt);
   return new Promise<number>((resolveExit) => {
     child.once("error", () => resolveExit(1));
@@ -1681,6 +1695,180 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   process.stdout.write(`run done: ${label}\n`);
 }
 
+// 登録項目の owner（Role code または agent nickname）から実行 agent を解決する。
+// 優先順位: --cmd / --agent-cmd → --by → owner の nickname 一致 → owner の Role code 一致
+// （priority 昇順）→ edit-mode の汎用自動選択。owner はロールとして解釈するため、
+// human member の nickname と一致しても human へは割り当てず自動選択へフォールバックする。
+export function resolveRegisterCommand(
+  item: { id: string; owner: string },
+  roster: MemberRoster | null,
+  opts: Pick<RunOpts, "by" | "cmd" | "agentCmd">,
+): { command: string; actor: string } {
+  const override = (opts.agentCmd ?? opts.cmd)?.trim();
+  const by = opts.by?.trim();
+  if (override) {
+    const member = roster?.members.find(
+      (m) => m.type === "agent" && m.command && (m.nickname === override || m.command === override),
+    );
+    return { command: member?.command ?? override, actor: by || member?.nickname || "auto-agent" };
+  }
+  if (by) {
+    const member = roster?.members.find(
+      (m) => m.nickname === by && m.type === "agent" && m.command,
+    );
+    if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`);
+    return { command: member.command, actor: by };
+  }
+
+  const owner = item.owner.trim();
+  const hasOwner = owner !== "" && owner !== "-" && owner !== "_TODO_";
+  if (hasOwner && roster) {
+    const nicknameMatch = roster.members.find(
+      (m) => m.nickname === owner && m.type === "agent" && m.command && m.disabled !== true,
+    );
+    if (nicknameMatch?.command) {
+      return { command: nicknameMatch.command, actor: nicknameMatch.nickname };
+    }
+    const roleMatches = roster.members
+      .filter(
+        (m) =>
+          m.type === "agent" &&
+          m.command &&
+          m.disabled !== true &&
+          (m.mode === undefined || m.mode === "edit") &&
+          m.roles.includes(owner),
+      )
+      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+    const roleMatch = roleMatches[0];
+    if (roleMatch?.command) {
+      return { command: roleMatch.command, actor: roleMatch.nickname };
+    }
+  }
+
+  const candidates = selectCandidates({ capabilities: [] }, roster, "edit");
+  const candidate = candidates[0];
+  if (!candidate?.command) {
+    throw new Error(
+      `No agent found for register item ${item.id} (owner: ${item.owner || "-"}). Specify --cmd <command>.`,
+    );
+  }
+  return { command: candidate.command, actor: candidate.nickname };
+}
+
+// register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
+// 派生ビュー再生成を一元的に通すため、直接ファイルを書き換えず自プロセスを spawn する。
+function spawnRegisterTransition(projectId: string | undefined, args: string[]): boolean {
+  const fullArgs = ["register", ...args];
+  if (projectId) fullArgs.push("--project", projectId);
+  return spawnSelf(fullArgs);
+}
+
+// register 項目の in-place 実行。plan 生成 → `register start` → agent 実行 → 成否を
+// register の状態遷移（成功: review / 失敗: waiting）と result に反映する。
+// schedule のタスクではないため exec の claim/complete イベントは記録しない。
+async function runRegisterMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(resolvedPaths);
+  const { schedulePath, executionPath } = resolvedPaths;
+  const repoRoot = specdojoRootDir();
+  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
+  if (!projectId) {
+    throw new Error(
+      "--register requires a project id. Use --project <id> or set current_project in specdojo.config.json.",
+    );
+  }
+
+  const pjrId = normalizePjrId(opts.register as string);
+  const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const category = requireRunnableRegisterItem(item);
+
+  const roster = loadRosterForExecutionPath(executionPath);
+  const { command, actor } = resolveRegisterCommand(item, roster, opts);
+  const stem = buildInPlaceStem(pjrId.toLowerCase());
+  const plansDir = join(executionPath, "exec", "plans");
+
+  if (opts.dryRun) {
+    process.stdout.write(
+      `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
+    );
+    process.stdout.write(`[dry-run] actor: ${actor}\n`);
+    process.stdout.write(`[dry-run] command: ${command}\n`);
+    process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
+    process.stdout.write(`[dry-run] plan: ${join(plansDir, `${stem}-plan.md`)}\n`);
+    process.stdout.write(
+      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
+    );
+    return;
+  }
+
+  const { planPath } = await generateRegisterPlan({
+    executionPath,
+    projectId,
+    registerPaths,
+    item,
+    stem,
+  });
+  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const { resultPath } = await scaffoldResult({
+    executionPath,
+    taskId: item.id,
+    mode: "edit",
+    projectId,
+    planRef: `exec/plans/${stem}-plan.md`,
+    agent: actor,
+    startedAt: new Date().toISOString(),
+    stem,
+  });
+
+  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(`  Agent: ${actor}\n`);
+  if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+    throw new Error(`register start failed: ${item.id}`);
+  }
+
+  process.stdout.write(`Running ${item.id} in place: ${command}\n`);
+  const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+
+  // in-place 実行と同じ補助判定: agent が result 必須節を埋めずに終了コード 0 で
+  // 終わった場合は block として扱う（runInPlaceMode と同じ理由）。
+  let effectiveExit = exitCode;
+  let blockReason: string | undefined;
+  if (exitCode === 0 && isResultUnfilled(resultPath, "edit")) {
+    effectiveExit = 1;
+    blockReason =
+      "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)";
+    process.stdout.write(`run blocked: ${item.id} (result not filled despite exit 0)\n`);
+  }
+
+  await updateResultStatus(
+    resultPath,
+    effectiveExit === 0 ? "complete" : "blocked",
+    new Date().toISOString(),
+    blockReason,
+  );
+
+  if (effectiveExit === 0) {
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+      process.stderr.write(`register review transition failed: ${item.id}\n`);
+      process.exitCode = 1;
+      return;
+    }
+    process.stdout.write(
+      `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
+    );
+    return;
+  }
+
+  const conclusion = sanitizeRegisterConclusion(
+    blockReason ?? `agent exited with non-zero code (exit ${exitCode})`,
+  );
+  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+    process.stderr.write(`register wait transition failed: ${item.id}\n`);
+  }
+  process.exitCode = effectiveExit ?? 1;
+  process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
+}
+
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
     .command("run")
@@ -1695,6 +1883,10 @@ export function registerRunCommand(exec: Command): void {
     "Catalog deliverable local_id target (unique project-wide)",
   );
   rcmd.option("--plan <path>", "Run an existing plan file (in-place; no generation)");
+  rcmd.option(
+    "--register <pjrId>",
+    "Project register item ID (PJR-XXXX) to run in place; tracks state via register transitions",
+  );
   rcmd.option(
     "--worktree",
     "Isolate execution in a git worktree and integrate back (requires --task)",
@@ -1754,17 +1946,27 @@ export function registerRunCommand(exec: Command): void {
       const hasTask = !!opts.task;
       const hasDeliverable = !!opts.deliverable;
       const hasPlan = !!opts.plan;
-      const isManual = hasTask || hasDeliverable || hasPlan;
+      const hasRegister = !!opts.register;
+      const isManual = hasTask || hasDeliverable || hasPlan || hasRegister;
       const hasCommand = !!opts.cmd;
       const isBatch = isAuto || (!isManual && hasCommand);
 
       if (!isAuto && !isManual && !hasCommand) {
-        process.stdout.write("Specify --auto, --cmd, --task, --deliverable, or --plan.\n");
+        process.stdout.write(
+          "Specify --auto, --cmd, --task, --deliverable, --plan, or --register.\n",
+        );
         process.exitCode = 1;
         return;
       }
-      if ([hasTask, hasDeliverable, hasPlan].filter(Boolean).length > 1) {
-        process.stdout.write("Specify at most one of --task, --deliverable, --plan.\n");
+      if ([hasTask, hasDeliverable, hasPlan, hasRegister].filter(Boolean).length > 1) {
+        process.stdout.write("Specify at most one of --task, --deliverable, --plan, --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (hasRegister && opts.trackState) {
+        process.stdout.write(
+          "--track-state cannot be used with --register (state is tracked in the register itself).\n",
+        );
         process.exitCode = 1;
         return;
       }
@@ -1793,6 +1995,13 @@ export function registerRunCommand(exec: Command): void {
       if (isManual && parseParallel(opts.parallel) !== 1) {
         process.stdout.write("--parallel cannot be used with a manual target.\n");
         process.exitCode = 1;
+        return;
+      }
+
+      // Register-item run: in place, with state tracked via register transitions
+      // (start → review / waiting) instead of exec events.
+      if (hasRegister) {
+        await runRegisterMode(opts);
         return;
       }
 
