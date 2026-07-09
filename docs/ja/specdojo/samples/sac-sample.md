@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sac
+  id: sac-sample
   type: project
   status: draft
   rulebook: sac-rulebook

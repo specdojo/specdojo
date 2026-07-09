@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: mip-index
+  id: mip-index-sample
   type: project
   status: draft
   rulebook: mip-index-rulebook

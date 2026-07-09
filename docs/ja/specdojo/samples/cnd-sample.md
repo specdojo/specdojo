@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cnd
+  id: cnd-sample
   type: project
   status: draft
   rulebook: cnd-mermaid-rulebook

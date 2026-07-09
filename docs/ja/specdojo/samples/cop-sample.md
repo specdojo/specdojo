@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cop-cutover-day
+  id: cop-sample
   type: project
   status: draft
   rulebook: cop-rulebook

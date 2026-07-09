@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:dct-index
+  id: dct-index-sample
   type: project
   status: draft
   rulebook: dct-index-rulebook

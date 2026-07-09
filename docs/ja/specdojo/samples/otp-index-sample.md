@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: otp-index
+  id: otp-index-sample
   type: project
   status: draft
   rulebook: otp-index-rulebook

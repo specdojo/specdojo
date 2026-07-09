@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opd-index
+  id: opd-index-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

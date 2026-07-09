@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sll-main
+  id: sld-sample
   type: project
   status: draft
   rulebook: sld-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-issue-log
+  id: pm-issue-log-sample
   type: project
   status: draft
   rulebook: pm-issue-log-rulebook

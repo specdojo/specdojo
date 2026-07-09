@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sysd-cross-cutting-policy
+  id: sysd-cross-cutting-policy-sample
   type: project
   status: draft
   rulebook: sysd-cross-cutting-policy-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cdfd
+  id: cdfd-sample
   type: project
   status: draft
   rulebook: cdfd-rulebook

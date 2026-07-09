@@ -3,7 +3,7 @@
 # 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。
 # 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct.schema.yaml に従う。
 # work / control / generated の3種別と、done_criteria の記述例を示す。
-id: prj-0001:dct-project-definition
+id: dct-sample
 type: project
 status: draft
 part_of:

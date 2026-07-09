@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: ifd
+  id: ifd-sample
   type: project
   status: draft
   rulebook: ifd-mermaid-rulebook

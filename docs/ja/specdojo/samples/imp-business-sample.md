@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: imp-business
+  id: imp-business-sample
   type: project
   status: draft
   rulebook: imp-business-rulebook

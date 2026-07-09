@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: otp-hypercare
+  id: otp-sample
   type: project
   status: draft
   rulebook: otp-rulebook

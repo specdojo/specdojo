@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: atc-index
+  id: atc-index-sample
   type: project
   status: draft
   rulebook: atc-index-rulebook

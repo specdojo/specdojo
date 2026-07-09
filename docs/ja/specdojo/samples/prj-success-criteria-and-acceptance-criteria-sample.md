@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-success-criteria-and-acceptance-criteria
+  id: prj-success-criteria-and-acceptance-criteria-sample
   type: project
   status: ready
   rulebook: prj-success-criteria-and-acceptance-criteria-rulebook

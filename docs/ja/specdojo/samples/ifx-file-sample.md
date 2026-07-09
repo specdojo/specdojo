@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: ifx-file
+  id: ifx-file-sample
   type: project
   status: draft
   rulebook: ifx-file-rulebook

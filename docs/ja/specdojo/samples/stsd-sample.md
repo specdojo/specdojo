@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: stl-main
+  id: stsd-sample
   type: project
   status: draft
   rulebook: stsd-rulebook

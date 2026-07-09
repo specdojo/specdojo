@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cxd
+  id: cxd-sample
   type: project
   status: draft
   rulebook: cxd-mermaid-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: imp-operations
+  id: imp-operations-sample
   type: project
   status: draft
   rulebook: imp-operations-rulebook

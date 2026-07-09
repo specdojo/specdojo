@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: mm-2026-04-19-01
+  id: mm-sample
   type: project
   status: draft
   rulebook: mm-rulebook

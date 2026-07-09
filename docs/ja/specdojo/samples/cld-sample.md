@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cld
+  id: cld-sample
   type: project
   status: draft
   rulebook: cld-rulebook

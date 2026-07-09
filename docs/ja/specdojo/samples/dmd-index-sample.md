@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: dmd-index
+  id: dmd-index-sample
   type: project
   status: draft
   rulebook: dmd-index-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: stc-index
+  id: stc-index-sample
   type: project
   status: draft
   rulebook: stc-index-rulebook

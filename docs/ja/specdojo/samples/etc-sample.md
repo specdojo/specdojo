@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: etc
+  id: etc-sample
   type: project
   status: draft
   rulebook: etc-rulebook

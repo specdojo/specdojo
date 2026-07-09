@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: bac
+  id: bac-sample
   type: project
   status: draft
   rulebook: bac-rulebook

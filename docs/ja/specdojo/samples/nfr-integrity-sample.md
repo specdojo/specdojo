@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-integrity
+  id: nfr-integrity-sample
   type: project
   status: draft
   rulebook: nfr-integrity-rulebook

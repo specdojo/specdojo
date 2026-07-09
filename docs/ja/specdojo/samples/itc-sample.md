@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: itc
+  id: itc-sample
   type: project
   status: draft
   rulebook: itc-rulebook

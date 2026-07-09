@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-availability
+  id: nfr-availability-sample
   type: project
   status: draft
   rulebook: nfr-availability-rulebook

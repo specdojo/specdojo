@@ -1,11 +1,11 @@
-id: prj-0001:pm-members
+id: pm-members-sample
 type: project
 status: draft
 rulebook: pm-members-rulebook
 based_on:
   - people-and-organization-definition-standard
-  - prj-0001:pm-organization
-  - prj-0001:pm-roles
+  - pm-organization-sample
+  - pm-roles-sample
 version: 1
 project_id: prj-0001
 

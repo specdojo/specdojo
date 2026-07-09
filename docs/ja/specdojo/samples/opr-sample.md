@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opr-index
+  id: opr-sample
   type: project
   status: draft
   rulebook: opr-rulebook

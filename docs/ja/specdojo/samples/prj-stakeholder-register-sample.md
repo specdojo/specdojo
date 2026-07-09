@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:prj-stakeholder-register-sample
+  id: prj-stakeholder-register-sample
   type: sample
   status: draft
   rulebook: prj-stakeholder-register-rulebook

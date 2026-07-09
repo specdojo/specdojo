@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: dec-0001-auth-policy
+  id: dec-sample
   type: project
   status: draft
   rulebook: dec-rulebook

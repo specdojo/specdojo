@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: tsp-index
+  id: tsp-index-sample
   type: project
   status: draft
   rulebook: tsp-index-rulebook

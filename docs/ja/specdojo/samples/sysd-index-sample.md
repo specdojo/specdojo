@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sysd-index
+  id: sysd-index-sample
   type: project
   status: draft
   rulebook: sysd-index-rulebook

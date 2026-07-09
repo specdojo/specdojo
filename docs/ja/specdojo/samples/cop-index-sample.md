@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cop-index
+  id: cop-index-sample
   type: project
   status: draft
   rulebook: cop-index-rulebook

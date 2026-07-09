@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opr-backup-restore
+  id: opr-backup-restore-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: ntp
+  id: ntp-sample
   type: project
   status: draft
   rulebook: ntp-rulebook

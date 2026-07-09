@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opr-change
+  id: opr-change-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

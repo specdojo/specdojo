@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: tsd-index
+  id: tsd-index-sample
   type: architecture
   status: draft
   rulebook: tsd-index-rulebook

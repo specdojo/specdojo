@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-index
+  id: nfr-index-sample
   type: project
   status: draft
   rulebook: nfr-index-rulebook

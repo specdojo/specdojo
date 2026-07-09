@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opd-incident-management
+  id: opd-incident-management-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

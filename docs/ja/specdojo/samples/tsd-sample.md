@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: tsd
+  id: tsd-sample
   type: project
   status: draft
   rulebook: tsd-rulebook

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: bps
+  id: bps-sample
   type: project
   status: draft
   rulebook: bps-rulebook

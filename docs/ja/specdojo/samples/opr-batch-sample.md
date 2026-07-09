@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opr-batch
+  id: opr-batch-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

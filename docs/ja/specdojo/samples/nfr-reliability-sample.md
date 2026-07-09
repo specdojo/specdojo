@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-reliability
+  id: nfr-reliability-sample
   type: project
   status: draft
   rulebook: nfr-reliability-rulebook

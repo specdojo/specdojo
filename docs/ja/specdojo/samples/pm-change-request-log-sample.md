@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-change-request-log
+  id: pm-change-request-log-sample
   type: project
   status: draft
   rulebook: pm-change-request-log-rulebook

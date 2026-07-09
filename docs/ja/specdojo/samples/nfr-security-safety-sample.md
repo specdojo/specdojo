@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-security-safety
+  id: nfr-security-safety-sample
   type: project
   status: draft
   rulebook: nfr-security-safety-rulebook

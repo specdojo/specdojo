@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: bes
+  id: bes-sample
   type: project
   status: draft
   rulebook: bes-rulebook

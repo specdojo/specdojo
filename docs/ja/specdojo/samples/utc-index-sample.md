@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: utc-index
+  id: utc-index-sample
   type: project
   status: draft
   rulebook: utc-index-rulebook

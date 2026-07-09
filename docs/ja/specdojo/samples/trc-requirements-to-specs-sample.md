@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: trc-requirements-to-specs
+  id: trc-requirements-to-specs-sample
   type: project
   status: draft
   rulebook: trc-requirements-to-specs-rulebook

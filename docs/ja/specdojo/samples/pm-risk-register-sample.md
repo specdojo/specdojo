@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-risk-register
+  id: pm-risk-register-sample
   type: project
   status: draft
   rulebook: pm-risk-register-rulebook

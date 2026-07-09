@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opr-access-control
+  id: opr-access-control-sample
   type: operations
   status: draft
   rulebook: opd-rulebook

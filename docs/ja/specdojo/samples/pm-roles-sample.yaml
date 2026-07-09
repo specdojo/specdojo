@@ -1,9 +1,9 @@
-id: prj-0001:pm-roles
+id: pm-roles-sample
 type: project
 status: draft
 based_on:
   - people-and-organization-definition-standard
-  - prj-0001:pm-organization
+  - pm-organization-sample
 version: 1
 project_id: prj-0001
 

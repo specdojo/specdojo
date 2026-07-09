@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: imp-test
+  id: imp-test-sample
   type: project
   status: draft
   rulebook: imp-test-rulebook

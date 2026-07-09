@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: uis
+  id: uis-sample
   type: project
   status: draft
   rulebook: uis-rulebook
