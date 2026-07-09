@@ -152,7 +152,7 @@ specdojo build --project prj-0001
 
 ## 7. 定期実行と登録項目の実行
 
-schedule に基づく実行のほかに、次の 2 つの実行経路があります。詳細は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
+schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を、経路ごとの使い分けの基準は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 | 機能                  | 概要                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |

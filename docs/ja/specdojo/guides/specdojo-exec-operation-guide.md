@@ -9,7 +9,7 @@ specdojo:
 
 SpecDojo Exec Operation Guide
 
-`specdojo exec` によるタスク実行、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
+`specdojo exec` によるタスク実行、実行経路（schedule / register / routine）の使い分け、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
 
 ## 1. execの関心事
 
@@ -24,7 +24,29 @@ SpecDojo Exec Operation Guide
 
 既定の `exec run --task` はカレントリポジトリで単発実行し、状態イベントや worktree を作りません。
 
-## 2. 自動実行フロー
+## 2. 実行経路の使い分け
+
+agent にタスクを実行させる経路は、実行対象の出どころによって schedule 実行と register 実行の 2 つがあります。routine はそれらを時刻条件で発火させるトリガー層で、それ自体は実行機構を持ちません。「何を実行するか」（schedule / register）と「いつ実行するか」（人が起動する / routine が定期起動する）は独立に選べます。
+
+| 観点         | schedule 実行                             | register 実行                                     | routine（トリガー層）                    |
+| ------------ | ----------------------------------------- | ------------------------------------------------- | ---------------------------------------- |
+| 実行対象     | `sch-track-*.yaml` のタスク（依存グラフ） | `pjr-index.md` の項目                             | `rtn-*.yaml` の定義（実体は左の 2 経路） |
+| 代表コマンド | `exec run --task` / `exec run --auto`     | `exec run --register`                             | `routine run --due`                      |
+| 起動         | 人、または routine（`kind: exec-auto`）   | 人、または routine（`kind: register`）            | 外部スケジューラ（cron / CI）            |
+| 状態追跡     | exec events（claim / complete / block）   | register の遷移（in-progress / review / waiting） | `last_run` の記録のみ                    |
+| 隔離         | worktree（`--worktree` / `--auto`）       | in-place のみ                                     | -（実行経路へ委譲）                      |
+| 終端の扱い   | `complete` event（human finalize で確定） | 人が確認して `register close`                     | -（発火の記録のみ）                      |
+| 典型用途     | 計画された成果物の作成・レビュー・確定    | 突発の TODO・課題対応・調査                       | 日次スイープ・夜間バッチなどの定期実行   |
+
+迷った場合は次で判断します。
+
+- 成果物カタログと依存関係に基づく計画済みの作業は schedule 実行を使う（`exec run --auto` / `--task`）。
+- 計画外に発生した単発の対応・調査で、台帳として追跡したいものは register 実行を使う（`register add` で登録して `exec run --register`）。
+- 上記のどちらかを決まった時刻条件で繰り返したい場合は routine を使う（`rtn-*.yaml` を定義して外部スケジューラから `routine run --due` を呼ぶ）。
+
+register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。schedule の進捗として扱いたい作業は register 項目のままにせず、schedule のタスクとして計画します。
+
+## 3. 自動実行フロー
 
 `exec run --auto` は Ready タスクを選び、worktree 隔離と状態追跡を伴って実行します。
 
@@ -58,7 +80,7 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 specdojo exec run --project <project-id> --auto --strategy fifo
 ```
 
-## 3. auto実行中の注意点
+## 4. auto実行中の注意点
 
 `--auto` と `--loop` は root の現在ブランチへ checkpoint commit と merge を繰り返します。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
 
@@ -75,7 +97,7 @@ auto 実行と並行して人が作業する場合は、別ブランチの workt
 git worktree add ../specdojo-edit -b <edit-branch>
 ```
 
-## 4. blockedタスクの復帰
+## 5. blockedタスクの復帰
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
@@ -111,7 +133,7 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md) の `status` を使います。
 
-## 5. 手動実行フロー
+## 6. 手動実行フロー
 
 `exec run --auto` の処理を手で分ける場合は、次の順に実行します。
 
@@ -148,18 +170,19 @@ specdojo exec build --project <project-id>
 
 worktree 隔離を人が段階確認しながら実行する場合は [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md) を参照します。
 
-## 6. ユースケース別の選び方
+## 7. ユースケース別の選び方
 
-| やりたいこと                            | 代表コマンド                          | 状態追跡 | worktree |
-| --------------------------------------- | ------------------------------------- | -------- | -------- |
-| 1 task をカレントで軽く実行する         | `exec run --task`                     | なし     | なし     |
-| 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり     | なし     |
-| 1 task を隔離して実行する               | `exec run --task --worktree`          | あり     | あり     |
-| Ready 順に自動実行する                  | `exec run --auto`                     | あり     | あり     |
-| plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意     | 任意     |
-| worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動     | あり     |
+| やりたいこと                            | 代表コマンド                          | 状態追跡        | worktree |
+| --------------------------------------- | ------------------------------------- | --------------- | -------- |
+| 1 task をカレントで軽く実行する         | `exec run --task`                     | なし            | なし     |
+| 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり            | なし     |
+| 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
+| Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
+| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | なし     |
+| plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
+| worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
 
-## 7. planを確認してから実行する
+## 8. planを確認してから実行する
 
 plan を先に生成して内容を確認・編集してから実行できます。
 
@@ -176,7 +199,7 @@ specdojo exec plan --project <project-id> --deliverable <local_id>
 
 plan / result の命名、再実行、アーカイブは [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) を参照します。
 
-## 8. 完了済みタスクの再実行
+## 9. 完了済みタスクの再実行
 
 完了済み（`done`）タスクをやり直す場合は、既定の軽量実行でそのまま実行します。状態イベントは追加されず、変更は作業ツリーに残ります。
 
@@ -186,7 +209,7 @@ specdojo exec run --project <project-id> --task <task-id>
 
 スケジュール進捗として再度記録したい場合は、`claim`、`run`、`complete` を明示的に行います。
 
-## 9. レートリミット対応
+## 10. レートリミット対応
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
@@ -197,7 +220,7 @@ AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-d
 
 provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
 
-## 10. humanタスクの実行
+## 11. humanタスクの実行
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が直接、最終確認・修正と確定を行います。
 

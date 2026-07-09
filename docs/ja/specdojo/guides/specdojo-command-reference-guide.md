@@ -237,6 +237,8 @@ specdojo routine run --project prj-0001 --id rtn-daily-register-sweep
 specdojo routine run --project prj-0001 --due --dry-run
 ```
 
+schedule / register / routine の使い分けの基準は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+
 ## 11. 関連ガイド
 
 | 詳細                | 参照先                                                                             |
