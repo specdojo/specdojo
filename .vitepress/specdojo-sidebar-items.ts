@@ -196,14 +196,24 @@ export const specdojoSidebarItems = [
       guide("ドキュメントの書き方", "docs-editing-guide"),
       guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
       guide("参考資料の扱い", "specdojo-reference-materials-guide"),
-      guide("コマンド利用", "specdojo-command-usage-guide"),
       guide("レビュー", "specdojo-review-guide"),
       group(
-        "プロジェクトマネジメント",
+        "CLIツール",
         [
-          guide("スケジュールと実行", "specdojo-schedule-and-exec-guide"),
+          guide("CLI概要", "specdojo-cli-overview-guide"),
+          guide("コマンドリファレンス", "specdojo-command-reference-guide"),
+        ],
+        false,
+      ),
+      group(
+        "スケジュールと実行",
+        [
           guide("成果物からスケジュールへ", "specdojo-deliverables-to-schedule-guide"),
-          guide("実行戦略", "specdojo-exec-strategy-guide"),
+          guide("スケジュール設計", "specdojo-schedule-design-guide"),
+          guide("実行運用", "specdojo-exec-operation-guide"),
+          guide("実行設定", "specdojo-exec-config-guide"),
+          guide("plan/resultライフサイクル", "specdojo-plan-result-lifecycle-guide"),
+          guide("worktree運用", "specdojo-exec-worktree-guide"),
         ],
         false,
       ),

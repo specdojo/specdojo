@@ -218,11 +218,27 @@ const isAlreadyPrefixedByAnyLocale = (path: string): boolean => {
 // ソート用のキー：
 // 1) README（最優先）
 // 2) *rulebook（次）
-// 3) その他：先頭 xxx- を削除した名前でファイル名順
+// 3) 既知ファイル（PROJECTS_FILE_MENU の order 順。ゼロ埋めで未登録名より先に並ぶ）
+// 4) exec の result（started_at の時系列順）
+// 5) その他：ファイル名順
 const sortKey = (item: SidebarItem): { bucket: number; name: string } => {
   if (isReadme(item)) return { bucket: 0, name: "" };
   if (isRulebook(item)) return { bucket: 1, name: getBaseFromLink(item.link).toLowerCase() };
-  return { bucket: 2, name: getBaseFromLink(item.link).toLowerCase() };
+  if (!item.link) {
+    // グループ（リンクなし）は既定で先頭。PROJECTS_GROUP_ORDER で個別に後ろへ動かせる
+    const groupOrder = PROJECTS_GROUP_ORDER[item.text ?? ""];
+    if (groupOrder !== undefined) return { bucket: 2, name: String(groupOrder).padStart(4, "0") };
+    return { bucket: 2, name: "" };
+  }
+  const base = getBaseFromLink(item.link).toLowerCase();
+  const order = PROJECTS_FILE_MENU[base]?.order;
+  if (order !== undefined) return { bucket: 2, name: String(order).padStart(4, "0") };
+  if (item.link && isExecResultLink(item.link)) {
+    // ISO 8601 なので文字列比較で時系列順になる。取得できない場合はファイル名順
+    const startedAt = readExecResultStartedAt(item.link);
+    if (startedAt) return { bucket: 2, name: startedAt };
+  }
+  return { bucket: 2, name: base };
 };
 
 const normalizeAndPrefixLink = (link: string, locale: Locale): string => {
@@ -269,12 +285,55 @@ const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
 
 const PROJECTS_FILE_TEXT: Record<string, string> = {
   index: "一覧",
-  cpm: "クリティカルパス分析",
-  "critical-path": "クリティカルパス",
-  ready: "着手可能タスク",
-  "schedule-diff": "スケジュール差分",
   "task-catalog": "タスクカタログ",
-  timeline: "タイムライン",
+};
+
+// プロジェクト配下の既知ファイルのメニュー表示（標準成果物と生成ビュー）。
+// text: H1 の「タイトル: <プロジェクト名>」形式や英語 H1 より短い固定表示名（H1 より優先）。
+// order: 同一ディレクトリ内での表示順。ファイル名順ではなく作成順・検討順
+// （docs-authoring-order-guide）や参照頻度に合わせる。未登録ファイルはファイル名順で後続に並ぶ。
+// order を省略したファイルは既定の並び（README は先頭）に従う。
+const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }> = {
+  README: { text: "概要" },
+  // 010-deliverables-catalog
+  "dct-index": { text: "成果物カタログの索引", order: 10 },
+  "dct-project-definition": { text: "成果物カタログ（プロジェクト定義）", order: 20 },
+  "dct-project-management": { text: "成果物カタログ（プロジェクトマネジメント）", order: 30 },
+  // 020-project-definition
+  "prj-overview": { text: "プロジェクト概要", order: 10 },
+  "prj-stakeholder-register": { text: "ステークホルダー登録簿", order: 20 },
+  "prj-charter": { text: "プロジェクト憲章", order: 30 },
+  "prj-scope": { text: "プロジェクトスコープ", order: 40 },
+  "prj-success-criteria-and-acceptance-criteria": { text: "成功基準と受入条件", order: 50 },
+  "prj-issues-and-approach": { text: "課題と解決アプローチ", order: 60 },
+  "prj-assumptions-constraints-dependencies": { text: "前提・制約・依存関係", order: 70 },
+  "prj-comparison-of-alternatives": { text: "代替案の比較", order: 80 },
+  // 030-project-management / 010-management-plan
+  "pm-plan": { text: "プロジェクト管理計画", order: 10 },
+  "pm-communication-plan": { text: "コミュニケーション計画", order: 20 },
+  "pm-quality-management-plan": { text: "品質管理計画", order: 30 },
+  // 030-project-management / 020-organization
+  "pm-organization": { text: "組織とロールの定義", order: 10 },
+  "pm-raci": { text: "組織体制とRACI", order: 20 },
+  // 030-project-management / controls
+  "pjr-index": { text: "プロジェクト登録簿", order: 10 },
+  "pm-risk-register": { text: "リスク登録簿", order: 10 },
+  "pm-issue-log": { text: "課題ログ", order: 20 },
+  "pm-change-request-log": { text: "変更要求ログ", order: 30 },
+  "pm-decision-log": { text: "意思決定ログ", order: 40 },
+  // 030-project-management / execution / generated（進捗ビュー）
+  ready: { text: "着手可能タスク", order: 10 },
+  timeline: { text: "タイムライン", order: 20 },
+  "critical-path": { text: "クリティカルパス", order: 30 },
+  cpm: { text: "クリティカルパス分析", order: 40 },
+  "schedule-diff": { text: "スケジュール差分", order: 50 },
+};
+
+// グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。
+// 既定では同一階層の先頭に並ぶため、後ろへ動かしたいグループのみ登録する。
+// 実行ワークスペースは大量の plan / result を含むため、進捗ビューの後ろに置く。
+const PROJECTS_GROUP_ORDER: Record<string, number> = {
+  実行ワークスペース: 90,
 };
 
 const stripMarkdownFrontmatter = (content: string): string =>
@@ -302,6 +361,39 @@ const docsPathFromLink = (link: string): string | undefined => {
   return path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
 };
 
+// exec 配下の plan / result 判定。H1 が定型文（"Edit Plan: ..." 等）のため、
+// メニューはタスクIDベースの表示名にする
+const isExecPlanLink = (link: string): boolean => link.includes("/exec/plans/");
+const isExecResultLink = (link: string): boolean => link.includes("/exec/results/");
+
+// result frontmatter（specdojo: 名前空間配下）の started_at を読む。
+// 表示名とソートの両方で使うためキャッシュする
+const execResultStartedAtCache = new Map<string, string | undefined>();
+const readExecResultStartedAt = (link: string): string | undefined => {
+  if (execResultStartedAtCache.has(link)) return execResultStartedAtCache.get(link);
+
+  const filePath = docsPathFromLink(link);
+  const startedAt =
+    filePath && existsSync(filePath)
+      ? readFileSync(filePath, "utf8").match(/^\s+started_at:\s*"?([^"\s]+)"?\s*$/m)?.[1]
+      : undefined;
+
+  execResultStartedAtCache.set(link, startedAt);
+  return startedAt;
+};
+
+const toExecMenuText = (link: string): string | undefined => {
+  const base = getBaseFromLink(link);
+  if (isExecPlanLink(link)) return base.replace(/-plan$/, "");
+  if (isExecResultLink(link)) {
+    const taskId = base.replace(/-result$/, "");
+    const startedAt = readExecResultStartedAt(link);
+    // 実行日で時系列を追えるよう "MM/DD <タスクID>" で表示する
+    return startedAt ? `${startedAt.slice(5, 10).replace("-", "/")} ${taskId}` : taskId;
+  }
+  return undefined;
+};
+
 const readProjectsMenuTextFromMarkdown = (link: string): string | undefined => {
   const filePath = docsPathFromLink(link);
   if (!filePath || !existsSync(filePath)) return undefined;
@@ -327,10 +419,16 @@ const isProjectsLink = (link: string, locale: Locale): boolean => {
 
 const toProjectsMenuText = (item: SidebarItem, locale: Locale): string | undefined => {
   if (item.link) {
+    const base = getBaseFromLink(item.link);
+    const known = PROJECTS_FILE_MENU[base];
+    if (known) return known.text;
+
+    const execText = toExecMenuText(item.link);
+    if (execText) return execText;
+
     const markdownTitle = readProjectsMenuTextFromMarkdown(item.link);
     if (markdownTitle) return markdownTitle;
 
-    const base = getBaseFromLink(item.link);
     return PROJECTS_FILE_TEXT[base] ?? PROJECTS_SEGMENT_TEXT[base];
   }
 
