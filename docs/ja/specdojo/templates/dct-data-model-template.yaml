@@ -2,6 +2,8 @@
 id: dct-data-model-template
 type: template
 status: draft
+title: 成果物カタログ（データモデル）
+rulebook: dct-rulebook
 domain: data-model
 base_path: /docs/ja/product/010-business-specifications/020-data-model
 

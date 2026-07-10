@@ -2,6 +2,8 @@
 id: dct-non-functional-requirements-template
 type: template
 status: draft
+title: 成果物カタログ（非機能要件）
+rulebook: dct-rulebook
 domain: non-functional-requirements
 base_path: /docs/ja/product/060-non-functional-requirements
 

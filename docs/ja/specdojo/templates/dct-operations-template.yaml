@@ -2,6 +2,8 @@
 id: dct-operations-template
 type: template
 status: draft
+title: 成果物カタログ（運用）
+rulebook: dct-rulebook
 domain: operations
 base_path: /docs/ja/product/090-operations
 

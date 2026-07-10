@@ -2,6 +2,8 @@
 id: dct-interface-model-template
 type: template
 status: draft
+title: 成果物カタログ（インターフェースモデル）
+rulebook: dct-rulebook
 domain: interface-model
 base_path: /docs/ja/product/010-business-specifications/040-interface-model
 

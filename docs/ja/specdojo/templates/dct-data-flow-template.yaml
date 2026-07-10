@@ -4,6 +4,8 @@
 id: dct-data-flow-template
 type: template
 status: draft
+title: 成果物カタログ（データフロー）
+rulebook: dct-rulebook
 domain: data-flow
 base_path: /docs/ja/product/010-business-specifications/010-data-flow
 

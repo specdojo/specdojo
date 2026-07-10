@@ -2,6 +2,8 @@ kind: defaults
 id: prj-0001:sch-defaults
 type: project
 status: draft
+title: スケジュール既定値
+rulebook: sch-rulebook
 version: 1
 
 calendar:

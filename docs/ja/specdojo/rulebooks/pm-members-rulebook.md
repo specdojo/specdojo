@@ -65,7 +65,8 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `id`         | `<project-id>:pm-members` 形式の成果物 ID | ○    |
 | `type`       | `project` 固定                            | ○    |
 | `status`     | `draft` / `ready` / `deprecated`          | ○    |
-| `rulebook`   | `pm-members-rulebook`                     | 任意 |
+| `title`      | ドキュメント名。表示ページの見出しになる  | ○    |
+| `rulebook`   | `pm-members-rulebook` 固定                | ○    |
 | `based_on`   | 根拠ドキュメント ID の配列                | 任意 |
 | `version`    | データバージョン。初期値は `1`            | ○    |
 | `project_id` | プロジェクト ID                           | ○    |
@@ -79,7 +80,8 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `id`         | ○    | 成果物 ID                            |
 | `type`       | ○    | 成果物種別                           |
 | `status`     | ○    | 成果物状態                           |
-| `rulebook`   | 任意 | 参照する rulebook ID                 |
+| `title`      | ○    | ドキュメント名                       |
+| `rulebook`   | ○    | 参照する rulebook ID                 |
 | `based_on`   | 任意 | 根拠 ID 配列                         |
 | `version`    | ○    | データバージョン                     |
 | `project_id` | ○    | プロジェクト ID                      |

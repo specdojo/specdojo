@@ -1,6 +1,7 @@
 id: pm-members-sample
 type: project
 status: draft
+title: メンバー名簿
 rulebook: pm-members-rulebook
 based_on:
   - people-and-organization-definition-standard

@@ -32,6 +32,25 @@ describe("renderYamlPage", () => {
     expect(page).toContain("```yaml\nid: pm-roles-sample\n");
   });
 
+  it("uses the YAML title as the page heading and keeps it out of the frontmatter", () => {
+    const content =
+      "id: prj-0001:pm-roles\nstatus: ready\ntitle: ロール一覧\nrulebook: pm-roles-rulebook\n";
+
+    const page = renderYamlPage("docs/ja/projects/prj-0001/pm-roles.yaml", content);
+
+    expect(page).toContain("# ロール一覧\n");
+    const frontmatter = page.split("---")[1];
+    expect(frontmatter).not.toContain("title:");
+  });
+
+  it("falls back to the file name heading when the YAML has no title", () => {
+    const content = "id: prj-0001:pm-roles\nstatus: ready\n";
+
+    const page = renderYamlPage("docs/ja/projects/prj-0001/pm-roles.yaml", content);
+
+    expect(page).toContain("# pm-roles.yaml\n");
+  });
+
   it("falls back to filename base id, draft status, and rulebook none for out-of-schema values", () => {
     const content = "type: domain\nstatus: published\nrulebook: not a rulebook id\n";
 

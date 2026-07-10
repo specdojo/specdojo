@@ -1,6 +1,7 @@
 id: prj-0001:pm-members
 type: project
 status: draft
+title: メンバー名簿
 rulebook: pm-members-rulebook
 based_on:
   - people-and-organization-definition-standard

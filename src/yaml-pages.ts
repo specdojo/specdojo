@@ -64,7 +64,8 @@ export function yamlPageRelPath(yamlRelPath: string): string {
   return posix.join(dir, "generated", pageName);
 }
 
-function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta {
+// title は生成ページの H1 にのみ使い、frontmatter（deliverable-frontmatter スキーマ準拠）には含めない。
+function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { title?: string } {
   let parsed: unknown;
   try {
     parsed = yaml.load(content);
@@ -98,15 +99,20 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta {
   const rulebook =
     typeof rawRulebook === "string" && RULEBOOK_RE.test(rawRulebook) ? rawRulebook : "none";
 
-  return { id, type, status, rulebook };
+  const rawTitle = record["title"];
+  const title =
+    typeof rawTitle === "string" && rawTitle.trim() !== "" ? rawTitle.trim() : undefined;
+
+  return { id, type, status, rulebook, ...(title ? { title } : {}) };
 }
 
 // 表示ページの Markdown を組み立てる。YAML 本文はコードブロックで埋め込み、
 // 本文中のバッククォート連続より長いフェンスを使って壊れないようにする。
 export function renderYamlPage(yamlRelPath: string, content: string): string {
-  const meta = deriveMeta(yamlRelPath, content);
+  const { title, ...meta } = deriveMeta(yamlRelPath, content);
   const frontmatter = yaml.dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd();
   const fileName = posix.basename(yamlRelPath);
+  const heading = title ?? fileName;
 
   const backtickRuns = content.match(/`+/g) ?? [];
   const longestRun = backtickRuns.reduce((max, run) => Math.max(max, run.length), 0);
@@ -119,7 +125,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
     frontmatter,
     "---",
     "",
-    `# ${fileName}`,
+    `# ${heading}`,
     "",
     `> このページは \`${yamlRelPath}\` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。`,
     "",

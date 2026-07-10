@@ -2,6 +2,8 @@
 id: dct-system-design-template
 type: template
 status: draft
+title: 成果物カタログ（システム設計）
+rulebook: dct-rulebook
 domain: system-design
 base_path: /docs/ja/product/040-system-design
 

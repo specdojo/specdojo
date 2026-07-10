@@ -2,6 +2,8 @@
 id: dct-business-acceptance-criteria-template
 type: template
 status: draft
+title: 成果物カタログ（業務受入基準）
+rulebook: dct-rulebook
 domain: business-acceptance-criteria
 base_path: /docs/ja/product/050-business-acceptance-criteria
 

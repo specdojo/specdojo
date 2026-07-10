@@ -1,6 +1,8 @@
 id: prj-0001:pm-review-viewpoints
 type: project
 status: draft
+title: レビュー観点一覧
+rulebook: none
 based_on:
   - prj-0001:pm-roles
   - prj-0001:pm-quality-management-plan

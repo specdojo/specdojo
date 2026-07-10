@@ -61,30 +61,34 @@ Project Role Definition Documentation Rulebook
 YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ項目として記載する。
 機械検証は `docs/specdojo/schemas/v1/pm-roles.schema.yaml` を正本とする。
 
-| 項目         | 説明                                    | 必須 |
-| ------------ | --------------------------------------- | ---- |
-| `id`         | `<project-id>:pm-roles` 形式の成果物 ID | ○    |
-| `type`       | `project` 固定                          | ○    |
-| `status`     | `draft` / `ready` / `deprecated`        | ○    |
-| `based_on`   | 根拠ドキュメント ID の配列              | 任意 |
-| `version`    | データバージョン。初期値は `1`          | ○    |
-| `project_id` | プロジェクト ID                         | ○    |
+| 項目         | 説明                                     | 必須 |
+| ------------ | ---------------------------------------- | ---- |
+| `id`         | `<project-id>:pm-roles` 形式の成果物 ID  | ○    |
+| `type`       | `project` 固定                           | ○    |
+| `status`     | `draft` / `ready` / `deprecated`         | ○    |
+| `title`      | ドキュメント名。表示ページの見出しになる | ○    |
+| `rulebook`   | `pm-roles-rulebook` 固定                 | ○    |
+| `based_on`   | 根拠ドキュメント ID の配列               | 任意 |
+| `version`    | データバージョン。初期値は `1`           | ○    |
+| `project_id` | プロジェクト ID                          | ○    |
 
-`rulebook` など schema に定義されていないメタ項目は `pm-roles.yaml` には追加しない。参照する rulebook は成果物カタログや計画側で管理する。
+schema に定義されていないメタ項目は `pm-roles.yaml` には追加しない。
 
 ## 5. 本文構成（標準テンプレ）
 
 `pm-roles.yaml` は次のルート構造を標準とする。
 
-| 要素         | 必須 | 内容             |
-| ------------ | ---- | ---------------- |
-| `id`         | ○    | 成果物 ID        |
-| `type`       | ○    | 成果物種別       |
-| `status`     | ○    | 成果物状態       |
-| `based_on`   | 任意 | 根拠 ID 配列     |
-| `version`    | ○    | データバージョン |
-| `project_id` | ○    | プロジェクト ID  |
-| `roles`      | ○    | 全 Role の配列   |
+| 要素         | 必須 | 内容                 |
+| ------------ | ---- | -------------------- |
+| `id`         | ○    | 成果物 ID            |
+| `type`       | ○    | 成果物種別           |
+| `status`     | ○    | 成果物状態           |
+| `title`      | ○    | ドキュメント名       |
+| `rulebook`   | ○    | 参照する rulebook ID |
+| `based_on`   | 任意 | 根拠 ID 配列         |
+| `version`    | ○    | データバージョン     |
+| `project_id` | ○    | プロジェクト ID      |
+| `roles`      | ○    | 全 Role の配列       |
 
 `roles[]` は次のフィールドを標準とする。
 

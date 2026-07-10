@@ -14,6 +14,7 @@ Document Metadata Standard
 ## 1. 適用範囲
 
 - 共通原則: Frontmatter を持つすべての Markdown ドキュメント
+- 独立 YAML データファイル向け規約: SpecDojo スキーマ（`docs/specdojo/schemas/v1/`）を持つ YAML 成果物（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` / `bdd-*.yaml` など）
 - 成果物向け詳細規約: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template` / `sample`
 - 成果物スキーマ: [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
@@ -109,7 +110,29 @@ specdojo:
 - 生成時プレースホルダは `frontmatter_template` と本文の相互参照の両方に現れ、生成処理が一括置換する。
 - 記入プレースホルダは生成物に残し、recipe に従って作成者が埋める。生成処理は置換しない。
 
-## 3. 成果物の必須項目
+## 3. 独立 YAML データファイルのメタ情報
+
+独立 YAML データファイルは Frontmatter を持たないため、ファイル先頭のトップレベル項目でメタ情報を表す。
+
+- 名前空間化せず、トップレベルに項目を置く（共通原則を参照）。
+- `id` / `type` / `status` は Markdown Frontmatter と同じ制約に従う。
+- `title` を必須とし、ドキュメント名を記述する。Markdown における本文先頭の H1 に相当し、表示ページ生成（`specdojo yaml-pages build`）が生成ページの H1 として使用する。
+- `rulebook` を必須とし、準拠する rulebook の ID を指定する。該当する rulebook がない場合のみ `none` を許可する（成果物の必須項目と同じ制約）。
+- テンプレートファイル（`*-template.yaml`）では、`title` / `rulebook` は生成物側フィールドとして生成物の値を平坦に記述する（テンプレート自身のメタ情報と生成物 Frontmatter の分離を参照）。
+- 上記以外の項目（`based_on` / `supersedes` / `version` / `project_id` など）の許可項目と型は各スキーマを正本とする。
+- OpenAPI / AsyncAPI など外部標準形式の YAML（`ifx-*` 等）は本規約の対象外とし、`info.title` や `x-spec-meta` など各形式の慣行に従う。
+
+```yaml
+id: prj-0001:pm-roles
+type: project
+status: draft
+title: ロール一覧
+rulebook: pm-roles-rulebook
+version: 1
+project_id: prj-0001
+```
+
+## 4. 成果物の必須項目
 
 | 項目     | 説明                    |
 | -------- | ----------------------- |
@@ -121,7 +144,7 @@ specdojo:
 - `rulebook` は `none` または `*-rulebook` 形式の ID を指定する。
 - 該当する rulebook がない場合のみ `rulebook: none` を許可する。
 
-## 4. 成果物の任意項目
+## 5. 成果物の任意項目
 
 | 項目       | 説明                         |
 | ---------- | ---------------------------- |
@@ -131,14 +154,14 @@ specdojo:
 
 成果物種別によって追加項目を使用できる場合があります。正確な許可項目と型は成果物スキーマを正本とします。
 
-## 5. 成果物の値制約
+## 6. 成果物の値制約
 
 - `type` は `適用範囲` に列挙した成果物種別のいずれかとする。
 - `specdojo:` 配下では未定義プロパティを使用しない（`unevaluatedProperties: false`）。トップレベルには他フレームワークの項目を置いてよい。
 - 配列項目は重複させない。
 - 項目ごとの型、列挙値、パターンは成果物スキーマに従う。
 
-## 6. 成果物の記述例
+## 7. 成果物の記述例
 
 ```yaml
 ---
@@ -153,7 +176,7 @@ specdojo:
 ---
 ```
 
-## 7. バリデーション
+## 8. バリデーション
 
 - `npm run -s lint:md` で Markdown を検証する。
 - Frontmatter の機械検証では、ドキュメント種別に対応するスキーマを使用する。

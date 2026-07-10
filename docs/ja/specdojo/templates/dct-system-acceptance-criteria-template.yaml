@@ -2,6 +2,8 @@
 id: dct-system-acceptance-criteria-template
 type: template
 status: draft
+title: 成果物カタログ（システム受入基準）
+rulebook: dct-rulebook
 domain: system-acceptance-criteria
 base_path: /docs/ja/product/070-system-acceptance-criteria
 

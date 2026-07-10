@@ -61,6 +61,17 @@ describe("scaffoldDoc — プレースホルダ置換", () => {
     expect(doc.part_of).toEqual(["prj-0001:dct-index"]);
   });
 
+  it("title と rulebook をプロジェクトカタログへ引き継ぐ", () => {
+    const template: DctTemplateDoc = {
+      ...MINIMAL_TEMPLATE,
+      title: "成果物カタログ（テスト）",
+      rulebook: "dct-rulebook",
+    };
+    const doc = scaffoldDoc(template, "prj-0001", "large");
+    expect(doc.title).toBe("成果物カタログ（テスト）");
+    expect(doc.rulebook).toBe("dct-rulebook");
+  });
+
   it("instance_id_pattern をプロジェクトカタログへ保持する", () => {
     const template: DctTemplateDoc = {
       ...MINIMAL_TEMPLATE,
