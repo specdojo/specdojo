@@ -129,4 +129,20 @@ function toPart(value: unknown): ValuePart {
 .frontmatter-block code {
   font-size: 0.95em;
 }
+
+/* doc-before スロットは .vp-doc の外にあり、テーマのリセットでリンクが
+   プレーンテキストと同じ見た目になるため、本文（.vp-doc a）と同じ表示に合わせる */
+.frontmatter-block a {
+  font-weight: 500;
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition:
+    color 0.25s,
+    opacity 0.25s;
+}
+
+.frontmatter-block a:hover {
+  color: var(--vp-c-brand-2);
+}
 </style>
