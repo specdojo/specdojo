@@ -195,7 +195,56 @@ specdojo exec scaffold --provider claude
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねる。scaffold は `specdojo.config.json` のパス設定に基づく書き換えを行わない（テンプレートを事実上の推奨レイアウト前提で配布する）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含める。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持たない。
 
-## 7. 変更手順
+## 7. agent 権限とプロンプトインジェクション対策
+
+exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行される。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計する。
+
+### 7.1. 共通の構造的対策
+
+provider によらず、exec の実行構造そのものが次の境界を提供する。
+
+| 対策                       | 内容                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
+| worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                      |
+| git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
+| ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
+| commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
+| merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
+
+### 7.2. provider 別の権限設定
+
+**claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は成果物ディレクトリのみ、review は result 配下のみ書き込み可）でパス単位に制限する。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する。
+
+**codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御する。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使う。command には次を明示する。
+
+```yaml
+command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model gpt-5.4-mini -c model_reasoning_effort="medium"'
+```
+
+- `--sandbox workspace-write`: 書き込みを worktree（cwd 配下）と一時ディレクトリに限定する。`danger-full-access` は claude の bypassPermissions に相当するため使わない。
+- `-c sandbox_workspace_write.network_access=false`: sandbox 内からの直接のネットワークアクセスを遮断する。デフォルトでも無効だが、設定変更で意図せず解放されないよう command に固定する。`web_search` はモデル側ツールとして sandbox の外で動作するため、この設定の影響を受けない。
+- `--ephemeral`: セッションを永続化せず、実行間の文脈持ち越しを防ぐ。
+- `.codex/config.toml` は対話セッション用のデフォルト（`approval_policy = "on-request"` 等）であり、無人実行の権限は command の `-c` 上書きを正とする。claude の `settings.local.json`（対話用）と `--settings`（無人実行用）の分担に対応する。
+
+**opencode** はローカル Ollama 前提で外部送信面が小さい。権限は `.opencode/agents/*.md` の定義を正とする。
+
+### 7.3. 残余リスクと commit 対象の許可リスト化（設計）
+
+`workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `src/` や `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。現在の commit 対象は除外リスト方式（`除外対象以外はすべて commit`）のため、これらの変更は commit・merge まで到達しうる。
+
+この経路を閉じるため、commit 対象を mode 別の許可リスト方式へ移行する（未実装）。
+
+| mode                                        | commit を許可するパス                                                         |
+| ------------------------------------------- | ----------------------------------------------------------------------------- |
+| review                                      | 対象 task の result のみ                                                      |
+| edit                                        | 対象 task の result、plan frontmatter の `targets` から解決した成果物パス     |
+| edit（maintenance / bootstrap 系 approach） | 上記に加え、参考資料ディレクトリ（rulebooks / recipes / samples / templates） |
+
+- 許可リスト外の変更は commit 対象に含めず、検出時は対象パスを警告として出力する（worktree 内には残るため、必要なら人間が確認して手動で取り込む）。
+- 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用する。
+- パス制約を持たない provider（codex / opencode）への本命の対策であると同時に、claude に対しても settings と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
+
+## 8. 変更手順
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加する。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加する。
 

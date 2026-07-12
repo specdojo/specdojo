@@ -163,6 +163,8 @@ commit 対象から除外する主なパス:
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
+現在は上表の除外リスト方式ですが、プロンプトインジェクション対策として mode 別の許可リスト方式（review は result のみ、edit は result と対象成果物のみ）への移行を設計中です。詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
+
 ## 8. merge
 
 `merge` は exec branch の commit を、コマンドを実行した現在ブランチへ統合します。
