@@ -75,4 +75,4 @@ Operations Procedure Runbook Index Documentation Rules
 
 ## 8. サンプル
 
-- 参照先: [opr-index-sample](../samples/opr-index-sample.md)
+- 参照先: [[opr-index-sample]]

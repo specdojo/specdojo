@@ -177,7 +177,7 @@ Project Management Plan Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [pm-plan-sample](../samples/pm-plan-sample.md)
+- 参照先: [[pm-plan-sample]]
 
 ## 9. 作成レシピ
 

@@ -102,4 +102,4 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 
 ## 8. サンプル
 
-- 参照先: [tsd-sample](../samples/tsd-sample.md)
+- 参照先: [[tsd-sample]]

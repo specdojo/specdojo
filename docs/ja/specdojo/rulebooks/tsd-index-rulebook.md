@@ -99,4 +99,4 @@ Technology Stack Definition Index (TSD Index) Documentation Rules
 
 ## 8. サンプル
 
-- 参照先: [tsd-index-sample](../samples/tsd-index-sample.md)
+- 参照先: [[tsd-index-sample]]

@@ -127,4 +127,4 @@ Deliverables Catalog Documentation Rules
 
 ## 8. サンプル
 
-- 参照先: [dct-index-sample](../samples/dct-index-sample.md)
+- 参照先: [[dct-index-sample]]

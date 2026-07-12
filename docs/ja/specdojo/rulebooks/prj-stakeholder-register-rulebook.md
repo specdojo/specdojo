@@ -166,7 +166,7 @@ Stakeholder Register Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [prj-stakeholder-register-sample](../samples/prj-stakeholder-register-sample.md)
+- 参照先: [[prj-stakeholder-register-sample]]
 - sample は駄菓子屋の販売管理システムを題材に、各必須表を 1 行以上埋めた最小完成例を示す。
 - sample の固有の役割名や数値を、他プロジェクトの登録簿の必須値として扱わない。
 

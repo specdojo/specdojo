@@ -223,7 +223,7 @@ specdojo:
 
 ## 8. サンプル
 
-- 参照先: [prj-issues-and-approach-sample](../samples/prj-issues-and-approach-sample.md)
+- 参照先: [[prj-issues-and-approach-sample]]
 
 ## 9. 作成レシピ
 

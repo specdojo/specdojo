@@ -171,7 +171,7 @@ flowchart LR
 
 ## 8. サンプル
 
-- 参照先: [prj-assumptions-constraints-dependencies-sample](../samples/prj-assumptions-constraints-dependencies-sample.md)
+- 参照先: [[prj-assumptions-constraints-dependencies-sample]]
 
 ## 9. 作成レシピ
 

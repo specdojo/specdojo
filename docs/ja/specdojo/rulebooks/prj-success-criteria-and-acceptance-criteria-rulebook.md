@@ -151,7 +151,7 @@ flowchart LR
 
 ## 8. サンプル
 
-- 参照先: [prj-success-criteria-and-acceptance-criteria-sample](../samples/prj-success-criteria-and-acceptance-criteria-sample.md)
+- 参照先: [[prj-success-criteria-and-acceptance-criteria-sample]]
 
 ## 9. 作成レシピ
 

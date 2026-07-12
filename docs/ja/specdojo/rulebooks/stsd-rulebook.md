@@ -117,4 +117,4 @@ supersedes: []
 
 ## 7. サンプル
 
-- 参照先: [stsd-sample](../samples/stsd-sample.md)
+- 参照先: [[stsd-sample]]

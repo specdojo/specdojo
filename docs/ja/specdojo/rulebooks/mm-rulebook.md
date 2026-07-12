@@ -58,4 +58,4 @@ Meeting Minutes Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: `[mm-sample](../samples/mm-sample.md)`
+- 参照先: [[mm-sample]]

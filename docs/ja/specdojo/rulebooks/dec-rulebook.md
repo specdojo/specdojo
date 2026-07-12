@@ -60,4 +60,4 @@ Decision Log Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [dec-sample](../samples/dec-sample.md)
+- 参照先: [[dec-sample]]

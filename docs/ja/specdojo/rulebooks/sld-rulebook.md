@@ -80,4 +80,4 @@ supersedes: []
 
 ## 7. サンプル
 
-- 参照先: [sld-sample](../samples/sld-sample.md)
+- 参照先: [[sld-sample]]

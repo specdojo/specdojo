@@ -56,4 +56,4 @@ External System Interface Index Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [ifx-index-sample](../samples/ifx-index-sample.md)
+- 参照先: [[ifx-index-sample]]

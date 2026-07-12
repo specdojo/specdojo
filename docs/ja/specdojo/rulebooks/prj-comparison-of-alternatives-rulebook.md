@@ -179,7 +179,7 @@ flowchart LR
 
 ## 8. サンプル
 
-- 参照先: [prj-comparison-of-alternatives-sample](../samples/prj-comparison-of-alternatives-sample.md)
+- 参照先: [[prj-comparison-of-alternatives-sample]]
 
 ## 9. 作成レシピ
 

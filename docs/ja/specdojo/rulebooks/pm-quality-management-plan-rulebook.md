@@ -192,7 +192,7 @@ Quality Management Plan Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [pm-quality-management-plan-sample](../samples/pm-quality-management-plan-sample.md)
+- 参照先: [[pm-quality-management-plan-sample]]
 
 ## 9. 作成レシピ
 

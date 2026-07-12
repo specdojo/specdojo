@@ -70,7 +70,7 @@
 
 ## 5. サンプル
 
-- 参照先: [gl-sample](../samples/gl-sample.yaml)
+- 参照先: [[gl-sample]]
 
 ## 6. 禁止事項
 
@@ -80,4 +80,4 @@
 
 ## 7. サンプル
 
-- 参照先: [gl-sample](../samples/gl-sample.yaml)
+- 参照先: [[gl-sample]]

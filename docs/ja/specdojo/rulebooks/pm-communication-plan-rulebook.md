@@ -182,7 +182,7 @@ Communication Plan Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: [pm-communication-plan-sample](../samples/pm-communication-plan-sample.md)
+- 参照先: [[pm-communication-plan-sample]]
 
 ## 9. 作成レシピ
 

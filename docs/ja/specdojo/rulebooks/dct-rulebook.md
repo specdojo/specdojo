@@ -196,5 +196,5 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ## 8. サンプル
 
-- 参照先: [dct-sample](../samples/dct-sample.yaml)
+- 参照先: [[dct-sample]]
 - 構造例は成果物カタログのテンプレート（`../templates/dct-<domain>-template.yaml`）も参照する。

@@ -81,4 +81,4 @@ supersedes: []
 
 ## 7. サンプル
 
-- 参照先: [sf-sample](../samples/sf-sample.md)
+- 参照先: [[sf-sample]]

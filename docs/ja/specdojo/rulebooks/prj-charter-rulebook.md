@@ -239,7 +239,7 @@ flowchart LR
 
 ## 8. サンプル
 
-- 参照先: [prj-charter-sample](../samples/prj-charter-sample.md)
+- 参照先: [[prj-charter-sample]]
 - sample は駄菓子屋の販売管理システムを題材に、立ち上げ認可、権限委譲、予算枠、未決事項を含む最小完成例を示す。
 - sample の固有の役割名や数値を、他プロジェクトの憲章の必須値として扱わない。
 

@@ -59,4 +59,4 @@ Progress Report Documentation Rulebook
 
 ## 8. サンプル
 
-- 参照先: `[pr-sample](../samples/pr-sample.md)`
+- 参照先: [[pr-sample]]
