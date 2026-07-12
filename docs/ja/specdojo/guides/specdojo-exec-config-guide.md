@@ -235,6 +235,29 @@ command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="n
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分。ローカル Ollama 前提のため外部送信面はもともと小さいが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持する。
 
+**copilot**（GitHub Copilot CLI）は command のフラグで権限を制御する。deny は allow より常に優先され、`--allow-all-tools` すら上書きできる。`pm-members.yaml` には copilot member を `disabled: true` で定義済みで、有効化する際も次の command 構成を維持する。
+
+```yaml
+command: >-
+  copilot -p "$(cat)" --no-color --no-ask-user
+  --no-remote --no-remote-export --disable-builtin-mcps
+  --allow-tool write
+  --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+  --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+  --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+  --allow-tool 'shell(specdojo:*)'
+  --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+  --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+```
+
+- `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使わない（claude の bypassPermissions 相当）。
+- ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限される。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になる。
+- `write` はパス単位に絞れない（worktree 全域に書ける）ため、review agent でも `write` を許可して result を記入させ、変更の境界は commit 許可リストで作る。
+- shell は `--allow-tool 'shell(...)'` の許可リスト。git / gh は第1サブコマンド単位でマッチするため読み取り系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` を明示 deny する（deny 優先の保険。許可リストの追記で誤って開くことを防ぐ）。
+- 外部送信面を閉じる: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化する。セッションの GitHub web / mobile への共有・遠隔操作は `--no-remote --no-remote-export` で無効化する。URL アクセスはデフォルト確認制のため `--allow-url` を追加しない（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow する）。
+- `-p` は引数必須のため、stdin で渡される plan は `-p "$(cat)"` で受ける。`--no-ask-user` で質問ツールを無効化し、無人実行で停止しないようにする。
+- shell パターンのマッチ粒度（`shell(npm run)` が `npm run <script>` 全体を許可するか等）は、member 追加時に最初のタスクで permission ログを確認して調整する。
+
 ### 7.3. commit 対象の許可リスト
 
 `workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `src/` や `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。この経路は specdojo CLI 側で閉じる。commit 対象は mode 別の許可リスト方式とする。

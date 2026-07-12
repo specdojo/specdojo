@@ -274,6 +274,68 @@ members:
     scheduler_strategy: fifo
     note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
+  #
+  # copilot members
+  #
+
+  - nickname: copilot-edit-agent
+    disabled: true
+    priority: 4
+    display_name: Copilot Edit Agent
+    email: null
+    roles: []
+    type: agent
+    provider: copilot
+    mode: edit
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+    capabilities: []
+    command: >-
+      copilot -p "$(cat)" --no-color --no-ask-user
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+    scheduler_strategy: critical-first
+    note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo-exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+
+  - nickname: copilot-review-agent
+    disabled: true
+    priority: 4
+    display_name: Copilot Review Agent
+    email: null
+    roles: []
+    type: agent
+    provider: copilot
+    mode: review
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: []
+    command: >-
+      copilot -p "$(cat)" --no-color --no-ask-user
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+    scheduler_strategy: fifo
+    note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo-exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
   - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
