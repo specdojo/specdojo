@@ -121,9 +121,9 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-edit-agent"
+    command: "claude -p --verbose --agent claude-edit-agent --settings .specdojo/claude/settings.edit.json"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-edit-agent.md で定義。
+    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
 
   - nickname: claude-review-agent
     disabled: false
@@ -141,9 +141,9 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-review-agent"
+    command: "claude -p --verbose --agent claude-review-agent --settings .specdojo/claude/settings.review.json"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-review-agent.md で定義。
+    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
   - nickname: claude-expert-edit-agent
     disabled: false
@@ -163,9 +163,9 @@ members:
       - complex-analysis
       - architecture-judgment
     capabilities: [web_search]
-    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-edit-agent"
+    command: "claude -p --verbose --agent claude-expert-edit-agent --settings .specdojo/claude/settings.edit.json"
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-expert-edit-agent.md で定義。
+    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
 
   - nickname: claude-expert-review-agent
     disabled: false
@@ -184,9 +184,9 @@ members:
       - quality-assurance
       - complex-analysis
     capabilities: [web_search]
-    command: "claude -p --verbose --permission-mode bypassPermissions --agent claude-expert-review-agent"
+    command: "claude -p --verbose --agent claude-expert-review-agent --settings .specdojo/claude/settings.review.json"
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツール・権限は .claude/agents/claude-expert-review-agent.md で定義。
+    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
   #
   # codex members

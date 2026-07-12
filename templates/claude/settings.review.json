@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Edit(docs/ja/projects/**/exec/results/**)",
+      "Write(docs/ja/projects/**/exec/results/**)"
+    ],
+    "deny": ["Bash(git add *)", "Bash(git commit *)"]
+  }
+}

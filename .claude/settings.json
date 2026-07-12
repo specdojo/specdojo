@@ -5,21 +5,10 @@
       "Bash(specdojo *)",
       "Bash(git status)",
       "Bash(git diff *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
       "Bash(npm run *)",
       "Read(**)",
       "WebSearch",
-      "WebFetch",
-      "Bash(echo \"tsc:$?\")",
-      "Bash(echo \"build:$?\")",
-      "Bash(echo \"lint:$?\")",
-      "Bash(echo \"lint:md exit:$?\")",
-      "Bash(grep -v \"^\\\\s*$\")",
-      "Bash(echo \" quiet --frail exit=$?\")",
-      "Bash(grep -E \"^\\\\S.*\\\\.\\(md|mdx\\)$\")",
-      "Bash(grep -E \"\\\\.md$\")",
-      "Bash(awk '{print $2}')"
+      "WebFetch"
     ],
     "deny": [
       "Read(./.env)",
@@ -29,6 +18,7 @@
       "Bash(git push *)",
       "Bash(git reset --hard *)",
       "Bash(rm -rf *)"
-    ]
+    ],
+    "disableBypassPermissionsMode": "disable"
   }
 }
