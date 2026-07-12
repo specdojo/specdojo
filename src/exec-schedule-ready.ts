@@ -8,7 +8,13 @@ import {
   type SchedulerStrategy,
 } from "./exec-types.js";
 import { executionRootForProject, generatedDirForProject } from "./exec-project.js";
-import { ensureDir, toArtifactPath, toScheduleFilePath, writeJson } from "./exec-shared.js";
+import {
+  ensureDir,
+  formatDays,
+  toArtifactPath,
+  toScheduleFilePath,
+  writeJson,
+} from "./exec-shared.js";
 
 export function orderReadyIds(
   ready: string[],
@@ -146,7 +152,7 @@ export function writeReadyFiles(projectPath: string, readySnapshot: ReadySnapsho
     lines.push(`|---:|---|---|---:|---:|---|`);
     for (const task of readySnapshot.tasks) {
       lines.push(
-        `| ${task.critical_first_rank} | \`${task.id}\` | ${task.owner ?? "-"} | ${task.cpm?.slack ?? "-"} | ${task.cpm?.es ?? "-"} | ${task.schedule_file || "-"} |`,
+        `| ${task.critical_first_rank} | \`${task.id}\` | ${task.owner ?? "-"} | ${task.cpm ? formatDays(task.cpm.slack) : "-"} | ${task.cpm ? formatDays(task.cpm.es) : "-"} | ${task.schedule_file || "-"} |`,
       );
     }
     lines.push("");

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   collectRepeatable,
+  formatDays,
   isUtcIsoSeconds,
   parseKeyValuePairs,
   requireNonEmpty,
@@ -68,5 +69,21 @@ describe("parseKeyValuePairs", () => {
   });
   it("空配列は undefined を返す", () => {
     expect(parseKeyValuePairs([])).toBeUndefined();
+  });
+});
+
+describe("formatDays", () => {
+  it("浮動小数点誤差を含む値を小数点以下2桁に丸める", () => {
+    expect(formatDays(6.2509999999999994)).toBe("6.25");
+  });
+  it("小数点以下3桁目を四捨五入する", () => {
+    expect(formatDays(6.3759999999999994)).toBe("6.38");
+  });
+  it("整数は小数点なしで返す", () => {
+    expect(formatDays(0)).toBe("0");
+    expect(formatDays(3)).toBe("3");
+  });
+  it("末尾の 0 を付けない", () => {
+    expect(formatDays(1.5)).toBe("1.5");
   });
 });

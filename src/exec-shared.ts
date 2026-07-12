@@ -48,6 +48,13 @@ export function collectRepeatable(value: string, previous: string[]): string[] {
   return previous.concat([value]);
 }
 
+// CPM 由来の日数値（ES / EF / slack / duration 等）の表示用フォーマット。
+// 浮動小数点誤差（例: 6.2509999999999994）を吸収し、小数点以下を最大2桁に丸める。
+// JSON 等のデータ出力には使わず、Markdown 表示にのみ使う。
+export function formatDays(value: number): string {
+  return String(Math.round(value * 100) / 100);
+}
+
 // East Asian Wide / Fullwidth code point ranges. Characters in these ranges occupy two terminal
 // columns, so they must count as 2 when aligning columns (e.g. Japanese task names in `exec status`).
 const WIDE_CODE_POINT_RANGES: ReadonlyArray<readonly [number, number]> = [

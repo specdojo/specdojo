@@ -5,7 +5,7 @@ import {
   type ScheduleIndex,
   type StateSnapshot,
 } from "./exec-types.js";
-import { formatDateOnlyUtc } from "./exec-shared.js";
+import { formatDateOnlyUtc, formatDays } from "./exec-shared.js";
 import {
   buildWorkingTaskSegments,
   dateForWorkingOffset,
@@ -409,7 +409,7 @@ export function buildTimelineMarkdown(cpm: CpmResult, summary: TimelineMarkdownS
   lines.push(...summary.progressSummaryLines);
   lines.push(`- schedule_path: \`${cpm.schedule_path}\``);
   if (cpm.project_start_date) lines.push(`- project_start_date: \`${cpm.project_start_date}\``);
-  lines.push(`- project_duration_days: \`${cpm.project_duration_days}\``);
+  lines.push(`- project_duration_days: \`${formatDays(cpm.project_duration_days)}\``);
   lines.push(`- scope: \`full_schedule\``);
   lines.push(`- critical_path_task_count: \`${summary.criticalPathTaskCount}\``);
   lines.push(`- progress_percent: \`${summary.progressPercent}%\``);

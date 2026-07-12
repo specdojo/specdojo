@@ -10,6 +10,7 @@ import {
 import { computeReadyIds, foldEventsToState, validateEventShape } from "./exec-events.js";
 import {
   ensureDir,
+  formatDays,
   listFilesRecursive,
   readJson,
   toArtifactPath,
@@ -178,13 +179,13 @@ export function writeCpmFiles(
   const lines: string[] = [];
   lines.push(`# CPM`);
   lines.push("");
-  lines.push(`- project_duration_days: \`${cpm.project_duration_days}\``);
+  lines.push(`- project_duration_days: \`${formatDays(cpm.project_duration_days)}\``);
   lines.push("");
   lines.push(`| id | owner | kind | dur | ES | EF | LS | LF | slack | depends_on |`);
   lines.push(`|---|---|---:|---:|---:|---:|---:|---:|---:|---|`);
   for (const r of rows) {
     lines.push(
-      `| \`${r.id}\` | ${r.owner ?? "-"} | ${r.kind} | ${r.duration_days} | ${r.es} | ${r.ef} | ${r.ls} | ${r.lf} | ${r.slack} | ${r.depends_on.join(", ")} |`,
+      `| \`${r.id}\` | ${r.owner ?? "-"} | ${r.kind} | ${formatDays(r.duration_days)} | ${formatDays(r.es)} | ${formatDays(r.ef)} | ${formatDays(r.ls)} | ${formatDays(r.lf)} | ${formatDays(r.slack)} | ${r.depends_on.join(", ")} |`,
     );
   }
   lines.push("");
@@ -193,7 +194,7 @@ export function writeCpmFiles(
   const cp: string[] = [];
   cp.push(`# Critical Path`);
   cp.push("");
-  cp.push(`- project_duration_days: \`${cpm.project_duration_days}\``);
+  cp.push(`- project_duration_days: \`${formatDays(cpm.project_duration_days)}\``);
   cp.push("");
   if (!cpm.critical_path.length) cp.push("_No critical path computed._");
   else {
@@ -201,7 +202,9 @@ export function writeCpmFiles(
     cp.push("");
     for (const id of cpm.critical_path) {
       const n = cpm.nodes[id];
-      cp.push(`- \`${id}\`${n.name ? ` — ${n.name}` : ""} (ES=${n.es}, EF=${n.ef})`);
+      cp.push(
+        `- \`${id}\`${n.name ? ` — ${n.name}` : ""} (ES=${formatDays(n.es)}, EF=${formatDays(n.ef)})`,
+      );
     }
   }
   cp.push("");
