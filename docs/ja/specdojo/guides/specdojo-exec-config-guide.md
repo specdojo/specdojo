@@ -226,7 +226,14 @@ command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="n
 - `--ephemeral`: セッションを永続化せず、実行間の文脈持ち越しを防ぐ。
 - `.codex/config.toml` は対話セッション用のデフォルト（`approval_policy = "on-request"` 等）であり、無人実行の権限は command の `-c` 上書きを正とする。claude の `settings.local.json`（対話用）と `--settings`（無人実行用）の分担に対応する。
 
-**opencode** はローカル Ollama 前提で外部送信面が小さい。権限は `.opencode/agents/*.md` の定義を正とする。
+**opencode** は agent 定義（`.opencode/agents/*.md`）の frontmatter `permission` を正とする。claude の settings と同等以上の粒度（パス単位の `edit`、コマンドパターン単位の `bash`）を持つため、両 agent とも許可リスト方式で定義する。
+
+| agent                 | `edit`                                                   | `bash`                                                               |
+| --------------------- | -------------------------------------------------------- | -------------------------------------------------------------------- |
+| opencode-edit-agent   | `docs/**` のみ許可                                       | git 読み取り系・`npm run` 系・`specdojo` などの許可リスト。他は deny |
+| opencode-review-agent | `docs/ja/projects/**/execution/exec/results/**` のみ許可 | 読み取り系・検証系の許可リスト。他は deny                            |
+
+`bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分。ローカル Ollama 前提のため外部送信面はもともと小さいが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持する。
 
 ### 7.3. commit 対象の許可リスト
 
@@ -243,6 +250,7 @@ command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="n
 - mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読む。agent は working tree の plan を書き換えられるが HEAD は書き換えられないため、許可リストの導出は改ざん耐性がある。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックする。どちらでも解決できない id は警告を出し、commit を許可しない。
 - HEAD に plan が無い、または frontmatter から task 識別を復元できない場合のみ、従来の除外リスト方式へフォールバックする。CLI 経由の worktree は必ず plan を checkpoint するため、この分岐を agent 側から誘発することはできない。
+- この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になる。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達する。claude は settings の allow に `git add` / `git commit` を含めない（`-p` 実行では未許可ツールは自動拒否）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断する、opencode は `bash` の許可リストで塞ぐ。
 - パス制約を持たない provider（codex / opencode）への本命の対策であると同時に、claude に対しても settings と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
 
 ## 8. 変更手順
