@@ -140,7 +140,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 ## 8. サンプル
 
-- 参照先: [pm-roles-sample](../samples/pm-roles-sample.yaml)
+- 参照先: [[pm-roles-sample|ロール定義 サンプル]]
 
 ## 9. 作成レシピ
 
