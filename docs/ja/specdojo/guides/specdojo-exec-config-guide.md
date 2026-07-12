@@ -176,17 +176,18 @@ Claude Code provider の配布原本と配置先は次のとおり。
 
 `pm-members.yaml` の claude member の `command` には `--settings .specdojo/claude/settings.<mode>.json` を指定する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 
-### 6.1. scaffold コマンド設計
+### 6.1. scaffold コマンド
 
-この配置を自動化するため、`exec scaffold` に `--provider <name>` オプションを追加する。現時点では設計のみで未実装であり、導入は `templates/claude/README.md` の手動手順で行う。
+この配置は `exec scaffold` の `--provider <name>` オプションで自動化する。
 
 ```sh
-specdojo exec scaffold --project prj-0001 --provider claude
+specdojo exec scaffold --provider claude
 ```
 
-設計上の挙動は次のとおり。
+挙動は次のとおり。
 
 - `--provider <name>` を指定すると、package 内の `templates/<name>/` を配布原本として上表の配置先へコピーする。`--provider` を省略した場合は従来どおり `pm-review-viewpoints.yaml` の scaffold を行い、挙動を変えない。
+- 配置規則は provider 名から機械的に決まる。`agents/` 配下は `.<provider>/agents/` へ、それ以外のファイルは `.specdojo/<provider>/` へコピーする。配布原本の `README.md` はコピーしない。
 - 配布原本はインストール済み package のルートから解決する。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにする。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力する。`--force` 指定時のみ上書きする。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力する（既存の scaffold 系コマンドの出力形式に合わせる）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示する。

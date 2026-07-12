@@ -113,7 +113,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `exec run`       | plan を生成してエージェントを実行する                         | `specdojo exec run --project prj-0001 --task <task-id>`                                                            |
 | `exec resume`    | `doing` のタスクを既存 worktree で再開する                    | `specdojo exec resume --project prj-0001`                                                                          |
 | `exec status`    | 実行状態を表示する                                            | `specdojo exec status --project prj-0001 --state blocked`                                                          |
-| `exec scaffold`  | 実行関連の補助設定を生成する                                  | `specdojo exec scaffold --project prj-0001`                                                                        |
+| `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                    | `specdojo exec scaffold --provider claude`                                                                         |
 | `exec plan`      | plan だけを生成する                                           | `specdojo exec plan --project prj-0001 --task <task-id>`                                                           |
 | `exec archive`   | 完了済み plan を `done/` へ移動する                           | `specdojo exec archive --project prj-0001 --task <task-id>`                                                        |
 
