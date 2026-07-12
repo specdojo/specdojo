@@ -55,8 +55,16 @@ function extractIdFromMarkdown(content: string): string | undefined {
 
 function extractTopLevelId(parsed: unknown): string | undefined {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return undefined;
-  const id = (parsed as Record<string, unknown>)["id"];
+  const record = parsed as Record<string, unknown>;
+  const id = record["id"];
   if (typeof id === "string" && DOC_ID_RE.test(id)) return id;
+  // OpenAPI / AsyncAPI 形式（ifx-* 等）はトップレベルに独自キーを置けないため、
+  // document-metadata-standard に従い x-spec-meta.id をメタ情報の正本とする。
+  const specMeta = record["x-spec-meta"];
+  if (specMeta && typeof specMeta === "object" && !Array.isArray(specMeta)) {
+    const nestedId = (specMeta as Record<string, unknown>)["id"];
+    if (typeof nestedId === "string" && DOC_ID_RE.test(nestedId)) return nestedId;
+  }
   return undefined;
 }
 

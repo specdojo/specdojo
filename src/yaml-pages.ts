@@ -74,11 +74,16 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
   }
   const record = isRecord(parsed) ? parsed : {};
 
+  // OpenAPI / AsyncAPI 形式（ifx-* 等）はメタ情報を x-spec-meta に置く
+  // （document-metadata-standard）。トップレベルに無い項目はそちらへフォールバックする。
+  const specMeta = isRecord(record["x-spec-meta"]) ? record["x-spec-meta"] : {};
+  const readMeta = (key: string): unknown => record[key] ?? specMeta[key];
+
   const fileBase = posix
     .basename(yamlRelPath)
     .replace(YAML_FILE_RE, "")
     .replace(/[^a-z0-9:_-]/g, "-");
-  const rawId = record["id"];
+  const rawId = readMeta("id");
   const id = typeof rawId === "string" && DOC_ID_RE.test(rawId) ? rawId : fileBase;
 
   // type は deliverable-frontmatter スキーマの enum に収まるよう配置パスから決める
@@ -89,17 +94,19 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
       ? "template"
       : "project";
 
-  const rawStatus = record["status"];
+  const rawStatus = readMeta("status");
   const status =
     typeof rawStatus === "string" && STATUS_VALUES.has(rawStatus)
       ? (rawStatus as YamlPageMeta["status"])
       : "draft";
 
-  const rawRulebook = record["rulebook"];
+  const rawRulebook = readMeta("rulebook");
   const rulebook =
     typeof rawRulebook === "string" && RULEBOOK_RE.test(rawRulebook) ? rawRulebook : "none";
 
-  const rawTitle = record["title"];
+  // OpenAPI / AsyncAPI では表題は info.title に置かれるため、最後のフォールバックとする。
+  const info = isRecord(record["info"]) ? record["info"] : {};
+  const rawTitle = readMeta("title") ?? info["title"];
   const title =
     typeof rawTitle === "string" && rawTitle.trim() !== "" ? rawTitle.trim() : undefined;
 

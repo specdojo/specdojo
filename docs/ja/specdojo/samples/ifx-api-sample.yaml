@@ -5,7 +5,7 @@ info:
     決済サービスとの連携API仕様。
 
 x-spec-meta:
-  id: ifx-api-payment
+  id: ifx-api-sample
   type: api
   status: draft
   based_on: []

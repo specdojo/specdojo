@@ -62,6 +62,26 @@ describe("renderYamlPage", () => {
     expect(page).toContain("  rulebook: none\n");
   });
 
+  it("reads id and status from x-spec-meta and the heading from info.title for OpenAPI YAML", () => {
+    const content = [
+      "openapi: 3.0.3",
+      "info:",
+      "  title: 決済サービスAPI",
+      "x-spec-meta:",
+      "  id: ifx-api-sample",
+      "  type: api",
+      "  status: draft",
+      "",
+    ].join("\n");
+
+    const page = renderYamlPage("docs/ja/specdojo/samples/ifx-api-sample.yaml", content);
+
+    expect(page).toContain("  id: ifx-api-sample\n");
+    expect(page).toContain("  type: sample\n");
+    expect(page).toContain("  status: draft\n");
+    expect(page).toContain("# 決済サービスAPI\n");
+  });
+
   it("uses a longer fence when the YAML content contains triple backticks", () => {
     const content = "id: gl-sample\nnote: |\n  ```yaml\n  nested: fence\n  ```\n";
 

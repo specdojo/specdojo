@@ -5,7 +5,7 @@ info:
     在庫が変更されたときに発行されるイベント仕様。
 
 x-spec-meta:
-  id: ifx-msg-stock-changed
+  id: ifx-msg-sample
   type: message
   status: draft
   based_on: []

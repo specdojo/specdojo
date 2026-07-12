@@ -238,6 +238,36 @@ describe("buildDocIndex", () => {
     }
   });
 
+  it("トップレベル id のない YAML は x-spec-meta.id をインデックス化する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      mkdirSync(join(docsRoot, "ja"), { recursive: true });
+      writeFileSync(
+        join(docsRoot, "ja", "ifx-api-sample.yaml"),
+        [
+          "openapi: 3.0.3",
+          "info:",
+          "  title: 決済サービスAPI",
+          "x-spec-meta:",
+          "  id: ifx-api-sample",
+          "  type: api",
+          "  status: draft",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
+      buildDocIndex(docsRoot, outputPath, repoRoot);
+      const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
+
+      expect(index.entries["ifx-api-sample"]).toBe("docs/ja/ifx-api-sample.yaml");
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
   it("generated 配下を除外し、nested_id_files を収集する", () => {
     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
     try {
