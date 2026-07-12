@@ -166,13 +166,16 @@ providers:
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使う。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットする。
 
-Claude Code provider の配布原本と配置先は次のとおり。
+配置規則は provider 名から機械的に決まる（`agents/` 配下 → `.<provider>/agents/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしない）。provider ごとの配布内容は次のとおり。
 
-| 配布原本（package 内）                  | 利用プロジェクトでの配置先 | 説明                                                               |
-| --------------------------------------- | -------------------------- | ------------------------------------------------------------------ |
-| `templates/claude/agents/*.md`          | `.claude/agents/`          | agent 定義。`--agent <name>` の自動発見のため配置先は固定          |
-| `templates/claude/settings.edit.json`   | `.specdojo/claude/`        | edit agent 用 permission。成果物ディレクトリへの書き込みを許可する |
-| `templates/claude/settings.review.json` | `.specdojo/claude/`        | review agent 用 permission。result 配下のみ書き込みを許可する      |
+| provider | 配布内容                                                     | 配置先                                 |
+| -------- | ------------------------------------------------------------ | -------------------------------------- |
+| claude   | `agents/*.md`、`settings.edit.json` / `settings.review.json` | `.claude/agents/`、`.specdojo/claude/` |
+| codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）      | `.codex/agents/`                       |
+| opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）    | `.opencode/agents/`                    |
+| copilot  | `pm-members-snippet.yaml`（member 定義の参照スニペット）     | `.specdojo/copilot/`                   |
+
+導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照する。
 
 `pm-members.yaml` の claude member の `command` には `--settings .specdojo/claude/settings.<mode>.json` を指定する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 
@@ -186,8 +189,7 @@ specdojo exec scaffold --provider claude
 
 挙動は次のとおり。
 
-- `--provider <name>` を指定すると、package 内の `templates/<name>/` を配布原本として上表の配置先へコピーする。`--provider` を省略した場合は従来どおり `pm-review-viewpoints.yaml` の scaffold を行い、挙動を変えない。
-- 配置規則は provider 名から機械的に決まる。`agents/` 配下は `.<provider>/agents/` へ、それ以外のファイルは `.specdojo/<provider>/` へコピーする。配布原本の `README.md` はコピーしない。
+- `--provider <name>` を指定すると、package 内の `templates/<name>/` を配布原本として上記の配置規則でコピーする。`--provider` を省略した場合は従来どおり `pm-review-viewpoints.yaml` の scaffold を行い、挙動を変えない。
 - 配布原本はインストール済み package のルートから解決する。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにする。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力する。`--force` 指定時のみ上書きする。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力する（既存の scaffold 系コマンドの出力形式に合わせる）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示する。
