@@ -162,7 +162,39 @@ providers:
     max_concurrency: 1
 ```
 
-## 6. 変更手順
+## 6. provider 設定の配布と scaffold
+
+agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使う。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットする。
+
+Claude Code provider の配布原本と配置先は次のとおり。
+
+| 配布原本（package 内）                  | 利用プロジェクトでの配置先 | 説明                                                               |
+| --------------------------------------- | -------------------------- | ------------------------------------------------------------------ |
+| `templates/claude/agents/*.md`          | `.claude/agents/`          | agent 定義。`--agent <name>` の自動発見のため配置先は固定          |
+| `templates/claude/settings.edit.json`   | `.specdojo/claude/`        | edit agent 用 permission。成果物ディレクトリへの書き込みを許可する |
+| `templates/claude/settings.review.json` | `.specdojo/claude/`        | review agent 用 permission。result 配下のみ書き込みを許可する      |
+
+`pm-members.yaml` の claude member の `command` には `--settings .specdojo/claude/settings.<mode>.json` を指定する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
+
+### 6.1. scaffold コマンド設計
+
+この配置を自動化するため、`exec scaffold` に `--provider <name>` オプションを追加する。現時点では設計のみで未実装であり、導入は `templates/claude/README.md` の手動手順で行う。
+
+```sh
+specdojo exec scaffold --project prj-0001 --provider claude
+```
+
+設計上の挙動は次のとおり。
+
+- `--provider <name>` を指定すると、package 内の `templates/<name>/` を配布原本として上表の配置先へコピーする。`--provider` を省略した場合は従来どおり `pm-review-viewpoints.yaml` の scaffold を行い、挙動を変えない。
+- 配布原本はインストール済み package のルートから解決する。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにする。
+- 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力する。`--force` 指定時のみ上書きする。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力する（既存の scaffold 系コマンドの出力形式に合わせる）。
+- `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示する。
+- コピー完了後、次の 2 点を案内メッセージとして出力する。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `pm-members.yaml` の `command` に `--settings` の指定が必要であること。
+- `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねる。scaffold は `specdojo.config.json` のパス設定に基づく書き換えを行わない（テンプレートを事実上の推奨レイアウト前提で配布する）。
+- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含める。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持たない。
+
+## 7. 変更手順
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加する。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加する。
 

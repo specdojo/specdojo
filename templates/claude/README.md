@@ -21,6 +21,8 @@ specdojo:
 
 ## 3. 導入手順
 
+`specdojo exec scaffold --provider claude` による自動配置を予定しています（設計は [specdojo-exec-config-guide.md](../../docs/ja/specdojo/guides/specdojo-exec-config-guide.md) の `provider 設定の配布と scaffold` を参照）。実装されるまでは次の手動手順で導入します。
+
 1. `agents/*.md` を利用プロジェクトの `.claude/agents/` へコピーする。
 2. `settings.edit.json` / `settings.review.json` を利用プロジェクトの `.specdojo/claude/` へコピーする。
 3. `pm-members.yaml` の claude member の `command` に `--settings .specdojo/claude/settings.<mode>.json` を指定する（`--permission-mode bypassPermissions` は付けない）。
