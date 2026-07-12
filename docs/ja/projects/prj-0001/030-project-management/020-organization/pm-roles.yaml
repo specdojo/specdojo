@@ -1,6 +1,6 @@
 id: prj-0001:pm-roles
 type: project
-status: draft
+status: ready
 title: ロール一覧
 rulebook: pm-roles-rulebook
 based_on:

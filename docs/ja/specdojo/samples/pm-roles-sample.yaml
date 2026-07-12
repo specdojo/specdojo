@@ -1,6 +1,6 @@
 id: pm-roles-sample
 type: project
-status: draft
+status: ready
 title: ロール一覧
 rulebook: pm-roles-rulebook
 based_on:
