@@ -3,23 +3,24 @@
   "permissions": {
     "allow": [
       "Bash(specdojo *)",
+      "Bash(node dist/specdojo.js *)",
+      "Bash(./node_modules/.bin/specdojo *)",
       "Bash(git status)",
       "Bash(git diff *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
+      "Bash(git log *)",
+      "Bash(grep *)",
+      "Bash(sed -n *)",
       "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npx vitest *)",
+      "Bash(npx markdownlint *)",
+      "Bash(npx prettier *)",
+      "Bash(npx ajv *)",
       "Read(**)",
       "WebSearch",
-      "WebFetch",
-      "Bash(echo \"tsc:$?\")",
-      "Bash(echo \"build:$?\")",
-      "Bash(echo \"lint:$?\")",
-      "Bash(echo \"lint:md exit:$?\")",
-      "Bash(grep -v \"^\\\\s*$\")",
-      "Bash(echo \" quiet --frail exit=$?\")",
-      "Bash(grep -E \"^\\\\S.*\\\\.\\(md|mdx\\)$\")",
-      "Bash(grep -E \"\\\\.md$\")",
-      "Bash(awk '{print $2}')"
+      "WebFetch"
     ],
     "deny": [
       "Read(./.env)",
@@ -29,6 +30,7 @@
       "Bash(git push *)",
       "Bash(git reset --hard *)",
       "Bash(rm -rf *)"
-    ]
+    ],
+    "disableBypassPermissionsMode": "disable"
   }
 }

@@ -74,6 +74,11 @@ import {
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { scaffoldResult } from "./exec-results.js";
+import {
+  applyProviderScaffoldPlan,
+  buildProviderScaffoldPlan,
+  specdojoPackageRootDir,
+} from "./exec-provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
 import { scaffoldViewpoints } from "./review-plan.js";
 import { registerResumeCommand, registerRunCommand } from "./exec-run.js";
@@ -326,6 +331,38 @@ function printCommandError(error: unknown, fail = true): void {
   process.stdout.write(message + "\n");
   if (fail) exitWithCode(false);
   else process.exitCode = 1;
+}
+
+async function runProviderScaffold(
+  provider: string,
+  opts: { force: boolean; dryRun: boolean },
+): Promise<void> {
+  const plan = await buildProviderScaffoldPlan({
+    packageRoot: specdojoPackageRootDir(),
+    repoRoot: specdojoRootDir(),
+    provider,
+  });
+
+  if (opts.dryRun) {
+    for (const entry of plan.entries) {
+      process.stdout.write(`[dry-run] would write: ${entry.destinationRelPath}\n`);
+    }
+    return;
+  }
+
+  const outcomes = await applyProviderScaffoldPlan(plan, { force: opts.force });
+  for (const { entry, written } of outcomes) {
+    if (written) {
+      process.stdout.write(`Written: ${entry.destinationRelPath}\n`);
+    } else {
+      process.stdout.write(`Skipped (already exists): ${entry.destinationRelPath}\n`);
+    }
+  }
+  process.stdout.write(
+    "Next steps:\n" +
+      "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
+      `  2. Set --settings .specdojo/${provider}/settings.<mode>.json in pm-members.yaml agent commands.\n`,
+  );
 }
 
 function loadValidatedExecState(projectPath: string): LoadedExecState | null {
@@ -1131,14 +1168,29 @@ export function registerExecCommands(program: Command): void {
   registerResumeCommand(exec);
   registerExecWorktreeCommands(exec);
 
-  // exec scaffold: creates project setup files (viewpoints etc.)
+  // exec scaffold: creates project setup files (viewpoints etc.) or provider templates
   const scaffoldCmd = exec
     .command("scaffold")
-    .description("Scaffold project setup files (pm-review-viewpoints.yaml, etc.)");
+    .description(
+      "Scaffold project setup files (pm-review-viewpoints.yaml) or provider templates (--provider)",
+    );
   addProjectOptions(scaffoldCmd);
   scaffoldCmd.option("--force", "Overwrite existing files", false);
-  scaffoldCmd.action((opts) => {
+  scaffoldCmd.option(
+    "--provider <name>",
+    "Copy the provider's agent/settings templates (templates/<name>) into the repository",
+  );
+  scaffoldCmd.option("--dry-run", "Show planned files without writing", false);
+  scaffoldCmd.action(async (opts) => {
     try {
+      if (opts.provider) {
+        await runProviderScaffold(String(opts.provider), {
+          force: !!opts.force,
+          dryRun: !!opts.dryRun,
+        });
+        return;
+      }
+
       const { config } = loadConfig();
       if (!config) throw new Error("specdojo.config.json not found. Run: specdojo config init");
 
