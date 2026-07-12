@@ -3,9 +3,21 @@
   "permissions": {
     "allow": [
       "Bash(specdojo *)",
+      "Bash(node dist/specdojo.js *)",
+      "Bash(./node_modules/.bin/specdojo *)",
       "Bash(git status)",
       "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(grep *)",
+      "Bash(sed -n *)",
       "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npx vitest *)",
+      "Bash(npx markdownlint *)",
+      "Bash(npx prettier *)",
+      "Bash(npx ajv *)",
       "Read(**)",
       "WebSearch",
       "WebFetch"
