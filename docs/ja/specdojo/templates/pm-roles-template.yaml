@@ -4,6 +4,8 @@
 id: pm-roles-template
 type: template
 status: draft
+title: ロール一覧
+rulebook: pm-roles-rulebook
 based_on:
   - _PROJECT_ID_:pm-organization
 version: 1
@@ -12,7 +14,7 @@ project_id: _PROJECT_ID_
 # Role code の採用方針・根拠は pm-organization.md を参照する。
 # 実行主体、member nickname、兼務の割り当ては pm-members.yaml で管理する。
 # `project_note` は PO が承認判断できる公開可能な一行メモとして記述する。
-# rulebook など schema にないメタ項目は追加しない。
+# メタ項目は pm-roles.schema.yaml で許可されたものだけを使用する。
 
 roles:
   - code: PO

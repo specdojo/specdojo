@@ -2,6 +2,8 @@
 id: dct-testing-template
 type: template
 status: draft
+title: 成果物カタログ（テスト）
+rulebook: dct-rulebook
 domain: testing
 base_path: /docs/ja/product/080-testing
 

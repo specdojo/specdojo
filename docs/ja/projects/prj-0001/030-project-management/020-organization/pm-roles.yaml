@@ -1,6 +1,8 @@
 id: prj-0001:pm-roles
 type: project
 status: draft
+title: ロール一覧
+rulebook: pm-roles-rulebook
 based_on:
   - people-and-organization-definition-standard
   - prj-0001:pm-organization

@@ -87,6 +87,8 @@ export function scaffoldDoc(
     id: `${projectId}:${template.id.replace(/-template$/, "")}`,
     type: "project",
     status: template.status,
+    ...(template.title ? { title: replace(template.title) } : {}),
+    ...(template.rulebook ? { rulebook: template.rulebook } : {}),
     ...(template.part_of && template.part_of.length > 0
       ? { part_of: template.part_of.map(replace) }
       : {}),

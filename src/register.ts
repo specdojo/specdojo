@@ -9,7 +9,7 @@ import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 // Types
 // ================================
 
-type RegisterPaths = {
+export type RegisterPaths = {
   projectId: string;
   projectRegisterPath: string;
   pjrIndexPath: string;
@@ -17,7 +17,7 @@ type RegisterPaths = {
   controlsGeneratedPath: string;
 };
 
-type PjrItem = {
+export type PjrItem = {
   id: string;
   status: string;
   title: string;
@@ -35,7 +35,7 @@ type PjrItem = {
 // Constants
 // ================================
 
-const VALID_STATUSES = [
+export const VALID_STATUSES = [
   "open",
   "in-progress",
   "waiting",
@@ -46,7 +46,7 @@ const VALID_STATUSES = [
   "rejected",
 ] as const;
 
-const VALID_TYPES = [
+export const VALID_TYPES = [
   "todo",
   "question",
   "risk",
@@ -57,7 +57,7 @@ const VALID_TYPES = [
   "note",
 ] as const;
 
-const VALID_PRIORITIES = ["high", "medium", "low"] as const;
+export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
 
 const TABLE_HEADER =
   "| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |";
@@ -67,7 +67,7 @@ const TABLE_SEPARATOR = "| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 // Path Resolution
 // ================================
 
-function resolveRegisterPaths(opts: { project?: string }): RegisterPaths {
+export function resolveRegisterPaths(opts: { project?: string }): RegisterPaths {
   loadEnv();
   const { config, configPath } = loadConfig();
   const baseDir = specdojoRootDir();
@@ -124,7 +124,7 @@ function isTableSeparator(line: string): boolean {
   return line.startsWith("|") && /\|\s*---+\s*\|/.test(line);
 }
 
-function parsePjrIndex(content: string): PjrItem[] {
+export function parsePjrIndex(content: string): PjrItem[] {
   const lines = content.split("\n");
   const items: PjrItem[] = [];
   let inSection = false;
@@ -518,13 +518,13 @@ function writeDerivedViews(paths: RegisterPaths, scope: BuildScope): ViewFile[] 
 // Item Update Helpers
 // ================================
 
-const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
+export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function findItemById(items: PjrItem[], id: string): PjrItem | undefined {
+export function findItemById(items: PjrItem[], id: string): PjrItem | undefined {
   return items.find((it) => it.id === id);
 }
 

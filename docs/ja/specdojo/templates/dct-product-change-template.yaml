@@ -6,6 +6,8 @@
 id: dct-product-change-template
 type: template
 status: draft
+title: 成果物カタログ（プロダクト変更管理）
+rulebook: dct-rulebook
 part_of:
   - _PROJECT_ID_:dct-index
 domain: product-change

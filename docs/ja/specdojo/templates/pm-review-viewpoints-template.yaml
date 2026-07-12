@@ -3,6 +3,8 @@
 id: pm-review-viewpoints-template
 type: template
 status: draft
+title: レビュー観点一覧
+rulebook: none
 project_id: _PROJECT_ID_
 
 # レビュー観点一覧。

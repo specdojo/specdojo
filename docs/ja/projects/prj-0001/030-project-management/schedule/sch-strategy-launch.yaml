@@ -2,6 +2,8 @@ kind: strategy
 id: prj-0001:sch-strategy-launch
 type: project
 status: ready
+title: スケジュール戦略（launch）
+rulebook: sch-rulebook
 track: launch
 
 # sch-track-launch.yaml を生成するための戦略定義。

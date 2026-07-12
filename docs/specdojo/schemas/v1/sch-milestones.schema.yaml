@@ -9,6 +9,8 @@ required:
   - id
   - type
   - status
+  - title
+  - rulebook
   - version
   - project_id
   - settings
@@ -26,6 +28,14 @@ properties:
   status:
     type: string
     enum: ["draft", "ready", "deprecated"]
+  title:
+    type: string
+    minLength: 1
+    description: "Document title. Equivalent to the Markdown H1; used as the heading of the generated display page."
+  rulebook:
+    type: string
+    pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
+    description: "Rulebook ID this document conforms to. Use none only when no rulebook exists."
   version:
     type: integer
     minimum: 1

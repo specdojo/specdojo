@@ -66,6 +66,7 @@ config/credentials.json
 
 # claude
 .claude/settings.local.json
+.claude/worktrees/
 CLAUDE.local.md
 
 # Codex local

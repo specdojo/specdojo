@@ -2,6 +2,8 @@ kind: milestones
 id: prj-0001:sch-milestones
 type: project
 status: ready
+title: マイルストーン一覧
+rulebook: sch-rulebook
 version: 1
 project_id: prj-0001
 settings: {}

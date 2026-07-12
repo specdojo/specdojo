@@ -8,6 +8,7 @@ required:
   - type
   - title
   - status
+  - rulebook
   - interfaces
 
 $defs:
@@ -39,6 +40,10 @@ properties:
   status:
     type: string
     enum: ["draft", "ready", "deprecated"]
+  rulebook:
+    type: string
+    pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
+    description: "準拠する rulebook の ID。該当がない場合は none。"
   version:
     $ref: "#/$defs/semver"
   owners:

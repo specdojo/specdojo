@@ -95,6 +95,8 @@ Schedule ファイルは `kind` で種別を区別する。
 | 要素         | 必須 | 内容                                                          |
 | ------------ | ---- | ------------------------------------------------------------- |
 | `kind`       | ○    | `milestones` または `track`                                   |
+| `title`      | ○    | ドキュメント名。表示ページの見出しになる                      |
+| `rulebook`   | ○    | 参照する rulebook ID（`sch-rulebook`）                        |
 | `version`    | ○    | スキーマ/データバージョン（整数）                             |
 | `project_id` | ○    | プロジェクト識別子（例: `prj-0001`）                          |
 | `track`      | ○※   | トラック識別子（`kind: track` で必須）                        |
@@ -147,6 +149,8 @@ Schedule ファイルは `kind` で種別を区別する。
 | `id`                        | ○    | 成果物 ID（例: `prj-0001:sch-strategy-launch`）                    |
 | `type`                      | ○    | `project` 固定                                                     |
 | `status`                    | ○    | `draft` / `ready` / `deprecated`                                   |
+| `title`                     | ○    | ドキュメント名。表示ページの見出しになる                           |
+| `rulebook`                  | ○    | 参照する rulebook ID（`sch-rulebook`）                             |
 | `track`                     | ○    | 対象トラック識別子（例: `launch`）                                 |
 | `scope`                     | ○    | 対象カタログと include_kinds の定義                                |
 | `phases`                    | ○    | 成果物フォーマット別のフェーズ定義（`markdown` / `yaml` など）     |

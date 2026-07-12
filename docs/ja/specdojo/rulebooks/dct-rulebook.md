@@ -74,6 +74,8 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `id`         | 成果物 ID（例: `prj-0001:dct-project-definition`）                   | ○              |
 | `type`       | `project` / `template` のいずれか                                    | ○              |
 | `status`     | `draft` / `ready` / `deprecated`                                     | ○              |
+| `title`      | ドキュメント名。表示ページの見出しになる                             | ○              |
+| `rulebook`   | 参照する rulebook ID（`dct-rulebook`）                               | ○              |
 | `part_of`    | 親となる `dct-index` の `id`（配列形式）                             | 任意           |
 | `project_id` | プロジェクト ID（例: `prj-0001`）                                    | ○（`project`） |
 | `domain`     | ドメイン識別子。ファイル名 `dct-<domain>.yaml` と一致させる          | ○              |
@@ -90,6 +92,8 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `id`         | ○              | 成果物 ID                   |
 | `type`       | ○              | `project` / `template`      |
 | `status`     | ○              | 状態                        |
+| `title`      | ○              | ドキュメント名              |
+| `rulebook`   | ○              | 参照する rulebook ID        |
 | `part_of`    | 任意           | 親 `dct-index` の `id` 配列 |
 | `project_id` | ○（`project`） | プロジェクト ID             |
 | `domain`     | ○              | ドメイン識別子              |

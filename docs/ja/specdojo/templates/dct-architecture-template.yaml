@@ -2,6 +2,8 @@
 id: dct-architecture-template
 type: template
 status: draft
+title: 成果物カタログ（アーキテクチャ）
+rulebook: dct-rulebook
 domain: architecture
 base_path: /docs/ja/product/030-architecture
 

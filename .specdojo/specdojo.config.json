@@ -12,6 +12,7 @@
       "roles_path": "030-project-management/020-organization/pm-roles.yaml",
       "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
       "project_register_path": "030-project-management/controls/project-register",
+      "routines_path": "030-project-management/routines",
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }

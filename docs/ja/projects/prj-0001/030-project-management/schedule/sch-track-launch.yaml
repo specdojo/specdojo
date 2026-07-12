@@ -2,6 +2,8 @@ kind: track
 id: prj-0001:sch-track-launch
 type: project
 status: ready
+title: スケジュールトラック（launch）
+rulebook: sch-rulebook
 version: 1
 project_id: prj-0001
 track: launch

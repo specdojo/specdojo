@@ -34,6 +34,8 @@ export type DctDoc = {
   id: string;
   type: "project";
   status: DctStatus;
+  title?: string;
+  rulebook?: string;
   part_of?: string[];
   project_id: string;
   domain: string;
@@ -45,6 +47,8 @@ export type DctTemplateDoc = {
   id: string;
   type: "template";
   status: DctStatus;
+  title?: string;
+  rulebook?: string;
   part_of?: string[];
   domain: string;
   base_path?: string;

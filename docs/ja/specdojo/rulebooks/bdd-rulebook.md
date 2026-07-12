@@ -43,13 +43,14 @@ Business Data Dictionary (BDD) Documentation Rules
 
 Frontmatter と同等の以下の項目をYAMLドキュメントの先頭に必ず定義してください。
 
-| 項目       | 説明                             | 必須 |
-| ---------- | -------------------------------- | ---- |
-| id         | データ辞書ID（`bdd-...`）        | ○    |
-| type       | `domain` 固定                    | ○    |
-| status     | `draft` / `ready` / `deprecated` | ○    |
-| rulebook   | `bdd-rulebook` 固定              | 任意 |
-| supersedes | 置き換え関係（古仕様→新仕様）    | 任意 |
+| 項目       | 説明                                     | 必須 |
+| ---------- | ---------------------------------------- | ---- |
+| id         | データ辞書ID（`bdd-...`）                | ○    |
+| type       | `domain` 固定                            | ○    |
+| title      | ドキュメント名。表示ページの見出しになる | ○    |
+| status     | `draft` / `ready` / `deprecated`         | ○    |
+| rulebook   | `bdd-rulebook` 固定                      | ○    |
+| supersedes | 置き換え関係（古仕様→新仕様）            | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

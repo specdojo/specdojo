@@ -2,6 +2,8 @@
 id: dct-business-model-template
 type: template
 status: draft
+title: 成果物カタログ（業務モデル）
+rulebook: dct-rulebook
 domain: business-model
 base_path: /docs/ja/product/010-business-specifications/030-business-model
 

@@ -2,6 +2,8 @@
 id: dct-business-specifications-common-template
 type: template
 status: draft
+title: 成果物カタログ（業務仕様共通）
+rulebook: dct-rulebook
 domain: business-specifications-common
 base_path: /docs/ja/product/010-business-specifications/050-common
 
