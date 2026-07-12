@@ -163,7 +163,7 @@ commit 対象から除外する主なパス:
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
-現在は上表の除外リスト方式ですが、プロンプトインジェクション対策として mode 別の許可リスト方式（review は result のみ、edit は result と対象成果物のみ）への移行を設計中です。詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
+上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は参考資料ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
 
 ## 8. merge
 

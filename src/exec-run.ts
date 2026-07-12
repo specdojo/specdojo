@@ -901,6 +901,7 @@ async function runPreparedTask(
   repoRoot: string,
   schedulePath: string,
   executionPath: string,
+  catalogPath: string | undefined,
   execDefaults: ExecDefaultsConfig,
   dryRun: boolean,
 ): Promise<RunResult> {
@@ -917,7 +918,12 @@ async function runPreparedTask(
   );
 
   const completedAt = new Date().toISOString();
-  const context = { repoRoot, schedulePath, executionPath };
+  const context = {
+    repoRoot,
+    schedulePath,
+    executionPath,
+    ...(catalogPath ? { catalogPath } : {}),
+  };
   const worktreeResultPath = prepared.resultPath
     ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
     : undefined;
@@ -1184,6 +1190,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           repoRoot,
           schedulePath,
           executionPath,
+          catalogPath,
           execDefaults,
           dryRun,
         ),
@@ -1409,6 +1416,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     repoRoot,
     schedulePath,
     executionPath,
+    catalogPath,
     execDefaults,
     !!opts.dryRun,
   );
@@ -2144,6 +2152,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           repoRoot,
           schedulePath,
           executionPath,
+          catalogPath,
           execDefaults,
           dryRun,
         ),

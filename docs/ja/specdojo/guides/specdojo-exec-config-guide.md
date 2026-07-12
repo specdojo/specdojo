@@ -228,11 +228,9 @@ command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="n
 
 **opencode** はローカル Ollama 前提で外部送信面が小さい。権限は `.opencode/agents/*.md` の定義を正とする。
 
-### 7.3. 残余リスクと commit 対象の許可リスト化（設計）
+### 7.3. commit 対象の許可リスト
 
-`workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `src/` や `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。現在の commit 対象は除外リスト方式（`除外対象以外はすべて commit`）のため、これらの変更は commit・merge まで到達しうる。
-
-この経路を閉じるため、commit 対象を mode 別の許可リスト方式へ移行する（未実装）。
+`workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `src/` や `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。この経路は specdojo CLI 側で閉じる。commit 対象は mode 別の許可リスト方式とする。
 
 | mode                                        | commit を許可するパス                                                         |
 | ------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -240,8 +238,11 @@ command: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="n
 | edit                                        | 対象 task の result、plan frontmatter の `targets` から解決した成果物パス     |
 | edit（maintenance / bootstrap 系 approach） | 上記に加え、参考資料ディレクトリ（rulebooks / recipes / samples / templates） |
 
-- 許可リスト外の変更は commit 対象に含めず、検出時は対象パスを警告として出力する（worktree 内には残るため、必要なら人間が確認して手動で取り込む）。
+- 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力する（worktree 内には残るため、必要なら人間が確認して手動で取り込む）。
 - 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用する。
+- mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読む。agent は working tree の plan を書き換えられるが HEAD は書き換えられないため、許可リストの導出は改ざん耐性がある。
+- `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックする。どちらでも解決できない id は警告を出し、commit を許可しない。
+- HEAD に plan が無い、または frontmatter から task 識別を復元できない場合のみ、従来の除外リスト方式へフォールバックする。CLI 経由の worktree は必ず plan を checkpoint するため、この分岐を agent 側から誘発することはできない。
 - パス制約を持たない provider（codex / opencode）への本命の対策であると同時に、claude に対しても settings と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
 
 ## 8. 変更手順

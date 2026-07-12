@@ -207,7 +207,7 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
+    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
     note: Codex CLI を使用する標準worker。edit planに従って成果物とresultの更新を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
@@ -227,7 +227,7 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
+    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
     note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
@@ -249,7 +249,7 @@ members:
       - complex-analysis
       - architecture-judgment
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
+    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
     note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
@@ -270,7 +270,7 @@ members:
       - quality-assurance
       - complex-analysis
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
+    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
     note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
 
