@@ -10,6 +10,13 @@ based_on:
 version: 1
 project_id: prj-0001
 
+# 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
+# を member 属性で展開して解決するため、member には command を書かない。
+# この sample の custom provider は、次のテンプレートを定義している想定とする。
+#   providers:
+#     custom:
+#       command_template: "specdojo-agent run --agent {nickname}"
+
 members:
   - nickname: po
     display_name: Project Owner
@@ -44,7 +51,6 @@ members:
       - 要件の抜け漏れ確認
     capabilities:
       - web_search
-    command: "specdojo-agent run --profile ba-edit"
     scheduler_strategy: dependency-first
     note: 要件整理と受入条件草案を支援する。最終判断は人間の PO が行う。
 
@@ -65,7 +71,6 @@ members:
       - 禁止事項とルール準拠の確認
     capabilities:
       - web_search
-    command: "specdojo-agent run --profile qe-review"
     scheduler_strategy: fifo
     note: 品質観点のレビューを支援する。成果物の公開可否判断は行わない。
 
@@ -84,7 +89,6 @@ members:
       - 表記ゆれ確認
       - 成果物間の軽微な整合性確認
     capabilities: []
-    command: "specdojo-agent run --profile general"
     scheduler_strategy: manual
     note: 特定 Role に固定しない汎用支援 agent。実行時のタスク owner または plan で対象 Role を明示する。
 
@@ -93,6 +97,6 @@ rules:
   - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
   - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
-  - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決する。member の command は、この sample の custom provider のようにテンプレートを持たない構成に限って上書きとして使う。
-  - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+  - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決する。member の command は、テンプレートを持たない構成に限って上書きとして使う。
+  - command template と command 上書きには、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。
