@@ -1,7 +1,7 @@
 # GitHub Copilot CLI member 定義のスニペット。
 # 利用プロジェクトの pm-members.yaml の members へコピーして使う。
-# 権限は command のフラグが正本。--allow-all / --yolo / --allow-all-tools /
-# --allow-all-paths / COPILOT_ALLOW_ALL は使わない。
+# 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
+# providers.copilot.command_template で定義する（exec-defaults-snippet.yaml を参照）。
 # 設計の背景は specdojo-exec-config-guide.md の
 # 「agent 権限とプロンプトインジェクション対策」を参照。
 
@@ -22,19 +22,8 @@ members:
       - document-creation
       - implementation
     capabilities: []
-    command: >-
-      copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
-      --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
-      --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
     scheduler_strategy: critical-first
     note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。
-
   - nickname: copilot-review-agent
     disabled: true
     priority: 4
@@ -51,15 +40,5 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: []
-    command: >-
-      copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
-      --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
-      --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
     scheduler_strategy: fifo
     note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。

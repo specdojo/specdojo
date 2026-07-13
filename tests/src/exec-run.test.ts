@@ -5,7 +5,7 @@ import {
   resolveAgentOverride,
   selectCandidates,
 } from "../../src/exec-run.js";
-import type { RateLimitDetection } from "../../src/exec-agent-config.js";
+import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
 function agent(overrides: Partial<ProjectMember> & { nickname: string }): ProjectMember {
@@ -125,6 +125,23 @@ describe("selectCandidates", () => {
     const actual = selectCandidates(requirements, members, "edit").map((m) => m.nickname);
 
     expect(actual).toEqual(["codex", "opencode"]);
+  });
+
+  it("selects a member without a command when its provider declares a command_template", () => {
+    const execDefaults: ExecDefaultsConfig = {
+      providers: { claude: { command_template: "claude -p --agent {nickname}" } },
+    };
+    const members = roster([
+      agent({ nickname: "templated", provider: "claude", command: undefined, priority: 1 }),
+      agent({ nickname: "no-source", provider: "custom", command: undefined, priority: 2 }),
+    ]);
+
+    const actual = selectCandidates(requirements, members, "edit", undefined, execDefaults).map(
+      (m) => m.nickname,
+    );
+
+    // `no-source` has neither a command override nor a provider template, so it is not runnable.
+    expect(actual).toEqual(["templated"]);
   });
 });
 
@@ -257,5 +274,56 @@ describe("resolveAgentOverride", () => {
     const actual = resolveAgentOverride("edit", "some custom --cmd", {}, members);
 
     expect(actual).toEqual({ kind: "command", command: "some custom --cmd", actor: undefined });
+  });
+
+  it("resolves a mode override nickname through the provider command template", () => {
+    const execDefaults: ExecDefaultsConfig = {
+      providers: {
+        claude: {
+          command_template: "claude -p --agent {nickname} --settings settings.{mode}.json",
+        },
+      },
+    };
+    const templated = roster([
+      agent({ nickname: "claude-edit-agent", provider: "claude", command: undefined }),
+    ]);
+
+    const actual = resolveAgentOverride(
+      "edit",
+      undefined,
+      { edit: "claude-edit-agent" },
+      templated,
+      execDefaults,
+    );
+
+    expect(actual).toEqual({
+      kind: "command",
+      command: "claude -p --agent claude-edit-agent --settings settings.edit.json",
+      actor: "claude-edit-agent",
+      provider: "claude",
+    });
+  });
+
+  it("returns an error when the provider template cannot be expanded for the member", () => {
+    const execDefaults: ExecDefaultsConfig = {
+      providers: { codex: { command_template: "codex exec --model {model}" } },
+    };
+    const templated = roster([
+      agent({ nickname: "codex-edit-agent", provider: "codex", command: undefined }),
+    ]);
+
+    const actual = resolveAgentOverride(
+      "edit",
+      undefined,
+      { edit: "codex-edit-agent" },
+      templated,
+      execDefaults,
+    );
+
+    expect(actual.kind).toBe("error");
+    if (actual.kind === "error") {
+      expect(actual.message).toContain("{model}");
+      expect(actual.message).toContain("codex-edit-agent");
+    }
   });
 });

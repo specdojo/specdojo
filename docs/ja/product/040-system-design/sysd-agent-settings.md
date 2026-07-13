@@ -215,7 +215,7 @@ providers:
     command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
 
   codex:
-    command_template: 'codex exec --ephemeral --sandbox workspace-write --model {model} -c approval_policy="never" -c model_reasoning_effort="{effort}"'
+    command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
       by_proficiency:
         normal: { model: gpt-5.4-mini, effort: medium }

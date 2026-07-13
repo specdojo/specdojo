@@ -129,7 +129,7 @@ specdojo exec worktree agent \
   --task <task-id>
 ```
 
-claim actor と `pm-members.yaml` から command を解決します。plan 内の `[[id]]` は `index replace --format path --missing keep` 相当で展開し、agent の標準入力へ渡します。
+claim actor の member 属性と `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から command を解決します。plan 内の `[[id]]` は `index replace --format path --missing keep` 相当で展開し、agent の標準入力へ渡します。
 
 コマンドを明示する場合は `--agent-cmd` を使います。
 

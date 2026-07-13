@@ -37,7 +37,11 @@ rate_limit_policy:
       max_wait_seconds: 600
     on_exhausted: block # 全候補試行後はブロックして人間に委ねる
 
-# provider 別の検出・ポリシー上書き。各 provider ブロックの rate_limit_detection を
+# provider 別の設定。command_template は agent の起動コマンドで、member 属性
+# （{nickname} / {mode} / {proficiency} と command_params の変数）で展開する。
+# member 側の command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
+#
+# 検出・ポリシー上書きは、各 provider ブロックの rate_limit_detection を
 # 与えた場合、その provider の member ではグローバル rate_limit_detection を完全に
 # 置き換える（exit_codes を省略すれば exit code 起因の誤検出を避けられる）。
 #
@@ -47,6 +51,9 @@ rate_limit_policy:
 # 実際の出力で検証してから確定する。
 providers:
   claude:
+    # モデルは .claude/agents/{nickname}.md の model フィールドで指定するため、
+    # テンプレートにモデル名を含めない。permission は mode 別 settings で分離する。
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
     # Anthropic API: 429 / rate limit に加え、モデル高負荷時の overloaded を検出。
     # session limit は logs/exec-auto.log で実観測:
     #   "You've hit your session limit · resets 4:10am (UTC)"
@@ -59,6 +66,19 @@ providers:
         - "session limit"
 
   copilot:
+    # edit / review とも同一の許可リスト方式（shell は読み取り系・検証系のみ、git の
+    # 変更系は deny）。write はパス単位に絞れないため許可し、成果物変更の境界は
+    # specdojo CLI の commit 許可リストで作る。プレースホルダは不要のため使わない。
+    command_template: >-
+      copilot -p "$(cat)" --no-color --no-ask-user
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
     # Copilot: 429 / rate limit に加え、quota / premium request 上限の文言を検出。
     rate_limit_detection:
       stderr_patterns:
@@ -68,6 +88,16 @@ providers:
         - "premium request"
 
   codex:
+    # codex exec には worker 名を選択するオプションがないため {nickname} は使わず、
+    # モデルと reasoning effort を proficiency で切り替える。--ephemeral は rollout
+    # ファイルを保存しない（実行履歴の正本は SpecDojo の event・plan・result）。
+    # sandbox_workspace_write.network_access=false は sandbox 内からの直接の
+    # ネットワークアクセスを遮断する（web_search はモデル側ツールのため影響しない）。
+    command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
+    command_params:
+      by_proficiency:
+        normal: { model: gpt-5.4-mini, effort: medium }
+        expert: { model: gpt-5.5, effort: high }
     # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
     # と週次上限（weekly / usage limit）がスタックする。
     rate_limit_detection:
@@ -79,6 +109,9 @@ providers:
         - "usage limit"
 
   opencode:
+    # {nickname} が --agent の指定名になるため、member の nickname と
+    # .opencode/agents/<name>.md のファイル名を一致させる。
+    command_template: "opencode run --agent {nickname}"
     # 同一ホストの単一 Ollama モデルを共有するため、複数の opencode agent を同時起動
     # するとメモリ競合・モデルロード待ちで不安定になる。1 ラウンドで同時に走る opencode
     # を 1 つに制限する（他 provider のグローバル --parallel は下げない）。

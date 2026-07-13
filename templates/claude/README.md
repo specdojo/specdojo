@@ -29,11 +29,13 @@ specdojo exec scaffold --provider claude
 
 既存ファイルは上書きされません（`--force` 指定時のみ上書き）。`--dry-run` でコピー予定を確認できます。コピー後に次の 2 点を行います。
 
-1. `pm-members.yaml` の claude member の `command` に `--settings .specdojo/claude/settings.<mode>.json` を指定する（`--permission-mode bypassPermissions` は付けない）。
+1. `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings .specdojo/claude/settings.{mode}.json` を指定する（`--permission-mode bypassPermissions` は付けない）。member 側に `command` は書かない。
 2. コピーしたファイルをコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 
 ```yaml
-command: "claude -p --verbose --agent claude-review-agent --settings .specdojo/claude/settings.review.json"
+providers:
+  claude:
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
 ```
 
 ## 4. カスタマイズ

@@ -361,7 +361,7 @@ async function runProviderScaffold(
   process.stdout.write(
     "Next steps:\n" +
       "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
-      `  2. Set --settings .specdojo/${provider}/settings.<mode>.json in pm-members.yaml agent commands.\n`,
+      `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n`,
   );
 }
 

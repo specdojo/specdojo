@@ -1,0 +1,28 @@
+# GitHub Copilot CLI provider 設定のスニペット。
+# 利用プロジェクトの .specdojo/exec-defaults.yaml の providers へコピーして使う。
+# 権限は command template のフラグが正本。--allow-all / --yolo / --allow-all-tools /
+# --allow-all-paths / COPILOT_ALLOW_ALL は使わない。
+# 設計の背景は specdojo-exec-config-guide.md の
+# 「agent 権限とプロンプトインジェクション対策」を参照。
+
+providers:
+  copilot:
+    # edit / review とも同一の許可リスト構成のため、プレースホルダは使わない。
+    # -p は引数必須のため、標準入力で渡される plan を "$(cat)" で受ける。
+    command_template: >-
+      copilot -p "$(cat)" --no-color --no-ask-user
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+    # Copilot: 429 / rate limit に加え、quota / premium request 上限の文言を検出。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "premium request"

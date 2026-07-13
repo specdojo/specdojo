@@ -8,6 +8,11 @@ import {
   readAllEventFiles,
   releaseSchedulerLock,
 } from "./exec-events.js";
+import {
+  hasMemberCommandSource,
+  loadExecDefaultsConfig,
+  resolveMemberCommand,
+} from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
   buildTaskPhaseMap,
@@ -161,21 +166,27 @@ function resolveAgent(
   }
   const task = buildTaskView(context.schedulePath, context.executionPath, taskId);
   const roster = loadRosterForExecutionPath(context.executionPath);
+  const execDefaults = loadExecDefaultsConfig(undefined, context.executionPath);
   let command = opts.agentCmd?.trim() ?? "";
 
   if (command) {
     const member = roster?.members.find(
-      (item) => item.type === "agent" && item.command && item.nickname === command,
+      (item) =>
+        item.type === "agent" &&
+        hasMemberCommandSource(execDefaults, item) &&
+        item.nickname === command,
     );
-    command = member?.command ?? command;
+    const resolved = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    command = resolved ?? command;
   } else {
     if ((task.execution ?? "agent") === "human") {
       throw new Error(`Task requires human execution. Use --agent-cmd to override: ${taskId}`);
     }
     const member = roster?.members.find(
-      (item) => item.nickname === state.actor && item.type === "agent" && item.command,
+      (item) => item.nickname === state.actor && item.type === "agent",
     );
-    if (!member?.command) {
+    const resolved = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    if (!resolved) {
       throw new Error(`Agent command not found for claim actor: ${state.actor}`);
     }
     const maps = buildTaskPhaseMap(context.schedulePath);
@@ -186,11 +197,13 @@ function resolveAgent(
       { capabilities: task.capabilities ?? [], proficiency: task.proficiency },
       roster,
       task.mode ?? "edit",
+      undefined,
+      execDefaults,
     );
     if (!candidates.some((candidate) => candidate.nickname === state.actor)) {
       throw new Error(`Claim actor does not satisfy task agent requirements: ${state.actor}`);
     }
-    command = member.command;
+    command = resolved;
   }
 
   const prompt = loadPrompt(context.executionPath, taskId);

@@ -6,7 +6,9 @@ import { selfRunArgs } from "./spawn-self.js";
 import {
   defaultExecDefaultsPath,
   createProviderCapacityTracker,
+  hasMemberCommandSource,
   loadExecDefaultsConfig,
+  resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
@@ -151,47 +153,72 @@ export type AgentOverrideResolution =
 // The provider selects the per-provider failure-handling override in exec-defaults.yaml.
 type AgentRunCandidate = { command: string; provider?: AgentProvider };
 
+// Resolve a member's launch command without surfacing template errors, for places that only
+// probe "does this member's resolved command match this string" during override matching.
+function resolveMemberCommandQuietly(
+  execDefaults: ExecDefaultsConfig,
+  member: ProjectMember,
+): string | undefined {
+  try {
+    return resolveMemberCommand(execDefaults, member);
+  } catch {
+    return undefined;
+  }
+}
+
 // Resolve the agent override for a task's mode. A single explicit override (--cmd / --agent-cmd)
 // wins for every mode and accepts a nickname or a raw command string. Otherwise the mode-specific
 // override (--edit-agent / --review-agent) applies; it accepts an agent nickname only and resolves
-// the command from pm-members.yaml, failing if the nickname is unknown.
+// the command via the provider command template (or the member's command override), failing if
+// the nickname is unknown or the command cannot be resolved.
 export function resolveAgentOverride(
   mode: "edit" | "review",
   agentCmdOverride: string | undefined,
   modeAgentOverrides: ModeAgentOverrides,
   roster: MemberRoster | null,
+  execDefaults: ExecDefaultsConfig = {},
 ): AgentOverrideResolution {
   if (agentCmdOverride) {
     const member = roster?.members.find(
       (m) =>
         m.type === "agent" &&
-        m.command &&
-        (m.nickname === agentCmdOverride || m.command === agentCmdOverride),
+        hasMemberCommandSource(execDefaults, m) &&
+        (m.nickname === agentCmdOverride ||
+          resolveMemberCommandQuietly(execDefaults, m) === agentCmdOverride),
     );
-    return {
-      kind: "command",
-      command: member?.command ?? agentCmdOverride,
-      actor: member?.nickname,
-      provider: member?.provider,
-    };
+    if (!member) return { kind: "command", command: agentCmdOverride };
+    try {
+      return {
+        kind: "command",
+        command: resolveMemberCommand(execDefaults, member) ?? agentCmdOverride,
+        actor: member.nickname,
+        provider: member.provider,
+      };
+    } catch (error) {
+      return { kind: "error", message: error instanceof Error ? error.message : String(error) };
+    }
   }
 
   const nickname = mode === "review" ? modeAgentOverrides.review : modeAgentOverrides.edit;
   if (!nickname) return { kind: "none" };
 
-  const member = roster?.members.find(
-    (m) => m.type === "agent" && m.command && m.nickname === nickname,
-  );
-  if (!member?.command) {
-    const flag = mode === "review" ? "--review-agent" : "--edit-agent";
+  const flag = mode === "review" ? "--review-agent" : "--edit-agent";
+  const member = roster?.members.find((m) => m.type === "agent" && m.nickname === nickname);
+  let command: string | undefined;
+  try {
+    command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+  } catch (error) {
+    return { kind: "error", message: error instanceof Error ? error.message : String(error) };
+  }
+  if (!member || !command) {
     return {
       kind: "error",
-      message: `${flag} agent nickname not found in pm-members.yaml (or has no command): ${nickname}`,
+      message: `${flag} agent nickname not found in pm-members.yaml (or has no resolvable command): ${nickname}`,
     };
   }
   return {
     kind: "command",
-    command: member.command,
+    command,
     actor: member.nickname,
     provider: member.provider,
   };
@@ -308,12 +335,15 @@ export function selectCandidates(
   roster: MemberRoster | null,
   taskMode?: string,
   busyActors?: ReadonlySet<string>,
+  execDefaults: ExecDefaultsConfig = {},
 ): ProjectMember[] {
   if (!roster) return [];
   const { capabilities: required, proficiency } = requirements;
   return roster.members
     .filter((m) => {
-      if (m.type !== "agent" || !m.command) return false;
+      // Runnable agents need a command source: a provider command_template or an
+      // explicit member-level command override.
+      if (m.type !== "agent" || !hasMemberCommandSource(execDefaults, m)) return false;
       // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
       // are skipped during auto-selection.
       if (m.disabled === true) return false;
@@ -652,6 +682,7 @@ async function prepareSingleTask(
   skipClaim: boolean,
   worktreeBase: string,
   planGenPaths: PlanGenPaths,
+  execDefaults: ExecDefaultsConfig,
   hasProviderCapacity?: (provider?: AgentProvider) => boolean,
 ): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
@@ -666,6 +697,7 @@ async function prepareSingleTask(
     agentCmdOverride,
     modeAgentOverrides,
     roster,
+    execDefaults,
   );
   if (overrideResolution.kind === "error") {
     process.stdout.write(`  ${overrideResolution.message}\n`);
@@ -704,7 +736,7 @@ async function prepareSingleTask(
     };
 
     const busyActors = collectBusyActors(schedulePath);
-    const candidates = selectCandidates(requirements, roster, mode, busyActors);
+    const candidates = selectCandidates(requirements, roster, mode, busyActors, execDefaults);
     if (candidates.length === 0) {
       process.stdout.write(
         `  No agents found for mode: ${mode}, capabilities: [${requirements.capabilities.join(", ")}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ""}\n`,
@@ -726,12 +758,31 @@ async function prepareSingleTask(
       return "deferred";
     }
 
+    // Expand each candidate's launch command. A broken provider template (unresolved
+    // placeholder, ambiguous command_params) skips that candidate with a warning so a
+    // misconfigured provider does not block fallback to other providers.
+    const runnable: ProjectMember[] = [];
     for (const candidate of available) {
-      agentCandidates.push({ command: candidate.command!, provider: candidate.provider });
+      try {
+        const command = resolveMemberCommand(execDefaults, candidate);
+        if (!command) continue;
+        agentCandidates.push({ command, provider: candidate.provider });
+        runnable.push(candidate);
+      } catch (error) {
+        process.stdout.write(
+          `  Skipping ${candidate.nickname}: ${error instanceof Error ? error.message : String(error)}\n`,
+        );
+      }
     }
-    if (!actorOverride) actor = available[0].nickname;
+    if (runnable.length === 0) {
+      process.stdout.write(
+        `  No agent with a resolvable command for mode: ${mode} (check providers.<provider>.command_template in exec-defaults.yaml)\n`,
+      );
+      return "failure";
+    }
+    if (!actorOverride) actor = runnable[0].nickname;
     process.stdout.write(
-      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Mode: ${mode}  Agent: ${available[0].nickname}\n`,
+      `  Phase: ${phaseCtx.phaseSet}/${phaseCtx.phaseId}  Mode: ${mode}  Agent: ${runnable[0].nickname}\n`,
     );
   }
 
@@ -1162,6 +1213,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           false,
           worktreeBase,
           planGenPaths,
+          execDefaults,
           capacity.hasCapacity,
         );
         // "deferred": every candidate provider is at its cap this round; try it again next round.
@@ -1255,6 +1307,7 @@ export function resolveClaimingActor(
   roster: MemberRoster | null,
   byOverride: string | undefined,
   cmdOverride: string | undefined,
+  execDefaults: ExecDefaultsConfig = {},
 ): { actor: string | undefined; agentCmd: string | undefined; resumed: boolean } {
   if (byOverride) return { actor: byOverride, agentCmd: cmdOverride, resumed: false };
   if (taskState?.state !== "doing" || !taskState.last_by) {
@@ -1263,10 +1316,18 @@ export function resolveClaimingActor(
   const actor = taskState.last_by;
   let agentCmd = cmdOverride;
   if (!agentCmd && roster) {
-    const claimingMember = roster.members.find(
-      (m) => m.nickname === actor && m.type === "agent" && m.command,
-    );
-    if (claimingMember?.command) agentCmd = claimingMember.command;
+    const claimingMember = roster.members.find((m) => m.nickname === actor && m.type === "agent");
+    if (claimingMember) {
+      try {
+        agentCmd = resolveMemberCommand(execDefaults, claimingMember);
+      } catch (error) {
+        // Fall back to auto-selection; the broken template is reported so the resume
+        // does not silently switch agents without explanation.
+        process.stdout.write(
+          `  Cannot resolve command for claiming actor ${actor}: ${error instanceof Error ? error.message : String(error)}\n`,
+        );
+      }
+    }
   }
   process.stdout.write(
     agentCmd
@@ -1378,6 +1439,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
         roster,
         undefined,
         agentCmdOverride,
+        execDefaults,
       );
       actorOverride = resolved.actor;
       agentCmdOverride = resolved.agentCmd;
@@ -1403,6 +1465,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     alreadyClaimed,
     worktreeBase,
     planGenPaths,
+    execDefaults,
   );
 
   if (typeof prepared === "string") {
@@ -1432,14 +1495,17 @@ export function resolveInPlaceCommand(
   task: ReadyTaskView | null,
   roster: MemberRoster | null,
   opts: RunOpts,
+  execDefaults: ExecDefaultsConfig = {},
 ): { command: string; actor: string } {
   const by = opts.by?.trim();
   const override = (opts.agentCmd ?? opts.cmd)?.trim();
   if (override) {
     const member = roster?.members.find(
-      (m) => m.type === "agent" && m.command && m.nickname === override,
+      (m) =>
+        m.type === "agent" && hasMemberCommandSource(execDefaults, m) && m.nickname === override,
     );
-    return { command: member?.command ?? override, actor: by || member?.nickname || "auto-agent" };
+    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    return { command: command ?? override, actor: by || member?.nickname || "auto-agent" };
   }
 
   if (task && (task.execution ?? "agent") === "human") {
@@ -1447,21 +1513,23 @@ export function resolveInPlaceCommand(
   }
 
   if (by) {
-    const member = roster?.members.find(
-      (m) => m.nickname === by && m.type === "agent" && m.command,
-    );
-    if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`);
-    return { command: member.command, actor: by };
+    const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    if (!command) throw new Error(`Agent command not found for actor: ${by}`);
+    return { command, actor: by };
   }
 
   const candidates = selectCandidates(
     { capabilities: task?.capabilities ?? [], proficiency: task?.proficiency },
     roster,
     task?.mode ?? "edit",
+    undefined,
+    execDefaults,
   );
   const candidate = candidates[0];
-  if (!candidate?.command) throw new Error("No agent found. Specify --cmd <command>.");
-  return { command: candidate.command, actor: candidate.nickname };
+  const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
+  if (!candidate || !command) throw new Error("No agent found. Specify --cmd <command>.");
+  return { command, actor: candidate.nickname };
 }
 
 async function spawnAgentInPlace(
@@ -1499,6 +1567,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const repoRoot = specdojoRootDir();
   const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
   const roster = loadRosterForExecutionPath(executionPath);
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
 
   // --track-state controls whether this run records claim/complete events; it no longer affects
   // file naming. Task-identity runs (--task) always use the fixed `<task-id>` stem (shared with
@@ -1567,7 +1639,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     };
   }
 
-  const { command, actor } = resolveInPlaceCommand(task, roster, opts);
+  const { command, actor } = resolveInPlaceCommand(task, roster, opts, execDefaults);
   const label = slug ?? planPath;
 
   if (opts.dryRun) {
@@ -1711,56 +1783,73 @@ export function resolveRegisterCommand(
   item: { id: string; owner: string },
   roster: MemberRoster | null,
   opts: Pick<RunOpts, "by" | "cmd" | "agentCmd">,
+  execDefaults: ExecDefaultsConfig = {},
 ): { command: string; actor: string } {
   const override = (opts.agentCmd ?? opts.cmd)?.trim();
   const by = opts.by?.trim();
   if (override) {
     const member = roster?.members.find(
-      (m) => m.type === "agent" && m.command && (m.nickname === override || m.command === override),
+      (m) =>
+        m.type === "agent" &&
+        hasMemberCommandSource(execDefaults, m) &&
+        (m.nickname === override || resolveMemberCommandQuietly(execDefaults, m) === override),
     );
-    return { command: member?.command ?? override, actor: by || member?.nickname || "auto-agent" };
+    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    return { command: command ?? override, actor: by || member?.nickname || "auto-agent" };
   }
   if (by) {
-    const member = roster?.members.find(
-      (m) => m.nickname === by && m.type === "agent" && m.command,
-    );
-    if (!member?.command) throw new Error(`Agent command not found for actor: ${by}`);
-    return { command: member.command, actor: by };
+    const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    if (!command) throw new Error(`Agent command not found for actor: ${by}`);
+    return { command, actor: by };
   }
 
   const owner = item.owner.trim();
   const hasOwner = owner !== "" && owner !== "-" && owner !== "_TODO_";
   if (hasOwner && roster) {
     const nicknameMatch = roster.members.find(
-      (m) => m.nickname === owner && m.type === "agent" && m.command && m.disabled !== true,
+      (m) =>
+        m.nickname === owner &&
+        m.type === "agent" &&
+        hasMemberCommandSource(execDefaults, m) &&
+        m.disabled !== true,
     );
-    if (nicknameMatch?.command) {
-      return { command: nicknameMatch.command, actor: nicknameMatch.nickname };
+    if (nicknameMatch) {
+      const command = resolveMemberCommand(execDefaults, nicknameMatch);
+      if (command) return { command, actor: nicknameMatch.nickname };
     }
     const roleMatches = roster.members
       .filter(
         (m) =>
           m.type === "agent" &&
-          m.command &&
+          hasMemberCommandSource(execDefaults, m) &&
           m.disabled !== true &&
           (m.mode === undefined || m.mode === "edit") &&
           m.roles.includes(owner),
       )
       .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
     const roleMatch = roleMatches[0];
-    if (roleMatch?.command) {
-      return { command: roleMatch.command, actor: roleMatch.nickname };
+    if (roleMatch) {
+      const command = resolveMemberCommand(execDefaults, roleMatch);
+      if (command) return { command, actor: roleMatch.nickname };
     }
   }
 
-  const candidates = selectCandidates({ capabilities: [] }, roster, "edit");
+  const candidates = selectCandidates(
+    { capabilities: [] },
+    roster,
+    "edit",
+    undefined,
+    execDefaults,
+  );
   const candidate = candidates[0];
-  if (!candidate?.command) {
+  const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
+  if (!candidate || !command) {
     throw new Error(
       `No agent found for register item ${item.id} (owner: ${item.owner || "-"}). Specify --cmd <command>.`,
     );
   }
-  return { command: candidate.command, actor: candidate.nickname };
+  return { command, actor: candidate.nickname };
 }
 
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
@@ -1791,7 +1880,11 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   const category = requireRunnableRegisterItem(item);
 
   const roster = loadRosterForExecutionPath(executionPath);
-  const { command, actor } = resolveRegisterCommand(item, roster, opts);
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
+  const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const plansDir = join(executionPath, "exec", "plans");
 
@@ -2115,6 +2208,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           roster,
           opts.by,
           opts.agentCmd ?? opts.cmd,
+          execDefaults,
         );
         const prepared = await prepareSingleTask(
           task,
@@ -2132,6 +2226,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           true, // skipClaim: the task is already "doing" and remains claimed
           worktreeBase,
           planGenPaths,
+          execDefaults,
         );
         if (typeof prepared !== "string") preparedTasks.push(prepared);
         else if (prepared === "failure") process.exitCode = 1;

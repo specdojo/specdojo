@@ -27,7 +27,7 @@ specdojo exec scaffold --provider opencode
 
 コピー後に次を行います。
 
-1. `pm-members.yaml` の opencode member の `command` に `opencode run --agent <name>` を指定する。
+1. `.specdojo/exec-defaults.yaml` の `providers.opencode.command_template` に `opencode run --agent {nickname}` を指定する（member の nickname と agent 定義のファイル名を一致させる）。member 側に `command` は書かない。
 2. モデル接続設定（`opencode.json` の provider / model）を利用環境に合わせて作成する。ローカル Ollama の接続先などマシン固有の値を含むため、このテンプレートには含めていない。
 3. コピーしたファイルをコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 

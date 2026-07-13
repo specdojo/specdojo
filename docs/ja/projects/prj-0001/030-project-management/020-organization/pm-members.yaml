@@ -14,12 +14,14 @@ project_id: prj-0001
 # roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
 # タスク側の owner には pm-roles.yaml に存在する Role code を使う。
 #
-# type: agent のメンバーには command と capabilities を定義する。
+# type: agent のメンバーには provider と capabilities を定義する。
 # provider は agent を実行する CLI 種別を表す（opencode / claude / codex / copilot / custom）。
 # sch-strategy-<track>.yaml の phase.mode（edit / review）がタスク種別を決定する。
 # capabilities はツールアクセス（web_search 等）のみを表す。edit/review は mode で指定。
-#   command     : exec run が直接呼び出すシェルコマンド
-#   capabilities: このエージェントが持つツール能力（web_search 等）
+#
+# 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
+# を member 属性（nickname / mode / proficiency）で展開して解決するため、member には
+# 書かない。command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
 # priority は、mode・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
 #   normal                  : OpenCode -> Codex -> Claude
 #   expert                  : Codex -> Claude
@@ -77,7 +79,6 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: "opencode run --agent opencode-edit-agent"
     scheduler_strategy: critical-first
     note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を支援し、タスクの owner フィールドからロール文脈を判断して作業する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
 
@@ -97,7 +98,6 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: "opencode run --agent opencode-review-agent"
     scheduler_strategy: fifo
     note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物レビューを支援し、成果物は変更せず result のみ更新する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
 
@@ -121,7 +121,6 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: "claude -p --verbose --agent claude-edit-agent --settings .specdojo/claude/settings.edit.json"
     scheduler_strategy: critical-first
     note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
 
@@ -141,7 +140,6 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: "claude -p --verbose --agent claude-review-agent --settings .specdojo/claude/settings.review.json"
     scheduler_strategy: fifo
     note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
@@ -163,7 +161,6 @@ members:
       - complex-analysis
       - architecture-judgment
     capabilities: [web_search]
-    command: "claude -p --verbose --agent claude-expert-edit-agent --settings .specdojo/claude/settings.edit.json"
     scheduler_strategy: critical-first
     note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
 
@@ -184,7 +181,6 @@ members:
       - quality-assurance
       - complex-analysis
     capabilities: [web_search]
-    command: "claude -p --verbose --agent claude-expert-review-agent --settings .specdojo/claude/settings.review.json"
     scheduler_strategy: fifo
     note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
@@ -207,9 +203,8 @@ members:
       - document-creation
       - implementation
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultの更新を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultの更新を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
   - nickname: codex-review-agent
     disabled: false
@@ -227,9 +222,8 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.4-mini -c approval_policy="never" -c model_reasoning_effort="medium"'
     scheduler_strategy: fifo
-    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
   - nickname: codex-expert-edit-agent
     disabled: false
@@ -249,9 +243,8 @@ members:
       - complex-analysis
       - architecture-judgment
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはcommandで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
   - nickname: codex-expert-review-agent
     disabled: false
@@ -270,9 +263,8 @@ members:
       - quality-assurance
       - complex-analysis
     capabilities: [web_search]
-    command: 'codex exec --ephemeral --sandbox workspace-write -c sandbox_workspace_write.network_access=false --model gpt-5.5 -c approval_policy="never" -c model_reasoning_effort="high"'
     scheduler_strategy: fifo
-    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、このcommandから直接選択されない。
+    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
   #
   # copilot members
@@ -294,16 +286,6 @@ members:
       - document-creation
       - implementation
     capabilities: []
-    command: >-
-      copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
-      --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
-      --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
     scheduler_strategy: critical-first
     note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo-exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
@@ -323,16 +305,6 @@ members:
       - cross-viewpoint-consistency
       - quality-assurance
     capabilities: []
-    command: >-
-      copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
-      --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
-      --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
     scheduler_strategy: fifo
     note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo-exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
@@ -342,5 +314,6 @@ rules:
   - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
   - 汎用 agent の roles は空配列とし、実行時のタスク owner または plan で対象 Role を補う。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
-  - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+  - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の command はテンプレートを持たない構成に限って上書きとして使う。
+  - command を上書きする場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
