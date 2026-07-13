@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -93,10 +93,37 @@ function setupRepository(): Fixture {
   return fixture;
 }
 
+// CLI 生成 plan と同じ specdojo 名前空間 frontmatter を持つ plan 本文を組み立てる。
+// commit 許可リストは HEAD 側 plan のこの frontmatter（mode / approach / targets）から導出される。
+function planWithIdentity(
+  taskId: string,
+  opts: { mode: "edit" | "review"; approach?: string; targets?: string[] },
+): string {
+  const lines = [
+    "---",
+    "specdojo:",
+    `  id: xep-${taskId.toLowerCase()}`,
+    "  type: exec-plan",
+    "  rulebook: exec-plan-rulebook",
+    `  task_id: ${taskId}`,
+    `  mode: ${opts.mode}`,
+    "  status: doing",
+    "  project_id: prj-0001",
+  ];
+  if (opts.approach) lines.push(`  approach: ${opts.approach}`);
+  if (opts.targets && opts.targets.length > 0) {
+    lines.push("  targets:");
+    for (const target of opts.targets) lines.push(`    - ${target}`);
+  }
+  lines.push("---", "", `# Plan ${taskId}`, "");
+  return lines.join("\n");
+}
+
 // Scaffold the execution-management files a claimed task starts with: plan, result, claim event.
 function scaffoldTask(
   fixture: Fixture,
   taskId: string,
+  planContent?: string,
 ): { planPath: string; resultPath: string; claimEventPath: string } {
   const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
   const resultPath = join(fixture.executionPath, "exec", "results", `${taskId}-result.md`);
@@ -106,7 +133,7 @@ function scaffoldTask(
     "events",
     `20260613T000000Z_agent_${taskId}_claim.json`,
   );
-  writeFile(planPath, `# Plan ${taskId}\n`);
+  writeFile(planPath, planContent ?? `# Plan ${taskId}\n`);
   writeFile(resultPath, `# Result ${taskId}\n\nstatus: in_progress\n`);
   writeFile(
     claimEventPath,
@@ -121,8 +148,13 @@ function scaffoldTask(
   return { planPath, resultPath, claimEventPath };
 }
 
-function prepare(fixture: Fixture, taskId: string, worktreeTaskId: string = taskId): ExecWorktree {
-  const { planPath, resultPath, claimEventPath } = scaffoldTask(fixture, taskId);
+function prepare(
+  fixture: Fixture,
+  taskId: string,
+  worktreeTaskId: string = taskId,
+  planContent?: string,
+): ExecWorktree {
+  const { planPath, resultPath, claimEventPath } = scaffoldTask(fixture, taskId, planContent);
   return checkpointAndEnsureWorktree({
     context: fixture.context,
     taskId,
@@ -389,6 +421,120 @@ describe("exec worktree ops", () => {
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.committed).toBe(true);
     expect(committed.targets).toContain("docs/d.yaml");
+  });
+
+  it("commits only the result for a review task, leaving deliverable tampering uncommitted", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-030";
+    const worktree = prepare(fixture, taskId, taskId, planWithIdentity(taskId, { mode: "review" }));
+
+    // A prompt-injected review agent tampers with a deliverable alongside its result.
+    writeFile(join(worktree.path, "docs", "tampered.md"), "injected change\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toEqual([`execution/exec/results/${taskId}-result.md`]);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
+  });
+
+  it("commits only the plan targets for an edit task and merges past out-of-scope residue", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // The doc index committed at HEAD maps the target doc id to its path.
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:doc-a"] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "target deliverable\n");
+    writeFile(join(worktree.path, "src", "sneaky.ts"), "// injected\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    );
+    expect(committed.targets).not.toContain("src/sneaky.ts");
+
+    // The out-of-scope file stays in the worktree and must not block the merge.
+    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
+    expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
+  });
+
+  it("allows reference-material directories for a bootstrap-approach edit task", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", approach: "bootstrap", targets: [] }),
+    );
+
+    writeFile(
+      join(worktree.path, "docs", "ja", "specdojo", "rulebooks", "new-rulebook.md"),
+      "# rulebook\n",
+    );
+    writeFile(join(worktree.path, "docs", "unrelated.md"), "not a target\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/ja/specdojo/rulebooks/new-rulebook.md");
+    expect(committed.targets).not.toContain("docs/unrelated.md");
+  });
+
+  it("resolves a target absent from the doc index via the catalog's declared path", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // A brand-new deliverable is not in any doc index yet; the catalog declares its path.
+    const catalogPath = join(fixture.repo, "catalog");
+    writeFile(
+      join(catalogPath, "dct-test.yaml"),
+      [
+        "groups:",
+        "  - id: g",
+        "    base_path: docs",
+        "    deliverables:",
+        "      - local_id: doc-new",
+        "        path: new.md",
+        "",
+      ].join("\n"),
+    );
+    const context = { ...fixture.context, catalogPath };
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:doc-new"] }),
+    );
+    writeFile(join(worktree.path, "docs", "new.md"), "new deliverable\n");
+
+    const committed = commitWorktreeChanges({ context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/new.md");
   });
 
   it("removes a merged worktree even when only regenerated bookkeeping is dirty", () => {

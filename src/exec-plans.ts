@@ -3,6 +3,7 @@ import { basename, join, relative } from "node:path";
 import { load } from "js-yaml";
 import { specdojoRootDir } from "./specdojo-config.js";
 import {
+  referenceMaterialDirsForKinds,
   resolveDeliverableSchemaRef,
   resolveReferenceMaterialRefs,
 } from "./reference-materials.js";
@@ -457,6 +458,20 @@ function targetDocIds(
     if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));
   }
   return ids;
+}
+
+// approach が参考資料の変更を伴う場合に、変更を許可するディレクトリ（repo ルート相対）。
+// commit 許可リスト（exec-worktree-ops）から使う。
+export function targetReferenceDirsForApproach(approach: Approach | undefined): string[] {
+  const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
+  return referenceMaterialDirsForKinds(kinds);
+}
+
+// catalog から成果物 local_id の文書パス（repo ルート相対）を解決する。
+// 未作成の成果物でも catalog が宣言するパスを返せるため、doc-index に載る前の
+// 新規成果物の commit 許可判定に使う。
+export function deliverableDocPath(catalogPath: string, localId: string): string | undefined {
+  return findDeliverableInfo(catalogPath, localId)?.resolvedPath;
 }
 
 // Resolve the target doc ids for a deliverable by local_id (result scaffold 用)。

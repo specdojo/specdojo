@@ -3,6 +3,11 @@ import { relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
 import {
+  deliverableDocPath,
+  parsePlanTaskIdentity,
+  targetReferenceDirsForApproach,
+} from "./exec-plans.js";
+import {
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
@@ -22,6 +27,9 @@ export type WorktreeOpsContext = {
   repoRoot: string;
   schedulePath: string;
   executionPath: string;
+  // 成果物カタログのルート。commit 許可リストで、doc-index 未登録の新規成果物の
+  // 宣言パスを解決するために使う（省略時は catalog フォールバックなし）。
+  catalogPath?: string;
 };
 
 export function repoRelative(repoRoot: string, path: string): string {
@@ -146,15 +154,134 @@ function assertNoAgentReadyPromotion(
   }
 }
 
+const DOC_INDEX_REL = ".specdojo/doc-index.json";
+
+// worktree の HEAD（CLI が checkpoint した版）からファイル内容を読む。
+// agent は working tree を書き換えられるが HEAD は書き換えられないため、
+// ここから読む情報はプロンプトインジェクションに対して改ざん耐性がある。
+function readWorktreeHeadFile(worktreePath: string, relPath: string): string | undefined {
+  const result = gitResult(worktreePath, ["show", `HEAD:${relPath}`]);
+  return result.status === 0 && typeof result.stdout === "string" ? result.stdout : undefined;
+}
+
+// HEAD の doc-index から doc id → repo 相対パスを引く。"path:line" 形式は path 部を使う。
+function headDocIndexLookup(worktreePath: string): (id: string) => string | undefined {
+  const content = readWorktreeHeadFile(worktreePath, DOC_INDEX_REL);
+  let entries: Record<string, unknown> = {};
+  if (content) {
+    try {
+      const parsed: unknown = JSON.parse(content);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const candidate = (parsed as Record<string, unknown>).entries;
+        if (candidate && typeof candidate === "object" && !Array.isArray(candidate)) {
+          entries = candidate as Record<string, unknown>;
+        }
+      }
+    } catch {
+      // 壊れた index は「引けない」として扱い、catalog フォールバックに委ねる。
+    }
+  }
+  return (id: string) => {
+    const value = entries[id];
+    if (typeof value !== "string") return undefined;
+    const match = value.match(/^(.+):\d+$/);
+    return match ? match[1] : value;
+  };
+}
+
+// commit を許可する範囲。mode 別の許可リスト（review は result のみ、edit は result と
+// 対象成果物、maintenance / bootstrap 系 approach は参考資料ディレクトリも追加）。
+export type CommitScope = {
+  mode: "edit" | "review";
+  allowedFiles: string[];
+  // 末尾 "/" 付きの repo 相対ディレクトリ prefix
+  allowedDirPrefixes: string[];
+};
+
+// HEAD の plan frontmatter から commit 許可リストを導出する。plan が HEAD に無い、
+// または frontmatter から task 識別を復元できない場合は null を返し、呼び出し側は
+// 従来の除外リスト方式へフォールバックする（plan は CLI が checkpoint するため、
+// この分岐を agent 側から誘発することはできない）。
+export function resolveCommitScope(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): { scope: CommitScope | null; unresolvedTargets: string[] } {
+  const { planRel, resultRel } = taskPaths(context, taskId);
+  const planContent = readWorktreeHeadFile(worktree.path, planRel);
+  const identity = planContent ? parsePlanTaskIdentity(planContent) : null;
+  if (!identity) return { scope: null, unresolvedTargets: [] };
+
+  if (identity.mode === "review") {
+    return {
+      scope: { mode: "review", allowedFiles: [resultRel], allowedDirPrefixes: [] },
+      unresolvedTargets: [],
+    };
+  }
+
+  const allowedFiles = new Set<string>([resultRel]);
+  const unresolvedTargets: string[] = [];
+  const lookup = headDocIndexLookup(worktree.path);
+  for (const target of identity.targets ?? []) {
+    const fromIndex = lookup(target);
+    if (fromIndex) {
+      allowedFiles.add(fromIndex);
+      continue;
+    }
+    // doc-index 未登録（未作成の新規成果物など）は catalog が宣言するパスへ解決する。
+    const localId =
+      identity.projectId && target.startsWith(`${identity.projectId}:`)
+        ? target.slice(identity.projectId.length + 1)
+        : target;
+    const fromCatalog = context.catalogPath
+      ? deliverableDocPath(context.catalogPath, localId)
+      : undefined;
+    if (fromCatalog) {
+      allowedFiles.add(fromCatalog);
+      continue;
+    }
+    unresolvedTargets.push(target);
+  }
+  const allowedDirPrefixes = targetReferenceDirsForApproach(identity.approach).map(
+    (dir) => `${dir}/`,
+  );
+  return {
+    scope: { mode: "edit", allowedFiles: [...allowedFiles], allowedDirPrefixes },
+    unresolvedTargets,
+  };
+}
+
+// worktree の変更を「commit するパス」「許可リスト外のため commit しないパス」に分ける。
+// 除外リスト（isCommitTargetPath）は許可リストの内側でも引き続き適用する。
+export function partitionCommitTargets(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): { targets: string[]; outOfScope: string[]; unresolvedTargets: string[] } {
+  const { executionRel, resultRel } = taskPaths(context, taskId);
+  const candidates = statusPaths(worktree.path).filter((path) =>
+    isCommitTargetPath(path, executionRel, resultRel),
+  );
+  const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId);
+  if (!scope) return { targets: candidates, outOfScope: [], unresolvedTargets };
+
+  const targets: string[] = [];
+  const outOfScope: string[] = [];
+  for (const path of candidates) {
+    const allowed =
+      scope.allowedFiles.includes(path) ||
+      scope.allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
+    (allowed ? targets : outOfScope).push(path);
+  }
+  return { targets, outOfScope, unresolvedTargets };
+}
+
 export function commitTargetPaths(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
 ): string[] {
-  const { executionRel, resultRel } = taskPaths(context, taskId);
-  return statusPaths(worktree.path).filter((path) =>
-    isCommitTargetPath(path, executionRel, resultRel),
-  );
+  return partitionCommitTargets(context, worktree, taskId).targets;
 }
 
 export function stabilizeCommitTargets(
@@ -195,7 +322,9 @@ function rootDirtyPaths(repoRoot: string): Set<string> {
 }
 
 // Commit the task result and deliverable changes inside the worktree onto its exec branch.
-// Excludes plans, events, generated files, and other tasks' results (see isCommitTargetPath).
+// The commit is limited to the mode-based allowlist (resolveCommitScope); out-of-scope
+// changes stay uncommitted in the worktree and are reported. Excludes plans, events,
+// generated files, and other tasks' results (see isCommitTargetPath).
 export function commitWorktreeChanges(params: {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
@@ -204,7 +333,21 @@ export function commitWorktreeChanges(params: {
   dryRun?: boolean;
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
-  const paths = commitTargetPaths(context, worktree, taskId);
+  const {
+    targets: paths,
+    outOfScope,
+    unresolvedTargets,
+  } = partitionCommitTargets(context, worktree, taskId);
+  for (const target of unresolvedTargets) {
+    process.stdout.write(`commit-scope: unresolved target doc id (not committable): ${target}\n`);
+  }
+  if (outOfScope.length > 0) {
+    process.stdout.write(
+      `commit-scope: skipped non-target changes (left in worktree):\n${outOfScope
+        .map((path) => `  ${path}`)
+        .join("\n")}\n`,
+    );
+  }
   if (paths.length === 0) {
     process.stdout.write("No commit-target changes.\n");
     return { targets: [], committed: false };

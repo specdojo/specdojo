@@ -38,6 +38,16 @@ function rulebookFsPath(rulebookId: string): string {
   return join(specdojoRootDir(), DOCS_BASE, "rulebooks", `${rulebookId}.md`);
 }
 
+// 参考資料種別 → repo ルート相対ディレクトリ。commit 許可リスト（maintenance / bootstrap 系
+// approach で参考資料の変更を許可する範囲）の導出に使う。
+export function referenceMaterialDirsForKinds(
+  kinds: readonly (keyof ReferenceMaterialRefs)[],
+): string[] {
+  return kinds.map((kind) =>
+    kind === "rulebook" ? `${DOCS_BASE}/rulebooks` : `${DOCS_BASE}/${KIND_DIR[kind]}`,
+  );
+}
+
 // rulebook frontmatter の recipe / sample / template / target_format を読む。
 // ファイル不在・frontmatter なしの場合は空オブジェクトを返す。
 export function loadRulebookRefs(rulebookId: string): RulebookRefs {

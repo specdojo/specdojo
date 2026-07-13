@@ -15,7 +15,7 @@
     "docs/specdojo",
     "tools/docs/src",
     "tools/docs/tsconfig.json",
-    "templates/claude",
+    "templates",
     "README.md",
     "LICENSE"
   ],

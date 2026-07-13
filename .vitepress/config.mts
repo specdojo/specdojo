@@ -448,7 +448,7 @@ export default defineConfig({
   // srcDir 省略時は root（リポジトリルート）と同一になる。
   // サイトに含めるのは docs/ 配下の Markdown のみとし、
   // リポジトリ直下の README 等やローカル作業用ディレクトリは除外する。
-  srcExclude: ["*.md", "local/**", "workspaces/**"],
+  srcExclude: ["*.md", "local/**", "workspaces/**", "templates/**"],
 
   // サイドバー折りたたみ状態の復元（初回描画前に同期実行し、ちらつきを防ぐ）
   head: [
