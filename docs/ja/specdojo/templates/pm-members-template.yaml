@@ -15,7 +15,10 @@ project_id: _PROJECT_ID_
 
 # Role code の語彙は pm-roles.yaml を参照する。
 # Schedule の owner には Role code を使い、member nickname は書かない。
-# command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
+# 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
+# から解決するため、member には書かない。テンプレートを持たない provider（custom 等）
+# に限り command を上書きとして追加し、その場合も認証情報、秘密鍵、トークン、
+# 個人環境に閉じたパスを含めない。
 
 members:
   - nickname: _HUMAN_NICKNAME_
@@ -44,7 +47,6 @@ members:
       - _TODO_: edit agent が重視する観点を記述する。
     capabilities:
       - _EDIT_AGENT_CAPABILITY_
-    command: "_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
     scheduler_strategy: _EDIT_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: 草案作成・整合確認などの支援範囲を記述し、承認責任を持たないことを明記する。"
@@ -63,7 +65,6 @@ members:
       - _TODO_: review agent が重視する観点を記述する。
     capabilities:
       - _REVIEW_AGENT_CAPABILITY_
-    command: "_REVIEW_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
     scheduler_strategy: _REVIEW_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: レビュー支援範囲を記述し、公開可否判断を行わないことを明記する。"
@@ -80,7 +81,6 @@ members:
     focus:
       - _TODO_: 汎用支援 agent が重視する観点を記述する。
     capabilities: []
-    command: "_GENERAL_AGENT_COMMAND_"
     provider: _AGENT_PROVIDER_
     scheduler_strategy: _GENERAL_AGENT_SCHEDULER_STRATEGY_
     note: "_TODO_: 特定 Role に固定しない場合は、実行時の owner または plan で対象 Role を補うことを記述する。"
@@ -90,5 +90,6 @@ rules:
   - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
   - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の command はテンプレートを持たない構成に限って上書きとして使う。
   - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。

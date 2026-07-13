@@ -13,11 +13,11 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 ## 1. 設定ファイルの分担
 
-| ファイル                       | 役割                                                           | 粒度         |
-| ------------------------------ | -------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・`capabilities`・`proficiency` | トラック     |
-| `pm-members.yaml`              | 誰が作業するか（identity・command・capabilities・proficiency） | プロジェクト |
-| `.specdojo/exec-defaults.yaml` | rate limit 検出条件・リトライポリシー・provider 別同時実行上限 | システム     |
+| ファイル                       | 役割                                                                                     | 粒度         |
+| ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・`capabilities`・`proficiency`                           | トラック     |
+| `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority）                          | プロジェクト |
+| `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
 
 `sch-strategy` は agent 個体を指定しない。phase に「どんな能力が必要か」を書き、`pm-members.yaml` に「誰がその能力を持つか」を書く。
 
@@ -62,7 +62,7 @@ phase_sets:
 
 ## 3. エージェントの定義
 
-`pm-members.yaml` の `type: agent` メンバーには `command`・`capabilities`・`proficiency`・`priority` を定義する。
+`pm-members.yaml` の `type: agent` メンバーには `provider`・`capabilities`・`proficiency`・`priority` を定義する。起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決する。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使う。
 
 ```yaml
 members:
@@ -71,20 +71,20 @@ members:
     email: null
     roles: []
     type: agent
+    provider: opencode
     capabilities: []
     proficiency: normal
     priority: 10
-    command: "opencode run --agent edit-agent"
 
   - nickname: expert-web-agent
     display_name: Expert Web Agent
     email: null
     roles: []
     type: agent
+    provider: opencode
     capabilities: [web_search]
     proficiency: expert
     priority: 10
-    command: "opencode run --agent expert-web-agent"
 ```
 
 `exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にする。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含める。候補のソートキーは次の順に評価する。
@@ -149,9 +149,24 @@ rate_limit_policy:
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置く。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックする。`<provider>` は `pm-members[].provider` に対応する。指定できるキーは次のとおり。
 
+- `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開する。グローバル既定は持たない。
+- `command_params`: テンプレートの追加変数表。`by_mode.<mode>` と `by_proficiency.<proficiency>` に変数名と値の組を置く。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先する）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱う。
+
+```yaml
+providers:
+  claude:
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+
+  codex:
+    command_template: 'codex exec --ephemeral --sandbox workspace-write --model {model} -c approval_policy="never" -c model_reasoning_effort="{effort}"'
+    command_params:
+      by_proficiency:
+        normal: { model: gpt-5.4-mini, effort: medium }
+        expert: { model: gpt-5.5, effort: high }
+```
 
 `max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使う。グローバルな `--parallel` を下げずに、その provider だけを直列化できる。
 
@@ -174,7 +189,7 @@ Claude Code provider の配布原本と配置先は次のとおり。
 | `templates/claude/settings.edit.json`   | `.specdojo/claude/`        | edit agent 用 permission。成果物ディレクトリへの書き込みを許可する |
 | `templates/claude/settings.review.json` | `.specdojo/claude/`        | review agent 用 permission。result 配下のみ書き込みを許可する      |
 
-`pm-members.yaml` の claude member の `command` には `--settings .specdojo/claude/settings.<mode>.json` を指定する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
+`.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 
 ### 6.1. scaffold コマンド
 
@@ -191,7 +206,7 @@ specdojo exec scaffold --provider claude
 - 配布原本はインストール済み package のルートから解決する。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにする。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力する。`--force` 指定時のみ上書きする。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力する（既存の scaffold 系コマンドの出力形式に合わせる）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示する。
-- コピー完了後、次の 2 点を案内メッセージとして出力する。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `pm-members.yaml` の `command` に `--settings` の指定が必要であること。
+- コピー完了後、次の 2 点を案内メッセージとして出力する。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねる。scaffold は `specdojo.config.json` のパス設定に基づく書き換えを行わない（テンプレートを事実上の推奨レイアウト前提で配布する）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含める。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持たない。
 

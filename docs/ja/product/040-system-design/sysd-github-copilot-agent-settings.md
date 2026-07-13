@@ -24,7 +24,7 @@ GitHub Copilot は GitHub アカウント、Copilot CLI、GitHub.com の cloud a
 - **リポジトリ共通指示は `.github/copilot-instructions.md`**: Copilot Chat、Copilot CLI、cloud agent、code review が共有するプロジェクト概要、検証コマンド、安全規則を定義する。
 - **パス別指示は `.github/instructions/*.instructions.md`**: Markdown、TypeScript、Vitest、SpecDojo exec workflow など、対象ファイルに応じたルールを定義する。
 - **custom agent は `.github/agents/*.md`**: Copilot CLI / cloud agent で明示的に選択する agent profile として使用する。
-- **権限は command で最小化する**: `--allow-tool` と `--deny-tool` を `pm-members.yaml` の command に定義する。`--allow-all`、`--allow-all-tools`、`--allow-all-paths`、`--yolo` は通常運用で使用しない。
+- **権限は command で最小化する**: `--allow-tool` と `--deny-tool` を `.specdojo/exec-defaults.yaml` の command template に定義する。`--allow-all`、`--allow-all-tools`、`--allow-all-paths`、`--yolo` は通常運用で使用しない。
 - **CLI 設定は個人設定を優先する**: 共有可能な指示と agent profile は `.github/` に置く。認証、保存済み権限、session、個人設定は `~/.copilot/` または `.github/copilot/settings.local.json` に置き、リポジトリへコミットしない。
 
 ## 2. 責務分担
@@ -35,7 +35,7 @@ GitHub Copilot は GitHub アカウント、Copilot CLI、GitHub.com の cloud a
 
 ```text
 specdojo exec run
-   -> member.command の copilot -p --agent <name> を起動
+   -> providers.copilot の command template から解決した copilot -p --agent <name> を起動
    -> plan を標準入力で渡す
    -> Copilot agent が成果物または result を編集
    -> Copilot CLI の終了状態を共通フローへ返す
@@ -127,7 +127,7 @@ path-specific instructions は cloud agent と code review の双方で使われ
 
 Copilot custom agent は `.github/agents/<name>.md` に YAML frontmatter と prompt 本文で定義する。`description` は必須、`name` は表示名である。ファイル名から `.md` を除いた値が、`copilot -p --agent <name>` の指定名になる。
 
-frontmatter では `tools` と `model` を指定できる。`tools` は agent が利用可能なツールの絞り込みであり、実行時の自動許可ではない。自動実行時の許可・拒否は `pm-members.yaml` の command に `--allow-tool` / `--deny-tool` として定義する。
+frontmatter では `tools` と `model` を指定できる。`tools` は agent が利用可能なツールの絞り込みであり、実行時の自動許可ではない。自動実行時の許可・拒否は `.specdojo/exec-defaults.yaml` の command template に `--allow-tool` / `--deny-tool` として定義する。
 
 ### 8.1. frontmatter フィールド
 
@@ -180,46 +180,65 @@ review agent には `edit` tool を含めない。ただし CLI の tool filter 
 
 ## 9. エージェント割り当て設定
 
-### 9.1. `pm-members.yaml` のコマンド設計
+### 9.1. 起動コマンドの設計
 
-`pm-members.yaml` の `command` フィールドに、`specdojo exec run` から呼び出す完全なコマンドを記述する。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member には `command` を書かない。モデルと reasoning effort は `by_proficiency`、許可・拒否ツールは edit / review で異なるため `by_mode` で切り替える。
+
+```yaml
+providers:
+  copilot:
+    command_template: 'copilot -p --agent {nickname} --model {model} --reasoning-effort {effort} -s --no-ask-user --allow-tool="{allow_tools}" --deny-tool="{deny_tools}"'
+    command_params:
+      by_proficiency:
+        normal: { model: claude-sonnet-4.6, effort: medium }
+        expert: { model: gpt-5.4, effort: high }
+      by_mode:
+        edit:
+          allow_tools: "read,write,shell(npm:*),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)"
+          deny_tools: "read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"
+        review:
+          allow_tools: "read,shell(npm run -s lint:md),shell(npm test),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)"
+          deny_tools: "write,read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"
+```
+
+`pm-members.yaml` の member は選択属性だけを持つ。
 
 ```yaml
 members:
   - nickname: copilot-edit-agent
     type: agent
+    provider: copilot
     mode: edit
     capabilities: [web_search]
     proficiency: normal
     priority: 4
-    command: 'copilot -p --agent copilot-edit-agent --model claude-sonnet-4.6 --reasoning-effort medium -s --no-ask-user --allow-tool="read,write,shell(npm:*),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)" --deny-tool="read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"'
     scheduler_strategy: critical-first
 
   - nickname: copilot-review-agent
     type: agent
+    provider: copilot
     mode: review
     capabilities: [web_search]
     proficiency: normal
     priority: 4
-    command: 'copilot -p --agent copilot-review-agent --model claude-sonnet-4.6 --reasoning-effort medium -s --no-ask-user --allow-tool="read,shell(npm run -s lint:md),shell(npm test),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)" --deny-tool="write,read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"'
     scheduler_strategy: fifo
 
   - nickname: copilot-expert-edit-agent
     type: agent
+    provider: copilot
     mode: edit
     capabilities: [web_search]
     proficiency: expert
     priority: 3
-    command: 'copilot -p --agent copilot-expert-edit-agent --model gpt-5.4 --reasoning-effort high -s --no-ask-user --allow-tool="read,write,shell(npm:*),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)" --deny-tool="read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"'
     scheduler_strategy: critical-first
 
   - nickname: copilot-expert-review-agent
     type: agent
+    provider: copilot
     mode: review
     capabilities: [web_search]
     proficiency: expert
     priority: 3
-    command: 'copilot -p --agent copilot-expert-review-agent --model gpt-5.4 --reasoning-effort high -s --no-ask-user --allow-tool="read,shell(npm run -s lint:md),shell(npm test),shell(test:*),shell(git status),shell(git diff),shell(git ls-files),shell(rg:*),url(docs.github.com),url(github.com)" --deny-tool="write,read(.env),read(secrets/*),shell(git push),shell(git reset --hard),shell(git clean),shell(rm:*)"'
     scheduler_strategy: fifo
 ```
 

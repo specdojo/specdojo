@@ -59,7 +59,8 @@ specdojo exec run
    → exec/results/<task-id>-result.md を scaffold 生成
    → phase 要件に適合する member を選択
    → edit task では必要に応じて task 単位の worktree を作成
-   → member.command で agent CLI を非対話起動し、plan を渡す
+   → provider の command template（または member の command 上書き）から解決した
+     コマンドで agent CLI を非対話起動し、plan を渡す
    → agent が成果物の編集またはレビューと result の記録を実行
    → 終了コード 0 は complete、失敗はポリシーに従って retry / fallback / block
    → worktree をクリーンアップ
@@ -101,10 +102,12 @@ agent CLI 固有のプロジェクト設定と agent 定義の配置は子設計
 | `capabilities`       | Web 検索など、その member が提供できる能力                          |
 | `proficiency`        | `normal` または `expert`                                            |
 | `priority`           | 同じ要件に適合する member 間の優先順位                              |
-| `command`            | `specdojo exec run` が起動する非対話コマンド                        |
+| `command`            | 任意。provider の command template を使わない場合の上書きコマンド   |
 | `scheduler_strategy` | ready task の選択順序。edit は `critical-first` を基本とする        |
 
-`command` には agent CLI と実行オプションだけを定義する。plan 本文はコマンド文字列へ埋め込まず、`specdojo exec run` から標準入力で渡す。
+member を起動する非対話コマンドは、原則として `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から解決する（`起動コマンドの解決` を参照）。`pm-members.yaml` は「誰が・どの能力で・どの優先度か」だけを表し、CLI フラグやモデル名などの実行基盤設定を持ち込まない。テンプレートで表現できない特殊構成（`provider: custom` など）に限り、member の `command` で上書きする。
+
+解決後のコマンドには agent CLI と実行オプションだけが含まれる。plan 本文はコマンド文字列へ埋め込まず、`specdojo exec run` から標準入力で渡す。
 
 ### 5.2. `sch-strategy-<track>.yaml`
 
@@ -156,7 +159,7 @@ specdojo exec run --by <member-nickname>
 
 ### 6.2. `.specdojo/exec-defaults.yaml`
 
-rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で管理する。検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なるため、共通設計はグローバル既定値と provider 別上書きの2層で構成する。
+agent の起動コマンドテンプレート、rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で管理する。検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なるため、共通設計はグローバル既定値と provider 別上書きの2層で構成する。起動コマンドは provider 固有の情報のため、グローバル既定は持たず `providers.<provider>` にのみ置く（`起動コマンドの解決` を参照）。
 
 - グローバル既定: top-level の `rate_limit_detection` / `rate_limit_policy`。provider 別上書きを持たない member に適用する。
 - provider 別上書き: `providers.<provider>` 配下に `rate_limit_detection` / `rate_limit_policy` を置く。キーは `pm-members.yaml` の `provider` と一致させる。
@@ -202,7 +205,35 @@ providers:
 
 子設計には、その provider 固有のシグナルと、`providers.<provider>` に置く上書きの内容・運用上の注意だけを記述する。
 
-### 6.3. 制限情報と使用量の共通設計
+### 6.3. 起動コマンドの解決
+
+member を起動する非対話コマンドは、`providers.<provider>` の `command_template` と `command_params` から member 属性で展開して解決する。同一 provider の member 間でモデル名・フラグ・設定ファイルパスが重複しないよう、可変部分だけをプレースホルダにする。
+
+```yaml
+providers:
+  claude:
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+
+  codex:
+    command_template: 'codex exec --ephemeral --sandbox workspace-write --model {model} -c approval_policy="never" -c model_reasoning_effort="{effort}"'
+    command_params:
+      by_proficiency:
+        normal: { model: gpt-5.4-mini, effort: medium }
+        expert: { model: gpt-5.5, effort: high }
+```
+
+解決規則は次のとおりとする。
+
+- 組み込みプレースホルダは `{nickname}`、`{mode}`、`{proficiency}` とし、member の同名属性で展開する。
+- 追加プレースホルダは `command_params.by_mode.<member.mode>` と `command_params.by_proficiency.<member.proficiency>` の変数表で展開する。同名キーが `by_mode` と `by_proficiency` の両方に存在する定義は検証エラーとする。
+- member に `command` がある場合はテンプレートを使わず、その値をそのまま使う（上書き）。
+- 上書きが無く、`command_template` も無い provider の agent は、`exec run --auto` の候補にしない。
+- 展開後に未解決のプレースホルダが残る場合は、その member を起動せず検証エラーとして報告する。
+- `command_template`、`command_params`、member の `command` のいずれにも、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+
+`--cmd` によるコマンド直接指定は従来どおり member 解決より優先する。nickname 指定時はこの解決規則で得たコマンドを使う。
+
+### 6.4. 制限情報と使用量の共通設計
 
 4系統の agent CLI で共通取得できるのは、主に「今回の実行が継続可能か」「再試行価値があるか」という実行状態である。rate limit、session limit、quota 残量、premium request 残数、reset 時刻は CLI ごとに露出の粒度と取得方法が異なるため、共通 API で同一意味にそろえる前提を置かない。
 

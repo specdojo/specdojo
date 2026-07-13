@@ -186,9 +186,11 @@ $defs:
         type: string
         minLength: 1
         description: >
-          Shell command invoked by specdojo exec run for this agent.
-          The execution plan is appended as the final argument.
-          Required for type: agent.
+          Optional override of the launch command. Normally the command is resolved
+          from providers.<provider>.command_template in .specdojo/exec-defaults.yaml
+          using this member's attributes; set command only for configurations without
+          a template (e.g. provider: custom). Must not contain credentials or
+          machine-local paths.
 
       mode:
         type: string
@@ -231,4 +233,3 @@ $defs:
             - capabilities
             - proficiency
             - priority
-            - command

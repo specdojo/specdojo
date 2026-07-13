@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-13T14:25:08Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-members-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "PO",
+    "planned_owner": "PO"
+  }
+}

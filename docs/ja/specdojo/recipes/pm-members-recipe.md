@@ -43,7 +43,7 @@ Project Member Roster Writing Recipe
 1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。
 2. `based_on` に、組織定義、ロール定義など実際に確認した根拠 ID を記載する。
 3. `members` に、人間の最終判断主体を少なくとも 1 件記載する。
-4. 実行に使う agent を列挙し、`mode`、`proficiency`、`priority`、`capabilities`、`command` を確認する。
+4. 実行に使う agent を列挙し、`provider`、`mode`、`proficiency`、`priority`、`capabilities` を確認する。起動コマンドは `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` で解決されるため、member には書かない。
 5. 各 member の `roles` が `pm-roles.yaml` に存在する Role code だけで構成されているか確認する。
 6. `rules` に、`owner`、`roles`、`--by` の使い分け、agent の支援範囲、公開制約を記載する。
 7. PO が承認できるよう、実行主体の過不足、公開可否、説明責任の所在を確認する。
@@ -98,12 +98,13 @@ Project Member Roster Writing Recipe
 
 - `mode` は edit / review のどちらに対応するか。
 - `proficiency` と `priority` は scheduler の選択条件として使えるか。
-- `command` に秘密情報や個人環境依存のパスを含めていないか。
+- `provider` に対応する `command_template` が `.specdojo/exec-defaults.yaml` に存在するか。
+- `command` を上書きする場合、秘密情報や個人環境依存のパスを含めていないか。
 
 書き方:
 
-- `command` は runner が実行できるコマンドを 1 行で記載する。
-- `provider` は実行する CLI 種別を表すため、`command` と合わせて実行主体を判別できる値にする。
+- `provider` は実行する CLI 種別を表す。起動コマンドはこの値で `providers.<provider>.command_template` から解決される。
+- `command` は、テンプレートを持たない構成（`provider: custom` など）に限って 1 行の上書きとして記載する。
 - `capabilities` は `web_search` などのツール能力に限定する。
 - agent の `note` には、最終判断を持たないことを明示する。
 
@@ -113,7 +114,7 @@ Project Member Roster Writing Recipe
 2. ロール定義から、`members[].roles` に使える Role code を一覧化する。
 3. 実行ログ、Schedule、既存 event から、使われている nickname を確認する。
 4. 各 member を「人間の最終判断主体」「Role 固定 agent」「汎用 agent」「review agent」に分類する。
-5. agent ごとに、mode、provider、proficiency、priority、capabilities、command の不足を確認する。
+5. agent ごとに、mode、provider、proficiency、priority、capabilities の不足と、provider に対応する command template の有無を確認する。
 6. 公開文書に残してよい表示名、連絡先、コマンドだけになっているか確認する。
 7. PO 以外に最終承認、公開可否、説明責任が移っていないことを確認する。
 

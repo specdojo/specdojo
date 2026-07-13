@@ -4,10 +4,12 @@ title: "SpecDojo Exec Defaults schema"
 description: >
   Defines global defaults for specdojo exec run.
   Agent selection requirements are declared on sch-strategy phases; this file only
-  contains runtime defaults shared across tracks, such as rate-limit detection and retry policy.
+  contains runtime defaults shared across tracks, such as agent launch command templates,
+  rate-limit detection, and retry policy.
   Detection signals, exit codes, and wait times differ per agent runtime provider, so the
   top-level rate_limit_detection / rate_limit_policy act as global defaults and providers.<name>
-  supplies per-provider overrides keyed by pm-members[].provider.
+  supplies per-provider overrides keyed by pm-members[].provider. Launch command templates
+  are provider-specific and have no global default.
 type: object
 additionalProperties: false
 
@@ -46,7 +48,23 @@ $defs:
     description: >
       Provider-scoped override. Each present key fully replaces the matching top-level
       (global) value for members of this provider; absent keys fall back to the global value.
+      command_template / command_params have no global counterpart.
     properties:
+      command_template:
+        type: string
+        minLength: 1
+        description: >
+          Non-interactive launch command template for this provider's agents. Built-in
+          placeholders {nickname}, {mode}, and {proficiency} expand to the member's
+          attributes; additional placeholders are resolved from command_params. A member
+          whose provider has no command_template and who has no command override is not
+          an exec run --auto candidate. Unresolved placeholders after expansion are a
+          validation error. Must not contain credentials or machine-local paths.
+      command_params:
+        $ref: "#/$defs/CommandParams"
+        description: >
+          Extra template variables resolved by member attributes. Keys appearing in both
+          by_mode and by_proficiency are a validation error.
       rate_limit_detection:
         $ref: "#/$defs/RateLimitDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
@@ -62,6 +80,42 @@ $defs:
           local single-model Ollama host) without lowering the global --parallel for other
           providers. When a round would exceed this, the extra tasks are deferred to a later
           round. Absent means no per-provider limit.
+
+  CommandParams:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    description: >
+      Template variable tables resolved by member attributes. Each table maps an
+      attribute value (member mode or proficiency) to a set of placeholder name /
+      value pairs used to expand command_template.
+    properties:
+      by_mode:
+        type: object
+        minProperties: 1
+        description: "Variables selected by the member's mode."
+        propertyNames:
+          enum: ["edit", "review"]
+        additionalProperties:
+          $ref: "#/$defs/CommandVariableSet"
+      by_proficiency:
+        type: object
+        minProperties: 1
+        description: "Variables selected by the member's proficiency."
+        propertyNames:
+          enum: ["low", "normal", "high", "expert"]
+        additionalProperties:
+          $ref: "#/$defs/CommandVariableSet"
+
+  CommandVariableSet:
+    type: object
+    minProperties: 1
+    description: "Placeholder name to value pairs. Values are inserted into command_template as-is."
+    propertyNames:
+      pattern: "^[a-z][a-z0-9_]*$"
+    additionalProperties:
+      type: string
+      minLength: 1
 
   RateLimitDetection:
     type: object

@@ -104,7 +104,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `persona`            | 任意       | 実行姿勢やレビュー観点を表す短いラベル              |
 | `focus`              | 任意       | 重視する観点の配列                                  |
 | `capabilities`       | agent 推奨 | `web_search` などのツール能力                       |
-| `command`            | agent 推奨 | `exec run` が呼び出すシェルコマンド                 |
+| `command`            | 任意       | provider の command template を使わない場合の上書き |
 | `disabled`           | 任意       | `true` で `exec run --auto` の候補から一時除外する  |
 | `scheduler_strategy` | 任意       | 既定の scheduler 戦略                               |
 | `note`               | 任意       | 補足。責務境界や公開上の注意を簡潔に書く            |
@@ -115,7 +115,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 - `members` には、実行ログに残る可能性がある人間と agent を過不足なく記載する。
 - PO などの人間 member は、最終判断・公開可否・説明責任を担う範囲を `note` で明示する。
-- agent member は、支援範囲、実行モード、能力、実行コマンドが分かる粒度で記載する。
+- agent member は、支援範囲、実行モード、能力、provider が分かる粒度で記載する。
 - 一時的に使うだけの個人名、ローカル端末名、秘密情報を member として記載しない。
 
 ### 6.2. `members[].nickname`
@@ -136,9 +136,10 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 - 人間の実行主体は `human`、自動化または生成 AI 支援主体は `agent` とする。
 - `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`custom` から選ぶ。
-- `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities`、`command` を記載する。
+- `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
-- `command` には実行に必要なコマンドを記載するが、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
+- 起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から member 属性で解決する。モデル名や CLI フラグの変更は member 定義に影響させない。
+- `command` は、テンプレートで表現できない特殊構成（`provider: custom` など）に限って上書きとして使う。記載する場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
 - `disabled: true` を指定した agent は `exec run --auto` の候補選択（rate limit 時のフォールバックを含む）から一時的に除外される。特定 provider の挙動（例: rate limit）をテストする際に、member 定義を削除せずに他 agent を止める用途で使う。省略時または `false` は通常どおり選択対象になる。
 
 ### 6.5. `persona`、`focus`、`scheduler_strategy`
@@ -157,15 +158,16 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 ## 7. 禁止事項
 
-| 禁止事項                                                           | 理由                                                                       |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| `pm-members.yaml` の member 側で `owner` フィールドを使う          | `owner` は Schedule の主責任ロールであり、member 側では `roles` を使うため |
-| Schedule の `owner` に `nickname`、人名、agent 名を書く            | タスク責任が Role code で追跡できなくなるため                              |
-| `members[].roles` に `pm-roles.yaml` で未定義の Role code を書く   | 実行候補の判定が不整合になるため                                           |
-| agent に最終承認や公開可否判断を割り当てる                         | 人間の判断責任を代替してしまうため                                         |
-| 公開文書に不要な個人名、私用メールアドレス、非公開組織情報を書く   | 公開範囲とプライバシーに反するため                                         |
-| `command` に認証情報、秘密鍵、トークン、個人環境に閉じたパスを書く | 秘密情報の漏えいと再利用不能な構成を招くため                               |
-| 実行ログ記録後に `nickname` を変更する                             | 履歴との対応が壊れるため                                                   |
+| 禁止事項                                                             | 理由                                                                       |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `pm-members.yaml` の member 側で `owner` フィールドを使う            | `owner` は Schedule の主責任ロールであり、member 側では `roles` を使うため |
+| Schedule の `owner` に `nickname`、人名、agent 名を書く              | タスク責任が Role code で追跡できなくなるため                              |
+| `members[].roles` に `pm-roles.yaml` で未定義の Role code を書く     | 実行候補の判定が不整合になるため                                           |
+| agent に最終承認や公開可否判断を割り当てる                           | 人間の判断責任を代替してしまうため                                         |
+| 公開文書に不要な個人名、私用メールアドレス、非公開組織情報を書く     | 公開範囲とプライバシーに反するため                                         |
+| `command` に認証情報、秘密鍵、トークン、個人環境に閉じたパスを書く   | 秘密情報の漏えいと再利用不能な構成を招くため                               |
+| provider の command template で解決できる member に `command` を書く | 起動設定が `.specdojo/exec-defaults.yaml` と二重管理になるため             |
+| 実行ログ記録後に `nickname` を変更する                               | 履歴との対応が壊れるため                                                   |
 
 ## 8. サンプル
 
