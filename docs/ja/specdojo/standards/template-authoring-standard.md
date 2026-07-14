@@ -78,7 +78,6 @@ Template Authoring Standard
 - 実在のプロジェクト固有データや個人情報・機密情報を雛形に埋め込まない。
 - 埋めずに成果物として成立しない曖昧なプレースホルダを残さない。
 - プレースホルダ記法（`_UPPER_SNAKE_` / `_TODO_` / `_PROJECT_ID_` / `_FRONTMATTER_`）および `frontmatter_template` / `metadata_template` フィールド以外の独自記法を、共通ルール未定義のまま追加しない。
-- プレースホルダ記法（`_UPPER_SNAKE_` / `_TODO_` / `_PROJECT_ID_` / `_FRONTMATTER_`）および `frontmatter_template` フィールド以外の独自記法を、共通ルール未定義のまま追加しない。
 - 実行時展開変数の記法 `{lower_snake}` をテンプレートの記入プレースホルダとして使わない（`他のプレースホルダ記法との使い分け` を参照）。
 - テンプレート本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 
