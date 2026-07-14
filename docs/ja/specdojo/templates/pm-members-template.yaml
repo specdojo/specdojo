@@ -99,5 +99,5 @@ rules:
   - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
   - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
   - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の command はテンプレートを持たない構成に限って上書きとして使う。
-  - command には認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+  - command template と command 上書きには、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。

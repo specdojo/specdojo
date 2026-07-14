@@ -30,12 +30,14 @@ Project Member Roster Documentation Rulebook
 
 `pm-members.yaml` は、Role 定義と実行ログの間にある実行主体の台帳である。
 
-| 文書                 | 役割                                                            | 正本とする内容                                                           |
-| -------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する                  | 採用方針、最終判断の集約先、見直し条件                                   |
-| `pm-roles.yaml`      | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ                         |
-| `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、人間または agent、兼務割り当て、実行に必要な agent 情報 |
-| `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                                           |
+| 文書                 | 役割                                                            | 正本とする内容                                                    |
+| -------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する                  | 採用方針、最終判断の集約先、見直し条件                            |
+| `pm-roles.yaml`      | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ                  |
+| `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、人間または agent、兼務割り当て、agent の選択属性 |
+| `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                                    |
+
+agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`nickname` / `mode` / `proficiency`）で展開して解決する。`pm-members.yaml` は「誰が・どの能力で・どの優先度か」だけを表し、モデル名や CLI フラグなどの実行基盤設定を持ち込まない。
 
 用語は次のように使い分ける。
 
@@ -153,6 +155,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 
 - `rules` には、この member 定義を使う際に検証可能な運用ルールを箇条書きで記載する。
 - `owner`、`roles`、`--by` の使い分けを明記する。
+- 起動コマンドが `.specdojo/exec-defaults.yaml` の command template から解決されることと、`command` 上書きを使う限定条件を記載する。
 - agent が支援できる作業と、人間の PO が担う最終判断を分けて記載する。
 - 公開文書で扱わない個人情報や非公開組織情報を記載しない方針を含める。
 
