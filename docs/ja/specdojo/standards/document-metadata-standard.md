@@ -54,7 +54,8 @@ specdojo:
 - 生成される成果物の Frontmatter は、テンプレート自身の Frontmatter とは別に、生成物側の雛形として表現する。表現方法はテンプレート種別ごとに次のいずれかとする。
   - Markdown 成果物テンプレートは、自身 Frontmatter の `specdojo:` 配下に置いた `frontmatter_template` フィールドに、生成物 Frontmatter の雛形（`specdojo:` ラッパー込み）を記述する（本標準 `生成物 Frontmatter 雛形`）。
   - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
-  - YAML catalog テンプレート（`dct-*` 等）は独立 YAML データファイルであり名前空間化しない。生成物側フィールドを平坦に記述し、生成処理が `id` / `type` などを変換する。
+  - YAML catalog テンプレート（`dct-*`）は独立 YAML データファイルであり名前空間化しない。生成物側フィールドを平坦に記述し、生成処理（`specdojo scaffold`）が `id` / `type` などを変換する。
+  - YAML catalog 以外の独立 YAML データファイルのテンプレート（`pm-members-template.yaml` 等）は、自身のメタ情報をトップレベルに実値で記述し、生成物のメタ情報はトップレベルの `metadata_template` フィールドに雛形として記述する（本標準 `生成物メタ情報雛形（metadata_template）`）。
 - 生成時に置換する値は `_UPPER_SNAKE_` 形式のプレースホルダで表す。ただし `type: template` を理由に、すべての Frontmatter 項目や ID で大文字・アンダースコアを使用できるわけではない。
 - プレースホルダは、個別スキーマが許可したフィールドだけで使用する。許可していないフィールドでは、共通スキーマや成果物スキーマの通常の値制約を適用する。
 - プレースホルダを置換して生成した成果物は、生成後のドキュメント種別に対応する通常のスキーマを満たさなければならない。
@@ -118,7 +119,7 @@ specdojo:
 - `id` / `type` / `status` は Markdown Frontmatter と同じ制約に従う。
 - `title` を必須とし、ドキュメント名を記述する。Markdown における本文先頭の H1 に相当し、表示ページ生成（`specdojo yaml-pages build`）が生成ページの H1 として使用する。
 - `rulebook` を必須とし、準拠する rulebook の ID を指定する。該当する rulebook がない場合のみ `none` を許可する（成果物の必須項目と同じ制約）。
-- テンプレートファイル（`*-template.yaml`）では、`title` / `rulebook` は生成物側フィールドとして生成物の値を平坦に記述する（テンプレート自身のメタ情報と生成物 Frontmatter の分離を参照）。
+- YAML catalog テンプレート（`dct-*-template.yaml`）では、`title` / `rulebook` は生成物側フィールドとして生成物の値を平坦に記述する（テンプレート自身のメタ情報と生成物 Frontmatter の分離を参照）。それ以外のテンプレート（`*-template.yaml`）では、`title` はテンプレート自身の名前を実値で記述し、生成物のメタ情報は `metadata_template` に記述する（本標準 `生成物メタ情報雛形（metadata_template）`）。
 - 上記以外の項目（`based_on` / `supersedes` / `version` / `project_id` など）の許可項目と型は各スキーマを正本とする。
 - OpenAPI / AsyncAPI など外部標準形式の YAML（`ifx-*` 等）は本規約の対象外とし、`info.title` や `x-spec-meta` など各形式の慣行に従う。
 
@@ -130,6 +131,33 @@ title: ロール一覧
 rulebook: pm-roles-rulebook
 version: 1
 project_id: prj-0001
+```
+
+### 3.1. 生成物メタ情報雛形（`metadata_template`）
+
+YAML catalog（`dct-*`）を除く独立 YAML データファイルのテンプレート（`pm-members-template.yaml` 等）は、生成物のメタ情報をトップレベルの `metadata_template` フィールドに雛形として記述する。Markdown 成果物テンプレートの `frontmatter_template` に対応する仕組みである。
+
+- テンプレート自身のメタ情報はトップレベルに実値で記述する。`id` / `type` / `status` は通常のメタ情報制約に従い（例: `id: pm-members-template`、`type: template`）、`title` はテンプレート自身の名前を記述する。`rulebook` はテンプレート自身が準拠する rulebook が無いため `none` とする。
+- `metadata_template` の内容は、生成物のトップレベルメタ情報そのもの（`id` / `type` / `status` / `title` / `rulebook` / `based_on` / `version` / `project_id` など）とし、生成物のスキーマが定めるメタ項目の制約を満たす形にする。
+- 生成時に置換する値には生成時プレースホルダ（本標準 `生成時プレースホルダと記入プレースホルダ`）を使う。
+- 生成処理は、`metadata_template` の生成時プレースホルダを置換した内容をトップレベルに平坦化して出力し、続けて本文キー（テンプレート自身のメタ情報 `id` / `type` / `status` / `title` / `rulebook` と `metadata_template` を除いたトップレベルキー）を出力する。テンプレート自身のメタ情報は出力しない。
+
+```yaml
+id: pm-roles-template
+type: template
+status: draft
+title: ロール一覧テンプレート
+rulebook: none
+metadata_template:
+  id: _PROJECT_ID_:pm-roles
+  type: project
+  status: draft
+  title: ロール一覧
+  rulebook: pm-roles-rulebook
+  version: 1
+  project_id: _PROJECT_ID_
+
+# 以下、本文キー（roles など雛形本体）が続く
 ```
 
 ## 4. 成果物の必須項目

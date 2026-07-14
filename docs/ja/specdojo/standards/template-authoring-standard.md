@@ -25,6 +25,7 @@ Template Authoring Standard
 - Markdown テンプレートは、見出し構成を対象成果物の `本文構成（標準テンプレ）` に対応させる。
 - YAML テンプレートは、対象成果物のルートキー・必須キー・型を雛形として示す。
 - テンプレートファイル自身の Frontmatter も `specdojo:` 名前空間配下に実値で記述する（`specdojo.id: <prefix>-template`、`specdojo.type: template`、`specdojo.status: draft`）。生成物の Frontmatter は自身 Frontmatter とは別に表現する。表現方法は [document-metadata-standard.md](document-metadata-standard.md) の `テンプレート自身のメタ情報と生成物 Frontmatter の分離` に従い、Markdown 成果物テンプレートは `specdojo:` 配下の `frontmatter_template` フィールド（中身は `specdojo:` ラッパー込みの生成物 Frontmatter）、exec / result テンプレートは本文先頭の `_FRONTMATTER_` を用いる。
+- YAML テンプレートも自身のメタ情報（`id` / `type` / `status` / `title` / `rulebook`）をトップレベルに実値で記述する。YAML catalog（`dct-*`）を除き、生成物のメタ情報はトップレベルの `metadata_template` フィールドに記述する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物メタ情報雛形（metadata_template）`）。
 
 ## 3. プレースホルダ規約
 
@@ -40,6 +41,7 @@ Template Authoring Standard
 | `_TODO_`               | 後で記入・判断する箇所（記入プレースホルダ）                              | 担当 / 期限など        |
 | `_PROJECT_ID_`         | 生成時に置換するプロジェクト ID（生成時プレースホルダ）                   | `_PROJECT_ID_:pm-plan` |
 | `frontmatter_template` | 生成物 Frontmatter 雛形（Markdown 成果物テンプレート自身 Frontmatter 内） | —                      |
+| `metadata_template`    | 生成物メタ情報雛形（YAML テンプレートのトップレベル。`dct-*` を除く）     | —                      |
 | `_FRONTMATTER_`        | 生成処理が注入する Frontmatter（exec / result テンプレート本文先頭）      | —                      |
 
 ## 4. 構成の原則
@@ -63,7 +65,7 @@ Template Authoring Standard
 - 章番号末尾の `.` を省略しない。
 - 実在のプロジェクト固有データや個人情報・機密情報を雛形に埋め込まない。
 - 埋めずに成果物として成立しない曖昧なプレースホルダを残さない。
-- プレースホルダ記法（`_UPPER_SNAKE_` / `_TODO_` / `_PROJECT_ID_` / `_FRONTMATTER_`）および `frontmatter_template` フィールド以外の独自記法を、共通ルール未定義のまま追加しない。
+- プレースホルダ記法（`_UPPER_SNAKE_` / `_TODO_` / `_PROJECT_ID_` / `_FRONTMATTER_`）および `frontmatter_template` / `metadata_template` フィールド以外の独自記法を、共通ルール未定義のまま追加しない。
 - テンプレート本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 
 ## 7. 運用ルール

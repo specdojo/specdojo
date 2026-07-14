@@ -42,7 +42,7 @@ Project Role Definition Writing Recipe
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`version`、`project_id` を設定する。
+1. `id`、`type`、`status`、`version`、`project_id` を設定する。template から新規作成する場合は、template の `metadata_template` の内容をトップレベルへ平坦化し、`_PROJECT_ID_` を実際の `project_id` に置換する（template 自身のメタ項目はコピーしない）。
 2. `based_on` に、ロール採用の根拠となる組織定義などの ID を記載する。
 3. `roles` に、プロジェクトで使用する Role code を標準順で列挙する。
 4. 各 Role に `code` と `name` を記載し、必要な場合だけ `project_note` を 1 行で添える。

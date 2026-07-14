@@ -1,15 +1,23 @@
 # Template: project role definition
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
-# On scaffold, set id to <project_id>:pm-roles and type to project.
+# On scaffold, flatten metadata_template to the top level (with placeholders
+# replaced) and drop the template's own metadata (id/type/status/title/rulebook).
+# See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
 id: pm-roles-template
 type: template
 status: ready
-title: ロール一覧
-rulebook: pm-roles-rulebook
-based_on:
-  - _PROJECT_ID_:pm-organization
-version: 1
-project_id: _PROJECT_ID_
+title: ロール一覧テンプレート
+rulebook: none
+metadata_template:
+  id: _PROJECT_ID_:pm-roles
+  type: project
+  status: draft
+  title: ロール一覧
+  rulebook: pm-roles-rulebook
+  based_on:
+    - _PROJECT_ID_:pm-organization
+  version: 1
+  project_id: _PROJECT_ID_
 
 # Role code の採用方針・根拠は pm-organization.md を参照する。
 # 実行主体、member nickname、兼務の割り当ては pm-members.yaml で管理する。

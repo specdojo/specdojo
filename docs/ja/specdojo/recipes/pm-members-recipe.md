@@ -40,7 +40,7 @@ Project Member Roster Writing Recipe
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。
+1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。template から新規作成する場合は、template の `metadata_template` の内容をトップレベルへ平坦化し、`_PROJECT_ID_` を実際の `project_id` に置換する（template 自身のメタ項目はコピーしない）。
 2. `based_on` に、組織定義、ロール定義など実際に確認した根拠 ID を記載する。
 3. `members` に、人間の最終判断主体を少なくとも 1 件記載する。
 4. 実行に使う agent を列挙し、`provider`、`mode`、`proficiency`、`priority`、`capabilities` を確認する。起動コマンドは `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` で解決されるため、member には書かない。

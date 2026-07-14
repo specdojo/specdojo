@@ -29,6 +29,28 @@ describe("expandViewpointsDoc", () => {
     expect(doc).toHaveProperty("categories");
     expect(doc).toHaveProperty("viewpoints");
   });
+
+  it("生成物メタを metadata_template から平坦化し、テンプレート自身のメタを出力しない", () => {
+    const doc = expandViewpointsDoc(resolve(TEMPLATE_PATH), "prj-0001");
+
+    expect(doc.title).toBe("レビュー観点一覧");
+    expect(doc.status).toBe("draft");
+    expect(doc).not.toHaveProperty("metadata_template");
+  });
+
+  it("metadata_template を持たないテンプレートはファイルパスを含むエラーになる", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const templatePath = join(dir, "no-metadata-template.yaml");
+      writeFileSync(templatePath, "id: broken-template\ntype: template\n", "utf8");
+
+      expect(() => expandViewpointsDoc(templatePath, "prj-0001")).toThrow(
+        /metadata_template is missing or not a mapping: .*no-metadata-template\.yaml/,
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("scaffoldViewpoints", () => {

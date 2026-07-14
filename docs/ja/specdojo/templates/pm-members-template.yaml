@@ -1,17 +1,25 @@
 # Template: project member roster
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
-# On scaffold, set id to <project_id>:pm-members and type to project.
+# On scaffold, flatten metadata_template to the top level (with placeholders
+# replaced) and drop the template's own metadata (id/type/status/title/rulebook).
+# See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
 id: pm-members-template
 type: template
 status: draft
-title: メンバー名簿
-rulebook: pm-members-rulebook
-based_on:
-  - people-and-organization-definition-standard
-  - _PROJECT_ID_:pm-organization
-  - _PROJECT_ID_:pm-roles
-version: 1
-project_id: _PROJECT_ID_
+title: メンバー名簿テンプレート
+rulebook: none
+metadata_template:
+  id: _PROJECT_ID_:pm-members
+  type: project
+  status: draft
+  title: メンバー名簿
+  rulebook: pm-members-rulebook
+  based_on:
+    - people-and-organization-definition-standard
+    - _PROJECT_ID_:pm-organization
+    - _PROJECT_ID_:pm-roles
+  version: 1
+  project_id: _PROJECT_ID_
 
 # Role code の語彙は pm-roles.yaml を参照する。
 # Schedule の owner には Role code を使い、member nickname は書かない。

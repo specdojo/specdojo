@@ -1,11 +1,20 @@
 # Template: project review viewpoints
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
+# On scaffold, flatten metadata_template to the top level (with placeholders
+# replaced) and drop the template's own metadata (id/type/status/title/rulebook).
+# See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
 id: pm-review-viewpoints-template
 type: template
 status: draft
-title: レビュー観点一覧
+title: レビュー観点一覧テンプレート
 rulebook: none
-project_id: _PROJECT_ID_
+metadata_template:
+  id: _PROJECT_ID_:pm-review-viewpoints
+  type: project
+  status: draft
+  title: レビュー観点一覧
+  rulebook: none
+  project_id: _PROJECT_ID_
 
 # レビュー観点一覧。
 # Role code の語彙は pm-roles.yaml を参照する。
