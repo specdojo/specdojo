@@ -224,6 +224,7 @@ providers:
 
 解決規則は次のとおりとする。
 
+- プレースホルダの記法は `{lower_snake}` とする。実行のたびに展開される実行時変数であり、scaffold 用テンプレートの記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは区別する。
 - 組み込みプレースホルダは `{nickname}`、`{mode}`、`{proficiency}` とし、member の同名属性で展開する。
 - 追加プレースホルダは `command_params.by_mode.<member.mode>` と `command_params.by_proficiency.<member.proficiency>` の変数表で展開する。同名キーが `by_mode` と `by_proficiency` の両方に存在する定義は検証エラーとする。
 - member に `command` がある場合はテンプレートを使わず、その値をそのまま使う（上書き）。
