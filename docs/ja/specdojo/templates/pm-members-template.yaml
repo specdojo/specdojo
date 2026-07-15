@@ -5,7 +5,7 @@
 # See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
 id: pm-members-template
 type: template
-status: draft
+status: ready
 title: メンバー名簿テンプレート
 rulebook: none
 metadata_template:

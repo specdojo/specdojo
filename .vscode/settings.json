@@ -228,5 +228,6 @@
 
   "terminal.integrated.enablePersistentSessions": true,
   "terminal.integrated.persistentSessionReviveProcess": "never",
-  "terminal.integrated.hideOnStartup": "whenEmpty"
+  "terminal.integrated.hideOnStartup": "whenEmpty",
+  "git.detectWorktrees": true
 }
