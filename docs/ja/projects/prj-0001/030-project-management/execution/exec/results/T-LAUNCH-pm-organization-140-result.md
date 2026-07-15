@@ -1,21 +1,21 @@
 ---
 specdojo:
-  id: prj-0001:xer-t-launch-prj-scope-140
+  id: prj-0001:xer-t-launch-pm-organization-140
   type: exec-result
-  task_id: T-LAUNCH-prj-scope-140
+  task_id: T-LAUNCH-pm-organization-140
   mode: edit
   status: in_progress
   project_id: prj-0001
-  plan_ref: exec/plans/T-LAUNCH-prj-scope-140-plan.md
-  started_at: "2026-07-07T12:39:13.184Z"
+  plan_ref: exec/plans/T-LAUNCH-pm-organization-140-plan.md
+  started_at: "2026-07-15T13:38:14.399Z"
   agent: indie
   approach: bootstrap-finalize
   targets:
-    - prj-0001:prj-scope
-    - prj-scope-rulebook
-    - prj-scope-recipe
-    - prj-scope-sample
-    - prj-scope-template
+    - prj-0001:pm-organization
+    - pm-organization-rulebook
+    - pm-organization-recipe
+    - pm-organization-sample
+    - pm-organization-template
 ---
 
 # Finalize Result
@@ -24,10 +24,9 @@ specdojo:
 
 done_criteria の各項目を確認し、満たしていればチェックを付ける。満たせない項目がある場合は「確定判断」を差し戻しにし、理由を「実施内容」に記録する。
 
-- [x] 業務スコープ・除外範囲・利用者影響が業務観点で確認できること（BA / vp-ba-requirements-completeness）
-- [x] 対象範囲・対象外を承認できること（PO / vp-po-purpose-alignment）
-- [x] 技術的スコープ境界（外部連携の有無など）が識別できること（ARC / vp-arc-technical-constraints）
-- [x] スコープ境界をスケジュール計画の前提として確認できること（PM / vp-pm-plan-feasibility）
+- [x] 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること（PO / vp-po-decision-readiness）
+- [x] pm-roles.yaml と pm-members.yaml への導線が整備されていること（BA / vp-ba-stakeholder-clarity）
+- [x] pm-roles.yaml と pm-members.yaml との構造整合が取れていること（ARC / vp-arc-cross-document-consistency）
 
 ## 2. 参考資料の確認
 
@@ -43,11 +42,11 @@ done_criteria の各項目を確認し、満たしていればチェックを付
 
 最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。既に `ready` の参考資料は、劣化がないことを確認してチェックを付ける。
 
-- [x] 成果物: `docs/ja/projects/prj-0001/020-project-definition/prj-scope.md`
-- [x] rulebook: `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md`
-- [x] recipe: `docs/ja/specdojo/recipes/prj-scope-recipe.md`
-- [x] sample: `docs/ja/specdojo/samples/prj-scope-sample.md`
-- [x] template: `docs/ja/specdojo/templates/prj-scope-template.md`
+- [x] 成果物: `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-organization.md`
+- [x] rulebook: `docs/ja/specdojo/rulebooks/pm-organization-rulebook.md`
+- [x] recipe: `docs/ja/specdojo/recipes/pm-organization-recipe.md`
+- [x] sample: `docs/ja/specdojo/samples/pm-organization-sample.md`
+- [x] template: `docs/ja/specdojo/templates/pm-organization-template.md`
 
 ## 4. 実施内容
 
