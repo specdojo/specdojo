@@ -59,7 +59,32 @@ specdojo exec build --project <project-id>
 
 `phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec build` を実行します。
 
-## 4. phase_setsの反復
+## 4. トラックへ展開する情報
+
+`sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
+
+| 展開する情報    | 理由                                                     |
+| --------------- | -------------------------------------------------------- |
+| `name`          | 実行者が作業を識別するために必要                         |
+| `description`   | エージェント・人間が実行時に参照するフェーズ指示         |
+| `owner`         | 誰が実行するかを決定するために必要                       |
+| `duration_days` | CPM 計算に必要                                           |
+| `depends_on`    | 実行順序の決定に必要。タスク ID に解決済みの形で展開する |
+
+トラック全体に共通する生成ルールや設計意図は strategy に留めます。
+
+| strategy に留める情報             | 理由                                                             |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `phase_sets` の定義               | フェーズ構成は strategy が SSOT。定義全体はトラックへ複製しない  |
+| `owner_rules`                     | どの `local_id` を誰が担当するかのルール。トラックには展開しない |
+| `cross_domain_dependencies`       | 依存関係の設計意図。トラックには解決済み `depends_on` として反映 |
+| `phase_gates`・`group_milestones` | 生成ロジック。トラックにはマイルストーンとして展開済み           |
+
+`description` をトラックへ展開するのは、エージェントや人間が plan ファイルだけを読んで実行できるようにするためです。strategy を参照させる方式は plan 生成時にファイルが 2 つ必要になり、自己完結性が損なわれます。
+
+反復タスクには、実行時にタスク ID の文字列解析へ依存しないよう、生成元を表す `phase_set`・`phase_id`・`phase_suffix` と、該当する `cycle`・`iteration` を展開します。
+
+## 5. phase_setsの反復
 
 個別 `phase_set` の反復と、`phase_sets` シーケンス全体の反復は別の階層として扱います。
 
@@ -92,7 +117,7 @@ default_phase_sets: [first-pass, finalize-pass]
 
 `cycles` と `iterations` は追加回数ではなく総実行回数です。
 
-## 5. タスクID
+## 6. タスクID
 
 タスク ID は `T-<TRACK>-<local_id>-<phase_suffix>` を基礎にし、反復する場合だけ `-C<cycle>` と `-I<iteration>` を末尾に付けます。`id:` フィールドは `sch-track` の YAML に書かず、自動導出します。
 
@@ -112,7 +137,7 @@ T-LAUNCH-prj-overview-010-C01-I01
 
 `cycles` が `2` 以上の場合だけ `C`、`iterations` が `2` 以上の場合だけ `I` を付けます。両方を使う場合の順序は `C`、`I` です。
 
-## 6. フェーズと実行要件
+## 7. フェーズと実行要件
 
 `sch-strategy-<track>.yaml` の各フェーズには、実行種別と作業要件を定義できます。
 
@@ -138,7 +163,7 @@ phase_sets:
 
 エージェント選択の詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
 
-## 7. exec build時のフェーズ解決
+## 8. exec build時のフェーズ解決
 
 `exec build` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec build` では生成せず、`exec plan` または `exec run` が必要時に生成します。
 
@@ -153,7 +178,7 @@ sch-track task
 
 `mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec build` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
 
-## 8. タスク粒度
+## 9. タスク粒度
 
 Task は AI Agent が一度の実行で完了できる粒度にします。
 
@@ -165,7 +190,7 @@ Task は AI Agent が一度の実行で完了できる粒度にします。
 
 大きすぎる Task は分割し、小さすぎて独立完了できない Task は統合します。
 
-## 9. 依存関係
+## 10. 依存関係
 
 依存関係は最小限にします。依存が多いほど並列実行できる Ready タスクが減ります。
 
@@ -179,7 +204,7 @@ Task は AI Agent が一度の実行で完了できる粒度にします。
 
 Ready タスク数の目安は同時に5から20件です。これを下回る状態が続く場合は依存関係を見直します。
 
-## 10. CPMとクリティカルパス
+## 11. CPMとクリティカルパス
 
 `specdojo exec build` は Schedule から CPM（Critical Path Method）を計算します。
 
@@ -190,7 +215,7 @@ generated/critical-path.md
 
 Slack が `0` の Task はクリティカルパスに乗ります。これらの遅延はプロジェクト全体の遅延に直結するため、優先して Ready にします。
 
-## 11. Anti-patterns
+## 12. Anti-patterns
 
 | Anti-pattern                       | 問題                                                                 |
 | ---------------------------------- | -------------------------------------------------------------------- |
