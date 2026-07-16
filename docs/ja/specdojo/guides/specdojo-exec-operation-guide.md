@@ -245,7 +245,7 @@ specdojo exec claim \
 
 # 3. 人が最終確認・修正し、成果物 frontmatter の status を ready に更新する
 #    result の 確認チェックリスト / 確定対象 にチェックを付け、
-#    実施内容 / 変更ファイル / 確定判断 を記入する
+#    確定判断 を記入する（差し戻し理由や修正内容があれば 備考 に残す）
 
 # 4. 完了を記録する
 specdojo exec complete \
