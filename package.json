@@ -50,6 +50,7 @@
     "specdojo:build": "npm run build",
     "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
     "claude:work": "claude --worktree claude-work --permission-mode acceptEdits",
+    "claude": "claude --permission-mode acceptEdits",
     "code:red": "tools/vscode/open-worktree-workspace.sh red",
     "code:blue": "tools/vscode/open-worktree-workspace.sh blue",
     "code:green": "tools/vscode/open-worktree-workspace.sh green",
