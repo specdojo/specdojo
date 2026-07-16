@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-16T11:06:10Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-charter-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "PO",
+    "planned_owner": "PO"
+  }
+}
