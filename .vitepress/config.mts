@@ -103,6 +103,62 @@ function collectFrontmatterDocLinks(
   return links;
 }
 
+function getSpecdojoDocId(frontmatter: Record<string, unknown> | undefined): string | undefined {
+  const specdojo = frontmatter?.specdojo;
+  if (!specdojo || typeof specdojo !== "object" || Array.isArray(specdojo)) return undefined;
+
+  const id = (specdojo as { id?: unknown }).id;
+  if (typeof id !== "string") return undefined;
+
+  const trimmedId = id.trim();
+  return trimmedId.length > 0 ? trimmedId : undefined;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function makeSearchDocIdText(docId: string): string {
+  const aliases = [docId];
+  const localId = docId.includes(":") ? docId.slice(docId.lastIndexOf(":") + 1) : undefined;
+  if (localId && localId !== docId) aliases.push(localId);
+
+  const weightedAliases = aliases.flatMap((alias, index) => Array(index === 0 ? 80 : 40).fill(alias));
+  return `ドキュメントID Document ID ${weightedAliases.join(" ")}`;
+}
+
+function tokenizeSearchText(text: string): string[] {
+  const terms = text.split(/[\s\p{P}\p{S}]+/u).filter(Boolean);
+  const idTokens =
+    text.match(/[A-Za-z0-9][A-Za-z0-9-]*(?::[A-Za-z0-9][A-Za-z0-9-]*|(?:-[A-Za-z0-9]+)+)/g) ?? [];
+
+  return [...terms, ...idTokens];
+}
+
+function injectSearchDocId(html: string, docId: string): string {
+  const searchText = escapeHtml(makeSearchDocIdText(docId));
+  const hiddenDocId = `<p hidden class="vp-search-doc-id">${searchText}</p>`;
+
+  if (/<h1\b/i.test(html)) {
+    return html.replace(/(<h1\b[\s\S]*?<\/h1>)/i, `$1\n${hiddenDocId}`);
+  }
+
+  return `${html}\n${hiddenDocId}`;
+}
+
+function renderSearchHtml(src: string, env: { frontmatter?: Record<string, unknown> }, md: { render: (src: string, env: unknown) => string }): string {
+  const html = md.render(src, env);
+  if (env.frontmatter?.search === false) return "";
+
+  const docId = getSpecdojoDocId(env.frontmatter);
+  return docId ? injectSearchDocId(html, docId) : html;
+}
+
 const specdojoItems = {
   ja: {
     text: "specdojo",
@@ -472,6 +528,12 @@ export default defineConfig({
     search: {
       provider: "local",
       options: {
+        _render: renderSearchHtml,
+        miniSearch: {
+          options: {
+            tokenize: tokenizeSearchText,
+          },
+        },
         locales: {
           ja: {
             translations: {
