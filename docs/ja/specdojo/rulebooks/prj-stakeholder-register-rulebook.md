@@ -167,17 +167,11 @@ Stakeholder Register Documentation Rulebook
 ## 8. サンプル
 
 - 参照先: [[prj-stakeholder-register-sample]]
-- sample は駄菓子屋の販売管理システムを題材に、各必須表を 1 行以上埋めた最小完成例を示す。
-- sample の固有の役割名や数値を、他プロジェクトの登録簿の必須値として扱わない。
 
 ## 9. 作成レシピ
 
 - 参照: [[prj-stakeholder-register-recipe]]
-- 関係者の洗い出し、期待と懸念の具体化、合意対象の整理、レビュー観点は recipe を参照する。
-- 構造・必須項目・禁止事項は本書を正とする。
 
 ## 10. テンプレート
 
 - 参照: [[prj-stakeholder-register-template]]
-- テンプレートには本書の本文構成と表カラムだけを置き、プロジェクト固有の関係者は含めない。
-- 作成時は template を起点にし、内容の考え方は recipe を参照する。

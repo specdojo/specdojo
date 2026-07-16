@@ -2,9 +2,9 @@
 specdojo:
   id: prj-stakeholder-register-sample
   type: sample
-  status: draft
+  status: ready
   rulebook: prj-stakeholder-register-rulebook
-  based_on: []
+  based_on: [prj-overview-sample]
   supersedes: []
 ---
 
