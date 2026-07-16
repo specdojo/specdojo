@@ -69,8 +69,10 @@ providers:
     # edit / review とも同一の許可リスト方式（shell は読み取り系・検証系のみ、git の
     # 変更系は deny）。write はパス単位に絞れないため許可し、成果物変更の境界は
     # specdojo CLI の commit 許可リストで作る。プレースホルダは不要のため使わない。
+    # model は auto（Copilot の自動モデル選択）で常に最新・最適なモデルへ追従する。
+    # ローカル config に persist された model 設定に依存しないよう明示する。
     command_template: >-
-      copilot -p "$(cat)" --no-color --no-ask-user
+      copilot -p "$(cat)" --no-color --no-ask-user --model auto
       --no-remote --no-remote-export --disable-builtin-mcps
       --allow-tool write
       --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
@@ -96,8 +98,8 @@ providers:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
       by_proficiency:
-        normal: { model: gpt-5.4-mini, effort: medium }
-        expert: { model: gpt-5.5, effort: high }
+        normal: { model: gpt-5.6-terra, effort: medium }
+        expert: { model: gpt-5.6-sol, effort: high }
     # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
     # と週次上限（weekly / usage limit）がスタックする。
     rate_limit_detection:
