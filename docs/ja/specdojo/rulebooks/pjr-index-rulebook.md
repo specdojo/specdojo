@@ -2,8 +2,11 @@
 specdojo:
   id: pjr-index-rulebook
   type: rulebook
-  status: draft
+  status: ready
   target_format: markdown
+  recipe: none
+  sample: none
+  template: pjr-index-template
   based_on:
     - rulebook-authoring-standard
   supersedes: []
@@ -15,44 +18,18 @@ Project Register Documentation Rules
 
 本ドキュメントは、プロジェクト登録簿（`pjr-index`）を統一形式で記述するためのルールです。
 プロジェクト登録簿は `pjr-index` と `pjr-XXXX-<topic>.md` で構成し、TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一元管理します。
-type 別、担当者別、状態別、優先度別などの派生ビューは `generated/` 配下に置き、`pjr-index` と個別登録項目を正本として扱います。
+本書は構造・列・記述形式を定義し、位置づけ、値の意味・選び方、登録・状態遷移・個票分離などの運用は [[specdojo-register-operation-guide]] を参照します。
 
 ## 1. 全体方針
 
 - `pjr-index` は、project-register の本体として機能する。
 - 個別登録項目の詳細説明、判断理由、経緯、対応内容は各 `pjr-XXXX-<topic>.md` に集約し、`pjr-index` は登録項目一覧と参照先リンクの管理に専念する。
-- 本文の「登録項目一覧」は、type / status / priority / 担当 / 期限 を横断的に確認する入口として扱う。
 - `generated/` 配下の派生ビューは補助一覧であり、正本ではない。
+- 本文構造は `pjr-index.schema.yaml` により機械検証され、本書は構造と記述形式を定義する。
 
-## 2. 位置づけ
+## 2. ファイル命名・ID規則
 
-`pjr-index` と関連ドキュメントの関係を示します。
-
-```mermaid
-flowchart LR
-  PJR_IDX["pjr-index<br>プロジェクト登録簿"]
-  PJR_ITEM["pjr-XXXX-&lt;topic&gt;<br>個別登録項目"]
-  PJR_GEN["project-register/generated<br>登録簿内の補助一覧"]
-  PM_GEN["controls/generated<br>controls 全体の派生管理ビュー"]
-
-  PJR_IDX --> PJR_ITEM
-  PJR_IDX --> PJR_GEN
-  PJR_IDX --> PM_GEN
-  PJR_ITEM --> PJR_GEN
-  PJR_ITEM --> PM_GEN
-
-  classDef target stroke-width:4px
-  class PJR_IDX target
-```
-
-- `pjr-index` が project-register の起点となる。
-- `pjr-XXXX-<topic>.md` は個別登録項目の正本として扱う。
-- `project-register/generated/` には、登録簿内の補助一覧を置く。
-- `controls/generated/` には、controls 全体の type 別管理ビューを置く。
-
-## 3. ファイル命名・ID規則
-
-### 3.1. ID規約
+### 2.1. ID規約
 
 - `pjr-index` 自体の `id` は `<project-id>:pjr-index` 形式を推奨する。
   - 例: `prj-0001:pjr-index`
@@ -61,7 +38,7 @@ flowchart LR
 - 個別登録項目のファイル連番は 4 桁とし、project-register 内で一意にする。
 - `<topic>` は英小文字・数字・ハイフンのみとし、対象領域や論点が分かる短い名称にする。
 
-### 3.2. ファイル命名規約
+### 2.2. ファイル命名規約
 
 - プロジェクト登録簿本体のファイル名は `pjr-index.md` とする。
 - プロジェクト登録簿本体は以下に配置する。
@@ -72,10 +49,9 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 
 - 個別登録項目のファイル名は `pjr-XXXX-<topic>.md` 形式とする。
   - 例: `pjr-0001-auth-boundary.md`
-  - 例: `pjr-0002-payment-migration-range.md`
 - 相対リンクで `pjr-index` から個別登録項目へ遷移できる命名・配置を維持する。
 
-## 4. 推奨 Frontmatter 項目
+## 3. 推奨 Frontmatter 項目
 
 | 項目         | 説明                                                 | 必須 |
 | ------------ | ---------------------------------------------------- | ---- |
@@ -86,14 +62,16 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 | `based_on`   | 登録簿全体の運用根拠として参照した文書IDの配列       | 任意 |
 | `supersedes` | 置き換え元の文書IDの配列                             | 任意 |
 
-## 5. 本文構成（標準テンプレ）
+- `based_on` には登録簿全体の運用根拠だけを記載し、登録項目ごとの根拠文書は個別の `pjr-XXXX-<topic>.md` 側に記載する。直接根拠がない場合は省略してよい。
+
+## 4. 本文構成（標準テンプレ）
 
 | 章  | 内容         | 必須 |
 | --- | ------------ | ---- |
 | 1   | 登録項目一覧 | ○    |
 | 2   | 派生ビュー   | 任意 |
 
-### 5.1. 登録項目一覧 の標準列
+### 4.1. 登録項目一覧 の標準列
 
 | 列名       | 説明                                          | 必須 |
 | ---------- | --------------------------------------------- | ---- |
@@ -109,73 +87,56 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 | 結論       | 完了・却下・決定時の結果の要約。未定は `-`    | 任意 |
 | 個票       | `pjr-XXXX-<topic>.md` への相対リンク          | 条件 |
 
-`description` と `個票` は、少なくともどちらか一方を記載する。短文で管理できる項目は `description` のみでよい。
+`説明` と `個票` は、少なくともどちらか一方を記載する。
 
-### 5.2. 派生ビュー の標準リンク
+### 4.2. 派生ビュー の標準リンク
 
-「派生ビュー」章には、必要に応じて以下のリンク群を含める。
+「派生ビュー」章には、派生ビューが正本ではないことを明記し、必要に応じて次のリンクを含める。
 
-| 区分                                               | リンク先例                              | 必須 |
-| -------------------------------------------------- | --------------------------------------- | ---- |
-| 登録簿内の台帳ビュー（状態別・優先度別・担当者別） | `./generated/pjr-views.md`              | 任意 |
-| controls 全体のリスク登録簿                        | `../generated/pm-risk-register.md`      | 任意 |
-| controls 全体の課題ログ                            | `../generated/pm-issue-log.md`          | 任意 |
-| controls 全体の変更要求ログ                        | `../generated/pm-change-request-log.md` | 任意 |
-| controls 全体の決定記録                            | `../generated/pm-decision-log.md`       | 任意 |
+- 登録簿内の台帳ビュー: `./generated/pjr-views.md`
+- controls 全体の派生管理ビュー: `../generated/pm-risk-register.md`、`../generated/pm-issue-log.md`、`../generated/pm-change-request-log.md`、`../generated/pm-decision-log.md`
 
-## 6. 記述ガイド
+## 5. 記述ガイド
 
-### 6.1. タイトルと概要の記述
+### 5.1. タイトルと概要の記述
 
 - H1 は `プロジェクト登録簿` とし、project-register の本体であることが分かる名称にする。
 - H1 の直下には英語名を 1 行で記載する（例: Project Register）。
 - 英語名の直下に、ドキュメント概要を 2〜3 行で記載する。
 - 概要には少なくとも「対象」「目的」「登録項目を一覧管理すること」を含め、個別項目の詳細説明は書かない。
 
-### 6.2. 登録項目一覧の記述
+### 5.2. 登録項目一覧の記述
 
 - 一覧は表形式で記載する。
-- 短文で管理できる項目は、`description` に内容を記載し、個票を作成しなくてよい。
-- 詳細説明、判断理由、経緯、対応内容、根拠、添付情報が必要な項目は個票を作成する。
+- タイトルは1文以内に収め、登録項目の内容を端的に示す。
+- `説明` は1〜2文以内に収め、長文化する場合は個票へ分離する。
 - 「個票」列にリンクを記載する場合は `[pjr-XXXX-<topic>.md](./pjr-XXXX-<topic>.md)` 形式で相対リンクを記載する。
 - 個票を作成しない場合、「個票」列は `-` とする。
-- タイトルは1文以内に収め、登録項目の内容を端的に示す。
-- `description` は1〜2文以内に収め、長文化する場合は個票へ分離する。
 - 担当または期限が未定の場合は空欄にせず `_TODO_` と記載する。
 - 完了、却下、決定した項目は、「完了日」に日付を記入し、「結論」に結果を1文で残す。
 - 個票がある一覧行は個別登録項目の要約に留め、判断理由、経緯、対応内容は個別登録項目へ分離する。
 
-### 6.3. type / status / priority の記述
+### 5.3. type / status / priority の値
 
-- `type` は `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` のいずれかを使用する。
-- `status` は `open` / `in-progress` / `waiting` / `review` / `decided` / `done` / `deferred` / `rejected` のいずれかを使用する。
-- `priority` は `high` / `medium` / `low` のいずれかを使用する。
-- type / status / priority の値は、派生ビュー生成や横断管理で使用するため、表記ゆれを作らない。
+- 値は `pjr-index.schema.yaml` に定義された enum のみを使用し、表記ゆれを作らない。値の一覧は schema を正本とする。
+- 各値の意味と選び方は [[specdojo-register-operation-guide]] の `type の選び方` および `状態遷移とコマンド` を参照する。
 
-### 6.4. 派生ビューの記述
-
-`generated/` 配下のファイルは、project-register から生成される派生ビューであり、正本ではない。
-
-- `project-register/generated/` は、登録簿内の補助一覧を置く。
-- `controls/generated/` は、controls 全体の type 別管理ビューを置く。
-- 派生ビューの内容と `pjr-index` または個別登録項目が矛盾する場合は、`pjr-index` または個別登録項目を正とする。
-
-### 6.5. based_on の記述
-
-- `pjr-index` の `based_on` は、登録簿全体の運用根拠だけを記載する。
-- 登録項目ごとの根拠文書は、個別の `pjr-XXXX-<topic>.md` 側に記載する。
-- 登録簿全体の直接根拠がない場合、`based_on` は省略してよい。
-
-## 7. 禁止事項
+## 6. 禁止事項
 
 - `pjr-index` に個別登録項目の詳細説明、判断理由、経緯、対応内容を長文で記載しない。
 - type 別一覧、担当者別一覧、状態別一覧、優先度別一覧を `pjr-index` 本文で重複管理しない。
 - `generated/` 配下の派生ビューを正本として扱わない。
 - `type` / `status` / `priority` に未定義の値を使用しない。
-- `description` と `個票` の両方がない一覧行を作成しない。
+- `説明` と `個票` の両方がない一覧行を作成しない。
 - Git 管理を前提とする場合に、手書きの更新履歴を追加しない。
 - 特定プロジェクト固有の例外事項を共通ルールとして記載しない。
 
-## 8. サンプル
+## 7. サンプル
 
-_TODO_: `pjr-index-sample.md` を作成する。
+sample は提供しない（`sample: none`）。本文構造が `pjr-index.schema.yaml` と [[pjr-index-template]] で固定され、行の追加・更新も `specdojo register` コマンドで行うため、記述例としての sample を必要としない。実例は運用中のプロジェクトの `pjr-index.md` を参照する。
+
+## 8. テンプレート
+
+- 参照: [[pjr-index-template]]
+- テンプレートには本書の本文構成と一覧表のカラムだけを置き、プロジェクト固有の登録項目は含めない。
+- 個票の作成には、type 別の個票テンプレート（`pjr-todo-template.md` など `pjr-<type>-template.md`）を使用する。

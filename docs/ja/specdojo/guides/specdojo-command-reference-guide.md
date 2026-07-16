@@ -90,6 +90,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
+登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。
 
 ## 6. exec
 

@@ -214,6 +214,7 @@ export const specdojoSidebarItems = [
           guide("成果物からスケジュールへ", "specdojo-deliverables-to-schedule-guide"),
           guide("スケジュール設計", "specdojo-schedule-design-guide"),
           guide("実行運用", "specdojo-exec-operation-guide"),
+          guide("登録簿運用", "specdojo-register-operation-guide"),
           guide("実行設定", "specdojo-exec-config-guide"),
           guide("plan/resultライフサイクル", "specdojo-plan-result-lifecycle-guide"),
           guide("worktree運用", "specdojo-exec-worktree-guide"),
