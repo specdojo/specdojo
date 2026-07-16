@@ -34,8 +34,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 specdojo exec claim \
   --project <project-id> \
   --task <task-id> \
-  --by <actor> \
-  --msg "manual worktree run"
+  --by <actor>
 
 specdojo exec worktree prepare --project <project-id> --task <task-id>
 
@@ -53,8 +52,7 @@ specdojo exec worktree remove --project <project-id> --task <task-id> --delete-b
 specdojo exec complete \
   --project <project-id> \
   --task <task-id> \
-  --by <actor> \
-  --msg "manual worktree run done"
+  --by <actor>
 ```
 
 途中で問題が見つかった場合は、worktree を削除せず `agent` から再実行します。
@@ -210,7 +208,7 @@ specdojo exec complete \
   --project <project-id> \
   --task <task-id> \
   --by <actor> \
-  --msg "worktree result verified"
+  --msg "worktree result verified"  # --msg は省略可（省略時は "complete task"）
 ```
 
 完了条件を満たせない場合は result に状況を記録し、`block` を使います。

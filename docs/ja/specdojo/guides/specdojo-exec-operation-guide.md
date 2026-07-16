@@ -116,8 +116,7 @@ git worktree add ../specdojo-edit -b <edit-branch>
 specdojo exec release \
   --project <project-id> \
   --task <task-id> \
-  --by <actor> \
-  --msg "abandon blocked attempt; reset to todo"
+  --by <actor>
 
 specdojo exec build --project <project-id>
 ```
@@ -129,7 +128,6 @@ specdojo exec release \
   --project <project-id> \
   --task <task-id> \
   --by <actor> \
-  --msg "reset blocked task" \
   --reset-worktree
 ```
 
@@ -149,22 +147,20 @@ specdojo exec scheduler --project <project-id> --by <actor> --dry-run
 # 3. 実行コマンドと agent 解決結果を確認する
 specdojo exec run --project <project-id> --task <task-id> --dry-run
 
-# 4. claim する
+# 4. claim する（--msg 省略時は固定メッセージ "claim task" が記録される）
 specdojo exec claim \
   --project <project-id> \
   --task <task-id> \
-  --by <actor> \
-  --msg "manual run"
+  --by <actor>
 
 # 5. 実行する
 specdojo exec run --project <project-id> --task <task-id>
 
-# 6. 完了を記録する
+# 6. 完了を記録する（--msg 省略時は固定メッセージ "complete task" が記録される）
 specdojo exec complete \
   --project <project-id> \
   --task <task-id> \
-  --by <actor> \
-  --msg "manual run done"
+  --by <actor>
 
 # 7. 次の Ready を更新する
 specdojo exec build --project <project-id>

@@ -192,7 +192,20 @@ function addOwnerOptions(cmd: Command): Command {
     .option("--allow-owner-mismatch", "Allow claiming a task assigned to a different owner", false);
 }
 
-function addCommonAddOptions(cmd: Command, options?: { requireTask?: boolean }): Command {
+// Fixed default messages for routine state transitions. Events whose message carries the
+// reason itself (note / block / unblock / cancel) have no default and keep --msg required.
+const DEFAULT_EVENT_MESSAGES: Partial<Record<ExecEventType, string>> = {
+  claim: "claim task",
+  complete: "complete task",
+  release: "release task",
+  link: "link refs",
+  estimate: "update estimate",
+};
+
+function addCommonAddOptions(
+  cmd: Command,
+  options?: { requireTask?: boolean; msgDefault?: string },
+): Command {
   addProjectOptions(cmd);
   // `release --all-blocked` operates on every blocked task instead of a single --task, so the task
   // option must be optional for that command. The single-task path still validates it via
@@ -202,9 +215,13 @@ function addCommonAddOptions(cmd: Command, options?: { requireTask?: boolean }):
   } else {
     cmd.requiredOption("--task <taskId>", "Task/Milestone ID");
   }
+  cmd.requiredOption("--by <actor>", "Actor (human/agent)");
+  if (options?.msgDefault !== undefined) {
+    cmd.option("--msg <message>", "Short message", options.msgDefault);
+  } else {
+    cmd.requiredOption("--msg <message>", "Short message");
+  }
   return cmd
-    .requiredOption("--by <actor>", "Actor (human/agent)")
-    .requiredOption("--msg <message>", "Short message")
     .option("--run-id <id>", "Correlation id")
     .option("--ref <k=v...>", "refs key=value (repeatable)", collectRepeatable, [])
     .option("--meta <k=v...>", "meta key=value (repeatable)", collectRepeatable, [])
@@ -752,7 +769,10 @@ export function registerExecCommands(program: Command): void {
 
   for (const t of types) {
     const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
-    addCommonAddOptions(cmd, { requireTask: t !== "release" });
+    addCommonAddOptions(cmd, {
+      requireTask: t !== "release",
+      msgDefault: DEFAULT_EVENT_MESSAGES[t],
+    });
 
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
