@@ -139,6 +139,7 @@ Project Register
 | PJR-0116 | done | xrp-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | - |
 | PJR-0117 | done | xrr-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | - |
 | PJR-0118 | done | Debian chromium 150のヘッドレス描画クラッシュ対応 | arm64 full版chromium 150.0.7871.46がヘッドレス描画時にbrk #0でクラッシュしmermaid SVG生成が失敗。chromium-headless-shellへ切替(Dockerfile変更済み)。| issue | high | ARC | 2026-07-08 | 2026-07-08 | Dockerfileを修正 | - |
+| PJR-0119 | decided | プロジェクト憲章の承認 | prj-charter の立ち上げ認可と権限委譲を PO として承認する | decision | high | PO | 2026-07-17 | 2026-07-17 | コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定 | [pjr-0119-charter-approval](./pjr-0119-charter-approval.md) |
 
 ## 2. 派生ビュー
 
