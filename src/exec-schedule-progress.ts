@@ -1,6 +1,6 @@
 import { type CpmResult, type ScheduleCalendar, type ScheduleIndex } from "./exec-types.js";
 import { formatDateOnlyUtc } from "./exec-shared.js";
-import { isWorkingDateUtc } from "./exec-schedule-calendar.js";
+import { dateForWorkingOffset, isWorkingDateUtc } from "./exec-schedule-calendar.js";
 
 export type ProgressSummaryInput = {
   cpm: CpmResult;
@@ -19,6 +19,21 @@ function parseDateOnlyUtc(value: string): Date {
 
 function addUtcDays(base: Date, days: number): Date {
   return new Date(base.getTime() + days * 86400000);
+}
+
+function projectPlannedEndDate(input: ProgressSummaryInput): Date | null {
+  if (!input.cpm.project_start_date) return null;
+
+  let latest: Date | null = null;
+  for (const node of Object.values(input.cpm.nodes)) {
+    const candidate =
+      node.kind === "task"
+        ? dateForWorkingOffset(node.ef, input.cpm.project_start_date, input.schedule.calendar)
+        : dateForWorkingOffset(node.es, input.cpm.project_start_date, input.schedule.calendar);
+    if (!latest || candidate > latest) latest = candidate;
+  }
+
+  return latest;
 }
 
 function elapsedWorkingDaysUntil(
@@ -53,8 +68,19 @@ export function buildProgressSummaryLines(input: ProgressSummaryInput): string[]
   if (input.cpm.project_start_date) {
     const start = parseDateOnlyUtc(input.cpm.project_start_date);
     const todayDate = parseDateOnlyUtc(todayLabel);
+    const plannedEndDate = projectPlannedEndDate(input);
 
-    if (todayDate < start) {
+    if (plannedEndDate && todayDate > plannedEndDate && actualPercent < 100) {
+      status = "遅延";
+      overview = `${todayLabel} 時点では予定完了日 ${formatDateOnlyUtc(plannedEndDate)} を超過しており、実績進捗は ${actualPercent.toFixed(1)}% です。`;
+      cause = `予定完了日を過ぎた時点で未完了タスクが残っており、残作業 ${input.totalTaskCount - input.stateCounts.done} 件が残っています。`;
+      actions = [
+        "未完了タスクを完了優先で処理し、残作業を即時に見える化してください。",
+        input.nextTaskId
+          ? `次の着手候補 ${input.nextTaskId} を最優先で処理できるか確認してください。`
+          : "依存完了と完了登録を直ちに確認し、残タスクを順次消化してください。",
+      ];
+    } else if (todayDate < start) {
       if (input.stateCounts.doing > 0 || input.stateCounts.done > 0) {
         status = "前倒しで進行中";
         overview = `${todayLabel} 時点では計画開始日 ${input.cpm.project_start_date} 前ですが、先行着手が進んでいます。`;

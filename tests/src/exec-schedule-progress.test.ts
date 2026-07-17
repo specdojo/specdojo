@@ -104,6 +104,41 @@ describe("buildProgressSummaryLines", () => {
     expect(lines.join("\n")).toContain("計画消化ペース");
   });
 
+  it("予定完了日を超えて未完了なら「遅延」と判定する", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(Date.UTC(2026, 5, 8)));
+
+    const lines = buildProgressSummaryLines(
+      makeInput({
+        cpm: {
+          schedule_path: "docs/schedule",
+          project_start_date: "2026-06-01",
+          project_duration_days: 1,
+          nodes: {
+            "T-001": {
+              id: "T-001",
+              kind: "task",
+              duration_days: 1,
+              es: 0,
+              ef: 1,
+              ls: 0,
+              lf: 1,
+              slack: 0,
+              depends_on: [],
+              schedule_file: "schedule.yaml",
+            },
+          },
+          critical_path: ["T-001"],
+        },
+        totalTaskCount: 1,
+        stateCounts: { todo: 1, doing: 0, blocked: 0, done: 0, cancelled: 0 },
+      }),
+    );
+
+    expect(judgementLine(lines)).toBe("- 判定: 遅延");
+    expect(lines.join("\n")).toContain("予定完了日");
+  });
+
   it("計画に対して大きな遅れがなければ「順調」と判定する", () => {
     // 開始日当日は計画進捗0%なので、実績0%でも順調
     vi.useFakeTimers();
