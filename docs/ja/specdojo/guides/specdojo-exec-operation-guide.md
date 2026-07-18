@@ -20,7 +20,7 @@ SpecDojo Exec Operation Guide
 | plan生成         | schedule または catalog から作業指示を作る       | `exec plan` / `exec run`                |
 | 状態追跡         | claim / complete / block などの event を記録する | `exec claim` / `exec complete`          |
 | 隔離             | task worktree で成果物変更を隔離する             | `exec run --worktree` / `exec worktree` |
-| スケジューリング | Ready と CPM から次タスクを選ぶ                  | `exec scheduler` / `exec run --auto`    |
+| スケジューリング | Ready と CPM から次タスクを選んで claim する     | `exec scheduler` / `exec run --auto`    |
 
 既定の `exec run --task` はカレントリポジトリで単発実行し、状態イベントや worktree を作りません。
 
@@ -135,7 +135,7 @@ specdojo exec release \
 
 ## 6. 手動実行フロー
 
-`exec run --auto` の処理を手で分ける場合は、次の順に実行します。
+`exec run --auto` の処理を手で分ける場合は、次の順に実行します。タスクを確認せず次のタスクをそのまま claim してよい場合は、手順 2〜4 の代わりに `--dry-run` なしの `exec scheduler` を 1 回実行します（自動選択と claim をまとめて行う）。
 
 ```bash
 # 1. Ready と CPM を最新化する

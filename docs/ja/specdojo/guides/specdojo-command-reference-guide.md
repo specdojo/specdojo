@@ -101,7 +101,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `exec where`     | execution 関連パスを表示する                                  | `specdojo exec where --project prj-0001`                                                                |
 | `exec validate`  | schedule と event を検証する                                  | `specdojo exec validate --project prj-0001`                                                             |
 | `exec build`     | state、Ready、CPM、timeline と human タスクの plan を生成する | `specdojo exec build --project prj-0001`                                                                |
-| `exec scheduler` | 次に claim するタスクを選ぶ                                   | `specdojo exec scheduler --project prj-0001 --by agent-1 --dry-run`                                     |
+| `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ） | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
 | `exec claim`     | タスクを `doing` にする                                       | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
 | `exec complete`  | タスクを `done` にする                                        | `specdojo exec complete --project prj-0001 --task <task-id> --by agent-1`                               |
 | `exec block`     | タスクを `blocked` にする                                     | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
@@ -117,6 +117,8 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                    | `specdojo exec scaffold --provider claude`                                                              |
 | `exec plan`      | plan だけを生成する                                           | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
 | `exec archive`   | 完了済み plan を `done/` へ移動する                           | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+
+`exec scheduler` は、タスク ID を指定せずに次のタスクを claim する場合に使います。プロジェクトレベルのロック、`owner` と actor のロール整合チェック、多重 claim 防止（同じ actor の `doing` が残っていると拒否）を伴い、選択戦略は `--strategy`（`critical-first` 既定 / `fifo`）で切り替えます。選択結果の確認だけを行う場合は `--dry-run` を付けます。
 
 状態イベントの `--msg` の扱いはイベント種別ごとに異なります。
 
