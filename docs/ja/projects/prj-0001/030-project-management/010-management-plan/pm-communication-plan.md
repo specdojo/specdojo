@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pm-communication-plan
   type: project
-  status: draft
+  status: ready
   rulebook: pm-communication-plan-rulebook
   based_on:
     - prj-0001:pm-plan
