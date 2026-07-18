@@ -12,6 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-communication-plan
+    - pm-communication-plan-rulebook
+    - pm-communication-plan-recipe
+    - pm-communication-plan-sample
+    - pm-communication-plan-template
 ---
 
 # Finalize Result
@@ -20,7 +24,9 @@ specdojo:
 
 done_criteria の各項目を確認し、満たしていればチェックを付ける。満たせない項目がある場合は「確定判断」を差し戻しにし、理由を「備考」に記録する。
 
-_TODO_
+- [ ] 報告・連絡・会議体の計画を承認できる粒度で記述されていること（PO / vp-po-decision-readiness）
+- [ ] 進捗・課題・リスクの報告経路が定義されていること（PM / vp-pm-control-reporting）
+- [ ] 関係者ごとの情報要求・関与方針が業務観点で確認できること（BA / vp-ba-stakeholder-clarity）
 
 ## 2. 参考資料の確認
 
@@ -36,7 +42,11 @@ _TODO_
 
 最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。既に `ready` の参考資料は、劣化がないことを確認してチェックを付ける。
 
-_TODO_
+- [ ] 成果物: `docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-communication-plan.md`
+- [ ] rulebook: `docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md`
+- [ ] recipe: `docs/ja/specdojo/recipes/pm-communication-plan-recipe.md`
+- [ ] sample: `docs/ja/specdojo/samples/pm-communication-plan-sample.md`
+- [ ] template: `docs/ja/specdojo/templates/pm-communication-plan-template.md`
 
 ## 4. 確定判断
 

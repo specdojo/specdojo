@@ -1025,7 +1025,7 @@ export function registerExecCommands(program: Command): void {
     let lockDir = "";
 
     try {
-      const { schedulePath, executionPath } = resolveProjectContext(opts);
+      const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
       const actor = requireNonEmpty("by", opts.by);
       const roster = loadRosterForOpts(opts);
       assertValidActor(actor, roster);
@@ -1163,6 +1163,7 @@ export function registerExecCommands(program: Command): void {
       await scaffoldClaimResult({
         schedulePath,
         executionPath,
+        catalogPath,
         state,
         taskId: next,
         projectId: resolveProjectId(opts),
