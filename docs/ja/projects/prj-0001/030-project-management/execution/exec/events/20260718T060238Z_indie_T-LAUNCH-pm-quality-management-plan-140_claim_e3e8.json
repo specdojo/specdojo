@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-07-18T06:02:38Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-quality-management-plan-140",
+  "by": "indie",
+  "msg": "auto-claim",
+  "meta": {
+    "claim_owner": "PM",
+    "planned_owner": "PM",
+    "scheduler_strategy": "critical-first",
+    "claimed_via": "dojo-exec-scheduler"
+  }
+}

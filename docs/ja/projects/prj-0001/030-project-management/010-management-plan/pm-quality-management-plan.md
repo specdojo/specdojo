@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pm-quality-management-plan
   type: project
-  status: draft
+  status: ready
   rulebook: pm-quality-management-plan-rulebook
   based_on:
     - prj-0001:pm-plan
