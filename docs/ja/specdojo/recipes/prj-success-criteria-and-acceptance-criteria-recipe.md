@@ -11,7 +11,7 @@ specdojo:
 
 Success Criteria and Acceptance Criteria Writing Recipe
 
-本書は、業務価値を起点として、プロジェクトの成功基準と受入条件を判定可能な形にする作り方です。構造・必須項目・禁止事項は [[prj-success-criteria-and-acceptance-criteria-rulebook]] を正とし、本書では問い、深掘り、レビュー観点を扱います。
+本書は、業務価値を起点として、プロジェクトの成功基準と受入条件を判定可能な形にする作り方です。本書では問い、深掘り、レビュー観点を扱います。
 
 ## 1. このレシピの使い方
 
@@ -19,13 +19,6 @@ Success Criteria and Acceptance Criteria Writing Recipe
 - 次に、利用者にとって実現したい状態を業務価値として短く定義します。
 - 業務価値ごとに成功基準を置き、その成功を確認する最小の受入条件と証跡を定義します。
 - 最後に、確認者、承認者、否決時の再判定方法を明確にします。
-
-| 種別     | 役割                       | 使いどころ                         |
-| -------- | -------------------------- | ---------------------------------- |
-| rulebook | 成果物として成立する規約   | 構造、必須項目、禁止事項を確認する |
-| recipe   | 良い内容を書くための作り方 | 問い、深掘り、レビューに使う       |
-| sample   | 完成例                     | 粒度、文体、表の書き方を確認する   |
-| template | 記入用の骨組み             | 各欄を漏れなく配置する             |
 
 ## 2. 作成前に集める情報
 
@@ -158,8 +151,7 @@ Success Criteria and Acceptance Criteria Writing Recipe
 
 ## 8. 仕上げチェック
 
-- [[prj-success-criteria-and-acceptance-criteria-rulebook]] の本文構成に沿っている。
-- [[prj-success-criteria-and-acceptance-criteria-sample]] と同程度の粒度である。
+- 「全体の作成手順」で示した章立てと必須表がそろっている。
 - 業務価値、成功基準、受入条件、証跡、確認者、承認者を対応付けた。
 - 閾値には測定対象、単位、母数または比較対象を示した。
 - 対象外、未決事項、否決時の再判定方法を明示した。

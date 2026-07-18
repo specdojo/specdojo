@@ -11,20 +11,13 @@ specdojo:
 
 Project Member Roster Writing Recipe
 
-本ドキュメントは、メンバー定義を「PO が実行主体と担当 Role code の対応を承認できる内容」に仕上げるための作り方です。構造と必須項目は [[pm-members-rulebook|メンバー定義 作成ルール]] を正とし、本書では問い、深掘り手順、レビュー観点を扱います。
+本ドキュメントは、メンバー定義を「PO が実行主体と担当 Role code の対応を承認できる内容」に仕上げるための作り方です。本書では問い、深掘り手順、レビュー観点を扱います。
 
 ## 1. このレシピの使い方
 
 - 最初に、組織定義とロール定義から、採用する Role code、最終判断の集約先、公開方針を確認する。
 - 次に、実行ログに残す必要がある人間と agent を洗い出し、各 member の `roles` に対応 Role code を割り当てる。
 - 最後に、member nickname、Role code、Schedule の `owner` を混同せず、公開してよい情報だけを残す。
-
-| 種別     | 役割                           | 使いどころ                                   |
-| -------- | ------------------------------ | -------------------------------------------- |
-| rulebook | 成果物として成立するための規約 | 構造、必須項目、禁止事項を確認する           |
-| recipe   | 良い内容を書くための作り方     | 問い、深掘り、レビューに使う                 |
-| sample   | 完成例                         | 粒度、文体、YAML の書き方を確認する          |
-| template | 記入の骨組み                   | 新規作成時にメタ項目と Member 配列を用意する |
 
 ## 2. 作成前に集める情報
 
@@ -40,7 +33,7 @@ Project Member Roster Writing Recipe
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。template から新規作成する場合は、template の `metadata_template` の内容をトップレベルへ平坦化し、`_PROJECT_ID_` を実際の `project_id` に置換する（template 自身のメタ項目はコピーしない）。
+1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。
 2. `based_on` に、組織定義、ロール定義など実際に確認した根拠 ID を記載する。
 3. `members` に、人間の最終判断主体を少なくとも 1 件記載する。
 4. 実行に使う agent を列挙し、`provider`、`mode`、`proficiency`、`priority`、`capabilities` を確認する。起動コマンドは `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` で解決されるため、member には書かない。
@@ -145,8 +138,8 @@ Project Member Roster Writing Recipe
 
 ## 8. 仕上げチェック
 
-- [[pm-members-rulebook|メンバー定義 作成ルール]] の本文構成と禁止事項に従っている。
-- [[pm-members-sample|メンバー定義 sample]] と同程度の粒度で、人間と agent の違いが分かる。
+- 「全体の作成手順」で示した構成と必須項目がそろっている。
+- 人間と agent の違いが分かる粒度で書けている。
 - `members[].roles` に未定義 Role code、member nickname、人名、agent 名が混ざっていない。
 - agent の `provider`、`mode`、`proficiency` が揃っており、command template から起動コマンドを解決できる。
 - `command` を上書きしている場合、秘密情報や個人環境に閉じた値が含まれていない。

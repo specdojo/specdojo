@@ -11,7 +11,7 @@ specdojo:
 
 Project Role Definition Writing Recipe
 
-本ドキュメントは、ロール定義を「PO が全 Role code とプロジェクト固有メモを承認できる内容」に仕上げるための作り方です。構造と必須項目は [[pm-roles-rulebook|ロール定義 作成ルール]] を正とし、本書では問い、深掘り手順、レビュー観点を扱います。
+本ドキュメントは、ロール定義を「PO が全 Role code とプロジェクト固有メモを承認できる内容」に仕上げるための作り方です。本書では問い、深掘り手順、レビュー観点を扱います。
 
 ## 1. このレシピの使い方
 
@@ -19,13 +19,6 @@ Project Role Definition Writing Recipe
 - 次に、`pm-roles.yaml` に列挙する Role code を、Schedule の `owner` や RACI の列として使える粒度で整理する。
 - 最後に、member nickname、agent 名、個人名、兼務割り当てを混ぜず、プロジェクト固有メモだけを残す。
 - schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。
-
-| 種別     | 役割                           | 使いどころ                                 |
-| -------- | ------------------------------ | ------------------------------------------ |
-| rulebook | 成果物として成立するための規約 | 構造、必須項目、禁止事項を確認する         |
-| recipe   | 良い内容を書くための作り方     | 問い、深掘り、レビューに使う               |
-| sample   | 完成例                         | 粒度、文体、YAML の書き方を確認する        |
-| template | 記入の骨組み                   | 新規作成時にメタ項目と Role 配列を用意する |
 
 ## 2. 作成前に集める情報
 
@@ -42,7 +35,7 @@ Project Role Definition Writing Recipe
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`version`、`project_id` を設定する。template から新規作成する場合は、template の `metadata_template` の内容をトップレベルへ平坦化し、`_PROJECT_ID_` を実際の `project_id` に置換する（template 自身のメタ項目はコピーしない）。
+1. `id`、`type`、`status`、`version`、`project_id` を設定する。
 2. `based_on` に、ロール採用の根拠となる組織定義などの ID を記載する。
 3. `roles` に、プロジェクトで使用する Role code を標準順で列挙する。
 4. 各 Role に `code` と `name` を記載し、必要な場合だけ `project_note` を 1 行で添える。
@@ -132,7 +125,7 @@ Project Role Definition Writing Recipe
 
 ## 8. 仕上げチェック
 
-- [[pm-roles-rulebook|ロール定義 作成ルール]] の本文構成と禁止事項に従っている。
+- 「全体の作成手順」で示した構成と必須項目がそろっている。
 - `roles[].code` に必要な Role code が過不足・重複なく入っている。
 - `roles[].project_note` はプロジェクト固有メモに限定され、具体的な member 割り当てを含まない。
 - `roles[].project_note` の未決事項は `_UNDECIDED_:` または `_TODO_:` で明示され、放置されていない。
