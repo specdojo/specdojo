@@ -47,7 +47,7 @@ specdojo:
 | `pm-raci`                    | C   | A/R | C   | C   | I   | C   | I   | I   |
 | `pm-plan`                    | C   | A/R | C   | C   | I   | C   | I   | C   |
 | `pm-risk-register`           | C   | A/R | C   | C   | C   | C   | C   | C   |
-| `pm-quality-management-plan` | C   | C   | C   | C   | I   | A/R | C   | I   |
+| `pm-quality-management-plan` | A   | C   | C   | C   | I   | R   | C   | I   |
 | Schedule                     | C   | A/R | C   | C   | C   | C   | C   | C   |
 | `dct-index` / 成果物カタログ | C   | C   | C   | A/R | I   | C   | I   | I   |
 

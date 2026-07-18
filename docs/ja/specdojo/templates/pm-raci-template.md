@@ -2,7 +2,7 @@
 specdojo:
   id: pm-raci-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:pm-raci
