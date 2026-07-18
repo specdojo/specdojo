@@ -159,12 +159,13 @@ specdojo exec run --project <project-id> --task <task-id>
 # 6. 完了を記録する（--msg 省略時は固定メッセージ "complete task" が記録される）
 specdojo exec complete \
   --project <project-id> \
-  --task <task-id> \
   --by <actor>
 
 # 7. 次の Ready を更新する
 specdojo exec build --project <project-id>
 ```
+
+`exec complete` は `--task` を省略できます。`--by` で指定した actor の `doing` タスクが1件だけの場合は、そのタスクを完了対象として解決します。対象が0件の場合はエラー、複数件の場合は曖昧性を避けるため `--task <task-id>` の指定を要求します。
 
 worktree 隔離を人が段階確認しながら実行する場合は [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md) を参照します。
 

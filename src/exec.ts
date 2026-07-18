@@ -500,7 +500,7 @@ async function runLockedEventCommand(
     const actor = requireNonEmpty("by", opts.by);
     const roster = loadRosterForOpts(opts);
     assertValidActor(actor, roster);
-    const taskId = requireNonEmpty("task", opts.task);
+    let taskId = typeof opts.task === "string" ? opts.task.trim() : "";
     const allowMultipleDoing = !!opts.allowMultipleDoing;
     const lockTimeoutMs = Number(opts.lockTimeoutMs);
     const lockStaleMs = Number(opts.lockStaleMs);
@@ -510,6 +510,22 @@ async function runLockedEventCommand(
     const state = loadValidatedExecState(schedulePath);
     if (!state) return;
 
+    if (!taskId && action.type === "complete") {
+      const doingTasks = findDoingTasksForActor(state.snapshot, actor);
+      if (doingTasks.length === 0) {
+        throw new Error(`Actor ${actor} has no doing task to complete.`);
+      }
+      if (doingTasks.length > 1) {
+        throw new Error(
+          `Actor ${actor} has multiple doing tasks: ${doingTasks.join(", ")}. Specify --task.`,
+        );
+      }
+      taskId = doingTasks[0];
+    }
+    if (!taskId) taskId = requireNonEmpty("task", opts.task);
+
+    const resolvedOpts = { ...opts, task: taskId };
+
     if (
       action.requireSingleDoing &&
       !ensureActorCanClaimNext(state.snapshot, actor, allowMultipleDoing)
@@ -517,17 +533,17 @@ async function runLockedEventCommand(
       return;
     }
 
-    const check = action.check(state, taskId, actor, opts);
+    const check = action.check(state, taskId, actor, resolvedOpts);
     if (!check.ok) {
       process.stdout.write(`Cannot ${action.type} ${taskId}: ${check.reason}\n`);
       exitWithCode(false);
       return;
     }
 
-    const event = buildEvent(action.type, opts);
+    const event = buildEvent(action.type, resolvedOpts);
     if (action.type === "claim") {
       const plannedOwner = state.schedule.nodes.get(taskId)?.owner;
-      const claimOwner = resolveClaimOwner(opts, actor, roster, plannedOwner);
+      const claimOwner = resolveClaimOwner(resolvedOpts, actor, roster, plannedOwner);
       const cpm = computeCpm(state.schedule, schedulePath);
       writeGeneratedCore(schedulePath, state.events, state.schedule, cpm);
       writeScheduleHashAndDiff(schedulePath, state.schedule);
@@ -537,7 +553,7 @@ async function runLockedEventCommand(
         claim_owner: claimOwner,
       };
       if (plannedOwner) event.meta.planned_owner = plannedOwner;
-      if (plannedOwner && claimOwner !== plannedOwner && opts.allowOwnerMismatch) {
+      if (plannedOwner && claimOwner !== plannedOwner && resolvedOpts.allowOwnerMismatch) {
         event.meta.owner_override = true;
       }
     }
@@ -770,7 +786,7 @@ export function registerExecCommands(program: Command): void {
   for (const t of types) {
     const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
     addCommonAddOptions(cmd, {
-      requireTask: t !== "release",
+      requireTask: t !== "release" && t !== "complete",
       msgDefault: DEFAULT_EVENT_MESSAGES[t],
     });
 

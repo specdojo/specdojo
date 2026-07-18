@@ -26,6 +26,7 @@ const EVENTS_REL = join("execution", "exec", "events");
 
 // local_id `alpha` + phase_suffix `010` on track `test` becomes `T-TEST-alpha-010`.
 const TASK_ALPHA = "T-TEST-alpha-010";
+const TASK_BETA = "T-TEST-beta-020";
 
 function setupRepository(): string {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-msg-default-"));
@@ -61,6 +62,12 @@ function setupRepository(): string {
       "  - local_id: alpha",
       '    phase_suffix: "010"',
       "    name: Task alpha",
+      "    duration_days: 1",
+      "    depends_on: []",
+      "    owner: DEV",
+      "  - local_id: beta",
+      '    phase_suffix: "020"',
+      "    name: Task beta",
       "    duration_days: 1",
       "    depends_on: []",
       "    owner: DEV",
@@ -163,6 +170,63 @@ describe("exec event --msg defaults", () => {
         msg: "complete task",
       });
       expect(process.exitCode).toBe(0);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("complete without --task resolves the actor's only doing task", async () => {
+    const repo = setupRepository();
+    const stdout = captureStdout();
+    try {
+      process.chdir(repo);
+      writeClaimEvent(repo, TASK_ALPHA, "edit-agent");
+
+      await runExec(["complete", "--project", "test", "--by", "edit-agent", "--dry-run"]);
+
+      expect(parseDryRunEvent(stdout)).toMatchObject({
+        type: "complete",
+        task_id: TASK_ALPHA,
+        by: "edit-agent",
+      });
+      expect(process.exitCode).toBe(0);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("complete without --task fails when the actor has no doing task", async () => {
+    const repo = setupRepository();
+    const stdout = captureStdout();
+    try {
+      process.chdir(repo);
+
+      await runExec(["complete", "--project", "test", "--by", "edit-agent", "--dry-run"]);
+
+      expect(stdout.join("")).toContain("Actor edit-agent has no doing task to complete.");
+      expect(process.exitCode).toBe(1);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("complete without --task fails when the actor has multiple doing tasks", async () => {
+    const repo = setupRepository();
+    const stdout = captureStdout();
+    try {
+      process.chdir(repo);
+      writeClaimEvent(repo, TASK_ALPHA, "edit-agent");
+      writeClaimEvent(repo, TASK_BETA, "edit-agent");
+
+      await runExec(["complete", "--project", "test", "--by", "edit-agent", "--dry-run"]);
+
+      expect(stdout.join("")).toContain(
+        `Actor edit-agent has multiple doing tasks: ${TASK_ALPHA}, ${TASK_BETA}. Specify --task.`,
+      );
+      expect(process.exitCode).toBe(1);
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
