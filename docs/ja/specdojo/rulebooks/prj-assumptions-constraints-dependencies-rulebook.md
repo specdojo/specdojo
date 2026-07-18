@@ -168,15 +168,3 @@ flowchart LR
 | Agent に最終判断、承認、公開可否を委ねる   | 人間の判断責任を代替してしまう。         |
 | API、DB、契約書全文などの詳細を記載する    | 本書の責務を越え、詳細成果物と重複する。 |
 | 個人情報、非公開情報、機密情報を記載する   | 公開・再利用の前提を損なう。             |
-
-## 8. サンプル
-
-- 参照先: [[prj-assumptions-constraints-dependencies-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[prj-assumptions-constraints-dependencies-recipe]]
-
-## 10. テンプレート
-
-- 参照: [[prj-assumptions-constraints-dependencies-template]]

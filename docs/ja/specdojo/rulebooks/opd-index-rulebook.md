@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: opd-index-sample
 ---
 
 # 運用方針・設計 全体構成 作成ルール
@@ -72,7 +73,3 @@ Operations Policy and Design Index Documentation Rules
 - SLO/SLA/KPI を定量化せず曖昧語のみで記載しない。
 - 責任分界やエスカレーション条件を未定義のまま確定しない。
 - 変更承認条件とロールバック条件を省略しない。
-
-## 8. サンプル
-
-- 参照先: [[opd-index-sample]]

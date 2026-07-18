@@ -176,15 +176,3 @@ flowchart LR
 | 根拠資料リンクなし                                             | 説明責任を果たせないため           |
 | Agent に採択案の最終判断を委ねる                               | 人間の判断責任を代替してしまうため |
 | 公開リポジトリに個人名・個人連絡先・非公開の組織情報を記載する | 公開範囲とプライバシーに反するため |
-
-## 8. サンプル
-
-- 参照先: [[prj-comparison-of-alternatives-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[prj-comparison-of-alternatives-recipe]]
-
-## 10. テンプレート
-
-- 参照: [[prj-comparison-of-alternatives-template]]

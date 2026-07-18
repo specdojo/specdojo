@@ -3,6 +3,7 @@ specdojo:
   id: ntp-rules
   type: rulebook
   status: draft
+  sample: ntp-sample
 ---
 
 # 移行テスト計画（リハーサル計画） 作成ルール
@@ -57,7 +58,3 @@ Migration Test Plan Documentation Rules
 - 実装依存の詳細を記載しない。
 - 判定不能な曖昧語を使わない。
 - 参照元不明の値を断定しない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/ntp-sample.md`

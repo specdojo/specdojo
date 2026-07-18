@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: bes-index-sample
 ---
 
 # 業務イベント仕様 全体構成 作成ルール
@@ -97,7 +98,3 @@ Business Event Specification Index (BES Index) Documentation Rules
 - 実装クラス名・関数名・API実装詳細を記載しない。
 - UI操作手順（クリック列挙など）を一覧に混在させない。
 - 曖昧語（その他、適宜など）を多用しない。
-
-## 8. サンプル
-
-- 参照先: [[bes-index-sample]]

@@ -3,6 +3,7 @@ specdojo:
   id: pm-issue-log-rules
   type: rulebook
   status: draft
+  sample: pm-issue-log-sample
 ---
 
 # 課題ログ 作成ルール
@@ -89,7 +90,3 @@ Issue Log Documentation Rules
 | 優先度・期限を未記載にする   | 対応順序が判断できないため |
 | 状態更新ルールを未定義にする | 管理の一貫性が崩れるため   |
 | 根拠のない完了判定を記載する | 品質低下を招くため         |
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/pm-issue-log-sample.md`

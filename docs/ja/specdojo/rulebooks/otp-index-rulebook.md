@@ -3,6 +3,7 @@ specdojo:
   id: otp-index-rules
   type: rulebook
   status: draft
+  sample: otp-index-sample
 ---
 
 # 運用切替計画（ハイパーケア含む） 作成ルール
@@ -111,7 +112,3 @@ Operations Transition Plan Documentation Rules
 - 監視/窓口/SLA/クローズ条件を未定義にしない。
 - `otp-<term>` への導線を欠落させない。
 - 実装依存の長大な手順やコードを本文に記載しない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/otp-index-sample.md`

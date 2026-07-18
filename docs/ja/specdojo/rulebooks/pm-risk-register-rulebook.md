@@ -3,6 +3,7 @@ specdojo:
   id: pm-risk-register-rules
   type: rulebook
   status: draft
+  sample: pm-risk-register-sample
 ---
 
 # リスク登録簿 作成ルール
@@ -89,7 +90,3 @@ Risk Register Documentation Rules
 | 評価基準なしで優先度を決める   | 判断が恣意的になるため |
 | 対応責任者を未記載にする       | 対応遅延が発生するため |
 | モニタリング周期を未定義にする | 兆候を見落とすため     |
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/pm-risk-register-sample.md`

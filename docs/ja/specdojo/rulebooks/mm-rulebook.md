@@ -3,6 +3,7 @@ specdojo:
   id: mm-rulebook
   type: rulebook
   status: draft
+  sample: mm-sample
 ---
 
 # 議事録 作成ルール
@@ -55,7 +56,3 @@ Meeting Minutes Documentation Rulebook
 - 結論不明の議論のみを羅列しない。
 - 担当者未記載のアクションを残さない。
 - 実装詳細を議事録本文へ過度に記載しない。
-
-## 8. サンプル
-
-- 参照先: [[mm-sample]]

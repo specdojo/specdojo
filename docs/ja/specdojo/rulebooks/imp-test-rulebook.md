@@ -3,6 +3,7 @@ specdojo:
   id: imp-test-rulebook
   type: rulebook
   status: draft
+  sample: imp-test-sample
 ---
 
 # 影響調査（テスト）作成ルール
@@ -110,7 +111,3 @@ Impact Analysis (Test) Rulebook
 - 影響度の尺度を定義せずに高・中・低を混在させない。
 - 未解決事項に期限や担当を設定せずに放置しない。
 - 他ドキュメントの本文を重複転記し、参照元との不整合を生む記述をしない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/imp-test-sample.md`

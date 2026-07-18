@@ -3,6 +3,7 @@ specdojo:
   id: dmd-index-rules
   type: rulebook
   status: draft
+  sample: dmd-index-sample
 ---
 
 # データ移行設計 作成ルール
@@ -92,7 +93,3 @@ Data Migration Design Documentation Rules
 - 対象一覧に対象/非対象や対応DMDの導線を欠落させない。
 - run_id 規約や検証共通方針を未定義のままにしない。
 - 実装依存の長大なSQLやコードを本文に記載しない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/dmd-index-sample.md`

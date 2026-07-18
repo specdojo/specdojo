@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: yaml
+  sample: dct-sample
 ---
 
 # 成果物カタログ（ドメイン別）作成ルール
@@ -193,8 +194,3 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `depends_on` に `local_id` 以外（ファイルパス・URL）を混在させる | 依存解決が機械的に行えなくなるため               |
 | `work` 成果物で `path` または `done_criteria` を省略する         | スケジュール展開とレビュー計画生成に必須のため   |
 | 本ルールや成果物ファイルでスキーマ定義を再掲・上書きする         | `dct.schema.yaml` を SSOT とするため             |
-
-## 8. サンプル
-
-- 参照先: [[dct-sample]]
-- 構造例は成果物カタログのテンプレート（`../templates/dct-<domain>-template.yaml`）も参照する。

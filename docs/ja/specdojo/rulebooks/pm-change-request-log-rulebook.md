@@ -3,6 +3,7 @@ specdojo:
   id: pm-change-request-log-rules
   type: rulebook
   status: draft
+  sample: pm-change-request-log-sample
 ---
 
 # 変更要求ログ 作成ルール
@@ -90,7 +91,3 @@ Change Request Log Documentation Rules
 | 影響評価なしで承認可否を記載する       | 判断根拠が欠落するため   |
 | 決定者・決定日を省略する               | 監査性が失われるため     |
 | 実装詳細やコード差分を本文に貼り付ける | 管理対象が肥大化するため |
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/pm-change-request-log-sample.md`

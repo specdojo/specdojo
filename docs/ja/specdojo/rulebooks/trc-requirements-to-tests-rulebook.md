@@ -3,6 +3,7 @@ specdojo:
   id: trc-requirements-to-tests-rulebook
   type: rulebook
   status: draft
+  sample: trc-requirements-to-tests-sample
 ---
 
 # トレーサビリティ（要求→テスト）作成ルール
@@ -106,7 +107,3 @@ Requirements Traceability (Requirements to Tests) Rulebook
 - 充足状況に曖昧語（例: ほぼ対応、だいたい完了）を使用しない。
 - ギャップを「なし」としながら対応テストIDが未記載の状態を許容しない。
 - 根拠リンクや判断履歴なしで充足状況を更新しない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/trc-requirements-to-tests-sample.md`

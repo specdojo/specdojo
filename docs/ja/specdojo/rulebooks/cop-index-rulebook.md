@@ -3,6 +3,7 @@ specdojo:
   id: cop-index-rules
   type: rulebook
   status: draft
+  sample: cop-index-sample
 ---
 
 # カットオーバー計画（本番切替手順） 作成ルール
@@ -166,7 +167,3 @@ Frontmatter は共通スキーマに従う。
 | 周知（ユーザ通知、停止告知）を未記載にする | 利用者混乱と事故につながるため     |
 | `cop-index` と分冊の方針に矛盾を作る       | SSOTが崩れ、当日参照が割れるため   |
 | 関連ドキュメントを省略する                 | 導線が失われ、参照先が分散するため |
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/cop-index-sample.md`

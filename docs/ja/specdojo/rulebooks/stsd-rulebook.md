@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: stsd-rulebook
+  type: rulebook
+  status: draft
+  sample: stsd-sample
+---
+
 # ステータス一覧（Status List）作成ルール
 
 業務上のエンティティが取り得る状態（ステータス）を一覧で定義します。
@@ -114,7 +122,3 @@ supersedes: []
 - 状態遷移条件が不明なまま確定しない。
 - 実装依存のコード/SQLを記載しない。
 - 用語集と不整合な名称を採用しない。
-
-## 7. サンプル
-
-- 参照先: [[stsd-sample]]

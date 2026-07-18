@@ -189,15 +189,3 @@ Quality Management Plan Documentation Rulebook
 | Agent に最終承認、公開可否、重大不適合の採否を委ねる             | 人間の判断責任を代替してしまうため               |
 | 個人名、個人連絡先、非公開組織情報、認証情報、秘密情報を記載する | 公開範囲と安全性に反するため                     |
 | 実装詳細、DB 定義、API 詳細を本文に含める                        | 品質管理計画の責務から逸脱するため               |
-
-## 8. サンプル
-
-- 参照先: [[pm-quality-management-plan-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[pm-quality-management-plan-recipe|品質管理計画 作成レシピ]]
-
-## 10. テンプレート
-
-- 参照: [[pm-quality-management-plan-template|品質管理計画 テンプレート]]

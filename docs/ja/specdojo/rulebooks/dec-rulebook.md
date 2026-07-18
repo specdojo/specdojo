@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: dec-sample
 ---
 
 # 決定記録 作成ルール
@@ -57,7 +58,3 @@ Decision Log Documentation Rulebook
 - 根拠なしで結論のみを記載しない。
 - 実装断片の貼り付けで説明を代替しない。
 - 影響範囲未記載のまま確定しない。
-
-## 8. サンプル
-
-- 参照先: [[dec-sample]]

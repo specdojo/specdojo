@@ -3,6 +3,7 @@ specdojo:
   id: tsd-rulebook
   type: rulebook
   status: draft
+  sample: tsd-sample
 ---
 
 # 特定領域 技術スタック詳細定義（TSD）作成ルール
@@ -99,7 +100,3 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 | `tsd-index` と同じ全区分一覧表を本文に再掲する | 二重管理になるため                       |
 | 複数の無関係な技術領域を1ファイルに混在させる  | 参照・保守が困難になるため               |
 | 採用が確定していない技術の手順を記載する       | 前提条件として誤認されるため             |
-
-## 8. サンプル
-
-- 参照先: [[tsd-sample]]

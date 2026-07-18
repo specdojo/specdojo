@@ -46,7 +46,7 @@ description: "`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を
 6. sample 作成後にリンク解決を確認する
    - sample 内で記載したリンク先ファイルの存在を確認する
    - 存在しないリンクはデッドリンク回避のため Markdown リンクにせず、バッククォートで囲んだファイル名表記へ置換する
-7. 対応 rulebook の「サンプル」章に `*-sample.<ext>` へのリンクを記載する
+7. 対応 rulebook の Frontmatter に `sample: <prefix>-sample` が宣言されていることを確認し、未宣言なら追記する（rulebook 本文にリンク章は置かない）
 8. 対象ごとの結果を集約し、`npm run -s lint:md` で検証する
 
 ## 実行ルール

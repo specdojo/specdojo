@@ -3,6 +3,7 @@ specdojo:
   id: sf-index-rules
   type: rulebook
   status: draft
+  sample: sf-index-sample
 ---
 
 # [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール
@@ -57,7 +58,3 @@ System Functions Index Documentation Rules
 - 実装依存の詳細を記載しない。
 - 判定不能な曖昧語を使わない。
 - 参照元不明の値を断定しない。
-
-## 8. サンプル（最小でも可）
-
-- 参照: `../samples/sf-index-sample.md`

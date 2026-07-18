@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: sf-rulebook
+  type: rulebook
+  status: draft
+  sample: sf-sample
+---
+
 # システム化機能一覧（System Function List, SFL）作成ルール
 
 業務をシステムで実現するための機能（ユースケースや画面・バッチ単位など）を一覧化し、各機能の目的・入出力・関連プロセスを明確にします。
@@ -78,7 +86,3 @@ supersedes: []
 - 実装クラス名、SQL、内部設計の詳細を記載しない。
 - 関連仕様IDを空欄で確定しない。
 - 用語不整合のまま登録しない。
-
-## 7. サンプル
-
-- 参照先: [[sf-sample]]

@@ -3,6 +3,7 @@ specdojo:
   id: tsd-index-rulebook
   type: rulebook
   status: draft
+  sample: tsd-index-sample
 ---
 
 # 技術スタック定義（TSD Index）作成ルール
@@ -96,7 +97,3 @@ Technology Stack Definition Index (TSD Index) Documentation Rules
 | `tsd-<term>` の詳細内容（設定手順・コードブロック）を本文に展開する | インデックスの責務を逸脱するため       |
 | 採用が確定していない技術を記載する                                  | 前提条件として誤認されるため           |
 | `tsd-index` を複数作成する                                          | 全体インベントリの SSOT が分散するため |
-
-## 8. サンプル
-
-- 参照先: [[tsd-index-sample]]

@@ -3,6 +3,7 @@ specdojo:
   id: pr-rulebook
   type: rulebook
   status: draft
+  sample: pr-sample
 ---
 
 # 進捗報告 作成ルール
@@ -56,7 +57,3 @@ Progress Report Documentation Rulebook
 - 進捗率のみで根拠なく報告しない。
 - リスクを抽象語のみで記載しない。
 - 予定に期限や責任者を欠いたまま確定しない。
-
-## 8. サンプル
-
-- 参照先: [[pr-sample]]

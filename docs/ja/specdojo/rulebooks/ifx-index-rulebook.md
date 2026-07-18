@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: ifx-index-sample
 ---
 
 # 外部システムI/F一覧 作成ルール
@@ -53,7 +54,3 @@ External System Interface Index Documentation Rulebook
 - 実装コード、SQL、内部設計詳細を記載しない。
 - 連携先未特定のまま確定しない。
 - タイミングを曖昧語のみで記載しない。
-
-## 8. サンプル
-
-- 参照先: [[ifx-index-sample]]

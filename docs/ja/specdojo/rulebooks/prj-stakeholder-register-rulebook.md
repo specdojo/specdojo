@@ -163,15 +163,3 @@ Stakeholder Register Documentation Rulebook
 | 個人連絡先、非公開情報、機密性の高い利害関係を記載する                | 公開時の情報管理リスクを高めるため                             |
 | 詳細な会議運営や配信計画を重複管理する                                | コミュニケーション計画との二重管理になるため                   |
 | AI Agent やツールなどの実行主体を単独のステークホルダーとして記載する | 人または組織との関係として整理できず、責任境界が曖昧になるため |
-
-## 8. サンプル
-
-- 参照先: [[prj-stakeholder-register-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[prj-stakeholder-register-recipe]]
-
-## 10. テンプレート
-
-- 参照: [[prj-stakeholder-register-template]]

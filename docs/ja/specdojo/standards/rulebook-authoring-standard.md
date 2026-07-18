@@ -75,16 +75,13 @@ specdojo:
 | 5      | 本文構成（標準テンプレ） | ○    | 対象ドキュメントの標準章構成                                                                                       |
 | 6      | 記述ガイド               | ○    | 各章の書き方、推奨表、例など                                                                                       |
 | 7      | 禁止事項                 | ○    | してはいけない記述、スキーマ違反など                                                                               |
-| 8      | サンプル                 | ○    | 最小例のsample へのリンクを示す                                                                                    |
-| 9      | 作成レシピ               | 任意 | 対応する recipe へのリンクを示す                                                                                   |
-| 10     | テンプレート             | 任意 | 対応する template へのリンクを示す                                                                                 |
+| 8      | サンプル                 | 任意 | 最小例を rulebook 内にコードブロックで自己完結して埋め込む（別ファイルへのリンクにしない）                         |
 
 補足:
 
 - 本文構成（標準テンプレ）は、対象ドキュメント（例: `uts-index`, `utd-<term>`）の章構成を表で示し、必須/任意も明示する。
 - 記述ガイドには、章ごとの書き方と例（表・サンプル）を置き、重複を避けるため共通事項は上位（index）を SSOT とする方針を記載する。
-- サンプルを用意する場合、対応する `../samples/*-sample.md` へのリンクを記載する。
-- Frontmatter の `template` に template ID を宣言し、対応する template が存在する場合は、末尾に `テンプレート` 章を設けて `[[<prefix>-template]]` 形式で参照する。
+- sample / recipe / template との対応関係は Frontmatter の `sample` / `recipe` / `template` だけで示す。本文にリンク章（`サンプル` / `作成レシピ` / `テンプレート`）や wikilink を置かない。fully-guided 実行では rulebook と recipe だけが読み込まれるため、sample / template への本文中のリンクは実行不能な指示になる。
 - 用語定義は、ドメイン固有語や同じ語に複数の解釈がある場合だけ置く。本文構成（標準テンプレ）や記述ガイドで見出し・用語の意味を十分に定義できる場合は、重複を避けて用語定義を省略する。
 
 ## 5. 記述ガイド
@@ -97,17 +94,14 @@ specdojo:
 - 用語定義を置く場合は、本文構成の見出し名や記述ガイドを単に言い換えて重複させない。重複になる場合は用語定義を省略する。
 - `推奨 Frontmatter 項目` の記述は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `ファイル命名・ID規則` は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う。
-- `target_format` がある場合は、本文ルール・サンプルリンク・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
+- `target_format` がある場合は、本文ルール・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
 - `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。
 - 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
   - `_TODO_:` 後で人または生成 AI が確認・追記・修正する必要がある事項
   - `_UNDECIDED_:` 情報不足ではなく、意思決定が未了で未確定の事項
   - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
-- `サンプル` には、ファイルが存在する場合は `target_format` に合わせて次のいずれかでリンクを記載する。存在しない場合は「サンプル未作成。作成後にリンクを追記する」と記載する。
-  - Markdown の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.md)`
-  - YAML の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.yaml)`
-  - JSON の場合: `- 参照先: [<prefix>-sample](../samples/<prefix>-sample.json)`
-- `template` を宣言した場合は、対応ファイルが存在することを確認し、`テンプレート` 章に `- 参照: [[<prefix>-template]]` を記載する。template がない場合は、章と Frontmatter の `template` を省略するか `none` を宣言する。
+- `サンプル` 章を置く場合は、最小例をコードブロックで本文内に自己完結して埋め込む。sample ファイルの有無は Frontmatter の `sample`（該当なしは `none`）で宣言し、本文にリンクを記載しない。
+- template がない場合は、Frontmatter の `template` を省略するか `none` を宣言する。
 
 ## 6. 内容充実化（薄いドキュメント防止）
 
@@ -123,6 +117,7 @@ specdojo:
 - 章番号なし見出し（例: `## 全体方針`）を使用しない。
 - 章番号末尾の `.` を省略しない。
 - 章参照を番号のみ（例: `§5` / `第5章`）で記述しない。
+- 本文に sample / recipe / template への wikilink・リンク章を置かない。対応関係は Frontmatter の `sample` / `recipe` / `template` で示す。
 - rulebook 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。

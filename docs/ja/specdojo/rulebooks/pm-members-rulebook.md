@@ -171,15 +171,3 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `command` に認証情報、秘密鍵、トークン、個人環境に閉じたパスを書く   | 秘密情報の漏えいと再利用不能な構成を招くため                               |
 | provider の command template で解決できる member に `command` を書く | 起動設定が `.specdojo/exec-defaults.yaml` と二重管理になるため             |
 | 実行ログ記録後に `nickname` を変更する                               | 履歴との対応が壊れるため                                                   |
-
-## 8. サンプル
-
-- 参照先: [[pm-members-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[pm-members-recipe|メンバー定義 作成レシピ]]
-
-## 10. テンプレート
-
-- 参照: [[pm-members-template|メンバー定義 template]]

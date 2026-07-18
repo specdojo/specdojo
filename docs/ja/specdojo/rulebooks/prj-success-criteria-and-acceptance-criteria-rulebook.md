@@ -148,15 +148,3 @@ flowchart LR
 | 証跡なしの合格宣言                                             | 監査と追跡ができないため                 |
 | Agent に最終判断・GO 判定を委ねる                              | 人間の判断責任を代替してしまうため       |
 | 公開リポジトリに個人名・個人連絡先・非公開の組織情報を記載する | 公開範囲とプライバシーに反するため       |
-
-## 8. サンプル
-
-- 参照先: [[prj-success-criteria-and-acceptance-criteria-sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[prj-success-criteria-and-acceptance-criteria-recipe]]
-
-## 10. テンプレート
-
-- 参照: [[prj-success-criteria-and-acceptance-criteria-template]]

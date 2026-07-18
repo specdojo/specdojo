@@ -128,15 +128,3 @@ Organization Definition Documentation Rulebook
 | `owner` / `roles` / 実行主体の共通定義表を再掲する                        | 定義変更時に不整合が起きるため                 |
 | `pm-roles.yaml` にない値を Schedule の `owner` に使える語彙として記載する | タスク責任が追跡できなくなるため               |
 | 個人情報、連絡先、非公開組織情報を記載する                                | 公開文書としての安全性と説明責任を損なうため   |
-
-## 8. サンプル
-
-- 参照: [[pm-organization-sample|組織定義 sample]]
-
-## 9. 作成レシピ
-
-- 参照: [[pm-organization-recipe|組織定義 作成レシピ]]
-
-## 10. テンプレート
-
-- 参照: [[pm-organization-template|組織定義 template]]

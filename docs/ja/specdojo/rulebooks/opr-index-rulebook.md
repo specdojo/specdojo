@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: opr-index-sample
 ---
 
 # 運用手順 全体構成 作成ルール
@@ -72,7 +73,3 @@ Operations Procedure Runbook Index Documentation Rules
 - 優先度別障害対応を未定義のまま確定しない。
 - 証跡要件（保存先・識別子）を省略しない。
 - `opd` と矛盾する手順を独自に定義しない。
-
-## 8. サンプル
-
-- 参照先: [[opr-index-sample]]

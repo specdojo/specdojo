@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: sld-rulebook
+  type: rulebook
+  status: draft
+  sample: sld-sample
+---
+
 # 保管場所一覧 （Storage Locations List）作成ルール
 
 業務で管理する物理的・論理的な保管場所を一覧で定義します。各保管場所の主な保管対象・目的・関連プロセス・管理頻度などを明記し、在庫や現金などの流れ・管理単位を明確にします。
@@ -77,7 +85,3 @@ supersedes: []
 - 物理DB設計や実装コードを記載しない。
 - 保管対象未記載で確定しない。
 - 略語のみで意味不明な名称を使わない。
-
-## 7. サンプル
-
-- 参照先: [[sld-sample]]

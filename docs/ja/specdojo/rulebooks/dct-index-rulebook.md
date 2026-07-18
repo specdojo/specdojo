@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: dct-index-sample
 ---
 
 # 成果物カタログ 作成ルール
@@ -124,7 +125,3 @@ Deliverables Catalog Documentation Rules
 - ドメイン識別子に日本語・空白・大文字を使用しない。
 - 種別定義を `work` / `control` / `generated` 以外に拡張しない。
 - 特定プロジェクト固有の例外事項を共通ルールとして記載しない。
-
-## 8. サンプル
-
-- 参照先: [[dct-index-sample]]
