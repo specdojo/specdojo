@@ -122,7 +122,7 @@ Stakeholder Register Documentation Rulebook
 
 - 現状と目標を対比し、差分を埋める対応方針を記載する。
 - 対応方針には、目的が情報提供、相談、合意形成、承認依頼、巻き込み、リスク低減のどれか分かる行動を書く。
-- 責任者、期限、証跡を記載し、未確定の場合は `_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:` を用いる。
+- 責任者、期限、証跡を記載し、未確定の場合は _TODO_:、_UNDECIDED_:、_ASSUMPTION_: を用いる。
 
 推奨表:
 

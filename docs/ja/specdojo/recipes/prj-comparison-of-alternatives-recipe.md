@@ -60,7 +60,7 @@ Comparison of Alternatives Writing Recipe
 
 - 比較目的は 1〜2 文で書き、設計詳細や実装方式の説明に寄せすぎない。
 - 根拠資料は、直接判断に使う文書に絞る。
-- 未確定事項は `_TODO_` / `_UNDECIDED_` / `_ASSUMPTION_` で明示する。
+- 未確定事項は _TODO_ / _UNDECIDED_ / _ASSUMPTION_ で明示する。
 - 対象外とする範囲や、全体を一度に完成させきれない場合の扱いがあれば、前提条件で明示する。
 
 ### 4.2. 比較対象案

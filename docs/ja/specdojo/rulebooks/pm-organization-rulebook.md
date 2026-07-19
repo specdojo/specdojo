@@ -77,7 +77,7 @@ Organization Definition Documentation Rulebook
 - 目的、スコープ、優先順位、公開方針から、採用する構成と兼務の方針を説明する。具体的な member や割り当ては書かない。
 - `pm-roles.yaml` と `pm-members.yaml` が何を管理するかを 1 行ずつ示し、`pm-organization.md` が設計根拠を扱うことを明示する。
 - PO が最終判断、公開可否、説明責任を担うことと、AI Agent が支援する範囲を明記する。
-- 未決事項がある場合は、`_UNDECIDED_:` として判断者または判断時点を添える。
+- 未決事項がある場合は、_UNDECIDED_: として判断者または判断時点を添える。
 
 ### 6.2. 採用ロールと owner 語彙
 

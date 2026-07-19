@@ -68,9 +68,9 @@ Recipe Authoring Standard
 - 良い例と悪い例は同じ観点で対比し、何が良し悪しを分けるかを判定可能にする。
 - 推奨表のカラム（例: 観点、確認内容、良い例、悪い例）を 1 つ以上提示する。
 - 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
-  - `_TODO_:` 後で人または生成 AI が確認・追記・修正する必要がある事項
-  - `_UNDECIDED_:` 情報不足ではなく、意思決定が未了で未確定の事項
-  - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
+  - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
+  - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
+  - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
 - リンクはファイルがある場合に記載し、ない場合はバッククォートで仮置きする。
 
 ## 6. 内容充実化（薄いドキュメント防止）
@@ -91,7 +91,7 @@ Recipe Authoring Standard
 - rulebook / recipe / sample / template の種別ごとの役割分担表を recipe 本文に置かない（参考資料全体の役割は [specdojo-reference-materials-guide.md](../guides/specdojo-reference-materials-guide.md) が扱う）。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - recipe 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
-- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 
 ## 8. 運用ルール
 

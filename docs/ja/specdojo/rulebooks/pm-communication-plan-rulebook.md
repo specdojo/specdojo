@@ -160,7 +160,7 @@ Communication Plan Documentation Rulebook
 ### 6.9. 継続確認事項
 
 - 未決事項、暫定判断、後続対応、判断者を表で管理する。
-- `_TODO_:`, `_UNDECIDED_:`, `_ASSUMPTION_:` を使用する場合は、判断者または次アクションを添える。
+- _TODO_:, _UNDECIDED_:, _ASSUMPTION_: を使用する場合は、判断者または次アクションを添える。
 
 推奨フォーマット:
 
