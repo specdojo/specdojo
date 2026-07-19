@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-19T12:09:00Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-issues-and-approach-140",
+  "by": "indie",
+  "msg": "claim task",
+  "meta": {
+    "claim_owner": "BA",
+    "planned_owner": "BA"
+  }
+}
