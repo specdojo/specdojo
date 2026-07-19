@@ -111,6 +111,7 @@ groups:
         kind: work
         depends_on:
           - prj-scope
+          - prj-charter
         overview: 前提条件・制約事項・外部依存を整理
         path: prj-assumptions-constraints-dependencies.md
         rulebook: prj-assumptions-constraints-dependencies-rulebook
