@@ -508,18 +508,18 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
 
 本リポジトリの `.devcontainer/devcontainer.json` を devcontainer 設定の正本とする。現在の構成では、次を devcontainer 内に用意する。
 
-| 設定                               | 内容                                                                                     | 用途                                                  |
-| ---------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `remoteUser`                       | `node`                                                                                   | agent CLI と開発コマンドの実行ユーザー                |
-| `workspaceMount`                   | `source=${localWorkspaceFolder}/..`                                                      | worktree を含む親ディレクトリをコンテナへ bind mount  |
-| `shutdownAction`                   | `none`                                                                                   | VS Code 切断時もコンテナを即停止しない                |
-| `features.copilot-cli`             | GitHub Copilot CLI                                                                       | `copilot` コマンドを devcontainer 内に用意            |
-| `features.claude-code`             | Claude Code                                                                              | `claude` コマンドを devcontainer 内に用意             |
-| `features.apt-packages`            | `tmux` などの補助 CLI                                                                    | 長時間実行、ログ確認、shell 整備                      |
-| `postCreateCommand`                | `.devcontainer/post-create.sh` で `@openai/codex` / `opencode-ai` を npm global install  | `codex` / `opencode` コマンドを devcontainer 内に用意 |
-| `mounts`                           | `.claude` / `.codex` / `.copilot` / `.config/opencode` / `.config/gh` を named volume 化 | CLI 認証状態をコンテナ再作成後も保持                  |
-| `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                              | devcontainer から Host Mac の LLM API へ接続          |
-| `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                          | VS Code 側の補助機能                                  |
+| 設定                               | 内容                                                                                                                        | 用途                                                               |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `remoteUser`                       | `node`                                                                                                                      | agent CLI と開発コマンドの実行ユーザー                             |
+| `workspaceMount`                   | `source=${localWorkspaceFolder}/..`                                                                                         | worktree を含む親ディレクトリをコンテナへ bind mount               |
+| `shutdownAction`                   | `none`                                                                                                                      | VS Code 切断時もコンテナを即停止しない                             |
+| `features.copilot-cli`             | GitHub Copilot CLI                                                                                                          | `copilot` コマンドを devcontainer 内に用意                         |
+| `features.claude-code`             | Claude Code                                                                                                                 | `claude` コマンドを devcontainer 内に用意                          |
+| `features.apt-packages`            | `tmux` などの補助 CLI                                                                                                       | 長時間実行、ログ確認、shell 整備                                   |
+| `postCreateCommand`                | `.devcontainer/post-create.sh` で SpecDojo CLI の build / npm link と `@openai/codex` / `opencode-ai` の npm global install | `specdojo` / `codex` / `opencode` コマンドを devcontainer 内に用意 |
+| `mounts`                           | `.claude` / `.codex` / `.copilot` / `.config/opencode` / `.config/gh` を named volume 化                                    | CLI 認証状態をコンテナ再作成後も保持                               |
+| `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                                                                 | devcontainer から Host Mac の LLM API へ接続                       |
+| `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                                                             | VS Code 側の補助機能                                               |
 
 認証情報は `.devcontainer/devcontainer.json` へ書かず、各 CLI のログイン結果を named volume に保持する。API key を使う場合も、個人の shell profile、1回限りの export、または Docker / VS Code の secret 注入に留め、リポジトリへ保存しない。
 
