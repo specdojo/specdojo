@@ -151,10 +151,23 @@ function injectSearchDocId(html: string, docId: string): string {
   return `${html}\n${hiddenDocId}`;
 }
 
-function renderSearchHtml(src: string, env: { frontmatter?: Record<string, unknown> }, md: { render: (src: string, env: unknown) => string }): string {
-  const html = md.render(src, env);
-  if (env.frontmatter?.search === false) return "";
+type SearchRenderEnv = {
+  frontmatter?: Record<string, unknown>;
+  relativePath?: string;
+};
 
+const isExecRecordPath = (relativePath: string | undefined): boolean =>
+  relativePath !== undefined &&
+  /(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(relativePath.replace(/\\/g, "/"));
+
+function renderSearchHtml(
+  src: string,
+  env: SearchRenderEnv,
+  md: { render: (src: string, env: unknown) => string },
+): string {
+  if (env.frontmatter?.search === false || isExecRecordPath(env.relativePath)) return "";
+
+  const html = md.render(src, env);
   const docId = getSpecdojoDocId(env.frontmatter);
   return docId ? injectSearchDocId(html, docId) : html;
 }
