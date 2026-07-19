@@ -168,7 +168,7 @@ Quality Management Plan Documentation Rulebook
 ### 6.9. 未決事項
 
 - 未決事項、暫定判断、後続対応、判断者を表で管理する。
-- `_TODO_:`, `_UNDECIDED_:`, `_ASSUMPTION_:` を使用する場合は、判断者または次アクションを添える。
+- _TODO_:, _UNDECIDED_:, _ASSUMPTION_: を使用する場合は、判断者または次アクションを添える。
 - 課題、リスク、変更要求、決定記録へ転記すべき事項を本文に埋めっぱなしにしない。
 
 推奨フォーマット:

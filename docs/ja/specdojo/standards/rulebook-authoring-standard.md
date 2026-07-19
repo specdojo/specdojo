@@ -97,9 +97,9 @@ specdojo:
 - `target_format` がある場合は、本文ルール・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
 - `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。
 - 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
-  - `_TODO_:` 後で人または生成 AI が確認・追記・修正する必要がある事項
-  - `_UNDECIDED_:` 情報不足ではなく、意思決定が未了で未確定の事項
-  - `_ASSUMPTION_:` 現時点で仮置きしている前提・仮説
+  - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
+  - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
+  - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
 - `サンプル` 章を置く場合は、最小例をコードブロックで本文内に自己完結して埋め込む。sample ファイルの有無は Frontmatter の `sample`（該当なしは `none`）で宣言し、本文にリンクを記載しない。
 - template がない場合は、Frontmatter の `template` を省略するか `none` を宣言する。
 
@@ -120,7 +120,7 @@ specdojo:
 - 本文に sample / recipe / template への wikilink・リンク章を置かない。対応関係は Frontmatter の `sample` / `recipe` / `template` で示す。
 - rulebook 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
-- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 - 確定済みの内容をラベル付きのまま放置したり、ラベルを本文の代替として多用したりしない。
 
 ## 8. 運用ルール

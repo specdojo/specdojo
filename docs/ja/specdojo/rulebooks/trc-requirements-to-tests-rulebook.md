@@ -93,7 +93,7 @@ Requirements Traceability (Requirements to Tests) Rulebook
 ### 6.5. ギャップと対応方針
 
 - ギャップごとに「解消方針」「担当」「期限」「判定条件」を記載する。
-- 方針未確定の場合は `_UNDECIDED_:` ラベルで暫定状態を明示する。
+- 方針未確定の場合は _UNDECIDED_: ラベルで暫定状態を明示する。
 
 ### 6.6. 変更履歴と更新ルール
 
