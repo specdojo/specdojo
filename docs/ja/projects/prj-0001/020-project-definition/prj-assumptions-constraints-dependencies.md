@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:prj-assumptions-constraints-dependencies
   type: project
-  status: draft
+  status: ready
   rulebook: prj-assumptions-constraints-dependencies-rulebook
   based_on:
     - prj-0001:prj-scope

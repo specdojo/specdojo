@@ -2,7 +2,7 @@
 specdojo:
   id: prj-assumptions-constraints-dependencies-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:prj-assumptions-constraints-dependencies
