@@ -10,6 +10,7 @@ specdojo:
       status: draft
       rulebook: prj-issues-and-approach-rulebook
       based_on:
+        - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-scope
         - _PROJECT_ID_:prj-assumptions-constraints-dependencies
       supersedes: []
@@ -17,7 +18,7 @@ specdojo:
 
 # プロジェクト課題と解決アプローチ: _PROJECT_NAME_
 
-本書は、[[_PROJECT_ID_:prj-scope|プロジェクトスコープ]] と [[_PROJECT_ID_:prj-assumptions-constraints-dependencies|前提・制約・依存関係]] を前提に、_PROJECT_NAME_ の利用者が直面する主要課題と解決アプローチを整理する。詳細な設計・実装・テスト設計は扱わず、関係者が「何が課題で、どれを、どう解く方針か」を合意するための判断材料を示す。
+本書は、[[_PROJECT_ID_:prj-overview|プロジェクト概要]] で示した背景・必要性を起点とし、[[_PROJECT_ID_:prj-scope|プロジェクトスコープ]] と [[_PROJECT_ID_:prj-assumptions-constraints-dependencies|前提・制約・依存関係]] を前提に、_PROJECT_NAME_ の利用者が直面する主要課題と解決アプローチを整理する。詳細な設計・実装・テスト設計は扱わず、関係者が「何が課題で、どれを、どう解く方針か」を合意するための判断材料を示す。
 
 本章の合意対象は、優先して扱う主要課題、採用する解決アプローチ、先送りする事項、追加判断が必要な事項である。個別業務システムの設計、特定技術の採否、詳細な作業手順は本書の合意対象に含めない。
 
