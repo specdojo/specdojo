@@ -42,6 +42,7 @@ flowchart LR
 
   POV --> PSC
   PSC --> ACD
+  POV --> PIA
   PSC --> PIA
   ACD --> PIA
 
@@ -91,19 +92,19 @@ flowchart LR
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 - メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
-| 項目       | 説明                                                   | 必須 |
-| ---------- | ------------------------------------------------------ | ---- |
-| id         | `<project-id>:prj-issues-and-approach`                 | ○    |
-| type       | `project` 固定                                         | ○    |
-| status     | `draft` / `ready` / `deprecated`                       | ○    |
-| rulebook   | `prj-issues-and-approach-rulebook`                     | ○    |
-| based_on   | スコープ、前提・制約・依存関係など、直接根拠にした文書 | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                                | 任意 |
+| 項目       | 説明                                                         | 必須 |
+| ---------- | ------------------------------------------------------------ | ---- |
+| id         | `<project-id>:prj-issues-and-approach`                       | ○    |
+| type       | `project` 固定                                               | ○    |
+| status     | `draft` / `ready` / `deprecated`                             | ○    |
+| rulebook   | `prj-issues-and-approach-rulebook`                           | ○    |
+| based_on   | 概要、スコープ、前提・制約・依存関係など、直接根拠にした文書 | 任意 |
+| supersedes | 置き換え対象の旧文書 ID                                      | 任意 |
 
 ### 4.2. 推奨ルール
 
 - `based_on` は、根拠として直接参照するものがある場合のみ列挙します（なければ `[]`）。
-- 課題とアプローチを、スコープで定めた対象範囲と、前提・制約・依存関係で定めた成立条件に対応させます。
+- 課題とアプローチを、概要で示した背景・必要性・基本的な考え方、スコープで定めた対象範囲、前提・制約・依存関係で定めた成立条件に対応させます。
 
 ### 4.3. 推奨例
 
@@ -115,6 +116,7 @@ specdojo:
   status: draft
   rulebook: prj-issues-and-approach-rulebook
   based_on:
+    - prj-0001:prj-overview
     - prj-0001:prj-scope
     - prj-0001:prj-assumptions-constraints-dependencies
   supersedes: []
