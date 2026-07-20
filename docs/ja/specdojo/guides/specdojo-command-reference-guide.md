@@ -104,6 +104,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）        | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
 | `exec claim`     | タスクを `doing` にする                                              | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
 | `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可） | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
+| `exec reopen`    | 誤って完了したタスクを `done` から `todo` に戻す                     | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
 | `exec block`     | タスクを `blocked` にする                                            | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
 | `exec unblock`   | `blocked` を `doing` に戻す                                          | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
 | `exec release`   | `doing` / `blocked` を `todo` に戻す                                 | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
@@ -123,7 +124,9 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 状態イベントの `--msg` の扱いはイベント種別ごとに異なります。
 
 - `claim` / `complete` / `release` / `link` / `estimate` では `--msg` を省略でき、省略時はコマンドごとの固定英語メッセージが記録されます（`claim task` / `complete task` / `release task` / `link refs` / `update estimate`）。`--msg` を指定した場合のみ上書きされます。
-- `note` / `block` / `unblock` / `cancel` では、メッセージ自体が内容・理由・再開根拠を表すため `--msg` が必須です。
+- `note` / `block` / `unblock` / `reopen` / `cancel` では、メッセージ自体が内容・理由・再開根拠を表すため `--msg` が必須です。
+
+`exec reopen` は `--task` と `--by` を省略できません。`--by` には `pm-members.yaml` で `type: human` の member を指定します。対象は `done` の task に限り、後続 task が `doing` / `blocked` / `done` の場合は依存関係の不整合を防ぐため拒否します。
 
 代表的な `exec run`:
 

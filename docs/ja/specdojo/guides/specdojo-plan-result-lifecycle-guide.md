@@ -83,6 +83,7 @@ exec/results/<stem>-result.md
 | `exec claim`                    | 生成しない                                               | scaffold 生成する                         | `claim` を記録する                        |
 | `exec run --task`               | なければ生成する                                         | scaffold 生成し、終了コードで status 更新 | 変更しない                                |
 | `exec run --task --track-state` | なければ生成する                                         | scaffold 生成し、終了コードで status 更新 | `claim` / `complete` / `block` を記録する |
+| `exec reopen`                   | 変更しない                                               | 変更しない                                | `reopen` を記録する                       |
 | `exec run --plan`               | 既存 plan を使う                                         | plan 名から導出する                       | 変更しない                                |
 | `exec build`                    | `execution: human` の Ready タスクの未生成分のみ生成する | 生成しない                                | 変更しない                                |
 
@@ -152,13 +153,17 @@ exec/plans/done/<slug>-<UTC>-<rand>-plan.md
 specdojo exec run --project <project-id> --task <task-id>
 ```
 
-状態イベントは追加されません。スケジュール進捗へ再度反映したい場合は、`claim`、`run`、`complete` を明示的に実行します。
+状態イベントは追加されません。完了判定を取り消してスケジュール進捗へ再度反映したい場合は、`reopen`、`claim`、`run`、`complete` を明示的に実行します。
 
 ```bash
+specdojo exec reopen --project <project-id> --task <task-id> --by <human-actor> --msg "completion criteria unmet"
+specdojo exec build --project <project-id>
 specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
 specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
 ```
+
+`reopen` は完了済み plan を `done/` から戻さず、固定名 result の内容も変更しません。次の `exec plan` / `exec run` で新しい固定名 plan を生成し、再 claim 時に既存 result の `status` を `in_progress`、`started_at` と `agent` を新しい試行の値へ更新し、`completed_at` と `block_reason` を除去します。result 本文は前回の記録を引き継ぎ、過去の完了状態は Git 履歴と `complete` / `reopen` event で追跡します。
 
 ## 11. deliverable指定の解決
 

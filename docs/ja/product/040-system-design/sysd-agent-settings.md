@@ -37,11 +37,11 @@ SpecDojo CLI、agent、`specdojo exec run` の3層に責務を分割する。
 
 ## 2. 責務分担
 
-| 層                  | 責務                                                                                             | 責務外                             |
-| ------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| SpecDojo CLI        | validate / build / ready 抽出 / claim / complete / block / lock / CPM / plan・result・event 管理 | タスク内容の理解・成果物の編集     |
-| agent               | plan の解釈・関連文書の読解・成果物の編集またはレビュー・done criteria の確認・result の記録     | タスク取得の排他制御・並列起動制御 |
-| `specdojo exec run` | member 選択・フェーズ順序・並列数・worktree 割り当て・agent 起動・終了状態の反映・フォールバック | タスク内容の判断・成果物の編集     |
+| 層                  | 責務                                                                                                      | 責務外                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| SpecDojo CLI        | validate / build / ready 抽出 / claim / complete / reopen / block / lock / CPM / plan・result・event 管理 | タスク内容の理解・成果物の編集     |
+| agent               | plan の解釈・関連文書の読解・成果物の編集またはレビュー・done criteria の確認・result の記録              | タスク取得の排他制御・並列起動制御 |
+| `specdojo exec run` | member 選択・フェーズ順序・並列数・worktree 割り当て・agent 起動・終了状態の反映・フォールバック          | タスク内容の判断・成果物の編集     |
 
 各 agent CLI の設定ファイル、モデル、権限、非対話コマンドは子設計の責務とする。
 
@@ -67,6 +67,17 @@ specdojo exec run
 ```
 
 edit と review の順序は固定しない。`sch-strategy-<track>.yaml` の phase に `mode: edit` または `mode: review` を定義し、スケジュール構造で順序を表現する。
+
+### 3.1. 完了状態の訂正
+
+`complete` 済みタスクの完了判定が誤りだった場合は、既存 event を削除・変更せず、`reopen` event を追記して `done` から `todo` へ戻す。`reopen` は通常の再実行ではなく、確定済みの進捗と依存判定を訂正する操作として扱う。
+
+- `reopen` の遷移元は `done`、遷移先は `todo` に限定する。
+- 人間の判断を伴う状態訂正であるため、`--by` は `pm-members.yaml` で `type: human` の member に限定し、理由を `--msg` で必須記録する。agent member は実行できない。
+- event は append-only とし、対応する `complete` event、result、Git 履歴を削除しない。
+- 対象タスクに依存する後続 task が `doing`、`blocked`、`done` の場合は拒否する。後続 task も訂正する場合は依存グラフの下流から順に `reopen` または `release` し、整合する状態へ戻す。
+- `reopen` 自体は plan を復元・生成せず、result を変更しない。再 claim 時に固定名 result の実行状態と時刻を新しい試行用に更新し、本文は既存内容を引き継ぐ。完了済み plan は `exec/plans/done/` に履歴として残し、新しい plan は `exec plan` / `exec run` で生成する。
+- `reopen` 後は `exec build` により Ready、CPM、phase gate を再計算する。
 
 ## 4. 共通ディレクトリ
 
@@ -141,7 +152,7 @@ agent は次の契約に従う。
 - plan に指定された対象と done criteria だけを処理する。
 - edit agent は成果物を編集し、review agent は成果物を変更せず所見を result に記録する。
 - result の done criteria 確認欄を更新してから終了する。
-- agent 自身は claim、complete、block を実行しない。
+- agent 自身は claim、complete、reopen、block を実行しない。
 - 権限不足や判断不能な状態では権限を拡大せず、非0で終了して block 判断を呼び出し元へ戻す。
 
 共通の実行例は次のとおりとする。

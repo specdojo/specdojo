@@ -29,7 +29,7 @@ GitHub Copilot は GitHub アカウント、Copilot CLI、GitHub.com の cloud a
 
 ## 2. 責務分担
 
-3層の共通責務は親設計に従う。Copilot agent は、Copilot 固有の custom instructions、custom agent、モデル、ツール許可を使用して plan を処理する。claim、complete、block、並列起動、worktree 管理は行わない。
+3層の共通責務は親設計に従う。Copilot agent は、Copilot 固有の custom instructions、custom agent、モデル、ツール許可を使用して plan を処理する。claim、complete、reopen、block、並列起動、worktree 管理は行わない。
 
 ## 3. 全体フロー
 
@@ -143,7 +143,7 @@ exec の無人実行の command template は `--agent` を指定しない（`起
 | `disable-model-invocation` | -    | 自動呼び出しを無効にし、手動選択だけにする      |
 | `user-invocable`           | -    | ユーザーが手動選択できるかを制御する            |
 
-本文には、標準入力で渡された plan に従うこと、agent 自身で claim / complete / block を行わないこと、事実を捏造しないことだけを定める。対象成果物、owner 観点、result の記入方法、検証、正常・異常終了条件は edit / review plan を正本とする。
+本文には、標準入力で渡された plan に従うこと、agent 自身で claim / complete / reopen / block を行わないこと、事実を捏造しないことだけを定める。対象成果物、owner 観点、result の記入方法、検証、正常・異常終了条件は edit / review plan を正本とする。
 
 ### 8.2. `copilot-edit-agent.md`
 

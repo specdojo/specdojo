@@ -63,6 +63,6 @@ rulebook / recipe / sample / template に原則縛られず、対象領域の類
 
 - 対象ファイル不明・依存未解決・result 更新不能など、レビュー自体を完了できない場合は異常終了する（終了コード 1）。
 - 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
-- agent 自身は claim / complete / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
 _COMMON_CONVENTIONS_
