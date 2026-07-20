@@ -2,7 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isResultUnfilled, scaffoldResult, updateResultStatus } from "../../src/exec-results.js";
+import {
+  isResultUnfilled,
+  resetResultForClaim,
+  scaffoldResult,
+  updateResultStatus,
+} from "../../src/exec-results.js";
 
 describe("scaffoldResult + updateResultStatus round-trip", () => {
   let executionPath: string;
@@ -144,6 +149,37 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
     expect(frontmatter).toContain("status: complete");
     expect(frontmatter).not.toContain("block_reason:");
+  });
+
+  it("resets lifecycle fields for a new claim while preserving the result body", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "opencode-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+      targets: ["prj-0001:prj-overview"],
+    });
+    await updateResultStatus(resultPath, "blocked", "2026-06-20T00:01:00.000Z", "missing input");
+    const before = readFileSync(resultPath, "utf8").replace(
+      "_TODO_: 実施した内容",
+      "前回試行の実施内容",
+    );
+    writeFileSync(resultPath, before, "utf8");
+
+    await resetResultForClaim(resultPath, "codex-edit-agent", "2026-06-21T00:00:00.000Z");
+
+    const content = readFileSync(resultPath, "utf8");
+    const frontmatter = content.split("\n---")[0];
+    expect(frontmatter).toContain("status: in_progress");
+    expect(frontmatter).toContain('started_at: "2026-06-21T00:00:00.000Z"');
+    expect(frontmatter).toContain("agent: codex-edit-agent");
+    expect(frontmatter).toContain("targets:\n    - prj-0001:prj-overview");
+    expect(frontmatter).not.toContain("completed_at:");
+    expect(frontmatter).not.toContain("block_reason:");
+    expect(content).toContain("前回試行の実施内容");
   });
 
   it("expands the review result sections placeholder when reviewSections is provided", async () => {

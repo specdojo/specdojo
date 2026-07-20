@@ -9,6 +9,7 @@ import {
   canCancelTask,
   canClaimTask,
   canCompleteTask,
+  canReopenTask,
   canReleaseTask,
   canUnblockTask,
   collectRepeatable,
@@ -73,7 +74,7 @@ import {
   targetDocIdsForDeliverable,
   stemFromPlanPath,
 } from "./exec-plans.js";
-import { scaffoldResult } from "./exec-results.js";
+import { resetResultForClaim, scaffoldResult } from "./exec-results.js";
 import {
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
@@ -154,7 +155,7 @@ type LoadedExecState = {
 };
 
 type LockedEventAction = {
-  type: "claim" | "complete" | "block" | "unblock" | "release" | "cancel";
+  type: "claim" | "complete" | "reopen" | "block" | "unblock" | "release" | "cancel";
   check: (
     state: LoadedExecState,
     taskId: string,
@@ -193,7 +194,7 @@ function addOwnerOptions(cmd: Command): Command {
 }
 
 // Fixed default messages for routine state transitions. Events whose message carries the
-// reason itself (note / block / unblock / cancel) have no default and keep --msg required.
+// reason itself (note / block / unblock / reopen / cancel) have no default and keep --msg required.
 const DEFAULT_EVENT_MESSAGES: Partial<Record<ExecEventType, string>> = {
   claim: "claim task",
   complete: "complete task",
@@ -454,7 +455,7 @@ async function scaffoldClaimResult(opts: {
     opts.projectId,
     approach,
   );
-  await scaffoldResult({
+  const result = await scaffoldResult({
     executionPath: opts.executionPath,
     taskId: opts.taskId,
     mode,
@@ -467,6 +468,9 @@ async function scaffoldClaimResult(opts: {
     ...(reviewSections ? { reviewSections } : {}),
     ...(finalizeSections ? { finalizeSections } : {}),
   });
+  if (!result.created) {
+    await resetResultForClaim(result.resultPath, opts.actor, opts.startedAt);
+  }
 }
 
 function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void {
@@ -751,6 +755,16 @@ export function registerExecCommands(program: Command): void {
       check: ({ schedule, snapshot }, taskId, actor, opts) =>
         canCompleteTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
     },
+    reopen: {
+      type: "reopen",
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canReopenTask(
+          schedule,
+          snapshot,
+          taskId,
+          findRosterMember(loadRosterForOpts(opts), actor)?.type === "human",
+        ),
+    },
     block: {
       type: "block",
       check: ({ schedule, snapshot }, taskId, actor, opts) =>
@@ -777,6 +791,7 @@ export function registerExecCommands(program: Command): void {
     "block",
     "unblock",
     "complete",
+    "reopen",
     "release",
     "cancel",
     "link",

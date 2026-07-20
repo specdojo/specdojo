@@ -227,3 +227,33 @@ export async function updateResultStatus(
   writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), "utf8");
   await formatMarkdownFile(resultPath);
 }
+
+// A fixed-name result is retained across attempts. Re-claiming starts a new attempt by resetting
+// harness-owned lifecycle fields while preserving the prior body as handoff context; Git and exec
+// events retain the previous completion record.
+export async function resetResultForClaim(
+  resultPath: string,
+  agent: string,
+  startedAt: string,
+): Promise<void> {
+  if (!existsSync(resultPath)) return;
+
+  const content = readFileSync(resultPath, "utf8");
+  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const updatedMeta: ExecResultMeta = {
+    id: existingMeta.id ?? "",
+    type: "exec-result",
+    task_id: existingMeta.task_id ?? "",
+    mode: (existingMeta.mode as TaskMode) ?? "edit",
+    status: "in_progress",
+    project_id: existingMeta.project_id ?? "",
+    plan_ref: existingMeta.plan_ref ?? "",
+    started_at: startedAt,
+    agent,
+    approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
+    ...(existingTargets ? { targets: existingTargets } : {}),
+  };
+
+  writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), "utf8");
+  await formatMarkdownFile(resultPath);
+}
