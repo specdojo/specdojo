@@ -5,6 +5,7 @@ import {
   canCancelTask,
   canClaimTask,
   canCompleteTask,
+  canReopenTask,
   canReleaseTask,
   canUnblockTask,
   computeReadyIds,
@@ -83,6 +84,10 @@ function makeEvent(overrides: Partial<ExecEventV1> = {}): ExecEventV1 {
 describe("validateEventShape", () => {
   it("正常なイベントはエラーなし", () => {
     expect(validateEventShape(makeEvent(), "test")).toHaveLength(0);
+  });
+
+  it("reopen イベントは有効", () => {
+    expect(validateEventShape(makeEvent({ type: "reopen" }), "test")).toHaveLength(0);
   });
 
   it("v が 1 以外はエラー", () => {
@@ -186,6 +191,25 @@ describe("foldEventsToState", () => {
     ];
     const snapshot = foldEventsToState(events, schedule, "/dummy");
     expect(snapshot.tasks["T-001"].state).toBe("done");
+  });
+
+  it("reopen で done → todo に遷移する", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      { path: "1.json", event: makeEvent({ type: "claim", task_id: "T-001" }) },
+      { path: "2.json", event: makeEvent({ type: "complete", task_id: "T-001" }) },
+      { path: "3.json", event: makeEvent({ type: "reopen", task_id: "T-001", by: "indie" }) },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
+    expect(snapshot.tasks["T-001"].last_type).toBe("reopen");
+  });
+
+  it("done 以外への不正な reopen event は状態を変更しない", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const event = makeEvent({ type: "reopen", task_id: "T-001", by: "indie" });
+    const snapshot = foldEventsToState([{ path: "1.json", event }], schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
   });
 
   it("block で doing → blocked に遷移する", () => {
@@ -490,6 +514,67 @@ describe("canCompleteTask", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "blocked" } });
     expect(canCompleteTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
+  });
+});
+
+// ---- canReopenTask -----------------------------------------------------
+
+describe("canReopenTask", () => {
+  it("human は後続が進行していない done task を reopen できる", () => {
+    const schedule = makeSchedule([{ id: "A" }, { id: "B", depends_on: ["A"] }]);
+    const snapshot = makeSnapshot({ A: { state: "done" }, B: { state: "todo" } });
+    expect(canReopenTask(schedule, snapshot, "A", true).ok).toBe(true);
+  });
+
+  it("agent は done task を reopen できない", () => {
+    const schedule = makeSchedule([{ id: "A" }]);
+    const snapshot = makeSnapshot({ A: { state: "done" } });
+    const result = canReopenTask(schedule, snapshot, "A", false);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("human actor");
+  });
+
+  it("done 以外の task は reopen できない", () => {
+    const schedule = makeSchedule([{ id: "A" }]);
+    const snapshot = makeSnapshot({ A: { state: "todo" } });
+    expect(canReopenTask(schedule, snapshot, "A", true).ok).toBe(false);
+  });
+
+  it.each(["doing", "blocked", "done"] as const)(
+    "後続 task が %s の場合は reopen できない",
+    (state) => {
+      const schedule = makeSchedule([{ id: "A" }, { id: "B", depends_on: ["A"] }]);
+      const snapshot = makeSnapshot({ A: { state: "done" }, B: { state } });
+      const result = canReopenTask(schedule, snapshot, "A", true);
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain(`B (${state})`);
+    },
+  );
+
+  it("milestone を介した後続 done task も検出する", () => {
+    const schedule = makeSchedule([
+      { id: "A" },
+      { id: "M", kind: "milestone", depends_on: ["A"] },
+      { id: "B", depends_on: ["M"] },
+    ]);
+    const snapshot = makeSnapshot({ A: { state: "done" }, B: { state: "done" } });
+    const result = canReopenTask(schedule, snapshot, "A", true);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("B (done)");
+  });
+
+  it("後続 task が todo / cancelled の場合は reopen できる", () => {
+    const schedule = makeSchedule([
+      { id: "A" },
+      { id: "B", depends_on: ["A"] },
+      { id: "C", depends_on: ["A"] },
+    ]);
+    const snapshot = makeSnapshot({
+      A: { state: "done" },
+      B: { state: "todo" },
+      C: { state: "cancelled" },
+    });
+    expect(canReopenTask(schedule, snapshot, "A", true).ok).toBe(true);
   });
 });
 

@@ -26,6 +26,7 @@ export type ExecEventType =
   | "block"
   | "unblock"
   | "complete"
+  | "reopen"
   | "release"
   | "cancel"
   | "link"

@@ -50,6 +50,7 @@ export function validateEventShape(obj: unknown, source: string): string[] {
     "block",
     "unblock",
     "complete",
+    "reopen",
     "release",
     "cancel",
     "link",
@@ -95,6 +96,7 @@ export function readAllEventFiles(projectPath: string): { path: string; event: E
     estimate: 3,
     link: 3,
     unblock: 4,
+    reopen: 4,
     release: 5,
     cancel: 5,
   };
@@ -172,7 +174,11 @@ export function foldEventsToState(
     else if (event.type === "unblock")
       cur.state = "doing"; // resume work; same actor continues
     else if (event.type === "complete") cur.state = "done";
-    else if (event.type === "release") {
+    else if (event.type === "reopen") {
+      // reopen corrects an erroneous completion without deleting the complete event.
+      // Other states are left untouched (the command guard prevents emitting them).
+      if (cur.state === "done") cur.state = "todo";
+    } else if (event.type === "release") {
       // release returns an in-flight attempt to todo so the task can be re-executed.
       //   doing   → todo (claim released)
       //   blocked → todo (blocked attempt abandoned)
@@ -323,6 +329,62 @@ export function canCompleteTask(
   if (state !== "doing") return { ok: false, reason: `task is not doing: ${taskId}` };
   if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
     return { ok: false, reason: crossActorReason(cur?.last_by) };
+  }
+
+  return { ok: true };
+}
+
+// Reopening reverses a terminal completion and can invalidate dependency decisions. It is therefore
+// human-only and is rejected while any downstream task is already in-flight or complete. Traversal
+// passes through milestone/gate nodes so transitive task dependencies are guarded as well.
+export function canReopenTask(
+  schedule: ScheduleIndex,
+  snapshot: StateSnapshot,
+  taskId: string,
+  isHuman: boolean,
+): { ok: boolean; reason?: string } {
+  const node = schedule.nodes.get(taskId);
+  if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
+  if (node.kind !== "task") return { ok: false, reason: `cannot reopen non-task node: ${taskId}` };
+  if (!isHuman) return { ok: false, reason: `reopen requires a human actor: ${taskId}` };
+
+  const state = snapshot.tasks[taskId]?.state ?? "todo";
+  if (state !== "done") return { ok: false, reason: `task is not done: ${taskId} (${state})` };
+
+  const reverseDependencies = new Map<string, string[]>();
+  for (const candidate of schedule.nodes.values()) {
+    for (const dependencyId of candidate.depends_on) {
+      const dependents = reverseDependencies.get(dependencyId) ?? [];
+      dependents.push(candidate.id);
+      reverseDependencies.set(dependencyId, dependents);
+    }
+  }
+
+  const visited = new Set<string>([taskId]);
+  const queue = [...(reverseDependencies.get(taskId) ?? [])];
+  const conflicting: string[] = [];
+  while (queue.length > 0) {
+    const dependentId = queue.shift() as string;
+    if (visited.has(dependentId)) continue;
+    visited.add(dependentId);
+
+    const dependent = schedule.nodes.get(dependentId);
+    if (!dependent) continue;
+    if (dependent.kind === "task") {
+      const dependentState = snapshot.tasks[dependentId]?.state ?? "todo";
+      if (dependentState === "doing" || dependentState === "blocked" || dependentState === "done") {
+        conflicting.push(`${dependentId} (${dependentState})`);
+      }
+    }
+    queue.push(...(reverseDependencies.get(dependentId) ?? []));
+  }
+
+  if (conflicting.length > 0) {
+    conflicting.sort((a, b) => a.localeCompare(b));
+    return {
+      ok: false,
+      reason: `downstream task(s) must be reopened or released first: ${conflicting.join(", ")}`,
+    };
   }
 
   return { ok: true };
