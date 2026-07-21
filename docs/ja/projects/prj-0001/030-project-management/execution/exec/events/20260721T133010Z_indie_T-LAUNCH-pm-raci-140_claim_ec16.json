@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-07-21T13:30:10Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-raci-140",
+  "by": "indie",
+  "msg": "claim task",
+  "meta": {
+    "claim_owner": "PM",
+    "planned_owner": "PM"
+  }
+}
