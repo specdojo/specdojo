@@ -2,7 +2,7 @@
 specdojo:
   id: prj-comparison-of-alternatives-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:prj-comparison-of-alternatives
