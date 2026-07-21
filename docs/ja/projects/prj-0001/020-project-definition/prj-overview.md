@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:prj-overview
   type: project
-  status: draft
+  status: ready
   rulebook: prj-overview-rulebook
   based_on: []
   supersedes: []

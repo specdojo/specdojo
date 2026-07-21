@@ -3,7 +3,11 @@ import { join, resolve } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { getProjectSchedulePath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
-import { buildScheduleTrack, type GeneratedMilestone } from "./schedule-build.js";
+import {
+  buildScheduleTrack,
+  type GeneratedMilestone,
+  type GeneratedTask,
+} from "./schedule-build.js";
 import { readYaml } from "./exec-shared.js";
 
 function resolveSchedulePath(opts: { project?: string }): {
@@ -133,6 +137,28 @@ function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
 }
 
+export function createScheduleTrackDocument(input: {
+  projectId: string;
+  track: string;
+  status: string;
+  startDate: string | null;
+  tasks: GeneratedTask[];
+}): Record<string, unknown> {
+  return {
+    kind: "track",
+    id: `${input.projectId}:sch-track-${input.track}`,
+    type: "project",
+    status: input.status,
+    title: `スケジュールトラック（${input.track}）`,
+    rulebook: "sch-rulebook",
+    version: 1,
+    project_id: input.projectId,
+    track: input.track,
+    settings: input.startDate !== null ? { start_date: input.startDate } : {},
+    tasks: input.tasks,
+  };
+}
+
 export function registerScheduleCommands(program: Command): void {
   const sch = program.command("schedule").description("Schedule build commands");
 
@@ -208,17 +234,13 @@ export function registerScheduleCommands(program: Command): void {
         return;
       }
 
-      const outDoc = {
-        kind: "track",
-        id: `${projectId}:sch-track-${track}`,
-        type: "project",
-        status,
-        version: 1,
-        project_id: projectId,
+      const outDoc = createScheduleTrackDocument({
+        projectId,
         track,
-        settings: startDate !== null ? { start_date: startDate } : {},
+        status,
+        startDate,
         tasks,
-      };
+      });
 
       const outYaml = yaml.dump(outDoc, {
         lineWidth: 120,

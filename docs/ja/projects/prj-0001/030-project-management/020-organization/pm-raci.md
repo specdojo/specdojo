@@ -30,6 +30,7 @@ PM は本 RACI を、タスク化、順序付け、所要時間見積もり、�
 - 小規模運用で実行主体が兼務する場合でも、責務境界を確認できるよう `PO` と `PM` の責務を分けて記載する。
 - `PO` は目的、スコープ、優先順位、公開可否、組織構成の最終判断を担い、`PM` は管理・報告に接続する計画化、進捗確認、課題・リスク管理、変更要求の影響整理を担う。
 - `A` は 1 成果物・1 プロセスにつき 1 Role code に限定する。
+- Schedule の成果物作成・更新タスクに設定する `owner` は、その成果物行の主たる `R` と一致させる。`A` または `C` は `owner` の代用にしない。
 - Agent は `R`、`C` の支援を行ってよいが、`A` は担わない。
 - 実際の member、agent、兼務割り当ては [[prj-0001:pm-members|メンバー定義]] を正本とし、本書には複製しない。
 
@@ -52,6 +53,10 @@ PM は本 RACI を、タスク化、順序付け、所要時間見積もり、�
 | `prj-scope`                                    | A   | C   | R   | C   | I   | C   | C   | I   |
 | `prj-stakeholder-register`                     | A   | C   | R   | I   | I   | C   | C   | I   |
 | `prj-success-criteria-and-acceptance-criteria` | A   | C   | R   | C   | I   | C   | C   | I   |
+| `prj-charter`                                  | A/R | C   | C   | I   | I   | C   | I   | I   |
+| `prj-assumptions-constraints-dependencies`     | A   | C   | C   | R   | I   | C   | I   | I   |
+| `prj-issues-and-approach`                      | A   | C   | R   | C   | I   | C   | C   | I   |
+| `prj-comparison-of-alternatives`               | A   | C   | C   | R   | I   | C   | C   | I   |
 | `pm-organization`                              | A   | R   | C   | C   | I   | C   | I   | I   |
 | `pm-roles.yaml`                                | A   | R   | I   | C   | I   | C   | I   | I   |
 | `pm-members.yaml`                              | A   | R   | I   | C   | I   | C   | I   | I   |
@@ -59,6 +64,8 @@ PM は本 RACI を、タスク化、順序付け、所要時間見積もり、�
 | `pm-plan`                                      | C   | A/R | C   | C   | I   | C   | I   | C   |
 | `pm-communication-plan`                        | C   | A/R | C   | I   | I   | C   | C   | C   |
 | `pm-quality-management-plan`                   | A   | C   | C   | C   | I   | R   | C   | I   |
+| `sch-defaults`                                 | A   | C   | I   | R   | I   | C   | I   | I   |
+| `sch-strategy-launch`                          | C   | A/R | C   | C   | I   | C   | I   | I   |
 | `pm-risk-register`                             | C   | A/R | C   | C   | C   | C   | C   | C   |
 | `pm-issue-log`                                 | C   | A/R | C   | C   | C   | C   | C   | C   |
 | `pm-change-request-log`                        | C   | A/R | C   | C   | C   | C   | C   | C   |
