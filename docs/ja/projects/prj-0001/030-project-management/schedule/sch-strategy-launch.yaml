@@ -183,7 +183,7 @@ default_phase_sets:
     iterations: 2
   - phase_set: review-pass
 
-# 成果物 local_id → 作成タスクの owner ロール・phase_set・難易度
+# 成果物 local_id → 作成・更新の主たる実作業責任（R）を担う owner ロール・phase_set・難易度
 # difficulty はプロジェクト管理上の工数・品質リスクの目安。
 owner_rules:
   - local_ids:
@@ -210,8 +210,11 @@ owner_rules:
       - pm-plan
       - pm-communication-plan
       - pm-raci
-      - pm-quality-management-plan
     owner: PM
+
+  - local_ids:
+      - pm-quality-management-plan
+    owner: QE
 
   - local_ids:
       - sch-milestones
@@ -223,7 +226,7 @@ owner_rules:
       - pm-organization
       - pm-roles
       - pm-members
-    owner: PO
+    owner: PM
 
   - local_ids:
       - sch-defaults

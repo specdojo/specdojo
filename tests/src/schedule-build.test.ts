@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { buildInitialStateFromStrategy } from "../../src/exec-schedule-initial.js";
 import { buildScheduleIndex } from "../../src/exec-schedule-index.js";
 import { buildScheduleTrack } from "../../src/schedule-build.js";
+import { createScheduleTrackDocument } from "../../src/schedule.js";
 
 function writeCatalog(dir: string): void {
   writeFileSync(
@@ -367,6 +368,23 @@ describe("buildScheduleTrack status propagation", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("schedule track metadata", () => {
+  it("uses the metadata required by sch-rulebook", () => {
+    const outDoc = createScheduleTrackDocument({
+      projectId: "prj-test",
+      track: "launch",
+      status: "ready",
+      startDate: null,
+      tasks: [],
+    });
+
+    expect(outDoc).toMatchObject({
+      title: "スケジュールトラック（launch）",
+      rulebook: "sch-rulebook",
+    });
   });
 });
 

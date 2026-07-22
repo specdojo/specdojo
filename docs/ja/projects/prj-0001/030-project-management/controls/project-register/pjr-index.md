@@ -24,7 +24,7 @@ Project Register
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | - |
 | PJR-0002 | done | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | 2026-05-24 | sch-strategy-launchを作成 | - |
-| PJR-0003 | open | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | - | - | - |
+| PJR-0003 | done | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | 2026-07-22 | pm-roles, pm-membersに設定 | - |
 | PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | - |
 | PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
 | PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |

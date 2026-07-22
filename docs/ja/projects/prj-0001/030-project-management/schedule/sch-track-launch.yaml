@@ -639,6 +639,7 @@ tasks:
     duration_days: 1
     depends_on:
       - T-LAUNCH-prj-scope-010
+      - T-LAUNCH-prj-charter-010
     owner: ARC
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
@@ -1100,7 +1101,7 @@ tasks:
     duration_days: 1
     depends_on:
       - T-LAUNCH-prj-overview-000
-    owner: PO
+    owner: PM
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
       一貫した一組として作成・整備する。
@@ -1119,7 +1120,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-organization-010
       - G-LAUNCH-bootstrap-pass
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1133,7 +1134,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-070-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1147,7 +1148,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-080-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1161,7 +1162,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-070-I02
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1175,7 +1176,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-organization-080-I02
       - G-LAUNCH-refine-pass
-    owner: PO
+    owner: PM
     description: |
       レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
       成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
@@ -1188,7 +1189,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-090
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
       完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
@@ -1201,7 +1202,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-100
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
       章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
@@ -1214,7 +1215,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-110
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
       粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1227,7 +1228,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-organization-120
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
       章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1240,7 +1241,7 @@ tasks:
     duration_days: 0.125
     depends_on:
       - T-LAUNCH-pm-organization-130
-    owner: PO
+    owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
       bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
@@ -1253,7 +1254,7 @@ tasks:
     duration_days: 1
     depends_on:
       - T-LAUNCH-pm-organization-010
-    owner: PO
+    owner: PM
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
       一貫した一組として作成・整備する。
@@ -1272,7 +1273,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-roles-010
       - G-LAUNCH-bootstrap-pass
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1286,7 +1287,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-070-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1300,7 +1301,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-080-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1314,7 +1315,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-070-I02
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1328,7 +1329,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-roles-080-I02
       - G-LAUNCH-refine-pass
-    owner: PO
+    owner: PM
     description: |
       レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
       成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
@@ -1341,7 +1342,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-090
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
       完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
@@ -1354,7 +1355,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-100
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
       章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
@@ -1367,7 +1368,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-110
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
       粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1380,7 +1381,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-roles-120
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
       章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1393,7 +1394,7 @@ tasks:
     duration_days: 0.125
     depends_on:
       - T-LAUNCH-pm-roles-130
-    owner: PO
+    owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
       bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
@@ -1560,6 +1561,7 @@ tasks:
     duration_days: 1
     depends_on:
       - T-LAUNCH-pm-plan-010
+      - T-LAUNCH-prj-stakeholder-register-010
     owner: PM
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
@@ -1713,7 +1715,7 @@ tasks:
     duration_days: 1
     depends_on:
       - T-LAUNCH-pm-plan-010
-    owner: PM
+    owner: QE
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
       一貫した一組として作成・整備する。
@@ -1732,7 +1734,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-010
       - G-LAUNCH-bootstrap-pass
-    owner: PM
+    owner: QE
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1746,7 +1748,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-070-I01
-    owner: PM
+    owner: QE
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1760,7 +1762,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-080-I01
-    owner: PM
+    owner: QE
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1774,7 +1776,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-070-I02
-    owner: PM
+    owner: QE
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1788,7 +1790,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-080-I02
       - G-LAUNCH-refine-pass
-    owner: PM
+    owner: QE
     description: |
       レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
       成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
@@ -1801,7 +1803,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-090
-    owner: PM
+    owner: QE
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
       完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
@@ -1814,7 +1816,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-100
-    owner: PM
+    owner: QE
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
       章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
@@ -1827,7 +1829,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-110
-    owner: PM
+    owner: QE
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
       粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1840,7 +1842,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-120
-    owner: PM
+    owner: QE
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
       章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1853,7 +1855,7 @@ tasks:
     duration_days: 0.125
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-130
-    owner: PM
+    owner: QE
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
       bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
@@ -1867,7 +1869,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-organization-010
       - T-LAUNCH-pm-roles-010
-    owner: PO
+    owner: PM
     description: |
       エージェントが成果物と、それに紐づく参考資料一式（rulebook / recipe / sample / template）を
       一貫した一組として作成・整備する。
@@ -1886,7 +1888,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-members-010
       - G-LAUNCH-bootstrap-pass
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1900,7 +1902,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-070-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1914,7 +1916,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-080-I01
-    owner: PO
+    owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
       既存記述を尊重し、不足や参考資料との不整合のみを最小限修正・補強する（全面的な書き直しはしない）。
@@ -1928,7 +1930,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-070-I02
-    owner: PO
+    owner: PM
     description: |
       エージェントが同一ゲート内の他成果物を参照し、用語・数値・方針の整合性を確認する。
       矛盾・不整合が見つかった場合は、既存記述を尊重しつつ最小限の修正で整える。
@@ -1942,7 +1944,7 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-members-080-I02
       - G-LAUNCH-refine-pass
-    owner: PO
+    owner: PM
     description: |
       レビューエージェントが磨き込み後の内容を確認し、承認・修正指示・差し戻しを判断する。
       成果物カタログの done_criteria と関連成果物との整合性を全観点で確認する。
@@ -1955,7 +1957,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-090
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
       完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
@@ -1968,7 +1970,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-100
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
       章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
@@ -1981,7 +1983,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-110
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
       粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
@@ -1994,7 +1996,7 @@ tasks:
     duration_days: 0.25
     depends_on:
       - T-LAUNCH-pm-members-120
-    owner: PO
+    owner: PM
     description: |
       レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
       章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
@@ -2007,7 +2009,7 @@ tasks:
     duration_days: 0.125
     depends_on:
       - T-LAUNCH-pm-members-130
-    owner: PO
+    owner: PM
     description: |
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
       bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
