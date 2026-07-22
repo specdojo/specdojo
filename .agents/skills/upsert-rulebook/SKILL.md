@@ -16,13 +16,13 @@ description: "`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を新規�
 
 補足:
 
-- 成果物ファイル（`sample-gcs-product/` 配下等）から逆生成する場合は、`.github/skills/reverse-rulebook/SKILL.md` を使用する。
+- 成果物ファイル（`sample-gcs-product/` 配下等）から逆生成する場合は、`reverse-rulebook` Skill（`.agents/skills/reverse-rulebook/SKILL.md`）を使用する。
 
 ## 前提
 
 - 章立て・記述ルール・Frontmatter 規約の正本: `docs/ja/specdojo/standards/rulebook-authoring-standard.md`
 - 作業手順: `.github/instructions/rulebook.instructions.md`
-- ドキュメント内容ガイド: `docs/ja/specdojo/guidelines/docs-contents-guide.md`
+- ドキュメント内容ガイド: `docs/ja/specdojo/guides/docs-contents-guide.md`
 
 ## 引数仕様
 

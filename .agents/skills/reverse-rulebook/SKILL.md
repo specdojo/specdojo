@@ -16,7 +16,7 @@ description: "成果物ファイルを分析し、対応する `docs/ja/specdojo
 ## 前提
 
 - 共通運用ルール: `.github/instructions/rulebook.instructions.md`
-- ドキュメント内容ガイド: `docs/ja/specdojo/guidelines/docs-contents-guide.md`
+- ドキュメント内容ガイド: `docs/ja/specdojo/guides/docs-contents-guide.md`
 
 ## 対象ファイルから rulebook を特定する方法
 
