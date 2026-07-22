@@ -2,12 +2,12 @@
 specdojo:
   id: prj-stakeholder-register-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:prj-stakeholder-register
       type: project
-      status: ready
+      status: draft
       rulebook: prj-stakeholder-register-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview

@@ -34,6 +34,7 @@ groups:
         kind: work
         depends_on:
           - pm-plan
+          - prj-stakeholder-register
         overview: 報告・連絡・会議体の計画を定義
         path: pm-communication-plan.md
         rulebook: pm-communication-plan-rulebook

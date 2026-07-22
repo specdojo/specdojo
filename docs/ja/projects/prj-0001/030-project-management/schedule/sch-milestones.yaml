@@ -13,7 +13,6 @@ milestones:
     artifact_name: プロジェクト定義
     depends_on:
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-140
-      - T-LAUNCH-prj-charter-140
       - T-LAUNCH-prj-comparison-of-alternatives-140
     owner: PM
   - id: M-LAUNCH-project-management
