@@ -32,10 +32,11 @@ AI Agent と OSS は、構築・改善の費用と専門作業を減らせる可
 
 ## 3. 基本的な考え方
 
-1. **Why before What**: 対象者、社会課題、期待する変化を、実装やツール選定より先に合意する。
-2. **Specification-Driven**: 当事者の言葉、要求、仕様、判断、検証結果をつなぎ、人と AI Agent が参照・更新できる正本にする。
-3. **Open and Reusable**: 成果物と知見を公開・再利用し、同じ課題を解くための費用と作業を減らす。
-4. **Sustainable Participation**: 必要な成果物だけを選び、役割と作業を分担して、参加者の負荷を見える化する。
+1. **Why before What**: 対象者、課題、期待する変化を、手段より先に確認する。
+2. **Specification-Driven**: 当事者の言葉から検証結果までを、人と AI Agent が更新できる正本でつなぐ。
+3. **Start Anywhere, Evolve Always**: どこからでも始め、学びに応じて Why と成果物を更新する。
+4. **Open and Reusable**: 成果物と知見を公開・再利用し、費用と作業を減らす。
+5. **Sustainable Participation**: 必要な成果物を選び、役割を分担して負荷を見える化する。
 
 AI Agent は記録、提案、実行、検証を支援する。社会課題の定義、期待価値、主要判断、公開可否は人間が責任を持つ。
 
