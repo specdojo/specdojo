@@ -107,7 +107,7 @@ Project Register
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | done | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | 2026-07-22 | schemaチェックもtestに追加 | - |
-| PJR-0087 | open | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0087 | done | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | 2026-07-23 | yaml-pages の dct テンプレ表示ページを catalog build と同じ表形式（成果物表＋完了条件）で描画する実装を追加（コミットd8e1b346） | - |
 | PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-config-guide.mdに記述。設定ファイルも変更 | - |
 | PJR-0089 | done | claude-agent-settingsの見直し | capability, proficiencyに対応して記述を見直し | todo | medium | ARC | 2026-06-05 | 2026-06-02 | agent file含めて整備 | - |
 | PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | - |
