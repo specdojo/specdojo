@@ -335,7 +335,7 @@ function derivedViewFrontmatter(projectId: string, localId: string): string {
     "status: ready",
     "part_of:",
     `  - ${projectId}:pjr-index`,
-    "rulebook: pjr-index-rulebook",
+    "rulebook: pjr-rulebook",
   ]);
 }
 

@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-080-i02
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-080-I02
   name: 整合性確認・修正
   mode: edit

@@ -9,7 +9,7 @@ specdojo:
 
 SpecDojo Register Operation Guide
 
-プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-index-rulebook]] を、コマンドの一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を正本とします。
+プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を正本とします。
 
 ## 1. 登録簿の位置づけ
 
@@ -73,7 +73,7 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 
 ## 3. type の選び方
 
-値の一覧と列定義は [[pjr-index-rulebook]] と `pjr-index.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
+値の一覧と列定義は [[pjr-rulebook]] と `pjr-index.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
 
 | type             | 意味                                 | 迷ったとき                                                     |
 | ---------------- | ------------------------------------ | -------------------------------------------------------------- |

@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-prj-issues-and-approach-100
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-prj-issues-and-approach-100
   name: Recipe 最終調整
   mode: edit

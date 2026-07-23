@@ -213,7 +213,7 @@ groups:
         depends_on: []
         overview: 識別済み検討項目と対応策を管理（台帳）
         path: pjr-index.md
-        rulebook: pjr-index-rulebook
+        rulebook: pjr-rulebook
 
       - local_id: pjr-entry
         instance_id_pattern: pjr-{sequence}-{term}
@@ -223,6 +223,7 @@ groups:
           - pjr-index
         overview: 識別済み検討項目と対応策を管理（個別課題）
         note: sequence は4桁連番、term は件名の略称（kebab-case）
+        rulebook: pjr-rulebook
 
   # ── 管理台帳補助ビュー (medium+) ──────────────────────────────────────────
   - name: 管理台帳補助ビュー

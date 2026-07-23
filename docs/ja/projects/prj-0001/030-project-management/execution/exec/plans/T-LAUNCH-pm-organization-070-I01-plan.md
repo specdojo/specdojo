@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-organization-070-i01
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-organization-070-I01
   name: 磨き込み
   mode: edit

@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-prj-success-criteria-and-acceptance-criteria-140
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-prj-success-criteria-and-acceptance-criteria-140
   name: 完成版確定
   mode: edit

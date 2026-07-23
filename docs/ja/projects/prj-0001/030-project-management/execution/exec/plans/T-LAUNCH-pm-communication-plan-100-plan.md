@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-communication-plan-100
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-communication-plan-100
   name: Recipe 最終調整
   mode: edit

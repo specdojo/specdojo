@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:_PJR-XXXX_
       type: project
       status: draft
-      rulebook: pjr-index-rulebook
+      rulebook: pjr-rulebook
       item_type: todo
 ---
 

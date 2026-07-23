@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-raci-120
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-raci-120
   name: Sample 最終調整
   mode: edit

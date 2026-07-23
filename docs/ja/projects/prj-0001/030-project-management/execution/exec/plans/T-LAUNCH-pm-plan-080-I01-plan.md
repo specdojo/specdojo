@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-plan-080-i01
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-plan-080-I01
   name: 整合性確認・修正
   mode: edit

@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0119
   type: project
   status: ready
-  rulebook: pjr-index-rulebook
+  rulebook: pjr-rulebook
   item_type: decision
 ---
 

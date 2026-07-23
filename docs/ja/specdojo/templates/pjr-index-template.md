@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pjr-index
       type: project
       status: draft
-      rulebook: pjr-index-rulebook
+      rulebook: pjr-rulebook
 ---
 
 # プロジェクト登録簿
@@ -19,7 +19,7 @@ Project Register
 
 プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
 
-記載ルール、項目定義、type / status / priority の定義は [[pjr-index-rulebook]] に従います。
+記載ルール、項目定義、type / status / priority の定義は [[pjr-rulebook]] に従います。
 登録の判断、状態遷移、個票分離などの使い方は [[specdojo-register-operation-guide]] を参照します。
 
 ## 1. 登録項目一覧

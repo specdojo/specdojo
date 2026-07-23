@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-prj-stakeholder-register-110
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-prj-stakeholder-register-110
   name: Rulebook 最終調整
   mode: edit
