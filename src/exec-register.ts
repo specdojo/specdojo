@@ -124,7 +124,7 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
   const inner = [
     `id: ${docId}`,
     `type: exec-plan`,
-    `rulebook: xep-rulebook`,
+    `rulebook: none`,
     `task_id: ${item.id}`,
     `name: "${item.title.replace(/"/g, "'")}"`,
     `mode: edit`,

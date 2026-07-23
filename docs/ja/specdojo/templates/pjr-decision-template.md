@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:_PJR-XXXX_
       type: project
       status: draft
-      rulebook: pjr-index-rulebook
+      rulebook: pjr-rulebook
       item_type: decision
 ---
 
@@ -20,11 +20,11 @@ specdojo:
 | ---------- | ------------------- |
 | ID         | _PJR-XXXX_          |
 | 分類       | decision            |
-| ステータス | decided             |
+| ステータス | open                |
 | 優先度     | high / medium / low |
 | 担当       | _TODO_              |
 | 期限       | _TODO_              |
-| 完了日     | _TODO_              |
+| 完了日     | -                   |
 
 ## 2. 背景
 

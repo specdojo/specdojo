@@ -205,7 +205,7 @@ review plan は Frontmatter と本文セクションで構成する。
 specdojo:
   id: <project-id>:xrp-<task-id>
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: <task-id>
   name: <フェーズ名>
   mode: review

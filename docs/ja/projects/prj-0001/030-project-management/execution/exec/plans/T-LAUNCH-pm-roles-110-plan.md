@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-roles-110
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-roles-110
   name: Rulebook 最終調整
   mode: edit

@@ -691,7 +691,7 @@ function buildEditPlanMarkdown(
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
     type: "exec-plan",
-    rulebook: "xep-rulebook",
+    rulebook: "none",
     task_id: task.id,
     ...(task.name ? { name: task.name } : {}),
     mode: "edit",
@@ -749,7 +749,7 @@ function buildReviewPlanMarkdown(
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xrp", stem),
     type: "exec-plan",
-    rulebook: "xep-rulebook",
+    rulebook: "none",
     task_id: task.id,
     ...(task.name ? { name: task.name } : {}),
     mode: "review",

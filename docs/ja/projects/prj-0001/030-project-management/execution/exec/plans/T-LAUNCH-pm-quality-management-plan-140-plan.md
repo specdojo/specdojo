@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-quality-management-plan-140
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-quality-management-plan-140
   name: 完成版確定
   mode: edit

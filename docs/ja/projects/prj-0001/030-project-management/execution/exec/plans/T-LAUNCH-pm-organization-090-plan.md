@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xrp-t-launch-pm-organization-090
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-organization-090
   name: 完成版レビュー
   mode: review

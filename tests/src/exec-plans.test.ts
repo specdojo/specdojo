@@ -528,6 +528,7 @@ describe("generateSinglePlan", () => {
       expect(outPath).toBe(join(plansDir, "T-TEST-overview-020-plan.md"));
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("task_id: T-TEST-overview-020");
+      expect(plan).toContain("rulebook: none");
       expect(plan).toContain("Business value is clear");
 
       // Sibling plan and index are untouched (single-task generation must not wipe them).

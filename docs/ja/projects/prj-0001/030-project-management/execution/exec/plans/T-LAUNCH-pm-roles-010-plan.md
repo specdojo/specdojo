@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:xep-t-launch-pm-roles-010
   type: exec-plan
-  rulebook: xep-rulebook
+  rulebook: none
   task_id: T-LAUNCH-pm-roles-010
   name: 一括整備（成果物＋参考資料）
   mode: edit
