@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, posix } from "node:path";
 import yaml from "js-yaml";
 import { collectDocIndexEntries } from "./doc-index.js";
+import { isDctTemplateCatalog, renderCatalogTemplateBody } from "./catalog-build.js";
 
 // YAML は VitePress のページにならないため、doc-index に載っている YAML ごとに
 // 同階層の generated/<name>.md へ表示用ページ（本文を yaml コードブロックで埋め込んだ
@@ -120,6 +121,32 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
   const frontmatter = yaml.dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd();
   const fileName = posix.basename(yamlRelPath);
   const heading = title ?? fileName;
+  const note = `> このページは \`${yamlRelPath}\` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。`;
+
+  // dct 成果物カタログのテンプレートは、YAML 丸写しのコードブロックでは可読性が低いため、
+  // インスタンス（catalog build）と同じ表形式で本文を描画する。
+  let parsed: unknown;
+  try {
+    parsed = yaml.load(content);
+  } catch {
+    parsed = undefined;
+  }
+  if (isDctTemplateCatalog(yamlRelPath, parsed)) {
+    return [
+      "---",
+      frontmatter,
+      "---",
+      "",
+      `# ${heading}`,
+      "",
+      note,
+      "",
+      YAML_PAGE_MARKER,
+      "",
+      renderCatalogTemplateBody(parsed),
+      "",
+    ].join("\n");
+  }
 
   const backtickRuns = content.match(/`+/g) ?? [];
   const longestRun = backtickRuns.reduce((max, run) => Math.max(max, run.length), 0);
@@ -134,7 +161,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
     "",
     `# ${heading}`,
     "",
-    `> このページは \`${yamlRelPath}\` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。`,
+    note,
     "",
     YAML_PAGE_MARKER,
     "",

@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { buildMarkdown, validateDctDoc } from "../../src/catalog-build.js";
-import type { DctDoc, DctDeliverableItem, DctSection } from "../../src/catalog-types.js";
+import {
+  buildMarkdown,
+  isDctTemplateCatalog,
+  renderCatalogTemplateBody,
+  validateDctDoc,
+} from "../../src/catalog-build.js";
+import type {
+  DctDoc,
+  DctDeliverableItem,
+  DctSection,
+  DctTemplateDoc,
+} from "../../src/catalog-types.js";
 
 function makeDoc(overrides: Partial<DctDoc> = {}): DctDoc {
   return {
@@ -29,6 +39,79 @@ function makeWorkItem(overrides: Partial<DctDeliverableItem> = {}): DctDeliverab
 function makeSection(overrides: Partial<DctSection> = {}): DctSection {
   return { name: "セクション", deliverables: [], ...overrides };
 }
+
+function makeTemplateDoc(overrides: Partial<DctTemplateDoc> = {}): DctTemplateDoc {
+  return {
+    id: "dct-architecture-template",
+    type: "template",
+    status: "draft",
+    title: "成果物カタログ（アーキテクチャ）",
+    rulebook: "dct-rulebook",
+    domain: "architecture",
+    base_path: "/docs/ja/product/030-architecture",
+    groups: [
+      {
+        name: "C4",
+        base_path: "010-c4",
+        deliverables: [
+          {
+            local_id: "cxd-_CONTEXT_",
+            name: "C4コンテキスト図",
+            kind: "work",
+            overview: "対象システムと境界外の関係を定義する",
+            path: "cxd-_CONTEXT_.md",
+            done_criteria: [
+              { text: "境界が正確に表現されていること", roles: ["BA"], viewpoint: "" },
+            ],
+          },
+        ],
+      },
+    ],
+    ...overrides,
+  };
+}
+
+describe("isDctTemplateCatalog", () => {
+  it("templates 配下の dct-*-template.yaml で type:template なら true", () => {
+    const parsed = { type: "template", domain: "architecture", groups: [] };
+
+    expect(
+      isDctTemplateCatalog("docs/ja/specdojo/templates/dct-architecture-template.yaml", parsed),
+    ).toBe(true);
+  });
+
+  it("インスタンス（type:project）や templates 外のパスは false", () => {
+    const templateDoc = { type: "template", domain: "architecture", groups: [] };
+    const projectDoc = { type: "project", domain: "architecture", groups: [] };
+
+    expect(
+      isDctTemplateCatalog("docs/ja/projects/prj-0001/catalog/dct-architecture.yaml", templateDoc),
+    ).toBe(false);
+    expect(
+      isDctTemplateCatalog("docs/ja/specdojo/templates/dct-architecture-template.yaml", projectDoc),
+    ).toBe(false);
+  });
+});
+
+describe("renderCatalogTemplateBody", () => {
+  it("成果物表と完了条件を描画し、YAML コードブロックを含まない", () => {
+    const body = renderCatalogTemplateBody(makeTemplateDoc());
+
+    expect(body).toContain("## 1. C4");
+    expect(body).toContain("| local-id | 成果物名 | 種別 | 根拠 | 概要 |");
+    expect(body).toContain("| `cxd-_CONTEXT_` | C4コンテキスト図 | work | - |");
+    expect(body).toContain("**`cxd-_CONTEXT_`** の完了条件:");
+    expect(body).not.toContain("```yaml");
+  });
+
+  it("frontmatter や H1 を含まず本文セクションのみ返す", () => {
+    const body = renderCatalogTemplateBody(makeTemplateDoc());
+
+    expect(body.startsWith("## 1.")).toBe(true);
+    expect(body).not.toMatch(/^---/); // frontmatter フェンスを含まない
+    expect(body).not.toContain("# 成果物カタログ");
+  });
+});
 
 describe("validateDctDoc", () => {
   describe("必須フィールドの検証", () => {

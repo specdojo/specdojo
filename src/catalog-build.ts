@@ -6,6 +6,7 @@ import type {
   DctDoc,
   DctKind,
   DctSection,
+  DctTemplateDoc,
   DctValidationResult,
 } from "./catalog-types.js";
 import { declaredReferences } from "./reference-materials.js";
@@ -135,6 +136,33 @@ function buildFrontmatter(doc: DctDoc): string[] {
   }
   inner.push("rulebook: dct-rulebook");
   return buildSpecdojoFrontmatter(inner).split("\n");
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+// dct 成果物カタログのテンプレート（type: template）YAML かを判定する。
+// テンプレートはインスタンス（type: project）と違い project_id を持たず local_id に
+// プレースホルダを含むため、validateDctDoc/buildMarkdown は適用できない。yaml-pages の
+// 表示ページで、YAML 丸写しのコードブロックではなく可読な表形式で描画するために使う。
+export function isDctTemplateCatalog(
+  yamlRelPath: string,
+  parsed: unknown,
+): parsed is DctTemplateDoc {
+  if (!/\/templates\/dct-.+-template\.ya?ml$/.test(yamlRelPath)) return false;
+  if (!isRecord(parsed)) return false;
+  return (
+    parsed.type === "template" && typeof parsed.domain === "string" && Array.isArray(parsed.groups)
+  );
+}
+
+// dct テンプレートの本文（成果物表＋完了条件）を描画する。frontmatter・H1・注記は
+// 呼び出し側（yaml-pages 表示ページ）が付与するため、ここでは本文セクションのみ返す。
+// インスタンス（buildMarkdown）と同じ renderSections を共用し、表現を一致させる。
+export function renderCatalogTemplateBody(doc: DctTemplateDoc): string {
+  const topBase = resolveBasePath("", doc.base_path);
+  return renderSections(doc.groups, topBase, 1, []).join("\n").trim();
 }
 
 export function buildMarkdown(doc: DctDoc): string {

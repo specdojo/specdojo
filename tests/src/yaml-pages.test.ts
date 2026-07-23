@@ -90,6 +90,44 @@ describe("renderYamlPage", () => {
     expect(page).toContain("````yaml\n");
     expect(page).toContain("\n````\n");
   });
+
+  it("renders dct catalog templates as a readable table instead of a yaml code block", () => {
+    const content = [
+      "id: dct-architecture-template",
+      "type: template",
+      "status: draft",
+      "title: 成果物カタログ（アーキテクチャ）",
+      "rulebook: dct-rulebook",
+      "domain: architecture",
+      "base_path: /docs/ja/product/030-architecture",
+      "groups:",
+      "  - name: C4",
+      "    base_path: 010-c4",
+      "    deliverables:",
+      "      - local_id: cxd-_CONTEXT_",
+      "        name: C4コンテキスト図",
+      "        kind: work",
+      "        overview: 対象システムと外部との関係を定義する",
+      "        path: cxd-_CONTEXT_.md",
+      "        done_criteria:",
+      "          - text: 境界が業務観点で表現されていること",
+      "            roles: [BA]",
+      "            viewpoint: vp-ba-requirements-completeness",
+      "",
+    ].join("\n");
+
+    const page = renderYamlPage(
+      "docs/ja/specdojo/templates/dct-architecture-template.yaml",
+      content,
+    );
+
+    expect(page).toContain("# 成果物カタログ（アーキテクチャ）\n");
+    expect(page).toContain("| local-id | 成果物名 | 種別 | 根拠 | 概要 |");
+    expect(page).toContain("| `cxd-_CONTEXT_` | C4コンテキスト図 | work | - |");
+    expect(page).toContain("**`cxd-_CONTEXT_`** の完了条件:");
+    expect(page).toContain(YAML_PAGE_MARKER);
+    expect(page).not.toContain("```yaml");
+  });
 });
 
 describe("buildYamlPages", () => {
