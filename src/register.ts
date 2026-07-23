@@ -3,7 +3,6 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
-import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 
 // ================================
 // Types
@@ -59,9 +58,9 @@ export const VALID_TYPES = [
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
 
-const TABLE_HEADER =
-  "| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 期限 | 完了日 | 結論 | 個票 |";
-const TABLE_SEPARATOR = "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |";
+// 登録項目一覧テーブルは pjr-rulebook「本文構成」で章 1 に固定される。
+// 見出し文言（言語依存）ではなく章番号でセクションを特定し、i18n 非依存にする。
+const REGISTER_SECTION_RE = /^## 1\.\s/;
 
 // ================================
 // Path Resolution
@@ -124,13 +123,42 @@ function isTableSeparator(line: string): boolean {
   return line.startsWith("|") && /\|\s*---+\s*\|/.test(line);
 }
 
+// 生成ビューが使うテーブルの見出し行と区切り行。
+// 定数として持たず pjr-index.md（テンプレート由来）から採用し、列名の言語に依存しない。
+export type TableHeading = { header: string; separator: string };
+
+export function extractTableHeading(content: string): TableHeading {
+  const lines = content.split("\n");
+  let inSection = false;
+  let header: string | undefined;
+
+  for (const line of lines) {
+    if (REGISTER_SECTION_RE.test(line)) {
+      inSection = true;
+      continue;
+    }
+    if (inSection && /^## /.test(line)) break;
+    if (!inSection || !line.startsWith("|")) continue;
+
+    if (isTableSeparator(line)) {
+      if (header === undefined) {
+        throw new Error("Register table header row not found before the separator in pjr-index.md");
+      }
+      return { header: header.trim(), separator: line.trim() };
+    }
+    if (header === undefined) header = line;
+  }
+
+  throw new Error("Register table header row not found in pjr-index.md");
+}
+
 export function parsePjrIndex(content: string): PjrItem[] {
   const lines = content.split("\n");
   const items: PjrItem[] = [];
   let inSection = false;
 
   for (const line of lines) {
-    if (/^## 1\.\s+登録項目一覧/.test(line)) {
+    if (REGISTER_SECTION_RE.test(line)) {
       inSection = true;
       continue;
     }
@@ -180,7 +208,7 @@ function insertRowAfterLast(content: string, newRow: string): string {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (/^## 1\.\s+登録項目一覧/.test(line)) {
+    if (REGISTER_SECTION_RE.test(line)) {
       inSection = true;
       continue;
     }
@@ -317,110 +345,101 @@ function rebaseItems(items: PjrItem[], prefix: string): PjrItem[] {
   return items.map((it) => ({ ...it, ticket: adjustTicketLink(it.ticket, prefix) }));
 }
 
-function makeTable(items: PjrItem[]): string {
+function makeTable(items: PjrItem[], heading: TableHeading): string {
   const rows = items.map(formatTableRow);
-  return [TABLE_HEADER, TABLE_SEPARATOR, ...rows].join("\n");
+  return [heading.header, heading.separator, ...rows].join("\n");
 }
 
-function derivedViewNote(): string {
-  return "> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。";
-}
+type ViewGroup = { label: string; items: PjrItem[] };
 
-// pjr-index.md の派生ビュー（pjr-views / pm-risk-register など）の frontmatter。
-// pjr-index.md と整合させ、派生元を part_of で示す（deliverable-frontmatter スキーマに準拠）。
-function derivedViewFrontmatter(projectId: string, localId: string): string {
-  return buildSpecdojoFrontmatter([
-    `id: ${projectId}:${localId}`,
-    "type: project",
-    "status: ready",
-    "part_of:",
-    `  - ${projectId}:pjr-index`,
-    "rulebook: pjr-rulebook",
-  ]);
-}
-
-function generateViewsFile(items: PjrItem[], projectId: string): string {
-  const sections: string[] = [
-    derivedViewFrontmatter(projectId, "pjr-views"),
-    "",
-    "# 台帳ビュー",
-    "",
-    derivedViewNote(),
-  ];
-
-  // 1. 状態別
-  sections.push("", "## 1. 状態別");
-  let statusNum = 1;
-  for (const status of VALID_STATUSES) {
-    const filtered = items.filter((it) => it.status === status);
-    if (filtered.length === 0) continue;
-    sections.push(
-      "",
-      `### 1.${statusNum}. ${status}`,
-      "",
-      "<!-- prettier-ignore -->",
-      makeTable(filtered),
-    );
-    statusNum++;
+// 派生ビューの外枠（H1・note・章見出し・frontmatter）は template が所有する。
+// template をロードして生成物形へ平坦化し、`_PROJECT_ID_` を実プロジェクト ID へ置換する。
+function loadViewTemplate(templateFileName: string, projectId: string): string {
+  const templatePath = join(specdojoRootDir(), "docs/ja/specdojo/templates", templateFileName);
+  if (!existsSync(templatePath)) {
+    throw new Error(`View template not found: ${templatePath}`);
   }
+  const raw = readFileSync(templatePath, "utf8");
+  return flattenTemplateFrontmatter(raw).replace(/_PROJECT_ID_/g, projectId);
+}
 
-  // 2. 優先度別
-  sections.push("", "## 2. 優先度別");
-  let priorityNum = 1;
-  for (const priority of VALID_PRIORITIES) {
-    const filtered = items.filter((it) => it.priority === priority);
-    sections.push(
-      "",
-      `### 2.${priorityNum}. ${priority}`,
-      "",
-      "<!-- prettier-ignore -->",
-      makeTable(filtered),
-    );
-    priorityNum++;
+// template 本文中の `<!-- specdojo:view-slot=<key> -->` 行を生成テーブルへ置換する。
+// slot と提供テーブルは相互に過不足がないことを検証し、template の不整合を早期に検出する。
+export function injectViewSlots(content: string, slots: Record<string, string>): string {
+  const used = new Set<string>();
+  const injected = content.replace(
+    /^<!-- specdojo:view-slot=([a-z-]+) -->$/gm,
+    (_match, key: string) => {
+      if (!(key in slots)) {
+        throw new Error(`Unknown view-slot in template: ${key}`);
+      }
+      used.add(key);
+      return slots[key];
+    },
+  );
+  const missing = Object.keys(slots).filter((key) => !used.has(key));
+  if (missing.length > 0) {
+    throw new Error(`View-slot not found in template: ${missing.join(", ")}`);
   }
+  return injected;
+}
 
-  // 3. 担当者別
-  sections.push("", "## 3. 担当者別");
+// グループ（状態別・優先度別・担当者別など）を `### <chapter>.<n>. <label>` 見出し付きの
+// テーブル群へ整形する。章見出しラベルは template 側が持つため、ここでは番号と値のみ扱う。
+function renderGroupedTables(groups: ViewGroup[], chapter: number, heading: TableHeading): string {
+  return groups
+    .map((group, index) =>
+      [
+        `### ${chapter}.${index + 1}. ${group.label}`,
+        "",
+        "<!-- prettier-ignore -->",
+        makeTable(group.items, heading),
+      ].join("\n"),
+    )
+    .join("\n\n");
+}
+
+function groupByOwner(items: PjrItem[]): ViewGroup[] {
   const grouped = new Map<string, PjrItem[]>();
   for (const item of items) {
     const key = item.owner || "-";
     if (!grouped.has(key)) grouped.set(key, []);
     grouped.get(key)!.push(item);
   }
-  let ownerNum = 1;
-  for (const owner of [...grouped.keys()].sort()) {
-    sections.push(
-      "",
-      `### 3.${ownerNum}. ${owner}`,
-      "",
-      "<!-- prettier-ignore -->",
-      makeTable(grouped.get(owner)!),
-    );
-    ownerNum++;
-  }
+  return [...grouped.keys()].sort().map((owner) => ({ label: owner, items: grouped.get(owner)! }));
+}
 
-  return sections.join("\n") + "\n";
+function generateViewsFile(items: PjrItem[], projectId: string, heading: TableHeading): string {
+  const statusGroups = VALID_STATUSES.map((status) => ({
+    label: status,
+    items: items.filter((it) => it.status === status),
+  })).filter((group) => group.items.length > 0);
+
+  const priorityGroups = VALID_PRIORITIES.map((priority) => ({
+    label: priority,
+    items: items.filter((it) => it.priority === priority),
+  }));
+
+  const template = loadViewTemplate("pjr-views-template.md", projectId);
+  return injectViewSlots(template, {
+    "by-status": renderGroupedTables(statusGroups, 1, heading),
+    "by-priority": renderGroupedTables(priorityGroups, 2, heading),
+    "by-owner": renderGroupedTables(groupByOwner(items), 3, heading),
+  });
 }
 
 function generateTypeFilterView(
   items: PjrItem[],
   type: string,
-  title: string,
-  localId: string,
+  templateFileName: string,
   projectId: string,
+  heading: TableHeading,
 ): string {
   const filtered = items.filter((it) => it.type === type);
-  return [
-    derivedViewFrontmatter(projectId, localId),
-    "",
-    `# ${title}`,
-    "",
-    derivedViewNote(),
-    "",
-    "<!-- prettier-ignore -->",
-    makeTable(filtered),
-    "",
-  ].join("\n");
+  const template = loadViewTemplate(templateFileName, projectId);
+  return injectViewSlots(template, {
+    table: ["<!-- prettier-ignore -->", makeTable(filtered, heading)].join("\n"),
+  });
 }
 type BuildScope = "register" | "controls" | "all";
 type ViewFile = { path: string; content: string };
@@ -430,6 +449,7 @@ const VALID_BUILD_SCOPES: BuildScope[] = ["register", "controls", "all"];
 function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
   const content = readFileSync(paths.pjrIndexPath, "utf8");
   const items = parsePjrIndex(content);
+  const heading = extractTableHeading(content);
 
   // Ticket links in pjr-index.md use ./ relative to project-register/.
   // Rebase them so links remain valid from each generated/ directory.
@@ -443,7 +463,7 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
   if (scope === "register" || scope === "all") {
     registerViews.push({
       path: join(paths.generatedPath, "pjr-views.md"),
-      content: generateViewsFile(regItems, paths.projectId),
+      content: generateViewsFile(regItems, paths.projectId, heading),
     });
   }
 
@@ -454,9 +474,9 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
         content: generateTypeFilterView(
           ctrlItems,
           "risk",
-          "リスク登録簿",
-          "pm-risk-register",
+          "pm-risk-register-template.md",
           paths.projectId,
+          heading,
         ),
       },
       {
@@ -464,9 +484,9 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
         content: generateTypeFilterView(
           ctrlItems,
           "issue",
-          "課題ログ",
-          "pm-issue-log",
+          "pm-issue-log-template.md",
           paths.projectId,
+          heading,
         ),
       },
       {
@@ -474,9 +494,9 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
         content: generateTypeFilterView(
           ctrlItems,
           "change-request",
-          "変更要求ログ",
-          "pm-change-request-log",
+          "pm-change-request-log-template.md",
           paths.projectId,
+          heading,
         ),
       },
       {
@@ -484,9 +504,9 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
         content: generateTypeFilterView(
           ctrlItems,
           "decision",
-          "決定記録",
-          "pm-decision-log",
+          "pm-decision-log-template.md",
           paths.projectId,
+          heading,
         ),
       },
     );
@@ -535,7 +555,7 @@ function replaceRowInContent(content: string, updated: PjrItem): string {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (/^## 1\.\s+登録項目一覧/.test(line)) {
+    if (REGISTER_SECTION_RE.test(line)) {
       inSection = true;
       continue;
     }
