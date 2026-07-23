@@ -5,32 +5,22 @@ specdojo:
   status: draft
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_PJR-XXXX_
+      id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
       rulebook: pjr-rulebook
+      part_of:
+        - _PROJECT_ID_:pjr-index
       item_type: risk
 ---
 
 # _PJR-XXXX_ _RISK_TITLE_
 
-## 1. 基本情報
-
-| 項目       | 内容                |
-| ---------- | ------------------- |
-| ID         | _PJR-XXXX_          |
-| 分類       | risk                |
-| ステータス | open                |
-| 優先度     | high / medium / low |
-| 担当       | _TODO_              |
-| 期限       | _TODO_              |
-| 完了日     | -                   |
-
-## 2. リスク内容
+## 1. リスク内容
 
 _TODO_: 将来発生し得る不確実な事象と、その原因を記載する。
 
-## 3. 影響評価
+## 2. 影響評価
 
 | 項目     | 評価                |
 | -------- | ------------------- |
@@ -39,7 +29,7 @@ _TODO_: 将来発生し得る不確実な事象と、その原因を記載する
 | 影響範囲 | _TODO_              |
 | 兆候     | _TODO_              |
 
-## 4. 対応方針
+## 3. 対応方針
 
 | 項目               | 内容                      |
 | ------------------ | ------------------------- |
@@ -48,10 +38,10 @@ _TODO_: 将来発生し得る不確実な事象と、その原因を記載する
 | トリガー           | _TODO_                    |
 | エスカレーション先 | _TODO_                    |
 
-## 5. モニタリング
+## 4. モニタリング
 
 _TODO_: 監視周期、確認方法、状態更新の条件を記載する。
 
-## 6. 関連ドキュメント
+## 5. 関連ドキュメント
 
 - _TODO_

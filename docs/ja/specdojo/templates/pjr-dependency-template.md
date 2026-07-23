@@ -5,32 +5,22 @@ specdojo:
   status: draft
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_PJR-XXXX_
+      id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
       rulebook: pjr-rulebook
+      part_of:
+        - _PROJECT_ID_:pjr-index
       item_type: dependency
 ---
 
 # _PJR-XXXX_ _DEPENDENCY_TITLE_
 
-## 1. 基本情報
-
-| 項目       | 内容                |
-| ---------- | ------------------- |
-| ID         | _PJR-XXXX_          |
-| 分類       | dependency          |
-| ステータス | open                |
-| 優先度     | high / medium / low |
-| 担当       | _TODO_              |
-| 期限       | _TODO_              |
-| 完了日     | -                   |
-
-## 2. 依存事項
+## 1. 依存事項
 
 _TODO_: 依存している成果物、作業、外部判断、外部システムなどを記載する。
 
-## 3. 依存条件
+## 2. 依存条件
 
 | 項目       | 内容   |
 | ---------- | ------ |
@@ -39,7 +29,7 @@ _TODO_: 依存している成果物、作業、外部判断、外部システム
 | 必要な時期 | _TODO_ |
 | 依存先担当 | _TODO_ |
 
-## 4. 影響と代替策
+## 3. 影響と代替策
 
 | 項目                 | 内容   |
 | -------------------- | ------ |
@@ -47,10 +37,10 @@ _TODO_: 依存している成果物、作業、外部判断、外部システム
 | 代替策               | _TODO_ |
 | エスカレーション条件 | _TODO_ |
 
-## 5. 追跡状況
+## 4. 追跡状況
 
 _TODO_: 確認履歴、次回確認予定、状態更新の理由を記載する。
 
-## 6. 関連ドキュメント
+## 5. 関連ドキュメント
 
 - _TODO_

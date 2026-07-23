@@ -304,6 +304,7 @@ function getTitlePlaceholder(type: string): string {
 function generateTicket(opts: {
   projectId: string;
   displayId: string;
+  topic: string;
   type: string;
   title: string;
   templatePath: string;
@@ -316,8 +317,8 @@ function generateTicket(opts: {
   content = flattenTemplateFrontmatter(content);
   const pjrLower = opts.displayId.toLowerCase();
 
-  // Replace frontmatter id pattern first to keep it lowercase
-  content = content.replace(/_PROJECT_ID_:_PJR-XXXX_/g, `${opts.projectId}:${pjrLower}`);
+  // Keep the canonical document ID aligned with the ticket filename.
+  content = content.replace(/_PJR_DOCUMENT_ID_/g, `${opts.projectId}:${pjrLower}-${opts.topic}`);
   // Replace remaining project id placeholder
   content = content.replace(/_PROJECT_ID_/g, opts.projectId);
   // Replace display id placeholder with uppercase
@@ -743,6 +744,11 @@ export function registerRegisterCommands(program: Command): void {
       }
 
       const topic = opts.topic?.trim() || slugify(opts.title);
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
+        throw new Error(
+          `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+        );
+      }
       const ticketFilename = `${displayId.toLowerCase()}-${topic}.md`;
       const ticketRef = opts.ticket
         ? `[${ticketFilename.replace(".md", "")}](./${ticketFilename})`
@@ -774,6 +780,7 @@ export function registerRegisterCommands(program: Command): void {
           const ticketContent = generateTicket({
             projectId: paths.projectId,
             displayId,
+            topic,
             type: opts.type,
             title: opts.title,
             templatePath,
@@ -801,6 +808,7 @@ export function registerRegisterCommands(program: Command): void {
           const ticketContent = generateTicket({
             projectId: paths.projectId,
             displayId,
+            topic,
             type: opts.type,
             title: opts.title,
             templatePath,
