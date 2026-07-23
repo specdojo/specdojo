@@ -156,6 +156,14 @@ specdojo register build --project <project-id>
 - `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成される。
 - 派生ビューの内容を直したい場合は、生成ファイルではなく `pjr-index.md` または個票を修正して再生成する。
 
+派生ビューのテーブルのタイトル行（列名の行）は、コードや派生ビューの雛形ではなく `pjr-index.md` のタイトル行をそのまま継承します。列名を変更したい場合は、生成ファイルを直接編集せず、次を修正してから `register build` で再生成します。
+
+- 既存プロジェクトの実値: 当該 `pjr-index.md` の「登録項目一覧」テーブルのタイトル行
+- 新規プロジェクトの初期値: `pjr-index-template.md` のタイトル行
+- 列の追加・削除・改名を伴う規範変更: [[pjr-rulebook]] の「登録項目一覧の標準列」
+
+派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
+
 ## 8. agent実行・定期実行との連携
 
 登録項目は `exec run --register` で agent に実行させられます。
