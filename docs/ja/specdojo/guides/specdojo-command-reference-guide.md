@@ -13,12 +13,12 @@ SpecDojo Command Reference Guide
 
 ## 1. 共通オプション
 
-| オプション        | 用途                                               | 主な対象                            |
-| ----------------- | -------------------------------------------------- | ----------------------------------- |
-| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド            |
-| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree   |
-| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release |
-| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                   |
+| オプション        | 用途                                               | 主な対象                                       |
+| ----------------- | -------------------------------------------------- | ---------------------------------------------- |
+| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド                       |
+| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / generate / build / run / worktree   |
+| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / generate / schedule build / release |
+| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                              |
 
 project の解決順序と設定は [specdojo-cli-overview-guide.md](specdojo-cli-overview-guide.md) を参照します。
 
@@ -35,20 +35,37 @@ project の解決順序と設定は [specdojo-cli-overview-guide.md](specdojo-cl
 
 `catalog` は成果物カタログ（`dct-*.yaml`）を扱います。
 
-| コマンド           | 用途                                     | 例                                             |
-| ------------------ | ---------------------------------------- | ---------------------------------------------- |
-| `catalog scaffold` | テンプレートから `dct-*.yaml` を生成する | `specdojo catalog scaffold --project prj-0001` |
-| `catalog where`    | catalog 関連パスを表示する               | `specdojo catalog where --project prj-0001`    |
-| `catalog validate` | `dct-*.yaml` を検証する                  | `specdojo catalog validate --project prj-0001` |
-| `catalog build`    | `generated/dct-*.md` を生成する          | `specdojo catalog build --project prj-0001`    |
+| コマンド           | 用途                                            | 例                                             |
+| ------------------ | ----------------------------------------------- | ---------------------------------------------- |
+| `catalog scaffold` | テンプレートから `dct-*.yaml` を生成する        | `specdojo catalog scaffold --project prj-0001` |
+| `catalog where`    | catalog 関連パスを表示する                      | `specdojo catalog where --project prj-0001`    |
+| `catalog validate` | `dct-*.yaml` を検証する                         | `specdojo catalog validate --project prj-0001` |
+| `catalog build`    | `generated/dct-*.md` を生成する                 | `specdojo catalog build --project prj-0001`    |
+| `catalog generate` | `dct-*.yaml` が指す成果物ファイル本体を生成する | `specdojo catalog generate --project prj-0001` |
 
 主要オプション:
 
-| オプション          | 用途                                              |
-| ------------------- | ------------------------------------------------- |
-| `--size <size>`     | `small` / `medium` / `large` の成果物セットを選ぶ |
-| `--project-id <id>` | 生成ファイルに埋め込む project ID を上書きする    |
-| `--force`           | 既存ファイルを上書きする                          |
+| オプション          | 用途                                                          |
+| ------------------- | ------------------------------------------------------------- |
+| `--size <size>`     | `small` / `medium` / `large` の成果物セットを選ぶ             |
+| `--project-id <id>` | 生成ファイルに埋め込む project ID を上書きする                |
+| `--dct <name>`      | `catalog generate` の対象を特定の `dct-*.yaml` に絞る（後述） |
+| `--force`           | 既存ファイルを上書きする                                      |
+
+`catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`catalog generate` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`catalog generate` は project サイズ相当の成果物集合を材料化します。生成方針は次のとおりです。
+
+- 成果物 `local_id` に対応するテンプレート（`<local_id>-template.md` または `<local_id>-template.yaml`）がある場合は、そのテンプレートから生成する（`frontmatter_template` を平坦化し、`_PROJECT_ID_` を実 project ID に置換する。`_TODO_` 等の記入プレースホルダは残す）。
+- テンプレートがない場合は、カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行）。
+- 既にファイルが存在する成果物は上書きしない（`--force` 指定時のみ上書きする）。
+
+`--dct <name>` で対象を特定の `dct-*.yaml` に絞れます。`name` は `dct-` プレフィックスや `.yaml` の有無を問わず、ドメイン名（例: `project-definition`）でも一致します。カンマ区切りまたは複数回指定で複数のカタログを対象にできます。指定名に一致する `dct-*.yaml` がない場合はエラーで終了します。
+
+```bash
+specdojo catalog generate --project prj-0001 --dct project-definition
+specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
+```
+
+`catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集するため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済み本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回実行します。
 
 成果物カタログから Schedule への展開は [specdojo-deliverables-to-schedule-guide.md](specdojo-deliverables-to-schedule-guide.md) を参照します。
 

@@ -405,14 +405,14 @@ export function validateDctDoc(
   return { ok: errors.length === 0, errors, warnings };
 }
 
-type ResolvedDeliverable = {
+export type ResolvedDeliverable = {
   item: DctDeliverableItem;
   resolvedPath: string; // repo-relative path (no leading slash) to the deliverable document
 };
 
 // Walk all deliverables, resolving each one's document path using the
 // leading-slash base_path convention (same rules as renderSections / dct build).
-function collectResolvedDeliverables(
+export function collectResolvedDeliverables(
   sections: DctSection[],
   parentBase: string,
   out: ResolvedDeliverable[],

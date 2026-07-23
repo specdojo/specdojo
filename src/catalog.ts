@@ -14,6 +14,7 @@ import {
 import { collectDocIndexEntries } from "./doc-index.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
+import { runGenerate } from "./catalog-generate.js";
 import type { DctDoc } from "./catalog-types.js";
 
 function readSizeFromIndex(catalogPath: string): ProjectSize | null {
@@ -235,6 +236,58 @@ export function registerCatalogCommands(program: Command): void {
       }
       for (const p of written) {
         process.stdout.write(`Created: ${p}\n`);
+      }
+      for (const p of skipped) {
+        process.stdout.write(`Skipped (already exists; use --force to overwrite): ${p}\n`);
+      }
+
+      if (errors.length > 0) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const gcmd = cat
+    .command("generate")
+    .description("Create deliverable files the catalog points to (from template or catalog info)");
+  addProjectOption(gcmd);
+  gcmd.option(
+    "--project-id <projectId>",
+    "Project ID to embed (e.g. prj-0001); derived from each dct-*.yaml if omitted",
+  );
+  gcmd.option(
+    "--dct <name>",
+    "Limit to specific dct-*.yaml (repeatable / comma-separated; with or without 'dct-' prefix and '.yaml')",
+    (value: string, previous: string[]) => [...previous, ...value.split(",")],
+    [] as string[],
+  );
+  gcmd.option("--force", "Overwrite existing files", false);
+  gcmd.option("--dry-run", "Print planned files without writing", false);
+  gcmd.action((opts) => {
+    try {
+      const catalogPath = resolveCatalogPath(opts);
+
+      const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
+      if (!existsSync(templatesPath)) {
+        throw new Error(`Templates directory not found: ${templatesPath}`);
+      }
+
+      const { written, skipped, errors } = runGenerate({
+        catalogPath,
+        templatesPath,
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId ?? null,
+        force: !!opts.force,
+        dryRun: !!opts.dryRun,
+        dctNames: (opts.dct as string[]) ?? [],
+      });
+
+      const createdLabel = opts.dryRun ? "Would create" : "Created";
+      for (const err of errors) {
+        process.stdout.write(`ERROR: ${err}\n`);
+      }
+      for (const p of written) {
+        process.stdout.write(`${createdLabel}: ${p}\n`);
       }
       for (const p of skipped) {
         process.stdout.write(`Skipped (already exists; use --force to overwrite): ${p}\n`);

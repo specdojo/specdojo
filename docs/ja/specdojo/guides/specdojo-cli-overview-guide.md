@@ -134,6 +134,11 @@ specdojo catalog scaffold --project prj-0001
 specdojo catalog validate --project prj-0001
 specdojo catalog build --project prj-0001
 
+# 2.1 カタログが指す成果物ファイル本体を一括生成する
+#     テンプレートがあればテンプレートから、なければカタログ情報から最小雛形を作成する。
+#     既存ファイルは上書きしない（上書きは --force）。
+specdojo catalog generate --project prj-0001
+
 # 3. strategy から track schedule を生成する
 specdojo schedule build --project prj-0001 --track launch --force
 
