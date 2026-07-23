@@ -26,7 +26,7 @@ Project Register
 | PJR-0002 | done | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | 2026-05-24 | sch-strategy-launchを作成 | - |
 | PJR-0003 | done | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | 2026-07-22 | pm-roles, pm-membersに設定 | - |
 | PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | - |
-| PJR-0005 | open | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | - | - | - |
+| PJR-0005 | done | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | 2026-07-23 | pjr-rulebookを個別に作成 | - |
 | PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |
 | PJR-0007 | done | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0058で対応 | - |
 | PJR-0008 | done | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0037 | - |
@@ -117,7 +117,7 @@ Project Register
 | PJR-0094 | done | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | 2026-06-07 | 2026-06-07 | executionをhuman,agentに見直し後続へ反映 | - |
 | PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | - |
 | PJR-0096 | done | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | 2026-06-07 | 2026-06-02 | .remarkrc.yamlでのschema適用優先順も含め修正 | - |
-| PJR-0097 | open | xep-rulebookの追加 | edit plan用のrulebookを追加 | todo | medium | ARC | 2026-06-07 | - | - | - |
+| PJR-0097 | done | xep-rulebookの追加 | edit plan用のrulebookを追加 | todo | medium | ARC | 2026-06-07 | 2026-07-23 | xep, xrpについては自動生成のためrulebook不要 | - |
 | PJR-0098 | done | specdojo exec auto選択時にcapabilitiesのロジック変更 | 最小剰余を使用してcapabilitiesを選択->制約条件に変更 | todo | medium | ARC | 2026-06-07 | 2026-06-07 | priorityに基づいて選択するように変更 | - |
 | PJR-0099 | done | exec planをcreation_mode毎に出力変更 | creation_modeを反映し、planテンプレートから生成 | todo | medium | ARC | 2026-06-13 | 2026-06-10 | creation_modeをapproach_modeに変更してmode毎にテンプレート作成 | - |
 | PJR-0100 | done | *-instruction.mdを削除 | *-instruction.mdを廃止 | todo | medium | ARC | 2026-06-14 | 2026-06-13 | *-instruction.mdを廃止し、rulebook、標準、Skill、サイドバー、関連文書からinstruction参照を削除 | - |
