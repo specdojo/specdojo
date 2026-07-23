@@ -100,7 +100,7 @@ Project Register
 | PJR-0077 | done | specdojo exec runの追加 | agentの実行を管理するためのコマンドを追加 | todo | medium | ARC | 2026-05-26 | 2026-05-27 | specdojo exec runコマンドを実装 | - |
 | PJR-0078 | done | scheduleにgateを導入 | first_pass後にsecond_passに進めるよう、phase_gatesを導入 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gatesを導入、yamlとtsを修正 | - |
 | PJR-0079 | done | taskをstep-by-stepで実行 | agentで実行する前にtaskをステップごとに実行 | todo | medium | ARC | 2026-05-31 | 2026-07-22 | LAUNCH track実行の中で検証 | - |
-| PJR-0080 | open | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | 2026-05-31 | - | - | - |
+| PJR-0080 | done | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | 2026-05-31 | 2026-07-23 | catalog generateコマンドを追加 | - |
 | PJR-0081 | deferred | metadata.jsonの要否確認 | 少なくとも更新日付は不要、ファイル自体の用途も確認 | todo | medium | ARC | 2026-05-31 | - | 人向けなのでしばらく運用して不要であれば削除 | - |
 | PJR-0082 | done | pjr-by-*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | pjr-viewsに統合 | - |
 | PJR-0083 | done | milestoneをtimelineの上部に表示 | milestoneの表示位置をtimelineの上部に変更 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | 上部へ移動 | - |
@@ -140,8 +140,10 @@ Project Register
 | PJR-0117 | done | xrr-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | - |
 | PJR-0118 | done | Debian chromium 150のヘッドレス描画クラッシュ対応 | arm64 full版chromium 150.0.7871.46がヘッドレス描画時にbrk #0でクラッシュしmermaid SVG生成が失敗。chromium-headless-shellへ切替(Dockerfile変更済み)。| issue | high | ARC | 2026-07-08 | 2026-07-08 | Dockerfileを修正 | - |
 | PJR-0119 | decided | プロジェクト憲章の承認 | prj-charter の立ち上げ認可と権限委譲を PO として承認する | decision | high | PO | 2026-07-17 | 2026-07-17 | コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定 | [pjr-0119-charter-approval](./pjr-0119-charter-approval.md) |
-| PJR-0120 | open | 初期公開の範囲・ライセンス・貢献導線の確定 | 初期公開の対象範囲、ライセンス、貢献導線を PO の判断で確定する（旧 ACD-D03） | decision | high | PO | - | - | - | - |
-| PJR-0121 | open | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | - | - | - |
+| PJR-0120 | decided | 初期公開の範囲・ライセンス・貢献導線の確定 | 初期公開の対象範囲、ライセンス、貢献導線を PO の判断で確定する（旧 ACD-D03） | decision | high | PO | - | 2026-07-24 | 採用ライセンスを MIT、貢献導線を GitHub issue / pull request として確定 | - |
+| PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | - |
+| PJR-0122 | open | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | - | - | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
+| PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | _TODO_ | 2026-07-31 | - | - | - |
 
 ## 2. 派生ビュー
 
