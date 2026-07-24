@@ -152,7 +152,7 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 | `change-request` | 変更要求、影響評価、審査・決定、実施追跡                           |
 | `decision`       | 背景、検討した選択肢、決定内容、採択理由、影響範囲とフォローアップ |
 | `dependency`     | 依存事項、依存条件、影響と代替策、追跡状況                         |
-| `note`           | メモ、背景・文脈、参照情報、フォローアップ                         |
+| `note`           | メモ、背景・文脈、フォローアップ                                   |
 
 - type 固有の内容は、対象 type の標準構成を満たす見出しで記載する。
 - 該当しない内容を空欄の章として残さず、`-` と理由を記載するか、情報が未確定なら共通ラベルを使用する。
