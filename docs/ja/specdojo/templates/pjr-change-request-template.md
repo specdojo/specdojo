@@ -5,28 +5,18 @@ specdojo:
   status: draft
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_PJR-XXXX_
+      id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
       rulebook: pjr-rulebook
+      part_of:
+        - _PROJECT_ID_:pjr-index
       item_type: change-request
 ---
 
 # _PJR-XXXX_ _CHANGE_REQUEST_TITLE_
 
-## 1. 基本情報
-
-| 項目       | 内容                |
-| ---------- | ------------------- |
-| ID         | _PJR-XXXX_          |
-| 分類       | change-request      |
-| ステータス | open                |
-| 優先度     | high / medium / low |
-| 担当       | _TODO_              |
-| 期限       | _TODO_              |
-| 完了日     | -                   |
-
-## 2. 変更要求
+## 1. 変更要求
 
 | 項目     | 内容   |
 | -------- | ------ |
@@ -35,7 +25,7 @@ specdojo:
 | 申請日   | _TODO_ |
 | 変更理由 | _TODO_ |
 
-## 3. 影響評価
+## 2. 影響評価
 
 | 観点         | 影響   |
 | ------------ | ------ |
@@ -45,7 +35,7 @@ specdojo:
 | 品質         | _TODO_ |
 | 運用         | _TODO_ |
 
-## 4. 審査・決定
+## 3. 審査・決定
 
 | 項目     | 内容                              |
 | -------- | --------------------------------- |
@@ -54,7 +44,7 @@ specdojo:
 | 決定日   | _TODO_                            |
 | 実施条件 | _TODO_                            |
 
-## 5. 実施追跡
+## 4. 実施追跡
 
 | 項目     | 内容   |
 | -------- | ------ |
@@ -63,6 +53,6 @@ specdojo:
 | 完了条件 | _TODO_ |
 | 対応結果 | _TODO_ |
 
-## 6. 関連ドキュメント
+## 5. 関連ドキュメント
 
 - _TODO_

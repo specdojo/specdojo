@@ -36,7 +36,7 @@ function applySubstitutions(text: string, subs: Array<[string, string]>): string
 
 // register add が生成するファイルのプレースホルダと同じ置換ルール
 const PJR_SUBSTITUTIONS: Array<[string, string]> = [
-  ["_PROJECT_ID_:_PJR-XXXX_", "prj-test-0001:pjr-0001"],
+  ["_PJR_DOCUMENT_ID_", "prj-test-0001:pjr-0001-sample-topic"],
   ["_PROJECT_ID_", "prj-test-0001"],
 ];
 
@@ -60,6 +60,15 @@ describe("register add — pjr テンプレート frontmatter スキーマ適合
       ) as Record<string, unknown>;
 
       expect(validator(data), formatErrors(validator.errors)).toBe(true);
+      if (raw.includes("_PJR_DOCUMENT_ID_")) {
+        expect(data).toMatchObject({
+          specdojo: {
+            id: "prj-test-0001:pjr-0001-sample-topic",
+            part_of: ["prj-test-0001:pjr-index"],
+          },
+        });
+        expect(flattened).not.toContain("## 1. 基本情報");
+      }
     },
   );
 });

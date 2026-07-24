@@ -39,8 +39,8 @@ Project Register Documentation Rules
   - 例: `prj-0001:pjr-index`
 - 個別登録項目の表示 ID は `PJR-XXXX` 形式とする。
   - 例: `PJR-0001`
-- 個別登録項目の文書 ID は `<project-id>:pjr-XXXX` 形式とする。
-  - 例: `prj-0001:pjr-0001`
+- 個別登録項目の文書 ID は `<project-id>:pjr-XXXX-<topic>` 形式とする。
+  - 例: `prj-0001:pjr-0001-auth-boundary`
 - 個別登録項目のファイル連番は 4 桁とし、project-register 内で一意にする。
 - `<topic>` は英小文字・数字・ハイフンのみとし、対象領域や論点が分かる短い名称にする。
 
@@ -77,16 +77,18 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 
 | 項目         | 説明                                                                                           | 必須 |
 | ------------ | ---------------------------------------------------------------------------------------------- | ---- |
-| `id`         | `<project-id>:pjr-XXXX`（例: `prj-0001:pjr-0001`）                                             | ○    |
+| `id`         | `<project-id>:pjr-XXXX-<topic>`（例: `prj-0001:pjr-0001-auth-boundary`）                       | ○    |
 | `type`       | 文書種別として `project` を使用する                                                            | ○    |
 | `status`     | 文書自体の成熟度。`draft` / `ready` / `deprecated`                                             | ○    |
 | `rulebook`   | `pjr-rulebook`                                                                                 | ○    |
+| `part_of`    | 所属する `<project-id>:pjr-index` を要素に持つ配列                                             | ○    |
 | `item_type`  | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` | ○    |
 | `based_on`   | 登録項目の根拠となる文書 ID                                                                    | 任意 |
 | `supersedes` | 置き換え元の文書 ID                                                                            | 任意 |
 
-- Frontmatter の `status` は文書の成熟度を表し、基本情報の「ステータス」は登録項目の処理状態を表す。両者を同じ状態軸として扱わない。
+- Frontmatter の `status` は文書の成熟度を表し、`pjr-index` の「ステータス」は登録項目の処理状態を表す。両者を同じ状態軸として扱わない。
 - `item_type` は `pjr-index` の「分類」と一致させる。
+- `id` のローカル ID 部分は拡張子を除くファイル名と一致させ、`<topic>` を省略しない。
 
 ### 3.3. 派生ビュー
 
@@ -130,14 +132,13 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 
 ### 4.2. 個別登録項目の共通構成
 
-| 順序  | 内容             | 必須 | 説明                                           |
-| ----- | ---------------- | ---- | ---------------------------------------------- |
-| 1     | 基本情報         | ○    | ID、分類、処理状態、優先度、担当、期限、完了日 |
-| 2以降 | type 固有の記録  | ○    | 対象、背景、評価、対応・判断、結果など         |
-| 末尾  | 関連ドキュメント | ○    | 根拠、影響先、追跡先を文書 ID で示す           |
+| 順序  | 内容             | 必須 | 説明                                   |
+| ----- | ---------------- | ---- | -------------------------------------- |
+| 1以降 | type 固有の記録  | ○    | 対象、背景、評価、対応・判断、結果など |
+| 末尾  | 関連ドキュメント | ○    | 根拠、影響先、追跡先を文書 ID で示す   |
 
 - H1 は `PJR-XXXX <タイトル>` 形式とする。
-- 基本情報の「分類」は Frontmatter の `item_type` および `pjr-index` の「分類」と一致させる。
+- ID、分類、処理状態、優先度、担当、期限、完了日は本文へ重複記載せず、Frontmatter または `pjr-index` を参照する。
 - 未完了の項目で結果・結論が確定していない場合は `-` または共通ラベルを使い、確定済みの記述と混在させない。
 
 ### 4.3. type 別の標準構成
@@ -155,7 +156,7 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 
 - type 固有の内容は、対象 type の標準構成を満たす見出しで記載する。
 - 該当しない内容を空欄の章として残さず、`-` と理由を記載するか、情報が未確定なら共通ラベルを使用する。
-- type を変更する場合は、基本情報と Frontmatter を更新し、変更後の標準構成へ内容を移す。
+- type を変更する場合は、Frontmatter と `pjr-index` を更新し、変更後の標準構成へ内容を移す。
 
 ### 4.4. 派生ビュー
 
@@ -194,9 +195,11 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 
 ### 5.4. index と個別登録項目の同期
 
-- ID、分類、処理状態、優先度、担当、期限、完了日は `pjr-index` と個票で一致させる。
+- 処理状態、優先度、担当、期限、完了日、結論要約は `pjr-index` だけで管理し、個票本文へ複製しない。
+- 表示 ID は `pjr-index` の「ID」と、個票の H1 および文書 ID に含まれる `pjr-XXXX` とを一致させる。
+- `pjr-index` の「分類」は個票 Frontmatter の `item_type` と一致させる。
 - `pjr-index` の「結論」は個票の結果・結論を1文で要約し、詳細を重複記載しない。
-- 状態遷移は register コマンドを優先し、個票だけ、または index だけを先に終端状態へ変更しない。
+- 状態遷移は register コマンドを優先し、個票 Frontmatter の文書成熟度を処理状態に連動させない。
 - 個票を追加・削除・改名した場合は、`pjr-index` の「個票」リンクを同じ変更で更新する。
 - `reopen` した場合は、終端時の記録を削除せず、再開理由と新しい対応状況を追記する。
 
@@ -213,7 +216,8 @@ docs/ja/projects/<project-id>/030-project-management/controls/project-register/p
 - `type` / `status` / `priority` に未定義の値を使用しない。
 - `説明` と `個票` の両方がない一覧行を作成しない。
 - Frontmatter の `status` と登録項目の処理状態を混同しない。
-- `pjr-index` と個票に異なる ID、分類、状態、担当、期限、完了日を記載しない。
+- 個票本文に ID、分類、処理状態、優先度、担当、期限、完了日の基本情報表を置かない。
+- 個票の文書 ID から `<topic>` を省略したり、ファイル名と異なるローカル ID を使用したりしない。
 - 個票の結果・結論を `pjr-index` に長文で複製しない。
 - type 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
 - 派生ビューを直接編集しない。

@@ -5,32 +5,22 @@ specdojo:
   status: draft
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_PJR-XXXX_
+      id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
       rulebook: pjr-rulebook
+      part_of:
+        - _PROJECT_ID_:pjr-index
       item_type: issue
 ---
 
 # _PJR-XXXX_ _ISSUE_TITLE_
 
-## 1. 基本情報
-
-| 項目       | 内容                |
-| ---------- | ------------------- |
-| ID         | _PJR-XXXX_          |
-| 分類       | issue               |
-| ステータス | open                |
-| 優先度     | high / medium / low |
-| 担当       | _TODO_              |
-| 期限       | _TODO_              |
-| 完了日     | -                   |
-
-## 2. 課題内容
+## 1. 課題内容
 
 _TODO_: すでに顕在化している問題、発生日、影響を記載する。
 
-## 3. 影響範囲
+## 2. 影響範囲
 
 | 観点         | 影響   |
 | ------------ | ------ |
@@ -40,7 +30,7 @@ _TODO_: すでに顕在化している問題、発生日、影響を記載する
 | 品質         | _TODO_ |
 | 関係者       | _TODO_ |
 
-## 4. 対応方針
+## 3. 対応方針
 
 | 項目     | 内容   |
 | -------- | ------ |
@@ -49,10 +39,10 @@ _TODO_: すでに顕在化している問題、発生日、影響を記載する
 | 依存事項 | _TODO_ |
 | 完了条件 | _TODO_ |
 
-## 5. 対応結果
+## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
 
-## 6. 関連ドキュメント
+## 5. 関連ドキュメント
 
 - _TODO_
