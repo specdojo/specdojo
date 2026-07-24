@@ -14,7 +14,7 @@ specdojo:
       item_type: todo
 ---
 
-# _PJR-XXXX_ _TODO_TITLE_
+# _PJR-XXXX_ _TASK_TITLE_
 
 ## 1. 概要
 
@@ -36,4 +36,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_
+- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
