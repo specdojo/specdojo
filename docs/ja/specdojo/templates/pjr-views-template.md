@@ -2,15 +2,15 @@
 specdojo:
   id: pjr-views-template
   type: template
-  status: ready
+  status: draft
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:pjr-views
       type: project
       status: ready
+      rulebook: pjr-rulebook
       part_of:
         - _PROJECT_ID_:pjr-index
-      rulebook: pjr-rulebook
 ---
 
 # 台帳ビュー
