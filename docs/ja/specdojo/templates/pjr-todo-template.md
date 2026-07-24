@@ -14,7 +14,7 @@ specdojo:
       item_type: todo
 ---
 
-# _PJR-XXXX_ _TASK_TITLE_
+# _PJR-XXXX_ _TODO_TITLE_
 
 ## 1. 概要
 

@@ -144,6 +144,8 @@ Project Register
 | PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | - |
 | PJR-0122 | open | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | - | - | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
 | PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | _TODO_ | 2026-07-31 | - | - | - |
+| PJR-0124 | open | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | _TODO_ | - | - | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
+| PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | _TODO_ | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
 
 ## 2. 派生ビュー
 
