@@ -29,17 +29,23 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                       | 担当   | 状態 | メモ                                             |
-| --- | ---------------------------------------------------------------------------------------------------------- | ------ | ---- | ------------------------------------------------ |
-| 1   | 現在の round と `Promise.allSettled` を中心とした実行制御を、実行中 task を管理する worker pool へ変更する | _TODO_ | open | `--loop` なしの互換性を維持する                  |
-| 2   | task 完了後の merge、complete、Ready 再生成、次 task の claim を安全に直列化する                           | _TODO_ | open | scheduler lock と既存の worktree lock を利用する |
-| 3   | provider capacity をラウンド単位の予約数ではなく現在実行中の数として管理する                               | _TODO_ | open | agent 終了時に枠を解放する                       |
-| 4   | 停止条件と実行中 task の drain 方針を実装する                                                              | _TODO_ | open | 新規投入停止と既存プロセス終了を分ける           |
-| 5   | worker pool、依存関係更新、provider capacity、停止条件のテストを追加する                                   | _TODO_ | open | 長短 task の混在を含める                         |
+| No  | 作業                                                                                                       | 担当                    | 状態 | メモ                                                                                   |
+| --- | ---------------------------------------------------------------------------------------------------------- | ----------------------- | ---- | -------------------------------------------------------------------------------------- |
+| 1   | 現在の round と `Promise.allSettled` を中心とした実行制御を、実行中 task を管理する worker pool へ変更する | codex-expert-edit-agent | done | `--loop` なしは開始時の最大 `n` 件のみ実行する経路として維持した                       |
+| 2   | task 完了後の merge、complete、Ready 再生成、次 task の claim を安全に直列化する                           | codex-expert-edit-agent | done | agent 終了後の root 側統合処理と次 task 準備を `SerialAsyncLock` で直列化した          |
+| 3   | provider capacity をラウンド単位の予約数ではなく現在実行中の数として管理する                               | codex-expert-edit-agent | done | `reserve` に加えて `release` を追加し、agent 終了後に provider 枠を解放する            |
+| 4   | 停止条件と実行中 task の drain 方針を実装する                                                              | codex-expert-edit-agent | done | critical task の rate limit / failure 後は新規投入を止め、実行中 task は drain する    |
+| 5   | worker pool、依存関係更新、provider capacity、停止条件のテストを追加する                                   | codex-expert-edit-agent | done | 短時間 task 完了後の補充、停止時の drain、provider capacity 解放を単体テストで確認した |
 
 ## 4. 対応結果
 
--
+- `src/exec-run.ts` に completion-driven worker pool を追加し、`--loop --parallel <n>` では agent が1件完了するたびに Ready を再評価して空き枠へ次 task を投入するようにした。
+- `--loop` なし、または dry-run は従来どおり開始時に選択した最大 `n` 件だけを実行する経路に据え置いた。
+- agent プロセスは並列実行しつつ、claim、checkpoint、merge、complete、`exec build`、次 task の claim / worktree 準備は runner 内の直列ロックで順序化した。
+- provider capacity は現在実行中の provider 数として扱い、起動時に `reserve`、終了時に `release` するようにした。
+- critical task が rate limit または failure になった場合は新規投入を停止し、既に起動済みの task は終了処理まで drain する方針にした。
+- `tests/src/exec-run-worker-pool.test.ts` を追加し、短時間 task 完了後の補充、停止後の新規投入抑止と drain を検証した。`tests/src/exec-agent-config.test.ts` には provider capacity 解放の検証を追加した。
+- `specdojo-exec-operation-guide`、`specdojo-command-reference-guide`、`specdojo-exec-config-guide`、`sysd-agent-settings` を worker pool 前提の説明へ更新した。
 
 ## 5. 関連ドキュメント
 

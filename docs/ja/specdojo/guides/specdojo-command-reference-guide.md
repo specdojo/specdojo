@@ -160,7 +160,7 @@ specdojo exec run --project prj-0001 --task <task-id> --worktree
 # Ready タスクを自動実行する
 specdojo exec run --project prj-0001 --auto --parallel 5
 
-# Ready がなくなるまでラウンド実行する
+# Ready がなくなるまで連続実行する
 specdojo exec run --project prj-0001 --auto --loop --parallel 5
 
 # 登録簿の項目を実行する（開始で in-progress、成功で review、失敗で waiting へ遷移）
@@ -181,6 +181,8 @@ specdojo exec run --project prj-0001 --register PJR-0012,PJR-0013 --on-failure c
 - `--on-failure <stop|continue>`: 途中で失敗したときに残りのIDを停止（`stop`、既定）するか継続（`continue`）するかを選びます。`stop` では失敗以降のIDは skipped として記録されます。
 
 register 実行は worktree を使わない in-place 直列実行のため、`--worktree` と `--parallel` は指定できません（指定した場合は理由を表示して拒否します）。
+
+`--auto --loop --parallel <n>` は、agent が1件完了するたびに `exec build` で Ready を再計算し、空いた枠へ次の Ready タスクを投入します。`--loop` が無い場合は、開始時に選んだ最大 `n` 件だけを実行して終了します。
 
 exec運用の詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
 

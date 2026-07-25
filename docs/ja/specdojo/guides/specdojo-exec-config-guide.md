@@ -93,7 +93,7 @@ members:
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
-ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、同一ラウンドで既に上限数の agent を確保済みであれば、その provider の候補を除外する。別 provider の候補が残ればそれを実行者に繰り上げる。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを次ラウンドへ繰り延べる（タスクは `todo` のまま保持され、取りこぼさない）。`--loop` 実行では、この繰り延べにより上限付き provider が自然に直列化される。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持する。`max_concurrency` は auto 選択のみに適用し、`--agent-cmd` / `--edit-agent` / `--review-agent` などの明示指定や resume 実行には適用しない。
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外する。別 provider の候補が残ればそれを実行者に繰り上げる。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べる（タスクは `todo` のまま保持され、取りこぼさない）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入する。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持する。`max_concurrency` は auto 選択のみに適用し、`--agent-cmd` / `--edit-agent` / `--review-agent` などの明示指定や resume 実行には適用しない。
 
 ## 4. 実行フロー
 
@@ -175,7 +175,7 @@ providers:
 ```yaml
 providers:
   opencode:
-    # opencode は 1 ラウンドで同時 1 つに制限する（他 provider は --parallel のまま並列）。
+    # opencode は現在実行中の数を同時 1 つに制限する（他 provider は --parallel のまま並列）。
     max_concurrency: 1
 ```
 

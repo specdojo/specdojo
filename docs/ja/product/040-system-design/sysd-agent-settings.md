@@ -353,6 +353,8 @@ devcontainer up --workspace-folder . --remove-existing-container
 
 複数の edit agent を並列実行する場合は、タスクごとに worktree とブランチを作成して Git working tree の競合を防ぐ。review agent が成果物を変更しない場合、review task の worktree 分離は不要とする。
 
+`exec run --auto --loop --parallel <n>` は、agent プロセスの実行枠を worker pool として扱う。agent が1件終了した時点で、runner はその task の commit / merge / complete と `exec build` を直列に処理し、依存関係を再計算したうえで空いた枠へ次の Ready task を投入する。`--parallel <n>` は同時に起動している agent 数の上限であり、`--loop` が無い場合は開始時に選んだ最大 `n` 件だけを実行して終了する。
+
 | タイミング          | 操作                                                        |
 | ------------------- | ----------------------------------------------------------- |
 | claim 時            | `git worktree add ../worktrees/<task-id> -b exec/<task-id>` |

@@ -262,6 +262,88 @@ type PlanGenPaths = {
   projectContext?: string[];
 };
 
+type AsyncLock = {
+  runExclusive: <T>(fn: () => Promise<T> | T) => Promise<T>;
+};
+
+class SerialAsyncLock implements AsyncLock {
+  private tail: Promise<void> = Promise.resolve();
+
+  async runExclusive<T>(fn: () => Promise<T> | T): Promise<T> {
+    const previous = this.tail;
+    let release!: () => void;
+    this.tail = new Promise<void>((resolveTail) => {
+      release = resolveTail;
+    });
+    await previous;
+    try {
+      return await fn();
+    } finally {
+      release();
+    }
+  }
+}
+
+export type CompletionDrivenWorkerPoolResult = {
+  launched: number;
+  completed: number;
+};
+
+export async function runCompletionDrivenWorkerPool<TItem, TResult>(options: {
+  maxParallel: number;
+  fillSlots: (openSlots: number) => Promise<TItem[]> | TItem[];
+  runItem: (item: TItem) => Promise<TResult>;
+  onSettled?: (
+    item: TItem,
+    result: TResult,
+  ) => Promise<{ stop?: boolean } | void> | { stop?: boolean } | void;
+}): Promise<CompletionDrivenWorkerPoolResult> {
+  type RunningItem = {
+    token: number;
+    item: TItem;
+    promise: Promise<{ token: number; item: TItem; result: TResult }>;
+  };
+
+  const running = new Map<number, RunningItem>();
+  let nextToken = 1;
+  let stop = false;
+  let launched = 0;
+  let completed = 0;
+
+  const start = (item: TItem): void => {
+    const token = nextToken++;
+    running.set(token, {
+      token,
+      item,
+      promise: options.runItem(item).then((result) => ({ token, item, result })),
+    });
+    launched++;
+  };
+
+  const refill = async (): Promise<void> => {
+    if (stop || running.size >= options.maxParallel) return;
+    const items = await options.fillSlots(options.maxParallel - running.size);
+    for (const item of items) {
+      if (running.size >= options.maxParallel) break;
+      start(item);
+    }
+  };
+
+  await refill();
+  while (running.size > 0) {
+    const outcome = await Promise.race(
+      [...running.values()].map((runningItem) => runningItem.promise),
+    );
+    running.delete(outcome.token);
+    completed++;
+    const action = await options.onSettled?.(outcome.item, outcome.result);
+    if (action?.stop) stop = true;
+    await refill();
+  }
+
+  return { launched, completed };
+}
+
 export function buildTaskPhaseMap(schedulePath: string): {
   localIdToPhaseSets: Map<string, string[]>;
   phaseSetSuffixToId: Map<string, string>;
@@ -973,6 +1055,7 @@ async function runPreparedTask(
   catalogPath: string | undefined,
   execDefaults: ExecDefaultsConfig,
   dryRun: boolean,
+  lifecycleLock?: AsyncLock,
 ): Promise<RunResult> {
   if (dryRun) return "success";
 
@@ -986,72 +1069,126 @@ async function runPreparedTask(
     agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
   );
 
-  const completedAt = new Date().toISOString();
-  const context = {
-    repoRoot,
-    schedulePath,
-    executionPath,
-    ...(catalogPath ? { catalogPath } : {}),
-  };
-  const worktreeResultPath = prepared.resultPath
-    ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
-    : undefined;
+  const finalize = async (): Promise<RunResult> => {
+    const completedAt = new Date().toISOString();
+    const context = {
+      repoRoot,
+      schedulePath,
+      executionPath,
+      ...(catalogPath ? { catalogPath } : {}),
+    };
+    const worktreeResultPath = prepared.resultPath
+      ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
+      : undefined;
 
-  const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
-    result,
-    worktreeResultPath,
-    prepared.task.mode ?? "edit",
-  );
+    const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
+      result,
+      worktreeResultPath,
+      prepared.task.mode ?? "edit",
+    );
 
-  if (effectiveResult === "success") {
-    // Record completion in the worktree result, then commit (result + deliverables) onto the
-    // exec branch and merge it into the current root branch so the changes are integrated.
-    // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
-    // a rejection as a block so the agent's run does not silently land or crash the loop.
-    if (worktreeResultPath) await updateResultStatus(worktreeResultPath, "complete", completedAt);
-    try {
-      commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id });
-      mergeWorktreeIntoCurrent({ context, worktree: prepared.worktree, taskId: prepared.task.id });
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : String(error);
+    if (effectiveResult === "success") {
+      // Record completion in the worktree result, then commit (result + deliverables) onto the
+      // exec branch and merge it into the current root branch so the changes are integrated.
+      // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
+      // a rejection as a block so the agent's run does not silently land or crash the loop.
+      if (worktreeResultPath) await updateResultStatus(worktreeResultPath, "complete", completedAt);
+      try {
+        commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id });
+        mergeWorktreeIntoCurrent({
+          context,
+          worktree: prepared.worktree,
+          taskId: prepared.task.id,
+        });
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        if (worktreeResultPath)
+          await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+        spawnBlock(projectId, prepared.task.id, prepared.actor, reason);
+        process.stderr.write(`${reason}\n`);
+        process.stdout.write(
+          `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        );
+        return "failure";
+      }
+      removeWorktree({
+        context,
+        worktree: prepared.worktree,
+        taskId: prepared.task.id,
+        deleteBranch: true,
+      });
+      spawnComplete(projectId, prepared.task.id, prepared.actor);
+      process.stdout.write(`  Done: ${prepared.task.id}\n`);
+    } else if (effectiveResult === "rate_limit") {
+      // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
       if (worktreeResultPath)
-        await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-      spawnBlock(projectId, prepared.task.id, prepared.actor, reason);
-      process.stderr.write(`${reason}\n`);
+        await updateResultStatus(worktreeResultPath, "blocked", completedAt, "rate limit reached");
+      spawnBlock(projectId, prepared.task.id, prepared.actor, "rate limit reached");
       process.stdout.write(
-        `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
       );
-      return "failure";
+    } else {
+      const blockReason = unfilledBlock
+        ? "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
+        : extractBlockReason(stderr);
+      if (worktreeResultPath)
+        await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
+      spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason);
+      process.stdout.write(
+        `  ${unfilledBlock ? "Blocked (result not filled)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+      );
     }
-    removeWorktree({
-      context,
-      worktree: prepared.worktree,
-      taskId: prepared.task.id,
-      deleteBranch: true,
-    });
-    spawnComplete(projectId, prepared.task.id, prepared.actor);
-    process.stdout.write(`  Done: ${prepared.task.id}\n`);
-  } else if (effectiveResult === "rate_limit") {
-    // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
-    if (worktreeResultPath)
-      await updateResultStatus(worktreeResultPath, "blocked", completedAt, "rate limit reached");
-    spawnBlock(projectId, prepared.task.id, prepared.actor, "rate limit reached");
-    process.stdout.write(
-      `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-    );
-  } else {
-    const blockReason = unfilledBlock
-      ? "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
-      : extractBlockReason(stderr);
-    if (worktreeResultPath)
-      await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
-    spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason);
-    process.stdout.write(
-      `  ${unfilledBlock ? "Blocked (result not filled)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-    );
-  }
 
-  return effectiveResult;
+    return effectiveResult;
+  };
+
+  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+}
+
+type PreparedTaskOutcome = {
+  prepared: PreparedTask;
+  result: RunResult;
+};
+
+async function runPreparedTaskSafely(
+  prepared: PreparedTask,
+  projectId: string | undefined,
+  repoRoot: string,
+  schedulePath: string,
+  executionPath: string,
+  catalogPath: string | undefined,
+  execDefaults: ExecDefaultsConfig,
+  dryRun: boolean,
+  lifecycleLock?: AsyncLock,
+): Promise<PreparedTaskOutcome> {
+  try {
+    const result = await runPreparedTask(
+      prepared,
+      projectId,
+      repoRoot,
+      schedulePath,
+      executionPath,
+      catalogPath,
+      execDefaults,
+      dryRun,
+      lifecycleLock,
+    );
+    return { prepared, result };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(`[run] error: ${prepared.worktree.name}: ${message}\n`);
+    const block = async (): Promise<void> => {
+      if (!dryRun) {
+        const completedAt = new Date().toISOString();
+        if (prepared.resultPath)
+          await updateResultStatus(prepared.resultPath, "blocked", completedAt);
+        spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
+      }
+    };
+    if (lifecycleLock) await lifecycleLock.runExclusive(block);
+    else await block();
+    return { prepared, result: "failure" };
+  }
 }
 
 function spawnSelf(args: string[]): boolean {
@@ -1180,15 +1317,14 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
   const dryRun = !!opts.dryRun;
   const strategy = opts.strategy ?? "critical-first";
 
-  let round = 0;
-
-  for (;;) {
-    round++;
-
+  const prepareReadyTasks = async (
+    capacity: ReturnType<typeof createProviderCapacityTracker>,
+    limit: number,
+  ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number }> => {
     if (!existsSync(readyJsonPath)) {
       process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec build\n`);
       process.exitCode = 1;
-      return;
+      return { preparedTasks: [], readyCount: 0 };
     }
 
     const readySnapshot = readJson(readyJsonPath) as ReadySnapshot;
@@ -1197,21 +1333,13 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
         ? readySnapshot.strategies.fifo.ordered_task_ids
         : readySnapshot.strategies["critical-first"].ordered_task_ids;
 
-    if (orderedIds.length === 0) {
-      process.stdout.write("[run] no ready tasks — exit\n");
-      return;
-    }
+    if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0 };
 
-    const roundSuffix = loop
-      ? ` (round ${round}${maxRounds !== null ? `/${maxRounds}` : "/-"})`
-      : "";
     const taskMap = new Map(readySnapshot.tasks.map((t) => [t.id, t]));
     const preparedTasks: PreparedTask[] = [];
-    // Fresh per round: caps how many agents of a capped provider start together this round.
-    const capacity = createProviderCapacityTracker(execDefaults);
 
     for (const taskId of orderedIds) {
-      if (preparedTasks.length >= parallel) break;
+      if (preparedTasks.length >= limit) break;
       const task = taskMap.get(taskId);
       if (!task) continue;
 
@@ -1235,7 +1363,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           execDefaults,
           capacity.hasCapacity,
         );
-        // "deferred": every candidate provider is at its cap this round; try it again next round.
+        // "deferred": every candidate provider is at its cap; try it again after a slot frees.
         if (prepared === "deferred") continue;
         if (typeof prepared !== "string") {
           preparedTasks.push(prepared);
@@ -1247,15 +1375,24 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       }
     }
 
+    return { preparedTasks, readyCount: orderedIds.length };
+  };
+
+  if (!loop || dryRun) {
+    const capacity = createProviderCapacityTracker(execDefaults);
+    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, parallel);
+
     if (preparedTasks.length === 0) {
-      process.stdout.write("[run] no executable tasks — exit\n");
-      process.exitCode = 1;
+      process.stdout.write(
+        readyCount === 0 ? "[run] no ready tasks — exit\n" : "[run] no executable tasks — exit\n",
+      );
+      if (readyCount > 0 || process.exitCode) process.exitCode = 1;
       return;
     }
 
-    const settledResults = await Promise.allSettled(
+    const outcomes = await Promise.all(
       preparedTasks.map((prepared) =>
-        runPreparedTask(
+        runPreparedTaskSafely(
           prepared,
           projectId,
           repoRoot,
@@ -1267,54 +1404,95 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
         ),
       ),
     );
-    const results: RunResult[] = [];
-    for (const [index, settled] of settledResults.entries()) {
-      if (settled.status === "fulfilled") {
-        results.push(settled.value);
-        continue;
-      }
-      const prepared = preparedTasks[index];
-      const message =
-        settled.reason instanceof Error ? settled.reason.message : String(settled.reason);
-      process.stderr.write(`[run] error: ${prepared.worktree.name}: ${message}\n`);
-      if (!dryRun) {
-        const completedAt = new Date().toISOString();
-        if (prepared.resultPath)
-          await updateResultStatus(prepared.resultPath, "blocked", completedAt);
-        spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
-      }
-      results.push("failure");
-    }
+    const results = outcomes.map((outcome) => outcome.result);
     const completed = results.filter((result) => result === "success").length;
-    process.stdout.write(`[run] all ${completed} instance(s) completed${roundSuffix}\n`);
+    process.stdout.write(`[run] all ${completed} instance(s) completed\n`);
 
     if (results.some((result) => result === "failure")) process.exitCode = 1;
 
-    const criticalRateLimit = results.some(
-      (result, index) =>
-        result === "rate_limit" && (preparedTasks[index].task.cpm?.slack ?? 1) === 0,
+    const criticalRateLimit = outcomes.some(
+      (outcome) => outcome.result === "rate_limit" && (outcome.prepared.task.cpm?.slack ?? 1) === 0,
     );
     if (criticalRateLimit) {
       process.stdout.write("[run] stopping: rate limit on critical task.\n");
       process.exitCode = 1;
-      return;
     }
-
-    if (!loop) return;
-
-    if (maxRounds !== null && round >= maxRounds) {
-      process.stdout.write(`[run] reached max-rounds ${maxRounds} — exit\n`);
-      return;
-    }
-
-    const nextRoundSuffix = ` (round ${round + 1}${maxRounds !== null ? `/${maxRounds}` : "/-"})`;
-    process.stdout.write(`[run] exec build${nextRoundSuffix}...\n`);
-    if (!spawnBuild(projectId)) {
-      process.stdout.write("[run] exec build failed — exit\n");
-      process.exitCode = 1;
-      return;
-    }
+    return;
   }
+
+  const lifecycleLock = new SerialAsyncLock();
+  const capacity = createProviderCapacityTracker(execDefaults);
+  let schedulingPass = 0;
+  let stopNewTasks = false;
+  let lastReadyCount = 0;
+
+  const scheduleAvailable = async (openSlots: number): Promise<PreparedTask[]> => {
+    if (stopNewTasks || openSlots <= 0) return [];
+    if (maxRounds !== null && schedulingPass >= maxRounds) {
+      process.stdout.write(`[run] reached max-rounds ${maxRounds} — drain running tasks\n`);
+      stopNewTasks = true;
+      return [];
+    }
+
+    schedulingPass++;
+    const roundSuffix = ` (round ${schedulingPass}${maxRounds !== null ? `/${maxRounds}` : "/-"})`;
+    if (schedulingPass > 1) {
+      process.stdout.write(`[run] exec build${roundSuffix}...\n`);
+      if (!spawnBuild(projectId)) {
+        process.stdout.write("[run] exec build failed — drain running tasks\n");
+        process.exitCode = 1;
+        stopNewTasks = true;
+        return [];
+      }
+    }
+
+    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, openSlots);
+    lastReadyCount = readyCount;
+    return preparedTasks;
+  };
+
+  const poolResult = await runCompletionDrivenWorkerPool<PreparedTask, PreparedTaskOutcome>({
+    maxParallel: parallel,
+    fillSlots: (openSlots) => lifecycleLock.runExclusive(() => scheduleAvailable(openSlots)),
+    runItem: (prepared) =>
+      runPreparedTaskSafely(
+        prepared,
+        projectId,
+        repoRoot,
+        schedulePath,
+        executionPath,
+        catalogPath,
+        execDefaults,
+        dryRun,
+        lifecycleLock,
+      ),
+    onSettled: (prepared, outcome) => {
+      capacity.release(prepared.agentCandidates[0]?.provider);
+
+      if (outcome.result === "failure") process.exitCode = 1;
+
+      const critical = (prepared.task.cpm?.slack ?? 1) === 0;
+      if (critical && (outcome.result === "rate_limit" || outcome.result === "failure")) {
+        const reason = outcome.result === "rate_limit" ? "rate limit" : "failure";
+        process.stdout.write(`[run] stopping: ${reason} on critical task.\n`);
+        process.exitCode = 1;
+        stopNewTasks = true;
+        return { stop: true };
+      }
+    },
+  });
+
+  if (poolResult.launched === 0) {
+    process.stdout.write(
+      lastReadyCount > 0 ? "[run] no executable tasks — exit\n" : "[run] no ready tasks — exit\n",
+    );
+    if (lastReadyCount > 0 || process.exitCode) process.exitCode = 1;
+    return;
+  }
+
+  process.stdout.write(
+    `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
+  );
 }
 
 // For a task already in "doing" state, resume with the actor who claimed it (and their command)

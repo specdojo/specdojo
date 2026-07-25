@@ -69,13 +69,15 @@ exec build
   -> 次の Ready タスクを更新
 ```
 
+`--loop --parallel <n>` では、最初に最大 `n` 件を起動した後、1件の agent が終了するたびに root 側の統合処理を終えて `exec build` を実行し、空いた枠へ次の Ready タスクを投入します。他の実行中 task の完了を待たないため、長時間 task と短時間 task が混在しても短時間 task の枠を継続利用できます。`--loop` を指定しない場合は、開始時に選択した最大 `n` 件だけを実行して終了します。
+
 代表コマンド:
 
 ```bash
 # 1バッチ実行して終了する
 specdojo exec run --project <project-id> --auto --parallel 5
 
-# Ready がなくなるまでラウンド実行する
+# Ready がなくなるまで連続実行する
 specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 # FIFO順で実行する
@@ -92,6 +94,8 @@ specdojo exec run --project <project-id> --auto --strategy fifo
 | root の未commit変更と merge 対象パスが重複する | merge 前に停止する                                |
 | agent が失敗して `blocked` になる              | worktree を保持し、auto の Ready 選択から除外する |
 | プロセス中断で `doing` が残る                  | `exec resume` で再開する                          |
+
+parallel 実行中でも、claim、checkpoint、merge、complete、`exec build` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
 
 auto 実行と並行して人が作業する場合は、別ブランチの worktree を作成して編集します。
 

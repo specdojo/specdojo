@@ -141,6 +141,16 @@ describe("createProviderCapacityTracker", () => {
     expect(tracker.hasCapacity("opencode")).toBe(false);
   });
 
+  it("releases capacity when a capped provider's running task finishes", () => {
+    const tracker = createProviderCapacityTracker(config);
+
+    tracker.reserve("opencode");
+    expect(tracker.hasCapacity("opencode")).toBe(false);
+
+    tracker.release("opencode");
+    expect(tracker.hasCapacity("opencode")).toBe(true);
+  });
+
   it("never limits a provider that has no cap", () => {
     const tracker = createProviderCapacityTracker(config);
 

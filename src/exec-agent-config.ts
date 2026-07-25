@@ -197,14 +197,16 @@ export function resolveMaxConcurrency(
   return raw;
 }
 
-// Tracks how many agents of each provider have been reserved within a single `exec run`
-// round, so the scheduler can keep a capped provider (e.g. opencode) from launching more
-// than its `max_concurrency` instances at once. A fresh tracker is created per round.
+// Tracks how many agents of each provider are currently running within one `exec run`
+// invocation, so the scheduler can keep a capped provider (e.g. opencode) from launching more
+// than its `max_concurrency` instances at once.
 export type ProviderCapacityTracker = {
   // Whether another agent of this provider may start now (true when uncapped or below cap).
   hasCapacity: (provider?: AgentProvider) => boolean;
-  // Record that one agent of this provider has been reserved for the current round.
+  // Record that one agent of this provider has started.
   reserve: (provider?: AgentProvider) => void;
+  // Record that one agent of this provider has finished.
+  release: (provider?: AgentProvider) => void;
 };
 
 export function createProviderCapacityTracker(config: ExecDefaultsConfig): ProviderCapacityTracker {
@@ -218,6 +220,12 @@ export function createProviderCapacityTracker(config: ExecDefaultsConfig): Provi
     reserve(provider?: AgentProvider): void {
       if (!provider) return;
       counts.set(provider, (counts.get(provider) ?? 0) + 1);
+    },
+    release(provider?: AgentProvider): void {
+      if (!provider) return;
+      const next = (counts.get(provider) ?? 0) - 1;
+      if (next > 0) counts.set(provider, next);
+      else counts.delete(provider);
     },
   };
 }
