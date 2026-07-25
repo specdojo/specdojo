@@ -159,6 +159,7 @@ Project Register
 | PJR-0136 | review | agent利用制限後の自動再開 | 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0136-exec-limit-resume](./pjr-0136-exec-limit-resume.md) |
 | PJR-0137 | open | pjr-indexの重複ID検知と再採番 | 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する | todo | medium | ARC | _TODO_ | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |
 | PJR-0138 | open | 起票を統合ブランチへ委譲するregister add | 作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する | todo | low | ARC | _TODO_ | - | - | [pjr-0138-register-add-on-integration-branch](./pjr-0138-register-add-on-integration-branch.md) |
+| PJR-0139 | open | 個票frontmatterのstatus遷移を自動化 | 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する | todo | medium | ARC | _TODO_ | - | - | [pjr-0139-register-ticket-status-transition](./pjr-0139-register-ticket-status-transition.md) |
 
 ## 2. 派生ビュー
 
