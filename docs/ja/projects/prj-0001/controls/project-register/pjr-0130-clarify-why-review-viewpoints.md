@@ -29,14 +29,19 @@ specdojo:
 <!-- prettier-ignore -->
 | No | 作業 | 担当 | 状態 | メモ |
 | --- | --- | --- | --- | --- |
-| 1 | 既存の目的整合・業務価値・可読性 viewpoint の責務と重複を整理する | QE | open | PO / BA / UX 観点 |
-| 2 | Why の明確性と手段の目的化を判定する check / evidence を具体化する | QE | open | 抽象的なチェックにしない |
-| 3 | 成果物種別ごとの適用範囲と、責務外詳細を要求しない条件を定義する | BA | open | 構造・設定成果物を考慮 |
-| 4 | review plan / result の代表例で過剰指摘や観点漏れがないか確認する | QE | open | coverage との整合も確認 |
+| 1 | 既存の目的整合・業務価値・可読性 viewpoint の責務と重複を整理する | QE | done | PO は上位目的との整合、BA は業務上の Why と What / How の対応、UX は読み手への伝わり方を担当 |
+| 2 | Why の明確性と手段の目的化を判定する check / evidence を具体化する | QE | done | 不足・矛盾・対応先のない手段を根拠とともに指摘できる表現へ更新 |
+| 3 | 成果物種別ごとの適用範囲と、責務外詳細を要求しない条件を定義する | BA | done | 構造・設定中心の成果物は参照・命名・下流利用の整合で判定 |
+| 4 | review plan / result の代表例で過剰指摘や観点漏れがないか確認する | QE | done | charter の BA 観点と scope の PO 観点で既存 coverage と両立することを確認 |
 
 ## 4. 対応結果
 
--
+- [[prj-0001:pm-review-viewpoints|レビュー観点一覧]]の既存 3 観点を更新し、新しい viewpoint は追加しなかった。
+- `vp-po-purpose-alignment` は、project-level Why と主要な定義・判断の整合、成果物固有の目的または上位参照、対応する目的・成果のない手段を確認する責務とした。
+- `vp-ba-business-value` は、対象者、業務課題、放置時の影響、期待価値・効果を根拠に、主要な成果・方針が Why に応えるかを確認する責務とした。
+- `vp-ux-readability` は、Why の内容自体を再判定せず、初見の読者が必要性と主要な判断の関係、目的と手段の区別を理解できるかを確認する責務とした。
+- 構造・設定中心の成果物では業務上の Why の詳細な再掲を要求せず、上位参照、名称、メタデータ、下流利用との整合で判定する適用条件を各観点へ反映した。
+- [[prj-0001:xrp-t-launch-prj-charter-090|プロジェクト憲章の review plan]] / [[prj-0001:xrr-t-launch-prj-charter-090|review result]] の BA 観点と、[[prj-0001:xrp-t-launch-prj-scope-090|プロジェクトスコープの review plan]] / [[prj-0001:xrr-t-launch-prj-scope-090|review result]] の PO 観点を代表例として確認した。前者は対象者・期待効果・上位目的との対応、後者は対象範囲・対象外・上位目的との対応を証拠に判定できており、既存の `business_goal` / `scope_boundary` / `traceability` coverage と矛盾せず、後続文書へ委譲した詳細を過剰に要求しない。
 
 ## 5. 関連ドキュメント
 
@@ -45,3 +50,4 @@ specdojo:
 - [[prj-0001:pjr-0129-why-what-how-recipes|Why-What-How作成原則をrecipeへ反映]] — 作成側の対策
 - [[prj-0001:pm-review-viewpoints|レビュー観点一覧]] — 変更対象
 - [[specdojo-review-guide]] — review viewpoint の運用基準
+- [[recipe-authoring-standard|Recipe 記述標準]] — Why / What / How / Trace と成果物形式別の適用基準
