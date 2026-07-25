@@ -142,7 +142,7 @@ Project Register
 | PJR-0119 | decided | プロジェクト憲章の承認 | prj-charter の立ち上げ認可と権限委譲を PO として承認する | decision | high | PO | 2026-07-17 | 2026-07-17 | コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定 | [pjr-0119-charter-approval](./pjr-0119-charter-approval.md) |
 | PJR-0120 | decided | 初期公開の範囲・ライセンス・貢献導線の確定 | 初期公開の対象範囲、ライセンス、貢献導線を PO の判断で確定する（旧 ACD-D03） | decision | high | PO | - | 2026-07-24 | 採用ライセンスを MIT、貢献導線を GitHub issue / pull request として確定 | - |
 | PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | - |
-| PJR-0122 | done | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | 2026-07-25 | launch trackの振り返りを完了。対策案はPJR-0124/0126/0127-0133として起票し、リファクタリングは実装済み。自動化の改善は対策未確定のため後続の振り返りで扱う | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
+| PJR-0122 | open | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | - | - | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
 | PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | _TODO_ | 2026-07-31 | - | - | - |
 | PJR-0124 | open | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | _TODO_ | - | - | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
 | PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | _TODO_ | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
