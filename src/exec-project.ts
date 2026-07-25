@@ -1,6 +1,7 @@
 import { join, resolve } from "node:path";
 import {
   getProjectCatalogPath,
+  getProjectContext,
   getProjectExecutionPath,
   getProjectRolesPath,
   getProjectSchedulePath,
@@ -97,6 +98,7 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
       catalogPath: catalogPath ? resolveProjectRelative(baseDir, catalogPath) : undefined,
       rolesPath: rolesPath ? resolveProjectRelative(baseDir, rolesPath) : undefined,
       viewpointsPath: viewpointsPath ? resolveProjectRelative(baseDir, viewpointsPath) : undefined,
+      projectContext: getProjectContext(project),
     };
   }
 

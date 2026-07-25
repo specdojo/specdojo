@@ -100,6 +100,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
       "members_path": "030-project-management/pm-members.yaml",
       "reviews_path": "controls/reviews",
       "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
+      "project_context": ["prj-overview"],
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
@@ -109,6 +110,8 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 ```
 
 `base_path` を指定すると、`catalog_path`、`schedule_path`、`execution_path` などを `base_path` からの相対パスとして書けます。`run.exec_defaults` と `run.worktree_base` はリポジトリルート相対のまま扱います。
+
+`project_context` は、`depends_on` と独立して成果物の edit / review plan に渡すプロジェクト共通文書の ID リストです。省略時は `["prj-overview"]`、空配列 `[]` は opt-out を表します。project context は plan の参照範囲にだけ作用し、schedule、`based_on`、commit scope は変更しません。
 
 ## 5. プロジェクト解決順序
 

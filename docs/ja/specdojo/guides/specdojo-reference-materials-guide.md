@@ -32,6 +32,29 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 4 種類すべてが揃っているとは限らない。揃っていない場合の進め方は「`approach` による進め方の使い分け」で扱う。
 
+### 2.1. プロジェクトコンテキスト
+
+プロジェクトコンテキストは、成果物ごとの作成順序・根拠関係を表す `depends_on` と分離して、プロジェクト共通の Why、用語、判断原則を実行 agent へ渡す仕組みである。`specdojo.config.json` の project 単位で、文書 ID の配列として設定する。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "project_context": ["prj-overview"]
+    }
+  }
+}
+```
+
+- `project_context` を省略した場合の既定値は `["prj-overview"]` とする。
+- 空配列 `[]` を設定すると、その project の project context を無効化できる。
+- project 修飾のない ID は、plan 生成時に対象 project の ID で修飾する。既に project 修飾された ID はそのまま使う。
+- project context は、成果物を解決できる agent 向け edit / review plan に適用する。`freeform` や `bootstrap` も対象に含む。
+- `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance`、human 向け `finalize`、成果物を伴わない機械的タスク、project context 文書自身を対象とするタスクには追加しない。
+- project context は plan 本文の参照範囲だけを広げる。schedule の実行順序、カタログの `depends_on` / `based_on`、plan frontmatter の `targets` と commit 許可範囲には追加しない。
+
+agent は plan に列挙された project context を作業開始前に読み、成果物の目的・用語・判断をプロジェクトレベルの Why と整合させる。Why の全文を各成果物へ再掲せず、対象成果物の責務に必要な結論・影響だけを反映する。
+
 ## 3. `approach` による進め方の使い分け
 
 `approach` は、タスクの進め方プロファイルである。`fully-guided` / `recipe-guided` / `freeform` は、対象成果物の rulebook / recipe / sample / template の整備状況に応じて、エージェントが参考資料をどの程度参照するかを示す。`bootstrap` は、成果物と参考資料一式を同じタスクで一貫して初期作成する進め方を示す。`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、成果物を根拠に対象の参考資料を見直す進め方を示す（詳細は「参考資料メンテナンスの進め方」）。`finalize` / `bootstrap-finalize` は `execution: human` と組み合わせて使う確定プロファイルであり、human が対象を最終確認して frontmatter の `status` を `ready` へ昇格する（`ready` への昇格は human のみが行える）。整備状況の判断は人が行い、`sch-strategy-<track>.yaml` のフェーズまたは `owner_rules[].phase_overrides[]` に明示する（後者が優先される）。エージェントは参考資料の品質判定を行わず、`approach` に示された進め方に従う。
@@ -53,7 +76,7 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 判断の根拠を成果物または result に残す。特に `recipe-guided` / `freeform` では、rulebook / sample / template を基準にしなかった理由と、代わりに何を判断の根拠にしたかを明示する。後から rulebook / recipe / sample / template を整備する際の材料になる。
 
-`fully-guided` / `recipe-guided` および `approach` 未指定では、参照してよい文書を exec plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template と、`対象成果物` セクションの `depends_on` 成果物）に限定する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。`freeform` は対象領域の類似成果物の実例やプロジェクト文脈を参照する進め方であるため、この限定の対象外とする。
+`fully-guided` / `recipe-guided` および `approach` 未指定では、参照してよい文書を exec plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト）に限定する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。`freeform` は対象領域の類似成果物の実例やプロジェクト文脈を参照する進め方であるため、この限定の対象外とする。
 
 `fully-guided` / `recipe-guided` および `approach` 未指定では、対象成果物の既存記述を尊重する。既存記述の破棄や全面的な書き換えは原則として行わず、`depends_on` の最新の決定事項と明確に矛盾する箇所のみ最小限を修正し、不足分は既存記述を基礎に加筆・補強する。`freeform` は参考資料より類似成果物の実例やプロジェクト文脈を優先して組み立てる進め方であるため、この尊重方針の対象外とする。
 
@@ -87,7 +110,7 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 1. exec plan の frontmatter で `approach` の有無と値を確認する（生成元は `sch-strategy-<track>.yaml` のフェーズまたは `owner_rules[].phase_overrides[]` であり、後者が優先される）。
 2. `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は「参考資料メンテナンスの進め方」に従い、参照の向きを成果物 → 対象の参考資料に切り替える。
-3. それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無を確認する（exec plan の「対象成果物」セクション、またはカタログの登録情報で確認する）。
+3. それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無と、exec plan のプロジェクトコンテキストを確認する。
 4. `approach` が指定されている場合は「`approach` による進め方の使い分け」の表に従って参照範囲を決め、未指定の場合は存在するすべての参考資料をそれぞれの役割に沿って活用する。
 5. 参照した文書・参照しなかった文書と、その判断根拠を成果物または result に記録する。
 

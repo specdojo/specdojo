@@ -26,6 +26,8 @@ _PHASE_DESCRIPTION_
 
 result: `_RESULT_REF_`
 
+_PROJECT_CONTEXT_
+
 ## 3. owner ロールとしての記述ポイント
 
 成果物本体は frontmatter の `owner` に記載された role の視点で記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
@@ -49,7 +51,7 @@ _OWNER_ROLE_VIEWPOINTS_
 
 参考資料は成果物の丸写しにせず、同種成果物に再利用できる形に一般化する。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template は rulebook と矛盾しないように揃える。
 
-内容の根拠としてよい文書は、この plan に記載された対象（成果物・rulebook / recipe / sample / template）と、`対象成果物` セクションの `depends_on` 成果物に限定する。これら以外を成果物の内容の根拠にしない。ただし bootstrap では例外として、同種で `status: ready` の文書を手本として参照してよい（次項参照）。判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
+内容の根拠としてよい文書は、この plan に記載された対象（成果物・rulebook / recipe / sample / template）、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストに限定する。これら以外を成果物の内容の根拠にしない。ただし bootstrap では例外として、同種で `status: ready` の文書を手本として参照してよい（次項参照）。判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
 
 ここで整備した参考資料は後続の refine-pass で凍結し、編集しない。本タスクの実行に必要な bootstrap の進め方は、このセクションで完結する。approach 全体の定義を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
 

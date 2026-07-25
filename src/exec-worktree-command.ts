@@ -260,6 +260,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
         catalogPath: context.catalogPath ?? "",
         rolesPath: context.rolesPath,
         viewpointsPath: context.viewpointsPath,
+        projectContext: context.projectContext,
         task: buildTaskView(context.schedulePath, context.executionPath, opts.task),
       });
     }

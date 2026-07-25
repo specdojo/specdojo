@@ -30,8 +30,15 @@ export type SpecDojoProjectConfig = {
   viewpoints_path?: string;
   project_register_path?: string;
   routines_path?: string;
+  /**
+   * Project-level document ids supplied to deliverable edit/review plans independently from
+   * catalog depends_on. Omit to use the default prj-overview context; set [] to opt out.
+   */
+  project_context?: string[];
   run?: SpecDojoRunConfig;
 };
+
+export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
 // Agent runtime provider family. Selects which providers.<name> override in
 // exec-defaults.yaml applies to a member's failure handling.
@@ -158,6 +165,12 @@ export function getProjectRoutinesPath(project: SpecDojoProjectConfig): string |
   return withOptionalBasePath(project, project.routines_path);
 }
 
+export function getProjectContext(project: SpecDojoProjectConfig): string[] {
+  return project.project_context === undefined
+    ? [...DEFAULT_PROJECT_CONTEXT]
+    : [...project.project_context];
+}
+
 export function loadMemberRoster(
   baseDir: string,
   project: SpecDojoProjectConfig,
@@ -193,13 +206,24 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
 function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfig {
   if (!project || typeof project !== "object" || Array.isArray(project)) return false;
 
-  const candidate = project as { schedule_path?: unknown; execution_path?: unknown };
+  const candidate = project as {
+    schedule_path?: unknown;
+    execution_path?: unknown;
+    project_context?: unknown;
+  };
   if (typeof candidate.schedule_path !== "string" || candidate.schedule_path.trim().length === 0) {
     return false;
   }
   if (
     typeof candidate.execution_path !== "string" ||
     candidate.execution_path.trim().length === 0
+  ) {
+    return false;
+  }
+  if (
+    candidate.project_context !== undefined &&
+    (!Array.isArray(candidate.project_context) ||
+      !candidate.project_context.every((ref) => typeof ref === "string" && ref.trim().length > 0))
   ) {
     return false;
   }
@@ -226,7 +250,8 @@ export function loadConfig(): ConfigLoadResult {
   for (const [projectId, project] of Object.entries(parsed.projects)) {
     if (!isValidProjectConfig(project)) {
       throw new Error(
-        `Invalid .specdojo/specdojo.config.json: projects.${projectId} must be { schedule_path, execution_path }`,
+        `Invalid .specdojo/specdojo.config.json: projects.${projectId} must contain non-empty ` +
+          `schedule_path/execution_path strings and optional project_context string[]`,
       );
     }
   }
@@ -259,6 +284,7 @@ export function registerConfigCommands(program: Command): void {
           "shj-0001": {
             schedule_path: "docs/ja/projects/prj-0001/060-schedule",
             execution_path: "docs/ja/projects/prj-0001/070-execution",
+            project_context: ["prj-overview"],
           },
         },
       };

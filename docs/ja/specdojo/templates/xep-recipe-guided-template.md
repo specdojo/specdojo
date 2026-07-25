@@ -14,6 +14,8 @@ _PHASE_DESCRIPTION_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`
 
+_PROJECT_CONTEXT_
+
 ## 3. owner ロールとしての記述ポイント
 
 frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
@@ -32,7 +34,7 @@ _OWNER_ROLE_VIEWPOINTS_
 主な基準とする recipe（rulebook frontmatter から解決）: `_RECIPE_REF_`（`_MISSING_` の場合は「recipe が存在しない・内容が薄い場合」に従う）。
 
 1. recipe: 指定された recipe を読み込み、示された構成・問い・観点・深掘り手順に沿って成果物を組み立てる。
-2. recipe が答えを示さない箇所は、`depends_on` 成果物との整合で補う。参照してよい文書は、この plan に記載された recipe と `対象成果物` セクションの `depends_on` 成果物に限る。plan に列挙されていない他のプロジェクト文書を独自に探索・参照せず、判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
+2. recipe が答えを示さない箇所は、`depends_on` 成果物およびプロジェクトコンテキストとの整合で補う。参照してよい文書は、この plan に記載された recipe、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストに限る。plan に列挙されていない他のプロジェクト文書を独自に探索・参照せず、判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
 
 成果物は、冗長な記述や内容の重複を避け、簡潔でわかりやすく記載する。
 

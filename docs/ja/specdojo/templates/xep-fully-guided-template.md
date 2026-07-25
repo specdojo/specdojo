@@ -14,6 +14,8 @@ _PHASE_DESCRIPTION_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`
 
+_PROJECT_CONTEXT_
+
 ## 3. owner ロールとしての記述ポイント
 
 frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
@@ -39,7 +41,7 @@ _OWNER_ROLE_VIEWPOINTS_
 
 磨き込みでは sample / template は読み込まない。粒度・文体・表現・章構成は、既存の対象成果物を基準としてそろえる。複数の文書間で記述に矛盾がある場合は rulebook を正とする。
 
-参照してよい文書は、この plan に記載されたものに限定する。具体的には、本セクションの rulebook / recipe と、`対象成果物` セクションの `depends_on` 成果物である。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。成果物の作成・更新は plan に記載された資料とこの plan 自身の記述（フェーズ説明・レビュー観点）だけを根拠に行い、不足があっても未記載の文書を追加で読んで補わない。それでも判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
+参照してよい文書は、この plan に記載されたものに限定する。具体的には、本セクションの rulebook / recipe、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストである。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。成果物の作成・更新は plan に記載された資料とこの plan 自身の記述（フェーズ説明・レビュー観点）だけを根拠に行い、不足があっても未記載の文書を追加で読んで補わない。それでも判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
 
 本タスクの実行に必要な fully-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
 

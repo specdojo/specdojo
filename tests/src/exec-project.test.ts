@@ -25,10 +25,12 @@ function writeConfig(dir: string): void {
             execution_path: "docs/prj-a/execution",
             catalog_path: "docs/prj-a/catalog",
             roles_path: "docs/prj-a/pm-roles.yaml",
+            project_context: ["prj-overview"],
           },
           "prj-b": {
             schedule_path: "docs/prj-b/schedule",
             execution_path: "docs/prj-b/execution",
+            project_context: [],
           },
         },
       },
@@ -93,6 +95,7 @@ describe("resolveProjectPaths", () => {
       expect(paths.executionPath).toBe(join(dir, "docs/prj-a/execution"));
       expect(paths.catalogPath).toBe(join(dir, "docs/prj-a/catalog"));
       expect(paths.rolesPath).toBe(join(dir, "docs/prj-a/pm-roles.yaml"));
+      expect(paths.projectContext).toEqual(["prj-overview"]);
     });
   });
 
@@ -100,6 +103,7 @@ describe("resolveProjectPaths", () => {
     withRepo(() => {
       const paths = resolveProjectPaths({ project: "prj-b" });
       expect(paths.rolesPath).toBeUndefined();
+      expect(paths.projectContext).toEqual([]);
     });
   });
 
@@ -120,6 +124,29 @@ describe("resolveProjectPaths", () => {
       process.env.SPECDOJO_SCHEDULE_PATH = "custom/schedule";
       expect(() => resolveProjectPaths({})).toThrow(
         "SPECDOJO_SCHEDULE_PATH and SPECDOJO_EXECUTION_PATH",
+      );
+    });
+  });
+
+  it("project_context は空でない文字列の配列だけを受け付ける", () => {
+    withRepo((dir) => {
+      writeFileSync(
+        join(dir, ".specdojo", "specdojo.config.json"),
+        JSON.stringify({
+          version: 1,
+          projects: {
+            invalid: {
+              schedule_path: "schedule",
+              execution_path: "execution",
+              project_context: "prj-overview",
+            },
+          },
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveProjectPaths({ project: "invalid" })).toThrow(
+        /Invalid .*specdojo\.config\.json/,
       );
     });
   });

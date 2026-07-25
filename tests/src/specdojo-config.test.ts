@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertValidActor,
   getProjectCatalogPath,
+  getProjectContext,
   getProjectMembersPath,
   getProjectSchedulePath,
 } from "../../src/specdojo-config.js";
@@ -89,5 +90,13 @@ describe("project path accessors with base_path", () => {
 
     expect(getProjectCatalogPath(config)).toBeUndefined();
     expect(getProjectMembersPath(config)).toBeUndefined();
+  });
+
+  it("project_context は省略時に prj-overview、空配列で opt-out になる", () => {
+    expect(getProjectContext(project({}))).toEqual(["prj-overview"]);
+    expect(getProjectContext(project({ project_context: [] }))).toEqual([]);
+    expect(
+      getProjectContext(project({ project_context: ["project-why", "prj-shared:policy"] })),
+    ).toEqual(["project-why", "prj-shared:policy"]);
   });
 });

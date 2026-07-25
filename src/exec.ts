@@ -235,6 +235,7 @@ function resolveProjectContext(opts: { project?: string }): {
   catalogPath?: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: string[];
 } {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
@@ -913,8 +914,14 @@ export function registerExecCommands(program: Command): void {
   planCmd.option("--out <path>", "Override output path");
   planCmd.action(async (opts) => {
     try {
-      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
-        resolveProjectContext(opts);
+      const {
+        schedulePath,
+        executionPath,
+        catalogPath,
+        rolesPath,
+        viewpointsPath,
+        projectContext,
+      } = resolveProjectContext(opts);
       const hasTask = typeof opts.task === "string" && opts.task.trim() !== "";
       const hasDeliverable = typeof opts.deliverable === "string" && opts.deliverable.trim() !== "";
       const hasRegister = typeof opts.register === "string" && opts.register.trim() !== "";
@@ -954,6 +961,7 @@ export function registerExecCommands(program: Command): void {
           catalogPath: catalogPath ?? "",
           rolesPath,
           viewpointsPath,
+          projectContext,
           task,
           stem,
           ...(outOverride ? { outPath: outOverride } : {}),
@@ -973,6 +981,7 @@ export function registerExecCommands(program: Command): void {
           catalogPath: catalogPath ?? "",
           rolesPath,
           viewpointsPath,
+          projectContext,
           target,
           mode: parseTaskMode(opts.mode),
           ...(opts.approach ? { approach: parseApproach(opts.approach) } : {}),

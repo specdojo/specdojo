@@ -15,6 +15,8 @@ _PHASE_DESCRIPTION_
 - `rulebook`: `_RULEBOOK_REF_`
 - `result`: `_RESULT_REF_`
 
+_PROJECT_CONTEXT_
+
 ## 3. レビュー観点
 
 <!-- markdownlint-disable MD055 MD056 -->

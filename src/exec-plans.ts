@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join, relative } from "node:path";
 import { load } from "js-yaml";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "./specdojo-config.js";
 import {
   referenceMaterialDirsForKinds,
   resolveDeliverableSchemaRef,
@@ -340,6 +340,49 @@ function deliverableDependsOn(deliverable: DeliverableInfo | null, projectId: st
   return `\n${lines.join("\n")}`;
 }
 
+const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
+  "rulebook-maintenance",
+  "recipe-maintenance",
+  "sample-maintenance",
+  "template-maintenance",
+  "finalize",
+  "bootstrap-finalize",
+]);
+
+// Project context is project-level guidance, not an ordering/evidence edge. It is rendered only
+// for deliverable edit/review work, separately from depends_on, and is deliberately omitted for
+// maintenance/finalize work and when the target itself is the configured context document.
+function projectContextSection(
+  refs: readonly string[],
+  deliverable: DeliverableInfo | null,
+  approach: Approach | undefined,
+  projectId: string,
+): string {
+  if (!deliverable || (approach && PROJECT_CONTEXT_EXCLUDED_APPROACHES.has(approach))) return "";
+
+  const targetId = qualifiedDocId(projectId, deliverable.deliverable.local_id);
+  const qualifiedRefs = [
+    ...new Set(
+      refs
+        .map((ref) => ref.trim())
+        .filter(Boolean)
+        .map((ref) => (ref.includes(":") ? ref : qualifiedDocId(projectId, ref)))
+        .filter((ref) => ref !== targetId),
+    ),
+  ];
+  if (qualifiedRefs.length === 0) return "";
+
+  return [
+    "### プロジェクトコンテキスト",
+    "",
+    "以下は `depends_on` とは独立したプロジェクト共通の文脈であり、実行順序・成果物間の根拠関係を表さない。作業開始前に実際に読み、プロジェクトレベルの Why、用語、判断原則と成果物の内容を整合させる。",
+    "",
+    ...qualifiedRefs.map((ref) => `- [[${ref}]]`),
+    "",
+    "プロジェクトレベルの Why は判断軸として参照し、全文を成果物へ再掲しない。対象成果物の責務に必要な結論・影響だけを反映する。",
+  ].join("\n");
+}
+
 function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING;
 }
@@ -651,6 +694,7 @@ function buildEditPlanMarkdown(
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
+  projectContext: readonly string[],
   resultRef: string,
   stem: string,
 ): string {
@@ -682,6 +726,7 @@ function buildEditPlanMarkdown(
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
@@ -708,6 +753,7 @@ function buildReviewPlanMarkdown(
   vpMap: Map<string, ReviewViewpoint>,
   coverageMap: Map<string, CoverageType>,
   projectId: string,
+  projectContext: readonly string[],
   resultRef: string,
   stem: string,
 ): string {
@@ -738,6 +784,7 @@ function buildReviewPlanMarkdown(
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
@@ -770,6 +817,7 @@ type PlanGenContext = {
   vpMap: Map<string, ReviewViewpoint>;
   coverageMap: Map<string, CoverageType>;
   roleMap: Map<string, RoleDefinition>;
+  projectContext: string[];
   templateCache: Map<string, string>;
 };
 
@@ -811,6 +859,7 @@ async function writeTaskPlan(
           ctx.vpMap,
           ctx.coverageMap,
           ctx.projectId,
+          ctx.projectContext,
           resultRef,
           stem,
         )
@@ -821,6 +870,7 @@ async function writeTaskPlan(
           ctx.roleMap,
           ctx.vpMap,
           ctx.projectId,
+          ctx.projectContext,
           resultRef,
           stem,
         );
@@ -843,6 +893,7 @@ export async function generateSinglePlan(opts: {
   catalogPath: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: readonly string[];
   task: ReadyTaskView;
   outPath?: string;
   stem?: string;
@@ -873,6 +924,7 @@ export async function generateDeliverablePlan(opts: {
   catalogPath: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: readonly string[];
   target: ResolvedDeliverable;
   mode?: TaskMode;
   approach?: Approach;
@@ -905,6 +957,7 @@ function newPlanGenContext(opts: {
   catalogPath: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: readonly string[];
 }): PlanGenContext {
   const plansDir = join(opts.executionPath, "exec", "plans");
   mkdirSync(plansDir, { recursive: true });
@@ -921,6 +974,10 @@ function newPlanGenContext(opts: {
       ? loadCoverageTypes(opts.viewpointsPath)
       : new Map<string, CoverageType>(),
     roleMap: loadRoles(opts.rolesPath),
+    projectContext: [
+      ...(opts.projectContext ??
+        (opts.projectId ? DEFAULT_PROJECT_CONTEXT : ([] as readonly string[]))),
+    ],
     templateCache: new Map<string, string>(),
   };
 }

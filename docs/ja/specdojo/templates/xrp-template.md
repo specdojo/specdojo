@@ -15,6 +15,8 @@ _PHASE_DESCRIPTION_
 - `rulebook`: `_RULEBOOK_REF_`
 - `result`: `_RESULT_REF_`
 
+_PROJECT_CONTEXT_
+
 ## 3. レビュー観点
 
 <!-- markdownlint-disable MD055 MD056 -->
@@ -41,7 +43,7 @@ owner ロールの観点は、成果物がその責務を果たしているか�
   - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈との整合を確認する。
   - 未指定の場合は、存在するすべての参考資料をそれぞれの役割に沿って確認の基準にする。
 - 複数の文書間で記述に矛盾がある場合、確認の基準に rulebook を含む `approach`（`fully-guided` など）では rulebook を正とする。
-- `freeform` と参考資料メンテナンス系（`*-maintenance`）を除く `approach` では、確認に用いてよい文書をこの plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template と、`対象成果物` セクションの `depends_on` 成果物）に限定する。クロス文書整合のレビュー観点では `depends_on` 成果物を読み込んで対象成果物と突き合わせる。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
+- `freeform` と参考資料メンテナンス系（`*-maintenance`）を除く `approach` では、確認に用いてよい文書をこの plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト）に限定する。クロス文書整合のレビュー観点では `depends_on` 成果物を読み込んで対象成果物と突き合わせ、目的整合の判断ではプロジェクトコンテキストを参照する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
 - 存在しない、または確認の基準から外れた文書がある場合は、他に存在する文書、類似成果物、対象領域の慣行と整合しているかを確認し、判断の根拠を review result に残す。
 
 詳細は [[specdojo-reference-materials-guide]] を参照する。

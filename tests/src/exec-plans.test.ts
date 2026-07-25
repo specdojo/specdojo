@@ -425,6 +425,9 @@ describe("plan generation (edit done_criteria goals)", () => {
       // プレースホルダ（_SCHEMA_REF_）も漏れない。
       expect(editPlan).not.toContain("validate:schema:file");
       expect(editPlan).not.toContain("_SCHEMA_REF_");
+      expect(editPlan).toContain("### プロジェクトコンテキスト");
+      expect(editPlan).toContain("- [[test:prj-overview]]");
+      expect(editPlan).toContain("Why は判断軸として参照し、全文を成果物へ再掲しない");
 
       const maintenancePlan = readFileSync(
         join(executionPath, "exec/plans/T-TEST-overview-030-plan.md"),
@@ -434,6 +437,8 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(maintenancePlan).not.toContain("全 role 観点による自己レビュー");
       // approach 違い（recipe-maintenance）の plan にも同じ共通規約が注入される。
       expect(maintenancePlan).toContain("`[[id|title]]` 形式");
+      expect(maintenancePlan).not.toContain("### プロジェクトコンテキスト");
+      expect(maintenancePlan).not.toContain("_PROJECT_CONTEXT_");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -632,6 +637,54 @@ describe("generateSinglePlan", () => {
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| RVP-001 |");
       expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| RVP-001 |");
+      expect(plan).toContain("### プロジェクトコンテキスト");
+      expect(plan).toContain("- [[test:prj-overview]]");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("project_context は空配列で opt-out でき、context 文書自身には自己参照を出さない", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+
+      const optOutPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        projectContext: [],
+        stem: "opt-out",
+        task: {
+          id: "T-TEST-overview-020",
+          local_id: "overview",
+          mode: "edit",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const selfPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        projectContext: ["overview"],
+        stem: "self-context",
+        task: {
+          id: "T-TEST-overview-090",
+          local_id: "overview",
+          mode: "review",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      expect(readFileSync(optOutPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
+      expect(readFileSync(selfPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

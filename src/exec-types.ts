@@ -218,6 +218,7 @@ export type ResolvedProjectPaths = {
   catalogPath?: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: string[];
 };
 
 export type ExecPlanMeta = {

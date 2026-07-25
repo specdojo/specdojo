@@ -152,11 +152,19 @@ describe("generateDeliverablePlan", () => {
       executionPath,
       projectId: "prj-test",
       catalogPath,
+      projectContext: ["prj-overview"],
       target,
     });
 
     const plan = readFileSync(outPath, "utf8");
     expect(plan).toContain("- `depends_on`:\n  - [[prj-test:base-doc]]");
+    expect(plan).toContain("### プロジェクトコンテキスト");
+    expect(plan).toContain("- [[prj-test:prj-overview]]");
+    // Project context is plan guidance only: it does not become a dependency or a commit target.
+    expect(plan).not.toContain("  - [[prj-test:base-doc]]\n  - [[prj-test:prj-overview]]");
+    const metadata = plan.split("---")[1] ?? "";
+    expect(metadata).toContain("    - prj-test:dependent");
+    expect(metadata).not.toContain("prj-test:prj-overview");
   });
 });
 

@@ -259,6 +259,7 @@ type PlanGenPaths = {
   catalogPath?: string;
   rolesPath?: string;
   viewpointsPath?: string;
+  projectContext?: string[];
 };
 
 export function buildTaskPhaseMap(schedulePath: string): {
@@ -810,6 +811,7 @@ async function prepareSingleTask(
     catalogPath: planGenPaths.catalogPath ?? "",
     rolesPath: planGenPaths.rolesPath,
     viewpointsPath: planGenPaths.viewpointsPath,
+    projectContext: planGenPaths.projectContext,
     task,
   });
 
@@ -1152,11 +1154,12 @@ function spawnBlock(
 async function runBatchMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths;
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
+    resolvedPaths;
   // Use the resolved project id (which honors current_project / SPECDOJO_PROJECT), not the raw
   // --project flag. This keeps worktree branches project-qualified even when --project is omitted.
   const projectId = resolvedPaths.projectId ?? opts.project;
-  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath };
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath, projectContext };
   const repoRoot = specdojoRootDir();
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -1358,11 +1361,12 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   const taskId = opts.task as string;
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths;
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
+    resolvedPaths;
   // Use the resolved project id (which honors current_project / SPECDOJO_PROJECT), not the raw
   // --project flag. This keeps worktree branches project-qualified even when --project is omitted.
   const projectId = resolvedPaths.projectId ?? opts.project;
-  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath };
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath, projectContext };
   const repoRoot = specdojoRootDir();
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -1580,7 +1584,8 @@ async function spawnAgentInPlace(
 async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths;
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
+    resolvedPaths;
   const repoRoot = specdojoRootDir();
   const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
   const roster = loadRosterForExecutionPath(executionPath);
@@ -1676,6 +1681,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       catalogPath: catalogPath ?? "",
       rolesPath,
       viewpointsPath,
+      projectContext,
       task,
       ...(stem ? { stem } : {}),
     });
@@ -1686,6 +1692,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       catalogPath: catalogPath ?? "",
       rolesPath,
       viewpointsPath,
+      projectContext,
       target,
       ...(stem ? { stem } : {}),
     });
@@ -2318,9 +2325,10 @@ export function registerRunCommand(exec: Command): void {
 async function runResumeMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } = resolvedPaths;
+  const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
+    resolvedPaths;
   const projectId = resolvedPaths.projectId ?? opts.project;
-  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath };
+  const planGenPaths: PlanGenPaths = { catalogPath, rolesPath, viewpointsPath, projectContext };
   const repoRoot = specdojoRootDir();
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
