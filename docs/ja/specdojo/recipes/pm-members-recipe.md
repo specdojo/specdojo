@@ -18,6 +18,7 @@ Project Member Roster Writing Recipe
 - 最初に、組織定義とロール定義から、採用する Role code、最終判断の集約先、公開方針を確認する。
 - 次に、実行ログに残す必要がある人間と agent を洗い出し、各 member の `roles` に対応 Role code を割り当てる。
 - 最後に、member nickname、Role code、Schedule の `owner` を混同せず、公開してよい情報だけを残す。
+- 組織上の判断・実行需要（Why）を根拠に、必要な member と Role code 割り当て（What）を定め、agent の実行属性と共通 rules（How）は実行に必要な範囲だけを扱う。`based_on`、nickname、Role code で対応を追跡し（Trace）、そのために schema 外のキーは追加しない。
 
 ## 2. 作成前に集める情報
 
@@ -145,3 +146,4 @@ Project Member Roster Writing Recipe
 - `command` を上書きしている場合、秘密情報や個人環境に閉じた値が含まれていない。
 - `pm-organization.md` と `pm-roles.yaml` の方針と矛盾していない。
 - 公開してよい情報だけで構成され、最終判断と説明責任が人間の PO に残っている。
+- 各 member の採用理由、Role code、実行属性を、`based_on` と既存フィールドの対応から追跡できる。

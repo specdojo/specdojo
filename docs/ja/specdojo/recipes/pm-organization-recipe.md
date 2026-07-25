@@ -18,6 +18,7 @@ Organization Definition Writing Recipe
 - 目的、関係者、主要判断から必要な責任領域を抽出します。
 - 兼務可能な最小組織モデルを定めます。
 - ロール・member・RACIの正本へ責務を委譲します。
+- プロジェクトの目的と主要判断（Why）、必要な責任領域と最終判断先（What）、最小組織モデルと owner 方針（How）を扱い、正本の対応と見直し条件で追跡します（Trace）。Role code 全量や member 割り当ては各正本へ委譲します。
 
 ## 2. 作成前に集める情報
 
@@ -92,3 +93,4 @@ Organization Definition Writing Recipe
 - Role codeと実行主体を混同していない。
 - 個人情報・連絡先を記載していない。
 - Agentに最終判断を委ねていない。
+- 各責任領域が目的または主要判断に対応し、owner 方針と委譲先を追跡できる。

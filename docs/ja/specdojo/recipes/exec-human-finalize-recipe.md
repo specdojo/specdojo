@@ -17,6 +17,7 @@ Human Finalize Execution Recipe
 - Ready になった human タスクを claim し、生成された result を作業の入口にします。
 - result の `targets` とチェックリストから、確認対象と完了条件を特定します。
 - 確認・必要な修正・`ready` 昇格・確定判断を行い、同じ result に証跡を残します。
+- この実行では、タスクの目的と完了条件（Why）、確定対象と到達状態（What）、検証・修正・確定判断（How）を扱い、`done_criteria` ごとの結果を同じ result で追跡します（Trace）。
 
 ## 2. 実行前に集める情報
 
@@ -96,3 +97,4 @@ Human Finalize Execution Recipe
 - result に `_TODO_`、未記入の判断、未処理のチェック項目が残っていない。
 - 確定対象の検証が成功し、承認対象の `status` が `ready` である。
 - 完了 event と次の Ready 更新まで実施している。
+- 各 `done_criteria` に、確認した対象、実施した検証または修正、確定判断の根拠が対応している。

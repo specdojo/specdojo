@@ -19,6 +19,7 @@ Project Role Definition Writing Recipe
 - 次に、`pm-roles.yaml` に列挙する Role code を、Schedule の `owner` や RACI の列として使える粒度で整理する。
 - 最後に、member nickname、agent 名、個人名、兼務割り当てを混ぜず、プロジェクト固有メモだけを残す。
 - schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。
+- 組織上必要な責任領域（Why）、採用する Role code（What）、プロジェクト固有の責務強調（How）を扱い、`based_on` と下流の Role code 参照で追跡する（Trace）。割り当てや一般責務は各正本へ委譲する。
 
 ## 2. 作成前に集める情報
 
@@ -132,3 +133,4 @@ Project Role Definition Writing Recipe
 - `pm-organization.md` の採用方針と矛盾していない。
 - `pm-members.yaml` の `members[].roles` から参照できる Role code 語彙になっている。
 - 公開してよい情報だけで構成され、最終判断と説明責任が人間の PO に残っている。
+- 各 Role code の採用根拠と下流利用を、`based_on` と既存の参照値から追跡できる。

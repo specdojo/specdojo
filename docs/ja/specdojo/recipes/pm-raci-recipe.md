@@ -18,6 +18,7 @@ RACI Writing Recipe
 - 初期スコープから主要成果物と主要判断を選びます。
 - 成果物別と判断・プロセス別のRACIを作ります。
 - Schedule owner、member割り当てとの整合を確認します。
+- 責任衝突や判断停滞の回避（Why）、対象となる主要成果物・判断（What）、RACI と owner 方針（How）を扱い、行名・Role code・Schedule owner の対応で追跡します（Trace）。member 割り当ては再掲しません。
 
 ## 2. 作成前に集める情報
 
@@ -92,3 +93,4 @@ RACI Writing Recipe
 - 省略範囲と見直し条件が明確である。
 - member・Agent割り当てを再掲していない。
 - Agentに`A`を割り当てていない。
+- 各行の採用理由、`A` / `R`、Schedule owner または判断記録先の対応を追跡できる。
