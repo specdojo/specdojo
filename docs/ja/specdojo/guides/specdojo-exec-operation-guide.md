@@ -211,6 +211,7 @@ worktree 隔離を人が段階確認しながら実行する場合は [specdojo-
 | 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
 | Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
 | 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | なし     |
+| 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
 | plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
 | worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
 

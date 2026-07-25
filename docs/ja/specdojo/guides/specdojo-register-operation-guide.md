@@ -170,10 +170,16 @@ specdojo register build --project <project-id>
 
 ```bash
 specdojo exec run --project <project-id> --register PJR-0012
+
+# 複数項目を指定順に直列実行する（成功IDごとにcommit、途中失敗でも継続）
+specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register-commit --on-failure continue
 ```
 
 - type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になる。`decision` / `dependency` / `note` は実行対象外。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しない。成功後は人が内容を確認して `register close` する。
+- `--register` には複数の PJR-ID を空白区切り・カンマ区切りで渡せる。指定順に1件ずつ実行し、各IDの状態遷移まで完結してから次へ進む。全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示する。
+- `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitする（実行前から作業ツリーにある利用者の変更は含めない）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選ぶ。
+- register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしない。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使う。
 
 実行フローの詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。

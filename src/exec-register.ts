@@ -50,6 +50,45 @@ export function requireRunnableRegisterItem(item: PjrItem): RegisterTaskCategory
 }
 
 // ---------------------------------------------------------------------------
+// Run summary (aggregate display for serial multi-ID runs)
+// ---------------------------------------------------------------------------
+
+export type RegisterItemOutcome = "success" | "failure" | "skipped";
+export type RegisterItemTransition = "review" | "waiting" | "none";
+
+// ID別の実行結果。commit は "committed <sha>" / "no-changes" / "off" / "skipped"。
+export type RegisterItemSummary = {
+  id: string;
+  title: string;
+  outcome: RegisterItemOutcome;
+  transition: RegisterItemTransition;
+  commit: string;
+  reason?: string;
+};
+
+// 全ID処理後にID別の成否・状態遷移・commit結果・理由を一覧表示するための整形。
+export function formatRegisterRunSummary(summaries: readonly RegisterItemSummary[]): string {
+  const lines = ["Register run summary:"];
+  for (const summary of summaries) {
+    const parts = [
+      `  ${summary.id}`,
+      summary.outcome.padEnd(7),
+      `transition=${summary.transition}`,
+      `commit=${summary.commit}`,
+    ];
+    if (summary.reason) parts.push(`reason=${summary.reason}`);
+    lines.push(parts.join("  "));
+  }
+  return lines.join("\n");
+}
+
+// いずれかのIDが failure なら異常終了（exit 1）とする。skipped は失敗とは扱わないが、
+// 停止（stop）は先行する failure を伴うため結果的に exit 1 になる。
+export function registerRunExitCode(summaries: readonly RegisterItemSummary[]): number {
+  return summaries.some((summary) => summary.outcome === "failure") ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------
 // Item resolution
 // ---------------------------------------------------------------------------
 
@@ -59,6 +98,66 @@ export function normalizePjrId(value: string): string {
     throw new Error(`Invalid register item ID: "${value}". Must match PJR-XXXX (e.g., PJR-0012)`);
   }
   return id;
+}
+
+// ---------------------------------------------------------------------------
+// Multiple-ID parsing (serial execution input)
+// ---------------------------------------------------------------------------
+
+// 失敗時に残りのIDを止めるか継続するか。既定は stop（最初の失敗で残りを skip する）。
+export type RegisterFailureMode = "stop" | "continue";
+
+export function isRegisterFailureMode(value: string): value is RegisterFailureMode {
+  return value === "stop" || value === "continue";
+}
+
+// `--register` の入力（単一文字列・カンマ区切り・variadic 配列・その混在）を
+// PJR-ID の実行順リストへ正規化する。各要素は normalizePjrId で検証し、指定順を
+// 保持したまま重複は最初の出現のみ残す。除外した重複IDは duplicates に記録する。
+export function parseRegisterIds(raw: string | string[] | undefined): {
+  ids: string[];
+  duplicates: string[];
+} {
+  const tokens: string[] = [];
+  const rawValues = raw === undefined ? [] : Array.isArray(raw) ? raw : [raw];
+  for (const value of rawValues) {
+    for (const part of value.split(",")) {
+      const trimmed = part.trim();
+      if (trimmed !== "") tokens.push(trimmed);
+    }
+  }
+  if (tokens.length === 0) {
+    throw new Error("No register item ID specified. Provide at least one PJR-XXXX id.");
+  }
+  const ids: string[] = [];
+  const duplicates: string[] = [];
+  const seen = new Set<string>();
+  for (const token of tokens) {
+    const id = normalizePjrId(token);
+    if (seen.has(id)) {
+      duplicates.push(id);
+      continue;
+    }
+    seen.add(id);
+    ids.push(id);
+  }
+  return { ids, duplicates };
+}
+
+// ID単位 commit の対象パスを算出する。項目実行の開始前スナップショット（preexisting）に
+// 無く、実行後（current）に現れた変更パスだけを返す。これにより「実行前から存在する
+// 利用者の変更」は commit 対象から除外され、当該IDが生成した plan/result/events/成果物
+// および register の状態遷移による変更だけが対象になる。戻り値は再現性のためソートする。
+export function selectRegisterCommitPaths(
+  preexisting: Iterable<string>,
+  current: Iterable<string>,
+): string[] {
+  const before = new Set(preexisting);
+  const added = new Set<string>();
+  for (const path of current) {
+    if (!before.has(path)) added.add(path);
+  }
+  return [...added].sort();
 }
 
 export type RegisterRunTarget = {

@@ -54,20 +54,35 @@ import {
 } from "./exec-plans.js";
 import { buildTaskView } from "./exec-task-view.js";
 import {
+  formatRegisterRunSummary,
   generateRegisterPlan,
-  normalizePjrId,
+  isRegisterFailureMode,
+  parseRegisterIds,
+  registerRunExitCode,
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
   sanitizeRegisterConclusion,
+  selectRegisterCommitPaths,
+  type RegisterFailureMode,
+  type RegisterItemSummary,
+  type RegisterItemTransition,
 } from "./exec-register.js";
+import type { PjrItem } from "./register.js";
 import { isResultUnfilled, scaffoldResult, updateResultStatus } from "./exec-results.js";
-import { resolveWorktreeBase, worktreeNameFromTaskId, type ExecWorktree } from "./exec-worktree.js";
+import {
+  gitOutput,
+  gitResult,
+  resolveWorktreeBase,
+  worktreeNameFromTaskId,
+  type ExecWorktree,
+} from "./exec-worktree.js";
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   discardStaleExecWorktree,
   mergeWorktreeIntoCurrent,
   removeWorktree,
+  worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
 import {
   buildPhaseModeIndex,
@@ -116,7 +131,9 @@ export type RunOpts = {
   task?: string;
   deliverable?: string;
   plan?: string;
-  register?: string;
+  register?: string | string[];
+  registerCommit?: boolean;
+  onFailure?: string;
   worktree?: boolean;
   trackState?: boolean;
   archiveOnSuccess?: boolean;
@@ -1860,47 +1877,64 @@ function spawnRegisterTransition(projectId: string | undefined, args: string[]):
   return spawnSelf(fullArgs);
 }
 
-// register 項目の in-place 実行。plan 生成 → `register start` → agent 実行 → 成否を
-// register の状態遷移（成功: review / 失敗: waiting）と result に反映する。
+// 複数IDの直列実行で共有する、ID間で不変なセットアップ。paths/roster/execDefaults の
+// 解決は register 全体で1回だけ行い、各IDの実行に使い回す。
+type RegisterRunContext = {
+  projectId: string;
+  schedulePath: string;
+  executionPath: string;
+  repoRoot: string;
+  roster: MemberRoster | null;
+  execDefaults: ExecDefaultsConfig;
+  registerCommit: boolean;
+};
+
+// 成功したIDの実行によって生じた変更だけを1コミットにまとめる。開始前スナップショット
+// （preexisting）に無いパスのみを対象にすることで、実行前から存在する利用者の変更は
+// commit 対象から除外する。commitWorktreeChanges と同じ add → staged 確認 → commit の
+// 手順に合わせる。
+function commitRegisterItemChanges(
+  repoRoot: string,
+  item: PjrItem,
+  preexisting: readonly string[],
+): { committed: boolean; sha?: string } {
+  const paths = selectRegisterCommitPaths(preexisting, worktreeStatusPaths(repoRoot));
+  if (paths.length === 0) return { committed: false };
+
+  gitOutput(repoRoot, ["add", "-A", "--", ...paths]);
+  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+  if (staged.status === 0) return { committed: false };
+  if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+
+  const title = item.title.replace(/\r?\n/g, " ").trim();
+  gitOutput(repoRoot, ["commit", "-m", `exec(register ${item.id}): ${title}`, "--", ...paths]);
+  const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+  return { committed: true, sha };
+}
+
+// register 項目1件の in-place 実行。plan 生成 → `register start` → agent 実行 → 成否を
+// register の状態遷移（成功: review / 失敗: waiting）と result に反映し、成功かつ
+// registerCommit 有効なら当該IDの変更だけを commit する。ID別の結果を要約で返す。
 // schedule のタスクではないため exec の claim/complete イベントは記録しない。
-async function runRegisterMode(opts: RunOpts): Promise<void> {
-  const resolvedPaths = resolveProjectPaths({ project: opts.project });
-  activateResolvedProjectPaths(resolvedPaths);
-  const { schedulePath, executionPath } = resolvedPaths;
-  const repoRoot = specdojoRootDir();
-  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
-  if (!projectId) {
-    throw new Error(
-      "--register requires a project id. Use --project <id> or set current_project in specdojo.config.json.",
-    );
-  }
-
-  const pjrId = normalizePjrId(opts.register as string);
+async function runSingleRegisterItem(
+  context: RegisterRunContext,
+  opts: RunOpts,
+  pjrId: string,
+): Promise<RegisterItemSummary> {
+  const { projectId, schedulePath, executionPath, repoRoot } = context;
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
-  const category = requireRunnableRegisterItem(item);
+  requireRunnableRegisterItem(item);
 
-  const roster = loadRosterForExecutionPath(executionPath);
-  const execDefaults = loadExecDefaultsConfig(
-    resolveExecDefaultsPath(opts, schedulePath),
-    executionPath,
+  const { command, actor } = resolveRegisterCommand(
+    item,
+    context.roster,
+    opts,
+    context.execDefaults,
   );
-  const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
   const stem = buildInPlaceStem(pjrId.toLowerCase());
-  const plansDir = join(executionPath, "exec", "plans");
 
-  if (opts.dryRun) {
-    process.stdout.write(
-      `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
-    );
-    process.stdout.write(`[dry-run] actor: ${actor}\n`);
-    process.stdout.write(`[dry-run] command: ${command}\n`);
-    process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
-    process.stdout.write(`[dry-run] plan: ${join(plansDir, `${stem}-plan.md`)}\n`);
-    process.stdout.write(
-      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
-    );
-    return;
-  }
+  // ID単位 commit のため、この項目が変更を生じる前の作業ツリー状態を記録する。
+  const preexisting = context.registerCommit ? worktreeStatusPaths(repoRoot) : [];
 
   const { planPath } = await generateRegisterPlan({
     executionPath,
@@ -1949,15 +1983,22 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   );
 
   if (effectiveExit === 0) {
+    let transition: RegisterItemTransition = "review";
+    let reason: string | undefined;
     if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
-      process.exitCode = 1;
-      return;
+      transition = "none";
+      reason = "register review transition failed";
+    }
+    let commit = context.registerCommit ? "no-changes" : "off";
+    if (context.registerCommit) {
+      const result = commitRegisterItemChanges(repoRoot, item, preexisting);
+      if (result.committed) commit = `committed ${result.sha}`;
     }
     process.stdout.write(
       `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
     );
-    return;
+    return { id: item.id, title: item.title, outcome: "success", transition, commit, reason };
   }
 
   const conclusion = sanitizeRegisterConclusion(
@@ -1966,8 +2007,104 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
   }
-  process.exitCode = effectiveExit ?? 1;
   process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
+  return {
+    id: item.id,
+    title: item.title,
+    outcome: "failure",
+    transition: "waiting",
+    commit: context.registerCommit ? "skipped" : "off",
+    reason: conclusion,
+  };
+}
+
+// register 項目の in-place 実行（複数ID直列）。指定順に1件ずつ実行し、各IDが plan/result
+// 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。失敗時は
+// failureMode（stop: 残りを skip / continue: 継続）に従う。最後にID別の成否・状態遷移・
+// commit結果を一覧表示し、いずれかが failure ならプロセス終了コードへ反映する。
+async function runRegisterMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(resolvedPaths);
+  const { schedulePath, executionPath } = resolvedPaths;
+  const repoRoot = specdojoRootDir();
+  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
+  if (!projectId) {
+    throw new Error(
+      "--register requires a project id. Use --project <id> or set current_project in specdojo.config.json.",
+    );
+  }
+
+  const { ids, duplicates } = parseRegisterIds(opts.register);
+  for (const duplicate of duplicates) {
+    process.stdout.write(`Skipping duplicate register item id: ${duplicate}\n`);
+  }
+  const failureMode: RegisterFailureMode = opts.onFailure
+    ? (opts.onFailure as RegisterFailureMode)
+    : "stop";
+
+  const roster = loadRosterForExecutionPath(executionPath);
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
+
+  if (opts.dryRun) {
+    process.stdout.write(
+      `[dry-run] register items (serial): ${ids.join(", ")}  [on-failure: ${failureMode}, commit: ${opts.registerCommit ? "per-id" : "off"}]\n`,
+    );
+    for (const pjrId of ids) {
+      const { item } = resolveRegisterRunTarget(projectId, pjrId);
+      const category = requireRunnableRegisterItem(item);
+      const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
+      const stem = buildInPlaceStem(pjrId.toLowerCase());
+      process.stdout.write(
+        `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
+      );
+      process.stdout.write(`[dry-run]   actor: ${actor}\n`);
+      process.stdout.write(`[dry-run]   command: ${command}\n`);
+      process.stdout.write(
+        `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
+      );
+    }
+    process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
+    process.stdout.write(
+      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
+    );
+    return;
+  }
+
+  const context: RegisterRunContext = {
+    projectId,
+    schedulePath,
+    executionPath,
+    repoRoot,
+    roster,
+    execDefaults,
+    registerCommit: !!opts.registerCommit,
+  };
+
+  const summaries: RegisterItemSummary[] = [];
+  let stopped = false;
+  for (const pjrId of ids) {
+    if (stopped) {
+      summaries.push({
+        id: pjrId,
+        title: "-",
+        outcome: "skipped",
+        transition: "none",
+        commit: "skipped",
+        reason: "stopped after an earlier failure (--on-failure stop)",
+      });
+      continue;
+    }
+    const summary = await runSingleRegisterItem(context, opts, pjrId);
+    summaries.push(summary);
+    if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
+  }
+
+  process.stdout.write(`${formatRegisterRunSummary(summaries)}\n`);
+  const exitCode = registerRunExitCode(summaries);
+  if (exitCode !== 0) process.exitCode = exitCode;
 }
 
 export function registerRunCommand(exec: Command): void {
@@ -1985,8 +2122,17 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option("--plan <path>", "Run an existing plan file (in-place; no generation)");
   rcmd.option(
-    "--register <pjrId>",
-    "Project register item ID (PJR-XXXX) to run in place; tracks state via register transitions",
+    "--register <pjrIds...>",
+    "One or more project register item IDs (PJR-XXXX) to run in place, serially in the given order; tracks state via register transitions",
+  );
+  rcmd.option(
+    "--register-commit",
+    "With --register: commit each successful item's changes as a separate commit (default: leave changes in the working tree)",
+    false,
+  );
+  rcmd.option(
+    "--on-failure <mode>",
+    "With --register: stop|continue remaining items after a failure (default: stop)",
   );
   rcmd.option(
     "--worktree",
@@ -2068,6 +2214,30 @@ export function registerRunCommand(exec: Command): void {
         process.stdout.write(
           "--track-state cannot be used with --register (state is tracked in the register itself).\n",
         );
+        process.exitCode = 1;
+        return;
+      }
+      if (hasRegister && opts.worktree) {
+        process.stdout.write(
+          "--worktree is not supported with --register (register items run in place, not in a worktree).\n",
+        );
+        process.exitCode = 1;
+        return;
+      }
+      if (hasRegister && parseParallel(opts.parallel) !== 1) {
+        process.stdout.write(
+          "--parallel is not supported with --register (register items run serially in place).\n",
+        );
+        process.exitCode = 1;
+        return;
+      }
+      if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
+        process.stdout.write("--register-commit and --on-failure require --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.onFailure && !isRegisterFailureMode(opts.onFailure)) {
+        process.stdout.write(`--on-failure must be "stop" or "continue": ${opts.onFailure}\n`);
         process.exitCode = 1;
         return;
       }
