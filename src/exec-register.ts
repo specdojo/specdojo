@@ -229,6 +229,9 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
     `mode: edit`,
     `status: ready`,
     `project_id: ${projectId}`,
+    // 登録簿項目は対象成果物を特定できないため targets を持たない。schedule 由来の
+    // タスクと区別できるよう出自を明示する（schema の targets 必須判定にも使う）。
+    `origin: register`,
   ];
   if (item.owner && item.owner !== "-" && item.owner !== "_TODO_") {
     inner.push(`owner: ${item.owner}`);

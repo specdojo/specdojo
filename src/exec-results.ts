@@ -4,11 +4,17 @@ import { specdojoRootDir } from "./specdojo-config.js";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { expandTemplate } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
-import type { Approach, ExecResultMeta, TaskMode } from "./exec-types.js";
+import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
 // ---------------------------------------------------------------------------
+
+// frontmatter から読んだ origin を検証して返す。未知の値は採用せず undefined（= schedule）
+// として扱う。status 更新のたびに meta を組み直すため、既存値の持ち回しに使う。
+function parseOrigin(value: string | undefined): TaskOrigin | undefined {
+  return value === "register" || value === "schedule" ? value : undefined;
+}
 
 function serializeFrontmatter(meta: ExecResultMeta): string {
   const inner = [
@@ -19,6 +25,7 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
   ];
+  if (meta.origin) inner.push(`origin: ${meta.origin}`);
   if (meta.plan_ref) inner.push(`plan_ref: ${meta.plan_ref}`);
   inner.push(`started_at: "${meta.started_at}"`);
   if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
@@ -121,6 +128,8 @@ export async function scaffoldResult(opts: {
   startedAt: string;
   execution?: "agent" | "human";
   approach?: Approach;
+  // 登録簿項目の実行では "register" を渡す。省略時は schedule 由来のタスクとして扱う。
+  origin?: TaskOrigin;
   // タスクが対象とする文書の doc id リスト（plan frontmatter の targets と同じ規則）。
   targets?: string[];
   reviewSections?: string;
@@ -153,6 +162,7 @@ export async function scaffoldResult(opts: {
     project_id: projectId,
     started_at: startedAt,
     agent,
+    ...(opts.origin ? { origin: opts.origin } : {}),
     ...(planRef ? { plan_ref: planRef } : {}),
     ...(opts.execution ? { execution: opts.execution } : {}),
     ...(approach ? { approach } : {}),
@@ -225,6 +235,7 @@ export async function updateResultStatus(
     started_at: existingMeta.started_at ?? "",
     completed_at: completedAt,
     agent: existingMeta.agent,
+    ...(parseOrigin(existingMeta.origin) ? { origin: parseOrigin(existingMeta.origin) } : {}),
     ...(existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
     ...(existingMeta.execution === "human" || existingMeta.execution === "agent"
       ? { execution: existingMeta.execution }
@@ -265,6 +276,7 @@ export async function resetResultForClaim(
     project_id: existingMeta.project_id ?? "",
     started_at: startedAt,
     agent,
+    ...(parseOrigin(existingMeta.origin) ? { origin: parseOrigin(existingMeta.origin) } : {}),
     ...(execution !== "human" && existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
     ...(nextExecution ? { execution: nextExecution } : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
@@ -281,6 +293,7 @@ export type ResultTaskIdentity = {
   projectId: string;
   execution?: "agent" | "human";
   approach?: Approach;
+  origin?: TaskOrigin;
   targets?: string[];
 };
 
@@ -313,12 +326,15 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
       ? (meta.approach as Approach)
       : undefined;
 
+  const origin = parseOrigin(meta.origin);
+
   return {
     taskId,
     mode,
     projectId,
     ...(execution ? { execution } : {}),
     ...(approach ? { approach } : {}),
+    ...(origin ? { origin } : {}),
     ...(targets ? { targets } : {}),
   };
 }

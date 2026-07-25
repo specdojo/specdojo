@@ -18,7 +18,7 @@ import {
   randomHex,
   tsForFilenameUtc,
 } from "./exec-shared.js";
-import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./exec-types.js";
+import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
 import type { CoverageType, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
@@ -200,6 +200,7 @@ function frontmatter(meta: ExecPlanMeta): string {
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
   ];
+  if (meta.origin) inner.push(`origin: ${meta.origin}`);
   if (meta.owner) inner.push(`owner: ${meta.owner}`);
   if (meta.on_critical_path) inner.push(`on_critical_path: true`);
   if (meta.approach) inner.push(`approach: ${meta.approach}`);
@@ -1095,6 +1096,8 @@ export type PlanTaskIdentity = {
   mode: TaskMode;
   projectId: string;
   approach?: Approach;
+  // タスクの出自。register は登録簿項目の実行で、対象成果物を持たない。
+  origin?: TaskOrigin;
   // plan frontmatter の targets（対象文書の doc id リスト）。先頭は対象成果物。
   targets?: string[];
 };
@@ -1132,6 +1135,18 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
   const targets = Array.isArray(parsed.targets)
     ? parsed.targets.filter((entry): entry is string => typeof entry === "string")
     : [];
+  // 未知の値は採用せず undefined（= schedule）として扱う。
+  const origin =
+    parsed.origin === "register" || parsed.origin === "schedule"
+      ? (parsed.origin as TaskOrigin)
+      : undefined;
 
-  return { taskId, mode, projectId, approach, ...(targets.length > 0 ? { targets } : {}) };
+  return {
+    taskId,
+    mode,
+    projectId,
+    approach,
+    ...(origin ? { origin } : {}),
+    ...(targets.length > 0 ? { targets } : {}),
+  };
 }

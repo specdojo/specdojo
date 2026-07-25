@@ -23,8 +23,21 @@ properties:
       - status
       - project_id
       - started_at
-      - targets
     allOf:
+      # Register-originated tasks have no predetermined target deliverable, so targets
+      # cannot be resolved and is not required. Schedule tasks always carry it because
+      # the commit allowlist is derived from it.
+      - if:
+          required:
+            - origin
+          properties:
+            origin:
+              const: register
+        else:
+          required:
+            - targets
+          properties:
+            targets: true
       - if:
           required:
             - execution
@@ -32,12 +45,18 @@ properties:
             execution:
               const: human
         then:
-          not:
-            required:
-              - plan_ref
+          # execution: human では plan_ref を持たない。
+          # ajv strict の strictRequired は allOf 配下から親の properties を参照できないため、
+          # `not: {required: [plan_ref]}` ではなく properties 側で不許可を表現する。
+          properties:
+            plan_ref: false
         else:
           required:
             - plan_ref
+          properties:
+            plan_ref:
+              type: string
+              minLength: 1
     properties:
       id:
         type: string
@@ -68,6 +87,9 @@ properties:
 
       project_id:
         $ref: "./exec-common.schema.yaml#/$defs/ProjectId"
+
+      origin:
+        $ref: "./exec-common.schema.yaml#/$defs/TaskOrigin"
 
       plan_ref:
         type: string

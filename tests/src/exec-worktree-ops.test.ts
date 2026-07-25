@@ -72,7 +72,12 @@ function setupRepository(): Fixture {
 // commit 許可リストは HEAD 側 plan のこの frontmatter（mode / approach / targets）から導出される。
 function planWithIdentity(
   taskId: string,
-  opts: { mode: "edit" | "review"; approach?: string; targets?: string[] },
+  opts: {
+    mode: "edit" | "review";
+    approach?: string;
+    targets?: string[];
+    origin?: "schedule" | "register";
+  },
 ): string {
   const lines = [
     "---",
@@ -85,6 +90,7 @@ function planWithIdentity(
     "  status: doing",
     "  project_id: prj-0001",
   ];
+  if (opts.origin) lines.push(`  origin: ${opts.origin}`);
   if (opts.approach) lines.push(`  approach: ${opts.approach}`);
   if (opts.targets && opts.targets.length > 0) {
     lines.push("  targets:");
@@ -544,7 +550,11 @@ describe("exec worktree ops", () => {
       fixture,
       taskId,
       taskId,
-      planWithIdentity(taskId, { mode: "edit", approach: "bootstrap", targets: [] }),
+      planWithIdentity(taskId, {
+        mode: "edit",
+        approach: "bootstrap",
+        targets: ["prj-0001:doc-a"],
+      }),
     );
 
     writeFile(
@@ -557,6 +567,43 @@ describe("exec worktree ops", () => {
 
     expect(committed.targets).toContain("docs/ja/specdojo/rulebooks/new-rulebook.md");
     expect(committed.targets).not.toContain("docs/unrelated.md");
+  });
+
+  it("fails a schedule-originated edit task whose plan declares no targets", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# edited by agent\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /no targets in plan\/result frontmatter for edit task T-T-doc-010/,
+    );
+  });
+
+  it("falls back to the exclusion list for a register-originated task without targets", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0137";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    // 登録簿項目は対象成果物を宣言できないため、許可リストではなく除外リストで判定する。
+    writeFile(join(worktree.path, "docs", "a.md"), "# edited by agent\n");
+    writeFile(join(worktree.path, "src", "unrelated.ts"), "// touched by agent\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    // 許可リスト方式なら src/unrelated.ts は範囲外になるため、フォールバックの確認になる。
+    expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
   });
 
   it("resolves a target absent from the doc index via the catalog's declared path", () => {

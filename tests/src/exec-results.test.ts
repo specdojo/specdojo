@@ -325,6 +325,40 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(frontmatter).toContain("status: complete");
   });
 
+  it("origin: register は status 更新と再 claim の再シリアライズ後も保持される", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-0137",
+      mode: "edit",
+      projectId: "prj-0001",
+      origin: "register",
+      planRef: "exec/plans/pjr-0137-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-07-25T00:00:00.000Z",
+    });
+
+    await updateResultStatus(resultPath, "complete", "2026-07-25T01:00:00.000Z");
+    expect(readFileSync(resultPath, "utf8").split("\n---")[0]).toContain("origin: register");
+
+    await resetResultForClaim(resultPath, "codex-edit-agent", "2026-07-25T02:00:00.000Z");
+    expect(readFileSync(resultPath, "utf8").split("\n---")[0]).toContain("origin: register");
+  });
+
+  it("origin 省略時は frontmatter に origin を書かない", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-overview-140",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/t-test-overview-140-plan.md",
+      agent: "indie",
+      startedAt: "2026-07-25T00:00:00.000Z",
+      targets: ["prj-0001:prj-overview"],
+    });
+
+    expect(readFileSync(resultPath, "utf8").split("\n---")[0]).not.toContain("origin:");
+  });
+
   it("approach: finalize で sections 未解決なら _TODO_ にフォールバックする", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,

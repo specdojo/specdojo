@@ -2206,6 +2206,7 @@ async function runSingleRegisterItem(
     taskId: item.id,
     mode: "edit",
     projectId,
+    origin: "register",
     planRef: `exec/plans/${stem}-plan.md`,
     agent: actor,
     startedAt: new Date().toISOString(),

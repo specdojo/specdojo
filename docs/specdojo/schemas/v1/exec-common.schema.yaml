@@ -17,6 +17,17 @@ $defs:
     minLength: 1
     description: "Project ID (e.g., prj-0001)."
 
+  TaskOrigin:
+    type: string
+    enum: ["schedule", "register"]
+    description: >
+      Where the task came from.
+      schedule: a task expanded from the deliverable catalog and schedule. It has a
+      target deliverable, runs in a worktree, and derives its commit allowlist from targets.
+      register: a project register item (PJR-XXXX) executed by exec run --register. It has
+      no predetermined target deliverable and scopes its commit by working tree snapshot.
+      Omitted means schedule.
+
   TaskMode:
     type: string
     enum: ["edit", "review"]

@@ -229,6 +229,22 @@ export function resolveCommitScope(
     };
   }
 
+  // register 由来のタスクは対象成果物を特定できず targets を持たない。許可リストを
+  // 導出する根拠が無いため、従来どおり除外リスト方式へフォールバックする（register の
+  // 通常経路である作業ツリー差分による commit と同じ範囲になる）。
+  if (identity.origin === "register") return { scope: null, unresolvedTargets: [] };
+
+  // schedule 由来の edit タスクは targets から commit 許可リストを導出する。targets が
+  // 無いと許可リストが result 1 件へ縮退し、成果物の変更が commit されないまま worktree に
+  // 残る。静かに縮退させず、ここで失敗させる。
+  if ((identity.targets ?? []).length === 0) {
+    throw new Error(
+      `commit-scope: no targets in plan/result frontmatter for edit task ${taskId}. ` +
+        `Schedule-originated edit tasks must declare targets; ` +
+        `register-originated tasks must declare "origin: register".`,
+    );
+  }
+
   const allowedFiles = new Set<string>([resultRel]);
   const unresolvedTargets: string[] = [];
   const lookup = headDocIndexLookup(worktree.path);

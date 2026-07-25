@@ -295,6 +295,54 @@ describe("parsePlanTaskIdentity", () => {
 
     expect(identity?.targets).toEqual(["test:overview", "overview-rulebook"]);
   });
+
+  it("origin: register を復元し、targets が無くても identity を返す", () => {
+    const plan = [
+      "---",
+      "specdojo:",
+      "  id: test:xep-pjr-0137",
+      "  type: exec-plan",
+      "  task_id: PJR-0137",
+      "  mode: edit",
+      "  project_id: test",
+      "  origin: register",
+      "---",
+      "",
+      "# Edit Plan: PJR-0137",
+      "",
+    ].join("\n");
+
+    const identity = parsePlanTaskIdentity(plan);
+
+    expect(identity).toEqual({
+      taskId: "PJR-0137",
+      mode: "edit",
+      projectId: "test",
+      approach: undefined,
+      origin: "register",
+    });
+  });
+
+  it("未知の origin は無視して schedule 扱い（undefined）にする", () => {
+    const plan = [
+      "---",
+      "specdojo:",
+      "  id: test:xep-t-test-overview-010",
+      "  type: exec-plan",
+      "  task_id: T-TEST-overview-010",
+      "  mode: edit",
+      "  project_id: test",
+      "  origin: adhoc",
+      "  targets:",
+      "    - test:overview",
+      "---",
+      "",
+      "# Edit Plan: T-TEST-overview-010",
+      "",
+    ].join("\n");
+
+    expect(parsePlanTaskIdentity(plan)?.origin).toBeUndefined();
+  });
 });
 
 describe("plan generation (edit done_criteria goals)", () => {
