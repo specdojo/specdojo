@@ -255,26 +255,26 @@ provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide
 
 ## 12. humanタスクの実行
 
-`execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が直接、最終確認・修正と確定を行います。
+`execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が result を作業の入口として、最終確認・修正と確定を行います。
 
-plan は `exec build` が自動生成します。対象タスクが Ready になると、`exec build` は未生成の human plan を `exec/plans/<task-id>-plan.md` に作成します。この plan は agent 向けの実行プロトコルを持たず、done_criteria の確認チェックリストと確定手順で構成されます。既存 plan は上書きしません。
+human task の plan は生成しません。対象タスクを claim すると、`exec claim` が `execution: human`、`approach`、`targets` を持つ result を scaffold します。この result が作業指示と確認記録の正本です。確定手順は [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]、共通規約は [[exec-human-finalize-standard|Human Finalize 実行標準]]を参照します。
 
-確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。`sch-strategy-<track>.yaml` の finalize フェーズに `approach` を指定すると、対応する human 用テンプレートから plan が生成されます（テンプレート選択は [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) を参照）。
+確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。
 
 実行者に依らず、進捗（Ready・phase gate・CPM）へ反映するため状態イベントを記録します。
 
 ```bash
-# 1. plan を生成する（Ready なら build が human plan を作る）
+# 1. Ready を更新する（human plan は生成しない）
 specdojo exec build --project <project-id>
 
-# 2. claim する
+# 2. claim して result を生成する
 specdojo exec claim \
   --project <project-id> \
   --task <task-id> \
   --by <actor> \
   --msg "finalize"
 
-# 3. 人が最終確認・修正し、成果物 frontmatter の status を ready に更新する
+# 3. 人が result に従って最終確認・修正し、成果物 frontmatter の status を ready に更新する
 #    result の 確認チェックリスト / 確定対象 にチェックを付け、
 #    確定判断 を記入する（差し戻し理由や修正内容があれば 備考 に残す）
 

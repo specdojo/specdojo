@@ -7,6 +7,7 @@ import {
   parsePlanTaskIdentity,
   targetReferenceDirsForApproach,
 } from "./exec-plans.js";
+import { parseResultTaskIdentity } from "./exec-results.js";
 import {
   ensureExecWorktree,
   execBranchExists,
@@ -134,6 +135,10 @@ function assertNoAgentReadyPromotion(
   paths: string[],
 ): void {
   const { resultRel } = taskPaths(context, taskId);
+  const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
+  if (resultContent && parseResultTaskIdentity(resultContent)?.execution === "human") {
+    return;
+  }
   const promoted: string[] = [];
   for (const relPath of paths) {
     if (relPath === resultRel) continue;
@@ -198,18 +203,23 @@ export type CommitScope = {
   allowedDirPrefixes: string[];
 };
 
-// HEAD の plan frontmatter から commit 許可リストを導出する。plan が HEAD に無い、
-// または frontmatter から task 識別を復元できない場合は null を返し、呼び出し側は
-// 従来の除外リスト方式へフォールバックする（plan は CLI が checkpoint するため、
-// この分岐を agent 側から誘発することはできない）。
+// agent は HEAD の plan、human は HEAD の result frontmatter から commit 許可リストを
+// 導出する。いずれも task 識別を復元できない場合は null を返し、呼び出し側は従来の
+// 除外リスト方式へフォールバックする。checkpoint 済みの HEAD を読むため、agent の
+// working tree 改変からは影響を受けない。
 export function resolveCommitScope(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
 ): { scope: CommitScope | null; unresolvedTargets: string[] } {
   const { planRel, resultRel } = taskPaths(context, taskId);
+  const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
+  const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
   const planContent = readWorktreeHeadFile(worktree.path, planRel);
-  const identity = planContent ? parsePlanTaskIdentity(planContent) : null;
+  const planIdentity = planContent ? parsePlanTaskIdentity(planContent) : null;
+  // 旧版で生成済みの human plan が残っていても、明示された execution を優先して
+  // result の targets を正本に切り替える。
+  const identity = resultIdentity?.execution === "human" ? resultIdentity : planIdentity;
   if (!identity) return { scope: null, unresolvedTargets: [] };
 
   if (identity.mode === "review") {

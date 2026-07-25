@@ -275,7 +275,7 @@ export async function generateRegisterPlan(opts: {
 
   const body = expandTemplate(template, values);
   // register 項目は対象成果物の schema を特定できないため、schema 検査の項目は落とす。
-  const content = injectCommonConventions(body, MISSING, "agent", new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
 
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);

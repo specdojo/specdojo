@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   isResultUnfilled,
+  parseResultTaskIdentity,
   resetResultForClaim,
   scaffoldResult,
   updateResultStatus,
@@ -182,6 +183,27 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(content).toContain("前回試行の実施内容");
   });
 
+  it("re-claiming a legacy human result adds execution and removes its stale plan_ref", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-overview-140",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-overview-140-plan.md",
+      agent: "indie",
+      startedAt: "2026-07-06T00:00:00.000Z",
+      approach: "finalize",
+      targets: ["prj-0001:prj-overview"],
+    });
+
+    await resetResultForClaim(resultPath, "indie", "2026-07-07T00:00:00.000Z", "human");
+
+    const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
+    expect(frontmatter).toContain("execution: human");
+    expect(frontmatter).not.toContain("plan_ref:");
+    expect(frontmatter).toContain("targets:\n    - prj-0001:prj-overview");
+  });
+
   it("expands the review result sections placeholder when reviewSections is provided", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -222,9 +244,9 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       taskId: "T-TEST-overview-140",
       mode: "edit",
       projectId: "prj-0001",
-      planRef: "exec/plans/T-TEST-overview-140-plan.md",
       agent: "indie",
       startedAt: "2026-07-07T00:00:00.000Z",
+      execution: "human",
       approach: "bootstrap-finalize",
       targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
       finalizeSections: {
@@ -238,14 +260,27 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("# Finalize Result");
     // targets は frontmatter にリストとして残り、機械的に対象文書を取得できる。
     expect(body).toContain("targets:\n    - prj-0001:prj-scope\n    - prj-scope-rulebook");
+    expect(body).toContain("execution: human");
+    expect(body).not.toContain("plan_ref:");
+    expect(body).toContain("[[exec-human-finalize-recipe|Human Finalize 実行レシピ]]");
+    expect(body).toContain("[[exec-human-finalize-standard|Human Finalize 実行標準]]");
     expect(body).toContain("- [ ] Business value is clear（BA / vp-ba-business-value）");
-    expect(body).toContain("## 2. 参考資料の確認");
+    expect(body).toContain("## 3. 参考資料の確認");
     expect(body).toContain("- [ ] rulebook: `docs/ja/specdojo/rulebooks/overview-rulebook.md`");
     expect(body).toContain("- judgement: _TODO_（承認 / 差し戻し）");
     // agent 向けの「参考資料の活用」節は human finalize には載せない。
     expect(body).not.toContain("参考資料の活用");
     expect(body).not.toContain("_DONE_CRITERIA_CHECKLIST_");
     expect(body).not.toContain("_FINALIZE_TARGETS_CHECKLIST_");
+
+    expect(parseResultTaskIdentity(body)).toMatchObject({
+      taskId: "T-TEST-overview-140",
+      mode: "edit",
+      projectId: "prj-0001",
+      execution: "human",
+      approach: "bootstrap-finalize",
+      targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
+    });
   });
 
   it("targets は status 更新の再シリアライズ後も frontmatter に保持される", async () => {
@@ -254,9 +289,9 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       taskId: "T-TEST-overview-140",
       mode: "edit",
       projectId: "prj-0001",
-      planRef: "exec/plans/T-TEST-overview-140-plan.md",
       agent: "indie",
       startedAt: "2026-07-07T00:00:00.000Z",
+      execution: "human",
       approach: "bootstrap-finalize",
       targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
     });
@@ -265,6 +300,8 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
 
     const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
     expect(frontmatter).toContain("targets:\n    - prj-0001:prj-scope\n    - prj-scope-rulebook");
+    expect(frontmatter).toContain("execution: human");
+    expect(frontmatter).not.toContain("plan_ref:");
     expect(frontmatter).toContain("status: complete");
   });
 

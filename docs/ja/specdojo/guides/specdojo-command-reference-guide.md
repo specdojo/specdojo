@@ -117,7 +117,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `exec where`     | execution 関連パスを表示する                                         | `specdojo exec where --project prj-0001`                                                                |
 | `exec validate`  | schedule と event を検証する                                         | `specdojo exec validate --project prj-0001`                                                             |
-| `exec build`     | state、Ready、CPM、timeline と human タスクの plan を生成する        | `specdojo exec build --project prj-0001`                                                                |
+| `exec build`     | state、Ready、CPM、timeline を生成する                               | `specdojo exec build --project prj-0001`                                                                |
 | `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）        | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
 | `exec claim`     | タスクを `doing` にする                                              | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
 | `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可） | `specdojo exec complete --project prj-0001 --by agent-1`                                                |

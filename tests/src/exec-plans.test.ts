@@ -7,7 +7,6 @@ import { existsSync } from "node:fs";
 import {
   buildInPlaceStem,
   finalizeResultSectionsForDeliverable,
-  generateReadyHumanPlans,
   generateSinglePlan,
   ownerRoleFields,
   parsePlanTaskIdentity,
@@ -639,7 +638,7 @@ describe("generateSinglePlan", () => {
   });
 });
 
-describe("execution: human plans", () => {
+describe("execution: human results", () => {
   function writeCatalog(catalogPath: string): void {
     mkdirSync(catalogPath, { recursive: true });
     writeFileSync(
@@ -666,7 +665,7 @@ describe("execution: human plans", () => {
     );
   }
 
-  it("human finalize タスクの plan は確認チェックリストと人手確定手順を持ち agent 実行プロトコルを含まない", async () => {
+  it("execution: human のタスクでは plan を生成しない", async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
     const executionPath = join(root, "execution");
     const catalogPath = join(root, "catalog");
@@ -674,121 +673,26 @@ describe("execution: human plans", () => {
     try {
       writeCatalog(catalogPath);
 
-      const outPath = await generateSinglePlan({
-        executionPath,
-        projectId: "test",
-        catalogPath,
-        task: {
-          id: "T-TEST-overview-140",
-          local_id: "overview",
-          name: "完成版確定",
-          owner: "BA",
-          mode: "edit",
-          execution: "human",
-          schedule_file: "sch-track-test.yaml",
-          fifo_rank: 0,
-          critical_first_rank: 0,
-        },
-      });
-
-      const plan = readFileSync(outPath, "utf8");
-      // human テンプレートが選択される（agent 向け edit テンプレートの見出しではない）。
-      expect(plan).toContain("# Finalize Plan: T-TEST-overview-140");
-      expect(plan).toContain("## 3. 最終確認チェックリスト");
-      // done_criteria はチェックリスト（- [ ]）として提示し、owner/下流の分割はしない。
-      expect(plan).toContain("- [ ] Business value is clear");
-      expect(plan).not.toContain("owner として達成する狙い");
-      // status を ready にすることが完了条件（human 用 conventions が注入される）。
-      expect(plan).toContain("`status` を `ready` に更新することが、この確定タスクの完了条件");
-      // agent 実行プロトコル（異常終了・終了コード・runner 申し送り）は載せない。
-      expect(plan).not.toContain("異常終了の条件");
-      expect(plan).not.toContain("終了コード");
-      expect(plan).not.toContain("runner");
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
-
-  it("approach: finalize は human finalize テンプレートを使い approach を frontmatter に記録する", async () => {
-    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
-    const executionPath = join(root, "execution");
-    const catalogPath = join(root, "catalog");
-
-    try {
-      writeCatalog(catalogPath);
-
-      const outPath = await generateSinglePlan({
-        executionPath,
-        projectId: "test",
-        catalogPath,
-        task: {
-          id: "T-TEST-overview-140",
-          local_id: "overview",
-          name: "完成版確定",
-          owner: "BA",
-          mode: "edit",
-          execution: "human",
-          approach: "finalize",
-          schedule_file: "sch-track-test.yaml",
-          fifo_rank: 0,
-          critical_first_rank: 0,
-        },
-      });
-
-      const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("approach: finalize");
-      expect(plan).toContain("# Finalize Plan: T-TEST-overview-140");
-      // 確認項目は素の箇条書きで提示し、チェックの記録は result 側に寄せる。
-      expect(plan).toContain("- Business value is clear");
-      expect(plan).not.toContain("- [ ] Business value is clear");
-      expect(plan).toContain("確認結果は result の「確認チェックリスト」に記録する");
-      // finalize（成果物のみ）は参考資料セクションを持たない。
-      expect(plan).not.toContain("## 2. 対象成果物と参考資料");
-      expect(plan).not.toContain("終了コード");
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
-
-  it("approach: bootstrap-finalize は参考資料一式の確認と ready 昇格を plan に含める", async () => {
-    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
-    const executionPath = join(root, "execution");
-    const catalogPath = join(root, "catalog");
-
-    try {
-      writeCatalog(catalogPath);
-
-      const outPath = await generateSinglePlan({
-        executionPath,
-        projectId: "test",
-        catalogPath,
-        task: {
-          id: "T-TEST-overview-140",
-          local_id: "overview",
-          name: "完成版確定",
-          owner: "BA",
-          mode: "edit",
-          execution: "human",
-          approach: "bootstrap-finalize",
-          schedule_file: "sch-track-test.yaml",
-          fifo_rank: 0,
-          critical_first_rank: 0,
-        },
-      });
-
-      const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("approach: bootstrap-finalize");
-      // targets には対象成果物の project 修飾 doc id を焼き込む（rulebook 未宣言のため参考資料は無し）。
-      expect(plan).toContain("targets:\n    - test:overview");
-      expect(plan).toContain("## 2. 対象成果物と参考資料");
-      // rulebook 未宣言の成果物では参考資料は _MISSING_ で提示し、スキップを指示する。
-      expect(plan).toContain("- rulebook: `_MISSING_`");
-      expect(plan).toContain(
-        "存在する参考資料それぞれの frontmatter の `status` を `ready` に更新する",
-      );
-      // human plan なので agent 実行プロトコルは含まない。
-      expect(plan).not.toContain("終了コード");
-      expect(plan).not.toContain("runner");
+      await expect(
+        generateSinglePlan({
+          executionPath,
+          projectId: "test",
+          catalogPath,
+          task: {
+            id: "T-TEST-overview-140",
+            local_id: "overview",
+            name: "完成版確定",
+            owner: "BA",
+            mode: "edit",
+            execution: "human",
+            approach: "finalize",
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        }),
+      ).rejects.toThrow(/execution: human.*result instead of a plan/);
+      expect(existsSync(join(executionPath, "exec", "plans"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -860,49 +764,6 @@ describe("execution: human plans", () => {
       expect(
         targetDocIdsForDeliverable(catalogPath, undefined, "test", "finalize"),
       ).toBeUndefined();
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
-
-  it("generateReadyHumanPlans は human タスクのみ生成し agent タスクと既存 plan には触れない", async () => {
-    const root = mkdtempSync(join(tmpdir(), "specdojo-human-plan-"));
-    const executionPath = join(root, "execution");
-    const catalogPath = join(root, "catalog");
-    const plansDir = join(executionPath, "exec", "plans");
-
-    try {
-      writeCatalog(catalogPath);
-      mkdirSync(plansDir, { recursive: true });
-      // 既存の human plan（着手済み想定）は上書きしない。
-      writeFileSync(join(plansDir, "T-TEST-overview-140-plan.md"), "keep me\n", "utf8");
-
-      const base = {
-        id: "",
-        local_id: "overview",
-        mode: "edit" as const,
-        schedule_file: "sch-track-test.yaml",
-        fifo_rank: 0,
-        critical_first_rank: 0,
-      };
-      const generated = await generateReadyHumanPlans({
-        executionPath,
-        projectId: "test",
-        catalogPath,
-        tasks: [
-          { ...base, id: "T-TEST-overview-010", execution: "agent" },
-          { ...base, id: "T-TEST-overview-140", execution: "human", owner: "BA" },
-          { ...base, id: "T-TEST-overview-141", execution: "human", owner: "BA" },
-        ],
-      });
-
-      // agent タスクの plan は生成されない。
-      expect(existsSync(join(plansDir, "T-TEST-overview-010-plan.md"))).toBe(false);
-      // 既存の human plan は上書きされず、生成対象にも含まれない。
-      expect(readFileSync(join(plansDir, "T-TEST-overview-140-plan.md"), "utf8")).toBe("keep me\n");
-      // 未生成の human タスクだけが新規生成される。
-      expect(generated).toEqual([join(plansDir, "T-TEST-overview-141-plan.md")]);
-      expect(existsSync(join(plansDir, "T-TEST-overview-141-plan.md"))).toBe(true);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

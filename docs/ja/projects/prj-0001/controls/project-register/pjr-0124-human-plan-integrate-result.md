@@ -28,15 +28,19 @@ specdojo:
 <!-- prettier-ignore -->
 | No | 作業 | 担当 | 状態 | メモ |
 | --- | --- | --- | --- | --- |
-| 1 | `exec build` の human plan 生成（`generateReadyHumanPlans`）を停止する | ARC | open | `src/exec-plans.ts` |
-| 2 | commit スコープ導出を human 時に result frontmatter の `targets` 由来へ切替える | ARC | open | `src/exec-worktree-ops.ts` `resolveCommitScope` / `partitionCommitTargets` |
-| 3 | human result テンプレへ done_criteria チェックを集約（plan の最終確認項目を統合） | ARC | open | `xer-human-*-template.md` は現状維持で受け皿化 |
-| 4 | finalize の確定手順・共通規約を静的 recipe / standard へ移設し result から参照する | ARC | open | `xep-human-*-template.md` の定型部を移設 |
-| 5 | 既存 human plan テンプレ・生成物を整理し、影響とテストを更新する | ARC | open | agent フローとの非対称は脅威モデル差として許容 |
+| 1 | `exec build` の human plan 生成（`generateReadyHumanPlans`）を停止する | ARC | done | build から生成処理を削除し、human の `exec plan` も result 利用を案内して拒否 |
+| 2 | commit スコープ導出を human 時に result frontmatter の `targets` 由来へ切替える | ARC | done | HEAD 上の `execution: human` result を優先し、human の `ready` 昇格を許可 |
+| 3 | human result テンプレへ done_criteria チェックを集約（plan の最終確認項目を統合） | ARC | done | `xer-human-*-template.md` を作業指示と確認記録の受け皿に統合 |
+| 4 | finalize の確定手順・共通規約を静的 recipe / standard へ移設し result から参照する | ARC | done | [[exec-human-finalize-recipe\|Human Finalize 実行レシピ]] / [[exec-human-finalize-standard\|Human Finalize 実行標準]]を新設 |
+| 5 | 既存 human plan テンプレ・生成物を整理し、影響とテストを更新する | ARC | done | `xep-human-*-template.md` を削除し、schema・guide・関連テストを更新 |
 
 ## 4. 対応結果
 
--
+- `exec build` を generated 更新専用に戻し、human plan の自動生成処理と専用テンプレートを削除した。
+- human の claim result に `execution: human` と `targets` を記録し、存在しない `plan_ref` は出力しない構造へ変更した。
+- commit scope は agent では HEAD 上の plan、human では HEAD 上の result を正本として導出するよう分岐した。
+- done_criteria、確定対象、確定判断を human result に集約し、[[exec-human-finalize-recipe|Human Finalize 実行レシピ]]と [[exec-human-finalize-standard|Human Finalize 実行標準]]への参照を追加した。
+- `npm run build`、`npm run lint:ts`、関連テストを実行し、すべて成功した。
 
 ## 5. 関連ドキュメント
 

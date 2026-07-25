@@ -13,14 +13,14 @@ SpecDojo Plan and Result Lifecycle Guide
 
 ## 1. planとresultの役割
 
-| ファイル | 役割                             | 生成タイミング                                                          |
-| -------- | -------------------------------- | ----------------------------------------------------------------------- |
-| plan     | agent または人に渡す作業指示     | `exec plan` / `exec run`（`execution: human` は `exec build` でも生成） |
-| result   | 実行結果、確認結果、残課題の記録 | `exec claim` / `exec run`                                               |
+| ファイル | 役割                                               | 生成タイミング            |
+| -------- | -------------------------------------------------- | ------------------------- |
+| plan     | agent に渡す作業指示                               | `exec plan` / `exec run`  |
+| result   | 実行結果の記録。human では作業指示と確認記録の正本 | `exec claim` / `exec run` |
 
 plan と result は git 管理対象の通常ファイルとして扱います。`generated/` のような再生成物ではありません。
 
-plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。いずれも doc-index（`index lookup`）でパスへ解決できるため、schedule やファイル名の命名規約に依存せず、plan / result 単体から対象文書を機械的に取得できます。
+plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
 
 ## 2. 配置
 
@@ -76,41 +76,39 @@ exec/results/<stem>-result.md
 
 ## 6. 生成ルール
 
-| 操作                            | plan                                                     | result                                    | 状態event                                 |
-| ------------------------------- | -------------------------------------------------------- | ----------------------------------------- | ----------------------------------------- |
-| `exec plan --task`              | 生成する                                                 | 生成しない                                | 変更しない                                |
-| `exec plan --deliverable`       | 生成する                                                 | 生成しない                                | 変更しない                                |
-| `exec claim`                    | 生成しない                                               | scaffold 生成する                         | `claim` を記録する                        |
-| `exec run --task`               | なければ生成する                                         | scaffold 生成し、終了コードで status 更新 | 変更しない                                |
-| `exec run --task --track-state` | なければ生成する                                         | scaffold 生成し、終了コードで status 更新 | `claim` / `complete` / `block` を記録する |
-| `exec reopen`                   | 変更しない                                               | 変更しない                                | `reopen` を記録する                       |
-| `exec run --plan`               | 既存 plan を使う                                         | plan 名から導出する                       | 変更しない                                |
-| `exec build`                    | `execution: human` の Ready タスクの未生成分のみ生成する | 生成しない                                | 変更しない                                |
+| 操作                            | plan             | result                                    | 状態event                                 |
+| ------------------------------- | ---------------- | ----------------------------------------- | ----------------------------------------- |
+| `exec plan --task`              | 生成する         | 生成しない                                | 変更しない                                |
+| `exec plan --deliverable`       | 生成する         | 生成しない                                | 変更しない                                |
+| `exec claim`                    | 生成しない       | scaffold 生成する                         | `claim` を記録する                        |
+| `exec run --task`               | なければ生成する | scaffold 生成し、終了コードで status 更新 | 変更しない                                |
+| `exec run --task --track-state` | なければ生成する | scaffold 生成し、終了コードで status 更新 | `claim` / `complete` / `block` を記録する |
+| `exec reopen`                   | 変更しない       | 変更しない                                | `reopen` を記録する                       |
+| `exec run --plan`               | 既存 plan を使う | plan 名から導出する                       | 変更しない                                |
+| `exec build`                    | 生成しない       | 生成しない                                | 変更しない                                |
 
-`exec build` は state、Ready、CPM などの `generated/` 更新に専念し、agent タスクの plan は生成・削除しません。ただし `execution: human` のタスク（finalize など）は `exec run` の対象外で、他に plan を生成する導線がありません。このため build は Ready になった human タスクの plan を、まだ存在しない分だけ生成します（既存 plan は着手中の編集を保護するため上書きしません）。agent タスクの plan は従来どおり `exec plan` / `exec run` でオンデマンド生成します。
+`exec build` は state、Ready、CPM などの `generated/` 更新に専念し、plan は生成・削除しません。agent タスクの plan は `exec plan` / `exec run` でオンデマンド生成します。`execution: human` のタスクは plan を持たず、`exec claim` が生成する result を使います。
 
 ## 7. planテンプレート
 
-plan は `execution` / `mode` / `approach` に応じたテンプレートから生成します。
+plan は `mode` / `approach` に応じたテンプレートから生成します。
 plan の構造と生成規則は schema・本ガイド・各テンプレートを正本とするため、生成する Frontmatter の `rulebook` は `none` とします。
 
-| 条件                                                | 代表テンプレート                           |
-| --------------------------------------------------- | ------------------------------------------ |
-| `mode: edit`                                        | `xep-template.md`                          |
-| `mode: review`                                      | `xrp-template.md`                          |
-| `execution: human` + `approach: finalize`           | `xep-human-finalize-template.md`           |
-| `execution: human` + `approach: bootstrap-finalize` | `xep-human-bootstrap-finalize-template.md` |
-| `execution: human`（`approach` なし）               | `xep-human-template.md`                    |
+| 条件                  | 代表テンプレート             |
+| --------------------- | ---------------------------- |
+| `mode: edit`          | `xep-template.md`            |
+| `mode: review`        | `xrp-template.md`            |
+| `approach` が指定済み | `xep-<approach>-template.md` |
 
-`execution: human` のタスクは最優先で human 用テンプレートを使い、agent の実行プロトコル（異常終了・終了コード・runner への申し送り）を持ちません。`approach` が指定されていれば `xep-human-<approach>-template.md` を先に探し、無ければ汎用の `xep-human-template.md` へフォールバックします。`finalize` は成果物のみの確定（done_criteria の確認チェックリストと、frontmatter の `status` を `ready` に更新する確定手順）、`bootstrap-finalize` は bootstrap と対になる確定で、成果物に加えて参考資料（rulebook / recipe / sample / template）の確認と `ready` 昇格を含みます。あわせて共通規約も human 用の `xep-human-conventions-template.md` を注入し、確定対象の `status` を `ready` に昇格させることを完了条件として明示します。
+`execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]、共通規約は [[exec-human-finalize-standard|Human Finalize 実行標準]]を正本とし、human result から参照します。
 
-`execution: human` でない場合、`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
+`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
 参考資料の扱いは [specdojo-reference-materials-guide.md](specdojo-reference-materials-guide.md) を参照します。
 
 ## 8. resultテンプレート
 
-result は plan と対になる実行記録です。`claim` または `exec run` が scaffold 生成します。
+result は実行記録です。agent では plan と対になり、human では作業指示も兼ねます。`claim` または `exec run` が scaffold 生成します。
 
 | 条件                                          | 代表テンプレート                           |
 | --------------------------------------------- | ------------------------------------------ |
@@ -119,7 +117,7 @@ result は plan と対になる実行記録です。`claim` または `exec run`
 | `mode: edit` + `approach: finalize`           | `xer-human-finalize-template.md`           |
 | `mode: edit` + `approach: bootstrap-finalize` | `xer-human-bootstrap-finalize-template.md` |
 
-review の result には、scaffold 時に catalog から観点別セクション（RVP）を焼き込みます。同様に `finalize` / `bootstrap-finalize` の result には、done_criteria の確認チェックリスト（roles / viewpoint 注記付き）と確定対象（`status` を `ready` へ昇格する対象）のチェックリストを焼き込みます。plan は「何を確認するか」の指示、result は「何を確認して確定したか」の記録という分担で、チェックの記録は result 側に残します。plan は完了後にアーカイブ・再生成される一時物ですが、result は review などから参照される恒久記録だからです。
+review の result には、scaffold 時に catalog から観点別セクション（RVP）を焼き込みます。同様に `finalize` / `bootstrap-finalize` の result には、done_criteria の確認チェックリスト（roles / viewpoint 注記付き）と確定対象（`status` を `ready` へ昇格する対象）のチェックリストを焼き込みます。human result は `execution: human` と `targets` を持ち、`plan_ref` を持ちません。確定手順・確認対象・確認記録・確定判断を result 側へ一元化し、恒久記録として残します。
 
 既に result が存在する場合は上書きせず、既存ファイルを使います。エージェントや人は result に実行内容、検証結果、残課題を記録します。
 

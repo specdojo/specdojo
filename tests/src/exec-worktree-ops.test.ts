@@ -1,9 +1,8 @@
-import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { findExecWorktree, type ExecWorktree } from "../../src/exec-worktree.js";
+import { findExecWorktree, gitOutput, type ExecWorktree } from "../../src/exec-worktree.js";
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
@@ -17,32 +16,8 @@ import {
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
 
-// Git sets these per-invocation env vars when running hooks (e.g. pre-commit). If inherited by
-// git commands targeting the test's linked worktrees (where `.git` is a gitlink file, not a dir),
-// they break index access with "`.git/index`: Not a directory". Strip them, like production does.
-const GIT_LOCAL_ENV_VARS = [
-  "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-  "GIT_COMMON_DIR",
-  "GIT_DIR",
-  "GIT_GRAFT_FILE",
-  "GIT_IMPLICIT_WORK_TREE",
-  "GIT_INDEX_FILE",
-  "GIT_NO_REPLACE_OBJECTS",
-  "GIT_OBJECT_DIRECTORY",
-  "GIT_PREFIX",
-  "GIT_REPLACE_REF_BASE",
-  "GIT_SHALLOW_FILE",
-  "GIT_WORK_TREE",
-];
-
-function gitEnv(): NodeJS.ProcessEnv {
-  const env = { ...process.env };
-  for (const name of GIT_LOCAL_ENV_VARS) delete env[name];
-  return env;
-}
-
 function git(cwd: string, ...args: string[]): string {
-  return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnv() }).trim();
+  return gitOutput(cwd, args).trim();
 }
 
 type Fixture = {
@@ -119,11 +94,38 @@ function planWithIdentity(
   return lines.join("\n");
 }
 
+function humanResultWithIdentity(
+  taskId: string,
+  opts: { mode: "edit" | "review"; approach?: string; targets?: string[] },
+): string {
+  const lines = [
+    "---",
+    "specdojo:",
+    `  id: xer-${taskId.toLowerCase()}`,
+    "  type: exec-result",
+    `  task_id: ${taskId}`,
+    `  mode: ${opts.mode}`,
+    "  status: in_progress",
+    "  project_id: prj-0001",
+    '  started_at: "2026-06-13T00:00:00.000Z"',
+    "  agent: human-actor",
+    "  execution: human",
+  ];
+  if (opts.approach) lines.push(`  approach: ${opts.approach}`);
+  if (opts.targets && opts.targets.length > 0) {
+    lines.push("  targets:");
+    for (const target of opts.targets) lines.push(`    - ${target}`);
+  }
+  lines.push("---", "", `# Result ${taskId}`, "");
+  return lines.join("\n");
+}
+
 // Scaffold the execution-management files a claimed task starts with: plan, result, claim event.
 function scaffoldTask(
   fixture: Fixture,
   taskId: string,
   planContent?: string,
+  resultContent?: string,
 ): { planPath: string; resultPath: string; claimEventPath: string } {
   const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
   const resultPath = join(fixture.executionPath, "exec", "results", `${taskId}-result.md`);
@@ -134,7 +136,7 @@ function scaffoldTask(
     `20260613T000000Z_agent_${taskId}_claim.json`,
   );
   writeFile(planPath, planContent ?? `# Plan ${taskId}\n`);
-  writeFile(resultPath, `# Result ${taskId}\n\nstatus: in_progress\n`);
+  writeFile(resultPath, resultContent ?? `# Result ${taskId}\n\nstatus: in_progress\n`);
   writeFile(
     claimEventPath,
     JSON.stringify({
@@ -153,8 +155,14 @@ function prepare(
   taskId: string,
   worktreeTaskId: string = taskId,
   planContent?: string,
+  resultContent?: string,
 ): ExecWorktree {
-  const { planPath, resultPath, claimEventPath } = scaffoldTask(fixture, taskId, planContent);
+  const { planPath, resultPath, claimEventPath } = scaffoldTask(
+    fixture,
+    taskId,
+    planContent,
+    resultContent,
+  );
   return checkpointAndEnsureWorktree({
     context: fixture.context,
     taskId,
@@ -480,6 +488,53 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
     expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
+  });
+
+  it("commits only the result targets for an execution: human edit task", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-140";
+
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:stale"] }),
+      humanResultWithIdentity(taskId, {
+        mode: "edit",
+        approach: "finalize",
+        targets: ["prj-0001:doc-a"],
+      }),
+    );
+
+    writeFile(
+      join(worktree.path, "docs", "a.md"),
+      "---\nspecdojo:\n  id: prj-0001:doc-a\n  status: ready\n---\n\n# Human target\n",
+    );
+    writeFile(join(worktree.path, "docs", "stale.md"), "stale plan target\n");
+    writeFile(join(worktree.path, "src", "unrelated.ts"), "// unrelated\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      humanResultWithIdentity(taskId, {
+        mode: "edit",
+        approach: "finalize",
+        targets: ["prj-0001:doc-a"],
+      }).replace("status: in_progress", "status: complete"),
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    );
+    expect(committed.targets).not.toContain("docs/stale.md");
+    expect(committed.targets).not.toContain("src/unrelated.ts");
   });
 
   it("allows reference-material directories for a bootstrap-approach edit task", () => {

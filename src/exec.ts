@@ -66,7 +66,6 @@ import {
   archivePlan,
   buildInPlaceStem,
   generateDeliverablePlan,
-  generateReadyHumanPlans,
   generateSinglePlan,
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
@@ -91,6 +90,7 @@ import {
   buildPhaseModeIndex,
   resolveApproach,
   resolveOwnerForLocalId,
+  resolveTaskExecution,
   resolveTaskMode,
 } from "./exec-strategy.js";
 
@@ -441,6 +441,13 @@ async function scaffoldClaimResult(opts: {
     scheduleNode?.phase_suffix,
     scheduleNode?.phase_set,
   );
+  const execution = resolveTaskExecution(
+    localId,
+    opts.taskId,
+    phaseModeIndex,
+    scheduleNode?.phase_suffix,
+    scheduleNode?.phase_set,
+  );
   const reviewSections =
     mode === "review"
       ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId)
@@ -460,16 +467,17 @@ async function scaffoldClaimResult(opts: {
     taskId: opts.taskId,
     mode,
     projectId: opts.projectId,
-    planRef: `exec/plans/${opts.taskId}-plan.md`,
+    ...(execution === "agent" ? { planRef: `exec/plans/${opts.taskId}-plan.md` } : {}),
     agent: opts.actor,
     startedAt: opts.startedAt,
+    execution,
     ...(approach ? { approach } : {}),
     ...(targets ? { targets } : {}),
     ...(reviewSections ? { reviewSections } : {}),
     ...(finalizeSections ? { finalizeSections } : {}),
   });
   if (!result.created) {
-    await resetResultForClaim(result.resultPath, opts.actor, opts.startedAt);
+    await resetResultForClaim(result.resultPath, opts.actor, opts.startedAt, execution);
   }
 }
 
@@ -863,8 +871,7 @@ export function registerExecCommands(program: Command): void {
   addProjectOptions(bcmd);
   bcmd.action(async (opts) => {
     try {
-      const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath } =
-        resolveProjectContext(opts);
+      const { schedulePath } = resolveProjectContext(opts);
 
       const res = validateAll(schedulePath);
       printValidateResult(res);
@@ -877,28 +884,9 @@ export function registerExecCommands(program: Command): void {
       const events = readAllEventFiles(schedulePath);
       const cpm = computeCpm(schedule, schedulePath);
 
-      // Agent task plans are generated on demand by `exec plan` / `exec run`. Human tasks are never
-      // launched by the runner, so build generates their plans from the freshly-written ready.json
-      // (execution already resolved there) so a finalize plan appears as soon as the task is Ready.
       const snapshot = writeGeneratedCore(schedulePath, events, schedule, cpm);
       writeScheduleHashAndDiff(schedulePath, schedule);
       writeCpmFiles(schedulePath, cpm, snapshot);
-
-      const readyJsonPath = join(generatedDirForProject(schedulePath), "ready.json");
-      if (existsSync(readyJsonPath)) {
-        const readySnapshot = readJson(readyJsonPath) as ReadySnapshot;
-        const humanPlans = await generateReadyHumanPlans({
-          executionPath,
-          projectId: resolveProjectId(opts),
-          catalogPath: catalogPath ?? "",
-          rolesPath,
-          viewpointsPath,
-          tasks: readySnapshot.tasks,
-        });
-        for (const planPath of humanPlans) {
-          process.stdout.write(`Generated human plan: ${planPath}\n`);
-        }
-      }
 
       process.stdout.write(`\nGenerated: ${generatedDirForProject(schedulePath)}\n`);
       exitWithCode(true);
@@ -910,7 +898,7 @@ export function registerExecCommands(program: Command): void {
   const planCmd = exec
     .command("plan")
     .description(
-      "Generate a plan for a task or catalog deliverable (schedule-independent; does not change state or events)",
+      "Generate a plan for an agent task or catalog deliverable (schedule-independent; does not change state or events)",
     );
   addProjectOptions(planCmd);
   planCmd.option("--task <taskId>", "Scheduled task ID to generate the plan for");

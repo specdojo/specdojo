@@ -18,11 +18,12 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     `mode: ${meta.mode}`,
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,
-    `plan_ref: ${meta.plan_ref}`,
-    `started_at: "${meta.started_at}"`,
   ];
+  if (meta.plan_ref) inner.push(`plan_ref: ${meta.plan_ref}`);
+  inner.push(`started_at: "${meta.started_at}"`);
   if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
   if (meta.agent) inner.push(`agent: ${meta.agent}`);
+  if (meta.execution) inner.push(`execution: ${meta.execution}`);
   if (meta.approach) inner.push(`approach: ${meta.approach}`);
   if (meta.targets && meta.targets.length > 0) {
     inner.push("targets:");
@@ -111,9 +112,10 @@ export async function scaffoldResult(opts: {
   taskId: string;
   mode: TaskMode;
   projectId: string;
-  planRef: string;
+  planRef?: string;
   agent: string;
   startedAt: string;
+  execution?: "agent" | "human";
   approach?: Approach;
   // タスクが対象とする文書の doc id リスト（plan frontmatter の targets と同じ規則）。
   targets?: string[];
@@ -145,9 +147,10 @@ export async function scaffoldResult(opts: {
     mode,
     status: "in_progress",
     project_id: projectId,
-    plan_ref: planRef,
     started_at: startedAt,
     agent,
+    ...(planRef ? { plan_ref: planRef } : {}),
+    ...(opts.execution ? { execution: opts.execution } : {}),
     ...(approach ? { approach } : {}),
     ...(opts.targets && opts.targets.length > 0 ? { targets: opts.targets } : {}),
   };
@@ -215,10 +218,13 @@ export async function updateResultStatus(
     mode: (existingMeta.mode as TaskMode) ?? "edit",
     status,
     project_id: existingMeta.project_id ?? "",
-    plan_ref: existingMeta.plan_ref ?? "",
     started_at: existingMeta.started_at ?? "",
     completed_at: completedAt,
     agent: existingMeta.agent,
+    ...(existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
+    ...(existingMeta.execution === "human" || existingMeta.execution === "agent"
+      ? { execution: existingMeta.execution }
+      : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
     ...(blockReason ? { block_reason: blockReason } : {}),
@@ -235,11 +241,17 @@ export async function resetResultForClaim(
   resultPath: string,
   agent: string,
   startedAt: string,
+  execution?: "agent" | "human",
 ): Promise<void> {
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
   const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const existingExecution =
+    existingMeta.execution === "human" || existingMeta.execution === "agent"
+      ? existingMeta.execution
+      : undefined;
+  const nextExecution = execution ?? existingExecution;
   const updatedMeta: ExecResultMeta = {
     id: existingMeta.id ?? "",
     type: "exec-result",
@@ -247,13 +259,61 @@ export async function resetResultForClaim(
     mode: (existingMeta.mode as TaskMode) ?? "edit",
     status: "in_progress",
     project_id: existingMeta.project_id ?? "",
-    plan_ref: existingMeta.plan_ref ?? "",
     started_at: startedAt,
     agent,
+    ...(execution !== "human" && existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
+    ...(nextExecution ? { execution: nextExecution } : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
   };
 
   writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), "utf8");
   await formatMarkdownFile(resultPath);
+}
+
+export type ResultTaskIdentity = {
+  taskId: string;
+  mode: TaskMode;
+  projectId: string;
+  execution?: "agent" | "human";
+  approach?: Approach;
+  targets?: string[];
+};
+
+// human タスクの commit scope を、plan ではなく checkpoint 済み result から復元する。
+// 不正な値は採用せず、呼び出し側が既存の plan 由来解決へフォールバックできるようにする。
+export function parseResultTaskIdentity(resultContent: string): ResultTaskIdentity | null {
+  const { meta, targets } = parseFrontmatter(resultContent);
+  const taskId = meta.task_id?.trim() ?? "";
+  if (!taskId) return null;
+
+  const mode: TaskMode = meta.mode === "review" ? "review" : "edit";
+  const projectId = meta.project_id?.trim() ?? "";
+  const execution =
+    meta.execution === "human" || meta.execution === "agent" ? meta.execution : undefined;
+  const approach =
+    meta.approach &&
+    [
+      "fully-guided",
+      "recipe-guided",
+      "freeform",
+      "bootstrap",
+      "rulebook-maintenance",
+      "recipe-maintenance",
+      "sample-maintenance",
+      "template-maintenance",
+      "finalize",
+      "bootstrap-finalize",
+    ].includes(meta.approach)
+      ? (meta.approach as Approach)
+      : undefined;
+
+  return {
+    taskId,
+    mode,
+    projectId,
+    ...(execution ? { execution } : {}),
+    ...(approach ? { approach } : {}),
+    ...(targets ? { targets } : {}),
+  };
 }

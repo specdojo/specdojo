@@ -245,10 +245,12 @@ export type ExecResultMeta = {
   mode: TaskMode;
   status: "in_progress" | "complete" | "blocked";
   project_id: string;
-  plan_ref: string;
+  // human タスクは plan を生成せず result 単体で実行するため省略する。
+  plan_ref?: string;
   started_at: string;
   completed_at?: string;
   agent?: string;
+  execution?: "agent" | "human";
   approach?: Approach;
   // タスクが対象とする文書の doc id リスト（plan と同じ規則）。
   targets?: string[];

@@ -29,10 +29,6 @@ import type { RoleDefinition, RolesDoc } from "./role-types.js";
 
 type PlanTask = ReadyTaskView & { mode: TaskMode };
 
-// Execution owner of a task: an AI agent (default) or a human. Human tasks (e.g. finalize)
-// get a confirm/finalize plan instead of the agent execution protocol.
-export type TaskExecution = "agent" | "human";
-
 type DeliverableInfo = {
   deliverable: DctDeliverableItem;
   resolvedPath: string;
@@ -231,11 +227,6 @@ const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = "xrr-viewpoint-detail-template.m
 // stdin), so cross-tool rules must travel with the plan rather than tool-specific instruction
 // files. Kept as a single fragment to avoid duplicating the rule across every plan template.
 const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
-// Conventions fragment for execution: human plans. Keeps the executor-agnostic rules (link
-// notation, result recording) but inverts the status-promotion rule (a human finalizing the
-// deliverable is the one who promotes status to "ready") and drops the agent-only protocol
-// (exit codes, runner block hand-off, automatic lint/test execution).
-const HUMAN_CONVENTIONS_TEMPLATE = "xep-human-conventions-template.md";
 
 export function templatesDir(): string {
   return join(specdojoRootDir(), "docs/ja/specdojo/templates");
@@ -253,30 +244,10 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
   return `${templatePrefix(mode)}-${approach}-template.md`;
 }
 
-// Selects the template for a task. execution: human takes priority and looks up
-// <prefix>-human-<approach>-template.md first (approach 別の確定プロファイル。
-// 例: finalize / bootstrap-finalize), then <prefix>-human-template.md (approach
-// なしの human タスク向けの汎用確認テンプレート). Agent 向け approach テンプレートは
-// 実行プロトコル（終了コード・runner への申し送り）を含むため human では選択しない。
-// Otherwise selects <prefix>-<approach>-template.md when it exists, falling back
+// Selects <prefix>-<approach>-template.md when it exists, falling back
 // to the standard <prefix>-template.md. Any missing variant falls through to the
 // next candidate so a plan is always produced.
-function resolvePlanTemplatePath(
-  mode: TaskMode,
-  approach: Approach | undefined,
-  execution: TaskExecution,
-): string {
-  if (execution === "human") {
-    if (approach) {
-      const humanApproachPath = join(
-        templatesDir(),
-        `${templatePrefix(mode)}-human-${approach}-template.md`,
-      );
-      if (existsSync(humanApproachPath)) return humanApproachPath;
-    }
-    const humanPath = join(templatesDir(), `${templatePrefix(mode)}-human-template.md`);
-    if (existsSync(humanPath)) return humanPath;
-  }
+function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
   if (approach) {
     const candidatePath = join(templatesDir(), approachTemplateFileName(mode, approach));
     if (existsSync(candidatePath)) return candidatePath;
@@ -298,10 +269,9 @@ function readTemplate(templatePath: string, cache: Map<string, string>): string 
 function loadPlanTemplate(
   mode: TaskMode,
   approach: Approach | undefined,
-  execution: TaskExecution,
   cache: Map<string, string>,
 ): string {
-  return readTemplate(resolvePlanTemplatePath(mode, approach, execution), cache);
+  return readTemplate(resolvePlanTemplatePath(mode, approach), cache);
 }
 
 function loadViewpointDetailTemplate(cache: Map<string, string>): string {
@@ -324,12 +294,12 @@ const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 export function injectCommonConventions(
   body: string,
   schemaRef: string,
-  execution: TaskExecution,
   cache: Map<string, string>,
 ): string {
-  const conventionsTemplate =
-    execution === "human" ? HUMAN_CONVENTIONS_TEMPLATE : COMMON_CONVENTIONS_TEMPLATE;
-  let conventions = readTemplate(join(templatesDir(), conventionsTemplate), cache).trimEnd();
+  let conventions = readTemplate(
+    join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE),
+    cache,
+  ).trimEnd();
   conventions =
     schemaRef === MISSING
       ? conventions
@@ -822,9 +792,13 @@ async function writeTaskPlan(
   const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${stem}-result.md`;
   const outPath = override?.outPath ?? join(ctx.plansDir, `${stem}-plan.md`);
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
-  const execution: TaskExecution = task.execution ?? "agent";
+  if ((task.execution ?? "agent") === "human") {
+    throw new Error(
+      `Task ${task.id} has execution: human; claim it to create and use its result instead of a plan.`,
+    );
+  }
   const planTask: PlanTask = { ...task, mode };
-  const template = loadPlanTemplate(mode, task.approach, execution, ctx.templateCache);
+  const template = loadPlanTemplate(mode, task.approach, ctx.templateCache);
 
   const body =
     mode === "review"
@@ -854,16 +828,15 @@ async function writeTaskPlan(
     deliverable?.deliverable.rulebook,
     deliverable?.deliverable.local_id,
   );
-  const content = injectCommonConventions(body, schemaRef, execution, ctx.templateCache);
+  const content = injectCommonConventions(body, schemaRef, ctx.templateCache);
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);
   return outPath;
 }
 
-// Regenerate the plan for a single task without touching other plan files,
-// the index, or task state. Intended for manually re-running a completed task:
-// `exec build` deletes done-task plans, so this rebuilds just the one plan on demand.
+// Generate the plan for a single agent task without touching other plan files,
+// the index, or task state. Human tasks are result-only and are rejected here.
 export async function generateSinglePlan(opts: {
   executionPath: string;
   projectId: string;
@@ -874,6 +847,11 @@ export async function generateSinglePlan(opts: {
   outPath?: string;
   stem?: string;
 }): Promise<string> {
+  if ((opts.task.execution ?? "agent") === "human") {
+    throw new Error(
+      `Task ${opts.task.id} has execution: human; claim it to create and use its result instead of a plan.`,
+    );
+  }
   const ctx = newPlanGenContext(opts);
   const override =
     opts.outPath || opts.stem
@@ -883,31 +861,6 @@ export async function generateSinglePlan(opts: {
         }
       : undefined;
   return await writeTaskPlan(ctx, { ...opts.task, mode: opts.task.mode ?? "edit" }, override);
-}
-
-// Generate plans for the Ready tasks that require human execution (e.g. finalize). Agent tasks
-// get their plan at `exec run` time, but human tasks are never launched by the runner, so nothing
-// else produces their plan; `exec build` calls this so a human plan appears as soon as the task is
-// Ready. An existing plan is left untouched to preserve any manual edits. Returns the generated
-// plan paths (sorted) for reporting; tasks in reproducible schedule order for deterministic output.
-export async function generateReadyHumanPlans(opts: {
-  executionPath: string;
-  projectId: string;
-  catalogPath: string;
-  rolesPath?: string;
-  viewpointsPath?: string;
-  tasks: ReadyTaskView[];
-}): Promise<string[]> {
-  const ctx = newPlanGenContext(opts);
-  const generated: string[] = [];
-  for (const task of opts.tasks) {
-    if ((task.execution ?? "agent") !== "human") continue;
-    const planPath = planPathForTask(opts.executionPath, task.id);
-    if (existsSync(planPath)) continue;
-    await writeTaskPlan(ctx, { ...task, mode: task.mode ?? "edit" });
-    generated.push(planPath);
-  }
-  return generated.sort();
 }
 
 // Generate a plan directly from a catalog deliverable, independent of the

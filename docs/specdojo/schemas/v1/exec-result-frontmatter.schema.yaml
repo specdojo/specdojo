@@ -5,8 +5,8 @@ description: >
   Validates the YAML frontmatter of exec result files (edit-result and review-result).
   Result files are Markdown documents with YAML frontmatter created by exec run.
   They reside at exec/results/<task-id>-result.md under the execution path.
-  The harness scaffolds the file before the agent runs and updates status/timestamps after.
-  The agent fills in the Markdown body (done_criteria checks, notes, handoff).
+  The harness scaffolds the file before execution and updates status/timestamps after.
+  The actor fills in the Markdown body (done_criteria checks, notes, handoff).
 # SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
 type: object
 required:
@@ -22,9 +22,22 @@ properties:
       - mode
       - status
       - project_id
-      - plan_ref
       - started_at
       - targets
+    allOf:
+      - if:
+          required:
+            - execution
+          properties:
+            execution:
+              const: human
+        then:
+          not:
+            required:
+              - plan_ref
+        else:
+          required:
+            - plan_ref
     properties:
       id:
         type: string
@@ -42,7 +55,7 @@ properties:
 
       mode:
         $ref: "./exec-common.schema.yaml#/$defs/TaskMode"
-        description: "Work type. Matches the corresponding plan mode."
+        description: "Work type. Matches the task mode."
 
       status:
         type: string
@@ -59,7 +72,7 @@ properties:
       plan_ref:
         type: string
         minLength: 1
-        description: "Relative path to the corresponding plan file (exec/plans/<task-id>-<mode>-plan.md)."
+        description: "Relative path to the corresponding plan file. Omitted for execution: human."
 
       started_at:
         type: string
@@ -73,12 +86,18 @@ properties:
 
       agent:
         $ref: "./exec-common.schema.yaml#/$defs/AgentNickname"
-        description: "Agent nickname that executed this task."
+        description: "Actor nickname that executed this task."
+
+      execution:
+        type: string
+        enum: ["agent", "human"]
+        description: >
+          Execution owner. Human tasks are result-only and omit plan_ref.
 
       approach:
         $ref: "./exec-common.schema.yaml#/$defs/Approach"
         description: >
-          Carried from the corresponding plan. Omitted when not declared for this phase.
+          Carried from the scheduled task. Omitted when not declared for this phase.
 
       targets:
         type: array

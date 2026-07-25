@@ -289,17 +289,19 @@ providers:
 
 `workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。この経路は specdojo CLI 側で閉じる。commit 対象は mode 別の許可リスト方式とする。
 
-| mode                                        | commit を許可するパス                                                         |
+| execution / mode                            | commit を許可するパス                                                         |
 | ------------------------------------------- | ----------------------------------------------------------------------------- |
-| review                                      | 対象 task の result のみ                                                      |
-| edit                                        | 対象 task の result、plan frontmatter の `targets` から解決した成果物パス     |
+| agent / review                              | 対象 task の result のみ                                                      |
+| agent / edit                                | 対象 task の result、plan frontmatter の `targets` から解決した成果物パス     |
+| human / edit                                | 対象 task の result、result frontmatter の `targets` から解決した成果物パス   |
 | edit（maintenance / bootstrap 系 approach） | 上記に加え、参考資料ディレクトリ（rulebooks / recipes / samples / templates） |
 
 - 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力する（worktree 内には残るため、必要なら人間が確認して手動で取り込む）。
 - 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用する。
-- mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読む。agent は working tree の plan を書き換えられるが HEAD は書き換えられないため、許可リストの導出は改ざん耐性がある。
+- agent の mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読む。agent は working tree の plan を書き換えられるが HEAD は書き換えられないため、許可リストの導出は改ざん耐性がある。
+- human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出する。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しない。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックする。どちらでも解決できない id は警告を出し、commit を許可しない。
-- HEAD に plan が無い、または frontmatter から task 識別を復元できない場合のみ、従来の除外リスト方式へフォールバックする。CLI 経由の worktree は必ず plan を checkpoint するため、この分岐を agent 側から誘発することはできない。
+- agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックする。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできない。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になる。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達する。claude は settings の allow に `git add` / `git commit` を含めない（`-p` 実行では未許可ツールは自動拒否）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断する、opencode は `bash` の許可リストで塞ぐ。
 - worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
 
