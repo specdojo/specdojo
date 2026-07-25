@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-0124-exec-auto-worker-pool
+  id: prj-0001:pjr-0134-exec-auto-worker-pool
   type: project
   status: draft
   rulebook: pjr-rulebook
@@ -12,7 +12,7 @@ specdojo:
     - sysd-agent-settings
 ---
 
-# PJR-0124 exec run --autoを連続worker pool化
+# PJR-0134 exec run --autoを連続worker pool化
 
 ## 1. 概要
 

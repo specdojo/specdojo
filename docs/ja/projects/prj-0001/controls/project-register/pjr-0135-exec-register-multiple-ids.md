@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-0125-exec-register-multiple-ids
+  id: prj-0001:pjr-0135-exec-register-multiple-ids
   type: project
   status: draft
   rulebook: pjr-rulebook
@@ -12,7 +12,7 @@ specdojo:
     - sysd-agent-settings
 ---
 
-# PJR-0125 exec run --registerの複数ID直列実行
+# PJR-0135 exec run --registerの複数ID直列実行
 
 ## 1. 概要
 

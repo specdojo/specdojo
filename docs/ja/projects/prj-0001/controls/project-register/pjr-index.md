@@ -144,9 +144,19 @@ Project Register
 | PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | - |
 | PJR-0122 | open | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | - | - | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
 | PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | _TODO_ | 2026-07-31 | - | - | - |
-| PJR-0124 | open | exec run --autoを連続worker pool化 | parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0124-exec-auto-worker-pool](./pjr-0124-exec-auto-worker-pool.md) |
-| PJR-0125 | open | exec run --registerの複数ID直列実行 | 複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0125-exec-register-multiple-ids](./pjr-0125-exec-register-multiple-ids.md) |
-| PJR-0126 | open | agent利用制限後の自動再開 | 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0126-exec-limit-resume](./pjr-0126-exec-limit-resume.md) |
+| PJR-0124 | open | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | _TODO_ | - | - | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
+| PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | _TODO_ | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
+| PJR-0126 | open | PO承認をpull requestベースにする承認フロー整備 | decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討 | todo | medium | PM | _TODO_ | - | - | [pjr-0126-pr-based-po-approval](./pjr-0126-pr-based-po-approval.md) |
+| PJR-0127 | open | prj-overviewのプロジェクトWhyを明確化 | 後続文書の論点を安定させるため、対象者・課題・中心仮説・価値仮説・判断原則をプロジェクト概要の正本として明確化する | todo | high | BA | _TODO_ | - | - | [pjr-0127-clarify-project-why](./pjr-0127-clarify-project-why.md) |
+| PJR-0128 | open | exec planへproject contextを伝播 | 全ての対象成果物生成でprj-overviewを参照できるよう、depends_onと分離したproject contextをexec planへ追加する | todo | high | ARC | _TODO_ | - | - | [pjr-0128-propagate-project-context](./pjr-0128-propagate-project-context.md) |
+| PJR-0129 | open | Why-What-How作成原則をrecipeへ反映 | Why・What・How・Traceを章順ではなく論理の骨格として定義し、各成果物recipeへ重複なく適用する | todo | medium | ARC | _TODO_ | - | - | [pjr-0129-why-what-how-recipes](./pjr-0129-why-what-how-recipes.md) |
+| PJR-0130 | open | Whyの明確性を既存review viewpointsへ反映 | 重複観点を増やさず、目的整合・業務価値・可読性の既存観点にWhyの判定基準と証拠を具体化する | todo | medium | QE | _TODO_ | - | - | [pjr-0130-clarify-why-review-viewpoints](./pjr-0130-clarify-why-review-viewpoints.md) |
+| PJR-0131 | open | 簡潔な文書作成の共通原則をdocumentation policyへ追加 | 文書全体に適用する簡潔性・重複回避・正本参照・文章量の目安をdocumentation policyの共通原則として定義する | todo | medium | ARC | _TODO_ | - | - | [pjr-0131-concise-documentation-policy](./pjr-0131-concise-documentation-policy.md) |
+| PJR-0132 | open | 既存review viewpointで文書の冗長性を検出 | 新しい観点を重複追加せず、vp-ux-readabilityに反復・一般論・表と本文の重複・正本の過剰再掲を検出する基準を追加する | todo | medium | UX | _TODO_ | - | - | [pjr-0132-detect-document-redundancy](./pjr-0132-detect-document-redundancy.md) |
+| PJR-0133 | open | bootstrap後に成果物間の重複を整理する横断passを追加 | bootstrap完了後、refine前に成果物群を横断して正本を選択し、重複記述を要約と参照へ置き換える直列passを設ける | todo | high | ARC | _TODO_ | - | - | [pjr-0133-cross-deliverable-dedup-pass](./pjr-0133-cross-deliverable-dedup-pass.md) |
+| PJR-0134 | open | exec run --autoを連続worker pool化 | parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0134-exec-auto-worker-pool](./pjr-0134-exec-auto-worker-pool.md) |
+| PJR-0135 | open | exec run --registerの複数ID直列実行 | 複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0135-exec-register-multiple-ids](./pjr-0135-exec-register-multiple-ids.md) |
+| PJR-0136 | open | agent利用制限後の自動再開 | 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0136-exec-limit-resume](./pjr-0136-exec-limit-resume.md) |
 
 ## 2. 派生ビュー
 

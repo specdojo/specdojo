@@ -50,7 +50,7 @@ Project Register Documentation Rules
 - プロジェクト登録簿本体は以下に配置する。
 
 ```text
-docs/ja/projects/<project-id>/030-project-management/controls/project-register/pjr-index.md
+docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 ```
 
 - 個別登録項目のファイル名は `pjr-XXXX-<topic>.md` 形式とする。

@@ -82,9 +82,10 @@ edit と review の順序は固定しない。`sch-strategy-<track>.yaml` の ph
 ## 4. 共通ディレクトリ
 
 ```text
-docs/ja/projects/prj-0001/030-project-management/
-├─ 020-organization/
-│  └─ pm-members.yaml                 # agent CLI の起動定義と選択属性
+docs/ja/projects/prj-0001/
+├─ 030-project-management/
+│  └─ 020-organization/
+│     └─ pm-members.yaml              # agent CLI の起動定義と選択属性
 ├─ schedule/
 │  └─ sch-strategy-<track>.yaml       # phase の mode・capabilities・proficiency
 └─ execution/

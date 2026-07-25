@@ -51,8 +51,8 @@ describe("assertValidActor", () => {
 describe("project path accessors with base_path", () => {
   function project(overrides: Partial<SpecDojoProjectConfig>): SpecDojoProjectConfig {
     return {
-      schedule_path: "030-project-management/schedule",
-      execution_path: "030-project-management/execution",
+      schedule_path: "schedule",
+      execution_path: "execution",
       ...overrides,
     };
   }
@@ -64,9 +64,7 @@ describe("project path accessors with base_path", () => {
       members_path: "030-project-management/020-organization/pm-members.yaml",
     });
 
-    expect(getProjectSchedulePath(config)).toBe(
-      "docs/ja/projects/prj-0001/030-project-management/schedule",
-    );
+    expect(getProjectSchedulePath(config)).toBe("docs/ja/projects/prj-0001/schedule");
     expect(getProjectCatalogPath(config)).toBe(
       "docs/ja/projects/prj-0001/010-deliverables-catalog",
     );
@@ -80,7 +78,7 @@ describe("project path accessors with base_path", () => {
       catalog_path: "docs/ja/projects/prj-0001/010-deliverables-catalog",
     });
 
-    expect(getProjectSchedulePath(config)).toBe("030-project-management/schedule");
+    expect(getProjectSchedulePath(config)).toBe("schedule");
     expect(getProjectCatalogPath(config)).toBe(
       "docs/ja/projects/prj-0001/010-deliverables-catalog",
     );

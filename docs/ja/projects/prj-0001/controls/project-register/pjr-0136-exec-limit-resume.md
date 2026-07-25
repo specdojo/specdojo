@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-0126-exec-limit-resume
+  id: prj-0001:pjr-0136-exec-limit-resume
   type: project
   status: draft
   rulebook: pjr-rulebook
@@ -12,7 +12,7 @@ specdojo:
     - sysd-agent-settings
 ---
 
-# PJR-0126 agent利用制限後の自動再開
+# PJR-0136 agent利用制限後の自動再開
 
 ## 1. 概要
 

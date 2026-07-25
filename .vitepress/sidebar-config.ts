@@ -283,6 +283,7 @@ export const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
   generated: "生成物",
   reviews: "レビュー",
   schedule: "スケジュール",
+  routines: "ルーチン",
   "010-as-is": "現状定義",
   "010-business-specifications": "業務仕様",
   "020-impact-analysis": "影響調査",
@@ -322,13 +323,13 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   // 030-project-management / 020-organization
   "pm-organization": { text: "組織とロールの定義", order: 10 },
   "pm-raci": { text: "組織体制とRACI", order: 20 },
-  // 030-project-management / controls
+  // controls
   "pjr-index": { text: "プロジェクト登録簿", order: 10 },
   "pm-risk-register": { text: "リスク登録簿", order: 10 },
   "pm-issue-log": { text: "課題ログ", order: 20 },
   "pm-change-request-log": { text: "変更要求ログ", order: 30 },
   "pm-decision-log": { text: "意思決定ログ", order: 40 },
-  // 030-project-management / execution / generated（進捗ビュー）
+  // execution / generated（進捗ビュー）
   ready: { text: "着手可能タスク", order: 10 },
   timeline: { text: "タイムライン", order: 20 },
   "critical-path": { text: "クリティカルパス", order: 30 },
@@ -338,8 +339,15 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
 
 // グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。
 // 既定では同一階層の先頭に並ぶため、後ろへ動かしたいグループのみ登録する。
+// プロジェクト直下の横断ディレクトリ（台帳・スケジュール・実行状態）は、
+// 番号付きの成果物ツリー（成果物カタログ〜プロダクト変更）の後ろに運用順で並べる。
 // 実行プラン・実行結果は大量の項目を含むため、進捗ビューの後ろに置く。
 export const PROJECTS_GROUP_ORDER: Record<string, number> = {
+  "管理台帳・管理ビュー": 10,
+  スケジュール: 20,
+  ルーチン: 30,
+  実行管理: 40,
+  レポート: 50,
   実行プラン: 90,
   実行結果: 95,
 };
