@@ -52,6 +52,23 @@ type PhaseGate = {
   scope: PhaseGateScope;
 };
 
+type CrossDeliverablePass = {
+  id: string;
+  name: string;
+  task_suffix: string;
+  duration_days: number;
+  owner: string;
+  after_gate: string;
+  before_phase_set: string;
+  execution?: "agent" | "human";
+  mode?: "edit" | "review";
+  approach?: string;
+  capabilities?: string[];
+  proficiency?: string;
+  description?: string;
+  scope: PhaseGateScope;
+};
+
 type MilestoneConfig = {
   id: string;
   name: string;
@@ -80,6 +97,7 @@ type StrategyDoc = {
   owner_rules: OwnerRule[];
   cross_domain_dependencies?: CrossDomainDep[];
   phase_gates?: PhaseGate[];
+  cross_deliverable_passes?: CrossDeliverablePass[];
   group_milestones?: GroupMilestone[];
   initial_state?: {
     completed_deliverables?: Array<{ local_id: string; completed_through?: unknown }>;
@@ -99,7 +117,9 @@ type DeliverableInfo = {
 // --- Output types ---
 
 export type GeneratedTask = {
+  id?: string;
   local_id?: string;
+  target_local_ids?: string[];
   phase_suffix?: string;
   phase_set?: string;
   phase_id?: string;
@@ -197,6 +217,10 @@ function buildTaskId(
   iteration?: number,
 ): string {
   return `T-${track.toUpperCase()}-${localId}-${phaseSuffix}${taskIterationSuffix(cycle, iteration)}`;
+}
+
+function buildCrossDeliverableTaskId(track: string, passId: string, phaseSuffix: string): string {
+  return `T-${track.toUpperCase()}-${passId}-${phaseSuffix}`;
 }
 
 function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]): DeliverableInfo[] {
@@ -533,6 +557,72 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       }
     }
   }
+
+  // Generate each cross-deliverable pass once, after its completion gate, and make the
+  // first scoped task in before_phase_set wait for it. The target list is carried into
+  // sch-track so exec plan/result and commit scope can use the same explicit boundary.
+  for (const pass of strategy.cross_deliverable_passes ?? []) {
+    const scopedLocalIds = resolveGateScope(pass.scope, sorted);
+    if (scopedLocalIds.length < 2) {
+      errors.push(
+        `cross_deliverable_pass ${pass.id}: scope must resolve to at least two deliverables`,
+      );
+      continue;
+    }
+    if (!milestones.some((milestone) => milestone.id === pass.after_gate)) {
+      errors.push(
+        `cross_deliverable_pass ${pass.id}: after_gate not generated: ${pass.after_gate}`,
+      );
+      continue;
+    }
+
+    const taskId = buildCrossDeliverableTaskId(track, pass.id, pass.task_suffix);
+    if (taskMap.has(taskId)) {
+      errors.push(`Duplicate generated task ID '${taskId}'.`);
+      continue;
+    }
+
+    const blockedTaskIds: string[] = [];
+    for (const localId of scopedLocalIds) {
+      if (completedLocalIds.has(localId)) continue;
+      const boundary = boundaries.get(localId)?.byCycle.get(1);
+      const beforeTaskId = boundary?.phaseSets.find(
+        (phaseSet) => phaseSet.phaseSet === pass.before_phase_set,
+      )?.firstTaskId;
+      if (!beforeTaskId) {
+        errors.push(
+          `cross_deliverable_pass ${pass.id}: ${localId} has no ${pass.before_phase_set} task`,
+        );
+        continue;
+      }
+      blockedTaskIds.push(beforeTaskId);
+    }
+    const expectedBlockedCount = scopedLocalIds.filter(
+      (localId) => !completedLocalIds.has(localId),
+    ).length;
+    if (blockedTaskIds.length !== expectedBlockedCount) continue;
+
+    taskMap.set(taskId, {
+      id: taskId,
+      target_local_ids: scopedLocalIds,
+      phase_suffix: pass.task_suffix,
+      phase_set: "cross-deliverable-pass",
+      phase_id: pass.id,
+      name: pass.name,
+      duration_days: pass.duration_days,
+      depends_on: [pass.after_gate],
+      owner: pass.owner,
+      tags: ["cross-deliverable"],
+      ...(pass.description ? { description: pass.description } : {}),
+    });
+    for (const blockedTaskId of blockedTaskIds) {
+      const task = taskMap.get(blockedTaskId);
+      if (task && !task.depends_on.includes(taskId)) task.depends_on.push(taskId);
+    }
+  }
+
+  if (errors.length > 0)
+    return { projectId, track, status, startDate, tasks: [], milestones: [], errors, warnings };
 
   const tasks = [...taskMap.values()];
 

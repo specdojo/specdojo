@@ -20,7 +20,7 @@ SpecDojo Plan and Result Lifecycle Guide
 
 plan と result は git 管理対象の通常ファイルとして扱います。`generated/` のような再生成物ではありません。
 
-plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
+plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、参考資料は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
 
 ## 2. 配置
 

@@ -64,6 +64,7 @@ export function buildReadySnapshot(
     return {
       id,
       ...(node?.local_id ? { local_id: node.local_id } : {}),
+      ...(node?.target_local_ids ? { target_local_ids: node.target_local_ids } : {}),
       ...(node?.phase_suffix ? { phase_suffix: node.phase_suffix } : {}),
       ...(node?.phase_set ? { phase_set: node.phase_set } : {}),
       ...(node?.phase_id ? { phase_id: node.phase_id } : {}),

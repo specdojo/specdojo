@@ -4,6 +4,7 @@ export type TaskMode = "edit" | "review";
 // <kind>-maintenance は成果物を根拠に対象の参考資料を見直す進め方（参照の向きが逆転する）。
 // bootstrap は成果物とその参考資料一式（rulebook/recipe/sample/template）を一貫した一組として
 // 同一タスクで作成・整備する進め方（初期立ち上げ専用）。
+// cross-deliverable-dedup は明示した成果物群を横断して正本を選び、重複を要約と参照へ置換する。
 // finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
 // bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
 export type Approach =
@@ -11,6 +12,7 @@ export type Approach =
   | "recipe-guided"
   | "freeform"
   | "bootstrap"
+  | "cross-deliverable-dedup"
   | "rulebook-maintenance"
   | "recipe-maintenance"
   | "sample-maintenance"
@@ -78,6 +80,7 @@ export type StateSnapshot = {
 export type ScheduleNode = {
   id: string;
   local_id?: string;
+  target_local_ids?: string[];
   phase_suffix?: string;
   phase_set?: string;
   phase_id?: string;
@@ -156,6 +159,7 @@ export type SchedulerLockOptions = {
 export type ReadyTaskView = {
   id: string;
   local_id?: string;
+  target_local_ids?: string[];
   phase_suffix?: string;
   phase_set?: string;
   phase_id?: string;

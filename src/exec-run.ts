@@ -49,7 +49,7 @@ import {
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
   reviewResultSectionsForDeliverable,
-  targetDocIdsForDeliverable,
+  targetDocIdsForScheduledTask,
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { buildTaskView } from "./exec-task-view.js";
@@ -872,11 +872,10 @@ async function prepareSingleTask(
           task.approach,
         )
       : undefined;
-  const targets = targetDocIdsForDeliverable(
+  const targets = targetDocIdsForScheduledTask(
     planGenPaths.catalogPath ?? "",
-    task.local_id,
+    task,
     projectId ?? "",
-    task.approach,
   );
   const { resultPath } = await scaffoldResult({
     executionPath,
@@ -1724,12 +1723,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         : undefined;
     const targets =
       planTargets ??
-      targetDocIdsForDeliverable(
-        catalogPath ?? "",
-        task.local_id,
-        projectId || planProjectId,
-        task.approach,
-      );
+      targetDocIdsForScheduledTask(catalogPath ?? "", task, projectId || planProjectId);
     resultPath = (
       await scaffoldResult({
         executionPath,

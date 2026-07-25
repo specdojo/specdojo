@@ -181,6 +181,97 @@ properties:
               proficiency:
                 $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
 
+  cross_deliverable_passes:
+    type: array
+    description: >
+      Serial tasks that edit an explicit group of deliverables once, between a completed
+      phase gate and the next per-deliverable phase_set. Each entry generates one task,
+      not one task per deliverable.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - task_suffix
+        - duration_days
+        - owner
+        - after_gate
+        - before_phase_set
+        - scope
+      properties:
+        id:
+          type: string
+          pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
+          description: "Stable pass identifier used in the generated task ID."
+        name:
+          type: string
+          minLength: 1
+        task_suffix:
+          type: string
+          pattern: "^[0-9]{3}$"
+        duration_days:
+          type: number
+          exclusiveMinimum: 0
+        owner:
+          $ref: "./sch-common.schema.yaml#/$defs/Owner"
+        after_gate:
+          $ref: "./sch-common.schema.yaml#/$defs/Id"
+          description: "Completion gate that the cross-deliverable task depends on."
+        before_phase_set:
+          type: string
+          minLength: 1
+          description: "First scoped phase_set whose tasks must wait for this pass."
+        execution:
+          $ref: "#/$defs/Execution"
+        mode:
+          $ref: "./exec-common.schema.yaml#/$defs/TaskMode"
+        approach:
+          $ref: "./exec-common.schema.yaml#/$defs/Approach"
+        capabilities:
+          $ref: "#/$defs/Capabilities"
+        proficiency:
+          $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        description:
+          type: string
+          description: "Instructions carried into the generated task and exec plan."
+        scope:
+          type: object
+          additionalProperties: false
+          description: "Deliverables jointly edited by this task. Union of the declared selectors."
+          properties:
+            catalogs:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+                minLength: 1
+            groups:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                required:
+                  - catalog_id
+                  - name
+                properties:
+                  catalog_id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+            local_ids:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+                minLength: 1
+          anyOf:
+            - required: [catalogs]
+            - required: [groups]
+            - required: [local_ids]
+
   group_milestones:
     type: array
     description: >

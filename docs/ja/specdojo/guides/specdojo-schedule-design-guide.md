@@ -63,13 +63,14 @@ specdojo exec build --project <project-id>
 
 `sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
 
-| 展開する情報    | 理由                                                     |
-| --------------- | -------------------------------------------------------- |
-| `name`          | 実行者が作業を識別するために必要                         |
-| `description`   | エージェント・人間が実行時に参照するフェーズ指示         |
-| `owner`         | 誰が実行するかを決定するために必要                       |
-| `duration_days` | CPM 計算に必要                                           |
-| `depends_on`    | 実行順序の決定に必要。タスク ID に解決済みの形で展開する |
+| 展開する情報       | 理由                                                     |
+| ------------------ | -------------------------------------------------------- |
+| `name`             | 実行者が作業を識別するために必要                         |
+| `description`      | エージェント・人間が実行時に参照するフェーズ指示         |
+| `target_local_ids` | 横断タスクの対象成果物群を plan / commit scope へ渡す    |
+| `owner`            | 誰が実行するかを決定するために必要                       |
+| `duration_days`    | CPM 計算に必要                                           |
+| `depends_on`       | 実行順序の決定に必要。タスク ID に解決済みの形で展開する |
 
 トラック全体に共通する生成ルールや設計意図は strategy に留めます。
 
@@ -83,6 +84,8 @@ specdojo exec build --project <project-id>
 `description` をトラックへ展開するのは、エージェントや人間が plan ファイルだけを読んで実行できるようにするためです。strategy を参照させる方式は plan 生成時にファイルが 2 つ必要になり、自己完結性が損なわれます。
 
 反復タスクには、実行時にタスク ID の文字列解析へ依存しないよう、生成元を表す `phase_set`・`phase_id`・`phase_suffix` と、該当する `cycle`・`iteration` を展開します。
+
+`cross_deliverable_passes` から生成する横断タスクは、成果物別の `local_id` を持たず、明示された複数の `target_local_ids` を持ちます。これにより、一つの横断タスクの対象を plan frontmatter の `targets` と commit scope へ同じ順序で展開できます。
 
 ## 5. phase_setsの反復
 
@@ -133,9 +136,40 @@ T-LAUNCH-prj-overview-010-I01
 
 # 両方を反復
 T-LAUNCH-prj-overview-010-C01-I01
+
+# 横断タスク
+T-LAUNCH-project-definition-dedup-060
 ```
 
 `cycles` が `2` 以上の場合だけ `C`、`iterations` が `2` 以上の場合だけ `I` を付けます。両方を使う場合の順序は `C`、`I` です。
+
+横断タスクは `T-<TRACK>-<cross_deliverable_pass.id>-<task_suffix>` とします。成果物の `local_id` を代表値として使わないため、対象群をタスク ID から推測せず `target_local_ids` を参照します。
+
+### 6.1. 成果物群を横断する直列 pass
+
+成果物別 phase を複製せず、明示した成果物群を一度だけ共同編集する場合は `cross_deliverable_passes` を使います。
+
+```yaml
+cross_deliverable_passes:
+  - id: project-definition-dedup
+    name: プロジェクト定義の正本選択・重複整理
+    task_suffix: "060"
+    duration_days: 0.5
+    owner: ARC
+    after_gate: G-LAUNCH-bootstrap-pass
+    before_phase_set: refine-pass
+    execution: agent
+    mode: edit
+    approach: cross-deliverable-dedup
+    proficiency: expert
+    scope:
+      catalogs:
+        - prj-0001:dct-project-definition
+```
+
+各 entry は scope の成果物数にかかわらず一つのタスクへ展開されます。そのタスクは `after_gate` に依存し、scope 内の `before_phase_set` の先頭タスクが横断タスクに依存します。このため、完了ゲート → 横断タスク → 成果物別 phase の順序を保ちつつ、横断作業の重複生成を防げます。
+
+scope は `catalogs`、`groups`、`local_ids` の和集合で明示します。少なくとも二つの成果物へ解決できる必要があります。すでに全 phase 完了として `initial_state` に登録された成果物は対象群と plan targets には含めますが、後続 phase のブロック対象にはしません。
 
 ## 7. フェーズと実行要件
 
@@ -189,6 +223,8 @@ Task は AI Agent が一度の実行で完了できる粒度にします。
 | 責務            | 1つ              |
 
 大きすぎる Task は分割し、小さすぎて独立完了できない Task は統合します。
+
+`cross_deliverable_passes` は一つの論点整理責務を成果物群へ適用する例外であり、変更ファイル数より意味的なまとまりを優先します。scope を広げすぎず、正本を相互に選択できる成果物群ごとに分けます。
 
 ## 10. 依存関係
 

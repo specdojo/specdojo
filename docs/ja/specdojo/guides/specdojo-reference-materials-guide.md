@@ -57,20 +57,21 @@ agent は plan に列挙された project context を作業開始前に読み、
 
 ## 3. `approach` による進め方の使い分け
 
-`approach` は、タスクの進め方プロファイルである。`fully-guided` / `recipe-guided` / `freeform` は、対象成果物の rulebook / recipe / sample / template の整備状況に応じて、エージェントが参考資料をどの程度参照するかを示す。`bootstrap` は、成果物と参考資料一式を同じタスクで一貫して初期作成する進め方を示す。`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、成果物を根拠に対象の参考資料を見直す進め方を示す（詳細は「参考資料メンテナンスの進め方」）。`finalize` / `bootstrap-finalize` は `execution: human` と組み合わせて使う確定プロファイルであり、human が対象を最終確認して frontmatter の `status` を `ready` へ昇格する（`ready` への昇格は human のみが行える）。整備状況の判断は人が行い、`sch-strategy-<track>.yaml` のフェーズまたは `owner_rules[].phase_overrides[]` に明示する（後者が優先される）。エージェントは参考資料の品質判定を行わず、`approach` に示された進め方に従う。
+`approach` は、タスクの進め方プロファイルである。`fully-guided` / `recipe-guided` / `freeform` は、対象成果物の rulebook / recipe / sample / template の整備状況に応じて、エージェントが参考資料をどの程度参照するかを示す。`bootstrap` は、成果物と参考資料一式を同じタスクで一貫して初期作成する進め方を示す。`cross-deliverable-dedup` は、明示した成果物群の正本を選び、重複を要約と参照へ置き換える進め方を示す。`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、成果物を根拠に対象の参考資料を見直す進め方を示す（詳細は「参考資料メンテナンスの進め方」）。`finalize` / `bootstrap-finalize` は `execution: human` と組み合わせて使う確定プロファイルであり、human が対象を最終確認して frontmatter の `status` を `ready` へ昇格する（`ready` への昇格は human のみが行える）。整備状況の判断は人が行い、`sch-strategy-<track>.yaml` のフェーズ、`cross_deliverable_passes`、または `owner_rules[].phase_overrides[]` に明示する（owner rule の override が優先される）。エージェントは参考資料の品質判定を行わず、`approach` に示された進め方に従う。
 
-| `approach`             | 参照方針                                         | 進め方                                                                                                                                                                                                         |
-| ---------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fully-guided`         | rulebook / recipe / sample / template を参照する | template があれば雛形として開始点に使い、rulebook で構造・必須要素・禁止事項を確認し、recipe の問いと深掘り手順に沿って内容を組み立て、sample で粒度・文体・表の書き方を合わせる。プレースホルダは残さず埋める |
-| `recipe-guided`        | recipe を主に参照する                            | rulebook / sample / template は未成熟と判断されているため、recipe が示す構成・問い・観点だけを使って組み立てる。rulebook / sample / template が存在しても構造・文体の基準にはしない                            |
-| `freeform`             | 参考資料に原則縛られない                         | 参考資料より、対象領域の類似成果物の実例やプロジェクト文脈（背景・目的・関係者の意図）を優先して組み立てる。参考資料は矛盾しない範囲の参考にとどめる                                                           |
-| `bootstrap`            | 成果物と参考資料を同時に整備する                 | 成果物と rulebook / recipe / sample / template を同じタスクで初期作成し、構造・用語・粒度が互いに矛盾しない一式として揃える                                                                                    |
-| `rulebook-maintenance` | 成果物を根拠に rulebook を見直す                 | 参照の向きを「成果物 → rulebook」に切り替え、章構成・必須項目・禁止事項・判定基準の妥当性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                |
-| `recipe-maintenance`   | 成果物を根拠に recipe を見直す                   | 参照の向きを「成果物 → recipe」に切り替え、問い・観点・深掘り手順・レビュー観点の有効性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                  |
-| `sample-maintenance`   | 成果物を根拠に sample を見直す                   | 参照の向きを「成果物 → sample」に切り替え、粒度・文体・表の書き方が完成例として適切かを見直す（「参考資料メンテナンスの進め方」を参照する）                                                                    |
-| `template-maintenance` | 成果物を根拠に template を見直す                 | 参照の向きを「成果物 → template」に切り替え、章構成の骨組みとプレースホルダの配置・網羅性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                |
-| `finalize`             | 成果物のみを human が確定する                    | human が `done_criteria` を最終確認し、必要なら最小限の修正を加えて、成果物 frontmatter の `status` を `ready` へ昇格する。参考資料は対象に含めない                                                            |
-| `bootstrap-finalize`   | 成果物と参考資料を human がまとめて確定する      | `bootstrap` と対になる確定作業。human が成果物と rulebook / recipe / sample / template を最終確認し、それぞれの frontmatter の `status` を `ready` へ昇格する                                                  |
+| `approach`                | 参照方針                                         | 進め方                                                                                                                                                                                                         |
+| ------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fully-guided`            | rulebook / recipe / sample / template を参照する | template があれば雛形として開始点に使い、rulebook で構造・必須要素・禁止事項を確認し、recipe の問いと深掘り手順に沿って内容を組み立て、sample で粒度・文体・表の書き方を合わせる。プレースホルダは残さず埋める |
+| `recipe-guided`           | recipe を主に参照する                            | rulebook / sample / template は未成熟と判断されているため、recipe が示す構成・問い・観点だけを使って組み立てる。rulebook / sample / template が存在しても構造・文体の基準にはしない                            |
+| `freeform`                | 参考資料に原則縛られない                         | 参考資料より、対象領域の類似成果物の実例やプロジェクト文脈（背景・目的・関係者の意図）を優先して組み立てる。参考資料は矛盾しない範囲の参考にとどめる                                                           |
+| `bootstrap`               | 成果物と参考資料を同時に整備する                 | 成果物と rulebook / recipe / sample / template を同じタスクで初期作成し、構造・用語・粒度が互いに矛盾しない一式として揃える                                                                                    |
+| `cross-deliverable-dedup` | 成果物群の正本選択と重複整理を行う               | scope 内の成果物だけを横断し、詳細を正本へ集約して他文書を要約・参照化する。参考資料は変更せず、各成果物の必須情報と追跡性を維持する                                                                           |
+| `rulebook-maintenance`    | 成果物を根拠に rulebook を見直す                 | 参照の向きを「成果物 → rulebook」に切り替え、章構成・必須項目・禁止事項・判定基準の妥当性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                |
+| `recipe-maintenance`      | 成果物を根拠に recipe を見直す                   | 参照の向きを「成果物 → recipe」に切り替え、問い・観点・深掘り手順・レビュー観点の有効性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                  |
+| `sample-maintenance`      | 成果物を根拠に sample を見直す                   | 参照の向きを「成果物 → sample」に切り替え、粒度・文体・表の書き方が完成例として適切かを見直す（「参考資料メンテナンスの進め方」を参照する）                                                                    |
+| `template-maintenance`    | 成果物を根拠に template を見直す                 | 参照の向きを「成果物 → template」に切り替え、章構成の骨組みとプレースホルダの配置・網羅性を見直す（「参考資料メンテナンスの進め方」を参照する）                                                                |
+| `finalize`                | 成果物のみを human が確定する                    | human が `done_criteria` を最終確認し、必要なら最小限の修正を加えて、成果物 frontmatter の `status` を `ready` へ昇格する。参考資料は対象に含めない                                                            |
+| `bootstrap-finalize`      | 成果物と参考資料を human がまとめて確定する      | `bootstrap` と対になる確定作業。human が成果物と rulebook / recipe / sample / template を最終確認し、それぞれの frontmatter の `status` を `ready` へ昇格する                                                  |
 
 複数の文書間で記述に矛盾がある場合、`fully-guided` では rulebook（規約）を優先する（template の章構成が rulebook と食い違う場合も rulebook を正とする）。`recipe-guided` では rulebook を参照範囲に含めないため、recipe の指示を優先する。
 
@@ -90,6 +91,7 @@ agent は plan に列挙された project context を作業開始前に読み、
 | --------------------------------------------- | -------------------------------------------------------------------- |
 | `fully-guided` / `recipe-guided` / `freeform` | rulebook / recipe / sample / template → 成果物                       |
 | `bootstrap`                                   | 成果物 ↔ rulebook / recipe / sample / template（一式として初期整備） |
+| `cross-deliverable-dedup`                     | scope 内の成果物 ↔ 成果物（正本選択と参照化）                        |
 | `rulebook-maintenance`                        | 成果物 → rulebook（参照の向きが逆になる）                            |
 | `recipe-maintenance`                          | 成果物 → recipe（参照の向きが逆になる）                              |
 | `sample-maintenance`                          | 成果物 → sample（参照の向きが逆になる）                              |

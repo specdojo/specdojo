@@ -45,8 +45,9 @@ scope:
 #     維持/修正/作り直し、無ければ新規作成）凍結する。磨き込み中は編集せず、最終調整は review 後に 1 回だけ行う。
 #   - 凍結後の磨き込みは保守的な fully-guided（既存記述を尊重し最小修正）で収束させる。
 #
-# フローは bootstrap-pass → refine-pass → review-pass の3段階。
+# フローは bootstrap-pass → cross-deliverable-dedup → refine-pass → review-pass の4段階。
 #   bootstrap-pass: 成果物と参考資料一式を専用 approach で一括整備する（既存は評価して維持/修正/作り直し、無ければ新規作成）（1回）。
+#   cross-deliverable-dedup: 意味的に近い成果物群を一度だけ横断し、正本選択と重複の要約・参照化を行う。
 #   refine-pass   : 凍結した参考資料に沿って fully-guided で保守的に磨き込み、整合を取る（2回）。
 #   review-pass   : 完成版をレビューし、参考資料を最終調整した後、人が確定する（1回）。
 phase_sets:
@@ -182,6 +183,53 @@ default_phase_sets:
   - phase_set: refine-pass
     iterations: 2
   - phase_set: review-pass
+
+# bootstrap 完了ゲート後、refine-pass 前に成果物群ごとに一度だけ実行する横断タスク。
+# phase_sets へ入れないため、同じ横断作業が成果物単位に複製されない。
+cross_deliverable_passes:
+  - id: project-definition-dedup
+    name: プロジェクト定義の正本選択・重複整理
+    task_suffix: "060"
+    duration_days: 0.5
+    owner: ARC
+    after_gate: G-LAUNCH-bootstrap-pass
+    before_phase_set: refine-pass
+    execution: agent
+    mode: edit
+    approach: cross-deliverable-dedup
+    proficiency: expert
+    scope:
+      catalogs:
+        - prj-0001:dct-project-definition
+    description: |
+      プロジェクト定義の成果物群を横断し、同じ事実・判断・理由を詳述している箇所の正本を選ぶ。
+      正本へ詳細を集約し、他文書では単独可読性に必要な要約と正本への参照へ置き換える。
+      各成果物の done_criteria、固有の責務、トレーサビリティ、based_on / depends_on を維持する。
+
+  - id: project-management-dedup
+    name: プロジェクト管理の正本選択・重複整理
+    task_suffix: "060"
+    duration_days: 0.5
+    owner: ARC
+    after_gate: G-LAUNCH-bootstrap-pass
+    before_phase_set: refine-pass
+    execution: agent
+    mode: edit
+    approach: cross-deliverable-dedup
+    proficiency: expert
+    scope:
+      local_ids:
+        - pm-organization
+        - pm-roles
+        - pm-plan
+        - pm-communication-plan
+        - pm-quality-management-plan
+        - pm-members
+        - pm-raci
+    description: |
+      プロジェクト管理の成果物群を横断し、同じ事実・判断・理由を詳述している箇所の正本を選ぶ。
+      正本へ詳細を集約し、他文書では単独可読性に必要な要約と正本への参照へ置き換える。
+      各成果物の done_criteria、固有の責務、トレーサビリティ、based_on / depends_on を維持する。
 
 # 成果物 local_id → 作成・更新の主たる実作業責任（R）を担う owner ロール・phase_set・難易度
 # difficulty はプロジェクト管理上の工数・品質リスクの目安。

@@ -28,6 +28,7 @@ export function buildTaskView(
   let task: ReadyTaskView = {
     id: taskId,
     local_id: node.local_id,
+    target_local_ids: node.target_local_ids,
     phase_suffix: node.phase_suffix,
     phase_set: node.phase_set,
     phase_id: node.phase_id,
@@ -38,6 +39,7 @@ export function buildTaskView(
     schedule_file: node.schedule_file,
     fifo_rank: 0,
     critical_first_rank: 0,
+    description: node.description,
   };
   const readyPath = join(executionPath, "generated", "ready.json");
   if (existsSync(readyPath)) {
@@ -48,29 +50,21 @@ export function buildTaskView(
     task.local_id = extractLocalId(taskId);
     task.phase_suffix = extractPhaseSuffix(taskId);
   }
-  if (task.local_id) {
-    const phaseIndex = buildPhaseModeIndex(schedulePath);
-    task.mode =
-      task.mode ??
-      resolveTaskMode(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
-    task.execution =
-      task.execution ??
-      resolveTaskExecution(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
-    task.approach =
-      task.approach ??
-      resolveApproach(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
-    task.capabilities =
-      task.capabilities ??
-      resolveTaskCapabilities(
-        task.local_id,
-        task.id,
-        phaseIndex,
-        task.phase_suffix,
-        task.phase_set,
-      );
-    task.proficiency =
-      task.proficiency ??
-      resolveTaskProficiency(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
-  }
+  const phaseIndex = buildPhaseModeIndex(schedulePath);
+  task.mode =
+    task.mode ??
+    resolveTaskMode(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.execution =
+    task.execution ??
+    resolveTaskExecution(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.approach =
+    task.approach ??
+    resolveApproach(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.capabilities =
+    task.capabilities ??
+    resolveTaskCapabilities(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.proficiency =
+    task.proficiency ??
+    resolveTaskProficiency(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
   return task;
 }

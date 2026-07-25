@@ -142,6 +142,14 @@ $defs:
         type: string
         minLength: 1
         description: "Deliverable local_id this task belongs to. Used by tooling to resolve phase context without parsing the task name."
+      target_local_ids:
+        type: array
+        minItems: 2
+        uniqueItems: true
+        description: "Deliverable local_ids jointly edited by one cross-deliverable task."
+        items:
+          type: string
+          minLength: 1
       phase_suffix:
         type: string
         pattern: "^[0-9]{3}$"

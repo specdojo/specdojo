@@ -2,7 +2,14 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { resolveOwnerForLocalId } from "../../src/exec-strategy.js";
+import {
+  buildPhaseModeIndex,
+  resolveApproach,
+  resolveOwnerForLocalId,
+  resolveTaskExecution,
+  resolveTaskMode,
+  resolveTaskProficiency,
+} from "../../src/exec-strategy.js";
 
 describe("resolveOwnerForLocalId", () => {
   let dir: string;
@@ -93,5 +100,43 @@ describe("resolveOwnerForLocalId", () => {
     );
 
     expect(resolveOwnerForLocalId(dir, "unknown-deliverable", "launch")).toBeUndefined();
+  });
+});
+
+describe("cross-deliverable pass metadata", () => {
+  it("resolves task metadata by generated task id without a primary local_id", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-cross-"));
+    try {
+      writeFileSync(
+        join(dir, "sch-strategy-launch.yaml"),
+        [
+          "kind: strategy",
+          "track: launch",
+          "phase_sets:",
+          "  first:",
+          "    - id: draft",
+          "      task_suffix: '010'",
+          "owner_rules: []",
+          "cross_deliverable_passes:",
+          "  - id: project-definition-dedup",
+          "    task_suffix: '060'",
+          "    execution: agent",
+          "    mode: edit",
+          "    approach: cross-deliverable-dedup",
+          "    proficiency: expert",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const index = buildPhaseModeIndex(dir);
+      const taskId = "T-LAUNCH-project-definition-dedup-060";
+      expect(resolveTaskMode(undefined, taskId, index, "060")).toBe("edit");
+      expect(resolveTaskExecution(undefined, taskId, index, "060")).toBe("agent");
+      expect(resolveApproach(undefined, taskId, index, "060")).toBe("cross-deliverable-dedup");
+      expect(resolveTaskProficiency(undefined, taskId, index, "060")).toBe("expert");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

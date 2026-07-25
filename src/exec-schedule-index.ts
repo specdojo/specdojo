@@ -254,6 +254,11 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       if (!t || typeof t !== "object") continue;
       const tv = t as Record<string, unknown>;
       const taskLocalId = typeof tv["local_id"] === "string" ? tv["local_id"] : undefined;
+      const taskTargetLocalIds = Array.isArray(tv["target_local_ids"])
+        ? tv["target_local_ids"].filter(
+            (value): value is string => typeof value === "string" && value.length > 0,
+          )
+        : undefined;
       const taskPhaseSuffix =
         typeof tv["phase_suffix"] === "string" ? tv["phase_suffix"] : undefined;
       const taskPhaseSet = typeof tv["phase_set"] === "string" ? tv["phase_set"] : undefined;
@@ -275,6 +280,9 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       nodes.set(id, {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
+        ...(taskTargetLocalIds && taskTargetLocalIds.length > 0
+          ? { target_local_ids: taskTargetLocalIds }
+          : {}),
         ...(taskPhaseSuffix ? { phase_suffix: taskPhaseSuffix } : {}),
         ...(taskPhaseSet ? { phase_set: taskPhaseSet } : {}),
         ...(taskPhaseId ? { phase_id: taskPhaseId } : {}),

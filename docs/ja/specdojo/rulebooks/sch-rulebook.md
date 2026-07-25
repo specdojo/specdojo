@@ -51,6 +51,7 @@ Schedule は「いつ・誰が・どの順で作業するか」を定義する�
 ### 3.2. Task の `id`
 
 - 基本形式は `T-<TRACK>-<local_id>-<phase_suffix>` とし、反復する場合だけ `-C<cycle>` / `-I<iteration>` を末尾に付ける（順序は `C`、`I`。反復回数が 2 以上の場合のみ、`01` 始まりの 2 桁以上ゼロ埋め）。
+- `cross_deliverable_passes` の横断タスクだけは `T-<TRACK>-<pass_id>-<phase_suffix>` とし、対象成果物群は `target_local_ids` で追跡する。
 - `schedule build` で生成されるタスクの `id` は YAML に書かず、自動導出に委ねる。
 - 例: `T-LAUNCH-prj-overview-010`、反復例: `T-LAUNCH-prj-overview-010-C01-I02`
 - パターン: `^[A-Za-z0-9][A-Za-z0-9_-]{1,127}$`（最大128文字。スキーマ上の制約）
@@ -84,6 +85,7 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 ### 5.1. 成果物カタログとタスクの対応
 
 - 1 成果物エントリ = 原則 1 タスクとする。レビュー・承認・外部待ちなど実行管理上の理由がある場合のみ分割できる。
+- 複数成果物の正本選択など、単一成果物へ分割すると同じ作業を複製する横断処理は、`cross_deliverable_passes` で成果物群につき一つのタスクとして定義する。
 - タスク名（`name`）は成果物の `local_id` を含む動詞句とし、カタログとの追跡可能性を保つ（例: 「ルールブックをレビューする」）。
 - `create` / `modify` / `review` / `approve` などの action はタスク名で表現し、成果物カタログの `done_criteria` には書かない（カタログは WHAT / DONE、Schedule は HOW / WHEN を扱う）。
 
@@ -105,6 +107,7 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `scope.catalogs` は絶対パスで記載し、`include_kinds: [work]` で `kind: control` / `generated` を除外する。
 - `owner_rules` は、カタログに存在する全 `kind: work` の `local_id` を網羅する。
 - `cross_domain_dependencies` は、カタログの `depends_on` に含まれないドメイン間依存だけを補完し、重複して記載しない。
+- `cross_deliverable_passes` は完了済みの `after_gate` と後続の `before_phase_set` の間に置き、scope を `catalogs` / `groups` / `local_ids` で明示する。
 - レビュー担当ロールは各成果物の `done_criteria` から取得されるため、strategy に重複して記載しない。
 
 ## 6. 禁止事項

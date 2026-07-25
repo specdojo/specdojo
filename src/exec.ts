@@ -70,7 +70,7 @@ import {
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
   reviewResultSectionsForDeliverable,
-  targetDocIdsForDeliverable,
+  targetDocIdsForScheduledTask,
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { resetResultForClaim, scaffoldResult } from "./exec-results.js";
@@ -102,6 +102,7 @@ const KNOWN_APPROACHES = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "cross-deliverable-dedup",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",
@@ -457,11 +458,14 @@ async function scaffoldClaimResult(opts: {
     approach === "finalize" || approach === "bootstrap-finalize"
       ? finalizeResultSectionsForDeliverable(opts.catalogPath ?? "", localId, approach)
       : undefined;
-  const targets = targetDocIdsForDeliverable(
+  const targets = targetDocIdsForScheduledTask(
     opts.catalogPath ?? "",
-    localId,
+    {
+      local_id: localId,
+      target_local_ids: scheduleNode?.target_local_ids,
+      approach,
+    },
     opts.projectId,
-    approach,
   );
   const result = await scaffoldResult({
     executionPath: opts.executionPath,

@@ -496,6 +496,16 @@ describe("generateSinglePlan", () => {
         "          - text: Business value is clear",
         "            roles: [BA]",
         "            viewpoint: vp-ba-business-value",
+        "      - local_id: summary",
+        "        name: Summary",
+        "        kind: work",
+        "        overview: Test summary",
+        "        path: summary.md",
+        "        depends_on: [overview]",
+        "        done_criteria:",
+        "          - text: Summary remains traceable",
+        "            roles: [ARC]",
+        "            viewpoint: vp-arc-traceability",
       ].join("\n"),
     );
   }
@@ -538,6 +548,43 @@ describe("generateSinglePlan", () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, "T-TEST-overview-099-plan.md"), "utf8")).toBe("keep me\n");
       expect(readFileSync(join(plansDir, "index.md"), "utf8")).toBe("# existing index\n");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("横断 pass は複数成果物を targets と本文へ列挙する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-cross-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath);
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-project-dedup-060",
+          target_local_ids: ["overview", "summary"],
+          name: "Project dedup",
+          owner: "ARC",
+          mode: "edit",
+          approach: "cross-deliverable-dedup",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("approach: cross-deliverable-dedup");
+      expect(plan).toContain("targets:\n    - test:overview\n    - test:summary");
+      expect(plan).toContain("document: [[test:overview]]");
+      expect(plan).toContain("document: [[test:summary]]");
+      expect(plan).toContain("Summary remains traceable");
+      expect(plan).toContain("意図的に残した重複");
+      expect(plan).not.toContain("_TARGET_DELIVERABLES_");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

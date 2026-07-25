@@ -341,6 +341,7 @@ function deliverableDependsOn(deliverable: DeliverableInfo | null, projectId: st
 }
 
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
+  "cross-deliverable-dedup",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",
@@ -473,6 +474,17 @@ function targetDocIds(
   return ids;
 }
 
+function targetDocIdsForTask(
+  projectId: string,
+  task: Pick<ReadyTaskView, "local_id" | "target_local_ids" | "approach">,
+  deliverable: DeliverableInfo | null,
+): string[] {
+  if (task.target_local_ids && task.target_local_ids.length > 0) {
+    return [...new Set(task.target_local_ids)].map((localId) => qualifiedDocId(projectId, localId));
+  }
+  return targetDocIds(projectId, deliverable, task.approach, task.local_id);
+}
+
 // approach が参考資料の変更を伴う場合に、変更を許可するディレクトリ（repo ルート相対）。
 // commit 許可リスト（exec-worktree-ops）から使う。
 export function targetReferenceDirsForApproach(approach: Approach | undefined): string[] {
@@ -500,6 +512,52 @@ export function targetDocIdsForDeliverable(
   const info = catalogPath ? findDeliverableInfo(catalogPath, localId) : null;
   const ids = targetDocIds(projectId, info, approach, localId);
   return ids.length > 0 ? ids : undefined;
+}
+
+// Resolve every target of a scheduled task. Cross-deliverable tasks carry an explicit
+// target_local_ids list; ordinary tasks keep the single-deliverable/reference-material behavior.
+export function targetDocIdsForScheduledTask(
+  catalogPath: string,
+  task: Pick<ReadyTaskView, "local_id" | "target_local_ids" | "approach">,
+  projectId: string,
+): string[] | undefined {
+  if (task.target_local_ids && task.target_local_ids.length > 0) {
+    const ids = [...new Set(task.target_local_ids)].map((localId) =>
+      qualifiedDocId(projectId, localId),
+    );
+    return ids.length > 0 ? ids : undefined;
+  }
+  return targetDocIdsForDeliverable(catalogPath, task.local_id, projectId, task.approach);
+}
+
+function crossDeliverableTargetDetails(
+  projectId: string,
+  localIds: readonly string[],
+  deliverables: Map<string, DeliverableInfo>,
+): string {
+  const lines: string[] = [];
+  for (const localId of localIds) {
+    const info = deliverables.get(localId);
+    lines.push(`### ${qualifiedDocId(projectId, localId)}`);
+    lines.push("");
+    lines.push(`- document: [[${qualifiedDocId(projectId, localId)}]]`);
+    lines.push(`- name: ${deliverableName(info ?? null)}`);
+    lines.push(`- path: \`${deliverablePath(info ?? null)}\``);
+    lines.push(`- overview: ${deliverableOverview(info ?? null)}`);
+    lines.push(`- depends_on:${deliverableDependsOn(info ?? null, projectId)}`);
+    lines.push("- done_criteria:");
+    const criteria = info?.deliverable.done_criteria ?? [];
+    if (criteria.length === 0) lines.push(`  - ${MISSING}`);
+    else {
+      for (const criterion of criteria) {
+        lines.push(
+          `  - [${criterion.roles.join(", ")} / ${criterion.viewpoint}] ${criterion.text}`,
+        );
+      }
+    }
+    lines.push("");
+  }
+  return lines.join("\n").trimEnd();
 }
 
 function reviewViewpointRows(criteria: CriteriaItem[]): string {
@@ -697,10 +755,11 @@ function buildEditPlanMarkdown(
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
+  crossDeliverables: Map<string, DeliverableInfo> = new Map(),
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
-  const targets = targetDocIds(projectId, deliverable, task.approach, task.local_id);
+  const targets = targetDocIdsForTask(projectId, task, deliverable);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -740,6 +799,11 @@ function buildEditPlanMarkdown(
     _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
+    _TARGET_DELIVERABLES_: crossDeliverableTargetDetails(
+      projectId,
+      task.target_local_ids ?? [],
+      crossDeliverables,
+    ),
   };
   return expandTemplate(template, values);
 }
@@ -828,6 +892,12 @@ async function writeTaskPlan(
 ): Promise<string> {
   const mode: TaskMode = task.mode ?? "edit";
   const localId = task.local_id;
+  const targetLocalIds = [...new Set(task.target_local_ids ?? [])];
+  const crossDeliverables = new Map<string, DeliverableInfo>();
+  for (const targetLocalId of targetLocalIds) {
+    const info = ctx.catalogPath ? findDeliverableInfo(ctx.catalogPath, targetLocalId) : null;
+    if (info) crossDeliverables.set(targetLocalId, info);
+  }
   const deliverable =
     override?.deliverable !== undefined
       ? override.deliverable
@@ -873,6 +943,7 @@ async function writeTaskPlan(
           ctx.projectContext,
           resultRef,
           stem,
+          crossDeliverables,
         );
   const schemaRef = resolveDeliverableSchemaRef(
     deliverable?.deliverable.rulebook,
@@ -1033,6 +1104,7 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "cross-deliverable-dedup",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",

@@ -50,6 +50,93 @@ function writeTrack(dir: string, tasks: unknown[]): void {
 }
 
 describe("buildScheduleTrack phase set repetition", () => {
+  it("generates one cross-deliverable task after a gate and blocks scoped refine tasks", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-cross-deliverable-"));
+    try {
+      writeFileSync(
+        join(dir, "catalog.yaml"),
+        yaml.dump({
+          groups: [
+            {
+              name: "sample",
+              deliverables: [
+                { local_id: "a", name: "A", kind: "work", path: "a.md", depends_on: [] },
+                { local_id: "b", name: "B", kind: "work", path: "b.md", depends_on: [] },
+              ],
+            },
+          ],
+        }),
+        "utf8",
+      );
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        yaml.dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            bootstrap: [
+              { id: "bootstrap", name: "Bootstrap", task_suffix: "010", duration_days: 1 },
+            ],
+            refine: [{ id: "refine", name: "Refine", task_suffix: "070", duration_days: 1 }],
+          },
+          default_phase_sets: ["bootstrap", "refine"],
+          owner_rules: [{ local_ids: ["a", "b"], owner: "BA" }],
+          phase_gates: [
+            {
+              id: "G-TEST-bootstrap",
+              name: "Bootstrap complete",
+              after_phase_sets: ["bootstrap"],
+              owner: "PM",
+              scope: { local_ids: ["a", "b"] },
+            },
+          ],
+          cross_deliverable_passes: [
+            {
+              id: "group-dedup",
+              name: "Group dedup",
+              task_suffix: "060",
+              duration_days: 0.5,
+              owner: "ARC",
+              after_gate: "G-TEST-bootstrap",
+              before_phase_set: "refine",
+              approach: "cross-deliverable-dedup",
+              scope: { local_ids: ["a", "b"] },
+            },
+          ],
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+
+      expect(result.errors).toEqual([]);
+      const crossTasks = result.tasks.filter((task) => task.tags?.includes("cross-deliverable"));
+      expect(crossTasks).toHaveLength(1);
+      expect(crossTasks[0]).toMatchObject({
+        id: "T-TEST-group-dedup-060",
+        target_local_ids: ["a", "b"],
+        depends_on: ["G-TEST-bootstrap"],
+        owner: "ARC",
+      });
+      for (const localId of ["a", "b"]) {
+        expect(
+          result.tasks.find((task) => task.local_id === localId && task.phase_set === "refine")
+            ?.depends_on,
+        ).toContain("T-TEST-group-dedup-060");
+      }
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("keeps catalog dependencies inside the earliest shared phase gate", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-gate-dependency-"));
     try {

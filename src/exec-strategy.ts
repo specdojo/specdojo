@@ -38,6 +38,15 @@ type StrategyMinimal = {
     phase_set?: string;
     phase_overrides?: StrategyPhaseOverrideMinimal[];
   }>;
+  cross_deliverable_passes?: Array<{
+    id: string;
+    task_suffix: string;
+    execution?: "agent" | "human";
+    mode?: unknown;
+    approach?: unknown;
+    capabilities?: unknown;
+    proficiency?: unknown;
+  }>;
 };
 
 export type PhaseModeIndex = {
@@ -53,6 +62,11 @@ export type PhaseModeIndex = {
   localIdSuffixToApproach: Map<string, Approach>;
   localIdSuffixToCapabilities: Map<string, string[]>;
   localIdSuffixToProficiency: Map<string, Proficiency>;
+  taskIdToMode: Map<string, TaskMode>;
+  taskIdToExecution: Map<string, "agent" | "human">;
+  taskIdToApproach: Map<string, Approach>;
+  taskIdToCapabilities: Map<string, string[]>;
+  taskIdToProficiency: Map<string, Proficiency>;
   defaultMode: TaskMode;
 };
 
@@ -66,6 +80,7 @@ function isApproach(value: unknown): value is Approach {
     value === "recipe-guided" ||
     value === "freeform" ||
     value === "bootstrap" ||
+    value === "cross-deliverable-dedup" ||
     value === "rulebook-maintenance" ||
     value === "recipe-maintenance" ||
     value === "sample-maintenance" ||
@@ -113,6 +128,11 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const localIdSuffixToApproach = new Map<string, Approach>();
   const localIdSuffixToCapabilities = new Map<string, string[]>();
   const localIdSuffixToProficiency = new Map<string, Proficiency>();
+  const taskIdToMode = new Map<string, TaskMode>();
+  const taskIdToExecution = new Map<string, "agent" | "human">();
+  const taskIdToApproach = new Map<string, Approach>();
+  const taskIdToCapabilities = new Map<string, string[]>();
+  const taskIdToProficiency = new Map<string, Proficiency>();
 
   const defaultMode: TaskMode = "edit";
 
@@ -237,6 +257,21 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
         }
       }
     }
+
+    if (strategy.track && Array.isArray(strategy.cross_deliverable_passes)) {
+      for (const pass of strategy.cross_deliverable_passes) {
+        if (!pass?.id || !pass.task_suffix) continue;
+        const taskId = `T-${strategy.track.toUpperCase()}-${pass.id}-${pass.task_suffix}`;
+        taskIdToMode.set(taskId, isTaskMode(pass.mode) ? pass.mode : defaultMode);
+        taskIdToExecution.set(taskId, isExecution(pass.execution) ? pass.execution : "agent");
+        if (isApproach(pass.approach)) taskIdToApproach.set(taskId, pass.approach);
+        const capabilities = asCapabilityList(pass.capabilities);
+        if (capabilities !== undefined) taskIdToCapabilities.set(taskId, capabilities);
+        if (isProficiency(pass.proficiency)) {
+          taskIdToProficiency.set(taskId, pass.proficiency);
+        }
+      }
+    }
   }
 
   return {
@@ -252,6 +287,11 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     localIdSuffixToApproach,
     localIdSuffixToCapabilities,
     localIdSuffixToProficiency,
+    taskIdToMode,
+    taskIdToExecution,
+    taskIdToApproach,
+    taskIdToCapabilities,
+    taskIdToProficiency,
     defaultMode,
   };
 }
@@ -304,6 +344,8 @@ export function resolveApproach(
   phaseSuffix?: string,
   phaseSet?: string,
 ): Approach | undefined {
+  const taskApproach = index.taskIdToApproach.get(taskId);
+  if (taskApproach !== undefined) return taskApproach;
   if (!localId) return undefined;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
@@ -335,6 +377,8 @@ export function resolveTaskMode(
   phaseSuffix?: string,
   phaseSet?: string,
 ): TaskMode {
+  const taskMode = index.taskIdToMode.get(taskId);
+  if (taskMode !== undefined) return taskMode;
   if (localId) {
     const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
     if (suffix) {
@@ -369,6 +413,8 @@ export function resolveTaskCapabilities(
   phaseSuffix?: string,
   phaseSet?: string,
 ): string[] {
+  const taskCapabilities = index.taskIdToCapabilities.get(taskId);
+  if (taskCapabilities !== undefined) return taskCapabilities;
   if (!localId) return [];
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return [];
@@ -400,6 +446,8 @@ export function resolveTaskProficiency(
   phaseSuffix?: string,
   phaseSet?: string,
 ): Proficiency | undefined {
+  const taskProficiency = index.taskIdToProficiency.get(taskId);
+  if (taskProficiency !== undefined) return taskProficiency;
   if (!localId) return undefined;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
@@ -429,6 +477,8 @@ export function resolveTaskExecution(
   phaseSuffix?: string,
   phaseSet?: string,
 ): "agent" | "human" {
+  const taskExecution = index.taskIdToExecution.get(taskId);
+  if (taskExecution !== undefined) return taskExecution;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return "agent";
 
