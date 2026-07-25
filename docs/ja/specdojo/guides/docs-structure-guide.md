@@ -174,9 +174,19 @@ flowchart TB
 ディレクトリ名とファイル名については、以下のようにfrontmatterで定義されたidと対応させることを推奨します。
 idと対応させない場合（日本語名称を使用する場合等）は、一貫性を保った命名規約を採用してください。
 
-> 成果物カタログで管理する成果物に関しては、ディレクトリの頭に`NNN-`の番号を付与することを推奨します。
-> ただし、プロジェクトドキュメントの中には成果物カタログの管理対象外となる管理台帳や管理ビューも存在するため、
-> これらは番号なしで構成することを推奨します（例: `controls/`）。
+> 番号の有無は、成果物カタログの管理対象かどうかではなく、ディレクトリが何を収めるかで決めます。
+>
+> - `NNN-` 番号あり: 改訂しながら育てる計画・設計文書のツリー。読む順序に意味があり、番号で表します（例: `020-project-definition/`）。
+> - 番号なし: プロジェクト全体を横断する台帳・記録・実行状態。件数が時系列で増え、読む順序を持たず、`specdojo.config.json` からパスで直接参照されます（例: `controls/`、`execution/`）。
+>
+> 横断ディレクトリは特定ドメインの配下に置かず、プロジェクト直下に置きます。
+> `controls/project-register/` の登録項目や `execution/exec/plans/` の実行プランは、
+> プロジェクト定義・プロダクト変更を含む全ドメインの成果物を対象とするためです。
+> これらが成果物カタログの管理対象かどうかは配置とは独立で、
+> どのドメインに分類するかは各 `dct-<domain>.yaml` の `domain` が決めます。
+> 例えば `controls/`、`schedule/`、`reporting/` は `dct-project-management.yaml`
+> （`domain: project-management`）が管理し、`routines/` と `controls/reviews/` は
+> CLI の入出力領域なのでカタログ管理対象外です。
 
 ```text
 docs/
@@ -212,45 +222,11 @@ docs/
 │   │   │   │   │   ├── pm-communication-plan.md  # コミュニケーション計画
 │   │   │   │   │   └── pm-quality-management-plan.md　# 品質管理計画
 │   │   │   │   │
-│   │   │   │   ├── 020-organization/             # 組織体制
-│   │   │   │   │   ├── pm-organization.md        # 組織とロールの定義
-│   │   │   │   │   ├── pm-roles.yaml             # ロール定義
-│   │   │   │   │   ├── pm-members.yaml           # メンバー定義
-│   │   │   │   │   └── pm-raci.md　              # 組織体制とRACI
-│   │   │   │   │
-│   │   │   │   ├── controls/                     # 管理台帳・管理ビュー ※成果物カタログ管理対象外
-│   │   │   │   │   ├── project-register/         # 統合管理台帳（正本）
-│   │   │   │   │   │   ├── pjr-index.md          # プロジェクト登録簿
-│   │   │   │   │   │   ├── pjr-0001-auth.md      # 登録項目（認証）
-│   │   │   │   │   │   ├── pjr-0002-payment.md   # 登録項目（決済）
-│   │   │   │   │   │   └── generated/            # 正本から生成される補助一覧
-│   │   │   │   │   │       └── pjr-views.md      # 台帳ビュー（状態別・優先度別・担当者別）
-│   │   │   │   │   │
-│   │   │   │   │   └── generated/                # type別の派生管理ビュー
-│   │   │   │   │       ├── pm-risk-register.md   # type=risk の抽出ビュー
-│   │   │   │   │       ├── pm-issue-log.md       # type=issue の抽出ビュー
-│   │   │   │   │       ├── pm-change-request-log.md # type=change-request の抽出ビュー
-│   │   │   │   │       └── pm-decision-log.md    # type=decision の抽出ビュー
-│   │   │   │   │
-│   │   │   │   ├── schedule/                     # スケジュール
-│   │   │   │   │   ├── sch-milestones.yaml       # マイルストーン定義
-│   │   │   │   │   ├── sch-defaults.yaml         # 共通デフォルト設定
-│   │   │   │   │   ├── sch-track-<track>.yaml    # トラックごとのスケジュール定義
-│   │   │   │   │   └── sch-strategy-<track>.yaml  # トラックごとのタスク生成戦略
-│   │   │   │   │
-│   │   │   │   ├── reporting/                    # レポート ※成果物カタログ管理対象外
-│   │   │   │   │   ├── progress-reports/         # 進捗報告
-│   │   │   │   │   │   ├── pr-2026-03-01-01.md   # 進捗報告
-│   │   │   │   │   │   └── pr-2026-03-08-01.md   # 進捗報告
-│   │   │   │   │   └── meeting-minutes/          # 議事録
-│   │   │   │   │       ├── mm-2026-03-01-01.md   # 議事録
-│   │   │   │   │       └── mm-2026-03-08-01.md   # 議事録
-│   │   │   │   │
-│   │   │   │   └── execution/                     # 実行管理 ※成果物カタログ管理対象外
-│   │   │   │       ├── exec/                      # タスク実行ワークスペース
-│   │   │   │       │   ├── events/               # イベントログ
-│   │   │   │       │   └── .locks/               # 実行ロック
-│   │   │   │       └── generated/                # 自動生成成果物
+│   │   │   │   └── 020-organization/             # 組織体制
+│   │   │   │       ├── pm-organization.md        # 組織とロールの定義
+│   │   │   │       ├── pm-roles.yaml             # ロール定義
+│   │   │   │       ├── pm-members.yaml           # メンバー定義
+│   │   │   │       └── pm-raci.md　              # 組織体制とRACI
 │   │   │   │
 │   │   │   ├── 040-product-change/               # プロダクト変更
 │   │   │   │   ├── 010-as-is/                    # 現状定義（As-Is）
@@ -275,7 +251,48 @@ docs/
 │   │   │   │       ├── cop-index.md              # カットオーバー計画（本番切替手順）
 │   │   │   │       └── otp-index.md              # 運用切替計画（ハイパーケア含む）
 │   │   │   │
-│   │   │   └── ...
+│   │   │   ├── ...                               # 050- 以降の成果物ドメイン
+│   │   │   │
+│   │   │   ├── controls/                         # 管理台帳・管理ビュー（全ドメイン横断）
+│   │   │   │   ├── project-register/             # 統合管理台帳（正本）
+│   │   │   │   │   ├── pjr-index.md              # プロジェクト登録簿
+│   │   │   │   │   ├── pjr-0001-auth.md          # 登録項目（認証）
+│   │   │   │   │   ├── pjr-0002-payment.md       # 登録項目（決済）
+│   │   │   │   │   └── generated/                # 正本から生成される補助一覧
+│   │   │   │   │       └── pjr-views.md          # 台帳ビュー（状態別・優先度別・担当者別）
+│   │   │   │   │
+│   │   │   │   ├── reviews/                      # レビュー結果 ※成果物カタログ管理対象外
+│   │   │   │   │
+│   │   │   │   └── generated/                    # type別の派生管理ビュー
+│   │   │   │       ├── pm-risk-register.md       # type=risk の抽出ビュー
+│   │   │   │       ├── pm-issue-log.md           # type=issue の抽出ビュー
+│   │   │   │       ├── pm-change-request-log.md  # type=change-request の抽出ビュー
+│   │   │   │       └── pm-decision-log.md        # type=decision の抽出ビュー
+│   │   │   │
+│   │   │   ├── schedule/                         # スケジュール
+│   │   │   │   ├── sch-milestones.yaml           # マイルストーン定義
+│   │   │   │   ├── sch-defaults.yaml             # 共通デフォルト設定
+│   │   │   │   ├── sch-track-<track>.yaml        # トラックごとのスケジュール定義
+│   │   │   │   └── sch-strategy-<track>.yaml     # トラックごとのタスク生成戦略
+│   │   │   │
+│   │   │   ├── routines/                         # 定期実行ルーチン ※成果物カタログ管理対象外
+│   │   │   │   └── rtn-<name>.yaml               # ルーチン定義
+│   │   │   │
+│   │   │   ├── execution/                        # 実行管理 ※成果物カタログ管理対象外
+│   │   │   │   ├── exec/                         # タスク実行ワークスペース
+│   │   │   │   │   ├── plans/                    # 実行プラン
+│   │   │   │   │   ├── results/                  # 実行結果
+│   │   │   │   │   ├── events/                   # イベントログ
+│   │   │   │   │   └── .locks/                   # 実行ロック
+│   │   │   │   └── generated/                    # 自動生成成果物
+│   │   │   │
+│   │   │   └── reporting/                        # レポート
+│   │   │       ├── progress-reports/             # 進捗報告
+│   │   │       │   ├── pr-2026-03-01-01.md       # 進捗報告
+│   │   │       │   └── pr-2026-03-08-01.md       # 進捗報告
+│   │   │       └── meeting-minutes/              # 議事録
+│   │   │           ├── mm-2026-03-01-01.md       # 議事録
+│   │   │           └── mm-2026-03-08-01.md       # 議事録
 │   │   │
 │   │   └── prj-0002/ ...                         # 他プロジェクト
 │   │

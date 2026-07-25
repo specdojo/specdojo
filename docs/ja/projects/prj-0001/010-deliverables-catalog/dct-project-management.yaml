@@ -7,10 +7,10 @@ part_of:
   - prj-0001:dct-index
 project_id: prj-0001
 domain: project-management
-base_path: /docs/ja/projects/prj-0001/030-project-management
+base_path: /docs/ja/projects/prj-0001
 groups:
   - name: 管理計画
-    base_path: 010-management-plan
+    base_path: 030-project-management/010-management-plan
     deliverables:
       - local_id: pm-plan
         name: プロジェクト管理計画
@@ -67,7 +67,7 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
   - name: 組織体制
-    base_path: 020-organization
+    base_path: 030-project-management/020-organization
     deliverables:
       - local_id: pm-organization
         name: 組織定義

@@ -44,17 +44,17 @@ repo-root/
 │           │  ├─ dct-index.md
 │           │  └─ dct-*.yaml
 │           ├─ 030-project-management/
-│           │  ├─ schedule/
-│           │  │  ├─ sch-milestones.yaml
-│           │  │  ├─ sch-defaults.yaml
-│           │  │  ├─ sch-strategy-<track>.yaml
-│           │  │  └─ sch-track-<track>.yaml
-│           │  ├─ routines/
-│           │  │  └─ rtn-*.yaml
-│           │  └─ controls/
-│           │     ├─ project-register/
-│           │     └─ reviews/
-│           └─ 070-execution/
+│           ├─ schedule/
+│           │  ├─ sch-milestones.yaml
+│           │  ├─ sch-defaults.yaml
+│           │  ├─ sch-strategy-<track>.yaml
+│           │  └─ sch-track-<track>.yaml
+│           ├─ routines/
+│           │  └─ rtn-*.yaml
+│           ├─ controls/
+│           │  ├─ project-register/
+│           │  └─ reviews/
+│           └─ execution/
 │              ├─ exec/
 │              │  ├─ events/
 │              │  ├─ plans/
@@ -93,12 +93,12 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
     "prj-0001": {
       "base_path": "docs/ja/projects/prj-0001",
       "catalog_path": "010-deliverables-catalog",
-      "schedule_path": "030-project-management/schedule",
-      "execution_path": "070-execution",
-      "project_register_path": "030-project-management/controls/project-register",
-      "routines_path": "030-project-management/routines",
+      "schedule_path": "schedule",
+      "execution_path": "execution",
+      "project_register_path": "controls/project-register",
+      "routines_path": "routines",
       "members_path": "030-project-management/020-organization/pm-members.yaml",
-      "reviews_path": "030-project-management/controls/reviews",
+      "reviews_path": "controls/reviews",
       "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"

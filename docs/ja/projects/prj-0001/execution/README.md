@@ -1,6 +1,6 @@
 # prj-0001 Execution Layout
 
-このディレクトリは `docs/ja/projects/prj-0001/030-project-management/schedule` で定義した schedule を実行するための実行領域である。
+このディレクトリは `docs/ja/projects/prj-0001/schedule` で定義した schedule を実行するための実行領域である。
 
 ## 1. ディレクトリ責務
 

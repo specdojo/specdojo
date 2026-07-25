@@ -189,7 +189,7 @@ review plan は、成果物カタログの `done_criteria[].roles` と `done_cri
 
 ### 7.3. review plan の配置
 
-review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成する。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `030-project-management/execution`）を指す。
+review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成する。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `execution`）を指す。
 
 例
 

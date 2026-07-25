@@ -10,12 +10,12 @@ rulebook: dct-rulebook
 part_of:
   - _PROJECT_ID_:dct-index
 domain: project-management
-base_path: /docs/ja/projects/_PROJECT_ID_/030-project-management
+base_path: /docs/ja/projects/_PROJECT_ID_
 
 groups:
   # ── 管理計画 ──────────────────────────────────────────────────────────────
   - name: 管理計画
-    base_path: 010-management-plan
+    base_path: 030-project-management/010-management-plan
     deliverables:
       - local_id: pm-plan # small+
         name: プロジェクト管理計画
@@ -95,7 +95,7 @@ groups:
 
   # ── 組織体制 ──────────────────────────────────────────────────────────────
   - name: 組織体制
-    base_path: 020-organization
+    base_path: 030-project-management/020-organization
     deliverables:
       - local_id: pm-organization # small+
         name: 組織定義

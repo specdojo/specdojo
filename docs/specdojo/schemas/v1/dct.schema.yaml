@@ -68,8 +68,11 @@ properties:
     type: string
     pattern: "^/[^\\s]+$"
     description: >
-      Absolute repo-root path for this domain. Must start with "/".
-      Example: "/docs/ja/projects/prj-0001/030-project-management".
+      Absolute repo-root path this catalog's group paths are resolved against.
+      Must start with "/". Use the project root so that groups can span both the
+      numbered deliverable tree and the project-wide directories (controls,
+      schedule, reporting): "/docs/ja/projects/prj-0001". The domain a catalog
+      classifies is declared by `domain`, not by this path.
       Convention (applies to all base_path and path fields in this schema):
         leading "/"  → absolute from repo root
         no leading "/" → relative, joined onto the nearest ancestor's resolved base_path.

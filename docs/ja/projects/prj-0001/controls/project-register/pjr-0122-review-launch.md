@@ -68,6 +68,10 @@ specdojo:
 
 #### 1.3.４. 自動化の改善
 
+#### 1.3.5. リファクタリング
+
+controls, execution, reporting, routines, scheduleはprjのトップレベルのディレクトリにするか、prj以下は頭にNNN-をつけないか？
+
 ## 2. 背景・文脈
 
 launch trackが終了して、効率的にできた部分・できなかった部分があったため、workflowを見直す。
