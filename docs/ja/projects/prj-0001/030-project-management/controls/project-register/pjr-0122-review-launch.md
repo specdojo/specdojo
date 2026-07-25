@@ -30,6 +30,7 @@ specdojo:
 - 文書間の整合性取りは人がやるより、agentに依頼したほうが早いし正確。たまに間違いや抜けがあるが人間よりは高品質。
 - 1 成果物、1 taskの前提で構築したが、1 taskで複数成果物生成も必要そう。
 - exec run --autoのcommitの履歴が長くなる
+- review-viewpointsが細かくてこちらに引っ張られて文書が作成されいないか。
 
 ### 1.2. 対策の方針
 
@@ -41,11 +42,31 @@ specdojo:
 
 #### 1.3.1. complete, commit, pushの関係
 
-３回も確定行為を行うのはやや面倒だが、各々意味合いが違う、commitはpre-commitが走って失敗する可能性もあることから3つを分ける。
+- ３回も確定行為を行うのはやや面倒だが、各々意味合いが違う、commitはpre-commitが走って失敗する可能性もあることから3つを分ける。
+- prj-charterの承認のような作業については、pull requestベースの承認フローを運用で整備する
+  1. decisionを起票
+  2. pull requestを実行
+  3. POがpull requestを承認する
 
 #### 1.3.2. executionがhuman時にplanをつくるか
 
 人手で実行する場合は、planは読まずにresultだけで確認していたことから、planはhuman時には作らずにresultに統合。また、resultのチェックも最低限に限定。
+
+#### 1.3.3. 品質の上げ方
+
+改善ポイントは以下の３つ
+
+1. 論点を明確に
+   - recipeを改善する（why, what, howの順番に書く）
+   - review viewpointsに追加する（whyは明確か）
+   - prj-overviewの記述を磨いて、全てのドキュメント生成時に参照するようにする
+2. 簡潔に記述する
+   - recipeを改善する(箇条書きの行数や文章の長さのガイドを加える)
+   - review viewpointsに追加する
+3. 重複記述をなくす
+   - bootstrap-passの後に、成果物間の重複を調整する、横断passを設ける
+
+#### 1.3.４. 自動化の改善
 
 ## 2. 背景・文脈
 
@@ -54,6 +75,7 @@ launch trackが終了して、効率的にできた部分・できなかった�
 ## 3. フォローアップ
 
 - 対策案「executionがhuman時にplanをつくるか」の実装を [[prj-0001:pjr-0124-human-plan-integrate-result|PJR-0124]] として起票した。
+- 対策案「complete, commit, pushの関係」のうち PR ベース承認フローの整備を [[prj-0001:pjr-0126-pr-based-po-approval|PJR-0126]] として起票した。
 
 ## 4. 関連ドキュメント
 

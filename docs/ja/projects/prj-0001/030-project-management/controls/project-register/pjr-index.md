@@ -146,6 +146,7 @@ Project Register
 | PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | _TODO_ | 2026-07-31 | - | - | - |
 | PJR-0124 | open | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | _TODO_ | - | - | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
 | PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | _TODO_ | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
+| PJR-0126 | open | PO承認をpull requestベースにする承認フロー整備 | decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討 | todo | medium | PM | _TODO_ | - | - | [pjr-0126-pr-based-po-approval](./pjr-0126-pr-based-po-approval.md) |
 
 ## 2. 派生ビュー
 
