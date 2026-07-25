@@ -153,6 +153,7 @@ Project Register
 | PJR-0130 | open | Whyの明確性を既存review viewpointsへ反映 | 重複観点を増やさず、目的整合・業務価値・可読性の既存観点にWhyの判定基準と証拠を具体化する | todo | medium | QE | _TODO_ | - | - | [pjr-0130-clarify-why-review-viewpoints](./pjr-0130-clarify-why-review-viewpoints.md) |
 | PJR-0131 | open | 簡潔な文書作成の共通原則をdocumentation policyへ追加 | 文書全体に適用する簡潔性・重複回避・正本参照・文章量の目安をdocumentation policyの共通原則として定義する | todo | medium | ARC | _TODO_ | - | - | [pjr-0131-concise-documentation-policy](./pjr-0131-concise-documentation-policy.md) |
 | PJR-0132 | open | 既存review viewpointで文書の冗長性を検出 | 新しい観点を重複追加せず、vp-ux-readabilityに反復・一般論・表と本文の重複・正本の過剰再掲を検出する基準を追加する | todo | medium | UX | _TODO_ | - | - | [pjr-0132-detect-document-redundancy](./pjr-0132-detect-document-redundancy.md) |
+| PJR-0133 | open | bootstrap後に成果物間の重複を整理する横断passを追加 | bootstrap完了後、refine前に成果物群を横断して正本を選択し、重複記述を要約と参照へ置き換える直列passを設ける | todo | high | ARC | _TODO_ | - | - | [pjr-0133-cross-deliverable-dedup-pass](./pjr-0133-cross-deliverable-dedup-pass.md) |
 
 ## 2. 派生ビュー
 
