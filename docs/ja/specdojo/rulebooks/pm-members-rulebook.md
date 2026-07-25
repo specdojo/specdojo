@@ -52,7 +52,7 @@ agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/ex
 
 - ファイル名は `pm-members.yaml` を推奨する。
 - 配置先は `pm-organization.md`、`pm-roles.yaml`、`pm-raci.md` と同じ組織定義ディレクトリに置く。
-- 推奨パス: `docs/ja/projects/<project-id>/030-project-management/020-organization/pm-members.yaml`
+- 推奨パス: `docs/ja/projects/<project-id>/030-project-management/pm-members.yaml`
 - `project_id` は配置先プロジェクト ID と一致させる。例: `prj-0001`
 - `id` は `<project-id>:pm-members` 形式を推奨する。例: `prj-0001:pm-members`
 - `members[].nickname` は英小文字、数字、ハイフン、アンダースコアで記述する。

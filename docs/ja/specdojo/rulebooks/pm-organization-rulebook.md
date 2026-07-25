@@ -37,7 +37,7 @@ Organization Definition Documentation Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 配置は `docs/ja/projects/<project-id>/030-project-management/020-organization/pm-organization.md` を推奨します。
+- 配置は `docs/ja/projects/<project-id>/030-project-management/pm-organization.md` を推奨します。
 - ID は `<project-id>:pm-organization`、ファイル名は `pm-organization.md` とします。
 - Role code、member nickname、Schedule owner の形式は組織関連標準と各YAML正本に従います。
 

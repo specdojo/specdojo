@@ -14,7 +14,7 @@
 #   - path_field の値がある場合 : そのパスをインデックス値として使用（行番号なし）
 #   - path_field の値がない場合 : "ファイルパス:行番号" をインデックス値として使用
 nested_id_files:
-  - file: docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-review-viewpoints.yaml
+  - file: docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml
     collect_from:
       - field: viewpoints
         id_field: id

@@ -37,7 +37,7 @@ Quality Management Plan Documentation Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 配置は `docs/ja/projects/<project-id>/030-project-management/010-management-plan/pm-quality-management-plan.md` を推奨します。
+- 配置は `docs/ja/projects/<project-id>/030-project-management/pm-quality-management-plan.md` を推奨します。
 - ID は `<project-id>:pm-quality-management-plan`、ファイル名は `pm-quality-management-plan.md` とします。
 - 判定条件は成功基準 ID、受入条件 ID、成果物 ID など安定した識別子で参照します。
 

@@ -38,7 +38,7 @@ Project Management Plan Documentation Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 配置は `docs/ja/projects/<project-id>/030-project-management/010-management-plan/pm-plan.md` を推奨します。
+- 配置は `docs/ja/projects/<project-id>/030-project-management/pm-plan.md` を推奨します。
 - ID は `<project-id>:pm-plan`、ファイル名は `pm-plan.md` とします。
 - Role code、member、Schedule owner の識別規則は組織・ロールの正本に従います。
 

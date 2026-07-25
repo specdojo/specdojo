@@ -187,6 +187,14 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 > 例えば `controls/`、`schedule/`、`reporting/` は `dct-project-management.yaml`
 > （`domain: project-management`）が管理し、`routines/` と `controls/reviews/` は
 > CLI の入出力領域なのでカタログ管理対象外です。
+>
+> ドメイン内をさらにサブディレクトリへ分けるかは、その中でさらに階層が生えるか、
+> 件数が増え続けるかで決めます。`040-product-change/` は現状 → 影響調査 → 移行という
+> フェーズごとに仕様が増え、`010-as-is/010-business-specifications/` のように階層が生えるため
+> 分割します。一方 `030-project-management/` のように成果物が固定数で階層も生えない場合は、
+> `020-project-definition/` と同じくフラットに置きます。文書の並びは `dct-<domain>.yaml` の
+> group が宣言するため、group ごとにディレクトリを切る必要はありません（複数 group が
+> 同じ `base_path` を共有できます）。
 
 ```text
 docs/
@@ -217,16 +225,14 @@ docs/
 │   │   │   │   └── prj-comparison-of-alternatives.md # 代替案の比較
 │   │   │   │
 │   │   │   ├── 030-project-management/           # プロジェクトマネジメント
-│   │   │   │   ├── 010-management-plan/          # 管理計画
-│   │   │   │   │   ├── pm-plan.md                # プロジェクト管理計画
-│   │   │   │   │   ├── pm-communication-plan.md  # コミュニケーション計画
-│   │   │   │   │   └── pm-quality-management-plan.md　# 品質管理計画
-│   │   │   │   │
-│   │   │   │   └── 020-organization/             # 組織体制
-│   │   │   │       ├── pm-organization.md        # 組織とロールの定義
-│   │   │   │       ├── pm-roles.yaml             # ロール定義
-│   │   │   │       ├── pm-members.yaml           # メンバー定義
-│   │   │   │       └── pm-raci.md　              # 組織体制とRACI
+│   │   │   │   ├── pm-plan.md                    # プロジェクト管理計画
+│   │   │   │   ├── pm-communication-plan.md      # コミュニケーション計画
+│   │   │   │   ├── pm-quality-management-plan.md　# 品質管理計画
+│   │   │   │   ├── pm-review-viewpoints.yaml     # レビュー観点
+│   │   │   │   ├── pm-organization.md            # 組織とロールの定義
+│   │   │   │   ├── pm-roles.yaml                 # ロール定義
+│   │   │   │   ├── pm-members.yaml               # メンバー定義
+│   │   │   │   └── pm-raci.md　                  # 組織体制とRACI
 │   │   │   │
 │   │   │   ├── 040-product-change/               # プロダクト変更
 │   │   │   │   ├── 010-as-is/                    # 現状定義（As-Is）

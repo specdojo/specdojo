@@ -61,7 +61,7 @@ describe("project path accessors with base_path", () => {
     const config = project({
       base_path: "docs/ja/projects/prj-0001",
       catalog_path: "010-deliverables-catalog",
-      members_path: "030-project-management/020-organization/pm-members.yaml",
+      members_path: "030-project-management/pm-members.yaml",
     });
 
     expect(getProjectSchedulePath(config)).toBe("docs/ja/projects/prj-0001/schedule");
@@ -69,7 +69,7 @@ describe("project path accessors with base_path", () => {
       "docs/ja/projects/prj-0001/010-deliverables-catalog",
     );
     expect(getProjectMembersPath(config)).toBe(
-      "docs/ja/projects/prj-0001/030-project-management/020-organization/pm-members.yaml",
+      "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
     );
   });
 

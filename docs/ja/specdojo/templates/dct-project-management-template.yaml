@@ -15,7 +15,7 @@ base_path: /docs/ja/projects/_PROJECT_ID_
 groups:
   # ── 管理計画 ──────────────────────────────────────────────────────────────
   - name: 管理計画
-    base_path: 030-project-management/010-management-plan
+    base_path: 030-project-management
     deliverables:
       - local_id: pm-plan # small+
         name: プロジェクト管理計画
@@ -95,7 +95,7 @@ groups:
 
   # ── 組織体制 ──────────────────────────────────────────────────────────────
   - name: 組織体制
-    base_path: 030-project-management/020-organization
+    base_path: 030-project-management
     deliverables:
       - local_id: pm-organization # small+
         name: 組織定義

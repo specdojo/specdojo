@@ -51,7 +51,7 @@ Project Role Definition Documentation Rulebook
 
 - ファイル名は `pm-roles.yaml` を推奨する。
 - 配置先は `pm-organization.md`、`pm-members.yaml`、`pm-raci.md` と同じ組織定義ディレクトリに置く。
-- 推奨パス: `docs/ja/projects/<project-id>/030-project-management/020-organization/pm-roles.yaml`
+- 推奨パス: `docs/ja/projects/<project-id>/030-project-management/pm-roles.yaml`
 - `project_id` は配置先プロジェクト ID と一致させる。例: `prj-0001`
 - `id` は `<project-id>:pm-roles` 形式を推奨する。例: `prj-0001:pm-roles`
 - `roles[].code` は標準 Role code の表記に合わせ、大文字の短いコードにする。例: `PO`, `PM`, `BA`

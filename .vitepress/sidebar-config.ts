@@ -268,8 +268,6 @@ export const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
   "020-project-definition": "プロジェクト定義",
   "030-project-management": "プロジェクトマネジメント",
   "040-product-change": "プロダクト変更",
-  "010-management-plan": "管理計画",
-  "020-organization": "組織体制",
   controls: "管理台帳・管理ビュー",
   "project-register": "プロジェクト登録簿",
   reporting: "レポート",
@@ -316,13 +314,15 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   "prj-issues-and-approach": { text: "課題と解決アプローチ", order: 60 },
   "prj-assumptions-constraints-dependencies": { text: "前提・制約・依存関係", order: 70 },
   "prj-comparison-of-alternatives": { text: "代替案の比較", order: 80 },
-  // 030-project-management / 010-management-plan
+  // 030-project-management（管理計画 → 組織体制の順。同一ディレクトリなので通し番号）
   "pm-plan": { text: "プロジェクト管理計画", order: 10 },
   "pm-communication-plan": { text: "コミュニケーション計画", order: 20 },
   "pm-quality-management-plan": { text: "品質管理計画", order: 30 },
-  // 030-project-management / 020-organization
-  "pm-organization": { text: "組織とロールの定義", order: 10 },
-  "pm-raci": { text: "組織体制とRACI", order: 20 },
+  "pm-review-viewpoints": { text: "レビュー観点", order: 40 },
+  "pm-organization": { text: "組織とロールの定義", order: 50 },
+  "pm-roles": { text: "ロール定義", order: 60 },
+  "pm-members": { text: "メンバー定義", order: 70 },
+  "pm-raci": { text: "組織体制とRACI", order: 80 },
   // controls
   "pjr-index": { text: "プロジェクト登録簿", order: 10 },
   "pm-risk-register": { text: "リスク登録簿", order: 10 },

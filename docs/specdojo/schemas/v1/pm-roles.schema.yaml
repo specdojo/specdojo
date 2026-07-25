@@ -4,7 +4,7 @@ title: "SpecDojo Project Role Definition schema"
 type: object
 $comment: >
   Schema for project role definition files:
-  docs/ja/projects/<project_id>/030-project-management/020-organization/pm-roles.yaml
+  docs/ja/projects/<project_id>/030-project-management/pm-roles.yaml
   Defines the adopted roles for a project. Common role definitions and
   responsibilities are governed by people-and-organization-definition-standard.
   Non-adopted roles and owner usage rules are defined in pm-organization.md.

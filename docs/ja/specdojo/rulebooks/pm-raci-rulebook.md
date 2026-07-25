@@ -37,7 +37,7 @@ RACI Documentation Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 配置は `docs/ja/projects/<project-id>/030-project-management/020-organization/pm-raci.md` を推奨します。
+- 配置は `docs/ja/projects/<project-id>/030-project-management/pm-raci.md` を推奨します。
 - ID は `<project-id>:pm-raci`、ファイル名は `pm-raci.md` とします。
 - 列には採用済み Role code、行には成果物 ID または明確な判断・プロセス名を使います。
 

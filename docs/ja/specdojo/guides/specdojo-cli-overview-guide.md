@@ -97,9 +97,9 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
       "execution_path": "execution",
       "project_register_path": "controls/project-register",
       "routines_path": "routines",
-      "members_path": "030-project-management/020-organization/pm-members.yaml",
+      "members_path": "030-project-management/pm-members.yaml",
       "reviews_path": "controls/reviews",
-      "viewpoints_path": "030-project-management/010-management-plan/pm-review-viewpoints.yaml",
+      "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }

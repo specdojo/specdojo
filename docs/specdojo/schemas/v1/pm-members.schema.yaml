@@ -4,7 +4,7 @@ title: "SpecDojo Project Member Roster schema"
 type: object
 $comment: >
   Schema for project member roster files:
-  docs/ja/projects/<project_id>/030-project-management/020-organization/pm-members.yaml
+  docs/ja/projects/<project_id>/030-project-management/pm-members.yaml
   Manages the mapping from --by <nickname> (used in specdojo exec events) to
   display name, contact info, roles, and actor type. nickname is immutable once
   recorded in the event log.
