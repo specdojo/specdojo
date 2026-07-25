@@ -1,0 +1,11 @@
+# 利用制限で延期された schedule task を定期的に再開する routine のサンプル。
+# 外部スケジューラから `specdojo routine run --due` を呼び出して発火する。
+# enabled: false のため、運用開始時に interval と parallel を確認して有効化する。
+id: rtn-exec-limit-resume
+name: 利用制限後の延期 task 再開
+description: 再開可能時刻を迎えた retryable な利用制限 task だけを既存 worktree で再実行する。
+enabled: false
+interval: 15m
+action:
+  kind: exec-resume
+  parallel: 2

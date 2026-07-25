@@ -129,12 +129,14 @@ flowchart LR
 
 ```yaml
 rate_limit_detection:
-  exit_codes: [1]
+  exit_codes: []
   stderr_patterns:
     - "rate limit"
     - "429"
 
 rate_limit_policy:
+  cooldown_seconds:
+    rate_limit: 900
   on_non_critical:
     action: skip
   on_critical:
@@ -153,6 +155,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置く�
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>` と `by_proficiency.<proficiency>` に変数名と値の組を置く。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先する）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
+- `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しない。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱う。
 
 `{nickname}` のような `{lower_snake}` は実行のたびに展開される実行時変数であり、ファイルに記法のまま残った状態が完成形である。テンプレート成果物の記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは別の記法で、使い分けは [template-authoring-standard](../standards/template-authoring-standard.md) の `他のプレースホルダ記法との使い分け` を正本とする。

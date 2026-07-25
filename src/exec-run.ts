@@ -15,7 +15,21 @@ import {
   type RateLimitDetection,
 } from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
-import { readAllEventFiles, foldEventsToState } from "./exec-events.js";
+import {
+  acquireSchedulerLock,
+  buildEvent,
+  readAllEventFiles,
+  foldEventsToState,
+  releaseSchedulerLock,
+  writeEventFile,
+} from "./exec-events.js";
+import {
+  limitEventMeta,
+  normalizeAgentLimit,
+  selectDueDeferredLimitTasks,
+  type AgentLimitKind,
+  type AgentLimitSignal,
+} from "./exec-limit.js";
 import { buildScheduleIndex } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { listFilesRecursive, qualifyTaskId, readJson, readYaml } from "./exec-shared.js";
@@ -145,6 +159,7 @@ export type RunOpts = {
   maxRounds?: string;
   parallel?: string;
   worktreeBase?: string;
+  due?: boolean;
 };
 
 type RunResult = "success" | "rate_limit" | "failure";
@@ -168,7 +183,7 @@ export type AgentOverrideResolution =
 
 // A runnable agent candidate: the shell command plus the provider it belongs to.
 // The provider selects the per-provider failure-handling override in exec-defaults.yaml.
-type AgentRunCandidate = { command: string; provider?: AgentProvider };
+type AgentRunCandidate = { command: string; actor?: string; provider?: AgentProvider };
 
 // Resolve a member's launch command without surfacing template errors, for places that only
 // probe "does this member's resolved command match this string" during override matching.
@@ -253,6 +268,7 @@ type PreparedTask = {
   prompt: string;
   worktree: ExecWorktree;
   resultPath?: string;
+  priorLimitAttempts?: number;
 };
 
 type PlanGenPaths = {
@@ -617,9 +633,16 @@ async function executeAgent(
   agentCommand: string,
   prompt: string,
   detection: RateLimitDetection | undefined,
+  provider: AgentProvider | undefined,
+  cooldownSeconds: Partial<Record<AgentLimitKind, number>> | undefined,
   cwd: string,
   env: NodeJS.ProcessEnv,
-): Promise<{ result: RunResult; exitCode: number | null; stderr: string }> {
+): Promise<{
+  result: RunResult;
+  exitCode: number | null;
+  stderr: string;
+  limit?: AgentLimitSignal;
+}> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stderr: "Empty agent command" };
   }
@@ -659,8 +682,18 @@ async function executeAgent(
     child.once("close", (code) => resolveExit(code));
   });
 
-  if (isRateLimitError(exitCode, `${stdout}\n${stderr}`, detection)) {
-    return { result: "rate_limit", exitCode, stderr };
+  const combinedOutput = `${stdout}\n${stderr}`;
+  if (isRateLimitError(exitCode, combinedOutput, detection)) {
+    return {
+      result: "rate_limit",
+      exitCode,
+      stderr,
+      limit: normalizeAgentLimit({
+        output: combinedOutput,
+        provider,
+        cooldownSeconds,
+      }),
+    };
   }
   if (exitCode !== 0) {
     return { result: "failure", exitCode, stderr };
@@ -683,12 +716,18 @@ async function runWithRetry(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv,
-): Promise<{ result: RunResult; stderr: string }> {
+): Promise<{ result: RunResult; stderr: string; attempts: number; limit?: AgentLimitSignal }> {
   const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
+  let attempts = 0;
 
   // One pass tries every candidate in priority order with no wait between switches.
-  const runPass = async (): Promise<{ result: RunResult; stderr: string }> => {
+  const runPass = async (): Promise<{
+    result: RunResult;
+    stderr: string;
+    limit?: AgentLimitSignal;
+  }> => {
     let lastStderr = "";
+    let lastLimit: AgentLimitSignal | undefined;
     for (let idx = 0; idx < candidates.length; idx++) {
       if (idx > 0) {
         process.stdout.write(
@@ -696,26 +735,43 @@ async function runWithRetry(
         );
       }
       const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
-      const attempt = await executeAgent(candidates[idx].command, prompt, detection, cwd, env);
+      attempts++;
+      const attempt = await executeAgent(
+        candidates[idx].command,
+        prompt,
+        detection,
+        candidates[idx].provider,
+        policy?.cooldown_seconds,
+        cwd,
+        env,
+      );
       lastStderr = attempt.stderr;
+      lastLimit = attempt.limit;
       if (attempt.result !== "rate_limit")
         return { result: attempt.result, stderr: attempt.stderr };
     }
-    return { result: "rate_limit", stderr: lastStderr };
+    return { result: "rate_limit", stderr: lastStderr, limit: lastLimit };
   };
 
   const firstPass = await runPass();
-  if (firstPass.result !== "rate_limit") return firstPass;
+  if (firstPass.result !== "rate_limit") return { ...firstPass, attempts };
 
   // Every candidate is rate-limited. Without a policy we cannot bound further retries, so stop.
   if (!policy) {
     process.stdout.write(`Rate limit: all ${candidates.length} agent(s) exhausted.\n`);
-    return firstPass;
+    return { ...firstPass, attempts };
+  }
+
+  // Session and quota limits do not recover within the short in-process backoff loop. Keep their
+  // explicit reset/cooldown for a later routine invocation instead of sleeping and retrying now.
+  if (firstPass.limit?.kind === "session_limit" || firstPass.limit?.kind === "quota_exhausted") {
+    return { ...firstPass, attempts };
   }
 
   const { retry } = policy.on_critical;
   let waitSeconds = retry.initial_wait_seconds;
   let lastStderr = firstPass.stderr;
+  let lastLimit = firstPass.limit;
 
   // First pass counts as attempt 1; remaining passes wait+backoff before retrying all candidates.
   for (let pass = 2; pass <= retry.max_attempts; pass++) {
@@ -727,7 +783,8 @@ async function runWithRetry(
 
     const result = await runPass();
     lastStderr = result.stderr;
-    if (result.result !== "rate_limit") return result;
+    lastLimit = result.limit;
+    if (result.result !== "rate_limit") return { ...result, attempts };
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds);
   }
@@ -735,7 +792,7 @@ async function runWithRetry(
   process.stdout.write(
     `Rate limit: all ${candidates.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`,
   );
-  return { result: "rate_limit", stderr: lastStderr };
+  return { result: "rate_limit", stderr: lastStderr, attempts, limit: lastLimit };
 }
 
 function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: string): string {
@@ -805,7 +862,13 @@ async function prepareSingleTask(
   }
   const agentCandidates: AgentRunCandidate[] =
     overrideResolution.kind === "command"
-      ? [{ command: overrideResolution.command, provider: overrideResolution.provider }]
+      ? [
+          {
+            command: overrideResolution.command,
+            actor: overrideResolution.actor,
+            provider: overrideResolution.provider,
+          },
+        ]
       : [];
   let actor = actorOverride ?? "auto-agent";
   if (!actorOverride && overrideResolution.kind === "command" && overrideResolution.actor) {
@@ -866,7 +929,11 @@ async function prepareSingleTask(
       try {
         const command = resolveMemberCommand(execDefaults, candidate);
         if (!command) continue;
-        agentCandidates.push({ command, provider: candidate.provider });
+        agentCandidates.push({
+          command,
+          actor: candidate.nickname,
+          provider: candidate.provider,
+        });
         runnable.push(candidate);
       } catch (error) {
         process.stdout.write(
@@ -1061,7 +1128,7 @@ async function runPreparedTask(
 
   process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
-  const { result, stderr } = await runWithRetry(
+  const { result, stderr, attempts, limit } = await runWithRetry(
     prepared.agentCandidates,
     prepared.prompt,
     execDefaults,
@@ -1120,12 +1187,29 @@ async function runPreparedTask(
       spawnComplete(projectId, prepared.task.id, prepared.actor);
       process.stdout.write(`  Done: ${prepared.task.id}\n`);
     } else if (effectiveResult === "rate_limit") {
-      // Keep the worktree for inspection / resume; do not merge a blocked task's changes.
+      // Keep the worktree for the due-time resume path; do not merge partial changes.
+      const totalAttempts = (prepared.priorLimitAttempts ?? 0) + attempts;
+      const reason = limit
+        ? `${limit.kind} reached${limit.resume_at ? `; resume_at=${limit.resume_at}` : ""}`
+        : "rate limit reached";
       if (worktreeResultPath)
-        await updateResultStatus(worktreeResultPath, "blocked", completedAt, "rate limit reached");
-      spawnBlock(projectId, prepared.task.id, prepared.actor, "rate limit reached");
+        await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+      spawnBlock(
+        projectId,
+        prepared.task.id,
+        prepared.actor,
+        reason,
+        limit
+          ? limitEventMeta(limit, {
+              attempts: totalAttempts,
+              worktree: prepared.worktree.path,
+            })
+          : { limit_deferred: "false" },
+      );
       process.stdout.write(
-        `  Rate limited: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        limit?.auto_resume
+          ? `  Deferred: ${prepared.task.id} until ${limit.resume_at} (worktree kept: ${prepared.worktree.path})\n`
+          : `  Rate limited: ${prepared.task.id}; automatic resume unavailable (worktree kept: ${prepared.worktree.path})\n`,
       );
     } else {
       const blockReason = unfilledBlock
@@ -1281,8 +1365,10 @@ function spawnBlock(
   taskId: string,
   by: string,
   reason: string,
+  meta: Record<string, string> = { limit_deferred: "false" },
 ): void {
   const args = ["exec", "block", "--task", taskId, "--by", by, "--msg", reason];
+  for (const [key, value] of Object.entries(meta)) args.push("--meta", `${key}=${value}`);
   if (projectId) args.push("--project", projectId);
   spawnSelf(args);
 }
@@ -1410,13 +1496,6 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
 
     if (results.some((result) => result === "failure")) process.exitCode = 1;
 
-    const criticalRateLimit = outcomes.some(
-      (outcome) => outcome.result === "rate_limit" && (outcome.prepared.task.cpm?.slack ?? 1) === 0,
-    );
-    if (criticalRateLimit) {
-      process.stdout.write("[run] stopping: rate limit on critical task.\n");
-      process.exitCode = 1;
-    }
     return;
   }
 
@@ -1472,9 +1551,8 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       if (outcome.result === "failure") process.exitCode = 1;
 
       const critical = (prepared.task.cpm?.slack ?? 1) === 0;
-      if (critical && (outcome.result === "rate_limit" || outcome.result === "failure")) {
-        const reason = outcome.result === "rate_limit" ? "rate limit" : "failure";
-        process.stdout.write(`[run] stopping: ${reason} on critical task.\n`);
+      if (critical && outcome.result === "failure") {
+        process.stdout.write(`[run] stopping: failure on critical task.\n`);
         process.exitCode = 1;
         stopNewTasks = true;
         return { stop: true };
@@ -2521,31 +2599,87 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
   const schedule = buildScheduleIndex(schedulePath);
   const events = readAllEventFiles(schedulePath);
   const initTasks = buildInitialStateFromStrategy(schedulePath, schedule);
-  const snapshot = foldEventsToState(events, schedule, schedulePath, initTasks);
+  let snapshot = foldEventsToState(events, schedule, schedulePath, initTasks);
+  let doingIds: string[];
 
-  let doingIds = Object.entries(snapshot.tasks)
-    .filter(([, st]) => st.state === "doing")
-    .map(([id]) => id)
-    .sort();
+  if (opts.due) {
+    let lockDir = "";
+    try {
+      lockDir = acquireSchedulerLock(schedulePath, {
+        actor: opts.by ?? "exec-limit-resume",
+        lockTimeoutMs: 10_000,
+        lockStaleMs: 300_000,
+      });
+      // Re-fold after acquiring the scheduler lock. A concurrent routine may have already
+      // unblocked the task; only tasks that are still blocked and due are claimed below.
+      const lockedEvents = readAllEventFiles(schedulePath);
+      snapshot = foldEventsToState(lockedEvents, schedule, schedulePath, initTasks);
+      let dueTasks = selectDueDeferredLimitTasks(snapshot);
+      if (opts.task) dueTasks = dueTasks.filter((task) => task.taskId === opts.task);
+      doingIds = dueTasks.map((task) => task.taskId);
 
-  if (opts.task) {
-    const state = snapshot.tasks[opts.task]?.state;
-    if (state !== "doing") {
-      process.stdout.write(
-        `[resume] ${opts.task} is not in "doing" state (state: ${state ?? "unknown"}) — nothing to resume.\n`,
-      );
-      process.exitCode = 1;
-      return;
+      if (!dryRun) {
+        for (const task of dueTasks) {
+          const existingMeta = snapshot.tasks[task.taskId]?.meta ?? {};
+          const meta = Object.entries(existingMeta).map(
+            ([key, value]) => `${key}=${String(value)}`,
+          );
+          meta.push("limit_resume_claimed=true");
+          const event = buildEvent("unblock", {
+            task: task.taskId,
+            by: task.actor || "exec-limit-resume",
+            msg: `automatic limit resume due at ${task.resumeAt}`,
+            meta,
+          });
+          writeEventFile(schedulePath, event);
+        }
+      }
+      // Use the post-unblock state for actor/command resolution below. In dry-run mode this is
+      // only an in-memory projection; otherwise it mirrors the events just written.
+      for (const task of dueTasks) {
+        snapshot.tasks[task.taskId] = {
+          ...snapshot.tasks[task.taskId],
+          state: "doing",
+          last_by: task.actor || "exec-limit-resume",
+          last_type: "unblock",
+        };
+      }
+    } finally {
+      if (lockDir) releaseSchedulerLock(lockDir);
     }
-    doingIds = [opts.task];
+  } else {
+    doingIds = Object.entries(snapshot.tasks)
+      .filter(([, st]) => st.state === "doing")
+      .map(([id]) => id)
+      .sort();
+
+    if (opts.task) {
+      const state = snapshot.tasks[opts.task]?.state;
+      if (state !== "doing") {
+        process.stdout.write(
+          `[resume] ${opts.task} is not in "doing" state (state: ${state ?? "unknown"}) — nothing to resume.\n`,
+        );
+        process.exitCode = 1;
+        return;
+      }
+      doingIds = [opts.task];
+    }
   }
 
   if (doingIds.length === 0) {
-    process.stdout.write('[resume] no "doing" tasks to resume — exit\n');
+    process.stdout.write(
+      opts.due
+        ? "[resume] no due deferred-limit tasks — exit\n"
+        : '[resume] no "doing" tasks to resume — exit\n',
+    );
     return;
   }
 
-  process.stdout.write(`[resume] ${doingIds.length} doing task(s): ${doingIds.join(", ")}\n`);
+  process.stdout.write(
+    opts.due
+      ? `[resume] ${doingIds.length} due deferred-limit task(s): ${doingIds.join(", ")}\n`
+      : `[resume] ${doingIds.length} doing task(s): ${doingIds.join(", ")}\n`,
+  );
 
   for (let offset = 0; offset < doingIds.length; offset += parallel) {
     const batch = doingIds.slice(offset, offset + parallel);
@@ -2578,11 +2712,25 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           planGenPaths,
           execDefaults,
         );
-        if (typeof prepared !== "string") preparedTasks.push(prepared);
-        else if (prepared === "failure") process.exitCode = 1;
+        if (typeof prepared !== "string") {
+          const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
+          prepared.priorLimitAttempts =
+            typeof attempts === "string" && /^\d+$/.test(attempts)
+              ? Number.parseInt(attempts, 10)
+              : 0;
+          preparedTasks.push(prepared);
+        } else if (prepared === "failure") process.exitCode = 1;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[resume] setup error for ${taskId}: ${message}\n`);
+        if (opts.due && !dryRun) {
+          spawnBlock(
+            projectId,
+            taskId,
+            snapshot.tasks[taskId]?.last_by ?? "exec-limit-resume",
+            `resume setup error: ${message}`,
+          );
+        }
         process.exitCode = 1;
       }
     }
@@ -2626,10 +2774,17 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
 export function registerResumeCommand(exec: Command): void {
   const cmd = exec
     .command("resume")
-    .description('Resume tasks left in "doing" state on their existing worktrees');
+    .description(
+      'Resume tasks left in "doing" state, or due deferred-limit tasks, on existing worktrees',
+    );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
-  cmd.option("--task <taskId>", 'Resume only this task (must be in "doing" state)');
+  cmd.option("--task <taskId>", 'Resume only this task ("doing", or due with --due)');
+  cmd.option(
+    "--due",
+    "Atomically claim and resume only retryable limit blocks whose resume time has arrived",
+    false,
+  );
   cmd.option("--by <actor>", "Override the actor (default: the actor that claimed the task)");
   cmd.option("--cmd <command>", "Agent nickname or command string override");
   cmd.option("--agent-cmd <command>", "Override agent command string (alias of --cmd for resume)");

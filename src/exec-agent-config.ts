@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
 import { specdojoRootDir, type AgentProvider, type ProjectMember } from "./specdojo-config.js";
+import type { AgentLimitKind } from "./exec-limit.js";
 import type { Proficiency, TaskMode } from "./exec-types.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
@@ -24,6 +25,9 @@ export type RateLimitRetry = {
 };
 
 export type RateLimitPolicy = {
+  // Used only when the provider output has no explicit reset time or retry-after. Omitted kinds
+  // stay blocked without an estimated resume time.
+  cooldown_seconds?: Partial<Record<AgentLimitKind, number>>;
   on_non_critical: {
     action: "skip";
   };

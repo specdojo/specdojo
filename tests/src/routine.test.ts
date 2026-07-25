@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   buildExecAutoArgs,
+  buildExecResumeArgs,
   isRoutineDue,
   loadRoutines,
   parseIntervalMs,
@@ -217,6 +218,20 @@ describe("buildExecAutoArgs", () => {
     const actual = buildExecAutoArgs({ kind: "exec-auto", max_rounds: 3 }, "prj-test");
 
     expect(actual).toEqual(["exec", "run", "--auto", "--project", "prj-test"]);
+  });
+});
+
+describe("buildExecResumeArgs", () => {
+  it("due な延期 task の再開コマンドへ変換する", () => {
+    expect(buildExecResumeArgs({ kind: "exec-resume", parallel: 2 }, "prj-test")).toEqual([
+      "exec",
+      "resume",
+      "--due",
+      "--project",
+      "prj-test",
+      "--parallel",
+      "2",
+    ]);
   });
 });
 

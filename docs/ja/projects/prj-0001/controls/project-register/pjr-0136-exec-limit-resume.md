@@ -31,18 +31,23 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                        | 担当   | 状態 | メモ                                |
-| --- | --------------------------------------------------------------------------- | ------ | ---- | ----------------------------------- |
-| 1   | provider固有メッセージを共通の制限種別と再試行可否へ正規化する              | _TODO_ | open | raw messageも診断用に保持する       |
-| 2   | 延期状態と再開情報の永続化形式、event、resultとの関係を設計・実装する       | _TODO_ | open | 通常のblockedと区別する             |
-| 3   | reset時刻、retry-after、設定済みcooldownから再開可能時刻を解決する          | _TODO_ | open | 取得できない時刻を推定しない        |
-| 4   | dueな延期taskを排他的に再開するコマンドとroutine actionを実装する           | _TODO_ | open | 保持したactorとworktreeを再利用する |
-| 5   | autoのfallback・継続制御と再延期・block遷移を実装する                       | _TODO_ | open | critical taskの扱いも定義する       |
-| 6   | provider別ケース、時刻境界、多重起動、routine連携のテストと設計書を更新する | _TODO_ | open | Claude CodeとCodexを含める          |
+| No  | 作業                                                                        | 担当  | 状態 | メモ                                                         |
+| --- | --------------------------------------------------------------------------- | ----- | ---- | ------------------------------------------------------------ |
+| 1   | provider固有メッセージを共通の制限種別と再試行可否へ正規化する              | Codex | done | 6種別へ正規化し、診断用 raw message を長さ制限して保持した   |
+| 2   | 延期状態と再開情報の永続化形式、event、resultとの関係を設計・実装する       | Codex | done | block event meta を正本とし、通常の blocked と識別可能にした |
+| 3   | reset時刻、retry-after、設定済みcooldownから再開可能時刻を解決する          | Codex | done | timezone・翌日繰越を処理し、未取得時刻は推定しない           |
+| 4   | dueな延期taskを排他的に再開するコマンドとroutine actionを実装する           | Codex | done | `exec resume --due` と `exec-resume` action を追加した       |
+| 5   | autoのfallback・継続制御と再延期・block遷移を実装する                       | Codex | done | rate limit で独立 task を止めず、結果別の遷移を実装した      |
+| 6   | provider別ケース、時刻境界、多重起動、routine連携のテストと設計書を更新する | Codex | done | Claude Code・Codex・due抽出・routine引数をテスト化した       |
 
 ## 4. 対応結果
 
--
+- `rate_limit`、`session_limit`、`quota_exhausted`、`overloaded`、`timeout`、`oom` を正規化し、retryable・自動再開可否・provider 原文を block event の `meta` に永続化した。
+- provider の reset 時刻と retry-after を UTC の再開時刻へ変換した。日付なし時刻は明示 timezone で解釈して翌日繰越を行い、時刻不明時は明示された cooldown policy だけを使用する。`quota_exhausted` は自動再開しない。
+- `specdojo exec resume --due` が scheduler lock 内で due task を `blocked` から `doing` へ確保し、保持した actor と worktree で再実行するようにした。成功・再延期・通常 block を区別して記録する。
+- routine に `exec-resume` action を追加し、定時 routine から due task だけを冪等に再開できるようにした。
+- 利用制限を検出した critical task があっても、別 provider への fallback と依存しない Ready task の実行を継続するようにした。
+- 共通設計、exec 設定・運用・コマンドガイド、設定 schema、プロジェクト用 routine 例を更新した。
 
 ## 5. 関連ドキュメント
 

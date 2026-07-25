@@ -27,7 +27,7 @@ import { registerItemCategory } from "./exec-register.js";
 // Types
 // ================================
 
-export type RoutineActionKind = "register" | "exec-auto";
+export type RoutineActionKind = "register" | "exec-auto" | "exec-resume";
 
 export type RoutineRegisterFilter = {
   types?: string[];
@@ -40,7 +40,7 @@ export type RoutineAction = {
   // kind: register — 登録簿から実行対象を選ぶフィルタと件数上限
   filter?: RoutineRegisterFilter;
   limit?: number;
-  // kind: exec-auto — exec run --auto へ引き渡すオプション
+  // kind: exec-auto / exec-resume — exec run / resume へ引き渡すオプション
   strategy?: "critical-first" | "fifo";
   parallel?: number;
   loop?: boolean;
@@ -186,8 +186,8 @@ export function parseRoutineDoc(
 
   const action = value.action;
   const kind = typeof action.kind === "string" ? action.kind : "";
-  if (kind !== "register" && kind !== "exec-auto") {
-    errors.push(`action.kind must be one of: register, exec-auto (got "${kind}")`);
+  if (kind !== "register" && kind !== "exec-auto" && kind !== "exec-resume") {
+    errors.push(`action.kind must be one of: register, exec-auto, exec-resume (got "${kind}")`);
   }
 
   if (kind === "register") {
@@ -224,6 +224,10 @@ export function parseRoutineDoc(
     if (action.loop !== undefined && typeof action.loop !== "boolean") {
       errors.push("action.loop must be a boolean");
     }
+  }
+
+  if (kind === "exec-resume") {
+    validatePositiveIntegerField(errors, action.parallel, "action.parallel");
   }
 
   if (errors.length > 0) {
@@ -460,6 +464,12 @@ export function buildExecAutoArgs(action: RoutineAction, projectId: string): str
   return args;
 }
 
+export function buildExecResumeArgs(action: RoutineAction, projectId: string): string[] {
+  const args = ["exec", "resume", "--due", "--project", projectId];
+  if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
+  return args;
+}
+
 function buildRegisterRunArgs(pjrId: string, projectId: string): string[] {
   return ["exec", "run", "--register", pjrId, "--project", projectId];
 }
@@ -472,6 +482,15 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
 
   if (doc.action.kind === "exec-auto") {
     const args = buildExecAutoArgs(doc.action, projectId);
+    if (dryRun) {
+      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+      return true;
+    }
+    return spawnSelf(args);
+  }
+
+  if (doc.action.kind === "exec-resume") {
+    const args = buildExecResumeArgs(doc.action, projectId);
     if (dryRun) {
       process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
       return true;

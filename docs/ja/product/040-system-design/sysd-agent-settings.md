@@ -183,7 +183,7 @@ agent の起動コマンドテンプレート、rate limit と一時障害の検
 ```yaml
 # グローバル既定（上書きの無い provider 向け）
 rate_limit_detection:
-  exit_codes: [1]
+  exit_codes: []
   stderr_patterns:
     - "rate limit"
     - "429"
@@ -211,7 +211,7 @@ providers:
         - "model is loading"
 ```
 
-検出条件には汎用的な `exit_codes: [1]` を使わない。多くの agent CLI は通常失敗と agent 自身の block も exit 1 で返すため、素の exit 1 だけでは rate limit と block を区別できない（`非対話実行` の終了契約を参照）。検出は provider 固有の `stderr_patterns` に寄せ、グローバルの `exit_codes: [1]` は上書きの無い provider 向けの後方互換フォールバックとして最小限にとどめる。
+検出条件には汎用的な `exit_codes: [1]` を使わない。多くの agent CLI は通常失敗と agent 自身の block も exit 1 で返すため、素の exit 1 だけでは rate limit と block を区別できない（`非対話実行` の終了契約を参照）。検出は provider 固有の `stderr_patterns` に寄せ、グローバルの `exit_codes` も空配列を既定とする。provider が利用制限専用の終了コードを保証するときだけ provider 別設定へ追加する。
 
 `stderr_patterns` は終了コードと併用して判定する。`stderr_requires_nonzero_exit` が `true`（既定）のとき、stderr pattern はプロセスが非ゼロ終了（または異常終了）した場合にのみ rate limit シグナルとして扱う。agent が成功（exit 0）したまま、編集対象ファイルに含まれる `rate limit` 等の語を stderr へ出力しても誤検出しない。`exit_codes` に列挙したコードは従来どおり単独でシグナルとして成立する。終了コードに依らず stderr のみで判定したい provider は `stderr_requires_nonzero_exit: false` を明示する。
 
@@ -281,6 +281,28 @@ limit は provider ごとに種類とリセット周期（reset horizon）が異
 | `quota_exhausted`      | 日〜月        | `limited`            | false       | 別 provider へ `try_next`、無ければ block して人間に委ねる   |
 
 どの `kind` が存在するかは provider ごとに異なり、子設計の limit 表に従う。reset 時刻が取得できる場合のみ `observed_usage` / `provider_signal.metadata` に保持し、取得できない場合は推定せず message pattern と exit code で制御する。
+
+### 6.5. 利用制限後の延期と自動再開
+
+全候補への fallback 後も利用制限が残る場合、runner は通常の実行失敗と同じ `block` event を使いつつ、`meta` に正規化した制限情報を記録する。これにより既存の `blocked` 状態遷移との互換性を保ちながら、自動再開可能な延期と人の判断が必要な block を区別する。
+
+| event `meta`          | 内容                                                       |
+| --------------------- | ---------------------------------------------------------- |
+| `limit_kind`          | 正規化した provider signal kind                            |
+| `limit_provider`      | 制限を返した provider                                      |
+| `limit_retryable`     | 再試行可能か                                               |
+| `limit_auto_resume`   | routine の自動再開対象か                                   |
+| `limit_resume_at`     | 再開可能時刻（UTC ISO 8601）。解決できない場合は記録しない |
+| `limit_resume_source` | `provider_reset` / `retry_after` / `cooldown_policy`       |
+| `limit_attempts`      | 同一 task の累積試行回数                                   |
+| `limit_worktree`      | 保持した task worktree                                     |
+| `limit_raw_message`   | 診断用に長さを制限した provider 原文                       |
+
+task id、actor、event timestamp は event 本体を正本とする。resume 時刻は provider が明示した reset 時刻または retry-after を優先し、日付のない時刻は明示された timezone で解釈して、観測時刻以前なら翌日へ繰り越す。どちらも無い場合は `rate_limit_policy.cooldown_seconds.<kind>` が明示されているときだけ cooldown を使い、未設定時は時刻を推定しない。`quota_exhausted` は cooldown の有無にかかわらず自動再開対象外とする。
+
+定時 routine は `exec resume --due` を呼ぶ。コマンドは scheduler lock 内で event log を再読込し、現在も `blocked` で `limit_auto_resume: "true"`、かつ `limit_resume_at` が到来した task だけに `unblock` event を追記する。lock 解放後、保持した actor と worktree で再実行する。多重起動では最初のプロセスだけが `blocked -> doing` を確保し、後続プロセスは対象を抽出できないため重複再開しない。
+
+再実行結果は成功なら `complete`、再度利用制限なら新しい再開情報を持つ `block`、通常失敗なら `limit_deferred: "false"` を持つ通常の `block` へ遷移する。利用制限で延期された task が critical path 上にあっても、依存しない Ready task と別 provider の実行は継続する。
 
 ## 7. 外部エージェント CLI の更新
 

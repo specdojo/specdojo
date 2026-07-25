@@ -250,10 +250,24 @@ specdojo exec run --project <project-id> --task <task-id>
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
-| タスク         | 代表対応                                         |
-| -------------- | ------------------------------------------------ |
-| 非クリティカル | skip または block して次へ進む                   |
-| クリティカル   | 次候補 agent へ切り替え、必要に応じて retry する |
+| 状況                             | 代表対応                                                                |
+| -------------------------------- | ----------------------------------------------------------------------- |
+| 別 provider / agent の候補がある | 次候補へ切り替え、独立した Ready task は継続する                        |
+| reset / retry-after を取得できる | 再開時刻と worktree を block event に保持し、`exec resume --due` で再開 |
+| 時刻不明で明示 cooldown がある   | 設定済み cooldown から再開時刻を記録する                                |
+| 時刻不明で cooldown もない       | 時刻を推定せず、通常の blocked として人に委ねる                         |
+| `quota_exhausted`                | 自動再開せず、別 provider が無ければ人に委ねる                          |
+
+定時起動する場合は routine の `exec-resume` action を使います。due 判定と `blocked -> doing` の確保は scheduler lock 内で行われるため、多重起動でも同じ task を重複実行しません。
+
+```yaml
+id: rtn-exec-limit-resume
+enabled: true
+interval: 15m
+action:
+  kind: exec-resume
+  parallel: 2
+```
 
 provider別の `max_concurrency` や agent 選択は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
 

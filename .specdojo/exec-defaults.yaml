@@ -13,10 +13,9 @@
 
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
-  # exit 1 で返すため、素の exit 1 は rate limit と区別できない（providers.<name> で
-  # stderr_patterns に寄せる）。グローバル exit 1 は override の無い provider 向けの
-  # 後方互換フォールバックとして残す。
-  exit_codes: [1]
+  # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
+  # として延期しないよう、共通既定では exit code 単独の検出を行わない。
+  exit_codes: []
   # stderr_patterns は既定で「プロセスが非ゼロ終了した場合のみ」rate limit とみなす
   # （stderr_requires_nonzero_exit の既定は true）。成果物本文に "rate limit" 等の
   # 語が含まれ、agent が成功（exit 0）したままその差分を stderr に出力しても誤検出
@@ -26,6 +25,10 @@ rate_limit_detection:
     - "429"
 
 rate_limit_policy:
+  # provider 出力に reset / retry-after が無い一時的な rate limit だけ、明示した
+  # cooldown を再開時刻として使用する。quota_exhausted は自動再開しない。
+  cooldown_seconds:
+    rate_limit: 900
   on_non_critical:
     action: skip # cpm.slack > 0: block イベントを記録して次のタスクへ
   on_critical:

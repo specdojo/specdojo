@@ -130,7 +130,7 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `exec link`      | 外部参照イベントを残す                                               | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
 | `exec estimate`  | 見積もりイベントを残す                                               | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
 | `exec run`       | plan を生成してエージェントを実行する                                | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
-| `exec resume`    | `doing` のタスクを既存 worktree で再開する                           | `specdojo exec resume --project prj-0001`                                                               |
+| `exec resume`    | `doing`、または due な利用制限延期 task を既存 worktree で再開する   | `specdojo exec resume --project prj-0001 --due`                                                         |
 | `exec status`    | 実行状態を表示する                                                   | `specdojo exec status --project prj-0001 --state blocked`                                               |
 | `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                           | `specdojo exec scaffold --provider claude`                                                              |
 | `exec plan`      | plan だけを生成する                                                  | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
@@ -262,12 +262,13 @@ action:
   limit: 3
 ```
 
-`action.kind` は次の 2 種類です。
+`action.kind` は次の 3 種類です。
 
-| kind        | 動作                                                                                                                 |
-| ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| `register`  | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
-| `exec-auto` | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
+| kind          | 動作                                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
+| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
+| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）      |
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

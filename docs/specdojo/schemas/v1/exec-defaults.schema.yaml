@@ -154,6 +154,31 @@ $defs:
       - on_critical
     description: "Behavior when an agent returns a rate-limit signal during exec run."
     properties:
+      cooldown_seconds:
+        type: object
+        additionalProperties: false
+        minProperties: 1
+        description: >
+          Explicit fallback cooldowns used only when a retryable provider signal has no reset
+          timestamp or retry-after value. Omitted kinds remain blocked without an estimated
+          resume time. quota_exhausted is intentionally unsupported because it is not an
+          automatic-resume target.
+        properties:
+          rate_limit:
+            type: number
+            exclusiveMinimum: 0
+          session_limit:
+            type: number
+            exclusiveMinimum: 0
+          overloaded:
+            type: number
+            exclusiveMinimum: 0
+          timeout:
+            type: number
+            exclusiveMinimum: 0
+          oom:
+            type: number
+            exclusiveMinimum: 0
       on_non_critical:
         type: object
         additionalProperties: false
