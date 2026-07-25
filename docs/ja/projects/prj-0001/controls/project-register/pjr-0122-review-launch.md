@@ -68,6 +68,11 @@ specdojo:
 
 #### 1.3.４. 自動化の改善
 
+1. exec run --autoのparallel時に時間がかかるagentに引っ張られないよう、agentのタスクが完了したら次のagentを起動できるようにする。
+2. exec run --registerを別worktreeで実行できるようにして、並行実行できるようにする。
+3. exec run --registerで複数のidを指定して順次実行できるようにする。commitはid毎に実行する/実行しないをオプションで指定できるようにする。
+4. exec run --autoで実行してclaudeやcodexの利用制限で止まってしまうケースは、再開見込み時間を記録して、定時起動のroutineですくい上げて再実行する。
+
 #### 1.3.5. リファクタリング
 
 `controls` / `execution` / `reporting` / `routines` / `schedule` をプロジェクト直下へ移動する。
