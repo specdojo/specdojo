@@ -88,6 +88,10 @@ function execResultDocId(projectId: string, mode: TaskMode, localBase: string): 
 // mode 別の標準テンプレートへフォールバックする（plan 側の human × approach 解決と対称）。
 function loadResultTemplate(mode: TaskMode, approach: Approach | undefined): string {
   const templatesPath = join(specdojoRootDir(), "docs/ja/specdojo/templates");
+  if (mode === "edit" && approach === "cross-deliverable-dedup") {
+    const crossDeliverablePath = join(templatesPath, "xer-cross-deliverable-dedup-template.md");
+    if (existsSync(crossDeliverablePath)) return readFileSync(crossDeliverablePath, "utf8");
+  }
   if (mode === "edit" && isFinalizeApproach(approach)) {
     const finalizePath = join(templatesPath, `xer-human-${approach}-template.md`);
     if (existsSync(finalizePath)) return readFileSync(finalizePath, "utf8");
@@ -298,6 +302,7 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
       "recipe-guided",
       "freeform",
       "bootstrap",
+      "cross-deliverable-dedup",
       "rulebook-maintenance",
       "recipe-maintenance",
       "sample-maintenance",

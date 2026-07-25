@@ -221,6 +221,26 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).not.toContain("_REVIEW_RESULT_SECTIONS_");
   });
 
+  it("cross-deliverable-dedup は重複整理の専用 result セクションを使う", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-project-dedup-060",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-project-dedup-060-plan.md",
+      agent: "codex-expert-edit-agent",
+      startedAt: "2026-07-25T00:00:00.000Z",
+      approach: "cross-deliverable-dedup",
+      targets: ["prj-0001:overview", "prj-0001:summary"],
+    });
+
+    const body = readFileSync(resultPath, "utf8");
+    expect(body).toContain("## 3. 正本へ集約した記述");
+    expect(body).toContain("## 4. 要約・参照へ置き換えた重複");
+    expect(body).toContain("## 5. 意図的に残した重複");
+    expect(body).toContain("## 6. 維持確認");
+  });
+
   it("falls back to a language-neutral _TODO_ marker when a review result has no reviewSections", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
