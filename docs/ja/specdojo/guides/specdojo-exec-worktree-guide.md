@@ -220,3 +220,29 @@ specdojo exec block \
   --by <actor> \
   --msg "waiting for clarification"
 ```
+
+## 11. ベースブランチの取り込み
+
+`worktree merge` は exec branch を現在のブランチへ統合する一方向のコマンドです。逆に worktree 側へベースブランチの最新を取り込む操作は Git の標準機能で行います。worktree はリポジトリの ref を共有するため、ローカルブランチの取り込みに `fetch` は不要です。
+
+```bash
+# worktree のディレクトリ内で実行する
+npm run worktree:sync
+```
+
+`worktree:sync` はベースブランチを main worktree が checkout しているブランチから自動判定し、取り込み対象の commit を表示してから merge します。未commit変更がある場合は中断します。
+
+| オプション        | 用途                                                  |
+| ----------------- | ----------------------------------------------------- |
+| `--dry-run`       | 取り込み対象の commit を表示するだけで merge しない   |
+| `--rebase`        | merge ではなく rebase して履歴を直線に保つ            |
+| `--fetch`         | 先に `origin` を fetch し、`origin/<base>` を取り込む |
+| `--base <branch>` | ベースブランチを明示指定する                          |
+
+ベースブランチは `SPECDOJO_WORKTREE_BASE_BRANCH` でも指定できます。
+
+取り込み後は生成物が同期前の状態のままなので、作業を続ける前に再生成します。
+
+```bash
+npm run build && npm run docs:generate
+```
