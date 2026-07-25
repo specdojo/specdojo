@@ -157,6 +157,8 @@ Project Register
 | PJR-0134 | review | exec run --autoを連続worker pool化 | parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0134-exec-auto-worker-pool](./pjr-0134-exec-auto-worker-pool.md) |
 | PJR-0135 | done | exec run --registerの複数ID直列実行 | 複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする | todo | high | _TODO_ | _TODO_ | 2026-07-25 | exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした | [pjr-0135-exec-register-multiple-ids](./pjr-0135-exec-register-multiple-ids.md) |
 | PJR-0136 | review | agent利用制限後の自動再開 | 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0136-exec-limit-resume](./pjr-0136-exec-limit-resume.md) |
+| PJR-0137 | open | pjr-indexの重複ID検知と再採番 | 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する | todo | medium | ARC | _TODO_ | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |
+| PJR-0138 | open | 起票を統合ブランチへ委譲するregister add | 作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する | todo | low | ARC | _TODO_ | - | - | [pjr-0138-register-add-on-integration-branch](./pjr-0138-register-add-on-integration-branch.md) |
 
 ## 2. 派生ビュー
 
