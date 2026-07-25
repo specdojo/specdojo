@@ -70,7 +70,14 @@ specdojo:
 
 #### 1.3.5. リファクタリング
 
-controls, execution, reporting, routines, scheduleはprjのトップレベルのディレクトリにするか、prj以下は頭にNNN-をつけないか？
+`controls` / `execution` / `reporting` / `routines` / `schedule` をプロジェクト直下へ移動する。
+これらは全ドメインの成果物を対象とするため、`030-project-management` 配下という配置が実態と合っていなかった。
+`NNN-` を外す案は、配置のスコープ不整合が残るため採らない。
+
+成果物カタログ上の分類は変更しない。分類の正本は `dct-<domain>.yaml` の `domain` であり配置とは独立なので、
+`controls` / `schedule` / `reporting` は `dct-project-management.yaml` が引き続き管理する。
+あわせて `docs-structure-guide` の番号付与規約を、実態と食い違っていた「番号なし = カタログ管理対象外」から
+「番号あり = 改訂される計画文書ツリー / 番号なし = 全ドメイン横断の台帳・記録・実行状態」へ改めた。
 
 ## 2. 背景・文脈
 
@@ -80,6 +87,9 @@ launch trackが終了して、効率的にできた部分・できなかった�
 
 - 対策案「executionがhuman時にplanをつくるか」の実装を [[prj-0001:pjr-0124-human-plan-integrate-result|PJR-0124]] として起票した。
 - 対策案「complete, commit, pushの関係」のうち PR ベース承認フローの整備を [[prj-0001:pjr-0126-pr-based-po-approval|PJR-0126]] として起票した。
+- 対策案「品質の上げ方」の各改善ポイントを [[prj-0001:pjr-0127-clarify-project-why|PJR-0127]] から [[prj-0001:pjr-0133-cross-deliverable-dedup-pass|PJR-0133]] として起票した。
+- 対策案「リファクタリング」はコミット 39376776 で実装済み。別項目は起票しない。
+- 対策案「自動化の改善」は対策未確定のため、後続の振り返りで扱う。
 
 ## 4. 関連ドキュメント
 
