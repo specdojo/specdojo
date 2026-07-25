@@ -232,7 +232,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 
 ### 7.2. provider 別の権限設定
 
-**claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は成果物ディレクトリのみ、review は result 配下のみ書き込み可）でパス単位に制限する。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する。
+**claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は `docs/**`、`src/**`、`tests/**`、review は result 配下のみ書き込み可）でパス単位に制限する。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する。
 
 **codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御する。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使う。command template には次を明示する。
 
@@ -255,7 +255,7 @@ providers:
 
 | agent                 | `edit`                                                   | `bash`                                                               |
 | --------------------- | -------------------------------------------------------- | -------------------------------------------------------------------- |
-| opencode-edit-agent   | `docs/**` のみ許可                                       | git 読み取り系・`npm run` 系・`specdojo` などの許可リスト。他は deny |
+| opencode-edit-agent   | `docs/**`、`src/**`、`tests/**` を許可                   | git 読み取り系・`npm run` 系・`specdojo` などの許可リスト。他は deny |
 | opencode-review-agent | `docs/ja/projects/**/execution/exec/results/**` のみ許可 | 読み取り系・検証系の許可リスト。他は deny                            |
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分。ローカル Ollama 前提のため外部送信面はもともと小さいが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持する。
@@ -287,7 +287,7 @@ providers:
 
 ### 7.3. commit 対象の許可リスト
 
-`workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `src/` や `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。この経路は specdojo CLI 側で閉じる。commit 対象は mode 別の許可リスト方式とする。
+`workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げない。この経路は specdojo CLI 側で閉じる。commit 対象は mode 別の許可リスト方式とする。
 
 | mode                                        | commit を許可するパス                                                         |
 | ------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -301,7 +301,7 @@ providers:
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックする。どちらでも解決できない id は警告を出し、commit を許可しない。
 - HEAD に plan が無い、または frontmatter から task 識別を復元できない場合のみ、従来の除外リスト方式へフォールバックする。CLI 経由の worktree は必ず plan を checkpoint するため、この分岐を agent 側から誘発することはできない。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になる。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達する。claude は settings の allow に `git add` / `git commit` を含めない（`-p` 実行では未許可ツールは自動拒否）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断する、opencode は `bash` の許可リストで塞ぐ。
-- パス制約を持たない provider（codex / opencode）への本命の対策であると同時に、claude に対しても settings と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
+- worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能する。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としない。
 
 ## 8. 変更手順
 

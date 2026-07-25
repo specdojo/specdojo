@@ -174,6 +174,7 @@ providers:
 
 - `{nickname}` は member の nickname に展開され、`.claude/agents/<nickname>.md` の agent 定義を選択する。member の nickname と agent 定義のファイル名を一致させる。
 - `{mode}` は member の `mode` に展開され、edit / review 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。
+- edit 用設定は文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` への Edit / Write を許可する。review 用設定は result 配下だけを許可する。
 - モデルは agent 定義ファイルの `model` フィールドで指定するため、テンプレートにモデル名を含めない（normal は `sonnet`、expert は `opus`）。
 
 `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md` に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。

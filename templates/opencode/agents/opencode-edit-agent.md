@@ -33,6 +33,8 @@ permission:
   edit:
     "*": deny
     "docs/**": allow
+    "src/**": allow
+    "tests/**": allow
   task: deny
   webfetch: allow
   websearch: allow
@@ -49,7 +51,7 @@ agent 自身で claim / complete / block を実行せず、プロジェクトの
 実行環境の制約と推奨手順:
 
 - シェルは許可リスト方式で、git の読み取り系・`npm run` 系・`specdojo` などだけが実行できる。任意のワンライナー（`python3 -c "..."` 等）や一時スクリプトの作成・実行はできない。
-- ファイルの作成・編集は Edit ツールで `docs/` 配下のみ行える。`docs/` 外や `/tmp` などの外部ディレクトリへは書き込まない。
+- ファイルの作成・編集は Edit ツールで `docs/`、`src/`、`tests/` 配下のみ行える。それ以外のディレクトリや `/tmp` などの外部ディレクトリへは書き込まない。
 - YAML / JSON / Frontmatter / スキーマの検証はプロジェクト標準スクリプトを使う（例: `npm run validate:schema:file -- --schema <schema-path> --data <data-path>`、`npm run lint:fm`、`npm run lint:md`）。
 - Edit ツールの `old_string` はファイル内で一意になるよう、前後の固有な文脈を含める。`---` や `| --- | --- |` のような頻出行を単独アンカーにしない（複数マッチで失敗する）。
 - ファイル内容の確認に `cat -A` を使わない。`cat -A` は 0x80 以上のバイトを `M-x` 形式で表示するため、正常な UTF-8 の日本語が文字化けのように見え、エンコーディング破損と誤認して不要な書き直しを招く。中身の確認は Read ツールか素の `cat` を使う。

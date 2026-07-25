@@ -1,6 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": ["Edit(docs/**)", "Write(docs/**)"]
+    "allow": [
+      "Edit(docs/**)",
+      "Write(docs/**)",
+      "Edit(src/**)",
+      "Write(src/**)",
+      "Edit(tests/**)",
+      "Write(tests/**)"
+    ]
   }
 }

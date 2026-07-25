@@ -145,6 +145,7 @@ OpenCode の project agent は `.opencode/agents/<name>.md` に定義する。�
 主な安全境界は次のとおり。
 
 - `.env` と `secrets` の読み取りを禁止する。
+- Edit ツールは文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` だけを許可する。
 - `git push`、`git reset --hard`、`git clean`、`rm` を禁止する。
 - Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - agent 自身による claim、complete、reopen、block を禁止する。
