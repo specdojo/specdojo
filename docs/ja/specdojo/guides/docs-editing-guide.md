@@ -4,6 +4,18 @@ Document Editing Guide
 
 SpecDojoで扱うドキュメントの編集に役立つ、Visual Studio Code (VS Code) や各種ツールの設定や操作方法について説明します。
 
+**対象読者**
+
+- VS Code で SpecDojo の Markdown 文書を作成・編集する利用者
+
+**この文書で分かること**
+
+- 見出し番号の付け方、Markdown プレビューの使い方、表の整形方法
+
+**次に読む文書**
+
+- 文書の配置は [ドキュメント構成ガイド](docs-structure-guide.md)、成果物の記述内容は対象の rulebook を参照してください。
+
 ## 1. 見出しに番号を付与
 
 ### 1.1. コマンドで一括付与（いちばん簡単）

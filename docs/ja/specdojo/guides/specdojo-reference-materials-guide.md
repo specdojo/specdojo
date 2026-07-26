@@ -11,6 +11,18 @@ specdojo:
 
 exec plan は「何を」「どこまで」行うかを示すが、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しない。本書はその参照の仕方を、`approach`（進め方）というタスクメタデータに基づいて整理する。
 
+**対象読者**
+
+- exec plan に従って成果物を作成・更新・レビューする人、エージェント、実行設定の保守者
+
+**この文書で分かること**
+
+- rulebook・recipe・sample・template の役割、`approach` に応じた参照方法、参考資料メンテナンスとレビューへの適用
+
+**次に読む文書**
+
+- plan・result の生成規則は [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、レビュー手順は [SpecDojo レビューガイド](specdojo-review-guide.md) を参照してください。
+
 ## 1. このガイドの位置づけ
 
 - exec plan（`exec/plans/<task-id>-plan.md`）は、`specdojo exec plan` または `specdojo exec run` が `sch-track-<track>.yaml` と成果物カタログからオンデマンド生成する。生成内容は [specdojo-plan-result-lifecycle-guide](specdojo-plan-result-lifecycle-guide.md)、実行フローは [specdojo-exec-operation-guide](specdojo-exec-operation-guide.md) を参照する。

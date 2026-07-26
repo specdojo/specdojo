@@ -11,6 +11,18 @@ SpecDojo Plan and Result Lifecycle Guide
 
 `exec plan` / `exec run` / `exec claim` が扱う plan と result の生成、命名、再実行、アーカイブを説明します。exec の実行手順は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
 
+**対象読者**
+
+- exec plan と result の生成・保管・再実行を運用または保守する開発者、実行管理者
+
+**この文書で分かること**
+
+- plan・result の役割、配置、命名、生成ルール、テンプレート、アーカイブ、再実行時の扱い
+
+**次に読む文書**
+
+- 実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、plan が参照する資料の使い分けは [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
+
 ## 1. planとresultの役割
 
 | ファイル | 役割                                               | 生成タイミング            |

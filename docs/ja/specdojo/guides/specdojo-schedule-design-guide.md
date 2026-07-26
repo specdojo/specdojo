@@ -11,6 +11,18 @@ SpecDojo Schedule Design Guide
 
 Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク粒度、依存関係、CPM の考え方を説明します。コマンドの短い使い方は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
 
+**対象読者**
+
+- 成果物を実行タスクへ展開し、順序、反復、依存関係を設計するプロジェクト計画担当者、Schedule 作成者
+
+**この文書で分かること**
+
+- Schedule ファイルの責務、生成フロー、タスクIDと粒度、実行要件、依存関係、CPM
+
+**次に読む文書**
+
+- Schedule と成果物カタログの関係は [成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、実行設定は [実行設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+
 ## 1. Scheduleの役割
 
 Schedule は「いつ、どの順序で、誰が実行するか」を定義する層です。成果物のパスや完了条件は成果物カタログが持ち、Schedule は成果物IDを参照して実行タスクへ展開します。

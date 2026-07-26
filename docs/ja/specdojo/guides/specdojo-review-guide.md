@@ -11,6 +11,18 @@ specdojo:
 
 レビューは「問題なし」を宣言する作業ではない。どの観点を確認し、どの根拠を見て、何を未確認として残したかを記録する作業である。
 
+**対象読者**
+
+- SpecDojo の成果物をレビューする担当者、review plan を実行するエージェント、品質管理者
+
+**この文書で分かること**
+
+- レビューの入力と確認経路、coverage type、review plan・result、finding の分類、成果物を ready にする条件
+
+**次に読む文書**
+
+- レビュー時の参考資料の使い方は [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md)、plan・result の共通ライフサイクルは [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照してください。
+
 ## 1. レビューの役割
 
 SpecDojo のレビューは次を扱う。

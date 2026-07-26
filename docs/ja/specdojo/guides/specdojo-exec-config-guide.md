@@ -11,6 +11,18 @@ Exec Configuration Guide
 
 SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`pm-members.yaml` のエージェント定義から実行者を選択する。レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離する。
 
+**対象読者**
+
+- エージェント選択、provider、権限、リトライなどの実行設定を設計・変更する運用者
+
+**この文書で分かること**
+
+- Schedule・メンバー・共通実行設定の責務分担、エージェント解決、権限設定、設定変更手順
+
+**次に読む文書**
+
+- 設定を使った実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、Schedule 側の実行要件は [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+
 ## 1. 設定ファイルの分担
 
 | ファイル                       | 役割                                                                                     | 粒度         |

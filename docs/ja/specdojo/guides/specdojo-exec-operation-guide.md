@@ -11,6 +11,18 @@ SpecDojo Exec Operation Guide
 
 `specdojo exec` によるタスク実行、実行経路（schedule / register / routine）の使い分け、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
 
+**対象読者**
+
+- Schedule や登録簿のタスクを人またはエージェントで実行・監視する開発者、運用者
+
+**この文書で分かること**
+
+- 実行経路の選び方、自動・手動実行、状態遷移、blocked 復帰、再実行、human タスクの扱い
+
+**次に読む文書**
+
+- エージェント設定は [実行設定ガイド](specdojo-exec-config-guide.md)、plan・result の管理は [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、手動隔離実行は [SpecDojo exec worktreeガイド](specdojo-exec-worktree-guide.md) を参照してください。
+
 ## 1. execの関心事
 
 `exec` は次の関心事を分けて扱います。

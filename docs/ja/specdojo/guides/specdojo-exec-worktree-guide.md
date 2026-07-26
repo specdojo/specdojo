@@ -11,6 +11,18 @@ SpecDojo Exec Worktree Guide
 
 `specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)、project `develop`・feature・exec のブランチ全体フローは [specdojo-branch-workflow-guide.md](specdojo-branch-workflow-guide.md) を参照します。ブランチ命名と統合方向の規範は [git-branching-standard.md](../standards/git-branching-standard.md) を正本とします。
 
+**対象読者**
+
+- task worktree の準備、agent 実行、commit、merge、削除を段階ごとに確認して操作する開発者、運用者
+
+**この文書で分かること**
+
+- worktree 分割コマンドの責務、標準手順、ブランチ導出、安全条件、complete・block の記録方法
+
+**次に読む文書**
+
+- ブランチ全体の運用は [SpecDojo ブランチワークフローガイド](specdojo-branch-workflow-guide.md)、自動実行との使い分けは [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md) を参照してください。
+
 ## 1. worktree分割コマンドの役割
 
 `exec run --worktree` と `exec run --auto` は、worktree 準備、agent 起動、commit、merge、状態更新を一括で行います。各段階を人が確認しながら進める場合は `exec worktree` 配下の分割コマンドを使います。

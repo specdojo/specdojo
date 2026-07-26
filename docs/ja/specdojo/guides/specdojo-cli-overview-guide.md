@@ -11,6 +11,18 @@ SpecDojo CLI Overview Guide
 
 `specdojo` CLI の全体像、初期設定、代表的な実行フローを説明します。個別コマンドの詳細は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
 
+**対象読者**
+
+- SpecDojo CLI を導入し、成果物の計画・生成・実行管理を始める利用者
+
+**この文書で分かること**
+
+- CLI の役割、標準ディレクトリ、初期設定、project の解決順序、代表的な実行フロー
+
+**次に読む文書**
+
+- 計画設計は [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)、タスク実行は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [SpecDojoコマンドリファレンス](specdojo-command-reference-guide.md) を参照してください。
+
 ## 1. CLIの役割
 
 `specdojo` は Git リポジトリ内でプロジェクト実行管理を行う CLI です。主に次のファイル群を扱います。

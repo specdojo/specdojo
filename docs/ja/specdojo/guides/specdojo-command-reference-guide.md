@@ -11,6 +11,18 @@ SpecDojo Command Reference Guide
 
 `specdojo` CLI の主要コマンドを、用途、代表例、主要オプションに絞って説明します。背景や運用手順は各専門ガイドを参照します。
 
+**対象読者**
+
+- 実行するコマンド、代表例、主要オプションを確認したい CLI 利用者
+
+**この文書で分かること**
+
+- config、catalog、schedule、register、exec、index、watch、build、routine の主要な使い方
+
+**次に読む文書**
+
+- CLI 全体の流れは [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)、運用上の判断は各コマンド節からリンクされた専門ガイドを参照してください。
+
 ## 1. 共通オプション
 
 | オプション        | 用途                                               | 主な対象                                       |

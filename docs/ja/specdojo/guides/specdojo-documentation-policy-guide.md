@@ -11,6 +11,18 @@ SpecDojo Documentation Policy Guide
 
 SpecDojo におけるドキュメンテーションの基本方針、設計原則、運用上の判断基準を定めるガイドです。
 
+**対象読者**
+
+- SpecDojo の文書体系を設計・保守する利用者、standard・rulebook・guide の作成者
+
+**この文書で分かること**
+
+- 正本、構造化、メタデータ、規約と設定、トレーサビリティに関する設計理由と判断基準
+
+**次に読む文書**
+
+- 文書の分類と配置は [ドキュメント構成ガイド](docs-structure-guide.md)、メタデータの規定は [ドキュメントメタ情報標準](../standards/document-metadata-standard.md) を参照してください。
+
 ## 1. 基本方針
 
 - **ID as Identity**:\

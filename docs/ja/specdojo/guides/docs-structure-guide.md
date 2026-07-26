@@ -12,6 +12,18 @@ Document Structure Guide
 SpecDojoで扱うドキュメントの全体構成について、以下のガイドラインを示します。
 ドキュメントの作成順・検討順については [ドキュメント作成順ガイド](docs-authoring-order-guide.md) を参照してください。
 
+**対象読者**
+
+- SpecDojo を導入し、プロダクト文書とプロジェクト文書の配置を設計する利用者、リポジトリ管理者
+
+**この文書で分かること**
+
+- SpecDojo Unit、文書分類、ドキュメントオーナー、命名方針、標準ディレクトリ構成
+
+**次に読む文書**
+
+- 成果物を検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [ドキュメント内容ガイド](docs-contents-guide.md) を参照してください。
+
 ## 1. SpecDojoで扱うドキュメントの全体構成
 
 - SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメントとプロジェクトドキュメントを含む1つの `docs/` ルートを指します。

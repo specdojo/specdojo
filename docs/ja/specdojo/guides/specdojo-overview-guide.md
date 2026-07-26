@@ -17,6 +17,18 @@ SpecDojo Overview Guide
 SpecDojo の目的、文書体系、プロジェクトの進め方、CLI による実行管理の関係を一つの流れとして説明します。
 初めて SpecDojo に触れる利用者を対象とし、個別の成果物やコマンドの詳細は関連 guide、standard、rulebook に委ねます。
 
+**対象読者**
+
+- SpecDojo を初めて知る人、導入を検討する責任者、文書作成や実行管理を始める利用者
+
+**この文書で分かること**
+
+- SpecDojo の目的、文書体系、プロジェクトの基本的な流れ、成果物から実行管理への展開
+
+**次に読む文書**
+
+- 文書の配置は [ドキュメント構成ガイド](docs-structure-guide.md)、成果物の検討順は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、CLI の導入は [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md) を参照してください。
+
 ## 1. SpecDojoとは
 
 SpecDojo は、仕様駆動開発のためのドキュメントフレームワークです。

@@ -13,6 +13,18 @@ SpecDojo Branch Workflow Guide
 
 [git-branching-standard.md](../standards/git-branching-standard.md) に従い、project `develop`、feature、exec worktree を作成・同期・統合・終了する手順を説明します。対象読者は、複数の `prj-xxxx` と Git worktree を同じリポジトリで運用する開発者・運用者です。
 
+**対象読者**
+
+- project、feature、exec の各ブランチと Git worktree を運用する開発者、実行管理者
+
+**この文書で分かること**
+
+- 標準ブランチ構成、project `develop` の準備、feature・exec の開始から統合・終了までの手順
+
+**次に読む文書**
+
+- exec の実行経路は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、worktree の分割操作は [SpecDojo exec worktreeガイド](specdojo-exec-worktree-guide.md) を参照してください。
+
 ## 1. 前提と全体像
 
 作業を始める前に、対象 project ID、現在ブランチ、作業ツリーの状態を確認します。

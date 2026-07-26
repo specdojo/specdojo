@@ -16,6 +16,18 @@ SpecDojo における成果物カタログからスケジュールへの展開�
 - 成果物カタログ: [dct-rulebook](../rulebooks/dct-rulebook.md)
 - Schedule: [sch-rulebook](../rulebooks/sch-rulebook.md)
 
+**対象読者**
+
+- 成果物カタログを実行可能な Schedule へ展開するプロジェクト計画担当者、Schedule 作成者
+
+**この文書で分かること**
+
+- 成果物カタログと Schedule の責務分担、成果物から実行タスクを定義する基本的な流れ
+
+**次に読む文書**
+
+- タスク粒度、依存関係、反復の設計は [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+
 ## 1. 基本方針
 
 - **成果物カタログ** は「**何を管理対象とするか**・**どこに作成し何を満たせば完了か**」
