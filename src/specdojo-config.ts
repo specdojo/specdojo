@@ -10,6 +10,11 @@ export type SpecDojoRunConfig = {
   /** @deprecated Use exec_defaults. */
   agent_config?: string;
   worktree_base?: string;
+  /**
+   * Integration branch that owns pjr-index.md reservations. `register add --reserve` writes and
+   * commits the registration row to the worktree checked out on this branch. Defaults to "main".
+   */
+  register_integration_branch?: string;
 };
 
 export type SpecDojoProjectConfig = {

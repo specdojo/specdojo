@@ -1,10 +1,11 @@
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { gitOutput, gitResult, listRegisteredWorktrees } from "./exec-worktree.js";
 
 // ================================
 // Types
@@ -930,6 +931,167 @@ export function renumberPjrItem(opts: {
 }
 
 // ================================
+// Reserve (delegate row to integration branch worktree)
+// ================================
+
+// register add で登録行に書き込む項目値。個票は作らないため ticket セルは常に `-`。
+export type ReservationFields = {
+  type: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  owner: string;
+  due: string;
+  completed: string;
+  conclusion: string;
+};
+
+export type IntegrationWorktree = { path: string; branch: string };
+
+// pjr-index の現在内容から、予約する登録行と割り当て ID を算出する純粋関数。
+// I/O を持たず、フィールド検証と ID 衝突検知だけを行う。ID を省略すると最大値 +1 で採番する。
+export function planReservationRow(opts: {
+  content: string;
+  explicitId?: string;
+  fields: ReservationFields;
+}): { assignedId: string; newContent: string; newRow: string } {
+  const items = parsePjrIndex(opts.content);
+  const assignedId = opts.explicitId?.trim() || getNextPjrId(items);
+
+  validateFields({
+    status: opts.fields.status,
+    type: opts.fields.type,
+    priority: opts.fields.priority,
+    due: opts.fields.due,
+    completed: opts.fields.completed,
+    id: assignedId,
+  });
+
+  if (items.some((it) => it.id === assignedId)) {
+    throw new Error(`ID already exists in pjr-index.md: ${assignedId}`);
+  }
+
+  const newItem: PjrItem = {
+    id: assignedId,
+    status: opts.fields.status,
+    title: opts.fields.title,
+    description: opts.fields.description,
+    type: opts.fields.type,
+    priority: opts.fields.priority,
+    owner: opts.fields.owner,
+    due: opts.fields.due,
+    completed: opts.fields.completed,
+    conclusion: opts.fields.conclusion,
+    ticket: "-",
+  };
+  const newRow = formatTableRow(newItem);
+  return { assignedId, newContent: insertRowAfterLast(opts.content, newRow), newRow };
+}
+
+// pjr-index.md を所有する統合ブランチの worktree を解決する。
+// 明示パス（--integration-worktree）が指定された場合はそれを、無ければ branch 名に一致する
+// 登録済み worktree を採用する。予約できない状態（未登録・不在）は書き込み前にエラーにする。
+export function resolveIntegrationWorktree(
+  repoRoot: string,
+  opts: { branch: string; worktreePath?: string },
+): IntegrationWorktree {
+  const registered = listRegisteredWorktrees(repoRoot);
+
+  if (opts.worktreePath) {
+    const abs = resolve(opts.worktreePath);
+    const match = registered.find((item) => resolve(item.path) === abs);
+    if (!match) {
+      throw new Error(`Integration worktree is not a registered git worktree: ${abs}`);
+    }
+    if (!existsSync(abs)) {
+      throw new Error(`Integration worktree path does not exist: ${abs}`);
+    }
+    return { path: abs, branch: match.branch ?? opts.branch };
+  }
+
+  const match = registered.find((item) => item.branch === opts.branch);
+  if (!match) {
+    throw new Error(
+      `No worktree is checked out on integration branch "${opts.branch}". ` +
+        `Add one with "git worktree add" or pass --integration-worktree <path>.`,
+    );
+  }
+  if (!existsSync(match.path)) {
+    throw new Error(`Integration worktree path does not exist: ${match.path}`);
+  }
+  return { path: resolve(match.path), branch: opts.branch };
+}
+
+// 統合ブランチの worktree へ登録行だけを追記・commit して PJR-ID を予約する。
+// - pjr-index.md 不在・未 commit の変更あり・ID 競合は、書き込み前にエラーで終了する。
+// - commit は pjr-index.md の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
+export function reservePjrIdOnIntegration(opts: {
+  worktreePath: string;
+  pjrIndexRel: string;
+  explicitId?: string;
+  fields: ReservationFields;
+  commitMessage?: string;
+  dryRun: boolean;
+}): { assignedId: string } {
+  const pjrIndexPath = resolve(opts.worktreePath, opts.pjrIndexRel);
+  if (!existsSync(pjrIndexPath)) {
+    throw new Error(`pjr-index.md not found in integration worktree: ${pjrIndexPath}`);
+  }
+
+  // commit 対象の pjr-index.md に未 commit の変更があると、予約 commit が既存の変更を
+  // 巻き込む。予約 commit を登録行の追加だけに限定するため、書き込み前に清潔さを確認する。
+  const status = gitResult(opts.worktreePath, ["status", "--porcelain=v1", "--", opts.pjrIndexRel]);
+  if (status.status !== 0) {
+    const stderr = typeof status.stderr === "string" ? status.stderr.trim() : "";
+    throw new Error(`Failed to inspect integration worktree status${stderr ? `: ${stderr}` : ""}`);
+  }
+  if (typeof status.stdout === "string" && status.stdout.trim().length > 0) {
+    throw new Error(
+      `Integration worktree has uncommitted changes to ${opts.pjrIndexRel}; ` +
+        `commit or discard them before reserving.`,
+    );
+  }
+
+  const content = readFileSync(pjrIndexPath, "utf8");
+  const { assignedId, newContent } = planReservationRow({
+    content,
+    explicitId: opts.explicitId,
+    fields: opts.fields,
+  });
+
+  if (opts.dryRun) {
+    process.stdout.write(`Would reserve ${assignedId} in ${pjrIndexPath}\n`);
+    process.stdout.write(`${assignedId}\n`);
+    return { assignedId };
+  }
+
+  writeFileSync(pjrIndexPath, newContent, "utf8");
+  gitOutput(opts.worktreePath, ["add", "--", opts.pjrIndexRel]);
+  gitOutput(opts.worktreePath, [
+    "commit",
+    "-m",
+    opts.commitMessage?.trim() || `register(reserve): add ${assignedId}`,
+    "--",
+    opts.pjrIndexRel,
+  ]);
+
+  process.stdout.write(`Reserved ${assignedId} on integration worktree: ${pjrIndexPath}\n`);
+  process.stdout.write(`${assignedId}\n`);
+  return { assignedId };
+}
+
+// 統合ブランチ名を解決する。--integration-branch の明示指定を最優先し、
+// 次に config の run.register_integration_branch、最後に既定値 "main" を使う。
+function resolveIntegrationBranchName(projectId: string, override?: string): string {
+  const trimmed = override?.trim();
+  if (trimmed) return trimmed;
+  const { config } = loadConfig();
+  const branch = config?.projects[projectId]?.run?.register_integration_branch?.trim();
+  return branch || "main";
+}
+
+// ================================
 // Error Handling & Shared Helpers
 // ================================
 
@@ -1018,10 +1180,59 @@ export function registerRegisterCommands(program: Command): void {
     "Topic slug for ticket filename; derived from --title if omitted",
   );
   addCmd.option("--force", "Overwrite existing ticket file", false);
+  addCmd.option(
+    "--reserve",
+    "Reserve the PJR-ID by committing only the registration row to the integration branch worktree",
+    false,
+  );
+  addCmd.option(
+    "--integration-branch <name>",
+    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or main)",
+  );
+  addCmd.option(
+    "--integration-worktree <path>",
+    "Explicit integration worktree path (overrides integration branch lookup)",
+  );
+  addCmd.option("--commit-message <text>", "Commit message for the reservation commit");
   addCmd.option("--dry-run", "Print new row and ticket content without writing", false);
   addCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
+
+      if (opts.reserve) {
+        if (opts.ticket) {
+          throw new Error(
+            "--reserve does not create a ticket; drop --ticket. " +
+              "Reserve writes only the registration row to the integration branch worktree.",
+          );
+        }
+        const repoRoot = specdojoRootDir();
+        const branch = resolveIntegrationBranchName(paths.projectId, opts.integrationBranch);
+        const target = resolveIntegrationWorktree(repoRoot, {
+          branch,
+          worktreePath: opts.integrationWorktree?.trim() || undefined,
+        });
+        const pjrIndexRel = relative(repoRoot, paths.pjrIndexPath).split(sep).join("/");
+        reservePjrIdOnIntegration({
+          worktreePath: target.path,
+          pjrIndexRel,
+          explicitId: opts.id?.trim() || undefined,
+          fields: {
+            type: opts.type,
+            title: opts.title,
+            description: opts.description,
+            priority: opts.priority,
+            status: opts.status,
+            owner: opts.owner,
+            due: opts.due,
+            completed: opts.completed,
+            conclusion: opts.conclusion,
+          },
+          commitMessage: opts.commitMessage,
+          dryRun: opts.dryRun,
+        });
+        return;
+      }
 
       if (!existsSync(paths.pjrIndexPath)) {
         throw new Error(

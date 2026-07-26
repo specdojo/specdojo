@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0138-register-add-on-integration-branch
   type: project
-  status: draft
+  status: ready
   rulebook: pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -35,18 +35,22 @@ PJR-ID の重複と `pjr-index.md` 末尾での merge conflict は、採番と�
 
 ## 3. 作業内容
 
-| No  | 作業                                                         | 担当   | 状態 | メモ                                       |
-| --- | ------------------------------------------------------------ | ------ | ---- | ------------------------------------------ |
-| 1   | 統合ブランチ worktree の常設方針と設定項目を決める           | _TODO_ | open | 既定パスと解決順序を定義する               |
-| 2   | 別 worktree の pjr-index.md へ登録行を追記する経路を実装する | _TODO_ | open | 個票は作成しない                           |
-| 3   | 予約 commit の生成とスコープ限定を実装する                   | _TODO_ | open | 他の変更を巻き込まないこと                 |
-| 4   | 予約不可状態の検出とエラー処理を実装する                     | _TODO_ | open | worktree 不在・未 commit・ID 競合を区別    |
-| 5   | 既存の branch 内完結モードとの選択方法を整理する             | _TODO_ | open | 既定の挙動を変えるかどうかを含めて判断する |
-| 6   | テストを追加し、運用ガイドとコマンド一覧へ反映する           | _TODO_ | open | 予約後の個票作成手順を記載する             |
+| No  | 作業                                                         | 担当 | 状態 | メモ                                                            |
+| --- | ------------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------- |
+| 1   | 統合ブランチ worktree の常設方針と設定項目を決める           | ARC  | done | `run.register_integration_branch`（既定 `main`）で解決          |
+| 2   | 別 worktree の pjr-index.md へ登録行を追記する経路を実装する | ARC  | done | `register add --reserve`。個票は作成しない                      |
+| 3   | 予約 commit の生成とスコープ限定を実装する                   | ARC  | done | pathspec commit で pjr-index.md のみを対象化                    |
+| 4   | 予約不可状態の検出とエラー処理を実装する                     | ARC  | done | worktree 不在・未 commit・ID 競合を書き込み前に区別してエラー化 |
+| 5   | 既存の branch 内完結モードとの選択方法を整理する             | ARC  | done | `--reserve` 未指定時は既定の branch 内完結挙動を維持            |
+| 6   | テストを追加し、運用ガイドとコマンド一覧へ反映する           | ARC  | done | `register-reserve.test.ts` と両ガイドへ反映                     |
 
 ## 4. 対応結果
 
--
+- `specdojo register add` に `--reserve` モードを追加し、作業 worktree を離れずに統合ブランチの worktree へ登録行だけを追記・commit して PJR-ID を予約できるようにした。
+- 統合ブランチは `run.register_integration_branch`（既定 `main`）で設定から解決し、`--integration-branch` / `--integration-worktree` で上書きできる。
+- 予約 commit は `pjr-index.md` の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。個票は作成せず、割り当て PJR-ID を標準出力の最終行へ返す。
+- worktree 不在・`pjr-index.md` の未 commit 変更・ID 競合は書き込み前にエラー終了する。`--reserve` 未指定時は従来の branch 内完結挙動を維持する。
+- 予約起票の運用手順を [[specdojo-register-operation-guide|SpecDojo登録簿運用ガイド]] と [[specdojo-command-reference-guide|SpecDojoコマンドリファレンス]] へ記載した。
 
 ## 5. 関連ドキュメント
 

@@ -220,3 +220,39 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 - `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替える。
 - 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残らない。
 - 付け替え後は派生ビューも再生成される。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくい。
+
+## 10. PO 留保事項の PR 承認運用
+
+プロジェクト憲章の権限委譲章で PO の承認を要する事項（PO 留保事項）は、decision 個票の起票だけでなく pull request のレビュー承認を併用します。個票のセル文字列だけでは作成者と承認者が分離されず自己承認になりうるため、承認者・承認日時・承認対象差分を platform 側で担保します。
+
+- decision 個票は決定内容の SSOT（背景・選択肢・決定・理由）として、リポジトリ内に恒久保持する。
+- pull request は承認イベント（誰がいつ何を承認したか）の担保に用いる。
+- 相互リンク: 個票の承認章に PR URL と merge SHA を本文テキストで記録し、PR 説明には対象 decision 個票の `id` を記載する。PR URL と merge SHA を本文へ転記することで、platform に依存せずリポジトリ内だけで承認事実を追跡できる。
+
+承認フローは次の順で行います。
+
+1. 決定内容を decision 個票へ記録する。
+2. 承認対象の差分を pull request として作成し、PR 説明に対象個票の `id` を書く。
+3. PO が PR をレビューして approve する。作成者自身の承認は職務分離のため承認としてカウントしない。
+4. merge 後、個票または憲章の承認章へ承認日・承認者・承認対象・証跡リンク（PR URL・merge SHA）を書き戻す。
+
+PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護 / CODEOWNERS 方針の詳細は、当該プロジェクトの登録項目（例: `pjr-0126-pr-based-po-approval`）で定義します。schedule 上の計画済みタスクによる通常の成果物更新や日常の agent コミットは、PR 承認の対象外です。
+
+## 11. 統合ブランチへの予約起票
+
+作業 worktree（`exec/*` branch など）で作業中に PJR-ID だけを先に確保したい場合は、`register add --reserve` を使います。通常の `register add` は現在の branch の `pjr-index.md` を書き換えますが、`--reserve` を付けると統合ブランチの worktree へ登録行だけを追記・commit して ID を予約します。作業 worktree 側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
+
+```bash
+# 予約する ID と変更対象を事前に確認する
+specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --reserve --dry-run
+
+# 問題なければ予約する（割り当てられた PJR-ID が標準出力の最終行に返る）
+specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --reserve
+```
+
+- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `main` を使う。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使う。
+- 予約時に統合ブランチの worktree へ書き込むのは `pjr-index.md` の登録行だけで、個票は作成しない。`--reserve` と `--ticket` は併用できない。
+- 予約 commit は `pjr-index.md` の追記だけを対象とし、統合ブランチ側の他の未 commit 変更は巻き込まない。commit メッセージは `--commit-message <text>` で上書きできる。
+- 次のいずれかに当てはまる場合は書き込みを行わずにエラー終了する: 統合ブランチの worktree が存在しない、`pjr-index.md` に未 commit の変更がある、指定した ID が既存 ID と競合する。
+- 割り当てられた PJR-ID は標準出力の最終行に返るので、後続の個票作成・実作業に利用する。個票と実作業は従来どおり作業 branch 側で行い、状態遷移（`start` / `review` / `close` など）も従来どおり運用する。
+- 従来どおり作業 branch 上で完結して起票する場合は `--reserve` を付けない。既定の挙動は変わらない。

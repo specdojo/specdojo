@@ -109,6 +109,8 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 
 `register renumber` は、並行起票や rebase / cherry-pick で PJR-ID が重複・衝突したときに使います。表の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。移動先 ID が使用済みの場合は何も書き換えずにエラー終了し、`--dry-run` で変更対象を事前に確認できます。
 
+`register add --reserve` は、作業 worktree を離れずに PJR-ID を予約するために使います。統合ブランチの worktree へ登録行だけを追記・commit し、割り当てられた PJR-ID を標準出力の最終行に返します（個票は作らない）。統合ブランチは `--integration-branch <name>`（既定は config の `run.register_integration_branch`、無ければ `main`）または `--integration-worktree <path>` で指定します。統合ブランチの worktree が無い・`pjr-index.md` に未 commit の変更がある・ID が競合する場合は書き込まずにエラー終了します。予約起票の運用手順は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。
+
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。
 
