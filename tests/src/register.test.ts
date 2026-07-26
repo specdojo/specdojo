@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { load } from "js-yaml";
@@ -13,6 +13,11 @@ import {
   injectViewSlots,
   parsePjrIndex,
   parseTicketFilename,
+  planRenumber,
+  renumberPjrItem,
+  renumberReferences,
+  renumberTicketContent,
+  ticketTopicFromFilename,
   updateTicketFrontmatterStatus,
   updateTicketStatusForItem,
 } from "../../src/register.js";
@@ -313,6 +318,220 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
         String(call[0]).includes("Would update ticket status → ready"),
       );
       expect(previewed).toBe(true);
+    });
+  });
+});
+
+describe("ticketTopicFromFilename — 個票ファイル名から topic を取り出す", () => {
+  it("ID 接頭辞に一致する場合は topic を返す", () => {
+    expect(ticketTopicFromFilename("PJR-0137", "pjr-0137-register-id-uniqueness.md")).toBe(
+      "register-id-uniqueness",
+    );
+  });
+
+  it("ID 接頭辞と一致しない場合は undefined を返す", () => {
+    expect(ticketTopicFromFilename("PJR-0137", "pjr-0099-other.md")).toBeUndefined();
+  });
+});
+
+describe("renumberTicketContent — 個票本文の再採番", () => {
+  it("frontmatter の doc id と H1 の表示 ID を新しい ID へ更新する", () => {
+    const content = [
+      "---",
+      "specdojo:",
+      "  id: prj-0001:pjr-0137-register-id-uniqueness",
+      "  type: project",
+      "---",
+      "",
+      "# PJR-0137 pjr-indexの重複ID検知と再採番",
+      "",
+      "本文。",
+      "",
+    ].join("\n");
+
+    const updated = renumberTicketContent(
+      content,
+      "PJR-0137",
+      "PJR-0140",
+      "register-id-uniqueness",
+    );
+
+    expect(updated).toContain("  id: prj-0001:pjr-0140-register-id-uniqueness");
+    expect(updated).toContain("# PJR-0140 pjr-indexの重複ID検知と再採番");
+    expect(updated).not.toContain("pjr-0137");
+    expect(updated).not.toContain("# PJR-0137 ");
+  });
+});
+
+describe("renumberReferences — 参照リンク・targets の doc id 置換", () => {
+  it("wikilink と targets に含まれる doc id を置き換え、changed を返す", () => {
+    const content = [
+      "targets:",
+      "  - prj-0001:pjr-0137-register-id-uniqueness",
+      "",
+      "詳細は [[prj-0001:pjr-0137-register-id-uniqueness|一意性]] を参照。",
+    ].join("\n");
+
+    const { content: updated, changed } = renumberReferences(
+      content,
+      "prj-0001:pjr-0137-register-id-uniqueness",
+      "prj-0001:pjr-0140-register-id-uniqueness",
+    );
+
+    expect(changed).toBe(true);
+    expect(updated).not.toContain("pjr-0137");
+    expect(updated).toContain("- prj-0001:pjr-0140-register-id-uniqueness");
+    expect(updated).toContain("[[prj-0001:pjr-0140-register-id-uniqueness|一意性]]");
+  });
+
+  it("doc id を含まない場合は変更なしで changed=false を返す", () => {
+    const content = "無関係な本文";
+    const { content: updated, changed } = renumberReferences(
+      content,
+      "prj-0001:pjr-0137-register-id-uniqueness",
+      "prj-0001:pjr-0140-register-id-uniqueness",
+    );
+
+    expect(changed).toBe(false);
+    expect(updated).toBe(content);
+  });
+});
+
+describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
+  const buildIndex = (rows: string[]): string =>
+    [
+      "# Project Register",
+      "",
+      "## 1. Registered Items",
+      "",
+      "<!-- prettier-ignore -->",
+      "| ID | Status | Title | Description | Type | Priority | Owner | Due | Completed | Conclusion | Ticket |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+      ...rows,
+      "",
+    ].join("\n");
+
+  const ticketBody = (id: string): string =>
+    [
+      "---",
+      "specdojo:",
+      "  id: prj-0001:pjr-0137-register-id-uniqueness",
+      "  type: project",
+      "  status: draft",
+      "---",
+      "",
+      `# ${id} pjr-indexの重複ID検知と再採番`,
+      "",
+      "本文。",
+      "",
+    ].join("\n");
+
+  // specdojoRootDir() が temp を指すよう cwd を切り替える。参照走査を temp 内に閉じる。
+  const withTempRepo = (
+    fn: (paths: RegisterPaths, root: string) => void,
+    indexRows: string[] = [
+      "| PJR-0137 | open | dup | - | todo | medium | ARC | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
+    ],
+  ): void => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-renumber-"));
+    const originalCwd = process.cwd();
+    try {
+      mkdirSync(join(root, ".git"), { recursive: true });
+      const registerDir = join(root, "docs/ja/projects/prj-0001/controls/project-register");
+      mkdirSync(registerDir, { recursive: true });
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex(indexRows), "utf8");
+      writeFileSync(
+        join(registerDir, "pjr-0137-register-id-uniqueness.md"),
+        ticketBody("PJR-0137"),
+        "utf8",
+      );
+      const paths: RegisterPaths = {
+        projectId: "prj-0001",
+        projectRegisterPath: registerDir,
+        pjrIndexPath: join(registerDir, "pjr-index.md"),
+        generatedPath: join(registerDir, "generated"),
+        controlsGeneratedPath: join(root, "docs/ja/projects/prj-0001/controls/generated"),
+      };
+      process.chdir(root);
+      fn(paths, root);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(root, { recursive: true, force: true });
+    }
+  };
+
+  it("plan がインデックス行・個票リネーム・参照 targets の更新を含む", () => {
+    withTempRepo((paths, root) => {
+      const planDir = join(root, "docs/ja/projects/prj-0001/execution/exec/plans");
+      mkdirSync(planDir, { recursive: true });
+      const planPath = join(planDir, "foo-plan.md");
+      writeFileSync(
+        planPath,
+        ["targets:", "  - prj-0001:pjr-0137-register-id-uniqueness", ""].join("\n"),
+        "utf8",
+      );
+
+      const plan = planRenumber(paths, "PJR-0137", "PJR-0140");
+
+      expect(plan.ticketRename?.from).toBe(
+        join(paths.projectRegisterPath, "pjr-0137-register-id-uniqueness.md"),
+      );
+      expect(plan.ticketRename?.to).toBe(
+        join(paths.projectRegisterPath, "pjr-0140-register-id-uniqueness.md"),
+      );
+
+      const indexWrite = plan.writes.find((w) => w.path === paths.pjrIndexPath);
+      expect(indexWrite?.content).toContain("| PJR-0140 | open | dup |");
+      expect(indexWrite?.content).toContain("[pjr-0140-register-id-uniqueness]");
+      expect(indexWrite?.content).not.toContain("PJR-0137");
+
+      const ticketWrite = plan.writes.find((w) => w.path === plan.ticketRename?.to);
+      expect(ticketWrite?.content).toContain("  id: prj-0001:pjr-0140-register-id-uniqueness");
+
+      const planWrite = plan.writes.find((w) => w.path === planPath);
+      expect(planWrite?.content).toContain("- prj-0001:pjr-0140-register-id-uniqueness");
+    });
+  });
+
+  it("再採番先の ID が既に使われている場合は何も書き換えずにエラーで終了する", () => {
+    withTempRepo(
+      (paths) => {
+        expect(() => planRenumber(paths, "PJR-0137", "PJR-0140")).toThrow(
+          /Target ID already exists/,
+        );
+      },
+      [
+        "| PJR-0137 | open | dup | - | todo | medium | ARC | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
+        "| PJR-0140 | open | other | desc | todo | medium | ARC | - | - | - | - |",
+      ],
+    );
+  });
+
+  it("dry-run では何も書き換えず、個票ファイルが元のまま残る", () => {
+    withTempRepo((paths) => {
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      renumberPjrItem({ paths, fromId: "PJR-0137", toId: "PJR-0140", dryRun: true });
+
+      expect(
+        existsSync(join(paths.projectRegisterPath, "pjr-0137-register-id-uniqueness.md")),
+      ).toBe(true);
+      expect(
+        existsSync(join(paths.projectRegisterPath, "pjr-0140-register-id-uniqueness.md")),
+      ).toBe(false);
+      const printed = stdout.mock.calls.some((call) =>
+        String(call[0]).includes("Would renumber PJR-0137 → PJR-0140"),
+      );
+      expect(printed).toBe(true);
+      vi.restoreAllMocks();
+    });
+  });
+
+  it("同じ ID への再採番はエラーになる", () => {
+    withTempRepo((paths) => {
+      expect(() =>
+        renumberPjrItem({ paths, fromId: "PJR-0137", toId: "PJR-0137", dryRun: true }),
+      ).toThrow(/must differ/);
     });
   });
 });

@@ -143,7 +143,7 @@ Project Register
 | PJR-0120 | decided | 初期公開の範囲・ライセンス・貢献導線の確定 | 初期公開の対象範囲、ライセンス、貢献導線を PO の判断で確定する（旧 ACD-D03） | decision | high | PO | - | 2026-07-24 | 採用ライセンスを MIT、貢献導線を GitHub issue / pull request として確定 | - |
 | PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | - |
 | PJR-0122 | open | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | - | - | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
-| PJR-0123 | open | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | QE | 2026-07-31 | - | - | - |
+| PJR-0123 | done | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | QE | 2026-07-31 | 2026-07-26 | 重複した記述や個票間での違いを修正 | - |
 | PJR-0124 | done | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | 2026-07-31 | 2026-07-25 | human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a） | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
 | PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | 2026-07-31 | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
 | PJR-0126 | open | PO承認をpull requestベースにする承認フロー整備 | decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討 | todo | medium | PM | 2026-07-31 | - | - | [pjr-0126-pr-based-po-approval](./pjr-0126-pr-based-po-approval.md) |
@@ -157,9 +157,9 @@ Project Register
 | PJR-0134 | done | exec run --autoを連続worker pool化 | parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする | todo | high | ARC | 2026-07-31 | 2026-07-26 | 連続worker pool方式へ変更 | [pjr-0134-exec-auto-worker-pool](./pjr-0134-exec-auto-worker-pool.md) |
 | PJR-0135 | done | exec run --registerの複数ID直列実行 | 複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする | todo | high | ARC | 2026-07-31 | 2026-07-25 | exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした | [pjr-0135-exec-register-multiple-ids](./pjr-0135-exec-register-multiple-ids.md) |
 | PJR-0136 | done | agent利用制限後の自動再開 | 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする | todo | high | ARC | 2026-07-31 | 2026-07-26 | 利用制限に達した場合にroutineで再開 | [pjr-0136-exec-limit-resume](./pjr-0136-exec-limit-resume.md) |
-| PJR-0137 | open | pjr-indexの重複ID検知と再採番 | 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する | todo | medium | ARC | 2026-07-31 | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |
+| PJR-0137 | review | pjr-indexの重複ID検知と再採番 | 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する | todo | medium | ARC | 2026-07-31 | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |
 | PJR-0138 | open | 起票を統合ブランチへ委譲するregister add | 作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する | todo | low | ARC | 2026-07-31 | - | - | [pjr-0138-register-add-on-integration-branch](./pjr-0138-register-add-on-integration-branch.md) |
-| PJR-0139 | open | 個票frontmatterのstatus遷移を自動化 | 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する | todo | medium | ARC | 2026-07-31 | - | - | [pjr-0139-register-ticket-status-transition](./pjr-0139-register-ticket-status-transition.md) |
+| PJR-0139 | done | 個票frontmatterのstatus遷移を自動化 | 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | 個票frontmatterのstatus遷移をcloseで実行 | [pjr-0139-register-ticket-status-transition](./pjr-0139-register-ticket-status-transition.md) |
 
 ## 2. 派生ビュー
 
