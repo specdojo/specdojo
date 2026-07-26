@@ -2,7 +2,7 @@
 specdojo:
   id: exec-human-finalize-standard
   type: standard
-  status: draft
+  status: ready
 ---
 
 # Human Finalize 実行標準

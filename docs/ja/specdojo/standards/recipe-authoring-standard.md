@@ -2,7 +2,7 @@
 specdojo:
   id: recipe-authoring-standard
   type: standard
-  status: draft
+  status: ready
 ---
 
 # Recipe 記述標準

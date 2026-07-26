@@ -2,7 +2,7 @@
 specdojo:
   id: exec-human-finalize-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: none
 ---
 
