@@ -53,4 +53,4 @@ specdojo:
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[specdojo-register-operation-guide|SpecDojo登録簿運用ガイド]]
 - [[specdojo-exec-operation-guide|SpecDojo exec運用ガイド]]
-- [[specdojo-command-reference-guide|SpecDojoコマンドリファレンス]]
+- [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

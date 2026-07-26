@@ -50,7 +50,7 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-- 変更前に、対象成果物、`prj-scope`、`prj-issues-and-approach`、成果物カタログ、docs-contents-guide、rulebook / recipe / sample / template の記述標準を確認した。
+- 変更前に、対象成果物、`prj-scope`、`prj-issues-and-approach`、成果物カタログ、specdojo-deliverables-reference、rulebook / recipe / sample / template の記述標準を確認した。
 - 同種の ready 文書として、`prj-issues-and-approach-rulebook.md`、`prj-issues-and-approach-recipe.md`、`prj-issues-and-approach-sample.md`、`prj-issues-and-approach-template.md`、`prj-scope-rulebook.md`、`prj-scope-sample.md`、`prj-scope-template.md` を手本にした。
 - 既存成果物は構造が概ね成立していたため維持し、完了条件のうち「技術的実現可能性・影響」と「人間の最終判断責任」が読み取れるように補強した。
 - 既存 rulebook は薄い箇所を維持更新し、frontmatter の recipe / sample / template 宣言と本文構成を正として、sample / recipe / template を整合させた。

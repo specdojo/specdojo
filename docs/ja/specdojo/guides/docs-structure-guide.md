@@ -22,7 +22,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **次に読む文書**
 
-- 成果物を検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [SpecDojo 成果物リファレンス](docs-contents-guide.md) を参照してください。
+- 成果物を検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
 
 ## 1. SpecDojoで扱うドキュメントの全体構成
 
@@ -224,6 +224,7 @@ docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── specdojo/
 │   │   ├── guides/                           # ドキュメント作成ガイド
+│   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
 │   │
@@ -339,6 +340,7 @@ docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── specdojo/
 │   │   ├── guides/                           # ドキュメント作成ガイド
+│   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
 │   │

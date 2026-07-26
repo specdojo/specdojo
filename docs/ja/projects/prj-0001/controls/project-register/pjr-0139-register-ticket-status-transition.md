@@ -58,4 +58,4 @@ specdojo:
 - [[pjr-rulebook|プロジェクト登録簿ルールブック]]
 - [[document-metadata-standard|ドキュメントメタ情報標準]]
 - [[specdojo-register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[specdojo-command-reference-guide|SpecDojoコマンドリファレンス]]
+- [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

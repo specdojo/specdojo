@@ -99,19 +99,22 @@ flowchart TB
 
 SpecDojo では、成果物と、その作成を支援する資料を分けて管理します。
 
-| 種別     | 答える問い                         | 使い方                                         |
-| -------- | ---------------------------------- | ---------------------------------------------- |
-| standard | 共通して従う規約は何か             | メタデータ、命名、文書種別などの共通規約を確認 |
-| rulebook | この成果物には何を書くか           | 成果物固有の章構成、項目、記述規則を確認       |
-| recipe   | どのような手順と判断で作成するか   | 作成・更新の進め方を確認                       |
-| template | どの形から書き始めるか             | 新しい成果物の雛形として使用                   |
-| sample   | 完成した記述はどのようになるか     | 具体的な記述例として参照                       |
-| guide    | 全体像や操作をどう理解すればよいか | 複数の概念や一連の操作を理解                   |
+| 種別      | 答える問い                         | 使い方                                         |
+| --------- | ---------------------------------- | ---------------------------------------------- |
+| standard  | 共通して従う規約は何か             | メタデータ、命名、文書種別などの共通規約を確認 |
+| rulebook  | この成果物には何を書くか           | 成果物固有の章構成、項目、記述規則を確認       |
+| recipe    | どのような手順と判断で作成するか   | 作成・更新の進め方を確認                       |
+| template  | どの形から書き始めるか             | 新しい成果物の雛形として使用                   |
+| sample    | 完成した記述はどのようになるか     | 具体的な記述例として参照                       |
+| guide     | 全体像や操作をどう理解すればよいか | 複数の概念や一連の操作を理解                   |
+| reference | 特定の項目・コマンド・成果物は何か | 一覧・比較・値を参照する                       |
 
 これらは同じ内容を再掲するものではなく、異なる問いに答える資料です。
 詳細な役割分担と exec plan からの参照方法は
 [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md)
 を参照してください。
+
+ここでいう `reference` は文書種別です。exec plan で参照する rulebook、recipe、sample、template とは別の役割として扱います。
 
 ## 5. プロジェクトの基本的な流れ
 
@@ -143,7 +146,7 @@ flowchart LR
 成果物の検討順と判断点は
 [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、
 個々の成果物の目的は
-[SpecDojo 成果物リファレンス](docs-contents-guide.md)、
+[SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md)、
 成果物を確定するレビューは
 [SpecDojo レビューガイド](specdojo-review-guide.md)
 を参照してください。
@@ -210,13 +213,13 @@ CLI の導入は
 | 読者の目的                     | 最初に読む文書                                                                      |
 | ------------------------------ | ----------------------------------------------------------------------------------- |
 | 文書の分類と配置を理解したい   | [ドキュメント構成ガイド](docs-structure-guide.md)                                   |
-| 成果物の種類と内容を知りたい   | [SpecDojo 成果物リファレンス](docs-contents-guide.md)                               |
+| 成果物の種類と内容を知りたい   | [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md)     |
 | 成果物を検討する順序を知りたい | [ドキュメント作成順ガイド](docs-authoring-order-guide.md)                           |
 | CLIを使い始めたい              | [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)                            |
 | Scheduleを設計したい           | [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)                    |
 | タスクを実行・再実行したい     | [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)                         |
 | planとresultの扱いを知りたい   | [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) |
-| コマンドとオプションを調べたい | [SpecDojoコマンドリファレンス](specdojo-command-reference-guide.md)                 |
+| コマンドとオプションを調べたい | [SpecDojoコマンドリファレンス](../references/specdojo-command-reference.md)         |
 | Markdownの編集方法を知りたい   | [ドキュメント編集ガイド](docs-editing-guide.md)                                     |
 
 最初に全機能を理解する必要はありません。

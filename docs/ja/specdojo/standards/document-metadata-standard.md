@@ -19,11 +19,12 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - 成果物向け詳細規約: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template` / `sample`
 - 成果物スキーマ: [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
-`rulebook` / `recipe` / `guide` / `standard` は専用スキーマを持つため、成果物向け詳細規約の対象外とします。それぞれの追加規約は次を正本とします。
+`rulebook` / `recipe` / `guide` / `reference` / `standard` は専用スキーマを持つため、成果物向け詳細規約の対象外とします。それぞれの追加規約は次を正本とします。
 
 - rulebook: [rulebook-authoring-standard.md](rulebook-authoring-standard.md) の `Frontmatter 規約`
 - recipe: [recipe-authoring-standard.md](recipe-authoring-standard.md) の `Frontmatter 規約`
 - guide: [guide-authoring-standard.md](guide-authoring-standard.md) の `Frontmatter 規約`
+- reference: [reference-authoring-standard.md](reference-authoring-standard.md) の `Frontmatter 規約`
 - standard: [standard-authoring-standard.md](standard-authoring-standard.md) の `Frontmatter 規約`
 
 ## 2. 共通原則

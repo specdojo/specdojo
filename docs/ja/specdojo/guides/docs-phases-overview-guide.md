@@ -21,7 +21,7 @@ Document Phases Overview
 
 **次に読む文書**
 
-- フェーズと文書体系の対応は [ドキュメント構成ガイド](docs-structure-guide.md)、具体的な成果物は [SpecDojo 成果物リファレンス](docs-contents-guide.md) を参照してください。
+- フェーズと文書体系の対応は [ドキュメント構成ガイド](docs-structure-guide.md)、具体的な成果物は [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
 
 | フェーズ | 本質                   |
 | -------- | ---------------------- |

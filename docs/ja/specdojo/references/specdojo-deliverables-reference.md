@@ -1,8 +1,10 @@
 ---
 specdojo:
-  id: docs-contents-guide
-  type: guide
+  id: specdojo-deliverables-reference
+  type: reference
   status: draft
+  supersedes:
+    - docs-contents-guide
 ---
 
 # SpecDojo 成果物リファレンス
@@ -11,17 +13,7 @@ SpecDojo Deliverables Reference
 
 SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な内容を一覧します。
 
-**対象読者**
-
-- プロジェクトで必要な成果物を選定する責任者、計画担当者、成果物作成者
-
-**この文書で分かること**
-
-- プロジェクト文書とプロダクト文書の種類、推奨ファイル名、各成果物の目的と主な内容
-
-**次に読む文書**
-
-- 作成順は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、成果物固有の書き方は対象の rulebook と [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
+プロジェクトで必要な成果物を選定するときは [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md) を、成果物固有の書き方は対象の rulebook を参照してください。
 
 ## 1. プロジェクト
 

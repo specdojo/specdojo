@@ -28,11 +28,11 @@ CLI による実行管理から確認したい場合は、[SpecDojo CLI概要ガ
 
 ### 作成する成果物を決める
 
-| やりたいこと                                   | 参照先                                                                                 |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 成果物の種類、目的、主な内容を調べる           | [SpecDojo 成果物リファレンス](./specdojo/guides/docs-contents-guide.md)                |
-| 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)            |
-| rulebook、recipe、sample、templateを使い分ける | [SpecDojo 参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md) |
+| やりたいこと                                   | 参照先                                                                                  |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 成果物の種類、目的、主な内容を調べる           | [SpecDojo 成果物リファレンス](./specdojo/references/specdojo-deliverables-reference.md) |
+| 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)             |
+| rulebook、recipe、sample、templateを使い分ける | [SpecDojo 参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md)  |
 
 成果物を実際に記述するときは、`specdojo/rulebooks/`で対象成果物の rulebook を確認し、`specdojo/templates/`と`specdojo/samples/`を雛形・記述例として利用します。
 
@@ -48,7 +48,7 @@ CLI による実行管理から確認したい場合は、[SpecDojo CLI概要ガ
 | やりたいこと                               | 参照先                                                                                                |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
 | CLIの役割、初期設定、代表フローを知る      | [SpecDojo CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
-| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/guides/specdojo-command-reference-guide.md)                      |
+| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)                        |
 | 課題、リスク、変更要求、意思決定を管理する | [SpecDojo 登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
 | Scheduleのタスクを実行・再実行する         | [SpecDojo exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
 | エージェント、権限、共通実行設定を変更する | [実行設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                                     |
@@ -82,16 +82,17 @@ SpecDojo を利用するリポジトリは、次のいずれかの方法で準�
 
 ## 提供する資料
 
-| ディレクトリ           | 内容                                                 |
-| ---------------------- | ---------------------------------------------------- |
-| `specdojo/guides/`     | 全体像、判断方法、操作手順                           |
-| `specdojo/standards/`  | 文書種別を横断する共通規約                           |
-| `specdojo/rulebooks/`  | 成果物ごとの記述規則                                 |
-| `specdojo/recipes/`    | 成果物を作成・更新する手順                           |
-| `specdojo/templates/`  | 成果物の雛形                                         |
-| `specdojo/samples/`    | 成果物の記述例                                       |
-| `sample-gcs-projects/` | おばあちゃんの駄菓子屋を題材にしたプロジェクト文書例 |
-| `sample-gcs-product/`  | おばあちゃんの駄菓子屋を題材にしたプロダクト文書例   |
+| ディレクトリ           | 内容                                                   |
+| ---------------------- | ------------------------------------------------------ |
+| `specdojo/guides/`     | 全体像、判断方法、操作手順                             |
+| `specdojo/references/` | 成果物、コマンド、設定などを一覧・比較して参照する資料 |
+| `specdojo/standards/`  | 文書種別を横断する共通規約                             |
+| `specdojo/rulebooks/`  | 成果物ごとの記述規則                                   |
+| `specdojo/recipes/`    | 成果物を作成・更新する手順                             |
+| `specdojo/templates/`  | 成果物の雛形                                           |
+| `specdojo/samples/`    | 成果物の記述例                                         |
+| `sample-gcs-projects/` | おばあちゃんの駄菓子屋を題材にしたプロジェクト文書例   |
+| `sample-gcs-product/`  | おばあちゃんの駄菓子屋を題材にしたプロダクト文書例     |
 
 ## 基本ディレクトリ構成
 
@@ -100,6 +101,7 @@ docs/
 ├── ja/
 │   ├── specdojo/
 │   │   ├── guides/
+│   │   ├── references/
 │   │   ├── standards/
 │   │   ├── rulebooks/
 │   │   ├── recipes/

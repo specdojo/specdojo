@@ -9,7 +9,7 @@ specdojo:
 
 SpecDojo Register Operation Guide
 
-プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を正本とします。
+プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [specdojo-command-reference.md](../references/specdojo-command-reference.md) を正本とします。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ SpecDojo Register Operation Guide
 
 **次に読む文書**
 
-- 登録項目の実行経路は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [SpecDojoコマンドリファレンス](specdojo-command-reference-guide.md) を参照してください。
+- 登録項目の実行経路は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [SpecDojoコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
 
 ## 1. 登録簿の位置づけ
 

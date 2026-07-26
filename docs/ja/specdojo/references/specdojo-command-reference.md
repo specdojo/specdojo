@@ -1,27 +1,19 @@
 ---
 specdojo:
-  id: specdojo-command-reference-guide
-  type: guide
+  id: specdojo-command-reference
+  type: reference
   status: draft
+  supersedes:
+    - specdojo-command-reference-guide
 ---
 
-# SpecDojoコマンドリファレンス
+# SpecDojo CLIコマンドリファレンス
 
-SpecDojo Command Reference Guide
+SpecDojo CLI Command Reference
 
 `specdojo` CLI の主要コマンドを、用途、代表例、主要オプションに絞って説明します。背景や運用手順は各専門ガイドを参照します。
 
-**対象読者**
-
-- 実行するコマンド、代表例、主要オプションを確認したい CLI 利用者
-
-**この文書で分かること**
-
-- config、catalog、schedule、register、exec、index、watch、build、routine の主要な使い方
-
-**次に読む文書**
-
-- CLI 全体の流れは [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)、運用上の判断は各コマンド節からリンクされた専門ガイドを参照してください。
+CLI 全体の流れは [SpecDojo CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) を、運用上の判断は各コマンド節からリンクされた専門ガイドを参照してください。
 
 ## 1. 共通オプション
 
@@ -32,7 +24,7 @@ SpecDojo Command Reference Guide
 | `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / generate / schedule build / release |
 | `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                              |
 
-project の解決順序と設定は [specdojo-cli-overview-guide.md](specdojo-cli-overview-guide.md) を参照します。
+project の解決順序と設定は [specdojo-cli-overview-guide.md](../guides/specdojo-cli-overview-guide.md) を参照します。
 
 ## 2. config / project
 
@@ -79,7 +71,7 @@ specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,d
 
 `catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集するため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済み本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回実行します。
 
-成果物カタログから Schedule への展開は [specdojo-deliverables-to-schedule-guide.md](specdojo-deliverables-to-schedule-guide.md) を参照します。
+成果物カタログから Schedule への展開は [specdojo-deliverables-to-schedule-guide.md](../guides/specdojo-deliverables-to-schedule-guide.md) を参照します。
 
 ## 4. schedule
 
@@ -98,7 +90,7 @@ specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,d
 | `--force`         | 既存の `sch-track-<track>.yaml` を上書きする |
 | `--dry-run`       | 生成予定を確認する                           |
 
-Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule-design-guide.md) を参照します。
+Schedule設計の詳細は [specdojo-schedule-design-guide.md](../guides/specdojo-schedule-design-guide.md) を参照します。
 
 ## 5. register
 
@@ -121,10 +113,10 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 
 `register renumber` は、並行起票や rebase / cherry-pick で PJR-ID が重複・衝突したときに使います。表の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。移動先 ID が使用済みの場合は何も書き換えずにエラー終了し、`--dry-run` で変更対象を事前に確認できます。
 
-`register add --reserve` は、作業 worktree を離れずに PJR-ID を予約するために使います。統合ブランチの worktree へ登録行だけを追記・commit し、割り当てられた PJR-ID を標準出力の最終行に返します（個票は作らない）。統合ブランチは `--integration-branch <name>`（既定は config の `run.register_integration_branch`、無ければ `main`）または `--integration-worktree <path>` で指定します。統合ブランチの worktree が無い・`pjr-index.md` に未 commit の変更がある・ID が競合する場合は書き込まずにエラー終了します。予約起票の運用手順は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。
+`register add --reserve` は、作業 worktree を離れずに PJR-ID を予約するために使います。統合ブランチの worktree へ登録行だけを追記・commit し、割り当てられた PJR-ID を標準出力の最終行に返します（個票は作らない）。統合ブランチは `--integration-branch <name>`（既定は config の `run.register_integration_branch`、無ければ `main`）または `--integration-worktree <path>` で指定します。統合ブランチの worktree が無い・`pjr-index.md` に未 commit の変更がある・ID が競合する場合は書き込まずにエラー終了します。予約起票の運用手順は [specdojo-register-operation-guide.md](../guides/specdojo-register-operation-guide.md) を参照します。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
-登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。
+登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [specdojo-register-operation-guide.md](../guides/specdojo-register-operation-guide.md) を参照します。
 
 ## 6. exec
 
@@ -203,7 +195,7 @@ register 実行は worktree を使わない in-place 直列実行のため、`--
 
 `--auto --loop --parallel <n>` は、agent が1件完了するたびに `exec build` で Ready を再計算し、空いた枠へ次の Ready タスクを投入します。`--loop` が無い場合は、開始時に選んだ最大 `n` 件だけを実行して終了します。
 
-exec運用の詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
+exec運用の詳細は [specdojo-exec-operation-guide.md](../guides/specdojo-exec-operation-guide.md) を参照します。
 
 ## 7. exec worktree
 
@@ -228,7 +220,7 @@ specdojo exec worktree merge --project prj-0001 --task <task-id>
 specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branch
 ```
 
-詳細な安全条件は [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md) を参照します。
+詳細な安全条件は [specdojo-exec-worktree-guide.md](../guides/specdojo-exec-worktree-guide.md) を参照します。
 
 ## 8. index
 
@@ -300,15 +292,15 @@ specdojo routine run --project prj-0001 --id rtn-daily-register-sweep
 specdojo routine run --project prj-0001 --due --dry-run
 ```
 
-schedule / register / routine の使い分けの基準は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+schedule / register / routine の使い分けの基準は [specdojo-exec-operation-guide.md](../guides/specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 ## 11. 関連ガイド
 
-| 詳細                | 参照先                                                                             |
-| ------------------- | ---------------------------------------------------------------------------------- |
-| CLI全体像と初期設定 | [specdojo-cli-overview-guide.md](specdojo-cli-overview-guide.md)                   |
-| Schedule設計        | [specdojo-schedule-design-guide.md](specdojo-schedule-design-guide.md)             |
-| exec運用            | [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)               |
-| worktree隔離実行    | [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md)                 |
-| plan/result         | [specdojo-plan-result-lifecycle-guide.md](specdojo-plan-result-lifecycle-guide.md) |
-| エージェント設定    | [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md)                     |
+| 詳細                | 参照先                                                                                       |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| CLI全体像と初期設定 | [specdojo-cli-overview-guide.md](../guides/specdojo-cli-overview-guide.md)                   |
+| Schedule設計        | [specdojo-schedule-design-guide.md](../guides/specdojo-schedule-design-guide.md)             |
+| exec運用            | [specdojo-exec-operation-guide.md](../guides/specdojo-exec-operation-guide.md)               |
+| worktree隔離実行    | [specdojo-exec-worktree-guide.md](../guides/specdojo-exec-worktree-guide.md)                 |
+| plan/result         | [specdojo-plan-result-lifecycle-guide.md](../guides/specdojo-plan-result-lifecycle-guide.md) |
+| エージェント設定    | [specdojo-exec-config-guide.md](../guides/specdojo-exec-config-guide.md)                     |

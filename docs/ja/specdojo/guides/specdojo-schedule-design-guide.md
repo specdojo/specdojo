@@ -9,7 +9,7 @@ specdojo:
 
 SpecDojo Schedule Design Guide
 
-Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク粒度、依存関係、CPM の考え方を説明します。コマンドの短い使い方は [specdojo-command-reference-guide.md](specdojo-command-reference-guide.md) を参照します。
+Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク粒度、依存関係、CPM の考え方を説明します。コマンドの短い使い方は [specdojo-command-reference.md](../references/specdojo-command-reference.md) を参照します。
 
 **対象読者**
 

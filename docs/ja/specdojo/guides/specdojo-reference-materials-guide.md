@@ -9,6 +9,8 @@ specdojo:
 
 本ドキュメントは SpecDojo における **exec plan 実行時に rulebook / recipe / sample / template をどう参照するか**を定義する。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用する。
 
+`reference` は一覧・比較のための文書種別であり、本書でいう exec plan の参考資料種別には含めない。
+
 exec plan は「何を」「どこまで」行うかを示すが、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しない。本書はその参照の仕方を、`approach`（進め方）というタスクメタデータに基づいて整理する。
 
 **対象読者**

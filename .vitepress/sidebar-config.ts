@@ -13,6 +13,10 @@ const guide = (text: string, id: string): SidebarItem => ({
   text,
   link: specdojoLink("guides", id),
 });
+const reference = (text: string, id: string): SidebarItem => ({
+  text,
+  link: specdojoLink("references", id),
+});
 const standard = (text: string, id: string): SidebarItem => ({
   text,
   link: specdojoLink("standards", id),
@@ -220,8 +224,8 @@ export const specdojoSidebarItems = [
     text: "リファレンス",
     collapsed: false,
     items: [
-      guide("SpecDojo 成果物リファレンス", "docs-contents-guide"),
-      guide("CLIコマンドリファレンス", "specdojo-command-reference-guide"),
+      reference("SpecDojo 成果物リファレンス", "specdojo-deliverables-reference"),
+      reference("CLIコマンドリファレンス", "specdojo-command-reference"),
     ],
   },
   {
@@ -241,6 +245,7 @@ export const specdojoSidebarItems = [
       standard("サンプル記述", "sample-authoring-standard"),
       standard("テンプレート記述", "template-authoring-standard"),
       standard("ガイド記述", "guide-authoring-standard"),
+      standard("リファレンス記述", "reference-authoring-standard"),
       standard("標準記述", "standard-authoring-standard"),
       standard("人・組織定義", "people-and-organization-definition-standard"),
       standard("テスト文書スコープ", "test-document-scope-standard"),

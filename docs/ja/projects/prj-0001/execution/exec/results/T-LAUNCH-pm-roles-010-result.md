@@ -54,5 +54,5 @@ specdojo:
 - 既存の `pm-roles` 一式（成果物 + rulebook / recipe / sample / template）は、章構成・必須項目・参照関係の骨格が成立していたため、作り直さず、schema 適合と PO 判断に必要な粒度の不足だけを補強する判断とした。
 - 同種 ready 文書として `pm-members-rulebook.md` / `pm-members-recipe.md` / `pm-members-sample.yaml` / `pm-members-template.yaml` を手本に、YAML 成果物のメタ項目、実行主体との分離、agent に最終判断を持たせない記述粒度、sample の駄菓子屋プロジェクト共通文脈の使い方を揃えた。
 - 構造・必須項目・禁止事項は `pm-roles-rulebook.md` を正とし、recipe / sample / template はそれと矛盾しないことを確認した。参考資料は成果物の丸写しではなく、同種成果物へ再利用できる一般化（標準 Role code 集合・プレースホルダ・問いとレビュー観点）として整理した。
-- `upsert-rulebook` Skill が参照する `docs/ja/specdojo/guidelines/docs-contents-guide.md` は存在しなかったため、実在する `docs/ja/specdojo/guides/docs-contents-guide.md` の組織体制セクションを確認し、ロール定義の目的・主な内容の確認に使った。
+- `upsert-rulebook` Skill が参照する `docs/ja/specdojo/guidelines/docs-contents-guide.md` は存在しなかったため、実在する `docs/ja/specdojo/references/specdojo-deliverables-reference.md` の組織体制セクションを確認し、ロール定義の目的・主な内容の確認に使った。
 - 成果物・参考資料の内容根拠は plan 対象、既存 reference material、`pm-organization.md` に限定した。外部 Web 出典は使用していない。

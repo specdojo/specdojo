@@ -28,6 +28,8 @@ plugins:
           schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/rulebooks/**/*.md
           schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/references/**/*.md
+          schema: docs/specdojo/schemas/v1/reference-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/guides/**/*.md
           schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/standards/**/*.md

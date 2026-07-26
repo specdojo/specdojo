@@ -22,7 +22,7 @@ SpecDojoで扱うドキュメントの作成順・検討順について、以下
 
 **次に読む文書**
 
-- 成果物ごとの目的は [SpecDojo 成果物リファレンス](docs-contents-guide.md)、実行計画への展開は [成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) を参照してください。
+- 成果物ごとの目的は [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md)、実行計画への展開は [成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) を参照してください。
 
 ## 1. 作成順・検討順のガイドライン
 
