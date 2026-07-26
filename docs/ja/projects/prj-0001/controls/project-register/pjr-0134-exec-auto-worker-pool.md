@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0134-exec-auto-worker-pool
   type: project
-  status: draft
+  status: ready
   rulebook: pjr-rulebook
   part_of:
     - prj-0001:pjr-index
