@@ -1,6 +1,7 @@
 import { type Command } from "commander";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
+import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
@@ -724,6 +725,211 @@ export function updateTicketStatusForItem(opts: {
 }
 
 // ================================
+// Renumber (duplicate ID recovery)
+// ================================
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// 個票ファイル名 `pjr-XXXX-<topic>.md` から topic を取り出す。
+// ID 接頭辞（`pjr-xxxx-`）と一致しない場合は undefined。
+export function ticketTopicFromFilename(id: string, filename: string): string | undefined {
+  const prefix = `${id.toLowerCase()}-`;
+  const base = filename.replace(/\.md$/, "");
+  if (!base.startsWith(prefix)) return undefined;
+  const topic = base.slice(prefix.length);
+  return topic.length > 0 ? topic : undefined;
+}
+
+// pjr-index の登録項目一覧テーブルで fromId の行を updated へ差し替える。
+// replaceRowInContent は「同一 ID を書き戻す」用途で updated.id と一致する行を探すため、
+// ID を変える再採番には fromId で行を特定する専用処理を使う。
+function renumberRowInContent(content: string, fromId: string, updated: PjrItem): string {
+  const newRow = formatTableRow(updated);
+  const lines = content.split("\n");
+  let inSection = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (REGISTER_SECTION_RE.test(line)) {
+      inSection = true;
+      continue;
+    }
+    if (inSection && /^## /.test(line)) break;
+    if (!inSection) continue;
+    if (!line.startsWith("|") || isTableSeparator(line)) continue;
+
+    const cells = parseTableCells(line);
+    if (cells.length >= 1 && cells[0] === fromId) {
+      lines[i] = newRow;
+      return lines.join("\n");
+    }
+  }
+
+  throw new Error(`Item ${fromId} not found in table`);
+}
+
+// 個票本文の再採番。frontmatter の doc id 断片（`:pjr-XXXX-<topic>`）と
+// H1 の表示 ID（`# PJR-XXXX ...`）を新しい ID へ更新する。
+export function renumberTicketContent(
+  content: string,
+  fromId: string,
+  toId: string,
+  topic: string,
+): string {
+  const fromFragment = `:${fromId.toLowerCase()}-${topic}`;
+  const toFragment = `:${toId.toLowerCase()}-${topic}`;
+  let updated = content.split(fromFragment).join(toFragment);
+  updated = updated.replace(
+    new RegExp(`^(#\\s+)${escapeRegExp(fromId)}(\\s|$)`, "m"),
+    (_m, prefix: string, tail: string) => `${prefix}${toId}${tail}`,
+  );
+  return updated;
+}
+
+// 他文書からの参照リンク（wikilink `[[<docId>|...]]`）と
+// exec plan / result の `targets` に含まれる doc id を新しい doc id へ置き換える。
+export function renumberReferences(
+  content: string,
+  fromDocId: string,
+  toDocId: string,
+): { content: string; changed: boolean } {
+  if (!content.includes(fromDocId)) return { content, changed: false };
+  return { content: content.split(fromDocId).join(toDocId), changed: true };
+}
+
+export type RenumberPlan = {
+  writes: { path: string; content: string }[];
+  ticketRename?: { from: string; to: string };
+};
+
+// 再採番で書き換える全ファイルを事前に算出する。
+// 途中で衝突・不整合を検出したら例外を投げ、部分適用が起きないようにする。
+export function planRenumber(paths: RegisterPaths, fromId: string, toId: string): RenumberPlan {
+  const indexContent = readFileSync(paths.pjrIndexPath, "utf8");
+  const items = parsePjrIndex(indexContent);
+
+  const fromItem = findItemById(items, fromId);
+  if (!fromItem) {
+    throw new Error(`Item not found: ${fromId}`);
+  }
+  if (findItemById(items, toId)) {
+    throw new Error(`Target ID already exists in pjr-index.md: ${toId}`);
+  }
+
+  const writes: RenumberPlan["writes"] = [];
+  let ticketRename: RenumberPlan["ticketRename"];
+  let newIndexContent = indexContent;
+
+  const oldFilename = parseTicketFilename(fromItem.ticket);
+  let fromDocId: string | undefined;
+  let toDocId: string | undefined;
+
+  if (oldFilename) {
+    const topic = ticketTopicFromFilename(fromId, oldFilename);
+    if (!topic) {
+      throw new Error(
+        `Ticket filename "${oldFilename}" does not match ID "${fromId}"; ` +
+          `fix the ticket link before renumbering.`,
+      );
+    }
+    const newFilename = `${toId.toLowerCase()}-${topic}.md`;
+    const oldTicketPath = join(paths.projectRegisterPath, oldFilename);
+    const newTicketPath = join(paths.projectRegisterPath, newFilename);
+    if (!existsSync(oldTicketPath)) {
+      throw new Error(`Ticket file not found: ${oldTicketPath}`);
+    }
+    if (existsSync(newTicketPath)) {
+      throw new Error(`Target ticket file already exists: ${newTicketPath}`);
+    }
+
+    fromDocId = `${paths.projectId}:${oldFilename.replace(/\.md$/, "")}`;
+    toDocId = `${paths.projectId}:${newFilename.replace(/\.md$/, "")}`;
+
+    const ticketContent = readFileSync(oldTicketPath, "utf8");
+    writes.push({
+      path: newTicketPath,
+      content: renumberTicketContent(ticketContent, fromId, toId, topic),
+    });
+    ticketRename = { from: oldTicketPath, to: newTicketPath };
+
+    const newTicketRef = `[${newFilename.replace(/\.md$/, "")}](./${newFilename})`;
+    const updated: PjrItem = { ...fromItem, id: toId, ticket: newTicketRef };
+    newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
+  } else {
+    const updated: PjrItem = { ...fromItem, id: toId };
+    newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
+  }
+
+  writes.push({ path: paths.pjrIndexPath, content: newIndexContent });
+
+  // 参照リンク・targets の付け替え（doc id を持つ個票がある場合のみ）。
+  if (fromDocId && toDocId) {
+    const root = specdojoRootDir();
+    const referenceFiles = fg
+      .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
+      .sort((a, b) => a.localeCompare(b));
+
+    for (const absPath of referenceFiles) {
+      if (absPath === paths.pjrIndexPath) continue;
+      if (ticketRename && absPath === ticketRename.from) continue;
+      const content = readFileSync(absPath, "utf8");
+      const { content: replaced, changed } = renumberReferences(content, fromDocId, toDocId);
+      if (changed) writes.push({ path: absPath, content: replaced });
+    }
+  }
+
+  return { writes, ticketRename };
+}
+
+export function renumberPjrItem(opts: {
+  paths: RegisterPaths;
+  fromId: string;
+  toId: string;
+  dryRun: boolean;
+}): void {
+  const { paths, fromId, toId, dryRun } = opts;
+
+  if (!existsSync(paths.pjrIndexPath)) {
+    throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`);
+  }
+  for (const id of [fromId, toId]) {
+    if (!/^PJR-\d{4}$/.test(id)) {
+      throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
+    }
+  }
+  if (fromId === toId) {
+    throw new Error(`--id and --to must differ (both are ${fromId})`);
+  }
+
+  const plan = planRenumber(paths, fromId, toId);
+
+  if (dryRun) {
+    process.stdout.write(`Would renumber ${fromId} → ${toId}:\n`);
+    if (plan.ticketRename) {
+      process.stdout.write(`  Rename: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+    }
+    for (const write of plan.writes) {
+      process.stdout.write(`  Update: ${write.path}\n`);
+    }
+    return;
+  }
+
+  for (const write of plan.writes) {
+    writeFileSync(write.path, write.content, "utf8");
+    process.stdout.write(`Updated: ${write.path}\n`);
+  }
+  if (plan.ticketRename) {
+    unlinkSync(plan.ticketRename.from);
+    process.stdout.write(`Renamed: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+  }
+  for (const view of writeDerivedViews(paths, "all")) {
+    process.stdout.write(`Generated: ${view.path}\n`);
+  }
+}
+
+// ================================
 // Error Handling & Shared Helpers
 // ================================
 
@@ -1175,6 +1381,23 @@ export function registerRegisterCommands(program: Command): void {
       for (const view of writeDerivedViews(paths, scope)) {
         process.stdout.write(`Generated: ${view.path}\n`);
       }
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  // --- renumber ---
+  const renumberCmd = reg
+    .command("renumber")
+    .description("Move a duplicated/conflicting PJR-ID to an unused PJR-ID");
+  addProjectOption(renumberCmd);
+  renumberCmd.requiredOption("--id <id>", "Current item ID (PJR-XXXX)");
+  renumberCmd.requiredOption("--to <id>", "Target unused ID (PJR-XXXX)");
+  renumberCmd.option("--dry-run", "Print planned changes without writing", false);
+  renumberCmd.action((opts) => {
+    try {
+      const paths = resolveRegisterPaths(opts);
+      renumberPjrItem({ paths, fromId: opts.id, toId: opts.to, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }

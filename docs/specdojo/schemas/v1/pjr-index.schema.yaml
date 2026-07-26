@@ -43,6 +43,14 @@ sections:
       # each row must have a value in at least one of description or ticket
       at_least_one_of:
         - [description, ticket]
+      # ID 列は登録簿全体で一意でなければならない。並行起票や rebase / cherry-pick で
+      # 同一 PJR-ID が別行に混入した場合を検証で必ず落とす。
+      unique_columns:
+        - ID
+      # 表の PJR-ID と個票セルのファイル名 `pjr-XXXX-<topic>.md` の対応を検証する。
+      ticket_filename_check:
+        id_column: ID
+        ticket_column: ticket
       column_rules:
         ID:
           pattern: "^PJR-\\d{4}$"

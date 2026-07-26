@@ -12,11 +12,18 @@ interface ColumnRule {
   pattern?: string;
 }
 
+interface TicketFilenameCheck {
+  id_column: string;
+  ticket_column: string;
+}
+
 interface TableSchema {
   required_columns: string[];
   optional_columns?: string[];
   column_rules?: Record<string, ColumnRule>;
   at_least_one_of?: string[][];
+  unique_columns?: string[];
+  ticket_filename_check?: TicketFilenameCheck;
 }
 
 interface Section {
@@ -183,8 +190,14 @@ function validateTable(
 
   const rules = schema.column_rules ?? {};
   const atLeastOneOf = schema.at_least_one_of ?? [];
+  const uniqueColumns = schema.unique_columns ?? [];
+  const uniqueSeen: Record<string, Map<string, number>> = {};
+  for (const col of uniqueColumns) uniqueSeen[col] = new Map();
 
-  for (const row of table.children.slice(1) as TableRow[]) {
+  const dataRows = table.children.slice(1) as TableRow[];
+
+  for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
+    const row = dataRows[rowIndex];
     const cellValues: Record<string, string> = {};
     for (let i = 0; i < headers.length; i++) {
       const cell = row.children[i];
@@ -218,6 +231,79 @@ function validateTable(
         file.message(`${rowId}: [${group.join(", ")}] のうち少なくとも1列に値が必要です`, row);
       }
     }
+
+    for (const col of uniqueColumns) {
+      const value = cellValues[col];
+      if (value === undefined || value === "") continue;
+      const seen = uniqueSeen[col];
+      const firstRow = seen.get(value);
+      if (firstRow !== undefined) {
+        file.message(
+          `列 "${col}" の値 "${value}" が重複しています（${firstRow + 1} 行目と ${rowIndex + 1} 行目）`,
+          row,
+        );
+      } else {
+        seen.set(value, rowIndex);
+      }
+    }
+
+    if (schema.ticket_filename_check) {
+      const ticketColIndex = headers.indexOf(schema.ticket_filename_check.ticket_column);
+      const ticketCellNode = ticketColIndex >= 0 ? row.children[ticketColIndex] : undefined;
+      validateTicketFilename(
+        cellValues[schema.ticket_filename_check.id_column],
+        ticketCellNode,
+        rowId,
+        row,
+        file,
+      );
+    }
+  }
+}
+
+// 個票セル AST から個票ファイル名を取り出す。
+// pjr-index の個票セルは Markdown リンク（例: `[pjr-0001-topic](./pjr-0001-topic.md)`）で、
+// 表示テキストではなくリンク URL からファイル名を得る。個票なし（`-`）は undefined。
+function extractTicketFilename(cellNode: unknown): string | undefined {
+  const url = findLinkUrl(cellNode);
+  if (url === undefined) return undefined;
+  const match = url.match(/([^/]+\.md)$/);
+  return match ? match[1] : undefined;
+}
+
+function findLinkUrl(node: unknown): string | undefined {
+  if (typeof node !== "object" || node === null) return undefined;
+  const n = node as Record<string, unknown>;
+  if (n.type === "link" && typeof n.url === "string") return n.url;
+  if (Array.isArray(n.children)) {
+    for (const child of n.children as unknown[]) {
+      const url = findLinkUrl(child);
+      if (url !== undefined) return url;
+    }
+  }
+  return undefined;
+}
+
+// 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応を検証する。
+// 個票なし（`-`）は対象外。ファイル名が `<id 小文字>-` で始まらない場合を検出する。
+function validateTicketFilename(
+  id: string | undefined,
+  ticketCellNode: unknown,
+  rowId: string,
+  row: TableRow,
+  file: VFile,
+): void {
+  if (id === undefined || !/^PJR-\d{4}$/.test(id)) return;
+
+  const filename = extractTicketFilename(ticketCellNode);
+  if (filename === undefined) return;
+
+  const expectedPrefix = `${id.toLowerCase()}-`;
+  if (!filename.startsWith(expectedPrefix)) {
+    file.message(
+      `${rowId}: 個票ファイル名 "${filename}" が ID "${id}" と一致しません（期待: ${expectedPrefix}<topic>.md）`,
+      row,
+    );
   }
 }
 

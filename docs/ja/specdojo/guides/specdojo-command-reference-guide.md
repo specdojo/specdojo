@@ -105,6 +105,9 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `register reject`   | 項目を却下にし、個票を `deprecated` にする   | `specdojo register reject --project prj-0001 --id PJR-001`                  |
 | `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す   | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+
+`register renumber` は、並行起票や rebase / cherry-pick で PJR-ID が重複・衝突したときに使います。表の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。移動先 ID が使用済みの場合は何も書き換えずにエラー終了し、`--dry-run` で変更対象を事前に確認できます。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [specdojo-register-operation-guide.md](specdojo-register-operation-guide.md) を参照します。

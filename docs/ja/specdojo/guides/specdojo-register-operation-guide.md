@@ -193,3 +193,30 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使う。
 
 実行フローの詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
+
+## 9. PJR-ID 重複の検知と復旧
+
+`register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生します。表末尾への追記は通常 merge conflict になりますが、rebase や cherry-pick を経ると重複が検知されずに混入することがあります。
+
+重複は検証で必ず落ちます。次の検証は VSCode のリアルタイム検証と CI の両方で機能します。
+
+```bash
+npm run validate:schema:pjr-index
+```
+
+- 登録項目一覧に同じ PJR-ID が 2 行以上ある場合、重複した ID と該当行位置を示してエラーになる。
+- 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応が取れていない場合もエラーになる。
+
+重複や衝突を検出したら、`register renumber` で片方の項目を未使用の PJR-ID へ移します。
+
+```bash
+# まず変更対象を確認する
+specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140 --dry-run
+
+# 問題なければ適用する
+specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
+```
+
+- `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替える。
+- 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残らない。
+- 付け替え後は派生ビューも再生成される。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくい。
