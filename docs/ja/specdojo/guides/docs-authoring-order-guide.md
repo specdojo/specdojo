@@ -9,8 +9,8 @@ specdojo:
 
 Document Authoring Order Guide
 
-SpecDojoで扱うドキュメントの作成順・検討順について、以下のガイドラインを示します。
-ドキュメントの分類・ディレクトリ構成については [ドキュメント構成ガイド](docs-structure-guide.md) を参照してください。
+SpecDojoで扱う成果物の選定・検討順と、プロジェクト継続を判断する推奨ゲートについて、以下のガイドラインを示します。
+本書が示す順序はプロジェクト計画のたたき台であり、実際の実行順を固定するものではありません。
 
 **対象読者**
 
@@ -18,11 +18,18 @@ SpecDojoで扱うドキュメントの作成順・検討順について、以下
 
 **この文書で分かること**
 
-- 成果物の類型、基本的な作成順、GO/NOT GO の判断点、成果物カタログから実行管理へ展開する流れ
+- 成果物の計画上のグループ、基本的な選定・検討順、GO/NOT GO の判断点
 
 **次に読む文書**
 
-- 成果物ごとの目的は [成果物リファレンス](../references/specdojo-deliverables-reference.md)、実行計画への展開は [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+- 文書の分類・ディレクトリ構成は [ドキュメント構成ガイド](docs-structure-guide.md)、成果物ごとの目的は [成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
+- 選定した成果物を実行タスクへ展開する方法は [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+
+**この文書が扱わないこと**
+
+- 要求・要件・仕様・設計・実装の定義
+- プロダクトドキュメントとプロジェクトドキュメントの分類や配置
+- Schedule 上の実行順、担当者、日付、反復
 
 ## 1. 作成順・検討順のガイドライン
 
@@ -31,6 +38,8 @@ SpecDojoで扱うドキュメントの作成順・検討順について、以下
 > Frontmatter の `based_on` は各文書を作成する際に直接根拠として参照した文書のみを記載するため、
 > 本図の矢印と `based_on` が一致するわけではありません。
 
+- 本書の `A`〜`E` は、成果物を選定・検討するための計画上のグループです。要求・要件・仕様・設計・実装のフェーズや、ディレクトリの分類とは一致しません。
+- 本書の矢印は標準的な検討の先行関係を表します。実際の実行順、並行作業、反復、担当者、日付は Schedule で定義します。
 - 成果物カタログ（`dct-<domain>.yaml`）は、
   プロジェクトで管理対象とする成果物の単一の正本（SSOT）であり、各成果物の作成・更新・管理の起点となります。
   各類型（プロジェクト定義、プロジェクトマネジメント、プロダクト変更等）の成果物は、
@@ -41,7 +50,7 @@ SpecDojoで扱うドキュメントの作成順・検討順について、以下
   - C. プロジェクトマネジメント
   - D. プロダクト変更
   - E. プロダクト成果物（更に詳細な類型に分類）
-- 成果物の作成順は、`A → (C + B) → D → E` が基本になりますが、プロジェクトの状況に応じて柔軟に対応します。
+- 成果物の検討順は、`A → (C + B) → D → E` が基本になりますが、プロジェクトの状況に応じて柔軟に対応します。
   特に、`A. 立ち上げ`の成果物（概要・ステークホルダー・憲章）を起点として、
   `B. プロジェクト定義`（何を作るか）と `C. プロジェクトマネジメント`（どう進めるか）は並行して作成されることが多いです。
 - 図中の成果物カタログ（`dct-<domain>.yaml`）は同一種類の正本文書を表し、各サブグラフでは当該類型に関する登録範囲を示しています。
@@ -77,7 +86,7 @@ flowchart TB
   subgraph PM["C. プロジェクトマネジメント"]
   direction LR
     PM_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクトマネジメント用）"]
-    PM_EXE(["実行・管理"])
+    PM_EXE(["作成・更新"])
     PL["pm-plan<br/>プロジェクト管理計画"]
     CP["pm-communication-plan<br/>コミュニケーション計画"]
     QMP["pm-quality-management-plan<br/>品質管理計画"]
@@ -89,7 +98,7 @@ flowchart TB
   subgraph PD["B. プロジェクト定義"]
   direction LR
     PD_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロジェクト定義用）"]
-    PD_EXE(["実行・管理"])
+    PD_EXE(["作成・更新"])
     PS["prj-scope<br/>スコープ"]
     SC_AC["prj-success-criteria-and-acceptance-criteria<br/>成功基準と受入条件"]
     ACD["prj-assumptions-constraints-dependencies<br/>前提・制約・依存関係"]
@@ -105,12 +114,13 @@ flowchart TB
   end
 
   GT1{"GO/NOT GO"}
+  PM --> GT1
   PD --> GT1 --> PC
 
   subgraph PC["D. プロダクト変更"]
   direction LR
     PC_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト変更用）"]
-    PC_EXE(["実行・管理"])
+    PC_EXE(["作成・更新"])
     AS_IS["As-Is<br/>現状定義"]
     IMP["Impact<br/>影響範囲"]
     TRC["Traceability<br/>トレーサビリティ"]
@@ -128,7 +138,7 @@ flowchart TB
   subgraph DEL["E. プロダクト成果物"]
   direction LR
     DEL_DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ<br/>（プロダクト成果物用）"]
-    DEL_EXE(["実行・管理"])
+    DEL_EXE(["作成・更新"])
     DE["deliverables<br/>成果物"]
     DEL_DC --> DEL_EXE --> DE
   end
@@ -153,26 +163,15 @@ flowchart TB
 
 ```
 
-## 3. 実行・管理の流れ
+## 3. 成果物計画から実行計画への引き継ぎ
 
-`作成順・検討順の全体図`中の成果物カタログからプロジェクトドキュメントを作成する`実行・管理`の流れは以下になります。
+本書で成果物を選定・検討した後、管理対象と完了条件を成果物カタログに定義し、実際の作業を Schedule に展開します。
 
-```mermaid
-flowchart LR
+| 層             | 答える問い                               | 正本                |
+| -------------- | ---------------------------------------- | ------------------- |
+| 本書           | どの成果物を、どのような順序で検討するか | 本書のガイドライン  |
+| 成果物カタログ | 何を、どこに作成し、何を満たせば完了か   | `dct-<domain>.yaml` |
+| Schedule       | いつ、誰が、どの順で実行するか           | `sch-*.yaml`        |
 
-  PJR["pjr-index / pjr-&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
-  DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ"]
-  SCH["sch-track-&lt;track&gt;.yaml<br/>Schedule"]
-  EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
-  PV["pjr-views<br/>台帳ビュー（状態別・優先度別・担当者別）"]
-  PRR["pm-risk-register<br/>リスク登録簿"]
-  PL["pm-issue/change-request/decision-log<br/>課題/変更要求/意思決定<br/>ログ"]
-
-  PJR --> DC --> SCH --> EXE
-  PJR --> PV
-  PJR --> PRR
-  PJR --> PL
-
-  classDef projectWise fill:#fff3bf,stroke:#f08c00,color:#000;
-  class PJR,DC,SCH,EXE,PV,PRR,PL projectWise;
-```
+成果物カタログから Schedule への展開、依存関係、反復、ゲートの具体的な設計は
+[Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
