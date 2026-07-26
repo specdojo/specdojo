@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 
 // ================================
 // Types
@@ -57,6 +58,11 @@ export const VALID_TYPES = [
 ] as const;
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
+
+// 個票 Frontmatter の文書成熟度（pjr-rulebook「個票 status の遷移基準」）。
+// pjr-index の処理状態（VALID_STATUSES）とは別の状態軸として扱う。
+export const VALID_TICKET_STATUSES = ["draft", "ready", "deprecated"] as const;
+export type TicketStatus = (typeof VALID_TICKET_STATUSES)[number];
 
 // 登録項目一覧テーブルは pjr-rulebook「本文構成」で章 1 に固定される。
 // 見出し文言（言語依存）ではなく章番号でセクションを特定し、i18n 非依存にする。
@@ -625,6 +631,99 @@ function applyItemUpdate(opts: {
 }
 
 // ================================
+// Ticket Frontmatter Status
+// ================================
+
+const FRONTMATTER_BLOCK_RE = /^---\r?\n([\s\S]*?)\r?\n---/;
+
+// pjr-index の「個票」セル（例: `[pjr-0001-topic](./pjr-0001-topic.md)`）から
+// project-register ディレクトリ相対のファイル名を取り出す。個票なし（`-`）は undefined。
+export function parseTicketFilename(ticketCell: string): string | undefined {
+  if (ticketCell === "-" || ticketCell.trim() === "") return undefined;
+  const match = ticketCell.match(/\]\(\.\/([^)]+\.md)\)/);
+  return match ? match[1] : undefined;
+}
+
+// type 固有の必須節が固まっているかの判定。見出し文言（言語依存）に依存せず、
+// 本文に記入プレースホルダ `_TODO_` が残っていれば「未確定」とみなす。
+function ticketBodyHasTodo(content: string): boolean {
+  const { body } = parseSpecdojoDocument(content);
+  return body.includes("_TODO_");
+}
+
+// 個票 Frontmatter（specdojo 名前空間）内の `status:` 行を targetStatus へ書き換える。
+// 既に目的の値なら changed=false を返し、内容を変えない（冪等）。
+export function updateTicketFrontmatterStatus(
+  content: string,
+  targetStatus: TicketStatus,
+): { content: string; changed: boolean } {
+  const block = content.match(FRONTMATTER_BLOCK_RE);
+  if (!block) {
+    throw new Error("frontmatter not found in ticket file");
+  }
+  const statusLineRe = /^(\s*status:[ \t]*)(\S+)(.*)$/m;
+  const statusLine = block[1].match(statusLineRe);
+  if (!statusLine) {
+    throw new Error("status field not found in ticket frontmatter");
+  }
+  if (statusLine[2] === targetStatus) {
+    return { content, changed: false };
+  }
+  const newFrontmatter = block[1].replace(
+    statusLineRe,
+    (_m, prefix: string, _old: string, suffix: string) => `${prefix}${targetStatus}${suffix}`,
+  );
+  const newContent = content.replace(block[1], () => newFrontmatter);
+  return { content: newContent, changed: true };
+}
+
+// close / reject に伴い、対象個票の Frontmatter `status` を昇格・廃止する。
+// - 個票なし（個票列が `-`）や個票ファイル不在は、エラーにせず処理状態のみで完了する。
+// - `ready` への昇格は必須節に `_TODO_` が残っていないことを条件とし、残る場合は警告して据え置く。
+export function updateTicketStatusForItem(opts: {
+  paths: RegisterPaths;
+  item: PjrItem;
+  targetStatus: TicketStatus;
+  dryRun: boolean;
+}): void {
+  const filename = parseTicketFilename(opts.item.ticket);
+  if (!filename) return;
+
+  const ticketPath = join(opts.paths.projectRegisterPath, filename);
+  if (!existsSync(ticketPath)) {
+    process.stdout.write(
+      `Warning: ticket file not found; skipped status update for ${opts.item.id}: ${ticketPath}\n`,
+    );
+    return;
+  }
+
+  const content = readFileSync(ticketPath, "utf8");
+
+  if (opts.targetStatus === "ready" && ticketBodyHasTodo(content)) {
+    process.stdout.write(
+      `Warning: ${opts.item.id} ticket has unresolved _TODO_; kept as draft (not promoted to ready): ${ticketPath}\n`,
+    );
+    return;
+  }
+
+  const { content: updated, changed } = updateTicketFrontmatterStatus(content, opts.targetStatus);
+  if (!changed) {
+    if (opts.dryRun) {
+      process.stdout.write(`Ticket already ${opts.targetStatus}: ${ticketPath}\n`);
+    }
+    return;
+  }
+
+  if (opts.dryRun) {
+    process.stdout.write(`Would update ticket status → ${opts.targetStatus}: ${ticketPath}\n`);
+    return;
+  }
+
+  writeFileSync(ticketPath, updated, "utf8");
+  process.stdout.write(`Updated ticket status → ${opts.targetStatus}: ${ticketPath}\n`);
+}
+
+// ================================
 // Error Handling & Shared Helpers
 // ================================
 
@@ -853,6 +952,7 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
       applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -882,6 +982,7 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
       applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      updateTicketStatusForItem({ paths, item, targetStatus: "deprecated", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }

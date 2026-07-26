@@ -199,7 +199,7 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 - 表示 ID は `pjr-index` の「ID」と、個票の H1 および文書 ID に含まれる `pjr-XXXX` とを一致させる。
 - `pjr-index` の「分類」は個票 Frontmatter の `item_type` と一致させる。
 - `pjr-index` の「結論」は個票の結果・結論を1文で要約し、詳細を重複記載しない。
-- 状態遷移は register コマンドを優先し、個票 Frontmatter の文書成熟度を処理状態に連動させない。
+- 状態遷移は register コマンドを優先し、個票 Frontmatter の文書成熟度は処理状態をそのまま写像せず、記述が固まっているかを判定して遷移させる（`個票 status の遷移基準` を参照）。
 - 個票を追加・削除・改名した場合は、`pjr-index` の「個票」リンクを同じ変更で更新する。
 - `reopen` した場合は、終端時の記録を削除せず、再開理由と新しい対応状況を追記する。
 
@@ -207,6 +207,22 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 
 - 値は `pjr-index.schema.yaml` に定義された enum のみを使用し、表記ゆれを作らない。値の一覧は schema を正本とする。
 - 各値の意味と選び方は [[specdojo-register-operation-guide]] の `type の選び方` および `状態遷移とコマンド` を参照する。
+
+### 5.6. 個票 status の遷移基準
+
+- 個票 Frontmatter の `status` は文書の成熟度を表す状態軸であり、`pjr-index` の処理状態を機械的に写像した値ではない。両者を同一視せず、記述が固まっているかを判定して遷移させる。
+- 各値は次の時点で遷移させる。
+
+| `status`     | 意味                                              | 遷移させる時点                                                                                  |
+| ------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `draft`      | 作成直後。type 固有の必須節が未確定               | `register add --ticket` で個票を生成した時点                                                    |
+| `ready`      | type 固有の必須節が固まり `_TODO_` が残っていない | 項目を `register close`（`done` / `decided`）し、必須節に `_TODO_` が残っていないと判定した時点 |
+| `deprecated` | 却下・破棄され成熟度を追う必要がない              | 項目を `register reject`（`rejected`）した時点                                                  |
+
+- 遷移は register コマンド（`close` / `reject`）が担い、個票 Frontmatter を直接手書きで書き換えない。
+- `ready` への昇格は、個票の必須節（type 別の標準構成が要求する節。`todo` なら概要・完了条件・作業内容・対応結果）に記入プレースホルダ `_TODO_` が残っていないことを条件とする。`_TODO_` が残る個票は `close` しても `ready` へ昇格させず、`draft` のまま警告する。
+- 個票を持たない登録項目（個票列が `-`）は成熟度を追う対象がないため、`close` / `reject` は処理状態のみ更新し、status 遷移は行わない。
+- 既に目的の `status` になっている個票を再度 `close` / `reject` しても内容は変化させない。
 
 ## 6. 禁止事項
 

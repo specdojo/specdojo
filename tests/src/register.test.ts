@@ -1,11 +1,21 @@
-import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { load } from "js-yaml";
 import fg from "fast-glob";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
-import { extractTableHeading, injectViewSlots, parsePjrIndex } from "../../src/register.js";
+import {
+  type PjrItem,
+  type RegisterPaths,
+  extractTableHeading,
+  injectViewSlots,
+  parsePjrIndex,
+  parseTicketFilename,
+  updateTicketFrontmatterStatus,
+  updateTicketStatusForItem,
+} from "../../src/register.js";
 
 // 章番号アンカーと見出し流用が言語非依存であることを固定する。
 // 見出し文言・列名を英語にしても、章 1 を登録項目一覧として解釈できることを検証する。
@@ -132,5 +142,177 @@ describe("injectViewSlots — 派生ビュー template の slot 差し込み", (
     expect(() => injectViewSlots(template, { table: "x" })).toThrow(
       /Unknown view-slot in template: unknown/,
     );
+  });
+});
+
+describe("parseTicketFilename — 個票セルからファイル名を取り出す", () => {
+  it("相対リンクセルからファイル名を返す", () => {
+    const cell = "[pjr-0001-auth-boundary](./pjr-0001-auth-boundary.md)";
+
+    expect(parseTicketFilename(cell)).toBe("pjr-0001-auth-boundary.md");
+  });
+
+  it("個票なし（`-`）は undefined を返す", () => {
+    expect(parseTicketFilename("-")).toBeUndefined();
+  });
+});
+
+describe("updateTicketFrontmatterStatus — 個票 Frontmatter の status 書き換え", () => {
+  const ticket = (status: string): string =>
+    [
+      "---",
+      "specdojo:",
+      "  id: prj-0001:pjr-0001-topic",
+      "  type: project",
+      `  status: ${status}`,
+      "  rulebook: pjr-rulebook",
+      "---",
+      "",
+      "# PJR-0001 タイトル",
+      "",
+      "本文",
+      "",
+    ].join("\n");
+
+  it("draft を ready へ書き換え、本文を保持する", () => {
+    const result = updateTicketFrontmatterStatus(ticket("draft"), "ready");
+
+    expect(result.changed).toBe(true);
+    expect(result.content).toContain("  status: ready");
+    expect(result.content).not.toContain("  status: draft");
+    expect(result.content).toContain("# PJR-0001 タイトル");
+  });
+
+  it("既に目的の status なら changed=false で内容を変えない", () => {
+    const input = ticket("ready");
+    const result = updateTicketFrontmatterStatus(input, "ready");
+
+    expect(result.changed).toBe(false);
+    expect(result.content).toBe(input);
+  });
+
+  it("frontmatter が無い場合は文脈付きで失敗する", () => {
+    expect(() => updateTicketFrontmatterStatus("# 見出しのみ\n", "ready")).toThrow(
+      /frontmatter not found/,
+    );
+  });
+});
+
+describe("updateTicketStatusForItem — close / reject に伴う個票 status 遷移", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const makeItem = (ticketCell: string): PjrItem => ({
+    id: "PJR-0001",
+    status: "done",
+    title: "t",
+    description: "d",
+    type: "todo",
+    priority: "medium",
+    owner: "ARC",
+    due: "-",
+    completed: "2026-07-26",
+    conclusion: "-",
+    ticket: ticketCell,
+  });
+
+  const buildTicket = (status: string, body: string): string =>
+    [
+      "---",
+      "specdojo:",
+      "  id: prj-0001:pjr-0001-topic",
+      "  type: project",
+      `  status: ${status}`,
+      "  rulebook: pjr-rulebook",
+      "---",
+      "",
+      "# PJR-0001 タイトル",
+      "",
+      body,
+      "",
+    ].join("\n");
+
+  const withTempRepo = (fn: (paths: RegisterPaths, ticketPath: string) => void): void => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-ticket-"));
+    try {
+      const paths: RegisterPaths = {
+        projectId: "prj-0001",
+        projectRegisterPath: dir,
+        pjrIndexPath: join(dir, "pjr-index.md"),
+        generatedPath: join(dir, "generated"),
+        controlsGeneratedPath: join(dir, "generated"),
+      };
+      const ticketPath = join(dir, "pjr-0001-topic.md");
+      fn(paths, ticketPath);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  };
+
+  it("close 相当: 必須節に _TODO_ が無ければ ready へ昇格する", () => {
+    withTempRepo((paths, ticketPath) => {
+      writeFileSync(ticketPath, buildTicket("draft", "対応結果を記述済み"), "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: false });
+
+      expect(readFileSync(ticketPath, "utf8")).toContain("  status: ready");
+    });
+  });
+
+  it("警告: 本文に _TODO_ が残る場合は ready へ昇格せず draft を保つ", () => {
+    withTempRepo((paths, ticketPath) => {
+      const original = buildTicket("draft", "対応結果: _TODO_");
+      writeFileSync(ticketPath, original, "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: false });
+
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      const warned = stdout.mock.calls.some((call) =>
+        String(call[0]).includes("unresolved _TODO_"),
+      );
+      expect(warned).toBe(true);
+    });
+  });
+
+  it("reject 相当: _TODO_ が残っていても deprecated へ更新する", () => {
+    withTempRepo((paths, ticketPath) => {
+      writeFileSync(ticketPath, buildTicket("draft", "対応結果: _TODO_"), "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "deprecated", dryRun: false });
+
+      expect(readFileSync(ticketPath, "utf8")).toContain("  status: deprecated");
+    });
+  });
+
+  it("個票なし（個票列が `-`）はエラーにならず何も書き換えない", () => {
+    withTempRepo((paths) => {
+      const item = makeItem("-");
+
+      expect(() =>
+        updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: false }),
+      ).not.toThrow();
+    });
+  });
+
+  it("dry-run では個票を書き換えず、変更予定を表示する", () => {
+    withTempRepo((paths, ticketPath) => {
+      const original = buildTicket("draft", "対応結果を記述済み");
+      writeFileSync(ticketPath, original, "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: true });
+
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      const previewed = stdout.mock.calls.some((call) =>
+        String(call[0]).includes("Would update ticket status → ready"),
+      );
+      expect(previewed).toBe(true);
+    });
   });
 });

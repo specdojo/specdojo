@@ -101,8 +101,8 @@ Schedule設計の詳細は [specdojo-schedule-design-guide.md](specdojo-schedule
 | `register start`    | 項目を対応中へ変更する                       | `specdojo register start --project prj-0001 --id PJR-001`                   |
 | `register wait`     | 項目を待ち状態へ変更する                     | `specdojo register wait --project prj-0001 --id PJR-001`                    |
 | `register review`   | 項目をレビュー状態へ変更する                 | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`    | 項目を完了にする                             | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`   | 項目を却下にする                             | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register close`    | 項目を完了にし、個票を `ready` へ昇格する    | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`   | 項目を却下にし、個票を `deprecated` にする   | `specdojo register reject --project prj-0001 --id PJR-001`                  |
 | `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
 
