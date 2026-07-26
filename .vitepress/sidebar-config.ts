@@ -189,7 +189,7 @@ const productChangeRulebooks = [
 
 export const specdojoSidebarItems = [
   {
-    text: "ガイドライン",
+    text: "ガイド",
     collapsed: false,
     items: [
       guide("ドキュメントの構成", "docs-structure-guide"),
