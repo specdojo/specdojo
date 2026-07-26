@@ -5,7 +5,7 @@ specdojo:
   status: draft
 ---
 
-# 実行設定ガイド
+# exec設定ガイド
 
 Exec Configuration Guide
 
@@ -21,7 +21,7 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 **次に読む文書**
 
-- 設定を使った実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、Schedule 側の実行要件は [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+- 設定を使った実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、Schedule 側の実行要件は [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
 
 ## 1. 設定ファイルの分担
 

@@ -7,7 +7,7 @@ specdojo:
     - docs-contents-guide
 ---
 
-# SpecDojo 成果物リファレンス
+# 成果物リファレンス
 
 SpecDojo Deliverables Reference
 

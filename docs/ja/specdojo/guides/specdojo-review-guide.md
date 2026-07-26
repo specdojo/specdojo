@@ -5,7 +5,7 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo レビューガイド
+# レビューガイド
 
 本ドキュメントは SpecDojo における **成果物レビューの進め方**を定義する。
 
@@ -21,7 +21,7 @@ specdojo:
 
 **次に読む文書**
 
-- レビュー時の参考資料の使い方は [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md)、plan・result の共通ライフサイクルは [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照してください。
+- レビュー時の参考資料の使い方は [参考資料活用ガイド](specdojo-reference-materials-guide.md)、plan・result の共通ライフサイクルは [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照してください。
 
 ## 1. レビューの役割
 

@@ -5,11 +5,11 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo Schedule設計ガイド
+# Schedule設計ガイド
 
 SpecDojo Schedule Design Guide
 
-Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク粒度、依存関係、CPM の考え方を説明します。コマンドの短い使い方は [specdojo-command-reference.md](../references/specdojo-command-reference.md) を参照します。
+Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク粒度、依存関係、CPM の考え方を説明します。コマンドの短い使い方は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- Schedule と成果物カタログの関係は [成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、実行設定は [実行設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+- Schedule と成果物カタログの関係は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、実行設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
 
 ## 1. Scheduleの役割
 
@@ -34,7 +34,7 @@ Schedule は「いつ、どの順序で、誰が実行するか」を定義す�
 | エージェント定義 | `pm-members.yaml`              |
 | 実行共通設定     | `.specdojo/exec-defaults.yaml` |
 
-成果物カタログとの責務分担は [specdojo-deliverables-to-schedule-guide.md](specdojo-deliverables-to-schedule-guide.md) も参照します。
+成果物カタログとの責務分担は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) も参照します。
 
 ## 2. Scheduleファイル
 
@@ -207,7 +207,7 @@ phase_sets:
 | `capabilities` | 必要なツールや能力を示す                 |
 | `proficiency`  | 必要な習熟度を示す                       |
 
-エージェント選択の詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) を参照します。
+エージェント選択の詳細は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
 
 ## 8. exec build時のフェーズ解決
 

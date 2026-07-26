@@ -10,7 +10,7 @@ specdojo:
     - document-metadata-standard
 ---
 
-# SpecDojo 全体概要ガイド
+# 全体概要ガイド
 
 SpecDojo Overview Guide
 
@@ -62,7 +62,7 @@ SpecDojo の文書は、説明・判断・方針を記述する Markdown と、�
 と各形式のスキーマを正本とします。
 
 これらの設計理由、規約と設定の責務分担、運用上の判断基準は
-[SpecDojo ドキュメンテーション ポリシーガイド](specdojo-documentation-policy-guide.md)
+[ドキュメンテーションポリシーガイド](specdojo-documentation-policy-guide.md)
 を参照してください。
 
 ## 3. SpecDojo Unitと二種類の文書
@@ -111,7 +111,7 @@ SpecDojo では、成果物と、その作成を支援する資料を分けて�
 
 これらは同じ内容を再掲するものではなく、異なる問いに答える資料です。
 詳細な役割分担と exec plan からの参照方法は
-[SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md)
+[参考資料活用ガイド](specdojo-reference-materials-guide.md)
 を参照してください。
 
 ここでいう `reference` は文書種別です。exec plan で参照する rulebook、recipe、sample、template とは別の役割として扱います。
@@ -146,9 +146,9 @@ flowchart LR
 成果物の検討順と判断点は
 [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、
 個々の成果物の目的は
-[SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md)、
+[成果物リファレンス](../references/specdojo-deliverables-reference.md)、
 成果物を確定するレビューは
-[SpecDojo レビューガイド](specdojo-review-guide.md)
+[レビューガイド](specdojo-review-guide.md)
 を参照してください。
 
 ## 6. 成果物から実行管理への展開
@@ -180,17 +180,17 @@ flowchart LR
 | 実行イベント・生成物 | タスクの状態、実行履歴、Ready、クリティカルパスなどを表す |
 
 成果物カタログと Schedule の関係は
-[成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、
+[成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、
 タスク設計は
-[SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)、
+[Schedule設計ガイド](specdojo-schedule-design-guide.md)、
 plan と result の管理は
-[SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)
+[plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)
 を参照してください。
 
 CLI の導入は
-[SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)、
+[CLI概要ガイド](specdojo-cli-overview-guide.md)、
 実行と状態管理は
-[SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)
+[exec運用ガイド](specdojo-exec-operation-guide.md)
 を参照してください。
 
 ## 7. 実行を支える機能
@@ -203,24 +203,24 @@ CLI の導入は
 | review             | 成果物の妥当性、整合性、トレーサビリティを確認する   | [レビュー](specdojo-review-guide.md)                      |
 | routine            | 時刻条件のある定期作業を実行する                     | [CLI概要](specdojo-cli-overview-guide.md)                 |
 | branch / worktree  | プロジェクトやタスクの変更を分離して安全に統合する   | [ブランチワークフロー](specdojo-branch-workflow-guide.md) |
-| exec設定           | エージェント、実行要件、権限、共通ポリシーを設定する | [実行設定](specdojo-exec-config-guide.md)                 |
+| exec設定           | エージェント、実行要件、権限、共通ポリシーを設定する | [exec設定](specdojo-exec-config-guide.md)                 |
 
 これらはすべてのプロジェクトで一度に導入する必要はありません。
 まず成果物と完了条件を明確にし、必要になった管理機能を段階的に利用します。
 
 ## 8. 目的別の次の読み物
 
-| 読者の目的                     | 最初に読む文書                                                                      |
-| ------------------------------ | ----------------------------------------------------------------------------------- |
-| 文書の分類と配置を理解したい   | [ドキュメント構成ガイド](docs-structure-guide.md)                                   |
-| 成果物の種類と内容を知りたい   | [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md)     |
-| 成果物を検討する順序を知りたい | [ドキュメント作成順ガイド](docs-authoring-order-guide.md)                           |
-| CLIを使い始めたい              | [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)                            |
-| Scheduleを設計したい           | [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)                    |
-| タスクを実行・再実行したい     | [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)                         |
-| planとresultの扱いを知りたい   | [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) |
-| コマンドとオプションを調べたい | [SpecDojoコマンドリファレンス](../references/specdojo-command-reference.md)         |
-| Markdownの編集方法を知りたい   | [ドキュメント編集ガイド](docs-editing-guide.md)                                     |
+| 読者の目的                     | 最初に読む文書                                                             |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| 文書の分類と配置を理解したい   | [ドキュメント構成ガイド](docs-structure-guide.md)                          |
+| 成果物の種類と内容を知りたい   | [成果物リファレンス](../references/specdojo-deliverables-reference.md)     |
+| 成果物を検討する順序を知りたい | [ドキュメント作成順ガイド](docs-authoring-order-guide.md)                  |
+| CLIを使い始めたい              | [CLI概要ガイド](specdojo-cli-overview-guide.md)                            |
+| Scheduleを設計したい           | [Schedule設計ガイド](specdojo-schedule-design-guide.md)                    |
+| タスクを実行・再実行したい     | [exec運用ガイド](specdojo-exec-operation-guide.md)                         |
+| planとresultの扱いを知りたい   | [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) |
+| コマンドとオプションを調べたい | [CLIコマンドリファレンス](../references/specdojo-command-reference.md)     |
+| Markdownの編集方法を知りたい   | [ドキュメント編集ガイド](docs-editing-guide.md)                            |
 
 最初に全機能を理解する必要はありません。
 導入時は「構成を理解する」「必要な成果物を選ぶ」「小さな Schedule で実行する」の順に進み、必要に応じて登録簿、レビュー、自動実行へ範囲を広げます。

@@ -26,6 +26,10 @@ const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem 
   link: specdojoLink("rulebooks", `${id}-rulebook`),
   ...(items ? { collapsed: true, items } : {}),
 });
+const recipe = (text: string, id: string): SidebarItem => ({
+  text,
+  link: specdojoLink("recipes", `${id}-recipe`),
+});
 const group = (text: string, items: SidebarItem[], collapsed = true): SidebarItem => ({
   text,
   collapsed,
@@ -60,7 +64,7 @@ const projectManagementRulebooks = [
     rulebook("組織体制とRACI", "pm-raci"),
   ]),
   group("管理台帳・管理ビュー", [
-    rulebook("プロジェクト登録簿", "pjr-index"),
+    rulebook("プロジェクト登録簿", "pjr"),
     rulebook("リスク登録簿", "pm-risk-register"),
     rulebook("課題ログ", "pm-issue-log"),
     rulebook("変更要求ログ", "pm-change-request-log"),
@@ -191,30 +195,58 @@ const productChangeRulebooks = [
   group("移行", migrationRulebooks),
 ];
 
+// recipe は rulebook と同じ並び順にし、成果物ごとに rulebook / recipe を対で辿れるようにする。
+const projectDefinitionRecipes = [
+  recipe("プロジェクト概要", "prj-overview"),
+  recipe("ステークホルダー登録簿", "prj-stakeholder-register"),
+  recipe("プロジェクト憲章", "prj-charter"),
+  recipe("プロジェクトスコープ", "prj-scope"),
+  recipe("成功基準と受入条件", "prj-success-criteria-and-acceptance-criteria"),
+  recipe("プロジェクト課題と解決アプローチ", "prj-issues-and-approach"),
+  recipe("前提・制約・依存関係", "prj-assumptions-constraints-dependencies"),
+  recipe("代替案の比較", "prj-comparison-of-alternatives"),
+];
+
+const projectManagementRecipes = [
+  recipe("プロジェクト管理計画", "pm-plan"),
+  recipe("コミュニケーション計画", "pm-communication-plan"),
+  recipe("品質管理計画", "pm-quality-management-plan"),
+  recipe("組織とロールの定義", "pm-organization"),
+  recipe("ロール定義", "pm-roles"),
+  recipe("メンバー定義", "pm-members"),
+  recipe("組織体制とRACI", "pm-raci"),
+];
+
+const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
+
+// サイドバーの表示名は対象ページの H1 に揃える。guide は「ガイド」グループ配下で
+// 種別が自明なため接尾辞「ガイド」を落とし、reference は H1 をそのまま使う。
+// クリック前後でタイトルが変わらないようにするため、H1 を変更したらここも合わせて更新する。
 export const specdojoSidebarItems = [
   {
     text: "ガイド",
     collapsed: false,
     items: [
-      guide("SpecDojo全体概要", "specdojo-overview-guide"),
-      guide("ドキュメントの構成", "docs-structure-guide"),
-      guide("ドキュメントの作成順", "docs-authoring-order-guide"),
-      guide("ドキュメントのフェーズ概要", "docs-phases-overview-guide"),
+      guide("全体概要", "specdojo-overview-guide"),
+      guide("ドキュメント構成", "docs-structure-guide"),
+      guide("ドキュメント作成順", "docs-authoring-order-guide"),
+      guide("ドキュメントフェーズ概要", "docs-phases-overview-guide"),
       guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
-      guide("参考資料の扱い", "specdojo-reference-materials-guide"),
+      guide("参考資料活用", "specdojo-reference-materials-guide"),
+      guide("ドキュメント編集", "docs-editing-guide"),
       guide("レビュー", "specdojo-review-guide"),
       group(
         "スケジュールと実行",
         [
           guide("CLI概要", "specdojo-cli-overview-guide"),
-          guide("成果物からスケジュールへ", "specdojo-deliverables-to-schedule-guide"),
-          guide("スケジュール設計", "specdojo-schedule-design-guide"),
-          guide("実行運用", "specdojo-exec-operation-guide"),
+          guide("成果物カタログからScheduleへの展開", "specdojo-deliverables-to-schedule-guide"),
+          guide("Schedule設計", "specdojo-schedule-design-guide"),
+          guide("exec運用", "specdojo-exec-operation-guide"),
           guide("登録簿運用", "specdojo-register-operation-guide"),
-          guide("実行設定", "specdojo-exec-config-guide"),
+          guide("exec設定", "specdojo-exec-config-guide"),
           guide("plan/resultライフサイクル", "specdojo-plan-result-lifecycle-guide"),
-          guide("ブランチ運用", "specdojo-branch-workflow-guide"),
-          guide("worktree運用", "specdojo-exec-worktree-guide"),
+          guide("ブランチワークフロー", "specdojo-branch-workflow-guide"),
+          guide("exec worktree運用", "specdojo-exec-worktree-guide"),
         ],
         false,
       ),
@@ -224,14 +256,18 @@ export const specdojoSidebarItems = [
     text: "リファレンス",
     collapsed: false,
     items: [
-      reference("SpecDojo 成果物リファレンス", "specdojo-deliverables-reference"),
+      reference("成果物リファレンス", "specdojo-deliverables-reference"),
       reference("CLIコマンドリファレンス", "specdojo-command-reference"),
     ],
   },
   {
-    text: "How-to",
+    text: "レシピ",
     collapsed: true,
-    items: [guide("Markdown編集", "docs-editing-guide")],
+    items: [
+      group("プロジェクト定義", projectDefinitionRecipes),
+      group("プロジェクトマネジメント", projectManagementRecipes),
+      group("実行", execRecipes),
+    ],
   },
   {
     text: "標準",

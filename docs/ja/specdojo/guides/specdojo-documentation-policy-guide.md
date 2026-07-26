@@ -5,7 +5,7 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo ドキュメンテーション ポリシーガイド
+# ドキュメンテーションポリシーガイド
 
 SpecDojo Documentation Policy Guide
 

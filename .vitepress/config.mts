@@ -128,7 +128,9 @@ function makeSearchDocIdText(docId: string): string {
   const localId = docId.includes(":") ? docId.slice(docId.lastIndexOf(":") + 1) : undefined;
   if (localId && localId !== docId) aliases.push(localId);
 
-  const weightedAliases = aliases.flatMap((alias, index) => Array(index === 0 ? 80 : 40).fill(alias));
+  const weightedAliases = aliases.flatMap((alias, index) =>
+    Array(index === 0 ? 80 : 40).fill(alias),
+  );
   return `ドキュメントID Document ID ${weightedAliases.join(" ")}`;
 }
 
@@ -585,7 +587,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: "ホーム", link: "/ja/" },
-          { text: "SpecDojo", link: "/ja/specdojo/guides/docs-phases-overview" },
+          { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
           {
             text: "プロジェクト",
             link: "/ja/projects/prj-0001/020-project-definition/prj-overview",

@@ -9,56 +9,56 @@ SpecDojo は、**仕様駆動開発のためのドキュメントフレームワ
 
 初めて SpecDojo に触れる場合は、次の順に読むと全体像をつかめます。
 
-1. [SpecDojo 全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)：SpecDojo の目的、文書体系、成果物から実行管理までの流れを説明します。
+1. [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)：SpecDojo の目的、文書体系、成果物から実行管理までの流れを説明します。
 2. [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)：プロダクト文書とプロジェクト文書の分類、配置を説明します。
 3. [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)：プロジェクトで成果物を検討・作成する順序を説明します。
 
-CLI による実行管理から確認したい場合は、[SpecDojo CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)から始めてください。
+CLI による実行管理から確認したい場合は、[CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)から始めてください。
 
 ## 目的から探す
 
 ### SpecDojoの考え方を理解する
 
-| 知りたいこと                           | 参照先                                                                                                   |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| SpecDojo 全体の構成と流れ              | [SpecDojo 全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                                  |
-| ドキュメンテーションの原則             | [SpecDojo ドキュメンテーション ポリシーガイド](./specdojo/guides/specdojo-documentation-policy-guide.md) |
-| 要求・要件・仕様・設計・実装の違い     | [ドキュメントフェーズ概要](./specdojo/guides/docs-phases-overview-guide.md)                              |
-| プロダクト文書とプロジェクト文書の構造 | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                                      |
+| 知りたいこと                           | 参照先                                                                                         |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| SpecDojo 全体の構成と流れ              | [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                                 |
+| ドキュメンテーションの原則             | [ドキュメンテーションポリシーガイド](./specdojo/guides/specdojo-documentation-policy-guide.md) |
+| 要求・要件・仕様・設計・実装の違い     | [ドキュメントフェーズ概要ガイド](./specdojo/guides/docs-phases-overview-guide.md)              |
+| プロダクト文書とプロジェクト文書の構造 | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                            |
 
 ### 作成する成果物を決める
 
-| やりたいこと                                   | 参照先                                                                                  |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
-| 成果物の種類、目的、主な内容を調べる           | [SpecDojo 成果物リファレンス](./specdojo/references/specdojo-deliverables-reference.md) |
-| 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)             |
-| rulebook、recipe、sample、templateを使い分ける | [SpecDojo 参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md)  |
+| やりたいこと                                   | 参照先                                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| 成果物の種類、目的、主な内容を調べる           | [成果物リファレンス](./specdojo/references/specdojo-deliverables-reference.md) |
+| 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)    |
+| rulebook、recipe、sample、templateを使い分ける | [参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md)  |
 
 成果物を実際に記述するときは、`specdojo/rulebooks/`で対象成果物の rulebook を確認し、`specdojo/templates/`と`specdojo/samples/`を雛形・記述例として利用します。
 
 ### 成果物の作成を計画する
 
-| やりたいこと                                 | 参照先                                                                                                       |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| 成果物カタログからScheduleへの流れを理解する | [成果物カタログからスケジュールへの展開ガイド](./specdojo/guides/specdojo-deliverables-to-schedule-guide.md) |
-| フェーズ、タスク、依存関係、反復を設計する   | [SpecDojo Schedule設計ガイド](./specdojo/guides/specdojo-schedule-design-guide.md)                           |
+| やりたいこと                                 | 参照先                                                                                                   |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 成果物カタログからScheduleへの流れを理解する | [成果物カタログからScheduleへの展開ガイド](./specdojo/guides/specdojo-deliverables-to-schedule-guide.md) |
+| フェーズ、タスク、依存関係、反復を設計する   | [Schedule設計ガイド](./specdojo/guides/specdojo-schedule-design-guide.md)                                |
 
 ### プロジェクトを実行・管理する
 
-| やりたいこと                               | 参照先                                                                                                |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| CLIの役割、初期設定、代表フローを知る      | [SpecDojo CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
-| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)                        |
-| 課題、リスク、変更要求、意思決定を管理する | [SpecDojo 登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
-| Scheduleのタスクを実行・再実行する         | [SpecDojo exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
-| エージェント、権限、共通実行設定を変更する | [実行設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                                     |
-| planとresultの生成・保管・再実行を理解する | [SpecDojo plan/resultライフサイクルガイド](./specdojo/guides/specdojo-plan-result-lifecycle-guide.md) |
-| worktreeを使って手動で隔離実行する         | [SpecDojo exec worktreeガイド](./specdojo/guides/specdojo-exec-worktree-guide.md)                     |
-| projectとtaskのブランチを運用する          | [SpecDojo ブランチワークフローガイド](./specdojo/guides/specdojo-branch-workflow-guide.md)            |
+| やりたいこと                               | 参照先                                                                                       |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| CLIの役割、初期設定、代表フローを知る      | [CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
+| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)               |
+| 課題、リスク、変更要求、意思決定を管理する | [登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
+| Scheduleのタスクを実行・再実行する         | [exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
+| エージェント、権限、共通実行設定を変更する | [exec設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                            |
+| planとresultの生成・保管・再実行を理解する | [plan/resultライフサイクルガイド](./specdojo/guides/specdojo-plan-result-lifecycle-guide.md) |
+| worktreeを使って手動で隔離実行する         | [exec worktree運用ガイド](./specdojo/guides/specdojo-exec-worktree-guide.md)                 |
+| projectとtaskのブランチを運用する          | [ブランチワークフローガイド](./specdojo/guides/specdojo-branch-workflow-guide.md)            |
 
 ### 成果物をレビューする
 
-成果物の妥当性、整合性、トレーサビリティを確認し、review planとreview resultを残す方法は、[SpecDojo レビューガイド](./specdojo/guides/specdojo-review-guide.md)を参照してください。
+成果物の妥当性、整合性、トレーサビリティを確認し、review planとreview resultを残す方法は、[レビューガイド](./specdojo/guides/specdojo-review-guide.md)を参照してください。
 
 ### Markdownを編集する
 
@@ -78,7 +78,7 @@ SpecDojo を利用するリポジトリは、次のいずれかの方法で準�
 3. 小さな Schedule に展開して、成果物を一つ作成・レビューします。
 4. 必要に応じて登録簿、自動実行、branch / worktree運用を追加します。
 
-具体的な CLI 操作は[SpecDojo CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)を参照してください。
+具体的な CLI 操作は[CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)を参照してください。
 
 ## 提供する資料
 

@@ -7,11 +7,11 @@ specdojo:
     - git-branching-standard
 ---
 
-# SpecDojo ブランチワークフローガイド
+# ブランチワークフローガイド
 
 SpecDojo Branch Workflow Guide
 
-[git-branching-standard.md](../standards/git-branching-standard.md) に従い、project `develop`、feature、exec worktree を作成・同期・統合・終了する手順を説明します。対象読者は、複数の `prj-xxxx` と Git worktree を同じリポジトリで運用する開発者・運用者です。
+[Git ブランチ運用標準](../standards/git-branching-standard.md) に従い、project `develop`、feature、exec worktree を作成・同期・統合・終了する手順を説明します。対象読者は、複数の `prj-xxxx` と Git worktree を同じリポジトリで運用する開発者・運用者です。
 
 **対象読者**
 
@@ -23,7 +23,7 @@ SpecDojo Branch Workflow Guide
 
 **次に読む文書**
 
-- exec の実行経路は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、worktree の分割操作は [SpecDojo exec worktreeガイド](specdojo-exec-worktree-guide.md) を参照してください。
+- exec の実行経路は [exec運用ガイド](specdojo-exec-operation-guide.md)、worktree の分割操作は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照してください。
 
 ## 1. 前提と全体像
 
@@ -138,7 +138,7 @@ specdojo exec run \
   --worktree
 ```
 
-段階ごとに確認する場合は [specdojo-exec-worktree-guide.md](specdojo-exec-worktree-guide.md) の分割手順を使います。特に `worktree merge` の直前には、root worktree が対象 project の `develop` であることを再確認します。
+段階ごとに確認する場合は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) の分割手順を使います。特に `worktree merge` の直前には、root worktree が対象 project の `develop` であることを再確認します。
 
 ```bash
 git branch --show-current

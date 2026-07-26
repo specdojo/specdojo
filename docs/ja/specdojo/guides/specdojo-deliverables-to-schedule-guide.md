@@ -5,11 +5,11 @@ specdojo:
   status: draft
 ---
 
-# 成果物カタログからスケジュールへの展開ガイド
+# 成果物カタログからScheduleへの展開ガイド
 
 SpecDojo Deliverables Catalog to Schedule Guide
 
-SpecDojo における成果物カタログからスケジュールへの展開ルールとガイドラインを定義します。成果物カタログで定義した管理対象成果物を、Schedule 定義で実行計画に落とし込む一連の流れを示します。
+SpecDojo における成果物カタログから Schedule への展開ルールとガイドラインを定義します。成果物カタログで定義した管理対象成果物を、Schedule 定義で実行計画に落とし込む一連の流れを示します。
 
 各層の詳細なルールは、それぞれの rulebook を参照してください。
 
@@ -26,7 +26,7 @@ SpecDojo における成果物カタログからスケジュールへの展開�
 
 **次に読む文書**
 
-- タスク粒度、依存関係、反復の設計は [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+- タスク粒度、依存関係、反復の設計は [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
 
 ## 1. 基本方針
 

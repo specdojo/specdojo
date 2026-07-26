@@ -5,11 +5,11 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo 登録簿運用ガイド
+# 登録簿運用ガイド
 
 SpecDojo Register Operation Guide
 
-プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [specdojo-command-reference.md](../references/specdojo-command-reference.md) を正本とします。
+プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を正本とします。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ SpecDojo Register Operation Guide
 
 **次に読む文書**
 
-- 登録項目の実行経路は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [SpecDojoコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
+- 登録項目の実行経路は [exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
 
 ## 1. 登録簿の位置づけ
 
@@ -29,7 +29,7 @@ SpecDojo Register Operation Guide
 
 - 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）である。
 - 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しない。
-- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れない。計画外に発生した単発の対応・調査・判断を登録簿で追跡する（[specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照）。
+- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れない。計画外に発生した単発の対応・調査・判断を登録簿で追跡する（[exec運用ガイド](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照）。
 
 関連ドキュメントの関係は次のとおりです。
 
@@ -204,7 +204,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 - register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしない。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使う。
 
-実行フローの詳細は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
+実行フローの詳細は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
 
 ## 9. PJR-ID 重複の検知と復旧
 

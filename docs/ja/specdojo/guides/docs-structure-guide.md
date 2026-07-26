@@ -22,7 +22,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **次に読む文書**
 
-- 成果物を検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [SpecDojo 成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
+- 成果物を検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
 
 ## 1. SpecDojoで扱うドキュメントの全体構成
 
@@ -74,7 +74,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 | 4        | 設計（Design）         | How (方式)      | 構造・方式・構成として**どう実現するか**  |
 | 5        | 実装（Implementation） | How (具現)      | コード・設定としての実現                  |
 
-各フェーズの詳細は [ドキュメントフェーズ概要](docs-phases-overview-guide.md) を参照してください。
+各フェーズの詳細は [ドキュメントフェーズ概要ガイド](docs-phases-overview-guide.md) を参照してください。
 
 ## 4. ドキュメントオーナー
 

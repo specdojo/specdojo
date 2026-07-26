@@ -5,7 +5,7 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo 参考資料活用ガイド
+# 参考資料活用ガイド
 
 本ドキュメントは SpecDojo における **exec plan 実行時に rulebook / recipe / sample / template をどう参照するか**を定義する。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用する。
 
@@ -23,7 +23,7 @@ exec plan は「何を」「どこまで」行うかを示すが、対象成果�
 
 **次に読む文書**
 
-- plan・result の生成規則は [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、実行手順は [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)、レビュー手順は [SpecDojo レビューガイド](specdojo-review-guide.md) を参照してください。
+- plan・result の生成規則は [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、レビュー手順は [レビューガイド](specdojo-review-guide.md) を参照してください。
 
 ## 1. このガイドの位置づけ
 

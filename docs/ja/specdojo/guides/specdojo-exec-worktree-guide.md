@@ -5,11 +5,11 @@ specdojo:
   status: draft
 ---
 
-# SpecDojo exec worktreeガイド
+# exec worktree運用ガイド
 
 SpecDojo Exec Worktree Guide
 
-`specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)、project `develop`・feature・exec のブランチ全体フローは [specdojo-branch-workflow-guide.md](specdojo-branch-workflow-guide.md) を参照します。ブランチ命名と統合方向の規範は [git-branching-standard.md](../standards/git-branching-standard.md) を正本とします。
+`specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [exec運用ガイド](specdojo-exec-operation-guide.md)、project `develop`・feature・exec のブランチ全体フローは [ブランチワークフローガイド](specdojo-branch-workflow-guide.md) を参照します。ブランチ命名と統合方向の規範は [Git ブランチ運用標準](../standards/git-branching-standard.md) を正本とします。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ SpecDojo Exec Worktree Guide
 
 **次に読む文書**
 
-- ブランチ全体の運用は [SpecDojo ブランチワークフローガイド](specdojo-branch-workflow-guide.md)、自動実行との使い分けは [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md) を参照してください。
+- ブランチ全体の運用は [ブランチワークフローガイド](specdojo-branch-workflow-guide.md)、自動実行との使い分けは [exec運用ガイド](specdojo-exec-operation-guide.md) を参照してください。
 
 ## 1. worktree分割コマンドの役割
 
@@ -173,7 +173,7 @@ commit 対象から除外する主なパス:
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
-上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は参考資料ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [specdojo-exec-config-guide.md](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
+上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は参考資料ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [exec設定ガイド](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
 
 ## 8. merge
 
