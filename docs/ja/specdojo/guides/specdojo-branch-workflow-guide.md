@@ -9,7 +9,7 @@ specdojo:
 
 # ブランチワークフローガイド
 
-SpecDojo Branch Workflow Guide
+Branch Workflow Guide
 
 [Git ブランチ運用標準](../standards/git-branching-standard.md) に従い、project `develop`、feature、exec worktree を作成・同期・統合・終了する手順を説明します。対象読者は、複数の `prj-xxxx` と Git worktree を同じリポジトリで運用する開発者・運用者です。
 

@@ -12,7 +12,7 @@ specdojo:
 
 # 全体概要ガイド
 
-SpecDojo Overview Guide
+Overview Guide
 
 SpecDojo の目的、文書体系、プロジェクトの進め方、CLI による実行管理の関係を一つの流れとして説明します。
 SpecDojo に関わるすべての読者の入口となる文書であり、個別の規約や操作の詳細は関連 guide、standard、rulebook に委ねます。

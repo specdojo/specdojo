@@ -9,9 +9,9 @@ specdojo:
 
 Review Guide
 
-本ドキュメントは SpecDojo における **成果物レビューの進め方**を定義する。
+本ドキュメントは SpecDojo における **成果物レビューの進め方**を定義します。
 
-レビューは「問題なし」を宣言する作業ではない。どの観点を確認し、どの根拠を見て、何を未確認として残したかを記録する作業である。
+レビューは「問題なし」を宣言する作業ではありません。どの観点を確認し、どの根拠を見て、何を未確認として残したかを記録する作業です。
 
 **対象読者**
 
@@ -31,7 +31,7 @@ Review Guide
 
 ### 1.1. レビューの役割
 
-SpecDojo のレビューは次を扱う。
+SpecDojo のレビューは次を扱います。
 
 | 項目       | 内容                                                               |
 | ---------- | ------------------------------------------------------------------ |
@@ -41,11 +41,11 @@ SpecDojo のレビューは次を扱う。
 | 検証可能性 | pass / fail を判断できる完了条件、受入条件、証跡があるか           |
 | 追跡可能性 | 上位目的から要求、要件、仕様、設計、テスト、運用まで対応を追えるか |
 
-レビューの合格条件は、対象プロジェクトの成果物カタログに定義された `done_criteria` を正とする。
+レビューの合格条件は、対象プロジェクトの成果物カタログに定義された `done_criteria` を正とします。
 
 ### 1.2. レビューの入力
 
-レビューでは次を入力として扱う。
+レビューでは次を入力として扱います。
 
 | 入力              | 正本ファイル                | 役割                                                                    |
 | ----------------- | --------------------------- | ----------------------------------------------------------------------- |
@@ -60,7 +60,7 @@ SpecDojo のレビューは次を扱う。
 
 ### 1.3. 機械検証とレビューの分担
 
-機械で確認できることは、レビュー判断の前に検証する。
+機械で確認できることは、レビュー判断の前に検証します。
 
 | 確認対象               | 主な方法               |
 | ---------------------- | ---------------------- |
@@ -73,7 +73,7 @@ SpecDojo のレビューは次を扱う。
 | 意味の妥当性           | agent / human review   |
 | 判断責任               | human approver         |
 
-機械検証で失敗した成果物は、意味レビューの前に修正する。ただし、検証不能な前提や設計判断は review result に残してよい。
+機械検証で失敗した成果物は、意味レビューの前に修正します。ただし、検証不能な前提や設計判断は review result に残して構いません。
 
 ## 2. レビューの観点とパス
 
@@ -81,11 +81,11 @@ SpecDojo のレビューは次を扱う。
 
 ### 2.1. レビューの基本パス
 
-レビューは 3 つのパスで行う。
+レビューは 3 つのパスで行います。
 
 #### 2.1.1. 上位から下位へ
 
-上位成果物の目的、要求、制約が下位成果物に展開されているかを確認する。
+上位成果物の目的、要求、制約が下位成果物に展開されているかを確認します。
 
 主に検出するもの
 
@@ -95,7 +95,7 @@ SpecDojo のレビューは次を扱う。
 
 #### 2.1.2. 下位から上位へ
 
-下位成果物の記述に、上位根拠のない機能、仕様、設計判断が混ざっていないかを確認する。
+下位成果物の記述に、上位根拠のない機能、仕様、設計判断が混ざっていないかを確認します。
 
 主に検出するもの
 
@@ -106,7 +106,7 @@ SpecDojo のレビューは次を扱う。
 
 #### 2.1.3. 横断観点
 
-成果物の種類にかかわらず、抜けやすい観点を横断して確認する。
+成果物の種類にかかわらず、抜けやすい観点を横断して確認します。
 
 主に確認するもの
 
@@ -126,11 +126,11 @@ SpecDojo のレビューは次を扱う。
 
 ### 2.2. coverage_types の使い方
 
-`coverage_types` は、レビュー時に「何の型を確認したか」を記録するための語彙である。
+`coverage_types` は、レビュー時に「何の型を確認したか」を記録するための語彙です。
 
-`coverage_types` は観点そのものではなく、レビュー探索の軸である。たとえば `vp-qe-omissions-consistency` を使う場合でも、実際には `stakeholder`、`exception_case`、`non_functional`、`traceability` など、どの型を確認したかを分けて記録する。
+`coverage_types` は観点そのものではなく、レビュー探索の軸です。たとえば `vp-qe-omissions-consistency` を使う場合でも、実際には `stakeholder`、`exception_case`、`non_functional`、`traceability` など、どの型を確認したかを分けて記録します。
 
-review result では、`レビュー観点別結果` セクションの各 `RVP-NNN` に対して、確認した coverage_types と根拠を記述する。
+review result では、`レビュー観点別結果` セクションの各 `RVP-NNN` に対して、確認した coverage_types と根拠を記述します。
 
 例
 
@@ -142,11 +142,11 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 - notes: 例外ケースと非機能要求の展開に不足がある（確認できたのは stakeholder, use_case, exception_case, non_functional。traceability は未確認）。
 ```
 
-確認できなかった coverage_types は、上記のように `notes` に範囲と理由を明記する。重大な抜けは `findings` に指摘として残す。
+確認できなかった coverage_types は、上記のように `notes` に範囲と理由を明記します。重大な抜けは `findings` に指摘として残します。
 
 ### 2.3. 要求・要件・仕様レビュー
 
-要求、要件、仕様のヌケモレや間違いは、成果物単体だけでは検出しにくい。必ず隣接成果物との対応を確認する。
+要求、要件、仕様のヌケモレや間違いは、成果物単体だけでは検出しにくいものです。必ず隣接成果物との対応を確認します。
 
 | 対象 | 主な確認                                                                         |
 | ---- | -------------------------------------------------------------------------------- |
@@ -158,9 +158,9 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 ## 3. review plan と review result
 
-SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残す**。
+SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残します**。
 
-review plan は `specdojo exec build` が生成する。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新する。
+review plan は `specdojo exec build` が生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
 
 ```text
 pm-review-viewpoints.yaml
@@ -178,28 +178,28 @@ review result（exec/results/<task-id>-result.md）
 PJR / 修正 / 再レビュー
 ```
 
-review plan は「今回のレビューで何を見るか」を固定する。review result は「実際に何を見て、何が分かり、何を未確認として残したか」を記録する。
+review plan は「今回のレビューで何を見るか」を固定します。review result は「実際に何を見て、何が分かり、何を未確認として残したか」を記録します。
 
 | 成果物        | 役割                                                                                  |
 | ------------- | ------------------------------------------------------------------------------------- |
 | review plan   | 対象成果物、Role code、viewpoint、coverage_required、エビデンス例、完了手順を定義する |
 | review result | レビュー観点ごとの判定（pass / fail / unclear）、根拠、findings、decision を記録する  |
 
-review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくする。
+review result を直接作らず、review plan を挟むことで、レビュー範囲の揺れ、観点の抜け、未実施レビューを検出しやすくします。
 
 ### 3.1. edit plan の完了の狙い
 
-通常の成果物編集を行う edit plan は、観点別の自己レビューを行わない。代わりに、`done_criteria` を「完了の狙い」として素の箇条書き（観点・coverage なし）で提示し、編集者は rulebook / recipe / sample / template と「進め方」に沿って記述する中で、その狙いを満たすことを目指す。
+通常の成果物編集を行う edit plan は、観点別の自己レビューを行いません。代わりに、`done_criteria` を「完了の狙い」として素の箇条書き（観点・coverage なし）で提示し、編集者は rulebook / recipe / sample / template と「進め方」に沿って記述する中で、その狙いを満たすことを目指します。
 
-- 品質の担保は rulebook（必須項目・禁止事項）・recipe（書き方・レビュー観点・仕上げチェック）・sample・template が担う。
-- `done_criteria` を満たしているかの多観点での最終判定は、後続の独立した review plan / review result が行う。
-- maintenance 系 approach は対象と判定基準が異なるため、完了の狙いの提示は行わない。
+- 品質の担保は rulebook（必須項目・禁止事項）・recipe（書き方・レビュー観点・仕上げチェック）・sample・template が担います。
+- `done_criteria` を満たしているかの多観点での最終判定は、後続の独立した review plan / review result が行います。
+- maintenance 系 approach は対象と判定基準が異なるため、完了の狙いの提示は行いません。
 
-edit plan で観点別の自己レビューを行わないのは、各観点を満たそうとして成果物へ過剰な記述を挿入する副作用を避けるためである。多観点での判定と証跡は review task に集約し、review task では成果物を修正せず第三者的な立場で残す。
+edit plan で観点別の自己レビューを行わないのは、各観点を満たそうとして成果物へ過剰な記述を挿入する副作用を避けるためです。多観点での判定と証跡は review task に集約し、review task では成果物を修正せず第三者的な立場で残します。
 
 ### 3.2. review plan の生成
 
-review plan は `specdojo exec build` によって機械生成する（`mode: review` のタスクが対象）。
+review plan は `specdojo exec build` によって機械生成します（`mode: review` のタスクが対象）。
 
 主な入力
 
@@ -208,11 +208,11 @@ review plan は `specdojo exec build` によって機械生成する（`mode: re
 - 対応する rulebook
 - `sch-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
 
-review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から `レビュー観点` セクションの review item（`RVP-NNN`）を作る。
+review plan は、成果物カタログの `done_criteria[].roles` と `done_criteria[].viewpoint` から `レビュー観点` セクションの review item（`RVP-NNN`）を作ります。
 
 ### 3.3. review plan の配置
 
-review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成する。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `execution`）を指す。
+review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成します。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `execution`）を指します。
 
 例
 
@@ -222,7 +222,7 @@ exec/plans/T-LAUNCH-prj-overview-030-plan.md
 
 ### 3.4. review plan の構成
 
-review plan は Frontmatter と本文セクションで構成する。
+review plan は Frontmatter と本文セクションで構成します。
 
 ```yaml
 specdojo:
@@ -248,21 +248,21 @@ specdojo:
 
 ### 3.5. review execution
 
-人または agent は review plan に従ってレビューする。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入する。
+人または agent は review plan に従ってレビューします。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
 
-レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従う。詳細は [specdojo-reference-materials-guide](specdojo-reference-materials-guide.md) を参照する。
+レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従います。詳細は [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
 
 実行時の原則
 
-- `レビュー観点` の各項目（`RVP-NNN`）を勝手に省略しない。
-- plan にない観点で重大な問題を見つけた場合は、`findings` に追加する。
-- 確認できない範囲は pass にせず、`unclear` として根拠とともに残す。
-- 機械検証の失敗は、意味レビューの結果と分けて記録する。
-- agent は最終承認、公開可否判断、説明責任を担わない。
+- `レビュー観点` の各項目（`RVP-NNN`）を勝手に省略しません。
+- plan にない観点で重大な問題を見つけた場合は、`findings` に追加します。
+- 確認できない範囲は pass にせず、`unclear` として根拠とともに残します。
+- 機械検証の失敗は、意味レビューの結果と分けて記録します。
+- agent は最終承認、公開可否判断、説明責任を担いません。
 
 ### 3.6. review result の構成
 
-review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新する。
+review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新します。
 
 ```yaml
 specdojo:
@@ -290,9 +290,9 @@ review result に何をどう残し、findings をどう分類し、どこへ引
 
 ### 4.1. レビュー結果の残し方
 
-レビュー結果は、成果物単位、フェーズ単位、Role code 単位で記録する。review result は必ず review plan に対応させ、Frontmatter の `plan_ref` で参照する。
+レビュー結果は、成果物単位、フェーズ単位、Role code 単位で記録します。review result は必ず review plan に対応させ、Frontmatter の `plan_ref` で参照します。
 
-`レビュー観点別結果` セクションには、`RVP-NNN` ごとに次を記入する。
+`レビュー観点別結果` セクションには、`RVP-NNN` ごとに次を記入します。
 
 | 項目     | 内容                                                                     |
 | -------- | ------------------------------------------------------------------------ |
@@ -300,7 +300,7 @@ review result に何をどう残し、findings をどう分類し、どこへ引
 | evidence | 確認した根拠（参照箇所、具体的な記述）                                   |
 | notes    | 判定根拠の補足、coverage_required のうち確認できた範囲とできなかった範囲 |
 
-`findings` セクションには、確認した中で見つかった指摘事項を次の観点で記述する。
+`findings` セクションには、確認した中で見つかった指摘事項を次の観点で記述します。
 
 | 項目           | 内容                                                                                                                             |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -310,7 +310,7 @@ review result に何をどう残し、findings をどう分類し、どこへ引
 | summary        | 指摘概要                                                                                                                         |
 | recommendation | 修正方針                                                                                                                         |
 
-`decision` セクションには、レビュー全体としての判断（`approve` / `revise` / `reject`）と、PO 判断が必要かどうかを記述する。
+`decision` セクションには、レビュー全体としての判断（`approve` / `revise` / `reject`）と、PO 判断が必要かどうかを記述します。
 
 ### 4.2. finding の分類
 
@@ -326,15 +326,15 @@ review result に何をどう残し、findings をどう分類し、どこへ引
 
 ### 4.3. PJR への転記
 
-すべてのレビュー指摘を PJR に転記しない。review result には詳細を残し、プロジェクト管理対象だけを PJR に転記する。
+すべてのレビュー指摘を PJR に転記しません。review result には詳細を残し、プロジェクト管理対象だけを PJR に転記します。
 
 PJR に転記する条件
 
-- PO 判断が必要
-- 後続成果物、Schedule、公開判断に影響する
-- スコープ、責任分担、成果物追加に影響する
-- 重大な矛盾によりレビュー継続ができない
-- 将来リスクとして監視する必要がある
+- PO 判断が必要です。
+- 後続成果物、Schedule、公開判断に影響します。
+- スコープ、責任分担、成果物追加に影響します。
+- 重大な矛盾によりレビュー継続ができません。
+- 将来リスクとして監視する必要があります。
 
 ## 5. Agent への指示テンプレート
 
@@ -372,24 +372,24 @@ review plan に従って対象成果物をレビューしてください。
 
 ### 6.1. 完了条件
 
-レビューを完了とするには、次を満たす。
+レビューを完了とするには、次を満たします。
 
-- review result が review plan の全 `review_items` に対応している。
-- 対象成果物の `done_criteria` に対応する観点を確認している。
-- 使用した `plan_item_id`、`viewpoint_id`、`coverage_checked` が記録されている。
-- pass / fail の根拠となる `evidence` が記録されている。
-- 未確認範囲がある場合は `unverified_scope` に残している。
-- `blocker` と `major` の未解決指摘が扱われている。
-- PO 判断が必要な事項は PJR または decision に接続されている。
-- agent が最終承認者になっていない。
+- review result が review plan の全 `review_items` に対応しています。
+- 対象成果物の `done_criteria` に対応する観点を確認しています。
+- 使用した `plan_item_id`、`viewpoint_id`、`coverage_checked` が記録されています。
+- pass / fail の根拠となる `evidence` が記録されています。
+- 未確認範囲がある場合は `unverified_scope` に残しています。
+- `blocker` と `major` の未解決指摘が扱われています。
+- PO 判断が必要な事項は PJR または decision に接続されています。
+- agent が最終承認者になっていません。
 
 ### 6.2. 成果物 ready 化条件
 
-成果物を完成版または `ready` 候補にするには、次をすべて満たすこと。
+成果物を完成版または `ready` 候補にするには、次をすべて満たすことが必要です。
 
-- 対象成果物の `done_criteria` に対応する全 Role code のレビューが完了している。
-- `blocker` と `major` の未解決指摘が 0 件である。
-- `conditional_pass` の条件が PO により許容または対応済みと判断されている。
-- 関連する PJR がある場合、対応方針、担当 Role code、期限が記録されている。
-- `npm run -s lint:md`、必要な YAML schema 検証、生成物再作成など、対象成果物に必要な機械検証が完了している。
-- 最終承認、公開可否判断、説明責任を人間の `PO` が担っている。
+- 対象成果物の `done_criteria` に対応する全 Role code のレビューが完了しています。
+- `blocker` と `major` の未解決指摘が 0 件です。
+- `conditional_pass` の条件が PO により許容または対応済みと判断されています。
+- 関連する PJR がある場合、対応方針、担当 Role code、期限が記録されています。
+- `npm run -s lint:md`、必要な YAML schema 検証、生成物再作成など、対象成果物に必要な機械検証が完了しています。
+- 最終承認、公開可否判断、説明責任を人間の `PO` が担っています。

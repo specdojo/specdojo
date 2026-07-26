@@ -7,7 +7,7 @@ specdojo:
 
 # exec運用ガイド
 
-SpecDojo Exec Operation Guide
+Exec Operation Guide
 
 `specdojo exec` によるタスク実行、実行経路（schedule / register / routine）の使い分け、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
 
@@ -148,9 +148,9 @@ git worktree add ../specdojo-edit -b <edit-branch>
 
 `exec scheduler` は、タスクIDを指定せずに次のタスクを claim するためのコマンドです。claim にあたって次の保護が働きます。
 
-- プロジェクトレベルのロックを取得し、複数の runner が同じタスクを同時に claim しない。
-- `owner` と actor のロール整合をチェックし、担当ロールの一致しないタスクは選ばない。
-- 同じ actor に `doing` のタスクが残っている場合は、多重 claim を防ぐため拒否する。
+- プロジェクトレベルのロックを取得し、複数の runner が同じタスクを同時に claim しません。
+- `owner` と actor のロール整合をチェックし、担当ロールの一致しないタスクは選びません。
+- 同じ actor に `doing` のタスクが残っている場合は、多重 claim を防ぐため拒否します。
 
 選択戦略は `--strategy` で切り替えます（`critical-first` 既定 / `fifo`）。選択結果の確認だけを行う場合は `--dry-run` を付けます。
 
@@ -305,10 +305,10 @@ specdojo exec build --project <project-id>
 
 次の条件をすべて満たす必要があります。
 
-- 対象が schedule に存在する task で、現在の状態が `done` である。
-- `--task`、`--by`、`--msg` を明示する。
-- `--by` が `pm-members.yaml` で `type: human` の member である。
-- 対象に依存する後続 task に `doing`、`blocked`、`done` がない。
+- 対象が schedule に存在する task で、現在の状態が `done` です。
+- `--task`、`--by`、`--msg` を明示します。
+- `--by` が `pm-members.yaml` で `type: human` の member です。
+- 対象に依存する後続 task に `doing`、`blocked`、`done` がありません。
 
 後続 task も完了済みの場合は、依存グラフの下流から順に `reopen` します。後続 task が `doing` / `blocked` の場合は、先に同じ試行を完了させるか、`exec release` で `todo` に戻します。これにより、完了していない依存先を前提に後続 task が進行・完了している状態を防ぎます。
 

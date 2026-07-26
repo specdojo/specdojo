@@ -7,7 +7,7 @@ specdojo:
 
 # CLI概要ガイド
 
-SpecDojo CLI Overview Guide
+CLI Overview Guide
 
 `specdojo` CLI の全体像、初期設定、代表的な実行フローを説明します。個別コマンドの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
 

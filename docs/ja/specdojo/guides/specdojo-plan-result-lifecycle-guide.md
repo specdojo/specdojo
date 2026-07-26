@@ -7,7 +7,7 @@ specdojo:
 
 # plan/resultライフサイクルガイド
 
-SpecDojo Plan and Result Lifecycle Guide
+Plan and Result Lifecycle Guide
 
 `exec plan` / `exec run` / `exec claim` が扱う plan と result の生成、命名、再実行、アーカイブを説明します。exec の実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
 
@@ -80,9 +80,9 @@ exec/results/<stem>-result.md
 
 `<stem>` は次の優先順位で決まります。
 
-1. `--out <path>` または `--plan <path>` を指定した場合は、そのファイル名から導出する。
-2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とする。
-3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番する。
+1. `--out <path>` または `--plan <path>` を指定した場合は、そのファイル名から導出します。
+2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とします。
+3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番します。
 
 これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
 

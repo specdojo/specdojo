@@ -7,7 +7,7 @@ specdojo:
 
 # exec worktree運用ガイド
 
-SpecDojo Exec Worktree Guide
+Exec Worktree Guide
 
 `specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [exec運用ガイド](specdojo-exec-operation-guide.md)、project `develop`・feature・exec のブランチ全体フローは [ブランチワークフローガイド](specdojo-branch-workflow-guide.md) を参照します。ブランチ命名と統合方向の規範は [Git ブランチ運用標準](../standards/git-branching-standard.md) を正本とします。
 
@@ -96,13 +96,13 @@ specdojo exec worktree prepare \
 
 主な処理:
 
-1. task state が `doing` であることを確認する。
-2. プロジェクトロックを取得する。
-3. plan、result、claim event を確認する。
-4. plan がなければ `exec plan` 相当で生成する。
-5. root index に stage 済み変更がないことを確認する。
-6. plan、result、claim event を checkpoint commit する。
-7. checkpoint commit から exec branch と worktree を作成する。
+1. task state が `doing` であることを確認します。
+2. プロジェクトロックを取得します。
+3. plan、result、claim event を確認します。
+4. plan がなければ `exec plan` 相当で生成します。
+5. root index に stage 済み変更がないことを確認します。
+6. plan、result、claim event を checkpoint commit します。
+7. checkpoint commit から exec branch と worktree を作成します。
 
 root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
 

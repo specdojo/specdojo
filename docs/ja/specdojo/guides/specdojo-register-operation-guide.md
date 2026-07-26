@@ -7,7 +7,7 @@ specdojo:
 
 # 登録簿運用ガイド
 
-SpecDojo Register Operation Guide
+Register Operation Guide
 
 プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を正本とします。
 
@@ -27,9 +27,9 @@ SpecDojo Register Operation Guide
 
 プロジェクト登録簿は、プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘を一元管理する台帳です。
 
-- 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）である。
-- 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しない。
-- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れない。計画外に発生した単発の対応・調査・判断を登録簿で追跡する（[exec運用ガイド](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照）。
+- 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）です。
+- 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しません。
+- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れません。計画外に発生した単発の対応・調査・判断を登録簿で追跡します（[exec運用ガイド](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
 
 関連ドキュメントの関係は次のとおりです。
 
@@ -160,9 +160,9 @@ specdojo register close \
   --conclusion "取消処理で在庫数を戻すよう修正"
 ```
 
-- `done` / `decided`: 対応内容または決定内容を書く。
-- `rejected`: 却下の理由を書く。
-- `deferred`: 再開の条件または再評価のタイミングを書く。
+- `done` / `decided`: 対応内容または決定内容を書きます。
+- `rejected`: 却下の理由を書きます。
+- `deferred`: 再開の条件または再評価のタイミングを書きます。
 
 結論が残っていない終了項目は、後から経緯を追えなくなるため、close 前に埋めます。
 
@@ -174,9 +174,9 @@ specdojo register close \
 specdojo register build --project <project-id>
 ```
 
-- `project-register/generated/` には登録簿内の補助一覧（状態別・優先度別・担当者別）が生成される。
-- `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成される。
-- 派生ビューの内容を直したい場合は、生成ファイルではなく `pjr-index.md` または個票を修正して再生成する。
+- `project-register/generated/` には登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
+- `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成されます。
+- 派生ビューの内容を直したい場合は、生成ファイルではなく `pjr-index.md` または個票を修正して再生成します。
 
 派生ビューのテーブルのタイトル行（列名の行）は、コードや派生ビューの雛形ではなく `pjr-index.md` のタイトル行をそのまま継承します。列名を変更したい場合は、生成ファイルを直接編集せず、次を修正してから `register build` で再生成します。
 
@@ -197,14 +197,14 @@ specdojo exec run --project <project-id> --register PJR-0012
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register-commit --on-failure continue
 ```
 
-- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になる。`decision` / `dependency` / `note` は実行対象外。
-- 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しない。成功後は人が内容を確認して `register close` する。
-- `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せる。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進む。重複したIDは最初の1件だけを実行する。
-- 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示する。いずれかが失敗した場合は終了コード 1 で終了する。
-- `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitする（実行前から作業ツリーにある利用者の変更は含めない）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選ぶ。`stop` では失敗以降のIDが skipped として記録される。
-- register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしない（指定した場合は理由を表示して拒否する）。
-- 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使う。
-- open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使う。
+- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `dependency` / `note` は実行対象外です。
+- 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
+- `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
+- 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
+- `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。
+- register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしません（指定した場合は理由を表示して拒否します）。
+- 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使います。
+- open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使います。
 
 `--register-commit` は、登録簿の状態遷移・派生ビュー・当該IDの plan/result を runner 管理パスとして commit 対象に含めます。pre-commit hook が対象ファイルを整形した場合は、同じ commit へ収束するまで amend します。収束後も対象差分が残る場合は `incomplete` の失敗として一覧と終了コードへ反映します。既定は無効で、変更は作業ツリーに残ります。
 
@@ -222,8 +222,8 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 npm run validate:schema:pjr-index
 ```
 
-- 登録項目一覧に同じ PJR-ID が 2 行以上ある場合、重複した ID と該当行位置を示してエラーになる。
-- 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応が取れていない場合もエラーになる。
+- 登録項目一覧に同じ PJR-ID が 2 行以上ある場合、重複した ID と該当行位置を示してエラーになります。
+- 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応が取れていない場合もエラーになります。
 
 重複や衝突を検出したら、`register renumber` で片方の項目を未使用の PJR-ID へ移します。
 
@@ -235,24 +235,24 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140 --
 specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 ```
 
-- `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替える。
-- 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残らない。
-- 付け替え後は派生ビューも再生成される。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくい。
+- `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。
+- 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残りません。
+- 付け替え後は派生ビューも再生成されます。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくくなります。
 
 ## 10. PO 留保事項の PR 承認運用
 
 プロジェクト憲章の権限委譲章で PO の承認を要する事項（PO 留保事項）は、decision 個票の起票だけでなく pull request のレビュー承認を併用します。個票のセル文字列だけでは作成者と承認者が分離されず自己承認になりうるため、承認者・承認日時・承認対象差分を platform 側で担保します。
 
-- decision 個票は決定内容の SSOT（背景・選択肢・決定・理由）として、リポジトリ内に恒久保持する。
-- pull request は承認イベント（誰がいつ何を承認したか）の担保に用いる。
-- 相互リンク: 個票の承認章に PR URL と merge SHA を本文テキストで記録し、PR 説明には対象 decision 個票の `id` を記載する。PR URL と merge SHA を本文へ転記することで、platform に依存せずリポジトリ内だけで承認事実を追跡できる。
+- decision 個票は決定内容の SSOT（背景・選択肢・決定・理由）として、リポジトリ内に恒久保持します。
+- pull request は承認イベント（誰がいつ何を承認したか）の担保に用います。
+- 相互リンク: 個票の承認章に PR URL と merge SHA を本文テキストで記録し、PR 説明には対象 decision 個票の `id` を記載します。PR URL と merge SHA を本文へ転記することで、platform に依存せずリポジトリ内だけで承認事実を追跡できます。
 
 承認フローは次の順で行います。
 
-1. 決定内容を decision 個票へ記録する。
-2. 承認対象の差分を pull request として作成し、PR 説明に対象個票の `id` を書く。
-3. PO が PR をレビューして approve する。作成者自身の承認は職務分離のため承認としてカウントしない。
-4. merge 後、個票または憲章の承認章へ承認日・承認者・承認対象・証跡リンク（PR URL・merge SHA）を書き戻す。
+1. 決定内容を decision 個票へ記録します。
+2. 承認対象の差分を pull request として作成し、PR 説明に対象個票の `id` を書きます。
+3. PO が PR をレビューして approve します。作成者自身の承認は職務分離のため承認としてカウントしません。
+4. merge 後、個票または憲章の承認章へ承認日・承認者・承認対象・証跡リンク（PR URL・merge SHA）を書き戻します。
 
 PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護 / CODEOWNERS 方針の詳細は、当該プロジェクトの登録項目（例: `pjr-0126-pr-based-po-approval`）で定義します。schedule 上の計画済みタスクによる通常の成果物更新や日常の agent コミットは、PR 承認の対象外です。
 
@@ -268,9 +268,9 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --reserve
 ```
 
-- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `main` を使う。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使う。
-- 予約時に統合ブランチの worktree へ書き込むのは `pjr-index.md` の登録行だけで、個票は作成しない。`--reserve` と `--ticket` は併用できない。
-- 予約 commit は `pjr-index.md` の追記だけを対象とし、統合ブランチ側の他の未 commit 変更は巻き込まない。commit メッセージは `--commit-message <text>` で上書きできる。
-- 次のいずれかに当てはまる場合は書き込みを行わずにエラー終了する: 統合ブランチの worktree が存在しない、`pjr-index.md` に未 commit の変更がある、指定した ID が既存 ID と競合する。
-- 割り当てられた PJR-ID は標準出力の最終行に返るので、後続の個票作成・実作業に利用する。個票と実作業は従来どおり作業 branch 側で行い、状態遷移（`start` / `review` / `close` など）も従来どおり運用する。
-- 従来どおり作業 branch 上で完結して起票する場合は `--reserve` を付けない。既定の挙動は変わらない。
+- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `main` を使います。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使います。
+- 予約時に統合ブランチの worktree へ書き込むのは `pjr-index.md` の登録行だけで、個票は作成しません。`--reserve` と `--ticket` は併用できません。
+- 予約 commit は `pjr-index.md` の追記だけを対象とし、統合ブランチ側の他の未 commit 変更は巻き込みません。commit メッセージは `--commit-message <text>` で上書きできます。
+- 次のいずれかに当てはまる場合は、書き込みを行わずにエラー終了します: 統合ブランチの worktree が存在しない場合、`pjr-index.md` に未 commit の変更がある場合、指定した ID が既存 ID と競合する場合です。
+- 割り当てられた PJR-ID は標準出力の最終行に返るので、後続の個票作成・実作業に利用します。個票と実作業は従来どおり作業 branch 側で行い、状態遷移（`start` / `review` / `close` など）も従来どおり運用します。
+- 従来どおり作業 branch 上で完結して起票する場合は `--reserve` を付けません。既定の挙動は変わりません。

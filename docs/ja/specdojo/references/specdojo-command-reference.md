@@ -9,7 +9,7 @@ specdojo:
 
 # CLIコマンドリファレンス
 
-SpecDojo CLI Command Reference
+CLI Command Reference
 
 `specdojo` CLI の主要コマンドを、用途、代表例、主要オプションに絞って説明します。背景や運用手順は各専門ガイドを参照します。
 

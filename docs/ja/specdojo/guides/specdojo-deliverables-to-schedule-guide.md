@@ -7,7 +7,7 @@ specdojo:
 
 # 成果物カタログからScheduleへの展開ガイド
 
-SpecDojo Deliverables Catalog to Schedule Guide
+Deliverables Catalog to Schedule Guide
 
 SpecDojo における成果物カタログから Schedule への展開ルールとガイドラインを定義します。成果物カタログで定義した管理対象成果物を、Schedule 定義で実行計画に落とし込む一連の流れを示します。
 
