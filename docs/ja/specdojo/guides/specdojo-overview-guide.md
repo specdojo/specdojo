@@ -192,9 +192,7 @@ flowchart LR
 | result               | 実施内容、確認結果、残課題を記録する                      |
 | 実行イベント・生成物 | タスクの状態、実行履歴、Ready、クリティカルパスなどを表す |
 
-成果物カタログと Schedule の関係は
-[成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、
-タスク設計は
+成果物カタログと Schedule の関係、タスク設計は
 [Schedule設計ガイド](specdojo-schedule-design-guide.md)、
 plan と result の管理は
 [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)
@@ -243,10 +241,9 @@ CLI の導入は
 
 ### 8.3. 成果物の作成を計画する
 
-| 目的                                           | 参照先                                                                                 |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 成果物カタログから Schedule への流れを理解する | [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) |
-| フェーズ、タスク、依存関係、反復を設計する     | [Schedule設計ガイド](specdojo-schedule-design-guide.md)                                |
+| 目的                                                                                       | 参照先                                                  |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| 成果物カタログから Schedule への流れを理解する、フェーズ・タスク・依存関係・反復を設計する | [Schedule設計ガイド](specdojo-schedule-design-guide.md) |
 
 ### 8.4. プロジェクトを実行・管理する
 

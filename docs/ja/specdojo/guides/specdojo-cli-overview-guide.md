@@ -169,7 +169,7 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 specdojo build --project prj-0001
 ```
 
-手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) を参照します。
+手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [Schedule設計ガイド](specdojo-schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ### 6.1. catalog generateの生成方針
 

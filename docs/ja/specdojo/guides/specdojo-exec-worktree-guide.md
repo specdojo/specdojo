@@ -23,7 +23,11 @@ Exec Worktree Guide
 
 - ブランチ全体の運用は [ブランチワークフローガイド](specdojo-branch-workflow-guide.md)、自動実行との使い分けは [exec運用ガイド](specdojo-exec-operation-guide.md) を参照してください。
 
-## 1. worktree分割コマンドの役割
+## 1. worktree分割コマンドの概要
+
+分割コマンドの責務、標準的な進め方、共通の導出ルールを示します。
+
+### 1.1. 分割コマンドの役割
 
 `exec run --worktree` と `exec run --auto` は、worktree 準備、agent 起動、commit、merge、状態更新を一括で行います。各段階を人が確認しながら進める場合は `exec worktree` 配下の分割コマンドを使います。
 
@@ -38,7 +42,7 @@ Exec Worktree Guide
 
 分割コマンドは `claim`、`complete`、`block` を暗黙には実行しません。対象タスクは事前に `doing` である必要があります。
 
-## 2. 標準手順
+### 1.2. 標準手順
 
 ```bash
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -69,7 +73,7 @@ specdojo exec complete \
 
 途中で問題が見つかった場合は、worktree を削除せず `agent` から再実行します。
 
-## 3. 共通の導出ルール
+### 1.3. 共通の導出ルール
 
 `exec worktree` は独自の JSON や状態ファイルを作りません。必要な情報は毎回既存情報から導出します。
 
@@ -84,7 +88,11 @@ specdojo exec complete \
 
 project が解決できる場合、branch 名は project ID を含めます。例として `prj-0001:T-LAUNCH-prj-scope-010` は `exec/prj-0001-T-LAUNCH-prj-scope-010` になります。
 
-## 4. prepare
+## 2. 分割コマンドの詳細
+
+各分割コマンドの役割、入出力、安全条件を示します。
+
+### 2.1. prepare
 
 `prepare` は claim 済みタスク専用の worktree を作成します。
 
@@ -106,7 +114,7 @@ specdojo exec worktree prepare \
 
 root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
 
-## 5. status
+### 2.2. status
 
 `status` は分割実行の現在地を確認する読み取り専用コマンドです。
 
@@ -129,7 +137,7 @@ specdojo exec worktree status \
 
 worktree が未準備の場合も、削除や作成はせず `not prepared` として確認できます。
 
-## 6. agent
+### 2.3. agent
 
 `agent` は準備済み worktree をカレントディレクトリとして agent command を1回起動します。
 
@@ -152,7 +160,7 @@ specdojo exec worktree agent \
 
 `agent` は retry、fallback、commit、merge、event 更新を行いません。終了コードは agent command の終了コードをそのまま返します。
 
-## 7. commit
+### 2.4. commit
 
 `commit` は agent が更新した result と成果物を exec branch へ commit します。
 
@@ -175,7 +183,7 @@ commit 対象から除外する主なパス:
 
 上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は参考資料ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [exec設定ガイド](specdojo-exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
 
-## 8. merge
+### 2.5. merge
 
 `merge` は exec branch の commit を、コマンドを実行した現在ブランチへ統合します。
 
@@ -196,7 +204,7 @@ specdojo exec worktree merge \
 
 通常は `git merge --no-ff --no-edit` 相当で統合します。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。競合した場合は Git の競合状態を保持し、自動 abort しません。
 
-## 9. remove
+### 2.6. remove
 
 `remove` は不要になった task worktree を削除します。
 
@@ -211,7 +219,7 @@ specdojo exec worktree remove \
 
 `--force` は `git worktree remove --force` 相当であり、未commit変更が失われる可能性があります。exec branch の削除には `-D` 相当の強制削除を使いません。
 
-## 10. complete / blockの記録
+## 3. complete / blockの記録
 
 分割コマンドは状態 event を更新しないため、成果物確認後に人が明示的に `complete` または `block` を実行します。
 
@@ -233,7 +241,7 @@ specdojo exec block \
   --msg "waiting for clarification"
 ```
 
-## 11. ベースブランチの取り込み
+## 4. ベースブランチの取り込み
 
 `worktree merge` は exec branch を現在のブランチへ統合する一方向のコマンドです。逆に worktree 側へベースブランチの最新を取り込む操作は Git の標準機能で行います。worktree はリポジトリの ref を共有するため、ローカルブランチの取り込みに `fetch` は不要です。
 

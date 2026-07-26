@@ -239,7 +239,6 @@ export const specdojoSidebarItems = [
         "スケジュールと実行",
         [
           guide("CLI概要", "specdojo-cli-overview-guide"),
-          guide("成果物カタログからScheduleへの展開", "specdojo-deliverables-to-schedule-guide"),
           guide("Schedule設計", "specdojo-schedule-design-guide"),
           guide("exec運用", "specdojo-exec-operation-guide"),
           guide("登録簿運用", "specdojo-register-operation-guide"),

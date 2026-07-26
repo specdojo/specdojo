@@ -23,7 +23,11 @@ Plan and Result Lifecycle Guide
 
 - 実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、plan が参照する資料の使い分けは [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
 
-## 1. planとresultの役割
+## 1. planとresultの基本
+
+plan と result が持つ役割と、それぞれの配置場所を示します。
+
+### 1.1. planとresultの役割
 
 | ファイル | 役割                                               | 生成タイミング            |
 | -------- | -------------------------------------------------- | ------------------------- |
@@ -34,7 +38,7 @@ plan と result は git 管理対象の通常ファイルとして扱います�
 
 plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、参考資料は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
 
-## 2. 配置
+### 1.2. 配置
 
 | 種別          | 配置                                |
 | ------------- | ----------------------------------- |
@@ -44,7 +48,11 @@ plan / result の frontmatter には `targets`（対象文書の doc id リス�
 
 result は完了記録であり、review などから参照されるため `done/` へ移動しません。
 
-## 3. task identityありの命名
+## 2. 命名規則
+
+task identity の有無によるファイル名の決め方と、対象成果物の解決方法を示します。
+
+### 2.1. task identityありの命名
 
 `--task <task-id>` を使う場合、plan と result は task ID を使った固定名になります。
 
@@ -65,7 +73,7 @@ exec/results/<task-id>-result.md
 
 同じ task の再生成や再実行では同じファイルを上書きします。過去内容は Git 履歴、完了の事実は event と commit 履歴で追跡します。
 
-## 4. task identityなしの命名
+### 2.2. task identityなしの命名
 
 `--deliverable <local_id>` や ad-hoc 実行では、task ID がないためユニーク名を使います。
 
@@ -76,7 +84,7 @@ exec/results/<stem>-result.md
 
 `<stem>` は plan と result の連結キーです。同じ plan から実行する result は同じ `<stem>` を使います。
 
-## 5. stemの決定順序
+### 2.3. stemの決定順序
 
 `<stem>` は次の優先順位で決まります。
 
@@ -86,7 +94,23 @@ exec/results/<stem>-result.md
 
 これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
 
-## 6. 生成ルール
+### 2.4. deliverable指定の解決
+
+`--deliverable <local_id>` は成果物カタログ全体から `local_id` を検索します。
+
+| 一致件数 | 挙動                                  |
+| -------- | ------------------------------------- |
+| 0件      | エラー                                |
+| 1件      | その成果物を対象にする                |
+| 2件以上  | エラーにし、`local_id` の一意化を促す |
+
+先頭一致や domain の暗黙選択は行いません。`local_id` はプロジェクト全体で一意にします。
+
+## 3. 生成とテンプレート
+
+どの操作が plan / result を生成するか、`mode` / `approach` に応じたテンプレートの選び方を示します。
+
+### 3.1. 生成ルール
 
 | 操作                            | plan             | result                                    | 状態event                                 |
 | ------------------------------- | ---------------- | ----------------------------------------- | ----------------------------------------- |
@@ -101,7 +125,7 @@ exec/results/<stem>-result.md
 
 `exec build` は state、Ready、CPM などの `generated/` 更新に専念し、plan は生成・削除しません。agent タスクの plan は `exec plan` / `exec run` でオンデマンド生成します。`execution: human` のタスクは plan を持たず、`exec claim` が生成する result を使います。
 
-## 7. planテンプレート
+### 3.2. planテンプレート
 
 plan は `mode` / `approach` に応じたテンプレートから生成します。
 plan の構造と生成規則は schema・本ガイド・各テンプレートを正本とするため、生成する Frontmatter の `rulebook` は `none` とします。
@@ -112,13 +136,13 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 | `mode: review`        | `xrp-template.md`            |
 | `approach` が指定済み | `xep-<approach>-template.md` |
 
-`execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]、共通規約は [[exec-human-finalize-standard|Human Finalize 実行標準]]を正本とし、human result から参照します。
+`execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
 参考資料の扱いは [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照します。
 
-## 8. resultテンプレート
+### 3.3. resultテンプレート
 
 result は実行記録です。agent では plan と対になり、human では作業指示も兼ねます。`claim` または `exec run` が scaffold 生成します。
 
@@ -133,7 +157,11 @@ review の result には、scaffold 時に catalog から観点別セクショ�
 
 既に result が存在する場合は上書きせず、既存ファイルを使います。エージェントや人は result に実行内容、検証結果、残課題を記録します。
 
-## 9. アーカイブ
+## 4. アーカイブと再実行
+
+完了済み plan の扱いと、完了済み task をやり直すときの手順を示します。
+
+### 4.1. アーカイブ
 
 完了後の plan は `exec/plans/done/` へ移動できます。
 
@@ -156,7 +184,7 @@ exec/plans/done/<slug>-<UTC>-<rand>-plan.md
 
 不要な plan は `done/` へ移動せず削除してもかまいません。plan は catalog と schedule から再生成でき、result が記録として残るためです。
 
-## 10. 再実行
+### 4.2. 再実行
 
 完了済み task を軽くやり直す場合は、固定名 plan / result を再生成してカレントリポジトリで実行します。
 
@@ -175,15 +203,3 @@ specdojo exec complete --project <project-id> --task <task-id> --by <actor> --ms
 ```
 
 `reopen` は完了済み plan を `done/` から戻さず、固定名 result の内容も変更しません。次の `exec plan` / `exec run` で新しい固定名 plan を生成し、再 claim 時に既存 result の `status` を `in_progress`、`started_at` と `agent` を新しい試行の値へ更新し、`completed_at` と `block_reason` を除去します。result 本文は前回の記録を引き継ぎ、過去の完了状態は Git 履歴と `complete` / `reopen` event で追跡します。
-
-## 11. deliverable指定の解決
-
-`--deliverable <local_id>` は成果物カタログ全体から `local_id` を検索します。
-
-| 一致件数 | 挙動                                  |
-| -------- | ------------------------------------- |
-| 0件      | エラー                                |
-| 1件      | その成果物を対象にする                |
-| 2件以上  | エラーにし、`local_id` の一意化を促す |
-
-先頭一致や domain の暗黙選択は行いません。`local_id` はプロジェクト全体で一意にします。

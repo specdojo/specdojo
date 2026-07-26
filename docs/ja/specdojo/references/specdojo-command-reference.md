@@ -73,7 +73,7 @@ specdojo catalog generate --project prj-0001 --dct project-definition
 specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
 ```
 
-`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [成果物カタログからScheduleへの展開ガイド](../guides/specdojo-deliverables-to-schedule-guide.md) を参照します。
+`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ## 4. schedule
 

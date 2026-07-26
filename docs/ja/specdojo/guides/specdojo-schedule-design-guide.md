@@ -3,6 +3,8 @@ specdojo:
   id: specdojo-schedule-design-guide
   type: guide
   status: draft
+  supersedes:
+    - specdojo-deliverables-to-schedule-guide
 ---
 
 # Schedule設計ガイド
@@ -21,9 +23,13 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- Schedule と成果物カタログの関係は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、exec 設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+- 実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、exec 設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
 
-## 1. Scheduleの役割
+## 1. Scheduleの基本
+
+Schedule が扱う責務と、責務ごとに分かれたファイルの役割を示します。
+
+### 1.1. Scheduleの役割
 
 Schedule は「いつ、どの順序で、誰が実行するか」を定義する層です。成果物のパスや完了条件は成果物カタログが持ち、Schedule は成果物IDを参照して実行タスクへ展開します。
 
@@ -34,9 +40,39 @@ Schedule は「いつ、どの順序で、誰が実行するか」を定義す�
 | エージェント定義 | `pm-members.yaml`              |
 | 実行共通設定     | `.specdojo/exec-defaults.yaml` |
 
-成果物カタログとの責務分担は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) も参照します。
+#### 1.1.1. 成果物カタログとの責務分担
 
-## 2. Scheduleファイル
+成果物カタログは「何を管理対象とするか・どこに作成し何を満たせば完了か」を扱い、Schedule は「いつ・誰が・どの順で作業するか」を扱います。両者の責務は次のように分かれます。
+
+| 観点               | 成果物カタログ                         | Schedule               |
+| ------------------ | -------------------------------------- | ---------------------- |
+| 主目的             | 成果物の論理定義と完了単位の定義       | 実行計画               |
+| 問い               | 何がどこに完成すればよいか             | いつ誰が何をするか     |
+| 単位               | 成果物                                 | 実行タスク             |
+| 成果物ID           | 定義する                               | 参照する               |
+| 配置先・成果物パス | `kind: work` の `path` で持つ          | 原則持たない           |
+| 完了条件           | `kind: work` の `done_criteria` で持つ | 原則持たない           |
+| action             | 持たない                               | 持つ                   |
+| 日付               | 持たない                               | 持つ                   |
+| 担当者             | 原則持たない                           | 持つ                   |
+| 依存関係           | 成果物間の根拠程度                     | 実行順序の依存         |
+| status             | カタログ定義文書の状態として持つ       | タスクの実行状態を持つ |
+
+成果物カタログから Schedule への定義の流れは次のとおりです。
+
+```mermaid
+flowchart LR
+    START(( )) -->|管理対象成果物・path・<br/>done_criteriaを定義| A["成果物カタログ"]
+    A -->|成果物IDを参照し<br/>action・日付・担当を付与| C["Schedule"]
+    C --> END(( ))
+```
+
+各層の詳細なルールは、それぞれの rulebook を正本とします。
+
+- 成果物カタログ: [成果物カタログ（ドメイン別）作成ルール](../rulebooks/dct-rulebook.md)
+- Schedule: [スケジュール作成ルール](../rulebooks/sch-rulebook.md)
+
+### 1.2. Scheduleファイル
 
 Schedule は用途別に4種類のファイルで管理します。
 
@@ -49,7 +85,11 @@ Schedule は用途別に4種類のファイルで管理します。
 
 `sch-strategy-<track>.yaml` は生成入力です。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。
 
-## 3. 生成フロー
+## 2. sch-trackの生成
+
+strategy から track への生成フロー、展開する情報、反復、タスクIDの導出を示します。
+
+### 2.1. 生成フロー
 
 `sch-track-<track>.yaml` は原則として手書きせず、次の流れで生成します。
 
@@ -71,7 +111,7 @@ specdojo exec build --project <project-id>
 
 `phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec build` を実行します。
 
-## 4. トラックへ展開する情報
+### 2.2. トラックへ展開する情報
 
 `sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
 
@@ -99,7 +139,7 @@ specdojo exec build --project <project-id>
 
 `cross_deliverable_passes` から生成する横断タスクは、成果物別の `local_id` を持たず、明示された複数の `target_local_ids` を持ちます。これにより、一つの横断タスクの対象を plan frontmatter の `targets` と commit scope へ同じ順序で展開できます。
 
-## 5. phase_setsの反復
+### 2.3. phase_setsの反復
 
 個別 `phase_set` の反復と、`phase_sets` シーケンス全体の反復は別の階層として扱います。
 
@@ -132,7 +172,7 @@ default_phase_sets: [first-pass, finalize-pass]
 
 `cycles` と `iterations` は追加回数ではなく総実行回数です。
 
-## 6. タスクID
+### 2.4. タスクID
 
 タスク ID は `T-<TRACK>-<local_id>-<phase_suffix>` を基礎にし、反復する場合だけ `-C<cycle>` と `-I<iteration>` を末尾に付けます。`id:` フィールドは `sch-track` の YAML に書かず、自動導出します。
 
@@ -157,7 +197,7 @@ T-LAUNCH-project-definition-dedup-060
 
 横断タスクは `T-<TRACK>-<cross_deliverable_pass.id>-<task_suffix>` とします。成果物の `local_id` を代表値として使わないため、対象群をタスク ID から推測せず `target_local_ids` を参照します。
 
-### 6.1. 成果物群を横断する直列 pass
+#### 2.4.1. 成果物群を横断する直列 pass
 
 成果物別 phase を複製せず、明示した成果物群を一度だけ共同編集する場合は `cross_deliverable_passes` を使います。
 
@@ -183,7 +223,11 @@ cross_deliverable_passes:
 
 scope は `catalogs`、`groups`、`local_ids` の和集合で明示します。少なくとも二つの成果物へ解決できる必要があります。すでに全 phase 完了として `initial_state` に登録された成果物は対象群と plan targets には含めますが、後続 phase のブロック対象にはしません。
 
-## 7. フェーズと実行要件
+## 3. 実行要件とフェーズ解決
+
+phase ごとの実行要件の定義方法と、`exec build` 時にどう解決されるかを示します。
+
+### 3.1. フェーズと実行要件
 
 `sch-strategy-<track>.yaml` の各フェーズには、実行種別と作業要件を定義できます。
 
@@ -209,7 +253,7 @@ phase_sets:
 
 エージェント選択の詳細は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
 
-## 8. exec build時のフェーズ解決
+### 3.2. exec build時のフェーズ解決
 
 `exec build` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec build` では生成せず、`exec plan` または `exec run` が必要時に生成します。
 
@@ -224,7 +268,11 @@ sch-track task
 
 `mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec build` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
 
-## 9. タスク粒度
+## 4. タスク設計の品質
+
+タスク粒度、依存関係、CPM、典型的な失敗パターンを示します。
+
+### 4.1. タスク粒度
 
 Task は AI Agent が一度の実行で完了できる粒度にします。
 
@@ -238,7 +286,7 @@ Task は AI Agent が一度の実行で完了できる粒度にします。
 
 `cross_deliverable_passes` は一つの論点整理責務を成果物群へ適用する例外であり、変更ファイル数より意味的なまとまりを優先します。scope を広げすぎず、正本を相互に選択できる成果物群ごとに分けます。
 
-## 10. 依存関係
+### 4.2. 依存関係
 
 依存関係は最小限にします。依存が多いほど並列実行できる Ready タスクが減ります。
 
@@ -252,7 +300,7 @@ Task は AI Agent が一度の実行で完了できる粒度にします。
 
 Ready タスク数の目安は同時に5から20件です。これを下回る状態が続く場合は依存関係を見直します。
 
-## 11. CPMとクリティカルパス
+### 4.3. CPMとクリティカルパス
 
 `specdojo exec build` は Schedule から CPM（Critical Path Method）を計算します。
 
@@ -263,7 +311,7 @@ generated/critical-path.md
 
 Slack が `0` の Task はクリティカルパスに乗ります。これらの遅延はプロジェクト全体の遅延に直結するため、優先して Ready にします。
 
-## 12. Anti-patterns
+### 4.4. Anti-patterns
 
 | Anti-pattern                       | 問題                                                                 |
 | ---------------------------------- | -------------------------------------------------------------------- |

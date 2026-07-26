@@ -359,7 +359,7 @@ provider別の `max_concurrency` や agent 選択は [exec設定ガイド](specd
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が result を作業の入口として、最終確認・修正と確定を行います。
 
-human task の plan は生成しません。対象タスクを claim すると、`exec claim` が `execution: human`、`approach`、`targets` を持つ result を scaffold します。この result が作業指示と確認記録の正本です。確定手順は [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]、共通規約は [[exec-human-finalize-standard|Human Finalize 実行標準]]を参照します。
+human task の plan は生成しません。対象タスクを claim すると、`exec claim` が `execution: human`、`approach`、`targets` を持つ result を scaffold します。この result が作業指示と確認記録の正本です。確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を参照します。
 
 確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。
 

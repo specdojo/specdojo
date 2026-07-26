@@ -9,7 +9,7 @@ specdojo:
 
 Register Operation Guide
 
-プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [[pjr-rulebook]] を、コマンドの一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を正本とします。
+プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) を、コマンドの一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を正本とします。
 
 **対象読者**
 
@@ -23,7 +23,11 @@ Register Operation Guide
 
 - 登録項目の実行経路は [exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
 
-## 1. 登録簿の位置づけ
+## 1. 登録簿の基本
+
+登録簿が何を管理するか、いつ登録するか、type をどう選ぶかを示します。
+
+### 1.1. 登録簿の位置づけ
 
 プロジェクト登録簿は、プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘を一元管理する台帳です。
 
@@ -56,7 +60,7 @@ flowchart LR
 specdojo register scaffold --project <project-id>
 ```
 
-## 2. 登録の判断基準
+### 1.2. 登録の判断基準
 
 次のいずれかに当てはまる事項は、その場で処理せず登録簿に登録します。
 
@@ -83,9 +87,9 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 | `medium` | 期限までに対応が必要             |
 | `low`    | 影響が限定的で、後回しにできる   |
 
-## 3. type の選び方
+### 1.3. type の選び方
 
-値の一覧と列定義は [[pjr-rulebook]] と `pjr-index.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
+値の一覧と列定義は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) と `pjr-index.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
 
 | type             | 意味                                 | 迷ったとき                                                     |
 | ---------------- | ------------------------------------ | -------------------------------------------------------------- |
@@ -100,7 +104,11 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 
 type は派生ビューの生成と `exec run --register` の挙動（`agent実行・定期実行との連携` を参照）に影響するため、内容が変質した場合は `register update` で見直します。
 
-## 4. 状態遷移とコマンド
+## 2. 登録項目のライフサイクル
+
+登録から完了までの状態遷移、個票の扱い、完了時の記録、派生ビューを示します。
+
+### 2.1. 状態遷移とコマンド
 
 登録項目の状態はコマンドで遷移させます。手で status セルを書き換えるより、遷移ガードの効くコマンドを優先します。
 
@@ -119,7 +127,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 - 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
 - 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。
 
-個票（`pjr-XXXX-<topic>.md`）を持つ項目では、`close` / `reject` が処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [[pjr-rulebook]] の `個票 status の遷移基準` を正本とします。
+個票（`pjr-XXXX-<topic>.md`）を持つ項目では、`close` / `reject` が処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
 
 | コマンド          | 個票 `status` の遷移 | 条件                                                                       |
 | ----------------- | -------------------- | -------------------------------------------------------------------------- |
@@ -129,7 +137,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 - 個票を持たない項目（個票列が `-`）は成熟度を追う対象がないため、処理状態のみ更新されます。
 - 変更前に確認したい場合は `--dry-run` を付けると、一覧行の変更に加えて個票の `status` 変更予定も表示されます。
 
-## 5. 個票の分離
+### 2.2. 個票の分離
 
 一覧の 1 行（説明 1〜2 文）で管理できる項目は個票を作りません。次の場合に個票（`pjr-XXXX-<topic>.md`）へ分離します。
 
@@ -149,7 +157,7 @@ specdojo register add \
 
 個票を作成した後も、一覧の行は要約に留め、詳細は個票側へ書きます。
 
-## 6. 完了時の記録
+### 2.3. 完了時の記録
 
 `close` / `reject` / `defer` するときは、完了日と結論を残します。結論は「何をどう判断したか」が 1 文で分かる形にします。
 
@@ -166,7 +174,7 @@ specdojo register close \
 
 結論が残っていない終了項目は、後から経緯を追えなくなるため、close 前に埋めます。
 
-## 7. 派生ビューの扱い
+### 2.4. 派生ビューの扱い
 
 派生ビューは `register build` で生成します。
 
@@ -182,11 +190,11 @@ specdojo register build --project <project-id>
 
 - 既存プロジェクトの実値: 当該 `pjr-index.md` の「登録項目一覧」テーブルのタイトル行
 - 新規プロジェクトの初期値: `pjr-index-template.md` のタイトル行
-- 列の追加・削除・改名を伴う規範変更: [[pjr-rulebook]] の「登録項目一覧の標準列」
+- 列の追加・削除・改名を伴う規範変更: [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の「登録項目一覧の標準列」
 
 派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
 
-## 8. agent実行・定期実行との連携
+## 3. agent実行・定期実行との連携
 
 登録項目は `exec run --register` で agent に実行させられます。
 
@@ -212,7 +220,11 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 
 実行フローの詳細は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
 
-## 9. PJR-ID 重複の検知と復旧
+## 4. 例外対応と特殊な運用
+
+ID 重複の復旧、PO 留保事項の承認運用、統合ブランチへの予約起票など、通常運用から外れる場面を扱います。
+
+### 4.1. PJR-ID 重複の検知と復旧
 
 `register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生します。表末尾への追記は通常 merge conflict になりますが、rebase や cherry-pick を経ると重複が検知されずに混入することがあります。
 
@@ -239,7 +251,7 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 - 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残りません。
 - 付け替え後は派生ビューも再生成されます。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくくなります。
 
-## 10. PO 留保事項の PR 承認運用
+### 4.2. PO 留保事項の PR 承認運用
 
 プロジェクト憲章の権限委譲章で PO の承認を要する事項（PO 留保事項）は、decision 個票の起票だけでなく pull request のレビュー承認を併用します。個票のセル文字列だけでは作成者と承認者が分離されず自己承認になりうるため、承認者・承認日時・承認対象差分を platform 側で担保します。
 
@@ -256,7 +268,7 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 
 PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護 / CODEOWNERS 方針の詳細は、当該プロジェクトの登録項目（例: `pjr-0126-pr-based-po-approval`）で定義します。schedule 上の計画済みタスクによる通常の成果物更新や日常の agent コミットは、PR 承認の対象外です。
 
-## 11. 統合ブランチへの予約起票
+### 4.3. 統合ブランチへの予約起票
 
 作業 worktree（`exec/*` branch など）で作業中に PJR-ID だけを先に確保したい場合は、`register add --reserve` を使います。通常の `register add` は現在の branch の `pjr-index.md` を書き換えますが、`--reserve` を付けると統合ブランチの worktree へ登録行だけを追記・commit して ID を予約します。作業 worktree 側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
 
