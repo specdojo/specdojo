@@ -45,7 +45,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-scope-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: BA
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -199,7 +198,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-success-criteria-and-acceptance-criteria-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: BA
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -353,7 +351,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-stakeholder-register-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: BA
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -508,7 +505,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-charter-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: PO
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -663,7 +659,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-assumptions-constraints-dependencies-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: ARC
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -818,7 +813,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-issues-and-approach-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: BA
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -973,7 +967,6 @@ tasks:
     depends_on:
       - T-LAUNCH-prj-comparison-of-alternatives-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-definition-dedup-060
     owner: ARC
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1127,7 +1120,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-organization-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1281,7 +1273,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-roles-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1436,7 +1427,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-plan-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1591,7 +1581,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-communication-plan-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1745,7 +1734,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-quality-management-plan-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: QE
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -1900,7 +1888,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-members-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -2054,7 +2041,6 @@ tasks:
     depends_on:
       - T-LAUNCH-pm-raci-010
       - G-LAUNCH-bootstrap-pass
-      - T-LAUNCH-project-management-dedup-060
     owner: PM
     description: |
       エージェントが bootstrap で凍結した rulebook / recipe / sample / template に沿って成果物を磨き込む。
@@ -2197,50 +2183,3 @@ tasks:
     owner: PM
     tags:
       - initial-complete
-  - id: T-LAUNCH-project-definition-dedup-060
-    target_local_ids:
-      - prj-overview
-      - prj-scope
-      - prj-success-criteria-and-acceptance-criteria
-      - prj-stakeholder-register
-      - prj-charter
-      - prj-assumptions-constraints-dependencies
-      - prj-issues-and-approach
-      - prj-comparison-of-alternatives
-    phase_suffix: "060"
-    phase_set: cross-deliverable-pass
-    phase_id: project-definition-dedup
-    name: プロジェクト定義の正本選択・重複整理
-    duration_days: 0.5
-    depends_on:
-      - G-LAUNCH-bootstrap-pass
-    owner: ARC
-    tags:
-      - cross-deliverable
-    description: |
-      プロジェクト定義の成果物群を横断し、同じ事実・判断・理由を詳述している箇所の正本を選ぶ。
-      正本へ詳細を集約し、他文書では単独可読性に必要な要約と正本への参照へ置き換える。
-      各成果物の done_criteria、固有の責務、トレーサビリティ、based_on / depends_on を維持する。
-  - id: T-LAUNCH-project-management-dedup-060
-    target_local_ids:
-      - pm-organization
-      - pm-roles
-      - pm-plan
-      - pm-communication-plan
-      - pm-quality-management-plan
-      - pm-members
-      - pm-raci
-    phase_suffix: "060"
-    phase_set: cross-deliverable-pass
-    phase_id: project-management-dedup
-    name: プロジェクト管理の正本選択・重複整理
-    duration_days: 0.5
-    depends_on:
-      - G-LAUNCH-bootstrap-pass
-    owner: ARC
-    tags:
-      - cross-deliverable
-    description: |
-      プロジェクト管理の成果物群を横断し、同じ事実・判断・理由を詳述している箇所の正本を選ぶ。
-      正本へ詳細を集約し、他文書では単独可読性に必要な要約と正本への参照へ置き換える。
-      各成果物の done_criteria、固有の責務、トレーサビリティ、based_on / depends_on を維持する。
