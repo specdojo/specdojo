@@ -23,14 +23,14 @@ CLI による実行管理から確認したい場合は、[SpecDojo CLI概要ガ
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | SpecDojo 全体の構成と流れ              | [SpecDojo 全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                                  |
 | ドキュメンテーションの原則             | [SpecDojo ドキュメンテーション ポリシーガイド](./specdojo/guides/specdojo-documentation-policy-guide.md) |
-| 要求・要件・仕様・設計・実装の違い     | [ドキュメントフェーズ概要](./specdojo/guides/docs-phases-overview.md)                                    |
+| 要求・要件・仕様・設計・実装の違い     | [ドキュメントフェーズ概要](./specdojo/guides/docs-phases-overview-guide.md)                              |
 | プロダクト文書とプロジェクト文書の構造 | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                                      |
 
 ### 作成する成果物を決める
 
 | やりたいこと                                   | 参照先                                                                                 |
 | ---------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 成果物の種類、目的、主な内容を調べる           | [ドキュメント内容ガイド](./specdojo/guides/docs-contents-guide.md)                     |
+| 成果物の種類、目的、主な内容を調べる           | [SpecDojo 成果物リファレンス](./specdojo/guides/docs-contents-guide.md)                |
 | 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)            |
 | rulebook、recipe、sample、templateを使い分ける | [SpecDojo 参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md) |
 
@@ -48,7 +48,7 @@ CLI による実行管理から確認したい場合は、[SpecDojo CLI概要ガ
 | やりたいこと                               | 参照先                                                                                                |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
 | CLIの役割、初期設定、代表フローを知る      | [SpecDojo CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
-| CLIのコマンドとオプションを調べる          | [SpecDojoコマンドリファレンス](./specdojo/guides/specdojo-command-reference-guide.md)                 |
+| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/guides/specdojo-command-reference-guide.md)                      |
 | 課題、リスク、変更要求、意思決定を管理する | [SpecDojo 登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
 | Scheduleのタスクを実行・再実行する         | [SpecDojo exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
 | エージェント、権限、共通実行設定を変更する | [実行設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                                     |

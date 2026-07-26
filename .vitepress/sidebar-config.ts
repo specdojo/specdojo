@@ -192,25 +192,17 @@ export const specdojoSidebarItems = [
     text: "ガイド",
     collapsed: false,
     items: [
+      guide("SpecDojo全体概要", "specdojo-overview-guide"),
       guide("ドキュメントの構成", "docs-structure-guide"),
       guide("ドキュメントの作成順", "docs-authoring-order-guide"),
-      guide("ドキュメントのフェーズ概要", "docs-phases-overview"),
-      guide("ドキュメントの内容", "docs-contents-guide"),
-      guide("ドキュメントの書き方", "docs-editing-guide"),
+      guide("ドキュメントのフェーズ概要", "docs-phases-overview-guide"),
       guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
       guide("参考資料の扱い", "specdojo-reference-materials-guide"),
       guide("レビュー", "specdojo-review-guide"),
       group(
-        "CLIツール",
-        [
-          guide("CLI概要", "specdojo-cli-overview-guide"),
-          guide("コマンドリファレンス", "specdojo-command-reference-guide"),
-        ],
-        false,
-      ),
-      group(
         "スケジュールと実行",
         [
+          guide("CLI概要", "specdojo-cli-overview-guide"),
           guide("成果物からスケジュールへ", "specdojo-deliverables-to-schedule-guide"),
           guide("スケジュール設計", "specdojo-schedule-design-guide"),
           guide("実行運用", "specdojo-exec-operation-guide"),
@@ -223,6 +215,19 @@ export const specdojoSidebarItems = [
         false,
       ),
     ],
+  },
+  {
+    text: "リファレンス",
+    collapsed: false,
+    items: [
+      guide("SpecDojo 成果物リファレンス", "docs-contents-guide"),
+      guide("CLIコマンドリファレンス", "specdojo-command-reference-guide"),
+    ],
+  },
+  {
+    text: "How-to",
+    collapsed: true,
+    items: [guide("Markdown編集", "docs-editing-guide")],
   },
   {
     text: "標準",

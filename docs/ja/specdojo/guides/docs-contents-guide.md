@@ -5,11 +5,11 @@ specdojo:
   status: draft
 ---
 
-# ドキュメント内容ガイド
+# SpecDojo 成果物リファレンス
 
-Document Contents Guide
+SpecDojo Deliverables Reference
 
-SpecDojoで扱うドキュメントの内容について、以下のガイドラインを示します。
+SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な内容を一覧します。
 
 **対象読者**
 

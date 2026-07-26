@@ -143,7 +143,7 @@ flowchart LR
 成果物の検討順と判断点は
 [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、
 個々の成果物の目的は
-[ドキュメント内容ガイド](docs-contents-guide.md)、
+[SpecDojo 成果物リファレンス](docs-contents-guide.md)、
 成果物を確定するレビューは
 [SpecDojo レビューガイド](specdojo-review-guide.md)
 を参照してください。
@@ -210,7 +210,7 @@ CLI の導入は
 | 読者の目的                     | 最初に読む文書                                                                      |
 | ------------------------------ | ----------------------------------------------------------------------------------- |
 | 文書の分類と配置を理解したい   | [ドキュメント構成ガイド](docs-structure-guide.md)                                   |
-| 成果物の種類と内容を知りたい   | [ドキュメント内容ガイド](docs-contents-guide.md)                                    |
+| 成果物の種類と内容を知りたい   | [SpecDojo 成果物リファレンス](docs-contents-guide.md)                               |
 | 成果物を検討する順序を知りたい | [ドキュメント作成順ガイド](docs-authoring-order-guide.md)                           |
 | CLIを使い始めたい              | [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)                            |
 | Scheduleを設計したい           | [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)                    |
