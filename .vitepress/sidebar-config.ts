@@ -217,6 +217,7 @@ export const specdojoSidebarItems = [
           guide("登録簿運用", "specdojo-register-operation-guide"),
           guide("実行設定", "specdojo-exec-config-guide"),
           guide("plan/resultライフサイクル", "specdojo-plan-result-lifecycle-guide"),
+          guide("ブランチ運用", "specdojo-branch-workflow-guide"),
           guide("worktree運用", "specdojo-exec-worktree-guide"),
         ],
         false,
@@ -229,6 +230,7 @@ export const specdojoSidebarItems = [
     items: [
       standard("ドキュメントID・ファイル命名", "id-and-file-naming-standard"),
       standard("ドキュメントメタ情報", "document-metadata-standard"),
+      standard("Gitブランチ運用", "git-branching-standard"),
       standard("ルールブック記述", "rulebook-authoring-standard"),
       standard("レシピ記述", "recipe-authoring-standard"),
       standard("サンプル記述", "sample-authoring-standard"),

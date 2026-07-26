@@ -9,7 +9,7 @@ specdojo:
 
 SpecDojo Exec Worktree Guide
 
-`specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md) を参照します。
+`specdojo exec worktree` による隔離実行の分割手順と安全条件を説明します。自動実行や通常の手動実行は [specdojo-exec-operation-guide.md](specdojo-exec-operation-guide.md)、project `develop`・feature・exec のブランチ全体フローは [specdojo-branch-workflow-guide.md](specdojo-branch-workflow-guide.md) を参照します。ブランチ命名と統合方向の規範は [git-branching-standard.md](../standards/git-branching-standard.md) を正本とします。
 
 ## 1. worktree分割コマンドの役割
 
