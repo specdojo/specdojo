@@ -180,8 +180,10 @@ specdojo exec run --project prj-0001 --register PJR-0012,PJR-0013 --on-failure c
 
 `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複IDは最初の1件だけを実行します。全ID処理後に、ID別の成否・状態遷移・commit 結果を一覧表示し、いずれかが失敗すると終了コード 1 になります。オプションの意味は次のとおりです。
 
-- `--register-commit`: 成功したIDごとに、その実行で生じた変更だけを1コミットにまとめます。実行前から作業ツリーにある利用者の変更はcommit対象に含めません。既定は無効で、変更は作業ツリーに残ります。
+- `--register-commit`: 成功したIDごとに、その実行で生じた変更だけを1コミットにまとめます。実行前から作業ツリーにある利用者の変更はcommit対象に含めません。登録簿の状態遷移、派生ビュー、当該IDのplan/resultはrunner管理パスとして対象に含め、pre-commit hookが対象を整形した場合は同じcommitへ収束するまでamendします。収束後も対象差分が残る場合は `incomplete` の失敗としてサマリと終了コードへ反映します。既定は無効で、変更は作業ツリーに残ります。
 - `--on-failure <stop|continue>`: 途中で失敗したときに残りのIDを停止（`stop`、既定）するか継続（`continue`）するかを選びます。`stop` では失敗以降のIDは skipped として記録されます。
+
+`--register-commit` の実行前に過去のregister実行が残した未commitのplan/resultを検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
 
 register 実行は worktree を使わない in-place 直列実行のため、`--worktree` と `--parallel` は指定できません（指定した場合は理由を表示して拒否します）。
 

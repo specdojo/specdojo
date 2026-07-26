@@ -56,7 +56,8 @@ export function requireRunnableRegisterItem(item: PjrItem): RegisterTaskCategory
 export type RegisterItemOutcome = "success" | "failure" | "skipped";
 export type RegisterItemTransition = "review" | "waiting" | "none";
 
-// ID別の実行結果。commit は "committed <sha>" / "no-changes" / "off" / "skipped"。
+// ID別の実行結果。commit は
+// "committed <sha>" / "no-changes" / "incomplete" / "off" / "skipped"。
 export type RegisterItemSummary = {
   id: string;
   title: string;
@@ -145,19 +146,39 @@ export function parseRegisterIds(raw: string | string[] | undefined): {
 }
 
 // ID単位 commit の対象パスを算出する。項目実行の開始前スナップショット（preexisting）に
-// 無く、実行後（current）に現れた変更パスだけを返す。これにより「実行前から存在する
-// 利用者の変更」は commit 対象から除外され、当該IDが生成した plan/result/events/成果物
-// および register の状態遷移による変更だけが対象になる。戻り値は再現性のためソートする。
+// 無く、実行後（current）に現れた変更パスを返す。ただし runnerManaged に明示された
+// 登録簿・派生ビュー・当該 plan/result は、失敗試行などで開始前から dirty でも対象にする。
+// これにより利用者の既存変更を保護しつつ、runner 自身の状態遷移は取りこぼさない。
+// 戻り値は再現性のため重複除去してソートする。
 export function selectRegisterCommitPaths(
   preexisting: Iterable<string>,
   current: Iterable<string>,
+  runnerManaged: Iterable<string> = [],
 ): string[] {
   const before = new Set(preexisting);
+  const managed = new Set(runnerManaged);
   const added = new Set<string>();
   for (const path of current) {
-    if (!before.has(path)) added.add(path);
+    if (!before.has(path) || managed.has(path)) added.add(path);
   }
   return [...added].sort();
+}
+
+// 過去の register 実行が未commitのまま残した plan/result を抽出する。現在の実行が
+// 生成する前のスナップショットへ適用し、別IDの履歴へ暗黙に混ぜず警告するために使う。
+export function selectRegisterRunArtifactResidue(paths: Iterable<string>): string[] {
+  const residue = new Set<string>();
+  for (const path of paths) {
+    const normalized = path.replaceAll("\\", "/");
+    if (
+      /(?:^|\/)exec\/(?:plans|results)\/pjr-\d{4}-\d{8}T\d{6}Z-[a-f0-9]+-(?:plan|result)\.md$/i.test(
+        normalized,
+      )
+    ) {
+      residue.add(path);
+    }
+  }
+  return [...residue].sort();
 }
 
 export type RegisterRunTarget = {

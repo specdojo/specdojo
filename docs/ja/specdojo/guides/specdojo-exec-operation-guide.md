@@ -219,6 +219,8 @@ worktree 隔離を人が段階確認しながら実行する場合は [specdojo-
 | plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
 | worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
 
+`exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
+
 ## 9. planを確認してから実行する
 
 plan を先に生成して内容を確認・編集してから実行できます。

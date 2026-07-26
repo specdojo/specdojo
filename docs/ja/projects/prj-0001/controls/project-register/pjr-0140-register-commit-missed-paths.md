@@ -55,7 +55,11 @@ commit 対象は `selectRegisterCommitPaths` が算出し、その ID の実行�
 
 ## 4. 対応結果
 
--
+- `commitRegisterItemChanges` のcommit後に対象パスを再検出し、pre-commit hookが変更・再stageした差分を同じcommitへ収束させる処理を追加した。pathspec commitが元のindexを復元して逆向き差分を残す場合も、再add後に対象差分が消えたことを確認して正常終了する。
+- `pjr-index.md`、登録簿の派生ビュー、当該IDのplan/resultをrunner管理パスとして扱い、開始前からdirtyでもcommit対象に含めるようにした。その他の開始前からある利用者変更は従来どおり除外する。
+- 過去のregister実行が残した未commitのplan/resultを実行前スナップショットから検出し、現在のIDへ混ぜず標準エラーへ警告するようにした。
+- hook変更が規定回数で収束しないなどcommit後検証が失敗した場合は、対象IDを `waiting` へ遷移させ、実行サマリへ `failure` / `commit=incomplete` と理由を表示して終了コード1へ反映するようにした。
+- hook整形後の収束、同じパスを変更する次IDのcommit、runner管理パス、利用者変更の保護、失敗残骸の検出、`incomplete` サマリを自動テストへ追加した。
 
 ## 5. 関連ドキュメント
 

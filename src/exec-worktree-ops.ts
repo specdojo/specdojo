@@ -322,7 +322,12 @@ export function stabilizeCommitTargets(
     gitOutput(repoRoot, ["add", "-A", "--", ...paths]);
     const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
     if (staged.status === 0) {
-      throw new Error(`Failed to stage post-hook commit-target changes: ${paths.join(", ")}`);
+      // pathspec commit は hook が再stageした内容を commit した後、元の index を復元して
+      // HEAD と逆向きの差分を残す場合がある。この場合は add が index を HEAD へ揃えて
+      // 差分を解消するため、再取得して消えていれば正常な収束として扱う。
+      const remaining = listRemainingPaths();
+      if (remaining.length === 0) return;
+      throw new Error(`Failed to stage post-hook commit-target changes: ${remaining.join(", ")}`);
     }
     if (staged.status !== 1) throw new Error("Failed to inspect post-hook worktree changes.");
 

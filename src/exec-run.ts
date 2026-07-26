@@ -77,11 +77,12 @@ import {
   resolveRegisterRunTarget,
   sanitizeRegisterConclusion,
   selectRegisterCommitPaths,
+  selectRegisterRunArtifactResidue,
   type RegisterFailureMode,
   type RegisterItemSummary,
   type RegisterItemTransition,
 } from "./exec-register.js";
-import type { PjrItem } from "./register.js";
+import type { PjrItem, RegisterPaths } from "./register.js";
 import { isResultUnfilled, scaffoldResult, updateResultStatus } from "./exec-results.js";
 import {
   gitOutput,
@@ -96,6 +97,7 @@ import {
   discardStaleExecWorktree,
   mergeWorktreeIntoCurrent,
   removeWorktree,
+  stabilizeCommitTargets,
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
 import {
@@ -2147,15 +2149,17 @@ type RegisterRunContext = {
 };
 
 // 成功したIDの実行によって生じた変更だけを1コミットにまとめる。開始前スナップショット
-// （preexisting）に無いパスのみを対象にすることで、実行前から存在する利用者の変更は
-// commit 対象から除外する。commitWorktreeChanges と同じ add → staged 確認 → commit の
-// 手順に合わせる。
-function commitRegisterItemChanges(
+// （preexisting）に無いパスと runnerManaged を対象にし、利用者の既存変更は除外する。
+// commit 後は hook が変更した対象を amend し、対象差分が消えるまで収束を検証する。
+export function commitRegisterItemChanges(
   repoRoot: string,
   item: PjrItem,
   preexisting: readonly string[],
+  runnerManaged: readonly string[] = [],
 ): { committed: boolean; sha?: string } {
-  const paths = selectRegisterCommitPaths(preexisting, worktreeStatusPaths(repoRoot));
+  const remainingPaths = (): string[] =>
+    selectRegisterCommitPaths(preexisting, worktreeStatusPaths(repoRoot), runnerManaged);
+  const paths = remainingPaths();
   if (paths.length === 0) return { committed: false };
 
   gitOutput(repoRoot, ["add", "-A", "--", ...paths]);
@@ -2165,8 +2169,35 @@ function commitRegisterItemChanges(
 
   const title = item.title.replace(/\r?\n/g, " ").trim();
   gitOutput(repoRoot, ["commit", "-m", `exec(register ${item.id}): ${title}`, "--", ...paths]);
+  stabilizeCommitTargets(repoRoot, remainingPaths);
   const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
   return { committed: true, sha };
+}
+
+function repoRelativePath(repoRoot: string, path: string): string {
+  return relative(repoRoot, path).split(sep).join("/");
+}
+
+function registerRunnerManagedPaths(
+  repoRoot: string,
+  registerPaths: RegisterPaths,
+  planPath: string,
+  resultPath: string,
+  currentPaths: readonly string[],
+): string[] {
+  const exact = new Set(
+    [registerPaths.pjrIndexPath, planPath, resultPath].map((path) =>
+      repoRelativePath(repoRoot, path),
+    ),
+  );
+  const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
+    (path) => `${repoRelativePath(repoRoot, path)}/`,
+  );
+  for (const path of currentPaths) {
+    const normalized = path.replaceAll("\\", "/");
+    if (prefixes.some((prefix) => normalized.startsWith(prefix))) exact.add(path);
+  }
+  return [...exact];
 }
 
 // register 項目1件の in-place 実行。plan 生成 → `register start` → agent 実行 → 成否を
@@ -2192,6 +2223,13 @@ async function runSingleRegisterItem(
 
   // ID単位 commit のため、この項目が変更を生じる前の作業ツリー状態を記録する。
   const preexisting = context.registerCommit ? worktreeStatusPaths(repoRoot) : [];
+  const residue = context.registerCommit ? selectRegisterRunArtifactResidue(preexisting) : [];
+  if (residue.length > 0) {
+    process.stderr.write(
+      `Warning: pre-existing uncommitted register plan/result files detected before ${item.id}; ` +
+        `left out of this item's commit:\n${residue.map((path) => `  ${path}`).join("\n")}\n`,
+    );
+  }
 
   const { planPath } = await generateRegisterPlan({
     executionPath,
@@ -2250,8 +2288,44 @@ async function runSingleRegisterItem(
     }
     let commit = context.registerCommit ? "no-changes" : "off";
     if (context.registerCommit) {
-      const result = commitRegisterItemChanges(repoRoot, item, preexisting);
-      if (result.committed) commit = `committed ${result.sha}`;
+      const currentPaths = worktreeStatusPaths(repoRoot);
+      const runnerManaged = registerRunnerManagedPaths(
+        repoRoot,
+        registerPaths,
+        planPath,
+        resultPath,
+        currentPaths,
+      );
+      try {
+        const result = commitRegisterItemChanges(repoRoot, item, preexisting, runnerManaged);
+        if (result.committed) commit = `committed ${result.sha}`;
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error);
+        const commitReason = sanitizeRegisterConclusion(`register commit incomplete: ${detail}`);
+        process.stderr.write(`run commit failed: ${item.id}: ${detail}\n`);
+        if (
+          spawnRegisterTransition(projectId, [
+            "wait",
+            "--id",
+            item.id,
+            "--conclusion",
+            commitReason,
+          ])
+        ) {
+          transition = "waiting";
+        } else {
+          process.stderr.write(`register wait transition failed: ${item.id}\n`);
+          transition = "none";
+        }
+        return {
+          id: item.id,
+          title: item.title,
+          outcome: "failure",
+          transition,
+          commit: "incomplete",
+          reason: commitReason,
+        };
+      }
     }
     process.stdout.write(
       `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
