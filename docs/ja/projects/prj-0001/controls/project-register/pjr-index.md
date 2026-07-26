@@ -160,6 +160,7 @@ Project Register
 | PJR-0137 | review | pjr-indexの重複ID検知と再採番 | 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する | todo | medium | ARC | 2026-07-31 | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |
 | PJR-0138 | open | 起票を統合ブランチへ委譲するregister add | 作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する | todo | low | ARC | 2026-07-31 | - | - | [pjr-0138-register-add-on-integration-branch](./pjr-0138-register-add-on-integration-branch.md) |
 | PJR-0139 | done | 個票frontmatterのstatus遷移を自動化 | 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | 個票frontmatterのstatus遷移をcloseで実行 | [pjr-0139-register-ticket-status-transition](./pjr-0139-register-ticket-status-transition.md) |
+| PJR-0140 | open | register commitがhook整形差分と失敗残骸を取りこぼす | pathspec commitでhookの整形差分がindexに残り、次ID実行の開始前スナップショットに載って commit 対象から丸ごと除外される。失敗試行の残骸とrunner自身の状態遷移も同様に取りこぼす | issue | high | ARC | _TODO_ | - | - | [pjr-0140-register-commit-missed-paths](./pjr-0140-register-commit-missed-paths.md) |
 
 ## 2. 派生ビュー
 
