@@ -299,10 +299,10 @@ docs/
 │   │   │   │       ├── pm-change-request-log.md  # type=change-request の抽出ビュー
 │   │   │   │       └── pm-decision-log.md        # type=decision の抽出ビュー
 │   │   │   │
-│   │   │   ├── schedule/                         # スケジュール
+│   │   │   ├── schedule/                         # Schedule
 │   │   │   │   ├── sch-milestones.yaml           # マイルストーン定義
 │   │   │   │   ├── sch-defaults.yaml             # 共通デフォルト設定
-│   │   │   │   ├── sch-track-<track>.yaml        # トラックごとのスケジュール定義
+│   │   │   │   ├── sch-track-<track>.yaml        # トラックごとのSchedule定義
 │   │   │   │   └── sch-strategy-<track>.yaml     # トラックごとのタスク生成戦略
 │   │   │   │
 │   │   │   ├── routines/                         # 定期実行ルーチン ※成果物カタログ管理対象外

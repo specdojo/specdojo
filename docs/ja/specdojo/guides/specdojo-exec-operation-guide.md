@@ -17,7 +17,7 @@ SpecDojo Exec Operation Guide
 
 **この文書で分かること**
 
-- 実行経路の選び方、自動・手動実行、状態遷移、blocked 復帰、再実行、human タスクの扱い
+- 実行経路の選び方、自動・手動実行、状態遷移、blocked 復帰、再実行、routine による定期実行、human タスクの扱い
 
 **次に読む文書**
 
@@ -186,6 +186,14 @@ specdojo exec complete --project <project-id> --task <task-id> --by <actor> --ms
 
 `exec run --auto` の処理を手で分ける場合は、次の順に実行します。タスクを確認せず次のタスクをそのまま claim してよい場合は、手順 2〜4 の代わりに `--dry-run` なしの `exec scheduler` を 1 回実行します（自動選択と claim をまとめて行う）。
 
+`exec scheduler` は、タスクIDを指定せずに次のタスクを claim するためのコマンドです。claim にあたって次の保護が働きます。
+
+- プロジェクトレベルのロックを取得し、複数の runner が同じタスクを同時に claim しない。
+- `owner` と actor のロール整合をチェックし、担当ロールの一致しないタスクは選ばない。
+- 同じ actor に `doing` のタスクが残っている場合は、多重 claim を防ぐため拒否する。
+
+選択戦略は `--strategy` で切り替えます（`critical-first` 既定 / `fifo`）。選択結果の確認だけを行う場合は `--dry-run` を付けます。
+
 ```bash
 # 1. Ready と CPM を最新化する
 specdojo exec build --project <project-id>
@@ -258,9 +266,55 @@ plan / result の命名、再実行、アーカイブは [plan/resultライフ�
 specdojo exec run --project <project-id> --task <task-id>
 ```
 
-完了判定を取り消してスケジュール進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
+完了判定を取り消して Schedule の進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
 
-## 11. レートリミット対応
+## 11. routineによる定期実行
+
+`routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐しません。外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出す前提です。
+
+定義は `specdojo.config.json` の `routines_path` 配下に `rtn-<slug>.yaml` として置き、`id` はファイル名と一致させます。
+
+```yaml
+id: rtn-daily-register-sweep
+name: 登録簿 open todo の日次スイープ
+enabled: true
+interval: 1d
+action:
+  kind: register
+  filter:
+    types:
+      - todo
+    priorities:
+      - high
+    statuses:
+      - open
+  limit: 3
+```
+
+最終実行時刻は `<routines-path>/generated/routine-state.json` に記録され、`interval`（`30m` / `6h` / `1d` / `1w` 形式）が経過したものを due と判定します。多重起動は lock で防ぐため、外部スケジューラが重複起動しても同じ routine が二重に走ることはありません。
+
+`action.kind` で、どの実行経路を発火させるかを選びます。
+
+| kind          | 動作                                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
+| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
+| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）      |
+
+```bash
+# due な routine をまとめて実行する（cron / CI から呼ぶ想定）
+specdojo routine run --project <project-id> --due
+
+# 特定の routine を due 判定と無関係に即時実行する
+specdojo routine run --project <project-id> --id rtn-daily-register-sweep
+
+# 実行内容を確認する（実行も last_run 記録もしない）
+specdojo routine run --project <project-id> --due --dry-run
+```
+
+routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine が記録するのは `last_run` だけです。
+
+## 12. レートリミット対応
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
@@ -285,7 +339,7 @@ action:
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
 
-## 12. humanタスクの実行
+## 13. humanタスクの実行
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が result を作業の入口として、最終確認・修正と確定を行います。
 

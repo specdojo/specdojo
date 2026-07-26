@@ -56,12 +56,6 @@ project の解決順序と設定は [CLI概要ガイド](../guides/specdojo-cli-
 | `--dct <name>`      | `catalog generate` の対象を特定の `dct-*.yaml` に絞る（後述） |
 | `--force`           | 既存ファイルを上書きする                                      |
 
-`catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`catalog generate` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`catalog generate` は project サイズ相当の成果物集合を材料化します。生成方針は次のとおりです。
-
-- 成果物 `local_id` に対応するテンプレート（`<local_id>-template.md` または `<local_id>-template.yaml`）がある場合は、そのテンプレートから生成する（`frontmatter_template` を平坦化し、`_PROJECT_ID_` を実 project ID に置換する。`_TODO_` 等の記入プレースホルダは残す）。
-- テンプレートがない場合は、カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行）。
-- 既にファイルが存在する成果物は上書きしない（`--force` 指定時のみ上書きする）。
-
 `--dct <name>` で対象を特定の `dct-*.yaml` に絞れます。`name` は `dct-` プレフィックスや `.yaml` の有無を問わず、ドメイン名（例: `project-definition`）でも一致します。カンマ区切りまたは複数回指定で複数のカタログを対象にできます。指定名に一致する `dct-*.yaml` がない場合はエラーで終了します。
 
 ```bash
@@ -69,9 +63,7 @@ specdojo catalog generate --project prj-0001 --dct project-definition
 specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
 ```
 
-`catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集するため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済み本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回実行します。
-
-成果物カタログから Schedule への展開は [成果物カタログからScheduleへの展開ガイド](../guides/specdojo-deliverables-to-schedule-guide.md) を参照します。
+`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [成果物カタログからScheduleへの展開ガイド](../guides/specdojo-deliverables-to-schedule-guide.md) を参照します。
 
 ## 4. schedule
 
@@ -111,12 +103,20 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/specdojo-schedule
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
 | `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す   | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
 
-`register renumber` は、並行起票や rebase / cherry-pick で PJR-ID が重複・衝突したときに使います。表の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。移動先 ID が使用済みの場合は何も書き換えずにエラー終了し、`--dry-run` で変更対象を事前に確認できます。
+主要オプション:
 
-`register add --reserve` は、作業 worktree を離れずに PJR-ID を予約するために使います。統合ブランチの worktree へ登録行だけを追記・commit し、割り当てられた PJR-ID を標準出力の最終行に返します（個票は作らない）。統合ブランチは `--integration-branch <name>`（既定は config の `run.register_integration_branch`、無ければ `main`）または `--integration-worktree <path>` で指定します。統合ブランチの worktree が無い・`pjr-index.md` に未 commit の変更がある・ID が競合する場合は書き込まずにエラー終了します。予約起票の運用手順は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
+| オプション                      | 用途                                                                              | 対象               |
+| ------------------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                        | `renumber`         |
+| `--reserve`                     | 統合ブランチへ登録行だけを追記して PJR-ID を予約する（個票は作らない）            | `add`              |
+| `--integration-branch <name>`   | 予約先の統合ブランチ（既定は `run.register_integration_branch`、無ければ `main`） | `add --reserve`    |
+| `--integration-worktree <path>` | 予約先の worktree をパスで直接指定する                                            | `add --reserve`    |
+| `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                              | `add --reserve`    |
+| `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                | `renumber` / `add` |
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
-登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
+
+`renumber` による ID 重複の復旧手順、`add --reserve` による予約起票の運用、登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
 
 ## 6. exec
 
@@ -145,14 +145,30 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/specdojo-schedule
 | `exec plan`      | plan だけを生成する                                                  | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
 | `exec archive`   | 完了済み plan を `done/` へ移動する                                  | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
 
-`exec scheduler` は、タスク ID を指定せずに次のタスクを claim する場合に使います。プロジェクトレベルのロック、`owner` と actor のロール整合チェック、多重 claim 防止（同じ actor の `doing` が残っていると拒否）を伴い、選択戦略は `--strategy`（`critical-first` 既定 / `fifo`）で切り替えます。選択結果の確認だけを行う場合は `--dry-run` を付けます。
+状態イベントの `--msg` は、イベント種別によって必須・省略可が分かれます。
 
-状態イベントの `--msg` の扱いはイベント種別ごとに異なります。
+| コマンド                                               | `--msg` | 省略時に記録される固定メッセージ                                                  |
+| ------------------------------------------------------ | ------- | --------------------------------------------------------------------------------- |
+| `claim` / `complete` / `release` / `link` / `estimate` | 省略可  | `claim task` / `complete task` / `release task` / `link refs` / `update estimate` |
+| `note` / `block` / `unblock` / `reopen` / `cancel`     | 必須    | -（内容・理由・再開根拠をメッセージ自体が表すため）                               |
 
-- `claim` / `complete` / `release` / `link` / `estimate` では `--msg` を省略でき、省略時はコマンドごとの固定英語メッセージが記録されます（`claim task` / `complete task` / `release task` / `link refs` / `update estimate`）。`--msg` を指定した場合のみ上書きされます。
-- `note` / `block` / `unblock` / `reopen` / `cancel` では、メッセージ自体が内容・理由・再開根拠を表すため `--msg` が必須です。
+主要オプション:
 
-`exec reopen` は `--task` と `--by` を省略できません。`--by` には `pm-members.yaml` で `type: human` の member を指定します。対象は `done` の task に限り、後続 task が `doing` / `blocked` / `done` の場合は依存関係の不整合を防ぐため拒否します。
+| オプション                      | 用途                                                           | 対象                        |
+| ------------------------------- | -------------------------------------------------------------- | --------------------------- |
+| `--task <task-id>`              | 対象タスクを指定する                                           | 状態遷移系 / `run` / `plan` |
+| `--by <actor>`                  | 実行 actor を指定する                                          | 状態遷移系                  |
+| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）         | `scheduler` / `run --auto`  |
+| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す      | `run`                       |
+| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                        | `run --auto`                |
+| `--worktree`                    | task worktree に隔離して実行する                               | `run`                       |
+| `--track-state`                 | claim / complete の状態イベントを記録する                      | `run --task`                |
+| `--register <PJR-ID>`           | 登録簿の項目を in-place 実行する（空白・カンマ区切りで複数可） | `run` / `plan`              |
+| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる    | `run --register`            |
+| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）    | `run --register`            |
+| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                 | `resume`                    |
+
+`exec scheduler` の claim 保護と選択戦略、`exec reopen` の実行条件、`--auto --loop --parallel` の枠管理は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) を参照します。
 
 代表的な `exec run`:
 
@@ -182,20 +198,9 @@ specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --register-com
 specdojo exec run --project prj-0001 --register PJR-0012,PJR-0013 --on-failure continue
 ```
 
-`--register` は登録簿（`pjr-index.md`）の項目を in-place 実行します。type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります（`decision` / `dependency` / `note` は実行対象外）。状態は exec の claim/complete イベントではなく register の状態遷移で追跡し、agent は項目を終端化しません。成功後は人が確認して `register close` します。plan だけ確認する場合は `exec plan --register <PJR-ID>` を使います。
+`--register` は登録簿（`pjr-index.md`）の項目を in-place 実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `dependency` / `note` は対象外です。worktree を使わない直列実行のため、`--worktree` と `--parallel` は併用できません。
 
-`--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複IDは最初の1件だけを実行します。全ID処理後に、ID別の成否・状態遷移・commit 結果を一覧表示し、いずれかが失敗すると終了コード 1 になります。オプションの意味は次のとおりです。
-
-- `--register-commit`: 成功したIDごとに、その実行で生じた変更だけを1コミットにまとめます。実行前から作業ツリーにある利用者の変更はcommit対象に含めません。登録簿の状態遷移、派生ビュー、当該IDのplan/resultはrunner管理パスとして対象に含め、pre-commit hookが対象を整形した場合は同じcommitへ収束するまでamendします。収束後も対象差分が残る場合は `incomplete` の失敗としてサマリと終了コードへ反映します。既定は無効で、変更は作業ツリーに残ります。
-- `--on-failure <stop|continue>`: 途中で失敗したときに残りのIDを停止（`stop`、既定）するか継続（`continue`）するかを選びます。`stop` では失敗以降のIDは skipped として記録されます。
-
-`--register-commit` の実行前に過去のregister実行が残した未commitのplan/resultを検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
-
-register 実行は worktree を使わない in-place 直列実行のため、`--worktree` と `--parallel` は指定できません（指定した場合は理由を表示して拒否します）。
-
-`--auto --loop --parallel <n>` は、agent が1件完了するたびに `exec build` で Ready を再計算し、空いた枠へ次の Ready タスクを投入します。`--loop` が無い場合は、開始時に選んだ最大 `n` 件だけを実行して終了します。
-
-exec運用の詳細は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) を参照します。
+register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) を参照します。
 
 ## 7. exec worktree
 
@@ -254,32 +259,15 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `routine run`      | due な routine を実行し、`last_run` を記録する | `specdojo routine run --project prj-0001 --due` |
 | `routine where`    | routine 関連パスを表示する                     | `specdojo routine where --project prj-0001`     |
 
-定義は `specdojo.config.json` の `routines_path` 配下に `rtn-<slug>.yaml`（`id` はファイル名と一致）として置きます。最終実行時刻は `<routines-path>/generated/routine-state.json` に記録され、`interval`（`30m` / `6h` / `1d` / `1w` 形式）の経過で due と判定します。多重起動は lock で防ぎます。
+主要オプション:
 
-```yaml
-id: rtn-daily-register-sweep
-name: 登録簿 open todo の日次スイープ
-enabled: true
-interval: 1d
-action:
-  kind: register
-  filter:
-    types:
-      - todo
-    priorities:
-      - high
-    statuses:
-      - open
-  limit: 3
-```
+| オプション  | 用途                                            |
+| ----------- | ----------------------------------------------- |
+| `--due`     | due と判定された routine だけを対象にする       |
+| `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
+| `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action.kind` は次の 3 種類です。
-
-| kind          | 動作                                                                                                                 |
-| ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
-| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
-| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）      |
+`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) の `routineによる定期実行` を参照します。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
@@ -300,7 +288,8 @@ schedule / register / routine の使い分けの基準は [exec運用ガイド](
 | ------------------- | ------------------------------------------------------------------------------------ |
 | CLI全体像と初期設定 | [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md)                            |
 | Schedule設計        | [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md)                    |
-| exec運用            | [exec運用ガイド](../guides/specdojo-exec-operation-guide.md)                         |
+| exec運用・定期実行  | [exec運用ガイド](../guides/specdojo-exec-operation-guide.md)                         |
+| 登録簿運用          | [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md)                   |
 | worktree隔離実行    | [exec worktree運用ガイド](../guides/specdojo-exec-worktree-guide.md)                 |
 | plan/result         | [plan/resultライフサイクルガイド](../guides/specdojo-plan-result-lifecycle-guide.md) |
 | エージェント設定    | [exec設定ガイド](../guides/specdojo-exec-config-guide.md)                            |

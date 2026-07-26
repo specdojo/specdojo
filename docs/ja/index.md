@@ -45,16 +45,16 @@ CLI による実行管理から確認したい場合は、[CLI概要ガイド](.
 
 ### プロジェクトを実行・管理する
 
-| やりたいこと                               | 参照先                                                                                       |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| CLIの役割、初期設定、代表フローを知る      | [CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
-| CLIのコマンドとオプションを調べる          | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)               |
-| 課題、リスク、変更要求、意思決定を管理する | [登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
-| Scheduleのタスクを実行・再実行する         | [exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
-| エージェント、権限、共通実行設定を変更する | [exec設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                            |
-| planとresultの生成・保管・再実行を理解する | [plan/resultライフサイクルガイド](./specdojo/guides/specdojo-plan-result-lifecycle-guide.md) |
-| worktreeを使って手動で隔離実行する         | [exec worktree運用ガイド](./specdojo/guides/specdojo-exec-worktree-guide.md)                 |
-| projectとtaskのブランチを運用する          | [ブランチワークフローガイド](./specdojo/guides/specdojo-branch-workflow-guide.md)            |
+| やりたいこと                                  | 参照先                                                                                       |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
+| CLIのコマンドとオプションを調べる             | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)               |
+| 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
+| Scheduleのタスクを実行・再実行する            | [exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
+| エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                            |
+| planとresultの生成・保管・再実行を理解する    | [plan/resultライフサイクルガイド](./specdojo/guides/specdojo-plan-result-lifecycle-guide.md) |
+| worktreeを使って手動で隔離実行する            | [exec worktree運用ガイド](./specdojo/guides/specdojo-exec-worktree-guide.md)                 |
+| projectとtaskのブランチを運用する             | [ブランチワークフローガイド](./specdojo/guides/specdojo-branch-workflow-guide.md)            |
 
 ### 成果物をレビューする
 

@@ -21,7 +21,7 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- Schedule と成果物カタログの関係は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、実行設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+- Schedule と成果物カタログの関係は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、exec 設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
 
 ## 1. Scheduleの役割
 

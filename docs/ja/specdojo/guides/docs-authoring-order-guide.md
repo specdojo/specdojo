@@ -162,7 +162,7 @@ flowchart LR
 
   PJR["pjr-index / pjr-&lt;NNNN&gt;-&lt;term&gt;<br/>プロジェクト登録簿"]
   DC["dct-&lt;domain&gt;.yaml<br/>成果物カタログ"]
-  SCH["sch-track-&lt;track&gt;.yaml<br/>スケジュール"]
+  SCH["sch-track-&lt;track&gt;.yaml<br/>Schedule"]
   EXE["execution / reporting / controls<br/>実行 / 報告 / 管理"]
   PV["pjr-views<br/>台帳ビュー（状態別・優先度別・担当者別）"]
   PRR["pm-risk-register<br/>リスク登録簿"]

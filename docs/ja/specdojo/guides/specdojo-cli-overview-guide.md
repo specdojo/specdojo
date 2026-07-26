@@ -150,8 +150,6 @@ specdojo catalog validate --project prj-0001
 specdojo catalog build --project prj-0001
 
 # 2.1 カタログが指す成果物ファイル本体を一括生成する
-#     テンプレートがあればテンプレートから、なければカタログ情報から最小雛形を作成する。
-#     既存ファイルは上書きしない（上書きは --force）。
 specdojo catalog generate --project prj-0001
 
 # 3. strategy から track schedule を生成する
@@ -169,6 +167,22 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 ```bash
 specdojo build --project prj-0001
 ```
+
+### 6.1. catalog generateの生成方針
+
+`catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`catalog generate` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`catalog generate` はプロジェクトのサイズ相当の成果物集合をまとめて材料化します。
+
+成果物ごとの生成方針は次のとおりです。
+
+| 条件                                    | 生成内容                                                                                                                                                                                             |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `local_id` に対応するテンプレートがある | `<local_id>-template.md` / `<local_id>-template.yaml` から生成する。`frontmatter_template` を平坦化し、`_PROJECT_ID_` を実プロジェクトIDへ置換する（`_TODO_` などの記入プレースホルダは残す）        |
+| テンプレートがない                      | カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行） |
+| すでにファイルが存在する                | 上書きしない（`--force` を指定した場合のみ上書きする）                                                                                                                                               |
+
+`catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集します。そのため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済みの本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回だけ実行します。
+
+対象を特定のカタログに絞る場合は `--dct <name>` を使います。オプションの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
 
 ## 7. 定期実行と登録項目の実行
 

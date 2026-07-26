@@ -13,7 +13,9 @@ SpecDojo Deliverables Reference
 
 SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な内容を一覧します。
 
-プロジェクトで必要な成果物を選定するときは [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md) を、成果物固有の書き方は対象の rulebook を参照してください。
+ドキュメント名は、記述規則の正本である rulebook へのリンクになっています。作成手順を示す recipe がある成果物は、`作成レシピ` 列から辿れます。
+
+プロジェクトで必要な成果物を選定するときは [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md) を、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
 
 ## 1. プロジェクト
 
@@ -25,29 +27,29 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| 成果物カタログ索引 | Deliverables Catalog Index | `dct-index` | プロジェクトで管理する成果物カタログの入口を示す | 成果物カタログ一覧、対象範囲、生成ビューへの導線 |
-| 成果物カタログ | Deliverables Catalog | `dct-<domain>.yaml` | プロジェクト成果物の一覧と配置・派生関係をYAML正本として管理する | 成果物一覧、目的、配置先、生成元、依存関係、完了条件 |
+| [成果物カタログ索引](../rulebooks/dct-index-rulebook.md) | Deliverables Catalog Index | `dct-index` | プロジェクトで管理する成果物カタログの入口を示す | 成果物カタログ一覧、対象範囲、生成ビューへの導線 |
+| [成果物カタログ](../rulebooks/dct-rulebook.md) | Deliverables Catalog | `dct-<domain>.yaml` | プロジェクト成果物の一覧と配置・派生関係をYAML正本として管理する | 成果物一覧、目的、配置先、生成元、依存関係、完了条件 |
 | 成果物カタログ生成ビュー | Generated Deliverables Catalog View | `generated/dct-<domain>` | YAML正本から読みやすい一覧・確認用ビューを生成する | 成果物一覧、状態、担当、関連タスク、参照リンク |
 
 ### 1.2. 立ち上げ
 
 <!-- prettier-ignore -->
-| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
-| --- | --- | --- | --- | --- |
-| プロジェクト概要 | Project Overview | `prj-overview` | プロジェクトの背景・目的・ゴールを共有する | 背景、目的、必要性、期待効果、前提条件 |
-| プロジェクト憲章 | Project Charter | `prj-charter` | プロジェクトの正式な認可と権限委譲を文書化する | プロジェクトの目的、スポンサー、権限、成功条件、承認事項 |
-| ステークホルダー登録簿 | Stakeholder Register | `prj-stakeholder-register` | 関係者の役割・関心・影響度を整理する | 関係者一覧、役割、期待、影響度、コミュニケーション上の留意点 |
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
+| --- | --- | --- | --- | --- | --- |
+| [プロジェクト概要](../rulebooks/prj-overview-rulebook.md) | Project Overview | `prj-overview` | プロジェクトの背景・目的・ゴールを共有する | 背景、目的、必要性、期待効果、前提条件 | [レシピ](../recipes/prj-overview-recipe.md) |
+| [プロジェクト憲章](../rulebooks/prj-charter-rulebook.md) | Project Charter | `prj-charter` | プロジェクトの正式な認可と権限委譲を文書化する | プロジェクトの目的、スポンサー、権限、成功条件、承認事項 | [レシピ](../recipes/prj-charter-recipe.md) |
+| [ステークホルダー登録簿](../rulebooks/prj-stakeholder-register-rulebook.md) | Stakeholder Register | `prj-stakeholder-register` | 関係者の役割・関心・影響度を整理する | 関係者一覧、役割、期待、影響度、コミュニケーション上の留意点 | [レシピ](../recipes/prj-stakeholder-register-recipe.md) |
 
 ### 1.3. プロジェクト定義
 
 <!-- prettier-ignore -->
-| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
-| --- | --- | --- | --- | --- |
-| プロジェクトスコープ | Project Scope | `prj-scope` | 対象範囲と対象外を明確にする | 対象業務、対象システム、対象期間、スコープ外 |
-| 成功基準と受入条件 | Success Criteria and Acceptance Criteria | `prj-success-criteria-and-acceptance-criteria` | プロジェクト成功の判定基準と受入条件を明確化する | 成功指標、完了定義、受入条件、判定方法、承認者 |
-| 前提・制約・依存関係 | Assumptions, Constraints and Dependencies | `prj-assumptions-constraints-dependencies` | 実行上の前提条件・制約事項・外部依存を明示する | 前提条件、制約事項、依存先、影響、対応方針 |
-| プロジェクト課題と解決アプローチ | Project Issues and Approach | `prj-issues-and-approach` | 主要課題と解決方針を整理する | 課題一覧、原因、解決策候補、選択したアプローチと理由 |
-| 代替案比較 | Comparison of Alternatives | `prj-comparison-of-alternatives` | 複数案を比較し、採択理由を残す | 比較対象、評価観点、メリット・デメリット、採択案、採択理由 |
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
+| --- | --- | --- | --- | --- | --- |
+| [プロジェクトスコープ](../rulebooks/prj-scope-rulebook.md) | Project Scope | `prj-scope` | 対象範囲と対象外を明確にする | 対象業務、対象システム、対象期間、スコープ外 | [レシピ](../recipes/prj-scope-recipe.md) |
+| [成功基準と受入条件](../rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md) | Success Criteria and Acceptance Criteria | `prj-success-criteria-and-acceptance-criteria` | プロジェクト成功の判定基準と受入条件を明確化する | 成功指標、完了定義、受入条件、判定方法、承認者 | [レシピ](../recipes/prj-success-criteria-and-acceptance-criteria-recipe.md) |
+| [前提・制約・依存関係](../rulebooks/prj-assumptions-constraints-dependencies-rulebook.md) | Assumptions, Constraints and Dependencies | `prj-assumptions-constraints-dependencies` | 実行上の前提条件・制約事項・外部依存を明示する | 前提条件、制約事項、依存先、影響、対応方針 | [レシピ](../recipes/prj-assumptions-constraints-dependencies-recipe.md) |
+| [プロジェクト課題と解決アプローチ](../rulebooks/prj-issues-and-approach-rulebook.md) | Project Issues and Approach | `prj-issues-and-approach` | 主要課題と解決方針を整理する | 課題一覧、原因、解決策候補、選択したアプローチと理由 | [レシピ](../recipes/prj-issues-and-approach-recipe.md) |
+| [代替案比較](../rulebooks/prj-comparison-of-alternatives-rulebook.md) | Comparison of Alternatives | `prj-comparison-of-alternatives` | 複数案を比較し、採択理由を残す | 比較対象、評価観点、メリット・デメリット、採択案、採択理由 | [レシピ](../recipes/prj-comparison-of-alternatives-recipe.md) |
 
 ### 1.4. プロダクト変更
 
@@ -66,30 +68,30 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| 影響調査（業務） | Impact Analysis (Business) | `imp-business` | 変更要求が業務へ与える影響を整理する | 影響対象業務、変更要否、影響度、対応方針、未解決事項 |
-| 影響調査（データ） | Impact Analysis (Data) | `imp-data` | 変更要求がデータへ与える影響を整理する | 影響対象データ、変更要否、影響度、対応方針、未解決事項 |
-| 影響調査（I/F） | Impact Analysis (Interface) | `imp-interface` | 変更要求がインターフェースへ与える影響を整理する | 影響対象I/F、変更要否、影響度、対応方針、未解決事項 |
-| 影響調査（テスト） | Impact Analysis (Test) | `imp-test` | 変更要求がテストへ与える影響を整理する | 影響対象テスト、変更要否、影響度、対応方針、未解決事項 |
-| 影響調査（運用） | Impact Analysis (Operations) | `imp-operations` | 変更要求が運用へ与える影響を整理する | 影響対象運用、変更要否、影響度、対応方針、未解決事項 |
+| [影響調査（業務）](../rulebooks/imp-business-rulebook.md) | Impact Analysis (Business) | `imp-business` | 変更要求が業務へ与える影響を整理する | 影響対象業務、変更要否、影響度、対応方針、未解決事項 |
+| [影響調査（データ）](../rulebooks/imp-data-rulebook.md) | Impact Analysis (Data) | `imp-data` | 変更要求がデータへ与える影響を整理する | 影響対象データ、変更要否、影響度、対応方針、未解決事項 |
+| [影響調査（I/F）](../rulebooks/imp-interface-rulebook.md) | Impact Analysis (Interface) | `imp-interface` | 変更要求がインターフェースへ与える影響を整理する | 影響対象I/F、変更要否、影響度、対応方針、未解決事項 |
+| [影響調査（テスト）](../rulebooks/imp-test-rulebook.md) | Impact Analysis (Test) | `imp-test` | 変更要求がテストへ与える影響を整理する | 影響対象テスト、変更要否、影響度、対応方針、未解決事項 |
+| [影響調査（運用）](../rulebooks/imp-operations-rulebook.md) | Impact Analysis (Operations) | `imp-operations` | 変更要求が運用へ与える影響を整理する | 影響対象運用、変更要否、影響度、対応方針、未解決事項 |
 
 #### 1.4.3. トレーサビリティ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| トレーサビリティ（要求→仕様） | Requirements Traceability (Requirements to Specs) | `trc-requirements-to-specs` | 要求と仕様の対応を可視化し、漏れを防ぐ | 要求ID、対応仕様ID、充足状況、ギャップ |
-| トレーサビリティ（要求→テスト） | Requirements Traceability (Requirements to Tests) | `trc-requirements-to-tests` | 要求とテストの対応を可視化し、漏れを防ぐ | 要求ID、対応テストID、充足状況、ギャップ |
+| [トレーサビリティ（要求→仕様）](../rulebooks/trc-requirements-to-specs-rulebook.md) | Requirements Traceability (Requirements to Specs) | `trc-requirements-to-specs` | 要求と仕様の対応を可視化し、漏れを防ぐ | 要求ID、対応仕様ID、充足状況、ギャップ |
+| [トレーサビリティ（要求→テスト）](../rulebooks/trc-requirements-to-tests-rulebook.md) | Requirements Traceability (Requirements to Tests) | `trc-requirements-to-tests` | 要求とテストの対応を可視化し、漏れを防ぐ | 要求ID、対応テストID、充足状況、ギャップ |
 
 #### 1.4.4. 移行
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| 移行計画 | Migration Plan | `mip-index` | 変更対象の移行方針と全体計画を定義し、切替リスクを管理する | 移行範囲、移行方式、体制、スケジュール、リスクと対策 |
-| データ移行設計 | Data Migration Design | `dmd-index`, `dmd-<term>` | データ移行の設計内容を定義し、移行時の整合性を確保する | 移行対象データ、変換方針、マッピング、検証方法、ロールバック方針 |
-| 移行テスト計画（リハーサル計画） | Migration Test Plan | `mtp-index`, `mtp-<term>` | 移行リハーサルの実施計画を定義し、切替前に妥当性を検証する | テスト範囲、シナリオ、環境、判定基準、是正計画 |
-| カットオーバー計画（本番切替手順） | Cutover Plan | `cop-index`, `cop-<term>` | 本番切替の手順を定義し、停止時間と障害リスクを最小化する | 切替手順、実施順序、判定ポイント、エスカレーション、切戻し手順 |
-| 運用切替計画（ハイパーケア含む） | Operations Transition Plan | `otp-index`, `otp-<term>` | 切替後の運用移管計画を定義し、安定稼働へ移行する | 運用引継ぎ、体制、監視強化期間、問い合わせ対応、安定化完了条件 |
+| [移行計画](../rulebooks/mip-index-rulebook.md) | Migration Plan | `mip-index` | 変更対象の移行方針と全体計画を定義し、切替リスクを管理する | 移行範囲、移行方式、体制、スケジュール、リスクと対策 |
+| [データ移行設計](../rulebooks/dmd-index-rulebook.md) | Data Migration Design | `dmd-index`, `dmd-<term>` | データ移行の設計内容を定義し、移行時の整合性を確保する | 移行対象データ、変換方針、マッピング、検証方法、ロールバック方針 |
+| [移行テスト計画（リハーサル計画）](../rulebooks/mtp-rulebook.md) | Migration Test Plan | `mtp-index`, `mtp-<term>` | 移行リハーサルの実施計画を定義し、切替前に妥当性を検証する | テスト範囲、シナリオ、環境、判定基準、是正計画 |
+| [カットオーバー計画（本番切替手順）](../rulebooks/cop-index-rulebook.md) | Cutover Plan | `cop-index`, `cop-<term>` | 本番切替の手順を定義し、停止時間と障害リスクを最小化する | 切替手順、実施順序、判定ポイント、エスカレーション、切戻し手順 |
+| [運用切替計画（ハイパーケア含む）](../rulebooks/otp-index-rulebook.md) | Operations Transition Plan | `otp-index`, `otp-<term>` | 切替後の運用移管計画を定義し、安定稼働へ移行する | 運用引継ぎ、体制、監視強化期間、問い合わせ対応、安定化完了条件 |
 
 ### 1.5. プロジェクトマネジメント
 
@@ -98,51 +100,55 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 #### 1.5.1. 管理計画
 
 <!-- prettier-ignore -->
-| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
-| --- | --- | --- | --- | --- |
-| プロジェクト管理計画 | Project Management Plan | `pm-plan` | プロジェクト全体の管理方針・プロセスを定義する | スコープ管理、スケジュール管理、コスト管理、品質管理、リスク管理、コミュニケーション管理の方針 |
-| コミュニケーション計画 | Communication Plan | `pm-communication-plan` | 報告・連絡・会議体の計画を定義する | 報告頻度、会議体一覧、連絡系統、エスカレーションルール |
-| 品質管理計画 | Quality Management Plan | `pm-quality-management-plan` | 品質目標・レビュー方針・品質基準を定義する | 品質目標、レビュープロセス、品質メトリクス、検査基準 |
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
+| --- | --- | --- | --- | --- | --- |
+| [プロジェクト管理計画](../rulebooks/pm-plan-rulebook.md) | Project Management Plan | `pm-plan` | プロジェクト全体の管理方針・プロセスを定義する | スコープ管理、スケジュール管理、コスト管理、品質管理、リスク管理、コミュニケーション管理の方針 | [レシピ](../recipes/pm-plan-recipe.md) |
+| [コミュニケーション計画](../rulebooks/pm-communication-plan-rulebook.md) | Communication Plan | `pm-communication-plan` | 報告・連絡・会議体の計画を定義する | 報告頻度、会議体一覧、連絡系統、エスカレーションルール | [レシピ](../recipes/pm-communication-plan-recipe.md) |
+| [品質管理計画](../rulebooks/pm-quality-management-plan-rulebook.md) | Quality Management Plan | `pm-quality-management-plan` | 品質目標・レビュー方針・品質基準を定義する | 品質目標、レビュープロセス、品質メトリクス、検査基準 | [レシピ](../recipes/pm-quality-management-plan-recipe.md) |
 
 #### 1.5.2. 組織体制
 
 <!-- prettier-ignore -->
-| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
-| --- | --- | --- | --- | --- |
-| 組織とロールの定義 | Organization and Role Definition | `pm-organization` | プロジェクトの体制・関係者構造・意思決定構造を明確にする | プロジェクト全体の体制図、チーム構成、ロール構成 |
-| ロール定義 | Role Definition | `pm-roles.yaml` | プロジェクトで利用するロールを機械処理しやすい形で定義する | ロールコード、ロール名、責務、権限 |
-| メンバー定義 | Member Definition | `pm-members.yaml` | メンバーとロールの対応を管理する | メンバー、所属、担当ロール、連絡先、稼働条件 |
-| RACI | RACI | `pm-raci` | 作業や成果物に対する責任分担マトリクスを定義する | 成果物ごとの RACI マトリクス |
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
+| --- | --- | --- | --- | --- | --- |
+| [組織とロールの定義](../rulebooks/pm-organization-rulebook.md) | Organization and Role Definition | `pm-organization` | プロジェクトの体制・関係者構造・意思決定構造を明確にする | プロジェクト全体の体制図、チーム構成、ロール構成 | [レシピ](../recipes/pm-organization-recipe.md) |
+| [ロール定義](../rulebooks/pm-roles-rulebook.md) | Role Definition | `pm-roles.yaml` | プロジェクトで利用するロールを機械処理しやすい形で定義する | ロールコード、ロール名、責務、権限 | [レシピ](../recipes/pm-roles-recipe.md) |
+| [メンバー定義](../rulebooks/pm-members-rulebook.md) | Member Definition | `pm-members.yaml` | メンバーとロールの対応を管理する | メンバー、所属、担当ロール、連絡先、稼働条件 | [レシピ](../recipes/pm-members-recipe.md) |
+| [RACI](../rulebooks/pm-raci-rulebook.md) | RACI | `pm-raci` | 作業や成果物に対する責任分担マトリクスを定義する | 成果物ごとの RACI マトリクス | [レシピ](../recipes/pm-raci-recipe.md) |
 
 #### 1.5.3. 管理台帳・管理ビュー
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| プロジェクト登録簿 | Project Register | `pjr-index`, `pjr-<NNNN>-<term>` | リスク・課題・変更要求・意思決定などの統合管理台帳を正本として管理する | 登録項目ID、種別、タイトル、優先度、担当、期限、ステータス、関連成果物 |
+| [プロジェクト登録簿](../rulebooks/pjr-rulebook.md) | Project Register | `pjr-index`, `pjr-<NNNN>-<term>` | リスク・課題・変更要求・意思決定などの統合管理台帳を正本として管理する | 登録項目ID、種別、タイトル、優先度、担当、期限、ステータス、関連成果物 |
 | 台帳ビュー | Project Register View | `pjr-views` | プロジェクト登録簿から状態別・優先度別・担当者別の補助ビューを生成する | 未完了項目、状態別一覧、優先度別一覧、担当者別一覧 |
-| リスク登録簿 | Risk Register | `pm-risk-register` | `type=risk` の登録項目を抽出してリスク管理ビューを提供する | リスク ID、発生確率、影響度、対応策、担当、ステータス |
-| 課題ログ | Issue Log | `pm-issue-log` | `type=issue` の登録項目を抽出して課題管理ビューを提供する | 課題 ID、発生日、内容、優先度、対応策、担当、期限、ステータス |
-| 変更要求ログ | Change Request Log | `pm-change-request-log` | `type=change-request` の登録項目を抽出して変更要求ビューを提供する | 変更 ID、要求内容、影響範囲、審査結果、決定日 |
+| [リスク登録簿](../rulebooks/pm-risk-register-rulebook.md) | Risk Register | `pm-risk-register` | `type=risk` の登録項目を抽出してリスク管理ビューを提供する | リスク ID、発生確率、影響度、対応策、担当、ステータス |
+| [課題ログ](../rulebooks/pm-issue-log-rulebook.md) | Issue Log | `pm-issue-log` | `type=issue` の登録項目を抽出して課題管理ビューを提供する | 課題 ID、発生日、内容、優先度、対応策、担当、期限、ステータス |
+| [変更要求ログ](../rulebooks/pm-change-request-log-rulebook.md) | Change Request Log | `pm-change-request-log` | `type=change-request` の登録項目を抽出して変更要求ビューを提供する | 変更 ID、要求内容、影響範囲、審査結果、決定日 |
 | 決定ログ | Decision Log | `pm-decision-log` | `type=decision` の登録項目を抽出して意思決定ビューを提供する | 背景、決定した内容、検討した選択肢、採択理由、影響範囲 |
+
+登録簿の運用手順は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
 
 #### 1.5.4. レポート
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| 進捗報告 | Progress Report | `pr-<yyyy-mm-dd>-<nn>` | 定期的な進捗状況を報告する | 報告期間、完了タスク、遅延・リスク、次期予定、課題・依頼事項 |
-| 議事録 | Meeting Minutes | `mm-<yyyy-mm-dd>-<nn>` | 会議の決定事項・アクションを記録する | 会議名、日時、参加者、議題、決定事項、アクションアイテム |
+| [進捗報告](../rulebooks/pr-rulebook.md) | Progress Report | `pr-<yyyy-mm-dd>-<nn>` | 定期的な進捗状況を報告する | 報告期間、完了タスク、遅延・リスク、次期予定、課題・依頼事項 |
+| [議事録](../rulebooks/mm-rulebook.md) | Meeting Minutes | `mm-<yyyy-mm-dd>-<nn>` | 会議の決定事項・アクションを記録する | 会議名、日時、参加者、議題、決定事項、アクションアイテム |
 
-#### 1.5.5. スケジュール
+#### 1.5.5. Schedule
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | マイルストーン定義 | Milestones Definition | `sch-milestones.yaml` | プロジェクト全体のマイルストーンを定義する | マイルストーン名、期日、判定基準（YAML 形式） |
-| 共通デフォルト設定 | Schedule Defaults | `sch-defaults.yaml` | スケジュール共通のカレンダー・開始日などを定義する | カレンダー、タイムゾーン、開始日、既定設定 |
-| トラック別スケジュール定義 | Schedule Track Definition | `sch-track-<track>.yaml` | トラックごとのタスク・マイルストーンを定義する | タスク、開始日、終了日、依存関係、担当、実行形態 |
+| 共通デフォルト設定 | Schedule Defaults | `sch-defaults.yaml` | Schedule 共通のカレンダー・開始日などを定義する | カレンダー、タイムゾーン、開始日、既定設定 |
+| トラック別Schedule定義 | Schedule Track Definition | `sch-track-<track>.yaml` | トラックごとのタスク・マイルストーンを定義する | タスク、開始日、終了日、依存関係、担当、実行形態 |
 | トラック別タスク生成戦略 | Schedule Strategy Definition | `sch-strategy-<track>.yaml` | トラックごとのタスク生成戦略を定義する | 対象カタログ、生成フェーズ、担当ルール、依存補完 |
+
+Schedule 定義全体の記述ルールは [sch-rulebook](../rulebooks/sch-rulebook.md)、設計の考え方は [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md) を参照します。
 
 #### 1.5.6. 実行管理
 

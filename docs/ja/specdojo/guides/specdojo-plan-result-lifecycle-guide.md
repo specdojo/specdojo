@@ -164,7 +164,7 @@ exec/plans/done/<slug>-<UTC>-<rand>-plan.md
 specdojo exec run --project <project-id> --task <task-id>
 ```
 
-状態イベントは追加されません。完了判定を取り消してスケジュール進捗へ再度反映したい場合は、`reopen`、`claim`、`run`、`complete` を明示的に実行します。
+状態イベントは追加されません。完了判定を取り消して Schedule の進捗へ再度反映したい場合は、`reopen`、`claim`、`run`、`complete` を明示的に実行します。
 
 ```bash
 specdojo exec reopen --project <project-id> --task <task-id> --by <human-actor> --msg "completion criteria unmet"

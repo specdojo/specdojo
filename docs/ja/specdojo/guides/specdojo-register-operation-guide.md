@@ -199,10 +199,16 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 
 - type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になる。`decision` / `dependency` / `note` は実行対象外。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しない。成功後は人が内容を確認して `register close` する。
-- `--register` には複数の PJR-ID を空白区切り・カンマ区切りで渡せる。指定順に1件ずつ実行し、各IDの状態遷移まで完結してから次へ進む。全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示する。
-- `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitする（実行前から作業ツリーにある利用者の変更は含めない）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選ぶ。
-- register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしない。
+- `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せる。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進む。重複したIDは最初の1件だけを実行する。
+- 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示する。いずれかが失敗した場合は終了コード 1 で終了する。
+- `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitする（実行前から作業ツリーにある利用者の変更は含めない）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選ぶ。`stop` では失敗以降のIDが skipped として記録される。
+- register 実行は in-place の直列実行であり、`--worktree` と `--parallel` はサポートしない（指定した場合は理由を表示して拒否する）。
+- 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使う。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使う。
+
+`--register-commit` は、登録簿の状態遷移・派生ビュー・当該IDの plan/result を runner 管理パスとして commit 対象に含めます。pre-commit hook が対象ファイルを整形した場合は、同じ commit へ収束するまで amend します。収束後も対象差分が残る場合は `incomplete` の失敗として一覧と終了コードへ反映します。既定は無効で、変更は作業ツリーに残ります。
+
+実行前に、過去の register 実行が残した未 commit の plan/result を検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
 
 実行フローの詳細は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
 
