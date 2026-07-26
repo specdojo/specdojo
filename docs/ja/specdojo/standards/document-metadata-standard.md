@@ -9,12 +9,13 @@ specdojo:
 
 Document Metadata Standard
 
-ドキュメントの Frontmatter に関する共通原則と、成果物ドキュメントの記述ルールを定義します。
+Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する共通原則、および成果物ドキュメントの記述ルールを定義します。
 
 ## 1. 適用範囲
 
 - 共通原則: Frontmatter を持つすべての Markdown ドキュメント
 - 独立 YAML データファイル向け規約: SpecDojo スキーマ（`docs/specdojo/schemas/v1/`）を持つ YAML 成果物（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` / `bdd-*.yaml` など）
+- JSON データファイル向け規約: SpecDojo が管理する JSON 文書、実行イベント、設定、インデックス、生成物
 - 成果物向け詳細規約: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template` / `sample`
 - 成果物スキーマ: [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
@@ -35,6 +36,7 @@ Document Metadata Standard
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
 - `specdojo:` 名前空間の対象は Markdown Frontmatter のみとする。独立 YAML データファイル（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` など）は Markdown ではなく他ツールとの同居も無いため、名前空間化せずトップレベルに項目を置く。
+- JSON データファイルは Frontmatter を持たず、用途別のスキーマまたは実装契約が定めるトップレベル項目にメタデータを置く。Markdown の `specdojo:` 名前空間や `id` / `type` / `status` の共通必須条件を一律には適用しない。
 
 ```yaml
 ---
@@ -160,7 +162,40 @@ metadata_template:
 # 以下、本文キー（roles など雛形本体）が続く
 ```
 
-## 4. 成果物の必須項目
+## 4. JSONデータファイルのメタ情報
+
+JSON データファイルは Frontmatter を持たないため、トップレベルの構造化項目でメタデータを表す。
+JSON オブジェクトのプロパティ順序には意味がないため、メタデータ項目を表示上ファイル先頭へ置く場合でも、その順序を識別や検証の条件にしない。
+
+JSON は用途によって責務と必要な識別情報が異なるため、Markdown や独立 YAML 成果物の `id` / `type` / `status` を一律の必須項目としない。
+
+| 区分               | メタデータの例                             | 正本                                         |
+| ------------------ | ------------------------------------------ | -------------------------------------------- |
+| JSON 成果物・定義  | `id`、`type`、`status`、スキーマバージョン | 対応する成果物スキーマ、rulebook             |
+| 実行イベント       | `v`、`ts`、`type`、`task_id`、`by`         | イベント形式のスキーマまたは実装上の検証契約 |
+| 設定・インデックス | バージョン、対象、生成元など               | 各ファイル形式のスキーマ                     |
+| 生成物・派生ビュー | スキーマバージョン、生成元、対象など       | 生成処理と出力形式のスキーマ                 |
+
+- JSON 成果物として文書IDや状態を管理する場合は、対応するスキーマで `id` / `type` / `status` の必須性と値制約を定義する。
+- イベントの `type` など、同名でも文書種別とは意味が異なる項目があるため、項目名だけで共通メタデータと判断しない。
+- スキーマバージョンの項目名は、既存形式との互換性を維持するため、用途別スキーマが定める `v`、`version`、`schema_version` などを使用する。
+- 自動生成される JSON のメタデータは生成元から導出し、生成物を直接編集して同期しない。
+- JSON Lines（`.jsonl`）は複数の JSON 値を行単位で格納する形式であり、各レコードのスキーマまたは生成処理の契約に従う。
+
+例として、exec イベントではイベント形式の契約に従い、次のようにバージョン、発生日時、イベント種別、対象タスクをトップレベル項目で表す。
+
+```json
+{
+  "v": 1,
+  "ts": "2026-07-16T11:06:10Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-prj-charter-140",
+  "by": "agent",
+  "msg": "claim task"
+}
+```
+
+## 5. 成果物の必須項目
 
 | 項目     | 説明                    |
 | -------- | ----------------------- |
@@ -172,7 +207,7 @@ metadata_template:
 - `rulebook` は `none` または `*-rulebook` 形式の ID を指定する。
 - 該当する rulebook がない場合のみ `rulebook: none` を許可する。
 
-## 5. 成果物の任意項目
+## 6. 成果物の任意項目
 
 | 項目       | 説明                         |
 | ---------- | ---------------------------- |
@@ -182,14 +217,14 @@ metadata_template:
 
 成果物種別によって追加項目を使用できる場合があります。正確な許可項目と型は成果物スキーマを正本とします。
 
-## 6. 成果物の値制約
+## 7. 成果物の値制約
 
 - `type` は `適用範囲` に列挙した成果物種別のいずれかとする。
 - `specdojo:` 配下では未定義プロパティを使用しない（`unevaluatedProperties: false`）。トップレベルには他フレームワークの項目を置いてよい。
 - 配列項目は重複させない。
 - 項目ごとの型、列挙値、パターンは成果物スキーマに従う。
 
-## 7. 成果物の記述例
+## 8. 成果物の記述例
 
 ```yaml
 ---
@@ -204,8 +239,11 @@ specdojo:
 ---
 ```
 
-## 8. バリデーション
+## 9. バリデーション
 
 - `npm run -s lint:md` で Markdown を検証する。
 - Frontmatter の機械検証では、ドキュメント種別に対応するスキーマを使用する。
 - 成果物には `deliverable-frontmatter.schema.yaml` を使用する。
+- 独立 YAML データファイルは、ファイル形式に対応するスキーマで検証する。
+- JSON データファイルは、用途別の JSON Schema または実装上の検証契約で必須項目、型、列挙値を検証する。
+- JSON に対応するスキーマがない場合でも、JSON 構文として読み込めることを検証する。
