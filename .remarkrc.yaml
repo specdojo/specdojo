@@ -17,6 +17,10 @@ plugins:
     - schemas:
         docs/specdojo/schemas/v1/pjr-index.schema.yaml:
           - docs/ja/**/pjr-index.md
+        docs/specdojo/schemas/v1/guide-content.schema.yaml:
+          - docs/ja/specdojo/guides/*-guide.md
+        docs/specdojo/schemas/v1/reference-content.schema.yaml:
+          - docs/ja/specdojo/references/*-reference.md
   - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
     - strict: true
       schemaRules: # 配列なので上から順に評価し、最初にマッチしたスキーマを適用します。

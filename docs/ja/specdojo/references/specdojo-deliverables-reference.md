@@ -13,9 +13,18 @@ SpecDojo Deliverables Reference
 
 SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な内容を一覧します。
 
-ドキュメント名は、記述規則の正本である rulebook へのリンクになっています。作成手順を示す recipe がある成果物は、`作成レシピ` 列から辿れます。
+**対象範囲**
 
-プロジェクトで必要な成果物を選定するときは [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md) を、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
+- SpecDojo で扱うプロジェクト成果物とプロダクト成果物の全種別
+
+**ここで引けるもの**
+
+- 成果物の名称、英語名称、推奨ファイル名、目的、主な内容と、記述規則の正本である rulebook への導線
+- ドキュメント名は rulebook へのリンクです。作成手順を示す recipe がある成果物は `作成レシピ` 列から辿れます。
+
+**詳細の参照先**
+
+- 必要な成果物を選定する順序は [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md)、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
 
 ## 1. プロジェクト
 

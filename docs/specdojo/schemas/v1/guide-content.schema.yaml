@@ -1,0 +1,14 @@
+# guide-content.schema.yaml
+# *-guide.md の本文構造（導入ブロック）を検証するカスタムスキーマ。
+# remark-md-content によって読み込まれ、remark AST を使って検証する。
+# 規約の正本は docs/ja/specdojo/standards/guide-authoring-standard.md。
+id: guide-content
+title: "Guide Content Schema"
+description: "*-guide.md が H1 直後に必須の導入ブロックを持つことを検証するスキーマ"
+
+# H1 と最初の `##` 見出しの間に、この順で `**ラベル**` の段落を置く。
+intro_blocks:
+  required:
+    - 対象読者
+    - この文書で分かること
+    - 次に読む文書

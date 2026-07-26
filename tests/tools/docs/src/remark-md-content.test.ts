@@ -217,3 +217,78 @@ describe("remarkMdContent ticket_filename_check", () => {
     expect(reasons).toEqual([]);
   });
 });
+
+const INTRO_SCHEMA_YAML = `
+id: intro-content
+intro_blocks:
+  required:
+    - 対象読者
+    - この文書で分かること
+    - 次に読む文書
+`;
+
+function introMarkdown(blocks: string[]): string {
+  return [
+    "# タイトル",
+    "",
+    "Title In English",
+    "",
+    "概要文。",
+    "",
+    ...blocks.flatMap((label) => [`**${label}**`, "", `- ${label} の内容`, ""]),
+    "## 1. 最初の章",
+    "",
+  ].join("\n");
+}
+
+describe("remarkMdContent intro_blocks", () => {
+  it("accepts the required blocks placed in the defined order", async () => {
+    const markdown = introMarkdown(["対象読者", "この文書で分かること", "次に読む文書"]);
+
+    const reasons = await validateMarkdown(markdown, INTRO_SCHEMA_YAML);
+
+    expect(reasons).toEqual([]);
+  });
+
+  it("reports every missing block in one message", async () => {
+    const markdown = introMarkdown(["対象読者"]);
+
+    const reasons = await validateMarkdown(markdown, INTRO_SCHEMA_YAML);
+
+    expect(reasons).toEqual([
+      "H1 直後に必須の導入ブロックがありません: **この文書で分かること** / **次に読む文書**",
+    ]);
+  });
+
+  it("reports blocks that appear in the wrong order", async () => {
+    const markdown = introMarkdown(["次に読む文書", "対象読者", "この文書で分かること"]);
+
+    const reasons = await validateMarkdown(markdown, INTRO_SCHEMA_YAML);
+
+    expect(reasons).toEqual([
+      "導入ブロックの順序が規約と異なります（期待: 対象読者 -> この文書で分かること -> 次に読む文書）",
+    ]);
+  });
+
+  it("ignores bold labels that appear after the first chapter heading", async () => {
+    const markdown = [
+      introMarkdown(["対象読者", "この文書で分かること"]),
+      "**次に読む文書**",
+      "",
+      "- 章の中に置いても導入ブロックとして数えない",
+      "",
+    ].join("\n");
+
+    const reasons = await validateMarkdown(markdown, INTRO_SCHEMA_YAML);
+
+    expect(reasons).toEqual(["H1 直後に必須の導入ブロックがありません: **次に読む文書**"]);
+  });
+
+  it("does not require intro blocks when the schema omits them", async () => {
+    const markdown = introMarkdown([]);
+
+    const reasons = await validateMarkdown(markdown, "id: no-intro\nsections: []\n");
+
+    expect(reasons).toEqual([]);
+  });
+});

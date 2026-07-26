@@ -34,8 +34,15 @@ interface Section {
   table?: TableSchema;
 }
 
+// H1 直後・最初の `##` 見出しより前に置く導入ブロックの規約。
+// 各ブロックは `**ラベル**` だけの段落で始まり、定義順に並ぶ必要がある。
+interface IntroBlocksSchema {
+  required: string[];
+}
+
 interface MdContentSchema {
-  sections: Section[];
+  sections?: Section[];
+  intro_blocks?: IntroBlocksSchema;
   column_aliases?: Record<string, string[]>;
 }
 
@@ -307,9 +314,58 @@ function validateTicketFilename(
   }
 }
 
+// 段落が `**ラベル**` だけで構成されている場合にラベルを返す。
+function extractIntroBlockLabel(node: Root["children"][number]): string | undefined {
+  if (node.type !== "paragraph") return undefined;
+  if (node.children.length !== 1) return undefined;
+  const only = node.children[0];
+  if (only.type !== "strong") return undefined;
+  const label = extractText(only).trim();
+  return label.length > 0 ? label : undefined;
+}
+
+// H1 と最初の `##` 見出しの間に、必須の導入ブロックが定義順で並んでいるか検証する。
+function validateIntroBlocks(tree: Root, schema: IntroBlocksSchema, file: VFile): void {
+  const titleIndex = tree.children.findIndex((node) => node.type === "heading" && node.depth === 1);
+  if (titleIndex === -1) {
+    file.message("H1 見出しが見つからないため、導入ブロックを検証できません");
+    return;
+  }
+
+  // 導入部は H1 の次から、最初に現れる見出し（深さを問わない）の直前まで。
+  // 章の中に置いた `**ラベル**` を導入ブロックとして数えないようにする。
+  const found: string[] = [];
+  for (let i = titleIndex + 1; i < tree.children.length; i++) {
+    const node = tree.children[i];
+    if (node.type === "heading") break;
+    const label = extractIntroBlockLabel(node);
+    if (label !== undefined) found.push(label);
+  }
+
+  const missing = schema.required.filter((label) => !found.includes(label));
+  if (missing.length > 0) {
+    file.message(
+      `H1 直後に必須の導入ブロックがありません: ${missing.map((m) => `**${m}**`).join(" / ")}`,
+      tree.children[titleIndex],
+    );
+    return;
+  }
+
+  const orderInDocument = schema.required.map((label) => found.indexOf(label));
+  const isOrdered = orderInDocument.every((pos, i) => i === 0 || orderInDocument[i - 1] < pos);
+  if (!isOrdered) {
+    file.message(
+      `導入ブロックの順序が規約と異なります（期待: ${schema.required.join(" -> ")}）`,
+      tree.children[titleIndex],
+    );
+  }
+}
+
 function validateTree(tree: Root, schema: MdContentSchema, file: VFile): void {
+  if (schema.intro_blocks) validateIntroBlocks(tree, schema.intro_blocks, file);
+
   const aliasMap = buildAliasMap(schema.column_aliases);
-  for (const section of schema.sections) {
+  for (const section of schema.sections ?? []) {
     const idx = findHeadingIndex(tree.children, section);
     if (idx === -1) {
       if (section.required) {

@@ -1,0 +1,15 @@
+# reference-content.schema.yaml
+# *-reference.md の本文構造（導入ブロック）を検証するカスタムスキーマ。
+# remark-md-content によって読み込まれ、remark AST を使って検証する。
+# 規約の正本は docs/ja/specdojo/standards/reference-authoring-standard.md。
+id: reference-content
+title: "Reference Content Schema"
+description: "*-reference.md が H1 直後に必須の導入ブロックを持つことを検証するスキーマ"
+
+# H1 と最初の `##` 見出しの間に、この順で `**ラベル**` の段落を置く。
+# guide の「対象読者 / この文書で分かること / 次に読む文書」と対になる。
+intro_blocks:
+  required:
+    - 対象範囲
+    - ここで引けるもの
+    - 詳細の参照先
