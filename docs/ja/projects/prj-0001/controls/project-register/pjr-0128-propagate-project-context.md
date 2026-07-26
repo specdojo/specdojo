@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0128-propagate-project-context
   type: project
-  status: draft
+  status: ready
   rulebook: pjr-rulebook
   part_of:
     - prj-0001:pjr-index
