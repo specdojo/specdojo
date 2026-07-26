@@ -23,7 +23,11 @@ SpecDojo Exec Operation Guide
 
 - エージェント設定は [exec設定ガイド](specdojo-exec-config-guide.md)、plan・result の管理は [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、手動隔離実行は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照してください。
 
-## 1. execの関心事
+## 1. execの基本
+
+exec が扱う関心事、タスクの出どころによる実行経路の選び方、代表的なユースケースを示します。
+
+### 1.1. execの関心事
 
 `exec` は次の関心事を分けて扱います。
 
@@ -36,7 +40,7 @@ SpecDojo Exec Operation Guide
 
 既定の `exec run --task` はカレントリポジトリで単発実行し、状態イベントや worktree を作りません。
 
-## 2. 実行経路の使い分け
+### 1.2. 実行経路の使い分け
 
 agent にタスクを実行させる経路は、実行対象の出どころによって schedule 実行と register 実行の 2 つがあります。routine はそれらを時刻条件で発火させるトリガー層で、それ自体は実行機構を持ちません。「何を実行するか」（schedule / register）と「いつ実行するか」（人が起動する / routine が定期起動する）は独立に選べます。
 
@@ -60,7 +64,26 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 登録の判断、type の選び方、個票分離などの台帳運用は [登録簿運用ガイド](specdojo-register-operation-guide.md) を参照します。
 
-## 3. 自動実行フロー
+### 1.3. ユースケース別の選び方
+
+| やりたいこと                            | 代表コマンド                          | 状態追跡        | worktree |
+| --------------------------------------- | ------------------------------------- | --------------- | -------- |
+| 1 task をカレントで軽く実行する         | `exec run --task`                     | なし            | なし     |
+| 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり            | なし     |
+| 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
+| Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
+| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | なし     |
+| 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
+| plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
+| worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
+
+`exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
+
+## 2. 自動実行
+
+`exec run --auto` で Ready タスクを選び、worktree 隔離と状態追跡を伴って実行する経路です。
+
+### 2.1. 自動実行フロー
 
 `exec run --auto` は Ready タスクを選び、worktree 隔離と状態追跡を伴って実行します。
 
@@ -96,7 +119,7 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 specdojo exec run --project <project-id> --auto --strategy fifo
 ```
 
-## 4. auto実行中の注意点
+### 2.2. auto実行中の注意点
 
 `--auto` と `--loop` は root の現在ブランチへ checkpoint commit と merge を繰り返します。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
 
@@ -115,74 +138,11 @@ auto 実行と並行して人が作業する場合は、別ブランチの workt
 git worktree add ../specdojo-edit -b <edit-branch>
 ```
 
-## 5. blockedタスクの復帰
+## 3. 手動実行
 
-`blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
+自動実行がまとめて行う各段階を、人が確認しながら順に進める経路です。
 
-| 状況                             | コマンド       | 結果                   |
-| -------------------------------- | -------------- | ---------------------- |
-| 中断で `doing` のまま            | `exec resume`  | 既存 worktree 上で継続 |
-| 障害を解消し同じ試行を続ける     | `exec unblock` | `blocked -> doing`     |
-| 試行を破棄して最初からやり直す   | `exec release` | `blocked -> todo`      |
-| 着手前のタスクを恒久的に中止する | `exec cancel`  | `todo -> cancelled`    |
-
-`release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
-
-```bash
-specdojo exec release \
-  --project <project-id> \
-  --task <task-id> \
-  --by <actor>
-
-specdojo exec build --project <project-id>
-```
-
-調査用 worktree も即座に破棄したい場合だけ `--reset-worktree` を付けます。
-
-```bash
-specdojo exec release \
-  --project <project-id> \
-  --task <task-id> \
-  --by <actor> \
-  --reset-worktree
-```
-
-`--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) の `status` を使います。
-
-## 6. 完了済みタスクをtodoに戻す
-
-完了条件を満たしていないのに `complete` した場合など、完了判定そのものを訂正するときは `exec reopen` を使います。単に追加作業が発生した場合は、完了履歴を訂正せず新しい schedule task として計画します。
-
-```bash
-specdojo exec reopen \
-  --project <project-id> \
-  --task <task-id> \
-  --by <human-actor> \
-  --msg "completion criteria unmet"
-
-specdojo exec build --project <project-id>
-```
-
-`reopen` は `reopen` event を追記し、`done -> todo` へ遷移させます。対応する `complete` event は削除しないため、「一度完了と判断した後、理由を記録して再開した」という履歴が残ります。
-
-次の条件をすべて満たす必要があります。
-
-- 対象が schedule に存在する task で、現在の状態が `done` である。
-- `--task`、`--by`、`--msg` を明示する。
-- `--by` が `pm-members.yaml` で `type: human` の member である。
-- 対象に依存する後続 task に `doing`、`blocked`、`done` がない。
-
-後続 task も完了済みの場合は、依存グラフの下流から順に `reopen` します。後続 task が `doing` / `blocked` の場合は、先に同じ試行を完了させるか、`exec release` で `todo` に戻します。これにより、完了していない依存先を前提に後続 task が進行・完了している状態を防ぎます。
-
-`reopen` は plan、result、成果物、Git 履歴を削除・復元しません。完了済み plan は `exec/plans/done/` に残り、次の `exec plan` / `exec run` で新しい固定名 plan を生成します。再 claim 時は固定名 result を再利用し、新しい試行の状態と時刻に更新します。
-
-```bash
-specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
-specdojo exec run --project <project-id> --task <task-id>
-specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
-```
-
-## 7. 手動実行フロー
+### 3.1. 手動実行フロー
 
 `exec run --auto` の処理を手で分ける場合は、次の順に実行します。タスクを確認せず次のタスクをそのまま claim してよい場合は、手順 2〜4 の代わりに `--dry-run` なしの `exec scheduler` を 1 回実行します（自動選択と claim をまとめて行う）。
 
@@ -226,22 +186,7 @@ specdojo exec build --project <project-id>
 
 worktree 隔離を人が段階確認しながら実行する場合は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照します。
 
-## 8. ユースケース別の選び方
-
-| やりたいこと                            | 代表コマンド                          | 状態追跡        | worktree |
-| --------------------------------------- | ------------------------------------- | --------------- | -------- |
-| 1 task をカレントで軽く実行する         | `exec run --task`                     | なし            | なし     |
-| 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり            | なし     |
-| 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
-| Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
-| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | なし     |
-| 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
-| plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
-| worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
-
-`exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
-
-## 9. planを確認してから実行する
+### 3.2. planを確認してから実行する
 
 plan を先に生成して内容を確認・編集してから実行できます。
 
@@ -258,17 +203,7 @@ specdojo exec plan --project <project-id> --deliverable <local_id>
 
 plan / result の命名、再実行、アーカイブは [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照します。
 
-## 10. 完了済みタスクの再実行
-
-完了済み（`done`）タスクをやり直す場合は、既定の軽量実行でそのまま実行します。状態イベントは追加されず、変更は作業ツリーに残ります。
-
-```bash
-specdojo exec run --project <project-id> --task <task-id>
-```
-
-完了判定を取り消して Schedule の進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
-
-## 11. routineによる定期実行
+## 4. routineによる定期実行
 
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐しません。外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出す前提です。
 
@@ -314,7 +249,88 @@ specdojo routine run --project <project-id> --due --dry-run
 
 routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine が記録するのは `last_run` だけです。
 
-## 12. レートリミット対応
+## 5. 中断・訂正・再実行
+
+実行が途中で止まった場合、完了判定そのものを訂正する場合、利用制限で中断した場合の戻し方を扱います。
+
+### 5.1. blockedタスクの復帰
+
+`blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
+
+| 状況                             | コマンド       | 結果                   |
+| -------------------------------- | -------------- | ---------------------- |
+| 中断で `doing` のまま            | `exec resume`  | 既存 worktree 上で継続 |
+| 障害を解消し同じ試行を続ける     | `exec unblock` | `blocked -> doing`     |
+| 試行を破棄して最初からやり直す   | `exec release` | `blocked -> todo`      |
+| 着手前のタスクを恒久的に中止する | `exec cancel`  | `todo -> cancelled`    |
+
+`release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
+
+```bash
+specdojo exec release \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor>
+
+specdojo exec build --project <project-id>
+```
+
+調査用 worktree も即座に破棄したい場合だけ `--reset-worktree` を付けます。
+
+```bash
+specdojo exec release \
+  --project <project-id> \
+  --task <task-id> \
+  --by <actor> \
+  --reset-worktree
+```
+
+`--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) の `status` を使います。
+
+### 5.2. 完了済みタスクをtodoに戻す
+
+完了条件を満たしていないのに `complete` した場合など、完了判定そのものを訂正するときは `exec reopen` を使います。単に追加作業が発生した場合は、完了履歴を訂正せず新しい schedule task として計画します。
+
+```bash
+specdojo exec reopen \
+  --project <project-id> \
+  --task <task-id> \
+  --by <human-actor> \
+  --msg "completion criteria unmet"
+
+specdojo exec build --project <project-id>
+```
+
+`reopen` は `reopen` event を追記し、`done -> todo` へ遷移させます。対応する `complete` event は削除しないため、「一度完了と判断した後、理由を記録して再開した」という履歴が残ります。
+
+次の条件をすべて満たす必要があります。
+
+- 対象が schedule に存在する task で、現在の状態が `done` である。
+- `--task`、`--by`、`--msg` を明示する。
+- `--by` が `pm-members.yaml` で `type: human` の member である。
+- 対象に依存する後続 task に `doing`、`blocked`、`done` がない。
+
+後続 task も完了済みの場合は、依存グラフの下流から順に `reopen` します。後続 task が `doing` / `blocked` の場合は、先に同じ試行を完了させるか、`exec release` で `todo` に戻します。これにより、完了していない依存先を前提に後続 task が進行・完了している状態を防ぎます。
+
+`reopen` は plan、result、成果物、Git 履歴を削除・復元しません。完了済み plan は `exec/plans/done/` に残り、次の `exec plan` / `exec run` で新しい固定名 plan を生成します。再 claim 時は固定名 result を再利用し、新しい試行の状態と時刻に更新します。
+
+```bash
+specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
+specdojo exec run --project <project-id> --task <task-id>
+specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
+```
+
+### 5.3. 完了済みタスクの再実行
+
+完了済み（`done`）タスクをやり直す場合は、既定の軽量実行でそのまま実行します。状態イベントは追加されず、変更は作業ツリーに残ります。
+
+```bash
+specdojo exec run --project <project-id> --task <task-id>
+```
+
+完了判定を取り消して Schedule の進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
+
+### 5.4. レートリミット対応
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
@@ -339,7 +355,7 @@ action:
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
 
-## 13. humanタスクの実行
+## 6. humanタスクの実行
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree` はこれらのタスクを拒否し、`--agent-cmd` などの override を要求します。人が result を作業の入口として、最終確認・修正と確定を行います。
 
