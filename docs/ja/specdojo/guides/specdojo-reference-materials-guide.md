@@ -144,8 +144,8 @@ review でも「`approach` による進め方の使い分け」を同じ基準�
 
 ## 7. 関連ドキュメント
 
-- [prj-overview-recipe](../recipes/prj-overview-recipe.md): rulebook / recipe / sample の役割分担の記述例
-- [specdojo-plan-result-lifecycle-guide](specdojo-plan-result-lifecycle-guide.md): exec plan / result の生成、命名、アーカイブ
-- [specdojo-exec-operation-guide](specdojo-exec-operation-guide.md): exec plan を使った実行フロー
-- [specdojo-review-guide](specdojo-review-guide.md): review plan / review result の扱いと、参考資料の活用方法
-- [specdojo-exec-config-guide](specdojo-exec-config-guide.md): `approach` を含む phase の実行要件
+- [プロジェクト概要 作成レシピ](../recipes/prj-overview-recipe.md): rulebook / recipe / sample の役割分担の記述例
+- [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md): exec plan / result の生成、命名、アーカイブ
+- [exec運用ガイド](specdojo-exec-operation-guide.md): exec plan を使った実行フロー
+- [レビューガイド](specdojo-review-guide.md): review plan / review result の扱いと、参考資料の活用方法
+- [exec設定ガイド](specdojo-exec-config-guide.md): `approach` を含む phase の実行要件

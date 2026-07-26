@@ -22,6 +22,7 @@ SpecDojo CLI Overview Guide
 **次に読む文書**
 
 - 計画設計は [Schedule設計ガイド](specdojo-schedule-design-guide.md)、タスク実行は [exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
+- 目的から guide と reference を探す場合は [全体概要ガイド](specdojo-overview-guide.md) の `目的別の次の読み物` を参照してください。
 
 ## 1. CLIの役割
 
@@ -121,7 +122,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 }
 ```
 
-`base_path` を指定すると、`catalog_path`、`schedule_path`、`execution_path` などを `base_path` からの相対パスとして書けます。`run.exec_defaults` と `run.worktree_base` はリポジトリルート相対のまま扱います。
+`base_path` を指定すると、`catalog_path`、`schedule_path`、`execution_path` などを `base_path` からの相対パスとして書けます。`run.exec_defaults` と `run.worktree_base` はリポジトリルート相対のまま扱います。`run.exec_defaults` が指すファイルの中身（エージェント、provider、権限、リトライ）は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
 
 `project_context` は、`depends_on` と独立して成果物の edit / review plan に渡すプロジェクト共通文書の ID リストです。省略時は `["prj-overview"]`、空配列 `[]` は opt-out を表します。project context は plan の参照範囲にだけ作用し、schedule、`based_on`、commit scope は変更しません。
 
@@ -168,6 +169,8 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 specdojo build --project prj-0001
 ```
 
+手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) を参照します。
+
 ### 6.1. catalog generateの生成方針
 
 `catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`catalog generate` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`catalog generate` はプロジェクトのサイズ相当の成果物集合をまとめて材料化します。
@@ -192,15 +195,3 @@ schedule に基づく実行のほかに、次の 2 つの実行経路があり�
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す  |
 | `exec run --register` | 登録簿（`pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
-
-## 8. 詳細ガイド
-
-| 目的                                                 | 参照先                                                                                 |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| コマンドの例と主要オプションを引く                   | [CLIコマンドリファレンス](../references/specdojo-command-reference.md)                 |
-| 成果物カタログからScheduleへ展開する考え方を確認する | [成果物カタログからScheduleへの展開ガイド](specdojo-deliverables-to-schedule-guide.md) |
-| Scheduleを設計する                                   | [Schedule設計ガイド](specdojo-schedule-design-guide.md)                                |
-| execを運用する                                       | [exec運用ガイド](specdojo-exec-operation-guide.md)                                     |
-| worktree隔離実行を手動で進める                       | [exec worktree運用ガイド](specdojo-exec-worktree-guide.md)                             |
-| plan/resultの扱いを確認する                          | [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)             |
-| エージェント選択とexec設定を変更する                 | [exec設定ガイド](specdojo-exec-config-guide.md)                                        |

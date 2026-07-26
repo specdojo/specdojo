@@ -15,54 +15,7 @@ SpecDojo は、**仕様駆動開発のためのドキュメントフレームワ
 
 CLI による実行管理から確認したい場合は、[CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)から始めてください。
 
-## 目的から探す
-
-### SpecDojoの考え方を理解する
-
-| 知りたいこと                           | 参照先                                                                                         |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| SpecDojo 全体の構成と流れ              | [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                                 |
-| ドキュメンテーションの原則             | [ドキュメンテーションポリシーガイド](./specdojo/guides/specdojo-documentation-policy-guide.md) |
-| 要求・要件・仕様・設計・実装の違い     | [ドキュメントフェーズ概要ガイド](./specdojo/guides/docs-phases-overview-guide.md)              |
-| プロダクト文書とプロジェクト文書の構造 | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                            |
-
-### 作成する成果物を決める
-
-| やりたいこと                                   | 参照先                                                                         |
-| ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| 成果物の種類、目的、主な内容を調べる           | [成果物リファレンス](./specdojo/references/specdojo-deliverables-reference.md) |
-| 成果物を検討・作成する順序を決める             | [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)    |
-| rulebook、recipe、sample、templateを使い分ける | [参考資料活用ガイド](./specdojo/guides/specdojo-reference-materials-guide.md)  |
-
-成果物を実際に記述するときは、`specdojo/rulebooks/`で対象成果物の rulebook を確認し、`specdojo/templates/`と`specdojo/samples/`を雛形・記述例として利用します。
-
-### 成果物の作成を計画する
-
-| やりたいこと                                 | 参照先                                                                                                   |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 成果物カタログからScheduleへの流れを理解する | [成果物カタログからScheduleへの展開ガイド](./specdojo/guides/specdojo-deliverables-to-schedule-guide.md) |
-| フェーズ、タスク、依存関係、反復を設計する   | [Schedule設計ガイド](./specdojo/guides/specdojo-schedule-design-guide.md)                                |
-
-### プロジェクトを実行・管理する
-
-| やりたいこと                                  | 参照先                                                                                       |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)                            |
-| CLIのコマンドとオプションを調べる             | [CLIコマンドリファレンス](./specdojo/references/specdojo-command-reference.md)               |
-| 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](./specdojo/guides/specdojo-register-operation-guide.md)                   |
-| Scheduleのタスクを実行・再実行する            | [exec運用ガイド](./specdojo/guides/specdojo-exec-operation-guide.md)                         |
-| エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](./specdojo/guides/specdojo-exec-config-guide.md)                            |
-| planとresultの生成・保管・再実行を理解する    | [plan/resultライフサイクルガイド](./specdojo/guides/specdojo-plan-result-lifecycle-guide.md) |
-| worktreeを使って手動で隔離実行する            | [exec worktree運用ガイド](./specdojo/guides/specdojo-exec-worktree-guide.md)                 |
-| projectとtaskのブランチを運用する             | [ブランチワークフローガイド](./specdojo/guides/specdojo-branch-workflow-guide.md)            |
-
-### 成果物をレビューする
-
-成果物の妥当性、整合性、トレーサビリティを確認し、review planとreview resultを残す方法は、[レビューガイド](./specdojo/guides/specdojo-review-guide.md)を参照してください。
-
-### Markdownを編集する
-
-VS Code のプレビュー、見出し番号、Markdown 表の編集方法は、[ドキュメント編集ガイド](./specdojo/guides/docs-editing-guide.md)を参照してください。
+やりたいことから文書を探す場合は、[全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)の`目的別の次の読み物`を参照してください。guide と reference を目的別にまとめた唯一の一覧です。
 
 ## Quick Start
 

@@ -177,6 +177,7 @@ function renderSearchHtml(
 const specdojoItems = {
   ja: {
     text: "specdojo",
+    link: "/ja/specdojo/",
     collapsed: false,
     items: specdojoSidebarItems,
   },
