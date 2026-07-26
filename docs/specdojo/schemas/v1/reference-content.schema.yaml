@@ -1,10 +1,16 @@
 # reference-content.schema.yaml
-# *-reference.md の本文構造（導入ブロック）を検証するカスタムスキーマ。
+# *-reference.md の本文構造（英語名・導入ブロック・水平線の扱い）を検証するカスタムスキーマ。
 # remark-md-content によって読み込まれ、remark AST を使って検証する。
 # 規約の正本は docs/ja/specdojo/standards/reference-authoring-standard.md。
 id: reference-content
 title: "Reference Content Schema"
-description: "*-reference.md が H1 直後に必須の導入ブロックを持つことを検証するスキーマ"
+description: "*-reference.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"
+
+# H1 直下（次のブロック）に、日本語を含まない英語名 1 行を必須とする。
+require_english_name: true
+
+# 本文中の水平線（`---` 等）をセクション区切りとして使うことを禁止する。
+forbid_thematic_break: true
 
 # H1 と最初の `##` 見出しの間に、この順で `**ラベル**` の段落を置く。
 # guide の「対象読者 / この文書で分かること / 次に読む文書」と対になる。

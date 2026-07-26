@@ -7,6 +7,8 @@ specdojo:
 
 # 参考資料活用ガイド
 
+Reference Materials Guide
+
 本ドキュメントは SpecDojo における **exec plan 実行時に rulebook / recipe / sample / template をどう参照するか**を定義する。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用する。
 
 `reference` は一覧・比較のための文書種別であり、本書でいう exec plan の参考資料種別には含めない。

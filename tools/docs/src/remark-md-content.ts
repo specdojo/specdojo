@@ -44,6 +44,12 @@ interface MdContentSchema {
   sections?: Section[];
   intro_blocks?: IntroBlocksSchema;
   column_aliases?: Record<string, string[]>;
+  // true の場合、H1 の直下（空行を挟んだ次の段落）に英語名 1 行を必須とする。
+  require_english_name?: boolean;
+  // true の場合、本文中の水平線（`---` 等）をセクション区切りとして使うことを禁止する。
+  // markdown.instructions.md の禁止事項に対応する。Frontmatter の区切り自体は
+  // remark-frontmatter が別ノード種別（yaml）として消費するため対象に含まれない。
+  forbid_thematic_break?: boolean;
 }
 
 export interface MdContentOptions {
@@ -361,8 +367,41 @@ function validateIntroBlocks(tree: Root, schema: IntroBlocksSchema, file: VFile)
   }
 }
 
+const JAPANESE_CHAR_PATTERN = /[぀-ヿ㐀-䶿一-鿿]/;
+const LATIN_LETTER_PATTERN = /[A-Za-z]/;
+
+// H1 の直後（次のブロックノード）に、日本語を含まない英語名 1 行があるかを検証する。
+function validateEnglishName(tree: Root, file: VFile): void {
+  const titleIndex = tree.children.findIndex((node) => node.type === "heading" && node.depth === 1);
+  if (titleIndex === -1) return; // H1 欠落は intro_blocks 側の検証に委ねる
+
+  const next = tree.children[titleIndex + 1];
+  const text = next ? extractText(next).trim() : "";
+  const looksLikeEnglishName =
+    text.length > 0 && LATIN_LETTER_PATTERN.test(text) && !JAPANESE_CHAR_PATTERN.test(text);
+
+  if (!looksLikeEnglishName) {
+    file.message(
+      "H1 直後に英語名（日本語を含まない1行）がありません",
+      next ?? tree.children[titleIndex],
+    );
+  }
+}
+
+// 本文中の水平線（thematicBreak）をセクション区切りとして使っていないか検証する。
+// Frontmatter の `---` は remark-frontmatter が yaml ノードとして消費するため対象に含まれない。
+function validateNoThematicBreak(tree: Root, file: VFile): void {
+  for (const node of tree.children) {
+    if (node.type === "thematicBreak") {
+      file.message("本文中で `---` をセクション区切りに使わないでください（禁止事項）", node);
+    }
+  }
+}
+
 function validateTree(tree: Root, schema: MdContentSchema, file: VFile): void {
   if (schema.intro_blocks) validateIntroBlocks(tree, schema.intro_blocks, file);
+  if (schema.require_english_name) validateEnglishName(tree, file);
+  if (schema.forbid_thematic_break) validateNoThematicBreak(tree, file);
 
   const aliasMap = buildAliasMap(schema.column_aliases);
   for (const section of schema.sections ?? []) {

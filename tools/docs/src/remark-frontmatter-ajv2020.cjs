@@ -113,7 +113,10 @@ function resolveSchemaPath(schemaRef, schemas) {
   return schemas[schemaRef] || schemaRef;
 }
 
-function selectSchemaPath(relativePath, schemas, schemaRules) {
+// マッチしたルールの schemaPath と、frontmatter 欠落を許容するかどうかを返す。
+// require_frontmatter を明示した既存ルールのみ、欠落を検証エラーとして扱う
+// （既定 false: schemaRules 全体へ後方互換を保ち、影響範囲を意図的に限定するため）。
+function selectRule(relativePath, schemas, schemaRules) {
   const filePath = toPosix(relativePath || "");
 
   // 先勝ちで評価するため、具体的なルールを汎用ルールより前に置く。
@@ -121,7 +124,7 @@ function selectSchemaPath(relativePath, schemas, schemaRules) {
     if (!rule || typeof rule !== "object") continue;
     if (!ruleMatches(filePath, rule)) continue;
     const path = resolveSchemaPath(rule.schema, schemas);
-    if (path) return path;
+    if (path) return { schemaPath: path, requireFrontmatter: rule.require_frontmatter === true };
   }
 
   return null;
@@ -191,12 +194,22 @@ module.exports = function remarkFrontmatterAjv2020(options = {}) {
     const workspaceRoot = options.workspaceRoot || process.cwd();
     const currentPath = file.path ? path.resolve(String(file.path)) : "";
     const relativePath = currentPath ? toPosix(path.relative(workspaceRoot, currentPath)) : "";
-    const schemaPath = selectSchemaPath(relativePath, schemas, schemaRules);
-    if (!schemaPath) return;
+    const matched = selectRule(relativePath, schemas, schemaRules);
+    if (!matched) return;
+    const { schemaPath, requireFrontmatter } = matched;
 
     const source = String(file.value || "");
     const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-    if (!match) return;
+    if (!match) {
+      if (requireFrontmatter) {
+        file.message(
+          `Frontmatter is required for this path but was not found (expected schema: ${schemaPath}).`,
+          { start: { line: 1, column: 1 } },
+          "frontmatter-schema-2020",
+        );
+      }
+      return;
+    }
 
     const frontmatterBody = match[1];
 

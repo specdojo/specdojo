@@ -292,3 +292,91 @@ describe("remarkMdContent intro_blocks", () => {
     expect(reasons).toEqual([]);
   });
 });
+
+const ENGLISH_NAME_SCHEMA_YAML = `
+id: english-name-content
+require_english_name: true
+`;
+
+describe("remarkMdContent require_english_name", () => {
+  it("accepts a Latin-only line directly after H1", async () => {
+    const markdown = ["# タイトル", "", "Sample Guide Title", "", "概要文。", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, ENGLISH_NAME_SCHEMA_YAML);
+
+    expect(reasons).toEqual([]);
+  });
+
+  it("rejects a Japanese line directly after H1", async () => {
+    const markdown = ["# タイトル", "", "概要文だけがあり英語名がない。", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, ENGLISH_NAME_SCHEMA_YAML);
+
+    expect(reasons).toEqual(["H1 直後に英語名（日本語を含まない1行）がありません"]);
+  });
+
+  it("rejects a missing block entirely after H1", async () => {
+    const markdown = ["# タイトル", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, ENGLISH_NAME_SCHEMA_YAML);
+
+    expect(reasons).toEqual(["H1 直後に英語名（日本語を含まない1行）がありません"]);
+  });
+
+  it("does not require an English name when the schema omits the flag", async () => {
+    const markdown = ["# タイトル", "", "概要文だけ。", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, "id: no-english-name\n");
+
+    expect(reasons).toEqual([]);
+  });
+});
+
+const THEMATIC_BREAK_SCHEMA_YAML = `
+id: thematic-break-content
+forbid_thematic_break: true
+`;
+
+describe("remarkMdContent forbid_thematic_break", () => {
+  it("reports every thematic break used as a section separator", async () => {
+    const markdown = [
+      "# タイトル",
+      "",
+      "## 1. セクションA",
+      "",
+      "内容。",
+      "",
+      "---",
+      "",
+      "## 2. セクションB",
+      "",
+      "内容。",
+      "",
+      "---",
+      "",
+    ].join("\n");
+
+    const reasons = await validateMarkdown(markdown, THEMATIC_BREAK_SCHEMA_YAML);
+
+    expect(reasons).toEqual([
+      "本文中で `---` をセクション区切りに使わないでください（禁止事項）",
+      "本文中で `---` をセクション区切りに使わないでください（禁止事項）",
+    ]);
+  });
+
+  it("does not flag the frontmatter delimiter itself", async () => {
+    const markdown = ["---", "id: sample", "---", "", "# タイトル", "", "本文。", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, THEMATIC_BREAK_SCHEMA_YAML);
+
+    expect(reasons).toEqual([]);
+  });
+
+  it("allows thematic breaks when the schema omits the flag", async () => {
+    const markdown = ["# タイトル", "", "---", ""].join("\n");
+
+    const reasons = await validateMarkdown(markdown, "id: no-thematic-break-check\n");
+
+    expect(reasons).toEqual([]);
+  });
+});
