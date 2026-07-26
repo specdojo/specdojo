@@ -15,19 +15,7 @@ specdojo:
 SpecDojo Overview Guide
 
 SpecDojo の目的、文書体系、プロジェクトの進め方、CLI による実行管理の関係を一つの流れとして説明します。
-初めて SpecDojo に触れる利用者を対象とし、個別の成果物やコマンドの詳細は関連 guide、standard、rulebook に委ねます。
-
-**対象読者**
-
-- SpecDojo を初めて知る人、導入を検討する責任者、文書作成や実行管理を始める利用者
-
-**この文書で分かること**
-
-- SpecDojo の目的、文書体系、プロジェクトの基本的な流れ、成果物から実行管理への展開
-
-**次に読む文書**
-
-- 文書の配置は [ドキュメント構成ガイド](docs-structure-guide.md)、成果物の検討順は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、CLI の導入は [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md) を参照してください。
+SpecDojo に関わるすべての読者の入口となる文書であり、個別の規約や操作の詳細は関連 guide、standard、rulebook に委ねます。
 
 ## 1. SpecDojoとは
 
@@ -50,11 +38,32 @@ SpecDojo は開発プロセスそのものを一律に固定するものでは�
 ## 2. 基本となる考え方
 
 SpecDojo では、文書をプロジェクトを定義・実行・検証するための成果物として扱います。
-正本と派生物を分け、ID と参照関係によってトレーサビリティを確保し、人と AI・ツールが同じ情報を扱える構造にします。
-この設計理由と運用上の判断基準は [SpecDojo ドキュメンテーション ポリシーガイド](specdojo-documentation-policy-guide.md) を参照してください。
+中心となる考え方は次のとおりです。
 
-本文や判断は Markdown、構造化データは YAML、ツール連携や生成物は JSON を中心に扱い、形式に応じたメタデータを持たせます。
-具体的な項目、必須条件、配置、検証方法は [ドキュメントメタ情報標準](../standards/document-metadata-standard.md) と各形式のスキーマを正本とします。
+| 考え方                                                     | 概要                                                                 |
+| ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| ID as Identity                                             | 文書IDを形式ごとの構造化メタデータで管理する                         |
+| Single Source of Truth                                     | 同じ情報の正本を一つに定め、一覧やレポートは参照または生成する       |
+| Traceability                                               | 目的、要求、仕様、設計、テストなどの関係を追跡可能にする             |
+| Structured Documents                                       | Markdown、YAML、JSON を役割に応じて使い分ける                        |
+| Human and AI Readable                                      | 人が理解でき、AI とツールも安定して処理できる構造にする              |
+| Convention as Defaults, Configuration for Explicit Context | 共通の構造と既定値は規約、プロジェクト固有の選択は設定として明示する |
+| Git as Source of Truth                                     | 正本と変更履歴を Git リポジトリで管理する                            |
+
+SpecDojo の文書は、説明・判断・方針を記述する Markdown と、人が管理する構造化データを記述する YAML、ツール連携・実行記録・生成物を記述する JSON を使い分けます。
+文書やデータを識別・管理できるように、形式に応じたメタデータを埋め込みます。
+
+- Markdown はファイル先頭の YAML Frontmatter に `id`、`type`、`status` などを記述します。
+- 独立した YAML データファイルは Frontmatter を持たず、ファイル先頭のトップレベル項目にメタデータを記述します。
+- JSON は Frontmatter を持たず、用途別のスキーマが定めるトップレベルの構造化項目にメタデータを記述します。
+
+具体的な項目、必須条件、配置、検証方法は
+[ドキュメントメタ情報標準](../standards/document-metadata-standard.md)
+と各形式のスキーマを正本とします。
+
+これらの設計理由、規約と設定の責務分担、運用上の判断基準は
+[SpecDojo ドキュメンテーション ポリシーガイド](specdojo-documentation-policy-guide.md)
+を参照してください。
 
 ## 3. SpecDojo Unitと二種類の文書
 
@@ -76,13 +85,33 @@ flowchart TB
 ```
 
 プロダクトドキュメントはプロダクトの現在像、プロジェクトドキュメントは個別の構築・改修における目的、変更、実行、判断を表します。
-分類、ライフサイクル、命名、ディレクトリ配置は [ドキュメント構成ガイド](docs-structure-guide.md) を参照してください。
+
+| 分類                     | 表すもの                                     | ライフサイクル                         |
+| ------------------------ | -------------------------------------------- | -------------------------------------- |
+| プロダクトドキュメント   | 業務仕様、システム設計などプロダクトの現在像 | 改修のたびに更新し、継続して管理する   |
+| プロジェクトドキュメント | 目的、スコープ、変更内容、実行・判断の記録   | プロジェクトごとに作成し、完了後に残す |
+
+文書の分類、ライフサイクル、命名、ディレクトリ配置は
+[ドキュメント構成ガイド](docs-structure-guide.md)
+を参照してください。
 
 ## 4. 記述支援資料の役割
 
 SpecDojo では、成果物と、その作成を支援する資料を分けて管理します。
-共通規約を扱う standard、成果物固有の規則を扱う rulebook、作り方を扱う recipe、雛形となる template、完成例となる sample、概念や操作を説明する guide が、それぞれ異なる問いに答えます。
-詳細な役割分担と exec plan からの参照方法は [SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
+
+| 種別     | 答える問い                         | 使い方                                         |
+| -------- | ---------------------------------- | ---------------------------------------------- |
+| standard | 共通して従う規約は何か             | メタデータ、命名、文書種別などの共通規約を確認 |
+| rulebook | この成果物には何を書くか           | 成果物固有の章構成、項目、記述規則を確認       |
+| recipe   | どのような手順と判断で作成するか   | 作成・更新の進め方を確認                       |
+| template | どの形から書き始めるか             | 新しい成果物の雛形として使用                   |
+| sample   | 完成した記述はどのようになるか     | 具体的な記述例として参照                       |
+| guide    | 全体像や操作をどう理解すればよいか | 複数の概念や一連の操作を理解                   |
+
+これらは同じ内容を再掲するものではなく、異なる問いに答える資料です。
+詳細な役割分担と exec plan からの参照方法は
+[SpecDojo 参考資料活用ガイド](specdojo-reference-materials-guide.md)
+を参照してください。
 
 ## 5. プロジェクトの基本的な流れ
 
@@ -102,7 +131,22 @@ flowchart LR
   F -->|修正| E
 ```
 
-成果物の検討順と判断点は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、個々の成果物の目的は [ドキュメント内容ガイド](docs-contents-guide.md)、成果物を確定するレビューは [SpecDojo レビューガイド](specdojo-review-guide.md) を参照してください。
+代表的な進め方は次のとおりです。
+
+1. プロジェクトの背景、目的、スコープ、成功条件を明らかにします。
+2. プロジェクトで作成・更新する成果物を選びます。
+3. 成果物カタログに、成果物の配置、依存関係、完了条件を登録します。
+4. 成果物を作成する順序と反復を Schedule に展開します。
+5. 人またはエージェントが成果物を作成・更新します。
+6. 機械検証と内容レビューを行い、成果物を確定します。
+
+成果物の検討順と判断点は
+[ドキュメント作成順ガイド](docs-authoring-order-guide.md)、
+個々の成果物の目的は
+[ドキュメント内容ガイド](docs-contents-guide.md)、
+成果物を確定するレビューは
+[SpecDojo レビューガイド](specdojo-review-guide.md)
+を参照してください。
 
 ## 6. 成果物から実行管理への展開
 
@@ -124,13 +168,27 @@ flowchart LR
   DEL --> SCH
 ```
 
-各情報の責務と詳細は、次の文書を正本とします。
+| 情報                 | 主な役割                                                  |
+| -------------------- | --------------------------------------------------------- |
+| 成果物カタログ       | 管理する成果物、配置、依存関係、完了条件を定義する        |
+| Schedule             | フェーズ、タスク、順序、反復、実行要件を定義する          |
+| plan                 | 一回の作業で確認・変更する対象と手順を示す                |
+| result               | 実施内容、確認結果、残課題を記録する                      |
+| 実行イベント・生成物 | タスクの状態、実行履歴、Ready、クリティカルパスなどを表す |
 
-- 成果物カタログから Schedule への展開: [成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)
-- タスク粒度、依存関係、反復、CPM: [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)
-- plan と result の生成、命名、保管: [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)
-- CLI の導入と代表フロー: [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)
-- タスクの実行と状態管理: [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)
+成果物カタログと Schedule の関係は
+[成果物カタログからスケジュールへの展開ガイド](specdojo-deliverables-to-schedule-guide.md)、
+タスク設計は
+[SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)、
+plan と result の管理は
+[SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)
+を参照してください。
+
+CLI の導入は
+[SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)、
+実行と状態管理は
+[SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)
+を参照してください。
 
 ## 7. 実行を支える機能
 
@@ -149,5 +207,17 @@ flowchart LR
 
 ## 8. 目的別の次の読み物
 
-目的別のguide一覧と導入順は [SpecDojo 日本語ドキュメントポータル](../../index.md) を参照してください。
-最初に全機能を理解する必要はなく、「構成を理解する」「必要な成果物を選ぶ」「小さな Schedule で実行する」の順に進み、必要に応じて登録簿、レビュー、自動実行へ範囲を広げます。
+| 読者の目的                     | 最初に読む文書                                                                      |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| 文書の分類と配置を理解したい   | [ドキュメント構成ガイド](docs-structure-guide.md)                                   |
+| 成果物の種類と内容を知りたい   | [ドキュメント内容ガイド](docs-contents-guide.md)                                    |
+| 成果物を検討する順序を知りたい | [ドキュメント作成順ガイド](docs-authoring-order-guide.md)                           |
+| CLIを使い始めたい              | [SpecDojo CLI概要ガイド](specdojo-cli-overview-guide.md)                            |
+| Scheduleを設計したい           | [SpecDojo Schedule設計ガイド](specdojo-schedule-design-guide.md)                    |
+| タスクを実行・再実行したい     | [SpecDojo exec運用ガイド](specdojo-exec-operation-guide.md)                         |
+| planとresultの扱いを知りたい   | [SpecDojo plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) |
+| コマンドとオプションを調べたい | [SpecDojoコマンドリファレンス](specdojo-command-reference-guide.md)                 |
+| Markdownの編集方法を知りたい   | [ドキュメント編集ガイド](docs-editing-guide.md)                                     |
+
+最初に全機能を理解する必要はありません。
+導入時は「構成を理解する」「必要な成果物を選ぶ」「小さな Schedule で実行する」の順に進み、必要に応じて登録簿、レビュー、自動実行へ範囲を広げます。
