@@ -22,7 +22,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **次に読む文書**
 
-- 要求・要件・仕様・設計・実装の違いは [ドキュメントフェーズ概要ガイド](docs-phases-overview-guide.md) を参照してください。
+- 要求・要件・仕様・設計・実装の違いは [ドキュメント概念体系ガイド](docs-concept-system-guide.md) を参照してください。
 - 成果物を選定・検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md)、各成果物の目的は [成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
 
 **この文書が扱わないこと**
