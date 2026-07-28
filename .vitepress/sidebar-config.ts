@@ -230,8 +230,6 @@ export const specdojoSidebarItems = [
       guide("全体概要", "specdojo-overview-guide"),
       guide("ドキュメント構成", "docs-structure-guide"),
       guide("トラック設計", "track-design-guide"),
-      guide("ドキュメント概念体系", "docs-concept-system-guide"),
-      guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
       guide("参考資料活用", "specdojo-reference-materials-guide"),
       guide("ドキュメント編集", "docs-editing-guide"),
       guide("レビュー", "specdojo-review-guide"),
@@ -249,6 +247,11 @@ export const specdojoSidebarItems = [
         ],
         false,
       ),
+      // 考え方・方針は一度読めば足りるため、実務で引く guide の後ろへ折りたたんで置く。
+      group("考え方と方針", [
+        guide("ドキュメント概念体系", "docs-concept-system-guide"),
+        guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
+      ]),
     ],
   },
   {
