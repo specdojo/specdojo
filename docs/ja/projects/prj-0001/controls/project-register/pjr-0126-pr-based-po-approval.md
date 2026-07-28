@@ -31,7 +31,7 @@ specdojo:
 | 1 | PR 承認が必要な決定範囲を定義する（憲章の PO 留保事項へマッピング） | PM | done | 対応結果「PR 承認が必要な決定範囲」に定義。日常の agent コミットは対象外 |
 | 2 | branch 保護・CODEOWNERS で PO を required reviewer 化する方針を策定する | PM | done | 対応結果「branch 保護 / CODEOWNERS 方針」に定義。author≠approver を強制 |
 | 3 | 承認証跡（PR URL・承認者・merge SHA）を decision 個票 / 憲章承認章へ書き戻す手順を定義する | PM | done | 対応結果「承認証跡の書き戻し手順」に定義。可搬性のため本文テキストで記録 |
-| 4 | decision 個票と PR の役割分担・相互リンク運用を guide / rulebook へ反映する | PM | done | [[specdojo-register-operation-guide]] の「PO 留保事項の PR 承認運用」章へ反映 |
+| 4 | decision 個票と PR の役割分担・相互リンク運用を guide / rulebook へ反映する | PM | done | [[register-operation-guide]] の「PO 留保事項の PR 承認運用」章へ反映 |
 | 5 | 既存 PJR-0119 の遡及要否を判断し記録する | PO | review | PM 推奨（grandfather）を対応結果に記録。最終判断は PO が確定 |
 | 6 | 署名タグ / 署名コミット等の高保証代替の要否を評価する | ARC | review | PM 一次評価（現段階は不要）を記録。要否確定は ARC |
 
@@ -91,7 +91,7 @@ PR URL と merge SHA を本文へ転記することで、platform 依存の承�
 | decision 個票 | 決定内容の SSOT（背景・選択肢・決定・理由・影響範囲） | リポジトリ内に恒久保持       |
 | pull request  | 承認イベントの担保（承認者・承認日時・承認対象差分）  | platform（証跡は本文へ転記） |
 
-相互リンク運用: decision 個票の承認章に PR URL と merge SHA を記載し、PR 説明には対象 decision 個票の `id` を記載する。この役割分担と相互リンク運用は [[specdojo-register-operation-guide]] の「PO 留保事項の PR 承認運用」章へ反映した。
+相互リンク運用: decision 個票の承認章に PR URL と merge SHA を記載し、PR 説明には対象 decision 個票の `id` を記載する。この役割分担と相互リンク運用は [[register-operation-guide]] の「PO 留保事項の PR 承認運用」章へ反映した。
 
 ### 4.5. 既存 PJR-0119 の遡及要否
 
@@ -109,4 +109,4 @@ PR URL と merge SHA を本文へ転記することで、platform 依存の承�
 - [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元（対策案「complete, commit, pushの関係」の PR 承認フロー）
 - [[prj-0001:prj-charter|プロジェクト憲章]] — 承認章・権限委譲章（証跡の対象）
 - [[prj-0001:pjr-0119-charter-approval|PJR-0119 プロジェクト憲章の承認]] — 現行方式（改善対象）
-- [[specdojo-register-operation-guide]] — 承認運用の反映先
+- [[register-operation-guide]] — 承認運用の反映先

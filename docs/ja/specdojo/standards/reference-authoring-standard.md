@@ -69,7 +69,7 @@ H1 と概要文の直下、最初の `##` 見出しより前に、次の3ブロ�
 
 **詳細の参照先**
 
-- CLI 全体の流れは [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) を参照してください。
+- CLI 全体の流れは [CLI概要ガイド](../guides/cli-overview-guide.md) を参照してください。
 ```
 
 機械検証は [reference-content.schema.yaml](../../../specdojo/schemas/v1/reference-content.schema.yaml) を SSOT とし、`npm run lint:fm` で検証します。

@@ -64,5 +64,5 @@ commit 対象は `selectRegisterCommitPaths` が算出し、その ID の実行�
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0135-exec-register-multiple-ids|exec run --registerの複数ID直列実行]]
-- [[specdojo-exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[exec-operation-guide|SpecDojo exec運用ガイド]]
 - [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

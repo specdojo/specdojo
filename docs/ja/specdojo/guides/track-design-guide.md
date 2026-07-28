@@ -27,7 +27,7 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 **次に読む文書**
 
 - 各成果物の目的・推奨ファイル名・記述規則への導線は [成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
-- トラックを実行タスクへ展開する方法は [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+- トラックを実行タスクへ展開する方法は [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
 **この文書が扱わないこと**
 
@@ -67,7 +67,7 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 | ドメイン | 成果物カタログの管理単位               | `dct-<domain>.yaml`                             |
 | 成果物   | 個別のドキュメント・定義ファイル       | 種別ごとの rulebook（一覧は成果物リファレンス） |
 
-3層は Schedule 定義で接続します。`sch-strategy-<track>.yaml` は `track` でトラックを宣言し、`scope.catalogs` で対象とする `dct-<domain>.yaml` を指定します。つまりトラックが直接ぶら下げるのはドメインであり、個別成果物はドメインの成果物カタログ側で管理されます。生成の流れは [Schedule設計ガイド](specdojo-schedule-design-guide.md) を参照してください。
+3層は Schedule 定義で接続します。`sch-strategy-<track>.yaml` は `track` でトラックを宣言し、`scope.catalogs` で対象とする `dct-<domain>.yaml` を指定します。つまりトラックが直接ぶら下げるのはドメインであり、個別成果物はドメインの成果物カタログ側で管理されます。生成の流れは [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
 ### 2.2. トラック別の対応
 
@@ -137,7 +137,7 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 - `launch` は最小限の範囲で先に通し、確定しない前提は `_UNDECIDED_` として残したままサイクルを始めます。
 - `qa-d` は `tobe-rs` と同じサイクル内で進め、受入条件を仕様と同時に定義します。後追いにすると手戻りが大きくなります。
 - `asis-rs` と `impact` は全体を先に調べ切らず、サイクルで扱う範囲だけを対象にします。
-- 反復は Schedule 側で表現します。`sch-strategy-<track>.yaml` の `cycles` と `iterations` の意味は [Schedule設計ガイド](specdojo-schedule-design-guide.md) の `phase_setsの反復` を参照してください。
+- 反復は Schedule 側で表現します。`sch-strategy-<track>.yaml` の `cycles` と `iterations` の意味は [Schedule設計ガイド](schedule-design-guide.md) の `phase_setsの反復` を参照してください。
 - リリース後も `tobe-rs` 以降のサイクルは続くため、`ops` は他トラックと並行して動き続けます。
 
 ### 3.2. ウォーターフォール開発の場合

@@ -382,6 +382,37 @@ IDには、次の情報を含めない。
 | 担当者           | 担当変更で変わるため                                                                       |
 | 作業アクション   | `create`, `modify`, `review` などは Schedule 側の責務であるため                            |
 | 日付             | IDの永続性を損なうため。ただし議事録・進捗レポートなど時点そのものが識別子になる場合を除く |
+| 所属             | 配置ディレクトリが表すため（`ファイル名には namespace を含めない` と同じ理由）             |
+
+### 4.9. フレームワーク文書のID
+
+`docs/ja/specdojo/` 配下のフレームワーク文書（guide、standard、reference、rulebook、recipe、sample、template）は、成果物文書の `<prefix>-<term>` とは逆に、主題語の後ろへ文書種別のサフィックスを置く。
+
+```text
+<subject>-<type-suffix>
+```
+
+- `<subject>`: 文書の主題を表す名詞句
+- `<type-suffix>`: `guide`、`standard`、`reference`、`rulebook`、`recipe`、`sample`、`template`
+
+- 所属を表す接頭辞はIDに含めない。`docs/ja/specdojo/` 配下にあることは配置ディレクトリが表すため、`specdojo-` を接頭辞として付けない。
+- ただし SpecDojo 自体を主題とする文書は、主題語として `specdojo` を用いる。
+
+OK:
+
+```text
+cli-overview-guide
+exec-operation-guide
+guide-authoring-standard
+specdojo-overview-guide
+```
+
+NG:
+
+```text
+specdojo-cli-overview-guide
+specdojo-exec-operation-guide
+```
 
 ## 5. ID参照ルール
 
@@ -653,6 +684,7 @@ supersedes:
 | `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                             |
 | `prj-0001:prj-overview-draft`                       | 状態をIDに含めている                                               |
 | `prj-0001:prj-overview.md`                          | ファイル名に namespace を含めている                                |
+| `specdojo-cli-overview-guide`                       | 配置ディレクトリが表す所属をIDの接頭辞にしている                   |
 
 ## 11. 運用指針
 

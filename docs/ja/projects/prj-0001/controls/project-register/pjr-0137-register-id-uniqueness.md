@@ -49,5 +49,5 @@ specdojo:
 ## 5. 関連ドキュメント
 
 - [[pjr-rulebook|プロジェクト登録簿ルールブック]]
-- [[specdojo-register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
 - [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

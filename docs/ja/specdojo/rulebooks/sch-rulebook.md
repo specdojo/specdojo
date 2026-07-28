@@ -17,12 +17,12 @@ Schedule Documentation Rules
 
 本ドキュメントは、Schedule（`sch-*.yaml`）を一貫した粒度と命名で作成・更新するためのルールです。
 Schedule は「いつ・誰が・どの順で作業するか」を定義する層であり、成果物スコープと完了条件（WHAT / DONE）は成果物カタログ（`dct-<domain>.yaml`）で管理します。
-本書は命名・ID 規則と schema で表現できない記述規範を定義し、構造・必須キーは schema を、設計の考え方と生成フローは [[specdojo-schedule-design-guide]] を参照します。
+本書は命名・ID 規則と schema で表現できない記述規範を定義し、構造・必須キーは schema を、設計の考え方と生成フローは [[schedule-design-guide]] を参照します。
 
 ## 1. 全体方針
 
-- Schedule は `sch-milestones.yaml` / `sch-defaults.yaml` / `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` の 4 種類に分割して管理する。各ファイルの役割と生成フローは [[specdojo-schedule-design-guide]] を参照する。
-- 成果物カタログの `kind: work` エントリを実行タスクへ展開し、期間・担当・依存関係を付与する。成果物パスと完了条件はカタログが管理する（[[specdojo-schedule-design-guide]] の `成果物カタログとの責務分担` を参照）。
+- Schedule は `sch-milestones.yaml` / `sch-defaults.yaml` / `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` の 4 種類に分割して管理する。各ファイルの役割と生成フローは [[schedule-design-guide]] を参照する。
+- 成果物カタログの `kind: work` エントリを実行タスクへ展開し、期間・担当・依存関係を付与する。成果物パスと完了条件はカタログが管理する（[[schedule-design-guide]] の `成果物カタログとの責務分担` を参照）。
 - `sch-strategy-<track>.yaml` が存在するトラックでは、strategy と成果物カタログを SSOT とし、`sch-track-<track>.yaml` は `specdojo schedule build` で再生成可能な生成物として扱う。生成後の track を直接編集しない。
 - Schedule の `owner` には Role code のみを記載し、実行主体との対応は `pm-members.yaml` で管理する。
 
@@ -55,7 +55,7 @@ Schedule は「いつ・誰が・どの順で作業するか」を定義する�
 - `schedule build` で生成されるタスクの `id` は YAML に書かず、自動導出に委ねる。
 - 例: `T-LAUNCH-prj-overview-010`、反復例: `T-LAUNCH-prj-overview-010-C01-I02`
 - パターン: `^[A-Za-z0-9][A-Za-z0-9_-]{1,127}$`（最大128文字。スキーマ上の制約）
-- 導出規則と反復の考え方は [[specdojo-schedule-design-guide]] の `タスクID` と `phase_setsの反復` を参照する。
+- 導出規則と反復の考え方は [[schedule-design-guide]] の `タスクID` と `phase_setsの反復` を参照する。
 
 ### 3.3. Milestone の `id`
 
@@ -80,7 +80,7 @@ Schedule は Markdown の章構成を持たない YAML 成果物であり、ル�
 
 ## 5. 記述ガイド
 
-schema で機械検証できない記述規範だけを定める。設計の考え方（フェーズ設計、反復、タスク粒度、依存関係、トラックへ展開する情報）は [[specdojo-schedule-design-guide]] を参照する。
+schema で機械検証できない記述規範だけを定める。設計の考え方（フェーズ設計、反復、タスク粒度、依存関係、トラックへ展開する情報）は [[schedule-design-guide]] を参照する。
 
 ### 5.1. 成果物カタログとタスクの対応
 

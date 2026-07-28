@@ -2,7 +2,7 @@
 # 利用プロジェクトの pm-members.yaml の members へコピーして使う。
 # 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
 # providers.copilot.command_template で定義する（exec-defaults-snippet.yaml を参照）。
-# 設計の背景は specdojo-exec-config-guide.md の
+# 設計の背景は exec-config-guide.md の
 # 「agent 権限とプロンプトインジェクション対策」を参照。
 
 members:

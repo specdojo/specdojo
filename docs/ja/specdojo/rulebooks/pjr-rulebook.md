@@ -19,7 +19,7 @@ Project Register Documentation Rules
 
 本ドキュメントは、プロジェクト登録簿（`pjr-index`）、個別登録項目（`pjr-XXXX-<topic>`）、派生ビューを統一形式で記述するためのルールです。
 プロジェクト登録簿は、TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一元管理します。
-本書は構造・列・記述形式を定義し、位置づけ、値の意味・選び方、登録・状態遷移・個票分離などの運用は [[specdojo-register-operation-guide]] を参照します。
+本書は構造・列・記述形式を定義し、位置づけ、値の意味・選び方、登録・状態遷移・個票分離などの運用は [[register-operation-guide]] を参照します。
 
 ## 1. 全体方針
 
@@ -206,7 +206,7 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 ### 5.5. type / status / priority の値
 
 - 値は `pjr-index.schema.yaml` に定義された enum のみを使用し、表記ゆれを作らない。値の一覧は schema を正本とする。
-- 各値の意味と選び方は [[specdojo-register-operation-guide]] の `type の選び方` および `状態遷移とコマンド` を参照する。
+- 各値の意味と選び方は [[register-operation-guide]] の `type の選び方` および `状態遷移とコマンド` を参照する。
 
 ### 5.6. 個票 status の遷移基準
 

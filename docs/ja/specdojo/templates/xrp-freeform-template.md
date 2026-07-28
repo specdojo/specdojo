@@ -44,7 +44,7 @@ rulebook / recipe / sample / template に原則縛られず、対象領域の類
 
 参考資料とプロジェクト文脈が矛盾する場合は、プロジェクト文脈を優先し、その理由を記録する。
 
-本タスクの実行に必要な freeform の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
+本タスクの実行に必要な freeform の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[reference-materials-guide]] を参照する。
 
 ### 4.1. 判断根拠の記録
 

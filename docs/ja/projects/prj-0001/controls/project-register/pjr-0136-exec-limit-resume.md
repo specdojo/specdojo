@@ -55,5 +55,5 @@ specdojo:
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[sysd-claude-agent-settings|Claude Codeエージェント設定]]
 - [[sysd-codex-agent-settings|Codexエージェント設定]]
-- [[specdojo-exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[exec-operation-guide|SpecDojo exec運用ガイド]]
 - [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

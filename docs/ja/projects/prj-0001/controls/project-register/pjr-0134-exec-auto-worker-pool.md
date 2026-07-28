@@ -45,11 +45,11 @@ specdojo:
 - provider capacity は現在実行中の provider 数として扱い、起動時に `reserve`、終了時に `release` するようにした。
 - critical task が rate limit または failure になった場合は新規投入を停止し、既に起動済みの task は終了処理まで drain する方針にした。
 - `tests/src/exec-run-worker-pool.test.ts` を追加し、短時間 task 完了後の補充、停止後の新規投入抑止と drain を検証した。`tests/src/exec-agent-config.test.ts` には provider capacity 解放の検証を追加した。
-- `specdojo-exec-operation-guide`、`specdojo-command-reference`、`specdojo-exec-config-guide`、`sysd-agent-settings` を worker pool 前提の説明へ更新した。
+- `exec-operation-guide`、`specdojo-command-reference`、`exec-config-guide`、`sysd-agent-settings` を worker pool 前提の説明へ更新した。
 
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]]
 - [[sysd-agent-settings|エージェント共通設定]]
-- [[specdojo-exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[exec-operation-guide|SpecDojo exec運用ガイド]]
 - [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-exec-operation-guide
+  id: exec-operation-guide
   type: guide
   status: draft
 ---
@@ -21,7 +21,7 @@ Exec Operation Guide
 
 **次に読む文書**
 
-- エージェント設定は [exec設定ガイド](specdojo-exec-config-guide.md)、plan・result の管理は [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、手動隔離実行は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照してください。
+- エージェント設定は [exec設定ガイド](exec-config-guide.md)、plan・result の管理は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、手動隔離実行は [exec worktree運用ガイド](exec-worktree-guide.md) を参照してください。
 
 ## 1. execの基本
 
@@ -62,7 +62,7 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 
 register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。schedule の進捗として扱いたい作業は register 項目のままにせず、schedule のタスクとして計画します。
 
-登録の判断、type の選び方、個票分離などの台帳運用は [登録簿運用ガイド](specdojo-register-operation-guide.md) を参照します。
+登録の判断、type の選び方、個票分離などの台帳運用は [登録簿運用ガイド](register-operation-guide.md) を参照します。
 
 ### 1.3. ユースケース別の選び方
 
@@ -184,7 +184,7 @@ specdojo exec build --project <project-id>
 
 `exec complete` は `--task` を省略できます。`--by` で指定した actor の `doing` タスクが1件だけの場合は、そのタスクを完了対象として解決します。対象が0件の場合はエラー、複数件の場合は曖昧性を避けるため `--task <task-id>` の指定を要求します。
 
-worktree 隔離を人が段階確認しながら実行する場合は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照します。
+worktree 隔離を人が段階確認しながら実行する場合は [exec worktree運用ガイド](exec-worktree-guide.md) を参照します。
 
 ### 3.2. planを確認してから実行する
 
@@ -201,7 +201,7 @@ schedule に無い成果物を catalog から直接 plan 化する場合は `--d
 specdojo exec plan --project <project-id> --deliverable <local_id>
 ```
 
-plan / result の命名、再実行、アーカイブは [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照します。
+plan / result の命名、再実行、アーカイブは [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照します。
 
 ## 4. routineによる定期実行
 
@@ -285,7 +285,7 @@ specdojo exec release \
   --reset-worktree
 ```
 
-`--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) の `status` を使います。
+`--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
 ### 5.2. 完了済みタスクをtodoに戻す
 
@@ -353,7 +353,7 @@ action:
   parallel: 2
 ```
 
-provider別の `max_concurrency` や agent 選択は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
+provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
 ## 6. humanタスクの実行
 

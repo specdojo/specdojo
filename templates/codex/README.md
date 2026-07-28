@@ -45,4 +45,4 @@ specdojo exec scaffold --provider codex
 ## 4. カスタマイズ
 
 - worker のモデル・reasoning effort は `command_params.by_proficiency` の1箇所で調整する。subagent（`agents/*.toml`）側の `model` / `model_reasoning_effort` は利用プランに合わせて調整する。
-- 権限設計の背景は `specdojo-exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。
+- 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

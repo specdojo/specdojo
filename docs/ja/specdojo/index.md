@@ -26,4 +26,4 @@ SpecDojo が提供する記述支援資料の入口です。ここには成果�
 | `templates/`  | 成果物の雛形                     |
 | `samples/`    | 成果物の記述例                   |
 
-種別ごとに答える問いの違い、責務分担、exec plan からの参照方法は [参考資料活用ガイド](./guides/specdojo-reference-materials-guide.md) を参照します。
+種別ごとに答える問いの違い、責務分担、exec plan からの参照方法は [参考資料活用ガイド](./guides/reference-materials-guide.md) を参照します。

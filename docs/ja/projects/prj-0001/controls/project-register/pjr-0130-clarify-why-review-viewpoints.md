@@ -49,5 +49,5 @@ specdojo:
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — 判定対象となる project-level Why
 - [[prj-0001:pjr-0129-why-what-how-recipes|Why-What-How作成原則をrecipeへ反映]] — 作成側の対策
 - [[prj-0001:pm-review-viewpoints|レビュー観点一覧]] — 変更対象
-- [[specdojo-review-guide]] — review viewpoint の運用基準
+- [[review-guide]] — review viewpoint の運用基準
 - [[recipe-authoring-standard|Recipe 記述標準]] — Why / What / How / Trace と成果物形式別の適用基準

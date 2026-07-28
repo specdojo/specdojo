@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-plan-result-lifecycle-guide
+  id: plan-result-lifecycle-guide
   type: guide
   status: draft
 ---
@@ -9,7 +9,7 @@ specdojo:
 
 Plan and Result Lifecycle Guide
 
-`exec plan` / `exec run` / `exec claim` が扱う plan と result の生成、命名、再実行、アーカイブを説明します。exec の実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
+`exec plan` / `exec run` / `exec claim` が扱う plan と result の生成、命名、再実行、アーカイブを説明します。exec の実行手順は [exec運用ガイド](exec-operation-guide.md) を参照します。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ Plan and Result Lifecycle Guide
 
 **次に読む文書**
 
-- 実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、plan が参照する資料の使い分けは [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
+- 実行手順は [exec運用ガイド](exec-operation-guide.md)、plan が参照する資料の使い分けは [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
 
 ## 1. planとresultの基本
 
@@ -140,7 +140,7 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
-参考資料の扱いは [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照します。
+参考資料の扱いは [参考資料活用ガイド](reference-materials-guide.md) を参照します。
 
 ### 3.3. resultテンプレート
 

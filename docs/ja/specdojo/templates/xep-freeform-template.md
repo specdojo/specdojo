@@ -44,7 +44,7 @@ rulebook / recipe / sample / template に原則縛られないため、対象成
 - 参考資料とプロジェクト文脈が矛盾する場合は、プロジェクト文脈を優先し、その理由を記録する。
 - この plan のフェーズ説明とレビュー観点を満たすことを主な基準にする。
 
-本タスクの実行に必要な freeform の進め方は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
+本タスクの実行に必要な freeform の進め方は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[reference-materials-guide]] を参照する。
 
 ### 4.1. 判断根拠の記録
 

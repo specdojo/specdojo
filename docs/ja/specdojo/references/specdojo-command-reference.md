@@ -23,7 +23,7 @@ CLI Command Reference
 
 **詳細の参照先**
 
-- CLI 全体の流れは [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md)、運用上の判断と手順は各コマンド節からリンクした専門ガイドを参照してください。
+- CLI 全体の流れは [CLI概要ガイド](../guides/cli-overview-guide.md)、運用上の判断と手順は各コマンド節からリンクした専門ガイドを参照してください。
 
 ## 1. 共通オプション
 
@@ -34,7 +34,7 @@ CLI Command Reference
 | `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / generate / schedule build / release |
 | `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                              |
 
-project の解決順序と設定は [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) を参照します。
+project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-guide.md) を参照します。
 
 ## 2. config / project
 
@@ -73,7 +73,7 @@ specdojo catalog generate --project prj-0001 --dct project-definition
 specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
 ```
 
-`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
+`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ## 4. schedule
 
@@ -92,7 +92,7 @@ specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,d
 | `--force`         | 既存の `sch-track-<track>.yaml` を上書きする |
 | `--dry-run`       | 生成予定を確認する                           |
 
-Schedule設計の詳細は [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md) を参照します。
+Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
 ## 5. register
 
@@ -126,7 +126,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/specdojo-schedule
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 
-`renumber` による ID 重複の復旧手順、`add --reserve` による予約起票の運用、登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
+`renumber` による ID 重複の復旧手順、`add --reserve` による予約起票の運用、登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
 
 ## 6. exec
 
@@ -178,7 +178,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/specdojo-schedule
 | `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）    | `run --register`            |
 | `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                 | `resume`                    |
 
-`exec scheduler` の claim 保護と選択戦略、`exec reopen` の実行条件、`--auto --loop --parallel` の枠管理は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) を参照します。
+`exec scheduler` の claim 保護と選択戦略、`exec reopen` の実行条件、`--auto --loop --parallel` の枠管理は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 代表的な `exec run`:
 
@@ -210,7 +210,7 @@ specdojo exec run --project prj-0001 --register PJR-0012,PJR-0013 --on-failure c
 
 `--register` は登録簿（`pjr-index.md`）の項目を in-place 実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `dependency` / `note` は対象外です。worktree を使わない直列実行のため、`--worktree` と `--parallel` は併用できません。
 
-register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) を参照します。
+register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 ## 7. exec worktree
 
@@ -235,7 +235,7 @@ specdojo exec worktree merge --project prj-0001 --task <task-id>
 specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branch
 ```
 
-詳細な安全条件は [exec worktree運用ガイド](../guides/specdojo-exec-worktree-guide.md) を参照します。
+詳細な安全条件は [exec worktree運用ガイド](../guides/exec-worktree-guide.md) を参照します。
 
 ## 8. index
 
@@ -277,7 +277,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) の `routineによる定期実行` を参照します。
+`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [exec運用ガイド](../guides/exec-operation-guide.md) の `routineによる定期実行` を参照します。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
@@ -290,16 +290,16 @@ specdojo routine run --project prj-0001 --id rtn-daily-register-sweep
 specdojo routine run --project prj-0001 --due --dry-run
 ```
 
-schedule / register / routine の使い分けの基準は [exec運用ガイド](../guides/specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+schedule / register / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 ## 11. 関連ガイド
 
-| 詳細                | 参照先                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| CLI全体像と初期設定 | [CLI概要ガイド](../guides/specdojo-cli-overview-guide.md)                            |
-| Schedule設計        | [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md)                    |
-| exec運用・定期実行  | [exec運用ガイド](../guides/specdojo-exec-operation-guide.md)                         |
-| 登録簿運用          | [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md)                   |
-| worktree隔離実行    | [exec worktree運用ガイド](../guides/specdojo-exec-worktree-guide.md)                 |
-| plan/result         | [plan/resultライフサイクルガイド](../guides/specdojo-plan-result-lifecycle-guide.md) |
-| エージェント設定    | [exec設定ガイド](../guides/specdojo-exec-config-guide.md)                            |
+| 詳細                | 参照先                                                                      |
+| ------------------- | --------------------------------------------------------------------------- |
+| CLI全体像と初期設定 | [CLI概要ガイド](../guides/cli-overview-guide.md)                            |
+| Schedule設計        | [Schedule設計ガイド](../guides/schedule-design-guide.md)                    |
+| exec運用・定期実行  | [exec運用ガイド](../guides/exec-operation-guide.md)                         |
+| 登録簿運用          | [登録簿運用ガイド](../guides/register-operation-guide.md)                   |
+| worktree隔離実行    | [exec worktree運用ガイド](../guides/exec-worktree-guide.md)                 |
+| plan/result         | [plan/resultライフサイクルガイド](../guides/plan-result-lifecycle-guide.md) |
+| エージェント設定    | [exec設定ガイド](../guides/exec-config-guide.md)                            |

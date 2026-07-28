@@ -160,7 +160,7 @@ opus モデルを使用する高性能 review エージェント。多観点の�
 
 ## 9. エージェント割り当て設定
 
-エージェント割り当てのより詳細な設計は [specdojo-exec-config-guide](../../specdojo/guides/specdojo-exec-config-guide.md) を参照。
+エージェント割り当てのより詳細な設計は [exec-config-guide](../../specdojo/guides/exec-config-guide.md) を参照。
 
 ### 9.1. 起動コマンドの設計
 

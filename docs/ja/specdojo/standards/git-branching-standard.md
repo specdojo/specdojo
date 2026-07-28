@@ -9,7 +9,7 @@ specdojo:
 
 Git Branching Standard
 
-SpecDojo Unit を管理するリポジトリで、プロジェクト単位の変更と task 単位の自動実行を安全に統合するためのブランチ構成、命名、統合方向、保護条件を定義します。具体的な操作は [specdojo-branch-workflow-guide.md](../guides/specdojo-branch-workflow-guide.md) を参照してください。
+SpecDojo Unit を管理するリポジトリで、プロジェクト単位の変更と task 単位の自動実行を安全に統合するためのブランチ構成、命名、統合方向、保護条件を定義します。具体的な操作は [branch-workflow-guide.md](../guides/branch-workflow-guide.md) を参照してください。
 
 ## 1. 目的・適用範囲
 
@@ -102,6 +102,6 @@ main
 ## 9. 運用・見直しルール
 
 - ブランチ命名を変更するときは、SpecDojo の branch 導出、worktree 検索、テスト、関連 guide を同時に確認します。
-- exec の分岐元または統合先の挙動を変更するときは、[specdojo-exec-worktree-guide.md](../guides/specdojo-exec-worktree-guide.md) と CLI 実装の整合を確認します。
+- exec の分岐元または統合先の挙動を変更するときは、[exec-worktree-guide.md](../guides/exec-worktree-guide.md) と CLI 実装の整合を確認します。
 - 複数プロジェクト運用で競合や誤統合が繰り返される場合は、ベースブランチの明示を自動実行設定へ昇格させます。
 - 例外運用は対象、理由、期間、復帰条件を project register または同等の管理記録に残します。

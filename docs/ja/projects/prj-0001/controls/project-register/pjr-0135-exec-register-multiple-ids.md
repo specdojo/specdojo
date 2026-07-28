@@ -51,6 +51,6 @@ specdojo:
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]]
 - [[sysd-agent-settings|エージェント共通設定]]
-- [[specdojo-register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[specdojo-exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[exec-operation-guide|SpecDojo exec運用ガイド]]
 - [[specdojo-command-reference|SpecDojoコマンドリファレンス]]

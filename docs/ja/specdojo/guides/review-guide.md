@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-review-guide
+  id: review-guide
   type: guide
   status: draft
 ---
@@ -23,7 +23,7 @@ Review Guide
 
 **次に読む文書**
 
-- レビュー時の参考資料の使い方は [参考資料活用ガイド](specdojo-reference-materials-guide.md)、plan・result の共通ライフサイクルは [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を参照してください。
+- レビュー時の参考資料の使い方は [参考資料活用ガイド](reference-materials-guide.md)、plan・result の共通ライフサイクルは [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
 ## 1. レビューの位置づけ
 
@@ -250,7 +250,7 @@ specdojo:
 
 人または agent は review plan に従ってレビューします。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
 
-レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従います。詳細は [参考資料活用ガイド](specdojo-reference-materials-guide.md) を参照してください。
+レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従います。詳細は [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
 
 実行時の原則
 

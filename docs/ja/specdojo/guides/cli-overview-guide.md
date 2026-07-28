@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-cli-overview-guide
+  id: cli-overview-guide
   type: guide
   status: draft
 ---
@@ -21,7 +21,7 @@ CLI Overview Guide
 
 **次に読む文書**
 
-- 計画設計は [Schedule設計ガイド](specdojo-schedule-design-guide.md)、タスク実行は [exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
+- 計画設計は [Schedule設計ガイド](schedule-design-guide.md)、タスク実行は [exec運用ガイド](exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
 - 目的から guide と reference を探す場合は [全体概要ガイド](specdojo-overview-guide.md) の `目的別の次の読み物` を参照してください。
 
 ## 1. CLIの役割
@@ -122,7 +122,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 }
 ```
 
-`base_path` を指定すると、`catalog_path`、`schedule_path`、`execution_path` などを `base_path` からの相対パスとして書けます。`run.exec_defaults` と `run.worktree_base` はリポジトリルート相対のまま扱います。`run.exec_defaults` が指すファイルの中身（エージェント、provider、権限、リトライ）は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
+`base_path` を指定すると、`catalog_path`、`schedule_path`、`execution_path` などを `base_path` からの相対パスとして書けます。`run.exec_defaults` と `run.worktree_base` はリポジトリルート相対のまま扱います。`run.exec_defaults` が指すファイルの中身（エージェント、provider、権限、リトライ）は [exec設定ガイド](exec-config-guide.md) を参照します。
 
 `project_context` は、`depends_on` と独立して成果物の edit / review plan に渡すプロジェクト共通文書の ID リストです。省略時は `["prj-overview"]`、空配列 `[]` は opt-out を表します。project context は plan の参照範囲にだけ作用し、schedule、`based_on`、commit scope は変更しません。
 
@@ -169,7 +169,7 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 specdojo build --project prj-0001
 ```
 
-手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [Schedule設計ガイド](specdojo-schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
+手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [Schedule設計ガイド](schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ### 6.1. catalog generateの生成方針
 
@@ -189,7 +189,7 @@ specdojo build --project prj-0001
 
 ## 7. 定期実行と登録項目の実行
 
-schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を、経路ごとの使い分けの基準は [exec運用ガイド](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を、経路ごとの使い分けの基準は [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 | 機能                  | 概要                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |

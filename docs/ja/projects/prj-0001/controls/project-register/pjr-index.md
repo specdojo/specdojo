@@ -15,7 +15,7 @@ Project Register
 プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
 
 記載ルール、項目定義、type / status / priority の定義は [[pjr-rulebook]] に従います。
-登録の判断、状態遷移、個票分離などの使い方は [[specdojo-register-operation-guide]] を参照します。
+登録の判断、状態遷移、個票分離などの使い方は [[register-operation-guide]] を参照します。
 
 ## 1. 登録項目一覧
 
@@ -108,7 +108,7 @@ Project Register
 | PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | done | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | 2026-07-22 | schemaチェックもtestに追加 | - |
 | PJR-0087 | done | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | 2026-07-23 | yaml-pages の dct テンプレ表示ページを catalog build と同じ表形式（成果物表＋完了条件）で描画する実装を追加（コミットd8e1b346） | - |
-| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | specdojo-exec-config-guide.mdに記述。設定ファイルも変更 | - |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | exec-config-guide.mdに記述。設定ファイルも変更 | - |
 | PJR-0089 | done | claude-agent-settingsの見直し | capability, proficiencyに対応して記述を見直し | todo | medium | ARC | 2026-06-05 | 2026-06-02 | agent file含めて整備 | - |
 | PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | - |
 | PJR-0091 | done | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | 2026-06-05 | 2026-07-22 | complete後にcommit, pushを実行する運用で当面実行 | - |

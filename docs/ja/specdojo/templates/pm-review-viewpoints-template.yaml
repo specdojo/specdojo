@@ -18,7 +18,7 @@ metadata_template:
 
 # レビュー観点一覧。
 # Role code の語彙は pm-roles.yaml を参照する。
-# レビュー運用方針は specdojo-review-guide.md を参照する。
+# レビュー運用方針は review-guide.md を参照する。
 # 成果物ごとの完了条件は成果物カタログの done_criteria を正とする。
 
 categories:

@@ -24,7 +24,7 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 
 **詳細の参照先**
 
-- 成果物をどのトラックで扱うかは [トラック設計ガイド](../guides/track-design-guide.md)、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
+- 成果物をどのトラックで扱うかは [トラック設計ガイド](../guides/track-design-guide.md)、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/reference-materials-guide.md) を参照してください。
 
 ## 1. プロジェクト成果物
 
@@ -137,7 +137,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [変更要求ログ](../rulebooks/pm-change-request-log-rulebook.md) | Change Request Log | `pm-change-request-log` | `type=change-request` の登録項目を抽出して変更要求ビューを提供する | 変更 ID、要求内容、影響範囲、審査結果、決定日 |
 | 決定ログ | Decision Log | `pm-decision-log` | `type=decision` の登録項目を抽出して意思決定ビューを提供する | 背景、決定した内容、検討した選択肢、採択理由、影響範囲 |
 
-登録簿の運用手順は [登録簿運用ガイド](../guides/specdojo-register-operation-guide.md) を参照します。
+登録簿の運用手順は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
 
 #### 1.5.4. レポート
 
@@ -157,7 +157,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | トラック別Schedule定義 | Schedule Track Definition | `sch-track-<track>.yaml` | トラックごとのタスク・マイルストーンを定義する | タスク、開始日、終了日、依存関係、担当、実行形態 |
 | トラック別タスク生成戦略 | Schedule Strategy Definition | `sch-strategy-<track>.yaml` | トラックごとのタスク生成戦略を定義する | 対象カタログ、生成フェーズ、担当ルール、依存補完 |
 
-Schedule 定義全体の記述ルールは [スケジュール作成ルール](../rulebooks/sch-rulebook.md)、設計の考え方は [Schedule設計ガイド](../guides/specdojo-schedule-design-guide.md) を参照します。
+Schedule 定義全体の記述ルールは [スケジュール作成ルール](../rulebooks/sch-rulebook.md)、設計の考え方は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
 #### 1.5.6. 実行管理
 

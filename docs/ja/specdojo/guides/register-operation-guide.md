@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-register-operation-guide
+  id: register-operation-guide
   type: guide
   status: draft
 ---
@@ -21,7 +21,7 @@ Register Operation Guide
 
 **次に読む文書**
 
-- 登録項目の実行経路は [exec運用ガイド](specdojo-exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
+- 登録項目の実行経路は [exec運用ガイド](exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
 
 ## 1. 登録簿の基本
 
@@ -33,7 +33,7 @@ Register Operation Guide
 
 - 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）です。
 - 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しません。
-- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れません。計画外に発生した単発の対応・調査・判断を登録簿で追跡します（[exec運用ガイド](specdojo-exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
+- 成果物カタログと依存関係に基づく計画済みの作業は schedule で管理し、登録簿には入れません。計画外に発生した単発の対応・調査・判断を登録簿で追跡します（[exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
 
 関連ドキュメントの関係は次のとおりです。
 
@@ -218,7 +218,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register
 
 実行前に、過去の register 実行が残した未 commit の plan/result を検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
 
-実行フローの詳細は [exec運用ガイド](specdojo-exec-operation-guide.md) を参照します。
+実行フローの詳細は [exec運用ガイド](exec-operation-guide.md) を参照します。
 
 ## 4. 例外対応と特殊な運用
 

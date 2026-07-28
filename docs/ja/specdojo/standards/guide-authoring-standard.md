@@ -49,7 +49,7 @@ Guide Authoring Standard
 
 **次に読む文書**
 
-- エージェント設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+- エージェント設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 ```
 
 - 「次に読む文書」には、その guide の直接の後続だけを書く。目的別の横断一覧は [specdojo-overview-guide.md](../guides/specdojo-overview-guide.md) の `目的別の次の読み物` を唯一の正本とし、各 guide に同じ一覧を複製しない。

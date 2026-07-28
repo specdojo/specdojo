@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-schedule-design-guide
+  id: schedule-design-guide
   type: guide
   status: draft
   supersedes:
@@ -23,7 +23,7 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- 実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、exec 設定は [exec設定ガイド](specdojo-exec-config-guide.md) を参照してください。
+- 実行手順は [exec運用ガイド](exec-operation-guide.md)、exec 設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
 ## 1. Scheduleの基本
 
@@ -251,7 +251,7 @@ phase_sets:
 | `capabilities` | 必要なツールや能力を示す                 |
 | `proficiency`  | 必要な習熟度を示す                       |
 
-エージェント選択の詳細は [exec設定ガイド](specdojo-exec-config-guide.md) を参照します。
+エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
 ### 3.2. exec build時のフェーズ解決
 

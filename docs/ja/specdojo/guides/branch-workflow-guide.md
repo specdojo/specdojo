@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-branch-workflow-guide
+  id: branch-workflow-guide
   type: guide
   status: draft
   based_on:
@@ -23,7 +23,7 @@ Branch Workflow Guide
 
 **次に読む文書**
 
-- exec の実行経路は [exec運用ガイド](specdojo-exec-operation-guide.md)、worktree の分割操作は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) を参照してください。
+- exec の実行経路は [exec運用ガイド](exec-operation-guide.md)、worktree の分割操作は [exec worktree運用ガイド](exec-worktree-guide.md) を参照してください。
 
 ## 1. 前提と全体像
 
@@ -138,7 +138,7 @@ specdojo exec run \
   --worktree
 ```
 
-段階ごとに確認する場合は [exec worktree運用ガイド](specdojo-exec-worktree-guide.md) の分割手順を使います。特に `worktree merge` の直前には、root worktree が対象 project の `develop` であることを再確認します。
+段階ごとに確認する場合は [exec worktree運用ガイド](exec-worktree-guide.md) の分割手順を使います。特に `worktree merge` の直前には、root worktree が対象 project の `develop` であることを再確認します。
 
 ```bash
 git branch --show-current

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-reference-materials-guide
+  id: reference-materials-guide
   type: guide
   status: draft
 ---
@@ -25,11 +25,11 @@ exec plan は「何を」「どこまで」行うかを示しますが、対象�
 
 **次に読む文書**
 
-- plan・result の生成規則は [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](specdojo-exec-operation-guide.md)、レビュー手順は [レビューガイド](specdojo-review-guide.md) を参照してください。
+- plan・result の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](exec-operation-guide.md)、レビュー手順は [レビューガイド](review-guide.md) を参照してください。
 
 ## 1. 参照する文書の役割
 
-exec plan（`exec/plans/<task-id>-plan.md`）が示すのは「対象成果物」「完了の狙い（edit）/ レビュー観点（review）」「完了手順」「異常終了の条件」であり、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。exec plan 自体の生成規則は [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md) を正本とします。
+exec plan（`exec/plans/<task-id>-plan.md`）が示すのは「対象成果物」「完了の狙い（edit）/ レビュー観点（review）」「完了手順」「異常終了の条件」であり、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。exec plan 自体の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を正本とします。
 
 参考資料として参照する文書の役割は次のとおりです。
 
@@ -143,7 +143,7 @@ review でも「`approach` による進め方の使い分け」を同じ基準�
 ## 6. 関連ドキュメント
 
 - [プロジェクト概要 作成レシピ](../recipes/prj-overview-recipe.md): rulebook / recipe / sample の役割分担の記述例
-- [plan/resultライフサイクルガイド](specdojo-plan-result-lifecycle-guide.md): exec plan / result の生成、命名、アーカイブ
-- [exec運用ガイド](specdojo-exec-operation-guide.md): exec plan を使った実行フロー
-- [レビューガイド](specdojo-review-guide.md): review plan / review result の扱いと、参考資料の活用方法
-- [exec設定ガイド](specdojo-exec-config-guide.md): `approach` を含む phase の実行要件
+- [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md): exec plan / result の生成、命名、アーカイブ
+- [exec運用ガイド](exec-operation-guide.md): exec plan を使った実行フロー
+- [レビューガイド](review-guide.md): review plan / review result の扱いと、参考資料の活用方法
+- [exec設定ガイド](exec-config-guide.md): `approach` を含む phase の実行要件

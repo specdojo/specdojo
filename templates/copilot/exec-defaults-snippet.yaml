@@ -2,7 +2,7 @@
 # 利用プロジェクトの .specdojo/exec-defaults.yaml の providers へコピーして使う。
 # 権限は command template のフラグが正本。--allow-all / --yolo / --allow-all-tools /
 # --allow-all-paths / COPILOT_ALLOW_ALL は使わない。
-# 設計の背景は specdojo-exec-config-guide.md の
+# 設計の背景は exec-config-guide.md の
 # 「agent 権限とプロンプトインジェクション対策」を参照。
 
 providers:

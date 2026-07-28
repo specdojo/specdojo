@@ -38,4 +38,4 @@ specdojo exec scaffold --provider copilot
 - フラグの追加・変更は `providers.copilot.command_template` の1箇所で行う（member 側に `command` を書かない）。
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使わない。
 - `--deny-tool` の `git add` / `git commit` / `git push` は維持する。deny は `--allow-all-tools` より優先されるため、許可リストの追記で誤って開くことを防ぐ保険になる。
-- 権限設計の背景は `specdojo-exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。
+- 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

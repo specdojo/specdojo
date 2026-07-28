@@ -21,7 +21,7 @@ specdojo:
 
 ## 3. 導入手順
 
-利用プロジェクトのルートで scaffold コマンドを実行すると、上表の配置先へ一式コピーされます（詳細は [specdojo-exec-config-guide.md](../../docs/ja/specdojo/guides/specdojo-exec-config-guide.md) の `provider 設定の配布と scaffold` を参照）。
+利用プロジェクトのルートで scaffold コマンドを実行すると、上表の配置先へ一式コピーされます（詳細は [exec-config-guide.md](../../docs/ja/specdojo/guides/exec-config-guide.md) の `provider 設定の配布と scaffold` を参照）。
 
 ```sh
 specdojo exec scaffold --provider claude
