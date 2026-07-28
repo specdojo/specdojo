@@ -229,8 +229,8 @@ export const specdojoSidebarItems = [
     items: [
       guide("全体概要", "specdojo-overview-guide"),
       guide("ドキュメント構成", "docs-structure-guide"),
-      guide("ドキュメント作成順", "docs-authoring-order-guide"),
-      guide("ドキュメントフェーズ概要", "docs-phases-overview-guide"),
+      guide("トラック設計", "track-design-guide"),
+      guide("ドキュメント概念体系", "docs-concept-system-guide"),
       guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
       guide("参考資料活用", "specdojo-reference-materials-guide"),
       guide("ドキュメント編集", "docs-editing-guide"),
@@ -344,7 +344,7 @@ export const PROJECTS_FILE_TEXT: Record<string, string> = {
 // プロジェクト配下の既知ファイルのメニュー表示（標準成果物と生成ビュー）。
 // text: H1 の「タイトル: <プロジェクト名>」形式や英語 H1 より短い固定表示名（H1 より優先）。
 // order: 同一ディレクトリ内での表示順。ファイル名順ではなく作成順・検討順
-// （docs-authoring-order-guide）や参照頻度に合わせる。未登録ファイルはファイル名順で後続に並ぶ。
+// （track-design-guide）や参照頻度に合わせる。未登録ファイルはファイル名順で後続に並ぶ。
 // order を省略したファイルは既定の並び（README は先頭）に従う。
 export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }> = {
   README: { text: "概要" },

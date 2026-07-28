@@ -11,7 +11,7 @@ SpecDojo は、**仕様駆動開発のためのドキュメントフレームワ
 
 1. [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)：SpecDojo の目的、文書体系、成果物から実行管理までの流れを説明します。
 2. [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)：プロダクト文書とプロジェクト文書の分類、配置を説明します。
-3. [ドキュメント作成順ガイド](./specdojo/guides/docs-authoring-order-guide.md)：プロジェクトで成果物を検討・作成する順序を説明します。
+3. [トラック設計ガイド](./specdojo/guides/track-design-guide.md)：プロジェクトの作業系列であるトラックの構成と実行順序を説明します。
 
 CLI による実行管理から確認したい場合は、[CLI概要ガイド](./specdojo/guides/specdojo-cli-overview-guide.md)から始めてください。
 

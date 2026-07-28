@@ -23,7 +23,7 @@ Document Concept System Guide
 **次に読む文書**
 
 - 文書の分類・ライフサイクル・配置は [ドキュメント構成ガイド](docs-structure-guide.md)、具体的な成果物は [成果物リファレンス](../references/specdojo-deliverables-reference.md) を参照してください。
-- 成果物を選定・検討する順序は [ドキュメント作成順ガイド](docs-authoring-order-guide.md) を参照してください。
+- トラックの構成と実行順序は [トラック設計ガイド](track-design-guide.md) を参照してください。
 
 **この文書が扱わないこと**
 

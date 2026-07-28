@@ -24,7 +24,7 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 
 **詳細の参照先**
 
-- 必要な成果物を選定する順序は [ドキュメント作成順ガイド](../guides/docs-authoring-order-guide.md)、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
+- 成果物をどのトラックで扱うかは [トラック設計ガイド](../guides/track-design-guide.md)、rulebook・recipe・sample・template の使い分けは [参考資料活用ガイド](../guides/specdojo-reference-materials-guide.md) を参照してください。
 
 ## 1. プロジェクト成果物
 

@@ -12,7 +12,7 @@ SpecDojo が提供する記述支援資料の入口です。ここには成果�
 | 成果物の種類、目的、書き方の正本を調べる | [成果物リファレンス](./references/specdojo-deliverables-reference.md) |
 | CLI のコマンドとオプションを調べる       | [CLIコマンドリファレンス](./references/specdojo-command-reference.md) |
 | 文書の分類と配置を確認する               | [ドキュメント構成ガイド](./guides/docs-structure-guide.md)            |
-| 成果物を検討・作成する順序を決める       | [ドキュメント作成順ガイド](./guides/docs-authoring-order-guide.md)    |
+| トラックの構成と実行順序を設計する       | [トラック設計ガイド](./guides/track-design-guide.md)                  |
 
 ## 2. 資料の配置
 
