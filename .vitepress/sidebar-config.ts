@@ -258,8 +258,8 @@ export const specdojoSidebarItems = [
     text: "リファレンス",
     collapsed: false,
     items: [
-      reference("成果物リファレンス", "specdojo-deliverables-reference"),
-      reference("CLIコマンドリファレンス", "specdojo-command-reference"),
+      reference("成果物リファレンス", "deliverables-reference"),
+      reference("CLIコマンドリファレンス", "command-reference"),
     ],
   },
   {

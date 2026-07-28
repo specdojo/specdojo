@@ -6,13 +6,13 @@ SpecDojo が提供する記述支援資料の入口です。ここには成果�
 
 全体像から読む場合は [全体概要ガイド](./guides/specdojo-overview-guide.md) から始めてください。目的から guide と reference を探す場合は、同ガイドの `目的別の次の読み物` を参照します。
 
-| 目的                                     | 参照先                                                                |
-| ---------------------------------------- | --------------------------------------------------------------------- |
-| SpecDojo 全体の構成と流れを知る          | [全体概要ガイド](./guides/specdojo-overview-guide.md)                 |
-| 成果物の種類、目的、書き方の正本を調べる | [成果物リファレンス](./references/specdojo-deliverables-reference.md) |
-| CLI のコマンドとオプションを調べる       | [CLIコマンドリファレンス](./references/specdojo-command-reference.md) |
-| 文書の分類と配置を確認する               | [ドキュメント構成ガイド](./guides/docs-structure-guide.md)            |
-| トラックの構成と実行順序を設計する       | [トラック設計ガイド](./guides/track-design-guide.md)                  |
+| 目的                                     | 参照先                                                       |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| SpecDojo 全体の構成と流れを知る          | [全体概要ガイド](./guides/specdojo-overview-guide.md)        |
+| 成果物の種類、目的、書き方の正本を調べる | [成果物リファレンス](./references/deliverables-reference.md) |
+| CLI のコマンドとオプションを調べる       | [CLIコマンドリファレンス](./references/command-reference.md) |
+| 文書の分類と配置を確認する               | [ドキュメント構成ガイド](./guides/docs-structure-guide.md)   |
+| トラックの構成と実行順序を設計する       | [トラック設計ガイド](./guides/track-design-guide.md)         |
 
 ## 2. 資料の配置
 

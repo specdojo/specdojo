@@ -50,4 +50,4 @@ specdojo:
 
 - [[pjr-rulebook|プロジェクト登録簿ルールブック]]
 - [[register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[specdojo-command-reference|SpecDojoコマンドリファレンス]]
+- [[command-reference|SpecDojoコマンドリファレンス]]

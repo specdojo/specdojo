@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: specdojo-command-reference
+  id: command-reference
   type: reference
   status: draft
   supersedes:
-    - specdojo-command-reference-guide
+    - command-reference-guide
 ---
 
 # CLIコマンドリファレンス

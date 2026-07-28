@@ -37,7 +37,7 @@ Frontmatter は [ドキュメントメタ情報標準](document-metadata-standar
 ```yaml
 ---
 specdojo:
-  id: specdojo-command-reference
+  id: command-reference
   type: reference
   status: draft
 ---

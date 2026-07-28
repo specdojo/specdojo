@@ -9,7 +9,7 @@ specdojo:
 
 Exec Operation Guide
 
-`specdojo exec` によるタスク実行、実行経路（schedule / register / routine）の使い分け、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
+`specdojo exec` によるタスク実行、実行経路（schedule / register / routine）の使い分け、状態追跡、自動実行、手動実行、blocked 復帰を説明します。コマンド一覧は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
 
 **対象読者**
 

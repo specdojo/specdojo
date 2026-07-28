@@ -9,7 +9,7 @@ specdojo:
 
 CLI Overview Guide
 
-`specdojo` CLI の全体像、初期設定、代表的な実行フローを説明します。個別コマンドの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
+`specdojo` CLI の全体像、初期設定、代表的な実行フローを説明します。個別コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ CLI Overview Guide
 
 **次に読む文書**
 
-- 計画設計は [Schedule設計ガイド](schedule-design-guide.md)、タスク実行は [exec運用ガイド](exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照してください。
+- 計画設計は [Schedule設計ガイド](schedule-design-guide.md)、タスク実行は [exec運用ガイド](exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
 - 目的から guide と reference を探す場合は [全体概要ガイド](specdojo-overview-guide.md) の `目的別の次の読み物` を参照してください。
 
 ## 1. CLIの役割
@@ -185,11 +185,11 @@ specdojo build --project prj-0001
 
 `catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集します。そのため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済みの本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回だけ実行します。
 
-対象を特定のカタログに絞る場合は `--dct <name>` を使います。オプションの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を参照します。
+対象を特定のカタログに絞る場合は `--dct <name>` を使います。オプションの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
 
 ## 7. 定期実行と登録項目の実行
 
-schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [CLIコマンドリファレンス](../references/specdojo-command-reference.md) を、経路ごとの使い分けの基準は [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、経路ごとの使い分けの基準は [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 | 機能                  | 概要                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |

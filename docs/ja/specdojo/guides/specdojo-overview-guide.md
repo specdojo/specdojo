@@ -157,7 +157,7 @@ flowchart LR
 トラックの構成と実行順序は
 [トラック設計ガイド](track-design-guide.md)、
 個々の成果物の目的は
-[成果物リファレンス](../references/specdojo-deliverables-reference.md)、
+[成果物リファレンス](../references/deliverables-reference.md)、
 成果物を確定するレビューは
 [レビューガイド](review-guide.md)
 を参照してください。
@@ -253,11 +253,11 @@ CLI の導入は
 
 ### 8.2. 作成する成果物を決める
 
-| 目的                                               | 参照先                                                                 |
-| -------------------------------------------------- | ---------------------------------------------------------------------- |
-| 成果物の種類、目的、主な内容を調べる               | [成果物リファレンス](../references/specdojo-deliverables-reference.md) |
-| トラックの構成と実行順序を設計する                 | [トラック設計ガイド](track-design-guide.md)                            |
-| rulebook / recipe / sample / template を使い分ける | [参考資料活用ガイド](reference-materials-guide.md)                     |
+| 目的                                               | 参照先                                                        |
+| -------------------------------------------------- | ------------------------------------------------------------- |
+| 成果物の種類、目的、主な内容を調べる               | [成果物リファレンス](../references/deliverables-reference.md) |
+| トラックの構成と実行順序を設計する                 | [トラック設計ガイド](track-design-guide.md)                   |
+| rulebook / recipe / sample / template を使い分ける | [参考資料活用ガイド](reference-materials-guide.md)            |
 
 ### 8.3. 成果物の作成を計画する
 
@@ -267,16 +267,16 @@ CLI の導入は
 
 ### 8.4. プロジェクトを実行・管理する
 
-| 目的                                          | 参照先                                                                 |
-| --------------------------------------------- | ---------------------------------------------------------------------- |
-| CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](cli-overview-guide.md)                                 |
-| コマンドとオプションを調べる                  | [CLIコマンドリファレンス](../references/specdojo-command-reference.md) |
-| タスクを実行・再実行する、定期実行する        | [exec運用ガイド](exec-operation-guide.md)                              |
-| 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](register-operation-guide.md)                        |
-| エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](exec-config-guide.md)                                 |
-| planとresultの生成・保管・再実行を理解する    | [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)      |
-| projectとtaskのブランチを運用する             | [ブランチワークフローガイド](branch-workflow-guide.md)                 |
-| worktreeを使って手動で隔離実行する            | [exec worktree運用ガイド](exec-worktree-guide.md)                      |
+| 目的                                          | 参照先                                                            |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](cli-overview-guide.md)                            |
+| コマンドとオプションを調べる                  | [CLIコマンドリファレンス](../references/command-reference.md)     |
+| タスクを実行・再実行する、定期実行する        | [exec運用ガイド](exec-operation-guide.md)                         |
+| 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](register-operation-guide.md)                   |
+| エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](exec-config-guide.md)                            |
+| planとresultの生成・保管・再実行を理解する    | [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) |
+| projectとtaskのブランチを運用する             | [ブランチワークフローガイド](branch-workflow-guide.md)            |
+| worktreeを使って手動で隔離実行する            | [exec worktree運用ガイド](exec-worktree-guide.md)                 |
 
 ### 8.5. 成果物を確定・編集する
 

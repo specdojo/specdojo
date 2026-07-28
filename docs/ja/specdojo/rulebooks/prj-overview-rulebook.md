@@ -29,7 +29,7 @@ Project Overview Documentation Rulebook
 
 ## 2. 位置づけ
 
-本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。本書を扱う立ち上げトラックの位置づけは [[track-design-guide|トラック設計ガイド]]、立ち上げで扱う成果物の一覧は [[specdojo-deliverables-reference|成果物リファレンス]] を参照してください。
+本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。本書を扱う立ち上げトラックの位置づけは [[track-design-guide|トラック設計ガイド]]、立ち上げで扱う成果物の一覧は [[deliverables-reference|成果物リファレンス]] を参照してください。
 
 ## 3. ファイル命名・ID規則
 
