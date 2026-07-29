@@ -21,6 +21,8 @@ plugins:
           - docs/ja/specdojo/guides/*-guide.md
         docs/specdojo/schemas/v1/reference-content.schema.yaml:
           - docs/ja/specdojo/references/*-reference.md
+        docs/specdojo/schemas/v1/philosophy-content.schema.yaml:
+          - docs/ja/specdojo/philosophy/*-philosophy.md
   - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
     - strict: true
       schemaRules: # 配列なので上から順に評価し、最初にマッチしたスキーマを適用します。
@@ -37,6 +39,9 @@ plugins:
           require_frontmatter: true
         - glob: docs/ja/specdojo/guides/**/*.md
           schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
+          require_frontmatter: true
+        - glob: docs/ja/specdojo/philosophy/**/*.md
+          schema: docs/specdojo/schemas/v1/philosophy-frontmatter.schema.yaml
           require_frontmatter: true
         - glob: docs/ja/specdojo/standards/**/*.md
           schema: docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml

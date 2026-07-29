@@ -15,7 +15,7 @@ Guide Authoring Standard
 
 - 対象: `docs/ja/specdojo/guides/` 配下のすべての `*-guide.md`
 - 目的: guide の構成・記述品質を統一し、読み手が考え方・手順・使い方を理解して実行できる説明文書を提供する
-- 位置づけ: guide は規範（must）ではなく、理解・操作・判断を助ける説明と手順を扱う。規範事項は対応する standard / rulebook を正本とする
+- 位置づけ: guide は規範（must）ではなく、理解・操作・判断を助ける説明と手順を扱う。規範事項は対応する standard / rulebook、規約の前提となる方針・概念は philosophy を正本とする
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [guide-frontmatter.schema.yaml](../../../specdojo/schemas/v1/guide-frontmatter.schema.yaml)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)

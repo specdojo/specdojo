@@ -45,5 +45,5 @@ agent が手段や網羅的な説明へ引っ張られず、主要な論点を�
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — project-level Why の整備
-- [[docs-concept-system-guide]] — Why / What / How の既存概念
+- [[concept-system-philosophy]] — Why / What / How の既存概念
 - [[reference-materials-guide]] — recipe の役割と参照方針

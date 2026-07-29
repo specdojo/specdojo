@@ -22,7 +22,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **次に読む文書**
 
-- 要求・要件・仕様・設計・実装の違いは [ドキュメント概念体系ガイド](docs-concept-system-guide.md) を参照してください。
+- 要求・要件・仕様・設計・実装の違いは [概念体系の考え方](../philosophy/concept-system-philosophy.md) を参照してください。
 - トラックの構成と実行順序は [トラック設計ガイド](track-design-guide.md)、各成果物の目的は [成果物リファレンス](../references/deliverables-reference.md) を参照してください。
 
 **この文書が扱わないこと**
@@ -222,6 +222,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── specdojo/
+│   │   ├── philosophy/                       # 規約の前提となる方針・概念
 │   │   ├── guides/                           # ドキュメント作成ガイド
 │   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
@@ -338,6 +339,7 @@ docs/
 docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
 │   ├── specdojo/
+│   │   ├── philosophy/                       # 規約の前提となる方針・概念
 │   │   ├── guides/                           # ドキュメント作成ガイド
 │   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約

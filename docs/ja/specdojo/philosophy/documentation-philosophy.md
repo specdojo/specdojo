@@ -1,15 +1,16 @@
 ---
 specdojo:
-  id: specdojo-documentation-policy-guide
-  type: guide
+  id: documentation-philosophy
+  type: philosophy
   status: draft
 ---
 
-# ドキュメンテーションポリシーガイド
+# ドキュメンテーションの考え方
 
-Documentation Policy Guide
+Documentation Philosophy
 
-SpecDojo におけるドキュメンテーションの基本方針、設計原則、運用上の判断基準を定めるガイドです。
+SpecDojo におけるドキュメンテーションの基本方針、設計原則、運用上の判断基準を示します。
+本書は規範（must）ではなく、規約の設計理由と判断原則を扱います。判定可能な規約は各 standard を正本とします。
 
 **対象読者**
 
@@ -21,7 +22,7 @@ SpecDojo におけるドキュメンテーションの基本方針、設計原�
 
 **次に読む文書**
 
-- 文書の分類と配置は [ドキュメント構成ガイド](docs-structure-guide.md)、メタデータの規定は [ドキュメントメタ情報標準](../standards/document-metadata-standard.md) を参照してください。
+- 文書の分類と配置は [ドキュメント構成ガイド](../guides/docs-structure-guide.md)、メタデータの規定は [ドキュメントメタ情報標準](../standards/document-metadata-standard.md) を参照してください。
 
 ## 1. 基本方針
 

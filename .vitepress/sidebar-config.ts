@@ -21,6 +21,10 @@ const standard = (text: string, id: string): SidebarItem => ({
   text,
   link: specdojoLink("standards", id),
 });
+const philosophy = (text: string, id: string): SidebarItem => ({
+  text,
+  link: specdojoLink("philosophy", id),
+});
 const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
   text,
   link: specdojoLink("rulebooks", `${id}-rulebook`),
@@ -219,8 +223,8 @@ const projectManagementRecipes = [
 
 const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
 
-// サイドバーの表示名は対象ページの H1 に揃える。guide は「ガイド」グループ配下で
-// 種別が自明なため接尾辞「ガイド」を落とし、reference は H1 をそのまま使う。
+// サイドバーの表示名は対象ページの H1 に揃える。guide と philosophy はグループ配下で
+// 種別が自明なため接尾辞（「ガイド」「の考え方」）を落とし、reference は H1 をそのまま使う。
 // クリック前後でタイトルが変わらないようにするため、H1 を変更したらここも合わせて更新する。
 export const specdojoSidebarItems = [
   {
@@ -247,11 +251,6 @@ export const specdojoSidebarItems = [
         ],
         false,
       ),
-      // 考え方・方針は一度読めば足りるため、実務で引く guide の後ろへ折りたたんで置く。
-      group("考え方と方針", [
-        guide("ドキュメント概念体系", "docs-concept-system-guide"),
-        guide("ドキュメンテーションポリシー", "specdojo-documentation-policy-guide"),
-      ]),
     ],
   },
   {
@@ -260,6 +259,15 @@ export const specdojoSidebarItems = [
     items: [
       reference("成果物リファレンス", "deliverables-reference"),
       reference("CLIコマンドリファレンス", "command-reference"),
+    ],
+  },
+  {
+    // 規約の前提となる考え方。一度読めば足りるため、実務で引く guide / reference の後ろへ置く。
+    text: "考え方",
+    collapsed: true,
+    items: [
+      philosophy("ドキュメンテーション", "documentation-philosophy"),
+      philosophy("概念体系", "concept-system-philosophy"),
     ],
   },
   {

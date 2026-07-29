@@ -1,16 +1,17 @@
 ---
 specdojo:
-  id: docs-concept-system-guide
-  type: guide
+  id: concept-system-philosophy
+  type: philosophy
   status: draft
 ---
 
-# ドキュメント概念体系ガイド
+# 概念体系の考え方
 
-Document Concept System Guide
+Concept System Philosophy
 
 本ドキュメントは、要求、要件、仕様、設計、実装という記述内容の違いと関係を整理します。
 ここでいう概念は内容を区別するためのものであり、プロジェクトの工程、成果物の分類、実際の作成順を固定するものではありません。
+本書は規範（must）ではなく、概念の定義と典型的な誤りを扱います。成果物ごとの記述規則は各 rulebook を正本とします。
 
 **対象読者**
 
@@ -22,8 +23,8 @@ Document Concept System Guide
 
 **次に読む文書**
 
-- 文書の分類・ライフサイクル・配置は [ドキュメント構成ガイド](docs-structure-guide.md)、具体的な成果物は [成果物リファレンス](../references/deliverables-reference.md) を参照してください。
-- トラックの構成と実行順序は [トラック設計ガイド](track-design-guide.md) を参照してください。
+- 文書の分類・ライフサイクル・配置は [ドキュメント構成ガイド](../guides/docs-structure-guide.md)、具体的な成果物は [成果物リファレンス](../references/deliverables-reference.md) を参照してください。
+- トラックの構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照してください。
 
 **この文書が扱わないこと**
 
