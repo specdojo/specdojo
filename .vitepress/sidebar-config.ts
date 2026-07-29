@@ -231,12 +231,19 @@ export const specdojoSidebarItems = [
     text: "ガイド",
     collapsed: false,
     items: [
-      guide("全体概要", "specdojo-overview-guide"),
-      guide("Quick Start", "quick-start-guide"),
-      guide("ドキュメント構成", "docs-structure-guide"),
-      guide("参考資料活用", "reference-materials-guide"),
-      guide("ドキュメント編集", "docs-editing-guide"),
-      guide("レビュー", "review-guide"),
+      group(
+        "はじめに",
+        [guide("全体概要", "specdojo-overview-guide"), guide("Quick Start", "quick-start-guide")],
+        false,
+      ),
+      group(
+        "文書体系を理解する",
+        [
+          guide("ドキュメント構成", "docs-structure-guide"),
+          guide("参考資料活用", "reference-materials-guide"),
+        ],
+        false,
+      ),
       group(
         "スケジュールと実行",
         [
@@ -254,6 +261,11 @@ export const specdojoSidebarItems = [
           guide("ブランチワークフロー", "branch-workflow-guide"),
           guide("exec worktree運用", "exec-worktree-guide"),
         ],
+        false,
+      ),
+      group(
+        "成果物を仕上げる",
+        [guide("レビュー", "review-guide"), guide("ドキュメント編集", "docs-editing-guide")],
         false,
       ),
     ],
