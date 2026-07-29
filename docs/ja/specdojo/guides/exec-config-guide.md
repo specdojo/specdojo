@@ -72,6 +72,8 @@ phase_sets:
 | `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                              |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                  |
 
+`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [参考資料活用ガイド](reference-materials-guide.md) を参照します。
+
 ## 3. エージェントの定義
 
 `pm-members.yaml` の `type: agent` メンバーには `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。

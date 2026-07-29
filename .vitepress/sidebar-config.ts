@@ -232,8 +232,8 @@ export const specdojoSidebarItems = [
     collapsed: false,
     items: [
       guide("全体概要", "specdojo-overview-guide"),
+      guide("Quick Start", "quick-start-guide"),
       guide("ドキュメント構成", "docs-structure-guide"),
-      guide("トラック設計", "track-design-guide"),
       guide("参考資料活用", "reference-materials-guide"),
       guide("ドキュメント編集", "docs-editing-guide"),
       guide("レビュー", "review-guide"),
@@ -241,9 +241,14 @@ export const specdojoSidebarItems = [
         "スケジュールと実行",
         [
           guide("CLI概要", "cli-overview-guide"),
-          guide("Schedule設計", "schedule-design-guide"),
-          guide("exec運用", "exec-operation-guide"),
+          guide("exec運用（経路の選び方）", "exec-operation-guide"),
           guide("登録簿運用", "register-operation-guide"),
+          group("schedule系", [
+            guide("トラック設計", "track-design-guide"),
+            guide("Schedule設計", "schedule-design-guide"),
+            guide("schedule実行運用", "schedule-operation-guide"),
+          ]),
+          guide("routine運用", "routine-operation-guide"),
           guide("exec設定", "exec-config-guide"),
           guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),
           guide("ブランチワークフロー", "branch-workflow-guide"),

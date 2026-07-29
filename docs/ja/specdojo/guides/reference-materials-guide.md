@@ -13,7 +13,7 @@ Reference Materials Guide
 
 `reference` は一覧・比較のための文書種別であり、本書でいう exec plan の参考資料種別には含めません。
 
-exec plan は「何を」「どこまで」行うかを示しますが、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。本書はその参照の仕方を、`approach`（進め方）というタスクメタデータに基づいて整理します。
+exec plan は「何を」「どこまで」行うかを示しますが、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。本書はその参照の仕方を、`approach`（進め方）というタスクメタデータに基づいて整理します。`approach` は `sch-strategy-<track>.yaml` のフェーズに定義するフィールドで、フィールドの一覧は [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
 **対象読者**
 
@@ -26,6 +26,7 @@ exec plan は「何を」「どこまで」行うかを示しますが、対象�
 **次に読む文書**
 
 - plan・result の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](exec-operation-guide.md)、レビュー手順は [レビューガイド](review-guide.md) を参照してください。
+- `approach` を定義する Schedule 側の仕組みは [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
 ## 1. 参照する文書の役割
 

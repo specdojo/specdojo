@@ -19,6 +19,8 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 **この文書で分かること**
 
 - SpecDojo Unit、文書分類、ドキュメントオーナー、命名方針、標準ディレクトリ構成
+- 成果物と記述支援資料（philosophy / standard / rulebook / recipe / sample / template）の関係
+- 成果物カタログ（dct）・Schedule（sch）・実行管理（exec）の関係
 
 **次に読む文書**
 
@@ -27,9 +29,9 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **この文書が扱わないこと**
 
-- 要求・要件・仕様・設計・実装の定義
+- 要求・要件・仕様・設計・実装の定義そのもの
 - プロジェクトで成果物を選定・検討する順序や GO/NOT GO の判断
-- Schedule 上の実行順、担当者、日付、反復
+- Schedule 上の詳細な実行順序・担当者・日付・反復（構造的な関係ではなく運用の詳細は [Schedule設計ガイド](schedule-design-guide.md) / [schedule実行運用ガイド](schedule-operation-guide.md) を参照）
 
 本書の分類と構成は、文書の管理単位と配置を表します。開発工程や成果物の作成順を表すものではありません。
 
@@ -178,7 +180,94 @@ flowchart TB
 - 図中のアーキテクチャ設計は、個別仕様に先立つ全体構造の設計を表します。
 - 「業務要件を含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
 
-## 5. ディレクトリ・ファイルの命名ルール
+## 5. 成果物と記述支援資料の関係
+
+成果物と、その作成を支援する記述支援資料（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係を示します。各種別が答える問いと使い方は [全体概要ガイド](specdojo-overview-guide.md) の4章を参照し、本章では成果物への紐付け方（解決の仕組み）を扱います。
+
+### 5.1. 紐付けの仕組み
+
+```mermaid
+flowchart TB
+  PHIL["philosophy<br/>規約の前提となる方針・概念"]
+  STD["standard<br/>共通規約（メタデータ・命名等）"]
+  RB["rulebook<br/>成果物種別ごとの構造・必須項目"]
+  RC["recipe<br/>作成手順"]
+  TPL["template<br/>雛形"]
+  SMP["sample<br/>完成例"]
+  DEL["成果物<br/>（dct-&lt;domain&gt;.yamlのdeliverables[]エントリ）"]
+
+  PHIL --> STD
+  PHIL --> RB
+  STD --> RB
+  DEL -->|rulebookフィールドで指定| RB
+  RB -->|frontmatterのsample/recipe/templateで宣言| RC
+  RB --> SMP
+  RB --> TPL
+```
+
+| 記述支援資料               | 成果物との紐付け方                                                             | 例                                |
+| -------------------------- | ------------------------------------------------------------------------------ | --------------------------------- |
+| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | concept-system-philosophy         |
+| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard        |
+| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: prj-overview-rulebook` |
+| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`              |
+| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                      |
+
+`approach` に応じた rulebook / recipe / sample / template の参照方針（どこまで参照するか）は [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
+
+## 6. 成果物カタログ・Schedule・実行管理の関係
+
+成果物とその実行管理は、次の2つの軸で整理できます。
+
+```text
+[内容分類軸]（時間を含まない・静的）
+  ドメイン（成果物の領域毎のまとまり）
+    └─ 成果物 ──(概念体系: 要求/要件/仕様/設計/実装)
+
+[実行管理軸]（時間・順序を含む・動的）
+  スケジュール
+    └─ トラック（対象成果物スコープを決める）
+        └─ 実行フェーズ / パス（作業段階のテンプレート、または横断処理）
+            └─ タスク（成果物×フェーズ の実行アトム）
+```
+
+内容分類軸は成果物の性質を表す静的な分類で、実行順序を固定しません。実行管理軸は、成果物をいつ・どの単位でまとめて進めるかを表す動的な管理構造です。要求・要件・仕様・設計・実装の違いは [概念体系の考え方](../philosophy/concept-system-philosophy.md) を参照してください。
+
+### 6.1. dct・sch・execの対応
+
+| 情報                 | 主な役割                                                             | 担当ファイル                                           |
+| -------------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
+| 成果物カタログ       | 管理する成果物、配置、依存関係、完了条件を定義する                   | `dct-<domain>.yaml`                                    |
+| トラック             | 対象成果物のスコープを決め、実行系列としてまとめる                   | `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` |
+| 実行フェーズ / パス  | 成果物ごと、または成果物群を横断して適用する作業段階を定義する       | `sch-strategy-<track>.yaml`                            |
+| タスク               | 成果物×フェーズ から生成される実行アトム。担当・期限・依存関係を持つ | `sch-track-<track>.yaml`（生成物）                     |
+| plan                 | 一回の作業で確認・変更する対象と手順を示す                           | `execution/exec/plans/`                                |
+| result               | 実施内容、確認結果、残課題を記録する                                 | `execution/exec/results/`                              |
+| 実行イベント・生成物 | タスクの状態、実行履歴、Ready、クリティカルパスなどを表す            | `execution/generated/`                                 |
+
+### 6.2. 展開の流れ
+
+```mermaid
+flowchart LR
+  DCT["成果物カタログ<br/>成果物・依存関係・完了条件"]
+  TRACK["トラック<br/>対象成果物のスコープを決める"]
+  PHASE["実行フェーズ / パス<br/>作業段階のテンプレート、または横断処理"]
+  TASK["タスク<br/>成果物×フェーズ の実行アトム"]
+  PLAN["plan<br/>今回何を行うか"]
+  WORK["人・エージェント<br/>作成・更新・レビュー"]
+  RESULT["result<br/>何を行ったか"]
+  DEL["成果物"]
+
+  DCT --> TRACK --> PHASE --> TASK --> PLAN --> WORK
+  WORK --> RESULT
+  WORK --> DEL
+  RESULT --> TASK
+  DEL --> TASK
+```
+
+成果物カタログと Schedule の関係、タスク設計は [Schedule設計ガイド](schedule-design-guide.md)、schedule実行の運用は [schedule実行運用ガイド](schedule-operation-guide.md)、plan と result の管理は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
+
+## 7. ディレクトリ・ファイルの命名ルール
 
 ディレクトリ名とファイル名については、frontmatterで定義されたidと対応させることを推奨します。
 idと対応させない場合（日本語名称を使用する場合等）は、一貫性を保った命名規約を採用してください。
@@ -188,13 +277,13 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 - `NNN-` 番号あり: 改訂しながら育てる計画・設計文書等のツリー。読む順序に意味があり、番号で表します（例: `020-project-definition/`）。
 - 番号なし: プロジェクトやプロダクト全体を横断する台帳・記録・実行状態。件数が時系列で増え、読む順序を持たず、`specdojo.config.json` からパスで直接参照されます（例: `controls/`、`execution/`）。
 
-## 6. プロジェクトドキュメントの構成
+## 8. プロジェクトドキュメントの構成
 
-### 6.1. ディレクトリ階層の構成方針
+### 8.1. ディレクトリ階層の構成方針
 
 プロジェクト毎にプロジェクトidを付与し、`projects/<prj-id>/`以下にドキュメントを格納します。
 
-#### 6.1.1. ドメインドキュメント
+#### 8.1.1. ドメインドキュメント
 
 - ドキュメントは分類（ドメイン）毎にディレクトリを分けます。
 - ドメイン内をさらにサブディレクトリへ分けるかは、その中でさらに階層が生えるか、
@@ -205,7 +294,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
   group が宣言するため、group ごとにディレクトリを切る必要はありません（複数 group が
   同じ `base_path` を共有できます）。
 
-#### 6.1.2. 横断ドキュメント
+#### 8.1.2. 横断ドキュメント
 
 - 横断ディレクトリは特定ドメインの配下に置かず、プロジェクト直下に置きます。
   `controls/project-register/` の登録項目や `execution/exec/plans/` の実行プランは、
@@ -216,7 +305,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
   （`domain: project-management`）が管理し、`routines/` と `controls/reviews/` は
   CLI の入出力領域なのでカタログ管理対象外です。
 
-### 6.2. ディレクトリ構成
+### 8.2. ディレクトリ構成
 
 ```text
 docs/
@@ -331,9 +420,9 @@ docs/
 └── en/                                           # 将来の英語ドキュメント用ディレクトリ
 ```
 
-## 7. プロダクトドキュメントの構成
+## 9. プロダクトドキュメントの構成
 
-### 7.1. ディレクトリ構成
+### 9.1. ディレクトリ構成
 
 ```text
 docs/

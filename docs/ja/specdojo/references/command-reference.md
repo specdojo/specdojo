@@ -178,7 +178,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）    | `run --register`            |
 | `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                 | `resume`                    |
 
-`exec scheduler` の claim 保護と選択戦略、`exec reopen` の実行条件、`--auto --loop --parallel` の枠管理は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
+`exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 代表的な `exec run`:
 
@@ -277,7 +277,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [exec運用ガイド](../guides/exec-operation-guide.md) の `routineによる定期実行` を参照します。
+`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
@@ -294,12 +294,14 @@ schedule / register / routine の使い分けの基準は [exec運用ガイド](
 
 ## 11. 関連ガイド
 
-| 詳細                | 参照先                                                                      |
-| ------------------- | --------------------------------------------------------------------------- |
-| CLI全体像と初期設定 | [CLI概要ガイド](../guides/cli-overview-guide.md)                            |
-| Schedule設計        | [Schedule設計ガイド](../guides/schedule-design-guide.md)                    |
-| exec運用・定期実行  | [exec運用ガイド](../guides/exec-operation-guide.md)                         |
-| 登録簿運用          | [登録簿運用ガイド](../guides/register-operation-guide.md)                   |
-| worktree隔離実行    | [exec worktree運用ガイド](../guides/exec-worktree-guide.md)                 |
-| plan/result         | [plan/resultライフサイクルガイド](../guides/plan-result-lifecycle-guide.md) |
-| エージェント設定    | [exec設定ガイド](../guides/exec-config-guide.md)                            |
+| 詳細                     | 参照先                                                                      |
+| ------------------------ | --------------------------------------------------------------------------- |
+| CLI全体像と初期設定      | [CLI概要ガイド](../guides/cli-overview-guide.md)                            |
+| Schedule設計             | [Schedule設計ガイド](../guides/schedule-design-guide.md)                    |
+| exec運用（経路の選び方） | [exec運用ガイド](../guides/exec-operation-guide.md)                         |
+| schedule実行運用         | [schedule実行運用ガイド](../guides/schedule-operation-guide.md)             |
+| routine運用              | [routine運用ガイド](../guides/routine-operation-guide.md)                   |
+| 登録簿運用               | [登録簿運用ガイド](../guides/register-operation-guide.md)                   |
+| worktree隔離実行         | [exec worktree運用ガイド](../guides/exec-worktree-guide.md)                 |
+| plan/result              | [plan/resultライフサイクルガイド](../guides/plan-result-lifecycle-guide.md) |
+| エージェント設定         | [exec設定ガイド](../guides/exec-config-guide.md)                            |
