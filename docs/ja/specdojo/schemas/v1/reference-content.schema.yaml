@@ -1,7 +1,7 @@
 # reference-content.schema.yaml
 # *-reference.md の本文構造（英語名・導入ブロック・水平線の扱い）を検証するカスタムスキーマ。
 # remark-md-content によって読み込まれ、remark AST を使って検証する。
-# 規約の正本は docs/ja/specdojo/standards/reference-authoring-standard.md。
+# 日本語版の規約の正本は docs/ja/specdojo/standards/reference-authoring-standard.md。
 id: reference-content
 title: "Reference Content Schema"
 description: "*-reference.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"

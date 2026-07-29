@@ -59,7 +59,7 @@ Philosophy Authoring Standard
 
 - 目的別の横断一覧は [specdojo-overview-guide.md](../guides/specdojo-overview-guide.md) の `目的別の次の読み物` を唯一の正本とし、複製しない。
 - `この文書が扱わないこと` は任意で追加してよい。
-- 機械検証は [philosophy-content.schema.yaml](../../../specdojo/schemas/v1/philosophy-content.schema.yaml) を SSOT とし、`npm run lint:fm` で検証する。
+- 機械検証は [philosophy-content.schema.yaml](../schemas/v1/philosophy-content.schema.yaml) を SSOT とし、`npm run lint:fm` で検証する。
 
 ## 5. Frontmatter 規約
 

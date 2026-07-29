@@ -1,7 +1,7 @@
 # philosophy-content.schema.yaml
 # *-philosophy.md の本文構造（英語名・導入ブロック・水平線の扱い）を検証するカスタムスキーマ。
 # remark-md-content によって読み込まれ、remark AST を使って検証する。
-# 規約の正本は docs/ja/specdojo/standards/philosophy-authoring-standard.md。
+# 日本語版の規約の正本は docs/ja/specdojo/standards/philosophy-authoring-standard.md。
 id: philosophy-content
 title: "Philosophy Content Schema"
 description: "*-philosophy.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"

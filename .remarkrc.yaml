@@ -17,11 +17,11 @@ plugins:
     - schemas:
         docs/specdojo/schemas/v1/pjr-index.schema.yaml:
           - docs/ja/**/pjr-index.md
-        docs/specdojo/schemas/v1/guide-content.schema.yaml:
+        docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
           - docs/ja/specdojo/guides/*-guide.md
-        docs/specdojo/schemas/v1/reference-content.schema.yaml:
+        docs/ja/specdojo/schemas/v1/reference-content.schema.yaml:
           - docs/ja/specdojo/references/*-reference.md
-        docs/specdojo/schemas/v1/philosophy-content.schema.yaml:
+        docs/ja/specdojo/schemas/v1/philosophy-content.schema.yaml:
           - docs/ja/specdojo/philosophy/*-philosophy.md
   - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
     - strict: true
