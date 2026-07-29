@@ -227,6 +227,7 @@ docs/
 │   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
+│   │   ├── schemas/                              # 言語固有の文書構造スキーマ
 │   │
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）

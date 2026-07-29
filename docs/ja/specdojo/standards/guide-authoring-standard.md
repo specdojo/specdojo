@@ -54,7 +54,7 @@ Guide Authoring Standard
 
 - 「次に読む文書」には、その guide の直接の後続だけを書く。目的別の横断一覧は [specdojo-overview-guide.md](../guides/specdojo-overview-guide.md) の `目的別の次の読み物` を唯一の正本とし、各 guide に同じ一覧を複製しない。
 - 同じ理由で、guide の末尾に全 guide を並べる「詳細ガイド」章を置かない。特定のテーマに閉じた関連文書の列挙は妨げない。
-- 機械検証は [guide-content.schema.yaml](../../../specdojo/schemas/v1/guide-content.schema.yaml) を SSOT とし、`npm run lint:fm` で検証する。
+- 機械検証は [guide-content.schema.yaml](../schemas/v1/guide-content.schema.yaml) を SSOT とし、`npm run lint:fm` で検証する。
 
 ## 4. Frontmatter 規約
 
