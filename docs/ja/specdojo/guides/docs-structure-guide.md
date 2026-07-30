@@ -19,7 +19,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 **この文書で分かること**
 
 - SpecDojo Unit、文書分類、ドキュメントオーナー、命名方針、標準ディレクトリ構成
-- 成果物と記述支援資料（philosophy / standard / rulebook / recipe / sample / template）の関係
+- 成果物と実践体系（philosophy / standard / rulebook / recipe / sample / template）の関係
 - 成果物カタログ（dct）・Schedule（sch）・実行管理（exec）の関係
 
 **次に読む文書**
@@ -180,9 +180,9 @@ flowchart TB
 - 図中のアーキテクチャ設計は、個別仕様に先立つ全体構造の設計を表します。
 - 「業務要件を含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
 
-## 5. 成果物と記述支援資料の関係
+## 5. 成果物と実践体系の関係
 
-成果物と、その作成を支援する記述支援資料（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係を示します。各種別が答える問いと使い方は [全体概要ガイド](specdojo-overview-guide.md) の4章を参照し、本章では成果物への紐付け方（解決の仕組み）を扱います。
+成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係を示します。各種別が答える問いと使い方は [全体概要ガイド](specdojo-overview-guide.md) の4章を参照し、本章では成果物への紐付け方（解決の仕組み）を扱います。
 
 ### 5.1. 紐付けの仕組み
 
@@ -205,7 +205,7 @@ flowchart TB
   RB --> TPL
 ```
 
-| 記述支援資料               | 成果物との紐付け方                                                             | 例                                |
+| 実践体系                   | 成果物との紐付け方                                                             | 例                                |
 | -------------------------- | ------------------------------------------------------------------------------ | --------------------------------- |
 | philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | concept-system-philosophy         |
 | standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard        |

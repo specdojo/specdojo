@@ -236,36 +236,35 @@ export const specdojoSidebarItems = [
         [guide("全体概要", "specdojo-overview-guide"), guide("Quick Start", "quick-start-guide")],
         false,
       ),
+      group("成果物体系を理解する", [guide("ドキュメント構成", "docs-structure-guide")], false),
       group(
-        "文書体系を理解する",
+        "実践体系を適用する",
         [
-          guide("ドキュメント構成", "docs-structure-guide"),
           guide("参考資料活用", "reference-materials-guide"),
+          guide("ドキュメント編集", "docs-editing-guide"),
+          guide("レビュー", "review-guide"),
         ],
         false,
       ),
       group(
-        "スケジュールと実行",
+        "プロジェクトを推進する",
         [
           guide("CLI概要", "cli-overview-guide"),
           guide("exec運用（経路の選び方）", "exec-operation-guide"),
           guide("登録簿運用", "register-operation-guide"),
-          group("schedule系", [
+          group("schedule設計・実行", [
             guide("トラック設計", "track-design-guide"),
             guide("Schedule設計", "schedule-design-guide"),
             guide("schedule実行運用", "schedule-operation-guide"),
           ]),
           guide("routine運用", "routine-operation-guide"),
-          guide("exec設定", "exec-config-guide"),
-          guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),
-          guide("ブランチワークフロー", "branch-workflow-guide"),
-          guide("exec worktree運用", "exec-worktree-guide"),
+          group("exec共通", [
+            guide("exec設定", "exec-config-guide"),
+            guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),
+            guide("exec worktree運用", "exec-worktree-guide"),
+            guide("ブランチワークフロー", "branch-workflow-guide"),
+          ]),
         ],
-        false,
-      ),
-      group(
-        "成果物を仕上げる",
-        [guide("レビュー", "review-guide"), guide("ドキュメント編集", "docs-editing-guide")],
         false,
       ),
     ],
