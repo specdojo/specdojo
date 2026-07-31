@@ -1,13 +1,13 @@
 ---
 specdojo:
-  id: reference-materials-guide
+  id: kata-guide
   type: guide
   status: draft
 ---
 
 # 実践の型活用ガイド
 
-Reference Materials Guide
+Kata Guide
 
 SpecDojo で成果物を作成・更新・レビューするときに、rulebook / recipe / sample / template（実践の型）をどう使い分けるかを説明します。実践の型の整備状況に応じた進め方（`approach`）ごとに、雛形から書き始め、内容を記述し、レビューするまでの参照方針を整理します。
 

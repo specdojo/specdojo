@@ -39,5 +39,5 @@ specdojo:
 - rulebook は構造面の正本として参照し、schema 許可キー、必須メタ項目、標準 Role code、Role code の重複禁止、実行主体・兼務割り当てを `pm-roles.yaml` に記載しない方針を確認した。
 - recipe は内容面の確認観点として参照し、PO が全 Role code と `project_note` を承認できるか、Schedule の `owner` 語彙として使えるか、公開してよい情報だけで構成されているかを確認した。
 - `pm-organization.md` は依存成果物として参照し、Role code を責務語彙として採用すること、専任 member の有無とは分離すること、最終判断・公開可否・説明責任を人間の PO に残すことを照合した。
-- sample / template は plan の指示に従い参照しなかった。`docs/ja/specdojo/guides/specdojo-reference-materials-guide.md` は、fully-guided の参照方針が plan 内で完結していたため参照しなかった。
+- sample / template は plan の指示に従い参照しなかった。`docs/ja/specdojo/guides/specdojo-kata-guide.md` は、fully-guided の参照方針が plan 内で完結していたため参照しなかった。
 - 複数文書間で rulebook を正として上書き判断が必要な矛盾はなかった。参考資料は基準として機能する内容であり、欠落または内容が薄いとは判断しなかった。

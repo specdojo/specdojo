@@ -128,7 +128,7 @@ SpecDojo では、成果物と、それを作るための実践体系を分け�
 上表は概要です。各種別の役割、種別間の関係、成果物への紐付け方（rulebook フィールドや frontmatter による解決の仕組み）の正本は
 [実践体系構成ガイド](practice-system-composition-guide.md)
 です。`approach` に応じた参照方法は
-[実践の型活用ガイド](reference-materials-guide.md)
+[実践の型活用ガイド](kata-guide.md)
 を参照してください。
 
 ここでいう `reference` は文書種別です。exec plan で参照する rulebook、recipe、sample、template とは別の役割として扱います。
@@ -220,7 +220,7 @@ CLI の導入は
 | -------------------------------------------------- | ------------------------------------------------------------- |
 | 成果物の種類、目的、主な内容を調べる               | [成果物リファレンス](../references/deliverables-reference.md) |
 | トラックの構成と実行順序を設計する                 | [トラック設計ガイド](track-design-guide.md)                   |
-| rulebook / recipe / sample / template を使い分ける | [実践の型活用ガイド](reference-materials-guide.md)            |
+| rulebook / recipe / sample / template を使い分ける | [実践の型活用ガイド](kata-guide.md)                           |
 
 ### 8.3. 成果物の作成を計画する
 

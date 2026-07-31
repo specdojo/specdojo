@@ -22,7 +22,7 @@ specdojo:
 
 完成版 `pm-roles.yaml` と review result `T-LAUNCH-pm-roles-090-result.md` を根拠に、`pm-roles-rulebook.md` を見直した。
 章構成、必須項目、禁止事項、判定基準は完成版の実態と整合しており、review でも pass だったため、rulebook 本体の修正は行わなかった。
-あわせて `rulebook-authoring-standard.md`、`specdojo-reference-materials-guide.md`、`specdojo-deliverables-reference.md`、`pm-organization.md`、`pm-roles.yaml`、`pm-roles-sample.yaml`、`pm-roles-template.yaml` を照合し、`pm-roles` の規約が PO 承認可能な粒度に収まっていることを確認した。
+あわせて `rulebook-authoring-standard.md`、`specdojo-kata-guide.md`、`specdojo-deliverables-reference.md`、`pm-organization.md`、`pm-roles.yaml`、`pm-roles-sample.yaml`、`pm-roles-template.yaml` を照合し、`pm-roles` の規約が PO 承認可能な粒度に収まっていることを確認した。
 
 ## 2. 変更ファイル
 
@@ -41,4 +41,4 @@ specdojo:
 
 `approach: rulebook-maintenance` に従い、参照の向きを「成果物 → rulebook」に切り替えて見直した。完成版 `pm-roles.yaml` と review result を主根拠に、`pm-roles-rulebook.md` の章構成・必須項目・禁止事項・判定基準が現行実態を過不足なく表しているかを確認した。
 `pm-roles-rulebook.md` は `pm-roles.yaml` の `roles[].code`、`project_note` の記述制約、公開可否、`pm-members.yaml` との責務分離を既に正しく定義しており、修正を要する矛盾は見つからなかった。
-`rulebook-authoring-standard.md` で章立てと記述ルールを、`specdojo-reference-materials-guide.md` で maintenance 時の参照方向を、`specdojo-deliverables-reference.md` で `pm-roles.yaml` の位置づけを確認した。`pm-organization.md` は採用方針と owner 語彙の前提として参照し、`pm-roles-sample.yaml` と `pm-roles-template.yaml` は粒度と雛形の整合確認にのみ使った。
+`rulebook-authoring-standard.md` で章立てと記述ルールを、`specdojo-kata-guide.md` で maintenance 時の参照方向を、`specdojo-deliverables-reference.md` で `pm-roles.yaml` の位置づけを確認した。`pm-organization.md` は採用方針と owner 語彙の前提として参照し、`pm-roles-sample.yaml` と `pm-roles-template.yaml` は粒度と雛形の整合確認にのみ使った。

@@ -72,7 +72,7 @@ phase_sets:
 | `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                              |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                  |
 
-`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](reference-materials-guide.md) を参照します。
+`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](kata-guide.md) を参照します。
 
 ## 3. エージェントの定義
 

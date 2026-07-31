@@ -41,7 +41,7 @@ guided な agent 実行では exec plan に列挙された参考資料と `depen
 - project context を project 解決結果から全ての成果物 plan 生成経路へ伝播し、edit / review plan に `depends_on` と独立した「プロジェクトコンテキスト」を生成するようにした。
 - `prj-overview` は `[[<project-id>:prj-overview]]` として解決可能な参照を出力し、実行 agent に作業前の参照、Why・用語・判断原則との整合、全文を再掲しない原則を指示するようにした。
 - 参考資料 maintenance、human finalize、成果物を解決できない機械的タスク、context 文書自身は除外した。project context は plan 本文だけに追加し、schedule、`depends_on` / `based_on`、frontmatter `targets` と commit scope には追加していない。
-- [[reference-materials-guide|SpecDojo 参考資料活用ガイド]]、CLI の project 設定例、edit / review plan テンプレートを更新した。
+- [[kata-guide|SpecDojo 参考資料活用ガイド]]、CLI の project 設定例、edit / review plan テンプレートを更新した。
 - plan 生成・project 設定の単体テスト 61 件、関連 ESLint、TypeScript build が成功した。
 
 ## 5. 関連ドキュメント
@@ -49,4 +49,4 @@ guided な agent 実行では exec plan に列挙された参考資料と `depen
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — 先行して参照内容を明確化
 - [[prj-0001:prj-overview|プロジェクト概要]] — project context の既定参照先
-- [[reference-materials-guide]] — 現行の参照範囲と反映先
+- [[kata-guide]] — 現行の参照範囲と反映先

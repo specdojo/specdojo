@@ -182,7 +182,7 @@ flowchart TB
 
 ## 5. 成果物と実践体系の関係
 
-成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係、各種別の役割、成果物への紐付け方（解決の仕組み）は [実践体系構成ガイド](practice-system-composition-guide.md) を正本とします。`approach` に応じた rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](reference-materials-guide.md) を参照してください。
+成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係、各種別の役割、成果物への紐付け方（解決の仕組み）は [実践体系構成ガイド](practice-system-composition-guide.md) を正本とします。`approach` に応じた rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](kata-guide.md) を参照してください。
 
 ## 6. 成果物カタログ・Schedule・実行管理の関係
 

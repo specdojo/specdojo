@@ -38,7 +38,7 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-- `approach: sample-maintenance` のため、`specdojo-reference-materials-guide.md` の「参考資料メンテナンスの進め方」に従い、参照の向きを「成果物 → sample」に切り替えた。見直す対象は [[pm-roles-sample|ロール定義 サンプル]] とし、主な見直し観点は「粒度、文体、表の書き方、完成例としての妥当性」とした。
+- `approach: sample-maintenance` のため、`specdojo-kata-guide.md` の「参考資料メンテナンスの進め方」に従い、参照の向きを「成果物 → sample」に切り替えた。見直す対象は [[pm-roles-sample|ロール定義 サンプル]] とし、主な見直し観点は「粒度、文体、表の書き方、完成例としての妥当性」とした。
 - 根拠とした成果物・review result は次のとおり実際に読み込んだ。
   - 完成版 [[prj-0001:pm-roles|ロール定義]]: approve 済みの実成果物として、コメントの書き方、`project_note` の句点の有無などの文体を比較する一次根拠にした。
   - `T-LAUNCH-pm-roles-090-result.md`（review result）: RVP-001（PO）/RVP-002（ARC）/RVP-003（QE）すべて pass・findings なしで承認済みであることを確認し、完成版の構造・内容自体を比較対象として信頼できると判断した根拠にした。

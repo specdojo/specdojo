@@ -33,4 +33,4 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-`approach: sample-maintenance` に従い、参照の向きを成果物 → sample に切り替えた。見直し対象は `pm-plan-sample.md` とし、根拠として `pm-plan-rulebook.md`、`sample-authoring-standard.md`、`specdojo-reference-materials-guide.md`、依存先の `pm-organization.md` と `pm-roles-sample.yaml` を確認した。sample の完成例としての妥当性を優先し、rulebook と矛盾しない範囲で、本文参照先の sample 化と task 由来の表現の一般化だけを行った。
+`approach: sample-maintenance` に従い、参照の向きを成果物 → sample に切り替えた。見直し対象は `pm-plan-sample.md` とし、根拠として `pm-plan-rulebook.md`、`sample-authoring-standard.md`、`specdojo-kata-guide.md`、依存先の `pm-organization.md` と `pm-roles-sample.yaml` を確認した。sample の完成例としての妥当性を優先し、rulebook と矛盾しない範囲で、本文参照先の sample 化と task 由来の表現の一般化だけを行った。

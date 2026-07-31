@@ -58,7 +58,7 @@ frontmatter の `owner` に記載された role の視点で成果物を記述�
 
 参照してよい文書は、この plan に記載されたものに限定する。具体的には、本セクションの rulebook / recipe と、`対象成果物` セクションの `depends_on` 成果物である。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。成果物の作成・更新は plan に記載された資料とこの plan 自身の記述（フェーズ説明・レビュー観点）だけを根拠に行い、不足があっても未記載の文書を追加で読んで補わない。それでも判断できない箇所は憶測で埋めず `_TODO_` / `_ASSUMPTION_` として論点を残す。
 
-本タスクの実行に必要な fully-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo-reference-materials-guide]] を参照する。
+本タスクの実行に必要な fully-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo-kata-guide]] を参照する。
 
 ### 4.1. 参考資料が存在しない・内容が薄い場合
 

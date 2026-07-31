@@ -131,7 +131,7 @@ Why は What の必要性を説明し、What は How が満たすべき境界を
 - 章参照を番号のみ（例: `§4` / `第4章`）で記述しない。
 - rulebook の構造・必須項目・禁止事項を recipe 側で再定義しない。
 - 本文に rulebook / sample への wikilink や照合指示（「rulebook の本文構成に従っている」「sample と同程度の粒度」など）を書かない。対応関係は frontmatter で示す。
-- rulebook / recipe / sample / template の種別ごとの役割分担表を recipe 本文に置かない（実践の型全体の役割は [reference-materials-guide.md](../guides/reference-materials-guide.md) が扱う）。
+- rulebook / recipe / sample / template の種別ごとの役割分担表を recipe 本文に置かない（実践の型全体の役割は [kata-guide.md](../guides/kata-guide.md) が扱う）。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - recipe 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。

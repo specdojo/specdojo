@@ -57,7 +57,7 @@ frontmatter の `owner` に記載された role の視点で成果物を記述�
 
 見直した recipe は [[recipe-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従う。rulebook と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 
-approach 全体の定義は [[specdojo-reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な recipe メンテナンスの進め方は、このセクションで完結する。
+approach 全体の定義は [[specdojo-kata-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な recipe メンテナンスの進め方は、このセクションで完結する。
 
 ### 4.1. 見直しの根拠が不足する場合
 

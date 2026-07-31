@@ -36,7 +36,7 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-- `docs/ja/specdojo/guides/specdojo-reference-materials-guide.md` の `recipe-maintenance` と `参考資料メンテナンスの進め方` を基準に、成果物から recipe へ参照の向きを切り替えた。
+- `docs/ja/specdojo/guides/specdojo-kata-guide.md` の `recipe-maintenance` と `参考資料メンテナンスの進め方` を基準に、成果物から recipe へ参照の向きを切り替えた。
 - `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-raci-090-result.md` の `RVP-003` で、`pm-roles.yaml` が参照範囲に含まれないため Role code の実体確認ができない点が既知の限界として残っていた。これを recipe 側で一般化し、参照範囲外の正本に依存する場合は `_ASSUMPTION_` / result で制約を記録する方針にした。
 - `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-organization.md` は Role code の正本を `pm-roles.yaml` に委譲しているため、recipe ではその委譲先が参照できないときの扱いを明示した。
 - `docs/ja/specdojo/rulebooks/pm-raci-rulebook.md` で禁止事項と見直し条件の構造を確認し、recipe には構造の重複を避けつつ、判断に必要な問いだけを追加した。

@@ -40,4 +40,4 @@ specdojo:
 - `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-raci.md` と `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-raci-090-result.md` を根拠に、成果物別 RACI だけでなく決定記録・申し送りまで扱う必要があることを確認した。
 - `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-pm-raci-090-result.md` の `RVP-003` で、`pm-roles.yaml` が参照範囲外のため Role code 実体一覧との厳密な一致確認ができないことが既知の限界として残っていたため、その限界は rulebook を推測で補わず、result の申し送りに残した。
 - `docs/ja/specdojo/recipes/pm-raci-recipe.md`、`docs/ja/specdojo/samples/pm-raci-sample.md`、`docs/ja/specdojo/templates/pm-raci-template.md` は、章構成・粒度・禁止事項の整合を確認するために参照し、構造の変更は加えなかった。
-- `docs/ja/specdojo/standards/rulebook-authoring-standard.md` と `docs/ja/specdojo/guides/specdojo-reference-materials-guide.md` を参照し、rulebook の章構成と maintenance 時の参照方向が標準に沿うことを確認した。
+- `docs/ja/specdojo/standards/rulebook-authoring-standard.md` と `docs/ja/specdojo/guides/specdojo-kata-guide.md` を参照し、rulebook の章構成と maintenance 時の参照方向が標準に沿うことを確認した。
