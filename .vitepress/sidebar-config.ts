@@ -245,7 +245,6 @@ export const specdojoSidebarItems = [
         [
           guide("実践体系構成", "practice-system-composition-guide"),
           guide("実践の型活用", "kata-guide"),
-          guide("ドキュメント編集", "docs-editing-guide"),
           guide("レビュー", "review-guide"),
         ],
         false,
@@ -271,6 +270,7 @@ export const specdojoSidebarItems = [
         ],
         false,
       ),
+      group("付録", [guide("ドキュメント編集", "docs-editing-guide")]),
     ],
   },
   {
