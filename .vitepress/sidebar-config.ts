@@ -233,13 +233,17 @@ export const specdojoSidebarItems = [
     items: [
       group(
         "はじめに",
-        [guide("全体概要", "specdojo-overview-guide"), guide("Quick Start", "quick-start-guide")],
+        [
+          guide("全体概要", "specdojo-overview-guide"),
+          guide("Quick Start", "quick-start-guide"),
+          guide("ドキュメント構成", "docs-structure-guide"),
+        ],
         false,
       ),
-      group("成果物体系を理解する", [guide("ドキュメント構成", "docs-structure-guide")], false),
       group(
-        "実践体系を適用する",
+        "実践体系で作る",
         [
+          guide("実践体系構成", "practice-system-composition-guide"),
           guide("参考資料活用", "reference-materials-guide"),
           guide("ドキュメント編集", "docs-editing-guide"),
           guide("レビュー", "review-guide"),
@@ -247,7 +251,7 @@ export const specdojoSidebarItems = [
         false,
       ),
       group(
-        "プロジェクトを推進する",
+        "推進体系で回す",
         [
           guide("CLI概要", "cli-overview-guide"),
           guide("exec運用（経路の選び方）", "exec-operation-guide"),

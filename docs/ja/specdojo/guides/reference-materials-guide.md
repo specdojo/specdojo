@@ -9,30 +9,26 @@ specdojo:
 
 Reference Materials Guide
 
-本ドキュメントは SpecDojo における **exec plan 実行時に rulebook / recipe / sample / template をどう参照するか**を定義します。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用します。
-
-`reference` は一覧・比較のための文書種別であり、本書でいう exec plan の参考資料種別には含めません。
-
-exec plan は「何を」「どこまで」行うかを示しますが、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。本書はその参照の仕方を、`approach`（進め方）というタスクメタデータに基づいて整理します。`approach` は `sch-strategy-<track>.yaml` のフェーズに定義するフィールドで、フィールドの一覧は [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
+SpecDojo で成果物を作成・更新・レビューするときに、rulebook / recipe / sample / template（参考資料）をどう使い分けるかを説明します。基本の使い方に加えて、exec 実行時に `approach`（進め方）に応じて参照範囲をどう変えるかを定義します。
 
 **対象読者**
 
-- exec plan に従って成果物を作成・更新・レビューする人、エージェント、exec 設定の保守者
+- 成果物を作成・更新・レビューする人、エージェント、exec 設定の保守者
 
 **この文書で分かること**
 
-- rulebook・recipe・sample・template の役割、`approach` に応じた参照方法、参考資料メンテナンスとレビューへの適用
+- rulebook・recipe・sample・template の使い分け、`approach` に応じた参照方法、参考資料メンテナンスとレビューへの適用
 
 **次に読む文書**
 
-- plan・result の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](exec-operation-guide.md)、レビュー手順は [レビューガイド](review-guide.md) を参照してください。
-- `approach` を定義する Schedule 側の仕組みは [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
+- 参考資料そのものの種別と役割は [実践体系構成ガイド](practice-system-composition-guide.md) を参照してください。
+- `approach` を定義する Schedule 側の仕組みは [Schedule設計ガイド](schedule-design-guide.md)、plan・result の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
-## 1. 参照する文書の役割
+## 1. 参考資料の使い分け
 
-exec plan（`exec/plans/<task-id>-plan.md`）が示すのは「対象成果物」「完了の狙い（edit）/ レビュー観点（review）」「完了手順」「異常終了の条件」であり、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。exec plan 自体の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を正本とします。
+参考資料は rulebook / recipe / sample / template の4種です。各種別の役割の正本は [実践体系構成ガイド](practice-system-composition-guide.md) とし、本章では成果物を書くときの使い方を示します。
 
-参考資料として参照する文書の役割は次のとおりです。
+`reference` は一覧・比較のための文書種別であり、本書でいう参考資料には含めません。
 
 | 種別     | 役割                           | 確認できること                                     |
 | -------- | ------------------------------ | -------------------------------------------------- |
@@ -41,34 +37,21 @@ exec plan（`exec/plans/<task-id>-plan.md`）が示すのは「対象成果物�
 | sample   | 完成例                         | 粒度、文体、表の書き方                             |
 | template | 成果物の雛形                   | 章構成の骨組み、記述すべき箇所を示すプレースホルダ |
 
+成果物を書くときは、template があれば雛形として開始し、rulebook で構造・必須項目・禁止事項を確認し、recipe の問いと深掘り手順に沿って内容を組み立て、sample で粒度・文体・表の書き方を合わせます。
+
 template は、記述する部分を _TODO_ などのプレースホルダとして配置した雛形です。内容が埋まった完成例である sample と役割を分担し、成果物作成の開始点として使います。
 
-4 種類すべてが揃っているとは限りません。揃っていない場合の進め方は「`approach` による進め方の使い分け」で扱います。
+4 種類すべてが揃っているとは限りません。整備状況に応じてどこまで参照するかは、exec 実行時に `approach` で切り替わります（「`approach` による進め方の使い分け」で扱います）。
 
-### 1.1. プロジェクトコンテキスト
+## 2. exec 実行との関係
 
-プロジェクトコンテキストは、成果物ごとの作成順序・根拠関係を表す `depends_on` と分離して、プロジェクト共通の Why、用語、判断原則を実行 agent へ渡す仕組みです。`specdojo.config.json` の project 単位で、文書 ID の配列として設定します。
+成果物の作成・更新・レビューは、SpecDojo では exec plan という単位で実行します。本章以降は、その exec 実行時に参考資料をどう参照するかを定義します。
 
-```json
-{
-  "projects": {
-    "prj-0001": {
-      "project_context": ["prj-overview"]
-    }
-  }
-}
-```
+exec plan（`exec/plans/<task-id>-plan.md`）が示すのは「対象成果物」「完了の狙い（edit）/ レビュー観点（review）」「完了手順」「異常終了の条件」であり、対象成果物に紐づく rulebook / recipe / sample / template をどう使うかは規定しません。exec plan 自体の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を正本とします。
 
-- `project_context` を省略した場合の既定値は `["prj-overview"]` とします。
-- 空配列 `[]` を設定すると、その project の project context を無効化できます。
-- project 修飾のない ID は、plan 生成時に対象 project の ID で修飾します。既に project 修飾された ID はそのまま使います。
-- project context は、成果物を解決できる agent 向け edit / review plan に適用します。`freeform` や `bootstrap` も対象に含みます。
-- `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance`、human 向け `finalize`、成果物を伴わない機械的タスク、project context 文書自身を対象とするタスクには追加しません。
-- project context は plan 本文の参照範囲だけを広げます。schedule の実行順序、カタログの `depends_on` / `based_on`、plan frontmatter の `targets` と commit 許可範囲には追加しません。
+参照の仕方は `approach`（進め方）というタスクメタデータで決まります。`approach` は `sch-strategy-<track>.yaml` のフェーズに定義するフィールドで、フィールドの一覧は [Schedule設計ガイド](schedule-design-guide.md) を参照してください。`mode: edit`（作成・更新）と `mode: review`（レビュー）の両方の exec plan に共通して適用します。
 
-agent は plan に列挙された project context を作業開始前に読み、成果物の目的・用語・判断をプロジェクトレベルの Why と整合させます。Why の全文を各成果物へ再掲せず、対象成果物の責務に必要な結論・影響だけを反映します。
-
-## 2. `approach` による進め方の使い分け
+## 3. `approach` による進め方の使い分け
 
 `approach` は、タスクの進め方プロファイルです。`fully-guided` / `recipe-guided` / `freeform` は、対象成果物の rulebook / recipe / sample / template の整備状況に応じて、エージェントが参考資料をどの程度参照するかを示します。`bootstrap` は、成果物と参考資料一式を同じタスクで一貫して初期作成する進め方を示します。`cross-deliverable-dedup` は、明示した成果物群の正本を選び、重複を要約と参照へ置き換える進め方を示します。`rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、成果物を根拠に対象の参考資料を見直す進め方を示します（詳細は「参考資料メンテナンスの進め方」）。`finalize` / `bootstrap-finalize` は `execution: human` と組み合わせて使う確定プロファイルであり、human が対象を最終確認して frontmatter の `status` を `ready` へ昇格します（`ready` への昇格は human のみが行えます）。整備状況の判断は人が行い、`sch-strategy-<track>.yaml` のフェーズ、`cross_deliverable_passes`、または `owner_rules[].phase_overrides[]` に明示します（owner rule の override が優先されます）。エージェントは参考資料の品質判定を行わず、`approach` に示された進め方に従います。
 
@@ -96,7 +79,30 @@ agent は plan に列挙された project context を作業開始前に読み、
 
 `done_criteria` や review plan の `レビュー観点`（`RVP-NNN`）が判定基準を示す場合は、それらを優先します。本章は、判定基準だけでは読み取れない「どこまで参照に照らすか」を補う位置づけです。
 
-## 3. 参考資料メンテナンスの進め方
+## 4. プロジェクトコンテキスト
+
+プロジェクトコンテキストは、成果物ごとの作成順序・根拠関係を表す `depends_on` と分離して、プロジェクト共通の Why、用語、判断原則を実行 agent へ渡す仕組みです。`specdojo.config.json` の project 単位で、文書 ID の配列として設定します。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "project_context": ["prj-overview"]
+    }
+  }
+}
+```
+
+- `project_context` を省略した場合の既定値は `["prj-overview"]` とします。
+- 空配列 `[]` を設定すると、その project の project context を無効化できます。
+- project 修飾のない ID は、plan 生成時に対象 project の ID で修飾します。既に project 修飾された ID はそのまま使います。
+- project context は、成果物を解決できる agent 向け edit / review plan に適用します。`freeform` や `bootstrap` も対象に含みます。
+- `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance`、human 向け `finalize`、成果物を伴わない機械的タスク、project context 文書自身を対象とするタスクには追加しません。
+- project context は plan 本文の参照範囲だけを広げます。schedule の実行順序、カタログの `depends_on` / `based_on`、plan frontmatter の `targets` と commit 許可範囲には追加しません。
+
+agent は plan に列挙された project context を作業開始前に読み、成果物の目的・用語・判断をプロジェクトレベルの Why と整合させます。Why の全文を各成果物へ再掲せず、対象成果物の責務に必要な結論・影響だけを反映します。
+
+## 5. 参考資料メンテナンスの進め方
 
 `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、通常の成果物作業とは参照の向きが逆になる進め方です。作成・更新かレビューかを `mode`（`edit` / `review`）で表す点は他の `approach` と同じです。
 
@@ -121,7 +127,7 @@ agent は plan に列挙された project context を作業開始前に読み、
 
 参考資料メンテナンスは自動で差し込まれません。必要な場合は、`approach: rulebook-maintenance` のように対象を指定した phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述します。
 
-## 4. エージェントの確認手順
+## 6. エージェントの確認手順
 
 1. exec plan の frontmatter で `approach` の有無と値を確認します（生成元は `sch-strategy-<track>.yaml` のフェーズまたは `owner_rules[].phase_overrides[]` であり、後者が優先されます）。
 2. `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は「参考資料メンテナンスの進め方」に従い、参照の向きを成果物 → 対象の参考資料に切り替えます。
@@ -129,7 +135,7 @@ agent は plan に列挙された project context を作業開始前に読み、
 4. `approach` が指定されている場合は「`approach` による進め方の使い分け」の表に従って参照範囲を決め、未指定の場合は存在するすべての参考資料をそれぞれの役割に沿って活用します。
 5. 参照した文書・参照しなかった文書と、その判断根拠を成果物または result に記録します。
 
-## 5. review への適用
+## 7. review への適用
 
 review でも「`approach` による進め方の使い分け」を同じ基準で適用します。レビューでは「成果物を組み立てる」のではなく「成果物が満たすべき基準に照らして確認する」ため、次のように読み替えます。
 
@@ -141,8 +147,9 @@ review でも「`approach` による進め方の使い分け」を同じ基準�
 - `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance`: 「参考資料メンテナンスの進め方」に従い、対象の参考資料が見直しに値するかという向きで確認観点を読み替えます。
 - 判断の根拠を review result に残します。
 
-## 6. 関連ドキュメント
+## 8. 関連ドキュメント
 
+- [実践体系構成ガイド](practice-system-composition-guide.md): 参考資料を含む実践体系の種別と役割
 - [プロジェクト概要 作成レシピ](../recipes/prj-overview-recipe.md): rulebook / recipe / sample の役割分担の記述例
 - [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md): exec plan / result の生成、命名、アーカイブ
 - [exec運用ガイド](exec-operation-guide.md): exec plan を使った実行フロー

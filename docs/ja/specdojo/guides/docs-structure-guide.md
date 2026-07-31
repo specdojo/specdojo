@@ -182,38 +182,7 @@ flowchart TB
 
 ## 5. 成果物と実践体系の関係
 
-成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係を示します。各種別が答える問いと使い方は [全体概要ガイド](specdojo-overview-guide.md) の4章を参照し、本章では成果物への紐付け方（解決の仕組み）を扱います。
-
-### 5.1. 紐付けの仕組み
-
-```mermaid
-flowchart TB
-  PHIL["philosophy<br/>規約の前提となる方針・概念"]
-  STD["standard<br/>共通規約（メタデータ・命名等）"]
-  RB["rulebook<br/>成果物種別ごとの構造・必須項目"]
-  RC["recipe<br/>作成手順"]
-  TPL["template<br/>雛形"]
-  SMP["sample<br/>完成例"]
-  DEL["成果物<br/>（dct-&lt;domain&gt;.yamlのdeliverables[]エントリ）"]
-
-  PHIL --> STD
-  PHIL --> RB
-  STD --> RB
-  DEL -->|rulebookフィールドで指定| RB
-  RB -->|frontmatterのsample/recipe/templateで宣言| RC
-  RB --> SMP
-  RB --> TPL
-```
-
-| 実践体系                   | 成果物との紐付け方                                                             | 例                                |
-| -------------------------- | ------------------------------------------------------------------------------ | --------------------------------- |
-| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | concept-system-philosophy         |
-| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard        |
-| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: prj-overview-rulebook` |
-| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`              |
-| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                      |
-
-`approach` に応じた rulebook / recipe / sample / template の参照方針（どこまで参照するか）は [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
+成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係、各種別の役割、成果物への紐付け方（解決の仕組み）は [実践体系構成ガイド](practice-system-composition-guide.md) を正本とします。`approach` に応じた rulebook / recipe / sample / template の参照方針は [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
 
 ## 6. 成果物カタログ・Schedule・実行管理の関係
 
