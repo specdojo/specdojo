@@ -24,7 +24,7 @@ SpecDojo の実践体系（成果物の作成を支援する文書群）が、�
 
 **次に読む文書**
 
-- `approach` に応じた rulebook / recipe / sample / template の参照方法は [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
+- `approach` に応じた rulebook / recipe / sample / template の参照方法は [実践の型活用ガイド](reference-materials-guide.md) を参照してください。
 - 文書の分類・ライフサイクル・配置は [ドキュメント構成ガイド](docs-structure-guide.md) を参照してください。
 
 ## 1. 実践体系とは
@@ -50,7 +50,7 @@ SpecDojo は、成果物（プロダクトとプロジェクトの内容その�
 
 template は記述する部分を _TODO_ などのプレースホルダとして配置した雛形で、内容が埋まった完成例である sample と役割を分担します。
 
-ここでいう `reference` は文書種別です。exec plan が実行時に参照する参考資料（rulebook / recipe / sample / template）とは別の役割として扱います。
+ここでいう `reference` は文書種別です。exec plan が実行時に参照する実践の型（rulebook / recipe / sample / template）とは別の役割として扱います。
 
 ## 3. 種別間の関係と成果物への紐付け
 
@@ -83,15 +83,15 @@ flowchart TB
 | recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`              |
 | guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                      |
 
-## 4. 参考資料サブセットと活用
+## 4. 実践の型サブセットと活用
 
-exec plan が実行時に参照するのは、実践体系のうち rulebook / recipe / sample / template の4種（参考資料）です。これらをどこまで参照するか（`approach` に応じた参照方針）は [参考資料活用ガイド](reference-materials-guide.md) を正本とします。
+exec plan が実行時に参照するのは、実践体系のうち rulebook / recipe / sample / template の4種（実践の型）です。これらをどこまで参照するか（`approach` に応じた参照方針）は [実践の型活用ガイド](reference-materials-guide.md) を正本とします。
 
 philosophy / standard は全体に効く前提・共通規約として常に踏まえ、guide / reference は個別成果物に紐づかない横断文書として理解と参照に使います。
 
 ## 5. 関連ドキュメント
 
 - [全体概要ガイド](specdojo-overview-guide.md): 実践体系を含む SpecDojo 全体像
-- [参考資料活用ガイド](reference-materials-guide.md): `approach` に応じた参考資料の参照方法
+- [実践の型活用ガイド](reference-materials-guide.md): `approach` に応じた実践の型の参照方法
 - [ドキュメント構成ガイド](docs-structure-guide.md): 文書の分類、命名、ディレクトリ配置
 - [ドキュメントメタ情報標準](../standards/document-metadata-standard.md): 各種別の Frontmatter 規約

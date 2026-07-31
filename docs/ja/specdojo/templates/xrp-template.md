@@ -36,14 +36,14 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 ## 4. 進め方
 
 - exec plan frontmatter の `approach` を確認する。
-- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、確認の向きを「成果物 → 対象の参考資料」に切り替え、対象の参考資料が見直しに値するかを確認する。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、確認の向きを「成果物 → 対象の実践の型」に切り替え、対象の実践の型が見直しに値するかを確認する。
 - それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無を確認し、`approach` に応じて確認の基準を決める。
   - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体、template の章構成との整合を確認する（プレースホルダが残っていないことも確認する）。
   - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample / template の構造・文体は基準にしない）。
-  - `freeform`: 参考資料より、類似成果物の実例やプロジェクト文脈との整合を確認する。
-  - 未指定の場合は、存在するすべての参考資料をそれぞれの役割に沿って確認の基準にする。
+  - `freeform`: 実践の型より、類似成果物の実例やプロジェクト文脈との整合を確認する。
+  - 未指定の場合は、存在するすべての実践の型をそれぞれの役割に沿って確認の基準にする。
 - 複数の文書間で記述に矛盾がある場合、確認の基準に rulebook を含む `approach`（`fully-guided` など）では rulebook を正とする。
-- `freeform` と参考資料メンテナンス系（`*-maintenance`）を除く `approach` では、確認に用いてよい文書をこの plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト）に限定する。クロス文書整合のレビュー観点では `depends_on` 成果物を読み込んで対象成果物と突き合わせ、目的整合の判断ではプロジェクトコンテキストを参照する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
+- `freeform` と実践の型メンテナンス系（`*-maintenance`）を除く `approach` では、確認に用いてよい文書をこの plan に記載されたもの（対象成果物に紐づく rulebook / recipe / sample / template、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト）に限定する。クロス文書整合のレビュー観点では `depends_on` 成果物を読み込んで対象成果物と突き合わせ、目的整合の判断ではプロジェクトコンテキストを参照する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
 - 存在しない、または確認の基準から外れた文書がある場合は、他に存在する文書、類似成果物、対象領域の慣行と整合しているかを確認し、判断の根拠を review result に残す。
 
 詳細は [[reference-materials-guide]] を参照する。

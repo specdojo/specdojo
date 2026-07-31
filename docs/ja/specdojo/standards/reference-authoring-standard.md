@@ -20,7 +20,7 @@ SpecDojo のリファレンス文書を、一貫して検索・参照できる�
 
 リファレンスは、成果物、コマンド、設定項目などを一覧・比較・確認するための文書です。読者が特定の項目を素早く引けることを目的とし、背景から順に理解させる guide や、遵守事項を定める standard とは役割を分けます。
 
-exec plan における「参考資料」は rulebook / recipe / sample / template を指します。本標準の `reference` は文書種別であり、exec plan が参照する資料種別を追加・変更するものではありません。
+exec plan における「実践の型」は rulebook / recipe / sample / template を指します。本標準の `reference` は文書種別であり、exec plan が参照する資料種別を追加・変更するものではありません。
 
 ## 2. 基本方針
 

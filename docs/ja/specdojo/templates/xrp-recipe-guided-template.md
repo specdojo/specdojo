@@ -48,7 +48,7 @@ rulebook / sample / template は未成熟と判断されているため、存在
 
 ### 4.1. recipe が存在しない・内容が薄い場合
 
-- recipe は recipe-guided の唯一の主基準であるため、存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `参考資料との整合確認` セクションに記録する。
+- recipe は recipe-guided の唯一の主基準であるため、存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `実践の型との整合確認` セクションに記録する。
 - 欠落を理由にレビュー観点を unclear のまま放置しない。`depends_on` 成果物・類似成果物・プロジェクト文脈を基準にして判定根拠を補い、何を recipe の代わりに根拠としたかを明示する。
 - recipe そのものの整備が必要と判断した場合でも、本タスクの範囲を超える整備は行わず、findings または申し送りに残す。
 
@@ -57,7 +57,7 @@ rulebook / sample / template は未成熟と判断されているため、存在
 確認した文書と判断根拠を review result に残す。記録先は次のとおり。
 
 - レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
-- recipe に照らした確認内容、rulebook / sample / template を基準にしなかった理由と代わりに根拠にした内容、欠落・薄い recipe の扱い: review result の `参考資料との整合確認` セクション。
+- recipe に照らした確認内容、rulebook / sample / template を基準にしなかった理由と代わりに根拠にした内容、欠落・薄い recipe の扱い: review result の `実践の型との整合確認` セクション。
 - 検出した問題点・指摘事項: review result の `findings` セクション。
 
 ## 5. 完了手順

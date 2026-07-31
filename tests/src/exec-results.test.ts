@@ -285,11 +285,11 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("[[exec-human-finalize-recipe|Human Finalize 実行レシピ]]");
     expect(body).toContain("[[exec-human-finalize-standard|Human Finalize 実行標準]]");
     expect(body).toContain("- [ ] Business value is clear（BA / vp-ba-business-value）");
-    expect(body).toContain("## 3. 参考資料の確認");
+    expect(body).toContain("## 3. 実践の型の確認");
     expect(body).toContain("- [ ] rulebook: `docs/ja/specdojo/rulebooks/overview-rulebook.md`");
     expect(body).toContain("- judgement: _TODO_（承認 / 差し戻し）");
-    // agent 向けの「参考資料の活用」節は human finalize には載せない。
-    expect(body).not.toContain("参考資料の活用");
+    // agent 向けの「実践の型の活用」節は human finalize には載せない。
+    expect(body).not.toContain("実践の型の活用");
     expect(body).not.toContain("_DONE_CRITERIA_CHECKLIST_");
     expect(body).not.toContain("_FINALIZE_TARGETS_CHECKLIST_");
 
@@ -373,8 +373,8 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
 
     const body = readFileSync(resultPath, "utf8");
     expect(body).toContain("# Finalize Result");
-    // finalize（成果物のみ）は参考資料の確認節を持たない。
-    expect(body).not.toContain("## 2. 参考資料の確認");
+    // finalize（成果物のみ）は実践の型の確認節を持たない。
+    expect(body).not.toContain("## 2. 実践の型の確認");
     expect(body).not.toContain("_DONE_CRITERIA_CHECKLIST_");
     expect(body).not.toContain("_FINALIZE_TARGETS_CHECKLIST_");
     expect(body).toContain("_TODO_");
@@ -394,7 +394,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
 
     const body = readFileSync(resultPath, "utf8");
     expect(body).toContain("# Edit Result");
-    expect(body).toContain("## 4. 参考資料の活用");
+    expect(body).toContain("## 4. 実践の型の活用");
   });
 
   it("treats a freshly scaffolded edit result as unfilled", async () => {

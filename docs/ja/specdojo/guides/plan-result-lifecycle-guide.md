@@ -21,7 +21,7 @@ Plan and Result Lifecycle Guide
 
 **次に読む文書**
 
-- 実行手順は [exec運用ガイド](exec-operation-guide.md)、plan が参照する資料の使い分けは [参考資料活用ガイド](reference-materials-guide.md) を参照してください。
+- 実行手順は [exec運用ガイド](exec-operation-guide.md)、plan が参照する資料の使い分けは [実践の型活用ガイド](reference-materials-guide.md) を参照してください。
 
 ## 1. planとresultの基本
 
@@ -36,7 +36,7 @@ plan と result が持つ役割と、それぞれの配置場所を示します�
 
 plan と result は git 管理対象の通常ファイルとして扱います。`generated/` のような再生成物ではありません。
 
-plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる参考資料の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない参考資料は含めません）。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、参考資料は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
+plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる実践の型の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない実践の型は含めません）。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、実践の型は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
 
 ### 1.2. 配置
 
@@ -140,7 +140,7 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
-参考資料の扱いは [参考資料活用ガイド](reference-materials-guide.md) を参照します。
+実践の型の扱いは [実践の型活用ガイド](reference-materials-guide.md) を参照します。
 
 ### 3.3. resultテンプレート
 

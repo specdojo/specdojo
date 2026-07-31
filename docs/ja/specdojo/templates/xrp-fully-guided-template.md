@@ -37,7 +37,7 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 
 対象成果物に紐づく rulebook / recipe / sample / template は、いずれも指定されたファイルを実際に読み込んだうえで、次の役割に沿って確認の基準にする。読み込まずに記憶や推測で代替しない。レビューでは成果物を組み立てるのではなく、成果物が基準を満たすかを照合する。
 
-参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備のため「参考資料が存在しない・内容が薄い場合」に従う）:
+参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備のため「実践の型が存在しない・内容が薄い場合」に従う）:
 
 - rulebook: `_RULEBOOK_REF_`
 - recipe: `_RECIPE_REF_`
@@ -55,19 +55,19 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 
 本タスクの実行に必要な fully-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[reference-materials-guide]] を参照する。
 
-### 4.1. 参考資料が存在しない・内容が薄い場合
+### 4.1. 実践の型が存在しない・内容が薄い場合
 
-- 指定された rulebook / recipe / sample / template のいずれかが存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `参考資料との整合確認` セクションに記録する。
-- 欠落を理由にレビュー観点を unclear のまま放置しない。存在する他の参考資料と `depends_on` 成果物・プロジェクト文脈を基準にして判定根拠を補う。
+- 指定された rulebook / recipe / sample / template のいずれかが存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `実践の型との整合確認` セクションに記録する。
+- 欠落を理由にレビュー観点を unclear のまま放置しない。存在する他の実践の型と `depends_on` 成果物・プロジェクト文脈を基準にして判定根拠を補う。
 - template が欠落する場合は、rulebook の構造を骨組みとして整合を確認する。
-- 参考資料そのものの整備が必要と判断した場合でも、本タスクの範囲を超える整備は行わず、findings または申し送りに残す。
+- 実践の型そのものの整備が必要と判断した場合でも、本タスクの範囲を超える整備は行わず、findings または申し送りに残す。
 
 ### 4.2. 判断根拠の記録
 
 確認した文書・確認しなかった文書と、その判断根拠を review result に残す。記録先は次のとおり。
 
 - レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
-- 参照した rulebook / recipe / sample / template の使い分け、矛盾時に rulebook を正とした箇所、欠落・薄い参考資料の扱い: review result の `参考資料との整合確認` セクション。
+- 参照した rulebook / recipe / sample / template の使い分け、矛盾時に rulebook を正とした箇所、欠落・薄い実践の型の扱い: review result の `実践の型との整合確認` セクション。
 - 検出した問題点・指摘事項: review result の `findings` セクション。
 
 ## 5. 完了手順

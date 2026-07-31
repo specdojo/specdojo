@@ -9,7 +9,7 @@ import type {
   DctTemplateDoc,
   DctValidationResult,
 } from "./catalog-types.js";
-import { declaredReferences } from "./reference-materials.js";
+import { declaredKata } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
@@ -281,7 +281,7 @@ export function validateCatalogLocalIds(catalogPath: string): DctValidationResul
 // recipe / sample / template in its frontmatter must point at files that exist.
 // Returns warnings (not errors); a declared-but-missing reference is a soft signal
 // to author the asset, not a build blocker. Each rulebook is checked once.
-export function validateRulebookReferenceMaterials(catalogPath: string): DctValidationResult {
+export function validateRulebookKata(catalogPath: string): DctValidationResult {
   const warnings: string[] = [];
   const checked = new Set<string>();
   const files = readdirSync(catalogPath)
@@ -301,7 +301,7 @@ export function validateRulebookReferenceMaterials(catalogPath: string): DctVali
           const rulebookId = item.rulebook;
           if (!rulebookId || rulebookId === "none" || checked.has(rulebookId)) continue;
           checked.add(rulebookId);
-          for (const ref of declaredReferences(rulebookId)) {
+          for (const ref of declaredKata(rulebookId)) {
             if (!existsSync(ref.fsPath)) {
               warnings.push(
                 `rulebook '${rulebookId}' declares ${ref.kind} '${ref.id}' but the file is missing: ${ref.fsPath}`,

@@ -2,18 +2,14 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import {
-  declaredReferences,
-  resolveDeliverableSchemaRef,
-  resolveReferenceMaterialRefs,
-} from "../../src/reference-materials.js";
-import { validateRulebookReferenceMaterials } from "../../src/catalog-build.js";
+import { declaredKata, resolveDeliverableSchemaRef, resolveKataRefs } from "../../src/kata.js";
+import { validateRulebookKata } from "../../src/catalog-build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して
 // docs/ja/specdojo/* を温度差なく解決できるようにする。
 const SPECDOJO = "docs/ja/specdojo";
 
-describe("reference-materials", () => {
+describe("kata", () => {
   let root: string;
   let originalCwd: string;
 
@@ -48,7 +44,7 @@ describe("reference-materials", () => {
     );
   }
 
-  describe("resolveReferenceMaterialRefs", () => {
+  describe("resolveKataRefs", () => {
     it("rulebook frontmatter の宣言から各参照先パスを解決する", () => {
       writeRulebook(
         "prj-overview-rulebook",
@@ -63,7 +59,7 @@ describe("reference-materials", () => {
         ].join("\n"),
       );
 
-      const refs = resolveReferenceMaterialRefs("prj-overview-rulebook");
+      const refs = resolveKataRefs("prj-overview-rulebook");
 
       expect(refs).toEqual({
         rulebook: "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
@@ -85,7 +81,7 @@ describe("reference-materials", () => {
         ].join("\n"),
       );
 
-      expect(resolveReferenceMaterialRefs("dct-rulebook").sample).toBe(
+      expect(resolveKataRefs("dct-rulebook").sample).toBe(
         "docs/ja/specdojo/samples/dct-sample.yaml",
       );
     });
@@ -102,13 +98,13 @@ describe("reference-materials", () => {
         ].join("\n"),
       );
 
-      expect(resolveReferenceMaterialRefs("pm-roles-rulebook").template).toBe(
+      expect(resolveKataRefs("pm-roles-rulebook").template).toBe(
         "docs/ja/specdojo/templates/pm-roles-template.yaml",
       );
     });
 
     it("rulebook が未指定なら全項目を MISSING にする", () => {
-      expect(resolveReferenceMaterialRefs(undefined)).toEqual({
+      expect(resolveKataRefs(undefined)).toEqual({
         rulebook: "_MISSING_",
         recipe: "_MISSING_",
         sample: "_MISSING_",
@@ -122,7 +118,7 @@ describe("reference-materials", () => {
         ["id: minimal-rulebook", "type: rulebook", "status: draft"].join("\n"),
       );
 
-      const refs = resolveReferenceMaterialRefs("minimal-rulebook");
+      const refs = resolveKataRefs("minimal-rulebook");
 
       expect(refs.rulebook).toBe("docs/ja/specdojo/rulebooks/minimal-rulebook.md");
       expect(refs.recipe).toBe("_MISSING_");
@@ -147,7 +143,7 @@ describe("reference-materials", () => {
         "utf8",
       );
 
-      const refs = resolveReferenceMaterialRefs("pm-organization-rulebook");
+      const refs = resolveKataRefs("pm-organization-rulebook");
 
       expect(refs.sample).toBe("docs/ja/specdojo/samples/pm-organization-sample.md");
       expect(refs.recipe).toBe("_MISSING_");
@@ -161,7 +157,7 @@ describe("reference-materials", () => {
       );
       writeFileSync(join(root, SPECDOJO, "samples", "opt-out-sample.md"), "# sample\n", "utf8");
 
-      expect(resolveReferenceMaterialRefs("opt-out-rulebook").sample).toBe("_MISSING_");
+      expect(resolveKataRefs("opt-out-rulebook").sample).toBe("_MISSING_");
     });
   });
 
@@ -266,7 +262,7 @@ describe("reference-materials", () => {
     });
   });
 
-  describe("declaredReferences", () => {
+  describe("declaredKata", () => {
     it("宣言された参照のみを kind / id / 絶対パスで返す", () => {
       writeRulebook(
         "prj-overview-rulebook",
@@ -279,7 +275,7 @@ describe("reference-materials", () => {
         ].join("\n"),
       );
 
-      const refs = declaredReferences("prj-overview-rulebook");
+      const refs = declaredKata("prj-overview-rulebook");
 
       expect(refs.map((r) => r.kind)).toEqual(["recipe", "template"]);
       expect(refs.map((r) => r.id)).toEqual(["prj-overview-recipe", "prj-overview-template"]);
@@ -287,7 +283,7 @@ describe("reference-materials", () => {
     });
   });
 
-  describe("validateRulebookReferenceMaterials", () => {
+  describe("validateRulebookKata", () => {
     function writeCatalog(rulebookId: string): string {
       const catalogDir = join(root, "catalog");
       mkdirSync(catalogDir, { recursive: true });
@@ -319,7 +315,7 @@ describe("reference-materials", () => {
       );
       const catalogDir = writeCatalog("doc-rulebook");
 
-      const { warnings } = validateRulebookReferenceMaterials(catalogDir);
+      const { warnings } = validateRulebookKata(catalogDir);
 
       expect(warnings).toHaveLength(1);
       expect(warnings[0]).toContain("rulebook 'doc-rulebook' declares recipe 'doc-recipe'");
@@ -333,7 +329,7 @@ describe("reference-materials", () => {
       writeFileSync(join(root, SPECDOJO, "recipes", "doc-recipe.md"), "# recipe\n", "utf8");
       const catalogDir = writeCatalog("doc-rulebook");
 
-      expect(validateRulebookReferenceMaterials(catalogDir).warnings).toEqual([]);
+      expect(validateRulebookKata(catalogDir).warnings).toEqual([]);
     });
   });
 });

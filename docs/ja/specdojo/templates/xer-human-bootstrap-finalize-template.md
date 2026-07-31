@@ -7,7 +7,7 @@ _FRONTMATTER_
 - 実施手順: [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]
 - 共通規約: [[exec-human-finalize-standard|Human Finalize 実行標準]]
 
-この result を作業指示と確認記録の正本とし、frontmatter の `targets` に含まれる成果物と参考資料だけを確認・修正・確定する。
+この result を作業指示と確認記録の正本とし、frontmatter の `targets` に含まれる成果物と実践の型だけを確認・修正・確定する。
 
 ## 2. 確認チェックリスト
 
@@ -15,9 +15,9 @@ done_criteria の各項目を確認し、満たしていればチェックを付
 
 _DONE_CRITERIA_CHECKLIST_
 
-## 3. 参考資料の確認
+## 3. 実践の型の確認
 
-参考資料を種別ごとに確認し、満たしていればチェックを付ける。「確定対象」に無い種別はスキップし、行を削除する。
+実践の型を種別ごとに確認し、満たしていればチェックを付ける。「確定対象」に無い種別はスキップし、行を削除する。
 
 - [ ] rulebook: 章構成・必須項目・禁止事項・判定基準が完成版の成果物と整合している
 - [ ] recipe: 問い・観点・深掘り手順が完成版の作成過程に照らして有効である
@@ -27,7 +27,7 @@ _DONE_CRITERIA_CHECKLIST_
 
 ## 4. 確定対象
 
-最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。既に `ready` の参考資料は、劣化がないことを確認してチェックを付ける。
+最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。既に `ready` の実践の型は、劣化がないことを確認してチェックを付ける。
 
 _FINALIZE_TARGETS_CHECKLIST_
 

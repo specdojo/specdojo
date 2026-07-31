@@ -69,12 +69,12 @@ flowchart LR
 
 - 成果物 ID: `<project-id>:prj-assumptions-constraints-dependencies`
 - rulebook ID: `prj-assumptions-constraints-dependencies-rulebook`
-- 参考資料 ID: `prj-assumptions-constraints-dependencies-recipe`、`prj-assumptions-constraints-dependencies-sample`、`prj-assumptions-constraints-dependencies-template`
+- 実践の型 ID: `prj-assumptions-constraints-dependencies-recipe`、`prj-assumptions-constraints-dependencies-sample`、`prj-assumptions-constraints-dependencies-template`
 
 ### 3.3. ファイル名
 
 - 成果物: `prj-assumptions-constraints-dependencies.md`
-- 参考資料: `prj-assumptions-constraints-dependencies-{rulebook,recipe,sample,template}.md`
+- 実践の型: `prj-assumptions-constraints-dependencies-{rulebook,recipe,sample,template}.md`
 - 日本語の表示名を使う場合も、ID とファイル名は一意で検索可能な英小文字・ハイフン区切りを維持する。
 
 ## 4. 推奨 Frontmatter 項目
@@ -160,7 +160,7 @@ flowchart LR
 
 ### 6.5. 監視・変更管理
 
-- 「定期的に確認する」ではなく、スコープまたは参考資料一式が変わったときなど、具体的な見直しの契機を記載する。
+- 「定期的に確認する」ではなく、スコープまたは実践の型一式が変わったときなど、具体的な見直しの契機を記載する。
 - 変更記録には、項目 ID、変化内容、影響範囲、判断者、対応状況を残す。記録先はプロジェクト登録簿を第一候補とし、未定なら _TODO_: とする。
 - 文書構造・配置・命名・技術制約・参照資料の整合確認を担うロールと、公開可否やスコープ変更などの最終判断を行う人間の責任者を区別して明示する。
 

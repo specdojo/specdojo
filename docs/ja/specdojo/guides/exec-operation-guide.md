@@ -194,7 +194,7 @@ provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-
 
 human task の plan は生成しません。対象タスクを claim すると、`exec claim` が `execution: human`、`approach`、`targets` を持つ result を scaffold します。この result が作業指示と確認記録の正本です。確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を参照します。
 
-確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と参考資料（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。
+確定作業のスコープは `approach` で明示します。`finalize` は成果物のみを確定し、`bootstrap-finalize` は bootstrap と対になり、成果物と実践の型（rulebook / recipe / sample / template）をまとめて確定します。claim が scaffold する result には、done_criteria の確認チェックリストと確定対象のチェックリストが焼き込まれます。確認・昇格の記録はこの result のチェックリストに残します。
 
 実行者に依らず、進捗（Ready・phase gate・CPM）へ反映するため状態イベントを記録します。
 

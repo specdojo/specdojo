@@ -862,7 +862,7 @@ describe("execution: human results", () => {
       expect(sections?.doneCriteriaChecklist).toBe(
         "- [ ] Business value is clear（BA / vp-ba-business-value）",
       );
-      // rulebook 未宣言の成果物では参考資料は解決されず、確定対象は成果物のみになる。
+      // rulebook 未宣言の成果物では実践の型は解決されず、確定対象は成果物のみになる。
       expect(sections?.targetsChecklist).toContain("- [ ] 成果物: `");
       expect(sections?.targetsChecklist).not.toContain("rulebook");
     } finally {
@@ -893,11 +893,11 @@ describe("execution: human results", () => {
     try {
       writeCatalog(catalogPath);
 
-      // rulebook 未宣言の成果物では参考資料は解決されず、成果物のみになる。
+      // rulebook 未宣言の成果物では実践の型は解決されず、成果物のみになる。
       expect(
         targetDocIdsForDeliverable(catalogPath, "overview", "test", "bootstrap-finalize"),
       ).toEqual(["test:overview"]);
-      // 参考資料を対象にしない approach でも成果物は常に含む。
+      // 実践の型を対象にしない approach でも成果物は常に含む。
       expect(targetDocIdsForDeliverable(catalogPath, "overview", "test", "fully-guided")).toEqual([
         "test:overview",
       ]);

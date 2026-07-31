@@ -2,12 +2,8 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { basename, join, relative } from "node:path";
 import { load } from "js-yaml";
 import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "./specdojo-config.js";
-import {
-  referenceMaterialDirsForKinds,
-  resolveDeliverableSchemaRef,
-  resolveReferenceMaterialRefs,
-} from "./reference-materials.js";
-import type { ReferenceMaterialRefs } from "./reference-materials.js";
+import { kataDirsForKinds, resolveDeliverableSchemaRef, resolveKataRefs } from "./kata.js";
+import type { KataRefs } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
@@ -429,14 +425,14 @@ function doneCriteriaItems(criteria: CriteriaItem[]): string {
   return criteria.map((c) => `- ${c.text}`).join("\n");
 }
 
-// 参考資料の doc id を正準パス（docs/ja/specdojo/<kind>s/<id>.<ext>）の basename から導出する。
-// 参考資料の frontmatter id はファイル名と一致する規約（docs-structure-guide）を前提にする。
+// 実践の型の doc id を正準パス（docs/ja/specdojo/<kind>s/<id>.<ext>）の basename から導出する。
+// 実践の型の frontmatter id はファイル名と一致する規約（docs-structure-guide）を前提にする。
 function refDocIdFromPath(refPath: string): string {
   return basename(refPath).replace(/\.(md|yaml|json)$/, "");
 }
 
-// approach ごとに、成果物に加えて変更・確定の対象になる参考資料の種別。
-const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof ReferenceMaterialRefs)[]>> = {
+// approach ごとに、成果物に加えて変更・確定の対象になる実践の型の種別。
+const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof KataRefs)[]>> = {
   bootstrap: ["rulebook", "recipe", "sample", "template"],
   "bootstrap-finalize": ["rulebook", "recipe", "sample", "template"],
   "rulebook-maintenance": ["rulebook"],
@@ -450,9 +446,9 @@ function qualifiedDocId(projectId: string, localId: string): string {
 }
 
 // タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
-// 以降は approach に応じて変更・確定しうる参考資料の doc id。いずれも doc-index で
+// 以降は approach に応じて変更・確定しうる実践の型の doc id。いずれも doc-index で
 // パスへ解決できる id にし、schedule やファイル名の命名規約に依存せず対象を機械的に
-// 取得できるようにする。解決できない参考資料（_MISSING_）は含めない。
+// 取得できるようにする。解決できない実践の型（_MISSING_）は含めない。
 // targets は frontmatter の必須項目のため、catalog で成果物を解決できない場合も
 // fallbackLocalId から成果物の doc id だけは組み立てる。
 function targetDocIds(
@@ -467,7 +463,7 @@ function targetDocIds(
   const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
-  const refs = resolveReferenceMaterialRefs(deliverable.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable.deliverable.rulebook);
   for (const kind of kinds) {
     const refPath = refs[kind];
     if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));
@@ -486,11 +482,11 @@ function targetDocIdsForTask(
   return targetDocIds(projectId, deliverable, task.approach, task.local_id);
 }
 
-// approach が参考資料の変更を伴う場合に、変更を許可するディレクトリ（repo ルート相対）。
+// approach が実践の型の変更を伴う場合に、変更を許可するディレクトリ（repo ルート相対）。
 // commit 許可リスト（exec-worktree-ops）から使う。
 export function targetReferenceDirsForApproach(approach: Approach | undefined): string[] {
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
-  return referenceMaterialDirsForKinds(kinds);
+  return kataDirsForKinds(kinds);
 }
 
 // catalog から成果物 local_id の文書パス（repo ルート相対）を解決する。
@@ -626,11 +622,11 @@ function doneCriteriaResultChecklist(criteria: CriteriaItem[]): string {
 }
 
 // 確定対象（status を ready へ昇格する対象）のチェックリスト。成果物を先頭に、
-// bootstrap-finalize では解決できた参考資料（_MISSING_ 以外）を続ける。
+// bootstrap-finalize では解決できた実践の型（_MISSING_ 以外）を続ける。
 function finalizeTargetsChecklist(deliverable: DeliverableInfo, approach: Approach): string {
   const lines = [`- [ ] 成果物: \`${deliverablePath(deliverable)}\``];
   if (approach === "bootstrap-finalize") {
-    const refs = resolveReferenceMaterialRefs(deliverable.deliverable.rulebook);
+    const refs = resolveKataRefs(deliverable.deliverable.rulebook);
     const entries: [string, string][] = [
       ["rulebook", refs.rulebook],
       ["recipe", refs.recipe],
@@ -779,7 +775,7 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap);
-  const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -842,7 +838,7 @@ function buildReviewPlanMarkdown(
     ...(targets.length > 0 ? { targets } : {}),
   };
 
-  const refs = resolveReferenceMaterialRefs(deliverable?.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,

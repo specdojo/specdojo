@@ -72,7 +72,7 @@ phase_sets:
 | `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                              |
 | `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                  |
 
-`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [参考資料活用ガイド](reference-materials-guide.md) を参照します。
+`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](reference-materials-guide.md) を参照します。
 
 ## 3. エージェントの定義
 
@@ -311,7 +311,7 @@ providers:
 | agent / review                              | 対象 task の result のみ                                                      |
 | agent / edit                                | 対象 task の result、plan frontmatter の `targets` から解決した成果物パス     |
 | human / edit                                | 対象 task の result、result frontmatter の `targets` から解決した成果物パス   |
-| edit（maintenance / bootstrap 系 approach） | 上記に加え、参考資料ディレクトリ（rulebooks / recipes / samples / templates） |
+| edit（maintenance / bootstrap 系 approach） | 上記に加え、実践の型ディレクトリ（rulebooks / recipes / samples / templates） |
 
 - 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
 - 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用します。
@@ -326,4 +326,4 @@ providers:
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加します。
 
-`approach: rulebook-maintenance` のような進め方の違いも phase に直接定義します。参考資料メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示します。
+`approach: rulebook-maintenance` のような進め方の違いも phase に直接定義します。実践の型メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示します。

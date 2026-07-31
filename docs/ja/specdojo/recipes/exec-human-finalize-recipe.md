@@ -26,7 +26,7 @@ Human Finalize Execution Recipe
 | タスク     | task ID、`approach`、実行者、現在の exec state                     |
 | 確認対象   | result frontmatter の `targets` を doc-index で解決した文書        |
 | 完了条件   | result の「確認チェックリスト」に展開された `done_criteria`        |
-| 確定対象   | result の「確定対象」に展開された成果物と参考資料                  |
+| 確定対象   | result の「確定対象」に展開された成果物と実践の型                  |
 | 検証方法   | 対象文書に適用される整形、静的検査、schema 検証                    |
 | 判断の証跡 | 承認または差し戻しの理由、確認中に行った修正、後続への申し送り事項 |
 
@@ -36,7 +36,7 @@ Human Finalize Execution Recipe
 2. `specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で claim し、生成された result を開きます。
 3. result frontmatter の `targets` を確認し、doc-index で対象文書を解決します。
 4. result の「確認チェックリスト」に従って完成版を確認し、満たせない項目があれば最小限の修正を加えます。
-5. `approach: bootstrap-finalize` の場合は「参考資料の確認」も実施し、存在しない種別の行は削除します。
+5. `approach: bootstrap-finalize` の場合は「実践の型の確認」も実施し、存在しない種別の行は削除します。
 6. 対象文書に必要な整形・静的検査・schema 検証を行い、確定できる文書の `status` を `ready` に更新します。
 7. result のチェックリスト、確定判断、備考を実際の結果で埋めます。未確認項目が残る場合は差し戻しとし、その理由を記録します。
 8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度 build して次の Ready を更新します。
@@ -45,7 +45,7 @@ Human Finalize Execution Recipe
 
 ### 4.1. 対象と完了条件の特定
 
-- `targets` の先頭を主成果物、以降を approach に応じた参考資料として扱います。
+- `targets` の先頭を主成果物、以降を approach に応じた実践の型として扱います。
 - 確認対象は result に焼き込まれた値を使い、schedule の命名や過去の plan から推測しません。
 - チェックリストが未展開の場合は確定せず、catalog の解決不備として差し戻します。
 
@@ -55,11 +55,11 @@ Human Finalize Execution Recipe
 - 不足を直す場合は既存の責務と文脈を保ち、確定に必要な範囲だけを修正します。
 - 修正後は対象形式に対応する検証を再実行し、エラーがない状態にします。
 
-### 4.3. 参考資料の最終確認
+### 4.3. 実践の型の最終確認
 
 - rulebook は章構成、必須項目、禁止事項、判定基準が完成版と整合するか確認します。
 - recipe / sample / template は、作成手順、完成例、雛形として再利用できるかを種別ごとに確認します。
-- 既に `ready` の参考資料も、今回の成果物変更で劣化していないことを確認します。
+- 既に `ready` の実践の型も、今回の成果物変更で劣化していないことを確認します。
 
 ### 4.4. 確定判断と記録
 
@@ -88,7 +88,7 @@ Human Finalize Execution Recipe
 
 - result だけで対象、完了条件、確定対象、判断結果を追跡できるか。
 - `targets` に含まれない文書を確定作業へ混ぜていないか。
-- `done_criteria` と参考資料の確認に未チェック項目が残っていないか。
+- `done_criteria` と実践の型の確認に未チェック項目が残っていないか。
 - `ready` 昇格と確定判断が一致し、差し戻し理由が判定可能に書かれているか。
 
 ## 8. 仕上げチェック

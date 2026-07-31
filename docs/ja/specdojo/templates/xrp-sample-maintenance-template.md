@@ -40,11 +40,11 @@ _REVIEW_VIEWPOINT_DETAILS_
 3. 見直し内容が [[sample-authoring-standard]]（構成・記述ルール・禁止事項の正本）に従っているか確認する。
 4. rulebook / recipe と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 
-approach 全体の定義は [[reference-materials-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な sample メンテナンス確認の方針は、このセクションで完結する。
+approach 全体の定義は [[reference-materials-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な sample メンテナンス確認の方針は、このセクションで完結する。
 
 ### 4.1. 見直しの根拠が不足する場合
 
-- 見直しの根拠とできる成果物・review result が不足し、改訂の妥当性を判定できない場合は、観点を unclear のまま放置せず、その事実と判断を review result の `参考資料との整合確認` セクションに記録する。
+- 見直しの根拠とできる成果物・review result が不足し、改訂の妥当性を判定できない場合は、観点を unclear のまま放置せず、その事実と判断を review result の `実践の型との整合確認` セクションに記録する。
 - 根拠不足のまま改訂が正当化できない箇所は findings に挙げる。
 
 ### 4.2. 判断根拠の記録
@@ -52,7 +52,7 @@ approach 全体の定義は [[reference-materials-guide]] の「参考資料メ�
 確認の根拠とした成果物・review result と判断根拠を review result に残す。記録先は次のとおり。
 
 - レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
-- 根拠とした成果物・review result、改訂内容の妥当性判断、矛盾時に rulebook を正とした箇所: review result の `参考資料との整合確認` セクション。
+- 根拠とした成果物・review result、改訂内容の妥当性判断、矛盾時に rulebook を正とした箇所: review result の `実践の型との整合確認` セクション。
 - 検出した問題点・指摘事項: review result の `findings` セクション。
 
 ## 5. 完了手順
