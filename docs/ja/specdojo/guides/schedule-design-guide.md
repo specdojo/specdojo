@@ -23,7 +23,7 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- 実行手順は [schedule実行運用ガイド](schedule-operation-guide.md)、exec 設定は [exec設定ガイド](exec-config-guide.md)、`approach` による実践の型の参照方針は [実践の型活用ガイド](kata-guide.md) を参照してください。
+- 実行手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、exec 設定は [exec設定ガイド](exec-config-guide.md)、`approach` による実践の型の参照方針は [実践の型活用ガイド](kata-guide.md) を参照してください。
 
 ## 1. Scheduleの基本
 

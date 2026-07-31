@@ -9,7 +9,7 @@ specdojo:
 
 Exec Operation Guide
 
-`specdojo exec` が扱う3つの実行経路（schedule / register / routine）の関心事と選び方、中断・訂正・再実行、human タスクの扱いを説明します。経路ごとの実行手順は、schedule実行が [schedule実行運用ガイド](schedule-operation-guide.md)、register実行が [登録簿運用ガイド](register-operation-guide.md)、routineによる定期起動が [routine運用ガイド](routine-operation-guide.md) です。コマンド一覧は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
+`specdojo exec` が扱う3つの実行経路（schedule / register / routine）の関心事と選び方、中断・訂正・再実行、human タスクの扱いを説明します。経路ごとの実行手順は、schedule実行が [Schedule実行運用ガイド](schedule-operation-guide.md)、register実行が [登録簿運用ガイド](register-operation-guide.md)、routineによる定期起動が [routine運用ガイド](routine-operation-guide.md) です。コマンド一覧は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
 
 **対象読者**
 
@@ -21,7 +21,7 @@ Exec Operation Guide
 
 **次に読む文書**
 
-- schedule タスクの自動・手動実行は [schedule実行運用ガイド](schedule-operation-guide.md)、登録簿運用は [登録簿運用ガイド](register-operation-guide.md)、routineによる定期実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
+- schedule タスクの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、登録簿運用は [登録簿運用ガイド](register-operation-guide.md)、routineによる定期実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 - エージェント設定は [exec設定ガイド](exec-config-guide.md)、plan・result の管理は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、手動隔離実行は [exec worktree運用ガイド](exec-worktree-guide.md) を参照してください。
 
 ## 1. execの基本
@@ -57,7 +57,7 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 
 迷った場合は次で判断します。
 
-- 成果物カタログと依存関係に基づく計画済みの作業は schedule 実行を使う（`exec run --auto` / `--task`。手順は [schedule実行運用ガイド](schedule-operation-guide.md)）。
+- 成果物カタログと依存関係に基づく計画済みの作業は schedule 実行を使う（`exec run --auto` / `--task`。手順は [Schedule実行運用ガイド](schedule-operation-guide.md)）。
 - 計画外に発生した単発の対応・調査で、台帳として追跡したいものは register 実行を使う（`register add` で登録して `exec run --register`。手順は [登録簿運用ガイド](register-operation-guide.md)）。
 - 上記のどちらかを決まった時刻条件で繰り返したい場合は routine を使う（`rtn-*.yaml` を定義して外部スケジューラから `routine run --due` を呼ぶ。手順は [routine運用ガイド](routine-operation-guide.md)）。
 
@@ -80,7 +80,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
-schedule タスクの自動実行・手動実行の具体的な手順は [schedule実行運用ガイド](schedule-operation-guide.md)、routine の定義と実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
+schedule タスクの自動実行・手動実行の具体的な手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、routine の定義と実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 
 ## 2. 中断・訂正・再実行
 

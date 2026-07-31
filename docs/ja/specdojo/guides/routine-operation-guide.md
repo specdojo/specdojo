@@ -21,7 +21,7 @@ Routine Operation Guide
 
 **次に読む文書**
 
-- schedule 実行の詳細は [schedule実行運用ガイド](schedule-operation-guide.md)、register 実行の詳細は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
+- schedule 実行の詳細は [Schedule実行運用ガイド](schedule-operation-guide.md)、register 実行の詳細は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 - レートリミット再開のための routine 例は [exec運用ガイド](exec-operation-guide.md) の `中断・訂正・再実行` を参照してください。
 
 ## 1. routineの定義

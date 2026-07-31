@@ -31,7 +31,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 - 要求・要件・仕様・設計・実装の定義そのもの
 - プロジェクトで成果物を選定・検討する順序や GO/NOT GO の判断
-- Schedule 上の詳細な実行順序・担当者・日付・反復（構造的な関係ではなく運用の詳細は [Schedule設計ガイド](schedule-design-guide.md) / [schedule実行運用ガイド](schedule-operation-guide.md) を参照）
+- Schedule 上の詳細な実行順序・担当者・日付・反復（構造的な関係ではなく運用の詳細は [Schedule設計ガイド](schedule-design-guide.md) / [Schedule実行運用ガイド](schedule-operation-guide.md) を参照）
 
 本書の分類と構成は、文書の管理単位と配置を表します。開発工程や成果物の作成順を表すものではありません。
 
@@ -234,7 +234,7 @@ flowchart LR
   DEL --> TASK
 ```
 
-成果物カタログと Schedule の関係、タスク設計は [Schedule設計ガイド](schedule-design-guide.md)、schedule実行の運用は [schedule実行運用ガイド](schedule-operation-guide.md)、plan と result の管理は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
+成果物カタログと Schedule の関係、タスク設計は [Schedule設計ガイド](schedule-design-guide.md)、schedule実行の運用は [Schedule実行運用ガイド](schedule-operation-guide.md)、plan と result の管理は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
 ## 7. ディレクトリ・ファイルの命名ルール
 

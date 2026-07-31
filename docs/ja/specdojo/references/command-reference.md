@@ -178,7 +178,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）    | `run --register`            |
 | `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                 | `resume`                    |
 
-`exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
+`exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 代表的な `exec run`:
 
@@ -299,7 +299,7 @@ schedule / register / routine の使い分けの基準は [exec運用ガイド](
 | CLI全体像と初期設定      | [CLI概要ガイド](../guides/cli-overview-guide.md)                            |
 | Schedule設計             | [Schedule設計ガイド](../guides/schedule-design-guide.md)                    |
 | exec運用（経路の選び方） | [exec運用ガイド](../guides/exec-operation-guide.md)                         |
-| schedule実行運用         | [schedule実行運用ガイド](../guides/schedule-operation-guide.md)             |
+| Schedule実行運用         | [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)             |
 | routine運用              | [routine運用ガイド](../guides/routine-operation-guide.md)                   |
 | 登録簿運用               | [登録簿運用ガイド](../guides/register-operation-guide.md)                   |
 | worktree隔離実行         | [exec worktree運用ガイド](../guides/exec-worktree-guide.md)                 |

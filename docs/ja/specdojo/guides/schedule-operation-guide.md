@@ -5,7 +5,7 @@ specdojo:
   status: draft
 ---
 
-# schedule実行運用ガイド
+# Schedule実行運用ガイド
 
 Schedule Execution Operation Guide
 

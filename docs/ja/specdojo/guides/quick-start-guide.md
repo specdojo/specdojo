@@ -26,7 +26,7 @@ Quick Start Guide
 **この文書が扱わないこと**
 
 - 成果物カタログやトラック戦略の設計・作成手順（[トラック設計ガイド](track-design-guide.md)、[Schedule設計ガイド](schedule-design-guide.md) を参照）
-- 自動実行・並列実行、register 実行、routine 実行などの応用的な使い方（[schedule実行運用ガイド](schedule-operation-guide.md) 等を参照）
+- 自動実行・並列実行、register 実行、routine 実行などの応用的な使い方（[Schedule実行運用ガイド](schedule-operation-guide.md) 等を参照）
 
 ## 1. 前提条件
 
@@ -81,7 +81,7 @@ specdojo exec build --project <project-id>
 
 ## 6. 次のステップ
 
-- まとめて自動実行する: [schedule実行運用ガイド](schedule-operation-guide.md)
+- まとめて自動実行する: [Schedule実行運用ガイド](schedule-operation-guide.md)
 - 突発の対応を登録簿で追跡する: [登録簿運用ガイド](register-operation-guide.md)
 - 定期実行を組む: [routine運用ガイド](routine-operation-guide.md)
 - トラック・Schedule の設計から始める: [トラック設計ガイド](track-design-guide.md)、[Schedule設計ガイド](schedule-design-guide.md)

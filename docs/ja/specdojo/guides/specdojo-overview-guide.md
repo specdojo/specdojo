@@ -173,7 +173,7 @@ SpecDojo CLI は、成果物カタログの成果物をトラック・実行フ�
 成果物カタログと Schedule の関係、タスク設計は
 [Schedule設計ガイド](schedule-design-guide.md)、
 schedule実行の運用は
-[schedule実行運用ガイド](schedule-operation-guide.md)、
+[Schedule実行運用ガイド](schedule-operation-guide.md)、
 plan と result の管理は
 [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)
 を参照してください。
@@ -235,7 +235,7 @@ CLI の導入は
 | 最短手順で1タスクを動かしてみる               | [Quick Startガイド](quick-start-guide.md)                         |
 | CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](cli-overview-guide.md)                            |
 | コマンドとオプションを調べる                  | [CLIコマンドリファレンス](../references/command-reference.md)     |
-| タスクを実行・再実行する                      | [schedule実行運用ガイド](schedule-operation-guide.md)             |
+| タスクを実行・再実行する                      | [Schedule実行運用ガイド](schedule-operation-guide.md)             |
 | 定期実行する                                  | [routine運用ガイド](routine-operation-guide.md)                   |
 | 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](register-operation-guide.md)                   |
 | エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](exec-config-guide.md)                            |

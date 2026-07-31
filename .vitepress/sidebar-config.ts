@@ -254,12 +254,12 @@ export const specdojoSidebarItems = [
         "推進体系で回す",
         [
           guide("CLI概要", "cli-overview-guide"),
-          guide("exec運用（経路の選び方）", "exec-operation-guide"),
+          guide("exec運用", "exec-operation-guide"),
           guide("登録簿運用", "register-operation-guide"),
-          group("schedule設計・実行", [
+          group("Schedule設計・実行", [
             guide("トラック設計", "track-design-guide"),
             guide("Schedule設計", "schedule-design-guide"),
-            guide("schedule実行運用", "schedule-operation-guide"),
+            guide("Schedule実行運用", "schedule-operation-guide"),
           ]),
           guide("routine運用", "routine-operation-guide"),
           group("exec共通", [
