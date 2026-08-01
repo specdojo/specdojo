@@ -67,21 +67,110 @@ flowchart TD
 
 ### 2.2. approach 一覧
 
-| `approach`                | 参照方針                                         | 進め方                                                                                                                                                                                                         |
-| ------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fully-guided`            | rulebook / recipe / sample / template を参照する | template があれば雛形として開始点に使い、rulebook で構造・必須要素・禁止事項を確認し、recipe の問いと深掘り手順に沿って内容を組み立て、sample で粒度・文体・表の書き方を合わせる。プレースホルダは残さず埋める |
-| `recipe-guided`           | recipe を主に参照する                            | rulebook / sample / template は未成熟と判断されているため、recipe が示す構成・問い・観点だけを使って組み立てる。rulebook / sample / template が存在しても構造・文体の基準にはしない                            |
-| `freeform`                | 実践の型に原則縛られない                         | 実践の型より、対象領域の類似成果物の実例やプロジェクト文脈（背景・目的・関係者の意図）を優先して組み立てる。実践の型は矛盾しない範囲の参考にとどめる                                                           |
-| `bootstrap`               | 成果物と実践の型を同時に整備する                 | 成果物と rulebook / recipe / sample / template を同じタスクで初期作成し、構造・用語・粒度が互いに矛盾しない一式として揃える                                                                                    |
-| `cross-deliverable-dedup` | 成果物群の正本選択と重複整理を行う               | scope 内の成果物だけを横断し、詳細を正本へ集約して他文書を要約・参照化する。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                                                                           |
-| `rulebook-maintenance`    | 成果物を根拠に rulebook を見直す                 | 参照の向きを「成果物 → rulebook」に切り替え、章構成・必須項目・禁止事項・判定基準の妥当性を見直す（「実践の型メンテナンスの進め方」を参照する）                                                                |
-| `recipe-maintenance`      | 成果物を根拠に recipe を見直す                   | 参照の向きを「成果物 → recipe」に切り替え、問い・観点・深掘り手順・レビュー観点の有効性を見直す（「実践の型メンテナンスの進め方」を参照する）                                                                  |
-| `sample-maintenance`      | 成果物を根拠に sample を見直す                   | 参照の向きを「成果物 → sample」に切り替え、粒度・文体・表の書き方が完成例として適切かを見直す（「実践の型メンテナンスの進め方」を参照する）                                                                    |
-| `template-maintenance`    | 成果物を根拠に template を見直す                 | 参照の向きを「成果物 → template」に切り替え、章構成の骨組みとプレースホルダの配置・網羅性を見直す（「実践の型メンテナンスの進め方」を参照する）                                                                |
-| `finalize`                | 成果物のみを human が確定する                    | human が `done_criteria` を最終確認し、必要なら最小限の修正を加えて、成果物 frontmatter の `status` を `ready` へ昇格する。実践の型は対象に含めない                                                            |
-| `bootstrap-finalize`      | 成果物と実践の型を human がまとめて確定する      | `bootstrap` と対になる確定作業。human が成果物と rulebook / recipe / sample / template を最終確認し、それぞれの frontmatter の `status` を `ready` へ昇格する                                                  |
+`approach` は、目的に応じて「成果物の作成・更新」「初期整備・横断整理」「実践の型のメンテナンス」「human による確定」の4種に分けられます。以下の表にある edit / review は plan テンプレート、result は実行記録のテンプレートです。テンプレートには各 `approach` で行う具体的な手順が定義されています。mode や execution に対応する専用テンプレートがない場合のフォールバック規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
-`finalize` / `bootstrap-finalize` は `execution: human` と組み合わせる確定プロファイルで、`ready` への昇格は human のみが行えます。`approach` を指定しない場合は、存在するすべての実践の型をそれぞれの役割に沿って活用します。schedule で `approach` をどこで設定し `exec build` でどう解決するかは [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
+#### 2.2.1. 成果物の作成・更新
+
+実践の型をどこまで作成・更新の基準にするかを切り替える進め方です。
+
+```mermaid
+flowchart LR
+  RB["rulebook<br/>構造・必須事項・禁止事項"]
+  RC["recipe<br/>問い・組み立て方"]
+  SP["sample<br/>粒度・文体・表現"]
+  TP["template<br/>開始時の雛形"]
+  CTX["類似成果物・<br/>プロジェクト文脈"]
+  D["成果物"]
+
+  RB -->|fully-guided| D
+  RC -->|fully-guided / recipe-guided| D
+  SP -->|fully-guided| D
+  TP -->|fully-guided| D
+  CTX -->|freeform| D
+```
+
+| `approach`      | 参照方針と進め方                                                                                                                                               | 対応テンプレート                                                                                          |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `fully-guided`  | rulebook / recipe / sample / template をそれぞれの役割に沿って使う。template から開始し、プレースホルダを残さず、rulebook と矛盾する場合は rulebook を正とする | [edit](../templates/xep-fully-guided-template.md) / [review](../templates/xrp-fully-guided-template.md)   |
+| `recipe-guided` | recipe が示す構成・問い・観点を主基準にする。rulebook / sample / template が存在しても、構造・文体の基準にはしない                                             | [edit](../templates/xep-recipe-guided-template.md) / [review](../templates/xrp-recipe-guided-template.md) |
+| `freeform`      | 実践の型より、対象領域の類似成果物やプロジェクト文脈を優先する。実践の型は矛盾しない範囲の参考にとどめる                                                       | [edit](../templates/xep-freeform-template.md) / [review](../templates/xrp-freeform-template.md)           |
+
+#### 2.2.2. 初期整備・横断整理
+
+成果物と実践の型を一式で立ち上げる場合、または複数成果物の重複を整理する場合に使います。
+
+```mermaid
+flowchart LR
+  BS["bootstrap"]
+  D["成果物"]
+  K["rulebook / recipe /<br/>sample / template"]
+  S["scope 内の<br/>複数成果物"]
+  DD["cross-deliverable-dedup<br/>正本を選択"]
+  C["正本＋要約・参照"]
+
+  BS -->|初期作成| D
+  BS -->|初期作成| K
+  D <-->|構造・用語・粒度を整合| K
+  S --> DD --> C
+```
+
+| `approach`                | 参照方針と進め方                                                                                                               | 対応テンプレート                                                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap`               | 成果物と rulebook / recipe / sample / template を同じタスクで初期作成し、互いに矛盾しない一式として揃える                      | [edit](../templates/xep-bootstrap-template.md)                                                                                |
+| `cross-deliverable-dedup` | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する | [edit](../templates/xep-cross-deliverable-dedup-template.md) / [result](../templates/xer-cross-deliverable-dedup-template.md) |
+
+#### 2.2.3. 実践の型のメンテナンス
+
+通常の成果物作業とは参照の向きを逆にし、成果物や review result を根拠として対象の実践の型を見直します。
+
+```mermaid
+flowchart LR
+  E["複数の成果物・<br/>review result・慣行"]
+  RB["rulebook"]
+  RC["recipe"]
+  SP["sample"]
+  TP["template"]
+
+  E -->|rulebook-maintenance| RB
+  E -->|recipe-maintenance| RC
+  E -->|sample-maintenance| SP
+  E -->|template-maintenance| TP
+```
+
+| `approach`             | 見直す対象 | 対応テンプレート                                                                                                        |
+| ---------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `rulebook-maintenance` | rulebook   | [edit](../templates/xep-rulebook-maintenance-template.md) / [review](../templates/xrp-rulebook-maintenance-template.md) |
+| `recipe-maintenance`   | recipe     | [edit](../templates/xep-recipe-maintenance-template.md) / [review](../templates/xrp-recipe-maintenance-template.md)     |
+| `sample-maintenance`   | sample     | [edit](../templates/xep-sample-maintenance-template.md) / [review](../templates/xrp-sample-maintenance-template.md)     |
+| `template-maintenance` | template   | [edit](../templates/xep-template-maintenance-template.md) / [review](../templates/xrp-template-maintenance-template.md) |
+
+#### 2.2.4. human による確定
+
+`execution: human` と組み合わせ、確認対象の `status` を `ready` へ昇格する確定プロファイルです。`ready` への昇格は human のみが行えます。
+
+```mermaid
+flowchart LR
+  H["human"]
+  D["成果物"]
+  K["rulebook / recipe /<br/>sample / template"]
+  F["finalize"]
+  BF["bootstrap-finalize"]
+  DR["成果物<br/>status: ready"]
+  AR["成果物と実践の型<br/>status: ready"]
+
+  H --> F
+  D --> F --> DR
+  H --> BF
+  D --> BF
+  K --> BF --> AR
+```
+
+| `approach`           | 確定対象と進め方                                                                                                               | 対応テンプレート                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `finalize`           | human が `done_criteria` を確認し、必要なら最小限の修正を加え、成果物のみを `ready` へ昇格する                                 | [result](../templates/xer-human-finalize-template.md)           |
+| `bootstrap-finalize` | `bootstrap` と対になり、human が成果物と rulebook / recipe / sample / template をまとめて確認し、それぞれを `ready` へ昇格する | [result](../templates/xer-human-bootstrap-finalize-template.md) |
+
+`approach` を指定しない場合は、存在するすべての実践の型をそれぞれの役割に沿って活用します。schedule で `approach` をどこで設定し `exec build` でどう解決するかは [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
 これらの `approach` に沿って作業する plan は、`specdojo exec plan` または `specdojo exec run` で生成できます。plan・result の生成規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md)、実行手順は [exec運用ガイド](exec-operation-guide.md) を参照してください。
 
@@ -98,16 +187,6 @@ flowchart TD
 ## 3. 実践の型メンテナンスの進め方
 
 `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、通常の成果物作業とは参照の向きが逆になる進め方です。作成・更新かレビューかを `mode`（`edit` / `review`）で表す点は他の `approach` と同じです。
-
-| `approach`                                    | 参照の向き                                                           |
-| --------------------------------------------- | -------------------------------------------------------------------- |
-| `fully-guided` / `recipe-guided` / `freeform` | rulebook / recipe / sample / template → 成果物                       |
-| `bootstrap`                                   | 成果物 ↔ rulebook / recipe / sample / template（一式として初期整備） |
-| `cross-deliverable-dedup`                     | scope 内の成果物 ↔ 成果物（正本選択と参照化）                        |
-| `rulebook-maintenance`                        | 成果物 → rulebook（参照の向きが逆になる）                            |
-| `recipe-maintenance`                          | 成果物 → recipe（参照の向きが逆になる）                              |
-| `sample-maintenance`                          | 成果物 → sample（参照の向きが逆になる）                              |
-| `template-maintenance`                        | 成果物 → template（参照の向きが逆になる）                            |
 
 メンテナンスのタスクでは、対象の実践の型を「見直す対象」として扱い、複数の成果物・review result・対象領域の慣行を根拠に、次の観点で妥当性を見直します。
 
