@@ -60,15 +60,90 @@ specdojo project list
 
 この経路では、成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）から Schedule を生成し、依存関係に従ってタスクを実行します。
 
-### 3.1. 前提を確認する
+### 3.1. 成果物カタログを作成する
 
-- 対象プロジェクトに、少なくとも1つの成果物カタログがあること
-- 対象トラックの `sch-strategy-<track>.yaml` があること
-- タスクを agent で実行するための agent 設定があること
+成果物カタログは「何を、どこに作り、何を満たせば完了か」を定義する `dct-<domain>.yaml` です。`specdojo.config.json` の `catalog_path` を設定してから、次の順に実行します。
 
-成果物カタログやトラック戦略をまだ作成していない場合は、[トラック設計ガイド](track-design-guide.md) と [Schedule設計ガイド](schedule-design-guide.md) を先に参照してください。
+```bash
+# プロジェクト規模に応じた dct-*.yaml をテンプレートから生成する
+specdojo catalog scaffold --project <project-id> --size small
 
-### 3.2. Scheduleを生成する
+# カタログの構造、ID、依存関係などを検証する
+specdojo catalog validate --project <project-id>
+
+# カタログが指す成果物ファイル本体を初回だけ生成する
+specdojo catalog generate --project <project-id>
+
+# カタログの Markdown 派生ビューを生成する
+specdojo catalog build --project <project-id>
+```
+
+各コマンドの役割は次のとおりです。
+
+| コマンド           | 作成・確認するもの                               | 再実行時の扱い                                                    |
+| ------------------ | ------------------------------------------------ | ----------------------------------------------------------------- |
+| `catalog scaffold` | 規模別テンプレートから `dct-*.yaml` を作成する   | 既存ファイルは上書きしない。作り直す場合だけ `--force` を指定する |
+| `catalog validate` | カタログの構造、ID、依存関係を検証する           | カタログを変更するたびに実行する                                  |
+| `catalog generate` | カタログの `path` が指す成果物ファイル本体を作る | 既存成果物は上書きしない。通常は初期作成時に1回実行する           |
+| `catalog build`    | `generated/dct-*.md` のカタログ派生ビューを作る  | 正本の `dct-*.yaml` を変更した後に再実行する                      |
+
+`--size` には `small` / `medium` / `large` を指定します。`catalog scaffold` 後は、生成された全成果物をそのまま採用するのではなく、プロジェクトのスコープに合わせて `dct-*.yaml` の成果物、依存関係、完了条件を確認してください。
+
+### 3.2. トラック戦略を作成する
+
+`sch-strategy-<track>.yaml` は、成果物カタログを実行タスクへ展開するための生成入力です。成果物カタログが WHAT / DONE を持つのに対し、strategy は対象カタログ、作業フェーズ、担当ロールを定義します。`schedule build` が生成する `sch-track-<track>.yaml` とは異なり、strategy はプロジェクトに合わせて人が作成・編集します。
+
+`specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は `prj-overview` を BA が1回編集する最小例です。`<project-id>` とカタログのパスは実際の値へ置き換えてください。
+
+```yaml
+kind: strategy
+id: <project-id>:sch-strategy-launch
+type: project
+status: ready
+title: スケジュール戦略（launch）
+rulebook: sch-rulebook
+track: launch
+
+scope:
+  catalogs:
+    - id: <project-id>:dct-project-definition
+      path: /docs/ja/projects/<project-id>/010-deliverables-catalog/dct-project-definition.yaml
+  include_kinds:
+    - work
+
+phase_sets:
+  first-pass:
+    - id: draft
+      name: 初稿作成
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      task_suffix: "010"
+      duration_days: 1
+      description: 成果物カタログの完了条件と rulebook に従って初稿を作成する。
+
+default_phase_set: first-pass
+
+owner_rules:
+  - local_ids:
+      - prj-overview
+    owner: BA
+```
+
+主要フィールドの意味は次のとおりです。
+
+| フィールド            | 意味                                                                        |
+| --------------------- | --------------------------------------------------------------------------- |
+| `track`               | トラックID。ファイル名の `<track>` および `schedule build --track` と揃える |
+| `scope.catalogs`      | 対象 `dct-<domain>.yaml` のIDと、`/` から始まるリポジトリルート基準パス     |
+| `scope.include_kinds` | カタログからタスクへ展開する成果物種別。通常は `work`                       |
+| `phase_sets`          | 各成果物に適用する作業フェーズ、実行方法、タスク接尾辞、所要日数            |
+| `default_phase_set`   | 個別指定がない成果物へ適用する既定のフェーズセット                          |
+| `owner_rules`         | 成果物の `local_id` と担当ロールの対応                                      |
+
+`owner_rules.owner` は `pm-members.yaml` の `roles` と対応させます。複数フェーズ、反復、レビュー、成果物間のゲートを含む実運用向けの設計は [Schedule設計ガイド](schedule-design-guide.md)、トラックの選び方は [トラック設計ガイド](track-design-guide.md) を参照してください。
+
+### 3.3. Scheduleを生成する
 
 ```bash
 specdojo schedule build --project <project-id> --track <track> --force
@@ -77,7 +152,9 @@ specdojo exec build --project <project-id>
 
 `exec build` により、着手可能なタスクが `generated/ready.json` に出力されます。
 
-### 3.3. 1タスクを実行する
+`schedule build` は strategy と対象カタログから、実行対象となる `sch-track-<track>.yaml` を生成します。`exec build` はそこから Ready タスク、CPM、タイムラインなどを生成します。
+
+### 3.4. 1タスクを実行する
 
 次のタスクを確認し、claim、実行、完了記録の順に進めます。
 
