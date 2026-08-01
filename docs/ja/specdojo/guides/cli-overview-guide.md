@@ -78,7 +78,7 @@ repo-root/
 └─ tools/
 ```
 
-実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。
+実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。ファイル単位の完全なディレクトリ構成は [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) を参照してください。
 
 ## 3. 初期設定
 
