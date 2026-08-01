@@ -92,6 +92,32 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 `specdojo-orchestrator` は各 CLI の agent 選択機構で起動する。設定ファイルの配置は `設定ファイル構成` のとおりで、非対話起動の具体的なフラグは共通設定の各子設計（[Claude Code エージェント設定](sysd-claude-agent-settings.md) / [Codex エージェント設定](sysd-codex-agent-settings.md) / [GitHub Copilot エージェント設定](sysd-github-copilot-agent-settings.md) / [OpenCode エージェント設定（Ollama）](sysd-opencode-agent-settings.md)）に従う。edit / review agent と異なり、本エージェントは対話セッションで使うことを主用途とする。
 
+### 6.1. npm スクリプト
+
+`package.json` に対話起動用の npm スクリプトを `orch:` 接頭辞で用意する。Claude / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動する。
+
+| スクリプト           | CLI・モデル             | worktree                                         |
+| -------------------- | ----------------------- | ------------------------------------------------ |
+| `orch:sonnet`        | Claude Code / `sonnet`  | なし                                             |
+| `orch:sonnet:work`   | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）      |
+| `orch:opus`          | Claude Code / `opus`    | なし                                             |
+| `orch:opus:work`     | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）      |
+| `orch:terra`         | Codex / `gpt-5.6-terra` | なし                                             |
+| `orch:terra:work`    | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）    |
+| `orch:sol`           | Codex / `gpt-5.6-sol`   | なし                                             |
+| `orch:sol:work`      | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）    |
+| `orch:copilot`       | GitHub Copilot          | なし                                             |
+| `orch:copilot:work`  | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成）  |
+| `orch:opencode`      | OpenCode                | なし                                             |
+| `orch:opencode:work` | OpenCode                | `../worktrees/opencode-work`（無ければ自動作成） |
+
+起動方式の要点は次のとおりとする。
+
+- Claude Code は `--agent specdojo-orchestrator --model <model>` で起動し、`:work` は `--worktree claude-work` で worktree を自動作成する。orchestrator の承認フローを維持するため `--permission-mode acceptEdits` は付けない。
+- Codex は対話 TUI に agent 選択フラグが無いため、SSOT 本文（`.agents/specdojo-orchestrator.agent.md`）を初期プロンプトとして渡し、`-m <model>` でモデルを指定する。承認・sandbox は `.codex/config.toml` の設定に従う。
+- Codex / GitHub Copilot / OpenCode は worktree を作成できないため、`:work` は `git worktree add ../worktrees/<cli>-work` を冪等に先行させてから作業ディレクトリ指定で入る（Codex / Copilot は `-C <path>`、OpenCode は位置引数 `<path>`）。worktree 名を固定することで、Claude Code 以外でも worktree 実行を実現する。
+- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。
+
 ## 7. 保守
 
 - 本文を変更する場合は SSOT（`.agents/specdojo-orchestrator.agent.md`）を編集し、4系統のラッパー本文をすべて同期する。ラッパー本文が SSOT とバイト一致していることを確認する。
