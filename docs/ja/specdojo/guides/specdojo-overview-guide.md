@@ -71,7 +71,7 @@ SpecDojo の文書は、説明・判断・方針を記述する Markdown と、�
 と各形式のスキーマを正本とします。
 
 これらの設計理由、規約と設定の責務分担、運用上の判断基準は
-[ドキュメンテーションの考え方](../philosophy/documentation-philosophy.md)
+[SpecDojo の考え方](../philosophy/specdojo-philosophy.md)
 を参照してください。
 
 ## 3. SpecDojo Unitと二種類の文書
@@ -206,7 +206,7 @@ CLI の導入は
 
 | 目的                                           | 参照先                                                                            |
 | ---------------------------------------------- | --------------------------------------------------------------------------------- |
-| ドキュメンテーションの原則と設計理由を知る     | [ドキュメンテーションの考え方](../philosophy/documentation-philosophy.md)         |
+| SpecDojoの基本方針と設計理由を知る             | [SpecDojo の考え方](../philosophy/specdojo-philosophy.md)                         |
 | 要求・要件・仕様・設計・実装の違いを知る       | [概念体系の考え方](../philosophy/concept-system-philosophy.md)                    |
 | 文書の分類、ライフサイクル、配置を理解する     | [ドキュメント構成ガイド](docs-structure-guide.md)                                 |
 | ファイル単位のディレクトリ配置を引く           | [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) |

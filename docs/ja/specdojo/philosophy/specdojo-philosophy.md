@@ -1,15 +1,17 @@
 ---
 specdojo:
-  id: documentation-philosophy
+  id: specdojo-philosophy
   type: philosophy
   status: draft
+  supersedes:
+    - documentation-philosophy
 ---
 
-# ドキュメンテーションの考え方
+# SpecDojo の考え方
 
-Documentation Philosophy
+SpecDojo Philosophy
 
-SpecDojo におけるドキュメンテーションの基本方針、設計原則、運用上の判断基準を示します。
+SpecDojo の基本方針（Docs as Code / Kata / Human & AI Readability）と、それを構造化ドキュメントへ適用する設計・運用の原則、運用上の判断基準を示します。実行・エージェント固有の方針は各 guide を正本とします。
 本書は規範（must）ではなく、規約の設計理由と判断原則を扱います。判定可能な規約は各 standard を正本とします。
 
 **対象読者**
@@ -32,9 +34,9 @@ SpecDojo の基本方針は次の3つです。「コードと同じ規律で管�
 - **Kata（実践の型）**: 成果物の作り方を rulebook / recipe / sample / template として型化し、`approach` で参照度合いを切り替える。
 - **Human & AI Readability**: 人が判断理由を理解でき、AI とツールが解析・生成・検証できる構造にする。
 
-各方針を実務へ落とす下位原則と判断基準は `設計と運用の原則` にまとめます。Kata の詳細は [実践体系構成ガイド](../guides/practice-system-composition-guide.md) と [実践の型活用ガイド](../guides/kata-guide.md) を正本とします。
+各方針を構造化ドキュメントへ適用する原則と判断基準は `ドキュメントの設計と運用の原則` にまとめます。Kata の詳細は [実践体系構成ガイド](../guides/practice-system-composition-guide.md) と [実践の型活用ガイド](../guides/kata-guide.md) を正本とします。
 
-## 2. 設計と運用の原則
+## 2. ドキュメントの設計と運用の原則
 
 SpecDojo のドキュメントは、単なる文章ではなく、プロジェクトを定義・管理・実行・検証するための構造化された情報資産として設計します。以下の 2.1 以降は、`基本方針` を実務へ落とすための設計判断と、判断に迷った場合に従う運用基準を一体で示した原則です。各原則がどの基本方針に対応するかは次のとおりです（括弧内は対応する広く知られた原則名）。
 
