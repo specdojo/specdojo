@@ -36,6 +36,34 @@ Use Case Guide
 
 「この項目はどの文書か」を平坦に引きたい場合は [全体概要ガイド](specdojo-overview-guide.md) の `目的別の次の読み物` を、コマンドとオプションは [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。まず一度通す体験は [Quick Startガイド](quick-start-guide.md) が最短です。
 
+次の早見図から、いまの状況に近いシナリオへ進めます。各ノードは以降の節の見出しに対応します。
+
+```mermaid
+flowchart TD
+  Q{"いまの状況は？"}
+  Q -->|まだ何も無い| S11["新規プロジェクトを<br/>最短で立ち上げる"]
+  Q -->|目的・スコープが未確定| S12["課題整理から<br/>目的・スコープを固める"]
+  Q -->|既存プロダクト・文書なし| S13["既存プロダクトから<br/>着手する"]
+  Q -->|計画済みを実行したい| EXE{"どう実行する？"}
+  Q -->|運用・管理したい| MNG{"何を管理する？"}
+
+  EXE -->|agent に任せる| S21["agent に成果物を<br/>量産させる"]
+  EXE -->|変更を隔離したい| S22["worktree で<br/>隔離実行する"]
+  EXE -->|会話で操作したい| S23["対話（チャット）で<br/>運用する"]
+
+  MNG -->|品質を確定したい| S31["レビューを回して<br/>ready にする"]
+  MNG -->|計画外の対応・調査| S32["計画外の単発対応・<br/>調査を管理する"]
+  MNG -->|定期的に回す| S33["定期実行を組む"]
+  MNG -->|複数PJ・ブランチ| S34["複数プロジェクト・<br/>ブランチを並行する"]
+
+  classDef setup fill:#fff3bf,stroke:#f08c00,color:#000;
+  classDef exec fill:#d0ebff,stroke:#1c7ed6,color:#000;
+  classDef manage fill:#d3f9d8,stroke:#2f9e44,color:#000;
+  class S11,S12,S13 setup;
+  class S21,S22,S23 exec;
+  class S31,S32,S33,S34 manage;
+```
+
 ## 2. 立ち上げと計画
 
 ### 2.1. 新規プロジェクトを最短で立ち上げる
