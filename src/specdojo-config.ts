@@ -11,8 +11,9 @@ export type SpecDojoRunConfig = {
   agent_config?: string;
   worktree_base?: string;
   /**
-   * Integration branch that owns pjr-index.md reservations. `register add --reserve` writes and
-   * commits the registration row to the worktree checked out on this branch. Defaults to "main".
+   * Integration branch that owns pjr-index.md reservations. `register add` allocates and commits
+   * the registration row to the worktree checked out on this branch when run from another branch.
+   * Defaults to the project integration branch `project/<project-id>/develop` (git-branching-standard).
    */
   register_integration_branch?: string;
 };

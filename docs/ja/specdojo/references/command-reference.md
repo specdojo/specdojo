@@ -115,14 +115,15 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 主要オプション:
 
-| オプション                      | 用途                                                                              | 対象               |
-| ------------------------------- | --------------------------------------------------------------------------------- | ------------------ |
-| `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                        | `renumber`         |
-| `--reserve`                     | 統合ブランチへ登録行だけを追記して PJR-ID を予約する（個票は作らない）            | `add`              |
-| `--integration-branch <name>`   | 予約先の統合ブランチ（既定は `run.register_integration_branch`、無ければ `main`） | `add --reserve`    |
-| `--integration-worktree <path>` | 予約先の worktree をパスで直接指定する                                            | `add --reserve`    |
-| `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                              | `add --reserve`    |
-| `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                | `renumber` / `add` |
+| オプション                      | 用途                                                                                              | 対象               |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------ |
+| `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                                        | `renumber`         |
+| `--reserve`                     | 統合ブランチ上でも予約経路を強制する（登録行を commit。`--ticket` 併用可）                        | `add`              |
+| `--local`                       | 自動ルーティングせず現在ブランチの `pjr-index.md` に追記する（ID 衝突の恐れ）                     | `add`              |
+| `--integration-branch <name>`   | 統合ブランチ（既定は `run.register_integration_branch`、無ければ `project/<project-id>/develop`） | `add`              |
+| `--integration-worktree <path>` | 統合ブランチ worktree をパスで直接指定する                                                        | `add`              |
+| `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                                              | `add`              |
+| `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                                | `renumber` / `add` |
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 

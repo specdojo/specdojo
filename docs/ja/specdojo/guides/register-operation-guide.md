@@ -234,7 +234,7 @@ ID 重複の復旧、PO 留保事項の承認運用、統合ブランチへの�
 
 ### 4.1. PJR-ID 重複の検知と復旧
 
-`register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生します。表末尾への追記は通常 merge conflict になりますが、rebase や cherry-pick を経ると重複が検知されずに混入することがあります。
+`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にするため（`PJR-ID の採番と統合ブランチ集約` を参照）、通常運用では別 branch から同じ ID が発生することはありません。ただし `--local` での起票、統合ブランチの未同期、rebase や cherry-pick を経た履歴の混在では、依然として重複が混入することがあります。
 
 重複は検証で必ず落ちます。次の検証は VSCode のリアルタイム検証と CI の両方で機能します。
 
@@ -276,21 +276,24 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 
 PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護 / CODEOWNERS 方針の詳細は、当該プロジェクトの登録項目（例: `pjr-0126-pr-based-po-approval`）で定義します。schedule 上の計画済みタスクによる通常の成果物更新や日常の agent コミットは、PR 承認の対象外です。
 
-### 4.3. 統合ブランチへの予約起票
+### 4.3. PJR-ID の採番と統合ブランチ集約
 
-作業 worktree（`exec/*` branch など）で作業中に PJR-ID だけを先に確保したい場合は、`register add --reserve` を使います。通常の `register add` は現在の branch の `pjr-index.md` を書き換えますが、`--reserve` を付けると統合ブランチの worktree へ登録行だけを追記・commit して ID を予約します。作業 worktree 側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
+単調連番の PJR-ID は分散採番できない（最大値 +1 を各 branch が独立に計算すると同じ ID が衝突する）ため、`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にします。実行時のブランチによって書き込み先が自動で決まります。
+
+- 統合ブランチ（`project/<project-id>/develop`）上で実行した場合は、従来どおり現在の作業ツリーの `pjr-index.md` に in-place で追記します（そこが唯一の採番元なので競合しません）。
+- feature / exec など統合ブランチ以外で実行した場合は、作業ブランチの `pjr-index.md` を触らず、統合ブランチの worktree へ登録行（と `--ticket` 指定時は個票）を追記・commit して ID を予約します。作業ブランチ側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
 
 ```bash
-# 予約する ID と変更対象を事前に確認する
-specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --reserve --dry-run
+# feature ブランチ上でも、統合ブランチへ自動で予約される（割り当てられた PJR-ID が標準出力の最終行に返る）
+specdojo register add --project <project-id> --type todo --title "在庫初期データの登録"
 
-# 問題なければ予約する（割り当てられた PJR-ID が標準出力の最終行に返る）
-specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --reserve
+# 内容を事前に確認する
+specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --dry-run
 ```
 
-- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `main` を使います。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使います。
-- 予約時に統合ブランチの worktree へ書き込むのは `pjr-index.md` の登録行だけで、個票は作成しません。`--reserve` と `--ticket` は併用できません。
-- 予約 commit は `pjr-index.md` の追記だけを対象とし、統合ブランチ側の他の未 commit 変更は巻き込みません。commit メッセージは `--commit-message <text>` で上書きできます。
-- 次のいずれかに当てはまる場合は、書き込みを行わずにエラー終了します: 統合ブランチの worktree が存在しない場合、`pjr-index.md` に未 commit の変更がある場合、指定した ID が既存 ID と競合する場合です。
-- 割り当てられた PJR-ID は標準出力の最終行に返るので、後続の個票作成・実作業に利用します。個票と実作業は従来どおり作業 branch 側で行い、状態遷移（`start` / `review` / `close` など）も従来どおり運用します。
-- 従来どおり作業 branch 上で完結して起票する場合は `--reserve` を付けません。既定の挙動は変わりません。
+- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `project/<project-id>/develop` を使います。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使います。
+- `--reserve` を付けると、統合ブランチ上にいても予約経路を強制します（登録行を commit して即座に ID を確定させたいとき）。`--ticket` と併用でき、個票も同じ commit に含めます。
+- `--local` を付けると自動ルーティングを行わず、現在のブランチの `pjr-index.md` に in-place で追記します（統合 worktree が無い・オフラインなどの退避用）。ただし別ブランチで採番すると ID 衝突の恐れがあるため、通常は使いません。
+- 予約 commit は `pjr-index.md`（と個票）の pathspec に限定し、統合ブランチ側の他の未 commit 変更は巻き込みません。commit メッセージは `--commit-message <text>` で上書きできます。
+- 次のいずれかに当てはまる場合は、書き込みを行わずにエラー終了します: 統合ブランチの worktree が存在しない場合、統合ブランチの `pjr-index.md` に未 commit の変更がある場合、指定した ID が既存 ID と競合する場合です。統合 worktree が無い場合は、統合ブランチ上で実行するか、`git worktree add` で worktree を用意するか、`--local` を使ってください。
+- 予約した項目は統合ブランチ側にのみ存在します。作業ブランチからは、統合ブランチを merge / 同期した時点で見えるようになります。状態遷移（`start` / `review` / `close` など）は統合ブランチ上で運用します。

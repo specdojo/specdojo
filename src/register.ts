@@ -955,7 +955,9 @@ export function planReservationRow(opts: {
   content: string;
   explicitId?: string;
   fields: ReservationFields;
-}): { assignedId: string; newContent: string; newRow: string } {
+  // 個票を作る場合の topic slug。指定すると ticket セルに個票リンクを埋め、個票ファイル名を返す。
+  ticketTopic?: string;
+}): { assignedId: string; newContent: string; newRow: string; ticketFilename?: string } {
   const items = parsePjrIndex(opts.content);
   const assignedId = opts.explicitId?.trim() || getNextPjrId(items);
 
@@ -972,6 +974,13 @@ export function planReservationRow(opts: {
     throw new Error(`ID already exists in pjr-index.md: ${assignedId}`);
   }
 
+  const ticketFilename = opts.ticketTopic
+    ? `${assignedId.toLowerCase()}-${opts.ticketTopic}.md`
+    : undefined;
+  const ticketRef = ticketFilename
+    ? `[${ticketFilename.replace(/\.md$/, "")}](./${ticketFilename})`
+    : "-";
+
   const newItem: PjrItem = {
     id: assignedId,
     status: opts.fields.status,
@@ -983,10 +992,15 @@ export function planReservationRow(opts: {
     due: opts.fields.due,
     completed: opts.fields.completed,
     conclusion: opts.fields.conclusion,
-    ticket: "-",
+    ticket: ticketRef,
   };
   const newRow = formatTableRow(newItem);
-  return { assignedId, newContent: insertRowAfterLast(opts.content, newRow), newRow };
+  return {
+    assignedId,
+    newContent: insertRowAfterLast(opts.content, newRow),
+    newRow,
+    ticketFilename,
+  };
 }
 
 // pjr-index.md を所有する統合ブランチの worktree を解決する。
@@ -1023,9 +1037,10 @@ export function resolveIntegrationWorktree(
   return { path: resolve(match.path), branch: opts.branch };
 }
 
-// 統合ブランチの worktree へ登録行だけを追記・commit して PJR-ID を予約する。
-// - pjr-index.md 不在・未 commit の変更あり・ID 競合は、書き込み前にエラーで終了する。
-// - commit は pjr-index.md の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
+// 統合ブランチの worktree へ登録行（と任意で個票）を追記・commit して PJR-ID を予約する。
+// - pjr-index.md 不在・未 commit の変更あり・ID 競合・個票の既存衝突は、書き込み前にエラーで終了する。
+// - commit は登録行（と個票）の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
+// - ticket を渡すと、確定した ID に基づく個票内容を makeContent で生成し、同一 commit に含める。
 export function reservePjrIdOnIntegration(opts: {
   worktreePath: string;
   pjrIndexRel: string;
@@ -1033,6 +1048,7 @@ export function reservePjrIdOnIntegration(opts: {
   fields: ReservationFields;
   commitMessage?: string;
   dryRun: boolean;
+  ticket?: { topic: string; makeContent: (assignedId: string) => string };
 }): { assignedId: string } {
   const pjrIndexPath = resolve(opts.worktreePath, opts.pjrIndexRel);
   if (!existsSync(pjrIndexPath)) {
@@ -1054,41 +1070,65 @@ export function reservePjrIdOnIntegration(opts: {
   }
 
   const content = readFileSync(pjrIndexPath, "utf8");
-  const { assignedId, newContent } = planReservationRow({
+  const { assignedId, newContent, ticketFilename } = planReservationRow({
     content,
     explicitId: opts.explicitId,
     fields: opts.fields,
+    ticketTopic: opts.ticket?.topic,
   });
+
+  // 個票の repo 相対パスは pjr-index.md と同じディレクトリに置く。
+  const ticketRel =
+    ticketFilename !== undefined
+      ? [...opts.pjrIndexRel.split("/").slice(0, -1), ticketFilename].join("/")
+      : undefined;
+  const ticketAbs = ticketRel ? resolve(opts.worktreePath, ticketRel) : undefined;
+  if (ticketAbs && existsSync(ticketAbs)) {
+    throw new Error(`Target ticket file already exists in integration worktree: ${ticketAbs}`);
+  }
 
   if (opts.dryRun) {
     process.stdout.write(`Would reserve ${assignedId} in ${pjrIndexPath}\n`);
+    if (ticketAbs) process.stdout.write(`Would create ticket: ${ticketAbs}\n`);
     process.stdout.write(`${assignedId}\n`);
     return { assignedId };
   }
 
   writeFileSync(pjrIndexPath, newContent, "utf8");
-  gitOutput(opts.worktreePath, ["add", "--", opts.pjrIndexRel]);
+  const commitPaths = [opts.pjrIndexRel];
+  if (ticketAbs && ticketRel && opts.ticket) {
+    writeFileSync(ticketAbs, opts.ticket.makeContent(assignedId), "utf8");
+    commitPaths.push(ticketRel);
+  }
+  gitOutput(opts.worktreePath, ["add", "--", ...commitPaths]);
   gitOutput(opts.worktreePath, [
     "commit",
     "-m",
     opts.commitMessage?.trim() || `register(reserve): add ${assignedId}`,
     "--",
-    opts.pjrIndexRel,
+    ...commitPaths,
   ]);
 
   process.stdout.write(`Reserved ${assignedId} on integration worktree: ${pjrIndexPath}\n`);
+  if (ticketAbs) process.stdout.write(`Created ticket: ${ticketAbs}\n`);
   process.stdout.write(`${assignedId}\n`);
   return { assignedId };
 }
 
 // 統合ブランチ名を解決する。--integration-branch の明示指定を最優先し、
-// 次に config の run.register_integration_branch、最後に既定値 "main" を使う。
-function resolveIntegrationBranchName(projectId: string, override?: string): string {
+// 次に config の run.register_integration_branch、最後に git-branching-standard に従い
+// プロジェクト統合ブランチ `project/<project-id>/develop` を既定にする。
+export function resolveIntegrationBranchName(projectId: string, override?: string): string {
   const trimmed = override?.trim();
   if (trimmed) return trimmed;
   const { config } = loadConfig();
   const branch = config?.projects[projectId]?.run?.register_integration_branch?.trim();
-  return branch || "main";
+  return branch || `project/${projectId}/develop`;
+}
+
+// 現在の作業ツリーがチェックアウトしているブランチ名を返す。detached HEAD では空文字。
+function currentBranchName(repoRoot: string): string {
+  return gitOutput(repoRoot, ["branch", "--show-current"]).trim();
 }
 
 // ================================
@@ -1182,12 +1222,17 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--force", "Overwrite existing ticket file", false);
   addCmd.option(
     "--reserve",
-    "Reserve the PJR-ID by committing only the registration row to the integration branch worktree",
+    "Force reserving the PJR-ID on the integration branch even when already on it (add commits the row)",
+    false,
+  );
+  addCmd.option(
+    "--local",
+    "Add to the current branch's pjr-index.md without integration-branch routing (may cause ID conflicts across branches)",
     false,
   );
   addCmd.option(
     "--integration-branch <name>",
-    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or main)",
+    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or project/<project-id>/develop)",
   );
   addCmd.option(
     "--integration-worktree <path>",
@@ -1199,19 +1244,54 @@ export function registerRegisterCommands(program: Command): void {
     try {
       const paths = resolveRegisterPaths(opts);
 
-      if (opts.reserve) {
-        if (opts.ticket) {
+      if (opts.local && opts.reserve) {
+        throw new Error("--local and --reserve are mutually exclusive.");
+      }
+
+      const topic = opts.topic?.trim() || slugify(opts.title);
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
+        throw new Error(
+          `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+        );
+      }
+
+      // ID 採番の抜本対策（案1）: 単調連番 PJR-ID は分散採番できないため、統合ブランチの
+      // pjr-index.md を単一直列化点にする。統合ブランチ上なら従来どおり in-place で追記する
+      // （そこが唯一の採番元）。別ブランチ（feature/exec）から実行された場合は、作業ブランチの
+      // pjr-index.md を触らず統合ブランチ worktree へ自動ルーティングして採番・commit する。
+      // --local は従来の in-place を強制する退避口。
+      const repoRoot = specdojoRootDir();
+      const integrationBranch = resolveIntegrationBranchName(
+        paths.projectId,
+        opts.integrationBranch,
+      );
+      const currentBranch = currentBranchName(repoRoot);
+      const routeToIntegration =
+        !opts.local && (opts.reserve || currentBranch !== integrationBranch);
+
+      if (routeToIntegration) {
+        const makeTemplatePath = (): string =>
+          join(specdojoRootDir(), `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`);
+        let target: IntegrationWorktree;
+        try {
+          target = resolveIntegrationWorktree(repoRoot, {
+            branch: integrationBranch,
+            worktreePath: opts.integrationWorktree?.trim() || undefined,
+          });
+        } catch (error) {
+          const detail = error instanceof Error ? error.message : String(error);
           throw new Error(
-            "--reserve does not create a ticket; drop --ticket. " +
-              "Reserve writes only the registration row to the integration branch worktree.",
+            `${detail}\n` +
+              `Run register add on the integration branch (${integrationBranch}), ` +
+              `check out a worktree there, or pass --local to add to the current branch.`,
           );
         }
-        const repoRoot = specdojoRootDir();
-        const branch = resolveIntegrationBranchName(paths.projectId, opts.integrationBranch);
-        const target = resolveIntegrationWorktree(repoRoot, {
-          branch,
-          worktreePath: opts.integrationWorktree?.trim() || undefined,
-        });
+        if (!opts.reserve && currentBranch !== integrationBranch) {
+          process.stdout.write(
+            `Not on integration branch "${integrationBranch}" (current: "${currentBranch || "detached"}"); ` +
+              `routing to integration worktree: ${target.path}\n`,
+          );
+        }
         const pjrIndexRel = relative(repoRoot, paths.pjrIndexPath).split(sep).join("/");
         reservePjrIdOnIntegration({
           worktreePath: target.path,
@@ -1230,6 +1310,22 @@ export function registerRegisterCommands(program: Command): void {
           },
           commitMessage: opts.commitMessage,
           dryRun: opts.dryRun,
+          ...(opts.ticket
+            ? {
+                ticket: {
+                  topic,
+                  makeContent: (assignedId: string): string =>
+                    generateTicket({
+                      projectId: paths.projectId,
+                      displayId: assignedId,
+                      topic,
+                      type: opts.type,
+                      title: opts.title,
+                      templatePath: makeTemplatePath(),
+                    }),
+                },
+              }
+            : {}),
         });
         return;
       }
@@ -1259,12 +1355,6 @@ export function registerRegisterCommands(program: Command): void {
         throw new Error(`ID already exists in pjr-index.md: ${displayId}`);
       }
 
-      const topic = opts.topic?.trim() || slugify(opts.title);
-      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
-        throw new Error(
-          `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
-        );
-      }
       const ticketFilename = `${displayId.toLowerCase()}-${topic}.md`;
       const ticketRef = opts.ticket
         ? `[${ticketFilename.replace(".md", "")}](./${ticketFilename})`

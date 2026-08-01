@@ -87,6 +87,18 @@ describe("planReservationRow — 予約行と割り当て ID の算出", () => {
       }),
     ).toThrow(/ID already exists in pjr-index.md: PJR-0001/);
   });
+
+  it("ticketTopic を渡すと ticket セルに個票リンクを埋め、個票ファイル名を返す", () => {
+    const result = planReservationRow({
+      content: buildIndex([EXISTING_ROW]),
+      fields: DEFAULT_FIELDS,
+      ticketTopic: "inventory-seed",
+    });
+
+    expect(result.assignedId).toBe("PJR-0002");
+    expect(result.ticketFilename).toBe("pjr-0002-inventory-seed.md");
+    expect(result.newRow).toContain("| [pjr-0002-inventory-seed](./pjr-0002-inventory-seed.md) |");
+  });
 });
 
 describe("resolveIntegrationWorktree — 統合ブランチ worktree の解決", () => {
@@ -153,6 +165,37 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
     // 割り当て ID が stdout の最終行として返る
     const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
     expect(printed.trim().split("\n").pop()).toBe("PJR-0002");
+  });
+
+  it("ticket を渡すと登録行と個票を同じ commit に含め、行に個票リンクを埋める", () => {
+    repo = createIntegrationRepo();
+    vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+    const result = reservePjrIdOnIntegration({
+      worktreePath: repo,
+      pjrIndexRel: PJR_INDEX_REL,
+      fields: DEFAULT_FIELDS,
+      dryRun: false,
+      ticket: {
+        topic: "inventory-seed",
+        makeContent: (assignedId) => `# ${assignedId} ticket body\n`,
+      },
+    });
+
+    expect(result.assignedId).toBe("PJR-0002");
+
+    const ticketRel = PJR_INDEX_REL.replace("pjr-index.md", "pjr-0002-inventory-seed.md");
+    expect(readFileSync(join(repo, ticketRel), "utf8")).toBe("# PJR-0002 ticket body\n");
+
+    const index = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
+    expect(index).toContain("| [pjr-0002-inventory-seed](./pjr-0002-inventory-seed.md) |");
+
+    // 登録行と個票が同じ commit に含まれる
+    const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
+      .split("\n")
+      .filter(Boolean)
+      .sort();
+    expect(committedFiles).toEqual([PJR_INDEX_REL, ticketRel].sort());
   });
 
   it("統合ブランチ側の他の変更を予約 commit に巻き込まない", () => {
