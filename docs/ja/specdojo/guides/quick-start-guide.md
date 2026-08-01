@@ -201,6 +201,9 @@ specdojo register close \
 
 `catalog generate` で作成した `pm-members.yaml` の `members` に、タスクを実行する人を登録します。次の例では `<actor>` が BA ロールを担当します。
 
+<details>
+<summary>pm-members.yaml への追記例（クリックで展開）</summary>
+
 ```yaml
 members:
   - nickname: <actor>
@@ -210,7 +213,12 @@ members:
     type: human
 ```
 
+</details>
+
 `.specdojo/specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は small の `dct-project-definition.yaml` に含まれる3成果物を、依存順に BA が1回ずつ作成・確認する例です。最初の Ready タスクは `prj-overview` になります。`<project-id>` とカタログのパスは実際の値へ置き換えてください。この strategy はコマンドで生成できませんが、オーケストレーターに「launch トラックの sch-strategy-launch.yaml を作って。対象カタログは dct-project-definition、first-pass で BA が各成果物を1回ずつ作成・確認する構成にして」と伝えると、この雛形をドラフトできます。
+
+<details>
+<summary>sch-strategy-launch.yaml の全体例（クリックで展開）</summary>
 
 ```yaml
 kind: strategy
@@ -248,6 +256,8 @@ owner_rules:
       - prj-success-criteria-and-acceptance-criteria
     owner: BA
 ```
+
+</details>
 
 主要フィールドの意味は次のとおりです。
 
@@ -320,6 +330,9 @@ specdojo register add \
 
 `.specdojo/specdojo.config.json` の `routines_path` 配下に `rtn-daily-register-sweep.yaml` を作成します。
 
+<details>
+<summary>rtn-daily-register-sweep.yaml の例（クリックで展開）</summary>
+
 ```yaml
 id: rtn-daily-register-sweep
 name: 登録簿 open todo の日次スイープ
@@ -336,6 +349,8 @@ action:
       - open
   limit: 3
 ```
+
+</details>
 
 定義を検証し、実行対象を確認してから1回実行します。
 
