@@ -163,6 +163,8 @@ Project Register
 | PJR-0140 | done | register commitがhook整形差分と失敗残骸を取りこぼす | pathspec commitでhookの整形差分がindexに残り、次ID実行の開始前スナップショットに載って commit 対象から丸ごと除外される。失敗試行の残骸とrunner自身の状態遷移も同様に取りこぼす | issue | high | ARC | 2026-07-31 | 2026-07-26 | hook整形差分が出る場合は再度commitするように変更 | [pjr-0140-register-commit-missed-paths](./pjr-0140-register-commit-missed-paths.md) |
 | PJR-0141 | open | guide/reference-content.schema.yamlを言語別に整備 | schemaを言語別に分けてチェックできるように変更（.remarkrc.yamlで設定） | todo | medium | ARC | 2026-07-31 | - | - | - |
 | PJR-0142 | open | ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加 | docs-editing-guide に、必要な VS Code extension（Markdown All in One 等）と SpecDojo extension（tools/vscode-specdojo）の導入・設定・使い方を追記する | todo | low | ARC | 2026-08-31 | - | - | - |
+| PJR-0143 | open | VS Code拡張のMarketplace登録 | tools/vscode-specdojo 拡張を Visual Studio Marketplace へ公開する（発行者登録・vsce publish・公開手順/CIの整備） | todo | medium | ARC | 2026-08-31 | - | - | - |
+| PJR-0144 | open | fmt-md-table を VS Code 拡張へ統合 | 現在 .vscode/tasks.json のタスク（Format Markdown Table）として提供している fmt-md-table を vscode-specdojo 拡張のコマンドとして統合する | todo | medium | ARC | 2026-08-31 | - | - | - |
 
 ## 2. 派生ビュー
 
