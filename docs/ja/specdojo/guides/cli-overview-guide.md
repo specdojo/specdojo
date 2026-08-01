@@ -21,8 +21,8 @@ CLI Overview Guide
 
 **次に読む文書**
 
-- 計画設計は [Schedule設計ガイド](schedule-design-guide.md)、タスク実行は [exec運用ガイド](exec-operation-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
-- 目的から guide と reference を探す場合は [全体概要ガイド](specdojo-overview-guide.md) の `目的別の次の読み物` を参照してください。
+- 初期設定から1タスクの完了まで試す場合は [Quick Startガイド](quick-start-guide.md) を参照してください。
+- 計画設計は [Schedule設計ガイド](schedule-design-guide.md)、コマンド詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
 
 ## 1. CLIの役割
 
@@ -44,7 +44,8 @@ CLI Overview Guide
 
 ```text
 repo-root/
-├─ specdojo.config.json
+├─ .specdojo/
+│  └─ specdojo.config.json
 ├─ docs/
 │  └─ ja/
 │     ├─ specdojo/
@@ -77,7 +78,7 @@ repo-root/
 └─ tools/
 ```
 
-実際のパスは `specdojo.config.json` の project 設定で変更できます。
+実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。
 
 ## 3. 初期設定
 
@@ -96,7 +97,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 
 ## 4. プロジェクト設定
 
-`specdojo.config.json` は複数プロジェクトを扱うためのレジストリです。
+`.specdojo/specdojo.config.json` は複数プロジェクトを扱うためのレジストリです。
 
 ```json
 {
@@ -132,10 +133,10 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 
 1. `--project <id>`
 2. `SPECDOJO_PROJECT`
-3. `specdojo.config.json` の `current_project`
-4. `specdojo.config.json` の `projects` に定義された先頭 project
+3. `.specdojo/specdojo.config.json` の `current_project`
+4. `.specdojo/specdojo.config.json` の `projects` に定義された先頭 project
 
-通常は `current_project` を使います。ブランチや worktree ごとに `specdojo.config.json` を Git 管理すれば、`.env` のコピーは不要です。
+通常は `current_project` を使います。ブランチや worktree ごとに `.specdojo/specdojo.config.json` を Git 管理すれば、`.env` のコピーは不要です。
 
 ## 6. 代表フロー
 
@@ -145,21 +146,24 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
 # 1. 設定を作成する
 specdojo config init
 
-# 2. 成果物カタログを作成・検証・Markdown生成する
-specdojo catalog scaffold --project prj-0001
+# 2. 未整理の課題・判断があれば登録簿で整理する
+specdojo register scaffold --project prj-0001
+
+# 3. 成果物カタログを作成・検証する
+specdojo catalog scaffold --project prj-0001 --size small
 specdojo catalog validate --project prj-0001
+
+# 3.1 カタログが指す成果物ファイル本体を一括生成する
+specdojo catalog generate --project prj-0001
 specdojo catalog build --project prj-0001
 
-# 2.1 カタログが指す成果物ファイル本体を一括生成する
-specdojo catalog generate --project prj-0001
-
-# 3. strategy から track schedule を生成する
+# 4. sch-strategy-launch.yaml を用意し、track schedule を生成する
 specdojo schedule build --project prj-0001 --track launch --force
 
-# 4. 実行状態、Ready、CPMを生成する
+# 5. 実行状態、Ready、CPMを生成する
 specdojo exec build --project prj-0001
 
-# 5. Readyタスクを実行する
+# 6. pm-members.yaml と provider 設定を用意して Readyタスクを実行する
 specdojo exec run --project prj-0001 --auto --parallel 5
 ```
 
@@ -169,7 +173,7 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 specdojo build --project prj-0001
 ```
 
-手順 2 から手順 3 へ移るときの考え方（成果物カタログのどの情報が Schedule のどのタスクになるか）は [Schedule設計ガイド](schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
+register から成果物カタログへ移す手順は [Quick Startガイド](quick-start-guide.md)、成果物カタログのどの情報が Schedule のどのタスクになるかは [Schedule設計ガイド](schedule-design-guide.md) の `成果物カタログとの責務分担`、agent の最小設定は [exec設定ガイド](exec-config-guide.md) を参照します。
 
 ### 6.1. catalog generateの生成方針
 
@@ -189,7 +193,7 @@ specdojo build --project prj-0001
 
 ## 7. 定期実行と登録項目の実行
 
-schedule に基づく実行のほかに、次の 2 つの実行経路があります。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、経路ごとの使い分けの基準は [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+register は立ち上げ時の未整理事項と進行中の計画外事項を扱い、schedule は成果物カタログから展開した計画済み作業を扱います。routine はどちらかの実行を時刻条件で起動します。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、使い分けは [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 | 機能                  | 概要                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
