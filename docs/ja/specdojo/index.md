@@ -4,11 +4,13 @@ SpecDojo が提供する実践体系の入口です。ここには成果物そ�
 
 ## 1. 最初に読む文書
 
-全体像から読む場合は [全体概要ガイド](./guides/specdojo-overview-guide.md) から始めてください。目的から guide と reference を探す場合は、同ガイドの `目的別の次の読み物` を参照します。
+全体像から読む場合は [全体概要ガイド](./guides/specdojo-overview-guide.md) から始めてください。まず一度手を動かす場合は [Quick Startガイド](./guides/quick-start-guide.md)、やりたいことから進め方を探す場合は [ユースケース別ガイド](./guides/use-case-guide.md)、目的から guide と reference を探す場合は、全体概要ガイドの `目的別の次の読み物` を参照します。
 
 | 目的                                     | 参照先                                                       |
 | ---------------------------------------- | ------------------------------------------------------------ |
 | SpecDojo 全体の構成と流れを知る          | [全体概要ガイド](./guides/specdojo-overview-guide.md)        |
+| まず一度、最短で手を動かす               | [Quick Startガイド](./guides/quick-start-guide.md)           |
+| やりたいことから進め方を探す             | [ユースケース別ガイド](./guides/use-case-guide.md)           |
 | 成果物の種類、目的、書き方の正本を調べる | [成果物リファレンス](./references/deliverables-reference.md) |
 | CLI のコマンドとオプションを調べる       | [CLIコマンドリファレンス](./references/command-reference.md) |
 | 文書の分類と配置を確認する               | [ドキュメント構成ガイド](./guides/docs-structure-guide.md)   |
