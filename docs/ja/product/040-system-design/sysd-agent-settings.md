@@ -17,6 +17,8 @@ SpecDojo CLI と外部エージェント CLI を組み合わせてマルチエ�
 - [GitHub Copilot エージェント設定](sysd-github-copilot-agent-settings.md)
 - [OpenCode エージェント設定（Ollama）](sysd-opencode-agent-settings.md)
 
+本設計は `specdojo exec run` による非対話実行モデルを対象とする。人との対話から `specdojo` コマンドを実行する対話型オーケストレーターは、別系統として [SpecDojo オーケストレーターエージェント設定](sysd-orchestrator-agent-settings.md) で定義する。
+
 ## 1. 設計方針
 
 SpecDojo CLI、agent、`specdojo exec run` の3層に責務を分割する。
