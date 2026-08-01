@@ -82,7 +82,8 @@
         "unifiedjs.vscode-remark",
         "yzhang.markdown-all-in-one",
         "vue.volar",
-        "redhat.vscode-xml"
+        "redhat.vscode-xml",
+        "tamasfe.even-better-toml"
       ]
     }
   }

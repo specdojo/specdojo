@@ -238,7 +238,10 @@
       "matchCommandLine": true
     }
   },
-
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": true
+  },
   "terminal.integrated.enablePersistentSessions": true,
   "terminal.integrated.persistentSessionReviveProcess": "never",
   "terminal.integrated.hideOnStartup": "whenEmpty",
