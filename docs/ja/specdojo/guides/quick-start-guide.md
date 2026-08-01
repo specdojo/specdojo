@@ -311,9 +311,30 @@ specdojo exec build --project <project-id>
 
 成果物の変更は作業ツリーに、実行結果は `<execution_path>/exec/results/` に記録されます。agent による自動実行や並列実行へ進む場合は、[exec設定ガイド](exec-config-guide.md) で設定してから [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
 
-ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。次のroutineは、agent設定後に試す任意の発展手順です。
+ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。以降の worktree 隔離実行と routine は、agent 設定後に試す任意の発展手順です。
 
-## 4. routineで定期実行する
+## 4. （発展）worktreeで1タスクを隔離実行する
+
+前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `pm-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec build` まで済ませておきます。
+
+対象タスクを worktree に隔離して一括実行します。SpecDojo が worktree 準備・agent 実行・commit・merge・状態更新をまとめて行います。
+
+```bash
+# 実行前に統合先ブランチ（例: project/<project-id>/develop）にいることを確認する
+git branch --show-current
+
+# 1 タスクを worktree で隔離実行する
+# チャット:「タスク <task-id> を worktree で隔離実行して」
+specdojo exec run --project <project-id> --task <task-id> --worktree
+
+# Ready 順に自動で隔離実行する場合
+# チャット:「Ready タスクを worktree で並列5件、自動実行して」
+specdojo exec run --project <project-id> --auto --parallel 5
+```
+
+各段階（prepare → agent → commit → merge → remove）を人が確認しながら進める場合は [exec worktree運用ガイド](exec-worktree-guide.md)、project `develop`・feature・exec のブランチ全体運用は [ブランチワークフローガイド](branch-workflow-guide.md)、自動・並列実行の運用は [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
+
+## 5. routineで定期実行する
 
 この経路では、動作確認済みの schedule または register のagent実行を、`rtn-*.yaml` に定義した間隔で起動します。routine は任意の発展手順です。先に [exec設定ガイド](exec-config-guide.md) に従ってagentを設定し、次のような open かつ高優先度のtodoを用意します。
 
