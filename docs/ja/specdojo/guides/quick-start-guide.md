@@ -25,12 +25,15 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 - register のtypeと状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 - Scheduleの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、agent設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
+各コマンドには、`npm run orch:sonnet` で起動するオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます（[オーケストレーター運用ガイド](orchestrator-operation-guide.md)）。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
+
 ## 1. CLIを初期設定する
 
 リポジトリのルートで依存パッケージを導入し、SpecDojo の設定ファイルを作成します。
 
 ```bash
 npm install
+# チャット:「<project-id> の SpecDojo 設定を初期化して」
 specdojo config init
 ```
 
@@ -39,6 +42,7 @@ specdojo config init
 設定したプロジェクトを確認します。
 
 ```bash
+# チャット:「設定済みのプロジェクト一覧を見せて」
 specdojo project list
 ```
 
@@ -63,6 +67,7 @@ issue（何が問題か）
 `.specdojo/specdojo.config.json` の `project_register_path` を設定し、登録簿を初期生成します。
 
 ```bash
+# チャット:「<project-id> の登録簿を用意して」
 specdojo register scaffold --project <project-id>
 ```
 
@@ -72,6 +77,7 @@ specdojo register scaffold --project <project-id>
 
 ```bash
 # 1. 解決すべき問題を記録する
+# チャット:「issue を起票して。タイトルは『初期スコープと必要成果物が未確定』、個票あり、topic は clarify-initial-scope」
 specdojo register add \
   --project <project-id> \
   --type issue \
@@ -79,6 +85,7 @@ specdojo register add \
   --ticket --topic clarify-initial-scope
 
 # 2. 選択肢と決定を記録する
+# チャット:「decision を起票して。タイトルは『初期スコープと対象成果物を決定する』、個票あり、topic は decide-initial-scope」
 specdojo register add \
   --project <project-id> \
   --type decision \
@@ -86,6 +93,7 @@ specdojo register add \
   --ticket --topic decide-initial-scope
 
 # 3. 決定内容を実行可能な作業にする
+# チャット:「高優先度の todo を起票して。タイトルは『プロジェクト定義の成果物カタログを作成する』、個票あり、topic は create-project-definition-catalog」
 specdojo register add \
   --project <project-id> \
   --type todo \
@@ -107,10 +115,12 @@ specdojo register add \
 issue に人が着手し、個票へ問題、影響、原因、対応方針を記入して完了させます。
 
 ```bash
+# チャット:「issue <issue-id> に着手して」
 specdojo register start --project <project-id> --id <issue-id>
 
 # issue 個票を編集して調査結果を記録する
 
+# チャット:「issue <issue-id> を『問題、影響、対応方針を整理』で完了して」
 specdojo register close \
   --project <project-id> \
   --id <issue-id> \
@@ -120,10 +130,12 @@ specdojo register close \
 issue の結論を基に、decision 個票へ選択肢、決定内容、理由を記入します。decision は agent の実行対象ではないため、人が判断して完了させます。
 
 ```bash
+# チャット:「decision <decision-id> に着手して」
 specdojo register start --project <project-id> --id <decision-id>
 
 # decision 個票を編集して判断内容を記録する
 
+# チャット:「decision <decision-id> を『採用するスコープと成果物を決定』で完了して」
 specdojo register close \
   --project <project-id> \
   --id <decision-id> \
@@ -133,6 +145,7 @@ specdojo register close \
 agent 設定が完了している場合、`issue` や `todo` は次のコマンドでも実行できます。成功後は `review` になるため、人が結果を確認して `register close` します。
 
 ```bash
+# チャット:「issue または todo <issue-or-todo-id> を agent に実行させて」
 specdojo exec run --project <project-id> --register <issue-or-todo-id>
 ```
 
@@ -148,18 +161,23 @@ specdojo exec run --project <project-id> --register <issue-or-todo-id>
 
 ```bash
 # プロジェクト規模に応じた dct-*.yaml をテンプレートから生成する
+# チャット:「<project-id> の成果物カタログを small サイズで作成して」
 specdojo catalog scaffold --project <project-id> --size small
 
 # カタログの構造、ID、依存関係などを検証する
+# チャット:「成果物カタログを検証して」
 specdojo catalog validate --project <project-id>
 
 # カタログが指す成果物ファイル本体を初回だけ生成する
+# チャット:「カタログが指す成果物ファイルを一括生成して」
 specdojo catalog generate --project <project-id>
 
 # カタログの Markdown 派生ビューを生成する
+# チャット:「カタログの派生ビューをビルドして」
 specdojo catalog build --project <project-id>
 
 # dct-project-definition.yaml の作成 todo を完了する
+# チャット:「todo <catalog-todo-id> を『対象成果物を dct-project-definition.yaml に定義し、検証を完了』で完了して」
 specdojo register close \
   --project <project-id> \
   --id <catalog-todo-id> \
@@ -192,7 +210,7 @@ members:
     type: human
 ```
 
-`.specdojo/specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は small の `dct-project-definition.yaml` に含まれる3成果物を、依存順に BA が1回ずつ作成・確認する例です。最初の Ready タスクは `prj-overview` になります。`<project-id>` とカタログのパスは実際の値へ置き換えてください。
+`.specdojo/specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は small の `dct-project-definition.yaml` に含まれる3成果物を、依存順に BA が1回ずつ作成・確認する例です。最初の Ready タスクは `prj-overview` になります。`<project-id>` とカタログのパスは実際の値へ置き換えてください。この strategy はコマンドで生成できませんが、オーケストレーターに「launch トラックの sch-strategy-launch.yaml を作って。対象カタログは dct-project-definition、first-pass で BA が各成果物を1回ずつ作成・確認する構成にして」と伝えると、この雛形をドラフトできます。
 
 ```yaml
 kind: strategy
@@ -247,7 +265,9 @@ owner_rules:
 ### 3.3. Scheduleを生成する
 
 ```bash
+# チャット:「<track> トラックの schedule を生成して」
 specdojo schedule build --project <project-id> --track <track> --force
+# チャット:「実行状態と Ready、CPM を生成して」
 specdojo exec build --project <project-id>
 ```
 
@@ -261,17 +281,21 @@ specdojo exec build --project <project-id>
 
 ```bash
 # 次のタスクを確認する（claim はしない）
+# チャット:「次に着手すべきタスクを <actor> で確認して。claim はしないで」
 specdojo exec scheduler --project <project-id> --by <actor> --dry-run
 
 # 確認した task-id を claim する
+# チャット:「タスク <task-id> を <actor> で claim して」
 specdojo exec claim --project <project-id> --task <task-id> --by <actor>
 
 # 成果物と、claim 時に生成された result のチェックリスト・確定判断を編集する
 
 # 完了を記録する
+# チャット:「タスク <task-id> を <actor> で完了にして」
 specdojo exec complete --project <project-id> --task <task-id> --by <actor>
 
 # 次の Ready タスクを更新する
+# チャット:「Ready タスクを更新して」
 specdojo exec build --project <project-id>
 ```
 
@@ -284,6 +308,7 @@ specdojo exec build --project <project-id>
 この経路では、動作確認済みの schedule または register のagent実行を、`rtn-*.yaml` に定義した間隔で起動します。routine は任意の発展手順です。先に [exec設定ガイド](exec-config-guide.md) に従ってagentを設定し、次のような open かつ高優先度のtodoを用意します。
 
 ```bash
+# チャット:「高優先度の todo『日次確認事項に対応する』を起票して」
 specdojo register add \
   --project <project-id> \
   --type todo \
@@ -315,15 +340,20 @@ action:
 定義を検証し、実行対象を確認してから1回実行します。
 
 ```bash
+# チャット:「ルーチン定義を検証して」
 specdojo routine validate --project <project-id>
+# チャット:「ルーチン一覧を見せて」
 specdojo routine list --project <project-id>
+# チャット:「rtn-daily-register-sweep を dry-run で確認して」
 specdojo routine run --project <project-id> --id rtn-daily-register-sweep --dry-run
+# チャット:「rtn-daily-register-sweep を実行して」
 specdojo routine run --project <project-id> --id rtn-daily-register-sweep
 ```
 
 継続運用では、cron や CI の scheduled workflow から次のコマンドを定期的に呼び出します。CLI 自体は常駐しません。
 
 ```bash
+# チャット:「due なルーチンをまとめて実行して」
 specdojo routine run --project <project-id> --due
 ```
 
