@@ -236,6 +236,7 @@ export const specdojoSidebarItems = [
         [
           guide("全体概要", "specdojo-overview-guide"),
           guide("Quick Start", "quick-start-guide"),
+          guide("ユースケース別", "use-case-guide"),
           guide("ドキュメント構成", "docs-structure-guide"),
         ],
         false,
@@ -279,6 +280,7 @@ export const specdojoSidebarItems = [
     collapsed: false,
     items: [
       reference("成果物リファレンス", "deliverables-reference"),
+      reference("ディレクトリレイアウトリファレンス", "directory-layout-reference"),
       reference("CLIコマンドリファレンス", "command-reference"),
     ],
   },
