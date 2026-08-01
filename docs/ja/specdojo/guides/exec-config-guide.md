@@ -23,6 +23,15 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 - 設定を使った実行手順は [exec運用ガイド](exec-operation-guide.md)、Schedule 側の実行要件は [Schedule設計ガイド](schedule-design-guide.md) を参照してください。
 
+初回設定では、すべての章を読む必要はありません。
+
+| 目的                         | 読む章                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| agentを1件動かす             | `設定ファイルの分担`、`phase の実行要件`、`エージェントの定義`、`provider 設定の配布と scaffold` |
+| rate limit・並列数を調整する | `実行フロー`、`exec-defaults`                                                                    |
+| 無人実行の権限境界を確認する | `agent 権限とプロンプトインジェクション対策`                                                     |
+| 既存設定を変更する           | `変更手順`                                                                                       |
+
 ## 1. 設定ファイルの分担
 
 | ファイル                       | 役割                                                                                     | 粒度         |
@@ -228,7 +237,7 @@ specdojo exec scaffold --provider claude
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力します。`--force` 指定時のみ上書きします。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力します（既存の scaffold 系コマンドの出力形式に合わせます）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示します。
 - コピー完了後、次の 2 点を案内メッセージとして出力します。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
-- `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
+- `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持ちません。
 
 ## 7. agent 権限とプロンプトインジェクション対策

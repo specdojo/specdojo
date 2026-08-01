@@ -22,8 +22,8 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 **次に読む文書**
 
-- CLI の全体像と詳しい初期設定は [CLI概要ガイド](cli-overview-guide.md)、各コマンドのオプションは [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
-- 実行経路の詳しい選び方と状態管理は [exec運用ガイド](exec-operation-guide.md) を参照してください。
+- register のtypeと状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
+- Scheduleの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、agent設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
 ## 1. CLIを初期設定する
 
@@ -44,6 +44,8 @@ specdojo project list
 
 以降の例では、対象プロジェクトを `<project-id>` と表記します。`current_project` を設定している場合も、最初は対象を確認しやすいように `--project` を明示します。
 
+このガイドの基本手順は、provider 未設定でも完了できるように人が作業する経路を使います。agent に実行させる箇所は、`pm-members.yaml` と provider を [exec設定ガイド](exec-config-guide.md) に従って設定した後に試してください。
+
 ## 2. registerで課題と判断を整理する
 
 プロジェクトの開始時点では、解決すべき問題、判断が必要な事項、実施する作業が混在しています。まず register に個票として記録し、issue → decision → todo の順に具体化します。
@@ -58,7 +60,7 @@ issue（何が問題か）
 
 ### 2.1. 登録簿を用意する
 
-`specdojo.config.json` の `project_register_path` を設定し、登録簿を初期生成します。
+`.specdojo/specdojo.config.json` の `project_register_path` を設定し、登録簿を初期生成します。
 
 ```bash
 specdojo register scaffold --project <project-id>
@@ -87,6 +89,7 @@ specdojo register add \
 specdojo register add \
   --project <project-id> \
   --type todo \
+  --priority high \
   --title "プロジェクト定義の成果物カタログを作成する" \
   --ticket --topic create-project-definition-catalog
 ```
@@ -101,10 +104,13 @@ specdojo register add \
 
 ### 2.3. 判断を確定してカタログ作成へ進む
 
-issue は agent に調査・対応させられます。成功後は `review` になるため、人が結果を確認して完了させます。
+issue に人が着手し、個票へ問題、影響、原因、対応方針を記入して完了させます。
 
 ```bash
-specdojo exec run --project <project-id> --register <issue-id>
+specdojo register start --project <project-id> --id <issue-id>
+
+# issue 個票を編集して調査結果を記録する
+
 specdojo register close \
   --project <project-id> \
   --id <issue-id> \
@@ -124,13 +130,13 @@ specdojo register close \
   --conclusion "採用するスコープと成果物を決定"
 ```
 
-todo を agent に対応させる場合も、次のコマンドを使えます。
+agent 設定が完了している場合、`issue` や `todo` は次のコマンドでも実行できます。成功後は `review` になるため、人が結果を確認して `register close` します。
 
 ```bash
-specdojo exec run --project <project-id> --register <todo-id>
+specdojo exec run --project <project-id> --register <issue-or-todo-id>
 ```
 
-個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、この時点では `open` のまま残します。次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
+個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。基本手順では、成果物カタログ作成の todo を `open` のまま残し、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
 
 ## 3. 成果物カタログからscheduleへ展開する
 
@@ -138,7 +144,7 @@ specdojo exec run --project <project-id> --register <todo-id>
 
 ### 3.1. 成果物カタログを作成する
 
-成果物カタログは「何を、どこに作り、何を満たせば完了か」を定義する `dct-<domain>.yaml` です。`specdojo.config.json` の `catalog_path` を設定してから、次の順に実行します。
+成果物カタログは「何を、どこに作り、何を満たせば完了か」を定義する `dct-<domain>.yaml` です。`.specdojo/specdojo.config.json` の `catalog_path` を設定してから、次の順に実行します。
 
 ```bash
 # プロジェクト規模に応じた dct-*.yaml をテンプレートから生成する
@@ -175,7 +181,18 @@ specdojo register close \
 
 `sch-strategy-<track>.yaml` は、成果物カタログを実行タスクへ展開するための生成入力です。成果物カタログが WHAT / DONE を持つのに対し、strategy は対象カタログ、作業フェーズ、担当ロールを定義します。`schedule build` が生成する `sch-track-<track>.yaml` とは異なり、strategy はプロジェクトに合わせて人が作成・編集します。
 
-`specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は `prj-overview` を BA が1回編集する最小例です。`<project-id>` とカタログのパスは実際の値へ置き換えてください。
+`catalog generate` で作成した `pm-members.yaml` の `members` に、タスクを実行する人を登録します。次の例では `<actor>` が BA ロールを担当します。
+
+```yaml
+members:
+  - nickname: <actor>
+    display_name: Quick Start Operator
+    email: null
+    roles: [BA]
+    type: human
+```
+
+`.specdojo/specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は small の `dct-project-definition.yaml` に含まれる3成果物を、依存順に BA が1回ずつ作成・確認する例です。最初の Ready タスクは `prj-overview` になります。`<project-id>` とカタログのパスは実際の値へ置き換えてください。
 
 ```yaml
 kind: strategy
@@ -197,18 +214,20 @@ phase_sets:
   first-pass:
     - id: draft
       name: 初稿作成
-      execution: agent
+      execution: human
       mode: edit
-      approach: fully-guided
+      approach: finalize
       task_suffix: "010"
       duration_days: 1
-      description: 成果物カタログの完了条件と rulebook に従って初稿を作成する。
+      description: 成果物カタログの完了条件と rulebook に従って成果物を作成・確認する。
 
 default_phase_set: first-pass
 
 owner_rules:
   - local_ids:
       - prj-overview
+      - prj-scope
+      - prj-success-criteria-and-acceptance-criteria
     owner: BA
 ```
 
@@ -238,7 +257,7 @@ specdojo exec build --project <project-id>
 
 ### 3.4. 1タスクを実行する
 
-次のタスクを確認し、claim、実行、完了記録の順に進めます。
+次のタスクを確認して claim します。`execution: human` のタスクは agent を起動せず、claim 時に確認用resultを生成します。人が成果物とresultを編集してから完了を記録します。
 
 ```bash
 # 次のタスクを確認する（claim はしない）
@@ -247,23 +266,34 @@ specdojo exec scheduler --project <project-id> --by <actor> --dry-run
 # 確認した task-id を claim する
 specdojo exec claim --project <project-id> --task <task-id> --by <actor>
 
-# 実行する
-specdojo exec run --project <project-id> --task <task-id>
+# 成果物と、claim 時に生成された result のチェックリスト・確定判断を編集する
 
 # 完了を記録する
-specdojo exec complete --project <project-id> --by <actor>
+specdojo exec complete --project <project-id> --task <task-id> --by <actor>
 
 # 次の Ready タスクを更新する
 specdojo exec build --project <project-id>
 ```
 
-成果物の変更は作業ツリーに、実行結果は `execution/exec/results/` に記録されます。自動実行や並列実行は [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
+成果物の変更は作業ツリーに、実行結果は `<execution_path>/exec/results/` に記録されます。agent による自動実行や並列実行へ進む場合は、[exec設定ガイド](exec-config-guide.md) で設定してから [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
+
+ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。次のroutineは、agent設定後に試す任意の発展手順です。
 
 ## 4. routineで定期実行する
 
-この経路では、動作確認済みの schedule または register の実行を、`rtn-*.yaml` に定義した間隔で起動します。次の例は、登録簿の open な高優先度 todo を毎日最大3件実行します。
+この経路では、動作確認済みの schedule または register のagent実行を、`rtn-*.yaml` に定義した間隔で起動します。routine は任意の発展手順です。先に [exec設定ガイド](exec-config-guide.md) に従ってagentを設定し、次のような open かつ高優先度のtodoを用意します。
 
-`specdojo.config.json` の `routines_path` 配下に `rtn-daily-register-sweep.yaml` を作成します。
+```bash
+specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --priority high \
+  --title "日次確認事項に対応する"
+```
+
+次のroutine例は、このようなtodoを毎日最大3件実行します。
+
+`.specdojo/specdojo.config.json` の `routines_path` 配下に `rtn-daily-register-sweep.yaml` を作成します。
 
 ```yaml
 id: rtn-daily-register-sweep

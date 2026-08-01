@@ -53,15 +53,15 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 | 状態追跡     | exec events（claim / complete / block）   | register の遷移（in-progress / review / waiting） | `last_run` の記録のみ                    |
 | 隔離         | worktree（`--worktree` / `--auto`）       | in-place のみ                                     | -（実行経路へ委譲）                      |
 | 終端の扱い   | `complete` event（human finalize で確定） | 人が確認して `register close`                     | -（発火の記録のみ）                      |
-| 典型用途     | 計画された成果物の作成・レビュー・確定    | 突発の TODO・課題対応・調査                       | 日次スイープ・夜間バッチなどの定期実行   |
+| 典型用途     | 計画された成果物の作成・レビュー・確定    | 立ち上げ時の課題・判断、進行中の計画外対応・調査  | 日次スイープ・夜間バッチなどの定期実行   |
 
 迷った場合は次で判断します。
 
 - 成果物カタログと依存関係に基づく計画済みの作業は schedule 実行を使う（`exec run --auto` / `--task`。手順は [Schedule実行運用ガイド](schedule-operation-guide.md)）。
-- 計画外に発生した単発の対応・調査で、台帳として追跡したいものは register 実行を使う（`register add` で登録して `exec run --register`。手順は [登録簿運用ガイド](register-operation-guide.md)）。
+- 立ち上げ時の未整理な課題・判断、または進行中に発生した計画外の単発対応・調査で、台帳として追跡したいものは register を使う（`register add` で登録し、agent 実行可能な type は `exec run --register`。手順は [登録簿運用ガイド](register-operation-guide.md)）。
 - 上記のどちらかを決まった時刻条件で繰り返したい場合は routine を使う（`rtn-*.yaml` を定義して外部スケジューラから `routine run --due` を呼ぶ。手順は [routine運用ガイド](routine-operation-guide.md)）。
 
-register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。schedule の進捗として扱いたい作業は register 項目のままにせず、schedule のタスクとして計画します。
+register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。立ち上げ時の個票で目的・スコープ・対象成果物を決定したら、カタログ作成の個票を完了し、以後の計画済み作業を schedule のタスクとして管理します。
 
 登録の判断、type の選び方、個票分離などの台帳運用は [登録簿運用ガイド](register-operation-guide.md) を参照します。
 
