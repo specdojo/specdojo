@@ -250,7 +250,7 @@ export const specdojoSidebarItems = [
         false,
       ),
       group(
-        "推進体系で回す",
+        "遂行体系で回す",
         [
           guide("CLI概要", "cli-overview-guide"),
           guide("exec運用", "exec-operation-guide"),
