@@ -9,7 +9,7 @@ specdojo:
 
 Quick Start Guide
 
-SpecDojo CLI の初期設定から始め、目的に応じて schedule、register、routine のいずれかを最短手順で試します。
+SpecDojo CLI の初期設定から始め、register で課題と判断を整理し、成果物カタログ、schedule、routine へ展開する基本フローを最短手順で試します。
 
 **対象読者**
 
@@ -17,8 +17,8 @@ SpecDojo CLI の初期設定から始め、目的に応じて schedule、registe
 
 **この文書で分かること**
 
-- CLI の初期設定と、schedule / register / routine の使い分け
-- 各実行経路を最小構成で試す手順
+- CLI の初期設定と、register / schedule / routine の使い分け
+- issue / decision / todo から成果物カタログと Schedule へ展開する手順
 
 **次に読む文書**
 
@@ -44,19 +44,95 @@ specdojo project list
 
 以降の例では、対象プロジェクトを `<project-id>` と表記します。`current_project` を設定している場合も、最初は対象を確認しやすいように `--project` を明示します。
 
-## 2. 実行経路を選ぶ
+## 2. registerで課題と判断を整理する
 
-実施したい作業に応じて、次の経路を選びます。
+プロジェクトの開始時点では、解決すべき問題、判断が必要な事項、実施する作業が混在しています。まず register に個票として記録し、issue → decision → todo の順に具体化します。
 
-| ユースケース                                         | 選ぶ経路 | 例                                       | 最初に試す章                         |
-| ---------------------------------------------------- | -------- | ---------------------------------------- | ------------------------------------ |
-| 成果物カタログと依存関係に基づく計画済みの作業       | schedule | 要求、設計、テスト文書を順番に作成する   | `scheduleで計画済みタスクを実行する` |
-| プロジェクト進行中に発生した単発の対応               | register | 課題、調査、変更要求を記録して対応する   | `registerで単発の対応を管理する`     |
-| 時刻条件で schedule または register の実行を繰り返す | routine  | 日次スイープ、夜間実行、利用制限後の再開 | `routineで定期実行する`              |
+```text
+issue（何が問題か）
+  -> decision（何を対象とするか）
+  -> todo（成果物カタログを作成する）
+  -> dct-<domain>.yaml
+  -> schedule
+```
 
-`routine` は作業そのものを定義する経路ではなく、schedule または register の実行を時刻条件で起動するトリガー層です。まず委譲先となる schedule または register が動作することを確認してから設定します。
+### 2.1. 登録簿を用意する
 
-## 3. scheduleで計画済みタスクを実行する
+`specdojo.config.json` の `project_register_path` を設定し、登録簿を初期生成します。
+
+```bash
+specdojo register scaffold --project <project-id>
+```
+
+### 2.2. issue、decision、todoを登録する
+
+次の例では、初期スコープと必要な成果物が未確定な状態から、成果物カタログを作成する作業までを3つの個票で追跡します。コマンドはまとめて示していますが、実運用では issue の調査結果を受けて decision を起票し、決定後に todo を起票します。
+
+```bash
+# 1. 解決すべき問題を記録する
+specdojo register add \
+  --project <project-id> \
+  --type issue \
+  --title "初期スコープと必要成果物が未確定" \
+  --ticket --topic clarify-initial-scope
+
+# 2. 選択肢と決定を記録する
+specdojo register add \
+  --project <project-id> \
+  --type decision \
+  --title "初期スコープと対象成果物を決定する" \
+  --ticket --topic decide-initial-scope
+
+# 3. 決定内容を実行可能な作業にする
+specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "プロジェクト定義の成果物カタログを作成する" \
+  --ticket --topic create-project-definition-catalog
+```
+
+`register add` の出力に表示された `PJR-XXXX` を控えます。`--ticket` を指定すると、一覧行に加えて、背景、選択肢、完了条件、結論などを記録する type 別の個票が生成されます。成果物カタログを複数ドメインに分ける場合は、原則として `dct-<domain>.yaml` ごとに todo 個票を起票すると、対象と完了条件を追跡しやすくなります。
+
+| type       | 記録する内容                           | 完了状態  | agent実行                                  |
+| ---------- | -------------------------------------- | --------- | ------------------------------------------ |
+| `issue`    | 発生している問題、影響、原因、対応結果 | `done`    | `exec run --register` で対応できる         |
+| `decision` | 判断の背景、選択肢、決定内容、決定理由 | `decided` | 対象外。人が判断して `register close` する |
+| `todo`     | 実施内容、完了条件、作業結果           | `done`    | `exec run --register` で対応できる         |
+
+### 2.3. 判断を確定してカタログ作成へ進む
+
+issue は agent に調査・対応させられます。成功後は `review` になるため、人が結果を確認して完了させます。
+
+```bash
+specdojo exec run --project <project-id> --register <issue-id>
+specdojo register close \
+  --project <project-id> \
+  --id <issue-id> \
+  --conclusion "問題、影響、対応方針を整理"
+```
+
+issue の結論を基に、decision 個票へ選択肢、決定内容、理由を記入します。decision は agent の実行対象ではないため、人が判断して完了させます。
+
+```bash
+specdojo register start --project <project-id> --id <decision-id>
+
+# decision 個票を編集して判断内容を記録する
+
+specdojo register close \
+  --project <project-id> \
+  --id <decision-id> \
+  --conclusion "採用するスコープと成果物を決定"
+```
+
+todo を agent に対応させる場合も、次のコマンドを使えます。
+
+```bash
+specdojo exec run --project <project-id> --register <todo-id>
+```
+
+個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、この時点では `open` のまま残します。次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
+
+## 3. 成果物カタログからscheduleへ展開する
 
 この経路では、成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）から Schedule を生成し、依存関係に従ってタスクを実行します。
 
@@ -76,6 +152,12 @@ specdojo catalog generate --project <project-id>
 
 # カタログの Markdown 派生ビューを生成する
 specdojo catalog build --project <project-id>
+
+# dct-project-definition.yaml の作成 todo を完了する
+specdojo register close \
+  --project <project-id> \
+  --id <catalog-todo-id> \
+  --conclusion "対象成果物を dct-project-definition.yaml に定義し、検証を完了"
 ```
 
 各コマンドの役割は次のとおりです。
@@ -177,42 +259,7 @@ specdojo exec build --project <project-id>
 
 成果物の変更は作業ツリーに、実行結果は `execution/exec/results/` に記録されます。自動実行や並列実行は [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
 
-## 4. registerで単発の対応を管理する
-
-この経路では、計画外に発生した課題、調査、変更要求などをプロジェクト登録簿へ追加し、完了まで追跡します。
-
-### 4.1. 登録簿を用意して項目を追加する
-
-```bash
-specdojo register scaffold --project <project-id>
-specdojo register add \
-  --project <project-id> \
-  --type todo \
-  --priority high \
-  --title "確認事項に対応する"
-```
-
-`register add` の出力に表示された `PJR-XXXX` を、以降の `<pjr-id>` に指定します。
-
-### 4.2. 項目を実行して完了する
-
-```bash
-# agent に実行させる
-specdojo exec run --project <project-id> --register <pjr-id>
-
-# 結果を確認した後、人が完了を記録する
-specdojo register close \
-  --project <project-id> \
-  --id <pjr-id> \
-  --conclusion "対応内容または判断結果"
-
-# 派生ビューを更新する
-specdojo register build --project <project-id>
-```
-
-`exec run --register` が成功すると項目は `review` になります。agent は項目を完了状態にしないため、人が結果を確認して `register close` を実行します。type の選び方や手動での状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
-
-## 5. routineで定期実行する
+## 4. routineで定期実行する
 
 この経路では、動作確認済みの schedule または register の実行を、`rtn-*.yaml` に定義した間隔で起動します。次の例は、登録簿の open な高優先度 todo を毎日最大3件実行します。
 
