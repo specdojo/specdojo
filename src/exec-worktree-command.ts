@@ -271,12 +271,10 @@ async function prepare(opts: CommonOpts): Promise<void> {
 
     const worktree = checkpointAndEnsureWorktree({
       context,
-      taskId: opts.task,
       worktreeTaskId,
       base,
-      planPath,
-      resultPath,
-      claimEventPath: lockedState.claimEventPath,
+      checkpointPaths: [planPath, resultPath, lockedState.claimEventPath],
+      commitMessage: `exec(${opts.task}): prepare execution`,
     });
     printWorktree(worktree);
   } finally {

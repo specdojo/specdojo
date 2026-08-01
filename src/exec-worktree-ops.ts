@@ -564,18 +564,19 @@ export function discardStaleExecWorktree(params: {
   return branch;
 }
 
-// Commit the execution checkpoint (plan/result/claim event) onto root HEAD, then create
-// the task worktree from that commit. Reuses an existing worktree or exec branch when present.
+// Commit the execution checkpoint onto root HEAD, then create the task worktree from that
+// commit. Reuses an existing worktree or exec branch when present. `checkpointPaths` are the
+// absolute paths to commit before branching: for scheduled tasks that is plan/result/claim event;
+// for register-item runs it is plan/result/pjr-index and the regenerated derived views (so the
+// worktree branches from a HEAD that already reflects the `register start` transition).
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
-  taskId: string;
   worktreeTaskId: string;
   base: string;
-  planPath: string;
-  resultPath: string;
-  claimEventPath: string;
+  checkpointPaths: string[];
+  commitMessage: string;
 }): ExecWorktree {
-  const { context, taskId, worktreeTaskId, base } = params;
+  const { context, worktreeTaskId, base } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
 
   const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
@@ -594,16 +595,14 @@ export function checkpointAndEnsureWorktree(params: {
     }
     if (staged.status !== 0) throw new Error("Failed to inspect staged changes in root worktree.");
 
-    const paths = [params.planPath, params.resultPath, params.claimEventPath].map((path) =>
-      repoRelative(context.repoRoot, path),
-    );
+    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
     gitOutput(context.repoRoot, ["add", "--", ...paths]);
     const checkpoint = gitResult(context.repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
     if (checkpoint.status === 1) {
       const committed = gitResult(context.repoRoot, [
         "commit",
         "-m",
-        `exec(${taskId}): prepare execution`,
+        params.commitMessage,
         "--",
         ...paths,
       ]);
@@ -618,7 +617,7 @@ export function checkpointAndEnsureWorktree(params: {
           .filter(Boolean)
           .join("\n");
         throw new Error(
-          `Checkpoint commit failed for ${taskId}; staged changes rolled back (likely a failing git hook):\n${detail}`,
+          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back (likely a failing git hook):\n${detail}`,
         );
       }
     } else if (checkpoint.status !== 0) {

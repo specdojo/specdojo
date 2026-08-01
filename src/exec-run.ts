@@ -1068,12 +1068,14 @@ async function prepareSingleTask(
   try {
     worktree = checkpointAndEnsureWorktree({
       context: { repoRoot, schedulePath, executionPath },
-      taskId: task.id,
       worktreeTaskId,
       base: worktreeBase,
-      planPath: join(executionPath, "exec", "plans", `${task.id}-plan.md`),
-      resultPath,
-      claimEventPath,
+      checkpointPaths: [
+        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+        resultPath,
+        claimEventPath,
+      ],
+      commitMessage: `exec(${task.id}): prepare execution`,
     });
   } catch (error) {
     // We claimed this task in this call (skipClaim is false); the checkpoint failed, so release the
@@ -2146,6 +2148,9 @@ type RegisterRunContext = {
   roster: MemberRoster | null;
   execDefaults: ExecDefaultsConfig;
   registerCommit: boolean;
+  // worktree モードでは成果物を worktree に隔離し、状態遷移は root で直列化する。
+  worktree: boolean;
+  worktreeBase: string;
 };
 
 // 成功したIDの実行によって生じた変更だけを1コミットにまとめる。開始前スナップショット
@@ -2350,8 +2355,248 @@ async function runSingleRegisterItem(
   };
 }
 
-// register 項目の in-place 実行（複数ID直列）。指定順に1件ずつ実行し、各IDが plan/result
-// 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。失敗時は
+// register の状態遷移（start/review/wait）が変更した調整状態（pjr-index と派生ビュー）だけを
+// 抽出する。worktree モードでは各遷移を root（統合ブランチ）へ commit して作業ツリーを清潔に
+// 保ち、後続 ID・並列実行の checkpoint / merge と干渉させない。plan/result は checkpoint と
+// worktree merge が扱うため、ここでは含めない。
+export function registerStatePaths(repoRoot: string, registerPaths: RegisterPaths): string[] {
+  const changed = worktreeStatusPaths(repoRoot);
+  const pjrRel = repoRelativePath(repoRoot, registerPaths.pjrIndexPath);
+  const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
+    (path) => `${repoRelativePath(repoRoot, path)}/`,
+  );
+  const selected = new Set<string>();
+  for (const path of changed) {
+    const normalized = path.replaceAll("\\", "/");
+    if (normalized === pjrRel || prefixes.some((prefix) => normalized.startsWith(prefix))) {
+      selected.add(path);
+    }
+  }
+  return [...selected].sort();
+}
+
+// register 状態遷移の pjr-index / 派生ビュー変更を root へ 1 コミットする。hook が対象を
+// 整形した場合は同じ commit へ収束するまで amend する。commit 対象が無ければ何もしない。
+function commitRegisterState(
+  repoRoot: string,
+  registerPaths: RegisterPaths,
+  message: string,
+): void {
+  const paths = registerStatePaths(repoRoot, registerPaths);
+  if (paths.length === 0) return;
+  gitOutput(repoRoot, ["add", "--", ...paths]);
+  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+  if (staged.status === 0) return;
+  if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
+  gitOutput(repoRoot, ["commit", "-m", message, "--", ...paths]);
+  stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths));
+}
+
+// register 項目1件の worktree 実行。成果物は worktree に隔離し、状態遷移（start/review/wait）は
+// root（統合ブランチ）で lifecycleLock 直列化して pjr-index の競合を避ける。フローは
+// Phase1: plan/result 生成 → register start → checkpoint（plan/result/pjr-index/views を root
+// HEAD へ commit）→ worktree 作成、Phase2: worktree で agent 実行、Phase3: 成功なら成果物を
+// commit → merge back → worktree 撤去 → register review、失敗/rate limit なら register wait。
+async function runSingleRegisterItemWorktree(
+  context: RegisterRunContext,
+  opts: RunOpts,
+  pjrId: string,
+  lifecycleLock?: AsyncLock,
+): Promise<RegisterItemSummary> {
+  const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
+  const wtContext = { repoRoot, schedulePath, executionPath };
+  const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  requireRunnableRegisterItem(item);
+
+  const { command, actor } = resolveRegisterCommand(
+    item,
+    context.roster,
+    opts,
+    context.execDefaults,
+  );
+  const provider = context.roster?.members.find(
+    (m) => m.nickname === actor && m.type === "agent",
+  )?.provider;
+  const stem = buildInPlaceStem(pjrId.toLowerCase());
+  const worktreeTaskId = qualifyTaskId(projectId, item.id);
+
+  const waitSummary = (reason: string): RegisterItemSummary => {
+    const conclusion = sanitizeRegisterConclusion(reason);
+    let transition: RegisterItemTransition = "waiting";
+    if (
+      !spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])
+    ) {
+      process.stderr.write(`register wait transition failed: ${item.id}\n`);
+      transition = "none";
+    } else {
+      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`);
+    }
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "failure",
+      transition,
+      commit: "off",
+      reason: conclusion,
+    };
+  };
+
+  // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
+  const setup = async (): Promise<
+    { worktree: ExecWorktree; resultPath: string; prompt: string } | RegisterItemSummary
+  > => {
+    const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId });
+    if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
+
+    const { planPath } = await generateRegisterPlan({
+      executionPath,
+      projectId,
+      registerPaths,
+      item,
+      stem,
+    });
+    const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: item.id,
+      mode: "edit",
+      projectId,
+      origin: "register",
+      planRef: `exec/plans/${stem}-plan.md`,
+      agent: actor,
+      startedAt: new Date().toISOString(),
+      stem,
+    });
+
+    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(`  Agent: ${actor}\n`);
+    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+      throw new Error(`register start failed: ${item.id}`);
+    }
+
+    const checkpointRel = registerRunnerManagedPaths(
+      repoRoot,
+      registerPaths,
+      planPath,
+      resultPath,
+      worktreeStatusPaths(repoRoot),
+    );
+    const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
+    try {
+      const worktree = checkpointAndEnsureWorktree({
+        context: wtContext,
+        worktreeTaskId,
+        base: worktreeBase,
+        checkpointPaths,
+        commitMessage: `exec(register ${item.id}): start`,
+      });
+      const setupAction = worktree.created ? "setup" : "reuse";
+      process.stdout.write(
+        `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
+      );
+      return { worktree, resultPath, prompt };
+    } catch (error) {
+      // checkpoint 失敗時は start を巻き戻して waiting にする（worktree は未作成）。
+      return waitSummary(
+        `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  };
+
+  const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
+  if ("outcome" in prepared) return prepared;
+  const { worktree, resultPath, prompt } = prepared;
+
+  // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
+  process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
+  const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
+  const { result: agentResult, stderr } = await runWithRetry(
+    [{ command, actor, provider }],
+    prompt,
+    context.execDefaults,
+    worktree.path,
+    env,
+  );
+
+  // Phase 3: 成果物統合と状態遷移（root で直列化）。
+  const finalize = async (): Promise<RegisterItemSummary> => {
+    const completedAt = new Date().toISOString();
+    const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+    const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
+      agentResult,
+      worktreeResultPath,
+      "edit",
+    );
+
+    if (effectiveResult === "success") {
+      await updateResultStatus(worktreeResultPath, "complete", completedAt);
+      const title = item.title.replace(/\r?\n/g, " ").trim();
+      try {
+        commitWorktreeChanges({
+          context: wtContext,
+          worktree,
+          taskId: stem,
+          message: `exec(register ${item.id}): ${title}`,
+        });
+        mergeWorktreeIntoCurrent({ context: wtContext, worktree, taskId: stem });
+      } catch (error) {
+        const reason = sanitizeRegisterConclusion(
+          `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+        process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+        const summary = waitSummary(reason);
+        return { ...summary, commit: "incomplete" };
+      }
+      removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+
+      let transition: RegisterItemTransition = "review";
+      let reason: string | undefined;
+      if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+        process.stderr.write(`register review transition failed: ${item.id}\n`);
+        transition = "none";
+        reason = "register review transition failed";
+      } else {
+        commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): review`);
+      }
+      const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+      process.stdout.write(
+        `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
+      );
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "success",
+        transition,
+        commit: `committed ${sha}`,
+        reason,
+      };
+    }
+
+    // 失敗 / rate limit: worktree は保持し（調査・再実行のため）、waiting へ遷移する。
+    const reason = unfilledBlock
+      ? "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
+      : agentResult === "rate_limit"
+        ? "rate limit reached"
+        : extractBlockReason(stderr);
+    await updateResultStatus(
+      worktreeResultPath,
+      "blocked",
+      completedAt,
+      sanitizeRegisterConclusion(reason),
+    );
+    process.stdout.write(
+      `run failed: ${item.id} (status: waiting; worktree kept: ${worktree.path})\n`,
+    );
+    return waitSummary(reason);
+  };
+
+  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+}
+
+// register 項目の実行（複数ID）。in-place モードは指定順に1件ずつ直列実行し、各IDが plan/result
+// 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。worktree モードは成果物を
+// worktree に隔離し、状態遷移を root で直列化する（--parallel で並列化可能）。失敗時は
 // failureMode（stop: 残りを skip / continue: 継続）に従う。最後にID別の成否・状態遷移・
 // commit結果を一覧表示し、いずれかが failure ならプロセス終了コードへ反映する。
 async function runRegisterMode(opts: RunOpts): Promise<void> {
@@ -2379,10 +2624,20 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
   );
+  const useWorktree = !!opts.worktree;
+  const parallel = parseParallel(opts.parallel);
+  const worktreeBase = resolveWorktreeBase(
+    repoRoot,
+    opts.worktreeBase,
+    configuredWorktreeBase(schedulePath),
+  );
 
   if (opts.dryRun) {
+    const modeLabel = useWorktree
+      ? `worktree${parallel > 1 ? `, parallel: ${parallel}` : ", serial"}`
+      : "in-place, serial";
     process.stdout.write(
-      `[dry-run] register items (serial): ${ids.join(", ")}  [on-failure: ${failureMode}, commit: ${opts.registerCommit ? "per-id" : "off"}]\n`,
+      `[dry-run] register items (${modeLabel}): ${ids.join(", ")}  [on-failure: ${failureMode}, commit: ${useWorktree ? "always (worktree)" : opts.registerCommit ? "per-id" : "off"}]\n`,
     );
     for (const pjrId of ids) {
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
@@ -2398,7 +2653,9 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
       );
     }
-    process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
+    process.stdout.write(
+      `[dry-run] cwd: ${useWorktree ? `${worktreeBase}/<worktree>` : repoRoot}\n`,
+    );
     process.stdout.write(
       `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
     );
@@ -2413,25 +2670,54 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     roster,
     execDefaults,
     registerCommit: !!opts.registerCommit,
+    worktree: useWorktree,
+    worktreeBase,
   };
 
+  const skippedSummary = (pjrId: string): RegisterItemSummary => ({
+    id: pjrId,
+    title: "-",
+    outcome: "skipped",
+    transition: "none",
+    commit: "skipped",
+    reason: "stopped after an earlier failure (--on-failure stop)",
+  });
+
   const summaries: RegisterItemSummary[] = [];
-  let stopped = false;
-  for (const pjrId of ids) {
-    if (stopped) {
-      summaries.push({
-        id: pjrId,
-        title: "-",
-        outcome: "skipped",
-        transition: "none",
-        commit: "skipped",
-        reason: "stopped after an earlier failure (--on-failure stop)",
-      });
-      continue;
+
+  if (useWorktree && parallel > 1) {
+    // 並列実行: 成果物は worktree ごとに隔離し、状態遷移は lifecycleLock で直列化する。
+    // stop 指定でも実行中の項目は完走し、未着手の残りだけを skipped にする。
+    const lifecycleLock = new SerialAsyncLock();
+    const queue = [...ids];
+    const byId = new Map<string, RegisterItemSummary>();
+    let stop = false;
+    await runCompletionDrivenWorkerPool<string, RegisterItemSummary>({
+      maxParallel: parallel,
+      fillSlots: (openSlots) => (stop ? [] : queue.splice(0, openSlots)),
+      runItem: (pjrId) => runSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock),
+      onSettled: (pjrId, summary) => {
+        byId.set(pjrId, summary);
+        if (summary.outcome === "failure" && failureMode === "stop") {
+          stop = true;
+          return { stop: true };
+        }
+      },
+    });
+    for (const pjrId of ids) summaries.push(byId.get(pjrId) ?? skippedSummary(pjrId));
+  } else {
+    let stopped = false;
+    for (const pjrId of ids) {
+      if (stopped) {
+        summaries.push(skippedSummary(pjrId));
+        continue;
+      }
+      const summary = useWorktree
+        ? await runSingleRegisterItemWorktree(context, opts, pjrId)
+        : await runSingleRegisterItem(context, opts, pjrId);
+      summaries.push(summary);
+      if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
     }
-    const summary = await runSingleRegisterItem(context, opts, pjrId);
-    summaries.push(summary);
-    if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
   }
 
   process.stdout.write(`${formatRegisterRunSummary(summaries)}\n`);
@@ -2455,11 +2741,11 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--plan <path>", "Run an existing plan file (in-place; no generation)");
   rcmd.option(
     "--register <pjrIds...>",
-    "One or more project register item IDs (PJR-XXXX) to run in place, serially in the given order; tracks state via register transitions",
+    "One or more project register item IDs (PJR-XXXX) to run; tracks state via register transitions. In place and serial by default; add --worktree to isolate deliverables (and --parallel to run concurrently)",
   );
   rcmd.option(
     "--register-commit",
-    "With --register: commit each successful item's changes as a separate commit (default: leave changes in the working tree)",
+    "With --register (in-place only): commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored with --worktree, which always commits",
     false,
   );
   rcmd.option(
@@ -2468,7 +2754,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--worktree",
-    "Isolate execution in a git worktree and integrate back (requires --task)",
+    "Isolate execution in a git worktree and integrate back (requires --task or --register)",
     false,
   );
   rcmd.option(
@@ -2549,19 +2835,17 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      if (hasRegister && opts.worktree) {
+      if (hasRegister && !opts.worktree && parseParallel(opts.parallel) !== 1) {
         process.stdout.write(
-          "--worktree is not supported with --register (register items run in place, not in a worktree).\n",
+          "--parallel with --register requires --worktree (in-place register items run serially).\n",
         );
         process.exitCode = 1;
         return;
       }
-      if (hasRegister && parseParallel(opts.parallel) !== 1) {
+      if (hasRegister && opts.worktree && opts.registerCommit) {
         process.stdout.write(
-          "--parallel is not supported with --register (register items run serially in place).\n",
+          "Note: --register-commit is ignored with --worktree; worktree runs always commit (checkpoint + merge back).\n",
         );
-        process.exitCode = 1;
-        return;
       }
       if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
         process.stdout.write("--register-commit and --on-failure require --register.\n");
@@ -2590,19 +2874,21 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      if (opts.worktree && !hasTask) {
-        process.stdout.write("--worktree requires --task.\n");
+      if (opts.worktree && !hasTask && !hasRegister) {
+        process.stdout.write("--worktree requires --task or --register.\n");
         process.exitCode = 1;
         return;
       }
-      if (isManual && parseParallel(opts.parallel) !== 1) {
+      // --parallel is allowed for register worktree runs (handled above); reject it for other
+      // manual targets, which run a single instance.
+      if (isManual && !hasRegister && parseParallel(opts.parallel) !== 1) {
         process.stdout.write("--parallel cannot be used with a manual target.\n");
         process.exitCode = 1;
         return;
       }
 
-      // Register-item run: in place, with state tracked via register transitions
-      // (start → review / waiting) instead of exec events.
+      // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
+      // via register transitions (start → review / waiting) instead of exec events.
       if (hasRegister) {
         await runRegisterMode(opts);
         return;

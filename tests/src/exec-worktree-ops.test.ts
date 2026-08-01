@@ -171,12 +171,10 @@ function prepare(
   );
   return checkpointAndEnsureWorktree({
     context: fixture.context,
-    taskId,
     worktreeTaskId,
     base: fixture.worktreeBase,
-    planPath,
-    resultPath,
-    claimEventPath,
+    checkpointPaths: [planPath, resultPath, claimEventPath],
+    commitMessage: `exec(${taskId}): prepare execution`,
   });
 }
 

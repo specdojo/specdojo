@@ -164,19 +164,19 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 主要オプション:
 
-| オプション                      | 用途                                                           | 対象                        |
-| ------------------------------- | -------------------------------------------------------------- | --------------------------- |
-| `--task <task-id>`              | 対象タスクを指定する                                           | 状態遷移系 / `run` / `plan` |
-| `--by <actor>`                  | 実行 actor を指定する                                          | 状態遷移系                  |
-| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）         | `scheduler` / `run --auto`  |
-| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す      | `run`                       |
-| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                        | `run --auto`                |
-| `--worktree`                    | task worktree に隔離して実行する                               | `run`                       |
-| `--track-state`                 | claim / complete の状態イベントを記録する                      | `run --task`                |
-| `--register <PJR-ID>`           | 登録簿の項目を in-place 実行する（空白・カンマ区切りで複数可） | `run` / `plan`              |
-| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる    | `run --register`            |
-| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）    | `run --register`            |
-| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                 | `resume`                    |
+| オプション                      | 用途                                                                                                   | 対象                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| `--task <task-id>`              | 対象タスクを指定する                                                                                   | 状態遷移系 / `run` / `plan`                |
+| `--by <actor>`                  | 実行 actor を指定する                                                                                  | 状態遷移系                                 |
+| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                 | `scheduler` / `run --auto`                 |
+| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                              | `run`                                      |
+| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                                                                | `run --auto` / `run --register --worktree` |
+| `--worktree`                    | worktree に隔離して実行する                                                                            | `run --task` / `run --register`            |
+| `--track-state`                 | claim / complete の状態イベントを記録する                                                              | `run --task`                               |
+| `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。既定は in-place、`--worktree` で隔離）             | `run` / `plan`                             |
+| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（`--worktree` 時は常に commit のため無視） | `run --register`                           |
+| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                            | `run --register`                           |
+| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                         | `resume`                                   |
 
 `exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
