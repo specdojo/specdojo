@@ -296,6 +296,9 @@ docs/
 │   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
+│   │   ├── recipes/                              # 成果物ごとの作成手順
+│   │   ├── samples/                              # 成果物の完成例
+│   │   ├── templates/                            # 成果物・plan/result の雛形
 │   │   ├── schemas/                              # 言語固有の文書構造スキーマ
 │   │
 │   ├── projects/
@@ -321,12 +324,12 @@ docs/
 │   │   │   ├── 030-project-management/           # プロジェクトマネジメント
 │   │   │   │   ├── pm-plan.md                    # プロジェクト管理計画
 │   │   │   │   ├── pm-communication-plan.md      # コミュニケーション計画
-│   │   │   │   ├── pm-quality-management-plan.md　# 品質管理計画
+│   │   │   │   ├── pm-quality-management-plan.md # 品質管理計画
 │   │   │   │   ├── pm-review-viewpoints.yaml     # レビュー観点
 │   │   │   │   ├── pm-organization.md            # 組織とロールの定義
 │   │   │   │   ├── pm-roles.yaml                 # ロール定義
 │   │   │   │   ├── pm-members.yaml               # メンバー定義
-│   │   │   │   └── pm-raci.md　                  # 組織体制とRACI
+│   │   │   │   └── pm-raci.md                    # 組織体制とRACI
 │   │   │   │
 │   │   │   ├── 040-product-change/               # プロダクト変更
 │   │   │   │   ├── 010-as-is/                    # 現状定義（As-Is）
@@ -414,6 +417,10 @@ docs/
 │   │   ├── references/                       # 一覧・比較のためのリファレンス
 │   │   ├── standards/                            # 共通標準・メタ規約
 │   │   ├── rulebooks/                            # ドキュメント記述規約
+│   │   ├── recipes/                              # 成果物ごとの作成手順
+│   │   ├── samples/                              # 成果物の完成例
+│   │   ├── templates/                            # 成果物・plan/result の雛形
+│   │   ├── schemas/                              # 言語固有の文書構造スキーマ
 │   │
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）

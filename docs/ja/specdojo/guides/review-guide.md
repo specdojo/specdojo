@@ -9,7 +9,7 @@ specdojo:
 
 Review Guide
 
-本ドキュメントは SpecDojo における **成果物レビューの進め方**を定義します。
+本ドキュメントは SpecDojo における成果物レビューの進め方を定義します。
 
 レビューは「問題なし」を宣言する作業ではありません。どの観点を確認し、どの根拠を見て、何を未確認として残したかを記録する作業です。
 
@@ -160,7 +160,7 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 ## 3. review plan と review result
 
-SpecDojo のレビューは、原則として **review plan を作ってから実施し、review result を残します**。
+SpecDojo のレビューは、原則として review plan を作ってから実施し、review result を残します。
 
 review plan は `specdojo exec build` が生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
 
@@ -344,7 +344,7 @@ PJR に転記する条件
 
 ```text
 review plan に従って対象成果物をレビューしてください。
-各 review_items について pass / fail / skip を判定し、plan_item_id、viewpoint_id、coverage_checked、evidence、findings、unverified_scope、verdict を含めてください。
+各 RVP-NNN について result（pass / fail / unclear）を判定し、viewpoint_id、確認した coverage_types、evidence、notes を記入し、指摘は findings、全体判断は decision（recommendation: approve / revise / reject）に記録してください。
 ```
 
 ### 5.2. トレーサビリティレビュー
@@ -376,11 +376,11 @@ review plan に従って対象成果物をレビューしてください。
 
 レビューを完了とするには、次を満たします。
 
-- review result が review plan の全 `review_items` に対応しています。
+- review result が review plan の全 `RVP-NNN` に対応しています。
 - 対象成果物の `done_criteria` に対応する観点を確認しています。
-- 使用した `plan_item_id`、`viewpoint_id`、`coverage_checked` が記録されています。
+- 確認した `viewpoint_id` と `coverage_types` が記録されています。
 - pass / fail の根拠となる `evidence` が記録されています。
-- 未確認範囲がある場合は `unverified_scope` に残しています。
+- 未確認範囲がある場合は `notes` に残しています。
 - `blocker` と `major` の未解決指摘が扱われています。
 - PO 判断が必要な事項は PJR または decision に接続されています。
 - agent が最終承認者になっていません。
@@ -391,7 +391,7 @@ review plan に従って対象成果物をレビューしてください。
 
 - 対象成果物の `done_criteria` に対応する全 Role code のレビューが完了しています。
 - `blocker` と `major` の未解決指摘が 0 件です。
-- `conditional_pass` の条件が PO により許容または対応済みと判断されています。
+- 条件付き合格とした指摘が PO により許容または対応済みと判断されています。
 - 関連する PJR がある場合、対応方針、担当 Role code、期限が記録されています。
 - `npm run -s lint:md`、必要な YAML schema 検証、生成物再作成など、対象成果物に必要な機械検証が完了しています。
 - 最終承認、公開可否判断、説明責任を人間の `PO` が担っています。

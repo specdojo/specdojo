@@ -231,18 +231,20 @@ CLI の導入は
 
 ### 8.4. プロジェクトを実行・管理する
 
-| 目的                                          | 参照先                                                            |
-| --------------------------------------------- | ----------------------------------------------------------------- |
-| 最短手順で1タスクを動かしてみる               | [Quick Startガイド](quick-start-guide.md)                         |
-| CLIの役割、初期設定、代表フローを知る         | [CLI概要ガイド](cli-overview-guide.md)                            |
-| コマンドとオプションを調べる                  | [CLIコマンドリファレンス](../references/command-reference.md)     |
-| タスクを実行・再実行する                      | [Schedule実行運用ガイド](schedule-operation-guide.md)             |
-| 定期実行する                                  | [routine運用ガイド](routine-operation-guide.md)                   |
-| 課題、リスク、変更要求、意思決定を管理する    | [登録簿運用ガイド](register-operation-guide.md)                   |
-| エージェント、権限、exec の共通設定を変更する | [exec設定ガイド](exec-config-guide.md)                            |
-| planとresultの生成・保管・再実行を理解する    | [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) |
-| projectとtaskのブランチを運用する             | [ブランチワークフローガイド](branch-workflow-guide.md)            |
-| worktreeを使って手動で隔離実行する            | [exec worktree運用ガイド](exec-worktree-guide.md)                 |
+| 目的                                                                    | 参照先                                                            |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 最短手順で1タスクを動かしてみる                                         | [Quick Startガイド](quick-start-guide.md)                         |
+| CLIの役割、初期設定、代表フローを知る                                   | [CLI概要ガイド](cli-overview-guide.md)                            |
+| コマンドとオプションを調べる                                            | [CLIコマンドリファレンス](../references/command-reference.md)     |
+| 実行経路（schedule / register / routine）を使い分け、中断・再実行を扱う | [exec運用ガイド](exec-operation-guide.md)                         |
+| scheduleタスクを自動・手動で実行する                                    | [Schedule実行運用ガイド](schedule-operation-guide.md)             |
+| 定期実行する                                                            | [routine運用ガイド](routine-operation-guide.md)                   |
+| 課題、リスク、変更要求、意思決定を管理する                              | [登録簿運用ガイド](register-operation-guide.md)                   |
+| エージェント、権限、exec の共通設定を変更する                           | [exec設定ガイド](exec-config-guide.md)                            |
+| planとresultの生成・保管・再実行を理解する                              | [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) |
+| projectとtaskのブランチを運用する                                       | [ブランチワークフローガイド](branch-workflow-guide.md)            |
+| worktreeを使って手動で隔離実行する                                      | [exec worktree運用ガイド](exec-worktree-guide.md)                 |
+| 対話でCLI操作を進める                                                   | [オーケストレーター運用ガイド](orchestrator-operation-guide.md)   |
 
 ### 8.5. 成果物を確定・編集する
 
