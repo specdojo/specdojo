@@ -290,7 +290,7 @@ export const specdojoSidebarItems = [
     collapsed: true,
     items: [
       philosophy("SpecDojo", "specdojo-philosophy"),
-      philosophy("概念体系", "concept-system-philosophy"),
+      philosophy("要求から実装まで", "needs-to-implementation-philosophy"),
     ],
   },
   {

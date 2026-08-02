@@ -1,13 +1,15 @@
 ---
 specdojo:
-  id: concept-system-philosophy
+  id: needs-to-implementation-philosophy
   type: philosophy
   status: draft
+  supersedes:
+    - concept-system-philosophy
 ---
 
-# 概念体系の考え方
+# 要求から実装までの考え方
 
-Concept System Philosophy
+Needs to Implementation Philosophy
 
 本ドキュメントは、要求、要件、仕様、設計、実装という記述内容の違いと関係を整理します。
 ここでいう概念は内容を区別するためのものであり、プロジェクトの工程、成果物の分類、実際の作成順を固定するものではありません。

@@ -75,13 +75,13 @@ flowchart TB
   RB --> TPL
 ```
 
-| 実践体系                   | 成果物との紐付け方                                                             | 例                                |
-| -------------------------- | ------------------------------------------------------------------------------ | --------------------------------- |
-| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | concept-system-philosophy         |
-| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard        |
-| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: prj-overview-rulebook` |
-| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`              |
-| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                      |
+| 実践体系                   | 成果物との紐付け方                                                             | 例                                 |
+| -------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | needs-to-implementation-philosophy |
+| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard         |
+| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: prj-overview-rulebook`  |
+| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`               |
+| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                       |
 
 ## 4. 実践の型サブセットと活用
 

@@ -207,7 +207,7 @@ CLI の導入は
 | 目的                                           | 参照先                                                                            |
 | ---------------------------------------------- | --------------------------------------------------------------------------------- |
 | SpecDojoの基本方針と設計理由を知る             | [SpecDojo の考え方](../philosophy/specdojo-philosophy.md)                         |
-| 要求・要件・仕様・設計・実装の違いを知る       | [概念体系の考え方](../philosophy/concept-system-philosophy.md)                    |
+| 要求・要件・仕様・設計・実装の違いを知る       | [要求から実装までの考え方](../philosophy/needs-to-implementation-philosophy.md)   |
 | 文書の分類、ライフサイクル、配置を理解する     | [ドキュメント構成ガイド](docs-structure-guide.md)                                 |
 | ファイル単位のディレクトリ配置を引く           | [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) |
 | 実践体系の種別・役割・成果物との関係を理解する | [実践体系構成ガイド](practice-system-composition-guide.md)                        |
