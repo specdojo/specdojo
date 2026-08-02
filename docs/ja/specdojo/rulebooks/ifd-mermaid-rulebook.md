@@ -1,3 +1,16 @@
+---
+specdojo:
+  id: ifd-mermaid-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: none
+  sample: none
+  template: none
+  based_on:
+    - rulebook-authoring-standard
+---
+
 # Mermaidを用いたインフラ構成図 作成ルール
 
 Infrastructure Flow Diagram (IFD) Documentation Rules using Mermaid

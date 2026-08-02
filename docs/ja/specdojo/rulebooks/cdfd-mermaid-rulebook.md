@@ -1,3 +1,16 @@
+---
+specdojo:
+  id: cdfd-mermaid-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: none
+  sample: none
+  template: none
+  based_on:
+    - rulebook-authoring-standard
+---
+
 # Mermaid を用いたデータフロー図 作成ルール
 
 Conceptual Data Flow Diagram (CDFD) Documentation Rules using Mermaid

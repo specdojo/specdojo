@@ -23,6 +23,17 @@ properties:
               - json
               - markdown
             description: "ルールの対象となるドキュメントのフォーマット"
+          includes:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              pattern: "^[a-z0-9][a-z0-9-]*-rulebook$"
+            description: >-
+              併せて適用する rulebook の ID 配列（記法ルールなど共有部品）。
+              自分自身は含めない。単一段のみ（include 先の include はたどらない）。
+              sample / template / schema / target_format のアンカーは主 rulebook が保持し、
+              includes 先は記法・散文の寄与のみとする。
           recipe:
             $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
             description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
