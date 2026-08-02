@@ -10,15 +10,16 @@ specdojo:
 
 Requirements Traceability (Requirements to Tests) Rulebook
 
-本ドキュメントは、要求とテストの対応関係を一貫した形式で記述するためのルールを定義します。要求漏れ・テスト漏れを防ぎ、変更時の影響追跡と受入判断を容易にすることを目的とします。
+本ドキュメントは、各成果物の型付きID参照から要求とテストの対応関係を派生ビューとして表示する場合の形式を定義します。要求漏れ・テスト漏れを防ぎ、変更時の影響追跡と受入判断を容易にすることを目的とします。
 
 ## 1. 全体方針
 
 - 対象は「要求とテストの対応関係の可視化」であり、テスト手順本文の詳細記述は扱わない。
+- 対応関係の正本はテスト成果物の `relations.verifies` とし、本ビューを手編集しない。
 - 1 行は 1 つの対応命題（要求IDと対応テストIDの関係）を原則とし、判定可能な状態で記述する。
 - 記載の最小単位は `要求ID` とし、各要求が少なくとも 1 つ以上のテストへトレースされる状態を維持する。
 - 充足状況とギャップは、レビュー時に即時判定できる語彙で統一する。
-- 本書は SSOT として、要求管理・テスト設計・品質判定の起点として参照される前提で運用する。
+- 本ビューは必要なプロジェクトで生成する任意の管理ビューとし、独立した成果物ドメインやトラックを持たない。
 
 ## 2. 位置づけと用語定義（必要に応じて）
 
@@ -40,14 +41,14 @@ Requirements Traceability (Requirements to Tests) Rulebook
 
 [document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
-| 項目       | 説明                                 | 必須 |
-| ---------- | ------------------------------------ | ---- |
-| id         | `trc-requirements-to-tests`          | ○    |
-| type       | `project`                            | ○    |
-| status     | `draft` / `ready` / `deprecated`     | ○    |
-| rulebook   | `trc-requirements-to-tests-rulebook` | ○    |
-| based_on   | 根拠となる要求・テスト仕様の ID 配列 | 任意 |
-| supersedes | 置き換え対象ドキュメント ID 配列     | 任意 |
+| 項目       | 説明                                   | 必須 |
+| ---------- | -------------------------------------- | ---- |
+| id         | `trc-requirements-to-tests`            | ○    |
+| type       | `project`                              | ○    |
+| status     | `draft` / `ready` / `deprecated`       | ○    |
+| rulebook   | `trc-requirements-to-tests-rulebook`   | ○    |
+| based_on   | 生成元となる要求・テスト仕様の ID 配列 | 任意 |
+| supersedes | 置き換え対象ドキュメント ID 配列       | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -97,8 +98,8 @@ Requirements Traceability (Requirements to Tests) Rulebook
 
 ### 6.6. 変更履歴と更新ルール
 
-- 要求更新またはテスト追加を起点に、トレース表を同一コミットまたは同一レビュー単位で更新する。
-- 更新時は削除よりも状態遷移（未着手→一部充足→充足）を優先して履歴性を残す。
+- 要求やテストのID参照が更新された場合は、派生ビューを再生成する。
+- 充足状況やギャップをビューへ直接入力せず、生成元となる成果物または検証結果へ記録する。
 
 ## 7. 禁止事項
 
@@ -107,3 +108,4 @@ Requirements Traceability (Requirements to Tests) Rulebook
 - 充足状況に曖昧語（例: ほぼ対応、だいたい完了）を使用しない。
 - ギャップを「なし」としながら対応テストIDが未記載の状態を許容しない。
 - 根拠リンクや判断履歴なしで充足状況を更新しない。
+- 生成したトレース表を手編集し、成果物の `relations.verifies` と異なる関係を持たせない。

@@ -76,28 +76,22 @@ docs/
 │   │   │   │   ├── pm-members.yaml               # メンバー定義
 │   │   │   │   └── pm-raci.md                    # 組織体制とRACI
 │   │   │   │
-│   │   │   ├── 040-product-change/               # プロダクト変更
-│   │   │   │   ├── 010-as-is/                    # 現状定義（As-Is）
-│   │   │   │   │   └── 010-business-specifications/ # 業務仕様
-│   │   │   │   │
-│   │   │   │   ├── 020-impact-analysis/          # 影響調査
-│   │   │   │   │   ├── imp-business.md           # 業務影響
-│   │   │   │   │   ├── imp-data.md               # データ影響
-│   │   │   │   │   ├── imp-interface.md          # インターフェース影響
-│   │   │   │   │   ├── imp-test.md               # テスト影響
-│   │   │   │   │   └── imp-operations.md         # 運用影響
-│   │   │   │   │
-│   │   │   │   ├── 030-traceability/             # トレーサビリティ
-│   │   │   │   │   └── generated/                # 自動生成成果物
-│   │   │   │   │       ├── trc-requirements-to-specs.md # 要求と仕様のトレース
-│   │   │   │   │       └── trc-requirements-to-tests.md # 要求とテストのトレース
-│   │   │   │   │
-│   │   │   │   └── 040-migration/                # 移行
-│   │   │   │       ├── mip-index.md              # 移行計画
-│   │   │   │       ├── dmd-index.md              # データ移行設計
-│   │   │   │       ├── mtp-index.md              # 移行テスト計画（リハーサル計画）
-│   │   │   │       ├── cop-index.md              # カットオーバー計画（本番切替手順）
-│   │   │   │       └── otp-index.md              # 運用切替計画（ハイパーケア含む）
+│   │   │   ├── 040-current-state/                # 現状（必要な成果物だけを配置）
+│   │   │   │   └── 010-business-specs/          # 現行の業務仕様（例）
+│   │   │   │
+│   │   │   ├── 050-impact-analysis/              # 影響調査
+│   │   │   │   ├── imp-business.md               # 業務影響
+│   │   │   │   ├── imp-data.md                   # データ影響
+│   │   │   │   ├── imp-interface.md              # インターフェース影響
+│   │   │   │   ├── imp-test.md                   # テスト影響
+│   │   │   │   └── imp-operations.md             # 運用影響
+│   │   │   │
+│   │   │   ├── 060-migration-planning/           # 移行計画
+│   │   │   │   ├── mip-index.md                  # 移行計画
+│   │   │   │   ├── dmd-index.md                  # データ移行設計
+│   │   │   │   ├── mtp-index.md                  # 移行テスト計画（リハーサル計画）
+│   │   │   │   ├── cop-index.md                  # カットオーバー計画（本番切替手順）
+│   │   │   │   └── otp-index.md                  # 運用切替計画（ハイパーケア含む）
 │   │   │   │
 │   │   │   ├── ...                               # 050- 以降の成果物ドメイン
 │   │   │   │
@@ -115,7 +109,8 @@ docs/
 │   │   │   │       ├── pm-risk-register.md       # type=risk の抽出ビュー
 │   │   │   │       ├── pm-issue-log.md           # type=issue の抽出ビュー
 │   │   │   │       ├── pm-change-request-log.md  # type=change-request の抽出ビュー
-│   │   │   │       └── pm-decision-log.md        # type=decision の抽出ビュー
+│   │   │   │       ├── pm-decision-log.md        # type=decision の抽出ビュー
+│   │   │   │       └── traceability/             # ID参照から生成する任意のトレースビュー
 │   │   │   │
 │   │   │   ├── schedule/                         # Schedule
 │   │   │   │   ├── sch-milestones.yaml           # マイルストーン定義
@@ -170,7 +165,7 @@ docs/
 │   │   └── prj-0002/ ...                         # 他プロジェクト
 │   │
 │   └── product/
-│       ├── 010-business-specifications/          # 業務仕様
+│       ├── 010-business-specs/                   # 業務仕様
 │       │   ├── 010-data-flow/                    # データフロー
 │       │   │   └── cdfd-sales-management.md      # 概念データフロー図（例：販売管理）
 │       │   ├── 020-data-model/                   # データモデル
@@ -194,7 +189,7 @@ docs/
 │       │       ├── sf-order-entry.md             # システム化機能一覧（個別）（例：受注入力）
 │       │       └── gl-sales-management.md        # 用語集（例：販売管理）
 │       │
-│       ├── 020-external-if-specifications/       # 外部I/F仕様
+│       ├── 020-external-interface-specs/         # 外部I/F仕様
 │       │   ├── ifx-index.yaml                    # 外部システムI/F一覧
 │       │   ├── ifx-api-supplier-system.yaml      # 外部API仕様（例：仕入先システム）
 │       │   ├── ifx-file-inventory-sync.yaml      # 外部ファイル連携仕様（例：在庫同期）
@@ -231,7 +226,7 @@ docs/
 │       ├── 070-system-acceptance-criteria/       # システム受入条件
 │       │   └── sac-sales-management.md           # システム受入条件（例：販売管理）
 │       │
-│       ├── 080-testing/                          # テスト
+│       ├── 080-test-specs/                       # テスト仕様
 │       │   ├── 010-test-strategy-and-policy/     # テスト戦略・方針
 │       │   │   └── tsp-index.md                  # テスト戦略・方針
 │       │   ├── 020-unit-test-catalog/            # 単体テストカタログ

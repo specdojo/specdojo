@@ -5,7 +5,7 @@ status: draft
 title: 成果物カタログ（インターフェースモデル）
 rulebook: dct-rulebook
 domain: interface-model
-base_path: /docs/ja/product/010-business-specifications/040-interface-model
+base_path: /docs/ja/product/010-business-specs/040-interface-model
 
 groups:
   - deliverables:

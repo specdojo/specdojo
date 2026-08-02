@@ -36,6 +36,23 @@ properties:
           rulebook:
             $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
             description: "準拠する rulebook の ID。該当がない場合は none。"
+          relations:
+            type: object
+            additionalProperties: false
+            properties:
+              satisfies:
+                $ref: "./common-frontmatter.schema.yaml#/$defs/idRefArray"
+                default: []
+                description: "この成果物が充足する要求・要件・受入条件のID。"
+              verifies:
+                $ref: "./common-frontmatter.schema.yaml#/$defs/idRefArray"
+                default: []
+                description: "この成果物が検証する要求・仕様・受入条件のID。"
+              implements:
+                $ref: "./common-frontmatter.schema.yaml#/$defs/idRefArray"
+                default: []
+                description: "この成果物が実現する仕様・設計のID。"
+            default: {}
           item_type:
             type: string
             enum:
