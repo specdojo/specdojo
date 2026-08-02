@@ -167,6 +167,7 @@ Project Register
 | PJR-0144 | open | fmt-md-table を VS Code 拡張へ統合 | 現在 .vscode/tasks.json のタスク（Format Markdown Table）として提供している fmt-md-table を vscode-specdojo 拡張のコマンドとして統合する | todo | medium | ARC | 2026-08-31 | - | - | - |
 | PJR-0145 | open | README.md / docs/index.md / docs/<lang>/index.md の責務再整理と記述見直し | READMEおよびdocs配下のindex.mdの役割分担を再整理し、記述内容を見直す | todo | medium | PO | 2026-08-31 | - | - | - |
 | PJR-0146 | open | 履歴蓄積ファイル（plan/result/pjr-NNNN-<topic>等）はリンクを禁止しリポジトリルート相対パス記述に統一するルール化 | plan/result/pjr-NNNN-<topic>等の履歴として蓄積されるファイルは、リンク先のファイル名変更時に修正が発生してしまうため、リンク（wikilink/Markdownリンク）を使わずリポジトリルートからの相対パスのみで参照先を記述するルールを定め、関連する記述ルール文書（例: markdown.instructions.md等）へ反映する | todo | medium | ARC | 2026-08-31 | - | - | [pjr-0146-forbid-links-in-history-files](./pjr-0146-forbid-links-in-history-files.md) |
+| PJR-0147 | open | 実装先行（コード先行）時に設計書/仕様書/要件書へ反映・新設するapproachの整備 | 実装が既に存在するにもかかわらず対応する設計書/仕様書/要件書が未整備、または内容が乖離している場合に、実装内容を既存文書へ反映するか、文書が存在しない場合は新設するための判断基準・手順（approach）を策定する | todo | medium | ARC | 2026-08-31 | - | - | [pjr-0147-retrofit-design-docs-for-existing-implementation](./pjr-0147-retrofit-design-docs-for-existing-implementation.md) |
 
 ## 2. 派生ビュー
 
