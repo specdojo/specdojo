@@ -27,8 +27,10 @@ Project Deliverables Catalog
 
 ## 2. 成果物カタログ一覧
 
-| ドメイン           | 名称               | 成果物カタログ                                          | 概要                                                 |
-| ------------------ | ------------------ | ------------------------------------------------------- | ---------------------------------------------------- |
-| project-definition | プロジェクト定義   | `[dct-project-definition](./dct-project-definition.md)` | 目的、スコープ、前提条件などの定義成果物を管理する。 |
-| project-management | プロジェクト管理   | `[dct-project-management](./dct-project-management.md)` | 計画、課題、進捗、会議体などの管理成果物を管理する。 |
-| product-change     | プロダクト変更管理 | `[dct-product-change](./dct-product-change.md)`         | 変更要求から反映判断までの変更管理成果物を管理する。 |
+| ドメイン           | 名称             | 成果物カタログ                                          | 概要                                                     |
+| ------------------ | ---------------- | ------------------------------------------------------- | -------------------------------------------------------- |
+| project-definition | プロジェクト定義 | `[dct-project-definition](./dct-project-definition.md)` | 目的、スコープ、前提条件などの定義成果物を管理する。     |
+| project-management | プロジェクト管理 | `[dct-project-management](./dct-project-management.md)` | 計画、課題、進捗、会議体などの管理成果物を管理する。     |
+| current-state      | 現状             | `[dct-current-state](./dct-current-state.md)`           | 必要な範囲の現行業務・システム・運用を管理する。         |
+| impact-analysis    | 影響調査         | `[dct-impact-analysis](./dct-impact-analysis.md)`       | 導入・変更が業務・システム・運用へ与える影響を管理する。 |
+| migration-planning | 移行計画         | `[dct-migration-planning](./dct-migration-planning.md)` | データ移行、切替、リハーサル、運用移管を管理する。       |

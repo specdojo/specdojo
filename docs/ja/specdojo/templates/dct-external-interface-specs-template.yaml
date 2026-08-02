@@ -1,11 +1,11 @@
 # Template: external IF specifications deliverables catalog
-id: dct-external-if-specifications-template
+id: dct-external-interface-specs-template
 type: template
 status: draft
 title: 成果物カタログ（外部IF仕様）
 rulebook: dct-rulebook
-domain: external-if-specifications
-base_path: /docs/ja/product/020-external-if-specifications
+domain: external-interface-specs
+base_path: /docs/ja/product/020-external-interface-specs
 
 groups:
   - deliverables:

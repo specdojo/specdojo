@@ -1,0 +1,136 @@
+# Template: impact analysis deliverables catalog
+# min_size: deliverable is included only when scaffold --size >= this value
+# Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
+id: dct-impact-analysis-template
+type: template
+status: draft
+title: 成果物カタログ（影響調査）
+rulebook: dct-rulebook
+part_of:
+  - _PROJECT_ID_:dct-index
+domain: impact-analysis
+base_path: /docs/ja/projects/_PROJECT_ID_/050-impact-analysis
+
+groups:
+  - name: 影響調査
+    deliverables:
+      - local_id: imp-business
+        name: 影響調査（業務）
+        kind: work
+        depends_on: []
+        overview: 導入・変更が業務へ与える影響を整理
+        path: imp-business.md
+        rulebook: imp-business-rulebook
+        done_criteria:
+          - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 業務影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術実装への影響範囲が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装上の変更影響が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: imp-data
+        min_size: medium
+        name: 影響調査（データ）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 導入・変更がデータへ与える影響を整理
+        path: imp-data.md
+        rulebook: imp-data-rulebook
+        done_criteria:
+          - text: 影響対象データ・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データ影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: データ構造・整合性への技術的影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・移行テストへの影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: データ変更の実装影響が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: imp-interface
+        min_size: medium
+        name: 影響調査（I/F）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 導入・変更がインターフェースへ与える影響を整理
+        path: imp-interface.md
+        rulebook: imp-interface-rulebook
+        done_criteria:
+          - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: I/F影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 外部システム連携への技術的影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: I/Fテストへの影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: imp-test
+        name: 影響調査（テスト）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 導入・変更がテストへ与える影響を整理
+        path: imp-test.md
+        rulebook: imp-test-rulebook
+        done_criteria:
+          - text: 影響対象テスト・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: テスト影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: テスト技術的影響（テストデータ・環境・自動化）が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 既存テスト資産への影響と追加テスト方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: imp-operations
+        min_size: medium
+        name: 影響調査（運用）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: 導入・変更が運用へ与える影響を整理
+        path: imp-operations.md
+        rulebook: imp-operations-rulebook
+        done_criteria:
+          - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 運用影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 運用技術基盤への影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用テスト・受入への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用手順・監視設定の変更影響が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

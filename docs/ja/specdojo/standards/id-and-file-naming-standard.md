@@ -512,6 +512,16 @@ based_on:
 - ファイル名には namespace を含めない
 - 日本語ファイル名を使用してよいが、例外運用とする
 
+パスと機械識別子では `specifications` を `specs` と表記します。これは標準用語として認める限定的な短縮であり、`requirements`、`criteria`、`architecture`、`interface`、`operations` は短縮しません。文書タイトルと英語名称では `Specifications` を使用します。
+
+```text
+business-specs
+external-interface-specs
+test-specs
+```
+
+`business-specifications`、`external-if-specs`、`test-specifications` のように完全形と別の短縮を混在させません。
+
 ### 6.2. ファイル名の基本構成（推奨）
 
 ```text
@@ -655,6 +665,8 @@ id: "prj-0001:010-prj-overview"
 - 個別文書は、必要に応じて `-index` を参照して共通方針・全体基準の重複を避ける
 - 同一プロジェクト内の参照はローカルIDでよい
 - 他プロジェクトへの参照は `<project-id>:<local-id>` を使用する
+- 作成時の根拠は `based_on`、要求・仕様・テスト・実装の意味付き関係は `relations.satisfies` / `relations.verifies` / `relations.implements` を使用する
+- トレース表はID参照から導出する派生ビューとし、独立した手編集のSSOTにしない
 
 ## 9. IDの変更・置換ルール
 
@@ -748,7 +760,7 @@ supersedes:
 | プロジェクト課題と解決アプローチ | Project Issues and Approach | prj- | prj-issues-and-approach | prj-0001:prj-issues-and-approach |
 | 前提・制約・依存 | Assumptions, Constraints, and Dependencies | prj- | prj-assumptions-constraints-dependencies | prj-0001:prj-assumptions-constraints-dependencies |
 | 代替案の比較 | Comparison of Alternatives | prj- | prj-comparison-of-alternatives | prj-0001:prj-comparison-of-alternatives |
-| 現状定義（As-Is） | As-Is Definition | - | cdfd-sales-management | prj-0001:cdfd-sales-management |
+| 現状定義 | Current State Definition | - | cdfd-sales-management | prj-0001:cdfd-sales-management |
 | 影響調査 | Impact Analysis | imp- | imp-business | prj-0001:imp-business |
 | プロジェクトマネジメント計画 | Project Management Plan | pm- | pm-plan | prj-0001:pm-plan |
 | スケジュール | Schedule | sch- | sch-milestones, sch-defaults, sch-track-project-definition, sch-strategy-project-definition | prj-0001:sch-track-project-definition |
@@ -764,7 +776,7 @@ supersedes:
 | 議事録 | Meeting Minutes | mm- | mm-2026-03-01-01 | prj-0001:mm-2026-03-01-01 |
 | 体制・RACI | Organization and RACI | pm- | pm-organization | prj-0001:pm-organization |
 
-現状定義（As-Is）は専用prefixを設けず、`040-product-change/010-as-is/` 配下に必要なプロダクト文書を同じ local-id で配置する。
+現状定義は専用prefixを設けず、`040-current-state/` 配下に必要なプロダクト文書を同じ local-id で配置する。
 
 ### 14.2. プロダクト関係ドキュメント
 

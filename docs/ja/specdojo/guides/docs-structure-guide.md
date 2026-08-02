@@ -80,7 +80,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 個別プロジェクト毎の、
 
 - 業務要求: 目的・狙い、スコープ、課題と対策
-- プロダクトの変更（現状、トレース、影響範囲、移行）
+- 現状、導入・変更の影響、移行計画
 - プロジェクトマネジメント
 
 について記載します。プロジェクト完了後はアーカイブされます。
@@ -269,8 +269,8 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 
 - ドキュメントは分類（ドメイン）毎にディレクトリを分けます。
 - ドメイン内をさらにサブディレクトリへ分けるかは、その中でさらに階層が生えるか、
-  件数が増え続けるかで決めます。`040-product-change/` は現状 → 影響調査 → 移行というフェーズごとに仕様が増え、
-  `010-as-is/010-business-specifications/` のように階層が生えるため分割します。
+  件数が増え続けるかで決めます。現状、影響調査、移行計画はそれぞれ独立した成果物カタログとトラックを持つため、
+  `040-current-state/`、`050-impact-analysis/`、`060-migration-planning/` としてトップレベルに分けます。
 - 一方 `030-project-management/` のように成果物が固定数で階層も生えない場合は、
   `020-project-definition/` と同じくフラットに置きます。文書の並びは `dct-<domain>.yaml` の
   group が宣言するため、group ごとにディレクトリを切る必要はありません（複数 group が
@@ -296,8 +296,10 @@ projects/<prj-id>/
 ├── 010-deliverables-catalog/   # 成果物カタログ（dct-*.yaml と索引）
 ├── 020-project-definition/     # プロジェクト定義（prj-*.md）
 ├── 030-project-management/     # プロジェクトマネジメント（pm-*）
-├── 040-product-change/         # プロダクト変更（現状 / 影響調査 / トレース / 移行）
-├── ...                         # 050- 以降の成果物ドメイン
+├── 040-current-state/          # 現状（必要なプロダクト成果物のスナップショット）
+├── 050-impact-analysis/        # 導入・変更の影響調査
+├── 060-migration-planning/     # 移行計画・設計・切替計画
+├── ...                         # 070- 以降の成果物ドメイン
 ├── controls/                   # 管理台帳・派生ビュー（登録簿・レビュー結果）
 ├── schedule/                   # Schedule（sch-*.yaml）
 ├── routines/                   # 定期実行ルーチン（rtn-*.yaml）
@@ -315,14 +317,14 @@ projects/<prj-id>/
 
 ```text
 product/
-├── 010-business-specifications/      # 業務仕様（データ / 業務モデル / 画面・帳票 / 共通）
-├── 020-external-if-specifications/   # 外部I/F仕様（ifx-*.yaml）
+├── 010-business-specs/               # 業務仕様（データ / 業務モデル / 画面・帳票 / 共通）
+├── 020-external-interface-specs/     # 外部I/F仕様（ifx-*.yaml）
 ├── 030-architecture/                 # アーキテクチャ（C4・インフラ）
 ├── 040-system-design/                # システム設計
 ├── 050-business-acceptance-criteria/ # 業務受入条件
 ├── 060-non-functional-requirements/  # 非機能要件
 ├── 070-system-acceptance-criteria/   # システム受入条件
-├── 080-testing/                      # テスト（単体〜受入カタログ）
+├── 080-test-specs/                   # テスト仕様（単体〜受入カタログ）
 └── 090-operations/                   # 運用（方針・設計・手順）
 ```
 

@@ -1,11 +1,11 @@
 # Template: business specifications common deliverables catalog
-id: dct-business-specifications-common-template
+id: dct-business-specs-common-template
 type: template
 status: draft
 title: 成果物カタログ（業務仕様共通）
 rulebook: dct-rulebook
-domain: business-specifications-common
-base_path: /docs/ja/product/010-business-specifications/050-common
+domain: business-specs-common
+base_path: /docs/ja/product/010-business-specs/050-common
 
 groups:
   # ── システム化機能一覧 ────────────────────────────────────────────────────

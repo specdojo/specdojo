@@ -61,19 +61,16 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 | [プロジェクト課題と解決アプローチ](../rulebooks/prj-issues-and-approach-rulebook.md) | Project Issues and Approach | `prj-issues-and-approach` | 主要課題と解決方針を整理する | 課題一覧、原因、解決策候補、選択したアプローチと理由 | [レシピ](../recipes/prj-issues-and-approach-recipe.md) |
 | [代替案比較](../rulebooks/prj-comparison-of-alternatives-rulebook.md) | Comparison of Alternatives | `prj-comparison-of-alternatives` | 複数案を比較し、採択理由を残す | 比較対象、評価観点、メリット・デメリット、採択案、採択理由 | [レシピ](../recipes/prj-comparison-of-alternatives-recipe.md) |
 
-### 1.4. プロダクト変更
-
-#### 1.4.1. 現状定義
+### 1.4. 現状
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| 現状定義（As-Is） | As-Is Definition | `040-product-change/010-as-is/` | 変更前のベースラインを定義し、比較の基準を固定する | 現行業務仕様の対象範囲、前提、参照元、凍結時点 |
+| 現状定義 | Current State Definition | `040-current-state/` | 導入・変更前の状態を定義し、比較の基準を固定する | 現行の業務・システム・運用の対象範囲、前提、参照元、凍結時点 |
 
-as-isの定義については、`010-business-specifications`などの子ディレクトリを切って、プロダクトドキュメントと同様の構成で管理することを推奨します。
-また、as-isが必要なドキュメントに絞って定義して下さい。
+現状の定義については、`010-business-specs` などの子ディレクトリを切り、プロダクトドキュメントと同様の構成で管理することを推奨します。既存プロダクトがない初期開発でも、現行業務・手作業・外部システム・運用実態を必要な範囲で記録できます。現状として必要な成果物だけを作成し、プロダクトドキュメントへ混在させません。対象はプロジェクトごとに異なるため、固定の `dct-current-state-template.yaml` は提供せず、必要なプロダクト成果物のカタログ項目を選んで `dct-current-state.yaml` を定義します。
 
-#### 1.4.2. 影響調査
+### 1.5. 影響調査
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -84,15 +81,9 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [影響調査（テスト）](../rulebooks/imp-test-rulebook.md) | Impact Analysis (Test) | `imp-test` | 変更要求がテストへ与える影響を整理する | 影響対象テスト、変更要否、影響度、対応方針、未解決事項 |
 | [影響調査（運用）](../rulebooks/imp-operations-rulebook.md) | Impact Analysis (Operations) | `imp-operations` | 変更要求が運用へ与える影響を整理する | 影響対象運用、変更要否、影響度、対応方針、未解決事項 |
 
-#### 1.4.3. トレーサビリティ
+トレーサビリティは独立した成果物カテゴリとしません。各成果物のIDと型付き参照を正本とし、要求から仕様・テストへの対応表や未充足項目は必要に応じて `controls/generated/traceability/` へ派生ビューとして出力します。
 
-<!-- prettier-ignore -->
-| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
-| --- | --- | --- | --- | --- |
-| [トレーサビリティ（要求→仕様）](../rulebooks/trc-requirements-to-specs-rulebook.md) | Requirements Traceability (Requirements to Specs) | `trc-requirements-to-specs` | 要求と仕様の対応を可視化し、漏れを防ぐ | 要求ID、対応仕様ID、充足状況、ギャップ |
-| [トレーサビリティ（要求→テスト）](../rulebooks/trc-requirements-to-tests-rulebook.md) | Requirements Traceability (Requirements to Tests) | `trc-requirements-to-tests` | 要求とテストの対応を可視化し、漏れを防ぐ | 要求ID、対応テストID、充足状況、ギャップ |
-
-#### 1.4.4. 移行
+### 1.6. 移行計画
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -103,11 +94,11 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [カットオーバー計画（本番切替手順）](../rulebooks/cop-index-rulebook.md) | Cutover Plan | `cop-index`, `cop-<term>` | 本番切替の手順を定義し、停止時間と障害リスクを最小化する | 切替手順、実施順序、判定ポイント、エスカレーション、切戻し手順 |
 | [運用切替計画（ハイパーケア含む）](../rulebooks/otp-index-rulebook.md) | Operations Transition Plan | `otp-index`, `otp-<term>` | 切替後の運用移管計画を定義し、安定稼働へ移行する | 運用引継ぎ、体制、監視強化期間、問い合わせ対応、安定化完了条件 |
 
-### 1.5. プロジェクトマネジメント
+### 1.7. プロジェクトマネジメント
 
 プロジェクトの計画・管理・実行に関するドキュメントです。
 
-#### 1.5.1. 管理計画
+#### 1.7.1. 管理計画
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
@@ -116,7 +107,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [コミュニケーション計画](../rulebooks/pm-communication-plan-rulebook.md) | Communication Plan | `pm-communication-plan` | 報告・連絡・会議体の計画を定義する | 報告頻度、会議体一覧、連絡系統、エスカレーションルール | [レシピ](../recipes/pm-communication-plan-recipe.md) |
 | [品質管理計画](../rulebooks/pm-quality-management-plan-rulebook.md) | Quality Management Plan | `pm-quality-management-plan` | 品質目標・レビュー方針・品質基準を定義する | 品質目標、レビュープロセス、品質メトリクス、検査基準 | [レシピ](../recipes/pm-quality-management-plan-recipe.md) |
 
-#### 1.5.2. 組織体制
+#### 1.7.2. 組織体制
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 | 作成レシピ |
@@ -126,7 +117,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [メンバー定義](../rulebooks/pm-members-rulebook.md) | Member Definition | `pm-members.yaml` | メンバーとロールの対応を管理する | メンバー、所属、担当ロール、連絡先、稼働条件 | [レシピ](../recipes/pm-members-recipe.md) |
 | [RACI](../rulebooks/pm-raci-rulebook.md) | RACI | `pm-raci` | 作業や成果物に対する責任分担マトリクスを定義する | 成果物ごとの RACI マトリクス | [レシピ](../recipes/pm-raci-recipe.md) |
 
-#### 1.5.3. 管理台帳・管理ビュー
+#### 1.7.3. 管理台帳・管理ビュー
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -140,7 +131,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 
 登録簿の運用手順は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
 
-#### 1.5.4. レポート
+#### 1.7.4. レポート
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -148,7 +139,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 | [進捗報告](../rulebooks/pr-rulebook.md) | Progress Report | `pr-<yyyy-mm-dd>-<nn>` | 定期的な進捗状況を報告する | 報告期間、完了タスク、遅延・リスク、次期予定、課題・依頼事項 |
 | [議事録](../rulebooks/mm-rulebook.md) | Meeting Minutes | `mm-<yyyy-mm-dd>-<nn>` | 会議の決定事項・アクションを記録する | 会議名、日時、参加者、議題、決定事項、アクションアイテム |
 
-#### 1.5.5. Schedule
+#### 1.7.5. Schedule
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -160,7 +151,7 @@ as-isの定義については、`010-business-specifications`などの子ディ�
 
 Schedule 定義全体の記述ルールは [スケジュール作成ルール](../rulebooks/sch-rulebook.md)、設計の考え方は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
-#### 1.5.6. 実行管理
+#### 1.7.6. 実行管理
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |

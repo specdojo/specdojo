@@ -4,6 +4,9 @@ specdojo:
   type: project
   status: draft
   rulebook: atc-rulebook
+  relations:
+    verifies:
+      - bac-order-registration
 ---
 
 # [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル
