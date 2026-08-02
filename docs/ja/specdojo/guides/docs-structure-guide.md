@@ -24,7 +24,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 
 **次に読む文書**
 
-- 要求・要件・仕様・設計・実装の違いは [概念体系の考え方](../philosophy/concept-system-philosophy.md) を参照してください。
+- 要求・要件・仕様・設計・実装の違いは [要求から実装までの考え方](../philosophy/needs-to-implementation-philosophy.md) を参照してください。
 - トラックの構成と実行順序は [トラック設計ガイド](track-design-guide.md)、各成果物の目的は [成果物リファレンス](../references/deliverables-reference.md) を参照してください。
 - ファイル単位の完全なディレクトリ構成は [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) を参照してください。
 
@@ -212,7 +212,7 @@ flowchart TB
             └─ タスク（成果物×フェーズ の実行アトム）
 ```
 
-内容分類軸は成果物の性質を表す静的な分類で、実行順序を固定しません。実行管理軸は、成果物をいつ・どの単位でまとめて進めるかを表す動的な管理構造です。要求・要件・仕様・設計・実装の違いは [概念体系の考え方](../philosophy/concept-system-philosophy.md) を参照してください。
+内容分類軸は成果物の性質を表す静的な分類で、実行順序を固定しません。実行管理軸は、成果物をいつ・どの単位でまとめて進めるかを表す動的な管理構造です。要求・要件・仕様・設計・実装の違いは [要求から実装までの考え方](../philosophy/needs-to-implementation-philosophy.md) を参照してください。
 
 ### 6.1. dct・sch・execの対応
 
