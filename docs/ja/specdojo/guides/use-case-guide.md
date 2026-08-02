@@ -2,7 +2,7 @@
 specdojo:
   id: use-case-guide
   type: guide
-  status: draft
+  status: ready
   based_on:
     - specdojo-overview-guide
     - quick-start-guide

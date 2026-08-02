@@ -2,7 +2,7 @@
 specdojo:
   id: plan-result-lifecycle-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # plan/resultライフサイクルガイド

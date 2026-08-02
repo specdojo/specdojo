@@ -2,7 +2,7 @@
 specdojo:
   id: schedule-design-guide
   type: guide
-  status: draft
+  status: ready
   supersedes:
     - specdojo-deliverables-to-schedule-guide
 ---

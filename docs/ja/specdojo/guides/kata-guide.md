@@ -2,7 +2,7 @@
 specdojo:
   id: kata-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # 実践の型活用ガイド

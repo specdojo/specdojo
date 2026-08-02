@@ -2,7 +2,7 @@
 specdojo:
   id: routine-operation-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # routine運用ガイド

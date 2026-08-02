@@ -2,7 +2,7 @@
 specdojo:
   id: register-operation-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # 登録簿運用ガイド

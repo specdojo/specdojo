@@ -2,7 +2,7 @@
 specdojo:
   id: orchestrator-operation-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # オーケストレーター運用ガイド

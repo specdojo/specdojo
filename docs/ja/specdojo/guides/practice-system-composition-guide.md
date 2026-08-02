@@ -2,7 +2,7 @@
 specdojo:
   id: practice-system-composition-guide
   type: guide
-  status: draft
+  status: ready
   based_on:
     - specdojo-overview-guide
     - docs-structure-guide

@@ -2,7 +2,7 @@
 specdojo:
   id: branch-workflow-guide
   type: guide
-  status: draft
+  status: ready
   based_on:
     - git-branching-standard
 ---

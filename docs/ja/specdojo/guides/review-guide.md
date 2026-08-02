@@ -2,7 +2,7 @@
 specdojo:
   id: review-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # レビューガイド

@@ -2,7 +2,7 @@
 specdojo:
   id: track-design-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # トラック設計ガイド
