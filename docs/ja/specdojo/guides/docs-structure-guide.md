@@ -2,7 +2,7 @@
 specdojo:
   id: docs-structure-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # ドキュメント構成ガイド

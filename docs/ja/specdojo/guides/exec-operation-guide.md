@@ -2,7 +2,7 @@
 specdojo:
   id: exec-operation-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # exec運用ガイド

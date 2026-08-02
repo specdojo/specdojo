@@ -2,7 +2,7 @@
 specdojo:
   id: schedule-operation-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # Schedule実行運用ガイド

@@ -9,7 +9,7 @@ import type {
   DctTemplateDoc,
   DctValidationResult,
 } from "./catalog-types.js";
-import { declaredKata } from "./kata.js";
+import { declaredIncludes, declaredKata } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
@@ -277,10 +277,19 @@ export function validateCatalogLocalIds(catalogPath: string): DctValidationResul
   return { ok: true, errors: [], warnings };
 }
 
+// Reads the specdojo `type` from a rulebook file. Returns undefined when the file
+// has no frontmatter or the field is absent.
+function readRulebookType(fsPath: string): string | undefined {
+  if (!existsSync(fsPath)) return undefined;
+  const fm = readSpecdojoNamespace(readFileSync(fsPath, "utf8"));
+  return typeof fm.type === "string" ? fm.type : undefined;
+}
+
 // Cross-file check: each rulebook referenced by a catalog deliverable that declares
-// recipe / sample / template in its frontmatter must point at files that exist.
-// Returns warnings (not errors); a declared-but-missing reference is a soft signal
-// to author the asset, not a build blocker. Each rulebook is checked once.
+// recipe / sample / template (or includes other rulebooks) in its frontmatter must
+// point at files that exist. Returns warnings (not errors); a declared-but-missing
+// reference is a soft signal to author the asset, not a build blocker. Each rulebook
+// is checked once.
 export function validateRulebookKata(catalogPath: string): DctValidationResult {
   const warnings: string[] = [];
   const checked = new Set<string>();
@@ -305,6 +314,24 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
             if (!existsSync(ref.fsPath)) {
               warnings.push(
                 `rulebook '${rulebookId}' declares ${ref.kind} '${ref.id}' but the file is missing: ${ref.fsPath}`,
+              );
+            }
+          }
+          for (const inc of declaredIncludes(rulebookId)) {
+            if (inc.selfReference) {
+              warnings.push(`rulebook '${rulebookId}' includes itself; remove the self-reference`);
+              continue;
+            }
+            if (!existsSync(inc.fsPath)) {
+              warnings.push(
+                `rulebook '${rulebookId}' includes '${inc.id}' but the file is missing: ${inc.fsPath}`,
+              );
+              continue;
+            }
+            const type = readRulebookType(inc.fsPath);
+            if (type !== "rulebook") {
+              warnings.push(
+                `rulebook '${rulebookId}' includes '${inc.id}' but it is not a rulebook (type: ${type ?? "unknown"})`,
               );
             }
           }

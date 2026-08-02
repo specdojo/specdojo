@@ -1,3 +1,18 @@
+---
+specdojo:
+  id: cdfd-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: none
+  sample: none
+  template: none
+  includes:
+    - cdfd-mermaid-rulebook
+  based_on:
+    - rulebook-authoring-standard
+---
+
 # 概念データフロー図 作成ルール
 
 Conceptual Data Flow Diagram (CDFD) Documentation Rules

@@ -2,7 +2,12 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { basename, join, relative } from "node:path";
 import { load } from "js-yaml";
 import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "./specdojo-config.js";
-import { kataDirsForKinds, resolveDeliverableSchemaRef, resolveKataRefs } from "./kata.js";
+import {
+  kataDirsForKinds,
+  resolveDeliverableSchemaRef,
+  resolveIncludedRulebooks,
+  resolveKataRefs,
+} from "./kata.js";
 import type { KataRefs } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
@@ -425,6 +430,15 @@ function doneCriteriaItems(criteria: CriteriaItem[]): string {
   return criteria.map((c) => `- ${c.text}`).join("\n");
 }
 
+// 主 rulebook が include する rulebook を plan へ注入する表記に整形する。
+// 併せて適用する rulebook（記法など）を backtick 付きパスのカンマ区切りで示す。
+// include が無い場合は他の参照と同様に MISSING を返す。
+function rulebookIncludesText(rulebookId: string | undefined): string {
+  const paths = resolveIncludedRulebooks(rulebookId);
+  if (paths.length === 0) return MISSING;
+  return paths.map((p) => `\`${p}\``).join(", ");
+}
+
 // 実践の型の doc id を正準パス（docs/ja/specdojo/<kind>s/<id>.<ext>）の basename から導出する。
 // 実践の型の frontmatter id はファイル名と一致する規約（docs-structure-guide）を前提にする。
 function refDocIdFromPath(refPath: string): string {
@@ -787,6 +801,7 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
+    _RULEBOOK_INCLUDES_: rulebookIncludesText(deliverable?.deliverable.rulebook),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
@@ -850,6 +865,7 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
+    _RULEBOOK_INCLUDES_: rulebookIncludesText(deliverable?.deliverable.rulebook),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,

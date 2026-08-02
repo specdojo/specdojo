@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo-overview-guide
   type: guide
-  status: draft
+  status: ready
   based_on:
     - docs-structure-guide
     - track-design-guide

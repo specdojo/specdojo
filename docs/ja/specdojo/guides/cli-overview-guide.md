@@ -2,7 +2,7 @@
 specdojo:
   id: cli-overview-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # CLI概要ガイド

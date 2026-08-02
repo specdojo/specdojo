@@ -493,6 +493,90 @@ describe("plan generation (edit done_criteria goals)", () => {
   });
 });
 
+describe("plan generation (rulebook includes)", () => {
+  // specdojoRootDir() は cwd から上方探索するため、実リポジトリのテンプレートと
+  // 移行済み cdfd-rulebook（includes: cdfd-mermaid-rulebook）を用いて注入を検証する。
+  async function generateFullyGuidedPlan(rulebook: string | undefined): Promise<string> {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-exec-inc-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    const rolesPath = join(root, "pm-roles.yaml");
+    try {
+      mkdirSync(catalogPath, { recursive: true });
+      writeFileSync(
+        join(catalogPath, "dct-test.yaml"),
+        [
+          "id: test:dct",
+          "type: project",
+          "status: draft",
+          "project_id: test",
+          "domain: test",
+          "base_path: /docs/test",
+          "groups:",
+          "  - deliverables:",
+          "      - local_id: overview",
+          "        name: Overview",
+          "        kind: work",
+          "        overview: Test overview",
+          "        path: overview.md",
+          ...(rulebook ? [`        rulebook: ${rulebook}`] : []),
+          "        done_criteria:",
+          "          - text: Business value is clear",
+          "            roles: [BA]",
+        ].join("\n"),
+      );
+      writeFileSync(
+        rolesPath,
+        [
+          "id: test:roles",
+          "type: roles",
+          "status: draft",
+          "project_id: test",
+          "roles:",
+          "  - code: BA",
+          "    name: Business Analyst",
+          "    project_note: Analyze requirements.",
+        ].join("\n"),
+      );
+      await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        rolesPath,
+        task: {
+          id: "T-TEST-overview-020",
+          local_id: "overview",
+          name: "作成",
+          owner: "BA",
+          mode: "edit",
+          approach: "fully-guided",
+          schedule_file: "",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      return readFileSync(join(executionPath, "exec/plans/T-TEST-overview-020-plan.md"), "utf8");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+
+  it("include を宣言する rulebook では併せて適用する rulebook のパスを注入する", async () => {
+    const plan = await generateFullyGuidedPlan("cdfd-rulebook");
+
+    expect(plan).toContain("併せて適用する rulebook（記法など）:");
+    expect(plan).toContain("`docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md`");
+    expect(plan).not.toContain("_RULEBOOK_INCLUDES_");
+  });
+
+  it("rulebook 未宣言の成果物では併せて適用する rulebook は _MISSING_ になる", async () => {
+    const plan = await generateFullyGuidedPlan(undefined);
+
+    expect(plan).toContain("併せて適用する rulebook（記法など）: _MISSING_");
+    expect(plan).not.toContain("_RULEBOOK_INCLUDES_");
+  });
+});
+
 describe("review plan templates", () => {
   const reviewTemplates = [
     "xrp-template.md",

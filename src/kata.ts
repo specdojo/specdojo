@@ -26,6 +26,7 @@ type RulebookRefs = {
   template?: string;
   target_format?: string;
   schema?: string;
+  includes?: string[];
 };
 
 const KIND_DIR: Record<KataKind, string> = {
@@ -55,12 +56,17 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
   const fm = readSpecdojoNamespace(readFileSync(fsPath, "utf8"));
   const str = (value: unknown): string | undefined =>
     typeof value === "string" && value !== "" ? value : undefined;
+  const strArray = (value: unknown): string[] | undefined =>
+    Array.isArray(value)
+      ? value.filter((v): v is string => typeof v === "string" && v !== "")
+      : undefined;
   return {
     recipe: str(fm.recipe),
     sample: str(fm.sample),
     template: str(fm.template),
     target_format: str(fm.target_format),
     schema: str(fm.schema),
+    includes: strArray(fm.includes),
   };
 }
 
@@ -112,6 +118,56 @@ export function resolveKataRefs(rulebookId: string | undefined): KataRefs {
     sample: resolveRef("sample", fm.sample, rulebookId, formatExt(fm.target_format)),
     template: resolveRef("template", fm.template, rulebookId, formatExt(fm.target_format)),
   };
+}
+
+// rulebook の repo 相対パス（先頭スラッシュ無し）。
+function rulebookRepoPath(rulebookId: string): string {
+  return `${DOCS_BASE}/rulebooks/${rulebookId}.md`;
+}
+
+// 主 rulebook の frontmatter `includes` から、併せて適用する rulebook の宣言順・重複除去済み
+// ID 一覧を返す。自己参照は除外する。単一段のみ（include 先の include はたどらない）。
+function declaredIncludeIds(rulebookId: string): string[] {
+  const fm = loadRulebookRefs(rulebookId);
+  const ids = fm.includes ?? [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const id of ids) {
+    if (id === rulebookId || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+  }
+  return out;
+}
+
+// plan 注入用: 主 rulebook が include する rulebook の repo 相対パス一覧。
+// 実在するファイルのみを返す（不在の宣言は validate で警告する）。
+export function resolveIncludedRulebooks(rulebookId: string | undefined): string[] {
+  if (!rulebookId || rulebookId === "none") return [];
+  return declaredIncludeIds(rulebookId)
+    .filter((id) => existsSync(rulebookFsPath(id)))
+    .map((id) => rulebookRepoPath(id));
+}
+
+export type DeclaredInclude = {
+  id: string;
+  fsPath: string;
+  selfReference: boolean;
+};
+
+// validate 用: 主 rulebook が宣言する include の一覧（実在に関わらず）。
+// 自己参照フラグ付きで返し、呼び出し側で存在・種別を検査する。
+export function declaredIncludes(rulebookId: string): DeclaredInclude[] {
+  const fm = loadRulebookRefs(rulebookId);
+  const ids = fm.includes ?? [];
+  const seen = new Set<string>();
+  const out: DeclaredInclude[] = [];
+  for (const id of ids) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, fsPath: rulebookFsPath(id), selfReference: id === rulebookId });
+  }
+  return out;
 }
 
 // schema ファイル（docs/specdojo/schemas/v1/<id>.schema.yaml）の repo 相対パス。

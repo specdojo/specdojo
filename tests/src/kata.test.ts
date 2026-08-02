@@ -2,7 +2,13 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { declaredKata, resolveDeliverableSchemaRef, resolveKataRefs } from "../../src/kata.js";
+import {
+  declaredIncludes,
+  declaredKata,
+  resolveDeliverableSchemaRef,
+  resolveIncludedRulebooks,
+  resolveKataRefs,
+} from "../../src/kata.js";
 import { validateRulebookKata } from "../../src/catalog-build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して
@@ -283,6 +289,85 @@ describe("kata", () => {
     });
   });
 
+  describe("resolveIncludedRulebooks", () => {
+    it("include を宣言順・重複除去で解決し、実在するファイルのみ返す", () => {
+      writeRulebook("a-mermaid-rulebook", ["id: a-mermaid-rulebook", "type: rulebook"].join("\n"));
+      writeRulebook("b-mermaid-rulebook", ["id: b-mermaid-rulebook", "type: rulebook"].join("\n"));
+      writeRulebook(
+        "a-rulebook",
+        [
+          "id: a-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - b-mermaid-rulebook",
+          "  - a-mermaid-rulebook",
+        ].join("\n"),
+      );
+
+      expect(resolveIncludedRulebooks("a-rulebook")).toEqual([
+        "docs/ja/specdojo/rulebooks/b-mermaid-rulebook.md",
+        "docs/ja/specdojo/rulebooks/a-mermaid-rulebook.md",
+      ]);
+    });
+
+    it("実在しない include は除外する", () => {
+      writeRulebook(
+        "a-rulebook",
+        [
+          "id: a-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - ghost-rulebook",
+        ].join("\n"),
+      );
+
+      expect(resolveIncludedRulebooks("a-rulebook")).toEqual([]);
+    });
+
+    it("自己参照は除外する", () => {
+      writeRulebook(
+        "a-rulebook",
+        ["id: a-rulebook", "type: rulebook", "status: draft", "includes:", "  - a-rulebook"].join(
+          "\n",
+        ),
+      );
+
+      expect(resolveIncludedRulebooks("a-rulebook")).toEqual([]);
+    });
+
+    it("rulebook 未指定・includes 未宣言なら空配列を返す", () => {
+      writeRulebook("a-rulebook", ["id: a-rulebook", "type: rulebook", "status: draft"].join("\n"));
+
+      expect(resolveIncludedRulebooks(undefined)).toEqual([]);
+      expect(resolveIncludedRulebooks("none")).toEqual([]);
+      expect(resolveIncludedRulebooks("a-rulebook")).toEqual([]);
+    });
+  });
+
+  describe("declaredIncludes", () => {
+    it("宣言された include を重複除去し、自己参照フラグ付きで返す", () => {
+      writeRulebook(
+        "a-rulebook",
+        [
+          "id: a-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - b-mermaid-rulebook",
+          "  - a-rulebook",
+        ].join("\n"),
+      );
+
+      const includes = declaredIncludes("a-rulebook");
+
+      expect(includes.map((i) => i.id)).toEqual(["b-mermaid-rulebook", "a-rulebook"]);
+      expect(includes.map((i) => i.selfReference)).toEqual([false, true]);
+      expect(includes[0].fsPath).toBe(join(root, SPECDOJO, "rulebooks", "b-mermaid-rulebook.md"));
+    });
+  });
+
   describe("validateRulebookKata", () => {
     function writeCatalog(rulebookId: string): string {
       const catalogDir = join(root, "catalog");
@@ -327,6 +412,90 @@ describe("kata", () => {
         ["id: doc-rulebook", "type: rulebook", "status: draft", "recipe: doc-recipe"].join("\n"),
       );
       writeFileSync(join(root, SPECDOJO, "recipes", "doc-recipe.md"), "# recipe\n", "utf8");
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      expect(validateRulebookKata(catalogDir).warnings).toEqual([]);
+    });
+
+    it("include 先ファイルが存在しなければ警告する", () => {
+      writeRulebook(
+        "doc-rulebook",
+        [
+          "id: doc-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - ghost-rulebook",
+        ].join("\n"),
+      );
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      const { warnings } = validateRulebookKata(catalogDir);
+
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toContain("rulebook 'doc-rulebook' includes 'ghost-rulebook'");
+      expect(warnings[0]).toContain("missing");
+    });
+
+    it("自己参照の include を警告する", () => {
+      writeRulebook(
+        "doc-rulebook",
+        [
+          "id: doc-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - doc-rulebook",
+        ].join("\n"),
+      );
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      const { warnings } = validateRulebookKata(catalogDir);
+
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toContain("includes itself");
+    });
+
+    it("include 先が rulebook 種別でなければ警告する", () => {
+      writeRulebook(
+        "doc-rulebook",
+        [
+          "id: doc-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - notation-rulebook",
+        ].join("\n"),
+      );
+      // frontmatter の type を rulebook 以外にした include 先。
+      writeFileSync(
+        join(root, SPECDOJO, "rulebooks", "notation-rulebook.md"),
+        "---\nspecdojo:\n  id: notation-rulebook\n  type: recipe\n  status: draft\n---\n\n# x\n",
+        "utf8",
+      );
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      const { warnings } = validateRulebookKata(catalogDir);
+
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toContain("is not a rulebook");
+    });
+
+    it("実在する rulebook 種別の include は警告しない", () => {
+      writeRulebook(
+        "doc-rulebook",
+        [
+          "id: doc-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "includes:",
+          "  - notation-rulebook",
+        ].join("\n"),
+      );
+      writeRulebook(
+        "notation-rulebook",
+        ["id: notation-rulebook", "type: rulebook", "status: draft"].join("\n"),
+      );
       const catalogDir = writeCatalog("doc-rulebook");
 
       expect(validateRulebookKata(catalogDir).warnings).toEqual([]);

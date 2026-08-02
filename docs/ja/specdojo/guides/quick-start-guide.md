@@ -2,7 +2,7 @@
 specdojo:
   id: quick-start-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # Quick Start ガイド

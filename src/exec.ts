@@ -861,7 +861,8 @@ export function registerExecCommands(program: Command): void {
         for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
           process.stdout.write(`WARN:  ${warn}\n`);
         }
-        // Warn when a rulebook declares recipe/sample/template that do not exist.
+        // Warn when a rulebook declares recipe/sample/template or includes rulebooks
+        // that do not exist (or self-reference / non-rulebook includes).
         for (const warn of validateRulebookKata(catalogPath).warnings) {
           process.stdout.write(`WARN:  ${warn}\n`);
         }

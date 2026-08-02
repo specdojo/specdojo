@@ -2,7 +2,7 @@
 specdojo:
   id: exec-config-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # exec設定ガイド

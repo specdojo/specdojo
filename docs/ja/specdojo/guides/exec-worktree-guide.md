@@ -2,7 +2,7 @@
 specdojo:
   id: exec-worktree-guide
   type: guide
-  status: draft
+  status: ready
 ---
 
 # exec worktree運用ガイド
