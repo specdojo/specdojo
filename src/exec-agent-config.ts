@@ -86,6 +86,15 @@ type CommandMemberAttributes = Pick<
 const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
 const BUILTIN_VARIABLE_NAMES = new Set(["nickname", "mode", "proficiency"]);
 
+// Mirror of the nickname pattern in docs/specdojo/schemas/v1/pm-members.schema.yaml
+// ($defs.Member.nickname). Defense in depth: a nickname is expanded into a provider's
+// command_template and the result is executed with { shell: true }. loadMemberRoster reads
+// pm-members.yaml without schema validation, so a roster edited to carry shell metacharacters
+// in a nickname could inject an arbitrary command. Re-check the value here, at the point where
+// it enters the command, and refuse to build a command for a nickname that the schema would
+// have rejected. Keep this pattern byte-for-byte in sync with the schema.
+const NICKNAME_PATTERN = /^[a-z0-9][a-z0-9_-]{0,62}$/;
+
 // True when the member has any command source: an explicit override or a provider
 // command_template. Used to filter selectable agents without expanding the template.
 export function hasMemberCommandSource(
@@ -103,6 +112,14 @@ function buildCommandVariables(
   params: CommandParams | undefined,
 ): Map<string, string> {
   const variables = new Map<string, string>();
+  if (!NICKNAME_PATTERN.test(member.nickname)) {
+    throw new Error(
+      `Invalid nickname ${JSON.stringify(member.nickname)} for provider ${provider}: ` +
+        `must match ${NICKNAME_PATTERN.source} (pm-members.schema.yaml). ` +
+        `nickname is expanded into command_template and executed with shell: true; ` +
+        `refusing to build a command.`,
+    );
+  }
   variables.set("nickname", member.nickname);
   if (member.mode) variables.set("mode", member.mode);
   if (member.proficiency) variables.set("proficiency", member.proficiency);

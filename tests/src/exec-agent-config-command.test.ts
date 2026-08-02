@@ -149,6 +149,22 @@ describe("resolveMemberCommand", () => {
     );
   });
 
+  it("rejects a nickname carrying shell metacharacters before building a command", () => {
+    const member = buildMember({ nickname: "x; rm -rf /" });
+
+    expect(() => resolveMemberCommand(claudeTemplateConfig, member)).toThrow(
+      /Invalid nickname .*shell: true/,
+    );
+  });
+
+  it("rejects a nickname that violates the schema pattern", () => {
+    const member = buildMember({ nickname: "$(whoami)" });
+
+    expect(() => resolveMemberCommand(claudeTemplateConfig, member)).toThrow(
+      /Invalid nickname.*pm-members\.schema\.yaml/,
+    );
+  });
+
   it("throws when command_params redefines a built-in variable", () => {
     const config: ExecDefaultsConfig = {
       providers: {
