@@ -52,6 +52,6 @@ launch track では、一成果物単位で生成した文書に同じ説明や�
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
 - [[prj-0001:sch-strategy-launch|スケジュール戦略（launch）]] — 横断 pass とゲートの変更対象
 - [[schedule-design-guide]] — schedule 生成設計の基準
-- [[documentation-philosophy]] — 正本と参照の共通原則
+- [[specdojo-philosophy]] — 正本と参照の共通原則
 - [[prj-0001:pjr-0131-concise-documentation-policy|簡潔な文書作成の共通原則をdocumentation policyへ追加]] — 作成・修正時の共通原則
 - [[prj-0001:pjr-0132-detect-document-redundancy|既存review viewpointで文書の冗長性を検出]] — review での再発検知

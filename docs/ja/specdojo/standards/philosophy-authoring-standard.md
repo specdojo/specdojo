@@ -82,7 +82,7 @@ Philosophy Authoring Standard
 ```yaml
 ---
 specdojo:
-  id: documentation-philosophy
+  id: specdojo-philosophy
   type: philosophy
   status: draft
 ---

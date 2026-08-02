@@ -1,15 +1,17 @@
 ---
 specdojo:
-  id: documentation-philosophy
+  id: specdojo-philosophy
   type: philosophy
   status: draft
+  supersedes:
+    - documentation-philosophy
 ---
 
-# ドキュメンテーションの考え方
+# SpecDojo の考え方
 
-Documentation Philosophy
+SpecDojo Philosophy
 
-SpecDojo におけるドキュメンテーションの基本方針、設計原則、運用上の判断基準を示します。
+SpecDojo の基本方針（Docs as Code / Kata / Human & AI Readability）と、それを構造化ドキュメントへ適用する設計・運用の原則、運用上の判断基準を示します。実行・エージェント固有の方針は各 guide を正本とします。
 本書は規範（must）ではなく、規約の設計理由と判断原則を扱います。判定可能な規約は各 standard を正本とします。
 
 **対象読者**
@@ -18,7 +20,7 @@ SpecDojo におけるドキュメンテーションの基本方針、設計原�
 
 **この文書で分かること**
 
-- 正本、構造化、メタデータ、規約と設定、トレーサビリティに関する設計理由と判断基準
+- 基本方針（Docs as Code / Kata / Human & AI Readability）と、正本・構造化・メタデータ・規約と設定・トレーサビリティに関する設計理由と判断基準
 
 **次に読む文書**
 
@@ -26,57 +28,31 @@ SpecDojo におけるドキュメンテーションの基本方針、設計原�
 
 ## 1. 基本方針
 
-- **ID as Identity**:\
-  ドキュメントの `id` は、Markdown の Frontmatter または YAML・JSON のスキーマ所定の構造化項目で管理します。
-  ファイル名やディレクトリは、可読性・分類・探索性を高めるための配置規約として扱います。
+SpecDojo の基本方針は次の3つです。「コードと同じ規律で管理し、型に沿って作成し、人と AI の双方が読める」ドキュメンテーションを目指します。
 
-- **Convention as Defaults, Configuration for Explicit Context**:\
-  共通の構造、命名、既定値は規約で定めます。
-  プロジェクト、実行環境、エージェントによって変わる情報は設定として明示し、AI やツールの推測に依存しません。
-  設定を省略した場合の既定動作は規約で定め、規約を単に再記述するだけの設定は追加しません。
+- **Docs as Code**: 正本を Git に置き、構造化・単一正本・生成・機械検証で、コードと同じ規律で管理する。
+- **Kata（実践の型）**: 成果物の作り方を rulebook / recipe / sample / template として型化し、`approach` で参照度合いを切り替える。
+- **Human & AI Readability**: 人が判断理由を理解でき、AI とツールが解析・生成・検証できる構造にする。
 
-- **Don't Repeat Yourself**:\
-  正本となる情報は一箇所に定義し、他のドキュメントでは参照します。
-  ただし、読者の理解に必要な範囲で、要約・抜粋・リンク付き再掲は許容します。
+各方針を構造化ドキュメントへ適用する原則と判断基準は `ドキュメントの設計と運用の原則` にまとめます。Kata の詳細は [実践体系構成ガイド](../guides/practice-system-composition-guide.md) と [実践の型活用ガイド](../guides/kata-guide.md) を正本とします。
 
-- **Concise but Complete**:\
-  必要な論点と判断根拠を維持し、重複と判断に不要な記述を除きます。
-  短さ自体を目的にせず、背景、判断理由、例外、制約、完了条件の充足に必要な内容を残します。
+## 2. ドキュメントの設計と運用の原則
 
-- **Single Source of Truth**:\
-  各情報には正本となるドキュメントを定めます。
-  派生ドキュメント、一覧、ビュー、レポートは正本から参照または生成します。
+SpecDojo のドキュメントは、単なる文章ではなく、プロジェクトを定義・管理・実行・検証するための構造化された情報資産として設計します。以下の 2.1 以降は、`基本方針` を実務へ落とすための設計判断と、判断に迷った場合に従う運用基準を一体で示した原則です。各原則がどの基本方針に対応するかは次のとおりです（括弧内は対応する広く知られた原則名）。
 
-- **Structured Documentation**:\
-  ドキュメントは、構造化された Markdown、YAML、JSON で記述します。
-  Markdown は説明・判断・方針、YAML は人が管理する構造化データ、JSON はツール連携、実行記録、生成物に用います。
+| 設計・運用の原則                                                                   | 対応する基本方針                     |
+| ---------------------------------------------------------------------------------- | ------------------------------------ |
+| 2.1. 正本を一つに定め、他は参照・生成に寄せる（Single Source of Truth / DRY）      | Docs as Code                         |
+| 2.2. 人間とAIの両方が読める構造にする（Structured Documentation / AI Readability） | Docs as Code・Human & AI Readability |
+| 2.3. ドキュメントを成果物として扱い、責務ごとに分ける                              | 横断（全方針）                       |
+| 2.4. ファイル配置とIDで文書を識別できるようにする（ID as Identity / Traceability） | Docs as Code                         |
+| 2.5. 規約と設定の責務を分ける（Convention as Defaults, Configuration）             | Docs as Code                         |
+| 2.6. 簡潔さと文章量を責務に合わせる（Concise but Complete）                        | Human & AI Readability               |
+| 2.7. 小さく始めて、必要に応じて拡張する                                            | 横断（全方針）                       |
+| 2.8. 変更理由を残す（Git as Source of Truth）                                      | Docs as Code                         |
+| 2.9. 例外は明示的に扱う                                                            | 横断（全方針）                       |
 
-- **Traceability**:\
-  ドキュメント間の根拠、依存、派生、更新関係を Frontmatter や構造化メタデータで明示します。
-
-- **AI Readability**:\
-  ドキュメントは、人間だけでなくAIが解析・生成・検証しやすいよう、
-  見出し、Frontmatter、構造化メタデータ、表、ID、参照関係を一貫した形式で記述します。
-
-- **Git as Source of Truth**:\
-  ドキュメントの正本はGitリポジトリ上で管理します。
-  Issue、チャット、会議メモ、外部ツールの内容は、必要に応じてGit上のドキュメントへ反映し、変更履歴を追跡可能にします。
-
-## 2. 設計と運用の原則
-
-SpecDojo のドキュメントは、単なる文章ではなく、プロジェクトを定義・管理・実行・検証するための構造化された情報資産として設計します。以下は、その設計判断と、判断に迷った場合に従う運用基準を一体で示した原則です。`基本方針` の各原則との対応は次のとおりです。
-
-| 基本方針                                                   | 対応する原則                                      |
-| ---------------------------------------------------------- | ------------------------------------------------- |
-| ID as Identity                                             | 2.4. ファイル配置とIDで文書を識別できるようにする |
-| Convention as Defaults, Configuration for Explicit Context | 2.5. 規約と設定の責務を分ける                     |
-| Don't Repeat Yourself / Single Source of Truth             | 2.1. 正本を一つに定め、他は参照・生成に寄せる     |
-| Concise but Complete                                       | 2.6. 簡潔さと文章量を責務に合わせる               |
-| Structured Documentation / AI Readability                  | 2.2. 人間とAIの両方が読める構造にする             |
-| Traceability                                               | 2.4. ファイル配置とIDで文書を識別できるようにする |
-| Git as Source of Truth                                     | 2.8. 変更理由を残す                               |
-
-`2.3`・`2.7`・`2.9` は、`基本方針` の個々の原則というより、複数の原則を実務で適用するときに繰り返し必要になる判断基準です。
+`2.3`・`2.7`・`2.9` は特定の基本方針というより、複数の方針を実務で適用するときに繰り返し必要になる横断的な判断基準です。Kata（実践の型）は成果物の作り方に関する方針のため、本章の設計・運用原則ではなく [実践体系構成ガイド](../guides/practice-system-composition-guide.md) と [実践の型活用ガイド](../guides/kata-guide.md) を正本とします。
 
 ### 2.1. 正本を一つに定め、他は参照・生成に寄せる
 

@@ -36,7 +36,7 @@ agent が生成する文書を、必要な論点と判断根拠を保ったま�
 
 ## 4. 対応結果
 
-- [[documentation-philosophy]]の基本方針に「Concise but Complete」を追加し、簡潔性を、必要な論点と判断根拠を維持しながら重複と判断に不要な記述を除くことと定義した。
+- [[specdojo-philosophy]]の基本方針に「Concise but Complete」を追加し、簡潔性を、必要な論点と判断根拠を維持しながら重複と判断に不要な記述を除くことと定義した。
 - 一文一主張、一段落一論点、一項目一論点、表と本文の役割分担を共通原則として整理した。短文化で背景、判断理由、例外、制約、トレーサビリティ、`done_criteria` の充足に必要な内容を削除しない条件も明記した。
 - 文、段落、箇条書き、表の量は見直しを始める推奨目安とし、文字数や行数などの数値だけで合否を判定しない方針を示した。
 - 文章中心の Markdown、表中心の Markdown、YAML / JSON について、簡潔にする方法と保持する内容を整理した。
@@ -45,6 +45,6 @@ agent が生成する文書を、必要な論点と判断根拠を保ったま�
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
-- [[documentation-philosophy]] — 変更対象
+- [[specdojo-philosophy]] — 変更対象
 - [[prj-0001:pjr-0129-why-what-how-recipes|Why-What-How作成原則をrecipeへ反映]] — recipe 側の関連対応
 - [[prj-0001:pjr-0132-detect-document-redundancy|既存review viewpointで文書の冗長性を検出]] — レビュー側の関連対応
