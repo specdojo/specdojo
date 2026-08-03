@@ -42,11 +42,11 @@ function makeSection(overrides: Partial<DctSection> = {}): DctSection {
 
 function makeTemplateDoc(overrides: Partial<DctTemplateDoc> = {}): DctTemplateDoc {
   return {
-    id: "dct-architecture-template",
+    id: "specdojo:dct-architecture-template",
     type: "template",
     status: "draft",
     title: "成果物カタログ（アーキテクチャ）",
-    rulebook: "dct-rulebook",
+    rulebook: "specdojo:dct-rulebook",
     domain: "architecture",
     base_path: "/docs/ja/product/030-architecture",
     groups: [

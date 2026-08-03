@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0149-project-dashboard-page
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -42,7 +42,7 @@ specdojo:
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-index|プロジェクト登録簿]]
-- [[routine-operation-guide|routine運用ガイド]]
-- [[schedule-operation-guide|Schedule実行運用ガイド]]
+- [[specdojo:routine-operation-guide|routine運用ガイド]]
+- [[specdojo:schedule-operation-guide|Schedule実行運用ガイド]]
 - docs/ja/projects/prj-0001/execution/generated/timeline.md
 - .vitepress/sidebar-config.ts

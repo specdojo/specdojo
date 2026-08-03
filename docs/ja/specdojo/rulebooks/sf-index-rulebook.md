@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: sf-index-rules
+  id: specdojo:sf-index-rulebook
   type: rulebook
   status: draft
-  sample: sf-index-sample
+  sample: specdojo:sf-index-sample
 ---
 
 # [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール

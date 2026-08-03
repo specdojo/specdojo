@@ -13,14 +13,14 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:prj-stakeholder-register
-    - prj-stakeholder-register-sample
+    - specdojo:prj-stakeholder-register-sample
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-対象の `prj-stakeholder-register-sample.md` を、rulebook（`[[prj-stakeholder-register-rulebook]]`）と完成版成果物（`[[prj-0001:prj-stakeholder-register]]`）、sample authoring standard（`[[sample-authoring-standard]]`の共通サンプル文脈）に従って再構成した。
+対象の `prj-stakeholder-register-sample.md` を、rulebook（`[[specdojo:prj-stakeholder-register-rulebook]]`）と完成版成果物（`[[prj-0001:prj-stakeholder-register]]`）、sample authoring standard（`[[specdojo:sample-authoring-standard]]`の共通サンプル文脈）に従って再構成した。
 
 具体的には以下の点を見直した：
 
@@ -42,12 +42,12 @@ specdojo:
 
 ### 根拠とした成果物
 
-| ファイル                                                         | 用途                                                                                                                                                              |
-| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[[prj-0001:prj-stakeholder-register]]`（完成版）                | rulebook が求める必須項目・表構成を確認し、sample の再構成時に参照した。SpecDojo プロジェクトの具体的な関係者は sample に反映せず、共通サンプル文脈に一般化した。 |
-| `[[prj-0001:prj-overview]]`（prj-stakeholder-register の依存先） | 完成版が `based_on` で参照している prj-overview を通じてプロジェクトの基本理念・前提条件を確認し、sample が共通文脈で説明できることを判断した。                   |
-| `[[prj-stakeholder-register-rulebook]]`（rulebook）              | 一次根拠とした。本文構成（5章）、表カラム、禁止事項に従って sample を再構成した。必須章をすべて満たしつつ最小記述量にする方針に従った。                           |
-| `[[sample-authoring-standard]]`（sample authoring standard）     | 共通サンプル文脈（駄菓子屋きぬや販売管理システム）、共通登場人物の役割名定義、出力フォーマットルールに従って sample を新規作成した。                              |
+| ファイル                                                              | 用途                                                                                                                                                              |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[[prj-0001:prj-stakeholder-register]]`（完成版）                     | rulebook が求める必須項目・表構成を確認し、sample の再構成時に参照した。SpecDojo プロジェクトの具体的な関係者は sample に反映せず、共通サンプル文脈に一般化した。 |
+| `[[prj-0001:prj-overview]]`（prj-stakeholder-register の依存先）      | 完成版が `based_on` で参照している prj-overview を通じてプロジェクトの基本理念・前提条件を確認し、sample が共通文脈で説明できることを判断した。                   |
+| `[[specdojo:prj-stakeholder-register-rulebook]]`（rulebook）          | 一次根拠とした。本文構成（5章）、表カラム、禁止事項に従って sample を再構成した。必須章をすべて満たしつつ最小記述量にする方針に従った。                           |
+| `[[specdojo:sample-authoring-standard]]`（sample authoring standard） | 共通サンプル文脈（駄菓子屋きぬや販売管理システム）、共通登場人物の役割名定義、出力フォーマットルールに従って sample を新規作成した。                              |
 
 ### review result が不足していることとその扱い
 

@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-issues-and-approach
-    - prj-issues-and-approach-recipe
+    - specdojo:prj-issues-and-approach-recipe
 ---
 
 # Edit Result

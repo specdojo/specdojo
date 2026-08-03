@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-charter-sample
+  id: specdojo:prj-charter-sample
   type: project
   status: ready
-  rulebook: prj-charter-rulebook
+  rulebook: specdojo:prj-charter-rulebook
   based_on:
-    - prj-overview-sample
-    - prj-stakeholder-register-sample
+    - specdojo:prj-overview-sample
+    - specdojo:prj-stakeholder-register-sample
   supersedes: []
 ---
 

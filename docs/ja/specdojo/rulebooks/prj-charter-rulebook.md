@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-charter-rulebook
+  id: specdojo:prj-charter-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-charter-recipe
-  sample: prj-charter-sample
-  template: prj-charter-template
+  recipe: specdojo:prj-charter-recipe
+  sample: specdojo:prj-charter-sample
+  template: specdojo:prj-charter-template
 ---
 
 # プロジェクト憲章 作成ルール
@@ -89,7 +89,7 @@ flowchart LR
 | id         | `<project-id>:prj-charter` 形式の文書 ID                     | ○    |
 | type       | `project`                                                    | ○    |
 | status     | `draft` / `ready` / `deprecated`                             | ○    |
-| rulebook   | `prj-charter-rulebook`                                       | ○    |
+| rulebook   | `specdojo:prj-charter-rulebook`                              | ○    |
 | based_on   | 立ち上げ認可の直接根拠にした概要、ステークホルダー登録簿など | 任意 |
 | supersedes | 置き換えた旧文書 ID                                          | 任意 |
 

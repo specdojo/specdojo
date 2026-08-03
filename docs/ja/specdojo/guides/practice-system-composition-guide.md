@@ -1,11 +1,11 @@
 ---
 specdojo:
-  id: practice-system-composition-guide
+  id: specdojo:practice-system-composition-guide
   type: guide
   status: ready
   based_on:
-    - specdojo-overview-guide
-    - docs-structure-guide
+    - specdojo:specdojo-overview-guide
+    - specdojo:docs-structure-guide
 ---
 
 # 実践体系構成ガイド
@@ -32,6 +32,8 @@ SpecDojo の実践体系（成果物の作成を支援する文書群）が、�
 SpecDojo は、成果物（プロダクトとプロジェクトの内容そのもの）と、その作成を支援する文書群を分けて管理します。後者を実践体系と呼びます。
 
 実践体系は成果物を再掲するものではなく、成果物を「なぜ・何を・どう書くか」を支える別の役割を担います。本書は実践体系の構成の正本であり、[全体概要ガイド](specdojo-overview-guide.md) の `実践体系の役割` は本書の概要にあたります。
+
+npm package が所有する実践体系文書は、package ごとの authority を ID に付けます。SpecDojo core は `specdojo:`、業界固有の variant package は `construction-dojo:` などを使用します。authority は論理IDにだけ含め、ファイル名には含めません。利用プロジェクトへコピーした標準文書を override する場合は同じ完全IDを維持し、独自文書を追加する場合は別IDを付けます。
 
 ## 2. 種別と役割
 
@@ -75,13 +77,13 @@ flowchart TB
   RB --> TPL
 ```
 
-| 実践体系                   | 成果物との紐付け方                                                             | 例                                 |
-| -------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
-| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | needs-to-implementation-philosophy |
-| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | document-metadata-standard         |
-| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: prj-overview-rulebook`  |
-| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: dct-sample`               |
-| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                       |
+| 実践体系                   | 成果物との紐付け方                                                             | 例                                          |
+| -------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
+| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | specdojo:needs-to-implementation-philosophy |
+| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | specdojo:document-metadata-standard         |
+| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: specdojo:prj-overview-rulebook`  |
+| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: specdojo:dct-sample`               |
+| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                                |
 
 ## 4. 実践の型サブセットと活用
 

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo-philosophy
+  id: specdojo:specdojo-philosophy
   type: philosophy
   status: draft
   supersedes:

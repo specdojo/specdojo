@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-success-criteria-and-acceptance-criteria
-    - prj-success-criteria-and-acceptance-criteria-rulebook
+    - specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
 ---
 
 # Edit Result

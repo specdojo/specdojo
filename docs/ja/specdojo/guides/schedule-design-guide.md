@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: schedule-design-guide
+  id: specdojo:schedule-design-guide
   type: guide
   status: ready
   supersedes:

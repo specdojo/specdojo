@@ -3,7 +3,7 @@
 # On scaffold, flatten metadata_template to the top level (with placeholders
 # replaced) and drop the template's own metadata (id/type/status/title/rulebook).
 # See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
-id: pm-review-viewpoints-template
+id: specdojo:pm-review-viewpoints-template
 type: template
 status: draft
 title: レビュー観点一覧テンプレート

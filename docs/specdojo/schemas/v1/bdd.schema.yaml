@@ -14,7 +14,7 @@ required:
 properties:
   id:
     type: string
-    pattern: "^bdd-[a-z0-9\\-]+$"
+    pattern: "^(?:[a-z][a-z0-9-]*:)?bdd-[a-z0-9\\-]+$"
 
   type:
     type: string
@@ -29,7 +29,7 @@ properties:
 
   rulebook:
     type: string
-    pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
 
   version:
     type: string

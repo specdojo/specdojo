@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-assumptions-constraints-dependencies-template
+  id: specdojo:prj-assumptions-constraints-dependencies-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-assumptions-constraints-dependencies
       type: project
       status: draft
-      rulebook: prj-assumptions-constraints-dependencies-rulebook
+      rulebook: specdojo:prj-assumptions-constraints-dependencies-rulebook
       based_on:
         - _PROJECT_ID_:prj-scope
       supersedes: []

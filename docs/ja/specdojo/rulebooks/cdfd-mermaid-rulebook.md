@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cdfd-mermaid-rulebook
+  id: specdojo:cdfd-mermaid-rulebook
   type: rulebook
   status: draft
   target_format: markdown
@@ -8,7 +8,7 @@ specdojo:
   sample: none
   template: none
   based_on:
-    - rulebook-authoring-standard
+    - specdojo:rulebook-authoring-standard
 ---
 
 # Mermaid を用いたデータフロー図 作成ルール

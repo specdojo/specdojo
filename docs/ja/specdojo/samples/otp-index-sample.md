@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: otp-index-sample
+  id: specdojo:otp-index-sample
   type: project
   status: draft
-  rulebook: otp-index-rulebook
+  rulebook: specdojo:otp-index-rulebook
 ---
 
 # 運用切替計画（ハイパーケア含む） サンプル

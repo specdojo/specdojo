@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-rulebook
+    - specdojo:prj-assumptions-constraints-dependencies-rulebook
 ---
 
 # Edit Result

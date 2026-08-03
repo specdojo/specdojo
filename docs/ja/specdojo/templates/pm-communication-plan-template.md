@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-communication-plan-template
+  id: specdojo:pm-communication-plan-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pm-communication-plan
       type: project
       status: draft
-      rulebook: pm-communication-plan-rulebook
+      rulebook: specdojo:pm-communication-plan-rulebook
       based_on:
         - _PROJECT_ID_:pm-plan
         - _PROJECT_ID_:prj-stakeholder-register

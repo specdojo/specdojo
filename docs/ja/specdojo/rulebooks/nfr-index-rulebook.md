@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-index-rules
+  id: specdojo:nfr-index-rulebook
   type: rulebook
   status: draft
 ---
@@ -39,7 +39,7 @@ Non-Functional Requirements Index Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-index-rules` を用いる。
+- ルールドキュメントIDは `specdojo:nfr-index-rulebook` を用いる。
 - 生成対象ドキュメントIDは `nfr-index` を推奨する。
 - 分冊IDは `nfr-reliability` / `nfr-availability` などカテゴリ名を用いる。
 - 1分冊 = 1カテゴリを原則とする。

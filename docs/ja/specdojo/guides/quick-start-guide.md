@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: quick-start-guide
+  id: specdojo:quick-start-guide
   type: guide
   status: ready
 ---
@@ -226,7 +226,7 @@ id: <project-id>:sch-strategy-launch
 type: project
 status: ready
 title: スケジュール戦略（launch）
-rulebook: sch-rulebook
+rulebook: specdojo:sch-rulebook
 track: launch
 
 scope:

@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:prj-issues-and-approach
-    - prj-issues-and-approach-template
+    - specdojo:prj-issues-and-approach-template
 ---
 
 # Edit Result

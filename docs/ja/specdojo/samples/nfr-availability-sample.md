@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: nfr-availability-sample
+  id: specdojo:nfr-availability-sample
   type: project
   status: draft
-  rulebook: nfr-availability-rulebook
+  rulebook: specdojo:nfr-availability-rulebook
 ---
 
 # [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                                               | 備考                        |
-| ------------ | ---------------------------------------------------------------- | --------------------------- |
-| ドキュメント | [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) | 最小サンプル                |
-| 目的         | システム稼働の継続性を定義する                                   | deliverables-reference 準拠 |
-| 主な内容     | 稼働率、RTO/RPO、フェイルオーバー、冗長化、バックアップ          | 要点のみ記載                |
+| 項目         | 値                                                               | 備考                                 |
+| ------------ | ---------------------------------------------------------------- | ------------------------------------ |
+| ドキュメント | [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) | 最小サンプル                         |
+| 目的         | システム稼働の継続性を定義する                                   | specdojo:deliverables-reference 準拠 |
+| 主な内容     | 稼働率、RTO/RPO、フェイルオーバー、冗長化、バックアップ          | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

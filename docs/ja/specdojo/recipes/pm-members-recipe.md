@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: pm-members-recipe
+  id: specdojo:pm-members-recipe
   type: recipe
   status: ready
-  rulebook: pm-members-rulebook
-  sample: pm-members-sample
+  rulebook: specdojo:pm-members-rulebook
+  sample: specdojo:pm-members-sample
 ---
 
 # メンバー定義 作成レシピ
@@ -55,7 +55,7 @@ Project Member Roster Writing Recipe
 書き方:
 
 - `type` は `project`、`version` は整数で記載する。
-- `rulebook` には `pm-members-rulebook` を記載する。
+- `rulebook` には `specdojo:pm-members-rulebook` を記載する。
 - 根拠 ID は、内容を実際に確認した文書だけを記載する。
 
 ### 4.2. `members`

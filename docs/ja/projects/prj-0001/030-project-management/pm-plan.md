@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pm-plan
   type: project
   status: ready
-  rulebook: pm-plan-rulebook
+  rulebook: specdojo:pm-plan-rulebook
   based_on:
     - prj-0001:pm-organization
     - prj-0001:pm-roles

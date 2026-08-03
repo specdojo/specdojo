@@ -1,9 +1,9 @@
 # Template: system design deliverables catalog
-id: dct-system-design-template
+id: specdojo:dct-system-design-template
 type: template
 status: draft
 title: 成果物カタログ（システム設計）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 domain: system-design
 base_path: /docs/ja/product/040-system-design
 
@@ -15,7 +15,7 @@ groups:
         depends_on: []
         overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル等）への導線を1箇所に集約する
         path: sysd-index.md
-        rulebook: sysd-index-rulebook
+        rulebook: specdojo:sysd-index-rulebook
         done_criteria:
           - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
             roles: [ARC]
@@ -38,7 +38,7 @@ groups:
           - sysd-index
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
-        rulebook: sysd-critical-flows-rulebook
+        rulebook: specdojo:sysd-critical-flows-rulebook
         done_criteria:
           - text: 重要フローの選定理由と業務影響が確認できること
             roles: [BA]
@@ -64,7 +64,7 @@ groups:
           - sysd-index
         overview: 実装全体に影響する共通ルール（エラー・タイムアウト・冪等・トレーシング等）をSSOT化する
         path: sysd-cross-cutting-policy.md
-        rulebook: sysd-cross-cutting-policy-rulebook
+        rulebook: specdojo:sysd-cross-cutting-policy-rulebook
         done_criteria:
           - text: 横断ルールが実装上の制約として確認できること
             roles: [ARC]

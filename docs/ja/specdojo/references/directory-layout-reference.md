@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: directory-layout-reference
+  id: specdojo:directory-layout-reference
   type: reference
   status: draft
   based_on:
-    - docs-structure-guide
+    - specdojo:docs-structure-guide
 ---
 
 # ディレクトリレイアウトリファレンス

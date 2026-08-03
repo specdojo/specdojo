@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0127-clarify-project-why
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -45,4 +45,4 @@ launch track では、対象を CivicTech に絞り、`prj-overview` の必要�
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
 - [[prj-0001:prj-overview|プロジェクト概要]] — 変更対象
-- [[prj-overview-recipe]] — 作成・レビュー時の基準
+- [[specdojo:prj-overview-recipe]] — 作成・レビュー時の基準

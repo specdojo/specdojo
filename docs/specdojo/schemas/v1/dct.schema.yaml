@@ -23,7 +23,7 @@ properties:
   id:
     type: string
     pattern: "^[a-z0-9][a-z0-9-:]*$"
-    description: "Document metadata ID (e.g., prj-0001:dct-project-definition, dct-data-flow-template)."
+    description: "Document metadata ID (e.g., prj-0001:dct-project-definition, specdojo:dct-data-flow-template)."
 
   type:
     type: string
@@ -44,7 +44,7 @@ properties:
 
   rulebook:
     type: string
-    pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
     description: "Rulebook ID this document conforms to. Use none only when no rulebook exists."
 
   part_of:
@@ -274,10 +274,10 @@ $defs:
 
       rulebook:
         type: string
-        pattern: "^[a-z0-9][a-z0-9-]*$"
+        pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$"
         description: >
-          Optional rulebook ID for this deliverable (e.g., prj-overview-rulebook).
-          Resolved to docs/ja/specdojo/rulebooks/<id>.md by convention.
+          Optional rulebook ID for this deliverable (e.g., specdojo:prj-overview-rulebook).
+          The authority identifies its practice package; the local ID resolves to the filename.
           Used by review plan generation to populate inputs.rulebook.
 
       done_criteria:

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-change-request-log-template
+  id: specdojo:pm-change-request-log-template
   type: template
   status: ready
   frontmatter_template:
@@ -10,7 +10,7 @@ specdojo:
       status: ready
       part_of:
         - _PROJECT_ID_:pjr-index
-      rulebook: pjr-rulebook
+      rulebook: specdojo:pjr-rulebook
 ---
 
 # 変更要求ログ

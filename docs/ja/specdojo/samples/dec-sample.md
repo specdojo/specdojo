@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: dec-sample
+  id: specdojo:dec-sample
   type: project
   status: draft
-  rulebook: dec-rulebook
+  rulebook: specdojo:dec-rulebook
 ---
 
 # [決定記録](../rulebooks/dec-rulebook.md) サンプル

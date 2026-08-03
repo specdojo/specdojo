@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: pr-sample
+  id: specdojo:pr-sample
   type: project
   status: draft
-  rulebook: pr-rulebook
+  rulebook: specdojo:pr-rulebook
 ---
 
 # 進捗報告 サンプル

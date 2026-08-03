@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: exec-human-finalize-recipe
+  id: specdojo:exec-human-finalize-recipe
   type: recipe
   status: ready
   rulebook: none

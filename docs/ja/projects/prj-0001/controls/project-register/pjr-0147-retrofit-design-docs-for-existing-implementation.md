@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0147-retrofit-design-docs-for-existing-implementation
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -20,7 +20,7 @@ specdojo:
 - 実装先行が発生し得る対象範囲（成果物カタログ`dct-*.yaml`で管理される文書種別）が明確化されている。
 - 実装と文書の乖離を検知する方法（レビュー時のチェック、既存の exec/review フロー内での確認等）が定義されている。
 - 既存文書へ「反映」する場合と、文書を「新設」する場合の判断基準が定義されている。
-- `retrofit` approach の参照方針・進め方が [[kata-guide|実践の型活用ガイド]] の「初期整備・横断整理」に追加されている。
+- `retrofit` approach の参照方針・進め方が [[specdojo:kata-guide|実践の型活用ガイド]] の「初期整備・横断整理」に追加されている。
 - `xep-retrofit-template.md`（edit）が作成されている。
 - `xrp-retrofit-template.md`（review）が作成されている。
 - `exec-common.schema.yaml` の `Approach` enum に `retrofit` が追加され、依存する各 schema（exec-plan / exec-result / sch-strategy frontmatter）に反映されている。
@@ -45,9 +45,9 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[pjr-rulebook|プロジェクト登録簿ルールブック]]
-- [[docs-structure-guide|ドキュメント構成ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
-- [[kata-guide|実践の型活用ガイド]]
-- [[plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
-- [[exec-config-guide|exec設定ガイド]]
+- [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]]
+- [[specdojo:docs-structure-guide|ドキュメント構成ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:kata-guide|実践の型活用ガイド]]
+- [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
+- [[specdojo:exec-config-guide|exec設定ガイド]]

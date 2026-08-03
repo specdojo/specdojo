@@ -19,22 +19,23 @@ describe("yamlPageRelPath", () => {
 
 describe("renderYamlPage", () => {
   it("derives frontmatter from the YAML metadata and embeds the content in a yaml fence", () => {
-    const content = "id: pm-roles-sample\nstatus: ready\nrulebook: pm-roles-rulebook\n";
+    const content =
+      "id: specdojo:pm-roles-sample\nstatus: ready\nrulebook: specdojo:pm-roles-rulebook\n";
 
     const page = renderYamlPage("docs/ja/specdojo/samples/pm-roles-sample.yaml", content);
 
-    expect(page).toContain("  id: pm-roles-sample\n");
+    expect(page).toContain("  id: specdojo:pm-roles-sample\n");
     expect(page).toContain("  type: sample\n");
     expect(page).toContain("  status: ready\n");
-    expect(page).toContain("  rulebook: pm-roles-rulebook\n");
+    expect(page).toContain("  rulebook: specdojo:pm-roles-rulebook\n");
     expect(page).toContain("# pm-roles-sample.yaml");
     expect(page).toContain(YAML_PAGE_MARKER);
-    expect(page).toContain("```yaml\nid: pm-roles-sample\n");
+    expect(page).toContain("```yaml\nid: specdojo:pm-roles-sample\n");
   });
 
   it("uses the YAML title as the page heading and keeps it out of the frontmatter", () => {
     const content =
-      "id: prj-0001:pm-roles\nstatus: ready\ntitle: ロール一覧\nrulebook: pm-roles-rulebook\n";
+      "id: prj-0001:pm-roles\nstatus: ready\ntitle: ロール一覧\nrulebook: specdojo:pm-roles-rulebook\n";
 
     const page = renderYamlPage("docs/ja/projects/prj-0001/pm-roles.yaml", content);
 
@@ -68,7 +69,7 @@ describe("renderYamlPage", () => {
       "info:",
       "  title: 決済サービスAPI",
       "x-spec-meta:",
-      "  id: ifx-api-sample",
+      "  id: specdojo:ifx-api-sample",
       "  type: api",
       "  status: draft",
       "",
@@ -76,14 +77,14 @@ describe("renderYamlPage", () => {
 
     const page = renderYamlPage("docs/ja/specdojo/samples/ifx-api-sample.yaml", content);
 
-    expect(page).toContain("  id: ifx-api-sample\n");
+    expect(page).toContain("  id: specdojo:ifx-api-sample\n");
     expect(page).toContain("  type: sample\n");
     expect(page).toContain("  status: draft\n");
     expect(page).toContain("# 決済サービスAPI\n");
   });
 
   it("uses a longer fence when the YAML content contains triple backticks", () => {
-    const content = "id: gl-sample\nnote: |\n  ```yaml\n  nested: fence\n  ```\n";
+    const content = "id: specdojo:gl-sample\nnote: |\n  ```yaml\n  nested: fence\n  ```\n";
 
     const page = renderYamlPage("docs/ja/specdojo/samples/gl-sample.yaml", content);
 
@@ -93,11 +94,11 @@ describe("renderYamlPage", () => {
 
   it("renders dct catalog templates as a readable table instead of a yaml code block", () => {
     const content = [
-      "id: dct-architecture-template",
+      "id: specdojo:dct-architecture-template",
       "type: template",
       "status: draft",
       "title: 成果物カタログ（アーキテクチャ）",
-      "rulebook: dct-rulebook",
+      "rulebook: specdojo:dct-rulebook",
       "domain: architecture",
       "base_path: /docs/ja/product/030-architecture",
       "groups:",

@@ -2,14 +2,14 @@ id: prj-0001:pm-roles
 type: project
 status: ready
 title: ロール一覧
-rulebook: pm-roles-rulebook
+rulebook: specdojo:pm-roles-rulebook
 based_on:
-  - people-and-organization-definition-standard
+  - specdojo:people-and-organization-definition-standard
   - prj-0001:pm-organization
 version: 1
 project_id: prj-0001
 
-# ロール一覧。Role code の共通定義・責務は people-and-organization-definition-standard を参照する。
+# ロール一覧。Role code の共通定義・責務は specdojo:people-and-organization-definition-standard を参照する。
 # 兼務の割り当ては pm-members.yaml の roles フィールドで管理する。
 # ロール採用の方針・根拠は pm-organization.md を参照する。
 

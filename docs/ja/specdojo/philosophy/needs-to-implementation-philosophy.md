@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: needs-to-implementation-philosophy
+  id: specdojo:needs-to-implementation-philosophy
   type: philosophy
   status: draft
   supersedes:

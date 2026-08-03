@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0129-why-what-how-recipes
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -36,14 +36,14 @@ agent が手段や網羅的な説明へ引っ張られず、主要な論点を�
 
 ## 4. 対応結果
 
-- [[recipe-authoring-standard|Recipe 記述標準]]に、Why・What・How・Trace の意味、相互関係、判定基準、形式別の適用方法、非適用条件、アンチパターンを定義した。4 要素は固定章ではなく、主要な主張・判断の論理の骨格として既存の章・表・フィールドへ配置する。
+- [[specdojo:recipe-authoring-standard|Recipe 記述標準]]に、Why・What・How・Trace の意味、相互関係、判定基準、形式別の適用方法、非適用条件、アンチパターンを定義した。4 要素は固定章ではなく、主要な主張・判断の論理の骨格として既存の章・表・フィールドへ配置する。
 - `docs/ja/specdojo/recipes/` 配下の全 16 recipe を棚卸しし、各「このレシピの使い方」に成果物固有の Why / What / How / Trace と責務外の委譲先を記載した。共通原則の説明は各 recipe へ複製していない。
 - 各 recipe の「仕上げチェック」に、成果物固有の論点・判断・方法・証跡の対応を確認する項目を追加した。YAML recipe は schema 外キーを増やさず `based_on` と既存 ID、登録簿 recipe は行 ID・根拠・対応・証跡、実行 result は `done_criteria` と同じ result で追跡する。
-- [[prj-overview-sample|プロジェクト概要サンプル]]と [[prj-0001:prj-overview|SpecDojo プロジェクト概要]]を代表例として確認した。背景・必要性と中心仮説（Why）から、実現したいこと・価値仮説（What）、基本的な考え方・判断原則（How）、`CH-01` / `BV-01`〜`BV-04` と後続文書参照（Trace）を追え、詳細スコープ・受入条件・設計が委譲されていることを確認した。
+- [[specdojo:prj-overview-sample|プロジェクト概要サンプル]]と [[prj-0001:prj-overview|SpecDojo プロジェクト概要]]を代表例として確認した。背景・必要性と中心仮説（Why）から、実現したいこと・価値仮説（What）、基本的な考え方・判断原則（How）、`CH-01` / `BV-01`〜`BV-04` と後続文書参照（Trace）を追え、詳細スコープ・受入条件・設計が委譲されていることを確認した。
 
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — project-level Why の整備
-- [[needs-to-implementation-philosophy]] — Why / What / How の既存概念
-- [[kata-guide]] — recipe の役割と参照方針
+- [[specdojo:needs-to-implementation-philosophy]] — Why / What / How の既存概念
+- [[specdojo:kata-guide]] — recipe の役割と参照方針

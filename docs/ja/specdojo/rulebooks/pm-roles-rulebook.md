@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-roles-rulebook
+  id: specdojo:pm-roles-rulebook
   type: rulebook
   status: ready
   target_format: yaml
-  recipe: pm-roles-recipe
-  sample: pm-roles-sample
-  template: pm-roles-template
+  recipe: specdojo:pm-roles-recipe
+  sample: specdojo:pm-roles-sample
+  template: specdojo:pm-roles-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # プロジェクトロール定義 作成ルール
@@ -67,7 +67,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `type`       | `project` 固定                           | ○    |
 | `status`     | `draft` / `ready` / `deprecated`         | ○    |
 | `title`      | ドキュメント名。表示ページの見出しになる | ○    |
-| `rulebook`   | `pm-roles-rulebook` 固定                 | ○    |
+| `rulebook`   | `specdojo:pm-roles-rulebook` 固定        | ○    |
 | `based_on`   | 根拠ドキュメント ID の配列               | 任意 |
 | `version`    | データバージョン。初期値は `1`           | ○    |
 | `project_id` | プロジェクト ID                          | ○    |

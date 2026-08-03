@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pjr-note-template
+  id: specdojo:pjr-note-template
   type: template
   status: draft
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
-      rulebook: pjr-rulebook
+      rulebook: specdojo:pjr-rulebook
       part_of:
         - _PROJECT_ID_:pjr-index
       item_type: note

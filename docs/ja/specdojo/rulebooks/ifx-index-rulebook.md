@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: ifx-index-rulebook
+  id: specdojo:ifx-index-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: ifx-index-sample
+  sample: specdojo:ifx-index-sample
 ---
 
 # 外部システムI/F一覧 作成ルール

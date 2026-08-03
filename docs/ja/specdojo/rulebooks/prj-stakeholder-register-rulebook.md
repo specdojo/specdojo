@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-stakeholder-register-rulebook
+  id: specdojo:prj-stakeholder-register-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-stakeholder-register-recipe
-  sample: prj-stakeholder-register-sample
-  template: prj-stakeholder-register-template
+  recipe: specdojo:prj-stakeholder-register-recipe
+  sample: specdojo:prj-stakeholder-register-sample
+  template: specdojo:prj-stakeholder-register-template
 ---
 
 # ステークホルダー登録簿 作成ルール
@@ -70,7 +70,7 @@ Stakeholder Register Documentation Rulebook
 | id         | `<project-id>:prj-stakeholder-register` 形式の文書 ID | ○    |
 | type       | `project`                                             | ○    |
 | status     | `draft` / `ready` / `deprecated`                      | ○    |
-| rulebook   | `prj-stakeholder-register-rulebook`                   | ○    |
+| rulebook   | `specdojo:prj-stakeholder-register-rulebook`          | ○    |
 | based_on   | 関係者の根拠にした概要、憲章など                      | 任意 |
 | supersedes | 置き換えた旧文書 ID                                   | 任意 |
 

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pjr-change-request-template
+  id: specdojo:pjr-change-request-template
   type: template
   status: draft
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PJR_DOCUMENT_ID_
       type: project
       status: draft
-      rulebook: pjr-rulebook
+      rulebook: specdojo:pjr-rulebook
       part_of:
         - _PROJECT_ID_:pjr-index
       item_type: change-request

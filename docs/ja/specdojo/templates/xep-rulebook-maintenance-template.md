@@ -36,9 +36,9 @@ _OWNER_ROLE_VIEWPOINTS_
 3. 成果物側で繰り返し守られていない規定は、規定が過剰なのか成果物側の不備なのかを判断し、根拠とともに rulebook へ反映するか result に記録する。
 4. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。
 
-見直した rulebook は [[rulebook-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従う。recipe / sample / template と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
+見直した rulebook は [[specdojo:rulebook-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従う。recipe / sample / template と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 
-approach 全体の定義は [[kata-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンスの進め方は、このセクションで完結する。
+approach 全体の定義は [[specdojo:kata-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンスの進め方は、このセクションで完結する。
 
 ### 4.1. 見直しの根拠が不足する場合
 

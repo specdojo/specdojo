@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: id-and-file-naming-standard
+  id: specdojo:id-and-file-naming-standard
   type: standard
   status: draft
 ---
@@ -45,6 +45,8 @@ repo/apps/product-b/docs/
 ```
 
 ドキュメントIDは、原則として **SpecDojo Unit 内で一意** にする。
+
+npm package が所有する実践体系は、利用プロジェクトの成果物と同じ Unit に展開しても所有元を識別できるよう、package ごとに定めた authority を ID の namespace として持つ。SpecDojo core の authority は `specdojo` とする。
 
 複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID とドキュメントIDの組み合わせで識別する。
 
@@ -113,7 +115,25 @@ prj-0001:prj-charter
 prj-0001:sch-track-project-definition
 ```
 
-#### 3.1.3. local-id の形式
+#### 3.1.3. 実践体系文書
+
+npm package が所有する philosophy / standard / rulebook / recipe / sample / template / guide / reference は、authority を namespace として持つ。
+
+```text
+<authority>:<local-id>
+```
+
+例:
+
+```text
+specdojo:document-metadata-standard
+specdojo:prj-overview-rulebook
+specdojo:track-design-guide
+```
+
+authority は論理的な所有元であり、ファイル名には含めない。SpecDojo core をローカルへコピーして明示的に override する場合も、同じ論理文書として同じ完全 ID を維持する。
+
+#### 3.1.4. local-id の形式
 
 `<local-id>` は次の形式を基本とする。
 
@@ -165,18 +185,19 @@ prj-0001
 prj-0002
 ```
 
-#### 3.2.3. namespaced-id
+#### 3.2.3. namespace付きID
 
-プロジェクト文書のIDは、`project-id` と `local-id` をコロンで連結する。
+プロジェクト文書とpackage所有の実践体系文書は、namespace と `local-id` をコロンで連結する。
 
 ```text
-<project-id>:<local-id>
+<namespace>:<local-id>
 ```
 
 例:
 
 ```text
 prj-0001:prj-overview
+specdojo:track-design-guide
 ```
 
 YAML frontmatter では、コロンを含むIDはクォートで囲む。
@@ -188,8 +209,8 @@ id: "prj-0001:prj-overview"
 ### 3.3. ファイル名
 
 - 既定推奨は `ファイル名 = local-id`
-- プロジェクト文書でも、ファイル名には `<project-id>:` を含めない
-- namespace はディレクトリで表現する
+- プロジェクト文書でも実践体系文書でも、ファイル名には namespace を含めない
+- namespace はID上の論理的な所有元を表し、配置先ディレクトリと対応させる
 
 例:
 
@@ -231,12 +252,13 @@ specdojo:
 
 ### 4.1. IDの種類
 
-SpecDojo のドキュメントIDには、次の2種類がある。
+SpecDojo のドキュメントIDには、次の3種類がある。
 
-| 種類           | 形式                     | 用途                                             |
-| -------------- | ------------------------ | ------------------------------------------------ |
-| ローカルID     | `<local-id>`             | プロダクト文書、その他プロジェクトに属さない文書 |
-| 名前空間付きID | `<namespace>:<local-id>` | プロジェクト文書                                 |
+| 種類                | 形式                      | 用途                           |
+| ------------------- | ------------------------- | ------------------------------ |
+| ローカルID          | `<local-id>`              | プロダクト文書                 |
+| プロジェクトID      | `<project-id>:<local-id>` | プロジェクト文書               |
+| authority付き実践ID | `<authority>:<local-id>`  | package が所有する実践体系文書 |
 
 ### 4.2. プロダクト文書のID
 
@@ -285,7 +307,17 @@ prj-0001:prj-overview
 prj-0002:prj-overview
 ```
 
-### 4.4. local-id の基本構造
+### 4.4. 実践体系文書のID
+
+package が所有する実践体系文書は、package ごとに定めた authority を namespace として持つ。authority と local-id は英小文字、数字、ハイフンで構成し、`prj-` で始まる authority はプロジェクトIDとの混同を避けるため使用しない。
+
+```text
+specdojo:<local-id>
+```
+
+ファイル名は local-id と一致させる。例えば `specdojo:track-design-guide` のファイル名は `track-design-guide.md` とする。package のバージョンは ID に含めず、npm package version と lockfile で管理する。
+
+### 4.5. local-id の基本構造
 
 ```text
 <prefix>-<term>
@@ -307,7 +339,7 @@ prj-overview
 dct-project-definition
 ```
 
-### 4.5. kind の命名原則
+### 4.6. kind の命名原則
 
 - `<kind>` は語彙を固定し、同義語の混在を禁止する
   - 例: `api`, `msg`, `file`
@@ -327,7 +359,7 @@ NG:
 ifx-external-api-inventory
 ```
 
-### 4.6. term の命名原則
+### 4.7. term の命名原則
 
 - 名詞句で表現する
 - 動詞単体で始めない
@@ -350,9 +382,9 @@ edit-order
 create-invoice
 ```
 
-### 4.7. index / common の扱い（ID）
+### 4.8. index / common の扱い（ID）
 
-#### 4.7.1. `-index`（系列の入口・Hub）
+#### 4.8.1. `-index`（系列の入口・Hub）
 
 `<prefix>-index` は、系列の入口として以下を満たす。
 
@@ -363,28 +395,28 @@ create-invoice
 
 `-index` は単なるリンク集ではなく、**要点（SSOT）＋関連リンク**を持つ Hub とする。
 
-#### 4.7.2. `-common`（横断的・共有定義）
+#### 4.8.2. `-common`（横断的・共有定義）
 
 `<prefix>-common` は、系列外も含めて参照される共通定義に用いる。
 
 - 系列の親子関係を持たない
 - 参照元が複数系列にまたがる定義を置く
 
-### 4.8. IDに含めない情報
+### 4.9. IDに含めない情報
 
 IDには、次の情報を含めない。
 
-| 含めない情報     | 理由                                                                                       |
-| ---------------- | ------------------------------------------------------------------------------------------ |
-| ディレクトリ番号 | 構成変更で変わるため                                                                       |
-| 表示順           | 並び替えで変わるため                                                                       |
-| 状態             | `draft`, `approved` などは変化するため                                                     |
-| 担当者           | 担当変更で変わるため                                                                       |
-| 作業アクション   | `create`, `modify`, `review` などは Schedule 側の責務であるため                            |
-| 日付             | IDの永続性を損なうため。ただし議事録・進捗レポートなど時点そのものが識別子になる場合を除く |
-| 所属             | 配置ディレクトリが表すため（`ファイル名には namespace を含めない` と同じ理由）             |
+| 含めない情報         | 理由                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| ディレクトリ番号     | 構成変更で変わるため                                                                       |
+| 表示順               | 並び替えで変わるため                                                                       |
+| 状態                 | `draft`, `approved` などは変化するため                                                     |
+| 担当者               | 担当変更で変わるため                                                                       |
+| 作業アクション       | `create`, `modify`, `review` などは Schedule 側の責務であるため                            |
+| 日付                 | IDの永続性を損なうため。ただし議事録・進捗レポートなど時点そのものが識別子になる場合を除く |
+| ディレクトリ上の所属 | 配置ディレクトリが表すため。package の論理的な所有元は authority で表す                    |
 
-### 4.9. フレームワーク文書のID
+### 4.10. 実践体系文書のlocal-id
 
 `docs/ja/specdojo/` 配下のフレームワーク文書（guide、standard、reference、rulebook、recipe、sample、template）は、成果物文書の `<prefix>-<term>` とは逆に、主題語の後ろへ文書種別のサフィックスを置く。
 
@@ -395,16 +427,16 @@ IDには、次の情報を含めない。
 - `<subject>`: 文書の主題を表す名詞句
 - `<type-suffix>`: `guide`、`standard`、`reference`、`philosophy`、`rulebook`、`recipe`、`sample`、`template`
 
-- 所属を表す接頭辞はIDに含めない。`docs/ja/specdojo/` 配下にあることは配置ディレクトリが表すため、`specdojo-` を接頭辞として付けない。
+- package の所有元は `specdojo:` のような authority で表し、local-id に `specdojo-` のような所属接頭辞を重ねない。
 - ただし SpecDojo 自体を主題とする文書は、主題語として `specdojo` を用いる。
 
 OK:
 
 ```text
-cli-overview-guide
-exec-operation-guide
-guide-authoring-standard
-specdojo-overview-guide
+specdojo:cli-overview-guide
+specdojo:exec-operation-guide
+specdojo:guide-authoring-standard
+specdojo:specdojo-overview-guide
 ```
 
 NG:
@@ -420,7 +452,7 @@ specdojo-exec-operation-guide
 
 SpecDojo では、frontmatter の `id` には正規IDを使用する。
 
-一方、参照フィールドでは、同一プロジェクト内に限りローカル参照を許可する。
+一方、参照フィールドでは、同一プロジェクト内に限りプロジェクト文書のローカル参照を許可する。package所有の実践体系文書は、所有元を曖昧にしないため常に authority 付き完全IDで参照する。
 
 #### 5.1.1. 正規ID
 
@@ -443,12 +475,13 @@ prj-0001:prj-overview
 
 ### 5.2. 参照解決ルール
 
-| 参照値                  | 参照元          | 解決結果                |
-| ----------------------- | --------------- | ----------------------- |
-| `prj-overview`          | `prj-0001` 配下 | `prj-0001:prj-overview` |
-| `prj-0002:prj-overview` | 任意            | `prj-0002:prj-overview` |
-| `sysd-index`            | 任意            | `sysd-index`            |
-| `bdd-common`            | 任意            | `bdd-common`            |
+| 参照値                        | 参照元          | 解決結果                      |
+| ----------------------------- | --------------- | ----------------------------- |
+| `prj-overview`                | `prj-0001` 配下 | `prj-0001:prj-overview`       |
+| `prj-0002:prj-overview`       | 任意            | `prj-0002:prj-overview`       |
+| `specdojo:track-design-guide` | 任意            | `specdojo:track-design-guide` |
+| `sysd-index`                  | 任意            | `sysd-index`                  |
+| `bdd-common`                  | 任意            | `bdd-common`                  |
 
 ### 5.3. 同一プロジェクト内の参照
 
@@ -683,26 +716,27 @@ supersedes:
 
 ## 10. NGパターン
 
-| パターン                                            | 理由                                                               |
-| --------------------------------------------------- | ------------------------------------------------------------------ |
-| `Order_API_v1`                                      | 大文字・アンダースコア・記号                                       |
-| `create-order-api`                                  | 動詞主導                                                           |
-| `sf-list`                                           | 一覧・入口は `index` を使う                                        |
-| `bdd-main`                                          | 役割が曖昧                                                         |
-| `ifx-inventory-api`                                 | kind は prefix 直後に置く                                          |
-| `product:sf-index`                                  | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要 |
-| `prj-overview` を複数プロジェクトの正本IDとして使う | プロジェクト間で衝突する                                           |
-| `prj-0001-prj-overview`                             | project-id と local-id の境界が曖昧                                |
-| `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                             |
-| `prj-0001:prj-overview-draft`                       | 状態をIDに含めている                                               |
-| `prj-0001:prj-overview.md`                          | ファイル名に namespace を含めている                                |
-| `specdojo-cli-overview-guide`                       | 配置ディレクトリが表す所属をIDの接頭辞にしている                   |
+| パターン                                            | 理由                                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------------ |
+| `Order_API_v1`                                      | 大文字・アンダースコア・記号                                             |
+| `create-order-api`                                  | 動詞主導                                                                 |
+| `sf-list`                                           | 一覧・入口は `index` を使う                                              |
+| `bdd-main`                                          | 役割が曖昧                                                               |
+| `ifx-inventory-api`                                 | kind は prefix 直後に置く                                                |
+| `product:sf-index`                                  | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要       |
+| `prj-overview` を複数プロジェクトの正本IDとして使う | プロジェクト間で衝突する                                                 |
+| `prj-0001-prj-overview`                             | project-id と local-id の境界が曖昧                                      |
+| `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                                   |
+| `prj-0001:prj-overview-draft`                       | 状態をIDに含めている                                                     |
+| `prj-0001:prj-overview.md`                          | ファイル名に namespace を含めている                                      |
+| `specdojo-cli-overview-guide`                       | authority と local-id の境界が曖昧。`specdojo:cli-overview-guide` とする |
 
 ## 11. 運用指針
 
 - 迷ったら「これは何についての文書か？」を名詞で考える
 - プロダクト文書はローカルIDを使う
 - プロジェクト文書は `<project-id>:<local-id>` を使う
+- package 所有の実践体系文書は `<authority>:<local-id>` を使い、SpecDojo core は `specdojo:` とする
 - 同一プロジェクト内の参照では `<project-id>:` を省略してよい
 - 他プロジェクトへの参照では完全IDを使う
 - 入口は `-index`、横断定義は `-common` を使う

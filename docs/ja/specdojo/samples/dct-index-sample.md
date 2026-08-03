@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: dct-index-sample
+  id: specdojo:dct-index-sample
   type: project
   status: draft
-  rulebook: dct-index-rulebook
+  rulebook: specdojo:dct-index-rulebook
 ---
 
 # 成果物カタログ

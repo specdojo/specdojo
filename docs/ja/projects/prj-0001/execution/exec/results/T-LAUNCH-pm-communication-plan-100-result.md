@@ -11,7 +11,7 @@ specdojo:
   completed_at: "2026-07-01T14:48:58.107Z"
   targets:
     - prj-0001:pm-communication-plan
-    - pm-communication-plan-recipe
+    - specdojo:pm-communication-plan-recipe
 ---
 
 # Execution Result

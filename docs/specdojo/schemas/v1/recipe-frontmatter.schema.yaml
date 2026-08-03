@@ -23,5 +23,5 @@ properties:
             description: "構造の正本となる rulebook の ID。該当がない場合は none。"
           sample:
             type: string
-            pattern: "^[a-z0-9][a-z0-9-]*-sample$"
+            pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample$"
             description: "粒度・文体の参照となる sample の ID。"

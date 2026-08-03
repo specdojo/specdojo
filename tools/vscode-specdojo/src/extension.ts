@@ -165,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("specdojo.openById", async () => {
       const id = await vscode.window.showInputBox({
         prompt: "Enter a SpecDojo document ID",
-        placeHolder: "e.g. prj-overview-rulebook or prj-0001:pm-roles",
+        placeHolder: "e.g. specdojo:prj-overview-rulebook or prj-0001:pm-roles",
       });
       if (!id) return;
 

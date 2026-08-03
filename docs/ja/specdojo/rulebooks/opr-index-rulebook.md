@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: opr-index-rulebook
+  id: specdojo:opr-index-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: opr-index-sample
+  sample: specdojo:opr-index-sample
 ---
 
 # 運用手順 全体構成 作成ルール
@@ -38,7 +38,7 @@ Operations Procedure Runbook Index Documentation Rules
 | `id`         | `opr-index`                      | ○    |
 | `type`       | `operations`                     | ○    |
 | `status`     | `draft` / `ready` / `deprecated` | ○    |
-| `rulebook`   | `opr-index-rulebook`             | 任意 |
+| `rulebook`   | `specdojo:opr-index-rulebook`    | 任意 |
 | `based_on`   | 根拠仕様 ID 配列                 | 任意 |
 | `supersedes` | 置換関係 ID 配列                 | 任意 |
 

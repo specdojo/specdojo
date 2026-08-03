@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-charter-rulebook` と `prj-charter-recipe` を参照し、プロジェクト憲章が立ち上げ認可、権限委譲、予算枠、GO / Not GO 判断、承認、未決事項を含む構成になっていることを確認した。
+- `specdojo:prj-charter-rulebook` と `specdojo:prj-charter-recipe` を参照し、プロジェクト憲章が立ち上げ認可、権限委譲、予算枠、GO / Not GO 判断、承認、未決事項を含む構成になっていることを確認した。
 - `prj-overview` と `prj-stakeholder-register` を参照し、目的、期待効果、初期ステークホルダー、人間の PO による最終判断、AI Agent の支援範囲との整合を確認した。
 - 本書承認が本格実行開始、外部公開、追加支出の承認に読めないよう、初期公開準備の扱いを「追加支出を伴わない公開準備の検討」に補正した。
 - 権限委譲表の「本格実行開始」を、PO 判断を前提とした「本格実行開始の GO / Not GO 判断準備」に補正した。

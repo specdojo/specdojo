@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-stakeholder-register-template
+  id: specdojo:prj-stakeholder-register-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-stakeholder-register
       type: project
       status: draft
-      rulebook: prj-stakeholder-register-rulebook
+      rulebook: specdojo:prj-stakeholder-register-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
       supersedes: []

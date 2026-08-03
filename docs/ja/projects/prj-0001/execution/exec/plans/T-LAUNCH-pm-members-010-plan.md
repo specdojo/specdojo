@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap
   targets:
     - prj-0001:pm-members
-    - pm-members-rulebook
-    - pm-members-recipe
-    - pm-members-sample
-    - pm-members-template
+    - specdojo:pm-members-rulebook
+    - specdojo:pm-members-recipe
+    - specdojo:pm-members-sample
+    - specdojo:pm-members-template
 ---
 
 # Edit Plan: T-LAUNCH-pm-members-010
@@ -70,16 +70,16 @@ result: `docs/ja/projects/prj-0001/030-project-management/execution/exec/results
 成果物とその参考資料一式を、相互に矛盾しない一組として作成・整備する。成果物を主対象とし、そこから一般化した規定・作り方・例・雛形を参考資料に反映する。各対象は実際に読み込んだうえで、既存があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
 
 1. 成果物（主対象）: `depends_on` の決定事項・用語・制約と整合させ、owner ロールの責務に集中して記述する。既存記述があれば内容を評価し、活かせる部分は維持、古い・矛盾する部分は修正、前提と合わない場合は作り直す。内部情報だけで判断できない一般的な観点・用語・標準があり、実行 agent が Web 検索能力を持つ場合は、関連情報を取得して出典を添える。
-2. rulebook: 成果物の構造を一般化し、章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。rulebook は [[rulebook-authoring-standard]]（章立て・Frontmatter 規約・記述ルール・禁止事項の正本）に従う。
+2. rulebook: 成果物の構造を一般化し、章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。rulebook は [[specdojo:rulebook-authoring-standard]]（章立て・Frontmatter 規約・記述ルール・禁止事項の正本）に従う。
 3. recipe: 良い成果物を作るための問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
-4. sample: 粒度・文体・表の書き方が伝わる最小の完成例にする。プロジェクト固有の値は一般化またはプレースホルダ化する。sample は [[sample-authoring-standard]]（構成・記述ルール・共通サンプル文脈・禁止事項の正本）に従い、rulebook / recipe と矛盾しないように作成する。
-5. template: 章構成の骨組みとプレースホルダを配置した雛形にする。成果物固有の内容は持ち込まない。template は [[template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従い、埋めた結果が rulebook の本文構成と矛盾しないように作成する。
+4. sample: 粒度・文体・表の書き方が伝わる最小の完成例にする。プロジェクト固有の値は一般化またはプレースホルダ化する。sample は [[specdojo:sample-authoring-standard]]（構成・記述ルール・共通サンプル文脈・禁止事項の正本）に従い、rulebook / recipe と矛盾しないように作成する。
+5. template: 章構成の骨組みとプレースホルダを配置した雛形にする。成果物固有の内容は持ち込まない。template は [[specdojo:template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従い、埋めた結果が rulebook の本文構成と矛盾しないように作成する。
 
 参考資料は成果物の丸写しにせず、同種成果物に再利用できる形に一般化する。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template は rulebook と矛盾しないように揃える。
 
 内容の根拠としてよい文書は、この plan に記載された対象（成果物・rulebook / recipe / sample / template）と、`対象成果物` セクションの `depends_on` 成果物に限定する。これら以外を成果物の内容の根拠にしない。ただし bootstrap では例外として、同種で `status: ready` の文書を手本として参照してよい（次項参照）。判断できない箇所は憶測で埋めず `_TODO_` / `_ASSUMPTION_` として論点を残す。
 
-ここで整備した参考資料は後続の refine-pass で凍結し、編集しない。本タスクの実行に必要な bootstrap の進め方は、このセクションで完結する。approach 全体の定義を確認したい場合のみ、参考として [[specdojo-kata-guide]] を参照する。
+ここで整備した参考資料は後続の refine-pass で凍結し、編集しない。本タスクの実行に必要な bootstrap の進め方は、このセクションで完結する。approach 全体の定義を確認したい場合のみ、参考として [[specdojo:kata-guide]] を参照する。
 
 ### 4.1. 同種の ready 文書を手本にする
 

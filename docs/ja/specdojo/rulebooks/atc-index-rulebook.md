@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: atc-index-rules
+  id: specdojo:atc-index-rulebook
   type: rulebook
   status: draft
 ---

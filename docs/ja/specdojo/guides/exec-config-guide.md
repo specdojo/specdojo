@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: exec-config-guide
+  id: specdojo:exec-config-guide
   type: guide
   status: ready
 ---

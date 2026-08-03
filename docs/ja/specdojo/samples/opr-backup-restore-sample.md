@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: opr-backup-restore-sample
+  id: specdojo:opr-backup-restore-sample
   type: operations
   status: draft
-  rulebook: opd-rulebook
+  rulebook: specdojo:opd-rulebook
   based_on: [opd-index]
   supersedes: []
 ---

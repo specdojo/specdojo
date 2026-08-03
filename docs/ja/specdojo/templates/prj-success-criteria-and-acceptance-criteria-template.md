@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-success-criteria-and-acceptance-criteria-template
+  id: specdojo:prj-success-criteria-and-acceptance-criteria-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-success-criteria-and-acceptance-criteria
       type: project
       status: draft
-      rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+      rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-scope

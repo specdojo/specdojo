@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0122
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: note
@@ -81,7 +81,7 @@ specdojo:
 
 成果物カタログ上の分類は変更しない。分類の正本は `dct-<domain>.yaml` の `domain` であり配置とは独立なので、
 `controls` / `schedule` / `reporting` は `dct-project-management.yaml` が引き続き管理する。
-あわせて `docs-structure-guide` の番号付与規約を、実態と食い違っていた「番号なし = カタログ管理対象外」から
+あわせて `specdojo:docs-structure-guide` の番号付与規約を、実態と食い違っていた「番号なし = カタログ管理対象外」から
 「番号あり = 改訂される計画文書ツリー / 番号なし = 全ドメイン横断の台帳・記録・実行状態」へ改めた。
 
 ## 2. 背景・文脈

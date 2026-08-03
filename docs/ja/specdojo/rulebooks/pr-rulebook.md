@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: pr-rulebook
+  id: specdojo:pr-rulebook
   type: rulebook
   status: draft
-  sample: pr-sample
+  sample: specdojo:pr-sample
 ---
 
 # 進捗報告 作成ルール

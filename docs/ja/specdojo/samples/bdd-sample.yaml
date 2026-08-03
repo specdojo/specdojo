@@ -1,8 +1,8 @@
-id: bdd-sample
+id: specdojo:bdd-sample
 type: domain
 title: 業務データ辞書(main)
 status: draft
-rulebook: bdd-rulebook
+rulebook: specdojo:bdd-rulebook
 supersedes: []
 
 entities:

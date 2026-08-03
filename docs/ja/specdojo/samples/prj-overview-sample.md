@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: prj-overview-sample
+  id: specdojo:prj-overview-sample
   type: project
   status: ready
-  rulebook: prj-overview-rulebook
+  rulebook: specdojo:prj-overview-rulebook
   based_on: []
   supersedes: []
 ---

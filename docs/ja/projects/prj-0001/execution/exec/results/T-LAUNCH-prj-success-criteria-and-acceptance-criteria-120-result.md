@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:prj-success-criteria-and-acceptance-criteria
-    - prj-success-criteria-and-acceptance-criteria-sample
+    - specdojo:prj-success-criteria-and-acceptance-criteria-sample
 ---
 
 # Edit Result

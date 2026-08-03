@@ -53,10 +53,10 @@ specdojo:
 
 `fully-guided` approach に従って以下の reference documents を実読で確認した。
 
-- **rulebook** [[prj-stakeholder-register-rulebook]]: §5 本文構成の5章（関係者一覧、影響度/関心度分析、エンゲージメント方針、コミュニケーション要件、見直し条件）すべての必須カラムが対象成果物の表に展開されていることを確認。§7 禁止事項（個人名の記載、未採用Role code の推測、根拠のない影響度評価など）に抵触していないことを確認。
-- **recipe** [[prj-stakeholder-register-recipe]]: §3 作成手順で要求する「関係者→期待/懸念→合意→関与方針→見直し」の整合が成果物で完結していることを確認。§7 レビュー観点のうち、「業務価値との対応」「利用者影響」「評価根拠」といった点は対象成果物が概ね充足していると判断した。
-- **sample** [[prj-stakeholder-register-sample]]: 駄菓子屋題材ではあるが、表のカラム数・粒度（1行あたりの情報量）は sample と同等レベルであること、文体の統一性は整合していることを確認。
-- **template** [[prj-stakeholder-register-template]]: Frontmatter の id / type / status / rulebook / based*on / supersedes が template と一致し、§1〜§5 の見出しと表構成が template から project 固有の内容に置き換わっていることを確認。プレースホルダー `\_TODO*`は成果物の本文から消去済み（§3・§5 に残る`_TODO_:`および`_ASSUMPTION_:` は rulebook §6.1 で明示的に許容された未確定値である）。4 文書間での矛盾は確認されず、rulebook を正として判定した箇所もなし。
+- **rulebook** [[specdojo:prj-stakeholder-register-rulebook]]: §5 本文構成の5章（関係者一覧、影響度/関心度分析、エンゲージメント方針、コミュニケーション要件、見直し条件）すべての必須カラムが対象成果物の表に展開されていることを確認。§7 禁止事項（個人名の記載、未採用Role code の推測、根拠のない影響度評価など）に抵触していないことを確認。
+- **recipe** [[specdojo:prj-stakeholder-register-recipe]]: §3 作成手順で要求する「関係者→期待/懸念→合意→関与方針→見直し」の整合が成果物で完結していることを確認。§7 レビュー観点のうち、「業務価値との対応」「利用者影響」「評価根拠」といった点は対象成果物が概ね充足していると判断した。
+- **sample** [[specdojo:prj-stakeholder-register-sample]]: 駄菓子屋題材ではあるが、表のカラム数・粒度（1行あたりの情報量）は sample と同等レベルであること、文体の統一性は整合していることを確認。
+- **template** [[specdojo:prj-stakeholder-register-template]]: Frontmatter の id / type / status / rulebook / based*on / supersedes が template と一致し、§1〜§5 の見出しと表構成が template から project 固有の内容に置き換わっていることを確認。プレースホルダー `\_TODO*`は成果物の本文から消去済み（§3・§5 に残る`_TODO_:`および`_ASSUMPTION_:` は rulebook §6.1 で明示的に許容された未確定値である）。4 文書間での矛盾は確認されず、rulebook を正として判定した箇所もなし。
 
 ## 4. decision
 

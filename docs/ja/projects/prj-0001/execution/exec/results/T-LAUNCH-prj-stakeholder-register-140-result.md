@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:prj-stakeholder-register
-    - prj-stakeholder-register-rulebook
-    - prj-stakeholder-register-recipe
-    - prj-stakeholder-register-sample
-    - prj-stakeholder-register-template
+    - specdojo:prj-stakeholder-register-rulebook
+    - specdojo:prj-stakeholder-register-recipe
+    - specdojo:prj-stakeholder-register-sample
+    - specdojo:prj-stakeholder-register-template
 ---
 
 # Finalize Result

@@ -3,7 +3,7 @@ specdojo:
   id: sysd-agent-settings
   type: project
   status: draft
-  rulebook: sysd-rulebook
+  rulebook: specdojo:sysd-rulebook
 ---
 
 # エージェント共通設定
@@ -142,7 +142,7 @@ phase_sets:
 
 CLI 名やモデル名は phase に記述しない。実行環境の差し替えは `pm-members.yaml` で行う。
 
-詳細は [exec-config-guide](../../specdojo/guides/exec-config-guide.md) を参照する。
+詳細は [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) を参照する。
 
 ## 6. 実行と失敗処理
 

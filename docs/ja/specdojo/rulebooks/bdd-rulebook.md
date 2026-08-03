@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: bdd-rulebook
+  id: specdojo:bdd-rulebook
   type: rulebook
   status: draft
   target_format: yaml
-  sample: bdd-sample
+  sample: specdojo:bdd-sample
 ---
 
 # 業務データ辞書 作成ルール
@@ -50,7 +50,7 @@ Frontmatter と同等の以下の項目をYAMLドキュメントの先頭に必�
 | type       | `domain` 固定                            | ○    |
 | title      | ドキュメント名。表示ページの見出しになる | ○    |
 | status     | `draft` / `ready` / `deprecated`         | ○    |
-| rulebook   | `bdd-rulebook` 固定                      | ○    |
+| rulebook   | `specdojo:bdd-rulebook` 固定             | ○    |
 | supersedes | 置き換え関係（古仕様→新仕様）            | 任意 |
 
 ## 5. 本文構成（標準テンプレ）

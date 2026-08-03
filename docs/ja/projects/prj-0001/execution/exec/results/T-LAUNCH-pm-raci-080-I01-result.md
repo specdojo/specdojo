@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `pm-raci-rulebook` と `pm-raci-recipe` を基準に、対象成果物 `pm-raci.md` の章構成、RACI 列、成果物別 RACI、プロセス別 RACI、見直し条件、禁止事項を確認した。
+- `specdojo:pm-raci-rulebook` と `specdojo:pm-raci-recipe` を基準に、対象成果物 `pm-raci.md` の章構成、RACI 列、成果物別 RACI、プロセス別 RACI、見直し条件、禁止事項を確認した。
 - `pm-organization.md` と照合し、Role code の正本を組織定義側に置く方針、member・agent・兼務割り当てを RACI に複製しない方針、AI Agent に `A` を割り当てない方針と矛盾しないことを確認した。
 - 成果物別 RACI とプロセス別 RACI の各行に `A` が 1 つだけ置かれていることを確認した。対象成果物本文への修正は不要と判断した。
 

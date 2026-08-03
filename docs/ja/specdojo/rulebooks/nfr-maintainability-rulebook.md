@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-maintainability-rules
+  id: specdojo:nfr-maintainability-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Maintainability Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-maintainability-rules`。
+- ルールドキュメントIDは `specdojo:nfr-maintainability-rulebook`。
 - 生成対象ドキュメントIDは `nfr-maintainability` を推奨する。
 - 要件IDは `nfr-mnt-<連番>` を推奨する。
 

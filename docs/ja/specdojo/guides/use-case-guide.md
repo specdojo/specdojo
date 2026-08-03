@@ -1,11 +1,11 @@
 ---
 specdojo:
-  id: use-case-guide
+  id: specdojo:use-case-guide
   type: guide
   status: ready
   based_on:
-    - specdojo-overview-guide
-    - quick-start-guide
+    - specdojo:specdojo-overview-guide
+    - specdojo:quick-start-guide
 ---
 
 # ユースケース別ガイド

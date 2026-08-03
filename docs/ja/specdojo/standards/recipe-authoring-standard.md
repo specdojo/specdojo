@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: recipe-authoring-standard
+  id: specdojo:recipe-authoring-standard
   type: standard
   status: ready
 ---
@@ -36,13 +36,13 @@ Recipe Authoring Standard
 - `type` は `recipe` 固定とする。
 - 対応する成果物の根拠を示すため、`rulebook` と `sample`（存在する場合）を記載する。
 
-| 項目     | 必須 | 説明                                       |
-| -------- | ---- | ------------------------------------------ |
-| id       | ○    | `<prefix>-recipe` 形式の一意 ID            |
-| type     | ○    | `recipe` 固定                              |
-| status   | ○    | `draft` / `ready` / `deprecated`           |
-| rulebook | ○    | 構造の正本となる `<prefix>-rulebook` の ID |
-| sample   | 任意 | 粒度・文体の参照となる `<prefix>-sample`   |
+| 項目     | 必須 | 説明                                     |
+| -------- | ---- | ---------------------------------------- |
+| id       | ○    | `specdojo:<prefix>-recipe` 形式の一意 ID |
+| type     | ○    | `recipe` 固定                            |
+| status   | ○    | `draft` / `ready` / `deprecated`         |
+| rulebook | ○    | 構造の正本となる rulebook の完全 ID      |
+| sample   | 任意 | 粒度・文体の参照となる sample の完全 ID  |
 
 ## 4. 標準章構成（`*-recipe.md`）
 

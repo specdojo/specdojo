@@ -53,10 +53,10 @@ _本レビューで改善すべき問題は検出されていない。_
 
 本タスクは `fully-guided` approach で実行された。plan が指定した4種の参考资料と depends_on 対象を全件読み込み、以下に従って統合確認を実施した。
 
-- **rulebook** (`[[pm-roles-rulebook|ロール定義 作成ルール]]`): 必須メタ項目 (§4)、本文構成 (§5)、禁止事項 (§7) を pm-roles.yaml の各要素と逐一行った照合に使用した。RVP-002（ARC）の判定根拠となった。
-- **recipe** (`[[pm-roles-recipe|ロール定義 作成レシピ]]`): Line56-135 の問い・観点を確認清单として pm-roles.yaml の内容と突き合わせて使用した。「過不足なし」「表記ゆれなし」などの確認をこの recipe に根拠づけた。RVP-003（QE）の判定に補完的に寄与した。
-- **sample** (`[[pm-roles-sample|ロール定義 サンプル]]`): YAML の構文スタイル、role 配列の粒度和文体が整合していることを確認した。target project_note はプロジェクト固有の内容のため sample と完全に一致しないが、粒度・表記は同等であった。
-- **template** (`[[pm-roles-template|ロール定義 template]]`): Roles 配列の章構成（PO→PM→BA→ARC→DEV→QE→UX→OPS）が整合していることを確認し、`_TODO_` プレースホルダが全て解消済みであることを確認した。
+- **rulebook** (`[[specdojo:pm-roles-rulebook|ロール定義 作成ルール]]`): 必須メタ項目 (§4)、本文構成 (§5)、禁止事項 (§7) を pm-roles.yaml の各要素と逐一行った照合に使用した。RVP-002（ARC）の判定根拠となった。
+- **recipe** (`[[specdojo:pm-roles-recipe|ロール定義 作成レシピ]]`): Line56-135 の問い・観点を確認清单として pm-roles.yaml の内容と突き合わせて使用した。「過不足なし」「表記ゆれなし」などの確認をこの recipe に根拠づけた。RVP-003（QE）の判定に補完的に寄与した。
+- **sample** (`[[specdojo:pm-roles-sample|ロール定義 サンプル]]`): YAML の構文スタイル、role 配列の粒度和文体が整合していることを確認した。target project_note はプロジェクト固有の内容のため sample と完全に一致しないが、粒度・表記は同等であった。
+- **template** (`[[specdojo:pm-roles-template|ロール定義 template]]`): Roles 配列の章構成（PO→PM→BA→ARC→DEV→QE→UX→OPS）が整合していることを確認し、`_TODO_` プレースホルダが全て解消済みであることを確認した。
 - **depends_on** (`[[prj-0001:pm-organization|組織設計]]`): ロール採用方針・owner 語彙の扱い Line26-30）と pm-roles.yaml の content が矛盾しないことをクロスチェックしましたRVP-001（PO）判定に寄与した。
 
 複数の参考資料間に構造的な矛盾は確認されなかったため、rulebook を正とする優先順位ルールを発動する必要はなかった

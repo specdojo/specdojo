@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0136-exec-limit-resume
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -55,5 +55,5 @@ specdojo:
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[sysd-claude-agent-settings|Claude Codeエージェント設定]]
 - [[sysd-codex-agent-settings|Codexエージェント設定]]
-- [[exec-operation-guide|SpecDojo exec運用ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]

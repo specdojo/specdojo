@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-comparison-of-alternatives-template
+  id: specdojo:prj-comparison-of-alternatives-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-comparison-of-alternatives
       type: project
       status: draft
-      rulebook: prj-comparison-of-alternatives-rulebook
+      rulebook: specdojo:prj-comparison-of-alternatives-rulebook
       based_on:
         - _PROJECT_ID_:prj-scope
         - _PROJECT_ID_:prj-issues-and-approach

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: dmd-rules
+  id: specdojo:dmd-rulebook
   type: rulebook
   status: draft
 ---

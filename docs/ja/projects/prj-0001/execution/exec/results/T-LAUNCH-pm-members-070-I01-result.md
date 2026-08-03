@@ -28,7 +28,7 @@ specdojo:
 
 ## 3. 申し送り
 
-- plan では template として `docs/ja/specdojo/templates/pm-members-template.md` が指定されていたが、同名の Markdown ファイルは存在せず、実在する `docs/ja/specdojo/templates/pm-members-template.yaml` を参照した。rulebook の `target_format: yaml` および template 参照 ID `pm-members-template` と整合するため、欠落ではなく拡張子指定のゆれとして扱った。
+- plan では template として `docs/ja/specdojo/templates/pm-members-template.md` が指定されていたが、同名の Markdown ファイルは存在せず、実在する `docs/ja/specdojo/templates/pm-members-template.yaml` を参照した。rulebook の `target_format: yaml` および template 参照 ID `specdojo:pm-members-template` と整合するため、欠落ではなく拡張子指定のゆれとして扱った。
 - recipe には実行ログから既存 nickname を確認する手順があるが、本 task の参照範囲は plan 記載文書と depends_on 成果物に限定されているため、追加の実行ログ探索は行わなかった。既存 `pm-members.yaml` 内の nickname は変更していない。
 
 ## 4. 参考資料の活用

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: etc-rules
+  id: specdojo:etc-rulebook
   type: rulebook
   status: draft
 ---

@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-success-criteria-and-acceptance-criteria-rulebook
+  id: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-success-criteria-and-acceptance-criteria-recipe
-  sample: prj-success-criteria-and-acceptance-criteria-sample
-  template: prj-success-criteria-and-acceptance-criteria-template
+  recipe: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
+  sample: specdojo:prj-success-criteria-and-acceptance-criteria-sample
+  template: specdojo:prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # 成功基準と受入条件 作成ルール
@@ -82,14 +82,14 @@ flowchart LR
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 - メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
 
-| 項目       | 説明                                                        | 必須 |
-| ---------- | ----------------------------------------------------------- | ---- |
-| id         | `<project-id>:prj-success-criteria-and-acceptance-criteria` | ○    |
-| type       | `project` 固定                                              | ○    |
-| status     | `draft` / `ready` / `deprecated`                            | ○    |
-| rulebook   | `prj-success-criteria-and-acceptance-criteria-rulebook`     | ○    |
-| based_on   | `prj-scope` など、直接の根拠となる文書を含む配列            | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                                     | 任意 |
+| 項目       | 説明                                                             | 必須 |
+| ---------- | ---------------------------------------------------------------- | ---- |
+| id         | `<project-id>:prj-success-criteria-and-acceptance-criteria`      | ○    |
+| type       | `project` 固定                                                   | ○    |
+| status     | `draft` / `ready` / `deprecated`                                 | ○    |
+| rulebook   | `specdojo:prj-success-criteria-and-acceptance-criteria-rulebook` | ○    |
+| based_on   | `prj-scope` など、直接の根拠となる文書を含む配列                 | 任意 |
+| supersedes | 置き換え対象の旧文書 ID                                          | 任意 |
 
 ### 4.2. 推奨ルール
 

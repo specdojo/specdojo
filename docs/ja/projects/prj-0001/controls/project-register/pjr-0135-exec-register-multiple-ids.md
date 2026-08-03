@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0135-exec-register-multiple-ids
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -51,6 +51,6 @@ specdojo:
 
 - [[prj-0001:pjr-0122|launch trackの振り返り]]
 - [[sysd-agent-settings|エージェント共通設定]]
-- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[exec-operation-guide|SpecDojo exec運用ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[specdojo:exec-operation-guide|SpecDojo exec運用ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: nfr-maintainability-sample
+  id: specdojo:nfr-maintainability-sample
   type: project
   status: draft
-  rulebook: nfr-maintainability-rulebook
+  rulebook: specdojo:nfr-maintainability-rulebook
 ---
 
 # [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                                                  | 備考                        |
-| ------------ | ------------------------------------------------------------------- | --------------------------- |
-| ドキュメント | [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) | 最小サンプル                |
-| 目的         | 変更容易性と復旧容易性を定義する                                    | deliverables-reference 準拠 |
-| 主な内容     | 平均修復時間(MTTR)、変更リードタイム、ログ粒度                      | 要点のみ記載                |
+| 項目         | 値                                                                  | 備考                                 |
+| ------------ | ------------------------------------------------------------------- | ------------------------------------ |
+| ドキュメント | [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) | 最小サンプル                         |
+| 目的         | 変更容易性と復旧容易性を定義する                                    | specdojo:deliverables-reference 準拠 |
+| 主な内容     | 平均修復時間(MTTR)、変更リードタイム、ログ粒度                      | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

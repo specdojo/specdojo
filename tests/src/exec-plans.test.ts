@@ -495,7 +495,7 @@ describe("plan generation (edit done_criteria goals)", () => {
 
 describe("plan generation (rulebook includes)", () => {
   // specdojoRootDir() は cwd から上方探索するため、実リポジトリのテンプレートと
-  // 移行済み cdfd-rulebook（includes: cdfd-mermaid-rulebook）を用いて注入を検証する。
+  // 移行済み specdojo:cdfd-rulebook（includes: specdojo:cdfd-mermaid-rulebook）を用いて注入を検証する。
   async function generateFullyGuidedPlan(rulebook: string | undefined): Promise<string> {
     const root = mkdtempSync(join(tmpdir(), "specdojo-exec-inc-"));
     const executionPath = join(root, "execution");
@@ -562,7 +562,7 @@ describe("plan generation (rulebook includes)", () => {
   }
 
   it("include を宣言する rulebook では併せて適用する rulebook のパスを注入する", async () => {
-    const plan = await generateFullyGuidedPlan("cdfd-rulebook");
+    const plan = await generateFullyGuidedPlan("specdojo:cdfd-rulebook");
 
     expect(plan).toContain("併せて適用する rulebook（記法など）:");
     expect(plan).toContain("`docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md`");

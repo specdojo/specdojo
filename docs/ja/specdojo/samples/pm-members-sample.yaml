@@ -1,12 +1,12 @@
-id: pm-members-sample
+id: specdojo:pm-members-sample
 type: project
 status: draft
 title: メンバー名簿
-rulebook: pm-members-rulebook
+rulebook: specdojo:pm-members-rulebook
 based_on:
-  - people-and-organization-definition-standard
-  - pm-organization-sample
-  - pm-roles-sample
+  - specdojo:people-and-organization-definition-standard
+  - specdojo:pm-organization-sample
+  - specdojo:pm-roles-sample
 version: 1
 project_id: prj-0001
 

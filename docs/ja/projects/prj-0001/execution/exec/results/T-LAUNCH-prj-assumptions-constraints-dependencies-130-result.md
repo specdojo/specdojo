@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-template
+    - specdojo:prj-assumptions-constraints-dependencies-template
 ---
 
 # Edit Result

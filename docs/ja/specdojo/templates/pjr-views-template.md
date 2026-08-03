@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pjr-views-template
+  id: specdojo:pjr-views-template
   type: template
   status: draft
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pjr-views
       type: project
       status: ready
-      rulebook: pjr-rulebook
+      rulebook: specdojo:pjr-rulebook
       part_of:
         - _PROJECT_ID_:pjr-index
 ---

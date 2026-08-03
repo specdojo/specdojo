@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:pm-quality-management-plan
-    - pm-quality-management-plan-template
+    - specdojo:pm-quality-management-plan-template
 ---
 
 # Edit Result

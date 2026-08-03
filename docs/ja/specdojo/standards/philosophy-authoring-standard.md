@@ -1,11 +1,11 @@
 ---
 specdojo:
-  id: philosophy-authoring-standard
+  id: specdojo:philosophy-authoring-standard
   type: standard
   status: draft
   based_on:
-    - document-metadata-standard
-    - id-and-file-naming-standard
+    - specdojo:document-metadata-standard
+    - specdojo:id-and-file-naming-standard
 ---
 
 # Philosophy 記述標準
@@ -66,23 +66,23 @@ Philosophy Authoring Standard
 - ファイル名は `<subject>-philosophy.md` とする。
 - `id` / `type` / `status` を必須とし、共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `type` は `philosophy` 固定とする。
-- `id` は `<subject>-philosophy` 形式とし、所属を表す接頭辞を付けない（[id-and-file-naming-standard.md](id-and-file-naming-standard.md) の `フレームワーク文書のID` に従う）。
+- `id` は `specdojo:<subject>-philosophy` 形式とし、authority は所有元、local-id は主題と文書種別だけを表す（[id-and-file-naming-standard.md](id-and-file-naming-standard.md) の `実践体系文書のlocal-id` に従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目       | 必須 | 説明                                 |
-| ---------- | ---- | ------------------------------------ |
-| id         | ○    | `<subject>-philosophy` 形式の一意 ID |
-| type       | ○    | `philosophy` 固定                    |
-| status     | ○    | `draft` / `ready` / `deprecated`     |
-| based_on   | 任意 | 根拠ドキュメント                     |
-| supersedes | 任意 | 置き換え関係                         |
+| 項目       | 必須 | 説明                                          |
+| ---------- | ---- | --------------------------------------------- |
+| id         | ○    | `specdojo:<subject>-philosophy` 形式の一意 ID |
+| type       | ○    | `philosophy` 固定                             |
+| status     | ○    | `draft` / `ready` / `deprecated`              |
+| based_on   | 任意 | 根拠ドキュメント                              |
+| supersedes | 任意 | 置き換え関係                                  |
 
 記述例:
 
 ```yaml
 ---
 specdojo:
-  id: specdojo-philosophy
+  id: specdojo:specdojo-philosophy
   type: philosophy
   status: draft
 ---

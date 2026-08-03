@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `pm-roles.yaml` の既存記述を、`pm-roles-rulebook`、`pm-roles-recipe`、`pm-organization.md`、対応 schema の観点で確認した。
+- `pm-roles.yaml` の既存記述を、`specdojo:pm-roles-rulebook`、`specdojo:pm-roles-recipe`、`pm-organization.md`、対応 schema の観点で確認した。
 - 対象 YAML は、標準 Role code（`PO` / `PM` / `BA` / `ARC` / `DEV` / `QE` / `UX` / `OPS`）を過不足・重複なく標準順で定義していた。
 - 各 `project_note` は公開可能なプロジェクト固有メモの範囲に収まり、member nickname、agent 名、個人名、具体的な兼務割り当て、非公開情報を含んでいないため、対象 YAML の内容変更は不要と判断した。
 - schema 検査、Markdown 整形、Markdown lint を実施した。plan 指定の npm script は sandbox の IPC 制限で起動時に失敗したため、同一 validator を `node --import tsx` 経由で実行し、対象 YAML が valid であることを確認した。
@@ -30,8 +30,8 @@ specdojo:
 
 ## 3. 申し送り
 
-- 対象 YAML の `based_on` には `people-and-organization-definition-standard` が含まれているが、本 plan の参照許可範囲外のため内容確認は行っていない。
-- `pm-organization.md` では新しい Role code が必要になった場合の見直し条件に触れているが、`pm-roles-rulebook` は標準外 Role code の追加を禁止している。現時点の `pm-roles.yaml` は標準 Role code のみで成立しているため変更不要とした。将来、標準外 Role code の必要性が出た場合は、先に rulebook / schema 側の扱いを見直す必要がある。
+- 対象 YAML の `based_on` には `specdojo:people-and-organization-definition-standard` が含まれているが、本 plan の参照許可範囲外のため内容確認は行っていない。
+- `pm-organization.md` では新しい Role code が必要になった場合の見直し条件に触れているが、`specdojo:pm-roles-rulebook` は標準外 Role code の追加を禁止している。現時点の `pm-roles.yaml` は標準 Role code のみで成立しているため変更不要とした。将来、標準外 Role code の必要性が出た場合は、先に rulebook / schema 側の扱いを見直す必要がある。
 - `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-roles.schema.yaml --data docs/ja/projects/prj-0001/030-project-management/020-organization/pm-roles.yaml` は、`tsx` が `/tmp/tsx-1000/*.pipe` を listen する段階で `EPERM` となった。schema / data の不整合ではない。
 
 ## 4. 参考資料の活用

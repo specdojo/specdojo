@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0138-register-add-on-integration-branch
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -50,11 +50,11 @@ PJR-ID の重複と `pjr-index.md` 末尾での merge conflict は、採番と�
 - 統合ブランチは `run.register_integration_branch`（既定 `main`）で設定から解決し、`--integration-branch` / `--integration-worktree` で上書きできる。
 - 予約 commit は `pjr-index.md` の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。個票は作成せず、割り当て PJR-ID を標準出力の最終行へ返す。
 - worktree 不在・`pjr-index.md` の未 commit 変更・ID 競合は書き込み前にエラー終了する。`--reserve` 未指定時は従来の branch 内完結挙動を維持する。
-- 予約起票の運用手順を [[register-operation-guide|SpecDojo登録簿運用ガイド]] と [[command-reference|SpecDojoコマンドリファレンス]] へ記載した。
+- 予約起票の運用手順を [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]] と [[specdojo:command-reference|SpecDojoコマンドリファレンス]] へ記載した。
 
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0137-register-id-uniqueness|pjr-indexの重複ID検知と再採番]]
-- [[pjr-rulebook|プロジェクト登録簿ルールブック]]
-- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]]
+- [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]

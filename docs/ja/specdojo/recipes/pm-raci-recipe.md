@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: pm-raci-recipe
+  id: specdojo:pm-raci-recipe
   type: recipe
   status: ready
-  rulebook: pm-raci-rulebook
-  sample: pm-raci-sample
+  rulebook: specdojo:pm-raci-rulebook
+  sample: specdojo:pm-raci-sample
 ---
 
 # RACI 作成レシピ

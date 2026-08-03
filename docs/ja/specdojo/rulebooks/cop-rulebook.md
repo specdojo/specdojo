@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cop-rules
+  id: specdojo:cop-rulebook
   type: rulebook
   status: draft
 ---

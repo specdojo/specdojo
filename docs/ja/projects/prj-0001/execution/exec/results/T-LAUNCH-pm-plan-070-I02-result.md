@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `pm-plan-rulebook` と `pm-plan-recipe` に照らし、`pm-plan.md` が標準章立て、PM / PO の責務境界、計画・進捗・課題・リスク・変更管理の方針、管理台帳への分離方針を満たしていることを確認した。
+- `specdojo:pm-plan-rulebook` と `specdojo:pm-plan-recipe` に照らし、`pm-plan.md` が標準章立て、PM / PO の責務境界、計画・進捗・課題・リスク・変更管理の方針、管理台帳への分離方針を満たしていることを確認した。
 - 磨き込み方針に合わせ、品質確認の根拠表現を `sample` 参照前提から既存構成を基準にした表現へ最小修正した。
 - `status: draft` は人間による `ready` 昇格対象のため据え置いた。
 

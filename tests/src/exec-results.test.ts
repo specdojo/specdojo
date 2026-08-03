@@ -268,7 +268,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       startedAt: "2026-07-07T00:00:00.000Z",
       execution: "human",
       approach: "bootstrap-finalize",
-      targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
+      targets: ["prj-0001:prj-scope", "specdojo:prj-scope-rulebook"],
       finalizeSections: {
         doneCriteriaChecklist: "- [ ] Business value is clear（BA / vp-ba-business-value）",
         targetsChecklist:
@@ -279,11 +279,11 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const body = readFileSync(resultPath, "utf8");
     expect(body).toContain("# Finalize Result");
     // targets は frontmatter にリストとして残り、機械的に対象文書を取得できる。
-    expect(body).toContain("targets:\n    - prj-0001:prj-scope\n    - prj-scope-rulebook");
+    expect(body).toContain("targets:\n    - prj-0001:prj-scope\n    - specdojo:prj-scope-rulebook");
     expect(body).toContain("execution: human");
     expect(body).not.toContain("plan_ref:");
-    expect(body).toContain("[[exec-human-finalize-recipe|Human Finalize 実行レシピ]]");
-    expect(body).toContain("[[exec-human-finalize-standard|Human Finalize 実行標準]]");
+    expect(body).toContain("[[specdojo:exec-human-finalize-recipe|Human Finalize 実行レシピ]]");
+    expect(body).toContain("[[specdojo:exec-human-finalize-standard|Human Finalize 実行標準]]");
     expect(body).toContain("- [ ] Business value is clear（BA / vp-ba-business-value）");
     expect(body).toContain("## 3. 実践の型の確認");
     expect(body).toContain("- [ ] rulebook: `docs/ja/specdojo/rulebooks/overview-rulebook.md`");
@@ -299,7 +299,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       projectId: "prj-0001",
       execution: "human",
       approach: "bootstrap-finalize",
-      targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
+      targets: ["prj-0001:prj-scope", "specdojo:prj-scope-rulebook"],
     });
   });
 
@@ -313,13 +313,15 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       startedAt: "2026-07-07T00:00:00.000Z",
       execution: "human",
       approach: "bootstrap-finalize",
-      targets: ["prj-0001:prj-scope", "prj-scope-rulebook"],
+      targets: ["prj-0001:prj-scope", "specdojo:prj-scope-rulebook"],
     });
 
     await updateResultStatus(resultPath, "complete", "2026-07-07T01:00:00.000Z");
 
     const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
-    expect(frontmatter).toContain("targets:\n    - prj-0001:prj-scope\n    - prj-scope-rulebook");
+    expect(frontmatter).toContain(
+      "targets:\n    - prj-0001:prj-scope\n    - specdojo:prj-scope-rulebook",
+    );
     expect(frontmatter).toContain("execution: human");
     expect(frontmatter).not.toContain("plan_ref:");
     expect(frontmatter).toContain("status: complete");

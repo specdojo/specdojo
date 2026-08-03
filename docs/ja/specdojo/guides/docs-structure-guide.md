@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: docs-structure-guide
+  id: specdojo:docs-structure-guide
   type: guide
   status: ready
 ---

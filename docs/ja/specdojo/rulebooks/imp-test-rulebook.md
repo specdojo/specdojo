@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-test-rulebook
+  id: specdojo:imp-test-rulebook
   type: rulebook
   status: draft
-  sample: imp-test-sample
+  sample: specdojo:imp-test-sample
 ---
 
 # 影響調査（テスト）作成ルール
@@ -46,7 +46,7 @@ Impact Analysis (Test) Rulebook
 | id         | ドキュメント ID（例: `imp-test`）   | ○    |
 | type       | `project`                           | ○    |
 | status     | `draft` / `ready` / `deprecated`    | ○    |
-| rulebook   | `imp-test-rulebook` 固定            | ○    |
+| rulebook   | `specdojo:imp-test-rulebook` 固定   | ○    |
 | part_of    | 一覧/親ドキュメントへの所属 ID 配列 | 任意 |
 | based_on   | 変更要求や根拠資料の ID 配列        | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列    | 任意 |

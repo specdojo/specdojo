@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-interface-rulebook
+  id: specdojo:imp-interface-rulebook
   type: rulebook
   status: draft
-  sample: imp-interface-sample
+  sample: specdojo:imp-interface-sample
 ---
 
 # 影響調査（I/F）作成ルール
@@ -46,7 +46,7 @@ Impact Analysis (Interface) Rulebook
 | id         | ドキュメント ID（例: `imp-interface`） | ○    |
 | type       | `project`                              | ○    |
 | status     | `draft` / `ready` / `deprecated`       | ○    |
-| rulebook   | `imp-interface-rulebook` 固定          | ○    |
+| rulebook   | `specdojo:imp-interface-rulebook` 固定 | ○    |
 | part_of    | 一覧/親ドキュメントへの所属 ID 配列    | 任意 |
 | based_on   | 変更要求や根拠資料の ID 配列           | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列       | 任意 |

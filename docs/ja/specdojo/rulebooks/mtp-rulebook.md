@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: mtp-rules
+  id: specdojo:mtp-rulebook
   type: rulebook
   status: draft
 ---

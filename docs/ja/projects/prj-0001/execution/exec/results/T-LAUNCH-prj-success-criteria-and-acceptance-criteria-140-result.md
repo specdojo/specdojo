@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:prj-success-criteria-and-acceptance-criteria
-    - prj-success-criteria-and-acceptance-criteria-rulebook
-    - prj-success-criteria-and-acceptance-criteria-recipe
-    - prj-success-criteria-and-acceptance-criteria-sample
-    - prj-success-criteria-and-acceptance-criteria-template
+    - specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+    - specdojo:prj-success-criteria-and-acceptance-criteria-recipe
+    - specdojo:prj-success-criteria-and-acceptance-criteria-sample
+    - specdojo:prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # Finalize Result

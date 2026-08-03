@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: stc-rules
+  id: specdojo:stc-rulebook
   type: rulebook
   status: draft
 ---

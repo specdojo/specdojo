@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: opr-incident-sample
+  id: specdojo:opr-incident-sample
   type: operations
   status: draft
-  rulebook: opd-rulebook
+  rulebook: specdojo:opd-rulebook
   based_on: [opd-incident-management]
   supersedes: []
 ---

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-data-rulebook
+  id: specdojo:imp-data-rulebook
   type: rulebook
   status: draft
-  sample: imp-data-sample
+  sample: specdojo:imp-data-sample
 ---
 
 # 影響調査（データ）作成ルール
@@ -46,7 +46,7 @@ Impact Analysis (Data) Rulebook
 | id         | ドキュメント ID（例: `imp-data`）   | ○    |
 | type       | `project`                           | ○    |
 | status     | `draft` / `ready` / `deprecated`    | ○    |
-| rulebook   | `imp-data-rulebook` 固定            | ○    |
+| rulebook   | `specdojo:imp-data-rulebook` 固定   | ○    |
 | part_of    | 一覧/親ドキュメントへの所属 ID 配列 | 任意 |
 | based_on   | 変更要求や根拠資料の ID 配列        | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列    | 任意 |

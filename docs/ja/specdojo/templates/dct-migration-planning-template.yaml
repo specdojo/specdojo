@@ -1,11 +1,11 @@
 # Template: migration planning deliverables catalog
 # min_size: deliverable is included only when scaffold --size >= this value
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
-id: dct-migration-planning-template
+id: specdojo:dct-migration-planning-template
 type: template
 status: draft
 title: 成果物カタログ（移行計画）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 part_of:
   - _PROJECT_ID_:dct-index
 domain: migration-planning
@@ -22,7 +22,7 @@ groups:
           - imp-business
         overview: 移行方針と全体計画を定義し、切替リスクを管理
         path: mip-index.md
-        rulebook: mip-index-rulebook
+        rulebook: specdojo:mip-index-rulebook
         done_criteria:
           - text: 移行範囲・移行方式・スケジュール・リスクが業務観点で確認できること
             roles: [BA]
@@ -52,7 +52,7 @@ groups:
           - imp-data
         overview: データ移行の設計内容を定義し、移行時の整合性を確保
         path: dmd-index.md
-        rulebook: dmd-index-rulebook
+        rulebook: specdojo:dmd-index-rulebook
         done_criteria:
           - text: 移行対象データ・変換方針・マッピングが業務観点で確認できること
             roles: [BA]
@@ -78,7 +78,7 @@ groups:
           - mip-index
         overview: 移行リハーサルの実施計画を定義し、切替前に妥当性を検証
         path: mtp-index.md
-        rulebook: mtp-index-rulebook
+        rulebook: specdojo:mtp-index-rulebook
         done_criteria:
           - text: テスト範囲・シナリオ・判定基準が業務観点で確認できること
             roles: [BA]
@@ -102,7 +102,7 @@ groups:
           - mtp-index
         overview: 本番切替の手順を定義し、停止時間と障害リスクを最小化
         path: cop-index.md
-        rulebook: cop-index-rulebook
+        rulebook: specdojo:cop-index-rulebook
         done_criteria:
           - text: 切替手順・業務停止範囲・判定ポイントが業務観点で確認できること
             roles: [BA]
@@ -128,7 +128,7 @@ groups:
           - cop-index
         overview: 切替後の運用移管計画を定義し、安定稼働へ移行
         path: otp-index.md
-        rulebook: otp-index-rulebook
+        rulebook: specdojo:otp-index-rulebook
         done_criteria:
           - text: 運用引継ぎ・ハイパーケア体制が業務観点で確認できること
             roles: [BA]

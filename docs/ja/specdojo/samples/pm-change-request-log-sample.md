@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: pm-change-request-log-sample
+  id: specdojo:pm-change-request-log-sample
   type: project
   status: draft
-  rulebook: pm-change-request-log-rulebook
+  rulebook: specdojo:pm-change-request-log-rulebook
 ---
 
 # 変更要求ログ サンプル

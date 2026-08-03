@@ -3,7 +3,7 @@ specdojo:
   id: tsd-vllm-mlx-mr
   type: architecture
   status: draft
-  rulebook: tsd-rulebook
+  rulebook: specdojo:tsd-rulebook
 ---
 
 # vllm-mlx Model Registry 技術スタック定義

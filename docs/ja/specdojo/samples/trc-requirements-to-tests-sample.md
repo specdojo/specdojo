@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: trc-requirements-to-tests-sample
+  id: specdojo:trc-requirements-to-tests-sample
   type: project
   status: draft
-  rulebook: trc-requirements-to-tests-rulebook
+  rulebook: specdojo:trc-requirements-to-tests-rulebook
   based_on:
     - utc-index
     - itc-index

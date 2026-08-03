@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-quality-management-plan-template
+  id: specdojo:pm-quality-management-plan-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pm-quality-management-plan
       type: project
       status: draft
-      rulebook: pm-quality-management-plan-rulebook
+      rulebook: specdojo:pm-quality-management-plan-rulebook
       based_on:
         - _PROJECT_ID_:pm-plan
         - _PROJECT_ID_:prj-success-criteria-and-acceptance-criteria

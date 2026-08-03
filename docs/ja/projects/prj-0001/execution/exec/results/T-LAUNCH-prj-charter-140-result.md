@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:prj-charter
-    - prj-charter-rulebook
-    - prj-charter-recipe
-    - prj-charter-sample
-    - prj-charter-template
+    - specdojo:prj-charter-rulebook
+    - specdojo:prj-charter-recipe
+    - specdojo:prj-charter-sample
+    - specdojo:prj-charter-template
 ---
 
 # Finalize Result

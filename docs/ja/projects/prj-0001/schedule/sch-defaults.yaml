@@ -3,7 +3,7 @@ id: prj-0001:sch-defaults
 type: project
 status: ready
 title: スケジュール既定値
-rulebook: sch-rulebook
+rulebook: specdojo:sch-rulebook
 version: 1
 
 calendar:

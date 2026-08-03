@@ -13,15 +13,15 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:pm-organization
-    - pm-organization-rulebook
+    - specdojo:pm-organization-rulebook
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- `docs/ja/specdojo/rulebooks/pm-organization-rulebook.md` を更新し、`people-and-organization-definition-standard` を based_on に追加した。
-- 位置づけと用語定義の表に `people-and-organization-definition-standard` を追加し、`pm-organization.md` が Role / Member / owner / RACI の共通定義を再掲しない前提を明確にした。
+- `docs/ja/specdojo/rulebooks/pm-organization-rulebook.md` を更新し、`specdojo:people-and-organization-definition-standard` を based_on に追加した。
+- 位置づけと用語定義の表に `specdojo:people-and-organization-definition-standard` を追加し、`pm-organization.md` が Role / Member / owner / RACI の共通定義を再掲しない前提を明確にした。
 - 完成版 `pm-organization.md` は review 済みで内容変更不要と判断し、rulebook 側の最終調整に限定した。
 
 ## 2. 変更ファイル

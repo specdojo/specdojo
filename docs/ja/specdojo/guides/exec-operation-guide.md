@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: exec-operation-guide
+  id: specdojo:exec-operation-guide
   type: guide
   status: ready
 ---

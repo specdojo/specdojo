@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-scope-rulebook
+  id: specdojo:prj-scope-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-scope-recipe
-  sample: prj-scope-sample
-  template: prj-scope-template
+  recipe: specdojo:prj-scope-recipe
+  sample: specdojo:prj-scope-sample
+  template: specdojo:prj-scope-template
 ---
 
 # プロジェクトスコープ 作成ルール
@@ -65,7 +65,7 @@ flowchart LR
 ### 3.1. 配置（推奨）
 
 - `docs/ja/projects/<project-id>/020-project-definition/prj-scope.md` へ配置します。
-- プロジェクト配下の章構成は [[docs-structure-guide]] に従います。
+- プロジェクト配下の章構成は [[specdojo:docs-structure-guide]] に従います。
 - 参考図表や補足資料を別ファイルにする場合は、スコープ本文から参照リンクで紐付けます。
 
 ### 3.2. ドキュメントID（推奨）
@@ -86,14 +86,14 @@ flowchart LR
 Frontmatter は共通スキーマに従います。
 
 - 参照スキーマ: [deliverable-frontmatter.schema.yaml](/docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
-- メタ情報標準: [[document-metadata-standard]]
+- メタ情報標準: [[specdojo:document-metadata-standard]]
 
 | 項目       | 説明                               | 必須 |
 | ---------- | ---------------------------------- | ---- |
 | id         | `<project-id>:prj-scope`           | ○    |
 | type       | `project` 固定                     | ○    |
 | status     | `draft` / `ready` / `deprecated`   | ○    |
-| rulebook   | `prj-scope-rulebook`               | ○    |
+| rulebook   | `specdojo:prj-scope-rulebook`      | ○    |
 | based_on   | `prj-overview`、上位方針、憲章など | 任意 |
 | supersedes | 置き換え対象の旧文書 ID            | 任意 |
 

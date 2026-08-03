@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-sample
+    - specdojo:prj-assumptions-constraints-dependencies-sample
 ---
 
 # Edit Result
@@ -24,7 +24,7 @@ specdojo:
 
 - `## 4. 影響評価と対応方針` の表に `一次対応・判断` 列を追加し、前提・制約・依存の変化ごとに「最初に確認すること」と「一次対応・判断」を分けて読める形にした。
 - `## 5. 監視・変更管理` を、見直し契機・記録項目・責任分担が分かるように書き換えた。変更記録の項目と、店主代表と開発担当の役割分担を明示した。
-- 既存の `前提条件`、`制約事項`、`依存関係` の列構成と、`[[prj-scope-sample|プロジェクトスコープ]]` への参照は維持し、デッドリンクは発生していないことを確認した。
+- 既存の `前提条件`、`制約事項`、`依存関係` の列構成と、`[[specdojo:prj-scope-sample|プロジェクトスコープ]]` への参照は維持し、デッドリンクは発生していないことを確認した。
 
 ## 2. 変更ファイル
 
@@ -47,6 +47,6 @@ specdojo:
 | `docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md`                                                         | 章構成と基本の表構造を確認し、sample が rulebook の本文構成から外れていないことを確かめた。                                           |
 | `docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md`                                            | 実成果物の記述粒度と責任分担を確認し、sample の `監視・変更管理` に店主代表と開発担当の役割分担を反映した。                           |
 | `docs/ja/projects/prj-0001/030-project-management/execution/exec/results/T-LAUNCH-prj-assumptions-constraints-dependencies-110-result.md` | 直前の rulebook 更新内容を確認し、sample 側で追従が必要な箇所が表構成の差分であることを把握した。                                     |
-| `docs/ja/specdojo/samples/prj-scope-sample.md`                                                                                            | 参照先として存在することを確認し、`[[prj-scope-sample\|プロジェクトスコープ]]` のリンクを維持した。                                   |
+| `docs/ja/specdojo/samples/prj-scope-sample.md`                                                                                            | 参照先として存在することを確認し、`[[specdojo:prj-scope-sample\|プロジェクトスコープ]]` のリンクを維持した。                          |
 
 複数文書間で矛盾は見つからなかった。rulebook を正として、sample の影響評価表と監視・変更管理のみを最小限修正した。

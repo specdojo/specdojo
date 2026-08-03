@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-success-criteria-and-acceptance-criteria-sample
+  id: specdojo:prj-success-criteria-and-acceptance-criteria-sample
   type: project
   status: ready
-  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+  rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
   based_on:
-    - prj-overview-sample
-    - prj-scope-sample
+    - specdojo:prj-overview-sample
+    - specdojo:prj-scope-sample
   supersedes: []
 ---
 

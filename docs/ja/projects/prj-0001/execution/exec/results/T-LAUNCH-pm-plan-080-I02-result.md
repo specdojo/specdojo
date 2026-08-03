@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `pm-plan-rulebook` と `pm-plan-recipe` に沿って、対象成果物 `pm-plan.md` の章構成、必須要素、禁止事項、管理粒度を確認した。
+- `specdojo:pm-plan-rulebook` と `specdojo:pm-plan-recipe` に沿って、対象成果物 `pm-plan.md` の章構成、必須要素、禁止事項、管理粒度を確認した。
 - depends_on の [[prj-0001:pm-organization|組織定義]] と `pm-roles-sample.yaml` を参照し、Role code、実行主体、AI Agent、最終判断の扱いを照合した。
 - `pm-roles-sample.yaml` に含まれる project_note の業務文脈が `pm-plan.md` の SpecDojo 向け記述と完全には一致しないため、Role code 語彙のみを正本として扱う暫定判断を `pm-plan.md` の継続確認事項に追加した。
 

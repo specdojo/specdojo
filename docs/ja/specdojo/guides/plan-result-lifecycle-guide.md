@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: plan-result-lifecycle-guide
+  id: specdojo:plan-result-lifecycle-guide
   type: guide
   status: ready
 ---

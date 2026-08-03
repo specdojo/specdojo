@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:pm-raci
-    - pm-raci-template
+    - specdojo:pm-raci-template
 ---
 
 # Edit Result
@@ -22,7 +22,7 @@ specdojo:
 
 `docs/ja/specdojo/templates/pm-raci-template.md` を、レビュー済みの成果物およびルールブックに基づき最終調整した。
 
-- **構成の最適化**: `pm-raci-rulebook` の標準構成（目的、適用方針、定義、成果物別、プロセス別、見直し条件、禁止事項）に従い、骨組みを維持しつつ内容を具体化した。
+- **構成の最適化**: `specdojo:pm-raci-rulebook` の標準構成（目的、適用方針、定義、成果物別、プロセス別、見直し条件、禁止事項）に従い、骨組みを維持しつつ内容を具体化した。
 - **定型表現の導入**: 成果物 `prj-0001:pm-raci` で採用され、汎用性が高いと判断した以下の記述を雛形として取り込んだ。
   - 「目的」セクションにおける PM の利用用途（計画化、進捗確認、課題・リスク管理への接続）。
   - 「適用方針」における Role code の正本参照、`A` の集約方針、Agent/兼務の扱い。

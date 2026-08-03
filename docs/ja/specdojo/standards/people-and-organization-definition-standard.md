@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: people-and-organization-definition-standard
+  id: specdojo:people-and-organization-definition-standard
   type: standard
   status: draft
 ---

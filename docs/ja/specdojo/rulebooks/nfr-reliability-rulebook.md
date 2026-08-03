@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-reliability-rules
+  id: specdojo:nfr-reliability-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Reliability Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-reliability-rules`。
+- ルールドキュメントIDは `specdojo:nfr-reliability-rulebook`。
 - 生成対象ドキュメントIDは `nfr-reliability` を推奨する。
 - 要件IDは `nfr-rel-<連番>`（例: `nfr-rel-001`）を推奨する。
 

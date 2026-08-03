@@ -39,6 +39,6 @@ specdojo:
 - 参照した rulebook: `docs/ja/specdojo/rulebooks/pm-raci-rulebook.md`。本文構成、RACI 列の Role code 制約、1 行 1 `A`、Agent に `A` を割り当てないこと、成果物別・プロセス別 RACI の必須性、見直し条件と禁止事項を構造基準として使用した。
 - 参照した recipe: `docs/ja/specdojo/recipes/pm-raci-recipe.md`。PM が計画化、進捗確認、課題・リスク、変更要求、決定記録へ接続できる責任分担になっているか、`C` と `I` の読み分けができるかを確認する観点として使用した。
 - 参照した depends_on 成果物: `docs/ja/projects/prj-0001/030-project-management/020-organization/pm-organization.md`。RACI の Role code 語彙は組織定義を正とし、実行主体や兼務割り当てを RACI 本文へ複製しない方針の根拠として使用した。
-- 磨き込みでは sample / template を読まないという plan 指示に従い、`pm-raci-sample` と `pm-raci-template` は参照していない。
+- 磨き込みでは sample / template を読まないという plan 指示に従い、`specdojo:pm-raci-sample` と `specdojo:pm-raci-template` は参照していない。
 - `pm-roles.yaml`、`pm-members.yaml`、`prj-overview` は本文や依存文書から言及されているが、plan に列挙されていないため参照していない。Role code の実体確認は未実施とし、既存 RACI 列を採用済み Role code として扱う前提を本文と申し送りに残した。
 - rulebook / recipe / depends_on の間に、今回の編集判断へ影響する明確な矛盾は確認していない。既存記述は rulebook の章構成と禁止事項をおおむね満たしていたため、表の再設計や全面的な書き換えは行わず、判断根拠が薄い箇所の前提明示にとどめた。

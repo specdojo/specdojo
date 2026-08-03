@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:pm-members
-    - pm-members-template
+    - specdojo:pm-members-template
 ---
 
 # Edit Result
@@ -34,6 +34,6 @@ template は variable な値をプレースホルダ化しただけで、`pm-mem
 
 ## 4. 参考資料の活用
 
-`approach: template-maintenance` に従い、参照の向きを `成果物 → template` に切り替えた。見直し対象は `[[pm-members-template|メンバー定義 template]]` とし、根拠として完成版 `[[prj-0001:pm-members|メンバー定義]]`、review result `[[prj-0001:xrr-t-launch-pm-members-090|T-LAUNCH-pm-members-090]]` / `[[prj-0001:xer-t-launch-pm-members-110|T-LAUNCH-pm-members-110]]`、完成例 `[[pm-members-sample|メンバー定義 sample]]`、および `[[pm-members-rulebook|メンバー定義 作成ルール]]` / `[[pm-members-recipe|メンバー定義 作成レシピ]]` を実際に確認した。
+`approach: template-maintenance` に従い、参照の向きを `成果物 → template` に切り替えた。見直し対象は `[[specdojo:pm-members-template|メンバー定義 template]]` とし、根拠として完成版 `[[prj-0001:pm-members|メンバー定義]]`、review result `[[prj-0001:xrr-t-launch-pm-members-090|T-LAUNCH-pm-members-090]]` / `[[prj-0001:xer-t-launch-pm-members-110|T-LAUNCH-pm-members-110]]`、完成例 `[[specdojo:pm-members-sample|メンバー定義 sample]]`、および `[[specdojo:pm-members-rulebook|メンバー定義 作成ルール]]` / `[[specdojo:pm-members-recipe|メンバー定義 作成レシピ]]` を実際に確認した。
 review result 090 では `pm-members.yaml` は approve され、110 でも rulebook の改訂不要と判断されていたため、構造・必須項目・禁止事項は rulebook を正として維持した。sample 120 では表示名や説明の一般化が行われており、template 側はその一般化を壊さず、雛形として使う際に固定値が残りにくい形へ調整するのが妥当と判断した。
 参照範囲内で矛盾は見つからず、追加の実例探索は行っていない。結果として、template にのみ variable な設定値のプレースホルダ化を反映し、成果物固有の内容は持ち込まない方針を維持した。

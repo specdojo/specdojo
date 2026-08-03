@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: br-sample
+  id: specdojo:br-sample
   type: project
   status: draft
-  rulebook: br-rulebook
+  rulebook: specdojo:br-rulebook
 ---
 
 # [ビジネスルール](../rulebooks/br-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                               | 備考                        |
-| ------------ | ------------------------------------------------ | --------------------------- |
-| ドキュメント | [ビジネスルール](../rulebooks/br-rulebook.md)    | 最小サンプル                |
-| 目的         | 複数プロセスから参照される横断的な判断を定義する | deliverables-reference 準拠 |
-| 主な内容     | ルール概要、入力、ルール、出力、例外 など        | 要点のみ記載                |
+| 項目         | 値                                               | 備考                                 |
+| ------------ | ------------------------------------------------ | ------------------------------------ |
+| ドキュメント | [ビジネスルール](../rulebooks/br-rulebook.md)    | 最小サンプル                         |
+| 目的         | 複数プロセスから参照される横断的な判断を定義する | specdojo:deliverables-reference 準拠 |
+| 主な内容     | ルール概要、入力、ルール、出力、例外 など        | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

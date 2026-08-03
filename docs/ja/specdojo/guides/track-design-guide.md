@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: track-design-guide
+  id: specdojo:track-design-guide
   type: guide
   status: ready
 ---

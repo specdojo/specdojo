@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { parsePracticeId, practiceLocalId, qualifyPracticeId } from "./practice-id.js";
 
 // 実践の型（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。
@@ -36,7 +37,7 @@ const KIND_DIR: Record<KataKind, string> = {
 };
 
 function rulebookFsPath(rulebookId: string): string {
-  return join(specdojoRootDir(), DOCS_BASE, "rulebooks", `${rulebookId}.md`);
+  return join(specdojoRootDir(), DOCS_BASE, "rulebooks", `${practiceLocalId(rulebookId)}.md`);
 }
 
 // 実践の型種別 → repo ルート相対ディレクトリ。commit 許可リスト（maintenance / bootstrap 系
@@ -78,13 +79,15 @@ function formatExt(targetFormat: string | undefined): string {
 // Canonical repo-root-relative path (no leading slash): the agent opens these files
 // from the run CWD (repo root or worktree root).
 function repoPath(kind: KataKind, id: string, ext: string): string {
-  return `${DOCS_BASE}/${KIND_DIR[kind]}/${id}.${ext}`;
+  return `${DOCS_BASE}/${KIND_DIR[kind]}/${practiceLocalId(id)}.${ext}`;
 }
 
 // rulebook 未宣言時の慣例 ID（<rulebook-prefix>-<kind>）。
-// 例: rulebook `pm-organization-rulebook` → sample `pm-organization-sample`。
+// 例: rulebook `specdojo:pm-organization-rulebook` → sample `specdojo:pm-organization-sample`。
 function conventionalRefId(rulebookId: string, kind: KataKind): string {
-  return `${rulebookId.replace(/-rulebook$/, "")}-${kind}`;
+  const { authority, localId } = parsePracticeId(rulebookId);
+  const conventionalId = `${localId.replace(/-rulebook$/, "")}-${kind}`;
+  return authority ? qualifyPracticeId(authority, conventionalId) : conventionalId;
 }
 
 // recipe / sample / template を 1 件解決する。
@@ -99,7 +102,12 @@ function resolveRef(
   if (declaredId === "none") return MISSING;
   if (declaredId) return repoPath(kind, declaredId, ext);
   const fallbackId = conventionalRefId(rulebookId, kind);
-  const fsPath = join(specdojoRootDir(), DOCS_BASE, KIND_DIR[kind], `${fallbackId}.${ext}`);
+  const fsPath = join(
+    specdojoRootDir(),
+    DOCS_BASE,
+    KIND_DIR[kind],
+    `${practiceLocalId(fallbackId)}.${ext}`,
+  );
   return existsSync(fsPath) ? repoPath(kind, fallbackId, ext) : MISSING;
 }
 
@@ -113,7 +121,7 @@ export function resolveKataRefs(rulebookId: string | undefined): KataRefs {
   }
   const fm = loadRulebookRefs(rulebookId);
   return {
-    rulebook: `${DOCS_BASE}/rulebooks/${rulebookId}.md`,
+    rulebook: `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`,
     recipe: resolveRef("recipe", fm.recipe, rulebookId, "md"),
     sample: resolveRef("sample", fm.sample, rulebookId, formatExt(fm.target_format)),
     template: resolveRef("template", fm.template, rulebookId, formatExt(fm.target_format)),
@@ -122,7 +130,7 @@ export function resolveKataRefs(rulebookId: string | undefined): KataRefs {
 
 // rulebook の repo 相対パス（先頭スラッシュ無し）。
 function rulebookRepoPath(rulebookId: string): string {
-  return `${DOCS_BASE}/rulebooks/${rulebookId}.md`;
+  return `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`;
 }
 
 // 主 rulebook の frontmatter `includes` から、併せて適用する rulebook の宣言順・重複除去済み
@@ -189,7 +197,7 @@ export function resolveDeliverableSchemaRef(
   if (fm.target_format !== "yaml") return MISSING;
   if (fm.schema === "none") return MISSING;
   if (fm.schema) return schemaRepoPath(fm.schema);
-  const prefix = rulebookId.replace(/-rulebook$/, "");
+  const prefix = practiceLocalId(rulebookId).replace(/-rulebook$/, "");
   const root = specdojoRootDir();
   for (const id of [localId, prefix]) {
     if (!id) continue;
@@ -212,7 +220,11 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
   const out: DeclaredKata[] = [];
   const add = (kind: KataKind, id: string | undefined, ext: string): void => {
     if (id && id !== "none") {
-      out.push({ kind, id, fsPath: join(root, DOCS_BASE, KIND_DIR[kind], `${id}.${ext}`) });
+      out.push({
+        kind,
+        id,
+        fsPath: join(root, DOCS_BASE, KIND_DIR[kind], `${practiceLocalId(id)}.${ext}`),
+      });
     }
   };
   add("recipe", fm.recipe, "md");

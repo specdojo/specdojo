@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-issues-and-approach
-    - prj-issues-and-approach-rulebook
+    - specdojo:prj-issues-and-approach-rulebook
 ---
 
 # Edit Result

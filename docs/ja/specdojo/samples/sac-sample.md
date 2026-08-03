@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: sac-sample
+  id: specdojo:sac-sample
   type: project
   status: draft
-  rulebook: sac-rulebook
+  rulebook: specdojo:sac-rulebook
 ---
 
 # [システム受入条件](../rulebooks/sac-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                               | 備考                        |
-| ------------ | ------------------------------------------------ | --------------------------- |
-| ドキュメント | [システム受入条件](../rulebooks/sac-rulebook.md) | 最小サンプル                |
-| 目的         | システム全体としての合格基準を定義する           | deliverables-reference 準拠 |
-| 主な内容     | 機能・非機能・障害・移行などの受け入れ条件       | 要点のみ記載                |
+| 項目         | 値                                               | 備考                                 |
+| ------------ | ------------------------------------------------ | ------------------------------------ |
+| ドキュメント | [システム受入条件](../rulebooks/sac-rulebook.md) | 最小サンプル                         |
+| 目的         | システム全体としての合格基準を定義する           | specdojo:deliverables-reference 準拠 |
+| 主な内容     | 機能・非機能・障害・移行などの受け入れ条件       | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

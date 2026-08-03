@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: pm-risk-register-rules
+  id: specdojo:pm-risk-register-rulebook
   type: rulebook
   status: draft
-  sample: pm-risk-register-sample
+  sample: specdojo:pm-risk-register-sample
 ---
 
 # リスク登録簿 作成ルール

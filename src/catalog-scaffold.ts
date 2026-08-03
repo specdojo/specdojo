@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { join } from "node:path";
 import yaml from "js-yaml";
 import type { DctDeliverableItem, DctDoc, DctSection, DctTemplateDoc } from "./catalog-types.js";
+import { practiceLocalId } from "./practice-id.js";
 
 export type ProjectSize = "small" | "medium" | "large";
 
@@ -84,7 +85,7 @@ export function scaffoldDoc(
     .filter((g): g is DctSection => g !== null);
 
   const doc: DctDoc = {
-    id: `${projectId}:${template.id.replace(/-template$/, "")}`,
+    id: `${projectId}:${practiceLocalId(template.id).replace(/-template$/, "")}`,
     type: "project",
     status: template.status,
     ...(template.title ? { title: replace(template.title) } : {}),

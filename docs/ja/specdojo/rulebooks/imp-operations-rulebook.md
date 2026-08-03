@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-operations-rulebook
+  id: specdojo:imp-operations-rulebook
   type: rulebook
   status: draft
-  sample: imp-operations-sample
+  sample: specdojo:imp-operations-sample
 ---
 
 # 影響調査（運用）作成ルール
@@ -46,7 +46,7 @@ Impact Analysis (Operations) Rulebook
 | id         | ドキュメント ID（例: `imp-operations`） | ○    |
 | type       | `project`                               | ○    |
 | status     | `draft` / `ready` / `deprecated`        | ○    |
-| rulebook   | `imp-operations-rulebook` 固定          | ○    |
+| rulebook   | `specdojo:imp-operations-rulebook` 固定 | ○    |
 | part_of    | 一覧/親ドキュメントへの所属 ID 配列     | 任意 |
 | based_on   | 変更要求や根拠資料の ID 配列            | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列        | 任意 |

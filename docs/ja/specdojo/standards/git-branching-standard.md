@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: git-branching-standard
+  id: specdojo:git-branching-standard
   type: standard
   status: draft
 ---

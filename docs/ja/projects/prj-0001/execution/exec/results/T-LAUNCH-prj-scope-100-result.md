@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-scope
-    - prj-scope-recipe
+    - specdojo:prj-scope-recipe
 ---
 
 # Edit Result

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: tsd-rulebook
+  id: specdojo:tsd-rulebook
   type: rulebook
   status: draft
-  sample: tsd-sample
+  sample: specdojo:tsd-sample
 ---
 
 # 特定領域 技術スタック詳細定義（TSD）作成ルール
@@ -44,7 +44,7 @@ Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 | `type`     | `architecture`                   | ○    |
 | `status`   | `draft` / `ready` / `deprecated` | ○    |
 | `part_of`  | `tsd-index`                      | ○    |
-| `rulebook` | `tsd-rulebook`                   | 推奨 |
+| `rulebook` | `specdojo:tsd-rulebook`          | 推奨 |
 | `based_on` | 根拠となる仕様 ID（配列）        | 任意 |
 
 ## 5. 本文構成（標準テンプレ）

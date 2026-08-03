@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-scope
   type: project
   status: ready
-  rulebook: prj-scope-rulebook
+  rulebook: specdojo:prj-scope-rulebook
   based_on:
     - prj-0001:prj-overview
   supersedes: []

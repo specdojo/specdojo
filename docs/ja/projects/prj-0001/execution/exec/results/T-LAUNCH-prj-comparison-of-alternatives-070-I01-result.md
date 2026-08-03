@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-comparison-of-alternatives-rulebook` の必須構成に沿って、既存の章構成を維持したまま内容を磨き込んだ。
+- `specdojo:prj-comparison-of-alternatives-rulebook` の必須構成に沿って、既存の章構成を維持したまま内容を磨き込んだ。
 - 評価値 `High` / `Middle` / `Low` が各評価軸で「採択判断に有利か」を示すことを明記し、コスト・リスク評価の読み違いを避けるよう補強した。
 - ARC 観点として、技術的外部依存、後続成果物への影響、案ごとのリスクとトレードオフを追記した。
 

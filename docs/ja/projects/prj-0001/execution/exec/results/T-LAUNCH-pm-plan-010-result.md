@@ -12,10 +12,10 @@ specdojo:
   agent: codex-expert-edit-agent
   targets:
     - prj-0001:pm-plan
-    - pm-plan-rulebook
-    - pm-plan-recipe
-    - pm-plan-sample
-    - pm-plan-template
+    - specdojo:pm-plan-rulebook
+    - specdojo:pm-plan-recipe
+    - specdojo:pm-plan-sample
+    - specdojo:pm-plan-template
 ---
 
 ## 1. 実施内容
@@ -50,7 +50,7 @@ specdojo:
 - bootstrap の手本として、同種で `status: ready` の `pm-organization-rulebook.md`、`pm-organization-recipe.md`、`pm-organization-sample.md`、`pm-organization-template.md` と、近接 PM 成果物の `pm-raci-rulebook.md`、`pm-raci-sample.md`、`pm-raci-template.md` を参照した。章構成、粒度、表、プレースホルダの置き方を手本にし、内容はプロジェクト管理計画用に一般化した。
 - 既存の `pm-plan.md` は、管理方針、品質・リスク・課題管理、体制、報告、見直しの骨格を維持した。ただし、owner ロールが PM である本タスクに合わせ、判断者が `PO` に寄りすぎていた箇所を、PM の起案・整理・運用と PO の最終判断に分離した。
 - 既存の `pm-plan-rulebook.md` は、構造の大枠を維持しつつ、recipe / sample / template への参照、PM 管理責務、Role code と実行主体の分離、管理台帳への接続、禁止事項を補強した。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template を追従させた。
-- `pm-plan-sample.md` は、既存が薄く sample ID も成果物 ID と重複していたため、`pm-plan-sample` に修正し、駄菓子屋文脈の完成最小例として再構成した。
+- `pm-plan-sample.md` は、既存が薄く sample ID も成果物 ID と重複していたため、`specdojo:pm-plan-sample` に修正し、駄菓子屋文脈の完成最小例として再構成した。
 - `pm-plan-recipe.md` は、rulebook の本文構成を重複定義せず、問い、深掘り、レビュー観点に集中した作成手順として確認した。
 - `pm-plan-template.md` は、rulebook の標準構成に対応する章とプレースホルダを持つ雛形として確認した。
 - 外部情報は使用しなかった。指定された対象文書、依存成果物、同種 ready 文書で判断可能だったため、Web 出典は追加していない。

@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-stakeholder-register
-    - prj-stakeholder-register-rulebook
+    - specdojo:prj-stakeholder-register-rulebook
 ---
 
 # Edit Result

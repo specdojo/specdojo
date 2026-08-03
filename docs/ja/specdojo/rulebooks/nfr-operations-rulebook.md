@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-operations-rules
+  id: specdojo:nfr-operations-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Operations Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-operations-rules`。
+- ルールドキュメントIDは `specdojo:nfr-operations-rulebook`。
 - 生成対象ドキュメントIDは `nfr-operations` を推奨する。
 - 要件IDは `nfr-ops-<連番>` を推奨する。
 

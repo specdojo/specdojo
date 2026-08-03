@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: prj-issues-and-approach-rulebook
+  id: specdojo:prj-issues-and-approach-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-issues-and-approach-recipe
-  sample: prj-issues-and-approach-sample
-  template: prj-issues-and-approach-template
+  recipe: specdojo:prj-issues-and-approach-recipe
+  sample: specdojo:prj-issues-and-approach-sample
+  template: specdojo:prj-issues-and-approach-template
   based_on:
-    - rulebook-authoring-standard
+    - specdojo:rulebook-authoring-standard
   supersedes: []
 ---
 
@@ -98,7 +98,7 @@ flowchart LR
 | id         | `<project-id>:prj-issues-and-approach`                       | ○    |
 | type       | `project` 固定                                               | ○    |
 | status     | `draft` / `ready` / `deprecated`                             | ○    |
-| rulebook   | `prj-issues-and-approach-rulebook`                           | ○    |
+| rulebook   | `specdojo:prj-issues-and-approach-rulebook`                  | ○    |
 | based_on   | 概要、スコープ、前提・制約・依存関係など、直接根拠にした文書 | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                                      | 任意 |
 
@@ -115,7 +115,7 @@ specdojo:
   id: prj-0001:prj-issues-and-approach
   type: project
   status: draft
-  rulebook: prj-issues-and-approach-rulebook
+  rulebook: specdojo:prj-issues-and-approach-rulebook
   based_on:
     - prj-0001:prj-overview
     - prj-0001:prj-scope

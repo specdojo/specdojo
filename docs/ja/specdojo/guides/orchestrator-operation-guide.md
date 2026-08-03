@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: orchestrator-operation-guide
+  id: specdojo:orchestrator-operation-guide
   type: guide
   status: ready
 ---

@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:pm-raci
-    - pm-raci-sample
+    - specdojo:pm-raci-sample
 ---
 
 # Edit Result
@@ -21,7 +21,7 @@ specdojo:
 ## 1. 実施内容
 
 - `docs/ja/specdojo/samples/pm-raci-sample.md` を最終調整し、sample 同士の参照に揃えた。
-- `based_on` に `pm-roles-sample` と `pm-members-sample` を追加し、本文中の組織定義・メンバー定義・見直し条件の参照先を sample 側へ寄せた。
+- `based_on` に `specdojo:pm-roles-sample` と `specdojo:pm-members-sample` を追加し、本文中の組織定義・メンバー定義・見直し条件の参照先を sample 側へ寄せた。
 - 見直し条件と禁止事項の表現を sample の導線に合わせ、表セル内の wiki link は `|` をエスケープして崩れないようにした。
 - `npx prettier --write` と `npx markdownlint` を実行し、対象 Markdown の整形・静的検査が通ることを確認した。
 
@@ -32,7 +32,7 @@ specdojo:
 
 ## 3. 申し送り
 
-- `pm-raci-sample` は sample 群の参照に揃えたため、今後 `pm-organization-sample` / `pm-roles-sample` / `pm-members-sample` の表現方針が変わる場合は、同じ参照粒度で再調整する。
+- `specdojo:pm-raci-sample` は sample 群の参照に揃えたため、今後 `specdojo:pm-organization-sample` / `specdojo:pm-roles-sample` / `specdojo:pm-members-sample` の表現方針が変わる場合は、同じ参照粒度で再調整する。
 - `pm-raci.md` 本体の見直しが必要になった場合は、この sample ではなく project 側の成果物と review result を優先して扱う。
 
 ## 4. 参考資料の活用

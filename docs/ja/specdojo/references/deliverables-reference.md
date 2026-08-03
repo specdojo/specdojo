@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: deliverables-reference
+  id: specdojo:deliverables-reference
   type: reference
   status: draft
   supersedes:

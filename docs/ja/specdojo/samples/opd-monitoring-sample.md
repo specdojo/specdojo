@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: opd-monitoring-sample
+  id: specdojo:opd-monitoring-sample
   type: operations
   status: draft
-  rulebook: opd-rulebook
+  rulebook: specdojo:opd-rulebook
   based_on: []
   supersedes: []
 ---

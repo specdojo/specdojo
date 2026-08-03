@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `pm-plan.md` が `pm-plan-rulebook` の必須構成、PM / PO の責務境界、Role code と実行主体の分離方針を満たしているか確認した。
+- `pm-plan.md` が `specdojo:pm-plan-rulebook` の必須構成、PM / PO の責務境界、Role code と実行主体の分離方針を満たしているか確認した。
 - [[prj-0001:pm-organization|組織定義]] の記述に合わせ、AI Agent の支援範囲へ整合確認・機械的更新を補い、最終判断だけでなく説明責任も人間の `PO` が担う表現へ最小修正した。
 - `pm-roles-sample.yaml` の Role code と `pm-plan.md` の採用ロール表を照合し、未定義 Role code の追加がないことを確認した。
 

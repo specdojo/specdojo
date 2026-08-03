@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: kata-guide
+  id: specdojo:kata-guide
   type: guide
   status: ready
 ---

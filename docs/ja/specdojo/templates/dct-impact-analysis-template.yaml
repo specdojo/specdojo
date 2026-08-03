@@ -1,11 +1,11 @@
 # Template: impact analysis deliverables catalog
 # min_size: deliverable is included only when scaffold --size >= this value
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
-id: dct-impact-analysis-template
+id: specdojo:dct-impact-analysis-template
 type: template
 status: draft
 title: 成果物カタログ（影響調査）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 part_of:
   - _PROJECT_ID_:dct-index
 domain: impact-analysis
@@ -20,7 +20,7 @@ groups:
         depends_on: []
         overview: 導入・変更が業務へ与える影響を整理
         path: imp-business.md
-        rulebook: imp-business-rulebook
+        rulebook: specdojo:imp-business-rulebook
         done_criteria:
           - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -46,7 +46,7 @@ groups:
           - imp-business
         overview: 導入・変更がデータへ与える影響を整理
         path: imp-data.md
-        rulebook: imp-data-rulebook
+        rulebook: specdojo:imp-data-rulebook
         done_criteria:
           - text: 影響対象データ・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -72,7 +72,7 @@ groups:
           - imp-business
         overview: 導入・変更がインターフェースへ与える影響を整理
         path: imp-interface.md
-        rulebook: imp-interface-rulebook
+        rulebook: specdojo:imp-interface-rulebook
         done_criteria:
           - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -94,7 +94,7 @@ groups:
           - imp-business
         overview: 導入・変更がテストへ与える影響を整理
         path: imp-test.md
-        rulebook: imp-test-rulebook
+        rulebook: specdojo:imp-test-rulebook
         done_criteria:
           - text: 影響対象テスト・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -117,7 +117,7 @@ groups:
           - imp-business
         overview: 導入・変更が運用へ与える影響を整理
         path: imp-operations.md
-        rulebook: imp-operations-rulebook
+        rulebook: specdojo:imp-operations-rulebook
         done_criteria:
           - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること
             roles: [BA]

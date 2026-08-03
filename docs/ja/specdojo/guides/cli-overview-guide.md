@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: cli-overview-guide
+  id: specdojo:cli-overview-guide
   type: guide
   status: ready
 ---

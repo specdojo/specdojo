@@ -78,7 +78,7 @@ groups:
         depends_on: [prj-overview]
         overview: プロジェクトの正式な認可と権限委譲を文書化
         path: prj-charter.md
-        rulebook: prj-charter-rulebook
+        rulebook: specdojo:prj-charter-rulebook
 `;
 
 beforeEach(async () => {
@@ -102,7 +102,7 @@ describe("runGenerate — テンプレートがない成果物", () => {
     expect(content).toContain("id: prjx:prj-charter");
     expect(content).toContain("type: project");
     expect(content).toContain("status: draft");
-    expect(content).toContain("rulebook: prj-charter-rulebook");
+    expect(content).toContain("rulebook: specdojo:prj-charter-rulebook");
     expect(content).toContain("based_on:");
     expect(content).toContain("- prjx:prj-overview");
     expect(content).toContain("# プロジェクト憲章");
@@ -126,7 +126,7 @@ groups:
         kind: work
         overview: ロール定義
         path: pm-roles.yaml
-        rulebook: pm-roles-rulebook
+        rulebook: specdojo:pm-roles-rulebook
 `,
     );
 
@@ -138,7 +138,7 @@ groups:
       id: "prjx:pm-roles",
       type: "project",
       status: "draft",
-      rulebook: "pm-roles-rulebook",
+      rulebook: "specdojo:pm-roles-rulebook",
     });
   });
 });
@@ -150,7 +150,7 @@ describe("runGenerate — テンプレートがある成果物", () => {
       path.join(fx.templatesPath, "prj-charter-template.md"),
       `---
 specdojo:
-  id: prj-charter-template
+  id: specdojo:prj-charter-template
   type: template
   status: draft
   frontmatter_template:
@@ -158,7 +158,7 @@ specdojo:
       id: _PROJECT_ID_:prj-charter
       type: project
       status: ready
-      rulebook: prj-charter-rulebook
+      rulebook: specdojo:prj-charter-rulebook
 ---
 
 # プロジェクト憲章: _PROJECT_NAME_
@@ -176,7 +176,7 @@ _TODO_: 本文を記述する。
     expect(content).toContain("  id: prjx:prj-charter");
     expect(content).toContain("  status: ready");
     expect(content).not.toContain("frontmatter_template");
-    expect(content).not.toContain("id: prj-charter-template");
+    expect(content).not.toContain("id: specdojo:prj-charter-template");
     // 生成時プレースホルダは置換、記入プレースホルダは温存
     expect(content).not.toContain("_PROJECT_ID_");
     expect(content).toContain("_PROJECT_NAME_");
@@ -199,19 +199,19 @@ groups:
         kind: work
         overview: ロール定義
         path: pm-roles.yaml
-        rulebook: pm-roles-rulebook
+        rulebook: specdojo:pm-roles-rulebook
 `,
     );
     writeFileSync(
       path.join(fx.templatesPath, "pm-roles-template.yaml"),
-      `id: pm-roles-template
+      `id: specdojo:pm-roles-template
 type: template
 status: draft
 metadata_template:
   id: _PROJECT_ID_:pm-roles
   type: project
   status: draft
-  rulebook: pm-roles-rulebook
+  rulebook: specdojo:pm-roles-rulebook
 roles:
   - id: _ROLE_ID_
     project_id: _PROJECT_ID_

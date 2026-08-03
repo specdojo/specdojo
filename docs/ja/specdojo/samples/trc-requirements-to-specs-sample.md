@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: trc-requirements-to-specs-sample
+  id: specdojo:trc-requirements-to-specs-sample
   type: project
   status: draft
-  rulebook: trc-requirements-to-specs-rulebook
+  rulebook: specdojo:trc-requirements-to-specs-rulebook
   based_on:
     - bac-cashier-flow
     - bes-product-master

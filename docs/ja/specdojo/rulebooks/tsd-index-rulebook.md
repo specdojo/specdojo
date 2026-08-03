@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: tsd-index-rulebook
+  id: specdojo:tsd-index-rulebook
   type: rulebook
   status: draft
-  sample: tsd-index-sample
+  sample: specdojo:tsd-index-sample
 ---
 
 # 技術スタック定義（TSD Index）作成ルール
@@ -44,7 +44,7 @@ Technology Stack Definition Index (TSD Index) Documentation Rules
 | `id`       | `tsd-index`                      | ○    |
 | `type`     | `architecture`                   | ○    |
 | `status`   | `draft` / `ready` / `deprecated` | ○    |
-| `rulebook` | `tsd-index-rulebook`             | 推奨 |
+| `rulebook` | `specdojo:tsd-index-rulebook`    | 推奨 |
 | `based_on` | 根拠となる仕様 ID（配列）        | 任意 |
 
 ## 5. 本文構成（標準テンプレ）

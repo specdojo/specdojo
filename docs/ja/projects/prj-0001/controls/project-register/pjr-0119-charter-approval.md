@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0119-charter-approval
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision

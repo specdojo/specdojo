@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-security-safety-rules
+  id: specdojo:nfr-security-safety-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Security and Safety Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-security-safety-rules`。
+- ルールドキュメントIDは `specdojo:nfr-security-safety-rulebook`。
 - 生成対象ドキュメントIDは `nfr-security-safety` を推奨する。
 - 要件IDは `nfr-sec-<連番>` を推奨する。
 

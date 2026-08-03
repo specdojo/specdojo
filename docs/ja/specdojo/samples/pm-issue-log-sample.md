@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: pm-issue-log-sample
+  id: specdojo:pm-issue-log-sample
   type: project
   status: draft
-  rulebook: pm-issue-log-rulebook
+  rulebook: specdojo:pm-issue-log-rulebook
 ---
 
 # 課題ログ サンプル

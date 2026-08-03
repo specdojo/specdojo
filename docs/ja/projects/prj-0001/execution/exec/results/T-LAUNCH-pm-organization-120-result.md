@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:pm-organization
-    - pm-organization-sample
+    - specdojo:pm-organization-sample
 ---
 
 # Edit Result

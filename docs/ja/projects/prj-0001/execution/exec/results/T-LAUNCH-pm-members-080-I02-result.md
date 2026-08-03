@@ -39,5 +39,5 @@ specdojo:
 - `pm-members-recipe.md` は PO が実行主体と担当 Role code の対応を承認できるかを確認する観点として参照した。人間の最終判断主体、agent の支援範囲、`--by` に使う nickname、公開可否を重点的に確認した。
 - `pm-organization.md` は、初期運用では人間 PO が全体判断を担い、AI Agent は支援範囲に限定する方針の根拠として参照した。`pm-members.yaml` の `indie` が全 Role code を兼務し、agent の note が最終判断を否定しているため、方針と整合していると判断した。
 - `pm-roles-sample.yaml` は plan の `depends_on` に記載された Role code 語彙として参照した。`members[].roles` に未定義 Role code はなく、agent の `roles: []` は rulebook 上許容される汎用 agent として扱った。
-- `pm-members-sample.yaml` と `pm-members-template` は、plan の「磨き込みでは sample / template は読み込まない」に従い参照しなかった。`people-and-organization-definition-standard` と `prj-overview` は `pm-members.yaml` または `pm-organization.md` の `based_on` に現れるが、本 plan の参照許可範囲外のため参照しなかった。
+- `pm-members-sample.yaml` と `specdojo:pm-members-template` は、plan の「磨き込みでは sample / template は読み込まない」に従い参照しなかった。`specdojo:people-and-organization-definition-standard` と `prj-overview` は `pm-members.yaml` または `pm-organization.md` の `based_on` に現れるが、本 plan の参照許可範囲外のため参照しなかった。
 - 参照資料間で rulebook を正として解消すべき矛盾は見つからなかった。
