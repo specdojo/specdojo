@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-charter
   type: project
   status: ready
-  rulebook: prj-charter-rulebook
+  rulebook: specdojo:prj-charter-rulebook
   based_on:
     - prj-0001:prj-overview
     - prj-0001:prj-stakeholder-register

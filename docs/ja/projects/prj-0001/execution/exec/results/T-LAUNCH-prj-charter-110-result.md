@@ -13,14 +13,14 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-charter
-    - prj-charter-rulebook
+    - specdojo:prj-charter-rulebook
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- 完成版 [[prj-0001:prj-charter|プロジェクト憲章]]、review result [[prj-0001:xrr-t-launch-prj-charter-090|T-LAUNCH-prj-charter-090]]、依存成果物 [[prj-0001:prj-overview|プロジェクト概要]] / [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]]、および [[prj-charter-recipe]] / [[prj-charter-sample]] / [[prj-charter-template]] を根拠に [[prj-charter-rulebook]] を最終調整した。
+- 完成版 [[prj-0001:prj-charter|プロジェクト憲章]]、review result [[prj-0001:xrr-t-launch-prj-charter-090|T-LAUNCH-prj-charter-090]]、依存成果物 [[prj-0001:prj-overview|プロジェクト概要]] / [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]]、および [[specdojo:prj-charter-recipe]] / [[specdojo:prj-charter-sample]] / [[specdojo:prj-charter-template]] を根拠に [[specdojo:prj-charter-rulebook]] を最終調整した。
 - 完成版で実際に採用されていた `認可条件` の補足行を、条件付き承認を扱う場合の任意項目として一般化し、承認章の代替にしないことを明示した。
 - 既存の章構成、必須項目、禁止事項、判定基準は、完成版と review result 090 で有効性が確認できていたため維持した。
 
@@ -36,6 +36,6 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-- `approach: rulebook-maintenance` のため、参照の向きを「成果物 → rulebook」に切り替えた。見直し対象は [[prj-charter-rulebook]] とし、根拠資料として完成版 [[prj-0001:prj-charter|プロジェクト憲章]]、review result [[prj-0001:xrr-t-launch-prj-charter-090|T-LAUNCH-prj-charter-090]], 依存成果物 [[prj-0001:prj-overview|プロジェクト概要]] / [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]]、および [[prj-charter-recipe]] / [[prj-charter-sample]] / [[prj-charter-template]] を確認した。
+- `approach: rulebook-maintenance` のため、参照の向きを「成果物 → rulebook」に切り替えた。見直し対象は [[specdojo:prj-charter-rulebook]] とし、根拠資料として完成版 [[prj-0001:prj-charter|プロジェクト憲章]]、review result [[prj-0001:xrr-t-launch-prj-charter-090|T-LAUNCH-prj-charter-090]], 依存成果物 [[prj-0001:prj-overview|プロジェクト概要]] / [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]]、および [[specdojo:prj-charter-recipe]] / [[specdojo:prj-charter-sample]] / [[specdojo:prj-charter-template]] を確認した。
 - review result 090 では findings がなく、完成版の憲章は rulebook の必須章構成・禁止事項・判定基準と整合していたため、構造の大幅変更は行わなかった。
 - 完成版で追加されていた `認可条件` 行だけは、条件付き承認を扱う際の補足として rulebook に一般化して追記した。承認記録そのものは別章で扱うべきであり、未確定情報を承認扱いにしない点は維持した。

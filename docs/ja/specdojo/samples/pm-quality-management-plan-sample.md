@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: pm-quality-management-plan-sample
+  id: specdojo:pm-quality-management-plan-sample
   type: project
   status: ready
-  rulebook: pm-quality-management-plan-rulebook
+  rulebook: specdojo:pm-quality-management-plan-rulebook
   based_on:
-    - pm-plan-sample
-    - prj-success-criteria-and-acceptance-criteria-sample
+    - specdojo:pm-plan-sample
+    - specdojo:prj-success-criteria-and-acceptance-criteria-sample
 ---
 
 # 品質管理計画: 駄菓子屋きぬや 販売管理システム

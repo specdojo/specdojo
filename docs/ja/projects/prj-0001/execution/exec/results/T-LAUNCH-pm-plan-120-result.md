@@ -13,14 +13,14 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:pm-plan
-    - pm-plan-sample
+    - specdojo:pm-plan-sample
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-`pm-plan-sample.md` を sample-maintenance の観点で最終調整し、`based_on` に `pm-roles-sample` を追加したうえで、本文中の参照先を sample 群に寄せて整えた。関連ドキュメント欄は、実在する sample を前提に `[[...|...]]` 形式へ揃え、task 由来のメタな言い回しを避けるために表現を最小限一般化した。
+`pm-plan-sample.md` を sample-maintenance の観点で最終調整し、`based_on` に `specdojo:pm-roles-sample` を追加したうえで、本文中の参照先を sample 群に寄せて整えた。関連ドキュメント欄は、実在する sample を前提に `[[...|...]]` 形式へ揃え、task 由来のメタな言い回しを避けるために表現を最小限一般化した。
 
 ## 2. 変更ファイル
 
@@ -29,7 +29,7 @@ specdojo:
 
 ## 3. 申し送り
 
-`pm-plan-sample.md` の関連ドキュメント欄は sample 群に揃えたが、`pm-members-sample` は YAML 成果物のため、今後の sample 群全体でリンク解決と表記揺れの整合を再確認するとよい。
+`pm-plan-sample.md` の関連ドキュメント欄は sample 群に揃えたが、`specdojo:pm-members-sample` は YAML 成果物のため、今後の sample 群全体でリンク解決と表記揺れの整合を再確認するとよい。
 
 ## 4. 参考資料の活用
 

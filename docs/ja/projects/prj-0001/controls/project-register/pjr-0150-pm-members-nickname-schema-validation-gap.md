@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0150-pm-members-nickname-schema-validation-gap
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -43,5 +43,5 @@ specdojo:
 - docs/specdojo/schemas/v1/pm-members.schema.yaml
 - src/specdojo-config.ts
 - src/exec-agent-config.ts
-- [[pm-members-rulebook|プロジェクトメンバー定義ルールブック]]
-- [[exec-config-guide|exec設定ガイド]]
+- [[specdojo:pm-members-rulebook|プロジェクトメンバー定義ルールブック]]
+- [[specdojo:exec-config-guide|exec設定ガイド]]

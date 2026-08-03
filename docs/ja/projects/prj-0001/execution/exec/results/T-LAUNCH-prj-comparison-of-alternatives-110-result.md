@@ -13,16 +13,16 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:prj-comparison-of-alternatives
-    - prj-comparison-of-alternatives-rulebook
+    - specdojo:prj-comparison-of-alternatives-rulebook
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-`prj-comparison-of-alternatives-rulebook` を成果物・review result・rulebook-authoring-standard に照合し、最終調整を行った。
+`specdojo:prj-comparison-of-alternatives-rulebook` を成果物・review result・specdojo:rulebook-authoring-standard に照合し、最終調整を行った。
 
-章構成・必須項目・禁止事項・判定基準は成果物の実態と整合しており、全面改訂は不要と判断した。`rulebook-authoring-standard` との差異として以下の 2 点を修正した。
+章構成・必須項目・禁止事項・判定基準は成果物の実態と整合しており、全面改訂は不要と判断した。`specdojo:rulebook-authoring-standard` との差異として以下の 2 点を修正した。
 
 - `## 8. サンプル（最小でも可）` → `## 8. サンプル`: 章タイトルを standard の表示形式に揃えた（standard 章構成表では "サンプル" のみ）。
 - `- 参照: [...]` → `- 参照先: [...]`: sample リンクの接頭語を standard の指定形式 "参照先:" に揃えた（recipe・template の wikilink は "参照:" のままで standard と整合）。
@@ -47,7 +47,7 @@ specdojo:
   - `prj-0001:xer-t-launch-prj-comparison-of-alternatives-070-i01` / `-070-i02` / `-080-i01` / `-080-i02`（各磨き込みの edit result）
   - `docs/ja/specdojo/standards/rulebook-authoring-standard.md`（章立て・記述ルール・禁止事項の正本）
 - 改訂した記述とその根拠:
-  - 章タイトルと sample リンク形式: `rulebook-authoring-standard` の章構成表（§4）と記述ガイド（§5）の記法と一致させた。いずれも成果物の構造や review 結果には影響しない軽微な記法統一であり、根拠は standard の指定形式。
+  - 章タイトルと sample リンク形式: `specdojo:rulebook-authoring-standard` の章構成表（§4）と記述ガイド（§5）の記法と一致させた。いずれも成果物の構造や review 結果には影響しない軽微な記法統一であり、根拠は standard の指定形式。
 - 維持した記述:
   - 章構成（§1〜§10）: standard の必須章・任意章すべて存在し、順序も正しい。review (090) で規定違反がないことを確認済み。
   - 必須項目・禁止事項（§1, §5, §6, §7）: 成果物が全 RVP を pass し、禁止事項に抵触しないことが review で確認済みのため、変更なし。
@@ -55,4 +55,4 @@ specdojo:
   - PO 最終判断の明記（§1, §6.3, §7）: 成果物・review ともに評価され有効な規定と確認。
 - recipe 更新 (100) との対比: recipe に追加された 3 点（対象外スコープの前提引き継ぎ、評価軸と課題 ID の対応付け、既存アーティファクト名に限定した軽減策記述）は、いずれも「どう書くか」の実装ガイダンスに相当し、rulebook の構造要件・禁止事項には属さないと判断した。rulebook 側への追記は不要。
 - 矛盾の有無: 検出しなかった。rulebook の構造・必須項目・禁止事項は成果物・recipe・sample・template と整合していることが review (090) で確認済み。
-- 根拠不足の有無: なし。成果物・review result・edit result・rulebook-authoring-standard が揃っており、判断に必要な確証は得られた。
+- 根拠不足の有無: なし。成果物・review result・edit result・specdojo:rulebook-authoring-standard が揃っており、判断に必要な確証は得られた。

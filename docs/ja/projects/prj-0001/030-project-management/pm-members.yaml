@@ -2,9 +2,9 @@ id: prj-0001:pm-members
 type: project
 status: ready
 title: メンバー名簿
-rulebook: pm-members-rulebook
+rulebook: specdojo:pm-members-rulebook
 based_on:
-  - people-and-organization-definition-standard
+  - specdojo:people-and-organization-definition-standard
   - prj-0001:pm-organization
   - prj-0001:pm-roles
 version: 1
@@ -287,7 +287,7 @@ members:
       - implementation
     capabilities: []
     scheduler_strategy: critical-first
-    note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+    note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
   - nickname: copilot-review-agent
     disabled: true
@@ -306,7 +306,7 @@ members:
       - quality-assurance
     capabilities: []
     scheduler_strategy: fifo
-    note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+    note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-usability-rules
+  id: specdojo:nfr-usability-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Usability Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-usability-rules`。
+- ルールドキュメントIDは `specdojo:nfr-usability-rulebook`。
 - 生成対象ドキュメントIDは `nfr-usability` を推奨する。
 - 要件IDは `nfr-usb-<連番>` を推奨する。
 

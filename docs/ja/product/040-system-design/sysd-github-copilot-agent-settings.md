@@ -3,7 +3,7 @@ specdojo:
   id: sysd-github-copilot-agent-settings
   type: project
   status: draft
-  rulebook: sysd-rulebook
+  rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-agent-settings
 ---
@@ -184,7 +184,7 @@ review agent には `edit` tool を含めない。ただし CLI の tool filter 
 
 ### 9.1. 起動コマンドの設計
 
-起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は [exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
 
 ```yaml
 providers:

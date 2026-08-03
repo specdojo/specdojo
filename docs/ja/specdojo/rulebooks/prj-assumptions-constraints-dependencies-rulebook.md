@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: prj-assumptions-constraints-dependencies-rulebook
+  id: specdojo:prj-assumptions-constraints-dependencies-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-assumptions-constraints-dependencies-recipe
-  sample: prj-assumptions-constraints-dependencies-sample
-  template: prj-assumptions-constraints-dependencies-template
+  recipe: specdojo:prj-assumptions-constraints-dependencies-recipe
+  sample: specdojo:prj-assumptions-constraints-dependencies-sample
+  template: specdojo:prj-assumptions-constraints-dependencies-template
   based_on:
-    - rulebook-authoring-standard
+    - specdojo:rulebook-authoring-standard
   supersedes: []
 ---
 
@@ -68,8 +68,8 @@ flowchart LR
 ### 3.2. ドキュメント ID
 
 - 成果物 ID: `<project-id>:prj-assumptions-constraints-dependencies`
-- rulebook ID: `prj-assumptions-constraints-dependencies-rulebook`
-- 実践の型 ID: `prj-assumptions-constraints-dependencies-recipe`、`prj-assumptions-constraints-dependencies-sample`、`prj-assumptions-constraints-dependencies-template`
+- rulebook ID: `specdojo:prj-assumptions-constraints-dependencies-rulebook`
+- 実践の型 ID: `specdojo:prj-assumptions-constraints-dependencies-recipe`、`specdojo:prj-assumptions-constraints-dependencies-sample`、`specdojo:prj-assumptions-constraints-dependencies-template`
 
 ### 3.3. ファイル名
 
@@ -81,14 +81,14 @@ flowchart LR
 
 ### 4.1. 設定内容
 
-| 項目       | 説明                                                    | 必須 |
-| ---------- | ------------------------------------------------------- | ---- |
-| id         | `<project-id>:prj-assumptions-constraints-dependencies` | ○    |
-| type       | `project`                                               | ○    |
-| status     | `draft` / `ready` / `deprecated`                        | ○    |
-| rulebook   | `prj-assumptions-constraints-dependencies-rulebook`     | ○    |
-| based_on   | 直接参照した上位成果物の ID 配列                        | 任意 |
-| supersedes | 置き換える旧成果物の ID 配列                            | 任意 |
+| 項目       | 説明                                                         | 必須 |
+| ---------- | ------------------------------------------------------------ | ---- |
+| id         | `<project-id>:prj-assumptions-constraints-dependencies`      | ○    |
+| type       | `project`                                                    | ○    |
+| status     | `draft` / `ready` / `deprecated`                             | ○    |
+| rulebook   | `specdojo:prj-assumptions-constraints-dependencies-rulebook` | ○    |
+| based_on   | 直接参照した上位成果物の ID 配列                             | 任意 |
+| supersedes | 置き換える旧成果物の ID 配列                                 | 任意 |
 
 ### 4.2. 推奨ルール
 

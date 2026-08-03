@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: nfr-operations-sample
+  id: specdojo:nfr-operations-sample
   type: project
   status: draft
-  rulebook: nfr-operations-rulebook
+  rulebook: specdojo:nfr-operations-rulebook
 ---
 
 # [非機能要件 / 運用](../rulebooks/nfr-operations-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                                           | 備考                        |
-| ------------ | ------------------------------------------------------------ | --------------------------- |
-| ドキュメント | [非機能要件 / 運用](../rulebooks/nfr-operations-rulebook.md) | 最小サンプル                |
-| 目的         | 監視・手順・継続運用を定義する                               | deliverables-reference 準拠 |
-| 主な内容     | アラート検知率、復旧達成率、運用手順充実度                   | 要点のみ記載                |
+| 項目         | 値                                                           | 備考                                 |
+| ------------ | ------------------------------------------------------------ | ------------------------------------ |
+| ドキュメント | [非機能要件 / 運用](../rulebooks/nfr-operations-rulebook.md) | 最小サンプル                         |
+| 目的         | 監視・手順・継続運用を定義する                               | specdojo:deliverables-reference 準拠 |
+| 主な内容     | アラート検知率、復旧達成率、運用手順充実度                   | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

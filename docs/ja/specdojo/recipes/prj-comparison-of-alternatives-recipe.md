@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: prj-comparison-of-alternatives-recipe
+  id: specdojo:prj-comparison-of-alternatives-recipe
   type: recipe
   status: ready
-  rulebook: prj-comparison-of-alternatives-rulebook
-  sample: prj-comparison-of-alternatives-sample
+  rulebook: specdojo:prj-comparison-of-alternatives-rulebook
+  sample: specdojo:prj-comparison-of-alternatives-sample
 ---
 
 # 代替案比較 作成レシピ

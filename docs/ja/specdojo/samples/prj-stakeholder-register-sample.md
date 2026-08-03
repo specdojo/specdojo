@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: prj-stakeholder-register-sample
+  id: specdojo:prj-stakeholder-register-sample
   type: sample
   status: ready
-  rulebook: prj-stakeholder-register-rulebook
-  based_on: [prj-overview-sample]
+  rulebook: specdojo:prj-stakeholder-register-rulebook
+  based_on: [specdojo:prj-overview-sample]
   supersedes: []
 ---
 

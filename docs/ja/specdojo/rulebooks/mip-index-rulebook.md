@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: mip-index-rules
+  id: specdojo:mip-index-rulebook
   type: rulebook
   status: draft
 ---

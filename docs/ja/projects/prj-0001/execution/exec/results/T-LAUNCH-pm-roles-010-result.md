@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap
   targets:
     - prj-0001:pm-roles
-    - pm-roles-rulebook
-    - pm-roles-recipe
-    - pm-roles-sample
-    - pm-roles-template
+    - specdojo:pm-roles-rulebook
+    - specdojo:pm-roles-recipe
+    - specdojo:pm-roles-sample
+    - specdojo:pm-roles-template
 ---
 
 # Edit Result

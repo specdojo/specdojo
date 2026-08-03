@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: pm-organization-sample
+  id: specdojo:pm-organization-sample
   type: project
   status: ready
-  rulebook: pm-organization-rulebook
+  rulebook: specdojo:pm-organization-rulebook
   based_on:
-    - prj-overview-sample
-    - prj-stakeholder-register-sample
+    - specdojo:prj-overview-sample
+    - specdojo:prj-stakeholder-register-sample
 ---
 
 # 組織定義: 駄菓子屋きぬや 販売管理システム

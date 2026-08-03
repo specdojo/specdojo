@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-organization-rulebook
+  id: specdojo:pm-organization-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: pm-organization-recipe
-  sample: pm-organization-sample
-  template: pm-organization-template
+  recipe: specdojo:pm-organization-recipe
+  sample: specdojo:pm-organization-sample
+  template: specdojo:pm-organization-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # 組織定義 作成ルール
@@ -48,7 +48,7 @@ Organization Definition Documentation Rulebook
 | id         | `<project-id>:pm-organization`           | ○    |
 | type       | `project`                                | ○    |
 | status     | `draft` / `ready` / `deprecated`         | ○    |
-| rulebook   | `pm-organization-rulebook`               | ○    |
+| rulebook   | `specdojo:pm-organization-rulebook`      | ○    |
 | based_on   | 概要、スコープ、ステークホルダーなどのID | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                  | 任意 |
 

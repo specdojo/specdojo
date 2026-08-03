@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sysd-index-rules
+  id: specdojo:sysd-index-rulebook
   type: rulebook
   status: draft
 ---

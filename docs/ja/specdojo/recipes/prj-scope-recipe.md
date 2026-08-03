@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: prj-scope-recipe
+  id: specdojo:prj-scope-recipe
   type: recipe
   status: ready
-  rulebook: prj-scope-rulebook
-  sample: prj-scope-sample
+  rulebook: specdojo:prj-scope-rulebook
+  sample: specdojo:prj-scope-sample
 ---
 
 # プロジェクトスコープ 作成レシピ

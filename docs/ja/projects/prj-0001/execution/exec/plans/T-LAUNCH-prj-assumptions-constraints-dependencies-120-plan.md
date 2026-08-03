@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-sample
+    - specdojo:prj-assumptions-constraints-dependencies-sample
 ---
 
 # Edit Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-120
@@ -55,9 +55,9 @@ frontmatter の `owner` に記載された role の視点で成果物を記述�
 3. rulebook の必須項目・禁止事項を満たす最小の記述例になるよう再構成し、実成果物の丸写しを避ける。
 4. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。
 
-見直した sample は [[sample-authoring-standard]]（構成・記述ルール・禁止事項の正本）に従う。rulebook / recipe と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
+見直した sample は [[specdojo:sample-authoring-standard]]（構成・記述ルール・禁止事項の正本）に従う。rulebook / recipe と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 
-approach 全体の定義は [[specdojo-kata-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な sample メンテナンスの進め方は、このセクションで完結する。
+approach 全体の定義は [[specdojo:kata-guide]] の「参考資料メンテナンスの進め方」を参照する。本タスクの実行に必要な sample メンテナンスの進め方は、このセクションで完結する。
 
 ### 4.1. 見直しの根拠が不足する場合
 

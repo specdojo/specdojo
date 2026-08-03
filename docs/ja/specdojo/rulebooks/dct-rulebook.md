@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: dct-rulebook
+  id: specdojo:dct-rulebook
   type: rulebook
   status: draft
   target_format: yaml
-  sample: dct-sample
+  sample: specdojo:dct-sample
 ---
 
 # 成果物カタログ（ドメイン別）作成ルール
@@ -76,7 +76,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `type`       | `project` / `template` のいずれか                                    | ○              |
 | `status`     | `draft` / `ready` / `deprecated`                                     | ○              |
 | `title`      | ドキュメント名。表示ページの見出しになる                             | ○              |
-| `rulebook`   | 参照する rulebook ID（`dct-rulebook`）                               | ○              |
+| `rulebook`   | 参照する rulebook ID（`specdojo:dct-rulebook`）                      | ○              |
 | `part_of`    | 親となる `dct-index` の `id`（配列形式）                             | 任意           |
 | `project_id` | プロジェクト ID（例: `prj-0001`）                                    | ○（`project`） |
 | `domain`     | ドメイン識別子。ファイル名 `dct-<domain>.yaml` と一致させる          | ○              |
@@ -115,18 +115,18 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 5.3. `deliverables[]`（成果物エントリ）
 
-| フィールド            | 必須        | 内容                                                  |
-| --------------------- | ----------- | ----------------------------------------------------- |
-| `local_id`            | ○           | 成果物の論理名（例: `prj-overview`）                  |
-| `instance_id_pattern` | 任意        | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`） |
-| `name`                | ○           | 業務ユーザーが理解可能な日本語名                      |
-| `kind`                | ○           | `work` / `control` / `generated`                      |
-| `depends_on`          | 任意        | 依存する成果物の `local_id` 配列。なければ空配列 `[]` |
-| `overview`            | ○           | 成果物の目的を1文で記述                               |
-| `path`                | ○（`work`） | 成果物のファイルパス                                  |
-| `rulebook`            | 任意        | 成果物の rulebook ID（例: `prj-overview-rulebook`）   |
-| `done_criteria`       | ○（`work`） | 完了条件の配列                                        |
-| `note`                | 任意        | 構造化フィールドで表せない補足                        |
+| フィールド            | 必須        | 内容                                                         |
+| --------------------- | ----------- | ------------------------------------------------------------ |
+| `local_id`            | ○           | 成果物の論理名（例: `prj-overview`）                         |
+| `instance_id_pattern` | 任意        | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`）        |
+| `name`                | ○           | 業務ユーザーが理解可能な日本語名                             |
+| `kind`                | ○           | `work` / `control` / `generated`                             |
+| `depends_on`          | 任意        | 依存する成果物の `local_id` 配列。なければ空配列 `[]`        |
+| `overview`            | ○           | 成果物の目的を1文で記述                                      |
+| `path`                | ○（`work`） | 成果物のファイルパス                                         |
+| `rulebook`            | 任意        | 成果物の rulebook ID（例: `specdojo:prj-overview-rulebook`） |
+| `done_criteria`       | ○（`work`） | 完了条件の配列                                               |
+| `note`                | 任意        | 構造化フィールドで表せない補足                               |
 
 ### 5.4. `done_criteria[]`（完了条件）
 

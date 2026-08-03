@@ -1,13 +1,13 @@
 ---
 specdojo:
-  id: pm-raci-sample
+  id: specdojo:pm-raci-sample
   type: project
   status: ready
-  rulebook: pm-raci-rulebook
+  rulebook: specdojo:pm-raci-rulebook
   based_on:
-    - pm-organization-sample
-    - pm-roles-sample
-    - pm-members-sample
+    - specdojo:pm-organization-sample
+    - specdojo:pm-roles-sample
+    - specdojo:pm-members-sample
 ---
 
 # RACI: 駄菓子屋きぬや 販売管理システム

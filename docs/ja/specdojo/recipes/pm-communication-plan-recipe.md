@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: pm-communication-plan-recipe
+  id: specdojo:pm-communication-plan-recipe
   type: recipe
   status: ready
-  rulebook: pm-communication-plan-rulebook
-  sample: pm-communication-plan-sample
+  rulebook: specdojo:pm-communication-plan-rulebook
+  sample: specdojo:pm-communication-plan-sample
 ---
 
 # コミュニケーション計画 作成レシピ

@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:pm-communication-plan
-    - pm-communication-plan-sample
+    - specdojo:pm-communication-plan-sample
 ---
 
 # Edit Result
@@ -51,4 +51,4 @@ specdojo:
 - **報告種別**: 実成果物で明文化されている 「品質・検証報告」 を追加し、`QE` ロールの責任範囲を具体化した。
 - **連絡チャネル**: AI Agent による作業が実運用の中核となるため、実成果物に沿って 「作業指示チャット」 を追加し、証跡管理の方針を明確にした。
 - **エスカレーション**: 実成果物で定義されている 「構成・命名問題 (`ARC`)」 の経路を sample に追加し、判断者の分離（`PO`, `PM`）を具体化した。
-- **参照リンク**: sample-authoring-standard に基づき、sample 内での他の sample への参照を `-sample.md` 形式に統一した。
+- **参照リンク**: specdojo:sample-authoring-standard に基づき、sample 内での他の sample への参照を `-sample.md` 形式に統一した。

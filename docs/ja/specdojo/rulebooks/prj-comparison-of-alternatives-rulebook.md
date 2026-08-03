@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: prj-comparison-of-alternatives-rulebook
+  id: specdojo:prj-comparison-of-alternatives-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-comparison-of-alternatives-recipe
-  sample: prj-comparison-of-alternatives-sample
-  template: prj-comparison-of-alternatives-template
+  recipe: specdojo:prj-comparison-of-alternatives-recipe
+  sample: specdojo:prj-comparison-of-alternatives-sample
+  template: specdojo:prj-comparison-of-alternatives-template
   based_on:
-    - rulebook-authoring-standard
+    - specdojo:rulebook-authoring-standard
   supersedes: []
 ---
 
@@ -102,7 +102,7 @@ flowchart LR
 | id         | `<project-id>:prj-comparison-of-alternatives`                                 | ○    |
 | type       | `project` 固定                                                                | ○    |
 | status     | `draft` / `ready` / `deprecated`                                              | ○    |
-| rulebook   | `prj-comparison-of-alternatives-rulebook`                                     | ○    |
+| rulebook   | `specdojo:prj-comparison-of-alternatives-rulebook`                            | ○    |
 | based_on   | 比較判断に直接使用するスコープ、課題と解決アプローチ、前提・制約などの文書 ID | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                                                       | 任意 |
 

@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:pm-communication-plan
-    - pm-communication-plan-template
+    - specdojo:pm-communication-plan-template
 ---
 
 # Edit Result

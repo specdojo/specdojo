@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: stsd-rulebook
+  id: specdojo:stsd-rulebook
   type: rulebook
   status: draft
-  sample: stsd-sample
+  sample: specdojo:stsd-sample
 ---
 
 # ステータス一覧（Status List）作成ルール

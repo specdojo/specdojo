@@ -3,7 +3,7 @@ specdojo:
   id: tsd-home-mac-dev-server
   type: architecture
   status: draft
-  rulebook: tsd-rulebook
+  rulebook: specdojo:tsd-rulebook
   part_of:
     - tsd-index
   based_on:

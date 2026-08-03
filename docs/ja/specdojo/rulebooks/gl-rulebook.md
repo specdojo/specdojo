@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: gl-rulebook
+  id: specdojo:gl-rulebook
   type: rulebook
   status: draft
-  sample: gl-sample
+  sample: specdojo:gl-sample
 ---
 
 # 用語集（Glossary）作成ルール

@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-raci
-    - pm-raci-rulebook
-    - pm-raci-recipe
-    - pm-raci-sample
-    - pm-raci-template
+    - specdojo:pm-raci-rulebook
+    - specdojo:pm-raci-recipe
+    - specdojo:pm-raci-sample
+    - specdojo:pm-raci-template
 ---
 
 # Finalize Plan: T-LAUNCH-pm-raci-140

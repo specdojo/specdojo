@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: exec-human-finalize-standard
+  id: specdojo:exec-human-finalize-standard
   type: standard
   status: ready
 ---

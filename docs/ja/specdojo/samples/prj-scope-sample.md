@@ -1,11 +1,11 @@
 ---
 specdojo:
-  id: prj-scope-sample
+  id: specdojo:prj-scope-sample
   type: project
   status: ready
-  rulebook: prj-scope-rulebook
+  rulebook: specdojo:prj-scope-rulebook
   based_on:
-    - prj-overview-sample
+    - specdojo:prj-overview-sample
   supersedes: []
 ---
 

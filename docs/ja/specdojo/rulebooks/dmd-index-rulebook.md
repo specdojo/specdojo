@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: dmd-index-rules
+  id: specdojo:dmd-index-rulebook
   type: rulebook
   status: draft
-  sample: dmd-index-sample
+  sample: specdojo:dmd-index-sample
 ---
 
 # データ移行設計 作成ルール

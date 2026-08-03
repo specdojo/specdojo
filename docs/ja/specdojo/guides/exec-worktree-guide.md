@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: exec-worktree-guide
+  id: specdojo:exec-worktree-guide
   type: guide
   status: ready
 ---

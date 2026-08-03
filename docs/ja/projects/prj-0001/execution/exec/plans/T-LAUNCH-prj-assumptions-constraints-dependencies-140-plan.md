@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-rulebook
-    - prj-assumptions-constraints-dependencies-recipe
-    - prj-assumptions-constraints-dependencies-sample
-    - prj-assumptions-constraints-dependencies-template
+    - specdojo:prj-assumptions-constraints-dependencies-rulebook
+    - specdojo:prj-assumptions-constraints-dependencies-recipe
+    - specdojo:prj-assumptions-constraints-dependencies-sample
+    - specdojo:prj-assumptions-constraints-dependencies-template
 ---
 
 # Finalize Plan: T-LAUNCH-prj-assumptions-constraints-dependencies-140

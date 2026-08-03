@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: prj-overview-rulebook
+  id: specdojo:prj-overview-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: prj-overview-recipe
-  sample: prj-overview-sample
-  template: prj-overview-template
+  recipe: specdojo:prj-overview-recipe
+  sample: specdojo:prj-overview-sample
+  template: specdojo:prj-overview-template
 ---
 
 # プロジェクト概要 作成ルール
@@ -29,14 +29,14 @@ Project Overview Documentation Rulebook
 
 ## 2. 位置づけ
 
-本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。本書を扱う立ち上げトラックの位置づけは [[track-design-guide|トラック設計ガイド]]、立ち上げで扱う成果物の一覧は [[deliverables-reference|成果物リファレンス]] を参照してください。
+本書（`prj-overview`）は、ステークホルダー登録簿（`prj-stakeholder-register`）とプロジェクト憲章（`prj-charter`）の起点となる構想・概要文書です。本書を扱う立ち上げトラックの位置づけは [[specdojo:track-design-guide|トラック設計ガイド]]、立ち上げで扱う成果物の一覧は [[specdojo:deliverables-reference|成果物リファレンス]] を参照してください。
 
 ## 3. ファイル命名・ID規則
 
 ### 3.1. 配置（推奨）
 
 - `docs/ja/projects/<project-id>/` のように、プロジェクト単位のフォルダ配下に配置します。
-- 配下の章ディレクトリは `020-project-definition/` を用います（構成は [[docs-structure-guide]] に従う）。
+- 配下の章ディレクトリは `020-project-definition/` を用います（構成は [[specdojo:docs-structure-guide]] に従う）。
 - 章ディレクトリには、サブディレクトリを切って、プロジェクトの背景や目的に関わる関連資料（図表、参考資料など）を置いてもよい。
 
 ### 3.2. ドキュメントID（推奨）
@@ -58,14 +58,14 @@ Project Overview Documentation Rulebook
 Frontmatter は共通スキーマに従います（あわせてドキュメントのメタ情報の記述ルールも参照）。
 
 - 参照スキーマ: [deliverable-frontmatter.schema.yaml](/docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
-- メタ情報標準: [[document-metadata-standard]]
+- メタ情報標準: [[specdojo:document-metadata-standard]]
 
 | 項目       | 説明                               | 必須 |
 | ---------- | ---------------------------------- | ---- |
 | id         | `<project-id>:prj-overview`        | ○    |
 | type       | `project` 固定                     | ○    |
 | status     | `draft` / `ready` / `deprecated`   | ○    |
-| rulebook   | `prj-overview-rulebook`            | ○    |
+| rulebook   | `specdojo:prj-overview-rulebook`   | ○    |
 | based_on   | 既存の経営方針・制度資料・過去 DEC | 任意 |
 | supersedes | 置き換え関係                       | 任意 |
 

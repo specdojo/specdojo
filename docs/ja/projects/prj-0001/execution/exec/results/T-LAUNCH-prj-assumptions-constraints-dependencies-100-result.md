@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-assumptions-constraints-dependencies
-    - prj-assumptions-constraints-dependencies-recipe
+    - specdojo:prj-assumptions-constraints-dependencies-recipe
 ---
 
 # Edit Result

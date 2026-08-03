@@ -48,7 +48,7 @@ properties:
 
   rulebook:
     type: string
-    pattern: "^([a-z0-9][a-z0-9-]*-rulebook|none)$"
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
     description: "Rulebook ID this document conforms to. Use none only when no rulebook exists."
 
   track:

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: ifx-file-sample
+  id: specdojo:ifx-file-sample
   type: project
   status: draft
-  rulebook: ifx-file-rulebook
+  rulebook: specdojo:ifx-file-rulebook
 ---
 
 # [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                                        | 備考                        |
-| ------------ | --------------------------------------------------------- | --------------------------- |
-| ドキュメント | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | 最小サンプル                |
-| 目的         | 外部システムとのファイル連携をYAMLで定義する              | deliverables-reference 準拠 |
-| 主な内容     | ファイル形式、伝送方法、スケジュール、ファイル項目一覧    | 要点のみ記載                |
+| 項目         | 値                                                        | 備考                                 |
+| ------------ | --------------------------------------------------------- | ------------------------------------ |
+| ドキュメント | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | 最小サンプル                         |
+| 目的         | 外部システムとのファイル連携をYAMLで定義する              | specdojo:deliverables-reference 準拠 |
+| 主な内容     | ファイル形式、伝送方法、スケジュール、ファイル項目一覧    | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

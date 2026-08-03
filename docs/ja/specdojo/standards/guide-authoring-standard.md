@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: guide-authoring-standard
+  id: specdojo:guide-authoring-standard
   type: standard
   status: draft
 ---
@@ -61,16 +61,16 @@ Guide Authoring Standard
 - ファイル名は `<name>-guide.md` とする。
 - `id` / `type` / `status` を必須とし、共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `type` は `guide` 固定とする。
-- `id` は英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
+- `id` はauthority、英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目       | 必須 | 説明                             |
-| ---------- | ---- | -------------------------------- |
-| id         | ○    | `<name>-guide` 形式の一意 ID     |
-| type       | ○    | `guide` 固定                     |
-| status     | ○    | `draft` / `ready` / `deprecated` |
-| based_on   | 任意 | 根拠ドキュメント                 |
-| supersedes | 任意 | 置き換え関係                     |
+| 項目       | 必須 | 説明                                  |
+| ---------- | ---- | ------------------------------------- |
+| id         | ○    | `specdojo:<name>-guide` 形式の一意 ID |
+| type       | ○    | `guide` 固定                          |
+| status     | ○    | `draft` / `ready` / `deprecated`      |
+| based_on   | 任意 | 根拠ドキュメント                      |
+| supersedes | 任意 | 置き換え関係                          |
 
 - 機械検証は [guide-frontmatter.schema.yaml](../../../specdojo/schemas/v1/guide-frontmatter.schema.yaml) を SSOT とする。
 
@@ -79,7 +79,7 @@ Guide Authoring Standard
 ```yaml
 ---
 specdojo:
-  id: docs-structure-guide
+  id: specdojo:docs-structure-guide
   type: guide
   status: draft
 ---
@@ -115,7 +115,7 @@ specdojo:
 - デッドリンクを記載しない。
 - _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 - `導入ブロック` の3ブロックを省略しない。ラベル名を変えない。順序を入れ替えない。
-- 全 guide / reference を並べた目的別の横断一覧を、`specdojo-overview-guide` 以外に置かない。
+- 全 guide / reference を並べた目的別の横断一覧を、`specdojo:specdojo-overview-guide` 以外に置かない。
 
 ## 8. 運用ルール
 

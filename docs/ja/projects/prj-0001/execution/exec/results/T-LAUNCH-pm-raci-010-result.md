@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap
   targets:
     - prj-0001:pm-raci
-    - pm-raci-rulebook
-    - pm-raci-recipe
-    - pm-raci-sample
-    - pm-raci-template
+    - specdojo:pm-raci-rulebook
+    - specdojo:pm-raci-recipe
+    - specdojo:pm-raci-sample
+    - specdojo:pm-raci-template
 ---
 
 ## 1. 実施内容
@@ -48,7 +48,7 @@ specdojo:
 - bootstrap の手本として、同種で `status: ready` の `pm-organization-rulebook.md`、`pm-organization-recipe.md`、`pm-organization-sample.md`、`pm-organization-template.md` を参照した。章構成、粒度、表、プレースホルダの置き方を手本にし、内容は RACI 用に一般化した。
 - 既存の `pm-raci.md` は、目的、適用方針、成果物別 RACI、プロセス別 RACI、見直し条件、禁止事項の骨格を維持した。ただし、採用ロールに関する記述が `pm-organization.md` と矛盾していたため修正した。
 - 既存の `pm-raci-rulebook.md` は、構造の大枠を維持しつつ、recipe / sample / template への参照、PM 管理プロセス、`A` 1 つの判定基準、禁止事項を補強した。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template を追従させた。
-- `pm-raci-sample.md` は、既存が実プロジェクト ID と重複していたため `pm-raci-sample` に修正し、駄菓子屋文脈の完成例として再構成した。
+- `pm-raci-sample.md` は、既存が実プロジェクト ID と重複していたため `specdojo:pm-raci-sample` に修正し、駄菓子屋文脈の完成例として再構成した。
 - 外部情報は使用しなかった。指定された対象文書、依存成果物、同種 ready 文書で判断可能だったため、Web 出典は追加していない。
 
 ## 5. 検証

@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: bes-index-rulebook
+  id: specdojo:bes-index-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: bes-index-sample
+  sample: specdojo:bes-index-sample
 ---
 
 # 業務イベント仕様 全体構成 作成ルール
@@ -46,7 +46,7 @@ Business Event Specification Index (BES Index) Documentation Rules
 | `id`         | ドキュメントID（例: `bes-index`）  | ○    |
 | `type`       | `project` を推奨（メタ仕様に従う） | ○    |
 | `status`     | `draft` / `ready` / `deprecated`   | ○    |
-| `rulebook`   | `bes-index-rulebook`               | 任意 |
+| `rulebook`   | `specdojo:bes-index-rulebook`      | 任意 |
 | `supersedes` | 置き換え関係（古仕様→新仕様）      | 任意 |
 
 ## 5. 本文構成（標準テンプレ）

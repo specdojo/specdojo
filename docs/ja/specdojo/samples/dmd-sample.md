@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: dmd-sample
+  id: specdojo:dmd-sample
   type: project
   status: draft
-  rulebook: dmd-rulebook
+  rulebook: specdojo:dmd-rulebook
 ---
 
 # データ移行設計 サンプル

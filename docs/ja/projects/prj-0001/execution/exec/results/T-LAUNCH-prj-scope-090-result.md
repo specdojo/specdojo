@@ -27,7 +27,7 @@ specdojo:
 
 - result: pass
 - evidence: `[[prj-0001:prj-scope]]` の「1. 対象業務」（利用者・利用場面・利用者影響の表、対象活動領域の箇条書き）、「3. 対象期間」（開始条件・完了条件・GO/NotGo 判断時点）、「4. スコープ外」（対象外・理由・補足の表）、「5. 境界の判断基準」。`[[prj-0001:prj-overview]]` の「2. 必要性」「4. 実現したいこと」との対応。
-- notes: stakeholder（市民/専門家/行政、開発者、AI Agent の3者を利用場面・利用者影響とともに識別）、scope_boundary（対象業務・対象システム・対象期間・スコープ外で判断可能）、business_event（初期対象期間の開始・完了条件、GO/NotGo 判断のトリガーを明示）、acceptance/non_functional/exception_case/operations は本書では薄いが、これは prj-scope-rulebook 1章で「詳細な成功判定や受入条件は `prj-success-criteria-and-acceptance-criteria`、前提・制約・依存は `prj-assumptions-constraints-dependencies`、課題と解決方針は `prj-issues-and-approach` へ委譲」と明記されており、本文末尾でも「個別成果物ごとの詳細な受入条件、設計、実装、テスト手順は後続文書で扱う」と自己言及している。スコープ文書としての責務（境界定義）は満たしており、coverage_required の一部項目（acceptance 等）は仕様上の意図的な委譲であって欠落ではないと判断した。traceability は based_on（`prj-0001:prj-overview`）と本文冒頭の参照文で確保されている。
+- notes: stakeholder（市民/専門家/行政、開発者、AI Agent の3者を利用場面・利用者影響とともに識別）、scope_boundary（対象業務・対象システム・対象期間・スコープ外で判断可能）、business_event（初期対象期間の開始・完了条件、GO/NotGo 判断のトリガーを明示）、acceptance/non_functional/exception_case/operations は本書では薄いが、これは specdojo:prj-scope-rulebook 1章で「詳細な成功判定や受入条件は `prj-success-criteria-and-acceptance-criteria`、前提・制約・依存は `prj-assumptions-constraints-dependencies`、課題と解決方針は `prj-issues-and-approach` へ委譲」と明記されており、本文末尾でも「個別成果物ごとの詳細な受入条件、設計、実装、テスト手順は後続文書で扱う」と自己言及している。スコープ文書としての責務（境界定義）は満たしており、coverage_required の一部項目（acceptance 等）は仕様上の意図的な委譲であって欠落ではないと判断した。traceability は based_on（`prj-0001:prj-overview`）と本文冒頭の参照文で確保されている。
 
 ### RVP-002（PO: vp-po-purpose-alignment）
 
@@ -55,7 +55,7 @@ specdojo:
 
 ## 2. findings
 
-- 軽微: 「3. 対象期間」で未確定の初回公開日を `_TODO_:` 表記しているが、prj-scope-recipe「4.3. 対象期間」では未決事項を `_UNDECIDED_:` とする書き方を推奨しており、prj-scope-sample も同様の場面で `_UNDECIDED_:` を採用している（一方 prj-scope-rulebook 6.1 では `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` のいずれも未確定の明示として認めている）。rulebook を正としているため本件は禁止事項・必須要素違反にはあたらず blocking ではないが、recipe・sample との表記統一の観点では `_UNDECIDED_:` への変更を検討する余地がある。
+- 軽微: 「3. 対象期間」で未確定の初回公開日を `_TODO_:` 表記しているが、specdojo:prj-scope-recipe「4.3. 対象期間」では未決事項を `_UNDECIDED_:` とする書き方を推奨しており、specdojo:prj-scope-sample も同様の場面で `_UNDECIDED_:` を採用している（一方 specdojo:prj-scope-rulebook 6.1 では `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` のいずれも未確定の明示として認めている）。rulebook を正としているため本件は禁止事項・必須要素違反にはあたらず blocking ではないが、recipe・sample との表記統一の観点では `_UNDECIDED_:` への変更を検討する余地がある。
 
 ## 3. 参考資料との整合確認
 

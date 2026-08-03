@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: trc-requirements-to-tests-rulebook
+  id: specdojo:trc-requirements-to-tests-rulebook
   type: rulebook
   status: draft
-  sample: trc-requirements-to-tests-sample
+  sample: specdojo:trc-requirements-to-tests-sample
 ---
 
 # トレーサビリティ（要求→テスト）作成ルール
@@ -34,21 +34,21 @@ Requirements Traceability (Requirements to Tests) Rulebook
 
 - 対象ドキュメント ID は `trc-requirements-to-tests` とする。
 - 推奨ファイル名は `trc-requirements-to-tests.md` とする。
-- 本 rulebook の ID は `trc-requirements-to-tests-rulebook` とする。
+- 本 rulebook の ID は `specdojo:trc-requirements-to-tests-rulebook` とする。
 - 追加分割が必要な場合は `trc-requirements-to-tests-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
 [document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
-| 項目       | 説明                                   | 必須 |
-| ---------- | -------------------------------------- | ---- |
-| id         | `trc-requirements-to-tests`            | ○    |
-| type       | `project`                              | ○    |
-| status     | `draft` / `ready` / `deprecated`       | ○    |
-| rulebook   | `trc-requirements-to-tests-rulebook`   | ○    |
-| based_on   | 生成元となる要求・テスト仕様の ID 配列 | 任意 |
-| supersedes | 置き換え対象ドキュメント ID 配列       | 任意 |
+| 項目       | 説明                                          | 必須 |
+| ---------- | --------------------------------------------- | ---- |
+| id         | `trc-requirements-to-tests`                   | ○    |
+| type       | `project`                                     | ○    |
+| status     | `draft` / `ready` / `deprecated`              | ○    |
+| rulebook   | `specdojo:trc-requirements-to-tests-rulebook` | ○    |
+| based_on   | 生成元となる要求・テスト仕様の ID 配列        | 任意 |
+| supersedes | 置き換え対象ドキュメント ID 配列              | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

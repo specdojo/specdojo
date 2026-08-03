@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0139-register-ticket-status-transition
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -17,7 +17,7 @@ specdojo:
 
 個票は「対応結果」まで書けて初めて文書として完結するため、記述が固まる時期は実務上 `close` / `reject` と一致する。遷移基準を rulebook に明記し、`close` / `reject` が個票の `status` を更新するようにする。
 
-`pjr-index` の処理状態と frontmatter の成熟度は別の状態軸であり、同一視してはならない（[[pjr-rulebook]]）。両者を機械的に連動させるのではなく、記述が固まっているかを判定した上で遷移させる。
+`pjr-index` の処理状態と frontmatter の成熟度は別の状態軸であり、同一視してはならない（[[specdojo:pjr-rulebook]]）。両者を機械的に連動させるのではなく、記述が固まっているかを判定した上で遷移させる。
 
 ## 2. 完了条件
 
@@ -46,7 +46,7 @@ specdojo:
 
 ## 4. 対応結果
 
-- 遷移基準を [[pjr-rulebook|プロジェクト登録簿ルールブック]] の `個票 status の遷移基準` に明記した。`draft` は個票生成直後、`ready` は `close` かつ必須節に `_TODO_` なし、`deprecated` は `reject` で遷移する。処理状態を機械的に写像しない点も併記した。
+- 遷移基準を [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]] の `個票 status の遷移基準` に明記した。`draft` は個票生成直後、`ready` は `close` かつ必須節に `_TODO_` なし、`deprecated` は `reject` で遷移する。処理状態を機械的に写像しない点も併記した。
 - `src/register.ts` に個票 Frontmatter の `status` を書き換える処理を実装し、`register close` は `ready`、`register reject` は `deprecated` へ更新するようにした。個票列が `-` の項目や個票ファイル不在は従来どおり処理状態のみ更新する。
 - `ready` への昇格は本文に `_TODO_` が残っていないことを条件とし、残る場合は昇格せず警告して `draft` を維持する。`_TODO_` 判定は見出し文言に依存せず本文全体を対象とし、i18n 非依存とした。
 - `--dry-run` では個票を書き換えず、`Would update ticket status → <status>` の予定を表示する。既に目的の `status` の個票は冪等に扱い内容を変えない。
@@ -55,7 +55,7 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[pjr-rulebook|プロジェクト登録簿ルールブック]]
-- [[document-metadata-standard|ドキュメントメタ情報標準]]
-- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]]
+- [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+- [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]

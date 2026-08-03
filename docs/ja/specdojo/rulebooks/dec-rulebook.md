@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: dec-rulebook
+  id: specdojo:dec-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: dec-sample
+  sample: specdojo:dec-sample
 ---
 
 # 決定記録 作成ルール

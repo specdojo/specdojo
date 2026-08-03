@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-issues-and-approach-template
+  id: specdojo:prj-issues-and-approach-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-issues-and-approach
       type: project
       status: draft
-      rulebook: prj-issues-and-approach-rulebook
+      rulebook: specdojo:prj-issues-and-approach-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-scope

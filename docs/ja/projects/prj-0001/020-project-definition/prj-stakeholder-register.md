@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-stakeholder-register
   type: project
   status: ready
-  rulebook: prj-stakeholder-register-rulebook
+  rulebook: specdojo:prj-stakeholder-register-rulebook
   based_on:
     - prj-0001:prj-overview
   supersedes: []

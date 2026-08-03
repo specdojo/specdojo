@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: docs-editing-guide
+  id: specdojo:docs-editing-guide
   type: guide
   status: ready
 ---

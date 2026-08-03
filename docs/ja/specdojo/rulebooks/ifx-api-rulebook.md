@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: ifx-api-rulebook
+  id: specdojo:ifx-api-rulebook
   type: rulebook
   status: draft
-  sample: ifx-api-sample
+  sample: specdojo:ifx-api-sample
 ---
 
 # 外部API仕様（External API Specification: EAPIS）作成ルール

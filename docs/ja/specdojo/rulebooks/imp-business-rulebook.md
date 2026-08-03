@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-business-rulebook
+  id: specdojo:imp-business-rulebook
   type: rulebook
   status: draft
-  sample: imp-business-sample
+  sample: specdojo:imp-business-sample
 ---
 
 # 影響調査（業務）作成ルール
@@ -46,7 +46,7 @@ Impact Analysis (Business) Rulebook
 | id         | ドキュメント ID（例: `imp-business`） | ○    |
 | type       | `project`                             | ○    |
 | status     | `draft` / `ready` / `deprecated`      | ○    |
-| rulebook   | `imp-business-rulebook` 固定          | ○    |
+| rulebook   | `specdojo:imp-business-rulebook` 固定 | ○    |
 | part_of    | 一覧/親ドキュメントへの所属 ID 配列   | 任意 |
 | based_on   | 変更要求や根拠資料の ID 配列          | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列      | 任意 |

@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0146-forbid-links-in-history-files
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -15,7 +15,7 @@ specdojo:
 
 plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生する Markdown リンク（`[]()`）を含めない。`docs/` 配下の文書を参照する場合は `id` を正とする `[[id]]`（wikilink）に統一し、`docs/` 外のファイル（`.github/instructions/` 等）や外部URLはリポジトリルートからの相対パス表記／URLそのままで記述するルールを定める。加えて、ルール違反（Markdownリンクの使用）を自動検知できるよう validation / lint チェックの仕組みを整備する。
 
-`[[id]]` は `specdojo index build` の doc-index を介して `id` から解決するため、`id-and-file-naming-standard` の「ファイル名を変更しても `id` は変更しない」原則の下では、参照先ファイルがリネームされても参照側の修正が不要になる。`id` が未解決の場合もビルドエラーにはならず `[[id]]` の文字列表示に留まる（`src/doc-index.ts` の `replaceDocIndexRefs`、`.vitepress/config.mts` の wikilink 変換ルールで確認済み）。
+`[[id]]` は `specdojo index build` の doc-index を介して `id` から解決するため、`specdojo:id-and-file-naming-standard` の「ファイル名を変更しても `id` は変更しない」原則の下では、参照先ファイルがリネームされても参照側の修正が不要になる。`id` が未解決の場合もビルドエラーにはならず `[[id]]` の文字列表示に留まる（`src/doc-index.ts` の `replaceDocIndexRefs`、`.vitepress/config.mts` の wikilink 変換ルールで確認済み）。
 
 ## 2. 完了条件
 
@@ -43,5 +43,5 @@ plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物に�
 
 - .github/instructions/markdown.instructions.md
 - .github/instructions/specdojo-exec-workflow.instructions.md
-- [[id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]]
+- [[specdojo:id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]]
 - [[prj-0001:pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope|docs/外へのwikilink解決範囲拡張の要否検討]]

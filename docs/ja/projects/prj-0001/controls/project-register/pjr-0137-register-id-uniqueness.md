@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0137-register-id-uniqueness
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -48,6 +48,6 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[pjr-rulebook|プロジェクト登録簿ルールブック]]
-- [[register-operation-guide|SpecDojo登録簿運用ガイド]]
-- [[command-reference|SpecDojoコマンドリファレンス]]
+- [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]]
+- [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]

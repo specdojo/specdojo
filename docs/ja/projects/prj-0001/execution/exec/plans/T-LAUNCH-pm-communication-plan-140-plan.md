@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-communication-plan
-    - pm-communication-plan-rulebook
-    - pm-communication-plan-recipe
-    - pm-communication-plan-sample
-    - pm-communication-plan-template
+    - specdojo:pm-communication-plan-rulebook
+    - specdojo:pm-communication-plan-recipe
+    - specdojo:pm-communication-plan-sample
+    - specdojo:pm-communication-plan-template
 ---
 
 # Finalize Plan: T-LAUNCH-pm-communication-plan-140

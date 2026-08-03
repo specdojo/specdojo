@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: rulebook-authoring-standard
+  id: specdojo:rulebook-authoring-standard
   type: standard
   status: ready
 ---
@@ -32,20 +32,20 @@ Rulebook Authoring Standard
 - ファイル名は `<prefix>-rulebook.md` とする。
 - `id` / `type` / `status` を必須とし、共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `type` は `rulebook` 固定とする。
-- `id` は英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
+- `id` はauthority、英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目          | 必須 | 説明                                                              |
-| ------------- | ---- | ----------------------------------------------------------------- |
-| id            | ○    | `<prefix>-rulebook` 形式の一意 ID                                 |
-| type          | ○    | `rulebook` 固定                                                   |
-| status        | ○    | `draft` / `ready` / `deprecated`                                  |
-| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`）    |
-| recipe        | 任意 | 対応する recipe の ID（`<prefix>-recipe`）。該当なしは `none`     |
-| sample        | 任意 | 対応する sample の ID（`<prefix>-sample`）。該当なしは `none`     |
-| template      | 任意 | 対応する template の ID（`<prefix>-template`）。該当なしは `none` |
-| based_on      | 任意 | 上位規約や根拠ドキュメント                                        |
-| supersedes    | 任意 | 置き換え関係                                                      |
+| 項目          | 必須 | 説明                                                           |
+| ------------- | ---- | -------------------------------------------------------------- |
+| id            | ○    | `specdojo:<prefix>-rulebook` 形式の一意 ID                     |
+| type          | ○    | `rulebook` 固定                                                |
+| status        | ○    | `draft` / `ready` / `deprecated`                               |
+| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
+| recipe        | 任意 | 対応する recipe の完全 ID。該当なしは `none`                   |
+| sample        | 任意 | 対応する sample の完全 ID。該当なしは `none`                   |
+| template      | 任意 | 対応する template の完全 ID。該当なしは `none`                 |
+| based_on      | 任意 | 上位規約や根拠ドキュメント                                     |
+| supersedes    | 任意 | 置き換え関係                                                   |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
 - `recipe` / `sample` / `template` は ID 参照であり、`fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
@@ -56,7 +56,7 @@ Rulebook Authoring Standard
 ```yaml
 ---
 specdojo:
-  id: imp-business-rulebook
+  id: specdojo:imp-business-rulebook
   type: rulebook
   status: draft
 ---

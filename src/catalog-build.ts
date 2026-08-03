@@ -134,7 +134,7 @@ function buildFrontmatter(doc: DctDoc): string[] {
       inner.push(`  - ${val}`);
     }
   }
-  inner.push("rulebook: dct-rulebook");
+  inner.push("rulebook: specdojo:dct-rulebook");
   return buildSpecdojoFrontmatter(inner).split("\n");
 }
 
@@ -524,7 +524,7 @@ type RefResolution =
   | { kind: "external" } // global / product / other-project / non-catalog project doc
   | { kind: "unresolved" }; // matches nothing known
 
-// Resolves a based_on reference per id-and-file-naming-standard §5.2.
+// Resolves a based_on reference per specdojo:id-and-file-naming-standard §5.2.
 // Bare references resolve to the same project first, then to a global/product id.
 function resolveReference(
   ref: string,
@@ -564,7 +564,7 @@ function readBasedOn(docFsPath: string): string[] | null {
 // closure (project-global). A basis document must be produced before the document
 // based on it, so it has to be a (transitive) prerequisite in the WBS.
 //
-// References are resolved per id-and-file-naming-standard §5.2:
+// References are resolved per specdojo:id-and-file-naming-standard §5.2:
 //   - bare refs resolve to the same project first, then to a global/product id;
 //   - `<project_id>:<local_id>` and other-project refs use the explicit id.
 // `knownIds` is the universe of valid document ids (from the doc index); a

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: cstd-sample
+  id: specdojo:cstd-sample
   type: project
   status: draft
-  rulebook: cstd-mermaid-rulebook
+  rulebook: specdojo:cstd-mermaid-rulebook
 ---
 
 # [概念状態遷移図](../rulebooks/cstd-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                              | 備考                        |
-| ------------ | ----------------------------------------------- | --------------------------- |
-| ドキュメント | [概念状態遷移図](../rulebooks/cstd-rulebook.md) | 最小サンプル                |
-| 目的         | 業務オブジェクトの状態変化を図で定義する        | deliverables-reference 準拠 |
-| 主な内容     | 対象、状態、遷移、イベント、条件など            | 要点のみ記載                |
+| 項目         | 値                                              | 備考                                 |
+| ------------ | ----------------------------------------------- | ------------------------------------ |
+| ドキュメント | [概念状態遷移図](../rulebooks/cstd-rulebook.md) | 最小サンプル                         |
+| 目的         | 業務オブジェクトの状態変化を図で定義する        | specdojo:deliverables-reference 準拠 |
+| 主な内容     | 対象、状態、遷移、イベント、条件など            | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: opd-rulebook
+  id: specdojo:opd-rulebook
   type: rulebook
   status: draft
   target_format: markdown

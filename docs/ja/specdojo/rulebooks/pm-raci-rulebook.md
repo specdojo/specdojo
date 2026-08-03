@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-raci-rulebook
+  id: specdojo:pm-raci-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: pm-raci-recipe
-  sample: pm-raci-sample
-  template: pm-raci-template
+  recipe: specdojo:pm-raci-recipe
+  sample: specdojo:pm-raci-sample
+  template: specdojo:pm-raci-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # RACI 作成ルール
@@ -48,7 +48,7 @@ RACI Documentation Rulebook
 | id         | `<project-id>:pm-raci`           | ○    |
 | type       | `project`                        | ○    |
 | status     | `draft` / `ready` / `deprecated` | ○    |
-| rulebook   | `pm-raci-rulebook`               | ○    |
+| rulebook   | `specdojo:pm-raci-rulebook`      | ○    |
 | based_on   | 組織定義、ロール定義などの ID    | 任意 |
 | supersedes | 置き換え対象の旧文書 ID          | 任意 |
 

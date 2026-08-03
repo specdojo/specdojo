@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:pm-roles
-    - pm-roles-rulebook
+    - specdojo:pm-roles-rulebook
 ---
 
 # Edit Result

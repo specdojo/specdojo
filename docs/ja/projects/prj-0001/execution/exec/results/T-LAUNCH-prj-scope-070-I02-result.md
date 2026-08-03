@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-scope-rulebook` と `prj-scope-recipe` に沿って、対象成果物の必須章、禁止事項、記述粒度を確認した。
+- `specdojo:prj-scope-rulebook` と `specdojo:prj-scope-recipe` に沿って、対象成果物の必須章、禁止事項、記述粒度を確認した。
 - 既存の章構成と記述を維持し、`prj-overview` との対応、合意対象、下流ロールが入力として確認する境界、変更記録先を最小限補強した。
 - `status` は人間による昇格対象のため `draft` のまま維持した。
 

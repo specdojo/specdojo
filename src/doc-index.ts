@@ -43,6 +43,16 @@ const SKIP_DIRS = new Set(["node_modules", "dist", ".vitepress", "out"]);
 const FILE_RE = /\.(md|yaml|yml)$/;
 const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
 
+class DuplicateDocIdError extends Error {}
+
+function addEntry(entries: Record<string, string>, id: string, path: string): void {
+  const previous = entries[id];
+  if (previous && previous !== path) {
+    throw new DuplicateDocIdError(`Duplicate document ID "${id}": ${previous}, ${path}`);
+  }
+  entries[id] = path;
+}
+
 // ---- Markdown frontmatter ----------------------------------------------
 
 function extractIdFromMarkdown(content: string): string | undefined {
@@ -59,7 +69,7 @@ function extractTopLevelId(parsed: unknown): string | undefined {
   const id = record["id"];
   if (typeof id === "string" && DOC_ID_RE.test(id)) return id;
   // OpenAPI / AsyncAPI 形式（ifx-* 等）はトップレベルに独自キーを置けないため、
-  // document-metadata-standard に従い x-spec-meta.id をメタ情報の正本とする。
+  // specdojo:document-metadata-standard に従い x-spec-meta.id をメタ情報の正本とする。
   const specMeta = record["x-spec-meta"];
   if (specMeta && typeof specMeta === "object" && !Array.isArray(specMeta)) {
     const nestedId = (specMeta as Record<string, unknown>)["id"];
@@ -124,11 +134,11 @@ function collectFromFields(
       const pathVal = itemRec[pathKey];
       if (typeof pathVal === "string" && pathVal.trim()) {
         // item has a path field → use it as the index target (no line number)
-        entries[id] = pathVal.trim();
+        addEntry(entries, id, pathVal.trim());
       } else {
         // no path → use file:line
         const lineNum = findIdLine(lines, id, idKey);
-        entries[id] = `${fileRelPath}:${lineNum}`;
+        addEntry(entries, id, `${fileRelPath}:${lineNum}`);
       }
     }
   }
@@ -152,16 +162,17 @@ function scanFile(
     if (isYaml) {
       const parsed = yaml.load(content);
       const topId = extractTopLevelId(parsed);
-      if (topId) entries[topId] = entryPath;
+      if (topId) addEntry(entries, topId, entryPath);
       const specs = nestedMap.get(scanRelPath);
       if (specs && specs.length > 0) {
         collectFromFields(parsed, specs, entryPath, content, entries);
       }
     } else {
       const id = extractIdFromMarkdown(content);
-      if (id && DOC_ID_RE.test(id)) entries[id] = entryPath;
+      if (id && DOC_ID_RE.test(id)) addEntry(entries, id, entryPath);
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof DuplicateDocIdError) throw error;
     // ignore unreadable / unparseable files
   }
 }

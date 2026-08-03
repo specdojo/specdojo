@@ -1,9 +1,9 @@
 # Template: external IF specifications deliverables catalog
-id: dct-external-interface-specs-template
+id: specdojo:dct-external-interface-specs-template
 type: template
 status: draft
 title: 成果物カタログ（外部IF仕様）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 domain: external-interface-specs
 base_path: /docs/ja/product/020-external-interface-specs
 
@@ -15,7 +15,7 @@ groups:
         depends_on: []
         overview: 外部システムとの連携を一覧（YAML）で定義する
         path: ifx-index.yaml
-        rulebook: ifx-rulebook
+        rulebook: specdojo:ifx-rulebook
         done_criteria:
           - text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
             roles: [BA]
@@ -41,7 +41,7 @@ groups:
           - ifx-index
         overview: 外部システムとのAPI連携をOpenAPI形式（YAML）で定義する
         path: ifx-api-_TERM_.yaml
-        rulebook: ifx-api-rulebook
+        rulebook: specdojo:ifx-api-rulebook
         note: "_TERM_ は対象外部システム名の略称（kebab-case）"
         done_criteria:
           - text: APIのエンドポイント・リクエスト・レスポンスが業務利用観点で確認できること
@@ -68,7 +68,7 @@ groups:
           - ifx-index
         overview: 外部システムとのファイル連携をYAMLで定義する
         path: ifx-file-_TERM_.yaml
-        rulebook: ifx-file-rulebook
+        rulebook: specdojo:ifx-file-rulebook
         note: "_TERM_ は対象ファイル連携名の略称（kebab-case）"
         done_criteria:
           - text: ファイル形式・伝送方法・スケジュール・項目が業務観点で記述されていること
@@ -92,7 +92,7 @@ groups:
           - ifx-index
         overview: 他システムとのイベント・キューのメッセージ連携をAsyncAPI + CloudEvents（YAML）で定義する
         path: ifx-msg-_TERM_.yaml
-        rulebook: ifx-msg-rulebook
+        rulebook: specdojo:ifx-msg-rulebook
         note: "_TERM_ は対象メッセージ・イベント名の略称（kebab-case）"
         done_criteria:
           - text: メッセージ内容・チャネル・タイミングが業務観点で確認できること

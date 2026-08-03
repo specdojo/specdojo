@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-raci-template
+  id: specdojo:pm-raci-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,9 +8,9 @@ specdojo:
       id: _PROJECT_ID_:pm-raci
       type: project
       status: draft
-      rulebook: pm-raci-rulebook
+      rulebook: specdojo:pm-raci-rulebook
       based_on:
-        - people-and-organization-definition-standard
+        - specdojo:people-and-organization-definition-standard
         - _PROJECT_ID_:pm-organization
       supersedes: []
 ---

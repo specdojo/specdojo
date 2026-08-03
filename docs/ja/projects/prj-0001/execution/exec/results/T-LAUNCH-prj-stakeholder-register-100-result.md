@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-stakeholder-register
-    - prj-stakeholder-register-recipe
+    - specdojo:prj-stakeholder-register-recipe
 ---
 
 # Edit Result

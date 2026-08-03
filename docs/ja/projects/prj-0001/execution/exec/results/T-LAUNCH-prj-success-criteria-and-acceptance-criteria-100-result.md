@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-success-criteria-and-acceptance-criteria
-    - prj-success-criteria-and-acceptance-criteria-recipe
+    - specdojo:prj-success-criteria-and-acceptance-criteria-recipe
 ---
 
 # Edit Result

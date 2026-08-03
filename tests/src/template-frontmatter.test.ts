@@ -7,7 +7,7 @@ describe("flattenTemplateFrontmatter", () => {
     const template = [
       "---",
       "specdojo:",
-      "  id: pjr-issue-template",
+      "  id: specdojo:pjr-issue-template",
       "  type: template",
       "  status: draft",
       "  frontmatter_template:",
@@ -15,7 +15,7 @@ describe("flattenTemplateFrontmatter", () => {
       "      id: _PROJECT_ID_:_PJR-XXXX_",
       "      type: project",
       "      status: draft",
-      "      rulebook: pjr-rulebook",
+      "      rulebook: specdojo:pjr-rulebook",
       "      item_type: issue",
       "---",
       "",
@@ -34,7 +34,7 @@ describe("flattenTemplateFrontmatter", () => {
         "  id: _PROJECT_ID_:_PJR-XXXX_",
         "  type: project",
         "  status: draft",
-        "  rulebook: pjr-rulebook",
+        "  rulebook: specdojo:pjr-rulebook",
         "  item_type: issue",
         "---",
         "",
@@ -50,7 +50,7 @@ describe("flattenTemplateFrontmatter", () => {
     const template = [
       "---",
       "specdojo:",
-      "  id: pm-plan-template",
+      "  id: specdojo:pm-plan-template",
       "  type: template",
       "  status: draft",
       "  frontmatter_template:",
@@ -58,7 +58,7 @@ describe("flattenTemplateFrontmatter", () => {
       "      id: _PROJECT_ID_:pm-plan",
       "      type: project",
       "      status: ready",
-      "      rulebook: pm-plan-rulebook",
+      "      rulebook: specdojo:pm-plan-rulebook",
       "      based_on:",
       "        - _PROJECT_ID_:pm-organization",
       "        - _PROJECT_ID_:pm-roles",
@@ -78,7 +78,7 @@ describe("flattenTemplateFrontmatter", () => {
         "  id: _PROJECT_ID_:pm-plan",
         "  type: project",
         "  status: ready",
-        "  rulebook: pm-plan-rulebook",
+        "  rulebook: specdojo:pm-plan-rulebook",
         "  based_on:",
         "    - _PROJECT_ID_:pm-organization",
         "    - _PROJECT_ID_:pm-roles",
@@ -95,7 +95,7 @@ describe("flattenTemplateFrontmatter", () => {
     const template = [
       "---",
       "specdojo:",
-      "  id: pjr-index-template",
+      "  id: specdojo:pjr-index-template",
       "  type: template",
       "  status: draft",
       "  frontmatter_template:",
@@ -103,7 +103,7 @@ describe("flattenTemplateFrontmatter", () => {
       "      id: _PROJECT_ID_:pjr-index",
       "      type: project",
       "      status: draft",
-      "      rulebook: pjr-rulebook",
+      "      rulebook: specdojo:pjr-rulebook",
       "---",
       "",
       "# _PROJECT_ID_ プロジェクト登録簿",
@@ -114,7 +114,7 @@ describe("flattenTemplateFrontmatter", () => {
 
     expect(actual).toContain("id: _PROJECT_ID_:pjr-index");
     expect(actual).toContain("# _PROJECT_ID_ プロジェクト登録簿");
-    expect(actual).not.toContain("pjr-index-template");
+    expect(actual).not.toContain("specdojo:pjr-index-template");
   });
 
   it("returns input unchanged when there is no frontmatter_template field", () => {

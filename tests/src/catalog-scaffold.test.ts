@@ -65,11 +65,11 @@ describe("scaffoldDoc — プレースホルダ置換", () => {
     const template: DctTemplateDoc = {
       ...MINIMAL_TEMPLATE,
       title: "成果物カタログ（テスト）",
-      rulebook: "dct-rulebook",
+      rulebook: "specdojo:dct-rulebook",
     };
     const doc = scaffoldDoc(template, "prj-0001", "large");
     expect(doc.title).toBe("成果物カタログ（テスト）");
-    expect(doc.rulebook).toBe("dct-rulebook");
+    expect(doc.rulebook).toBe("specdojo:dct-rulebook");
   });
 
   it("instance_id_pattern をプロジェクトカタログへ保持する", () => {

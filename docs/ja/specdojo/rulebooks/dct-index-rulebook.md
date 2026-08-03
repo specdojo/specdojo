@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: dct-index-rulebook
+  id: specdojo:dct-index-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: dct-index-sample
+  sample: specdojo:dct-index-sample
 ---
 
 # 成果物カタログ 作成ルール
@@ -52,7 +52,7 @@ Deliverables Catalog Documentation Rules
 | `id`       | `<project-id>:dct-index`（例: `prj-0001:dct-index`） | ○    |
 | `type`     | `project` を推奨                                     | ○    |
 | `status`   | `draft` / `ready` / `deprecated`                     | ○    |
-| `rulebook` | `dct-index-rulebook`                                 | 任意 |
+| `rulebook` | `specdojo:dct-index-rulebook`                        | 任意 |
 | `based_on` | 直接根拠として参照した文書IDの配列                   | 任意 |
 
 ## 5. 本文構成（標準テンプレ）

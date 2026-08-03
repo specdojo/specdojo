@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: mm-sample
+  id: specdojo:mm-sample
   type: project
   status: draft
-  rulebook: mm-rulebook
+  rulebook: specdojo:mm-rulebook
 ---
 
 # 議事録 サンプル

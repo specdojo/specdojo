@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:pm-quality-management-plan
-    - pm-quality-management-plan-recipe
+    - specdojo:pm-quality-management-plan-recipe
 ---
 
 # Edit Result
@@ -22,7 +22,7 @@ specdojo:
 
 品質管理計画の完成版成果物と前々回の edit result（`070-I01`, `070-I02`, `080-I01`, `080-I02`）、最終 review result（`090`）を根拠として、レシピ `pm-quality-management-plan-recipe.md` を見直した。
 
-- レシピの章構成（`§1`〜`§8` ）は recipe-authoring-standard の標準章構成と一致していることを確認した。
+- レシピの章構成（`§1`〜`§8` ）は specdojo:recipe-authoring-standard の標準章構成と一致していることを確認した。
 - review result 総合: findings なし, all pass。「品質目標」「レビュープロセス」「品質メトリクス」「是正プロセス」「PM/QE/PO責任分離」の各観点がレシピにより適切に指導致されている。
 - 前々回の edit で修正された「未確定コマンドを確定事項として書かない」「内容不整合の再判定を QE と PO に分ける」といった教訓は、成果物固有の事情であり recipe には持ち込まない方針に従い維持したままとした。
 - レシピに対する追加修正または陳腐化による修正が必要な箇所は確認されなかったため、レシピは変更なしのまま完了とした。
@@ -37,7 +37,7 @@ approach は `recipe-maintenance`。品質管理計画に関連する以下の�
 
 **根拠にした成果物・review result**:
 
-- 見直し対象 recipe: `docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md` — 180行分の既存構造を把握し、章構成が recipe-authoring-standard の標準構成と一致していることを確認した。
+- 見直し対象 recipe: `docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md` — 180行分の既存構造を把握し、章構成が specdojo:recipe-authoring-standard の標準構成と一致していることを確認した。
 - 完成版成果物: `docs/ja/projects/prj-0001/030-project-management/010-management-plan/pm-quality-management-plan.md` — `§4`各章の書き方 が品質管理計画の8章（概要〜見直し条件）に対して適切な問い・書き方を提供していることを確認した。
 - edit result `T-LAUNCH-pm-quality-management-plan-070-I01-result.md`: メトリクス算出方法から未確認コマンド名を除外する修正を実施。recipe は PM の計画化可能性、QE と PO の判断責任分離を確認する観点として機能したとの記録あり
 - edit result `T-LAUNCH-pm-quality-management-plan-070-I02-result.md`: QE 中心の品質確認と PO 最終判断を概要へ追記。レシピ構造は整合し、改善不要との判断が記録済み
@@ -53,7 +53,7 @@ approach は `recipe-maintenance`。品質管理計画に関連する以下の�
 - `§4.4`品質メトリクス — 「未確定コマンドを記述しない」という edit 070-I01/I02 の教訓は成果物固有の修正であり、recipe に追加一般化は不要（approach の「成果物固有の事情は recipe へ持ち込まない」に適合）
 - 他の `§4` サブセクションと `§5`〜`§8` — レシピの内容が完成版作成に必要な指導致を備えており、陳腐化または追加指摘もない
 
-**recipe-authoring-standard との整合確認**:
+**specdojo:recipe-authoring-standard との整合確認**:
 
 - 標準章構成（必須7章＋任意1）との一致 ✓
 - Frontmatter の `rulebook`, `sample` 項目 ✓

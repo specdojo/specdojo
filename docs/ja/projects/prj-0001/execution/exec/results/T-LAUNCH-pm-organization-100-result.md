@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:pm-organization
-    - pm-organization-recipe
+    - specdojo:pm-organization-recipe
 ---
 
 # Edit Result

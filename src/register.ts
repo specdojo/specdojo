@@ -61,12 +61,12 @@ export const VALID_TYPES = [
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
 
-// 個票 Frontmatter の文書成熟度（pjr-rulebook「個票 status の遷移基準」）。
+// 個票 Frontmatter の文書成熟度（specdojo:pjr-rulebook「個票 status の遷移基準」）。
 // pjr-index の処理状態（VALID_STATUSES）とは別の状態軸として扱う。
 export const VALID_TICKET_STATUSES = ["draft", "ready", "deprecated"] as const;
 export type TicketStatus = (typeof VALID_TICKET_STATUSES)[number];
 
-// 登録項目一覧テーブルは pjr-rulebook「本文構成」で章 1 に固定される。
+// 登録項目一覧テーブルは specdojo:pjr-rulebook「本文構成」で章 1 に固定される。
 // 見出し文言（言語依存）ではなく章番号でセクションを特定し、i18n 非依存にする。
 const REGISTER_SECTION_RE = /^## 1\.\s/;
 
@@ -1116,7 +1116,7 @@ export function reservePjrIdOnIntegration(opts: {
 }
 
 // 統合ブランチ名を解決する。--integration-branch の明示指定を最優先し、
-// 次に config の run.register_integration_branch、最後に git-branching-standard に従い
+// 次に config の run.register_integration_branch、最後に specdojo:git-branching-standard に従い
 // プロジェクト統合ブランチ `project/<project-id>/develop` を既定にする。
 export function resolveIntegrationBranchName(projectId: string, override?: string): string {
   const trimmed = override?.trim();

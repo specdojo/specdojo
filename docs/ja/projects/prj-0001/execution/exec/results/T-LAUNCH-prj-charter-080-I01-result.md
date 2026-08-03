@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-charter-rulebook` と `prj-charter-recipe` を確認し、プロジェクト憲章の必須構成、認可対象、権限委譲、予算枠、GO / Not GO 判断、承認・未決事項の記述が成立していることを確認した。
+- `specdojo:prj-charter-rulebook` と `specdojo:prj-charter-recipe` を確認し、プロジェクト憲章の必須構成、認可対象、権限委譲、予算枠、GO / Not GO 判断、承認・未決事項の記述が成立していることを確認した。
 - `prj-overview` と `prj-stakeholder-register` を根拠に、プロジェクト目的、公開方針、人間の PO による最終判断、AI Agent の支援者としての位置づけ、予算枠未確定時の扱いを確認した。
 - ステークホルダー登録簿で Role code が未設定の関係者に、憲章側で `BA` / `PM` が割り当てられていたため、登録簿に合わせて未設定として修正した。
 - 権限委譲表に、参照範囲内で未確認の `ARC` / `QE` が確定協議先として記載されていたため、確定済みの `BA` と未決のレビュー担当に整理した。

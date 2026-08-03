@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-communication-plan-rulebook
+  id: specdojo:pm-communication-plan-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: pm-communication-plan-recipe
-  sample: pm-communication-plan-sample
-  template: pm-communication-plan-template
+  recipe: specdojo:pm-communication-plan-recipe
+  sample: specdojo:pm-communication-plan-sample
+  template: specdojo:pm-communication-plan-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # コミュニケーション計画 作成ルール
@@ -48,7 +48,7 @@ Communication Plan Documentation Rulebook
 | id         | `<project-id>:pm-communication-plan`      | ○    |
 | type       | `project`                                 | ○    |
 | status     | `draft` / `ready` / `deprecated`          | ○    |
-| rulebook   | `pm-communication-plan-rulebook`          | ○    |
+| rulebook   | `specdojo:pm-communication-plan-rulebook` | ○    |
 | based_on   | 管理計画、ステークホルダー登録簿などの ID | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                   | 任意 |
 

@@ -1,13 +1,13 @@
 ---
 specdojo:
-  id: prj-comparison-of-alternatives-sample
+  id: specdojo:prj-comparison-of-alternatives-sample
   type: project
   status: ready
-  rulebook: prj-comparison-of-alternatives-rulebook
+  rulebook: specdojo:prj-comparison-of-alternatives-rulebook
   based_on:
-    - prj-scope-sample
-    - prj-issues-and-approach-sample
-    - prj-assumptions-constraints-dependencies-sample
+    - specdojo:prj-scope-sample
+    - specdojo:prj-issues-and-approach-sample
+    - specdojo:prj-assumptions-constraints-dependencies-sample
   supersedes: []
 ---
 
@@ -21,7 +21,7 @@ specdojo:
 | ------ | ---------------------- | ------------------------------------- | ---------------------------------- |
 | D-01   | 業務・システム解決方式 | P-01〜P-03 をどの解決方式で改善するか | 個別製品、開発手法、作業管理ツール |
 
-根拠資料は、販売・在庫・つけ管理を初期対象とする `prj-scope-sample`、記録不統一、つけ残高確認、在庫過不足を課題とする `prj-issues-and-approach-sample`、単一店舗、タブレット 1 台、有償サービス導入前の費用確認を条件とする `prj-assumptions-constraints-dependencies-sample` である。
+根拠資料は、販売・在庫・つけ管理を初期対象とする `specdojo:prj-scope-sample`、記録不統一、つけ残高確認、在庫過不足を課題とする `specdojo:prj-issues-and-approach-sample`、単一店舗、タブレット 1 台、有償サービス導入前の費用確認を条件とする `specdojo:prj-assumptions-constraints-dependencies-sample` である。
 
 前提条件:
 

@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-plan-sample
+  id: specdojo:pm-plan-sample
   type: project
   status: ready
-  rulebook: pm-plan-rulebook
+  rulebook: specdojo:pm-plan-rulebook
   based_on:
-    - prj-overview-sample
-    - prj-scope-sample
-    - prj-success-criteria-and-acceptance-criteria-sample
-    - pm-organization-sample
+    - specdojo:prj-overview-sample
+    - specdojo:prj-scope-sample
+    - specdojo:prj-success-criteria-and-acceptance-criteria-sample
+    - specdojo:pm-organization-sample
 ---
 
 # プロジェクト管理計画: 駄菓子屋きぬや 販売管理システム

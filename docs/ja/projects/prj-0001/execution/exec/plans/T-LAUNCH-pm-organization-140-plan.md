@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-organization
-    - pm-organization-rulebook
-    - pm-organization-recipe
-    - pm-organization-sample
-    - pm-organization-template
+    - specdojo:pm-organization-rulebook
+    - specdojo:pm-organization-recipe
+    - specdojo:pm-organization-sample
+    - specdojo:pm-organization-template
 ---
 
 # Finalize Plan: T-LAUNCH-pm-organization-140

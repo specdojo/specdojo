@@ -1,13 +1,13 @@
 ---
 specdojo:
-  id: prj-issues-and-approach-sample
+  id: specdojo:prj-issues-and-approach-sample
   type: project
   status: ready
-  rulebook: prj-issues-and-approach-rulebook
+  rulebook: specdojo:prj-issues-and-approach-rulebook
   based_on:
-    - prj-overview-sample
-    - prj-scope-sample
-    - prj-assumptions-constraints-dependencies-sample
+    - specdojo:prj-overview-sample
+    - specdojo:prj-scope-sample
+    - specdojo:prj-assumptions-constraints-dependencies-sample
   supersedes: []
 ---
 

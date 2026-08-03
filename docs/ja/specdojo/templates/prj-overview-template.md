@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-overview-template
+  id: specdojo:prj-overview-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-overview
       type: project
       status: draft
-      rulebook: prj-overview-rulebook
+      rulebook: specdojo:prj-overview-rulebook
       based_on: []
       supersedes: []
 ---

@@ -9,6 +9,7 @@ import {
   resolveIncludedRulebooks,
   resolveKataRefs,
 } from "../../src/kata.js";
+import { practiceLocalId } from "../../src/practice-id.js";
 import { validateRulebookKata } from "../../src/catalog-build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して
@@ -44,7 +45,7 @@ describe("kata", () => {
       .map((line) => (line.length === 0 ? "" : `  ${line}`))
       .join("\n");
     writeFileSync(
-      join(root, SPECDOJO, "rulebooks", `${id}.md`),
+      join(root, SPECDOJO, "rulebooks", `${practiceLocalId(id)}.md`),
       `---\nspecdojo:\n${nested}\n---\n\n# ${id}\n`,
       "utf8",
     );
@@ -53,19 +54,19 @@ describe("kata", () => {
   describe("resolveKataRefs", () => {
     it("rulebook frontmatter の宣言から各参照先パスを解決する", () => {
       writeRulebook(
-        "prj-overview-rulebook",
+        "specdojo:prj-overview-rulebook",
         [
-          "id: prj-overview-rulebook",
+          "id: specdojo:prj-overview-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: markdown",
-          "recipe: prj-overview-recipe",
-          "sample: prj-overview-sample",
-          "template: prj-overview-template",
+          "recipe: specdojo:prj-overview-recipe",
+          "sample: specdojo:prj-overview-sample",
+          "template: specdojo:prj-overview-template",
         ].join("\n"),
       );
 
-      const refs = resolveKataRefs("prj-overview-rulebook");
+      const refs = resolveKataRefs("specdojo:prj-overview-rulebook");
 
       expect(refs).toEqual({
         rulebook: "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
@@ -77,34 +78,34 @@ describe("kata", () => {
 
     it("sample の拡張子は target_format に従う", () => {
       writeRulebook(
-        "dct-rulebook",
+        "specdojo:dct-rulebook",
         [
-          "id: dct-rulebook",
+          "id: specdojo:dct-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: yaml",
-          "sample: dct-sample",
+          "sample: specdojo:dct-sample",
         ].join("\n"),
       );
 
-      expect(resolveKataRefs("dct-rulebook").sample).toBe(
+      expect(resolveKataRefs("specdojo:dct-rulebook").sample).toBe(
         "docs/ja/specdojo/samples/dct-sample.yaml",
       );
     });
 
     it("template の拡張子も target_format に従う", () => {
       writeRulebook(
-        "pm-roles-rulebook",
+        "specdojo:pm-roles-rulebook",
         [
-          "id: pm-roles-rulebook",
+          "id: specdojo:pm-roles-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: yaml",
-          "template: pm-roles-template",
+          "template: specdojo:pm-roles-template",
         ].join("\n"),
       );
 
-      expect(resolveKataRefs("pm-roles-rulebook").template).toBe(
+      expect(resolveKataRefs("specdojo:pm-roles-rulebook").template).toBe(
         "docs/ja/specdojo/templates/pm-roles-template.yaml",
       );
     });
@@ -134,9 +135,9 @@ describe("kata", () => {
 
     it("未宣言でも規定ディレクトリに慣例ファイルがあればそのパスを返す", () => {
       writeRulebook(
-        "pm-organization-rulebook",
+        "specdojo:pm-organization-rulebook",
         [
-          "id: pm-organization-rulebook",
+          "id: specdojo:pm-organization-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: markdown",
@@ -149,7 +150,7 @@ describe("kata", () => {
         "utf8",
       );
 
-      const refs = resolveKataRefs("pm-organization-rulebook");
+      const refs = resolveKataRefs("specdojo:pm-organization-rulebook");
 
       expect(refs.sample).toBe("docs/ja/specdojo/samples/pm-organization-sample.md");
       expect(refs.recipe).toBe("_MISSING_");
@@ -177,9 +178,9 @@ describe("kata", () => {
 
     it("frontmatter の schema 宣言を正としてパスを解決する", () => {
       writeRulebook(
-        "pm-roles-rulebook",
+        "specdojo:pm-roles-rulebook",
         [
-          "id: pm-roles-rulebook",
+          "id: specdojo:pm-roles-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: yaml",
@@ -187,43 +188,51 @@ describe("kata", () => {
         ].join("\n"),
       );
 
-      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe(
+      expect(resolveDeliverableSchemaRef("specdojo:pm-roles-rulebook", "pm-roles")).toBe(
         "docs/specdojo/schemas/v1/pm-roles.schema.yaml",
       );
     });
 
     it("未宣言なら local_id の慣例 schema を実在確認して返す", () => {
       writeRulebook(
-        "pm-roles-rulebook",
-        ["id: pm-roles-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join(
-          "\n",
-        ),
+        "specdojo:pm-roles-rulebook",
+        [
+          "id: specdojo:pm-roles-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+        ].join("\n"),
       );
       writeSchema("pm-roles");
 
-      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe(
+      expect(resolveDeliverableSchemaRef("specdojo:pm-roles-rulebook", "pm-roles")).toBe(
         "docs/specdojo/schemas/v1/pm-roles.schema.yaml",
       );
     });
 
     it("local_id の schema が無ければ rulebook prefix の schema にフォールバックする", () => {
       writeRulebook(
-        "bdd-rulebook",
-        ["id: bdd-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join("\n"),
+        "specdojo:bdd-rulebook",
+        [
+          "id: specdojo:bdd-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+        ].join("\n"),
       );
       // 共有型インスタンス: bdd-purchase.schema.yaml は無く、型 schema bdd.schema.yaml のみ実在。
       writeSchema("bdd");
 
-      expect(resolveDeliverableSchemaRef("bdd-rulebook", "bdd-purchase")).toBe(
+      expect(resolveDeliverableSchemaRef("specdojo:bdd-rulebook", "bdd-purchase")).toBe(
         "docs/specdojo/schemas/v1/bdd.schema.yaml",
       );
     });
 
     it("target_format が yaml 以外なら MISSING にする", () => {
       writeRulebook(
-        "prj-overview-rulebook",
+        "specdojo:prj-overview-rulebook",
         [
-          "id: prj-overview-rulebook",
+          "id: specdojo:prj-overview-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: markdown",
@@ -231,16 +240,16 @@ describe("kata", () => {
       );
       writeSchema("prj-overview");
 
-      expect(resolveDeliverableSchemaRef("prj-overview-rulebook", "prj-overview")).toBe(
+      expect(resolveDeliverableSchemaRef("specdojo:prj-overview-rulebook", "prj-overview")).toBe(
         "_MISSING_",
       );
     });
 
     it("schema 宣言が 'none' なら慣例ファイルが存在しても MISSING にする", () => {
       writeRulebook(
-        "pm-roles-rulebook",
+        "specdojo:pm-roles-rulebook",
         [
-          "id: pm-roles-rulebook",
+          "id: specdojo:pm-roles-rulebook",
           "type: rulebook",
           "status: draft",
           "target_format: yaml",
@@ -249,18 +258,25 @@ describe("kata", () => {
       );
       writeSchema("pm-roles");
 
-      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe("_MISSING_");
+      expect(resolveDeliverableSchemaRef("specdojo:pm-roles-rulebook", "pm-roles")).toBe(
+        "_MISSING_",
+      );
     });
 
     it("該当 schema が無ければ MISSING にする", () => {
       writeRulebook(
-        "pm-roles-rulebook",
-        ["id: pm-roles-rulebook", "type: rulebook", "status: draft", "target_format: yaml"].join(
-          "\n",
-        ),
+        "specdojo:pm-roles-rulebook",
+        [
+          "id: specdojo:pm-roles-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+        ].join("\n"),
       );
 
-      expect(resolveDeliverableSchemaRef("pm-roles-rulebook", "pm-roles")).toBe("_MISSING_");
+      expect(resolveDeliverableSchemaRef("specdojo:pm-roles-rulebook", "pm-roles")).toBe(
+        "_MISSING_",
+      );
     });
 
     it("rulebook 未指定なら MISSING にする", () => {
@@ -271,20 +287,23 @@ describe("kata", () => {
   describe("declaredKata", () => {
     it("宣言された参照のみを kind / id / 絶対パスで返す", () => {
       writeRulebook(
-        "prj-overview-rulebook",
+        "specdojo:prj-overview-rulebook",
         [
-          "id: prj-overview-rulebook",
+          "id: specdojo:prj-overview-rulebook",
           "type: rulebook",
           "status: draft",
-          "recipe: prj-overview-recipe",
-          "template: prj-overview-template",
+          "recipe: specdojo:prj-overview-recipe",
+          "template: specdojo:prj-overview-template",
         ].join("\n"),
       );
 
-      const refs = declaredKata("prj-overview-rulebook");
+      const refs = declaredKata("specdojo:prj-overview-rulebook");
 
       expect(refs.map((r) => r.kind)).toEqual(["recipe", "template"]);
-      expect(refs.map((r) => r.id)).toEqual(["prj-overview-recipe", "prj-overview-template"]);
+      expect(refs.map((r) => r.id)).toEqual([
+        "specdojo:prj-overview-recipe",
+        "specdojo:prj-overview-template",
+      ]);
       expect(refs[0].fsPath).toBe(join(root, SPECDOJO, "recipes", "prj-overview-recipe.md"));
     });
   });

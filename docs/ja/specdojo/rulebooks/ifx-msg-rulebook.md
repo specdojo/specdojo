@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: ifx-msg-rulebook
+  id: specdojo:ifx-msg-rulebook
   type: rulebook
   status: draft
-  sample: ifx-msg-sample
+  sample: specdojo:ifx-msg-sample
 ---
 
 # 外部メッセージ仕様（External Message Specification: EMS）作成ルール

@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-issue-log-template
+  id: specdojo:pm-issue-log-template
   type: template
   status: ready
   frontmatter_template:
@@ -10,7 +10,7 @@ specdojo:
       status: ready
       part_of:
         - _PROJECT_ID_:pjr-index
-      rulebook: pjr-rulebook
+      rulebook: specdojo:pjr-rulebook
 ---
 
 # 課題ログ

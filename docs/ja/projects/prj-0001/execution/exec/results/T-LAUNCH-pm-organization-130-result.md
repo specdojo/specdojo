@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:pm-organization
-    - pm-organization-template
+    - specdojo:pm-organization-template
 ---
 
 # Edit Result

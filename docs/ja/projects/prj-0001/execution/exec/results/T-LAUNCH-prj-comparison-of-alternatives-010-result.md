@@ -12,10 +12,10 @@ specdojo:
   agent: codex-expert-edit-agent
   targets:
     - prj-0001:prj-comparison-of-alternatives
-    - prj-comparison-of-alternatives-rulebook
-    - prj-comparison-of-alternatives-recipe
-    - prj-comparison-of-alternatives-sample
-    - prj-comparison-of-alternatives-template
+    - specdojo:prj-comparison-of-alternatives-rulebook
+    - specdojo:prj-comparison-of-alternatives-recipe
+    - specdojo:prj-comparison-of-alternatives-sample
+    - specdojo:prj-comparison-of-alternatives-template
 ---
 
 ## 1. 実施内容

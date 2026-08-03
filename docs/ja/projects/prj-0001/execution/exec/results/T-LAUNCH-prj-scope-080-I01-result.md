@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-scope.md` を `prj-scope-rulebook` / `prj-scope-recipe` / `prj-overview.md` と照合し、必須章（対象業務、対象システム、対象期間、スコープ外、境界の判断基準、スコープ変更方針）が揃っていることを確認した。
+- `prj-scope.md` を `specdojo:prj-scope-rulebook` / `specdojo:prj-scope-recipe` / `prj-overview.md` と照合し、必須章（対象業務、対象システム、対象期間、スコープ外、境界の判断基準、スコープ変更方針）が揃っていることを確認した。
 - `prj-overview.md` の短期的な成功条件に含まれる「AI Agent 向け指示」「管理基盤」がスコープ本文で明示的に追跡できるよう、対象システムと対象期間へ最小限加筆した。
 - 既存の対象外、境界判断、変更方針は rulebook の責務範囲に合っており、設計詳細や受入条件への踏み込みは見られなかったため維持した。
 

@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:pm-raci
-    - pm-raci-rulebook
+    - specdojo:pm-raci-rulebook
 ---
 
 # Edit Result

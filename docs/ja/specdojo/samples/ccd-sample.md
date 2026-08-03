@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: ccd-sample
+  id: specdojo:ccd-sample
   type: project
   status: draft
-  rulebook: ccd-mermaid-rulebook
+  rulebook: specdojo:ccd-mermaid-rulebook
 ---
 
 # [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) サンプル
@@ -25,11 +25,11 @@ specdojo:
 
 ## 4. 最小記述例
 
-| 項目         | 値                                                                  | 備考                        |
-| ------------ | ------------------------------------------------------------------- | --------------------------- |
-| ドキュメント | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md)                | 最小サンプル                |
-| 目的         | 業務上のエンティティ関係を図で定義する                              | deliverables-reference 準拠 |
-| 主な内容     | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など | 要点のみ記載                |
+| 項目         | 値                                                                  | 備考                                 |
+| ------------ | ------------------------------------------------------------------- | ------------------------------------ |
+| ドキュメント | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md)                | 最小サンプル                         |
+| 目的         | 業務上のエンティティ関係を図で定義する                              | specdojo:deliverables-reference 準拠 |
+| 主な内容     | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など | 要点のみ記載                         |
 
 ## 5. 未解決事項
 

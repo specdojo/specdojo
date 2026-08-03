@@ -15,7 +15,7 @@ export const YAML_PAGE_MARKER = "<!-- specdojo:generated-by=yaml-pages -->";
 const YAML_FILE_RE = /\.ya?ml$/;
 const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
 const STATUS_VALUES = new Set(["draft", "ready", "deprecated"]);
-const RULEBOOK_RE = /^[a-z0-9][a-z0-9-]*-rulebook$/;
+const RULEBOOK_RE = /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$/;
 
 // 生成対象は VitePress の rewrites（docs/ja → /ja 等）で URL が安定する範囲に限る。
 // docs/specdojo/schemas 等は rewrite 対象外のため除外する。
@@ -76,7 +76,7 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
   const record = isRecord(parsed) ? parsed : {};
 
   // OpenAPI / AsyncAPI 形式（ifx-* 等）はメタ情報を x-spec-meta に置く
-  // （document-metadata-standard）。トップレベルに無い項目はそちらへフォールバックする。
+  // （specdojo:document-metadata-standard）。トップレベルに無い項目はそちらへフォールバックする。
   const specMeta = isRecord(record["x-spec-meta"]) ? record["x-spec-meta"] : {};
   const readMeta = (key: string): unknown => record[key] ?? specMeta[key];
 

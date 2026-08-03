@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: sf-rulebook
+  id: specdojo:sf-rulebook
   type: rulebook
   status: draft
-  sample: sf-sample
+  sample: specdojo:sf-sample
 ---
 
 # システム化機能一覧（System Function List, SFL）作成ルール

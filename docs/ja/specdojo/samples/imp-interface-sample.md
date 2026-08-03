@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-interface-sample
+  id: specdojo:imp-interface-sample
   type: project
   status: draft
-  rulebook: imp-interface-rulebook
+  rulebook: specdojo:imp-interface-rulebook
   based_on:
     - cr-2026-004
   part_of:

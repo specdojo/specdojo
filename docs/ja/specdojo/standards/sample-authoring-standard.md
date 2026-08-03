@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sample-authoring-standard
+  id: specdojo:sample-authoring-standard
   type: standard
   status: draft
 ---

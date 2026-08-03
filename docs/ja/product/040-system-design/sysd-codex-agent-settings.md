@@ -3,7 +3,7 @@ specdojo:
   id: sysd-codex-agent-settings
   type: project
   status: draft
-  rulebook: sysd-rulebook
+  rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-agent-settings
 ---

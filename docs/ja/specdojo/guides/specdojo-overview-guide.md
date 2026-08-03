@@ -1,13 +1,13 @@
 ---
 specdojo:
-  id: specdojo-overview-guide
+  id: specdojo:specdojo-overview-guide
   type: guide
   status: ready
   based_on:
-    - docs-structure-guide
-    - track-design-guide
-    - cli-overview-guide
-    - document-metadata-standard
+    - specdojo:docs-structure-guide
+    - specdojo:track-design-guide
+    - specdojo:cli-overview-guide
+    - specdojo:document-metadata-standard
 ---
 
 # 全体概要ガイド

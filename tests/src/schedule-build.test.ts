@@ -459,7 +459,7 @@ describe("buildScheduleTrack status propagation", () => {
 });
 
 describe("schedule track metadata", () => {
-  it("uses the metadata required by sch-rulebook", () => {
+  it("uses the metadata required by specdojo:sch-rulebook", () => {
     const outDoc = createScheduleTrackDocument({
       projectId: "prj-test",
       track: "launch",
@@ -470,7 +470,7 @@ describe("schedule track metadata", () => {
 
     expect(outDoc).toMatchObject({
       title: "スケジュールトラック（launch）",
-      rulebook: "sch-rulebook",
+      rulebook: "specdojo:sch-rulebook",
     });
   });
 });

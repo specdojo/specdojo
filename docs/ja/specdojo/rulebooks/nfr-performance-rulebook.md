@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-performance-rules
+  id: specdojo:nfr-performance-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Performance Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-performance-rules`。
+- ルールドキュメントIDは `specdojo:nfr-performance-rulebook`。
 - 生成対象ドキュメントIDは `nfr-performance` を推奨する。
 - 要件IDは `nfr-perf-<連番>` を推奨する。
 

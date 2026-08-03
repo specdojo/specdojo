@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-success-criteria-and-acceptance-criteria
   type: project
   status: ready
-  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
+  rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
   based_on:
     - prj-0001:prj-scope
     - prj-0001:prj-overview

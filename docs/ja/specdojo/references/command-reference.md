@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: command-reference
+  id: specdojo:command-reference
   type: reference
   status: draft
   supersedes:
@@ -242,11 +242,11 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `index` は frontmatter の `id` とファイルパスのインデックスを扱います。
 
-| コマンド        | 用途                                              | 例                                                 |
-| --------------- | ------------------------------------------------- | -------------------------------------------------- |
-| `index build`   | `.specdojo/doc-index.json` を生成する             | `specdojo index build`                             |
-| `index lookup`  | ID からパスを返す                                 | `specdojo index lookup prj-overview-rulebook`      |
-| `index replace` | `[[id]]` を Markdown リンクまたは path に展開する | `specdojo index replace --format path <plan-path>` |
+| コマンド        | 用途                                              | 例                                                     |
+| --------------- | ------------------------------------------------- | ------------------------------------------------------ |
+| `index build`   | `.specdojo/doc-index.json` を生成する             | `specdojo index build`                                 |
+| `index lookup`  | ID からパスを返す                                 | `specdojo index lookup specdojo:prj-overview-rulebook` |
+| `index replace` | `[[id]]` を Markdown リンクまたは path に展開する | `specdojo index replace --format path <plan-path>`     |
 
 `exec run` は agent に plan を渡す直前に `index replace --format path --missing keep` 相当の処理を行います。
 

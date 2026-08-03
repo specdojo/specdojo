@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:pm-members
-    - pm-members-recipe
+    - specdojo:pm-members-recipe
 ---
 
 # Edit Result

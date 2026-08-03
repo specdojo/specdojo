@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-index
   type: project
   status: ready
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
 ---
 
 # プロジェクト登録簿
@@ -14,8 +14,8 @@ Project Register
 
 プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
 
-記載ルール、項目定義、type / status / priority の定義は [[pjr-rulebook]] に従います。
-登録の判断、状態遷移、個票分離などの使い方は [[register-operation-guide]] を参照します。
+記載ルール、項目定義、type / status / priority の定義は [[specdojo:pjr-rulebook]] に従います。
+登録の判断、状態遷移、個票分離などの使い方は [[specdojo:register-operation-guide]] を参照します。
 
 ## 1. 登録項目一覧
 
@@ -26,7 +26,7 @@ Project Register
 | PJR-0002 | done | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | 2026-05-10 | 2026-05-24 | sch-strategy-launchを作成 | - |
 | PJR-0003 | done | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | 2026-05-10 | 2026-07-22 | pm-roles, pm-membersに設定 | - |
 | PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | - |
-| PJR-0005 | done | pjr-rulebook作成のtask化 | pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | 2026-07-23 | pjr-rulebookを個別に作成 | - |
+| PJR-0005 | done | specdojo:pjr-rulebook作成のtask化 | specdojo:pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | 2026-05-10 | 2026-07-23 | specdojo:pjr-rulebookを個別に作成 | - |
 | PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | 2026-05-10 | 2026-05-04 | スクリプト影響なし | - |
 | PJR-0007 | done | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0058で対応 | - |
 | PJR-0008 | done | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | 2026-05-10 | 2026-05-23 | PJR-0037 | - |
@@ -105,7 +105,7 @@ Project Register
 | PJR-0082 | done | pjr-by-*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | pjr-viewsに統合 | - |
 | PJR-0083 | done | milestoneをtimelineの上部に表示 | milestoneの表示位置をtimelineの上部に変更 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | 上部へ移動 | - |
 | PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | - |
-| PJR-0085 | done | docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
+| PJR-0085 | done | specdojo:docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | - |
 | PJR-0086 | done | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | 2026-05-31 | 2026-07-22 | schemaチェックもtestに追加 | - |
 | PJR-0087 | done | dct-*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | 2026-05-31 | 2026-07-23 | yaml-pages の dct テンプレ表示ページを catalog build と同じ表形式（成果物表＋完了条件）で描画する実装を追加（コミットd8e1b346） | - |
 | PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | 2026-05-31 | 2026-05-30 | exec-config-guide.mdに記述。設定ファイルも変更 | - |
@@ -145,11 +145,11 @@ Project Register
 | PJR-0122 | done | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | note | medium | PO | 2026-07-31 | 2026-07-26 | 改善点を一通り反映 | [pjr-0122-review-launch](./pjr-0122-review-launch.md) |
 | PJR-0123 | done | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | QE | 2026-07-31 | 2026-07-26 | 重複した記述や個票間での違いを修正 | - |
 | PJR-0124 | done | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | 2026-07-31 | 2026-07-25 | human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a） | [pjr-0124-human-plan-integrate-result](./pjr-0124-human-plan-integrate-result.md) |
-| PJR-0125 | done | pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | 2026-07-31 | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
+| PJR-0125 | done | specdojo:pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | 2026-07-31 | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | - |
 | PJR-0126 | done | PO承認をpull requestベースにする承認フロー整備 | decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討 | todo | medium | PM | 2026-07-31 | 2026-07-26 | pull requestで承認する運用を明記 | [pjr-0126-pr-based-po-approval](./pjr-0126-pr-based-po-approval.md) |
 | PJR-0127 | done | prj-overviewのプロジェクトWhyを明確化 | 後続文書の論点を安定させるため、対象者・課題・中心仮説・価値仮説・判断原則をプロジェクト概要の正本として明確化する | todo | high | BA | 2026-07-31 | 2026-07-26 | IDを付与してトレースを明確化 | [pjr-0127-clarify-project-why](./pjr-0127-clarify-project-why.md) |
 | PJR-0128 | done | exec planへproject contextを伝播 | 全ての対象成果物生成でprj-overviewを参照できるよう、depends_onと分離したproject contextをexec planへ追加する | todo | high | ARC | 2026-07-31 | 2026-07-26 | project contextをtemplateに追加 | [pjr-0128-propagate-project-context](./pjr-0128-propagate-project-context.md) |
-| PJR-0129 | done | Why-What-How作成原則をrecipeへ反映 | Why・What・How・Traceを章順ではなく論理の骨格として定義し、各成果物recipeへ重複なく適用する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d） | [pjr-0129-why-what-how-recipes](./pjr-0129-why-what-how-recipes.md) |
+| PJR-0129 | done | Why-What-How作成原則をrecipeへ反映 | Why・What・How・Traceを章順ではなく論理の骨格として定義し、各成果物recipeへ重複なく適用する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | specdojo:recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d） | [pjr-0129-why-what-how-recipes](./pjr-0129-why-what-how-recipes.md) |
 | PJR-0130 | done | Whyの明確性を既存review viewpointsへ反映 | 重複観点を増やさず、目的整合・業務価値・可読性の既存観点にWhyの判定基準と証拠を具体化する | todo | medium | QE | 2026-07-31 | 2026-07-26 | whyの明確性をreview viewpointsに反映 | [pjr-0130-clarify-why-review-viewpoints](./pjr-0130-clarify-why-review-viewpoints.md) |
 | PJR-0131 | done | 簡潔な文書作成の共通原則をdocumentation policyへ追加 | 文書全体に適用する簡潔性・重複回避・正本参照・文章量の目安をdocumentation policyの共通原則として定義する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | 簡潔な文書作成の共通原則を追加 | [pjr-0131-concise-documentation-policy](./pjr-0131-concise-documentation-policy.md) |
 | PJR-0132 | done | 既存review viewpointで文書の冗長性を検出 | 新しい観点を重複追加せず、vp-ux-readabilityに反復・一般論・表と本文の重複・正本の過剰再掲を検出する基準を追加する | todo | medium | UX | 2026-07-31 | 2026-07-26 | review-viewpointsに反映 | [pjr-0132-detect-document-redundancy](./pjr-0132-detect-document-redundancy.md) |
@@ -162,7 +162,7 @@ Project Register
 | PJR-0139 | done | 個票frontmatterのstatus遷移を自動化 | 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する | todo | medium | ARC | 2026-07-31 | 2026-07-26 | 個票frontmatterのstatus遷移をcloseで実行 | [pjr-0139-register-ticket-status-transition](./pjr-0139-register-ticket-status-transition.md) |
 | PJR-0140 | done | register commitがhook整形差分と失敗残骸を取りこぼす | pathspec commitでhookの整形差分がindexに残り、次ID実行の開始前スナップショットに載って commit 対象から丸ごと除外される。失敗試行の残骸とrunner自身の状態遷移も同様に取りこぼす | issue | high | ARC | 2026-07-31 | 2026-07-26 | hook整形差分が出る場合は再度commitするように変更 | [pjr-0140-register-commit-missed-paths](./pjr-0140-register-commit-missed-paths.md) |
 | PJR-0141 | open | guide/reference-content.schema.yamlを言語別に整備 | schemaを言語別に分けてチェックできるように変更（.remarkrc.yamlで設定） | todo | medium | ARC | 2026-07-31 | - | - | - |
-| PJR-0142 | open | ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加 | docs-editing-guide に、必要な VS Code extension（Markdown All in One 等）と SpecDojo extension（tools/vscode-specdojo）の導入・設定・使い方を追記する | todo | low | ARC | 2026-08-31 | - | - | - |
+| PJR-0142 | open | ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加 | specdojo:docs-editing-guide に、必要な VS Code extension（Markdown All in One 等）と SpecDojo extension（tools/vscode-specdojo）の導入・設定・使い方を追記する | todo | low | ARC | 2026-08-31 | - | - | - |
 | PJR-0143 | open | VS Code拡張のMarketplace登録 | tools/vscode-specdojo 拡張を Visual Studio Marketplace へ公開する（発行者登録・vsce publish・公開手順/CIの整備） | todo | medium | ARC | 2026-08-31 | - | - | - |
 | PJR-0144 | open | fmt-md-table を VS Code 拡張へ統合 | 現在 .vscode/tasks.json のタスク（Format Markdown Table）として提供している fmt-md-table を vscode-specdojo 拡張のコマンドとして統合する | todo | medium | ARC | 2026-08-31 | - | - | - |
 | PJR-0145 | open | README.md / docs/index.md / docs/<lang>/index.md の責務再整理と記述見直し | READMEおよびdocs配下のindex.mdの役割分担を再整理し、記述内容を見直す | todo | medium | PO | 2026-08-31 | - | - | - |
@@ -170,7 +170,7 @@ Project Register
 | PJR-0147 | open | 実装先行（コード先行）時に設計書/仕様書/要件書へ反映・新設するapproachの整備 | 実装が既に存在するにもかかわらず対応する設計書/仕様書/要件書が未整備、または内容が乖離している場合に、実装内容を既存文書へ反映するか、文書が存在しない場合は新設するための判断基準・手順（approach）を策定する | todo | medium | ARC | 2026-08-31 | - | - | [pjr-0147-retrofit-design-docs-for-existing-implementation](./pjr-0147-retrofit-design-docs-for-existing-implementation.md) |
 | PJR-0148 | open | docs/外への[[id]]（wikilink）解決範囲拡張の要否検討 | 現状specdojo index buildの走査対象はdocs/配下のみで、.github/instructions/やREADME.md等docs/外のファイルは[[id]]で参照できない。docs/外への[[id]]解決範囲拡張が必要かどうかを、走査対象拡大に伴う除外ロジック変更・frontmatter契約の非互換・ID衝突リスク等を踏まえて検討する | todo | low | ARC | 2026-09-30 | - | - | [pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope](./pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md) |
 | PJR-0149 | open | 各プロジェクトにダッシュボードページを追加（schedule進捗・register状況・routine実行状況の一覧化） | 現状はschedule進捗(timeline.md)、register登録/消化状況(pjr-index.md/pjr-views.md)、routine実行状況(specdojo routine list等CLI出力のみ)を個別に確認する必要があり、一目で把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できるダッシュボードページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る | todo | medium | ARC | 2026-08-31 | - | - | [pjr-0149-project-dashboard-page](./pjr-0149-project-dashboard-page.md) |
-| PJR-0150 | done | pm-members.yaml のnicknameスキーマ検証欠落によるcommand_templateインジェクションリスクの解消 | pm-members.schema.yamlはnicknameに安全な文字パターン`^[a-z0-9][a-z0-9_-]{0,62}$`を定義しているが、loadMemberRoster(src/specdojo-config.ts)はyaml.loadのみで検証せず、package.jsonのvalidate:schema集約にもpm-members.schema.yamlが含まれていない。resolveMemberCommand(src/exec-agent-config.ts)はnicknameをcommand_templateへ無エスケープでプレースホルダ展開しshell:trueで実行するため、pm-members.yamlの書き換え権限があればコマンドインジェクションが可能。validate:schemaへのpm-members追加と、resolveMemberCommand側での再検証を行う | todo | medium | ARC | 2026-08-31 | 2026-08-02 | resolveMemberCommandにnickname再検証を追加し多層防御を実装。validate:schemaへpm-members追加済み。exec-config-guideへ反映済み | [pjr-0150-pm-members-nickname-schema-validation-gap](./pjr-0150-pm-members-nickname-schema-validation-gap.md) |
+| PJR-0150 | done | pm-members.yaml のnicknameスキーマ検証欠落によるcommand_templateインジェクションリスクの解消 | pm-members.schema.yamlはnicknameに安全な文字パターン`^[a-z0-9][a-z0-9_-]{0,62}$`を定義しているが、loadMemberRoster(src/specdojo-config.ts)はyaml.loadのみで検証せず、package.jsonのvalidate:schema集約にもpm-members.schema.yamlが含まれていない。resolveMemberCommand(src/exec-agent-config.ts)はnicknameをcommand_templateへ無エスケープでプレースホルダ展開しshell:trueで実行するため、pm-members.yamlの書き換え権限があればコマンドインジェクションが可能。validate:schemaへのpm-members追加と、resolveMemberCommand側での再検証を行う | todo | medium | ARC | 2026-08-31 | 2026-08-02 | resolveMemberCommandにnickname再検証を追加し多層防御を実装。validate:schemaへpm-members追加済み。specdojo:exec-config-guideへ反映済み | [pjr-0150-pm-members-nickname-schema-validation-gap](./pjr-0150-pm-members-nickname-schema-validation-gap.md) |
 | PJR-0151 | open | specdojo index buildの重複ID「あと勝ち」をエラー検知に変更 | src/doc-index.tsのID登録処理(scanFile/collectFromFields)は既存キーの存在チェックをせず、Markdown/YAML/ネストIDいずれも無条件上書き(あと勝ち)になっている。同一Unit内の重複IDをエラーにし、衝突したIDと全ファイルパスを表示し、Markdown/YAML/ネストIDを同じ基準で検証し、specdojo index buildと総合validateの両方で失敗させるようにする。あわせて多言語文書(docs/en等)を言語別インデックスにするか同一論理IDの言語variantとして扱うかを決定する | todo | medium | ARC | 2026-08-31 | - | - | [pjr-0151-index-build-duplicate-id-error-detection](./pjr-0151-index-build-duplicate-id-error-detection.md) |
 
 ## 2. 派生ビュー

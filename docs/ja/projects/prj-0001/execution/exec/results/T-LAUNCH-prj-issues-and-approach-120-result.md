@@ -13,7 +13,7 @@ specdojo:
   approach: sample-maintenance
   targets:
     - prj-0001:prj-issues-and-approach
-    - prj-issues-and-approach-sample
+    - specdojo:prj-issues-and-approach-sample
 ---
 
 # Edit Result
@@ -36,7 +36,7 @@ specdojo:
 
 ## 4. 参考資料の活用
 
-- `sample-maintenance` として進め、rulebook を構造・必須項目・禁止事項の正本、recipe を書き方の基準、sample を粒度と文体の基準、sample-authoring-standard を構成・記述ルールの正本として参照した。
+- `sample-maintenance` として進め、rulebook を構造・必須項目・禁止事項の正本、recipe を書き方の基準、sample を粒度と文体の基準、specdojo:sample-authoring-standard を構成・記述ルールの正本として参照した。
 - `docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md` で、必須章と禁止事項を確認し、sample で崩すべき構造上の制約がないことを確認した。
 - `docs/ja/specdojo/standards/sample-authoring-standard.md` で、共通サンプル文脈、利用者視点、曖昧表現の回避、完成例としての最小粒度を確認し、導入文の表現調整に反映した。
 - `docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md` で、H1 直後の目的説明と利用ロールの読み取り方を確認し、sample の冒頭が BA 視点で自然に読めるように整えた。

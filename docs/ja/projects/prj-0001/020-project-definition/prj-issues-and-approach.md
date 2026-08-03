@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-issues-and-approach
   type: project
   status: ready
-  rulebook: prj-issues-and-approach-rulebook
+  rulebook: specdojo:prj-issues-and-approach-rulebook
   based_on:
     - prj-0001:prj-overview
     - prj-0001:prj-scope

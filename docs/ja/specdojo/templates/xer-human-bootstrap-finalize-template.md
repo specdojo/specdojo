@@ -4,8 +4,8 @@ _FRONTMATTER_
 
 ## 1. 実施基準
 
-- 実施手順: [[exec-human-finalize-recipe|Human Finalize 実行レシピ]]
-- 共通規約: [[exec-human-finalize-standard|Human Finalize 実行標準]]
+- 実施手順: [[specdojo:exec-human-finalize-recipe|Human Finalize 実行レシピ]]
+- 共通規約: [[specdojo:exec-human-finalize-standard|Human Finalize 実行標準]]
 
 この result を作業指示と確認記録の正本とし、frontmatter の `targets` に含まれる成果物と実践の型だけを確認・修正・確定する。
 

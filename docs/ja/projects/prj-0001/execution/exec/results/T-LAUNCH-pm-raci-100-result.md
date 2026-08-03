@@ -13,7 +13,7 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:pm-raci
-    - pm-raci-recipe
+    - specdojo:pm-raci-recipe
 ---
 
 # Edit Result

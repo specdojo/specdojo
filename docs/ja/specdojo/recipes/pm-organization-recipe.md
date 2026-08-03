@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: pm-organization-recipe
+  id: specdojo:pm-organization-recipe
   type: recipe
   status: ready
-  rulebook: pm-organization-rulebook
-  sample: pm-organization-sample
+  rulebook: specdojo:pm-organization-rulebook
+  sample: specdojo:pm-organization-sample
 ---
 
 # 組織定義 作成レシピ

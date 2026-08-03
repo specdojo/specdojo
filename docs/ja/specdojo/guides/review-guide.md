@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: review-guide
+  id: specdojo:review-guide
   type: guide
   status: ready
 ---

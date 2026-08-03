@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:prj-comparison-of-alternatives
   type: project
   status: ready
-  rulebook: prj-comparison-of-alternatives-rulebook
+  rulebook: specdojo:prj-comparison-of-alternatives-rulebook
   based_on:
     - prj-0001:prj-scope
     - prj-0001:prj-issues-and-approach

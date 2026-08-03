@@ -210,6 +210,25 @@ describe("replaceDocIndexRefs", () => {
 });
 
 describe("buildDocIndex", () => {
+  it("異なるファイルに同じ authority-qualified ID があれば拒否する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      mkdirSync(join(docsRoot, "ja", "specdojo", "guides"), { recursive: true });
+      mkdirSync(join(docsRoot, "ja", "project", "guides"), { recursive: true });
+      const frontmatter =
+        "---\nspecdojo:\n  id: specdojo:shared-guide\n  type: guide\n  status: draft\n---\n";
+      writeFileSync(join(docsRoot, "ja", "specdojo", "guides", "shared-guide.md"), frontmatter);
+      writeFileSync(join(docsRoot, "ja", "project", "guides", "shared-guide.md"), frontmatter);
+
+      expect(() =>
+        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+      ).toThrow(/Duplicate document ID "specdojo:shared-guide"/);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
   it("Markdown frontmatter と YAML top-level id をインデックス化する", () => {
     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
     try {
@@ -250,7 +269,7 @@ describe("buildDocIndex", () => {
           "info:",
           "  title: 決済サービスAPI",
           "x-spec-meta:",
-          "  id: ifx-api-sample",
+          "  id: specdojo:ifx-api-sample",
           "  type: api",
           "  status: draft",
           "",
@@ -262,7 +281,7 @@ describe("buildDocIndex", () => {
       buildDocIndex(docsRoot, outputPath, repoRoot);
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
-      expect(index.entries["ifx-api-sample"]).toBe("docs/ja/ifx-api-sample.yaml");
+      expect(index.entries["specdojo:ifx-api-sample"]).toBe("docs/ja/ifx-api-sample.yaml");
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

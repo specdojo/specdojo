@@ -19,8 +19,8 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-charter-rulebook` の必須構成に照らし、既存の 13 章構成を維持したまま不足しやすい認可範囲、予算枠、外部支出の扱いを補強した。
-- `prj-charter-recipe` の問いに沿って、PO が本書で承認する範囲と後続判断に残す範囲を明確にした。
+- `specdojo:prj-charter-rulebook` の必須構成に照らし、既存の 13 章構成を維持したまま不足しやすい認可範囲、予算枠、外部支出の扱いを補強した。
+- `specdojo:prj-charter-recipe` の問いに沿って、PO が本書で承認する範囲と後続判断に残す範囲を明確にした。
 - ステークホルダー登録簿と整合するよう、権限委譲表の協議先表記を公開可能な Role code ベースに寄せた。
 
 ## 2. 変更ファイル
@@ -38,6 +38,6 @@ specdojo:
 - 参照した rulebook: `docs/ja/specdojo/rulebooks/prj-charter-rulebook.md`。本文構成、認可対象、権限委譲、予算枠、承認、未決事項、禁止事項の確認基準として使用した。
 - 参照した recipe: `docs/ja/specdojo/recipes/prj-charter-recipe.md`。PO が承認、保留、差し戻しを判断できるよう、認可する範囲と認可しない範囲、PO 承認事項、GO / Not GO 条件を明確にする観点として使用した。
 - 参照した depends_on: `docs/ja/projects/prj-0001/020-project-definition/prj-overview.md` と `docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md`。目的、期待効果、公開方針、人間の判断責任、ステークホルダーの Role code の根拠として使用した。
-- 磨き込みでは sample / template は読まないという plan 指示に従い、`prj-charter-sample` と `prj-charter-template` は参照していない。
+- 磨き込みでは sample / template は読まないという plan 指示に従い、`specdojo:prj-charter-sample` と `specdojo:prj-charter-template` は参照していない。
 - plan に列挙されていない他のプロジェクト文書は参照していない。後続文書名は、既存の対象成果物にある詳細化先として維持し、存在確認や内容補完は行っていない。
 - rulebook / recipe / depends_on 間に、今回の修正判断を左右する矛盾は確認しなかった。予算枠が未確定である点は、rulebook の「未確定の場合は追加支出の可否と確定タイミングを明記する」基準に従い、追加支出を行わない制約として補強した。

@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: sld-rulebook
+  id: specdojo:sld-rulebook
   type: rulebook
   status: draft
-  sample: sld-sample
+  sample: specdojo:sld-sample
 ---
 
 # 保管場所一覧 （Storage Locations List）作成ルール

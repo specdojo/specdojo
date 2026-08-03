@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-organization-template
+  id: specdojo:pm-organization-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pm-organization
       type: project
       status: draft
-      rulebook: pm-organization-rulebook
+      rulebook: specdojo:pm-organization-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-stakeholder-register

@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: pm-roles-recipe
+  id: specdojo:pm-roles-recipe
   type: recipe
   status: ready
-  rulebook: pm-roles-rulebook
-  sample: pm-roles-sample
+  rulebook: specdojo:pm-roles-rulebook
+  sample: specdojo:pm-roles-sample
 ---
 
 # ロール定義 作成レシピ
@@ -103,14 +103,14 @@ Project Role Definition Writing Recipe
 
 ## 6. 良い例 / 悪い例
 
-| 観点                 | 良い例                                            | 悪い例                            |
-| -------------------- | ------------------------------------------------- | --------------------------------- |
-| Role code            | `code: PM`                                        | `code: project-manager-agent`     |
-| 実行主体との分離     | 実行主体の割り当ては `pm-members.yaml` で管理する | `PM は pm-agent が担当する`       |
-| プロジェクト固有メモ | 小規模運用では専任化せず、滞留時に見直す          | 必要に応じて対応する              |
-| 公開可否             | 公開判断は PO に残す                              | agent が公開可否を判断する        |
-| 下流入力             | `roles[].code` を Schedule の `owner` に使う      | `owner` に member nickname を使う |
-| schema 適合          | メタ項目は schema が許可するキーだけにする        | `rulebook: pm-roles-rulebook`     |
+| 観点                 | 良い例                                            | 悪い例                                 |
+| -------------------- | ------------------------------------------------- | -------------------------------------- |
+| Role code            | `code: PM`                                        | `code: project-manager-agent`          |
+| 実行主体との分離     | 実行主体の割り当ては `pm-members.yaml` で管理する | `PM は pm-agent が担当する`            |
+| プロジェクト固有メモ | 小規模運用では専任化せず、滞留時に見直す          | 必要に応じて対応する                   |
+| 公開可否             | 公開判断は PO に残す                              | agent が公開可否を判断する             |
+| 下流入力             | `roles[].code` を Schedule の `owner` に使う      | `owner` に member nickname を使う      |
+| schema 適合          | メタ項目は schema が許可するキーだけにする        | `rulebook: specdojo:pm-roles-rulebook` |
 
 ## 7. レビュー観点
 

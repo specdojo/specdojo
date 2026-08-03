@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: prj-overview-recipe
+  id: specdojo:prj-overview-recipe
   type: recipe
   status: ready
-  rulebook: prj-overview-rulebook
-  sample: prj-overview-sample
+  rulebook: specdojo:prj-overview-rulebook
+  sample: specdojo:prj-overview-sample
 ---
 
 # プロジェクト概要 作成レシピ

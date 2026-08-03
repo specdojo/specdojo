@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: prj-success-criteria-and-acceptance-criteria-recipe
+  id: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
   type: recipe
   status: ready
-  rulebook: prj-success-criteria-and-acceptance-criteria-rulebook
-  sample: prj-success-criteria-and-acceptance-criteria-sample
+  rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+  sample: specdojo:prj-success-criteria-and-acceptance-criteria-sample
 ---
 
 # 成功基準と受入条件 作成レシピ

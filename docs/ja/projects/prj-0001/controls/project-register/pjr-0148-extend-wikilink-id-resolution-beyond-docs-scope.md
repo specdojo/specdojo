@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope
   type: project
   status: draft
-  rulebook: pjr-rulebook
+  rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
@@ -38,4 +38,4 @@ PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `do
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-0146-forbid-links-in-history-files|履歴蓄積ファイルのリンク禁止ルール化]]
-- [[id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]]
+- [[specdojo:id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]]

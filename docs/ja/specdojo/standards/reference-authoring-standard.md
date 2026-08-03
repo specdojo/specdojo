@@ -1,11 +1,11 @@
 ---
 specdojo:
-  id: reference-authoring-standard
+  id: specdojo:reference-authoring-standard
   type: standard
   status: draft
   based_on:
-    - document-metadata-standard
-    - id-and-file-naming-standard
+    - specdojo:document-metadata-standard
+    - specdojo:id-and-file-naming-standard
 ---
 
 # リファレンス記述標準
@@ -37,14 +37,14 @@ Frontmatter は [ドキュメントメタ情報標準](document-metadata-standar
 ```yaml
 ---
 specdojo:
-  id: command-reference
+  id: specdojo:command-reference
   type: reference
   status: draft
 ---
 ```
 
 - `type` は必ず `reference` とする。
-- ファイル名は原則として `<id>.md` とし、ID は `*-reference` で終える。
+- ファイル名は原則としてlocal-idと一致させ、完全IDは `specdojo:*`、local-idは `*-reference` で終える。
 - 置換前の文書がある場合は、`supersedes` に旧IDを記録する。
 - スキーマの正本は [reference-frontmatter.schema.yaml](../../../specdojo/schemas/v1/reference-frontmatter.schema.yaml) とする。
 

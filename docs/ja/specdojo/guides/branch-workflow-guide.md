@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: branch-workflow-guide
+  id: specdojo:branch-workflow-guide
   type: guide
   status: ready
   based_on:
-    - git-branching-standard
+    - specdojo:git-branching-standard
 ---
 
 # ブランチワークフローガイド

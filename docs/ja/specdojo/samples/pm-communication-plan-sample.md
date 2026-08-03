@@ -1,12 +1,12 @@
 ---
 specdojo:
-  id: pm-communication-plan-sample
+  id: specdojo:pm-communication-plan-sample
   type: project
   status: ready
-  rulebook: pm-communication-plan-rulebook
+  rulebook: specdojo:pm-communication-plan-rulebook
   based_on:
-    - pm-plan-sample
-    - prj-stakeholder-register-sample
+    - specdojo:pm-plan-sample
+    - specdojo:prj-stakeholder-register-sample
 ---
 
 # コミュニケーション計画: 駄菓子屋きぬや 販売管理システム

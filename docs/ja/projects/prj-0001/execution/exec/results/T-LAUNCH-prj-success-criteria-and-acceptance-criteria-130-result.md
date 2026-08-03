@@ -13,7 +13,7 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:prj-success-criteria-and-acceptance-criteria
-    - prj-success-criteria-and-acceptance-criteria-template
+    - specdojo:prj-success-criteria-and-acceptance-criteria-template
 ---
 
 # Edit Result
@@ -37,5 +37,5 @@ specdojo:
 ## 4. 参考資料の活用
 
 - `template-maintenance` のため、参照の向きを「成果物 → template」に切り替えた。見直し対象は `docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md` とし、根拠として完成版成果物 `[[prj-0001:prj-success-criteria-and-acceptance-criteria|成功基準と受入条件]]`、review result `[[prj-0001:xrr-t-launch-prj-success-criteria-and-acceptance-criteria-090|T-LAUNCH-prj-success-criteria-and-acceptance-criteria-090]]`、および前回の maintenance 結果 `[[prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-100|T-LAUNCH-prj-success-criteria-and-acceptance-criteria-100]]`、`[[prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-110|T-LAUNCH-prj-success-criteria-and-acceptance-criteria-110]]`、`[[prj-0001:xer-t-launch-prj-success-criteria-and-acceptance-criteria-120|T-LAUNCH-prj-success-criteria-and-acceptance-criteria-120]]` を読み込んだ。
-- rulebook `[[prj-success-criteria-and-acceptance-criteria-rulebook]]` を構造・必須項目・禁止事項の正本として確認し、recipe `[[prj-success-criteria-and-acceptance-criteria-recipe]]` を記述の進め方と未確定事項ラベルの運用基準として確認した。sample `[[prj-success-criteria-and-acceptance-criteria-sample]]` は完成例として粒度と表構成を確認するために使った。
+- rulebook `[[specdojo:prj-success-criteria-and-acceptance-criteria-rulebook]]` を構造・必須項目・禁止事項の正本として確認し、recipe `[[specdojo:prj-success-criteria-and-acceptance-criteria-recipe]]` を記述の進め方と未確定事項ラベルの運用基準として確認した。sample `[[specdojo:prj-success-criteria-and-acceptance-criteria-sample]]` は完成例として粒度と表構成を確認するために使った。
 - 参照した範囲では、章構成や各表の列構成に矛盾はなく、template を全面改稿する必要はなかった。唯一、未解決事項の扱いが `_TODO_` だと recipe / rulebook で示している運用が伝わりにくいため、その箇所のみ `_UNDECIDED_:` に寄せた。

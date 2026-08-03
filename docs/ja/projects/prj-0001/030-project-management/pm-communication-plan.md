@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pm-communication-plan
   type: project
   status: ready
-  rulebook: pm-communication-plan-rulebook
+  rulebook: specdojo:pm-communication-plan-rulebook
   based_on:
     - prj-0001:pm-plan
     - prj-0001:prj-stakeholder-register

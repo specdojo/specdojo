@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-plan-rulebook
+  id: specdojo:pm-plan-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: pm-plan-recipe
-  sample: pm-plan-sample
-  template: pm-plan-template
+  recipe: specdojo:pm-plan-recipe
+  sample: specdojo:pm-plan-sample
+  template: specdojo:pm-plan-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # プロジェクト管理計画 作成ルール
@@ -49,7 +49,7 @@ Project Management Plan Documentation Rulebook
 | id         | `<project-id>:pm-plan`                                  | ○    |
 | type       | `project`                                               | ○    |
 | status     | `draft` / `ready` / `deprecated`                        | ○    |
-| rulebook   | `pm-plan-rulebook`                                      | ○    |
+| rulebook   | `specdojo:pm-plan-rulebook`                             | ○    |
 | based_on   | 概要、スコープ、成功基準、組織定義など直接根拠となる ID | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                                 | 任意 |
 

@@ -1,9 +1,9 @@
 # Template: data model deliverables catalog
-id: dct-data-model-template
+id: specdojo:dct-data-model-template
 type: template
 status: draft
 title: 成果物カタログ（データモデル）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 domain: data-model
 base_path: /docs/ja/product/010-business-specs/020-data-model
 
@@ -17,7 +17,7 @@ groups:
         depends_on: []
         overview: 業務上の管理単位（エンティティ）とその属性の論理名・説明・制約を定義する
         path: bdd-_TERM_.yaml
-        rulebook: bdd-rulebook
+        rulebook: specdojo:bdd-rulebook
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -43,7 +43,7 @@ groups:
         depends_on: []
         overview: 概念データストア（情報の保管場所）を一覧で定義する
         path: cdsd-_TERM_.md
-        rulebook: cdsd-rulebook
+        rulebook: specdojo:cdsd-rulebook
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
@@ -63,7 +63,7 @@ groups:
         depends_on: []
         overview: 業務対象となる物の物理的な保管場所を一覧で定義する
         path: sld-_TERM_.md
-        rulebook: sld-rulebook
+        rulebook: specdojo:sld-rulebook
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: 保管場所・保管対象・管理頻度が業務観点で記述されていること
@@ -79,7 +79,7 @@ groups:
         depends_on: []
         overview: 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する
         path: stsd-_TERM_.md
-        rulebook: stsd-rulebook
+        rulebook: specdojo:stsd-rulebook
         note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
@@ -102,7 +102,7 @@ groups:
         depends_on: []
         overview: 業務上の分類（カテゴリ・種別・区分など）を一覧で定義する
         path: cld-_TERM_.md
-        rulebook: cld-rulebook
+        rulebook: specdojo:cld-rulebook
         note: "_TERM_ は対象分類体系の略称（kebab-case）"
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
@@ -121,7 +121,7 @@ groups:
         depends_on: []
         overview: 業務上のエンティティ関係・継承・属性を図で定義する
         path: ccd-_TERM_.md
-        rulebook: ccd-mermaid-rulebook
+        rulebook: specdojo:ccd-mermaid-rulebook
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること
@@ -147,7 +147,7 @@ groups:
         depends_on: []
         overview: 業務オブジェクトの状態変化・イベント・遷移条件を図で定義する
         path: cstd-_TERM_.md
-        rulebook: cstd-rulebook
+        rulebook: specdojo:cstd-rulebook
         note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
         done_criteria:
           - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること

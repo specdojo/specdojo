@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-availability-rules
+  id: specdojo:nfr-availability-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Availability Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-availability-rules`。
+- ルールドキュメントIDは `specdojo:nfr-availability-rulebook`。
 - 生成対象ドキュメントIDは `nfr-availability` を推奨する。
 - 要件IDは `nfr-avl-<連番>` を推奨する。
 

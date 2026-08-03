@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: ntp-rules
+  id: specdojo:ntp-rulebook
   type: rulebook
   status: draft
-  sample: ntp-sample
+  sample: specdojo:ntp-sample
 ---
 
 # 移行テスト計画（リハーサル計画） 作成ルール

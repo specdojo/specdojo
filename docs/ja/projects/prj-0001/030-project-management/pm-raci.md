@@ -3,9 +3,9 @@ specdojo:
   id: prj-0001:pm-raci
   type: project
   status: ready
-  rulebook: pm-raci-rulebook
+  rulebook: specdojo:pm-raci-rulebook
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
     - prj-0001:pm-organization
 ---
 

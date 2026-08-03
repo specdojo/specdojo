@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: register-operation-guide
+  id: specdojo:register-operation-guide
   type: guide
   status: ready
 ---

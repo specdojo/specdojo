@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: tsp-index-rules
+  id: specdojo:tsp-index-rulebook
   type: rulebook
   status: draft
 ---

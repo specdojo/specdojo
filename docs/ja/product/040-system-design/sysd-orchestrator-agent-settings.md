@@ -3,7 +3,7 @@ specdojo:
   id: sysd-orchestrator-agent-settings
   type: project
   status: draft
-  rulebook: sysd-rulebook
+  rulebook: specdojo:sysd-rulebook
 ---
 
 # SpecDojo オーケストレーターエージェント設定

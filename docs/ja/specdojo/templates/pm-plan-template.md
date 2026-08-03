@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: pm-plan-template
+  id: specdojo:pm-plan-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:pm-plan
       type: project
       status: draft
-      rulebook: pm-plan-rulebook
+      rulebook: specdojo:pm-plan-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-scope

@@ -4,7 +4,7 @@ specdojo:
   type: project
   status: draft
   size: large
-  rulebook: dct-index-rulebook
+  rulebook: specdojo:dct-index-rulebook
 ---
 
 # 成果物カタログ

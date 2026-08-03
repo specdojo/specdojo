@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap
   targets:
     - prj-0001:prj-issues-and-approach
-    - prj-issues-and-approach-rulebook
-    - prj-issues-and-approach-recipe
-    - prj-issues-and-approach-sample
-    - prj-issues-and-approach-template
+    - specdojo:prj-issues-and-approach-rulebook
+    - specdojo:prj-issues-and-approach-recipe
+    - specdojo:prj-issues-and-approach-sample
+    - specdojo:prj-issues-and-approach-template
 ---
 
 # Edit Result

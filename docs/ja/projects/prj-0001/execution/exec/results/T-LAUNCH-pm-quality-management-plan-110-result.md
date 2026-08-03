@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:pm-quality-management-plan
-    - pm-quality-management-plan-rulebook
+    - specdojo:pm-quality-management-plan-rulebook
 ---
 
 # Edit Result

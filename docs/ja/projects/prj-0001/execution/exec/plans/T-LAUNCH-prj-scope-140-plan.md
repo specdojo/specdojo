@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:prj-scope
-    - prj-scope-rulebook
-    - prj-scope-recipe
-    - prj-scope-sample
-    - prj-scope-template
+    - specdojo:prj-scope-rulebook
+    - specdojo:prj-scope-recipe
+    - specdojo:prj-scope-sample
+    - specdojo:prj-scope-template
 ---
 
 # Finalize Plan: T-LAUNCH-prj-scope-140

@@ -38,7 +38,7 @@ Prettier (`npx prettier --write`) および markdownlint を実施した。エ�
 ## 4. 参考資料の活用
 
 - `approach`: fully-guided
-- **rulebook** (`pm-communication-plan-rulebook`): §5「本文構成」・§7「禁止事項」、§6「記述ガイド」、§8「関連ドキュメント」と照合し、構成・表スキーマ・文言を確認した。既存文の rulebook 適合性を判定する基準とした。
+- **rulebook** (`specdojo:pm-communication-plan-rulebook`): §5「本文構成」・§7「禁止事項」、§6「記述ガイド」、§8「関連ドキュメント」と照合し、構成・表スキーマ・文言を確認した。既存文の rulebook 適合性を判定する基準とした。
 - **recipe** (`pm-communication-plan-recipe.md`): §3「全体の作成手順」§4「各章の書き方」、§7「レビュー観点」で確認すべき点を整理し、網羅性チェック項目（計画化可能性・報告経路・情報要求・管理台帳への接続・判断責任）に用いた。
 - **pm-plan.md**: §4.1 採用ロール一覧 / §5.1 reporting タイミングと閾値超過時対応 / §6 関連ドキュメントを参照し、`pm-communication-plan.md` との矛盾がないか横断確認した。
-- **sample / template** は、本フェーズ（磨き込み）では recipe の指示通り読み込まない。構成に大きなギャップがなかったため未必要と判断。**参考資料間の矛盾箇所**: pm-communication-plan-rulebook と pm-communication-plan.md 間で矛盾は検知されなかった。
+- **sample / template** は、本フェーズ（磨き込み）では recipe の指示通り読み込まない。構成に大きなギャップがなかったため未必要と判断。**参考資料間の矛盾箇所**: specdojo:pm-communication-plan-rulebook と pm-communication-plan.md 間で矛盾は検知されなかった。

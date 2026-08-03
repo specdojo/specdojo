@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: nfr-integrity-rules
+  id: specdojo:nfr-integrity-rulebook
   type: rulebook
   status: draft
 ---
@@ -37,7 +37,7 @@ Non-Functional Requirements Integrity Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- ルールドキュメントIDは `nfr-integrity-rules`。
+- ルールドキュメントIDは `specdojo:nfr-integrity-rulebook`。
 - 生成対象ドキュメントIDは `nfr-integrity` を推奨する。
 - 要件IDは `nfr-int-<連番>` を推奨する。
 

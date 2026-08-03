@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-test-sample
+  id: specdojo:imp-test-sample
   type: project
   status: draft
-  rulebook: imp-test-rulebook
+  rulebook: specdojo:imp-test-rulebook
   based_on:
     - cr-2026-004
   part_of:

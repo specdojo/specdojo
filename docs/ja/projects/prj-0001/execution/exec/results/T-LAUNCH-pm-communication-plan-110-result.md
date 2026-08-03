@@ -13,7 +13,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - prj-0001:pm-communication-plan
-    - pm-communication-plan-rulebook
+    - specdojo:pm-communication-plan-rulebook
 ---
 
 # Edit Result

@@ -12,10 +12,10 @@ specdojo:
   agent: codex-expert-edit-agent
   targets:
     - prj-0001:pm-organization
-    - pm-organization-rulebook
-    - pm-organization-recipe
-    - pm-organization-sample
-    - pm-organization-template
+    - specdojo:pm-organization-rulebook
+    - specdojo:pm-organization-recipe
+    - specdojo:pm-organization-sample
+    - specdojo:pm-organization-template
 ---
 
 ## 1. 実施内容
@@ -44,6 +44,6 @@ specdojo:
 
 - 成果物本体は、直接根拠を `prj-overview` と対象成果物群に限定した。関連する設計標準は、Role / Member / `owner` の使い分けと記述上の制約確認に限って参照した。
 - bootstrap として既存の `pm-organization.md`、rulebook、recipe、sample、template を評価した。小規模・兼務・人間 PO の最終判断という骨格は維持し、薄かった「採用ロールと owner 語彙」を追加した。
-- 同種で `status: ready` の [[prj-scope-rulebook|プロジェクトスコープ 作成ルール]]、[[prj-scope-recipe|プロジェクトスコープ 作成レシピ]]、[[prj-scope-sample|プロジェクトスコープ sample]]、[[prj-scope-template|プロジェクトスコープ template]] を、章構成、粒度、表、プレースホルダの手本として参照した。内容は転記せず、組織定義用に一般化した。
+- 同種で `status: ready` の [[specdojo:prj-scope-rulebook|プロジェクトスコープ 作成ルール]]、[[specdojo:prj-scope-recipe|プロジェクトスコープ 作成レシピ]]、[[specdojo:prj-scope-sample|プロジェクトスコープ sample]]、[[specdojo:prj-scope-template|プロジェクトスコープ template]] を、章構成、粒度、表、プレースホルダの手本として参照した。内容は転記せず、組織定義用に一般化した。
 - rulebook の構造・必須項目・禁止事項を正とし、recipe / sample / template をその構造に追従させた。丸写しを避けるため、rulebook は規定、recipe は問いと手順、sample は完成例、template はプレースホルダに役割を分けた。
 - 外部情報は使用しなかった。指定された依存文書と既存の同種 ready 文書で判断可能であり、成果物内容の根拠範囲外となる Web 出典は追加していない。

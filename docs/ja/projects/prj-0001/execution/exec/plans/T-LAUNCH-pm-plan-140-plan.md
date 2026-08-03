@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-plan
-    - pm-plan-rulebook
-    - pm-plan-recipe
-    - pm-plan-sample
-    - pm-plan-template
+    - specdojo:pm-plan-rulebook
+    - specdojo:pm-plan-recipe
+    - specdojo:pm-plan-sample
+    - specdojo:pm-plan-template
 ---
 
 # Finalize Plan: T-LAUNCH-pm-plan-140

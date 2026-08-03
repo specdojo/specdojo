@@ -13,10 +13,10 @@ specdojo:
   approach: bootstrap
   targets:
     - prj-0001:pm-members
-    - pm-members-rulebook
-    - pm-members-recipe
-    - pm-members-sample
-    - pm-members-template
+    - specdojo:pm-members-rulebook
+    - specdojo:pm-members-recipe
+    - specdojo:pm-members-sample
+    - specdojo:pm-members-template
 ---
 
 # Edit Result

@@ -3,7 +3,7 @@
 # On scaffold, flatten metadata_template to the top level (with placeholders
 # replaced) and drop the template's own metadata (id/type/status/title/rulebook).
 # See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
-id: pm-roles-template
+id: specdojo:pm-roles-template
 type: template
 status: ready
 title: ロール一覧テンプレート
@@ -13,7 +13,7 @@ metadata_template:
   type: project
   status: draft
   title: ロール一覧
-  rulebook: pm-roles-rulebook
+  rulebook: specdojo:pm-roles-rulebook
   based_on:
     - _PROJECT_ID_:pm-organization
   version: 1

@@ -13,14 +13,14 @@ specdojo:
   approach: template-maintenance
   targets:
     - prj-0001:prj-comparison-of-alternatives
-    - prj-comparison-of-alternatives-template
+    - specdojo:prj-comparison-of-alternatives-template
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-`docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md` を、完成版成果物 `docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md` および `prj-comparison-of-alternatives-rulebook` に基づいて最終調整した。
+`docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md` を、完成版成果物 `docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md` および `specdojo:prj-comparison-of-alternatives-rulebook` に基づいて最終調整した。
 
 - 比較目的と前提条件: 根拠資料との整合性確保を促す記述を追加。
 - 比較対象案: 案の抽出元（`prj-issues-and-approach` 等）を明記するプレースホルダを追加。
@@ -43,6 +43,6 @@ specdojo:
 
 - 成果物: `[[prj-0001:prj-comparison-of-alternatives]]`
   - 実際に記述された「案の抽出元」の明記、詳細な「評価軸と課題の対応関係」の記述、および「案ごとのリスク/トレードオフ」の整理方法を template に反映し、後続者が同様の品質で作成できるように改善した。
-- Rulebook: `[[prj-comparison-of-alternatives-rulebook]]`
+- Rulebook: `[[specdojo:prj-comparison-of-alternatives-rulebook]]`
   - 必須項目（比較結果、採択理由、非採択理由、リスクとトレードオフ）が網羅されていることを確認し、記述ガイドの内容をプレースホルダの指示として取り込んだ。
   - 「一部採択」の扱いを明確化し、Rulebook の推奨表形式に整合させた。

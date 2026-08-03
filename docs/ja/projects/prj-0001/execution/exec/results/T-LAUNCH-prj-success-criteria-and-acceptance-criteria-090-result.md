@@ -26,7 +26,7 @@ specdojo:
 **確認基準**: 業務価値と受入条件が対応していること
 
 - result: pass
-- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-0001:prj-scope]], [[prj-success-criteria-and-acceptance-criteria-rulebook]]
+- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-0001:prj-scope]], [[specdojo:prj-success-criteria-and-acceptance-criteria-rulebook]]
 - notes: 業務価値 BV-01/BV-02 と成功基準・受入条件の対応があり、対象範囲・対象外・前提・依存関係も [[prj-0001:prj-scope]] と整合している。利用者、利用場面、期待結果、例外条件、公開適性の観点も本文で確認できる。
 
 ### RVP-002（PO: vp-po-decision-readiness）
@@ -34,7 +34,7 @@ specdojo:
 **確認基準**: 成功基準を承認できること
 
 - result: pass
-- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-success-criteria-and-acceptance-criteria-rulebook]], [[prj-success-criteria-and-acceptance-criteria-recipe]]
+- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[specdojo:prj-success-criteria-and-acceptance-criteria-rulebook]], [[specdojo:prj-success-criteria-and-acceptance-criteria-recipe]]
 - notes: PO の承認者位置付け、判定結果の証跡、未決事項、是正と再判定の流れが明示されている。Agent を最終判断者に置いておらず、人間の承認責任も保たれている。
 
 ### RVP-003（ARC: vp-arc-technical-constraints）
@@ -42,7 +42,7 @@ specdojo:
 **確認基準**: 技術的受入条件が確認できること
 
 - result: pass
-- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-0001:prj-scope]], [[prj-success-criteria-and-acceptance-criteria-rulebook]], [[prj-success-criteria-and-acceptance-criteria-template]]
+- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-0001:prj-scope]], [[specdojo:prj-success-criteria-and-acceptance-criteria-rulebook]], [[specdojo:prj-success-criteria-and-acceptance-criteria-template]]
 - notes: 文書構造、ID、参照関係、lint 確認、公開導線、外部連携の対象外が確認できる。技術的受入は業務価値と分離され、スコープ境界とも矛盾しない。
 
 ### RVP-004（QE: vp-qe-verifiability）
@@ -50,7 +50,7 @@ specdojo:
 **確認基準**: 受入条件が検証可能な形で記述されていること
 
 - result: pass
-- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[prj-success-criteria-and-acceptance-criteria-rulebook]], [[prj-success-criteria-and-acceptance-criteria-sample]]
+- evidence: [[prj-0001:prj-success-criteria-and-acceptance-criteria]], [[specdojo:prj-success-criteria-and-acceptance-criteria-rulebook]], [[specdojo:prj-success-criteria-and-acceptance-criteria-sample]]
 - notes: 成功基準・受入条件は判定基準、測定方法、証跡、確認者、承認者が対応付けられており、否決時の再判定手順もある。数値条件ではなくても、確認対象と確認結果が判定可能な形で書かれている。
 
 ## 2. findings

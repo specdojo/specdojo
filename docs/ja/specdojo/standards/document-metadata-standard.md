@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: document-metadata-standard
+  id: specdojo:document-metadata-standard
   type: standard
   status: draft
 ---
@@ -34,6 +34,7 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - SpecDojo が所有する項目はすべて `specdojo:` 名前空間（ネストしたオブジェクト）配下に置く。トップレベルは他フレームワーク（VitePress 等）の項目に明け渡し、SpecDojo は直接使わない。
 - `id` / `type` / `status` は全種別で必須とし、`specdojo:` 配下に置く。
 - `id` は共通スキーマの `idRef` に従い、`^[a-z0-9][a-z0-9-:]*$` に一致させる。
+- npm package が所有する実践体系文書の `id` は `<authority>:<local-id>` とし、SpecDojo core は `specdojo:` を使用する。これは Frontmatter の親キー `specdojo:` とは別に、ID値の所有元を表す namespace である。
 - `type` は各ドキュメント種別のスキーマに定義された値を使用する。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
@@ -46,7 +47,7 @@ specdojo:
   id: prj-scope
   type: project
   status: ready
-  rulebook: prj-scope-rulebook
+  rulebook: specdojo:prj-scope-rulebook
 ---
 ```
 
@@ -54,7 +55,7 @@ specdojo:
 
 テンプレートファイル自身のメタ情報と、テンプレートから生成される成果物の Frontmatter は明確に分離する。
 
-- テンプレートファイル自身のメタ情報も `specdojo:` 配下に置き、`id` / `type` / `status` は実値で記述して通常のメタ情報制約に従う。例: `specdojo.id: dct-project-management-template`、`specdojo.type: template`、`specdojo.status: draft`。
+- テンプレートファイル自身のメタ情報も `specdojo:` 配下に置き、`id` / `type` / `status` は実値で記述して通常のメタ情報制約に従う。例: `specdojo.id: specdojo:dct-project-management-template`、`specdojo.type: template`、`specdojo.status: draft`。
 - 生成される成果物の Frontmatter は、テンプレート自身の Frontmatter とは別に、生成物側の雛形として表現する。表現方法はテンプレート種別ごとに次のいずれかとする。
   - Markdown 成果物テンプレートは、自身 Frontmatter の `specdojo:` 配下に置いた `frontmatter_template` フィールドに、生成物 Frontmatter の雛形（`specdojo:` ラッパー込み）を記述する（本標準 `生成物 Frontmatter 雛形`）。
   - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
@@ -67,7 +68,7 @@ specdojo:
 例えば [dct.schema.yaml](../../../specdojo/schemas/v1/dct.schema.yaml) は、テンプレートの `part_of` などで参照する `DocId` に大文字とアンダースコアを許可し、`local_id` では `_NNNN_` や `_TERM_` を含む値を許可しています。一方、生成後の project 文書には `StrictDocId` と kebab-case の `local_id` が適用されます。
 
 ```yaml
-id: dct-project-management-template
+id: specdojo:dct-project-management-template
 type: template
 status: draft
 part_of:
@@ -87,7 +88,7 @@ Markdown 成果物テンプレートは、生成物の Frontmatter を自身 Fro
 ```yaml
 ---
 specdojo:
-  id: pm-plan-template
+  id: specdojo:pm-plan-template
   type: template
   status: draft
   frontmatter_template:
@@ -95,7 +96,7 @@ specdojo:
       id: _PROJECT_ID_:pm-plan
       type: project
       status: ready
-      rulebook: pm-plan-rulebook
+      rulebook: specdojo:pm-plan-rulebook
       based_on:
         - _PROJECT_ID_:pm-organization
         - _PROJECT_ID_:pm-roles
@@ -132,7 +133,7 @@ id: prj-0001:pm-roles
 type: project
 status: draft
 title: ロール一覧
-rulebook: pm-roles-rulebook
+rulebook: specdojo:pm-roles-rulebook
 version: 1
 project_id: prj-0001
 ```
@@ -141,13 +142,13 @@ project_id: prj-0001
 
 YAML catalog（`dct-*`）を除く独立 YAML データファイルのテンプレート（`pm-members-template.yaml` 等）は、生成物のメタ情報をトップレベルの `metadata_template` フィールドに雛形として記述する。Markdown 成果物テンプレートの `frontmatter_template` に対応する仕組みである。
 
-- テンプレート自身のメタ情報はトップレベルに実値で記述する。`id` / `type` / `status` は通常のメタ情報制約に従い（例: `id: pm-members-template`、`type: template`）、`title` はテンプレート自身の名前を記述する。`rulebook` はテンプレート自身が準拠する rulebook が無いため `none` とする。
+- テンプレート自身のメタ情報はトップレベルに実値で記述する。`id` / `type` / `status` は通常のメタ情報制約に従い（例: `id: specdojo:pm-members-template`、`type: template`）、`title` はテンプレート自身の名前を記述する。`rulebook` はテンプレート自身が準拠する rulebook が無いため `none` とする。
 - `metadata_template` の内容は、生成物のトップレベルメタ情報そのもの（`id` / `type` / `status` / `title` / `rulebook` / `based_on` / `version` / `project_id` など）とし、生成物のスキーマが定めるメタ項目の制約を満たす形にする。
 - 生成時に置換する値には生成時プレースホルダ（本標準 `生成時プレースホルダと記入プレースホルダ`）を使う。
 - 生成処理は、`metadata_template` の生成時プレースホルダを置換した内容をトップレベルに平坦化して出力し、続けて本文キー（テンプレート自身のメタ情報 `id` / `type` / `status` / `title` / `rulebook` と `metadata_template` を除いたトップレベルキー）を出力する。テンプレート自身のメタ情報は出力しない。
 
 ```yaml
-id: pm-roles-template
+id: specdojo:pm-roles-template
 type: template
 status: draft
 title: ロール一覧テンプレート
@@ -157,7 +158,7 @@ metadata_template:
   type: project
   status: draft
   title: ロール一覧
-  rulebook: pm-roles-rulebook
+  rulebook: specdojo:pm-roles-rulebook
   version: 1
   project_id: _PROJECT_ID_
 
@@ -236,7 +237,7 @@ specdojo:
   id: atc-order-registration
   type: test
   status: ready
-  rulebook: atc-rulebook
+  rulebook: specdojo:atc-rulebook
   based_on:
     - tsp-index
   relations:
@@ -263,7 +264,7 @@ specdojo:
   id: imp-business
   type: project
   status: draft
-  rulebook: imp-business-rulebook
+  rulebook: specdojo:imp-business-rulebook
   part_of: []
   based_on: []
   supersedes: []

@@ -1,10 +1,10 @@
 ---
 specdojo:
-  id: opd-index-rulebook
+  id: specdojo:opd-index-rulebook
   type: rulebook
   status: draft
   target_format: markdown
-  sample: opd-index-sample
+  sample: specdojo:opd-index-sample
 ---
 
 # 運用方針・設計 全体構成 作成ルール
@@ -38,7 +38,7 @@ Operations Policy and Design Index Documentation Rules
 | `id`         | `opd-index`                      | ○    |
 | `type`       | `operations`                     | ○    |
 | `status`     | `draft` / `ready` / `deprecated` | ○    |
-| `rulebook`   | `opd-index-rulebook`             | 任意 |
+| `rulebook`   | `specdojo:opd-index-rulebook`    | 任意 |
 | `based_on`   | 根拠仕様 ID 配列                 | 任意 |
 | `supersedes` | 置換関係 ID 配列                 | 任意 |
 

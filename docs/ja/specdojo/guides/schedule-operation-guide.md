@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: schedule-operation-guide
+  id: specdojo:schedule-operation-guide
   type: guide
   status: ready
 ---

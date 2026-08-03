@@ -19,8 +19,8 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-assumptions-constraints-dependencies-rulebook` の必須構成、frontmatter、禁止事項に照らして対象成果物を確認した。
-- `prj-assumptions-constraints-dependencies-recipe` の問いに沿って、前提・制約・依存がスコープ上の成立条件、境界、依存先として分離されていることを確認した。
+- `specdojo:prj-assumptions-constraints-dependencies-rulebook` の必須構成、frontmatter、禁止事項に照らして対象成果物を確認した。
+- `specdojo:prj-assumptions-constraints-dependencies-recipe` の問いに沿って、前提・制約・依存がスコープ上の成立条件、境界、依存先として分離されていることを確認した。
 - `prj-scope` の「外部 SaaS、行政システム、個別団体の業務システムとのデータ連携や認証連携は対象外」という記述に合わせ、補助ツール・生成物に関する制約を最小限補強した。
 
 ## 2. 変更ファイル

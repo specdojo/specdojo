@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 実施内容
 
-- `prj-assumptions-constraints-dependencies-rulebook` と `prj-assumptions-constraints-dependencies-recipe` を参照し、対象成果物の章構成、frontmatter、前提・制約・依存の分類、影響・確認方法・トリガー・所有者・対応方針の有無を確認した。
+- `specdojo:prj-assumptions-constraints-dependencies-rulebook` と `specdojo:prj-assumptions-constraints-dependencies-recipe` を参照し、対象成果物の章構成、frontmatter、前提・制約・依存の分類、影響・確認方法・トリガー・所有者・対応方針の有無を確認した。
 - `prj-scope` と照合し、スコープで明示されている「対象範囲、ライセンス、貢献導線」と整合するよう、初期公開方針の成立条件の表現を最小修正した。
 - 対象成果物は `draft` のまま据え置き、`ready` へ昇格していない。
 

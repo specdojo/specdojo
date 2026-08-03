@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: sysd-critical-flows-rules
+  id: specdojo:sysd-critical-flows-rulebook
   type: rulebook
   status: draft
 ---

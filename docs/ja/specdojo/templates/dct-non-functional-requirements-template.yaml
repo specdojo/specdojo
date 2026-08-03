@@ -1,9 +1,9 @@
 # Template: non-functional requirements deliverables catalog
-id: dct-non-functional-requirements-template
+id: specdojo:dct-non-functional-requirements-template
 type: template
 status: draft
 title: 成果物カタログ（非機能要件）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 domain: non-functional-requirements
 base_path: /docs/ja/product/060-non-functional-requirements
 
@@ -15,7 +15,7 @@ groups:
         depends_on: []
         overview: 非機能要件を8カテゴリに分冊管理し、測定可能・検証可能な形で一元化する
         path: nfr-index.md
-        rulebook: nfr-index-rulebook
+        rulebook: specdojo:nfr-index-rulebook
         done_criteria:
           - text: 非機能要件のカテゴリ構成と優先度が業務観点で確認できること
             roles: [BA]
@@ -37,7 +37,7 @@ groups:
           - nfr-index
         overview: 障害抑止と誤動作防止に関する要件を定義する（故障率・MTBF・エラー率等）
         path: nfr-reliability.md
-        rulebook: nfr-reliability-rulebook
+        rulebook: specdojo:nfr-reliability-rulebook
         done_criteria:
           - text: 信頼性要件が業務継続性の観点で記述されていること
             roles: [BA]
@@ -59,7 +59,7 @@ groups:
           - nfr-index
         overview: システム稼働の継続性に関する要件を定義する（稼働率・RTO/RPO・フェイルオーバー等）
         path: nfr-availability.md
-        rulebook: nfr-availability-rulebook
+        rulebook: specdojo:nfr-availability-rulebook
         done_criteria:
           - text: 稼働率・RTO/RPO要件が業務影響の観点で記述されていること
             roles: [BA]
@@ -85,7 +85,7 @@ groups:
           - nfr-index
         overview: 変更容易性と復旧容易性に関する要件を定義する（MTTR・変更リードタイム・ログ粒度等）
         path: nfr-maintainability.md
-        rulebook: nfr-maintainability-rulebook
+        rulebook: specdojo:nfr-maintainability-rulebook
         done_criteria:
           - text: 保守性要件が運用継続性の観点で記述されていること
             roles: [BA]
@@ -108,7 +108,7 @@ groups:
           - nfr-index
         overview: データ正確性と改ざん防止に関する要件を定義する（整合性検証・監査証跡・トランザクション境界等）
         path: nfr-integrity.md
-        rulebook: nfr-integrity-rulebook
+        rulebook: specdojo:nfr-integrity-rulebook
         done_criteria:
           - text: データ整合性要件が業務データ品質の観点で記述されていること
             roles: [BA]
@@ -130,7 +130,7 @@ groups:
           - nfr-index
         overview: 不正利用防止とセキュリティに関する要件を定義する（認証・認可・暗号化・アクセス制御等）
         path: nfr-security-safety.md
-        rulebook: nfr-security-safety-rulebook
+        rulebook: specdojo:nfr-security-safety-rulebook
         done_criteria:
           - text: セキュリティ要件が業務データ保護の観点で記述されていること
             roles: [BA]
@@ -152,7 +152,7 @@ groups:
           - nfr-index
         overview: 応答性と処理能力に関する要件を定義する（P95/P99レイテンシ・RPS・リソース効率等）
         path: nfr-performance.md
-        rulebook: nfr-performance-rulebook
+        rulebook: specdojo:nfr-performance-rulebook
         done_criteria:
           - text: 性能要件が業務利用の観点で記述されていること
             roles: [BA]
@@ -175,7 +175,7 @@ groups:
           - nfr-index
         overview: 監視・手順・継続運用に関する要件を定義する（アラート検知率・復旧達成率・運用手順充実度等）
         path: nfr-operations.md
-        rulebook: nfr-operations-rulebook
+        rulebook: specdojo:nfr-operations-rulebook
         done_criteria:
           - text: 運用要件が業務継続性の観点で記述されていること
             roles: [BA]
@@ -201,7 +201,7 @@ groups:
           - nfr-index
         overview: 使いやすさと誤操作防止に関する要件を定義する（タスク完了率・誤操作率・エラーメッセージ明確性等）
         path: nfr-usability.md
-        rulebook: nfr-usability-rulebook
+        rulebook: specdojo:nfr-usability-rulebook
         done_criteria:
           - text: 操作性要件が業務ユーザー観点で記述されていること
             roles: [BA]

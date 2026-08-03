@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: otp-rules
+  id: specdojo:otp-rulebook
   type: rulebook
   status: draft
 ---

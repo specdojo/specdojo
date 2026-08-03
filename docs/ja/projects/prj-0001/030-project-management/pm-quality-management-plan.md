@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:pm-quality-management-plan
   type: project
   status: ready
-  rulebook: pm-quality-management-plan-rulebook
+  rulebook: specdojo:pm-quality-management-plan-rulebook
   based_on:
     - prj-0001:pm-plan
   supersedes: []

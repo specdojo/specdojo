@@ -12,6 +12,7 @@ import type { KataRefs } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
+import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
 import {
   expandTemplate,
   listFilesRecursive,
@@ -440,9 +441,15 @@ function rulebookIncludesText(rulebookId: string | undefined): string {
 }
 
 // 実践の型の doc id を正準パス（docs/ja/specdojo/<kind>s/<id>.<ext>）の basename から導出する。
-// 実践の型の frontmatter id はファイル名と一致する規約（docs-structure-guide）を前提にする。
+// 実践の型の frontmatter id はファイル名と一致する規約（specdojo:docs-structure-guide）を前提にする。
 function refDocIdFromPath(refPath: string): string {
-  return basename(refPath).replace(/\.(md|yaml|json)$/, "");
+  const localId = basename(refPath).replace(/\.(md|yaml|json)$/, "");
+  const parts = refPath.split("/");
+  const authority =
+    parts[0] === "docs" && /^[a-z]{2}$/.test(parts[1] ?? "")
+      ? parts[2]
+      : SPECDOJO_PRACTICE_AUTHORITY;
+  return qualifyPracticeId(authority ?? SPECDOJO_PRACTICE_AUTHORITY, localId);
 }
 
 // approach ごとに、成果物に加えて変更・確定の対象になる実践の型の種別。

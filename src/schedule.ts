@@ -150,7 +150,7 @@ export function createScheduleTrackDocument(input: {
     type: "project",
     status: input.status,
     title: `スケジュールトラック（${input.track}）`,
-    rulebook: "sch-rulebook",
+    rulebook: "specdojo:sch-rulebook",
     version: 1,
     project_id: input.projectId,
     track: input.track,

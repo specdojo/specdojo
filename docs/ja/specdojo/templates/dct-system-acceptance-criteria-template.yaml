@@ -1,9 +1,9 @@
 # Template: system acceptance criteria deliverables catalog
-id: dct-system-acceptance-criteria-template
+id: specdojo:dct-system-acceptance-criteria-template
 type: template
 status: draft
 title: 成果物カタログ（システム受入基準）
-rulebook: dct-rulebook
+rulebook: specdojo:dct-rulebook
 domain: system-acceptance-criteria
 base_path: /docs/ja/product/070-system-acceptance-criteria
 
@@ -15,7 +15,7 @@ groups:
         depends_on: []
         overview: システム全体としての合格基準（機能・非機能・障害・移行等）を定義する
         path: sac-_TERM_.md
-        rulebook: sac-rulebook
+        rulebook: specdojo:sac-rulebook
         note: "_TERM_ は対象システム・機能領域の略称（kebab-case）"
         done_criteria:
           - text: 業務機能・非機能の受入条件が業務観点で記述されていること

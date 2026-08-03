@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-charter-template
+  id: specdojo:prj-charter-template
   type: template
   status: ready
   frontmatter_template:
@@ -8,7 +8,7 @@ specdojo:
       id: _PROJECT_ID_:prj-charter
       type: project
       status: ready
-      rulebook: prj-charter-rulebook
+      rulebook: specdojo:prj-charter-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-stakeholder-register

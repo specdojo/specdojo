@@ -13,14 +13,14 @@ specdojo:
   approach: recipe-maintenance
   targets:
     - prj-0001:prj-comparison-of-alternatives
-    - prj-comparison-of-alternatives-recipe
+    - specdojo:prj-comparison-of-alternatives-recipe
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-`[[prj-0001:prj-comparison-of-alternatives|代替案比較]]` を根拠に `prj-comparison-of-alternatives-recipe` を見直した。recipe の章構成・内容は概ね有効だったため全面改訂はせず、複数回の磨き込み（070-I01/I02、080-I01/I02）と review（090、findings なし・approve）で繰り返し補強・修正された観点を recipe の問い・書き方・深掘り手順・良い例 / 悪い例・レビュー観点・仕上げチェックに追加した。
+`[[prj-0001:prj-comparison-of-alternatives|代替案比較]]` を根拠に `specdojo:prj-comparison-of-alternatives-recipe` を見直した。recipe の章構成・内容は概ね有効だったため全面改訂はせず、複数回の磨き込み（070-I01/I02、080-I01/I02）と review（090、findings なし・approve）で繰り返し補強・修正された観点を recipe の問い・書き方・深掘り手順・良い例 / 悪い例・レビュー観点・仕上げチェックに追加した。
 
 - 「比較目的と前提条件」に、根拠資料が示す対象外範囲・初期段階で優先する最小成立範囲を前提条件に引き継ぐ問い・書き方を追加した（080-I01 で初期公開対象外連携・全文書種別の完成保証外を補足した経緯に対応）。
 - 「評価軸と評価基準」に、評価軸を根拠資料の課題 ID・業務価値に対応付ける問い・書き方を追加した（070-I02・080-I02 で評価軸と主要課題の対応を補足した経緯、および review の RVP-001 で評価軸と業務価値の対応が確認観点になっていたことに対応）。

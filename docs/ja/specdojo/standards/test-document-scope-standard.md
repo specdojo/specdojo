@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: test-document-scope-standard
+  id: specdojo:test-document-scope-standard
   type: standard
   status: draft
 ---

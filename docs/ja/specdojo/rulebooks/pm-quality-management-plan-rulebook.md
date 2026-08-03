@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-quality-management-plan-rulebook
+  id: specdojo:pm-quality-management-plan-rulebook
   type: rulebook
   status: ready
   target_format: markdown
-  recipe: pm-quality-management-plan-recipe
-  sample: pm-quality-management-plan-sample
-  template: pm-quality-management-plan-template
+  recipe: specdojo:pm-quality-management-plan-recipe
+  sample: specdojo:pm-quality-management-plan-sample
+  template: specdojo:pm-quality-management-plan-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # 品質管理計画 作成ルール
@@ -43,14 +43,14 @@ Quality Management Plan Documentation Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目       | 説明                                      | 必須 |
-| ---------- | ----------------------------------------- | ---- |
-| id         | `<project-id>:pm-quality-management-plan` | ○    |
-| type       | `project`                                 | ○    |
-| status     | `draft` / `ready` / `deprecated`          | ○    |
-| rulebook   | `pm-quality-management-plan-rulebook`     | ○    |
-| based_on   | 管理計画、成功基準など直接根拠となる ID   | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                   | 任意 |
+| 項目       | 説明                                           | 必須 |
+| ---------- | ---------------------------------------------- | ---- |
+| id         | `<project-id>:pm-quality-management-plan`      | ○    |
+| type       | `project`                                      | ○    |
+| status     | `draft` / `ready` / `deprecated`               | ○    |
+| rulebook   | `specdojo:pm-quality-management-plan-rulebook` | ○    |
+| based_on   | 管理計画、成功基準など直接根拠となる ID        | 任意 |
+| supersedes | 置き換え対象の旧文書 ID                        | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

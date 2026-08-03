@@ -1,9 +1,9 @@
 ---
 specdojo:
-  id: imp-business-sample
+  id: specdojo:imp-business-sample
   type: project
   status: draft
-  rulebook: imp-business-rulebook
+  rulebook: specdojo:imp-business-rulebook
   based_on:
     - cr-2026-004
   part_of:

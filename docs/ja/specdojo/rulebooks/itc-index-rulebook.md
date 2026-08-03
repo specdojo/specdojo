@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: itc-index-rules
+  id: specdojo:itc-index-rulebook
   type: rulebook
   status: draft
 ---

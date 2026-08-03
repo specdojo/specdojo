@@ -28,7 +28,7 @@ properties:
             uniqueItems: true
             items:
               type: string
-              pattern: "^[a-z0-9][a-z0-9-]*-rulebook$"
+              pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$"
             description: >-
               併せて適用する rulebook の ID 配列（記法ルールなど共有部品）。
               自分自身は含めない。単一段のみ（include 先の include はたどらない）。

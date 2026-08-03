@@ -12,10 +12,10 @@ specdojo:
   approach: bootstrap-finalize
   targets:
     - prj-0001:pm-quality-management-plan
-    - pm-quality-management-plan-rulebook
-    - pm-quality-management-plan-recipe
-    - pm-quality-management-plan-sample
-    - pm-quality-management-plan-template
+    - specdojo:pm-quality-management-plan-rulebook
+    - specdojo:pm-quality-management-plan-recipe
+    - specdojo:pm-quality-management-plan-sample
+    - specdojo:pm-quality-management-plan-template
 ---
 
 # Finalize Result

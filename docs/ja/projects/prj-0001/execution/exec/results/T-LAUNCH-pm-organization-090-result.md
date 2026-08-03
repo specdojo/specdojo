@@ -49,10 +49,10 @@ specdojo:
 
 `approach: fully-guided` に従い、rulebook / recipe / sample / template をいずれも実際に読み込んだうえで基準とした。
 
-- rulebook（[[pm-organization-rulebook]]）: 本文構成（5章: 基本方針／採用ロールと owner 語彙／関連ドキュメント／見直し条件／禁止事項）が対象文書の章構成と一致していることを確認した。7章の禁止事項（Role code 一覧の複製、member・兼務割り当ての複製、`owner`／`roles`／実行主体の共通定義表の再掲、`pm-roles.yaml` にない値を `owner` として認める、AI Agent への最終承認・公開可否の委任、個人情報・連絡先・非公開組織情報の記載）に該当する記述は対象文書になかった。
-- recipe（[[pm-organization-recipe]]）: 3章の作成手順、4章の各章の書き方、7章のレビュー観点に示された問い（兼務してよい範囲とその根拠、owner 語彙の正本分離、関連ドキュメントへの導線、見直し条件のトリガー・影響範囲・更新対象、禁止事項の理由）を基準に、対象文書の各章がこれらの問いに答えているかを確認した。
-- sample（[[pm-organization-sample]]）: 章構成・粒度・文体が対象文書と整合しており、「Role code 一覧や member を本文に複製しない」という方針、関連ドキュメント表・見直し条件表の書き方（文書名と役割を 1 行で示す）が一致していることを確認した。
-- template（[[pm-organization-template]]）: 5章構成と対象文書の章構成が一致しており、`_TODO_` などのプレースホルダが対象文書に残っていないことを確認した。
+- rulebook（[[specdojo:pm-organization-rulebook]]）: 本文構成（5章: 基本方針／採用ロールと owner 語彙／関連ドキュメント／見直し条件／禁止事項）が対象文書の章構成と一致していることを確認した。7章の禁止事項（Role code 一覧の複製、member・兼務割り当ての複製、`owner`／`roles`／実行主体の共通定義表の再掲、`pm-roles.yaml` にない値を `owner` として認める、AI Agent への最終承認・公開可否の委任、個人情報・連絡先・非公開組織情報の記載）に該当する記述は対象文書になかった。
+- recipe（[[specdojo:pm-organization-recipe]]）: 3章の作成手順、4章の各章の書き方、7章のレビュー観点に示された問い（兼務してよい範囲とその根拠、owner 語彙の正本分離、関連ドキュメントへの導線、見直し条件のトリガー・影響範囲・更新対象、禁止事項の理由）を基準に、対象文書の各章がこれらの問いに答えているかを確認した。
+- sample（[[specdojo:pm-organization-sample]]）: 章構成・粒度・文体が対象文書と整合しており、「Role code 一覧や member を本文に複製しない」という方針、関連ドキュメント表・見直し条件表の書き方（文書名と役割を 1 行で示す）が一致していることを確認した。
+- template（[[specdojo:pm-organization-template]]）: 5章構成と対象文書の章構成が一致しており、`_TODO_` などのプレースホルダが対象文書に残っていないことを確認した。
 - rulebook・recipe・sample・template の間に記述上の矛盾はなく、rulebook を正として判定し直した箇所はなかった。
 - depends_on（[[prj-0001:prj-overview]]）: 組織設計が支える目的（人と AI Agent が共有する仕様体系、オープンソースとして公開可能な共通基盤、継続的な改善）と、対象文書「1. 基本方針」冒頭および本文の記述が整合していることを確認した。
 - `pm-roles.yaml` と `pm-members.yaml` は本 plan の `depends_on` に明記されておらず、plan の進め方の規定（参照してよい文書は plan に記載されたものに限定する）に従い参照対象外として内容を読み込んでいない。RVP-002・RVP-003 では、対象文書がこれらのファイルへの導線・責務分離を提示できているかという入力適合性の確認に限定した。

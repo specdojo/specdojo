@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: utc-rules
+  id: specdojo:utc-rulebook
   type: rulebook
   status: draft
 ---

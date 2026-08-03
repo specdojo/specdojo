@@ -1,14 +1,14 @@
 ---
 specdojo:
-  id: pm-members-rulebook
+  id: specdojo:pm-members-rulebook
   type: rulebook
   status: ready
   target_format: yaml
-  recipe: pm-members-recipe
-  sample: pm-members-sample
-  template: pm-members-template
+  recipe: specdojo:pm-members-recipe
+  sample: specdojo:pm-members-sample
+  template: specdojo:pm-members-template
   based_on:
-    - people-and-organization-definition-standard
+    - specdojo:people-and-organization-definition-standard
 ---
 
 # プロジェクトメンバー定義 作成ルール
@@ -68,7 +68,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `type`       | `project` 固定                            | ○    |
 | `status`     | `draft` / `ready` / `deprecated`          | ○    |
 | `title`      | ドキュメント名。表示ページの見出しになる  | ○    |
-| `rulebook`   | `pm-members-rulebook` 固定                | ○    |
+| `rulebook`   | `specdojo:pm-members-rulebook` 固定       | ○    |
 | `based_on`   | 根拠ドキュメント ID の配列                | 任意 |
 | `version`    | データバージョン。初期値は `1`            | ○    |
 | `project_id` | プロジェクト ID                           | ○    |
