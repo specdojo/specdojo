@@ -59,12 +59,28 @@ project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-
 
 主要オプション:
 
-| オプション          | 用途                                                          |
-| ------------------- | ------------------------------------------------------------- |
-| `--size <size>`     | `small` / `medium` / `large` の成果物セットを選ぶ             |
-| `--project-id <id>` | 生成ファイルに埋め込む project ID を上書きする                |
-| `--dct <name>`      | `catalog generate` の対象を特定の `dct-*.yaml` に絞る（後述） |
-| `--force`           | 既存ファイルを上書きする                                      |
+| オプション           | 用途                                                                      |
+| -------------------- | ------------------------------------------------------------------------- |
+| `--size <size>`      | `small` / `medium` / `large` の成果物セットを選ぶ                         |
+| `--project-id <id>`  | 生成ファイルに埋め込む project ID を上書きする                            |
+| `--domain <domain>`  | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り） |
+| `--var <NAME=value>` | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）           |
+| `--dct <name>`       | `catalog generate` の対象を特定の `dct-*.yaml` に絞る（後述）             |
+| `--force`            | 既存ファイルを上書きする                                                  |
+
+`catalog scaffold`は、`--domain`を省略すると従来どおりすべてのDCT templateを対象にします。指定した場合は、ファイル名ではなくtemplate内の`domain`が一致するものだけを生成します。存在しないdomainを指定した場合は、部分的な生成を行わずエラーで終了します。
+
+`--var`はtemplate内の文字列に含まれる`_NAME_`を置換します。`local_id`、`path`、`depends_on`、名称、概要、注記も同じ値で展開されます。`PROJECT_ID`は予約済みであり、project IDの上書きには`--project-id`を使用します。変数指定後もplaceholderが残る成果物は従来どおり生成対象から除外し、除外した`local_id`を警告します。
+
+```bash
+specdojo catalog scaffold \
+  --project prj-0001 \
+  --size large \
+  --domain data-flow,data-model \
+  --domain business-model \
+  --var TERM=specdojo \
+  --var DOMAIN=specdojo
+```
 
 `--dct <name>` で対象を特定の `dct-*.yaml` に絞れます。`name` は `dct-` プレフィックスや `.yaml` の有無を問わず、ドメイン名（例: `project-definition`）でも一致します。カンマ区切りまたは複数回指定で複数のカタログを対象にできます。指定名に一致する `dct-*.yaml` がない場合はエラーで終了します。
 

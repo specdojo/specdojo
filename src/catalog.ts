@@ -70,6 +70,40 @@ function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
 }
 
+function collectCommaSeparated(value: string, previous: string[]): string[] {
+  return [
+    ...previous,
+    ...value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean),
+  ];
+}
+
+function collectRepeatable(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
+function parseScaffoldVariables(values: string[]): Record<string, string> {
+  const variables: Record<string, string> = {};
+  for (const value of values) {
+    const separator = value.indexOf("=");
+    const name = separator >= 0 ? value.slice(0, separator).trim() : "";
+    const replacement = separator >= 0 ? value.slice(separator + 1) : "";
+    if (!/^[A-Z][A-Z0-9_]*$/.test(name) || replacement.length === 0) {
+      throw new Error(`Invalid --var: "${value}". Use NAME=value (NAME must be uppercase).`);
+    }
+    if (name === "PROJECT_ID") {
+      throw new Error(`--var PROJECT_ID is reserved; use --project-id instead.`);
+    }
+    if (Object.hasOwn(variables, name) && variables[name] !== replacement) {
+      throw new Error(`Conflicting --var values for ${name}.`);
+    }
+    variables[name] = replacement;
+  }
+  return variables;
+}
+
 export function registerCatalogCommands(program: Command): void {
   const cat = program.command("catalog").description("Deliverables catalog (dct-*.yaml) commands");
 
@@ -199,6 +233,18 @@ export function registerCatalogCommands(program: Command): void {
     "--project-id <projectId>",
     "Project ID to embed (e.g. prj-0001); derived from catalog_path if omitted",
   );
+  scCmd.option(
+    "--domain <domain>",
+    "Limit to template domain (repeatable / comma-separated)",
+    collectCommaSeparated,
+    [] as string[],
+  );
+  scCmd.option(
+    "--var <NAME=value>",
+    "Replace a template placeholder such as _TERM_ (repeatable)",
+    collectRepeatable,
+    [] as string[],
+  );
   scCmd.option("--force", "Overwrite existing files", false);
   scCmd.action((opts) => {
     try {
@@ -223,12 +269,14 @@ export function registerCatalogCommands(program: Command): void {
         throw new Error(`Templates directory not found: ${templatesPath}`);
       }
 
-      const { written, skipped, errors } = runScaffold({
+      const { written, skipped, warnings, errors } = runScaffold({
         catalogPath,
         templatesPath,
         size,
         projectId: opts.projectId ?? null,
         force: !!opts.force,
+        domains: opts.domain as string[],
+        variables: parseScaffoldVariables(opts.var as string[]),
       });
 
       for (const err of errors) {
@@ -239,6 +287,9 @@ export function registerCatalogCommands(program: Command): void {
       }
       for (const p of skipped) {
         process.stdout.write(`Skipped (already exists; use --force to overwrite): ${p}\n`);
+      }
+      for (const warning of warnings) {
+        process.stdout.write(`WARN: ${warning}\n`);
       }
 
       if (errors.length > 0) process.exitCode = 1;

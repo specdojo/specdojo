@@ -1,9 +1,18 @@
-import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { load } from "js-yaml";
 import fg from "fast-glob";
-import { scaffoldDoc } from "../../src/catalog-scaffold.js";
+import { runScaffold, scaffoldDoc } from "../../src/catalog-scaffold.js";
 import type { DctTemplateDoc } from "../../src/catalog-types.js";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 
@@ -72,6 +81,41 @@ describe("scaffoldDoc — プレースホルダ置換", () => {
     expect(doc.rulebook).toBe("specdojo:dct-rulebook");
   });
 
+  it("--var相当の変数をlocal_id・path・depends_on・noteへ一貫して展開する", () => {
+    const template: DctTemplateDoc = {
+      ...MINIMAL_TEMPLATE,
+      groups: [
+        {
+          deliverables: [
+            {
+              local_id: "doc-_TERM_",
+              name: "_TERM_ document",
+              kind: "work",
+              overview: "_TERM_ overview",
+              path: "doc-_TERM_.md",
+              depends_on: ["base-_TERM_"],
+              note: "domain is _DOMAIN_",
+            },
+          ],
+        },
+      ],
+    };
+
+    const doc = scaffoldDoc(template, "prj-0001", "large", {
+      TERM: "specdojo",
+      DOMAIN: "documentation",
+    });
+    const deliverable = doc.groups[0]?.deliverables?.[0];
+    expect(deliverable).toMatchObject({
+      local_id: "doc-specdojo",
+      name: "specdojo document",
+      overview: "specdojo overview",
+      path: "doc-specdojo.md",
+      depends_on: ["base-specdojo"],
+      note: "domain is documentation",
+    });
+  });
+
   it("instance_id_pattern をプロジェクトカタログへ保持する", () => {
     const template: DctTemplateDoc = {
       ...MINIMAL_TEMPLATE,
@@ -91,6 +135,109 @@ describe("scaffoldDoc — プレースホルダ置換", () => {
     };
     const doc = scaffoldDoc(template, "prj-0001", "large");
     expect(doc.groups[0]?.deliverables?.[0]?.instance_id_pattern).toBe("doc-{sequence}-{term}");
+  });
+});
+
+describe("runScaffold — domain選択と変数展開", () => {
+  const dirs: string[] = [];
+
+  afterEach(() => {
+    for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+  });
+
+  function fixture(): { root: string; catalogPath: string; templatesPath: string } {
+    const root = mkdtempSync(join(tmpdir(), "catalog-scaffold-"));
+    dirs.push(root);
+    const catalogPath = join(root, "docs", "ja", "projects", "prj-0001", "catalog");
+    const templatesPath = join(root, "templates");
+    mkdirSync(catalogPath, { recursive: true });
+    mkdirSync(templatesPath, { recursive: true });
+    return { root, catalogPath, templatesPath };
+  }
+
+  function writeTemplate(templatesPath: string, domain: string): void {
+    writeFileSync(
+      join(templatesPath, `dct-${domain}-template.yaml`),
+      [
+        `id: specdojo:dct-${domain}-template`,
+        "type: template",
+        "status: draft",
+        `title: ${domain}`,
+        "rulebook: specdojo:dct-rulebook",
+        `domain: ${domain}`,
+        `base_path: /docs/_PROJECT_ID_/${domain}`,
+        "groups:",
+        "  - deliverables:",
+        "      - local_id: doc-_TERM_",
+        "        name: Document",
+        "        kind: work",
+        "        overview: Overview",
+        "        path: doc-_TERM_.md",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+  }
+
+  it("指定した複数domainだけを生成する", () => {
+    const { catalogPath, templatesPath } = fixture();
+    for (const domain of ["alpha", "beta", "gamma"]) writeTemplate(templatesPath, domain);
+
+    const result = runScaffold({
+      catalogPath,
+      templatesPath,
+      size: "large",
+      projectId: "prj-0001",
+      force: false,
+      domains: ["alpha", "gamma"],
+      variables: { TERM: "specdojo" },
+    });
+
+    expect(result.errors).toEqual([]);
+    expect(result.warnings).toEqual([]);
+    expect(readdirSync(catalogPath).sort()).toEqual(["dct-alpha.yaml", "dct-gamma.yaml"]);
+    expect(readFileSync(join(catalogPath, "dct-alpha.yaml"), "utf8")).toContain(
+      "local_id: doc-specdojo",
+    );
+  });
+
+  it("未知domainがあれば部分生成せずエラーにする", () => {
+    const { catalogPath, templatesPath } = fixture();
+    writeTemplate(templatesPath, "alpha");
+
+    const result = runScaffold({
+      catalogPath,
+      templatesPath,
+      size: "large",
+      projectId: "prj-0001",
+      force: false,
+      domains: ["alpha", "missing"],
+    });
+
+    expect(result.errors[0]).toContain("Unknown --domain: missing");
+    expect(readdirSync(catalogPath)).toEqual([]);
+  });
+
+  it("未解決placeholderの成果物を除外し、IDを警告する", () => {
+    const { catalogPath, templatesPath } = fixture();
+    writeTemplate(templatesPath, "alpha");
+
+    const result = runScaffold({
+      catalogPath,
+      templatesPath,
+      size: "large",
+      projectId: "prj-0001",
+      force: false,
+      domains: ["alpha"],
+    });
+
+    expect(result.errors).toEqual([]);
+    expect(result.warnings[0]).toContain("excluded unresolved deliverables: doc-_TERM_");
+    expect(existsSync(join(catalogPath, "dct-alpha.yaml"))).toBe(true);
+    const output = load(
+      readFileSync(join(catalogPath, "dct-alpha.yaml"), "utf8"),
+    ) as DctTemplateDoc;
+    expect(output.groups).toEqual([]);
   });
 });
 
