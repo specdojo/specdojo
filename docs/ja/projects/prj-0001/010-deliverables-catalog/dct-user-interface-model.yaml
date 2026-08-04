@@ -1,22 +1,20 @@
-# Template: interface model deliverables catalog
-id: specdojo:dct-interface-model-template
-type: template
+id: prj-0001:dct-user-interface-model
+type: project
 status: draft
-title: 成果物カタログ（インターフェースモデル）
+title: 成果物カタログ（ユーザーインターフェースモデル）
 rulebook: specdojo:dct-rulebook
-domain: interface-model
-base_path: /docs/ja/product/010-business-specs/040-interface-model
-
+project_id: prj-0001
+domain: user-interface-model
+base_path: /docs/ja/product/010-business-specs/040-user-interface-model
 groups:
   - deliverables:
-      - local_id: uis-_TERM_
+      - local_id: uis-specdojo
         name: 画面仕様
         kind: work
-        depends_on: []
         overview: 業務ユーザー視点の画面の利用目的・表示項目・操作・遷移を定義する
-        path: uis-_TERM_.md
+        path: uis-specdojo.md
         rulebook: specdojo:uis-rulebook
-        note: "_TERM_ は対象画面名の略称（kebab-case）"
+        note: specdojo は対象画面名の略称（kebab-case）
         done_criteria:
           - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
             roles: [BA]
@@ -33,16 +31,13 @@ groups:
           - text: 業務ユーザーが操作しやすい表現・構成になっていること
             roles: [UX]
             viewpoint: vp-ux-readability
-
-      - local_id: bds-_TERM_
-        min_size: medium
+      - local_id: bds-specdojo
         name: 帳票仕様
         kind: work
-        depends_on: []
         overview: 業務ユーザー視点の帳票の利用目的・表示項目・出力タイミングを定義する
-        path: bds-_TERM_.md
+        path: bds-specdojo.md
         rulebook: specdojo:bds-rulebook
-        note: "_TERM_ は対象帳票名の略称（kebab-case）"
+        note: specdojo は対象帳票名の略称（kebab-case）
         done_criteria:
           - text: 利用目的・表示項目・出力タイミングが業務観点で記述されていること
             roles: [BA]

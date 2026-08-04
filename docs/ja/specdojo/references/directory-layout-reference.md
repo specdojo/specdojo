@@ -181,7 +181,7 @@ docs/
 │       │   │   ├── br-reorder-point.md           # ビジネスルール（例：発注点判定）
 │       │   │   ├── bes-index.md                  # 業務イベント仕様（全体構成）（例：販売管理）
 │       │   │   └── bes-order-approved.md         # 業務イベント仕様（個別）（例：受注承認）
-│       │   ├── 040-interface-model/              # インターフェースモデル
+│       │   ├── 040-user-interface-model/         # ユーザーインターフェースモデル
 │       │   │   ├── uis-order-entry.md            # 画面仕様（例：受注入力）
 │       │   │   └── bds-order-summary.md          # 帳票仕様（例：受注明細）
 │       │   ├── 050-system-functions/             # システム化機能

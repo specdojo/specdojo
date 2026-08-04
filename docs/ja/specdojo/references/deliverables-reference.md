@@ -167,6 +167,8 @@ SpecDojo で扱うプロダクト成果物（`docs/ja/product/` 配下、また�
 
 業務仕様は、[三要素分析法](https://dbc.in.coocan.jp/methodology.html)（データフロー図を頂点に、データモデル・業務モデル・インターフェースモデルの3要素で業務とシステムを分析・設計する方法論）に基づいて構成しています。現行の業務やあるべき業務を概念的なモデルとして整理・可視化し、各要素とドキュメントとの関係は次のとおりです。
 
+本体系では、外部システムとのインターフェースを扱う「外部I/F仕様」と区別するため、三要素分析法のインターフェースモデルを「ユーザーインターフェースモデル」と呼びます。
+
 ```mermaid
 flowchart
   subgraph データフロー
@@ -185,23 +187,25 @@ flowchart
     業務イベント一覧[業務イベント一覧]
   end
 
-  subgraph ユーザーインターフェースモデル
+  subgraph userInterfaceModelGroup[ユーザーインターフェースモデル]
     画面仕様[画面仕様]
     帳票仕様[帳票仕様]
   end
 
-  subgraph システム化機能と用語集
+  subgraph supportingDeliverables[システム化機能と用語集]
     システム化機能一覧[システム化機能一覧]
     用語集定義[用語集]
   end
 
   データフロー --> データモデル
   データフロー --> 業務モデル
-  データフロー --> ユーザーインターフェースモデル
-  業務モデル --> システム化機能と用語集
-  データモデル --> システム化機能と用語集
-  ユーザーインターフェースモデル --> システム化機能と用語集
+  データフロー --> userInterfaceModelGroup
+  業務モデル --> supportingDeliverables
+  データモデル --> supportingDeliverables
+  userInterfaceModelGroup --> supportingDeliverables
 ```
+
+システム化機能と用語集は、図の可読性のため同じ枠内に表示していますが、成果物カタログではそれぞれ独立したdomainとして管理します。
 
 #### 2.1.1. データフロー
 

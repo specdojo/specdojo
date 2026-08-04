@@ -31,13 +31,13 @@ SpecDojo プロジェクトで作成する成果物とその説明をまとめ�
 
 ## 2. 成果物カタログ一覧
 
-| ドメイン             | 名称                   | 成果物カタログ                                                  | 概要                                             |
-| -------------------- | ---------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
-| `project-definition` | プロジェクト定義       | [dct-project-definition](./generated/dct-project-definition.md) | プロジェクト定義に関する成果物の一覧と説明       |
-| `project-management` | プロジェクト管理       | [dct-project-management](./generated/dct-project-management.md) | プロジェクト管理に関する成果物の一覧と説明       |
-| `data-flow`          | データフロー           | [dct-data-flow](./generated/dct-data-flow.md)                   | データフローに関する成果物の一覧と説明           |
-| `data-model`         | データモデル           | [dct-data-model](./generated/dct-data-model.md)                 | データモデルに関する成果物の一覧と説明           |
-| `business-model`     | 業務モデル             | [dct-business-model](./generated/dct-business-model.md)         | 業務モデルに関する成果物の一覧と説明             |
-| `interface-model`    | インターフェースモデル | [dct-interface-model](./generated/dct-interface-model.md)       | インターフェースモデルに関する成果物の一覧と説明 |
-| `system-functions`   | システム化機能         | [dct-system-functions](./generated/dct-system-functions.md)     | システム化機能に関する成果物の一覧と説明         |
-| `glossary`           | 用語集                 | [dct-glossary](./generated/dct-glossary.md)                     | 用語集に関する成果物の一覧と説明                 |
+| ドメイン               | 名称                           | 成果物カタログ                                                      | 概要                                                     |
+| ---------------------- | ------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| `project-definition`   | プロジェクト定義               | [dct-project-definition](./generated/dct-project-definition.md)     | プロジェクト定義に関する成果物の一覧と説明               |
+| `project-management`   | プロジェクト管理               | [dct-project-management](./generated/dct-project-management.md)     | プロジェクト管理に関する成果物の一覧と説明               |
+| `data-flow`            | データフロー                   | [dct-data-flow](./generated/dct-data-flow.md)                       | データフローに関する成果物の一覧と説明                   |
+| `data-model`           | データモデル                   | [dct-data-model](./generated/dct-data-model.md)                     | データモデルに関する成果物の一覧と説明                   |
+| `business-model`       | 業務モデル                     | [dct-business-model](./generated/dct-business-model.md)             | 業務モデルに関する成果物の一覧と説明                     |
+| `user-interface-model` | ユーザーインターフェースモデル | [dct-user-interface-model](./generated/dct-user-interface-model.md) | ユーザーインターフェースモデルに関する成果物の一覧と説明 |
+| `system-functions`     | システム化機能                 | [dct-system-functions](./generated/dct-system-functions.md)         | システム化機能に関する成果物の一覧と説明                 |
+| `glossary`             | 用語集                         | [dct-glossary](./generated/dct-glossary.md)                         | 用語集に関する成果物の一覧と説明                         |
