@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
 ---
 
-# PJR-0146 履歴蓄積ファイル（plan/result/pjr-NNNN-<topic>等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+# PJR-0146 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
 
 ## 1. 概要
 
