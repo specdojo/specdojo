@@ -1,0 +1,31 @@
+id: prj-0001:dct-glossary
+type: project
+status: draft
+title: 成果物カタログ（用語集）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: glossary
+base_path: /docs/ja/product/010-business-specs/060-glossary
+groups:
+  - name: 用語集
+    deliverables:
+      - local_id: gl-specdojo
+        name: 用語集
+        kind: work
+        overview: 業務・システムで使用する用語の意味を統一的に定義する
+        path: gl-specdojo.md
+        rulebook: specdojo:gl-rulebook
+        note: specdojo は対象業務領域の略称（kebab-case）
+        done_criteria:
+          - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・API命名・DBカラム名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: ドキュメント間の用語の一貫性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency

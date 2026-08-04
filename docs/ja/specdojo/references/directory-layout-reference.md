@@ -184,9 +184,10 @@ docs/
 │       │   ├── 040-interface-model/              # インターフェースモデル
 │       │   │   ├── uis-order-entry.md            # 画面仕様（例：受注入力）
 │       │   │   └── bds-order-summary.md          # 帳票仕様（例：受注明細）
-│       │   └── 050-common/                       # 共通
-│       │       ├── sf-index.md                   # システム化機能一覧（全体構成）
-│       │       ├── sf-order-entry.md             # システム化機能一覧（個別）（例：受注入力）
+│       │   ├── 050-system-functions/             # システム化機能
+│       │   │   ├── sf-index.md                   # システム化機能一覧（全体構成）
+│       │   │   └── sf-order-entry.md             # システム化機能（個別）（例：受注入力）
+│       │   └── 060-glossary/                     # 用語集
 │       │       └── gl-sales-management.md        # 用語集（例：販売管理）
 │       │
 │       ├── 020-external-interface-specs/         # 外部I/F仕様

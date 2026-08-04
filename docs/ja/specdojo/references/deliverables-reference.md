@@ -242,13 +242,19 @@ flowchart
 | [画面仕様](../rulebooks/uis-rulebook.md) | UI Specification | `uis-<term>` | 業務ユーザー視点の画面の利用目的や表示項目、操作を定義する | 画面概要、利用目的、表示項目、操作、遷移、エラー表示 など |
 | [帳票仕様](../rulebooks/bds-rulebook.md) | Business Document Specification | `bds-<term>` | 業務ユーザー視点の帳票の利用目的や表示項目を定義する | 帳票概要、利用目的、表示項目、出力タイミング など |
 
-#### 2.1.5. 共通
+#### 2.1.5. システム化機能
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
 | [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の概要・関連仕様を定義する | 機能概要、関連プロセス、関連画面、関連IF、関連ルール など |
+
+#### 2.1.6. 用語集
+
+<!-- prettier-ignore -->
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
+| --- | --- | --- | --- | --- |
 | [用語集](../rulebooks/gl-rulebook.md) | Glossary | `gl-<domain>` | 用語の意味を統一的に定義する | 用語、定義、別名、分類、関連用語 など |
 
 ### 2.2. 外部I/F仕様
