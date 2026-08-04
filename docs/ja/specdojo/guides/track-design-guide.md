@@ -80,8 +80,8 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 | id                       | 想定ドメインの例                                                                                          | 主に扱う成果物カテゴリ                                       | 関与の仕方 |
 | ------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------- |
 | launch                   | `project-definition`、`project-management`                                                                | 立ち上げ、プロジェクト定義、プロジェクトマネジメント         | 定義する   |
-| current-state            | `current-state`                                                                                           | 現状定義（必要なプロダクト成果物カテゴリのスナップショット） | 定義する   |
 | business-specs           | `data-flow`、`data-model`、`business-model`、`interface-model`、`system-functions`、`glossary`            | 業務仕様                                                     | 定義する   |
+| current-state            | `current-state`                                                                                           | 現状定義（必要なプロダクト成果物カテゴリのスナップショット） | 定義する   |
 | external-interface-specs | `external-interface-specs`                                                                                | 外部I/F仕様                                                  | 定義する   |
 | impact-analysis          | `impact-analysis`                                                                                         | 影響調査                                                     | 定義する   |
 | architecture             | `architecture`                                                                                            | アーキテクチャ                                               | 定義する   |
