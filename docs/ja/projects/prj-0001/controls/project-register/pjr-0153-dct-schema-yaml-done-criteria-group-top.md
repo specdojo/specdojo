@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0153-dct-schema-yaml-done-criteria-group-top
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
