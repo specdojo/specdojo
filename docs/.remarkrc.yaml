@@ -1,0 +1,60 @@
+# ⚠ 実験成果物（削除予定） / EXPERIMENT ARTIFACT — TO BE DELETED
+#
+# このファイルは PJR-0152 の調査中に「サブディレクトリ config による lint:fm への
+# プラグイン組み込み（カスケード）」の可否を検証するために作成したものです。
+# 検証の結果、unified-engine（remark-cli）のカスケードは親設定を「マージ」せず
+# 「上書き」することが確認されたため、この方式は不採用としました
+# （docs 配下のスキーマ検証が無効化されてしまうため）。
+#
+# 実行サンドボックスの制約で agent がファイル削除（rm）を行えなかったため、
+# 削除できずに残置しています。ルート `.remarkrc.yaml` の検証を維持するため、
+# 内容はルート設定のミラー（プラグインのモジュールパスのみ `../` に調整）としています。
+# runner / 人間はこのファイル自体を削除してください。
+plugins:
+  - remark-parse
+  - - remark-frontmatter
+    - type: yaml
+      marker: "-"
+  - - remark-gfm
+    - tablePipeAlign: false
+  - remark-lint
+  - - ../tools/docs/src/remark-md-content.cjs
+    - schemas:
+        docs/specdojo/schemas/v1/pjr-index.schema.yaml:
+          - docs/ja/**/pjr-index.md
+        docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
+          - docs/ja/specdojo/guides/*-guide.md
+        docs/ja/specdojo/schemas/v1/reference-content.schema.yaml:
+          - docs/ja/specdojo/references/*-reference.md
+        docs/ja/specdojo/schemas/v1/philosophy-content.schema.yaml:
+          - docs/ja/specdojo/philosophy/*-philosophy.md
+  - - ../tools/docs/src/remark-frontmatter-ajv2020.cjs
+    - strict: true
+      schemaRules:
+        - glob: docs/ja/projects/**/exec/plans/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/exec/results/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/exec/results/**/*.md
+          schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/rulebooks/**/*.md
+          schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/references/**/*.md
+          schema: docs/specdojo/schemas/v1/reference-frontmatter.schema.yaml
+          require_frontmatter: true
+        - glob: docs/ja/specdojo/guides/**/*.md
+          schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
+          require_frontmatter: true
+        - glob: docs/ja/specdojo/philosophy/**/*.md
+          schema: docs/specdojo/schemas/v1/philosophy-frontmatter.schema.yaml
+          require_frontmatter: true
+        - glob: docs/ja/specdojo/standards/**/*.md
+          schema: docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/recipes/**/*.md
+          schema: docs/specdojo/schemas/v1/recipe-frontmatter.schema.yaml
+        - glob: docs/ja/product/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+        - glob: docs/ja/specdojo/samples/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml

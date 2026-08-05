@@ -25,21 +25,27 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 実装場所（remark-lintプラグイン or markdownlint customRules）の選定 | ARC  | open | -    |
-| 2   | 実在HTMLタグ名の許可リスト設計                                      | ARC  | open | -    |
-| 3   | 検知ルールの実装                                                    | ARC  | open | -    |
-| 4   | `lint:fm`/`lint:md` への組み込み                                    | ARC  | open | -    |
-| 5   | 既存 `docs/` 配下での誤検知有無の確認（正規HTML利用との切り分け）   | ARC  | open | -    |
-| 6   | 単体テスト追加（違反検知・正規HTML非検知の両方）                    | ARC  | open | -    |
+| No  | 作業                                                                | 担当 | 状態    | メモ                                                        |
+| --- | ------------------------------------------------------------------- | ---- | ------- | ----------------------------------------------------------- |
+| 1   | 実装場所（remark-lintプラグイン or markdownlint customRules）の選定 | ARC  | done    | remark プラグイン方式（AST の `html` ノードを検査）を採用   |
+| 2   | 実在HTMLタグ名の許可リスト設計                                      | ARC  | done    | HTML Living Standard の要素一覧＋廃止要素/SVG/MathML を許可 |
+| 3   | 検知ルールの実装                                                    | ARC  | done    | `remark-no-unescaped-angle-placeholder.ts` を実装           |
+| 4   | `lint:fm`/`lint:md` への組み込み                                    | ARC  | blocked | ルート `.remarkrc.yaml` がサンドボックスで書き込み不可      |
+| 5   | 既存 `docs/` 配下での誤検知有無の確認（正規HTML利用との切り分け）   | ARC  | done    | 全 `docs/**/*.md` 走査テストで誤検知ゼロを確認              |
+| 6   | 単体テスト追加（違反検知・正規HTML非検知の両方）                    | ARC  | done    | vitest 10 ケース（実 docs 走査含む）を追加・全 pass         |
 
 ## 4. 対応結果
 
--
+- 検知ロジックは remark プラグイン `tools/docs/src/remark-no-unescaped-angle-placeholder.ts`（＋`.cjs` ラッパー）として実装した。remark は本文中の `<xxx>` を tag 名が HTML 文法に合致すると `html` ノードとして解釈するため、`html` ノードを走査し、実在 HTML 要素の許可リストに無い tag 名を「未エスケープの山括弧プレースホルダ」として警告する。インラインコード（バッククォート）内は `inlineCode` ノードとなり `html` ノードにならないため検知対象外となる。
+- 単体テスト `tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts` を追加（vitest 10 ケース、全 pass）。PJR-0145/0146 で実際に発生した `<lang>` / `<topic>`、および `<project-id>` / `Array<string>` / `prefix-<term>-suffix` を検知し、`` `<lang>` `` のようなインラインコード・`<br>` / `<details>` / `<summary>` 等の正規 HTML・コードフェンス内・HTML コメント・autolink を検知しないことを確認した。
+- 誤検知確認: テスト内で全 `docs/**/*.md` をプラグインで走査し、警告ゼロ（誤検知なし）を確認した。
+- 未完了（要ハンドオフ）: `lint:fm` への組み込みはルート `.remarkrc.yaml` への 1 行追加が必要だが、本実行サンドボックスはリポジトリルート直下ファイルの書き込みを拒否するため反映できなかった。詳細と適用手順は本項目の result を参照。
 
 ## 5. 関連ドキュメント
 
+- tools/docs/src/remark-no-unescaped-angle-placeholder.ts
+- tools/docs/src/remark-no-unescaped-angle-placeholder.cjs
+- tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts
 - tools/docs/src/remark-md-content.cjs
 - .remarkrc.yaml
 - .markdownlint.yaml
