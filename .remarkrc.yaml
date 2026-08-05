@@ -13,6 +13,7 @@ plugins:
   - - remark-gfm
     - tablePipeAlign: false
   - remark-lint
+  - ./tools/docs/src/remark-no-unescaped-angle-placeholder.cjs
   - - ./tools/docs/src/remark-md-content.cjs
     - schemas:
         docs/specdojo/schemas/v1/pjr-index.schema.yaml:
