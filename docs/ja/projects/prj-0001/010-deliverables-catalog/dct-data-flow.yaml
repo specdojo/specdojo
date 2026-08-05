@@ -7,24 +7,304 @@ project_id: prj-0001
 domain: data-flow
 base_path: /docs/ja/product/010-business-specs/010-data-flow
 groups:
-  - deliverables:
-      - local_id: cdfd-specdojo
-        name: 概念データフロー図
+  - name: 全体構成
+    deliverables:
+      - local_id: cdfd-overview
+        name: 概念データフロー図（全体概要）
         kind: work
-        overview: 対象業務の全体構成・情報の流れ・業務主体を可視化し定義する
-        path: cdfd-specdojo.md
+        overview: SpecDojoを用いたプロジェクト推進とオペレーション推進の主要プロセスグループの関係と全体の流れを可視化し定義する
+        path: cdfd-overview.md
         rulebook: specdojo:cdfd-rulebook
-        note: specdojo は対象業務名の略称（kebab-case）
         done_criteria:
-          - text: 業務プロセス・情報の流れ・業務主体が業務観点で正確に表現されていること
+          - text: プロジェクト推進とオペレーション推進の主要プロセスグループの関係と全体の流れが業務観点で正確に表現されていること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: 対象業務のスコープと境界を承認できること
+          - text: 対象範囲（プロジェクト推進・オペレーション推進）のスコープと境界を承認できること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: システム設計・アーキテクチャの入力として参照できること
+          - text: 領域別業務フロー（各cdfd）の構成方針の入力として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: テスト対象業務フローが識別できること
+          - text: 領域別業務フローへの分割に抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+  - name: プロジェクト推進
+    deliverables:
+      - local_id: cdfd-init
+        name: 概念データフロー図（初期セットアップ）
+        kind: work
+        overview: config init・register scaffold・catalog scaffoldによるプロジェクト初期セットアップの流れを可視化し定義する
+        path: cdfd-init.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-overview
+        done_criteria:
+          - text: 設定初期化・登録簿雛形作成・成果物カタログ雛形作成の流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 初期化対象（config/register/catalog）のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: config init・catalog scaffoldの入出力ファイル構成が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 初期化完了の確認観点（生成物の存在確認など）が識別できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+      - local_id: cdfd-register-triage
+        name: 概念データフロー図（課題整理）
+        kind: work
+        overview: 課題（issue）・判断（decision）・作業（todo）の起票から、着手・確認待ち（review）・他者対応待ち（wait）を経て結論記録に至り、成果物カタログ作成に繋げる課題整理の流れを可視化し定義する
+        path: cdfd-register-triage.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-init
+        done_criteria:
+          - text: issue・decision・todoの起票からwait・reviewを経て結論記録までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対象とする課題整理のスコープと境界を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 登録簿・個票ファイルの入出力構成が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: issue/decision/todoの状態遷移に抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-catalog-planning
+        name: 概念データフロー図（カタログ〜計画展開）
+        kind: work
+        overview: 成果物カタログ（dct）とスケジュール戦略（strategy）からSchedule（sch-track）と実行状態（ready）を生成する流れを可視化し定義する
+        path: cdfd-catalog-planning.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-register-triage
+        done_criteria:
+          - text: カタログ作成からSchedule生成までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 計画対象（成果物カタログ・トラック戦略）のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: dct・strategy・scheduleファイル間の依存関係が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: カタログ検証・スケジュール生成の各ゲートが判定可能な形で識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-task-execution
+        name: 概念データフロー図（タスク実行）
+        kind: work
+        overview: Readyタスクのclaimから完了までの実行経路（human/agent、in-place/worktree）を可視化し定義する
+        path: cdfd-task-execution.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-catalog-planning
+        done_criteria:
+          - text: claim・実行・completeの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 実行対象（human/agent、in-place/worktree）のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: worktree隔離実行（prepare→agent→commit→merge→remove）の構成が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 実行結果（result）の記録・検証観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-exec-recovery
+        name: 概念データフロー図（実行の中断・訂正・再実行）
+        kind: work
+        overview: blockedタスクの復帰（resume/unblock/release/cancel）、完了済みタスクの差し戻し（reopen）・再実行、レートリミット対応（resume --due）の流れを可視化し定義する
+        path: cdfd-exec-recovery.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-task-execution
+        done_criteria:
+          - text: blocked復帰・reopen・再実行・レートリミット対応の各状況と選択すべき対応が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対応方針の切り分け（続行・破棄・中止・差し戻し）を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: block event・reopen eventなどの状態遷移とworktree保持方針が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状況ごとの分岐（resume/unblock/release/cancel/reopen/レートリミット）に抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-review
+        name: 概念データフロー図（レビュー〜ready確定）
+        kind: work
+        overview: レビュー計画（review plan）・結果（review result）から指摘対応を経てreadyへ確定する流れを可視化し定義する
+        path: cdfd-review.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-task-execution
+        done_criteria:
+          - text: 観点別レビューの指摘対応からready確定までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: readyへの確定判断（finalize）、および前提不足等でblockedと判定された場合のPJR登録・PO判断への接続を承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: review plan・resultのファイル構成が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 観点別レビュー（完全性・整合性・妥当性等）の網羅性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+  - name: オペレーション推進
+    deliverables:
+      - local_id: cdfd-register-operation
+        name: 概念データフロー図（計画外対応の継続管理）
+        kind: work
+        overview: 運用中に発生する計画外の対応・調査をregisterで起票し、wait・review・deferを含む状態遷移を経て実行またはclose/reject確認まで追跡する流れを可視化し定義する
+        path: cdfd-register-operation.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-overview
+        done_criteria:
+          - text: 計画外対応の起票からwait・review・deferを経て追跡・close/reject確認までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 対象とする運用対応のスコープ（scheduleとの二重管理回避を含む）を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: register個票とschedule計画済み作業の使い分け方針が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 対応結果（成功／要確認）の判定観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-routine
+        name: 概念データフロー図（定期実行）
+        kind: work
+        overview: rtn-*.yamlに定義した間隔でregister実行またはschedule実行を起動する定期運用の流れを可視化し定義する
+        path: cdfd-routine.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-register-operation
+        done_criteria:
+          - text: 定期実行の対象選定から実行結果反映までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 定期実行対象（register/schedule、interval、limit）のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: rtn-*.yamlのフィルタ条件・実行経路の構成が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: due判定・利用制限時の再開などの異常系が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-multi-project
+        name: 概念データフロー図（複数プロジェクト・ブランチ並行運用）
+        kind: work
+        overview: project develop・feature・execの各ブランチとworktreeを用いて複数プロジェクト・タスクを並行運用する流れを可視化し定義する
+        path: cdfd-multi-project.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-init
+        done_criteria:
+          - text: ブランチ分離から統合（merge back）までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 並行運用対象（複数プロジェクト・ブランチ）のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: ブランチ命名・統合方向・同期手順が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 統合失敗時の切り戻し・競合解消の観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-register-exception
+        name: 概念データフロー図（登録簿の例外対応・特殊運用）
+        kind: work
+        overview: PJR-ID重複の検知と復旧、PO留保事項のPR承認運用、統合ブランチでのPJR-ID予約起票など、登録簿の通常運用から外れる場面の流れを可視化し定義する
+        path: cdfd-register-exception.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-register-operation
+          - cdfd-multi-project
+        done_criteria:
+          - text: ID重複復旧・PO留保承認・ID予約起票の各場面の流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 留保事項の承認・却下判断に必要な情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 統合ブランチでのPJR-ID採番・重複検知の仕組みが設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 例外運用（ID重複・留保・予約起票）の検知条件と復旧手順に抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-progress-monitoring
+        name: 概念データフロー図（進捗モニタリング・遅延検知）
+        kind: work
+        overview: Ready・CPM・クリティカルパス・マイルストーン達成状況を継続的に確認し、遅延・滞留（blocked/doingの残留）を検知して対応につなげる流れを可視化し定義する
+        path: cdfd-progress-monitoring.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-catalog-planning
+          - cdfd-task-execution
+        done_criteria:
+          - text: Ready・CPM・マイルストーン達成状況の定点確認から遅延・滞留への対応までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 遅延・滞留の検知条件とエスカレーション基準が計画運用に使える粒度で定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-dependency-risk
+          - text: CPM/クリティカルパス生成、blocked/doing残留検知の仕組みが設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 遅延・滞留の検知条件に抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-agent-config-operation
+        name: 概念データフロー図（agent・provider構成の運用変更）
+        kind: work
+        overview: 新しい作業要件の発生に応じてpm-members.yamlへagentを追加し、sch-strategy-<track>.yamlのphaseへcapabilities/proficiencyを追加するなど、agent・provider構成を継続的に見直す流れを可視化し定義する
+        path: cdfd-agent-config-operation.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-task-execution
+        done_criteria:
+          - text: 作業要件の変化からagent追加・phase定義見直しまでの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: agent・provider構成の変更（権限範囲を含む）を承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: pm-members.yaml・exec-defaults.yaml・sch-strategyの変更箇所と整合が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: agent権限・プロンプトインジェクション対策の観点で抜け漏れがないことが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: cdfd-reporting
+        name: 概念データフロー図（報告・ログ管理）
+        kind: work
+        overview: 進捗報告（pr）・議事録（mm）・課題ログ等の管理台帳補助ビューを生成・更新する流れを可視化し定義する
+        path: cdfd-reporting.md
+        rulebook: specdojo:cdfd-rulebook
+        depends_on:
+          - cdfd-task-execution
+          - cdfd-register-operation
+        done_criteria:
+          - text: 報告・記録の作成から関連ログへの反映までの流れが業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 報告対象範囲（進捗・議事録・ログ種別）を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 生成ビュー（pjr-open-items等）とpjr-entryとの参照関係が設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 報告・ログの更新漏れが確認できる観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
