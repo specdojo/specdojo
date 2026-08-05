@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0146-forbid-links-in-history-files
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -27,17 +27,36 @@ plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物に�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                  | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 対象ファイル種別の洗い出し                                                            | ARC  | open | -    |
-| 2   | ルール文書への追記（`[[id]]`/パス表記の使い分け含む）                                 | ARC  | open | -    |
-| 3   | 既存ファイルへの遡及要否の判断                                                        | ARC  | open | -    |
-| 4   | 対象ファイル種別に対するMarkdownリンク使用検知の validation / lint チェック設計・実装 | ARC  | open | -    |
-| 5   | 検証コマンド（CI / npm scripts）への組み込み                                          | ARC  | open | -    |
+| No  | 作業                                                                                  | 担当 | 状態 | メモ                                                                     |
+| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------ |
+| 1   | 対象ファイル種別の洗い出し                                                            | ARC  | done | plan / result / 個票（`pjr-<NNNN>-<topic>`）。`pjr-index.md` は対象外    |
+| 2   | ルール文書への追記（`[[id]]`/パス表記の使い分け含む）                                 | ARC  | wip  | ルール本文を確定。SSOT の instructions への反映は human 適用（申し送り） |
+| 3   | 既存ファイルへの遡及要否の判断                                                        | ARC  | done | 既存に Markdown リンクなし。発見時に置換、一括遡及移行は不要と決定       |
+| 4   | 対象ファイル種別に対するMarkdownリンク使用検知の validation / lint チェック設計・実装 | ARC  | done | `tools/docs/src/validate-history-links.ts`（unit test 付き）を追加       |
+| 5   | 検証コマンド（CI / npm scripts）への組み込み                                          | ARC  | wip  | `package.json` / `lefthook.yml` への配線は human 適用（申し送り）        |
 
 ## 4. 対応結果
 
--
+確定したリンク記法ルール（履歴蓄積ファイル向け）:
+
+- 対象は plan（`docs/ja/projects/**/exec/plans/`）、result（`docs/ja/projects/**/exec/results/`）、個票（`docs/ja/projects/**/controls/project-register/pjr-*.md`）。登録簿本体 `pjr-index.md` は個票セルを Markdown リンクで参照するため対象外。
+- `docs/` 配下の参照は `id` を正とする wikilink（`[[id]]` / `[[id|表示名]]`）に統一する。ファイルをリネームしても `id` は変えない運用のため、参照側の追従修正が不要になる。
+- `docs/` 外のファイル（`.github/instructions/` など）はリポジトリルートからの相対パス表記、外部URLは URL そのまま（bare URL / autolink）で書く。
+- Markdown リンク（`[表示名](パス)`）と参照リンク（`[表示名][ラベル]` + 定義）は書かない。画像 `![](...)` とページ内アンカー `[..](#..)` は対象外。
+
+移行方針:
+
+- 既存の plan / result / 個票に Markdown リンクは 0 件（調査済み）。一括の遡及移行は行わず、検査で検出された時点で上記記法へ置き換える方針とする。
+
+導入した検査（validation / lint チェック）:
+
+- 検出モジュール `tools/docs/src/history-links.ts` と CLI `tools/docs/src/validate-history-links.ts` を追加。`[]()` / 参照リンクを検出したら exit 1。wikilink・bare URL・autolink・画像・アンカーは誤検知しない。
+- unit test `tests/tools/docs/src/history-links.test.ts`（11 ケース）で挙動を固定。`npx eslint` / `npx tsc --noEmit` / `npx vitest run` は成功。
+
+human 適用が必要な残作業（sensitive file のため本 exec では未反映。詳細な差分は result の申し送りに記載）:
+
+- 記述ルール SSOT `.github/instructions/markdown.instructions.md` への節追加（本ルールの反映）。
+- `package.json` の `check` への `validate:history-links` 組み込み、または `lefthook.yml` pre-commit への検査追加。
 
 ## 5. 関連ドキュメント
 
