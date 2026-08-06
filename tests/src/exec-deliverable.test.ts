@@ -214,17 +214,41 @@ describe("archivePlan", () => {
 });
 
 describe("validateCatalogDomains", () => {
-  it("reports duplicate domains across catalog files", () => {
+  it("allows multiple files that share one domain when they are mergeable", () => {
     root = mkdtempSync(join(tmpdir(), "specdojo-domains-"));
     const catalogPath = join(root, "catalog");
     mkdirSync(catalogPath, { recursive: true });
-    writeFileSync(join(catalogPath, "dct-one.yaml"), dctYaml("dup", ["a"]), "utf8");
-    writeFileSync(join(catalogPath, "dct-two.yaml"), dctYaml("dup", ["b"]), "utf8");
+    writeFileSync(join(catalogPath, "dct-data-model-sales.yaml"), dctYaml("dup", ["a"]), "utf8");
+    writeFileSync(join(catalogPath, "dct-data-model-buy.yaml"), dctYaml("dup", ["b"]), "utf8");
+
+    expect(validateCatalogDomains(catalogPath)).toEqual({ ok: true, errors: [], warnings: [] });
+  });
+
+  it("errors when same-domain parts define a duplicate local_id", () => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-domains-dup-"));
+    const catalogPath = join(root, "catalog");
+    mkdirSync(catalogPath, { recursive: true });
+    writeFileSync(join(catalogPath, "dct-data-model-a.yaml"), dctYaml("dup", ["shared"]), "utf8");
+    writeFileSync(join(catalogPath, "dct-data-model-b.yaml"), dctYaml("dup", ["shared"]), "utf8");
 
     const result = validateCatalogDomains(catalogPath);
 
     expect(result.ok).toBe(false);
-    expect(result.errors[0]).toMatch(/duplicate domain 'dup'/);
+    expect(result.errors[0]).toMatch(/duplicate local_id 'shared'/);
+  });
+
+  it("errors when same-domain parts disagree on base_path", () => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-domains-base-"));
+    const catalogPath = join(root, "catalog");
+    mkdirSync(catalogPath, { recursive: true });
+    writeFileSync(join(catalogPath, "dct-data-model-a.yaml"), dctYaml("dup", ["a"]), "utf8");
+    const other = dctYaml("dup", ["b"]).replace("base_path: /docs/dup", "base_path: /docs/other");
+    writeFileSync(join(catalogPath, "dct-data-model-b.yaml"), other, "utf8");
+
+    const result = validateCatalogDomains(catalogPath);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors[0]).toMatch(/base_path mismatch/);
   });
 
   it("passes when every domain is unique", () => {
