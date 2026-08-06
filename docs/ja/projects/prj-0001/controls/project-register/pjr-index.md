@@ -176,6 +176,7 @@ Project Register
 | PJR-0153 | rejected | dct.schema.yaml: done_criteria のデフォルト指定(group/top)を可能にする | done_criteria を local_id 単位だけでなく、group 単位およびトップレベルでデフォルトとして指定できるようにスキーマを拡張する。 | todo | medium | ARC | 2026-08-31 | 2026-08-04 | 既存dctは全件で成果物ごとにdone_criteriaを個別記述しており、group/topレベルの共通デフォルトは設計方針（成果物内容に即した検証可能な条件）と逆行するため見送り。dct-data-flow.yaml側の重複はdone_criteriaの個別化で解消済み | [pjr-0153-dct-schema-yaml-done-criteria-group-top](./pjr-0153-dct-schema-yaml-done-criteria-group-top.md) |
 | PJR-0154 | decided | シビックテックサービスの運用設計（090-operationsドメイン）の対応時期を決定 | 運用設計について、prj-0001での対応方針を決定する | decision | medium | PO | 2026-08-31 | 2026-08-04 | シビックテックサービスの運用設計（090-operations相当）はprj-0001の対象外とし、代表試行（SC-01〜SC-03）確認後の後続プロジェクトで検討する | [pjr-0154-operations-domain-timing](./pjr-0154-operations-domain-timing.md) |
 | PJR-0155 | done | dctカタログの1 domain複数ファイル分割（物理分割）対応 | domain一意制約を緩和し、同一domainの複数dctファイルをbuild時にマージ可能にする | todo | medium | ARC | 2026-08-31 | 2026-08-06 | catalog buildで同一domainの複数dctファイルをファイル名昇順でマージする機能を実装。dct.schema.yaml・dct-rulebook（物理分割の命名/ID規約とテンプレート分割）を更新し、tests/src/catalog-merge.test.ts等を追加。全テスト通過。 | [pjr-0155-dct-domain-multifile](./pjr-0155-dct-domain-multifile.md) |
+| PJR-0156 | open | dctカタログmergeの同名group結合対応 | 同一domainの複数dctファイルで同名groupを1章へ結合し、種別ごと物理分割時の章重複を解消する | todo | medium | _TODO_ | _TODO_ | - | - | [pjr-0156-dct-merge-same-name-group](./pjr-0156-dct-merge-same-name-group.md) |
 
 ## 2. 派生ビュー
 
