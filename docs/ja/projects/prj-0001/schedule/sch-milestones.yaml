@@ -64,3 +64,57 @@ milestones:
       - T-LAUNCH-pm-members-080-I02
       - T-LAUNCH-pm-raci-080-I02
     owner: PM
+  - id: G-DATA-FLOW-retrofit-pass
+    name: retrofit-pass 完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-010
+      - T-DATA-FLOW-cdfd-init-010
+      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-catalog-planning-010
+      - T-DATA-FLOW-cdfd-task-execution-010
+      - T-DATA-FLOW-cdfd-routine-010
+      - T-DATA-FLOW-cdfd-multi-project-010
+      - T-DATA-FLOW-cdfd-agent-config-operation-010
+      - T-DATA-FLOW-cdfd-derived-content-010
+      - T-DATA-FLOW-cdfd-reporting-010
+    owner: PM
+  - id: G-DATA-FLOW-refine-pass
+    name: refine-pass 完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-070
+      - T-DATA-FLOW-cdfd-init-070
+      - T-DATA-FLOW-cdfd-register-operation-070
+      - T-DATA-FLOW-cdfd-catalog-planning-070
+      - T-DATA-FLOW-cdfd-task-execution-070
+      - T-DATA-FLOW-cdfd-routine-070
+      - T-DATA-FLOW-cdfd-multi-project-070
+      - T-DATA-FLOW-cdfd-agent-config-operation-070
+      - T-DATA-FLOW-cdfd-derived-content-070
+      - T-DATA-FLOW-cdfd-reporting-070
+    owner: PM
+  - id: G-DATA-FLOW-review-pass
+    name: review-pass 完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-090
+      - T-DATA-FLOW-cdfd-init-090
+      - T-DATA-FLOW-cdfd-register-operation-090
+      - T-DATA-FLOW-cdfd-catalog-planning-090
+      - T-DATA-FLOW-cdfd-task-execution-090
+      - T-DATA-FLOW-cdfd-routine-090
+      - T-DATA-FLOW-cdfd-multi-project-090
+      - T-DATA-FLOW-cdfd-agent-config-operation-090
+      - T-DATA-FLOW-cdfd-derived-content-090
+      - T-DATA-FLOW-cdfd-reporting-090
+    owner: PM
+  - id: M-DATA-FLOW-data-flow
+    name: ドメイン完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-routine-140
+      - T-DATA-FLOW-cdfd-multi-project-140
+      - T-DATA-FLOW-cdfd-agent-config-operation-140
+      - T-DATA-FLOW-cdfd-reporting-140
+    owner: PM

@@ -8,7 +8,7 @@ track: data-flow
 
 # sch-track-data-flow.yaml を生成するための戦略定義。
 # dct-data-flow.yaml の kind: work の成果物を対象とし、共通の CDFD 実践一式を
-# cdfd-overview の bootstrap で一度だけ整備してから、残りの成果物を作成する。
+# cdfd-overview の bootstrap で一度だけ整備してから、実装エビデンスを各成果物へ反映する。
 # owner はロールのみを持ち、実際の実行者は pm-members.yaml と実行要件から解決する。
 
 settings:
@@ -21,23 +21,38 @@ scope:
   include_kinds:
     - work
 
-# cdfd-overview だけは phase_overrides で bootstrap を使用し、成果物と共通の
-# rulebook / recipe / sample / template を一式整備する。その他の成果物は、
-# cdfd-overview の first-pass 完了後に、整備された実践一式を使って fully-guided で作成する。
+# cdfd-overview だけは bootstrap-pass から開始し、成果物と共通の
+# rulebook / recipe / sample / template を一式整備する。全成果物は DCT の evidence_refs を
+# retrofit-pass で調査・反映し、横断的な重複整理後に fully-guided で磨き込む。
 phase_sets:
-  first-pass:
-    - id: draft
-      name: 初期整備・草案作成
+  bootstrap-pass:
+    - id: bootstrap
+      name: 代表成果物・実践一式の初期整備
       execution: agent
       mode: edit
-      approach: fully-guided
+      approach: bootstrap
+      proficiency: expert
+      task_suffix: "005"
+      duration_days: 0.5
+      description: |
+        cdfd-overview と共通の rulebook / recipe / sample / template を同じタスクで初期整備し、
+        構造・用語・粒度が互いに矛盾しない実践一式として揃える。成果物カタログの done_criteria と
+        プロジェクト文脈を基準にし、実装エビデンスの詳細な反映は後続の retrofit-pass に委ねる。
+
+  retrofit-pass:
+    - id: retrofit
+      name: 実装調査・草案反映
+      execution: agent
+      mode: edit
+      approach: retrofit
       proficiency: normal
       task_suffix: "010"
       duration_days: 0.5
       description: |
-        cdfd-overview は bootstrap により、成果物と共通の rulebook / recipe / sample / template を
-        一式として評価・作成・整備する。その他の成果物は、先行成果物と整備済みの実践一式を参照し、
-        rulebook の必須要素・禁止事項および成果物カタログの done_criteria に沿って草案を作成する。
+        DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+        意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+        反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+        将来方針は推測せず、必要に応じて確認事項として残す。
         プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
         データストア、正常経路と必要な例外経路を概念レベルで記述する。
 
@@ -61,14 +76,15 @@ phase_sets:
       name: 完成版レビュー
       execution: agent
       mode: review
-      approach: fully-guided
+      approach: retrofit
       proficiency: normal
       task_suffix: "090"
       duration_days: 0.25
       description: |
-        完成版の CDFD を変更せず、成果物カタログの done_criteria、rulebook、先行・隣接 CDFD、
-        プロジェクト文脈との整合を多観点でレビューする。表と図の対応、領域間の重複・欠落、
-        正常系・例外系、担当と入出力の追跡性を確認し、判定と根拠を review result に記録する。
+        完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+        プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+        領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+        未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
 
   finalize-pass:
     - id: finalize
@@ -84,21 +100,24 @@ phase_sets:
         rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
 
 default_phase_sets:
-  - phase_set: first-pass
+  - phase_set: retrofit-pass
   - phase_set: refine-pass
   - phase_set: review-pass
   - phase_set: finalize-pass
 
 # CDFD は業務のプロセス・情報・イベントの流れを定義するため、主たる実作業責任は BA とする。
-# cdfd-overview のみ、共通の実践一式を重複なく初期整備・確定するため approach を上書きする。
+# cdfd-overview のみ bootstrap-pass を先行させ、共通の実践一式も確定対象に含める。
 owner_rules:
   - local_ids:
       - cdfd-overview
     owner: BA
+    phase_sets:
+      - phase_set: bootstrap-pass
+      - phase_set: retrofit-pass
+      - phase_set: refine-pass
+      - phase_set: review-pass
+      - phase_set: finalize-pass
     phase_overrides:
-      - phase: draft
-        approach: bootstrap
-        proficiency: expert
       - phase: finalize
         approach: bootstrap-finalize
 
@@ -114,7 +133,7 @@ owner_rules:
       - cdfd-reporting
     owner: BA
 
-# first-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
+# retrofit-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
 # 重複記述を正本選択・要約・参照へ整理してから、成果物別の磨き込みへ進む。
 cross_deliverable_passes:
   - id: data-flow-dedup
@@ -122,7 +141,7 @@ cross_deliverable_passes:
     task_suffix: "060"
     duration_days: 0.5
     owner: ARC
-    after_gate: G-DATA-FLOW-first-pass
+    after_gate: G-DATA-FLOW-retrofit-pass
     before_phase_set: refine-pass
     execution: agent
     mode: edit
@@ -137,10 +156,10 @@ cross_deliverable_passes:
         - prj-0001:dct-data-flow
 
 phase_gates:
-  - id: G-DATA-FLOW-first-pass
-    name: first-pass 完了
+  - id: G-DATA-FLOW-retrofit-pass
+    name: retrofit-pass 完了
     artifact_name: データフロー
-    after_phase_sets: [first-pass]
+    after_phase_sets: [retrofit-pass]
     owner: PM
     scope:
       catalogs:

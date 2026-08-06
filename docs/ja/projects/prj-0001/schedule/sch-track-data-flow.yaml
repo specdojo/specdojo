@@ -1,0 +1,665 @@
+kind: track
+id: prj-0001:sch-track-data-flow
+type: project
+status: ready
+title: スケジュールトラック（data-flow）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: data-flow
+settings:
+  start_date: "2026-08-06"
+tasks:
+  - local_id: cdfd-overview
+    phase_suffix: "005"
+    phase_set: bootstrap-pass
+    phase_id: bootstrap
+    name: 代表成果物・実践一式の初期整備
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: |
+      cdfd-overview と共通の rulebook / recipe / sample / template を同じタスクで初期整備し、
+      構造・用語・粒度が互いに矛盾しない実践一式として揃える。成果物カタログの done_criteria と
+      プロジェクト文脈を基準にし、実装エビデンスの詳細な反映は後続の retrofit-pass に委ねる。
+  - local_id: cdfd-overview
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-005
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-overview
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-overview
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-overview
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-init
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-init
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-init
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-init
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-register-operation
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-register-operation
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-register-operation
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-register-operation
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-catalog-planning
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-catalog-planning
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-catalog-planning-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-catalog-planning
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-catalog-planning-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-catalog-planning
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-catalog-planning-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-task-execution
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-catalog-planning-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-task-execution
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-task-execution-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-task-execution
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-task-execution-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-task-execution
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-task-execution-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-routine
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-task-execution-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-routine
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-routine-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-routine
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-routine-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-routine
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-routine-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-multi-project
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-multi-project
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-multi-project-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-multi-project
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-multi-project-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-multi-project
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-multi-project-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-agent-config-operation
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-task-execution-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-agent-config-operation
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-agent-config-operation-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-agent-config-operation
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-agent-config-operation-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-agent-config-operation
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-agent-config-operation-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-derived-content
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-catalog-planning-010
+      - T-DATA-FLOW-cdfd-task-execution-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-derived-content
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-derived-content-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-derived-content
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-derived-content-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-derived-content
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-derived-content-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-reporting
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-task-execution-010
+      - T-DATA-FLOW-cdfd-derived-content-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-reporting
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-reporting-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+      表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+      depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+      成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-reporting
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-reporting-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
+      領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
+      未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-reporting
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-reporting-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+      rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - id: T-DATA-FLOW-data-flow-dedup-060
+    target_local_ids:
+      - cdfd-overview
+      - cdfd-init
+      - cdfd-register-operation
+      - cdfd-catalog-planning
+      - cdfd-task-execution
+      - cdfd-routine
+      - cdfd-multi-project
+      - cdfd-agent-config-operation
+      - cdfd-derived-content
+      - cdfd-reporting
+    phase_suffix: "060"
+    phase_set: cross-deliverable-pass
+    phase_id: data-flow-dedup
+    name: CDFD間の正本選択・重複整理
+    duration_days: 0.5
+    depends_on:
+      - G-DATA-FLOW-retrofit-pass
+    owner: ARC
+    tags:
+      - cross-deliverable
+    description: |
+      全 CDFD を横断し、同じプロセス・状態遷移・入力・出力・データストアの説明が
+      複数文書へ重複していないか確認する。各情報の正本を選び、他の文書は必要な要約と参照へ整理する。
+      各 CDFD の固有責務と done_criteria は維持し、領域間の受け渡しと用語を統一する。
