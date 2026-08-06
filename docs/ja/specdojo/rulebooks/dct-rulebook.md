@@ -56,6 +56,7 @@ flowchart LR
 
 - ファイル名は `dct-<domain>.yaml` とする（例: `dct-project-definition.yaml`、`dct-project-management.yaml`）。
 - `<domain>` は `domain` キーの値と一致させる。
+- 1 ドメインを複数ファイルに物理分割する場合は `dct-<domain>-<part>.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-sales.yaml`・`dct-data-model-buy.yaml` はいずれも `domain: data-model`）。分割の判断基準は `物理分割（1 ドメイン複数ファイル）` を参照する。
 - テンプレートは `dct-<domain>-template.yaml` とし、`type: template` で記述する。
 
 ### 3.2. ID・識別子規約
@@ -189,6 +190,15 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 対象業務が単一で、成果物を業務の局面・処理内容ごとに複数項目へ分割する場合はパターンB（単一領域・複数項目）を用いる。このときは `_TERM_` を使わず、項目ごとに固定の `local_id` と `done_criteria` を個別に記載する。
 - どちらのパターンでも `groups[]` と `deliverables[]` の項目数に上限はない。テンプレートの1件は書式サンプルであり、実際に必要な数だけ記載する。
 - パターンBの実例は `prj-0001:dct-data-flow`（`domain: data-flow`。単一業務（SpecDojo運用）を、初期化・課題整理・タスク実行・例外対応・定期実行など複数のデータフロー（`cdfd`）に分割している）を参照する。
+
+### 6.9. 物理分割（1 ドメイン複数ファイル）
+
+- 反復要素が多く単一ファイルが肥大化するドメイン（例: `data-model` を業務領域ごとに複製）は、論理ドメインを保ったまま複数ファイルへ物理分割してよい。
+- 分割ファイルは `dct-<domain>-<part>.yaml` とし、すべて同一の `domain` キーを持たせる。`catalog build` は同一 `domain` のファイルをファイル名の昇順でマージし、`dct-<domain>.md` を 1 つ生成する。
+- マージ順序はファイル名の昇順で決定的に定まる。章（`groups`）の並びを制御したい場合は `<part>` の命名で順序を表現する。
+- 同一 `domain` の各ファイルは `project_id` と `base_path` を一致させる。`base_path` はマージ後の配置先解決の起点となるため、部分ファイルごとに変えない。
+- `local_id` はプロジェクト内で一意という制約を維持する。同一ドメインの分割ファイル間で `local_id` が重複するとマージがエラーになる。
+- ドキュメントの `id`・`title` 等のメタ情報は、マージ後カタログではファイル名昇順で先頭となるファイルの値を採用する。分割してもメタ情報が一貫するよう記載する。
 
 ## 7. 禁止事項
 

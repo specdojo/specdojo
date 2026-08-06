@@ -62,7 +62,12 @@ properties:
   domain:
     type: string
     pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
-    description: "Domain identifier matching the file name dct-<domain>.yaml."
+    description: >
+      Logical domain identifier. A domain may live in a single dct-<domain>.yaml or be
+      split across several dct-<domain>-<part>.yaml files that all declare this same
+      domain; catalog build merges same-domain files (in sorted file order) into one
+      dct-<domain>.md. Same-domain parts must agree on project_id and base_path and
+      keep local_id project-wide unique.
 
   base_path:
     type: string

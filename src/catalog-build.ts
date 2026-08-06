@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { join } from "node:path";
 import yaml from "js-yaml";
 import type {
   DctDeliverableItem,
@@ -208,11 +208,29 @@ export function collectCatalogLocalIds(catalogPath: string): Set<string> {
   return ids;
 }
 
-// Cross-file check: each `domain` must be unique across the project's catalogs
-// (catalog build output is keyed by domain).
-export function validateCatalogDomains(catalogPath: string): DctValidationResult {
-  const errors: string[] = [];
-  const seen = new Map<string, string>();
+// A parsed dct-*.yaml with its source file identity, used to merge multiple
+// physical files that share one logical `domain` into a single domain catalog.
+export type LoadedDctDoc = {
+  file: string; // bare file name (e.g. dct-data-model-sales.yaml)
+  filePath: string; // catalog-relative or absolute path used in messages
+  doc: DctDoc;
+};
+
+// A domain catalog produced by merging one or more dct-*.yaml parts that share the
+// same `domain`. `doc` carries the primary part's metadata with all parts' groups
+// concatenated in file order. `errors` collects merge-blocking inconsistencies.
+export type MergedDomainCatalog = {
+  domain: string;
+  doc: DctDoc;
+  files: string[]; // source file names in merge order
+  errors: string[];
+};
+
+// Reads and parses every dct-*.yaml in a catalog directory in sorted file order.
+// Files that fail to parse or have no groups are skipped (structural validation
+// and parse-error reporting are handled by the caller / validateDctDoc).
+export function loadCatalogDocs(catalogPath: string): LoadedDctDoc[] {
+  const loaded: LoadedDctDoc[] = [];
   const files = readdirSync(catalogPath)
     .filter((f) => /^dct-.+\.yaml$/.test(f))
     .sort();
@@ -224,15 +242,108 @@ export function validateCatalogDomains(catalogPath: string): DctValidationResult
     } catch {
       continue;
     }
-    const domain = doc?.domain;
-    if (!domain) continue;
-    const prev = seen.get(domain);
-    if (prev) {
-      errors.push(`duplicate domain '${domain}': ${prev} and ${filePath}`);
-    } else {
-      seen.set(domain, filePath);
+    if (!doc || !Array.isArray(doc.groups)) continue;
+    loaded.push({ file: f, filePath, doc });
+  }
+  return loaded;
+}
+
+// Collect (local_id -> first-seen file) across a section tree, appending an error
+// for any local_id that first appears in a different file (cross-file duplicate).
+function collectMergedLocalIds(
+  sections: DctSection[],
+  filePath: string,
+  domain: string,
+  seen: Map<string, string>,
+  reported: Set<string>,
+  errors: string[],
+): void {
+  for (const section of sections) {
+    for (const item of section.deliverables ?? []) {
+      const prev = seen.get(item.local_id);
+      if (prev === undefined) {
+        seen.set(item.local_id, filePath);
+      } else if (prev !== filePath && !reported.has(item.local_id)) {
+        reported.add(item.local_id);
+        errors.push(
+          `domain '${domain}': duplicate local_id '${item.local_id}' across merged files: ${prev}, ${filePath}`,
+        );
+      }
+    }
+    if (section.groups) {
+      collectMergedLocalIds(section.groups, filePath, domain, seen, reported, errors);
     }
   }
+}
+
+// Groups loaded dct docs by their logical `domain` and merges each group's parts
+// into a single domain catalog. Merge order is the sorted file order captured by
+// loadCatalogDocs, so the result is deterministic and file-listing-order agnostic.
+//
+// Parts of one domain must agree on `project_id` and `base_path` (both anchor how
+// the merged groups resolve), and their `local_id`s must stay unique across parts;
+// violations are reported as per-domain errors instead of silently merging.
+export function mergeDomainCatalogs(loaded: LoadedDctDoc[]): MergedDomainCatalog[] {
+  const order: string[] = [];
+  const groups = new Map<string, LoadedDctDoc[]>();
+  for (const entry of loaded) {
+    const domain = entry.doc.domain;
+    if (!domain) continue;
+    const existing = groups.get(domain);
+    if (existing) {
+      existing.push(entry);
+    } else {
+      groups.set(domain, [entry]);
+      order.push(domain);
+    }
+  }
+
+  const merged: MergedDomainCatalog[] = [];
+  for (const domain of order) {
+    const parts = groups.get(domain);
+    if (!parts || parts.length === 0) continue;
+    const primary = parts[0];
+    const errors: string[] = [];
+
+    for (const part of parts.slice(1)) {
+      if (part.doc.project_id !== primary.doc.project_id) {
+        errors.push(
+          `domain '${domain}': project_id mismatch between ${primary.filePath} (${primary.doc.project_id}) and ${part.filePath} (${part.doc.project_id})`,
+        );
+      }
+      const primaryBase = primary.doc.base_path ?? "";
+      const partBase = part.doc.base_path ?? "";
+      if (partBase !== primaryBase) {
+        errors.push(
+          `domain '${domain}': base_path mismatch between ${primary.filePath} (${primaryBase || "-"}) and ${part.filePath} (${partBase || "-"}); parts of one domain must share base_path`,
+        );
+      }
+    }
+
+    const mergedGroups: DctSection[] = [];
+    const seen = new Map<string, string>();
+    const reported = new Set<string>();
+    for (const part of parts) {
+      mergedGroups.push(...part.doc.groups);
+      collectMergedLocalIds(part.doc.groups, part.filePath, domain, seen, reported, errors);
+    }
+
+    merged.push({
+      domain,
+      doc: { ...primary.doc, groups: mergedGroups },
+      files: parts.map((p) => p.file),
+      errors,
+    });
+  }
+  return merged;
+}
+
+// Cross-file check: multiple dct-*.yaml may share a `domain` (physical split of one
+// logical domain); build merges them into a single domain catalog. This validates
+// that same-domain parts are mergeable — consistent project_id / base_path and
+// project-wide-unique local_ids — rather than forbidding the shared domain outright.
+export function validateCatalogDomains(catalogPath: string): DctValidationResult {
+  const errors = mergeDomainCatalogs(loadCatalogDocs(catalogPath)).flatMap((m) => m.errors);
   return { ok: errors.length === 0, errors, warnings: [] };
 }
 
@@ -631,23 +742,43 @@ export function buildCatalog(catalogPath: string): { generated: string[]; errors
 
   const knownLocalIds = collectCatalogLocalIds(catalogPath);
 
+  // Per-file structural validation first. Files that pass become merge inputs;
+  // a domain with any invalid part is skipped so we never emit a partial catalog.
+  const loaded: LoadedDctDoc[] = [];
+  const invalidDomains = new Set<string>();
   for (const f of files) {
     const filePath = join(catalogPath, f);
+    let doc: DctDoc;
     try {
-      const raw = readFileSync(filePath, "utf8");
-      const doc = yaml.load(raw) as DctDoc;
-      const validation = validateDctDoc(doc, filePath, knownLocalIds);
-      if (!validation.ok) {
-        errors.push(...validation.errors);
-        continue;
-      }
-      const md = buildMarkdown(doc);
-      const outName = basename(f, ".yaml") + ".md";
-      const outPath = join(outputDir, outName);
+      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+    } catch (err) {
+      errors.push(`${filePath}: ${err instanceof Error ? err.message : String(err)}`);
+      continue;
+    }
+    const validation = validateDctDoc(doc, filePath, knownLocalIds);
+    if (!validation.ok) {
+      errors.push(...validation.errors);
+      if (doc?.domain) invalidDomains.add(doc.domain);
+      continue;
+    }
+    loaded.push({ file: f, filePath, doc });
+  }
+
+  // Merge same-domain parts into one domain catalog, keyed and named by `domain`
+  // so a single file (dct-<domain>.yaml) keeps its previous dct-<domain>.md output.
+  for (const catalog of mergeDomainCatalogs(loaded)) {
+    if (invalidDomains.has(catalog.domain)) continue;
+    if (catalog.errors.length > 0) {
+      errors.push(...catalog.errors);
+      continue;
+    }
+    try {
+      const md = buildMarkdown(catalog.doc);
+      const outPath = join(outputDir, `dct-${catalog.domain}.md`);
       writeFileSync(outPath, md, "utf8");
       generated.push(outPath);
     } catch (err) {
-      errors.push(`${filePath}: ${err instanceof Error ? err.message : String(err)}`);
+      errors.push(`dct-${catalog.domain}: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
