@@ -38,24 +38,37 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 
 ## 1. 標準トラック構成
 
-| id                       | トラック               | 概要                                                       |
-| ------------------------ | ---------------------- | ---------------------------------------------------------- |
-| launch                   | 立ち上げトラック       | プロジェクトの目的、範囲、前提および推進体制を定義する     |
-| business-specs           | 業務仕様トラック       | プロダクトの業務仕様を定義する                             |
-| current-state            | 現状把握トラック       | 現行の業務・システム・運用と、その課題・制約を明らかにする |
-| external-interface-specs | 外部I/F仕様トラック    | 外部システムとのインターフェース契約を定義する             |
-| impact-analysis          | 影響調査トラック       | 導入・変更が業務・システム・運用へ与える影響を明らかにする |
-| architecture             | アーキテクチャトラック | プロダクト全体の構造、実行基盤および技術選定を定義する     |
-| system-design            | システム設計トラック   | 実装の構造、重要フローおよび横断方針を設計する             |
-| quality-specs            | 品質仕様トラック       | 品質基準、受入条件および検証方法を定義する                 |
-| migration-planning       | 移行計画トラック       | データ移行、切替、リハーサルおよび運用移管を計画する       |
-| operations-design        | 運用設計トラック       | 恒常運用の方針、体制および手順を設計する                   |
-| implementation           | 実装トラック           | 仕様・設計に基づき、業務・システムを実装する               |
-| testing                  | テストトラック         | 要件・仕様・設計への適合性を検証する                       |
-| migration                | 移行トラック           | 移行計画に基づき、本番環境へ移行する                       |
-| operations               | 運用トラック           | 業務・システムを運用し、継続的に改善する                   |
+| id                       | トラック               | 概要                                                                     |
+| ------------------------ | ---------------------- | ------------------------------------------------------------------------ |
+| launch                   | 立ち上げトラック       | プロジェクトの目的、範囲、前提および推進体制を定義する                   |
+| business-specs           | 業務仕様カテゴリ       | プロダクトの業務仕様を定義する。ドメイン別トラックに分割する             |
+| current-state            | 現状把握トラック       | 現行の業務・システム・運用と、その課題・制約を明らかにする               |
+| external-interface-specs | 外部I/F仕様トラック    | 外部システムとのインターフェース契約を定義する                           |
+| impact-analysis          | 影響調査トラック       | 導入・変更が業務・システム・運用へ与える影響を明らかにする               |
+| architecture             | アーキテクチャトラック | プロダクト全体の構造、実行基盤および技術選定を定義する                   |
+| system-design            | システム設計トラック   | 実装の構造、重要フローおよび横断方針を設計する                           |
+| quality-specs            | 品質仕様カテゴリ       | 品質基準、受入条件および検証方法を定義する。ドメイン別トラックに分割する |
+| migration-planning       | 移行計画トラック       | データ移行、切替、リハーサルおよび運用移管を計画する                     |
+| operations-design        | 運用設計トラック       | 恒常運用の方針、体制および手順を設計する                                 |
+| implementation           | 実装トラック           | 仕様・設計に基づき、業務・システムを実装する                             |
+| testing                  | テストトラック         | 要件・仕様・設計への適合性を検証する                                     |
+| migration                | 移行トラック           | 移行計画に基づき、本番環境へ移行する                                     |
+| operations               | 運用トラック           | 業務・システムを運用し、継続的に改善する                                 |
 
 プロダクトドキュメントは常に「現在の正」を表すため、標準トラックIDには `to-be` を付けません。変更前の状態だけはプロジェクト固有の比較基準として `current-state` で扱います。また、`specifications` はパスと機械識別子では `specs` と表記します。
+
+`business-specs` と `quality-specs` は、扱うドメインが多く、ドメインごとに作成ワークフローと完了判断が異なるため、単一トラックではなく**カテゴリ**として扱い、スケジュール上の実体は**ドメイン別トラック**として管理します。
+
+### 1.1. 業務仕様・品質仕様のドメイン別トラック
+
+トラックとスケジュール戦略（`sch-strategy-<track>.yaml`）は 1 対 1 で対応します。したがってドメイン別トラックにすることで、ドメイン固有のフェーズ構成・ゲート・横断整理（`cross_deliverable_passes`）を個別に定義できます。各ドメイン別トラックの `track` id はドメイン名と一致させます。
+
+| カテゴリ         | ドメイン別トラック id                                                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| `business-specs` | `data-flow`、`data-model`、`business-model`、`user-interface-model`、`system-functions`、`glossary`       |
+| `quality-specs`  | `business-acceptance-criteria`、`non-functional-requirements`、`system-acceptance-criteria`、`test-specs` |
+
+カテゴリ内の全ドメインを必ず個別トラックにする必要はありません。規模が小さく作成ワークフローが共通なドメインは 1 トラックへまとめてもよく、分割の判断基準は `ドメインの切り方` を参照します。以降の各表では、`business-specs` と `quality-specs` はカテゴリ（その配下のドメイン別トラック全体）を指す略記として用います。
 
 ## 2. トラックとドメイン・成果物カテゴリの関係
 
@@ -77,22 +90,30 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 
 各トラックが対象とするドメインと成果物カテゴリの標準的な組み合わせは次のとおりです。成果物カテゴリは [成果物リファレンス](../references/deliverables-reference.md) の章タイトルに対応します。ドメイン名は例であり、実際の切り方はプロジェクトごとに決めます。
 
-| id                       | 想定ドメインの例                                                                                          | 主に扱う成果物カテゴリ                                       | 関与の仕方 |
-| ------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------- |
-| launch                   | `project-definition`、`project-management`                                                                | 立ち上げ、プロジェクト定義、プロジェクトマネジメント         | 定義する   |
-| business-specs           | `data-flow`、`data-model`、`business-model`、`user-interface-model`、`system-functions`、`glossary`       | 業務仕様                                                     | 定義する   |
-| current-state            | `current-state`                                                                                           | 現状定義（必要なプロダクト成果物カテゴリのスナップショット） | 定義する   |
-| external-interface-specs | `external-interface-specs`                                                                                | 外部I/F仕様                                                  | 定義する   |
-| impact-analysis          | `impact-analysis`                                                                                         | 影響調査                                                     | 定義する   |
-| architecture             | `architecture`                                                                                            | アーキテクチャ                                               | 定義する   |
-| system-design            | `system-design`                                                                                           | システム設計                                                 | 定義する   |
-| quality-specs            | `business-acceptance-criteria`、`non-functional-requirements`、`system-acceptance-criteria`、`test-specs` | 業務受入条件、非機能要件、システム受入条件、テスト仕様       | 定義する   |
-| migration-planning       | `migration-planning`                                                                                      | 移行                                                         | 定義する   |
-| operations-design        | `operations`                                                                                              | 運用                                                         | 定義する   |
-| implementation           | `system-design`                                                                                           | システム設計（SSOTである定義ファイル・コードへの導線）       | 実施する   |
-| testing                  | `test-specs`                                                                                              | テスト                                                       | 実施する   |
-| migration                | `migration-planning`                                                                                      | 移行                                                         | 実施する   |
-| operations               | `operations`                                                                                              | 運用                                                         | 実施する   |
+| id                           | 想定ドメインの例                           | 主に扱う成果物カテゴリ                                       | 関与の仕方 |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------------------ | ---------- |
+| launch                       | `project-definition`、`project-management` | 立ち上げ、プロジェクト定義、プロジェクトマネジメント         | 定義する   |
+| data-flow                    | `data-flow`                                | 業務仕様（データフロー）                                     | 定義する   |
+| data-model                   | `data-model`                               | 業務仕様（データモデル）                                     | 定義する   |
+| business-model               | `business-model`                           | 業務仕様（業務モデル）                                       | 定義する   |
+| user-interface-model         | `user-interface-model`                     | 業務仕様（UIモデル）                                         | 定義する   |
+| system-functions             | `system-functions`                         | 業務仕様（システム機能）                                     | 定義する   |
+| glossary                     | `glossary`                                 | 業務仕様（用語集）                                           | 定義する   |
+| current-state                | `current-state`                            | 現状定義（必要なプロダクト成果物カテゴリのスナップショット） | 定義する   |
+| external-interface-specs     | `external-interface-specs`                 | 外部I/F仕様                                                  | 定義する   |
+| impact-analysis              | `impact-analysis`                          | 影響調査                                                     | 定義する   |
+| architecture                 | `architecture`                             | アーキテクチャ                                               | 定義する   |
+| system-design                | `system-design`                            | システム設計                                                 | 定義する   |
+| business-acceptance-criteria | `business-acceptance-criteria`             | 業務受入条件                                                 | 定義する   |
+| non-functional-requirements  | `non-functional-requirements`              | 非機能要件                                                   | 定義する   |
+| system-acceptance-criteria   | `system-acceptance-criteria`               | システム受入条件                                             | 定義する   |
+| test-specs                   | `test-specs`                               | テスト仕様                                                   | 定義する   |
+| migration-planning           | `migration-planning`                       | 移行                                                         | 定義する   |
+| operations-design            | `operations`                               | 運用                                                         | 定義する   |
+| implementation               | `system-design`                            | システム設計（SSOTである定義ファイル・コードへの導線）       | 実施する   |
+| testing                      | `test-specs`                               | テスト                                                       | 実施する   |
+| migration                    | `migration-planning`                       | 移行                                                         | 実施する   |
+| operations                   | `operations`                               | 運用                                                         | 実施する   |
 
 `関与の仕方` は、そのトラックが成果物を書き起こすのか、既存の成果物に従って作業するのかを表します。`定義する` トラックは成果物そのものが主な産物になります。`実施する` トラックは、対応する `定義する` トラックの成果物を入力として実行し、実行記録や更新結果を残します。テストは `quality-specs` で観点・条件を定義して `testing` で実施する、移行は `migration-planning` で計画して `migration` で実行する、というように対になります。
 
@@ -103,7 +124,8 @@ SpecDojoでは、関連する成果物の作成・更新と、それらを生み
 同じ成果物カテゴリが複数のトラックに現れるため、ドメインとトラックは1対1にはなりません。切り分けでは次を目安にします。
 
 - 1つのトラックが複数のドメインを対象にしてよい。`sch-strategy-<track>.yaml` の `scope.catalogs` には複数の成果物カタログを指定できます。
-- 1つのドメインを複数のトラックが参照してよい。例えば業務仕様のドメインは `business-specs` で作成し、`implementation` や `testing` では入力として参照します。
+- ドメインごとに作成ワークフロー・ゲート・完了判断が異なる、または規模が大きい場合は、カテゴリを複数のドメイン別トラックに分割する。トラックとスケジュール戦略（`sch-strategy-<track>.yaml`）は 1 対 1 のため、ドメイン別トラックにするとドメイン固有のフェーズ構成・横断整理を個別に定義できます（`業務仕様・品質仕様のドメイン別トラック` を参照）。
+- 1つのドメインを複数のトラックが参照してよい。例えば業務仕様の各ドメイン別トラックで作成した成果物は、`implementation` や `testing` では入力として参照します。
 - 現状とプロダクトの現在の正で同じ成果物種別を扱う場合は、`current-state` と `product` の配置ディレクトリで区別し、同一カタログに混在させないようにします。
 - ドメインは成果物カタログの管理単位なので、担当者と完了判断がまとまる粒度で切ると、Schedule への展開が素直になります。
 
