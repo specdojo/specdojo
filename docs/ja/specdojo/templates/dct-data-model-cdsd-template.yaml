@@ -1,0 +1,39 @@
+# Template: data model deliverables catalog (conceptual data store definition)
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+#
+# This is the cdsd physical part of the data-model domain. Catalog build merges
+# all dct-data-model-*-template parts by same-name group in sorted file order.
+#
+# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
+# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+id: specdojo:dct-data-model-cdsd-template
+type: template
+status: draft
+title: 成果物カタログ（データモデル／概念データストア定義）
+rulebook: specdojo:dct-rulebook
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+groups:
+  - name: 業務データ辞書
+    deliverables:
+      - local_id: cdsd-_TERM_
+        min_size: medium
+        name: 概念データストア定義
+        kind: work
+        depends_on: []
+        overview: 概念データストア（情報の保管場所）を一覧で定義する
+        path: cdsd-_TERM_.md
+        rulebook: specdojo:cdsd-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

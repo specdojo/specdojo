@@ -26,22 +26,25 @@ PJR-0155 で実装した dct カタログの物理分割マージ（`mergeDomain
 
 ## 3. 作業内容
 
-| No  | 作業                                                                           | 担当   | 状態 | メモ                                           |
-| --- | ------------------------------------------------------------------------------ | ------ | ---- | ---------------------------------------------- |
-| 1   | 同名 group 結合のマージ規則を設計（結合キー・順序・入れ子・base_path 継承）    | _TODO_ | open | 分割軸は種別ごとで確定                         |
-| 2   | `mergeDomainCatalogs` を同名 group 結合へ拡張                                  | _TODO_ | open | `src/catalog-build.ts`。連結から名前キー結合へ |
-| 3   | テスト追加（同名結合・順序・入れ子・別名非結合・無名維持・重複検出・後方互換） | _TODO_ | open | `tests/src/catalog-merge.test.ts`              |
-| 4   | rulebook 3.1/3.2 の分割例・命名を種別分割に合わせて追記                        | _TODO_ | open | `specdojo:dct-rulebook`                        |
-| 5   | data-model テンプレートを種別ごと（bdd/cdsd/sld/stsd/cld/ccd/cstd）へ再分割    | _TODO_ | open | 各ファイルは該当種別のみ・group 名を維持       |
-| 6   | 検証（`npm run build` / `lint:ts` / `lint:md` / `validate:catalog`）           | _TODO_ | open | -                                              |
+| No  | 作業                                                                           | 担当 | 状態 | メモ                                                |
+| --- | ------------------------------------------------------------------------------ | ---- | ---- | --------------------------------------------------- |
+| 1   | 同名 group 結合のマージ規則を設計（結合キー・順序・入れ子・base_path 継承）    | ARC  | done | 同一階層の `name` 完全一致。先頭 group の属性を継承 |
+| 2   | `mergeDomainCatalogs` を同名 group 結合へ拡張                                  | ARC  | done | 再帰結合を実装。無名・単一ファイル構造は維持        |
+| 3   | テスト追加（同名結合・順序・入れ子・別名非結合・無名維持・重複検出・後方互換） | ARC  | done | `tests/src/catalog-merge.test.ts` に追加            |
+| 4   | rulebook 3.1/3.2 の分割例・命名を種別分割に合わせて追記                        | ARC  | done | 種別接頭辞と同名 group 結合規則を追記               |
+| 5   | data-model テンプレートを種別ごと（bdd/cdsd/sld/stsd/cld/ccd/cstd）へ再分割    | ARC  | done | 7ファイルへ分割し既存の成果物定義を維持             |
+| 6   | 検証（`npm run build` / `lint:ts` / `lint:md` / `validate:catalog`）           | ARC  | done | 対象検査成功。全体テストの環境制約は対応結果に記録  |
 
 ## 4. 対応結果
 
--
+- `mergeDomainCatalogs` は、ファイル名昇順で同一 domain の各パートを処理し、同一階層で `name` が完全一致する group を最初の章へ結合する。最初の group の章位置・`base_path`・`note`・`min_size` を維持し、後続の `deliverables` をファイル順・定義順で追記する。子 `groups` にも同じ規則を再帰適用する。
+- 名前が異なる group と無名 group は結合せず、単一ファイル内の group 構造も変更しない。既存の domain 単位 `project_id` / `base_path` 整合検証とファイル横断 `local_id` 重複検出を維持した。
+- data-model テンプレートを `bdd` / `cdsd` / `sld` / `stsd` / `cld` / `ccd` / `cstd` の7種別へ再分割した。scaffold と build を通した回帰テストで、5ファイルの `業務データ辞書` が1章、2ファイルの `概念モデル` が1章になることを確認した。
+- `npm run build`、`npm run lint:ts`、`npm run lint:md`、data-model テンプレート7件の schema 検証、`catalog validate --project prj-0001`、対象テスト73件が成功した。全体テストは807件中784件が成功し、残る23件はサンドボックスがテスト内の子プロセス起動を `EPERM` で拒否する既知の実行環境制約により失敗した。変更対象のテスト失敗はない。
 
 ## 5. 関連ドキュメント
 
-- [[specdojo:dct-rulebook]]
+- [[specdojo:dct-rulebook|成果物カタログ（ドメイン別）作成ルール]]
 - `src/catalog-build.ts`
 - `tests/src/catalog-merge.test.ts`
 - `docs/ja/projects/prj-0001/controls/project-register/pjr-0155-dct-domain-multifile.md`
