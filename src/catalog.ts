@@ -134,13 +134,14 @@ export function registerCatalogCommands(program: Command): void {
       }
 
       const knownLocalIds = collectCatalogLocalIds(catalogPath);
+      const repoRoot = specdojoRootDir();
       let allOk = true;
       for (const f of files) {
         const filePath = `${catalogPath}/${f}`;
         try {
           const raw = readFileSync(filePath, "utf8");
           const doc = yaml.load(raw) as DctDoc;
-          const result = validateDctDoc(doc, filePath, knownLocalIds);
+          const result = validateDctDoc(doc, filePath, knownLocalIds, repoRoot);
           for (const err of result.errors) {
             process.stdout.write(`ERROR: ${err}\n`);
           }
@@ -163,7 +164,6 @@ export function registerCatalogCommands(program: Command): void {
       // Cross-check: same-project based_on must be within the depends_on closure.
       // Build a fresh document-id universe so resolve-or-error does not depend on
       // a possibly-stale .specdojo/doc-index.json.
-      const repoRoot = specdojoRootDir();
       const knownIds = new Set(
         Object.keys(collectDocIndexEntries(resolve(repoRoot, "docs"), repoRoot)),
       );

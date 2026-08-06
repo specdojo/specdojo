@@ -462,12 +462,25 @@ export function validateDctDoc(
   doc: DctDoc,
   filePath: string,
   knownLocalIds?: Set<string>,
+  repoRoot?: string,
 ): DctValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
   const localIdPattern = /^[a-z0-9][a-z0-9-]*$/;
   const instanceIdPattern =
     /^(?=.*\{[a-z][a-z0-9-]*\})[a-z0-9]+(?:-(?:[a-z0-9]+|\{[a-z][a-z0-9-]*\}))*$/;
+  const overlyBroadEvidencePaths = new Set([
+    "src",
+    "tools",
+    "docs",
+    "tests",
+    "templates",
+    "public",
+    ".github",
+    ".agents",
+    ".codex",
+    ".specdojo",
+  ]);
 
   if (!doc.id) errors.push(`${filePath}: missing required field: id`);
   if (doc.type !== "project") errors.push(`${filePath}: type must be 'project', got: ${doc.type}`);
@@ -506,6 +519,65 @@ export function validateDctDoc(
             if (!item.path) errors.push(`${filePath}: ${item.local_id}: kind:work requires path`);
             if (!item.done_criteria || item.done_criteria.length === 0) {
               errors.push(`${filePath}: ${item.local_id}: kind:work requires done_criteria`);
+            }
+          }
+          if (item.evidence_refs !== undefined) {
+            if (!Array.isArray(item.evidence_refs) || item.evidence_refs.length === 0) {
+              errors.push(`${filePath}: ${item.local_id}: evidence_refs must be a non-empty array`);
+            } else {
+              const evidencePaths = new Set<string>();
+              for (const rawRef of item.evidence_refs as unknown[]) {
+                if (!isRecord(rawRef)) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs entries must be objects`,
+                  );
+                  continue;
+                }
+                if (rawRef.kind !== "implementation") {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs kind must be 'implementation'`,
+                  );
+                }
+                const evidencePath = typeof rawRef.path === "string" ? rawRef.path : "";
+                const segments = evidencePath.split("/");
+                const canonical =
+                  evidencePath.length > 0 &&
+                  !evidencePath.startsWith("/") &&
+                  !evidencePath.includes("\\") &&
+                  !evidencePath.includes("//") &&
+                  !/\s/.test(evidencePath) &&
+                  segments.every(
+                    (segment) => segment !== "" && segment !== "." && segment !== "..",
+                  );
+                if (!canonical) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs path must be canonical repo-relative: ${evidencePath || "<missing>"}`,
+                  );
+                  continue;
+                }
+                if (evidencePaths.has(evidencePath)) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: duplicate evidence_refs path: ${evidencePath}`,
+                  );
+                } else {
+                  evidencePaths.add(evidencePath);
+                }
+                if (overlyBroadEvidencePaths.has(evidencePath)) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs path is overly broad: ${evidencePath}`,
+                  );
+                }
+                if (repoRoot && !existsSync(join(repoRoot, evidencePath))) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs path does not exist: ${evidencePath}`,
+                  );
+                }
+                if (typeof rawRef.purpose !== "string" || rawRef.purpose.trim().length === 0) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: evidence_refs purpose must be a non-empty string`,
+                  );
+                }
+              }
             }
           }
         }

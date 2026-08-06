@@ -253,7 +253,20 @@ phase_sets:
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](kata-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
-### 3.2. exec build時のフェーズ解決
+### 3.2. `bootstrap` と `retrofit` のフェーズ順序
+
+実践の型が未整備で、かつ既存実装から成果物を作成・補正する場合、`bootstrap` と `retrofit` を一つの phase に混在させません。次の順序を推奨します。
+
+1. `bootstrap`: 代表成果物と rulebook / recipe / sample / template を一式で初期整備する。
+2. `retrofit` edit: DCT の `evidence_refs` から各成果物を新設・補正する。
+3. `cross-deliverable-dedup`: 必要な場合だけ、成果物間の正本選択と重複整理を行う。
+4. `fully-guided`: 整備済みの実践の型に沿って内容を磨き込む。
+5. `retrofit` review: 完成版と実装エビデンスの一致・乖離・未確認範囲を判定する。
+6. `finalize` または `bootstrap-finalize`: human が成果物と必要な実践の型を確定する。
+
+`retrofit` を使う成果物には、事前に DCT の `evidence_refs` を宣言します。実装エビデンスは Schedule の依存関係ではなく調査入力であるため、`depends_on` や `targets` へ複製しません。
+
+### 3.3. exec build時のフェーズ解決
 
 `exec build` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec build` では生成せず、`exec plan` または `exec run` が必要時に生成します。
 

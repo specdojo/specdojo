@@ -15,6 +15,10 @@ groups:
         overview: SpecDojoを用いたプロジェクト推進とオペレーション推進について、主要プロセス領域の関係と情報・イベントの流れを可視化し定義する
         path: cdfd-overview.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: CLI全体のコマンド領域と起動関係
         note: list・where・status・validate・dry-runなど、状態や成果物を変更しない補助操作は独立した業務フローとして分割しない
         done_criteria:
           - text: 初期セットアップ・登録簿運用・計画展開・タスク実行・定期運用・並行運用・構成変更・派生生成・報告の各プロセス領域と相互の情報の流れが表と図で確認できること
@@ -37,6 +41,16 @@ groups:
         overview: config・register・catalog・実行補助設定を初期化し、プロジェクトの計画と実行を開始できる状態にする流れを可視化し定義する
         path: cdfd-init.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: プロジェクト設定の読込・初期化経路
+          - kind: implementation
+            path: src/catalog-scaffold.ts
+            purpose: 成果物カタログの初期生成処理
+          - kind: implementation
+            path: src/exec-provider-scaffold.ts
+            purpose: 実行provider設定の初期生成処理
         depends_on:
           - cdfd-overview
         done_criteria:
@@ -58,6 +72,13 @@ groups:
         overview: 立ち上げ時の未整理事項と運用中の計画外事項を登録し、判断・実行・待機・レビュー・終了・再開と例外復旧まで継続管理する流れを可視化し定義する
         path: cdfd-register-operation.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録簿項目を実行タスクとして扱う経路
         depends_on:
           - cdfd-init
         done_criteria:
@@ -79,6 +100,16 @@ groups:
         overview: 成果物カタログとスケジュール戦略を検証し、Scheduleと実行状態・Ready・CPM・timelineへ展開する流れを可視化し定義する
         path: cdfd-catalog-planning.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog-build.ts
+            purpose: 成果物カタログの検証・表示ビュー生成
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: カタログと戦略からScheduleへ展開する処理
+          - kind: implementation
+            path: src/exec-schedule.ts
+            purpose: Scheduleから実行状態・CPM・timelineへ展開する処理
         depends_on:
           - cdfd-init
         done_criteria:
@@ -97,6 +128,16 @@ groups:
         overview: Readyタスクの選択・claimからhuman/agentによる実行、レビュー・ready確定、完了記録、中断・訂正・再実行までの流れを可視化し定義する
         path: cdfd-task-execution.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: agent・humanタスクの実行制御と結果処理
+          - kind: implementation
+            path: src/exec-events.ts
+            purpose: claim・complete・block等の状態イベント処理
+          - kind: implementation
+            path: src/exec-worktree-ops.ts
+            purpose: worktreeでの変更許可・commit・統合境界
         depends_on:
           - cdfd-catalog-planning
         done_criteria:
@@ -120,6 +161,10 @@ groups:
         overview: routine定義とdue判定に基づき、登録項目またはScheduleタスクの実行を起動し結果を反映する流れを可視化し定義する
         path: cdfd-routine.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: routineのdue判定・委譲・実行結果更新
         depends_on:
           - cdfd-register-operation
           - cdfd-task-execution
@@ -139,6 +184,13 @@ groups:
         overview: project develop・feature・execの各ブランチとworktreeを用いて複数プロジェクト・タスクを分離し、同期・統合する流れを可視化し定義する
         path: cdfd-multi-project.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-project.ts
+            purpose: プロジェクト単位の実行ブランチ・worktree制御
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: タスクworktreeの作成・同期・後片付け
         depends_on:
           - cdfd-init
         done_criteria:
@@ -157,6 +209,13 @@ groups:
         overview: 作業要件と実行結果に応じてagent・provider・phaseの構成を評価し、承認・変更・検証する流れを可視化し定義する
         path: cdfd-agent-config-operation.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: agent・provider設定の解決とコマンド生成
+          - kind: implementation
+            path: src/exec-strategy.ts
+            purpose: phaseの実行要件とapproachの解決
         depends_on:
           - cdfd-task-execution
         done_criteria:
@@ -178,6 +237,19 @@ groups:
         overview: カタログ・登録簿・実行状態などの正本から、成果物本体・表示ビュー・YAML表示ページ・文書索引を生成し同期する流れを可視化し定義する
         path: cdfd-derived-content.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 派生生成コマンド全体の起動順序
+          - kind: implementation
+            path: src/catalog-generate.ts
+            purpose: カタログから成果物雛形を生成する処理
+          - kind: implementation
+            path: src/doc-index.ts
+            purpose: 文書索引の収集・生成処理
+          - kind: implementation
+            path: src/yaml-pages.ts
+            purpose: YAML正本から表示ページを生成する処理
         depends_on:
           - cdfd-register-operation
           - cdfd-catalog-planning
@@ -198,6 +270,16 @@ groups:
         overview: 実行状態・CPM・マイルストーン・登録簿を監視し、遅延や滞留を検知して進捗報告・議事録・管理ログへ反映する流れを可視化し定義する
         path: cdfd-reporting.md
         rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-task-view.ts
+            purpose: Ready・doing等の実行状態ビュー生成
+          - kind: implementation
+            path: src/exec-schedule-cpm.ts
+            purpose: CPM・余裕時間・クリティカルパスの計算
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿から課題・リスク・決定等の管理ビューを生成する処理
         depends_on:
           - cdfd-register-operation
           - cdfd-task-execution

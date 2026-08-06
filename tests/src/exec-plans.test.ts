@@ -247,7 +247,7 @@ describe("parsePlanTaskIdentity", () => {
     ].join("\n");
   }
 
-  it.each(["bootstrap", "finalize", "bootstrap-finalize", "fully-guided"])(
+  it.each(["bootstrap", "retrofit", "finalize", "bootstrap-finalize", "fully-guided"])(
     "approach %s を frontmatter から復元する",
     (approach) => {
       const identity = parsePlanTaskIdentity(planWithApproach(approach));
@@ -583,6 +583,7 @@ describe("review plan templates", () => {
     "xrp-fully-guided-template.md",
     "xrp-recipe-guided-template.md",
     "xrp-freeform-template.md",
+    "xrp-retrofit-template.md",
     "xrp-rulebook-maintenance-template.md",
     "xrp-recipe-maintenance-template.md",
     "xrp-sample-maintenance-template.md",
@@ -606,7 +607,7 @@ describe("review plan templates", () => {
 });
 
 describe("generateSinglePlan", () => {
-  function writeCatalog(catalogPath: string): void {
+  function writeCatalog(catalogPath: string, withEvidence = true): void {
     mkdirSync(catalogPath, { recursive: true });
     writeFileSync(
       join(catalogPath, "dct-test.yaml"),
@@ -624,6 +625,14 @@ describe("generateSinglePlan", () => {
         "        kind: work",
         "        overview: Test overview",
         "        path: overview.md",
+        ...(withEvidence
+          ? [
+              "        evidence_refs:",
+              "          - kind: implementation",
+              "            path: src/exec-plans.ts",
+              "            purpose: plan生成の現在動作",
+            ]
+          : []),
         "        done_criteria:",
         "          - text: Business value is clear",
         "            roles: [BA]",
@@ -680,6 +689,71 @@ describe("generateSinglePlan", () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, "T-TEST-overview-099-plan.md"), "utf8")).toBe("keep me\n");
       expect(readFileSync(join(plansDir, "index.md"), "utf8")).toBe("# existing index\n");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it.each(["edit", "review"] as const)(
+    "retrofit %s plan へ実装エビデンスを展開し targets には追加しない",
+    async (mode) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-retrofit-plan-"));
+      const executionPath = join(root, "execution");
+      const catalogPath = join(root, "catalog");
+      try {
+        writeCatalog(catalogPath);
+        const outPath = await generateSinglePlan({
+          executionPath,
+          projectId: "test",
+          catalogPath,
+          task: {
+            id: `T-TEST-overview-${mode === "edit" ? "020" : "030"}`,
+            local_id: "overview",
+            name: "実装反映",
+            mode,
+            approach: "retrofit",
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        });
+
+        const plan = readFileSync(outPath, "utf8");
+        expect(plan).toContain("approach: retrofit");
+        expect(plan).toContain("## 3. 実装エビデンス");
+        expect(plan).toContain("`src/exec-plans.ts`（implementation）: plan生成の現在動作");
+        expect(plan).toContain("targets:\n    - test:overview");
+        expect(plan).not.toContain("targets:\n    - test:overview\n    - src/exec-plans.ts");
+        expect(plan).not.toContain("_IMPLEMENTATION_EVIDENCE_");
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
+
+  it("retrofit 対象に evidence_refs がなければ plan 生成を拒否する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-retrofit-missing-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    try {
+      writeCatalog(catalogPath, false);
+
+      await expect(
+        generateSinglePlan({
+          executionPath,
+          projectId: "test",
+          catalogPath,
+          task: {
+            id: "T-TEST-overview-020",
+            local_id: "overview",
+            mode: "edit",
+            approach: "retrofit",
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        }),
+      ).rejects.toThrow(/has no evidence_refs/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

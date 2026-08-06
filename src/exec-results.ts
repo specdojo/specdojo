@@ -315,6 +315,7 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
       "recipe-guided",
       "freeform",
       "bootstrap",
+      "retrofit",
       "cross-deliverable-dedup",
       "rulebook-maintenance",
       "recipe-maintenance",

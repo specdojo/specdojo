@@ -73,13 +73,13 @@ phase_sets:
       mode: review
 ```
 
-| フィールド     | 必須 | 説明                                                                                                                                                                                    |
-| -------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `execution`    | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                |
-| `mode`         | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                 |
-| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
-| `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                              |
-| `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                  |
+| フィールド     | 必須 | 説明                                                                                                                                                                                                 |
+| -------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execution`    | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                             |
+| `mode`         | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                              |
+| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
+| `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
+| `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](kata-guide.md) を参照します。
 
@@ -327,6 +327,7 @@ providers:
 - agent の mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent は working tree の plan を書き換えられますが HEAD は書き換えられないため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。
+- `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
 - agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックします。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできません。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
 - worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
