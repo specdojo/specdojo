@@ -1,0 +1,48 @@
+# Template: business model deliverables catalog (business rule)
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+#
+# This file is one physical part of the business-model domain. It shares domain
+# `business-model` with the other dct-business-model-<part>-template.yaml files;
+# catalog build merges same-domain parts and combines same-name groups (in sorted
+# file order) into one dct-business-model.md.
+#
+# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
+# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+id: specdojo:dct-business-model-br-template
+type: template
+status: draft
+title: 成果物カタログ（業務モデル／ビジネスルール）
+rulebook: specdojo:dct-rulebook
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+groups:
+  # ── 業務プロセス ──────────────────────────────────────────────────────────
+  - name: 業務プロセス
+    deliverables:
+      - local_id: br-_TERM_
+        min_size: medium
+        name: ビジネスルール
+        kind: work
+        depends_on: []
+        overview: 複数プロセスから参照される横断的な業務判断・条件を定義する
+        path: br-_TERM_.md
+        rulebook: specdojo:br-rulebook
+        note: "_TERM_ は対象ルール名の略称（kebab-case）"
+        done_criteria:
+          - text: ルール・入力・出力・例外が業務観点で明確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ルールの業務的妥当性と適用範囲を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: ルール実装（バリデーション・ドメインロジック）の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: ルールベースのテストケース設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ビジネスロジック実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

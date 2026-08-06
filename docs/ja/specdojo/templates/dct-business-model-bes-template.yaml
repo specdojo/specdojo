@@ -1,0 +1,73 @@
+# Template: business model deliverables catalog (business event spec)
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+#
+# This file is one physical part of the business-model domain. It shares domain
+# `business-model` with the other dct-business-model-<part>-template.yaml files;
+# catalog build merges same-domain parts and combines same-name groups (in sorted
+# file order) into one dct-business-model.md.
+#
+# bes-index は _TERM_ を持たない全体構成（単一）で、個別イベント bes-_TERM_ と
+# 同じ業務イベントファミリーのため、この1ファイルにまとめる。
+#
+# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
+# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+id: specdojo:dct-business-model-bes-template
+type: template
+status: draft
+title: 成果物カタログ（業務モデル／業務イベント仕様）
+rulebook: specdojo:dct-rulebook
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+groups:
+  # ── 業務イベント ──────────────────────────────────────────────────────────
+  - name: 業務イベント
+    deliverables:
+      - local_id: bes-index
+        name: 業務イベント仕様（全体構成）
+        kind: work
+        depends_on: []
+        overview: 業務上で発生する主要なイベントを一覧で定義する
+        path: bes-index.md
+        rulebook: specdojo:bes-index-rulebook
+        done_criteria:
+          - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント一覧のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント駆動設計・メッセージング設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントベースのテスト設計への網羅性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+      - local_id: bes-_TERM_
+        min_size: medium
+        name: 業務イベント仕様（個別）
+        kind: work
+        depends_on:
+          - bes-index
+        overview: 業務上で発生する主要なイベントを個別に詳細定義する
+        path: bes-_TERM_.md
+        rulebook: specdojo:bes-rulebook
+        note: "_TERM_ は対象イベント名の略称（kebab-case）"
+        done_criteria:
+          - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント仕様の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント処理実装・メッセージ設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントテスト設計への活用が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: イベントハンドラ・パブリッシャー実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

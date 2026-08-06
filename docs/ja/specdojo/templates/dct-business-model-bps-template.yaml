@@ -1,0 +1,47 @@
+# Template: business model deliverables catalog (business process spec)
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+#
+# This file is one physical part of the business-model domain. It shares domain
+# `business-model` with the other dct-business-model-<part>-template.yaml files;
+# catalog build merges same-domain parts and combines same-name groups (in sorted
+# file order) into one dct-business-model.md.
+#
+# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
+# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+id: specdojo:dct-business-model-bps-template
+type: template
+status: draft
+title: 成果物カタログ（業務モデル／業務プロセス仕様）
+rulebook: specdojo:dct-rulebook
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+groups:
+  # ── 業務プロセス ──────────────────────────────────────────────────────────
+  - name: 業務プロセス
+    deliverables:
+      - local_id: bps-_TERM_
+        name: 業務プロセス仕様
+        kind: work
+        depends_on: []
+        overview: 業務プロセスのトリガー・入力・処理・出力・前提を定義する
+        path: bps-_TERM_.md
+        rulebook: specdojo:bps-rulebook
+        note: "_TERM_ は対象プロセス名の略称（kebab-case）"
+        done_criteria:
+          - text: トリガー・前提・入力・処理・出力が業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: プロセスのスコープと業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: システム設計・機能設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストシナリオ設計・受入条件との対応が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装設計（サービス・ユースケース）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
