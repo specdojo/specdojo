@@ -56,13 +56,13 @@ flowchart LR
 
 - ファイル名は `dct-<domain>.yaml` とする（例: `dct-project-definition.yaml`、`dct-project-management.yaml`）。
 - `<domain>` は `domain` キーの値と一致させる。
-- 1 ドメインを複数ファイルに物理分割する場合は `dct-<domain>-<part>.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-sales.yaml`・`dct-data-model-buy.yaml` はいずれも `domain: data-model`）。分割の判断基準は `物理分割（1 ドメイン複数ファイル）` を参照する。
+- 1 ドメインを複数ファイルに物理分割する場合は `dct-<domain>-<part>.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ。`<part>` は分割軸を表す kebab-case とし、成果物種別で分割する場合は成果物 ID の接頭辞を用いる（例: `dct-data-model-bdd.yaml`・`dct-data-model-cdsd.yaml` はいずれも `domain: data-model`）。分割の判断基準は `物理分割（1 ドメイン複数ファイル）` を参照する。
 - テンプレートは `dct-<domain>-template.yaml` とし、`type: template` で記述する。
-- テンプレートを物理分割する場合は `dct-<domain>-<part>-template.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-dictionary-template.yaml`・`dct-data-model-conceptual-template.yaml` はいずれも `domain: data-model`）。scaffold で `dct-<domain>-<part>.yaml` に展開され、`catalog build` で同一 `domain` としてマージされる。
+- テンプレートを物理分割する場合は `dct-<domain>-<part>-template.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-bdd-template.yaml`・`dct-data-model-cdsd-template.yaml` はいずれも `domain: data-model`）。scaffold で `dct-<domain>-<part>.yaml` に展開され、`catalog build` で同一 `domain` としてマージされる。
 
 ### 3.2. ID・識別子規約
 
-- ドキュメントの `id` は、`type: project` では `<project-id>:dct-<domain>` 形式とする（例: `prj-0001:dct-project-definition`）。テンプレートでは `dct-<domain>-template` 形式とする。物理分割する場合は、`type: project` では `<project-id>:dct-<domain>-<part>`、テンプレートでは `dct-<domain>-<part>-template` 形式とし、`domain` キーは分割前と同じ `<domain>` を保つ。
+- ドキュメントの `id` は、`type: project` では `<project-id>:dct-<domain>` 形式とする（例: `prj-0001:dct-project-definition`）。テンプレートでは `dct-<domain>-template` 形式とする。物理分割する場合は、`type: project` では `<project-id>:dct-<domain>-<part>`、テンプレートでは `dct-<domain>-<part>-template` 形式とし、`domain` キーは分割前と同じ `<domain>` を保つ（例: `prj-0001:dct-data-model-bdd`、`specdojo:dct-data-model-bdd-template`）。
 - `domain` は英小文字・数字・ハイフン（kebab-case）で、先頭は英小文字または数字、最大 63 文字とする。
 - `project_id` は `prj-` + 4 桁以上の数字とし、`type: project` では必須とする。配置先プロジェクト ID と一致させる。
 - 各成果物の `local_id` は、`type: project` では英小文字・数字・ハイフンのみとし、プロジェクト内で一意にする。
@@ -212,9 +212,12 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 6.10. 物理分割（1 ドメイン複数ファイル）
 
-- 反復要素が多く単一ファイルが肥大化するドメイン（例: `data-model` を業務領域ごとに複製）は、論理ドメインを保ったまま複数ファイルへ物理分割してよい。
+- 反復要素が多く単一ファイルが肥大化するドメイン（例: `data-model` を成果物種別ごとに分ける場合）は、論理ドメインを保ったまま複数ファイルへ物理分割してよい。
 - 分割ファイルは `dct-<domain>-<part>.yaml` とし、すべて同一の `domain` キーを持たせる。`catalog build` は同一 `domain` のファイルをファイル名の昇順でマージし、`dct-<domain>.md` を 1 つ生成する。
-- マージ順序はファイル名の昇順で決定的に定まる。章（`groups`）の並びを制御したい場合は `<part>` の命名で順序を表現する。
+- 同一階層にある名前付き group は `name` の完全一致をキーに1章へ結合する。章の位置と `base_path`・`note`・`min_size` は最初に現れた group の値を採用し、`deliverables` はファイル名昇順、各ファイル内の定義順で追記する。同名の子 `groups` にもこの規則を再帰的に適用する。
+- group の `base_path` 等は同名 group 間で一致させる。後続 group の成果物と子 group は、結合先となる最初の group の `base_path` を継承する。
+- 名前が異なる group は別章として保持する。無名 group は結合キーを持たないため、従来どおりファイル名昇順で見出しなしの内容として連結する。単一ファイル内の group 構造は変更しない。
+- マージ順序はファイル名の昇順で決定的に定まる。最初に現れる章の並びを制御したい場合は `<part>` の命名で順序を表現する。
 - 同一 `domain` の各ファイルは `project_id` と `base_path` を一致させる。`base_path` はマージ後の配置先解決の起点となるため、部分ファイルごとに変えない。
 - `local_id` はプロジェクト内で一意という制約を維持する。同一ドメインの分割ファイル間で `local_id` が重複するとマージがエラーになる。
 - ドキュメントの `id`・`title` 等のメタ情報は、マージ後カタログではファイル名昇順で先頭となるファイルの値を採用する。分割してもメタ情報が一貫するよう記載する。

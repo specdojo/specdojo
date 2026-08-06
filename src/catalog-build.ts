@@ -218,7 +218,7 @@ export type LoadedDctDoc = {
 
 // A domain catalog produced by merging one or more dct-*.yaml parts that share the
 // same `domain`. `doc` carries the primary part's metadata with all parts' groups
-// concatenated in file order. `errors` collects merge-blocking inconsistencies.
+// merged in file order. `errors` collects merge-blocking inconsistencies.
 export type MergedDomainCatalog = {
   domain: string;
   doc: DctDoc;
@@ -276,6 +276,54 @@ function collectMergedLocalIds(
   }
 }
 
+function cloneSection(section: DctSection): DctSection {
+  return {
+    ...section,
+    ...(section.deliverables ? { deliverables: [...section.deliverables] } : {}),
+    ...(section.groups ? { groups: section.groups.map(cloneSection) } : {}),
+  };
+}
+
+// Merge groups contributed by one physical file into groups accumulated from
+// earlier files. Only a named group that already existed before this file is a
+// merge target, so duplicate headings inside a single file keep their legacy
+// shape. Unnamed groups are never keyed and remain heading-less concatenations.
+//
+// The first occurrence owns scalar metadata (base_path, note, min_size). Later
+// matching groups contribute deliverables in definition order and child groups,
+// which are merged recursively by the same sibling-level name rule.
+function mergeSectionGroups(accumulated: DctSection[], incoming: DctSection[]): DctSection[] {
+  const result = accumulated.map(cloneSection);
+  const namedTargets = new Map<string, number>();
+
+  for (const [index, section] of result.entries()) {
+    if (section.name && !namedTargets.has(section.name)) {
+      namedTargets.set(section.name, index);
+    }
+  }
+
+  for (const section of incoming) {
+    const targetIndex = section.name ? namedTargets.get(section.name) : undefined;
+    if (targetIndex === undefined) {
+      result.push(cloneSection(section));
+      continue;
+    }
+
+    const target = result[targetIndex];
+    result[targetIndex] = {
+      ...target,
+      ...(section.deliverables
+        ? { deliverables: [...(target.deliverables ?? []), ...section.deliverables] }
+        : {}),
+      ...(section.groups
+        ? { groups: mergeSectionGroups(target.groups ?? [], section.groups) }
+        : {}),
+    };
+  }
+
+  return result;
+}
+
 // Groups loaded dct docs by their logical `domain` and merges each group's parts
 // into a single domain catalog. Merge order is the sorted file order captured by
 // loadCatalogDocs, so the result is deterministic and file-listing-order agnostic.
@@ -286,7 +334,8 @@ function collectMergedLocalIds(
 export function mergeDomainCatalogs(loaded: LoadedDctDoc[]): MergedDomainCatalog[] {
   const order: string[] = [];
   const groups = new Map<string, LoadedDctDoc[]>();
-  for (const entry of loaded) {
+  const sorted = [...loaded].sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : 0));
+  for (const entry of sorted) {
     const domain = entry.doc.domain;
     if (!domain) continue;
     const existing = groups.get(domain);
@@ -320,11 +369,11 @@ export function mergeDomainCatalogs(loaded: LoadedDctDoc[]): MergedDomainCatalog
       }
     }
 
-    const mergedGroups: DctSection[] = [];
+    let mergedGroups: DctSection[] = [];
     const seen = new Map<string, string>();
     const reported = new Set<string>();
     for (const part of parts) {
-      mergedGroups.push(...part.doc.groups);
+      mergedGroups = mergeSectionGroups(mergedGroups, part.doc.groups);
       collectMergedLocalIds(part.doc.groups, part.filePath, domain, seen, reported, errors);
     }
 
