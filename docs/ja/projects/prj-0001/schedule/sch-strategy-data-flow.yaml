@@ -1,0 +1,173 @@
+kind: strategy
+id: prj-0001:sch-strategy-data-flow
+type: project
+status: ready
+title: スケジュール戦略（data-flow）
+rulebook: specdojo:sch-rulebook
+track: data-flow
+
+# sch-track-data-flow.yaml を生成するための戦略定義。
+# dct-data-flow.yaml の kind: work の成果物を対象とし、共通の CDFD 実践一式を
+# cdfd-overview の bootstrap で一度だけ整備してから、残りの成果物を作成する。
+# owner はロールのみを持ち、実際の実行者は pm-members.yaml と実行要件から解決する。
+
+settings:
+  start_date: "2026-08-06"
+
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+  include_kinds:
+    - work
+
+# cdfd-overview だけは phase_overrides で bootstrap を使用し、成果物と共通の
+# rulebook / recipe / sample / template を一式整備する。その他の成果物は、
+# cdfd-overview の first-pass 完了後に、整備された実践一式を使って fully-guided で作成する。
+phase_sets:
+  first-pass:
+    - id: draft
+      name: 初期整備・草案作成
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        cdfd-overview は bootstrap により、成果物と共通の rulebook / recipe / sample / template を
+        一式として評価・作成・整備する。その他の成果物は、先行成果物と整備済みの実践一式を参照し、
+        rulebook の必須要素・禁止事項および成果物カタログの done_criteria に沿って草案を作成する。
+        プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+        データストア、正常経路と必要な例外経路を概念レベルで記述する。
+
+  refine-pass:
+    - id: refine
+      name: 磨き込み・整合性確認
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      proficiency: normal
+      task_suffix: "070"
+      duration_days: 0.25
+      description: |
+        整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
+        表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
+        depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
+        成果物カタログの done_criteria を満たす状態へ整える。
+
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description: |
+        完成版の CDFD を変更せず、成果物カタログの done_criteria、rulebook、先行・隣接 CDFD、
+        プロジェクト文脈との整合を多観点でレビューする。表と図の対応、領域間の重複・欠落、
+        正常系・例外系、担当と入出力の追跡性を確認し、判定と根拠を review result に記録する。
+
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description: |
+        担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+        cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
+        rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+
+default_phase_sets:
+  - phase_set: first-pass
+  - phase_set: refine-pass
+  - phase_set: review-pass
+  - phase_set: finalize-pass
+
+# CDFD は業務のプロセス・情報・イベントの流れを定義するため、主たる実作業責任は BA とする。
+# cdfd-overview のみ、共通の実践一式を重複なく初期整備・確定するため approach を上書きする。
+owner_rules:
+  - local_ids:
+      - cdfd-overview
+    owner: BA
+    phase_overrides:
+      - phase: draft
+        approach: bootstrap
+        proficiency: expert
+      - phase: finalize
+        approach: bootstrap-finalize
+
+  - local_ids:
+      - cdfd-init
+      - cdfd-register-operation
+      - cdfd-catalog-planning
+      - cdfd-task-execution
+      - cdfd-routine
+      - cdfd-multi-project
+      - cdfd-agent-config-operation
+      - cdfd-derived-content
+      - cdfd-reporting
+    owner: BA
+
+# first-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
+# 重複記述を正本選択・要約・参照へ整理してから、成果物別の磨き込みへ進む。
+cross_deliverable_passes:
+  - id: data-flow-dedup
+    name: CDFD間の正本選択・重複整理
+    task_suffix: "060"
+    duration_days: 0.5
+    owner: ARC
+    after_gate: G-DATA-FLOW-first-pass
+    before_phase_set: refine-pass
+    execution: agent
+    mode: edit
+    approach: cross-deliverable-dedup
+    proficiency: expert
+    description: |
+      全 CDFD を横断し、同じプロセス・状態遷移・入力・出力・データストアの説明が
+      複数文書へ重複していないか確認する。各情報の正本を選び、他の文書は必要な要約と参照へ整理する。
+      各 CDFD の固有責務と done_criteria は維持し、領域間の受け渡しと用語を統一する。
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+phase_gates:
+  - id: G-DATA-FLOW-first-pass
+    name: first-pass 完了
+    artifact_name: データフロー
+    after_phase_sets: [first-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+  - id: G-DATA-FLOW-refine-pass
+    name: refine-pass 完了
+    artifact_name: データフロー
+    after_phase_sets: [refine-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+  - id: G-DATA-FLOW-review-pass
+    name: review-pass 完了
+    artifact_name: データフロー
+    after_phase_sets: [review-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+group_milestones:
+  - catalog_id: prj-0001:dct-data-flow
+    milestone:
+      id: M-DATA-FLOW-data-flow
+      name: ドメイン完了
+      artifact_name: データフロー
+      owner: PM
