@@ -58,10 +58,11 @@ flowchart LR
 - `<domain>` は `domain` キーの値と一致させる。
 - 1 ドメインを複数ファイルに物理分割する場合は `dct-<domain>-<part>.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-sales.yaml`・`dct-data-model-buy.yaml` はいずれも `domain: data-model`）。分割の判断基準は `物理分割（1 ドメイン複数ファイル）` を参照する。
 - テンプレートは `dct-<domain>-template.yaml` とし、`type: template` で記述する。
+- テンプレートを物理分割する場合は `dct-<domain>-<part>-template.yaml` とし、各ファイルの `domain` キーは分割前と同じ `<domain>` を保つ（例: `dct-data-model-dictionary-template.yaml`・`dct-data-model-conceptual-template.yaml` はいずれも `domain: data-model`）。scaffold で `dct-<domain>-<part>.yaml` に展開され、`catalog build` で同一 `domain` としてマージされる。
 
 ### 3.2. ID・識別子規約
 
-- ドキュメントの `id` は、`type: project` では `<project-id>:dct-<domain>` 形式とする（例: `prj-0001:dct-project-definition`）。テンプレートでは `dct-<domain>-template` 形式とする。
+- ドキュメントの `id` は、`type: project` では `<project-id>:dct-<domain>` 形式とする（例: `prj-0001:dct-project-definition`）。テンプレートでは `dct-<domain>-template` 形式とする。物理分割する場合は、`type: project` では `<project-id>:dct-<domain>-<part>`、テンプレートでは `dct-<domain>-<part>-template` 形式とし、`domain` キーは分割前と同じ `<domain>` を保つ。
 - `domain` は英小文字・数字・ハイフン（kebab-case）で、先頭は英小文字または数字、最大 63 文字とする。
 - `project_id` は `prj-` + 4 桁以上の数字とし、`type: project` では必須とする。配置先プロジェクト ID と一致させる。
 - 各成果物の `local_id` は、`type: project` では英小文字・数字・ハイフンのみとし、プロジェクト内で一意にする。

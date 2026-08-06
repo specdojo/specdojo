@@ -1,0 +1,72 @@
+# Template: data model deliverables catalog (conceptual model)
+# Placeholder _PROJECT_ID_ is not used for product-level templates.
+# base_path is fixed to the product document directory.
+#
+# This file is one physical part of the data-model domain. It shares domain
+# `data-model` with dct-data-model-dictionary-template.yaml; catalog build
+# merges same-domain parts (in sorted file order) into one dct-data-model.md.
+#
+# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
+# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+id: specdojo:dct-data-model-conceptual-template
+type: template
+status: draft
+title: 成果物カタログ（データモデル／概念モデル）
+rulebook: specdojo:dct-rulebook
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+groups:
+  # ── 概念モデル ────────────────────────────────────────────────────────────
+  - name: 概念モデル
+    deliverables:
+      - local_id: ccd-_TERM_
+        name: 概念クラス図
+        kind: work
+        depends_on: []
+        overview: 業務上のエンティティ関係・継承・属性を図で定義する
+        path: ccd-_TERM_.md
+        rulebook: specdojo:ccd-mermaid-rulebook
+        note: "_TERM_ は対象業務領域の略称（kebab-case）"
+        done_criteria:
+          - text: エンティティ関係・属性が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: スコープ範囲のエンティティを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: データモデル・クラス設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストデータ設計・整合性検証に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ER図・実装モデルの基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: cstd-_TERM_
+        min_size: medium
+        name: 概念状態遷移図
+        kind: work
+        depends_on: []
+        overview: 業務オブジェクトの状態変化・イベント・遷移条件を図で定義する
+        path: cstd-_TERM_.md
+        rulebook: specdojo:cstd-rulebook
+        note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
