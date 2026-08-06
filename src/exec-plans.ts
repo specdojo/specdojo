@@ -391,6 +391,12 @@ function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING;
 }
 
+function implementationEvidence(deliverable: DeliverableInfo | null): string {
+  const refs = deliverable?.deliverable.evidence_refs ?? [];
+  if (refs.length === 0) return MISSING;
+  return refs.map((ref) => `- \`${ref.path}\`（${ref.kind}）: ${ref.purpose}`).join("\n");
+}
+
 // edit plan の「完了の狙い」用。一文書一責務のため、done_criteria を owner ロールの狙いと
 // 下流ロールの入力適合に分けて提示する。owner の狙いを作成目標とし、下流は入力として最低限
 // 成立させる範囲にとどめる（各ロールの内容を作り込まない）。下流の適合性検証や観点別の自己
@@ -805,6 +811,7 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
@@ -869,6 +876,7 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
@@ -936,6 +944,11 @@ async function writeTaskPlan(
     );
   }
   const planTask: PlanTask = { ...task, mode };
+  if (task.approach === "retrofit" && implementationEvidence(deliverable) === MISSING) {
+    throw new Error(
+      `Task ${task.id} uses approach: retrofit but the target deliverable has no evidence_refs.`,
+    );
+  }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache);
 
   const body =
@@ -1126,6 +1139,7 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "retrofit",
   "cross-deliverable-dedup",
   "rulebook-maintenance",
   "recipe-maintenance",

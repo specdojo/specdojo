@@ -567,6 +567,36 @@ describe("exec worktree ops", () => {
     expect(committed.targets).not.toContain("docs/unrelated.md");
   });
 
+  it("keeps retrofit implementation evidence outside commit scope", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "docs", "a.md"), "before retrofit\n");
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", "docs/a.md", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add retrofit target");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        approach: "retrofit",
+        targets: ["prj-0001:doc-a"],
+      }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "retrofit document update\n");
+    writeFile(join(worktree.path, "src", "evidence.ts"), "// must remain read-only\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/a.md");
+    expect(committed.targets).not.toContain("src/evidence.ts");
+  });
+
   it("fails a schedule-originated edit task whose plan declares no targets", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";

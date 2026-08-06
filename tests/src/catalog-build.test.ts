@@ -262,6 +262,76 @@ describe("validateDctDoc", () => {
     });
   });
 
+  describe("evidence_refs の検証", () => {
+    it("正準な既存実装パスを許可する", () => {
+      const item = makeWorkItem({
+        evidence_refs: [
+          {
+            kind: "implementation",
+            path: "src/catalog-build.ts",
+            purpose: "カタログ検証の現在動作",
+          },
+        ],
+      });
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] });
+
+      const result = validateDctDoc(doc, "/dummy/dct.yaml", undefined, process.cwd());
+
+      expect(result.ok).toBe(true);
+    });
+
+    it.each(["/src/catalog-build.ts", "../src/catalog-build.ts", "src\\catalog-build.ts"])(
+      "非正準パス %s を拒否する",
+      (path) => {
+        const item = makeWorkItem({
+          evidence_refs: [{ kind: "implementation", path, purpose: "カタログ検証の現在動作" }],
+        });
+        const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] });
+
+        const result = validateDctDoc(doc, "/dummy/dct.yaml");
+
+        expect(result.ok).toBe(false);
+        expect(result.errors.some((error) => error.includes("canonical repo-relative"))).toBe(true);
+      },
+    );
+
+    it("存在しないパスを拒否する", () => {
+      const item = makeWorkItem({
+        evidence_refs: [
+          {
+            kind: "implementation",
+            path: "src/does-not-exist.ts",
+            purpose: "存在確認",
+          },
+        ],
+      });
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] });
+
+      const result = validateDctDoc(doc, "/dummy/dct.yaml", undefined, process.cwd());
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.some((error) => error.includes("path does not exist"))).toBe(true);
+    });
+
+    it("重複パスと過度に広い参照を拒否する", () => {
+      const item = makeWorkItem({
+        evidence_refs: [
+          { kind: "implementation", path: "src", purpose: "全実装" },
+          { kind: "implementation", path: "src", purpose: "重複した全実装" },
+        ],
+      });
+      const doc = makeDoc({ groups: [makeSection({ deliverables: [item] })] });
+
+      const result = validateDctDoc(doc, "/dummy/dct.yaml");
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.some((error) => error.includes("duplicate evidence_refs path"))).toBe(
+        true,
+      );
+      expect(result.errors.some((error) => error.includes("overly broad"))).toBe(true);
+    });
+  });
+
   describe("depends_on の外部参照警告", () => {
     it("同一ファイル内に存在しない depends_on は警告を返す", () => {
       const item = makeWorkItem({ local_id: "item-a", depends_on: ["nonexistent"] });

@@ -7,6 +7,12 @@ export type CriteriaItem = {
   viewpoint: string;
 };
 
+export type EvidenceRef = {
+  kind: "implementation";
+  path: string;
+  purpose: string;
+};
+
 export type DctDeliverableItem = {
   local_id: string;
   instance_id_pattern?: string;
@@ -16,6 +22,7 @@ export type DctDeliverableItem = {
   overview: string;
   path?: string;
   rulebook?: string;
+  evidence_refs?: EvidenceRef[];
   done_criteria?: CriteriaItem[];
   note?: string;
   min_size?: string; // template-only: 'small' | 'medium' | 'large'

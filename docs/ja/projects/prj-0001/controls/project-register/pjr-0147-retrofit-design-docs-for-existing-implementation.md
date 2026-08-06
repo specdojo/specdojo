@@ -129,28 +129,31 @@ data-flowでは、`cdfd-overview` の `bootstrap` で共通のCDFD実践一式�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                         | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 実装先行が発生している既存箇所の洗い出し（data-flowを代表例とする）          | ARC  | open | -    |
-| 2   | 文書への「反映」/「新設」の判断基準と乖離時の優先規則の設計                  | ARC  | open | -    |
-| 3   | `evidence_refs` の構造、パス制約、存在・重複・広さの検証規則の設計           | ARC  | open | -    |
-| 4   | `dct.schema.yaml` とDCT型定義への `evidence_refs` 追加                       | DEV  | open | -    |
-| 5   | DCTの `evidence_refs` をedit/review planへ展開する処理の実装                 | DEV  | open | -    |
-| 6   | 実装エビデンスを変更・commit許可対象に含めない境界の実装・テスト             | DEV  | open | -    |
-| 7   | `retrofit` approach の参照方針・進め方とkata-guide.mdへの反映                | ARC  | open | -    |
-| 8   | `xep-retrofit-template.md`（edit用planテンプレート）の作成                   | ARC  | open | -    |
-| 9   | `xrp-retrofit-template.md`（review用planテンプレート）の作成                 | ARC  | open | -    |
-| 10  | `exec-common.schema.yaml` の `Approach` enumと依存schemaへの `retrofit` 追加 | DEV  | open | -    |
-| 11  | edit/review resultの実装対応・乖離・未確認範囲の記録項目の整備               | ARC  | open | -    |
-| 12  | 関連ガイド（exec-config、plan/result lifecycle、Schedule設計）への反映       | ARC  | open | -    |
-| 13  | data-flowのDCTへ実装エビデンスを割り当て、plan展開を検証                     | ARC  | open | -    |
-| 14  | `retrofit` edit/review、パス検証、commit境界の自動テスト追加                 | QE   | open | -    |
+| No  | 作業                                                                         | 担当 | 状態 | メモ                                            |
+| --- | ---------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------- |
+| 1   | 実装先行が発生している既存箇所の洗い出し（data-flowを代表例とする）          | ARC  | done | data-flow の全10成果物を実装と対応付け          |
+| 2   | 文書への「反映」/「新設」の判断基準と乖離時の優先規則の設計                  | ARC  | done | retrofit plan と kata-guide に定義              |
+| 3   | `evidence_refs` の構造、パス制約、存在・重複・広さの検証規則の設計           | ARC  | done | DCT schema・rulebook・catalog validation に反映 |
+| 4   | `dct.schema.yaml` とDCT型定義への `evidence_refs` 追加                       | DEV  | done | `EvidenceRef` 型と schema 定義を追加            |
+| 5   | DCTの `evidence_refs` をedit/review planへ展開する処理の実装                 | DEV  | done | plan の「実装エビデンス」へ展開                 |
+| 6   | 実装エビデンスを変更・commit許可対象に含めない境界の実装・テスト             | DEV  | done | targets 非追加と commit scope 除外をテスト      |
+| 7   | `retrofit` approach の参照方針・進め方とkata-guide.mdへの反映                | ARC  | done | 初期整備・実装反映・横断整理に追加              |
+| 8   | `xep-retrofit-template.md`（edit用planテンプレート）の作成                   | ARC  | done | 反映/新設判断と乖離記録を定義                   |
+| 9   | `xrp-retrofit-template.md`（review用planテンプレート）の作成                 | ARC  | done | 対応・乖離・修正対象判定を定義                  |
+| 10  | `exec-common.schema.yaml` の `Approach` enumと依存schemaへの `retrofit` 追加 | DEV  | done | 共通 enum とTypeScript解決処理へ追加            |
+| 11  | edit/review resultの実装対応・乖離・未確認範囲の記録項目の整備               | ARC  | done | plan と汎用 result テンプレートへ記録項目を追加 |
+| 12  | 関連ガイド（exec-config、plan/result lifecycle、Schedule設計）への反映       | ARC  | done | 3ガイドへ反映                                   |
+| 13  | data-flowのDCTへ実装エビデンスを割り当て、plan展開を検証                     | ARC  | done | `dct-data-flow.yaml` と自動テストで検証         |
+| 14  | `retrofit` edit/review、パス検証、commit境界の自動テスト追加                 | QE   | done | 関連125テスト通過                               |
 
 ## 5. 対応結果
 
-- 設計提案として、`retrofit` を独立したapproachとし、DCTの `evidence_refs` から実装エビデンスを読み取り専用でplanへ展開する方針を整理した。
-- 実装、意図された仕様、`done_criteria` の位置づけと、乖離時に実装を無条件で文書へ転記しない判断方針を整理した。
-- data-flowへ適用する推奨フェーズ順序を整理した。実装と検証は未着手である。
+- `retrofit` を独立したapproachとして、TypeScript型、CLIのapproach解決、共通schema、edit/review planテンプレートへ実装した。
+- DCTに `evidence_refs` を追加し、正準相対パス・存在・重複・過度に広い範囲を `catalog validate` で検証できるようにした。宣言がない `retrofit` planは生成エラーとした。
+- 実装を現在動作、既存文書・決定記録を意図された仕様、`done_criteria` を成果物目的として扱い、維持・部分反映・作り直し・新設を判定する基準をガイドとplanへ反映した。
+- 実装エビデンスはplan本文へ読み取り専用で展開し、`targets` とcommit許可範囲には追加しない境界を実装・テストした。
+- data-flowの全10成果物へ `src/` の実装エビデンスを割り当て、edit/review plan展開、パス検証、commit境界の自動テストを追加した。
+- 型ビルド、関連125テスト、DCT・Schedule strategyのschema検証を完了した。
 
 ## 6. 関連ドキュメント
 

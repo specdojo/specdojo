@@ -48,6 +48,7 @@ $defs:
         "recipe-guided",
         "freeform",
         "bootstrap",
+        "retrofit",
         "cross-deliverable-dedup",
         "rulebook-maintenance",
         "recipe-maintenance",
@@ -62,6 +63,9 @@ $defs:
       a deliverable. bootstrap authors the deliverable and its full reference set
       (rulebook/recipe/sample/template) together in one task as a mutually consistent whole;
       it is used to initially establish a deliverable and its reference materials.
+      retrofit reads implementation evidence declared by the catalog and reflects the verified
+      current behavior into an existing or newly created deliverable without treating the
+      implementation as the unconditional source of intended behavior.
       cross-deliverable-dedup selects canonical descriptions across an explicitly scoped
       deliverable group and replaces duplicate detail with summaries and references. The
       *-maintenance values improve the named reference material based on deliverables

@@ -80,6 +80,7 @@ function isApproach(value: unknown): value is Approach {
     value === "recipe-guided" ||
     value === "freeform" ||
     value === "bootstrap" ||
+    value === "retrofit" ||
     value === "cross-deliverable-dedup" ||
     value === "rulebook-maintenance" ||
     value === "recipe-maintenance" ||
