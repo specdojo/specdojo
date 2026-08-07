@@ -169,6 +169,8 @@ export type RunOpts = {
   agentCmd?: string;
   editAgent?: string;
   reviewAgent?: string;
+  editBy?: string;
+  reviewBy?: string;
   cmd?: string;
   loop?: boolean;
   maxRounds?: string;
@@ -180,13 +182,85 @@ export type RunOpts = {
 
 type RunResult = "success" | "rate_limit" | "failure";
 
-// Mode-specific agent overrides from --edit-agent / --review-agent. Each value is an agent
+// Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent
 // nickname (not a raw command); the command is resolved from pm-members.yaml. undefined means
 // "auto-select for that mode".
 export type ModeAgentOverrides = {
   edit?: string;
   review?: string;
 };
+
+export type NormalizedAgentFlags = {
+  editAgent?: string;
+  reviewAgent?: string;
+  warnings: string[];
+};
+
+// Consolidates the agent-selection flags into canonical values and collects deprecation
+// warnings, so the downstream resolvers read a single normalized shape.
+//
+// Canonical flags:
+//   --by <nickname>          single agent for a manual/register target (also the actor)
+//   --edit-by / --review-by  mode-specific nicknames for --auto batch runs
+//   --auto                   batch selection of ready tasks
+//
+// Deprecated flags (still honored this release, emit a warning; scheduled for removal):
+//   --edit-agent / --review-agent  → renamed to --edit-by / --review-by
+//   --cmd                          → use --by (manual) or --auto (batch)
+//   --agent-cmd                    → use --by <nickname> (raw commands are no longer the model)
+//
+// Precedence: the new mode flag wins over its deprecated alias; supplying both with different
+// values is a conflict and throws so the caller can surface a clear error.
+export function normalizeAgentFlags(opts: {
+  cmd?: string;
+  agentCmd?: string;
+  editAgent?: string;
+  reviewAgent?: string;
+  editBy?: string;
+  reviewBy?: string;
+  task?: string;
+  deliverable?: string;
+  plan?: string;
+  register?: string | string[];
+  job?: string;
+}): NormalizedAgentFlags {
+  const warnings: string[] = [];
+  const isManual = !!(opts.task || opts.deliverable || opts.plan || opts.register || opts.job);
+
+  if (opts.editBy !== undefined && opts.editAgent !== undefined && opts.editBy !== opts.editAgent) {
+    throw new Error("Conflicting --edit-by and deprecated --edit-agent. Use --edit-by only.");
+  }
+  if (
+    opts.reviewBy !== undefined &&
+    opts.reviewAgent !== undefined &&
+    opts.reviewBy !== opts.reviewAgent
+  ) {
+    throw new Error("Conflicting --review-by and deprecated --review-agent. Use --review-by only.");
+  }
+
+  if (opts.editAgent !== undefined) warnings.push("--edit-agent is deprecated; use --edit-by.");
+  if (opts.reviewAgent !== undefined) {
+    warnings.push("--review-agent is deprecated; use --review-by.");
+  }
+  if (opts.agentCmd !== undefined) {
+    warnings.push(
+      "--agent-cmd is deprecated; select a registered agent with --by <nickname> (agents live in pm-members.yaml).",
+    );
+  }
+  if (opts.cmd !== undefined) {
+    warnings.push(
+      isManual
+        ? "--cmd is deprecated; use --by <nickname> to select the agent."
+        : "--cmd as a batch trigger is deprecated; use --auto (with --edit-by / --review-by).",
+    );
+  }
+
+  return {
+    editAgent: opts.editBy ?? opts.editAgent,
+    reviewAgent: opts.reviewBy ?? opts.reviewAgent,
+    warnings,
+  };
+}
 
 // Outcome of resolving a per-task agent override.
 //   none    — no override applies; fall back to auto-selection
@@ -214,11 +288,12 @@ function resolveMemberCommandQuietly(
   }
 }
 
-// Resolve the agent override for a task's mode. A single explicit override (--cmd / --agent-cmd)
-// wins for every mode and accepts a nickname or a raw command string. Otherwise the mode-specific
-// override (--edit-agent / --review-agent) applies; it accepts an agent nickname only and resolves
-// the command via the provider command template (or the member's command override), failing if
-// the nickname is unknown or the command cannot be resolved.
+// Resolve the agent override for a task's mode. A single explicit override (--by, or the
+// deprecated --cmd / --agent-cmd) wins for every mode and accepts a nickname or a raw command
+// string. Otherwise the mode-specific override (--edit-by / --review-by, or the deprecated
+// --edit-agent / --review-agent) applies; it accepts an agent nickname only and resolves the
+// command via the provider command template (or the member's command override), failing if the
+// nickname is unknown or the command cannot be resolved.
 export function resolveAgentOverride(
   mode: "edit" | "review",
   agentCmdOverride: string | undefined,
@@ -250,7 +325,7 @@ export function resolveAgentOverride(
   const nickname = mode === "review" ? modeAgentOverrides.review : modeAgentOverrides.edit;
   if (!nickname) return { kind: "none" };
 
-  const flag = mode === "review" ? "--review-agent" : "--edit-agent";
+  const flag = mode === "review" ? "--review-by" : "--edit-by";
   const member = roster?.members.find((m) => m.type === "agent" && m.nickname === nickname);
   let command: string | undefined;
   try {
@@ -1839,7 +1914,7 @@ export function resolveInPlaceCommand(
   }
 
   if (task && (task.execution ?? "agent") === "human") {
-    throw new Error(`Task requires human execution. Use --cmd to override: ${task.id}`);
+    throw new Error(`Task requires human execution. Use --by <nickname> to override: ${task.id}`);
   }
 
   if (by) {
@@ -1858,7 +1933,7 @@ export function resolveInPlaceCommand(
   );
   const candidate = candidates[0];
   const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
-  if (!candidate || !command) throw new Error("No agent found. Specify --cmd <command>.");
+  if (!candidate || !command) throw new Error("No agent found. Specify --by <nickname>.");
   return { command, actor: candidate.nickname };
 }
 
@@ -2278,7 +2353,7 @@ export function resolveRegisterCommand(
   const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
   if (!candidate || !command) {
     throw new Error(
-      `No agent found for register item ${item.id} (owner: ${item.owner || "-"}). Specify --cmd <command>.`,
+      `No agent found for register item ${item.id} (owner: ${item.owner || "-"}). Specify --by <nickname>.`,
     );
   }
   return { command, actor: candidate.nickname };
@@ -2930,7 +3005,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--cmd <command>",
-    "Agent nickname or command string (selects a ready-task batch unless a manual target is used)",
+    "[deprecated] Use --by <nickname> (manual) or --auto (batch). Agent nickname or command string",
   );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
   rcmd.option("--worktree-base <path>", "Override worktree base directory");
@@ -2959,20 +3034,31 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--agent-config <path>", "Deprecated alias for --exec-defaults");
   rcmd.option(
     "--agent-cmd <command>",
-    'Override agent command string, e.g. "opencode run --agent edit-agent" (--task mode only)',
+    "[deprecated] Use --by <nickname>. Override agent command string (--task mode only)",
   );
   rcmd.option(
-    "--edit-agent <nickname>",
-    "pm-members.yaml agent nickname for edit-mode tasks (overrides auto-selection; --cmd/--agent-cmd take precedence)",
+    "--edit-by <nickname>",
+    "pm-members.yaml agent nickname for edit-mode tasks in --auto batch runs",
   );
   rcmd.option(
-    "--review-agent <nickname>",
-    "pm-members.yaml agent nickname for review-mode tasks (overrides auto-selection; --cmd/--agent-cmd take precedence)",
+    "--review-by <nickname>",
+    "pm-members.yaml agent nickname for review-mode tasks in --auto batch runs",
   );
+  rcmd.option("--edit-agent <nickname>", "[deprecated] Renamed to --edit-by");
+  rcmd.option("--review-agent <nickname>", "[deprecated] Renamed to --review-by");
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 
   rcmd.action(async (opts: RunOpts) => {
     try {
+      // Normalize agent-selection flags (new --edit-by/--review-by over deprecated aliases)
+      // and surface deprecation warnings before any resolution reads opts.
+      const normalizedFlags = normalizeAgentFlags(opts);
+      for (const warning of normalizedFlags.warnings) {
+        process.stderr.write(`warning: ${warning}\n`);
+      }
+      opts.editAgent = normalizedFlags.editAgent;
+      opts.reviewAgent = normalizedFlags.reviewAgent;
+
       const isAuto = !!opts.auto;
       const hasTask = !!opts.task;
       const hasDeliverable = !!opts.deliverable;
@@ -2985,7 +3071,7 @@ export function registerRunCommand(exec: Command): void {
 
       if (!isAuto && !isManual && !hasCommand) {
         process.stdout.write(
-          "Specify --auto, --cmd, --task, --deliverable, --plan, --register, or --job.\n",
+          "Specify --auto, --by (with a manual target), --task, --deliverable, --plan, --register, or --job.\n",
         );
         process.exitCode = 1;
         return;
@@ -3053,7 +3139,7 @@ export function registerRunCommand(exec: Command): void {
       }
       if (opts.agentCmd && !isManual) {
         process.stdout.write(
-          "--agent-cmd requires a manual target. Use --cmd for batch execution.\n",
+          "--agent-cmd requires a manual target. Use --auto (with --edit-by / --review-by) for batch execution.\n",
         );
         process.exitCode = 1;
         return;
@@ -3338,16 +3424,21 @@ export function registerResumeCommand(exec: Command): void {
     false,
   );
   cmd.option("--by <actor>", "Override the actor (default: the actor that claimed the task)");
-  cmd.option("--cmd <command>", "Agent nickname or command string override");
-  cmd.option("--agent-cmd <command>", "Override agent command string (alias of --cmd for resume)");
   cmd.option(
-    "--edit-agent <nickname>",
+    "--cmd <command>",
+    "[deprecated] Use --by <nickname>. Agent nickname or command override",
+  );
+  cmd.option("--agent-cmd <command>", "[deprecated] Use --by <nickname>. Override agent command");
+  cmd.option(
+    "--edit-by <nickname>",
     "pm-members.yaml agent nickname for edit-mode tasks (overrides the claiming actor)",
   );
   cmd.option(
-    "--review-agent <nickname>",
+    "--review-by <nickname>",
     "pm-members.yaml agent nickname for review-mode tasks (overrides the claiming actor)",
   );
+  cmd.option("--edit-agent <nickname>", "[deprecated] Renamed to --edit-by");
+  cmd.option("--review-agent <nickname>", "[deprecated] Renamed to --review-by");
   cmd.option("--parallel <n>", "Number of tasks to resume in parallel", "1");
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(
@@ -3363,6 +3454,13 @@ export function registerResumeCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
+      const normalizedFlags = normalizeAgentFlags(opts);
+      for (const warning of normalizedFlags.warnings) {
+        process.stderr.write(`warning: ${warning}\n`);
+      }
+      opts.editAgent = normalizedFlags.editAgent;
+      opts.reviewAgent = normalizedFlags.reviewAgent;
+
       await withProjectExecRunLock(opts, "resume", () => runResumeMode(opts));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

@@ -2,12 +2,66 @@ import { describe, expect, it } from "vitest";
 import {
   extractBlockReason,
   isRateLimitError,
+  normalizeAgentFlags,
   parseExecRunBusyPolicy,
   resolveAgentOverride,
   selectCandidates,
 } from "../../src/exec-run.js";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
+
+describe("normalizeAgentFlags", () => {
+  it("新フラグ --edit-by / --review-by を正準値として返し警告を出さない", () => {
+    const result = normalizeAgentFlags({
+      editBy: "claude-edit-agent",
+      reviewBy: "claude-review-agent",
+    });
+
+    expect(result).toEqual({
+      editAgent: "claude-edit-agent",
+      reviewAgent: "claude-review-agent",
+      warnings: [],
+    });
+  });
+
+  it("非推奨 --edit-agent / --review-agent を正準値へ畳み込み警告する", () => {
+    const result = normalizeAgentFlags({ editAgent: "e-agent", reviewAgent: "r-agent" });
+
+    expect(result.editAgent).toBe("e-agent");
+    expect(result.reviewAgent).toBe("r-agent");
+    expect(result.warnings).toEqual([
+      "--edit-agent is deprecated; use --edit-by.",
+      "--review-agent is deprecated; use --review-by.",
+    ]);
+  });
+
+  it("新フラグは非推奨エイリアスより優先する", () => {
+    const result = normalizeAgentFlags({ editBy: "new", editAgent: "new" });
+
+    expect(result.editAgent).toBe("new");
+  });
+
+  it("--edit-by と --edit-agent が食い違う場合はエラーにする", () => {
+    expect(() => normalizeAgentFlags({ editBy: "a", editAgent: "b" })).toThrow(
+      /Conflicting --edit-by and deprecated --edit-agent/,
+    );
+  });
+
+  it("--cmd は手動ターゲット有無で誘導先を出し分けて警告する", () => {
+    expect(normalizeAgentFlags({ cmd: "x", task: "T-1" }).warnings).toEqual([
+      "--cmd is deprecated; use --by <nickname> to select the agent.",
+    ]);
+    expect(normalizeAgentFlags({ cmd: "x" }).warnings).toEqual([
+      "--cmd as a batch trigger is deprecated; use --auto (with --edit-by / --review-by).",
+    ]);
+  });
+
+  it("--agent-cmd は --by へ誘導して警告する", () => {
+    expect(normalizeAgentFlags({ agentCmd: "opencode run" }).warnings).toEqual([
+      "--agent-cmd is deprecated; select a registered agent with --by <nickname> (agents live in pm-members.yaml).",
+    ]);
+  });
+});
 
 describe("parseExecRunBusyPolicy", () => {
   it("既定を fail とし、skip / wait / fail だけを受け入れる", () => {
@@ -261,7 +315,7 @@ describe("resolveAgentOverride", () => {
 
     expect(actual.kind).toBe("error");
     if (actual.kind === "error") {
-      expect(actual.message).toContain("--edit-agent");
+      expect(actual.message).toContain("--edit-by");
       expect(actual.message).toContain("ghost-agent");
     }
   });

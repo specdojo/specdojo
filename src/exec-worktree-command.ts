@@ -437,10 +437,18 @@ export function registerExecWorktreeCommands(exec: Command): void {
     worktree.command("agent").description("Run the task agent once inside its worktree"),
   );
   agentCommand.option("--by <actor>", "Validate the claim actor");
-  agentCommand.option("--agent-cmd <command>", "Override agent command");
+  agentCommand.option(
+    "--agent-cmd <command>",
+    "[deprecated] Use --by <nickname>. Override agent command",
+  );
   agentCommand.option("--dry-run", "Print the resolved command without executing", false);
   agentCommand.action(async (opts: AgentOpts) => {
     try {
+      if (opts.agentCmd !== undefined) {
+        process.stderr.write(
+          "warning: --agent-cmd is deprecated; select a registered agent with --by <nickname>.\n",
+        );
+      }
       await agent(opts);
     } catch (error) {
       commandError(error);
