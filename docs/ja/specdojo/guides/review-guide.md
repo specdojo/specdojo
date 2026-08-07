@@ -162,7 +162,7 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 SpecDojo のレビューは、原則として review plan を作ってから実施し、review result を残します。
 
-review plan は `specdojo exec build` が生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
+review plan は `specdojo exec plan` または `specdojo exec run` が必要時に生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
 
 ```text
 pm-review-viewpoints.yaml
@@ -171,7 +171,7 @@ dct-*.yaml
   ↓
 rulebook
   ↓
-exec build → review plan（exec/plans/<task-id>-plan.md）
+exec plan / exec run → review plan（exec/plans/<task-id>-plan.md）
   ↓
 human / agent review（exec run）
   ↓
@@ -201,7 +201,7 @@ edit plan で観点別の自己レビューを行わないのは、各観点を�
 
 ### 3.2. review plan の生成
 
-review plan は `specdojo exec build` によって機械生成します（`mode: review` のタスクが対象）。
+review plan は `specdojo exec plan` または `specdojo exec run` によって機械生成します（`mode: review` のタスクが対象）。`exec refresh` は Ready などの実行状態を更新しますが、plan は生成しません。
 
 主な入力
 

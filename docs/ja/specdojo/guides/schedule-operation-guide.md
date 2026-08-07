@@ -33,7 +33,7 @@ Schedule（`sch-track-*.yaml`）から生成したタスクを、自動実行ま
 `exec run --auto` は Ready タスクを選び、worktree 隔離と状態追跡を伴って実行します。
 
 ```text
-exec build
+exec refresh
   -> ready.json に Ready タスクを出力
 exec run --auto [--loop]
   -> Ready タスクを選択
@@ -45,11 +45,11 @@ exec run --auto [--loop]
   -> agent command を実行
   -> 成功: result と成果物を commit / merge / complete
   -> 失敗: result を blocked に更新 / block / worktree を保持
-exec build
+exec refresh
   -> 次の Ready タスクを更新
 ```
 
-`--loop --parallel <n>` では、最初に最大 `n` 件を起動した後、1件の agent が終了するたびに root 側の統合処理を終えて `exec build` を実行し、空いた枠へ次の Ready タスクを投入します。他の実行中 task の完了を待たないため、長時間 task と短時間 task が混在しても短時間 task の枠を継続利用できます。`--loop` を指定しない場合は、開始時に選択した最大 `n` 件だけを実行して終了します。
+`--loop --parallel <n>` では、最初に最大 `n` 件を起動した後、1件の agent が終了するたびに root 側の統合処理を終えて `exec refresh` を実行し、空いた枠へ次の Ready タスクを投入します。他の実行中 task の完了を待たないため、長時間 task と短時間 task が混在しても短時間 task の枠を継続利用できます。`--loop` を指定しない場合は、開始時に選択した最大 `n` 件だけを実行して終了します。
 
 代表コマンド:
 
@@ -75,7 +75,7 @@ specdojo exec run --project <project-id> --auto --strategy fifo
 | agent が失敗して `blocked` になる              | worktree を保持し、auto の Ready 選択から除外する |
 | プロセス中断で `doing` が残る                  | `exec resume` で再開する                          |
 
-parallel 実行中でも、claim、checkpoint、merge、complete、`exec build` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
+parallel 実行中でも、claim、checkpoint、merge、complete、`exec refresh` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
 
 auto 実行と並行して人が作業する場合は、別ブランチの worktree を作成して編集します。
 
@@ -101,7 +101,7 @@ git worktree add ../specdojo-edit -b <edit-branch>
 
 ```bash
 # 1. Ready と CPM を最新化する
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 
 # 2. 次のタスクを確認する
 specdojo exec scheduler --project <project-id> --by <actor> --dry-run
@@ -124,7 +124,7 @@ specdojo exec complete \
   --by <actor>
 
 # 7. 次の Ready を更新する
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 `exec complete` は `--task` を省略できます。`--by` で指定した actor の `doing` タスクが1件だけの場合は、そのタスクを完了対象として解決します。対象が0件の場合はエラー、複数件の場合は曖昧性を避けるため `--task <task-id>` の指定を要求します。

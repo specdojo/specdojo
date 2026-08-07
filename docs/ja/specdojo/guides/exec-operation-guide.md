@@ -105,7 +105,7 @@ specdojo exec release \
   --task <task-id> \
   --by <actor>
 
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 調査用 worktree も即座に破棄したい場合だけ `--reset-worktree` を付けます。
@@ -131,7 +131,7 @@ specdojo exec reopen \
   --by <human-actor> \
   --msg "completion criteria unmet"
 
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 `reopen` は `reopen` event を追記し、`done -> todo` へ遷移させます。対応する `complete` event は削除しないため、「一度完了と判断した後、理由を記録して再開した」という履歴が残ります。
@@ -200,7 +200,7 @@ human task の plan は生成しません。対象タスクを claim すると�
 
 ```bash
 # 1. Ready を更新する（human plan は生成しない）
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 
 # 2. claim して result を生成する
 specdojo exec claim \
@@ -221,7 +221,7 @@ specdojo exec complete \
   --msg "finalized"
 
 # 5. 次の Ready を更新する
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 成果物の `status` を `ready` に昇格できるのは人だけです。エージェント実行では、`ready` へ昇格させるコミットは exec のガードで拒否されます。

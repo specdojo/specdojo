@@ -52,11 +52,12 @@ SpecDojo CLI、agent、`specdojo exec run` の3層に責務を分割する。
 ```text
 schedule yaml（owner・phase・mode・capabilities・proficiency を定義）
    ↓
-specdojo exec build
+specdojo exec refresh
    ↓
-generated/ready.json / exec/plans/<task-id>-plan.md
+generated/ready.json
    ↓
 specdojo exec run
+   → exec/plans/<task-id>-plan.md がなければ生成
    → ready task を claim
    → exec/results/<task-id>-result.md を scaffold 生成
    → phase 要件に適合する member を選択
@@ -79,7 +80,7 @@ edit と review の順序は固定しない。`sch-strategy-<track>.yaml` の ph
 - event は append-only とし、対応する `complete` event、result、Git 履歴を削除しない。
 - 対象タスクに依存する後続 task が `doing`、`blocked`、`done` の場合は拒否する。後続 task も訂正する場合は依存グラフの下流から順に `reopen` または `release` し、整合する状態へ戻す。
 - `reopen` 自体は plan を復元・生成せず、result を変更しない。再 claim 時に固定名 result の実行状態と時刻を新しい試行用に更新し、本文は既存内容を引き継ぐ。完了済み plan は `exec/plans/done/` に履歴として残し、新しい plan は `exec plan` / `exec run` で生成する。
-- `reopen` 後は `exec build` により Ready、CPM、phase gate を再計算する。
+- `reopen` 後は `exec refresh` により Ready、CPM、phase gate を再計算する。
 
 ## 4. 共通ディレクトリ
 
@@ -96,7 +97,7 @@ docs/ja/projects/prj-0001/
    │  ├─ results/                     # agent が確認結果を記録する result
    │  └─ events/                      # append-only の状態変更イベント
    └─ generated/
-      └─ ready.json                   # exec build の生成物
+      └─ ready.json                   # exec refresh の生成物
 ```
 
 agent CLI 固有のプロジェクト設定と agent 定義の配置は子設計で定義する。
@@ -377,7 +378,7 @@ devcontainer up --workspace-folder . --remove-existing-container
 
 複数の edit agent を並列実行する場合は、タスクごとに worktree とブランチを作成して Git working tree の競合を防ぐ。review agent が成果物を変更しない場合、review task の worktree 分離は不要とする。
 
-`exec run --auto --loop --parallel <n>` は、agent プロセスの実行枠を worker pool として扱う。agent が1件終了した時点で、runner はその task の commit / merge / complete と `exec build` を直列に処理し、依存関係を再計算したうえで空いた枠へ次の Ready task を投入する。`--parallel <n>` は同時に起動している agent 数の上限であり、`--loop` が無い場合は開始時に選んだ最大 `n` 件だけを実行して終了する。
+`exec run --auto --loop --parallel <n>` は、agent プロセスの実行枠を worker pool として扱う。agent が1件終了した時点で、runner はその task の commit / merge / complete と `exec refresh` を直列に処理し、依存関係を再計算したうえで空いた枠へ次の Ready task を投入する。`--parallel <n>` は同時に起動している agent 数の上限であり、`--loop` が無い場合は開始時に選んだ最大 `n` 件だけを実行して終了する。
 
 | タイミング          | 操作                                                        |
 | ------------------- | ----------------------------------------------------------- |

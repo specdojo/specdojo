@@ -61,7 +61,7 @@ function setupFixture(repo: string, worktreeBase: string, agentScript: string): 
   for (const rel of [".specdojo", "schedule", "execution/exec/events", "docs/project"]) {
     mkdirSync(join(repo, rel), { recursive: true });
   }
-  // The full template set is required by `exec build` to generate plans.
+  // The full template set is required by `exec plan` / `exec run` to generate plans.
   cpSync(templatesDir, join(repo, "docs", "ja", "specdojo", "templates"), { recursive: true });
 
   writeFileSync(
@@ -148,7 +148,7 @@ function run(): void {
   try {
     setupFixture(repo, worktreeBase, agentScript);
 
-    cli(repo, ["exec", "build", "--project", "test"]);
+    cli(repo, ["exec", "refresh", "--project", "test"]);
     cli(repo, [
       "exec",
       "run",

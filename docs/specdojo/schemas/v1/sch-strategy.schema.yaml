@@ -6,7 +6,7 @@ description: >
   Used as input to the code generator; not a runtime schedule file.
   phase_sets defines named groups of phases keyed by semantic name (e.g., first-pass, finalize-pass).
   Each owner_rule references a phase_set by name.
-  Phase.mode (edit/review) is written into ready.json by exec build to drive plan/result generation.
+  Phase.mode (edit/review) is written into ready.json by exec refresh to drive plan/result generation.
   Agent execution requirements are declared directly on phases using capabilities and proficiency;
   exec run --auto resolves matching agents from pm-members.yaml.
 type: object
@@ -93,7 +93,7 @@ properties:
     description: >
       Named phase set definitions. Keys are arbitrary names (e.g., first-pass, finalize-pass).
       Each owner_rule references one of these keys via its phase_set field.
-      exec build writes phase metadata into ready.json so exec run --auto can resolve agents
+      exec refresh writes phase metadata into ready.json so exec run --auto can resolve agents
       from pm-members.yaml without a separate assignment rule file.
     minProperties: 1
     additionalProperties:

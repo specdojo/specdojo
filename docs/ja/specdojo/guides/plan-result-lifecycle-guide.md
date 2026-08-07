@@ -121,9 +121,9 @@ exec/results/<stem>-result.md
 | `exec run --task --track-state` | なければ生成する | scaffold 生成し、終了コードで status 更新 | `claim` / `complete` / `block` を記録する |
 | `exec reopen`                   | 変更しない       | 変更しない                                | `reopen` を記録する                       |
 | `exec run --plan`               | 既存 plan を使う | plan 名から導出する                       | 変更しない                                |
-| `exec build`                    | 生成しない       | 生成しない                                | 変更しない                                |
+| `exec refresh`                  | 生成しない       | 生成しない                                | 変更しない                                |
 
-`exec build` は state、Ready、CPM などの `generated/` 更新に専念し、plan は生成・削除しません。agent タスクの plan は `exec plan` / `exec run` でオンデマンド生成します。`execution: human` のタスクは plan を持たず、`exec claim` が生成する result を使います。
+`exec refresh` は state、Ready、CPM などの `generated/` 更新に専念し、plan は生成・削除しません。agent タスクの plan は `exec plan` / `exec run` でオンデマンド生成します。`execution: human` のタスクは plan を持たず、`exec claim` が生成する result を使います。
 
 ### 3.2. planテンプレート
 
@@ -198,7 +198,7 @@ specdojo exec run --project <project-id> --task <task-id>
 
 ```bash
 specdojo exec reopen --project <project-id> --task <task-id> --by <human-actor> --msg "completion criteria unmet"
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
 specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"

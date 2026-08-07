@@ -73,7 +73,7 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
     if (statSync(strategyFile).mtimeMs > statSync(trackFile).mtimeMs) {
       warnings.push(
         `${basename(strategyFile)} is newer than ${basename(trackFile)}. ` +
-          `Run: specdojo schedule build --track ${track} --force before exec build.`,
+          `Run: specdojo schedule build --track ${track} --force before exec refresh.`,
       );
     }
   }

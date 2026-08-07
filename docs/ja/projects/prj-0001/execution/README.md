@@ -15,14 +15,14 @@ execution/
 ```
 
 - `exec/events/`: append-only の実行イベント JSON
-- `exec/plans/`: `exec build` が生成する edit-plan / review-plan
+- `exec/plans/`: `exec plan` / `exec run` が必要時に生成する edit-plan / review-plan
 - `exec/results/`: claim 時に生成し、実行結果を記録する result
 - `exec/.locks/`: scheduler の排他ロック
-- `generated/`: `specdojo exec build` が生成する派生ファイル
+- `generated/`: `specdojo exec refresh` が生成する派生ファイル
 
 ## 2. 主な generated ファイル
 
-`specdojo exec build --project prj-0001` 実行後、`generated/` に以下が出力される。
+`specdojo exec refresh --project prj-0001` 実行後、`generated/` に以下が出力される。
 
 - `state.json`: task state snapshot（全 task の現在状態: todo/doing/blocked/done/cancelled）
 - `ready.md`: 人間向け ready 一覧（strategy 別に整形済み）
@@ -31,7 +31,7 @@ execution/
 - `cpm.json` / `cpm.md`: CPM 計算結果
 - `critical-path.md`: クリティカルパスと slack 分析
 - `timeline.md` / `timeline.svg`: プロジェクトタイムライン（Gantt-like 表示）
-- `schedule-diff.md`: スケジュールスキーマ差分（前回ビルドからの追加/削除/変更）
+- `schedule-diff.md`: スケジュールスキーマ差分（前回 refresh からの追加/削除/変更）
 - `metadata.json`: 生成メタデータ（タイムスタンプ、schedule ファイル数、派生ファイル一覧）
 
 ## 3. Ready と Claim の見方
@@ -68,7 +68,7 @@ execution/
 
 ```bash
 specdojo exec validate --project prj-0001
-specdojo exec build --project prj-0001
+specdojo exec refresh --project prj-0001
 specdojo exec scheduler --project prj-0001 --by agent-1
 ```
 

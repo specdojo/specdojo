@@ -41,9 +41,9 @@ pre-commit:
       glob: "docs/ja/projects/**"
       run: npx tsx src/specdojo.ts catalog validate
 
-    exec-build:
+    exec-refresh:
       glob: "docs/**/sch-*.yaml"
-      run: npx tsx src/specdojo.ts exec build
+      run: npx tsx src/specdojo.ts exec refresh
 
     index-build:
       glob: "docs/**"

@@ -89,7 +89,7 @@ tools/vscode-specdojo/out/
 .specdojo/doc-index.json
 
 # specdojo build の生成物（generated/ 配下）。
-# catalog/register/exec build が出力する派生ファイルで、timestamp 等で内容が変わる。
+# catalog/register build と exec refresh が出力する派生ファイルで、timestamp 等で内容が変わる。
 # VitePress build 時（docs:build の前段 docs:generate）に再生成するため tracking しない。
 # ただし空ディレクトリを保持するための .gitkeep は追跡対象に残す。
 docs/**/generated/*
