@@ -56,9 +56,8 @@ describe("registerItemCategory", () => {
     expect(registerItemCategory("risk")).toBe("investigate");
   });
 
-  it("decision / dependency / note は実行対象外として null を返す", () => {
+  it("decision / note は実行対象外として null を返す", () => {
     expect(registerItemCategory("decision")).toBeNull();
-    expect(registerItemCategory("dependency")).toBeNull();
     expect(registerItemCategory("note")).toBeNull();
   });
 });

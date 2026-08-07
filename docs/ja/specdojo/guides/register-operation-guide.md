@@ -29,7 +29,7 @@ Register Operation Guide
 
 ### 1.1. 登録簿の位置づけ
 
-プロジェクト登録簿は、プロジェクト立ち上げ時または進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘を一元管理する台帳です。
+プロジェクト登録簿は、プロジェクト立ち上げ時または進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘を一元管理する台帳です。
 
 - 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）です。
 - 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しません。
@@ -94,16 +94,17 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 
 値の一覧と列定義は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) と `pjr-index-content.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
 
-| type             | 意味                                 | 迷ったとき                                                     |
-| ---------------- | ------------------------------------ | -------------------------------------------------------------- |
-| `todo`           | 実施が決まっている作業               | 変更判断を伴うなら `change-request`、外部待ちなら `dependency` |
-| `question`       | 回答・確認が必要な事項               | 共有だけでよいなら `note`、選択肢を決める判断なら `decision`   |
-| `risk`           | まだ顕在化していない懸念             | すでに発生している問題なら `issue`                             |
-| `issue`          | 顕在化している問題                   | 未発生の懸念なら `risk`                                        |
-| `change-request` | 成果物・仕様・計画に対する変更の要望 | 実施が確定済みの作業なら `todo`                                |
-| `decision`       | 記録・追跡する意思決定               | 判断材料が足りず確認が先なら `question`                        |
-| `dependency`     | 外部の対応・提供物への依存           | 自分たちが実施する作業なら `todo`                              |
-| `note`           | 共有・備忘のための記録               | 回答や結論が必要なら `question`                                |
+| type             | 意味                                 | 迷ったとき                                                                                                  |
+| ---------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `todo`           | 実施が決まっている作業               | 変更判断を伴うなら `change-request`、外部待ちは `todo`/`issue` に登録し `register wait` で `waiting` にする |
+| `question`       | 回答・確認が必要な事項               | 共有だけでよいなら `note`、選択肢を決める判断なら `decision`                                                |
+| `risk`           | まだ顕在化していない懸念             | すでに発生している問題なら `issue`                                                                          |
+| `issue`          | 顕在化している問題                   | 未発生の懸念なら `risk`                                                                                     |
+| `change-request` | 成果物・仕様・計画に対する変更の要望 | 実施が確定済みの作業なら `todo`                                                                             |
+| `decision`       | 記録・追跡する意思決定               | 判断材料が足りず確認が先なら `question`                                                                     |
+| `note`           | 共有・備忘のための記録               | 回答や結論が必要なら `question`                                                                             |
+
+外部の対応・提供物への依存（外部待ち）には専用 type を設けない。対応が必要なら `todo` / `issue` として登録し、外部待ちで止まっている状態は `register wait` の `waiting` ステータスで表す。計画上の前提・制約・依存関係は `prj-assumptions-constraints-dependencies` 成果物へ整理する。
 
 type は派生ビューの生成と `exec run --register` の挙動（`agent実行・定期実行との連携` を参照）に影響するため、内容が変質した場合は `register update` で見直します。
 
@@ -214,7 +215,7 @@ specdojo exec run --project <project-id> --register PJR-0012 --worktree
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree --parallel 2
 ```
 
-- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `dependency` / `note` は実行対象外です。
+- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `note` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
 - `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
