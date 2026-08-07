@@ -198,6 +198,32 @@ specdojo register build --project <project-id>
 
 派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
 
+### 2.5. 承認フローと承認者
+
+承認を要する type（`change-request` / `decision` / `risk` / `question` / `issue`）について、承認の種類・状態遷移・承認方式・承認者を次のとおり運用します。
+
+まず承認には 2 種類があり、混同しません。
+
+- 成果物レビュー: agent 生成物の妥当性確認です。exec の `review` 状態と review result、`register close` で成立します。
+- 内容承認: 権限者が判断・変更・対応方針そのものを承認する行為です。チケット個票の「審査・決定」「採択理由」「対応方針」「承認」節が担います。本節が対象とするのは主に内容承認です。
+
+承認は register の状態遷移に沿って進めます。`review` で承認に回し、`close`（`done` / `decided`）・`reject`・`defer`・`wait` のいずれかで終端または保留します。
+
+| type             | 承認方式（既定）             | 承認の状態遷移                           | 承認者（RACI の A）      |
+| ---------------- | ---------------------------- | ---------------------------------------- | ------------------------ |
+| `change-request` | PR ベース                    | `review` → PR approve → `close`          | 変更承認権限者（PO/CCB） |
+| `decision`       | commit ベース                | 決定者を承認節に記入し `close`→`decided` | 意思決定者               |
+| `risk`           | commit ベース                | 対応方針を記入し `close` / `defer`       | リスクオーナー           |
+| `question`       | commit ベース                | 回答者を承認節に記入し `close`→`decided` | 回答権限者               |
+| `issue`          | commit ベース（exec review） | exec `review` → `close`                  | 課題リード               |
+| `todo`           | commit ベース（exec review） | exec `review` → `close`                  | -                        |
+| 全 type 共通     | PR ベース                    | `develop → main` 昇格                    | リポジトリ管理者         |
+
+- 承認方式は既定 commit とし、PR を強制するのは `develop → main` 昇格 / `change-request` 承認 / 不可逆・高リスク・framework schema 破壊的変更（`todo` / `issue` / `decision` の一部）の 3 ケースに限定します。判定条件は [Git ブランチ運用標準](../standards/git-branching-standard.md) の `承認ゲートと PR 強制条件` を正本とします。
+- 承認者ロール（RACI の A）は pm-raci と整合させ、`change-request` は変更承認権限者（PO/CCB）、`decision` / `question` は当該領域の意思決定者・回答権限者を割り当てます。
+- PR 強制ケースの承認者強制は `main` / `develop` の branch protection と `CODEOWNERS` で担保します。commit ベースの承認は `decision` / `question` 個票の承認節（決定者・決定日 / 回答者・回答日）で承認者と承認日を残します。
+- PR 承認を併用する具体的な運用手順は `PO 留保事項の PR 承認運用` を参照します。
+
 ## 3. agent実行・定期実行との連携
 
 登録項目は `exec run --register` で agent に実行させられます。
