@@ -91,6 +91,7 @@ import {
 } from "./exec-register.js";
 import type { PjrItem, RegisterPaths } from "./register.js";
 import { isResultUnfilled, scaffoldResult, updateResultStatus } from "./exec-results.js";
+import { completeJobRun, materializeJobRun } from "./job.js";
 import {
   gitOutput,
   gitResult,
@@ -155,6 +156,10 @@ export type RunOpts = {
   deliverable?: string;
   plan?: string;
   register?: string | string[];
+  job?: string;
+  input?: string | string[];
+  scheduledAt?: string;
+  jobTrigger?: string;
   registerCommit?: boolean;
   onFailure?: string;
   worktree?: boolean;
@@ -2097,6 +2102,110 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   process.stdout.write(`run done: ${label}\n`);
 }
 
+async function runJobMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(resolvedPaths);
+  const { schedulePath, executionPath } = resolvedPaths;
+  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
+  if (!projectId) throw new Error("--job requires a project id.");
+
+  const trigger =
+    opts.jobTrigger === "ci"
+      ? "ci"
+      : process.env[ROUTINE_EXEC_ENV] === "1" || opts.jobTrigger === "routine"
+        ? "routine"
+        : "manual";
+  const materialized = await materializeJobRun({
+    projectId,
+    jobId: (opts.job as string).trim(),
+    inputs: opts.input,
+    scheduledAt: opts.scheduledAt,
+    trigger,
+    dryRun: !!opts.dryRun,
+  });
+  const { definition, record, runPath, planPath } = materialized;
+  if (materialized.duplicateComplete) {
+    process.stdout.write(`Job Run already complete: ${record.run_id} (${record.state})\n`);
+    return;
+  }
+
+  const task: ReadyTaskView = {
+    id: record.run_id,
+    local_id: record.task.targets?.[0] ?? record.run_id,
+    name: definition.name,
+    owner: record.task.owner,
+    mode: record.task.mode,
+    capabilities: record.task.capabilities,
+    proficiency: record.task.proficiency,
+    schedule_file: "",
+    fifo_rank: 0,
+    critical_first_rank: 0,
+  };
+  const roster = loadRosterForExecutionPath(executionPath);
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
+  const { command, actor } = resolveInPlaceCommand(task, roster, opts, execDefaults);
+
+  if (opts.dryRun) {
+    process.stdout.write(`[dry-run] job: ${definition.id}\n`);
+    process.stdout.write(`[dry-run] run: ${record.run_id}\n`);
+    process.stdout.write(`[dry-run] scheduled_at: ${record.scheduled_at}\n`);
+    process.stdout.write(`[dry-run] command: ${command}\n`);
+    process.stdout.write(`[dry-run] plan: ${planPath}\n`);
+    return;
+  }
+
+  const { resultPath } = await scaffoldResult({
+    executionPath,
+    taskId: record.run_id,
+    mode: record.task.mode,
+    projectId,
+    origin: "job",
+    jobId: definition.id,
+    runId: record.run_id,
+    planRef: record.plan_ref,
+    agent: actor,
+    startedAt: new Date().toISOString(),
+    ...(record.task.targets ? { targets: record.task.targets } : {}),
+  });
+  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
+  const exitCode = await spawnAgentInPlace(
+    command,
+    prompt,
+    specdojoRootDir(),
+    schedulePath,
+    executionPath,
+  );
+  let effectiveExit = exitCode;
+  let reason: string | undefined;
+  if (exitCode === 0 && isResultUnfilled(resultPath, record.task.mode)) {
+    effectiveExit = 1;
+    reason = "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)";
+  }
+  const completedAt = new Date().toISOString();
+  await updateResultStatus(
+    resultPath,
+    effectiveExit === 0 ? "complete" : "blocked",
+    completedAt,
+    reason,
+  );
+  completeJobRun({
+    projectId,
+    runPath,
+    status: effectiveExit === 0 ? "succeeded" : "failed",
+    ...(reason ? { reason } : {}),
+  });
+  if (effectiveExit === 0) {
+    process.stdout.write(`Job Run complete: ${record.run_id}\n`);
+  } else {
+    process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+    process.exitCode = effectiveExit || 1;
+  }
+}
+
 // 登録項目の owner（Role code または agent nickname）から実行 agent を解決する。
 // 優先順位: --cmd / --agent-cmd → --by → owner の nickname 一致 → owner の Role code 一致
 // （priority 昇順）→ edit-mode の汎用自動選択。owner はロールとして解釈するため、
@@ -2787,6 +2896,13 @@ export function registerRunCommand(exec: Command): void {
     "--register <pjrIds...>",
     "One or more project register item IDs (PJR-XXXX) to run; tracks state via register transitions. In place and serial by default; add --worktree to isolate deliverables (and --parallel to run concurrently)",
   );
+  rcmd.option("--job <jobId>", "Materialize and run a reusable job definition");
+  rcmd.option(
+    "--input <key=value...>",
+    "Job input values (repeat or provide multiple key=value pairs)",
+  );
+  rcmd.option("--scheduled-at <dateTime>", "Scheduled occurrence time for a Job Run");
+  rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
   rcmd.option(
     "--register-commit",
     "With --register (in-place only): commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored with --worktree, which always commits",
@@ -2861,19 +2977,22 @@ export function registerRunCommand(exec: Command): void {
       const hasDeliverable = !!opts.deliverable;
       const hasPlan = !!opts.plan;
       const hasRegister = !!opts.register;
-      const isManual = hasTask || hasDeliverable || hasPlan || hasRegister;
+      const hasJob = !!opts.job;
+      const isManual = hasTask || hasDeliverable || hasPlan || hasRegister || hasJob;
       const hasCommand = !!opts.cmd;
       const isBatch = isAuto || (!isManual && hasCommand);
 
       if (!isAuto && !isManual && !hasCommand) {
         process.stdout.write(
-          "Specify --auto, --cmd, --task, --deliverable, --plan, or --register.\n",
+          "Specify --auto, --cmd, --task, --deliverable, --plan, --register, or --job.\n",
         );
         process.exitCode = 1;
         return;
       }
-      if ([hasTask, hasDeliverable, hasPlan, hasRegister].filter(Boolean).length > 1) {
-        process.stdout.write("Specify at most one of --task, --deliverable, --plan, --register.\n");
+      if ([hasTask, hasDeliverable, hasPlan, hasRegister, hasJob].filter(Boolean).length > 1) {
+        process.stdout.write(
+          "Specify at most one of --task, --deliverable, --plan, --register, --job.\n",
+        );
         process.exitCode = 1;
         return;
       }
@@ -2898,6 +3017,21 @@ export function registerRunCommand(exec: Command): void {
       }
       if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
         process.stdout.write("--register-commit and --on-failure require --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if ((opts.input || opts.scheduledAt) && !hasJob) {
+        process.stdout.write("--input and --scheduled-at require --job.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.jobTrigger && !["manual", "routine", "ci"].includes(opts.jobTrigger)) {
+        process.stdout.write("--job-trigger must be manual, routine, or ci.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (hasJob && opts.worktree) {
+        process.stdout.write("--worktree is not yet supported with --job.\n");
         process.exitCode = 1;
         return;
       }
@@ -2941,6 +3075,11 @@ export function registerRunCommand(exec: Command): void {
         // via register transitions (start → review / waiting) instead of exec events.
         if (hasRegister) {
           await runRegisterMode(opts);
+          return;
+        }
+
+        if (hasJob) {
+          await runJobMode(opts);
           return;
         }
 

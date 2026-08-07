@@ -13,6 +13,7 @@
       "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
       "project_register_path": "controls/project-register",
       "routines_path": "routines",
+      "jobs_path": "jobs",
       "project_context": ["prj-overview"],
       "run": {
         "exec_defaults": ".specdojo/exec-defaults.yaml"

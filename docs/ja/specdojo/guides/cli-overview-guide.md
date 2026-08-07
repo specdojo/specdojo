@@ -79,6 +79,8 @@ repo-root/
 │           │  └─ sch-track-<track>.yaml
 │           ├─ routines/
 │           │  └─ rtn-*.yaml
+│           ├─ jobs/
+│           │  └─ job-*.yaml
 │           ├─ controls/
 │           │  ├─ project-register/
 │           │  └─ reviews/
@@ -125,6 +127,7 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
       "execution_path": "execution",
       "project_register_path": "controls/project-register",
       "routines_path": "routines",
+      "jobs_path": "jobs",
       "members_path": "030-project-management/pm-members.yaml",
       "reviews_path": "controls/reviews",
       "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
@@ -207,9 +210,10 @@ register から成果物カタログへ移す手順は [Quick Startガイド](qu
 
 ## 7. 定期実行と登録項目の実行
 
-register は立ち上げ時の未整理事項と進行中の計画外事項を扱い、schedule は成果物カタログから展開した計画済み作業を扱います。routine はどちらかの実行を時刻条件で起動します。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、使い分けは [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+register は立ち上げ時の未整理事項と進行中の計画外事項を扱い、schedule は成果物カタログから展開した計画済み作業を扱います。Jobは入力ごとに新しい反復作業のRunを生成し、routineはこれらを時刻条件で起動します。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、使い分けは [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
 | 機能                  | 概要                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す  |
 | `exec run --register` | 登録簿（`pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
+| `exec run --job`      | `job-*.yaml`から入力とcheckpointを解決し、一意なJob Runを生成してagentに実行させる                                      |

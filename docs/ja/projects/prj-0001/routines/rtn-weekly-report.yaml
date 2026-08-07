@@ -1,0 +1,16 @@
+# Job実装の週報サンプル。運用開始時にenabledをtrueへ変更する。
+id: rtn-weekly-report
+name: 週報作成
+description: 毎週金曜日17時（Asia/Tokyo）に当該ISO週の週報Jobを起動する。
+enabled: false
+trigger:
+  cron: "0 17 * * 5"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-weekly-report
+  inputs:
+    period: "{{scheduled_at | iso_week}}"
+policy:
+  missed_run: all
+  overlap: skip

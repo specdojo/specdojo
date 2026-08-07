@@ -1,0 +1,77 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: SpecDojo Routine Definition
+type: object
+additionalProperties: false
+required: [id, action]
+oneOf:
+  - required: [interval]
+    not:
+      required: [trigger]
+  - required: [trigger]
+    not:
+      required: [interval]
+properties:
+  id:
+    type: string
+    pattern: "^rtn-[a-z0-9][a-z0-9-]*$"
+  name:
+    type: string
+  description:
+    type: string
+  enabled:
+    type: boolean
+  interval:
+    type: string
+    pattern: "^[1-9][0-9]*[mhdw]$"
+  trigger:
+    type: object
+    additionalProperties: false
+    required: [cron, timezone]
+    properties:
+      cron:
+        type: string
+        minLength: 1
+      timezone:
+        type: string
+        minLength: 1
+  policy:
+    type: object
+    additionalProperties: false
+    properties:
+      missed_run:
+        enum: [latest, all]
+      overlap:
+        const: skip
+  action:
+    oneOf:
+      - type: object
+        additionalProperties: true
+        required: [kind]
+        properties:
+          kind:
+            const: register
+      - type: object
+        additionalProperties: true
+        required: [kind]
+        properties:
+          kind:
+            const: exec-auto
+      - type: object
+        additionalProperties: true
+        required: [kind]
+        properties:
+          kind:
+            const: exec-resume
+      - type: object
+        additionalProperties: false
+        required: [kind, job]
+        properties:
+          kind:
+            const: job
+          job:
+            type: string
+            pattern: "^job-[a-z0-9][a-z0-9-]*$"
+          inputs:
+            type: object
+            additionalProperties:
+              type: string

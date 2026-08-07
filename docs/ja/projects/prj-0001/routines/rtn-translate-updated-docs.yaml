@@ -1,0 +1,14 @@
+# Job実装の翻訳サンプル。運用開始時にenabledをtrueへ変更する。
+id: rtn-translate-updated-docs
+name: 更新文書の翻訳
+description: 毎日3時（Asia/Tokyo）に前回成功後の文書翻訳Jobを起動する。
+enabled: false
+trigger:
+  cron: "0 3 * * *"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-translate-updated-docs
+policy:
+  missed_run: latest
+  overlap: skip

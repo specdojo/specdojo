@@ -287,6 +287,8 @@ idと対応させない場合（日本語名称を使用する場合等）は、
   （`domain: project-management`）が管理し、`routines/` と `controls/reviews/` は
   CLI の入出力領域なのでカタログ管理対象外です。
 
+再利用可能なJob Definitionは`jobs/`、各回のJob Runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
+
 ### 8.2. ディレクトリ構成の概観
 
 プロジェクトドキュメントは `projects/<prj-id>/` 配下に、ドメイン（`NNN-` 番号あり）と横断領域（番号なし）を並べます。トップ階層は次のとおりです。
@@ -303,6 +305,7 @@ projects/<prj-id>/
 ├── controls/                   # 管理台帳・派生ビュー（登録簿・レビュー結果）
 ├── schedule/                   # Schedule（sch-*.yaml）
 ├── routines/                   # 定期実行ルーチン（rtn-*.yaml）
+├── jobs/                       # 再利用可能なJob Definition（job-*.yaml）
 ├── execution/                  # 実行管理（plans / results / events / generated）
 └── reporting/                  # レポート（進捗報告・議事録）
 ```

@@ -1,0 +1,96 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: SpecDojo Job Definition
+type: object
+additionalProperties: false
+required: [id, name, task, run]
+properties:
+  id:
+    type: string
+    pattern: "^job-[a-z0-9][a-z0-9-]*$"
+  name:
+    type: string
+    minLength: 1
+  description:
+    type: string
+  inputs:
+    type: object
+    propertyNames:
+      pattern: "^[a-z][a-z0-9_]*$"
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      required: [type]
+      properties:
+        type:
+          enum: [string, integer, boolean, list]
+        required:
+          type: boolean
+        default: true
+        from_checkpoint:
+          type: string
+          minLength: 1
+        resolve:
+          enum: [git_head]
+        git_revision:
+          type: boolean
+  task:
+    type: object
+    additionalProperties: false
+    required: [mode, description]
+    anyOf:
+      - required: [targets]
+      - required: [paths]
+    properties:
+      mode:
+        enum: [edit, review]
+      owner:
+        type: string
+        minLength: 1
+      description:
+        type: string
+        minLength: 1
+      targets:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      paths:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      capabilities:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      proficiency:
+        enum: [low, normal, high, expert]
+  run:
+    type: object
+    additionalProperties: false
+    required: [idempotency_key]
+    properties:
+      idempotency_key:
+        type: string
+        minLength: 1
+  checkpoint:
+    type: object
+    additionalProperties: false
+    required: [values]
+    properties:
+      values:
+        type: object
+        propertyNames:
+          pattern: "^[a-z][a-z0-9_]*$"
+        additionalProperties:
+          type: string
+      advance_on:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          enum: [succeeded, noop]

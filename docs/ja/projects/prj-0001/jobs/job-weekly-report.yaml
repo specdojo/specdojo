@@ -1,0 +1,17 @@
+id: job-weekly-report
+name: 週報作成
+description: 対象週の実績を進捗報告へまとめる。
+inputs:
+  period:
+    type: string
+    required: true
+task:
+  mode: edit
+  owner: PM
+  description: |
+    {{inputs.period}} のSchedule完了実績、registerの状態変化、課題、翌週予定を確認し、
+    reporting/progress-reports配下へ期間で一意な週報を作成する。
+  targets:
+    - pr-progress-report
+run:
+  idempotency_key: "{{job_id}}:{{inputs.period}}"

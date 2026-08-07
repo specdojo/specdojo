@@ -8,6 +8,7 @@ import { registerScheduleCommands } from "./schedule.js";
 import { registerIndexCommands } from "./index-command.js";
 import { registerRegisterCommands } from "./register.js";
 import { registerRoutineCommands } from "./routine.js";
+import { registerJobCommands } from "./job.js";
 import { registerWatchCommand } from "./watch.js";
 import { registerBuildCommand } from "./build-command.js";
 import { registerYamlPagesCommands } from "./yaml-pages-command.js";
@@ -26,6 +27,7 @@ async function main(): Promise<void> {
   registerIndexCommands(program);
   registerRegisterCommands(program);
   registerRoutineCommands(program);
+  registerJobCommands(program);
   registerWatchCommand(program);
   registerBuildCommand(program);
   registerYamlPagesCommands(program);

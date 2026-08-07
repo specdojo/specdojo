@@ -32,7 +32,7 @@ properties:
             - origin
           properties:
             origin:
-              const: register
+              enum: [register, job]
         else:
           required:
             - targets
@@ -90,6 +90,14 @@ properties:
 
       origin:
         $ref: "./exec-common.schema.yaml#/$defs/TaskOrigin"
+
+      job_id:
+        type: string
+        pattern: "^job-[a-z0-9][a-z0-9-]*$"
+
+      run_id:
+        type: string
+        pattern: "^JBR-[A-Za-z0-9-]+$"
 
       plan_ref:
         type: string

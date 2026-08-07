@@ -21,7 +21,7 @@ export type SpecDojoRunConfig = {
 export type SpecDojoProjectConfig = {
   /**
    * Optional repo-root-relative prefix shared by every project document path below
-   * (catalog/schedule/execution/members/reviews/roles/viewpoints/project_register). When set, those
+   * (catalog/schedule/execution/members/reviews/roles/viewpoints/project_register/routines/jobs). When set, those
    * fields are interpreted relative to `base_path`. `run.*` paths are NOT affected and stay
    * repo-root relative. Resolve project paths via the getProject*Path accessors so base_path is
    * applied consistently.
@@ -36,6 +36,7 @@ export type SpecDojoProjectConfig = {
   viewpoints_path?: string;
   project_register_path?: string;
   routines_path?: string;
+  jobs_path?: string;
   /**
    * Project-level document ids supplied to deliverable edit/review plans independently from
    * catalog depends_on. Omit to use the default prj-overview context; set [] to opt out.
@@ -169,6 +170,10 @@ export function getProjectRegisterPath(project: SpecDojoProjectConfig): string |
 
 export function getProjectRoutinesPath(project: SpecDojoProjectConfig): string | undefined {
   return withOptionalBasePath(project, project.routines_path);
+}
+
+export function getProjectJobsPath(project: SpecDojoProjectConfig): string | undefined {
+  return withOptionalBasePath(project, project.jobs_path);
 }
 
 export function getProjectContext(project: SpecDojoProjectConfig): string[] {
