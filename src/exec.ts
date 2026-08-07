@@ -45,11 +45,11 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from "./exec-schedule.js";
+import { readReadySnapshot } from "./exec-schedule-ready.js";
 import {
   type Approach,
   type ExecEventType,
   type ExecEventV1,
-  type ReadySnapshot,
   type SchedulerStrategy,
   type StateSnapshot,
   type TaskMode,
@@ -59,7 +59,6 @@ import {
   nowUtcIsoSeconds,
   padEndDisplay,
   qualifyTaskId,
-  readJson,
   requireNonEmpty,
 } from "./exec-shared.js";
 import {
@@ -1125,8 +1124,8 @@ export function registerExecCommands(program: Command): void {
       if (actorMode || isAgent) {
         const readyJsonPath = join(generatedDirForProject(schedulePath), "ready.json");
         if (existsSync(readyJsonPath)) {
-          const readySnapshot = readJson(readyJsonPath) as ReadySnapshot;
-          const taskInfoMap = new Map((readySnapshot.tasks ?? []).map((t) => [t.id, t]));
+          const readySnapshot = readReadySnapshot(readyJsonPath);
+          const taskInfoMap = new Map(readySnapshot.tasks.map((t) => [t.id, t]));
           readyForMode = readyForOwner.filter((taskId) => {
             const taskInfo = taskInfoMap.get(taskId);
             if (!taskInfo) return true;

@@ -11,10 +11,57 @@ import { executionRootForProject, generatedDirForProject } from "./exec-project.
 import {
   ensureDir,
   formatDays,
+  isRecord,
+  isStringArray,
+  readJson,
   toArtifactPath,
   toScheduleFilePath,
   writeJson,
 } from "./exec-shared.js";
+
+function isStrategyOrder(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    (typeof value.next_task_id === "string" || value.next_task_id === null) &&
+    isStringArray(value.ordered_task_ids)
+  );
+}
+
+function isReadyTaskView(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.schedule_file === "string" &&
+    typeof value.fifo_rank === "number" &&
+    typeof value.critical_first_rank === "number"
+  );
+}
+
+function isReadySnapshot(value: unknown): value is ReadySnapshot {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.schedule_path === "string" &&
+    typeof value.execution_path === "string" &&
+    typeof value.generated_dir === "string" &&
+    typeof value.ready_count === "number" &&
+    (value.default_strategy === "fifo" || value.default_strategy === "critical-first") &&
+    isRecord(value.strategies) &&
+    isStrategyOrder(value.strategies.fifo) &&
+    isStrategyOrder(value.strategies["critical-first"]) &&
+    Array.isArray(value.tasks) &&
+    value.tasks.every(isReadyTaskView)
+  );
+}
+
+// ready.json は exec refresh の生成物だが、途中終了や手編集で壊れることがある。
+// 生の as で押し込むと利用側が "Cannot read properties of undefined" で落ちるため、
+// 読み込み時にファイルパス付きで失敗させる。
+export function readReadySnapshot(path: string): ReadySnapshot {
+  const raw = readJson(path);
+  if (!isReadySnapshot(raw))
+    throw new Error(`Invalid ready.json: ${path}. Run: specdojo exec refresh`);
+  return raw;
+}
 
 export function orderReadyIds(
   ready: string[],

@@ -7,7 +7,12 @@ import {
   type StateSnapshot,
   type ValidateResult,
 } from "./exec-types.js";
-import { computeReadyIds, foldEventsToState, validateEventShape } from "./exec-events.js";
+import {
+  computeReadyIds,
+  foldEventsToState,
+  isExecEventV1,
+  validateEventShape,
+} from "./exec-events.js";
 import {
   ensureDir,
   formatDays,
@@ -127,9 +132,9 @@ export function validateAll(projectPath: string): ValidateResult {
     }
     const shapeErrs = validateEventShape(obj, f);
     errors.push(...shapeErrs);
-    if (shapeErrs.length === 0) {
+    if (isExecEventV1(obj, f)) {
       parsedEvents++;
-      const ev = obj as ExecEventV1;
+      const ev = obj;
       if (!scheduleIds.has(ev.task_id))
         warnings.push(
           `${f}: task_id ${ev.task_id} not found in current sch-*.yaml; ` +

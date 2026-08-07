@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import {
   buildReadySnapshot,
   orderReadyIds,
+  readReadySnapshot,
   selectNextTask,
   writeReadyFiles,
 } from "../../src/exec-schedule-ready.js";
@@ -291,6 +292,52 @@ describe("writeReadyFiles", () => {
       process.chdir(originalCwd);
       rmSync(dir, { recursive: true, force: true });
       restoreEnv();
+    }
+  });
+});
+
+describe("readReadySnapshot", () => {
+  const snapshot = {
+    schedule_path: "docs/ja/projects/prj-0001/schedule",
+    execution_path: "docs/ja/projects/prj-0001/execution",
+    generated_dir: "docs/ja/projects/prj-0001/execution/generated",
+    ready_count: 1,
+    default_strategy: "critical-first",
+    strategies: {
+      "critical-first": { next_task_id: "A", ordered_task_ids: ["A"] },
+      fifo: { next_task_id: "A", ordered_task_ids: ["A"] },
+    },
+    tasks: [
+      { id: "A", schedule_file: "schedule/sch-track.yaml", fifo_rank: 1, critical_first_rank: 1 },
+    ],
+  };
+
+  it("returns the snapshot for a well-formed ready.json", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-ready-"));
+    try {
+      const path = join(dir, "ready.json");
+      writeFileSync(path, JSON.stringify(snapshot), "utf8");
+
+      const actual = readReadySnapshot(path);
+
+      expect(actual.ready_count).toBe(1);
+      expect(actual.strategies["critical-first"].next_task_id).toBe("A");
+      expect(actual.tasks.map((task) => task.id)).toEqual(["A"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("fails with the file path when ready.json is truncated", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-ready-"));
+    try {
+      const path = join(dir, "ready.json");
+      const { tasks: _tasks, ...withoutTasks } = snapshot;
+      writeFileSync(path, JSON.stringify(withoutTasks), "utf8");
+
+      expect(() => readReadySnapshot(path)).toThrow(/Invalid ready\.json: .*ready\.json/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });

@@ -79,12 +79,27 @@ export function validateEventShape(obj: unknown, source: string): string[] {
   return errs;
 }
 
+export function isExecEventV1(value: unknown, source: string): value is ExecEventV1 {
+  return validateEventShape(value, source).length === 0;
+}
+
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
   const dir = eventsDirForProject(projectPath);
   const files = listFilesRecursive(dir).filter((p) => extname(p).toLowerCase() === ".json");
 
   const items: { path: string; event: ExecEventV1 }[] = [];
-  for (const f of files) items.push({ path: f, event: readJson(f) as ExecEventV1 });
+  for (const f of files) {
+    const raw = readJson(f);
+    // Events are the SSOT for task state. A malformed file must not be folded in
+    // silently as undefined fields; report it with the failing path instead.
+    if (!isExecEventV1(raw, f)) {
+      throw new Error(
+        `Invalid exec event file: ${validateEventShape(raw, f).join("; ")}. ` +
+          `Run: specdojo exec validate`,
+      );
+    }
+    items.push({ path: f, event: raw });
+  }
 
   // Within the same timestamp, order by logical event sequence to prevent
   // e.g. 'cancel' (alphabetically before 'claim') from being processed first.

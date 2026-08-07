@@ -32,7 +32,8 @@ import {
 } from "./exec-limit.js";
 import { buildScheduleIndex } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
-import { listFilesRecursive, qualifyTaskId, readJson, readYaml } from "./exec-shared.js";
+import { readReadySnapshot } from "./exec-schedule-ready.js";
+import { listFilesRecursive, qualifyTaskId, readYaml } from "./exec-shared.js";
 import {
   getProjectExecutionPath,
   getProjectSchedulePath,
@@ -43,7 +44,7 @@ import {
   type MemberRoster,
   type ProjectMember,
 } from "./specdojo-config.js";
-import { type ReadySnapshot, type ReadyTaskView } from "./exec-types.js";
+import { type ReadyTaskView } from "./exec-types.js";
 import type { CurrentState, Proficiency, TaskMode } from "./exec-types.js";
 import {
   acquireExecRunLock,
@@ -1466,7 +1467,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
       return { preparedTasks: [], readyCount: 0 };
     }
 
-    const readySnapshot = readJson(readyJsonPath) as ReadySnapshot;
+    const readySnapshot = readReadySnapshot(readyJsonPath);
     const orderedIds: string[] =
       strategy === "fifo"
         ? readySnapshot.strategies.fifo.ordered_task_ids
@@ -1693,7 +1694,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
   const readyJsonPath = join(executionPath, "generated", "ready.json");
   let task: ReadyTaskView = { id: taskId, schedule_file: "", fifo_rank: 0, critical_first_rank: 0 };
   if (existsSync(readyJsonPath)) {
-    const snap = readJson(readyJsonPath) as ReadySnapshot;
+    const snap = readReadySnapshot(readyJsonPath);
     const found = snap.tasks.find((t) => t.id === taskId);
     if (found) task = found;
   }

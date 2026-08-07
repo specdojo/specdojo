@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   buildEvent,
   canBlockTask,
@@ -11,6 +14,7 @@ import {
   computeReadyIds,
   foldEventsToState,
   isDependencySatisfied,
+  readAllEventFiles,
   validateEventShape,
 } from "../../src/exec-events.js";
 import type {
@@ -745,5 +749,88 @@ describe("canReleaseTask", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "done", last_by: "agent-1" } });
     expect(canReleaseTask(schedule, snapshot, "T-001", "agent-1").ok).toBe(false);
+  });
+});
+
+// ---- readAllEventFiles -------------------------------------------------
+
+const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
+const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
+const originalCwd = process.cwd();
+
+function restoreEnv(): void {
+  for (const key of ENV_KEYS) delete process.env[key];
+  for (const [key, value] of Object.entries(originalEnv)) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
+}
+
+function setupEventsRepo(): { dir: string; projectPath: string; eventsDir: string } {
+  const dir = mkdtempSync(join(tmpdir(), "specdojo-events-"));
+  const projectPath = join(dir, "schedule");
+  const eventsDir = join(dir, "execution", "exec", "events");
+  mkdirSync(projectPath, { recursive: true });
+  mkdirSync(eventsDir, { recursive: true });
+  mkdirSync(join(dir, ".specdojo"), { recursive: true });
+  writeFileSync(
+    join(dir, ".specdojo", "specdojo.config.json"),
+    JSON.stringify({
+      version: 1,
+      projects: { "prj-a": { schedule_path: "schedule", execution_path: "execution" } },
+    }),
+    "utf8",
+  );
+  process.chdir(dir);
+  restoreEnv();
+  return { dir, projectPath, eventsDir };
+}
+
+function validEvent(taskId: string): string {
+  return JSON.stringify({
+    v: 1,
+    ts: "2026-08-07T03:10:00Z",
+    type: "claim",
+    task_id: taskId,
+    by: "DEV",
+    msg: "start",
+  });
+}
+
+describe("readAllEventFiles", () => {
+  it("reads well-formed event files", () => {
+    const { dir, projectPath, eventsDir } = setupEventsRepo();
+    try {
+      writeFileSync(join(eventsDir, "a.json"), validEvent("T-A"), "utf8");
+      writeFileSync(join(eventsDir, "b.json"), validEvent("T-B"), "utf8");
+
+      const actual = readAllEventFiles(projectPath);
+
+      expect(actual.map((item) => item.event.task_id)).toEqual(["T-A", "T-B"]);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(dir, { recursive: true, force: true });
+      restoreEnv();
+    }
+  });
+
+  it("fails with the offending path when an event file does not match the event shape", () => {
+    const { dir, projectPath, eventsDir } = setupEventsRepo();
+    try {
+      writeFileSync(join(eventsDir, "a.json"), validEvent("T-A"), "utf8");
+      writeFileSync(
+        join(eventsDir, "broken.json"),
+        JSON.stringify({ v: 1, type: "claim" }),
+        "utf8",
+      );
+
+      expect(() => readAllEventFiles(projectPath)).toThrow(
+        /Invalid exec event file: .*broken\.json: /,
+      );
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(dir, { recursive: true, force: true });
+      restoreEnv();
+    }
   });
 });

@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { buildScheduleIndex } from "./exec-schedule.js";
-import { readJson } from "./exec-shared.js";
+import { readReadySnapshot } from "./exec-schedule-ready.js";
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -11,7 +11,7 @@ import {
   resolveTaskProficiency,
 } from "./exec-strategy.js";
 import { extractLocalId, extractPhaseSuffix } from "./schedule-phase-sets.js";
-import { type ReadySnapshot, type ReadyTaskView } from "./exec-types.js";
+import { type ReadyTaskView } from "./exec-types.js";
 
 // Reconstruct a full ReadyTaskView for a task from the schedule (+ ready.json when
 // present), filling mode/execution/approach/capabilities/proficiency from strategy
@@ -43,7 +43,7 @@ export function buildTaskView(
   };
   const readyPath = join(executionPath, "generated", "ready.json");
   if (existsSync(readyPath)) {
-    const ready = readJson(readyPath) as ReadySnapshot;
+    const ready = readReadySnapshot(readyPath);
     task = ready.tasks.find((item) => item.id === taskId) ?? task;
   }
   if (!task.local_id) {

@@ -9,12 +9,25 @@ import {
 } from "./exec-types.js";
 import {
   ensureDir,
+  isRecord,
+  isStringArray,
   readJson,
   toArtifactPath,
   toScheduleFilePath,
   writeJson,
 } from "./exec-shared.js";
 import { generatedDirForProject } from "./exec-project.js";
+
+function isScheduleHash(value: unknown): value is ScheduleHash {
+  return (
+    isRecord(value) &&
+    value.schema_version === 1 &&
+    typeof value.schedule_path === "string" &&
+    isStringArray(value.schedule_files) &&
+    isRecord(value.node_hashes) &&
+    Object.values(value.node_hashes).every((hash) => typeof hash === "string")
+  );
+}
 
 function normalizeNodeForHash(n: ScheduleNode): Record<string, unknown> {
   return {
@@ -79,7 +92,8 @@ export function writeScheduleHashAndDiff(projectPath: string, schedule: Schedule
   let prev: ScheduleHash | null = null;
   if (existsSync(hashPath)) {
     try {
-      prev = readJson(hashPath) as ScheduleHash;
+      const raw = readJson(hashPath);
+      prev = isScheduleHash(raw) ? raw : null;
     } catch {
       prev = null;
     }
