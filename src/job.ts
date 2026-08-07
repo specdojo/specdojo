@@ -119,6 +119,62 @@ function validStringList(value: unknown): value is string[] {
   );
 }
 
+function isJobRunState(value: unknown): value is JobRunState {
+  return value === "running" || value === "succeeded" || value === "failed" || value === "noop";
+}
+
+function isJobTaskDefinition(value: unknown): value is JobTaskDefinition {
+  if (!isRecord(value)) return false;
+  if (value.mode !== "edit" && value.mode !== "review") return false;
+  if (typeof value.description !== "string") return false;
+  if (value.owner !== undefined && typeof value.owner !== "string") return false;
+  return (["targets", "paths", "capabilities"] as const).every(
+    (field) => value[field] === undefined || validStringList(value[field]),
+  );
+}
+
+function isJobRunAttempt(value: unknown): value is JobRunAttempt {
+  return (
+    isRecord(value) &&
+    typeof value.attempt === "number" &&
+    typeof value.started_at === "string" &&
+    isJobRunState(value.status)
+  );
+}
+
+function isJobRunRecord(value: unknown): value is JobRunRecord {
+  if (!isRecord(value)) return false;
+  const stringFields = [
+    "run_id",
+    "job_id",
+    "idempotency_key",
+    "project_id",
+    "scheduled_at",
+    "created_at",
+    "updated_at",
+    "plan_ref",
+    "result_ref",
+  ] as const;
+  return (
+    value.version === 1 &&
+    stringFields.every((field) => typeof value[field] === "string") &&
+    (value.trigger === "manual" || value.trigger === "routine" || value.trigger === "ci") &&
+    isJobRunState(value.state) &&
+    isRecord(value.inputs) &&
+    isJobTaskDefinition(value.task) &&
+    isRecord(value.checkpoint_before) &&
+    (value.checkpoint_after === undefined || isRecord(value.checkpoint_after)) &&
+    Array.isArray(value.attempts) &&
+    value.attempts.every(isJobRunAttempt)
+  );
+}
+
+function readJobRunRecord(filePath: string): JobRunRecord {
+  const raw = readJson(filePath);
+  if (!isJobRunRecord(raw)) throw new Error(`Invalid Job Run file: ${filePath}`);
+  return raw;
+}
+
 export function parseJobDefinition(
   value: unknown,
   fileName: string,
@@ -406,7 +462,7 @@ export function deriveJobState(paths: JobPaths): JobStateFile {
     .filter((path) => path.endsWith(".json"))
     .sort()) {
     try {
-      const run = readJson<JobRunRecord>(filePath);
+      const run = readJobRunRecord(filePath);
       if (!run.checkpoint_after || (run.state !== "succeeded" && run.state !== "noop")) continue;
       const current = state.jobs[run.job_id];
       if (!current || current.updated_at < run.updated_at) {
@@ -576,7 +632,7 @@ export async function materializeJobRun(opts: {
   const now = new Date().toISOString();
   let record: JobRunRecord;
   if (existsSync(runPath)) {
-    record = readJson<JobRunRecord>(runPath);
+    record = readJobRunRecord(runPath);
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
       throw new Error(`Job Run identity collision: ${runId}`);
     }
@@ -637,7 +693,7 @@ export function completeJobRun(opts: {
   reason?: string;
 }): JobRunRecord {
   const paths = resolveJobPaths(opts.projectId);
-  const record = readJson<JobRunRecord>(opts.runPath);
+  const record = readJobRunRecord(opts.runPath);
   const definition = loadJobDefinition(paths, record.job_id);
   const completedAt = new Date().toISOString();
   const attempts = [...record.attempts];

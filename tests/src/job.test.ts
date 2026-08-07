@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   completeJobRun,
+  deriveJobState,
   jobCheckpoint,
   materializeJobRun,
   parseJobDefinition,
@@ -145,6 +146,50 @@ describe("Job Run lifecycle", () => {
       });
       expect(retry.record.run_id).toBe(first.record.run_id);
       expect(retry.record.attempts).toHaveLength(2);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("Job Run file validation", () => {
+  it("skips a structurally invalid Run file and keeps checkpoints from valid history", async () => {
+    const repo = setupRepo();
+    try {
+      const paths = resolveJobPaths("test");
+      const run = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["to_revision=abc123"],
+      });
+      completeJobRun({ projectId: "test", runPath: run.runPath, status: "succeeded" });
+      writeFileSync(
+        join(paths.runsPath, "JBR-translate-broken.json"),
+        JSON.stringify({ version: 1, run_id: "JBR-translate-broken", state: "succeeded" }),
+      );
+
+      const state = deriveJobState(paths);
+
+      expect(Object.keys(state.jobs)).toEqual(["job-translate"]);
+      expect(state.jobs["job-translate"]?.checkpoint).toEqual({ revision: "abc123" });
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects completing a Run whose file does not match the Run record shape", () => {
+    const repo = setupRepo();
+    try {
+      const paths = resolveJobPaths("test");
+      mkdirSync(paths.runsPath, { recursive: true });
+      const runPath = join(paths.runsPath, "JBR-translate-invalid.json");
+      writeFileSync(runPath, JSON.stringify({ version: 1, run_id: "JBR-translate-invalid" }));
+
+      expect(() => completeJobRun({ projectId: "test", runPath, status: "succeeded" })).toThrow(
+        /Invalid Job Run file: .*JBR-translate-invalid\.json/,
+      );
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
