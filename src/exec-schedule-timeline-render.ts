@@ -52,7 +52,9 @@ export function buildTimelineSvg(
   cpm: CpmResult,
   schedule: ScheduleIndex,
   stateSnapshot?: StateSnapshot,
+  options?: { title?: string },
 ): string {
+  const title = options?.title ?? "プロジェクトタイムライン";
   const rows = Object.values(cpm.nodes).sort((a, b) => a.es - b.es || a.id.localeCompare(b.id));
   const criticalSet = new Set(cpm.critical_path);
   const leftPad = 440;
@@ -85,6 +87,7 @@ export function buildTimelineSvg(
 
   // Insert each gate row immediately after its last dependency task in the first task file section
   const gateRows = rows.filter((r) => r.kind === "gate");
+  const insertedGateIds = new Set<string>();
   if (firstTaskFile && gateRows.length > 0) {
     const fileRows = taskRowsByFile.get(firstTaskFile) ?? [];
     const rowIndexById = new Map(fileRows.map((r, i) => [r.id, i]));
@@ -104,9 +107,14 @@ export function buildTimelineSvg(
 
     for (const { gate, insertAfter } of insertions) {
       fileRows.splice(insertAfter + 1, 0, gate);
+      insertedGateIds.add(gate.id);
     }
     taskRowsByFile.set(firstTaskFile, fileRows);
   }
+
+  // Gates with no task section to attach to (e.g. milestones-only scope) are rendered
+  // alongside milestones so the節目 stays visible.
+  const orphanGateRows = gateRows.filter((r) => !insertedGateIds.has(r.id));
 
   const taskSegments = new Map<string, WorkingTaskSegment[]>();
   let timelineEnd = new Date(timelineStart.getTime());
@@ -144,10 +152,11 @@ export function buildTimelineSvg(
 
   const layoutRows: Array<{ type: "section"; label: string } | { type: "node"; row: CpmNode }> = [];
 
-  // Milestones at the top
-  if (milestoneRows.length > 0) {
+  // Milestones at the top (with orphan gates that had no task section to attach to)
+  if (milestoneRows.length > 0 || orphanGateRows.length > 0) {
     layoutRows.push({ type: "section", label: "マイルストーン" });
     for (const row of milestoneRows) layoutRows.push({ type: "node", row });
+    for (const row of orphanGateRows) layoutRows.push({ type: "node", row });
   }
 
   // Tasks (+ gates merged in) grouped by file
@@ -176,7 +185,7 @@ export function buildTimelineSvg(
 
   const parts: string[] = [];
   parts.push(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="プロジェクトタイムライン">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${xmlEscape(title)}">`,
   );
   parts.push(`<style>
     text { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #1f2937; }
@@ -205,7 +214,7 @@ export function buildTimelineSvg(
   parts.push(
     `<rect x="${leftPad}" y="0" width="${chartWidth + 40}" height="${height}" fill="#ffffff" />`,
   );
-  parts.push(`<text class="title" x="16" y="28">プロジェクトタイムライン</text>`);
+  parts.push(`<text class="title" x="16" y="28">${xmlEscape(title)}</text>`);
   parts.push(
     `<text class="caption" x="16" y="48">1 タスク 1 行で表示します。1 日の長さは ${schedule.calendar.work_hours_per_day} 時間で、休日と週末は空白のままとし、次の稼働日に作業を再開します。</text>`,
   );
@@ -402,21 +411,29 @@ export function buildTimelineSvg(
   return parts.join("\n");
 }
 
-export function buildTimelineMarkdown(cpm: CpmResult, summary: TimelineMarkdownSummary): string {
+export function buildTimelineMarkdown(
+  cpm: CpmResult,
+  summary: TimelineMarkdownSummary,
+  options?: { title?: string; svgFileName?: string; scopeLabel?: string },
+): string {
+  const title = options?.title ?? "タイムライン";
+  const svgFileName = options?.svgFileName ?? "timeline.svg";
+  const scopeLabel = options?.scopeLabel ?? "full_schedule";
+
   const lines: string[] = [];
-  lines.push(`# タイムライン`);
+  lines.push(`# ${title}`);
   lines.push("");
   lines.push(...summary.progressSummaryLines);
   lines.push(`- schedule_path: \`${cpm.schedule_path}\``);
   if (cpm.project_start_date) lines.push(`- project_start_date: \`${cpm.project_start_date}\``);
   lines.push(`- project_duration_days: \`${formatDays(cpm.project_duration_days)}\``);
-  lines.push(`- scope: \`full_schedule\``);
+  lines.push(`- scope: \`${scopeLabel}\``);
   lines.push(`- critical_path_task_count: \`${summary.criticalPathTaskCount}\``);
   lines.push(`- progress_percent: \`${summary.progressPercent}%\``);
   lines.push(`- done_tasks: \`${summary.doneTasks}\``);
   lines.push(`- task_state_counts: \`${summary.taskStateCounts}\``);
   lines.push("");
-  lines.push(`![プロジェクトタイムライン](./timeline.svg)`);
+  lines.push(`![${title}](./${svgFileName})`);
   lines.push("");
   return lines.join("\n");
 }

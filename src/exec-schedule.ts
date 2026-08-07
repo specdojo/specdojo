@@ -28,6 +28,11 @@ import {
   buildTimelineSvg,
 } from "./exec-schedule-timeline.js";
 import { buildScheduleIndex } from "./exec-schedule-index.js";
+import {
+  buildTimelineScopeSpecs,
+  filterCpmNodes,
+  scheduleTrackNames,
+} from "./exec-schedule-timeline-scope.js";
 import { computeCpm, topoSort } from "./exec-schedule-cpm.js";
 import {
   buildReadySnapshot,
@@ -211,59 +216,93 @@ export function writeCpmFiles(
   writeFileSync(join(genDir, "critical-path.md"), cp.join("\n"), "utf8");
 
   const schedule = buildScheduleIndex(projectPath);
-  const criticalSet = new Set(cpm.critical_path);
-  const taskRows = rows.filter((row) => row.kind === "task");
-  const stateCounts: Record<"todo" | "doing" | "blocked" | "done" | "cancelled", number> = {
-    todo: 0,
-    doing: 0,
-    blocked: 0,
-    done: 0,
-    cancelled: 0,
-  };
-
-  for (const row of taskRows) {
-    const state = stateSnapshot?.tasks[row.id]?.state ?? "todo";
-    stateCounts[state] += 1;
-  }
-
-  const doneCount = stateCounts.done;
-  const totalTaskCount = taskRows.length;
-  const progressPercent =
-    totalTaskCount > 0 ? ((doneCount / totalTaskCount) * 100).toFixed(1) : "0.0";
-  const ready = computeReadyIds(schedule, {
+  const allTaskRows = rows.filter((row) => row.kind === "task");
+  const tasksState = stateSnapshot?.tasks ?? {};
+  const readyAll = computeReadyIds(schedule, {
     schedule_path: cpm.schedule_path,
-    tasks: stateSnapshot?.tasks ?? {},
+    tasks: tasksState,
   });
-  const readyOrdered = orderReadyIds(ready, cpm, "critical-first");
-  const criticalDoingCount = taskRows.filter(
-    (row) => criticalSet.has(row.id) && (stateSnapshot?.tasks[row.id]?.state ?? "todo") === "doing",
-  ).length;
-  const progressSummaryLines = buildProgressSummaryLines({
-    cpm,
-    schedule,
-    stateCounts,
-    totalTaskCount,
-    readyCount: ready.length,
-    nextTaskId: readyOrdered[0] ?? null,
-    criticalDoingCount,
-  });
+  const readyOrderedAll = orderReadyIds(readyAll, cpm, "critical-first");
 
-  writeFileSync(
-    join(genDir, "timeline.svg"),
-    buildTimelineSvg(cpm, schedule, stateSnapshot),
-    "utf8",
-  );
-  writeFileSync(
-    join(genDir, "timeline.md"),
-    buildTimelineMarkdown(cpm, {
-      criticalPathTaskCount: criticalSet.size,
-      progressPercent,
-      doneTasks: `${doneCount}/${totalTaskCount}`,
-      taskStateCounts: `todo=${stateCounts.todo}, doing=${stateCounts.doing}, blocked=${stateCounts.blocked}, done=${stateCounts.done}, cancelled=${stateCounts.cancelled}`,
-      progressSummaryLines,
-    }),
-    "utf8",
-  );
+  const stateOf = (id: string): "todo" | "doing" | "blocked" | "done" | "cancelled" =>
+    stateSnapshot?.tasks[id]?.state ?? "todo";
+
+  for (const scope of buildTimelineScopeSpecs(cpm)) {
+    // SVG: scope の描画対象ノードだけを持つ CpmResult（full は cpm そのまま）。
+    const renderCpm = scope.renderIds
+      ? filterCpmNodes(cpm, scope.renderIds, scope.keepCriticalPath)
+      : cpm;
+
+    // 進捗サマリー: scope の母集団（track なら track の task、full/milestones は全 task）。
+    const progressCpm = scope.progressIds
+      ? filterCpmNodes(cpm, scope.progressIds, scope.keepCriticalPath)
+      : cpm;
+    const progressTaskRows = scope.progressIds
+      ? allTaskRows.filter((row) => scope.progressIds!.has(row.id))
+      : allTaskRows;
+
+    const stateCounts: Record<"todo" | "doing" | "blocked" | "done" | "cancelled", number> = {
+      todo: 0,
+      doing: 0,
+      blocked: 0,
+      done: 0,
+      cancelled: 0,
+    };
+    for (const row of progressTaskRows) stateCounts[stateOf(row.id)] += 1;
+
+    const doneCount = stateCounts.done;
+    const totalTaskCount = progressTaskRows.length;
+    const progressPercent =
+      totalTaskCount > 0 ? ((doneCount / totalTaskCount) * 100).toFixed(1) : "0.0";
+
+    const readyScope = scope.progressIds
+      ? readyAll.filter((id) => scope.progressIds!.has(id))
+      : readyAll;
+    const nextTaskId =
+      (scope.progressIds
+        ? readyOrderedAll.filter((id) => scope.progressIds!.has(id))
+        : readyOrderedAll)[0] ?? null;
+
+    const progressCriticalSet = new Set(progressCpm.critical_path);
+    const criticalDoingCount = progressTaskRows.filter(
+      (row) => progressCriticalSet.has(row.id) && stateOf(row.id) === "doing",
+    ).length;
+
+    const progressSummaryLines = buildProgressSummaryLines({
+      cpm: progressCpm,
+      schedule,
+      stateCounts,
+      totalTaskCount,
+      readyCount: readyScope.length,
+      nextTaskId,
+      criticalDoingCount,
+    });
+
+    writeFileSync(
+      join(genDir, `${scope.fileBase}.svg`),
+      buildTimelineSvg(renderCpm, schedule, stateSnapshot, { title: scope.title }),
+      "utf8",
+    );
+    writeFileSync(
+      join(genDir, `${scope.fileBase}.md`),
+      buildTimelineMarkdown(
+        progressCpm,
+        {
+          criticalPathTaskCount: new Set(renderCpm.critical_path).size,
+          progressPercent,
+          doneTasks: `${doneCount}/${totalTaskCount}`,
+          taskStateCounts: `todo=${stateCounts.todo}, doing=${stateCounts.doing}, blocked=${stateCounts.blocked}, done=${stateCounts.done}, cancelled=${stateCounts.cancelled}`,
+          progressSummaryLines,
+        },
+        {
+          title: scope.title,
+          svgFileName: `${scope.fileBase}.svg`,
+          scopeLabel: scope.scopeLabel,
+        },
+      ),
+      "utf8",
+    );
+  }
 }
 
 export function writeGeneratedCore(
@@ -326,6 +365,10 @@ export function writeGeneratedCore(
   }
   writeReadyFiles(projectPath, readySnapshot);
 
+  const timelineFiles = ["timeline", "timeline-milestones"]
+    .concat(scheduleTrackNames(schedule).map((track) => `timeline-track-${track}`))
+    .flatMap((base) => [`${base}.md`, `${base}.svg`]);
+
   writeJson(join(genDir, "metadata.json"), {
     schedule_path: toArtifactPath(projectPath),
     execution_path: toArtifactPath(executionRootForProject(projectPath)),
@@ -345,9 +388,8 @@ export function writeGeneratedCore(
       "schedule-diff.md",
       "schedule-hash.json",
       "state.json",
-      "timeline.md",
-      "timeline.svg",
-    ],
+      ...timelineFiles,
+    ].sort(),
   });
 
   return snapshot;
