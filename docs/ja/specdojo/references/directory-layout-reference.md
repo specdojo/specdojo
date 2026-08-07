@@ -121,12 +121,18 @@ docs/
 │   │   │   ├── routines/                         # 定期実行ルーチン ※成果物カタログ管理対象外
 │   │   │   │   └── rtn-<name>.yaml               # ルーチン定義
 │   │   │   │
+│   │   │   ├── jobs/                             # 再利用可能なJob Definition ※成果物カタログ管理対象外
+│   │   │   │   └── job-<name>.yaml               # Job定義
+│   │   │   │
 │   │   │   ├── execution/                        # 実行管理 ※成果物カタログ管理対象外
 │   │   │   │   ├── exec/                         # タスク実行ワークスペース
 │   │   │   │   │   ├── plans/                    # 実行プラン
 │   │   │   │   │   ├── results/                  # 実行結果
 │   │   │   │   │   ├── events/                   # イベントログ
 │   │   │   │   │   └── .locks/                   # 実行ロック
+│   │   │   │   ├── jobs/                         # Job Run履歴と派生state
+│   │   │   │   │   ├── runs/                    # 入力・task・attempt・結果
+│   │   │   │   │   └── generated/               # checkpoint派生ビュー
 │   │   │   │   └── generated/                    # 自動生成成果物
 │   │   │   │
 │   │   │   └── reporting/                        # レポート

@@ -5,9 +5,12 @@ import path from "node:path";
 import {
   buildExecAutoArgs,
   buildExecResumeArgs,
+  buildJobRunArgs,
   buildRegisterRunArgs,
+  cronOccurrences,
   formatRoutineLastRun,
   isRoutineDue,
+  isoWeek,
   loadRoutines,
   parseIntervalMs,
   parseRoutineDoc,
@@ -258,6 +261,53 @@ describe("buildRegisterRunArgs", () => {
   });
 });
 
+describe("cron Job routine", () => {
+  it("calculates a weekly occurrence in the configured timezone", () => {
+    const doc = makeRoutine({
+      interval: undefined,
+      trigger: { cron: "0 17 * * 5", timezone: "Asia/Tokyo" },
+      action: { kind: "job", job: "job-weekly-report" },
+    });
+    const occurrences = cronOccurrences(
+      doc,
+      "2026-08-06T08:00:00Z",
+      new Date("2026-08-07T08:02:00Z"),
+    );
+    expect(occurrences.map((date) => date.toISOString())).toEqual(["2026-08-07T08:00:00.000Z"]);
+    expect(isoWeek(occurrences[0], "Asia/Tokyo")).toBe("2026-W32");
+  });
+
+  it("builds exec run --job arguments with occurrence inputs", () => {
+    expect(
+      buildJobRunArgs(
+        {
+          kind: "job",
+          job: "job-weekly-report",
+          inputs: { period: "{{scheduled_at | iso_week}}" },
+        },
+        "prj-test",
+        new Date("2026-08-07T08:00:00Z"),
+        "Asia/Tokyo",
+      ),
+    ).toEqual([
+      "exec",
+      "run",
+      "--job",
+      "job-weekly-report",
+      "--project",
+      "prj-test",
+      "--scheduled-at",
+      "2026-08-07T08:00:00.000Z",
+      "--job-trigger",
+      "routine",
+      "--if-busy",
+      "skip",
+      "--input",
+      "period=2026-W32",
+    ]);
+  });
+});
+
 describe("formatRoutineLastRun", () => {
   it("skipped を failure と区別して表示する", () => {
     expect(formatRoutineLastRun({ last_run: "2026-08-07T03:17:09Z", last_result: "skipped" })).toBe(
@@ -296,7 +346,9 @@ describe("loadRoutines", () => {
       const { routines, errors } = loadRoutines(dir);
 
       expect(routines.map((entry) => entry.doc.id)).toEqual(["rtn-a-sweep", "rtn-b-auto"]);
-      expect(errors.some((e) => e.startsWith("rtn-broken.yaml: interval is required"))).toBe(true);
+      expect(
+        errors.some((e) => e.startsWith("rtn-broken.yaml: interval or trigger is required")),
+      ).toBe(true);
       expect(
         errors.some(
           (e) => e.includes("rtn-a-sweep.yml") && e.includes('duplicate routine id "rtn-a-sweep"'),

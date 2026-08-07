@@ -1,0 +1,33 @@
+id: job-translate-updated-docs
+name: 更新文書の翻訳
+description: 前回成功時点以降に更新された日本語文書の他言語版を同期する。
+inputs:
+  from_revision:
+    type: string
+    from_checkpoint: revision
+    default: HEAD~1
+    git_revision: true
+  to_revision:
+    type: string
+    resolve: git_head
+    git_revision: true
+  languages:
+    type: list
+    default: [en]
+task:
+  mode: edit
+  owner: PM
+  description: |
+    {{inputs.from_revision}}..{{inputs.to_revision}} の差分から、追加・変更・改名・削除された
+    docs/ja配下の原文を抽出し、{{inputs.languages}}の対応文書を同期する。
+    翻訳先の変更を原文変更として再検出せず、対象がなければresultにno-opと記録する。
+  paths:
+    - docs/ja
+    - docs/en
+run:
+  idempotency_key: >-
+    {{job_id}}:{{inputs.from_revision}}:{{inputs.to_revision}}:{{inputs.languages}}
+checkpoint:
+  values:
+    revision: "{{inputs.to_revision}}"
+  advance_on: [succeeded, noop]

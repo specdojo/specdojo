@@ -11,7 +11,7 @@ Routine Operation Guide
 
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行する、時刻条件のトリガー層です。routine 自体は実行機構を持たず、何を実行するかは schedule 実行または register 実行に委ねます。3つの実行経路の比較は [exec運用ガイド](exec-operation-guide.md) を参照します。
 
-現行routineが繰り返すのは「既存の未完了Schedule/Register項目を探して起動すること」です。週報のように期間ごとの新しい実行単位を生成する作業や、前回成功時点以降の変更文書を翻訳する作業は直接表現できません。これらは、再利用可能な定義から毎回Job Runを生成する[Job実行設計](../../product/040-system-design/sysd-job-execution.md)で扱います。Job連携は設計段階であり、現行CLIには未実装です。
+routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
 **対象読者**
 
@@ -60,6 +60,25 @@ action:
 | `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
 | `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
 | `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）      |
+| `job`         | `job-*.yaml`から一意なJob Runを生成し、`exec run --job`で実行する                                                    |
+
+週報Jobを毎週金曜日17時（Asia/Tokyo）に起動する例です。
+
+```yaml
+id: rtn-weekly-report
+enabled: true
+trigger:
+  cron: "0 17 * * 5"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-weekly-report
+  inputs:
+    period: "{{scheduled_at | iso_week}}"
+policy:
+  missed_run: all
+  overlap: skip
+```
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
@@ -92,7 +111,7 @@ routine 自体は実行機構を持たないトリガー層です。何を実行
 | -------------------- | --------------------------------------- | ------------------------------------ |
 | 既存項目の再探索     | openな高優先度todoを毎日最大3件消化する | `kind: register`で対応済み           |
 | 既存計画の継続       | ReadyなSchedule taskを夜間に進める      | `kind: exec-auto`で対応済み          |
-| 新しい実行単位の反復 | 毎週分の週報を作る                      | Job Runのmaterializeが必要（未実装） |
-| checkpoint差分の反復 | 前回成功後に更新された文書を翻訳する    | Jobとcheckpointが必要（未実装）      |
+| 新しい実行単位の反復 | 毎週分の週報を作る                      | `kind: job`で期間ごとのRunを生成する |
+| checkpoint差分の反復 | 前回成功後に更新された文書を翻訳する    | Jobのcheckpointを使用する            |
 
-`interval: 1w`は前回実行から7日が経過したかを判定するもので、「毎週金曜日17時」のような暦上の予定ではありません。Job連携の設計では、routineに`cron`と`timezone`を追加してこの差を扱います。
+`interval: 1w`は前回実行から7日が経過したかを判定します。「毎週金曜日17時」のような暦上の予定は`trigger.cron`と`trigger.timezone`で定義します。取りこぼした実行枠は`policy.missed_run: latest|all`、実行中の重複起動は`policy.overlap: skip`で扱います。

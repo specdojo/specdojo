@@ -236,6 +236,9 @@ specdojo exec run --project prj-0001 --register PJR-0012 --worktree
 
 # worktree 隔離のまま複数項目を並列実行する
 specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --worktree --parallel 2
+
+# Job Definitionから期間ごとのRunを生成して実行する
+specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
 `--register` は登録簿（`pjr-index.md`）の項目を実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `note` は対象外です。既定は in-place の直列実行です。`--worktree` を付けると成果物の変更を worktree に隔離し、状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化したうえで、成功時に merge back します。`--parallel <n>` は `--worktree` との併用時のみ指定でき、単独で指定するとエラーになります。
@@ -288,7 +291,19 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
-## 10. routine
+## 10. job
+
+`job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
+
+| コマンド       | 用途                                       | 例                                         |
+| -------------- | ------------------------------------------ | ------------------------------------------ |
+| `job list`     | Job Definitionと最終Runを表示する          | `specdojo job list --project prj-0001`     |
+| `job validate` | `job-*.yaml`を検証する                     | `specdojo job validate --project prj-0001` |
+| `job where`    | Job Definition・Run・stateのパスを表示する | `specdojo job where --project prj-0001`    |
+
+`exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
+
+## 11. routine
 
 `routine` は `rtn-*.yaml` の定義に基づき、schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐せず、外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出します。
 
@@ -307,7 +322,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action.kind` は `register` / `exec-auto` / `exec-resume` の 3 種類です。定義ファイルの配置、`interval` の書式、due 判定、kind ごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
+`action.kind` は `register` / `exec-auto` / `exec-resume` / `job` の4種類です。定義ファイルの配置、`interval`または`trigger.cron`の書式、due判定、kindごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
@@ -320,9 +335,9 @@ specdojo routine run --project prj-0001 --id rtn-daily-register-sweep
 specdojo routine run --project prj-0001 --due --dry-run
 ```
 
-schedule / register / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+schedule / register / job / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
-## 11. 関連ガイド
+## 12. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |

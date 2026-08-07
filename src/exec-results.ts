@@ -13,7 +13,7 @@ import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-type
 // frontmatter から読んだ origin を検証して返す。未知の値は採用せず undefined（= schedule）
 // として扱う。status 更新のたびに meta を組み直すため、既存値の持ち回しに使う。
 function parseOrigin(value: string | undefined): TaskOrigin | undefined {
-  return value === "register" || value === "schedule" ? value : undefined;
+  return value === "register" || value === "schedule" || value === "job" ? value : undefined;
 }
 
 function serializeFrontmatter(meta: ExecResultMeta): string {
@@ -26,6 +26,8 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     `project_id: ${meta.project_id}`,
   ];
   if (meta.origin) inner.push(`origin: ${meta.origin}`);
+  if (meta.job_id) inner.push(`job_id: ${meta.job_id}`);
+  if (meta.run_id) inner.push(`run_id: ${meta.run_id}`);
   if (meta.plan_ref) inner.push(`plan_ref: ${meta.plan_ref}`);
   inner.push(`started_at: "${meta.started_at}"`);
   if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
@@ -128,8 +130,10 @@ export async function scaffoldResult(opts: {
   startedAt: string;
   execution?: "agent" | "human";
   approach?: Approach;
-  // 登録簿項目の実行では "register" を渡す。省略時は schedule 由来のタスクとして扱う。
+  // 登録簿項目は "register"、Job Runは "job"。省略時はschedule由来として扱う。
   origin?: TaskOrigin;
+  jobId?: string;
+  runId?: string;
   // タスクが対象とする文書の doc id リスト（plan frontmatter の targets と同じ規則）。
   targets?: string[];
   reviewSections?: string;
@@ -163,6 +167,8 @@ export async function scaffoldResult(opts: {
     started_at: startedAt,
     agent,
     ...(opts.origin ? { origin: opts.origin } : {}),
+    ...(opts.jobId ? { job_id: opts.jobId } : {}),
+    ...(opts.runId ? { run_id: opts.runId } : {}),
     ...(planRef ? { plan_ref: planRef } : {}),
     ...(opts.execution ? { execution: opts.execution } : {}),
     ...(approach ? { approach } : {}),
@@ -236,6 +242,8 @@ export async function updateResultStatus(
     completed_at: completedAt,
     agent: existingMeta.agent,
     ...(parseOrigin(existingMeta.origin) ? { origin: parseOrigin(existingMeta.origin) } : {}),
+    ...(existingMeta.job_id ? { job_id: existingMeta.job_id } : {}),
+    ...(existingMeta.run_id ? { run_id: existingMeta.run_id } : {}),
     ...(existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
     ...(existingMeta.execution === "human" || existingMeta.execution === "agent"
       ? { execution: existingMeta.execution }
@@ -277,6 +285,8 @@ export async function resetResultForClaim(
     started_at: startedAt,
     agent,
     ...(parseOrigin(existingMeta.origin) ? { origin: parseOrigin(existingMeta.origin) } : {}),
+    ...(existingMeta.job_id ? { job_id: existingMeta.job_id } : {}),
+    ...(existingMeta.run_id ? { run_id: existingMeta.run_id } : {}),
     ...(execution !== "human" && existingMeta.plan_ref ? { plan_ref: existingMeta.plan_ref } : {}),
     ...(nextExecution ? { execution: nextExecution } : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,

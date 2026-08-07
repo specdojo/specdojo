@@ -165,6 +165,9 @@ groups:
           - kind: implementation
             path: src/routine.ts
             purpose: routineのdue判定・委譲・実行結果更新
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Definition検証・Job Run生成・checkpoint更新
         depends_on:
           - cdfd-register-operation
           - cdfd-task-execution

@@ -28,7 +28,7 @@ import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.j
 // Types
 // ================================
 
-export type RoutineActionKind = "register" | "exec-auto" | "exec-resume";
+export type RoutineActionKind = "register" | "exec-auto" | "exec-resume" | "job";
 
 export type RoutineRegisterFilter = {
   types?: string[];
@@ -46,6 +46,9 @@ export type RoutineAction = {
   parallel?: number;
   loop?: boolean;
   max_rounds?: number;
+  // kind: job — materialize する Job Definition と入力
+  job?: string;
+  inputs?: Record<string, string>;
 };
 
 export type RoutineDoc = {
@@ -53,7 +56,15 @@ export type RoutineDoc = {
   name?: string;
   description?: string;
   enabled?: boolean;
-  interval: string;
+  interval?: string;
+  trigger?: {
+    cron: string;
+    timezone: string;
+  };
+  policy?: {
+    missed_run?: "latest" | "all";
+    overlap?: "skip";
+  };
   action: RoutineAction;
 };
 
@@ -74,6 +85,7 @@ export type RoutineExecutionResult = "success" | "failure" | "skipped";
 export type RoutineStateEntry = {
   last_run: string;
   last_result?: RoutineExecutionResult;
+  last_scheduled_for?: string;
 };
 
 type RoutineStateFile = {
@@ -104,10 +116,137 @@ export function parseIntervalMs(text: string): number {
 
 // last_run が無い（未実行）または不正な場合は due とみなす。
 export function isRoutineDue(doc: RoutineDoc, lastRun: string | undefined, now: Date): boolean {
+  if (!doc.interval) return cronOccurrences(doc, lastRun, now).length > 0;
   if (!lastRun) return true;
   const last = new Date(lastRun);
   if (Number.isNaN(last.getTime())) return true;
   return now.getTime() - last.getTime() >= parseIntervalMs(doc.interval);
+}
+
+type CronField = Set<number>;
+
+function parseCronField(text: string, min: number, max: number, label: string): CronField {
+  const result = new Set<number>();
+  for (const token of text.split(",")) {
+    const [base, stepText] = token.split("/");
+    const step = stepText === undefined ? 1 : Number(stepText);
+    if (!Number.isSafeInteger(step) || step < 1) throw new Error(`Invalid cron ${label}: ${text}`);
+    let start: number;
+    let end: number;
+    if (base === "*") {
+      start = min;
+      end = max;
+    } else if (base.includes("-")) {
+      const parts = base.split("-").map(Number);
+      if (parts.length !== 2) throw new Error(`Invalid cron ${label}: ${text}`);
+      [start, end] = parts;
+    } else {
+      start = Number(base);
+      end = start;
+    }
+    if (
+      !Number.isSafeInteger(start) ||
+      !Number.isSafeInteger(end) ||
+      start < min ||
+      end > max ||
+      start > end
+    ) {
+      throw new Error(`Invalid cron ${label}: ${text}`);
+    }
+    for (let value = start; value <= end; value += step) result.add(value);
+  }
+  return result;
+}
+
+export function parseCronExpression(expression: string): CronField[] {
+  const fields = expression.trim().split(/\s+/);
+  if (fields.length !== 5)
+    throw new Error(`Invalid cron expression: "${expression}" (expected 5 fields)`);
+  return [
+    parseCronField(fields[0], 0, 59, "minute"),
+    parseCronField(fields[1], 0, 23, "hour"),
+    parseCronField(fields[2], 1, 31, "day-of-month"),
+    parseCronField(fields[3], 1, 12, "month"),
+    parseCronField(fields[4], 0, 6, "day-of-week"),
+  ];
+}
+
+function zonedParts(date: Date, timezone: string): [number, number, number, number, number] {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    minute: "numeric",
+    hour: "numeric",
+    day: "numeric",
+    month: "numeric",
+    weekday: "short",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(value("weekday"));
+  return [
+    Number(value("minute")),
+    Number(value("hour")),
+    Number(value("day")),
+    Number(value("month")),
+    weekday,
+  ];
+}
+
+export function cronMatches(expression: string, timezone: string, date: Date): boolean {
+  const fields = parseCronExpression(expression);
+  const parts = zonedParts(date, timezone);
+  return fields.every((field, index) => field.has(parts[index]));
+}
+
+const MAX_CRON_LOOKBACK_MINUTES = 366 * 24 * 60;
+
+export function cronOccurrences(
+  doc: RoutineDoc,
+  lastScheduledFor: string | undefined,
+  now: Date,
+): Date[] {
+  if (!doc.trigger) return [];
+  const nowMinute = new Date(Math.floor(now.getTime() / 60_000) * 60_000);
+  const parsedLast = lastScheduledFor ? new Date(lastScheduledFor) : null;
+  if (parsedLast && Number.isNaN(parsedLast.getTime())) return cronOccurrences(doc, undefined, now);
+
+  if (!parsedLast) {
+    for (let offset = 0; offset <= MAX_CRON_LOOKBACK_MINUTES; offset++) {
+      const candidate = new Date(nowMinute.getTime() - offset * 60_000);
+      if (cronMatches(doc.trigger.cron, doc.trigger.timezone, candidate)) return [candidate];
+    }
+    return [];
+  }
+
+  const occurrences: Date[] = [];
+  let cursor = Math.floor(parsedLast.getTime() / 60_000) * 60_000 + 60_000;
+  const maxStart = nowMinute.getTime() - MAX_CRON_LOOKBACK_MINUTES * 60_000;
+  if (cursor < maxStart) cursor = maxStart;
+  for (; cursor <= nowMinute.getTime(); cursor += 60_000) {
+    const candidate = new Date(cursor);
+    if (cronMatches(doc.trigger.cron, doc.trigger.timezone, candidate)) occurrences.push(candidate);
+    if (occurrences.length > 1000)
+      throw new Error(`Too many missed cron occurrences for ${doc.id}`);
+  }
+  return doc.policy?.missed_run === "all" ? occurrences : occurrences.slice(-1);
+}
+
+export function isoWeek(date: Date, timezone: string): string {
+  const local = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+  const [year, month, day] = local.split("-").map(Number);
+  const value = new Date(Date.UTC(year, month - 1, day));
+  const weekday = value.getUTCDay() || 7;
+  value.setUTCDate(value.getUTCDate() + 4 - weekday);
+  const weekYear = value.getUTCFullYear();
+  const first = new Date(Date.UTC(weekYear, 0, 1));
+  const week = Math.ceil(((value.getTime() - first.getTime()) / 86_400_000 + 1) / 7);
+  return `${weekYear}-W${String(week).padStart(2, "0")}`;
 }
 
 // ================================
@@ -172,13 +311,55 @@ export function parseRoutineDoc(
   }
 
   const interval = typeof value.interval === "string" ? value.interval.trim() : "";
-  if (!interval) {
-    errors.push("interval is required (e.g. 30m, 6h, 1d, 1w)");
-  } else {
+  const trigger = isRecord(value.trigger) ? value.trigger : undefined;
+  if (!interval && !trigger) {
+    errors.push("interval or trigger is required");
+  }
+  if (interval && trigger) errors.push("specify either interval or trigger, not both");
+  if (interval) {
     try {
       parseIntervalMs(interval);
     } catch (error) {
       errors.push(error instanceof Error ? error.message : String(error));
+    }
+  }
+  let parsedTrigger: RoutineDoc["trigger"];
+  if (trigger) {
+    const cron = typeof trigger.cron === "string" ? trigger.cron.trim() : "";
+    const timezone = typeof trigger.timezone === "string" ? trigger.timezone.trim() : "";
+    if (!cron) errors.push("trigger.cron is required");
+    else {
+      try {
+        parseCronExpression(cron);
+      } catch (error) {
+        errors.push(error instanceof Error ? error.message : String(error));
+      }
+    }
+    if (!timezone) errors.push("trigger.timezone is required");
+    else {
+      try {
+        new Intl.DateTimeFormat("en-US", { timeZone: timezone }).format();
+      } catch {
+        errors.push(`Invalid trigger.timezone: ${timezone}`);
+      }
+    }
+    if (cron && timezone) parsedTrigger = { cron, timezone };
+  }
+
+  let policy: RoutineDoc["policy"];
+  if (value.policy !== undefined) {
+    if (!isRecord(value.policy)) errors.push("policy must be a mapping");
+    else {
+      const missed = value.policy.missed_run;
+      const overlap = value.policy.overlap;
+      if (missed !== undefined && missed !== "latest" && missed !== "all") {
+        errors.push("policy.missed_run must be latest or all");
+      }
+      if (overlap !== undefined && overlap !== "skip") errors.push("policy.overlap must be skip");
+      policy = {
+        ...(missed === "latest" || missed === "all" ? { missed_run: missed } : {}),
+        ...(overlap === "skip" ? { overlap } : {}),
+      };
     }
   }
 
@@ -189,8 +370,10 @@ export function parseRoutineDoc(
 
   const action = value.action;
   const kind = typeof action.kind === "string" ? action.kind : "";
-  if (kind !== "register" && kind !== "exec-auto" && kind !== "exec-resume") {
-    errors.push(`action.kind must be one of: register, exec-auto, exec-resume (got "${kind}")`);
+  if (kind !== "register" && kind !== "exec-auto" && kind !== "exec-resume" && kind !== "job") {
+    errors.push(
+      `action.kind must be one of: register, exec-auto, exec-resume, job (got "${kind}")`,
+    );
   }
 
   if (kind === "register") {
@@ -233,6 +416,19 @@ export function parseRoutineDoc(
     validatePositiveIntegerField(errors, action.parallel, "action.parallel");
   }
 
+  if (kind === "job") {
+    if (typeof action.job !== "string" || !/^job-[a-z0-9][a-z0-9-]*$/.test(action.job)) {
+      errors.push("action.job must match job-<slug>");
+    }
+    if (
+      action.inputs !== undefined &&
+      (!isRecord(action.inputs) ||
+        Object.values(action.inputs).some((item) => typeof item !== "string"))
+    ) {
+      errors.push("action.inputs must be a mapping of string values");
+    }
+  }
+
   if (errors.length > 0) {
     return { errors: errors.map((message) => `${fileName}: ${message}`) };
   }
@@ -254,7 +450,9 @@ export function parseRoutineDoc(
     ...(typeof value.name === "string" ? { name: value.name } : {}),
     ...(typeof value.description === "string" ? { description: value.description } : {}),
     ...(typeof value.enabled === "boolean" ? { enabled: value.enabled } : {}),
-    interval,
+    ...(interval ? { interval } : {}),
+    ...(parsedTrigger ? { trigger: parsedTrigger } : {}),
+    ...(policy ? { policy } : {}),
     action: {
       kind: kind as RoutineActionKind,
       ...(filter && Object.keys(filter).length > 0 ? { filter } : {}),
@@ -265,6 +463,8 @@ export function parseRoutineDoc(
       ...(typeof action.parallel === "number" ? { parallel: action.parallel } : {}),
       ...(typeof action.loop === "boolean" ? { loop: action.loop } : {}),
       ...(typeof action.max_rounds === "number" ? { max_rounds: action.max_rounds } : {}),
+      ...(typeof action.job === "string" ? { job: action.job } : {}),
+      ...(isRecord(action.inputs) ? { inputs: action.inputs as Record<string, string> } : {}),
     },
   };
   return { doc, errors: [] };
@@ -482,12 +682,48 @@ export function buildRegisterRunArgs(pjrId: string, projectId: string): string[]
   return ["exec", "run", "--register", pjrId, "--project", projectId, "--if-busy", "skip"];
 }
 
+function renderRoutineInput(value: string, scheduledAt: Date, timezone: string): string {
+  return value.replace(/\{\{\s*scheduled_at(?:\s*\|\s*iso_week)?\s*\}\}/g, (match) =>
+    match.includes("iso_week") ? isoWeek(scheduledAt, timezone) : scheduledAt.toISOString(),
+  );
+}
+
+export function buildJobRunArgs(
+  action: RoutineAction,
+  projectId: string,
+  scheduledAt: Date,
+  timezone = "UTC",
+): string[] {
+  if (!action.job) throw new Error("job action requires action.job");
+  const args = [
+    "exec",
+    "run",
+    "--job",
+    action.job,
+    "--project",
+    projectId,
+    "--scheduled-at",
+    scheduledAt.toISOString(),
+    "--job-trigger",
+    "routine",
+    "--if-busy",
+    "skip",
+  ];
+  for (const [key, value] of Object.entries(action.inputs ?? {}).sort(([a], [b]) =>
+    a.localeCompare(b),
+  )) {
+    args.push("--input", `${key}=${renderRoutineInput(value, scheduledAt, timezone)}`);
+  }
+  return args;
+}
+
 // 1 routine を実行する。register kind は対象項目ごとに失敗を記録して継続し、
 // 最後に集約する（1 件の失敗で残りの項目を止めない）。
 function executeRoutine(
   routine: LoadedRoutine,
   projectId: string,
   dryRun: boolean,
+  scheduledAt = new Date(),
 ): RoutineExecutionResult {
   const { doc } = routine;
   process.stdout.write(`[routine] ${doc.id}: ${doc.name ?? doc.action.kind}\n`);
@@ -503,6 +739,20 @@ function executeRoutine(
 
   if (doc.action.kind === "exec-resume") {
     const args = buildExecResumeArgs(doc.action, projectId);
+    if (dryRun) {
+      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+      return "success";
+    }
+    return spawnSelf(args);
+  }
+
+  if (doc.action.kind === "job") {
+    const args = buildJobRunArgs(
+      doc.action,
+      projectId,
+      scheduledAt,
+      doc.trigger?.timezone ?? "UTC",
+    );
     if (dryRun) {
       process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
       return "success";
@@ -627,15 +877,19 @@ export function registerRoutineCommands(program: Command): void {
       const rows = routines.map(({ doc }) => ({
         id: doc.id,
         enabled: doc.enabled === false ? "disabled" : "enabled",
-        interval: doc.interval,
+        interval: doc.interval ?? doc.trigger?.cron ?? "-",
         kind: doc.action.kind,
         lastRun: formatRoutineLastRun(state.routines[doc.id]),
         due:
           doc.enabled === false
             ? "-"
-            : isRoutineDue(doc, state.routines[doc.id]?.last_run, now)
-              ? "due"
-              : "-",
+            : doc.trigger
+              ? cronOccurrences(doc, state.routines[doc.id]?.last_scheduled_for, now).length > 0
+                ? "due"
+                : "-"
+              : isRoutineDue(doc, state.routines[doc.id]?.last_run, now)
+                ? "due"
+                : "-",
       }));
 
       const idWidth = Math.max(2, ...rows.map((row) => row.id.length));
@@ -680,20 +934,27 @@ export function registerRoutineCommands(program: Command): void {
       const state = readRoutineState(paths.statePath);
       const now = new Date();
 
-      let selected: LoadedRoutine[];
+      let selected: Array<{ entry: LoadedRoutine; scheduledAt: Date }>;
       if (opts.id) {
         const routineId = (opts.id as string).trim();
         const found = routines.find((entry) => entry.doc.id === routineId);
         if (!found) {
           throw new Error(`Routine not found: ${routineId} (in ${paths.routinesPath})`);
         }
-        selected = [found];
+        selected = [{ entry: found, scheduledAt: now }];
       } else {
-        selected = routines.filter(
-          (entry) =>
-            entry.doc.enabled !== false &&
-            isRoutineDue(entry.doc, state.routines[entry.doc.id]?.last_run, now),
-        );
+        selected = routines.flatMap((entry) => {
+          if (entry.doc.enabled === false) return [];
+          const stateEntry = state.routines[entry.doc.id];
+          if (entry.doc.trigger) {
+            return cronOccurrences(entry.doc, stateEntry?.last_scheduled_for, now).map(
+              (scheduledAt) => ({ entry, scheduledAt }),
+            );
+          }
+          return isRoutineDue(entry.doc, stateEntry?.last_run, now)
+            ? [{ entry, scheduledAt: now }]
+            : [];
+        });
       }
 
       if (selected.length === 0) {
@@ -708,15 +969,20 @@ export function registerRoutineCommands(program: Command): void {
 
       let failed = 0;
       let skipped = 0;
-      for (const entry of selected) {
+      for (const selectedRun of selected) {
+        const { entry, scheduledAt } = selectedRun;
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
         if (!dryRun) {
-          state.routines[entry.doc.id] = { last_run: nowUtcIsoSeconds() };
+          state.routines[entry.doc.id] = {
+            ...state.routines[entry.doc.id],
+            last_run: nowUtcIsoSeconds(),
+            ...(entry.doc.trigger ? { last_scheduled_for: scheduledAt.toISOString() } : {}),
+          };
           writeRoutineState(paths, state);
         }
 
-        const result = executeRoutine(entry, paths.projectId, dryRun);
+        const result = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
         if (result === "failure") failed++;
         if (result === "skipped") {
           skipped++;

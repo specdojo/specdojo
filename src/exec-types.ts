@@ -232,8 +232,9 @@ export type ResolvedProjectPaths = {
 
 // タスクの出自。schedule は成果物カタログ由来のタスクで、対象成果物を持ち targets から
 // commit 許可リストを導出する。register は登録簿項目（PJR-XXXX）の実行で、対象成果物を
-// 特定できないため targets を持たない。省略時は schedule とみなす。
-export type TaskOrigin = "schedule" | "register";
+// 特定できないため targets を持たない。job はJob DefinitionからmaterializeしたRunで、
+// targetsまたは対象pathをRunスナップショットに保持する。省略時は schedule とみなす。
+export type TaskOrigin = "schedule" | "register" | "job";
 
 export type ExecPlanMeta = {
   id: string;
@@ -245,6 +246,8 @@ export type ExecPlanMeta = {
   status: "ready";
   project_id: string;
   origin?: TaskOrigin;
+  job_id?: string;
+  run_id?: string;
   owner?: string;
   on_critical_path?: true;
   agent?: string;
@@ -262,6 +265,8 @@ export type ExecResultMeta = {
   status: "in_progress" | "complete" | "blocked";
   project_id: string;
   origin?: TaskOrigin;
+  job_id?: string;
+  run_id?: string;
   // human タスクは plan を生成せず result 単体で実行するため省略する。
   plan_ref?: string;
   started_at: string;

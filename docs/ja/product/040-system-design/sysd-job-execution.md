@@ -2,7 +2,7 @@
 specdojo:
   id: sysd-job-execution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-rulebook
 ---
 
@@ -10,7 +10,7 @@ specdojo:
 
 週報作成や更新文書の翻訳など、同じ作業定義から実行単位を繰り返し生成するためのJob実行モデルを定義する。
 
-本設計は将来機能の設計であり、現行CLIには未実装である。コマンド名、YAML、配置パスは実装時にschemaおよびコマンドリファレンスへ反映して確定する。
+本設計は`job-*.yaml`、`exec run --job`、routineの`action.kind: job`として実装されている。Job Runは既存exec基盤を使ってin-place実行され、結果とcheckpointを実行履歴へ記録する。
 
 ## 1. 目的と適用範囲
 
@@ -71,7 +71,7 @@ Runには少なくとも次を記録する。
 - `run_id`、`job_id`、`idempotency_key`
 - 起動元、`scheduled_at`、生成時刻
 - 解決済み入力と解決済みtask
-- `queued` / `running` / `succeeded` / `failed` / `skipped` / `noop`の状態
+- `running` / `succeeded` / `failed` / `noop`の状態
 - attempt、plan/result参照、対象commit
 - 実行前checkpointと、成功時に確定する次checkpoint
 
@@ -79,7 +79,7 @@ Runには少なくとも次を記録する。
 
 ## 3. 定義形式
 
-次のYAMLは設計上の形を示す。未実装のため、現時点ではCLIへ渡せない。
+次のYAMLを`jobs_path`配下へ配置し、CLIから検証・実行する。
 
 ```yaml
 id: job-weekly-report
@@ -97,7 +97,7 @@ task:
   description: |
     対象期間の完了事項、進行中事項、課題、翌週予定を根拠とともにまとめる。
   targets:
-    - pm-weekly-report
+    - pr-progress-report
 
 run:
   idempotency_key: "{{job_id}}:{{inputs.period}}"
@@ -109,7 +109,7 @@ run:
 
 ## 4. 起動と実行フロー
 
-将来のCLI境界は次を基本案とする。
+CLI境界は次のとおりとする。
 
 ```bash
 # 手動で1回起動する
@@ -162,10 +162,10 @@ cronのdue判定では、実際に処理を開始した`last_run`とは別に、
 
 routineはJobごとに次の方針を指定できるようにする。
 
-| 方針         | 選択肢                      | 意味                                                        |
-| ------------ | --------------------------- | ----------------------------------------------------------- |
-| `missed_run` | `skip` / `latest` / `all`   | 停止期間中の実行枠を捨てる、最新だけ補う、すべて補う        |
-| `overlap`    | `skip` / `queue` / `forbid` | 前回Run実行中の次回起動を無視、待ち行列化、設定エラーとする |
+| 方針         | 選択肢           | 意味                                                         |
+| ------------ | ---------------- | ------------------------------------------------------------ |
+| `missed_run` | `latest` / `all` | 停止期間中の最新だけを補う、またはすべて補う                 |
+| `overlap`    | `skip`           | 前回のexec実行中は待機せず、次の外部スケジューラ起動へ委ねる |
 
 既定案は`missed_run: latest`、`overlap: skip`とする。週報のように各期間を必ず残す必要があるJobは`all`を明示する。
 
@@ -198,10 +198,13 @@ name: 更新文書の翻訳
 inputs:
   from_revision:
     type: string
-    required: true
+    from_checkpoint: revision
+    default: HEAD~1
+    git_revision: true
   to_revision:
     type: string
-    required: true
+    resolve: git_head
+    git_revision: true
   languages:
     type: list
     default: [en]
@@ -211,13 +214,17 @@ task:
   owner: TR
   description: |
     revision範囲で追加・変更・改名・削除された原文を判定し、対応する翻訳を同期する。
+  paths:
+    - docs/ja
+    - docs/en
 
 run:
   idempotency_key: >-
     {{job_id}}:{{inputs.from_revision}}:{{inputs.to_revision}}:{{inputs.languages}}
 
 checkpoint:
-  read: last_success.to_revision
+  values:
+    revision: "{{inputs.to_revision}}"
   advance_on: [succeeded, noop]
 ```
 
@@ -233,7 +240,7 @@ checkpoint:
 
 ## 7. 保存領域と監査
 
-プロジェクト直下へ次の領域を追加する案とする。
+プロジェクト直下へ次の領域を配置する。
 
 ```text
 projects/<prj-id>/
@@ -252,14 +259,10 @@ Runの状態変更とattemptは上書きだけで失われない履歴として�
 
 認証情報、秘密鍵、翻訳サービスのtokenなどをJob Definition、入力、Runへ保存しない。外部サービスの資格情報は既存exec provider設定と実行環境から注入する。
 
-## 8. 実装時の変更対象
+## 8. 現在の実装境界
 
-本設計を実装する際は、少なくとも次を同時に更新する。
-
-- Job Definition / Job Run / routine triggerのschema
-- project configの`jobs_path`
-- `exec run --job`とJob Runの状態管理
-- routineの`action.kind: job`、`cron`、`timezone`、missed/overlap policy
-- plan/result frontmatterの`origin: job`
-- Job Definition、Run、checkpoint、重複起動、失敗・retryのテスト
-- CLIコマンドリファレンス、exec/routine運用ガイド、ディレクトリ構成
+- Job Runはin-place実行に対応する。`exec run --job --worktree`は未対応で、指定時にエラーとする。
+- cronは5フィールド形式を扱い、数値、`*`、リスト、範囲、stepを受け付ける。
+- `missed_run`は`latest`と`all`、`overlap`は`skip`に対応する。
+- agentが変更不要と判断して正常終了したRunは現在`succeeded`として記録する。`noop`はデータモデルとcheckpoint規則に予約しているが、agent resultからの自動分類は未対応である。
+- Job DefinitionとRunは`job validate`およびschemaで検証し、`job-state.json`はRun履歴から再導出できる派生物とする。
