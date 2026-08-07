@@ -18,8 +18,9 @@ const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUT
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
 
 const FAKE_AGENT_CMD =
-  `node -e "let s='';process.stdin.on('data',d=>s+=d);` +
-  `process.stdin.on('end',()=>require('node:fs').writeFileSync('agent-ran.txt',s))"`;
+  `node -e "const fs=require('node:fs');` +
+  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
+const FAKE_AGENT_NICKNAME = "test-edit-agent";
 
 function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key];
@@ -49,12 +50,36 @@ function setupRepository(): { repo: string; executionPath: string } {
         version: 1,
         current_project: "test",
         projects: {
-          test: { schedule_path: "schedule", execution_path: "execution", catalog_path: "catalog" },
+          test: {
+            schedule_path: "schedule",
+            execution_path: "execution",
+            catalog_path: "catalog",
+            members_path: "pm-members.yaml",
+          },
         },
       },
       null,
       2,
     ) + "\n",
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "pm-members.yaml"),
+    [
+      "version: 1",
+      "project_id: test",
+      "members:",
+      `  - nickname: ${FAKE_AGENT_NICKNAME}`,
+      "    display_name: Test Edit Agent",
+      "    email: null",
+      "    roles: [DEV]",
+      "    type: agent",
+      "    capabilities: []",
+      "    priority: 1",
+      `    command: ${JSON.stringify(FAKE_AGENT_CMD)}`,
+      "    mode: edit",
+      "",
+    ].join("\n"),
     "utf8",
   );
   writeFileSync(
@@ -149,8 +174,8 @@ describe("exec run (in-place, default)", () => {
         "test",
         "--task",
         "T-TEST-doc-010",
-        "--cmd",
-        FAKE_AGENT_CMD,
+        "--by",
+        FAKE_AGENT_NICKNAME,
       ]);
 
       const received = readFileSync(join(repo, "agent-ran.txt"), "utf8");
@@ -192,7 +217,15 @@ describe("exec run (in-place, default)", () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       process.chdir(repo);
-      await runExec(["run", "--project", "test", "--deliverable", "doc", "--cmd", FAKE_AGENT_CMD]);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--deliverable",
+        "doc",
+        "--by",
+        FAKE_AGENT_NICKNAME,
+      ]);
 
       expect(readFileSync(join(repo, "agent-ran.txt"), "utf8")).toContain("Content is complete");
       const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
@@ -211,8 +244,24 @@ describe("exec run (in-place, default)", () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       process.chdir(repo);
-      await runExec(["run", "--project", "test", "--deliverable", "doc", "--cmd", FAKE_AGENT_CMD]);
-      await runExec(["run", "--project", "test", "--deliverable", "doc", "--cmd", FAKE_AGENT_CMD]);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--deliverable",
+        "doc",
+        "--by",
+        FAKE_AGENT_NICKNAME,
+      ]);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--deliverable",
+        "doc",
+        "--by",
+        FAKE_AGENT_NICKNAME,
+      ]);
 
       const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
         f.endsWith("-plan.md"),
@@ -241,8 +290,8 @@ describe("exec run (in-place, default)", () => {
         "test",
         "--deliverable",
         "doc",
-        "--cmd",
-        FAKE_AGENT_CMD,
+        "--by",
+        FAKE_AGENT_NICKNAME,
         "--archive-on-success",
       ]);
 
@@ -275,8 +324,8 @@ describe("exec run (in-place, default)", () => {
         "test",
         "--deliverable",
         "doc",
-        "--cmd",
-        FAKE_AGENT_CMD,
+        "--by",
+        FAKE_AGENT_NICKNAME,
         "--dry-run",
       ]);
 
@@ -323,7 +372,7 @@ describe("exec run (in-place, default)", () => {
         "utf8",
       );
 
-      await runExec(["run", "--project", "test", "--plan", planPath, "--cmd", FAKE_AGENT_CMD]);
+      await runExec(["run", "--project", "test", "--plan", planPath, "--by", FAKE_AGENT_NICKNAME]);
 
       const result = readFileSync(
         join(executionPath, "exec", "results", "custom-result.md"),
@@ -369,8 +418,8 @@ describe("exec run (in-place, default)", () => {
         "test",
         "--task",
         "T-TEST-doc-010",
-        "--cmd",
-        FAKE_AGENT_CMD,
+        "--by",
+        FAKE_AGENT_NICKNAME,
       ]);
 
       // The agent ran (exit 0) but produced no result content.

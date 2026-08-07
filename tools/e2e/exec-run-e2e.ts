@@ -74,6 +74,7 @@ function setupFixture(repo: string, worktreeBase: string, agentScript: string): 
           test: {
             schedule_path: "schedule",
             execution_path: "execution",
+            members_path: "pm-members.yaml",
             run: { worktree_base: worktreeBase },
           },
         },
@@ -81,6 +82,25 @@ function setupFixture(repo: string, worktreeBase: string, agentScript: string): 
       null,
       2,
     ) + "\n",
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "pm-members.yaml"),
+    [
+      "version: 1",
+      "project_id: test",
+      "members:",
+      "  - nickname: e2e-edit-agent",
+      "    display_name: E2E Edit Agent",
+      "    email: null",
+      "    roles: [DEV]",
+      "    type: agent",
+      "    capabilities: []",
+      "    priority: 1",
+      `    command: ${JSON.stringify(`node ${agentScript}`)}`,
+      "    mode: edit",
+      "",
+    ].join("\n"),
     "utf8",
   );
   writeFileSync(
@@ -157,8 +177,8 @@ function run(): void {
       "--task",
       TASK_ID,
       "--worktree",
-      "--agent-cmd",
-      `node ${agentScript}`,
+      "--by",
+      "e2e-edit-agent",
     ]);
 
     // The agent's deliverable change must be merged into the root branch.

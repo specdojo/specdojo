@@ -247,7 +247,7 @@ providers:
 - 展開後に未解決のプレースホルダが残る場合は、その member を起動せず検証エラーとして報告する。
 - `command_template`、`command_params`、member の `command` のいずれにも、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
 
-`--cmd` によるコマンド直接指定は従来どおり member 解決より優先する。nickname 指定時はこの解決規則で得たコマンドを使う。
+agent の明示指定は `--by` / `--edit-by` / `--review-by` に nickname を渡し、この解決規則で command を得る。生の command 文字列は受理しない。
 
 ### 6.4. 制限情報と使用量の共通設計
 

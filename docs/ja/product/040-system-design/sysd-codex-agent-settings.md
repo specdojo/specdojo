@@ -215,14 +215,14 @@ codex exec \
 
 このcommandの `--model`、`--sandbox`、`model_reasoning_effort` は、選択済みworkerの実行設定であり、worker名を選択する引数ではない。`codex exec` にはOpenCodeやClaude Codeの `--agent <name>` に相当する直接worker選択オプションはない。
 
-memberを明示して実行する場合は `--cmd` にnicknameを指定する。
+memberを明示して実行する場合は `--by` にnicknameを指定する。
 
 ```bash
-specdojo exec run --cmd codex-edit-agent
-specdojo exec run --cmd codex-expert-review-agent
+specdojo exec run --by codex-edit-agent --task <task-id>
+specdojo exec run --by codex-expert-review-agent --task <task-id>
 ```
 
-`--by` はeventやresultに記録するactor名の上書きであり、member選択には使用しない。
+`--by` は member 選択と、event や result に記録する actor の指定を兼ねる。
 
 #### Codex custom subagentの選択
 

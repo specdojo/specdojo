@@ -147,15 +147,15 @@ specdojo exec worktree agent \
   --task <task-id>
 ```
 
-claim actor の member 属性と `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から command を解決します。plan 内の `[[id]]` は `index replace --format path --missing keep` 相当で展開し、agent の標準入力へ渡します。
+既定では claim actor の nickname を使い、member 属性と `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から command を解決します。plan 内の `[[id]]` は `index replace --format path --missing keep` 相当で展開し、agent の標準入力へ渡します。
 
-コマンドを明示する場合は `--agent-cmd` を使います。
+別の登録済み agent を明示する場合は `--by <nickname>` を使います。生の command 文字列は指定できません。
 
 ```bash
 specdojo exec worktree agent \
   --project <project-id> \
   --task <task-id> \
-  --agent-cmd "opencode run --agent opencode-edit-agent"
+  --by opencode-edit-agent
 ```
 
 `agent` は retry、fallback、commit、merge、event 更新を行いません。終了コードは agent command の終了コードをそのまま返します。

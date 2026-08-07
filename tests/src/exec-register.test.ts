@@ -157,16 +157,12 @@ describe("resolveRegisterCommand", () => {
     expect(actual).toEqual({ command: "run-generic", actor: "generic" });
   });
 
-  it("--cmd 指定は nickname 解決を優先しつつコマンド文字列も受け入れる", () => {
+  it("--by 指定は nickname から command を解決する", () => {
     const roster = makeRoster([makeAgent({ nickname: "named", command: "run-named" })]);
 
-    expect(resolveRegisterCommand(makeItem(), roster, { cmd: "named" })).toEqual({
+    expect(resolveRegisterCommand(makeItem(), roster, { by: "named" })).toEqual({
       command: "run-named",
       actor: "named",
-    });
-    expect(resolveRegisterCommand(makeItem(), roster, { cmd: "raw-command" })).toEqual({
-      command: "raw-command",
-      actor: "auto-agent",
     });
   });
 
