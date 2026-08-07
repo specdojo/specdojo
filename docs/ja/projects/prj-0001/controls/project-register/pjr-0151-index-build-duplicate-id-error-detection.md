@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0151-index-build-duplicate-id-error-detection
   type: project
-  status: draft
+  status: ready
   rulebook: pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -26,19 +26,24 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                     | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------------------------ | ---- | ---- | ---- |
-| 1   | 重複ID検知ロジックの設計・実装（Markdown/YAML/ネストIDを共通基準で検証） | ARC  | open | -    |
-| 2   | エラーメッセージ（衝突ID・全ファイルパス表示）の実装                     | ARC  | open | -    |
-| 3   | `specdojo index build` 単体実行時のエラー化                              | ARC  | open | -    |
-| 4   | 総合validate（`exec validate`/`build`パイプライン）での失敗伝播の実装    | ARC  | open | -    |
-| 5   | 多言語文書のID方針の検討・決定（言語別インデックス or 言語variant）      | ARC  | open | -    |
-| 6   | 決定した方針の `id-and-file-naming-standard` 等該当設計書への反映        | ARC  | open | -    |
-| 7   | 単体テスト追加（重複検知・エラーメッセージ・多言語方針の境界値）         | ARC  | open | -    |
+| No  | 作業                                                                     | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 重複ID検知ロジックの設計・実装（Markdown/YAML/ネストIDを共通基準で検証） | ARC  | done | 言語スコープ対応の `addId` で共通検証                |
+| 2   | エラーメッセージ（衝突ID・全ファイルパス表示）の実装                     | ARC  | done | 衝突ID・両ファイルパス・locale/mixed を明示          |
+| 3   | `specdojo index build` 単体実行時のエラー化                              | ARC  | done | `DuplicateDocIdError` で exit 1                      |
+| 4   | 総合validate（`exec validate`/`build`パイプライン）での失敗伝播の実装    | ARC  | done | `collectDocIndex` 経由で伝播                         |
+| 5   | 多言語文書のID方針の検討・決定（言語別インデックス or 言語variant）      | ARC  | done | 同一論理ID＋言語スコープ解決に決定                   |
+| 6   | 決定した方針の `id-and-file-naming-standard` 等該当設計書への反映        | ARC  | done | 標準に `2.4. 多言語文書のID方針` を追加              |
+| 7   | 単体テスト追加（重複検知・エラーメッセージ・多言語方針の境界値）         | ARC  | done | `tests/src/doc-index.test.ts` に言語スコープ系を追加 |
 
 ## 4. 対応結果
 
--
+- 多言語文書のID方針を「同一論理ID（言語中立）＋言語スコープでの重複検知・参照解決」に決定した。翻訳は同じ論理文書の言語違いとして同一 `id` を共有し、`[[id]]` 参照は言語を書かずに同一言語 variant へ解決する。純粋な言語別ID案は、参照が言語固有になり翻訳がリンクを共有できずID数も倍増するため不採用とした。
+- 一意性の粒度を「Unit 内かつ同一言語サブツリー内で一意（言語をまたぐ同一IDは variant として許容）」に精緻化。ロケール集合は `.specdojo/index-config.yaml` の `locales` で宣言する（未宣言時は従来どおり Unit 全体で一意）。
+- `src/doc-index.ts` を言語スコープ対応に改修。`addId` で「同一スコープ内の重複のみエラー」「言語中立と言語別の混在はエラー」を判定。出力 `doc-index.json` に既定言語の `entries`（後方互換）に加えて言語別 `localized`（id→{locale:path}）を追加。`replaceDocIndexRefs` に `lang` を追加し同一言語優先で解決。`index replace` はパスから言語を自動判定（`--lang` で上書き可）。
+- `docs/specdojo/` 配下のスキーマは言語中立として全体一意を維持することを確認。実 `index build` は 774 件で成功（重複なし）。
+- 標準 `id-and-file-naming-standard` に `2.4. 多言語文書のID方針（言語スコープ）` を追加し、`5.2. 参照解決ルール` に言語スコープ解決の注記を追加した。
+- `docs/en/` は現在プレースホルダのみで、本方針と矛盾しない（言語別サブツリーとして自然に受け入れられる）。
 
 ## 5. 関連ドキュメント
 

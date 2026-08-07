@@ -5,8 +5,12 @@ import { tmpdir } from "node:os";
 import { buildDocIndex, lookupDocIndex, replaceDocIndexRefs } from "../../src/doc-index.js";
 import type { DocIndex } from "../../src/doc-index.js";
 
-function writeIndex(dir: string, entries: Record<string, string>): string {
-  const index: DocIndex = { version: 1, entries };
+function writeIndex(
+  dir: string,
+  entries: Record<string, string>,
+  localized?: Record<string, Record<string, string>>,
+): string {
+  const index: DocIndex = { version: 1, entries, ...(localized ? { localized } : {}) };
   const indexPath = join(dir, "doc-index.json");
   writeFileSync(indexPath, JSON.stringify(index, null, 2), "utf8");
   return indexPath;
@@ -193,6 +197,44 @@ describe("replaceDocIndexRefs", () => {
     }
   });
 
+  it("lang 指定時は同一言語の localized variant を優先解決する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const indexPath = writeIndex(
+        dir,
+        { "shared-guide": "docs/ja/guide.md" },
+        { "shared-guide": { ja: "docs/ja/guide.md", en: "docs/en/guide.md" } },
+      );
+      const result = replaceDocIndexRefs("See [[shared-guide]].", indexPath, {
+        format: "path",
+        lang: "en",
+      });
+
+      expect(result.content).toBe("See docs/en/guide.md.");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("lang の variant が無ければ既定言語（entries）へフォールバックする", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const indexPath = writeIndex(
+        dir,
+        { "ja-only": "docs/ja/only.md" },
+        { "ja-only": { ja: "docs/ja/only.md" } },
+      );
+      const result = replaceDocIndexRefs("See [[ja-only]].", indexPath, {
+        format: "path",
+        lang: "en",
+      });
+
+      expect(result.content).toBe("See docs/ja/only.md.");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("missing: marker の場合は未解決 ID を _MISSING_ に置換する", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
     try {
@@ -282,6 +324,87 @@ describe("buildDocIndex", () => {
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       expect(index.entries["specdojo:ifx-api-sample"]).toBe("docs/ja/ifx-api-sample.yaml");
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("locales 設定時、同一論理 ID の言語別文書は variant として許容する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      mkdirSync(join(docsRoot, "ja"), { recursive: true });
+      mkdirSync(join(docsRoot, "en"), { recursive: true });
+      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
+      const frontmatter = (id: string) =>
+        `---\nspecdojo:\n  id: ${id}\n  type: guide\n  status: draft\n---\n\n# Doc\n`;
+      writeFileSync(join(docsRoot, "ja", "guide.md"), frontmatter("shared-guide"), "utf8");
+      writeFileSync(join(docsRoot, "en", "guide.md"), frontmatter("shared-guide"), "utf8");
+      writeFileSync(
+        join(repoRoot, ".specdojo", "index-config.yaml"),
+        "locales:\n  - ja\n  - en\n",
+        "utf8",
+      );
+
+      const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
+      buildDocIndex(docsRoot, outputPath, repoRoot);
+      const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
+
+      // entries は既定言語（config 先頭の ja）を指す。
+      expect(index.entries["shared-guide"]).toBe("docs/ja/guide.md");
+      expect(index.localized?.["shared-guide"]).toEqual({
+        ja: "docs/ja/guide.md",
+        en: "docs/en/guide.md",
+      });
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("locales 設定時でも同一言語内の ID 重複は拒否する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      mkdirSync(join(docsRoot, "ja", "a"), { recursive: true });
+      mkdirSync(join(docsRoot, "ja", "b"), { recursive: true });
+      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
+      const frontmatter = "---\nspecdojo:\n  id: dup-guide\n  type: guide\n  status: draft\n---\n";
+      writeFileSync(join(docsRoot, "ja", "a", "guide.md"), frontmatter, "utf8");
+      writeFileSync(join(docsRoot, "ja", "b", "guide.md"), frontmatter, "utf8");
+      writeFileSync(
+        join(repoRoot, ".specdojo", "index-config.yaml"),
+        "locales:\n  - ja\n  - en\n",
+        "utf8",
+      );
+
+      expect(() =>
+        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+      ).toThrow(/Duplicate document ID "dup-guide" in locale "ja"/);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("言語中立文書と言語別文書で同一 ID を使うと拒否する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      mkdirSync(join(docsRoot, "ja"), { recursive: true });
+      mkdirSync(join(docsRoot, "specdojo"), { recursive: true });
+      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
+      const frontmatter = "---\nspecdojo:\n  id: mixed-id\n  type: guide\n  status: draft\n---\n";
+      // docs/specdojo は locales に含めないため言語中立、docs/ja は locale ja。
+      writeFileSync(join(docsRoot, "specdojo", "neutral.md"), frontmatter, "utf8");
+      writeFileSync(join(docsRoot, "ja", "localized.md"), frontmatter, "utf8");
+      writeFileSync(
+        join(repoRoot, ".specdojo", "index-config.yaml"),
+        "locales:\n  - ja\n  - en\n",
+        "utf8",
+      );
+
+      expect(() =>
+        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+      ).toThrow(/mixed language-neutral and localized/);
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

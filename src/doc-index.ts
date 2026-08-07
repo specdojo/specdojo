@@ -6,7 +6,11 @@ import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 export interface DocIndex {
   version: number;
   // id → path  or  id → "path:line" (1-based line number)
+  // 言語別（localized）を持つ ID は既定言語のパスを格納する（後方互換）。
   entries: Record<string, string>;
+  // 同一論理 ID を複数言語で持つ場合の言語別パス。id → { locale → path }。
+  // 言語スコープが有効（config.locales 設定時）かつ言語別文書が存在する場合のみ出力する。
+  localized?: Record<string, Record<string, string>>;
 }
 
 export type DocIndexReplaceFormat = "markdown" | "path";
@@ -16,6 +20,9 @@ export interface ReplaceDocIndexRefsOptions {
   format?: DocIndexReplaceFormat;
   missing?: DocIndexMissingMode;
   missingMarker?: string;
+  // 参照元ファイルの言語。指定時は同一言語の variant を優先解決し、
+  // 無ければ既定言語（entries）へフォールバックする。
+  lang?: string;
 }
 
 export interface ReplaceDocIndexRefsResult {
@@ -37,6 +44,11 @@ export interface NestedIdFile {
 
 export interface IndexConfig {
   nested_id_files?: NestedIdFile[];
+  // 言語スコープを有効化するロケール一覧（docs ルート直下のディレクトリ名）。
+  // 例: ["ja", "en"]。設定した言語ディレクトリ配下の文書は、同一論理 ID を
+  // 言語ごとに1件ずつ持てる（言語をまたぐ同一 ID は variant として扱い衝突にしない）。
+  // 未設定時は言語スコープ無効（従来どおり Unit 全体で ID を一意にする）。
+  locales?: string[];
 }
 
 const SKIP_DIRS = new Set(["node_modules", "dist", ".vitepress", "out"]);
@@ -45,12 +57,87 @@ const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
 
 class DuplicateDocIdError extends Error {}
 
-function addEntry(entries: Record<string, string>, id: string, path: string): void {
-  const previous = entries[id];
-  if (previous && previous !== path) {
-    throw new DuplicateDocIdError(`Duplicate document ID "${id}": ${previous}, ${path}`);
+// 言語スコープ対応の ID 収集器。id ごとに、言語中立（neutral）と言語別（byLocale）を
+// 別管理する。同一スコープ内の重複はエラー、言語をまたぐ同一 ID は variant として許容する。
+interface IdSource {
+  path: string;
+}
+interface IdRecord {
+  neutral?: IdSource;
+  byLocale: Map<string, IdSource>;
+}
+type IdCollector = Map<string, IdRecord>;
+
+// scanRelPath（scan ルート相対）先頭ディレクトリが locales に含まれればそのロケール、
+// そうでなければ言語中立（null）を返す。locales 空なら常に中立（従来動作）。
+function localeOfScanPath(scanRelPath: string, locales: Set<string>): string | null {
+  if (locales.size === 0) return null;
+  const first = scanRelPath.split("/")[0];
+  return locales.has(first) ? first : null;
+}
+
+function addId(collector: IdCollector, id: string, path: string, locale: string | null): void {
+  let record = collector.get(id);
+  if (!record) {
+    record = { byLocale: new Map() };
+    collector.set(id, record);
   }
-  entries[id] = path;
+
+  if (locale === null) {
+    if (record.neutral && record.neutral.path !== path) {
+      throw new DuplicateDocIdError(
+        `Duplicate document ID "${id}": ${record.neutral.path}, ${path}`,
+      );
+    }
+    if (record.byLocale.size > 0) {
+      const other = [...record.byLocale.values()][0];
+      throw new DuplicateDocIdError(
+        `Duplicate document ID "${id}": ${other.path}, ${path} (mixed language-neutral and localized)`,
+      );
+    }
+    record.neutral = { path };
+    return;
+  }
+
+  if (record.neutral) {
+    throw new DuplicateDocIdError(
+      `Duplicate document ID "${id}": ${record.neutral.path}, ${path} (mixed language-neutral and localized)`,
+    );
+  }
+  const existing = record.byLocale.get(locale);
+  if (existing && existing.path !== path) {
+    throw new DuplicateDocIdError(
+      `Duplicate document ID "${id}" in locale "${locale}": ${existing.path}, ${path}`,
+    );
+  }
+  record.byLocale.set(locale, { path });
+}
+
+// 収集器から出力用の { entries（既定言語のフラット map）, localized } を構築する。
+function buildIndexMaps(
+  collector: IdCollector,
+  localeOrder: string[],
+): { entries: Record<string, string>; localized: Record<string, Record<string, string>> } {
+  const entries: Record<string, string> = {};
+  const localized: Record<string, Record<string, string>> = {};
+
+  for (const id of [...collector.keys()].sort()) {
+    const record = collector.get(id)!;
+    if (record.neutral) {
+      entries[id] = record.neutral.path;
+      continue;
+    }
+    const localeMap: Record<string, string> = {};
+    for (const locale of [...record.byLocale.keys()].sort()) {
+      localeMap[locale] = record.byLocale.get(locale)!.path;
+    }
+    localized[id] = localeMap;
+    const defaultLocale =
+      localeOrder.find((locale) => record.byLocale.has(locale)) ?? Object.keys(localeMap)[0];
+    entries[id] = localeMap[defaultLocale];
+  }
+
+  return { entries, localized };
 }
 
 // ---- Markdown frontmatter ----------------------------------------------
@@ -114,7 +201,8 @@ function collectFromFields(
   specs: CollectFromSpec[],
   fileRelPath: string,
   content: string,
-  entries: Record<string, string>,
+  collector: IdCollector,
+  locale: string | null,
 ): void {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return;
   const lines = content.split("\n");
@@ -134,11 +222,11 @@ function collectFromFields(
       const pathVal = itemRec[pathKey];
       if (typeof pathVal === "string" && pathVal.trim()) {
         // item has a path field → use it as the index target (no line number)
-        addEntry(entries, id, pathVal.trim());
+        addId(collector, id, pathVal.trim(), locale);
       } else {
         // no path → use file:line
         const lineNum = findIdLine(lines, id, idKey);
-        addEntry(entries, id, `${fileRelPath}:${lineNum}`);
+        addId(collector, id, `${fileRelPath}:${lineNum}`, locale);
       }
     }
   }
@@ -150,26 +238,28 @@ function scanFile(
   fullPath: string,
   rootDir: string,
   repoRoot: string,
-  entries: Record<string, string>,
+  collector: IdCollector,
   nestedMap: Map<string, CollectFromSpec[]>,
+  locales: Set<string>,
 ): void {
   // nestedMap keys are rootDir-relative; entry values are repoRoot-relative
   const scanRelPath = relative(rootDir, fullPath).replace(/\\/g, "/");
   const entryPath = relative(repoRoot, fullPath).replace(/\\/g, "/");
+  const locale = localeOfScanPath(scanRelPath, locales);
   const isYaml = !fullPath.endsWith(".md");
   try {
     const content = readFileSync(fullPath, "utf8");
     if (isYaml) {
       const parsed = yaml.load(content);
       const topId = extractTopLevelId(parsed);
-      if (topId) addEntry(entries, topId, entryPath);
+      if (topId) addId(collector, topId, entryPath, locale);
       const specs = nestedMap.get(scanRelPath);
       if (specs && specs.length > 0) {
-        collectFromFields(parsed, specs, entryPath, content, entries);
+        collectFromFields(parsed, specs, entryPath, content, collector, locale);
       }
     } else {
       const id = extractIdFromMarkdown(content);
-      if (id && DOC_ID_RE.test(id)) addEntry(entries, id, entryPath);
+      if (id && DOC_ID_RE.test(id)) addId(collector, id, entryPath, locale);
     }
   } catch (error) {
     if (error instanceof DuplicateDocIdError) throw error;
@@ -181,8 +271,9 @@ function walkDir(
   dir: string,
   rootDir: string,
   repoRoot: string,
-  entries: Record<string, string>,
+  collector: IdCollector,
   nestedMap: Map<string, CollectFromSpec[]>,
+  locales: Set<string>,
 ): void {
   let items: string[];
   try {
@@ -201,9 +292,9 @@ function walkDir(
       continue;
     }
     if (st.isDirectory()) {
-      walkDir(full, rootDir, repoRoot, entries, nestedMap);
+      walkDir(full, rootDir, repoRoot, collector, nestedMap, locales);
     } else if (FILE_RE.test(item)) {
-      scanFile(full, rootDir, repoRoot, entries, nestedMap);
+      scanFile(full, rootDir, repoRoot, collector, nestedMap, locales);
     }
   }
 }
@@ -228,14 +319,14 @@ function loadIndexConfig(repoRoot: string, configPath?: string): IndexConfig {
 
 // ---- public API --------------------------------------------------------
 
-// Scans docs and returns the id → path entries without writing a file.
+// Scans docs and returns { entries, localized } without writing a file.
 // Used both by buildDocIndex and by validators that need a fresh ID universe
 // (avoids depending on a possibly-stale .specdojo/doc-index.json).
-export function collectDocIndexEntries(
+export function collectDocIndex(
   rootDir: string,
   repoRoot: string,
   configPath?: string,
-): Record<string, string> {
+): { entries: Record<string, string>; localized: Record<string, Record<string, string>> } {
   const config = loadIndexConfig(repoRoot, configPath);
 
   // Build nested map: scan-root-relative path → collect_from specs
@@ -249,9 +340,23 @@ export function collectDocIndexEntries(
     }
   }
 
-  const entries: Record<string, string> = {};
-  walkDir(rootDir, rootDir, repoRoot, entries, nestedMap);
-  return entries;
+  const localeOrder = (config.locales ?? []).filter(
+    (locale): locale is string => typeof locale === "string" && locale.length > 0,
+  );
+  const locales = new Set(localeOrder);
+
+  const collector: IdCollector = new Map();
+  walkDir(rootDir, rootDir, repoRoot, collector, nestedMap, locales);
+  return buildIndexMaps(collector, localeOrder);
+}
+
+// Scans docs and returns the flat id → path entries (default locale per id).
+export function collectDocIndexEntries(
+  rootDir: string,
+  repoRoot: string,
+  configPath?: string,
+): Record<string, string> {
+  return collectDocIndex(rootDir, repoRoot, configPath).entries;
 }
 
 export function buildDocIndex(
@@ -260,11 +365,12 @@ export function buildDocIndex(
   repoRoot: string,
   configPath?: string,
 ): { count: number } {
-  const entries = collectDocIndexEntries(rootDir, repoRoot, configPath);
+  const { entries, localized } = collectDocIndex(rootDir, repoRoot, configPath);
 
   const index: DocIndex = {
     version: 1,
     entries,
+    ...(Object.keys(localized).length > 0 ? { localized } : {}),
   };
 
   const outDir = dirname(outputPath);
@@ -323,6 +429,7 @@ export function replaceDocIndexRefs(
   const format = options.format ?? "markdown";
   const missing = options.missing ?? "keep";
   const missingMarker = options.missingMarker ?? "_MISSING_";
+  const lang = options.lang;
   const index = readDocIndex(indexPath);
   const missingIds = new Set<string>();
 
@@ -333,7 +440,10 @@ export function replaceDocIndexRefs(
     if (groups.ref === undefined) return match;
 
     const { id, title } = parseWikiRef(groups.ref);
-    const path = index?.entries[id];
+    // 参照元の言語が指定されていれば同一言語の variant を優先し、
+    // 無ければ既定言語（entries）へフォールバックする。
+    const localizedPath = lang ? index?.localized?.[id]?.[lang] : undefined;
+    const path = localizedPath ?? index?.entries[id];
     if (path) return replacementForResolvedRef(id, title, path, format);
 
     missingIds.add(id);

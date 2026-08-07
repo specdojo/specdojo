@@ -1,5 +1,10 @@
 # specdojo index 設定ファイル
 #
+# locales: 言語スコープを有効化するロケール（docs ルート直下のディレクトリ名）。
+# 設定した言語ディレクトリ配下の文書は、同一論理 ID を言語ごとに1件ずつ持てる
+# （言語をまたぐ同一 ID は同一論理文書の variant として扱い衝突にしない）。
+# 言語別に含まれない配下（例: docs/specdojo/ のスキーマ）は言語中立として全体一意。
+#
 # nested_id_files: YAML ファイルのうち、top-level の id に加えて
 # ネストされた id フィールドもインデックス対象にするファイル。
 #
@@ -13,6 +18,10 @@
 # 収集ルール（top-level / Markdown は行番号なし）:
 #   - path_field の値がある場合 : そのパスをインデックス値として使用（行番号なし）
 #   - path_field の値がない場合 : "ファイルパス:行番号" をインデックス値として使用
+locales:
+  - ja
+  - en
+
 nested_id_files:
   - file: docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml
     collect_from:

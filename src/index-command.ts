@@ -65,6 +65,10 @@ export function registerIndexCommands(program: Command): void {
     .option("--root <path>", "Root directory to scan when using --build", "docs")
     .option("--format <type>", "Replacement format: markdown|path", "markdown")
     .option("--missing <mode>", "Missing ID handling: keep|marker", "keep")
+    .option(
+      "--lang <locale>",
+      "Resolve same-language variants for this locale (auto-detected from path if omitted)",
+    )
     .option("--write", "Rewrite the input file instead of printing to stdout", false)
     .action((file: string, opts) => {
       try {
@@ -89,8 +93,12 @@ export function registerIndexCommands(program: Command): void {
           process.stderr.write(`Built index: ${count} entries → ${opts.index}\n`);
         }
 
+        // 参照元の言語は --lang 優先、無ければ docs/<locale>/ のパスから推定する。
+        const detectedLang = /(?:^|\/)docs\/([^/]+)\//.exec(filePath.replace(/\\/g, "/"))?.[1];
+        const lang = (opts.lang as string | undefined) ?? detectedLang;
+
         const input = readFileSync(filePath, "utf8");
-        const result = replaceDocIndexRefs(input, indexPath, { format, missing });
+        const result = replaceDocIndexRefs(input, indexPath, { format, missing, lang });
 
         if (result.missingIds.length > 0) {
           process.stderr.write(`Unresolved ID reference(s): ${result.missingIds.join(", ")}\n`);
