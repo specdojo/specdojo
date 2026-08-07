@@ -55,7 +55,6 @@ export const VALID_TYPES = [
   "issue",
   "change-request",
   "decision",
-  "dependency",
   "note",
 ] as const;
 

@@ -19,7 +19,7 @@ import { specdojoRootDir } from "./specdojo-config.js";
 // ---------------------------------------------------------------------------
 
 // 登録項目の実行区分。edit は成果物・実装を変更する対応、investigate は調査して
-// 結論案を result に記録する対応（decision / dependency / note は実行対象外）。
+// 結論案を result に記録する対応（decision / note は実行対象外）。
 export type RegisterTaskCategory = "edit" | "investigate";
 
 const EDIT_TYPES: ReadonlySet<string> = new Set(["todo", "issue", "change-request"]);

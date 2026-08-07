@@ -18,7 +18,7 @@ specdojo:
 Project Register Documentation Rules
 
 本ドキュメントは、プロジェクト登録簿（`pjr-index`）、個別登録項目（`pjr-XXXX-<topic>`）、派生ビューを統一形式で記述するためのルールです。
-プロジェクト登録簿は、TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一元管理します。
+プロジェクト登録簿は、TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘などの管理対象を一元管理します。
 本書は構造・列・記述形式を定義し、位置づけ、値の意味・選び方、登録・状態遷移・個票分離などの運用は [[specdojo:register-operation-guide]] を参照します。
 
 ## 1. 全体方針
@@ -75,16 +75,16 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 
 ### 3.2. 個別登録項目
 
-| 項目         | 説明                                                                                           | 必須 |
-| ------------ | ---------------------------------------------------------------------------------------------- | ---- |
-| `id`         | `<project-id>:pjr-XXXX-<topic>`（例: `prj-0001:pjr-0001-auth-boundary`）                       | ○    |
-| `type`       | 文書種別として `project` を使用する                                                            | ○    |
-| `status`     | 文書自体の成熟度。`draft` / `ready` / `deprecated`                                             | ○    |
-| `rulebook`   | `specdojo:pjr-rulebook`                                                                        | ○    |
-| `part_of`    | 所属する `<project-id>:pjr-index` を要素に持つ配列                                             | ○    |
-| `item_type`  | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `dependency` / `note` | ○    |
-| `based_on`   | 登録項目の根拠となる文書 ID                                                                    | 任意 |
-| `supersedes` | 置き換え元の文書 ID                                                                            | 任意 |
+| 項目         | 説明                                                                            | 必須 |
+| ------------ | ------------------------------------------------------------------------------- | ---- |
+| `id`         | `<project-id>:pjr-XXXX-<topic>`（例: `prj-0001:pjr-0001-auth-boundary`）        | ○    |
+| `type`       | 文書種別として `project` を使用する                                             | ○    |
+| `status`     | 文書自体の成熟度。`draft` / `ready` / `deprecated`                              | ○    |
+| `rulebook`   | `specdojo:pjr-rulebook`                                                         | ○    |
+| `part_of`    | 所属する `<project-id>:pjr-index` を要素に持つ配列                              | ○    |
+| `item_type`  | `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `note` | ○    |
+| `based_on`   | 登録項目の根拠となる文書 ID                                                     | 任意 |
+| `supersedes` | 置き換え元の文書 ID                                                             | 任意 |
 
 - Frontmatter の `status` は文書の成熟度を表し、`pjr-index` の「ステータス」は登録項目の処理状態を表す。両者を同じ状態軸として扱わない。
 - `item_type` は `pjr-index` の「分類」と一致させる。
@@ -151,12 +151,12 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 | `issue`          | 課題内容、影響範囲、対応方針、対応結果                             |
 | `change-request` | 変更要求、影響評価、審査・決定、実施追跡                           |
 | `decision`       | 背景、検討した選択肢、決定内容、採択理由、影響範囲とフォローアップ |
-| `dependency`     | 依存事項、依存条件、影響と代替策、追跡状況                         |
 | `note`           | メモ、背景・文脈、フォローアップ                                   |
 
 - type 固有の内容は、対象 type の標準構成を満たす見出しで記載する。
 - 該当しない内容を空欄の章として残さず、`-` と理由を記載するか、情報が未確定なら共通ラベルを使用する。
 - type を変更する場合は、Frontmatter と `pjr-index` を更新し、変更後の標準構成へ内容を移す。
+- 外部の対応・提供物への依存（外部待ち）は専用 type を設けず、対応が必要なら `todo` / `issue` として登録し、外部待ちで止まっている状態は `register wait` の `waiting` ステータスで表す。計画上の前提・制約・依存関係は `prj-assumptions-constraints-dependencies` 成果物へ整理する。
 
 ### 4.4. 派生ビュー
 

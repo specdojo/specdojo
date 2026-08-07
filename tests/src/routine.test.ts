@@ -142,7 +142,7 @@ describe("parseRoutineDoc", () => {
     );
 
     expect(errors).toEqual([
-      'rtn-bad-filter.yaml: action.filter.types contains unknown value "epic". Allowed: todo, question, risk, issue, change-request, decision, dependency, note',
+      'rtn-bad-filter.yaml: action.filter.types contains unknown value "epic". Allowed: todo, question, risk, issue, change-request, decision, note',
     ]);
   });
 });

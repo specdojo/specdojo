@@ -12,7 +12,7 @@ Project Register
 
 この文書は、プロジェクト登録簿です。
 
-プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、依存事項、備忘などの管理対象を一覧化します。
+プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘などの管理対象を一覧化します。
 
 記載ルール、項目定義、type / status / priority の定義は [[specdojo:pjr-rulebook]] に従います。
 登録の判断、状態遷移、個票分離などの使い方は [[specdojo:register-operation-guide]] を参照します。
@@ -180,7 +180,7 @@ Project Register
 | PJR-0157 | done | CLI生成系動詞の用語整理と破壊的リネーム | exec build→exec refresh、catalog generate→deliverable scaffoldへ改名し、生成系動詞(scaffold/build/refresh/run)の用語標準を明文化する | todo | medium | ARC | 2026-08-31 | 2026-08-07 | 生成系動詞を整理し破壊的リネームを実施。exec build→exec refresh、catalog generate→deliverable scaffold(独立サブコマンド)へ改名し、schedule buildは据え置き。用語標準をguideへ明文化、コード・lefthook・docs・tests・schemaを更新、旧名はエラー化。全819テスト成功。オーケストレーターSSOT+4ラッパーも同期済み。 | [pjr-0157-cli-verb-taxonomy](./pjr-0157-cli-verb-taxonomy.md) |
 | PJR-0158 | review | exec runにproject単位の実行ロックを追加しroutineのbusy-skipを実現 | exec run全体をproject単位のheartbeatロックで排他。--if-busy skip/wait/fail(手動fail/routine skip)。routine-state.jsonにlast_result=skippedを追加。retryは次のcron tickに委ね待機なし。 | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0158-exec-run-project-lock](./pjr-0158-exec-run-project-lock.md) |
 | PJR-0159 | in-progress | exec の agent 指定フラグを --by 系へ統一（--cmd/--agent-cmd 撤廃、--edit-agent/--review-agent を --edit-by/--review-by へ改名） | exec run/resume/worktree の agent 指定フラグを nickname 一本化・--by 系へ統一する。--cmd/--agent-cmd（生コマンド指定）を撤廃し agent 指定は roster nickname のみ、バッチ起動は --auto に一本化、--edit-agent/--review-agent を --edit-by/--review-by へ改名。旧フラグは deprecated alias を経て撤去。 | change-request | medium | ARC | 2026-08-31 | - | - | [pjr-0159-exec-agent-flag-by-unification](./pjr-0159-exec-agent-flag-by-unification.md) |
-| PJR-0160 | open | 登録簿type dependencyの要否見直し(廃止 or Assumption Log化 or 明文化) | dependencyはPMBOK非標準でexec実行区分/生成PMログなし・実績0件。waitingステータスおよびprj-assumptions-constraints-dependencies成果物と役割が重複。廃止/assumption type化/rulebook明文化のいずれかを決定し対応する。enum変更はschema・VALID_TYPES・exec-registerのSet・テンプレ・docsの同時修正を伴う破壊的変更。 | todo | medium | _TODO_ | _TODO_ | - | - | [pjr-0160-register-dependency-type-review](./pjr-0160-register-dependency-type-review.md) |
+| PJR-0160 | done | 登録簿type dependencyの要否見直し(廃止 or Assumption Log化 or 明文化) | dependencyはPMBOK非標準でexec実行区分/生成PMログなし・実績0件。waitingステータスおよびprj-assumptions-constraints-dependencies成果物と役割が重複。廃止/assumption type化/rulebook明文化のいずれかを決定し対応する。enum変更はschema・VALID_TYPES・exec-registerのSet・テンプレ・docsの同時修正を伴う破壊的変更。 | todo | medium | _TODO_ | _TODO_ | 2026-08-07 | 案A（dependency type 廃止）を採択。enum・VALID_TYPES・テンプレート・schema・docs・テストを一貫更新。実績0件のため移行不要。必要時は後方互換の追加で再導入。 | [pjr-0160-register-dependency-type-review](./pjr-0160-register-dependency-type-review.md) |
 | PJR-0161 | open | 登録簿承認typeの承認フローとPR/commit使い分けの規約化 | 承認を要するtype(change-request/decision/risk/question/issue)の承認フローをregister状態遷移(review→close等)へ明文化し、承認方式を既定commit＋限定PRで規約化する。PR強制はdevelop→main昇格/change-request承認/不可逆・高リスク・schema破壊的変更に限定。branch protectionとCODEOWNERSで承認者を強制、decision/questionテンプレに承認者欄を追加。関連文書はbranch-workflow-guide/git-branching-standard/register-operation-guide/pjr-rulebook。 | todo | high | _TODO_ | _TODO_ | - | - | [pjr-0161-register-approval-workflow-policy](./pjr-0161-register-approval-workflow-policy.md) |
 
 ## 2. 派生ビュー

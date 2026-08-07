@@ -61,7 +61,6 @@ properties:
               - issue
               - question
               - decision
-              - dependency
               - note
               - change-request
             description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
