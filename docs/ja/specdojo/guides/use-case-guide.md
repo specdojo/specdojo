@@ -124,6 +124,8 @@ flowchart TD
 - 進め方: `rtn-*.yaml` に register 実行または schedule 実行を定義し、外部スケジューラから `routine run --due` を冪等に呼ぶ。
 - 主に使う文書: [routine運用ガイド](routine-operation-guide.md)。
 
+現行routineは既存の未完了項目を繰り返し探索して起動する機能です。期間ごとに新しい実行単位を作る週報や、前回成功時点以降の差分を処理する翻訳は、設計中のJob実行モデルで扱います。Jobは現行CLIには未実装です。設計は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
+
 ### 4.4. 複数プロジェクト・ブランチを並行する
 
 - ゴール: 複数の `prj-xxxx` や worktree を同じリポジトリで安全に並行運用する。

@@ -11,6 +11,8 @@ Routine Operation Guide
 
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行する、時刻条件のトリガー層です。routine 自体は実行機構を持たず、何を実行するかは schedule 実行または register 実行に委ねます。3つの実行経路の比較は [exec運用ガイド](exec-operation-guide.md) を参照します。
 
+現行routineが繰り返すのは「既存の未完了Schedule/Register項目を探して起動すること」です。週報のように期間ごとの新しい実行単位を生成する作業や、前回成功時点以降の変更文書を翻訳する作業は直接表現できません。これらは、再利用可能な定義から毎回Job Runを生成する[Job実行設計](../../product/040-system-design/sysd-job-execution.md)で扱います。Job連携は設計段階であり、現行CLIには未実装です。
+
 **対象読者**
 
 - 日次スイープや夜間バッチなど、時刻条件で繰り返す作業を運用する開発者、運用者
@@ -81,3 +83,16 @@ specdojo routine run --project <project-id> --due --dry-run
 ## 3. 実行経路への委譲
 
 routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine は発火結果として `last_run` と `last_result` を記録します。
+
+### 3.1. 既存項目の再探索と実行単位の反復
+
+次の2種類を区別します。
+
+| 種類                 | 例                                      | 現行routineでの扱い                  |
+| -------------------- | --------------------------------------- | ------------------------------------ |
+| 既存項目の再探索     | openな高優先度todoを毎日最大3件消化する | `kind: register`で対応済み           |
+| 既存計画の継続       | ReadyなSchedule taskを夜間に進める      | `kind: exec-auto`で対応済み          |
+| 新しい実行単位の反復 | 毎週分の週報を作る                      | Job Runのmaterializeが必要（未実装） |
+| checkpoint差分の反復 | 前回成功後に更新された文書を翻訳する    | Jobとcheckpointが必要（未実装）      |
+
+`interval: 1w`は前回実行から7日が経過したかを判定するもので、「毎週金曜日17時」のような暦上の予定ではありません。Job連携の設計では、routineに`cron`と`timezone`を追加してこの差を扱います。

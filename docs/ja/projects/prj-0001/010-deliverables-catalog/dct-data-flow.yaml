@@ -158,7 +158,7 @@ groups:
       - local_id: cdfd-routine
         name: 概念データフロー図（定期実行）
         kind: work
-        overview: routine定義とdue判定に基づき、登録項目またはScheduleタスクの実行を起動し結果を反映する流れを可視化し定義する
+        overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
         path: cdfd-routine.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
@@ -169,13 +169,13 @@ groups:
           - cdfd-register-operation
           - cdfd-task-execution
         done_criteria:
-          - text: routine定義の選択・due判定・register/schedule実行への委譲・last_run更新の流れが表と図で確認できること
+          - text: routine定義の選択・due判定・register/schedule実行への委譲に加え、Job Run生成を伴う反復作業との境界・last_run更新の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: rtn-*.yamlのfilter・interval・limitと、委譲先へ渡す入力および返却される結果が識別できること
+          - text: rtn-*.yamlのfilter・interval・limit、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 対象なし・利用制限・部分失敗・再開時刻待ちの場合に、実行結果と次回判定がどのように記録されるか確認できること
+          - text: 対象なし・利用制限・部分失敗・再開時刻待ち・重複Job Run・取りこぼしの場合に、実行結果と次回判定がどのように記録されるか確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: cdfd-multi-project
