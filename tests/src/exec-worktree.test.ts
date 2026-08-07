@@ -131,6 +131,82 @@ describe("exec worktree", () => {
     }
   });
 
+  it("links package-local node_modules into a newly created worktree", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    try {
+      const packageDir = join(repo, "tools", "vscode-specdojo");
+      mkdirSync(packageDir, { recursive: true });
+      writeFileSync(join(packageDir, "package.json"), '{ "name": "vscode-specdojo" }\n', "utf8");
+      writeFileSync(
+        join(packageDir, "package-lock.json"),
+        '{ "name": "vscode-specdojo" }\n',
+        "utf8",
+      );
+      git(
+        repo,
+        "add",
+        "tools/vscode-specdojo/package.json",
+        "tools/vscode-specdojo/package-lock.json",
+      );
+      git(repo, "commit", "-m", "add package");
+
+      mkdirSync(join(packageDir, "node_modules"));
+      writeFileSync(join(packageDir, "node_modules", "marker.txt"), "ok\n", "utf8");
+
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "prj-0001:T-LAUNCH-pm-plan-010",
+      });
+
+      const linkPath = join(created.path, "tools", "vscode-specdojo", "node_modules");
+      expect(lstatSync(linkPath).isSymbolicLink()).toBe(true);
+      expect(resolve(created.path, readlinkSync(linkPath))).toBe(
+        resolve(packageDir, "node_modules"),
+      );
+      expect(existsSync(join(linkPath, "marker.txt"))).toBe(true);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("skips package-local node_modules links when the source install is missing", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    try {
+      const packageDir = join(repo, "tools", "vscode-specdojo");
+      mkdirSync(packageDir, { recursive: true });
+      writeFileSync(join(packageDir, "package.json"), '{ "name": "vscode-specdojo" }\n', "utf8");
+      writeFileSync(
+        join(packageDir, "package-lock.json"),
+        '{ "name": "vscode-specdojo" }\n',
+        "utf8",
+      );
+      git(
+        repo,
+        "add",
+        "tools/vscode-specdojo/package.json",
+        "tools/vscode-specdojo/package-lock.json",
+      );
+      git(repo, "commit", "-m", "add package");
+
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "prj-0001:T-LAUNCH-pm-plan-010",
+      });
+
+      expect(existsSync(join(created.path, "tools", "vscode-specdojo", "node_modules"))).toBe(
+        false,
+      );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
   it("skips the node_modules link when the repository has none", () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));

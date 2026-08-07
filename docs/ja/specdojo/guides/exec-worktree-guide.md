@@ -114,6 +114,10 @@ specdojo exec worktree prepare \
 
 root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
 
+作成または再利用した task worktree には、元 worktree の `node_modules` を共有リンクします。対象は root と、`package.json` / `package-lock.json` を持つ独立 package のうち、元 worktree 側に `node_modules` が存在するディレクトリです。既存の `node_modules` が task worktree 側にある場合は上書きしません。
+
+依存関係を追加・更新する場合は、統合元の worktree 側で `npm install` を実行してから task worktree を準備し直します。task worktree 側の共有リンク先は別 worktree であり、sandbox や権限設定によっては `npm install` の書き込み先として使えません。
+
 ### 2.2. status
 
 `status` は分割実行の現在地を確認する読み取り専用コマンドです。

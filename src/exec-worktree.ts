@@ -154,15 +154,44 @@ function pathEntryExists(target: string): boolean {
   }
 }
 
-// Git worktree は独自の作業ツリーを持つだけで node_modules は引き継がないため、
-// pre-commit フック（vitest / tsx 等）が依存解決できず commit が失敗する。
-// 同一マシン・同一プラットフォーム前提で、リポジトリの node_modules を共有リンクする。
-export function ensureNodeModulesLink(repoRoot: string, worktreePath: string): void {
-  const source = join(repoRoot, "node_modules");
+function trackedPackageLockDirs(repoRoot: string): string[] {
+  const output = gitOutput(repoRoot, [
+    "ls-files",
+    "-z",
+    "--",
+    "package-lock.json",
+    "*/package-lock.json",
+  ]);
+  const dirs = new Set<string>();
+  for (const entry of output.split("\0")) {
+    if (!entry) continue;
+    dirs.add(resolve(repoRoot, entry.slice(0, -"package-lock.json".length) || "."));
+  }
+  return [...dirs].sort();
+}
+
+function ensureNodeModulesLinkAt(repoRoot: string, worktreePath: string, packageDir: string): void {
+  const source = join(packageDir, "node_modules");
   if (!existsSync(source)) return;
-  const target = join(worktreePath, "node_modules");
+
+  const rel = relative(repoRoot, packageDir);
+  const targetParent = resolve(worktreePath, rel);
+  if (!pathEntryExists(targetParent)) return;
+
+  const target = join(targetParent, "node_modules");
   if (pathEntryExists(target)) return;
   symlinkSync(source, target, "dir");
+}
+
+// Git worktree は独自の作業ツリーを持つだけで node_modules は引き継がないため、
+// pre-commit フックや package-local の typecheck が依存解決できず失敗する。
+// 同一マシン・同一プラットフォーム前提で、root と lockfile を持つ package の node_modules を共有リンクする。
+export function ensureNodeModulesLink(repoRoot: string, worktreePath: string): void {
+  const root = resolve(repoRoot);
+  const packageDirs = new Set([root, ...trackedPackageLockDirs(root)]);
+  for (const packageDir of packageDirs) {
+    ensureNodeModulesLinkAt(root, worktreePath, packageDir);
+  }
 }
 
 export function ensureExecWorktree(opts: {
