@@ -16,7 +16,7 @@ plugins:
   - ./tools/docs/src/remark-no-unescaped-angle-placeholder.cjs
   - - ./tools/docs/src/remark-md-content.cjs
     - schemas:
-        docs/specdojo/schemas/v1/pjr-index.schema.yaml:
+        docs/ja/specdojo/schemas/v1/pjr-index-content.schema.yaml:
           - docs/ja/**/pjr-index.md
         docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
           - docs/ja/specdojo/guides/*-guide.md
