@@ -5,6 +5,8 @@ import path from "node:path";
 import {
   buildExecAutoArgs,
   buildExecResumeArgs,
+  buildRegisterRunArgs,
+  formatRoutineLastRun,
   isRoutineDue,
   loadRoutines,
   parseIntervalMs,
@@ -182,13 +184,15 @@ describe("selectRegisterItems", () => {
 });
 
 describe("buildExecAutoArgs", () => {
-  it("最小構成では --auto と --project のみを渡す", () => {
+  it("最小構成で --if-busy skip を渡す", () => {
     expect(buildExecAutoArgs({ kind: "exec-auto" }, "prj-test")).toEqual([
       "exec",
       "run",
       "--auto",
       "--project",
       "prj-test",
+      "--if-busy",
+      "skip",
     ]);
   });
 
@@ -204,6 +208,8 @@ describe("buildExecAutoArgs", () => {
       "--auto",
       "--project",
       "prj-test",
+      "--if-busy",
+      "skip",
       "--strategy",
       "fifo",
       "--parallel",
@@ -217,7 +223,7 @@ describe("buildExecAutoArgs", () => {
   it("loop なしの max_rounds は引数に含めない", () => {
     const actual = buildExecAutoArgs({ kind: "exec-auto", max_rounds: 3 }, "prj-test");
 
-    expect(actual).toEqual(["exec", "run", "--auto", "--project", "prj-test"]);
+    expect(actual).toEqual(["exec", "run", "--auto", "--project", "prj-test", "--if-busy", "skip"]);
   });
 });
 
@@ -229,9 +235,34 @@ describe("buildExecResumeArgs", () => {
       "--due",
       "--project",
       "prj-test",
+      "--if-busy",
+      "skip",
       "--parallel",
       "2",
     ]);
+  });
+});
+
+describe("buildRegisterRunArgs", () => {
+  it("register 実行へ --if-busy skip を渡す", () => {
+    expect(buildRegisterRunArgs("PJR-0001", "prj-test")).toEqual([
+      "exec",
+      "run",
+      "--register",
+      "PJR-0001",
+      "--project",
+      "prj-test",
+      "--if-busy",
+      "skip",
+    ]);
+  });
+});
+
+describe("formatRoutineLastRun", () => {
+  it("skipped を failure と区別して表示する", () => {
+    expect(formatRoutineLastRun({ last_run: "2026-08-07T03:17:09Z", last_result: "skipped" })).toBe(
+      "2026-08-07T03:17:09Z (skipped)",
+    );
   });
 });
 
