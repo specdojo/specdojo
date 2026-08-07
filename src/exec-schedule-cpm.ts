@@ -1,5 +1,6 @@
 import { type CpmNode, type CpmResult, type ScheduleIndex } from "./exec-types.js";
 import { toArtifactPath, toScheduleFilePath } from "./exec-shared.js";
+import { workingDayOffsetForDate } from "./exec-schedule-calendar.js";
 
 export function topoSort(schedule: ScheduleIndex): { order: string[]; cycle?: string[] } {
   const indeg = new Map<string, number>();
@@ -50,9 +51,26 @@ export function computeCpm(schedule: ScheduleIndex, projectPath: string): CpmRes
 
   const nodes: Record<string, CpmNode> = {};
 
+  // schedule_file（生パス）ごとの start_date を、project_start_date を基準にした
+  // 稼働日オフセットへ変換する。track が明示した start_date より前に開始しないための
+  // es 下限（床）として使う。project_start_date が無い場合はオフセット 0。
+  const fileStartOffsets = new Map<string, number>();
+  if (schedule.start_date) {
+    for (const [file, date] of schedule.file_start_dates) {
+      fileStartOffsets.set(
+        file,
+        workingDayOffsetForDate(schedule.start_date, date, schedule.calendar),
+      );
+    }
+  }
+
   for (const id of order) {
     const n = schedule.nodes.get(id)!;
-    const es = n.depends_on.length === 0 ? 0 : Math.max(...n.depends_on.map((d) => nodes[d].ef));
+    const startFloor = fileStartOffsets.get(n.schedule_file) ?? 0;
+    const es =
+      n.depends_on.length === 0
+        ? startFloor
+        : Math.max(startFloor, ...n.depends_on.map((d) => nodes[d].ef));
     const ef = es + n.duration_days;
 
     nodes[id] = {
@@ -95,8 +113,12 @@ export function computeCpm(schedule: ScheduleIndex, projectPath: string): CpmRes
       .filter((n) => n.slack === 0)
       .map((n) => n.id),
   );
-  const starts = Object.values(nodes)
-    .filter((n) => critical.has(n.id) && n.es === 0)
+  const criticalNodes = Object.values(nodes).filter((n) => critical.has(n.id));
+  // track 床の導入で起点 es は必ずしも 0 にならないため、critical ノードの
+  // 最小 es を起点として検出する（単一 track では従来どおり es === 0）。
+  const minCriticalEs = criticalNodes.length ? Math.min(...criticalNodes.map((n) => n.es)) : 0;
+  const starts = criticalNodes
+    .filter((n) => n.es === minCriticalEs)
     .sort((a, b) => a.id.localeCompare(b.id));
 
   const path: string[] = [];

@@ -76,6 +76,30 @@ export function addWorkingDayOffset(
   return dt;
 }
 
+export function workingDayOffsetForDate(
+  startDate: string,
+  targetDate: string,
+  calendar: ScheduleCalendar,
+): number {
+  const toMidnightUtc = (dateOnly: string): Date => {
+    const [year, month, day] = dateOnly.split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+  };
+
+  const cursor = toMidnightUtc(startDate);
+  const target = toMidnightUtc(targetDate);
+  advanceToNextWorkingInstantUtc(cursor, calendar);
+  advanceToNextWorkingInstantUtc(target, calendar);
+  if (target.getTime() <= cursor.getTime()) return 0;
+
+  let count = 0;
+  while (cursor.getTime() < target.getTime()) {
+    if (isWorkingDateUtc(cursor, calendar)) count += 1;
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return count;
+}
+
 export function buildWorkingTaskSegments(
   startDate: string,
   startOffset: number,

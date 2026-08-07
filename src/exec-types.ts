@@ -112,6 +112,9 @@ export type ScheduleIndex = {
   start_date: string | null;
   calendar: ScheduleCalendar;
   section_labels: Record<string, string>;
+  // schedule_file（生パス）ごとの明示 start_date。track/milestones が
+  // settings.start_date を持つ場合のみ格納する。CPM の es 下限に使う。
+  file_start_dates: Map<string, string>;
 };
 
 export type CpmNode = {

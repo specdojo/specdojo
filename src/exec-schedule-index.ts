@@ -179,6 +179,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
 
   const nodes = new Map<string, ScheduleNode>();
   const sectionLabels: Record<string, string> = {};
+  const fileStartDates = new Map<string, string>();
   let startDate: string | null = null;
   // sch-defaults.yaml の default_start_date は、track/milestones が明示の
   // start_date を持たない場合にのみ使うフォールバック。明示値とは min で競わせない。
@@ -233,7 +234,9 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
     const scheduleFile = toScheduleFilePath(projectPath, f);
     sectionLabels[scheduleFile] = scheduleSectionLabelForDoc(d, scheduleFile);
 
-    startDate = minDateOnly(startDate, extractScheduleStartDate(d));
+    const docStartDate = extractScheduleStartDate(d);
+    if (docStartDate) fileStartDates.set(f, docStartDate);
+    startDate = minDateOnly(startDate, docStartDate);
 
     const docCalendar = applyScheduleCalendar(calendar, d["calendar"]);
     if (docCalendar && d["calendar"] && typeof d["calendar"] === "object") {
@@ -324,5 +327,6 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
     start_date: startDate ?? defaultsStartDate,
     calendar,
     section_labels: sectionLabels,
+    file_start_dates: fileStartDates,
   };
 }

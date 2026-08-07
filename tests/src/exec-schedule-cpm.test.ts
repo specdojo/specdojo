@@ -8,30 +8,40 @@ function makeSchedule(
     duration?: number;
     depends_on?: string[];
     kind?: "task" | "milestone";
+    file?: string;
   }>,
+  options?: {
+    startDate?: string;
+    fileStartDates?: Record<string, string>;
+    workdays?: number[];
+  },
 ): ScheduleIndex {
   const nodes = new Map<string, ScheduleIndex["nodes"] extends Map<string, infer V> ? V : never>();
+  const files = new Set<string>();
   for (const t of tasks) {
+    const file = t.file ?? "/dummy/sch-test.yaml";
+    files.add(file);
     nodes.set(t.id, {
       id: t.id,
       name: t.id,
       depends_on: t.depends_on ?? [],
       duration_days: t.duration ?? 1,
       kind: t.kind ?? "task",
-      schedule_file: "/dummy/sch-test.yaml",
+      schedule_file: file,
     });
   }
   return {
     nodes,
-    files: ["/dummy/sch-test.yaml"],
-    start_date: null,
+    files: files.size > 0 ? [...files] : ["/dummy/sch-test.yaml"],
+    start_date: options?.startDate ?? null,
     calendar: {
       timezone: "UTC",
-      workdays: new Set([1, 2, 3, 4, 5]),
+      workdays: new Set(options?.workdays ?? [1, 2, 3, 4, 5]),
       holidays: new Set<string>(),
       work_hours_per_day: 8,
     },
     section_labels: {},
+    file_start_dates: new Map(Object.entries(options?.fileStartDates ?? {})),
   };
 }
 
@@ -190,5 +200,48 @@ describe("computeCpm", () => {
     schedule.start_date = "2026-06-01";
     const result = computeCpm(schedule, "/dummy");
     expect(result.project_start_date).toBe("2026-06-01");
+  });
+
+  it("track の start_date を es の下限（床）として適用する", () => {
+    // 全曜日稼働。project_start_date=2026-06-15 を基準に track-b は 2026-06-18 開始。
+    // 依存なしタスク B は es=0 ではなく 3 稼働日ぶん持ち上がる。
+    const schedule = makeSchedule(
+      [
+        { id: "A", duration: 1, file: "/dummy/sch-track-a.yaml" },
+        { id: "B", duration: 1, file: "/dummy/sch-track-b.yaml" },
+      ],
+      {
+        startDate: "2026-06-15",
+        workdays: [0, 1, 2, 3, 4, 5, 6],
+        fileStartDates: {
+          "/dummy/sch-track-a.yaml": "2026-06-15",
+          "/dummy/sch-track-b.yaml": "2026-06-18",
+        },
+      },
+    );
+    const result = computeCpm(schedule, "/dummy");
+    expect(result.nodes["A"].es).toBe(0);
+    expect(result.nodes["B"].es).toBe(3);
+    expect(result.nodes["B"].ef).toBe(4);
+  });
+
+  it("依存タスクは track 床と依存 EF の大きい方を es とする", () => {
+    // track-b 床=5。A(EF=2) にのみ依存する B は max(5, 2)=5 開始。
+    const schedule = makeSchedule(
+      [
+        { id: "A", duration: 2, file: "/dummy/sch-track-a.yaml" },
+        { id: "B", duration: 1, depends_on: ["A"], file: "/dummy/sch-track-b.yaml" },
+      ],
+      {
+        startDate: "2026-06-15",
+        workdays: [0, 1, 2, 3, 4, 5, 6],
+        fileStartDates: {
+          "/dummy/sch-track-b.yaml": "2026-06-20",
+        },
+      },
+    );
+    const result = computeCpm(schedule, "/dummy");
+    expect(result.nodes["A"].es).toBe(0);
+    expect(result.nodes["B"].es).toBe(5);
   });
 });

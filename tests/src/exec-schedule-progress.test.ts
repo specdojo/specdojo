@@ -17,6 +17,7 @@ function makeSchedule(): ScheduleIndex {
       work_hours_per_day: 8,
     },
     section_labels: {},
+    file_start_dates: new Map(),
   };
 }
 
