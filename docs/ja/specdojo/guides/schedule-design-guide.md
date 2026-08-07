@@ -98,7 +98,7 @@ strategy から track への生成フロー、展開する情報、反復、タ�
   -> sch-strategy-<track>.yaml
   -> specdojo schedule build --track <track> --force
   -> sch-track-<track>.yaml
-  -> specdojo exec build
+  -> specdojo exec refresh
   -> generated/ready.json, cpm.md, timeline.svg など
 ```
 
@@ -106,10 +106,10 @@ strategy から track への生成フロー、展開する情報、反復、タ�
 
 ```bash
 specdojo schedule build --project <project-id> --track <track> --force
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
-`phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec build` を実行します。
+`phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec refresh` を実行します。
 
 `--track` は生成・上書きする `sch-track-<track>.yaml` を指定します。一方、`sch-milestones.yaml` はプロジェクト全体の正本であるため、同じ `schedule_path` にあるすべての `sch-strategy-*.yaml` から毎回再構築します。別 track のマイルストーンは保持され、削除された strategy や定義から生成されなくなったマイルストーンだけが除去されます。
 
@@ -231,7 +231,7 @@ scope は `catalogs`、`groups`、`local_ids` の和集合で明示します。�
 
 ## 3. 実行要件とフェーズ解決
 
-phase ごとの実行要件の定義方法と、`exec build` 時にどう解決されるかを示します。
+phase ごとの実行要件の定義方法と、`exec refresh` 時にどう解決されるかを示します。
 
 ### 3.1. フェーズと実行要件
 
@@ -272,9 +272,9 @@ phase_sets:
 
 `retrofit` を使う成果物には、事前に DCT の `evidence_refs` を宣言します。実装エビデンスは Schedule の依存関係ではなく調査入力であるため、`depends_on` や `targets` へ複製しません。
 
-### 3.3. exec build時のフェーズ解決
+### 3.3. exec refresh時のフェーズ解決
 
-`exec build` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec build` では生成せず、`exec plan` または `exec run` が必要時に生成します。
+`exec refresh` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec refresh` では生成せず、`exec plan` または `exec run` が必要時に生成します。
 
 ```text
 sch-track task
@@ -285,7 +285,7 @@ sch-track task
   -> exec plan / exec run が plan を生成
 ```
 
-`mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec build` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
+`mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec refresh` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
 
 ## 4. タスク設計の品質
 
@@ -321,7 +321,7 @@ Ready タスク数の目安は同時に5から20件です。これを下回る�
 
 ### 4.3. CPMとクリティカルパス
 
-`specdojo exec build` は Schedule から CPM（Critical Path Method）を計算します。
+`specdojo exec refresh` は Schedule から CPM（Critical Path Method）を計算します。
 
 ```text
 generated/cpm.md

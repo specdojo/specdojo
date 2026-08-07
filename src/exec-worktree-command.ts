@@ -251,7 +251,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
     const planPath = join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`);
     const resultPath = join(context.executionPath, "exec", "results", `${opts.task}-result.md`);
 
-    // Plans are generated on demand (exec build no longer manages them). Generate
+    // Plans are generated on demand (exec refresh does not manage them). Generate
     // one if absent; keep an existing plan so a hand-edited plan is not clobbered.
     if (!existsSync(planPath)) {
       await generateSinglePlan({

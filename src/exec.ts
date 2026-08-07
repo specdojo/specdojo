@@ -874,9 +874,11 @@ export function registerExecCommands(program: Command): void {
     }
   });
 
-  const bcmd = exec.command("build").description("Generate all files under generated/");
-  addProjectOptions(bcmd);
-  bcmd.action(async (opts) => {
+  const refreshCmd = exec
+    .command("refresh")
+    .description("Refresh derived execution state under generated/");
+  addProjectOptions(refreshCmd);
+  refreshCmd.action(async (opts) => {
     try {
       const { schedulePath } = resolveProjectContext(opts);
 

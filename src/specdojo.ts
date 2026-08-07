@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { registerConfigCommands, registerProjectCommands } from "./specdojo-config.js";
 import { registerExecCommands } from "./exec.js";
 import { registerCatalogCommands } from "./catalog.js";
+import { registerDeliverableCommands } from "./deliverable.js";
 import { registerScheduleCommands } from "./schedule.js";
 import { registerIndexCommands } from "./index-command.js";
 import { registerRegisterCommands } from "./register.js";
@@ -20,6 +21,7 @@ async function main(): Promise<void> {
   registerProjectCommands(program);
   registerExecCommands(program);
   registerCatalogCommands(program);
+  registerDeliverableCommands(program);
   registerScheduleCommands(program);
   registerIndexCommands(program);
   registerRegisterCommands(program);

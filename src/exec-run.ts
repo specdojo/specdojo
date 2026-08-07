@@ -955,7 +955,7 @@ async function prepareSingleTask(
     );
   }
 
-  // Plans are generated on demand here; `exec build` no longer manages them.
+  // Plans are generated on demand here; `exec refresh` does not manage them.
   await generateSinglePlan({
     executionPath,
     projectId: projectId ?? "",
@@ -1291,10 +1291,10 @@ function spawnValidate(projectId: string | undefined): boolean {
   return spawnSelf(args);
 }
 
-function spawnBuild(projectId: string | undefined): boolean {
-  const buildArgs = ["exec", "build"];
-  if (projectId) buildArgs.push("--project", projectId);
-  return spawnSelf(buildArgs);
+function spawnRefresh(projectId: string | undefined): boolean {
+  const refreshArgs = ["exec", "refresh"];
+  if (projectId) refreshArgs.push("--project", projectId);
+  return spawnSelf(refreshArgs);
 }
 
 function spawnClaim(projectId: string | undefined, taskId: string, by: string): boolean {
@@ -1412,7 +1412,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
     limit: number,
   ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number }> => {
     if (!existsSync(readyJsonPath)) {
-      process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec build\n`);
+      process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec refresh\n`);
       process.exitCode = 1;
       return { preparedTasks: [], readyCount: 0 };
     }
@@ -1520,9 +1520,9 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
     schedulingPass++;
     const roundSuffix = ` (round ${schedulingPass}${maxRounds !== null ? `/${maxRounds}` : "/-"})`;
     if (schedulingPass > 1) {
-      process.stdout.write(`[run] exec build${roundSuffix}...\n`);
-      if (!spawnBuild(projectId)) {
-        process.stdout.write("[run] exec build failed — drain running tasks\n");
+      process.stdout.write(`[run] exec refresh${roundSuffix}...\n`);
+      if (!spawnRefresh(projectId)) {
+        process.stdout.write("[run] exec refresh failed — drain running tasks\n");
         process.exitCode = 1;
         stopNewTasks = true;
         return [];
@@ -2779,7 +2779,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--loop",
-    "Repeat rounds until no ready tasks remain, running exec build between rounds",
+    "Repeat rounds until no ready tasks remain, running exec refresh between rounds",
     false,
   );
   rcmd.option(
@@ -2895,7 +2895,7 @@ export function registerRunCommand(exec: Command): void {
       }
 
       // In-place manual run (default): generate the plan on demand and run in the
-      // current repository. No validate/build pass — that is orchestration only.
+      // current repository. No validate/refresh pass — that is orchestration only.
       if (isManual && !opts.worktree) {
         await runInPlaceMode(opts);
         return;
@@ -2907,13 +2907,13 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      process.stdout.write("[run] validate: ok\n[run] build...\n");
-      if (!spawnBuild(opts.project)) {
-        process.stdout.write("[run] build failed — exit\n");
+      process.stdout.write("[run] validate: ok\n[run] refresh...\n");
+      if (!spawnRefresh(opts.project)) {
+        process.stdout.write("[run] refresh failed — exit\n");
         process.exitCode = 1;
         return;
       }
-      process.stdout.write("[run] build: ok\n");
+      process.stdout.write("[run] refresh: ok\n");
 
       if (isBatch) {
         await runBatchMode(opts);

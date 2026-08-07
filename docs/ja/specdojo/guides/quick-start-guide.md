@@ -170,7 +170,7 @@ specdojo catalog validate --project <project-id>
 
 # カタログが指す成果物ファイル本体を初回だけ生成する
 # チャット:「カタログが指す成果物ファイルを一括生成して」
-specdojo catalog generate --project <project-id>
+specdojo deliverable scaffold --project <project-id>
 
 # カタログの Markdown 派生ビューを生成する
 # チャット:「カタログの派生ビューをビルドして」
@@ -186,12 +186,12 @@ specdojo register close \
 
 各コマンドの役割は次のとおりです。
 
-| コマンド           | 作成・確認するもの                               | 再実行時の扱い                                                    |
-| ------------------ | ------------------------------------------------ | ----------------------------------------------------------------- |
-| `catalog scaffold` | 規模別テンプレートから `dct-*.yaml` を作成する   | 既存ファイルは上書きしない。作り直す場合だけ `--force` を指定する |
-| `catalog validate` | カタログの構造、ID、依存関係を検証する           | カタログを変更するたびに実行する                                  |
-| `catalog generate` | カタログの `path` が指す成果物ファイル本体を作る | 既存成果物は上書きしない。通常は初期作成時に1回実行する           |
-| `catalog build`    | `generated/dct-*.md` のカタログ派生ビューを作る  | 正本の `dct-*.yaml` を変更した後に再実行する                      |
+| コマンド               | 作成・確認するもの                               | 再実行時の扱い                                                    |
+| ---------------------- | ------------------------------------------------ | ----------------------------------------------------------------- |
+| `catalog scaffold`     | 規模別テンプレートから `dct-*.yaml` を作成する   | 既存ファイルは上書きしない。作り直す場合だけ `--force` を指定する |
+| `catalog validate`     | カタログの構造、ID、依存関係を検証する           | カタログを変更するたびに実行する                                  |
+| `deliverable scaffold` | カタログの `path` が指す成果物ファイル本体を作る | 既存成果物は上書きしない。通常は初期作成時に1回実行する           |
+| `catalog build`        | `generated/dct-*.md` のカタログ派生ビューを作る  | 正本の `dct-*.yaml` を変更した後に再実行する                      |
 
 `--size` には `small` / `medium` / `large` を指定します。`catalog scaffold` 後は、生成された全成果物をそのまま採用するのではなく、プロジェクトのスコープに合わせて `dct-*.yaml` の成果物、依存関係、完了条件を確認してください。
 
@@ -199,7 +199,7 @@ specdojo register close \
 
 `sch-strategy-<track>.yaml` は、成果物カタログを実行タスクへ展開するための生成入力です。成果物カタログが WHAT / DONE を持つのに対し、strategy は対象カタログ、作業フェーズ、担当ロールを定義します。`schedule build` が生成する `sch-track-<track>.yaml` とは異なり、strategy はプロジェクトに合わせて人が作成・編集します。
 
-`catalog generate` で作成した `pm-members.yaml` の `members` に、タスクを実行する人を登録します。次の例では `<actor>` が BA ロールを担当します。
+`deliverable scaffold` で作成した `pm-members.yaml` の `members` に、タスクを実行する人を登録します。次の例では `<actor>` が BA ロールを担当します。
 
 <details>
 <summary>pm-members.yaml への追記例（クリックで展開）</summary>
@@ -278,12 +278,12 @@ owner_rules:
 # チャット:「<track> トラックの schedule を生成して」
 specdojo schedule build --project <project-id> --track <track> --force
 # チャット:「実行状態と Ready、CPM を生成して」
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
-`exec build` により、着手可能なタスクが `generated/ready.json` に出力されます。
+`exec refresh` により、着手可能なタスクが `generated/ready.json` に出力されます。
 
-`schedule build` は strategy と対象カタログから、実行対象となる `sch-track-<track>.yaml` を生成します。`exec build` はそこから Ready タスク、CPM、タイムラインなどを生成します。
+`schedule build` は strategy と対象カタログから、実行対象となる `sch-track-<track>.yaml` を生成します。`exec refresh` はそこから Ready タスク、CPM、タイムラインなどを生成します。
 
 ### 3.4. 1タスクを実行する
 
@@ -306,7 +306,7 @@ specdojo exec complete --project <project-id> --task <task-id> --by <actor>
 
 # 次の Ready タスクを更新する
 # チャット:「Ready タスクを更新して」
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 成果物の変更は作業ツリーに、実行結果は `<execution_path>/exec/results/` に記録されます。agent による自動実行や並列実行へ進む場合は、[exec設定ガイド](exec-config-guide.md) で設定してから [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
@@ -315,7 +315,7 @@ specdojo exec build --project <project-id>
 
 ## 4. （発展）worktreeで1タスクを隔離実行する
 
-前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `pm-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec build` まで済ませておきます。
+前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `pm-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec refresh` まで済ませておきます。
 
 対象タスクを worktree に隔離して一括実行します。SpecDojo が worktree 準備・agent 実行・commit・merge・状態更新をまとめて行います。
 

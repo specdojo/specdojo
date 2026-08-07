@@ -14,7 +14,6 @@ import {
 import { collectDocIndexEntries } from "./doc-index.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
-import { runGenerate } from "./catalog-generate.js";
 import type { DctDoc } from "./catalog-types.js";
 
 function readSizeFromIndex(catalogPath: string): ProjectSize | null {
@@ -26,7 +25,7 @@ function readSizeFromIndex(catalogPath: string): ProjectSize | null {
   return null;
 }
 
-function resolveCatalogPath(opts: { project?: string }): string {
+export function resolveCatalogPath(opts: { project?: string }): string {
   loadEnv();
   const { config, configPath } = loadConfig();
   const baseDir = specdojoRootDir();
@@ -60,13 +59,13 @@ function resolveCatalogPath(opts: { project?: string }): string {
   return resolve(baseDir, catalogPath);
 }
 
-function printCommandError(error: unknown): void {
+export function printCommandError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error);
   process.stdout.write(message + "\n");
   process.exitCode = 1;
 }
 
-function addProjectOption(cmd: Command): Command {
+export function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
 }
 
@@ -290,58 +289,6 @@ export function registerCatalogCommands(program: Command): void {
       }
       for (const warning of warnings) {
         process.stdout.write(`WARN: ${warning}\n`);
-      }
-
-      if (errors.length > 0) process.exitCode = 1;
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
-
-  const gcmd = cat
-    .command("generate")
-    .description("Create deliverable files the catalog points to (from template or catalog info)");
-  addProjectOption(gcmd);
-  gcmd.option(
-    "--project-id <projectId>",
-    "Project ID to embed (e.g. prj-0001); derived from each dct-*.yaml if omitted",
-  );
-  gcmd.option(
-    "--dct <name>",
-    "Limit to specific dct-*.yaml (repeatable / comma-separated; with or without 'dct-' prefix and '.yaml')",
-    (value: string, previous: string[]) => [...previous, ...value.split(",")],
-    [] as string[],
-  );
-  gcmd.option("--force", "Overwrite existing files", false);
-  gcmd.option("--dry-run", "Print planned files without writing", false);
-  gcmd.action((opts) => {
-    try {
-      const catalogPath = resolveCatalogPath(opts);
-
-      const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
-      if (!existsSync(templatesPath)) {
-        throw new Error(`Templates directory not found: ${templatesPath}`);
-      }
-
-      const { written, skipped, errors } = runGenerate({
-        catalogPath,
-        templatesPath,
-        repoRoot: specdojoRootDir(),
-        projectId: opts.projectId ?? null,
-        force: !!opts.force,
-        dryRun: !!opts.dryRun,
-        dctNames: (opts.dct as string[]) ?? [],
-      });
-
-      const createdLabel = opts.dryRun ? "Would create" : "Created";
-      for (const err of errors) {
-        process.stdout.write(`ERROR: ${err}\n`);
-      }
-      for (const p of written) {
-        process.stdout.write(`${createdLabel}: ${p}\n`);
-      }
-      for (const p of skipped) {
-        process.stdout.write(`Skipped (already exists; use --force to overwrite): ${p}\n`);
       }
 
       if (errors.length > 0) process.exitCode = 1;

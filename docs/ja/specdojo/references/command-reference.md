@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（config / catalog / schedule / register / exec / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（config / catalog / deliverable / schedule / register / exec / index / watch / build / routine）
 
 **ここで引けるもの**
 
@@ -27,12 +27,12 @@ CLI Command Reference
 
 ## 1. 共通オプション
 
-| オプション        | 用途                                               | 主な対象                                       |
-| ----------------- | -------------------------------------------------- | ---------------------------------------------- |
-| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド                       |
-| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / generate / build / run / worktree   |
-| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / generate / schedule build / release |
-| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                              |
+| オプション        | 用途                                               | 主な対象                            |
+| ----------------- | -------------------------------------------------- | ----------------------------------- |
+| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド            |
+| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree   |
+| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release |
+| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                   |
 
 project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-guide.md) を参照します。
 
@@ -45,17 +45,22 @@ project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。
 
-## 3. catalog
+## 3. catalog / deliverable
 
 `catalog` は成果物カタログ（`dct-*.yaml`）を扱います。
 
-| コマンド           | 用途                                            | 例                                             |
-| ------------------ | ----------------------------------------------- | ---------------------------------------------- |
-| `catalog scaffold` | テンプレートから `dct-*.yaml` を生成する        | `specdojo catalog scaffold --project prj-0001` |
-| `catalog where`    | catalog 関連パスを表示する                      | `specdojo catalog where --project prj-0001`    |
-| `catalog validate` | `dct-*.yaml` を検証する                         | `specdojo catalog validate --project prj-0001` |
-| `catalog build`    | `generated/dct-*.md` を生成する                 | `specdojo catalog build --project prj-0001`    |
-| `catalog generate` | `dct-*.yaml` が指す成果物ファイル本体を生成する | `specdojo catalog generate --project prj-0001` |
+| コマンド           | 用途                                     | 例                                             |
+| ------------------ | ---------------------------------------- | ---------------------------------------------- |
+| `catalog scaffold` | テンプレートから `dct-*.yaml` を生成する | `specdojo catalog scaffold --project prj-0001` |
+| `catalog where`    | catalog 関連パスを表示する               | `specdojo catalog where --project prj-0001`    |
+| `catalog validate` | `dct-*.yaml` を検証する                  | `specdojo catalog validate --project prj-0001` |
+| `catalog build`    | `generated/dct-*.md` を生成する          | `specdojo catalog build --project prj-0001`    |
+
+`deliverable` はカタログが指す、人が編集する成果物ファイル本体を扱います。
+
+| コマンド               | 用途                                            | 例                                                 |
+| ---------------------- | ----------------------------------------------- | -------------------------------------------------- |
+| `deliverable scaffold` | `dct-*.yaml` が指す成果物ファイル本体を生成する | `specdojo deliverable scaffold --project prj-0001` |
 
 主要オプション:
 
@@ -65,7 +70,7 @@ project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-
 | `--project-id <id>`  | 生成ファイルに埋め込む project ID を上書きする                            |
 | `--domain <domain>`  | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り） |
 | `--var <NAME=value>` | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）           |
-| `--dct <name>`       | `catalog generate` の対象を特定の `dct-*.yaml` に絞る（後述）             |
+| `--dct <name>`       | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）         |
 | `--force`            | 既存ファイルを上書きする                                                  |
 
 `catalog scaffold`は、`--domain`を省略すると従来どおりすべてのDCT templateを対象にします。指定した場合は、ファイル名ではなくtemplate内の`domain`が一致するものだけを生成します。存在しないdomainを指定した場合は、部分的な生成を行わずエラーで終了します。
@@ -85,11 +90,11 @@ specdojo catalog scaffold \
 `--dct <name>` で対象を特定の `dct-*.yaml` に絞れます。`name` は `dct-` プレフィックスや `.yaml` の有無を問わず、ドメイン名（例: `project-definition`）でも一致します。カンマ区切りまたは複数回指定で複数のカタログを対象にできます。指定名に一致する `dct-*.yaml` がない場合はエラーで終了します。
 
 ```bash
-specdojo catalog generate --project prj-0001 --dct project-definition
-specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
+specdojo deliverable scaffold --project prj-0001 --dct project-definition
+specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
 ```
 
-`catalog generate` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/cli-overview-guide.md) の `catalog generateの生成方針`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
+`deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/cli-overview-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ## 4. schedule
 
@@ -155,7 +160,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `exec where`     | execution 関連パスを表示する                                         | `specdojo exec where --project prj-0001`                                                                |
 | `exec validate`  | schedule と event を検証する                                         | `specdojo exec validate --project prj-0001`                                                             |
-| `exec build`     | state、Ready、CPM、timeline を生成する                               | `specdojo exec build --project prj-0001`                                                                |
+| `exec refresh`   | state、Ready、CPM、timeline を再計算する                             | `specdojo exec refresh --project prj-0001`                                                              |
 | `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）        | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
 | `exec claim`     | タスクを `doing` にする                                              | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
 | `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可） | `specdojo exec complete --project prj-0001 --by agent-1`                                                |

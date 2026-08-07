@@ -113,7 +113,7 @@ groups:
         depends_on:
           - cdfd-init
         done_criteria:
-          - text: カタログと戦略の準備からcatalog validate・schedule build・exec buildを経て計画情報を利用可能にする流れが表と図で確認できること
+          - text: カタログと戦略の準備からcatalog validate・schedule build・exec refreshを経て計画情報を利用可能にする流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: dct・strategy・schedule・eventからstate・Ready・CPM・timelineへ至る入力、出力、依存関係が識別できること
@@ -255,7 +255,7 @@ groups:
           - cdfd-catalog-planning
           - cdfd-task-execution
         done_criteria:
-          - text: catalog generate/build・register build・exec build・yaml-pages build・index buildと一括build/watchの役割および起動関係が表と図で確認できること
+          - text: deliverable scaffold・catalog build・register build・exec refresh・yaml-pages build・index buildと一括build/watchの役割および起動関係が表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: 各正本と生成先の対応、直接編集してはならない派生成果物、再生成時の上書き境界が識別できること

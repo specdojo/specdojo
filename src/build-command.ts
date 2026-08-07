@@ -46,8 +46,8 @@ function resolveSteps(
   const candidates: StepDef[] = [
     {
       scope: "exec",
-      label: "exec build",
-      subArgs: ["exec", "build", ...projectArgs],
+      label: "exec refresh",
+      subArgs: ["exec", "refresh", ...projectArgs],
     },
     {
       scope: "catalog",

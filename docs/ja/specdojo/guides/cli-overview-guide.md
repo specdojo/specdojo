@@ -28,15 +28,29 @@ CLI Overview Guide
 
 `specdojo` は Git リポジトリ内でプロジェクト実行管理を行う CLI です。主に次のファイル群を扱います。
 
-| 対象                       | 代表ファイル               | 主なコマンド |
-| -------------------------- | -------------------------- | ------------ |
-| 成果物カタログ             | `dct-*.yaml`               | `catalog`    |
-| Schedule                   | `sch-*.yaml`               | `schedule`   |
-| 実行イベント               | `exec/events/*.json`       | `exec`       |
-| 実行生成物                 | `generated/*`              | `exec build` |
-| プロジェクト登録簿         | `pjr-index.md`             | `register`   |
-| 定期実行定義               | `rtn-*.yaml`               | `routine`    |
-| ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`      |
+| 対象                       | 代表ファイル               | 主なコマンド   |
+| -------------------------- | -------------------------- | -------------- |
+| 成果物カタログ             | `dct-*.yaml`               | `catalog`      |
+| 成果物ファイル             | `prj-charter.md` など      | `deliverable`  |
+| Schedule                   | `sch-*.yaml`               | `schedule`     |
+| 実行イベント               | `exec/events/*.json`       | `exec`         |
+| 実行生成物                 | `generated/*`              | `exec refresh` |
+| プロジェクト登録簿         | `pjr-index.md`             | `register`     |
+| 定期実行定義               | `rtn-*.yaml`               | `routine`      |
+| ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`        |
+
+### 1.1. 生成系動詞の標準
+
+生成や実行を伴うコマンドは、出力の性質と副作用に応じて次の動詞を使います。
+
+| 動詞       | 用途                                                         | 再実行と上書きの原則                                         | 代表例                                     |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------ |
+| `scaffold` | 人が編集する正本や設定の初期雛形を作る                       | 既存ファイルを既定で保護し、上書きは `--force` で明示する    | `catalog scaffold`、`deliverable scaffold` |
+| `build`    | 正本から再現可能な派生物を組み立てる                         | 同じ入力から繰り返し生成でき、派生物の置換を許容する         | `catalog build`、`schedule build`、`build` |
+| `refresh`  | イベントやScheduleから変化する実行状態スナップショットを更新 | 実行履歴や正本を変更せず、現在状態を安全に再計算する         | `exec refresh`                             |
+| `run`      | タスク、routine、agentなどの処理を実際に実行する             | 状態遷移、外部プロセス起動、成果物編集などの副作用を許容する | `exec run`、`routine run`                  |
+
+`scaffold` と `build` の違いは、生成後のファイルを人が正本として編集するか、入力から再生成できる派生物かです。`refresh` は build 可能な一般成果物ではなく、イベントを反映して時点ごとに変わる実行状態に限定します。`run` はファイル生成そのものではなく、処理の遂行を表します。
 
 ## 2. 標準ディレクトリ構成
 
@@ -154,14 +168,14 @@ specdojo catalog scaffold --project prj-0001 --size small
 specdojo catalog validate --project prj-0001
 
 # 3.1 カタログが指す成果物ファイル本体を一括生成する
-specdojo catalog generate --project prj-0001
+specdojo deliverable scaffold --project prj-0001
 specdojo catalog build --project prj-0001
 
 # 4. sch-strategy-launch.yaml を用意し、track schedule を生成する
 specdojo schedule build --project prj-0001 --track launch --force
 
 # 5. 実行状態、Ready、CPMを生成する
-specdojo exec build --project prj-0001
+specdojo exec refresh --project prj-0001
 
 # 6. pm-members.yaml と provider 設定を用意して Readyタスクを実行する
 specdojo exec run --project prj-0001 --auto --parallel 5
@@ -175,9 +189,9 @@ specdojo build --project prj-0001
 
 register から成果物カタログへ移す手順は [Quick Startガイド](quick-start-guide.md)、成果物カタログのどの情報が Schedule のどのタスクになるかは [Schedule設計ガイド](schedule-design-guide.md) の `成果物カタログとの責務分担`、agent の最小設定は [exec設定ガイド](exec-config-guide.md) を参照します。
 
-### 6.1. catalog generateの生成方針
+### 6.1. deliverable scaffold の生成方針
 
-`catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`catalog generate` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`catalog generate` はプロジェクトのサイズ相当の成果物集合をまとめて材料化します。
+`catalog scaffold` は `--size` で選んだ成果物セットで `dct-*.yaml` を生成し、`deliverable scaffold` はその `dct-*.yaml` を辿って成果物ファイル本体（`prj-charter.md` など）を一括生成します。カタログ自体がサイズ別に生成済みのため、`deliverable scaffold` はプロジェクトのサイズ相当の成果物集合をまとめて材料化します。
 
 成果物ごとの生成方針は次のとおりです。
 
@@ -187,7 +201,7 @@ register から成果物カタログへ移す手順は [Quick Startガイド](qu
 | テンプレートがない                      | カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行） |
 | すでにファイルが存在する                | 上書きしない（`--force` を指定した場合のみ上書きする）                                                                                                                                               |
 
-`catalog generate` は成果物本体を一度だけ材料化し、以後は人手で記入・編集します。そのため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済みの本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回だけ実行します。
+`deliverable scaffold` は成果物本体を一度だけ材料化し、以後は人手で記入・編集します。そのため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済みの本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回だけ実行します。
 
 対象を特定のカタログに絞る場合は `--dct <name>` を使います。オプションの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
 

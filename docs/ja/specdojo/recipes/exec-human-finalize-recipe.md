@@ -32,7 +32,7 @@ Human Finalize Execution Recipe
 
 ## 3. 全体の実行手順
 
-1. `specdojo exec build --project <project-id>` を実行し、対象タスクが Ready であることを確認します。build は human plan を生成しません。
+1. `specdojo exec refresh --project <project-id>` を実行し、対象タスクが Ready であることを確認します。refresh は human plan を生成しません。
 2. `specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で claim し、生成された result を開きます。
 3. result frontmatter の `targets` を確認し、doc-index で対象文書を解決します。
 4. result の「確認チェックリスト」に従って完成版を確認し、満たせない項目があれば最小限の修正を加えます。

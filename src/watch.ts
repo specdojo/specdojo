@@ -126,8 +126,8 @@ function buildCommand(
   switch (scope) {
     case "exec":
       return {
-        label: `specdojo exec build${ctx.projectId ? ` --project ${ctx.projectId}` : ""}`,
-        subArgs: ["exec", "build", ...projectArgs],
+        label: `specdojo exec refresh${ctx.projectId ? ` --project ${ctx.projectId}` : ""}`,
+        subArgs: ["exec", "refresh", ...projectArgs],
       };
     case "catalog":
       return {
