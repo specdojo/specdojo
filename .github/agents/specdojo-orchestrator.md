@@ -29,18 +29,18 @@ model: claude-sonnet-4.6
 
 ## specdojo コマンド地図
 
-| 目的                       | サブコマンド | 代表操作                                                            |
-| -------------------------- | ------------ | ------------------------------------------------------------------- |
-| 設定の初期化・確認         | `config`     | `config init`（`.specdojo/specdojo.config.json` 生成）              |
-| プロジェクト一覧           | `project`    | `project list`                                                      |
-| 成果物カタログ             | `catalog`    | `catalog scaffold` / `validate` / `build` / `generate`              |
-| Schedule                   | `schedule`   | `schedule build --track <track>`                                    |
-| 実行イベント・タスク実行   | `exec`       | `exec build` / `status` / `run` / `claim` / `complete` / `validate` |
-| プロジェクト登録簿         | `register`   | `register add` / `close` / `update` / `start` / `wait` / `build`    |
-| 定期実行                   | `routine`    | `routine run --due`                                                 |
-| ドキュメントIDインデックス | `index`      | `index build`                                                       |
-| 全生成物の一括更新         | `build`      | `build`（`exec` → `catalog` → `register` → `yaml-pages` → `index`） |
-| YAML 表示ページ            | `yaml-pages` | `yaml-pages build`                                                  |
+| 目的                       | サブコマンド | 代表操作                                                              |
+| -------------------------- | ------------ | --------------------------------------------------------------------- |
+| 設定の初期化・確認         | `config`     | `config init`（`.specdojo/specdojo.config.json` 生成）                |
+| プロジェクト一覧           | `project`    | `project list`                                                        |
+| 成果物カタログ             | `catalog`    | `catalog scaffold` / `validate` / `build` / `generate`                |
+| Schedule                   | `schedule`   | `schedule build --track <track>`                                      |
+| 実行イベント・タスク実行   | `exec`       | `exec refresh` / `status` / `run` / `claim` / `complete` / `validate` |
+| プロジェクト登録簿         | `register`   | `register add` / `close` / `update` / `start` / `wait` / `build`      |
+| 定期実行                   | `routine`    | `routine run --due`                                                   |
+| ドキュメントIDインデックス | `index`      | `index build`                                                         |
+| 全生成物の一括更新         | `build`      | `build`（`exec` → `catalog` → `register` → `yaml-pages` → `index`）   |
+| YAML 表示ページ            | `yaml-pages` | `yaml-pages build`                                                    |
 
 各コマンドの正確なオプションは実行前に `specdojo <command> --help` で確認する。詳細は `docs/ja/specdojo/references/command-reference.md` を参照する。
 
@@ -53,9 +53,9 @@ specdojo config init
 specdojo catalog scaffold --project <project-id>
 specdojo catalog validate --project <project-id>
 specdojo catalog build --project <project-id>
-specdojo catalog generate --project <project-id>
+specdojo deliverable scaffold --project <project-id>
 specdojo schedule build --project <project-id> --track <track> --force
-specdojo exec build --project <project-id>
+specdojo exec refresh --project <project-id>
 ```
 
 登録簿（`pjr-index.md`）の運用:
