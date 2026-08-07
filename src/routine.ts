@@ -22,6 +22,7 @@ import {
   type PjrItem,
 } from "./register.js";
 import { registerItemCategory } from "./exec-register.js";
+import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
 
 // ================================
 // Types
@@ -68,9 +69,11 @@ export type RoutinePaths = {
   statePath: string;
 };
 
-type RoutineStateEntry = {
+export type RoutineExecutionResult = "success" | "failure" | "skipped";
+
+export type RoutineStateEntry = {
   last_run: string;
-  last_result?: "success" | "failure";
+  last_result?: RoutineExecutionResult;
 };
 
 type RoutineStateFile = {
@@ -446,15 +449,20 @@ function releaseRoutineLock(lockDir: string): void {
 // Execution
 // ================================
 
-function spawnSelf(args: string[]): boolean {
+function spawnSelf(args: string[]): RoutineExecutionResult {
   const [exe, fullArgs] = selfRunArgs(args);
-  const result = spawnSync(exe, fullArgs, { stdio: "inherit", cwd: specdojoRootDir() });
-  return result.status === 0;
+  const result = spawnSync(exe, fullArgs, {
+    stdio: "inherit",
+    cwd: specdojoRootDir(),
+    env: { ...process.env, [ROUTINE_EXEC_ENV]: "1" },
+  });
+  if (result.status === ROUTINE_BUSY_SKIP_EXIT_CODE) return "skipped";
+  return result.status === 0 ? "success" : "failure";
 }
 
 // exec-auto action を exec run --auto の引数リストへ変換する（dry-run 表示と実行で共用）。
 export function buildExecAutoArgs(action: RoutineAction, projectId: string): string[] {
-  const args = ["exec", "run", "--auto", "--project", projectId];
+  const args = ["exec", "run", "--auto", "--project", projectId, "--if-busy", "skip"];
   if (action.strategy) args.push("--strategy", action.strategy);
   if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
   if (action.loop) {
@@ -465,18 +473,22 @@ export function buildExecAutoArgs(action: RoutineAction, projectId: string): str
 }
 
 export function buildExecResumeArgs(action: RoutineAction, projectId: string): string[] {
-  const args = ["exec", "resume", "--due", "--project", projectId];
+  const args = ["exec", "resume", "--due", "--project", projectId, "--if-busy", "skip"];
   if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
   return args;
 }
 
-function buildRegisterRunArgs(pjrId: string, projectId: string): string[] {
-  return ["exec", "run", "--register", pjrId, "--project", projectId];
+export function buildRegisterRunArgs(pjrId: string, projectId: string): string[] {
+  return ["exec", "run", "--register", pjrId, "--project", projectId, "--if-busy", "skip"];
 }
 
 // 1 routine を実行する。register kind は対象項目ごとに失敗を記録して継続し、
 // 最後に集約する（1 件の失敗で残りの項目を止めない）。
-function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boolean): boolean {
+function executeRoutine(
+  routine: LoadedRoutine,
+  projectId: string,
+  dryRun: boolean,
+): RoutineExecutionResult {
   const { doc } = routine;
   process.stdout.write(`[routine] ${doc.id}: ${doc.name ?? doc.action.kind}\n`);
 
@@ -484,7 +496,7 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
     const args = buildExecAutoArgs(doc.action, projectId);
     if (dryRun) {
       process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return true;
+      return "success";
     }
     return spawnSelf(args);
   }
@@ -493,7 +505,7 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
     const args = buildExecResumeArgs(doc.action, projectId);
     if (dryRun) {
       process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return true;
+      return "success";
     }
     return spawnSelf(args);
   }
@@ -502,13 +514,13 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
   const registerPaths = resolveRegisterPaths({ project: projectId });
   if (!existsSync(registerPaths.pjrIndexPath)) {
     process.stderr.write(`  pjr-index.md not found: ${registerPaths.pjrIndexPath}\n`);
-    return false;
+    return "failure";
   }
   const items = parsePjrIndex(readFileSync(registerPaths.pjrIndexPath, "utf8"));
   const selected = selectRegisterItems(items, doc.action);
   if (selected.length === 0) {
     process.stdout.write(`  no matching register items\n`);
-    return true;
+    return "success";
   }
 
   let allOk = true;
@@ -520,7 +532,9 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
       continue;
     }
     process.stdout.write(`  run: ${item.id} — ${item.title}\n`);
-    if (!spawnSelf(args)) {
+    const result = spawnSelf(args);
+    if (result === "skipped") return "skipped";
+    if (result === "failure") {
       allOk = false;
       failedIds.push(item.id);
     }
@@ -528,7 +542,7 @@ function executeRoutine(routine: LoadedRoutine, projectId: string, dryRun: boole
   if (failedIds.length > 0) {
     process.stderr.write(`  failed register item(s): ${failedIds.join(", ")}\n`);
   }
-  return allOk;
+  return allOk ? "success" : "failure";
 }
 
 // ================================
@@ -545,7 +559,7 @@ function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
 }
 
-function formatLastRun(entry: RoutineStateEntry | undefined): string {
+export function formatRoutineLastRun(entry: RoutineStateEntry | undefined): string {
   if (!entry?.last_run) return "-";
   return entry.last_result ? `${entry.last_run} (${entry.last_result})` : entry.last_run;
 }
@@ -615,7 +629,7 @@ export function registerRoutineCommands(program: Command): void {
         enabled: doc.enabled === false ? "disabled" : "enabled",
         interval: doc.interval,
         kind: doc.action.kind,
-        lastRun: formatLastRun(state.routines[doc.id]),
+        lastRun: formatRoutineLastRun(state.routines[doc.id]),
         due:
           doc.enabled === false
             ? "-"
@@ -693,6 +707,7 @@ export function registerRoutineCommands(program: Command): void {
       }
 
       let failed = 0;
+      let skipped = 0;
       for (const entry of selected) {
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
@@ -701,19 +716,25 @@ export function registerRoutineCommands(program: Command): void {
           writeRoutineState(paths, state);
         }
 
-        const ok = executeRoutine(entry, paths.projectId, dryRun);
-        if (!ok) failed++;
+        const result = executeRoutine(entry, paths.projectId, dryRun);
+        if (result === "failure") failed++;
+        if (result === "skipped") {
+          skipped++;
+          process.stdout.write(`[routine] skipped ${entry.doc.id}: exec busy\n`);
+        }
 
         if (!dryRun) {
           state.routines[entry.doc.id] = {
             ...state.routines[entry.doc.id],
-            last_result: ok ? "success" : "failure",
+            last_result: result,
           };
           writeRoutineState(paths, state);
         }
       }
 
-      process.stdout.write(`[routine] ${selected.length} routine(s) executed, ${failed} failed\n`);
+      process.stdout.write(
+        `[routine] ${selected.length} routine(s) processed, ${skipped} skipped, ${failed} failed\n`,
+      );
       if (failed > 0) process.exitCode = 1;
     } catch (error) {
       printCommandError(error);

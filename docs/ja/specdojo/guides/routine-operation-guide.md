@@ -49,7 +49,7 @@ action:
 
 ## 2. due判定と実行
 
-最終実行時刻は `<routines-path>/generated/routine-state.json` に記録され、`interval`（`30m` / `6h` / `1d` / `1w` 形式）が経過したものを due と判定します。多重起動は lock で防ぐため、外部スケジューラが重複起動しても同じ routine が二重に走ることはありません。
+最終実行時刻と結果は `<routines-path>/generated/routine-state.json` に記録され、`interval`（`30m` / `6h` / `1d` / `1w` 形式）が経過したものを due と判定します。多重起動は lock で防ぐため、外部スケジューラが重複起動しても同じ routine が二重に走ることはありません。
 
 `action.kind` で、どの実行経路を発火させるかを選びます。
 
@@ -70,6 +70,14 @@ specdojo routine run --project <project-id> --id rtn-daily-register-sweep
 specdojo routine run --project <project-id> --due --dry-run
 ```
 
+各 action は委譲先へ `--if-busy skip` を渡します。同じ project の `exec run` または `exec resume` が動作中なら待機せず、次のように記録して終了します。単一の routine 実行内では再試行せず、次回の cron tick に委ねます。
+
+```text
+[routine] skipped rtn-daily-register-sweep: exec busy
+```
+
+`routine-state.json` の `last_result` は `success`、`failure`、`skipped` のいずれかです。`skipped` は failure 件数や終了コードへ加算されず、`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
+
 ## 3. 実行経路への委譲
 
-routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine が記録するのは `last_run` だけです。
+routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine は発火結果として `last_run` と `last_result` を記録します。

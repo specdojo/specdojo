@@ -45,6 +45,13 @@ import {
 } from "./specdojo-config.js";
 import { type ReadySnapshot, type ReadyTaskView } from "./exec-types.js";
 import type { CurrentState, Proficiency, TaskMode } from "./exec-types.js";
+import {
+  acquireExecRunLock,
+  releaseExecRunLock,
+  ROUTINE_BUSY_SKIP_EXIT_CODE,
+  ROUTINE_EXEC_ENV,
+  type ExecRunBusyPolicy,
+} from "./exec-run-lock.js";
 import { replaceDocIndexRefs } from "./doc-index.js";
 import {
   extractLocalId,
@@ -162,6 +169,7 @@ export type RunOpts = {
   parallel?: string;
   worktreeBase?: string;
   due?: boolean;
+  ifBusy?: string;
 };
 
 type RunResult = "success" | "rate_limit" | "failure";
@@ -583,6 +591,42 @@ function parseParallel(value: string | undefined): number {
     throw new Error(`--parallel must be a positive integer: ${value ?? ""}`);
   }
   return parsed;
+}
+
+export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPolicy {
+  const policy = value ?? "fail";
+  if (policy !== "skip" && policy !== "wait" && policy !== "fail") {
+    throw new Error(`--if-busy must be "skip", "wait", or "fail": ${value ?? ""}`);
+  }
+  return policy;
+}
+
+async function withProjectExecRunLock(
+  opts: RunOpts,
+  commandLabel: "run" | "resume",
+  action: () => Promise<void>,
+): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  const policy = parseExecRunBusyPolicy(opts.ifBusy);
+  const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
+    actor: opts.by ?? `exec-${commandLabel}`,
+    ifBusy: policy,
+    onWait: () => process.stdout.write(`[${commandLabel}] exec busy — waiting\n`),
+  });
+
+  if (!handle) {
+    process.stdout.write(`[${commandLabel}] skipped: exec busy\n`);
+    if (process.env[ROUTINE_EXEC_ENV] === "1") {
+      process.exitCode = ROUTINE_BUSY_SKIP_EXIT_CODE;
+    }
+    return;
+  }
+
+  try {
+    await action();
+  } finally {
+    releaseExecRunLock(handle);
+  }
 }
 
 function delay(ms: number): Promise<void> {
@@ -2787,6 +2831,11 @@ export function registerRunCommand(exec: Command): void {
     "Maximum number of rounds when using --loop (ignored without --loop)",
   );
   rcmd.option(
+    "--if-busy <policy>",
+    "When another exec is running for the project: skip|wait|fail (default: fail)",
+    "fail",
+  );
+  rcmd.option(
     "--exec-defaults <path>",
     "Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)",
   );
@@ -2887,39 +2936,41 @@ export function registerRunCommand(exec: Command): void {
         return;
       }
 
-      // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
-      // via register transitions (start → review / waiting) instead of exec events.
-      if (hasRegister) {
-        await runRegisterMode(opts);
-        return;
-      }
+      await withProjectExecRunLock(opts, "run", async () => {
+        // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
+        // via register transitions (start → review / waiting) instead of exec events.
+        if (hasRegister) {
+          await runRegisterMode(opts);
+          return;
+        }
 
-      // In-place manual run (default): generate the plan on demand and run in the
-      // current repository. No validate/refresh pass — that is orchestration only.
-      if (isManual && !opts.worktree) {
-        await runInPlaceMode(opts);
-        return;
-      }
+        // In-place manual run (default): generate the plan on demand and run in the
+        // current repository. No validate/refresh pass — that is orchestration only.
+        if (isManual && !opts.worktree) {
+          await runInPlaceMode(opts);
+          return;
+        }
 
-      process.stdout.write("[run] validate...\n");
-      if (!spawnValidate(opts.project)) {
-        process.stdout.write("[run] validate failed — exit\n");
-        process.exitCode = 1;
-        return;
-      }
-      process.stdout.write("[run] validate: ok\n[run] refresh...\n");
-      if (!spawnRefresh(opts.project)) {
-        process.stdout.write("[run] refresh failed — exit\n");
-        process.exitCode = 1;
-        return;
-      }
-      process.stdout.write("[run] refresh: ok\n");
+        process.stdout.write("[run] validate...\n");
+        if (!spawnValidate(opts.project)) {
+          process.stdout.write("[run] validate failed — exit\n");
+          process.exitCode = 1;
+          return;
+        }
+        process.stdout.write("[run] validate: ok\n[run] refresh...\n");
+        if (!spawnRefresh(opts.project)) {
+          process.stdout.write("[run] refresh failed — exit\n");
+          process.exitCode = 1;
+          return;
+        }
+        process.stdout.write("[run] refresh: ok\n");
 
-      if (isBatch) {
-        await runBatchMode(opts);
-      } else {
-        await runManualMode(opts);
-      }
+        if (isBatch) {
+          await runBatchMode(opts);
+        } else {
+          await runManualMode(opts);
+        }
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");
@@ -3163,11 +3214,16 @@ export function registerResumeCommand(exec: Command): void {
     "--exec-defaults <path>",
     "Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)",
   );
+  cmd.option(
+    "--if-busy <policy>",
+    "When another exec is running for the project: skip|wait|fail (default: fail)",
+    "fail",
+  );
   cmd.option("--dry-run", "Print resolved commands without executing", false);
 
   cmd.action(async (opts: RunOpts) => {
     try {
-      await runResumeMode(opts);
+      await withProjectExecRunLock(opts, "resume", () => runResumeMode(opts));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");

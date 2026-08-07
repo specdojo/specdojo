@@ -82,6 +82,25 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 schedule タスクの自動実行・手動実行の具体的な手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、routine の定義と実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 
+### 1.4. project単位の実行ロック
+
+`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。
+
+ロックは別プロセスの heartbeat で更新されます。正常終了時は `finally` で解放し、プロセスが異常終了して heartbeat が stale になった場合は、後続 run がロックを安全に奪取します。
+
+busy 時の動作は `--if-busy <skip|wait|fail>` で選びます。既定は `fail` です。
+
+```bash
+# 手動実行の既定: busy ならエラー終了
+specdojo exec run --project <project-id> --auto
+
+# busy なら実行せず正常終了
+specdojo exec run --project <project-id> --auto --if-busy skip
+
+# ロックが空くまで待ってから実行
+specdojo exec run --project <project-id> --auto --if-busy wait
+```
+
 ## 2. 中断・訂正・再実行
 
 実行が途中で止まった場合、完了判定そのものを訂正する場合、利用制限で中断した場合の戻し方を扱います。これらは schedule 実行を主な対象としますが、`reopen` を除き register 実行にも共通する考え方です。

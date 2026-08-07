@@ -2,11 +2,22 @@ import { describe, expect, it } from "vitest";
 import {
   extractBlockReason,
   isRateLimitError,
+  parseExecRunBusyPolicy,
   resolveAgentOverride,
   selectCandidates,
 } from "../../src/exec-run.js";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
+
+describe("parseExecRunBusyPolicy", () => {
+  it("既定を fail とし、skip / wait / fail だけを受け入れる", () => {
+    expect(parseExecRunBusyPolicy(undefined)).toBe("fail");
+    expect(parseExecRunBusyPolicy("skip")).toBe("skip");
+    expect(parseExecRunBusyPolicy("wait")).toBe("wait");
+    expect(parseExecRunBusyPolicy("fail")).toBe("fail");
+    expect(() => parseExecRunBusyPolicy("retry")).toThrow(/--if-busy/);
+  });
+});
 
 function agent(overrides: Partial<ProjectMember> & { nickname: string }): ProjectMember {
   return {

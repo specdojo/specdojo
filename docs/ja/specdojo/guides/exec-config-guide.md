@@ -120,6 +120,10 @@ members:
 
 ## 4. 実行フロー
 
+`providers.<provider>.max_concurrency` は1つの `exec run` プロセス内の provider 枠を制御します。複数の `exec run` プロセスを跨ぐ上限ではないため、project ごとの `exec-run.lock` が手動実行・routine・CI の run 全体を排他します。同一 run 内の `--parallel` はこのロックの内側で動作します。
+
+手動 CLI の busy 時既定は `--if-busy fail` です。必要に応じて `wait` または `skip` を明示します。routine は待機で cron worker を占有しないよう常に `--if-busy skip` を渡し、再試行は次回の cron tick に委ねます。
+
 rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行します（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返します。この再試行は critical / non-critical を問わず全タスクに適用します。
 
 ```mermaid
