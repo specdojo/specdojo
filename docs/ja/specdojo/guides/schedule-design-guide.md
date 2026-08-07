@@ -111,6 +111,10 @@ specdojo exec build --project <project-id>
 
 `phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec build` を実行します。
 
+`--track` は生成・上書きする `sch-track-<track>.yaml` を指定します。一方、`sch-milestones.yaml` はプロジェクト全体の正本であるため、同じ `schedule_path` にあるすべての `sch-strategy-*.yaml` から毎回再構築します。別 track のマイルストーンは保持され、削除された strategy や定義から生成されなくなったマイルストーンだけが除去されます。
+
+全 strategy のいずれかに検証エラー、project ID の不一致、マイルストーン ID の重複がある場合、`schedule build` は不完全な `sch-track-<track>.yaml` や `sch-milestones.yaml` を書き込まずに停止します。`--dry-run` でも全 strategy を評価し、プロジェクト全体のマイルストーン生成結果を表示します。
+
 ### 2.2. トラックへ展開する情報
 
 `sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
