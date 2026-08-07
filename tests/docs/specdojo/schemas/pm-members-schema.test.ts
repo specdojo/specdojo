@@ -3,9 +3,14 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { load } from "js-yaml";
-import Ajv2020 from "ajv/dist/2020";
-import addFormats from "ajv-formats";
+import Ajv2020Module from "ajv/dist/2020.js";
+import addFormatsModule from "ajv-formats";
 import type { ValidateFunction } from "ajv";
+
+// ajv / ajv-formats は CJS のため、NodeNext 解決では default import がモジュール名前空間になる。
+// 実体は名前空間の default に入っているので、ここで取り出してから使う。
+const Ajv2020 = Ajv2020Module.default;
+const addFormats = addFormatsModule.default;
 
 // Repo-root-relative directories resolved from this test file's location so the test is
 // independent of the process working directory.
