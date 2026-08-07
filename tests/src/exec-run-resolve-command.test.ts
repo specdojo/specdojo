@@ -48,7 +48,7 @@ function buildTask(overrides: Partial<ReadyTaskView> = {}): ReadyTaskView {
 }
 
 describe("resolveInPlaceCommand actor derivation", () => {
-  it("auto-derives the actor from the capability-selected agent when neither --by nor --cmd is given", () => {
+  it("auto-derives the actor from the capability-selected agent when --by is omitted", () => {
     const result = resolveInPlaceCommand(buildTask(), buildRoster(), {} as RunOpts);
 
     // Lowest priority wins; its nickname becomes the recorded actor (mirrors the worktree path).
@@ -65,31 +65,28 @@ describe("resolveInPlaceCommand actor derivation", () => {
     expect(result.actor).toBe("opencode-edit-agent");
   });
 
-  it("derives the actor from a --cmd nickname override", () => {
-    const result = resolveInPlaceCommand(buildTask(), buildRoster(), {
-      cmd: "opencode-edit-agent",
-    } as RunOpts);
-
-    expect(result.command).toBe("opencode run --agent opencode-edit-agent");
-    expect(result.actor).toBe("opencode-edit-agent");
+  it("rejects an unknown --by nickname instead of accepting a raw command", () => {
+    expect(() =>
+      resolveInPlaceCommand(buildTask(), buildRoster(), {
+        by: "node ./my-agent.js",
+      } as RunOpts),
+    ).toThrow(/Agent command not found for actor/);
   });
 
-  it("falls back to the auto-agent placeholder for a raw --cmd command string", () => {
-    const result = resolveInPlaceCommand(buildTask(), buildRoster(), {
-      cmd: "node ./my-agent.js",
-    } as RunOpts);
-
-    expect(result.command).toBe("node ./my-agent.js");
-    expect(result.actor).toBe("auto-agent");
-  });
-
-  it("prefers an explicit --by over a raw --cmd command string for the actor", () => {
-    const result = resolveInPlaceCommand(buildTask(), buildRoster(), {
+  it("allows a registered --by agent to override human execution", () => {
+    const result = resolveInPlaceCommand(buildTask({ execution: "human" }), buildRoster(), {
       by: "claude-edit-agent",
-      cmd: "node ./my-agent.js",
     } as RunOpts);
 
-    expect(result.command).toBe("node ./my-agent.js");
-    expect(result.actor).toBe("claude-edit-agent");
+    expect(result).toEqual({
+      command: "claude -p --agent claude-edit-agent",
+      actor: "claude-edit-agent",
+    });
+  });
+
+  it("rejects human execution when --by is omitted", () => {
+    expect(() =>
+      resolveInPlaceCommand(buildTask({ execution: "human" }), buildRoster(), {} as RunOpts),
+    ).toThrow(/Use --by <nickname> to override/);
   });
 });

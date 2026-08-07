@@ -30,16 +30,20 @@ PJR-0159 で agent 指定フラグを `--by` 系（`--by` / `--edit-by` / `--rev
 
 | No  | 作業                                                                   | 担当 | 状態 | メモ                                                        |
 | --- | ---------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------- |
-| 1   | `exec run` / `exec resume` の旧フラグ定義と `RunOpts` フィールドを削除 | ARC  | open | `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent` |
-| 2   | 生コマンド受理経路とバッチ起動判定を除去し nickname 一本化             | ARC  | open | `resolveAgentOverride` ほか解決系                           |
-| 3   | `exec worktree agent` の command 供給を `--by` nickname 解決へ付け替え | ARC  | open | `--agent-cmd` 撤去                                          |
-| 4   | 旧フラグ・生コマンド依存テストの移行または削除                         | ARC  | open | 5 テストファイル                                            |
-| 5   | ドキュメントから旧フラグ記述を除去・更新                               | ARC  | open | command-reference / guides / sysd                           |
-| 6   | build / lint / テストによる検証                                        | ARC  | open | ts/md/関連テスト                                            |
+| 1   | `exec run` / `exec resume` の旧フラグ定義と `RunOpts` フィールドを削除 | ARC  | done | `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent` |
+| 2   | 生コマンド受理経路とバッチ起動判定を除去し nickname 一本化             | ARC  | done | `resolveAgentOverride` ほか解決系                           |
+| 3   | `exec worktree agent` の command 供給を `--by` nickname 解決へ付け替え | ARC  | done | `--agent-cmd` 撤去                                          |
+| 4   | 旧フラグ・生コマンド依存テストの移行または削除                         | ARC  | done | 5 テストファイル                                            |
+| 5   | ドキュメントから旧フラグ記述を除去・更新                               | ARC  | done | command-reference / guides / sysd                           |
+| 6   | build / lint / テストによる検証                                        | ARC  | done | ts/md/関連テスト                                            |
 
 ## 4. 対応結果
 
--
+- `exec run` / `exec resume` / `exec worktree agent` から旧 agent 指定フラグを削除し、`RunOpts` と正規化処理も撤去した。
+- 単体指定を `--by`、mode 別指定を `--edit-by` / `--review-by`、バッチ起動を `--auto` に限定し、agent command は roster / exec-defaults の nickname 解決だけで取得するようにした。
+- in-place / register / claiming actor の raw command フォールバックを削除し、関連 unit・integration・E2E fixture を登録済み nickname 前提へ移行した。
+- command reference、exec guides、agent system design と package script を現行フラグへ更新した。
+- build、TypeScript / Markdown lint、関連テストを実施した。全体テストのうち Git subprocess を使わない 835 件は成功し、Git を spawn する 21 件は実行環境の制約（`spawnSync git EPERM`）で開始できなかった。
 
 ## 5. 関連ドキュメント
 

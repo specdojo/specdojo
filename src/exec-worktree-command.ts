@@ -55,7 +55,6 @@ type CommonOpts = {
 
 type AgentOpts = CommonOpts & {
   by?: string;
-  agentCmd?: string;
 };
 
 type CommitOpts = CommonOpts & {
@@ -161,34 +160,25 @@ function resolveAgent(
   prompt: string;
 } {
   const state = requireDoingTask(context.schedulePath, taskId);
-  if (opts.by && opts.by !== state.actor) {
-    throw new Error(`--by ${opts.by} does not match claim actor ${state.actor}.`);
-  }
   const task = buildTaskView(context.schedulePath, context.executionPath, taskId);
   const roster = loadRosterForExecutionPath(context.executionPath);
   const execDefaults = loadExecDefaultsConfig(undefined, context.executionPath);
-  let command = opts.agentCmd?.trim() ?? "";
+  const nickname = opts.by?.trim() || state.actor;
+  if ((task.execution ?? "agent") === "human" && !opts.by) {
+    throw new Error(`Task requires human execution. Use --by <nickname> to override: ${taskId}`);
+  }
+  const member = roster?.members.find(
+    (item) =>
+      item.nickname === nickname &&
+      item.type === "agent" &&
+      hasMemberCommandSource(execDefaults, item),
+  );
+  const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+  if (!command) {
+    throw new Error(`Agent command not found for actor: ${nickname}`);
+  }
 
-  if (command) {
-    const member = roster?.members.find(
-      (item) =>
-        item.type === "agent" &&
-        hasMemberCommandSource(execDefaults, item) &&
-        item.nickname === command,
-    );
-    const resolved = member ? resolveMemberCommand(execDefaults, member) : undefined;
-    command = resolved ?? command;
-  } else {
-    if ((task.execution ?? "agent") === "human") {
-      throw new Error(`Task requires human execution. Use --agent-cmd to override: ${taskId}`);
-    }
-    const member = roster?.members.find(
-      (item) => item.nickname === state.actor && item.type === "agent",
-    );
-    const resolved = member ? resolveMemberCommand(execDefaults, member) : undefined;
-    if (!resolved) {
-      throw new Error(`Agent command not found for claim actor: ${state.actor}`);
-    }
+  if (!opts.by) {
     const maps = buildTaskPhaseMap(context.schedulePath);
     if (!resolveTaskPhaseContext(task, maps.localIdToPhaseSets, maps.phaseSetSuffixToId)) {
       throw new Error(`Cannot resolve phase context for task: ${taskId}`);
@@ -200,15 +190,14 @@ function resolveAgent(
       undefined,
       execDefaults,
     );
-    if (!candidates.some((candidate) => candidate.nickname === state.actor)) {
-      throw new Error(`Claim actor does not satisfy task agent requirements: ${state.actor}`);
+    if (!candidates.some((candidate) => candidate.nickname === nickname)) {
+      throw new Error(`Claim actor does not satisfy task agent requirements: ${nickname}`);
     }
-    command = resolved;
   }
 
   const prompt = loadPrompt(context.executionPath, taskId);
   if (!prompt) throw new Error(`Plan not found for task: ${taskId}`);
-  return { actor: state.actor, command, prompt };
+  return { actor: nickname, command, prompt };
 }
 
 function printWorktree(worktree: ExecWorktree): void {
@@ -436,19 +425,10 @@ export function registerExecWorktreeCommands(exec: Command): void {
   const agentCommand = addCommonOptions(
     worktree.command("agent").description("Run the task agent once inside its worktree"),
   );
-  agentCommand.option("--by <actor>", "Validate the claim actor");
-  agentCommand.option(
-    "--agent-cmd <command>",
-    "[deprecated] Use --by <nickname>. Override agent command",
-  );
+  agentCommand.option("--by <nickname>", "Select a pm-members.yaml agent nickname");
   agentCommand.option("--dry-run", "Print the resolved command without executing", false);
   agentCommand.action(async (opts: AgentOpts) => {
     try {
-      if (opts.agentCmd !== undefined) {
-        process.stderr.write(
-          "warning: --agent-cmd is deprecated; select a registered agent with --by <nickname>.\n",
-        );
-      }
       await agent(opts);
     } catch (error) {
       commandError(error);

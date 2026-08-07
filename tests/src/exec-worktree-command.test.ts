@@ -10,6 +10,9 @@ import { findExecWorktree, gitEnvironment } from "../../src/exec-worktree.js";
 const originalCwd = process.cwd();
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
+const FAKE_AGENT_CMD =
+  `node -e "const fs=require('node:fs');` +
+  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
 
 function git(cwd: string, ...args: string[]): string {
   return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
@@ -49,6 +52,7 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
           test: {
             schedule_path: "schedule",
             execution_path: "execution",
+            members_path: "pm-members.yaml",
             run: { worktree_base: worktreeBase },
           },
         },
@@ -56,6 +60,25 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
       null,
       2,
     ) + "\n",
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "pm-members.yaml"),
+    [
+      "version: 1",
+      "project_id: test",
+      "members:",
+      "  - nickname: edit-agent",
+      "    display_name: Edit Agent",
+      "    email: null",
+      "    roles: [DEV]",
+      "    type: agent",
+      "    capabilities: []",
+      "    priority: 1",
+      `    command: ${JSON.stringify(FAKE_AGENT_CMD)}`,
+      "    mode: edit",
+      "",
+    ].join("\n"),
     "utf8",
   );
   writeFileSync(
@@ -84,7 +107,14 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
   git(repo, "init");
   git(repo, "config", "user.name", "SpecDojo Test");
   git(repo, "config", "user.email", "specdojo@example.invalid");
-  git(repo, "add", ".specdojo/specdojo.config.json", "schedule/sch-track-test.yaml", "README.md");
+  git(
+    repo,
+    "add",
+    ".specdojo/specdojo.config.json",
+    "schedule/sch-track-test.yaml",
+    "pm-members.yaml",
+    "README.md",
+  );
   git(repo, "commit", "-m", "initial");
 
   writeFileSync(
@@ -146,17 +176,7 @@ describe("exec worktree commands", () => {
 
       process.chdir(worktree!.path);
       await runExecWorktree(["status", "--project", "test", "--task", taskId]);
-      await runExecWorktree([
-        "agent",
-        "--project",
-        "test",
-        "--task",
-        taskId,
-        "--by",
-        "edit-agent",
-        "--agent-cmd",
-        `node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>require('node:fs').writeFileSync('agent-ran.txt',s))"`,
-      ]);
+      await runExecWorktree(["agent", "--project", "test", "--task", taskId, "--by", "edit-agent"]);
       expect(readFileSync(join(worktree!.path, "agent-ran.txt"), "utf8")).toContain(
         "Update README.",
       );

@@ -271,11 +271,11 @@ stderr の実文言は CLI バージョンで変わりうるため、上記 patt
 
 共通の実行コマンドは親設計を参照する。Copilot member は phase の `capabilities` / `proficiency` と `pm-members.yaml` の属性により自動選択される。
 
-memberを明示して実行する場合は `--cmd` にnicknameを指定する。
+memberを明示して実行する場合は `--by` にnicknameを指定する。
 
 ```bash
-specdojo exec run --cmd copilot-edit-agent
-specdojo exec run --cmd copilot-review-agent
+specdojo exec run --by copilot-edit-agent --task <task-id>
+specdojo exec run --by copilot-review-agent --task <task-id>
 ```
 
 ## 10. 非対話実行と出力
