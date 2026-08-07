@@ -21,6 +21,12 @@ pre-commit:
       run: npx prettier --write {staged_files} && npx markdownlint {staged_files}
       stage_fixed: true
 
+    # tsc -b は staged 単位で実行できないため、プロジェクト全体を型チェックする。
+    # tsconfig.build.json（src）だけでなく tests / tools も参照経由で対象になる。
+    typecheck:
+      glob: "{src/**,tests/**,scripts/**,tools/**,tsconfig*.json}"
+      run: npm run typecheck
+
     test:
       glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
       run: npm test

@@ -140,7 +140,7 @@ await expect(loadYaml("missing.yaml")).rejects.toThrow(/missing.yaml/);
 
 - テスト追加後は、プロジェクトで定義された Vitest 実行 script を使って確認する。
 - Vitest 実行 script が未定義の場合は、導入時に `npm test` または `npm run test` で実行できる script を追加する。
-- TypeScript の型影響がある変更では、`npm run build` も実行する。
+- TypeScript の型影響がある変更では、`npm run typecheck` も実行する。`npm run build` は `src` のみが対象で、`tests` 配下の型エラーは検出されない。
 - Markdown、schema、template 生成に関係するテストでは、必要に応じて `npm run check` または該当する検証 script を実行する。
 
 ## 12. 禁止事項

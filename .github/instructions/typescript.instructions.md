@@ -75,7 +75,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 ## 8. テストと検証
 
-- TypeScript 変更後は、少なくとも `npm run build` を実行して型チェックとビルドを確認する。
+- TypeScript 変更後は、少なくとも `npm run typecheck` を実行して型エラーがないことを確認する。`tsc -b` がルートの `tsconfig.json` の `references` を辿るため、`src` だけでなく `tests` と `tools` も対象になる。
+- `dist` の生成物を確認する必要がある場合は `npm run build` も実行する。`npm run build` は `src` のみを対象とするので、型チェックの代わりにはならない。
 - `npm run lint:ts` で ESLint（`@typescript-eslint/no-explicit-any`、`consistent-type-imports` 等）のエラーがないことを確認する。自動修正可能なものは `npm run lint:ts:fix` で一括修正する。
 - Markdown や schema 生成に影響する変更では、必要に応じて `npm run lint:md`、`npm run lint:fm`、`npm run validate:schema` を実行する。
 - CLI の挙動を変える場合は、代表的な入力で実行結果を確認する。
