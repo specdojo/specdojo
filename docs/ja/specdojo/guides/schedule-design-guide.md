@@ -113,6 +113,8 @@ specdojo exec build --project <project-id>
 
 `--track` は生成・上書きする `sch-track-<track>.yaml` を指定します。一方、`sch-milestones.yaml` はプロジェクト全体の正本であるため、同じ `schedule_path` にあるすべての `sch-strategy-*.yaml` から毎回再構築します。別 track のマイルストーンは保持され、削除された strategy や定義から生成されなくなったマイルストーンだけが除去されます。
 
+再構築時は、既存ファイルに残るマイルストーン ID の並びを維持し、新しく生成された ID を末尾へ追加します。既存項目の内容は最新の strategy から全面置換するため、表示順を安定させながら定義変更を反映できます。既存ファイルがない初回生成では、strategy ファイル名順に並びます。
+
 全 strategy のいずれかに検証エラー、project ID の不一致、マイルストーン ID の重複がある場合、`schedule build` は不完全な `sch-track-<track>.yaml` や `sch-milestones.yaml` を書き込まずに停止します。`--dry-run` でも全 strategy を評価し、プロジェクト全体のマイルストーン生成結果を表示します。
 
 ### 2.2. トラックへ展開する情報

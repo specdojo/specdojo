@@ -97,6 +97,33 @@ describe("project milestone rebuild", () => {
     }
   });
 
+  it("既存 milestone の順序を維持して新規 track の項目を末尾へ追加する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-order-"));
+    try {
+      writeMilestoneStrategy(dir, "launch", "G-LAUNCH-first");
+      const initial = collectProjectMilestones(dir, dir, "prj-test");
+      updateMilestonesFile(dir, "prj-test", initial.milestones, "ready", false);
+
+      writeMilestoneStrategy(dir, "data-flow", "G-DATA-FLOW-first");
+      const rebuilt = collectProjectMilestones(dir, dir, "prj-test");
+      updateMilestonesFile(dir, "prj-test", rebuilt.milestones, "ready", false);
+      const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+        milestones: Array<{ id: string }>;
+      };
+
+      expect(rebuilt.milestones.map((milestone) => milestone.id)).toEqual([
+        "G-DATA-FLOW-first",
+        "G-LAUNCH-first",
+      ]);
+      expect(doc.milestones.map((milestone) => milestone.id)).toEqual([
+        "G-LAUNCH-first",
+        "G-DATA-FLOW-first",
+      ]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("削除された strategy 由来の stale milestone を再構築時に除去する", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-removal-"));
     try {

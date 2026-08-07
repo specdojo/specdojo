@@ -158,7 +158,25 @@ export function updateMilestonesFile(
     if (previousIds.has(m.id)) updated.push(m.id);
     else added.push(m.id);
   }
-  doc.milestones = newMilestones.map((milestone) => ({ ...milestone }));
+
+  // Keep the established presentation order for milestones that still exist, while replacing
+  // every field from the freshly generated definitions. Newly generated IDs are appended in the
+  // deterministic all-strategy order so adding a track does not move existing track sections.
+  const generatedById = new Map(newMilestones.map((milestone) => [milestone.id, milestone]));
+  const orderedMilestones: GeneratedMilestone[] = [];
+  for (const entry of previous) {
+    const id = String(entry?.id ?? "");
+    const generated = generatedById.get(id);
+    if (!generated) continue;
+    orderedMilestones.push(generated);
+    generatedById.delete(id);
+  }
+  for (const milestone of newMilestones) {
+    if (!generatedById.has(milestone.id)) continue;
+    orderedMilestones.push(milestone);
+    generatedById.delete(milestone.id);
+  }
+  doc.milestones = orderedMilestones.map((milestone) => ({ ...milestone }));
 
   const outYaml = yaml.dump(doc, { lineWidth: 120, noRefs: true });
 
