@@ -45,7 +45,7 @@ phase_sets:
       execution: agent
       mode: edit
       approach: retrofit
-      proficiency: normal
+      proficiency: expert
       task_suffix: "010"
       duration_days: 0.5
       description: |
