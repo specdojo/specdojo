@@ -108,7 +108,7 @@ specdojo catalog generate --project prj-0001 --dct dct-project-definition.yaml,d
 | `--force`         | 既存の `sch-track-<track>.yaml` を上書きする |
 | `--dry-run`       | 生成予定を確認する                           |
 
-`--track` で指定した `sch-track-<track>.yaml` だけを生成・上書きします。プロジェクト共通の `sch-milestones.yaml` は、同じ `schedule_path` にある全 `sch-strategy-*.yaml` から再構築するため、指定外 track のマイルストーンも保持されます。全 strategy のいずれかが不正、project ID が不一致、またはマイルストーン ID が重複している場合は、生成物を書き込まずに停止します。
+`--track` で指定した `sch-track-<track>.yaml` だけを生成・上書きします。プロジェクト共通の `sch-milestones.yaml` は、同じ `schedule_path` にある全 `sch-strategy-*.yaml` から再構築するため、指定外 track のマイルストーンも保持されます。既存 ID の表示順は維持し、新規 ID は末尾へ追加します。全 strategy のいずれかが不正、project ID が不一致、またはマイルストーン ID が重複している場合は、生成物を書き込まずに停止します。
 
 Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
