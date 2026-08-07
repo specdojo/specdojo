@@ -10,8 +10,8 @@ import {
   buildWorkingTaskSegments,
   dateForWorkingOffset,
   isWorkingDateUtc,
-  timelinePositionX,
   timelineStartDate,
+  workingMinutesPerDay,
   type WorkingTaskSegment,
 } from "./exec-schedule-calendar.js";
 
@@ -116,6 +116,13 @@ export function buildTimelineSvg(
   // alongside milestones so the節目 stays visible.
   const orphanGateRows = gateRows.filter((r) => !insertedGateIds.has(r.id));
 
+  const dayIndexOf = (dt: Date): number =>
+    Math.floor((dt.getTime() - timelineStart.getTime()) / 86400000);
+
+  // タスクバー・マイルストーン・ゲートが載る日（timelineStart からの日インデックス）。
+  // アクティブでない日の連続区間は時間軸で圧縮表示する。
+  const activeDays = new Set<number>();
+
   const taskSegments = new Map<string, WorkingTaskSegment[]>();
   let timelineEnd = new Date(timelineStart.getTime());
   for (const row of rows) {
@@ -136,19 +143,70 @@ export function buildTimelineSvg(
       taskSegments.set(row.id, segments);
       const end = segments[segments.length - 1]?.end;
       if (end && end > timelineEnd) timelineEnd = end;
+      if (isInitialComplete(row)) continue; // no bar → does not activate days
+      for (const segment of segments) {
+        const from = dayIndexOf(segment.start);
+        // end が翌日 00:00 のとき翌日を誤って含めないよう 1ms 戻す
+        const to = dayIndexOf(new Date(segment.end.getTime() - 1));
+        for (let k = from; k <= to; k += 1) activeDays.add(k);
+      }
       continue;
     }
 
     const milestoneAt = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar);
     if (milestoneAt > timelineEnd) timelineEnd = milestoneAt;
+    activeDays.add(dayIndexOf(milestoneAt));
   }
 
   const totalDays = Math.max(
     1,
     Math.ceil((timelineEnd.getTime() - timelineStart.getTime()) / 86400000) + 1,
   );
-  const chartWidth = totalDays * dayWidth;
+
+  // 圧縮軸レイアウト: 非アクティブ日が minCompressRun 日以上連続する区間を
+  // 1 本の gap カラムに畳む。それ以外は従来どおり dayWidth の day カラム。
+  const minCompressRun = 3;
+  const gapWidth = 48;
+  type AxisColumn =
+    | { kind: "day"; dayIndex: number; x: number }
+    | { kind: "gap"; fromDay: number; days: number; x: number };
+  const columns: AxisColumn[] = [];
+  const dayX = new Map<number, number>();
+  let cursorX = 0;
+  let dayCursor = 0;
+  while (dayCursor < totalDays) {
+    if (!activeDays.has(dayCursor)) {
+      let runEnd = dayCursor;
+      while (runEnd < totalDays && !activeDays.has(runEnd)) runEnd += 1;
+      const runLength = runEnd - dayCursor;
+      if (runLength >= minCompressRun) {
+        columns.push({ kind: "gap", fromDay: dayCursor, days: runLength, x: cursorX });
+        for (let k = dayCursor; k < runEnd; k += 1) dayX.set(k, cursorX);
+        cursorX += gapWidth;
+        dayCursor = runEnd;
+        continue;
+      }
+    }
+    columns.push({ kind: "day", dayIndex: dayCursor, x: cursorX });
+    dayX.set(dayCursor, cursorX);
+    cursorX += dayWidth;
+    dayCursor += 1;
+  }
+  const chartWidth = cursorX;
   const width = leftPad + chartWidth + 40;
+
+  const xForDate = (dt: Date): number => {
+    const midnight = new Date(dt.getTime());
+    midnight.setUTCHours(0, 0, 0, 0);
+    const dayIndex = dayIndexOf(midnight);
+    const baseX = dayX.get(dayIndex) ?? 0;
+    const minutesFromMidnight = dt.getUTCHours() * 60 + dt.getUTCMinutes();
+    const relative = Math.max(
+      0,
+      Math.min(1, minutesFromMidnight / workingMinutesPerDay(schedule.calendar)),
+    );
+    return leftPad + baseX + relative * dayWidth;
+  };
 
   const layoutRows: Array<{ type: "section"; label: string } | { type: "node"; row: CpmNode }> = [];
 
@@ -203,6 +261,9 @@ export function buildTimelineSvg(
     .holiday { fill: #eff6ff; }
     .legend-label { font-size: 11px; fill: #475569; }
     .month-grid { stroke: #94a3b8; stroke-width: 2; }
+    .gap { fill: #f1f5f9; }
+    .gap-div { stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 3 3; }
+    .gap-label { font-size: 10px; fill: #64748b; }
   </style>`);
   parts.push(`<defs>
     <clipPath id="clip-col1"><rect x="${col1X}" y="0" width="${col1DivX - col1X}" height="${height}" /></clipPath>
@@ -216,7 +277,7 @@ export function buildTimelineSvg(
   );
   parts.push(`<text class="title" x="16" y="28">${xmlEscape(title)}</text>`);
   parts.push(
-    `<text class="caption" x="16" y="48">1 タスク 1 行で表示します。1 日の長さは ${schedule.calendar.work_hours_per_day} 時間で、休日と週末は空白のままとし、次の稼働日に作業を再開します。</text>`,
+    `<text class="caption" x="16" y="48">1 タスク 1 行で表示します。1 日の長さは ${schedule.calendar.work_hours_per_day} 時間で、休日と週末は空白のままとし、次の稼働日に作業を再開します。タスクが無い期間は ⋯ で圧縮表示します。</text>`,
   );
   parts.push(`<rect x="0" y="${topPad - 36}" width="${width}" height="28" fill="#fff7ed" />`);
 
@@ -252,9 +313,27 @@ export function buildTimelineSvg(
   parts.push(`<text class="axis" x="${col2X}" y="${topPad - 18}">成果物名</text>`);
   parts.push(`<text class="axis" x="${col3X}" y="${topPad - 18}">フェーズ</text>`);
 
-  for (let dayIndex = 0; dayIndex < totalDays; dayIndex += 1) {
-    const dayStart = new Date(timelineStart.getTime() + dayIndex * 86400000);
-    const x = leftPad + dayIndex * dayWidth;
+  for (const column of columns) {
+    if (column.kind === "gap") {
+      const x = leftPad + column.x;
+      // 圧縮区間: 薄い塗り + 破線の区切り + 「⋯ N日」ラベル
+      parts.push(
+        `<rect class="gap" x="${x}" y="${topPad - 20}" width="${gapWidth}" height="${height - topPad}" />`,
+      );
+      parts.push(
+        `<line class="gap-div" x1="${x}" y1="${topPad - 20}" x2="${x}" y2="${height - bottomPad}" />`,
+      );
+      parts.push(
+        `<line class="gap-div" x1="${x + gapWidth}" y1="${topPad - 20}" x2="${x + gapWidth}" y2="${height - bottomPad}" />`,
+      );
+      parts.push(
+        `<text class="gap-label" x="${x + gapWidth / 2}" y="${topPad - 18}" text-anchor="middle">⋯${column.days}日</text>`,
+      );
+      continue;
+    }
+
+    const dayStart = new Date(timelineStart.getTime() + column.dayIndex * 86400000);
+    const x = leftPad + column.x;
     const isWorking = isWorkingDateUtc(dayStart, schedule.calendar);
     const dayOfWeek = dayStart.getUTCDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -367,10 +446,8 @@ export function buildTimelineSvg(
     } else if (row.kind === "task") {
       const segments = taskSegments.get(row.id) ?? [];
       for (const segment of segments) {
-        const startX =
-          leftPad + timelinePositionX(segment.start, timelineStart, schedule.calendar, dayWidth);
-        const endX =
-          leftPad + timelinePositionX(segment.end, timelineStart, schedule.calendar, dayWidth);
+        const startX = xForDate(segment.start);
+        const endX = xForDate(segment.end);
         const widthPx = Math.max(2, endX - startX);
         const stroke = criticalSet.has(row.id)
           ? "#991b1b"
@@ -385,7 +462,7 @@ export function buildTimelineSvg(
       }
     } else if (row.kind === "gate") {
       const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar);
-      const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth);
+      const cx = xForDate(at);
       // Vertical bar with top/bottom caps (gate/barrier symbol)
       parts.push(
         `<rect x="${cx - 2}" y="${rowTop}" width="4" height="12" fill="${fill}" opacity="0.9" />`,
@@ -398,7 +475,7 @@ export function buildTimelineSvg(
       );
     } else {
       const at = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar);
-      const cx = leftPad + timelinePositionX(at, timelineStart, schedule.calendar, dayWidth);
+      const cx = xForDate(at);
       parts.push(
         `<polygon points="${cx},${rowMid - 7} ${cx + 7},${rowMid} ${cx},${rowMid + 7} ${cx - 7},${rowMid}" fill="${fill}" />`,
       );
