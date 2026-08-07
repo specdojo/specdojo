@@ -280,6 +280,8 @@ specdojo exec worktree merge --project prj-0001 --task <task-id>
 specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branch
 ```
 
+`prepare` は root と package-lock 付き独立 package の `node_modules` を元 worktree から共有リンクします。依存関係を追加・更新する場合は、元 worktree 側で `npm install` を行ってから task worktree を準備します。
+
 詳細な安全条件は [exec worktree運用ガイド](../guides/exec-worktree-guide.md) を参照します。
 
 ## 8. index
