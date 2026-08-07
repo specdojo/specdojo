@@ -187,7 +187,31 @@ git branch --no-merged project/prj-0001/develop
 
 project 完了後に `develop` を削除する場合は、`main` への統合と未退避作業がないことを確認してから行います。
 
-## 7. 複数projectを並行する
+## 7. 承認方式を使い分ける
+
+登録項目の承認は、既定で commit（register の状態遷移とチケット個票の承認節）で残し、PR 承認は強制する 3 ケースに限定します。判定条件は [Git ブランチ運用標準](../standards/git-branching-standard.md) の `承認ゲートと PR 強制条件`、type 別の承認フローは [登録簿運用ガイド](register-operation-guide.md) の `承認フローと承認者` を参照します。
+
+commit ベースで承認する場合（`decision` / `risk` / `question` / `issue` / `todo` の通常運用）は、チケット個票の承認節と register の状態遷移で承認事実を残します。
+
+```bash
+specdojo register close \
+  --project prj-0001 \
+  --id PJR-0005 \
+  --conclusion "回答者・回答日を承認節に記入し decided へ遷移"
+```
+
+PR 承認を強制する 3 ケース（`develop → main` 昇格 / `change-request` 承認 / 不可逆・高リスク・framework schema 破壊的変更）では、承認対象の差分を Pull Request として作成し、承認者が approve します。作成者自身の承認は職務分離のためカウントしません。
+
+```bash
+git switch project/prj-0001/develop
+git switch -c feature/prj-0001/schema-change
+# 変更を commit した後に PR を作成する
+gh pr create --base project/prj-0001/develop --title "PJR-XXXX schema 破壊的変更" --body "対象個票: prj-0001:pjr-xxxx-topic"
+```
+
+merge 後は、承認者・承認日・承認対象・証跡（PR URL・merge SHA）をチケット個票の承認節へ書き戻します。`main` と `project/<project-id>/develop` の承認者は `CODEOWNERS` と branch protection で強制します。
+
+## 8. 複数projectを並行する
 
 `worktree:sync` は既定で main worktree が checkout しているブランチをベースにします。複数 project の worktree が同時に存在する場合は、対象 project の `develop` を毎回明示します。
 
@@ -209,7 +233,7 @@ export SPECDOJO_WORKTREE_BASE_BRANCH=project/prj-0001/develop
 npm run worktree:sync
 ```
 
-## 8. 既存featureブランチを移行する
+## 9. 既存featureブランチを移行する
 
 未公開または単独作業中の `feature/<topic>` は、project ID を含む名前へ変更できます。
 
@@ -234,7 +258,7 @@ git push origin --delete feature/branch-policy
 
 レビュー中または共同作業中の branch は無理に改名せず、完了後に新しい命名へ切り替える方が安全です。
 
-## 9. 作業前後のチェックリスト
+## 10. 作業前後のチェックリスト
 
 | 時点                 | 確認内容                                                             |
 | -------------------- | -------------------------------------------------------------------- |

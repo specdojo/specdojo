@@ -61,16 +61,20 @@ specdojo:
 
 | No  | 作業                                                        | 担当   | 状態 | メモ                                    |
 | --- | ----------------------------------------------------------- | ------ | ---- | --------------------------------------- |
-| 1   | 承認2区分と type 別承認フロー（状態遷移ベース）の定義       | _TODO_ | open | register-operation-guide / pjr-rulebook |
-| 2   | 承認方式（既定 commit ＋ 限定 PR）と PR 強制3ケースの明文化 | _TODO_ | open | branch-workflow-guide / 標準            |
-| 3   | type 別承認者ロールの割り当て（RACI の A）                  | _TODO_ | open | pm-raci との整合                        |
-| 4   | branch protection ＋ CODEOWNERS による承認者強制方針の策定  | _TODO_ | open | main/develop                            |
-| 5   | decision/question テンプレへの承認者・承認日欄の追加        | _TODO_ | open | pjr-decision/pjr-question テンプレート  |
-| 6   | 関連文書への反映と lint 検証                                | _TODO_ | open | lint:md                                 |
+| 1   | 承認2区分と type 別承認フロー（状態遷移ベース）の定義       | _TODO_ | done | register-operation-guide / pjr-rulebook |
+| 2   | 承認方式（既定 commit ＋ 限定 PR）と PR 強制3ケースの明文化 | _TODO_ | done | branch-workflow-guide / 標準            |
+| 3   | type 別承認者ロールの割り当て（RACI の A）                  | _TODO_ | done | pm-raci との整合                        |
+| 4   | branch protection ＋ CODEOWNERS による承認者強制方針の策定  | _TODO_ | done | main/develop                            |
+| 5   | decision/question テンプレへの承認者・承認日欄の追加        | _TODO_ | done | pjr-decision/pjr-question テンプレート  |
+| 6   | 関連文書への反映と lint 検証                                | _TODO_ | done | lint:md                                 |
 
 ## 5. 対応結果
 
--
+- 承認の2区分（成果物レビュー / 内容承認）と type 別承認フロー（`review` → `close`/`reject`/`defer`/`wait`）、承認者ロール（RACI の A）を [[specdojo:register-operation-guide]] の `承認フローと承認者` に定義した。
+- 承認方式の使い分け（既定 commit ＋ 限定 PR）と PR 強制3ケース（`develop → main` 昇格 / `change-request` 承認 / 不可逆・高リスク・framework schema 破壊的変更）を [[specdojo:git-branching-standard]] の `承認ゲートと PR 強制条件` に明文化し、[[specdojo:branch-workflow-guide]] の `承認方式を使い分ける` に操作手順を追加した。
+- `main` / `develop` の branch protection と `CODEOWNERS` による承認者強制方針を [[specdojo:git-branching-standard]] の `同期・履歴・保護` に追加した。
+- [[specdojo:pjr-decision-template]] に承認節（決定者・決定日・承認方式・証跡）、[[specdojo:pjr-question-template]] に承認節（回答者・回答日・承認方式・証跡）を追加し、[[specdojo:pjr-rulebook]] の type 別標準構成へ `decision` / `question` の承認節を反映した。
+- `npx prettier --write` で対象を整形し、`npm run lint:md` が通ることを確認した（詳細は result を参照）。
 
 ## 6. 関連ドキュメント
 
