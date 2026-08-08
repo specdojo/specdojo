@@ -32,15 +32,20 @@ edit result テンプレート `docs/ja/specdojo/templates/xer-template.md` の�
 
 | No  | 作業                                                | 担当 | 状態 | メモ                                                   |
 | --- | --------------------------------------------------- | ---- | ---- | ------------------------------------------------------ |
-| 1   | `xer-template.md` の見出しと本文の改称              | ARC  | open | 本文も進め方と実践の型の双方を求める記述へ調整する     |
-| 2   | plan テンプレート10ファイルの参照文言の追随         | ARC  | open | 参照は合計27箇所。文脈に応じて自然な日本語へ整える     |
-| 3   | `tests/src/exec-results.test.ts` のアサーション更新 | ARC  | open | human finalize に載せない検証（2箇所）も新名称へ       |
-| 4   | 変更対象外の章に手を入れていないことの確認          | ARC  | open | review result と human finalize の章は名称と内容が一致 |
-| 5   | 検証（`npm run lint:md` / `npm test`）              | ARC  | open | テンプレートとテストの変更は pre-commit の `test` 対象 |
+| 1   | `xer-template.md` の見出しと本文の改称              | ARC  | done | 本文も進め方と実践の型の双方を求める記述へ調整する     |
+| 2   | plan テンプレート9ファイルの参照文言の追随          | ARC  | done | 参照は合計26箇所。文脈に応じて自然な日本語へ整える     |
+| 3   | `tests/src/exec-results.test.ts` のアサーション更新 | ARC  | done | human finalize に載せない検証（2箇所）も新名称へ       |
+| 4   | 変更対象外の章に手を入れていないことの確認          | ARC  | done | review result と human finalize の章は名称と内容が一致 |
+| 5   | 検証（`npm run lint:md` / `npm test`）              | ARC  | done | テンプレートとテストの変更は pre-commit の `test` 対象 |
 
 ## 4. 対応結果
 
--
+- `xer-template.md` の第4章を「実践の型の活用」から「進め方と実践の型の適用」へ改称した。本文は `approach` に沿った進め方と実践の型の適用状況の双方を求める記述にし、実践の型を基準にしなかった場合の判断と代替根拠も記入対象であることを明記した。
+- `xep-*` テンプレート9ファイル（bootstrap / fully-guided / recipe-guided / freeform / recipe-maintenance / rulebook-maintenance / sample-maintenance / template-maintenance / xep-template）の参照文言26箇所を新名称へ追随させた。当初「10ファイル・27箇所」と見積もったが、10ファイルは `xer-template.md` を含む変更対象ファイル総数であり、参照側の plan テンプレートは9ファイル・26箇所であることを実地の確認で確定した。
+- `tests/src/exec-results.test.ts` の2箇所（human finalize に載せない検証、汎用 edit テンプレートの見出し検証）を新名称へ更新した。
+- 変更対象外とした `xrr-template.md` の「実践の型との整合確認」と `xer-human-bootstrap-finalize-template.md` の「実践の型の確認」は据え置いた。`src/` には章名をハードコードした箇所がないことを確認済みで、実装側の追随は不要だった。
+- `docs/ja/specdojo/guides/kata-guide.md` および `ryu-guide.md` の「実践の型の活用方法」は review guide の説明文であり、本章名の参照ではないため据え置いた。
+- 既存の result 履歴ファイルと本個票・登録簿の記述に含まれる旧名称は、履歴および改称対象の説明として残した。
 
 ## 5. 参考情報
 
