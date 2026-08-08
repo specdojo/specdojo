@@ -90,7 +90,7 @@ flowchart TD
 
 - ゴール: 計画済みタスクを agent に実行させ、レビューへ回す。
 - 進め方: `pm-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズで schedule を組む。`exec run --auto` で Ready 順に実行する。参照の深さは `approach` で切り替える。
-- 主に使う文書: [exec設定ガイド](exec-config-guide.md)、[Schedule実行運用ガイド](schedule-operation-guide.md)、[実践の型活用ガイド](kata-guide.md)。
+- 主に使う文書: [exec設定ガイド](exec-config-guide.md)、[Schedule実行運用ガイド](schedule-operation-guide.md)、[実践の進め方ガイド](ryu-guide.md)。
 
 ### 3.2. worktreeで隔離実行する
 

@@ -245,6 +245,7 @@ export const specdojoSidebarItems = [
         "実践体系で作る",
         [
           guide("実践体系構成", "practice-system-composition-guide"),
+          guide("実践の進め方", "ryu-guide"),
           guide("実践の型活用", "kata-guide"),
           guide("レビュー", "review-guide"),
         ],

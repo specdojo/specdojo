@@ -23,7 +23,7 @@ Review Guide
 
 **次に読む文書**
 
-- レビュー時の実践の型の使い方は [実践の型活用ガイド](kata-guide.md)、plan・result の共通ライフサイクルは [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
+- レビュー時の実践の型の使い方は [実践の進め方ガイド](ryu-guide.md)、plan・result の共通ライフサイクルは [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
 最初にレビューを実行する場合は、`レビューの位置づけ`、`レビューの観点とパス`、`review plan と review result`、`完了と確定` を読めば実施できます。finding の転記判断は `レビュー結果の記録`、手動でagentへ依頼する場合の文面は `Agent への指示テンプレート` を参照してください。
 
@@ -252,7 +252,7 @@ specdojo:
 
 人または agent は review plan に従ってレビューします。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
 
-レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従います。詳細は [実践の型活用ガイド](kata-guide.md) を参照してください。
+レビューでどこまで rulebook / recipe / sample / template に照らすかは、タスクに付与された `approach` に従います。詳細は [実践の進め方ガイド](ryu-guide.md) を参照してください。
 
 実行時の原則
 

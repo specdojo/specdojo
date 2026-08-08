@@ -21,7 +21,7 @@ Plan and Result Lifecycle Guide
 
 **次に読む文書**
 
-- 実行手順は [exec運用ガイド](exec-operation-guide.md)、plan が参照する資料の使い分けは [実践の型活用ガイド](kata-guide.md) を参照してください。
+- 実行手順は [exec運用ガイド](exec-operation-guide.md)、plan が参照する資料の使い分けは [実践の進め方ガイド](ryu-guide.md) を参照してください。
 
 ## 1. planとresultの基本
 
@@ -142,7 +142,7 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 `approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。`evidence_refs` がない場合は plan 生成をエラーにします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
 
-実践の型の扱いは [実践の型活用ガイド](kata-guide.md) を参照します。
+実践の型の扱いは [実践の進め方ガイド](ryu-guide.md) を参照します。
 
 ### 3.3. resultテンプレート
 

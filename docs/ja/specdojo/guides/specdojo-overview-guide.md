@@ -126,7 +126,7 @@ SpecDojo では、成果物と、それを作るための実践体系を分け�
 です。
 
 このうち exec plan が成果物の作成・レビュー時に参照するのは、rulebook / recipe / sample / template の4種です。この4種を **実践の型** と呼びます。philosophy / standard は全体に効く前提・共通規約として常に踏まえ、guide / reference は個別成果物に紐づかない横断文書として理解と参照に使います。実践の型を `approach` に応じてどこまで参照するかは
-[実践の型活用ガイド](kata-guide.md)
+[実践の進め方ガイド](ryu-guide.md)
 を参照してください。
 
 ここでいう `reference` は文書種別です。実践の型として exec plan が参照する rulebook / recipe / sample / template とは別の役割として扱います。

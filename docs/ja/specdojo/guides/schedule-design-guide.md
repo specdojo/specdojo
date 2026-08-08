@@ -23,7 +23,7 @@ Schedule の役割、`sch-strategy` から `sch-track` への展開、タスク�
 
 **次に読む文書**
 
-- 実行手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、exec 設定は [exec設定ガイド](exec-config-guide.md)、`approach` による実践の型の参照方針は [実践の型活用ガイド](kata-guide.md) を参照してください。
+- 実行手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、exec 設定は [exec設定ガイド](exec-config-guide.md)、`approach` による実践の型の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照してください。
 
 ## 1. Scheduleの基本
 
@@ -257,7 +257,7 @@ phase_sets:
 | `capabilities` | 必要なツールや能力を示す                 |
 | `proficiency`  | 必要な習熟度を示す                       |
 
-`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の型活用ガイド](kata-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
+`approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
 ### 3.2. `bootstrap` と `retrofit` のフェーズ順序
 

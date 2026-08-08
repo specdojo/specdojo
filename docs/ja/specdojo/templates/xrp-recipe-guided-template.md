@@ -44,7 +44,7 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 
 rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。recipe の指示が他の文書と矛盾する場合は recipe を優先する。
 
-本タスクの実行に必要な recipe-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo:kata-guide]] を参照する。
+本タスクの実行に必要な recipe-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。
 
 ### 4.1. recipe が存在しない・内容が薄い場合
 

@@ -41,7 +41,7 @@ _REVIEW_VIEWPOINT_DETAILS_
 3. 見直し内容が [[specdojo:rulebook-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従っているか確認する。
 4. recipe / sample / template、および `併せて適用する rulebook`（`_MISSING_` でない場合）と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
 
-approach 全体の定義は [[specdojo:kata-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンス確認の方針は、このセクションで完結する。
+approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンス確認の方針は、このセクションで完結する。
 
 ### 4.1. 見直しの根拠が不足する場合
 
