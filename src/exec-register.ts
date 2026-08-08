@@ -11,7 +11,11 @@ import {
 } from "./register.js";
 import { injectCommonConventions, MISSING, templatesDir } from "./exec-plans.js";
 import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
-import { escapeMarkdownInline, expandTemplate } from "./exec-shared.js";
+import {
+  escapeMarkdownInline,
+  expandTemplate,
+  stripTerminalControlSequences,
+} from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 
@@ -212,11 +216,16 @@ export function ticketPathFromItem(item: PjrItem, projectRegisterPath: string): 
 }
 
 // runner が register の結論列（Markdown 表セル）に書く失敗理由を安全な 1 行へ整形する。
+// 失敗理由には subprocess の生出力が含まれうるため、まず ANSI エスケープシーケンスや
+// 制御文字を除去する（lefthook 等の色付き出力が結論列を破壊するのを防ぐ）。そのうえで
 // セル内の `|` と改行は表を壊すため置換し、読みやすさのため長さも制限する。
 const MAX_CONCLUSION_LENGTH = 200;
 
 export function sanitizeRegisterConclusion(reason: string): string {
-  const singleLine = reason.replace(/\r?\n/g, " ").replace(/\|/g, "/").trim();
+  const singleLine = stripTerminalControlSequences(reason)
+    .replace(/\r?\n/g, " ")
+    .replace(/\|/g, "/")
+    .trim();
   if (singleLine.length <= MAX_CONCLUSION_LENGTH) return singleLine;
   return `${singleLine.slice(0, MAX_CONCLUSION_LENGTH)}…`;
 }

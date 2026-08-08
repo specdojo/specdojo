@@ -114,6 +114,24 @@ describe("sanitizeRegisterConclusion", () => {
     expect(actual).toHaveLength(201);
     expect(actual.endsWith("…")).toBe(true);
   });
+
+  it("色付き hook 出力の ANSI エスケープコードを除去する", () => {
+    const esc = String.fromCharCode(0x1b);
+    const colored = `${esc}[31mCheckpoint commit failed${esc}[0m`;
+
+    const actual = sanitizeRegisterConclusion(colored);
+
+    // 制御文字が残らず、表・YAML を壊さない可読文字列になること。
+    expect(actual).toBe("Checkpoint commit failed");
+    expect([...actual].every((ch) => (ch.codePointAt(0) ?? 0) >= 0x20)).toBe(true);
+  });
+
+  it("ANSI 除去後も改行はスペースへ、パイプはスラッシュへ整える", () => {
+    const esc = String.fromCharCode(0x1b);
+    const reason = `${esc}[1mline1\nline2 | note${esc}[0m`;
+
+    expect(sanitizeRegisterConclusion(reason)).toBe("line1 line2 / note");
+  });
 });
 
 describe("resolveRegisterCommand", () => {
