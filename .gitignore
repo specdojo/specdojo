@@ -94,5 +94,10 @@ tools/vscode-specdojo/out/
 # ただし空ディレクトリを保持するための .gitkeep は追跡対象に残す。
 docs/**/generated/*
 !docs/**/generated/.gitkeep
+
+# exec run のproject単位実行ロック（heartbeat・所有者情報）。実行のたびに生成される
+# 実行時状態で、commitすると別マシン/別実行の状態と衝突するため tracking しない。
+docs/**/execution/exec/.locks/
+
 /*.log
 /logs/*.log
