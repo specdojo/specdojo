@@ -16,6 +16,7 @@
       "jobs_path": "jobs",
       "project_context": ["prj-overview"],
       "run": {
+        "register_date_timezone": "Asia/Tokyo",
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
     }
