@@ -69,7 +69,7 @@ groups:
       - local_id: cdfd-register-operation
         name: 概念データフロー図（登録簿ライフサイクル）
         kind: work
-        overview: 立ち上げ時の未整理事項と運用中の計画外事項を登録し、判断・実行・待機・レビュー・終了・再開と例外復旧まで継続管理する流れを可視化し定義する
+        overview: 立ち上げ時の未整理事項と運用中の計画外事項を登録し、判断・実行・待機・レビュー・承認・終了・再開と例外復旧まで継続管理する流れを可視化し定義する
         path: cdfd-register-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
@@ -79,19 +79,22 @@ groups:
           - kind: implementation
             path: src/exec-register.ts
             purpose: 登録簿項目を実行タスクとして扱う経路
+          - kind: implementation
+            path: src/register-date.ts
+            purpose: 登録日・完了日のタイムゾーン解決と検証
         depends_on:
           - cdfd-init
         done_criteria:
           - text: todo・question・risk・issue・change-request・decision・dependency・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: open・in-progress・waiting・review・done/decided・rejected・deferredから成る通常の状態遷移とreopenが、起点イベントおよび結論記録と対応していること
+          - text: open・in-progress・waiting・review・done/decided・rejected・deferredから成る通常の状態遷移とreopenが、起点イベント、登録日・完了日および結論記録と対応していること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: agent実行の成功時・失敗時の遷移、PJR-ID重複時のrenumber、統合ブランチでの予約起票の例外経路が確認できること
+          - text: agent実行の成功時・失敗時の遷移、ランダムPJR-IDの競合時のrenumber、統合worktreeの同期・予約起票・strict sync失敗時の例外経路が確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-          - text: 留保・却下・延期・再開の判断に必要な情報と承認者への引き渡しが識別できること
+          - text: type別の承認者とreviewからclose・reject・defer・waitへの遷移、commit承認とPR承認の適用境界、および留保・却下・延期・再開の判断に必要な情報が識別できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
       - local_id: cdfd-catalog-planning
@@ -133,8 +136,14 @@ groups:
             path: src/exec-run.ts
             purpose: agent・humanタスクの実行制御と結果処理
           - kind: implementation
+            path: src/exec-run-lock.ts
+            purpose: project単位の実行排他とbusy時の方針
+          - kind: implementation
             path: src/exec-events.ts
             purpose: claim・complete・block等の状態イベント処理
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: task worktreeの作成・依存導入・統合制御
           - kind: implementation
             path: src/exec-worktree-ops.ts
             purpose: worktreeでの変更許可・commit・統合境界
@@ -144,10 +153,10 @@ groups:
           - text: Ready選択・claim・plan/result生成・実行・レビュー・finalize・completeの正常経路が、担当と入出力を含めて表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: human/agent、in-place/worktree、単発/自動/並列の実行経路と、各経路で更新される成果物・event・resultが識別できること
+          - text: human/agent、in-place/worktree、単発/自動/並列の実行経路、登録済みnicknameによるagent選択と、各経路で更新される成果物・event・resultが識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: blockedからのunblock/release、todoからのcancel、doneからのreopen、レートリミット後のresume --due、worktree統合失敗の分岐が確認できること
+          - text: project実行中のskip/wait/fail、blockedからのunblock/release、todoからのcancel、doneからのreopen、レートリミット後のresume --due、worktreeの依存導入・統合失敗の分岐が確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
           - text: ready確定、差し戻し、前提不足時のPJR登録とPO判断に必要な情報が識別できること
@@ -158,7 +167,7 @@ groups:
       - local_id: cdfd-routine
         name: 概念データフロー図（定期実行）
         kind: work
-        overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
+        overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、順次実行cycle、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
         path: cdfd-routine.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
@@ -166,19 +175,22 @@ groups:
             path: src/routine.ts
             purpose: routineのdue判定・委譲・実行結果更新
           - kind: implementation
+            path: src/exec-run.ts
+            purpose: resume・状態再計算・autoを単一ロック内で順次実行するcycle制御
+          - kind: implementation
             path: src/job.ts
             purpose: Job Definition検証・Job Run生成・checkpoint更新
         depends_on:
           - cdfd-register-operation
           - cdfd-task-execution
         done_criteria:
-          - text: routine定義の選択・due判定・register/schedule実行への委譲に加え、Job Run生成を伴う反復作業との境界・last_run更新の流れが表と図で確認できること
+          - text: routine定義の選択・due判定・register/schedule実行への委譲、resumeから状態再計算・autoへ進むexec-cycleに加え、Job Run生成を伴う反復作業との境界・実行結果更新の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: rtn-*.yamlのfilter・interval・limit、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
+          - text: rtn-*.yamlのaction kind・filter・interval・limit、exec-cycleのstrategy・parallel・loop、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 対象なし・利用制限・部分失敗・再開時刻待ち・重複Job Run・取りこぼしの場合に、実行結果と次回判定がどのように記録されるか確認できること
+          - text: projectがbusyの場合、対象なし・利用制限・cycleのstep別失敗・再開時刻待ち・重複Job Run・取りこぼしの場合に、last_run・last_resultと次回判定がどのように記録されるか確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: cdfd-multi-project
