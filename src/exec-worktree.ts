@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, mkdirSync, symlinkSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 
 export type ExecWorktree = {
@@ -154,8 +154,8 @@ function pathEntryExists(target: string): boolean {
   }
 }
 
-function trackedPackageLockDirs(repoRoot: string): string[] {
-  const output = gitOutput(repoRoot, [
+function trackedPackageLockDirs(worktreePath: string): string[] {
+  const output = gitOutput(worktreePath, [
     "ls-files",
     "-z",
     "--",
@@ -165,32 +165,50 @@ function trackedPackageLockDirs(repoRoot: string): string[] {
   const dirs = new Set<string>();
   for (const entry of output.split("\0")) {
     if (!entry) continue;
-    dirs.add(resolve(repoRoot, entry.slice(0, -"package-lock.json".length) || "."));
+    dirs.add(resolve(worktreePath, entry.slice(0, -"package-lock.json".length) || "."));
   }
   return [...dirs].sort();
 }
 
-function ensureNodeModulesLinkAt(repoRoot: string, worktreePath: string, packageDir: string): void {
-  const source = join(packageDir, "node_modules");
-  if (!existsSync(source)) return;
+export type NpmCiRunner = (packageDir: string) => void;
 
-  const rel = relative(repoRoot, packageDir);
-  const targetParent = resolve(worktreePath, rel);
-  if (!pathEntryExists(targetParent)) return;
+function runNpmCi(packageDir: string): void {
+  const command = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawnSync(command, ["ci", "--include=dev"], {
+    cwd: packageDir,
+    env: { ...process.env, CI: "true", LEFTHOOK: "0" },
+    stdio: "inherit",
+  });
+  if (result.error) {
+    throw new Error(`npm ci could not start in ${packageDir}: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    throw new Error(`npm ci failed in ${packageDir} (exit ${result.status ?? "unknown"})`);
+  }
+}
 
-  const target = join(targetParent, "node_modules");
-  if (pathEntryExists(target)) return;
-  symlinkSync(source, target, "dir");
+function removeLegacyNodeModulesLink(packageDir: string): void {
+  const target = join(packageDir, "node_modules");
+  if (!pathEntryExists(target) || !lstatSync(target).isSymbolicLink()) return;
+  unlinkSync(target);
 }
 
 // Git worktree は独自の作業ツリーを持つだけで node_modules は引き継がないため、
-// pre-commit フックや package-local の typecheck が依存解決できず失敗する。
-// 同一マシン・同一プラットフォーム前提で、root と lockfile を持つ package の node_modules を共有リンクする。
-export function ensureNodeModulesLink(repoRoot: string, worktreePath: string): void {
-  const root = resolve(repoRoot);
-  const packageDirs = new Set([root, ...trackedPackageLockDirs(root)]);
-  for (const packageDir of packageDirs) {
-    ensureNodeModulesLinkAt(root, worktreePath, packageDir);
+// tracked package-lock.json ごとに npm ci を実行し、worktree 内へ独立して依存を配置する。
+// 旧方式の共有 symlink は npm に辿らせず、先に link 自体だけを削除する。
+export function installWorktreeDependencies(
+  worktreePath: string,
+  npmCi: NpmCiRunner = runNpmCi,
+): void {
+  for (const packageDir of trackedPackageLockDirs(resolve(worktreePath))) {
+    if (!existsSync(join(packageDir, "package.json"))) {
+      throw new Error(`package.json is missing next to package-lock.json: ${packageDir}`);
+    }
+    removeLegacyNodeModulesLink(packageDir);
+    process.stdout.write(
+      `Installing worktree dependencies: ${relative(worktreePath, packageDir) || "."}\n`,
+    );
+    npmCi(packageDir);
   }
 }
 
@@ -198,6 +216,7 @@ export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
+  installDependencies?: (worktreePath: string) => void;
 }): ExecWorktree {
   const repoRoot = resolve(opts.repoRoot);
   const baseRelative = relative(repoRoot, resolve(opts.worktreeBase));
@@ -219,7 +238,7 @@ export function ensureExecWorktree(opts: {
         `Worktree ${worktreePath} uses branch ${registeredAtPath.branch ?? "(detached)"}; expected ${branch}`,
       );
     }
-    ensureNodeModulesLink(repoRoot, worktreePath);
+    (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
     return { path: worktreePath, branch, name, created: false };
   }
 
@@ -235,6 +254,6 @@ export function ensureExecWorktree(opts: {
     : ["worktree", "add", worktreePath, "-b", branch];
   gitOutput(repoRoot, args);
 
-  ensureNodeModulesLink(repoRoot, worktreePath);
+  (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
   return { path: worktreePath, branch, name, created: true };
 }

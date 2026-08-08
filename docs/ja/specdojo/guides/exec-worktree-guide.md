@@ -111,12 +111,13 @@ specdojo exec worktree prepare \
 5. root index に stage 済み変更がないことを確認します。
 6. plan、result、claim event を checkpoint commit します。
 7. checkpoint commit から exec branch と worktree を作成します。
+8. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
 
 root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
 
-作成または再利用した task worktree には、元 worktree の `node_modules` を共有リンクします。対象は root と、`package.json` / `package-lock.json` を持つ独立 package のうち、元 worktree 側に `node_modules` が存在するディレクトリです。既存の `node_modules` が task worktree 側にある場合は上書きしません。
+作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。
 
-依存関係を追加・更新する場合は、統合元の worktree 側で `npm install` を実行してから task worktree を準備し直します。task worktree 側の共有リンク先は別 worktree であり、sandbox や権限設定によっては `npm install` の書き込み先として使えません。
+過去のバージョンが作成した `node_modules` シンボリックリンクを検出した場合は、リンク先へ変更を加えずリンクだけを削除してから `npm ci` で置き換えます。install に失敗した場合は agent を起動せず、調査できるよう task worktree を保持したままエラー終了します。依存取得に必要な registry と npm cache は、`exec run` を起動する環境から利用できる必要があります。
 
 ### 2.2. status
 
