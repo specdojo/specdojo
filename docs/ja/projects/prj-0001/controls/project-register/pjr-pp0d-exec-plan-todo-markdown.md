@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
 ---
 
-# PJR-PP0D exec plan生成時にアンダースコア識別子や*TODO*がMarkdown強調記号として誤解釈され破損する
+# PJR-PP0D exec plan生成時にアンダースコア識別子や`_TODO_`がMarkdown強調記号として誤解釈され破損する
 
 ## 1. 概要
 
