@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
-import { expandTemplate } from "./exec-shared.js";
+import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
 
@@ -38,10 +38,13 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     inner.push("targets:");
     for (const target of meta.targets) inner.push(`  - ${target}`);
   }
-  // reason は agent stderr 由来で任意文字を含みうる。YAML として安全にするため二重引用符内へ
-  // 収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は単一行を返すため改行は無い）。
+  // reason は agent stderr や subprocess の生出力由来で任意文字を含みうる。まず ANSI エスケープ
+  // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、YAML として
+  // 安全にするため二重引用符内へ収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は
+  // 単一行を返すため改行は無い）。
   if (meta.block_reason) {
-    inner.push(`block_reason: "${meta.block_reason.replace(/"/g, "'")}"`);
+    const safeReason = stripTerminalControlSequences(meta.block_reason).replace(/"/g, "'");
+    inner.push(`block_reason: "${safeReason}"`);
   }
   return buildSpecdojoFrontmatter(inner);
 }

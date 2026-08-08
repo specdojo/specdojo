@@ -8,6 +8,7 @@ import {
   targetReferenceDirsForApproach,
 } from "./exec-plans.js";
 import { parseResultTaskIdentity } from "./exec-results.js";
+import { stripTerminalControlSequences } from "./exec-shared.js";
 import {
   ensureExecWorktree,
   execBranchExists,
@@ -612,8 +613,13 @@ export function checkpointAndEnsureWorktree(params: {
         // guard for every subsequent task and abort the whole loop. The index was verified clean
         // above, so a full reset only drops what this checkpoint (and its hooks) staged.
         gitResult(context.repoRoot, ["reset", "--quiet"]);
+        // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
+        // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
+        // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
         const detail = [committed.stdout, committed.stderr]
-          .map((part) => (typeof part === "string" ? part.trim() : ""))
+          .map((part) =>
+            typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
+          )
           .filter(Boolean)
           .join("\n");
         throw new Error(

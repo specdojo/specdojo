@@ -6,8 +6,12 @@ import {
   parseKeyValuePairs,
   requireNonEmpty,
   safeSlug,
+  stripTerminalControlSequences,
   tsForFilenameUtc,
 } from "../../src/exec-shared.js";
+
+// ESC(0x1B) を String.fromCharCode で構築し、ソースへ生の制御文字を混入させない。
+const ESC = String.fromCharCode(0x1b);
 
 describe("isUtcIsoSeconds", () => {
   it("正しい UTC ISO 秒形式を受け入れる", () => {
@@ -85,5 +89,45 @@ describe("formatDays", () => {
   });
   it("末尾の 0 を付けない", () => {
     expect(formatDays(1.5)).toBe("1.5");
+  });
+});
+
+describe("stripTerminalControlSequences", () => {
+  it("SGR カラーの ANSI エスケープシーケンスを除去する", () => {
+    const colored = `${ESC}[31m${ESC}[1mERROR${ESC}[0m: build failed`;
+
+    expect(stripTerminalControlSequences(colored)).toBe("ERROR: build failed");
+  });
+
+  it("lefthook 風のボックス UI（色付き）を可読テキストへ整える", () => {
+    const boxed = `${ESC}[90m│${ESC}[0m ${ESC}[31mmarkdownlint${ESC}[0m ${ESC}[90m│${ESC}[0m`;
+
+    expect(stripTerminalControlSequences(boxed)).toBe("│ markdownlint │");
+  });
+
+  it("OSC 終端の BEL など制御文字を残さない", () => {
+    const bel = String.fromCharCode(0x07);
+    const withOsc = `${ESC}]0;title${bel}done`;
+
+    const actual = stripTerminalControlSequences(withOsc);
+
+    // ESC と BEL が除去され、制御文字が 1 つも残らないこと（表・YAML を壊さない）。
+    expect([...actual].every((ch) => (ch.codePointAt(0) ?? 0) >= 0x20)).toBe(true);
+    expect(actual).toContain("done");
+  });
+
+  it("その他の C0/C1 制御文字を除去する", () => {
+    const nul = String.fromCharCode(0x00);
+    const bs = String.fromCharCode(0x08);
+
+    expect(stripTerminalControlSequences(`a${nul}b${bs}c`)).toBe("abc");
+  });
+
+  it("タブ・改行・復帰は保持する（1 行化は呼び出し側に委ねる）", () => {
+    expect(stripTerminalControlSequences("a\tb\nc\r\nd")).toBe("a\tb\nc\r\nd");
+  });
+
+  it("制御文字を含まない文字列は変更しない", () => {
+    expect(stripTerminalControlSequences("plain text")).toBe("plain text");
   });
 });
