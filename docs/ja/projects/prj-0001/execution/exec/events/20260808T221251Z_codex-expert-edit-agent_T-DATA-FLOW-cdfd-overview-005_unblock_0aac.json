@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-08T22:12:51Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-cdfd-overview-005",
+  "by": "codex-expert-edit-agent",
+  "msg": "catalog validate error resolved; commit succeeded"
+}
