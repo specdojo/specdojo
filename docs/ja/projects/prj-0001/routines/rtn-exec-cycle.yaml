@@ -1,0 +1,18 @@
+# 利用制限で延期された task の再開・状態再計算・Ready task の auto loop を
+# 1 つの定時実行単位として順次処理する routine のサンプル。
+# 実行順は resume(due) → validate/refresh → run --auto --loop で固定され、
+# routine ファイルの列挙順や複数 routine の cron 時刻差に依存しない。
+# 一連の処理は単一の project 実行ロック内で保持されるため、step 間に手動実行・
+# 別 routine・CI の exec run / exec resume が割り込まない。
+# enabled: false のため、運用開始時に interval と parallel を確認して有効化する。
+id: rtn-exec-cycle
+name: 延期 task 再開と Ready task 自動実行の順次処理
+description: due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
+enabled: false
+interval: 30m
+action:
+  kind: exec-cycle
+  strategy: critical-first
+  parallel: 2
+  loop: true
+  max_rounds: 5

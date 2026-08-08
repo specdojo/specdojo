@@ -63,6 +63,12 @@ properties:
           kind:
             const: exec-resume
       - type: object
+        additionalProperties: true
+        required: [kind]
+        properties:
+          kind:
+            const: exec-cycle
+      - type: object
         additionalProperties: false
         required: [kind, job]
         properties:
