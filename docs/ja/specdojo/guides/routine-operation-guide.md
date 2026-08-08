@@ -100,6 +100,41 @@ specdojo routine run --project <project-id> --due --dry-run
 
 `routine-state.json` の `last_result` は `success`、`failure`、`skipped` のいずれかです。`skipped` は failure 件数や終了コードへ加算されず、`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
 
+### 2.1. devcontainerでのcron設定
+
+このリポジトリのdevcontainerでは、`.devcontainer/specdojo-routine.cron`をcron設定のテンプレートとして管理します。コンテナ起動時に`.devcontainer/post-start.sh`がワークスペースの絶対パスを埋め込み、`/etc/cron.d/specdojo-routine`へ登録してcronを起動します。これはユーザーcrontabではないため、`crontab -l`には表示されません。
+
+現在のテンプレートは、devcontainerが稼働している間、`prj-0001`のdueなroutineを毎日1時と6時（Asia/Tokyo）に確認します。
+
+```cron
+TZ=Asia/Tokyo
+CRON_TZ=Asia/Tokyo
+
+0 1,6 * * * node cd __WORKSPACE_DIR__ && /usr/local/bin/node dist/specdojo.js routine run --project prj-0001 --due >> logs/routine-exec-cycle.log 2>&1
+```
+
+登録内容と稼働状態は次のコマンドで確認します。
+
+```bash
+# /etc/cron.dへ登録された内容
+sudo cat /etc/cron.d/specdojo-routine
+
+# cronプロセス
+pgrep -a cron
+
+# routine定義とdue状態
+specdojo routine validate --project prj-0001
+specdojo routine list --project prj-0001
+
+# 実行対象だけを確認する（実行・状態更新なし）
+specdojo routine run --project prj-0001 --due --dry-run
+
+# cron実行後のログ（初回実行前はファイルが存在しない）
+tail -n 100 logs/routine-exec-cycle.log
+```
+
+devcontainerが停止している時刻のcronは実行されません。また、外部cronの起動時刻とroutine定義の`trigger.cron`は独立した設定です。特定時刻に確実にdue判定を行う構成では、`.devcontainer/specdojo-routine.cron`と対象の`rtn-*.yaml`で時刻・タイムゾーンを一致させます。プロジェクトIDや実行時刻を変更する場合は両方を更新し、コンテナを再起動して`post-start.sh`による再登録後に上記コマンドで確認します。
+
 ## 3. 実行経路への委譲
 
 routine 自体は実行機構を持たないトリガー層です。何を実行するかは `action.kind` が指す schedule 実行または register 実行に委ねられ、状態追跡もそれぞれの経路の規則に従います。routine は発火結果として `last_run` と `last_result` を記録します。
