@@ -13,7 +13,7 @@ SpecDojo は、**仕様駆動開発のためのドキュメントフレームワ
 2. [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)：プロダクト文書とプロジェクト文書の分類、配置を説明します。
 3. [トラック設計ガイド](./specdojo/guides/track-design-guide.md)：プロジェクトの作業系列であるトラックの構成と実行順序を説明します。
 
-CLI による実行管理から確認したい場合は、[CLI概要ガイド](./specdojo/guides/cli-overview-guide.md)から始めてください。
+CLI による実行管理から確認したい場合は、[遂行の技活用ガイド](./specdojo/guides/waza-guide.md)から始めてください。
 
 やりたいことから文書を探す場合は、[全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)の`目的別の次の読み物`を参照してください。guide と reference を目的別にまとめた唯一の一覧です。
 
@@ -31,7 +31,7 @@ SpecDojo を利用するリポジトリは、次のいずれかの方法で準�
 3. 小さな Schedule に展開して、成果物を一つ作成・レビューします。
 4. 必要に応じて登録簿、自動実行、branch / worktree運用を追加します。
 
-具体的な CLI 操作は[CLI概要ガイド](./specdojo/guides/cli-overview-guide.md)を参照してください。
+具体的な CLI 操作は[遂行の技活用ガイド](./specdojo/guides/waza-guide.md)を参照してください。
 
 ## 提供する資料
 

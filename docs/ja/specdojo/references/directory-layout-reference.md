@@ -26,7 +26,7 @@ SpecDojo Unit（1つの `docs/` ルート）配下の、プロジェクトドキ
 **詳細の参照先**
 
 - 分類・ライフサイクル・命名規約・構成方針（なぜこの配置か）は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) を正本とします。本リファレンスは配置の一覧に徹します。
-- 各成果物の目的・推奨ファイル名は [成果物リファレンス](deliverables-reference.md)、CLI 視点のリポジトリ構成は [CLI概要ガイド](../guides/cli-overview-guide.md) を参照してください。
+- 各成果物の目的・推奨ファイル名は [成果物リファレンス](deliverables-reference.md)、CLI 視点のリポジトリ構成は [遂行の技活用ガイド](../guides/waza-guide.md) を参照してください。
 
 本リファレンスのツリーは代表例です。ディレクトリ名のプレフィックス番号や横断ディレクトリの扱いなどの方針は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の `ディレクトリ・ファイルの命名ルール` と `プロジェクトドキュメントの構成` を参照してください。実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。
 

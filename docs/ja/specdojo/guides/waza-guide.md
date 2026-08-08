@@ -1,15 +1,17 @@
 ---
 specdojo:
-  id: specdojo:cli-overview-guide
+  id: specdojo:waza-guide
   type: guide
   status: ready
 ---
 
-# CLI概要ガイド
+# 遂行の技活用ガイド
 
-CLI Overview Guide
+Waza Guide
 
 `specdojo` CLI の全体像、初期設定、代表的な実行フローを説明します。個別コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を参照します。
+
+SpecDojo は道場のメタファーとして、`specdojo` CLI のコマンド群を「Waza（遂行の技）」と呼びます。「Waza」は本ガイドで CLI 全体像を説明するための愛称・分類であり、CLI のコマンド名（`specdojo exec run` など）や frontmatter のフィールド名を変更するものではありません。実際のコマンド名・フィールド名は従来どおりです。
 
 **対象読者**
 

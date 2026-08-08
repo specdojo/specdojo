@@ -9,7 +9,7 @@ specdojo:
 
 Orchestrator Operation Guide
 
-会話から `specdojo` CLI を実行する対話型オーケストレーターエージェント `specdojo-orchestrator` の使い方を説明します。起動方法、対話の進め方、承認を伴う実行、安全上の制約、設定ファイルの構成を扱います。個別コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、CLI 全体像は [CLI概要ガイド](cli-overview-guide.md) を参照します。
+会話から `specdojo` CLI を実行する対話型オーケストレーターエージェント `specdojo-orchestrator` の使い方を説明します。起動方法、対話の進め方、承認を伴う実行、安全上の制約、設定ファイルの構成を扱います。個別コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、CLI 全体像は [遂行の技活用ガイド](waza-guide.md) を参照します。
 
 **対象読者**
 
@@ -36,7 +36,7 @@ Orchestrator Operation Guide
 | 実行対象         | 成果物または result の編集     | `specdojo` サブコマンドの実行       |
 | claim / complete | 実行しない                     | `specdojo` コマンドとして実行しうる |
 
-CLI を直接操作する場合の代表フローは [CLI概要ガイド](cli-overview-guide.md) の `代表フロー` を参照します。オーケストレーターは、この代表フローを会話で組み立てて実行する用途に向きます。
+CLI を直接操作する場合の代表フローは [遂行の技活用ガイド](waza-guide.md) の `代表フロー` を参照します。オーケストレーターは、この代表フローを会話で組み立てて実行する用途に向きます。
 
 ## 2. 起動方法
 
@@ -86,7 +86,7 @@ worktree 付きは、固定名の worktree を使い、無ければ起動時に�
 
 読み取り・状況確認のみのコマンド（`--help` / `list` / `status` / `where` / `validate` / `--dry-run`）は、説明の上でそのまま実行します。
 
-対象 project は、`--project <id>` → 環境変数 `SPECDOJO_PROJECT` → `specdojo.config.json` の `current_project` → `projects` 先頭、の順で解決します（[CLI概要ガイド](cli-overview-guide.md) の `プロジェクト解決順序` を参照）。会話で対象を特定できない場合は確認します。
+対象 project は、`--project <id>` → 環境変数 `SPECDOJO_PROJECT` → `specdojo.config.json` の `current_project` → `projects` 先頭、の順で解決します（[遂行の技活用ガイド](waza-guide.md) の `プロジェクト解決順序` を参照）。会話で対象を特定できない場合は確認します。
 
 ## 4. 安全と権限
 

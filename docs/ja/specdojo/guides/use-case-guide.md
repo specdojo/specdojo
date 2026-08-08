@@ -70,7 +70,7 @@ flowchart TD
 
 - ゴール: 設定から1タスク完了までを最短で通す。
 - 進め方: `config init` → 成果物カタログ作成・検証・生成 → トラック戦略作成 → `schedule build` → `exec refresh` → 1タスクを claim / complete。
-- 主に使う文書: [Quick Startガイド](quick-start-guide.md)、[CLI概要ガイド](cli-overview-guide.md)。
+- 主に使う文書: [Quick Startガイド](quick-start-guide.md)、[遂行の技活用ガイド](waza-guide.md)。
 
 ### 2.2. 課題整理から目的・スコープを固める
 
@@ -102,7 +102,7 @@ flowchart TD
 
 - ゴール: CLI を直接叩く代わりに、会話で計画・実行・状況確認を進める。
 - 進め方: `npm run orch:sonnet` でオーケストレーターを起動し、やりたいことを自然文で伝える。状態を変える操作は提示・承認のうえ実行される。
-- 主に使う文書: [オーケストレーター運用ガイド](orchestrator-operation-guide.md)、[CLI概要ガイド](cli-overview-guide.md) の `代表フロー`。
+- 主に使う文書: [オーケストレーター運用ガイド](orchestrator-operation-guide.md)、[遂行の技活用ガイド](waza-guide.md) の `代表フロー`。
 
 ## 4. 管理・品質・運用
 

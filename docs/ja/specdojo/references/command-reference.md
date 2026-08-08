@@ -23,7 +23,7 @@ CLI Command Reference
 
 **詳細の参照先**
 
-- CLI 全体の流れは [CLI概要ガイド](../guides/cli-overview-guide.md)、運用上の判断と手順は各コマンド節からリンクした専門ガイドを参照してください。
+- CLI 全体の流れは [遂行の技活用ガイド](../guides/waza-guide.md)、運用上の判断と手順は各コマンド節からリンクした専門ガイドを参照してください。
 
 ## 1. 共通オプション
 
@@ -34,7 +34,7 @@ CLI Command Reference
 | `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release |
 | `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                   |
 
-project の解決順序と設定は [CLI概要ガイド](../guides/cli-overview-guide.md) を参照します。
+project の解決順序と設定は [遂行の技活用ガイド](../guides/waza-guide.md) を参照します。
 
 ## 2. config / project
 
@@ -94,7 +94,7 @@ specdojo deliverable scaffold --project prj-0001 --dct project-definition
 specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
 ```
 
-`deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [CLI概要ガイド](../guides/cli-overview-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
+`deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [遂行の技活用ガイド](../guides/waza-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
 ## 4. schedule
 
@@ -356,7 +356,7 @@ schedule / register / job / routine の使い分けの基準は [exec運用ガ�
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |
-| CLI全体像と初期設定      | [CLI概要ガイド](../guides/cli-overview-guide.md)                            |
+| CLI全体像と初期設定      | [遂行の技活用ガイド](../guides/waza-guide.md)                               |
 | Schedule設計             | [Schedule設計ガイド](../guides/schedule-design-guide.md)                    |
 | exec運用（経路の選び方） | [exec運用ガイド](../guides/exec-operation-guide.md)                         |
 | Schedule実行運用         | [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)             |

@@ -444,7 +444,7 @@ IDには、次の情報を含めない。
 OK:
 
 ```text
-specdojo:cli-overview-guide
+specdojo:waza-guide
 specdojo:exec-operation-guide
 specdojo:guide-authoring-standard
 specdojo:specdojo-overview-guide
@@ -453,7 +453,7 @@ specdojo:specdojo-overview-guide
 NG:
 
 ```text
-specdojo-cli-overview-guide
+specdojo-waza-guide
 specdojo-exec-operation-guide
 ```
 
@@ -729,20 +729,20 @@ supersedes:
 
 ## 10. NGパターン
 
-| パターン                                            | 理由                                                                     |
-| --------------------------------------------------- | ------------------------------------------------------------------------ |
-| `Order_API_v1`                                      | 大文字・アンダースコア・記号                                             |
-| `create-order-api`                                  | 動詞主導                                                                 |
-| `sf-list`                                           | 一覧・入口は `index` を使う                                              |
-| `bdd-main`                                          | 役割が曖昧                                                               |
-| `ifx-inventory-api`                                 | kind は prefix 直後に置く                                                |
-| `product:sf-index`                                  | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要       |
-| `prj-overview` を複数プロジェクトの正本IDとして使う | プロジェクト間で衝突する                                                 |
-| `prj-0001-prj-overview`                             | project-id と local-id の境界が曖昧                                      |
-| `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                                   |
-| `prj-0001:prj-overview-draft`                       | 状態をIDに含めている                                                     |
-| `prj-0001:prj-overview.md`                          | ファイル名に namespace を含めている                                      |
-| `specdojo-cli-overview-guide`                       | authority と local-id の境界が曖昧。`specdojo:cli-overview-guide` とする |
+| パターン                                            | 理由                                                               |
+| --------------------------------------------------- | ------------------------------------------------------------------ |
+| `Order_API_v1`                                      | 大文字・アンダースコア・記号                                       |
+| `create-order-api`                                  | 動詞主導                                                           |
+| `sf-list`                                           | 一覧・入口は `index` を使う                                        |
+| `bdd-main`                                          | 役割が曖昧                                                         |
+| `ifx-inventory-api`                                 | kind は prefix 直後に置く                                          |
+| `product:sf-index`                                  | SpecDojo Unit がプロダクト文脈を表すため、product namespace は不要 |
+| `prj-overview` を複数プロジェクトの正本IDとして使う | プロジェクト間で衝突する                                           |
+| `prj-0001-prj-overview`                             | project-id と local-id の境界が曖昧                                |
+| `prj-0001:010-prj-overview`                         | 表示順をIDに含めている                                             |
+| `prj-0001:prj-overview-draft`                       | 状態をIDに含めている                                               |
+| `prj-0001:prj-overview.md`                          | ファイル名に namespace を含めている                                |
+| `specdojo-waza-guide`                               | authority と local-id の境界が曖昧。`specdojo:waza-guide` とする   |
 
 ## 11. 運用指針
 

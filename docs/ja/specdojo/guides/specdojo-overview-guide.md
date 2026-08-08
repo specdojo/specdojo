@@ -6,7 +6,7 @@ specdojo:
   based_on:
     - specdojo:docs-structure-guide
     - specdojo:track-design-guide
-    - specdojo:cli-overview-guide
+    - specdojo:waza-guide
     - specdojo:document-metadata-standard
 ---
 
@@ -28,7 +28,7 @@ SpecDojo に関わるすべての読者の入口となる文書であり、個�
 **次に読む文書**
 
 - 目的から guide と reference を探す場合は、本書の `目的別の次の読み物` を参照してください。SpecDojo の guide と reference を目的別にまとめた唯一の一覧です。
-- 文書の分類から把握する場合は [ドキュメント構成ガイド](docs-structure-guide.md)、CLI の操作から始める場合は [CLI概要ガイド](cli-overview-guide.md) を参照してください。
+- 文書の分類から把握する場合は [ドキュメント構成ガイド](docs-structure-guide.md)、CLI の操作から始める場合は [遂行の技活用ガイド](waza-guide.md) を参照してください。
 
 ## 1. SpecDojoとは
 
@@ -178,7 +178,7 @@ plan と result の管理は
 を参照してください。
 
 CLI の導入は
-[CLI概要ガイド](cli-overview-guide.md)、
+[遂行の技活用ガイド](waza-guide.md)、
 実行と状態管理は
 [exec運用ガイド](exec-operation-guide.md)
 を参照してください。
@@ -231,7 +231,7 @@ CLI の導入は
 | 目的                                                                    | 参照先                                                            |
 | ----------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | 最短手順で1タスクを動かしてみる                                         | [Quick Startガイド](quick-start-guide.md)                         |
-| CLIの役割、初期設定、代表フローを知る                                   | [CLI概要ガイド](cli-overview-guide.md)                            |
+| CLIの役割、初期設定、代表フローを知る                                   | [遂行の技活用ガイド](waza-guide.md)                               |
 | コマンドとオプションを調べる                                            | [CLIコマンドリファレンス](../references/command-reference.md)     |
 | 実行経路（schedule / register / routine）を使い分け、中断・再実行を扱う | [exec運用ガイド](exec-operation-guide.md)                         |
 | scheduleタスクを自動・手動で実行する                                    | [Schedule実行運用ガイド](schedule-operation-guide.md)             |

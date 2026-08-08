@@ -253,7 +253,7 @@ export const specdojoSidebarItems = [
       group(
         "遂行体系で回す",
         [
-          guide("CLI概要", "cli-overview-guide"),
+          guide("遂行の技活用", "waza-guide"),
           guide("オーケストレーター運用", "orchestrator-operation-guide"),
           guide("exec運用", "exec-operation-guide"),
           guide("登録簿運用", "register-operation-guide"),

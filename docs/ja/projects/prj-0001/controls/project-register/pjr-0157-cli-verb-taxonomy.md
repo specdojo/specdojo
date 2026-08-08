@@ -43,7 +43,7 @@ CLI の生成系動詞が多義・重複しており、とくに `exec build`（
 
 ## 5. 関連ドキュメント
 
-- [[specdojo:cli-overview-guide]]
+- [[specdojo:waza-guide]]
 - [[specdojo:schedule-design-guide]]
 - `docs/ja/specdojo/references/command-reference.md`
 - `src/build-command.ts`
