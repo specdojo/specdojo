@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-4ahz-routine-exec-cycle-sequential-execution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
