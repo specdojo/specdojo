@@ -7,28 +7,53 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  based_on:
+    - prj-0001:pjr-0136-exec-limit-resume
+    - prj-0001:pjr-0158-exec-run-project-lock
 ---
 
 # PJR-4AHZ routineでexec resumeからautoを順次実行可能にする
 
 ## 1. 概要
 
-_TODO_: 実施すべき作業と、その作業が必要になった理由を 1〜3 文で記載する。
+定時 routine から利用制限で延期された task の再開と Ready task の自動実行を行う際、現行の `exec-resume` と `exec-auto` は別々の routine として起動する必要があり、実行順はファイル名順または発火時刻の差に依存する。時刻をずらす方式では、先行処理が想定時間を超えると後続処理が busy skip され、次回の定時発火まで実行されない。
+
+利用制限 task の再開、Schedule 状態の再計算、`exec run --auto --loop` を1つの定時実行単位として順次処理できる仕組みを追加する。実行全体でproject単位の排他と順序を保証し、再延期、通常失敗、busy、途中終了時の結果と再実行の扱いを明確にする。
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 1つの routine 定義で、due な利用制限 task の再開、Schedule 状態の再計算、Ready task の `--auto --loop` 実行をこの順で起動できる。
+- 順次実行は routine ファイルの列挙順や、複数 routine の cron 時刻差に依存しない。
+- project 単位の実行ロックを一連の処理全体で保持し、step 間に手動実行、別 routine、CI の `exec run` / `exec resume` が割り込まない。
+- 開始時に project がbusyの場合だけ定義された `skip` / `wait` / `fail` 方針を適用し、自身の後続stepを再入ロックでbusy skipしない。
+- due な再開対象が0件でも状態再計算とauto実行へ進む。再開対象が再度rate limitで延期された場合も、依存しないReady taskの実行を継続できる。
+- 通常失敗、再延期、対象なし、busy、途中終了を区別し、step単位の結果とroutine全体の結果を追跡できる。失敗時に後続stepへ進むか中断するかの方針が明確である。
+- cronの `missed_run` と `overlap`、`routine-state.json` の `last_run` / `last_result` / `last_scheduled_for` が、複合実行の全体結果と整合する。
+- 既存の `exec-auto` と `exec-resume` action、`exec run` / `exec resume` の単独利用と互換性を保つ。
+- CLI、routine schema、dry-run表示、運用ガイド、サンプル定義に順次実行の設定と意味が反映される。
+- 正常系、再開対象0件、再延期、通常失敗、busy、ロック維持、実行順、結果集約を自動テストで確認できる。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                             | 担当 | 状態 | メモ                                         |
+| --- | -------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
+| 1   | 順次実行の action / CLI 形式と、stepごとの継続・中断・結果集約ポリシーを設計する | ARC  | open | 専用actionと汎用sequenceを比較する           |
+| 2   | project lockを保持したままresume、refresh、auto loopを順次実行する制御を実装する | ARC  | open | 既存ロックの再入・所有権の扱いを明確化する   |
+| 3   | 再延期、通常失敗、busy、途中終了時の状態遷移と結果記録を実装する                 | ARC  | open | routine全体とstep単位の記録を区別する        |
+| 4   | routine schema、CLI検証、dry-run表示、既存actionとの互換性を更新する             | ARC  | open | 既存定義は変更なしで動作させる               |
+| 5   | 順序、ロック、各終了パターン、cron状態記録の自動テストを追加する                 | ARC  | open | 長時間実行を模したbusy skip再現も含める      |
+| 6   | 設計書、コマンドリファレンス、運用ガイド、routineサンプルを更新する              | ARC  | open | ファイル名順・時刻差に依存する例は推奨しない |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-0136-exec-limit-resume|agent利用制限後の自動再開]]
+- [[prj-0001:pjr-0158-exec-run-project-lock|exec runのproject単位実行ロック]]
+- [[sysd-agent-settings|エージェント共通設定]]
+- [[specdojo:routine-operation-guide|routine運用ガイド]]
+- [[specdojo:exec-operation-guide|exec運用ガイド]]
+- [[specdojo:exec-config-guide|exec設定ガイド]]
+- [[specdojo:command-reference|SpecDojoコマンドリファレンス]]
