@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0158-exec-run-project-lock
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index

@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0161-register-approval-workflow-policy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -59,14 +59,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                        | 担当   | 状態 | メモ                                    |
-| --- | ----------------------------------------------------------- | ------ | ---- | --------------------------------------- |
-| 1   | 承認2区分と type 別承認フロー（状態遷移ベース）の定義       | _TODO_ | done | register-operation-guide / pjr-rulebook |
-| 2   | 承認方式（既定 commit ＋ 限定 PR）と PR 強制3ケースの明文化 | _TODO_ | done | branch-workflow-guide / 標準            |
-| 3   | type 別承認者ロールの割り当て（RACI の A）                  | _TODO_ | done | pm-raci との整合                        |
-| 4   | branch protection ＋ CODEOWNERS による承認者強制方針の策定  | _TODO_ | done | main/develop                            |
-| 5   | decision/question テンプレへの承認者・承認日欄の追加        | _TODO_ | done | pjr-decision/pjr-question テンプレート  |
-| 6   | 関連文書への反映と lint 検証                                | _TODO_ | done | lint:md                                 |
+| No  | 作業                                                        | 担当 | 状態 | メモ                                    |
+| --- | ----------------------------------------------------------- | ---- | ---- | --------------------------------------- |
+| 1   | 承認2区分と type 別承認フロー（状態遷移ベース）の定義       | ARC  | done | register-operation-guide / pjr-rulebook |
+| 2   | 承認方式（既定 commit ＋ 限定 PR）と PR 強制3ケースの明文化 | ARC  | done | branch-workflow-guide / 標準            |
+| 3   | type 別承認者ロールの割り当て（RACI の A）                  | ARC  | done | pm-raci との整合                        |
+| 4   | branch protection ＋ CODEOWNERS による承認者強制方針の策定  | ARC  | done | main/develop                            |
+| 5   | decision/question テンプレへの承認者・承認日欄の追加        | ARC  | done | pjr-decision/pjr-question テンプレート  |
+| 6   | 関連文書への反映と lint 検証                                | ARC  | done | lint:md                                 |
 
 ## 5. 対応結果
 
