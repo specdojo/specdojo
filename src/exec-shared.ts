@@ -105,6 +105,37 @@ export function expandTemplate(template: string, values: Record<string, string>)
   return result;
 }
 
+// 登録簿の自由記述（title / description 列など）を Markdown 本文へ埋め込む際の安全化。
+// `register_date_timezone` のようなアンダースコア入り識別子や `_TODO_` / `_ASSUMPTION_` が、
+// 強調記号（`_..._` / `*...*`）として誤解釈され、生成 plan が markdownlint の MD049
+// （強調スタイル不統一）で失敗する事故を防ぐ。
+//
+// バックスラッシュエスケープ（`\_`）は使わない。生成パイプライン末尾の prettier が「不要」と
+// 判定した抑制を正規化で除去してしまい、生のアンダースコアへ戻るためである。代わりに `_` や `*`
+// を含む ASCII トークンをバッククォートの code span で包み、prettier を通しても安定させる。
+// code span 内は強調解釈されないため MD049 を確実に回避できる。既存の code span は著者が意図した
+// 記法として温存する。日本語などマルチバイト文字は ASCII トークン境界となり巻き込まない。
+const MARKDOWN_CODE_SPAN = /`[^`]*`/g;
+// バックティック（0x60）を除く印字可能 ASCII の連続。空白とマルチバイト文字で区切られる。
+const ASCII_RUN = /[\x21-\x5f\x61-\x7e]+/g;
+
+export function escapeMarkdownInline(text: string): string {
+  let result = "";
+  let lastIndex = 0;
+  for (const match of text.matchAll(MARKDOWN_CODE_SPAN)) {
+    const start = match.index ?? 0;
+    result += codeSpanRiskyTokens(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  result += codeSpanRiskyTokens(text.slice(lastIndex));
+  return result;
+}
+
+function codeSpanRiskyTokens(segment: string): string {
+  return segment.replace(ASCII_RUN, (run) => (/[_*]/.test(run) ? `\`${run}\`` : run));
+}
+
 export function parseKeyValuePairs(
   pairs: string[] | undefined,
 ): Record<string, string> | undefined {

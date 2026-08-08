@@ -11,7 +11,7 @@ import {
 } from "./register.js";
 import { injectCommonConventions, MISSING, templatesDir } from "./exec-plans.js";
 import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
-import { expandTemplate } from "./exec-shared.js";
+import { escapeMarkdownInline, expandTemplate } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 
@@ -287,8 +287,14 @@ export async function generateRegisterPlan(opts: {
   const values: Record<string, string> = {
     _FRONTMATTER_: registerPlanFrontmatter(opts.projectId, opts.stem, item),
     _PJR_ID_: item.id,
-    _PJR_TITLE_: item.title,
-    _PJR_DESCRIPTION_: item.description && item.description !== "_TODO_" ? item.description : "-",
+    // title / description は登録簿の自由記述列に由来し、アンダースコア入り識別子や
+    // `_TODO_` などを含みうる。plan 本文（H1・説明文）へそのまま埋め込むと強調記号として
+    // 誤解釈され markdownlint(MD049) で生成が壊れるため、Markdown 特殊文字をエスケープする。
+    _PJR_TITLE_: escapeMarkdownInline(item.title),
+    _PJR_DESCRIPTION_:
+      item.description && item.description !== "_TODO_"
+        ? escapeMarkdownInline(item.description)
+        : "-",
     _PJR_TYPE_: item.type,
     _PJR_PRIORITY_: item.priority,
     _PJR_OWNER_: item.owner,
