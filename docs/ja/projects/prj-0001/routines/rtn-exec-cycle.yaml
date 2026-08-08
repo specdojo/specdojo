@@ -4,15 +4,21 @@
 # routine ファイルの列挙順や複数 routine の cron 時刻差に依存しない。
 # 一連の処理は単一の project 実行ロック内で保持されるため、step 間に手動実行・
 # 別 routine・CI の exec run / exec resume が割り込まない。
-# enabled: false のため、運用開始時に interval と parallel を確認して有効化する。
+# 毎日1時と6時（Asia/Tokyo）に起動し、取りこぼした実行枠が複数ある場合は
+# 最新の1回だけを実行する。実行中の重複起動は skip する。
 id: rtn-exec-cycle
 name: 延期 task 再開と Ready task 自動実行の順次処理
-description: due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
-enabled: false
-interval: 30m
+description: 毎日1時と6時（Asia/Tokyo）に、due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
+enabled: true
+trigger:
+  cron: "0 1,6 * * *"
+  timezone: Asia/Tokyo
 action:
   kind: exec-cycle
   strategy: critical-first
   parallel: 2
   loop: true
   max_rounds: 5
+policy:
+  missed_run: latest
+  overlap: skip
