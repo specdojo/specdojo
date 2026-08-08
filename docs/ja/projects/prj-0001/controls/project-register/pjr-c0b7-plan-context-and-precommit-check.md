@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-c0b7-plan-context-and-precommit-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
