@@ -24,15 +24,18 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                            | 担当 | 状態 | メモ                                                         |
-| --- | ----------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------ |
-| 1   | `register where` のエラー出力をstderrへ変更する                                                 | ARC  | open | `printCommandError` を流用せず専用のエラー処理にするか要検討 |
-| 2   | npm script（`register:sync-pull` / `register:sync-push`）の挙動を統合worktree未用意時に確認する | ARC  | open | 手動確認または自動テストで再現・確認                         |
-| 3   | テストを追加し、コマンドリファレンスに変更点を反映する                                          | ARC  | open | -                                                            |
+| No  | 作業                                                                                            | 担当 | 状態 | メモ                                                           |
+| --- | ----------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------- |
+| 1   | `register where` のエラー出力をstderrへ変更する                                                 | ARC  | done | `printCommandError` を流用せず専用の `printWhereError` を新設  |
+| 2   | npm script（`register:sync-pull` / `register:sync-push`）の挙動を統合worktree未用意時に確認する | ARC  | done | `printWhereError` の stdout 非汚染を単体テストで検証           |
+| 3   | テストを追加し、コマンドリファレンスに変更点を反映する                                          | ARC  | done | `register-reserve.test.ts` に追加、command-reference.md へ追記 |
 
 ## 4. 対応結果
 
--
+- `src/register.ts` に `printWhereError` を新設し、`register where` の `catch` を `printCommandError` から `printWhereError` に切り替えた。エラーメッセージを `process.stderr` へ書くことで、成功時のパス出力（stdout）と分離した。
+- 他の `register` サブコマンドは従来どおり `printCommandError`（stdout 出力）のままで、`register where` のみの変更に限定した。
+- `tests/src/register-reserve.test.ts` に `printWhereError` の単体テストを追加し、エラーが stderr へ書かれ stdout を汚さないこと、`process.exitCode` が 1 になることを検証した。
+- `docs/ja/specdojo/references/command-reference.md` に `register where` のエラー出力を stderr へ分離する旨を追記した。
 
 ## 5. 関連ドキュメント
 

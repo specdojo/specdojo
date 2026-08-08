@@ -137,7 +137,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す             | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
 | `register where`    | 統合ブランチ worktree のパスを表示する（読み取り専用） | `specdojo register where --integration --project prj-0001`                  |
 
-`register add` は ID を省略すると自動採番します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。旧来の数字4桁 ID とも混在可能です。予約経路では採番の直前に統合 worktree で `git fetch` + `git merge --ff-only` を自動実行して最新化します（fetch 失敗時は既定で警告継続、`--strict-sync` で中断）。`git push` は組み込まず、`register where --integration` が返すパスと素の git を使う npm script（`register:sync-pull` / `register:sync-push`）へ委譲します。
+`register add` は ID を省略すると自動採番します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。旧来の数字4桁 ID とも混在可能です。予約経路では採番の直前に統合 worktree で `git fetch` + `git merge --ff-only` を自動実行して最新化します（fetch 失敗時は既定で警告継続、`--strict-sync` で中断）。`git push` は組み込まず、`register where --integration` が返すパスと素の git を使う npm script（`register:sync-pull` / `register:sync-push`）へ委譲します。`register where` は成功時のパスのみを標準出力へ書き、エラーメッセージは標準エラー出力へ分離します。これにより統合ブランチ worktree 未用意時でも、コマンド置換で解決したパスに `git -C` の不正な引数としてエラー文字列が混入しません。
 
 主要オプション:
 
