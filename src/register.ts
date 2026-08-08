@@ -1235,17 +1235,13 @@ function currentBranchName(repoRoot: string): string {
 // Error Handling & Shared Helpers
 // ================================
 
-function printCommandError(error: unknown): void {
-  const message = error instanceof Error ? error.message : String(error);
-  process.stdout.write(message + "\n");
-  process.exitCode = 1;
-}
-
-// `register where` は成功時のパスを stdout へ出す読み取り専用コマンドで、
+// register 系コマンドのエラーは Unix/CLI の慣習に合わせて stderr へ書く。
+// 正常出力（更新内容・生成パス・警告など）は stdout のまま残し、エラーだけを分離する。
+// とくに `register where` は成功時のパスを stdout へ出す読み取り専用コマンドで、
 // その stdout を `git -C "$(... register where --integration)"` のコマンド置換で
 // 直接消費する。エラーメッセージを stdout に混ぜると git の -C 引数へ不正パスとして
-// 渡り、分かりにくい二重エラーになるため、where のエラーは stderr へ分離する。
-export function printWhereError(error: unknown): void {
+// 渡り、分かりにくい二重エラーになるため、エラーは必ず stderr へ出す。
+export function printCommandError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error);
   process.stderr.write(message + "\n");
   process.exitCode = 1;
@@ -1860,7 +1856,7 @@ export function registerRegisterCommands(program: Command): void {
       });
       process.stdout.write(`${target.path}\n`);
     } catch (error) {
-      printWhereError(error);
+      printCommandError(error);
     }
   });
 }

@@ -9,7 +9,7 @@ import {
   PJR_ID_RE,
   generatePjrId,
   planReservationRow,
-  printWhereError,
+  printCommandError,
   reservePjrIdOnIntegration,
   resolveIntegrationWorktree,
   syncIntegrationWorktree,
@@ -169,7 +169,7 @@ describe("resolveIntegrationWorktree — 統合ブランチ worktree の解決",
   });
 });
 
-describe("printWhereError — where のエラーを stderr へ分離", () => {
+describe("printCommandError — register のエラーを stderr へ分離", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     process.exitCode = undefined;
@@ -179,7 +179,7 @@ describe("printWhereError — where のエラーを stderr へ分離", () => {
     const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
     const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-    printWhereError(new Error("integration worktree not found"));
+    printCommandError(new Error("integration worktree not found"));
 
     // stdout はコマンド置換で git -C の引数に渡るため、エラー文字列を混ぜてはならない。
     expect(stdout).not.toHaveBeenCalled();
@@ -191,7 +191,7 @@ describe("printWhereError — where のエラーを stderr へ分離", () => {
     const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
     const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-    printWhereError("plain failure");
+    printCommandError("plain failure");
 
     expect(stdout).not.toHaveBeenCalled();
     expect(stderr).toHaveBeenCalledWith("plain failure\n");
