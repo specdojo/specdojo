@@ -247,7 +247,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
 - `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。
 - 既定は in-place の直列実行で、変更は作業ツリーに残ります（`--register-commit` を付けると commit します）。
-- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree は root と package-lock 付き独立 package の `node_modules` を元 worktree から共有リンクするため、依存更新は元 worktree 側で行ってから実行します。状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化されるため、`pjr-index.md` の編集競合が起きません。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
+- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化されるため、`pjr-index.md` の編集競合が起きません。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
 - `--worktree` と併用する場合に限り `--parallel <n>` で複数項目を並列実行できます。状態遷移は直列化され、成果物は項目ごとの worktree に隔離されます。`--parallel` を単独（`--worktree` なし）で指定するとエラーになります。失敗時は当該項目の worktree を保持します（調査・再実行のため）。
 - 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使います。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使います。
