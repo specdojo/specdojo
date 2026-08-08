@@ -6,9 +6,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 import {
   type ReservationFields,
+  PJR_ID_RE,
+  generatePjrId,
   planReservationRow,
   reservePjrIdOnIntegration,
   resolveIntegrationWorktree,
+  syncIntegrationWorktree,
 } from "../../src/register.js";
 
 function git(cwd: string, ...args: string[]): string {
@@ -65,17 +68,18 @@ function createIntegrationRepo(rows: string[] = [EXISTING_ROW]): string {
 }
 
 describe("planReservationRow — 予約行と割り当て ID の算出", () => {
-  it("ID を省略すると最大値 +1 で採番し、ticket セルは `-` になる", () => {
+  it("ID を省略すると 32 文字セットの 4 桁ランダム ID を採番し、ticket セルは `-` になる", () => {
     const result = planReservationRow({
       content: buildIndex([EXISTING_ROW]),
       fields: DEFAULT_FIELDS,
     });
 
-    expect(result.assignedId).toBe("PJR-0002");
-    expect(result.newRow).toContain("| PJR-0002 | open | reserve title |");
+    expect(result.assignedId).toMatch(PJR_ID_RE);
+    expect(result.assignedId).not.toBe("PJR-0001");
+    expect(result.newRow).toContain(`| ${result.assignedId} | open | reserve title |`);
     expect(result.newRow.trimEnd().endsWith("| - |")).toBe(true);
     expect(result.newContent).toContain("| PJR-0001 | open | first |");
-    expect(result.newContent).toContain("| PJR-0002 | open | reserve title |");
+    expect(result.newContent).toContain(`| ${result.assignedId} | open | reserve title |`);
   });
 
   it("明示 ID が既存と競合する場合はエラーで終了する", () => {
@@ -95,9 +99,43 @@ describe("planReservationRow — 予約行と割り当て ID の算出", () => {
       ticketTopic: "inventory-seed",
     });
 
-    expect(result.assignedId).toBe("PJR-0002");
-    expect(result.ticketFilename).toBe("pjr-0002-inventory-seed.md");
-    expect(result.newRow).toContain("| [pjr-0002-inventory-seed](./pjr-0002-inventory-seed.md) |");
+    expect(result.assignedId).toMatch(PJR_ID_RE);
+    const lower = result.assignedId.toLowerCase();
+    expect(result.ticketFilename).toBe(`${lower}-inventory-seed.md`);
+    expect(result.newRow).toContain(`| [${lower}-inventory-seed](./${lower}-inventory-seed.md) |`);
+  });
+});
+
+describe("generatePjrId — ランダム ID 採番と再抽選", () => {
+  it("曖昧文字を除いた 32 文字セットの 4 桁 ID を生成する", () => {
+    const id = generatePjrId([]);
+
+    expect(id).toMatch(PJR_ID_RE);
+    expect(id.slice("PJR-".length)).not.toMatch(/[ILOU]/);
+  });
+
+  it("候補が既存 ID と一致した場合は再抽選する", () => {
+    const candidates = ["PJR-0001", "PJR-AB12"];
+    let index = 0;
+
+    const id = generatePjrId(["PJR-0001"], () => candidates[index++]);
+
+    expect(id).toBe("PJR-AB12");
+  });
+
+  it("候補が不適切語ブロックリストに一致した場合は再抽選する", () => {
+    const candidates = ["PJR-DAMN", "PJR-AB12"];
+    let index = 0;
+
+    const id = generatePjrId([], () => candidates[index++]);
+
+    expect(id).toBe("PJR-AB12");
+  });
+
+  it("上限回数内で採番できない場合は文脈付きで失敗する", () => {
+    expect(() => generatePjrId(["PJR-0001"], () => "PJR-0001", 3)).toThrow(
+      /Failed to generate an unused PJR-ID/,
+    );
   });
 });
 
@@ -147,24 +185,23 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
       dryRun: false,
     });
 
-    expect(result.assignedId).toBe("PJR-0002");
+    const id = result.assignedId;
+    expect(id).toMatch(PJR_ID_RE);
     const content = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
-    expect(content).toContain("| PJR-0002 | open | reserve title |");
+    expect(content).toContain(`| ${id} | open | reserve title |`);
     // 個票は作らない: ticket セルは `-`
-    expect(content).toContain(
-      "| PJR-0002 | open | reserve title | _TODO_ | todo | medium | _TODO_",
-    );
+    expect(content).toContain(`| ${id} | open | reserve title | _TODO_ | todo | medium | _TODO_`);
 
     // commit は pjr-index.md のみを対象とする
     const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
       .split("\n")
       .filter(Boolean);
     expect(committedFiles).toEqual([PJR_INDEX_REL]);
-    expect(git(repo, "log", "-1", "--pretty=format:%s")).toContain("PJR-0002");
+    expect(git(repo, "log", "-1", "--pretty=format:%s")).toContain(id);
 
     // 割り当て ID が stdout の最終行として返る
     const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
-    expect(printed.trim().split("\n").pop()).toBe("PJR-0002");
+    expect(printed.trim().split("\n").pop()).toBe(id);
   });
 
   it("ticket を渡すと登録行と個票を同じ commit に含め、行に個票リンクを埋める", () => {
@@ -182,13 +219,15 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
       },
     });
 
-    expect(result.assignedId).toBe("PJR-0002");
+    const id = result.assignedId;
+    expect(id).toMatch(PJR_ID_RE);
+    const lower = id.toLowerCase();
 
-    const ticketRel = PJR_INDEX_REL.replace("pjr-index.md", "pjr-0002-inventory-seed.md");
-    expect(readFileSync(join(repo, ticketRel), "utf8")).toBe("# PJR-0002 ticket body\n");
+    const ticketRel = PJR_INDEX_REL.replace("pjr-index.md", `${lower}-inventory-seed.md`);
+    expect(readFileSync(join(repo, ticketRel), "utf8")).toBe(`# ${id} ticket body\n`);
 
     const index = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
-    expect(index).toContain("| [pjr-0002-inventory-seed](./pjr-0002-inventory-seed.md) |");
+    expect(index).toContain(`| [${lower}-inventory-seed](./${lower}-inventory-seed.md) |`);
 
     // 登録行と個票が同じ commit に含まれる
     const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
@@ -269,9 +308,99 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
       dryRun: true,
     });
 
-    expect(result.assignedId).toBe("PJR-0002");
+    expect(result.assignedId).toMatch(PJR_ID_RE);
     expect(readFileSync(join(repo, PJR_INDEX_REL), "utf8")).toBe(before);
     const previewed = stdout.mock.calls.some((call) => String(call[0]).includes("Would reserve"));
     expect(previewed).toBe(true);
+  });
+});
+
+describe("syncIntegrationWorktree — 予約前の fetch + ff-only 同期", () => {
+  const repos: string[] = [];
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    for (const repo of repos.splice(0)) rmSync(repo, { recursive: true, force: true });
+  });
+
+  // origin（bare）と、それを clone した作業リポジトリ 2 つ（a / b）を用意する。
+  function createOriginAndClones(): { origin: string; a: string; b: string } {
+    const origin = mkdtempSync(join(tmpdir(), "specdojo-sync-origin-"));
+    git(origin, "init", "--bare", "--initial-branch=main");
+
+    const a = mkdtempSync(join(tmpdir(), "specdojo-sync-a-"));
+    execFileSync("git", ["clone", origin, a], { encoding: "utf8", env: gitEnvironment() });
+    git(a, "config", "user.name", "SpecDojo Test");
+    git(a, "config", "user.email", "specdojo@example.invalid");
+    git(a, "config", "commit.gpgsign", "false");
+    writeFileSync(join(a, "f.txt"), "1\n", "utf8");
+    git(a, "add", "f.txt");
+    git(a, "commit", "-m", "seed");
+    git(a, "push", "-u", "origin", "main");
+
+    const b = mkdtempSync(join(tmpdir(), "specdojo-sync-b-"));
+    execFileSync("git", ["clone", origin, b], { encoding: "utf8", env: gitEnvironment() });
+    git(b, "config", "user.name", "SpecDojo Test");
+    git(b, "config", "user.email", "specdojo@example.invalid");
+    git(b, "config", "commit.gpgsign", "false");
+
+    repos.push(origin, a, b);
+    return { origin, a, b };
+  }
+
+  // origin を到達不能なパスに設定し、git fetch を確実に失敗させる。
+  function repoWithUnreachableRemote(): string {
+    const repo = createIntegrationRepo();
+    repos.push(repo);
+    git(repo, "remote", "add", "origin", join(tmpdir(), "specdojo-missing-remote-xyzabc.git"));
+    return repo;
+  }
+
+  it("fetch が失敗しても strictSync=false なら警告して継続する", () => {
+    const repo = repoWithUnreachableRemote();
+    const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+    expect(() => syncIntegrationWorktree({ worktreePath: repo, strictSync: false })).not.toThrow();
+
+    const warned = stdout.mock.calls.some((call) => String(call[0]).includes("git fetch failed"));
+    expect(warned).toBe(true);
+  });
+
+  it("fetch が失敗し strictSync=true なら書き込み前に中断する", () => {
+    const repo = repoWithUnreachableRemote();
+
+    expect(() => syncIntegrationWorktree({ worktreePath: repo, strictSync: true })).toThrow(
+      /Failed to fetch the integration branch/,
+    );
+  });
+
+  it("upstream に遅れている場合は ff-only で最新化する", () => {
+    const { a, b } = createOriginAndClones();
+    // b が origin を進め、a を遅らせる
+    writeFileSync(join(b, "f.txt"), "2\n", "utf8");
+    git(b, "add", "f.txt");
+    git(b, "commit", "-m", "advance");
+    git(b, "push", "origin", "main");
+    vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+    syncIntegrationWorktree({ worktreePath: a, strictSync: false });
+
+    expect(readFileSync(join(a, "f.txt"), "utf8")).toBe("2\n");
+  });
+
+  it("origin から分岐している場合は ff 不可でエラーにする", () => {
+    const { a, b } = createOriginAndClones();
+    // a はローカル commit を持ち、origin は別の commit で進む → 分岐
+    writeFileSync(join(a, "g.txt"), "local\n", "utf8");
+    git(a, "add", "g.txt");
+    git(a, "commit", "-m", "local-only");
+    writeFileSync(join(b, "f.txt"), "2\n", "utf8");
+    git(b, "add", "f.txt");
+    git(b, "commit", "-m", "remote-only");
+    git(b, "push", "origin", "main");
+
+    expect(() => syncIntegrationWorktree({ worktreePath: a, strictSync: false })).toThrow(
+      /diverged from .*fast-forward is not possible/s,
+    );
   });
 });

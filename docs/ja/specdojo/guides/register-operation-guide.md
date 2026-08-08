@@ -287,7 +287,7 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 
 - `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。
 - 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残りません。
-- 付け替え後は派生ビューも再生成されます。移動先 ID は登録簿の最大値 +1 以降の未使用 ID を選ぶと、以後の自動採番と衝突しにくくなります。
+- 付け替え後は派生ビューも再生成されます。移動先 ID は任意の未使用 ID を選べます。自動採番は既存 ID を避けて再抽選するため、以後の採番と衝突する心配はありません。
 
 ### 4.2. PO 留保事項の PR 承認運用
 
@@ -308,10 +308,14 @@ PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護
 
 ### 4.3. PJR-ID の採番と統合ブランチ集約
 
-単調連番の PJR-ID は分散採番できない（最大値 +1 を各 branch が独立に計算すると同じ ID が衝突する）ため、`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にします。実行時のブランチによって書き込み先が自動で決まります。
+PJR-ID は乱数部分を持つ ID で、`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にします。実行時のブランチによって書き込み先が自動で決まります。
 
-- 統合ブランチ（`project/<project-id>/develop`）上で実行した場合は、従来どおり現在の作業ツリーの `pjr-index.md` に in-place で追記します（そこが唯一の採番元なので競合しません）。
+- ID の乱数部分は、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セット（単一ケース）による 4 桁のランダム値です（例: `PJR-4B7K`）。旧来の数字4桁 ID（例: `PJR-0163`）も同じ集合に含まれるため、混在しても検証・再採番は従来どおり機能します。生成した候補が既存 ID か簡易な不適切語ブロックリストに一致した場合は、採用せず再抽選します。
+- 統合ブランチ（`project/<project-id>/develop`）上で実行した場合は、現在の作業ツリーの `pjr-index.md` に in-place で追記します。
 - feature / exec など統合ブランチ以外で実行した場合は、作業ブランチの `pjr-index.md` を触らず、統合ブランチの worktree へ登録行（と `--ticket` 指定時は個票）を追記・commit して ID を予約します。作業ブランチ側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
+- 予約経路では、採番の直前に統合ブランチの worktree で `git fetch` と `git merge --ff-only` を自動実行し、ローカルの `pjr-index.md` を最新化してから採番します。これにより、複数マシンが並行して起票するときの採番ズレを軽減します。
+  - `git fetch` が失敗した場合（オフライン等）は、既定では警告を表示してローカルの内容のまま処理を継続します。厳密な同期を要求するときは `--strict-sync` を付けると、fetch 失敗時に書き込みを行わず中断します。
+  - 統合ブランチが origin から分岐していて fast-forward できない場合は、書き込みを行わずにエラー終了します。統合 worktree を手動で rebase / merge して解消してから再実行してください。
 
 ```bash
 # feature ブランチ上でも、統合ブランチへ自動で予約される（割り当てられた PJR-ID が標準出力の最終行に返る）
@@ -323,7 +327,19 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 
 - 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `project/<project-id>/develop` を使います。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使います。
 - `--reserve` を付けると、統合ブランチ上にいても予約経路を強制します（登録行を commit して即座に ID を確定させたいとき）。`--ticket` と併用でき、個票も同じ commit に含めます。
+- `--strict-sync` を付けると、予約直前の `git fetch` が失敗した場合に警告継続せず書き込みを中断します。既定（未指定）は警告のみ表示して継続します。
 - `--local` を付けると自動ルーティングを行わず、現在のブランチの `pjr-index.md` に in-place で追記します（統合 worktree が無い・オフラインなどの退避用）。ただし別ブランチで採番すると ID 衝突の恐れがあるため、通常は使いません。
 - 予約 commit は `pjr-index.md`（と個票）の pathspec に限定し、統合ブランチ側の他の未 commit 変更は巻き込みません。commit メッセージは `--commit-message <text>` で上書きできます。
 - 次のいずれかに当てはまる場合は、書き込みを行わずにエラー終了します: 統合ブランチの worktree が存在しない場合、統合ブランチの `pjr-index.md` に未 commit の変更がある場合、指定した ID が既存 ID と競合する場合です。統合 worktree が無い場合は、統合ブランチ上で実行するか、`git worktree add` で worktree を用意するか、`--local` を使ってください。
 - 予約した項目は統合ブランチ側にのみ存在します。作業ブランチからは、統合ブランチを merge / 同期した時点で見えるようになります。状態遷移（`start` / `review` / `close` など）は統合ブランチ上で運用します。
+
+`git push` は `specdojo` に組み込みません。統合 worktree の同期は、worktree パスを返す読み取り専用コマンドと、それを使う素の git 用 npm script に委譲します。`push` は人間が明示的に実行します。
+
+```bash
+# 統合ブランチ worktree のパスを表示する（読み取り専用）
+specdojo register where --integration --project <project-id>
+
+# npm script 経由（内部で register where --integration を使う。SPECDOJO_PROJECT でプロジェクトを指定）
+npm run register:sync-pull   # git pull --ff-only
+npm run register:sync-push   # git push（人間が明示実行）
+```

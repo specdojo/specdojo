@@ -121,20 +121,23 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 `register` はプロジェクト登録簿（`pjr-index.md`）と派生ビューを扱います。
 
-| コマンド            | 用途                                         | 例                                                                          |
-| ------------------- | -------------------------------------------- | --------------------------------------------------------------------------- |
-| `register scaffold` | 登録簿を初期生成する                         | `specdojo register scaffold --project prj-0001`                             |
-| `register add`      | issue / todo / question などの項目を追加する | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `register build`    | 派生ビューを生成する                         | `specdojo register build --project prj-0001`                                |
-| `register update`   | 登録項目を更新する                           | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
-| `register start`    | 項目を対応中へ変更する                       | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`     | 項目を待ち状態へ変更する                     | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`   | 項目をレビュー状態へ変更する                 | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`    | 項目を完了にし、個票を `ready` へ昇格する    | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`   | 項目を却下にし、個票を `deprecated` にする   | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す   | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| コマンド            | 用途                                                   | 例                                                                          |
+| ------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `register scaffold` | 登録簿を初期生成する                                   | `specdojo register scaffold --project prj-0001`                             |
+| `register add`      | issue / todo / question などの項目を追加する           | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `register build`    | 派生ビューを生成する                                   | `specdojo register build --project prj-0001`                                |
+| `register update`   | 登録項目を更新する                                     | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
+| `register start`    | 項目を対応中へ変更する                                 | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`     | 項目を待ち状態へ変更する                               | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`   | 項目をレビュー状態へ変更する                           | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`    | 項目を完了にし、個票を `ready` へ昇格する              | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`   | 項目を却下にし、個票を `deprecated` にする             | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`    | 項目を延期にする                                       | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`   | 終了済み項目を再オープンする                           | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す             | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register where`    | 統合ブランチ worktree のパスを表示する（読み取り専用） | `specdojo register where --integration --project prj-0001`                  |
+
+`register add` は ID を省略すると自動採番します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。旧来の数字4桁 ID とも混在可能です。予約経路では採番の直前に統合 worktree で `git fetch` + `git merge --ff-only` を自動実行して最新化します（fetch 失敗時は既定で警告継続、`--strict-sync` で中断）。`git push` は組み込まず、`register where --integration` が返すパスと素の git を使う npm script（`register:sync-pull` / `register:sync-push`）へ委譲します。
 
 主要オプション:
 
@@ -142,9 +145,11 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | ------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------ |
 | `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                                        | `renumber`         |
 | `--reserve`                     | 統合ブランチ上でも予約経路を強制する（登録行を commit。`--ticket` 併用可）                        | `add`              |
+| `--strict-sync`                 | 予約直前の `git fetch` が失敗したら警告継続せず中断する（既定は警告継続）                         | `add`              |
 | `--local`                       | 自動ルーティングせず現在ブランチの `pjr-index.md` に追記する（ID 衝突の恐れ）                     | `add`              |
-| `--integration-branch <name>`   | 統合ブランチ（既定は `run.register_integration_branch`、無ければ `project/<project-id>/develop`） | `add`              |
-| `--integration-worktree <path>` | 統合ブランチ worktree をパスで直接指定する                                                        | `add`              |
+| `--integration`                 | 統合ブランチ worktree のパスを表示する                                                            | `where`            |
+| `--integration-branch <name>`   | 統合ブランチ（既定は `run.register_integration_branch`、無ければ `project/<project-id>/develop`） | `add` / `where`    |
+| `--integration-worktree <path>` | 統合ブランチ worktree をパスで直接指定する                                                        | `add` / `where`    |
 | `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                                              | `add`              |
 | `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                                | `renumber` / `add` |
 

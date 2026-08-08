@@ -1,4 +1,5 @@
 import { type Command } from "commander";
+import { randomInt } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
@@ -59,6 +60,20 @@ export const VALID_TYPES = [
 ] as const;
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
+
+// PJR-ID の乱数部分に使う 32 文字セット。曖昧文字（`I` / `L` / `O` / `U`）を除いた
+// 英大文字（単一ケース）と数字で構成し、目視・手入力時の誤読を避ける。
+export const PJR_ID_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+// PJR-ID の乱数部分の桁数。
+const PJR_ID_LENGTH = 4;
+
+// PJR-ID の書式。旧来の数字4桁（例: `PJR-0163`）も 0-9 が集合に含まれるため引き続き一致する。
+export const PJR_ID_RE = /^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$/;
+
+// 生成した ID が偶然含みうる不適切語の簡易ブロックリスト（4 文字, 大文字, 曖昧文字除外後）。
+// 一致した候補は採用せず再抽選する。曖昧文字（I/L/O/U）を含む語は生成されえないため載せない。
+const PJR_ID_BLOCKLIST = new Set<string>(["CRAP", "DAMN", "TWAT", "WANK", "SHAG", "FART"]);
 
 // 個票 Frontmatter の文書成熟度（specdojo:pjr-rulebook「個票 status の遷移基準」）。
 // pjr-index の処理状態（VALID_STATUSES）とは別の状態軸として扱う。
@@ -175,7 +190,7 @@ export function parsePjrIndex(content: string): PjrItem[] {
 
     const cells = parseTableCells(line);
     if (cells.length < 11) continue;
-    if (!/^PJR-\d{4}$/.test(cells[0])) continue;
+    if (!PJR_ID_RE.test(cells[0])) continue;
 
     items.push({
       id: cells[0],
@@ -195,12 +210,32 @@ export function parsePjrIndex(content: string): PjrItem[] {
   return items;
 }
 
-function getNextPjrId(items: PjrItem[]): string {
-  const maxNum = items.reduce((max, item) => {
-    const m = item.id.match(/^PJR-(\d{4})$/);
-    return m ? Math.max(max, parseInt(m[1], 10)) : max;
-  }, 0);
-  return `PJR-${String(maxNum + 1).padStart(4, "0")}`;
+// 32 文字セットから一様乱択した 4 文字を持つ PJR-ID 候補を 1 件生成する。
+function defaultPjrCandidate(): string {
+  let suffix = "";
+  for (let i = 0; i < PJR_ID_LENGTH; i++) {
+    suffix += PJR_ID_ALPHABET[randomInt(0, PJR_ID_ALPHABET.length)];
+  }
+  return `PJR-${suffix}`;
+}
+
+// 既存 ID・不適切語ブロックリストと衝突しない PJR-ID をランダムに採番する。
+// 生成候補が既存 ID かブロックリストに一致した場合は再抽選する。nextCandidate は
+// テストで抽選列を差し込むための注入点で、既定は 32 文字セットからの一様乱択。
+export function generatePjrId(
+  existingIds: Iterable<string>,
+  nextCandidate: () => string = defaultPjrCandidate,
+  maxAttempts = 256,
+): string {
+  const existing = new Set(existingIds);
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const id = nextCandidate();
+    if (!PJR_ID_RE.test(id)) continue;
+    if (existing.has(id)) continue;
+    if (PJR_ID_BLOCKLIST.has(id.slice("PJR-".length))) continue;
+    return id;
+  }
+  throw new Error(`Failed to generate an unused PJR-ID after ${maxAttempts} attempts`);
 }
 
 function formatTableRow(item: PjrItem): string {
@@ -229,7 +264,7 @@ function insertRowAfterLast(content: string, newRow: string): string {
 
     if (line.startsWith("|")) {
       const cells = parseTableCells(line);
-      if (cells.length >= 1 && /^PJR-\d{4}$/.test(cells[0])) {
+      if (cells.length >= 1 && PJR_ID_RE.test(cells[0])) {
         lastRowIndex = i;
       }
     }
@@ -269,7 +304,7 @@ function validateFields(opts: {
       `Invalid priority: "${opts.priority}". Must be one of: ${VALID_PRIORITIES.join(", ")}`,
     );
   }
-  if (opts.id && !/^PJR-\d{4}$/.test(opts.id)) {
+  if (opts.id && !PJR_ID_RE.test(opts.id)) {
     errors.push(`Invalid ID: "${opts.id}". Must match PJR-XXXX (e.g., PJR-0001)`);
   }
   if (!/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
@@ -589,7 +624,7 @@ function loadItemForUpdate(
   if (!existsSync(paths.pjrIndexPath)) {
     throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`);
   }
-  if (!/^PJR-\d{4}$/.test(id)) {
+  if (!PJR_ID_RE.test(id)) {
     throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
   }
   const content = readFileSync(paths.pjrIndexPath, "utf8");
@@ -895,7 +930,7 @@ export function renumberPjrItem(opts: {
     throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`);
   }
   for (const id of [fromId, toId]) {
-    if (!/^PJR-\d{4}$/.test(id)) {
+    if (!PJR_ID_RE.test(id)) {
       throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
     }
   }
@@ -958,7 +993,7 @@ export function planReservationRow(opts: {
   ticketTopic?: string;
 }): { assignedId: string; newContent: string; newRow: string; ticketFilename?: string } {
   const items = parsePjrIndex(opts.content);
-  const assignedId = opts.explicitId?.trim() || getNextPjrId(items);
+  const assignedId = opts.explicitId?.trim() || generatePjrId(items.map((it) => it.id));
 
   validateFields({
     status: opts.fields.status,
@@ -1036,6 +1071,52 @@ export function resolveIntegrationWorktree(
   return { path: resolve(match.path), branch: opts.branch };
 }
 
+// 予約の直前に統合 worktree を origin と同期する。分散した複数マシンが別々に採番して
+// 起票するときの採番ズレを軽減するのが目的。
+// - fetch が失敗した場合（オフライン等）は既定で警告して継続し、strictSync のときは中断する。
+// - 追跡ブランチに追随できる場合のみ `merge --ff-only` で最新化する。
+// - origin から分岐（ff-only 不可）している場合は、書き込み前にエラーで止めて手動解決を促す。
+export function syncIntegrationWorktree(opts: { worktreePath: string; strictSync: boolean }): void {
+  const fetched = gitResult(opts.worktreePath, ["fetch"]);
+  if (fetched.status !== 0) {
+    const stderr = typeof fetched.stderr === "string" ? fetched.stderr.trim() : "";
+    const detail = stderr ? `: ${stderr}` : "";
+    if (opts.strictSync) {
+      throw new Error(`Failed to fetch the integration branch before reserving${detail}`);
+    }
+    process.stdout.write(
+      `Warning: git fetch failed; reserving against the local pjr-index.md ` +
+        `(pass --strict-sync to abort instead)${detail}\n`,
+    );
+    return;
+  }
+
+  // 追跡ブランチ（@{upstream}）が未設定なら同期対象が無いので ff-only はスキップする。
+  const upstream = gitResult(opts.worktreePath, [
+    "rev-parse",
+    "--abbrev-ref",
+    "--symbolic-full-name",
+    "@{upstream}",
+  ]);
+  const upstreamRef = typeof upstream.stdout === "string" ? upstream.stdout.trim() : "";
+  if (upstream.status !== 0 || !upstreamRef) {
+    process.stdout.write(
+      `Warning: no upstream is configured for the integration branch; skipping fast-forward sync.\n`,
+    );
+    return;
+  }
+
+  const merged = gitResult(opts.worktreePath, ["merge", "--ff-only", upstreamRef]);
+  if (merged.status !== 0) {
+    const stderr = typeof merged.stderr === "string" ? merged.stderr.trim() : "";
+    const detail = stderr ? `: ${stderr}` : "";
+    throw new Error(
+      `Integration branch has diverged from ${upstreamRef}; fast-forward is not possible${detail}. ` +
+        `Reconcile the integration worktree manually (rebase or merge) before reserving.`,
+    );
+  }
+}
+
 // 統合ブランチの worktree へ登録行（と任意で個票）を追記・commit して PJR-ID を予約する。
 // - pjr-index.md 不在・未 commit の変更あり・ID 競合・個票の既存衝突は、書き込み前にエラーで終了する。
 // - commit は登録行（と個票）の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
@@ -1047,6 +1128,8 @@ export function reservePjrIdOnIntegration(opts: {
   fields: ReservationFields;
   commitMessage?: string;
   dryRun: boolean;
+  // fetch 失敗時に警告継続（false, 既定）せず中断する（true）。
+  strictSync?: boolean;
   ticket?: { topic: string; makeContent: (assignedId: string) => string };
 }): { assignedId: string } {
   const pjrIndexPath = resolve(opts.worktreePath, opts.pjrIndexRel);
@@ -1066,6 +1149,15 @@ export function reservePjrIdOnIntegration(opts: {
       `Integration worktree has uncommitted changes to ${opts.pjrIndexRel}; ` +
         `commit or discard them before reserving.`,
     );
+  }
+
+  // 採番の直前に統合 worktree を最新化して、他マシンとの採番ズレを軽減する。
+  // dry-run は書き込みも commit も行わないため、working tree を変える ff-only merge は避ける。
+  if (!opts.dryRun) {
+    syncIntegrationWorktree({
+      worktreePath: opts.worktreePath,
+      strictSync: opts.strictSync ?? false,
+    });
   }
 
   const content = readFileSync(pjrIndexPath, "utf8");
@@ -1238,6 +1330,11 @@ export function registerRegisterCommands(program: Command): void {
     "Explicit integration worktree path (overrides integration branch lookup)",
   );
   addCmd.option("--commit-message <text>", "Commit message for the reservation commit");
+  addCmd.option(
+    "--strict-sync",
+    "Abort reserving if fetching the integration branch fails (default: warn and continue)",
+    false,
+  );
   addCmd.option("--dry-run", "Print new row and ticket content without writing", false);
   addCmd.action((opts) => {
     try {
@@ -1309,6 +1406,7 @@ export function registerRegisterCommands(program: Command): void {
           },
           commitMessage: opts.commitMessage,
           dryRun: opts.dryRun,
+          strictSync: opts.strictSync,
           ...(opts.ticket
             ? {
                 ticket: {
@@ -1339,7 +1437,7 @@ export function registerRegisterCommands(program: Command): void {
       const originalContent = readFileSync(paths.pjrIndexPath, "utf8");
       const existingItems = parsePjrIndex(originalContent);
 
-      const displayId = opts.id?.trim() || getNextPjrId(existingItems);
+      const displayId = opts.id?.trim() || generatePjrId(existingItems.map((it) => it.id));
 
       validateFields({
         status: opts.status,
@@ -1698,6 +1796,40 @@ export function registerRegisterCommands(program: Command): void {
     try {
       const paths = resolveRegisterPaths(opts);
       renumberPjrItem({ paths, fromId: opts.id, toId: opts.to, dryRun: opts.dryRun });
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  // --- where ---
+  // 読み取り専用のパス解決。pull / push は specdojo に組み込まず、このコマンドが返す
+  // 統合 worktree パスを素の git コマンド（npm script 側）へ委譲する。
+  const whereCmd = reg
+    .command("where")
+    .description("Print register-related paths (read-only; use with plain git for pull/push)");
+  addProjectOption(whereCmd);
+  whereCmd.option("--integration", "Print the integration-branch worktree path", false);
+  whereCmd.option(
+    "--integration-branch <name>",
+    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or project/<project-id>/develop)",
+  );
+  whereCmd.option(
+    "--integration-worktree <path>",
+    "Explicit integration worktree path (overrides integration branch lookup)",
+  );
+  whereCmd.action((opts) => {
+    try {
+      const paths = resolveRegisterPaths(opts);
+      if (!opts.integration) {
+        throw new Error("Specify --integration to print the integration worktree path.");
+      }
+      const repoRoot = specdojoRootDir();
+      const branch = resolveIntegrationBranchName(paths.projectId, opts.integrationBranch);
+      const target = resolveIntegrationWorktree(repoRoot, {
+        branch,
+        worktreePath: opts.integrationWorktree?.trim() || undefined,
+      });
+      process.stdout.write(`${target.path}\n`);
     } catch (error) {
       printCommandError(error);
     }

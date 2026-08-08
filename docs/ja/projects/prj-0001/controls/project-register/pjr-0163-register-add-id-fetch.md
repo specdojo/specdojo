@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-0163-register-add-id-fetch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -29,18 +29,22 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                              | 担当 | 状態 | メモ                                                                             |
-| --- | ----------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------- |
-| 1   | ID生成ロジックを数字4桁連番から英数字4桁ランダムへ変更する        | ARC  | open | 曖昧文字・母音一部除外、不適切語ブロックリストと再抽選を含む                     |
-| 2   | ID正規表現を参照する全箇所を新しい文字種に対応させる              | ARC  | open | `src/register.ts`、`src/exec-register.ts`、`tools/docs/src/remark-md-content.ts` |
-| 3   | 統合ブランチ予約経路に fetch + ff-only merge の自動実行を追加する | ARC  | open | 失敗時は警告継続、分岐時はエラー中断、`--strict-sync` 相当オプションを検討       |
-| 4   | 統合ブランチworktreeのパスを返す読み取り専用コマンドを追加する    | ARC  | open | 例: `register where --integration`。push/pullはspecdojoに含めない                |
-| 5   | pull/push用のnpm script（素のgitコマンド）を整備する              | ARC  | open | 例: `register:sync-pull` / `register:sync-push`（命名は実装時に確定）            |
-| 6   | 自動テストを追加し、運用ガイド・コマンドリファレンスへ反映する    | ARC  | open | ID生成・fetch同期・分岐時エラーの代表ケースを検証                                |
+| No  | 作業                                                              | 担当 | 状態 | メモ                                                                                               |
+| --- | ----------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------------- |
+| 1   | ID生成ロジックを数字4桁連番から英数字4桁ランダムへ変更する        | ARC  | done | 曖昧文字（I/L/O/U）除外の32文字セット、不適切語ブロックリストと再抽選を実装                        |
+| 2   | ID正規表現を参照する全箇所を新しい文字種に対応させる              | ARC  | done | `src/register.ts`（`PJR_ID_RE`）、`src/exec-register.ts`、`remark-md-content.ts`、pjr-index schema |
+| 3   | 統合ブランチ予約経路に fetch + ff-only merge の自動実行を追加する | ARC  | done | 失敗時は警告継続、分岐時はエラー中断、`--strict-sync` で厳密同期                                   |
+| 4   | 統合ブランチworktreeのパスを返す読み取り専用コマンドを追加する    | ARC  | done | `register where --integration` を追加。push/pullはspecdojoに含めない                               |
+| 5   | pull/push用のnpm script（素のgitコマンド）を整備する              | ARC  | done | `register:sync-pull` / `register:sync-push` を追加                                                 |
+| 6   | 自動テストを追加し、運用ガイド・コマンドリファレンスへ反映する    | ARC  | done | ID生成・fetch同期・分岐時エラーの代表ケースを検証。ガイド4.3節とリファレンスへ反映                 |
 
 ## 4. 対応結果
 
--
+- ID採番を数字4桁連番から、曖昧文字（`I` / `L` / `O` / `U`）を除いた32文字セット（英大文字+数字）による4桁ランダムIDへ変更した（`generatePjrId`）。生成候補が既存IDまたは不適切語ブロックリストに一致した場合は再抽選する。
+- ID正規表現の正本を `src/register.ts` の `PJR_ID_RE` に集約し、`src/exec-register.ts` は同定数を import、`tools/docs/src/remark-md-content.ts` と `pjr-index-content.schema.yaml` は同一パターンへ拡張した。旧来の数字4桁IDも新パターンに一致するため後方互換。
+- 統合ブランチ予約経路（`reservePjrIdOnIntegration`）に、採番直前の `git fetch` + `git merge --ff-only` 自動同期（`syncIntegrationWorktree`）を追加した。fetch失敗は既定で警告継続、`--strict-sync` で中断、origin分岐（ff不可）は書き込み前にエラー終了する。
+- 読み取り専用の `register where --integration` コマンドと、それを使う npm script（`register:sync-pull` / `register:sync-push`）を追加した。`git push` は specdojo に組み込まず人間が明示実行する。
+- 衝突検知・復旧は新規フォーマットを作らず、既存の `register renumber` と `validate:schema:pjr-index` をそのまま利用できる（ID正規表現の拡張のみ）。
 
 ## 5. 関連ドキュメント
 

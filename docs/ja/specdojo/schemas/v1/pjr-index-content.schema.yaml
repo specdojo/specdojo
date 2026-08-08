@@ -38,7 +38,9 @@ sections:
         ticket_column: 個票
       column_rules:
         ID:
-          pattern: "^PJR-\\d{4}$"
+          # 曖昧文字（I / L / O / U）を除いた英大文字+数字の 32 文字セットで 4 桁。
+          # 旧来の数字4桁 ID（例: PJR-0163）も 0-9 が含まれるため引き続き一致する。
+          pattern: "^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$"
         ステータス:
           enum:
             - open

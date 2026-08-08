@@ -297,6 +297,11 @@ function findLinkUrl(node: unknown): string | undefined {
   return undefined;
 }
 
+// PJR-ID の書式。曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットで
+// 4 桁。旧来の数字4桁 ID（例: `PJR-0163`）も 0-9 が含まれるため引き続き一致する。
+// 正本は src/register.ts の PJR_ID_RE。tools/docs は別パッケージのため同一パターンを複製する。
+const PJR_ID_PATTERN = /^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$/;
+
 // 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応を検証する。
 // 個票なし（`-`）は対象外。ファイル名が `<id 小文字>-` で始まらない場合を検出する。
 function validateTicketFilename(
@@ -306,7 +311,7 @@ function validateTicketFilename(
   row: TableRow,
   file: VFile,
 ): void {
-  if (id === undefined || !/^PJR-\d{4}$/.test(id)) return;
+  if (id === undefined || !PJR_ID_PATTERN.test(id)) return;
 
   const filename = extractTicketFilename(ticketCellNode);
   if (filename === undefined) return;

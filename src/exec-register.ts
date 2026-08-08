@@ -3,6 +3,7 @@ import { join, relative } from "node:path";
 import {
   findItemById,
   parsePjrIndex,
+  PJR_ID_RE,
   resolveRegisterPaths,
   TERMINAL_STATUSES_SET,
   type PjrItem,
@@ -95,7 +96,7 @@ export function registerRunExitCode(summaries: readonly RegisterItemSummary[]): 
 
 export function normalizePjrId(value: string): string {
   const id = value.trim().toUpperCase();
-  if (!/^PJR-\d{4}$/.test(id)) {
+  if (!PJR_ID_RE.test(id)) {
     throw new Error(`Invalid register item ID: "${value}". Must match PJR-XXXX (e.g., PJR-0012)`);
   }
   return id;
