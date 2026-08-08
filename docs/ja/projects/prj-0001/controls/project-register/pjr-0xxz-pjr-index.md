@@ -29,17 +29,22 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                         | 担当 | 状態 | メモ                                                     |
-| --- | ---------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------- |
-| 1   | `pjr-index.md`・schema・rulebookへ「登録日」列を追加する                     | ARC  | open | 既存列（期限・完了日）と同じ`YYYY-MM-DD`形式に揃える     |
-| 2   | `SpecDojoRunConfig`へ`register_date_timezone`（既定UTC）を追加する           | ARC  | open | `register_integration_branch`と同じ配置・記述スタイル    |
-| 3   | タイムゾーン明示指定の共通日付ヘルパーを実装し、登録日・完了日双方へ適用する | ARC  | open | `Intl.DateTimeFormat`使用、OS TZ非依存を自動テストで担保 |
-| 4   | 既存項目の移行方針を決めて適用する                                           | ARC  | open | 過去分は`_TODO_`一括、または可能な範囲でgit履歴から補完  |
-| 5   | 自動テストを追加し、運用ガイド・コマンドリファレンスへ反映する               | ARC  | open | 手動編集時の`_TODO_`運用も明記                           |
+| No  | 作業                                                                         | 担当 | 状態 | メモ                                                    |
+| --- | ---------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------- |
+| 1   | `pjr-index.md`・schema・rulebookへ「登録日」列を追加する                     | ARC  | done | 担当と期限の間へ`YYYY-MM-DD`形式の列を追加              |
+| 2   | `SpecDojoRunConfig`へ`register_date_timezone`（既定UTC）を追加する           | ARC  | done | `register_integration_branch`と同じ配置・記述スタイル   |
+| 3   | タイムゾーン明示指定の共通日付ヘルパーを実装し、登録日・完了日双方へ適用する | ARC  | done | `src/register-date.ts`に集約、`Intl.DateTimeFormat`使用 |
+| 4   | 既存項目の移行方針を決めて適用する                                           | ARC  | done | 過去分は一律`_TODO_`（正確な起票日は復元しない）        |
+| 5   | 自動テストを追加し、運用ガイド・コマンドリファレンスへ反映する               | ARC  | done | 手動編集時の`_TODO_`運用も明記                          |
 
 ## 4. 対応結果
 
--
+- `pjr-index.md`の登録項目一覧に「登録日」列（担当と期限の間、`YYYY-MM-DD` または未確定は`_TODO_`）を追加し、`pjr-index-content.schema.yaml`（optional_columns・column_rules）と`pjr-rulebook`（標準列・記述ガイド）、`pjr-index-template.md`に反映した。
+- `SpecDojoRunConfig`へ`register_date_timezone`（IANAタイムゾーン名、既定`UTC`）を追加し、`.specdojo/specdojo.config.json`の`projects.<project-id>.run`配下で設定できるようにした。
+- タイムゾーンを`Intl.DateTimeFormat`のtimeZoneオプションで明示解決する共通ヘルパー`src/register-date.ts`（`formatDateInTimeZone` / `todayInTimeZone` / `resolveRegisterDateTimeZone`）を新設し、OS/コンテナの`TZ`環境変数に依存させない。
+- `register add`は登録日を自動記入（`--registered`で上書き可）し、`register close` / `register reject`の完了日デフォルトも同じヘルパーへ統一して計算基準を一致させた（従来の`new Date().toISOString().slice(0,10)`固定UTCを置換）。
+- 既存全行（列導入前の過去分）は一律`_TODO_`で移行し、手動編集時も不明なら`_TODO_`とする運用を`register-operation-guide`・`command-reference`へ明記した。
+- タイムゾーン設定あり/なし双方の日付生成、登録日列の自動記入・列位置、登録日と完了日の計算基準一致を自動テスト（`register-date.test.ts` ほか）で確認した。
 
 ## 5. 関連ドキュメント
 

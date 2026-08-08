@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
+import { resolveRegisterDateTimeZone, todayInTimeZone } from "./register-date.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { gitOutput, gitResult, listRegisteredWorktrees } from "./exec-worktree.js";
@@ -18,6 +19,8 @@ export type RegisterPaths = {
   pjrIndexPath: string;
   generatedPath: string;
   controlsGeneratedPath: string;
+  // 登録日・完了日を導出する IANA タイムゾーン（run.register_date_timezone、既定 UTC）。
+  registerDateTimeZone: string;
 };
 
 export type PjrItem = {
@@ -28,6 +31,7 @@ export type PjrItem = {
   type: string;
   priority: string;
   owner: string;
+  registered: string;
   due: string;
   completed: string;
   conclusion: string;
@@ -125,6 +129,7 @@ export function resolveRegisterPaths(opts: { project?: string }): RegisterPaths 
     pjrIndexPath: join(absRegisterPath, "pjr-index.md"),
     generatedPath: join(absRegisterPath, "generated"),
     controlsGeneratedPath: join(dirname(absRegisterPath), "generated"),
+    registerDateTimeZone: resolveRegisterDateTimeZone(config, projectId),
   };
 }
 
@@ -189,7 +194,7 @@ export function parsePjrIndex(content: string): PjrItem[] {
     if (!line.startsWith("|") || isTableSeparator(line)) continue;
 
     const cells = parseTableCells(line);
-    if (cells.length < 11) continue;
+    if (cells.length < 12) continue;
     if (!PJR_ID_RE.test(cells[0])) continue;
 
     items.push({
@@ -200,10 +205,11 @@ export function parsePjrIndex(content: string): PjrItem[] {
       type: cells[4],
       priority: cells[5],
       owner: cells[6],
-      due: cells[7],
-      completed: cells[8],
-      conclusion: cells[9],
-      ticket: cells[10],
+      registered: cells[7],
+      due: cells[8],
+      completed: cells[9],
+      conclusion: cells[10],
+      ticket: cells[11],
     });
   }
 
@@ -239,7 +245,7 @@ export function generatePjrId(
 }
 
 function formatTableRow(item: PjrItem): string {
-  return `| ${item.id} | ${item.status} | ${item.title} | ${item.description} | ${item.type} | ${item.priority} | ${item.owner} | ${item.due} | ${item.completed} | ${item.conclusion} | ${item.ticket} |`;
+  return `| ${item.id} | ${item.status} | ${item.title} | ${item.description} | ${item.type} | ${item.priority} | ${item.owner} | ${item.registered} | ${item.due} | ${item.completed} | ${item.conclusion} | ${item.ticket} |`;
 }
 
 function insertRowAfterLast(content: string, newRow: string): string {
@@ -287,6 +293,7 @@ function validateFields(opts: {
   status: string;
   type: string;
   priority: string;
+  registered: string;
   due: string;
   completed: string;
   id?: string;
@@ -306,6 +313,9 @@ function validateFields(opts: {
   }
   if (opts.id && !PJR_ID_RE.test(opts.id)) {
     errors.push(`Invalid ID: "${opts.id}". Must match PJR-XXXX (e.g., PJR-0001)`);
+  }
+  if (!/^(\d{4}-\d{2}-\d{2}|_TODO_)$/.test(opts.registered)) {
+    errors.push(`Invalid registered: "${opts.registered}". Must be YYYY-MM-DD or _TODO_`);
   }
   if (!/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
     errors.push(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`);
@@ -582,10 +592,6 @@ function writeDerivedViews(paths: RegisterPaths, scope: BuildScope): ViewFile[] 
 // ================================
 
 export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
-
-function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
-}
 
 export function findItemById(items: PjrItem[], id: string): PjrItem | undefined {
   return items.find((it) => it.id === id);
@@ -976,6 +982,7 @@ export type ReservationFields = {
   priority: string;
   status: string;
   owner: string;
+  registered: string;
   due: string;
   completed: string;
   conclusion: string;
@@ -999,6 +1006,7 @@ export function planReservationRow(opts: {
     status: opts.fields.status,
     type: opts.fields.type,
     priority: opts.fields.priority,
+    registered: opts.fields.registered,
     due: opts.fields.due,
     completed: opts.fields.completed,
     id: assignedId,
@@ -1023,6 +1031,7 @@ export function planReservationRow(opts: {
     type: opts.fields.type,
     priority: opts.fields.priority,
     owner: opts.fields.owner,
+    registered: opts.fields.registered,
     due: opts.fields.due,
     completed: opts.fields.completed,
     conclusion: opts.fields.conclusion,
@@ -1301,6 +1310,10 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
   addCmd.option("--status <status>", `Status: ${VALID_STATUSES.join(" | ")}`, "open");
   addCmd.option("--owner <owner>", "Owner or role", "_TODO_");
+  addCmd.option(
+    "--registered <date>",
+    "Registration date (YYYY-MM-DD or _TODO_; defaults to today in run.register_date_timezone)",
+  );
   addCmd.option("--due <date>", "Due date (YYYY-MM-DD, -, or _TODO_)", "_TODO_");
   addCmd.option("--completed <date>", "Completion date (YYYY-MM-DD or -)", "-");
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
@@ -1351,6 +1364,9 @@ export function registerRegisterCommands(program: Command): void {
         );
       }
 
+      // 登録日は明示指定が無ければ run.register_date_timezone（既定 UTC）での「今日」を採用する。
+      const registered = opts.registered?.trim() || todayInTimeZone(paths.registerDateTimeZone);
+
       // ID 採番の抜本対策（案1）: 単調連番 PJR-ID は分散採番できないため、統合ブランチの
       // pjr-index.md を単一直列化点にする。統合ブランチ上なら従来どおり in-place で追記する
       // （そこが唯一の採番元）。別ブランチ（feature/exec）から実行された場合は、作業ブランチの
@@ -1400,6 +1416,7 @@ export function registerRegisterCommands(program: Command): void {
             priority: opts.priority,
             status: opts.status,
             owner: opts.owner,
+            registered,
             due: opts.due,
             completed: opts.completed,
             conclusion: opts.conclusion,
@@ -1443,6 +1460,7 @@ export function registerRegisterCommands(program: Command): void {
         status: opts.status,
         type: opts.type,
         priority: opts.priority,
+        registered,
         due: opts.due,
         completed: opts.completed,
         id: displayId,
@@ -1465,6 +1483,7 @@ export function registerRegisterCommands(program: Command): void {
         type: opts.type,
         priority: opts.priority,
         owner: opts.owner,
+        registered,
         due: opts.due,
         completed: opts.completed,
         conclusion: opts.conclusion,
@@ -1544,7 +1563,7 @@ export function registerRegisterCommands(program: Command): void {
         throw new Error(`--status must be "done" or "decided" for the close command`);
       }
 
-      const completed = opts.completed ?? todayIso();
+      const completed = opts.completed ?? todayInTimeZone(paths.registerDateTimeZone);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
         throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`);
       }
@@ -1574,7 +1593,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
       const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
 
-      const completed = opts.completed ?? todayIso();
+      const completed = opts.completed ?? todayInTimeZone(paths.registerDateTimeZone);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
         throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`);
       }

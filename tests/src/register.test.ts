@@ -30,13 +30,13 @@ const EN_PJR_INDEX = [
   "## 1. Registered Items",
   "",
   "<!-- prettier-ignore -->",
-  "| ID | Status | Title | Description | Type | Priority | Owner | Due | Completed | Conclusion | Ticket |",
-  "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-  "| PJR-0001 | open | first | desc | todo | high | ARC | 2026-01-01 | - | - | - |",
+  "| ID | Status | Title | Description | Type | Priority | Owner | Registered | Due | Completed | Conclusion | Ticket |",
+  "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+  "| PJR-0001 | open | first | desc | todo | high | ARC | 2026-01-01 | 2026-01-01 | - | - | - |",
   "",
   "## 2. Derived Views",
   "",
-  "| ID | should-not | be | parsed | x | x | x | x | x | x | x |",
+  "| ID | should-not | be | parsed | x | x | x | x | x | x | x | x |",
 ].join("\n");
 
 function extractFrontmatter(content: string, filePath: string): string {
@@ -96,6 +96,9 @@ describe("parsePjrIndex — 章番号アンカーの言語非依存", () => {
     expect(items[0].id).toBe("PJR-0001");
     expect(items[0].status).toBe("open");
     expect(items[0].owner).toBe("ARC");
+    // 登録日列（Owner と Due の間）を正しい位置から読み取る。
+    expect(items[0].registered).toBe("2026-01-01");
+    expect(items[0].due).toBe("2026-01-01");
   });
 
   it("章 2 以降のテーブル行は解釈しない", () => {
@@ -110,10 +113,10 @@ describe("extractTableHeading — 見出し行を pjr-index から採用", () =>
     const heading = extractTableHeading(EN_PJR_INDEX);
 
     expect(heading.header).toBe(
-      "| ID | Status | Title | Description | Type | Priority | Owner | Due | Completed | Conclusion | Ticket |",
+      "| ID | Status | Title | Description | Type | Priority | Owner | Registered | Due | Completed | Conclusion | Ticket |",
     );
     expect(heading.separator).toBe(
-      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     );
   });
 
@@ -216,6 +219,7 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
     type: "todo",
     priority: "medium",
     owner: "ARC",
+    registered: "_TODO_",
     due: "-",
     completed: "2026-07-26",
     conclusion: "-",
@@ -247,6 +251,7 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
         pjrIndexPath: join(dir, "pjr-index.md"),
         generatedPath: join(dir, "generated"),
         controlsGeneratedPath: join(dir, "generated"),
+        registerDateTimeZone: "UTC",
       };
       const ticketPath = join(dir, "pjr-0001-topic.md");
       fn(paths, ticketPath);
@@ -405,8 +410,8 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
       "## 1. Registered Items",
       "",
       "<!-- prettier-ignore -->",
-      "| ID | Status | Title | Description | Type | Priority | Owner | Due | Completed | Conclusion | Ticket |",
-      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+      "| ID | Status | Title | Description | Type | Priority | Owner | Registered | Due | Completed | Conclusion | Ticket |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
       ...rows,
       "",
     ].join("\n");
@@ -430,7 +435,7 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
   const withTempRepo = (
     fn: (paths: RegisterPaths, root: string) => void,
     indexRows: string[] = [
-      "| PJR-0137 | open | dup | - | todo | medium | ARC | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
+      "| PJR-0137 | open | dup | - | todo | medium | ARC | _TODO_ | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
     ],
   ): void => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-renumber-"));
@@ -451,6 +456,7 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
         pjrIndexPath: join(registerDir, "pjr-index.md"),
         generatedPath: join(registerDir, "generated"),
         controlsGeneratedPath: join(root, "docs/ja/projects/prj-0001/controls/generated"),
+        registerDateTimeZone: "UTC",
       };
       process.chdir(root);
       fn(paths, root);
@@ -501,8 +507,8 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
         );
       },
       [
-        "| PJR-0137 | open | dup | - | todo | medium | ARC | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
-        "| PJR-0140 | open | other | desc | todo | medium | ARC | - | - | - | - |",
+        "| PJR-0137 | open | dup | - | todo | medium | ARC | _TODO_ | - | - | - | [pjr-0137-register-id-uniqueness](./pjr-0137-register-id-uniqueness.md) |",
+        "| PJR-0140 | open | other | desc | todo | medium | ARC | _TODO_ | - | - | - | - |",
       ],
     );
   });

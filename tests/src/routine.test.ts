@@ -37,6 +37,7 @@ function makeItem(overrides: Partial<PjrItem> = {}): PjrItem {
     type: "todo",
     priority: "high",
     owner: "ARC",
+    registered: "_TODO_",
     due: "-",
     completed: "-",
     conclusion: "-",

@@ -21,6 +21,7 @@ sections:
       optional_columns:
         - 説明
         - 担当
+        - 登録日
         - 期限
         - 完了日
         - 結論
@@ -68,6 +69,9 @@ sections:
         完了日:
           # date (YYYY-MM-DD) or "-" (not yet done)
           pattern: "^(\\d{4}-\\d{2}-\\d{2}|-)$"
+        登録日:
+          # date (YYYY-MM-DD) or "_TODO_" (unknown for legacy rows / manual edits)
+          pattern: "^(\\d{4}-\\d{2}-\\d{2}|_TODO_)$"
         期限:
           # date (YYYY-MM-DD), "-", or "_TODO_" (undecided)
           pattern: "^(\\d{4}-\\d{2}-\\d{2}|-|_TODO_)$"

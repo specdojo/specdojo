@@ -144,6 +144,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | オプション                      | 用途                                                                                              | 対象               |
 | ------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------ |
 | `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                                        | `renumber`         |
+| `--registered <date>`           | 登録日（`YYYY-MM-DD` または `_TODO_`）。省略時は `run.register_date_timezone`（既定 UTC）での当日 | `add`              |
 | `--reserve`                     | 統合ブランチ上でも予約経路を強制する（登録行を commit。`--ticket` 併用可）                        | `add`              |
 | `--strict-sync`                 | 予約直前の `git fetch` が失敗したら警告継続せず中断する（既定は警告継続）                         | `add`              |
 | `--local`                       | 自動ルーティングせず現在ブランチの `pjr-index.md` に追記する（ID 衝突の恐れ）                     | `add`              |
@@ -152,6 +153,8 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `--integration-worktree <path>` | 統合ブランチ worktree をパスで直接指定する                                                        | `add` / `where`    |
 | `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                                              | `add`              |
 | `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                                | `renumber` / `add` |
+
+`register add` は登録行に「登録日」列（起票日、`YYYY-MM-DD`）を自動記入します。日付は OS / コンテナの `TZ` 環境変数に依存せず、config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）で明示的に解決します。`register close` / `register reject` の「完了日」も同じ基準で導出されます。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 

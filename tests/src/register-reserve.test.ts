@@ -27,15 +27,15 @@ function buildIndex(rows: string[]): string {
     "## 1. Registered Items",
     "",
     "<!-- prettier-ignore -->",
-    "| ID | Status | Title | Description | Type | Priority | Owner | Due | Completed | Conclusion | Ticket |",
-    "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    "| ID | Status | Title | Description | Type | Priority | Owner | Registered | Due | Completed | Conclusion | Ticket |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ...rows,
     "",
   ].join("\n");
 }
 
 const EXISTING_ROW =
-  "| PJR-0001 | open | first | desc | todo | high | ARC | 2026-01-01 | - | - | - |";
+  "| PJR-0001 | open | first | desc | todo | high | ARC | 2026-01-01 | 2026-01-01 | - | - | - |";
 
 const DEFAULT_FIELDS: ReservationFields = {
   type: "todo",
@@ -44,6 +44,7 @@ const DEFAULT_FIELDS: ReservationFields = {
   priority: "medium",
   status: "open",
   owner: "_TODO_",
+  registered: "2026-01-02",
   due: "_TODO_",
   completed: "-",
   conclusion: "-",
@@ -77,6 +78,8 @@ describe("planReservationRow — 予約行と割り当て ID の算出", () => {
     expect(result.assignedId).toMatch(PJR_ID_RE);
     expect(result.assignedId).not.toBe("PJR-0001");
     expect(result.newRow).toContain(`| ${result.assignedId} | open | reserve title |`);
+    // 登録日は担当（Owner）の直後の列に入る。
+    expect(result.newRow).toContain("| _TODO_ | 2026-01-02 | _TODO_ | - | - |");
     expect(result.newRow.trimEnd().endsWith("| - |")).toBe(true);
     expect(result.newContent).toContain("| PJR-0001 | open | first |");
     expect(result.newContent).toContain(`| ${result.assignedId} | open | reserve title |`);

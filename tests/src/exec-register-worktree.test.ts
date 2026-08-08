@@ -31,6 +31,7 @@ describe("registerStatePaths", () => {
       pjrIndexPath: join(absRegister, "pjr-index.md"),
       generatedPath: join(absRegister, "generated"),
       controlsGeneratedPath: join(repoRoot, "docs/ja/projects/prj-x/controls/generated"),
+      registerDateTimeZone: "UTC",
     };
   }
 

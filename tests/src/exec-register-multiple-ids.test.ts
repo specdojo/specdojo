@@ -69,6 +69,7 @@ function makeItem(id = "PJR-0001"): PjrItem {
     type: "issue",
     priority: "high",
     owner: "ARC",
+    registered: "_TODO_",
     due: "-",
     completed: "-",
     conclusion: "-",
