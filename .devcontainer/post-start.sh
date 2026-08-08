@@ -8,6 +8,8 @@ GIT_CONFIG_FILE="${GIT_CONFIG_GLOBAL:-/home/node/.config/git/config}"
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 TMUX_CONF_SOURCE="${WORKSPACE_DIR}/.devcontainer/tmux.conf"
 TMUX_CONF_TARGET="${HOME}/.tmux.conf"
+CRON_SOURCE="${WORKSPACE_DIR}/.devcontainer/specdojo-routine.cron"
+CRON_TARGET="/etc/cron.d/specdojo-routine"
 
 sudo mkdir -p \
   /home/node/.config \
@@ -55,6 +57,18 @@ ln -sfn "$CLAUDE_STATE_JSON" "$CLAUDE_JSON"
 
 if [ -f "$TMUX_CONF_SOURCE" ]; then
   ln -sfn "$TMUX_CONF_SOURCE" "$TMUX_CONF_TARGET"
+fi
+
+echo "Configuring SpecDojo routine cron..."
+if command -v cron >/dev/null 2>&1; then
+  sed "s|__WORKSPACE_DIR__|${WORKSPACE_DIR}|g" "$CRON_SOURCE" | sudo tee "$CRON_TARGET" >/dev/null
+  sudo chown root:root "$CRON_TARGET"
+  sudo chmod 0644 "$CRON_TARGET"
+  mkdir -p "${WORKSPACE_DIR}/logs"
+  sudo service cron start
+  sudo service cron status || true
+else
+  echo "Cron is not installed. Rebuild the devcontainer to apply .devcontainer/Dockerfile."
 fi
 
 echo "Checking tools..."

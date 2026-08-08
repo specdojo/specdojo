@@ -43,6 +43,7 @@ RUN sed -i 's/^# *\(ja_JP.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
 
 # emacsとよく使われるツールをインストール
 RUN apt-get update && apt-get install -y \
+    cron \
     emacs-nox \
     ripgrep \
     fd-find \
