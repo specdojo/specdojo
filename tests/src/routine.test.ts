@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   buildExecAutoArgs,
+  buildExecCycleArgs,
   buildExecResumeArgs,
   buildJobRunArgs,
   buildRegisterRunArgs,
@@ -244,6 +245,90 @@ describe("buildExecResumeArgs", () => {
       "--parallel",
       "2",
     ]);
+  });
+});
+
+describe("buildExecCycleArgs", () => {
+  it("最小構成で exec cycle へ --if-busy skip を渡す", () => {
+    expect(buildExecCycleArgs({ kind: "exec-cycle" }, "prj-test")).toEqual([
+      "exec",
+      "cycle",
+      "--project",
+      "prj-test",
+      "--if-busy",
+      "skip",
+    ]);
+  });
+
+  it("strategy / parallel / loop / max_rounds を auto step 用オプションへ変換する", () => {
+    const actual = buildExecCycleArgs(
+      { kind: "exec-cycle", strategy: "fifo", parallel: 2, loop: true, max_rounds: 5 },
+      "prj-test",
+    );
+
+    expect(actual).toEqual([
+      "exec",
+      "cycle",
+      "--project",
+      "prj-test",
+      "--if-busy",
+      "skip",
+      "--strategy",
+      "fifo",
+      "--parallel",
+      "2",
+      "--loop",
+      "--max-rounds",
+      "5",
+    ]);
+  });
+
+  it("loop なしの max_rounds は引数に含めない", () => {
+    const actual = buildExecCycleArgs({ kind: "exec-cycle", max_rounds: 5 }, "prj-test");
+
+    expect(actual).toEqual(["exec", "cycle", "--project", "prj-test", "--if-busy", "skip"]);
+  });
+});
+
+describe("parseRoutineDoc exec-cycle", () => {
+  it("strategy / parallel / loop / max_rounds を保持する", () => {
+    const { doc, errors } = parseRoutineDoc(
+      {
+        id: "rtn-cycle",
+        interval: "30m",
+        action: {
+          kind: "exec-cycle",
+          strategy: "critical-first",
+          parallel: 2,
+          loop: true,
+          max_rounds: 5,
+        },
+      },
+      "rtn-cycle.yaml",
+    );
+
+    expect(errors).toEqual([]);
+    expect(doc?.action).toEqual({
+      kind: "exec-cycle",
+      strategy: "critical-first",
+      parallel: 2,
+      loop: true,
+      max_rounds: 5,
+    });
+  });
+
+  it("不正な strategy / parallel を検証する", () => {
+    const { errors } = parseRoutineDoc(
+      {
+        id: "rtn-cycle",
+        interval: "30m",
+        action: { kind: "exec-cycle", strategy: "newest", parallel: 0 },
+      },
+      "rtn-cycle.yaml",
+    );
+
+    expect(errors).toContain('rtn-cycle.yaml: action.strategy must be "critical-first" or "fifo"');
+    expect(errors).toContain("rtn-cycle.yaml: action.parallel must be a positive integer");
   });
 });
 

@@ -573,7 +573,7 @@ export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPo
 
 async function withProjectExecRunLock(
   opts: RunOpts,
-  commandLabel: "run" | "resume",
+  commandLabel: "run" | "resume" | "cycle",
   action: () => Promise<void>,
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
@@ -3008,6 +3008,143 @@ export function registerRunCommand(exec: Command): void {
           await runManualMode(opts);
         }
       });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      process.stdout.write(message + "\n");
+      process.exitCode = 1;
+    }
+  });
+}
+
+// exec cycle: run limit-resume, schedule refresh, and the auto loop as one ordered sequence while
+// holding a single project exec-run lock for the whole run. Ordering does not depend on routine
+// file order or cron time offsets, and no manual run / other routine / CI can interleave between
+// the steps. The individual steps (runResumeMode, validate/refresh, runBatchMode) do not acquire
+// the exec-run lock themselves, so the later steps never busy-skip against this run's own lock.
+//
+// Step failure policy (fixed and documented so results are predictable):
+//   - resume:  a re-deferred or failed limit task must not block Ready tasks, so a resume failure
+//              is recorded but the cycle still proceeds to refresh + auto.
+//   - refresh: validate/refresh feeds ready.json; if it fails the auto step cannot select tasks
+//              safely, so the cycle aborts the remaining step.
+//   - auto:    failures are recorded; nothing runs after it.
+// The cycle exits non-zero when any executed step failed. Busy at start is handled by the shared
+// exec-run lock (--if-busy skip records a routine "skipped"; wait/fail behave as for run/resume).
+async function runCycleMode(opts: RunOpts): Promise<void> {
+  const projectId = opts.project;
+  const dryRun = !!opts.dryRun;
+  const stepOutcomes: string[] = [];
+  let anyFailure = false;
+
+  // runResumeMode / runBatchMode report failure via process.exitCode. Read and reset it around
+  // each step so one step's exit code cannot leak into the next step's outcome.
+  const takeStepFailure = (): boolean => {
+    const failed = process.exitCode !== undefined && process.exitCode !== 0;
+    process.exitCode = 0;
+    return failed;
+  };
+
+  // Step 1/3: resume due deferred-limit tasks.
+  process.stdout.write("[cycle] step 1/3: resume due deferred-limit tasks\n");
+  process.exitCode = 0;
+  await runResumeMode({ ...opts, due: true });
+  if (takeStepFailure()) {
+    anyFailure = true;
+    stepOutcomes.push("resume=failure");
+    process.stdout.write("[cycle] resume reported failures — continuing to run Ready tasks\n");
+  } else {
+    stepOutcomes.push("resume=success");
+  }
+
+  // Step 2/3: validate + refresh schedule state before selecting Ready tasks.
+  process.stdout.write("[cycle] step 2/3: validate + refresh schedule state\n");
+  if (dryRun) {
+    process.stdout.write("  [dry-run] specdojo exec validate\n");
+    process.stdout.write("  [dry-run] specdojo exec refresh\n");
+    stepOutcomes.push("refresh=success");
+  } else if (!spawnValidate(projectId)) {
+    stepOutcomes.push("refresh=failure(validate)");
+    process.stdout.write("[cycle] validate failed — aborting auto step\n");
+    process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+    process.exitCode = 1;
+    return;
+  } else if (!spawnRefresh(projectId)) {
+    stepOutcomes.push("refresh=failure(refresh)");
+    process.stdout.write("[cycle] refresh failed — aborting auto step\n");
+    process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+    process.exitCode = 1;
+    return;
+  } else {
+    stepOutcomes.push("refresh=success");
+  }
+
+  // Step 3/3: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
+  // may be stale/absent; preview the planned auto invocation instead of reading the cache.
+  process.stdout.write("[cycle] step 3/3: run Ready tasks (--auto)\n");
+  if (dryRun) {
+    const autoArgs = ["exec", "run", "--auto"];
+    if (projectId) autoArgs.push("--project", projectId);
+    if (opts.strategy) autoArgs.push("--strategy", opts.strategy);
+    if (opts.parallel) autoArgs.push("--parallel", opts.parallel);
+    if (opts.loop) {
+      autoArgs.push("--loop");
+      if (opts.maxRounds) autoArgs.push("--max-rounds", opts.maxRounds);
+    }
+    process.stdout.write(`  [dry-run] specdojo ${autoArgs.join(" ")}\n`);
+    stepOutcomes.push("auto=success");
+  } else {
+    process.exitCode = 0;
+    await runBatchMode({ ...opts, auto: true });
+    if (takeStepFailure()) {
+      anyFailure = true;
+      stepOutcomes.push("auto=failure");
+    } else {
+      stepOutcomes.push("auto=success");
+    }
+  }
+
+  process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+  if (anyFailure) process.exitCode = 1;
+}
+
+export function registerCycleCommand(exec: Command): void {
+  const cmd = exec
+    .command("cycle")
+    .description(
+      "Run limit-resume, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
+    );
+
+  cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
+  cmd.option(
+    "--strategy <s>",
+    "Task selection strategy for the auto step: critical-first|fifo (default: critical-first)",
+  );
+  cmd.option("--parallel <n>", "Number of tasks to resume / run in parallel", "1");
+  cmd.option("--loop", "Repeat the auto step until no Ready tasks remain", false);
+  cmd.option("--max-rounds <n>", "Maximum number of auto rounds when using --loop");
+  cmd.option(
+    "--edit-by <nickname>",
+    "pm-members.yaml agent nickname for edit-mode tasks (resume + auto)",
+  );
+  cmd.option(
+    "--review-by <nickname>",
+    "pm-members.yaml agent nickname for review-mode tasks (resume + auto)",
+  );
+  cmd.option("--worktree-base <path>", "Override worktree base directory");
+  cmd.option(
+    "--exec-defaults <path>",
+    "Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)",
+  );
+  cmd.option(
+    "--if-busy <policy>",
+    "When another exec is running for the project: skip|wait|fail (default: fail)",
+    "fail",
+  );
+  cmd.option("--dry-run", "Print resolved steps without executing", false);
+
+  cmd.action(async (opts: RunOpts) => {
+    try {
+      await withProjectExecRunLock(opts, "cycle", () => runCycleMode(opts));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");

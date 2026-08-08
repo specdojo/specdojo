@@ -55,12 +55,13 @@ action:
 
 `action.kind` で、どの実行経路を発火させるかを選びます。
 
-| kind          | 動作                                                                                                                 |
-| ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する |
-| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                         |
-| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）      |
-| `job`         | `job-*.yaml`から一意なJob Runを生成し、`exec run --job`で実行する                                                    |
+| kind          | 動作                                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する                                         |
+| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                                                                 |
+| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）                                              |
+| `exec-cycle`  | `exec cycle` を実行し、`exec-resume` → 状態再計算 → `exec-auto` を単一ロック内で順次処理する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる） |
+| `job`         | `job-*.yaml`から一意なJob Runを生成し、`exec run --job`で実行する                                                                                            |
 
 週報Jobを毎週金曜日17時（Asia/Tokyo）に起動する例です。
 
@@ -115,3 +116,39 @@ routine 自体は実行機構を持たないトリガー層です。何を実行
 | checkpoint差分の反復 | 前回成功後に更新された文書を翻訳する    | Jobのcheckpointを使用する            |
 
 `interval: 1w`は前回実行から7日が経過したかを判定します。「毎週金曜日17時」のような暦上の予定は`trigger.cron`と`trigger.timezone`で定義します。取りこぼした実行枠は`policy.missed_run: latest|all`、実行中の重複起動は`policy.overlap: skip`で扱います。
+
+### 3.2. 順次実行（exec-cycle）
+
+延期 task の再開と Ready task の自動実行を続けて動かしたいとき、`exec-resume` と `exec-auto` を別々の routine に分けると、実行順は routine ファイルの列挙順や複数 routine の cron 時刻差に依存します。先行 routine が想定時間を超えると後続 routine が busy skip され、次回の発火まで進みません。
+
+`kind: exec-cycle` は 1 つの routine で次の3 step を固定順で順次実行します。step の順序は routine ファイル名順や cron 時刻差に依存しません。
+
+1. `exec-resume --due`（再開時刻を迎えた retryable な利用制限 task の再開）
+2. schedule 状態の再計算（`exec validate` と `exec refresh`）
+3. `exec run --auto`（Ready task の実行。`loop` 指定時は Ready がなくなるまで反復）
+
+一連の処理は単一の project 実行ロック内で保持されます。step 間に手動実行・別 routine・CI の `exec run` / `exec resume` は割り込めません。後続 step は自身でロックを取り直さないため、同一 routine 実行の後続 step を busy skip することもありません。
+
+step 単位の失敗方針は次のとおりで、`[cycle] summary: ...` に step ごとの結果が出力されます。
+
+| step      | 失敗時の扱い                                                                      |
+| --------- | --------------------------------------------------------------------------------- |
+| `resume`  | 再延期や失敗があっても中断しない。依存しない Ready task の実行を継続する          |
+| `refresh` | `validate` / `refresh` は Ready 選択の前提のため、失敗したら auto step を中止する |
+| `auto`    | 失敗を記録する。以降の step はない                                                |
+
+いずれかの step が失敗すると routine 実行全体は失敗（終了コード 1）になり、`routine-state.json` の `last_result` は `failure` を記録します。開始時に project が busy の場合だけ `--if-busy` 方針（既定は routine 経由で `skip`）が適用され、`skipped` として記録されます。再開対象が 0 件でも状態再計算と auto 実行へ進みます。
+
+```yaml
+id: rtn-exec-cycle
+enabled: true
+interval: 30m
+action:
+  kind: exec-cycle
+  strategy: critical-first
+  parallel: 2
+  loop: true
+  max_rounds: 5
+```
+
+`strategy` / `loop` / `max_rounds` は auto step に、`parallel` は resume step と auto step の両方に適用されます。単体の `exec resume` / `exec run --auto` と `kind: exec-resume` / `kind: exec-auto` はこれまでどおり利用できます。

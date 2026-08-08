@@ -28,7 +28,7 @@ import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.j
 // Types
 // ================================
 
-export type RoutineActionKind = "register" | "exec-auto" | "exec-resume" | "job";
+export type RoutineActionKind = "register" | "exec-auto" | "exec-resume" | "exec-cycle" | "job";
 
 export type RoutineRegisterFilter = {
   types?: string[];
@@ -370,9 +370,15 @@ export function parseRoutineDoc(
 
   const action = value.action;
   const kind = typeof action.kind === "string" ? action.kind : "";
-  if (kind !== "register" && kind !== "exec-auto" && kind !== "exec-resume" && kind !== "job") {
+  if (
+    kind !== "register" &&
+    kind !== "exec-auto" &&
+    kind !== "exec-resume" &&
+    kind !== "exec-cycle" &&
+    kind !== "job"
+  ) {
     errors.push(
-      `action.kind must be one of: register, exec-auto, exec-resume, job (got "${kind}")`,
+      `action.kind must be one of: register, exec-auto, exec-resume, exec-cycle, job (got "${kind}")`,
     );
   }
 
@@ -397,7 +403,9 @@ export function parseRoutineDoc(
     validatePositiveIntegerField(errors, action.limit, "action.limit");
   }
 
-  if (kind === "exec-auto") {
+  // exec-cycle takes the same auto-step tuning as exec-auto (strategy / parallel / loop /
+  // max_rounds); parallel additionally caps the resume step of the cycle.
+  if (kind === "exec-auto" || kind === "exec-cycle") {
     if (
       action.strategy !== undefined &&
       action.strategy !== "critical-first" &&
@@ -678,6 +686,20 @@ export function buildExecResumeArgs(action: RoutineAction, projectId: string): s
   return args;
 }
 
+// exec-cycle action → exec cycle の引数リストへ変換する（dry-run 表示と実行で共用）。
+// resume → refresh → auto loop を単一の project lock 内で順次実行する。strategy / loop /
+// max_rounds は auto step、parallel は resume と auto の両 step に適用される。
+export function buildExecCycleArgs(action: RoutineAction, projectId: string): string[] {
+  const args = ["exec", "cycle", "--project", projectId, "--if-busy", "skip"];
+  if (action.strategy) args.push("--strategy", action.strategy);
+  if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
+  if (action.loop) {
+    args.push("--loop");
+    if (action.max_rounds !== undefined) args.push("--max-rounds", String(action.max_rounds));
+  }
+  return args;
+}
+
 export function buildRegisterRunArgs(pjrId: string, projectId: string): string[] {
   return ["exec", "run", "--register", pjrId, "--project", projectId, "--if-busy", "skip"];
 }
@@ -739,6 +761,15 @@ function executeRoutine(
 
   if (doc.action.kind === "exec-resume") {
     const args = buildExecResumeArgs(doc.action, projectId);
+    if (dryRun) {
+      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+      return "success";
+    }
+    return spawnSelf(args);
+  }
+
+  if (doc.action.kind === "exec-cycle") {
+    const args = buildExecCycleArgs(doc.action, projectId);
     if (dryRun) {
       process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
       return "success";
