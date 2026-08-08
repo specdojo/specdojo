@@ -31,13 +31,13 @@ exec plan の共通規約テンプレート `docs/ja/specdojo/templates/xep-comm
 
 ## 3. 作業内容
 
-| No  | 作業                                                          | 担当 | 状態 | メモ                                                         |
-| --- | ------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------ |
-| 1   | project context を `based_on` へ転記しない旨の追記            | ARC  | todo | 転記するとなぜ検証エラーになるかの理由も併記する             |
-| 2   | pre-commit 相当の検査を完了前に実行する旨の追記               | ARC  | todo | 変更ファイル種別と検査コマンドの対応が判断できる形にする     |
-| 3   | 既存の整形・静的検査に関する記述との整合確認                  | ARC  | todo | 重複記述にせず、既存箇条書きへ統合するか隣接させる           |
-| 4   | 検証（`npm run lint:md` / `npm test`）                        | ARC  | todo | テンプレート変更は pre-commit の `test` 対象                 |
-| 5   | `catalog validate` エラーメッセージへのヒント追加（要否判断） | ARC  | todo | テンプレート追記で足りるかを判断し、不要なら見送りを記録する |
+| No  | 作業                                                          | 担当 | 状態 | メモ                                                                                                                     |
+| --- | ------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1   | project context を `based_on` へ転記しない旨の追記            | ARC  | done | 推移閉包エラーになる理由と、閉包外参照が必要な場合の扱いも併記した                                                       |
+| 2   | pre-commit 相当の検査を完了前に実行する旨の追記               | ARC  | done | 変更ファイル種別と検査コマンドの対応表を追加した                                                                         |
+| 3   | 既存の整形・静的検査に関する記述との整合確認                  | ARC  | done | 既存の prettier / markdownlint / schema 検査の箇条書きに隣接させ、重複記述を作らなかった                                 |
+| 4   | 検証（`npm run lint:md` / `npm test`）                        | ARC  | done | 両方成功（`npm test` は 70 files / 901 tests passed）                                                                    |
+| 5   | `catalog validate` エラーメッセージへのヒント追加（要否判断） | ARC  | done | 見送り。既存メッセージが要件を示しており、block の原因はコミット時まで検査していなかったこと。テンプレート追記で対処する |
 
 ## 4. 参考情報
 
@@ -75,4 +75,13 @@ exec plan の共通規約テンプレート `docs/ja/specdojo/templates/xep-comm
 
 ## 5. 対応結果
 
-_TODO_
+`docs/ja/specdojo/templates/xep-common-conventions-template.md` に次を追記した。
+
+1. plan の「プロジェクトコンテキスト」章に挙がる文書を成果物 frontmatter の `based_on` へ転記せず、本文の記述内容へ反映する旨。あわせて、`based_on` に書けるのは `depends_on` の推移閉包に含まれる先行成果物だけであり、閉包外の ID は `catalog validate` でエラーになること、閉包外の根拠が必要な場合は転記せず result に記録することを明記した。
+2. 終了前に pre-commit 相当の検査を先回りで実行し、失敗を修正してから完了する旨。変更ファイル種別と検査コマンドの対応表（prettier / markdownlint / typecheck / test / catalog build / catalog validate / register build / exec refresh / index build）を追加し、コマンドの正本が `lefthook.yml` などの hook 設定であることを併記した。
+
+追記箇所は既存の frontmatter 規約の箇条書きの直後と、既存の整形・静的検査の箇条書きの直後で、重複記述は作っていない。記述はファイル種別のみを条件としており、approach や成果物種別に依存しない。
+
+作業 No.5（`catalog validate` エラーメッセージへのヒント追加）は見送った。既存メッセージは「根拠ドキュメントは先行成果物である必要があります」と要件を示しており、block の直接原因はコミット時まで検査を実行しなかったことであるため、テンプレート追記で対処できると判断した。
+
+検証は `npm run lint:md`（エラーなし）と `npm test`（70 files / 901 tests passed）を実行した。
