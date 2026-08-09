@@ -8,12 +8,13 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { resolveRegisterDateTimeZone, todayInTimeZone } from "./register-date.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
   applyRegisterItemFields,
   compareRegisterItemIds,
@@ -1435,6 +1436,31 @@ function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
 }
 
+// git のパス限定（pathspec）はリポジトリルート起点の POSIX 表記で渡す。
+function repoRelativePathspec(repoRoot: string, target: string): string {
+  const value = relative(repoRoot, target);
+  if (!value || value === ".." || value.startsWith(`..${sep}`)) {
+    throw new Error(`Register directory is outside the repository root: ${target}`);
+  }
+  return value.split(sep).join("/");
+}
+
+// `--id PJR-AAAA PJR-BBBB` と `--id PJR-AAAA,PJR-BBBB` の両方を受け付ける。
+function parseHistoryIds(values: string[] | undefined): string[] | undefined {
+  if (!values || values.length === 0) return undefined;
+
+  const ids: string[] = [];
+  for (const value of values.flatMap((entry) => entry.split(/[\s,]+/))) {
+    const id = value.trim().toUpperCase();
+    if (id === "") continue;
+    if (!PJR_ID_RE.test(id)) {
+      throw new Error(`Invalid item ID: "${value}". Must match PJR-XXXX`);
+    }
+    if (!ids.includes(id)) ids.push(id);
+  }
+  return ids.length > 0 ? ids : undefined;
+}
+
 // ================================
 // Command Registration
 // ================================
@@ -1877,6 +1903,60 @@ export function registerRegisterCommands(program: Command): void {
       for (const view of writeDerivedViews(paths, scope)) {
         process.stdout.write(`Generated: ${view.path}\n`);
       }
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  // --- history ---
+  // 個票 frontmatter が正本になったことで、台帳全体を1ファイルの差分で追えなくなった。
+  // その代替として、個票群の git 履歴から項目単位の追加・状態遷移・削除を再構成する。
+  const historyCmd = reg
+    .command("history")
+    .description("Show register item changes reconstructed from Git history");
+  addProjectOption(historyCmd);
+  historyCmd.option("--since <date>", "Include commits on or after this date (YYYY-MM-DD)");
+  historyCmd.option("--until <date>", "Include commits on or before this date (YYYY-MM-DD)");
+  historyCmd.option(
+    "--id <id...>",
+    "Limit output to these item IDs (PJR-XXXX; space/comma separated)",
+  );
+  historyCmd.option(
+    "--status-only",
+    "Show only additions, removals, and status transitions",
+    false,
+  );
+  historyCmd.option("--limit <count>", "Maximum number of commits to inspect");
+  historyCmd.option("--json", "Print events as JSON", false);
+  historyCmd.action((opts) => {
+    try {
+      const paths = resolveRegisterPaths(opts);
+      const ids = parseHistoryIds(opts.id);
+      const limit = opts.limit === undefined ? undefined : Number(opts.limit);
+
+      const events = collectRegisterHistoryEvents({
+        repoRoot: specdojoRootDir(),
+        registerPathspec: repoRelativePathspec(specdojoRootDir(), paths.projectRegisterPath),
+        since: opts.since?.trim() || undefined,
+        until: opts.until?.trim() || undefined,
+        limit,
+        ids,
+        statusOnly: Boolean(opts.statusOnly),
+      });
+
+      if (opts.json) {
+        process.stdout.write(`${JSON.stringify(events, null, 2)}\n`);
+        return;
+      }
+      if (events.length === 0) {
+        process.stdout.write("No register item changes found for the given range.\n");
+        return;
+      }
+
+      process.stdout.write(`${formatRegisterHistoryEvents(events)}\n`);
+      const itemCount = new Set(events.map((event) => event.id)).size;
+      const commitCount = new Set(events.map((event) => event.commit)).size;
+      process.stdout.write(`events=${events.length} items=${itemCount} commits=${commitCount}\n`);
     } catch (error) {
       printCommandError(error);
     }
