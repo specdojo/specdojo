@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-eqaq-register-timestamps
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
-  due_on: "2026-08-31"
   registered_at: "2026-08-09T14:04:24Z"
+  due_on: "2026-08-31"
+  completed_at: "2026-08-09T14:46:30Z"
 ---
 
 # PJR-EQAQ 登録簿日時をregistered_at・completed_atへ移行する
