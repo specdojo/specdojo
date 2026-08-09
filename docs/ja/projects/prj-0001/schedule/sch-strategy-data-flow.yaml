@@ -7,8 +7,9 @@ rulebook: specdojo:sch-rulebook
 track: data-flow
 
 # sch-track-data-flow.yaml を生成するための戦略定義。
-# dct-data-flow.yaml の kind: work の成果物を対象とし、共通の CDFD 実践一式を
-# cdfd-overview の bootstrap で一度だけ整備してから、実装エビデンスを各成果物へ反映する。
+# dct-data-flow.yaml の kind: work の成果物を対象とし、cdfd-overview 専用の実践一式と
+# 領域別 cdfd-<area> 用の実践一式を別々の bootstrap タスクで整備してから、
+# 実装エビデンスを各成果物へ反映する。
 # owner はロールのみを持ち、実際の実行者は pm-members.yaml と実行要件から解決する。
 
 settings:
@@ -21,12 +22,13 @@ scope:
   include_kinds:
     - work
 
-# cdfd-overview だけは bootstrap-pass から開始し、成果物と共通の
-# rulebook / recipe / sample / template を一式整備する。全成果物は DCT の evidence_refs を
-# retrofit-pass で調査・反映し、横断的な重複整理後に fully-guided で磨き込む。
+# cdfd-overview は overview-bootstrap-pass、領域別の代表成果物 cdfd-init は
+# area-bootstrap-pass から開始する。前者は overview 専用 Kata を新設し、後者は既存の
+# cdfd Kata を領域別専用へ再構成する。全成果物は DCT の evidence_refs を retrofit-pass で
+# 調査・反映し、横断的な重複整理後に fully-guided で磨き込む。
 phase_sets:
-  bootstrap-pass:
-    - id: bootstrap
+  overview-bootstrap-pass:
+    - id: legacy-bootstrap
       name: 代表成果物・実践一式の初期整備
       execution: agent
       mode: edit
@@ -38,6 +40,39 @@ phase_sets:
         cdfd-overview と共通の rulebook / recipe / sample / template を同じタスクで初期整備し、
         構造・用語・粒度が互いに矛盾しない実践一式として揃える。成果物カタログの done_criteria と
         プロジェクト文脈を基準にし、実装エビデンスの詳細な反映は後続の retrofit-pass に委ねる。
+    - id: overview-bootstrap
+      name: cdfd-overview・overview Kataの初期整備
+      execution: agent
+      mode: edit
+      approach: bootstrap
+      proficiency: expert
+      task_suffix: "006"
+      duration_days: 0.5
+      description: |
+        cdfd-overview と cdfd-overview-rulebook / recipe / sample / template を新設し、
+        一ノードを一領域とする領域間フローと分割境界の再現可能な型を定義する。
+        既存の cdfd-rulebook / recipe / sample / template はこのタスクで領域別専用へ変更しない。
+        Mermaid の共通記法は cdfd-mermaid-rulebook を共有し、overview と領域別の粒度差を
+        表現するために必要な共通規則だけを更新する。成果物カタログの done_criteria と
+        プロジェクト文脈を基準にし、実装エビデンスの詳細な反映は後続の retrofit-pass に委ねる。
+
+  area-bootstrap-pass:
+    - id: area-bootstrap
+      name: cdfd-init・領域別CDFD Kataの初期整備
+      execution: agent
+      mode: edit
+      approach: bootstrap
+      proficiency: expert
+      task_suffix: "005"
+      duration_days: 0.5
+      description: |
+        cdfd-init を代表成果物として、既存の cdfd-rulebook / recipe / sample / template を
+        領域別 CDFD 専用へ再構成する。cdfd-area-* という別 ID は作らず、
+        一ノードを一プロセスとする領域内フロー、主要例外、領域外への委譲を定義する。
+        overview 専用の cdfd-overview-rulebook / recipe / sample / template はこのタスクで変更せず、
+        Mermaid の共通記法は cdfd-mermaid-rulebook を参照する。成果物カタログの done_criteria と
+        cdfd-overview が定義した領域境界を基準にし、実装エビデンスの詳細な反映は後続の
+        retrofit-pass に委ねる。
 
   retrofit-pass:
     - id: retrofit
@@ -53,6 +88,8 @@ phase_sets:
         意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
         反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
         将来方針は推測せず、必要に応じて確認事項として残す。
+        cdfd-overview はプロセス領域一覧と領域間フローで全体境界と詳細化先を示し、領域内の
+        正常経路・例外経路を展開しない。領域別 cdfd-<area> は overview の境界を引き継ぎ、
         プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
         データストア、正常経路と必要な例外経路を概念レベルで記述する。
 
@@ -66,10 +103,11 @@ phase_sets:
       task_suffix: "070"
       duration_days: 0.25
       description: |
-        整備済みの実践一式と先行・隣接 CDFD を参照し、既存の草案を保守的に磨き込む。
-        表と図のプロセス名・イベント・入出力・データストアを一致させ、重複整理後の責務境界と
-        depends_on に沿った情報の受け渡しを確認する。不足や不整合だけを最小限修正し、
-        成果物カタログの done_criteria を満たす状態へ整える。
+        成果物種別に対応する整備済み Kata と先行・隣接 CDFD を参照し、既存の草案を保守的に
+        磨き込む。cdfd-overview は領域粒度と領域間の主要な受け渡しを維持し、領域別 CDFD は
+        領域内プロセス粒度で表と図のプロセス名・イベント・入出力・データストアを一致させる。
+        重複整理後の責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを
+        最小限修正して、成果物カタログの done_criteria を満たす状態へ整える。
 
   review-pass:
     - id: review
@@ -82,9 +120,10 @@ phase_sets:
       duration_days: 0.25
       description: |
         完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
-        プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。表と図の対応、
-        領域間の重複・欠落、正常系・例外系、担当と入出力の追跡性に加え、実装との一致・乖離・
-        未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+        プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。cdfd-overview は
+        領域粒度、領域間フロー、領域別 CDFD への分割を確認し、領域別 cdfd-<area> はプロセス粒度、
+        正常系・主要例外、担当と入出力の追跡性を確認する。実装との一致・乖離・未確認範囲を判定し、
+        根拠と修正対象候補を review result に記録する。
 
   finalize-pass:
     - id: finalize
@@ -96,8 +135,8 @@ phase_sets:
       duration_days: 0.125
       description: |
         担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
-        cdfd-overview では bootstrap-finalize により、bootstrap で整備した共通の
-        rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+        bootstrap 対象の cdfd-overview と cdfd-init では bootstrap-finalize により、各タスクで
+        整備した専用 rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
 
 default_phase_sets:
   - phase_set: retrofit-pass
@@ -106,13 +145,14 @@ default_phase_sets:
   - phase_set: finalize-pass
 
 # CDFD は業務のプロセス・情報・イベントの流れを定義するため、主たる実作業責任は BA とする。
-# cdfd-overview のみ bootstrap-pass を先行させ、共通の実践一式も確定対象に含める。
+# cdfd-overview は overview-bootstrap-pass、領域別の代表成果物 cdfd-init は
+# area-bootstrap-pass を先行させ、それぞれの専用 Kata も確定対象に含める。
 owner_rules:
   - local_ids:
       - cdfd-overview
     owner: BA
     phase_sets:
-      - phase_set: bootstrap-pass
+      - phase_set: overview-bootstrap-pass
       - phase_set: retrofit-pass
       - phase_set: refine-pass
       - phase_set: review-pass
@@ -123,6 +163,18 @@ owner_rules:
 
   - local_ids:
       - cdfd-init
+    owner: BA
+    phase_sets:
+      - phase_set: area-bootstrap-pass
+      - phase_set: retrofit-pass
+      - phase_set: refine-pass
+      - phase_set: review-pass
+      - phase_set: finalize-pass
+    phase_overrides:
+      - phase: finalize
+        approach: bootstrap-finalize
+
+  - local_ids:
       - cdfd-register-operation
       - cdfd-catalog-planning
       - cdfd-task-execution
