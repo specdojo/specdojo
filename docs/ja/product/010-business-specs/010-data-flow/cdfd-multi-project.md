@@ -31,13 +31,13 @@ specdojo:
 | `P-06-02` | 並行実行割当 | 依存を満たす実行単位を project と担当へ割り当て、同一範囲の変更順序を合意する。 | PM、タスク owner | 独立して実行可能な feature または Schedule タスクが複数存在する | 実行可能タスク、依存、対象 project・成果物、並列数、共通成果物の変更予定 | project・担当・実行方式・統合順序を含む実行割当 | Schedule・実行計画、運用・構成定義、実行記録 | 必須 |
 | `P-06-03` | feature worktree 作成 | 人が行う目的別変更を、対象 project の統合状態から分離する。 | 開発者 | feature の目的と担当が合意され、対象 project の `develop` と作業ツリーが clean である | project ID、topic、対象 project `develop` の commit、対象成果物 | `feature/<project-id>/<topic>` と feature worktree、ベース commit | project `develop`、feature branch / worktree | 条件付き |
 | `P-06-04` | exec worktree 作成 | Schedule タスクの自動変更を task 単位に分離し、成果物と result の混在を防ぐ。 | SpecDojo CLI、実行担当 | task が実行中として割り当てられ、plan、result、claim 記録と対象 project の統合先を確認できる | project 修飾 task ID、edit / review plan、対象 project `develop` の commit、実行条件 | `exec/<project-id>-<task-id>` と task worktree、checkpoint commit、実行可能な依存 | project `develop`、Schedule・実行計画、exec branch / worktree、実行記録 | 条件付き |
-| `P-06-05` | 分離作業 | feature または exec の変更を専用 worktree 内に限定し、対象と担当を追跡できる作業結果を作る。 | 開発者、タスク owner、AI Agent | feature または exec worktree の準備と担当割当が完了した | 対象成果物、plan・仕様、ベース commit、作業条件 | 更新成果物、検証結果、exec の場合は task result、未commit差分 | feature / exec worktree、成果物、実行記録 | 条件付き |
+| `P-06-05` | 分離作業 | feature または exec の変更を専用 worktree 内に限定し、対象と担当を追跡できる作業結果を作る。 | 開発者、タスク owner、AI Agent | feature または exec worktree の準備と担当割当が完了した | 対象成果物、plan・仕様、ベース commit、作業条件 | 更新成果物、検証結果、exec の場合の task result、未commit差分 | feature / exec worktree、成果物、実行記録 | 条件付き |
 | `P-06-06` | 分離結果 commit | 検証済みの成果物と許可された実行記録を、統合・監査できる変更単位として確定する。 | 開発者、SpecDojo CLI | 対象変更の検証が成功し、commit 対象と除外対象を識別できる | 更新成果物、task result、検証結果、変更許可範囲 | feature / exec branch の commit、commit 対象外として保持する変更の警告 | feature / exec branch、Git 履歴、実行記録 | 条件付き |
 | `P-06-07` | worktree ベース同期 | 統合前に対象 project の最新変更を分離作業へ取り込み、競合を project 内で解消できる状態にする。 | 開発者、タスク owner | worktree が clean で、対象 project `develop` に未取込 commit がある | 対象 project `develop`、feature / exec の commit、明示したベースブランチ | 同期済み feature / exec branch、競合の有無、再検証要求 | project `develop`、feature / exec branch / worktree、Git 履歴 | 条件付き |
 | `P-06-08` | feature・exec 統合 | 分離された結果を、所属する project の一つの統合状態へ戻す。 | PM、開発者、SpecDojo CLI | 同期と必要な再検証が成功し、統合先、未commit変更、未統合 commit を確認できる | feature / exec commit、検証結果、対象 project `develop`、統合順序 | project `develop` への merge commit、統合状態、更新された成果物・task result | feature / exec branch、project `develop`、Git 履歴、実行記録 | 条件付き |
 | `P-06-09` | main 共有変更同期 | `main` で確定した共通変更を project 履歴を保ったまま取り込み、project 間の長期乖離を避ける。 | PM、プロジェクト管理者 | `main` が更新され、project の作業を継続する | 最新 `main` commit、対象 project `develop`、共通変更の影響・統合順序 | `main` を merge した project `develop`、再検証結果、worktree への再同期要求 | `main`、project `develop`、Git 履歴、実行記録 | 条件付き |
 | `P-06-10` | project develop 昇格 | project の受入済み変更を、レビュー可能な単位で安定統合点 `main` へ共有する。 | プロジェクト管理者、承認者 | 未統合の feature / exec がなく、最新 `main` の取込、project 全体の検証、レビューが成功した | project `develop` の commit、検証結果、未解決事項、承認結果 | `main` への merge commit・PR 証跡、他 project への同期要求 | project `develop`、`main`、Git / PR 履歴、実行記録 | 条件付き |
-| `P-06-11` | worktree・branch 後片付け | 統合済みの一時作業領域だけを削除し、未退避の成果物・result・commitを失わない。 | 開発者、SpecDojo CLI、PM | 統合済みで、task 記録が完了し、未commit変更・未統合 commit・保持理由がない | worktree 状態、統合状態、task 状態、成果物・result の差分 | 削除済み worktree、条件付きで削除済み feature / exec branch、保持した監査証跡 | Git worktree 登録、feature / exec branch、Git 履歴、実行記録 | 条件付き |
+| `P-06-11` | worktree・branch 後片付け | 統合済みの一時作業領域だけを削除し、未退避の成果物・result・commit を失わない。 | 開発者、SpecDojo CLI、PM | 統合済みで、task 記録が完了し、未commit変更・未統合 commit・保持理由がない | worktree 状態、統合状態、task 状態、成果物・result の差分 | 削除済み worktree、条件付きで削除済み feature / exec branch、保持した監査証跡 | Git worktree 登録、feature / exec branch、Git 履歴、実行記録 | 条件付き |
 
 `P-06-03` と `P-06-04` は割り当てた実行方式ごとに選択する。複数 project を並行する場合は、worktree のベースを main worktree の現在ブランチから暗黙に決めず、対象の `project/<project-id>/develop` を明示する。`P-06-07` は対象 project に新しい commit がある場合に実施し、同期後は変更対象に必要な検証を再実行する。
 
@@ -112,7 +112,7 @@ flowchart TB
 
   featureWorktree -->|"目的別仕様・作業対象"| 分離作業
   execWorktree -->|"plan・対象成果物"| 分離作業
-  作業担当 -->|"分離された作業結果"| 分離作業
+  作業担当 -->|"担当割当・作業開始"| 分離作業
   分離作業 -->|"タスク内部の編集・検証要求"| タスク実行
   タスク実行 -->|"更新成果物・検証結果・result"| 分離作業
   分離作業 -->|"feature変更・検証結果"| featureWorktree
