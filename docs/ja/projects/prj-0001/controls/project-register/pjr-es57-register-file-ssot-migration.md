@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-es57-register-file-ssot-migration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
+  conclusion: 8件の分割先すべてが完了し、個票frontmatterを唯一の正本とする移行が完了した。
 ---
 
 # PJR-ES57 登録簿を1項目1ファイル正本へ移行し pjr-index を生成ビュー化する
@@ -40,20 +42,26 @@ PJR-9Y7G の決定（選択肢B）に基づき、個票 frontmatter を正本、
 
 本項目は分割元として全体を追跡し、実作業は次の登録項目で行う。番号は推奨する実施順序を表す。
 
-| No  | 分割先の登録項目                                       | 担当 | 状態 | メモ                                       |
-| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------ |
-| 1   | [[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] | ARC  | open | 後続すべての前提となる                     |
-| 2   | [[prj-0001:pjr-tt4j-register-cli-write-to-tickets]]    | ARC  | open | 1 に依存する                               |
-| 3   | [[prj-0001:pjr-rzr3-pjr-index-as-generated-view]]      | ARC  | open | 1 に依存する                               |
-| 4   | [[prj-0001:pjr-9p5q-migrate-existing-register-items]]  | ARC  | open | 1 と 3 に依存する                          |
-| 5   | [[prj-0001:pjr-37wn-remove-id-reservation-mechanisms]] | ARC  | open | 2 に依存する                               |
-| 6   | [[prj-0001:pjr-vc94-update-validation-and-tests]]      | ARC  | open | 1 から 5 の完了後に実施する                |
-| 7   | [[prj-0001:pjr-rdnc-update-docs-for-ticket-ssot]]      | ARC  | open | 5 の撤去範囲が確定してから記述を確定する   |
-| 8   | [[prj-0001:pjr-gh26-ledger-review-alternative]]        | ARC  | open | 3 に依存する。決定を伴うため早期の着手も可 |
+| No  | 分割先の登録項目                                       | 担当 | 状態 | メモ                                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | -------------------------------------------------------------------- |
+| 1   | [[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] | ARC  | done | claude-expert-edit-agent                                             |
+| 2   | [[prj-0001:pjr-tt4j-register-cli-write-to-tickets]]    | ARC  | done | claude-expert-edit-agent                                             |
+| 3   | [[prj-0001:pjr-rzr3-pjr-index-as-generated-view]]      | ARC  | done | claude-expert-edit-agent                                             |
+| 4   | [[prj-0001:pjr-9p5q-migrate-existing-register-items]]  | ARC  | done | codex-expert-edit-agent                                              |
+| 5   | [[prj-0001:pjr-37wn-remove-id-reservation-mechanisms]] | ARC  | done | codex-edit-agent（1回目はexec-run.tsの不具合で失敗し修正後に再実行） |
+| 6   | [[prj-0001:pjr-vc94-update-validation-and-tests]]      | ARC  | done | codex-edit-agent                                                     |
+| 7   | [[prj-0001:pjr-rdnc-update-docs-for-ticket-ssot]]      | ARC  | done | codex-edit-agent                                                     |
+| 8   | [[prj-0001:pjr-gh26-ledger-review-alternative]]        | ARC  | done | claude-expert-edit-agent                                             |
 
 ## 4. 対応結果
 
--
+- 8件の分割先すべてが完了し、完了条件をすべて満たした。個票 frontmatter が登録項目の唯一の正本になり、`pjr-index.md` は `generated/` 配下の非追跡な生成ビューへ移行した。register の全サブコマンドが個票を読み書きし、一覧生成は決定的である。予約系の補償機構は撤去され、`renumber` は乱数 ID 衝突の救済のみに縮小された。rulebook・運用ガイド・テンプレートは個票正本の構成へ更新された。既存186件の登録項目は個票へ移行済みで、台帳の差分レビュー代替手段（`register history` CLI 等）も実装・文書化された。テストは949件すべて green。
+- 移行の過程で3件の副次的な問題を発見し、別途対応した。
+  - 未定値プレースホルダ判定の誤検知（[[prj-0001:pjr-gqfx-todo-marker-false-positive-in-inline-code]]、未着手）
+  - CODEOWNERS 未整備による自己承認（[[prj-0001:pjr-bj97-codeowners-and-branch-protection]]、未着手）
+  - `pjr-index.md` の非追跡化に伴う wikilink 解決不能（[[prj-0001:pjr-1d0c-pjr-index-wikilink-broken]]、未着手。個票60件の`part_of`とwikilink10箇所が対象）
+- `exec-run.ts` のcheckpointが削除済み`pjr-index.md`を`git add`しようとして失敗するバグを発見・修正した（PJR-37WN以降の全register実行に影響していた）。
+- 上記のうち PJR-GQFX・PJR-BJ97・PJR-1D0C は本項目の完了条件の範囲外（発見時点で別途起票し追跡）のため、これらの未着手を理由に本項目のcloseを妨げない。
 
 ## 5. 関連ドキュメント
 
