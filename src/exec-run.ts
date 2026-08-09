@@ -1312,6 +1312,13 @@ function spawnRefresh(projectId: string | undefined): boolean {
   return spawnSelf(refreshArgs);
 }
 
+// doc-index is project-independent (it scans the whole docs/ tree), so no --project is passed.
+// Rebuilding it before Ready selection lets tasks resolve wikilinks/IDs to deliverables that a
+// prior round or a prior cycle step just created (see scheduleAvailable and runCycleMode).
+function spawnIndexBuild(): boolean {
+  return spawnSelf(["index", "build"]);
+}
+
 function spawnClaim(projectId: string | undefined, taskId: string, by: string): boolean {
   const args = [
     "exec",
@@ -1535,6 +1542,16 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
     schedulingPass++;
     const roundSuffix = ` (round ${schedulingPass}${maxRounds !== null ? `/${maxRounds}` : "/-"})`;
     if (schedulingPass > 1) {
+      // Rebuild doc-index before refresh so deliverables created by the previous round (e.g. a
+      // newly authored document referenced by wikilink) are resolvable when this round's tasks
+      // are prepared, instead of only becoming resolvable on a later, out-of-band index build.
+      process.stdout.write(`[run] index build${roundSuffix}...\n`);
+      if (!spawnIndexBuild()) {
+        process.stdout.write("[run] index build failed — drain running tasks\n");
+        process.exitCode = 1;
+        stopNewTasks = true;
+        return [];
+      }
       process.stdout.write(`[run] exec refresh${roundSuffix}...\n`);
       if (!spawnRefresh(projectId)) {
         process.stdout.write("[run] exec refresh failed — drain running tasks\n");
@@ -2868,7 +2885,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--loop",
-    "Repeat rounds until no ready tasks remain, running exec refresh between rounds",
+    "Repeat rounds until no ready tasks remain, rebuilding doc-index and running exec refresh between rounds",
     false,
   );
   rcmd.option(
@@ -3037,15 +3054,19 @@ export function registerRunCommand(exec: Command): void {
   });
 }
 
-// exec cycle: run limit-resume, schedule refresh, and the auto loop as one ordered sequence while
-// holding a single project exec-run lock for the whole run. Ordering does not depend on routine
-// file order or cron time offsets, and no manual run / other routine / CI can interleave between
-// the steps. The individual steps (runResumeMode, validate/refresh, runBatchMode) do not acquire
-// the exec-run lock themselves, so the later steps never busy-skip against this run's own lock.
+// exec cycle: run limit-resume, doc-index rebuild, schedule refresh, and the auto loop as one
+// ordered sequence while holding a single project exec-run lock for the whole run. Ordering does
+// not depend on routine file order or cron time offsets, and no manual run / other routine / CI
+// can interleave between the steps. The individual steps (runResumeMode, index build,
+// validate/refresh, runBatchMode) do not acquire the exec-run lock themselves, so the later steps
+// never busy-skip against this run's own lock.
 //
 // Step failure policy (fixed and documented so results are predictable):
 //   - resume:  a re-deferred or failed limit task must not block Ready tasks, so a resume failure
-//              is recorded but the cycle still proceeds to refresh + auto.
+//              is recorded but the cycle still proceeds to index/refresh + auto.
+//   - index:   doc-index feeds wikilink/ID resolution for Ready task plans; if it fails, tasks may
+//              reference deliverables the previous cycle just created but cannot resolve them
+//              reliably, so the cycle aborts the remaining steps.
 //   - refresh: validate/refresh feeds ready.json; if it fails the auto step cannot select tasks
 //              safely, so the cycle aborts the remaining step.
 //   - auto:    failures are recorded; nothing runs after it.
@@ -3065,8 +3086,8 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     return failed;
   };
 
-  // Step 1/3: resume due deferred-limit tasks.
-  process.stdout.write("[cycle] step 1/3: resume due deferred-limit tasks\n");
+  // Step 1/4: resume due deferred-limit tasks.
+  process.stdout.write("[cycle] step 1/4: resume due deferred-limit tasks\n");
   process.exitCode = 0;
   await runResumeMode({ ...opts, due: true });
   if (takeStepFailure()) {
@@ -3077,8 +3098,25 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("resume=success");
   }
 
-  // Step 2/3: validate + refresh schedule state before selecting Ready tasks.
-  process.stdout.write("[cycle] step 2/3: validate + refresh schedule state\n");
+  // Step 2/4: rebuild doc-index before recalculating schedule state, so deliverables created by
+  // the resume step, or left unindexed by a prior cycle run, are resolvable before Ready
+  // selection instead of only becoming resolvable on a later, out-of-band index build.
+  process.stdout.write("[cycle] step 2/4: rebuild doc index\n");
+  if (dryRun) {
+    process.stdout.write("  [dry-run] specdojo index build\n");
+    stepOutcomes.push("index=success");
+  } else if (!spawnIndexBuild()) {
+    stepOutcomes.push("index=failure");
+    process.stdout.write("[cycle] index build failed — aborting auto step\n");
+    process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+    process.exitCode = 1;
+    return;
+  } else {
+    stepOutcomes.push("index=success");
+  }
+
+  // Step 3/4: validate + refresh schedule state before selecting Ready tasks.
+  process.stdout.write("[cycle] step 3/4: validate + refresh schedule state\n");
   if (dryRun) {
     process.stdout.write("  [dry-run] specdojo exec validate\n");
     process.stdout.write("  [dry-run] specdojo exec refresh\n");
@@ -3099,9 +3137,9 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("refresh=success");
   }
 
-  // Step 3/3: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
+  // Step 4/4: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
   // may be stale/absent; preview the planned auto invocation instead of reading the cache.
-  process.stdout.write("[cycle] step 3/3: run Ready tasks (--auto)\n");
+  process.stdout.write("[cycle] step 4/4: run Ready tasks (--auto)\n");
   if (dryRun) {
     const autoArgs = ["exec", "run", "--auto"];
     if (projectId) autoArgs.push("--project", projectId);
@@ -3132,7 +3170,7 @@ export function registerCycleCommand(exec: Command): void {
   const cmd = exec
     .command("cycle")
     .description(
-      "Run limit-resume, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
+      "Run limit-resume, doc-index rebuild, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
     );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
