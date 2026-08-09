@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-37wn-remove-id-reservation-mechanisms
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
-  conclusion: "checkpoint failed: git add -- docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-37wn-20260809T110448Z-4c53-plan.md docs/ja/projects/pr…"
+  completed_on: "2026-08-09"
+  conclusion: 統合ブランチ自動ルーティング・予約経路・同期scriptを撤去し、renumberを乱数ID衝突の救済のみへ縮小した。
 ---
 
 # PJR-37WN ID 予約などの競合回避機構を撤去し renumber を縮小する
