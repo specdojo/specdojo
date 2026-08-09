@@ -17,6 +17,7 @@ import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { gitOutput, gitResult, listRegisteredWorktrees } from "./exec-worktree.js";
 import {
   applyRegisterItemFields,
+  compareRegisterItemIds,
   displayIdFromTicketFilename,
   formatRegisterItemFields,
   isPlaceholderCell,
@@ -92,6 +93,11 @@ export type TicketStatus = (typeof VALID_TICKET_STATUSES)[number];
 // 見出し文言（言語依存）ではなく章番号でセクションを特定し、i18n 非依存にする。
 const REGISTER_SECTION_RE = /^## 1\.\s/;
 
+// 登録項目一覧（pjr-index）の生成 template。外枠（H1・注記・章見出し）と章 1 の
+// 列見出しを所有し、生成処理は行だけを差し込む。列名を定数として持たないことで、
+// 一覧の言語は template 側の差し替えだけで切り替えられる。
+const REGISTER_INDEX_TEMPLATE = "pjr-index-template.md";
+
 // ================================
 // Path Resolution
 // ================================
@@ -155,15 +161,19 @@ function isTableSeparator(line: string): boolean {
 }
 
 // 生成ビューが使うテーブルの見出し行と区切り行。
-// 定数として持たず pjr-index.md（テンプレート由来）から採用し、列名の言語に依存しない。
+// 定数として持たず登録簿一覧 template から採用し、列名の言語に依存しない。
 export type TableHeading = { header: string; separator: string };
 
-export function extractTableHeading(content: string): TableHeading {
-  const lines = content.split("\n");
+// 章 1 の登録項目一覧テーブルの位置。separatorIndex は行配列上の区切り行の添字で、
+// 行を差し込む基準になる。
+type RegisterTableLocation = { heading: TableHeading; separatorIndex: number };
+
+function locateRegisterTable(lines: string[]): RegisterTableLocation | undefined {
   let inSection = false;
   let header: string | undefined;
 
-  for (const line of lines) {
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index];
     if (REGISTER_SECTION_RE.test(line)) {
       inSection = true;
       continue;
@@ -173,14 +183,39 @@ export function extractTableHeading(content: string): TableHeading {
 
     if (isTableSeparator(line)) {
       if (header === undefined) {
-        throw new Error("Register table header row not found before the separator in pjr-index.md");
+        throw new Error(
+          "Register table header row not found before the separator in the register list source",
+        );
       }
-      return { header: header.trim(), separator: line.trim() };
+      return {
+        heading: { header: header.trim(), separator: line.trim() },
+        separatorIndex: index,
+      };
     }
     if (header === undefined) header = line;
   }
 
-  throw new Error("Register table header row not found in pjr-index.md");
+  return undefined;
+}
+
+export function extractTableHeading(content: string): TableHeading {
+  const located = locateRegisterTable(content.split("\n"));
+  if (!located) {
+    throw new Error("Register table header row not found in the register list source");
+  }
+  return located.heading;
+}
+
+// 章 1 の登録項目一覧テーブルの区切り行直後へ、生成した行を差し込む。
+// テーブルの列見出しは template が所有するため、生成処理は行だけを注入する。
+export function injectRegisterRows(content: string, rows: string[]): string {
+  const lines = content.split("\n");
+  const located = locateRegisterTable(lines);
+  if (!located) {
+    throw new Error(`Register table not found in template: ${REGISTER_INDEX_TEMPLATE}`);
+  }
+  lines.splice(located.separatorIndex + 1, 0, ...rows);
+  return lines.join("\n");
 }
 
 export function parsePjrIndex(content: string): PjrItem[] {
@@ -470,6 +505,12 @@ function groupByOwner(items: PjrItem[]): ViewGroup[] {
   return [...grouped.keys()].sort().map((owner) => ({ label: owner, items: grouped.get(owner)! }));
 }
 
+// 登録項目一覧（pjr-index）本体を生成する。行は ID 昇順で、列見出しと外枠は template が持つ。
+function generateIndexView(items: PjrItem[], projectId: string): string {
+  const template = loadViewTemplate(REGISTER_INDEX_TEMPLATE, projectId);
+  return injectRegisterRows(template, items.map(formatTableRow));
+}
+
 function generateViewsFile(items: PjrItem[], projectId: string, heading: TableHeading): string {
   const statusGroups = VALID_STATUSES.map((status) => ({
     label: status,
@@ -502,19 +543,19 @@ function generateTypeFilterView(
     table: ["<!-- prettier-ignore -->", makeTable(filtered, heading)].join("\n"),
   });
 }
-type BuildScope = "register" | "controls" | "all";
-type ViewFile = { path: string; content: string };
+export type BuildScope = "register" | "controls" | "all";
+export type ViewFile = { path: string; content: string };
 
 const VALID_BUILD_SCOPES: BuildScope[] = ["register", "controls", "all"];
 
-function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
-  // 項目の値は個票 frontmatter（正本）から集める。pjr-index は列見出しの供給元として
-  // 読むだけで、行の内容は参照しない。
+export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
+  // 項目の値は個票 frontmatter（正本）から集める。列見出しは template から採用するため、
+  // 生成処理は作業ツリーの pjr-index.md を入力にしない。
   const items = loadRegisterItems(paths).map((view) => view.item);
-  const heading = extractTableHeading(readFileSync(paths.pjrIndexPath, "utf8"));
+  const heading = extractTableHeading(loadViewTemplate(REGISTER_INDEX_TEMPLATE, paths.projectId));
 
-  // Ticket links in pjr-index.md use ./ relative to project-register/.
-  // Rebase them so links remain valid from each generated/ directory.
+  // 個票セルのリンクは project-register/ 起点の `./` 表記で作られる。
+  // 各 generated/ ディレクトリから辿れるよう相対パスを付け替える。
   const pjrDirName = basename(paths.projectRegisterPath);
   const regItems = rebaseItems(items, "../");
   const ctrlItems = rebaseItems(items, `../${pjrDirName}/`);
@@ -523,10 +564,16 @@ function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): View
   const controlsViews: ViewFile[] = [];
 
   if (scope === "register" || scope === "all") {
-    registerViews.push({
-      path: join(paths.generatedPath, "pjr-views.md"),
-      content: generateViewsFile(regItems, paths.projectId, heading),
-    });
+    registerViews.push(
+      {
+        path: join(paths.generatedPath, "pjr-index.md"),
+        content: generateIndexView(regItems, paths.projectId),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-views.md"),
+        content: generateViewsFile(regItems, paths.projectId, heading),
+      },
+    );
   }
 
   if (scope === "controls" || scope === "all") {
@@ -637,7 +684,7 @@ export function loadRegisterItems(paths: RegisterPaths): RegisterItemView[] {
     }
   }
 
-  return [...views.values()].sort((a, b) => a.id.localeCompare(b.id));
+  return [...views.values()].sort((a, b) => compareRegisterItemIds(a.id, b.id));
 }
 
 export function findRegisterItem(
@@ -1283,45 +1330,26 @@ export function registerRegisterCommands(program: Command): void {
   const reg = program.command("register").description("Project register (pjr-index.md) commands");
 
   // --- scaffold ---
-  const scaffoldCmd = reg.command("scaffold").description("Generate pjr-index.md from template");
+  // 一覧（pjr-index）は個票から生成される派生ビューのため、scaffold は追跡対象の
+  // pjr-index.md を作らない。登録簿ディレクトリを用意し、generated/ 配下へ初回生成する。
+  const scaffoldCmd = reg
+    .command("scaffold")
+    .description("Initialize the register directory and generate its views");
   addProjectOption(scaffoldCmd);
-  scaffoldCmd.option("--project-id <id>", "Project ID to embed (defaults to --project value)");
-  scaffoldCmd.option("--force", "Overwrite existing pjr-index.md", false);
   scaffoldCmd.option("--dry-run", "Print generated content to stdout without writing", false);
   scaffoldCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const embedId = opts.projectId?.trim() || paths.projectId;
-
-      const templatePath = join(
-        specdojoRootDir(),
-        "docs/ja/specdojo/templates/pjr-index-template.md",
-      );
-      if (!existsSync(templatePath)) {
-        throw new Error(`Template not found: ${templatePath}`);
-      }
-
-      if (!opts.force && existsSync(paths.pjrIndexPath)) {
-        process.stdout.write(
-          `Skipped (already exists; use --force to overwrite): ${paths.pjrIndexPath}\n`,
-        );
-        return;
-      }
-
-      let content = readFileSync(templatePath, "utf8");
-      content = flattenTemplateFrontmatter(content);
-      content = content.replace(/_PROJECT_ID_/g, embedId);
 
       if (opts.dryRun) {
-        process.stdout.write(content);
+        for (const view of generateDerivedViewFiles(paths, "all")) {
+          process.stdout.write(`=== ${view.path} ===\n${view.content}\n\n`);
+        }
         return;
       }
 
       mkdirSync(paths.projectRegisterPath, { recursive: true });
-      mkdirSync(paths.generatedPath, { recursive: true });
-      writeFileSync(paths.pjrIndexPath, content, "utf8");
-      process.stdout.write(`Created: ${paths.pjrIndexPath}\n`);
-      process.stdout.write(`Created: ${paths.generatedPath}/\n`);
+      process.stdout.write(`Created: ${paths.projectRegisterPath}/\n`);
 
       for (const view of writeDerivedViews(paths, "all")) {
         process.stdout.write(`Generated: ${view.path}\n`);
@@ -1746,7 +1774,9 @@ export function registerRegisterCommands(program: Command): void {
   });
 
   // --- build ---
-  const buildCmd = reg.command("build").description("Generate derived views from pjr-index.md");
+  const buildCmd = reg
+    .command("build")
+    .description("Generate the register list and derived views from register item files");
   addProjectOption(buildCmd);
   buildCmd.option("--scope <scope>", "Generation scope: register | controls | all", "all");
   buildCmd.option("--dry-run", "Print generated content without writing", false);
@@ -1754,9 +1784,9 @@ export function registerRegisterCommands(program: Command): void {
     try {
       const paths = resolveRegisterPaths(opts);
 
-      if (!existsSync(paths.pjrIndexPath)) {
+      if (!existsSync(paths.projectRegisterPath)) {
         throw new Error(
-          `pjr-index.md not found: ${paths.pjrIndexPath}\n` +
+          `Project register directory not found: ${paths.projectRegisterPath}\n` +
             `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`,
         );
       }

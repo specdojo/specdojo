@@ -123,9 +123,9 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 | コマンド            | 用途                                                   | 例                                                                          |
 | ------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------- |
-| `register scaffold` | 登録簿を初期生成する                                   | `specdojo register scaffold --project prj-0001`                             |
+| `register scaffold` | 登録簿ディレクトリと生成ビューを初期化する             | `specdojo register scaffold --project prj-0001`                             |
 | `register add`      | issue / todo / question などの項目を追加する           | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `register build`    | 派生ビューを生成する                                   | `specdojo register build --project prj-0001`                                |
+| `register build`    | 個票から登録項目一覧と派生ビューを生成する             | `specdojo register build --project prj-0001`                                |
 | `register update`   | 登録項目を更新する                                     | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
 | `register start`    | 項目を対応中へ変更する                                 | `specdojo register start --project prj-0001 --id PJR-001`                   |
 | `register wait`     | 項目を待ち状態へ変更する                               | `specdojo register wait --project prj-0001 --id PJR-001`                    |

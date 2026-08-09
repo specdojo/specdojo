@@ -125,6 +125,13 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() !== "" ? value.trim() : undefined;
 }
 
+// 一覧の行順は表示 ID の昇順に固定する。localeCompare は ICU の照合順（環境・ロケール差）に
+// 依存するため、生成物の再現性を保つために code unit 比較で並べ替える。
+export function compareRegisterItemIds(a: string, b: string): number {
+  if (a === b) return 0;
+  return a < b ? -1 : 1;
+}
+
 // 個票ファイル名から表示 ID（PJR-XXXX）を取り出す。命名規約に合わない名前は undefined。
 export function displayIdFromTicketFilename(filename: string): string | undefined {
   const match = TICKET_FILENAME_RE.exec(filename);
@@ -222,8 +229,8 @@ export function readRegisterItemContent(
   return { id, item, hasRegisterFields: asString(fields.item_status) !== undefined };
 }
 
-// 登録簿ディレクトリ直下の個票ファイルを走査し、ID 昇順で返す。
-// 一覧本体（pjr-index.md）と生成ビュー（generated/）は対象外。
+// 登録簿ディレクトリ直下の個票ファイルを走査し、ID 昇順で返す。走査順（readdir の列挙順）は
+// 結果に影響しない。一覧本体（pjr-index.md）と生成ビュー（generated/）は対象外。
 export function loadRegisterItemDocs(projectRegisterPath: string): RegisterItemDoc[] {
   if (!existsSync(projectRegisterPath)) return [];
 
@@ -243,7 +250,7 @@ export function loadRegisterItemDocs(projectRegisterPath: string): RegisterItemD
     });
   }
 
-  return docs.sort((a, b) => a.id.localeCompare(b.id));
+  return docs.sort((a, b) => compareRegisterItemIds(a.id, b.id));
 }
 
 // ================================
