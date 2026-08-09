@@ -150,6 +150,23 @@ describe("register migration", () => {
       conclusion: "移行済み",
     });
 
+    writeFileSync(
+      paths.pjrIndexPath,
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-0001:pjr-index",
+        "  type: project",
+        "  status: draft",
+        "---",
+        "",
+        "# プロジェクト登録簿",
+        "",
+        "[登録項目一覧](./generated/pjr-index.md)",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
     const rerun = planRegisterMigration(paths);
     expect(rerun).toMatchObject({
       sourceCount: 2,

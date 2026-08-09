@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import fg from "fast-glob";
 import { buildDocIndex, lookupDocIndex, replaceDocIndexRefs } from "../../src/doc-index.js";
 import type { DocIndex } from "../../src/doc-index.js";
+import { readSpecdojoNamespace } from "../../src/frontmatter-namespace.js";
 
 function writeIndex(
   dir: string,
@@ -458,6 +460,58 @@ describe("buildDocIndex", () => {
       expect(index.entries["vp-with-line"]).toBe("docs/viewpoints.yaml:5");
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("prj-0001 project register references", () => {
+  it("個票の part_of と pjr-index wikilink が追跡文書へ解決する", () => {
+    const repoRoot = process.cwd();
+    const outputDir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    const indexPath = join(outputDir, "doc-index.json");
+    const registerId = "prj-0001:pjr-index";
+
+    try {
+      buildDocIndex(join(repoRoot, "docs"), indexPath, repoRoot);
+
+      const expectedPath = "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md";
+      expect(lookupDocIndex(registerId, indexPath)).toBe(expectedPath);
+
+      const registerFiles = fg.sync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
+        cwd: repoRoot,
+        absolute: true,
+      });
+      let partOfReferenceCount = 0;
+      for (const file of registerFiles) {
+        const namespace = readSpecdojoNamespace(readFileSync(file, "utf8"));
+        const partOf = Array.isArray(namespace.part_of) ? namespace.part_of : [];
+        for (const id of partOf) {
+          if (typeof id !== "string") continue;
+          partOfReferenceCount++;
+          expect(lookupDocIndex(id, indexPath), `${file}: unresolved part_of ${id}`).toBeDefined();
+        }
+      }
+      expect(partOfReferenceCount).toBeGreaterThan(0);
+
+      const markdownFiles = fg.sync("docs/**/*.md", {
+        cwd: repoRoot,
+        absolute: true,
+        ignore: ["**/generated/**"],
+      });
+      let wikilinkReferenceCount = 0;
+      for (const file of markdownFiles) {
+        const content = readFileSync(file, "utf8");
+        const matches = content.matchAll(/\[\[prj-0001:pjr-index(?:(?:\\\\)*\|[^\]]*)?\]\]/g);
+        for (const _match of matches) {
+          wikilinkReferenceCount++;
+          expect(lookupDocIndex(registerId, indexPath), `${file}: unresolved ${registerId}`).toBe(
+            expectedPath,
+          );
+        }
+      }
+      expect(wikilinkReferenceCount).toBeGreaterThan(0);
+    } finally {
+      rmSync(outputDir, { recursive: true, force: true });
     }
   });
 });
