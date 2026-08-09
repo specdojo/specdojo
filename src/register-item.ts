@@ -93,6 +93,10 @@ export type RegisterItemDoc = {
   hasRegisterFields: boolean;
 };
 
+export type RegisterItemValidationResult = {
+  errors: string[];
+};
+
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 
 // frontmatter の specdojo 名前空間で使うキー順。書き戻しのたびに同じ並びへ整えて、
@@ -255,6 +259,59 @@ export function loadRegisterItemDocs(projectRegisterPath: string): RegisterItemD
   }
 
   return docs.sort((a, b) => compareRegisterItemIds(a.id, b.id));
+}
+
+// 個票正本を横断して検証する。frontmatter の単票スキーマでは表現できない、表示 ID の一意性と
+// ファイル名・frontmatter ID の対応をここで保証する。エディタでは .remarkrc.yaml の schema rule が
+// 単票の enum / 必須項目を検証し、CI では register build がこの検証を実行する。
+export function validateRegisterItemDocs(
+  projectRegisterPath: string,
+): RegisterItemValidationResult {
+  if (!existsSync(projectRegisterPath)) return { errors: [] };
+
+  const errors: string[] = [];
+  const ids = new Map<string, string>();
+  const entries = readdirSync(projectRegisterPath, { withFileTypes: true }).sort((a, b) =>
+    a.name === b.name ? 0 : a.name < b.name ? -1 : 1,
+  );
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    const displayId = displayIdFromTicketFilename(entry.name);
+    if (!displayId) continue;
+
+    const filePath = join(projectRegisterPath, entry.name);
+    const content = readFileSync(filePath, "utf8");
+    const match = content.match(FRONTMATTER_RE);
+    let frontmatterId: string | undefined;
+    if (match) {
+      try {
+        const parsed = yaml.load(match[1]);
+        if (isRecord(parsed) && isRecord(parsed.specdojo)) {
+          frontmatterId = asString(parsed.specdojo.id);
+        }
+      } catch {
+        // YAML の構文エラー自体は frontmatter schema が報告する。ここでは対応検証だけを担う。
+      }
+    }
+
+    const expectedLocalId = entry.name.replace(/\.md$/, "");
+    if (!frontmatterId) {
+      errors.push(`${entry.name}: missing frontmatter specdojo.id for ${displayId}`);
+    } else if (!frontmatterId.endsWith(`:${expectedLocalId}`)) {
+      errors.push(
+        `${entry.name}: ${displayId} must match frontmatter id "${frontmatterId}" (expected *:${expectedLocalId})`,
+      );
+    }
+
+    const previous = ids.get(displayId);
+    if (previous) {
+      errors.push(`${displayId}: duplicate register item ID in ${previous} and ${entry.name}`);
+    } else {
+      ids.set(displayId, entry.name);
+    }
+  }
+
+  return { errors };
 }
 
 // ================================

@@ -12,8 +12,10 @@ import {
   setRegisterItemDescription,
   setRegisterItemTitle,
   titleFromBody,
+  validateRegisterItemDocs,
   type PjrItem,
 } from "../../src/register-item.js";
+import { buildValidator } from "../helpers/schema.js";
 
 // 登録項目の個票。frontmatter の登録項目フィールドは可変にして、
 // 移行済み（item_status あり）と未移行（なし）の両方を作れるようにする。
@@ -160,6 +162,53 @@ describe("loadRegisterItemDocs — 登録簿ディレクトリの走査", () => 
 
   it("ディレクトリが存在しない場合は空配列を返す", () => {
     expect(loadRegisterItemDocs(join(tmpdir(), "specdojo-missing-register-dir"))).toEqual([]);
+  });
+});
+
+describe("validateRegisterItemDocs — 個票正本の横断検証", () => {
+  it("重複した表示 ID と、ファイル名・frontmatter ID の不一致を対象ファイル付きで報告する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-register-validation-"));
+    try {
+      writeFileSync(join(dir, "pjr-ab12-first.md"), buildItemFile(MIGRATED_FIELDS), "utf8");
+      writeFileSync(
+        join(dir, "pjr-ab12-second.md"),
+        buildItemFile(MIGRATED_FIELDS).replace("pjr-ab12-inventory-seed", "pjr-cd34-second"),
+        "utf8",
+      );
+
+      expect(validateRegisterItemDocs(dir).errors).toEqual([
+        'pjr-ab12-first.md: PJR-AB12 must match frontmatter id "prj-0001:pjr-ab12-inventory-seed" (expected *:pjr-ab12-first)',
+        'pjr-ab12-second.md: PJR-AB12 must match frontmatter id "prj-0001:pjr-cd34-second" (expected *:pjr-ab12-second)',
+        "PJR-AB12: duplicate register item ID in pjr-ab12-first.md and pjr-ab12-second.md",
+      ]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("register-item-frontmatter schema — enum 検証", () => {
+  it("不正な item_status と priority を拒否する", () => {
+    const validator = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const data = {
+      specdojo: {
+        id: "prj-0001:pjr-ab12-inventory-seed",
+        type: "project",
+        status: "draft",
+        rulebook: "specdojo:pjr-rulebook",
+        part_of: ["prj-0001:pjr-index"],
+        item_type: "todo",
+        item_status: "running",
+        priority: "urgent",
+      },
+    };
+
+    expect(validator(data)).toBe(false);
+    expect(validator.errors?.map((error) => error.instancePath)).toEqual(
+      expect.arrayContaining(["/specdojo/item_status", "/specdojo/priority"]),
+    );
   });
 });
 

@@ -52,7 +52,7 @@ agent が生成する文書を、必要な論点と判断根拠を保ったま�
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元
 - [[specdojo:specdojo-philosophy]] — 変更対象
 - [[prj-0001:pjr-0129-why-what-how-recipes|Why-What-How作成原則をrecipeへ反映]] — recipe 側の関連対応
 - [[prj-0001:pjr-0132-detect-document-redundancy|既存review viewpointで文書の冗長性を検出]] — レビュー側の関連対応

@@ -53,7 +53,7 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — 判定対象となる project-level Why
 - [[prj-0001:pjr-0129-why-what-how-recipes|Why-What-How作成原則をrecipeへ反映]] — 作成側の対策
 - [[prj-0001:pm-review-viewpoints|レビュー観点一覧]] — 変更対象

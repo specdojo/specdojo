@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-0122
+  id: prj-0001:pjr-0122-review-launch
   type: project
   status: ready
   rulebook: specdojo:pjr-rulebook

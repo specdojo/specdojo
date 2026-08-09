@@ -90,7 +90,7 @@ specdojo register add --project <project-id> --type todo --title "在庫初期�
 
 ### 1.3. type の選び方
 
-値の一覧と列定義は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) と `pjr-index-content.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
+値の一覧と個票 frontmatter の定義は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) と `register-item-frontmatter.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
 
 | type             | 意味                                 | 迷ったとき                                                                                                  |
 | ---------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |

@@ -54,7 +54,7 @@ guided な agent 実行では exec plan に列挙された参考資料と `depen
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0127-clarify-project-why|prj-overviewのプロジェクトWhyを明確化]] — 先行して参照内容を明確化
 - [[prj-0001:prj-overview|プロジェクト概要]] — project context の既定参照先
 - [[specdojo:kata-guide]] — 現行の参照範囲と反映先
