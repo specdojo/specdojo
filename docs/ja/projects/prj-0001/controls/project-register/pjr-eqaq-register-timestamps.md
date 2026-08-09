@@ -7,11 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: review
   priority: medium
   owner: ARC
-  registered_at: "2026-08-09T14:04:24Z"
   due_on: "2026-08-31"
+  registered_at: "2026-08-09T14:04:24Z"
 ---
 
 # PJR-EQAQ 登録簿日時をregistered_at・completed_atへ移行する
