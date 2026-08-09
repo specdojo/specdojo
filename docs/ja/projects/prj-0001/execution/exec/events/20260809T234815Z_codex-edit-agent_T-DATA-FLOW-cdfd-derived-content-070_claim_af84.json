@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-09T23:48:15Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-derived-content-070",
+  "by": "codex-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
