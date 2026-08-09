@@ -56,10 +56,10 @@ flowchart TB
     execScaffold("P-01-05 exec scaffold<br>（担当: PM・BA）")
   end
 
-  プロジェクト構成[("プロジェクト定義・構成<br>.specdojo/specdojo.config.json")]
-  登録簿[("登録簿<br>project-register/")]
-  成果物カタログ[("成果物カタログ<br>dct-domain.yaml（パターン）")]
-  provider実行資材[("provider 実行資材<br>agent定義・provider固有設定")]
+  プロジェクト構成[("プロジェクト定義・構成")]
+  登録簿[("登録簿")]
+  成果物カタログ[("成果物カタログ")]
+  provider実行資材[("provider 実行資材")]
   運用構成定義[("運用・構成定義<br>レビュー観点")]
 
   subgraph 領域外["対象領域外"]
