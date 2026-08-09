@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-9y7g-register-item-file-as-ssot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -19,7 +19,7 @@ specdojo:
 
 - 1つの登録項目の属性が2ファイルへ分割保管されている。[[specdojo:pjr-rulebook]] の `index と個別登録項目の同期` で、処理状態・優先度・担当・期限・完了日・結論要約は `pjr-index` 側、背景・経緯は個票側という分割と、両者を一致させる同期規則が定義されている。
 - 表を共有単位とするため、並行編集で行の追記・編集が衝突しうる。これに対して PJR-ID の乱数化、`register add` の統合ブランチ自動ルーティング、`--reserve` / `--local` / `--strict-sync`、`register where --integration`、`register renumber`、worktree 隔離と lifecycleLock による補償機構を実装済みである（[[prj-0001:pjr-0137-register-id-uniqueness]]、[[prj-0001:pjr-0138-register-add-on-integration-branch]]）。
-- 表セルは構造化データの器としての制約（`|` のエスケープ、wikilink 表示名区切りの escape、整形ツールによる表崩れ、未定値を `_TODO_` で埋める規約）を持ち、検証には表専用の `pjr-index-content.schema.yaml` を要する。他の成果物では構造化メタを frontmatter に置き、frontmatter スキーマで検証している。
+- 表セルは構造化データの器としての制約（`|` のエスケープ、wikilink 表示名区切りの escape、整形ツールによる表崩れ、未定値をプレースホルダ文字列で埋める規約）を持ち、検証には表専用の `pjr-index-content.schema.yaml` を要する。他の成果物では構造化メタを frontmatter に置き、frontmatter スキーマで検証している。
 - SpecDojo 全体は「正本＝成果物ファイル、派生＝`generated/`」を採用し、`docs/**/generated/*` は `.gitignore` で非追跡としている。`pjr-index.md` のみ表が正本という例外になっている。
 - SpecDojo は未リリースのため、移行コストではなく設計の妥当性を主たる判断軸にできる。
 
@@ -42,7 +42,7 @@ specdojo:
 - 補償機構を撤去し、`renumber` は乱数 ID 衝突の救済のみへ縮小する。
 - 台帳の差分レビュー喪失に対する代替（個票の履歴で追う、pull request では frontmatter 差分を見る、一覧表示コマンドを用意する等）を決める。
 
-現時点の評価は _UNDECIDED_ とし、決定は PO の判断による。
+評価の結果、選択肢 B を採択した。決定内容と採択理由は後続の章に記載する。
 
 ## 3. 決定内容
 
@@ -54,12 +54,12 @@ Bを選択する。
 
 ## 5. 承認
 
-| 項目     | 内容                                                                |
-| -------- | ------------------------------------------------------------------- |
-| 決定者   | PO                                                                  |
-| 決定日   | _TODO_                                                              |
-| 承認方式 | PR（選択肢 B は framework の schema と CLI に破壊的変更を伴うため） |
-| 証跡     | _TODO_                                                              |
+| 項目     | 内容                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------- |
+| 決定者   | PO（GitHub アカウント: naoji3x）                                                                        |
+| 決定日   | 2026-08-09                                                                                              |
+| 承認方式 | PR（選択肢 B は framework の schema と CLI に破壊的変更を伴うため）                                     |
+| 証跡     | PR: <https://github.com/specdojo/specdojo/pull/3> / merge SHA: 98f507236c5997f82106e4139a82a4a3485a4c71 |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
@@ -69,7 +69,7 @@ Bを選択する。
 | 項目       | 内容                                                                                                                                                                                                                                                                      |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 影響範囲   | 選択肢 B 採択時: register CLI（`add` / 状態遷移 / `build` / `renumber` / `where`）、`pjr-index-content.schema.yaml`、[[specdojo:pjr-rulebook]]、[[specdojo:register-operation-guide]]、`pjr-index-template.md` と個票テンプレート、派生ビュー生成、既存の全登録項目の移行 |
-| 必要な対応 | 選択肢を評価して決定する。B を採択する場合は移行タスクを別途起票する                                                                                                                                                                                                      |
+| 必要な対応 | B を採択したため、移行タスク（CLI・スキーマ・rulebook・テンプレート・既存項目の移行）を別途起票する                                                                                                                                                                       |
 | 追跡先     | 本個票（PJR-9Y7G）                                                                                                                                                                                                                                                        |
 
 ## 7. 関連ドキュメント
