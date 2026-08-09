@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-09T16:11:50Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-overview-010",
+  "by": "codex-expert-edit-agent",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
