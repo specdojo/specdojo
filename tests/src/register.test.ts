@@ -638,7 +638,9 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
 
       expect(views.map((view) => view.path)).toEqual([
         join(paths.generatedPath, "pjr-index.md"),
-        join(paths.generatedPath, "pjr-views.md"),
+        join(paths.generatedPath, "pjr-views-by-status.md"),
+        join(paths.generatedPath, "pjr-views-by-priority.md"),
+        join(paths.generatedPath, "pjr-views-by-owner.md"),
       ]);
       expect(existsSync(paths.pjrIndexPath)).toBe(false);
     });

@@ -84,11 +84,13 @@ Project Register Documentation Rules
 
 ### 4.2. 生成一覧と派生ビュー
 
-| 生成物                       | 内容                                 | 編集可否 |
-| ---------------------------- | ------------------------------------ | -------- |
-| `generated/pjr-index.md`     | 全個票の一覧                         | 不可     |
-| `generated/pjr-views.md`     | 状態別・優先度別・担当者別の補助一覧 | 不可     |
-| `controls/generated/pm-*.md` | type 別の管理ビュー                  | 不可     |
+| 生成物                               | 内容                | 編集可否 |
+| ------------------------------------ | ------------------- | -------- |
+| `generated/pjr-index.md`             | 全個票の一覧        | 不可     |
+| `generated/pjr-views-by-status.md`   | 状態別の補助一覧    | 不可     |
+| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧  | 不可     |
+| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧  | 不可     |
+| `controls/generated/pm-*.md`         | type 別の管理ビュー | 不可     |
 
 - 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。
 - タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。

@@ -175,7 +175,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       // 一覧本体には行を追記しない（生成ビューとして扱う）。
       expect(readFileSync(join(registerDir, "pjr-index.md"), "utf8")).not.toContain("PJR-AB12");
       // 派生ビューは個票の走査から生成される。
-      expect(readFileSync(join(registerDir, "generated/pjr-views.md"), "utf8")).toContain(
+      expect(readFileSync(join(registerDir, "generated/pjr-views-by-status.md"), "utf8")).toContain(
         "PJR-AB12",
       );
     });
@@ -426,9 +426,10 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       await runRegister(["build", "--scope", "register"]);
 
-      const views = readFileSync(join(registerDir, "generated/pjr-views.md"), "utf8");
+      const views = readFileSync(join(registerDir, "generated/pjr-views-by-status.md"), "utf8");
       expect(views).toContain("| PJR-AB12 | open | 在庫初期値を決める | 個票本文の説明。");
-      expect(existsSync(join(registerDir, "generated/pjr-views.md"))).toBe(true);
+      expect(existsSync(join(registerDir, "generated/pjr-views-by-priority.md"))).toBe(true);
+      expect(existsSync(join(registerDir, "generated/pjr-views-by-owner.md"))).toBe(true);
     });
   });
 });

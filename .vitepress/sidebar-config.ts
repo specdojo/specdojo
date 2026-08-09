@@ -407,6 +407,9 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   "pm-raci": { text: "組織体制とRACI", order: 80 },
   // controls
   "pjr-index": { text: "プロジェクト登録簿", order: 10 },
+  "pjr-views-by-status": { text: "台帳ビュー（状態別）", order: 11 },
+  "pjr-views-by-priority": { text: "台帳ビュー（優先度別）", order: 12 },
+  "pjr-views-by-owner": { text: "台帳ビュー（担当者別）", order: 13 },
   "pm-risk-register": { text: "リスク登録簿", order: 10 },
   "pm-issue-log": { text: "課題ログ", order: 20 },
   "pm-change-request-log": { text: "変更要求ログ", order: 30 },

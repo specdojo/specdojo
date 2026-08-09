@@ -101,7 +101,9 @@ docs/
 │   │   │   │   │   ├── pjr-0001-auth.md          # 登録項目（認証）
 │   │   │   │   │   ├── pjr-0002-payment.md       # 登録項目（決済）
 │   │   │   │   │   └── generated/                # 正本から生成される補助一覧
-│   │   │   │   │       └── pjr-views.md          # 台帳ビュー（状態別・優先度別・担当者別）
+│   │   │   │   │       ├── pjr-views-by-status.md    # 台帳ビュー（状態別）
+│   │   │   │   │       ├── pjr-views-by-priority.md  # 台帳ビュー（優先度別）
+│   │   │   │   │       └── pjr-views-by-owner.md     # 台帳ビュー（担当者別）
 │   │   │   │   │
 │   │   │   │   ├── reviews/                      # レビュー結果 ※成果物カタログ管理対象外
 │   │   │   │   │

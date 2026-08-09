@@ -37,7 +37,9 @@ Project Register
 
 ### 2.1. 登録簿内の補助一覧
 
-- [[pjr-views|台帳ビュー（状態別・優先度別・担当者別）]]
+- [[pjr-views-by-status|台帳ビュー（状態別）]]
+- [[pjr-views-by-priority|台帳ビュー（優先度別）]]
+- [[pjr-views-by-owner|台帳ビュー（担当者別）]]
 
 ### 2.2. controls 全体の派生管理ビュー
 

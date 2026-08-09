@@ -837,22 +837,49 @@ function generateIndexView(items: PjrItem[], projectId: string): string {
   return injectRegisterRows(template, items.map(formatTableRow));
 }
 
-function generateViewsFile(items: PjrItem[], projectId: string, heading: TableHeading): string {
+// 状態別・優先度別・担当者別のビューは、非追跡の生成物になったことで単一ファイルへ
+// まとめる理由（共有編集時の git 差分・マージ競合の回避）が無くなったため、
+// 軸ごとに別ファイルへ分割する（見やすさを優先する）。
+function generateViewsByStatusFile(
+  items: PjrItem[],
+  projectId: string,
+  heading: TableHeading,
+): string {
   const statusGroups = VALID_STATUSES.map((status) => ({
     label: status,
     items: items.filter((it) => it.status === status),
   })).filter((group) => group.items.length > 0);
 
+  const template = loadViewTemplate("pjr-views-by-status-template.md", projectId);
+  return injectViewSlots(template, {
+    "by-status": renderGroupedTables(statusGroups, 1, heading),
+  });
+}
+
+function generateViewsByPriorityFile(
+  items: PjrItem[],
+  projectId: string,
+  heading: TableHeading,
+): string {
   const priorityGroups = VALID_PRIORITIES.map((priority) => ({
     label: priority,
     items: items.filter((it) => it.priority === priority),
   }));
 
-  const template = loadViewTemplate("pjr-views-template.md", projectId);
+  const template = loadViewTemplate("pjr-views-by-priority-template.md", projectId);
   return injectViewSlots(template, {
-    "by-status": renderGroupedTables(statusGroups, 1, heading),
-    "by-priority": renderGroupedTables(priorityGroups, 2, heading),
-    "by-owner": renderGroupedTables(groupByOwner(items), 3, heading),
+    "by-priority": renderGroupedTables(priorityGroups, 1, heading),
+  });
+}
+
+function generateViewsByOwnerFile(
+  items: PjrItem[],
+  projectId: string,
+  heading: TableHeading,
+): string {
+  const template = loadViewTemplate("pjr-views-by-owner-template.md", projectId);
+  return injectViewSlots(template, {
+    "by-owner": renderGroupedTables(groupByOwner(items), 1, heading),
   });
 }
 
@@ -896,8 +923,16 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
         content: generateIndexView(regItems, paths.projectId),
       },
       {
-        path: join(paths.generatedPath, "pjr-views.md"),
-        content: generateViewsFile(regItems, paths.projectId, heading),
+        path: join(paths.generatedPath, "pjr-views-by-status.md"),
+        content: generateViewsByStatusFile(regItems, paths.projectId, heading),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-views-by-priority.md"),
+        content: generateViewsByPriorityFile(regItems, paths.projectId, heading),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-views-by-owner.md"),
+        content: generateViewsByOwnerFile(regItems, paths.projectId, heading),
       },
     );
   }

@@ -204,7 +204,7 @@ specdojo register build --project <project-id>
 - 列名の実値: `pjr-index-template.md` のタイトル行
 - 列の追加・削除・改名を伴う規範変更: [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の「登録項目一覧の標準列」
 
-派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
+派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-by-status-template.md`、`pjr-views-by-priority-template.md`、`pjr-views-by-owner-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
 
 ### 2.5. 台帳の変更を追う
 
