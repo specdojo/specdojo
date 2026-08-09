@@ -10,6 +10,8 @@ import {
   type PjrItem,
   type RegisterPaths,
   extractTableHeading,
+  generateDerivedViewFiles,
+  injectRegisterRows,
   injectViewSlots,
   loadRegisterItems,
   parsePjrIndex,
@@ -124,7 +126,36 @@ describe("extractTableHeading — 見出し行を pjr-index から採用", () =>
   it("登録項目一覧テーブルが無い場合は文脈付きで失敗する", () => {
     const content = "# Project Register\n\n## 1. Registered Items\n\n本文のみ\n";
 
-    expect(() => extractTableHeading(content)).toThrow(/header row not found in pjr-index.md/);
+    expect(() => extractTableHeading(content)).toThrow(
+      /header row not found in the register list source/,
+    );
+  });
+});
+
+describe("injectRegisterRows — 一覧 template へ行を差し込む", () => {
+  it("章 1 テーブルの区切り行直後へ行を挿入し、後続の章を保持する", () => {
+    const rows = ["| PJR-0002 | open | b |", "| PJR-0003 | open | c |"];
+
+    const actual = injectRegisterRows(EN_PJR_INDEX, rows);
+
+    const lines = actual.split("\n");
+    const separatorIndex = lines.findIndex((line) => /^\|\s*---/.test(line));
+    expect(lines.slice(separatorIndex + 1, separatorIndex + 3)).toEqual(rows);
+    expect(actual).toContain("## 2. Derived Views");
+  });
+
+  it("行が空でもテーブル構造を壊さない", () => {
+    const actual = injectRegisterRows(EN_PJR_INDEX, []);
+
+    expect(actual).toBe(EN_PJR_INDEX);
+  });
+
+  it("章 1 のテーブルが無い template は文脈付きで失敗する", () => {
+    const content = "# Project Register\n\n## 1. Registered Items\n\n本文のみ\n";
+
+    expect(() => injectRegisterRows(content, ["| PJR-0001 |"])).toThrow(
+      /Register table not found in template: pjr-index-template.md/,
+    );
   });
 });
 
@@ -450,6 +481,137 @@ describe("loadRegisterItems — 個票正本と未移行行の解決", () => {
       expect(views.map((view) => view.id)).toEqual(["PJR-CD34", "PJR-ZZ99"]);
       expect(views[0].ticketPath).toBeUndefined();
       expect(views[1].source).toBe("ticket");
+    });
+  });
+});
+
+describe("generateDerivedViewFiles — 個票を入力とする生成ビュー", () => {
+  const buildTicket = (id: string, title: string, extraFields: string[]): string =>
+    [
+      "---",
+      "specdojo:",
+      `  id: prj-0001:${id.toLowerCase()}-topic`,
+      "  type: project",
+      "  status: draft",
+      "  rulebook: specdojo:pjr-rulebook",
+      "  item_type: todo",
+      ...extraFields.map((line) => `  ${line}`),
+      "---",
+      "",
+      `# ${id} ${title}`,
+      "",
+      "## 1. 概要",
+      "",
+      "個票本文の説明。",
+      "",
+    ].join("\n");
+
+  const withRegisterDir = (fn: (paths: RegisterPaths, dir: string) => void): void => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-register-views-"));
+    try {
+      const paths: RegisterPaths = {
+        projectId: "prj-0001",
+        projectRegisterPath: join(dir, "project-register"),
+        pjrIndexPath: join(dir, "project-register", "pjr-index.md"),
+        generatedPath: join(dir, "project-register", "generated"),
+        controlsGeneratedPath: join(dir, "generated"),
+        registerDateTimeZone: "UTC",
+      };
+      mkdirSync(paths.projectRegisterPath, { recursive: true });
+      fn(paths, paths.projectRegisterPath);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  };
+
+  // 個票のみ（pjr-index.md なし）で一覧が生成できることが、一覧を生成物へ移す前提になる。
+  const writeTwoTickets = (dir: string): void => {
+    writeFileSync(
+      join(dir, "pjr-zz99-topic.md"),
+      buildTicket("PJR-ZZ99", "後の項目", [
+        "item_status: open",
+        "priority: low",
+        "owner: PO",
+        'registered_on: "2026-08-02"',
+      ]),
+      "utf8",
+    );
+    writeFileSync(
+      join(dir, "pjr-ab12-topic.md"),
+      buildTicket("PJR-AB12", "先の項目", [
+        "item_status: review",
+        "priority: high",
+        "owner: ARC",
+        'registered_on: "2026-08-01"',
+      ]),
+      "utf8",
+    );
+  };
+
+  const findView = (views: { path: string; content: string }[], fileName: string): string => {
+    const view = views.find((candidate) => candidate.path.endsWith(fileName));
+    if (!view) throw new Error(`生成ビューが見つかりません: ${fileName}`);
+    return view.content;
+  };
+
+  it("pjr-index.md が無くても個票から一覧を generated/ へ生成する", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+
+      const views = generateDerivedViewFiles(paths, "register");
+
+      expect(views.map((view) => view.path)).toEqual([
+        join(paths.generatedPath, "pjr-index.md"),
+        join(paths.generatedPath, "pjr-views.md"),
+      ]);
+      expect(existsSync(paths.pjrIndexPath)).toBe(false);
+    });
+  });
+
+  it("一覧の行は ID 昇順で、個票リンクを generated/ 起点へ付け替える", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+
+      const content = findView(generateDerivedViewFiles(paths, "register"), "pjr-index.md");
+
+      const rows = content.split("\n").filter((line) => line.startsWith("| PJR-"));
+      expect(rows).toHaveLength(2);
+      expect(rows[0]).toContain("| PJR-AB12 | review | 先の項目 |");
+      expect(rows[0]).toContain("[pjr-ab12-topic](../pjr-ab12-topic.md)");
+      expect(rows[1]).toContain("| PJR-ZZ99 | open | 後の項目 |");
+    });
+  });
+
+  it("同一入力から同一出力を返す（生成が決定的）", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+
+      const first = generateDerivedViewFiles(paths, "all");
+      const second = generateDerivedViewFiles(paths, "all");
+
+      expect(second).toEqual(first);
+    });
+  });
+
+  it("controls スコープでは登録簿一覧を生成しない", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+
+      const views = generateDerivedViewFiles(paths, "controls");
+
+      expect(views.some((view) => view.path.endsWith(join("generated", "pjr-index.md")))).toBe(
+        false,
+      );
+    });
+  });
+
+  it("登録項目が無い場合は列見出しだけの一覧を生成する", () => {
+    withRegisterDir((paths) => {
+      const content = findView(generateDerivedViewFiles(paths, "register"), "pjr-index.md");
+
+      expect(content).toContain("## 1. 登録項目一覧");
+      expect(content.split("\n").filter((line) => line.startsWith("| PJR-"))).toEqual([]);
+      expect(content).toContain("specdojo register build");
     });
   });
 });

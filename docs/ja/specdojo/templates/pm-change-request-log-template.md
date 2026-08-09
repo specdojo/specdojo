@@ -15,6 +15,6 @@ specdojo:
 
 # 変更要求ログ
 
-> このファイルは `pjr-index.md` から生成された派生ビューです。正本は `pjr-index.md` と各 `pjr-XXXX-<topic>.md` であり、このファイルは再生成可能です。
+> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。
 
 <!-- specdojo:view-slot=table -->

@@ -31,8 +31,8 @@ Register Operation Guide
 
 プロジェクト登録簿は、プロジェクト立ち上げ時または進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘を一元管理する台帳です。
 
-- 正本は `pjr-index.md` の一覧と、各個票（`pjr-XXXX-<topic>.md`）です。
-- 状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される補助一覧であり、直接編集しません。
+- 正本は各個票（`pjr-XXXX-<topic>.md`）です。登録項目一覧（`pjr-index.md`）は個票から生成される一覧ビューです。
+- 一覧と、状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される派生物であり、直接編集しません。
 - 立ち上げ時は、未整理の問題・判断を `issue` / `question` / `decision` で記録し、合意した成果物カタログの作成を `todo` で追跡できます。
 - 成果物カタログと依存関係に基づく計画済みの作業へ移った後は schedule で管理し、登録簿との二重管理をしません。進行中に発生した計画外の単発対応・調査・判断は、引き続き登録簿で追跡します（[exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
 
@@ -40,19 +40,17 @@ Register Operation Guide
 
 ```mermaid
 flowchart LR
-  PJR_IDX["pjr-index<br>プロジェクト登録簿"]
-  PJR_ITEM["pjr-XXXX-&lt;topic&gt;<br>個別登録項目"]
+  PJR_ITEM["pjr-XXXX-&lt;topic&gt;<br>個別登録項目（正本）"]
+  PJR_IDX["project-register/generated<br>pjr-index 登録項目一覧"]
   PJR_GEN["project-register/generated<br>登録簿内の補助一覧"]
   PM_GEN["controls/generated<br>controls 全体の派生管理ビュー"]
 
-  PJR_IDX --> PJR_ITEM
-  PJR_IDX --> PJR_GEN
-  PJR_IDX --> PM_GEN
+  PJR_ITEM --> PJR_IDX
   PJR_ITEM --> PJR_GEN
   PJR_ITEM --> PM_GEN
 
   classDef target stroke-width:4px
-  class PJR_IDX target
+  class PJR_ITEM target
 ```
 
 登録簿の初期生成には `register scaffold` を使います。
@@ -193,20 +191,20 @@ specdojo register close \
 
 ### 2.4. 派生ビューの扱い
 
-派生ビューは `register build` で生成します。
+登録項目一覧と派生ビューは、個票を入力として `register build` で生成します。
 
 ```bash
 specdojo register build --project <project-id>
 ```
 
-- `project-register/generated/` には登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
+- `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
 - `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成されます。
-- 派生ビューの内容を直したい場合は、生成ファイルではなく `pjr-index.md` または個票を修正して再生成します。
+- `generated/` 配下は追跡対象外の生成物です。生成ファイルを手編集しても次回の `register build` で失われるため、内容を直したい場合は個票を修正して再生成します。
+- 行の並びは表示 ID の昇順に固定されます。同じ個票の集合からは常に同じ内容が生成されます。
 
-派生ビューのテーブルのタイトル行（列名の行）は、コードや派生ビューの雛形ではなく `pjr-index.md` のタイトル行をそのまま継承します。列名を変更したい場合は、生成ファイルを直接編集せず、次を修正してから `register build` で再生成します。
+一覧・派生ビューのテーブルのタイトル行（列名の行）は、コードではなく `pjr-index-template.md` の「登録項目一覧」テーブルのタイトル行をそのまま継承します。列名を変更したい場合は、生成ファイルを直接編集せず、次を修正してから `register build` で再生成します。
 
-- 既存プロジェクトの実値: 当該 `pjr-index.md` の「登録項目一覧」テーブルのタイトル行
-- 新規プロジェクトの初期値: `pjr-index-template.md` のタイトル行
+- 列名の実値: `pjr-index-template.md` のタイトル行
 - 列の追加・削除・改名を伴う規範変更: [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の「登録項目一覧の標準列」
 
 派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
