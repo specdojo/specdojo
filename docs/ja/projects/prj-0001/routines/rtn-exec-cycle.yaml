@@ -9,7 +9,7 @@
 id: rtn-exec-cycle
 name: 延期 task 再開と Ready task 自動実行の順次処理
 description: 毎日1時と6時（Asia/Tokyo）に、due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
-enabled: false
+enabled: true
 trigger:
   cron: "0 1,6 * * *"
   timezone: Asia/Tokyo
