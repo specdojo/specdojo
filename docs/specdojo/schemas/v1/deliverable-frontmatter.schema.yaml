@@ -53,17 +53,36 @@ properties:
                 default: []
                 description: "この成果物が実現する仕様・設計のID。"
             default: {}
+          # 登録項目（pjr-XXXX-<topic>）の構造化フィールド。定義の正本は
+          # register-item-frontmatter.schema.yaml 側にあり、そちらは必須項目と
+          # 終端状態の完了日も検証する。ここでは個票が段階的に項目を持てるよう、
+          # 同じ定義を参照した任意項目として許可する。
           item_type:
-            type: string
-            enum:
-              - todo
-              - risk
-              - issue
-              - question
-              - decision
-              - note
-              - change-request
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemType"
             description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
+          item_status:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemStatus"
+            description: "登録項目の処理状態。文書成熟度の status とは別の状態軸。"
+          priority:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Priority"
+            description: "登録項目の対応優先度。"
+          owner:
+            type: string
+            minLength: 1
+            description: "登録項目の担当ロールコードまたは担当者。未定の場合は項目自体を省略する。"
+          registered_on:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
+            description: "登録項目を起票した日付。"
+          due_on:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
+            description: "登録項目の対応期限または判断期限。"
+          completed_on:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
+            description: "登録項目を完了・決定・却下した日付。"
+          conclusion:
+            type: string
+            minLength: 1
+            description: "登録項目の完了・決定・却下時の結果を1文で要約した結論。"
           size:
             type: string
             enum: ["small", "medium", "large"]
