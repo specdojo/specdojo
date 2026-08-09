@@ -36,7 +36,7 @@ pre-commit:
     # commit には含めない（stage_fixed しない）。ローカル作業ツリーを最新化しつつ、
     # 入力変更でビルドが壊れていないことの確認も兼ねる。
     register-build:
-      glob: "docs/**/pjr-index.md"
+      glob: "docs/**/project-register/*.md"
       run: npx tsx src/specdojo.ts register build
 
     catalog-build:

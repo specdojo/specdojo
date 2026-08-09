@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-rzr3-pjr-index-as-generated-view
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-RZR3 pjr-index を generated 配下の生成ビューへ移す
