@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import {
-  findItemById,
-  parsePjrIndex,
+  findRegisterItem,
+  loadRegisterItems,
   PJR_ID_RE,
   resolveRegisterPaths,
   TERMINAL_STATUSES_SET,
@@ -193,18 +193,18 @@ export type RegisterRunTarget = {
 
 export function resolveRegisterRunTarget(projectId: string, pjrId: string): RegisterRunTarget {
   const registerPaths = resolveRegisterPaths({ project: projectId });
-  if (!existsSync(registerPaths.pjrIndexPath)) {
+  if (!existsSync(registerPaths.projectRegisterPath)) {
     throw new Error(
-      `pjr-index.md not found: ${registerPaths.pjrIndexPath}\n` +
+      `Project register directory not found: ${registerPaths.projectRegisterPath}\n` +
         `Run: specdojo register scaffold --project ${projectId}`,
     );
   }
-  const items = parsePjrIndex(readFileSync(registerPaths.pjrIndexPath, "utf8"));
-  const item = findItemById(items, pjrId);
-  if (!item) {
-    throw new Error(`Register item not found in ${registerPaths.pjrIndexPath}: ${pjrId}`);
+  // 登録項目の正本は個票 frontmatter。個票が無い（未移行の）項目は pjr-index の行から読む。
+  const view = findRegisterItem(loadRegisterItems(registerPaths), pjrId);
+  if (!view) {
+    throw new Error(`Register item not found in ${registerPaths.projectRegisterPath}: ${pjrId}`);
   }
-  return { registerPaths, item };
+  return { registerPaths, item: view.item };
 }
 
 // 登録簿の個票列（`[label](./file.md)` 形式）から個票の絶対パスを取り出す。

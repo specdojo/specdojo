@@ -1,6 +1,13 @@
 import { type Command } from "commander";
 import { randomInt } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
@@ -8,6 +15,37 @@ import { resolveRegisterDateTimeZone, todayInTimeZone } from "./register-date.js
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { gitOutput, gitResult, listRegisteredWorktrees } from "./exec-worktree.js";
+import {
+  applyRegisterItemFields,
+  displayIdFromTicketFilename,
+  formatRegisterItemFields,
+  isPlaceholderCell,
+  loadRegisterItemDocs,
+  PJR_ID_ALPHABET,
+  PJR_ID_RE,
+  registerItemFieldsFromItem,
+  setRegisterItemDescription,
+  setRegisterItemTitle,
+  TERMINAL_STATUSES_SET,
+  ticketRefCell,
+  VALID_PRIORITIES,
+  VALID_STATUSES,
+  VALID_TYPES,
+  type PjrItem,
+  type RegisterItemFieldUpdates,
+} from "./register-item.js";
+
+// 登録項目の型・enum・ID 書式は register-item.ts が正本。従来どおり register.js からも
+// 参照できるよう再輸出する。
+export {
+  PJR_ID_ALPHABET,
+  PJR_ID_RE,
+  TERMINAL_STATUSES_SET,
+  VALID_PRIORITIES,
+  VALID_STATUSES,
+  VALID_TYPES,
+  type PjrItem,
+};
 
 // ================================
 // Types
@@ -23,57 +61,23 @@ export type RegisterPaths = {
   registerDateTimeZone: string;
 };
 
-export type PjrItem = {
+// 個票（登録項目の正本）を1件指す解決結果。ticketPath が無い項目は、まだ個票へ
+// 移行されていない pjr-index の行（読み取り互換）だけが存在する状態を表す。
+export type RegisterItemView = {
   id: string;
-  status: string;
-  title: string;
-  description: string;
-  type: string;
-  priority: string;
-  owner: string;
-  registered: string;
-  due: string;
-  completed: string;
-  conclusion: string;
-  ticket: string;
+  item: PjrItem;
+  ticketPath?: string;
+  ticketFilename?: string;
+  // ticket: 個票 frontmatter が正本 / index: 未移行のため pjr-index の行から読んだ項目。
+  source: "ticket" | "index";
 };
 
 // ================================
 // Constants
 // ================================
 
-export const VALID_STATUSES = [
-  "open",
-  "in-progress",
-  "waiting",
-  "review",
-  "decided",
-  "done",
-  "deferred",
-  "rejected",
-] as const;
-
-export const VALID_TYPES = [
-  "todo",
-  "question",
-  "risk",
-  "issue",
-  "change-request",
-  "decision",
-  "note",
-] as const;
-
-export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
-
-// PJR-ID の乱数部分に使う 32 文字セット。曖昧文字（`I` / `L` / `O` / `U`）を除いた
-// 英大文字（単一ケース）と数字で構成し、目視・手入力時の誤読を避ける。
-export const PJR_ID_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-
 // PJR-ID の乱数部分の桁数。
 const PJR_ID_LENGTH = 4;
-
-// PJR-ID の書式。旧来の数字4桁（例: `PJR-0163`）も 0-9 が集合に含まれるため引き続き一致する。
-export const PJR_ID_RE = /^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$/;
 
 // 生成した ID が偶然含みうる不適切語の簡易ブロックリスト（4 文字, 大文字, 曖昧文字除外後）。
 // 一致した候補は採用せず再抽選する。曖昧文字（I/L/O/U）を含む語は生成されえないため載せない。
@@ -248,43 +252,6 @@ function formatTableRow(item: PjrItem): string {
   return `| ${item.id} | ${item.status} | ${item.title} | ${item.description} | ${item.type} | ${item.priority} | ${item.owner} | ${item.registered} | ${item.due} | ${item.completed} | ${item.conclusion} | ${item.ticket} |`;
 }
 
-function insertRowAfterLast(content: string, newRow: string): string {
-  const lines = content.split("\n");
-  let inSection = false;
-  let lastRowIndex = -1;
-  let separatorIndex = -1;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (REGISTER_SECTION_RE.test(line)) {
-      inSection = true;
-      continue;
-    }
-    if (inSection && /^## /.test(line)) break;
-    if (!inSection) continue;
-
-    if (isTableSeparator(line)) {
-      separatorIndex = i;
-      continue;
-    }
-
-    if (line.startsWith("|")) {
-      const cells = parseTableCells(line);
-      if (cells.length >= 1 && PJR_ID_RE.test(cells[0])) {
-        lastRowIndex = i;
-      }
-    }
-  }
-
-  const insertAfter = lastRowIndex !== -1 ? lastRowIndex : separatorIndex;
-  if (insertAfter === -1) {
-    throw new Error("Could not find table structure in pjr-index.md");
-  }
-
-  lines.splice(insertAfter + 1, 0, newRow);
-  return lines.join("\n");
-}
-
 // ================================
 // Validation
 // ================================
@@ -383,6 +350,47 @@ function generateTicket(opts: {
   );
 
   return content;
+}
+
+// 個票の完成形（テンプレート展開 + 説明の反映 + 登録項目 frontmatter）を組み立てる。
+// 登録項目の構造化フィールドは frontmatter、タイトルは H1、説明は概要段落が正本になる。
+function buildRegisterItemContent(opts: {
+  projectId: string;
+  displayId: string;
+  topic: string;
+  fields: ReservationFields;
+  templatePath: string;
+}): string {
+  let content = generateTicket({
+    projectId: opts.projectId,
+    displayId: opts.displayId,
+    topic: opts.topic,
+    type: opts.fields.type,
+    title: opts.fields.title,
+    templatePath: opts.templatePath,
+  });
+
+  if (!isPlaceholderCell(opts.fields.description)) {
+    content = setRegisterItemDescription(content, opts.fields.description);
+  }
+
+  return applyRegisterItemFields(
+    content,
+    registerItemFieldsFromItem({
+      id: opts.displayId,
+      status: opts.fields.status,
+      title: opts.fields.title,
+      description: opts.fields.description,
+      type: opts.fields.type,
+      priority: opts.fields.priority,
+      owner: opts.fields.owner,
+      registered: opts.fields.registered,
+      due: opts.fields.due,
+      completed: opts.fields.completed,
+      conclusion: opts.fields.conclusion,
+      ticket: "-",
+    }),
+  );
 }
 
 // ================================
@@ -500,9 +508,10 @@ type ViewFile = { path: string; content: string };
 const VALID_BUILD_SCOPES: BuildScope[] = ["register", "controls", "all"];
 
 function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
-  const content = readFileSync(paths.pjrIndexPath, "utf8");
-  const items = parsePjrIndex(content);
-  const heading = extractTableHeading(content);
+  // 項目の値は個票 frontmatter（正本）から集める。pjr-index は列見出しの供給元として
+  // 読むだけで、行の内容は参照しない。
+  const items = loadRegisterItems(paths).map((view) => view.item);
+  const heading = extractTableHeading(readFileSync(paths.pjrIndexPath, "utf8"));
 
   // Ticket links in pjr-index.md use ./ relative to project-register/.
   // Rebase them so links remain valid from each generated/ directory.
@@ -591,82 +600,123 @@ function writeDerivedViews(paths: RegisterPaths, scope: BuildScope): ViewFile[] 
 // Item Update Helpers
 // ================================
 
-export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
-
 export function findItemById(items: PjrItem[], id: string): PjrItem | undefined {
   return items.find((it) => it.id === id);
 }
 
-function replaceRowInContent(content: string, updated: PjrItem): string {
-  const newRow = formatTableRow(updated);
-  const lines = content.split("\n");
-  let inSection = false;
+// 登録項目を全件解決する。正本は個票 frontmatter で、登録項目フィールドを持つ個票を
+// 最優先で採用する。まだ個票へ移行していない項目は pjr-index の行から読み取り（互換）、
+// 個票ファイルがある場合はそのパスを保持して、次回の更新時に frontmatter へ移す。
+export function loadRegisterItems(paths: RegisterPaths): RegisterItemView[] {
+  const docs = loadRegisterItemDocs(paths.projectRegisterPath);
+  const docById = new Map(docs.map((doc) => [doc.id, doc]));
+  const views = new Map<string, RegisterItemView>();
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (REGISTER_SECTION_RE.test(line)) {
-      inSection = true;
-      continue;
-    }
-    if (inSection && /^## /.test(line)) break;
-    if (!inSection) continue;
-    if (!line.startsWith("|") || isTableSeparator(line)) continue;
+  for (const doc of docs) {
+    if (!doc.hasRegisterFields) continue;
+    views.set(doc.id, {
+      id: doc.id,
+      item: doc.item,
+      ticketPath: doc.path,
+      ticketFilename: doc.filename,
+      source: "ticket",
+    });
+  }
 
-    const cells = parseTableCells(line);
-    if (cells.length >= 1 && cells[0] === updated.id) {
-      lines[i] = newRow;
-      return lines.join("\n");
+  if (existsSync(paths.pjrIndexPath)) {
+    for (const item of parsePjrIndex(readFileSync(paths.pjrIndexPath, "utf8"))) {
+      if (views.has(item.id)) continue;
+      const doc = docById.get(item.id);
+      views.set(item.id, {
+        id: item.id,
+        item: doc ? { ...item, ticket: ticketRefCell(doc.filename) } : item,
+        ticketPath: doc?.path,
+        ticketFilename: doc?.filename,
+        source: "index",
+      });
     }
   }
 
-  throw new Error(`Item ${updated.id} not found in table`);
+  return [...views.values()].sort((a, b) => a.id.localeCompare(b.id));
 }
 
+export function findRegisterItem(
+  views: RegisterItemView[],
+  id: string,
+): RegisterItemView | undefined {
+  return views.find((view) => view.id === id);
+}
+
+// 更新対象の登録項目を解決する。個票ファイルが無い項目は、書き込み先（正本）が無いため
+// 更新できない。移行が済んでいない旧項目に当たった場合は、個票化を促して中断する。
 function loadItemForUpdate(
   paths: RegisterPaths,
   id: string,
   guard?: "require-active" | "require-terminal",
-): { content: string; item: PjrItem } {
-  if (!existsSync(paths.pjrIndexPath)) {
-    throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`);
-  }
+): RegisterItemView {
   if (!PJR_ID_RE.test(id)) {
     throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
   }
-  const content = readFileSync(paths.pjrIndexPath, "utf8");
-  const items = parsePjrIndex(content);
-  const item = findItemById(items, id);
-  if (!item) {
-    throw new Error(`Item not found: ${id}`);
+  const view = findRegisterItem(loadRegisterItems(paths), id);
+  if (!view) {
+    throw new Error(`Item not found: ${id} (searched ${paths.projectRegisterPath})`);
   }
-  if (guard === "require-active" && TERMINAL_STATUSES_SET.has(item.status)) {
+  if (!view.ticketPath) {
     throw new Error(
-      `Cannot change ${id}: status is "${item.status}" (terminal). Use "register reopen" first.`,
+      `Item ${id} has no ticket file under ${paths.projectRegisterPath}.\n` +
+        `The register item frontmatter is the source of truth; create the ticket file ` +
+        `(pjr-${id.slice("PJR-".length).toLowerCase()}-<topic>.md) before updating the item.`,
     );
   }
-  if (guard === "require-terminal" && !TERMINAL_STATUSES_SET.has(item.status)) {
-    throw new Error(`Cannot reopen ${id}: status is "${item.status}" (already active).`);
+  if (guard === "require-active" && TERMINAL_STATUSES_SET.has(view.item.status)) {
+    throw new Error(
+      `Cannot change ${id}: status is "${view.item.status}" (terminal). Use "register reopen" first.`,
+    );
   }
-  return { content, item };
+  if (guard === "require-terminal" && !TERMINAL_STATUSES_SET.has(view.item.status)) {
+    throw new Error(`Cannot reopen ${id}: status is "${view.item.status}" (already active).`);
+  }
+  return view;
 }
 
+// 更新後の項目値を個票 frontmatter へ書き戻す。未移行（source: index）の項目は、
+// 行から読んだ値も含めて全フィールドを書き込み、その場で個票正本へ移行する。
+// タイトル・説明は frontmatter に持たないため、H1 と概要段落を書き換える。
 function applyItemUpdate(opts: {
   paths: RegisterPaths;
-  content: string;
+  view: RegisterItemView;
   updated: PjrItem;
   dryRun: boolean;
   action?: string;
+  title?: string;
+  description?: string;
 }): void {
+  const ticketPath = opts.view.ticketPath;
+  if (!ticketPath) {
+    throw new Error(`Item ${opts.view.id} has no ticket file to update`);
+  }
+
   const label = opts.action ?? `→ ${opts.updated.status}`;
+  const updates: RegisterItemFieldUpdates = registerItemFieldsFromItem(opts.updated);
+
   if (opts.dryRun) {
-    process.stdout.write(
-      `Would update ${opts.updated.id} (${label}):\n${formatTableRow(opts.updated)}\n`,
-    );
+    const lines = [`Would update ${ticketPath} (${opts.updated.id} ${label}):`];
+    if (opts.title !== undefined) lines.push(`  title: ${opts.title}`);
+    if (opts.description !== undefined) lines.push(`  description: ${opts.description}`);
+    lines.push(formatRegisterItemFields(updates));
+    process.stdout.write(`${lines.join("\n")}\n`);
     return;
   }
-  const updatedContent = replaceRowInContent(opts.content, opts.updated);
-  writeFileSync(opts.paths.pjrIndexPath, updatedContent, "utf8");
-  process.stdout.write(`Updated: ${opts.paths.pjrIndexPath} (${opts.updated.id} ${label})\n`);
+
+  let content = readFileSync(ticketPath, "utf8");
+  if (opts.title !== undefined) content = setRegisterItemTitle(content, opts.title);
+  if (opts.description !== undefined) {
+    content = setRegisterItemDescription(content, opts.description);
+  }
+  content = applyRegisterItemFields(content, updates);
+  writeFileSync(ticketPath, content, "utf8");
+  process.stdout.write(`Updated: ${ticketPath} (${opts.updated.id} ${label})\n`);
+
   for (const view of writeDerivedViews(opts.paths, "all")) {
     process.stdout.write(`Generated: ${view.path}\n`);
   }
@@ -848,22 +898,26 @@ export type RenumberPlan = {
 // 再採番で書き換える全ファイルを事前に算出する。
 // 途中で衝突・不整合を検出したら例外を投げ、部分適用が起きないようにする。
 export function planRenumber(paths: RegisterPaths, fromId: string, toId: string): RenumberPlan {
-  const indexContent = readFileSync(paths.pjrIndexPath, "utf8");
-  const items = parsePjrIndex(indexContent);
+  const views = loadRegisterItems(paths);
 
-  const fromItem = findItemById(items, fromId);
-  if (!fromItem) {
+  const fromView = findRegisterItem(views, fromId);
+  if (!fromView) {
     throw new Error(`Item not found: ${fromId}`);
   }
-  if (findItemById(items, toId)) {
-    throw new Error(`Target ID already exists in pjr-index.md: ${toId}`);
+  if (findRegisterItem(views, toId)) {
+    throw new Error(`Target ID already exists: ${toId}`);
   }
+  const fromItem = fromView.item;
 
   const writes: RenumberPlan["writes"] = [];
   let ticketRename: RenumberPlan["ticketRename"];
-  let newIndexContent = indexContent;
+  // pjr-index に旧 ID の行が残っている場合だけ、その行も新しい ID へ差し替える。
+  const hasIndexRow =
+    existsSync(paths.pjrIndexPath) &&
+    parsePjrIndex(readFileSync(paths.pjrIndexPath, "utf8")).some((it) => it.id === fromId);
+  let newIndexContent = hasIndexRow ? readFileSync(paths.pjrIndexPath, "utf8") : "";
 
-  const oldFilename = parseTicketFilename(fromItem.ticket);
+  const oldFilename = fromView.ticketFilename;
   let fromDocId: string | undefined;
   let toDocId: string | undefined;
 
@@ -895,15 +949,18 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
     });
     ticketRename = { from: oldTicketPath, to: newTicketPath };
 
-    const newTicketRef = `[${newFilename.replace(/\.md$/, "")}](./${newFilename})`;
-    const updated: PjrItem = { ...fromItem, id: toId, ticket: newTicketRef };
-    newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
-  } else {
+    if (hasIndexRow) {
+      const updated: PjrItem = { ...fromItem, id: toId, ticket: ticketRefCell(newFilename) };
+      newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
+    }
+  } else if (hasIndexRow) {
     const updated: PjrItem = { ...fromItem, id: toId };
     newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
   }
 
-  writes.push({ path: paths.pjrIndexPath, content: newIndexContent });
+  if (hasIndexRow) {
+    writes.push({ path: paths.pjrIndexPath, content: newIndexContent });
+  }
 
   // 参照リンク・targets の付け替え（doc id を持つ個票がある場合のみ）。
   if (fromDocId && toDocId) {
@@ -932,9 +989,6 @@ export function renumberPjrItem(opts: {
 }): void {
   const { paths, fromId, toId, dryRun } = opts;
 
-  if (!existsSync(paths.pjrIndexPath)) {
-    throw new Error(`pjr-index.md not found: ${paths.pjrIndexPath}`);
-  }
   for (const id of [fromId, toId]) {
     if (!PJR_ID_RE.test(id)) {
       throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
@@ -971,10 +1025,11 @@ export function renumberPjrItem(opts: {
 }
 
 // ================================
-// Reserve (delegate row to integration branch worktree)
+// Reserve (delegate the new item file to the integration branch worktree)
 // ================================
 
-// register add で登録行に書き込む項目値。個票は作らないため ticket セルは常に `-`。
+// register add が個票へ書き込む項目値。タイトル・説明は個票本文（H1・概要）へ、
+// それ以外は frontmatter の登録項目フィールドへ入る。
 export type ReservationFields = {
   type: string;
   title: string;
@@ -990,17 +1045,35 @@ export type ReservationFields = {
 
 export type IntegrationWorktree = { path: string; branch: string };
 
-// pjr-index の現在内容から、予約する登録行と割り当て ID を算出する純粋関数。
-// I/O を持たず、フィールド検証と ID 衝突検知だけを行う。ID を省略すると最大値 +1 で採番する。
-export function planReservationRow(opts: {
-  content: string;
+// 登録簿ディレクトリに存在する登録項目 ID を集める。個票ファイル名を正とし、
+// 未移行の項目のために pjr-index の行からも ID を拾って採番の衝突を避ける。
+export function collectRegisterItemIds(projectRegisterPath: string): string[] {
+  const ids = new Set<string>();
+  if (existsSync(projectRegisterPath)) {
+    for (const entry of readdirSync(projectRegisterPath, { withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      const id = displayIdFromTicketFilename(entry.name);
+      if (id) ids.add(id);
+    }
+  }
+  const pjrIndexPath = join(projectRegisterPath, "pjr-index.md");
+  if (existsSync(pjrIndexPath)) {
+    for (const item of parsePjrIndex(readFileSync(pjrIndexPath, "utf8"))) ids.add(item.id);
+  }
+  return [...ids].sort();
+}
+
+// 予約する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、
+// フィールド検証と ID 衝突検知だけを行う。ID を省略するとランダムに採番する。
+export function planReservation(opts: {
+  existingIds: Iterable<string>;
   explicitId?: string;
   fields: ReservationFields;
-  // 個票を作る場合の topic slug。指定すると ticket セルに個票リンクを埋め、個票ファイル名を返す。
-  ticketTopic?: string;
-}): { assignedId: string; newContent: string; newRow: string; ticketFilename?: string } {
-  const items = parsePjrIndex(opts.content);
-  const assignedId = opts.explicitId?.trim() || generatePjrId(items.map((it) => it.id));
+  // 個票ファイル名に使う topic slug。
+  topic: string;
+}): { assignedId: string; ticketFilename: string } {
+  const existing = [...opts.existingIds];
+  const assignedId = opts.explicitId?.trim() || generatePjrId(existing);
 
   validateFields({
     status: opts.fields.status,
@@ -1012,41 +1085,14 @@ export function planReservationRow(opts: {
     id: assignedId,
   });
 
-  if (items.some((it) => it.id === assignedId)) {
-    throw new Error(`ID already exists in pjr-index.md: ${assignedId}`);
+  if (existing.includes(assignedId)) {
+    throw new Error(`ID already exists in the project register: ${assignedId}`);
   }
 
-  const ticketFilename = opts.ticketTopic
-    ? `${assignedId.toLowerCase()}-${opts.ticketTopic}.md`
-    : undefined;
-  const ticketRef = ticketFilename
-    ? `[${ticketFilename.replace(/\.md$/, "")}](./${ticketFilename})`
-    : "-";
-
-  const newItem: PjrItem = {
-    id: assignedId,
-    status: opts.fields.status,
-    title: opts.fields.title,
-    description: opts.fields.description,
-    type: opts.fields.type,
-    priority: opts.fields.priority,
-    owner: opts.fields.owner,
-    registered: opts.fields.registered,
-    due: opts.fields.due,
-    completed: opts.fields.completed,
-    conclusion: opts.fields.conclusion,
-    ticket: ticketRef,
-  };
-  const newRow = formatTableRow(newItem);
-  return {
-    assignedId,
-    newContent: insertRowAfterLast(opts.content, newRow),
-    newRow,
-    ticketFilename,
-  };
+  return { assignedId, ticketFilename: `${assignedId.toLowerCase()}-${opts.topic}.md` };
 }
 
-// pjr-index.md を所有する統合ブランチの worktree を解決する。
+// 登録項目の正本（個票）を所有する統合ブランチの worktree を解決する。
 // 明示パス（--integration-worktree）が指定された場合はそれを、無ければ branch 名に一致する
 // 登録済み worktree を採用する。予約できない状態（未登録・不在）は書き込み前にエラーにする。
 export function resolveIntegrationWorktree(
@@ -1126,38 +1172,26 @@ export function syncIntegrationWorktree(opts: { worktreePath: string; strictSync
   }
 }
 
-// 統合ブランチの worktree へ登録行（と任意で個票）を追記・commit して PJR-ID を予約する。
-// - pjr-index.md 不在・未 commit の変更あり・ID 競合・個票の既存衝突は、書き込み前にエラーで終了する。
-// - commit は登録行（と個票）の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
-// - ticket を渡すと、確定した ID に基づく個票内容を makeContent で生成し、同一 commit に含める。
+// 統合ブランチの worktree へ個票を作成・commit して PJR-ID を予約する。
+// - 登録簿ディレクトリ不在・ID 競合・個票の既存衝突は、書き込み前にエラーで終了する。
+// - commit は個票の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
+// - 個票の内容は、確定した ID に基づき makeContent で生成する。
 export function reservePjrIdOnIntegration(opts: {
   worktreePath: string;
-  pjrIndexRel: string;
+  // 登録簿ディレクトリの repo 相対パス（POSIX 区切り）。
+  registerDirRel: string;
   explicitId?: string;
   fields: ReservationFields;
+  topic: string;
+  makeContent: (assignedId: string) => string;
   commitMessage?: string;
   dryRun: boolean;
   // fetch 失敗時に警告継続（false, 既定）せず中断する（true）。
   strictSync?: boolean;
-  ticket?: { topic: string; makeContent: (assignedId: string) => string };
 }): { assignedId: string } {
-  const pjrIndexPath = resolve(opts.worktreePath, opts.pjrIndexRel);
-  if (!existsSync(pjrIndexPath)) {
-    throw new Error(`pjr-index.md not found in integration worktree: ${pjrIndexPath}`);
-  }
-
-  // commit 対象の pjr-index.md に未 commit の変更があると、予約 commit が既存の変更を
-  // 巻き込む。予約 commit を登録行の追加だけに限定するため、書き込み前に清潔さを確認する。
-  const status = gitResult(opts.worktreePath, ["status", "--porcelain=v1", "--", opts.pjrIndexRel]);
-  if (status.status !== 0) {
-    const stderr = typeof status.stderr === "string" ? status.stderr.trim() : "";
-    throw new Error(`Failed to inspect integration worktree status${stderr ? `: ${stderr}` : ""}`);
-  }
-  if (typeof status.stdout === "string" && status.stdout.trim().length > 0) {
-    throw new Error(
-      `Integration worktree has uncommitted changes to ${opts.pjrIndexRel}; ` +
-        `commit or discard them before reserving.`,
-    );
+  const registerDir = resolve(opts.worktreePath, opts.registerDirRel);
+  if (!existsSync(registerDir)) {
+    throw new Error(`Project register directory not found in integration worktree: ${registerDir}`);
   }
 
   // 採番の直前に統合 worktree を最新化して、他マシンとの採番ズレを軽減する。
@@ -1169,48 +1203,38 @@ export function reservePjrIdOnIntegration(opts: {
     });
   }
 
-  const content = readFileSync(pjrIndexPath, "utf8");
-  const { assignedId, newContent, ticketFilename } = planReservationRow({
-    content,
+  const { assignedId, ticketFilename } = planReservation({
+    existingIds: collectRegisterItemIds(registerDir),
     explicitId: opts.explicitId,
     fields: opts.fields,
-    ticketTopic: opts.ticket?.topic,
+    topic: opts.topic,
   });
 
-  // 個票の repo 相対パスは pjr-index.md と同じディレクトリに置く。
-  const ticketRel =
-    ticketFilename !== undefined
-      ? [...opts.pjrIndexRel.split("/").slice(0, -1), ticketFilename].join("/")
-      : undefined;
-  const ticketAbs = ticketRel ? resolve(opts.worktreePath, ticketRel) : undefined;
-  if (ticketAbs && existsSync(ticketAbs)) {
+  const ticketRel = `${opts.registerDirRel}/${ticketFilename}`;
+  const ticketAbs = resolve(opts.worktreePath, ticketRel);
+  if (existsSync(ticketAbs)) {
     throw new Error(`Target ticket file already exists in integration worktree: ${ticketAbs}`);
   }
 
   if (opts.dryRun) {
-    process.stdout.write(`Would reserve ${assignedId} in ${pjrIndexPath}\n`);
-    if (ticketAbs) process.stdout.write(`Would create ticket: ${ticketAbs}\n`);
+    process.stdout.write(`Would reserve ${assignedId} in ${registerDir}\n`);
+    process.stdout.write(`Would create ticket: ${ticketAbs}\n`);
     process.stdout.write(`${assignedId}\n`);
     return { assignedId };
   }
 
-  writeFileSync(pjrIndexPath, newContent, "utf8");
-  const commitPaths = [opts.pjrIndexRel];
-  if (ticketAbs && ticketRel && opts.ticket) {
-    writeFileSync(ticketAbs, opts.ticket.makeContent(assignedId), "utf8");
-    commitPaths.push(ticketRel);
-  }
-  gitOutput(opts.worktreePath, ["add", "--", ...commitPaths]);
+  writeFileSync(ticketAbs, opts.makeContent(assignedId), "utf8");
+  gitOutput(opts.worktreePath, ["add", "--", ticketRel]);
   gitOutput(opts.worktreePath, [
     "commit",
     "-m",
     opts.commitMessage?.trim() || `register(reserve): add ${assignedId}`,
     "--",
-    ...commitPaths,
+    ticketRel,
   ]);
 
-  process.stdout.write(`Reserved ${assignedId} on integration worktree: ${pjrIndexPath}\n`);
-  if (ticketAbs) process.stdout.write(`Created ticket: ${ticketAbs}\n`);
+  process.stdout.write(`Reserved ${assignedId} on integration worktree: ${ticketAbs}\n`);
+  process.stdout.write(`Created ticket: ${ticketAbs}\n`);
   process.stdout.write(`${assignedId}\n`);
   return { assignedId };
 }
@@ -1324,7 +1348,6 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--completed <date>", "Completion date (YYYY-MM-DD or -)", "-");
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
-  addCmd.option("--ticket", "Also generate individual ticket file", false);
   addCmd.option(
     "--topic <topic>",
     "Topic slug for ticket filename; derived from --title if omitted",
@@ -1332,17 +1355,17 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--force", "Overwrite existing ticket file", false);
   addCmd.option(
     "--reserve",
-    "Force reserving the PJR-ID on the integration branch even when already on it (add commits the row)",
+    "Force reserving the PJR-ID on the integration branch even when already on it (add commits the item file)",
     false,
   );
   addCmd.option(
     "--local",
-    "Add to the current branch's pjr-index.md without integration-branch routing (may cause ID conflicts across branches)",
+    "Add to the current branch without integration-branch routing (may cause ID conflicts across branches)",
     false,
   );
   addCmd.option(
     "--integration-branch <name>",
-    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or project/<project-id>/develop)",
+    "Integration branch that owns register items (default: run.register_integration_branch or project/<project-id>/develop)",
   );
   addCmd.option(
     "--integration-worktree <path>",
@@ -1354,7 +1377,7 @@ export function registerRegisterCommands(program: Command): void {
     "Abort reserving if fetching the integration branch fails (default: warn and continue)",
     false,
   );
-  addCmd.option("--dry-run", "Print new row and ticket content without writing", false);
+  addCmd.option("--dry-run", "Print the generated item file without writing", false);
   addCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
@@ -1373,23 +1396,39 @@ export function registerRegisterCommands(program: Command): void {
       // 登録日は明示指定が無ければ run.register_date_timezone（既定 UTC）での「今日」を採用する。
       const registered = opts.registered?.trim() || todayInTimeZone(paths.registerDateTimeZone);
 
-      // ID 採番の抜本対策（案1）: 単調連番 PJR-ID は分散採番できないため、統合ブランチの
-      // pjr-index.md を単一直列化点にする。統合ブランチ上なら従来どおり in-place で追記する
-      // （そこが唯一の採番元）。別ブランチ（feature/exec）から実行された場合は、作業ブランチの
-      // pjr-index.md を触らず統合ブランチ worktree へ自動ルーティングして採番・commit する。
+      const fields: ReservationFields = {
+        type: opts.type,
+        title: opts.title,
+        description: opts.description,
+        priority: opts.priority,
+        status: opts.status,
+        owner: opts.owner,
+        registered,
+        due: opts.due,
+        completed: opts.completed,
+        conclusion: opts.conclusion,
+      };
+      const templatePath = join(
+        specdojoRootDir(),
+        `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`,
+      );
+
+      // ID 採番の抜本対策（案1）: 分散採番できる ID 体系ではないため、統合ブランチの
+      // 登録簿ディレクトリを単一直列化点にする。統合ブランチ上なら in-place で個票を作る
+      // （そこが唯一の採番元）。別ブランチ（feature/exec）から実行された場合は、作業ブランチを
+      // 触らず統合ブランチ worktree へ自動ルーティングして採番・commit する。
       // --local は従来の in-place を強制する退避口。
       const repoRoot = specdojoRootDir();
       const integrationBranch = resolveIntegrationBranchName(
         paths.projectId,
         opts.integrationBranch,
       );
-      const currentBranch = currentBranchName(repoRoot);
+      // --local はブランチ判定を行わないため、git への問い合わせも行わない。
+      const currentBranch = opts.local ? "" : currentBranchName(repoRoot);
       const routeToIntegration =
         !opts.local && (opts.reserve || currentBranch !== integrationBranch);
 
       if (routeToIntegration) {
-        const makeTemplatePath = (): string =>
-          join(specdojoRootDir(), `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`);
         let target: IntegrationWorktree;
         try {
           target = resolveIntegrationWorktree(repoRoot, {
@@ -1410,139 +1449,60 @@ export function registerRegisterCommands(program: Command): void {
               `routing to integration worktree: ${target.path}\n`,
           );
         }
-        const pjrIndexRel = relative(repoRoot, paths.pjrIndexPath).split(sep).join("/");
+        const registerDirRel = relative(repoRoot, paths.projectRegisterPath).split(sep).join("/");
         reservePjrIdOnIntegration({
           worktreePath: target.path,
-          pjrIndexRel,
+          registerDirRel,
           explicitId: opts.id?.trim() || undefined,
-          fields: {
-            type: opts.type,
-            title: opts.title,
-            description: opts.description,
-            priority: opts.priority,
-            status: opts.status,
-            owner: opts.owner,
-            registered,
-            due: opts.due,
-            completed: opts.completed,
-            conclusion: opts.conclusion,
-          },
+          fields,
+          topic,
+          makeContent: (assignedId: string): string =>
+            buildRegisterItemContent({
+              projectId: paths.projectId,
+              displayId: assignedId,
+              topic,
+              fields,
+              templatePath,
+            }),
           commitMessage: opts.commitMessage,
           dryRun: opts.dryRun,
           strictSync: opts.strictSync,
-          ...(opts.ticket
-            ? {
-                ticket: {
-                  topic,
-                  makeContent: (assignedId: string): string =>
-                    generateTicket({
-                      projectId: paths.projectId,
-                      displayId: assignedId,
-                      topic,
-                      type: opts.type,
-                      title: opts.title,
-                      templatePath: makeTemplatePath(),
-                    }),
-                },
-              }
-            : {}),
         });
         return;
       }
 
-      if (!existsSync(paths.pjrIndexPath)) {
-        throw new Error(
-          `pjr-index.md not found: ${paths.pjrIndexPath}\n` +
-            `Run: specdojo register scaffold --project ${opts.project || paths.projectId}`,
-        );
-      }
-
-      const originalContent = readFileSync(paths.pjrIndexPath, "utf8");
-      const existingItems = parsePjrIndex(originalContent);
-
-      const displayId = opts.id?.trim() || generatePjrId(existingItems.map((it) => it.id));
-
-      validateFields({
-        status: opts.status,
-        type: opts.type,
-        priority: opts.priority,
-        registered,
-        due: opts.due,
-        completed: opts.completed,
-        id: displayId,
+      const { assignedId: displayId, ticketFilename } = planReservation({
+        existingIds: loadRegisterItems(paths).map((view) => view.id),
+        explicitId: opts.id?.trim() || undefined,
+        fields,
+        topic,
       });
 
-      if (opts.id && existingItems.some((it) => it.id === displayId)) {
-        throw new Error(`ID already exists in pjr-index.md: ${displayId}`);
-      }
-
-      const ticketFilename = `${displayId.toLowerCase()}-${topic}.md`;
-      const ticketRef = opts.ticket
-        ? `[${ticketFilename.replace(".md", "")}](./${ticketFilename})`
-        : "-";
-
-      const newItem: PjrItem = {
-        id: displayId,
-        status: opts.status,
-        title: opts.title,
-        description: opts.description,
-        type: opts.type,
-        priority: opts.priority,
-        owner: opts.owner,
-        registered,
-        due: opts.due,
-        completed: opts.completed,
-        conclusion: opts.conclusion,
-        ticket: ticketRef,
-      };
-
-      const newRow = formatTableRow(newItem);
+      const ticketPath = join(paths.projectRegisterPath, ticketFilename);
+      const content = buildRegisterItemContent({
+        projectId: paths.projectId,
+        displayId,
+        topic,
+        fields,
+        templatePath,
+      });
 
       if (opts.dryRun) {
-        process.stdout.write(`New row:\n${newRow}\n`);
-        if (opts.ticket) {
-          const templatePath = join(
-            specdojoRootDir(),
-            `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`,
-          );
-          const ticketContent = generateTicket({
-            projectId: paths.projectId,
-            displayId,
-            topic,
-            type: opts.type,
-            title: opts.title,
-            templatePath,
-          });
-          process.stdout.write(`\nTicket (${ticketFilename}):\n${ticketContent}\n`);
-        }
+        process.stdout.write(`Would create ${ticketPath}:\n${content}\n`);
         return;
       }
 
-      const updatedContent = insertRowAfterLast(originalContent, newRow);
-      writeFileSync(paths.pjrIndexPath, updatedContent, "utf8");
-      process.stdout.write(`Updated: ${paths.pjrIndexPath} (added ${displayId})\n`);
+      if (!opts.force && existsSync(ticketPath)) {
+        throw new Error(`Item file already exists (use --force to overwrite): ${ticketPath}`);
+      }
 
-      if (opts.ticket) {
-        const ticketPath = join(paths.projectRegisterPath, ticketFilename);
-        if (!opts.force && existsSync(ticketPath)) {
-          process.stdout.write(
-            `Skipped ticket (already exists; use --force to overwrite): ${ticketPath}\n`,
-          );
-        } else {
-          const templatePath = join(
-            specdojoRootDir(),
-            `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`,
-          );
-          const ticketContent = generateTicket({
-            projectId: paths.projectId,
-            displayId,
-            topic,
-            type: opts.type,
-            title: opts.title,
-            templatePath,
-          });
-          writeFileSync(ticketPath, ticketContent, "utf8");
-          process.stdout.write(`Created ticket: ${ticketPath}\n`);
+      mkdirSync(paths.projectRegisterPath, { recursive: true });
+      writeFileSync(ticketPath, content, "utf8");
+      process.stdout.write(`Created: ${ticketPath} (added ${displayId})\n`);
+
+      if (existsSync(paths.pjrIndexPath)) {
+        for (const view of writeDerivedViews(paths, "all")) {
+          process.stdout.write(`Generated: ${view.path}\n`);
         }
       }
     } catch (error) {
@@ -1561,7 +1521,8 @@ export function registerRegisterCommands(program: Command): void {
   closeCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
 
       const targetStatus =
         opts.status ?? (["decision", "question"].includes(item.type) ? "decided" : "done");
@@ -1580,7 +1541,7 @@ export function registerRegisterCommands(program: Command): void {
         completed,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
       updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
@@ -1597,7 +1558,8 @@ export function registerRegisterCommands(program: Command): void {
   rejectCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
 
       const completed = opts.completed ?? todayInTimeZone(paths.registerDateTimeZone);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
@@ -1610,7 +1572,7 @@ export function registerRegisterCommands(program: Command): void {
         completed,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
       updateTicketStatusForItem({ paths, item, targetStatus: "deprecated", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
@@ -1626,14 +1588,15 @@ export function registerRegisterCommands(program: Command): void {
   deferCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
 
       const updated: PjrItem = {
         ...item,
         status: "deferred",
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -1652,7 +1615,8 @@ export function registerRegisterCommands(program: Command): void {
   reopenCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-terminal");
+      const view = loadItemForUpdate(paths, opts.id, "require-terminal");
+      const item = view.item;
 
       const validReopenStatuses = ["open", "in-progress", "waiting", "review"];
       if (!validReopenStatuses.includes(opts.status)) {
@@ -1660,7 +1624,7 @@ export function registerRegisterCommands(program: Command): void {
       }
 
       const updated: PjrItem = { ...item, status: opts.status, completed: "-" };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -1674,9 +1638,10 @@ export function registerRegisterCommands(program: Command): void {
   startCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
       const updated: PjrItem = { ...item, status: "in-progress" };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -1691,13 +1656,14 @@ export function registerRegisterCommands(program: Command): void {
   waitCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
       const updated: PjrItem = {
         ...item,
         status: "waiting",
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -1711,9 +1677,10 @@ export function registerRegisterCommands(program: Command): void {
   reviewCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id, "require-active");
+      const view = loadItemForUpdate(paths, opts.id, "require-active");
+      const item = view.item;
       const updated: PjrItem = { ...item, status: "review" };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun });
+      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
     }
@@ -1732,7 +1699,8 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const { content, item } = loadItemForUpdate(paths, opts.id);
+      const view = loadItemForUpdate(paths, opts.id);
+      const item = view.item;
 
       const hasUpdates = ["title", "description", "priority", "owner", "due"].some(
         (k) => opts[k] !== undefined,
@@ -1763,7 +1731,15 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.owner !== undefined ? { owner: opts.owner } : {}),
         ...(opts.due !== undefined ? { due: opts.due } : {}),
       };
-      applyItemUpdate({ paths, content, updated, dryRun: opts.dryRun, action: "fields updated" });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        action: "fields updated",
+        ...(opts.title !== undefined ? { title: opts.title } : {}),
+        ...(opts.description !== undefined ? { description: opts.description } : {}),
+      });
     } catch (error) {
       printCommandError(error);
     }

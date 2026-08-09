@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
@@ -14,7 +14,7 @@ import {
   writeJson,
 } from "./exec-shared.js";
 import {
-  parsePjrIndex,
+  loadRegisterItems,
   resolveRegisterPaths,
   VALID_PRIORITIES,
   VALID_STATUSES,
@@ -793,11 +793,12 @@ function executeRoutine(
 
   // kind: register
   const registerPaths = resolveRegisterPaths({ project: projectId });
-  if (!existsSync(registerPaths.pjrIndexPath)) {
-    process.stderr.write(`  pjr-index.md not found: ${registerPaths.pjrIndexPath}\n`);
+  if (!existsSync(registerPaths.projectRegisterPath)) {
+    process.stderr.write(`  project register not found: ${registerPaths.projectRegisterPath}\n`);
     return "failure";
   }
-  const items = parsePjrIndex(readFileSync(registerPaths.pjrIndexPath, "utf8"));
+  // 選択対象は個票 frontmatter（正本）から読む。未移行の項目は pjr-index の行で補う。
+  const items = loadRegisterItems(registerPaths).map((view) => view.item);
   const selected = selectRegisterItems(items, doc.action);
   if (selected.length === 0) {
     process.stdout.write(`  no matching register items\n`);
