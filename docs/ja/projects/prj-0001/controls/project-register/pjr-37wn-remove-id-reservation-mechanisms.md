@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  conclusion: "checkpoint failed: git add -- docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-37wn-20260809T110448Z-4c53-plan.md docs/ja/projects/pr…"
 ---
 
 # PJR-37WN ID 予約などの競合回避機構を撤去し renumber を縮小する
