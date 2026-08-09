@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-9p5q-migrate-existing-register-items
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-9P5Q 既存登録項目を個票 frontmatter へ一括移行する
