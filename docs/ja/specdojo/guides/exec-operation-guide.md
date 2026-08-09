@@ -63,7 +63,7 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 
 register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。立ち上げ時の個票で目的・スコープ・対象成果物を決定したら、カタログ作成の個票を完了し、以後の計画済み作業を schedule のタスクとして管理します。
 
-登録の判断、type の選び方、個票分離などの台帳運用は [登録簿運用ガイド](register-operation-guide.md) を参照します。
+登録の判断、type の選び方、個票の作成などの台帳運用は [登録簿運用ガイド](register-operation-guide.md) を参照します。
 
 #### 反復可能なJob
 

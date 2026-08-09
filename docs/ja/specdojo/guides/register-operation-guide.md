@@ -9,7 +9,7 @@ specdojo:
 
 Register Operation Guide
 
-プロジェクト登録簿（`pjr-index.md`）の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の分離、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) を、コマンドの一覧は [CLIコマンドリファレンス](../references/command-reference.md) を正本とします。
+プロジェクト登録簿の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の作成、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) を、コマンドの一覧は [CLIコマンドリファレンス](../references/command-reference.md) を正本とします。
 
 **対象読者**
 
@@ -127,7 +127,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 | 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）               |
 
 - 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
-- 「登録日」は起票日を表す列で、`register add` が自動記入します。ID が乱数化され採番順から起票順を追えないため、行の並びに依存せず起票順を辿る手がかりになります。手動で `pjr-index.md` を直接編集して行を追加する場合は、登録日が不明なら空欄にせず _TODO_ と記載します（担当・期限と同じ運用）。列導入前から存在する既存行は、正確な起票日を復元せず一律 _TODO_ とし、必要になった時点で判明した日付へ更新します。
+- 「登録日」は起票日を表す個票 Frontmatter の `registered_on` で、`register add` が自動記入します。ID が乱数化され採番順から起票順を追えないため、生成一覧の行の並びに依存せず起票順を辿る手がかりになります。過去の項目で日付が不明な場合は値を推測せず、キーを省略します。
 - 登録日と完了日の日付は OS / コンテナの `TZ` 環境変数に依存させず、config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）で明示的に決めます。日本時間で運用する場合は次のように設定します。
 
 ```json
@@ -142,35 +142,28 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 
 - 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。
 
-個票（`pjr-XXXX-<topic>.md`）を持つ項目では、`close` / `reject` が処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
+すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
 
 | コマンド          | 個票 `status` の遷移 | 条件                                                                       |
 | ----------------- | -------------------- | -------------------------------------------------------------------------- |
 | `register close`  | `draft` → `ready`    | 必須節に `_TODO_` が残っていないこと（残る場合は昇格せず警告して据え置く） |
 | `register reject` | → `deprecated`       | 条件なし                                                                   |
 
-- 個票を持たない項目（個票列が `-`）は成熟度を追う対象がないため、処理状態のみ更新されます。
-- 変更前に確認したい場合は `--dry-run` を付けると、一覧行の変更に加えて個票の `status` 変更予定も表示されます。
+- 変更前に確認したい場合は `--dry-run` を付けると、個票 Frontmatter の変更予定と再生成されるビューを表示します。
 
-### 2.2. 個票の分離
+### 2.2. 個票の作成
 
-一覧の 1 行（説明 1〜2 文）で管理できる項目は個票を作りません。次の場合に個票（`pjr-XXXX-<topic>.md`）へ分離します。
-
-- 経緯、判断理由、選択肢の比較、根拠資料へのリンクを残す必要がある
-- 説明が 1〜2 文に収まらない、または複数回の追記が見込まれる
-- レビューや合意の記録を項目単位で追跡したい
-
-個票は `register add` に `--ticket` を付けると、type 別のテンプレート（`pjr-todo-template.md` など `pjr-<type>-template.md`）から生成されます。
+すべての登録項目は、type 別のテンプレート（`pjr-todo-template.md` など `pjr-<type>-template.md`）から作る個票です。`register add` は個票の Frontmatter に構造化フィールドを書き込み、H1 と本文にタイトル・説明を置きます。
 
 ```bash
 specdojo register add \
   --project <project-id> \
   --type risk \
   --title "タブレット故障時の営業継続" \
-  --ticket --topic tablet-failure-fallback
+  --topic tablet-failure-fallback
 ```
 
-個票を作成した後も、一覧の行は要約に留め、詳細は個票側へ書きます。
+個票を作成後、タイトル・説明・構造化フィールドを変更する場合も個票を正本として扱います。生成一覧へ直接追記・修正しません。
 
 ### 2.3. 完了時の記録
 
@@ -258,7 +251,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
 - `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。
 - 既定は in-place の直列実行で、変更は作業ツリーに残ります（`--register-commit` を付けると commit します）。
-- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化されるため、`pjr-index.md` の編集競合が起きません。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
+- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化されます。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
 - `--worktree` と併用する場合に限り `--parallel <n>` で複数項目を並列実行できます。状態遷移は直列化され、成果物は項目ごとの worktree に隔離されます。`--parallel` を単独（`--worktree` なし）で指定するとエラーになります。失敗時は当該項目の worktree を保持します（調査・再実行のため）。
 - 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使います。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使います。
@@ -271,20 +264,20 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 
 ## 4. 例外対応と特殊な運用
 
-ID 重複の復旧、PO 留保事項の承認運用、統合ブランチへの予約起票など、通常運用から外れる場面を扱います。
+ID 重複の復旧と PO 留保事項の承認運用など、通常運用から外れる場面を扱います。
 
 ### 4.1. PJR-ID 重複の検知と復旧
 
-`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にするため（`PJR-ID の採番と統合ブランチ集約` を参照）、通常運用では別 branch から同じ ID が発生することはありません。ただし `--local` での起票、統合ブランチの未同期、rebase や cherry-pick を経た履歴の混在では、依然として重複が混入することがあります。
+`register add` は既存個票の ID を避けてランダムに採番します。並行起票、rebase、cherry-pick などで重複が混入した場合は、個票の検証と `register build` が検出します。
 
 重複は検証で必ず落ちます。次の検証は VSCode のリアルタイム検証と CI の両方で機能します。
 
 ```bash
-npm run validate:schema:pjr-index
+npx tsx src/specdojo.ts register build --project <project-id>
 ```
 
-- 登録項目一覧に同じ PJR-ID が 2 行以上ある場合、重複した ID と該当行位置を示してエラーになります。
-- 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応が取れていない場合もエラーになります。
+- 個票の表示 ID が重複した場合、重複 ID と該当ファイルを示してエラーになります。
+- 個票の Frontmatter ID とファイル名 `pjr-XXXX-<topic>.md` の対応が取れていない場合もエラーになります。
 
 重複や衝突を検出したら、`register renumber` で片方の項目を未使用の PJR-ID へ移します。
 
@@ -296,7 +289,7 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140 --
 specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 ```
 
-- `pjr-index.md` の該当行・個票ファイル名・個票 frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替えます。
+- 個票ファイル名・個票 Frontmatter の `id`・他文書からの参照リンク・exec plan / result の `targets` を同時に付け替え、一覧・派生ビューを再生成します。
 - 移動先 ID が既に使われている場合は何も書き換えずにエラー終了するため、部分適用は残りません。
 - 付け替え後は派生ビューも再生成されます。移動先 ID は任意の未使用 ID を選べます。自動採番は既存 ID を避けて再抽選するため、以後の採番と衝突する心配はありません。
 
@@ -317,40 +310,8 @@ specdojo register renumber --project <project-id> --id PJR-0137 --to PJR-0140
 
 PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護 / CODEOWNERS 方針の詳細は、当該プロジェクトの登録項目（例: `pjr-0126-pr-based-po-approval`）で定義します。schedule 上の計画済みタスクによる通常の成果物更新や日常の agent コミットは、PR 承認の対象外です。
 
-### 4.3. PJR-ID の採番と統合ブランチ集約
+### 4.3. PJR-ID の採番
 
-PJR-ID は乱数部分を持つ ID で、`register add` は統合ブランチの `pjr-index.md` を採番の単一直列化点にします。実行時のブランチによって書き込み先が自動で決まります。
-
-- ID の乱数部分は、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セット（単一ケース）による 4 桁のランダム値です（例: `PJR-4B7K`）。旧来の数字4桁 ID（例: `PJR-0163`）も同じ集合に含まれるため、混在しても検証・再採番は従来どおり機能します。生成した候補が既存 ID か簡易な不適切語ブロックリストに一致した場合は、採用せず再抽選します。
-- 統合ブランチ（`project/<project-id>/develop`）上で実行した場合は、現在の作業ツリーの `pjr-index.md` に in-place で追記します。
-- feature / exec など統合ブランチ以外で実行した場合は、作業ブランチの `pjr-index.md` を触らず、統合ブランチの worktree へ登録行（と `--ticket` 指定時は個票）を追記・commit して ID を予約します。作業ブランチ側では `pjr-index.md` を変更しないため、表末尾への追記競合が構造的に発生しません。
-- 予約経路では、採番の直前に統合ブランチの worktree で `git fetch` と `git merge --ff-only` を自動実行し、ローカルの `pjr-index.md` を最新化してから採番します。これにより、複数マシンが並行して起票するときの採番ズレを軽減します。
-  - `git fetch` が失敗した場合（オフライン等）は、既定では警告を表示してローカルの内容のまま処理を継続します。厳密な同期を要求するときは `--strict-sync` を付けると、fetch 失敗時に書き込みを行わず中断します。
-  - 統合ブランチが origin から分岐していて fast-forward できない場合は、書き込みを行わずにエラー終了します。統合 worktree を手動で rebase / merge して解消してから再実行してください。
-
-```bash
-# feature ブランチ上でも、統合ブランチへ自動で予約される（割り当てられた PJR-ID が標準出力の最終行に返る）
-specdojo register add --project <project-id> --type todo --title "在庫初期データの登録"
-
-# 内容を事前に確認する
-specdojo register add --project <project-id> --type todo --title "在庫初期データの登録" --dry-run
-```
-
-- 統合ブランチは `--integration-branch <name>` で指定でき、省略時は config の `run.register_integration_branch`、それも無ければ既定値 `project/<project-id>/develop` を使います。worktree を branch ではなくパスで直接指定する場合は `--integration-worktree <path>` を使います。
-- `--reserve` を付けると、統合ブランチ上にいても予約経路を強制します（登録行を commit して即座に ID を確定させたいとき）。`--ticket` と併用でき、個票も同じ commit に含めます。
-- `--strict-sync` を付けると、予約直前の `git fetch` が失敗した場合に警告継続せず書き込みを中断します。既定（未指定）は警告のみ表示して継続します。
-- `--local` を付けると自動ルーティングを行わず、現在のブランチの `pjr-index.md` に in-place で追記します（統合 worktree が無い・オフラインなどの退避用）。ただし別ブランチで採番すると ID 衝突の恐れがあるため、通常は使いません。
-- 予約 commit は `pjr-index.md`（と個票）の pathspec に限定し、統合ブランチ側の他の未 commit 変更は巻き込みません。commit メッセージは `--commit-message <text>` で上書きできます。
-- 次のいずれかに当てはまる場合は、書き込みを行わずにエラー終了します: 統合ブランチの worktree が存在しない場合、統合ブランチの `pjr-index.md` に未 commit の変更がある場合、指定した ID が既存 ID と競合する場合です。統合 worktree が無い場合は、統合ブランチ上で実行するか、`git worktree add` で worktree を用意するか、`--local` を使ってください。
-- 予約した項目は統合ブランチ側にのみ存在します。作業ブランチからは、統合ブランチを merge / 同期した時点で見えるようになります。状態遷移（`start` / `review` / `close` など）は統合ブランチ上で運用します。
-
-`git push` は `specdojo` に組み込みません。統合 worktree の同期は、worktree パスを返す読み取り専用コマンドと、それを使う素の git 用 npm script に委譲します。`push` は人間が明示的に実行します。
-
-```bash
-# 統合ブランチ worktree のパスを表示する（読み取り専用）
-specdojo register where --integration --project <project-id>
-
-# npm script 経由（内部で register where --integration を使う。SPECDOJO_PROJECT でプロジェクトを指定）
-npm run register:sync-pull   # git pull --ff-only
-npm run register:sync-push   # git push（人間が明示実行）
-```
+- PJR-ID の乱数部分は、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁のランダム値である。例: `PJR-4B7K`。
+- `register add` は現在の作業ツリーに個票を作成し、既存 ID または簡易な不適切語ブロックリストに一致した候補は再抽選する。
+- 統合ブランチへの自動ルーティング、予約起票、同期用オプションは廃止済みである。廃止済みのオプションを指定した場合は未知オプションとしてエラー終了する。

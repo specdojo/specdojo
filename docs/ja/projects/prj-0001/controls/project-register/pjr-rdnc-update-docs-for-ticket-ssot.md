@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-rdnc-update-docs-for-ticket-ssot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-RDNC rulebook・運用ガイド・テンプレートを個票正本へ更新する
@@ -32,16 +33,18 @@ PJR-ES57 の分割7。index と個票の同期規則を削除し、個票分離�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ                                        |
-| --- | ------------------------------ | ---- | ---- | ------------------------------------------- |
-| 1   | rulebook を更新する            | ARC  | open | 同期規則の削除と正本の明示                  |
-| 2   | 運用ガイドを更新する           | ARC  | open | 撤去した機構に関する記述の削除を含む        |
-| 3   | テンプレートを更新する         | ARC  | open | 個票テンプレートと一覧テンプレートが対象    |
-| 4   | 関連する参照文書の記述を揃える | ARC  | open | 配置規約や CLI リファレンスの記述を確認する |
+| No  | 作業                           | 担当 | 状態 | メモ                                               |
+| --- | ------------------------------ | ---- | ---- | -------------------------------------------------- |
+| 1   | rulebook を更新する            | ARC  | done | 同期規則を削除し、個票 Frontmatter 正本を明示した  |
+| 2   | 運用ガイドを更新する           | ARC  | done | 個票分離・予約起票など撤去済み機構の記述を削除した |
+| 3   | テンプレートを更新する         | ARC  | done | 全 type 個票と一覧テンプレートを新構成へ揃えた     |
+| 4   | 関連する参照文書の記述を揃える | ARC  | done | CLI・quick start・exec ガイドを確認・更新した      |
 
 ## 4. 対応結果
 
--
+- [[specdojo:pjr-rulebook]] を個票 Frontmatter 正本のルールへ更新し、一覧と個票の同期規則および個票分離基準を削除した。生成一覧・派生ビューは `register build` の出力であり、直接編集しないことを明記した。
+- [[specdojo:register-operation-guide]] と CLI リファレンスから、`--ticket`、予約起票、統合ブランチ自動ルーティング、同期スクリプトを前提とする説明を削除した。
+- 一覧テンプレートと全 type の個票テンプレートを、個票 Frontmatter の初期処理状態・優先度を持つ新構成へ揃えた。
 
 ## 5. 関連ドキュメント
 

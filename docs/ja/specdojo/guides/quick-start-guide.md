@@ -82,7 +82,7 @@ specdojo register add \
   --project <project-id> \
   --type issue \
   --title "初期スコープと必要成果物が未確定" \
-  --ticket --topic clarify-initial-scope
+  --topic clarify-initial-scope
 
 # 2. 選択肢と決定を記録する
 # チャット:「decision を起票して。タイトルは『初期スコープと対象成果物を決定する』、個票あり、topic は decide-initial-scope」
@@ -90,7 +90,7 @@ specdojo register add \
   --project <project-id> \
   --type decision \
   --title "初期スコープと対象成果物を決定する" \
-  --ticket --topic decide-initial-scope
+  --topic decide-initial-scope
 
 # 3. 決定内容を実行可能な作業にする
 # チャット:「高優先度の todo を起票して。タイトルは『プロジェクト定義の成果物カタログを作成する』、個票あり、topic は create-project-definition-catalog」
@@ -99,10 +99,10 @@ specdojo register add \
   --type todo \
   --priority high \
   --title "プロジェクト定義の成果物カタログを作成する" \
-  --ticket --topic create-project-definition-catalog
+  --topic create-project-definition-catalog
 ```
 
-`register add` の出力に表示された `PJR-XXXX` を控えます。`--ticket` を指定すると、一覧行に加えて、背景、選択肢、完了条件、結論などを記録する type 別の個票が生成されます。成果物カタログを複数ドメインに分ける場合は、原則として `dct-<domain>.yaml` ごとに todo 個票を起票すると、対象と完了条件を追跡しやすくなります。
+`register add` の出力に表示された `PJR-XXXX` を控えます。すべての登録項目は、背景、選択肢、完了条件、結論などを記録する type 別の個票として生成されます。個票 Frontmatter が構造化フィールドの正本であり、一覧は個票から生成されます。成果物カタログを複数ドメインに分ける場合は、原則として `dct-<domain>.yaml` ごとに todo 個票を起票すると、対象と完了条件を追跡しやすくなります。
 
 | type       | 記録する内容                           | 完了状態  | agent実行                                  |
 | ---------- | -------------------------------------- | --------- | ------------------------------------------ |

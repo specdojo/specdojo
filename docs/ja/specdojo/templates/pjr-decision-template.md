@@ -12,6 +12,8 @@ specdojo:
       part_of:
         - _PROJECT_ID_:pjr-index
       item_type: decision
+      item_status: open
+      priority: medium
 ---
 
 # _PJR-XXXX_ _DECISION_TITLE_

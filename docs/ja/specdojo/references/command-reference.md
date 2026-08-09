@@ -119,46 +119,39 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 ## 5. register
 
-`register` はプロジェクト登録簿（`pjr-index.md`）と派生ビューを扱います。
+`register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
-| コマンド            | 用途                                                   | 例                                                                          |
-| ------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------- |
-| `register scaffold` | 登録簿ディレクトリと生成ビューを初期化する             | `specdojo register scaffold --project prj-0001`                             |
-| `register add`      | issue / todo / question などの項目を追加する           | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `register build`    | 個票から登録項目一覧と派生ビューを生成する             | `specdojo register build --project prj-0001`                                |
-| `register update`   | 登録項目を更新する                                     | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
-| `register start`    | 項目を対応中へ変更する                                 | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`     | 項目を待ち状態へ変更する                               | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`   | 項目をレビュー状態へ変更する                           | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`    | 項目を完了にし、個票を `ready` へ昇格する              | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`   | 項目を却下にし、個票を `deprecated` にする             | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`    | 項目を延期にする                                       | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`   | 終了済み項目を再オープンする                           | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す             | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
-| `register where`    | 統合ブランチ worktree のパスを表示する（読み取り専用） | `specdojo register where --integration --project prj-0001`                  |
+| コマンド            | 用途                                         | 例                                                                          |
+| ------------------- | -------------------------------------------- | --------------------------------------------------------------------------- |
+| `register scaffold` | 登録簿ディレクトリと生成ビューを初期化する   | `specdojo register scaffold --project prj-0001`                             |
+| `register add`      | issue / todo / question などの項目を追加する | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `register build`    | 個票から登録項目一覧と派生ビューを生成する   | `specdojo register build --project prj-0001`                                |
+| `register update`   | 登録項目を更新する                           | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
+| `register start`    | 項目を対応中へ変更する                       | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`     | 項目を待ち状態へ変更する                     | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`   | 項目をレビュー状態へ変更する                 | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`    | 項目を完了にし、個票を `ready` へ昇格する    | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`   | 項目を却下にし、個票を `deprecated` にする   | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す   | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
 
-`register add` は ID を省略すると自動採番します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。旧来の数字4桁 ID とも混在可能です。予約経路では採番の直前に統合 worktree で `git fetch` + `git merge --ff-only` を自動実行して最新化します（fetch 失敗時は既定で警告継続、`--strict-sync` で中断）。`git push` は組み込まず、`register where --integration` が返すパスと素の git を使う npm script（`register:sync-pull` / `register:sync-push`）へ委譲します。`register` 系コマンドはすべて、成功時の通常出力（更新内容・生成パス・警告など）を標準出力へ書き、エラーメッセージは標準エラー出力へ分離します。とくに `register where` は成功時のパスのみを標準出力へ書くため、統合ブランチ worktree 未用意時でも、コマンド置換で解決したパスに `git -C` の不正な引数としてエラー文字列が混入しません。なお、このエラー出力先の統一は `register` 系コマンドに限定した方針で、`catalog` / `schedule` など同種のパターンを持つ他コマンドへの拡張は本項目のスコープ外です。
+`register add` は ID を省略すると自動採番し、現在の作業ツリーに type 別の個票を作成します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
 主要オプション:
 
-| オプション                      | 用途                                                                                              | 対象               |
-| ------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------ |
-| `--to <PJR-ID>`                 | 移動先の PJR-ID を指定する                                                                        | `renumber`         |
-| `--registered <date>`           | 登録日（`YYYY-MM-DD` または `_TODO_`）。省略時は `run.register_date_timezone`（既定 UTC）での当日 | `add`              |
-| `--reserve`                     | 統合ブランチ上でも予約経路を強制する（登録行を commit。`--ticket` 併用可）                        | `add`              |
-| `--strict-sync`                 | 予約直前の `git fetch` が失敗したら警告継続せず中断する（既定は警告継続）                         | `add`              |
-| `--local`                       | 自動ルーティングせず現在ブランチの `pjr-index.md` に追記する（ID 衝突の恐れ）                     | `add`              |
-| `--integration`                 | 統合ブランチ worktree のパスを表示する                                                            | `where`            |
-| `--integration-branch <name>`   | 統合ブランチ（既定は `run.register_integration_branch`、無ければ `project/<project-id>/develop`） | `add` / `where`    |
-| `--integration-worktree <path>` | 統合ブランチ worktree をパスで直接指定する                                                        | `add` / `where`    |
-| `--commit-message <text>`       | 予約 commit のメッセージを上書きする                                                              | `add`              |
-| `--dry-run`                     | 書き込みを行わず変更対象を表示する                                                                | `renumber` / `add` |
+| オプション            | 用途                                                                              | 対象               |
+| --------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| `--to <PJR-ID>`       | 移動先の PJR-ID を指定する                                                        | `renumber`         |
+| `--registered <date>` | 登録日（`YYYY-MM-DD`）。省略時は `run.register_date_timezone`（既定 UTC）での当日 | `add`              |
+| `--topic <slug>`      | 個票ファイル名の論点部分を指定する                                                | `add`              |
+| `--dry-run`           | 書き込みを行わず変更対象を表示する                                                | `renumber` / `add` |
 
-`register add` は登録行に「登録日」列（起票日、`YYYY-MM-DD`）を自動記入します。日付は OS / コンテナの `TZ` 環境変数に依存せず、config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）で明示的に解決します。`register close` / `register reject` の「完了日」も同じ基準で導出されます。
+`register add` は個票 Frontmatter の `registered_on`（起票日、`YYYY-MM-DD`）を自動記入します。日付は OS / コンテナの `TZ` 環境変数に依存せず、config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）で明示的に解決します。`register close` / `register reject` の `completed_on` も同じ基準で導出されます。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 
-`renumber` による ID 重複の復旧手順、`add --reserve` による予約起票の運用、登録の判断、type の選び方、状態遷移、個票分離などの台帳運用は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
+`renumber` による ID 重複の復旧手順、登録の判断、type の選び方、状態遷移、個票の作成などの台帳運用は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
 
 ## 6. exec
 
@@ -254,7 +247,7 @@ specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --worktree --p
 specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
-`--register` は登録簿（`pjr-index.md`）の項目を実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `note` は対象外です。既定は in-place の直列実行です。`--worktree` を付けると成果物の変更を worktree に隔離し、状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化したうえで、成功時に merge back します。`--parallel <n>` は `--worktree` との併用時のみ指定でき、単独で指定するとエラーになります。
+`--register` は個票の項目を実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `note` は対象外です。既定は in-place の直列実行です。`--worktree` を付けると成果物の変更を worktree に隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--parallel <n>` は `--worktree` との併用時のみ指定でき、単独で指定するとエラーになります。
 
 register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
