@@ -48,8 +48,6 @@
     "start": "node dist/specdojo.js",
     "prepack": "npm run build",
     "specdojo:build": "npm run build",
-    "register:sync-pull": "git -C \"$(tsx src/specdojo.ts register where --integration)\" pull --ff-only",
-    "register:sync-push": "git -C \"$(tsx src/specdojo.ts register where --integration)\" push",
     "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
     "worktree:sync": "tools/worktree/sync.sh",
     "claude:work": "claude --worktree claude-work --permission-mode acceptEdits",

@@ -11,12 +11,6 @@ export type SpecDojoRunConfig = {
   agent_config?: string;
   worktree_base?: string;
   /**
-   * Integration branch that owns pjr-index.md reservations. `register add` allocates and commits
-   * the registration row to the worktree checked out on this branch when run from another branch.
-   * Defaults to the project integration branch `project/<project-id>/develop` (specdojo:git-branching-standard).
-   */
-  register_integration_branch?: string;
-  /**
    * IANA time zone name used to compute the pjr-index registration date (登録日) and completion
    * date (完了日) defaults. The date is derived with Intl.DateTimeFormat's timeZone option so it
    * never depends on the host/container TZ environment variable. Defaults to `UTC`.

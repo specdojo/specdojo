@@ -124,7 +124,6 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       await runRegister([
         "add",
-        "--local",
         "--type",
         "todo",
         "--title",
@@ -180,7 +179,6 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       await runRegister([
         "add",
-        "--local",
         "--type",
         "todo",
         "--title",
@@ -196,6 +194,20 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         /ID already exists in the project register: PJR-AB12/,
       );
     });
+  });
+
+  it.each([
+    "--reserve",
+    "--local",
+    "--strict-sync",
+    "--integration-branch",
+    "--integration-worktree",
+  ])("%s は廃止済みのため Commander の未知オプションとして拒否する", async (removedOption) => {
+    const removedArgs = [removedOption];
+    if (removedOption.startsWith("--integration-")) removedArgs.push("value");
+    await expect(
+      runRegister(["add", "--type", "todo", "--title", "x", ...removedArgs]),
+    ).rejects.toThrow(new RegExp(`unknown option '${removedOption}`));
   });
 
   it("状態遷移（start / close）は個票 frontmatter を更新する", async () => {
