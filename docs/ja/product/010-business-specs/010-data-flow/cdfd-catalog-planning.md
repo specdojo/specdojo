@@ -36,6 +36,8 @@ specdojo:
 
 `catalog validate` は `P-03-01`、`schedule build` は `P-03-02`、`exec refresh` は `P-03-03`〜`P-03-05` に対応する。Ready は未完了かつ依存が完了して着手可能な task の集合であり、既定では CPM を用いた critical-first 順で次候補を示す。state、Ready、CPM、timeline は同じ Schedule と event から再生成し、一部だけを手修正して正本化しない。
 
+Schedule・event から state、Ready、CPM、critical path、timeline を算出する入力関係・検証ゲートは本書を正本とする。一括 `build` における `exec refresh` の起動順、生成失敗後の下流停止、陳腐化した生成物の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照し、task event 自体の状態遷移は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] を参照する。
+
 ## 3. 概念データフロー
 
 ```mermaid

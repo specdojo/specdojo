@@ -39,6 +39,8 @@ specdojo:
 
 [[prj-0001:cdfd-catalog-planning|概念データフロー図（カタログ〜計画展開）]] を、`exec refresh` が扱う state・Ready・CPM・timeline の算出規則の正とする。[[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]] を、個票正本と登録簿ビューの項目・状態の正とする。[[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] を、成果物・result・event が生成入力として確定するまでの正とする。
 
+本書は、各正本の意味や状態遷移を再定義せず、生成処理と生成先の対応、一括起動順、直接編集・上書き境界、部分失敗・陳腐化後の再実行を横断的な正本とする。
+
 ## 2. 領域内プロセス一覧
 
 <!-- prettier-ignore -->

@@ -51,6 +51,8 @@ specdojo:
 | `exec/<project-id>-<task-id>` と task worktree     | 対象 project `develop` の成果物、edit / review plan、task の実行条件                | plan が許可する成果物、対象 task result、exec commit       | 対象 project `develop` から分岐・同期し、同じ project `develop` へ統合する。event・他 task の result・再生成物を task commit に混ぜない |
 | 実行記録領域                                       | Schedule task、plan、claim・状態 event、過去 result                                 | 実行割当、対象 task result、統合・block・complete の状態   | worktree commit には対象 result だけを含め、状態 event は project 統合側で直列に管理する                                                |
 
+branch / worktree の分離、ベース、同期、commit、統合方向、競合時の保持、後片付けは本書を正本とする。一つの task 内部の edit / review / finalize、result 判定、claim・complete・block などの状態遷移は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] を参照し、本書では分離環境と統合結果の受け渡しだけを定める。登録項目 ID の再採番規則は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]] を参照する。
+
 ## 3. 概念データフロー
 
 ```mermaid
