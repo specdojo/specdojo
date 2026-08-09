@@ -7,6 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: in-progress
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-9P5Q 既存登録項目を個票 frontmatter へ一括移行する
