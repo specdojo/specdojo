@@ -3,7 +3,7 @@ specdojo:
   id: prj-0001:cdfd-overview
   type: flow
   status: draft
-  rulebook: specdojo:cdfd-rulebook
+  rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []
 ---
