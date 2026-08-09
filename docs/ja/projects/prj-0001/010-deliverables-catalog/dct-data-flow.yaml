@@ -69,13 +69,19 @@ groups:
       - local_id: cdfd-register-operation
         name: 概念データフロー図（登録簿ライフサイクル）
         kind: work
-        overview: 立ち上げ時の未整理事項と運用中の計画外事項を登録し、判断・実行・待機・レビュー・承認・終了・再開と例外復旧まで継続管理する流れを可視化し定義する
+        overview: 立ち上げ時の未整理事項と運用中の計画外事項を個票へ登録し、判断・実行・待機・レビュー・承認・終了・再開、派生ビュー生成・履歴確認と例外復旧まで継続管理する流れを可視化し定義する
         path: cdfd-register-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新
+            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+          - kind: implementation
+            path: src/register-item.ts
+            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
+          - kind: implementation
+            path: src/register-history.ts
+            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
           - kind: implementation
             path: src/exec-register.ts
             purpose: 登録簿項目を実行タスクとして扱う経路
@@ -85,13 +91,13 @@ groups:
         depends_on:
           - cdfd-init
         done_criteria:
-          - text: todo・question・risk・issue・change-request・decision・dependency・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
+          - text: todo・question・risk・issue・change-request・decision・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: open・in-progress・waiting・review・done/decided・rejected・deferredから成る通常の状態遷移とreopenが、起点イベント、登録日・完了日および結論記録と対応していること
+          - text: 個票Frontmatterを正本としてopen・in-progress・waiting・review・done/decided・rejected・deferredを遷移し、登録日・完了日・結論、生成一覧・派生ビューおよびregister historyへ反映する流れが識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: agent実行の成功時・失敗時の遷移、ランダムPJR-IDの競合時のrenumber、統合worktreeの同期・予約起票・strict sync失敗時の例外経路が確認できること
+          - text: agent実行の成功時・失敗時の遷移、個票の重複IDまたはファイル名と文書IDの不整合の検出、renumberによる個票・参照・実行記録の復旧、およびworktreeの同期・統合失敗時の例外経路が確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
           - text: type別の承認者とreviewからclose・reject・defer・waitへの遷移、commit承認とPR承認の適用境界、および留保・却下・延期・再開の判断に必要な情報が識別できること
@@ -187,7 +193,7 @@ groups:
           - text: routine定義の選択・due判定・register/schedule実行への委譲、resumeから状態再計算・autoへ進むexec-cycleに加え、Job Run生成を伴う反復作業との境界・実行結果更新の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: rtn-*.yamlのaction kind・filter・interval・limit、exec-cycleのstrategy・parallel・loop、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
+          - text: rtn-*.yamlのaction kind・filter・interval・limit、個票Frontmatterを正本とするregister対象選択、exec-cycleのstrategy・parallel・loop、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: projectがbusyの場合、対象なし・利用制限・cycleのstep別失敗・再開時刻待ち・重複Job Run・取りこぼしの場合に、last_run・last_resultと次回判定がどのように記録されるか確認できること
@@ -273,7 +279,7 @@ groups:
           - text: deliverable scaffold・catalog build・register build・exec refresh・yaml-pages build・index buildと一括build/watchの役割および起動関係が表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
-          - text: 各正本と生成先の対応、直接編集してはならない派生成果物、再生成時の上書き境界が識別できること
+          - text: 個票Frontmatterから生成する登録項目一覧・状態別・優先度別・担当者別ビューを含め、各正本と生成先の対応、直接編集してはならない派生成果物、再生成時の上書き境界が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: 正本不足・検証失敗・部分生成失敗・生成物の陳腐化を検知した場合の停止条件と再実行経路が確認できること
@@ -295,6 +301,9 @@ groups:
           - kind: implementation
             path: src/register.ts
             purpose: 登録簿から課題・リスク・決定等の管理ビューを生成する処理
+          - kind: implementation
+            path: src/register-history.ts
+            purpose: 登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
         depends_on:
           - cdfd-register-operation
           - cdfd-task-execution
@@ -306,7 +315,7 @@ groups:
           - text: 遅延・滞留の検知条件、エスカレーション先、進捗報告・議事録を作成する契機が計画運用に使える粒度で定義されていること
             roles: [PM]
             viewpoint: vp-pm-dependency-risk
-          - text: 人が作成する進捗報告・議事録と、register buildで生成する課題・リスク・変更要求・決定ログの入力および更新責務が識別できること
+          - text: 人が作成する進捗報告・議事録と、register buildで生成する登録項目一覧・課題・リスク・変更要求・決定ログ、およびregister historyで再構成する監査履歴の入力と更新責務が識別できること
             roles: [ARC]
             viewpoint: vp-arc-cross-document-consistency
           - text: 更新漏れ・古い生成ビュー・未報告の遅延・未転記の決定事項を検知する確認経路が識別できること
