@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-10"
-  completed_on: "2026-05-05"
+  completed_at: "2026-05-05T12:00:00Z"
   conclusion: .agent/設定を整備
 ---
 

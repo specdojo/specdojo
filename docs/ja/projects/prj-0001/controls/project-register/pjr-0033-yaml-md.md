@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-17"
-  completed_on: "2026-05-17"
+  completed_at: "2026-05-17T12:00:00Z"
   conclusion: "`specdojo catalog build` で自動生成"
 ---
 

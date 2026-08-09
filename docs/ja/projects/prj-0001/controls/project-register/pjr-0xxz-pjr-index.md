@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-0XXZ pjr-indexへ登録日列を追加しタイムゾーン設定を導入する

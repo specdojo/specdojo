@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-07-26"
+  completed_at: "2026-07-26T12:00:00Z"
   conclusion: 簡潔な文書作成の共通原則を追加
 ---
 

@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
   item_status: done
   priority: medium
-  completed_on: "2026-08-07"
+  completed_at: "2026-08-07T12:00:00Z"
   conclusion: 案A（dependency type 廃止）を採択。enum・VALID_TYPES・テンプレート・schema・docs・テストを一貫更新。実績0件のため移行不要。必要時は後方互換の追加で再導入。
 ---
 

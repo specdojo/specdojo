@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-06"
+  completed_at: "2026-08-06T12:00:00Z"
   conclusion: mergeDomainCatalogsに同名group結合(決定的・再帰的)を実装。data-modelテンプレートをbdd/cdsd/sld/stsd/cld/ccd/cstdの7種別へ分割し、マージ後は業務データ辞書・概念モデルの2章に再構成。catalog-mergeテスト11件含め全対象テスト成功。
 ---
 

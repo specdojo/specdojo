@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: QE
   due_on: "2026-07-31"
-  completed_on: "2026-07-26"
+  completed_at: "2026-07-26T12:00:00Z"
   conclusion: 重複した記述や個票間での違いを修正
 ---
 

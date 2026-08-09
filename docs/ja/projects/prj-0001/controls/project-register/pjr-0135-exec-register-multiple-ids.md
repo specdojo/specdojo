@@ -14,7 +14,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-07-25"
+  completed_at: "2026-07-25T12:00:00Z"
   conclusion: exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした
 ---
 

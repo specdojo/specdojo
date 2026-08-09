@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: high
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:55:22Z"
 ---
 
 # PJR-RF3B 登録項目の個票 frontmatter スキーマを定義する

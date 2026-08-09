@@ -28,8 +28,8 @@ properties:
     unevaluatedProperties: false
     allOf:
       - $ref: "./common-frontmatter.schema.yaml"
-      # done / decided / rejected は register close / reject が完了日を記入する終端状態。
-      # deferred は完了日を伴わない（register defer は日付を記録しない）ため対象外。
+      # done / decided / rejected は register close / reject が完了日時を記入する終端状態。
+      # deferred は完了日時を伴わない（register defer は日時を記録しない）ため対象外。
       - if:
           required:
             - item_status
@@ -38,11 +38,11 @@ properties:
               $ref: "#/$defs/ClosedItemStatus"
         then:
           required:
-            - completed_on
+            - completed_at
           # ajv strict の strictRequired は同じ subschema の properties しか参照しないため、
           # required と同じ位置で対象プロパティを宣言する。
           properties:
-            completed_on: true
+            completed_at: true
       - type: object
         required:
           - rulebook
@@ -101,28 +101,31 @@ properties:
               Role code defined in pm-roles.yaml (e.g. ARC, PO) or the responsible
               member. Omit the key while the owner is undecided (list column: 担当).
 
-          registered_on:
-            $ref: "#/$defs/Date"
+          registered_at:
+            $ref: "#/$defs/Timestamp"
             description: >
-              Date the item was registered, in the project register timezone
-              (list column: 登録日). Omit the key only when the registration date
-              of a legacy item is unknown; newly added items always record it.
+              Instant the item was registered, in UTC. The displayed registration
+              date (list column: 登録日) is derived by converting it to the project
+              register timezone. Omit the key only when the registration time of a
+              legacy item is unknown; newly added items always record it.
 
           due_on:
             oneOf:
               - $ref: "#/$defs/Date"
               - type: "null"
             description: >
-              Due date for the response or the decision. Omit the key while the date
-              is undecided; use null when the item explicitly has no due date
-              (list column: 期限).
+              Due date for the response or the decision. It is a calendar day in the
+              project register timezone, not an instant, so it stays a date. Omit the
+              key while the date is undecided; use null when the item explicitly has
+              no due date (list column: 期限).
 
-          completed_on:
-            $ref: "#/$defs/Date"
+          completed_at:
+            $ref: "#/$defs/Timestamp"
             description: >
-              Date the item was completed, decided or rejected. Required for the
-              closed statuses and removed when the item is reopened
-              (list column: 完了日).
+              Instant the item was completed, decided or rejected, in UTC. Required
+              for the closed statuses and removed when the item is reopened. The
+              displayed completion date (list column: 完了日) is derived by converting
+              it to the project register timezone.
 
           conclusion:
             type: string
@@ -182,3 +185,12 @@ $defs:
     description: >
       ISO date (YYYY-MM-DD). Write it as a quoted YAML string, because an unquoted
       date is loaded as a timestamp value instead of a string.
+
+  Timestamp:
+    type: string
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    description: >
+      RFC 3339 date-time in UTC with second precision (YYYY-MM-DDTHH:MM:SSZ).
+      Storing the instant instead of a calendar day keeps the record independent of
+      the display timezone. Write it as a quoted YAML string, because an unquoted
+      date-time is loaded as a timestamp value instead of a string.

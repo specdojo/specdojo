@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-31"
-  completed_on: "2026-07-23"
+  completed_at: "2026-07-23T12:00:00Z"
   conclusion: catalog generateコマンドを追加
 ---
 

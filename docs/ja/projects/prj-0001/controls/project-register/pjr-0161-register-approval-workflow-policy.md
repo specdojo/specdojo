@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
   item_status: done
   priority: high
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-0161 登録簿承認typeの承認フローとPR/commit使い分けの規約化

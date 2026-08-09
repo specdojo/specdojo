@@ -11,12 +11,25 @@ import {
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
-import { resolveRegisterDateTimeZone, todayInTimeZone } from "./register-date.js";
+import {
+  normalizeRegisterTimestamp,
+  nowUtcTimestamp,
+  REGISTER_TIMESTAMP_RE,
+  resolveRegisterDateTimeZone,
+  timestampFromDateInTimeZone,
+} from "./register-date.js";
+import {
+  createGitTimestampResolver,
+  planRegisterTimestampMigration,
+  summarizeTimestampMigration,
+} from "./register-migrate-timestamps.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
   applyRegisterItemFields,
+  CELL_NONE,
+  CELL_TODO,
   compareRegisterItemIds,
   formatRegisterItemFields,
   isPlaceholderCell,
@@ -30,10 +43,12 @@ import {
   setRegisterItemTitle,
   TERMINAL_STATUSES_SET,
   ticketRefCell,
+  toDisplayItem,
   validateRegisterItemDocs,
   VALID_PRIORITIES,
   VALID_STATUSES,
   VALID_TYPES,
+  type PjrDisplayItem,
   type PjrItem,
   type RegisterItemFieldUpdates,
 } from "./register-item.js";
@@ -47,6 +62,7 @@ export {
   VALID_PRIORITIES,
   VALID_STATUSES,
   VALID_TYPES,
+  type PjrDisplayItem,
   type PjrItem,
 };
 
@@ -223,10 +239,15 @@ export function injectRegisterRows(content: string, rows: string[]): string {
   return lines.join("\n");
 }
 
-export function parsePjrIndex(content: string): PjrItem[] {
+// 旧一覧（追跡対象だった頃の pjr-index.md）の表を読む互換経路。日付セルは暦日しか持たない
+// ため、移行と同じ規則でプロジェクトタイムゾーンの 21:00 を補って日時へ変換する。
+export function parsePjrIndex(content: string, timeZone: string): PjrItem[] {
   const lines = content.split("\n");
   const items: PjrItem[] = [];
   let inSection = false;
+
+  const toTimestamp = (cell: string): string =>
+    isPlaceholderCell(cell) ? cell.trim() : timestampFromDateInTimeZone(cell.trim(), timeZone);
 
   for (const line of lines) {
     if (REGISTER_SECTION_RE.test(line)) {
@@ -249,9 +270,9 @@ export function parsePjrIndex(content: string): PjrItem[] {
       type: cells[4],
       priority: cells[5],
       owner: cells[6],
-      registered: cells[7],
+      registeredAt: toTimestamp(cells[7]),
       due: cells[8],
-      completed: cells[9],
+      completedAt: toTimestamp(cells[9]),
       conclusion: cells[10],
       ticket: cells[11],
     });
@@ -288,7 +309,7 @@ export function generatePjrId(
   throw new Error(`Failed to generate an unused PJR-ID after ${maxAttempts} attempts`);
 }
 
-function formatTableRow(item: PjrItem): string {
+function formatTableRow(item: PjrDisplayItem): string {
   return `| ${item.id} | ${item.status} | ${item.title} | ${item.description} | ${item.type} | ${item.priority} | ${item.owner} | ${item.registered} | ${item.due} | ${item.completed} | ${item.conclusion} | ${item.ticket} |`;
 }
 
@@ -300,9 +321,9 @@ function validateFields(opts: {
   status: string;
   type: string;
   priority: string;
-  registered: string;
+  registeredAt: string;
   due: string;
-  completed: string;
+  completedAt: string;
   id?: string;
 }): void {
   const errors: string[] = [];
@@ -321,14 +342,18 @@ function validateFields(opts: {
   if (opts.id && !PJR_ID_RE.test(opts.id)) {
     errors.push(`Invalid ID: "${opts.id}". Must match PJR-XXXX (e.g., PJR-0001)`);
   }
-  if (!/^(\d{4}-\d{2}-\d{2}|_TODO_)$/.test(opts.registered)) {
-    errors.push(`Invalid registered: "${opts.registered}". Must be YYYY-MM-DD or _TODO_`);
+  if (opts.registeredAt !== CELL_TODO && !REGISTER_TIMESTAMP_RE.test(opts.registeredAt)) {
+    errors.push(
+      `Invalid registered: "${opts.registeredAt}". Must be an RFC 3339 UTC date-time (YYYY-MM-DDTHH:MM:SSZ) or _TODO_`,
+    );
   }
   if (!/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
     errors.push(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`);
   }
-  if (!/^(\d{4}-\d{2}-\d{2}|-)$/.test(opts.completed)) {
-    errors.push(`Invalid completed: "${opts.completed}". Must be YYYY-MM-DD or -`);
+  if (opts.completedAt !== CELL_NONE && !REGISTER_TIMESTAMP_RE.test(opts.completedAt)) {
+    errors.push(
+      `Invalid completed: "${opts.completedAt}". Must be an RFC 3339 UTC date-time (YYYY-MM-DDTHH:MM:SSZ) or -`,
+    );
   }
 
   if (errors.length > 0) {
@@ -424,9 +449,9 @@ export function buildRegisterItemContent(opts: {
       type: opts.fields.type,
       priority: opts.fields.priority,
       owner: opts.fields.owner,
-      registered: opts.fields.registered,
+      registeredAt: opts.fields.registeredAt,
       due: opts.fields.due,
-      completed: opts.fields.completed,
+      completedAt: opts.fields.completedAt,
       conclusion: opts.fields.conclusion,
       ticket: "-",
     }),
@@ -461,9 +486,9 @@ const REGISTER_ITEM_VALUE_KEYS: (keyof PjrItem)[] = [
   "type",
   "priority",
   "owner",
-  "registered",
+  "registeredAt",
   "due",
-  "completed",
+  "completedAt",
   "conclusion",
 ];
 
@@ -522,6 +547,7 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
   }
 
   const sourceIndexContent = readFileSync(paths.pjrIndexPath, "utf8");
+  const timeZone = paths.registerDateTimeZone;
   // 移行後の pjr-index.md は文書 ID の解決先となる案内ページであり、旧一覧ではない。
   // 一覧テーブルを持たない案内ページは、旧一覧が存在しない場合と同じ no-op として扱う。
   if (!locateRegisterTable(sourceIndexContent.split("\n"))) {
@@ -540,7 +566,7 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
       files: [],
     };
   }
-  const indexItems = parsePjrIndex(sourceIndexContent);
+  const indexItems = parsePjrIndex(sourceIndexContent, timeZone);
   const duplicateIndexIds = indexItems
     .map((item) => item.id)
     .filter((id, index, ids) => ids.indexOf(id) !== index);
@@ -568,9 +594,9 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
       type: source.item.type,
       priority: source.item.priority,
       status: source.item.status,
-      registered: source.item.registered,
+      registeredAt: source.item.registeredAt,
       due: source.item.due,
-      completed: source.item.completed,
+      completedAt: source.item.completedAt,
     });
     const existing = docsById.get(source.id);
     let filename: string;
@@ -618,9 +644,9 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
           priority: source.item.priority,
           status: source.item.status,
           owner: source.item.owner,
-          registered: source.item.registered,
+          registeredAt: source.item.registeredAt,
           due: source.item.due,
-          completed: source.item.completed,
+          completedAt: source.item.completedAt,
           conclusion: source.item.conclusion,
         },
         templatePath,
@@ -759,16 +785,16 @@ function adjustTicketLink(ticket: string, prefix: string): string {
   return ticket.replace(/\]\(\.\//g, `](${prefix}`);
 }
 
-function rebaseItems(items: PjrItem[], prefix: string): PjrItem[] {
+function rebaseItems(items: PjrDisplayItem[], prefix: string): PjrDisplayItem[] {
   return items.map((it) => ({ ...it, ticket: adjustTicketLink(it.ticket, prefix) }));
 }
 
-function makeTable(items: PjrItem[], heading: TableHeading): string {
+function makeTable(items: PjrDisplayItem[], heading: TableHeading): string {
   const rows = items.map(formatTableRow);
   return [heading.header, heading.separator, ...rows].join("\n");
 }
 
-type ViewGroup = { label: string; items: PjrItem[] };
+type ViewGroup = { label: string; items: PjrDisplayItem[] };
 
 // 派生ビューの外枠（H1・note・章見出し・frontmatter）は template が所有する。
 // template をロードして生成物形へ平坦化し、`_PROJECT_ID_` を実プロジェクト ID へ置換する。
@@ -821,8 +847,8 @@ function renderGroupedTables(groups: ViewGroup[], chapter: number, heading: Tabl
     .join("\n\n");
 }
 
-function groupByOwner(items: PjrItem[]): ViewGroup[] {
-  const grouped = new Map<string, PjrItem[]>();
+function groupByOwner(items: PjrDisplayItem[]): ViewGroup[] {
+  const grouped = new Map<string, PjrDisplayItem[]>();
   for (const item of items) {
     const key = item.owner || "-";
     if (!grouped.has(key)) grouped.set(key, []);
@@ -832,7 +858,7 @@ function groupByOwner(items: PjrItem[]): ViewGroup[] {
 }
 
 // 登録項目一覧（pjr-index）本体を生成する。行は ID 昇順で、列見出しと外枠は template が持つ。
-function generateIndexView(items: PjrItem[], projectId: string): string {
+function generateIndexView(items: PjrDisplayItem[], projectId: string): string {
   const template = loadViewTemplate(REGISTER_INDEX_TEMPLATE, projectId);
   return injectRegisterRows(template, items.map(formatTableRow));
 }
@@ -841,7 +867,7 @@ function generateIndexView(items: PjrItem[], projectId: string): string {
 // まとめる理由（共有編集時の git 差分・マージ競合の回避）が無くなったため、
 // 軸ごとに別ファイルへ分割する（見やすさを優先する）。
 function generateViewsByStatusFile(
-  items: PjrItem[],
+  items: PjrDisplayItem[],
   projectId: string,
   heading: TableHeading,
 ): string {
@@ -857,7 +883,7 @@ function generateViewsByStatusFile(
 }
 
 function generateViewsByPriorityFile(
-  items: PjrItem[],
+  items: PjrDisplayItem[],
   projectId: string,
   heading: TableHeading,
 ): string {
@@ -873,7 +899,7 @@ function generateViewsByPriorityFile(
 }
 
 function generateViewsByOwnerFile(
-  items: PjrItem[],
+  items: PjrDisplayItem[],
   projectId: string,
   heading: TableHeading,
 ): string {
@@ -884,7 +910,7 @@ function generateViewsByOwnerFile(
 }
 
 function generateTypeFilterView(
-  items: PjrItem[],
+  items: PjrDisplayItem[],
   type: string,
   templateFileName: string,
   projectId: string,
@@ -904,7 +930,10 @@ const VALID_BUILD_SCOPES: BuildScope[] = ["register", "controls", "all"];
 export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope): ViewFile[] {
   // 項目の値は個票 frontmatter（正本）から集める。列見出しは template から採用するため、
   // 生成処理は作業ツリーの pjr-index.md を入力にしない。
-  const items = loadRegisterItems(paths).map((view) => view.item);
+  // 「登録日」「完了日」は保存された日時をプロジェクトの登録日タイムゾーンへ変換して導出する。
+  const items = loadRegisterItems(paths).map((view) =>
+    toDisplayItem(view.item, paths.registerDateTimeZone),
+  );
   const heading = extractTableHeading(loadViewTemplate(REGISTER_INDEX_TEMPLATE, paths.projectId));
 
   // 個票セルのリンクは project-register/ 起点の `./` 表記で作られる。
@@ -1032,7 +1061,10 @@ export function loadRegisterItems(paths: RegisterPaths): RegisterItemView[] {
   }
 
   if (existsSync(paths.pjrIndexPath)) {
-    for (const item of parsePjrIndex(readFileSync(paths.pjrIndexPath, "utf8"))) {
+    for (const item of parsePjrIndex(
+      readFileSync(paths.pjrIndexPath, "utf8"),
+      paths.registerDateTimeZone,
+    )) {
       if (views.has(item.id)) continue;
       const doc = docById.get(item.id);
       views.set(item.id, {
@@ -1322,7 +1354,7 @@ export function ticketTopicFromFilename(id: string, filename: string): string | 
 // pjr-index の登録項目一覧テーブルで fromId の行を updated へ差し替える。
 // replaceRowInContent は「同一 ID を書き戻す」用途で updated.id と一致する行を探すため、
 // ID を変える再採番には fromId で行を特定する専用処理を使う。
-function renumberRowInContent(content: string, fromId: string, updated: PjrItem): string {
+function renumberRowInContent(content: string, fromId: string, updated: PjrDisplayItem): string {
   const newRow = formatTableRow(updated);
   const lines = content.split("\n");
   let inSection = false;
@@ -1400,7 +1432,9 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
   // pjr-index に旧 ID の行が残っている場合だけ、その行も新しい ID へ差し替える。
   const hasIndexRow =
     existsSync(paths.pjrIndexPath) &&
-    parsePjrIndex(readFileSync(paths.pjrIndexPath, "utf8")).some((it) => it.id === fromId);
+    parsePjrIndex(readFileSync(paths.pjrIndexPath, "utf8"), paths.registerDateTimeZone).some(
+      (it) => it.id === fromId,
+    );
   let newIndexContent = hasIndexRow ? readFileSync(paths.pjrIndexPath, "utf8") : "";
 
   const oldFilename = fromView.ticketFilename;
@@ -1437,11 +1471,19 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
 
     if (hasIndexRow) {
       const updated: PjrItem = { ...fromItem, id: toId, ticket: ticketRefCell(newFilename) };
-      newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
+      newIndexContent = renumberRowInContent(
+        newIndexContent,
+        fromId,
+        toDisplayItem(updated, paths.registerDateTimeZone),
+      );
     }
   } else if (hasIndexRow) {
     const updated: PjrItem = { ...fromItem, id: toId };
-    newIndexContent = renumberRowInContent(newIndexContent, fromId, updated);
+    newIndexContent = renumberRowInContent(
+      newIndexContent,
+      fromId,
+      toDisplayItem(updated, paths.registerDateTimeZone),
+    );
   }
 
   if (hasIndexRow) {
@@ -1523,9 +1565,10 @@ export type RegisterAddFields = {
   priority: string;
   status: string;
   owner: string;
-  registered: string;
+  // 起票・完了は UTC・RFC 3339・秒精度の日時。期限だけは暦日のまま扱う。
+  registeredAt: string;
   due: string;
-  completed: string;
+  completedAt: string;
   conclusion: string;
 };
 
@@ -1545,9 +1588,9 @@ export function planRegisterItem(opts: {
     status: opts.fields.status,
     type: opts.fields.type,
     priority: opts.fields.priority,
-    registered: opts.fields.registered,
+    registeredAt: opts.fields.registeredAt,
     due: opts.fields.due,
-    completed: opts.fields.completed,
+    completedAt: opts.fields.completedAt,
     id: assignedId,
   });
 
@@ -1572,6 +1615,19 @@ export function printCommandError(error: unknown): void {
 
 function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
+}
+
+// CLI で明示された日時オプションを UTC の秒精度へ正規化する。未指定は undefined を返し、
+// 呼び出し側の既定値（実行時刻・プレースホルダ）へ委ねる。
+function parseRegisterTimestampOption(
+  value: string | undefined,
+  label: string,
+  placeholder: string,
+): string | undefined {
+  const text = value?.trim();
+  if (!text) return undefined;
+  if (text === placeholder) return placeholder;
+  return normalizeRegisterTimestamp(text, label);
 }
 
 // git のパス限定（pathspec）はリポジトリルート起点の POSIX 表記で渡す。
@@ -1653,11 +1709,15 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--status <status>", `Status: ${VALID_STATUSES.join(" | ")}`, "open");
   addCmd.option("--owner <owner>", "Owner or role", "_TODO_");
   addCmd.option(
-    "--registered <date>",
-    "Registration date (YYYY-MM-DD or _TODO_; defaults to today in run.register_date_timezone)",
+    "--registered <datetime>",
+    "Registration date-time (RFC 3339 with time zone, or _TODO_; defaults to now in UTC)",
   );
   addCmd.option("--due <date>", "Due date (YYYY-MM-DD, -, or _TODO_)", "_TODO_");
-  addCmd.option("--completed <date>", "Completion date (YYYY-MM-DD or -)", "-");
+  addCmd.option(
+    "--completed <datetime>",
+    "Completion date-time (RFC 3339 with time zone, or -)",
+    "-",
+  );
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
   addCmd.option(
@@ -1677,8 +1737,10 @@ export function registerRegisterCommands(program: Command): void {
         );
       }
 
-      // 登録日は明示指定が無ければ run.register_date_timezone（既定 UTC）での「今日」を採用する。
-      const registered = opts.registered?.trim() || todayInTimeZone(paths.registerDateTimeZone);
+      // 起票日時は明示指定が無ければ実行時刻を採る。明示された場合はタイムゾーン付きの
+      // RFC 3339 を受け付け、UTC の秒精度へ正規化してから保存する。
+      const registeredAt = parseRegisterTimestampOption(opts.registered, "registered", CELL_TODO);
+      const completedAt = parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE);
 
       const fields: RegisterAddFields = {
         type: opts.type,
@@ -1687,9 +1749,9 @@ export function registerRegisterCommands(program: Command): void {
         priority: opts.priority,
         status: opts.status,
         owner: opts.owner,
-        registered,
+        registeredAt: registeredAt ?? nowUtcTimestamp(),
         due: opts.due,
-        completed: opts.completed,
+        completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
       };
       const templatePath = join(
@@ -1742,7 +1804,10 @@ export function registerRegisterCommands(program: Command): void {
   closeCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
   closeCmd.option("--status <status>", "done or decided (auto from item type if omitted)");
   closeCmd.option("--conclusion <text>", "Conclusion or resolution summary");
-  closeCmd.option("--completed <date>", "Completion date (YYYY-MM-DD; defaults to today)");
+  closeCmd.option(
+    "--completed <datetime>",
+    "Completion date-time (RFC 3339 with time zone; defaults to now in UTC)",
+  );
   closeCmd.option("--dry-run", "Print change without writing", false);
   closeCmd.action((opts) => {
     try {
@@ -1756,15 +1821,18 @@ export function registerRegisterCommands(program: Command): void {
         throw new Error(`--status must be "done" or "decided" for the close command`);
       }
 
-      const completed = opts.completed ?? todayInTimeZone(paths.registerDateTimeZone);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
-        throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`);
+      const completedAt =
+        parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE) ?? nowUtcTimestamp();
+      if (completedAt === CELL_NONE) {
+        throw new Error(
+          `Invalid completed: "${opts.completed}". A completion date-time is required`,
+        );
       }
 
       const updated: PjrItem = {
         ...item,
         status: targetStatus,
-        completed,
+        completedAt,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
       applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
@@ -1779,7 +1847,10 @@ export function registerRegisterCommands(program: Command): void {
   addProjectOption(rejectCmd);
   rejectCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
   rejectCmd.option("--conclusion <text>", "Reason for rejection");
-  rejectCmd.option("--completed <date>", "Rejection date (YYYY-MM-DD; defaults to today)");
+  rejectCmd.option(
+    "--completed <datetime>",
+    "Rejection date-time (RFC 3339 with time zone; defaults to now in UTC)",
+  );
   rejectCmd.option("--dry-run", "Print change without writing", false);
   rejectCmd.action((opts) => {
     try {
@@ -1787,15 +1858,18 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
 
-      const completed = opts.completed ?? todayInTimeZone(paths.registerDateTimeZone);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(completed)) {
-        throw new Error(`Invalid completed date: "${completed}". Must be YYYY-MM-DD`);
+      const completedAt =
+        parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE) ?? nowUtcTimestamp();
+      if (completedAt === CELL_NONE) {
+        throw new Error(
+          `Invalid completed: "${opts.completed}". A rejection date-time is required`,
+        );
       }
 
       const updated: PjrItem = {
         ...item,
         status: "rejected",
-        completed,
+        completedAt,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
       applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
@@ -1849,7 +1923,8 @@ export function registerRegisterCommands(program: Command): void {
         throw new Error(`--status must be one of: ${validReopenStatuses.join(", ")}`);
       }
 
-      const updated: PjrItem = { ...item, status: opts.status, completed: "-" };
+      // reopen は完了日時のキーを取り除き、活動中の項目として扱えるようにする。
+      const updated: PjrItem = { ...item, status: opts.status, completedAt: CELL_NONE };
       applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
@@ -1974,7 +2049,9 @@ export function registerRegisterCommands(program: Command): void {
   // --- migrate ---
   const migrateCmd = reg
     .command("migrate")
-    .description("Migrate every legacy pjr-index row to register item frontmatter");
+    .description(
+      "Migrate legacy register data (pjr-index rows and registered_on / completed_on dates)",
+    );
   addProjectOption(migrateCmd);
   migrateCmd.option("--dry-run", "Validate and print the migration summary without writing", false);
   migrateCmd.action((opts) => {
@@ -1990,14 +2067,32 @@ export function registerRegisterCommands(program: Command): void {
         if (plan.sourceIndexPath) {
           process.stdout.write(`Would remove legacy index: ${plan.sourceIndexPath}\n`);
         }
+      } else {
+        applyRegisterMigrationPlan(plan);
+        process.stdout.write(`Migrated register items: ${summary}\n`);
+        if (plan.sourceIndexPath) {
+          process.stdout.write(`Removed legacy index: ${plan.sourceIndexPath}\n`);
+        }
+      }
+
+      // 旧日付キーの移行は個票が正本になった後の状態を入力にするため、行の個票化より後に行う。
+      const timestampPlan = planRegisterTimestampMigration({
+        projectRegisterPath: paths.projectRegisterPath,
+        timeZone: paths.registerDateTimeZone,
+        resolveGitTimestamps: createGitTimestampResolver(specdojoRootDir()),
+      });
+      const timestampSummary = summarizeTimestampMigration(timestampPlan);
+
+      if (opts.dryRun) {
+        process.stdout.write(`Would migrate register timestamps: ${timestampSummary}\n`);
         return;
       }
 
-      applyRegisterMigrationPlan(plan);
-      process.stdout.write(`Migrated register items: ${summary}\n`);
-      if (plan.sourceIndexPath) {
-        process.stdout.write(`Removed legacy index: ${plan.sourceIndexPath}\n`);
+      for (const file of timestampPlan.files) {
+        writeFileSync(file.path, file.content, "utf8");
       }
+      process.stdout.write(`Migrated register timestamps: ${timestampSummary}\n`);
+
       for (const view of writeDerivedViews(paths, "all")) {
         process.stdout.write(`Generated: ${view.path}\n`);
       }
@@ -2087,6 +2182,7 @@ export function registerRegisterCommands(program: Command): void {
         limit,
         ids,
         statusOnly: Boolean(opts.statusOnly),
+        timeZone: paths.registerDateTimeZone,
       });
 
       if (opts.json) {

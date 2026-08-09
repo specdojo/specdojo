@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-07-25"
+  completed_at: "2026-07-25T12:00:00Z"
   conclusion: human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a）
 ---
 

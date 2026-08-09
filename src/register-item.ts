@@ -7,13 +7,15 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import yaml from "js-yaml";
+import { registerDateFromTimestamp } from "./register-date.js";
 
 // ================================
 // Types & Constants
 // ================================
 
-// 一覧ビュー1行分の値。frontmatter の省略キーは、表示用プレースホルダ（`-` / `_TODO_`）へ
-// 変換してから格納する。
+// 登録項目1件分の値。frontmatter の省略キーは、表示用プレースホルダ（`-` / `_TODO_`）へ
+// 変換してから格納する。起票・完了は瞬間（UTC・RFC 3339・秒精度）で保持し、
+// 一覧に出す暦日は表示時にプロジェクトタイムゾーンへ変換して導出する。
 export type PjrItem = {
   id: string;
   status: string;
@@ -22,11 +24,17 @@ export type PjrItem = {
   type: string;
   priority: string;
   owner: string;
-  registered: string;
+  registeredAt: string;
   due: string;
-  completed: string;
+  completedAt: string;
   conclusion: string;
   ticket: string;
+};
+
+// 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
+export type PjrDisplayItem = Omit<PjrItem, "registeredAt" | "completedAt"> & {
+  registered: string;
+  completed: string;
 };
 
 export const VALID_STATUSES = [
@@ -78,10 +86,19 @@ export type RegisterItemFieldUpdates = {
   item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
-  registered_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
-  completed_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+};
+
+// 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
+export const LEGACY_REGISTERED_KEY = "registered_on";
+export const LEGACY_COMPLETED_KEY = "completed_on";
+
+export type RegisterItemLegacyDates = {
+  registeredOn?: string;
+  completedOn?: string;
 };
 
 export type RegisterItemDoc = {
@@ -112,9 +129,9 @@ const SPECDOJO_KEY_ORDER = [
   "item_status",
   "priority",
   "owner",
-  "registered_on",
+  "registered_at",
   "due_on",
-  "completed_on",
+  "completed_at",
   "conclusion",
 ];
 
@@ -223,18 +240,33 @@ export function readRegisterItemContent(
     type: asString(fields.item_type) ?? CELL_TODO,
     priority: asString(fields.priority) ?? "medium",
     owner: asString(fields.owner) ?? CELL_TODO,
-    registered: asString(fields.registered_on) ?? CELL_TODO,
+    registeredAt: asString(fields.registered_at) ?? CELL_TODO,
     due:
       fields.due_on === null
         ? CELL_NONE
         : (asString(fields.due_on) ??
           (Object.prototype.hasOwnProperty.call(fields, "due_on") ? CELL_NONE : CELL_TODO)),
-    completed: asString(fields.completed_on) ?? CELL_NONE,
+    completedAt: asString(fields.completed_at) ?? CELL_NONE,
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
   };
 
   return { id, item, hasRegisterFields: asString(fields.item_status) !== undefined };
+}
+
+// 個票の日時を、指定タイムゾーン上の暦日へ変換した表示値へ写す。
+// プレースホルダ（`-` / `_TODO_`）はそのまま残す。
+export function toDisplayItem(item: PjrItem, timeZone: string): PjrDisplayItem {
+  const { registeredAt, completedAt, ...rest } = item;
+  return {
+    ...rest,
+    registered: isPlaceholderCell(registeredAt)
+      ? registeredAt
+      : registerDateFromTimestamp(registeredAt, timeZone),
+    completed: isPlaceholderCell(completedAt)
+      ? completedAt
+      : registerDateFromTimestamp(completedAt, timeZone),
+  };
 }
 
 // 登録簿ディレクトリ直下の個票ファイルを走査し、ID 昇順で返す。走査順（readdir の列挙順）は
@@ -324,21 +356,21 @@ export function isPlaceholderCell(value: string | undefined): boolean {
   return trimmed === "" || trimmed === CELL_NONE || trimmed === CELL_TODO;
 }
 
-// 一覧1行分の値を frontmatter フィールドへ写す。表示プレースホルダはキー削除（null）にする。
+// 登録項目1件分の値を frontmatter フィールドへ写す。表示プレースホルダはキー削除（null）にする。
 export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpdates {
   return {
     item_type: item.type,
     item_status: item.status,
     priority: item.priority,
     owner: isPlaceholderCell(item.owner) ? null : item.owner.trim(),
-    registered_on: isPlaceholderCell(item.registered) ? null : item.registered.trim(),
+    registered_at: isPlaceholderCell(item.registeredAt) ? null : item.registeredAt.trim(),
     due_on:
       item.due.trim() === CELL_TODO
         ? REMOVE_REGISTER_ITEM_FIELD
         : item.due.trim() === CELL_NONE || item.due.trim() === ""
           ? null
           : item.due.trim(),
-    completed_on: isPlaceholderCell(item.completed) ? null : item.completed.trim(),
+    completed_at: isPlaceholderCell(item.completedAt) ? null : item.completedAt.trim(),
     conclusion: isPlaceholderCell(item.conclusion) ? null : item.conclusion.trim(),
   };
 }
@@ -354,20 +386,34 @@ function orderSpecdojoKeys(fields: Record<string, unknown>): Record<string, unkn
   return ordered;
 }
 
-// 個票 frontmatter の `specdojo:` 名前空間へ登録項目フィールドを反映する。
-// 値 null のキーは削除する。frontmatter 以外（本文）は書き換えない。
-export function applyRegisterItemFields(
+// 個票 frontmatter の `specdojo:` 名前空間を読み書きする共通処理。
+// mutate はキーの追加・更新・削除だけを行い、frontmatter 以外（本文）は書き換えない。
+function updateSpecdojoFields(
   content: string,
-  updates: RegisterItemFieldUpdates,
+  mutate: (fields: Record<string, unknown>) => void,
 ): string {
   const match = content.match(FRONTMATTER_RE);
   if (!match) {
     throw new Error("frontmatter not found in register item file");
   }
 
+  const parsed = parseFrontmatterDocument(match[1]);
+  if (!isRecord(parsed.specdojo)) {
+    throw new Error("register item frontmatter has no specdojo namespace");
+  }
+
+  const fields: Record<string, unknown> = { ...parsed.specdojo };
+  mutate(fields);
+
+  const document = { ...parsed, specdojo: orderSpecdojoKeys(fields) };
+  const dumped = yaml.dump(document, { lineWidth: -1, noRefs: true, quotingType: '"' });
+  return `---\n${dumped}---\n${match[2] ?? ""}`;
+}
+
+function parseFrontmatterDocument(frontmatter: string): Record<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = yaml.load(match[1]);
+    parsed = yaml.load(frontmatter);
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to parse register item frontmatter: ${detail}`);
@@ -375,23 +421,59 @@ export function applyRegisterItemFields(
   if (!isRecord(parsed)) {
     throw new Error("register item frontmatter must be a mapping");
   }
-  if (!isRecord(parsed.specdojo)) {
-    throw new Error("register item frontmatter has no specdojo namespace");
-  }
+  return parsed;
+}
 
-  const fields: Record<string, unknown> = { ...parsed.specdojo };
-  for (const [key, value] of Object.entries(updates)) {
-    if (value === undefined) continue;
-    if (value === REMOVE_REGISTER_ITEM_FIELD || (value === null && key !== "due_on")) {
-      delete fields[key];
-      continue;
+// 個票 frontmatter の `specdojo:` 名前空間へ登録項目フィールドを反映する。
+// 値 null のキーは削除する。frontmatter 以外（本文）は書き換えない。
+export function applyRegisterItemFields(
+  content: string,
+  updates: RegisterItemFieldUpdates,
+): string {
+  return updateSpecdojoFields(content, (fields) => {
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === undefined) continue;
+      if (value === REMOVE_REGISTER_ITEM_FIELD || (value === null && key !== "due_on")) {
+        delete fields[key];
+        continue;
+      }
+      fields[key] = value;
     }
-    fields[key] = value;
-  }
+  });
+}
 
-  const document = { ...parsed, specdojo: orderSpecdojoKeys(fields) };
-  const dumped = yaml.dump(document, { lineWidth: -1, noRefs: true, quotingType: '"' });
-  return `---\n${dumped}---\n${match[2] ?? ""}`;
+// 日時移行前の個票が持つ `registered_on` / `completed_on` を読み出す。
+// 移行済み（どちらのキーも無い）個票では両方 undefined を返す。
+export function readRegisterItemLegacyDates(content: string): RegisterItemLegacyDates {
+  const match = content.match(FRONTMATTER_RE);
+  if (!match) return {};
+
+  let parsed: unknown;
+  try {
+    parsed = yaml.load(match[1]);
+  } catch {
+    return {};
+  }
+  if (!isRecord(parsed) || !isRecord(parsed.specdojo)) return {};
+
+  const fields = parsed.specdojo;
+  return {
+    registeredOn: asString(fields[LEGACY_REGISTERED_KEY]),
+    completedOn: asString(fields[LEGACY_COMPLETED_KEY]),
+  };
+}
+
+// 旧日付キーを取り除き、UTC の日時キーへ置き換える。移行処理だけが使う。
+export function applyRegisterItemTimestamps(
+  content: string,
+  timestamps: { registeredAt?: string; completedAt?: string },
+): string {
+  return updateSpecdojoFields(content, (fields) => {
+    delete fields[LEGACY_REGISTERED_KEY];
+    delete fields[LEGACY_COMPLETED_KEY];
+    if (timestamps.registeredAt) fields.registered_at = timestamps.registeredAt;
+    if (timestamps.completedAt) fields.completed_at = timestamps.completedAt;
+  });
 }
 
 // H1 のタイトル部分（表示 ID の後ろ）を差し替える。ID 接頭辞は保持する。

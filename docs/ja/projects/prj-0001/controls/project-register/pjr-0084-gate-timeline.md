@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-31"
-  completed_on: "2026-05-30"
+  completed_at: "2026-05-30T12:00:00Z"
   conclusion: phase_gateをtaskの中に行表示
 ---
 

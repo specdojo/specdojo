@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-20"
-  completed_on: "2026-05-19"
+  completed_at: "2026-05-19T12:00:00Z"
   conclusion: command usage guideに仕様を作成
 ---
 

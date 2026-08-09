@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-24"
-  completed_on: "2026-07-23"
+  completed_at: "2026-07-23T12:00:00Z"
   conclusion: TABLE_HEADERをpjr-index.md由来に一本化し、章番号アンカーと派生ビューのtemplate駆動化で日本語ハードコードを除去（コミット18fc83db）
 ---
 

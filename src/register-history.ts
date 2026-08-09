@@ -10,8 +10,10 @@ import {
   displayIdFromTicketFilename,
   isPlaceholderCell,
   readRegisterItemContent,
+  toDisplayItem,
 } from "./register-item.js";
 import { gitOutput, gitResult } from "./exec-worktree.js";
+import { DEFAULT_REGISTER_DATE_TIMEZONE } from "./specdojo-config.js";
 
 // ================================
 // Types & Constants
@@ -131,15 +133,17 @@ export function parseRegisterLogOutput(output: string): RegisterCommitEntry[] {
 // ================================
 
 // 個票の内容から、比較対象フィールドの値を取り出す。個票として読めない内容は undefined。
+// 登録日・完了日は保存された日時を表示タイムゾーンの暦日へ変換した値で比較する。
 function itemFieldValues(
   content: string | undefined,
   filename: string,
+  timeZone: string,
 ): Record<RegisterHistoryField, string> | undefined {
   if (content === undefined) return undefined;
   const parsed = readRegisterItemContent(content, filename);
   if (!parsed) return undefined;
 
-  const item = parsed.item;
+  const item = toDisplayItem(parsed.item, timeZone);
   return {
     status: item.status,
     title: item.title,
@@ -185,9 +189,10 @@ function registerItemIdForPath(path: string): string | undefined {
 export function buildRegisterHistoryEvents(
   commits: readonly RegisterCommitEntry[],
   readAt: (revision: string, path: string) => string | undefined,
-  options: { ids?: readonly string[]; statusOnly?: boolean } = {},
+  options: { ids?: readonly string[]; statusOnly?: boolean; timeZone?: string } = {},
 ): RegisterHistoryEvent[] {
   const idFilter = options.ids && options.ids.length > 0 ? new Set(options.ids) : undefined;
+  const timeZone = options.timeZone ?? DEFAULT_REGISTER_DATE_TIMEZONE;
   const events: RegisterHistoryEvent[] = [];
 
   for (const commit of commits) {
@@ -205,11 +210,15 @@ export function buildRegisterHistoryEvents(
       const before =
         kind === "added"
           ? undefined
-          : itemFieldValues(readAt(`${commit.commit}^`, sourcePath), basename(sourcePath));
+          : itemFieldValues(
+              readAt(`${commit.commit}^`, sourcePath),
+              basename(sourcePath),
+              timeZone,
+            );
       const after =
         kind === "removed"
           ? undefined
-          : itemFieldValues(readAt(commit.commit, file.path), basename(file.path));
+          : itemFieldValues(readAt(commit.commit, file.path), basename(file.path), timeZone);
 
       let changes = kind === "removed" ? [] : diffFieldValues(before, after);
 
@@ -291,6 +300,8 @@ export type RegisterHistoryQuery = {
   limit?: number;
   ids?: readonly string[];
   statusOnly?: boolean;
+  // 登録日・完了日を暦日へ変換する IANA タイムゾーン（run.register_date_timezone）。
+  timeZone?: string;
 };
 
 export function assertHistoryDate(value: string, option: string): void {
@@ -341,6 +352,6 @@ export function collectRegisterHistoryEvents(query: RegisterHistoryQuery): Regis
   return buildRegisterHistoryEvents(
     commits,
     (revision, path) => readFileAtRevision(query.repoRoot, revision, path),
-    { ids: query.ids, statusOnly: query.statusOnly },
+    { ids: query.ids, statusOnly: query.statusOnly, timeZone: query.timeZone },
   );
 }

@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-24"
-  completed_on: "2026-06-07"
+  completed_at: "2026-06-07T12:00:00Z"
   conclusion: pm-members.yamlに定義
 ---
 

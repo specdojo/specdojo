@@ -4,14 +4,17 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
   applyRegisterItemFields,
+  applyRegisterItemTimestamps,
   descriptionFromBody,
   displayIdFromTicketFilename,
   loadRegisterItemDocs,
   readRegisterItemContent,
+  readRegisterItemLegacyDates,
   registerItemFieldsFromItem,
   setRegisterItemDescription,
   setRegisterItemTitle,
   titleFromBody,
+  toDisplayItem,
   validateRegisterItemDocs,
   type PjrItem,
 } from "../../src/register-item.js";
@@ -50,7 +53,7 @@ const MIGRATED_FIELDS = [
   "item_status: in-progress",
   "priority: high",
   "owner: ARC",
-  'registered_on: "2026-08-01"',
+  'registered_at: "2026-08-01T12:34:56Z"',
   'due_on: "2026-08-31"',
 ];
 
@@ -107,9 +110,9 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
       type: "todo",
       priority: "high",
       owner: "ARC",
-      registered: "2026-08-01",
+      registeredAt: "2026-08-01T12:34:56Z",
       due: "2026-08-31",
-      completed: "-",
+      completedAt: "-",
       conclusion: "-",
       ticket: "[pjr-ab12-inventory-seed](./pjr-ab12-inventory-seed.md)",
     });
@@ -121,7 +124,7 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
     expect(parsed?.hasRegisterFields).toBe(false);
     // 省略キーは一覧の表示プレースホルダへ変換する。
     expect(parsed?.item.owner).toBe("_TODO_");
-    expect(parsed?.item.registered).toBe("_TODO_");
+    expect(parsed?.item.registeredAt).toBe("_TODO_");
   });
 
   it("期限の未定（キー省略）と期限なし（null）を表示上も区別する", () => {
@@ -137,6 +140,99 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
 
   it("命名規約外のファイル名は undefined を返す", () => {
     expect(readRegisterItemContent(buildItemFile(), "notes.md")).toBeUndefined();
+  });
+});
+
+describe("toDisplayItem — 保存した日時から一覧の暦日を導出する", () => {
+  const item: PjrItem = {
+    id: "PJR-AB12",
+    status: "done",
+    title: "題名",
+    description: "説明",
+    type: "todo",
+    priority: "medium",
+    owner: "ARC",
+    registeredAt: "2026-08-01T15:30:00Z",
+    due: "2026-08-31",
+    completedAt: "2026-08-05T15:30:00Z",
+    conclusion: "-",
+    ticket: "-",
+  };
+
+  it("プロジェクトタイムゾーンへ変換した暦日を登録日・完了日にする", () => {
+    expect(toDisplayItem(item, "UTC")).toMatchObject({
+      registered: "2026-08-01",
+      completed: "2026-08-05",
+    });
+    // UTC 15:30 は Asia/Tokyo では翌日 00:30 になる。
+    expect(toDisplayItem(item, "Asia/Tokyo")).toMatchObject({
+      registered: "2026-08-02",
+      completed: "2026-08-06",
+    });
+  });
+
+  it("期限は瞬間ではなく暦日のため、タイムゾーン変換の対象にしない", () => {
+    expect(toDisplayItem(item, "Asia/Tokyo").due).toBe("2026-08-31");
+  });
+
+  it("プレースホルダ（`_TODO_` / `-`）はそのまま表示値として残す", () => {
+    const undecided: PjrItem = { ...item, registeredAt: "_TODO_", completedAt: "-" };
+
+    expect(toDisplayItem(undecided, "Asia/Tokyo")).toMatchObject({
+      registered: "_TODO_",
+      completed: "-",
+    });
+  });
+});
+
+describe("readRegisterItemLegacyDates / applyRegisterItemTimestamps — 日時への移行", () => {
+  const legacyFields = [
+    "item_status: done",
+    "priority: high",
+    "owner: ARC",
+    'registered_on: "2026-08-01"',
+    'due_on: "2026-08-31"',
+    'completed_on: "2026-08-05"',
+  ];
+
+  it("移行前の個票から旧日付キーを読み出す", () => {
+    expect(readRegisterItemLegacyDates(buildItemFile(legacyFields))).toEqual({
+      registeredOn: "2026-08-01",
+      completedOn: "2026-08-05",
+    });
+  });
+
+  it("移行済み・frontmatter 無しの内容では旧日付キーを返さない", () => {
+    expect(readRegisterItemLegacyDates(buildItemFile(MIGRATED_FIELDS))).toEqual({
+      registeredOn: undefined,
+      completedOn: undefined,
+    });
+    expect(readRegisterItemLegacyDates("# 見出しのみ\n")).toEqual({});
+  });
+
+  it("旧日付キーを取り除き、UTC の日時キーへ置き換える", () => {
+    const migrated = applyRegisterItemTimestamps(buildItemFile(legacyFields), {
+      registeredAt: "2026-08-01T12:34:56Z",
+      completedAt: "2026-08-05T09:00:00Z",
+    });
+
+    expect(migrated).not.toContain("registered_on");
+    expect(migrated).not.toContain("completed_on");
+    expect(migrated).toContain('  registered_at: "2026-08-01T12:34:56Z"');
+    expect(migrated).toContain('  completed_at: "2026-08-05T09:00:00Z"');
+    // 期限は暦日のまま維持し、本文も書き換えない。
+    expect(migrated).toContain('  due_on: "2026-08-31"');
+    expect(migrated).toContain("# PJR-AB12 駄菓子の在庫初期値を決める");
+  });
+
+  it("完了日を持たない項目は完了日時のキーを追加しない", () => {
+    const migrated = applyRegisterItemTimestamps(
+      buildItemFile(["item_status: open", 'registered_on: "2026-08-01"']),
+      { registeredAt: "2026-08-01T12:34:56Z" },
+    );
+
+    expect(migrated).toContain('  registered_at: "2026-08-01T12:34:56Z"');
+    expect(migrated).not.toContain("completed_at");
   });
 });
 
@@ -213,35 +309,35 @@ describe("register-item-frontmatter schema — enum 検証", () => {
 });
 
 describe("applyRegisterItemFields — 個票 frontmatter への書き込み", () => {
-  it("登録項目フィールドを追記し、日付を引用符付き文字列で書く", () => {
+  it("登録項目フィールドを追記し、日時を引用符付き文字列で書く", () => {
     const updated = applyRegisterItemFields(buildItemFile(), {
       item_status: "review",
       priority: "high",
       owner: "ARC",
-      registered_on: "2026-08-01",
+      registered_at: "2026-08-01T12:34:56Z",
     });
 
     expect(updated).toContain("  item_status: review");
     expect(updated).toContain("  priority: high");
-    expect(updated).toContain('  registered_on: "2026-08-01"');
+    expect(updated).toContain('  registered_at: "2026-08-01T12:34:56Z"');
     // 本文は書き換えない。
     expect(updated).toContain("# PJR-AB12 駄菓子の在庫初期値を決める");
     expect(updated).toContain("## 2. 完了条件");
   });
 
-  it("値 null のキーは削除する（reopen で完了日を消す場合）", () => {
+  it("値 null のキーは削除する（reopen で完了日時を消す場合）", () => {
     const closed = applyRegisterItemFields(buildItemFile(MIGRATED_FIELDS), {
       item_status: "done",
-      completed_on: "2026-08-05",
+      completed_at: "2026-08-05T09:00:00Z",
     });
 
     const reopened = applyRegisterItemFields(closed, {
       item_status: "open",
-      completed_on: null,
+      completed_at: null,
     });
 
-    expect(closed).toContain('  completed_on: "2026-08-05"');
-    expect(reopened).not.toContain("completed_on");
+    expect(closed).toContain('  completed_at: "2026-08-05T09:00:00Z"');
+    expect(reopened).not.toContain("completed_at");
     expect(reopened).toContain("  item_status: open");
   });
 
@@ -249,7 +345,7 @@ describe("applyRegisterItemFields — 個票 frontmatter への書き込み", ()
     const updated = applyRegisterItemFields(buildItemFile(), {
       conclusion: "対応済み",
       item_status: "done",
-      completed_on: "2026-08-05",
+      completed_at: "2026-08-05T09:00:00Z",
     });
 
     const keys = [...updated.matchAll(/^ {2}([a-z_]+):/gm)].map((match) => match[1]);
@@ -261,7 +357,7 @@ describe("applyRegisterItemFields — 個票 frontmatter への書き込み", ()
       "part_of",
       "item_type",
       "item_status",
-      "completed_on",
+      "completed_at",
       "conclusion",
     ]);
   });
@@ -299,9 +395,9 @@ describe("registerItemFieldsFromItem — 一覧値から frontmatter フィー�
       type: "todo",
       priority: "medium",
       owner: "_TODO_",
-      registered: "2026-08-01",
+      registeredAt: "2026-08-01T12:34:56Z",
       due: "-",
-      completed: "-",
+      completedAt: "-",
       conclusion: "-",
       ticket: "-",
     };
@@ -311,9 +407,9 @@ describe("registerItemFieldsFromItem — 一覧値から frontmatter フィー�
       item_status: "open",
       priority: "medium",
       owner: null,
-      registered_on: "2026-08-01",
+      registered_at: "2026-08-01T12:34:56Z",
       due_on: null,
-      completed_on: null,
+      completed_at: null,
       conclusion: null,
     });
   });
@@ -327,9 +423,9 @@ describe("registerItemFieldsFromItem — 一覧値から frontmatter フィー�
       type: "todo",
       priority: "medium",
       owner: "ARC",
-      registered: "2026-08-01",
+      registeredAt: "2026-08-01T12:34:56Z",
       due: "_TODO_",
-      completed: "-",
+      completedAt: "-",
       conclusion: "-",
       ticket: "-",
     };

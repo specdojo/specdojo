@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-24"
-  completed_on: "2026-05-23"
+  completed_at: "2026-05-23T12:00:00Z"
   conclusion: default_start_date、start_dateを設定
 ---
 

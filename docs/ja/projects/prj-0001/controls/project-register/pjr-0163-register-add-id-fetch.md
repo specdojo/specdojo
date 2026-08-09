@@ -10,7 +10,7 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-0163 register addのID採番方式見直しと統合ブランチ予約のfetch同期

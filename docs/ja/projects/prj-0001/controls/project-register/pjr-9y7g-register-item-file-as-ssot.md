@@ -10,9 +10,9 @@ specdojo:
   item_status: decided
   priority: high
   owner: PO
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T00:19:28Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:55:22Z"
   conclusion: 選択肢Bを採択。個票 frontmatter を正本とし pjr-index を生成ビュー化する
 ---
 

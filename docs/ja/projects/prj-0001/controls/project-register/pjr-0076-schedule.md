@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-26"
-  completed_on: "2026-05-30"
+  completed_at: "2026-05-30T12:00:00Z"
   conclusion: 初期値をずらすのとgateの処理を追加
 ---
 

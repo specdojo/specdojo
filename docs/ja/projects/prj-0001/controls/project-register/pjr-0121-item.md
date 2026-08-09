@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: PO
   due_on: null
-  completed_on: "2026-07-24"
+  completed_at: "2026-07-24T12:00:00Z"
   conclusion: 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定
 ---
 

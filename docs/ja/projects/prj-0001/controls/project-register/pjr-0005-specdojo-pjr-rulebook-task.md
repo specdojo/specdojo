@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: PO
   due_on: "2026-05-10"
-  completed_on: "2026-07-23"
+  completed_at: "2026-07-23T12:00:00Z"
   conclusion: specdojo:pjr-rulebookを個別に作成
 ---
 

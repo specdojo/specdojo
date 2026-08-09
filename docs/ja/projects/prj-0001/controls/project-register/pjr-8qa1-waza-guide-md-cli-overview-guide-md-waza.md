@@ -10,8 +10,8 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
-  completed_on: "2026-08-08"
+  registered_at: "2026-08-08T12:33:02Z"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-8QA1 waza-guide.md新設(cli-overview-guide.mdをWaza名称へ改称)とサイドバー・相互参照リンク更新

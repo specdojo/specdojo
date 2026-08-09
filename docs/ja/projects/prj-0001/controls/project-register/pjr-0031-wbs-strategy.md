@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-10"
-  completed_on: "2026-05-15"
+  completed_at: "2026-05-15T12:00:00Z"
   conclusion: ドメイン別展開方針を策定済み
 ---
 

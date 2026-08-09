@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-07-26"
+  completed_at: "2026-07-26T12:00:00Z"
   conclusion: specdojo:recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d）
 ---
 

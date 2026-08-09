@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: PO
   due_on: "2026-05-17"
-  completed_on: "2026-05-17"
+  completed_at: "2026-05-17T12:00:00Z"
   conclusion: rolesとmembers, 関連文書を見直し
 ---
 

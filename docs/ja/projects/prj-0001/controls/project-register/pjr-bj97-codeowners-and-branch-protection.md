@@ -10,7 +10,7 @@ specdojo:
   item_status: open
   priority: medium
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T02:12:43Z"
   due_on: "2026-08-31"
 ---
 

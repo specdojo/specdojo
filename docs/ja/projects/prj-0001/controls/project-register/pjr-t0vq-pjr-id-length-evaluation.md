@@ -9,9 +9,9 @@ specdojo:
   item_type: note
   item_status: done
   priority: low
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T00:30:44Z"
   due_on: null
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:55:22Z"
   conclusion: 32^4の空間と再抽選方式により通常経路では衝突しないと評価。桁数拡張は後方互換で後から可能
 ---
 

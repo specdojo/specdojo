@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: PO
   due_on: "2026-07-17"
-  completed_on: "2026-07-17"
+  completed_at: "2026-07-17T12:00:00Z"
   conclusion: コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定
   supersedes:
     - prj-0001:pjr-0119

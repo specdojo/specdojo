@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-07"
-  completed_on: "2026-06-07"
+  completed_at: "2026-06-07T12:00:00Z"
   conclusion: priorityに基づいて選択するように変更
 ---
 

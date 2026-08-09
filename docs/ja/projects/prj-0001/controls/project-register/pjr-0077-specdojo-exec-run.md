@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-26"
-  completed_on: "2026-05-27"
+  completed_at: "2026-05-27T12:00:00Z"
   conclusion: specdojo exec runコマンドを実装
 ---
 

@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-24"
-  completed_on: "2026-05-23"
+  completed_at: "2026-05-23T12:00:00Z"
   conclusion: 依存しているコードを再整理。validate-templates.tsのテスト化が残
 ---
 

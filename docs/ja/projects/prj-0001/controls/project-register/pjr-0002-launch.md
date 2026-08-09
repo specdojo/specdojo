@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: PO
   due_on: "2026-05-10"
-  completed_on: "2026-05-24"
+  completed_at: "2026-05-24T12:00:00Z"
   conclusion: sch-strategy-launchを作成
 ---
 
