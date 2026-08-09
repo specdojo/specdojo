@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: PJR idの重複検知と再採番を追加
 ---
 
 # PJR-0137 pjr-indexの重複ID検知と再採番
 
 ## 1. 概要
+
+並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する
 
 `specdojo register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生する。表末尾への追記は通常 merge conflict になるが、rebase や cherry-pick を経た場合は重複が検知されずに通る。重複 ID を検証で必ず落とし、発生時には表・個票ファイル名・参照リンクを一括で付け替える再採番コマンドを用意する。
 

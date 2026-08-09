@@ -7,11 +7,17 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  completed_on: "2026-08-08"
 ---
 
 # PJR-0163 register addのID採番方式見直しと統合ブランチ予約のfetch同期
 
 ## 1. 概要
+
+PJR-IDの採番を数字4桁の連番から、曖昧文字・母音を一部除いた英大文字+数字4桁のランダムIDへ変更する。統合ブランチworktreeへの予約経路(reservePjrIdOnIntegration)はそのまま維持し、予約直前にfetch+ff-only mergeを自動実行して他マシンとの採番ズレを軽減する。push はspecdojoに含めず人間が明示実行する。衝突検知・復旧は新規フォーマットを作らず既存のregister renumberを流用する。
 
 `register add` を worktree 側から実行して即座に起票したいが、統合ブランチが未同期だと別マシンとの並行起票でIDが衝突しうる。数字4桁連番の代替として検討したダミーID・案3（1項目1ファイル化）・数字乱数（4桁/5桁）はいずれも過剰な改修範囲か実用に耐えない衝突確率だったため、既存の統合ブランチ予約経路（[[prj-0001:pjr-0138-register-add-on-integration-branch]]）を維持したまま、ID の文字種変更と fetch 同期の自動化で残存リスクを縮小する。
 

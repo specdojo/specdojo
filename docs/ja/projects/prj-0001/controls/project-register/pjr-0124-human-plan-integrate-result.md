@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-25"
+  conclusion: human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a）
 ---
 
 # PJR-0124 human実行時のplan非生成とresultへの統合
 
 ## 1. 概要
+
+execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える
 
 `execution: human` のタスクでは、実行者が plan を参照せず result だけで確認していた。plan の固有価値は HEAD 由来の改ざん耐性ある commit スコープ導出だが、これは agent のプロンプトインジェクション対策であり、敵対 agent が存在しない human では無効になる。したがって human 時は plan を生成せず result へ統合し、commit スコープは result frontmatter の `targets` から導出する。result のチェックは現状で最低限のため温存し、done_criteria 確認の一元的な受け皿とする。
 

@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
+  conclusion: stripTerminalControlSequences(src/exec-shared.ts)を追加し、sanitizeRegisterConclusion・checkpoint失敗メッセージ・block_reason書き出しの3箇所でANSIエスケープコード等を除去。実装レビューで正規表現に生の制御バイトが直接埋め込まれgitがバイナリ扱いする不備を発見し、\\uXXXXエスケープ表記へ修正済み。
 ---
 
 # PJR-ZRXG register系失敗理由の文字列にANSIエスケープコードが混入し登録簿が破損する
 
 ## 1. 概要
+
+sanitizeRegisterConclusion（src/exec-register.ts）は改行とパイプ文字のみ除去し長さを制限するが、ANSIエスケープコード（ターミナル制御文字）は除去しない。checkpoint commit失敗時（src/exec-worktree-ops.ts）はcommitted.stdout/stderrを生のまま連結してエラーメッセージにするため、lefthook等が色付き出力を返す失敗ではANSIエスケープコードがそのままpjr-index.mdの結論列やresultのblocked理由に書き込まれ表示が壊れる（PJR-PP0Dのcheckpoint失敗で実際に発生）。sanitizeRegisterConclusionにANSIエスケープコード除去を追加し、同様に生のsubprocess出力をユーザ向け文字列として扱う他の箇所（exec-worktree-opsのチェックポイント/commit/merge失敗メッセージ等）も洗い出して対応する。
 
 `exec run --register PJR-NWPC PJR-PP0D PJR-4AHZ --worktree`実行時、PJR-PP0Dのcheckpoint commitがpre-commit hook（markdownlint）失敗で異常終了し、その際の生のsubprocess出力（lefthookの色付きボックスUIによるANSIエスケープコード込み）が`pjr-index.md`の「結論」列にそのまま書き込まれ表示が破損した。`sanitizeRegisterConclusion`（`src/exec-register.ts`）が改行と`|`のみ除去し、ANSIエスケープコードを除去していないことが原因である。
 

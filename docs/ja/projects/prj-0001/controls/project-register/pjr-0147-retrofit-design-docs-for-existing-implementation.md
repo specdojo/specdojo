@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-07"
+  conclusion: retrofit approachとevidence_refsを実装。型/CLI/schema/edit・review planテンプレート整備、data-flow全10成果物へ適用、関連ガイド反映、125テスト通過
 ---
 
 # PJR-0147 実装先行（コード先行）時に設計書/仕様書/要件書へ反映・新設するapproachの整備
 
 ## 1. 概要
+
+実装が既に存在するにもかかわらず対応する設計書/仕様書/要件書が未整備、または内容が乖離している場合に、実装内容を既存文書へ反映するか、文書が存在しない場合は新設するための判断基準・手順（approach）を策定する
 
 実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、現在実装されている挙動を AS-IS の根拠として調査し、成果物へ「反映」または「新設」する新しい `approach: retrofit` を整備する。
 

@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
+  item_status: decided
+  priority: medium
+  owner: PO
+  due_on: "2026-08-31"
+  completed_on: "2026-08-04"
+  conclusion: シビックテックサービスの運用設計（090-operations相当）はprj-0001の対象外とし、代表試行（SC-01〜SC-03）確認後の後続プロジェクトで検討する
 ---
 
 # PJR-0154 シビックテックサービスの運用設計（090-operationsドメイン）の対応時期を決定
 
 ## 1. 背景
+
+運用設計について、prj-0001での対応方針を決定する
 
 `dct-data-flow.yaml`（プロジェクト推進・オペレーション推進の業務フロー）を拡充する過程で、SpecDojoを用いて作成するシビックテックサービス自体の「運用設計」（`docs-structure-guide.md` が定める製品ドキュメント構成の `090-operations` ドメイン相当）を、どのプロジェクトでいつ整理するかが未確定であることが判明した。`prj-scope.md` は「個別ソリューションの本番開発・運用」をスコープ外としているが、その担い手が prj-0001 の後続活動か、別プロジェクトかは明記されていなかったため、判断を確定する。
 

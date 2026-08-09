@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-RDNC rulebook・運用ガイド・テンプレートを個票正本へ更新する
 
 ## 1. 概要
+
+PJR-ES57 の分割7。index と個票の同期規則を削除し、個票分離基準の二分を廃止して、テンプレートを新構成へ揃える。
 
 [[prj-0001:pjr-es57-register-file-ssot-migration]] の分割7。個票 frontmatter が正本になることに合わせて、記載ルール・運用手順・テンプレートを更新する。二重管理を前提とした規則と、個票を作るかどうかの判断基準を削除する。
 

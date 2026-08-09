@@ -7,11 +7,16 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  completed_on: "2026-08-08"
 ---
 
 # PJR-0158 exec runにproject単位の実行ロックを追加しroutineのbusy-skipを実現
 
 ## 1. 概要
+
+exec run全体をproject単位のheartbeatロックで排他。--if-busy skip/wait/fail(手動fail/routine skip)。routine-state.jsonにlast_result=skippedを追加。retryは次のcron tickに委ね待機なし。
 
 `exec run` プロセス同士（routine 起動・手動・CI）の重なりを止めるガードが無く、provider の `max_concurrency` は 1 プロセス内でしか効かないため、同時 agent 数とレートリミットが想定を超える。同一タスクの二重実行は claim が防ぐため正しさの問題ではなく、リソース統制の課題である。project 単位の実行ロックを `exec run` に導入し、routine は busy なら skip する運用に統一する。
 

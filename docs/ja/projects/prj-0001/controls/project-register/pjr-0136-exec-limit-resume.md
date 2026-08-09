@@ -6,15 +6,23 @@ specdojo:
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
-  item_type: todo
   based_on:
     - prj-0001:pjr-0122
     - sysd-agent-settings
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 利用制限に達した場合にroutineで再開
 ---
 
 # PJR-0136 agent利用制限後の自動再開
 
 ## 1. 概要
+
+利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする
 
 `exec run --auto` で Claude Code、Codex などの利用制限により task を継続できない場合に、制限種別と再開可能時刻を永続化する。定時起動される routine から再開時刻を迎えた task を抽出し、保持した実行状態と worktree を使って安全に再実行できるようにする。
 

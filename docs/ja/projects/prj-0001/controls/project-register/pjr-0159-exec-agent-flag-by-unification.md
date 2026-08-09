@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: change-request
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-07"
+  conclusion: agent指定を --by 系（--by/--edit-by/--review-by）＋--auto へ統一。旧フラグは deprecated alias＋警告で維持し normalizeAgentFlags に集約。物理撤去は PJR-0162 で実施。
 ---
 
 # PJR-0159 exec の agent 指定フラグを --by 系へ統一（--cmd/--agent-cmd 撤廃、--edit-agent/--review-agent を --edit-by/--review-by へ改名）
 
 ## 1. 変更要求
+
+exec run/resume/worktree の agent 指定フラグを nickname 一本化・--by 系へ統一する。--cmd/--agent-cmd（生コマンド指定）を撤廃し agent 指定は roster nickname のみ、バッチ起動は --auto に一本化、--edit-agent/--review-agent を --edit-by/--review-by へ改名。旧フラグは deprecated alias を経て撤去。
 
 | 項目     | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

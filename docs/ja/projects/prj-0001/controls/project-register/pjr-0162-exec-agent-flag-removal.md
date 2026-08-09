@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  completed_on: "2026-08-08"
+  conclusion: 旧agent指定フラグ(--cmd/--agent-cmd/--edit-agent/--review-agent)を物理撤去。exec run/resume/worktree agentをnickname(--by/--edit-by/--review-by/--auto)一本化。全878テスト成功を確認。
 ---
 
 # PJR-0162 旧agent指定フラグの撤去（--cmd/--agent-cmd/--edit-agent/--review-agent）
 
 ## 1. 概要
+
+PJR-0159で導入したdeprecated aliasを、deprecation期間（1〜2リリース）後に物理撤去する。exec run/resumeの--cmd/--agent-cmd/--edit-agent/--review-agent、exec worktree agentの--agent-cmd、生コマンド受理経路（resolveAgentOverrideのagentCmdOverride分岐・auto-agentフォールバック）、--cmdによるバッチ起動判定を除去し、worktree agentのcommand供給を--by nickname解決へ付け替える。関連テストとdocsを更新する。
 
 PJR-0159 で agent 指定フラグを `--by` 系（`--by` / `--edit-by` / `--review-by`）＋ `--auto` へ統一し、旧フラグ `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent`（および `exec worktree agent` の `--agent-cmd`）は deprecated alias（動作維持＋警告）として残した。本項目は、その deprecation 期間（1〜2 リリース）経過後に旧フラグと生コマンド受理経路を物理撤去する後続タスクである。
 

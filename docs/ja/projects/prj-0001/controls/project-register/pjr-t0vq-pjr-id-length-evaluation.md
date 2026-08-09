@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: note
+  item_status: done
+  priority: low
+  registered_on: "2026-08-09"
+  due_on: null
+  completed_on: "2026-08-09"
+  conclusion: 32^4の空間と再抽選方式により通常経路では衝突しないと評価。桁数拡張は後方互換で後から可能
 ---
 
 # PJR-T0VQ PJR-ID の桁数は4桁で十分（衝突可能性を評価済み）
 
 ## 1. メモ
+
+32^4=1,048,576 の ID 空間と再抽選方式の評価結果を記録する。通常経路では衝突せず、桁数拡張は後方互換で後から可能。
 
 PJR-ID の桁数（4文字）は将来の大規模プロジェクトでも十分であり、桁数を増やす必要はない。評価結果は次のとおり。
 

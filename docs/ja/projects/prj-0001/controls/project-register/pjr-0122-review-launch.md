@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: note
+  item_status: done
+  priority: medium
+  owner: PO
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 改善点を一通り反映
 ---
 
 # PJR-0122 launch trackの振り返り
 
 ## 1. メモ
+
+workflowの改善点を振り返りまとめる。
 
 ### 1.1. 事実・コメント
 

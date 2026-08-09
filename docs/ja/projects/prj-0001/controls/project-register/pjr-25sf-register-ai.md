@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
+  conclusion: 自動レビューパスは任意導入(オプトイン)、対象はedit区分に限定、否時は既存register waitへ差し戻し、完了条件節をdone_criteria相当として活用する方針。実装は別途todo化する。
 ---
 
 # PJR-25SF register系タスクへのAIレビューフェーズ導入を検討する
 
 ## 1. 概要
+
+catalog成果物はedit/review2段階のagent実行があるが、register(PJR)系タスクはeditのみでcloseの可否確認が人間任せになっている。review-agentによる自動レビューパスの導入価値と設計（対象item_type、レビュー失敗時の遷移、必須/任意、レビュー用planテンプレートと個票「完了条件」のdone_criteria相当としての参照方法）を検討する。
 
 catalog成果物には edit phase → review phase の2段階agent実行があるが、register(PJR)系タスク（`exec run --register`）は edit/investigate の実行区分のみで、review用のモード・planテンプレート・状態遷移が存在しない。[[prj-0001:pjr-0163-register-add-id-fetch]] の実行後、`review` 状態は「agentによる自動レビュー待ち」ではなく「人間が確認して `register close` するのを待つだけの手動チェックポイント」であることが判明した。この非対称性を踏まえ、register系タスクへの自動レビューパス導入の要否と設計を検討する。
 

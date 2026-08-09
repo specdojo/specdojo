@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: specdojo:recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d）
 ---
 
 # PJR-0129 Why-What-How作成原則をrecipeへ反映
 
 ## 1. 概要
+
+Why・What・How・Traceを章順ではなく論理の骨格として定義し、各成果物recipeへ重複なく適用する
 
 agent が手段や網羅的な説明へ引っ張られず、主要な論点を保って成果物を作成できるよう、Why・What・How・Trace を共通の論理構造として定義する。全成果物へ同じ章順を強制せず、共通原則は一か所に置き、各 recipe には成果物の責務に応じた問いと適用方法だけを反映する。
 

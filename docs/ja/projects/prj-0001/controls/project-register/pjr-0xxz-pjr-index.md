@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
 ---
 
 # PJR-0XXZ pjr-indexへ登録日列を追加しタイムゾーン設定を導入する
 
 ## 1. 概要
+
+pjr-index.mdにはID採番順序が失われた(英数字ランダムID化)ため起票順を追える列がない。登録日列(YYYY-MM-DD)を追加し、register add実行時に自動記入する。日付計算はOS/コンテナのTZに依存させず、SpecDojoRunConfigに register*date_timezone(既定UTC)を追加してIntl.DateTimeFormatで明示解決する。既存の完了日デフォルトも同じヘルパーへ統一する。手動でpjr-index.mdを直接編集する場合は不明なら\_TODO*のままでよい(既存の担当・期限と同じ運用)。
 
 [[prj-0001:pjr-0163-register-add-id-fetch]] でPJR-IDを数字4桁連番から英数字4桁ランダムへ変更した結果、ID自体から起票の前後関係を読み取れなくなった。`pjr-index.md`には登録日に相当する列がなく、追記方式による行の物理的な並び順だけが起票順の手がかりになっている。行順は現行の`register add`（追記）・`register renumber`・状態遷移コマンド（同一行を書き換えるのみで並べ替えない）では崩れないことを確認済みだが、手動編集や将来の並べ替えに対して脆弱なため、明示的な「登録日」列を追加する。日付計算はOS/コンテナのタイムゾーン設定に依存させず、プロジェクト設定で明示的に指定できるようにする。
 

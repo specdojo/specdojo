@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 簡潔な文書作成の共通原則を追加
 ---
 
 # PJR-0131 簡潔な文書作成の共通原則をdocumentation policyへ追加
 
 ## 1. 概要
+
+文書全体に適用する簡潔性・重複回避・正本参照・文章量の目安をdocumentation policyの共通原則として定義する
 
 agent が生成する文書を、必要な論点と判断根拠を保ったまま簡潔にするため、SpecDojo の文書全体に適用する共通原則を documentation policy に追加する。文字数や行数の機械的な達成を目的にせず、一文一主張、適切な段落・箇条書きの粒度、正本への参照、重複削除を基本方針として定義する。
 

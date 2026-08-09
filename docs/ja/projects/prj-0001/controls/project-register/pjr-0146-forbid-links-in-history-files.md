@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-05"
+  conclusion: 履歴蓄積ファイル(plan/result/個票)のMarkdownリンク禁止・[[id]]/パス表記統一ルールをmarkdown.instructions.mdへ追加し、検知CLI(validate-history-links)とunit testを実装、npm run checkへ組み込み。既存違反0件のため一括遡及移行は不要
 ---
 
-# PJR-0146 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+# PJR-0146 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し[[id]]/パス表記に統一するルール化
 
 ## 1. 概要
+
+plan/result/pjr-NNNN-`<topic>`等の履歴として蓄積されるファイルは、リンク先のファイル名変更時に修正が発生してしまうため、Markdownリンク`[]()`を使わず、docs/配下の参照は`[[id]]`、docs/外の参照・外部URLはパス表記/URLのままとするルールを定め、関連する記述ルール文書（例: markdown.instructions.md等）へ反映する
 
 plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生する Markdown リンク（`[]()`）を含めない。`docs/` 配下の文書を参照する場合は `id` を正とする `[[id]]`（wikilink）に統一し、`docs/` 外のファイル（`.github/instructions/` 等）や外部URLはリポジトリルートからの相対パス表記／URLそのままで記述するルールを定める。加えて、ルール違反（Markdownリンクの使用）を自動検知できるよう validation / lint チェックの仕組みを整備する。
 

@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
+  conclusion: printCommandErrorをstderr出力へ変更し、printWhereErrorと統合(削除)。register系全サブコマンドのエラー出力がstderrに統一された。内部呼び出し元はstdio inherit+終了コード判定のため影響なし。command-referenceへ反映。
 ---
 
 # PJR-Q88A register系コマンド全体のエラー出力をstdoutからstderrへ統一する
 
 ## 1. 概要
+
+registerサブコマンド(add/start/wait/review/close/reject/defer/reopen/update/renumber等)はほぼ全てprintCommandError慣例でエラーをstdoutへ出す。PJR-NWPCでregister whereのみstderrへ分離したが、他のサブコマンドはstdoutのまま残っている。内部呼び出し元(spawnSelf/spawnRegisterTransition等)はstdio inherit+終了コードのみで成否判定しておりstdout内容を解析していないため、stderrへ変更しても既存の内部呼び出しへの影響はない。printCommandErrorを呼ぶ全箇所をstderrへ揃え、既存テストのstdout検証も合わせて更新する。catalog.ts/schedule.tsにも同種のstdout一本化が見られるが、対象はregister系に限定し、他コマンドへの拡張は別途判断する。
 
 [[prj-0001:pjr-nwpc-register-where-stderr]]では`register where`のみエラー出力をstderrへ分離したが、`add`/`start`/`wait`/`review`/`close`/`reject`/`defer`/`reopen`/`update`/`renumber`等の他サブコマンドは`printCommandError`慣例のままstdoutへエラーを出している。内部呼び出し元（`spawnSelf`/`spawnRegisterTransition`等）は`stdio: inherit`＋終了コードのみで成否判定しており、stdout内容を解析する箇所は無いため、stderrへの変更は安全である。Unix/CLIの一般的な慣習（正常出力はstdout、エラーはstderr）に揃える。
 

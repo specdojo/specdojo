@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: PM
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: pull requestで承認する運用を明記
 ---
 
 # PJR-0126 PO承認をpull requestベースにする承認フロー整備
 
 ## 1. 概要
+
+decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討
 
 プロジェクト憲章の承認（[[prj-0001:pjr-0119-charter-approval|PJR-0119]]）は decision 個票の起票のみで行ったが、承認者が表のセル文字列で、作成者と承認者が分離されておらず自己承認になりうるため証跡が弱い。charter 等の PO 留保事項の承認を pull request レビューで行い、承認者・承認日時・承認対象差分を platform 側で担保する運用を整備する。decision 個票は決定内容の SSOT として残し、PR は承認イベントとして併用する。
 

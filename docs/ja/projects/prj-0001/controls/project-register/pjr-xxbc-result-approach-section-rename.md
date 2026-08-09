@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: low
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-09"
+  conclusion: xer-template.md 第4章を「進め方と実践の型の適用」へ改称し、本文も両者を求める記述へ調整。plan テンプレート9ファイル26箇所とテスト3箇所を追随、旧名称の残存0件
 ---
 
 # PJR-XXBC result の「実践の型の活用」を「進め方と実践の型の適用」へ改称する
 
 ## 1. 概要
+
+xer-template.md の見出しと、それを参照する xep-\* テンプレート10ファイル・テストの文言を改称する。approach 由来の記録（retrofit の実装参照、freeform のプロジェクト文脈優先など）を名称で包含できるようにする
 
 edit result テンプレート `docs/ja/specdojo/templates/xer-template.md` の第4章「実践の型の活用」を「進め方と実践の型の適用」へ改称し、これを参照する plan テンプレートおよびテストの文言を追随させる。
 

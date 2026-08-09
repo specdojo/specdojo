@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-06"
+  conclusion: mergeDomainCatalogsに同名group結合(決定的・再帰的)を実装。data-modelテンプレートをbdd/cdsd/sld/stsd/cld/ccd/cstdの7種別へ分割し、マージ後は業務データ辞書・概念モデルの2章に再構成。catalog-mergeテスト11件含め全対象テスト成功。
 ---
 
 # PJR-0156 dctカタログmergeの同名group結合対応
 
 ## 1. 概要
+
+同一domainの複数dctファイルで同名groupを1章へ結合し、種別ごと物理分割時の章重複を解消する
 
 PJR-0155 で実装した dct カタログの物理分割マージ（`mergeDomainCatalogs`）は、同一 `domain` の各ファイルの `groups` をファイル順に連結するだけで、同名 group を1章へ結合しない（`src/catalog-build.ts`）。このため成果物種別ごとにファイルを分割すると、`業務データ辞書`・`概念モデル` などの章見出しがファイル数だけ重複する。種別ごと物理分割（data-model テンプレートの再分割）を成立させ、rulebook の業務領域分割例（`dct-data-model-sales.yaml`／`-buy.yaml`）も正しく描画するため、マージ時に同一 `domain` 内の同名 group を1章へ結合できるようにする。
 

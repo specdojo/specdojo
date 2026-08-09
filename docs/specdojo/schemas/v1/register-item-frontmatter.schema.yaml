@@ -50,7 +50,6 @@ properties:
           - item_type
           - item_status
           - priority
-          - registered_on
         properties:
           id:
             type: string
@@ -106,13 +105,17 @@ properties:
             $ref: "#/$defs/Date"
             description: >
               Date the item was registered, in the project register timezone
-              (list column: 登録日).
+              (list column: 登録日). Omit the key only when the registration date
+              of a legacy item is unknown; newly added items always record it.
 
           due_on:
-            $ref: "#/$defs/Date"
+            oneOf:
+              - $ref: "#/$defs/Date"
+              - type: "null"
             description: >
-              Due date for the response or the decision. Omit the key when there is
-              no due date or it is undecided (list column: 期限).
+              Due date for the response or the decision. Omit the key while the date
+              is undecided; use null when the item explicitly has no due date
+              (list column: 期限).
 
           completed_on:
             $ref: "#/$defs/Date"

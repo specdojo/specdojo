@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-07"
+  conclusion: 生成系動詞を整理し破壊的リネームを実施。exec build→exec refresh、catalog generate→deliverable scaffold(独立サブコマンド)へ改名し、schedule buildは据え置き。用語標準をguideへ明文化、コード・lefthook・docs・tests・schemaを更新、旧名はエラー化。全819テスト成功。オーケストレーターSSOT+4ラッパーも同期済み。
 ---
 
 # PJR-0157 CLI生成系動詞の用語整理と破壊的リネーム
 
 ## 1. 概要
+
+exec build→exec refresh、catalog generate→deliverable scaffoldへ改名し、生成系動詞(scaffold/build/refresh/run)の用語標準を明文化する
 
 CLI の生成系動詞が多義・重複しており、とくに `exec build`（揮発的な実行状態の算出）と `catalog build`（派生ビュー生成）で `build` が別レイヤに並び、`catalog scaffold`（カタログ生成）と `catalog generate`（成果物本体生成）も語と意味が対応していない。生成系動詞を `scaffold`（起点）/ `build`（派生物）/ `refresh`（揮発状態）/ `run`（実行）の4語へ整理し、用語標準を明文化したうえで、破壊的リネームを一括で実施する（未公開プロジェクトのためエイリアスは設けない）。
 

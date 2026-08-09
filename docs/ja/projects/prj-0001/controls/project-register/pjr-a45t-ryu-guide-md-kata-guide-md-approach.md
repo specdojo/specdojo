@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  completed_on: "2026-08-08"
 ---
 
 # PJR-A45T ryu-guide.md新設(kata-guide.mdからapproachの説明を分離)とサイドバー・相互参照リンク更新
 
 ## 1. 概要
+
+kata-guide.mdの進め方(approach)に関する章をryu-guide.mdへ分離し、id・frontmatter・H1(実践の進め方ガイド/Ryu Guide)を新設する。kata-guide.mdは型(rulebook/recipe/sample/template)の使い分けに焦点を絞る。サイドバー表示名(実践の進め方)と相互参照リンクを追従修正する。
 
 SpecDojo の道場メタファーで、進め方（`approach`）は「Ryu」に対応する。現行の [[specdojo:kata-guide]] は、実質的な内容の大半（進め方の選び方・一覧、参照の共通原則、型メンテナンスの進め方、reviewへの適用）が `approach` の説明であり、型（rulebook/recipe/sample/template）そのものの使い分けを示す内容は冒頭の一部にとどまる。`approach` に関する章を `ryu-guide.md` として新設分離し、[[specdojo:kata-guide]] は型の役割・使い分けに焦点を絞り直す。
 

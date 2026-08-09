@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-VC94 検証とテストを個票正本の構成へ更新する
 
 ## 1. 概要
+
+PJR-ES57 の分割6。表専用スキーマの廃止に伴う検証経路の付け替えと、移行後の挙動を検証するテストを整備する。
 
 [[prj-0001:pjr-es57-register-file-ssot-migration]] の分割6。表専用スキーマによる検証を廃止し、個票 frontmatter を対象とする検証へ付け替える。あわせて既存テストを新構成へ更新し、移行後の挙動を検証するテストを追加する。
 

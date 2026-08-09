@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
+  item_status: decided
+  priority: high
+  owner: PO
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-09"
+  conclusion: 選択肢Bを採択。個票 frontmatter を正本とし pjr-index を生成ビュー化する
 ---
 
 # PJR-9Y7G 登録簿の正本を1項目1ファイルへ移し pjr-index を生成ビュー化する
 
 ## 1. 背景
+
+登録項目の正本を個票 frontmatter へ一本化し、pjr-index.md を generated の派生ビューへ変更するかを判断する。表の差分レビュー喪失の代替手段も選択肢比較に含める。
 
 登録簿は `pjr-index.md` の登録項目一覧（表）を正本とし、詳細が必要な項目のみ個票 `pjr-XXXX-<topic>.md` へ分離する二層構造をとっている。この構造について、正本の粒度を実体（登録項目）単位のファイルへ移すべきかを判断する必要がある。
 

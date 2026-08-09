@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-02"
+  conclusion: resolveMemberCommandにnickname再検証を追加し多層防御を実装。validate:schemaへpm-members追加済み。specdojo:exec-config-guideへ反映済み
 ---
 
 # PJR-0150 pm-members.yaml のnicknameスキーマ検証欠落によるcommand_templateインジェクションリスクの解消
 
 ## 1. 概要
+
+pm-members.schema.yamlはnicknameに安全な文字パターン`^[a-z0-9][a-z0-9_-]{0,62}$`を定義しているが、loadMemberRoster(src/specdojo-config.ts)はyaml.loadのみで検証せず、package.jsonのvalidate:schema集約にもpm-members.schema.yamlが含まれていない。resolveMemberCommand(src/exec-agent-config.ts)はnicknameをcommand_templateへ無エスケープでプレースホルダ展開しshell:trueで実行するため、pm-members.yamlの書き換え権限があればコマンドインジェクションが可能。validate:schemaへのpm-members追加と、resolveMemberCommand側での再検証を行う
 
 `pm-members.schema.yaml` は `nickname` に安全な文字パターン（`^[a-z0-9][a-z0-9_-]{0,62}$`）を定義しているが、`loadMemberRoster`（`src/specdojo-config.ts`）は `yaml.load` のみで検証せず、`package.json` の `validate:schema` 集約スクリプトにも `pm-members.schema.yaml` が含まれていない。一方 `resolveMemberCommand`（`src/exec-agent-config.ts`）は `nickname` を `command_template` のプレースホルダへ無エスケープで展開し、`spawn(command, { shell: true })` で実行する。このため `pm-members.yaml` を書き換えられる者がいれば、`nickname` にシェルメタ文字を仕込むことでコマンドインジェクションが成立し得る。schemaで定義した制約を実装側で確実に担保する対応を行う。
 

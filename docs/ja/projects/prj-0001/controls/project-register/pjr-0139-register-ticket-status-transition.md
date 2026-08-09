@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 個票frontmatterのstatus遷移をcloseで実行
 ---
 
 # PJR-0139 個票frontmatterのstatus遷移を自動化
 
 ## 1. 概要
+
+個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する
 
 個票の frontmatter `status` は文書の成熟度を表すが、遷移させる時期が rulebook に定義されておらず、`register` のどのコマンドも個票の frontmatter を更新しない。`register add` がテンプレート由来で `draft` を書き込んだあとは誰も更新しないため、既存 16 件のうち 15 件が `draft` のまま残り、成熟度の指標として機能していない。
 
