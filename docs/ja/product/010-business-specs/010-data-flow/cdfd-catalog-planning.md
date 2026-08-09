@@ -98,7 +98,7 @@ flowchart TB
   実行入力検証 -->|"検証済み Schedule・event"| 実行状態再構成
 
   スケジュール戦略 -->|"初期完了状態"| 実行状態再構成
-  実行状態再構成 -->|"task ごとの現在状態"| 実行状態
+  実行状態再構成 -->|"event 列・task ごとの現在状態"| 実行状態
   Schedule -->|"依存・期間・担当"| 計画情報算出
   実行状態 -->|"todo・doing・blocked・done・cancelled"| 計画情報算出
   計画情報算出 -->|"着手可能 task・次候補"| Ready
