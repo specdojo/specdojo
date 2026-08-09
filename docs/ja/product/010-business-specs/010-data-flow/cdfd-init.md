@@ -19,7 +19,7 @@ specdojo:
 - 対象は、プロジェクト開始が承認されてから、config の雛形を対象プロジェクト用に確定し、register、catalog の初期状態を作り、必要な場合だけ provider 実行資材・実行補助設定を準備して、計画展開へ引き渡すまでである。
 - config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスとする。provider 設定初期化と exec scaffold は、それぞれの利用方針が承認され、必要入力がそろった場合だけ起動する独立した任意プロセスとする。
 - 既存ファイルの継続利用・置換判断、入力不足・不正、生成失敗・部分生成を主要例外として扱う。個別コマンドのオプション、物理的な書き込み手順、内部エラーの全列挙は対象外とする。
-- 登録項目の日常運用は `P-02 登録簿運用`、カタログからの Schedule・実行計画生成は `P-03 計画展開`、タスクの実行は `P-04 タスク実行`、運用中の provider・agent・構成変更は `P-07 構成変更` の責務とし、本領域では作り込まない。
+- 登録項目の日常運用は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]]、カタログからの Schedule・実行計画生成は [[prj-0001:cdfd-catalog-planning|概念データフロー図（カタログ〜計画展開）]]、タスクの実行は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、運用中の provider・agent・構成変更は [[prj-0001:cdfd-agent-config-operation|概念データフロー図（agent・provider 構成の運用変更）]] の責務とし、本領域では作り込まない。
 - 社会課題、期待価値、公開方針、provider 利用、既存正本の置換に関する最終判断は人間が担い、AI Agent は初期値の提案、生成、検証を支援できる。
 
 ## 2. 領域内プロセス一覧
@@ -33,7 +33,7 @@ specdojo:
 | `P-01-04` | provider 設定初期化 | 承認済みの provider 利用方針を、agent 定義と provider 固有設定からなる実行資材へ展開する。 | PO、PM | provider の利用と権限方針が承認され、配布原本から対象 provider を選択できる | provider 利用方針、権限方針、provider テンプレート | provider 実行資材 → `.<provider>/agents/`、`.specdojo/<provider>/`、後続の手動設定確認事項 | provider 実行資材 | 条件付き |
 | `P-01-05` | exec scaffold | 承認済みのレビュー方針を、exec が参照する実行補助設定の初期状態へ展開する。 | PM、BA | exec のレビュー管理を利用する方針が承認され、レビュー設定の生成先が確定した | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 → `pm-review-viewpoints.yaml` | 運用・構成定義 | 条件付き |
 
-`<project-id>`、`<domain>`、`<provider>` は対象プロジェクト、選択した成果物ドメイン、provider に置き換える総称であり、未記入の成果物値ではない。`generated/pjr-index.md` は個票から再生成する派生ビューであり、追跡対象の `pjr-index.md` は同ビューへの案内を担う。任意設定を起動しない場合も、必須三プロセスの完了だけで計画展開へ引き渡せる。
+`<project-id>`、`<domain>`、`<provider>` は対象プロジェクト、選択した成果物ドメイン、provider に置き換える総称であり、未記入の成果物値ではない。`generated/pjr-index.md` は個票から再生成する派生ビューであり、追跡対象の `pjr-index.md` は同ビューへの案内を担う。本書は初回の受け皿作成だけを正本とし、派生ビューの生成順・上書き・再実行規則は [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。任意設定を起動しない場合も、必須三プロセスの完了だけで計画展開へ引き渡せる。
 
 ## 3. 概念データフロー
 

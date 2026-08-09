@@ -69,6 +69,8 @@ cron の探索範囲は現在動作では最大366日であり、`all` で1000�
 | 完了済み重複 Job Run     | `last_result: success`                                                                                   | 既存 Job Run・attempt・checkpoint を変更しない                  | idempotency key が変わる次の実行機会を待つ                                 |
 | 委譲前記録後の想定外例外 | 新しい `last_run` と必要時の `last_scheduled_for` は残るが、`last_result` は直前値または未記録になり得る | 例外発生点より後は未更新になり得る                              | 同じ実行機会は直ちに再試行されないため、運用担当が状態と外部記録を確認する |
 
+routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` / `last_scheduled_for`、checkpoint と次回判定は本書を正本とする。委譲後の登録項目状態は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]]、task 状態・利用制限後の再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、索引の生成順と失敗時の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。
+
 ## 3. 概念データフロー
 
 ```mermaid
@@ -77,6 +79,7 @@ flowchart TB
   登録簿運用先["P-02 登録簿運用"]
   計画展開先["P-03 計画展開"]
   タスク実行先["P-04 タスク実行"]
+  派生生成先["P-08 派生生成"]
 
   定期確認時点{{"定期確認時点が到来した"}}
   即時実行要求{{"特定 routine の即時実行が要求された"}}
@@ -125,9 +128,11 @@ flowchart TB
   Schedule実行記録 -->|"deferred task・event・Ready"| execCycle順次制御
   execCycle順次制御 -->|"due task 再開要求"| タスク実行先
   タスク実行先 -->|"再開結果"| execCycle順次制御
-  execCycle順次制御 -->|"索引・状態再計算要求"| 計画展開先
-  成果物索引 -->|"現行文書参照"| 計画展開先
-  計画展開先 -->|"更新済み索引・Ready"| execCycle順次制御
+  execCycle順次制御 -->|"索引再生成要求"| 派生生成先
+  成果物索引 -->|"現行文書参照"| 派生生成先
+  派生生成先 -->|"更新済み索引"| execCycle順次制御
+  execCycle順次制御 -->|"Schedule 検証・状態再計算要求"| 計画展開先
+  計画展開先 -->|"更新済み Ready"| execCycle順次制御
   execCycle順次制御 -->|"Ready task 自動実行要求"| タスク実行先
   タスク実行先 -->|"auto 実行結果"| execCycle順次制御
   execCycle順次制御 -->|"cycle step 別結果"| routine結果反映
@@ -148,33 +153,34 @@ flowchart TB
   routine結果反映 -->|"実行件数・失敗件数・継続判断材料"| 外部起動者
 ```
 
-凡例: 角丸長方形は一つのプロセス、六角形は起点イベント、円柱は正本または継続的な保管先、四角は外部主体・領域外の委譲先、`-->` は情報の流れを表す。`P-02`、`P-03`、`P-04` は委譲先の代表ノードであり、内部処理は本図の対象外とする。本図は現物の流れを扱わない。
+凡例: 角丸長方形は一つのプロセス、六角形は起点イベント、円柱は正本または継続的な保管先、四角は外部主体・領域外の委譲先、`-->` は情報の流れを表す。`P-02`〜`P-04` と `P-08` は委譲先の代表ノードであり、内部処理は本図の対象外とする。本図は現物の流れを扱わない。
 
 ## 4. 主要例外と領域外への委譲
 
 ### 4.1. 主要例外
 
-| 例外 ID | 対象プロセス         | 検出条件                                                                                                          | 本領域での扱い                                                                                                                                                       | 継続・再開条件                                                                                        |
-| ------- | -------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `E-01`  | `P-05-01`、`P-05-06` | routine の ID・interval / cron・timezone・policy・action、または Job Definition が不正、routine ID が重複している | 不正定義を実行対象にしない。検証エラーを報告し、正本や生成状態を推測で補正しない                                                                                     | 定義を規約に合わせ、routine / Job の検証が成功する                                                    |
-| `E-02`  | `P-05-01`、`P-05-02` | 別の routine run が routine 全体の lock を保持している                                                            | 新しい routine run を実行前に停止し、`last_run`・`last_result`・`last_scheduled_for` を更新しない。現在動作では定義上の `overlap: skip` にかかわらず異常終了する     | 先行 run が完了して lock を解放する。1時間を超えて陳腐化した lock は次回取得時に回収される            |
-| `E-03`  | `P-05-03`〜`P-05-07` | 同じ project の run / resume / cycle が実行中である                                                               | 委譲先の busy policy を `skip` とし、対象の実行を変更せず routine の `last_result` を `skipped` にする                                                               | project lock が解放された後の次回定期機会、または明示実行で再選択する                                 |
-| `E-04`  | `P-05-03`、`P-05-04` | filter に合う登録項目、Ready task、または due deferred-limit task が存在しない                                    | 対象なしとして正常終了し、対象側の正本を変更せず `last_result: success` を記録する                                                                                   | 次回定期機会に個票 Frontmatter、Ready、再開時刻を再評価する                                           |
-| `E-05`  | `P-05-03`            | 選択した登録項目の一部が失敗または busy skip になった                                                             | 通常の失敗は残りの選択項目を継続して項目別結果を残し、一件でも失敗なら集約を `failure` とする。busy skip は未着手の残りを起動せず routine を `skipped` とする        | 各項目の `waiting` 理由または project busy を解消し、次回機会か明示実行で再選択する                   |
-| `E-06`  | `P-05-05`            | exec-cycle の resume、索引再生成、Schedule 検証・状態再計算、または auto が失敗した                               | resume 失敗は記録して後続を継続する。索引・検証・状態再計算の失敗は auto を起動せず停止する。auto 失敗を含め、実行済み step の失敗があれば cycle を `failure` とする | block 理由、索引、Schedule、構成を解消し、次回 cycle で resume から順に再実行する                     |
-| `E-07`  | `P-05-04`、`P-05-05` | task が利用制限で block され、再開可能時刻が未到来または再開後も制限中である                                      | task の block event に制限種別、試行回数、再開時刻、worktree を保持する。時刻未到来は選ばず、再度 deferred となった場合も Ready task の処理を妨げない                | 自動再開可能な `resume_at` が到来する。または人間が代替担当・停止を判断する                           |
-| `E-08`  | `P-05-06`、`P-05-07` | 同じ idempotency key の Job Run が既に存在する                                                                    | `succeeded` / `noop` なら新しい attempt と実行を作らず既存結果を採用する。`running` / `failed` なら同じ Run に attempt を追加して再試行する                          | 完了済みなら新しい idempotency key の実行機会を待つ。未完了なら失敗原因を解消して再試行する           |
-| `E-09`  | `P-05-07`            | Job task が失敗、または終了コード0でも result 必須節が未記入である                                                | result と Job Run attempt を `failed` とし、checkpoint を進めない。routine は `failure` とする                                                                       | result 不足または作業失敗を解消し、同じ Run の新しい attempt で再実行する                             |
-| `E-10`  | `P-05-02`、`P-05-08` | 試行記録後、委譲結果を返す前に想定外例外が発生した                                                                | 新しい `last_run` と必要時の `last_scheduled_for` を保持する。`last_result` は新しい試行と対応しない可能性があるため、自動で成功・失敗を推測しない                   | 運用担当が routine 状態と委譲先の event / result / Job Run を照合し、次回実行または状態訂正を判断する |
+| 例外 ID | 対象プロセス         | 検出条件                                                                                                          | 本領域での扱い                                                                                                                                                                                    | 継続・再開条件                                                                                        |
+| ------- | -------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `E-01`  | `P-05-01`、`P-05-06` | routine の ID・interval / cron・timezone・policy・action、または Job Definition が不正、routine ID が重複している | 不正定義を実行対象にしない。検証エラーを報告し、正本や生成状態を推測で補正しない                                                                                                                  | 定義を規約に合わせ、routine / Job の検証が成功する                                                    |
+| `E-02`  | `P-05-01`、`P-05-02` | 別の routine run が routine 全体の lock を保持している                                                            | 新しい routine run を実行前に停止し、`last_run`・`last_result`・`last_scheduled_for` を更新しない。現在動作では定義上の `overlap: skip` にかかわらず異常終了する                                  | 先行 run が完了して lock を解放する。1時間を超えて陳腐化した lock は次回取得時に回収される            |
+| `E-03`  | `P-05-03`〜`P-05-07` | 同じ project の run / resume / cycle が実行中である                                                               | 委譲先の busy policy を `skip` とし、対象の実行を変更せず routine の `last_result` を `skipped` にする                                                                                            | project lock が解放された後の次回定期機会、または明示実行で再選択する                                 |
+| `E-04`  | `P-05-03`、`P-05-04` | filter に合う登録項目、Ready task、または due deferred-limit task が存在しない                                    | 対象なしとして正常終了し、対象側の正本を変更せず `last_result: success` を記録する                                                                                                                | 次回定期機会に個票 Frontmatter、Ready、再開時刻を再評価する                                           |
+| `E-05`  | `P-05-03`            | 選択した登録項目の一部が失敗または busy skip になった                                                             | 通常の失敗は残りの選択項目を継続して項目別結果を残し、一件でも失敗なら集約を `failure` とする。busy skip は未着手の残りを起動せず routine を `skipped` とする                                     | 各項目の `waiting` 理由または project busy を解消し、次回機会か明示実行で再選択する                   |
+| `E-06`  | `P-05-05`            | exec-cycle の resume、索引再生成、Schedule 検証・状態再計算、または auto が失敗した                               | resume 失敗は記録して後続を継続する。索引・検証・状態再計算の失敗は auto を起動せず停止する。auto 失敗を含め、実行済み step の失敗があれば cycle を `failure` とする                              | block 理由、索引、Schedule、構成を解消し、次回 cycle で resume から順に再実行する                     |
+| `E-07`  | `P-05-04`、`P-05-05` | task が利用制限で block され、再開可能時刻が未到来または再開後も制限中である                                      | 時刻未到来は選択せず、再度 deferred となっても別の Ready task を妨げない。block event、actor、worktree、result の保持規則は [[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]] を参照する | 自動再開可能な `resume_at` が到来する。または人間が代替担当・停止を判断する                           |
+| `E-08`  | `P-05-06`、`P-05-07` | 同じ idempotency key の Job Run が既に存在する                                                                    | `succeeded` / `noop` なら新しい attempt と実行を作らず既存結果を採用する。`running` / `failed` なら同じ Run に attempt を追加して再試行する                                                       | 完了済みなら新しい idempotency key の実行機会を待つ。未完了なら失敗原因を解消して再試行する           |
+| `E-09`  | `P-05-07`            | Job task が失敗、または終了コード0でも result 必須節が未記入である                                                | result と Job Run attempt を `failed` とし、checkpoint を進めない。routine は `failure` とする                                                                                                    | result 不足または作業失敗を解消し、同じ Run の新しい attempt で再実行する                             |
+| `E-10`  | `P-05-02`、`P-05-08` | 試行記録後、委譲結果を返す前に想定外例外が発生した                                                                | 新しい `last_run` と必要時の `last_scheduled_for` を保持する。`last_result` は新しい試行と対応しない可能性があるため、自動で成功・失敗を推測しない                                                | 運用担当が routine 状態と委譲先の event / result / Job Run を照合し、次回実行または状態訂正を判断する |
 
 ### 4.2. 領域外への委譲
 
-| 委譲先            | 委譲する事項                                                                | 引き渡す情報                                                      | 本領域へ戻す条件                                                                               |
-| ----------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `P-02 登録簿運用` | filter で選んだ登録項目を対応・調査し、人間の審査へ進める                   | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
-| `P-03 計画展開`   | exec-cycle 中に成果物索引を再生成し、Schedule を検証して Ready を再計算する | project ID、成果物・event・Schedule                               | 索引・検証・再計算の成否と更新済み Ready を cycle の auto step へ渡すとき                      |
-| `P-04 タスク実行` | Ready task、deferred limit task、または Job Run の実行単位を処理する        | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
-| 外部スケジューラ  | 定期確認時点に routine の due 実行を要求する                                | project ID、起動時刻                                              | 処理件数、skip・failure、終了結果から監視・次回起動を継続するとき                              |
+| 委譲先            | 委譲する事項                                                         | 引き渡す情報                                                      | 本領域へ戻す条件                                                                               |
+| ----------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `P-02 登録簿運用` | filter で選んだ登録項目を対応・調査し、人間の審査へ進める            | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
+| `P-03 計画展開`   | exec-cycle 中に Schedule を検証して state と Ready を再計算する      | project ID、Schedule、event、strategy                             | 検証・再計算の成否と更新済み Ready を cycle の auto step へ渡すとき                            |
+| `P-04 タスク実行` | Ready task、deferred limit task、または Job Run の実行単位を処理する | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
+| `P-08 派生生成`   | exec-cycle 中に成果物索引を再生成する                                | project ID、文書正本、索引設定                                    | 索引生成の成否と更新済み索引を状態再計算 step へ渡すとき                                       |
+| 外部スケジューラ  | 定期確認時点に routine の due 実行を要求する                         | project ID、起動時刻                                              | 処理件数、skip・failure、終了結果から監視・次回起動を継続するとき                              |
 
 ### 4.3. 受入確認
 
