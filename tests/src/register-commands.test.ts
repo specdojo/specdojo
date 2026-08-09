@@ -196,6 +196,24 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("build は個票ファイル名と frontmatter ID の不一致を検出して失敗する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      writeFileSync(
+        join(registerDir, "pjr-ab12-topic.md"),
+        buildTicket("PJR-CD34", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["build"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(String(stderr.mock.calls[0][0])).toContain(
+        'pjr-ab12-topic.md: PJR-AB12 must match frontmatter id "prj-0001:pjr-cd34-topic"',
+      );
+    });
+  });
+
   it.each([
     "--reserve",
     "--local",

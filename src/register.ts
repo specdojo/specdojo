@@ -29,6 +29,7 @@ import {
   setRegisterItemTitle,
   TERMINAL_STATUSES_SET,
   ticketRefCell,
+  validateRegisterItemDocs,
   VALID_PRIORITIES,
   VALID_STATUSES,
   VALID_TYPES,
@@ -1857,6 +1858,11 @@ export function registerRegisterCommands(program: Command): void {
         throw new Error(
           `Invalid scope: "${opts.scope}". Must be one of: ${VALID_BUILD_SCOPES.join(", ")}`,
         );
+      }
+
+      const validation = validateRegisterItemDocs(paths.projectRegisterPath);
+      if (validation.errors.length > 0) {
+        throw new Error(`Invalid register item files:\n${validation.errors.join("\n")}`);
       }
 
       const views = generateDerivedViewFiles(paths, scope);

@@ -55,7 +55,7 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元
 - [[prj-0001:pjr-0131-concise-documentation-policy|簡潔な文書作成の共通原則をdocumentation policyへ追加]] — 作成側の共通原則
 - [[prj-0001:pm-review-viewpoints|レビュー観点一覧]] — project 実値の変更対象
 - [[specdojo:pm-review-viewpoints-template]] — 新規 project 用 template の変更対象

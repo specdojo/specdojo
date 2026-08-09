@@ -57,7 +57,7 @@ launch track では、一成果物単位で生成した文書に同じ説明や�
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元
 - [[prj-0001:sch-strategy-launch|スケジュール戦略（launch）]] — 横断 pass とゲートの変更対象
 - [[specdojo:schedule-design-guide]] — schedule 生成設計の基準
 - [[specdojo:specdojo-philosophy]] — 正本と参照の共通原則

@@ -52,5 +52,5 @@ execution:humanはplanを読まないため、human時はplanを生成せずresu
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]] — 起票元（対策案「executionがhuman時にplanをつくるか」）
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]] — 起票元（対策案「executionがhuman時にplanをつくるか」）
 - [[specdojo:exec-config-guide]] — commit 許可リスト / プロンプトインジェクション対策の正本（影響先）

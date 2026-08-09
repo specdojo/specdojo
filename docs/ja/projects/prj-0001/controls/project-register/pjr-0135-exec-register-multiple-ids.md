@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   based_on:
-    - prj-0001:pjr-0122
+    - prj-0001:pjr-0122-review-launch
     - sysd-agent-settings
   item_type: todo
   item_status: done
@@ -57,7 +57,7 @@ specdojo:
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-0122|launch trackの振り返り]]
+- [[prj-0001:pjr-0122-review-launch|launch trackの振り返り]]
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]]
 - [[specdojo:exec-operation-guide|SpecDojo exec運用ガイド]]

@@ -28,7 +28,7 @@ Project Register Documentation Rules
 - 個別登録項目の詳細説明、判断理由、経緯、対応内容は各 `pjr-XXXX-<topic>.md` に集約し、`pjr-index` は登録項目一覧と参照先リンクの管理に専念する。
 - 個票は type 別の標準構成を使い、同じ情報を複数章へ重複記載しない。
 - `generated/` 配下の派生ビューは補助一覧であり、正本ではない。
-- `pjr-index` の本文構造は `pjr-index-content.schema.yaml` により機械検証され、本書は index と個票の構造・記述形式および正本間の整合条件を定義する。
+- 個票 frontmatter は `register-item-frontmatter.schema.yaml` により機械検証される。本書は個票の構造・記述形式と、そこから生成する index の表示規則を定義する。
 - type 別テンプレートの選択と初期生成は register コマンドが担うため、本 rulebook は単一の template を参照しない。
 
 ## 2. ファイル命名・ID規則
@@ -208,7 +208,7 @@ docs/ja/projects/<project-id>/controls/project-register/pjr-index.md
 
 ### 5.5. type / status / priority の値
 
-- 値は `pjr-index-content.schema.yaml` に定義された enum のみを使用し、表記ゆれを作らない。値の一覧は schema を正本とする。
+- 値は `register-item-frontmatter.schema.yaml` に定義された enum のみを使用し、表記ゆれを作らない。値の一覧は schema を正本とする。
 - 各値の意味と選び方は [[specdojo:register-operation-guide]] の `type の選び方` および `状態遷移とコマンド` を参照する。
 
 ### 5.6. 個票 status の遷移基準

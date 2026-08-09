@@ -16,8 +16,6 @@ plugins:
   - ./tools/docs/src/remark-no-unescaped-angle-placeholder.cjs
   - - ./tools/docs/src/remark-md-content.cjs
     - schemas:
-        docs/ja/specdojo/schemas/v1/pjr-index-content.schema.yaml:
-          - docs/ja/**/pjr-index.md
         docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
           - docs/ja/specdojo/guides/*-guide.md
         docs/ja/specdojo/schemas/v1/reference-content.schema.yaml:
@@ -33,6 +31,9 @@ plugins:
           schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/exec/results/**/*.md
           schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/controls/project-register/pjr-????-*.md
+          schema: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml
+          require_frontmatter: true
         - glob: docs/ja/specdojo/rulebooks/**/*.md
           schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/references/**/*.md
