@@ -3,23 +3,20 @@ import { randomInt, randomUUID } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
-  readdirSync,
   readFileSync,
   renameSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import fg from "fast-glob";
 import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import { resolveRegisterDateTimeZone, todayInTimeZone } from "./register-date.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
-import { gitOutput, gitResult, listRegisteredWorktrees } from "./exec-worktree.js";
 import {
   applyRegisterItemFields,
   compareRegisterItemIds,
-  displayIdFromTicketFilename,
   formatRegisterItemFields,
   isPlaceholderCell,
   loadRegisterItemDocs,
@@ -396,7 +393,7 @@ export function buildRegisterItemContent(opts: {
   projectId: string;
   displayId: string;
   topic: string;
-  fields: ReservationFields;
+  fields: RegisterAddFields;
   templatePath: string;
 }): string {
   let content = generateTicket({
@@ -1374,12 +1371,12 @@ export function renumberPjrItem(opts: {
 }
 
 // ================================
-// Reserve (delegate the new item file to the integration branch worktree)
+// Register item creation
 // ================================
 
 // register add が個票へ書き込む項目値。タイトル・説明は個票本文（H1・概要）へ、
 // それ以外は frontmatter の登録項目フィールドへ入る。
-export type ReservationFields = {
+export type RegisterAddFields = {
   type: string;
   title: string;
   description: string;
@@ -1392,32 +1389,12 @@ export type ReservationFields = {
   conclusion: string;
 };
 
-export type IntegrationWorktree = { path: string; branch: string };
-
-// 登録簿ディレクトリに存在する登録項目 ID を集める。個票ファイル名を正とし、
-// 未移行の項目のために pjr-index の行からも ID を拾って採番の衝突を避ける。
-export function collectRegisterItemIds(projectRegisterPath: string): string[] {
-  const ids = new Set<string>();
-  if (existsSync(projectRegisterPath)) {
-    for (const entry of readdirSync(projectRegisterPath, { withFileTypes: true })) {
-      if (!entry.isFile()) continue;
-      const id = displayIdFromTicketFilename(entry.name);
-      if (id) ids.add(id);
-    }
-  }
-  const pjrIndexPath = join(projectRegisterPath, "pjr-index.md");
-  if (existsSync(pjrIndexPath)) {
-    for (const item of parsePjrIndex(readFileSync(pjrIndexPath, "utf8"))) ids.add(item.id);
-  }
-  return [...ids].sort();
-}
-
-// 予約する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、
+// 作成する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、
 // フィールド検証と ID 衝突検知だけを行う。ID を省略するとランダムに採番する。
-export function planReservation(opts: {
+export function planRegisterItem(opts: {
   existingIds: Iterable<string>;
   explicitId?: string;
-  fields: ReservationFields;
+  fields: RegisterAddFields;
   // 個票ファイル名に使う topic slug。
   topic: string;
 }): { assignedId: string; ticketFilename: string } {
@@ -1441,179 +1418,12 @@ export function planReservation(opts: {
   return { assignedId, ticketFilename: `${assignedId.toLowerCase()}-${opts.topic}.md` };
 }
 
-// 登録項目の正本（個票）を所有する統合ブランチの worktree を解決する。
-// 明示パス（--integration-worktree）が指定された場合はそれを、無ければ branch 名に一致する
-// 登録済み worktree を採用する。予約できない状態（未登録・不在）は書き込み前にエラーにする。
-export function resolveIntegrationWorktree(
-  repoRoot: string,
-  opts: { branch: string; worktreePath?: string },
-): IntegrationWorktree {
-  const registered = listRegisteredWorktrees(repoRoot);
-
-  if (opts.worktreePath) {
-    const abs = resolve(opts.worktreePath);
-    const match = registered.find((item) => resolve(item.path) === abs);
-    if (!match) {
-      throw new Error(`Integration worktree is not a registered git worktree: ${abs}`);
-    }
-    if (!existsSync(abs)) {
-      throw new Error(`Integration worktree path does not exist: ${abs}`);
-    }
-    return { path: abs, branch: match.branch ?? opts.branch };
-  }
-
-  const match = registered.find((item) => item.branch === opts.branch);
-  if (!match) {
-    throw new Error(
-      `No worktree is checked out on integration branch "${opts.branch}". ` +
-        `Add one with "git worktree add" or pass --integration-worktree <path>.`,
-    );
-  }
-  if (!existsSync(match.path)) {
-    throw new Error(`Integration worktree path does not exist: ${match.path}`);
-  }
-  return { path: resolve(match.path), branch: opts.branch };
-}
-
-// 予約の直前に統合 worktree を origin と同期する。分散した複数マシンが別々に採番して
-// 起票するときの採番ズレを軽減するのが目的。
-// - fetch が失敗した場合（オフライン等）は既定で警告して継続し、strictSync のときは中断する。
-// - 追跡ブランチに追随できる場合のみ `merge --ff-only` で最新化する。
-// - origin から分岐（ff-only 不可）している場合は、書き込み前にエラーで止めて手動解決を促す。
-export function syncIntegrationWorktree(opts: { worktreePath: string; strictSync: boolean }): void {
-  const fetched = gitResult(opts.worktreePath, ["fetch"]);
-  if (fetched.status !== 0) {
-    const stderr = typeof fetched.stderr === "string" ? fetched.stderr.trim() : "";
-    const detail = stderr ? `: ${stderr}` : "";
-    if (opts.strictSync) {
-      throw new Error(`Failed to fetch the integration branch before reserving${detail}`);
-    }
-    process.stdout.write(
-      `Warning: git fetch failed; reserving against the local pjr-index.md ` +
-        `(pass --strict-sync to abort instead)${detail}\n`,
-    );
-    return;
-  }
-
-  // 追跡ブランチ（@{upstream}）が未設定なら同期対象が無いので ff-only はスキップする。
-  const upstream = gitResult(opts.worktreePath, [
-    "rev-parse",
-    "--abbrev-ref",
-    "--symbolic-full-name",
-    "@{upstream}",
-  ]);
-  const upstreamRef = typeof upstream.stdout === "string" ? upstream.stdout.trim() : "";
-  if (upstream.status !== 0 || !upstreamRef) {
-    process.stdout.write(
-      `Warning: no upstream is configured for the integration branch; skipping fast-forward sync.\n`,
-    );
-    return;
-  }
-
-  const merged = gitResult(opts.worktreePath, ["merge", "--ff-only", upstreamRef]);
-  if (merged.status !== 0) {
-    const stderr = typeof merged.stderr === "string" ? merged.stderr.trim() : "";
-    const detail = stderr ? `: ${stderr}` : "";
-    throw new Error(
-      `Integration branch has diverged from ${upstreamRef}; fast-forward is not possible${detail}. ` +
-        `Reconcile the integration worktree manually (rebase or merge) before reserving.`,
-    );
-  }
-}
-
-// 統合ブランチの worktree へ個票を作成・commit して PJR-ID を予約する。
-// - 登録簿ディレクトリ不在・ID 競合・個票の既存衝突は、書き込み前にエラーで終了する。
-// - commit は個票の pathspec に限定し、統合ブランチ側の他の変更を巻き込まない。
-// - 個票の内容は、確定した ID に基づき makeContent で生成する。
-export function reservePjrIdOnIntegration(opts: {
-  worktreePath: string;
-  // 登録簿ディレクトリの repo 相対パス（POSIX 区切り）。
-  registerDirRel: string;
-  explicitId?: string;
-  fields: ReservationFields;
-  topic: string;
-  makeContent: (assignedId: string) => string;
-  commitMessage?: string;
-  dryRun: boolean;
-  // fetch 失敗時に警告継続（false, 既定）せず中断する（true）。
-  strictSync?: boolean;
-}): { assignedId: string } {
-  const registerDir = resolve(opts.worktreePath, opts.registerDirRel);
-  if (!existsSync(registerDir)) {
-    throw new Error(`Project register directory not found in integration worktree: ${registerDir}`);
-  }
-
-  // 採番の直前に統合 worktree を最新化して、他マシンとの採番ズレを軽減する。
-  // dry-run は書き込みも commit も行わないため、working tree を変える ff-only merge は避ける。
-  if (!opts.dryRun) {
-    syncIntegrationWorktree({
-      worktreePath: opts.worktreePath,
-      strictSync: opts.strictSync ?? false,
-    });
-  }
-
-  const { assignedId, ticketFilename } = planReservation({
-    existingIds: collectRegisterItemIds(registerDir),
-    explicitId: opts.explicitId,
-    fields: opts.fields,
-    topic: opts.topic,
-  });
-
-  const ticketRel = `${opts.registerDirRel}/${ticketFilename}`;
-  const ticketAbs = resolve(opts.worktreePath, ticketRel);
-  if (existsSync(ticketAbs)) {
-    throw new Error(`Target ticket file already exists in integration worktree: ${ticketAbs}`);
-  }
-
-  if (opts.dryRun) {
-    process.stdout.write(`Would reserve ${assignedId} in ${registerDir}\n`);
-    process.stdout.write(`Would create ticket: ${ticketAbs}\n`);
-    process.stdout.write(`${assignedId}\n`);
-    return { assignedId };
-  }
-
-  writeFileSync(ticketAbs, opts.makeContent(assignedId), "utf8");
-  gitOutput(opts.worktreePath, ["add", "--", ticketRel]);
-  gitOutput(opts.worktreePath, [
-    "commit",
-    "-m",
-    opts.commitMessage?.trim() || `register(reserve): add ${assignedId}`,
-    "--",
-    ticketRel,
-  ]);
-
-  process.stdout.write(`Reserved ${assignedId} on integration worktree: ${ticketAbs}\n`);
-  process.stdout.write(`Created ticket: ${ticketAbs}\n`);
-  process.stdout.write(`${assignedId}\n`);
-  return { assignedId };
-}
-
-// 統合ブランチ名を解決する。--integration-branch の明示指定を最優先し、
-// 次に config の run.register_integration_branch、最後に specdojo:git-branching-standard に従い
-// プロジェクト統合ブランチ `project/<project-id>/develop` を既定にする。
-export function resolveIntegrationBranchName(projectId: string, override?: string): string {
-  const trimmed = override?.trim();
-  if (trimmed) return trimmed;
-  const { config } = loadConfig();
-  const branch = config?.projects[projectId]?.run?.register_integration_branch?.trim();
-  return branch || `project/${projectId}/develop`;
-}
-
-// 現在の作業ツリーがチェックアウトしているブランチ名を返す。detached HEAD では空文字。
-function currentBranchName(repoRoot: string): string {
-  return gitOutput(repoRoot, ["branch", "--show-current"]).trim();
-}
-
 // ================================
 // Error Handling & Shared Helpers
 // ================================
 
 // register 系コマンドのエラーは Unix/CLI の慣習に合わせて stderr へ書く。
 // 正常出力（更新内容・生成パス・警告など）は stdout のまま残し、エラーだけを分離する。
-// とくに `register where` は成功時のパスを stdout へ出す読み取り専用コマンドで、
-// その stdout を `git -C "$(... register where --integration)"` のコマンド置換で
-// 直接消費する。エラーメッセージを stdout に混ぜると git の -C 引数へ不正パスとして
-// 渡り、分かりにくい二重エラーになるため、エラーは必ず stderr へ出す。
 export function printCommandError(error: unknown): void {
   const message = error instanceof Error ? error.message : String(error);
   process.stderr.write(message + "\n");
@@ -1683,38 +1493,10 @@ export function registerRegisterCommands(program: Command): void {
     "Topic slug for ticket filename; derived from --title if omitted",
   );
   addCmd.option("--force", "Overwrite existing ticket file", false);
-  addCmd.option(
-    "--reserve",
-    "Force reserving the PJR-ID on the integration branch even when already on it (add commits the item file)",
-    false,
-  );
-  addCmd.option(
-    "--local",
-    "Add to the current branch without integration-branch routing (may cause ID conflicts across branches)",
-    false,
-  );
-  addCmd.option(
-    "--integration-branch <name>",
-    "Integration branch that owns register items (default: run.register_integration_branch or project/<project-id>/develop)",
-  );
-  addCmd.option(
-    "--integration-worktree <path>",
-    "Explicit integration worktree path (overrides integration branch lookup)",
-  );
-  addCmd.option("--commit-message <text>", "Commit message for the reservation commit");
-  addCmd.option(
-    "--strict-sync",
-    "Abort reserving if fetching the integration branch fails (default: warn and continue)",
-    false,
-  );
   addCmd.option("--dry-run", "Print the generated item file without writing", false);
   addCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-
-      if (opts.local && opts.reserve) {
-        throw new Error("--local and --reserve are mutually exclusive.");
-      }
 
       const topic = opts.topic?.trim() || slugify(opts.title);
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
@@ -1726,7 +1508,7 @@ export function registerRegisterCommands(program: Command): void {
       // 登録日は明示指定が無ければ run.register_date_timezone（既定 UTC）での「今日」を採用する。
       const registered = opts.registered?.trim() || todayInTimeZone(paths.registerDateTimeZone);
 
-      const fields: ReservationFields = {
+      const fields: RegisterAddFields = {
         type: opts.type,
         title: opts.title,
         description: opts.description,
@@ -1743,65 +1525,7 @@ export function registerRegisterCommands(program: Command): void {
         `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`,
       );
 
-      // ID 採番の抜本対策（案1）: 分散採番できる ID 体系ではないため、統合ブランチの
-      // 登録簿ディレクトリを単一直列化点にする。統合ブランチ上なら in-place で個票を作る
-      // （そこが唯一の採番元）。別ブランチ（feature/exec）から実行された場合は、作業ブランチを
-      // 触らず統合ブランチ worktree へ自動ルーティングして採番・commit する。
-      // --local は従来の in-place を強制する退避口。
-      const repoRoot = specdojoRootDir();
-      const integrationBranch = resolveIntegrationBranchName(
-        paths.projectId,
-        opts.integrationBranch,
-      );
-      // --local はブランチ判定を行わないため、git への問い合わせも行わない。
-      const currentBranch = opts.local ? "" : currentBranchName(repoRoot);
-      const routeToIntegration =
-        !opts.local && (opts.reserve || currentBranch !== integrationBranch);
-
-      if (routeToIntegration) {
-        let target: IntegrationWorktree;
-        try {
-          target = resolveIntegrationWorktree(repoRoot, {
-            branch: integrationBranch,
-            worktreePath: opts.integrationWorktree?.trim() || undefined,
-          });
-        } catch (error) {
-          const detail = error instanceof Error ? error.message : String(error);
-          throw new Error(
-            `${detail}\n` +
-              `Run register add on the integration branch (${integrationBranch}), ` +
-              `check out a worktree there, or pass --local to add to the current branch.`,
-          );
-        }
-        if (!opts.reserve && currentBranch !== integrationBranch) {
-          process.stdout.write(
-            `Not on integration branch "${integrationBranch}" (current: "${currentBranch || "detached"}"); ` +
-              `routing to integration worktree: ${target.path}\n`,
-          );
-        }
-        const registerDirRel = relative(repoRoot, paths.projectRegisterPath).split(sep).join("/");
-        reservePjrIdOnIntegration({
-          worktreePath: target.path,
-          registerDirRel,
-          explicitId: opts.id?.trim() || undefined,
-          fields,
-          topic,
-          makeContent: (assignedId: string): string =>
-            buildRegisterItemContent({
-              projectId: paths.projectId,
-              displayId: assignedId,
-              topic,
-              fields,
-              templatePath,
-            }),
-          commitMessage: opts.commitMessage,
-          dryRun: opts.dryRun,
-          strictSync: opts.strictSync,
-        });
-        return;
-      }
-
-      const { assignedId: displayId, ticketFilename } = planReservation({
+      const { assignedId: displayId, ticketFilename } = planRegisterItem({
         existingIds: loadRegisterItems(paths).map((view) => view.id),
         explicitId: opts.id?.trim() || undefined,
         fields,
@@ -2155,7 +1879,7 @@ export function registerRegisterCommands(program: Command): void {
   // --- renumber ---
   const renumberCmd = reg
     .command("renumber")
-    .description("Move a duplicated/conflicting PJR-ID to an unused PJR-ID");
+    .description("Resolve a random PJR-ID collision by moving one item to an unused ID");
   addProjectOption(renumberCmd);
   renumberCmd.requiredOption("--id <id>", "Current item ID (PJR-XXXX)");
   renumberCmd.requiredOption("--to <id>", "Target unused ID (PJR-XXXX)");
@@ -2164,40 +1888,6 @@ export function registerRegisterCommands(program: Command): void {
     try {
       const paths = resolveRegisterPaths(opts);
       renumberPjrItem({ paths, fromId: opts.id, toId: opts.to, dryRun: opts.dryRun });
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
-
-  // --- where ---
-  // 読み取り専用のパス解決。pull / push は specdojo に組み込まず、このコマンドが返す
-  // 統合 worktree パスを素の git コマンド（npm script 側）へ委譲する。
-  const whereCmd = reg
-    .command("where")
-    .description("Print register-related paths (read-only; use with plain git for pull/push)");
-  addProjectOption(whereCmd);
-  whereCmd.option("--integration", "Print the integration-branch worktree path", false);
-  whereCmd.option(
-    "--integration-branch <name>",
-    "Integration branch that owns pjr-index.md (default: run.register_integration_branch or project/<project-id>/develop)",
-  );
-  whereCmd.option(
-    "--integration-worktree <path>",
-    "Explicit integration worktree path (overrides integration branch lookup)",
-  );
-  whereCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
-      if (!opts.integration) {
-        throw new Error("Specify --integration to print the integration worktree path.");
-      }
-      const repoRoot = specdojoRootDir();
-      const branch = resolveIntegrationBranchName(paths.projectId, opts.integrationBranch);
-      const target = resolveIntegrationWorktree(repoRoot, {
-        branch,
-        worktreePath: opts.integrationWorktree?.trim() || undefined,
-      });
-      process.stdout.write(`${target.path}\n`);
     } catch (error) {
       printCommandError(error);
     }

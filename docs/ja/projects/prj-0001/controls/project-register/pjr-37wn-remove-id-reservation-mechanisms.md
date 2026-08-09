@@ -35,14 +35,17 @@ PJR-ES57 の分割5。統合ブランチ自動ルーティング・予約経路�
 
 | No  | 作業                                 | 担当 | 状態 | メモ                                              |
 | --- | ------------------------------------ | ---- | ---- | ------------------------------------------------- |
-| 1   | 撤去対象の機構と参照箇所を洗い出す   | ARC  | open | 予約経路・自動ルーティング・同期 script・関連設定 |
-| 2   | 予約経路と自動ルーティングを撤去する | ARC  | open | 廃止オプションの扱いを決めてから実施する          |
-| 3   | 同期 script と関連設定を整理する     | ARC  | open | 統合ブランチ worktree 前提の処理が対象            |
-| 4   | `renumber` を縮小する                | ARC  | open | 乱数 ID 衝突の救済としての役割は維持する          |
+| 1   | 撤去対象の機構と参照箇所を洗い出す   | ARC  | done | 予約経路・自動ルーティング・同期 script・関連設定 |
+| 2   | 予約経路と自動ルーティングを撤去する | ARC  | done | 廃止オプションは未知オプションとして拒否する      |
+| 3   | 同期 script と関連設定を整理する     | ARC  | done | 統合ブランチ worktree 前提の処理を削除した        |
+| 4   | `renumber` を縮小する                | ARC  | done | 乱数 ID 衝突の救済としての役割を明示した          |
 
 ## 4. 対応結果
 
--
+- `register add` を常に現在の作業ツリーの個票作成に統一し、統合ブランチへの自動ルーティング、予約 commit、fetch / ff-only 同期を撤去した。
+- `--reserve`、`--local`、`--strict-sync`、`--integration-branch`、`--integration-worktree` と `register where` を削除した。廃止した `add` オプションは Commander の未知オプションとしてエラー終了する。
+- `run.register_integration_branch`、`register:sync-pull`、`register:sync-push`、予約・同期専用の実装とテストを削除した。乱数 ID の既存 ID 照合・再抽選と、衝突時の `renumber` は維持した。
+- 運用ガイド・コマンドリファレンスなどの利用者向け説明の更新は、分割7 [[prj-0001:pjr-rdnc-update-docs-for-ticket-ssot]] の範囲として申し送る。
 
 ## 5. 関連ドキュメント
 

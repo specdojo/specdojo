@@ -7,15 +7,19 @@ import fg from "fast-glob";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
 import {
+  type RegisterAddFields,
+  PJR_ID_RE,
   type PjrItem,
   type RegisterPaths,
   extractTableHeading,
+  generatePjrId,
   generateDerivedViewFiles,
   injectRegisterRows,
   injectViewSlots,
   loadRegisterItems,
   parsePjrIndex,
   parseTicketFilename,
+  planRegisterItem,
   planRenumber,
   renumberPjrItem,
   renumberReferences,
@@ -61,6 +65,51 @@ const PJR_SUBSTITUTIONS: Array<[string, string]> = [
 const PJR_FILES = fg
   .sync("docs/ja/specdojo/templates/pjr-*-template.md", { onlyFiles: true })
   .sort();
+
+const DEFAULT_ADD_FIELDS: RegisterAddFields = {
+  type: "todo",
+  title: "登録項目",
+  description: "_TODO_",
+  priority: "medium",
+  status: "open",
+  owner: "_TODO_",
+  registered: "2026-08-09",
+  due: "_TODO_",
+  completed: "-",
+  conclusion: "-",
+};
+
+describe("PJR-ID の乱数衝突救済", () => {
+  it("既存 ID またはブロックリストに衝突した候補は再抽選する", () => {
+    const candidates = ["PJR-0001", "PJR-DAMN", "PJR-AB12"];
+    let index = 0;
+
+    expect(generatePjrId(["PJR-0001"], () => candidates[index++])).toBe("PJR-AB12");
+  });
+
+  it("作成時に既存 ID を明示した場合は書き込み前に拒否する", () => {
+    expect(() =>
+      planRegisterItem({
+        existingIds: ["PJR-AB12"],
+        explicitId: "PJR-AB12",
+        fields: DEFAULT_ADD_FIELDS,
+        topic: "sample",
+      }),
+    ).toThrow(/ID already exists in the project register: PJR-AB12/);
+  });
+
+  it("採番済み ID を避けた個票ファイル名を返す", () => {
+    const result = planRegisterItem({
+      existingIds: ["PJR-0001"],
+      fields: DEFAULT_ADD_FIELDS,
+      topic: "sample",
+    });
+
+    expect(result.assignedId).toMatch(PJR_ID_RE);
+    expect(result.assignedId).not.toBe("PJR-0001");
+    expect(result.ticketFilename).toBe(`${result.assignedId.toLowerCase()}-sample.md`);
+  });
+});
 
 describe("register add — pjr テンプレート frontmatter スキーマ適合検証", () => {
   it.each(PJR_FILES)(
