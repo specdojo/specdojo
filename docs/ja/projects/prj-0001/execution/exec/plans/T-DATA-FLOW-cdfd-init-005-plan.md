@@ -1,0 +1,174 @@
+---
+specdojo:
+  id: prj-0001:xep-t-data-flow-cdfd-init-005
+  type: exec-plan
+  rulebook: none
+  task_id: T-DATA-FLOW-cdfd-init-005
+  name: cdfd-init・領域別CDFD Kataの初期整備
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: BA
+  on_critical_path: true
+  approach: bootstrap
+  targets:
+    - prj-0001:cdfd-init
+    - specdojo:cdfd-rulebook
+    - specdojo:cdfd-recipe
+    - specdojo:cdfd-sample
+    - specdojo:cdfd-template
+---
+
+# Edit Plan: T-DATA-FLOW-cdfd-init-005
+
+## 1. このフェーズで行うこと
+
+cdfd-init を代表成果物として、既存の cdfd-rulebook / recipe / sample / template を
+領域別 CDFD 専用へ再構成する。cdfd-area-\* という別 ID は作らず、
+一ノードを一プロセスとする領域内フロー、主要例外、領域外への委譲を定義する。
+overview 専用の cdfd-overview-rulebook / recipe / sample / template はこのタスクで変更せず、
+Mermaid の共通記法は cdfd-mermaid-rulebook を参照する。成果物カタログの done_criteria と
+cdfd-overview が定義した領域境界を基準にし、実装エビデンスの詳細な反映は後続の
+retrofit-pass に委ねる。
+
+## 2. 対象成果物と実践の型
+
+このフェーズは、成果物とその実践の型一式を一貫した一組として作成・整備する。成果物本体と、それに紐づく rulebook / recipe / sample / template を同一タスクで編集する。
+
+成果物（主対象）:
+
+- `name`: 概念データフロー図（初期セットアップ）
+- `depends_on`:
+  - [[prj-0001:cdfd-overview]]
+- `overview`: config・register・catalog・実行補助設定を初期化し、プロジェクトの計画と実行を開始できる状態にする流れを可視化し定義する
+- `path`: `docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md`
+
+実践の型（rulebook frontmatter から解決。`_MISSING_` は未宣言・未整備のため新規作成する）:
+
+- rulebook: `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`
+- 併せて適用する rulebook（記法など）: `docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md`
+- recipe: `docs/ja/specdojo/recipes/cdfd-recipe.md`
+- sample: `docs/ja/specdojo/samples/cdfd-sample.md`
+- template: `docs/ja/specdojo/templates/cdfd-template.md`
+
+result: `docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-init-005-result.md`
+
+### プロジェクトコンテキスト
+
+以下は `depends_on` とは独立したプロジェクト共通の文脈であり、実行順序・成果物間の根拠関係を表さない。作業開始前に実際に読み、プロジェクトレベルの Why、用語、判断原則と成果物の内容を整合させる。
+
+- [[prj-0001:prj-overview]]
+
+プロジェクトレベルの Why は判断軸として参照し、全文を成果物へ再掲しない。対象成果物の責務に必要な結論・影響だけを反映する。
+
+## 3. owner ロールとしての記述ポイント
+
+成果物本体は frontmatter の `owner` に記載された role の視点で記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
+
+- owner role: **BA（Business Analyst）**
+- 責務: 仕様を書く人と読む人の利用者視点から、文書体系への要求、利用場面、受入条件を整理する。
+
+このロールが重視するレビュー観点:
+
+- 業務価値との対応: 業務価値を定義・展開する成果物で、主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。構造・設定中心の成果物では、上位目的への参照と下流利用の整合を確認し、業務上の Why の詳細な再掲を要求しない。
+- 要件・受入条件の充足: 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているか。
+- 関係者・利用場面の明確性: 関係者、利用場面、確認者、合意対象が読み取れるか。
+
+## 4. 進め方
+
+成果物とその実践の型一式を、相互に矛盾しない一組として作成・整備する。成果物を主対象とし、そこから一般化した規定・作り方・例・雛形を実践の型に反映する。各対象は実際に読み込んだうえで、既存があれば評価し、維持/修正/作り直しを判断する。無ければ新規作成する。
+
+1. 成果物（主対象）: `depends_on` の決定事項・用語・制約と整合させ、owner ロールの責務に集中して記述する。既存記述があれば内容を評価し、活かせる部分は維持、古い・矛盾する部分は修正、前提と合わない場合は作り直す。内部情報だけで判断できない一般的な観点・用語・標準があり、実行 agent が Web 検索能力を持つ場合は、関連情報を取得して出典を添える。
+2. rulebook: 成果物の構造を一般化し、章構成・必須項目・禁止事項・判定基準を、同種成果物へ適用できる規定として整理する。rulebook は [[specdojo:rulebook-authoring-standard]]（章立て・Frontmatter 規約・記述ルール・禁止事項の正本）に従う。
+3. recipe: 良い成果物を作るための問い・観点・深掘り手順・レビュー観点を、再利用できる作成手順として整理する。
+4. sample: 粒度・文体・表の書き方が伝わる最小の完成例にする。プロジェクト固有の値は一般化またはプレースホルダ化する。sample は [[specdojo:sample-authoring-standard]]（構成・記述ルール・共通サンプル文脈・禁止事項の正本）に従い、rulebook / recipe と矛盾しないように作成する。
+5. template: 章構成の骨組みとプレースホルダを配置した雛形にする。成果物固有の内容は持ち込まない。template は [[specdojo:template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従い、埋めた結果が rulebook の本文構成と矛盾しないように作成する。
+
+実践の型は成果物の丸写しにせず、同種成果物に再利用できる形に一般化する。構造・必須項目・禁止事項は rulebook を正とし、recipe / sample / template は rulebook と矛盾しないように揃える。
+
+内容の根拠としてよい文書は、この plan に記載された対象（成果物・rulebook / 併せて適用する rulebook / recipe / sample / template）、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストに限定する。これら以外を成果物の内容の根拠にしない。ただし bootstrap では例外として、同種で `status: ready` の文書を手本として参照してよい（次項参照）。判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
+
+ここで整備した実践の型は後続の refine-pass で凍結し、編集しない。本タスクの実行に必要な bootstrap の進め方は、このセクションで完結する。approach 全体の定義を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。
+
+### 4.1. 同種の ready 文書を手本にする
+
+bootstrap では実践の型が未整備なため、構造・記法・慣行の揺れ（毎回ゼロから設計し直すことによる churn）を避ける目的で、同種で `status: ready` の文書を手本にする。
+
+- 成果物・rulebook・recipe・sample・template のそれぞれについて、同じ種別で `status: ready` の文書があれば、その章構成・粒度・文体・表の書き方・プレースホルダの置き方などを手本にし、確立済みの形に倣う。
+- 手本にするのは形（構造・記法・慣行）であり、内容は丸写ししない。当該成果物の内容は `depends_on` とプロジェクト文脈に基づいて書く。
+- 手本が複数ある場合は、対象に最も近い種別・粒度のものを優先する。`status: ready` の同種文書が無い場合は、手本なしで `depends_on` と対象領域の慣行から組み立てる。
+- 手本にした文書は result の `進め方と実践の型の適用` セクションに記録する。
+
+### 4.2. 既存物の評価と作り直しの判断
+
+- 各対象に既存記述がある場合は、まず内容を読み、根拠（成果物・`depends_on`・同種の `ready` 文書・対象領域の慣行）と整合するかを評価する。
+- 整合するものは維持し、過不足・陳腐化・矛盾がある部分のみ修正する。基準として機能しないほど内容が古い・薄い場合に限り作り直す。
+- 既存が無い、または参照範囲から外れた対象は、成果物・`depends_on`・同種の `ready` 文書を手本に新規作成する。
+
+### 4.3. 判断根拠の記録
+
+成果物と各実践の型について、評価・作成・修正・維持の判断根拠を result に残す。記録先は次のとおり。
+
+- 成果物と各実践の型の作成・修正・維持の判断、手本にした同種 `ready` 文書、相互整合の取り方、矛盾時に rulebook を正とした箇所、丸写しを避けるための一般化、Web 出典: result の `進め方と実践の型の適用` セクション。
+
+## 5. 完了の狙い
+
+この成果物が満たすべき狙い（成果物カタログの `done_criteria`）を、owner ロールの狙いと下流ロールの入力適合に分けて示す。「進め方」に従って成果物と実践の型を整備する中で、owner の狙いを作成目標として満たすことを目指す。下流ロールの項目は、その文書から各ロールが自分の責務の成果物を作成できるよう入力として最低限成立させる範囲にとどめ、各ロールの内容を成果物に作り込まない（一文書一責務）。下流ロールの適合性検証や観点別の自己レビュー・修正ループは行わず、多観点での検証は後続の独立した review task に委ねる。
+
+owner として達成する狙い:
+
+- config init・register scaffold・catalog scaffoldと、必要に応じたexec scaffoldの起動条件・入力・生成物が表と図で確認できること
+
+下流ロールの入力適合（最低ライン。各ロールの内容は作り込まず、入力として成立させる）:
+
+- [PO] 必須の初期化と任意のprovider・実行補助設定の境界を承認できること
+- [ARC] 初期化対象ごとの正本ファイル、生成先、後続プロセスへの引き渡しが識別できること
+- [QE] 既存ファイルがある場合、設定が不足する場合、生成に失敗した場合の分岐が確認できること
+
+## 6. 完了手順
+
+1. 「このフェーズで行うこと」と「進め方」に従って、成果物と rulebook / recipe / sample / template を更新する。
+2. 「完了の狙い」を満たしているかを確認し、不足があれば加筆・補強する（観点別の自己レビューや再確認ループは行わない）。
+3. 成果物と各実践の型が相互に矛盾していないかを確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+4. 共通規約に従って、必要な整形・静的検査を実行する。
+5. result に実施内容・変更ファイル・進め方と実践の型の適用を記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+
+## 7. 異常終了の条件
+
+- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。対象を限定できる場合は対象限定の手順を優先し、プロジェクト標準または変更内容から全体 test / build が必要な場合は実行してよい。実行したコマンド・対象・結果は result に記録する。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                   | 実行する検査                                                             |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `*.md`                                                             | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>` |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                    | `npx prettier --write <対象ファイル>`                                    |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`           | `npm run typecheck`                                                      |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`vitest.config.*` | `npm test`                                                               |
+| `docs/ja/projects/` 配下                                           | `specdojo catalog validate`                                              |
+| `dct-*.yaml`                                                       | `specdojo catalog build`                                                 |
+| `pjr-index.md`                                                     | `specdojo register build`                                                |
+| `sch-*.yaml`                                                       | `specdojo exec refresh`                                                  |
+| `docs/` 配下                                                       | `specdojo index build`                                                   |
