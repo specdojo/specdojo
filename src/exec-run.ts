@@ -2258,7 +2258,10 @@ function registerRunnerManagedPaths(
   ticketPath?: string | null,
 ): string[] {
   // 状態遷移の書き込み先は個票（正本）。pjr-index と派生ビューは生成物として同時に更新される。
-  const managed = [registerPaths.pjrIndexPath, planPath, resultPath];
+  // 移行完了後の pjr-index.md は非追跡の生成物になり存在しないため、存在する場合のみ対象に含める
+  // （存在しないパスを git add すると pathspec エラーになる）。
+  const managed = [planPath, resultPath];
+  if (existsSync(registerPaths.pjrIndexPath)) managed.push(registerPaths.pjrIndexPath);
   if (ticketPath) managed.push(ticketPath);
   const exact = new Set(managed.map((path) => repoRelativePath(repoRoot, path)));
   const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
