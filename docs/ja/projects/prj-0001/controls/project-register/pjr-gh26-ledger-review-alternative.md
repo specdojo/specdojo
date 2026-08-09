@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-gh26-ledger-review-alternative
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-GH26 台帳の差分レビュー代替手段を決めて実装する
@@ -60,4 +61,5 @@ PJR-ES57 の分割8。一覧が非追跡になることで失われる台帳全�
 - [[prj-0001:pjr-es57-register-file-ssot-migration]]: 分割元の移行タスク
 - [[prj-0001:pjr-9y7g-register-item-file-as-ssot]]: 代替手段の決定を成立条件とした決定
 - [[prj-0001:pjr-rzr3-pjr-index-as-generated-view]]: 一覧が非追跡になる変更
+- [[prj-0001:pjr-1d0c-pjr-index-wikilink-broken]]: 同じくRZR3/9P5Qで一覧が非追跡になったことに起因する別問題（wikilink解決）。本項目の対応方針検討時に候補として参照したが、`register history` はwikilink解決を代替しないため対象外とした
 - [[specdojo:register-operation-guide]]: 反映先の運用手順
