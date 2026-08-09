@@ -68,19 +68,20 @@ const TICKET_FILENAME_RE = /^pjr-([0-9abcdefghjkmnpqrstvwxyz]{4})-[a-z0-9-]+\.md
 export const CELL_NONE = "-";
 export const CELL_TODO = "_TODO_";
 
-// 一覧の「説明」セルの最大長。個票本文の要約が長い場合に切り詰める。
-const MAX_DESCRIPTION_LENGTH = 120;
+// optional field を明示的に削除する内部値。`due_on: null` は「期限なし」を表すため、
+// キー削除と YAML null を区別する必要がある。
+export const REMOVE_REGISTER_ITEM_FIELD = Symbol("remove-register-item-field");
 
 // 個票 frontmatter が持つ登録項目フィールド。値 null は「キーを削除する」を意味する。
 export type RegisterItemFieldUpdates = {
-  item_type?: string;
-  item_status?: string;
-  priority?: string;
-  owner?: string | null;
-  registered_on?: string | null;
-  due_on?: string | null;
-  completed_on?: string | null;
-  conclusion?: string | null;
+  item_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  registered_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  completed_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 export type RegisterItemDoc = {
@@ -181,8 +182,7 @@ export function descriptionFromBody(body: string): string {
 
   const text = toCell(paragraph.join(" "));
   if (text.startsWith(CELL_TODO)) return CELL_TODO;
-  if (text.length <= MAX_DESCRIPTION_LENGTH) return text;
-  return `${text.slice(0, MAX_DESCRIPTION_LENGTH)}…`;
+  return text;
 }
 
 // ================================
@@ -218,9 +218,13 @@ export function readRegisterItemContent(
     description: descriptionFromBody(body),
     type: asString(fields.item_type) ?? CELL_TODO,
     priority: asString(fields.priority) ?? "medium",
-    owner: asString(fields.owner) ?? CELL_NONE,
+    owner: asString(fields.owner) ?? CELL_TODO,
     registered: asString(fields.registered_on) ?? CELL_TODO,
-    due: asString(fields.due_on) ?? CELL_NONE,
+    due:
+      fields.due_on === null
+        ? CELL_NONE
+        : (asString(fields.due_on) ??
+          (Object.prototype.hasOwnProperty.call(fields, "due_on") ? CELL_NONE : CELL_TODO)),
     completed: asString(fields.completed_on) ?? CELL_NONE,
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
@@ -271,7 +275,12 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     priority: item.priority,
     owner: isPlaceholderCell(item.owner) ? null : item.owner.trim(),
     registered_on: isPlaceholderCell(item.registered) ? null : item.registered.trim(),
-    due_on: isPlaceholderCell(item.due) ? null : item.due.trim(),
+    due_on:
+      item.due.trim() === CELL_TODO
+        ? REMOVE_REGISTER_ITEM_FIELD
+        : item.due.trim() === CELL_NONE || item.due.trim() === ""
+          ? null
+          : item.due.trim(),
     completed_on: isPlaceholderCell(item.completed) ? null : item.completed.trim(),
     conclusion: isPlaceholderCell(item.conclusion) ? null : item.conclusion.trim(),
   };
@@ -316,7 +325,7 @@ export function applyRegisterItemFields(
   const fields: Record<string, unknown> = { ...parsed.specdojo };
   for (const [key, value] of Object.entries(updates)) {
     if (value === undefined) continue;
-    if (value === null) {
+    if (value === REMOVE_REGISTER_ITEM_FIELD || (value === null && key !== "due_on")) {
       delete fields[key];
       continue;
     }
@@ -362,10 +371,30 @@ export function setRegisterItemDescription(content: string, description: string)
   return lines.join("\n");
 }
 
+// 一覧に記録されていた要約を最初の章の先頭段落へ移し、既存段落はその後ろへ残す。
+// 既存個票の詳細を失わず、本文から生成する一覧の「説明」を移行前と一致させるために使う。
+export function prependRegisterItemDescription(content: string, description: string): string {
+  const lines = content.split("\n");
+  const sectionIndex = lines.findIndex((line) => /^##\s/.test(line));
+  if (sectionIndex === -1) {
+    throw new Error("section heading (## ) not found in register item file");
+  }
+
+  let insertAt = sectionIndex + 1;
+  while (insertAt < lines.length && lines[insertAt].trim() === "") insertAt++;
+  lines.splice(insertAt, 0, description, "");
+  return lines.join("\n");
+}
+
 // dry-run 表示用に、書き込む登録項目フィールドを1行ずつ整形する。
 export function formatRegisterItemFields(updates: RegisterItemFieldUpdates): string {
   return Object.entries(updates)
     .filter(([, value]) => value !== undefined)
-    .map(([key, value]) => (value === null ? `  ${key}: (removed)` : `  ${key}: ${value}`))
+    .map(([key, value]) => {
+      if (value === REMOVE_REGISTER_ITEM_FIELD || (value === null && key !== "due_on")) {
+        return `  ${key}: (removed)`;
+      }
+      return `  ${key}: ${value === null ? "null" : value}`;
+    })
     .join("\n");
 }

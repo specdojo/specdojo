@@ -7,11 +7,17 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
 ---
 
 # PJR-0149 各プロジェクトにダッシュボードページを追加（schedule進捗・register状況・routine実行状況の一覧化）
 
 ## 1. 概要
+
+現状はschedule進捗(timeline.md)、register登録/消化状況(pjr-index.md/pjr-views.md)、routine実行状況(specdojo routine list等CLI出力のみ)を個別に確認する必要があり、一目で把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できるダッシュボードページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る
 
 現状、プロジェクトの状況確認は `execution/generated/timeline.md`（schedule進捗）、`pjr-index.md` / `pjr-views.md`（register登録・消化状況）、`specdojo routine list`（routine実行状況、CLI出力のみで生成ページなし）に分散しており、一目で全体像を把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できる「ダッシュボード」ページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る。
 

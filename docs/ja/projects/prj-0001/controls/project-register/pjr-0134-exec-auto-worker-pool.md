@@ -6,15 +6,23 @@ specdojo:
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
-  item_type: todo
   based_on:
     - prj-0001:pjr-0122
     - sysd-agent-settings
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 連続worker pool方式へ変更
 ---
 
 # PJR-0134 exec run --autoを連続worker pool化
 
 ## 1. 概要
+
+parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする
 
 `exec run --auto --loop --parallel` の固定バッチ方式を、agent の終了ごとに空いた実行枠へ次の Ready task を投入する連続 worker pool 方式へ変更する。長時間実行される task があっても、依存関係のない Ready task を空き枠で継続実行できるようにする。
 

@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-TT4J register CLI の読み書き先を個票 frontmatter へ変更する
 
 ## 1. 概要
+
+PJR-ES57 の分割2。add・状態遷移・update が pjr-index.md ではなく個票 frontmatter を読み書きするようにする。
 
 [[prj-0001:pjr-es57-register-file-ssot-migration]] の分割2。register の各サブコマンドが `pjr-index.md` の表ではなく個票 frontmatter を読み書きするようにする。[[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] のスキーマ定義に依存する。
 

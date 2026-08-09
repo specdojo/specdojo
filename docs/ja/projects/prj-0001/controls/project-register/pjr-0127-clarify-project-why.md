@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  owner: BA
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: IDを付与してトレースを明確化
 ---
 
 # PJR-0127 prj-overviewのプロジェクトWhyを明確化
 
 ## 1. 概要
+
+後続文書の論点を安定させるため、対象者・課題・中心仮説・価値仮説・判断原則をプロジェクト概要の正本として明確化する
 
 launch track では、対象を CivicTech に絞り、`prj-overview` の必要性を三つに明確化した後に、agent が生成する文書の論点と内容が改善した。後続成果物が共通の判断軸を参照できるよう、対象者、課題、中心仮説、価値仮説、判断原則をプロジェクトレベルの Why の正本として磨き込む。
 

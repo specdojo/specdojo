@@ -7,6 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
+  item_status: decided
+  priority: high
+  owner: PO
+  due_on: "2026-07-17"
+  completed_on: "2026-07-17"
+  conclusion: コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定
   supersedes:
     - prj-0001:pjr-0119
 ---
@@ -14,6 +20,8 @@ specdojo:
 # PJR-0119 プロジェクト憲章の承認
 
 ## 1. 背景
+
+prj-charter の立ち上げ認可と権限委譲を PO として承認する
 
 [[prj-0001:prj-charter|プロジェクト憲章]] の内容整備が完了し、正式な立ち上げ認可文書として確定させるため、PO の承認が必要になった。
 

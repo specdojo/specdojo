@@ -7,11 +7,17 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: low
+  owner: ARC
+  due_on: "2026-09-30"
 ---
 
 # PJR-0148 docs/外への[[id]]（wikilink）解決範囲拡張の要否検討
 
 ## 1. 概要
+
+現状specdojo index buildの走査対象はdocs/配下のみで、.github/instructions/やREADME.md等docs/外のファイルは[[id]]で参照できない。docs/外への[[id]]解決範囲拡張が必要かどうかを、走査対象拡大に伴う除外ロジック変更・frontmatter契約の非互換・ID衝突リスク等を踏まえて検討する
 
 PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `docs/` 配下に限定されているため、`.github/instructions/`、`README.md`、`CLAUDE.md` 等 `docs/` 外のファイルは `[[id]]`（wikilink）で参照できないことが判明した。`docs/` 外への `[[id]]` 解決範囲拡張が必要かどうかを、実装上の制約と費用対効果を踏まえて検討する。
 

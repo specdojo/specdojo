@@ -7,11 +7,16 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  completed_on: "2026-08-08"
 ---
 
 # PJR-0161 登録簿承認typeの承認フローとPR/commit使い分けの規約化
 
 ## 1. 概要
+
+承認を要するtype(change-request/decision/risk/question/issue)の承認フローをregister状態遷移(review→close等)へ明文化し、承認方式を既定commit＋限定PRで規約化する。PR強制はdevelop→main昇格/change-request承認/不可逆・高リスク・schema破壊的変更に限定。branch protectionとCODEOWNERSで承認者を強制、decision/questionテンプレに承認者欄を追加。関連文書はbranch-workflow-guide/git-branching-standard/register-operation-guide/pjr-rulebook。
 
 承認を要する登録簿 type（`change-request` / `decision` / `risk` / `question` / `issue`）について、承認フロー（誰が・どの状態遷移で承認するか）と承認方式（Pull Request ベースか単なる commit か）が未規定である。SpecDojo は既に `exec → develop` を自動 commit 統合、`develop → main` を PR 必須とする階層モデルを持つため、これに整合する形で type 別の承認運用を明文化する。
 

@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-06"
+  conclusion: catalog buildで同一domainの複数dctファイルをファイル名昇順でマージする機能を実装。dct.schema.yaml・dct-rulebook（物理分割の命名/ID規約とテンプレート分割）を更新し、tests/src/catalog-merge.test.ts等を追加。全テスト通過。
 ---
 
 # PJR-0155 dctカタログの1 domain複数ファイル分割（物理分割）対応
 
 ## 1. 概要
+
+domain一意制約を緩和し、同一domainの複数dctファイルをbuild時にマージ可能にする
 
 現行の dct カタログは、`catalog build` の出力が `domain` をキーに束ねられる都合上、`domain` 一意制約（`src/catalog.ts` の `validateCatalogDomains`）により 1 domain = 1 ファイルが前提となっている。`data-model` のように反復要素（業務データ辞書・概念モデルを業務領域ごとに複製）が多いカタログは単一ファイルが肥大化するため、論理 domain を維持したまま物理ファイルを分割できるよう、同一 `domain` を持つ複数 dct ファイルを build 時にマージ可能にする。
 

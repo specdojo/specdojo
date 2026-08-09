@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-GH26 台帳の差分レビュー代替手段を決めて実装する
 
 ## 1. 概要
+
+PJR-ES57 の分割8。一覧が非追跡になることで失われる台帳全体の差分レビューについて、代替手段を決めて運用ガイドへ反映する。
 
 [[prj-0001:pjr-es57-register-file-ssot-migration]] の分割8。一覧が生成物となり追跡対象から外れることで、台帳全体の変更を1ファイルの差分で追えなくなる。これは [[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B の懸念として挙げた点であり、成立条件として代替手段を決めることが求められている。
 

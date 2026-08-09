@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-ES57 登録簿を1項目1ファイル正本へ移行し pjr-index を生成ビュー化する
 
 ## 1. 概要
+
+PJR-9Y7G の決定（選択肢B）に基づき、個票 frontmatter を正本、pjr-index.md を generated の派生ビューへ移行する。CLI・スキーマ・rulebook・テンプレート・既存項目移行を対象とする。
 
 [[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B を採択したため、登録項目の正本を個票 frontmatter へ一本化し、`pjr-index.md` を `generated/` 配下の派生ビューへ移行する。正本の粒度を実体（登録項目）単位に合わせることで、index と個票の同期規則、表末尾の追記競合、それを回避するための補償機構を不要にする。未リリースのうちに実施する。
 

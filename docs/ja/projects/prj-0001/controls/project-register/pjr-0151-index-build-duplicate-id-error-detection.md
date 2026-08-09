@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-07"
+  conclusion: 多言語IDは同一論理ID＋言語スコープ解決に決定し、doc-index を言語スコープ対応に実装。標準へ反映済み。
 ---
 
 # PJR-0151 specdojo index buildの重複ID「あと勝ち」をエラー検知に変更
 
 ## 1. 概要
+
+src/doc-index.tsのID登録処理(scanFile/collectFromFields)は既存キーの存在チェックをせず、Markdown/YAML/ネストIDいずれも無条件上書き(あと勝ち)になっている。同一Unit内の重複IDをエラーにし、衝突したIDと全ファイルパスを表示し、Markdown/YAML/ネストIDを同じ基準で検証し、specdojo index buildと総合validateの両方で失敗させるようにする。あわせて多言語文書(docs/en等)を言語別インデックスにするか同一論理IDの言語variantとして扱うかを決定する
 
 `src/doc-index.ts` のID登録処理（`scanFile`・`collectFromFields`）は既存キーの存在チェックを行わず、Markdown frontmatter・YAML top-level・ネストID（`nested_id_files`によるglossary等）のいずれも `entries[id] = ...` による無条件上書き（あと勝ち）になっている。`walkDir` のディレクトリ走査順（`readdirSync`、ソートなし）に依存するため、どちらが勝つかも決定論的でない。`specdojo index build` と総合validateの両方で重複IDをエラーとして検知するようにする。あわせて、`docs/en/` 等の多言語文書展開時にIDがどう扱われるべきか（言語別インデックス化 or 同一論理IDの言語variant）を決める。
 

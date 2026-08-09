@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: project contextをtemplateに追加
 ---
 
 # PJR-0128 exec planへproject contextを伝播
 
 ## 1. 概要
+
+全ての対象成果物生成でprj-overviewを参照できるよう、depends_onと分離したproject contextをexec planへ追加する
 
 guided な agent 実行では exec plan に列挙された参考資料と `depends_on` 成果物だけが参照範囲となるため、`prj-overview` の Why が直接依存しない成果物へ届かない。作成順序・根拠関係を表す `depends_on` は変更せず、プロジェクト共通文脈を渡す独立した仕組みを設け、対象となる edit / review plan へ `prj-overview` を確実に伝播する。
 

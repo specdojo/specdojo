@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: hook整形差分が出る場合は再度commitするように変更
 ---
 
 # PJR-0140 register commitがhook整形差分と失敗残骸を取りこぼす
 
 ## 1. 課題内容
+
+pathspec commitでhookの整形差分がindexに残り、次ID実行の開始前スナップショットに載って commit 対象から丸ごと除外される。失敗試行の残骸とrunner自身の状態遷移も同様に取りこぼす
 
 2026-07-26 に `specdojo exec run --register PJR-0139 PJR-0137 --register-commit` を実行したところ、両 ID とも commit は成功したにもかかわらず、PJR-0137 が追加した `tests/src/register.test.ts` の 223 行、`pjr-index.md` の状態遷移、先行する失敗試行の plan / result が commit されず作業ツリーに残った。
 

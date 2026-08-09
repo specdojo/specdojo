@@ -6,14 +6,22 @@ specdojo:
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
-  item_type: todo
   based_on:
     - prj-0001:pjr-0137-register-id-uniqueness
+  item_type: todo
+  item_status: done
+  priority: low
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: idの--reserveオプションを追加
 ---
 
 # PJR-0138 起票を統合ブランチへ委譲するregister add
 
 ## 1. 概要
+
+作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する
 
 PJR-ID の重複と `pjr-index.md` 末尾での merge conflict は、採番と行追加が作業 branch 上で分散して行われることに起因する。起票のたびに統合ブランチへ checkout し直す運用は、exec が worktree 単位で走る前提では退避コストが高く、気づいた時点で登録するという登録簿の利点を損なう。`specdojo register add` が統合ブランチの worktree へ登録行だけを書き込んで commit することで、作業 worktree を離れずに ID を予約できるようにする。
 

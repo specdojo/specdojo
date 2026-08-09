@@ -74,8 +74,10 @@ properties:
             $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
             description: "登録項目を起票した日付。"
           due_on:
-            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
-            description: "登録項目の対応期限または判断期限。"
+            oneOf:
+              - $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
+              - type: "null"
+            description: "登録項目の対応期限または判断期限。未定は省略し、期限なしは null。"
           completed_on:
             $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
             description: "登録項目を完了・決定・却下した日付。"

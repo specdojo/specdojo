@@ -6,15 +6,23 @@ specdojo:
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
-  item_type: todo
   based_on:
     - prj-0001:pjr-0122
     - sysd-agent-settings
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-25"
+  conclusion: exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした
 ---
 
 # PJR-0135 exec run --registerの複数ID直列実行
 
 ## 1. 概要
+
+複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする
 
 `exec run --register` に複数の PJR-ID を渡し、指定順に直列実行できるようにする。各IDの実行後にcommitするかどうかをオプションで選択でき、失敗時に停止するか残りを継続するかも明示できるようにする。register の worktree 化と並列実行は本項目の対象外とする。
 

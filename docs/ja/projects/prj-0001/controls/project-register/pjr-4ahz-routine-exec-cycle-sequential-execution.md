@@ -6,15 +6,23 @@ specdojo:
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
-  item_type: todo
   based_on:
     - prj-0001:pjr-0136-exec-limit-resume
     - prj-0001:pjr-0158-exec-run-project-lock
+  item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
 ---
 
 # PJR-4AHZ routineでexec resumeからautoを順次実行可能にする
 
 ## 1. 概要
+
+定時実行でrate limitからの再開、状態再計算、Ready taskのauto loop実行を単一project lock内で順次処理できる仕組みを追加する。ファイル名順や時刻差に依存せず、busy・失敗・再延期・結果集約の挙動を設計し、routine定義、CLI、schema、ガイド、テストへ反映する。
 
 定時 routine から利用制限で延期された task の再開と Ready task の自動実行を行う際、現行の `exec-resume` と `exec-auto` は別々の routine として起動する必要があり、実行順はファイル名順または発火時刻の差に依存する。時刻をずらす方式では、先行処理が想定時間を超えると後続処理が busy skip され、次回の定時発火まで実行されない。
 

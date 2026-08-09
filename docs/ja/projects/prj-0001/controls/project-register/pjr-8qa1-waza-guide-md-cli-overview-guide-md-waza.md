@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  completed_on: "2026-08-08"
 ---
 
 # PJR-8QA1 waza-guide.md新設(cli-overview-guide.mdをWaza名称へ改称)とサイドバー・相互参照リンク更新
 
 ## 1. 概要
+
+cli-overview-guide.mdをwaza-guide.mdへリネームし、id・frontmatter・H1(遂行の技活用ガイド/Waza Guide)を更新する。サイドバー表示名(遂行の技活用)と、約30ファイルに及ぶ相互参照リンクを追従修正する。
 
 SpecDojo は道場のメタファーとして、実践の型（rulebook/recipe/sample/template）を「Kata」、進め方（`approach`）を「Ryu」、`specdojo` CLI コマンド群を「Waza」と呼ぶ整理を採用した。既存の [[specdojo:cli-overview-guide]] は `specdojo` CLI 全体の入口ガイドであり、この「Waza」に相当するため、`waza-guide.md` へ改称し、id・H1 を Waza の枠組みに合わせて更新する。
 

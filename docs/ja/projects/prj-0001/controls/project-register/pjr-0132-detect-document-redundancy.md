@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: UX
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: review-viewpointsに反映
 ---
 
 # PJR-0132 既存review viewpointで文書の冗長性を検出
 
 ## 1. 概要
+
+新しい観点を重複追加せず、vp-ux-readabilityに反復・一般論・表と本文の重複・正本の過剰再掲を検出する基準を追加する
 
 文書の主要な目的や判断点を短時間で把握できるかという観点から、冗長性を review で検出できるようにする。類似 viewpoint を新設せず、既存の `vp-ux-readability` に、同じ主張の反復、判断に不要な一般論、表と本文の重複、正本からの過剰な再掲を確認する具体的な check / evidence を反映する。
 

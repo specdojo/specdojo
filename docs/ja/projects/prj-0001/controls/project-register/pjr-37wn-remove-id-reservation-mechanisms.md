@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-37WN ID 予約などの競合回避機構を撤去し renumber を縮小する
 
 ## 1. 概要
+
+PJR-ES57 の分割5。統合ブランチ自動ルーティング・予約経路・同期 script を撤去し、renumber を乱数 ID 衝突の救済のみへ縮小する。
 
 [[prj-0001:pjr-es57-register-file-ssot-migration]] の分割5。表の共有編集を前提として導入した競合回避の補償機構を撤去する。個票が正本になると項目の追加と状態遷移が構造的に衝突しなくなるため、これらの機構は不要になる。
 

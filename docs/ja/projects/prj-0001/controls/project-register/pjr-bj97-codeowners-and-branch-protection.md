@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
+  item_status: open
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-BJ97 CODEOWNERS 未整備により PR 承認の職務分離が強制されていない
 
 ## 1. 課題内容
+
+.github/CODEOWNERS が存在せず branch protection の Code Owners 承認を強制できないため、PR 強制3ケースで自己承認が成立してしまう。
 
 PR 承認を強制する 3 ケース（`develop → main` 昇格、`change-request` の承認、不可逆・高リスク・framework schema 破壊的変更）について、承認者を宣言する仕組みが未整備であり、職務分離が platform 側で強制されていない。
 

@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-09"
+  conclusion: xep-common-conventions-template.md へ project context を based_on へ転記しない規約と、終了前に pre-commit 相当の検査を実行する規約（変更ファイル種別と検査コマンドの対応表付き）を追記。catalog validate のメッセージ改善は既存文言で要件が示されているため見送り
 ---
 
 # PJR-C0B7 exec plan 共通規約へ project context の based_on 転記禁止と pre-commit 事前チェックを明記する
 
 ## 1. 概要
+
+xep-common-conventions-template.md へ、plan のプロジェクトコンテキストを成果物 frontmatter の based_on へ転記しない旨と、完了前に pre-commit 相当の検査（prettier / markdownlint / typecheck / test / catalog validate 等）を実行し失敗を修正する旨を追記する
 
 exec plan の共通規約テンプレート `docs/ja/specdojo/templates/xep-common-conventions-template.md` へ、次の2点を追記する。
 

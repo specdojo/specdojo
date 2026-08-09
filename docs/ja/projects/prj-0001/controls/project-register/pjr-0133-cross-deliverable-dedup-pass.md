@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: 横断pass, dedup approachを追加
 ---
 
 # PJR-0133 bootstrap後に成果物間の重複を整理する横断passを追加
 
 ## 1. 概要
+
+bootstrap完了後、refine前に成果物群を横断して正本を選択し、重複記述を要約と参照へ置き換える直列passを設ける
 
 launch track では、一成果物単位で生成した文書に同じ説明や判断理由が散在し、最終段階で多数の重複削除が必要になった。全成果物の初稿がそろう `bootstrap-pass` 完了後、個別の `refine-pass` を始める前に、意味的に近い成果物群を横断して正本を選択し、重複を必要最小限の要約と参照へ置き換える直列 pass を追加する。
 

@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
+  item_status: open
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-09"
+  due_on: "2026-08-31"
 ---
 
 # PJR-GQFX register close の未記入 _TODO_ 検出がインラインコード内の文字列を誤検出する
 
 ## 1. 課題内容
+
+個票本文でインラインコードとして記述した _TODO_ を未記入欄と誤判定し、close 時に個票が ready へ昇格しない。
 
 register の状態遷移時に個票を `ready` へ昇格させる判定が、本文にプレースホルダが残っているかを文字列の単純包含で判断しているため、インラインコードやコードブロック内に記述した記法の説明までプレースホルダとみなす。
 

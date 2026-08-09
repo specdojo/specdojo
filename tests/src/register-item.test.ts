@@ -118,8 +118,19 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
 
     expect(parsed?.hasRegisterFields).toBe(false);
     // 省略キーは一覧の表示プレースホルダへ変換する。
-    expect(parsed?.item.owner).toBe("-");
+    expect(parsed?.item.owner).toBe("_TODO_");
     expect(parsed?.item.registered).toBe("_TODO_");
+  });
+
+  it("期限の未定（キー省略）と期限なし（null）を表示上も区別する", () => {
+    const undecided = readRegisterItemContent(buildItemFile(), "pjr-ab12-inventory-seed.md");
+    const none = readRegisterItemContent(
+      buildItemFile(["due_on: null"]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(undecided?.item.due).toBe("_TODO_");
+    expect(none?.item.due).toBe("-");
   });
 
   it("命名規約外のファイル名は undefined を返す", () => {
@@ -256,5 +267,32 @@ describe("registerItemFieldsFromItem — 一覧値から frontmatter フィー�
       completed_on: null,
       conclusion: null,
     });
+  });
+
+  it("期限未定はキー削除、期限なしは YAML null へ写像する", () => {
+    const base: PjrItem = {
+      id: "PJR-AB12",
+      status: "open",
+      title: "題名",
+      description: "説明",
+      type: "todo",
+      priority: "medium",
+      owner: "ARC",
+      registered: "2026-08-01",
+      due: "_TODO_",
+      completed: "-",
+      conclusion: "-",
+      ticket: "-",
+    };
+
+    const undecided = applyRegisterItemFields(buildItemFile(["due_on: null"]), {
+      due_on: registerItemFieldsFromItem(base).due_on,
+    });
+    const none = applyRegisterItemFields(buildItemFile(), {
+      due_on: registerItemFieldsFromItem({ ...base, due: "-" }).due_on,
+    });
+
+    expect(undecided).not.toContain("due_on");
+    expect(none).toContain("  due_on: null");
   });
 });

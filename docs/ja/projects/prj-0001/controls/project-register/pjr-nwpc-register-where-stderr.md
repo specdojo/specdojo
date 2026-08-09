@@ -7,11 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: low
+  owner: ARC
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
 ---
 
 # PJR-NWPC register whereのエラー出力をstderrへ分離する
 
 ## 1. 概要
+
+register whereはエラー時にprintCommandError慣例でstdoutへメッセージを書くため、npm script(register:sync-pull/register:sync-push)経由で統合ブランチworktree未用意時にgit -Cへ誤ったパス文字列として渡り、分かりにくい二重エラーになる（gitがpath不正で失敗するため実害はないがUXが悪い）。register whereのエラー出力のみstderrへ分離する。
 
 [[prj-0001:pjr-0163-register-add-id-fetch]] の申し送りで判明した事項。`register where` はエラー時に `printCommandError` の慣例に従いメッセージを stdout へ書くため、`register:sync-pull` / `register:sync-push` npm script が `git -C "$(specdojo register where --integration)"` のようにコマンド置換で呼び出すと、統合ブランチworktree未用意時にエラー文字列がそのまま `-C` のパス引数として渡り、gitの「cannot change to directory」という分かりにくい二重エラーになる。gitがpath不正で失敗するため実害（サイレント誤動作）はないが、エラーメッセージの分かりにくさを解消する。
 

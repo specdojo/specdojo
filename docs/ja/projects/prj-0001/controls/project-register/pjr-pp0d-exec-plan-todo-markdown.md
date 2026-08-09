@@ -7,11 +7,20 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_on: "2026-08-08"
+  due_on: "2026-08-31"
+  completed_on: "2026-08-08"
+  conclusion: exec-shared.tsにescapeMarkdownInlineを追加し、register add/updateの自由記述列(title/description)由来のアンダースコア/アスタリスクを含むASCIIトークンをcode span化してplan生成時のMD049誤解釈を防止。再実行(--worktree)で正常完了を確認。
 ---
 
 # PJR-PP0D exec plan生成時にアンダースコア識別子や`_TODO_`がMarkdown強調記号として誤解釈され破損する
 
 ## 1. 概要
+
+登録簿の説明文などに含まれる`register_date_timezone`のようなアンダースコア入り識別子や`_TODO_`/`_ASSUMPTION_`プレースホルダが、exec plan生成パイプラインを通る際にバッククォートでエスケープされず、Markdownの強調記号として誤って解釈され一部が破損する（例: `register_date_timezone` が `register*date_timezone` のように壊れる）。結果としてmarkdownlintのMD049エラーでcommitがブロックされる（PJR-0XXZのclose時に実際に発生し手動修正した）。plan生成時に識別子・プレースホルダ相当の文字列を適切にエスケープ（バッククォート化）する。
 
 [[prj-0001:pjr-0xxz-pjr-index]] のclose時に実際に発生した不具合。`src/exec-register.ts`の`_PJR_DESCRIPTION_`プレースホルダ置換（約291行目）が`item.description`（`pjr-index.md`の説明列の値）をエスケープせずそのままplan本文へ埋め込むため、説明文に`register_date_timezone`のようなアンダースコア入り識別子や`_TODO_`/`_ASSUMPTION_`が含まれると、生成されたplanのMarkdownとして誤って強調記号（`_..._`/`*...*`）に解釈され、一部が破損する（例: `register_date_timezone` が `register*date_timezone` のように壊れる）。破損したplanはmarkdownlintの`MD049`（強調スタイル不統一）でcommitがブロックされる。
 

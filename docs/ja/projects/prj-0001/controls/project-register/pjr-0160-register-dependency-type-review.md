@@ -7,11 +7,17 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  completed_on: "2026-08-07"
+  conclusion: 案A（dependency type 廃止）を採択。enum・VALID_TYPES・テンプレート・schema・docs・テストを一貫更新。実績0件のため移行不要。必要時は後方互換の追加で再導入。
 ---
 
 # PJR-0160 登録簿type dependencyの要否見直し(廃止 or Assumption Log化 or 明文化)
 
 ## 1. 概要
+
+dependencyはPMBOK非標準でexec実行区分/生成PMログなし・実績0件。waitingステータスおよびprj-assumptions-constraints-dependencies成果物と役割が重複。廃止/assumption type化/rulebook明文化のいずれかを決定し対応する。enum変更はschema・VALID_TYPES・exec-registerのSet・テンプレ・docsの同時修正を伴う破壊的変更。
 
 登録簿 type の `dependency` は PMBOK 標準の登録簿ではなく、SpecDojo 独自に「外部の対応・提供物への依存（外部待ち）」を記録するために用意された type である。しかし exec 実行区分（edit/investigate）を持たず、生成 PM ログも無く、実績は 0 件で、`waiting` ステータスや `prj-assumptions-constraints-dependencies` 成果物と役割が重複している。8 type 中で最も配線が薄い純ラベルであるため、要否を判断し対応する。
 

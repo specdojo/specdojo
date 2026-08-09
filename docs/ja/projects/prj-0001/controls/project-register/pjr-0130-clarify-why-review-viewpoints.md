@@ -7,11 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
+  item_status: done
+  priority: medium
+  owner: QE
+  due_on: "2026-07-31"
+  completed_on: "2026-07-26"
+  conclusion: whyの明確性をreview viewpointsに反映
 ---
 
 # PJR-0130 Whyの明確性を既存review viewpointsへ反映
 
 ## 1. 概要
+
+重複観点を増やさず、目的整合・業務価値・可読性の既存観点にWhyの判定基準と証拠を具体化する
 
 成果物の主要な定義・判断が、どの対象者のどの課題・期待価値に応えるかをレビューで判定できるようにする。類似する viewpoint を新設してレビューを細分化するのではなく、既存の目的整合、業務価値、可読性の観点へ、Why の明確性と手段の目的化を検出する具体的な check / evidence を反映する。
 
