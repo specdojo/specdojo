@@ -190,6 +190,29 @@ describe("exec strategy metadata resolution", () => {
     }
   });
 
+  it("resolveTaskPhaseContext は local_id を持たず phase_set/phase_id が確定済みの cross-deliverable-pass task を解決する", () => {
+    const { localIdToPhaseSets, phaseSetSuffixToId } = buildTaskPhaseMap(
+      mkdtempSync(join(tmpdir(), "specdojo-exec-run-empty-")),
+    );
+
+    expect(
+      resolveTaskPhaseContext(
+        {
+          id: "T-DATA-FLOW-data-flow-dedup-060",
+          target_local_ids: ["cdfd-overview", "cdfd-init"],
+          phase_suffix: "060",
+          phase_set: "cross-deliverable-pass",
+          phase_id: "data-flow-dedup",
+          schedule_file: "sch-track-data-flow.yaml",
+          fifo_rank: 1,
+          critical_first_rank: 1,
+        },
+        localIdToPhaseSets,
+        phaseSetSuffixToId,
+      ),
+    ).toEqual({ localId: "", phaseSet: "cross-deliverable-pass", phaseId: "data-flow-dedup" });
+  });
+
   it("phase_overrides.execution takes precedence over phase execution", () => {
     const scheduleDir = mkdtempSync(join(tmpdir(), "specdojo-exec-strategy-"));
     try {

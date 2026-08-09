@@ -406,15 +406,20 @@ export function resolveTaskPhaseContext(
   localIdToPhaseSets: Map<string, string[]>,
   phaseSetSuffixToId: Map<string, string>,
 ): TaskPhaseContext | null {
+  // ready.json/schedule 側で phase_set・phase_id が既に確定しているタスクは、それを正として
+  // 直接返す。cross-deliverable-pass タスク（single local_id を持たず target_local_ids のみを
+  // 持つ）はこの分岐でしか解決できないため、local_id の有無より先に判定する。ここで local_id
+  // チェックを先にすると、target_local_ids しか持たないタスクは常に「not found in sch-strategy
+  // files」で失敗する。
+  if (task.phase_set && task.phase_id) {
+    return { localId: task.local_id ?? "", phaseSet: task.phase_set, phaseId: task.phase_id };
+  }
+
   const localId = task.local_id;
   if (!localId) return null;
 
   const suffix = task.phase_suffix ?? extractPhaseSuffix(task.id);
   if (!suffix) return null;
-
-  if (task.phase_set && task.phase_id) {
-    return { localId, phaseSet: task.phase_set, phaseId: task.phase_id };
-  }
 
   const phaseSets = localIdToPhaseSets.get(localId);
   if (!phaseSets) return null;
