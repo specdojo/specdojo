@@ -14,7 +14,7 @@ groups:
         kind: work
         overview: SpecDojoを用いたプロジェクト推進とオペレーション推進について、主要プロセス領域の関係と情報・イベントの流れを可視化し定義する
         path: cdfd-overview.md
-        rulebook: specdojo:cdfd-rulebook
+        rulebook: specdojo:cdfd-overview-rulebook
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
