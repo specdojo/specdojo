@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1d0c-pjr-index-wikilink-broken
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-1D0C 個票のpart_ofとwikilinkがprj-0001:pjr-indexを参照できない
