@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-gqfx-todo-marker-false-positive-in-inline-code
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_on: "2026-08-09"
   due_on: "2026-08-31"
+  completed_on: "2026-08-09"
 ---
 
 # PJR-GQFX register close の未記入 `_TODO_` 検出がインラインコード内の文字列を誤検出する
