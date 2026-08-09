@@ -369,6 +369,33 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
     });
   });
 
+  it.each([
+    ["インラインコード", "プレースホルダ記法 `_TODO_` を説明する。"],
+    ["バッククォートのフェンスコード", "```md\n_TODO_\n```"],
+    ["チルダのフェンスコード", "~~~md\n_TODO_\n~~~"],
+  ])("close 相当: %s 内の _TODO_ は無視して ready へ昇格する", (_label, body) => {
+    withTempRepo((paths, ticketPath) => {
+      writeFileSync(ticketPath, buildTicket("draft", body), "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: false });
+
+      expect(readFileSync(ticketPath, "utf8")).toContain("  status: ready");
+    });
+  });
+
+  it("警告: コード範囲の外にも _TODO_ が残る場合は draft を保つ", () => {
+    withTempRepo((paths, ticketPath) => {
+      const original = buildTicket("draft", "記法 `_TODO_` の説明。\n\n対応結果: _TODO_");
+      writeFileSync(ticketPath, original, "utf8");
+      const item = makeItem("[pjr-0001-topic](./pjr-0001-topic.md)");
+
+      updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: false });
+
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+    });
+  });
+
   it("reject 相当: _TODO_ が残っていても deprecated へ更新する", () => {
     withTempRepo((paths, ticketPath) => {
       writeFileSync(ticketPath, buildTicket("draft", "対応結果: _TODO_"), "utf8");

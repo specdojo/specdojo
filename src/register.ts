@@ -1084,11 +1084,89 @@ export function parseTicketFilename(ticketCell: string): string | undefined {
   return match ? match[1] : undefined;
 }
 
+function stripFencedCode(markdown: string): string {
+  let fence: { marker: "`" | "~"; length: number } | undefined;
+
+  return markdown
+    .split(/(?<=\n)/)
+    .map((lineWithEnding) => {
+      const line = lineWithEnding.replace(/\r?\n$/, "");
+      const lineEnding = lineWithEnding.slice(line.length);
+
+      if (fence) {
+        const closing = line.match(/^ {0,3}(`+|~+)[ \t]*$/);
+        if (closing && closing[1][0] === fence.marker && closing[1].length >= fence.length) {
+          fence = undefined;
+        }
+        return lineEnding;
+      }
+
+      const opening = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+      if (opening && !(opening[1][0] === "`" && opening[2].includes("`"))) {
+        fence = { marker: opening[1][0] as "`" | "~", length: opening[1].length };
+        return lineEnding;
+      }
+
+      return lineWithEnding;
+    })
+    .join("");
+}
+
+function isEscapedMarkdownCharacter(markdown: string, index: number): boolean {
+  let backslashes = 0;
+  for (let cursor = index - 1; cursor >= 0 && markdown[cursor] === "\\"; cursor--) {
+    backslashes++;
+  }
+  return backslashes % 2 === 1;
+}
+
+function findClosingBacktickRun(markdown: string, start: number, length: number): number {
+  for (let cursor = start; cursor < markdown.length; ) {
+    if (markdown[cursor] !== "`") {
+      cursor++;
+      continue;
+    }
+
+    const runStart = cursor;
+    while (markdown[cursor] === "`") cursor++;
+    if (cursor - runStart === length && !isEscapedMarkdownCharacter(markdown, runStart)) {
+      return runStart;
+    }
+  }
+  return -1;
+}
+
+function stripInlineCode(markdown: string): string {
+  let result = "";
+
+  for (let cursor = 0; cursor < markdown.length; ) {
+    if (markdown[cursor] !== "`" || isEscapedMarkdownCharacter(markdown, cursor)) {
+      result += markdown[cursor];
+      cursor++;
+      continue;
+    }
+
+    const runStart = cursor;
+    while (markdown[cursor] === "`") cursor++;
+    const runLength = cursor - runStart;
+    const closing = findClosingBacktickRun(markdown, cursor, runLength);
+    if (closing === -1) {
+      result += markdown.slice(runStart, cursor);
+      continue;
+    }
+
+    cursor = closing + runLength;
+  }
+
+  return result;
+}
+
 // type 固有の必須節が固まっているかの判定。見出し文言（言語依存）に依存せず、
-// 本文に記入プレースホルダ `_TODO_` が残っていれば「未確定」とみなす。
+// Markdown のコード範囲を除く本文に記入プレースホルダ `_TODO_` が残っていれば
+// 「未確定」とみなす。コード範囲は記法の説明や例示に使えるため判定対象外とする。
 function ticketBodyHasTodo(content: string): boolean {
   const { body } = parseSpecdojoDocument(content);
-  return body.includes("_TODO_");
+  return stripInlineCode(stripFencedCode(body)).includes("_TODO_");
 }
 
 // 個票 Frontmatter（specdojo 名前空間）内の `status:` 行を targetStatus へ書き換える。
