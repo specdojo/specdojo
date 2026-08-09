@@ -86,6 +86,7 @@ import {
   sanitizeRegisterConclusion,
   selectRegisterCommitPaths,
   selectRegisterRunArtifactResidue,
+  ticketPathFromItem,
   type RegisterFailureMode,
   type RegisterItemSummary,
   type RegisterItemTransition,
@@ -2254,12 +2255,12 @@ function registerRunnerManagedPaths(
   planPath: string,
   resultPath: string,
   currentPaths: readonly string[],
+  ticketPath?: string | null,
 ): string[] {
-  const exact = new Set(
-    [registerPaths.pjrIndexPath, planPath, resultPath].map((path) =>
-      repoRelativePath(repoRoot, path),
-    ),
-  );
+  // 状態遷移の書き込み先は個票（正本）。pjr-index と派生ビューは生成物として同時に更新される。
+  const managed = [registerPaths.pjrIndexPath, planPath, resultPath];
+  if (ticketPath) managed.push(ticketPath);
+  const exact = new Set(managed.map((path) => repoRelativePath(repoRoot, path)));
   const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
     (path) => `${repoRelativePath(repoRoot, path)}/`,
   );
@@ -2281,6 +2282,8 @@ async function runSingleRegisterItem(
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
+  const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
 
   const { command, actor } = resolveRegisterCommand(
@@ -2365,6 +2368,7 @@ async function runSingleRegisterItem(
         planPath,
         resultPath,
         currentPaths,
+        ticketPath,
       );
       try {
         const result = commitRegisterItemChanges(repoRoot, item, preexisting, runnerManaged);
@@ -2424,16 +2428,21 @@ async function runSingleRegisterItem(
 // 抽出する。worktree モードでは各遷移を root（統合ブランチ）へ commit して作業ツリーを清潔に
 // 保ち、後続 ID・並列実行の checkpoint / merge と干渉させない。plan/result は checkpoint と
 // worktree merge が扱うため、ここでは含めない。
-export function registerStatePaths(repoRoot: string, registerPaths: RegisterPaths): string[] {
+export function registerStatePaths(
+  repoRoot: string,
+  registerPaths: RegisterPaths,
+  ticketPath?: string | null,
+): string[] {
   const changed = worktreeStatusPaths(repoRoot);
-  const pjrRel = repoRelativePath(repoRoot, registerPaths.pjrIndexPath);
+  const exact = new Set([repoRelativePath(repoRoot, registerPaths.pjrIndexPath)]);
+  if (ticketPath) exact.add(repoRelativePath(repoRoot, ticketPath));
   const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
     (path) => `${repoRelativePath(repoRoot, path)}/`,
   );
   const selected = new Set<string>();
   for (const path of changed) {
     const normalized = path.replaceAll("\\", "/");
-    if (normalized === pjrRel || prefixes.some((prefix) => normalized.startsWith(prefix))) {
+    if (exact.has(normalized) || prefixes.some((prefix) => normalized.startsWith(prefix))) {
       selected.add(path);
     }
   }
@@ -2446,15 +2455,16 @@ function commitRegisterState(
   repoRoot: string,
   registerPaths: RegisterPaths,
   message: string,
+  ticketPath?: string | null,
 ): void {
-  const paths = registerStatePaths(repoRoot, registerPaths);
+  const paths = registerStatePaths(repoRoot, registerPaths, ticketPath);
   if (paths.length === 0) return;
   gitOutput(repoRoot, ["add", "--", ...paths]);
   const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
   if (staged.status === 0) return;
   if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
   gitOutput(repoRoot, ["commit", "-m", message, "--", ...paths]);
-  stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths));
+  stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths, ticketPath));
 }
 
 // register 項目1件の worktree 実行。成果物は worktree に隔離し、状態遷移（start/review/wait）は
@@ -2471,6 +2481,8 @@ async function runSingleRegisterItemWorktree(
   const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
+  const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
 
   const { command, actor } = resolveRegisterCommand(
@@ -2494,7 +2506,7 @@ async function runSingleRegisterItemWorktree(
       process.stderr.write(`register wait transition failed: ${item.id}\n`);
       transition = "none";
     } else {
-      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`);
+      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`, ticketPath);
     }
     return {
       id: item.id,
@@ -2545,6 +2557,7 @@ async function runSingleRegisterItemWorktree(
       planPath,
       resultPath,
       worktreeStatusPaths(repoRoot),
+      ticketPath,
     );
     const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
     try {
@@ -2622,7 +2635,12 @@ async function runSingleRegisterItemWorktree(
         transition = "none";
         reason = "register review transition failed";
       } else {
-        commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): review`);
+        commitRegisterState(
+          repoRoot,
+          registerPaths,
+          `exec(register ${item.id}): review`,
+          ticketPath,
+        );
       }
       const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
       process.stdout.write(

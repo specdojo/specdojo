@@ -74,6 +74,19 @@ describe("registerStatePaths", () => {
     ]);
   });
 
+  it("selects the register item file that holds the transitioned status", () => {
+    repo = setup();
+    const ticketRel = `${REGISTER_REL}/pjr-ab12-topic.md`;
+    // 状態遷移の書き込み先は個票 frontmatter（正本）。
+    writeFileSync(join(repo, ticketRel), "# PJR-AB12 item\n", "utf8");
+    // 同じディレクトリでも対象外の個票は拾わない。
+    writeFileSync(join(repo, REGISTER_REL, "pjr-cd34-other.md"), "# PJR-CD34 other\n", "utf8");
+
+    const selected = registerStatePaths(repo, paths(repo), join(repo, ticketRel));
+
+    expect(selected).toEqual([ticketRel]);
+  });
+
   it("returns an empty list when no register state changed", () => {
     repo = setup();
     writeFileSync(join(repo, "docs/ja/projects/prj-x/deliverable.md"), "# d\n", "utf8");

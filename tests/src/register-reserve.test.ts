@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -7,8 +7,9 @@ import { gitEnvironment } from "../../src/exec-worktree.js";
 import {
   type ReservationFields,
   PJR_ID_RE,
+  collectRegisterItemIds,
   generatePjrId,
-  planReservationRow,
+  planReservation,
   printCommandError,
   reservePjrIdOnIntegration,
   resolveIntegrationWorktree,
@@ -19,7 +20,8 @@ function git(cwd: string, ...args: string[]): string {
   return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
 }
 
-const PJR_INDEX_REL = "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md";
+const REGISTER_DIR_REL = "docs/ja/projects/prj-0001/controls/project-register";
+const PJR_INDEX_REL = `${REGISTER_DIR_REL}/pjr-index.md`;
 
 function buildIndex(rows: string[]): string {
   return [
@@ -69,44 +71,57 @@ function createIntegrationRepo(rows: string[] = [EXISTING_ROW]): string {
   return repo;
 }
 
-describe("planReservationRow — 予約行と割り当て ID の算出", () => {
-  it("ID を省略すると 32 文字セットの 4 桁ランダム ID を採番し、ticket セルは `-` になる", () => {
-    const result = planReservationRow({
-      content: buildIndex([EXISTING_ROW]),
+describe("planReservation — 個票ファイル名と割り当て ID の算出", () => {
+  it("ID を省略すると 32 文字セットの 4 桁ランダム ID を採番し、個票ファイル名を返す", () => {
+    const result = planReservation({
+      existingIds: ["PJR-0001"],
       fields: DEFAULT_FIELDS,
+      topic: "inventory-seed",
     });
 
     expect(result.assignedId).toMatch(PJR_ID_RE);
     expect(result.assignedId).not.toBe("PJR-0001");
-    expect(result.newRow).toContain(`| ${result.assignedId} | open | reserve title |`);
-    // 登録日は担当（Owner）の直後の列に入る。
-    expect(result.newRow).toContain("| _TODO_ | 2026-01-02 | _TODO_ | - | - |");
-    expect(result.newRow.trimEnd().endsWith("| - |")).toBe(true);
-    expect(result.newContent).toContain("| PJR-0001 | open | first |");
-    expect(result.newContent).toContain(`| ${result.assignedId} | open | reserve title |`);
+    expect(result.ticketFilename).toBe(`${result.assignedId.toLowerCase()}-inventory-seed.md`);
   });
 
   it("明示 ID が既存と競合する場合はエラーで終了する", () => {
     expect(() =>
-      planReservationRow({
-        content: buildIndex([EXISTING_ROW]),
+      planReservation({
+        existingIds: ["PJR-0001"],
         explicitId: "PJR-0001",
         fields: DEFAULT_FIELDS,
+        topic: "inventory-seed",
       }),
-    ).toThrow(/ID already exists in pjr-index.md: PJR-0001/);
+    ).toThrow(/ID already exists in the project register: PJR-0001/);
   });
 
-  it("ticketTopic を渡すと ticket セルに個票リンクを埋め、個票ファイル名を返す", () => {
-    const result = planReservationRow({
-      content: buildIndex([EXISTING_ROW]),
-      fields: DEFAULT_FIELDS,
-      ticketTopic: "inventory-seed",
-    });
+  it("不正な項目値は書き込み前にまとめて検証する", () => {
+    expect(() =>
+      planReservation({
+        existingIds: [],
+        fields: { ...DEFAULT_FIELDS, priority: "urgent" },
+        topic: "inventory-seed",
+      }),
+    ).toThrow(/Invalid priority: "urgent"/);
+  });
+});
 
-    expect(result.assignedId).toMatch(PJR_ID_RE);
-    const lower = result.assignedId.toLowerCase();
-    expect(result.ticketFilename).toBe(`${lower}-inventory-seed.md`);
-    expect(result.newRow).toContain(`| [${lower}-inventory-seed](./${lower}-inventory-seed.md) |`);
+describe("collectRegisterItemIds — 採番済み ID の収集", () => {
+  let repo: string | undefined;
+
+  afterEach(() => {
+    if (repo) rmSync(repo, { recursive: true, force: true });
+    repo = undefined;
+  });
+
+  it("個票ファイル名と未移行の pjr-index 行の双方から ID を集める", () => {
+    repo = createIntegrationRepo();
+    const registerDir = join(repo, REGISTER_DIR_REL);
+    writeFileSync(join(registerDir, "pjr-ab12-inventory-seed.md"), "# PJR-AB12 seed\n", "utf8");
+    // 個票の命名規約に合わないファイルは対象外。
+    writeFileSync(join(registerDir, "README.md"), "# readme\n", "utf8");
+
+    expect(collectRegisterItemIds(registerDir)).toEqual(["PJR-0001", "PJR-AB12"]);
   });
 });
 
@@ -208,67 +223,42 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
     repo = undefined;
   });
 
-  it("登録行だけを追記・commit し、割り当て ID を stdout へ返す", () => {
+  const reserve = (
+    repoPath: string,
+    overrides: Partial<Parameters<typeof reservePjrIdOnIntegration>[0]> = {},
+  ): { assignedId: string } =>
+    reservePjrIdOnIntegration({
+      worktreePath: repoPath,
+      registerDirRel: REGISTER_DIR_REL,
+      fields: DEFAULT_FIELDS,
+      topic: "inventory-seed",
+      makeContent: (assignedId) => `# ${assignedId} ticket body\n`,
+      dryRun: false,
+      ...overrides,
+    });
+
+  it("個票だけを作成・commit し、割り当て ID を stdout へ返す", () => {
     repo = createIntegrationRepo();
     const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-    const result = reservePjrIdOnIntegration({
-      worktreePath: repo,
-      pjrIndexRel: PJR_INDEX_REL,
-      fields: DEFAULT_FIELDS,
-      dryRun: false,
-    });
+    const id = reserve(repo).assignedId;
 
-    const id = result.assignedId;
     expect(id).toMatch(PJR_ID_RE);
-    const content = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
-    expect(content).toContain(`| ${id} | open | reserve title |`);
-    // 個票は作らない: ticket セルは `-`
-    expect(content).toContain(`| ${id} | open | reserve title | _TODO_ | todo | medium | _TODO_`);
+    const ticketRel = `${REGISTER_DIR_REL}/${id.toLowerCase()}-inventory-seed.md`;
+    expect(readFileSync(join(repo, ticketRel), "utf8")).toBe(`# ${id} ticket body\n`);
+    // 一覧（pjr-index.md）へは行を追記しない
+    expect(readFileSync(join(repo, PJR_INDEX_REL), "utf8")).not.toContain(id);
 
-    // commit は pjr-index.md のみを対象とする
+    // commit は個票のみを対象とする
     const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
       .split("\n")
       .filter(Boolean);
-    expect(committedFiles).toEqual([PJR_INDEX_REL]);
+    expect(committedFiles).toEqual([ticketRel]);
     expect(git(repo, "log", "-1", "--pretty=format:%s")).toContain(id);
 
     // 割り当て ID が stdout の最終行として返る
     const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
     expect(printed.trim().split("\n").pop()).toBe(id);
-  });
-
-  it("ticket を渡すと登録行と個票を同じ commit に含め、行に個票リンクを埋める", () => {
-    repo = createIntegrationRepo();
-    vi.spyOn(process.stdout, "write").mockReturnValue(true);
-
-    const result = reservePjrIdOnIntegration({
-      worktreePath: repo,
-      pjrIndexRel: PJR_INDEX_REL,
-      fields: DEFAULT_FIELDS,
-      dryRun: false,
-      ticket: {
-        topic: "inventory-seed",
-        makeContent: (assignedId) => `# ${assignedId} ticket body\n`,
-      },
-    });
-
-    const id = result.assignedId;
-    expect(id).toMatch(PJR_ID_RE);
-    const lower = id.toLowerCase();
-
-    const ticketRel = PJR_INDEX_REL.replace("pjr-index.md", `${lower}-inventory-seed.md`);
-    expect(readFileSync(join(repo, ticketRel), "utf8")).toBe(`# ${id} ticket body\n`);
-
-    const index = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
-    expect(index).toContain(`| [${lower}-inventory-seed](./${lower}-inventory-seed.md) |`);
-
-    // 登録行と個票が同じ commit に含まれる
-    const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
-      .split("\n")
-      .filter(Boolean)
-      .sort();
-    expect(committedFiles).toEqual([PJR_INDEX_REL, ticketRel].sort());
   });
 
   it("統合ブランチ側の他の変更を予約 commit に巻き込まない", () => {
@@ -277,73 +267,55 @@ describe("reservePjrIdOnIntegration — 統合ブランチへの予約", () => {
     writeFileSync(join(repo, "README.md"), "# test changed\n", "utf8");
     vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-    reservePjrIdOnIntegration({
-      worktreePath: repo,
-      pjrIndexRel: PJR_INDEX_REL,
-      fields: DEFAULT_FIELDS,
-      dryRun: false,
-    });
+    const id = reserve(repo).assignedId;
 
     // 予約 commit には README.md を含めない
     const committedFiles = git(repo, "show", "--name-only", "--pretty=format:", "HEAD")
       .split("\n")
       .filter(Boolean);
-    expect(committedFiles).toEqual([PJR_INDEX_REL]);
+    expect(committedFiles).toEqual([`${REGISTER_DIR_REL}/${id.toLowerCase()}-inventory-seed.md`]);
     // README.md の変更は worktree に未 commit で残る
     expect(git(repo, "status", "--porcelain=v1", "--", "README.md")).toContain("README.md");
   });
 
-  it("pjr-index.md に未 commit の変更がある場合は書き込まずにエラーで終了する", () => {
+  it("既存個票と同じ ID の予約は書き込まずにエラーで終了する", () => {
     repo = createIntegrationRepo();
-    const before = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
-    // pjr-index.md をコミットせずに変更しておく
-    writeFileSync(join(repo, PJR_INDEX_REL), before + "\n<!-- dirty -->\n", "utf8");
-    const dirty = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
+    writeFileSync(
+      join(repo, REGISTER_DIR_REL, "pjr-ab12-existing.md"),
+      "# PJR-AB12 existing\n",
+      "utf8",
+    );
 
-    expect(() =>
-      reservePjrIdOnIntegration({
-        worktreePath: repo!,
-        pjrIndexRel: PJR_INDEX_REL,
-        fields: DEFAULT_FIELDS,
-        dryRun: false,
-      }),
-    ).toThrow(/uncommitted changes to .*pjr-index\.md/);
+    expect(() => reserve(repo!, { explicitId: "PJR-AB12" })).toThrow(
+      /ID already exists in the project register: PJR-AB12/,
+    );
 
-    // ファイルは書き換えられていない（予約行が追記されていない）
-    expect(readFileSync(join(repo, PJR_INDEX_REL), "utf8")).toBe(dirty);
+    expect(existsSync(join(repo, REGISTER_DIR_REL, "pjr-ab12-inventory-seed.md"))).toBe(false);
   });
 
-  it("既存 ID と競合する予約は書き込まずにエラーで終了する", () => {
+  it("未移行の pjr-index 行と競合する予約も書き込まずにエラーで終了する", () => {
     repo = createIntegrationRepo();
     const before = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
 
-    expect(() =>
-      reservePjrIdOnIntegration({
-        worktreePath: repo!,
-        pjrIndexRel: PJR_INDEX_REL,
-        explicitId: "PJR-0001",
-        fields: DEFAULT_FIELDS,
-        dryRun: false,
-      }),
-    ).toThrow(/ID already exists in pjr-index.md: PJR-0001/);
+    expect(() => reserve(repo!, { explicitId: "PJR-0001" })).toThrow(
+      /ID already exists in the project register: PJR-0001/,
+    );
 
     expect(readFileSync(join(repo, PJR_INDEX_REL), "utf8")).toBe(before);
   });
 
   it("dry-run では書き込まず、割り当て予定 ID を表示する", () => {
     repo = createIntegrationRepo();
-    const before = readFileSync(join(repo, PJR_INDEX_REL), "utf8");
     const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-    const result = reservePjrIdOnIntegration({
-      worktreePath: repo,
-      pjrIndexRel: PJR_INDEX_REL,
-      fields: DEFAULT_FIELDS,
-      dryRun: true,
-    });
+    const result = reserve(repo, { dryRun: true });
 
     expect(result.assignedId).toMatch(PJR_ID_RE);
-    expect(readFileSync(join(repo, PJR_INDEX_REL), "utf8")).toBe(before);
+    expect(
+      existsSync(
+        join(repo!, REGISTER_DIR_REL, `${result.assignedId.toLowerCase()}-inventory-seed.md`),
+      ),
+    ).toBe(false);
     const previewed = stdout.mock.calls.some((call) => String(call[0]).includes("Would reserve"));
     expect(previewed).toBe(true);
   });

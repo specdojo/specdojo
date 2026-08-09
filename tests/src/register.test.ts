@@ -11,6 +11,7 @@ import {
   type RegisterPaths,
   extractTableHeading,
   injectViewSlots,
+  loadRegisterItems,
   parsePjrIndex,
   parseTicketFilename,
   planRenumber,
@@ -323,6 +324,132 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
         String(call[0]).includes("Would update ticket status → ready"),
       );
       expect(previewed).toBe(true);
+    });
+  });
+});
+
+describe("loadRegisterItems — 個票正本と未移行行の解決", () => {
+  const buildIndex = (rows: string[]): string =>
+    [
+      "# Project Register",
+      "",
+      "## 1. Registered Items",
+      "",
+      "<!-- prettier-ignore -->",
+      "| ID | Status | Title | Description | Type | Priority | Owner | Registered | Due | Completed | Conclusion | Ticket |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+      ...rows,
+      "",
+    ].join("\n");
+
+  const buildTicket = (id: string, extraFields: string[]): string =>
+    [
+      "---",
+      "specdojo:",
+      `  id: prj-0001:${id.toLowerCase()}-topic`,
+      "  type: project",
+      "  status: draft",
+      "  rulebook: specdojo:pjr-rulebook",
+      "  item_type: todo",
+      ...extraFields.map((line) => `  ${line}`),
+      "---",
+      "",
+      `# ${id} 個票のタイトル`,
+      "",
+      "## 1. 概要",
+      "",
+      "個票本文の説明。",
+      "",
+    ].join("\n");
+
+  const withRegisterDir = (fn: (paths: RegisterPaths, dir: string) => void): void => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-register-load-"));
+    try {
+      const paths: RegisterPaths = {
+        projectId: "prj-0001",
+        projectRegisterPath: dir,
+        pjrIndexPath: join(dir, "pjr-index.md"),
+        generatedPath: join(dir, "generated"),
+        controlsGeneratedPath: join(dir, "generated"),
+        registerDateTimeZone: "UTC",
+      };
+      fn(paths, dir);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  };
+
+  it("登録項目フィールドを持つ個票を正本として採用し、pjr-index の行より優先する", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-ab12-topic.md"),
+        buildTicket("PJR-AB12", [
+          "item_status: review",
+          "priority: high",
+          "owner: ARC",
+          'registered_on: "2026-08-01"',
+        ]),
+        "utf8",
+      );
+      writeFileSync(
+        paths.pjrIndexPath,
+        buildIndex([
+          "| PJR-AB12 | open | 旧タイトル | 旧説明 | todo | low | PO | 2026-01-01 | - | - | - | - |",
+        ]),
+        "utf8",
+      );
+
+      const views = loadRegisterItems(paths);
+
+      expect(views).toHaveLength(1);
+      expect(views[0].source).toBe("ticket");
+      expect(views[0].ticketPath).toBe(join(dir, "pjr-ab12-topic.md"));
+      expect(views[0].item.status).toBe("review");
+      expect(views[0].item.title).toBe("個票のタイトル");
+      expect(views[0].item.priority).toBe("high");
+    });
+  });
+
+  it("未移行の個票は pjr-index の行を値とし、書き込み先として個票パスを持つ", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(join(dir, "pjr-ab12-topic.md"), buildTicket("PJR-AB12", []), "utf8");
+      writeFileSync(
+        paths.pjrIndexPath,
+        buildIndex([
+          "| PJR-AB12 | waiting | 行タイトル | 行説明 | todo | low | PO | 2026-01-01 | - | - | - | [pjr-ab12-topic](./pjr-ab12-topic.md) |",
+        ]),
+        "utf8",
+      );
+
+      const views = loadRegisterItems(paths);
+
+      expect(views[0].source).toBe("index");
+      expect(views[0].item.status).toBe("waiting");
+      expect(views[0].item.title).toBe("行タイトル");
+      expect(views[0].ticketPath).toBe(join(dir, "pjr-ab12-topic.md"));
+    });
+  });
+
+  it("個票が無い行も一覧に残し、ID 昇順で返す", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-zz99-topic.md"),
+        buildTicket("PJR-ZZ99", ["item_status: open", "priority: medium"]),
+        "utf8",
+      );
+      writeFileSync(
+        paths.pjrIndexPath,
+        buildIndex([
+          "| PJR-CD34 | open | 行のみ | 説明 | todo | medium | ARC | 2026-01-01 | - | - | - | - |",
+        ]),
+        "utf8",
+      );
+
+      const views = loadRegisterItems(paths);
+
+      expect(views.map((view) => view.id)).toEqual(["PJR-CD34", "PJR-ZZ99"]);
+      expect(views[0].ticketPath).toBeUndefined();
+      expect(views[1].source).toBe("ticket");
     });
   });
 });
