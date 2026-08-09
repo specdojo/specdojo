@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-17"
-  completed_on: "2026-05-18"
+  completed_at: "2026-05-18T12:00:00Z"
   conclusion: productの小分類を見直し
 ---
 

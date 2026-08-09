@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-24"
-  completed_on: "2026-05-24"
+  completed_at: "2026-05-24T12:00:00Z"
   conclusion: start/wait/review/close/reject/defer/reopen/updateを追加
 ---
 

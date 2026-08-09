@@ -13,9 +13,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
+  registered_at: "2026-08-08T12:00:00Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-4AHZ routineでexec resumeからautoを順次実行可能にする

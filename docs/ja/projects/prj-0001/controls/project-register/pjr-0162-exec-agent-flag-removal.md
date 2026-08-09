@@ -10,7 +10,7 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
   conclusion: 旧agent指定フラグ(--cmd/--agent-cmd/--edit-agent/--review-agent)を物理撤去。exec run/resume/worktree agentをnickname(--by/--edit-by/--review-by/--auto)一本化。全878テスト成功を確認。
 ---
 

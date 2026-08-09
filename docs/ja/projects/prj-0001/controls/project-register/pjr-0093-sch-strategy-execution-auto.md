@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-07"
-  completed_on: "2026-06-03"
+  completed_at: "2026-06-03T12:00:00Z"
   conclusion: manual/autoではなくhuman/agentに変更
 ---
 

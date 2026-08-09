@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-08-05"
+  completed_at: "2026-08-05T12:00:00Z"
   conclusion: content系schema（guide/reference/philosophy）をdocs/ja/specdojo/schemas/v1へ言語別に分離し、.remarkrc.yamlで言語別に適用済み。英語版schemaはdocs/en立ち上げ時に別途対応
 ---
 

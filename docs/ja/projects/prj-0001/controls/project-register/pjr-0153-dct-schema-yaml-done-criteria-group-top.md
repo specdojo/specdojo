@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-04"
+  completed_at: "2026-08-04T12:00:00Z"
   conclusion: 既存dctは全件で成果物ごとにdone_criteriaを個別記述しており、group/topレベルの共通デフォルトは設計方針（成果物内容に即した検証可能な条件）と逆行するため見送り。dct-data-flow.yaml側の重複はdone_criteriaの個別化で解消済み
 ---
 

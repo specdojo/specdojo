@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
+  registered_at: "2026-08-08T06:44:02Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
   conclusion: stripTerminalControlSequences(src/exec-shared.ts)を追加し、sanitizeRegisterConclusion・checkpoint失敗メッセージ・block_reason書き出しの3箇所でANSIエスケープコード等を除去。実装レビューで正規表現に生の制御バイトが直接埋め込まれgitがバイナリ扱いする不備を発見し、\\uXXXXエスケープ表記へ修正済み。
 ---
 

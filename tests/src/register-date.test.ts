@@ -1,7 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   formatDateInTimeZone,
+  formatUtcTimestamp,
+  normalizeRegisterTimestamp,
+  nowUtcTimestamp,
+  REGISTER_TIMESTAMP_RE,
+  registerDateFromTimestamp,
   resolveRegisterDateTimeZone,
+  timestampFromDateInTimeZone,
   todayInTimeZone,
 } from "../../src/register-date.js";
 import type { SpecDojoConfig } from "../../src/specdojo-config.js";
@@ -101,5 +107,114 @@ describe("resolveRegisterDateTimeZone", () => {
 
   it("空白のみの設定値は既定値 UTC へフォールバックする", () => {
     expect(resolveRegisterDateTimeZone(makeConfig("   "), "prj-0001")).toBe("UTC");
+  });
+});
+
+describe("formatUtcTimestamp / nowUtcTimestamp", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("UTC の RFC 3339・秒精度へ整形し、ミリ秒を切り捨てる", () => {
+    expect(formatUtcTimestamp(new Date("2026-08-09T14:08:51.987Z"))).toBe("2026-08-09T14:08:51Z");
+  });
+
+  it("不正な Date は文脈付きエラーで失敗する", () => {
+    expect(() => formatUtcTimestamp(new Date("not-a-date"))).toThrow(
+      /Cannot format an invalid Date as a register timestamp/,
+    );
+  });
+
+  it("現在時刻を保存書式（秒精度・UTC）で返す", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-09T14:08:51.500Z"));
+
+    expect(nowUtcTimestamp()).toBe("2026-08-09T14:08:51Z");
+    expect(REGISTER_TIMESTAMP_RE.test(nowUtcTimestamp())).toBe(true);
+  });
+});
+
+describe("normalizeRegisterTimestamp", () => {
+  it("オフセット付き RFC 3339 を UTC へ正規化する", () => {
+    expect(normalizeRegisterTimestamp("2026-08-09T23:08:51+09:00", "registered")).toBe(
+      "2026-08-09T14:08:51Z",
+    );
+  });
+
+  it("UTC 表記はそのまま秒精度で受け取る", () => {
+    expect(normalizeRegisterTimestamp("2026-08-09T14:08:51Z", "registered")).toBe(
+      "2026-08-09T14:08:51Z",
+    );
+  });
+
+  it("秒未満の精度は切り捨てる", () => {
+    expect(normalizeRegisterTimestamp("2026-08-09T14:08:51.987Z", "completed")).toBe(
+      "2026-08-09T14:08:51Z",
+    );
+  });
+
+  it("タイムゾーンを含まない表記は、解釈が実行環境に依存するため拒否する", () => {
+    expect(() => normalizeRegisterTimestamp("2026-08-09T14:08:51", "registered")).toThrow(
+      /Invalid registered: "2026-08-09T14:08:51"\. Must be an RFC 3339 date-time with a time zone/,
+    );
+  });
+
+  it("日付のみの指定は拒否し、受け付ける書式を例示する", () => {
+    expect(() => normalizeRegisterTimestamp("2026-08-09", "completed")).toThrow(
+      /2026-08-09T23:08:51\+09:00/,
+    );
+  });
+});
+
+describe("registerDateFromTimestamp", () => {
+  it("同じ瞬間でも表示タイムゾーンにより暦日が変わる", () => {
+    expect(registerDateFromTimestamp("2026-08-09T15:30:00Z", "UTC")).toBe("2026-08-09");
+    expect(registerDateFromTimestamp("2026-08-09T15:30:00Z", "Asia/Tokyo")).toBe("2026-08-10");
+  });
+
+  it("保存書式でない値は文脈付きエラーで失敗する", () => {
+    expect(() => registerDateFromTimestamp("not-a-timestamp", "UTC")).toThrow(
+      /Invalid register timestamp: "not-a-timestamp"/,
+    );
+  });
+});
+
+describe("timestampFromDateInTimeZone", () => {
+  it("既定では暦日のプロジェクトタイムゾーン 21:00 を UTC へ変換する", () => {
+    expect(timestampFromDateInTimeZone("2026-08-09", "UTC")).toBe("2026-08-09T21:00:00Z");
+    expect(timestampFromDateInTimeZone("2026-08-09", "Asia/Tokyo")).toBe("2026-08-09T12:00:00Z");
+  });
+
+  it("夏時間のあるタイムゾーンでも、その日のオフセットで変換する", () => {
+    // America/New_York は 8 月が -04:00、1 月が -05:00。
+    expect(timestampFromDateInTimeZone("2026-08-09", "America/New_York")).toBe(
+      "2026-08-10T01:00:00Z",
+    );
+    expect(timestampFromDateInTimeZone("2026-01-09", "America/New_York")).toBe(
+      "2026-01-10T02:00:00Z",
+    );
+  });
+
+  it("変換した日時から暦日へ戻すと元の日付に一致する", () => {
+    for (const timeZone of ["UTC", "Asia/Tokyo", "America/New_York"]) {
+      const timestamp = timestampFromDateInTimeZone("2026-03-08", timeZone);
+
+      expect(registerDateFromTimestamp(timestamp, timeZone)).toBe("2026-03-08");
+    }
+  });
+
+  it("時刻を明示した場合はその壁時計時刻で変換する", () => {
+    expect(timestampFromDateInTimeZone("2026-08-09", "Asia/Tokyo", "00:00:00")).toBe(
+      "2026-08-08T15:00:00Z",
+    );
+  });
+
+  it("日付・時刻の書式が不正な場合は文脈付きエラーで失敗する", () => {
+    expect(() => timestampFromDateInTimeZone("2026/08/09", "UTC")).toThrow(
+      /Invalid register date: "2026\/08\/09"\. Must be YYYY-MM-DD/,
+    );
+    expect(() => timestampFromDateInTimeZone("2026-08-09", "UTC", "21:00")).toThrow(
+      /Invalid time of day: "21:00"\. Must be HH:MM:SS/,
+    );
   });
 });

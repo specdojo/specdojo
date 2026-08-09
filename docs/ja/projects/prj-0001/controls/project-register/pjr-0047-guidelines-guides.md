@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-19"
-  completed_on: "2026-05-19"
+  completed_at: "2026-05-19T12:00:00Z"
   conclusion: guidelines/ を guides/ にリネームし全参照を更新
 ---
 

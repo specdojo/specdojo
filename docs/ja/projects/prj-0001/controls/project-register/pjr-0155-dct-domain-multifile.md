@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-06"
+  completed_at: "2026-08-06T12:00:00Z"
   conclusion: catalog buildで同一domainの複数dctファイルをファイル名昇順でマージする機能を実装。dct.schema.yaml・dct-rulebook（物理分割の命名/ID規約とテンプレート分割）を更新し、tests/src/catalog-merge.test.ts等を追加。全テスト通過。
 ---
 

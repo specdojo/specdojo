@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-07-31"
-  completed_on: "2026-07-24"
+  completed_at: "2026-07-24T12:00:00Z"
   conclusion: pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認
 ---
 

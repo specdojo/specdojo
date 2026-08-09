@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-07"
+  completed_at: "2026-08-07T12:00:00Z"
   conclusion: 生成系動詞を整理し破壊的リネームを実施。exec build→exec refresh、catalog generate→deliverable scaffold(独立サブコマンド)へ改名し、schedule buildは据え置き。用語標準をguideへ明文化、コード・lefthook・docs・tests・schemaを更新、旧名はエラー化。全819テスト成功。オーケストレーターSSOT+4ラッパーも同期済み。
 ---
 

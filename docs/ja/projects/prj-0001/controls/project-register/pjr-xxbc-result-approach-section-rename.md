@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: low
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-08T23:29:02Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:55:22Z"
   conclusion: xer-template.md 第4章を「進め方と実践の型の適用」へ改称し、本文も両者を求める記述へ調整。plan テンプレート9ファイル26箇所とテスト3箇所を追随、旧名称の残存0件
 ---
 

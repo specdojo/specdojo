@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-07"
-  completed_on: "2026-06-02"
+  completed_at: "2026-06-02T12:00:00Z"
   conclusion: .remarkrc.yamlでのschema適用優先順も含め修正
 ---
 

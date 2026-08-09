@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: high
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T02:12:43Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T12:03:32Z"
   conclusion: 8件の分割先すべてが完了し、個票frontmatterを唯一の正本とする移行が完了した。
 ---
 

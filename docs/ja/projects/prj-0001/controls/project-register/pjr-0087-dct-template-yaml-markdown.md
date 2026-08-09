@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-31"
-  completed_on: "2026-07-23"
+  completed_at: "2026-07-23T12:00:00Z"
   conclusion: yaml-pages の dct テンプレ表示ページを catalog build と同じ表形式（成果物表＋完了条件）で描画する実装を追加（コミットd8e1b346）
 ---
 

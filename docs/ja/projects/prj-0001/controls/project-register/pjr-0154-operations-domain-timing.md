@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: PO
   due_on: "2026-08-31"
-  completed_on: "2026-08-04"
+  completed_at: "2026-08-04T12:00:00Z"
   conclusion: シビックテックサービスの運用設計（090-operations相当）はprj-0001の対象外とし、代表試行（SC-01〜SC-03）確認後の後続プロジェクトで検討する
 ---
 

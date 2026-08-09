@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-05-31"
-  completed_on: "2026-07-22"
+  completed_at: "2026-07-22T12:00:00Z"
   conclusion: schemaチェックもtestに追加
 ---
 

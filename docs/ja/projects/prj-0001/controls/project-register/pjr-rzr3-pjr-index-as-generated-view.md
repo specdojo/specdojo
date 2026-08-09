@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: high
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:24:53Z"
 ---
 
 # PJR-RZR3 pjr-index を generated 配下の生成ビューへ移す

@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-14"
-  completed_on: "2026-06-21"
+  completed_at: "2026-06-21T12:00:00Z"
   conclusion: idや参考資料の参照を見直し
 ---
 

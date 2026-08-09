@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-07"
+  completed_at: "2026-08-07T12:00:00Z"
   conclusion: 多言語IDは同一論理ID＋言語スコープ解決に決定し、doc-index を言語スコープ対応に実装。標準へ反映済み。
 ---
 

@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
   conclusion: 自動レビューパスは任意導入(オプトイン)、対象はedit区分に限定、否時は既存register waitへ差し戻し、完了条件節をdone_criteria相当として活用する方針。実装は別途todo化する。
 ---
 

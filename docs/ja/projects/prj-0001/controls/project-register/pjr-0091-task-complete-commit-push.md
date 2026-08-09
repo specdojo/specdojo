@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-05"
-  completed_on: "2026-07-22"
+  completed_at: "2026-07-22T12:00:00Z"
   conclusion: complete後にcommit, pushを実行する運用で当面実行
 ---
 

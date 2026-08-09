@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-14"
-  completed_on: "2026-06-13"
+  completed_at: "2026-06-13T12:00:00Z"
   conclusion: "*-instruction.mdを廃止し、rulebook、標準、Skill、サイドバー、関連文書からinstruction参照を削除"
 ---
 

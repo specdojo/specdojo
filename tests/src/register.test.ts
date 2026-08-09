@@ -73,9 +73,9 @@ const DEFAULT_ADD_FIELDS: RegisterAddFields = {
   priority: "medium",
   status: "open",
   owner: "_TODO_",
-  registered: "2026-08-09",
+  registeredAt: "2026-08-09T12:00:00Z",
   due: "_TODO_",
-  completed: "-",
+  completedAt: "-",
   conclusion: "-",
 };
 
@@ -142,19 +142,19 @@ describe("register add — pjr テンプレート frontmatter スキーマ適合
 
 describe("parsePjrIndex — 章番号アンカーの言語非依存", () => {
   it("見出し文言が英語でも章 1 のテーブルを解釈する", () => {
-    const items = parsePjrIndex(EN_PJR_INDEX);
+    const items = parsePjrIndex(EN_PJR_INDEX, "UTC");
 
     expect(items).toHaveLength(1);
     expect(items[0].id).toBe("PJR-0001");
     expect(items[0].status).toBe("open");
     expect(items[0].owner).toBe("ARC");
-    // 登録日列（Owner と Due の間）を正しい位置から読み取る。
-    expect(items[0].registered).toBe("2026-01-01");
+    // 登録日列（Owner と Due の間）を正しい位置から読み取り、暦日へ 21:00 を補って日時にする。
+    expect(items[0].registeredAt).toBe("2026-01-01T21:00:00Z");
     expect(items[0].due).toBe("2026-01-01");
   });
 
   it("章 2 以降のテーブル行は解釈しない", () => {
-    const items = parsePjrIndex(EN_PJR_INDEX);
+    const items = parsePjrIndex(EN_PJR_INDEX, "UTC");
 
     expect(items.map((it) => it.id)).toEqual(["PJR-0001"]);
   });
@@ -300,9 +300,9 @@ describe("updateTicketStatusForItem — close / reject に伴う個票 status �
     type: "todo",
     priority: "medium",
     owner: "ARC",
-    registered: "_TODO_",
+    registeredAt: "_TODO_",
     due: "-",
-    completed: "2026-07-26",
+    completedAt: "2026-07-26T12:00:00Z",
     conclusion: "-",
     ticket: ticketCell,
   });
@@ -494,7 +494,7 @@ describe("loadRegisterItems — 個票正本と未移行行の解決", () => {
           "item_status: review",
           "priority: high",
           "owner: ARC",
-          'registered_on: "2026-08-01"',
+          'registered_at: "2026-08-01T12:00:00Z"',
         ]),
         "utf8",
       );
@@ -608,7 +608,7 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         "item_status: open",
         "priority: low",
         "owner: PO",
-        'registered_on: "2026-08-02"',
+        'registered_at: "2026-08-02T15:00:00Z"',
       ]),
       "utf8",
     );
@@ -618,7 +618,7 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         "item_status: review",
         "priority: high",
         "owner: ARC",
-        'registered_on: "2026-08-01"',
+        'registered_at: "2026-08-01T12:00:00Z"',
       ]),
       "utf8",
     );

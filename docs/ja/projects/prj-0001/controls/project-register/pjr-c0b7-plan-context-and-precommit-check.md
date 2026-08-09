@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-08T22:31:55Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T10:55:22Z"
   conclusion: xep-common-conventions-template.md へ project context を based_on へ転記しない規約と、終了前に pre-commit 相当の検査を実行する規約（変更ファイル種別と検査コマンドの対応表付き）を追記。catalog validate のメッセージ改善は既存文言で要件が示されているため見送り
 ---
 

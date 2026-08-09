@@ -10,8 +10,8 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
-  completed_on: "2026-08-08"
+  registered_at: "2026-08-08T12:34:12Z"
+  completed_at: "2026-08-08T12:00:00Z"
 ---
 
 # PJR-A45T ryu-guide.md新設(kata-guide.mdからapproachの説明を分離)とサイドバー・相互参照リンク更新

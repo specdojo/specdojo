@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-05"
-  completed_on: "2026-06-02"
+  completed_at: "2026-06-02T12:00:00Z"
   conclusion: agent file含めて整備
 ---
 

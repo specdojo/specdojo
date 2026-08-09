@@ -56,7 +56,7 @@ const OPEN_FIELDS = [
   "item_status: open",
   "priority: high",
   "owner: ARC",
-  'registered_on: "2026-08-01"',
+  'registered_at: "2026-08-01T12:00:00Z"',
   'due_on: "2026-08-31"',
 ];
 
@@ -65,9 +65,9 @@ const DONE_FIELDS = [
   "item_status: done",
   "priority: high",
   "owner: ARC",
-  'registered_on: "2026-08-01"',
+  'registered_at: "2026-08-01T12:00:00Z"',
   'due_on: "2026-08-31"',
-  'completed_on: "2026-08-09"',
+  'completed_at: "2026-08-09T08:20:00Z"',
   "conclusion: 仕入れ最小ロットに合わせた",
 ];
 

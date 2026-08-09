@@ -128,7 +128,7 @@ describe("register migration", () => {
     expect(existing).toContain("既存個票にだけある詳細説明。");
     expect(existing).toContain("詳細な完了条件を保持する。");
     expect(existing).toContain("  item_status: open");
-    expect(existing).not.toContain("registered_on");
+    expect(existing).not.toContain("registered_at");
     expect(existing).not.toContain("due_on");
 
     const migrated = loadRegisterItems(paths).map((view) => view.item);
@@ -137,16 +137,17 @@ describe("register migration", () => {
       id: "PJR-AB12",
       status: "open",
       description: "一覧の短い要約。",
-      registered: "_TODO_",
+      registeredAt: "_TODO_",
       due: "_TODO_",
     });
+    // 旧一覧の日付セルは、プロジェクトタイムゾーンの 21:00 を補って UTC の日時になる。
     expect(migrated[1]).toMatchObject({
       id: "PJR-CD34",
       status: "done",
       description: "A\\|B を移行する。",
       owner: "_TODO_",
       due: "-",
-      completed: "2026-08-02",
+      completedAt: "2026-08-02T21:00:00Z",
       conclusion: "移行済み",
     });
 

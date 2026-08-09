@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-07"
+  completed_at: "2026-08-07T12:00:00Z"
   conclusion: retrofit approachとevidence_refsを実装。型/CLI/schema/edit・review planテンプレート整備、data-flow全10成果物へ適用、関連ガイド反映、125テスト通過
 ---
 

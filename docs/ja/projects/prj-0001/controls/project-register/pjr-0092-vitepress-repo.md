@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-06-07"
-  completed_on: "2026-06-10"
+  completed_at: "2026-06-10T12:00:00Z"
   conclusion: .vitepressをルートに移動
 ---
 

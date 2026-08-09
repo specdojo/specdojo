@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-07-08"
-  completed_on: "2026-07-08"
+  completed_at: "2026-07-08T12:00:00Z"
   conclusion: Dockerfileを修正
 ---
 

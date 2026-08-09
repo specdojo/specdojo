@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  completed_on: "2026-08-07"
+  completed_at: "2026-08-07T12:00:00Z"
   conclusion: agent指定を --by 系（--by/--edit-by/--review-by）＋--auto へ統一。旧フラグは deprecated alias＋警告で維持し normalizeAgentFlags に集約。物理撤去は PJR-0162 で実施。
 ---
 

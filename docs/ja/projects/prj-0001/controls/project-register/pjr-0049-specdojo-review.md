@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   due_on: "2026-05-19"
-  completed_on: "2026-05-21"
+  completed_at: "2026-05-21T12:00:00Z"
   conclusion: specdojo review plan等を作成
 ---
 

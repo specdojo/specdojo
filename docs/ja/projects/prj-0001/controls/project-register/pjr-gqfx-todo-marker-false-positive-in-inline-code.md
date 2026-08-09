@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T02:12:43Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T12:16:54Z"
 ---
 
 # PJR-GQFX register close の未記入 `_TODO_` 検出がインラインコード内の文字列を誤検出する

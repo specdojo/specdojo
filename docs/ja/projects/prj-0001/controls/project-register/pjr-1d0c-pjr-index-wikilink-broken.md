@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: high
   owner: ARC
-  registered_on: "2026-08-09"
+  registered_at: "2026-08-09T11:03:44Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-09"
+  completed_at: "2026-08-09T12:42:13Z"
 ---
 
 # PJR-1D0C 個票のpart_ofとwikilinkがprj-0001:pjr-indexを参照できない

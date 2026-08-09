@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
+  registered_at: "2026-08-08T04:43:19Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
   conclusion: exec-shared.tsにescapeMarkdownInlineを追加し、register add/updateの自由記述列(title/description)由来のアンダースコア/アスタリスクを含むASCIIトークンをcode span化してplan生成時のMD049誤解釈を防止。再実行(--worktree)で正常完了を確認。
 ---
 

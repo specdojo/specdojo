@@ -10,9 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   owner: ARC
-  registered_on: "2026-08-08"
+  registered_at: "2026-08-08T09:57:44Z"
   due_on: "2026-08-31"
-  completed_on: "2026-08-08"
+  completed_at: "2026-08-08T12:00:00Z"
   conclusion: printCommandErrorをstderr出力へ変更し、printWhereErrorと統合(削除)。register系全サブコマンドのエラー出力がstderrに統一された。内部呼び出し元はstdio inherit+終了コード判定のため影響なし。command-referenceへ反映。
 ---
 

@@ -46,7 +46,7 @@ Project Register Documentation Rules
 
 ## 3. 推奨 Frontmatter 項目
 
-個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
+個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
 | 項目            | 説明                                         | 必須 |
 | --------------- | -------------------------------------------- | ---- |
@@ -59,14 +59,21 @@ Project Register Documentation Rules
 | `item_status`   | 登録項目の処理状態                           | ○    |
 | `priority`      | 対応優先度                                   | ○    |
 | `owner`         | 主担当者または役割                           | 任意 |
-| `registered_on` | 起票日                                       | 任意 |
+| `registered_at` | 起票日時                                     | 任意 |
 | `due_on`        | 対応期限または判断期限                       | 任意 |
-| `completed_on`  | 完了・却下・決定日                           | 条件 |
+| `completed_at`  | 完了・却下・決定日時                         | 条件 |
 | `conclusion`    | 終端時の結論要約                             | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
+
+### 3.1. 日時と日付の使い分け
+
+- 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。
+- 期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`due_on` は `YYYY-MM-DD` のまま保持する。
+- 一覧・派生ビューの「登録日」「完了日」は、保存した日時をプロジェクトの登録日タイムゾーンへ変換して導出する表示値であり、個票へ日付として重複保存しない。
+- 日時は register コマンドが記録する。手書きで日時を入力する場合も、タイムゾーンを含む値から UTC へ変換した値だけを保存する。
 
 ## 4. 本文構成（標準テンプレ）
 
@@ -79,7 +86,7 @@ Project Register Documentation Rules
 
 - H1 は `PJR-XXXX <タイトル>` 形式とする。
 - type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。
-- ID、分類、処理状態、優先度、担当、期限、完了日は本文へ重複記載せず、Frontmatter を参照する。
+- ID、分類、処理状態、優先度、担当、期限、完了日時は本文へ重複記載せず、Frontmatter を参照する。
 - 終端前に未確定の結果・結論がある場合は、`-` または共通ラベルを用い、確定済みの記述と混在させない。
 
 ### 4.2. 生成一覧と派生ビュー
@@ -94,6 +101,7 @@ Project Register Documentation Rules
 
 - 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。
 - タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。
+- 登録日と完了日の列は、`registered_at` / `completed_at` をプロジェクトの登録日タイムゾーンへ変換した暦日として生成する。
 - 生成ビューに独自の詳細情報や手作業の修正を追加しない。修正は個票に行い、`register build` を再実行する。
 
 ## 5. 記述ガイド
@@ -131,6 +139,7 @@ Project Register Documentation Rules
 - 一覧と個票の同期、一覧から個票への書き戻し、または個票を作るかどうかの分離基準を設けない。
 - 構造化フィールドを個票本文や別の正本へ重複管理しない。
 - `type` / `item_status` / `priority` に schema 未定義の値を使用しない。
+- `registered_at` / `completed_at` に、UTC 以外のオフセットやタイムゾーンを伴わない値、暦日だけの値を保存しない。
 - 個票の文書 ID から `<topic>` を省略したり、ファイル名と異なるローカル ID を使用したりしない。
 - type 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
 - Git 管理を前提とする場合に、手書きの更新履歴を追加しない。
