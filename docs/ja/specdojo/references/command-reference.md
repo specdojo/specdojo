@@ -135,6 +135,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `register defer`    | 項目を延期にする                             | `specdojo register defer --project prj-0001 --id PJR-001`                   |
 | `register reopen`   | 終了済み項目を再オープンする                 | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
 | `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す   | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register history`  | 個票の Git 履歴から台帳の変更を再構成する    | `specdojo register history --project prj-0001 --since 2026-08-01`           |
 
 `register add` は ID を省略すると自動採番し、現在の作業ツリーに type 別の個票を作成します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -146,8 +147,16 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | `--registered <date>` | 登録日（`YYYY-MM-DD`）。省略時は `run.register_date_timezone`（既定 UTC）での当日 | `add`              |
 | `--topic <slug>`      | 個票ファイル名の論点部分を指定する                                                | `add`              |
 | `--dry-run`           | 書き込みを行わず変更対象を表示する                                                | `renumber` / `add` |
+| `--since <date>`      | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                                  | `history`          |
+| `--until <date>`      | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                                  | `history`          |
+| `--id <PJR-ID...>`    | 出力する項目を限定する（空白・カンマ区切りで複数可）                              | `history`          |
+| `--status-only`       | 追加・削除・状態遷移だけを出力する                                                | `history`          |
+| `--limit <count>`     | 走査するコミット数の上限                                                          | `history`          |
+| `--json`              | イベントを JSON で出力する                                                        | `history`          |
 
 `register add` は個票 Frontmatter の `registered_on`（起票日、`YYYY-MM-DD`）を自動記入します。日付は OS / コンテナの `TZ` 環境変数に依存せず、config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）で明示的に解決します。`register close` / `register reject` の `completed_on` も同じ基準で導出されます。
+
+`register history` は登録簿ディレクトリの Git 履歴を走査し、個票単位の追加（`added`）・変更（`updated`）・削除（`removed`）を古い順に出力します。比較対象は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）で、一覧の列に現れない変更は出力しません。一覧そのものは `generated/` 配下の非追跡な生成物のため、履歴の入力にはなりません。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 

@@ -9,7 +9,7 @@ specdojo:
 
 Register Operation Guide
 
-プロジェクト登録簿の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の作成、完了時の記録、派生ビューの扱い、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) を、コマンドの一覧は [CLIコマンドリファレンス](../references/command-reference.md) を正本とします。
+プロジェクト登録簿の使い方を説明します。登録の判断、type の選び方、状態遷移、個票の作成、完了時の記録、派生ビューの扱い、台帳の変更の追跡、agent 実行・定期実行との連携を扱います。登録簿の記述ルール（構造・列・値の定義）は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) を、コマンドの一覧は [CLIコマンドリファレンス](../references/command-reference.md) を正本とします。
 
 **対象読者**
 
@@ -17,7 +17,7 @@ Register Operation Guide
 
 **この文書で分かること**
 
-- 登録簿へ記録する判断基準、type と状態遷移、個票・派生ビュー、agent・routine との連携
+- 登録簿へ記録する判断基準、type と状態遷移、個票・派生ビュー、台帳の変更履歴の追い方、agent・routine との連携
 
 **次に読む文書**
 
@@ -202,7 +202,48 @@ specdojo register build --project <project-id>
 
 派生ビューの見出し（`台帳ビュー`、`リスク登録簿` など）や再生成注記は、各派生ビューの雛形（`pjr-views-template.md`、`pm-<name>-template.md`）が持つため、そちらを修正して再生成します。
 
-### 2.5. 承認フローと承認者
+### 2.5. 台帳の変更を追う
+
+個票 Frontmatter が正本になったため、台帳全体の変更を1ファイル（旧 `pjr-index.md`）の差分で追うことはできません。台帳の変化は、目的別に次の手段で追います。
+
+| 目的                           | 手段                                 | 操作                                                                         |
+| ------------------------------ | ------------------------------------ | ---------------------------------------------------------------------------- |
+| いま台帳がどうなっているか     | 生成された一覧・派生ビュー           | `register build` で生成した `generated/pjr-index.md` を読む                  |
+| ある期間に何が起きたか（監査） | `register history`                   | `specdojo register history --project <project-id> --since <date>`            |
+| 変更の妥当性をレビューする     | pull request の個票 Frontmatter 差分 | PR の Files changed で `project-register/pjr-*.md` の Frontmatter を確認する |
+| 1つの項目の経緯を追う          | 個票の Git 履歴                      | `git log -p -- <個票パス>`                                                   |
+
+`register history` は登録簿ディレクトリの Git 履歴から、項目単位の変更を古い順に再構成します。比較する項目は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）で、表を正本にしていたときの一覧差分と同じ粒度です。
+
+```bash
+# 期間を指定して台帳の変化を一覧する
+specdojo register history --project <project-id> --since 2026-08-01 --until 2026-08-31
+
+# 追加・削除・状態遷移だけに絞る（月次レビューや監査向け）
+specdojo register history --project <project-id> --since 2026-08-01 --status-only
+
+# 特定の項目の経緯だけを追う
+specdojo register history --project <project-id> --id PJR-0012 PJR-0013
+
+# 集計・証跡化する場合は JSON で出力する
+specdojo register history --project <project-id> --since 2026-08-01 --json
+```
+
+出力は「日付・短縮コミット・項目 ID・種別（`added` / `updated` / `removed`）・変更内容・コミット件名」を並べた 1 行 1 イベントです。
+
+```text
+2026-08-01  abc1234  PJR-0012  added    status=open, title=在庫初期データの登録, type=todo, priority=high, owner=PM  # docs(prj-0001): add PJR-0012
+2026-08-09  def5678  PJR-0012  updated  status: open -> done; completed: - -> 2026-08-09  # docs(prj-0001): close PJR-0012
+```
+
+- 一覧の列に現れない変更（本文の推敲、個票 `status` の昇格など）はイベントになりません。個票の全差分が必要な場合は `git log -p` を使います。
+- `--status-only` は追加・削除・状態遷移だけを残し、変更内容も遷移に関わる項目（`status` / `type` / `completed` / `conclusion`）へ絞ります。
+- `renumber` による ID 付け替えは、`id` の変更を含む `updated` イベントとして現れます。
+- 監査で「ある期間の登録項目の追加・状態遷移」を再構成する場合は、`--since` と `--until` で期間を区切り、`--status-only` を付けて実行します。誰がいつ変更したかはコミット（短縮 SHA）から辿ります。
+- 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビューと履歴の対象は常に個票です。
+- 個票へ移行する前（`pjr-index.md` の表が正本だった期間）の履歴は、削除済みの一覧ファイルの履歴に残ります。`git log -p --follow -- <登録簿ディレクトリ>/pjr-index.md` で参照します。
+
+### 2.6. 承認フローと承認者
 
 承認を要する type（`change-request` / `decision` / `risk` / `question` / `issue`）について、承認の種類・状態遷移・承認方式・承認者を次のとおり運用します。
 
