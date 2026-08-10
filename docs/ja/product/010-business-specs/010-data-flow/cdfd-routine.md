@@ -35,7 +35,7 @@ specdojo:
 | `P-05-05` | exec-cycle 順次制御 | 再開、参照・状態再計算、Ready task 実行を一つの排他的な周期として順序保証する。 | PM、運用担当 | action kind が `exec-cycle` である | deferred limit task、成果物索引、Schedule・event、strategy、parallel、loop、max rounds | step 別結果、更新された Ready、task 実行結果 | Schedule・Ready、実行 event、成果物索引、task plan / result | 条件付き |
 | `P-05-06` | Job Run 生成 | 反復可能な Job Definition と実行時点の入力から、冪等に識別できる実行単位を作る。 | PM、運用担当 | action kind が `job` である | Job Definition、routine inputs、scheduled time、timezone、直前 checkpoint | Job Run、実行 plan、解決済み入力、重複完了判定 | Job Definition、Job Run 履歴、Job 実行状態、実行 plan | 条件付き |
 | `P-05-07` | Job Run 結果反映 | Job Run の作業結果を監査可能にし、成功した反復位置を次回入力へ引き継ぐ。 | 実行担当、運用担当 | 未完了の Job Run と plan が生成または再試行された | Job Run、実行 plan、実行担当、作業結果、result | attempt と `succeeded` / `failed`、完了 result、条件を満たす checkpoint | Job Run 履歴、Job 実行状態、実行 plan / result | 条件付き。完了済み重複は再実行しない |
-| `P-05-08` | routine 結果反映 | 委譲結果を次回 due 判定と運用確認に使える一つの結果へまとめる。 | PM、運用担当 | 選択した routine の委譲処理が戻った | `success` / `failure` / `skipped`、項目別結果または cycle step 別結果 | `last_result`、実行件数、失敗件数、継続判断材料 | routine 実行状態、実行記録 | 必須 |
+| `P-05-08` | routine 結果反映 | 委譲結果を次回 due 判定と運用確認に使える一つの結果へまとめる。 | PM、運用担当 | 選択した routine の委譲処理が戻った | `success` / `failure` / `skipped`、項目別結果、cycle step 別結果、または Job Run 集約結果 | `last_result`、実行件数、失敗件数、継続判断材料 | routine 実行状態、実行記録 | 必須 |
 
 ### 2.1. 定期運用定義と due 判定
 
