@@ -32,15 +32,19 @@ pipeline-stateを永続化し、reporter失敗時はexecutorを再実行せずre
 
 | No  | 作業                                        | 担当 | 状態 | メモ                       |
 | --- | ------------------------------------------- | ---- | ---- | -------------------------- |
-| 1   | pipeline state machine と保存形式を実装する | ARC  | open | ステージ境界で更新する     |
-| 2   | block event に失敗ステージ情報を追加する    | ARC  | open | 原因と再開位置を保持する   |
-| 3   | ステージ単位の resume を実装する            | ARC  | open | 有効な成果物を再利用する   |
-| 4   | ステージ別 agent 指定 CLI を追加する        | ARC  | open | 自動選択も維持する         |
-| 5   | claim、統合、complete の冪等性を検証する    | ARC  | open | Schedule task は分割しない |
+| 1   | pipeline state machine と保存形式を実装する | ARC  | done | ステージ境界で更新する     |
+| 2   | block event に失敗ステージ情報を追加する    | ARC  | done | 原因と再開位置を保持する   |
+| 3   | ステージ単位の resume を実装する            | ARC  | done | 有効な成果物を再利用する   |
+| 4   | ステージ別 agent 指定 CLI を追加する        | ARC  | done | 自動選択も維持する         |
+| 5   | claim、統合、complete の冪等性を検証する    | ARC  | done | Schedule task は分割しない |
 
 ## 4. 対応結果
 
--
+- run 単位の `exec/evidence/<task>/<run>/pipeline-state.json` と JSON Schema を追加し、executor / reporter の状態、actor、試行回数、開始・終了時刻、evidence / result 参照を各ステージ境界で原子的に保存するようにした。
+- pipeline の block event に `pipeline_stage`、`evidence_ref`、`pipeline_state_ref`、`pipeline_run_id` を記録し、失敗した stage と再開に必要な run-scoped artifact を保持するようにした。
+- `exec resume --task` が明示された blocked reporter task を同じ task claim のまま再開し、pipeline state と succeeded executor evidence の task ID / run ID が一致する場合だけ executor を省略するようにした。不整合・欠損時は新しい executor run へ安全にフォールバックする。
+- `exec run` / `exec resume` / `exec cycle` に `--executor-by` と `--reporter-by` を追加した。指定 member の `stage_role` を検証し、未指定 stage は従来どおり要件と優先度で自動選択する。
+- pipeline state、evidence 再利用条件、stage 別 CLI、reporter 成否、block metadata を単体・in-place 統合テストで固定した。task の claim、worktree 統合、complete は既存の task 単位 lifecycle を維持し、reporter resume では新しい claim を作らない。
 
 ## 5. 関連ドキュメント
 

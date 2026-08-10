@@ -133,4 +133,23 @@ describe("resolveInPlaceCommand actor derivation", () => {
       ),
     ).toThrow(/stage_role: executor/);
   });
+
+  it("uses --executor-by for a pipeline task and rejects it for a legacy task", () => {
+    const pipelineTask = buildTask({
+      agent_pipeline: {
+        stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+      },
+    });
+
+    expect(
+      resolveInPlaceCommand(pipelineTask, buildRoster(), {
+        executorBy: "executor",
+      } as RunOpts),
+    ).toEqual({ command: "run executor", actor: "executor" });
+    expect(() =>
+      resolveInPlaceCommand(buildTask(), buildRoster(), {
+        executorBy: "executor",
+      } as RunOpts),
+    ).toThrow(/require an agent_pipeline task/);
+  });
 });

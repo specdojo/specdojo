@@ -1,0 +1,52 @@
+# pipeline-state.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo executor/reporter pipeline state schema"
+description: >
+  Run-scoped recovery checkpoint persisted by the runner at executor and reporter stage
+  boundaries.
+type: object
+additionalProperties: false
+required: [schema_version, task_id, run_id, updated_at, stages]
+properties:
+  schema_version:
+    const: 1
+  task_id:
+    type: string
+    minLength: 1
+  run_id:
+    type: string
+    minLength: 1
+  updated_at:
+    type: string
+    format: date-time
+  stages:
+    type: object
+    additionalProperties: false
+    required: [executor, reporter]
+    properties:
+      executor:
+        $ref: "#/$defs/stage"
+      reporter:
+        $ref: "#/$defs/stage"
+$defs:
+  stage:
+    type: object
+    additionalProperties: false
+    required: [status, actor, attempts, started_at, completed_at, artifact_ref]
+    properties:
+      status:
+        type: string
+        enum: [pending, running, succeeded, failed, rate_limited]
+      actor:
+        type: [string, "null"]
+      attempts:
+        type: integer
+        minimum: 0
+      started_at:
+        type: [string, "null"]
+        format: date-time
+      completed_at:
+        type: [string, "null"]
+        format: date-time
+      artifact_ref:
+        type: [string, "null"]

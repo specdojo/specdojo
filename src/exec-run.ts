@@ -134,6 +134,14 @@ import {
 } from "./exec-strategy.js";
 import { recordExecutorEvidence } from "./exec-evidence.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
+import {
+  createPipelineState,
+  loadPipelineResumeCheckpoint,
+  pipelineStateLocation,
+  updatePipelineStage,
+  writePipelineState,
+  type PipelineState,
+} from "./exec-pipeline-state.js";
 
 type StrategyPhase = {
   id: string;
@@ -185,6 +193,8 @@ export type RunOpts = {
   archiveOnSuccess?: boolean;
   editBy?: string;
   reviewBy?: string;
+  executorBy?: string;
+  reporterBy?: string;
   loop?: boolean;
   maxRounds?: string;
   parallel?: string;
@@ -201,6 +211,11 @@ type RunResult = "success" | "rate_limit" | "failure";
 export type ModeAgentOverrides = {
   edit?: string;
   review?: string;
+};
+
+export type StageAgentOverrides = {
+  executor?: string;
+  reporter?: string;
 };
 
 // Outcome of resolving a per-task agent override.
@@ -277,6 +292,8 @@ type PreparedTask = {
   resultScaffold?: Record<string, unknown>;
   priorLimitAttempts?: number;
   pipelineRunId?: string;
+  pipelineResumeStage?: AgentStageRole;
+  pipelineStateRef?: string;
   reporterCandidates?: AgentRunCandidate[];
 };
 
@@ -717,9 +734,32 @@ function resolveReporterAgentCandidates(
   roster: MemberRoster | null,
   execDefaults: ExecDefaultsConfig,
   busyActors?: ReadonlySet<string>,
+  nicknameOverride?: string,
 ): AgentRunCandidate[] {
   const requirements = reporterRequirements(task);
   if (!requirements) return [];
+  if (nicknameOverride) {
+    const resolution = resolveAgentOverride(
+      task.mode ?? "edit",
+      nicknameOverride,
+      {},
+      roster,
+      execDefaults,
+      "reporter",
+    );
+    if (resolution.kind === "error") {
+      throw new Error(resolution.message.replace(/^--by/, "--reporter-by"));
+    }
+    if (resolution.kind === "command") {
+      return [
+        {
+          command: resolution.command,
+          actor: resolution.actor,
+          provider: resolution.provider,
+        },
+      ];
+    }
+  }
   const candidates: AgentRunCandidate[] = [];
   for (const member of selectCandidates(
     requirements,
@@ -1000,6 +1040,7 @@ async function prepareSingleTask(
   phaseSetSuffixToId: Map<string, string>,
   agentNicknameOverride: string | undefined,
   modeAgentOverrides: ModeAgentOverrides,
+  stageAgentOverrides: StageAgentOverrides,
   actorOverride: string | undefined,
   dryRun: boolean,
   skipClaim: boolean,
@@ -1007,9 +1048,15 @@ async function prepareSingleTask(
   planGenPaths: PlanGenPaths,
   execDefaults: ExecDefaultsConfig,
   hasProviderCapacity?: (provider?: AgentProvider) => boolean,
+  pipelineResume?: { stage?: AgentStageRole; stateRef?: string },
 ): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ""}  [${mode}]\n`);
+
+  if (!task.agent_pipeline && (stageAgentOverrides.executor || stageAgentOverrides.reporter)) {
+    process.stdout.write("  --executor-by / --reporter-by require an agent_pipeline task.\n");
+    return "failure";
+  }
 
   // Mode-specific overrides (--edit-by / --review-by) let nightly batch runs route edit and
   // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
@@ -1017,7 +1064,9 @@ async function prepareSingleTask(
   // to normal auto-selection.
   const overrideResolution = resolveAgentOverride(
     mode,
-    agentNicknameOverride,
+    task.agent_pipeline
+      ? (stageAgentOverrides.executor ?? agentNicknameOverride)
+      : agentNicknameOverride,
     modeAgentOverrides,
     roster,
     execDefaults,
@@ -1128,6 +1177,7 @@ async function prepareSingleTask(
       roster,
       execDefaults,
       collectBusyActors(schedulePath),
+      stageAgentOverrides.reporter,
     );
     if (reporterCandidates.length === 0) {
       process.stdout.write(
@@ -1184,6 +1234,8 @@ async function prepareSingleTask(
       prompt,
       worktree,
       pipelineRunId,
+      pipelineResumeStage: pipelineResume?.stage,
+      pipelineStateRef: pipelineResume?.stateRef,
       reporterCandidates,
     };
   }
@@ -1289,6 +1341,8 @@ async function prepareSingleTask(
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
     pipelineRunId,
+    pipelineResumeStage: pipelineResume?.stage,
+    pipelineStateRef: pipelineResume?.stateRef,
     reporterCandidates,
   };
 }
@@ -1367,32 +1421,124 @@ async function runPreparedTask(
     ? readResultFrontmatterSnapshot(worktreeResultPath)
     : undefined;
 
-  process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
-  const executorStartedAt = new Date().toISOString();
-  const executorOutcome = await runWithRetry(
-    prepared.agentCandidates,
-    prepared.prompt,
-    execDefaults,
-    prepared.worktree.path,
-    agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
-  );
-  let result = executorOutcome.result;
-  let stderr = executorOutcome.stderr;
-  const { exitCode, stdout, attempts, limit } = executorOutcome;
+  let result: RunResult = "success";
+  let stderr = "";
+  let exitCode: number | null = 0;
+  let stdout = "";
+  let attempts = 0;
+  let limit: AgentLimitSignal | undefined;
   let executorEvidenceRef: string | undefined;
   let executorEvidence: ReturnType<typeof recordExecutorEvidence>["evidence"] | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
   let pipelineBlockReason: string | undefined;
   let reporterLimit: AgentLimitSignal | undefined;
   let reporterAttempts = 0;
-  if (prepared.pipelineRunId) {
-    const recorded = recordExecutorEvidence({
+  let pipelineState: PipelineState | undefined;
+  let pipelineStatePath: string | undefined;
+  let pipelineStateRef: string | undefined;
+  let resumeReporter = false;
+
+  if (!prepared.pipelineRunId) {
+    process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
+    const outcome = await runWithRetry(
+      prepared.agentCandidates,
+      prepared.prompt,
+      execDefaults,
+      prepared.worktree.path,
+      agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+    );
+    result = outcome.result;
+    stderr = outcome.stderr;
+    exitCode = outcome.exitCode;
+    stdout = outcome.stdout;
+    attempts = outcome.attempts;
+    limit = outcome.limit;
+  }
+
+  if (prepared.pipelineRunId && prepared.pipelineStateRef) {
+    const checkpoint = loadPipelineResumeCheckpoint({
+      worktreePath: prepared.worktree.path,
+      stateRef: prepared.pipelineStateRef,
+      taskId: prepared.task.id,
+    });
+    if (checkpoint) {
+      pipelineState = checkpoint.state;
+      pipelineStatePath = checkpoint.statePath;
+      pipelineStateRef = prepared.pipelineStateRef;
+      if (prepared.pipelineResumeStage === "reporter" && checkpoint.evidence) {
+        executorEvidence = checkpoint.evidence;
+        executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
+        resumeReporter = true;
+        process.stdout.write(
+          `  Resuming reporter from persisted executor evidence: ${executorEvidenceRef}\n`,
+        );
+      } else if (prepared.pipelineResumeStage === "reporter") {
+        process.stdout.write(
+          "  Persisted executor evidence is invalid; starting a new executor run.\n",
+        );
+        pipelineState = undefined;
+        pipelineStatePath = undefined;
+        pipelineStateRef = undefined;
+      }
+    }
+  }
+
+  if (prepared.pipelineRunId && !pipelineState) {
+    const now = new Date().toISOString();
+    const location = pipelineStateLocation({
       repoRoot,
       worktreePath: prepared.worktree.path,
       executionPath,
       taskId: prepared.task.id,
       runId: prepared.pipelineRunId,
+    });
+    pipelineState = createPipelineState({
+      taskId: prepared.task.id,
+      runId: prepared.pipelineRunId,
+      updatedAt: now,
+      executorActor: prepared.agentCandidates[0]?.actor ?? prepared.actor,
+      reporterActor: prepared.reporterCandidates?.[0]?.actor,
+    });
+    pipelineStatePath = location.path;
+    pipelineStateRef = location.ref;
+    writePipelineState(pipelineStatePath, pipelineState);
+  }
+
+  if (prepared.pipelineRunId && !resumeReporter && pipelineState && pipelineStatePath) {
+    const executorStartedAt = new Date().toISOString();
+    pipelineState = updatePipelineStage(
+      pipelineState,
+      "executor",
+      {
+        status: "running",
+        actor: prepared.agentCandidates[0]?.actor ?? prepared.actor,
+        started_at: executorStartedAt,
+        completed_at: null,
+      },
+      executorStartedAt,
+    );
+    writePipelineState(pipelineStatePath, pipelineState);
+    process.stdout.write(`  Running executor: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
+    const executorOutcome = await runWithRetry(
+      prepared.agentCandidates,
+      prepared.prompt,
+      execDefaults,
+      prepared.worktree.path,
+      agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+    );
+    result = executorOutcome.result;
+    stderr = executorOutcome.stderr;
+    exitCode = executorOutcome.exitCode;
+    stdout = executorOutcome.stdout;
+    attempts = executorOutcome.attempts;
+    limit = executorOutcome.limit;
+    const recorded = recordExecutorEvidence({
+      repoRoot,
+      worktreePath: prepared.worktree.path,
+      executionPath,
+      taskId: prepared.task.id,
+      runId: pipelineState.run_id,
       actor: prepared.actor,
       status:
         result === "success" ? "succeeded" : result === "rate_limit" ? "rate_limited" : "failed",
@@ -1407,16 +1553,49 @@ async function runPreparedTask(
       .split(sep)
       .join("/");
     executorEvidence = recorded.evidence;
+    const executorCompletedAt = new Date().toISOString();
+    pipelineState = updatePipelineStage(
+      pipelineState,
+      "executor",
+      {
+        status:
+          result === "success" ? "succeeded" : result === "rate_limit" ? "rate_limited" : "failed",
+        attempts: pipelineState.stages.executor.attempts + attempts,
+        completed_at: executorCompletedAt,
+        artifact_ref: executorEvidenceRef,
+      },
+      executorCompletedAt,
+    );
+    writePipelineState(pipelineStatePath, pipelineState);
     process.stdout.write(`  Executor evidence: ${executorEvidenceRef}\n`);
   }
 
   if (prepared.pipelineRunId && result === "success") {
     pipelineFailureStage = "reporter";
-    if (!executorEvidence || !worktreeResultPath || !prepared.reporterCandidates?.length) {
+    if (
+      !executorEvidence ||
+      !worktreeResultPath ||
+      !prepared.reporterCandidates?.length ||
+      !pipelineState ||
+      !pipelineStatePath
+    ) {
       result = "failure";
       pipelineBlockReason = "reporter stage could not start because its managed inputs are missing";
       stderr = pipelineBlockReason;
     } else {
+      const reporterStartedAt = new Date().toISOString();
+      pipelineState = updatePipelineStage(
+        pipelineState,
+        "reporter",
+        {
+          status: "running",
+          actor: prepared.reporterCandidates[0].actor ?? null,
+          started_at: reporterStartedAt,
+          completed_at: null,
+        },
+        reporterStartedAt,
+      );
+      writePipelineState(pipelineStatePath, pipelineState);
       process.stdout.write(`  Running reporter: ${prepared.reporterCandidates[0].command}\n`);
       const reporter = await runReporterWithFormatRetry({
         plan: prepared.plan,
@@ -1446,6 +1625,23 @@ async function runPreparedTask(
           process.stdout.write(
             `  Reporter complete: ${prepared.reporterCandidates[0].actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
           );
+          if (result === "success") {
+            const reporterCompletedAt = new Date().toISOString();
+            pipelineState = updatePipelineStage(
+              pipelineState,
+              "reporter",
+              {
+                status: "succeeded",
+                attempts: pipelineState.stages.reporter.attempts + reporterAttempts,
+                completed_at: reporterCompletedAt,
+                artifact_ref: relative(prepared.worktree.path, worktreeResultPath)
+                  .split(sep)
+                  .join("/"),
+              },
+              reporterCompletedAt,
+            );
+            writePipelineState(pipelineStatePath, pipelineState);
+          }
         } catch (error) {
           result = "failure";
           pipelineBlockReason =
@@ -1458,6 +1654,24 @@ async function runPreparedTask(
         result = reporter.result;
         pipelineBlockReason = reporter.reason;
         stderr = reporter.reason;
+      }
+      if (result !== "success") {
+        const reporterCompletedAt = new Date().toISOString();
+        pipelineState = updatePipelineStage(
+          pipelineState,
+          "reporter",
+          {
+            status: result === "rate_limit" ? "rate_limited" : "failed",
+            attempts: pipelineState.stages.reporter.attempts + reporterAttempts,
+            completed_at: reporterCompletedAt,
+            artifact_ref:
+              reporter.result === "success"
+                ? relative(prepared.worktree.path, worktreeResultPath).split(sep).join("/")
+                : pipelineState.stages.reporter.artifact_ref,
+          },
+          reporterCompletedAt,
+        );
+        writePipelineState(pipelineStatePath, pipelineState);
       }
     }
   }
@@ -1549,14 +1763,24 @@ async function runPreparedTask(
           ? limitEventMeta(activeLimit, {
               attempts: totalAttempts,
               worktree: prepared.worktree.path,
-              ...(executorEvidenceRef
-                ? { pipeline_stage: pipelineFailureStage, evidence_ref: executorEvidenceRef }
+              ...(prepared.pipelineRunId
+                ? pipelineRecoveryMeta({
+                    stage: pipelineFailureStage,
+                    evidenceRef: executorEvidenceRef,
+                    stateRef: pipelineStateRef,
+                    runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+                  })
                 : {}),
             })
           : {
               limit_deferred: "false",
-              ...(executorEvidenceRef
-                ? { pipeline_stage: pipelineFailureStage, evidence_ref: executorEvidenceRef }
+              ...(prepared.pipelineRunId
+                ? pipelineRecoveryMeta({
+                    stage: pipelineFailureStage,
+                    evidenceRef: executorEvidenceRef,
+                    stateRef: pipelineStateRef,
+                    runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+                  })
                 : {}),
             },
       );
@@ -1571,19 +1795,17 @@ async function runPreparedTask(
         : (pipelineBlockReason ?? extractBlockReason(stderr));
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
-      spawnBlock(
-        projectId,
-        prepared.task.id,
-        prepared.actor,
-        blockReason,
-        executorEvidenceRef
-          ? {
-              limit_deferred: "false",
-              pipeline_stage: pipelineFailureStage,
-              evidence_ref: executorEvidenceRef,
-            }
-          : { limit_deferred: "false" },
-      );
+      spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason, {
+        limit_deferred: "false",
+        ...(prepared.pipelineRunId
+          ? pipelineRecoveryMeta({
+              stage: pipelineFailureStage,
+              evidenceRef: executorEvidenceRef,
+              stateRef: pipelineStateRef,
+              runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+            })
+          : {}),
+      });
       process.stdout.write(
         `  ${unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
       );
@@ -1733,6 +1955,20 @@ export function extractBlockReason(stderr: string): string {
   return `${fallback}: ${trimmed}`;
 }
 
+export function pipelineRecoveryMeta(input: {
+  stage: AgentStageRole;
+  evidenceRef?: string;
+  stateRef?: string;
+  runId?: string;
+}): Record<string, string> {
+  return {
+    pipeline_stage: input.stage,
+    ...(input.evidenceRef ? { evidence_ref: input.evidenceRef } : {}),
+    ...(input.stateRef ? { pipeline_state_ref: input.stateRef } : {}),
+    ...(input.runId ? { pipeline_run_id: input.runId } : {}),
+  };
+}
+
 function spawnBlock(
   projectId: string | undefined,
   taskId: string,
@@ -1814,6 +2050,7 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
           phaseSetSuffixToId,
           opts.by,
           { edit: opts.editBy, review: opts.reviewBy },
+          { executor: opts.executorBy, reporter: opts.reporterBy },
           opts.by,
           dryRun,
           false,
@@ -2088,6 +2325,7 @@ async function runManualMode(opts: RunOpts): Promise<void> {
     phaseSetSuffixToId,
     actorOverride,
     { edit: opts.editBy, review: opts.reviewBy },
+    { executor: opts.executorBy, reporter: opts.reporterBy },
     actorOverride,
     !!opts.dryRun,
     alreadyClaimed,
@@ -2124,7 +2362,10 @@ export function resolveInPlaceCommand(
   opts: RunOpts,
   execDefaults: ExecDefaultsConfig = {},
 ): { command: string; actor: string; provider?: AgentProvider } {
-  const by = opts.by?.trim();
+  if (!task?.agent_pipeline && (opts.executorBy || opts.reporterBy)) {
+    throw new Error("--executor-by / --reporter-by require an agent_pipeline task.");
+  }
+  const by = (task?.agent_pipeline ? (opts.executorBy ?? opts.by) : opts.by)?.trim();
   if (by) {
     const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
     if (task?.agent_pipeline && member?.stage_role !== "executor") {
@@ -2274,7 +2515,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
   const reporterCandidates =
     task?.agent_pipeline && task
-      ? resolveReporterAgentCandidates(task, roster, execDefaults)
+      ? resolveReporterAgentCandidates(task, roster, execDefaults, undefined, opts.reporterBy)
       : undefined;
   if (task?.agent_pipeline && !reporterCandidates?.length) {
     throw new Error("No agent found for reporter pipeline stage.");
@@ -2370,9 +2611,34 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let exitCode: number;
   let pipelineBlockReason: string | undefined;
   let pipelineEvidenceRef: string | undefined;
+  let pipelineStateRef: string | undefined;
+  let pipelineRunId: string | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
   if (task?.agent_pipeline) {
     const startedAt = new Date().toISOString();
+    pipelineRunId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+    const stateLocation = pipelineStateLocation({
+      repoRoot,
+      worktreePath: repoRoot,
+      executionPath,
+      taskId: task.id,
+      runId: pipelineRunId,
+    });
+    pipelineStateRef = stateLocation.ref;
+    let pipelineState = createPipelineState({
+      taskId: task.id,
+      runId: pipelineRunId,
+      updatedAt: startedAt,
+      executorActor: actor,
+      reporterActor: reporterCandidates?.[0]?.actor,
+    });
+    pipelineState = updatePipelineStage(
+      pipelineState,
+      "executor",
+      { status: "running", started_at: startedAt },
+      startedAt,
+    );
+    writePipelineState(stateLocation.path, pipelineState);
     const outcome = await runWithRetry(
       [{ command, actor, provider }],
       prompt,
@@ -2384,13 +2650,12 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
     );
-    const runId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: repoRoot,
       executionPath,
       taskId: task.id,
-      runId,
+      runId: pipelineRunId,
       actor,
       status:
         outcome.result === "success"
@@ -2406,9 +2671,40 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       stderr: outcome.stderr,
     });
     pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
+    const executorCompletedAt = new Date().toISOString();
+    pipelineState = updatePipelineStage(
+      pipelineState,
+      "executor",
+      {
+        status:
+          outcome.result === "success"
+            ? "succeeded"
+            : outcome.result === "rate_limit"
+              ? "rate_limited"
+              : "failed",
+        attempts: outcome.attempts,
+        completed_at: executorCompletedAt,
+        artifact_ref: pipelineEvidenceRef,
+      },
+      executorCompletedAt,
+    );
+    writePipelineState(stateLocation.path, pipelineState);
     process.stdout.write(`Executor evidence: ${pipelineEvidenceRef}\n`);
     if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
+      const reporterStartedAt = new Date().toISOString();
+      pipelineState = updatePipelineStage(
+        pipelineState,
+        "reporter",
+        {
+          status: "running",
+          actor: reporterCandidates?.[0]?.actor ?? null,
+          started_at: reporterStartedAt,
+        },
+        reporterStartedAt,
+      );
+      writePipelineState(stateLocation.path, pipelineState);
+      let reporterAttempts = 0;
       process.stdout.write(`Running reporter: ${reporterCandidates?.[0]?.command ?? ""}\n`);
       const reporter = await runReporterWithFormatRetry({
         plan: planPrompt,
@@ -2426,6 +2722,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
               SPECDOJO_EXECUTION_PATH: executionPath,
             },
           );
+          reporterAttempts += reporterOutcome.attempts;
           return {
             result: reporterOutcome.result,
             stdout: reporterOutcome.stdout,
@@ -2456,6 +2753,27 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         exitCode = 1;
         pipelineBlockReason = reporter.reason;
       }
+      const reporterCompletedAt = new Date().toISOString();
+      pipelineState = updatePipelineStage(
+        pipelineState,
+        "reporter",
+        {
+          status:
+            exitCode === 0
+              ? "succeeded"
+              : reporter.result === "rate_limit"
+                ? "rate_limited"
+                : "failed",
+          attempts: reporterAttempts,
+          completed_at: reporterCompletedAt,
+          artifact_ref:
+            reporter.result === "success" && resultPath
+              ? relative(repoRoot, resultPath).split(sep).join("/")
+              : null,
+        },
+        reporterCompletedAt,
+      );
+      writePipelineState(stateLocation.path, pipelineState);
     } else {
       pipelineBlockReason =
         outcome.result === "rate_limit"
@@ -2506,13 +2824,17 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         opts.task.trim(),
         actor,
         blockReason ?? "agent exited with non-zero code",
-        pipelineEvidenceRef
-          ? {
-              limit_deferred: "false",
-              pipeline_stage: pipelineFailureStage,
-              evidence_ref: pipelineEvidenceRef,
-            }
-          : { limit_deferred: "false" },
+        {
+          limit_deferred: "false",
+          ...(pipelineRunId
+            ? pipelineRecoveryMeta({
+                stage: pipelineFailureStage,
+                evidenceRef: pipelineEvidenceRef,
+                stateRef: pipelineStateRef,
+                runId: pipelineRunId,
+              })
+            : {}),
+        },
       );
   }
 
@@ -3409,6 +3731,14 @@ export function registerRunCommand(exec: Command): void {
     "--review-by <nickname>",
     "pm-members.yaml agent nickname for review-mode tasks in --auto batch runs",
   );
+  rcmd.option(
+    "--executor-by <nickname>",
+    "pm-members.yaml executor agent nickname for agent_pipeline tasks",
+  );
+  rcmd.option(
+    "--reporter-by <nickname>",
+    "pm-members.yaml reporter agent nickname for agent_pipeline tasks",
+  );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 
   rcmd.action(async (opts: RunOpts) => {
@@ -3489,6 +3819,11 @@ export function registerRunCommand(exec: Command): void {
         process.stdout.write(
           "--by requires a manual target; use --edit-by / --review-by with --auto.\n",
         );
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.by && opts.executorBy) {
+        process.stdout.write("Specify either --by or --executor-by, not both.\n");
         process.exitCode = 1;
         return;
       }
@@ -3644,6 +3979,8 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     if (projectId) autoArgs.push("--project", projectId);
     if (opts.strategy) autoArgs.push("--strategy", opts.strategy);
     if (opts.parallel) autoArgs.push("--parallel", opts.parallel);
+    if (opts.executorBy) autoArgs.push("--executor-by", opts.executorBy);
+    if (opts.reporterBy) autoArgs.push("--reporter-by", opts.reporterBy);
     if (opts.loop) {
       autoArgs.push("--loop");
       if (opts.maxRounds) autoArgs.push("--max-rounds", opts.maxRounds);
@@ -3687,6 +4024,14 @@ export function registerCycleCommand(exec: Command): void {
   cmd.option(
     "--review-by <nickname>",
     "pm-members.yaml agent nickname for review-mode tasks (resume + auto)",
+  );
+  cmd.option(
+    "--executor-by <nickname>",
+    "pm-members.yaml executor agent nickname for pipeline tasks (resume + auto)",
+  );
+  cmd.option(
+    "--reporter-by <nickname>",
+    "pm-members.yaml reporter agent nickname for pipeline tasks (resume + auto)",
   );
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(
@@ -3798,10 +4143,37 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
       .sort();
 
     if (opts.task) {
-      const state = snapshot.tasks[opts.task]?.state;
-      if (state !== "doing") {
+      const taskState = snapshot.tasks[opts.task];
+      const canResumeBlockedReporter =
+        taskState?.state === "blocked" &&
+        taskState.meta?.pipeline_stage === "reporter" &&
+        typeof taskState.meta?.pipeline_state_ref === "string";
+      if (canResumeBlockedReporter) {
+        const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
+        if (!dryRun) {
+          const meta = Object.entries(taskState.meta ?? {}).map(
+            ([key, value]) => `${key}=${String(value)}`,
+          );
+          meta.push("pipeline_resume_claimed=true");
+          writeEventFile(
+            schedulePath,
+            buildEvent("unblock", {
+              task: opts.task,
+              by: actor,
+              msg: "resume reporter from persisted pipeline state",
+              meta,
+            }),
+          );
+        }
+        snapshot.tasks[opts.task] = {
+          ...taskState,
+          state: "doing",
+          last_by: actor,
+          last_type: "unblock",
+        };
+      } else if (taskState?.state !== "doing") {
         process.stdout.write(
-          `[resume] ${opts.task} is not in "doing" state (state: ${state ?? "unknown"}) — nothing to resume.\n`,
+          `[resume] ${opts.task} is not resumable (state: ${taskState?.state ?? "unknown"}) — nothing to resume.\n`,
         );
         process.exitCode = 1;
         return;
@@ -3843,12 +4215,26 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
           phaseSetSuffixToId,
           resolved.actor,
           { edit: opts.editBy, review: opts.reviewBy },
+          { executor: opts.executorBy, reporter: opts.reporterBy },
           resolved.actor,
           dryRun,
           true, // skipClaim: the task is already "doing" and remains claimed
           worktreeBase,
           planGenPaths,
           execDefaults,
+          undefined,
+          {
+            stage:
+              snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
+                ? "reporter"
+                : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
+                  ? "executor"
+                  : undefined,
+            stateRef:
+              typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
+                ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
+                : undefined,
+          },
         );
         if (typeof prepared !== "string") {
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
@@ -3935,6 +4321,14 @@ export function registerResumeCommand(exec: Command): void {
     "--review-by <nickname>",
     "pm-members.yaml agent nickname for review-mode tasks (overrides the claiming actor)",
   );
+  cmd.option(
+    "--executor-by <nickname>",
+    "pm-members.yaml executor agent nickname for pipeline tasks",
+  );
+  cmd.option(
+    "--reporter-by <nickname>",
+    "pm-members.yaml reporter agent nickname for pipeline tasks",
+  );
   cmd.option("--parallel <n>", "Number of tasks to resume in parallel", "1");
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(
@@ -3950,6 +4344,11 @@ export function registerResumeCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
+      if (opts.by && opts.executorBy) {
+        process.stdout.write("Specify either --by or --executor-by, not both.\n");
+        process.exitCode = 1;
+        return;
+      }
       await withProjectExecRunLock(opts, "resume", () => runResumeMode(opts));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

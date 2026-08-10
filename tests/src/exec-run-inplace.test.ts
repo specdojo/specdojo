@@ -23,7 +23,7 @@ const FAKE_AGENT_CMD =
   `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
 const FAKE_AGENT_NICKNAME = "test-edit-agent";
 
-function configurePipeline(repo: string): void {
+function configurePipeline(repo: string, reporterCommandOverride?: string): void {
   const executorCommand =
     `node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');` +
     `fs.writeFileSync('pipeline-artifact.md','# Updated\\n');` +
@@ -41,8 +41,9 @@ function configurePipeline(repo: string): void {
   });
   const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
   const reporterCommand =
+    reporterCommandOverride ??
     `node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');` +
-    `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`;
+      `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`;
   writeFileSync(
     join(repo, "pm-members.yaml"),
     [
@@ -261,8 +262,10 @@ describe("exec run (in-place, default)", () => {
         "test",
         "--task",
         "T-TEST-doc-010",
-        "--by",
+        "--executor-by",
         "pipeline-executor",
+        "--reporter-by",
+        "pipeline-reporter",
       ]);
 
       expect(readFileSync(join(repo, "pipeline-artifact.md"), "utf8")).toContain("# Updated");
@@ -288,7 +291,75 @@ describe("exec run (in-place, default)", () => {
           ),
         ),
       ).toBe(true);
+      const pipelineState = JSON.parse(
+        readFileSync(
+          join(
+            executionPath,
+            "exec",
+            "evidence",
+            "T-TEST-doc-010",
+            evidenceDirs[0],
+            "pipeline-state.json",
+          ),
+          "utf8",
+        ),
+      ) as {
+        stages: {
+          executor: { status: string; attempts: number; artifact_ref: string };
+          reporter: { status: string; attempts: number; artifact_ref: string };
+        };
+      };
+      expect(pipelineState.stages.executor).toMatchObject({
+        status: "succeeded",
+        attempts: 1,
+      });
+      expect(pipelineState.stages.executor.artifact_ref).toContain("/evidence.json");
+      expect(pipelineState.stages.reporter).toMatchObject({
+        status: "succeeded",
+        attempts: 1,
+      });
+      expect(pipelineState.stages.reporter.artifact_ref).toContain("/T-TEST-doc-010-result.md");
       expect(process.exitCode).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("persists succeeded executor state when the reporter fails", async () => {
+    const { repo, executionPath } = setupRepository();
+    configurePipeline(
+      repo,
+      `node -e "require('node:fs').readFileSync(0,'utf8');process.stderr.write('reporter failed');process.exit(1)"`,
+    );
+    vi.spyOn(execWorktree, "gitOutput").mockImplementation((_repoRoot, args) =>
+      args[0] === "status" ? "?? pipeline-artifact.md\0" : " pipeline-artifact.md | 1 +\n",
+    );
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--task",
+        "T-TEST-doc-010",
+        "--executor-by",
+        "pipeline-executor",
+        "--reporter-by",
+        "pipeline-reporter",
+      ]);
+
+      expect(process.exitCode).toBe(1);
+      const runId = readdirSync(join(executionPath, "exec", "evidence", "T-TEST-doc-010"))[0];
+      const state = JSON.parse(
+        readFileSync(
+          join(executionPath, "exec", "evidence", "T-TEST-doc-010", runId, "pipeline-state.json"),
+          "utf8",
+        ),
+      ) as { stages: { executor: { status: string }; reporter: { status: string } } };
+      expect(state.stages.executor.status).toBe("succeeded");
+      expect(state.stages.reporter.status).toBe("failed");
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
