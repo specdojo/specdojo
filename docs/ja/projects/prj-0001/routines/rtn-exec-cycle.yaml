@@ -18,7 +18,7 @@ action:
   strategy: critical-first
   parallel: 2
   loop: true
-  max_rounds: 5
+  max_rounds: 100
 policy:
   missed_run: latest
   overlap: skip
