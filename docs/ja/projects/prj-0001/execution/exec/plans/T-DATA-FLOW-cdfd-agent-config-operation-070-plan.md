@@ -9,7 +9,6 @@ specdojo:
   status: ready
   project_id: prj-0001
   owner: BA
-  on_critical_path: true
   approach: fully-guided
   targets:
     - prj-0001:cdfd-agent-config-operation

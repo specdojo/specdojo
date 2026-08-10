@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-10T00:25:39Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-070",
+  "by": "indie",
+  "msg": "opencode-edit-agent で再試行し、result 未記入で終了した原因を調査する"
+}

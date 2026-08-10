@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-10T01:52:09Z",
+  "type": "release",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-070",
+  "by": "indie",
+  "msg": "resultのfrontmatterが破壊された状態でmergeされたため、resultをscaffold状態へ復元してtodoへ戻す"
+}

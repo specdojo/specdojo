@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "ts": "2026-08-10T00:10:24Z",
+  "type": "block",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-070",
+  "by": "opencode-edit-agent",
+  "msg": "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)",
+  "meta": {
+    "limit_deferred": "false"
+  }
+}
