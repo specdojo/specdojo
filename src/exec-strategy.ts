@@ -1,5 +1,12 @@
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
-import type { Approach, Proficiency, TaskMode } from "./exec-types.js";
+import type {
+  AgentPipeline,
+  AgentPipelineStage,
+  AgentStageRole,
+  Approach,
+  Proficiency,
+  TaskMode,
+} from "./exec-types.js";
 import {
   extractPhaseSuffix,
   normalizePhaseSetSelection,
@@ -15,6 +22,7 @@ type StrategyPhaseMinimal = {
   approach?: unknown;
   capabilities?: unknown;
   proficiency?: unknown;
+  agent_pipeline?: unknown;
 };
 
 type StrategyPhaseOverrideMinimal = {
@@ -57,6 +65,7 @@ export type PhaseModeIndex = {
   phaseSetSuffixToApproach: Map<string, Approach>;
   phaseSetSuffixToCapabilities: Map<string, string[]>;
   phaseSetSuffixToProficiency: Map<string, Proficiency>;
+  phaseSetSuffixToAgentPipeline: Map<string, AgentPipeline>;
   localIdSuffixToExecution: Map<string, "agent" | "human">;
   localIdSuffixToMode: Map<string, TaskMode>;
   localIdSuffixToApproach: Map<string, Approach>;
@@ -105,6 +114,28 @@ function asCapabilityList(value: unknown): string[] | undefined {
   return caps.length === value.length ? caps : undefined;
 }
 
+function asAgentPipeline(value: unknown): AgentPipeline | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const stages = (value as Record<string, unknown>).stages;
+  if (!Array.isArray(stages) || stages.length !== 2) return undefined;
+  const parsed = stages.map((stage): AgentPipelineStage | undefined => {
+    if (!stage || typeof stage !== "object" || Array.isArray(stage)) return undefined;
+    const item = stage as Record<string, unknown>;
+    if (item.stage_role !== "executor" && item.stage_role !== "reporter") return undefined;
+    const stageRole = item.stage_role as AgentStageRole;
+    const capabilities = asCapabilityList(item.capabilities);
+    const proficiency = isProficiency(item.proficiency) ? item.proficiency : undefined;
+    return {
+      stage_role: stageRole,
+      ...(capabilities !== undefined ? { capabilities } : {}),
+      ...(proficiency !== undefined ? { proficiency } : {}),
+    };
+  });
+  if (!parsed[0] || !parsed[1]) return undefined;
+  if (parsed[0].stage_role !== "executor" || parsed[1].stage_role !== "reporter") return undefined;
+  return { stages: [parsed[0], parsed[1]] };
+}
+
 /**
  * Builds a phase metadata index from sch-strategy files.
  * sch-strategy maps localId → phaseSet and phaseSet+phaseId → suffix, and phase
@@ -123,6 +154,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const phaseSetSuffixToApproach = new Map<string, Approach>();
   const phaseSetSuffixToCapabilities = new Map<string, string[]>();
   const phaseSetSuffixToProficiency = new Map<string, Proficiency>();
+  const phaseSetSuffixToAgentPipeline = new Map<string, AgentPipeline>();
   // localId:suffix → metadata declared on owner_rules[].phase_overrides (takes precedence)
   const localIdSuffixToExecution = new Map<string, "agent" | "human">();
   const localIdSuffixToMode = new Map<string, TaskMode>();
@@ -192,6 +224,10 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           }
           if (isProficiency(p.proficiency)) {
             phaseSetSuffixToProficiency.set(`${phaseSetName}:${suffix}`, p.proficiency);
+          }
+          const agentPipeline = asAgentPipeline(p.agent_pipeline);
+          if (agentPipeline !== undefined) {
+            phaseSetSuffixToAgentPipeline.set(`${phaseSetName}:${suffix}`, agentPipeline);
           }
         }
       }
@@ -283,6 +319,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     phaseSetSuffixToApproach,
     phaseSetSuffixToCapabilities,
     phaseSetSuffixToProficiency,
+    phaseSetSuffixToAgentPipeline,
     localIdSuffixToExecution,
     localIdSuffixToMode,
     localIdSuffixToApproach,
@@ -295,6 +332,26 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     taskIdToProficiency,
     defaultMode,
   };
+}
+
+/** Resolves the optional executor/reporter pipeline declared on a phase. */
+export function resolveAgentPipeline(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string,
+): AgentPipeline | undefined {
+  if (!localId) return undefined;
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return undefined;
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+  if (!phaseSets) return undefined;
+  for (const name of phaseSets) {
+    const pipeline = index.phaseSetSuffixToAgentPipeline.get(`${name}:${suffix}`);
+    if (pipeline !== undefined) return pipeline;
+  }
+  return undefined;
 }
 
 /**

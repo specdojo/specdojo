@@ -20,6 +20,19 @@ function buildRoster(): MemberRoster {
         mode: "edit",
       },
       {
+        nickname: "executor",
+        display_name: "Executor",
+        email: null,
+        roles: [],
+        type: "agent",
+        capabilities: ["exec"],
+        priority: 1,
+        command: "run executor",
+        mode: "edit",
+        stage_role: "executor",
+        proficiency: "expert",
+      },
+      {
         nickname: "opencode-edit-agent",
         display_name: "OpenCode Edit",
         email: null,
@@ -88,5 +101,36 @@ describe("resolveInPlaceCommand actor derivation", () => {
     expect(() =>
       resolveInPlaceCommand(buildTask({ execution: "human" }), buildRoster(), {} as RunOpts),
     ).toThrow(/Use --by <nickname> to override/);
+  });
+
+  it("selects an executor-stage agent from the pipeline stage requirements", () => {
+    const result = resolveInPlaceCommand(
+      buildTask({
+        agent_pipeline: {
+          stages: [
+            { stage_role: "executor", capabilities: ["exec"], proficiency: "expert" },
+            { stage_role: "reporter" },
+          ],
+        },
+      }),
+      buildRoster(),
+      {} as RunOpts,
+    );
+
+    expect(result).toEqual({ command: "run executor", actor: "executor" });
+  });
+
+  it("rejects a legacy --by override for a pipeline executor stage", () => {
+    expect(() =>
+      resolveInPlaceCommand(
+        buildTask({
+          agent_pipeline: {
+            stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+          },
+        }),
+        buildRoster(),
+        { by: "claude-edit-agent" } as RunOpts,
+      ),
+    ).toThrow(/stage_role: executor/);
   });
 });

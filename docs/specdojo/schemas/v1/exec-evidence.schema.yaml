@@ -1,0 +1,116 @@
+# exec-evidence.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo executor evidence schema"
+description: >
+  Bounded, structured evidence collected by the runner after an executor pipeline stage.
+  Raw diffs and unbounded process logs are intentionally excluded.
+type: object
+additionalProperties: false
+required:
+  - schema_version
+  - task_id
+  - run_id
+  - stage
+  - changes
+  - diff_summary
+  - validations
+  - final_message
+  - log_refs
+properties:
+  schema_version:
+    const: 1
+  task_id:
+    type: string
+    minLength: 1
+  run_id:
+    type: string
+    minLength: 1
+  stage:
+    type: object
+    additionalProperties: false
+    required: [role, actor, status, started_at, completed_at, exit_code, attempts]
+    properties:
+      role:
+        const: executor
+      actor:
+        type: string
+        minLength: 1
+      status:
+        type: string
+        enum: [succeeded, failed, rate_limited]
+      started_at:
+        type: string
+        format: date-time
+      completed_at:
+        type: string
+        format: date-time
+      exit_code:
+        type: [integer, "null"]
+      attempts:
+        type: integer
+        minimum: 1
+  changes:
+    type: array
+    maxItems: 1000
+    items:
+      type: object
+      additionalProperties: false
+      required: [path, status]
+      properties:
+        path:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          minLength: 1
+  diff_summary:
+    type: object
+    additionalProperties: false
+    required: [files_changed, summary]
+    properties:
+      files_changed:
+        type: integer
+        minimum: 0
+      summary:
+        type: string
+        maxLength: 4000
+  validations:
+    type: array
+    maxItems: 50
+    items:
+      type: object
+      additionalProperties: false
+      required: [command, status, summary]
+      properties:
+        command:
+          type: string
+          minLength: 1
+          maxLength: 500
+        status:
+          type: string
+          enum: [passed, failed, not_run]
+        summary:
+          type: string
+          maxLength: 1000
+  final_message:
+    type: string
+    maxLength: 4000
+  log_refs:
+    type: array
+    maxItems: 10
+    items:
+      type: object
+      additionalProperties: false
+      required: [kind, path, bytes, truncated]
+      properties:
+        kind:
+          const: agent-output-excerpt
+        path:
+          type: string
+          minLength: 1
+        bytes:
+          type: integer
+          minimum: 0
+          maximum: 65536
+        truncated:
+          type: boolean

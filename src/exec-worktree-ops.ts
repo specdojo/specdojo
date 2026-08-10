@@ -213,7 +213,7 @@ export function resolveCommitScope(
   worktree: ExecWorktree,
   taskId: string,
 ): { scope: CommitScope | null; unresolvedTargets: string[] } {
-  const { planRel, resultRel } = taskPaths(context, taskId);
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
   const planContent = readWorktreeHeadFile(worktree.path, planRel);
@@ -272,6 +272,10 @@ export function resolveCommitScope(
   const allowedDirPrefixes = targetReferenceDirsForApproach(identity.approach).map(
     (dir) => `${dir}/`,
   );
+  // Pipeline evidence is runner-owned and stored per task/run. It must be committed together with
+  // the eventual reporter-generated result so the structured executor record survives worktree
+  // removal. Legacy tasks create no files under this prefix, so their commit scope is unchanged.
+  allowedDirPrefixes.push(`${executionRel}/exec/evidence/${worktreeNameFromTaskId(taskId)}/`);
   return {
     scope: { mode: "edit", allowedFiles: [...allowedFiles], allowedDirPrefixes },
     unresolvedTargets,

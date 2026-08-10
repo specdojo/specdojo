@@ -38,7 +38,11 @@ executorには成果物編集だけを担当させ、差分、変更ファイル
 
 ## 4. 対応結果
 
--
+- strategy の `agent_pipeline` を Ready task まで伝播し、pipeline 対象では executor stage の `capabilities`、`proficiency`、`stage_role` だけで agent を選択・起動する経路を runner に追加した。明示指定 agent も `stage_role: executor` との一致を必須にした。
+- executor へ渡す prompt に stage 固有の責務境界と機械可読な検証報告契約を追加し、plan 内の result 更新・状態遷移指示を reporter / runner の責務として明示的に分離した。
+- `exec-evidence.schema.yaml` と保存処理を追加し、run ID 単位で変更ファイル、差分統計、検証コマンドと結果、最終メッセージ、executor 終了状態、ログ抜粋参照を `evidence.json` に記録できるようにした。
+- evidence とログ抜粋に認証情報の秘匿化、件数・文字数・64 KiB の容量上限を適用した。executor の失敗・rate limit・後続 reporter 待ちの block event には `pipeline_stage` と `evidence_ref` を記録する。
+- pipeline 未指定タスクの単一 agent 選択と既存 result 完了判定は維持し、pipeline metadata、executor prompt、選択境界、evidence の構造・秘匿・schema 適合を単体テストで固定した。
 
 ## 5. 関連ドキュメント
 

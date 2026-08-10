@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   buildPhaseModeIndex,
+  resolveAgentPipeline,
   resolveApproach,
   resolveOwnerForLocalId,
   resolveTaskExecution,
@@ -135,6 +136,48 @@ describe("cross-deliverable pass metadata", () => {
       expect(resolveTaskExecution(undefined, taskId, index, "060")).toBe("agent");
       expect(resolveApproach(undefined, taskId, index, "060")).toBe("cross-deliverable-dedup");
       expect(resolveTaskProficiency(undefined, taskId, index, "060")).toBe("expert");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("agent pipeline metadata", () => {
+  it("resolves the executor/reporter stages declared on the selected phase", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-pipeline-"));
+    try {
+      writeFileSync(
+        join(dir, "sch-strategy-launch.yaml"),
+        [
+          "kind: strategy",
+          "track: launch",
+          "phase_sets:",
+          "  first:",
+          "    - id: draft",
+          "      task_suffix: '010'",
+          "      agent_pipeline:",
+          "        stages:",
+          "          - stage_role: executor",
+          "            capabilities: [exec]",
+          "            proficiency: expert",
+          "          - stage_role: reporter",
+          "            proficiency: normal",
+          "owner_rules:",
+          "  - local_ids: [doc]",
+          "    owner: ARC",
+          "    phase_set: first",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const index = buildPhaseModeIndex(dir);
+      expect(resolveAgentPipeline("doc", "T-LAUNCH-doc-010", index, "010", "first")).toEqual({
+        stages: [
+          { stage_role: "executor", capabilities: ["exec"], proficiency: "expert" },
+          { stage_role: "reporter", proficiency: "normal" },
+        ],
+      });
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
