@@ -115,14 +115,27 @@ specdojo exec run --project <project-id> --auto --if-busy wait
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
-| 状況                             | コマンド       | 結果                   |
-| -------------------------------- | -------------- | ---------------------- |
-| 中断で `doing` のまま            | `exec resume`  | 既存 worktree 上で継続 |
-| 障害を解消し同じ試行を続ける     | `exec unblock` | `blocked -> doing`     |
-| 試行を破棄して最初からやり直す   | `exec release` | `blocked -> todo`      |
-| 着手前のタスクを恒久的に中止する | `exec cancel`  | `todo -> cancelled`    |
+| 状況                              | コマンド                  | 結果                       |
+| --------------------------------- | ------------------------- | -------------------------- |
+| 中断で `doing` のまま             | `exec resume`             | 既存 worktree 上で継続     |
+| pipeline の reporter で `blocked` | `exec resume --task <id>` | executor evidence から再開 |
+| 障害を解消し同じ試行を続ける      | `exec unblock`            | `blocked -> doing`         |
+| 試行を破棄して最初からやり直す    | `exec release`            | `blocked -> todo`          |
+| 着手前のタスクを恒久的に中止する  | `exec cancel`             | `todo -> cancelled`        |
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
+
+executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に両 stage の状態、agent、試行回数、evidence / result 参照を保存します。reporter 失敗の block event は `pipeline_stage=reporter`、`pipeline_state_ref`、`evidence_ref` を保持します。`exec resume --task <task-id>` はこの block を同じ task claim のまま再開し、state と succeeded executor evidence の task ID / run ID が一致する場合だけ executor を省略します。state または evidence が欠損・不整合なら executor を重複利用せず、新しい run として安全に実行し直します。
+
+stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
+
+```bash
+specdojo exec resume \
+  --project <project-id> \
+  --task <task-id> \
+  --executor-by <executor-nickname> \
+  --reporter-by <reporter-nickname>
+```
 
 ```bash
 specdojo exec release \

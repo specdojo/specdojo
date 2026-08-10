@@ -5,6 +5,7 @@ import {
   extractBlockReason,
   isRateLimitError,
   parseExecRunBusyPolicy,
+  pipelineRecoveryMeta,
   resolveAgentOverride,
   reporterRequirements,
   selectCandidates,
@@ -84,6 +85,24 @@ describe("extractBlockReason", () => {
     expect(actual.endsWith("…")).toBe(true);
     // prefix + first 500 chars of the reason + ellipsis
     expect(actual.length).toBe("agent exited with non-zero code: ".length + 500 + 1);
+  });
+});
+
+describe("pipelineRecoveryMeta", () => {
+  it("records reporter recovery position and run-scoped artifact references", () => {
+    expect(
+      pipelineRecoveryMeta({
+        stage: "reporter",
+        evidenceRef: "execution/exec/evidence/task/run/evidence.json",
+        stateRef: "execution/exec/evidence/task/run/pipeline-state.json",
+        runId: "run-1",
+      }),
+    ).toEqual({
+      pipeline_stage: "reporter",
+      evidence_ref: "execution/exec/evidence/task/run/evidence.json",
+      pipeline_state_ref: "execution/exec/evidence/task/run/pipeline-state.json",
+      pipeline_run_id: "run-1",
+    });
   });
 });
 
