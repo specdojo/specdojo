@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-10T22:58:33Z",
+  "type": "release",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-070",
+  "by": "indie",
+  "msg": "opencode-reporterのfrontmatter不一致blockを破棄し、todoからやり直す"
+}
