@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
-import type { SchedulerStrategy } from "./exec-types.js";
+import type { AgentStageRole, SchedulerStrategy } from "./exec-types.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -68,6 +68,7 @@ export type ProjectMember = {
   priority?: number; // agent only: tiebreaker within same profile (lower = tried first)
   command?: string; // agent only: shell command executed by exec run
   mode?: "edit" | "review"; // agent only: work mode this agent handles (edit or review)
+  stage_role?: AgentStageRole; // agent only: pipeline stage; omit for legacy flow
   disabled?: boolean; // agent only: when true, excluded from exec run --auto candidate selection
   scheduler_strategy?: SchedulerStrategy;
   note?: string;

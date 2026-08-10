@@ -47,6 +47,7 @@ import {
 } from "./specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
 import type {
+  AgentStageRole,
   CurrentState,
   Proficiency,
   ScheduleIndex,
@@ -252,6 +253,7 @@ export function resolveAgentOverride(
 export type ResolvedRequirements = {
   capabilities: string[];
   proficiency?: Proficiency;
+  stage_role?: AgentStageRole;
 };
 
 type PreparedTask = {
@@ -453,7 +455,7 @@ export function selectCandidates(
   execDefaults: ExecDefaultsConfig = {},
 ): ProjectMember[] {
   if (!roster) return [];
-  const { capabilities: required, proficiency } = requirements;
+  const { capabilities: required, proficiency, stage_role: stageRole } = requirements;
   return roster.members
     .filter((m) => {
       // Runnable agents need a command source: a provider command_template or an
@@ -465,6 +467,14 @@ export function selectCandidates(
       const caps = m.capabilities ?? [];
       if (!required.every((c) => caps.includes(c))) return false;
       if (proficiency !== undefined && m.proficiency !== proficiency) return false;
+      // Pipeline agents and legacy agents form disjoint auto-selection pools. This keeps newly
+      // introduced executor/reporter definitions out of existing single-agent tasks while also
+      // preventing legacy agents from silently filling a pipeline stage.
+      if (stageRole === undefined) {
+        if (m.stage_role !== undefined) return false;
+      } else if (m.stage_role !== stageRole) {
+        return false;
+      }
       // If agent declares a mode and task has a mode, they must match.
       // Agents without a mode field are mode-agnostic and match any task.
       if (m.mode !== undefined && taskMode !== undefined && m.mode !== taskMode) return false;

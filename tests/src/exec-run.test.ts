@@ -154,6 +154,40 @@ describe("selectCandidates", () => {
     // `no-source` has neither a command override nor a provider template, so it is not runnable.
     expect(actual).toEqual(["templated"]);
   });
+
+  it("keeps pipeline-stage agents out of legacy single-agent selection", () => {
+    const members = roster([
+      agent({ nickname: "legacy", priority: 3 }),
+      agent({ nickname: "executor", priority: 1, stage_role: "executor" }),
+      agent({ nickname: "reporter", priority: 2, stage_role: "reporter" }),
+    ]);
+
+    const actual = selectCandidates(requirements, members, "edit").map((m) => m.nickname);
+
+    expect(actual).toEqual(["legacy"]);
+  });
+
+  it("selects only agents matching the requested pipeline stage", () => {
+    const members = roster([
+      agent({ nickname: "legacy", priority: 1 }),
+      agent({ nickname: "executor", priority: 3, stage_role: "executor" }),
+      agent({ nickname: "reporter", priority: 2, stage_role: "reporter" }),
+    ]);
+
+    const executorCandidates = selectCandidates(
+      { ...requirements, stage_role: "executor" },
+      members,
+      "edit",
+    ).map((m) => m.nickname);
+    const reporterCandidates = selectCandidates(
+      { ...requirements, stage_role: "reporter" },
+      members,
+      "edit",
+    ).map((m) => m.nickname);
+
+    expect(executorCandidates).toEqual(["executor"]);
+    expect(reporterCandidates).toEqual(["reporter"]);
+  });
 });
 
 describe("isRateLimitError", () => {
