@@ -109,6 +109,9 @@ flowchart TB
   editPhase -->|"edit 開始条件"| Edit実行
   reviewPhase -->|"review 開始条件"| Review実行
   finalizePhase -->|"finalize 開始条件"| Finalize確定
+  planResult -->|"edit plan・result 雛形"| Edit実行
+  planResult -->|"review plan・先行 result"| Review実行
+  planResult -->|"finalize plan・review result"| Finalize確定
   実行担当 -->|"作業・実施根拠"| Edit実行
   レビュー担当 -->|"検証・finding"| Review実行
   人間承認者 -->|"最終確認・承認"| Finalize確定
