@@ -17,6 +17,8 @@ specdojo:
 | --------------- | -------------------------- | ------------------------------------------------------ |
 | `agents/*.toml` | `.codex/agents/`           | subagent 定義。command template から直接選択はされない |
 
+配布する subagent には、成果物の編集と検証だけを担い result を更新しない `codex-expert-executor` を含みます。
+
 ## 3. 導入手順
 
 利用プロジェクトのルートで scaffold コマンドを実行します。
@@ -45,4 +47,5 @@ specdojo exec scaffold --provider codex
 ## 4. カスタマイズ
 
 - worker のモデル・reasoning effort は `command_params.by_proficiency` の1箇所で調整する。subagent（`agents/*.toml`）側の `model` / `model_reasoning_effort` は利用プランに合わせて調整する。
+- `codex-expert-executor` の result 更新禁止は pipeline の責務境界なので維持する。SpecDojo worker としての選択は `pm-members.yaml` の `stage_role: executor` で行い、custom subagent ファイルは起動コマンドから直接選択されない。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

@@ -101,6 +101,46 @@ members:
     scheduler_strategy: fifo
     note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物レビューを支援し、成果物は変更せず result のみ更新する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
 
+  - nickname: opencode-executor
+    disabled: false
+    priority: 1
+    display_name: OpenCode Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: OpenCode CLI とローカル Ollama を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツール・権限と役割別プロンプトは .opencode/agents/opencode-executor.md で定義。
+
+  - nickname: opencode-reporter
+    disabled: false
+    priority: 1
+    display_name: OpenCode Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: reporter
+    proficiency: normal
+    persona: execution-reporter
+    focus:
+      - evidence-summarization
+      - structured-result-generation
+    capabilities: []
+    scheduler_strategy: fifo
+    note: OpenCode CLI とローカル Ollama を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す。権限と役割別プロンプトは .opencode/agents/opencode-reporter.md で定義。
+
   #
   # claude code members
   #
@@ -245,6 +285,29 @@ members:
     capabilities: [web_search]
     scheduler_strategy: critical-first
     note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
+
+  - nickname: codex-expert-executor
+    disabled: false
+    priority: 1
+    display_name: Codex Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Codex CLI を使用する expert pipeline executor。複雑な分析・設計判断を伴う成果物編集と検証だけを担当し、result は更新しない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定する。templates/codex/agents/codex-expert-executor.tomlは親Codexが必要に応じてspawnするsubagentの配布原本で、起動コマンドから直接選択されない。
 
   - nickname: codex-expert-review-agent
     disabled: false

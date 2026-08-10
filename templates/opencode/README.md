@@ -17,6 +17,8 @@ specdojo:
 | ------------- | -------------------------- | ---------------------------------------------------------------------- |
 | `agents/*.md` | `.opencode/agents/`        | agent 定義。パス単位の `edit` とコマンド許可リストの `bash` を含む正本 |
 
+配布する role は、従来の edit / review に加え、成果物編集と検証だけを担う `opencode-executor`、入力された evidence から構造化結果だけを返す `opencode-reporter` を含みます。
+
 ## 3. 導入手順
 
 利用プロジェクトのルートで scaffold コマンドを実行します。
@@ -34,5 +36,6 @@ specdojo exec scaffold --provider opencode
 ## 4. カスタマイズ
 
 - edit agent の `permission.edit` は既定で `docs/**`、`src/**`、`tests/**` を許可する。`permission.edit` / `permission.bash` のパターンは、利用プロジェクトの成果物・execution ディレクトリ配置に合わせて調整する。
+- executor の result パス deny と reporter の全ツール deny は、pipeline の責務境界なので維持する。
 - `bash` は deny 基点の許可リストを維持する。`git add` / `git commit` を許可しないこと（許可すると specdojo CLI の commit 許可リストを迂回できる）。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

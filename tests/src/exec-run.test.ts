@@ -188,6 +188,55 @@ describe("selectCandidates", () => {
     expect(executorCandidates).toEqual(["executor"]);
     expect(reporterCandidates).toEqual(["reporter"]);
   });
+
+  it("keeps the configured executor and reporter names out of legacy selection", () => {
+    const members = roster([
+      agent({ nickname: "opencode-edit-agent", priority: 3 }),
+      agent({
+        nickname: "opencode-executor",
+        priority: 1,
+        stage_role: "executor",
+        proficiency: "normal",
+      }),
+      agent({
+        nickname: "opencode-reporter",
+        priority: 1,
+        stage_role: "reporter",
+        proficiency: "normal",
+        capabilities: [],
+      }),
+      agent({
+        nickname: "codex-expert-executor",
+        priority: 1,
+        stage_role: "executor",
+        proficiency: "expert",
+      }),
+    ]);
+
+    const legacyCandidates = selectCandidates(requirements, members, "edit").map(
+      (member) => member.nickname,
+    );
+    const normalExecutorCandidates = selectCandidates(
+      { ...requirements, proficiency: "normal", stage_role: "executor" },
+      members,
+      "edit",
+    ).map((member) => member.nickname);
+    const expertExecutorCandidates = selectCandidates(
+      { ...requirements, proficiency: "expert", stage_role: "executor" },
+      members,
+      "edit",
+    ).map((member) => member.nickname);
+    const reporterCandidates = selectCandidates(
+      { capabilities: [], proficiency: "normal", stage_role: "reporter" },
+      members,
+      "edit",
+    ).map((member) => member.nickname);
+
+    expect(legacyCandidates).toEqual(["opencode-edit-agent"]);
+    expect(normalExecutorCandidates).toEqual(["opencode-executor"]);
+    expect(expertExecutorCandidates).toEqual(["codex-expert-executor"]);
+    expect(reporterCandidates).toEqual(["opencode-reporter"]);
+  });
 });
 
 describe("isRateLimitError", () => {
