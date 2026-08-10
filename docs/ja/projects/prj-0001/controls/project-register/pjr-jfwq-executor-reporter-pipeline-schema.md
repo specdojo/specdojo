@@ -38,7 +38,10 @@ sch-strategyのagent_pipelineとpm-membersのstage_roleを定義し、既存stra
 
 ## 4. 対応結果
 
--
+- `sch-strategy` の phase に任意の `agent_pipeline.stages` を追加し、`executor`、`reporter` の 2 stage と順序を schema で固定した。各 stage は任意の `capabilities` と `proficiency` を実行要件として持ち、member nickname は保持しない。
+- `pm-members` に agent 専用の任意 `stage_role`（`executor` / `reporter`）を追加した。未指定 member は従来フロー専用、指定 member は一致する pipeline stage 専用として自動選択候補を分離した。
+- pipeline を省略した既存 strategy と `stage_role` を省略した既存 roster が引き続き有効であり、従来の候補順が変わらないことを単体テストで固定した。
+- pipeline の順序、human phase との併用禁止、member の値制約、stage 別候補選択を schema / 選択規則の単体テストへ追加した。
 
 ## 5. 関連ドキュメント
 

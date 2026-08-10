@@ -71,4 +71,47 @@ describe("pm-members.schema.yaml", () => {
       true,
     );
   });
+
+  it("accepts executor and reporter stage roles on agents", () => {
+    const roster = load(readFileSync(rosterPath, "utf8")) as {
+      members: Array<Record<string, unknown>>;
+    };
+    const agents = roster.members.filter((member) => member.type === "agent");
+    agents[0].stage_role = "executor";
+    agents[1].stage_role = "reporter";
+
+    const valid = validate(roster);
+
+    expect(validate.errors ?? []).toEqual([]);
+    expect(valid).toBe(true);
+  });
+
+  it("rejects an unknown stage role", () => {
+    const roster = load(readFileSync(rosterPath, "utf8")) as {
+      members: Array<Record<string, unknown>>;
+    };
+    const agent = roster.members.find((member) => member.type === "agent");
+    if (!agent) throw new Error("test roster must contain an agent");
+    agent.stage_role = "approver";
+
+    const valid = validate(roster);
+
+    expect(valid).toBe(false);
+    expect((validate.errors ?? []).some((error) => error.instancePath.includes("stage_role"))).toBe(
+      true,
+    );
+  });
+
+  it("rejects a pipeline stage role on a human member", () => {
+    const roster = load(readFileSync(rosterPath, "utf8")) as {
+      members: Array<Record<string, unknown>>;
+    };
+    const human = roster.members.find((member) => member.type === "human");
+    if (!human) throw new Error("test roster must contain a human");
+    human.stage_role = "executor";
+
+    const valid = validate(roster);
+
+    expect(valid).toBe(false);
+  });
 });

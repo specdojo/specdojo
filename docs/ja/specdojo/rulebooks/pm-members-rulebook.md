@@ -37,16 +37,18 @@ Project Member Roster Documentation Rulebook
 | `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、人間または agent、兼務割り当て、agent の選択属性 |
 | `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                                    |
 
-agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`nickname` / `mode` / `proficiency`）で展開して解決する。`pm-members.yaml` は「誰が・どの能力で・どの優先度か」だけを表し、モデル名や CLI フラグなどの実行基盤設定を持ち込まない。
+agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`nickname` / `mode` / `proficiency`）で展開して解決する。`pm-members.yaml` は「誰が・どの能力で・どの優先度か」に加え、pipeline 専用 agent の場合だけ「どの stage を担当するか」を表し、モデル名や CLI フラグなどの実行基盤設定を持ち込まない。
 
 用語は次のように使い分ける。
 
-| 用語      | 意味                                     | `pm-members.yaml` での扱い                   |
-| --------- | ---------------------------------------- | -------------------------------------------- |
-| Role code | 責務・判断権限・専門性を表す短い識別子   | `members[].roles` に列挙する                 |
-| Member    | 実際に作業または支援する主体             | `members[]` に列挙する                       |
-| nickname  | CLI と実行ログで使う Member の安定識別子 | `members[].nickname` に記載する              |
-| Executor  | 実際にタスクを実行する主体               | `specdojo exec --by <nickname>` で指定される |
+| 用語              | 意味                                               | `pm-members.yaml` での扱い      |
+| ----------------- | -------------------------------------------------- | ------------------------------- |
+| Role code         | 責務・判断権限・専門性を表す短い識別子             | `members[].roles` に列挙する    |
+| Member            | 実際に作業または支援する主体                       | `members[]` に列挙する          |
+| nickname          | CLI と実行ログで使う Member の安定識別子           | `members[].nickname` に記載する |
+| legacy agent      | pipeline を使わない従来の単一 agent 実行主体       | `stage_role` を省略する         |
+| pipeline executor | 成果物編集と検証を担う pipeline の第 1 stage agent | `stage_role: executor` とする   |
+| pipeline reporter | evidence から結果を構成する第 2 stage agent        | `stage_role: reporter` とする   |
 
 ## 3. ファイル命名・ID規則
 
@@ -102,6 +104,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `provider`           | agent 必須 | agent を実行する CLI 種別（`opencode` など）        |
 | `priority`           | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |
 | `mode`               | agent 推奨 | `edit` または `review`。担当できる実行モードを表す  |
+| `stage_role`         | 任意       | pipeline 専用 agent の `executor` / `reporter`      |
 | `proficiency`        | agent 推奨 | `normal` / `expert` などの品質 tier                 |
 | `persona`            | 任意       | 実行姿勢やレビュー観点を表す短いラベル              |
 | `focus`              | 任意       | 重視する観点の配列                                  |
@@ -140,6 +143,9 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 - `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`custom` から選ぶ。
 - `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
+- `stage_role` は pipeline 専用 agent にだけ指定し、`executor` または `reporter` とする。人間 member には指定しない。
+- `stage_role` を省略した agent は従来の単一 agent フロー専用とする。`stage_role` を持つ agent と持たない agent は、自動選択時に相互の代替候補にしない。
+- pipeline stage の agent は、strategy の stage に宣言された `stage_role`、`capabilities`、`proficiency` と member 属性が一致する候補から選ぶ。strategy に member nickname を固定しない。
 - 起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から member 属性で解決する。モデル名や CLI フラグの変更は member 定義に影響させない。
 - `command` は、テンプレートで表現できない特殊構成（`provider: custom` など）に限って上書きとして使う。記載する場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
 - `disabled: true` を指定した agent は `exec run --auto` の候補選択（rate limit 時のフォールバックを含む）から一時的に除外される。特定 provider の挙動（例: rate limit）をテストする際に、member 定義を削除せずに他 agent を止める用途で使う。省略時または `false` は通常どおり選択対象になる。
@@ -170,4 +176,6 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | 公開文書に不要な個人名、私用メールアドレス、非公開組織情報を書く     | 公開範囲とプライバシーに反するため                                         |
 | `command` に認証情報、秘密鍵、トークン、個人環境に閉じたパスを書く   | 秘密情報の漏えいと再利用不能な構成を招くため                               |
 | provider の command template で解決できる member に `command` を書く | 起動設定が `.specdojo/exec-defaults.yaml` と二重管理になるため             |
+| 人間 member に `stage_role` を指定する                               | pipeline stage は agent 実行だけを対象とするため                           |
+| pipeline stage の指定に member nickname を使う                       | strategy と実行主体が密結合し、候補選択と差し替えができなくなるため        |
 | 実行ログ記録後に `nickname` を変更する                               | 履歴との対応が壊れるため                                                   |

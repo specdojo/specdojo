@@ -594,11 +594,70 @@ $defs:
           Required agent proficiency for execution: agent phases.
           Omit to accept agents of any proficiency level.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      agent_pipeline:
+        $ref: "#/$defs/AgentPipeline"
+        description: >
+          Optional ordered executor/reporter pipeline for this phase.
+          Omit to preserve the legacy single-agent execution flow.
       description:
         type: string
         description: >
           Human-readable description of what to do in this phase.
           Used as agent instructions when execution is agent, and as guidance for humans when execution is human.
+
+    allOf:
+      - if:
+          required:
+            - agent_pipeline
+        then:
+          properties:
+            execution:
+              const: "agent"
+
+  AgentPipeline:
+    type: object
+    additionalProperties: false
+    required:
+      - stages
+    properties:
+      stages:
+        type: array
+        description: >
+          Ordered pipeline stages. The executor always runs first and the reporter second.
+          Agent nicknames are resolved from pm-members.yaml and must not be embedded here.
+        minItems: 2
+        maxItems: 2
+        prefixItems:
+          - allOf:
+              - $ref: "#/$defs/AgentPipelineStage"
+              - properties:
+                  stage_role:
+                    const: "executor"
+          - allOf:
+              - $ref: "#/$defs/AgentPipelineStage"
+              - properties:
+                  stage_role:
+                    const: "reporter"
+        items: false
+
+  AgentPipelineStage:
+    type: object
+    additionalProperties: false
+    required:
+      - stage_role
+    properties:
+      stage_role:
+        type: string
+        enum: ["executor", "reporter"]
+        description: "Pipeline responsibility used to select a matching pm-members agent."
+      capabilities:
+        $ref: "#/$defs/Capabilities"
+        description: >
+          Capabilities required for this stage. Omit when no special tools are needed.
+      proficiency:
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        description: >
+          Agent proficiency required for this stage. Omit to accept any proficiency level.
 
   Capabilities:
     type: array

@@ -202,6 +202,14 @@ $defs:
           When set, exec run only selects this agent for tasks whose assignment_rule
           has a matching mode (or no mode specified). Omit to handle all modes.
 
+      stage_role:
+        type: string
+        enum: ["executor", "reporter"]
+        description: >
+          Optional pipeline-stage responsibility for this agent.
+          executor and reporter agents are selected only for the matching agent_pipeline stage.
+          Omit for legacy single-agent execution; members without this field are not pipeline candidates.
+
       disabled:
         type: boolean
         description: >
@@ -233,3 +241,10 @@ $defs:
             - capabilities
             - proficiency
             - priority
+      - if:
+          required:
+            - stage_role
+        then:
+          properties:
+            type:
+              const: agent

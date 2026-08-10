@@ -259,7 +259,38 @@ phase_sets:
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
-### 3.2. `bootstrap` と `retrofit` のフェーズ順序
+### 3.2. executor / reporter pipeline
+
+一つの agent が成果物編集から result 記入までを担う従来フローを分割する場合、`execution: agent` の phase に任意の `agent_pipeline` を定義します。pipeline は executor、reporter の 2 stage 固定で、この順序を入れ替えたり一方を省略したりできません。
+
+```yaml
+phase_sets:
+  first-pass:
+    - id: enrich
+      name: 調査・補強
+      execution: agent
+      task_suffix: "020"
+      mode: edit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            capabilities: [web_search]
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+```
+
+| stage      | 順序 | 責務                                | 選択要件                                |
+| ---------- | ---- | ----------------------------------- | --------------------------------------- |
+| `executor` | 1    | 成果物の編集と検証を行う            | stage の `capabilities` / `proficiency` |
+| `reporter` | 2    | evidence から構造化された結果を作る | stage の `capabilities` / `proficiency` |
+
+- `agent_pipeline` は phase 単位の任意設定です。省略した phase は従来の単一 agent フローのまま動作します。
+- pipeline を指定した phase は agent 実行専用です。`execution: human` と併用できません。
+- `mode` と `approach` は phase 全体へ適用し、各 stage の agent 選択要件は stage 内の `capabilities` と `proficiency` で定義します。
+- stage には `pm-members.yaml` の nickname を書きません。`stage_role` と実行要件に一致する member を実行時に解決します。
+
+### 3.3. `bootstrap` と `retrofit` のフェーズ順序
 
 実践の型が未整備で、かつ既存実装から成果物を作成・補正する場合、`bootstrap` と `retrofit` を一つの phase に混在させません。次の順序を推奨します。
 
@@ -272,7 +303,7 @@ phase_sets:
 
 `retrofit` を使う成果物には、事前に DCT の `evidence_refs` を宣言します。実装エビデンスは Schedule の依存関係ではなく調査入力であるため、`depends_on` や `targets` へ複製しません。
 
-### 3.3. exec refresh時のフェーズ解決
+### 3.4. exec refresh時のフェーズ解決
 
 `exec refresh` は、`sch-track-<track>.yaml` のタスクを入力にし、対応する `sch-strategy-<track>.yaml` からフェーズ情報を解決して `ready.json` へ記録します。plan ファイルは `exec refresh` では生成せず、`exec plan` または `exec run` が必要時に生成します。
 

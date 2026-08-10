@@ -24,6 +24,8 @@ export type Approach =
 
 export type Proficiency = "low" | "normal" | "high" | "expert";
 
+export type AgentStageRole = "executor" | "reporter";
+
 export type ExecEventType =
   | "claim"
   | "note"

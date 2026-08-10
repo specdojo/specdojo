@@ -36,8 +36,8 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 | ファイル                       | 役割                                                                                     | 粒度         |
 | ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・`capabilities`・`proficiency`                           | トラック     |
-| `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority）                          | プロジェクト |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent_pipeline`                       | トラック     |
+| `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority・任意の `stage_role`）     | プロジェクト |
 | `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
 
 `sch-strategy` は agent 個体を指定しません。phase に「どんな能力が必要か」を書き、`pm-members.yaml` に「誰がその能力を持つか」を書きます。
@@ -73,15 +73,18 @@ phase_sets:
       mode: review
 ```
 
-| フィールド     | 必須 | 説明                                                                                                                                                                                                 |
-| -------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `execution`    | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                             |
-| `mode`         | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                              |
-| `approach`     | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
-| `capabilities` | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
-| `proficiency`  | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
+| フィールド       | 必須 | 説明                                                                                                                                                                                                 |
+| ---------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execution`      | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                             |
+| `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                              |
+| `approach`       | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
+| `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
+| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
+| `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                        |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。
+
+pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定義します。各 stage は `stage_role` と任意の `capabilities` / `proficiency` を持ち、nickname は持ちません。pipeline の構造例は [Schedule設計ガイド](schedule-design-guide.md) の `executor / reporter pipeline` を参照してください。
 
 ## 3. エージェントの定義
 
@@ -110,7 +113,9 @@ members:
     priority: 10
 ```
 
-`exec run --auto` は phase の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含めます。候補のソートキーは次の順に評価します。
+pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
+
+`exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含めます。候補のソートキーは次の順に評価します。
 
 1. busy 状態（イベントログ上で `doing` のタスクを担当中の agent）を最後尾に置きます。`--parallel` 実行で同じ最上位 agent に集中して rate limit に陥るのを避けるためです。
 2. `priority` 昇順（同値なら次へ）。
