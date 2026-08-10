@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:46Z"
   due_on: "2026-08-31"
+  conclusion: rate limit reached
 ---
 
 # PJR-TC43 executor / reporterパイプラインのE2E検証と文書化を行う
