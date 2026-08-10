@@ -39,7 +39,11 @@ reporterへplanとevidenceを引き渡し、厳格な構造化出力を検証し
 
 ## 4. 対応結果
 
--
+- reporter stage の入力を plan と runner が収集した上限付き executor evidence に限定し、edit / review を判別する `exec-reporter-output.schema.yaml` と同じ JSON Schema を Ajv 2020 strict mode で検証する処理を追加した。生ログや raw diff は reporter prompt へ渡さない。
+- pipeline の第2 stage 要件（`capabilities`、`proficiency`、`stage_role: reporter`）から agent を独立選択し、worktree / in-place の両経路で executor 成功後に起動するよう runner を拡張した。
+- reporter が返した検証済み JSON から edit / review result の本文を決定的に描画し、scaffold 済み frontmatter は runner 管理のまま保持する renderer を追加した。review では scaffold の RVP ID と順序の完全一致も検証する。
+- reporter が終了コード0で形式不正な出力を返した場合は最大3回 reporter だけを再実行し、同じ plan と executor evidence を再利用する。process failure、rate limit、形式エラー、reporter の blocked 判定は `pipeline_stage=reporter` として block へ伝播する。
+- strict schema、追加フィールド拒否、単独形式リトライ、決定的描画、frontmatter 不変、Markdown lint、executor / reporter 実プロセスを通す in-place 統合をテストで固定した。stage 単位の resume は [[prj-0001:pjr-7mxj-pipeline-resume-recovery]] の範囲として分離した。
 
 ## 5. 関連ドキュメント
 

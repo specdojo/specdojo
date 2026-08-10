@@ -104,6 +104,7 @@
     "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log"
   },
   "dependencies": {
+    "ajv": "^8.20.0",
     "commander": "^15.0.0",
     "dotenv": "^17.4.2",
     "js-yaml": "^4.2.0",
@@ -117,7 +118,6 @@
     "@types/node": "^25.9.2",
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
-    "ajv": "^8.20.0",
     "ajv-cli": "^5.0.0",
     "ajv-formats": "^3.0.1",
     "eslint-config-prettier": "^10.1.8",

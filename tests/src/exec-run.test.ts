@@ -6,6 +6,7 @@ import {
   isRateLimitError,
   parseExecRunBusyPolicy,
   resolveAgentOverride,
+  reporterRequirements,
   selectCandidates,
 } from "../../src/exec-run.js";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
@@ -259,6 +260,23 @@ describe("pipeline executor preparation", () => {
         },
       }),
     ).toEqual({ capabilities: ["exec"], proficiency: "expert", stage_role: "executor" });
+  });
+
+  it("resolves reporter requirements independently from executor requirements", () => {
+    expect(
+      reporterRequirements({
+        id: "T-TEST-doc-010",
+        schedule_file: "sch-track-test.yaml",
+        fifo_rank: 1,
+        critical_first_rank: 1,
+        agent_pipeline: {
+          stages: [
+            { stage_role: "executor", capabilities: ["exec"], proficiency: "expert" },
+            { stage_role: "reporter", capabilities: ["summary"], proficiency: "normal" },
+          ],
+        },
+      }),
+    ).toEqual({ capabilities: ["summary"], proficiency: "normal", stage_role: "reporter" });
   });
 
   it("separates result writing from the executor prompt and requests structured evidence", () => {

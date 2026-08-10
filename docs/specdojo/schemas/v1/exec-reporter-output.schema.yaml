@@ -1,0 +1,151 @@
+# exec-reporter-output.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo reporter output schema"
+description: >
+  Strict structured output produced by the reporter pipeline stage. The runner validates this
+  object before rendering result Markdown and owns all result frontmatter fields.
+oneOf:
+  - $ref: "#/$defs/edit"
+  - $ref: "#/$defs/review"
+$defs:
+  text:
+    type: string
+    minLength: 1
+    maxLength: 4000
+  outcome:
+    type: string
+    enum: [complete, blocked]
+  edit:
+    type: object
+    additionalProperties: false
+    allOf:
+      - if:
+          properties:
+            outcome:
+              const: blocked
+        then:
+          properties:
+            block_reason:
+              type: string
+              pattern: "\\S"
+        else:
+          properties:
+            block_reason:
+              type: string
+              maxLength: 0
+    required:
+      - schema_version
+      - mode
+      - outcome
+      - summary
+      - changed_files
+      - handoff
+      - approach
+      - block_reason
+    properties:
+      schema_version:
+        const: 1
+      mode:
+        const: edit
+      outcome:
+        $ref: "#/$defs/outcome"
+      summary:
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          $ref: "#/$defs/text"
+      changed_files:
+        type: array
+        maxItems: 1000
+        items:
+          type: object
+          additionalProperties: false
+          required: [path, summary]
+          properties:
+            path:
+              type: string
+              minLength: 1
+              maxLength: 1000
+            summary:
+              $ref: "#/$defs/text"
+      handoff:
+        type: array
+        maxItems: 100
+        items:
+          $ref: "#/$defs/text"
+      approach:
+        $ref: "#/$defs/text"
+      block_reason:
+        type: string
+        maxLength: 4000
+  review:
+    type: object
+    additionalProperties: false
+    allOf:
+      - if:
+          properties:
+            outcome:
+              const: blocked
+        then:
+          properties:
+            block_reason:
+              type: string
+              pattern: "\\S"
+        else:
+          properties:
+            block_reason:
+              type: string
+              maxLength: 0
+    required:
+      - schema_version
+      - mode
+      - outcome
+      - viewpoint_results
+      - findings
+      - approach
+      - recommendation
+      - block_reason
+    properties:
+      schema_version:
+        const: 1
+      mode:
+        const: review
+      outcome:
+        $ref: "#/$defs/outcome"
+      viewpoint_results:
+        type: array
+        maxItems: 100
+        items:
+          type: object
+          additionalProperties: false
+          required: [id, result, evidence, notes]
+          properties:
+            id:
+              type: string
+              pattern: "^RVP-[0-9]{3}$"
+            result:
+              type: string
+              enum: [pass, fail, unclear]
+            evidence:
+              type: array
+              minItems: 1
+              maxItems: 100
+              items:
+                $ref: "#/$defs/text"
+            notes:
+              type: string
+              maxLength: 4000
+      findings:
+        type: array
+        maxItems: 100
+        items:
+          $ref: "#/$defs/text"
+      approach:
+        $ref: "#/$defs/text"
+      recommendation:
+        type: string
+        enum: [approve, revise, reject]
+      block_reason:
+        type: string
+        maxLength: 4000

@@ -12,6 +12,7 @@ import { join } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
+import * as execWorktree from "../../src/exec-worktree.js";
 
 const originalCwd = process.cwd();
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
@@ -21,6 +22,84 @@ const FAKE_AGENT_CMD =
   `node -e "const fs=require('node:fs');` +
   `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
 const FAKE_AGENT_NICKNAME = "test-edit-agent";
+
+function configurePipeline(repo: string): void {
+  const executorCommand =
+    `node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');` +
+    `fs.writeFileSync('pipeline-artifact.md','# Updated\\n');` +
+    `console.log('<specdojo_executor_evidence>'+JSON.stringify({final_message:'artifact updated',` +
+    `validations:[{command:'npm test',status:'passed',summary:'ok'}]})+'</specdojo_executor_evidence>')"`;
+  const reporterOutput = JSON.stringify({
+    schema_version: 1,
+    mode: "edit",
+    outcome: "complete",
+    summary: ["成果物を更新し、検証を完了した。"],
+    changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
+    handoff: [],
+    approach: "plan と executor evidence のみを根拠に結果を構成した。",
+    block_reason: "",
+  });
+  const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+  const reporterCommand =
+    `node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');` +
+    `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`;
+  writeFileSync(
+    join(repo, "pm-members.yaml"),
+    [
+      "version: 1",
+      "project_id: test",
+      "members:",
+      "  - nickname: pipeline-executor",
+      "    display_name: Pipeline Executor",
+      "    email: null",
+      "    roles: [DEV]",
+      "    type: agent",
+      "    stage_role: executor",
+      "    capabilities: [exec]",
+      "    proficiency: expert",
+      `    command: ${JSON.stringify(executorCommand)}`,
+      "    mode: edit",
+      "  - nickname: pipeline-reporter",
+      "    display_name: Pipeline Reporter",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    stage_role: reporter",
+      "    capabilities: []",
+      "    proficiency: normal",
+      `    command: ${JSON.stringify(reporterCommand)}`,
+      "    mode: edit",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "schedule", "sch-strategy-test.yaml"),
+    [
+      "kind: strategy",
+      "track: test",
+      "phase_sets:",
+      "  first:",
+      "    - id: draft",
+      "      name: Draft",
+      "      task_suffix: '010'",
+      "      mode: edit",
+      "      agent_pipeline:",
+      "        stages:",
+      "          - stage_role: executor",
+      "            capabilities: [exec]",
+      "            proficiency: expert",
+      "          - stage_role: reporter",
+      "            proficiency: normal",
+      "owner_rules:",
+      "  - local_ids: [doc]",
+      "    owner: DEV",
+      "    phase_set: first",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+}
 
 function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key];
@@ -163,6 +242,59 @@ afterEach(() => {
 });
 
 describe("exec run (in-place, default)", () => {
+  it("runs executor and reporter stages and renders the result from validated JSON", async () => {
+    const { repo, executionPath } = setupRepository();
+    configurePipeline(repo);
+    vi.spyOn(execWorktree, "gitOutput").mockImplementation((_repoRoot, args) =>
+      args[0] === "status" ? "?? pipeline-artifact.md\0" : " pipeline-artifact.md | 1 +\n",
+    );
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk: string | Uint8Array) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--task",
+        "T-TEST-doc-010",
+        "--by",
+        "pipeline-executor",
+      ]);
+
+      expect(readFileSync(join(repo, "pipeline-artifact.md"), "utf8")).toContain("# Updated");
+      const result = readFileSync(
+        join(executionPath, "exec", "results", "T-TEST-doc-010-result.md"),
+        "utf8",
+      );
+      expect(result, output.join("")).toContain("status: complete");
+      expect(result).toContain("成果物を更新し、検証を完了した。");
+      expect(result).toContain("`pipeline-artifact.md`: 文書を更新した。");
+      expect(result).not.toContain("_TODO_");
+      const evidenceDirs = readdirSync(join(executionPath, "exec", "evidence", "T-TEST-doc-010"));
+      expect(evidenceDirs).toHaveLength(1);
+      expect(
+        existsSync(
+          join(
+            executionPath,
+            "exec",
+            "evidence",
+            "T-TEST-doc-010",
+            evidenceDirs[0],
+            "evidence.json",
+          ),
+        ),
+      ).toBe(true);
+      expect(process.exitCode).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("runs --task in the current repo with the generated plan and writes no events", async () => {
     const { repo, executionPath } = setupRepository();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
