@@ -38,7 +38,10 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- `pm-members.yaml` に `stage_role` 付きの `opencode-executor`、`opencode-reporter`、`codex-expert-executor` を追加した。既存 agent は `stage_role` 未指定のまま維持し、従来フローと pipeline の候補を分離した。
+- OpenCode executor は成果物の編集・検証に限定し、result パスを edit deny とする実設定と配布原本を追加した。OpenCode reporter は全ツールを deny とし、渡された plan、evidence、出力スキーマだけから構造化結果を返す実設定と配布原本を追加した。
+- Codex expert executor は `proficiency: expert` の pipeline member と、result を更新しない役割別プロンプトを持つ custom subagent 配布原本を追加した。Codex worker は設計どおり member 属性と command template から起動し、custom subagent ファイルを直接選択しない。
+- 追加した3つの nickname を使う候補選択テストで、従来フローには既存 agent だけ、pipeline には一致する `stage_role` と `proficiency` の agent だけが選ばれることを固定した。
 
 ## 5. 関連ドキュメント
 
