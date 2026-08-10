@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-10T05:20:35Z",
+  "type": "release",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-070",
+  "by": "indie",
+  "msg": "OpenCode resultのfrontmatter破壊とMarkdownlint失敗のためCodexで再実行"
+}
