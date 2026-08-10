@@ -103,6 +103,7 @@ import type { PjrItem, RegisterPaths } from "./register.js";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
+  renderReporterResult,
   scaffoldResult,
   updateResultStatus,
 } from "./exec-results.js";
@@ -132,6 +133,7 @@ import {
   resolveTaskProficiency,
 } from "./exec-strategy.js";
 import { recordExecutorEvidence } from "./exec-evidence.js";
+import { runReporterWithFormatRetry } from "./exec-reporter.js";
 
 type StrategyPhase = {
   id: string;
@@ -268,12 +270,14 @@ type PreparedTask = {
   task: ReadyTaskView;
   actor: string;
   agentCandidates: AgentRunCandidate[];
+  plan: string;
   prompt: string;
   worktree: ExecWorktree;
   resultPath?: string;
   resultScaffold?: Record<string, unknown>;
   priorLimitAttempts?: number;
   pipelineRunId?: string;
+  reporterCandidates?: AgentRunCandidate[];
 };
 
 type PlanGenPaths = {
@@ -698,6 +702,44 @@ export function executorRequirements(task: ReadyTaskView): ResolvedRequirements 
   };
 }
 
+export function reporterRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
+  const reporter = task.agent_pipeline?.stages[1];
+  if (!reporter || reporter.stage_role !== "reporter") return undefined;
+  return {
+    capabilities: reporter.capabilities ?? [],
+    proficiency: reporter.proficiency,
+    stage_role: "reporter",
+  };
+}
+
+function resolveReporterAgentCandidates(
+  task: ReadyTaskView,
+  roster: MemberRoster | null,
+  execDefaults: ExecDefaultsConfig,
+  busyActors?: ReadonlySet<string>,
+): AgentRunCandidate[] {
+  const requirements = reporterRequirements(task);
+  if (!requirements) return [];
+  const candidates: AgentRunCandidate[] = [];
+  for (const member of selectCandidates(
+    requirements,
+    roster,
+    task.mode ?? "edit",
+    busyActors,
+    execDefaults,
+  )) {
+    try {
+      const command = resolveMemberCommand(execDefaults, member);
+      if (command) candidates.push({ command, actor: member.nickname, provider: member.provider });
+    } catch (error) {
+      process.stdout.write(
+        `  Skipping reporter ${member.nickname}: ${error instanceof Error ? error.message : String(error)}\n`,
+      );
+    }
+  }
+  return candidates;
+}
+
 export function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
   const { config } = loadConfig();
   if (!config) return null;
@@ -1078,6 +1120,23 @@ async function prepareSingleTask(
     );
   }
 
+  let reporterCandidates: AgentRunCandidate[] | undefined;
+  if (task.agent_pipeline) {
+    const requirements = reporterRequirements(task);
+    reporterCandidates = resolveReporterAgentCandidates(
+      task,
+      roster,
+      execDefaults,
+      collectBusyActors(schedulePath),
+    );
+    if (reporterCandidates.length === 0) {
+      process.stdout.write(
+        `  No agents found for reporter stage${requirements?.proficiency ? `, proficiency: ${requirements.proficiency}` : ""}\n`,
+      );
+      return "failure";
+    }
+  }
+
   // Plans are generated on demand here; `exec refresh` does not manage them.
   await generateSinglePlan({
     executionPath,
@@ -1121,9 +1180,11 @@ async function prepareSingleTask(
       task,
       actor,
       agentCandidates,
+      plan: planPrompt,
       prompt,
       worktree,
       pipelineRunId,
+      reporterCandidates,
     };
   }
 
@@ -1222,11 +1283,13 @@ async function prepareSingleTask(
     task,
     actor,
     agentCandidates,
+    plan: planPrompt,
     prompt,
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
     pipelineRunId,
+    reporterCandidates,
   };
 }
 
@@ -1307,14 +1370,22 @@ async function runPreparedTask(
   process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
   const executorStartedAt = new Date().toISOString();
-  const { result, exitCode, stdout, stderr, attempts, limit } = await runWithRetry(
+  const executorOutcome = await runWithRetry(
     prepared.agentCandidates,
     prepared.prompt,
     execDefaults,
     prepared.worktree.path,
     agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
   );
+  let result = executorOutcome.result;
+  let stderr = executorOutcome.stderr;
+  const { exitCode, stdout, attempts, limit } = executorOutcome;
   let executorEvidenceRef: string | undefined;
+  let executorEvidence: ReturnType<typeof recordExecutorEvidence>["evidence"] | undefined;
+  let pipelineFailureStage: AgentStageRole = "executor";
+  let pipelineBlockReason: string | undefined;
+  let reporterLimit: AgentLimitSignal | undefined;
+  let reporterAttempts = 0;
   if (prepared.pipelineRunId) {
     const recorded = recordExecutorEvidence({
       repoRoot,
@@ -1335,7 +1406,60 @@ async function runPreparedTask(
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
       .join("/");
+    executorEvidence = recorded.evidence;
     process.stdout.write(`  Executor evidence: ${executorEvidenceRef}\n`);
+  }
+
+  if (prepared.pipelineRunId && result === "success") {
+    pipelineFailureStage = "reporter";
+    if (!executorEvidence || !worktreeResultPath || !prepared.reporterCandidates?.length) {
+      result = "failure";
+      pipelineBlockReason = "reporter stage could not start because its managed inputs are missing";
+      stderr = pipelineBlockReason;
+    } else {
+      process.stdout.write(`  Running reporter: ${prepared.reporterCandidates[0].command}\n`);
+      const reporter = await runReporterWithFormatRetry({
+        plan: prepared.plan,
+        evidence: executorEvidence,
+        mode: prepared.task.mode ?? "edit",
+        invoke: async (reporterPrompt) => {
+          const outcome = await runWithRetry(
+            prepared.reporterCandidates ?? [],
+            reporterPrompt,
+            execDefaults,
+            prepared.worktree.path,
+            agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+          );
+          reporterAttempts += outcome.attempts;
+          if (outcome.limit) reporterLimit = outcome.limit;
+          return { result: outcome.result, stdout: outcome.stdout, stderr: outcome.stderr };
+        },
+      });
+      if (reporter.result === "success") {
+        try {
+          await renderReporterResult(worktreeResultPath, reporter.output);
+          result = reporter.output.outcome === "complete" ? "success" : "failure";
+          if (reporter.output.outcome === "blocked") {
+            pipelineBlockReason = reporter.output.block_reason;
+            stderr = reporter.output.block_reason;
+          }
+          process.stdout.write(
+            `  Reporter complete: ${prepared.reporterCandidates[0].actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
+          );
+        } catch (error) {
+          result = "failure";
+          pipelineBlockReason =
+            error instanceof Error
+              ? `reporter result rendering failed: ${error.message}`
+              : String(error);
+          stderr = pipelineBlockReason;
+        }
+      } else {
+        result = reporter.result;
+        pipelineBlockReason = reporter.reason;
+        stderr = reporter.reason;
+      }
+    }
   }
 
   const finalize = async (): Promise<RunResult> => {
@@ -1353,12 +1477,8 @@ async function runPreparedTask(
       attemptResultScaffold,
       prepared.resultScaffold,
     );
-    // Reporter execution and deterministic result rendering are introduced by PJR-RG7C. Until
-    // that stage exists, never integrate or complete a pipeline task after executor-only success.
-    // Keep the worktree and evidence so the next stage can consume the executor outcome safely.
-    const reporterPending = prepared.pipelineRunId !== undefined && result === "success";
-    const effectiveResult: RunResult = reporterPending ? "failure" : downgraded.result;
-    const unfilledBlock = reporterPending ? false : downgraded.unfilledBlock;
+    const effectiveResult: RunResult = downgraded.result;
+    const unfilledBlock = downgraded.unfilledBlock;
 
     if (effectiveResult === "success") {
       // Validate the same state/actor constraints as `exec complete` before touching Git. In
@@ -1412,10 +1532,12 @@ async function runPreparedTask(
       process.stdout.write(`  Done: ${prepared.task.id}\n`);
     } else if (effectiveResult === "rate_limit") {
       // Keep the worktree for the due-time resume path; do not merge partial changes.
-      const totalAttempts = (prepared.priorLimitAttempts ?? 0) + attempts;
-      const reason = limit
-        ? `${limit.kind} reached${limit.resume_at ? `; resume_at=${limit.resume_at}` : ""}`
-        : "rate limit reached";
+      const activeLimit = pipelineFailureStage === "reporter" ? reporterLimit : limit;
+      const activeAttempts = pipelineFailureStage === "reporter" ? reporterAttempts : attempts;
+      const totalAttempts = (prepared.priorLimitAttempts ?? 0) + activeAttempts;
+      const reason = activeLimit
+        ? `${activeLimit.kind} reached${activeLimit.resume_at ? `; resume_at=${activeLimit.resume_at}` : ""}`
+        : (pipelineBlockReason ?? "rate limit reached");
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
       spawnBlock(
@@ -1423,32 +1545,30 @@ async function runPreparedTask(
         prepared.task.id,
         prepared.actor,
         reason,
-        limit
-          ? limitEventMeta(limit, {
+        activeLimit
+          ? limitEventMeta(activeLimit, {
               attempts: totalAttempts,
               worktree: prepared.worktree.path,
               ...(executorEvidenceRef
-                ? { pipeline_stage: "executor", evidence_ref: executorEvidenceRef }
+                ? { pipeline_stage: pipelineFailureStage, evidence_ref: executorEvidenceRef }
                 : {}),
             })
           : {
               limit_deferred: "false",
               ...(executorEvidenceRef
-                ? { pipeline_stage: "executor", evidence_ref: executorEvidenceRef }
+                ? { pipeline_stage: pipelineFailureStage, evidence_ref: executorEvidenceRef }
                 : {}),
             },
       );
       process.stdout.write(
-        limit?.auto_resume
-          ? `  Deferred: ${prepared.task.id} until ${limit.resume_at} (worktree kept: ${prepared.worktree.path})\n`
+        activeLimit?.auto_resume
+          ? `  Deferred: ${prepared.task.id} until ${activeLimit.resume_at} (worktree kept: ${prepared.worktree.path})\n`
           : `  Rate limited: ${prepared.task.id}; automatic resume unavailable (worktree kept: ${prepared.worktree.path})\n`,
       );
     } else {
       const blockReason = unfilledBlock
         ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
-        : reporterPending
-          ? "executor stage completed and evidence was saved; reporter stage is pending implementation (PJR-RG7C)"
-          : extractBlockReason(stderr);
+        : (pipelineBlockReason ?? extractBlockReason(stderr));
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
       spawnBlock(
@@ -1459,13 +1579,13 @@ async function runPreparedTask(
         executorEvidenceRef
           ? {
               limit_deferred: "false",
-              pipeline_stage: "executor",
+              pipeline_stage: pipelineFailureStage,
               evidence_ref: executorEvidenceRef,
             }
           : { limit_deferred: "false" },
       );
       process.stdout.write(
-        `  ${reporterPending ? "Executor complete (reporter pending)" : unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        `  ${unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
       );
     }
 
@@ -2152,11 +2272,21 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   }
 
   const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
+  const reporterCandidates =
+    task?.agent_pipeline && task
+      ? resolveReporterAgentCandidates(task, roster, execDefaults)
+      : undefined;
+  if (task?.agent_pipeline && !reporterCandidates?.length) {
+    throw new Error("No agent found for reporter pipeline stage.");
+  }
   const label = slug ?? planPath;
 
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] target: ${label} (state ignored)\n`);
     process.stdout.write(`[dry-run] command: ${command}\n`);
+    if (reporterCandidates?.[0]) {
+      process.stdout.write(`[dry-run] reporter command: ${reporterCandidates[0].command}\n`);
+    }
     process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
     process.stdout.write(`[dry-run] plan: ${planPath}\n`);
     return;
@@ -2240,6 +2370,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let exitCode: number;
   let pipelineBlockReason: string | undefined;
   let pipelineEvidenceRef: string | undefined;
+  let pipelineFailureStage: AgentStageRole = "executor";
   if (task?.agent_pipeline) {
     const startedAt = new Date().toISOString();
     const outcome = await runWithRetry(
@@ -2277,9 +2408,54 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
     process.stdout.write(`Executor evidence: ${pipelineEvidenceRef}\n`);
     if (outcome.result === "success") {
-      pipelineBlockReason =
-        "executor stage completed and evidence was saved; reporter stage is pending implementation (PJR-RG7C)";
-      exitCode = 1;
+      pipelineFailureStage = "reporter";
+      process.stdout.write(`Running reporter: ${reporterCandidates?.[0]?.command ?? ""}\n`);
+      const reporter = await runReporterWithFormatRetry({
+        plan: planPrompt,
+        evidence: recorded.evidence,
+        mode: task.mode ?? "edit",
+        invoke: async (reporterPrompt) => {
+          const reporterOutcome = await runWithRetry(
+            reporterCandidates ?? [],
+            reporterPrompt,
+            execDefaults,
+            repoRoot,
+            {
+              ...process.env,
+              SPECDOJO_SCHEDULE_PATH: schedulePath,
+              SPECDOJO_EXECUTION_PATH: executionPath,
+            },
+          );
+          return {
+            result: reporterOutcome.result,
+            stdout: reporterOutcome.stdout,
+            stderr: reporterOutcome.stderr,
+          };
+        },
+      });
+      if (reporter.result === "success" && resultPath) {
+        try {
+          await renderReporterResult(resultPath, reporter.output);
+          exitCode = reporter.output.outcome === "complete" ? 0 : 1;
+          pipelineBlockReason =
+            reporter.output.outcome === "blocked" ? reporter.output.block_reason : undefined;
+          process.stdout.write(
+            `Reporter complete: ${reporterCandidates?.[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
+          );
+        } catch (error) {
+          exitCode = 1;
+          pipelineBlockReason =
+            error instanceof Error
+              ? `reporter result rendering failed: ${error.message}`
+              : String(error);
+        }
+      } else if (reporter.result === "success") {
+        exitCode = 1;
+        pipelineBlockReason = "reporter result path is unavailable";
+      } else {
+        exitCode = 1;
+        pipelineBlockReason = reporter.reason;
+      }
     } else {
       pipelineBlockReason =
         outcome.result === "rate_limit"
@@ -2333,7 +2509,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         pipelineEvidenceRef
           ? {
               limit_deferred: "false",
-              pipeline_stage: "executor",
+              pipeline_stage: pipelineFailureStage,
               evidence_ref: pipelineEvidenceRef,
             }
           : { limit_deferred: "false" },

@@ -6,6 +6,7 @@ import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-n
 import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
+import type { ReporterOutput, ReviewReporterOutput } from "./exec-reporter.js";
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -320,6 +321,135 @@ export function isResultUnfilled(
 export function readResultFrontmatterSnapshot(resultPath: string): Record<string, unknown> {
   if (!existsSync(resultPath)) return {};
   return parseSpecdojoDocument(readFileSync(resultPath, "utf8")).data;
+}
+
+function reporterInlineText(value: string): string {
+  return value
+    .replace(/[\r\n]+/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .trim();
+}
+
+function reporterBulletList(values: string[], empty: string): string {
+  if (values.length === 0) return `- ${empty}`;
+  return values.map((value) => `- ${reporterInlineText(value)}`).join("\n");
+}
+
+function renderEditReporterBody(output: Extract<ReporterOutput, { mode: "edit" }>): string {
+  const changedFiles =
+    output.changed_files.length === 0
+      ? "- なし"
+      : output.changed_files
+          .map(
+            (file) =>
+              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(file.summary)}`,
+          )
+          .join("\n");
+  return [
+    "# Edit Result",
+    "",
+    "## 1. 実施内容",
+    "",
+    reporterBulletList(output.summary, "実施内容なし"),
+    "",
+    "## 2. 変更ファイル",
+    "",
+    changedFiles,
+    "",
+    "## 3. 申し送り",
+    "",
+    reporterBulletList(output.handoff, "なし"),
+    "",
+    "## 4. 進め方と実践の型の適用",
+    "",
+    reporterInlineText(output.approach),
+  ].join("\n");
+}
+
+type ReviewViewpointContext = { id: string; suffix: string; criterion: string };
+
+function reviewViewpointContexts(body: string): ReviewViewpointContext[] {
+  const contexts: ReviewViewpointContext[] = [];
+  const pattern = /^### (RVP-[0-9]{3})([^\n]*)\n\n\*\*確認基準\*\*: ([^\n]+)$/gmu;
+  for (const match of body.matchAll(pattern)) {
+    contexts.push({ id: match[1], suffix: match[2], criterion: match[3] });
+  }
+  return contexts;
+}
+
+function renderReviewReporterBody(output: ReviewReporterOutput, scaffoldBody: string): string {
+  const contexts = reviewViewpointContexts(scaffoldBody);
+  const expectedIds = contexts.map((context) => context.id);
+  const actualIds = output.viewpoint_results.map((viewpoint) => viewpoint.id);
+  if (!isDeepStrictEqual(actualIds, expectedIds)) {
+    throw new Error(
+      `reporter viewpoint ids must match scaffold order: expected=[${expectedIds.join(", ")}], actual=[${actualIds.join(", ")}]`,
+    );
+  }
+  const byId = new Map(output.viewpoint_results.map((viewpoint) => [viewpoint.id, viewpoint]));
+  const viewpointSections =
+    contexts.length === 0
+      ? "- 観点別結果: 該当なし"
+      : contexts
+          .map((context) => {
+            const viewpoint = byId.get(context.id);
+            if (!viewpoint) throw new Error(`reporter viewpoint missing: ${context.id}`);
+            return [
+              `### ${context.id}${context.suffix}`,
+              "",
+              `**確認基準**: ${context.criterion}`,
+              "",
+              `- result: ${viewpoint.result}`,
+              `- evidence: ${viewpoint.evidence.map(reporterInlineText).join(" / ")}`,
+              `- notes: ${viewpoint.notes ? reporterInlineText(viewpoint.notes) : "なし"}`,
+            ].join("\n");
+          })
+          .join("\n\n");
+  return [
+    "# Review Result",
+    "",
+    "## 1. レビュー観点別結果",
+    "",
+    viewpointSections,
+    "",
+    "## 2. findings",
+    "",
+    reporterBulletList(output.findings, "なし"),
+    "",
+    "## 3. 実践の型との整合確認",
+    "",
+    reporterInlineText(output.approach),
+    "",
+    "## 4. decision",
+    "",
+    `- recommendation: ${output.recommendation}`,
+  ].join("\n");
+}
+
+/**
+ * Replaces only the result body from schema-validated reporter data. The scaffolded frontmatter
+ * remains byte-for-byte runner-owned until the lifecycle status update serializes it.
+ */
+export async function renderReporterResult(
+  resultPath: string,
+  output: ReporterOutput,
+): Promise<void> {
+  if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
+  const content = readFileSync(resultPath, "utf8");
+  const parsed = parseSpecdojoDocument(content);
+  if (parsed.data.mode !== output.mode) {
+    throw new Error(`reporter mode does not match result scaffold: ${output.mode}`);
+  }
+  const frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
+  if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
+  const body =
+    output.mode === "edit"
+      ? renderEditReporterBody(output)
+      : renderReviewReporterBody(output, parsed.body);
+  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
+  await formatMarkdownFile(resultPath);
 }
 
 export async function updateResultStatus(

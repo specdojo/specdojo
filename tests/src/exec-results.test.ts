@@ -2,14 +2,29 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { lint } from "markdownlint/sync";
+import yaml from "js-yaml";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
   parseResultTaskIdentity,
   resetResultForClaim,
+  renderReporterResult,
   scaffoldResult,
   updateResultStatus,
 } from "../../src/exec-results.js";
+import { specdojoRootDir } from "../../src/specdojo-config.js";
+
+function markdownlintErrors(content: string): unknown[] {
+  const parsed = yaml.load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
+  const config =
+    typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
+  const results = lint({
+    strings: { result: content },
+    config,
+  });
+  return results.result ?? [];
+}
 
 describe("scaffoldResult + updateResultStatus round-trip", () => {
   let executionPath: string;
@@ -432,6 +447,94 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     writeFileSync(resultPath, filled, "utf8");
 
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
+  });
+
+  it("deterministically renders a validated edit reporter result without changing frontmatter", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const output = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      outcome: "complete" as const,
+      summary: ["成果物とテストを更新した。"],
+      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
+      handoff: [],
+      approach: "plan と evidence の範囲だけを根拠にした。",
+      block_reason: "",
+    };
+
+    await renderReporterResult(resultPath, output);
+    const first = readFileSync(resultPath, "utf8");
+    await renderReporterResult(resultPath, output);
+    const second = readFileSync(resultPath, "utf8");
+
+    expect(second).toBe(first);
+    expect(readResultFrontmatterSnapshot(resultPath)).toEqual(scaffoldFrontmatter);
+    expect(first).toContain("`docs/test.md`: 記述を追加した。");
+    expect(first).not.toContain("_TODO_");
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
+    expect(markdownlintErrors(first)).toEqual([]);
+  });
+
+  it("renders review viewpoints in scaffold order and rejects mismatched ids", async () => {
+    const reviewSections = [
+      "### RVP-001（DEV: vp-quality）",
+      "",
+      "**確認基準**: 内容が完全である。",
+      "",
+      "- result: _TODO_（pass / fail / unclear）",
+      "- evidence: _TODO_",
+      "- notes: _TODO_",
+    ].join("\n");
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-doc-020",
+      mode: "review",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-doc-020-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+      reviewSections,
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "review" as const,
+      outcome: "complete" as const,
+      viewpoint_results: [
+        {
+          id: "RVP-001",
+          result: "pass" as const,
+          evidence: ["検証コマンドが成功した。"],
+          notes: "",
+        },
+      ],
+      findings: [],
+      approach: "done criteria と evidence を照合した。",
+      recommendation: "approve" as const,
+      block_reason: "",
+    };
+
+    await renderReporterResult(resultPath, output);
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("- result: pass");
+    expect(content).toContain("- recommendation: approve");
+    expect(content).not.toContain("_TODO_");
+    expect(markdownlintErrors(content)).toEqual([]);
+
+    await expect(
+      renderReporterResult(resultPath, {
+        ...output,
+        viewpoint_results: [{ ...output.viewpoint_results[0], id: "RVP-002" }],
+      }),
+    ).rejects.toThrow(/must match scaffold order/);
   });
 
   it.each([
