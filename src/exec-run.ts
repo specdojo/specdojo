@@ -18,6 +18,7 @@ import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-projec
 import {
   acquireSchedulerLock,
   buildEvent,
+  canCompleteTask,
   readAllEventFiles,
   foldEventsToState,
   releaseSchedulerLock,
@@ -45,7 +46,13 @@ import {
   type ProjectMember,
 } from "./specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
-import type { CurrentState, Proficiency, TaskMode } from "./exec-types.js";
+import type {
+  CurrentState,
+  Proficiency,
+  ScheduleIndex,
+  StateSnapshot,
+  TaskMode,
+} from "./exec-types.js";
 import {
   acquireExecRunLock,
   releaseExecRunLock,
@@ -92,7 +99,12 @@ import {
   type RegisterItemTransition,
 } from "./exec-register.js";
 import type { PjrItem, RegisterPaths } from "./register.js";
-import { isResultUnfilled, scaffoldResult, updateResultStatus } from "./exec-results.js";
+import {
+  isResultUnfilled,
+  readResultFrontmatterSnapshot,
+  scaffoldResult,
+  updateResultStatus,
+} from "./exec-results.js";
 import { completeJobRun, materializeJobRun } from "./job.js";
 import {
   gitOutput,
@@ -249,6 +261,7 @@ type PreparedTask = {
   prompt: string;
   worktree: ExecWorktree;
   resultPath?: string;
+  resultScaffold?: Record<string, unknown>;
   priorLimitAttempts?: number;
 };
 
@@ -1117,12 +1130,13 @@ async function prepareSingleTask(
     prompt,
     worktree,
     resultPath,
+    resultScaffold: readResultFrontmatterSnapshot(resultPath),
   };
 }
 
 // An agent can exit 0 without doing the work (e.g. a permission-denied tool call is fed back as a
-// tool error and the model ends its turn normally). The agent's core duty is to fill the result, so
-// treat a still-scaffold result (mandatory sections left as _TODO_) as a block even on exit 0. This
+// tool error and the model ends its turn normally). The agent's core duty is to fill the result while
+// preserving its scaffold frontmatter, so treat an incomplete or modified result as a block on exit 0. This
 // mirrors the in-place guard in runInPlaceMode; on the worktree path it also prevents an empty task
 // from being committed, merged, and unblocking downstream tasks. Only a successful run is reconsidered;
 // rate-limit and failure outcomes pass through unchanged.
@@ -1130,11 +1144,45 @@ export function downgradeUnfilledResult(
   agentResult: RunResult,
   resultPath: string | undefined,
   mode: TaskMode,
+  scaffoldFrontmatter?: Record<string, unknown>,
+  originalScaffoldFrontmatter?: Record<string, unknown>,
 ): { result: RunResult; unfilledBlock: boolean } {
-  if (agentResult === "success" && resultPath && isResultUnfilled(resultPath, mode)) {
+  if (
+    agentResult === "success" &&
+    resultPath &&
+    isResultUnfilled(resultPath, mode, scaffoldFrontmatter, originalScaffoldFrontmatter)
+  ) {
     return { result: "failure", unfilledBlock: true };
   }
   return { result: agentResult, unfilledBlock: false };
+}
+
+export function checkCompletionBeforeIntegration(
+  schedule: ScheduleIndex,
+  snapshot: StateSnapshot,
+  taskId: string,
+  actor: string,
+): { ok: boolean; reason?: string } {
+  return canCompleteTask(schedule, snapshot, taskId, actor);
+}
+
+function readCompletionPreflight(
+  schedulePath: string,
+  taskId: string,
+  actor: string,
+): { ok: boolean; reason?: string } {
+  try {
+    const schedule = buildScheduleIndex(schedulePath);
+    const events = readAllEventFiles(schedulePath);
+    const initialTasks = buildInitialStateFromStrategy(schedulePath, schedule);
+    const snapshot = foldEventsToState(events, schedule, schedulePath, initialTasks);
+    return checkCompletionBeforeIntegration(schedule, snapshot, taskId, actor);
+  } catch (error) {
+    return {
+      ok: false,
+      reason: `could not validate current task state: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
 }
 
 async function runPreparedTask(
@@ -1149,6 +1197,16 @@ async function runPreparedTask(
   lifecycleLock?: AsyncLock,
 ): Promise<RunResult> {
   if (dryRun) return "success";
+
+  const worktreeResultPath = prepared.resultPath
+    ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
+    : undefined;
+  // A resumed worktree may legitimately contain runner-owned blocked lifecycle fields that differ
+  // from the root checkpoint. Use the actual pre-run result for this attempt's exact comparison,
+  // while retaining the root scaffold below to reject changes to immutable fields across attempts.
+  const attemptResultScaffold = worktreeResultPath
+    ? readResultFrontmatterSnapshot(worktreeResultPath)
+    : undefined;
 
   process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
@@ -1168,17 +1226,33 @@ async function runPreparedTask(
       executionPath,
       ...(catalogPath ? { catalogPath } : {}),
     };
-    const worktreeResultPath = prepared.resultPath
-      ? pathInsideWorktree(repoRoot, prepared.worktree.path, prepared.resultPath)
-      : undefined;
-
     const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
       result,
       worktreeResultPath,
       prepared.task.mode ?? "edit",
+      attemptResultScaffold,
+      prepared.resultScaffold,
     );
 
     if (effectiveResult === "success") {
+      // Validate the same state/actor constraints as `exec complete` before touching Git. In
+      // particular, resume --by may run a different agent from the one that owns the claim; if we
+      // merged first, the subsequent complete command would reject that actor and leave schedule
+      // state at doing even though the deliverables had already landed and the worktree was gone.
+      const completionPreflight = readCompletionPreflight(
+        schedulePath,
+        prepared.task.id,
+        prepared.actor,
+      );
+      if (!completionPreflight.ok) {
+        const reason = `completion preflight failed: ${completionPreflight.reason ?? "unknown reason"}`;
+        process.stderr.write(`${reason}\n`);
+        process.stdout.write(
+          `  Blocked before integration: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        );
+        return "failure";
+      }
+
       // Record completion in the worktree result, then commit (result + deliverables) onto the
       // exec branch and merge it into the current root branch so the changes are integrated.
       // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
@@ -1237,13 +1311,13 @@ async function runPreparedTask(
       );
     } else {
       const blockReason = unfilledBlock
-        ? "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
+        ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
         : extractBlockReason(stderr);
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
       spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason);
       process.stdout.write(
-        `  ${unfilledBlock ? "Blocked (result not filled)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        `  ${unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
       );
     }
 
@@ -1967,6 +2041,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // generation). Skipped for bring-your-own --plan, where no managed task identity exists.
   // Idempotent: never clobbers an existing result (e.g. one created by claim above).
   let resultPath: string | undefined;
+  let resultScaffold: Record<string, unknown> | undefined;
   if (task && slug) {
     const reviewSections =
       (task.mode ?? "edit") === "review"
@@ -1995,6 +2070,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         ...(finalizeSections ? { finalizeSections } : {}),
       })
     ).resultPath;
+    resultScaffold = readResultFrontmatterSnapshot(resultPath);
   }
 
   process.stdout.write(`Running ${label} in place: ${command}\n`);
@@ -2002,15 +2078,22 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   // Some agents (notably `claude -p`) exit 0 even when they conclude they are blocked: a
   // permission-denied tool call is fed back as a tool error and the model ends its turn
-  // normally. The agent's core duty is to fill the result, so treat a still-scaffold result
-  // (mandatory sections left as _TODO_) as a block even on exit 0.
+  // normally. The agent's core duty is to fill the result while preserving its scaffold
+  // frontmatter, so treat an incomplete or modified result as a block even on exit 0.
   let effectiveExit = exitCode;
   let blockReason: string | undefined;
-  if (exitCode === 0 && resultPath && task && isResultUnfilled(resultPath, task.mode ?? "edit")) {
+  if (
+    exitCode === 0 &&
+    resultPath &&
+    task &&
+    isResultUnfilled(resultPath, task.mode ?? "edit", resultScaffold)
+  ) {
     effectiveExit = 1;
     blockReason =
-      "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)";
-    process.stdout.write(`run blocked: ${label} (result not filled despite exit 0)\n`);
+      "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)";
+    process.stdout.write(
+      `run blocked: ${label} (result incomplete or frontmatter changed despite exit 0)\n`,
+    );
   }
 
   // In-place runs do not write claim/complete events unless --track-state, but the result file's
@@ -2116,6 +2199,7 @@ async function runJobMode(opts: RunOpts): Promise<void> {
     startedAt: new Date().toISOString(),
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
+  const resultScaffold = readResultFrontmatterSnapshot(resultPath);
   const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
   process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
   const exitCode = await spawnAgentInPlace(
@@ -2127,9 +2211,10 @@ async function runJobMode(opts: RunOpts): Promise<void> {
   );
   let effectiveExit = exitCode;
   let reason: string | undefined;
-  if (exitCode === 0 && isResultUnfilled(resultPath, record.task.mode)) {
+  if (exitCode === 0 && isResultUnfilled(resultPath, record.task.mode, resultScaffold)) {
     effectiveExit = 1;
-    reason = "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)";
+    reason =
+      "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)";
   }
   const completedAt = new Date().toISOString();
   await updateResultStatus(
@@ -2348,6 +2433,7 @@ async function runSingleRegisterItem(
     startedAt: new Date().toISOString(),
     stem,
   });
+  const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
   process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
   process.stdout.write(`  Agent: ${actor}\n`);
@@ -2362,11 +2448,13 @@ async function runSingleRegisterItem(
   // 終わった場合は block として扱う（runInPlaceMode と同じ理由）。
   let effectiveExit = exitCode;
   let blockReason: string | undefined;
-  if (exitCode === 0 && isResultUnfilled(resultPath, "edit")) {
+  if (exitCode === 0 && isResultUnfilled(resultPath, "edit", resultScaffold)) {
     effectiveExit = 1;
     blockReason =
-      "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)";
-    process.stdout.write(`run blocked: ${item.id} (result not filled despite exit 0)\n`);
+      "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)";
+    process.stdout.write(
+      `run blocked: ${item.id} (result incomplete or frontmatter changed despite exit 0)\n`,
+    );
   }
 
   await updateResultStatus(
@@ -2545,7 +2633,13 @@ async function runSingleRegisterItemWorktree(
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
-    { worktree: ExecWorktree; resultPath: string; prompt: string } | RegisterItemSummary
+    | {
+        worktree: ExecWorktree;
+        resultPath: string;
+        resultScaffold: Record<string, unknown>;
+        prompt: string;
+      }
+    | RegisterItemSummary
   > => {
     const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
@@ -2569,6 +2663,7 @@ async function runSingleRegisterItemWorktree(
       startedAt: new Date().toISOString(),
       stem,
     });
+    const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
     process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
     process.stdout.write(`  Agent: ${actor}\n`);
@@ -2597,7 +2692,7 @@ async function runSingleRegisterItemWorktree(
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
       );
-      return { worktree, resultPath, prompt };
+      return { worktree, resultPath, resultScaffold, prompt };
     } catch (error) {
       // checkpoint 失敗時は start を巻き戻して waiting にする（worktree は未作成）。
       return waitSummary(
@@ -2608,7 +2703,7 @@ async function runSingleRegisterItemWorktree(
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
-  const { worktree, resultPath, prompt } = prepared;
+  const { worktree, resultPath, resultScaffold, prompt } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
   process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
@@ -2629,6 +2724,7 @@ async function runSingleRegisterItemWorktree(
       agentResult,
       worktreeResultPath,
       "edit",
+      resultScaffold,
     );
 
     if (effectiveResult === "success") {
@@ -2683,7 +2779,7 @@ async function runSingleRegisterItemWorktree(
 
     // 失敗 / rate limit: worktree は保持し（調査・再実行のため）、waiting へ遷移する。
     const reason = unfilledBlock
-      ? "agent exited 0 but result mandatory sections remain unfilled (treated as blocked)"
+      ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
       : agentResult === "rate_limit"
         ? "rate limit reached"
         : extractBlockReason(stderr);

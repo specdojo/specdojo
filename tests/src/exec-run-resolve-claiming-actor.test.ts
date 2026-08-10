@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { resolveClaimingActor } from "../../src/exec-run.js";
-import type { CurrentState } from "../../src/exec-types.js";
+import { checkCompletionBeforeIntegration, resolveClaimingActor } from "../../src/exec-run.js";
+import type { CurrentState, ScheduleIndex, StateSnapshot } from "../../src/exec-types.js";
 
 function doingState(lastBy?: string): CurrentState {
   return { state: "doing", ...(lastBy ? { last_by: lastBy } : {}) };
@@ -55,5 +55,77 @@ describe("resolveClaimingActor", () => {
     const result = resolveClaimingActor(undefined, undefined);
 
     expect(result).toEqual({ actor: undefined, resumed: false });
+  });
+});
+
+function scheduleWithTask(taskId: string): ScheduleIndex {
+  return {
+    nodes: new Map([
+      [
+        taskId,
+        {
+          id: taskId,
+          depends_on: [],
+          duration_days: 1,
+          kind: "task",
+          schedule_file: "sch-track-test.yaml",
+        },
+      ],
+    ]),
+    files: [],
+    start_date: null,
+    section_labels: {},
+    calendar: {
+      timezone: "Asia/Tokyo",
+      workdays: new Set([1, 2, 3, 4, 5]),
+      holidays: new Set(),
+      work_hours_per_day: 8,
+    },
+    file_start_dates: new Map(),
+  };
+}
+
+function snapshotWithTask(taskId: string, state: CurrentState): StateSnapshot {
+  return { schedule_path: "schedule", tasks: { [taskId]: state } };
+}
+
+describe("checkCompletionBeforeIntegration", () => {
+  const taskId = "T-TEST-doc-010";
+
+  it("allows integration when the completing actor owns the doing task", () => {
+    const result = checkCompletionBeforeIntegration(
+      scheduleWithTask(taskId),
+      snapshotWithTask(taskId, doingState("claiming-agent")),
+      taskId,
+      "claiming-agent",
+    );
+
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("rejects integration before Git operations when the actor differs from the claim", () => {
+    const result = checkCompletionBeforeIntegration(
+      scheduleWithTask(taskId),
+      snapshotWithTask(taskId, doingState("claiming-agent")),
+      taskId,
+      "resume-agent",
+    );
+
+    expect(result).toEqual({
+      ok: false,
+      reason:
+        "task is being worked on by another actor: claiming-agent (a human may override with --force)",
+    });
+  });
+
+  it("rejects integration when the task is no longer doing", () => {
+    const result = checkCompletionBeforeIntegration(
+      scheduleWithTask(taskId),
+      snapshotWithTask(taskId, { state: "blocked", last_by: "claiming-agent" }),
+      taskId,
+      "claiming-agent",
+    );
+
+    expect(result).toEqual({ ok: false, reason: `task is blocked: ${taskId}` });
   });
 });

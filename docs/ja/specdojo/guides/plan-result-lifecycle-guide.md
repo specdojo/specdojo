@@ -159,6 +159,10 @@ review の result には、scaffold 時に catalog から観点別セクショ�
 
 既に result が存在する場合は上書きせず、既存ファイルを使います。エージェントや人は result に実行内容、検証結果、残課題を記録します。
 
+agent の終了コードが 0 でも、result 本文の必須プレースホルダが残っている場合は runner が block として扱います。runner は agent 起動前の scaffold も保持し、終了時の `specdojo` frontmatter について必須項目が非空であることと、キー・値が scaffold と一致することを確認します。frontmatter の欠落、改名、値の改変、独自項目への置換がある場合も block とし、commit・merge・complete へ進めません。YAML の引用符やキー順など、パース後の値を変えない表記上の変更は一致として扱います。
+
+worktree を再利用する `exec resume` では、再開直前の worktree result をその試行の厳密な比較基準にします。rate-limit 後に runner が付けた `status: blocked`、`completed_at`、`block_reason` は元 scaffold との差分として許容しますが、元 scaffold との不変項目の照合も継続します。このため、正常な lifecycle 遷移は frontmatter 改変と誤判定せず、前回試行から持ち越された識別情報や固定値の破壊は再開後も block します。
+
 ## 4. アーカイブと再実行
 
 完了済み plan の扱いと、完了済み task をやり直すときの手順を示します。

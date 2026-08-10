@@ -77,6 +77,8 @@ specdojo exec run --project <project-id> --auto --strategy fifo
 
 parallel 実行中でも、claim、checkpoint、merge、complete、`exec refresh` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
 
+agent が成功した後、runner は commit / merge / worktree 削除へ進む前に、最新の event log から task state を再構築し、`exec complete` と同じ完了可否を検証します。task が `doing` でない場合や、実行 actor が claim actor と一致しない場合は統合を中止し、成果物を未統合のまま worktree に保持します。これにより、`exec resume --by` などで別 actor を指定しても、Schedule が `doing` のまま成果物だけが統合される状態を防ぎます。
+
 auto 実行と並行して人が作業する場合は、別ブランチの worktree を作成して編集します。
 
 ```bash

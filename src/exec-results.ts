@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { isDeepStrictEqual } from "node:util";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
@@ -207,15 +208,118 @@ const MANDATORY_PLACEHOLDERS: Record<TaskMode, readonly string[]> = {
   review: ["recommendation: _TODO_"],
 };
 
+// runner が scaffold 時に必ず設定する識別・ライフサイクル項目。agent が frontmatter を
+// 独自形式へ置換しても本文の _TODO_ だけでは検知できないため、終了時に非空を確認する。
+const REQUIRED_SCAFFOLD_FIELDS = [
+  "id",
+  "type",
+  "task_id",
+  "mode",
+  "status",
+  "project_id",
+  "started_at",
+  "agent",
+] as const;
+
+// runner が試行間で更新する lifecycle 項目。rate-limit 後の resume では worktree 側だけが
+// blocked へ更新されるため、元 scaffold との不変項目比較からは除外する。一方、同じ試行の
+// 開始時スナップショットとの比較ではこれらも含め、agent による変更を許可しない。
+const RUNNER_MANAGED_LIFECYCLE_FIELDS = new Set(["status", "completed_at", "block_reason"]);
+
+function immutableScaffoldFields(data: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(data).filter(([field]) => !RUNNER_MANAGED_LIFECYCLE_FIELDS.has(field)),
+  );
+}
+
+function hasNonEmptyScaffoldFields(data: Record<string, unknown>, mode: TaskMode): boolean {
+  if (
+    data.type !== "exec-result" ||
+    data.mode !== mode ||
+    !["in_progress", "complete", "blocked"].includes(String(data.status))
+  ) {
+    return false;
+  }
+  if (
+    !REQUIRED_SCAFFOLD_FIELDS.every((field) => {
+      const value = data[field];
+      return typeof value === "string" && value.trim().length > 0;
+    })
+  ) {
+    return false;
+  }
+
+  const optionalScalars = ["origin", "job_id", "run_id", "plan_ref", "execution", "approach"];
+  if (
+    optionalScalars.some((field) => {
+      if (!(field in data)) return false;
+      const value = data[field];
+      return typeof value !== "string" || value.trim().length === 0;
+    })
+  ) {
+    return false;
+  }
+
+  if ("targets" in data) {
+    const targets = data.targets;
+    if (
+      !Array.isArray(targets) ||
+      targets.length === 0 ||
+      targets.some((target) => typeof target !== "string" || target.trim().length === 0)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 // in-place 実行後の result が「scaffold のまま（必須節が未記入）」かを判定する。
 // agent プロセスの終了コードだけでは block を検知できない（例えば claude -p は
 // モデルが「blocked」と結論してもターン正常終了で 0 を返す）ため、agent 本来の責務で
 // ある result 必須節の記入が行われたかを内容から確認する補助に使う。
-// 必須節のプレースホルダが 1 つでも残っていれば未記入とみなす。
-export function isResultUnfilled(resultPath: string, mode: TaskMode): boolean {
-  if (!existsSync(resultPath)) return false;
-  const { body } = parseFrontmatter(readFileSync(resultPath, "utf8"));
-  return MANDATORY_PLACEHOLDERS[mode].some((marker) => body.includes(marker));
+// 必須節のプレースホルダが 1 つでも残っている、必須 frontmatter が非空でない、または
+// agent 起動前に保持した scaffold の specdojo 名前空間からキー・値が変わっていれば未完了と
+// みなす。YAML の引用符やキー順など表記だけの変更は、パース後の値が同じなら許容する。
+export function isResultUnfilled(
+  resultPath: string,
+  mode: TaskMode,
+  scaffoldFrontmatter?: Record<string, unknown>,
+  originalScaffoldFrontmatter?: Record<string, unknown>,
+): boolean {
+  if (!existsSync(resultPath)) return scaffoldFrontmatter !== undefined;
+  const current = parseSpecdojoDocument(readFileSync(resultPath, "utf8"));
+  if (MANDATORY_PLACEHOLDERS[mode].some((marker) => current.body.includes(marker))) return true;
+  if (!hasNonEmptyScaffoldFields(current.data, mode)) return true;
+
+  if (scaffoldFrontmatter !== undefined) {
+    if (!hasNonEmptyScaffoldFields(scaffoldFrontmatter, mode)) return true;
+    if (!isDeepStrictEqual(current.data, scaffoldFrontmatter)) return true;
+  }
+
+  // resume 時は、実行直前の worktree result を上の厳密比較に使う。さらに root に保持した
+  // 元 scaffold と不変項目を比較し、前回試行で生じた frontmatter 破壊を新しい基準として
+  // 取り込まない。status / completed_at / block_reason のみ runner 管理差分として許容する。
+  if (originalScaffoldFrontmatter !== undefined) {
+    if (!hasNonEmptyScaffoldFields(originalScaffoldFrontmatter, mode)) return true;
+    if (
+      !isDeepStrictEqual(
+        immutableScaffoldFields(current.data),
+        immutableScaffoldFields(originalScaffoldFrontmatter),
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// agent 起動前の result から、完了ガードで比較する specdojo frontmatter だけを保持する。
+// 本文や YAML の表記差ではなく、scaffold されたキーと値を実行単位の正本にする。
+export function readResultFrontmatterSnapshot(resultPath: string): Record<string, unknown> {
+  if (!existsSync(resultPath)) return {};
+  return parseSpecdojoDocument(readFileSync(resultPath, "utf8")).data;
 }
 
 export async function updateResultStatus(

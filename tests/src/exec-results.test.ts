@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   isResultUnfilled,
+  readResultFrontmatterSnapshot,
   parseResultTaskIdentity,
   resetResultForClaim,
   scaffoldResult,
@@ -423,12 +424,167 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       agent: "claude-edit-agent",
       startedAt: "2026-06-20T00:00:00.000Z",
     });
-    const filled = readFileSync(resultPath, "utf8")
+    const scaffoldContent = readFileSync(resultPath, "utf8");
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const filled = scaffoldContent
       .replace("_TODO_: 実施した内容の要約を記入する。", "組織定義を整備した。")
       .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
     writeFileSync(resultPath, filled, "utf8");
 
-    expect(isResultUnfilled(resultPath, "edit")).toBe(false);
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
+  });
+
+  it.each([
+    ["必須項目の欠落", "  task_id: prj-overview\n", ""],
+    ["必須項目の空値", "  project_id: prj-0001", '  project_id: ""'],
+    ["scaffold 値の改変", "  agent: claude-edit-agent", "  agent: local-edit-agent"],
+    [
+      "scaffold にない項目の追加",
+      "  agent: claude-edit-agent",
+      "  agent: claude-edit-agent\n  summary: custom",
+    ],
+  ])("frontmatter の%sを未完了として扱う", async (_label, from, to) => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const scaffoldContent = readFileSync(resultPath, "utf8");
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const changed = scaffoldContent
+      .replace("_TODO_: 実施した内容の要約を記入する。", "組織定義を整備した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md")
+      .replace(from, to);
+    writeFileSync(resultPath, changed, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
+  });
+
+  it("specdojo 名前空間を独自 frontmatter に置換した result を未完了として扱う", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const scaffoldContent = readFileSync(resultPath, "utf8");
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const body = scaffoldContent
+      .slice(scaffoldContent.indexOf("# Edit Result"))
+      .replace("_TODO_: 実施した内容の要約を記入する。", "組織定義を整備した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
+    writeFileSync(resultPath, `---\nresult: done\n---\n\n${body}`, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
+  });
+
+  it("YAML の表記だけが変わった frontmatter は scaffold と一致していると扱う", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const scaffoldContent = readFileSync(resultPath, "utf8");
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const changed = scaffoldContent
+      .replace("agent: claude-edit-agent", 'agent: "claude-edit-agent"')
+      .replace("_TODO_: 実施した内容の要約を記入する。", "組織定義を整備した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
+    writeFileSync(resultPath, changed, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
+  });
+
+  it("rate-limit 後の runner 管理 lifecycle 差分を許容して resume の完了を認識する", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const originalScaffold = readResultFrontmatterSnapshot(resultPath);
+    await updateResultStatus(
+      resultPath,
+      "blocked",
+      "2026-06-20T00:05:00.000Z",
+      "rate limit reached",
+    );
+    const resumeScaffold = readResultFrontmatterSnapshot(resultPath);
+    const filled = readFileSync(resultPath, "utf8")
+      .replace("_TODO_: 実施した内容の要約を記入する。", "再開後に処理を完了した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
+    writeFileSync(resultPath, filled, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", resumeScaffold, originalScaffold)).toBe(false);
+  });
+
+  it("前回試行から持ち越された不変 frontmatter の改変は resume 後も拒否する", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const originalScaffold = readResultFrontmatterSnapshot(resultPath);
+    const corrupted = readFileSync(resultPath, "utf8").replace(
+      "project_id: prj-0001",
+      "project_id: prj-corrupted",
+    );
+    writeFileSync(resultPath, corrupted, "utf8");
+    await updateResultStatus(
+      resultPath,
+      "blocked",
+      "2026-06-20T00:05:00.000Z",
+      "rate limit reached",
+    );
+    const resumeScaffold = readResultFrontmatterSnapshot(resultPath);
+    const filled = readFileSync(resultPath, "utf8")
+      .replace("_TODO_: 実施した内容の要約を記入する。", "再開後に処理を完了した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
+    writeFileSync(resultPath, filled, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", resumeScaffold, originalScaffold)).toBe(true);
+  });
+
+  it("approach と targets の scaffold 値を改変した result を未完了として扱う", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-overview-010",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-overview-010-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+      approach: "fully-guided",
+      targets: ["prj-0001:prj-overview", "specdojo:prj-overview-rulebook"],
+    });
+    const scaffoldContent = readFileSync(resultPath, "utf8");
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    const changed = scaffoldContent
+      .replace("approach: fully-guided", "approach: freeform")
+      .replace("specdojo:prj-overview-rulebook", "specdojo:prj-overview-recipe")
+      .replace("_TODO_: 実施した内容の要約を記入する。", "組織定義を整備した。")
+      .replace("_TODO_: 変更したファイルのパスを記入する。", "- docs/foo.md");
+    writeFileSync(resultPath, changed, "utf8");
+
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
   });
 
   it("treats a review result with an undecided recommendation as unfilled", async () => {
@@ -455,6 +611,22 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
 
   it("returns false for a missing result path", () => {
     expect(isResultUnfilled(join(executionPath, "nope-result.md"), "edit")).toBe(false);
+  });
+
+  it("scaffold 後に result 自体が削除された場合は未完了として扱う", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const scaffoldFrontmatter = readResultFrontmatterSnapshot(resultPath);
+    rmSync(resultPath);
+
+    expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
   });
 
   it("uses the stem for the result file name and doc id while keeping task_id", async () => {
