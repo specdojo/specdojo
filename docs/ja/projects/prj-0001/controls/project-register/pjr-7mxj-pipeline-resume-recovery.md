@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7mxj-pipeline-resume-recovery
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:45Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-10T22:42:26Z"
+  conclusion: run-scoped pipeline-state.jsonの永続化・検証、exec resumeでのreporterのみ再開（executor再実行抑止）、--executor-by/--reporter-byを実装。運用・設定ガイドへ復旧手順を反映。対象57件成功。
 ---
 
 # PJR-7MXJ パイプラインの再実行と復旧制御を実装する

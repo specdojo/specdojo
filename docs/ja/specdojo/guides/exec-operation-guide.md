@@ -228,6 +228,43 @@ action:
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
+### 2.5. executor / reporter pipelineの実行と復旧
+
+`agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。
+
+```bash
+specdojo exec run --project <project-id> --task <task-id> --worktree
+```
+
+run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
+
+| ファイル              | 確認できること                                                              |
+| --------------------- | --------------------------------------------------------------------------- |
+| `pipeline-state.json` | 各 stage の状態（`succeeded` / `failed` / `rate_limited`）・actor・試行回数 |
+| `evidence.json`       | executor の変更ファイル、diff サマリ、検証結果、最終メッセージ              |
+| `executor.log`        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                   |
+
+`executor.log` は人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
+
+stage 別の失敗と対応は次のとおりです。
+
+| 失敗                          | 状態の見え方                                           | 対応                                                                 |
+| ----------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------- |
+| executor の異常終了           | executor が `failed`、reporter は `pending`            | 原因を解消し `exec unblock` で継続、または `exec release` でやり直す |
+| executor の rate limit        | executor が `rate_limited`、block に再開時刻           | `レートリミット対応` と同じ（`exec resume --due`）                   |
+| reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する              |
+| reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                    |
+| reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                   |
+
+reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。
+
+```bash
+specdojo exec resume \
+  --project <project-id> \
+  --task <task-id> \
+  --reporter-by <reporter-nickname>
+```
+
 ## 3. humanタスクの実行
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree agent` で agent による実行を強制する場合は、登録済み agent の nickname を `--by` で明示します。人が result を作業の入口として、最終確認・修正と確定を行います。

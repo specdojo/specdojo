@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-nsxt-executor-reporter-agent-definitions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:42Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-10T22:42:14Z"
+  conclusion: pm-members.yamlにstage_role付きのopencode-executor/opencode-reporter/codex-expert-executorを追加し、既存agent定義は変更せず候補選択を分離。対象34件成功、provider scaffold dry-runでも配布対象を確認済み。
 ---
 
 # PJR-NSXT executor / reporter用エージェントを追加する

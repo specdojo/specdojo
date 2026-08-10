@@ -25,12 +25,13 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 初回設定では、すべての章を読む必要はありません。
 
-| 目的                         | 読む章                                                                                           |
-| ---------------------------- | ------------------------------------------------------------------------------------------------ |
-| agentを1件動かす             | `設定ファイルの分担`、`phase の実行要件`、`エージェントの定義`、`provider 設定の配布と scaffold` |
-| rate limit・並列数を調整する | `実行フロー`、`exec-defaults`                                                                    |
-| 無人実行の権限境界を確認する | `agent 権限とプロンプトインジェクション対策`                                                     |
-| 既存設定を変更する           | `変更手順`                                                                                       |
+| 目的                                   | 読む章                                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| agentを1件動かす                       | `設定ファイルの分担`、`phase の実行要件`、`エージェントの定義`、`provider 設定の配布と scaffold` |
+| rate limit・並列数を調整する           | `実行フロー`、`exec-defaults`                                                                    |
+| executor / reporter pipelineを構成する | `executor / reporter pipeline の構成`                                                            |
+| 無人実行の権限境界を確認する           | `agent 権限とプロンプトインジェクション対策`                                                     |
+| 既存設定を変更する                     | `変更手順`                                                                                       |
 
 ## 1. 設定ファイルの分担
 
@@ -216,7 +217,133 @@ providers:
     max_concurrency: 1
 ```
 
-## 6. provider 設定の配布と scaffold
+## 6. executor / reporter pipeline の構成
+
+pipeline は、成果物の編集と検証を行う executor と、evidence から result を構成する reporter の 2 stage で 1 タスクを実行します。設定は phase（`agent_pipeline.stages`）、member（`stage_role`）、provider（`command_template`）の 3 箇所に分かれ、それぞれの責務は `設定ファイルの分担` と同じです。
+
+### 6.1. ローカルLLM構成（executor / reporter とも同一 provider）
+
+ローカル Ollama の同一モデル（例: Gemma）で両 stage を実行する構成です。phase には nickname を書かず、stage ごとの要件だけを定義します。
+
+```yaml
+phase_sets:
+  first-pass:
+    - id: draft
+      name: 起草
+      execution: agent
+      task_suffix: "010"
+      mode: edit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+```
+
+member 側は、両 stage の agent を同じ provider で定義し、`stage_role` だけを分けます。`stage_role` を持たない既存の単一 agent は従来フロー専用として残ります。
+
+```yaml
+members:
+  - nickname: opencode-executor
+    display_name: OpenCode Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    priority: 1
+
+  - nickname: opencode-reporter
+    display_name: OpenCode Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: reporter
+    proficiency: normal
+    priority: 1
+```
+
+同一ホストの単一モデルを両 stage が共有するため、provider に `max_concurrency: 1` を設定して直列化します。グローバルな `--parallel` は下がらないため、別 provider のタスクは並列のまま実行されます。
+
+```yaml
+providers:
+  opencode:
+    max_concurrency: 1
+    command_template: "opencode run --agent {nickname}"
+```
+
+### 6.2. クラウド executor とローカル reporter の混在構成
+
+複雑な編集判断が必要な phase では、executor だけをクラウド provider の expert agent にし、reporter はローカルのまま共有できます。stage ごとに要件を分けるだけで、reporter と result 生成の経路は `ローカルLLM構成（executor / reporter とも同一 provider）` と同じです。
+
+```yaml
+phase_sets:
+  deep-pass:
+    - id: draft
+      name: 起草
+      execution: agent
+      task_suffix: "010"
+      mode: edit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            capabilities: [web_search]
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+```
+
+executor 候補は provider をまたいで `capabilities` / `proficiency` / `priority` で選ばれます。クラウド provider 側は既存の command template をそのまま使い、member に `stage_role: executor` を足すだけです。
+
+```yaml
+members:
+  - nickname: codex-expert-executor
+    display_name: Codex Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    capabilities: [web_search]
+    priority: 1
+```
+
+stage の agent を固定したい場合は `--executor-by` / `--reporter-by` を使います。片方だけ指定すると、もう一方は要件と優先度による自動選択のままです。
+
+```sh
+specdojo exec run --project <project-id> --task <task-id> \
+  --executor-by codex-expert-executor \
+  --reporter-by opencode-reporter
+```
+
+### 6.3. evidence とログの引き渡し方針
+
+executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
+
+| ファイル              | 内容                                                                      |
+| --------------------- | ------------------------------------------------------------------------- |
+| `evidence.json`       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ |
+| `executor.log`        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）         |
+| `pipeline-state.json` | executor / reporter の状態・actor・試行回数・成果物参照                   |
+
+引き渡しの方針は次のとおりです。
+
+- reporter へ渡すのは、plan と `evidence.json` の内容と出力 JSON Schema だけです。ログ本文・生 diff は渡しません。
+- ログは `evidence.json` の `log_refs` に参照（パス・バイト数・切り詰めの有無）としてだけ現れます。ログ本文を読むのは人です。
+- 保存前に上限を適用します。ログ抜粋は 64KiB、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
+- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と `executor.log` の両方に適用します。
+- executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
+- reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
+- result の frontmatter は runner が scaffold した内容を保ち、本文は検証済み JSON から runner が描画します。reporter はファイルを書きません。
+
+## 7. provider 設定の配布と scaffold
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
@@ -233,7 +360,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定します。`--permission-mode bypassPermissions` は使いません（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します）。
 
-### 6.1. scaffold コマンド
+### 7.1. scaffold コマンド
 
 この配置は `exec scaffold` の `--provider <name>` オプションで自動化します。
 
@@ -251,11 +378,11 @@ specdojo exec scaffold --provider claude
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持ちません。
 
-## 7. agent 権限とプロンプトインジェクション対策
+## 8. agent 権限とプロンプトインジェクション対策
 
 exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行されます。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計します。
 
-### 7.1. 共通の構造的対策
+### 8.1. 共通の構造的対策
 
 provider によらず、exec の実行構造そのものが次の境界を提供します。
 
@@ -267,7 +394,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 | commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
 | merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
 
-### 7.2. provider 別の権限設定
+### 8.2. provider 別の権限設定
 
 **claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は `docs/**`、`src/**`、`tests/**`、review は result 配下のみ書き込み可）でパス単位に制限します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
 
@@ -322,7 +449,7 @@ providers:
 - `-p` は引数必須のため、stdin で渡される plan は `-p "$(cat)"` で受けます。`--no-ask-user` で質問ツールを無効化し、無人実行で停止しないようにします。
 - shell パターンのマッチ粒度（`shell(npm run)` が `npm run <script>` 全体を許可するか等）は、member 追加時に最初のタスクで permission ログを確認して調整します。
 
-### 7.3. commit 対象の許可リスト
+### 8.3. commit 対象の許可リスト
 
 `workspace-write` は worktree 全域に書き込めるため、codex では「review agent が成果物を書き換える」「edit agent が `.github/` などタスク外ファイルを書き換える」ことを provider 側で防げません。この経路は specdojo CLI 側で閉じます。commit 対象は mode 別の許可リスト方式とします。
 
@@ -343,7 +470,7 @@ providers:
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
 - worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
 
-### 7.4. pm-members.yaml の値検証（nickname インジェクション対策）
+### 8.4. pm-members.yaml の値検証（nickname インジェクション対策）
 
 `nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。`pm-members.yaml` を書き換えられる者が `nickname` にシェルメタ文字を仕込むと、command 起動時にコマンドインジェクションが成立し得ます。これを次の 2 層で防ぎます。
 
@@ -352,7 +479,7 @@ providers:
 
 再検証のパターンは `pm-members.schema.yaml` の `nickname` と同一に保ちます（一方を変更したら他方も合わせます）。
 
-## 8. 変更手順
+## 9. 変更手順
 
 新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加します。
 

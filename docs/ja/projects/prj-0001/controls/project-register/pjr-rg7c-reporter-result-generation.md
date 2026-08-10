@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-rg7c-reporter-result-generation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:44Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-10T22:42:22Z"
+  conclusion: reporterの厳格な出力契約（Ajv 2020 strict schema検証・形式不正時3回再試行）とresult決定的描画をexec-reporter.ts/exec-results.tsに実装。frontmatter不変・review RVP順序一致を確認。対象85件成功。
 ---
 
 # PJR-RG7C reporterステージとresult生成を実装する

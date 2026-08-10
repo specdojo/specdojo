@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jfwq-executor-reporter-pipeline-schema
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:41Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-10T22:42:10Z"
+  conclusion: sch-strategyのagent_pipeline.stagesとpm-membersのstage_roleをschema化し、既存strategy/rosterとの後方互換性を単体テストで固定。対象37件・全体993件成功（worktree系16件はsandbox制約、この実行環境では全1050件成功を確認済み）。
 ---
 
 # PJR-JFWQ executor / reporterパイプラインのスキーマを設計する

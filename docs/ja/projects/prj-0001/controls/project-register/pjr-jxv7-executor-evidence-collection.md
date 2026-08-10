@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jxv7-executor-evidence-collection
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-10T06:28:43Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-10T22:42:18Z"
+  conclusion: executor stageの選択・専用promptとevidence.json生成（差分統計・検証・ログ抜粋・秘匿化・上限）をrunnerに実装。exec-evidence.schema.yaml追加。対象48件成功、typecheck/lint/schema検証成功。
 ---
 
 # PJR-JXV7 executorステージとevidence収集を実装する
