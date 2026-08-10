@@ -34,7 +34,7 @@ import {
 import { buildScheduleIndex } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
-import { listFilesRecursive, qualifyTaskId, readYaml } from "./exec-shared.js";
+import { listFilesRecursive, qualifyTaskId, randomHex, readYaml } from "./exec-shared.js";
 import {
   getProjectExecutionPath,
   getProjectSchedulePath,
@@ -131,6 +131,7 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "./exec-strategy.js";
+import { recordExecutorEvidence } from "./exec-evidence.js";
 
 type StrategyPhase = {
   id: string;
@@ -222,6 +223,7 @@ export function resolveAgentOverride(
   modeAgentOverrides: ModeAgentOverrides,
   roster: MemberRoster | null,
   execDefaults: ExecDefaultsConfig = {},
+  stageRole?: AgentStageRole,
 ): AgentOverrideResolution {
   const nickname =
     agentNicknameOverride ??
@@ -230,6 +232,12 @@ export function resolveAgentOverride(
 
   const flag = agentNicknameOverride ? "--by" : mode === "review" ? "--review-by" : "--edit-by";
   const member = roster?.members.find((m) => m.type === "agent" && m.nickname === nickname);
+  if (member && stageRole !== undefined && member.stage_role !== stageRole) {
+    return {
+      kind: "error",
+      message: `${flag} agent must have stage_role: ${stageRole} for this pipeline stage: ${nickname}`,
+    };
+  }
   let command: string | undefined;
   try {
     command = member ? resolveMemberCommand(execDefaults, member) : undefined;
@@ -265,6 +273,7 @@ type PreparedTask = {
   resultPath?: string;
   resultScaffold?: Record<string, unknown>;
   priorLimitAttempts?: number;
+  pipelineRunId?: string;
 };
 
 type PlanGenPaths = {
@@ -656,6 +665,39 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
   return plan ? expandPromptRefs(plan) : null;
 }
 
+const EXECUTOR_EVIDENCE_CONTRACT = `
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+`;
+
+export function buildExecutorPrompt(plan: string): string {
+  return `${plan.trimEnd()}${EXECUTOR_EVIDENCE_CONTRACT}`;
+}
+
+export function executorRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
+  const executor = task.agent_pipeline?.stages[0];
+  if (!executor || executor.stage_role !== "executor") return undefined;
+  return {
+    capabilities: executor.capabilities ?? [],
+    proficiency: executor.proficiency,
+    stage_role: "executor",
+  };
+}
+
 export function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
   const { config } = loadConfig();
   if (!config) return null;
@@ -685,11 +727,12 @@ async function executeAgent(
 ): Promise<{
   result: RunResult;
   exitCode: number | null;
+  stdout: string;
   stderr: string;
   limit?: AgentLimitSignal;
 }> {
   if (!agentCommand.trim()) {
-    return { result: "failure", exitCode: null, stderr: "Empty agent command" };
+    return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
   }
 
   // stdout is piped (not inherited) so it can be scanned for rate-limit signals: some CLIs print
@@ -732,6 +775,7 @@ async function executeAgent(
     return {
       result: "rate_limit",
       exitCode,
+      stdout,
       stderr,
       limit: normalizeAgentLimit({
         output: combinedOutput,
@@ -741,9 +785,9 @@ async function executeAgent(
     };
   }
   if (exitCode !== 0) {
-    return { result: "failure", exitCode, stderr };
+    return { result: "failure", exitCode, stdout, stderr };
   }
-  return { result: "success", exitCode: 0, stderr: "" };
+  return { result: "success", exitCode: 0, stdout, stderr: "" };
 }
 
 // Run the task's agent command, falling back through the remaining candidates on rate limit.
@@ -761,17 +805,28 @@ async function runWithRetry(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv,
-): Promise<{ result: RunResult; stderr: string; attempts: number; limit?: AgentLimitSignal }> {
+): Promise<{
+  result: RunResult;
+  exitCode: number | null;
+  stdout: string;
+  stderr: string;
+  attempts: number;
+  limit?: AgentLimitSignal;
+}> {
   const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
   let attempts = 0;
 
   // One pass tries every candidate in priority order with no wait between switches.
   const runPass = async (): Promise<{
     result: RunResult;
+    exitCode: number | null;
+    stdout: string;
     stderr: string;
     limit?: AgentLimitSignal;
   }> => {
     let lastStderr = "";
+    let lastStdout = "";
+    let lastExitCode: number | null = null;
     let lastLimit: AgentLimitSignal | undefined;
     for (let idx = 0; idx < candidates.length; idx++) {
       if (idx > 0) {
@@ -791,11 +846,24 @@ async function runWithRetry(
         env,
       );
       lastStderr = attempt.stderr;
+      lastStdout = attempt.stdout;
+      lastExitCode = attempt.exitCode;
       lastLimit = attempt.limit;
       if (attempt.result !== "rate_limit")
-        return { result: attempt.result, stderr: attempt.stderr };
+        return {
+          result: attempt.result,
+          exitCode: attempt.exitCode,
+          stdout: attempt.stdout,
+          stderr: attempt.stderr,
+        };
     }
-    return { result: "rate_limit", stderr: lastStderr, limit: lastLimit };
+    return {
+      result: "rate_limit",
+      exitCode: lastExitCode,
+      stdout: lastStdout,
+      stderr: lastStderr,
+      limit: lastLimit,
+    };
   };
 
   const firstPass = await runPass();
@@ -816,6 +884,8 @@ async function runWithRetry(
   const { retry } = policy.on_critical;
   let waitSeconds = retry.initial_wait_seconds;
   let lastStderr = firstPass.stderr;
+  let lastStdout = firstPass.stdout;
+  let lastExitCode = firstPass.exitCode;
   let lastLimit = firstPass.limit;
 
   // First pass counts as attempt 1; remaining passes wait+backoff before retrying all candidates.
@@ -828,6 +898,8 @@ async function runWithRetry(
 
     const result = await runPass();
     lastStderr = result.stderr;
+    lastStdout = result.stdout;
+    lastExitCode = result.exitCode;
     lastLimit = result.limit;
     if (result.result !== "rate_limit") return { ...result, attempts };
 
@@ -837,7 +909,14 @@ async function runWithRetry(
   process.stdout.write(
     `Rate limit: all ${candidates.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`,
   );
-  return { result: "rate_limit", stderr: lastStderr, attempts, limit: lastLimit };
+  return {
+    result: "rate_limit",
+    exitCode: lastExitCode,
+    stdout: lastStdout,
+    stderr: lastStderr,
+    attempts,
+    limit: lastLimit,
+  };
 }
 
 function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: string): string {
@@ -900,6 +979,7 @@ async function prepareSingleTask(
     modeAgentOverrides,
     roster,
     execDefaults,
+    task.agent_pipeline ? "executor" : undefined,
   );
   if (overrideResolution.kind === "error") {
     process.stdout.write(`  ${overrideResolution.message}\n`);
@@ -938,7 +1018,7 @@ async function prepareSingleTask(
       return "failure";
     }
 
-    const requirements: ResolvedRequirements = {
+    const requirements: ResolvedRequirements = executorRequirements(task) ?? {
       capabilities: task.capabilities ?? [],
       proficiency: task.proficiency,
     };
@@ -947,7 +1027,7 @@ async function prepareSingleTask(
     const candidates = selectCandidates(requirements, roster, mode, busyActors, execDefaults);
     if (candidates.length === 0) {
       process.stdout.write(
-        `  No agents found for mode: ${mode}, capabilities: [${requirements.capabilities.join(", ")}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ""}\n`,
+        `  No agents found for mode: ${mode}, capabilities: [${requirements.capabilities.join(", ")}]${requirements.proficiency ? `, proficiency: ${requirements.proficiency}` : ""}${requirements.stage_role ? `, stage_role: ${requirements.stage_role}` : ""}\n`,
       );
       return "failure";
     }
@@ -1009,11 +1089,15 @@ async function prepareSingleTask(
     task,
   });
 
-  const prompt = loadPrompt(executionPath, task.id);
-  if (!prompt) {
+  const planPrompt = loadPrompt(executionPath, task.id);
+  if (!planPrompt) {
     process.stdout.write(`  Plan not found for ${task.id}.\n`);
     return "failure";
   }
+  const prompt = task.agent_pipeline ? buildExecutorPrompt(planPrompt) : planPrompt;
+  const pipelineRunId = task.agent_pipeline
+    ? `${new Date().toISOString().replace(/[-:.]/g, "").replace("Z", "Z")}-${randomHex(4)}`
+    : undefined;
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
   const worktreeName = worktreeNameFromTaskId(worktreeTaskId);
@@ -1039,6 +1123,7 @@ async function prepareSingleTask(
       agentCandidates,
       prompt,
       worktree,
+      pipelineRunId,
     };
   }
 
@@ -1141,6 +1226,7 @@ async function prepareSingleTask(
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    pipelineRunId,
   };
 }
 
@@ -1220,13 +1306,37 @@ async function runPreparedTask(
 
   process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
   process.stdout.write(`  CWD: ${prepared.worktree.path}\n`);
-  const { result, stderr, attempts, limit } = await runWithRetry(
+  const executorStartedAt = new Date().toISOString();
+  const { result, exitCode, stdout, stderr, attempts, limit } = await runWithRetry(
     prepared.agentCandidates,
     prepared.prompt,
     execDefaults,
     prepared.worktree.path,
     agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
   );
+  let executorEvidenceRef: string | undefined;
+  if (prepared.pipelineRunId) {
+    const recorded = recordExecutorEvidence({
+      repoRoot,
+      worktreePath: prepared.worktree.path,
+      executionPath,
+      taskId: prepared.task.id,
+      runId: prepared.pipelineRunId,
+      actor: prepared.actor,
+      status:
+        result === "success" ? "succeeded" : result === "rate_limit" ? "rate_limited" : "failed",
+      startedAt: executorStartedAt,
+      completedAt: new Date().toISOString(),
+      exitCode,
+      attempts,
+      stdout,
+      stderr,
+    });
+    executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
+      .split(sep)
+      .join("/");
+    process.stdout.write(`  Executor evidence: ${executorEvidenceRef}\n`);
+  }
 
   const finalize = async (): Promise<RunResult> => {
     const completedAt = new Date().toISOString();
@@ -1236,13 +1346,19 @@ async function runPreparedTask(
       executionPath,
       ...(catalogPath ? { catalogPath } : {}),
     };
-    const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
+    const downgraded = downgradeUnfilledResult(
       result,
       worktreeResultPath,
       prepared.task.mode ?? "edit",
       attemptResultScaffold,
       prepared.resultScaffold,
     );
+    // Reporter execution and deterministic result rendering are introduced by PJR-RG7C. Until
+    // that stage exists, never integrate or complete a pipeline task after executor-only success.
+    // Keep the worktree and evidence so the next stage can consume the executor outcome safely.
+    const reporterPending = prepared.pipelineRunId !== undefined && result === "success";
+    const effectiveResult: RunResult = reporterPending ? "failure" : downgraded.result;
+    const unfilledBlock = reporterPending ? false : downgraded.unfilledBlock;
 
     if (effectiveResult === "success") {
       // Validate the same state/actor constraints as `exec complete` before touching Git. In
@@ -1311,8 +1427,16 @@ async function runPreparedTask(
           ? limitEventMeta(limit, {
               attempts: totalAttempts,
               worktree: prepared.worktree.path,
+              ...(executorEvidenceRef
+                ? { pipeline_stage: "executor", evidence_ref: executorEvidenceRef }
+                : {}),
             })
-          : { limit_deferred: "false" },
+          : {
+              limit_deferred: "false",
+              ...(executorEvidenceRef
+                ? { pipeline_stage: "executor", evidence_ref: executorEvidenceRef }
+                : {}),
+            },
       );
       process.stdout.write(
         limit?.auto_resume
@@ -1322,12 +1446,26 @@ async function runPreparedTask(
     } else {
       const blockReason = unfilledBlock
         ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
-        : extractBlockReason(stderr);
+        : reporterPending
+          ? "executor stage completed and evidence was saved; reporter stage is pending implementation (PJR-RG7C)"
+          : extractBlockReason(stderr);
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
-      spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason);
+      spawnBlock(
+        projectId,
+        prepared.task.id,
+        prepared.actor,
+        blockReason,
+        executorEvidenceRef
+          ? {
+              limit_deferred: "false",
+              pipeline_stage: "executor",
+              evidence_ref: executorEvidenceRef,
+            }
+          : { limit_deferred: "false" },
+      );
       process.stdout.write(
-        `  ${unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        `  ${reporterPending ? "Executor complete (reporter pending)" : unfilledBlock ? "Blocked (result incomplete or frontmatter changed)" : "Failed"}: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
       );
     }
 
@@ -1865,13 +2003,20 @@ export function resolveInPlaceCommand(
   roster: MemberRoster | null,
   opts: RunOpts,
   execDefaults: ExecDefaultsConfig = {},
-): { command: string; actor: string } {
+): { command: string; actor: string; provider?: AgentProvider } {
   const by = opts.by?.trim();
   if (by) {
     const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+    if (task?.agent_pipeline && member?.stage_role !== "executor") {
+      throw new Error(`Agent must have stage_role: executor for this pipeline stage: ${by}`);
+    }
     const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
     if (!command) throw new Error(`Agent command not found for actor: ${by}`);
-    return { command, actor: by };
+    return {
+      command,
+      actor: by,
+      ...(member?.provider ? { provider: member.provider } : {}),
+    };
   }
 
   if (task && (task.execution ?? "agent") === "human") {
@@ -1879,7 +2024,10 @@ export function resolveInPlaceCommand(
   }
 
   const candidates = selectCandidates(
-    { capabilities: task?.capabilities ?? [], proficiency: task?.proficiency },
+    (task && executorRequirements(task)) ?? {
+      capabilities: task?.capabilities ?? [],
+      proficiency: task?.proficiency,
+    },
     roster,
     task?.mode ?? "edit",
     undefined,
@@ -1888,7 +2036,11 @@ export function resolveInPlaceCommand(
   const candidate = candidates[0];
   const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
   if (!candidate || !command) throw new Error("No agent found. Specify --by <nickname>.");
-  return { command, actor: candidate.nickname };
+  return {
+    command,
+    actor: candidate.nickname,
+    ...(candidate.provider ? { provider: candidate.provider } : {}),
+  };
 }
 
 async function spawnAgentInPlace(
@@ -1999,7 +2151,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     };
   }
 
-  const { command, actor } = resolveInPlaceCommand(task, roster, opts, execDefaults);
+  const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
   const label = slug ?? planPath;
 
   if (opts.dryRun) {
@@ -2036,7 +2188,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     });
   }
 
-  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const planPrompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const prompt = task?.agent_pipeline ? buildExecutorPrompt(planPrompt) : planPrompt;
 
   if (trackState) {
     if (!opts.task) throw new Error("--track-state requires --task.");
@@ -2084,14 +2237,66 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   }
 
   process.stdout.write(`Running ${label} in place: ${command}\n`);
-  const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+  let exitCode: number;
+  let pipelineBlockReason: string | undefined;
+  let pipelineEvidenceRef: string | undefined;
+  if (task?.agent_pipeline) {
+    const startedAt = new Date().toISOString();
+    const outcome = await runWithRetry(
+      [{ command, actor, provider }],
+      prompt,
+      execDefaults,
+      repoRoot,
+      {
+        ...process.env,
+        SPECDOJO_SCHEDULE_PATH: schedulePath,
+        SPECDOJO_EXECUTION_PATH: executionPath,
+      },
+    );
+    const runId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+    const recorded = recordExecutorEvidence({
+      repoRoot,
+      worktreePath: repoRoot,
+      executionPath,
+      taskId: task.id,
+      runId,
+      actor,
+      status:
+        outcome.result === "success"
+          ? "succeeded"
+          : outcome.result === "rate_limit"
+            ? "rate_limited"
+            : "failed",
+      startedAt,
+      completedAt: new Date().toISOString(),
+      exitCode: outcome.exitCode,
+      attempts: outcome.attempts,
+      stdout: outcome.stdout,
+      stderr: outcome.stderr,
+    });
+    pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
+    process.stdout.write(`Executor evidence: ${pipelineEvidenceRef}\n`);
+    if (outcome.result === "success") {
+      pipelineBlockReason =
+        "executor stage completed and evidence was saved; reporter stage is pending implementation (PJR-RG7C)";
+      exitCode = 1;
+    } else {
+      pipelineBlockReason =
+        outcome.result === "rate_limit"
+          ? "executor rate limit reached"
+          : extractBlockReason(outcome.stderr);
+      exitCode = outcome.exitCode && outcome.exitCode !== 0 ? outcome.exitCode : 1;
+    }
+  } else {
+    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+  }
 
   // Some agents (notably `claude -p`) exit 0 even when they conclude they are blocked: a
   // permission-denied tool call is fed back as a tool error and the model ends its turn
   // normally. The agent's core duty is to fill the result while preserving its scaffold
   // frontmatter, so treat an incomplete or modified result as a block even on exit 0.
   let effectiveExit = exitCode;
-  let blockReason: string | undefined;
+  let blockReason: string | undefined = pipelineBlockReason;
   if (
     exitCode === 0 &&
     resultPath &&
@@ -2125,6 +2330,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         opts.task.trim(),
         actor,
         blockReason ?? "agent exited with non-zero code",
+        pipelineEvidenceRef
+          ? {
+              limit_deferred: "false",
+              pipeline_stage: "executor",
+              evidence_ref: pipelineEvidenceRef,
+            }
+          : { limit_deferred: "false" },
       );
   }
 

@@ -4,6 +4,7 @@ import { buildScheduleIndex } from "./exec-schedule.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
 import {
   buildPhaseModeIndex,
+  resolveAgentPipeline,
   resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
@@ -14,7 +15,7 @@ import { extractLocalId, extractPhaseSuffix } from "./schedule-phase-sets.js";
 import { type ReadyTaskView } from "./exec-types.js";
 
 // Reconstruct a full ReadyTaskView for a task from the schedule (+ ready.json when
-// present), filling mode/execution/approach/capabilities/proficiency from strategy
+// present), filling mode/execution/approach/capabilities/proficiency/pipeline from strategy
 // metadata. Works for any scheduled task regardless of its current state.
 export function buildTaskView(
   schedulePath: string,
@@ -66,5 +67,8 @@ export function buildTaskView(
   task.proficiency =
     task.proficiency ??
     resolveTaskProficiency(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.agent_pipeline =
+    task.agent_pipeline ??
+    resolveAgentPipeline(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
   return task;
 }

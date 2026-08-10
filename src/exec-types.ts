@@ -26,6 +26,16 @@ export type Proficiency = "low" | "normal" | "high" | "expert";
 
 export type AgentStageRole = "executor" | "reporter";
 
+export type AgentPipelineStage = {
+  stage_role: AgentStageRole;
+  capabilities?: string[];
+  proficiency?: Proficiency;
+};
+
+export type AgentPipeline = {
+  stages: [AgentPipelineStage, AgentPipelineStage];
+};
+
 export type ExecEventType =
   | "claim"
   | "note"
@@ -179,6 +189,7 @@ export type ReadyTaskView = {
   approach?: Approach;
   capabilities?: string[];
   proficiency?: Proficiency;
+  agent_pipeline?: AgentPipeline;
   schedule_file: string;
   fifo_rank: number;
   critical_first_rank: number;

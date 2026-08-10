@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildExecutorPrompt,
+  executorRequirements,
   extractBlockReason,
   isRateLimitError,
   parseExecRunBusyPolicy,
@@ -236,6 +238,44 @@ describe("selectCandidates", () => {
     expect(normalExecutorCandidates).toEqual(["opencode-executor"]);
     expect(expertExecutorCandidates).toEqual(["codex-expert-executor"]);
     expect(reporterCandidates).toEqual(["opencode-reporter"]);
+  });
+});
+
+describe("pipeline executor preparation", () => {
+  it("uses stage requirements instead of phase-wide agent requirements", () => {
+    expect(
+      executorRequirements({
+        id: "T-TEST-doc-010",
+        schedule_file: "sch-track-test.yaml",
+        fifo_rank: 1,
+        critical_first_rank: 1,
+        capabilities: ["phase-capability"],
+        proficiency: "normal",
+        agent_pipeline: {
+          stages: [
+            { stage_role: "executor", capabilities: ["exec"], proficiency: "expert" },
+            { stage_role: "reporter", proficiency: "normal" },
+          ],
+        },
+      }),
+    ).toEqual({ capabilities: ["exec"], proficiency: "expert", stage_role: "executor" });
+  });
+
+  it("separates result writing from the executor prompt and requests structured evidence", () => {
+    const prompt = buildExecutorPrompt("# Edit Plan\n\nUpdate the result file.");
+
+    expect(prompt).toContain("do not create or update the result file");
+    expect(prompt).toContain("<specdojo_executor_evidence>");
+    expect(prompt).toContain("Update the result file.");
+  });
+
+  it("rejects an explicit legacy agent override for an executor stage", () => {
+    const members = roster([agent({ nickname: "legacy" })]);
+
+    expect(resolveAgentOverride("edit", "legacy", {}, members, {}, "executor")).toEqual({
+      kind: "error",
+      message: "--by agent must have stage_role: executor for this pipeline stage: legacy",
+    });
   });
 });
 

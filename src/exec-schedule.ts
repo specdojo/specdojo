@@ -49,6 +49,7 @@ import { writeScheduleHashAndDiff } from "./exec-schedule-hash.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import {
   buildPhaseModeIndex,
+  resolveAgentPipeline,
   resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
@@ -367,6 +368,14 @@ export function writeGeneratedCore(
       task.phase_set,
     );
     if (proficiency !== undefined) task.proficiency = proficiency;
+    const agentPipeline = resolveAgentPipeline(
+      task.local_id,
+      task.id,
+      phaseModeIndex,
+      task.phase_suffix,
+      task.phase_set,
+    );
+    if (agentPipeline !== undefined) task.agent_pipeline = agentPipeline;
   }
   writeReadyFiles(projectPath, readySnapshot);
 
