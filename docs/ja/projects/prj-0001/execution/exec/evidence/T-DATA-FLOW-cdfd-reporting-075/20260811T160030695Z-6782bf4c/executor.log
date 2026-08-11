@@ -1,0 +1,29 @@
+対象成果物 `docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md` を、更新済み Kata（cdfd-rulebook / recipe / sample / cdfd-mermaid-rulebook）に合わせて作り直しました。
+
+## 実施内容（判断: 作り直し）
+
+既存構造（1. 目的と適用範囲 / 2. 領域内プロセス一覧 / 3. 概念データフロー（単一図）/ 4. 例外・委譲 / 5. 未決事項）は、更新後 rulebook の必須章立て（目的・適用範囲の分離、個別プロセス主要入出力の独立章、一覧表からの主要入出力列の排除、必須／条件付きによる図分割）を満たせないため、有効な決定・用語（プロセス ID、検知条件、例外 `E-01`〜`E-05`、未決 `U-01`〜`U-03`）を保持したまま再構成しました。
+
+- 1. 目的 / 2. 適用範囲 に分割。正本・参照情報・更新責務の表は 2.1 へ移し、「本領域での扱い」列を直接編集可否中心へ書き換えて 5 章との重複を排除。
+- 3. 領域内プロセス一覧を 6 列（ID・プロセス・業務目的・主な担当・起動条件・必須性）へ縮約し、検知条件と対応優先度を 3.1 に維持。
+- 4. 概念データフローを 2 図に分割（4.1 必須: `P-09-01`・`P-09-02`・`P-09-06` / 4.2 条件付き: `P-09-03`〜`P-09-05`）。両図とも `classDef` + 絵文字を採用し、凡例は全体概要の「凡例（本プロダクト共通）」を参照。共通ノード（`P-09-02`・`P-09-06`・監視結果・報告記録・Schedule 正本・`P-05`）が同一対象である旨を明記。図を分割したことで、条件付きプロセスの非起動時の正常経路（監視結果を残して `P-09-06` へ進む）を追跡可能にしました。
+- 5. 個別プロセス主要入出力を新設（5.1 必須 / 5.2 条件付き / 5.3 報告記録の最小内容と確認者）。作成契機は 3 章の起動条件を正本として重複記載を排除。
+- 6. 主要例外・領域外委譲・受入確認、7. 未決事項へ再配置。委譲先に対応 CDFD の wikilink を併記（`P-05` は `cdfd-routine` を追加）。
+
+## 実装エビデンスからの現在動作（AS-IS）
+
+- `src/exec-task-view.ts`: schedule インデックスと `generated/ready.json` スナップショットから任意 task の実行状態ビューを再構成し、mode/execution/approach/capabilities/proficiency/pipeline を strategy から補完（`fifo_rank`・`critical_first_rank` を保持）→ 「critical-first の実行候補」判定条件の裏付け。
+- `src/exec-schedule-cpm.ts`: 依存循環は例外、es/ef/ls/lf/slack と `critical_path` を算出（slack 0 が critical）→ 3.1 の critical path 条件を「余裕日数が 0」と実装に合わせて表現。
+- `src/register.ts`: 個票 frontmatter を入力に `generated/` の一覧・状態別・優先度別・担当者別ビューと controls 側の risk/issue/change-request/decision ログを生成（作業ツリーの `pjr-index.md` は入力にしない、検証失敗時は生成しない）。
+- `src/register-history.ts`: git 履歴から added/updated/removed と 10 項目（status/title/description/type/priority/owner/registered/due/completed/conclusion）の差分を再構成、`--status-only` 等で絞り込み、`generated/` は対象外 → 「未報告の変化」の検知条件を監査履歴で追える語彙へ調整。
+- 4 ファイルのいずれにも自動遅延検知・報告周期起動・進捗報告/議事録生成は無く、適用範囲の「現行動作として扱わない」記述を維持。
+
+## 未反映の乖離・未確認範囲（reporter 向け申し送り）
+
+- 監視結果・報告記録の保管先は実装エビデンス内に確認できず、論理的なデータストアとして記述。恒久的な保管先・保持期間・公開範囲は新規未決 `U-04` として追加（文書側の未決として保持、実装変更は要求しない）。
+- Ready 生成（`exec-schedule-ready.ts`）、state/event 集計、`exec refresh` 本体、週報 Routine 定義は evidence_refs 外のため未調査。3.1 の `doing`/`blocked`/マイルストーン条件は既存成果物・depends_on 由来の意図された仕様を維持。
+- 実装ファイルは一切編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-reporting.md を更新版 Kata（目的/適用範囲の分離・一覧表の列縮約・必須/条件付きによる2図分割・個別プロセス主要入出力の新設）へ作り直し、実装エビデンス4ファイルから確認した現在動作（ready/CPM slack=0/register build 生成ビュー/register history の差分項目）を反映。未確認の保管先は未決 U-04 として追加。変更ファイルは docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md のみ。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md","status":"passed","summary":"整形完了（1ファイル）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md","status":"passed","summary":"指摘なし"},{"command":"npx remark docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md --quiet --frail","status":"passed","summary":"frontmatter/Markdown 構文の警告なし"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1096 entries を再構築"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0。警告は他ドメイン成果物の未作成 based_on に関する既存warnのみ"},{"command":"mermaid ノード定義・class 割当・エッジ整合の突き合わせ（python3 ワンライナー）","status":"passed","summary":"2図とも未定義ノード・未分類ノード・未接続ノード・ラベルなしエッジは0件"},{"command":"npm run docs:build:mermaid","status":"not_run","summary":"pre-commit 対象外かつ本環境の chromium 制約のため未実行。図の記法整合は上記突き合わせと markdownlint/remark で確認"}]}
+</specdojo_executor_evidence>

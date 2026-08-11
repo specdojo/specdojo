@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-reporting-075",
+  "run_id": "20260811T160030695Z-6782bf4c",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-11T22:46:16.071Z",
+    "completed_at": "2026-08-11T22:54:53.148Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-reporting.md                | 300 ++++++++++++++-------\n .../T-DATA-FLOW-cdfd-reporting-075-result.md       |   4 +-\n 2 files changed, 209 insertions(+), 95 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "passed",
+      "summary": "整形完了（1ファイル）"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "passed",
+      "summary": "指摘なし"
+    },
+    {
+      "command": "npx remark docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md --quiet --frail",
+      "status": "passed",
+      "summary": "frontmatter/Markdown 構文の警告なし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1096 entries を再構築"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0。警告は他ドメイン成果物の未作成 based_on に関する既存warnのみ"
+    },
+    {
+      "command": "mermaid ノード定義・class 割当・エッジ整合の突き合わせ（python3 ワンライナー）",
+      "status": "passed",
+      "summary": "2図とも未定義ノード・未分類ノード・未接続ノード・ラベルなしエッジは0件"
+    },
+    {
+      "command": "npm run docs:build:mermaid",
+      "status": "not_run",
+      "summary": "pre-commit 対象外かつ本環境の chromium 制約のため未実行。図の記法整合は上記突き合わせと markdownlint/remark で確認"
+    }
+  ],
+  "final_message": "cdfd-reporting.md を更新版 Kata（目的/適用範囲の分離・一覧表の列縮約・必須/条件付きによる2図分割・個別プロセス主要入出力の新設）へ作り直し、実装エビデンス4ファイルから確認した現在動作（ready/CPM slack=0/register build 生成ビュー/register history の差分項目）を反映。未確認の保管先は未決 U-04 として追加。変更ファイルは docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md のみ。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-reporting-075/20260811T160030695Z-6782bf4c/executor.log",
+      "bytes": 6218,
+      "truncated": false
+    }
+  ]
+}
