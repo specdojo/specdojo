@@ -278,7 +278,14 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
       }
       if (!id) continue;
       const taskTags = Array.isArray(tv["tags"]) ? tv["tags"].map(String) : undefined;
-      const taskArtifactName = taskLocalId ? artifactNameMap.get(taskLocalId) : undefined;
+      // 通常タスクはカタログの local_id から artifact_name を解決する。
+      // cross-deliverable-pass タスク（target_local_ids のみで単一の local_id を
+      // 持たない）は、strategy が明示した artifact_name をそのまま使う。
+      const taskArtifactName = taskLocalId
+        ? artifactNameMap.get(taskLocalId)
+        : typeof tv["artifact_name"] === "string"
+          ? tv["artifact_name"]
+          : undefined;
       const taskDescription = typeof tv["description"] === "string" ? tv["description"] : undefined;
       nodes.set(id, {
         id,

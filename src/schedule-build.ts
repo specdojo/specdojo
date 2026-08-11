@@ -55,6 +55,7 @@ type PhaseGate = {
 type CrossDeliverablePass = {
   id: string;
   name: string;
+  artifact_name?: string;
   task_suffix: string;
   duration_days: number;
   owner: string;
@@ -126,6 +127,10 @@ export type GeneratedTask = {
   cycle?: number;
   iteration?: number;
   name: string;
+  // cross-deliverable-pass タスク（target_local_ids を持ち、単一の local_id を
+  // 持たない）向け。通常タスクの artifact_name は exec-schedule-index.ts が
+  // カタログの local_id から解決するため、ここでは設定しない。
+  artifact_name?: string;
   duration_days: number;
   depends_on: string[];
   owner: string;
@@ -613,6 +618,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       depends_on: [pass.after_gate],
       owner: pass.owner,
       tags: ["cross-deliverable"],
+      ...(pass.artifact_name !== undefined ? { artifact_name: pass.artifact_name } : {}),
       ...(pass.description ? { description: pass.description } : {}),
     });
     for (const blockedTaskId of blockedTaskIds) {

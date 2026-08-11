@@ -118,3 +118,33 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-140
       - T-DATA-FLOW-cdfd-reporting-140
     owner: PM
+  - id: G-DATA-FLOW-retrofit-pass-2
+    name: retrofit-pass-2 完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-075
+      - T-DATA-FLOW-cdfd-init-075
+      - T-DATA-FLOW-cdfd-register-operation-075
+      - T-DATA-FLOW-cdfd-catalog-planning-075
+      - T-DATA-FLOW-cdfd-task-execution-075
+      - T-DATA-FLOW-cdfd-routine-075
+      - T-DATA-FLOW-cdfd-multi-project-075
+      - T-DATA-FLOW-cdfd-agent-config-operation-075
+      - T-DATA-FLOW-cdfd-derived-content-075
+      - T-DATA-FLOW-cdfd-reporting-075
+    owner: PM
+  - id: G-DATA-FLOW-refine-pass-2
+    name: refine-pass-2 完了
+    artifact_name: データフロー
+    depends_on:
+      - T-DATA-FLOW-cdfd-overview-080
+      - T-DATA-FLOW-cdfd-init-080
+      - T-DATA-FLOW-cdfd-register-operation-080
+      - T-DATA-FLOW-cdfd-catalog-planning-080
+      - T-DATA-FLOW-cdfd-task-execution-080
+      - T-DATA-FLOW-cdfd-routine-080
+      - T-DATA-FLOW-cdfd-multi-project-080
+      - T-DATA-FLOW-cdfd-agent-config-operation-080
+      - T-DATA-FLOW-cdfd-derived-content-080
+      - T-DATA-FLOW-cdfd-reporting-080
+    owner: PM

@@ -205,6 +205,8 @@ default_phase_sets:
 # CDFD は業務のプロセス・情報・イベントの流れを定義するため、主たる実作業責任は BA とする。
 # cdfd-overview は overview-bootstrap-pass、領域別の代表成果物 cdfd-init は
 # area-bootstrap-pass を先行させ、それぞれの専用 Kata も確定対象に含める。
+# 全 10 成果物が retrofit-pass-2・refine-pass-2 を経て review-pass へ進むため、
+# review-pass（090）は G-DATA-FLOW-refine-pass-2 で足並みをそろえてから開始する。
 owner_rules:
   - local_ids:
       - cdfd-overview
@@ -213,6 +215,8 @@ owner_rules:
       - phase_set: overview-bootstrap-pass
       - phase_set: retrofit-pass
       - phase_set: refine-pass
+      - phase_set: retrofit-pass-2
+      - phase_set: refine-pass-2
       - phase_set: review-pass
       - phase_set: finalize-pass
     phase_overrides:
@@ -226,28 +230,29 @@ owner_rules:
       - phase_set: area-bootstrap-pass
       - phase_set: retrofit-pass
       - phase_set: refine-pass
+      - phase_set: retrofit-pass-2
+      - phase_set: refine-pass-2
       - phase_set: review-pass
       - phase_set: finalize-pass
     phase_overrides:
       - phase: finalize
         approach: bootstrap-finalize
 
+  # 領域別 CDFD（bootstrap 対象の cdfd-overview・cdfd-init 以外）は、1 回目の
+  # retrofit-pass・refine-pass の後、review-pass の前にもう一度 retrofit-pass・
+  # refine-pass を挟み、今回整備した Kata（rulebook / recipe / sample /
+  # template）に基づいて成果物を作り直してから磨き込む。1 回目の retrofit-pass・
+  # refine-pass は Kata 整備前に完了しており、いずれも review-pass にはまだ
+  # 進んでいない。
   - local_ids:
       - cdfd-register-operation
       - cdfd-catalog-planning
       - cdfd-task-execution
       - cdfd-routine
       - cdfd-multi-project
+      - cdfd-agent-config-operation
       - cdfd-derived-content
       - cdfd-reporting
-    owner: BA
-
-  # cdfd-agent-config-operation は 1 回目の retrofit-pass・refine-pass の後、
-  # review-pass の前にもう一度 retrofit-pass・refine-pass を挟み、今回整備した
-  # Kata（rulebook / recipe / sample / template）に基づいて成果物を作り直してから
-  # 磨き込む。
-  - local_ids:
-      - cdfd-agent-config-operation
     owner: BA
     phase_sets:
       - phase_set: retrofit-pass
@@ -262,6 +267,7 @@ owner_rules:
 cross_deliverable_passes:
   - id: data-flow-dedup
     name: CDFD間の正本選択・重複整理
+    artifact_name: データフロー
     task_suffix: "060"
     duration_days: 0.5
     owner: ARC
@@ -293,6 +299,27 @@ phase_gates:
     name: refine-pass 完了
     artifact_name: データフロー
     after_phase_sets: [refine-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+  # retrofit-pass-2・refine-pass-2 は cdfd-overview・cdfd-init を除く領域別
+  # CDFD だけが持つ phase_set のため、scope を横断してもこの2件には依存が
+  # 付かない（該当 phase_set を持つ成果物だけが対象になる）。
+  - id: G-DATA-FLOW-retrofit-pass-2
+    name: retrofit-pass-2 完了
+    artifact_name: データフロー
+    after_phase_sets: [retrofit-pass-2]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+  - id: G-DATA-FLOW-refine-pass-2
+    name: refine-pass-2 完了
+    artifact_name: データフロー
+    after_phase_sets: [refine-pass-2]
     owner: PM
     scope:
       catalogs:

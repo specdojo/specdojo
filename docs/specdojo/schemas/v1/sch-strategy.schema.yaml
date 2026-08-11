@@ -207,6 +207,13 @@ properties:
         name:
           type: string
           minLength: 1
+        artifact_name:
+          type: string
+          minLength: 1
+          description: >
+            Human-readable artifact/domain name displayed in the timeline artifact column.
+            The generated task has no single local_id (it targets multiple deliverables via
+            scope), so this value cannot be resolved from the catalog and must be set here.
         task_suffix:
           type: string
           pattern: "^[0-9]{3}$"

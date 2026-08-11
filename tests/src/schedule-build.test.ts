@@ -102,6 +102,7 @@ describe("buildScheduleTrack phase set repetition", () => {
             {
               id: "group-dedup",
               name: "Group dedup",
+              artifact_name: "Group",
               task_suffix: "060",
               duration_days: 0.5,
               owner: "ARC",
@@ -125,6 +126,7 @@ describe("buildScheduleTrack phase set repetition", () => {
         target_local_ids: ["a", "b"],
         depends_on: ["G-TEST-bootstrap"],
         owner: "ARC",
+        artifact_name: "Group",
       });
       for (const localId of ["a", "b"]) {
         expect(
@@ -132,6 +134,12 @@ describe("buildScheduleTrack phase set repetition", () => {
             ?.depends_on,
         ).toContain("T-TEST-group-dedup-060");
       }
+
+      // artifact_name は target_local_ids のみのタスク（単一 local_id を持たない）
+      // でも、buildScheduleIndex が読み戻した ScheduleNode に反映される。
+      writeTrack(dir, result.tasks);
+      const schedule = buildScheduleIndex(dir);
+      expect(schedule.nodes.get("T-TEST-group-dedup-060")?.artifact_name).toBe("Group");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
