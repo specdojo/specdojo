@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-catalog-planning-075",
+  "run_id": "20260811T142518630Z-eb381bf5",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-11T14:26:10.372Z",
+    "completed_at": "2026-08-11T14:31:57.910Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-catalog-planning.md         | 257 +++++++++++++--------\n 1 file changed, 166 insertions(+), 91 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "passed",
+      "summary": "対象Markdownを整形済み。"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "passed",
+      "summary": "Markdownlintエラーなし。"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "failed",
+      "summary": "実行環境のIPCソケット制約により起動前にEPERM。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全8カタログがOK。既存の未作成成果物に関するwarningのみ。"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "実行環境のIPCソケット制約により起動前にEPERM。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1084件を生成。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・パッチ形式エラーなし。"
+    }
+  ],
+  "final_message": "CDFDを更新済みKataに合わせて再構成し、必須・条件付きフロー、主要入出力、停止ゲートを明確化した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-catalog-planning-075/20260811T142518630Z-eb381bf5/executor.log",
+      "bytes": 1843,
+      "truncated": false
+    }
+  ]
+}
