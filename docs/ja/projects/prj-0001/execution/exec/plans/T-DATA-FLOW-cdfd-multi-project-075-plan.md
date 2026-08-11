@@ -9,7 +9,6 @@ specdojo:
   status: ready
   project_id: prj-0001
   owner: BA
-  on_critical_path: true
   approach: retrofit
   targets:
     - prj-0001:cdfd-multi-project
