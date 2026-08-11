@@ -20,10 +20,10 @@ BA が必須の初期化と任意設定の境界を整理し、PO、ARC、QE が
 ## 2. 適用範囲
 
 - 対象は、プロジェクト開始が承認されてから、config の雛形を対象プロジェクト用に確定し、register、catalog の初期状態を作り、必要な場合だけ provider 実行構成・実行補助設定を準備して、計画展開へ引き渡すまでである。
-- config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスとする。provider 設定初期化と exec scaffold は、それぞれの利用方針が承認され、必要入力がそろった場合だけ起動する独立した任意プロセスとする。
+- config init、register scaffold、catalog scaffold を必須プロセス、provider 設定初期化と exec scaffold を条件付きプロセスとする（詳細は「個別プロセス概要」を参照）。
 - 既存ファイルの継続利用・置換判断、入力不足・不正、生成失敗・部分生成を主要例外として扱う。個別コマンドのオプション、物理的な書き込み手順、内部エラーの全列挙は対象外とする。
 - 登録項目の日常運用は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]]、カタログからの Schedule・実行計画生成は [[prj-0001:cdfd-catalog-planning|概念データフロー図（カタログ〜計画展開）]]、タスクの実行は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、運用中の provider・agent・構成変更は [[prj-0001:cdfd-agent-config-operation|概念データフロー図（agent・provider 構成の運用変更）]] の責務とし、本領域では作り込まない。
-- 社会課題、期待価値、公開方針、provider 利用、既存正本の置換に関する最終判断は人間が担い、AI Agent は初期値の提案、生成、検証を支援できる。
+- 人間と AI Agent の責任分担の原則は [[prj-0001:prj-overview|プロジェクト概要]] に従う。既存正本の置換、provider 利用・権限方針の承認は人間が行う。
 
 ## 3. 領域内プロセス一覧
 
