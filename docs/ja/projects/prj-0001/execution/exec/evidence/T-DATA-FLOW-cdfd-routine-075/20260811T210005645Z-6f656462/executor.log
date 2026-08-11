@@ -1,0 +1,12 @@
+[cdfd-routine.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-routine-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md) をKata準拠で再構成しました。
+
+- プロセス一覧と個別主要入出力を分離
+- 必須、通常action、Job Runの3図へ分割
+- due判定、busy、cycle失敗、重複Job Run、次回判定を維持・明確化
+- resultファイルはexecutor指示に従い未変更
+
+全検査に合格しています。カタログ検証の既存warningはありますが、終了コードは0です。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-routine.mdを更新済みKataに準拠して再構成し、必須・条件付きフローと個別プロセス主要入出力を明確化した。","validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md","status":"passed","summary":"Prettier形式に適合"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md","status":"passed","summary":"Markdownlintエラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。未作成成果物に関する既存warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1098件を生成"},{"command":"node --input-type=module -e 'import fs from\"node:fs\";import D from\"dompurify\";D.sanitize=x=>x;D.addHook=()=>{};const{default:m}=await import(\"mermaid\");for(const[,x]of fs.readFileSync(\"docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md\",\"utf8\").matchAll(/```mermaid\\n([\\s\\S]*?)```/g))await m.parse(x);console.log(\"3 Mermaid diagrams parsed\")'","status":"passed","summary":"Mermaid 3図の構文解析に成功"}]}
+</specdojo_executor_evidence>

@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-routine-075
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-routine-075-plan.md
   started_at: "2026-08-11T21:00:05.996Z"
+  completed_at: "2026-08-11T21:15:32.107Z"
   agent: codex-expert-executor
   execution: agent
   approach: retrofit
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 更新済みKataに準拠して `docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md` を再構成し、必須・条件付きフローおよび個別プロセスの主要入出力を明確化した。
+- Prettier、Markdownlint、カタログバリデーション、およびMermaid図の構文解析による検証を完了した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md`: 更新済みKataに基づく再構成を実施し、フロー定義とプロセス入出力を詳細化した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+更新済みKataに基づいた成果物のretrofitを行い、実装エビデンス（src/routine.ts, src/exec-run.ts, src/job.ts）から抽出した現在動作と整合させ、文書構造を再定義した。
