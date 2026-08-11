@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-derived-content-075
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-derived-content-075-plan.md
   started_at: "2026-08-11T14:25:44.679Z"
+  completed_at: "2026-08-11T14:38:37.647Z"
   agent: claude-expert-executor
   execution: agent
   approach: retrofit
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md` を更新済み Kata（目的/適用範囲の分離、6列のプロセス一覧、必須性による2図分割、個別プロセス主要入出力の新設と上書き境界表）に基づき作り直しました。
+- 実装エビデンス4本から現在動作を抽出して反映し、watch 機能については未確認として U-01 に据え置きました。
+- prettier, markdownlint, remark, index build, catalog validate の静的検査および検証をすべてパスしました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md`: Kata 反映による再構成（目的・範囲の分離、プロセス一覧の拡充、図分割、入出力定義の新設）
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- watch 機能の詳細動作が未確認であるため、必要に応じて追加調査を推奨します。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+retrofit
