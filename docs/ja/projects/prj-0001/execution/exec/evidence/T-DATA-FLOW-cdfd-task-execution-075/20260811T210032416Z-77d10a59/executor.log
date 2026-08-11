@@ -1,0 +1,25 @@
+対象成果物を更新済みの Kata（cdfd-rulebook / cdfd-mermaid-rulebook / cdfd-sample / cdfd-template）に合わせて作り直しました。
+
+## 変更ファイル
+
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md`（作り直し）
+
+## 判断と反映内容
+
+- 判断: **作り直し**。更新後 rulebook の本文構成（`1. 目的` / `2. 適用範囲` の分離、`5. 個別プロセス主要入出力` の新設、`4.` の必須・条件付きによる図分割）が既存構成では満たせず、局所修正より再構成が明確だったため。プロセス ID（`P-04-01`〜`P-04-08`）、例外 ID（`E-01`〜`E-08`）、状態遷移、委譲境界などの既存決定は保持。
+- 章構成: `1. 目的` / `2. 適用範囲` / `3. 領域内プロセス一覧`（ID・業務目的・担当・起動条件・必須性のみ）/ `4. 概念データフロー`（4.1 必須プロセス、4.2 mode 別条件付き phase 実行の二図）/ `5. 個別プロセス主要入出力`（5.1・5.2 は図と同じ単位でグループ化、5.3 実行経路別の更新責務）/ `6. 主要例外と領域外への委譲`（6.1 例外、6.2 状態遷移、6.3 委譲、6.4 受入確認）。3 章と 5 章の項目重複は排除。
+- 図: 全体概要の「凡例（本プロダクト共通）」を参照する `classDef` + 絵文字記法へ統一。両図の共通ノード（`P-04-03`、`P-04-07`、成果物・plan/result・実施根拠記録、phase イベント）が同一対象である旨を各凡例に明記。CLI オプション表記は概念語へ置き換え。
+- 実装エビデンスから反映した AS-IS: 実行担当と記録担当を分ける二段の担当構成と実施根拠記録（`src/exec-run.ts`）、provider 同時実行上限による後回し（例外ではない旨を `E-02` に明記）、残存 worktree の破棄（`E-05`）、統合前の担当・状態整合検査と許可範囲（targets 由来）外変更の申し送り（`E-06`、`src/exec-worktree-ops.ts`）、result 雛形 frontmatter 改変の block 扱い・記録段からの再開（`E-03`）、利用制限時の再開時刻保持と自動再開（`E-04`）、クリティカルパス失敗時の新規投入停止。
+- 実装は一切編集していません。
+
+## 検証結果
+
+- `npx prettier --write <対象>` / `npx markdownlint <対象>`: 成功
+- `npm run -s lint:fm`: 警告 0（初回に混入した書き込み残骸 `</content>` / `</invoke>` を検出したため削除済み）
+- `npx tsx src/specdojo.ts index build`: 成功（1100 entries）
+- `npx tsx src/specdojo.ts catalog validate`: 終了コード 0（残存 WARN は本タスク対象外の未作成成果物に関するもの）
+- Mermaid ノード/エッジ整合の簡易検査: 2 ブロックとも未宣言ノード 0・孤立ノード 0・未ラベルエッジ 0・class 未割当 0。`mermaid.parse` 自体は DOM 非搭載環境のため実行不可（既存の同種文書でも同様）。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-task-execution.md を更新済み Kata の章構成（目的/適用範囲の分離、個別プロセス主要入出力の新設、必須・条件付きによる図分割）へ作り直し、実装エビデンスから確認した AS-IS（実行担当・記録担当の二段構成と実施根拠記録、provider 上限による後回し、残存 worktree 破棄、統合前整合検査と許可範囲外変更の申し送り、result 雛形改変の block 扱い、記録段からの再開）を反映した。プロセス ID・例外 ID・状態遷移・委譲境界は維持。実装は未編集。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md","status":"passed","summary":"整形完了（再実行時 unchanged）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md","status":"passed","summary":"エラーなし"},{"command":"npm run -s lint:fm","status":"passed","summary":"終了コード 0、警告 0（混入した書き込み残骸を削除後）"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1100 entries を doc-index.json へ再生成"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。残る WARN は本タスク対象外の未作成成果物に関する既存警告"},{"command":"node --input-type=module -e \"<mermaid ノード/エッジ整合の簡易検査>\"","status":"passed","summary":"2 ブロックとも未宣言ノード 0・孤立ノード 0・未ラベルエッジ 0・class 未割当 0"},{"command":"node --input-type=module -e \"await mermaid.parse(<各図>)\"","status":"failed","summary":"DOMPurify.addHook is not a function（DOM 非搭載環境の制約。既存 cdfd-catalog-planning でも同様に実行不可のため図の記法誤りとは切り分け済み）"}]}
+</specdojo_executor_evidence>
