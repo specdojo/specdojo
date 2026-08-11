@@ -1,0 +1,9 @@
+[cdfd-init.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-init-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md) を更新しました。
+
+条件付きの provider／exec 設定について、利用承認時の起動経路と、利用せず計画展開へ進む正常経路を図で明示しました。result ファイルは executor 指示どおり未更新です。
+
+検査はすべて実質通過しています。`npx tsx` のみ sandbox の IPC 制約で起動できず、同一処理を `node --import tsx` で実行して成功しました。カタログの警告は未作成の既存成果物に関するものです。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-init.mdへKataの条件付きプロセス非起動経路を反映し、検証を完了した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md","status":"passed","summary":"整形済み、追加変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md","status":"passed","summary":"Markdown違反なし"},{"command":"npx remark docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md --quiet --frail","status":"passed","summary":"FrontmatterおよびMarkdown検査に合格"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxのIPCソケット制約によりtsx CLIがlisten EPERMで起動不能"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"代替起動で文書索引1088件を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全8カタログがOK、未作成成果物に関する既存warningのみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
