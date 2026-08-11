@@ -29,7 +29,7 @@ _TODO_: この全体概要を使用する対象者（対象範囲を承認する
 
 ## 3. プロセス領域
 
-_TODO_: 業務がいくつのプロセス領域に分かれるかを一文で記述する（例: "業務は N のプロセス領域に分かれる"）。主要入力・主要出力・データストア・詳細化先の役割・委譲境界は「個別プロセス領域概要」に記載する。
+_TODO_: 業務がいくつのプロセス領域に分かれるかを一文で記述する（例: "業務は N のプロセス領域に分かれる"）。主要入力・主要出力・データストアは「個別プロセス領域入出力」、委譲境界は「委譲境界」に記載する。
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント | 領域別 CDFD |
@@ -115,58 +115,48 @@ flowchart LR
 
 凡例: 角丸長方形はプロセス領域（内訳は「プロセス領域」の一覧表を参照）、円柱はデータストア、四角は外部主体、`-->` は情報の流れを表す。現物の流れは外部主体と物理保管に着目した概要フロー（4.1）を参照する。色・絵文字の割り当ては「凡例（本プロダクト共通）」を参照する。
 
-## 5. 個別プロセス領域概要
+## 5. 個別プロセス領域入出力
 
-<!-- プロセスグループを設けない場合は、以下のグループ見出し（5.1、5.2）を省略し、領域見出し（5.1.1、5.1.2 相当）を 5.1、5.2 として直接並べる。 -->
+<!-- プロセスグループを設けない場合は、以下のグループ見出し（5.1、5.2）を省略し、表だけを直接並べる。 -->
 
 ### 5.1. _AREA_GROUP_NAME_（_PROCESS_AREA_ID_ 〜 _PROCESS_AREA_ID_）
 
-_TODO_: グループが扱う範囲を数行で要約する。
+_TODO_: グループが扱う範囲を数行で要約する。業務目的、主な担当、起点イベントは「プロセス領域」（3章）と重複させず記載しない。
 
-#### 5.1.1. _PROCESS_AREA_ID_ _PROCESS_AREA_NAME_
+<!-- prettier-ignore -->
+| 領域 ID | プロセス領域 | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
+| `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _MAIN_INPUTS_ | _MAIN_OUTPUTS_ | _DATA_STORES_ |
+| `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _MAIN_INPUTS_ | _MAIN_OUTPUTS_ | _DATA_STORES_ |
 
-- 業務目的: _BUSINESS_PURPOSE_
-- 主な担当: _OWNER_ROLE_
-- 起点イベント: _START_EVENT_
-- 主要入力: _MAIN_INPUTS_
-- 主要出力: _MAIN_OUTPUTS_
-- データストア: _DATA_STORES_
-- 詳細化先（正本）: `_DETAIL_CDFD_ID_` — _DETAIL_CDFD_ROLE_（その領域別 CDFD が正本とする横断的な決めごとを記述する）。
-- 委譲境界: _DELEGATION_BOUNDARY_
-
-<!-- グループ内に領域が3件以上ある場合は、5.1.3 として同じ構成を繰り返す。 -->
-
-#### 5.1.2. _PROCESS_AREA_ID_ _PROCESS_AREA_NAME_
-
-- 業務目的: _BUSINESS_PURPOSE_
-- 主な担当: _OWNER_ROLE_
-- 起点イベント: _START_EVENT_
-- 主要入力: _MAIN_INPUTS_
-- 主要出力: _MAIN_OUTPUTS_
-- データストア: _DATA_STORES_
-- 詳細化先（正本）: `_DETAIL_CDFD_ID_` — _DETAIL_CDFD_ROLE_（その領域別 CDFD が正本とする横断的な決めごとを記述する）。
-- 委譲境界: _DELEGATION_BOUNDARY_
-
-<!-- グループが3件以上ある場合は、5.3 として「グループ要約＋領域詳細」の構成を繰り返す。 -->
+<!-- グループ内に領域が3件以上ある場合は、同じ形式で行を追加する。 -->
 
 ### 5.2. _AREA_GROUP_NAME_（_PROCESS_AREA_ID_ 〜 _PROCESS_AREA_ID_）
 
 _TODO_: グループが扱う範囲を数行で要約する。
 
-#### 5.2.1. _PROCESS_AREA_ID_ _PROCESS_AREA_NAME_
+<!-- prettier-ignore -->
+| 領域 ID | プロセス領域 | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
+| `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _MAIN_INPUTS_ | _MAIN_OUTPUTS_ | _DATA_STORES_ |
 
-- 業務目的: _BUSINESS_PURPOSE_
-- 主な担当: _OWNER_ROLE_
-- 起点イベント: _START_EVENT_
-- 主要入力: _MAIN_INPUTS_
-- 主要出力: _MAIN_OUTPUTS_
-- データストア: _DATA_STORES_
-- 詳細化先（正本）: `_DETAIL_CDFD_ID_` — _DETAIL_CDFD_ROLE_（その領域別 CDFD が正本とする横断的な決めごとを記述する）。
-- 委譲境界: _DELEGATION_BOUNDARY_
+<!-- グループが3件以上ある場合は、5.3 として「グループ要約＋表」の構成を繰り返す。 -->
 
-_TODO_: 本プロダクトに複数の領域別 CDFD があり、共通の凡例を参照させる場合のみ、以下の「6. 凡例（本プロダクト共通）」章を残す。単一の CDFD しかない場合は、この章ごと削除する。
+## 6. 委譲境界
 
-## 6. 凡例（本プロダクト共通）
+_TODO_: 各領域が対象外として他領域へ委ねる境界を記述する。詳細化先（正本としての役割を持つ領域別 CDFD）は「プロセス領域」（3章）の領域別 CDFD 列を参照する前提とし、本章では再掲しない。
+
+<!-- prettier-ignore -->
+| 領域 ID | プロセス領域 | 委譲境界 |
+| --- | --- | --- |
+| `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _DELEGATION_BOUNDARY_ |
+| `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _DELEGATION_BOUNDARY_ |
+
+<!-- 一覧表の全領域を、グループ分けせず領域 ID 順の一つの表にまとめる。3件以上ある場合は同じ形式で行を追加する。 -->
+
+_TODO_: 本プロダクトに複数の領域別 CDFD があり、共通の凡例を参照させる場合のみ、以下の「7. 凡例（本プロダクト共通）」章を残す。単一の CDFD しかない場合は、この章ごと削除する。
+
+## 7. 凡例（本プロダクト共通）
 
 _TARGET_NAME_ の全 CDFD（本書および領域別 CDFD）が共通して参照するノード形状・色・絵文字の対応を示す。個々の CDFD は、以下の定義を再掲せず、本章への参照に留める。
 
@@ -209,7 +199,7 @@ flowchart LR
 
 <!-- 未決事項がある場合のみ、以下の章を追加する。ない場合は章ごと削除する。
 
-## 7. 未決事項
+## 8. 未決事項
 
 | 論点 | 影響 | 決定者 | 決定時期 |
 | --- | --- | --- | --- |
