@@ -1,0 +1,34 @@
+実装エビデンスを再調査し、更新済み Kata（cdfd-rulebook / sample / template）と照合したうえで、対象成果物を部分反映で更新しました。
+
+## 変更ファイル
+
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md`
+
+## 判断と反映内容
+
+判断は「部分反映」。章構成（1 目的 / 2 適用範囲 / 3 領域内プロセス一覧 / 4 概念データフロー（3図分割）/ 5 個別プロセス主要入出力 / 6 例外・委譲 / 7 未決事項）は更新済み Kata に既に適合しており、実装再調査で確認できた現在動作のうち未反映だった停止条件・分離条件を追記しました（兄弟 CDFD と同じく 6.3 受入確認は house style として維持）。
+
+反映箇所:
+
+- 適用範囲: worktree を作る場合の分離条件（project 作業ツリーとは別領域、依存も worktree ごとに準備）を追加。対象外に「業務結果が変わらない一時的な資源競合の内部再試行」を追加。
+- 3章 `P-06-02`: 業務目的に「実行対象 project を一意に特定し」を追加。
+- 4.1 図: `プロジェクト定義・構成` → `並行実行割当` のラベルを「Schedule・実行記録・カタログの所在」へ修正。
+- 5.1 `P-06-02`: 主要入力・主要出力に project 特定結果とカタログ所在を追加。5.2 `P-06-04`: task worktree が project 作業ツリーと別領域である点を明記。
+- 5.4: exec 行に「worktree 内に用意した作業依存」、プロジェクト定義・構成行にロール定義・レビュー観点・project 文脈と「一意に定まらない場合は分離・作業を開始しない」を追加。
+- 6.1 `E-01`: 対象を `P-06-01`〜`P-06-04` に拡張し、検出条件へ「実行対象 project を一意に特定できない」「登録済み作業領域の実体喪失」「作業領域の配置が規約と一致しない」を追加。`E-03`: 対象へ `P-06-04` を追加し、「作業依存を準備できない」を検出条件・再開条件へ反映。
+- 6.3 受入確認: ARC に作業領域・依存の独立性、QE に project 特定不能・作業依存の準備失敗を追加。
+
+## 実装エビデンスから確認した現在動作
+
+- `src/exec-project.ts`: 実行対象 project の解決（明示指定 → 所在の直接指定（Schedule と実行記録は同時指定必須）→ 環境の project 指定 → 既定 project）と、解決できない/未登録の場合は実行を開始せず失敗する挙動。project ごとに Schedule・実行記録・カタログ・ロール定義・レビュー観点・project 文脈を解決。
+- `src/exec-worktree.ts`: branch / worktree 名は task ID から導出（`exec/<slug>`）、作業領域はリポジトリ外配置が必須、登録済み worktree の branch 不一致・実体喪失・未登録パス衝突で停止、tracked `package-lock.json` ごとに依存を worktree 内へ実体配置（失敗時は停止）、index.lock 競合は内部再試行で業務結果は変わらない。
+
+## 未確認・申し送り（result 記録用）
+
+- `exec/<project-id>-<task-id>` の project 修飾は `src/exec-shared.ts` の `qualifyTaskId` と `src/exec-run.ts` の呼び出しで確認したが、これらは `evidence_refs` 外のため補助確認扱い。
+- 同期（`P-06-07`）・統合（`P-06-08`）・後片付け（`P-06-11`）の実装は `src/exec-worktree-ops.ts` / `src/exec-run.ts` にあり `evidence_refs` 外のため、今回の記述根拠には用いず未確認範囲とした（該当記述は既存成果物・ガイド由来の意図された仕様を維持）。
+- 実装側の修正は行っていない。カタログの `evidence_refs` に同期・統合・後片付けの実装を追加するかは後続検討候補。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-multi-project.md を Kata 準拠のまま部分反映で更新。exec-project.ts / exec-worktree.ts の再調査で確認した「実行対象 project の一意特定不能」「作業領域の分離・配置条件」「worktree 依存準備失敗」を適用範囲・3章・図ラベル・5.1/5.2/5.4・E-01/E-03・受入確認へ反映。整形・静的検査はすべて成功。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md","status":"passed","summary":"整形完了（1ファイル）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md","status":"passed","summary":"エラーなし"},{"command":"npx remark docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md --quiet --frail","status":"passed","summary":"frontmatter 検査 exit 0"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1090 entries を再生成、exit 0"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0（未作成成果物に関する既存 WARN のみ、本変更とは無関係）"}]}
+</specdojo_executor_evidence>
