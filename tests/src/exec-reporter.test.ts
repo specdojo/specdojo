@@ -119,6 +119,22 @@ describe("reporter structured output", () => {
     expect(prompt).not.toContain("executor log body");
   });
 
+  it("tells the reporter its own response fulfills the plan's result-recording requirement", () => {
+    // Regression: without this, a reporter reading a plan written for a single edit+record
+    // agent (record to result before finishing) alongside executor evidence that correctly
+    // leaves the result file untouched (writing it is the reporter's job, not the executor's)
+    // can conclude the task is incomplete and return outcome=blocked even though a
+    // outcome="complete" response is exactly what fulfills that requirement.
+    const prompt = buildReporterPrompt({
+      plan: "# Plan\n\nDo the work.",
+      evidence: evidence(),
+      mode: "edit",
+    });
+
+    expect(prompt).toContain('outcome="complete"');
+    expect(prompt).toContain("Do not treat the executor's evidence");
+  });
+
   it("retries only the reporter after a format error and reuses the same evidence", async () => {
     const prompts: string[] = [];
     const invoke = async (prompt: string) => {

@@ -311,7 +311,19 @@ export function buildReporterPrompt(opts: {
 Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
 invent facts that are absent from evidence. Return exactly one JSON object matching the supplied
 JSON Schema, without Markdown fences or commentary. Use outcome=blocked when the evidence cannot
-support a complete result. The runner owns frontmatter and Markdown rendering.${correction}
+support a complete result. The runner owns frontmatter and Markdown rendering: it writes your JSON
+response, verbatim, into the plan's result file.
+
+The plan below was written as generic instructions for a single agent that both edits the
+deliverable and records its own result. In this pipeline, those two responsibilities are split:
+the executor already completed the deliverable edit and intentionally left the result file
+untouched (its evidence may say so explicitly) because writing the result is your job, not its.
+Your JSON response IS the act of recording the result — returning a well-formed response with
+outcome="complete" satisfies the plan's "record to result" and "result must not remain unfilled"
+instructions; you do not need file access to fulfill them. Do not treat the executor's evidence
+noting an untouched result file as a reason to block. Reserve outcome=blocked for cases where the
+evidence itself shows the deliverable work is incomplete, incorrect, unverifiable, or otherwise
+falls short of the plan's completion criteria for the edit itself.${correction}
 <specdojo_plan>
 ${opts.plan.trimEnd()}
 </specdojo_plan>
