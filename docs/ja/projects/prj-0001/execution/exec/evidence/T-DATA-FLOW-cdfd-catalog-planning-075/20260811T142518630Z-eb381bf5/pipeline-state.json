@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-catalog-planning-075",
+  "run_id": "20260811T142518630Z-eb381bf5",
+  "updated_at": "2026-08-11T14:34:42.819Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-11T14:26:10.372Z",
+      "completed_at": "2026-08-11T14:31:58.251Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-catalog-planning-075/20260811T142518630Z-eb381bf5/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "opencode-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-11T14:31:58.252Z",
+      "completed_at": "2026-08-11T14:34:42.819Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-catalog-planning-075-result.md"
+    }
+  }
+}

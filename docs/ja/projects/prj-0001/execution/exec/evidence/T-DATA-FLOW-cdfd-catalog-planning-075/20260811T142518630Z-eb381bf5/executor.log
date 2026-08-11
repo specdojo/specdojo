@@ -1,0 +1,11 @@
+[cdfd-catalog-planning.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-catalog-planning-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md) を Kata に基づき再構成しました。
+
+- プロセス一覧と個別主要入出力を分離
+- 条件付き計画基盤更新／必須計画情報更新を二図化
+- dct から timeline までの依存関係と停止ゲートを明確化
+- executor 指示どおり result ファイルは未更新
+- 既存の未作成成果物に関する警告を除き、全検査合格
+
+<specdojo_executor_evidence>
+{"final_message":"CDFDを更新済みKataに合わせて再構成し、必須・条件付きフロー、主要入出力、停止ゲートを明確化した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md","status":"passed","summary":"対象Markdownを整形済み。"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md","status":"passed","summary":"Markdownlintエラーなし。"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"実行環境のIPCソケット制約により起動前にEPERM。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全8カタログがOK。既存の未作成成果物に関するwarningのみ。"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"実行環境のIPCソケット制約により起動前にEPERM。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1084件を生成。"},{"command":"git diff --check","status":"passed","summary":"空白・パッチ形式エラーなし。"}]}
+</specdojo_executor_evidence>
