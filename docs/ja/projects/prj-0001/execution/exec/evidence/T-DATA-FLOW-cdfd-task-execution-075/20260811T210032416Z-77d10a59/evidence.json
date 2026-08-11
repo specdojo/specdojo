@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-task-execution-075",
+  "run_id": "20260811T210032416Z-77d10a59",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-11T21:00:59.627Z",
+    "completed_at": "2026-08-11T21:10:05.427Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-task-execution.md           | 379 +++++++++++++--------\n 1 file changed, 242 insertions(+), 137 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "passed",
+      "summary": "整形完了（再実行時 unchanged）"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "command": "npm run -s lint:fm",
+      "status": "passed",
+      "summary": "終了コード 0、警告 0（混入した書き込み残骸を削除後）"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1100 entries を doc-index.json へ再生成"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード 0。残る WARN は本タスク対象外の未作成成果物に関する既存警告"
+    },
+    {
+      "command": "node --input-type=module -e \"<mermaid ノード/エッジ整合の簡易検査>\"",
+      "status": "passed",
+      "summary": "2 ブロックとも未宣言ノード 0・孤立ノード 0・未ラベルエッジ 0・class 未割当 0"
+    },
+    {
+      "command": "node --input-type=module -e \"await mermaid.parse(<各図>)\"",
+      "status": "failed",
+      "summary": "DOMPurify.addHook is not a function（DOM 非搭載環境の制約。既存 cdfd-catalog-planning でも同様に実行不可のため図の記法誤りとは切り分け済み）"
+    }
+  ],
+  "final_message": "cdfd-task-execution.md を更新済み Kata の章構成（目的/適用範囲の分離、個別プロセス主要入出力の新設、必須・条件付きによる図分割）へ作り直し、実装エビデンスから確認した AS-IS（実行担当・記録担当の二段構成と実施根拠記録、provider 上限による後回し、残存 worktree 破棄、統合前整合検査と許可範囲外変更の申し送り、result 雛形改変の block 扱い、記録段からの再開）を反映した。プロセス ID・例外 ID・状態遷移・委譲境界は維持。実装は未編集。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-task-execution-075/20260811T210032416Z-77d10a59/executor.log",
+      "bytes": 5024,
+      "truncated": false
+    }
+  ]
+}
