@@ -80,7 +80,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: retrofit
-      proficiency: expert
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "010"
       duration_days: 0.5
       description: |
@@ -99,7 +104,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "070"
       duration_days: 0.25
       description: |
@@ -115,7 +125,12 @@ phase_sets:
       execution: agent
       mode: review
       approach: retrofit
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "090"
       duration_days: 0.25
       description: |
