@@ -1,0 +1,12 @@
+[cdfd-register-operation.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-register-operation-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md) をKata準拠で再構成しました。
+
+- 個別プロセスの主要入出力を独立章へ分離
+- 必須／条件付きプロセスを別図に分割
+- 既存の状態遷移、承認、例外復旧仕様を維持
+- result ファイルは更新していません
+
+`npx tsx` は環境のIPC制限で起動できなかったため、同一CLIを `node --import tsx` で実行し、検証に合格しています。
+
+<specdojo_executor_evidence>
+{"final_message":"CDFDを更新済みKataに準拠して再構成し、全検査に合格した。resultファイルは未更新。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md","status":"passed","summary":"整形・Markdown lintともに成功"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"検査開始前にサンドボックスのIPCソケット作成がEPERM"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全DCTがOK。対象外の既存文書欠落warningのみ"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"検査開始前にサンドボックスのIPCソケット作成がEPERM"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1094件を生成"},{"command":"git diff --check","status":"passed","summary":"空白・差分形式エラーなし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md","status":"passed","summary":"最終Markdown lint成功"}]}
+</specdojo_executor_evidence>
