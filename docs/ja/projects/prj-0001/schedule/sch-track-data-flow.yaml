@@ -547,14 +547,45 @@ tasks:
       重複整理後の責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを
       最小限修正して、成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-agent-config-operation
+    phase_suffix: "075"
+    phase_set: retrofit-pass-2
+    phase_id: retrofit-2
+    name: 実装調査・草案再作成（Kata反映）
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-agent-config-operation-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      整備済みの cdfd-rulebook / recipe / sample / template（Kata）に基づき、成果物を
+      再度 retrofit する。DCT の evidence_refs から現在動作を再調査し、既存成果物・
+      決定記録・プロジェクト文脈が示す意図された仕様、および成果物カタログの
+      done_criteria と、更新済み Kata の章構成・記述ガイドと照合する。1回目の
+      retrofit-pass・refine-pass の結果を土台に、Kata の変更点（個別プロセス主要
+      入出力の分離、必須・条件付きプロセスによる図分割など）を反映して成果物を
+      作り直す。
+  - local_id: cdfd-agent-config-operation
+    phase_suffix: "080"
+    phase_set: refine-pass-2
+    phase_id: refine-2
+    name: 磨き込み・整合性確認（再実施）
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-agent-config-operation-075
+    owner: BA
+    description: |
+      retrofit-pass-2 で再作成した草案を、整備済み Kata に沿って磨き込む。表と図の
+      プロセス名・イベント・入出力・データストアを一致させ、責務境界と depends_on
+      に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して、成果物
+      カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-agent-config-operation
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-cdfd-agent-config-operation-070
-      - G-DATA-FLOW-refine-pass
+      - T-DATA-FLOW-cdfd-agent-config-operation-080
     owner: BA
     description: |
       完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・

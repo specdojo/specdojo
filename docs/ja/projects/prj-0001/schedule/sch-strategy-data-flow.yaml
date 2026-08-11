@@ -119,6 +119,49 @@ phase_sets:
         重複整理後の責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを
         最小限修正して、成果物カタログの done_criteria を満たす状態へ整える。
 
+  retrofit-pass-2:
+    - id: retrofit-2
+      name: 実装調査・草案再作成（Kata反映）
+      execution: agent
+      mode: edit
+      approach: retrofit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "075"
+      duration_days: 0.5
+      description: |
+        整備済みの cdfd-rulebook / recipe / sample / template（Kata）に基づき、成果物を
+        再度 retrofit する。DCT の evidence_refs から現在動作を再調査し、既存成果物・
+        決定記録・プロジェクト文脈が示す意図された仕様、および成果物カタログの
+        done_criteria と、更新済み Kata の章構成・記述ガイドと照合する。1回目の
+        retrofit-pass・refine-pass の結果を土台に、Kata の変更点（個別プロセス主要
+        入出力の分離、必須・条件付きプロセスによる図分割など）を反映して成果物を
+        作り直す。
+
+  refine-pass-2:
+    - id: refine-2
+      name: 磨き込み・整合性確認（再実施）
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "080"
+      duration_days: 0.25
+      description: |
+        retrofit-pass-2 で再作成した草案を、整備済み Kata に沿って磨き込む。表と図の
+        プロセス名・イベント・入出力・データストアを一致させ、責務境界と depends_on
+        に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して、成果物
+        カタログの done_criteria を満たす状態へ整える。
+
   review-pass:
     - id: review
       name: 完成版レビュー
@@ -195,10 +238,24 @@ owner_rules:
       - cdfd-task-execution
       - cdfd-routine
       - cdfd-multi-project
-      - cdfd-agent-config-operation
       - cdfd-derived-content
       - cdfd-reporting
     owner: BA
+
+  # cdfd-agent-config-operation は 1 回目の retrofit-pass・refine-pass の後、
+  # review-pass の前にもう一度 retrofit-pass・refine-pass を挟み、今回整備した
+  # Kata（rulebook / recipe / sample / template）に基づいて成果物を作り直してから
+  # 磨き込む。
+  - local_ids:
+      - cdfd-agent-config-operation
+    owner: BA
+    phase_sets:
+      - phase_set: retrofit-pass
+      - phase_set: refine-pass
+      - phase_set: retrofit-pass-2
+      - phase_set: refine-pass-2
+      - phase_set: review-pass
+      - phase_set: finalize-pass
 
 # retrofit-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
 # 重複記述を正本選択・要約・参照へ整理してから、成果物別の磨き込みへ進む。
