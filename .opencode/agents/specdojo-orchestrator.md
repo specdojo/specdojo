@@ -19,6 +19,8 @@ permission:
     "git diff*": allow
     "git log*": allow
     "git show*": allow
+    "git add*": ask
+    "git commit*": ask
     "specdojo --help*": allow
     "specdojo help*": allow
     "specdojo project list*": allow
