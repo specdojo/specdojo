@@ -1,0 +1,46 @@
+対象成果物の retrofit を完了しました。
+
+## 変更ファイル
+
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md`（作り直し）
+- 生成物のみ再生成: `.specdojo/doc-index.json`（gitignore 済み、commit 対象外）
+
+## 判断: 作り直し
+
+更新済み Kata の章構成（`1. 目的` / `2. 適用範囲` / `3. 領域内プロセス一覧` / `4. 概念データフロー` / `5. 個別プロセス主要入出力` / `6. 主要例外と領域外への委譲` / `7. 未決事項`）に対し、既存文書は `1. 目的と適用範囲`＋一覧表に主要入出力を内包する旧構成であり、局所修正では禁止事項（一覧表と個別入出力の項目重複）を解消できないため再構成しました。有効な決定（P-08 のプロセス分割、例外 ID `E-01`〜`E-07`、未決 `U-01`/`U-02`、用語）は保持しています。
+
+## 主な反映内容
+
+- 目的/適用範囲を分離し、BA・ARC・QE・成果物 owner の利用場面を明示。
+- 一覧表を Kata 指定の 6 列（ID/プロセス/業務目的/主な担当/起動条件/必須性）に整理し、`deliverable scaffold`〜`watch` と `P-08-01`〜`P-08-08` の対応行を追加。
+- 概念データフローを 2 図へ分割（4.1 一括再生成に組み込まれるプロセス `P-08-02`〜`P-08-07` / 4.2 一括再生成の外で起動する `P-08-01`・`P-08-08`）。共通ノードの同一性を凡例で明記し、`classDef`＋絵文字を全体概要の「凡例（本プロダクト共通）」準拠に統一。
+- 新設「5. 個別プロセス主要入出力」に 5.1/5.2 のグループ表と、ARC 向けの 5.3「直接編集と再生成時の上書き境界」を配置。
+
+## 実装エビデンスから確認した現在動作
+
+- `src/build-command.ts`: scope は exec/catalog/register/yaml-pages/index/all。適用可否は project 設定パスで判定（index・yaml-pages は常に適用）。順次実行し非ゼロ終了で後続を中止。適用ステップ 0 件・未知 project はエラー終了。scaffold と watch は step に含まれない。
+- `src/catalog-generate.ts`: `kind: work` かつ path を持つ成果物のみ生成。既存ファイルは既定 skip、force で全体置換。テンプレート無しは最小構成（`_TODO_`）を生成。
+- `src/yaml-pages.ts`: doc-index をメモリ収集して対象 YAML を決定（生成済み索引ファイルは入力にしない）。生成マーカー無しの既存ページは skip、同内容なら書き込み省略、読み取り失敗は例外。
+- `src/doc-index.ts`: `generated/` と隠しディレクトリを走査除外。ID 重複・言語中立/言語別混在で `DuplicateDocIdError`。
+
+## 未反映の乖離・未確認範囲
+
+- `watch`（`P-08-08`）: 実装エビデンス外のため監視対象・起動順・失敗後継続を確認できず、`U-01` として据え置き（文書側で補完せず）。
+- `exec refresh` / `catalog build` / `register build` の内部処理: `evidence_refs` 未収載。現在動作は build-command からの起動順のみを根拠にし、内容は `depends_on` の CDFD を正として記述。
+- カタログ表示・登録簿ビューの生成先パスは `cdfd-init` の配置規約からの類推であり「同階層の `generated/`」という論理表現に留めた。
+
+## 検証結果
+
+| コマンド | 結果 |
+| --- | --- |
+| `npx prettier --write docs/.../cdfd-derived-content.md` | 整形済み |
+| `npx markdownlint docs/.../cdfd-derived-content.md` | exit 0 |
+| `npx remark docs/.../cdfd-derived-content.md --quiet --frail` | exit 0 |
+| `npx tsx src/specdojo.ts index build` | 1086 entries、exit 0 |
+| `npx tsx src/specdojo.ts catalog validate` | exit 0（ERROR 0 件、既存の未作成成果物 WARN のみ） |
+
+Mermaid の実レンダリング（`mmdc`）は本セッションで実行許可が下りず未実行です。代替として 2 ブロックの構造（ノード形状・`classDef`・全エッジのラベル有無・プロセス ID の章間網羅）を機械的に照合し、無ラベルエッジ 0 件、`P-08-01`〜`P-08-08` が 3・4・5 章すべてに出現することを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-derived-content.md を更新済み Kata（目的/適用範囲の分離、6列のプロセス一覧、必須性による2図分割、個別プロセス主要入出力の新設と上書き境界表）へ作り直し。実装エビデンス4本から現在動作を抽出して反映し、watch は未確認として U-01 に据え置き。prettier/markdownlint/remark/index build/catalog validate はすべて成功。mermaid の実レンダリングのみコマンド承認が下りず未実行で、構造の機械照合で代替。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md","status":"passed","summary":"整形完了（1ファイル）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md","status":"passed","summary":"exit 0、指摘なし"},{"command":"npx remark docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md --quiet --frail","status":"passed","summary":"exit 0、frontmatter/山括弧プレースホルダ規約の違反なし"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 1086 entries → .specdojo/doc-index.json"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0、ERROR 0件（既存の未作成成果物に対する WARN のみ）"},{"command":"npx mmdc -p puppeteer-config.json -c mermaid-config.json -i <block>.mmd -o <block>.svg","status":"not_run","summary":"コマンド実行許可が得られず未実行。代替として mermaid ブロック2件の構造照合（無ラベルエッジ0件、P-08-01〜P-08-08 が3/4/5章すべてに出現）を実施"}]}
+</specdojo_executor_evidence>
