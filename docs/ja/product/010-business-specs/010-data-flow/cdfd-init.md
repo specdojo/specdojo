@@ -20,14 +20,14 @@ BA が必須の初期化と任意設定の境界を整理し、PO、ARC、QE が
 ## 2. 適用範囲
 
 - 対象は、プロジェクト開始が承認されてから、config の雛形を対象プロジェクト用に確定し、register、catalog の初期状態を作り、必要な場合だけ provider 実行構成・実行補助設定を準備して、計画展開へ引き渡すまでである。
-- config init、register scaffold、catalog scaffold を必須プロセス、provider 設定初期化と exec scaffold を条件付きプロセスとする（詳細は「個別プロセス入出力」を参照）。
+- config init、register scaffold、catalog scaffold を必須プロセス、provider 設定初期化と exec scaffold を条件付きプロセスとする（詳細は「個別プロセス主要入出力」を参照）。
 - 既存ファイルの継続利用・置換判断、入力不足・不正、生成失敗・部分生成を主要例外として扱う。個別コマンドのオプション、物理的な書き込み手順、内部エラーの全列挙は対象外とする。
 - 登録簿の日常運用、計画展開、タスク実行、運用中の provider・agent・構成変更は対象外とし、「領域外への委譲」（6.2）に従う。
 - 人間と AI Agent の責任分担の原則は [[prj-0001:prj-overview|プロジェクト概要]] に従う。既存正本の置換、provider 利用・権限方針の承認は人間が行う。
 
 ## 3. 領域内プロセス一覧
 
-`P-01 初期セットアップ` は五つのプロセスに分かれる。プロセスの分割、プロセス ID、プロセス間の受け渡しに関する規則は本書を正本とする。主要入力・主要出力は「個別プロセス入出力」に記載する。
+`P-01 初期セットアップ` は五つのプロセスに分かれる。プロセスの分割、プロセス ID、プロセス間の受け渡しに関する規則は本書を正本とする。主要入力・主要出力・データストアは「個別プロセス主要入出力」に記載する。
 
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 業務目的 | 主な担当 | 起動条件 | 必須性 |
@@ -150,7 +150,7 @@ flowchart LR
 
 凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-03 計画展開` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`プロジェクト定義・構成` は必須プロセスのフロー（4.1）で生成される正本を参照する。必須プロセスの起動条件・生成物は必須プロセスのフロー（4.1）を参照する。本図は現物の流れを扱わない。
 
-## 5. 個別プロセス入出力
+## 5. 個別プロセス主要入出力
 
 `<project-id>`、`<domain>`、`<provider>` は対象プロジェクト、選択した成果物ドメイン、provider に置き換える総称であり、未記入の成果物値ではない。`generated/pjr-index.md` は個票から再生成する派生ビューであり、追跡対象の `pjr-index.md` は同ビューへの案内を担う。本書は初回の受け皿作成だけを正本とし、派生ビューの生成順・上書き・再実行規則は [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。プロセス ID・業務目的・主な担当・起動条件・必須性は「領域内プロセス一覧」を参照する。
 
@@ -159,21 +159,21 @@ flowchart LR
 config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスであり、いずれも完了して初めて計画展開へ引き渡せる。
 
 <!-- prettier-ignore -->
-| プロセス ID | プロセス | 主要入力 | 主要出力 |
-| --- | --- | --- | --- |
-| `P-01-01` | config 初期化 | プロジェクト文脈、プロジェクト ID、文書・実行領域の配置方針 | 設定雛形を対象プロジェクト用に確定したプロジェクト構成 → `.specdojo/specdojo.config.json` |
-| `P-01-02` | register scaffold | プロジェクト構成、登録簿の配置方針 | 登録簿領域、追跡対象の案内ページ → `docs/ja/projects/<project-id>/controls/project-register/pjr-index.md`、初期生成ビュー → `generated/pjr-index.md` |
-| `P-01-03` | catalog scaffold | プロジェクト構成、成果物カタログのテンプレート、プロジェクト規模、対象ドメイン、置換値 | 選択条件を反映したカタログ初期ファイル → `docs/ja/projects/<project-id>/010-deliverables-catalog/dct-<domain>.yaml` |
+| プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
+| `P-01-01` | config 初期化 | プロジェクト文脈、プロジェクト ID、文書・実行領域の配置方針 | 設定雛形を対象プロジェクト用に確定したプロジェクト構成 | `.specdojo/specdojo.config.json` |
+| `P-01-02` | register scaffold | プロジェクト構成、登録簿の配置方針 | 登録簿領域、追跡対象の案内ページ、初期生成ビュー | `docs/ja/projects/<project-id>/controls/project-register/pjr-index.md`、`generated/pjr-index.md` |
+| `P-01-03` | catalog scaffold | プロジェクト構成、成果物カタログのテンプレート、プロジェクト規模、対象ドメイン、置換値 | 選択条件を反映したカタログ初期ファイル | `docs/ja/projects/<project-id>/010-deliverables-catalog/dct-<domain>.yaml` |
 
 ### 5.2. 条件付きプロセス（P-01-04・P-01-05）
 
 provider 設定初期化と exec scaffold は、それぞれの利用方針が承認され、必要入力がそろった場合だけ起動する独立した任意プロセスである。起動しない場合も、必須三プロセスの完了だけで計画展開へ引き渡せる。
 
 <!-- prettier-ignore -->
-| プロセス ID | プロセス | 主要入力 | 主要出力 |
-| --- | --- | --- | --- |
-| `P-01-04` | provider 設定初期化 | provider 利用方針、権限方針、provider テンプレート | provider 実行構成 → `.<provider>/agents/`、`.specdojo/<provider>/`、後続の手動設定確認事項 |
-| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 → `pm-review-viewpoints.yaml` |
+| プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
+| `P-01-04` | provider 設定初期化 | provider 利用方針、権限方針、provider テンプレート | provider 実行構成、後続の手動設定確認事項 | `.<provider>/agents/`、`.specdojo/<provider>/` |
+| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 | `pm-review-viewpoints.yaml` |
 
 ## 6. 主要例外と領域外への委譲
 
