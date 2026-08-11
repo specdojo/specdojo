@@ -1,0 +1,11 @@
+[対象 CDFD](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-agent-config-operation-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md)を Kata に合わせて再構成しました。
+
+- プロセス一覧と個別入出力を分離
+- 必須／条件付きフローを二図化
+- 構成正本、安全境界、例外・差し戻し経路を実装と整合
+- executor 指示どおり result ファイルは未更新
+- 全検査成功。カタログの警告は対象外の既存未作成成果物のみ
+
+<specdojo_executor_evidence>
+{"final_message":"Kataを反映してCDFDを再構成し、必要な検証に合格しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"対象Markdownを整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"lintエラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1082件を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。対象外の既存警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
