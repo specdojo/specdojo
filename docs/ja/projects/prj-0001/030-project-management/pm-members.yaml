@@ -224,6 +224,69 @@ members:
     scheduler_strategy: fifo
     note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
+  - nickname: claude-executor
+    disabled: false
+    priority: 3
+    display_name: Claude Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Claude Code CLI を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・ツールは .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+
+  - nickname: claude-expert-executor
+    disabled: false
+    priority: 2
+    display_name: Claude Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Claude Code CLI を使用する高性能 pipeline executor。複雑な分析・アーキテクチャ判断を伴う成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+
+  - nickname: claude-reporter
+    disabled: false
+    priority: 3
+    display_name: Claude Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    mode: edit
+    stage_role: reporter
+    proficiency: normal
+    persona: execution-reporter
+    focus:
+      - evidence-summarization
+      - structured-result-generation
+    capabilities: []
+    scheduler_strategy: fifo
+    note: Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す。モデル・ツールは .claude/agents/claude-reporter.md、権限は .specdojo/claude/settings.edit.json で定義。
+
   #
   # codex members
   #
