@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-11T13:28:30Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-075",
+  "by": "indie",
+  "msg": "reporterプロンプト修正の検証のため再実行"
+}

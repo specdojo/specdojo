@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-075",
+  "run_id": "20260811T130010703Z-e6410d8f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-11T13:00:10.703Z",
+    "completed_at": "2026-08-11T13:05:50.054Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-agent-config-operation.md   | 178 +++++++++++++--------\n 1 file changed, 111 insertions(+), 67 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md",
+      "status": "passed",
+      "summary": "整形完了、Markdown lintエラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "sandboxがtsxの/tmp IPC socket作成をEPERMで拒否"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1082文書の索引を生成"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全8カタログOK。未作成の別成果物に関する既存warningのみ"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "対象CDFDを更新済みKataに沿って再構成し、整形・lint・索引・カタログ検証を完了した。resultは未更新。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-agent-config-operation-075/20260811T130010703Z-e6410d8f/executor.log",
+      "bytes": 1652,
+      "truncated": false
+    }
+  ]
+}

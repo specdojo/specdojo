@@ -1,0 +1,13 @@
+[cdfd-agent-config-operation.md](/workspaces/specdojo-workspace/specdojo/docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md) を更新済み Kata に沿って再構成しました。
+
+- 目的・適用範囲を分離
+- プロセス一覧と個別主要入出力を分離
+- 必須／条件付きプロセスを二図に分割
+- 構成正本、権限境界、例外・差し戻し経路を維持
+- executor 指示に従い result は未更新
+
+`npx tsx` は sandbox の IPC 制限で失敗しましたが、同等の Node loader 経由で索引・カタログ検証に成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"対象CDFDを更新済みKataに沿って再構成し、整形・lint・索引・カタログ検証を完了した。resultは未更新。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"整形完了、Markdown lintエラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxがtsxの/tmp IPC socket作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1082文書の索引を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全8カタログOK。未作成の別成果物に関する既存warningのみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
