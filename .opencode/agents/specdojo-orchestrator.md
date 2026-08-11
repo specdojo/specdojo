@@ -3,6 +3,7 @@ description: SpecDojo 対話型オーケストレーター。会話から意図�
 mode: primary
 model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.2
+thinking: false
 permission:
   read:
     "*": allow
