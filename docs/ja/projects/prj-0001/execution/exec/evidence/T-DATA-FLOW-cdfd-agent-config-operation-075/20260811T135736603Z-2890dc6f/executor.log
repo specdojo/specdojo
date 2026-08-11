@@ -1,0 +1,5 @@
+既存成果物は更新済み Kata と実装に整合していたため「維持」と判断し、内容変更は行いませんでした。result ファイルにも触れていません。指定検査は代替起動を含めすべて合格しています。
+
+<specdojo_executor_evidence>
+{"final_message":"対象CDFDはKata要件を満たしているため維持。整形・lint・catalog validate・index buildは合格。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"整形済みで変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"警告・エラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。対象外の未作成成果物に関する既存警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1082件を正常生成"}]}
+</specdojo_executor_evidence>
