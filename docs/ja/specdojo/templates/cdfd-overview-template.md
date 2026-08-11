@@ -65,7 +65,7 @@ flowchart LR
   class _EXTERNAL_ACTOR_NODE_ID_ actor
 ```
 
-凡例: 角丸長方形はプロセス領域またはプロセスグループ（内訳は「プロセス領域」の一覧表を参照）、円柱はデータストア、四角は外部主体、`-->` は情報の流れを表す。個々の領域の起点イベントは「プロセス領域」の一覧表または「個別プロセス領域概要」に記載し、本図では省略する。本図は情報の流れを対象とし、現物の流れは対象外とする。
+凡例: 角丸長方形はプロセス領域またはプロセスグループ（内訳は「プロセス領域」の一覧表を参照）、円柱はデータストア、四角は外部主体、`-->` は情報の流れを表す。個々の領域の起点イベントは「プロセス領域」の一覧表または「個別プロセス領域概要」に記載し、本図では省略する。本図は情報の流れを対象とし、現物の流れは対象外とする。色・絵文字の割り当ては、「凡例（本プロダクト共通）」を設けた場合はそちらを参照し、設けない場合はこの凡例内で完結させる。
 
 ### 4.1. 外部主体と物理保管に着目した概要フロー
 
@@ -89,7 +89,7 @@ flowchart LR
   class _EXTERNAL_ACTOR_NODE_ID_ actor
 ```
 
-凡例: 角丸長方形はプロセス領域（内訳は「プロセス領域」の一覧表を参照）、スタジアム形は物理保管、四角は外部主体、`==>` は現物・現金の流れを表す。情報の流れはデータストアに着目した概要フロー（4.2）を参照する。
+凡例: 角丸長方形はプロセス領域（内訳は「プロセス領域」の一覧表を参照）、スタジアム形は物理保管、四角は外部主体、`==>` は現物・現金の流れを表す。情報の流れはデータストアに着目した概要フロー（4.2）を参照する。色・絵文字の割り当ては「凡例（本プロダクト共通）」を参照する。
 
 ### 4.2. データストアに着目した概要フロー
 
@@ -113,7 +113,7 @@ flowchart LR
   class _EXTERNAL_ACTOR_NODE_ID_ actor
 ```
 
-凡例: 角丸長方形はプロセス領域（内訳は「プロセス領域」の一覧表を参照）、円柱はデータストア、四角は外部主体、`-->` は情報の流れを表す。現物の流れは外部主体と物理保管に着目した概要フロー（4.1）を参照する。
+凡例: 角丸長方形はプロセス領域（内訳は「プロセス領域」の一覧表を参照）、円柱はデータストア、四角は外部主体、`-->` は情報の流れを表す。現物の流れは外部主体と物理保管に着目した概要フロー（4.1）を参照する。色・絵文字の割り当ては「凡例（本プロダクト共通）」を参照する。
 
 ## 5. 個別プロセス領域概要
 
@@ -164,9 +164,52 @@ _TODO_: グループが扱う範囲を数行で要約する。
 - 詳細化先（正本）: `_DETAIL_CDFD_ID_` — _DETAIL_CDFD_ROLE_（その領域別 CDFD が正本とする横断的な決めごとを記述する）。
 - 委譲境界: _DELEGATION_BOUNDARY_
 
+_TODO_: 本プロダクトに複数の領域別 CDFD があり、共通の凡例を参照させる場合のみ、以下の「6. 凡例（本プロダクト共通）」章を残す。単一の CDFD しかない場合は、この章ごと削除する。
+
+## 6. 凡例（本プロダクト共通）
+
+_TARGET_NAME_ の全 CDFD（本書および領域別 CDFD）が共通して参照するノード形状・色・絵文字の対応を示す。個々の CDFD は、以下の定義を再掲せず、本章への参照に留める。
+
+```mermaid
+flowchart LR
+  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
+  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+
+  _EXTERNAL_ACTOR_NODE_ID_["_EXTERNAL_ACTOR_EMOJI_ 外部主体"]
+  _START_EVENT_NODE_ID_{{"_EVENT_EMOJI_ 起点イベント"}}
+  _PROCESS_AREA_NODE_ID_("_PROCESS_EMOJI_ プロセス／プロセスグループ")
+  _DATA_STORE_NODE_ID_[("_STORE_EMOJI_ データストア")]
+  _PHYSICAL_STORAGE_NODE_ID_(["_PHYSICAL_STORAGE_EMOJI_ 物理保管"])
+
+  _EXTERNAL_ACTOR_NODE_ID_ -->|"情報の流れ"| _PROCESS_AREA_NODE_ID_
+  _START_EVENT_NODE_ID_ -->|"起動条件"| _PROCESS_AREA_NODE_ID_
+  _PROCESS_AREA_NODE_ID_ -->|"更新"| _DATA_STORE_NODE_ID_
+  _PROCESS_AREA_NODE_ID_ ==>|"物の流れ"| _PHYSICAL_STORAGE_NODE_ID_
+
+  class _PROCESS_AREA_NODE_ID_ process
+  class _START_EVENT_NODE_ID_ event
+  class _DATA_STORE_NODE_ID_,_PHYSICAL_STORAGE_NODE_ID_ store
+  class _EXTERNAL_ACTOR_NODE_ID_ actor
+```
+
+<!-- prettier-ignore -->
+| 概念 | 形状 | 色 | 絵文字例 |
+| --- | --- | --- | --- |
+| プロセス／プロセスグループ | 角丸長方形 | 青（`#e3f2fd` / `#1e88e5`） | _TODO_: 業務内容が伝わる絵文字例 |
+| 起点イベント | 六角形 | 橙（`#fff3e0` / `#fb8c00`） | _TODO_: 出来事が伝わる絵文字例 |
+| データストア | 円柱 | 緑（`#e8f5e9` / `#43a047`） | _TODO_: 保管物が伝わる絵文字例 |
+| 物理保管 | スタジアム形 | 緑（データストアと同じ） | _TODO_: 保管場所が伝わる絵文字例 |
+| 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | _TODO_: 主体が伝わる絵文字例 |
+| 情報の流れ | ラベル付き `-->` | — | — |
+| 物の流れ | ラベル付き `==>` | — | — |
+
+ノード形状・線種そのものの記法は `specdojo:cdfd-mermaid-rulebook` に従う。本章は、その記法に基づき _TARGET_NAME_ が実際に採用する色・絵文字の割り当てを固定する。
+
 <!-- 未決事項がある場合のみ、以下の章を追加する。ない場合は章ごと削除する。
 
-## 6. 未決事項
+## 7. 未決事項
 
 | 論点 | 影響 | 決定者 | 決定時期 |
 | --- | --- | --- | --- |
