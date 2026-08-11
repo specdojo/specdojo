@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-overview-075",
+  "run_id": "20260811T144222646Z-0df5796b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-11T14:42:47.372Z",
+    "completed_at": "2026-08-11T14:46:52.921Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md | 8 +++++++-\n 1 file changed, 7 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "passed",
+      "summary": "整形済みでMarkdown lintもエラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "failed",
+      "summary": "環境のIPCソケット作成制限によりEPERM。検査内容は代替起動で実施"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1092件を正常生成"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "cdfd-overviewへKataの責務境界と不足していた主要情報フローを反映し、resultは変更せず検証を完了しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-overview-075/20260811T144222646Z-0df5796b/executor.log",
+      "bytes": 1598,
+      "truncated": false
+    }
+  ]
+}

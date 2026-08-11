@@ -1,0 +1,10 @@
+[cdfd-overview.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-overview-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md) を部分更新しました。
+
+- 必須・条件付きプロセスは領域別 CDFD へ委譲する境界を明記
+- 対象成果物、現行構成、登録簿更新、派生ビュー利用のフローを補完
+- result ファイルは executor 指示どおり未変更
+- 全検査は代替起動を含め合格。カタログの警告は既存の未作成成果物のみです
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-overviewへKataの責務境界と不足していた主要情報フローを反映し、resultは変更せず検証を完了しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md","status":"passed","summary":"整形済みでMarkdown lintもエラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"環境のIPCソケット作成制限によりEPERM。検査内容は代替起動で実施"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1092件を正常生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
