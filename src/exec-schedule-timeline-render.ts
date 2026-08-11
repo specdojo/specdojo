@@ -57,13 +57,52 @@ export function buildTimelineSvg(
   const title = options?.title ?? "プロジェクトタイムライン";
   const rows = Object.values(cpm.nodes).sort((a, b) => a.es - b.es || a.id.localeCompare(b.id));
   const criticalSet = new Set(cpm.critical_path);
-  const leftPad = 440;
-  // Left panel column boundaries
+
+  // コード列（col1）に表示する文字列。タスクは local_id-phase_suffix、
+  // ゲート・マイルストーンは row.id をそのまま使う（描画ループと同じ導出規則）。
+  const col1LabelFor = (row: CpmNode): string => {
+    if (row.kind !== "task") return row.id;
+    const scheduleNode = schedule.nodes.get(row.id);
+    const localId = scheduleNode?.local_id ?? "";
+    const phaseSuffix = scheduleNode?.phase_suffix ?? "";
+    return localId && phaseSuffix ? `${localId}-${phaseSuffix}` : localId || phaseSuffix || row.id;
+  };
+
+  // フェーズセット列（col3）に表示する文字列。strategy.yaml の phase_sets
+  // キー（例: retrofit-pass-2）で、同じフェーズの1回目・2回目などを区別する。
+  // ゲート・マイルストーンには対応する phase_set がないため空文字にする。
+  const col3LabelFor = (row: CpmNode): string => {
+    if (row.kind !== "task") return "";
+    return schedule.nodes.get(row.id)?.phase_set ?? "";
+  };
+
+  // Left panel column boundaries — col1（コード列）・col3（フェーズセット列）は、
+  // このチャートに登場する最長の文字列がクリップされずに収まる幅へ動的に広げる。
+  // col2（成果物名・168px）・col4（フェーズ名・142px）の幅は従来値を維持する。
+  const monospaceCharWidthPx = 6.5;
+  const col1MinWidth = 114;
+  const col3MinWidth = 90;
+  const colTextPadding = 6;
+  const maxCol1Chars = rows.reduce((max, row) => Math.max(max, col1LabelFor(row).length), 0);
+  const col1Width = Math.max(
+    col1MinWidth,
+    Math.ceil(maxCol1Chars * monospaceCharWidthPx) + colTextPadding,
+  );
+  const maxCol3Chars = rows.reduce((max, row) => Math.max(max, col3LabelFor(row).length), 0);
+  const col3Width = Math.max(
+    col3MinWidth,
+    Math.ceil(maxCol3Chars * monospaceCharWidthPx) + colTextPadding,
+  );
+  const col2Width = 168;
+  const col4Width = 142;
   const col1X = 8;
-  const col1DivX = 122;
-  const col2X = 126;
-  const col2DivX = 294;
-  const col3X = 298;
+  const col1DivX = col1X + col1Width;
+  const col2X = col1DivX + 4;
+  const col2DivX = col2X + col2Width;
+  const col3X = col2DivX + 4;
+  const col3DivX = col3X + col3Width;
+  const col4X = col3DivX + 4;
+  const leftPad = col4X + col4Width;
   const topPad = 108;
   const bottomPad = 32;
   const rowHeight = 24;
@@ -253,6 +292,7 @@ export function buildTimelineSvg(
     .label { font-size: 12px; font-weight: 600; fill: #1f2937; }
     .label-artifact { font-size: 11px; font-weight: 400; fill: #6b7280; }
     .label-id { font-size: 10px; font-family: ui-monospace, 'Courier New', monospace; fill: #9ca3af; }
+    .label-phase-set { font-size: 10px; font-family: ui-monospace, 'Courier New', monospace; fill: #6b7280; }
     .axis { font-size: 11px; fill: #475569; }
     .col-div { stroke: #d7dee7; stroke-width: 1; }
     .grid { stroke: #d7dee7; stroke-width: 1; }
@@ -268,7 +308,8 @@ export function buildTimelineSvg(
   parts.push(`<defs>
     <clipPath id="clip-col1"><rect x="${col1X}" y="0" width="${col1DivX - col1X}" height="${height}" /></clipPath>
     <clipPath id="clip-col2"><rect x="${col2X}" y="0" width="${col2DivX - col2X}" height="${height}" /></clipPath>
-    <clipPath id="clip-col3"><rect x="${col3X}" y="0" width="${leftPad - col3X}" height="${height}" /></clipPath>
+    <clipPath id="clip-col3"><rect x="${col3X}" y="0" width="${col3DivX - col3X}" height="${height}" /></clipPath>
+    <clipPath id="clip-col4"><rect x="${col4X}" y="0" width="${leftPad - col4X}" height="${height}" /></clipPath>
   </defs>`);
   parts.push(`<rect x="0" y="0" width="${width}" height="${height}" fill="#fffdf8" />`);
   parts.push(`<rect x="0" y="0" width="${leftPad}" height="${height}" fill="#fffaf0" />`);
@@ -311,7 +352,8 @@ export function buildTimelineSvg(
   // Column header labels
   parts.push(`<text class="axis" x="${col1X}" y="${topPad - 18}">コード</text>`);
   parts.push(`<text class="axis" x="${col2X}" y="${topPad - 18}">成果物名</text>`);
-  parts.push(`<text class="axis" x="${col3X}" y="${topPad - 18}">フェーズ</text>`);
+  parts.push(`<text class="axis" x="${col3X}" y="${topPad - 18}">フェーズセット</text>`);
+  parts.push(`<text class="axis" x="${col4X}" y="${topPad - 18}">フェーズ</text>`);
 
   for (const column of columns) {
     if (column.kind === "gap") {
@@ -366,6 +408,9 @@ export function buildTimelineSvg(
   parts.push(
     `<line class="col-div" x1="${col2DivX}" y1="${topPad - 22}" x2="${col2DivX}" y2="${height - bottomPad}" />`,
   );
+  parts.push(
+    `<line class="col-div" x1="${col3DivX}" y1="${topPad - 22}" x2="${col3DivX}" y2="${height - bottomPad}" />`,
+  );
 
   let currentY = topPad;
   for (const entry of layoutRows) {
@@ -405,11 +450,9 @@ export function buildTimelineSvg(
     }
 
     if (row.kind === "task") {
-      const localId = scheduleNode?.local_id ?? "";
-      const phaseSuffix = scheduleNode?.phase_suffix ?? "";
-      const shortId =
-        localId && phaseSuffix ? `${localId}-${phaseSuffix}` : localId || phaseSuffix || row.id;
+      const shortId = col1LabelFor(row);
       const artifactName = scheduleNode?.artifact_name ?? "";
+      const phaseSet = col3LabelFor(row);
       const taskName = row.name ?? "";
       parts.push(
         `<text class="label-id" x="${col1X}" y="${currentY}" clip-path="url(#clip-col1)">${xmlEscape(shortId)}</text>`,
@@ -418,9 +461,13 @@ export function buildTimelineSvg(
         parts.push(
           `<text class="label-artifact" x="${col2X}" y="${currentY}" clip-path="url(#clip-col2)">${xmlEscape(artifactName)}</text>`,
         );
+      if (phaseSet)
+        parts.push(
+          `<text class="label-phase-set" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(phaseSet)}</text>`,
+        );
       if (taskName)
         parts.push(
-          `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(taskName)}</text>`,
+          `<text class="label" x="${col4X}" y="${currentY}" clip-path="url(#clip-col4)">${xmlEscape(taskName)}</text>`,
         );
     } else {
       const domainName = scheduleNode?.artifact_name ?? "";
@@ -434,7 +481,7 @@ export function buildTimelineSvg(
         );
       if (milestoneName)
         parts.push(
-          `<text class="label" x="${col3X}" y="${currentY}" clip-path="url(#clip-col3)">${xmlEscape(milestoneName)}</text>`,
+          `<text class="label" x="${col4X}" y="${currentY}" clip-path="url(#clip-col4)">${xmlEscape(milestoneName)}</text>`,
         );
     }
     parts.push(
