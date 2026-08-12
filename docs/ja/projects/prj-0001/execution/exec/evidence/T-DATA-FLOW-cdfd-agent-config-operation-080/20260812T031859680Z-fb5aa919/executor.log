@@ -1,0 +1,5 @@
+図内の構成正本名を入出力表の表記に統一しました。result は executor 指示に従い未更新です。
+
+<specdojo_executor_evidence>
+{"final_message":"構成正本のデータストア名を図と表で整合させ、検査を完了しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md","status":"passed","summary":"整形・Markdown静的検査に成功"},{"command":"npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build","status":"failed","summary":"tsxのIPCソケット作成が権限制約でEPERM"},{"command":"node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"カタログ検証は全件OK、インデックスを1117件で生成（既存の欠落文書に関する警告あり）"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

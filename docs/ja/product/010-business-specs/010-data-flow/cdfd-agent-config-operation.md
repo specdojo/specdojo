@@ -64,7 +64,7 @@ flowchart TB
   変更要件問題評価("P-07-01 変更要件・問題評価<br>（担当: BA・PM・task owner）")
 
   変更実行記録[("登録簿・変更記録・実行記録")]
-  運用構成定義[("現行の運用・構成定義")]
+  運用構成定義[("運用・構成定義")]
 
   変更要求者 -->|"作業要件・期待効果"| 作業要件変更
   作業要件変更 -->|"変更評価の起動条件"| 変更要件問題評価
@@ -111,9 +111,9 @@ flowchart TB
   構成検証引き渡し("P-07-06 構成検証・引き渡し<br>（担当: QE・ARC・実行管理者）")
 
   変更実行記録[("登録簿・変更記録・実行記録")]
-  スケジュール戦略[("スケジュール戦略<br>sch-strategy")]
-  memberRoster[("member roster<br>pm-members")]
-  provider実行既定[("provider 実行既定<br>exec-defaults")]
+  スケジュール戦略[("sch-strategy-<track>.yaml")]
+  memberRoster[("pm-members.yaml")]
+  provider実行既定[(".specdojo/exec-defaults.yaml")]
   provider固有設定[("provider 固有設定<br>CLI・権限・agent 定義")]
   認証ストア[("環境・CLI 認証ストア")]
   検証記録[("構成検証記録")]
