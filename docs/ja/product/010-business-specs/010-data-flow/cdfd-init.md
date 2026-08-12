@@ -176,7 +176,7 @@ provider 設定初期化と exec scaffold は、それぞれの利用方針が�
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
 | `P-01-04` | provider 設定初期化 | プロジェクト構成、provider 利用方針、権限方針、provider テンプレート | provider 実行構成、後続の手動設定確認事項 | `.<provider>/agents/`、`.specdojo/<provider>/` |
-| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 | `.specdojo/pm-review-viewpoints.yaml` |
+| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 | `docs/ja/projects/<project-id>/030-project-management/pm-review-viewpoints.yaml` |
 
 ## 6. 主要例外と領域外への委譲
 
