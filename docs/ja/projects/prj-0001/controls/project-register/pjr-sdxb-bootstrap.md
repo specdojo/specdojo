@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-sdxb-bootstrap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-12T01:12:02Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-12T04:35:44Z"
 ---
 
 # PJR-SDXB bootstrapテンプレートに仕上げ品質チェックを追加
