@@ -376,6 +376,33 @@ export const PROJECTS_FILE_TEXT: Record<string, string> = {
   "task-catalog": "タスクカタログ",
 };
 
+// docs/ja/product 配下のディレクトリ名 → サイドバー表示名（日本語化）。
+export const PRODUCT_SEGMENT_TEXT: Record<string, string> = {
+  product: "プロダクト",
+  "010-business-specs": "業務仕様",
+  "010-data-flow": "概念データフロー",
+  "030-architecture": "アーキテクチャ",
+  "020-infrastructure": "インフラ・技術選定",
+  "040-system-design": "システム設計",
+};
+
+// docs/ja/product 配下の既知ファイルのメニュー表示（PROJECTS_FILE_MENU と同じ仕組み）。
+// text: 全ファイル共通の「概念データフロー図（...）: SpecDojo」という H1 は冗長なため、
+// 固定の短い表示名（H1 より優先）にする。
+// order: cdfd-overview を先頭、以降は全体概要（P-01〜P-09）の並び順に揃える。
+export const PRODUCT_FILE_MENU: Record<string, { text: string; order?: number }> = {
+  "cdfd-overview": { text: "全体概要", order: 0 },
+  "cdfd-init": { text: "初期セットアップ（P-01）", order: 10 },
+  "cdfd-register-operation": { text: "登録簿運用（P-02）", order: 20 },
+  "cdfd-catalog-planning": { text: "計画展開（P-03）", order: 30 },
+  "cdfd-task-execution": { text: "タスク実行（P-04）", order: 40 },
+  "cdfd-routine": { text: "定期運用（P-05）", order: 50 },
+  "cdfd-multi-project": { text: "並行運用（P-06）", order: 60 },
+  "cdfd-agent-config-operation": { text: "構成変更（P-07）", order: 70 },
+  "cdfd-derived-content": { text: "派生生成（P-08）", order: 80 },
+  "cdfd-reporting": { text: "報告（P-09）", order: 90 },
+};
+
 // プロジェクト配下の既知ファイルのメニュー表示（標準成果物と生成ビュー）。
 // text: H1 の「タイトル: <プロジェクト名>」形式や英語 H1 より短い固定表示名（H1 より優先）。
 // order: 同一ディレクトリ内での表示順。ファイル名順ではなく作成順・検討順

@@ -7,6 +7,8 @@ import {
   PROJECTS_FILE_TEXT,
   PROJECTS_FILE_MENU,
   PROJECTS_GROUP_ORDER,
+  PRODUCT_SEGMENT_TEXT,
+  PRODUCT_FILE_MENU,
   FLATTENED_GROUP_TEXTS,
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
@@ -323,7 +325,7 @@ const sortKey = (item: SidebarItem): { bucket: number; name: string } => {
     return { bucket: 2, name: "" };
   }
   const base = getBaseFromLink(item.link).toLowerCase();
-  const order = PROJECTS_FILE_MENU[base]?.order;
+  const order = PROJECTS_FILE_MENU[base]?.order ?? PRODUCT_FILE_MENU[base]?.order;
   if (order !== undefined) return { bucket: 2, name: String(order).padStart(4, "0") };
   if (item.link && isExecResultLink(item.link)) {
     // ISO 8601 なので文字列比較で時系列順になる。取得できない場合はファイル名順
@@ -428,10 +430,31 @@ const isProjectsLink = (link: string, locale: Locale): boolean => {
   return link === `/${locale}/projects` || link.startsWith(`/${locale}/projects/`);
 };
 
-const toProjectsMenuText = (item: SidebarItem, locale: Locale): string | undefined => {
+const isProductLink = (link: string, locale: Locale): boolean => {
+  return link === `/${locale}/product` || link.startsWith(`/${locale}/product/`);
+};
+
+// サイドバー表示名を日本語化するコンテンツツリー。projects と product はディレクトリ
+// ごとに表示名テーブル（セグメント名・既知ファイル）が異なるため区別する。
+type ContentTree = "projects" | "product";
+
+const detectContentTree = (item: SidebarItem, locale: Locale): ContentTree | undefined => {
+  const text = (item.text ?? "").toString();
+  if (text === "projects" || (item.link && isProjectsLink(item.link, locale))) return "projects";
+  if (text === "product" || (item.link && isProductLink(item.link, locale))) return "product";
+  return undefined;
+};
+
+const toContentTreeMenuText = (
+  item: SidebarItem,
+  locale: Locale,
+  segmentText: Record<string, string>,
+  fileMenu: Record<string, { text: string; order?: number }>,
+  fileText: Record<string, string> = {},
+): string | undefined => {
   if (item.link) {
     const base = getBaseFromLink(item.link);
-    const known = PROJECTS_FILE_MENU[base];
+    const known = fileMenu[base];
     if (known) return known.text;
 
     const execText = toExecMenuText(item.link);
@@ -440,11 +463,11 @@ const toProjectsMenuText = (item: SidebarItem, locale: Locale): string | undefin
     const markdownTitle = readProjectsMenuTextFromMarkdown(item.link);
     if (markdownTitle) return markdownTitle;
 
-    return PROJECTS_FILE_TEXT[base] ?? PROJECTS_SEGMENT_TEXT[base];
+    return fileText[base] ?? segmentText[base];
   }
 
   const text = item.text ?? "";
-  return PROJECTS_SEGMENT_TEXT[text];
+  return segmentText[text];
 };
 
 const isHandbookTop = (item: SidebarItem): boolean => {
@@ -457,7 +480,7 @@ const isHandbookTop = (item: SidebarItem): boolean => {
 const transformSidebar = (
   items: SidebarItem[],
   locale: Locale,
-  parentIsProjects = false,
+  contentTree?: ContentTree,
 ): SidebarItem[] => {
   const transformed = items
     .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
@@ -467,17 +490,23 @@ const transformSidebar = (
       // prev/next 解決
       if (next.link) next.link = normalizeAndPrefixLink(next.link, locale);
 
-      const currentIsProjects =
-        parentIsProjects ||
-        (next.text ?? "").toString() === "projects" ||
-        Boolean(next.link && isProjectsLink(next.link, locale));
-      if (currentIsProjects) {
-        const text = toProjectsMenuText(next, locale);
+      const currentTree = contentTree ?? detectContentTree(next, locale);
+      if (currentTree === "projects") {
+        const text = toContentTreeMenuText(
+          next,
+          locale,
+          PROJECTS_SEGMENT_TEXT,
+          PROJECTS_FILE_MENU,
+          PROJECTS_FILE_TEXT,
+        );
+        if (text) next.text = text;
+      } else if (currentTree === "product") {
+        const text = toContentTreeMenuText(next, locale, PRODUCT_SEGMENT_TEXT, PRODUCT_FILE_MENU);
         if (text) next.text = text;
       }
 
       // 子も同じルールで処理
-      if (next.items) next.items = transformSidebar(next.items, locale, currentIsProjects);
+      if (next.items) next.items = transformSidebar(next.items, locale, currentTree);
 
       return next;
     });
