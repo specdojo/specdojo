@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-derived-content-080",
+  "run_id": "20260812T032428951Z-4f652f2a",
+  "updated_at": "2026-08-12T03:26:30.453Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-executor",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:24:54.379Z",
+      "completed_at": "2026-08-12T03:26:21.423Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-derived-content-080/20260812T032428951Z-4f652f2a/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "codex-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:26:21.424Z",
+      "completed_at": "2026-08-12T03:26:30.453Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-derived-content-080-result.md"
+    }
+  }
+}

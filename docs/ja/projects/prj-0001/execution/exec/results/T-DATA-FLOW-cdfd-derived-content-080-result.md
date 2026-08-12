@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-derived-content-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-derived-content-080-plan.md
   started_at: "2026-08-12T03:24:29.321Z"
+  completed_at: "2026-08-12T03:26:30.454Z"
   agent: codex-executor
   execution: agent
   approach: fully-guided
@@ -19,17 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-- 対象成果物 `docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md` をレビューし、依存成果物および rulebook との整合性を確認した結果、現状の記述が完了基準をすべて満たしているため、修正は不要と判断した。
-- npx prettier および npx markdownlint による静的検査を実施し、合格したことを確認した。
+- 概念データフロー図を更新し、変更監視の開始要求と正本変更検知を図で分離した。
+- 監視対象のscopeが未決であることを明示した。
+- Markdown整形、markdownlint、索引生成、差分空白検査が成功した。
 
 ## 2. 変更ファイル
 
-- なし
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md`: 変更監視と正本変更検知の表現を整合させ、未決の監視scopeを明記した。
 
 ## 3. 申し送り
 
-- なし
+- 索引生成は`npx tsx`では環境のIPCソケット作成がEPERMで失敗したが、`node --import tsx src/specdojo.ts index build`で1117件の索引生成に成功した。
 
 ## 4. 進め方と実践の型の適用
 
-依存成果物（cdfd-register-operation, cdfd-catalog-planning, cdfd-task-execution）および cdfd-rulebook に基づき整合性を検証し、BA/ARC/QE 各ロールの入力要件と owner の完了基準を満たしていることを確認した。
+executor evidenceに基づき、対象成果物のみを最小限更新し、整形・静的検査・索引生成・差分検査を実施した。

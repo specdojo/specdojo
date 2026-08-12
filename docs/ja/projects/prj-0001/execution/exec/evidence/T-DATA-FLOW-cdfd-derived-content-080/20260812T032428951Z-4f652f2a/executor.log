@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"変更監視の開始要求と正本変更検知を図で分離し、監視対象scope未決を明示しました。結果ファイルは更新していません。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md","status":"passed","summary":"整形済み・変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md","status":"passed","summary":"エラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"環境のtsx IPCソケット作成がEPERMで失敗"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1117件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
