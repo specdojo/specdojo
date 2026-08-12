@@ -349,6 +349,27 @@ members:
     scheduler_strategy: critical-first
     note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
+  - nickname: codex-executor
+    disabled: false
+    priority: 2
+    display_name: Codex Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Codex CLI を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand template（proficiency normal相当）で指定し、タスク固有の手順はedit planを正本とする。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
+
   - nickname: codex-expert-executor
     disabled: false
     priority: 1
@@ -391,6 +412,25 @@ members:
     capabilities: [web_search]
     scheduler_strategy: fifo
     note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
+
+  - nickname: codex-reporter
+    disabled: false
+    priority: 2
+    display_name: Codex Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    mode: edit
+    stage_role: reporter
+    proficiency: normal
+    persona: execution-reporter
+    focus:
+      - evidence-summarization
+      - structured-result-generation
+    capabilities: []
+    scheduler_strategy: fifo
+    note: Codex CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡されたevidenceから指定スキーマの構造化結果だけを返す。モデル・reasoning effortはexec-defaultsのcommand template（proficiency normal相当）で指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
   #
   # copilot members
