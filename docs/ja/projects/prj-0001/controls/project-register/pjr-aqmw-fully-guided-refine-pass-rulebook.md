@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-12T01:12:06Z"
@@ -20,12 +20,15 @@ specdojo:
 
 xep-fully-guided-template.mdの「4.2 既存記述の扱い」およびryu-guide.mdの「1.3 参照の共通原則」で、修正対象をdepends_onとの矛盾だけでなく、手順1で確認するrulebookの必須要素・禁止事項（章構成を含む）への不適合も含めるよう修正する。retrofit側（xep-retrofit-template.mdの判断基準表）にrulebook適合を判断基準として追加するかも合わせて検討する。フレームワーク共通ファイルのため他プロジェクトへの影響を確認のうえ反映する。
 
+追加スコープ（1回目の対応結果を踏まえて追記）: rulebook不適合の是正だけでは、bootstrapで挿入された不要・冗長な記述が削除されない問題が残る。既存記述の尊重原則（原則加筆・補強のみ）はそのままに、`depends_on`矛盾・rulebook不適合に加えて「同一成果物内での重複記述の統合」「rulebookの必須要素にもdone_criteriaにも寄与しない記述の削除」も修正対象に含めるよう、xep-fully-guided-template.mdの「4.2 既存記述の扱い」を再改訂する。安全弁は判断根拠をresultに記録することのみとし、追加の制約は設けない。
+
 ## 2. 完了条件
 
 - `xep-fully-guided-template.md` の「4.2 既存記述の扱い」で、修正対象が `depends_on` との矛盾に加え、手順1で確認する rulebook の必須要素・禁止事項（章構成を含む）への不適合も含むと明記されている。
 - `ryu-guide.md` の「1.3 参照の共通原則」の該当行が、上記と矛盾しない記述に更新されている。
 - `xep-retrofit-template.md` の判断基準表（維持・部分反映・作り直し・新設）に rulebook 章構成不適合を判断基準として追加するかどうかを検討し、結論（追加する場合は反映内容、見送る場合は理由）を対応結果に記録している。
 - rulebook 適合のための修正が「内容の全面書き換え」ではなく「既存記述を尊重した章立ての移し替え」であることが、テンプレートの記述から読み取れる。
+- `xep-fully-guided-template.md` の「4.2 既存記述の扱い」の修正対象に、同一成果物内での重複記述の統合（正本を1箇所に定め他は要約・参照へ置き換える）と、rulebookの必須要素にもdone_criteriaにも寄与しない記述の削除が追加されている。追加の制約（例: owner ロール限定など）は設けず、判断根拠をresultに記録する運用のみとする。
 - `npm run lint:md` がエラーなく通る。
 - フレームワーク共通ファイルであるため、`prj-0001` 以外で `fully-guided` / `retrofit` approach を使用している track・プロジェクトへの影響有無を確認し、対応結果に記録している。
 
@@ -38,6 +41,8 @@ xep-fully-guided-template.mdの「4.2 既存記述の扱い」およびryu-guide
 | 3   | `xep-retrofit-template.md` の判断基準表への rulebook 適合追加要否を検討し結論を出す          | ARC  | done | 追加する結論。維持・部分反映・作り直しの条件へ反映         |
 | 4   | 他 track・他プロジェクトでの `fully-guided` / `retrofit` approach 使用箇所への影響を確認する | ARC  | done | プロジェクトは prj-0001 のみ。`xep-template.md` も整合修正 |
 | 5   | `npm run lint:md` を実行し、エラーがないことを確認する                                       | ARC  | done | 追跡対象の Markdown はエラーなし                           |
+| 6   | `xep-fully-guided-template.md`「4.2 既存記述の扱い」に重複記述統合・不要記述削除を追加する   | ARC  | open | 制約なし。判断根拠をresultへ記録する運用のみ               |
+| 7   | 再度 `npm run lint:md` を実行し、エラーがないことを確認する                                  | ARC  | open | -                                                          |
 
 ## 4. 対応結果
 
