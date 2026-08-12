@@ -84,7 +84,7 @@ flowchart TB
   計画担当者 -->|"戦略準備・変更の通知"| 戦略更新
   戦略更新 -->|"Schedule 展開の起動条件"| Schedule展開
   スケジュール戦略 -->|"対象範囲・phase・owner・gate・初期状態"| Schedule展開
-  Schedule展開 -->|"task・milestone・依存・期間"| Schedule
+  Schedule展開 -->|"task・milestone・依存・担当・期間"| Schedule
   Schedule展開 -->|"不足・不正な戦略項目"| 戦略不足
   Schedule展開 -->|"未解決依存・循環"| 依存解決失敗
   戦略不足 -->|"戦略修正・再展開条件"| 計画担当者
@@ -127,6 +127,7 @@ flowchart TB
   Ready[("✅ 実行可能タスク<br>Ready")]
   CPM[("📊 CPM・critical path")]
   timeline[("📅 timeline")]
+  生成メタデータ[("🧾 生成メタデータ")]
 
   計画担当者 -->|"更新要求"| 計画情報更新
   計画情報更新 -->|"実行入力検証の起動条件"| 実行入力検証
@@ -149,6 +150,7 @@ flowchart TB
   計画情報算出 -->|"着手可能 task・次候補"| Ready
   計画情報算出 -->|"最早最遅時点・余裕・critical path"| CPM
   計画情報算出 -->|"日程・進捗・track 別表示"| timeline
+  計画情報算出 -->|"生成時点・入力対応"| 生成メタデータ
 
   Ready -->|"実行候補"| 計画情報利用者
   CPM -->|"依存・日程判断材料"| 計画情報利用者
@@ -156,7 +158,7 @@ flowchart TB
 
   class 実行入力検証,実行状態再構成,計画情報算出 process
   class 計画情報更新,戦略不足,依存解決失敗,event不正 event
-  class スケジュール戦略,Schedule,実行event,正規化event列,実行状態,Ready,CPM,timeline store
+  class スケジュール戦略,Schedule,実行event,正規化event列,実行状態,Ready,CPM,timeline,生成メタデータ store
   class 計画担当者,計画情報利用者 actor
 ```
 
