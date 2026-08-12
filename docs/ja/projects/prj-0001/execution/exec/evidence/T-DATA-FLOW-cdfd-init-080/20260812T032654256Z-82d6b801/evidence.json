@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-init-080",
+  "run_id": "20260812T032654256Z-82d6b801",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:27:20.513Z",
+    "completed_at": "2026-08-12T03:29:34.196Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md | 7 ++++---\n 1 file changed, 4 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md",
+      "status": "passed",
+      "summary": "整形完了（変更なし）"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md",
+      "status": "passed",
+      "summary": "静的検査に成功"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "sandbox 環境で tsx の IPC ソケット作成が EPERM"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "索引を1117件で再生成"
+    }
+  ],
+  "final_message": "cdfd-init のプロセス間受け渡しと対象範囲を整合させ、Markdown・索引生成を検証しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-init-080/20260812T032654256Z-82d6b801/executor.log",
+      "bytes": 1032,
+      "truncated": false
+    }
+  ]
+}
