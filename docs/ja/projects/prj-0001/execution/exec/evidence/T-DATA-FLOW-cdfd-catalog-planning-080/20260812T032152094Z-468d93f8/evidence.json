@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-catalog-planning-080",
+  "run_id": "20260812T032152094Z-468d93f8",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:22:24.906Z",
+    "completed_at": "2026-08-12T03:23:53.598Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-business-specs/010-data-flow/cdfd-catalog-planning.md       | 6 ++++--\n 1 file changed, 4 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "failed",
+      "summary": "実行環境がtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK（既存のbased_on警告あり）"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1117件の索引を生成"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分エラーなし"
+    }
+  ],
+  "final_message": "CDFDの表・図を整合させ、Schedule出力の担当情報と生成メタデータの流れを補完しました。resultファイルは更新していません。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-catalog-planning-080/20260812T032152094Z-468d93f8/executor.log",
+      "bytes": 1058,
+      "truncated": false
+    }
+  ]
+}
