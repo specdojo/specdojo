@@ -51,6 +51,9 @@ groups:
           - kind: implementation
             path: src/exec-provider-scaffold.ts
             purpose: 実行provider設定の初期生成処理
+          - kind: implementation
+            path: src/review-plan.ts
+            purpose: レビュー観点ファイル（pm-review-viewpoints.yaml）の初期生成処理
         depends_on:
           - cdfd-overview
         done_criteria:
