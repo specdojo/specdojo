@@ -48,12 +48,12 @@ review と finalize は edit の内部操作ではなく、Schedule 上の別 ta
 
 ## 4. 概念データフロー
 
-選択から統合までの必須プロセスと、task の mode によって起動が分かれる phase 実行では起動条件が異なるため、フローを二図に分ける。
+task の選択・準備、mode 別の phase 実行、結果判定・統合では性質が異なり、phase 実行は起動する mode によって関係する担当・データストアが分かれるため、フローを四図に分ける。
 
-### 4.1. 選択から統合までの必須プロセスのフロー
+### 4.1. 選択・準備のフロー
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
@@ -63,22 +63,15 @@ flowchart TB
 
   実行要求{{"⚡ 実行可能な task の実行が要求された"}}
   phase開始可能{{"⚡ mode に対応する phase 作業を開始できる"}}
-  phase終了{{"⚡ phase 作業が終了した"}}
-  実行異常{{"⚡ E-03 / E-04 / E-06 実行結果が block になった"}}
 
   実行対象選択("🎯 P-04-01 実行対象選択<br>（担当: task owner・実行管理者）")
   担当確定claim("🙋 P-04-02 担当確定・claim<br>（担当: task owner・実行管理者）")
   実行入力準備("🧰 P-04-03 実行入力準備<br>（担当: 実行管理者）")
-  実行結果判定("🔍 P-04-07 実行結果判定<br>（担当: 実行管理者・QE）")
-  結果統合complete("📦 P-04-08 結果統合・complete<br>（担当: 実行管理者・task owner）")
-
-  計画展開先("🗓️ P-03 計画展開<br>（領域外）")
 
   ScheduleReady[("🗓️ Schedule・Ready")]
   実行構成[("🔧 実行構成<br>member roster・provider 設定")]
   成果物[("📦 成果物")]
   planResult[("📝 plan・result")]
-  実施根拠記録[("🧾 実施根拠記録")]
   実行event[("🔖 実行 event・状態")]
   taskWorktree[("🌿 task worktree・Git 履歴")]
 
@@ -99,6 +92,141 @@ flowchart TB
   実行入力準備 -->|"task worktree 経路の checkpoint・分離環境・依存"| taskWorktree
   実行入力準備 -->|"phase 実行の開始条件"| phase開始可能
 
+  class 実行対象選択,担当確定claim,実行入力準備 process
+  class 実行要求,phase開始可能 event
+  class ScheduleReady,実行構成,成果物,planResult,実行event,taskWorktree store
+  class 実行要求者 actor
+```
+
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`mode に対応する phase 作業を開始できる` は Edit 実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）の起点イベントと同一であり、`成果物`、`plan・result` も両図と同一のデータストアを指す。current worktree 経路では `task worktree・Git 履歴` への入出力を行わず、現在の作業ツリーの成果物と result を直接更新する。
+
+### 4.2. Edit実行のフロー
+
+```mermaid
+flowchart LR
+  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
+  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+
+  実行担当["🧑 実行担当<br>（human・AI Agent）"]
+  記録担当["🤖 記録担当<br>（AI Agent）"]
+
+  edit開始{{"⚡ edit task の phase 作業を開始できる"}}
+  phase終了{{"⚡ phase 作業が終了した"}}
+
+  実行入力準備("🧰 P-04-03 実行入力準備<br>（担当: 実行管理者）")
+  Edit実行("✍️ P-04-04 Edit 実行<br>（担当: task owner・AI Agent）")
+
+  成果物[("📦 成果物")]
+  planResult[("📝 plan・result")]
+  実施根拠記録[("🧾 実施根拠記録")]
+
+  実行入力準備 -->|"edit 入力"| edit開始
+  edit開始 -->|"起動条件"| Edit実行
+
+  planResult -->|"edit plan・未記入 result"| Edit実行
+  成果物 -->|"対象成果物・変更許可範囲"| Edit実行
+  実行担当 -->|"作業・検証結果"| Edit実行
+  記録担当 -->|"実施根拠に基づく result 記入"| Edit実行
+
+  Edit実行 -->|"更新成果物"| 成果物
+  Edit実行 -->|"記入済み edit result"| planResult
+  Edit実行 -->|"実行段の終了結果・検証記録"| 実施根拠記録
+  Edit実行 -->|"phase 終了通知"| phase終了
+
+  class 実行入力準備,Edit実行 process
+  class edit開始,phase終了 event
+  class 成果物,planResult,実施根拠記録 store
+  class 実行担当,記録担当 actor
+```
+
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-04-03 実行入力準備` は選択・準備のフロー（4.1）、`phase 作業が終了した` は判定・統合のフロー（4.4）と同一のイベント・プロセスを指し、`成果物`・`plan・result`・`実施根拠記録` は両図と同一のデータストアを指す。`記録担当` は実行担当と記録担当を分ける二段構成のときだけ関与し、単一担当構成では実行担当が result まで記入する。
+
+### 4.3. Review・Finalize確定のフロー
+
+```mermaid
+flowchart LR
+  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
+  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+
+  記録担当["🤖 記録担当<br>（AI Agent）"]
+  レビュー担当["🔎 レビュー担当"]
+  人間承認者["👤 人間の承認者<br>（PO・成果物承認者）"]
+
+  review開始{{"⚡ review task の phase 作業を開始できる"}}
+  finalize開始{{"⚡ finalize task の phase 作業を開始できる"}}
+  phase終了{{"⚡ phase 作業が終了した"}}
+  判断不足{{"⚡ E-07 前提または PO 判断が不足した"}}
+
+  実行入力準備("🧰 P-04-03 実行入力準備<br>（担当: 実行管理者）")
+  Review実行("🔎 P-04-05 Review 実行<br>（担当: レビュー担当・AI Agent）")
+  Finalize確定("✅ P-04-06 Finalize・ready 確定<br>（担当: 人間の承認者）")
+
+  登録簿運用先("📒 P-02 登録簿運用<br>（領域外）")
+
+  成果物[("📦 成果物")]
+  planResult[("📝 plan・result")]
+  実施根拠記録[("🧾 実施根拠記録")]
+
+  実行入力準備 -->|"review 入力"| review開始
+  実行入力準備 -->|"finalize 入力"| finalize開始
+  review開始 -->|"起動条件"| Review実行
+  finalize開始 -->|"起動条件"| Finalize確定
+
+  planResult -->|"review plan・先行 result"| Review実行
+  planResult -->|"finalize plan・review result"| Finalize確定
+  成果物 -->|"検証対象・done criteria"| Review実行
+  成果物 -->|"確定対象・参考資料"| Finalize確定
+  記録担当 -->|"実施根拠に基づく result 記入"| Review実行
+  レビュー担当 -->|"検証・finding"| Review実行
+  人間承認者 -->|"最終確認・承認"| Finalize確定
+
+  Review実行 -->|"review result・受入結果"| planResult
+  Review実行 -->|"実行段の終了結果・検証記録"| 実施根拠記録
+  Review実行 -->|"不合格・不足前提"| 判断不足
+  Finalize確定 -->|"finalize result・確定結果"| planResult
+  Finalize確定 -->|"人間が承認した ready"| 成果物
+  Finalize確定 -->|"差し戻し・必要判断"| 判断不足
+  判断不足 -->|"finding・影響・必要判断・再開条件"| 登録簿運用先
+
+  Review実行 -->|"phase 終了通知"| phase終了
+  Finalize確定 -->|"phase 終了通知"| phase終了
+
+  class 実行入力準備,Review実行,Finalize確定,登録簿運用先 process
+  class review開始,finalize開始,phase終了,判断不足 event
+  class 成果物,planResult,実施根拠記録 store
+  class 記録担当,レビュー担当,人間承認者 actor
+```
+
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-04-03 実行入力準備` は選択・準備のフロー（4.1）、`phase 作業が終了した` は判定・統合のフロー（4.4）と同一のイベント・プロセスを指し、`成果物`・`plan・result`・`実施根拠記録` は Edit実行のフロー（4.2）と同一のデータストアを指す。`P-02 登録簿運用` は委譲先の代表ノードであり、その内部処理は対象外とする。`記録担当` は二段構成のときだけ関与する。
+
+### 4.4. 判定・統合のフロー
+
+```mermaid
+flowchart LR
+  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
+  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+
+  phase終了{{"⚡ phase 作業が終了した"}}
+  実行異常{{"⚡ E-03 / E-04 / E-06 実行結果が block になった"}}
+
+  実行結果判定("🔍 P-04-07 実行結果判定<br>（担当: 実行管理者・QE）")
+  結果統合complete("📦 P-04-08 結果統合・complete<br>（担当: 実行管理者・task owner）")
+
+  計画展開先("🗓️ P-03 計画展開<br>（領域外）")
+
+  ScheduleReady[("🗓️ Schedule・Ready")]
+  成果物[("📦 成果物")]
+  planResult[("📝 plan・result")]
+  実施根拠記録[("🧾 実施根拠記録")]
+  実行event[("🔖 実行 event・状態")]
+  taskWorktree[("🌿 task worktree・Git 履歴")]
+
   phase終了 -->|"起動条件"| 実行結果判定
   planResult -->|"記入済み result・必須節の記入状態"| 実行結果判定
   実施根拠記録 -->|"終了結果・検証記録・制限情報"| 実行結果判定
@@ -116,97 +244,20 @@ flowchart TB
   実行event -->|"状態再計算要求"| 計画展開先
   計画展開先 -->|"次 phase の実行候補"| ScheduleReady
 
-  class 実行対象選択,担当確定claim,実行入力準備,実行結果判定,結果統合complete,計画展開先 process
-  class 実行要求,phase開始可能,phase終了,実行異常 event
-  class ScheduleReady,実行構成,成果物,planResult,実施根拠記録,実行event,taskWorktree store
-  class 実行要求者 actor
+  class 実行結果判定,結果統合complete,計画展開先 process
+  class phase終了,実行異常 event
+  class ScheduleReady,成果物,planResult,実施根拠記録,実行event,taskWorktree store
 ```
 
-凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-03 計画展開` は委譲先の代表ノードであり、その内部処理は対象外とする。`mode に対応する phase 作業を開始できる` と `phase 作業が終了した` は、条件付きプロセスのフロー（4.2）の起点・終点イベントと同一である。`成果物`、`plan・result`、`実施根拠記録` も 4.2 と同一のデータストアを指す。current worktree 経路では `task worktree・Git 履歴` への入出力を行わず、現在の作業ツリーの成果物と result を直接更新する。
-
-### 4.2. mode 別の条件付き phase 実行のフロー
-
-```mermaid
-flowchart TB
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
-
-  実行担当["🧑 実行担当<br>（human・AI Agent）"]
-  記録担当["🤖 記録担当<br>（AI Agent）"]
-  レビュー担当["🔎 レビュー担当"]
-  人間承認者["👤 人間の承認者<br>（PO・成果物承認者）"]
-
-  edit開始{{"⚡ edit task の phase 作業を開始できる"}}
-  review開始{{"⚡ review task の phase 作業を開始できる"}}
-  finalize開始{{"⚡ finalize task の phase 作業を開始できる"}}
-  phase終了{{"⚡ phase 作業が終了した"}}
-  判断不足{{"⚡ E-07 前提または PO 判断が不足した"}}
-
-  実行入力準備("🧰 P-04-03 実行入力準備<br>（担当: 実行管理者）")
-  Edit実行("✍️ P-04-04 Edit 実行<br>（担当: task owner・AI Agent）")
-  Review実行("🔎 P-04-05 Review 実行<br>（担当: レビュー担当・AI Agent）")
-  Finalize確定("✅ P-04-06 Finalize・ready 確定<br>（担当: 人間の承認者）")
-  実行結果判定("🔍 P-04-07 実行結果判定<br>（担当: 実行管理者・QE）")
-
-  登録簿運用先("📒 P-02 登録簿運用<br>（領域外）")
-
-  成果物[("📦 成果物")]
-  planResult[("📝 plan・result")]
-  実施根拠記録[("🧾 実施根拠記録")]
-
-  実行入力準備 -->|"edit 入力"| edit開始
-  実行入力準備 -->|"review 入力"| review開始
-  実行入力準備 -->|"finalize 入力"| finalize開始
-  edit開始 -->|"起動条件"| Edit実行
-  review開始 -->|"起動条件"| Review実行
-  finalize開始 -->|"起動条件"| Finalize確定
-
-  planResult -->|"edit plan・未記入 result"| Edit実行
-  planResult -->|"review plan・先行 result"| Review実行
-  planResult -->|"finalize plan・review result"| Finalize確定
-  成果物 -->|"対象成果物・変更許可範囲"| Edit実行
-  成果物 -->|"検証対象・done criteria"| Review実行
-  成果物 -->|"確定対象・参考資料"| Finalize確定
-
-  実行担当 -->|"作業・検証結果"| Edit実行
-  記録担当 -->|"実施根拠に基づく result 記入"| Edit実行
-  記録担当 -->|"実施根拠に基づく result 記入"| Review実行
-  レビュー担当 -->|"検証・finding"| Review実行
-  人間承認者 -->|"最終確認・承認"| Finalize確定
-
-  Edit実行 -->|"更新成果物"| 成果物
-  Edit実行 -->|"記入済み edit result"| planResult
-  Edit実行 -->|"実行段の終了結果・検証記録"| 実施根拠記録
-  Review実行 -->|"review result・受入結果"| planResult
-  Review実行 -->|"実行段の終了結果・検証記録"| 実施根拠記録
-  Review実行 -->|"不合格・不足前提"| 判断不足
-  Finalize確定 -->|"finalize result・確定結果"| planResult
-  Finalize確定 -->|"人間が承認した ready"| 成果物
-  Finalize確定 -->|"差し戻し・必要判断"| 判断不足
-  判断不足 -->|"finding・影響・必要判断・再開条件"| 登録簿運用先
-
-  Edit実行 -->|"phase 終了通知"| phase終了
-  Review実行 -->|"phase 終了通知"| phase終了
-  Finalize確定 -->|"phase 終了通知"| phase終了
-  phase終了 -->|"起動条件"| 実行結果判定
-
-  class 実行入力準備,Edit実行,Review実行,Finalize確定,実行結果判定,登録簿運用先 process
-  class edit開始,review開始,finalize開始,phase終了,判断不足 event
-  class 成果物,planResult,実施根拠記録 store
-  class 実行担当,記録担当,レビュー担当,人間承認者 actor
-```
-
-凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-04-03 実行入力準備` と `P-04-07 実行結果判定` は必須プロセスのフロー（4.1）と同一のプロセスを指し、`成果物`、`plan・result`、`実施根拠記録` も同一のデータストアを指す。`P-02 登録簿運用` は委譲先の代表ノードであり、その内部処理は対象外とする。三つの phase イベントからは task の mode に対応する一経路だけを起動する。`記録担当` は実行担当と記録担当を分ける二段構成のときだけ関与し、単一担当構成では実行担当が result まで記入する。
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-03 計画展開` は委譲先の代表ノードであり、その内部処理は対象外とする。`phase 作業が終了した` は Edit実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）と同一のイベントを指し、`成果物`・`plan・result`・`実施根拠記録` も両図と同一のデータストアを指す。current worktree 経路では `task worktree・Git 履歴` への入出力を行わない。
 
 ## 5. 個別プロセス主要入出力
 
 代表パス中の `<project-id>` と `<task-id>` は、対象プロジェクトと対象 task に置き換える総称であり、未記入の成果物値ではない。プロセス ID、業務目的、主な担当、起動条件、必須性は「領域内プロセス一覧」を参照する。
 
-### 5.1. 選択から統合までの必須プロセス（P-04-01〜P-04-03、P-04-07・P-04-08）
+### 5.1. 選択・準備プロセス（P-04-01〜P-04-03）
 
-実行要求を受けてから担当と実行単位を確定し、phase 作業の結果を判定して正本へ統合するまでの、常に通過する処理を扱う。
+実行要求を受けてから担当と実行単位を確定するまでの、常に通過する処理を扱う。
 
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
@@ -214,23 +265,35 @@ flowchart TB
 | `P-04-01` | 実行対象選択 | Ready の実行候補と選択順位、選択戦略、並列枠、project の実行権、provider ごとの同時実行上限 | 選択 task、実行方式（human / AI Agent、current / task worktree、単発 / 自動 / 並列）、上限到達時の後回し対象 | Schedule・Ready、実行構成、project 実行権 |
 | `P-04-02` | 担当確定・claim | task の実行区分・mode・必要能力・熟練度・段階役割、member roster、明示指定された nickname、現行 event | 担当 nickname（実行担当・記録担当）、claim event、`doing` 状態 | 実行構成、実行 event |
 | `P-04-03` | 実行入力準備 | Schedule の task 定義、成果物カタログの done criteria と対象成果物、rulebook、project context、claim event | mode 別 plan、frontmatter を備えた未記入 result、checkpoint、task worktree と導入済み依存 | plan・result（`docs/ja/projects/<project-id>/execution/exec/plans`・`.../results`）、成果物、task worktree |
-| `P-04-07` | 実行結果判定 | phase の終了結果、記入済み result と必須節・frontmatter の保持状態、実施根拠記録、制限情報、claim actor と現在状態 | success 判定、または blocked result・block event・再開に必要な段階と根拠 | result、実施根拠記録、実行 event、task worktree |
-| `P-04-08` | 結果統合・complete | 検証済みの更新成果物、complete 状態の result、mode と対象成果物から導いた変更許可範囲、作業 branch、統合先の未コミット差分 | 統合済み成果物・result、許可範囲外の変更の申し送り、complete event、次 phase の再計算要求 | 成果物、result、実行 event、Git 履歴 |
 
-### 5.2. mode 別の条件付き phase 実行（P-04-04〜P-04-06）
-
-task の mode に応じて一つだけ起動する phase 作業を扱う。いずれも成果物または result を更新し、終了結果と実施根拠を `P-04-07` へ引き渡す。
+### 5.2. Edit 実行プロセス（P-04-04）
 
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
 | `P-04-04` | Edit 実行 | edit plan、対象成果物、参照資料、変更許可範囲、未記入 result | 更新成果物、記入済み edit result、実行段の終了結果・検証記録、異常時の block 理由 | 成果物、result、実施根拠記録（`.../execution/exec/evidence/<task-id>`） |
+
+### 5.3. Review・Finalize確定プロセス（P-04-05・P-04-06）
+
+<!-- prettier-ignore -->
+| プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
 | `P-04-05` | Review 実行 | review plan、対象成果物、done criteria、先行 result、review 観点 | review result、受入結果、finding と差し戻し情報、実行段の終了結果・検証記録 | 成果物、result、実施根拠記録 |
 | `P-04-06` | Finalize・ready 確定 | finalize plan、成果物、done criteria、review result、未決の業務判断 | finalize result、人間が承認した `ready`、または差し戻し・必要判断 | 成果物、result、実行 event |
 
-### 5.3. 実行経路別の更新責務
+### 5.4. 判定・統合プロセス（P-04-07・P-04-08）
 
-同じプロセス系列でも、実行主体、作業場所、選択方式、担当構成によって更新対象と記録範囲が変わる。本表は 5.1・5.2 のデータストアを経路別に読み分けるための対応を示す。
+phase 作業の結果を判定して正本へ統合するまでの、常に通過する処理を扱う。
+
+<!-- prettier-ignore -->
+| プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
+| `P-04-07` | 実行結果判定 | phase の終了結果、記入済み result と必須節・frontmatter の保持状態、実施根拠記録、制限情報、claim actor と現在状態 | success 判定、または blocked result・block event・再開に必要な段階と根拠 | result、実施根拠記録、実行 event、task worktree |
+| `P-04-08` | 結果統合・complete | 検証済みの更新成果物、complete 状態の result、mode と対象成果物から導いた変更許可範囲、作業 branch、統合先の未コミット差分 | 統合済み成果物・result、許可範囲外の変更の申し送り、complete event、次 phase の再計算要求 | 成果物、result、実行 event、Git 履歴 |
+
+### 5.5. 実行経路別の更新責務
+
+同じプロセス系列でも、実行主体、作業場所、選択方式、担当構成によって更新対象と記録範囲が変わる。本表は 5.1〜5.4 のデータストアを経路別に読み分けるための対応を示す。
 
 | 観点     | 経路             | 選択・担当                                                                                                | 成果物                                       | result                                                          | event・状態                                                               |
 | -------- | ---------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -285,12 +348,3 @@ task の mode に応じて一つだけ起動する phase 作業を扱う。い�
 | `P-06` [[prj-0001:cdfd-multi-project\|複数プロジェクト・ブランチ並行運用]]      | 複数 project / branch の配置、同期、統合方針を管理する                      | 独立 task、分離環境、branch、統合結果、競合情報                  | 個々の task を本領域のライフサイクルで実行または復旧する必要がある      |
 | `P-07` [[prj-0001:cdfd-agent-config-operation\|agent・provider 構成の運用変更]] | Agent・provider・能力・権限の不足や変更を承認・適用する                     | 選択失敗、利用制限、必要能力、代替候補、権限超過                 | 登録済み nickname と実行条件が更新され、再選択可能になった              |
 | `P-08` [[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]          | 成果物、索引、実行ビューを正本から再生成する                                | 統合済み成果物・result・event                                    | 再生成結果が次 task の plan または確認入力として利用可能になる          |
-
-### 6.4. 受入確認
-
-| 確認者 | 確認対象           | 受入条件                                                                                                                                                                 |
-| ------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| BA     | 正常経路と利用場面 | 実行対象選択、claim、plan / result 準備、mode 別 phase 実行、結果判定、統合・complete と次 phase への引継ぎを、担当と入出力を含めて一覧・入出力表と二図から説明できる    |
-| ARC    | 実行方式と更新境界 | human / AI Agent、current / task worktree、単発 / 自動 / 並列、登録済み nickname の選択、単一担当と二段の担当構成が更新する成果物・result・event・Git 履歴を識別できる   |
-| QE     | 例外と復旧         | project 実行中の skip / wait / fail、unblock / release / cancel / reopen、利用制限後の再開時刻による自動再開、依存導入・commit・統合失敗の停止範囲と再開条件を判定できる |
-| PO     | ready と判断準備   | `ready` の人間専用ゲート、review / finalize の差し戻し、前提不足時に登録簿運用へ渡す finding・影響・必要判断・再開条件を識別できる                                       |
