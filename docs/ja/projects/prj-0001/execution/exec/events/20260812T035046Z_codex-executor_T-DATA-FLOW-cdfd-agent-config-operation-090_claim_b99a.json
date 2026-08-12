@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-12T03:50:46Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-090",
+  "by": "codex-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
