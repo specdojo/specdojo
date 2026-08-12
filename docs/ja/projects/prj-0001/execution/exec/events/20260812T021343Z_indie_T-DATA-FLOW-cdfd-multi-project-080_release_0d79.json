@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-12T02:13:43Z",
+  "type": "release",
+  "task_id": "T-DATA-FLOW-cdfd-multi-project-080",
+  "by": "indie",
+  "msg": "codex-edit-agentへ切り替えるため、時間超過で中断したopencode実行を解放"
+}
