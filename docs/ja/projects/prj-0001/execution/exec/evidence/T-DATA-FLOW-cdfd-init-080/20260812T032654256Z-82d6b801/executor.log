@@ -1,0 +1,5 @@
+概念データフロー図を最小限更新し、provider 設定初期化の config 依存を図・入出力表で一致させました。派生ビューの詳細は対象外として整理済みです。result ファイルは更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-init のプロセス間受け渡しと対象範囲を整合させ、Markdown・索引生成を検証しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md","status":"passed","summary":"整形完了（変更なし）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md","status":"passed","summary":"静的検査に成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox 環境で tsx の IPC ソケット作成が EPERM"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"索引を1117件で再生成"}]}
+</specdojo_executor_evidence>
