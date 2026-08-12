@@ -1,0 +1,5 @@
+概要図を領域別ノード・起点イベント・主要な入出力／データストア接続に整合させました。result は executor 段階の指示に従い未更新です。
+
+<specdojo_executor_evidence>
+{"final_message":"CDFD概要図を9領域・9起点イベントへ整合し、Markdownおよびカタログ・索引検査を完了しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md","status":"passed","summary":"整形・Markdown lint ともに成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功（既存の参照先不足に関する警告あり）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"索引生成成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
