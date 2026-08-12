@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-init-080",
+  "run_id": "20260812T003731753Z-cfb11c80",
+  "updated_at": "2026-08-12T00:55:03.567Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opencode-executor",
+      "attempts": 1,
+      "started_at": "2026-08-12T00:38:06.969Z",
+      "completed_at": "2026-08-12T00:52:20.553Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-init-080/20260812T003731753Z-cfb11c80/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "opencode-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-12T00:52:20.555Z",
+      "completed_at": "2026-08-12T00:55:03.567Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-init-080-result.md"
+    }
+  }
+}
