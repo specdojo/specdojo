@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-12T03:18:42Z",
+  "type": "reopen",
+  "task_id": "T-DATA-FLOW-cdfd-catalog-planning-080",
+  "by": "indie",
+  "msg": "codex-executor/codex-reporterでrefine-pass-2を最初からやり直すためreopen"
+}
