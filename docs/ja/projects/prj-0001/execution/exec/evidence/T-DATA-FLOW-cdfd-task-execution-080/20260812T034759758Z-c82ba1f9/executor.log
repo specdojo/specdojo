@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"CDFD の経路条件と例外遷移を最小限補正しました。result は pipeline executor 指示に従い未更新です。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md","status":"passed","summary":"整形済み（変更なし）。"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md","status":"passed","summary":"Markdown 静的検査に合格。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証に合格。既存の参照先不足警告あり。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1127件の索引を生成。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
