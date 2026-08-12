@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-12T03:52:54Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-catalog-planning-090",
+  "by": "codex-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
