@@ -91,7 +91,7 @@ flowchart LR
   routine結果反映("📌 routine 結果反映<br>P-05-08")
 
   定期運用定義[("📒 定期運用定義<br>rtn-*.yaml")]
-  routine実行状態[("🗃️ routine 実行状態<br>last_run・last_result・last_scheduled_for")]
+  routine実行状態[("🗃️ routine 実行状態<br>last_run・last_result<br>・last_scheduled_for")]
 
   外部起動者 -->|"定期起動要求"| 定期確認時点
   外部起動者 -->|"routine ID"| 即時実行要求
