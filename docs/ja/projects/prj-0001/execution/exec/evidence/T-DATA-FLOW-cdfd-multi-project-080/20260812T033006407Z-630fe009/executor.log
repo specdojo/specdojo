@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"対象文書は既に完了基準と rulebook に整合していたため変更不要と判断しました。result ファイルは更新していません。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md","status":"passed","summary":"整形済みで、Markdown lint も成功しました。"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"実行環境が tsx の一時 IPC ソケット作成を EPERM で拒否しました。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同一 TypeScript ローダーで索引を正常に生成しました。"},{"command":"git diff --check","status":"passed","summary":"差分エラーはありません。"}]}
+</specdojo_executor_evidence>
