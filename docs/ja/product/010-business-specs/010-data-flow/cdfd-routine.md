@@ -72,7 +72,7 @@ routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` 
 ### 4.1. 必須プロセスのフロー
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
@@ -119,7 +119,7 @@ flowchart TB
 ### 4.2. 登録項目・Schedule・cycle の条件付きフロー
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
@@ -175,7 +175,7 @@ flowchart TB
 ### 4.3. Job Run の条件付きフロー
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
@@ -282,15 +282,6 @@ action kind に応じて、登録項目の対応、Ready task の自動実行、
 | `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]）    | Ready task、deferred limit task、または Job Run の実行単位を処理する | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
 | `P-08 派生生成`（[[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]） | exec-cycle 中に成果物索引を再生成する                                | project ID、文書正本、索引設定                                    | 索引生成の成否と更新済み索引を状態再計算 step へ渡すとき                                       |
 | 外部スケジューラ                                                                   | 定期確認時点に routine の due 実行を要求する                         | project ID、起動時刻                                              | 処理件数、skip・failure、終了結果から監視・次回起動を継続するとき                              |
-
-### 6.3. 受入確認
-
-| 確認者       | 確認対象           | 受入条件                                                                                                                                                                |
-| ------------ | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BA           | 正常経路と利用場面 | routine 選択、due 判定、試行記録、register / Schedule / cycle / Job の起動、結果反映までを、担当と入出力を含めて表と図から説明できる                                    |
-| ARC          | 定義・委譲境界     | action kind、filter、interval / cron / timezone / policy、limit、strategy、parallel、loop、Job 入力・冪等性・checkpoint、および `P-02`〜`P-04` との受け渡しを識別できる |
-| QE           | 例外と次回判定     | routine / project busy、対象なし、利用制限、cycle step 失敗、再開時刻待ち、重複 Job Run、取りこぼし、Job failure ごとの状態記録と次回判定を確認できる                   |
-| PM・運用担当 | 継続判断           | `last_run`、`last_result`、`last_scheduled_for`、task event、Job Run / checkpoint から、継続・再試行・人間判断の必要性を判定できる                                      |
 
 ## 7. 未決事項
 
