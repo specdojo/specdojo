@@ -53,7 +53,7 @@ Schedule・event から state、Ready、CPM、critical path、timeline を算出
 ### 4.1. カタログ・戦略変更時の計画基盤更新（条件付き）
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
@@ -101,7 +101,7 @@ flowchart TB
 ### 4.2. Schedule・event からの計画情報更新（必須）
 
 ```mermaid
-flowchart TB
+flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
@@ -211,12 +211,3 @@ event が存在しない初回更新は例外ではなく、戦略の初期状�
 | `P-04` [[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]               | Ready から task を選択し、実行結果を event と成果物へ反映する  | Ready、Schedule、task の mode・execution・approach・capability 条件 | event の追加、task の完了・中断、または依存へ影響する結果により再計算が必要になった |
 | `P-07` [[prj-0001:cdfd-agent-config-operation\|agent・provider 構成の運用変更]] | strategy、provider、agent、実行条件の変更を承認・適用する      | 変更要求、影響、承認結果、更新済み構成                              | 承認済み変更により Schedule または実行計画の再展開が必要になった                    |
 | `P-08` [[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]          | 計画情報を成果物、索引、一般的な派生ビューとして生成・公開する | Schedule、state、Ready、CPM、timeline                               | 表示元となる正本・計画情報の不整合が判明し、再計算が必要になった                    |
-
-### 6.3. 受入確認
-
-| 確認者 | 確認対象             | 受入条件                                                                                                                   |
-| ------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| BA     | 業務価値と利用場面   | カタログと戦略の準備から検証・展開・更新を経て、実行可能な task と日程・進捗情報を利用できるまでを一覧と二図から説明できる |
-| PM     | 必須・条件付きの境界 | カタログ・戦略変更時の計画基盤更新と、Schedule・event 更新時の必須更新を区別し、停止時の修正対象と再開順序を判断できる     |
-| ARC    | 入出力と依存         | dct・strategy・Schedule・event から state・Ready・CPM・timeline へ至る入力、出力、正本・派生の関係を追跡できる             |
-| QE     | 検証ゲートと例外経路 | カタログ検証失敗、戦略不足、依存解決失敗、event 不正について、停止する後続処理と再開条件を表と図から判定できる             |
