@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-derived-content-080",
+  "run_id": "20260812T032428951Z-4f652f2a",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:24:54.379Z",
+    "completed_at": "2026-08-12T03:26:21.045Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-business-specs/010-data-flow/cdfd-derived-content.md | 12 +++++++-----\n 1 file changed, 7 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md",
+      "status": "passed",
+      "summary": "整形済み・変更なし"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "環境のtsx IPCソケット作成がEPERMで失敗"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1117件の索引を生成"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "変更監視の開始要求と正本変更検知を図で分離し、監視対象scope未決を明示しました。結果ファイルは更新していません。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-derived-content-080/20260812T032428951Z-4f652f2a/executor.log",
+      "bytes": 906,
+      "truncated": false
+    }
+  ]
+}
