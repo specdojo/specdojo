@@ -7,8 +7,8 @@ specdojo:
   status: in_progress
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-multi-project-080-plan.md
-  started_at: "2026-08-12T00:55:28.363Z"
-  agent: opencode-executor
+  started_at: "2026-08-12T03:30:06.794Z"
+  agent: codex-executor
   execution: agent
   approach: fully-guided
   targets:
