@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-reporting-080",
+  "run_id": "20260812T034017576Z-5677d823",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:40:45.932Z",
+    "completed_at": "2026-08-12T03:42:11.241Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-reporting.md                | 23 +++++++++++-----------\n 1 file changed, 12 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "passed",
+      "summary": "整形済み（変更なし）"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1123 entries の索引を生成"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "環境のIPCソケット作成がEPERMで拒否されたため、非IPC起動で代替実行"
+    }
+  ],
+  "final_message": "cdfd-reporting を最小限修正し、表・図の整合性を改善しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-reporting-080/20260812T034017576Z-5677d823/executor.log",
+      "bytes": 1038,
+      "truncated": false
+    }
+  ]
+}

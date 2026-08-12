@@ -1,0 +1,5 @@
+更新完了。委譲先をプロセス形状へ統一し、費用・作業記録の位置づけを表と図で整合させました。result は更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-reporting を最小限修正し、表・図の整合性を改善しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md","status":"passed","summary":"整形済み（変更なし）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-reporting.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1123 entries の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"環境のIPCソケット作成がEPERMで拒否されたため、非IPC起動で代替実行"}]}
+</specdojo_executor_evidence>
