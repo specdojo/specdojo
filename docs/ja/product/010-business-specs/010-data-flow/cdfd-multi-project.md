@@ -50,7 +50,7 @@ BA が並行運用の利用場面と担当を整理し、PM、開発者、タス
 
 ## 4. 概念データフロー
 
-必須プロセス（`P-06-01`・`P-06-02`）、分離と作業の条件付きプロセス（`P-06-03`〜`P-06-06`）、同期・統合・後片付けの条件付きプロセス（`P-06-07`〜`P-06-11`）は、起動条件と担当が異なり、一図では起動順と分岐を追いにくいため、フローを三つの図に分ける。各図に登場する `main`、`project develop`、`feature branch / worktree`、`exec branch / worktree`、`Schedule・実行計画・実行記録`、`Git / PR 履歴` は、いずれも同一の対象を指す。
+必須プロセス（`P-06-01`・`P-06-02`）、分離と作業の条件付きプロセス（`P-06-03`〜`P-06-06`）、同期・統合の条件付きプロセス（`P-06-07`・`P-06-08`）、main同期・昇格・後片付けの条件付きプロセス（`P-06-09`〜`P-06-11`）は、起動条件と担当が異なり、一図では起動順と分岐を追いにくいため、フローを四つの図に分ける。各図に登場する `main`、`project develop`、`feature branch / worktree`、`exec branch / worktree`、`Schedule・実行計画・実行記録`、`Git / PR 履歴` は、いずれも同一の対象を指す。
 
 ### 4.1. 必須プロセスのフロー（P-06-01・P-06-02）
 
@@ -165,9 +165,9 @@ flowchart LR
   class 作業担当 actor
 ```
 
-凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-04 タスク実行` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`実行方式と担当が割り当てられた` は必須プロセスのフロー（4.1）、`統合対象の commit が確定した` は同期・統合・後片付けのフロー（4.3）の同名イベントと同一の対象を指す。本図は現物の流れを扱わない。
+凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-04 タスク実行` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`実行方式と担当が割り当てられた` は必須プロセスのフロー（4.1）、`統合対象の commit が確定した` は同期・統合のフロー（4.3）の同名イベントと同一の対象を指す。本図は現物の流れを扱わない。
 
-### 4.3. 同期・統合・後片付けの条件付きプロセスのフロー（P-06-07〜P-06-11）
+### 4.3. 同期・統合のフロー（P-06-07・P-06-08）
 
 ```mermaid
 flowchart LR
@@ -177,22 +177,13 @@ flowchart LR
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   プロジェクト管理者["👤 プロジェクト管理者<br>（PM・承認者）"]
-  作業担当["👥 作業担当<br>（開発者・タスク owner・AI Agent）"]
 
   統合可能{{"🚦 統合対象の commit が確定した"}}
-  main更新{{"🚦 main の共有変更が確定した"}}
-  project受入{{"🚦 project の変更が受入可能になった"}}
 
-  subgraph 並行運用統合["P-06 並行運用（同期・統合・後片付け）"]
-    direction TB
-    worktreeベース同期("🔄 P-06-07 worktree ベース同期<br>（担当: 開発者・タスク owner）")
-    featureExec統合("🔗 P-06-08 feature・exec 統合<br>（担当: PM・開発者・SpecDojo CLI）")
-    main共有変更同期("⬇️ P-06-09 main 共有変更同期<br>（担当: PM・プロジェクト管理者）")
-    projectDevelop昇格("⬆️ P-06-10 project develop 昇格<br>（担当: プロジェクト管理者・承認者）")
-    worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
-  end
+  worktreeベース同期("🔄 P-06-07 worktree ベース同期<br>（担当: 開発者・タスク owner）")
+  featureExec統合("🔗 P-06-08 feature・exec 統合<br>（担当: PM・開発者・SpecDojo CLI）")
+  worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
 
-  main[("🌳 main<br>安定統合点・共通成果物")]
   projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
   featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit")]
   execWorktree[("🤖 exec branch / worktree<br>対象成果物・task result・commit")]
@@ -201,8 +192,6 @@ flowchart LR
 
   subgraph 領域外統合["対象領域外"]
     登録簿運用("📒 P-02 登録簿運用")
-    構成変更("🔧 P-07 構成変更")
-    派生生成("🔁 P-08 派生生成")
   end
 
   統合可能 -->|"同期条件"| worktreeベース同期
@@ -222,6 +211,43 @@ flowchart LR
   featureExec統合 -->|"ID 競合・統合順序の判断要求"| 登録簿運用
   featureExec統合 -->|"統合済み作業領域"| worktreeBranch後片付け
 
+  class worktreeベース同期,featureExec統合,worktreeBranch後片付け,登録簿運用 process
+  class 統合可能 event
+  class projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 store
+  class プロジェクト管理者 actor
+```
+
+凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-02 登録簿運用` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`統合対象の commit が確定した` は分離と作業のフロー（4.2）の同名イベントと同一の対象を指す。`worktree・branch 後片付け` は main同期・昇格・後片付けのフロー（4.4）と同一のプロセスを指し、その内部の入出力は 4.4 を参照する。本図は現物の流れを扱わない。
+
+### 4.4. main同期・昇格・後片付けのフロー（P-06-09〜P-06-11）
+
+```mermaid
+flowchart LR
+  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
+  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+
+  プロジェクト管理者["👤 プロジェクト管理者<br>（PM・承認者）"]
+  作業担当["👥 作業担当<br>（開発者・タスク owner・AI Agent）"]
+
+  main更新{{"🚦 main の共有変更が確定した"}}
+  project受入{{"🚦 project の変更が受入可能になった"}}
+
+  main共有変更同期("⬇️ P-06-09 main 共有変更同期<br>（担当: PM・プロジェクト管理者）")
+  projectDevelop昇格("⬆️ P-06-10 project develop 昇格<br>（担当: プロジェクト管理者・承認者）")
+  worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
+
+  main[("🌳 main<br>安定統合点・共通成果物")]
+  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
+  実行計画記録[("🗓️ Schedule・実行計画・実行記録")]
+  GitPR履歴[("🧾 Git / PR 履歴")]
+
+  subgraph 領域外統合後片付け["対象領域外"]
+    構成変更("🔧 P-07 構成変更")
+    派生生成("🔁 P-08 派生生成")
+  end
+
   作業担当 -->|"未commit変更・保持理由の確認"| worktreeBranch後片付け
   worktreeBranch後片付け -->|"削除・保持結果"| 実行計画記録
   worktreeBranch後片付け -->|"保持した監査証跡"| GitPR履歴
@@ -240,13 +266,13 @@ flowchart LR
   projectDevelop昇格 -->|"共通成果物の再生成要求"| 派生生成
   実行計画記録 -->|"失敗記録・運用条件の変更要求"| 構成変更
 
-  class worktreeベース同期,featureExec統合,main共有変更同期,projectDevelop昇格,worktreeBranch後片付け,登録簿運用,構成変更,派生生成 process
-  class 統合可能,main更新,project受入 event
-  class main,projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 store
+  class main共有変更同期,projectDevelop昇格,worktreeBranch後片付け,構成変更,派生生成 process
+  class main更新,project受入 event
+  class main,projectDevelop,実行計画記録,GitPR履歴 store
   class プロジェクト管理者,作業担当 actor
 ```
 
-凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-02 登録簿運用`、`P-07 構成変更`、`P-08 派生生成` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`統合対象の commit が確定した` は分離と作業のフロー（4.2）の同名イベントと同一の対象を指す。本図は現物の流れを扱わない。
+凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-07 構成変更`、`P-08 派生生成` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`worktree・branch 後片付け` は同期・統合のフロー（4.3）と同一のプロセスを指し、統合済み作業領域の引き渡しは 4.3 を参照する。本図は現物の流れを扱わない。
 
 ## 5. 個別プロセス主要入出力
 
@@ -274,20 +300,28 @@ project 固有変更の統合点を用意し、独立して実行できる単位
 | `P-06-05` | 分離作業 | 対象成果物、plan・仕様、ベース commit、作業条件 | 更新成果物、検証結果、exec の場合の task result、未commit差分 | feature / exec worktree、成果物、実行記録 |
 | `P-06-06` | 分離結果 commit | 更新成果物、task result、検証結果、変更許可範囲 | feature / exec branch の commit、commit 対象外として保持する変更の警告 | feature / exec branch、Git / PR 履歴、実行記録 |
 
-### 5.3. 同期・統合・後片付けの条件付きプロセス（P-06-07〜P-06-11）
+### 5.3. 同期・統合の条件付きプロセス（P-06-07・P-06-08）
 
-分離された変更を対象 project の最新状態へ合わせ、project `develop` へ戻し、受入後に `main` へ昇格し、統合済みの作業領域だけを削除する。`main` の共有変更は project 履歴を保ったまま取り込む。
+分離された変更を対象 project の最新状態へ合わせ、project `develop` へ戻す。
 
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
 | `P-06-07` | worktree ベース同期 | 対象 project `develop` の commit、feature / exec の commit、明示したベースブランチ | 同期済み feature / exec branch、競合の有無、再検証要求 | project `develop`、feature / exec branch / worktree、Git / PR 履歴 |
 | `P-06-08` | feature・exec 統合 | feature / exec commit、検証結果、対象 project `develop`、統合順序 | project `develop` への merge commit、統合状態、更新された成果物・task result | feature / exec branch、project `develop`、Git / PR 履歴、実行記録 |
+
+### 5.4. main同期・昇格・後片付けの条件付きプロセス（P-06-09〜P-06-11）
+
+受入後に `main` へ昇格し、統合済みの作業領域だけを削除する。`main` の共有変更は project 履歴を保ったまま取り込む。
+
+<!-- prettier-ignore -->
+| プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
+| --- | --- | --- | --- | --- |
 | `P-06-09` | main 共有変更同期 | 最新 `main` commit、対象 project `develop`、共通変更の影響・統合順序 | `main` を merge した project `develop`、再検証結果、worktree への再同期要求 | `main`、project `develop`、Git / PR 履歴、実行記録 |
 | `P-06-10` | project develop 昇格 | project `develop` の commit、検証結果、未解決事項、承認結果 | `main` への merge commit・PR 証跡、他 project への同期要求 | project `develop`、`main`、Git / PR 履歴、実行記録 |
 | `P-06-11` | worktree・branch 後片付け | worktree 状態、統合状態、task 状態、成果物・result の差分 | 削除済み worktree、条件付きで削除済み feature / exec branch、保持した監査証跡 | Git worktree 登録、feature / exec branch、Git / PR 履歴、実行記録 |
 
-### 5.4. ブランチ・worktree の正本と統合方向
+### 5.5. ブランチ・worktree の正本と統合方向
 
 各データストアが読み書きする情報と統合方向を示す。branch / worktree の分離、ベース、同期、commit、統合方向、競合時の保持、後片付けは本書を正本とする。
 
@@ -329,15 +363,6 @@ project 固有変更の統合点を用意し、独立して実行できる単位
 | `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]） | worktree 内での成果物編集、検証、result 記録、判断依頼 | plan、対象成果物、仕様、担当、分離された worktree、完了条件 | 更新成果物、検証結果、result、未commit差分を分離結果として受け取るとき |
 | `P-07 構成変更`（[[prj-0001:cdfd-agent-config-operation\|agent・provider 構成の運用変更]]） | agent、provider、並列数、worktree ベースなど運用条件の承認済み変更 | 現行条件、失敗記録、影響 project・タスク、変更要求・承認結果 | 更新した運用条件で新しい実行割当または worktree を準備するとき |
 | `P-08 派生生成`（[[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]） | 同期・統合後の索引、ビュー、生成成果物の再生成 | 更新された成果物、実行記録、対象 project、生成条件 | 生成失敗が統合結果の受入を妨げる、または ID 競合を検出したとき |
-
-### 6.3. 受入確認
-
-| 確認者     | 確認対象                 | 受入条件                                                                                                                                                                                                                                                                               |
-| ---------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BA         | 利用場面・担当・全体経路 | project `develop`、feature、exec の作成、分離作業、同期、project への統合、`main` への昇格、後片付けについて、起動条件と担当を「領域内プロセス一覧」と概念データフローから説明できる                                                                                                   |
-| ARC        | 正本・commit・統合方向   | `main`、project `develop`、feature / exec worktree、Schedule・実行計画・実行記録が読み書きする成果物・result・event と、`main → project develop → feature / exec → project develop → main` の方向、および worktree が project 作業ツリーと独立した作業領域・依存を持つことを識別できる |
-| QE         | 停止条件・復旧経路       | 実行対象 project の特定不能、ID・branch・path 競合、作業依存の準備失敗、同期失敗、merge 競合、統合先誤り、未commit変更、共通成果物の競合について、停止範囲、保持する情報、再開条件を確認できる                                                                                         |
-| PM・承認者 | 分離・統合・削除判断     | 独立実行の条件、共通成果物の統合順序、project 昇格の承認条件、worktree / branch を削除せず保持する条件を判断できる                                                                                                                                                                     |
 
 ## 7. 未決事項
 
