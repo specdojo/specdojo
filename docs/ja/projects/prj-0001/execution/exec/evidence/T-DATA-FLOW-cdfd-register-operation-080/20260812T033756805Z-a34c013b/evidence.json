@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-register-operation-080",
+  "run_id": "20260812T033756805Z-a34c013b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:38:26.478Z",
+    "completed_at": "2026-08-12T03:39:41.957Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "command": "npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md",
+      "status": "passed",
+      "summary": "Prettier整形済み。"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-register-operation.md",
+      "status": "passed",
+      "summary": "Markdownlintエラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "検証成功（既存の参照先不足に関する警告のみ）。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "索引を1121件で生成。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分なし・空白エラーなし。"
+    }
+  ],
+  "final_message": "登録簿ライフサイクルCFDFDを確認し、表・図・入出力・例外・委譲の整合性を確認済み。変更不要。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-register-operation-080/20260812T033756805Z-a34c013b/executor.log",
+      "bytes": 1129,
+      "truncated": false
+    }
+  ]
+}
