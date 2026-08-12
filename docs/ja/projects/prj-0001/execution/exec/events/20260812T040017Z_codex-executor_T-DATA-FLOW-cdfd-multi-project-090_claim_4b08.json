@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-12T04:00:17Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-multi-project-090",
+  "by": "codex-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
