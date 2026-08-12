@@ -1,0 +1,5 @@
+Job Run 図に実行 plan / result の入力を追加し、入出力表との整合を取りました。既存の未追跡 evidence は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-routine の Job Run 結果反映に実行 plan / result の受け渡しを明記し、表と図を整合させた。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md","status":"passed","summary":"整形・Markdown 静的検査に成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"環境が tsx IPC ソケット作成を EPERM で拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1125件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

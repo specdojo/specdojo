@@ -198,6 +198,7 @@ flowchart TB
   JobRun生成 -->|"Job 実行 plan"| planResult
   JobRun生成 -->|"未完了 Job Run・解決済み入力"| JobRun結果反映
   JobRun生成 -->|"完了済み重複の既存結果"| routine結果反映
+  planResult -->|"Job 実行 plan・実行 result"| JobRun結果反映
   JobRun結果反映 -->|"Job task 実行要求"| タスク実行先
   タスク実行先 -->|"Job task 結果"| JobRun結果反映
   JobRun結果反映 -->|"attempt・状態・checkpoint"| JobRun履歴
