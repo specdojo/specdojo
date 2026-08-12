@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-agent-config-operation-080",
+  "run_id": "20260812T031859680Z-fb5aa919",
+  "updated_at": "2026-08-12T03:21:28.760Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-executor",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:19:33.877Z",
+      "completed_at": "2026-08-12T03:21:16.008Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-agent-config-operation-080/20260812T031859680Z-fb5aa919/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "codex-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:21:16.009Z",
+      "completed_at": "2026-08-12T03:21:28.760Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-agent-config-operation-080-result.md"
+    }
+  }
+}
