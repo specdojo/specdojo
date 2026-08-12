@@ -64,7 +64,7 @@ flowchart TB
   実行要求{{"⚡ 実行可能な task の実行が要求された"}}
   phase開始可能{{"⚡ mode に対応する phase 作業を開始できる"}}
   phase終了{{"⚡ phase 作業が終了した"}}
-  実行異常{{"⚡ E-03 実行または result 検証に失敗した"}}
+  実行異常{{"⚡ E-03 / E-04 / E-06 実行結果が block になった"}}
 
   実行対象選択("🎯 P-04-01 実行対象選択<br>（担当: task owner・実行管理者）")
   担当確定claim("🙋 P-04-02 担当確定・claim<br>（担当: task owner・実行管理者）")
@@ -90,13 +90,13 @@ flowchart TB
   実行対象選択 -->|"選択 task・実行方式"| 担当確定claim
   実行構成 -->|"owner・登録済み nickname・能力・優先度"| 担当確定claim
   実行event -->|"現在状態・先行 claim"| 担当確定claim
-  担当確定claim -->|"claim event・doing"| 実行event
+  担当確定claim -->|"state 追跡時の claim event・doing"| 実行event
   担当確定claim -->|"担当付き task"| 実行入力準備
 
   ScheduleReady -->|"task 定義・done criteria・対象成果物"| 実行入力準備
   成果物 -->|"対象成果物・参照仕様"| 実行入力準備
   実行入力準備 -->|"phase 別 plan・未記入 result"| planResult
-  実行入力準備 -->|"checkpoint・分離環境・依存"| taskWorktree
+  実行入力準備 -->|"task worktree 経路の checkpoint・分離環境・依存"| taskWorktree
   実行入力準備 -->|"phase 実行の開始条件"| phase開始可能
 
   phase終了 -->|"起動条件"| 実行結果判定
@@ -109,9 +109,10 @@ flowchart TB
   実行異常 -->|"blocked 状態・再開情報"| 実行event
 
   結果統合complete -->|"complete 状態の result"| planResult
-  結果統合complete -->|"許可範囲の commit・統合"| taskWorktree
+  結果統合complete -->|"task worktree 経路の commit・統合"| taskWorktree
   結果統合complete -->|"統合済み更新"| 成果物
   結果統合complete -->|"complete event・done"| 実行event
+  結果統合complete -->|"統合失敗・block 理由"| 実行異常
   実行event -->|"状態再計算要求"| 計画展開先
   計画展開先 -->|"次 phase の実行候補"| ScheduleReady
 

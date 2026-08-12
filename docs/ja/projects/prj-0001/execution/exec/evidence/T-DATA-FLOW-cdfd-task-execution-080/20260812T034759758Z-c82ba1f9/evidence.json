@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-task-execution-080",
+  "run_id": "20260812T034759758Z-c82ba1f9",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-12T03:48:37.609Z",
+    "completed_at": "2026-08-12T03:50:12.682Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-business-specs/010-data-flow/cdfd-task-execution.md      | 9 +++++----\n 1 file changed, 5 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "passed",
+      "summary": "整形済み（変更なし）。"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-task-execution.md",
+      "status": "passed",
+      "summary": "Markdown 静的検査に合格。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログ検証に合格。既存の参照先不足警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1127件の索引を生成。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    }
+  ],
+  "final_message": "CDFD の経路条件と例外遷移を最小限補正しました。result は pipeline executor 指示に従い未更新です。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-task-execution-080/20260812T034759758Z-c82ba1f9/executor.log",
+      "bytes": 936,
+      "truncated": false
+    }
+  ]
+}
