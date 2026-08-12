@@ -98,7 +98,7 @@ flowchart LR
   class 実行要求者 actor
 ```
 
-凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`mode に対応する phase 作業を開始できる` は Edit 実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）の起点イベントと同一であり、`成果物`、`plan・result` も両図と同一のデータストアを指す。current worktree 経路では `task worktree・Git 履歴` への入出力を行わず、現在の作業ツリーの成果物と result を直接更新する。
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`mode に対応する phase 作業を開始できる` は Edit 実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）の起点イベントと同一であり、`成果物`、`plan・result` も両図と同一のデータストアを指す。current worktree 経路と task worktree 経路の更新責務は5.5を参照する。
 
 ### 4.2. Edit実行のフロー
 
@@ -249,7 +249,7 @@ flowchart LR
   class ScheduleReady,成果物,planResult,実施根拠記録,実行event,taskWorktree store
 ```
 
-凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-03 計画展開` は委譲先の代表ノードであり、その内部処理は対象外とする。`phase 作業が終了した` は Edit実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）と同一のイベントを指し、`成果物`・`plan・result`・`実施根拠記録` も両図と同一のデータストアを指す。current worktree 経路では `task worktree・Git 履歴` への入出力を行わない。
+凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-03 計画展開` は委譲先の代表ノードであり、その内部処理は対象外とする。`phase 作業が終了した` は Edit実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）と同一のイベントを指し、`成果物`・`plan・result`・`実施根拠記録` も両図と同一のデータストアを指す。current worktree 経路と task worktree 経路の更新責務は5.5を参照する。
 
 ## 5. 個別プロセス主要入出力
 
