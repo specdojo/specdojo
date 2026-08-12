@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-init-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-init-080-plan.md
   started_at: "2026-08-12T00:37:32.128Z"
+  completed_at: "2026-08-12T00:55:03.569Z"
   agent: opencode-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 概念データフロー図（初期セットアップ）の磨き込みを行い、整合性と静的検査を確認しました。
+- P-01-05 のデータストアパスを .specdojo/pm-review-viewpoints.yaml へ修正し、ARC 視点での配置明確化を図りました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md`: P-01-05 のデータストアパスを修正し、整合性を確保。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+指定された rulebook/recipe に基づき、既存記述を尊重しながら最小限の修正で整合性を確保し、prettier、markdownlint および specdojo catalog validate による静的検査を実施した。
