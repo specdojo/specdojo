@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-reporting-080",
+  "run_id": "20260812T034017576Z-5677d823",
+  "updated_at": "2026-08-12T03:42:22.461Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-executor",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:40:45.932Z",
+      "completed_at": "2026-08-12T03:42:11.409Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-reporting-080/20260812T034017576Z-5677d823/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "codex-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-12T03:42:11.410Z",
+      "completed_at": "2026-08-12T03:42:22.461Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-cdfd-reporting-080-result.md"
+    }
+  }
+}
