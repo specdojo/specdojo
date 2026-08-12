@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-routine-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-routine-080-plan.md
   started_at: "2026-08-12T03:42:48.017Z"
+  completed_at: "2026-08-12T03:44:56.563Z"
   agent: codex-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 概念データフロー図（定期実行）に、Job Run結果の実行plan/resultへの受け渡しを明記し、表と図を整合させた。
+- Markdown整形・静的検査、索引生成、差分空白検査に成功した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md`: Job Run結果反映時の実行plan/resultの受け渡しを追記した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 後続レビューでは、routine定義選択・due判定・register/schedule委譲・exec-cycle・Job Run連携の表と図の整合性を確認する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+executor evidenceに基づき、既存の概念データフロー図へ最小限の追記を行い、Prettier、markdownlint、SpecDojo索引生成、git diff --checkで検証した。
