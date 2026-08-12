@@ -62,7 +62,7 @@ flowchart LR
   実行要求者["👥 実行要求者<br>（task owner・実行管理者）"]
 
   実行要求{{"⚡ 実行可能な task の実行が要求された"}}
-  phase開始可能{{"⚡ mode に対応する phase 作業を開始できる"}}
+  phase開始可能{{"⚡ mode に対応する<br>phase 作業を開始できる"}}
 
   実行対象選択("🎯 P-04-01 実行対象選択<br>（担当: task owner・実行管理者）")
   担当確定claim("🙋 P-04-02 担当確定・claim<br>（担当: task owner・実行管理者）")
@@ -157,7 +157,7 @@ flowchart LR
   人間承認者["👤 人間の承認者<br>（PO・成果物承認者）"]
 
   review開始{{"⚡ review task の phase 作業を開始できる"}}
-  finalize開始{{"⚡ finalize task の phase 作業を開始できる"}}
+  finalize開始{{"⚡ finalize task の<br>phase 作業を開始できる"}}
   phase終了{{"⚡ phase 作業が終了した"}}
   判断不足{{"⚡ E-07 前提または PO 判断が不足した"}}
 
@@ -213,7 +213,7 @@ flowchart LR
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   phase終了{{"⚡ phase 作業が終了した"}}
-  実行異常{{"⚡ E-03 / E-04 / E-06 実行結果が block になった"}}
+  実行異常{{"⚡ E-03 / E-04 / E-06<br>実行結果が block になった"}}
 
   実行結果判定("🔍 P-04-07 実行結果判定<br>（担当: 実行管理者・QE）")
   結果統合complete("📦 P-04-08 結果統合・complete<br>（担当: 実行管理者・task owner）")
