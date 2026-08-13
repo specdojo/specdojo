@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cdfd-overview-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _AUTHORITY_:cdfd-overview

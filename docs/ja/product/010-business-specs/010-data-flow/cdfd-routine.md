@@ -10,9 +10,9 @@ specdojo:
   supersedes: []
 ---
 
-# 概念データフロー図（定期運用）: SpecDojo
+# 概念データフロー図（定期処理）: SpecDojo
 
-本書は、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] が定める `P-05 定期運用` の境界を引き継ぎ、定期運用定義から due の実行機会を選び、登録項目、Schedule task、exec-cycle、または Job Run を起動して結果を継続判断へ反映する概念仕様である。
+本書は、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] が定める `P-05 定期処理` の境界を引き継ぎ、定期処理定義から due の実行機会を選び、登録項目、Schedule task、exec-cycle、または Job Run を起動して結果を継続判断へ反映する概念仕様である。
 
 ## 1. 目的
 
@@ -27,7 +27,7 @@ specdojo:
 - `where`、`list`、`validate`、`dry-run` は正本を更新しない補助操作であり、独立プロセスにしない。外部スケジューラの製品・設定手順、個別 CLI 操作、物理データ項目は対象外とする。
 - 社会課題、期待価値、主要判断、公開可否は人間が責任を持つ。AI Agent は登録済みの権限と変更範囲で実行を支援するが、前提不足や運用方針を推測で補わない。
 
-### 2.1. 定期運用定義と due 判定
+### 2.1. 定期処理定義と due 判定
 
 | 定義・経路         | 起動条件と選択                                                                                                                                                                                 | 引き渡す主な設定                                     | 実行後の次回判定                                                                                          |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` 
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 業務目的 | 主な担当 | 起動条件 | 必須性 |
 | --- | --- | --- | --- | --- | --- |
-| `P-05-01` | 定期実行対象選択 | 定期運用定義と時点から、今回起動する実行機会を一意にする。 | PM、運用担当 | 定期確認時点が到来した、または特定 routine の即時実行が要求された | 必須。対象なしなら状態を変えず終了する |
+| `P-05-01` | 定期実行対象選択 | 定期処理定義と時点から、今回起動する実行機会を一意にする。 | PM、運用担当 | 定期確認時点が到来した、または特定 routine の即時実行が要求された | 必須。対象なしなら状態を変えず終了する |
 | `P-05-02` | 実行試行記録 | 同じ実行機会の高頻度な再起動を防ぎ、結果と予定時刻を対応付けられるようにする。 | 運用担当 | 実行対象が一件以上選択され、routine 全体の実行権を取得した | 選択された実行機会ごとに必須。dry-run では記録しない |
 | `P-05-03` | 登録項目実行委譲 | 登録簿の正本から条件に合う計画外事項を選び、項目ごとの対応へ引き渡す。 | PM、運用担当 | action kind が `register` である | 条件付き。対象なしは正常終了する |
 | `P-05-04` | Schedule 実行委譲 | Ready task の自動実行、または再開時刻が到来した task の再開を要求する。 | PM、運用担当 | action kind が `exec-auto` または `exec-resume` である | 条件付き。対象なしは正常終了する |
@@ -67,7 +67,7 @@ routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` 
 
 ## 4. 概念データフロー
 
-定期運用の全 action に共通する必須処理、登録項目・Schedule・cycle の条件付き処理、Job Run の条件付き処理では、起動条件とデータストアが異なるため、フローを三図に分ける。
+定期処理の全 action に共通する必須処理、登録項目・Schedule・cycle の条件付き処理、Job Run の条件付き処理では、起動条件とデータストアが異なるため、フローを三図に分ける。
 
 ### 4.1. 必須プロセスのフロー
 
@@ -90,14 +90,14 @@ flowchart LR
   実行試行記録("📝 実行試行記録<br>P-05-02")
   routine結果反映("📌 routine 結果反映<br>P-05-08")
 
-  定期運用定義[("📒 定期運用定義<br>rtn-*.yaml")]
+  定期処理定義[("📒 定期処理定義<br>rtn-*.yaml")]
   routine実行状態[("🗃️ routine 実行状態<br>last_run・last_result<br>・last_scheduled_for")]
 
   外部起動者 -->|"定期起動要求"| 定期確認時点
   外部起動者 -->|"routine ID"| 即時実行要求
   定期確認時点 -->|"due 確認条件"| 定期実行対象選択
   即時実行要求 -->|"即時実行条件"| 定期実行対象選択
-  定期運用定義 -->|"interval・cron・timezone・policy・action"| 定期実行対象選択
+  定期処理定義 -->|"interval・cron・timezone・policy・action"| 定期実行対象選択
   routine実行状態 -->|"直前実行時刻・予定時刻"| 定期実行対象選択
   定期実行対象選択 -->|"対象なし"| 対象なし
   対象なし -->|"変更なしの終了結果"| 外部起動者
@@ -110,7 +110,7 @@ flowchart LR
 
   class 定期実行対象選択,実行試行記録,routine結果反映 process
   class 定期確認時点,即時実行要求,対象なし,action起動,action結果返却 event
-  class 定期運用定義,routine実行状態 store
+  class 定期処理定義,routine実行状態 store
   class 外部起動者 actor
 ```
 
@@ -124,7 +124,7 @@ flowchart LR
   classDef store fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
-  登録簿運用先["📒 P-02 登録簿運用"]
+  登録簿ライフサイクル先["📒 P-02 登録簿ライフサイクル"]
   計画展開先["🧩 P-03 計画展開"]
   タスク実行先["⚙️ P-04 タスク実行"]
   派生生成先["📚 P-08 派生生成"]
@@ -142,8 +142,8 @@ flowchart LR
 
   実行試行記録 -->|"register action・filter・limit"| 登録項目実行委譲
   登録項目個票 -->|"type・priority・status・ID"| 登録項目実行委譲
-  登録項目実行委譲 -->|"project ID・登録項目 ID"| 登録簿運用先
-  登録簿運用先 -->|"項目別状態・result"| routine結果反映
+  登録項目実行委譲 -->|"project ID・登録項目 ID"| 登録簿ライフサイクル先
+  登録簿ライフサイクル先 -->|"項目別状態・result"| routine結果反映
 
   実行試行記録 -->|"auto または resume action"| Schedule実行委譲
   Schedule実行記録 -->|"Ready・deferred limit task"| Schedule実行委譲
@@ -167,7 +167,7 @@ flowchart LR
 
   class 実行試行記録,登録項目実行委譲,Schedule実行委譲,execCycle順次制御,routine結果反映 process
   class 登録項目個票,Schedule実行記録,成果物索引,planResult store
-  class 登録簿運用先,計画展開先,タスク実行先,派生生成先 actor
+  class 登録簿ライフサイクル先,計画展開先,タスク実行先,派生生成先 actor
 ```
 
 凡例: `P-05-02` と `P-05-08` は必須プロセスのフロー（4.1）と同一のプロセスを指す。`P-02`〜`P-04` と `P-08` は委譲先の代表ノードであり、内部処理は本図の対象外とする。ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。本図は現物の流れを扱わない。
@@ -221,7 +221,7 @@ flowchart LR
 <!-- prettier-ignore -->
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
-| `P-05-01` | 定期実行対象選択 | 定期運用定義、現在時刻、routine 実行状態、任意の指定 routine ID | routine と scheduled time の組、または対象なし | 定期運用定義、routine 実行状態 |
+| `P-05-01` | 定期実行対象選択 | 定期処理定義、現在時刻、routine 実行状態、任意の指定 routine ID | routine と scheduled time の組、または対象なし | 定期処理定義、routine 実行状態 |
 | `P-05-02` | 実行試行記録 | routine ID、現在時刻、scheduled time、直前の実行状態 | `last_run`、cron の場合は `last_scheduled_for`、選択 action の起動条件 | routine 実行状態 |
 | `P-05-08` | routine 結果反映 | `success` / `failure` / `skipped`、項目別結果、cycle step 別結果、または Job Run 集約結果 | `last_result`、実行件数、失敗件数、継続判断材料 | routine 実行状態、委譲先の実行記録 |
 
@@ -275,13 +275,13 @@ action kind に応じて、登録項目の対応、Ready task の自動実行、
 
 ### 6.2. 領域外への委譲
 
-| 委譲先                                                                             | 委譲する事項                                                         | 引き渡す情報                                                      | 本領域へ戻す条件                                                                               |
-| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `P-02 登録簿運用`（[[prj-0001:cdfd-register-operation\|登録簿ライフサイクル]]）    | filter で選んだ登録項目を対応・調査し、人間の審査へ進める            | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
-| `P-03 計画展開`（[[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]）          | exec-cycle 中に Schedule を検証して state と Ready を再計算する      | project ID、Schedule、event、strategy                             | 検証・再計算の成否と更新済み Ready を cycle の auto step へ渡すとき                            |
-| `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]）    | Ready task、deferred limit task、または Job Run の実行単位を処理する | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
-| `P-08 派生生成`（[[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]） | exec-cycle 中に成果物索引を再生成する                                | project ID、文書正本、索引設定                                    | 索引生成の成否と更新済み索引を状態再計算 step へ渡すとき                                       |
-| 外部スケジューラ                                                                   | 定期確認時点に routine の due 実行を要求する                         | project ID、起動時刻                                              | 処理件数、skip・failure、終了結果から監視・次回起動を継続するとき                              |
+| 委譲先                                                                                    | 委譲する事項                                                         | 引き渡す情報                                                      | 本領域へ戻す条件                                                                               |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-operation\|登録簿ライフサイクル]]） | filter で選んだ登録項目を対応・調査し、人間の審査へ進める            | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
+| `P-03 計画展開`（[[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]）                 | exec-cycle 中に Schedule を検証して state と Ready を再計算する      | project ID、Schedule、event、strategy                             | 検証・再計算の成否と更新済み Ready を cycle の auto step へ渡すとき                            |
+| `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]）           | Ready task、deferred limit task、または Job Run の実行単位を処理する | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
+| `P-08 派生生成`（[[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]）        | exec-cycle 中に成果物索引を再生成する                                | project ID、文書正本、索引設定                                    | 索引生成の成否と更新済み索引を状態再計算 step へ渡すとき                                       |
+| 外部スケジューラ                                                                          | 定期確認時点に routine の due 実行を要求する                         | project ID、起動時刻                                              | 処理件数、skip・failure、終了結果から監視・次回起動を継続するとき                              |
 
 ## 7. 未決事項
 

@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cdfd-overview-sample
   type: sample
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []

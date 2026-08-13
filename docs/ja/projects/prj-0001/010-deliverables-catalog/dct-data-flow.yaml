@@ -21,7 +21,7 @@ groups:
             purpose: CLI全体のコマンド領域と起動関係
         note: list・where・status・validate・dry-runなど、状態や成果物を変更しない補助操作は独立した業務フローとして分割しない
         done_criteria:
-          - text: 初期セットアップ・登録簿運用・計画展開・タスク実行・定期運用・並行運用・構成変更・派生生成・報告の各プロセス領域と相互の情報の流れが表と図で確認できること
+          - text: 初期セットアップ・登録簿ライフサイクル・計画展開・タスク実行・定期処理・並行処理・構成変更・派生生成・報告の各プロセス領域と相互の情報の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
@@ -174,7 +174,7 @@ groups:
   - name: オペレーション推進
     deliverables:
       - local_id: cdfd-routine
-        name: 概念データフロー図（定期実行）
+        name: 概念データフロー図（定期処理）
         kind: work
         overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、順次実行cycle、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
         path: cdfd-routine.md
@@ -203,7 +203,7 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: cdfd-multi-project
-        name: 概念データフロー図（複数プロジェクト・ブランチ並行運用）
+        name: 概念データフロー図（複数プロジェクト・ブランチ並行処理）
         kind: work
         overview: project develop・feature・execの各ブランチとworktreeを用いて複数プロジェクト・タスクを分離し、同期・統合する流れを可視化し定義する
         path: cdfd-multi-project.md
