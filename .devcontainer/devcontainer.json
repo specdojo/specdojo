@@ -9,6 +9,14 @@
   "workspaceFolder": "/workspaces/specdojo-workspace/specdojo",
   "shutdownAction": "none",
 
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "VitePress docs",
+      "onAutoForward": "notify"
+    }
+  },
+
   // docs:build（vitepress build）の rendering pages が 8GB ではメモリ不足で
   // OOM (exit 137) になるため、必要メモリを宣言する。
   // Codespaces ではマシンサイズ選択に反映され、ローカル Docker Desktop では
