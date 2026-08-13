@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-deprecation-070",
+  "run_id": "20260813T160947488Z-89040385",
+  "stage": {
+    "role": "executor",
+    "actor": "opencode-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-13T16:10:16.305Z",
+    "completed_at": "2026-08-13T16:27:08.402Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md",
+      "status": "passed",
+      "summary": "Formatted successfully"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md",
+      "status": "passed",
+      "summary": "No lint errors"
+    },
+    {
+      "command": "specdojo catalog validate",
+      "status": "passed",
+      "summary": "Catalog validation successful"
+    }
+  ],
+  "final_message": "`docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md` を磨き込み、rulebook の必須項目である「必須性」の記載を標準的な値（必須）に修正しました。完了の狙い（done_criteria）を満たしていることを確認し、静的検査および catalog validate を完了しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-deprecation-070/20260813T160947488Z-89040385/executor.log",
+      "bytes": 836,
+      "truncated": false
+    }
+  ]
+}

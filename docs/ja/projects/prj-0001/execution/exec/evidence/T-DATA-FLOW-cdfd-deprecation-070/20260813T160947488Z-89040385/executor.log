@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"`docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md` を磨き込み、rulebook の必須項目である「必須性」の記載を標準的な値（必須）に修正しました。完了の狙い（done_criteria）を満たしていることを確認し、静的検査および catalog validate を完了しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md","status":"passed","summary":"Formatted successfully"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md","status":"passed","summary":"No lint errors"},{"command":"specdojo catalog validate","status":"passed","summary":"Catalog validation successful"}]}
+</specdojo_executor_evidence>
