@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-13T16:00:07Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-deprecation-010",
+  "by": "codex-expert-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
