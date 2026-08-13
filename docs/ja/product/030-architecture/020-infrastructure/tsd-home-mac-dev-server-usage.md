@@ -158,7 +158,7 @@ Host Mac 上の `host-mac` と devcontainer 内の `specdojo` は実行場所も
 
 ### 4.4. tmux で VitePress 開発サーバを継続実行する
 
-`.devcontainer/devcontainer.json` は VitePress の固定ポート 5173 を `forwardPorts` に宣言している。初回適用時または設定変更後は VS Code で Dev Container を rebuild し、コンテナへ再接続する。これにより、コマンドを起動した terminal の種類に依存せず、VS Code の Ports パネルに `VitePress docs` としてポート 5173 が登録される。
+`.devcontainer/devcontainer.json` は VitePress の固定ポート 5173 を `appPort` で公開している。`appPort` は Docker レベルでコンテナ起動時に固定的にポートを公開するため、コマンドを起動した terminal の種類（devcontainer 内 tmux か VS Code 統合 terminal か）に依存しない。初回適用時または設定変更後は VS Code で Dev Container を rebuild する。
 
 devcontainer 内の tmux session で開発サーバを起動する。
 
@@ -167,7 +167,35 @@ tmux new-session -A -s specdojo
 npm run docs:dev
 ```
 
-`docs:dev` は `0.0.0.0:5173` で待ち受ける。VS Code の Ports パネルで 5173 の転送先 URL を確認し、接続元端末のブラウザから開く。VS Code がコンテナへ接続していない間は VS Code のポート転送も利用できないため、外部 terminal から tmux に接続してサーバを起動する場合も、ブラウザで利用する端末の VS Code を devcontainer へ接続しておく。
+`docs:dev` は `0.0.0.0:5173` で待ち受ける。
+
+Host Mac 自身のブラウザからは、そのまま次で確認できる。
+
+```text
+http://localhost:5173
+```
+
+接続元端末（Windows / 別 Mac）から使う場合は、VS Code の Ports パネルによる自動転送（`forwardPorts`）ではなく、4.8.6 の Ollama API と同様に SSH local forwarding を使う。Remote SSH 越しに Dev Container を開くネスト構成では、VS Code 主導のポート転送は接続元 VS Code の起動有無に転送が依存し、複数クライアントから同じ devcontainer へ接続すると母艦側セッションが再接続される問題があるため使用しない。
+
+`LocalForward` はその設定を持つ SSH 接続自体にだけ有効なため、tmux から `docs:dev` を使う運用では、通常のログイン接続 `Host home-mbp` ではなく、4.11.2 の tmux 接続用エイリアス（`Host home-mbp-tmux`）へ追加する。
+
+```ssh-config
+Host home-mbp-tmux
+  HostName home-mbp
+  User <mac-login-user>
+  ForwardAgent no
+  RequestTTY force
+  RemoteCommand ~/bin/specdojo-tmux
+  LocalForward 5173 127.0.0.1:5173
+```
+
+新しく SSH 接続した後、接続元端末のブラウザから確認する。
+
+```text
+http://localhost:5173
+```
+
+SSH local forwarding は VS Code の起動と独立して機能するため、接続元端末で VS Code を起動していなくても、SSH 接続が張られている間はアクセスできる。
 
 ## 5. SpecDojo agent 実行
 

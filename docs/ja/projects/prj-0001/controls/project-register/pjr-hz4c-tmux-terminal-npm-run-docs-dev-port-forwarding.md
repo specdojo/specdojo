@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-hz4c-tmux-terminal-npm-run-docs-dev-port-forwarding
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-12T22:17:50Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-13T04:49:02Z"
+  conclusion: devcontainer.jsonのforwardPortsをappPort（Dockerレベルの固定ポート公開）へ変更し、リモート端末からのアクセスはVS CodeのPorts機能ではなくtmux接続用Hostエントリへのssh local forwardingで対応。Mac自身・リモート端末（ThinkPad）双方のブラウザで実機確認済み。
 ---
 
 # PJR-HZ4C tmuxのterminalからnpm run docs:devを起動してもport forwardingを機能させる
@@ -27,19 +29,26 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                    | 担当 | 状態    | メモ                                                                 |
-| --- | --------------------------------------------------------------------------------------- | ---- | ------- | -------------------------------------------------------------------- |
-| 1   | `.devcontainer/devcontainer.json` に `forwardPorts: [5173]` と `portsAttributes` を追加 | ARC  | done    | `VitePress docs` として固定ポート 5173 を明示登録                    |
-| 2   | Dev Container を Rebuild し、設定が反映されることを確認                                 | ARC  | handoff | 現行の agent 実行環境を再作成できないため、次回 rebuild 時に確認する |
-| 3   | tmux ターミナルから `npm run docs:dev` を起動し、Ports パネルへの自動登録を確認         | ARC  | handoff | VS Code の Dev Container 接続後に実機確認する                        |
-| 4   | ホスト/リモート端末のブラウザから転送URLでアクセスできることを確認                      | ARC  | handoff | Ports パネルに表示された転送 URL で実機確認する                      |
+| No  | 作業                                                                                                        | 担当  | 状態 | メモ                                                                                                                                       |
+| --- | ----------------------------------------------------------------------------------------------------------- | ----- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `.devcontainer/devcontainer.json` に `forwardPorts: [5173]` と `portsAttributes` を追加                     | ARC   | done | 初回対応。`VitePress docs` として固定ポート 5173 を明示登録                                                                                |
+| 2   | 実機確認: Rebuild 後、Mac 自身のブラウザからアクセス                                                        | owner | done | 到達を確認                                                                                                                                 |
+| 3   | 実機確認: リモート端末（ThinkPad）のブラウザからアクセス                                                    | owner | done | `forwardPorts` では到達不可。VS Code の `Forward a Port` で手動転送すると到達したが、VS Code起動必須・母艦側セッション再接続の副作用を確認 |
+| 4   | 副作用の原因調査と対応方針の決定                                                                            | ARC   | done | ネスト構成（Remote SSH + Dev Containers）での `forwardPorts` の既知の制限と判断。`appPort` + SSH local forwarding へ変更                   |
+| 5   | `.devcontainer/devcontainer.json` を `forwardPorts` から `appPort: [5173]` へ変更                           | ARC   | done | Docker レベルの固定ポート公開に切り替え、VS Code の起動有無に依存しない構成にした                                                          |
+| 6   | [[tsd-home-mac-dev-server-usage\|自宅 MacBook Pro 開発サーバ運用ガイド]] へ SSH local forwarding 手順を追記 | ARC   | done | 4.8.6 の Ollama API と同様のパターンで、接続元端末の `~/.ssh/config` に `LocalForward 5173 127.0.0.1:5173` を追加する手順を記載            |
+| 7   | Dev Container を Rebuild し、`appPort` 設定が反映されることを確認                                           | owner | done | No.9 のリモートアクセス成功により、rebuild と `appPort` 反映を確認                                                                         |
+| 8   | Mac 自身のブラウザから `http://localhost:5173` でアクセスできることを再確認                                 | owner | done | `appPort` 変更後も到達を確認                                                                                                               |
+| 9   | リモート端末の SSH config に `LocalForward` を追加し、VS Code 未起動でもアクセスできることを確認            | owner | done | Windows(ThinkPad) の `~/.ssh/config` の tmux 接続用 Host エントリ（環境名: `specdojo-tmux`）に追加してアクセス成功                         |
 
 ## 4. 対応結果
 
-- `.devcontainer/devcontainer.json` に `forwardPorts: [5173]` を追加し、terminal のポート自動検出に依存せず、VS Code がコンテナ接続時にポート 5173 を転送する構成にした。
-- `portsAttributes` にラベル `VitePress docs` と `onAutoForward: notify` を設定し、Ports パネル上の識別と転送開始の通知を明示した。
-- tmux からの起動手順、VS Code の接続が必要な範囲、転送 URL の確認方法を[[tsd-home-mac-dev-server-usage|自宅 MacBook Pro 開発サーバ運用ガイド]]へ追記した。
-- JSONC/Markdown の整形・静的検査と register/catalog/index の検証は完了した。Dev Container の rebuild、VS Code Ports パネル、接続元ブラウザは現行の agent 実行環境から操作できないため、上表 No. 2〜4 を実機確認の申し送りとした。
+- 初回対応として `.devcontainer/devcontainer.json` に `forwardPorts: [5173]` を追加したが、実機確認の結果、Mac 自身のブラウザからは到達したものの、リモート端末（ThinkPad）からは到達しなかった。
+- 接続経路は「リモート端末 → SSH（Tailscale）→ Host Mac → Dev Containers → devcontainer」という二重のリモート接続（ネスト構成）であり、`forwardPorts` は VS Code（Dev Containers拡張）が動的に張るトンネルのため、この経路の SSH レイヤーでの自動転送検出が機能していなかったと判断した。VS Code の `Forward a Port` で手動転送すると到達したが、「リモート端末で VS Code を起動していないと繋がらない」「母艦（Mac）側で開いている VS Code が再接続になる」という副作用が確認された。これは VS Code Remote SSH + Dev Containers のネスト構成における既知の制限（[microsoft/vscode#191945](https://github.com/microsoft/vscode/issues/191945)、[microsoft/vscode-remote-release#10926](https://github.com/microsoft/vscode-remote-release/issues/10926)）と一致する。
+- 対応として、`forwardPorts`（VS Code 主導の動的トンネル）を `appPort: [5173]`（Docker レベルの固定ポート公開）へ変更した。`docs:dev` は既に `--host 0.0.0.0` で待ち受けており、`appPort` の要件（全インターフェースで待ち受け）を満たす。
+- リモート端末からのアクセスは、VS Code の Ports パネルではなく SSH local forwarding（`LocalForward 5173 127.0.0.1:5173`）を使う方式へ変更した。`LocalForward` はその設定を持つ SSH 接続自体にだけ有効なため、通常のログイン接続（`Host home-mbp`）ではなく、tmux セッションへ直接入る接続用 Host エントリ（4.11.2 の `home-mbp-tmux` 相当）へ追加する必要がある。当初「`Host home-mbp` へ追加する」と案内したのは誤りで、[[tsd-home-mac-dev-server-usage|自宅 MacBook Pro 開発サーバ運用ガイド]] を tmux 接続用 Host エントリへの追加に訂正した。実機では Windows(ThinkPad) 側の tmux 接続用 Host エントリ（環境名: `specdojo-tmux`）へ追加してアクセスに成功した。
+- 既存の Ollama API（11434番、4.8.6節）と同じ SSH local forwarding のパターンを踏襲しており、SSH 接続が張られている間は VS Code の起動有無に関わらずアクセスでき、複数クライアント間のトンネル競合も発生しない。
+- JSONC/Markdown の整形・静的検査と register/catalog/index の検証は完了した。Mac 自身のブラウザ、リモート端末（ThinkPad）のブラウザの双方で `appPort` + SSH local forwarding 構成での到達を実機確認し、完了条件を満たした。
 
 ## 5. 関連ドキュメント
 
