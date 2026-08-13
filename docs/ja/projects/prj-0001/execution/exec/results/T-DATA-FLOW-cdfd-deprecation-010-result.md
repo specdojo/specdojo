@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-cdfd-deprecation-010
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-cdfd-deprecation-010-plan.md
   started_at: "2026-08-13T16:00:07.645Z"
+  completed_at: "2026-08-13T16:09:20.594Z"
   agent: codex-expert-executor
   execution: agent
   approach: retrofit
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 非推奨化・保管CDFDを再構成し、経路A/Bの使い分け、ID維持、trashディレクトリへの移動、および例外・委譲境界に関する定義を表と図に反映した。
+- prettier, markdownlint による静的検査および catalog validate, index build による整合性検証を完了した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md`: 実装調査に基づき、非推奨化および保管の流れを可視化した概念データフロー図を再構成し、詳細仕様を反映した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+実装エビデンス（src/deliverable-trash.ts 等）から現在の非推奨化処理の動作を調査し、その結果を成果物カタログの完了基準および rulebook に基づいて CDFD 文書へ反映する retrofit アプローチを実施した。

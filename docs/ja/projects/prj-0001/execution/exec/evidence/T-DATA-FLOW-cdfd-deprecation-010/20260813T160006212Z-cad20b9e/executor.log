@@ -1,0 +1,9 @@
+[cdfd-deprecation.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-cdfd-deprecation-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md) を作り直しました。
+
+経路A/B、4プロセスの表・図、ID・Schedule task IDの維持、`trash/` 配置、停止・再開条件、削除・復元の未決境界を反映しています。executor 指示どおり result は更新していません。
+
+Markdown、カタログ、索引検証は合格しました。標準の `npx tsx` は環境のIPC制限で起動できなかったため、同じ処理を `node --import tsx` で検証しています。
+
+<specdojo_executor_evidence>
+{"final_message":"非推奨化・保管CDFDを作り直し、経路A/B、ID維持、trash移動、例外・委譲境界を表と図へ反映した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md","status":"passed","summary":"整形済み、Markdown lintエラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"実行環境のtsx IPCソケット作成がEPERMで拒否され、検証本体は未起動"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。既存の未作成成果物に関する警告のみ"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"実行環境のtsx IPCソケット作成がEPERMで拒否され、生成本体は未起動"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1167件を正常生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

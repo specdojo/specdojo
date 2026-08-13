@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-cdfd-deprecation-010",
+  "run_id": "20260813T160006212Z-cad20b9e",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-13T16:00:35.827Z",
+    "completed_at": "2026-08-13T16:06:31.266Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-deprecation.md              | 168 ++++++++++++++++++++-\n 1 file changed, 164 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md",
+      "status": "passed",
+      "summary": "整形済み、Markdown lintエラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "failed",
+      "summary": "実行環境のtsx IPCソケット作成がEPERMで拒否され、検証本体は未起動"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "実行環境のtsx IPCソケット作成がEPERMで拒否され、生成本体は未起動"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1167件を正常生成"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "非推奨化・保管CDFDを作り直し、経路A/B、ID維持、trash移動、例外・委譲境界を表と図へ反映した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-cdfd-deprecation-010/20260813T160006212Z-cad20b9e/executor.log",
+      "bytes": 1859,
+      "truncated": false
+    }
+  ]
+}
