@@ -273,6 +273,14 @@ owner_rules:
       - phase_set: review-pass
       - phase_set: finalize-pass
 
+  # cdfd-deprecation は既存の Kata（rulebook / recipe / sample / template）に
+  # 対して初めて書き起こす新規成果物のため、上記グループの二重 retrofit・refine
+  # は不要。default_phase_sets（retrofit-pass → refine-pass → review-pass →
+  # finalize-pass）を1回通す。
+  - local_ids:
+      - cdfd-deprecation
+    owner: BA
+
 # retrofit-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
 # 重複記述を正本選択・要約・参照へ整理してから、成果物別の磨き込みへ進む。
 cross_deliverable_passes:

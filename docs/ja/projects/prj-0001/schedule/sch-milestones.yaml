@@ -78,6 +78,7 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-010
       - T-DATA-FLOW-cdfd-derived-content-010
       - T-DATA-FLOW-cdfd-reporting-010
+      - T-DATA-FLOW-cdfd-deprecation-010
     owner: PM
   - id: G-DATA-FLOW-refine-pass
     name: refine-pass 完了
@@ -93,6 +94,7 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-070
       - T-DATA-FLOW-cdfd-derived-content-070
       - T-DATA-FLOW-cdfd-reporting-070
+      - T-DATA-FLOW-cdfd-deprecation-070
     owner: PM
   - id: G-DATA-FLOW-review-pass
     name: review-pass 完了
@@ -108,6 +110,7 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-090
       - T-DATA-FLOW-cdfd-derived-content-090
       - T-DATA-FLOW-cdfd-reporting-090
+      - T-DATA-FLOW-cdfd-deprecation-090
     owner: PM
   - id: M-DATA-FLOW-data-flow
     name: ドメイン完了
@@ -118,6 +121,7 @@ milestones:
       - T-DATA-FLOW-cdfd-multi-project-140
       - T-DATA-FLOW-cdfd-agent-config-operation-140
       - T-DATA-FLOW-cdfd-reporting-140
+      - T-DATA-FLOW-cdfd-deprecation-140
     owner: PM
   - id: G-DATA-FLOW-retrofit-pass-2
     name: retrofit-pass-2 完了

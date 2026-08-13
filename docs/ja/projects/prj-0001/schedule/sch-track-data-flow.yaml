@@ -1049,6 +1049,71 @@ tasks:
       担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
       bootstrap 対象の cdfd-overview と cdfd-init では bootstrap-finalize により、各タスクで
       整備した専用 rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-deprecation
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+    owner: BA
+    description: |
+      DCT の evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す
+      意図された仕様、および成果物カタログの done_criteria と照合する。一致する内容は成果物へ
+      反映し、乖離は実装へ無条件に合わせず result に記録する。実装から確認できない業務判断や
+      将来方針は推測せず、必要に応じて確認事項として残す。
+      cdfd-overview はプロセス領域一覧と領域間フローで全体境界と詳細化先を示し、領域内の
+      正常経路・例外経路を展開しない。領域別 cdfd-<area> は overview の境界を引き継ぎ、
+      プロセス概要の表と業務フロー図で名称を揃え、起点イベント、担当、主要な入力・出力、
+      データストア、正常経路と必要な例外経路を概念レベルで記述する。
+  - local_id: cdfd-deprecation
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-deprecation-010
+      - G-DATA-FLOW-retrofit-pass
+      - T-DATA-FLOW-data-flow-dedup-060
+    owner: BA
+    description: |
+      成果物種別に対応する整備済み Kata と先行・隣接 CDFD を参照し、既存の草案を保守的に
+      磨き込む。cdfd-overview は領域粒度と領域間の主要な受け渡しを維持し、領域別 CDFD は
+      領域内プロセス粒度で表と図のプロセス名・イベント・入出力・データストアを一致させる。
+      重複整理後の責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを
+      最小限修正して、成果物カタログの done_criteria を満たす状態へ整える。
+  - local_id: cdfd-deprecation
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-DATA-FLOW-cdfd-deprecation-070
+      - G-DATA-FLOW-refine-pass
+    owner: BA
+    description: |
+      完成版の CDFD を変更せず、DCT の evidence_refs が示す現在動作、既存成果物・決定記録・
+      プロジェクト文脈が示す意図された仕様、および done_criteria を照合する。cdfd-overview は
+      領域粒度、領域間フロー、領域別 CDFD への分割を確認し、領域別 cdfd-<area> はプロセス粒度、
+      正常系・主要例外、担当と入出力の追跡性を確認する。実装との一致・乖離・未確認範囲を判定し、
+      根拠と修正対象候補を review result に記録する。
+  - local_id: cdfd-deprecation
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-DATA-FLOW-cdfd-deprecation-090
+      - G-DATA-FLOW-review-pass
+    owner: BA
+    description: |
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
+      bootstrap 対象の cdfd-overview と cdfd-init では bootstrap-finalize により、各タスクで
+      整備した専用 rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
   - id: T-DATA-FLOW-data-flow-dedup-060
     target_local_ids:
       - cdfd-overview
@@ -1062,6 +1127,7 @@ tasks:
       - cdfd-agent-config-operation
       - cdfd-derived-content
       - cdfd-reporting
+      - cdfd-deprecation
     phase_suffix: "060"
     phase_set: cross-deliverable-pass
     phase_id: data-flow-dedup
