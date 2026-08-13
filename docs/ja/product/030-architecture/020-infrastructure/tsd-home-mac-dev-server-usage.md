@@ -156,6 +156,19 @@ Docker Desktop、Tailscale、Ollama など Host Mac 側の状態を調べてか�
 
 Host Mac 上の `host-mac` と devcontainer 内の `specdojo` は実行場所もファイルシステムも異なる。`host-mac` に attach したまま `tmux attach -t specdojo` を実行しても devcontainer 側の session には到達できないため、必ず `~/bin/specdojo-tmux` を経由する。
 
+### 4.4. tmux で VitePress 開発サーバを継続実行する
+
+`.devcontainer/devcontainer.json` は VitePress の固定ポート 5173 を `forwardPorts` に宣言している。初回適用時または設定変更後は VS Code で Dev Container を rebuild し、コンテナへ再接続する。これにより、コマンドを起動した terminal の種類に依存せず、VS Code の Ports パネルに `VitePress docs` としてポート 5173 が登録される。
+
+devcontainer 内の tmux session で開発サーバを起動する。
+
+```bash
+tmux new-session -A -s specdojo
+npm run docs:dev
+```
+
+`docs:dev` は `0.0.0.0:5173` で待ち受ける。VS Code の Ports パネルで 5173 の転送先 URL を確認し、接続元端末のブラウザから開く。VS Code がコンテナへ接続していない間は VS Code のポート転送も利用できないため、外部 terminal から tmux に接続してサーバを起動する場合も、ブラウザで利用する端末の VS Code を devcontainer へ接続しておく。
+
 ## 5. SpecDojo agent 実行
 
 SpecDojo の agent 実行は、必ず devcontainer 内の terminal から行う。外部端末の shell や Host Mac の通常 shell と混在させない。長時間実行は devcontainer 内の tmux session で開始する。
