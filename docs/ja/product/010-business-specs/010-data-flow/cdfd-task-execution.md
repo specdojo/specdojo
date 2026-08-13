@@ -56,7 +56,8 @@ task の選択・準備、mode 別の phase 実行、結果判定・統合では
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   実行要求者["👥 実行要求者<br>（task owner・実行管理者）"]
@@ -94,7 +95,8 @@ flowchart LR
 
   class 実行対象選択,担当確定claim,実行入力準備 process
   class 実行要求,phase開始可能 event
-  class ScheduleReady,実行構成,成果物,planResult,実行event,taskWorktree store
+  class 実行構成 storeMaster
+  class ScheduleReady,成果物,planResult,実行event,taskWorktree storeTransaction
   class 実行要求者 actor
 ```
 
@@ -106,7 +108,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   実行担当["🧑 実行担当<br>（human・AI Agent）"]
@@ -137,7 +140,7 @@ flowchart LR
 
   class 実行入力準備,Edit実行 process
   class edit開始,phase終了 event
-  class 成果物,planResult,実施根拠記録 store
+  class 成果物,planResult,実施根拠記録 storeTransaction
   class 実行担当,記録担当 actor
 ```
 
@@ -149,7 +152,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   記録担当["🤖 記録担当<br>（AI Agent）"]
@@ -197,7 +201,7 @@ flowchart LR
 
   class 実行入力準備,Review実行,Finalize確定,登録簿ライフサイクル先 process
   class review開始,finalize開始,phase終了,判断不足 event
-  class 成果物,planResult,実施根拠記録 store
+  class 成果物,planResult,実施根拠記録 storeTransaction
   class 記録担当,レビュー担当,人間承認者 actor
 ```
 
@@ -209,7 +213,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   phase終了{{"⚡ phase 作業が終了した"}}
@@ -246,7 +251,7 @@ flowchart LR
 
   class 実行結果判定,結果統合complete,計画展開先 process
   class phase終了,実行異常 event
-  class ScheduleReady,成果物,planResult,実施根拠記録,実行event,taskWorktree store
+  class ScheduleReady,成果物,planResult,実施根拠記録,実行event,taskWorktree storeTransaction
 ```
 
 凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。本図は現物の流れを扱わない。`P-03 計画展開` は委譲先の代表ノードであり、その内部処理は対象外とする。`phase 作業が終了した` は Edit実行のフロー（4.2）・Review・Finalize確定のフロー（4.3）と同一のイベントを指し、`成果物`・`plan・result`・`実施根拠記録` も両図と同一のデータストアを指す。current worktree 経路と task worktree 経路の更新責務は5.5を参照する。

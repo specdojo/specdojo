@@ -75,7 +75,8 @@ routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` 
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   外部起動者["⏰ 外部スケジューラ・運用担当"]
@@ -110,7 +111,8 @@ flowchart LR
 
   class 定期実行対象選択,実行試行記録,routine結果反映 process
   class 定期確認時点,即時実行要求,対象なし,action起動,action結果返却 event
-  class 定期処理定義,routine実行状態 store
+  class 定期処理定義 storeMaster
+  class routine実行状態 storeTransaction
   class 外部起動者 actor
 ```
 
@@ -121,7 +123,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   登録簿ライフサイクル先["📒 P-02 登録簿ライフサイクル"]
@@ -166,7 +169,7 @@ flowchart LR
   タスク実行先 -->|"task result"| planResult
 
   class 実行試行記録,登録項目実行委譲,Schedule実行委譲,execCycle順次制御,routine結果反映 process
-  class 登録項目個票,Schedule実行記録,成果物索引,planResult store
+  class 登録項目個票,Schedule実行記録,成果物索引,planResult storeTransaction
   class 登録簿ライフサイクル先,計画展開先,タスク実行先,派生生成先 actor
 ```
 
@@ -177,7 +180,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   タスク実行先["⚙️ P-04 タスク実行"]
@@ -206,7 +210,8 @@ flowchart LR
   JobRun結果反映 -->|"Job Run 集約結果"| routine結果反映
 
   class 実行試行記録,JobRun生成,JobRun結果反映,routine結果反映 process
-  class JobDefinition,JobRun履歴,planResult store
+  class JobDefinition storeMaster
+  class JobRun履歴,planResult storeTransaction
   class タスク実行先 actor
 ```
 

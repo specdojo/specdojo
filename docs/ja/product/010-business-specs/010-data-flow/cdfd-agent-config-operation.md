@@ -50,7 +50,8 @@ specdojo:
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   変更要求者["変更要求者<br>（BA・PM・task owner）"]
@@ -77,7 +78,8 @@ flowchart LR
 
   class 変更要件問題評価 process
   class 作業要件変更,実行問題検知,構成変更必要 event
-  class 変更実行記録,運用構成定義 store
+  class 運用構成定義 storeMaster
+  class 変更実行記録 storeTransaction
   class 変更要求者,タスク実行,登録簿ライフサイクル actor
 ```
 
@@ -89,7 +91,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   人間承認者["人間の承認者<br>（PO・構成承認者）"]
@@ -129,7 +132,8 @@ flowchart LR
 
   class 構成案作成,権限安全境界確認,構成変更承認,承認済み設定変更 process
   class 構成変更必要,安全確認不合格,承認不成立 event
-  class 変更実行記録,スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア store
+  class スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア storeMaster
+  class 変更実行記録 storeTransaction
   class 人間承認者,登録簿ライフサイクル actor
 ```
 
@@ -141,7 +145,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   設定管理者["設定管理者<br>（PM・ARC）"]
@@ -182,7 +187,8 @@ flowchart LR
 
   class 承認済み設定変更,構成検証引き渡し,構成案作成 process
   class 検証不合格 event
-  class スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア,検証記録 store
+  class スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア storeMaster
+  class 検証記録 storeTransaction
   class 設定管理者,検証担当,計画展開,タスク実行 actor
 ```
 

@@ -48,7 +48,8 @@ BA が必須の初期化と任意設定の境界を整理し、PO、ARC、QE が
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   人間判断者["👤 人間の判断者<br>（PO・承認者）"]
@@ -92,7 +93,8 @@ flowchart LR
 
   class config初期化,registerScaffold,catalogScaffold,計画展開 process
   class 開始承認,必須初期化完了 event
-  class プロジェクト構成,登録簿,成果物カタログ store
+  class プロジェクト構成,成果物カタログ storeMaster
+  class 登録簿 storeTransaction
   class 人間判断者,プロジェクト参加者 actor
 ```
 
@@ -104,7 +106,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   人間判断者["👤 人間の判断者<br>（PO・承認者）"]
@@ -147,7 +150,7 @@ flowchart LR
 
   class provider初期化,execScaffold,計画展開 process
   class provider利用判断,exec利用判断 event
-  class プロジェクト構成,provider実行構成,運用構成定義 store
+  class プロジェクト構成,provider実行構成,運用構成定義 storeMaster
   class 人間判断者,プロジェクト参加者 actor
 ```
 

@@ -56,7 +56,8 @@ Schedule・event から state、Ready、CPM、critical path、timeline を算出
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   計画担当者["👥 計画担当者<br>（PM・BA）"]
@@ -92,7 +93,8 @@ flowchart LR
 
   class カタログ検証,Schedule展開 process
   class カタログ更新,戦略更新,カタログ不合格,戦略不足,依存解決失敗 event
-  class 成果物カタログ,スケジュール戦略,Schedule store
+  class 成果物カタログ,スケジュール戦略 storeMaster
+  class Schedule storeTransaction
   class 計画担当者 actor
 ```
 
@@ -104,7 +106,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   計画担当者["👤 計画担当者<br>（PM）"]
@@ -158,7 +161,8 @@ flowchart LR
 
   class 実行入力検証,実行状態再構成,計画情報算出 process
   class 計画情報更新,戦略不足,依存解決失敗,event不正 event
-  class スケジュール戦略,Schedule,実行event,正規化event列,実行状態,Ready,CPM,timeline,生成メタデータ store
+  class スケジュール戦略 storeMaster
+  class Schedule,実行event,正規化event列,実行状態,Ready,CPM,timeline,生成メタデータ storeTransaction
   class 計画担当者,計画情報利用者 actor
 ```
 

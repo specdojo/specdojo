@@ -60,7 +60,8 @@ specdojo:
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   運用担当["👤 運用担当"]
@@ -111,7 +112,8 @@ flowchart LR
 
   class 一括再生成,実行情報更新,カタログ表示生成,登録簿ビュー生成 process
   class 正本更新,一括生成要求 event
-  class project構成,Schedule実行event,スケジュール戦略,成果物カタログ,登録項目個票,登録簿表示設定,実行計画派生情報,カタログ派生ビュー,登録簿派生ビュー store
+  class project構成,スケジュール戦略,成果物カタログ,登録簿表示設定 storeMaster
+  class Schedule実行event,登録項目個票,実行計画派生情報,カタログ派生ビュー,登録簿派生ビュー storeTransaction
   class 運用担当,文書利用者 actor
 ```
 
@@ -122,7 +124,8 @@ flowchart LR
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   文書利用者["👥 文書利用者<br>（BA・ARC・QE・task owner）"]
@@ -150,7 +153,8 @@ flowchart LR
   文書索引 -->|"文書参照先"| 文書利用者
 
   class 登録簿ビュー生成,YAML表示ページ生成,文書索引生成 process
-  class YAMLMarkdown文書,文書索引設定,YAML表示ページ,文書索引 store
+  class 文書索引設定 storeMaster
+  class YAMLMarkdown文書,YAML表示ページ,文書索引 storeTransaction
   class 文書利用者 actor
 ```
 
@@ -162,7 +166,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   成果物owner["👤 人間の成果物 owner<br>（BA・成果物 owner）"]
@@ -204,7 +209,8 @@ flowchart LR
 
   class 成果物雛形生成,変更監視再生成起動,一括再生成 process
   class 初期材料化要求,変更監視開始,変更検知 event
-  class project構成,成果物カタログ,成果物テンプレート,成果物本体,監視対象正本 store
+  class project構成,成果物カタログ,成果物テンプレート storeMaster
+  class 成果物本体,監視対象正本 storeTransaction
   class 成果物owner,運用担当 actor
 ```
 

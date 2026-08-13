@@ -58,7 +58,8 @@ BA が並行処理の利用場面と担当を整理し、PM、開発者、タス
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   プロジェクト管理者["👤 プロジェクト管理者<br>（PM・承認者）"]
@@ -98,7 +99,8 @@ flowchart LR
 
   class projectDevelop作成,並行実行割当,計画展開 process
   class project開始,並行実行可能,割当確定 event
-  class main,projectDevelop,project構成,実行計画記録 store
+  class main,project構成 storeMaster
+  class projectDevelop,実行計画記録 storeTransaction
   class プロジェクト管理者 actor
 ```
 
@@ -110,7 +112,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   作業担当["👥 作業担当<br>（開発者・タスク owner・AI Agent）"]
@@ -161,7 +164,7 @@ flowchart LR
 
   class featureWorktree作成,execWorktree作成,分離作業,分離結果Commit,タスク実行 process
   class 割当確定,統合可能 event
-  class projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 store
+  class projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 storeTransaction
   class 作業担当 actor
 ```
 
@@ -173,7 +176,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   プロジェクト管理者["👤 プロジェクト管理者<br>（PM・承認者）"]
@@ -213,7 +217,7 @@ flowchart LR
 
   class worktreeベース同期,featureExec統合,worktreeBranch後片付け,登録簿ライフサイクル process
   class 統合可能 event
-  class projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 store
+  class projectDevelop,featureWorktree,execWorktree,実行計画記録,GitPR履歴 storeTransaction
   class プロジェクト管理者 actor
 ```
 
@@ -225,7 +229,8 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   プロジェクト管理者["👤 プロジェクト管理者<br>（PM・承認者）"]
@@ -268,7 +273,8 @@ flowchart LR
 
   class main共有変更同期,projectDevelop昇格,worktreeBranch後片付け,構成変更,派生生成 process
   class main更新,project受入 event
-  class main,projectDevelop,実行計画記録,GitPR履歴 store
+  class main storeMaster
+  class projectDevelop,実行計画記録,GitPR履歴 storeTransaction
   class プロジェクト管理者,作業担当 actor
 ```
 
