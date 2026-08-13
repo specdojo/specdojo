@@ -113,6 +113,7 @@ milestones:
     name: ドメイン完了
     artifact_name: データフロー
     depends_on:
+      - T-DATA-FLOW-cdfd-register-operation-140
       - T-DATA-FLOW-cdfd-routine-140
       - T-DATA-FLOW-cdfd-multi-project-140
       - T-DATA-FLOW-cdfd-agent-config-operation-140

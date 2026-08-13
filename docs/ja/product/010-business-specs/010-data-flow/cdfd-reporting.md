@@ -5,7 +5,7 @@ specdojo:
   status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
-    - prj-0001:cdfd-register-operation
+    - prj-0001:cdfd-register-lifecycle
     - prj-0001:cdfd-task-execution
     - prj-0001:cdfd-derived-content
   supersedes: []
@@ -49,7 +49,7 @@ specdojo:
 | 監視結果 | 本領域が作る基準時点・検知・対応の作業記録 | `P-09-01`〜`P-09-03` | 報告記録の材料として保持し、正本の代替にしない | PM・BA・QE が監視のたびに更新する |
 | 進捗報告、議事録 | 人間が確定する報告記録 | `P-09-04`、`P-09-05` | 状況、判断、決定、次の行動、根拠参照を記録する | PM・BA、会議の確認者が更新・確認する |
 
-各正本の意味と算出規則は本書で再定義しない。計画情報の算出は [[prj-0001:cdfd-catalog-planning|概念データフロー図（カタログ〜計画展開）]]、task 状態と復旧は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、派生情報の生成・陳腐化・再生成は [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]]、個票の意味と監査履歴は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]] を正とする。本書は、それらを同じ基準時点で監視し、人が作る報告記録へ結び付ける規則だけを正本とする。
+各正本の意味と算出規則は本書で再定義しない。計画情報の算出は [[prj-0001:cdfd-catalog-planning|概念データフロー図（カタログ〜計画展開）]]、task 状態と復旧は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、派生情報の生成・陳腐化・再生成は [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]]、個票の意味と監査履歴は [[prj-0001:cdfd-register-lifecycle|概念データフロー図（登録簿ライフサイクル）]] を正とする。本書は、それらを同じ基準時点で監視し、人が作る報告記録へ結び付ける規則だけを正本とする。
 
 ## 3. 領域内プロセス一覧
 
@@ -318,7 +318,7 @@ flowchart LR
 <!-- prettier-ignore -->
 | 委譲先 | 委譲する事項 | 引き渡す情報 | 本領域へ戻す条件 |
 | --- | --- | --- | --- |
-| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-operation\|登録簿ライフサイクル]]） | 遅延・リスク・課題・変更・決定・アクションを個票正本で追跡する | 検知事実、影響、type 候補、owner・期限、判断者、再開条件、報告・議事録の参照 | 個票の起票・更新・承認が完了し、管理ビューと監査履歴で確認できる |
+| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-lifecycle\|登録簿ライフサイクル]]） | 遅延・リスク・課題・変更・決定・アクションを個票正本で追跡する | 検知事実、影響、type 候補、owner・期限、判断者、再開条件、報告・議事録の参照 | 個票の起票・更新・承認が完了し、管理ビューと監査履歴で確認できる |
 | `P-03 計画展開`（[[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]） | 依存、順序、期間、マイルストーンを見直し、計画情報を再計算する | 遅延・滞留 task、critical path、影響する後続、再計画判断、登録簿の確定事項 | Schedule と計画派生情報が更新され、影響と達成見込みを再評価できる |
 | `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]） | blocked / doing task の復旧、引継ぎ、状態訂正、再実行を行う | task、actor、block 理由、result、再開条件、必要な人間判断 | complete / block / release / reopen 等の event と result が確定した |
 | `P-05 定期処理`（[[prj-0001:cdfd-routine\|定期処理]]） | 承認された周期報告を起動し、重複・失敗時の扱いを管理する | 報告周期、対象期間、Job、missed run・overlap 方針、承認結果 | 報告 Job の起動結果または次の報告契機が本領域へ渡る |

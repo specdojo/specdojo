@@ -341,7 +341,7 @@ project 固有変更の統合点を用意し、独立して実行できる単位
 | Schedule・実行計画・実行記録 | Schedule task、plan、claim・状態 event、過去 result | 実行割当、対象 task result、統合・block・complete の状態 | worktree commit には対象 result だけを含め、状態 event は project 統合側で直列に管理する |
 | プロジェクト定義・構成 | project ID、Schedule・実行記録・カタログ・ロール定義・レビュー観点の配置、project 文脈 | 対象 project の選択結果 | 複数 project の Schedule・実行記録・カタログの所在をここで解決し、実行対象 project を一意にする。一意に定まらない場合は分離・作業を開始しない |
 
-一つの task 内部の edit / review / finalize、result 判定、claim・complete・block などの状態遷移は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] を正本とし、本書では分離環境と統合結果の受け渡しだけを定める。登録項目 ID の再採番規則は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]] を参照する。
+一つの task 内部の edit / review / finalize、result 判定、claim・complete・block などの状態遷移は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] を正本とし、本書では分離環境と統合結果の受け渡しだけを定める。登録項目 ID の再採番規則は [[prj-0001:cdfd-register-lifecycle|概念データフロー図（登録簿ライフサイクル）]] を参照する。
 
 ## 6. 主要例外と領域外への委譲
 
@@ -364,7 +364,7 @@ project 固有変更の統合点を用意し、独立して実行できる単位
 <!-- prettier-ignore -->
 | 委譲先 | 委譲する事項 | 引き渡す情報 | 本領域へ戻す条件 |
 | --- | --- | --- | --- |
-| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-operation\|登録簿ライフサイクル]]） | ID 競合、共通成果物の統合順序、例外対応、判断要求の継続管理 | 競合対象、影響 project、保持した branch / worktree、選択肢、担当、再開条件 | ID・統合順序・例外方針が確定し、分離・同期・統合を再開するとき |
+| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-lifecycle\|登録簿ライフサイクル]]） | ID 競合、共通成果物の統合順序、例外対応、判断要求の継続管理 | 競合対象、影響 project、保持した branch / worktree、選択肢、担当、再開条件 | ID・統合順序・例外方針が確定し、分離・同期・統合を再開するとき |
 | `P-03 計画展開`（[[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]） | project とタスクの依存、優先度、実行可能性の再計画 | 統合済み・block 中のタスク状態、共通変更の依存、再実行要求 | 独立して実行可能な単位と統合順序が更新されたとき |
 | `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]） | worktree 内での成果物編集、検証、result 記録、判断依頼 | plan、対象成果物、仕様、担当、分離された worktree、完了条件 | 更新成果物、検証結果、result、未commit差分を分離結果として受け取るとき |
 | `P-07 構成変更`（[[prj-0001:cdfd-agent-config-operation\|agent・provider 構成の運用変更]]） | agent、provider、並列数、worktree ベースなど運用条件の承認済み変更 | 現行条件、失敗記録、影響 project・タスク、変更要求・承認結果 | 更新した運用条件で新しい実行割当または worktree を準備するとき |

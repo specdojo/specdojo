@@ -22,6 +22,16 @@ scope:
   include_kinds:
     - work
 
+# cdfd-register-operation を cdfd-register-lifecycle へ改称した（id-and-file-naming-standard.md
+# 9.2 経路B）。旧 local_id の完了実績（010〜140）を新 local_id へ引き継ぎ、フルフェーズの
+# タスクチェーンを再生成しないようにするための登録。
+initial_state:
+  completed_deliverables:
+    - local_id: cdfd-register-lifecycle
+      completed_on: "2026-08-13"
+      by: indie
+      note: cdfd-register-operation（旧 local_id）の完了実績を引き継ぐ改称。内容は移行済み
+
 # cdfd-overview は overview-bootstrap-pass、領域別の代表成果物 cdfd-init は
 # area-bootstrap-pass から開始する。前者は overview 専用 Kata を新設し、後者は既存の
 # cdfd Kata を領域別専用へ再構成する。全成果物は DCT の evidence_refs を retrofit-pass で
@@ -246,6 +256,7 @@ owner_rules:
   # 進んでいない。
   - local_ids:
       - cdfd-register-operation
+      - cdfd-register-lifecycle
       - cdfd-catalog-planning
       - cdfd-task-execution
       - cdfd-routine

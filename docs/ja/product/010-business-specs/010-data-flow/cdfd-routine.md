@@ -5,7 +5,7 @@ specdojo:
   status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
-    - prj-0001:cdfd-register-operation
+    - prj-0001:cdfd-register-lifecycle
     - prj-0001:cdfd-task-execution
   supersedes: []
 ---
@@ -22,7 +22,7 @@ specdojo:
 ## 2. 適用範囲
 
 - 対象は、`rtn-*.yaml` の選択と due 判定、実行試行の記録、登録項目または Schedule task への委譲、exec-cycle の順次制御、Job Definition からの Job Run 生成、実行結果と checkpoint の反映である。
-- 登録項目の対応・審査・終了は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]]、個々の Schedule task の選択後の実行・結果統合・再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] に委譲し、本領域では委譲入力、返却結果、実行順序だけを扱う。
+- 登録項目の対応・審査・終了は [[prj-0001:cdfd-register-lifecycle|概念データフロー図（登録簿ライフサイクル）]]、個々の Schedule task の選択後の実行・結果統合・再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]] に委譲し、本領域では委譲入力、返却結果、実行順序だけを扱う。
 - Job Run は Schedule task ではなく、Job Definition と入力・checkpoint から生成される再利用可能な実行単位である。本領域では生成、重複判定、実行結果、checkpoint 更新までを扱い、AI Agent の内部作業は扱わない。
 - `where`、`list`、`validate`、`dry-run` は正本を更新しない補助操作であり、独立プロセスにしない。外部スケジューラの製品・設定手順、個別 CLI 操作、物理データ項目は対象外とする。
 - 社会課題、期待価値、主要判断、公開可否は人間が責任を持つ。AI Agent は登録済みの権限と変更範囲で実行を支援するが、前提不足や運用方針を推測で補わない。
@@ -49,7 +49,7 @@ cron の探索範囲は最大366日であり、`all` で1000件を超える取�
 | 完了済み重複 Job Run     | `last_result: success`                                                                                   | 既存 Job Run・attempt・checkpoint を変更しない                  | idempotency key が変わる次の実行機会を待つ                                 |
 | 委譲前記録後の想定外例外 | 新しい `last_run` と必要時の `last_scheduled_for` は残るが、`last_result` は直前値または未記録になり得る | 例外発生点より後は未更新になり得る                              | 同じ実行機会は直ちに再試行されないため、運用担当が状態と外部記録を確認する |
 
-routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` / `last_scheduled_for`、checkpoint と次回判定は本書を正本とする。委譲後の登録項目状態は [[prj-0001:cdfd-register-operation|概念データフロー図（登録簿ライフサイクル）]]、task 状態・利用制限後の再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、索引の生成順と失敗時の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。
+routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` / `last_scheduled_for`、checkpoint と次回判定は本書を正本とする。委譲後の登録項目状態は [[prj-0001:cdfd-register-lifecycle|概念データフロー図（登録簿ライフサイクル）]]、task 状態・利用制限後の再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、索引の生成順と失敗時の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。
 
 ## 3. 領域内プロセス一覧
 
@@ -282,7 +282,7 @@ action kind に応じて、登録項目の対応、Ready task の自動実行、
 
 | 委譲先                                                                                    | 委譲する事項                                                         | 引き渡す情報                                                      | 本領域へ戻す条件                                                                               |
 | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-operation\|登録簿ライフサイクル]]） | filter で選んだ登録項目を対応・調査し、人間の審査へ進める            | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
+| `P-02 登録簿ライフサイクル`（[[prj-0001:cdfd-register-lifecycle\|登録簿ライフサイクル]]） | filter で選んだ登録項目を対応・調査し、人間の審査へ進める            | project ID、登録項目 ID、個票の現行状態                           | 項目別の `review` / `waiting`、result、失敗理由を routine 集約結果へ反映するとき               |
 | `P-03 計画展開`（[[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]）                 | exec-cycle 中に Schedule を検証して state と Ready を再計算する      | project ID、Schedule、event、strategy                             | 検証・再計算の成否と更新済み Ready を cycle の auto step へ渡すとき                            |
 | `P-04 タスク実行`（[[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]）           | Ready task、deferred limit task、または Job Run の実行単位を処理する | task / Job Run、strategy、parallel、actor、plan、result、worktree | complete / block / deferred、実行 result、利用制限情報を routine または Job Run へ反映するとき |
 | `P-08 派生生成`（[[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]）        | exec-cycle 中に成果物索引を再生成する                                | project ID、文書正本、索引設定                                    | 索引生成の成否と更新済み索引を状態再計算 step へ渡すとき                                       |

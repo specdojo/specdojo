@@ -18,7 +18,7 @@ specdojo:
 
 ## 1. 概要
 
-cdfd-register-operation.md（2.1/2.2/2.3）、cdfd-routine.md（2.1/2.2）、cdfd-reporting.md（2.1）にある状態定義・type分類・データ正本の詳細記載は、対応するステータス定義（stsd）・概念状態遷移図（cstd）・データストア定義（cdsd）等の文書を作成する際に、そちらへ移設し、cdfd側は参照へ簡潔化する。
+cdfd-register-lifecycle.md（2.1/2.2/2.3）、cdfd-routine.md（2.1/2.2）、cdfd-reporting.md（2.1）にある状態定義・type分類・データ正本の詳細記載は、対応するステータス定義（stsd）・概念状態遷移図（cstd）・データストア定義（cdsd）等の文書を作成する際に、そちらへ移設し、cdfd側は参照へ簡潔化する。
 
 ## 2. 完了条件
 
@@ -40,6 +40,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:cdfd-register-operation]]（2.1・2.2・2.3が対象）
+- [[prj-0001:cdfd-register-lifecycle]]（2.1・2.2・2.3が対象）
 - [[prj-0001:cdfd-routine]]（2.1・2.2が対象）
 - [[prj-0001:cdfd-reporting]]（2.1が対象）

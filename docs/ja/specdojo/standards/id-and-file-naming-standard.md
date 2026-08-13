@@ -719,6 +719,7 @@ id: "prj-0001:010-prj-overview"
 - IDは原則変更不可
 - 変更が必要な場合は、新IDを作成し、旧IDとの関係を `supersedes` に記載する
 - ID変更後も、既存参照の移行が完了するまで旧IDとの関係を追跡可能にする
+- 呼び方や置き場所を変えたいだけか、文書を作り直したいかで 9.1（経路A）と 9.2（経路B）を使い分ける
 
 例:
 
@@ -726,6 +727,30 @@ id: "prj-0001:010-prj-overview"
 supersedes:
   - "prj-0001:api-order-get-v1"
 ```
+
+### 9.1. 経路A: ファイル名のみの変更（表示改善・構成変更）
+
+用語や置き場所を変えたいだけで、文書としての同一性が変わらない場合に使う。`id`（成果物カタログでは `local_id`）を変更しないため、Schedule のタスクIDにも影響しない、最も影響範囲が小さい経路である。
+
+1. `id`（成果物カタログのエントリなら `local_id`）は変更しない（2.3 参照）。
+2. ファイルは `git mv` でリネームし、履歴を保持する。
+3. 成果物カタログ（`dct-*.yaml`）の該当エントリは `path` だけを新しいファイル名に更新し、`local_id` は変更しない。
+4. Schedule（`sch-strategy-<track>.yaml` / `sch-track-<track>.yaml`）は変更不要（`local_id` が不変のため、タスクIDも変わらない）。
+5. wikilink は `[[id|新しい表示名]]` の表示名部分だけを更新する（id 自体は変わらないためリンク解決は保たれる）。
+6. sidebar 設定（`.vitepress/sidebar-config.ts` の `PRODUCT_FILE_MENU` / `PROJECTS_FILE_MENU`）のキーを新しいファイル名（拡張子なし）に更新し、表示名も合わせる。
+7. `specdojo index build` → `specdojo catalog validate` → `npm run lint:md` → `npm run docs:build` の順で解決を確認する。
+
+### 9.2. 経路B: 新IDへの切替（文書の再定義・分割・統合）
+
+文書として作り直したい、または新IDを別立てしたい場合に使う。成果物カタログで Schedule によりタスク化されている deliverable の場合、タスクIDは `local_id` から生成されるため、`local_id` を変更すると生成元が変わり、既存の完了実績とは切り離された新規タスクチェーン（フルフェーズの再展開）が生成される点に注意する。
+
+1. 旧IDの成果物カタログエントリ（`local_id` / `path` / `done_criteria` など）は削除せず維持する。すでに Schedule に焼き込まれた過去のタスクIDの参照整合性を保つため。
+2. 新しい `local_id` で成果物カタログへ新規エントリを追加し、新しいファイルを正本にする。
+3. 新ファイルの frontmatter に `supersedes: [<旧id>]` を設定する。
+4. 旧ファイルは `status: deprecated` にし、新IDへの移行を示す最小限の内容（H1 と移行先への案内）へ縮小する。
+5. 旧IDの実績を新 `local_id` へ引き継ぐ場合は、Schedule 戦略（`sch-strategy-<track>.yaml`）の `initial_state.completed_deliverables` に新 `local_id` を登録する。これにより新 `local_id` はフルフェーズのタスクチェーンを再生成せず、完了済みを示す単一の軽量タスクだけが生成される（フィールド定義は `sch-strategy.schema.yaml` の `initial_state`、運用の考え方は schedule-design-guide.md を参照）。
+6. 旧IDを参照している既存の wikilink・成果物カタログの `depends_on` は、順次新IDへ更新する。旧IDのまま残しても Schedule 上は解決できるが、今後の主参照は新IDに揃えるのが望ましい。
+7. `specdojo schedule build --track <track> --force` → `specdojo exec refresh` → `specdojo catalog validate` の順で整合性を確認する。
 
 ## 10. NGパターン
 

@@ -393,14 +393,17 @@ export const PRODUCT_SEGMENT_TEXT: Record<string, string> = {
 export const PRODUCT_FILE_MENU: Record<string, { text: string; order?: number }> = {
   "cdfd-overview": { text: "全体概要", order: 0 },
   "cdfd-init": { text: "初期セットアップ（P-01）", order: 10 },
-  "cdfd-register-operation": { text: "登録簿運用（P-02）", order: 20 },
+  "cdfd-register-lifecycle": { text: "登録簿ライフサイクル（P-02）", order: 20 },
   "cdfd-catalog-planning": { text: "計画展開（P-03）", order: 30 },
   "cdfd-task-execution": { text: "タスク実行（P-04）", order: 40 },
-  "cdfd-routine": { text: "定期運用（P-05）", order: 50 },
-  "cdfd-multi-project": { text: "並行運用（P-06）", order: 60 },
+  "cdfd-routine": { text: "定期処理（P-05）", order: 50 },
+  "cdfd-multi-project": { text: "並行処理（P-06）", order: 60 },
   "cdfd-agent-config-operation": { text: "構成変更（P-07）", order: 70 },
   "cdfd-derived-content": { text: "派生生成（P-08）", order: 80 },
   "cdfd-reporting": { text: "報告（P-09）", order: 90 },
+  // 廃止済み（id-and-file-naming-standard.md 9.2 経路B）。cdfd-register-lifecycle の後継に
+  // 移行済みだが、Schedule の過去タスクID参照整合性のためファイルは維持する。
+  "cdfd-register-operation": { text: "登録簿運用（廃止・旧版）", order: 999 },
 };
 
 // プロジェクト配下の既知ファイルのメニュー表示（標準成果物と生成ビュー）。

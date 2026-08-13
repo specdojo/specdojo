@@ -349,6 +349,15 @@ tasks:
       担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。
       bootstrap 対象の cdfd-overview と cdfd-init では bootstrap-finalize により、各タスクで
       整備した専用 rulebook / recipe / sample / template もあわせて確認し、確定対象を ready に更新する。
+  - local_id: cdfd-register-lifecycle
+    phase_suffix: "000"
+    name: 完了済み
+    duration_days: 0.001
+    depends_on:
+      - T-DATA-FLOW-cdfd-init-010
+    owner: BA
+    tags:
+      - initial-complete
   - local_id: cdfd-catalog-planning
     phase_suffix: "010"
     phase_set: retrofit-pass
@@ -552,7 +561,7 @@ tasks:
     name: 実装調査・草案反映
     duration_days: 0.5
     depends_on:
-      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-register-lifecycle-000
       - T-DATA-FLOW-cdfd-task-execution-010
     owner: BA
     description: |
@@ -847,7 +856,7 @@ tasks:
     name: 実装調査・草案反映
     duration_days: 0.5
     depends_on:
-      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-register-lifecycle-000
       - T-DATA-FLOW-cdfd-catalog-planning-010
       - T-DATA-FLOW-cdfd-task-execution-010
     owner: BA
@@ -947,7 +956,7 @@ tasks:
     name: 実装調査・草案反映
     duration_days: 0.5
     depends_on:
-      - T-DATA-FLOW-cdfd-register-operation-010
+      - T-DATA-FLOW-cdfd-register-lifecycle-000
       - T-DATA-FLOW-cdfd-task-execution-010
       - T-DATA-FLOW-cdfd-derived-content-010
     owner: BA
@@ -1045,6 +1054,7 @@ tasks:
       - cdfd-overview
       - cdfd-init
       - cdfd-register-operation
+      - cdfd-register-lifecycle
       - cdfd-catalog-planning
       - cdfd-task-execution
       - cdfd-routine

@@ -70,9 +70,9 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: cdfd-register-operation
-        name: 概念データフロー図（登録簿ライフサイクル）
+        name: 概念データフロー図（登録簿運用）
         kind: work
-        overview: 立ち上げ時の未整理事項と運用中の計画外事項を個票へ登録し、判断・実行・待機・レビュー・承認・終了・再開、派生ビュー生成・履歴確認と例外復旧まで継続管理する流れを可視化し定義する
+        overview: 廃止済み。内容は cdfd-register-lifecycle へ移行した（id-and-file-naming-standard.md 9.2 経路B）。Schedule に記録済みの過去タスクIDとの参照整合性を保つためエントリを維持する。
         path: cdfd-register-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
@@ -93,6 +93,45 @@ groups:
             purpose: 登録日・完了日のタイムゾーン解決と検証
         depends_on:
           - cdfd-init
+        note: 廃止済み。新規参照は cdfd-register-lifecycle を使用する。
+        done_criteria:
+          - text: todo・question・risk・issue・change-request・decision・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 個票Frontmatterを正本としてopen・in-progress・waiting・review・done/decided・rejected・deferredを遷移し、登録日・完了日・結論、生成一覧・派生ビューおよびregister historyへ反映する流れが識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: agent実行の成功時・失敗時の遷移、個票の重複IDまたはファイル名と文書IDの不整合の検出、renumberによる個票・参照・実行記録の復旧、およびworktreeの同期・統合失敗時の例外経路が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: type別の承認者とreviewからclose・reject・defer・waitへの遷移、commit承認とPR承認の適用境界、および留保・却下・延期・再開の判断に必要な情報が識別できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-register-lifecycle
+        name: 概念データフロー図（登録簿ライフサイクル）
+        kind: work
+        overview: 立ち上げ時の未整理事項と運用中の計画外事項を個票へ登録し、判断・実行・待機・レビュー・承認・終了・再開、派生ビュー生成・履歴確認と例外復旧まで継続管理する流れを可視化し定義する
+        path: cdfd-register-lifecycle.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+          - kind: implementation
+            path: src/register-item.ts
+            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
+          - kind: implementation
+            path: src/register-history.ts
+            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録簿項目を実行タスクとして扱う経路
+          - kind: implementation
+            path: src/register-date.ts
+            purpose: 登録日・完了日のタイムゾーン解決と検証
+        depends_on:
+          - cdfd-init
+        note: cdfd-register-operation（廃止済み）の後継。id-and-file-naming-standard.md 9.2 経路B に従い、実績は initial_state.completed_deliverables で引き継ぐ。
         done_criteria:
           - text: todo・question・risk・issue・change-request・decision・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
             roles: [BA]
@@ -190,7 +229,7 @@ groups:
             path: src/job.ts
             purpose: Job Definition検証・Job Run生成・checkpoint更新
         depends_on:
-          - cdfd-register-operation
+          - cdfd-register-lifecycle
           - cdfd-task-execution
         done_criteria:
           - text: routine定義の選択・due判定・register/schedule実行への委譲、resumeから状態再計算・autoへ進むexec-cycleに加え、Job Run生成を伴う反復作業との境界・実行結果更新の流れが表と図で確認できること
@@ -275,7 +314,7 @@ groups:
             path: src/yaml-pages.ts
             purpose: YAML正本から表示ページを生成する処理
         depends_on:
-          - cdfd-register-operation
+          - cdfd-register-lifecycle
           - cdfd-catalog-planning
           - cdfd-task-execution
         done_criteria:
@@ -308,7 +347,7 @@ groups:
             path: src/register-history.ts
             purpose: 登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
         depends_on:
-          - cdfd-register-operation
+          - cdfd-register-lifecycle
           - cdfd-task-execution
           - cdfd-derived-content
         done_criteria:
