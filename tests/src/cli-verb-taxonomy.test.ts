@@ -18,7 +18,7 @@ describe("CLI generation verb taxonomy", () => {
     registerCatalogCommands(program);
     registerDeliverableCommands(program);
 
-    expect(subcommandNames(program, "deliverable")).toEqual(["scaffold"]);
+    expect(subcommandNames(program, "deliverable")).toEqual(["scaffold", "trash"]);
     expect(subcommandNames(program, "catalog")).not.toContain("generate");
   });
 

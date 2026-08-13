@@ -747,10 +747,25 @@ supersedes:
 1. 旧IDの成果物カタログエントリ（`local_id` / `path` / `done_criteria` など）は削除せず維持する。すでに Schedule に焼き込まれた過去のタスクIDの参照整合性を保つため。
 2. 新しい `local_id` で成果物カタログへ新規エントリを追加し、新しいファイルを正本にする。
 3. 新ファイルの frontmatter に `supersedes: [<旧id>]` を設定する。
-4. 旧ファイルは `status: deprecated` にし、新IDへの移行を示す最小限の内容（H1 と移行先への案内）へ縮小する。
+4. 旧ファイルは `status: deprecated` にし、新IDへの移行を示す最小限の内容（H1 と移行先への案内）へ縮小する。物理配置を `trash` ディレクトリへ移す場合は 9.3 の手順を使う。
 5. 旧IDの実績を新 `local_id` へ引き継ぐ場合は、Schedule 戦略（`sch-strategy-<track>.yaml`）の `initial_state.completed_deliverables` に新 `local_id` を登録する。これにより新 `local_id` はフルフェーズのタスクチェーンを再生成せず、完了済みを示す単一の軽量タスクだけが生成される（フィールド定義は `sch-strategy.schema.yaml` の `initial_state`、運用の考え方は schedule-design-guide.md を参照）。
 6. 旧IDを参照している既存の wikilink・成果物カタログの `depends_on` は、順次新IDへ更新する。旧IDのまま残しても Schedule 上は解決できるが、今後の主参照は新IDに揃えるのが望ましい。
 7. `specdojo schedule build --track <track> --force` → `specdojo exec refresh` → `specdojo catalog validate` の順で整合性を確認する。
+
+### 9.3. `trash` ディレクトリへの移動
+
+`status: deprecated` にした成果物ファイルを、通常の成果物と混在させたままにすると、ディレクトリを一覧したときに現行文書と誤認されやすい。`id` は変更しない配置変更（経路A の一種）として、`trash` ディレクトリへ移す。
+
+- 置き場所は `docs/ja/product/trash/`（プロダクト文書）または `docs/ja/projects/<project-id>/trash/`（プロジェクト文書）とする。連番プレフィックスは付けない。
+- 移動には専用コマンド `specdojo deliverable trash --project <project-id> --local-id <local-id>` を使う。`--dry-run` で移動計画だけ確認できる。
+- このコマンドは、成果物カタログ（`dct-*.yaml`）中の該当エントリを検出し、`git mv` でファイルを移動したうえで、そのエントリの `path` フィールドだけを新しい絶対パスへ書き換える（`local_id` は変更しないため、他のフィールドや YAML 中のコメント・整形はそのまま残る）。
+- `status` の変更はコマンドの対象外である。`status: deprecated` への変更は 9.2 の手順（または該当文書の finalize/確定手順）で別途行う。コマンドは `specdojo.status` が `deprecated` でない場合に警告を出すのみで、値は書き換えない。
+- 対応先が `docs/ja/product/**` でも `docs/ja/projects/<project-id>/**` でもない場合はエラーで終了する（対象外の配置）。
+
+```sh
+specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation --dry-run
+specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
+```
 
 ## 10. NGパターン
 

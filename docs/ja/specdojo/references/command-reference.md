@@ -58,9 +58,10 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 `deliverable` はカタログが指す、人が編集する成果物ファイル本体を扱います。
 
-| コマンド               | 用途                                            | 例                                                 |
-| ---------------------- | ----------------------------------------------- | -------------------------------------------------- |
-| `deliverable scaffold` | `dct-*.yaml` が指す成果物ファイル本体を生成する | `specdojo deliverable scaffold --project prj-0001` |
+| コマンド               | 用途                                                                    | 例                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `deliverable scaffold` | `dct-*.yaml` が指す成果物ファイル本体を生成する                         | `specdojo deliverable scaffold --project prj-0001`                                 |
+| `deliverable trash`    | 非推奨化した成果物ファイルを `trash` ディレクトリへ移動する（idは不変） | `specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation` |
 
 主要オプション:
 

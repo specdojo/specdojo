@@ -4,6 +4,7 @@ import { type Command } from "commander";
 import { addProjectOption, printCommandError, resolveCatalogPath } from "./catalog.js";
 import { runGenerate } from "./catalog-generate.js";
 import { specdojoRootDir } from "./specdojo-config.js";
+import { applyTrash, planTrash } from "./deliverable-trash.js";
 
 function collectCommaSeparated(value: string, previous: string[]): string[] {
   return [
@@ -62,6 +63,45 @@ export function registerDeliverableCommands(program: Command): void {
       }
 
       if (errors.length > 0) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const trash = deliverable
+    .command("trash")
+    .description(
+      "Move a deliverable's document file into docs/ja/product/trash/ or " +
+        "docs/ja/projects/<project-id>/trash/, keeping its local_id and catalog entry " +
+        "(id-and-file-naming-standard.md 9.1)",
+    );
+  addProjectOption(trash);
+  trash.requiredOption("--local-id <localId>", "local_id of the deliverable to move");
+  trash.option("--dry-run", "Print the plan without moving files or writing the catalog", false);
+  trash.action((opts) => {
+    try {
+      const catalogPath = resolveCatalogPath(opts);
+      const repoRoot = specdojoRootDir();
+      const plan = planTrash(repoRoot, catalogPath, opts.localId as string);
+
+      process.stdout.write(`local_id: ${plan.localId}\n`);
+      process.stdout.write(`catalog: ${plan.catalogFile}\n`);
+      process.stdout.write(`${plan.oldDocPath} -> ${plan.newDocPath}\n`);
+      if (plan.frontmatterStatus !== "deprecated") {
+        process.stdout.write(
+          `WARN: specdojo.status is '${plan.frontmatterStatus ?? "unknown"}', not 'deprecated'. ` +
+            `deliverable trash does not change document status; update it separately.\n`,
+        );
+      }
+
+      if (opts.dryRun) {
+        process.stdout.write(`Dry run: no files moved, catalog not written.\n`);
+        return;
+      }
+
+      applyTrash(repoRoot, plan);
+      process.stdout.write(`Moved: ${plan.oldDocPath} -> ${plan.newDocPath}\n`);
+      process.stdout.write(`Updated: ${plan.catalogFile}\n`);
     } catch (error) {
       printCommandError(error);
     }
