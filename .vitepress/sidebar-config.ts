@@ -369,6 +369,8 @@ export const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
   "020-impact-analysis": "影響調査",
   "030-traceability": "トレーサビリティ",
   "040-migration": "移行",
+  // 非推奨化した成果物ファイルの置き場所（id-and-file-naming-standard.md 9.1）。
+  trash: "廃止済み",
 };
 
 export const PROJECTS_FILE_TEXT: Record<string, string> = {
@@ -384,6 +386,8 @@ export const PRODUCT_SEGMENT_TEXT: Record<string, string> = {
   "030-architecture": "アーキテクチャ",
   "020-infrastructure": "インフラ・技術選定",
   "040-system-design": "システム設計",
+  // 非推奨化した成果物ファイルの置き場所（id-and-file-naming-standard.md 9.1）。
+  trash: "廃止済み",
 };
 
 // docs/ja/product 配下の既知ファイルのメニュー表示（PROJECTS_FILE_MENU と同じ仕組み）。

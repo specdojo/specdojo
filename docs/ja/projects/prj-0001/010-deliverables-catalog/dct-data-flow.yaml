@@ -73,7 +73,7 @@ groups:
         name: 概念データフロー図（登録簿運用）
         kind: work
         overview: 廃止済み。内容は cdfd-register-lifecycle へ移行した（id-and-file-naming-standard.md 9.2 経路B）。Schedule に記録済みの過去タスクIDとの参照整合性を保つためエントリを維持する。
-        path: cdfd-register-operation.md
+        path: /docs/ja/product/trash/cdfd-register-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
