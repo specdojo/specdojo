@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-multi-project
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-init
@@ -75,7 +75,7 @@ flowchart LR
   end
 
   main[("🌳 main<br>安定統合点・共通成果物")]
-  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
+  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
   project構成[("📐 プロジェクト定義・構成")]
   実行計画記録[("🗓️ Schedule・実行計画・実行記録")]
 
@@ -129,9 +129,9 @@ flowchart LR
     分離結果Commit("📌 P-06-06 分離結果 commit<br>（担当: 開発者・SpecDojo CLI）")
   end
 
-  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
-  featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit")]
-  execWorktree[("🤖 exec branch / worktree<br>対象成果物・task result・commit")]
+  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
+  featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit<br>feature/&lt;project-id&gt;<br>/&lt;topic&gt;")]
+  execWorktree[("🤖 exec branch / worktree<br>対象成果物・task result・commit<br>exec/&lt;project-id&gt;<br>-&lt;task-id&gt;")]
   実行計画記録[("🗓️ Schedule・実行計画・実行記録")]
   GitPR履歴[("🧾 Git / PR 履歴")]
 
@@ -188,9 +188,9 @@ flowchart LR
   featureExec統合("🔗 P-06-08 feature・exec 統合<br>（担当: PM・開発者・SpecDojo CLI）")
   worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
 
-  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
-  featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit")]
-  execWorktree[("🤖 exec branch / worktree<br>対象成果物・task result・commit")]
+  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
+  featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit<br>feature/&lt;project-id&gt;<br>/&lt;topic&gt;")]
+  execWorktree[("🤖 exec branch / worktree<br>対象成果物・task result・commit<br>exec/&lt;project-id&gt;<br>-&lt;task-id&gt;")]
   実行計画記録[("🗓️ Schedule・実行計画・実行記録")]
   GitPR履歴[("🧾 Git / PR 履歴")]
 
@@ -244,7 +244,7 @@ flowchart LR
   worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
 
   main[("🌳 main<br>安定統合点・共通成果物")]
-  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit")]
+  projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
   実行計画記録[("🗓️ Schedule・実行計画・実行記録")]
   GitPR履歴[("🧾 Git / PR 履歴")]
 

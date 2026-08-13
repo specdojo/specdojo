@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-derived-content
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-register-operation
@@ -82,8 +82,8 @@ flowchart LR
   登録項目個票[("📒 登録項目個票<br>Frontmatter・本文（正本）")]
   登録簿表示設定[("🎛️ 表示用テンプレート<br>・表示タイムゾーン")]
   実行計画派生情報[("📊 state・Ready・CPM・timeline")]
-  カタログ派生ビュー[("🗃️ カタログ表示")]
-  登録簿派生ビュー[("🗄️ 登録項目一覧・状態別・優先度別・<br>担当者別・type 別ビュー")]
+  カタログ派生ビュー[("🗃️ カタログ表示<br>generated/dct-<br>&lt;domain&gt;.md")]
+  登録簿派生ビュー[("🗄️ 登録項目一覧・状態別・<br>優先度別・担当者別・<br>type 別ビュー<br>generated/")]
 
   Schedule実行event -->|"実行状態の更新"| 正本更新
   成果物カタログ -->|"カタログの更新"| 正本更新
@@ -136,8 +136,8 @@ flowchart LR
 
   YAMLMarkdown文書[("📁 YAML・Markdown 文書（正本）")]
   文書索引設定[("⚙️ 文書索引設定<br>ネスト ID・言語設定")]
-  YAML表示ページ[("📃 YAML 表示ページ")]
-  文書索引[("🔖 文書索引")]
+  YAML表示ページ[("📃 YAML 表示ページ<br>generated/&lt;name&gt;.md")]
+  文書索引[("🔖 文書索引<br>.specdojo/doc-index.json")]
 
   登録簿ビュー生成 -->|"4. 成功時の次工程"| YAML表示ページ生成
   YAML表示ページ生成 -->|"5. 成功時の次工程"| 文書索引生成

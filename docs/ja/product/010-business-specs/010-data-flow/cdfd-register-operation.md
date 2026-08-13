@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-register-operation
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-init

@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-agent-config-operation
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-task-execution
@@ -108,7 +108,7 @@ flowchart LR
   承認済み設定変更("P-07-05 承認済み設定変更<br>（担当: PM・ARC・設定管理者）")
 
   変更実行記録[("登録簿・変更記録・実行記録")]
-  スケジュール戦略[("sch-strategy-<track>.yaml")]
+  スケジュール戦略[("sch-strategy-<br>&lt;track&gt;.yaml")]
   memberRoster[("pm-members.yaml")]
   provider実行既定[(".specdojo/exec-defaults.yaml")]
   provider固有設定[("provider 固有設定<br>CLI・権限・agent 定義")]
@@ -160,7 +160,7 @@ flowchart LR
   構成検証引き渡し("P-07-06 構成検証・引き渡し<br>（担当: QE・ARC・実行管理者）")
   構成案作成("P-07-02 構成案作成<br>（担当: PM・ARC）")
 
-  スケジュール戦略[("sch-strategy-<track>.yaml")]
+  スケジュール戦略[("sch-strategy-<br>&lt;track&gt;.yaml")]
   memberRoster[("pm-members.yaml")]
   provider実行既定[(".specdojo/exec-defaults.yaml")]
   provider固有設定[("provider 固有設定<br>CLI・権限・agent 定義")]

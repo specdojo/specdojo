@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-task-execution
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-catalog-planning
@@ -72,7 +72,7 @@ flowchart LR
   ScheduleReady[("🗓️ Schedule・Ready")]
   実行構成[("🔧 実行構成<br>member roster・provider 設定")]
   成果物[("📦 成果物")]
-  planResult[("📝 plan・result")]
+  planResult[("📝 plan・result<br>exec/plans・results")]
   実行event[("🔖 実行 event・状態")]
   taskWorktree[("🌿 task worktree・Git 履歴")]
 
@@ -122,8 +122,8 @@ flowchart LR
   Edit実行("✍️ P-04-04 Edit 実行<br>（担当: task owner・AI Agent）")
 
   成果物[("📦 成果物")]
-  planResult[("📝 plan・result")]
-  実施根拠記録[("🧾 実施根拠記録")]
+  planResult[("📝 plan・result<br>exec/plans・results")]
+  実施根拠記録[("🧾 実施根拠記録<br>evidence/<br>&lt;task-id&gt;")]
 
   実行入力準備 -->|"edit 入力"| edit開始
   edit開始 -->|"起動条件"| Edit実行
@@ -172,8 +172,8 @@ flowchart LR
   登録簿ライフサイクル先("📒 P-02 登録簿ライフサイクル<br>（領域外）")
 
   成果物[("📦 成果物")]
-  planResult[("📝 plan・result")]
-  実施根拠記録[("🧾 実施根拠記録")]
+  planResult[("📝 plan・result<br>exec/plans・results")]
+  実施根拠記録[("🧾 実施根拠記録<br>evidence/<br>&lt;task-id&gt;")]
 
   実行入力準備 -->|"review 入力"| review開始
   実行入力準備 -->|"finalize 入力"| finalize開始
@@ -227,8 +227,8 @@ flowchart LR
 
   ScheduleReady[("🗓️ Schedule・Ready")]
   成果物[("📦 成果物")]
-  planResult[("📝 plan・result")]
-  実施根拠記録[("🧾 実施根拠記録")]
+  planResult[("📝 plan・result<br>exec/plans・results")]
+  実施根拠記録[("🧾 実施根拠記録<br>evidence/<br>&lt;task-id&gt;")]
   実行event[("🔖 実行 event・状態")]
   taskWorktree[("🌿 task worktree・Git 履歴")]
 

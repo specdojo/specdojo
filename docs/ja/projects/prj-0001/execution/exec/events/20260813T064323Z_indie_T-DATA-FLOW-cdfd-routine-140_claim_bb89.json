@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-08-13T06:43:23Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-cdfd-routine-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "BA",
+    "planned_owner": "BA"
+  }
+}

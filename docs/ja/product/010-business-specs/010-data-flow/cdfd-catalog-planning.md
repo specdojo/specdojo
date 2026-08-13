@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-catalog-planning
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-init
@@ -71,9 +71,9 @@ flowchart LR
   カタログ検証("📚 P-03-01 成果物カタログ検証<br>（担当: PM・BA）")
   Schedule展開("🗓️ P-03-02 Schedule 展開<br>（担当: PM）")
 
-  成果物カタログ[("📚 成果物カタログ<br>dct")]
-  スケジュール戦略[("🧭 スケジュール戦略<br>strategy")]
-  Schedule[("🗓️ Schedule<br>task・milestone・依存")]
+  成果物カタログ[("📚 成果物カタログ<br>dct-*.yaml")]
+  スケジュール戦略[("🧭 スケジュール戦略<br>sch-strategy-<br>&lt;track&gt;.yaml")]
+  Schedule[("🗓️ Schedule<br>sch-track-<br>&lt;track&gt;.yaml")]
 
   計画担当者 -->|"カタログ準備・変更の通知"| カタログ更新
   カタログ更新 -->|"カタログ検証の起動条件"| カタログ検証
@@ -124,13 +124,13 @@ flowchart LR
 
   スケジュール戦略[("🧭 スケジュール戦略<br>strategy")]
   Schedule[("🗓️ Schedule<br>task・milestone・依存")]
-  実行event[("📝 実行 event")]
-  正規化event列[("🧾 正規化 event 列")]
-  実行状態[("🔖 実行状態<br>state")]
-  Ready[("✅ 実行可能タスク<br>Ready")]
-  CPM[("📊 CPM・critical path")]
-  timeline[("📅 timeline")]
-  生成メタデータ[("🧾 生成メタデータ")]
+  実行event[("📝 実行 event<br>events/*.json")]
+  正規化event列[("🧾 正規化 event 列<br>exec.jsonl")]
+  実行状態[("🔖 実行状態<br>state.json")]
+  Ready[("✅ 実行可能タスク<br>ready.*")]
+  CPM[("📊 CPM・critical path<br>cpm.*")]
+  timeline[("📅 timeline<br>timeline*.md")]
+  生成メタデータ[("🧾 生成メタデータ<br>metadata.json")]
 
   計画担当者 -->|"更新要求"| 計画情報更新
   計画情報更新 -->|"実行入力検証の起動条件"| 実行入力検証
