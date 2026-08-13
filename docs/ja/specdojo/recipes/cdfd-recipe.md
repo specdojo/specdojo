@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cdfd-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   sample: specdojo:cdfd-sample
 ---

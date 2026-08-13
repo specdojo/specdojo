@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-init
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-overview
@@ -60,14 +60,14 @@ flowchart LR
 
   subgraph 初期セットアップ["P-01 初期セットアップ（必須）"]
     direction TB
-    config初期化("⚙️ P-01-01 config 初期化<br>（担当: BA・PM）")
-    registerScaffold("📋 P-01-02 register scaffold<br>（担当: BA・PM）")
-    catalogScaffold("🗂️ P-01-03 catalog scaffold<br>（担当: BA・ARC）")
+    config初期化("⚙️ P-01-01<br>config 初期化<br>（担当: BA・PM）")
+    registerScaffold("📋 P-01-02<br>register scaffold<br>（担当: BA・PM）")
+    catalogScaffold("🗂️ P-01-03<br>catalog scaffold<br>（担当: BA・ARC）")
   end
 
-  プロジェクト構成[("📐 プロジェクト定義・構成")]
-  登録簿[("📒 登録簿")]
-  成果物カタログ[("📚 成果物カタログ")]
+  プロジェクト構成[("📐 プロジェクト定義・構成<br>.specdojo/<br>specdojo.config.json")]
+  登録簿[("📒 登録簿<br>pjr-index.md")]
+  成果物カタログ[("📚 成果物カタログ<br>dct-&lt;domain&gt;<br>.yaml")]
 
   subgraph 領域外["対象領域外"]
     計画展開("🧭 P-03 計画展開")
@@ -116,16 +116,16 @@ flowchart LR
   provider利用判断{{"🔑 provider 利用の要否と<br>権限方針が判断された"}}
   exec利用判断{{"📝 exec のレビュー管理の<br>利用要否が判断された"}}
 
-  プロジェクト構成[("📐 プロジェクト定義・構成")]
+  プロジェクト構成[("📐 プロジェクト定義・構成<br>.specdojo/<br>specdojo.config.json")]
 
   subgraph 初期セットアップ["P-01 初期セットアップ（条件付き）"]
     direction TB
-    provider初期化("🔌 P-01-04 provider 設定初期化<br>（担当: PO・PM）")
-    execScaffold("🧪 P-01-05 exec scaffold<br>（担当: PM・BA）")
+    provider初期化("🔌 P-01-04<br>provider 設定初期化<br>（担当: PO・PM）")
+    execScaffold("🧪 P-01-05<br>exec scaffold<br>（担当: PM・BA）")
   end
 
-  provider実行構成[("🧩 provider 実行構成")]
-  運用構成定義[("🔧 運用・構成定義<br>レビュー観点")]
+  provider実行構成[("🧩 provider 実行構成<br>.specdojo/<br>&lt;provider&gt;/")]
+  運用構成定義[("🔧 運用・構成定義<br>pm-review-<br>viewpoints.yaml")]
 
   subgraph 領域外["対象領域外"]
     計画展開("🧭 P-03 計画展開")
