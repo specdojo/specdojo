@@ -70,8 +70,8 @@ flowchart LR
 
   subgraph 並行処理必須["P-06 並行処理（必須）"]
     direction TB
-    projectDevelop作成("🌱 P-06-01 project develop 作成<br>（担当: PM・プロジェクト管理者）")
-    並行実行割当("🧭 P-06-02 並行実行割当<br>（担当: PM・タスク owner）")
+    projectDevelop作成("🌱 P-06-01<br>project develop 作成<br>（担当: PM・プロジェクト管理者）")
+    並行実行割当("🧭 P-06-02<br>並行実行割当<br>（担当: PM・タスク owner）")
   end
 
   main[("🌳 main<br>安定統合点・共通成果物")]
@@ -123,10 +123,10 @@ flowchart LR
 
   subgraph 並行処理分離["P-06 並行処理（分離と作業）"]
     direction TB
-    featureWorktree作成("🌿 P-06-03 feature worktree 作成<br>（担当: 開発者）")
-    execWorktree作成("🤖 P-06-04 exec worktree 作成<br>（担当: SpecDojo CLI・実行担当）")
-    分離作業("✍️ P-06-05 分離作業<br>（担当: 開発者・タスク owner・AI Agent）")
-    分離結果Commit("📌 P-06-06 分離結果 commit<br>（担当: 開発者・SpecDojo CLI）")
+    featureWorktree作成("🌿 P-06-03<br>feature worktree 作成<br>（担当: 開発者）")
+    execWorktree作成("🤖 P-06-04<br>exec worktree 作成<br>（担当: SpecDojo CLI・実行担当）")
+    分離作業("✍️ P-06-05<br>分離作業<br>（担当: 開発者・タスク owner・AI Agent）")
+    分離結果Commit("📌 P-06-06<br>分離結果 commit<br>（担当: 開発者・SpecDojo CLI）")
   end
 
   projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
@@ -136,7 +136,7 @@ flowchart LR
   GitPR履歴[("🧾 Git / PR 履歴")]
 
   subgraph 領域外分離["対象領域外"]
-    タスク実行("🧪 P-04 タスク実行")
+    タスク実行("🧪 P-04<br>タスク実行")
   end
 
   割当確定 -->|"feature 割当"| featureWorktree作成
@@ -184,9 +184,9 @@ flowchart LR
 
   統合可能{{"🚦 統合対象の commit が確定した"}}
 
-  worktreeベース同期("🔄 P-06-07 worktree ベース同期<br>（担当: 開発者・タスク owner）")
-  featureExec統合("🔗 P-06-08 feature・exec 統合<br>（担当: PM・開発者・SpecDojo CLI）")
-  worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
+  worktreeベース同期("🔄 P-06-07<br>worktree ベース同期<br>（担当: 開発者・タスク owner）")
+  featureExec統合("🔗 P-06-08<br>feature・exec 統合<br>（担当: PM・開発者・SpecDojo CLI）")
+  worktreeBranch後片付け("🧹 P-06-11<br>worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
 
   projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
   featureWorktree[("🌿 feature branch / worktree<br>目的別成果物・commit<br>feature/&lt;project-id&gt;<br>/&lt;topic&gt;")]
@@ -239,9 +239,9 @@ flowchart LR
   main更新{{"🚦 main の共有変更が確定した"}}
   project受入{{"🚦 project の変更が受入可能になった"}}
 
-  main共有変更同期("⬇️ P-06-09 main 共有変更同期<br>（担当: PM・プロジェクト管理者）")
-  projectDevelop昇格("⬆️ P-06-10 project develop 昇格<br>（担当: プロジェクト管理者・承認者）")
-  worktreeBranch後片付け("🧹 P-06-11 worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
+  main共有変更同期("⬇️ P-06-09<br>main 共有変更同期<br>（担当: PM・プロジェクト管理者）")
+  projectDevelop昇格("⬆️ P-06-10<br>project develop 昇格<br>（担当: プロジェクト管理者・承認者）")
+  worktreeBranch後片付け("🧹 P-06-11<br>worktree・branch 後片付け<br>（担当: 開発者・SpecDojo CLI・PM）")
 
   main[("🌳 main<br>安定統合点・共通成果物")]
   projectDevelop[("📦 project develop<br>project 成果物・実行記録・統合 commit<br>project/&lt;project-id&gt;<br>/develop")]
@@ -249,8 +249,8 @@ flowchart LR
   GitPR履歴[("🧾 Git / PR 履歴")]
 
   subgraph 領域外統合後片付け["対象領域外"]
-    構成変更("🔧 P-07 構成変更")
-    派生生成("🔁 P-08 派生生成")
+    構成変更("🔧 P-07<br>構成変更")
+    派生生成("🔁 P-08<br>派生生成")
   end
 
   作業担当 -->|"未commit変更・保持理由の確認"| worktreeBranch後片付け

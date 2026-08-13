@@ -82,14 +82,14 @@ flowchart LR
   外部起動者["⏰ 外部スケジューラ・運用担当"]
 
   定期確認時点{{"⚡ 定期確認時点が到来した"}}
-  即時実行要求{{"⚡ 特定 routine の即時実行が要求された"}}
+  即時実行要求{{"⚡ 特定 routine の<br>即時実行が要求された"}}
   対象なし{{"⚡ due の実行機会が存在しない"}}
-  action起動{{"⚡ 選択した action の起動条件が成立した"}}
-  action結果返却{{"⚡ 選択した action の結果が返った"}}
+  action起動{{"⚡ 選択した action の<br>起動条件が成立した"}}
+  action結果返却{{"⚡ 選択した action <br>の結果が返った"}}
 
-  定期実行対象選択("🔎 定期実行対象選択<br>P-05-01")
-  実行試行記録("📝 実行試行記録<br>P-05-02")
-  routine結果反映("📌 routine 結果反映<br>P-05-08")
+  定期実行対象選択("🔎 P-05-01<br>定期実行対象選択")
+  実行試行記録("📝 P-05-02<br>実行試行記録")
+  routine結果反映("📌 P-05-08<br>routine 結果反映")
 
   定期処理定義[("📒 定期処理定義<br>rtn-*.yaml")]
   routine実行状態[("🗃️ routine 実行状態<br>last_run・last_result<br>・last_scheduled_for")]
@@ -127,16 +127,16 @@ flowchart LR
   classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
-  登録簿ライフサイクル先["📒 P-02 登録簿ライフサイクル"]
-  計画展開先["🧩 P-03 計画展開"]
-  タスク実行先["⚙️ P-04 タスク実行"]
-  派生生成先["📚 P-08 派生生成"]
+  登録簿ライフサイクル先["📒 P-02<br>登録簿ライフサイクル"]
+  計画展開先["🧩 P-03<br>計画展開"]
+  タスク実行先["⚙️ P-04<br>タスク実行"]
+  派生生成先["📚 P-08<br>派生生成"]
 
-  実行試行記録("📝 実行試行記録<br>P-05-02")
-  登録項目実行委譲("📋 登録項目実行委譲<br>P-05-03")
-  Schedule実行委譲("▶️ Schedule 実行委譲<br>P-05-04")
-  execCycle順次制御("🔁 exec-cycle 順次制御<br>P-05-05")
-  routine結果反映("📌 routine 結果反映<br>P-05-08")
+  実行試行記録("📝 P-05-02<br>実行試行記録")
+  登録項目実行委譲("📋 P-05-03<br>登録項目実行委譲")
+  Schedule実行委譲("▶️ P-05-04<br>Schedule 実行委譲")
+  execCycle順次制御("🔁 P-05-05<br>exec-cycle 順次制御")
+  routine結果反映("📌 P-05-08<br>routine 結果反映")
 
   登録項目個票[("📒 登録項目個票<br>Frontmatter・本文（正本）")]
   Schedule実行記録[("🗓️ Schedule・Ready・実行 event")]
@@ -184,12 +184,12 @@ flowchart LR
   classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
-  タスク実行先["⚙️ P-04 タスク実行"]
+  タスク実行先["⚙️ P-04<br>タスク実行"]
 
-  実行試行記録("📝 実行試行記録<br>P-05-02")
-  JobRun生成("🧱 Job Run 生成<br>P-05-06")
-  JobRun結果反映("✅ Job Run 結果反映<br>P-05-07")
-  routine結果反映("📌 routine 結果反映<br>P-05-08")
+  実行試行記録("📝 P-05-02<br>実行試行記録")
+  JobRun生成("🧱 P-05-06<br>Job Run 生成")
+  JobRun結果反映("✅ P-05-07<br>Job Run 結果反映")
+  routine結果反映("📌 P-05-08<br>routine 結果反映")
 
   JobDefinition[("📘 Job Definition")]
   JobRun履歴[("🗃️ Job Run 履歴・Job 実行状態")]
