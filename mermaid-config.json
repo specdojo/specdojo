@@ -8,6 +8,7 @@
   },
   "flowchart": {
     "useMaxWidth": false,
-    "htmlLabels": false
+    "htmlLabels": false,
+    "wrappingWidth": 220
   }
 }
