@@ -382,13 +382,19 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       const owner = getOwner(d.local_id, strategy.owner_rules) ?? "PM";
       const firstDeps = new Set<string>();
       for (const dep of d.depends_on) {
-        const fin = finalizeTaskId.get(dep);
-        if (fin) firstDeps.add(fin);
+        // Use the same earliest-shared-gate-boundary resolution as normal tasks
+        // (resolveDependencyTaskId), not the dependency's absolute final task.
+        // Otherwise a completed deliverable that depends on a still-in-progress
+        // deliverable can point at a task gated behind a track-wide phase gate
+        // (e.g. review-pass), which in turn depends on deliverables that now
+        // depend on this completed deliverable's 000 task — a cycle.
+        const depId = resolveDependencyTaskId(d.local_id, dep);
+        if (depId) firstDeps.add(depId);
       }
       for (const cd of crossDeps) {
         if (cd.dependent !== d.local_id) continue;
-        const fin = finalizeTaskId.get(cd.requires);
-        if (fin) firstDeps.add(fin);
+        const depId = resolveDependencyTaskId(d.local_id, cd.requires);
+        if (depId) firstDeps.add(depId);
       }
       const taskId = buildTaskId(track, d.local_id, "000");
       taskMap.set(taskId, {
