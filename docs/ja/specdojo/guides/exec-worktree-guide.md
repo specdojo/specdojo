@@ -160,7 +160,7 @@ specdojo exec worktree agent \
 specdojo exec worktree agent \
   --project <project-id> \
   --task <task-id> \
-  --by opencode-edit-agent
+  --by opencode-executor
 ```
 
 `agent` は retry、fallback、commit、merge、event 更新を行いません。終了コードは agent command の終了コードをそのまま返します。

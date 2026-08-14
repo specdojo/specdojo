@@ -57,9 +57,8 @@ repo-root/
 ├─ .opencode/
 │  ├─ AGENTS.md                        # instructions で明示して使うOpenCode固有ルール
 │  └─ agents/
-│     ├─ opencode-edit-agent.md        # 通常 edit primary agent
-│     ├─ opencode-review-agent.md      # 通常 review primary agent
-│     ├─ opencode-executor.md          # pipeline executor primary agent
+│     ├─ opencode-executor.md          # pipeline executor primary agent（edit）
+│     ├─ opencode-review-executor.md   # pipeline executor primary agent（review）
 │     └─ opencode-reporter.md          # pipeline reporter primary agent
 ```
 
@@ -91,11 +90,11 @@ SpecDojo の project management 配下と worktree の共通構成は親設計�
 
 `opencode.json` には3モデルを定義し、その中から選択する。複数モデルの同時ロードによるメモリ圧迫を避けるため、edit / review いずれの agent も `gemma4:31b-mlx-work-64k` を使用し、実行時に同時ロードするモデルを1つに保つ。残る2モデルは選択肢として定義するが、agent には既定で割り当てない。
 
-| モデルID                   | 用途                             | agent 例                                        | 注意点                                       |
-| -------------------------- | -------------------------------- | ----------------------------------------------- | -------------------------------------------- |
-| `gemma4:31b-mlx-work-64k`  | 文書作成・編集・レビューの全般   | `opencode-edit-agent` / `opencode-review-agent` | edit / review 共通の既定モデル               |
-| `qwen3.6:27b-mlx-work-64k` | 汎用作業・コード寄りタスクの代替 | -                                               | 選択肢。agent へ割り当てた場合のみロードする |
-| `gemma4:e4b-mlx`           | 軽作業（短い要約・分類・整形）   | -                                               | 選択肢。軽量だが用途を限定する               |
+| モデルID                   | 用途                             | agent 例                                                               | 注意点                                       |
+| -------------------------- | -------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------- |
+| `gemma4:31b-mlx-work-64k`  | 文書作成・編集・レビューの全般   | `opencode-executor` / `opencode-review-executor` / `opencode-reporter` | edit / review / reporter 共通の既定モデル    |
+| `qwen3.6:27b-mlx-work-64k` | 汎用作業・コード寄りタスクの代替 | -                                                                      | 選択肢。agent へ割り当てた場合のみロードする |
+| `gemma4:e4b-mlx`           | 軽作業（短い要約・分類・整形）   | -                                                                      | 選択肢。軽量だが用途を限定する               |
 
 ### 5.4. 追加設定方針
 
@@ -138,53 +137,48 @@ OpenCode の project agent は `.opencode/agents/<name>.md` に定義する。�
 
 `tools` は非推奨のため、新規設定では `permission` を使用する。
 
-### 7.2. `opencode-edit-agent.md`
+member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。
 
-通常 edit agent は exec plan に従って成果物と result を更新する。モデル、permission、最小実行契約は agent 定義ファイル、タスク固有の処理手順は exec plan を正本とする。
+### 7.2. `opencode-executor.md`
 
-実際のファイル: `.opencode/agents/opencode-edit-agent.md`
+pipeline executor（edit）は executor plan に従って成果物の編集と検証だけを行い、result は更新しない。`docs/ja/projects/**/execution/exec/results/**` は明示的に deny する。変更ファイルと検証結果は runner が evidence として収集できるよう、ツール出力と最終応答へ残す。
+
+実際のファイル: `.opencode/agents/opencode-executor.md`
 
 主な安全境界は次のとおり。
 
 - `.env` と `secrets` の読み取りを禁止する。
-- Edit ツールは文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` だけを許可する。
+- Edit ツールは文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` だけを許可し、`docs/ja/projects/**/execution/exec/results/**` は deny する。
 - `git push`、`git reset --hard`、`git clean`、`rm` を禁止する。
 - Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - agent 自身による claim、complete、reopen、block を禁止する。
 
-### 7.3. `opencode-review-agent.md`
+### 7.3. `opencode-review-executor.md`
 
-通常 review agent は review plan に従って成果物を検証し、成果物を変更せず result に所見と判定を記録する。モデル、permission、最小実行契約は agent 定義ファイル、タスク固有の処理手順は review plan を正本とする。
+pipeline executor（review）は review plan の各観点に従って成果物を多観点でレビューするが、成果物・result のいずれにも書き込まない（`edit` を全面 deny する）。レビュー結果はツール出力と最終応答へ残し、reporter が evidence として引き継ぐ。
 
-実際のファイル: `.opencode/agents/opencode-review-agent.md`
+実際のファイル: `.opencode/agents/opencode-review-executor.md`
 
 主な安全境界は次のとおり。
 
-- 成果物の編集を禁止し、`docs/ja/projects/**/execution/exec/results/**` だけを編集可能とする。
+- `edit` を全面禁止する（成果物・result のいずれも変更しない）。
 - bash は Git の参照系コマンド、Markdown lint、`specdojo exec validate` だけを許可する。
 - `.env` と `secrets` の読み取りを禁止する。Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - 全基準を確認できない場合は pass または approve と判定しない。
 
-### 7.4. `opencode-executor.md`
+### 7.4. `opencode-reporter.md`
 
-pipeline executor は executor plan に従って成果物の編集と検証だけを行い、result は更新しない。edit permission は通常 edit agent と同じ成果物領域を許可するが、`docs/ja/projects/**/execution/exec/results/**` は明示的に deny する。変更ファイルと検証結果は runner が evidence として収集できるよう、ツール出力と最終応答へ残す。
-
-実際のファイル: `.opencode/agents/opencode-executor.md`
-
-### 7.5. `opencode-reporter.md`
-
-pipeline reporter は標準入力で渡された plan、executor evidence、出力スキーマだけから構造化結果を返す。read / glob / grep / list / bash / edit / Web / subagent をすべて deny とし、成果物や result を直接変更できないようにする。応答には指定スキーマ外の説明やコードフェンスを加えない。
+pipeline reporter は標準入力で渡された plan、executor evidence、出力スキーマだけから構造化結果を返す。read / glob / grep / list / bash / edit / Web / subagent をすべて deny とし、成果物や result を直接変更できないようにする。応答には指定スキーマ外の説明やコードフェンスを加えない。edit/review どちらの executor の後段にも使う。
 
 実際のファイル: `.opencode/agents/opencode-reporter.md`
 
-### 7.6. エージェント一覧
+### 7.5. エージェント一覧
 
-| ファイル名                 | `--agent` 指定名        | mode      | モデル                    | 用途              |
-| -------------------------- | ----------------------- | --------- | ------------------------- | ----------------- |
-| `opencode-edit-agent.md`   | `opencode-edit-agent`   | `primary` | `gemma4:31b-mlx-work-64k` | 通常 edit         |
-| `opencode-review-agent.md` | `opencode-review-agent` | `primary` | `gemma4:31b-mlx-work-64k` | 通常 review       |
-| `opencode-executor.md`     | `opencode-executor`     | `primary` | `gemma4:31b-mlx-work-64k` | pipeline executor |
-| `opencode-reporter.md`     | `opencode-reporter`     | `primary` | `gemma4:31b-mlx-work-64k` | pipeline reporter |
+| ファイル名                    | `--agent` 指定名           | mode      | モデル                    | stage_role | 用途                        |
+| ----------------------------- | -------------------------- | --------- | ------------------------- | ---------- | --------------------------- |
+| `opencode-executor.md`        | `opencode-executor`        | `primary` | `gemma4:31b-mlx-work-64k` | executor   | pipeline executor（edit）   |
+| `opencode-review-executor.md` | `opencode-review-executor` | `primary` | `gemma4:31b-mlx-work-64k` | executor   | pipeline executor（review） |
+| `opencode-reporter.md`        | `opencode-reporter`        | `primary` | `gemma4:31b-mlx-work-64k` | reporter   | pipeline reporter           |
 
 ## 8. エージェント割り当て設定
 
@@ -202,24 +196,6 @@ providers:
 
 ```yaml
 members:
-  - nickname: opencode-edit-agent
-    type: agent
-    provider: opencode
-    mode: edit
-    proficiency: normal
-    priority: 1
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-
-  - nickname: opencode-review-agent
-    type: agent
-    provider: opencode
-    mode: review
-    proficiency: normal
-    priority: 1
-    capabilities: [web_search]
-    scheduler_strategy: fifo
-
   - nickname: opencode-executor
     type: agent
     provider: opencode
@@ -230,10 +206,19 @@ members:
     capabilities: [web_search]
     scheduler_strategy: critical-first
 
+  - nickname: opencode-review-executor
+    type: agent
+    provider: opencode
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    priority: 1
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+
   - nickname: opencode-reporter
     type: agent
     provider: opencode
-    mode: edit
     stage_role: reporter
     proficiency: normal
     priority: 1
@@ -241,7 +226,7 @@ members:
     scheduler_strategy: fifo
 ```
 
-OpenCode edit / review / executor は `websearch` と `webfetch` を利用できるため、`capabilities: [web_search]` とする。reporter は渡された evidence だけを扱うため capability を持たせない。normal taskでは、Web検索の要否にかかわらず `priority: 1` によりOpenCodeを最初の候補とする。すべてのOpenCode member は既定モデル `gemma4:31b-mlx-work-64k` を使用する。
+OpenCode の executor（edit / review）は `websearch` と `webfetch` を利用できるため、`capabilities: [web_search]` とする。reporter は渡された evidence だけを扱うため capability を持たせない。normal taskでは、Web検索の要否にかかわらず `priority: 1` によりOpenCodeを最初の候補とする。すべてのOpenCode member は既定モデル `gemma4:31b-mlx-work-64k` を使用する。
 
 ### 8.2. `sch-strategy-<track>.yaml`
 
@@ -291,7 +276,7 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ### 8.4. 実行コマンド
 
-共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は `specdojo exec run --by opencode-edit-agent` を使用する。
+共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は `specdojo exec run --by opencode-executor` を使用する。
 
 ## 9. 非対話実行とセッション
 
@@ -301,7 +286,7 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ```bash
 opencode run \
-  --agent opencode-edit-agent \
+  --agent opencode-executor \
   --format json \
   "SpecDojo plan を実行してください"
 ```
@@ -320,7 +305,7 @@ opencode run \
   --attach http://127.0.0.1:4096 \
   --username opencode \
   --password "${OPENCODE_SERVER_PASSWORD}" \
-  --agent opencode-edit-agent \
+  --agent opencode-executor \
   "SpecDojo plan を実行してください"
 ```
 

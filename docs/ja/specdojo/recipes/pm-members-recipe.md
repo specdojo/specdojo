@@ -107,7 +107,7 @@ Project Member Roster Writing Recipe
 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
 2. ロール定義から、`members[].roles` に使える Role code を一覧化する。
 3. 実行ログ、Schedule、既存 event から、使われている nickname を確認する。
-4. 各 member を「人間の最終判断主体」「Role 固定 agent」「汎用 agent」「review agent」に分類する。
+4. 各 member を「人間の最終判断主体」「Role 固定 agent」「汎用 agent（executor）」「汎用 agent（reporter）」に分類する。
 5. agent ごとに、mode、provider、proficiency、priority、capabilities の不足と、provider に対応する command template の有無を確認する。
 6. 公開文書に残してよい表示名、連絡先、コマンドだけになっているか確認する。
 7. PO 以外に最終承認、公開可否、説明責任が移っていないことを確認する。
@@ -116,7 +116,7 @@ Project Member Roster Writing Recipe
 
 | 観点           | 良い例                                           | 悪い例                                              |
 | -------------- | ------------------------------------------------ | --------------------------------------------------- |
-| nickname       | `codex-edit-agent`                               | `Codex Expert Edit Agent`                           |
+| nickname       | `codex-executor`                                 | `Codex Expert Executor`                             |
 | roles          | `roles: [PO, PM, OPS]`                           | `owner: po`                                         |
 | 汎用 agent     | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする            |
 | agent の責務   | 草案作成と整合確認を支援し、承認しない           | agent が公開可否を判断する                          |

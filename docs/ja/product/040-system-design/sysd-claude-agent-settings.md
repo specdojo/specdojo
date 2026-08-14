@@ -52,10 +52,11 @@ repo-root/
 │  ├─ rules/
 │  │  └─ *.md                         # パス別ルール（既存）
 │  └─ agents/
-│     ├─ claude-edit-agent.md         # sonnet 標準 edit エージェント定義
-│     ├─ claude-review-agent.md       # sonnet 標準 review エージェント定義
-│     ├─ claude-expert-edit-agent.md  # opus 高性能 edit エージェント定義
-│     └─ claude-expert-review-agent.md # opus 高性能 review エージェント定義
+│     ├─ claude-executor.md               # sonnet pipeline executor（edit）定義
+│     ├─ claude-expert-executor.md        # opus pipeline executor（edit）定義
+│     ├─ claude-review-executor.md        # sonnet pipeline executor（review）定義
+│     ├─ claude-expert-review-executor.md # opus pipeline executor（review）定義
+│     └─ claude-reporter.md               # sonnet pipeline reporter定義
 ```
 
 SpecDojo の project management 配下と worktree の共通構成は親設計を参照する。
@@ -125,38 +126,35 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`。自動実行では `bypassPermissions` を使用（`settings.json` の deny リストが安全境界） |
 | `maxTurns`       | -    | エージェントの最大ターン数                                                                                                                             |
 
-### 8.2. `claude-edit-agent.md`
+member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化 result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。edit/review の違いは executor の `tools`（Edit/Write の有無）と起動時の `--settings` プロファイルで表す。
 
-sonnet モデルを使用する標準 edit エージェント。plan を読んでタスクを実装し、result ファイルに done_criteria の確認結果を記入する。
+### 8.2. `claude-executor.md` / `claude-expert-executor.md`
 
-実際のファイル: `.claude/agents/claude-edit-agent.md`
+sonnet（`claude-executor`）または opus（`claude-expert-executor`）モデルを使用する pipeline executor（edit）。executor plan を読んで対象成果物の編集と検証だけを行い、result は更新しない。`.specdojo/claude/settings.edit.json`（`docs/**` / `src/**` / `tests/**` への Edit を許可）で起動する。
 
-### 8.3. `claude-review-agent.md`
+実際のファイル: `.claude/agents/claude-executor.md`、`.claude/agents/claude-expert-executor.md`
 
-sonnet モデルを使用する標準 review エージェント。review plan の各観点に従って成果物をレビューし、result ファイルに記録する。Edit/Write ツールは持たない。
+### 8.3. `claude-review-executor.md` / `claude-expert-review-executor.md`
 
-実際のファイル: `.claude/agents/claude-review-agent.md`
+sonnet（`claude-review-executor`）または opus（`claude-expert-review-executor`）モデルを使用する pipeline executor（review）。review plan の各観点に従って成果物をレビューするが、成果物・result のいずれにも書き込まない（`tools` に Edit/Write を含まない）。レビュー結果は evidence として reporter へ引き継ぐ。
 
-### 8.4. `claude-expert-edit-agent.md`
+実際のファイル: `.claude/agents/claude-review-executor.md`、`.claude/agents/claude-expert-review-executor.md`
 
-opus モデルを使用する高性能 edit エージェント。複雑な分析・アーキテクチャ判断・詳細設計が必要なタスクを担当する。
+### 8.4. `claude-reporter.md`
 
-実際のファイル: `.claude/agents/claude-expert-edit-agent.md`
+sonnet モデルを使用する pipeline reporter。渡された evidence だけから指定スキーマの構造化結果を返す。`tools: Read, Glob, Grep` のみでファイルへは一切書き込まない（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。
 
-### 8.5. `claude-expert-review-agent.md`
+実際のファイル: `.claude/agents/claude-reporter.md`
 
-opus モデルを使用する高性能 review エージェント。多観点の深い分析が必要なレビューを担当する。Edit/Write ツールは持たない。
+### 8.5. エージェント一覧
 
-実際のファイル: `.claude/agents/claude-expert-review-agent.md`
-
-### 8.6. エージェント一覧
-
-| ファイル名                      | `name`                       | モデル   | tools（主要）                                  | 用途                                       |
-| ------------------------------- | ---------------------------- | -------- | ---------------------------------------------- | ------------------------------------------ |
-| `claude-edit-agent.md`          | `claude-edit-agent`          | `sonnet` | Read, Edit, Write, Bash, WebSearch/Fetch       | 標準的な文書作成・実装                     |
-| `claude-review-agent.md`        | `claude-review-agent`        | `sonnet` | Read, Bash, WebSearch/Fetch（Edit/Write なし） | done_criteria の多観点レビュー             |
-| `claude-expert-edit-agent.md`   | `claude-expert-edit-agent`   | `opus`   | Read, Edit, Write, Bash, WebSearch/Fetch       | 複雑な設計判断・詳細分析が必要な作成タスク |
-| `claude-expert-review-agent.md` | `claude-expert-review-agent` | `opus`   | Read, Bash, WebSearch/Fetch（Edit/Write なし） | 高品質な多観点レビュー                     |
+| ファイル名                         | `name`                          | モデル   | tools（主要）                                  | stage_role | 用途                                         |
+| ---------------------------------- | ------------------------------- | -------- | ---------------------------------------------- | ---------- | -------------------------------------------- |
+| `claude-executor.md`               | `claude-executor`               | `sonnet` | Read, Edit, Write, Bash, WebSearch/Fetch       | executor   | 標準的な文書作成・実装（edit）               |
+| `claude-expert-executor.md`        | `claude-expert-executor`        | `opus`   | Read, Edit, Write, Bash, WebSearch/Fetch       | executor   | 複雑な設計判断・詳細分析が必要な作成（edit） |
+| `claude-review-executor.md`        | `claude-review-executor`        | `sonnet` | Read, Bash, WebSearch/Fetch（Edit/Write なし） | executor   | done_criteria の多観点レビュー（review）     |
+| `claude-expert-review-executor.md` | `claude-expert-review-executor` | `opus`   | Read, Bash, WebSearch/Fetch（Edit/Write なし） | executor   | 高品質な多観点レビュー（review）             |
+| `claude-reporter.md`               | `claude-reporter`               | `sonnet` | Read, Glob, Grep（Edit/Write なし）            | reporter   | evidence からの構造化 result 生成            |
 
 ## 9. エージェント割り当て設定
 
@@ -173,59 +171,75 @@ providers:
 ```
 
 - `{nickname}` は member の nickname に展開され、`.claude/agents/<nickname>.md` の agent 定義を選択する。member の nickname と agent 定義のファイル名を一致させる。
-- `{mode}` は member の `mode` に展開され、edit / review 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。
+- `{mode}` は member の `mode` に展開され、edit / review 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。executor（edit）は `mode: edit`、executor（review）と reporter は `mode: review` を持つ（reporter 自身は `tools` に Edit/Write を持たないため、`{mode}` の解決だけに使う）。
 - edit 用設定は文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` への Edit / Write を許可する。review 用設定は result 配下だけを許可する。
 - モデルは agent 定義ファイルの `model` フィールドで指定するため、テンプレートにモデル名を含めない（normal は `sonnet`、expert は `opus`）。
 
 `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md` に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 
-`pm-members.yaml` の member は選択属性だけを持つ。
+`pm-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
 
 ```yaml
 members:
-  - nickname: claude-edit-agent
-    display_name: Claude Edit Agent
+  - nickname: claude-executor
+    display_name: Claude Executor
     type: agent
     provider: claude
     mode: edit
+    stage_role: executor
     capabilities: [web_search]
     proficiency: normal
     priority: 3
     scheduler_strategy: critical-first
-    note: Sonnet モデルを使用する標準エージェント。外部 Web 情報参照が必要なタスクを担当する。
+    note: Sonnet モデルを使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。
 
-  - nickname: claude-review-agent
-    display_name: Claude Review Agent
+  - nickname: claude-review-executor
+    display_name: Claude Review Executor
     type: agent
     provider: claude
     mode: review
+    stage_role: executor
     capabilities: [web_search]
     proficiency: normal
     priority: 3
     scheduler_strategy: fifo
-    note: Sonnet モデルを使用するレビューエージェント。done_criteria を多観点で検証する。
+    note: Sonnet モデルを使用する pipeline executor（review）。done_criteria を多観点で検証するが、成果物・result のいずれにも書き込まない。
 
-  - nickname: claude-expert-edit-agent
-    display_name: Claude Expert Edit Agent
+  - nickname: claude-expert-executor
+    display_name: Claude Expert Executor
     type: agent
     provider: claude
     mode: edit
+    stage_role: executor
     capabilities: [web_search]
     proficiency: expert
     priority: 2
     scheduler_strategy: critical-first
-    note: Opus モデルを使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
+    note: Opus モデルを使用する高性能 pipeline executor（edit）。複雑な分析・アーキテクチャ判断が必要なタスクを担当する。
 
-  - nickname: claude-expert-review-agent
-    display_name: Claude Expert Review Agent
+  - nickname: claude-expert-review-executor
+    display_name: Claude Expert Review Executor
     type: agent
     provider: claude
     mode: review
+    stage_role: executor
     capabilities: [web_search]
     proficiency: expert
     priority: 2
     scheduler_strategy: fifo
-    note: Opus モデルを使用する高性能レビューエージェント。精度が重要なレビュータスクを担当する。
+    note: Opus モデルを使用する高性能 pipeline executor（review）。精度が重要なレビュータスクを担当するが、成果物・result のいずれにも書き込まない。
+
+  - nickname: claude-reporter
+    display_name: Claude Reporter
+    type: agent
+    provider: claude
+    mode: review
+    stage_role: reporter
+    capabilities: []
+    proficiency: normal
+    priority: 3
+    scheduler_strategy: fifo
+    note: Sonnet モデルを使用する pipeline reporter。evidence から構造化 result を返すだけで、ファイルへは一切書き込まない。edit/review どちらの executor の後段にも使う。
 ```
 
 ### 9.2. `sch-strategy-<track>.yaml`
@@ -251,7 +265,7 @@ providers:
 
 実際のファイル: [exec-defaults.yaml](../../../../.specdojo/exec-defaults.yaml)
 
-`try_next` でフォールバックメンバー（`claude-expert-edit-agent` など）に切り替えることで継続実行できる。
+`try_next` でフォールバックメンバー（`claude-expert-executor` など）に切り替えることで継続実行できる。
 
 Claude Code の limit は次の種類があり、reset horizon が異なるため正規化と回復戦略を変える。共通モデルへの写像は親設計の limit 表に従う。
 
@@ -276,7 +290,7 @@ Claude Code の limit は次の種類があり、reset horizon が異なるた�
 
 ```bash
 claude -p \
-  --agent claude-edit-agent \
+  --agent claude-executor \
   --permission-mode auto \
   --max-budget-usd 1.00 \
   "SpecDojo task を1件実行してください"
@@ -286,4 +300,4 @@ claude -p \
 
 ## 11. worktree 分離セットアップ
 
-worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。`claude-edit-agent` と `claude-expert-edit-agent` の並列実行では worktree を使用し、成果物を変更しない review agent では不要とする。
+worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。`claude-executor` と `claude-expert-executor`（stage_role: executor、mode: edit）の並列実行では worktree を使用し、成果物を変更しない review executor / reporter では不要とする。

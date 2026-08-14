@@ -417,10 +417,11 @@ providers:
 
 **opencode** は agent 定義（`.opencode/agents/*.md`）の frontmatter `permission` を正とします。claude の settings と同等以上の粒度（パス単位の `edit`、コマンドパターン単位の `bash`）を持つため、両 agent とも許可リスト方式で定義します。
 
-| agent                 | `edit`                                                   | `bash`                                                               |
-| --------------------- | -------------------------------------------------------- | -------------------------------------------------------------------- |
-| opencode-edit-agent   | `docs/**`、`src/**`、`tests/**` を許可                   | git 読み取り系・`npm run` 系・`specdojo` などの許可リスト。他は deny |
-| opencode-review-agent | `docs/ja/projects/**/execution/exec/results/**` のみ許可 | 読み取り系・検証系の許可リスト。他は deny                            |
+| agent                    | `edit`                                           | `bash`                                                               |
+| ------------------------ | ------------------------------------------------ | -------------------------------------------------------------------- |
+| opencode-executor        | `docs/**`、`src/**`、`tests/**` を許可           | git 読み取り系・`npm run` 系・`specdojo` などの許可リスト。他は deny |
+| opencode-review-executor | 全面 deny（成果物・result のいずれも変更しない） | 読み取り系・検証系の許可リスト。他は deny                            |
+| opencode-reporter        | 全面 deny（result への反映は runner が行う）     | 全面 deny                                                            |
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。ローカル Ollama 前提のため外部送信面はもともと小さいですが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持します。
 

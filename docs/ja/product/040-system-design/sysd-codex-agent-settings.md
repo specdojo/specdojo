@@ -50,11 +50,10 @@ repo-root/
 ├─ .codex/
 │  ├─ config.toml                     # プロジェクト共通設定
 │  └─ agents/
-│     ├─ codex-edit-agent.toml        # 必要時に親 Codex が spawn する edit subagent
-│     ├─ codex-review-agent.toml      # 必要時に親 Codex が spawn する review subagent
-│     ├─ codex-expert-edit-agent.toml # 複雑な作業用の expert edit subagent
-│     ├─ codex-expert-executor.toml   # pipeline の expert executor subagent
-│     └─ codex-expert-review-agent.toml # 複雑なレビュー用の expert review subagent
+│     ├─ codex-executor.toml                # 必要時に親 Codex が spawn する pipeline executor（edit）subagent
+│     ├─ codex-expert-executor.toml         # 複雑な作業用の expert pipeline executor（edit）subagent
+│     ├─ codex-review-executor.toml         # 必要時に親 Codex が spawn する pipeline executor（review）subagent
+│     └─ codex-expert-review-executor.toml  # 複雑なレビュー用の expert pipeline executor（review）subagent
 ```
 
 個人設定・認証情報・CLI profile は `~/.codex/` に置き、リポジトリへコミットしない。
@@ -131,51 +130,50 @@ SpecDojo のタスク実行手順（plan の読み方・result の記入方法�
 
 ## 8. Codex worker と custom agent の設計
 
+worker は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`mode: edit` は成果物への書き込みを許可し、`mode: review` は成果物・result のいずれへの書き込みも `developer_instructions` と plan の指示で禁止する（Codex の sandbox はパス単位の書き込み制御を持たないため、この境界はプロンプトと specdojo CLI の commit 許可リストで作る）。`stage_role: reporter` は executor の evidence から構造化 result を作るだけで、ファイルへは一切書き込まない。
+
 ### 8.1. SpecDojo worker
 
 `specdojo exec run` が直接起動する Codex プロセスを worker と呼ぶ。worker のモデル・reasoning effort・sandbox は `.specdojo/exec-defaults.yaml` の `providers.codex` の command template で指定し、worker は渡された plan を1件だけ実行する。
 
-| nickname                    | mode   | モデル例       | reasoning effort | sandbox           | 用途                               |
-| --------------------------- | ------ | -------------- | ---------------- | ----------------- | ---------------------------------- |
-| `codex-edit-agent`          | edit   | `gpt-5.4-mini` | `medium`         | `workspace-write` | 標準的な文書作成・実装             |
-| `codex-review-agent`        | review | `gpt-5.4-mini` | `medium`         | `workspace-write` | done_criteria の多観点レビュー     |
-| `codex-expert-edit-agent`   | edit   | `gpt-5.5`      | `high`           | `workspace-write` | 複雑な設計判断・詳細分析を伴う実装 |
-| `codex-expert-review-agent` | review | `gpt-5.5`      | `high`           | `workspace-write` | 高品質な多観点レビュー             |
-| `codex-expert-executor`     | edit   | `gpt-5.5`      | `high`           | `workspace-write` | pipeline の成果物編集と検証        |
+| nickname                       | mode   | stage_role | モデル例       | reasoning effort | sandbox           | 用途                                                                |
+| ------------------------------ | ------ | ---------- | -------------- | ---------------- | ----------------- | ------------------------------------------------------------------- |
+| `codex-executor`               | edit   | executor   | `gpt-5.4-mini` | `medium`         | `workspace-write` | 標準的な文書作成・実装（result は更新しない）                       |
+| `codex-expert-executor`        | edit   | executor   | `gpt-5.5`      | `high`           | `workspace-write` | 複雑な設計判断・詳細分析を伴う実装                                  |
+| `codex-review-executor`        | review | executor   | `gpt-5.4-mini` | `medium`         | `workspace-write` | done_criteria の多観点レビュー（成果物・result いずれも変更しない） |
+| `codex-expert-review-executor` | review | executor   | `gpt-5.5`      | `high`           | `workspace-write` | 高品質な多観点レビュー（成果物・result いずれも変更しない）         |
+| `codex-reporter`               | -      | reporter   | `gpt-5.4-mini` | `medium`         | `workspace-write` | evidence からの構造化 result 生成                                   |
 
 ### 8.2. `.codex/agents/*.toml`
 
-custom agent は親 Codex セッションが明示的に spawn する subagent である。SpecDojo が複数 worker を起動する仕組みとは別であり、1つの複雑な plan 内で探索・レビューなどを委譲する場合だけ使用する。
+custom agent は親 Codex セッションが明示的に spawn する subagent である。SpecDojo が複数 worker を起動する仕組みとは別であり、1つの複雑な plan 内で探索・レビューなどを委譲する場合だけ使用する。worker の nickname と名称を揃えているが、`codex-reporter` はファイルへ一切書き込まない役割のため subagent 定義を持たない。
 
 必須フィールドは `name`・`description`・`developer_instructions`。モデル、reasoning effort、sandbox などは親セッションから継承するか、agent ファイルで上書きする。本文には最小限の実行契約だけを置き、タスク固有の手順は edit / review plan を正本とする。
 
-`codex-edit-agent` は成果物と result を更新するため `workspace-write` を使用する。
+`codex-executor` は成果物を編集・検証するため `workspace-write` を使用するが、result は更新しない（reporter / runner の責務として扱う）。
 
-実際のファイル: `.codex/agents/codex-edit-agent.toml`
+実際のファイル: `.codex/agents/codex-executor.toml`
 
-`codex-review-agent` は成果物を変更せず result だけを更新する。Codex の sandbox はパス単位の書き込み制御を提供しないため `workspace-write` を使用し、成果物変更禁止を `developer_instructions` と plan で制約する。
+`codex-expert-executor` は複雑な分析・設計判断を伴う executor plan を担当し、`gpt-5.5` と reasoning effort `high` を使用する。result は更新しない。
 
-実際のファイル: `.codex/agents/codex-review-agent.toml`
+実際のファイル: `.codex/agents/codex-expert-executor.toml`
 
-`codex-expert-edit-agent` は複雑な分析・設計判断を伴う edit plan を担当し、`gpt-5.5` と reasoning effort `high` を使用する。
+`codex-review-executor` は成果物・result のいずれも変更せず、review plan の各観点に従ってレビューするだけである。Codex の sandbox はパス単位の書き込み制御を提供しないため `workspace-write` のままだが、成果物・result への書き込み禁止を `developer_instructions` と plan で制約する。
 
-実際のファイル: `.codex/agents/codex-expert-edit-agent.toml`
+実際のファイル: `.codex/agents/codex-review-executor.toml`
 
-`codex-expert-review-agent` は複雑な多観点 review plan を担当し、成果物を変更せず result だけを更新する。
+`codex-expert-review-executor` は複雑な多観点 review plan を担当し、成果物・result のいずれも変更しない。`gpt-5.5` と reasoning effort `high` を使用する。
 
-実際のファイル: `.codex/agents/codex-expert-review-agent.toml`
+実際のファイル: `.codex/agents/codex-expert-review-executor.toml`
 
-`codex-expert-executor` は複雑な分析・設計判断を伴う executor plan を担当し、成果物の編集と検証だけを行う。result 更新手順は reporter / runner の責務として実行せず、変更ファイルと検証結果を evidence 用の最終応答へ残す。
+配布原本は `templates/codex/agents/` 配下に置く。利用プロジェクトの `.codex/agents/` へは `specdojo exec scaffold --provider codex` で配置する。
 
-配布原本: `templates/codex/agents/codex-expert-executor.toml`。利用プロジェクトの `.codex/agents/` へは `specdojo exec scaffold --provider codex` で配置する。
-
-| ファイル名                       | モデル         | reasoning effort | sandbox           | 用途                     |
-| -------------------------------- | -------------- | ---------------- | ----------------- | ------------------------ |
-| `codex-edit-agent.toml`          | `gpt-5.4-mini` | `medium`         | `workspace-write` | 標準 edit                |
-| `codex-review-agent.toml`        | `gpt-5.4-mini` | `medium`         | `workspace-write` | 標準 review              |
-| `codex-expert-edit-agent.toml`   | `gpt-5.5`      | `high`           | `workspace-write` | expert edit              |
-| `codex-expert-review-agent.toml` | `gpt-5.5`      | `high`           | `workspace-write` | expert review            |
-| `codex-expert-executor.toml`     | `gpt-5.5`      | `high`           | `workspace-write` | pipeline expert executor |
+| ファイル名                          | モデル         | reasoning effort | sandbox           | 用途                               |
+| ----------------------------------- | -------------- | ---------------- | ----------------- | ---------------------------------- |
+| `codex-executor.toml`               | `gpt-5.4-mini` | `medium`         | `workspace-write` | pipeline executor（edit）          |
+| `codex-expert-executor.toml`        | `gpt-5.5`      | `high`           | `workspace-write` | pipeline expert executor（edit）   |
+| `codex-review-executor.toml`        | `gpt-5.4-mini` | `medium`         | `workspace-write` | pipeline executor（review）        |
+| `codex-expert-review-executor.toml` | `gpt-5.5`      | `high`           | `workspace-write` | pipeline expert executor（review） |
 
 並列 write は競合しやすいため、親セッションからsubagentをspawnする場合も同一ファイルを複数agentへ割り当てない。
 
@@ -200,15 +198,16 @@ Codex が AGENTS.md と標準入力の plan を読み込む
 `specdojo exec run` は、taskのphase要件と `pm-members.yaml` の各memberを次の順で照合する。
 
 1. `type: agent` であり、起動コマンドを解決できる（provider に command template があるか、member に `command` 上書きがある）memberだけを候補にする。
-2. taskの `mode` とmemberの `mode` が一致する候補だけを残す。
-3. taskが要求する `capabilities` をすべて持つ候補だけを残す。
-4. taskに `proficiency` が指定されている場合は、同じ値の候補だけを残す。
-5. `priority` の数値が小さい候補を優先する。
-6. `priority` が同じ場合は、task要件に対する余分なcapabilityが少ない候補を優先する。
+2. taskのagent_pipeline stage（`executor` / `reporter`）とmemberの `stage_role` が一致する候補だけを残す。
+3. memberが `mode` を持つ場合は、taskの `mode` と一致する候補だけを残す（`mode` を持たない member は edit/review どちらのtaskにもマッチする）。`reporter` stageの選定ではtaskの `mode` そのものを比較条件に使わない（reporterの役割はedit/reviewで変わらないため）。
+4. taskが要求する `capabilities` をすべて持つ候補だけを残す。
+5. taskに `proficiency` が指定されている場合は、同じ値の候補だけを残す。
+6. `priority` の数値が小さい候補を優先する。
+7. `priority` が同じ場合は、task要件に対する余分なcapabilityが少ない候補を優先する。
 
 並べ替え後の先頭候補が通常の実行workerになる。critical path上でrate limitが発生し、fallback方針が `try_next` の場合は、同じ条件に適合する後続候補を順に試す。
 
-たとえば、phaseが `mode: edit`、`proficiency: expert`、`capabilities: [web_search]` を要求する場合、`codex-expert-edit-agent` がCodex候補になる。選択後に実行されるcommandは次のとおりである。
+たとえば、phaseが `mode: edit`、`stage_role: executor`、`proficiency: expert`、`capabilities: [web_search]` を要求する場合、`codex-expert-executor` がCodex候補になる。選択後に実行されるcommandは次のとおりである。
 
 ```bash
 codex exec \
@@ -225,8 +224,8 @@ codex exec \
 memberを明示して実行する場合は `--by` にnicknameを指定する。
 
 ```bash
-specdojo exec run --by codex-edit-agent --task <task-id>
-specdojo exec run --by codex-expert-review-agent --task <task-id>
+specdojo exec run --by codex-executor --task <task-id>
+specdojo exec run --by codex-expert-review-executor --task <task-id>
 ```
 
 `--by` は member 選択と、event や result に記録する actor の指定を兼ねる。
@@ -235,15 +234,14 @@ specdojo exec run --by codex-expert-review-agent --task <task-id>
 
 `.codex/agents/*.toml` は、起動済みの親Codexが内部で追加agentへ委譲する場合の定義である。SpecDojoと `codex exec` のcommand lineは、このファイルを直接選択しない。
 
-- `codex-edit-agent.toml`: 親Codexが標準edit作業を分担させる場合のsubagent
-- `codex-review-agent.toml`: 親Codexが標準reviewを分担させる場合のsubagent
-- `codex-expert-edit-agent.toml`: 親Codexが複雑なedit作業を分担させる場合のsubagent
-- `codex-expert-review-agent.toml`: 親Codexが複雑なreviewを分担させる場合のsubagent
-- `codex-expert-executor.toml`: 親Codexがpipelineの成果物編集と検証だけを分担させる場合のsubagent
+- `codex-executor.toml`: 親Codexが標準edit作業（成果物の編集・検証のみ、result更新なし）を分担させる場合のsubagent
+- `codex-expert-executor.toml`: 親Codexが複雑なedit作業を分担させる場合のsubagent
+- `codex-review-executor.toml`: 親Codexが標準reviewを分担させる場合のsubagent（成果物・result いずれも変更しない）
+- `codex-expert-review-executor.toml`: 親Codexが複雑なreviewを分担させる場合のsubagent（成果物・result いずれも変更しない）
 
 親Codexはsubagentのnameとdescriptionを参照し、必要な場合に明示的にspawnする。spawnしない場合、`.codex/agents/*.toml` はworker実行へ影響せず、workerは `AGENTS.md`、command template から解決した起動コマンド、標準入力のplanだけで動作する。
 
-workerのnicknameとcustom subagentのnameは運用上同じ名称に揃えているが、Codex CLIが自動的に両者を関連付けるわけではない。たとえば `pm-members.yaml` で `codex-expert-edit-agent` が選ばれても、`.codex/agents/codex-expert-edit-agent.toml` が自動適用されることはない。
+workerのnicknameとcustom subagentのnameは運用上同じ名称に揃えているが、Codex CLIが自動的に両者を関連付けるわけではない。たとえば `pm-members.yaml` で `codex-expert-executor` が選ばれても、`.codex/agents/codex-expert-executor.toml` が自動適用されることはない。
 
 ## 9. エージェント割り当て設定
 
@@ -261,45 +259,19 @@ providers:
         expert: { model: gpt-5.5, effort: high }
 ```
 
-`pm-members.yaml` の member は選択属性だけを持つ。
+`pm-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
 
 ```yaml
 members:
-  - nickname: codex-edit-agent
+  - nickname: codex-executor
     type: agent
     provider: codex
     mode: edit
+    stage_role: executor
     capabilities: [web_search]
     proficiency: normal
     priority: 2
     scheduler_strategy: critical-first
-
-  - nickname: codex-review-agent
-    type: agent
-    provider: codex
-    mode: review
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 2
-    scheduler_strategy: fifo
-
-  - nickname: codex-expert-edit-agent
-    type: agent
-    provider: codex
-    mode: edit
-    capabilities: [web_search]
-    proficiency: expert
-    priority: 1
-    scheduler_strategy: critical-first
-
-  - nickname: codex-expert-review-agent
-    type: agent
-    provider: codex
-    mode: review
-    capabilities: [web_search]
-    proficiency: expert
-    priority: 1
-    scheduler_strategy: fifo
 
   - nickname: codex-expert-executor
     type: agent
@@ -310,6 +282,35 @@ members:
     proficiency: expert
     priority: 1
     scheduler_strategy: critical-first
+
+  - nickname: codex-review-executor
+    type: agent
+    provider: codex
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: normal
+    priority: 2
+    scheduler_strategy: fifo
+
+  - nickname: codex-expert-review-executor
+    type: agent
+    provider: codex
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 1
+    scheduler_strategy: fifo
+
+  - nickname: codex-reporter
+    type: agent
+    provider: codex
+    stage_role: reporter
+    capabilities: []
+    proficiency: normal
+    priority: 2
+    scheduler_strategy: fifo
 ```
 
 `--ephemeral` はセッション rollout ファイルを保存しない。実行履歴の正本は SpecDojo の event・plan・result とする。モデル名の更新（例: 新世代モデルへの切り替え）は `command_params.by_proficiency` の1箇所だけを変更すればよく、member 定義には影響しない。
