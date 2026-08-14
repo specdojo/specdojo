@@ -1,0 +1,118 @@
+id: prj-0001:dct-data-model-cstd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／概念状態遷移図）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（cstd 部分）。domain キーは分割前と同じ data-model を保つ。
+# cstd-rulebook.md 1章に「1ファイルは1つの対象（1エンティティ/1概念）にフォーカスする」と明記され
+# ているため、状態遷移を持つ対象エンティティごとに local_id を列挙する。対応する stsd の
+# ステータス定義を根拠（depends_on）として持つ。
+
+groups:
+  - name: 概念状態遷移図
+    deliverables:
+      - local_id: cstd-register-entry
+        name: 概念状態遷移図（登録項目個票）
+        kind: work
+        depends_on:
+          - stsd-register-entry
+          - bdd-register-entry
+        overview: 登録項目個票のライフサイクル（状態変化）を図で定義する
+        path: cstd-register-entry.md
+        rulebook: specdojo:cstd-rulebook
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cstd-task-execution
+        name: 概念状態遷移図（タスク実行）
+        kind: work
+        depends_on:
+          - stsd-task-execution
+          - bdd-exec-state
+          - bdd-exec-event
+        overview: タスク実行のライフサイクル（状態変化）を図で定義する
+        path: cstd-task-execution.md
+        rulebook: specdojo:cstd-rulebook
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cstd-deliverable
+        name: 概念状態遷移図（成果物）
+        kind: work
+        depends_on:
+          - stsd-deliverable
+          - bdd-deliverable
+        overview: 成果物状態のライフサイクル（draft → ready → deprecated）を図で定義する
+        path: cstd-deliverable.md
+        rulebook: specdojo:cstd-rulebook
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cstd-job-run
+        name: 概念状態遷移図（Job Run）
+        kind: work
+        depends_on:
+          - stsd-job-run
+          - bdd-job-run
+        overview: Job Run のライフサイクル（状態変化）を図で定義する
+        path: cstd-job-run.md
+        rulebook: specdojo:cstd-rulebook
+        done_criteria:
+          - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 状態管理実装・イベント処理設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態遷移ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移ロジック実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

@@ -1,0 +1,92 @@
+id: prj-0001:dct-data-model-cld
+type: project
+status: draft
+title: 成果物カタログ（データモデル／分類定義）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（cld 部分）。domain キーは分割前と同じ data-model を保つ。
+# cld-rulebook.md は「1対象エンティティ（分類軸） = 1ファイル」を想定するため、分類を持つ
+# 属性・エンティティごとに local_id を列挙する。
+
+groups:
+  - name: 分類定義
+    deliverables:
+      - local_id: cld-register-type
+        name: 分類定義（登録項目の種別）
+        kind: work
+        depends_on:
+          - bdd-register-entry
+        overview: 登録項目の種別（type）が取り得る risk／issue／change-request／decision の分類を一覧で定義する
+        path: cld-register-type.md
+        rulebook: specdojo:cld-rulebook
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cld-deliverable-kind
+        name: 分類定義（成果物の種別）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+          - bdd-deliverables-catalog
+        overview: 成果物の種別（kind）が取り得る work／control／generated の分類を一覧で定義する
+        path: cld-deliverable-kind.md
+        rulebook: specdojo:cld-rulebook
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cld-exec-mode
+        name: 分類定義（実行のmode・execution）
+        kind: work
+        depends_on:
+          - bdd-schedule-track
+        overview: 実行のmode（edit / review）・execution（agent / human）区分を一覧で定義する
+        path: cld-exec-mode.md
+        rulebook: specdojo:cld-rulebook
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cld-routine-action-kind
+        name: 分類定義（定期処理のaction kind）
+        kind: work
+        depends_on:
+          - bdd-routine-definition
+        overview: 定期処理のaction kind（register / exec-auto / exec-resume / exec-cycle / job）分類を一覧で定義する
+        path: cld-routine-action-kind.md
+        rulebook: specdojo:cld-rulebook
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cld-role
+        name: 分類定義（ロールコード）
+        kind: work
+        depends_on:
+          - bdd-operations-config
+        overview: プロジェクトで用いるロールコード（PO / PM / BA / ARC / DEV / QE / UX / OPS）の分類を一覧で定義する
+        path: cld-role.md
+        rulebook: specdojo:cld-rulebook
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

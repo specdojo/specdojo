@@ -1,0 +1,99 @@
+id: prj-0001:dct-data-model-ccd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／概念クラス図）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（ccd 部分）。domain キーは分割前と同じ data-model を保つ。
+# ccd は図の可読性を優先し、bdd の16対象そのままではなく cdfd-overview.md の3プロセスグループ
+# 単位でエンティティ関係をまとめる。
+
+groups:
+  - name: 概念クラス図
+    deliverables:
+      - local_id: ccd-project-planning
+        name: 概念クラス図（プロジェクトの立上と計画）
+        kind: work
+        depends_on:
+          - bdd-project-config
+          - bdd-operations-config
+          - bdd-register-entry
+          - bdd-deliverables-catalog
+          - bdd-schedule-strategy
+          - bdd-schedule-track
+        overview: プロジェクトの立上と計画に関わるエンティティ間の関係を図で定義する
+        path: ccd-project-planning.md
+        rulebook: specdojo:ccd-mermaid-rulebook
+        done_criteria:
+          - text: エンティティ関係・属性が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: スコープ範囲のエンティティを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: データモデル・クラス設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストデータ設計・整合性検証に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ER図・実装モデルの基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: ccd-task-execution
+        name: 概念クラス図（プロジェクト実行）
+        kind: work
+        depends_on:
+          - bdd-exec-event
+          - bdd-exec-state
+          - bdd-exec-plan-result
+          - bdd-exec-evidence
+          - bdd-worktree-branch
+        overview: プロジェクト実行に関わるエンティティ間の関係を図で定義する
+        path: ccd-task-execution.md
+        rulebook: specdojo:ccd-mermaid-rulebook
+        done_criteria:
+          - text: エンティティ関係・属性が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: スコープ範囲のエンティティを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: データモデル・クラス設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストデータ設計・整合性検証に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ER図・実装モデルの基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: ccd-sharing
+        name: 概念クラス図（活用と共有）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+          - bdd-derived-view
+          - bdd-report-record
+        overview: 活用と共有に関わるエンティティ間の関係を図で定義する
+        path: ccd-sharing.md
+        rulebook: specdojo:ccd-mermaid-rulebook
+        done_criteria:
+          - text: エンティティ関係・属性が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: スコープ範囲のエンティティを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: データモデル・クラス設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストデータ設計・整合性検証に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ER図・実装モデルの基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness

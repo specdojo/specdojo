@@ -1,0 +1,383 @@
+id: prj-0001:dct-data-model-bdd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／業務データ辞書）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（bdd 部分）。domain キーは分割前と同じ data-model を保つ。
+# local_id は cdfd-overview.md および領域別 CDFD（cdfd-init.md 等）の「個別プロセス主要入出力」表に
+# 現れるデータストア・エンティティを根拠に、単一領域（SpecDojo運用）を複数項目へ分割するパターンB
+# （dct-rulebook.md「業務領域テンプレートの反復方針」参照）で列挙する。
+
+groups:
+  - name: 業務データ辞書
+    groups:
+      - name: 立ち上げ・構成
+        deliverables:
+          - local_id: bdd-project-config
+            name: 業務データ辞書（プロジェクト構成）
+            kind: work
+            overview: プロジェクト構成・設定情報（specdojo.config.json）のエンティティ・属性を定義する
+            path: bdd-project-config.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-operations-config
+            name: 業務データ辞書（運用・構成定義）
+            kind: work
+            overview: 運用・構成定義（pm-members、exec-defaults、provider固有設定等）のエンティティ・属性を定義する
+            path: bdd-operations-config.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: 登録簿
+        deliverables:
+          - local_id: bdd-register-entry
+            name: 業務データ辞書（登録項目個票）
+            kind: work
+            overview: 登録項目個票（pjr）のエンティティ・属性を定義する
+            path: bdd-register-entry.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: 計画基盤
+        deliverables:
+          - local_id: bdd-deliverables-catalog
+            name: 業務データ辞書（成果物カタログ）
+            kind: work
+            overview: 成果物カタログ（dct）のエンティティ・属性を定義する
+            path: bdd-deliverables-catalog.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-schedule-strategy
+            name: 業務データ辞書（スケジュール戦略）
+            kind: work
+            overview: スケジュール戦略（sch-strategy）のエンティティ・属性を定義する
+            path: bdd-schedule-strategy.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-schedule-track
+            name: 業務データ辞書（スケジュールトラック）
+            kind: work
+            overview: スケジュールトラック（sch-track、マイルストーンを含む）のエンティティ・属性を定義する
+            path: bdd-schedule-track.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: タスク実行
+        deliverables:
+          - local_id: bdd-exec-event
+            name: 業務データ辞書（実行イベント）
+            kind: work
+            overview: 実行イベント（claim / complete / block / note 等）のエンティティ・属性を定義する
+            path: bdd-exec-event.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-exec-state
+            name: 業務データ辞書（実行状態・計画情報）
+            kind: work
+            overview: 実行状態・計画情報（state、Ready、CPM、timeline等）のエンティティ・属性を定義する
+            path: bdd-exec-state.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-exec-plan-result
+            name: 業務データ辞書（実行計画・実行結果）
+            kind: work
+            overview: 実行計画・実行結果（plan / result）のエンティティ・属性を定義する
+            path: bdd-exec-plan-result.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-exec-evidence
+            name: 業務データ辞書（実施根拠記録）
+            kind: work
+            overview: 実施根拠記録（evidence）のエンティティ・属性を定義する
+            path: bdd-exec-evidence.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: 並行処理
+        deliverables:
+          - local_id: bdd-worktree-branch
+            name: 業務データ辞書（worktree・branch）
+            kind: work
+            overview: worktree・branch（project develop、feature、exec worktree等）のエンティティ・属性を定義する
+            path: bdd-worktree-branch.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: 定期処理
+        deliverables:
+          - local_id: bdd-routine-definition
+            name: 業務データ辞書（定期処理定義・実行状態）
+            kind: work
+            overview: 定期処理定義・実行状態のエンティティ・属性を定義する
+            path: bdd-routine-definition.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-job-run
+            name: 業務データ辞書（Job Run）
+            kind: work
+            overview: Job Run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する
+            path: bdd-job-run.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+      - name: 派生生成・報告
+        deliverables:
+          - local_id: bdd-deliverable
+            name: 業務データ辞書（成果物本体）
+            kind: work
+            overview: 成果物本体の共通メタ情報のエンティティ・属性を定義する
+            path: bdd-deliverable.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-derived-view
+            name: 業務データ辞書（派生ビュー・索引）
+            kind: work
+            overview: 派生ビュー・索引（登録簿ビュー、カタログ表示、文書索引等）のエンティティ・属性を定義する
+            path: bdd-derived-view.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness
+          - local_id: bdd-report-record
+            name: 業務データ辞書（報告記録）
+            kind: work
+            overview: 報告記録（進捗報告、議事録）のエンティティ・属性を定義する
+            path: bdd-report-record.yaml
+            rulebook: specdojo:bdd-rulebook
+            done_criteria:
+              - text: エンティティ・属性の業務的定義が正確に記述されていること
+                roles: [BA]
+                viewpoint: vp-ba-requirements-completeness
+              - text: データスコープとエンティティ境界を承認できること
+                roles: [PO]
+                viewpoint: vp-po-purpose-alignment
+              - text: DB設計・システム設計の入力として参照できること
+                roles: [ARC]
+                viewpoint: vp-arc-technical-constraints
+              - text: データ検証ルール・制約が確認できること
+                roles: [QE]
+                viewpoint: vp-qe-verifiability
+              - text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+                roles: [DEV]
+                viewpoint: vp-dev-implementation-readiness

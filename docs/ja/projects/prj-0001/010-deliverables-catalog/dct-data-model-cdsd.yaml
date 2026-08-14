@@ -1,0 +1,83 @@
+id: prj-0001:dct-data-model-cdsd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／概念データストア定義）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（cdsd 部分）。domain キーは分割前と同じ data-model を保つ。
+# cdsd は「一覧」形式（1ファイルに複数データストアを表の行として列挙する）のため、bdd のような
+# データストア単位の細分割はせず、cdfd-overview.md の3プロセスグループ単位でまとめる。
+
+groups:
+  - name: 概念データストア定義
+    deliverables:
+      - local_id: cdsd-planning
+        name: 概念データストア定義（プロジェクトの立上と計画）
+        kind: work
+        depends_on:
+          - bdd-project-config
+          - bdd-operations-config
+          - bdd-register-entry
+          - bdd-deliverables-catalog
+          - bdd-schedule-strategy
+          - bdd-schedule-track
+        overview: プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する
+        path: cdsd-planning.md
+        rulebook: specdojo:cdsd-rulebook
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdsd-execution
+        name: 概念データストア定義（プロジェクト実行）
+        kind: work
+        depends_on:
+          - bdd-exec-event
+          - bdd-exec-state
+          - bdd-exec-plan-result
+          - bdd-exec-evidence
+          - bdd-worktree-branch
+          - bdd-routine-definition
+          - bdd-job-run
+        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
+        path: cdsd-execution.md
+        rulebook: specdojo:cdsd-rulebook
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdsd-sharing
+        name: 概念データストア定義（活用と共有）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+          - bdd-derived-view
+          - bdd-report-record
+        overview: 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する
+        path: cdsd-sharing.md
+        rulebook: specdojo:cdsd-rulebook
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

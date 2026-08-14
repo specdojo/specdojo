@@ -1,0 +1,121 @@
+id: prj-0001:dct-data-model-stsd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／ステータス定義）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（stsd 部分）。domain キーは分割前と同じ data-model を保つ。
+# stsd-rulebook.md は「1対象エンティティ = 1ファイル」を想定するため、状態を持つ対象エンティティ
+# ごとに local_id を列挙する。
+
+groups:
+  - name: ステータス定義
+    deliverables:
+      - local_id: stsd-register-entry
+        name: ステータス定義（登録項目個票）
+        kind: work
+        depends_on:
+          - bdd-register-entry
+        overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）を一覧で定義する
+        path: stsd-register-entry.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: stsd-task-execution
+        name: ステータス定義（タスク実行）
+        kind: work
+        depends_on:
+          - bdd-exec-state
+        overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）を一覧で定義する
+        path: stsd-task-execution.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: stsd-deliverable
+        name: ステータス定義（成果物）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+        overview: 成果物が取り得る状態（draft / ready / deprecated）を一覧で定義する
+        path: stsd-deliverable.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: stsd-routine-run
+        name: ステータス定義（定期処理の実行結果）
+        kind: work
+        depends_on:
+          - bdd-routine-definition
+        overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態を一覧で定義する
+        path: stsd-routine-run.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: stsd-job-run
+        name: ステータス定義（Job Run）
+        kind: work
+        depends_on:
+          - bdd-job-run
+        overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）を一覧で定義する
+        path: stsd-job-run.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: ステータス名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移実装の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 状態ベースのテスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態管理実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
