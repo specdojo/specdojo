@@ -43,7 +43,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: bootstrap
-      proficiency: expert
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "005"
       duration_days: 0.5
       description: |
@@ -55,7 +60,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: bootstrap
-      proficiency: expert
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "006"
       duration_days: 0.5
       description: |
@@ -72,7 +82,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: bootstrap
-      proficiency: expert
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "005"
       duration_days: 0.5
       description: |
@@ -295,7 +310,12 @@ cross_deliverable_passes:
     execution: agent
     mode: edit
     approach: cross-deliverable-dedup
-    proficiency: expert
+    agent_pipeline:
+      stages:
+        - stage_role: executor
+          proficiency: expert
+        - stage_role: reporter
+          proficiency: normal
     description: |
       全 CDFD を横断し、同じプロセス・状態遷移・入力・出力・データストアの説明が
       複数文書へ重複していないか確認する。各情報の正本を選び、他の文書は必要な要約と参照へ整理する。

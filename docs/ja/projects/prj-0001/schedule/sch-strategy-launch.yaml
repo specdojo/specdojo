@@ -60,8 +60,13 @@ phase_sets:
       execution: agent
       mode: edit
       approach: bootstrap
-      capabilities: [web_search]
-      proficiency: expert
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            capabilities: [web_search]
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "010"
       duration_days: 1.0 # 4〜8h 相当（成果物＋参考資料4種を一括）
       description: |
@@ -81,7 +86,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "070"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -93,7 +103,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: fully-guided
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "080"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -109,7 +124,12 @@ phase_sets:
       execution: agent
       mode: review
       approach: fully-guided
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "090"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -121,7 +141,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: recipe-maintenance
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "100"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -133,7 +158,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: rulebook-maintenance
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "110"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -145,7 +175,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: sample-maintenance
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "120"
       duration_days: 0.25 # 1〜2h 相当
       description: |
@@ -157,7 +192,12 @@ phase_sets:
       execution: agent
       mode: edit
       approach: template-maintenance
-      proficiency: normal
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
       task_suffix: "130"
       duration_days: 0.25 # 1〜2h 相当
       description: |
