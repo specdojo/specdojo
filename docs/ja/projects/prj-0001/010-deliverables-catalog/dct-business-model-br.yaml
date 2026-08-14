@@ -1,0 +1,105 @@
+id: prj-0001:dct-business-model-br
+type: project
+status: draft
+title: 成果物カタログ（業務モデル／ビジネスルール）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+# business-model ドメインの物理分割ファイル（br 部分）。domain キーは分割前と同じ business-model を保つ。
+# br-rulebook.md は「1ファイル=1ビジネスルール」を想定する。各領域別CDFDの「判定・選択・委譲規則」
+# 系の表（action kind別の選択・委譲規則、権限・安全境界の承認条件等）を根拠に抽出した、複数プロセス
+# から参照される横断的な判断・条件ロジックを列挙する。
+
+groups:
+  - name: ビジネスルール
+    deliverables:
+      - local_id: br-task-selection-strategy
+        name: ビジネスルール（タスク選択戦略）
+        kind: work
+        depends_on:
+          - bps-task-selection-preparation
+        overview: Ready task を critical-first / fifo などで選ぶ選択順位・selection strategyを定義する
+        path: br-task-selection-strategy.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: &br-done-criteria
+          - text: ルール・入力・出力・例外が業務観点で明確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ルールの業務的妥当性と適用範囲を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: ルール実装（バリデーション・ドメインロジック）の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: ルールベースのテストケース設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ビジネスロジック実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: br-actor-assignment
+        name: ビジネスルール（担当・claim解決）
+        kind: work
+        depends_on:
+          - bps-task-selection-preparation
+        overview: task の実行区分・mode・必要能力・熟練度から担当nickname（実行担当・記録担当）を解決する規則を定義する
+        path: br-actor-assignment.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-execution-result-judgment
+        name: ビジネスルール（実行結果判定）
+        kind: work
+        depends_on:
+          - bps-task-judgment-integration
+        overview: 記入済みresultと必須節・frontmatterの保持状態からsuccess判定またはblockedを導く規則を定義する
+        path: br-execution-result-judgment.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-routine-action-routing
+        name: ビジネスルール（routine action kind選択・委譲）
+        kind: work
+        depends_on:
+          - bps-routine-register-schedule-cycle
+          - bps-routine-job-run
+        overview: routineのaction kind（register / exec-auto / exec-resume / exec-cycle / job）別の選択・制御・委譲条件を定義する
+        path: br-routine-action-routing.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-review-verdict
+        name: ビジネスルール（レビュー判定）
+        kind: work
+        depends_on:
+          - bps-task-review-finalize
+        overview: レビュー結果を pass / conditional_pass / changes_requested / blocked のいずれに判定するかの規則を定義する
+        path: br-review-verdict.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-agent-config-safety-boundary
+        name: ビジネスルール（agent構成の権限・安全境界）
+        kind: work
+        depends_on:
+          - bps-config-change-proposal-approval
+        overview: task の mode・targets・capability、provider権限、プロンプトインジェクション対策から構成変更案の許可範囲・禁止事項を判定する規則を定義する
+        path: br-agent-config-safety-boundary.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-branch-integration-direction
+        name: ビジネスルール（branch・worktree統合方向）
+        kind: work
+        depends_on:
+          - bps-parallel-sync-integration
+        overview: feature / exec branch と project develop、mainの間で、どちらを正本としどちらへ統合するかの方向を定義する
+        path: br-branch-integration-direction.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-deprecation-route-selection
+        name: ビジネスルール（非推奨化の経路選択）
+        kind: work
+        depends_on:
+          - bps-deprecation-process
+        overview: 対象文書の同一性・後継候補から、経路A（ファイル名のみ変更）と経路B（新ID切替）のどちらを選ぶかの判断規則を定義する
+        path: br-deprecation-route-selection.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria

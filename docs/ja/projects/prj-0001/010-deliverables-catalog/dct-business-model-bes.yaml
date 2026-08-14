@@ -1,0 +1,107 @@
+id: prj-0001:dct-business-model-bes
+type: project
+status: draft
+title: 成果物カタログ（業務モデル／業務イベント仕様）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+# business-model ドメインの物理分割ファイル（bes 部分）。domain キーは分割前と同じ business-model を保つ。
+# bes-index を hub とし、cdfd-overview.md「3. プロセス領域」表の起点イベント10件を一覧の行として
+# 持たせる。個別 bes-<term> は bes-rulebook.md の「解釈が割れやすいサイン」に該当するものだけ昇格する。
+
+groups:
+  - name: 業務イベント
+    deliverables:
+      - local_id: bes-index
+        name: 業務イベント仕様（全体構成）
+        kind: work
+        overview: cdfd-overview.md の10プロセス領域の起点イベントを一覧で定義する
+        path: bes-index.md
+        rulebook: specdojo:bes-index-rulebook
+        done_criteria:
+          - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント一覧のスコープを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント駆動設計・メッセージング設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントベースのテスト設計への網羅性が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: bes-routine-due
+        name: 業務イベント仕様（定期実行の期限到来）
+        kind: work
+        depends_on:
+          - bes-index
+        overview: 定期実行の期限または条件が到来したイベント（cron / interval等、いつの基準が割れやすい）を定義する
+        path: bes-routine-due.md
+        rulebook: specdojo:bes-rulebook
+        done_criteria:
+          - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント仕様の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント処理実装・メッセージ設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントテスト設計への活用が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: イベントハンドラ・パブリッシャー実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: bes-task-ready-selected
+        name: 業務イベント仕様（実行可能タスクの選択）
+        kind: work
+        depends_on:
+          - bes-index
+        overview: 実行可能なタスクが選択されたイベント（単発／自動／並列など起点が一意にならない）を定義する
+        path: bes-task-ready-selected.md
+        rulebook: specdojo:bes-rulebook
+        done_criteria:
+          - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント仕様の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント処理実装・メッセージ設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントテスト設計への活用が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: イベントハンドラ・パブリッシャー実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: bes-derived-content-requested
+        name: 業務イベント仕様（派生生成の要求）
+        kind: work
+        depends_on:
+          - bes-index
+        overview: 正本が更新された、または派生生成が要求されたイベント（起点が複数系統ある）を定義する
+        path: bes-derived-content-requested.md
+        rulebook: specdojo:bes-rulebook
+        done_criteria:
+          - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: イベント仕様の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: イベント処理実装・メッセージ設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: イベントテスト設計への活用が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: イベントハンドラ・パブリッシャー実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
