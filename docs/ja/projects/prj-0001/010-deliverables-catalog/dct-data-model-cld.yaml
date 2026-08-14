@@ -22,6 +22,10 @@ groups:
         overview: 登録項目の種別（type）が取り得る risk／issue／change-request／decision の分類を一覧で定義する
         path: cld-register-type.md
         rulebook: specdojo:cld-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register-item.ts
+            purpose: 登録項目のtype（risk/issue/change-request/decision等）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -38,6 +42,10 @@ groups:
         overview: 成果物の種別（kind）が取り得る work／control／generated の分類を一覧で定義する
         path: cld-deliverable-kind.md
         rulebook: specdojo:cld-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog-types.ts
+            purpose: 成果物kind（work/control/generated）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -53,6 +61,10 @@ groups:
         overview: 実行のmode（edit / review）・execution（agent / human）区分を一覧で定義する
         path: cld-exec-mode.md
         rulebook: specdojo:cld-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-types.ts
+            purpose: mode（edit/review）・execution（agent/human）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -68,6 +80,10 @@ groups:
         overview: 定期処理のaction kind（register / exec-auto / exec-resume / exec-cycle / job）分類を一覧で定義する
         path: cld-routine-action-kind.md
         rulebook: specdojo:cld-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: action.kind（register/exec-auto/exec-resume/exec-cycle/job）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -83,6 +99,10 @@ groups:
         overview: プロジェクトで用いるロールコード（PO / PM / BA / ARC / DEV / QE / UX / OPS）の分類を一覧で定義する
         path: cld-role.md
         rulebook: specdojo:cld-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/role-types.ts
+            purpose: ロールコード（PO/PM/BA/ARC/DEV/QE/UX/OPS）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]

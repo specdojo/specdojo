@@ -27,6 +27,22 @@ groups:
         overview: プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する
         path: cdsd-planning.md
         rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: プロジェクト構成ストアの読込・検証
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿ストアの生成・状態遷移
+          - kind: implementation
+            path: src/catalog.ts
+            purpose: 成果物カタログストアの読込・検証
+          - kind: implementation
+            path: src/exec-strategy.ts
+            purpose: Schedule戦略ストアの型・解決規則
+          - kind: implementation
+            path: src/schedule.ts
+            purpose: Scheduleトラックストアの読込・タスクID導出
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
             roles: [BA]
@@ -51,6 +67,25 @@ groups:
         overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
         path: cdsd-execution.md
         rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-events.ts
+            purpose: 実行イベントストアのスキーマ・追記規則
+          - kind: implementation
+            path: src/exec-schedule-ready.ts
+            purpose: 実行状態（Ready）ストアの算出
+          - kind: implementation
+            path: src/exec-plans.ts
+            purpose: plan/resultストアのscaffold規則
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: worktreeストアの命名・配置
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期処理ストアのスキーマ
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Runストアのスキーマ
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
             roles: [BA]
@@ -71,6 +106,14 @@ groups:
         overview: 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する
         path: cdsd-sharing.md
         rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/deliverable.ts
+            purpose: 成果物本体ストアの読込・雛形生成
+          - kind: implementation
+            path: src/catalog-generate.ts
+            purpose: 派生ビューストアの生成規則
+        note: 報告記録ストア（pr-*/mm-*）はCLI側の専用生成コードを持たないため、evidence_refsに含めない
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
             roles: [BA]

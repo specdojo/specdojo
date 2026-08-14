@@ -27,6 +27,13 @@ groups:
         overview: プロジェクトの立上と計画に関わるエンティティ間の関係を図で定義する
         path: ccd-project-planning.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog-types.ts
+            purpose: 成果物カタログ関連エンティティの型定義・参照関係
+          - kind: implementation
+            path: src/exec-strategy.ts
+            purpose: Schedule戦略とカタログ・登録項目の参照関係
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること
             roles: [BA]
@@ -55,6 +62,13 @@ groups:
         overview: プロジェクト実行に関わるエンティティ間の関係を図で定義する
         path: ccd-task-execution.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-types.ts
+            purpose: タスク・plan・result・event間の参照関係の型定義
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: タスク実行時のエンティティ間の受け渡し（event・plan・result・worktree）
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること
             roles: [BA]
@@ -81,6 +95,11 @@ groups:
         overview: 活用と共有に関わるエンティティ間の関係を図で定義する
         path: ccd-sharing.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog-generate.ts
+            purpose: 成果物・派生ビュー間の生成元参照関係
+        note: 報告記録（pr-*/mm-*）はCLI側の専用生成コードを持たないため、evidence_refsに含めない
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること
             roles: [BA]

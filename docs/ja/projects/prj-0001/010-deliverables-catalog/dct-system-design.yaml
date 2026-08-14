@@ -73,6 +73,16 @@ groups:
         path: sysd-cross-cutting-policy.md
         rulebook: specdojo:sysd-cross-cutting-policy-rulebook
         note: PJR-ZP0Bで新設。sysd-agent-settings.mdの1〜6・8章（3層責務分離、設定解決規則、rate limit方針、worktree分離、reopen規則）をscp-<カテゴリ>-<連番>形式で移設する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: rate limit検出・retry/fallback方針、command_template解決の共通規則
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: worktree分離のライフサイクル規則
+          - kind: implementation
+            path: src/exec-events.ts
+            purpose: append-onlyイベント・reopenの遷移規則
         done_criteria:
           - text: 横断ルールが実装上の制約として確認できること
             roles: [ARC]
@@ -98,6 +108,16 @@ groups:
         path: sysd-agent-settings.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit。PJR-ZP0Bで横断ルール相当の内容をsysd-cross-cutting-policyへ、運用手順をopr-agent-cli-updateへ移設し、本書は4provider設計へのhubへ縮小する
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: AgentProvider（opencode/claude/codex/copilot/custom）の型定義
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: member選択・起動コマンド解決（command_template/command_params）の共通規則
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: 3層（SpecDojo CLI／agent／exec run）の責務分担、非対話実行・worktree割当の制御
         done_criteria: &sysd-term-done-criteria
           - text: 設計トピックの採用理由・制約が業務要件と整合していること
             roles: [BA]
@@ -124,6 +144,10 @@ groups:
         path: sysd-claude-agent-settings.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: providers.claudeのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
       - local_id: sysd-codex-agent-settings
@@ -135,6 +159,10 @@ groups:
         path: sysd-codex-agent-settings.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: providers.codexのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
       - local_id: sysd-opencode-agent-settings
@@ -147,6 +175,10 @@ groups:
         path: sysd-opencode-agent-settings.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: providers.opencodeのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
       - local_id: sysd-github-copilot-agent-settings
@@ -158,6 +190,10 @@ groups:
         path: sysd-github-copilot-agent-settings.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: providers.copilotのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
       - local_id: sysd-job-execution
@@ -168,4 +204,11 @@ groups:
         path: sysd-job-execution.md
         rulebook: specdojo:sysd-rulebook
         note: 既存文書のretrofit（現状status=ready）。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Definition／Job Runの概念モデル・生成・実行フロー
+          - kind: implementation
+            path: src/routine.ts
+            purpose: action.kind＝jobによるJob Run起動の委譲規則
         done_criteria: *sysd-term-done-criteria

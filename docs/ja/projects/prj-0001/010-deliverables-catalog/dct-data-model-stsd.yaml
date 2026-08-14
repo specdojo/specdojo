@@ -22,6 +22,10 @@ groups:
         overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）を一覧で定義する
         path: stsd-register-entry.md
         rulebook: specdojo:stsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目個票のstatusフィールドの許容値・状態遷移規則
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -43,6 +47,10 @@ groups:
         overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）を一覧で定義する
         path: stsd-task-execution.md
         rulebook: specdojo:stsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-schedule-index.ts
+            purpose: タスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -64,6 +72,10 @@ groups:
         overview: 成果物が取り得る状態（draft / ready / deprecated）を一覧で定義する
         path: stsd-deliverable.md
         rulebook: specdojo:stsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/deliverable.ts
+            purpose: 成果物のspecdojo.status（draft/ready/deprecated）の扱い
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -85,6 +97,10 @@ groups:
         overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態を一覧で定義する
         path: stsd-routine-run.md
         rulebook: specdojo:stsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: routine実行結果（last_result＝success/failure/skipped）の判定・更新規則
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -106,6 +122,10 @@ groups:
         overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）を一覧で定義する
         path: stsd-job-run.md
         rulebook: specdojo:stsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Runのattempt状態（pending/succeeded/failed等）の判定・更新規則
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]

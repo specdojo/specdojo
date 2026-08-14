@@ -19,9 +19,11 @@ groups:
         depends_on:
           - bps-init-required
           - bps-init-optional
+          - prj-success-criteria-and-acceptance-criteria
         overview: プロジェクトの初期セットアップ（config初期化・register/catalog scaffold等）が業務として成立することを確認する
         path: bac-init.md
         rulebook: specdojo:bac-rulebook
+        note: &bac-ac-note 根拠はAC-01（利用者視点：代表試行に必要な最小成果物・作成支援資料・試行手順があり、代表試行に合格すること）
         done_criteria: &bac-done-criteria
           - text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること
             roles: [BA]
@@ -43,9 +45,11 @@ groups:
           - bps-register-required
           - bps-register-response
           - bps-register-resume-audit
+          - prj-success-criteria-and-acceptance-criteria
         overview: 登録項目の起票から対応・終了判断・再開までが業務として成立することを確認する
         path: bac-register-lifecycle.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-catalog-planning
@@ -54,9 +58,11 @@ groups:
         depends_on:
           - bps-planning-catalog-strategy-update
           - bps-planning-schedule-event-update
+          - prj-success-criteria-and-acceptance-criteria
         overview: 成果物カタログ・戦略からSchedule展開、実行状態再構成までが業務として成立することを確認する
         path: bac-catalog-planning.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-task-execution
@@ -67,9 +73,11 @@ groups:
           - bps-task-edit
           - bps-task-review-finalize
           - bps-task-judgment-integration
+          - prj-success-criteria-and-acceptance-criteria
         overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する
         path: bac-task-execution.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-routine
@@ -79,9 +87,11 @@ groups:
           - bps-routine-required
           - bps-routine-register-schedule-cycle
           - bps-routine-job-run
+          - prj-success-criteria-and-acceptance-criteria
         overview: 定期実行対象選択から登録項目・Schedule・Job Runの反映までが業務として成立することを確認する
         path: bac-routine.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-multi-project
@@ -92,9 +102,11 @@ groups:
           - bps-parallel-isolation-work
           - bps-parallel-sync-integration
           - bps-parallel-main-promotion
+          - prj-success-criteria-and-acceptance-criteria
         overview: project develop作成から分離作業・同期統合・main昇格までが業務として成立することを確認する
         path: bac-multi-project.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-agent-config-operation
@@ -104,9 +116,11 @@ groups:
           - bps-config-change-evaluation
           - bps-config-change-proposal-approval
           - bps-config-change-apply-verify
+          - prj-success-criteria-and-acceptance-criteria
         overview: agent・provider構成の変更評価から承認・設定変更・検証までが業務として成立することを確認する
         path: bac-agent-config-operation.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-derived-content
@@ -116,9 +130,11 @@ groups:
           - bps-derived-project-scoped
           - bps-derived-document-wide
           - bps-derived-standalone
+          - prj-success-criteria-and-acceptance-criteria
         overview: 成果物・派生ビュー・索引の生成が業務として成立することを確認する
         path: bac-derived-content.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-reporting
@@ -128,9 +144,11 @@ groups:
           - bps-reporting-monitoring-detection
           - bps-reporting-consistency-delegation
           - bps-reporting-conditional
+          - prj-success-criteria-and-acceptance-criteria
         overview: 進捗監視・検知から報告記録・議事録作成までが業務として成立することを確認する
         path: bac-reporting.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
       - local_id: bac-deprecation
@@ -139,7 +157,9 @@ groups:
         depends_on:
           - bps-deprecation-process
           - bps-deprecation-storage
+          - prj-success-criteria-and-acceptance-criteria
         overview: 文書の非推奨化判断から保管・カタログ更新までが業務として成立することを確認する
         path: bac-deprecation.md
         rulebook: specdojo:bac-rulebook
+        note: *bac-ac-note
         done_criteria: *bac-done-criteria

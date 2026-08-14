@@ -23,6 +23,10 @@ groups:
             overview: プロジェクト構成・設定情報（specdojo.config.json）のエンティティ・属性を定義する
             path: bdd-project-config.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/specdojo-config.ts
+                purpose: プロジェクト構成（project_id・current_project・paths等）の読込・検証・既定値解決
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -45,6 +49,10 @@ groups:
             overview: 運用・構成定義（pm-members、exec-defaults、provider固有設定等）のエンティティ・属性を定義する
             path: bdd-operations-config.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-agent-config.ts
+                purpose: pm-members.yaml・.specdojo/exec-defaults.yamlの読込、provider別設定の解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -69,6 +77,13 @@ groups:
             overview: 登録項目個票（pjr）のエンティティ・属性を定義する
             path: bdd-register-entry.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/register-item.ts
+                purpose: 登録項目個票のフィールド定義（type・priority・status・owner・due_on等）と生成規則
+              - kind: implementation
+                path: src/register.ts
+                purpose: 登録項目の状態遷移・派生ビュー更新・ID競合復旧の扱い
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -93,6 +108,13 @@ groups:
             overview: 成果物カタログ（dct）のエンティティ・属性を定義する
             path: bdd-deliverables-catalog.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/catalog-types.ts
+                purpose: dct-<domain>.yamlのgroups・deliverables・done_criteria等の型定義
+              - kind: implementation
+                path: src/catalog.ts
+                purpose: 成果物カタログの読込・検証・依存解決
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -115,6 +137,10 @@ groups:
             overview: スケジュール戦略（sch-strategy）のエンティティ・属性を定義する
             path: bdd-schedule-strategy.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-strategy.ts
+                purpose: sch-strategy-<track>.yamlのphase_sets・owner_rules・cross_deliverable_passes等の型・解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -137,6 +163,13 @@ groups:
             overview: スケジュールトラック（sch-track、マイルストーンを含む）のエンティティ・属性を定義する
             path: bdd-schedule-track.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-types.ts
+                purpose: task・milestone・依存関係の型定義
+              - kind: implementation
+                path: src/schedule.ts
+                purpose: sch-track-<track>.yamlの読込・タスクID導出・依存解決
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -161,6 +194,10 @@ groups:
             overview: 実行イベント（claim / complete / block / note 等）のエンティティ・属性を定義する
             path: bdd-exec-event.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-events.ts
+                purpose: 実行イベント（claim/complete/block/reopen等）のスキーマ・追記規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -183,6 +220,13 @@ groups:
             overview: 実行状態・計画情報（state、Ready、CPM、timeline等）のエンティティ・属性を定義する
             path: bdd-exec-state.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-schedule-ready.ts
+                purpose: Ready task算出のためのtask状態・依存判定
+              - kind: implementation
+                path: src/exec-schedule-cpm.ts
+                purpose: CPM・クリティカルパス・slackの算出
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -205,6 +249,13 @@ groups:
             overview: 実行計画・実行結果（plan / result）のエンティティ・属性を定義する
             path: bdd-exec-plan-result.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-plans.ts
+                purpose: edit/review plan frontmatterの生成・scaffold規則
+              - kind: implementation
+                path: src/exec-results.ts
+                purpose: result frontmatter・必須節のscaffold・記入検証
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -227,6 +278,10 @@ groups:
             overview: 実施根拠記録（evidence）のエンティティ・属性を定義する
             path: bdd-exec-evidence.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-evidence.ts
+                purpose: 実施根拠記録（evidence）の格納先・構造
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -251,6 +306,13 @@ groups:
             overview: worktree・branch（project develop、feature、exec worktree等）のエンティティ・属性を定義する
             path: bdd-worktree-branch.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/exec-worktree.ts
+                purpose: worktree・branchの命名規則・配置
+              - kind: implementation
+                path: src/exec-worktree-ops.ts
+                purpose: worktreeの作成・削除・同期操作
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -275,6 +337,10 @@ groups:
             overview: 定期処理定義・実行状態のエンティティ・属性を定義する
             path: bdd-routine-definition.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/routine.ts
+                purpose: 定期処理定義（routine）のスキーマ・due判定・last_run/last_result更新規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -297,6 +363,10 @@ groups:
             overview: Job Run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する
             path: bdd-job-run.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/job.ts
+                purpose: Job Definition・Job Runのスキーマ、idempotency key・attempt・checkpointの生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -321,6 +391,10 @@ groups:
             overview: 成果物本体の共通メタ情報のエンティティ・属性を定義する
             path: bdd-deliverable.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/deliverable.ts
+                purpose: 成果物本体の共通メタ情報（frontmatter）の読込・雛形生成
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -343,6 +417,13 @@ groups:
             overview: 派生ビュー・索引（登録簿ビュー、カタログ表示、文書索引等）のエンティティ・属性を定義する
             path: bdd-derived-view.yaml
             rulebook: specdojo:bdd-rulebook
+            evidence_refs:
+              - kind: implementation
+                path: src/catalog-generate.ts
+                purpose: 成果物カタログ表示ビュー（generated/dct-<domain>.md）の生成規則
+              - kind: implementation
+                path: src/doc-index.ts
+                purpose: 文書ID索引（.specdojo/doc-index.json）の構造・生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -365,6 +446,7 @@ groups:
             overview: 報告記録（進捗報告、議事録）のエンティティ・属性を定義する
             path: bdd-report-record.yaml
             rulebook: specdojo:bdd-rulebook
+            note: pr-*/mm-*はCLI側の専用生成コードを持たない（人が直接作成する文書）ため、evidence_refsは設定せず、pr-rulebook.md/mm-rulebook.mdの構成要件を根拠にする
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]

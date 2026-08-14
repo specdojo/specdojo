@@ -24,6 +24,13 @@ groups:
         path: ifx-index.yaml
         rulebook: specdojo:ifx-rulebook
         note: interfaces の kind は現状スキーマの制約上 API を暫定使用し、spec_ref は TBD とする。PJR-T7EM（ifx-cmd新設）完了後、kindをコマンド区分へ、spec_refをifx-cmd-<term>へ更新する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: AI provider CLIの起動コマンド解決・非対話実行
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: Git操作（worktree作成・commit・push等）の実行箇所
         done_criteria:
           - text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
             roles: [BA]

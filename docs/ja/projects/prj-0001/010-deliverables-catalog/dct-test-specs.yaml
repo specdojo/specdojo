@@ -75,6 +75,16 @@ groups:
         overview: catalog*.ts／deliverable*.ts／kata.ts の単体テスト観点・条件を定義する
         path: utc-catalog.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog.ts
+            purpose: 成果物カタログの読込・検証の中核処理
+          - kind: implementation
+            path: src/catalog-build.ts
+            purpose: カタログ検証・表示ビュー生成
+          - kind: implementation
+            path: src/deliverable.ts
+            purpose: 成果物本体の読込・雛形生成
         done_criteria: &utc-target-done-criteria
           - text: 個別対象の範囲・観点・代表条件が記述されていること
             roles: [QE]
@@ -90,6 +100,13 @@ groups:
         overview: schedule.ts／schedule-build.ts／schedule-phase-sets.ts の単体テスト観点・条件を定義する
         path: utc-schedule.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/schedule.ts
+            purpose: sch-track読込・タスクID導出
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: sch-strategyからのsch-track生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-core
         name: 単体テスト（exec中核）
@@ -99,6 +116,16 @@ groups:
         overview: exec.ts／exec-run.ts／exec-plans.ts／exec-results.ts／exec-events.ts等の単体テスト観点・条件を定義する
         path: utc-exec-core.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: タスク選択・claim・agent起動・完了処理の中核
+          - kind: implementation
+            path: src/exec-plans.ts
+            purpose: plan frontmatterの生成・scaffold規則
+          - kind: implementation
+            path: src/exec-results.ts
+            purpose: result frontmatter・必須節のscaffold・記入検証
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-schedule
         name: 単体テスト（exec-schedule）
@@ -108,6 +135,13 @@ groups:
         overview: exec-schedule*.ts（CPM・timeline・ready等）の単体テスト観点・条件を定義する
         path: utc-exec-schedule.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-schedule-cpm.ts
+            purpose: CPM・クリティカルパス・slackの算出
+          - kind: implementation
+            path: src/exec-schedule-ready.ts
+            purpose: Ready task算出
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-worktree
         name: 単体テスト（exec-worktree）
@@ -117,6 +151,13 @@ groups:
         overview: exec-worktree*.ts の単体テスト観点・条件を定義する
         path: utc-exec-worktree.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: worktree・branchの命名規則・配置
+          - kind: implementation
+            path: src/exec-worktree-ops.ts
+            purpose: worktreeの作成・削除・同期操作
         done_criteria: *utc-target-done-criteria
       - local_id: utc-register
         name: 単体テスト（登録簿）
@@ -126,6 +167,13 @@ groups:
         overview: register*.ts の単体テスト観点・条件を定義する
         path: utc-register.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目の状態遷移・派生ビュー更新
+          - kind: implementation
+            path: src/register-item.ts
+            purpose: 登録項目個票のフィールド定義・生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-routine-job
         name: 単体テスト（定期処理・Job）
@@ -135,6 +183,13 @@ groups:
         overview: routine.ts／job.ts の単体テスト観点・条件を定義する
         path: utc-routine-job.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期処理定義のdue判定・実行委譲
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Run生成・実行・checkpoint更新
         done_criteria: *utc-target-done-criteria
       - local_id: utc-index-build
         name: 単体テスト（索引・派生生成）
@@ -144,6 +199,13 @@ groups:
         overview: index-command.ts／doc-index.ts／watch.ts／build-command.ts／yaml-pages*.ts の単体テスト観点・条件を定義する
         path: utc-index-build.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/doc-index.ts
+            purpose: 文書ID索引の構造・生成規則
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
         done_criteria: *utc-target-done-criteria
       - local_id: utc-cli-config
         name: 単体テスト（CLI・構成）
@@ -153,6 +215,13 @@ groups:
         overview: specdojo.ts／specdojo-config.ts／spawn-self.ts等の単体テスト観点・条件を定義する
         path: utc-cli-config.md
         rulebook: specdojo:utc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: CLIエントリポイント・サブコマンド登録
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: プロジェクト構成の読込・検証・既定値解決
         done_criteria: *utc-target-done-criteria
 
   - name: 内部結合テストカタログ
@@ -187,6 +256,13 @@ groups:
         overview: 成果物カタログからSchedule展開までの連携を確認する
         path: itc-catalog-schedule.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog-build.ts
+            purpose: 成果物カタログの検証・確定
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: 検証済みカタログからのsch-track生成
         done_criteria: &itc-target-done-criteria
           - text: 個別結合範囲・テスト条件・合格基準が記述されていること
             roles: [QE]
@@ -202,6 +278,13 @@ groups:
         overview: Schedule展開からexec refresh・Ready算出までの連携を確認する
         path: itc-schedule-exec.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-schedule.ts
+            purpose: Schedule検証・状態再計算のexec側処理
+          - kind: implementation
+            path: src/exec-schedule-ready.ts
+            purpose: Ready task算出
         done_criteria: *itc-target-done-criteria
       - local_id: itc-exec-register
         name: 内部結合テスト（exec↔登録簿）
@@ -211,6 +294,13 @@ groups:
         overview: 登録簿連携タスク（AI Agentによる対応・調査）の実行連携を確認する
         path: itc-exec-register.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録項目に紐づくexecタスクの実行連携
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目の状態遷移
         done_criteria: *itc-target-done-criteria
       - local_id: itc-exec-worktree
         name: 内部結合テスト（exec↔worktree分離）
@@ -220,6 +310,13 @@ groups:
         overview: exec実行とworktree分離・統合の連携を確認する
         path: itc-exec-worktree.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: claim時のworktree割当・完了時の統合制御
+          - kind: implementation
+            path: src/exec-worktree-ops.ts
+            purpose: worktreeの作成・削除操作
         done_criteria: *itc-target-done-criteria
       - local_id: itc-routine-exec
         name: 内部結合テスト（routine→exec自動実行）
@@ -229,6 +326,13 @@ groups:
         overview: routineからのexec自動実行（exec-auto／exec-cycle等）の連携を確認する
         path: itc-routine-exec.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: action.kind別（exec-auto/exec-resume/exec-cycle）の委譲規則
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: routineから委譲された実行の処理
         done_criteria: *itc-target-done-criteria
       - local_id: itc-build-index
         name: 内部結合テスト（build→索引・派生生成）
@@ -238,6 +342,13 @@ groups:
         overview: build実行からindex・yaml-pages等の派生生成までの連携を確認する
         path: itc-build-index.md
         rulebook: specdojo:itc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
+          - kind: implementation
+            path: src/doc-index.ts
+            purpose: 文書索引の再構築
         done_criteria: *itc-target-done-criteria
 
   - name: 外部結合テストカタログ
@@ -272,6 +383,10 @@ groups:
         overview: AI provider CLI（Claude Code／Codex／opencode等）との連携（ifx-index対応）を確認する
         path: etc-provider-cli.md
         rulebook: specdojo:etc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: AI provider CLIの起動コマンド解決・非対話実行
         done_criteria: &etc-target-done-criteria
           - text: I/Fごとのテスト条件・前提・合格基準が記述されていること
             roles: [QE]
@@ -287,6 +402,10 @@ groups:
         overview: Git／GitHub（gh CLI）との連携（ifx-index対応）を確認する
         path: etc-git-github.md
         rulebook: specdojo:etc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: Git操作（worktree作成・commit・push等）の実行箇所
         done_criteria: *etc-target-done-criteria
 
   - name: 総合テストカタログ
@@ -320,6 +439,16 @@ groups:
         overview: 初期セットアップのエンドツーエンドシナリオを定義する
         path: stc-init.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-init
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: プロジェクト構成の初期化
+          - kind: implementation
+            path: src/catalog-scaffold.ts
+            purpose: 成果物カタログの初期生成
+          - kind: implementation
+            path: src/exec-provider-scaffold.ts
+            purpose: provider実行構成の初期生成
         done_criteria: &stc-target-done-criteria
           - text: 個別シナリオの前提・データ準備・テスト条件・期待結果が記述されていること
             roles: [QE]
@@ -334,6 +463,16 @@ groups:
         overview: 登録簿ライフサイクルのエンドツーエンドシナリオを定義する
         path: stc-register-lifecycle.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-register-lifecycle
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目の状態遷移・派生ビュー更新
+          - kind: implementation
+            path: src/register-item.ts
+            purpose: 登録項目個票のフィールド定義
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録項目に紐づくexecタスクの実行連携
         done_criteria: *stc-target-done-criteria
       - local_id: stc-catalog-planning
         name: 総合テスト（計画展開）
@@ -342,6 +481,16 @@ groups:
         overview: 計画展開のエンドツーエンドシナリオを定義する
         path: stc-catalog-planning.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-catalog-planning
+          - kind: implementation
+            path: src/catalog-build.ts
+            purpose: 成果物カタログの検証
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: Schedule展開
+          - kind: implementation
+            path: src/exec-schedule.ts
+            purpose: 実行入力検証・状態再構成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-task-execution
         name: 総合テスト（タスク実行）
@@ -350,6 +499,19 @@ groups:
         overview: タスク実行のエンドツーエンドシナリオを定義する
         path: stc-task-execution.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-task-execution
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: タスク選択・claim・agent起動・完了処理
+          - kind: implementation
+            path: src/exec-run-lock.ts
+            purpose: 実行ロックの排他制御
+          - kind: implementation
+            path: src/exec-events.ts
+            purpose: 実行イベントの記録
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-routine
         name: 総合テスト（定期処理）
@@ -358,6 +520,16 @@ groups:
         overview: 定期処理のエンドツーエンドシナリオを定義する
         path: stc-routine.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-routine
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期実行対象選択・実行試行記録・結果反映
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: routineから委譲された実行
+          - kind: implementation
+            path: src/job.ts
+            purpose: Job Run生成・実行
         done_criteria: *stc-target-done-criteria
       - local_id: stc-multi-project
         name: 総合テスト（並行処理）
@@ -366,6 +538,13 @@ groups:
         overview: 並行処理のエンドツーエンドシナリオを定義する
         path: stc-multi-project.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-multi-project
+          - kind: implementation
+            path: src/exec-project.ts
+            purpose: project develop作成・並行実行割当
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: feature/exec worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-agent-config-operation
         name: 総合テスト（構成変更）
@@ -374,6 +553,13 @@ groups:
         overview: agent・provider構成変更のエンドツーエンドシナリオを定義する
         path: stc-agent-config-operation.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-agent-config-operation
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: agent・provider設定の解決とコマンド生成
+          - kind: implementation
+            path: src/exec-strategy.ts
+            purpose: phaseの実行要件とapproachの解決
         done_criteria: *stc-target-done-criteria
       - local_id: stc-derived-content
         name: 総合テスト（派生生成）
@@ -382,6 +568,19 @@ groups:
         overview: 派生生成のエンドツーエンドシナリオを定義する
         path: stc-derived-content.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-derived-content
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 一括再生成の順序制御
+          - kind: implementation
+            path: src/catalog-generate.ts
+            purpose: カタログ表示ビュー生成
+          - kind: implementation
+            path: src/doc-index.ts
+            purpose: 文書索引生成
+          - kind: implementation
+            path: src/yaml-pages.ts
+            purpose: YAML表示ページ生成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-reporting
         name: 総合テスト（報告）
@@ -390,6 +589,16 @@ groups:
         overview: 報告のエンドツーエンドシナリオを定義する
         path: stc-reporting.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-reporting
+          - kind: implementation
+            path: src/exec-task-view.ts
+            purpose: 進捗・タスク状態の集約表示
+          - kind: implementation
+            path: src/exec-schedule-cpm.ts
+            purpose: CPM・クリティカルパスの算出
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿の状態集計
         done_criteria: *stc-target-done-criteria
       - local_id: stc-deprecation
         name: 総合テスト（非推奨化・保管）
@@ -398,6 +607,13 @@ groups:
         overview: 非推奨化・保管のエンドツーエンドシナリオを定義する
         path: stc-deprecation.md
         rulebook: specdojo:stc-rulebook
+        evidence_refs: &evidence-deprecation
+          - kind: implementation
+            path: src/deliverable-trash.ts
+            purpose: 文書のtrash移動・カタログ更新
+          - kind: implementation
+            path: src/catalog-paths.ts
+            purpose: 保管先パスの解決
         done_criteria: *stc-target-done-criteria
 
   - name: 受入テストカタログ
@@ -431,6 +647,7 @@ groups:
         overview: 初期セットアップの受入テスト条件を定義する
         path: atc-init.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-init
         done_criteria: &atc-target-done-criteria
           - text: 個別シナリオの前提・テスト条件・期待結果・合格基準が記述されていること
             roles: [QE]
@@ -448,6 +665,7 @@ groups:
         overview: 登録簿ライフサイクルの受入テスト条件を定義する
         path: atc-register-lifecycle.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-register-lifecycle
         done_criteria: *atc-target-done-criteria
       - local_id: atc-catalog-planning
         name: 受入テスト（計画展開）
@@ -456,6 +674,7 @@ groups:
         overview: 計画展開の受入テスト条件を定義する
         path: atc-catalog-planning.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-catalog-planning
         done_criteria: *atc-target-done-criteria
       - local_id: atc-task-execution
         name: 受入テスト（タスク実行）
@@ -464,6 +683,7 @@ groups:
         overview: タスク実行の受入テスト条件を定義する
         path: atc-task-execution.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-task-execution
         done_criteria: *atc-target-done-criteria
       - local_id: atc-routine
         name: 受入テスト（定期処理）
@@ -472,6 +692,7 @@ groups:
         overview: 定期処理の受入テスト条件を定義する
         path: atc-routine.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-routine
         done_criteria: *atc-target-done-criteria
       - local_id: atc-multi-project
         name: 受入テスト（並行処理）
@@ -480,6 +701,7 @@ groups:
         overview: 並行処理の受入テスト条件を定義する
         path: atc-multi-project.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-multi-project
         done_criteria: *atc-target-done-criteria
       - local_id: atc-agent-config-operation
         name: 受入テスト（構成変更）
@@ -488,6 +710,7 @@ groups:
         overview: agent・provider構成変更の受入テスト条件を定義する
         path: atc-agent-config-operation.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-agent-config-operation
         done_criteria: *atc-target-done-criteria
       - local_id: atc-derived-content
         name: 受入テスト（派生生成）
@@ -496,6 +719,7 @@ groups:
         overview: 派生生成の受入テスト条件を定義する
         path: atc-derived-content.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-derived-content
         done_criteria: *atc-target-done-criteria
       - local_id: atc-reporting
         name: 受入テスト（報告）
@@ -504,6 +728,7 @@ groups:
         overview: 報告の受入テスト条件を定義する
         path: atc-reporting.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-reporting
         done_criteria: *atc-target-done-criteria
       - local_id: atc-deprecation
         name: 受入テスト（非推奨化・保管）
@@ -512,4 +737,5 @@ groups:
         overview: 非推奨化・保管の受入テスト条件を定義する
         path: atc-deprecation.md
         rulebook: specdojo:atc-rulebook
+        evidence_refs: *evidence-deprecation
         done_criteria: *atc-target-done-criteria

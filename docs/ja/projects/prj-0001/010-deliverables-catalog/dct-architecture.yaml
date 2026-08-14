@@ -24,6 +24,13 @@ groups:
         overview: SpecDojo CLIと、境界外の人・外部システム（AI provider CLI、Git/GitHub）との関係を俯瞰的に定義する
         path: cxd-specdojo.md
         rulebook: specdojo:cxd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: CLIエントリポイントが公開するコマンド全体（境界の外縁）
+          - kind: implementation
+            path: package.json
+            purpose: 外部ツール依存関係（provider CLI・GitHub連携等）の宣言
         done_criteria:
           - text: 対象システムと外部システム・ユーザーの関係が業務観点で正確に表現されていること
             roles: [BA]
@@ -46,6 +53,13 @@ groups:
         overview: SpecDojo CLI・生成ドキュメントサイト（VitePress）・外部システム・リポジトリ（データストア）の関係を定義する
         path: cnd-specdojo.md
         rulebook: specdojo:cnd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: SpecDojo CLIコンテナが持つコマンド領域
+          - kind: implementation
+            path: .vitepress/config.mts
+            purpose: 生成ドキュメントサイト（VitePress）コンテナのビルド構成
         done_criteria:
           - text: 主要コンテナ構成・データフローが業務観点で理解できること
             roles: [BA]
@@ -71,6 +85,10 @@ groups:
         overview: SpecDojo CLI内部の主要コンポーネント（catalog／schedule／exec／register／routine／index等のエンジン）と依存関係を定義する
         path: cpd-specdojo-cli.md
         rulebook: specdojo:cpd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: 各サブコマンド（catalog/schedule/exec/register/routine/index/build等）の登録・呼び出し関係
         done_criteria:
           - text: コンポーネント構成と依存関係を設計の入力として参照できること
             roles: [ARC]
@@ -93,6 +111,13 @@ groups:
         overview: SpecDojo CLIの実行環境（devcontainer／ホスト）と、クラウドAI provider（Claude・Codex・GitHub Copilot等）・Tailscale経由のホームMacローカルLLMゾーン（Ollama・vllm-mlx）・GitHubへの通信境界を定義する
         path: ifd-specdojo.md
         rulebook: specdojo:ifd-mermaid-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: .devcontainer/devcontainer.json
+            purpose: SpecDojo CLI実行環境（devcontainer）のネットワーク・接続構成
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: クラウドAI providerへの接続解決規則
         done_criteria:
           - text: 実行環境・ネットワーク・コンポーネント構成が業務制約と整合していること
             roles: [BA]
@@ -118,6 +143,10 @@ groups:
         path: tsd-index.md
         rulebook: specdojo:tsd-index-rulebook
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        evidence_refs:
+          - kind: implementation
+            path: package.json
+            purpose: 採用技術・依存ライブラリの一覧（バージョン含む）
         done_criteria: &tsd-done-criteria
           - text: 採用技術の選定理由と制約が業務要件と整合していること
             roles: [BA]
@@ -143,6 +172,10 @@ groups:
         overview: TypeScript／Node.js／Commander.js／js-yaml／AJV／markdownlint-cli／remark／Prettier／lefthook／commitlint／npm配信など、CLI実装・開発ツールチェーンの詳細を定義する
         path: tsd-specdojo-cli.md
         rulebook: specdojo:tsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: package.json
+            purpose: CLI実装・開発ツールチェーン（TypeScript/Commander.js/js-yaml/AJV/markdownlint-cli/remark/Prettier/lefthook/commitlint等）の依存関係とバージョン
         done_criteria: *tsd-done-criteria
 
       - local_id: tsd-docs-site
@@ -153,6 +186,13 @@ groups:
         overview: VitePress・Mermaid CLIなど、ドキュメントサイトのビルド・配信技術の詳細を定義する
         path: tsd-docs-site.md
         rulebook: specdojo:tsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: .vitepress/config.mts
+            purpose: VitePressのサイト構成・ビルド設定
+          - kind: implementation
+            path: package.json
+            purpose: Mermaid CLI等ドキュメントサイト関連の依存関係
         done_criteria: *tsd-done-criteria
 
       - local_id: tsd-ollama
