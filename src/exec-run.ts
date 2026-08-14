@@ -760,11 +760,16 @@ function resolveReporterAgentCandidates(
       ];
     }
   }
+  // Reporter behavior (turn captured evidence into a structured result; write nothing
+  // else) does not vary between edit and review tasks, unlike the executor stage. Do not
+  // filter reporter candidates by task.mode: a reporter member's own `mode` (if it has
+  // one, e.g. to resolve a provider command_template placeholder) only affects command
+  // construction, not eligibility.
   const candidates: AgentRunCandidate[] = [];
   for (const member of selectCandidates(
     requirements,
     roster,
-    task.mode ?? "edit",
+    undefined,
     busyActors,
     execDefaults,
   )) {

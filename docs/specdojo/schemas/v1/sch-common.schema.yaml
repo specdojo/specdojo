@@ -186,6 +186,13 @@ $defs:
         $ref: "#/$defs/Owner"
       agent_mode:
         $ref: "#/$defs/AgentMode"
+      artifact_name:
+        type: string
+        minLength: 1
+        description: >
+          Human-readable artifact/domain name displayed in the timeline artifact column.
+          Set on cross-deliverable-pass tasks (target_local_ids, no single local_id),
+          whose document path cannot be resolved from the catalog.
       tags:
         type: array
         description: "Optional tags for filtering/grouping."

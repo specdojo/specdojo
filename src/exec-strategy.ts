@@ -54,6 +54,7 @@ type StrategyMinimal = {
     approach?: unknown;
     capabilities?: unknown;
     proficiency?: unknown;
+    agent_pipeline?: unknown;
   }>;
 };
 
@@ -76,6 +77,7 @@ export type PhaseModeIndex = {
   taskIdToApproach: Map<string, Approach>;
   taskIdToCapabilities: Map<string, string[]>;
   taskIdToProficiency: Map<string, Proficiency>;
+  taskIdToAgentPipeline: Map<string, AgentPipeline>;
   defaultMode: TaskMode;
 };
 
@@ -166,6 +168,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const taskIdToApproach = new Map<string, Approach>();
   const taskIdToCapabilities = new Map<string, string[]>();
   const taskIdToProficiency = new Map<string, Proficiency>();
+  const taskIdToAgentPipeline = new Map<string, AgentPipeline>();
 
   const defaultMode: TaskMode = "edit";
 
@@ -307,6 +310,10 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
         if (isProficiency(pass.proficiency)) {
           taskIdToProficiency.set(taskId, pass.proficiency);
         }
+        const agentPipeline = asAgentPipeline(pass.agent_pipeline);
+        if (agentPipeline !== undefined) {
+          taskIdToAgentPipeline.set(taskId, agentPipeline);
+        }
       }
     }
   }
@@ -330,6 +337,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     taskIdToApproach,
     taskIdToCapabilities,
     taskIdToProficiency,
+    taskIdToAgentPipeline,
     defaultMode,
   };
 }
@@ -342,7 +350,9 @@ export function resolveAgentPipeline(
   phaseSuffix?: string,
   phaseSet?: string,
 ): AgentPipeline | undefined {
-  if (!localId) return undefined;
+  // Cross-deliverable-pass tasks (target_local_ids, no single local_id) declare
+  // agent_pipeline directly on the pass, indexed by the generated task ID.
+  if (!localId) return index.taskIdToAgentPipeline.get(taskId);
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
   const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);

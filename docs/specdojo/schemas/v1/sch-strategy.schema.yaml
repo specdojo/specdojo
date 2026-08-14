@@ -239,6 +239,12 @@ properties:
           $ref: "#/$defs/Capabilities"
         proficiency:
           $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        agent_pipeline:
+          $ref: "#/$defs/AgentPipeline"
+          description: >
+            Optional ordered executor/reporter pipeline for this cross-deliverable pass.
+            Indexed by the generated task ID (no single local_id applies). Omit to
+            preserve the legacy single-agent execution flow.
         description:
           type: string
           description: "Instructions carried into the generated task and exec plan."
@@ -278,6 +284,14 @@ properties:
             - required: [catalogs]
             - required: [groups]
             - required: [local_ids]
+      allOf:
+        - if:
+            required:
+              - agent_pipeline
+          then:
+            properties:
+              execution:
+                const: "agent"
 
   group_milestones:
     type: array

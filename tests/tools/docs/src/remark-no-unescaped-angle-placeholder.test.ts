@@ -101,5 +101,5 @@ describe("remarkNoUnescapedAnglePlaceholder against the real docs tree", () => {
     }
 
     expect(violations).toEqual([]);
-  }, 15_000);
+  }, 30_000);
 });

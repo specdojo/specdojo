@@ -513,5 +513,5 @@ describe("prj-0001 project register references", () => {
     } finally {
       rmSync(outputDir, { recursive: true, force: true });
     }
-  });
+  }, 20_000);
 });

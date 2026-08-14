@@ -740,6 +740,8 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     fixture = undefined;
   });
 
+  // Spawns real git worktree + child-process commands; needs more than the 5s default
+  // when the full suite runs in parallel under load.
   it("resumes the reporter from persisted evidence instead of rerunning the executor", async () => {
     fixture = setupPipelineRepository();
     worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
@@ -801,5 +803,5 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     // 同一秒に書かれるイベントはファイル名順が確定しないため、種別の集合で確認する。
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
-  });
+  }, 20_000);
 });
