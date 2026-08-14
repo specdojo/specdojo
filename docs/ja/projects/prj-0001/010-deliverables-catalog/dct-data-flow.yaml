@@ -385,7 +385,7 @@ groups:
           - text: 非推奨化の判断から、id移行経路（ファイル名のみ変更・新IDへの切替）の使い分け、trashディレクトリへの物理移動までの流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: local_idとSchedule task IDを変更せず、成果物カタログのpathフィールドだけを更新して docs/ja/product/trash/ または docs/ja/projects/<project-id>/trash/ へ配置する対応関係が識別できること
+          - text: local_idとSchedule task IDを変更せず、成果物カタログのpathフィールドだけを更新して `docs/ja/product/trash/` または `docs/ja/projects/<project-id>/trash/` へ配置する対応関係が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: 移動先が既に存在する場合、対象文書またはcatalogエントリが見つからない場合の停止条件が確認できること

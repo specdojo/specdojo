@@ -118,7 +118,7 @@ owner として達成する狙い:
 
 下流ロールの入力適合（最低ライン。各ロールの内容は作り込まず、入力として成立させる）:
 
-- [ARC] local_idとSchedule task IDを変更せず、成果物カタログのpathフィールドだけを更新して docs/ja/product/trash/ または docs/ja/projects/<project-id>/trash/ へ配置する対応関係が識別できること
+- [ARC] local_idとSchedule task IDを変更せず、成果物カタログのpathフィールドだけを更新して `docs/ja/product/trash/` または `docs/ja/projects/<project-id>/trash/` へ配置する対応関係が識別できること
 - [QE] 移動先が既に存在する場合、対象文書またはcatalogエントリが見つからない場合の停止条件が確認できること
 - [PO] 非推奨化の承認境界と、恒久的な削除・復元の方針が本領域の対象外として未定義のままであることを承認できること
 
