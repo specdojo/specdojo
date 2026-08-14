@@ -62,7 +62,7 @@ groups:
         overview: SpecDojo導入が、コミュニケーション・連携手段（現状はSlack中心、導入後はGit/GitHubの正本管理中心）へ与える影響を整理する
         path: imp-interface.md
         rulebook: specdojo:imp-interface-rulebook
-        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする。じぶんごとプラネット側に変更対象のI/Fは実在しないため内容は薄くなる見込みだが、PJR-1F46のとおりKata（imp-interface-rulebook）の整備・検証を目的として意図的に維持する
         done_criteria: &imp-done-criteria-4
           - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -85,7 +85,7 @@ groups:
         overview: SpecDojo導入が、検証方法（現状はペルソナワークショップ等の手動検証、導入後はdone_criteria・レビュー観点による検証）へ与える影響を整理する
         path: imp-test.md
         rulebook: specdojo:imp-test-rulebook
-        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする。じぶんごとプラネット側に既存テスト資産は実在しないため内容は薄くなる見込みだが、PJR-1F46のとおりKata（imp-test-rulebook）の整備・検証を目的として意図的に維持する
         done_criteria: *imp-done-criteria-4
 
       - local_id: imp-operations

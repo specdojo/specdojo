@@ -56,6 +56,7 @@ groups:
         overview: Slack上の議論・ワークショップ記録・個人noteなど非構造の記録を、成果物カタログ・登録簿・Schedule等の構造化データへ変換する設計を定義する
         path: dmd-index.md
         rulebook: specdojo:dmd-index-rulebook
+        note: &kata-only-migration-note じぶんごとプラネットの移行は仮想シナリオであり、実データ移行・本番切替は発生しない。PJR-1F46のとおりKata（dmd-index-rulebook）の整備・検証を目的として意図的に維持する
         done_criteria:
           - text: 移行対象データ・変換方針・マッピングが業務観点で確認できること
             roles: [BA]
@@ -81,6 +82,7 @@ groups:
         overview: SpecDojoベース運営への切替前に、成果物カタログ・Schedule・登録簿が実運用に耐えるかを検証するリハーサル計画を定義する
         path: mtp-index.md
         rulebook: specdojo:mtp-index-rulebook
+        note: *kata-only-migration-note
         done_criteria:
           - text: テスト範囲・シナリオ・判定基準が業務観点で確認できること
             roles: [BA]
@@ -104,6 +106,7 @@ groups:
         overview: ソーシャルハックデー中心の運営からSpecDojoベース運営への切替手順を定義し、活動停止期間と混乱を最小化する
         path: cop-index.md
         rulebook: specdojo:cop-index-rulebook
+        note: *kata-only-migration-note
         done_criteria:
           - text: 切替手順・業務停止範囲・判定ポイントが業務観点で確認できること
             roles: [BA]
@@ -129,6 +132,7 @@ groups:
         overview: 切替後、SpecDojoベース運営（Schedule・登録簿・routine）が安定稼働するまでの運用移管計画とハイパーケア体制を定義する
         path: otp-index.md
         rulebook: specdojo:otp-index-rulebook
+        note: *kata-only-migration-note
         done_criteria:
           - text: 運用引継ぎ・ハイパーケア体制が業務観点で確認できること
             roles: [BA]

@@ -33,8 +33,9 @@ specdojo:
 
 ## 3. フォローアップ
 
-- コードが実在する領域（`data-model`／`system-design`／`architecture`／`test-specs`／`external-interface-specs`／`system-functions`）の各カタログエントリへ`evidence_refs`を追記する。
-- `bac-*`／`sac-*`／`nfr-*`の該当エントリへ、`prj-success-criteria-and-acceptance-criteria`（AC-01〜04、SC-01〜06）・`prj-comparison-of-alternatives`（評価軸）への参照を追加する。
+- [x] コードが実在する領域（`data-model`／`system-design`／`architecture`／`test-specs`／`external-interface-specs`／`system-functions`）の各カタログエントリへ`evidence_refs`を追記した。
+- [x] `bac-*`／`sac-*`／`nfr-*`の該当エントリへ、`prj-success-criteria-and-acceptance-criteria`（AC-01〜04、SC-01〜06）・`prj-comparison-of-alternatives`（評価軸）への参照を追加した。
+- [x] 「最大セットでも不要では」と指摘した`dmd-index`／`mtp-index`／`cop-index`／`otp-index`（migration-planning）、`imp-interface`／`imp-test`（impact-analysis）、`sysd-critical-flows`（system-design）について、Kata（rulebook）整備・検証を目的として意図的に維持する方針を確認した。各エントリの`note`に維持理由を明記した。
 - 成果物本体の作成・Schedule化は、SC-01〜SC-03に必要な範囲を優先し、238件を一括着手しない。
 
 ## 4. 関連ドキュメント

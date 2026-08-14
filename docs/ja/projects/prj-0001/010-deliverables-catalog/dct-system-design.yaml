@@ -46,7 +46,7 @@ groups:
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
         rulebook: specdojo:sysd-critical-flows-rulebook
-        note: PJR-ZP0Bで要否を判断する。不要と判断した場合はkindをcontrolへ変更するか本エントリを削除し、判断根拠をPJR-ZP0Bのresultへ記録する
+        note: PJR-1F46のとおりKata（sysd-critical-flows-rulebook）の整備・検証を目的として意図的に維持する。SpecDojo自体に本当に「最大5件の重要フロー」が必要かはPJR-ZP0Bで改めて判断し、不要と判断した場合はkindをcontrolへ変更するか本エントリを削除して判断根拠をPJR-ZP0Bのresultへ記録する
         done_criteria:
           - text: 重要フローの選定理由と業務影響が確認できること
             roles: [BA]
