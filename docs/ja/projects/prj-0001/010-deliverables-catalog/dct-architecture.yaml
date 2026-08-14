@@ -1,0 +1,246 @@
+id: prj-0001:dct-architecture
+type: project
+status: draft
+title: 成果物カタログ（アーキテクチャ）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: architecture
+base_path: /docs/ja/product/030-architecture
+
+# tsd-index・tsd-ollama・tsd-ollama-opencode・tsd-home-mac-dev-server・
+# tsd-home-mac-dev-server-usage・tsd-vllm-mlx・tsd-vllm-mlx-opencode・
+# tsd-vllm-mlx-mr・tsd-vllm-mlx-mr-opencode の9件は、本カタログ整備前に
+# 作成済みの既存文書を retrofit で登録する（evidence_refsではなくpathで直接参照）。
+# 他6件（cxd/cnd/cpd/ifd/tsd-specdojo-cli/tsd-docs-site）は新規。
+
+groups:
+  - name: C4（構造・依存関係）
+    base_path: 010-c4
+    deliverables:
+      - local_id: cxd-specdojo
+        name: C4コンテキスト図（SpecDojo）
+        kind: work
+        depends_on: []
+        overview: SpecDojo CLIと、境界外の人・外部システム（AI provider CLI、Git/GitHub）との関係を俯瞰的に定義する
+        path: cxd-specdojo.md
+        rulebook: specdojo:cxd-rulebook
+        done_criteria:
+          - text: 対象システムと外部システム・ユーザーの関係が業務観点で正確に表現されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: システム境界とステークホルダーを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: アーキテクチャ全体構造の共通理解として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: システム境界・外部依存のテスト観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: cnd-specdojo
+        name: C4コンテナ図（SpecDojo）
+        kind: work
+        depends_on:
+          - cxd-specdojo
+        overview: SpecDojo CLI・生成ドキュメントサイト（VitePress）・外部システム・リポジトリ（データストア）の関係を定義する
+        path: cnd-specdojo.md
+        rulebook: specdojo:cnd-rulebook
+        done_criteria:
+          - text: 主要コンテナ構成・データフローが業務観点で理解できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: コンテナ構成とデプロイ方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: インフラ設計・デプロイ構成の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: コンテナ間結合テストの対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装コンポーネントの配備先・通信経路の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: cpd-specdojo-cli
+        name: C4コンポーネント図（SpecDojo CLI）
+        kind: work
+        depends_on:
+          - cnd-specdojo
+        overview: SpecDojo CLI内部の主要コンポーネント（catalog／schedule／exec／register／routine／index等のエンジン）と依存関係を定義する
+        path: cpd-specdojo-cli.md
+        rulebook: specdojo:cpd-rulebook
+        done_criteria:
+          - text: コンポーネント構成と依存関係を設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: コンポーネント間インターフェースのテスト観点が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: コンポーネント実装の配置・依存方向の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+  - name: インフラ・技術選定
+    base_path: 020-infrastructure
+    deliverables:
+      - local_id: ifd-specdojo
+        name: インフラ構成図（SpecDojo実行環境）
+        kind: work
+        depends_on:
+          - cnd-specdojo
+        overview: SpecDojo CLIの実行環境（devcontainer／ホスト）と、クラウドAI provider（Claude・Codex・GitHub Copilot等）・Tailscale経由のホームMacローカルLLMゾーン（Ollama・vllm-mlx）・GitHubへの通信境界を定義する
+        path: ifd-specdojo.md
+        rulebook: specdojo:ifd-mermaid-rulebook
+        done_criteria:
+          - text: 実行環境・ネットワーク・コンポーネント構成が業務制約と整合していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: インフラ方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: インフラ設計・セキュリティゾーン設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: インフラテスト・障害テストの対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用構成・監視設定の参照として使えること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: tsd-index
+        name: 技術スタック定義（全体構成）
+        kind: work
+        depends_on: []
+        overview: SpecDojoが採用する技術の全体インベントリ（既存文書、retrofit対象）
+        path: tsd-index.md
+        rulebook: specdojo:tsd-index-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: &tsd-done-criteria
+          - text: 採用技術の選定理由と制約が業務要件と整合していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 技術スタック選定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的制約・ライセンス・バージョン方針が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テストフレームワーク・CI/CD環境の参照として使えること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 開発環境構築・ライブラリ選定の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: tsd-specdojo-cli
+        name: 技術スタック定義（SpecDojo CLI実装）
+        kind: work
+        depends_on:
+          - cpd-specdojo-cli
+        overview: TypeScript／Node.js／Commander.js／js-yaml／AJV／markdownlint-cli／remark／Prettier／lefthook／commitlint／npm配信など、CLI実装・開発ツールチェーンの詳細を定義する
+        path: tsd-specdojo-cli.md
+        rulebook: specdojo:tsd-rulebook
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-docs-site
+        name: 技術スタック定義（ドキュメントサイト）
+        kind: work
+        depends_on:
+          - cnd-specdojo
+        overview: VitePress・Mermaid CLIなど、ドキュメントサイトのビルド・配信技術の詳細を定義する
+        path: tsd-docs-site.md
+        rulebook: specdojo:tsd-rulebook
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-ollama
+        name: 技術スタック定義（Ollama）
+        kind: work
+        depends_on:
+          - ifd-specdojo
+        overview: Host Mac上でのローカルLLM実行（Ollama）の詳細（既存文書、retrofit対象）
+        path: tsd-ollama.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-ollama-opencode
+        name: 技術スタック定義（Ollama × opencode）
+        kind: work
+        depends_on:
+          - tsd-ollama
+        overview: opencodeからOllamaを利用する構成の詳細（既存文書、retrofit対象）
+        path: tsd-ollama-opencode.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-home-mac-dev-server
+        name: 技術スタック定義（ホームMac開発サーバ・初期設定）
+        kind: work
+        depends_on:
+          - ifd-specdojo
+          - tsd-ollama
+        overview: 自宅MacBook Proを常時起動の開発サーバとして使うための初期設定の詳細（既存文書、retrofit対象）
+        path: tsd-home-mac-dev-server.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-home-mac-dev-server-usage
+        name: 技術スタック定義（ホームMac開発サーバ・日常運用）
+        kind: work
+        depends_on:
+          - tsd-home-mac-dev-server
+        overview: tmuxとSpecDojoを用いたホームMac開発サーバの日常運用の詳細（既存文書、retrofit対象）
+        path: tsd-home-mac-dev-server-usage.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-vllm-mlx
+        name: 技術スタック定義（vllm-mlx）
+        kind: work
+        depends_on:
+          - ifd-specdojo
+        overview: Apple Silicon上でのOpenAI/Anthropic互換LLM Serving（vllm-mlx）の詳細（既存文書、retrofit対象）
+        path: tsd-vllm-mlx.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-vllm-mlx-opencode
+        name: 技術スタック定義（vllm-mlx × opencode）
+        kind: work
+        depends_on:
+          - tsd-vllm-mlx
+        overview: opencodeからvllm-mlxを利用する構成の詳細（既存文書、retrofit対象）
+        path: tsd-vllm-mlx-opencode.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-vllm-mlx-mr
+        name: 技術スタック定義（vllm-mlx Model Registry）
+        kind: work
+        depends_on:
+          - tsd-vllm-mlx
+        overview: vllm-mlxのModel Registry検証構成の詳細（既存文書、retrofit対象）
+        path: tsd-vllm-mlx-mr.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-vllm-mlx-mr-opencode
+        name: 技術スタック定義（vllm-mlx Model Registry × opencode）
+        kind: work
+        depends_on:
+          - tsd-vllm-mlx-mr
+          - tsd-vllm-mlx-opencode
+        overview: vllm-mlxのModel Registryをopencodeから使う構成の詳細（既存文書、retrofit対象）
+        path: tsd-vllm-mlx-mr-opencode.md
+        rulebook: specdojo:tsd-rulebook
+        note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
+        done_criteria: *tsd-done-criteria
