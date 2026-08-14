@@ -1,0 +1,115 @@
+id: prj-0001:dct-impact-analysis
+type: project
+status: draft
+title: 成果物カタログ（影響調査）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: impact-analysis
+base_path: /docs/ja/projects/prj-0001/050-impact-analysis
+
+# 変更要求は「じぶんごとプラネットのような、ソーシャルハックデー中心の反復開発で進む
+# シビックテックプロジェクトに、SpecDojoの仕様駆動アプローチを導入する」ことと位置づける。
+# 現状（AS-IS）は dct-current-state.yaml の cdfd-jibungoto-planet、変更後（TO-BE）は
+# SpecDojo自身の cdfd-overview／cdfd-<area>（dct-data-flow.yaml）を比較根拠とする。
+# imp-business/imp-data/imp-interface/imp-test/imp-operationsは5種類固定構成
+# （dct-impact-analysis-template.yaml）のため、SpecDojo固有の分割判断は不要。
+
+groups:
+  - name: 影響調査
+    deliverables:
+      - local_id: imp-business
+        name: 影響調査（業務）
+        kind: work
+        depends_on:
+          - cdfd-jibungoto-planet
+        overview: SpecDojo導入が、ソーシャルハックデー中心の反復開発プロセス（企画・リサーチ・要件検討・軌道修正・検証・公開）へ与える影響を整理する
+        path: imp-business.md
+        rulebook: specdojo:imp-business-rulebook
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        done_criteria: &imp-done-criteria-5
+          - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 業務影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術実装への影響範囲が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト対象への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装上の変更影響が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: imp-data
+        name: 影響調査（データ）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: SpecDojo導入が、要件・意思決定・検証結果などの記録方法（現状は非構造化、導入後はbdd/dct/pjr等の構造化データ）へ与える影響を整理する
+        path: imp-data.md
+        rulebook: specdojo:imp-data-rulebook
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        done_criteria: *imp-done-criteria-5
+
+      - local_id: imp-interface
+        name: 影響調査（I/F）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: SpecDojo導入が、コミュニケーション・連携手段（現状はSlack中心、導入後はGit/GitHubの正本管理中心）へ与える影響を整理する
+        path: imp-interface.md
+        rulebook: specdojo:imp-interface-rulebook
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        done_criteria: &imp-done-criteria-4
+          - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: I/F影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 外部システム連携への技術的影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: I/Fテストへの影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: imp-test
+        name: 影響調査（テスト）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: SpecDojo導入が、検証方法（現状はペルソナワークショップ等の手動検証、導入後はdone_criteria・レビュー観点による検証）へ与える影響を整理する
+        path: imp-test.md
+        rulebook: specdojo:imp-test-rulebook
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        done_criteria: *imp-done-criteria-4
+
+      - local_id: imp-operations
+        name: 影響調査（運用）
+        kind: work
+        depends_on:
+          - imp-business
+        overview: SpecDojo導入が、継続運用サイクル（現状は月次ソーシャルハックデー、導入後はroutine/Schedule駆動の運用）へ与える影響を整理する
+        path: imp-operations.md
+        rulebook: specdojo:imp-operations-rulebook
+        note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
+        done_criteria:
+          - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 運用影響の範囲と対応方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 運用技術基盤への影響が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用テスト・受入への影響が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用手順・監視設定の変更影響が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

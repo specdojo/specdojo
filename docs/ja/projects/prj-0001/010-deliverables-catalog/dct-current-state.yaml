@@ -1,0 +1,43 @@
+id: prj-0001:dct-current-state
+type: project
+status: draft
+title: 成果物カタログ（現状定義）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: current-state
+base_path: /docs/ja/projects/prj-0001/040-current-state
+
+# current-state は固定テンプレートを持たず、必要なプロダクト成果物カタログ項目を選んで定義する
+# （deliverables-reference.md 1.4／docs-structure-guide.md 8.2）。専用prefixは設けず、既存の
+# 成果物種別prefixをそのまま使う（id-and-file-naming-standard.md 14.1）。
+#
+# 対象は「じぶんごとプラネット」（Code for Japan × 国立環境研究所が共同開発したカーボン
+# フットプリント可視化アプリ）の、アプリ自体の業務フローではなく、企画から公開までの
+# 開発プロセス。prj-overview.md がシビックテックを対象とすることから、SpecDojoが解決を
+# 目指す3つの課題（課題と技術の断絶／実現費用の不足／善意への依存）と比較できる、
+# 実在するシビックテックプロジェクトの現状の進め方を記録する。
+
+groups:
+  - deliverables:
+      - local_id: cdfd-jibungoto-planet
+        name: 概念データフロー図（じぶんごとプラネット開発プロセス）
+        kind: work
+        depends_on: []
+        overview: Code for Japanが「じぶんごとプラネット」を企画・開発・公開した際の、要求から実装までの進め方（ソーシャルハックデーを中心とした反復開発プロセス）を、SpecDojoとの比較基準として定義する
+        path: cdfd-jibungoto-planet.md
+        rulebook: specdojo:cdfd-rulebook
+        note: |
+          対象は国立環境研究所とCode for Japanが2021年11月〜2022年8月に共同開発した実在プロジェクト。
+          公開情報（Code for Japan公式サイト、国立環境研究所プレスリリース、開発当事者note記事等）を
+          出典として記述する。設問文言・内部の意思決定記録など非公開情報は_TODO_として残し、
+          憶測で埋めない。
+        done_criteria:
+          - text: 開発プロセスの流れ（きっかけ・反復開発・軌道修正・公開）が出典に基づき正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: SpecDojoの価値仮説（BV-01〜BV-03）と比較できるスコープ・粒度になっていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 各記述に出典（URL等）が示され、非公開情報は_TODO_として区別されていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
