@@ -1,0 +1,109 @@
+id: prj-0001:dct-system-acceptance-criteria
+type: project
+status: draft
+title: 成果物カタログ（システム受入条件）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: system-acceptance-criteria
+base_path: /docs/ja/product/070-system-acceptance-criteria
+
+# sac-rulebook.md は「1ファイル=1受入対象（合格基準のまとまり）」を想定する。sac には
+# bes-index のような一覧hubが無いため、既に作成済みの nfr-*（8カテゴリ固定）と1:1対応させ、
+# depends_on・based_on（成果物frontmatter側）は対応する nfr-* を参照する。
+
+groups:
+  - deliverables:
+      - local_id: sac-reliability
+        name: システム受入条件（信頼性）
+        kind: work
+        depends_on:
+          - nfr-reliability
+        overview: 障害抑止・誤動作防止に関するシステム全体としての合格基準を定義する
+        path: sac-reliability.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: &sac-done-criteria
+          - text: 業務機能・非機能の受入条件が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: システム受入基準を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的受入条件が実装と整合していること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 受入テスト設計・合格判定の基礎として活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装完了の判定基準として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: sac-availability
+        name: システム受入条件（可用性）
+        kind: work
+        depends_on:
+          - nfr-availability
+        overview: システム稼働の継続性（稼働率・RTO/RPO・フェイルオーバー等）に関するシステム全体としての合格基準を定義する
+        path: sac-availability.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-maintainability
+        name: システム受入条件（保守性）
+        kind: work
+        depends_on:
+          - nfr-maintainability
+        overview: 変更容易性・復旧容易性に関するシステム全体としての合格基準を定義する
+        path: sac-maintainability.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-integrity
+        name: システム受入条件（完全性）
+        kind: work
+        depends_on:
+          - nfr-integrity
+        overview: データ正確性・改ざん防止に関するシステム全体としての合格基準を定義する
+        path: sac-integrity.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-security-safety
+        name: システム受入条件（機密性・安全性）
+        kind: work
+        depends_on:
+          - nfr-security-safety
+        overview: 不正利用防止・セキュリティ（認証・認可・アクセス制御等）に関するシステム全体としての合格基準を定義する
+        path: sac-security-safety.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-performance
+        name: システム受入条件（性能）
+        kind: work
+        depends_on:
+          - nfr-performance
+        overview: 応答性・処理能力（レイテンシ・スループット等）に関するシステム全体としての合格基準を定義する
+        path: sac-performance.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-operations
+        name: システム受入条件（運用）
+        kind: work
+        depends_on:
+          - nfr-operations
+        overview: 監視・手順・継続運用に関するシステム全体としての合格基準を定義する
+        path: sac-operations.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
+
+      - local_id: sac-usability
+        name: システム受入条件（操作性）
+        kind: work
+        depends_on:
+          - nfr-usability
+        overview: 使いやすさ・誤操作防止に関するシステム全体としての合格基準を定義する
+        path: sac-usability.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria: *sac-done-criteria
