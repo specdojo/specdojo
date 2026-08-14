@@ -9,13 +9,13 @@ base_path: /docs/ja/product/010-business-specs/060-glossary
 groups:
   - name: 用語集
     deliverables:
-      - local_id: gl-specdojo
-        name: 用語集
+      - local_id: gl-common
+        name: 用語集（共通）
         kind: work
-        overview: 業務・システムで使用する用語の意味を統一的に定義する
-        path: gl-specdojo.md
+        overview: 業務・システムで使用する用語の意味を、ドメインを横断して統一的に定義する
+        path: gl-common.yaml
         rulebook: specdojo:gl-rulebook
-        note: specdojo は対象業務領域の略称（kebab-case）
+        note: SpecDojoの用語は複数ドメインを横断して使われるため、ドメイン別に分割せず単一の用語集にまとめる（id-and-file-naming-standard.md の-common定義に準拠）
         done_criteria:
           - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること
             roles: [BA]

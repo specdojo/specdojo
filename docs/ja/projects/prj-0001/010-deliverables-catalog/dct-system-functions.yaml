@@ -12,9 +12,22 @@ groups:
       - local_id: sf-index
         name: システム化機能一覧（全体構成）
         kind: work
-        overview: システムで実現する機能の全体構成と一覧を定義する
+        depends_on:
+          - bps-init-required
+          - bps-register-required
+          - bps-planning-catalog-strategy-update
+          - bps-task-selection-preparation
+          - bps-routine-required
+          - bps-parallel-required
+          - bps-config-change-evaluation
+          - bps-derived-project-scoped
+          - bps-reporting-monitoring-detection
+          - bps-deprecation-process
+          - uis-index
+        overview: システムで実現する機能の全体構成と一覧を定義する。行ごとに業務プロセス仕様（bps-*）・画面仕様（uis-index配下のCLIコマンド群）を要約参照する
         path: sf-index.md
         rulebook: specdojo:sf-rulebook
+        note: 個別機能（sf-<term>）は現時点では作成しない。sf-indexの一覧行だけでは説明が不十分な機能が明らかになった時点で、id-and-file-naming-standard.md 9.2（経路B）に従って個別追加を検討する
         done_criteria:
           - text: 機能一覧が業務仕様と対応し、スコープが網羅されていること
             roles: [BA]
@@ -31,22 +44,3 @@ groups:
           - text: 実装スコープ・機能境界の参照として使えること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-      - local_id: sf-specdojo
-        name: システム化機能（個別）
-        kind: work
-        overview: 個別のシステム化機能の概要・関連仕様を定義する
-        path: sf-specdojo.md
-        rulebook: specdojo:sf-rulebook
-        note: specdojo は対象機能名の略称（kebab-case）
-        done_criteria:
-          - text: 機能概要・関連プロセス・関連仕様が業務観点で記述されていること
-            roles: [BA]
-            viewpoint: vp-ba-requirements-completeness
-          - text: 機能の業務的妥当性を承認できること
-            roles: [PO]
-            viewpoint: vp-po-purpose-alignment
-          - text: 機能実装・コンポーネント設計の参照として使えること
-            roles: [DEV]
-            viewpoint: vp-dev-implementation-readiness
-        depends_on:
-          - sf-index
