@@ -14,15 +14,27 @@ project_id: prj-0001
 # roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
 # タスク側の owner には pm-roles.yaml に存在する Role code を使う。
 #
-# type: agent のメンバーには provider と capabilities を定義する。
+# type: agent のメンバーは、全員 stage_role（executor / reporter）を持つ pipeline
+# メンバーとする。単体で edit/review を完結する legacy 構成（stage_role なし）は
+# 廃止した。sch-strategy-<track>.yaml の phase は agent_pipeline（executor + reporter
+# の2段構成）を必須とする。
+#
+# stage_role: executor は成果物の編集・検証を担当し、result は更新しない。
+#   mode: edit    はさらに成果物への書き込みを許可する。
+#   mode: review  は成果物への書き込みを禁止する（読み取り専用で調査し、evidence だけを残す）。
+# stage_role: reporter は、executor の evidence から構造化 result を作るだけで、
+#   ファイルへは一切書き込まない（result への書き込みは runner が行う）。reporter の
+#   振る舞いは edit/review で変わらないため、選択条件としての mode（taskMode との
+#   一致判定）は課さない。ただし provider の command_template が {mode} を使う場合
+#   （claude 等）は、正しい permission profile を選ぶために mode を保持する。
+#
 # provider は agent を実行する CLI 種別を表す（opencode / claude / codex / copilot / custom）。
-# sch-strategy-<track>.yaml の phase.mode（edit / review）がタスク種別を決定する。
-# capabilities はツールアクセス（web_search 等）のみを表す。edit/review は mode で指定。
+# capabilities はツールアクセス（web_search 等）のみを表す。
 #
 # 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
 # を member 属性（nickname / mode / proficiency）で展開して解決するため、member には
 # 書かない。command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
-# priority は、mode・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
+# priority は、stage_role・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
 #   normal                  : OpenCode -> Codex -> Claude
 #   expert                  : Codex -> Claude
 #
@@ -63,44 +75,6 @@ members:
   # opencode members
   #
 
-  - nickname: opencode-edit-agent
-    disabled: false
-    priority: 1
-    display_name: OpenCode Edit Agent
-    email: null
-    roles: []
-    type: agent
-    provider: opencode
-    mode: edit
-    proficiency: normal
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-creation
-      - implementation
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-    note: OpenCode CLI とローカル Ollama を使用する標準エージェント。成果物の新規作成・文書化・実装を支援し、タスクの owner フィールドからロール文脈を判断して作業する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-edit-agent.md で定義。
-
-  - nickname: opencode-review-agent
-    disabled: false
-    priority: 1
-    display_name: OpenCode Review Agent
-    email: null
-    roles: []
-    type: agent
-    provider: opencode
-    mode: review
-    proficiency: normal
-    persona: multi-viewpoint-reviewer
-    focus:
-      - done-criteria-verification
-      - cross-viewpoint-consistency
-      - quality-assurance
-    capabilities: [web_search]
-    scheduler_strategy: fifo
-    note: OpenCode CLI とローカル Ollama を使用するレビューエージェント。done_criteria の roles フィールドを参照して全観点で成果物レビューを支援し、成果物は変更せず result のみ更新する。最終判断は行わない。モデル・ツール・権限は .opencode/agents/opencode-review-agent.md で定義。
-
   - nickname: opencode-executor
     disabled: false
     priority: 1
@@ -120,7 +94,27 @@ members:
       - verification
     capabilities: [web_search]
     scheduler_strategy: critical-first
-    note: OpenCode CLI とローカル Ollama を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツール・権限と役割別プロンプトは .opencode/agents/opencode-executor.md で定義。
+    note: OpenCode CLI とローカル Ollama を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツール・権限と役割別プロンプトは .opencode/agents/opencode-executor.md で定義。
+
+  - nickname: opencode-review-executor
+    disabled: false
+    priority: 1
+    display_name: OpenCode Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+    note: OpenCode CLI とローカル Ollama を使用する pipeline executor（review）。done_criteria の roles フィールドを参照して全観点でレビューを行うが、成果物・result のいずれにも書き込まない（読み取り専用）。調査結果は evidence として reporter へ引き継ぐ。モデル・ツール・権限は .opencode/agents/opencode-review-executor.md で定義。
 
   - nickname: opencode-reporter
     disabled: false
@@ -130,7 +124,6 @@ members:
     roles: []
     type: agent
     provider: opencode
-    mode: edit
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -139,90 +132,11 @@ members:
       - structured-result-generation
     capabilities: []
     scheduler_strategy: fifo
-    note: OpenCode CLI とローカル Ollama を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す。権限と役割別プロンプトは .opencode/agents/opencode-reporter.md で定義。
+    note: OpenCode CLI とローカル Ollama を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（ファイル書き込みは一切行わない。result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。権限と役割別プロンプトは .opencode/agents/opencode-reporter.md で定義。
 
   #
   # claude code members
   #
-
-  - nickname: claude-edit-agent
-    disabled: false
-    priority: 3
-    display_name: Claude Edit Agent
-    email: null
-    roles: []
-    type: agent
-    provider: claude
-    mode: edit
-    proficiency: normal
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-creation
-      - implementation
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する標準エージェント。成果物の新規作成・実装・外部 Web 情報参照が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
-
-  - nickname: claude-review-agent
-    disabled: false
-    priority: 3
-    display_name: Claude Review Agent
-    email: null
-    roles: []
-    type: agent
-    provider: claude
-    mode: review
-    proficiency: normal
-    persona: multi-viewpoint-reviewer
-    focus:
-      - done-criteria-verification
-      - cross-viewpoint-consistency
-      - quality-assurance
-    capabilities: [web_search]
-    scheduler_strategy: fifo
-    note: Claude Code CLI を使用するレビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
-
-  - nickname: claude-expert-edit-agent
-    disabled: false
-    priority: 2
-    display_name: Claude Expert Edit Agent
-    email: null
-    roles: []
-    type: agent
-    provider: claude
-    mode: edit
-    proficiency: expert
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-creation
-      - implementation
-      - complex-analysis
-      - architecture-judgment
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能エージェント。複雑な分析・アーキテクチャ判断が必要なタスクを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-edit-agent.md、権限は .specdojo/claude/settings.edit.json で定義。
-
-  - nickname: claude-expert-review-agent
-    disabled: false
-    priority: 2
-    display_name: Claude Expert Review Agent
-    email: null
-    roles: []
-    type: agent
-    provider: claude
-    mode: review
-    proficiency: expert
-    persona: multi-viewpoint-reviewer
-    focus:
-      - done-criteria-verification
-      - cross-viewpoint-consistency
-      - quality-assurance
-      - complex-analysis
-    capabilities: [web_search]
-    scheduler_strategy: fifo
-    note: Claude Code CLI を使用する高性能レビューエージェント。done_criteria の roles フィールドを参照し、全観点で成果物レビューを支援する。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-review-agent.md、権限は .specdojo/claude/settings.review.json で定義。
 
   - nickname: claude-executor
     disabled: false
@@ -243,7 +157,7 @@ members:
       - verification
     capabilities: [web_search]
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・ツールは .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+    note: Claude Code CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツールは .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json（成果物への Edit を許可）で定義。
 
   - nickname: claude-expert-executor
     disabled: false
@@ -266,7 +180,48 @@ members:
       - architecture-judgment
     capabilities: [web_search]
     scheduler_strategy: critical-first
-    note: Claude Code CLI を使用する高性能 pipeline executor。複雑な分析・アーキテクチャ判断を伴う成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・ツールは .claude/agents/claude-expert-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+    note: Claude Code CLI を使用する高性能 pipeline executor（edit）。複雑な分析・アーキテクチャ判断を伴う成果物の編集と検証だけを担当し、result は更新しない。モデル・ツールは .claude/agents/claude-expert-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+
+  - nickname: claude-review-executor
+    disabled: false
+    priority: 3
+    display_name: Claude Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+    note: Claude Code CLI を使用する pipeline executor（review）。done_criteria の roles フィールドを参照し全観点でレビューを行うが、result も含めファイルへは一切書き込まない（読み取り専用）。調査結果は evidence として reporter へ引き継ぐ。モデル・ツールは .claude/agents/claude-review-executor.md、権限は .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）で定義。
+
+  - nickname: claude-expert-review-executor
+    disabled: false
+    priority: 2
+    display_name: Claude Expert Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    mode: review
+    stage_role: executor
+    proficiency: expert
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+    note: Claude Code CLI を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、result も含めファイルへは一切書き込まない（読み取り専用）。モデル・ツールは .claude/agents/claude-expert-review-executor.md、権限は .specdojo/claude/settings.review.json で定義。
 
   - nickname: claude-reporter
     disabled: false
@@ -276,7 +231,7 @@ members:
     roles: []
     type: agent
     provider: claude
-    mode: edit
+    mode: review
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -285,69 +240,11 @@ members:
       - structured-result-generation
     capabilities: []
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す。モデル・ツールは .claude/agents/claude-reporter.md、権限は .specdojo/claude/settings.edit.json で定義。
+    note: Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。mode は command_template の {mode} 解決のためだけに保持し、権限は .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）を流用する。モデル・ツールは .claude/agents/claude-reporter.md で定義。
 
   #
   # codex members
   #
-  - nickname: codex-edit-agent
-    disabled: false
-    priority: 2
-    display_name: Codex Edit Agent
-    email: null
-    roles: []
-    type: agent
-    provider: codex
-    mode: edit
-    proficiency: normal
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-creation
-      - implementation
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-    note: Codex CLI を使用する標準worker。edit planに従って成果物とresultの更新を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、共通ルールはAGENTS.md、タスク固有の手順はedit planを正本とする。.codex/agents/codex-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
-
-  - nickname: codex-review-agent
-    disabled: false
-    priority: 2
-    display_name: Codex Review Agent
-    email: null
-    roles: []
-    type: agent
-    provider: codex
-    mode: review
-    proficiency: normal
-    persona: multi-viewpoint-reviewer
-    focus:
-      - done-criteria-verification
-      - cross-viewpoint-consistency
-      - quality-assurance
-    capabilities: [web_search]
-    scheduler_strategy: fifo
-    note: Codex CLI を使用する標準review worker。review planに従って成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
-
-  - nickname: codex-expert-edit-agent
-    disabled: false
-    priority: 1
-    display_name: Codex Expert Edit Agent
-    email: null
-    roles: []
-    type: agent
-    provider: codex
-    mode: edit
-    proficiency: expert
-    persona: task-executor
-    focus:
-      - task-execution
-      - document-creation
-      - implementation
-      - complex-analysis
-      - architecture-judgment
-    capabilities: [web_search]
-    scheduler_strategy: critical-first
-    note: Codex CLI を使用する高性能worker。複雑な分析・アーキテクチャ判断が必要なedit planの実行を支援する。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定し、タスク固有の手順はedit planを正本とする。.codex/agents/codex-expert-edit-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
 
   - nickname: codex-executor
     disabled: false
@@ -368,7 +265,7 @@ members:
       - verification
     capabilities: [web_search]
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する pipeline executor。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand template（proficiency normal相当）で指定し、タスク固有の手順はedit planを正本とする。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
+    note: Codex CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・reasoning effort・sandboxはexec-defaultsのcommand template（proficiency normal相当）で指定し、タスク固有の手順はedit planを正本とする。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
   - nickname: codex-expert-executor
     disabled: false
@@ -391,17 +288,38 @@ members:
       - architecture-judgment
     capabilities: [web_search]
     scheduler_strategy: critical-first
-    note: Codex CLI を使用する expert pipeline executor。複雑な分析・設計判断を伴う成果物編集と検証だけを担当し、result は更新しない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定する。templates/codex/agents/codex-expert-executor.tomlは親Codexが必要に応じてspawnするsubagentの配布原本で、起動コマンドから直接選択されない。
+    note: Codex CLI を使用する expert pipeline executor（edit）。複雑な分析・設計判断を伴う成果物編集と検証だけを担当し、result は更新しない。モデル・reasoning effort・sandboxはexec-defaultsのcommand templateで指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
-  - nickname: codex-expert-review-agent
+  - nickname: codex-review-executor
     disabled: false
-    priority: 1
-    display_name: Codex Expert Review Agent
+    priority: 2
+    display_name: Codex Review Executor
     email: null
     roles: []
     type: agent
     provider: codex
     mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+    note: Codex CLI を使用する pipeline executor（review）。review planに従って多観点でレビューするが、成果物・result のいずれも変更しない（読み取り専用）。sandbox は provider 共通の workspace-write のまま変わらないため、成果物・result を変更しない境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
+
+  - nickname: codex-expert-review-executor
+    disabled: false
+    priority: 1
+    display_name: Codex Expert Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    mode: review
+    stage_role: executor
     proficiency: expert
     persona: multi-viewpoint-reviewer
     focus:
@@ -411,7 +329,7 @@ members:
       - complex-analysis
     capabilities: [web_search]
     scheduler_strategy: fifo
-    note: Codex CLI を使用する高性能review worker。複雑な多観点レビューを支援し、成果物を変更せずresultのみ更新する。最終判断は行わない。result更新のためworkspace-writeを使用する。.codex/agents/codex-expert-review-agent.tomlは親Codexが必要に応じてspawnするsubagent定義であり、起動コマンドから直接選択されない。
+    note: Codex CLI を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
   - nickname: codex-reporter
     disabled: false
@@ -421,7 +339,6 @@ members:
     roles: []
     type: agent
     provider: codex
-    mode: edit
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -430,21 +347,22 @@ members:
       - structured-result-generation
     capabilities: []
     scheduler_strategy: fifo
-    note: Codex CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡されたevidenceから指定スキーマの構造化結果だけを返す。モデル・reasoning effortはexec-defaultsのcommand template（proficiency normal相当）で指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
+    note: Codex CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡されたevidenceから指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。モデル・reasoning effortはexec-defaultsのcommand template（proficiency normal相当）で指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
   #
   # copilot members
   #
 
-  - nickname: copilot-edit-agent
+  - nickname: copilot-executor
     disabled: true
     priority: 4
-    display_name: Copilot Edit Agent
+    display_name: Copilot Executor
     email: null
     roles: []
     type: agent
     provider: copilot
     mode: edit
+    stage_role: executor
     proficiency: normal
     persona: task-executor
     focus:
@@ -453,17 +371,18 @@ members:
       - implementation
     capabilities: []
     scheduler_strategy: critical-first
-    note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+    note: GitHub Copilot CLI を使用する pipeline executor（edit）。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。write はパス単位に絞れないため許可し、成果物変更の境界は specdojo CLI の commit 許可リストで作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
-  - nickname: copilot-review-agent
+  - nickname: copilot-review-executor
     disabled: true
     priority: 4
-    display_name: Copilot Review Agent
+    display_name: Copilot Review Executor
     email: null
     roles: []
     type: agent
     provider: copilot
     mode: review
+    stage_role: executor
     proficiency: normal
     persona: multi-viewpoint-reviewer
     focus:
@@ -472,7 +391,25 @@ members:
       - quality-assurance
     capabilities: []
     scheduler_strategy: fifo
-    note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+    note: GitHub Copilot CLI を使用する pipeline executor（review）。write はパス単位に絞れないため、成果物・result を変更しない境界は plan の指示と specdojo CLI の commit 許可リストで作る（review は何も commit しない）。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
+
+  - nickname: copilot-reporter
+    disabled: true
+    priority: 4
+    display_name: Copilot Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: copilot
+    stage_role: reporter
+    proficiency: normal
+    persona: execution-reporter
+    focus:
+      - evidence-summarization
+      - structured-result-generation
+    capabilities: []
+    scheduler_strategy: fifo
+    note: GitHub Copilot CLI を使用する pipeline reporter。evidence から構造化結果を返すだけで、result への反映は runner が行う。edit/review どちらの executor の後段にも使う。権限設計は specdojo:exec-config-guide の「agent 権限とプロンプトインジェクション対策」を正とする。
 
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
@@ -483,3 +420,4 @@ rules:
   - 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の command はテンプレートを持たない構成に限って上書きとして使う。
   - command を上書きする場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
   - 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
+  - "type: agent のメンバーは全員 stage_role（executor / reporter）を持つ。単体で edit/review を完結する legacy 構成は使わない。"
