@@ -1,0 +1,171 @@
+id: prj-0001:dct-system-design
+type: project
+status: draft
+title: 成果物カタログ（システム設計）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: system-design
+base_path: /docs/ja/product/040-system-design
+
+# PJR-ZP0B（system-design: sysd-<term>新設とsysd-agent-settings系の再構成）の完了を前提とした
+# 構成で先に定義する。sysd-agent-settings系5件・sysd-job-executionは既存ファイルのretrofitだが、
+# PJR-ZP0B完了までは rulebook 参照（specdojo:sysd-rulebook）が実在しない状態となる。
+# sysd-index・sysd-critical-flows・sysd-cross-cutting-policyは新規で、
+# sysd-cross-cutting-policyはsysd-agent-settings.mdの1〜6・8章の移設先になる。
+
+groups:
+  - name: 全体構成・重要フロー・横断ルール
+    deliverables:
+      - local_id: sysd-index
+        name: システム設計（全体構成・リンク集）
+        kind: work
+        depends_on: []
+        overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル・agent実行構成等）への導線を1箇所に集約する
+        path: sysd-index.md
+        rulebook: specdojo:sysd-index-rulebook
+        note: PJR-ZP0Bで新設。SSOT一覧のConfigurations種別にagent実行構成（.specdojo/exec-defaults.yaml等）の行を追加する
+        done_criteria:
+          - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 設計のSSOT所在が確認できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+          - text: テスト設計に必要な設計SSOTへのリンクが確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用・監視設定の参照先が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: sysd-critical-flows
+        name: システム設計（重要フロー）
+        kind: work
+        depends_on:
+          - sysd-index
+        overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
+        path: sysd-critical-flows.md
+        rulebook: specdojo:sysd-critical-flows-rulebook
+        note: PJR-ZP0Bで要否を判断する。不要と判断した場合はkindをcontrolへ変更するか本エントリを削除し、判断根拠をPJR-ZP0Bのresultへ記録する
+        done_criteria:
+          - text: 重要フローの選定理由と業務影響が確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 重要フローの内容を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 重要フローのテストシナリオ設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: フロー実装の共通理解として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: sysd-cross-cutting-policy
+        name: システム設計（横断ルール）
+        kind: work
+        depends_on:
+          - sysd-index
+        overview: 実装全体に影響する共通ルール（エラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界等）をSSOT化する
+        path: sysd-cross-cutting-policy.md
+        rulebook: specdojo:sysd-cross-cutting-policy-rulebook
+        note: PJR-ZP0Bで新設。sysd-agent-settings.mdの1〜6・8章（3層責務分離、設定解決規則、rate limit方針、worktree分離、reopen規則）をscp-<カテゴリ>-<連番>形式で移設する
+        done_criteria:
+          - text: 横断ルールが実装上の制約として確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: エラー処理・冪等・タイムアウト・ログ方針が記述されていること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+          - text: 横断ルールのテスト・検証方針が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 監視・トレーシング・セキュリティの運用観点が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+  - name: 個別設計トピック（sysd-<term>）
+    deliverables:
+      - local_id: sysd-agent-settings
+        name: システム設計（エージェント実行・共通設計）
+        kind: work
+        depends_on:
+          - sysd-cross-cutting-policy
+        overview: SpecDojo CLIと外部エージェントCLIを組み合わせたマルチエージェント実行の全体像と、provider別詳細設計への導線を示す
+        path: sysd-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit。PJR-ZP0Bで横断ルール相当の内容をsysd-cross-cutting-policyへ、運用手順をopr-agent-cli-updateへ移設し、本書は4provider設計へのhubへ縮小する
+        done_criteria: &sysd-term-done-criteria
+          - text: 設計トピックの採用理由・制約が業務要件と整合していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 設計方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 技術的制約・依存関係が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: テスト設計・検証観点の参照として使えること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: sysd-claude-agent-settings
+        name: システム設計（Claude Codeエージェント設定）
+        kind: work
+        depends_on:
+          - sysd-agent-settings
+        overview: Claude Code固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
+        path: sysd-claude-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        done_criteria: *sysd-term-done-criteria
+
+      - local_id: sysd-codex-agent-settings
+        name: システム設計（Codexエージェント設定）
+        kind: work
+        depends_on:
+          - sysd-agent-settings
+        overview: Codex固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
+        path: sysd-codex-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        done_criteria: *sysd-term-done-criteria
+
+      - local_id: sysd-opencode-agent-settings
+        name: システム設計（opencodeエージェント設定）
+        kind: work
+        depends_on:
+          - sysd-agent-settings
+          - tsd-ollama-opencode
+        overview: opencode（Ollama等ローカルLLM含む）固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
+        path: sysd-opencode-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        done_criteria: *sysd-term-done-criteria
+
+      - local_id: sysd-github-copilot-agent-settings
+        name: システム設計（GitHub Copilotエージェント設定）
+        kind: work
+        depends_on:
+          - sysd-agent-settings
+        overview: GitHub Copilot固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
+        path: sysd-github-copilot-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        done_criteria: *sysd-term-done-criteria
+
+      - local_id: sysd-job-execution
+        name: システム設計（Job実行設計）
+        kind: work
+        depends_on: []
+        overview: 同じ作業定義から実行単位を繰り返し生成するJob実行モデル（Job Definition／Job Run）を定義する
+        path: sysd-job-execution.md
+        rulebook: specdojo:sysd-rulebook
+        note: 既存文書のretrofit（現状status=ready）。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
+        done_criteria: *sysd-term-done-criteria

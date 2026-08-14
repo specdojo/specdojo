@@ -1,0 +1,145 @@
+id: prj-0001:dct-business-acceptance-criteria
+type: project
+status: draft
+title: 成果物カタログ（業務受入条件）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: business-acceptance-criteria
+base_path: /docs/ja/product/050-business-acceptance-criteria
+
+# bac-rulebook.md は「1ファイル=1受入対象（業務の塊）」を想定するため、bps（29件、フロー単位）
+# より粗い、cdfd-overview.md の10プロセス領域を1受入対象とする。depends_on・based_on（成果物
+# frontmatter側）は該当領域のbps-*を参照する。
+
+groups:
+  - deliverables:
+      - local_id: bac-init
+        name: 業務受入条件（初期セットアップ）
+        kind: work
+        depends_on:
+          - bps-init-required
+          - bps-init-optional
+        overview: プロジェクトの初期セットアップ（config初期化・register/catalog scaffold等）が業務として成立することを確認する
+        path: bac-init.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: &bac-done-criteria
+          - text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 受入条件の業務的妥当性と判定基準を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: システム実装が受入条件を満たせる設計になっていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 受入テスト設計の基礎として活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: bac-register-lifecycle
+        name: 業務受入条件（登録簿ライフサイクル）
+        kind: work
+        depends_on:
+          - bps-register-required
+          - bps-register-response
+          - bps-register-resume-audit
+        overview: 登録項目の起票から対応・終了判断・再開までが業務として成立することを確認する
+        path: bac-register-lifecycle.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-catalog-planning
+        name: 業務受入条件（計画展開）
+        kind: work
+        depends_on:
+          - bps-planning-catalog-strategy-update
+          - bps-planning-schedule-event-update
+        overview: 成果物カタログ・戦略からSchedule展開、実行状態再構成までが業務として成立することを確認する
+        path: bac-catalog-planning.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-task-execution
+        name: 業務受入条件（タスク実行）
+        kind: work
+        depends_on:
+          - bps-task-selection-preparation
+          - bps-task-edit
+          - bps-task-review-finalize
+          - bps-task-judgment-integration
+        overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する
+        path: bac-task-execution.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-routine
+        name: 業務受入条件（定期処理）
+        kind: work
+        depends_on:
+          - bps-routine-required
+          - bps-routine-register-schedule-cycle
+          - bps-routine-job-run
+        overview: 定期実行対象選択から登録項目・Schedule・Job Runの反映までが業務として成立することを確認する
+        path: bac-routine.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-multi-project
+        name: 業務受入条件（並行処理）
+        kind: work
+        depends_on:
+          - bps-parallel-required
+          - bps-parallel-isolation-work
+          - bps-parallel-sync-integration
+          - bps-parallel-main-promotion
+        overview: project develop作成から分離作業・同期統合・main昇格までが業務として成立することを確認する
+        path: bac-multi-project.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-agent-config-operation
+        name: 業務受入条件（構成変更）
+        kind: work
+        depends_on:
+          - bps-config-change-evaluation
+          - bps-config-change-proposal-approval
+          - bps-config-change-apply-verify
+        overview: agent・provider構成の変更評価から承認・設定変更・検証までが業務として成立することを確認する
+        path: bac-agent-config-operation.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-derived-content
+        name: 業務受入条件（派生生成）
+        kind: work
+        depends_on:
+          - bps-derived-project-scoped
+          - bps-derived-document-wide
+          - bps-derived-standalone
+        overview: 成果物・派生ビュー・索引の生成が業務として成立することを確認する
+        path: bac-derived-content.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-reporting
+        name: 業務受入条件（報告）
+        kind: work
+        depends_on:
+          - bps-reporting-monitoring-detection
+          - bps-reporting-consistency-delegation
+          - bps-reporting-conditional
+        overview: 進捗監視・検知から報告記録・議事録作成までが業務として成立することを確認する
+        path: bac-reporting.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-deprecation
+        name: 業務受入条件（非推奨化・保管）
+        kind: work
+        depends_on:
+          - bps-deprecation-process
+          - bps-deprecation-storage
+        overview: 文書の非推奨化判断から保管・カタログ更新までが業務として成立することを確認する
+        path: bac-deprecation.md
+        rulebook: specdojo:bac-rulebook
+        done_criteria: *bac-done-criteria
