@@ -1,0 +1,144 @@
+id: prj-0001:dct-operations
+type: project
+status: draft
+title: 成果物カタログ（運用）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: operations
+base_path: /docs/ja/product/090-operations
+
+# opd-<term>/opr-<term> は SpecDojo自身の運用実態（cdfd-routine.md・cdfd-reporting.md・
+# cdfd-agent-config-operation.md・sysd-agent-settings.mdの失敗処理設計）を根拠に選定する。
+# opr-agent-cli-update は PJR-ZP0B（system-design再構成）で sysd-agent-settings.md 7章の
+# 移設先として既に特定済み。opd/opr-backup-restore はGitの分散VCS冗長性により対象外とする。
+
+groups:
+  - name: 運用設計
+    deliverables:
+      - local_id: opd-index
+        name: 運用方針・設計
+        kind: work
+        depends_on: []
+        overview: 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）をSSOT化する
+        path: opd-index.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria: &opd-index-done-criteria
+          - text: SLO/SLA・体制・監視・変更管理・バックアップ方針が業務継続性の観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 運用方針・品質目標を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 監視・アラート・障害対応・権限管理の技術設計が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用品質（アラート検知率・復旧達成率）の検証基準が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 運用手順・監視・問い合わせ対応の実施基盤として参照できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+      - local_id: opd-monitoring
+        name: 運用方針・設計（監視）
+        kind: work
+        depends_on:
+          - opd-index
+        overview: 定期処理の失敗検知、rate limit監視、登録項目の期限監視など監視方針を定義する
+        path: opd-monitoring.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria: &opd-term-done-criteria
+          - text: 個別テーマの運用方針が業務継続性の観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 個別テーマの技術設計が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用手順整備の前提として参照できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+      - local_id: opd-incident-response
+        name: 運用方針・設計（障害対応）
+        kind: work
+        depends_on:
+          - opd-index
+          - sysd-agent-settings
+        overview: agent・provider障害時のエスカレーション、block/reopen判断の運用方針を定義する
+        path: opd-incident-response.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria: *opd-term-done-criteria
+      - local_id: opd-access-management
+        name: 運用方針・設計（権限管理）
+        kind: work
+        depends_on:
+          - opd-index
+        overview: provider認証情報・GitHub権限のアカウント管理方針を定義する
+        path: opd-access-management.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria: *opd-term-done-criteria
+
+  - name: 運用手順
+    deliverables:
+      - local_id: opr-index
+        name: 運用手順
+        kind: work
+        depends_on:
+          - opd-index
+        overview: 運用作業を再現可能な手順として定義し、誰がやっても同じ結果になる状態を作る
+        path: opr-index.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria: &opr-index-done-criteria
+          - text: 日次・週次・月次の定常運用手順が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 運用手順の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 障害対応・アラート対応・バックアップ手順の技術的整合が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 手順の網羅性・実施可能性・証跡要件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 誰が実施しても同じ結果になる粒度で手順が記述されていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+      - local_id: opr-agent-cli-update
+        name: 運用手順（外部エージェントCLI更新）
+        kind: work
+        depends_on:
+          - opr-index
+          - sysd-agent-settings
+        overview: 外部エージェントCLI（Claude Code／Codex／opencode／GitHub Copilot）の更新手順を定義する
+        path: opr-agent-cli-update.md
+        rulebook: specdojo:opr-rulebook
+        note: PJR-ZP0Bでsysd-agent-settings.md7章（CLI更新手順）の移設先として特定済み
+        done_criteria: &opr-term-done-criteria
+          - text: 個別手順が実施可能な粒度で記述されていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+          - text: 手順の技術的正確性が確認できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 手順の完了条件・証跡要件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: opr-incident-response
+        name: 運用手順（障害対応）
+        kind: work
+        depends_on:
+          - opr-index
+          - opd-incident-response
+        overview: block解除、利用制限からの復旧対応など障害対応手順を定義する
+        path: opr-incident-response.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria: *opr-term-done-criteria
+      - local_id: opr-routine-monitoring
+        name: 運用手順（定期処理監視）
+        kind: work
+        depends_on:
+          - opr-index
+          - opd-monitoring
+        overview: 定期処理の監視・失敗時対応手順を定義する
+        path: opr-routine-monitoring.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria: *opr-term-done-criteria
