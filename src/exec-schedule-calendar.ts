@@ -130,7 +130,7 @@ export function buildWorkingTaskSegments(
   return segments;
 }
 
-function timelineAnchorDate(startDate: string | null): Date {
+function ganttChartAnchorDate(startDate: string | null): Date {
   if (!startDate) return new Date(scheduleAnchorDateUtc());
   const [year, month, day] = startDate.split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
@@ -149,20 +149,20 @@ export function dateForWorkingOffset(
       );
 }
 
-export function timelinePositionX(
+export function ganttChartPositionX(
   dt: Date,
-  timelineStart: Date,
+  ganttChartStart: Date,
   calendar: ScheduleCalendar,
   dayWidth: number,
 ): number {
   const midnight = new Date(dt.getTime());
   midnight.setUTCHours(0, 0, 0, 0);
-  const dayIndex = Math.floor((midnight.getTime() - timelineStart.getTime()) / 86400000);
+  const dayIndex = Math.floor((midnight.getTime() - ganttChartStart.getTime()) / 86400000);
   const minutesFromMidnight = dt.getUTCHours() * 60 + dt.getUTCMinutes();
   const relative = Math.max(0, Math.min(1, minutesFromMidnight / workingMinutesPerDay(calendar)));
   return (dayIndex + relative) * dayWidth;
 }
 
-export function timelineStartDate(startDate: string | null): Date {
-  return timelineAnchorDate(startDate);
+export function ganttChartStartDate(startDate: string | null): Date {
+  return ganttChartAnchorDate(startDate);
 }

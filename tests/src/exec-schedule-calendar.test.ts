@@ -4,8 +4,8 @@ import {
   buildWorkingTaskSegments,
   dateForWorkingOffset,
   isWorkingDateUtc,
-  timelinePositionX,
-  timelineStartDate,
+  ganttChartPositionX,
+  ganttChartStartDate,
   workingMinutesPerDay,
 } from "../../src/exec-schedule-calendar.js";
 import type { ScheduleCalendar } from "../../src/exec-types.js";
@@ -117,26 +117,26 @@ describe("dateForWorkingOffset", () => {
   });
 });
 
-describe("timelinePositionX", () => {
+describe("ganttChartPositionX", () => {
   it("稼働時間の途中は日内比率を dayWidth に掛けた位置になる", () => {
-    const timelineStart = new Date(Date.UTC(2026, 0, 2));
+    const ganttChartStart = new Date(Date.UTC(2026, 0, 2));
     const dt = new Date(Date.UTC(2026, 0, 2, 4, 0));
-    expect(timelinePositionX(dt, timelineStart, makeCalendar(), 10)).toBe(5);
+    expect(ganttChartPositionX(dt, ganttChartStart, makeCalendar(), 10)).toBe(5);
   });
 
   it("翌日の始業時刻は dayWidth 1日分進んだ位置になる", () => {
-    const timelineStart = new Date(Date.UTC(2026, 0, 2));
+    const ganttChartStart = new Date(Date.UTC(2026, 0, 2));
     const dt = new Date(Date.UTC(2026, 0, 3, 0, 0));
-    expect(timelinePositionX(dt, timelineStart, makeCalendar(), 10)).toBe(10);
+    expect(ganttChartPositionX(dt, ganttChartStart, makeCalendar(), 10)).toBe(10);
   });
 });
 
-describe("timelineStartDate", () => {
+describe("ganttChartStartDate", () => {
   it("startDate を UTC 日付として解釈する", () => {
-    expect(timelineStartDate("2026-01-02").toISOString()).toBe("2026-01-02T00:00:00.000Z");
+    expect(ganttChartStartDate("2026-01-02").toISOString()).toBe("2026-01-02T00:00:00.000Z");
   });
 
   it("startDate がなければ 2000-01-01 を返す", () => {
-    expect(timelineStartDate(null).toISOString()).toBe("2000-01-01T00:00:00.000Z");
+    expect(ganttChartStartDate(null).toISOString()).toBe("2000-01-01T00:00:00.000Z");
   });
 });

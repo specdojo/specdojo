@@ -313,6 +313,32 @@ groups:
           - text: phases・owner_rules・initial_state の各設定値の妥当性が確認できること
             roles: [QE]
             viewpoint: vp-qe-config-validity
+  - name: タイムライン
+    base_path: timeline
+    deliverables:
+      - local_id: tml-index
+        name: トラック順序計画
+        kind: work
+        depends_on: []
+        overview: 成果物カタログ作成からトラック実行までのマクロな着手順序を計画
+        path: tml-index.yaml
+        rulebook: specdojo:tml-rulebook
+        done_criteria:
+          - text: トラックの着手順序と並行方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: order・parallel_group・depends_on が計画立案に使える粒度で定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: トラック間の依存関係に循環や矛盾がないこと
+            roles: [PM]
+            viewpoint: vp-pm-dependency-risk
+          - text: validate:schema を通過していること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: catalog_status と実際のカタログ作成状況が一致していること
+            roles: [QE]
+            viewpoint: vp-qe-config-validity
   - name: レポート
     groups:
       - name: 進捗報告

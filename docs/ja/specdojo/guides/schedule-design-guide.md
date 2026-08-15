@@ -99,7 +99,7 @@ strategy から track への生成フロー、展開する情報、反復、タ�
   -> specdojo schedule build --track <track> --force
   -> sch-track-<track>.yaml
   -> specdojo exec refresh
-  -> generated/ready.json, cpm.md, timeline.svg など
+  -> generated/ready.json, cpm.md, gantt-chart.svg など
 ```
 
 実行するコマンドは次のとおりです。

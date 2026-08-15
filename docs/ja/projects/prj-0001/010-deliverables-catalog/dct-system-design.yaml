@@ -97,7 +97,7 @@ groups:
             roles: [OPS]
             viewpoint: vp-ops-operability
 
-  - name: 個別設計トピック（sysd-<term>）
+  - name: 個別設計トピック（`sysd-<term>`）
     deliverables:
       - local_id: sysd-agent-settings
         name: システム設計（エージェント実行・共通設計）
