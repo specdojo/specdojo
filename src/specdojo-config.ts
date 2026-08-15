@@ -33,6 +33,7 @@ export type SpecDojoProjectConfig = {
   catalog_path?: string;
   schedule_path: string;
   execution_path: string;
+  timeline_path?: string;
   members_path?: string;
   reviews_path?: string;
   roles_path?: string;
@@ -146,6 +147,12 @@ export function getProjectSchedulePath(project: SpecDojoProjectConfig): string {
 
 export function getProjectExecutionPath(project: SpecDojoProjectConfig): string {
   return withBasePath(project, project.execution_path);
+}
+
+// Timeline lives in a fixed cross-cutting directory under the project root, so an
+// unset timeline_path falls back to "timeline" instead of disabling the command.
+export function getProjectTimelinePath(project: SpecDojoProjectConfig): string {
+  return withBasePath(project, project.timeline_path?.trim() || "timeline");
 }
 
 export function getProjectMembersPath(project: SpecDojoProjectConfig): string | undefined {

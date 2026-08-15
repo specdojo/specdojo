@@ -118,7 +118,34 @@ specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.ya
 
 Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
-## 5. register
+## 5. timeline
+
+`timeline` は、人間が着手前に決めた `tml-index.yaml`（トラック順序計画）から、着手順序と成果物カタログ作成の準備情報を生成します。`tml-index.yaml` が正本で、生成物は `timeline/generated/` へ出力する一方通行の流れです。
+
+| コマンド         | 用途                                                    | 例                                           |
+| ---------------- | ------------------------------------------------------- | -------------------------------------------- |
+| `timeline build` | `tml-index.yaml` から着手順序と scaffold 対象を生成する | `specdojo timeline build --project prj-0001` |
+| `timeline where` | timeline 関連パスを表示する                             | `specdojo timeline where --project prj-0001` |
+
+主要オプション:
+
+| オプション  | 用途                                     |
+| ----------- | ---------------------------------------- |
+| `--dry-run` | 生成内容を標準出力へ表示し、書き込まない |
+
+生成物は次の3つです。
+
+| ファイル              | 内容                                                                     |
+| --------------------- | ------------------------------------------------------------------------ |
+| `timeline-order.md`   | `order` / `parallel_group` / `depends_on` から算出した着手 wave 一覧     |
+| `catalog-scaffold.md` | `dct-<domain>.yaml` が未作成のドメインと `catalog scaffold` 実行コマンド |
+| `timeline.json`       | 後続コマンドが読む機械可読サマリー                                       |
+
+`depends_on` の未定義参照・循環、`depends_on` と `order` の矛盾、track id の重複を検出した場合は、生成物を書き込まずに終了コード 1 で停止します。`catalog_status` と実カタログの有無が食い違う場合は警告のみを出します。カタログの突き合わせはファイル名ではなく各 `dct-*.yaml` の `domain` 値で行うため、1 ドメインが複数ファイルに分割されていても検出できます。
+
+`timeline_path` は未設定の場合、プロジェクト直下の `timeline` を既定とします。記述ルールは `tml-rulebook.md`、トラックの標準構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照します。
+
+## 6. register
 
 `register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
@@ -171,7 +198,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 `renumber` による ID 重複の復旧手順、登録の判断、type の選び方、状態遷移、個票の作成などの台帳運用は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照します。
 
-## 6. exec
+## 7. exec
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
 
@@ -179,7 +206,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 | ---------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `exec where`     | execution 関連パスを表示する                                                             | `specdojo exec where --project prj-0001`                                                                |
 | `exec validate`  | schedule と event を検証する                                                             | `specdojo exec validate --project prj-0001`                                                             |
-| `exec refresh`   | state、Ready、CPM、timeline を再計算する                                                 | `specdojo exec refresh --project prj-0001`                                                              |
+| `exec refresh`   | state、Ready、CPM、gantt-chart を再計算する                                              | `specdojo exec refresh --project prj-0001`                                                              |
 | `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                            | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
 | `exec claim`     | タスクを `doing` にする                                                                  | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
 | `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                     | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
@@ -269,7 +296,7 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 
 register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
-## 7. exec worktree
+## 8. exec worktree
 
 `exec worktree` は、claim 済みタスクを段階ごとに確認しながら隔離実行するための分割コマンドです。
 
@@ -296,7 +323,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 詳細な安全条件は [exec worktree運用ガイド](../guides/exec-worktree-guide.md) を参照します。
 
-## 8. index
+## 9. index
 
 `index` は frontmatter の `id` とファイルパスのインデックスを扱います。
 
@@ -308,7 +335,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `exec run` は agent に plan を渡す直前に `index replace --format path --missing keep` 相当の処理を行います。
 
-## 9. watch / build
+## 10. watch / build
 
 | コマンド | 用途                                        | 例                                               |
 | -------- | ------------------------------------------- | ------------------------------------------------ |
@@ -317,7 +344,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
-## 10. job
+## 11. job
 
 `job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
 
@@ -329,7 +356,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
 
-## 11. routine
+## 12. routine
 
 `routine` は `rtn-*.yaml` の定義に基づき、schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐せず、外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出します。
 
@@ -363,7 +390,7 @@ specdojo routine run --project prj-0001 --due --dry-run
 
 schedule / register / job / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
-## 12. 関連ガイド
+## 13. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |

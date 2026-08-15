@@ -28,16 +28,16 @@ import {
   generatedDirForProject,
 } from "./exec-project.js";
 import {
+  buildGanttChartMarkdown,
+  buildGanttChartSvg,
   buildProgressSummaryLines,
-  buildTimelineMarkdown,
-  buildTimelineSvg,
-} from "./exec-schedule-timeline.js";
+} from "./exec-schedule-gantt-chart.js";
 import { buildScheduleIndex } from "./exec-schedule-index.js";
 import {
-  buildTimelineScopeSpecs,
+  buildGanttChartScopeSpecs,
   filterCpmNodes,
   scheduleTrackNames,
-} from "./exec-schedule-timeline-scope.js";
+} from "./exec-schedule-gantt-chart-scope.js";
 import { computeCpm, topoSort } from "./exec-schedule-cpm.js";
 import {
   buildReadySnapshot,
@@ -233,7 +233,7 @@ export function writeCpmFiles(
   const stateOf = (id: string): "todo" | "doing" | "blocked" | "done" | "cancelled" =>
     stateSnapshot?.tasks[id]?.state ?? "todo";
 
-  for (const scope of buildTimelineScopeSpecs(cpm)) {
+  for (const scope of buildGanttChartScopeSpecs(cpm)) {
     // SVG: scope の描画対象ノードだけを持つ CpmResult（full は cpm そのまま）。
     const renderCpm = scope.renderIds
       ? filterCpmNodes(cpm, scope.renderIds, scope.keepCriticalPath)
@@ -286,12 +286,12 @@ export function writeCpmFiles(
 
     writeFileSync(
       join(genDir, `${scope.fileBase}.svg`),
-      buildTimelineSvg(renderCpm, schedule, stateSnapshot, { title: scope.title }),
+      buildGanttChartSvg(renderCpm, schedule, stateSnapshot, { title: scope.title }),
       "utf8",
     );
     writeFileSync(
       join(genDir, `${scope.fileBase}.md`),
-      buildTimelineMarkdown(
+      buildGanttChartMarkdown(
         progressCpm,
         {
           criticalPathTaskCount: new Set(renderCpm.critical_path).size,
@@ -379,8 +379,8 @@ export function writeGeneratedCore(
   }
   writeReadyFiles(projectPath, readySnapshot);
 
-  const timelineFiles = ["timeline", "timeline-milestones"]
-    .concat(scheduleTrackNames(schedule).map((track) => `timeline-track-${track}`))
+  const ganttChartFiles = ["gantt-chart", "gantt-chart-milestones"]
+    .concat(scheduleTrackNames(schedule).map((track) => `gantt-chart-track-${track}`))
     .flatMap((base) => [`${base}.md`, `${base}.svg`]);
 
   writeJson(join(genDir, "metadata.json"), {
@@ -402,7 +402,7 @@ export function writeGeneratedCore(
       "schedule-diff.md",
       "schedule-hash.json",
       "state.json",
-      ...timelineFiles,
+      ...ganttChartFiles,
     ].sort(),
   });
 

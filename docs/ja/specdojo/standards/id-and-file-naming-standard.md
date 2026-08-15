@@ -851,6 +851,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 影響調査 | Impact Analysis | imp- | imp-business | prj-0001:imp-business |
 | プロジェクトマネジメント計画 | Project Management Plan | pm- | pm-plan | prj-0001:pm-plan |
 | スケジュール | Schedule | sch- | sch-milestones, sch-defaults, sch-track-project-definition, sch-strategy-project-definition | prj-0001:sch-track-project-definition |
+| トラック順序計画 | Timeline | tml- | tml-index | prj-0001:tml-index |
 | エージェント実行戦略 | Exec Strategy | exec-strategy- | exec-strategy-launch | prj-0001:exec-strategy-launch |
 | コミュニケーション計画 | Communication Plan | pm- | pm-communication-plan | prj-0001:pm-communication-plan |
 | 品質管理計画 | Quality Management Plan | pm- | pm-quality-management-plan | prj-0001:pm-quality-management-plan |

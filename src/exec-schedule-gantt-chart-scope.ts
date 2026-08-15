@@ -1,7 +1,7 @@
 import { type CpmNode, type CpmResult, type ScheduleIndex } from "./exec-types.js";
 
-export type TimelineScopeSpec = {
-  // 出力ファイル名の基底（拡張子なし）。例: "timeline", "timeline-track-launch"。
+export type GanttChartScopeSpec = {
+  // 出力ファイル名の基底（拡張子なし）。例: "gantt-chart", "gantt-chart-track-launch"。
   fileBase: string;
   // SVG タイトルおよび Markdown H1。
   title: string;
@@ -98,18 +98,18 @@ export function filterCpmNodes(
 }
 
 // full / milestones / track-<name> の順で生成対象 scope を列挙する。
-export function buildTimelineScopeSpecs(cpm: CpmResult): TimelineScopeSpec[] {
-  const specs: TimelineScopeSpec[] = [
+export function buildGanttChartScopeSpecs(cpm: CpmResult): GanttChartScopeSpec[] {
+  const specs: GanttChartScopeSpec[] = [
     {
-      fileBase: "timeline",
-      title: "プロジェクトタイムライン",
+      fileBase: "gantt-chart",
+      title: "プロジェクトガントチャート",
       scopeLabel: "full_schedule",
       renderIds: null,
       keepCriticalPath: true,
       progressIds: null,
     },
     {
-      fileBase: "timeline-milestones",
+      fileBase: "gantt-chart-milestones",
       title: "マイルストーン概要",
       scopeLabel: "milestones",
       renderIds: milestoneRenderIds(cpm),
@@ -121,8 +121,8 @@ export function buildTimelineScopeSpecs(cpm: CpmResult): TimelineScopeSpec[] {
 
   for (const track of tracksOrderedByStart(cpm)) {
     specs.push({
-      fileBase: `timeline-track-${track}`,
-      title: `トラックタイムライン（${track}）`,
+      fileBase: `gantt-chart-track-${track}`,
+      title: `トラックガントチャート（${track}）`,
       scopeLabel: `track:${track}`,
       renderIds: trackRenderIds(cpm, track),
       keepCriticalPath: false,

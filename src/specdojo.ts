@@ -5,6 +5,7 @@ import { registerExecCommands } from "./exec.js";
 import { registerCatalogCommands } from "./catalog.js";
 import { registerDeliverableCommands } from "./deliverable.js";
 import { registerScheduleCommands } from "./schedule.js";
+import { registerTimelineCommands } from "./timeline.js";
 import { registerIndexCommands } from "./index-command.js";
 import { registerRegisterCommands } from "./register.js";
 import { registerRoutineCommands } from "./routine.js";
@@ -24,6 +25,7 @@ async function main(): Promise<void> {
   registerCatalogCommands(program);
   registerDeliverableCommands(program);
   registerScheduleCommands(program);
+  registerTimelineCommands(program);
   registerIndexCommands(program);
   registerRegisterCommands(program);
   registerRoutineCommands(program);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildTimelineSvg } from "../../src/exec-schedule-timeline-render.js";
+import { buildGanttChartSvg } from "../../src/exec-schedule-gantt-chart-render.js";
 import type { CpmNode, CpmResult, ScheduleIndex } from "../../src/exec-types.js";
 
 function node(partial: Partial<CpmNode> & Pick<CpmNode, "id" | "kind">): CpmNode {
@@ -45,9 +45,9 @@ function makeSchedule(): ScheduleIndex {
   };
 }
 
-describe("buildTimelineSvg", () => {
+describe("buildGanttChartSvg", () => {
   it("options.title を SVG タイトルと aria-label に反映する", () => {
-    const svg = buildTimelineSvg(
+    const svg = buildGanttChartSvg(
       makeCpm([node({ id: "M-A", kind: "milestone" })]),
       makeSchedule(),
       undefined,
@@ -62,7 +62,7 @@ describe("buildTimelineSvg", () => {
 
   it("task が無い scope でも gate をマイルストーン節に描画する", () => {
     // milestones-only scope: task セクションが無くても gate 行が消えないこと。
-    const svg = buildTimelineSvg(
+    const svg = buildGanttChartSvg(
       makeCpm([
         node({ id: "M-DONE", kind: "milestone", es: 2, ef: 2 }),
         node({ id: "G-DATA-FLOW-retrofit-pass", kind: "gate", es: 3, ef: 3 }),
@@ -76,7 +76,7 @@ describe("buildTimelineSvg", () => {
 
   it("タスクが無い長い期間を圧縮カラムに畳む", () => {
     // 全日稼働。es=0 と es=20 の間（1〜19 日）はタスクが無く圧縮対象。
-    const svg = buildTimelineSvg(
+    const svg = buildGanttChartSvg(
       makeCpm([
         node({
           id: "T-A",
@@ -104,7 +104,7 @@ describe("buildTimelineSvg", () => {
 
   it("短い空白期間（閾値未満）は圧縮しない", () => {
     // es=0 と es=2 の間の空白は 1 日のみ（minCompressRun=3 未満）。
-    const svg = buildTimelineSvg(
+    const svg = buildGanttChartSvg(
       makeCpm([
         node({
           id: "T-A",

@@ -9,13 +9,13 @@ import { formatDateOnlyUtc, formatDays } from "./exec-shared.js";
 import {
   buildWorkingTaskSegments,
   dateForWorkingOffset,
+  ganttChartStartDate,
   isWorkingDateUtc,
-  timelineStartDate,
   workingMinutesPerDay,
   type WorkingTaskSegment,
 } from "./exec-schedule-calendar.js";
 
-export type TimelineMarkdownSummary = {
+export type GanttChartMarkdownSummary = {
   criticalPathTaskCount: number;
   progressPercent: string;
   doneTasks: string;
@@ -48,13 +48,13 @@ function stateColor(state: ExecState | "milestone" | "gate", critical: boolean):
   return "#d1d5db";
 }
 
-export function buildTimelineSvg(
+export function buildGanttChartSvg(
   cpm: CpmResult,
   schedule: ScheduleIndex,
   stateSnapshot?: StateSnapshot,
   options?: { title?: string },
 ): string {
-  const title = options?.title ?? "プロジェクトタイムライン";
+  const title = options?.title ?? "プロジェクトガントチャート";
   const rows = Object.values(cpm.nodes).sort((a, b) => a.es - b.es || a.id.localeCompare(b.id));
   const criticalSet = new Set(cpm.critical_path);
 
@@ -109,7 +109,7 @@ export function buildTimelineSvg(
   const sectionHeight = 30;
   const sectionGap = 8;
   const dayWidth = 56;
-  const timelineStart = timelineStartDate(cpm.project_start_date);
+  const ganttChartStart = ganttChartStartDate(cpm.project_start_date);
 
   const isInitialComplete = (r: CpmNode) => r.tags?.includes("initial-complete") ?? false;
   const milestoneRows = rows.filter((r) => r.kind === "milestone");
@@ -156,14 +156,14 @@ export function buildTimelineSvg(
   const orphanGateRows = gateRows.filter((r) => !insertedGateIds.has(r.id));
 
   const dayIndexOf = (dt: Date): number =>
-    Math.floor((dt.getTime() - timelineStart.getTime()) / 86400000);
+    Math.floor((dt.getTime() - ganttChartStart.getTime()) / 86400000);
 
-  // タスクバー・マイルストーン・ゲートが載る日（timelineStart からの日インデックス）。
+  // タスクバー・マイルストーン・ゲートが載る日（ganttChartStart からの日インデックス）。
   // アクティブでない日の連続区間は時間軸で圧縮表示する。
   const activeDays = new Set<number>();
 
   const taskSegments = new Map<string, WorkingTaskSegment[]>();
-  let timelineEnd = new Date(timelineStart.getTime());
+  let ganttChartEnd = new Date(ganttChartStart.getTime());
   for (const row of rows) {
     if (row.kind === "task") {
       const segments = cpm.project_start_date
@@ -181,7 +181,7 @@ export function buildTimelineSvg(
           ];
       taskSegments.set(row.id, segments);
       const end = segments[segments.length - 1]?.end;
-      if (end && end > timelineEnd) timelineEnd = end;
+      if (end && end > ganttChartEnd) ganttChartEnd = end;
       if (isInitialComplete(row)) continue; // no bar → does not activate days
       for (const segment of segments) {
         const from = dayIndexOf(segment.start);
@@ -193,13 +193,13 @@ export function buildTimelineSvg(
     }
 
     const milestoneAt = dateForWorkingOffset(row.es, cpm.project_start_date, schedule.calendar);
-    if (milestoneAt > timelineEnd) timelineEnd = milestoneAt;
+    if (milestoneAt > ganttChartEnd) ganttChartEnd = milestoneAt;
     activeDays.add(dayIndexOf(milestoneAt));
   }
 
   const totalDays = Math.max(
     1,
-    Math.ceil((timelineEnd.getTime() - timelineStart.getTime()) / 86400000) + 1,
+    Math.ceil((ganttChartEnd.getTime() - ganttChartStart.getTime()) / 86400000) + 1,
   );
 
   // 圧縮軸レイアウト: 非アクティブ日が minCompressRun 日以上連続する区間を
@@ -374,7 +374,7 @@ export function buildTimelineSvg(
       continue;
     }
 
-    const dayStart = new Date(timelineStart.getTime() + column.dayIndex * 86400000);
+    const dayStart = new Date(ganttChartStart.getTime() + column.dayIndex * 86400000);
     const x = leftPad + column.x;
     const isWorking = isWorkingDateUtc(dayStart, schedule.calendar);
     const dayOfWeek = dayStart.getUTCDay();
@@ -535,13 +535,13 @@ export function buildTimelineSvg(
   return parts.join("\n");
 }
 
-export function buildTimelineMarkdown(
+export function buildGanttChartMarkdown(
   cpm: CpmResult,
-  summary: TimelineMarkdownSummary,
+  summary: GanttChartMarkdownSummary,
   options?: { title?: string; svgFileName?: string; scopeLabel?: string },
 ): string {
-  const title = options?.title ?? "タイムライン";
-  const svgFileName = options?.svgFileName ?? "timeline.svg";
+  const title = options?.title ?? "ガントチャート";
+  const svgFileName = options?.svgFileName ?? "gantt-chart.svg";
   const scopeLabel = options?.scopeLabel ?? "full_schedule";
 
   const lines: string[] = [];

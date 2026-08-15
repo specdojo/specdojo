@@ -81,21 +81,26 @@ tracks:
 <!-- prettier-ignore -->
 | No  | 作業 | 担当 | 状態 | メモ |
 | --- | --- | --- | --- | --- |
-| 1   | `exec-schedule-timeline*.ts`のモジュール名・export名・内部変数名の改名 | ARC | open | 対象: `src/exec-schedule-timeline.ts`等3ファイル、参照元`exec-schedule.ts`／`exec-schedule-calendar.ts` |
-| 2   | 生成ファイル名の改名（`timeline*` → `gantt-chart*`） | ARC | open | `exec-schedule-timeline-scope.ts`の`fileBase`定義を中心に変更 |
-| 3   | ドキュメント記述の追随 | ARC | open | `command-reference.md`／`schedule-design-guide.md`／`execution/README.md` |
-| 4   | 既存生成物`timeline*`（8件）の削除・`gantt-chart*`としての再生成 | ARC | open | `specdojo exec refresh --project prj-0001` |
-| 5   | `tml-rulebook.md`の新設 | ARC | open | 2.1の仕様、2.3の役割分担を含む |
-| 6   | `tml-index.yaml`の新設 | ARC | open | 2.1のフィールドで、既存track（launch/data-flow）と未着手17ドメインを記載。`order`等の値はこれまでの検討順・`track-design-guide.md`の標準順を初期案として仮置きし、`tml-index.yaml`自体の`status`を`draft`とする（内容の最終確定は人間レビュー対象。本チケットの完了条件はスキーマ・仕組みの整備であり、最終的な着手順の確定は含めない） |
-| 7   | `specdojo timeline build`コマンドの実装 | ARC | open | 対象: `src/timeline-build.ts`（新設）、`src/specdojo.ts`へのコマンド登録。contractは2.2 |
-| 8   | `tml-index`を`dct-project-management.yaml`へ登録 | ARC | open | - |
-| 9   | `docs/specdojo/schemas/v1/tml-index.schema.yaml`の新設 | ARC | open | `sch-track.schema.yaml`等に倣う |
-| 10  | `id-and-file-naming-standard.md`への`tml-`prefix追記 | ARC | open | 14.1または新設セクション |
-| 11  | 検証コマンド実行 | ARC | open | lint:md／typecheck／build／docs:build |
+| 1   | `exec-schedule-timeline*.ts`のモジュール名・export名・内部変数名の改名 | ARC | done | 3ファイルを`exec-schedule-gantt-chart*.ts`へ`git mv`。`buildTimelineSvg`→`buildGanttChartSvg`等のexport名、`exec-schedule-calendar.ts`の`timelineStartDate`→`ganttChartStartDate`等、内部変数`timelineStart`／`timelineEnd`まで改名 |
+| 2   | 生成ファイル名の改名（`timeline*` → `gantt-chart*`） | ARC | done | `exec-schedule-gantt-chart-scope.ts`の`fileBase`と`exec-schedule.ts`の`metadata.json` derived_files一覧を変更 |
+| 3   | ドキュメント記述の追随 | ARC | done | `command-reference.md`／`schedule-design-guide.md`／`execution/README.md`を更新。`.vitepress/sidebar-config.ts`は権限不足で未変更（申し送り） |
+| 4   | 既存生成物`timeline*`（8件）の削除・`gantt-chart*`としての再生成 | ARC | done | 本worktreeでは`generated/`が未生成だったため削除対象なし。`exec refresh`で`gantt-chart*`8件（md/svg各4）を生成 |
+| 5   | `tml-rulebook.md`の新設 | ARC | done | 2.1の仕様、2.3の役割分担（`sch-milestones.yaml`との比較表）、今後の検討（フル成果物カタログ化）を記載 |
+| 6   | `tml-index.yaml`の新設 | ARC | done | 既存track（launch/data-flow）＋未着手16トラックを6 waveで記載。`status: draft`、`notes`に_UNDECIDED_を明記 |
+| 7   | `specdojo timeline build`コマンドの実装 | ARC | done | `src/timeline-build.ts`（ロジック）＋`src/timeline.ts`（CLI）を新設し`src/specdojo.ts`へ登録。`timeline build`／`timeline where`を提供 |
+| 8   | `tml-index`を`dct-project-management.yaml`へ登録 | ARC | done | `タイムライン`グループ（base_path: timeline）を追加し、done_criteria5件を定義 |
+| 9   | `docs/specdojo/schemas/v1/tml-index.schema.yaml`の新設 | ARC | done | `sch-track.schema.yaml`に倣い`$defs/TrackPlan`で定義。`tml-rulebook.md`の本文構成から参照 |
+| 10  | `id-and-file-naming-standard.md`への`tml-`prefix追記 | ARC | done | 14.1のプロジェクト関係ドキュメント表へ「トラック順序計画 / Timeline / tml- / tml-index」を追加 |
+| 11  | 検証コマンド実行 | ARC | done | typecheck／lint:ts／test（1075件）／build／docs:build／catalog validate すべて成功 |
 
 ## 5. 対応結果
 
--
+- 既存timelineをgantt-chartへ改名し、`tml-`系の新成果物種別としてtimelineを新設した。両者の名前空間は完全に分離し、`src/`・`tests/`に`timeline`という語のGantt由来の用法は残っていない。
+- Gantt側の改名は、モジュール名・export名・内部変数名・生成ファイル名・ドキュメント記述の5層すべてで実施した。生成物は`gantt-chart.{md,svg}`／`gantt-chart-milestones.{md,svg}`／`gantt-chart-track-{launch,data-flow}.{md,svg}`の8件。
+- 新timelineは「着手前に人間が決める計画」、`sch-milestones.yaml`は「実行後に集計される実績」という役割分担を`tml-rulebook.md`に明記し、`sch-milestones.yaml`は廃止していない。
+- `specdojo timeline build`は`tml-index.yaml`を入力に、`timeline-order.md`（着手wave一覧）・`catalog-scaffold.md`（カタログ未作成ドメインと実行コマンド）・`timeline.json`（機械可読サマリー）を`timeline/generated/`へ出力する一方通行の生成コマンドとして実装した。`depends_on`の未定義参照・循環・`order`との矛盾・track id重複を検出すると終了コード1で停止する。
+- カタログの突き合わせは、`data-model`／`business-model`のように1ドメインが複数ファイルへ分割される実態に合わせ、ファイル名ではなく各`dct-*.yaml`の`domain`値で行う実装とした。
+- `tml-index.yaml`の`order`・`catalog_duration_estimate_days`は`track-design-guide.md`のウォーターフォール段階分けを基にした初期案であり、`status: draft`のまま人間レビューに委ねる。本チケットの完了条件はスキーマ・仕組みの整備であり、着手順の最終確定は含まない。
 
 ## 6. 関連ドキュメント
 

@@ -30,7 +30,7 @@ execution/
 - `claim-next.json`: strategy ごとの次の claim 対象
 - `cpm.json` / `cpm.md`: CPM 計算結果
 - `critical-path.md`: クリティカルパスと slack 分析
-- `timeline.md` / `timeline.svg`: プロジェクトタイムライン（Gantt-like 表示）
+- `gantt-chart.md` / `gantt-chart.svg`: プロジェクトガントチャート（Gantt 表示）
 - `schedule-diff.md`: スケジュールスキーマ差分（前回 refresh からの追加/削除/変更）
 - `metadata.json`: 生成メタデータ（タイムスタンプ、schedule ファイル数、派生ファイル一覧）
 

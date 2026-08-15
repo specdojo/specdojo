@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildTimelineScopeSpecs,
+  buildGanttChartScopeSpecs,
   filterCpmNodes,
   scheduleTrackNames,
-} from "../../src/exec-schedule-timeline-scope.js";
+} from "../../src/exec-schedule-gantt-chart-scope.js";
 import type { CpmNode, CpmResult, ScheduleIndex } from "../../src/exec-types.js";
 
 function node(partial: Partial<CpmNode> & Pick<CpmNode, "id" | "kind">): CpmNode {
@@ -71,7 +71,7 @@ describe("filterCpmNodes", () => {
   });
 });
 
-describe("buildTimelineScopeSpecs", () => {
+describe("buildGanttChartScopeSpecs", () => {
   const cpm = makeCpm([
     node({
       id: "T-LAUNCH-a-005",
@@ -92,7 +92,7 @@ describe("buildTimelineScopeSpecs", () => {
   ]);
 
   it("full → milestones → track（開始が早い順）の順で scope を列挙する", () => {
-    const specs = buildTimelineScopeSpecs(cpm);
+    const specs = buildGanttChartScopeSpecs(cpm);
 
     expect(specs.map((s) => s.scopeLabel)).toEqual([
       "full_schedule",
@@ -103,7 +103,7 @@ describe("buildTimelineScopeSpecs", () => {
   });
 
   it("full scope は全ノード描画・critical path 表示・全 task 進捗", () => {
-    const full = buildTimelineScopeSpecs(cpm)[0];
+    const full = buildGanttChartScopeSpecs(cpm)[0];
 
     expect(full.renderIds).toBeNull();
     expect(full.keepCriticalPath).toBe(true);
@@ -111,7 +111,7 @@ describe("buildTimelineScopeSpecs", () => {
   });
 
   it("milestones scope は milestone/gate のみ描画し進捗はプロジェクト全体", () => {
-    const milestones = buildTimelineScopeSpecs(cpm).find((s) => s.scopeLabel === "milestones")!;
+    const milestones = buildGanttChartScopeSpecs(cpm).find((s) => s.scopeLabel === "milestones")!;
 
     expect([...milestones.renderIds!].sort()).toEqual([
       "G-DATA-FLOW-retrofit-pass",
@@ -122,7 +122,9 @@ describe("buildTimelineScopeSpecs", () => {
   });
 
   it("track scope は task を schedule_file、gate/milestone を id 接頭辞で収集する", () => {
-    const dataFlow = buildTimelineScopeSpecs(cpm).find((s) => s.scopeLabel === "track:data-flow")!;
+    const dataFlow = buildGanttChartScopeSpecs(cpm).find(
+      (s) => s.scopeLabel === "track:data-flow",
+    )!;
 
     expect([...dataFlow.renderIds!].sort()).toEqual([
       "G-DATA-FLOW-retrofit-pass",

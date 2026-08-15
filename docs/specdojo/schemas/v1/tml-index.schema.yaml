@@ -1,0 +1,99 @@
+# tml-index.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Timeline index schema"
+type: object
+additionalProperties: false
+
+required:
+  - id
+  - type
+  - status
+  - title
+  - rulebook
+  - version
+  - project_id
+  - tracks
+
+properties:
+  id:
+    type: string
+    minLength: 1
+    description: "Deliverable ID (e.g., prj-0001:tml-index)."
+  type:
+    const: "project"
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+  title:
+    type: string
+    minLength: 1
+    description: "Document title. Equivalent to the Markdown H1; used as the heading of the generated display page."
+  rulebook:
+    type: string
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
+    description: "Rulebook ID this document conforms to. Use none only when no rulebook exists."
+  version:
+    type: integer
+    minimum: 1
+    description: "Schema/data version."
+  project_id:
+    type: string
+    minLength: 1
+    description: "Project identifier (e.g., prj-0001)."
+  notes:
+    type: string
+    description: "Optional file-level notes."
+  tracks:
+    type: array
+    minItems: 1
+    description: "Planned tracks in macro execution order. Human-authored plan, not a generated result."
+    items:
+      $ref: "#/$defs/TrackPlan"
+
+$defs:
+  TrackPlan:
+    type: object
+    additionalProperties: false
+    required:
+      - track
+      - domains
+      - catalog_status
+      - order
+      - depends_on
+    properties:
+      track:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]*$"
+        description: "Track identifier matching <track> in sch-strategy-<track>.yaml / sch-track-<track>.yaml."
+      domains:
+        type: array
+        minItems: 1
+        description: "Domain values of the dct-<domain>.yaml catalogs this track covers."
+        items:
+          type: string
+          pattern: "^[a-z0-9][a-z0-9-]*$"
+      catalog_status:
+        type: string
+        enum: ["not_started", "draft", "primary"]
+        description: "Progress of catalog authoring. not_started = no catalog yet, draft = catalog exists but not fixed, primary = catalog is the SSOT that drives schedule build."
+      catalog_duration_estimate_days:
+        type: number
+        exclusiveMinimum: 0
+        description: "Estimated working days to bring the catalog from draft to primary."
+      order:
+        type: integer
+        minimum: 1
+        description: "Sequential start order. Equal values are candidates for parallel execution."
+      parallel_group:
+        type: string
+        minLength: 1
+        description: "Optional group label. Tracks sharing the same value may run in parallel."
+      depends_on:
+        type: array
+        description: "Track ids that should be started earlier. Empty array means no prerequisite."
+        items:
+          type: string
+          pattern: "^[a-z0-9][a-z0-9-]*$"
+      note:
+        type: string
+        description: "Optional free-form supplement."
