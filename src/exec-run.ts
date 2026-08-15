@@ -3028,6 +3028,269 @@ export function resolveRegisterCommand(
   return { command, actor: candidate.nickname };
 }
 
+// --register が executor/reporter パイプラインで実行されたかどうかを、CLI フラグの有無から
+// 判定する。owner/--by による従来の単一エージェント解決とは互いに排他（isRegisterPipelineRequested
+// が true の間は resolveRegisterCommand を使わない）。
+export function isRegisterPipelineRequested(
+  opts: Pick<RunOpts, "executorBy" | "reporterBy">,
+): boolean {
+  return !!(opts.executorBy || opts.reporterBy);
+}
+
+// --register 向けの executor/reporter 解決。Schedule タスクの agent_pipeline と異なり、
+// register 項目には per-item のパイプライン宣言が無いため、owner/role からの自動選択は行わず
+// --executor-by / --reporter-by の明示指定のみを受け付ける。
+export function resolveRegisterPipelineCommand(
+  roster: MemberRoster | null,
+  opts: Pick<RunOpts, "executorBy" | "reporterBy">,
+  execDefaults: ExecDefaultsConfig = {},
+): {
+  executor: AgentRunCandidate & { actor: string };
+  reporterCandidates: AgentRunCandidate[];
+} {
+  if (!opts.executorBy || !opts.reporterBy) {
+    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
+  }
+  const executorResolution = resolveAgentOverride(
+    "edit",
+    opts.executorBy,
+    {},
+    roster,
+    execDefaults,
+    "executor",
+  );
+  if (executorResolution.kind === "error") {
+    throw new Error(executorResolution.message.replace(/^--by/, "--executor-by"));
+  }
+  if (executorResolution.kind !== "command") {
+    throw new Error(`--executor-by agent not found in pm-members.yaml: ${opts.executorBy}`);
+  }
+  const reporterResolution = resolveAgentOverride(
+    "edit",
+    opts.reporterBy,
+    {},
+    roster,
+    execDefaults,
+    "reporter",
+  );
+  if (reporterResolution.kind === "error") {
+    throw new Error(reporterResolution.message.replace(/^--by/, "--reporter-by"));
+  }
+  if (reporterResolution.kind !== "command") {
+    throw new Error(`--reporter-by agent not found in pm-members.yaml: ${opts.reporterBy}`);
+  }
+  return {
+    executor: {
+      command: executorResolution.command,
+      actor: executorResolution.actor ?? opts.executorBy,
+      provider: executorResolution.provider,
+    },
+    reporterCandidates: [
+      {
+        command: reporterResolution.command,
+        actor: reporterResolution.actor ?? opts.reporterBy,
+        provider: reporterResolution.provider,
+      },
+    ],
+  };
+}
+
+// register 項目1件を executor→reporter の2段階で実行する。in-place（cwd: repoRoot）・
+// worktree（cwd: worktree.path）の双方から共有する。evidence・pipeline-state の記録先は
+// Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
+// 監査証跡のフォーマットを実行経路によらず統一する。register には resume の概念がまだ無いため
+// （PJR-TNDHの完了条件外）、失敗時は毎回このタスク全体を再実行する前提でよい。
+async function runRegisterAgentPipeline(params: {
+  repoRoot: string;
+  cwd: string;
+  schedulePath: string;
+  executionPath: string;
+  taskId: string;
+  executor: AgentRunCandidate & { actor: string };
+  reporterCandidates: AgentRunCandidate[];
+  planPrompt: string;
+  resultPath: string;
+  execDefaults: ExecDefaultsConfig;
+}): Promise<{
+  exitCode: 0 | 1;
+  runResult: RunResult;
+  blockReason?: string;
+  stateRef: string;
+  evidenceRef?: string;
+}> {
+  const {
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    taskId,
+    executor,
+    reporterCandidates,
+    planPrompt,
+    resultPath,
+    execDefaults,
+  } = params;
+  const startedAt = new Date().toISOString();
+  const runId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+  const stateLocation = pipelineStateLocation({
+    repoRoot,
+    worktreePath: cwd,
+    executionPath,
+    taskId,
+    runId,
+  });
+  let state = createPipelineState({
+    taskId,
+    runId,
+    updatedAt: startedAt,
+    executorActor: executor.actor,
+    reporterActor: reporterCandidates[0]?.actor,
+  });
+  state = updatePipelineStage(
+    state,
+    "executor",
+    { status: "running", started_at: startedAt },
+    startedAt,
+  );
+  writePipelineState(stateLocation.path, state);
+
+  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
+  const executorPrompt = buildExecutorPrompt(planPrompt);
+  const outcome = await runWithRetry([executor], executorPrompt, execDefaults, cwd, env);
+
+  const recorded = recordExecutorEvidence({
+    repoRoot,
+    worktreePath: cwd,
+    executionPath,
+    taskId,
+    runId,
+    actor: executor.actor,
+    status:
+      outcome.result === "success"
+        ? "succeeded"
+        : outcome.result === "rate_limit"
+          ? "rate_limited"
+          : "failed",
+    startedAt,
+    completedAt: new Date().toISOString(),
+    exitCode: outcome.exitCode,
+    attempts: outcome.attempts,
+    stdout: outcome.stdout,
+    stderr: outcome.stderr,
+  });
+  const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
+  const executorCompletedAt = new Date().toISOString();
+  state = updatePipelineStage(
+    state,
+    "executor",
+    {
+      status:
+        outcome.result === "success"
+          ? "succeeded"
+          : outcome.result === "rate_limit"
+            ? "rate_limited"
+            : "failed",
+      attempts: outcome.attempts,
+      completed_at: executorCompletedAt,
+      artifact_ref: evidenceRef,
+    },
+    executorCompletedAt,
+  );
+  writePipelineState(stateLocation.path, state);
+  process.stdout.write(`  Executor evidence: ${evidenceRef}\n`);
+
+  if (outcome.result !== "success") {
+    const blockReason =
+      outcome.result === "rate_limit"
+        ? "executor rate limit reached"
+        : extractBlockReason(outcome.stderr);
+    return {
+      exitCode: 1,
+      runResult: outcome.result,
+      blockReason,
+      stateRef: stateLocation.ref,
+      evidenceRef,
+    };
+  }
+
+  const reporterStartedAt = new Date().toISOString();
+  state = updatePipelineStage(
+    state,
+    "reporter",
+    {
+      status: "running",
+      actor: reporterCandidates[0]?.actor ?? null,
+      started_at: reporterStartedAt,
+    },
+    reporterStartedAt,
+  );
+  writePipelineState(stateLocation.path, state);
+  process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
+  let reporterAttempts = 0;
+  const reporter = await runReporterWithFormatRetry({
+    plan: planPrompt,
+    evidence: recorded.evidence,
+    mode: "edit",
+    invoke: async (reporterPrompt) => {
+      const reporterOutcome = await runWithRetry(
+        reporterCandidates,
+        reporterPrompt,
+        execDefaults,
+        cwd,
+        env,
+      );
+      reporterAttempts += reporterOutcome.attempts;
+      return {
+        result: reporterOutcome.result,
+        stdout: reporterOutcome.stdout,
+        stderr: reporterOutcome.stderr,
+      };
+    },
+  });
+
+  let exitCode: 0 | 1 = 1;
+  let blockReason: string | undefined;
+  if (reporter.result === "success") {
+    try {
+      await renderReporterResult(resultPath, reporter.output);
+      exitCode = reporter.output.outcome === "complete" ? 0 : 1;
+      blockReason =
+        reporter.output.outcome === "blocked" ? reporter.output.block_reason : undefined;
+      process.stdout.write(
+        `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
+      );
+    } catch (error) {
+      exitCode = 1;
+      blockReason =
+        error instanceof Error
+          ? `reporter result rendering failed: ${error.message}`
+          : String(error);
+    }
+  } else {
+    blockReason = reporter.reason;
+  }
+
+  const reporterCompletedAt = new Date().toISOString();
+  state = updatePipelineStage(
+    state,
+    "reporter",
+    {
+      status:
+        exitCode === 0 ? "succeeded" : reporter.result === "rate_limit" ? "rate_limited" : "failed",
+      attempts: reporterAttempts,
+      completed_at: reporterCompletedAt,
+      artifact_ref:
+        reporter.result === "success" ? relative(cwd, resultPath).split(sep).join("/") : null,
+    },
+    reporterCompletedAt,
+  );
+  writePipelineState(stateLocation.path, state);
+
+  const runResult: RunResult =
+    exitCode === 0 ? "success" : reporter.result === "rate_limit" ? "rate_limit" : "failure";
+  return { exitCode, runResult, blockReason, stateRef: stateLocation.ref, evidenceRef };
+}
+
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
 // 派生ビュー再生成を一元的に通すため、直接ファイルを書き換えず自プロセスを spawn する。
 function spawnRegisterTransition(projectId: string | undefined, args: string[]): boolean {
@@ -3121,12 +3384,15 @@ async function runSingleRegisterItem(
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
 
-  const { command, actor } = resolveRegisterCommand(
-    item,
-    context.roster,
-    opts,
-    context.execDefaults,
-  );
+  const pipelineMode = isRegisterPipelineRequested(opts);
+  const pipelineAgents = pipelineMode
+    ? resolveRegisterPipelineCommand(context.roster, opts, context.execDefaults)
+    : undefined;
+  // agent（result frontmatter へ記録する actor）は executor 側にする。Schedule の
+  // agent_pipeline（scaffoldResult 呼び出し時に executor の actor を渡す）と揃える。
+  const { command, actor } = pipelineAgents
+    ? { command: pipelineAgents.executor.command, actor: pipelineAgents.executor.actor }
+    : resolveRegisterCommand(item, context.roster, opts, context.execDefaults);
   const stem = buildInPlaceStem(pjrId.toLowerCase());
 
   // ID単位 commit のため、この項目が変更を生じる前の作業ツリー状態を記録する。
@@ -3161,18 +3427,48 @@ async function runSingleRegisterItem(
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
   process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
-  process.stdout.write(`  Agent: ${actor}\n`);
+  process.stdout.write(`  Agent: ${actor}${pipelineAgents ? " (executor)" : ""}\n`);
+  if (pipelineAgents) {
+    process.stdout.write(`  Agent: ${pipelineAgents.reporterCandidates[0]?.actor} (reporter)\n`);
+  }
   if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
     throw new Error(`register start failed: ${item.id}`);
   }
 
-  process.stdout.write(`Running ${item.id} in place: ${command}\n`);
-  const exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+  let exitCode: number;
+  let pipelineBlockReason: string | undefined;
+  if (pipelineAgents) {
+    process.stdout.write(`Running ${item.id} in place (executor/reporter pipeline)\n`);
+    const pipelineOutcome = await runRegisterAgentPipeline({
+      repoRoot,
+      cwd: repoRoot,
+      schedulePath,
+      executionPath,
+      taskId: item.id,
+      executor: pipelineAgents.executor,
+      reporterCandidates: pipelineAgents.reporterCandidates,
+      planPrompt: prompt,
+      resultPath,
+      execDefaults: context.execDefaults,
+    });
+    exitCode = pipelineOutcome.exitCode;
+    pipelineBlockReason = pipelineOutcome.blockReason;
+    if (pipelineOutcome.exitCode !== 0) {
+      process.stdout.write(
+        `run blocked: ${item.id} (${pipelineOutcome.blockReason ?? "pipeline failed"})\n`,
+      );
+    }
+  } else {
+    process.stdout.write(`Running ${item.id} in place: ${command}\n`);
+    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+  }
 
   // in-place 実行と同じ補助判定: agent が result 必須節を埋めずに終了コード 0 で
-  // 終わった場合は block として扱う（runInPlaceMode と同じ理由）。
+  // 終わった場合は block として扱う（runInPlaceMode と同じ理由）。pipeline モードでは
+  // reporter が renderReporterResult で本文を埋めるため通常は該当しないが、
+  // フォーマット不整合等の防御として同じチェックを維持する。
   let effectiveExit = exitCode;
-  let blockReason: string | undefined;
+  let blockReason: string | undefined = pipelineBlockReason;
   if (exitCode === 0 && isResultUnfilled(resultPath, "edit", resultScaffold)) {
     effectiveExit = 1;
     blockReason =
@@ -3323,15 +3619,25 @@ async function runSingleRegisterItemWorktree(
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
 
-  const { command, actor } = resolveRegisterCommand(
-    item,
-    context.roster,
-    opts,
-    context.execDefaults,
-  );
-  const provider = context.roster?.members.find(
-    (m) => m.nickname === actor && m.type === "agent",
-  )?.provider;
+  const pipelineMode = isRegisterPipelineRequested(opts);
+  const pipelineAgents = pipelineMode
+    ? resolveRegisterPipelineCommand(context.roster, opts, context.execDefaults)
+    : undefined;
+  // agent（result frontmatter へ記録する actor）は executor 側にする。Schedule の
+  // agent_pipeline（scaffoldResult 呼び出し時に executor の actor を渡す）と揃える。
+  const { command, actor, provider } = pipelineAgents
+    ? {
+        command: pipelineAgents.executor.command,
+        actor: pipelineAgents.executor.actor,
+        provider: pipelineAgents.executor.provider,
+      }
+    : {
+        ...resolveRegisterCommand(item, context.roster, opts, context.execDefaults),
+        provider: undefined as AgentProvider | undefined,
+      };
+  const resolvedProvider =
+    provider ??
+    context.roster?.members.find((m) => m.nickname === actor && m.type === "agent")?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
@@ -3431,15 +3737,40 @@ async function runSingleRegisterItemWorktree(
   const { worktree, resultPath, resultScaffold, prompt } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
-  process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
   const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
-  const { result: agentResult, stderr } = await runWithRetry(
-    [{ command, actor, provider }],
-    prompt,
-    context.execDefaults,
-    worktree.path,
-    env,
-  );
+  let agentResult: RunResult;
+  let stderr = "";
+  if (pipelineAgents) {
+    process.stdout.write(
+      `Running ${item.id} in worktree (executor/reporter pipeline)\n  CWD: ${worktree.path}\n`,
+    );
+    const worktreeResultPathForPipeline = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+    const pipelineOutcome = await runRegisterAgentPipeline({
+      repoRoot,
+      cwd: worktree.path,
+      schedulePath,
+      executionPath,
+      taskId: item.id,
+      executor: pipelineAgents.executor,
+      reporterCandidates: pipelineAgents.reporterCandidates,
+      planPrompt: prompt,
+      resultPath: worktreeResultPathForPipeline,
+      execDefaults: context.execDefaults,
+    });
+    agentResult = pipelineOutcome.runResult;
+    stderr = pipelineOutcome.blockReason ?? "";
+  } else {
+    process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
+    const outcome = await runWithRetry(
+      [{ command, actor, provider: resolvedProvider }],
+      prompt,
+      context.execDefaults,
+      worktree.path,
+      env,
+    );
+    agentResult = outcome.result;
+    stderr = outcome.stderr;
+  }
 
   // Phase 3: 成果物統合と状態遷移（root で直列化）。
   const finalize = async (): Promise<RegisterItemSummary> => {
@@ -3547,6 +3878,12 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   const failureMode: RegisterFailureMode = opts.onFailure
     ? (opts.onFailure as RegisterFailureMode)
     : "stop";
+  // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
+  // 曖昧なため、実行前に明示的なエラーで止める（isRegisterPipelineRequested は片方でも true を
+  // 返すため、resolveRegisterPipelineCommand 側の対称チェックとは別に、ここで早期に検知する）。
+  if ((opts.executorBy && !opts.reporterBy) || (!opts.executorBy && opts.reporterBy)) {
+    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
+  }
 
   const roster = loadRosterForExecutionPath(executionPath);
   const execDefaults = loadExecDefaultsConfig(
@@ -3568,16 +3905,29 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     process.stdout.write(
       `[dry-run] register items (${modeLabel}): ${ids.join(", ")}  [on-failure: ${failureMode}, commit: ${useWorktree ? "always (worktree)" : opts.registerCommit ? "per-id" : "off"}]\n`,
     );
+    const pipelineMode = isRegisterPipelineRequested(opts);
     for (const pjrId of ids) {
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
       const category = requireRunnableRegisterItem(item);
-      const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
       const stem = buildInPlaceStem(pjrId.toLowerCase());
       process.stdout.write(
         `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
       );
-      process.stdout.write(`[dry-run]   actor: ${actor}\n`);
-      process.stdout.write(`[dry-run]   command: ${command}\n`);
+      if (pipelineMode) {
+        const { executor, reporterCandidates } = resolveRegisterPipelineCommand(
+          roster,
+          opts,
+          execDefaults,
+        );
+        process.stdout.write(`[dry-run]   executor: ${executor.actor}\n`);
+        process.stdout.write(`[dry-run]   executor command: ${executor.command}\n`);
+        process.stdout.write(`[dry-run]   reporter: ${reporterCandidates[0]?.actor}\n`);
+        process.stdout.write(`[dry-run]   reporter command: ${reporterCandidates[0]?.command}\n`);
+      } else {
+        const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
+        process.stdout.write(`[dry-run]   actor: ${actor}\n`);
+        process.stdout.write(`[dry-run]   command: ${command}\n`);
+      }
       process.stdout.write(
         `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
       );

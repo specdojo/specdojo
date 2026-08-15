@@ -7,7 +7,11 @@ import {
   sanitizeRegisterConclusion,
   ticketPathFromItem,
 } from "../../src/exec-register.js";
-import { resolveRegisterCommand } from "../../src/exec-run.js";
+import {
+  isRegisterPipelineRequested,
+  resolveRegisterCommand,
+  resolveRegisterPipelineCommand,
+} from "../../src/exec-run.js";
 import type { PjrItem } from "../../src/register.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
@@ -197,5 +201,78 @@ describe("resolveRegisterCommand", () => {
     expect(() => resolveRegisterCommand(makeItem({ id: "PJR-0042" }), null, {})).toThrow(
       /PJR-0042/,
     );
+  });
+});
+
+describe("isRegisterPipelineRequested", () => {
+  it("--executor-by と --reporter-by が両方揃うと true を返す", () => {
+    expect(isRegisterPipelineRequested({ executorBy: "exec-1", reporterBy: "report-1" })).toBe(
+      true,
+    );
+  });
+
+  it("片方だけでも true を返す（呼び出し側で対称チェックする前提）", () => {
+    expect(isRegisterPipelineRequested({ executorBy: "exec-1" })).toBe(true);
+    expect(isRegisterPipelineRequested({ reporterBy: "report-1" })).toBe(true);
+  });
+
+  it("どちらも無指定なら false を返す", () => {
+    expect(isRegisterPipelineRequested({})).toBe(false);
+  });
+});
+
+describe("resolveRegisterPipelineCommand", () => {
+  it("--executor-by / --reporter-by の nickname から executor と reporter の候補を解決する", () => {
+    const roster = makeRoster([
+      makeAgent({
+        nickname: "exec-1",
+        stage_role: "executor",
+        provider: "codex",
+        command: "run-exec-1",
+      }),
+      makeAgent({
+        nickname: "report-1",
+        stage_role: "reporter",
+        provider: "codex",
+        command: "run-report-1",
+      }),
+    ]);
+
+    const actual = resolveRegisterPipelineCommand(roster, {
+      executorBy: "exec-1",
+      reporterBy: "report-1",
+    });
+
+    expect(actual).toEqual({
+      executor: { command: "run-exec-1", actor: "exec-1", provider: "codex" },
+      reporterCandidates: [{ command: "run-report-1", actor: "report-1", provider: "codex" }],
+    });
+  });
+
+  it("片方だけの指定はエラーを投げる", () => {
+    const roster = makeRoster([makeAgent({ nickname: "exec-1", stage_role: "executor" })]);
+
+    expect(() => resolveRegisterPipelineCommand(roster, { executorBy: "exec-1" })).toThrow(
+      /requires both --executor-by and --reporter-by/,
+    );
+  });
+
+  it("stage_role が一致しない nickname はエラーを投げる", () => {
+    const roster = makeRoster([
+      makeAgent({ nickname: "exec-1", stage_role: "reporter", command: "run-exec-1" }),
+      makeAgent({ nickname: "report-1", stage_role: "reporter", command: "run-report-1" }),
+    ]);
+
+    expect(() =>
+      resolveRegisterPipelineCommand(roster, { executorBy: "exec-1", reporterBy: "report-1" }),
+    ).toThrow(/--executor-by agent must have stage_role: executor/);
+  });
+
+  it("nickname が roster に存在しない場合はエラーを投げる", () => {
+    const roster = makeRoster([makeAgent({ nickname: "exec-1", stage_role: "executor" })]);
+
+    expect(() =>
+      resolveRegisterPipelineCommand(roster, { executorBy: "exec-1", reporterBy: "unknown" }),
+    ).toThrow(/--reporter-by agent nickname not found/);
   });
 });
