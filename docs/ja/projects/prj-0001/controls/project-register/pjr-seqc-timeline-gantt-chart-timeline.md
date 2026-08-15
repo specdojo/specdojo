@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-08-14T15:08:17Z"
   due_on: "2026-08-31"
-  conclusion: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
 ---
 
 # PJR-SEQC timelineをgantt-chartへ改名し、timelineをトラック順序計画として新設する
