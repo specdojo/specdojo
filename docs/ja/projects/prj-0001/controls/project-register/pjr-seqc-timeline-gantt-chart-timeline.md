@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-seqc-timeline-gantt-chart-timeline
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-14T15:08:17Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-15T04:43:43Z"
 ---
 
 # PJR-SEQC timelineをgantt-chartへ改名し、timelineをトラック順序計画として新設する
