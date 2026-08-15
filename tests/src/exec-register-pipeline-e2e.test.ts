@@ -343,6 +343,53 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
+    "runs the same pipeline in --worktree mode and merges the result back",
+    { timeout: 60_000 },
+    async () => {
+      await withRepo(async ({ root }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+        ]);
+
+        const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
+        expect(ticket).toContain("item_status: review");
+
+        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        expect(resultFiles).toHaveLength(1);
+        const result = readFileSync(
+          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
+          "utf8",
+        );
+        expect(result).toContain("status: complete");
+        expect(result).toContain("register 項目を pipeline 経由で処理した。");
+        expect(result).not.toContain("_TODO_");
+
+        const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        expect(existsSync(evidenceDir)).toBe(true);
+        expect(readdirSync(evidenceDir)).toHaveLength(1);
+
+        // worktree は成功時に merge back 後、撤去される。
+        const worktrees = git(root, "worktree", "list", "--porcelain");
+        expect(worktrees).not.toContain("PJR-AB12");
+
+        expect(process.exitCode ?? 0).toBe(0);
+      });
+    },
+  );
+
+  it(
     "rejects --register with only one of --executor-by/--reporter-by",
     { timeout: 30_000 },
     async () => {

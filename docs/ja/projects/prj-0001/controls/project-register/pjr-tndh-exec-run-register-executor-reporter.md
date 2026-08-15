@@ -50,9 +50,9 @@ specdojo:
 - in-place・worktree双方に実装した。worktreeモードでは、executor/reporter双方の実行をworktree内（`cwd: worktree.path`）で行い、finalize処理（commit・merge・register review遷移）は既存ロジックをそのまま利用する。
 - 片方のフラグのみの指定は実行前に明示的なエラーで停止する（`--register pipeline execution requires both --executor-by and --reporter-by.`）。
 - `resolveRegisterPipelineCommand`は owner/role からの自動選択を行わない設計にした。register項目にはSchedule相当のper-itemパイプライン宣言が無く、自動選択の基準（capabilities/proficiencyの要求元）が存在しないため、明示指定のみを許容する方が安全と判断した。
-- 動作確認は、実際の`specdojo` CLI（`src/specdojo.ts`）をtsx経由で一時プロジェクトに対して実行する形の自動テストで行った（`tests/src/exec-register-pipeline-e2e.test.ts`、3件）。`register start`/`review`の状態遷移コマンドはrunner内部で自プロセス（`spawnSelf`）を再帰的に起動する設計のため、一時リポジトリへ実リポジトリの`node_modules`をシンボリックリンクし、`process.argv[1]`を実リポジトリの`src/specdojo.ts`へ差し替えることで、テスト内から実CLI経路（agent実行・evidence記録・reporter実行・result描画・register状態遷移・commitまで）を成立させた。結果、`item_status`が`review`へ遷移し、result本文がreporter出力で埋まり、evidence・pipeline-stateファイルが生成されることを確認した。
+- 動作確認は、実際の`specdojo` CLI（`src/specdojo.ts`）をtsx経由で一時プロジェクトに対して実行する形の自動テストで行った（`tests/src/exec-register-pipeline-e2e.test.ts`、4件：in-place実行・worktree実行・エラー系・register add前提確認）。`register start`/`review`の状態遷移コマンドはrunner内部で自プロセス（`spawnSelf`）を再帰的に起動する設計のため、一時リポジトリへ実リポジトリの`node_modules`をシンボリックリンクし、`process.argv[1]`を実リポジトリの`src/specdojo.ts`へ差し替えることで、テスト内から実CLI経路（agent実行・evidence記録・reporter実行・result描画・register状態遷移・commitまで）を成立させた。結果、in-place・worktreeの両モードで`item_status`が`review`へ遷移し、result本文がreporter出力で埋まり、evidence・pipeline-stateファイルが生成されることを確認した（worktreeは初回コミット時点では未検証だったため、レビュー時に追加確認した）。
 - `resolveRegisterCommand`（従来の単一エージェント解決）の単体テストに加え、`isRegisterPipelineRequested`／`resolveRegisterPipelineCommand`の単体テストを`tests/src/exec-register.test.ts`へ追加した（9件）。
-- 検証コマンド: `npm run typecheck`（成功）／`npm run -s lint:ts`（成功）／`npm test`（1085件成功、新規10件含む）／`npm run -s lint:md`（成功。生成物ディレクトリの既存の無関係な警告のみ残存、コミット対象外）。
+- 検証コマンド: `npm run typecheck`（成功）／`npm run -s lint:ts`（成功）／`npm test`（1086件成功、新規11件含む）／`npm run -s lint:md`（成功。生成物ディレクトリの既存の無関係な警告のみ残存、コミット対象外）。
 - 申し送り: `resolveRegisterPipelineCommand`は現状owner/roleからの自動選択に対応していない（明示指定必須）。将来的に自動選択が必要になった場合は、register項目へパイプライン既定値を持たせる設計（例: `exec-defaults.yaml`へのregister向けデフォルト追加）を別途検討する必要がある。
 
 ## 5. 関連ドキュメント
