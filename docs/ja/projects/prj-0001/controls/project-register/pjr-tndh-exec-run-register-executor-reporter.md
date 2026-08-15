@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-tndh-exec-run-register-executor-reporter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-15T02:51:26Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-15T03:47:49Z"
 ---
 
 # PJR-TNDH exec run --register をexecutor/reporterパイプラインに対応させる
