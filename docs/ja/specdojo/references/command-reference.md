@@ -143,7 +143,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 `depends_on` の未定義参照・循環、`depends_on` と `order` の矛盾、track id の重複を検出した場合は、生成物を書き込まずに終了コード 1 で停止します。`catalog_status` と実カタログの有無が食い違う場合は警告のみを出します。カタログの突き合わせはファイル名ではなく各 `dct-*.yaml` の `domain` 値で行うため、1 ドメインが複数ファイルに分割されていても検出できます。
 
-`timeline_path` は未設定の場合、プロジェクト直下の `timeline` を既定とします。記述ルールは `tml-rulebook.md`、トラックの標準構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照します。
+`timeline_path` は未設定の場合、プロジェクト直下の `timeline` を既定とします。記述ルールは [タイムライン作成ルール](../rulebooks/tml-rulebook.md)、生成フローと運用タイミングは [Timeline設計ガイド](../guides/timeline-design-guide.md)、トラックの標準構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照します。
 
 ## 6. register
 

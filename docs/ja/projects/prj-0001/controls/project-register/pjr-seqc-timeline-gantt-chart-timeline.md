@@ -74,6 +74,7 @@ tracks:
 - `docs/specdojo/schemas/v1/tml-index.schema.yaml` が新設され、`tml-rulebook.md`から参照されていること（`sch-track.schema.yaml`等の既存パターンに倣う）。
 - `id-and-file-naming-standard.md` に `tml-` prefixの命名規則が追記されていること。
 - `sch-milestones.yaml`との役割分担が`tml-rulebook.md`に明記されていること。
+- `docs/ja/specdojo/guides/timeline-design-guide.md`が新設され、`timeline build`の生成フロー・運用タイミング・`track-design-guide.md`との関係が記載されていること（`sch-`が`sch-rulebook.md`と`schedule-design-guide.md`の両方を持つ構成に揃える）。
 - `npm run -s lint:md`／`npm run typecheck`／`npm run build`／`npm run docs:build` が成功すること。
 
 ## 4. 作業内容
@@ -92,6 +93,8 @@ tracks:
 | 9   | `docs/specdojo/schemas/v1/tml-index.schema.yaml`の新設 | ARC | done | `sch-track.schema.yaml`に倣い`$defs/TrackPlan`で定義。`tml-rulebook.md`の本文構成から参照 |
 | 10  | `id-and-file-naming-standard.md`への`tml-`prefix追記 | ARC | done | 14.1のプロジェクト関係ドキュメント表へ「トラック順序計画 / Timeline / tml- / tml-index」を追加 |
 | 11  | 検証コマンド実行 | ARC | done | typecheck／lint:ts／test（1075件）／build／docs:build／catalog validate すべて成功 |
+| 12  | `specdojo timeline build`を実プロジェクトで初回実行する | ARC | done | `specdojo timeline build --project prj-0001`を実行し、`timeline/generated/`へ`timeline-order.md`／`catalog-scaffold.md`／`timeline.json`（6 wave、`catalog_scaffold_targets: 0`）を生成。`generated/`は他成果物と同様gitignore対象のためコミット対象外 |
+| 13  | Timeline設計ガイドの新設 | ARC | done | レビューで、`sch-`が`sch-rulebook.md`（記述ルール）と`schedule-design-guide.md`（生成フロー・運用ガイド）の両方を持つのに対し、`tml-`はrulebookのみで運用ガイドを欠いている点を指摘された。`docs/ja/specdojo/guides/timeline-design-guide.md`を新設し、`timeline build`の生成アルゴリズム（wave算出・整合性検証・catalog scaffold対象判定）・運用タイミング（tml-index更新のたびに再実行する運用コマンドであること）・`track-design-guide.md`との関係・アンチパターンを記載。`command-reference.md`のtimeline節と`specdojo-overview-guide.md`8.3節から参照を追加 |
 
 ## 5. 対応結果
 
@@ -101,6 +104,8 @@ tracks:
 - `specdojo timeline build`は`tml-index.yaml`を入力に、`timeline-order.md`（着手wave一覧）・`catalog-scaffold.md`（カタログ未作成ドメインと実行コマンド）・`timeline.json`（機械可読サマリー）を`timeline/generated/`へ出力する一方通行の生成コマンドとして実装した。`depends_on`の未定義参照・循環・`order`との矛盾・track id重複を検出すると終了コード1で停止する。
 - カタログの突き合わせは、`data-model`／`business-model`のように1ドメインが複数ファイルへ分割される実態に合わせ、ファイル名ではなく各`dct-*.yaml`の`domain`値で行う実装とした。
 - `tml-index.yaml`の`order`・`catalog_duration_estimate_days`は`track-design-guide.md`のウォーターフォール段階分けを基にした初期案であり、`status: draft`のまま人間レビューに委ねる。本チケットの完了条件はスキーマ・仕組みの整備であり、着手順の最終確定は含まない。
+- レビュー対応として`specdojo timeline build --project prj-0001`を実行し、生成物が実際に問題なく出力されることを確認した。`launch`／`data-flow`トラックは`tml-index.yaml`導入前から`primary`かつSchedule実行済みのため、この2トラックについては追認的な記録（retrofit）である旨を新設した`timeline-design-guide.md`に明記した。
+- レビュー対応として`docs/ja/specdojo/guides/timeline-design-guide.md`を新設した。`sch-`（`sch-rulebook.md`＋`schedule-design-guide.md`）と同じ「rulebook（記述規範）＋guide（生成フロー・運用）」の2文書構成にTimelineも揃え、`command-reference.md`・`specdojo-overview-guide.md`から参照を追加した。`guide-authoring-standard.md`の導入ブロック・見出し番号・章タイトル参照規約に従い、`npm run lint:md`／`npm run -s lint:fm`／`npm run docs:build`（mermaid 2図含む）で検証済み。
 
 ## 6. 関連ドキュメント
 
@@ -111,3 +116,5 @@ tracks:
 - [[specdojo:kata-guide]]: rulebook / recipe / sample / template の役割分担
 - [[specdojo:sch-rulebook]]: recipe/sample/templateを持たない構成の先例
 - [[prj-0001:dct-project-management]]: `tml-index`の登録先
+- [[specdojo:timeline-design-guide]]: レビュー対応で新設した運用ガイド
+- [[specdojo:guide-authoring-standard]]: guide新設時に従った構成・記述規約
