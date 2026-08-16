@@ -130,8 +130,8 @@ providers:
         - "connection refused"
         - "out of memory"
         - "model is loading"
-    # 同一ホスト・単一モデル共有のため、別 opencode member への try_next では解消
-    # しない。復旧は wait+backoff の再試行に依存するため初回待機を長めに取る。
+    # 同一ホストの OpenCode provider を共有するため、別 member への try_next でも
+    # モデル切替・メモリ不足は解消しないことがある。復旧は wait+backoff を優先する。
     rate_limit_policy:
       on_non_critical:
         action: skip

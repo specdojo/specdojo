@@ -35,8 +35,8 @@ project_id: prj-0001
 # を member 属性（nickname / mode / proficiency）で展開して解決するため、member には
 # 書かない。command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
 # priority は、stage_role・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
-#   normal                  : OpenCode -> Codex -> Claude
-#   expert                  : Codex -> Claude
+#   normal                  : Qwen -> Gemma -> Codex -> Claude
+#   expert                  : Qwen -> Gemma -> Codex -> Claude
 #
 # disabled: true を指定した agent は exec run --auto の候補選択（rate limit 時の
 # フォールバックを含む）から一時的に除外される。member 定義を削除せずに特定 provider
@@ -75,10 +75,10 @@ members:
   # opencode members
   #
 
-  - nickname: opencode-executor
+  - nickname: qwen-executor
     disabled: false
     priority: 1
-    display_name: OpenCode Executor
+    display_name: Qwen Executor
     email: null
     roles: []
     type: agent
@@ -92,14 +92,14 @@ members:
       - document-creation
       - implementation
       - verification
-    capabilities: [web_search]
+    capabilities: [web_search, code_generation]
     scheduler_strategy: critical-first
-    note: OpenCode CLI とローカル Ollama を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツール・権限と役割別プロンプトは .opencode/agents/opencode-executor.md で定義。
+    note: OpenCode CLI と Ollama の Qwen を使用する pipeline executor（edit）。モデル・権限は .opencode/agents/qwen-executor.md で定義。
 
-  - nickname: opencode-review-executor
+  - nickname: qwen-review-executor
     disabled: false
     priority: 1
-    display_name: OpenCode Review Executor
+    display_name: Qwen Review Executor
     email: null
     roles: []
     type: agent
@@ -112,14 +112,14 @@ members:
       - done-criteria-verification
       - cross-viewpoint-consistency
       - quality-assurance
-    capabilities: [web_search]
+    capabilities: [web_search, code_generation]
     scheduler_strategy: fifo
-    note: OpenCode CLI とローカル Ollama を使用する pipeline executor（review）。done_criteria の roles フィールドを参照して全観点でレビューを行うが、成果物・result のいずれにも書き込まない（読み取り専用）。調査結果は evidence として reporter へ引き継ぐ。モデル・ツール・権限は .opencode/agents/opencode-review-executor.md で定義。
+    note: OpenCode CLI と Ollama の Qwen を使用する pipeline executor（review）。モデル・権限は .opencode/agents/qwen-review-executor.md で定義。
 
-  - nickname: opencode-reporter
+  - nickname: qwen-reporter
     disabled: false
     priority: 1
-    display_name: OpenCode Reporter
+    display_name: Qwen Reporter
     email: null
     roles: []
     type: agent
@@ -130,9 +130,129 @@ members:
     focus:
       - evidence-summarization
       - structured-result-generation
-    capabilities: []
+    capabilities: [code_generation]
     scheduler_strategy: fifo
-    note: OpenCode CLI とローカル Ollama を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（ファイル書き込みは一切行わない。result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。権限と役割別プロンプトは .opencode/agents/opencode-reporter.md で定義。
+    note: OpenCode CLI と Ollama の Qwen を使用する pipeline reporter。権限とプロンプトは .opencode/agents/qwen-reporter.md で定義。
+
+  - nickname: gemma-executor
+    disabled: false
+    priority: 2
+    display_name: Gemma Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus: [task-execution, document-creation, verification]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: critical-first
+    note: OpenCode CLI と Ollama の Gemma を使用する pipeline executor（edit）。モデル・権限は .opencode/agents/gemma-executor.md で定義。
+
+  - nickname: gemma-review-executor
+    disabled: false
+    priority: 2
+    display_name: Gemma Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus: [done-criteria-verification, cross-viewpoint-consistency, quality-assurance]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: fifo
+    note: OpenCode CLI と Ollama の Gemma を使用する pipeline executor（review）。モデル・権限は .opencode/agents/gemma-review-executor.md で定義。
+
+  - nickname: gemma-reporter
+    disabled: false
+    priority: 2
+    display_name: Gemma Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    stage_role: reporter
+    proficiency: normal
+    persona: execution-reporter
+    focus: [evidence-summarization, structured-result-generation]
+    capabilities: [document_authoring]
+    scheduler_strategy: fifo
+    note: OpenCode CLI と Ollama の Gemma を使用する pipeline reporter。権限とプロンプトは .opencode/agents/gemma-reporter.md で定義。
+
+  - nickname: qwen-expert-executor
+    disabled: false
+    priority: 1
+    display_name: Qwen Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus: [task-execution, implementation, verification, complex-analysis]
+    capabilities: [web_search, code_generation]
+    scheduler_strategy: critical-first
+    note: thinking を有効化した Qwen を使用する expert executor。モデル・権限は .opencode/agents/qwen-expert-executor.md で定義。
+
+  - nickname: qwen-expert-review-executor
+    disabled: false
+    priority: 1
+    display_name: Qwen Expert Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: review
+    stage_role: executor
+    proficiency: expert
+    persona: multi-viewpoint-reviewer
+    focus:
+      [done-criteria-verification, cross-viewpoint-consistency, quality-assurance, complex-analysis]
+    capabilities: [web_search, code_generation]
+    scheduler_strategy: fifo
+    note: thinking を有効化した Qwen を使用する expert review executor。モデル・権限は .opencode/agents/qwen-expert-review-executor.md で定義。
+
+  - nickname: gemma-expert-executor
+    disabled: false
+    priority: 2
+    display_name: Gemma Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus: [task-execution, document-creation, verification, complex-analysis]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: critical-first
+    note: thinking を有効化した Gemma を使用する expert executor。モデル・権限は .opencode/agents/gemma-expert-executor.md で定義。
+
+  - nickname: gemma-expert-review-executor
+    disabled: false
+    priority: 2
+    display_name: Gemma Expert Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: review
+    stage_role: executor
+    proficiency: expert
+    persona: multi-viewpoint-reviewer
+    focus:
+      [done-criteria-verification, cross-viewpoint-consistency, quality-assurance, complex-analysis]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: fifo
+    note: thinking を有効化した Gemma を使用する expert review executor。モデル・権限は .opencode/agents/gemma-expert-review-executor.md で定義。
 
   #
   # claude code members

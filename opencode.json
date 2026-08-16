@@ -12,8 +12,8 @@
         "gemma4:31b-mlx-work-64k": {
           "name": "Gemma 4 31B-MLX Work (64k)"
         },
-        "qwen3.6:27b-mlx-work-64k": {
-          "name": "Qwen3.6 27B-MLX Work (64k)"
+        "qwen3.8:27b-mlx-work-64k": {
+          "name": "Qwen3.8 27B-MLX Work (64k)"
         },
         "gemma4:e4b-mlx": {
           "name": "Gemma 4 E4B-MLX"
@@ -21,5 +21,5 @@
       }
     }
   },
-  "model": "ollama-local/gemma4:31b-mlx-work-64k"
+  "model": "ollama-local/qwen3.8:27b-mlx-work-64k"
 }
