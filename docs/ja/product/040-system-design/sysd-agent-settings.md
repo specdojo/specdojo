@@ -174,7 +174,15 @@ specdojo exec run --by <member-nickname>
 
 ### 6.2. `.specdojo/exec-defaults.yaml`
 
-agent の起動コマンドテンプレート、rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で管理する。検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なるため、共通設計はグローバル既定値と provider 別上書きの2層で構成する。起動コマンドは provider 固有の情報のため、グローバル既定は持たず `providers.<provider>` にのみ置く（`起動コマンドの解決` を参照）。
+agent の起動コマンドテンプレート、親 runner の固定検証、rate limit と一時障害の検出条件、および retry / fallback / block のポリシーは `.specdojo/exec-defaults.yaml` で管理する。検出対象となる終了コード、stderr pattern、待機時間は provider ごとに異なるため、共通設計はグローバル既定値と provider 別上書きの2層で構成する。起動コマンドは provider 固有の情報のため、グローバル既定は持たず `providers.<provider>` にのみ置く（`起動コマンドの解決` を参照）。
+
+executor の sandbox で実行できない検証は `pipeline.parent_validations` に組み込み許可リストの ID を指定する。設定・plan・agent 出力から command 文字列や引数は受理せず、親 runner が固定 executable / argv を `shell: false` で実行する。`test-integration` は `npm run test:integration` に解決する。実行順序は executor 成功、親検証、evidence 保存、reporter の順とし、検証結果には `source: runner` と ID を記録する。親検証の失敗は reporter の `complete` より優先し、reporter 再開時は保存済み evidence を使って再実行しない。
+
+```yaml
+pipeline:
+  parent_validations:
+    - test-integration
+```
 
 - グローバル既定: top-level の `rate_limit_detection` / `rate_limit_policy`。provider 別上書きを持たない member に適用する。
 - provider 別上書き: `providers.<provider>` 配下に `rate_limit_detection` / `rate_limit_policy` を置く。キーは `pm-members.yaml` の `provider` と一致させる。

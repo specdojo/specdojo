@@ -41,6 +41,16 @@ specdojo exec scaffold --provider codex
            expert: { model: gpt-5.5, effort: high }
    ```
 
+   実 Git / worktree を必要とする integration テストを親 runner で実行する場合は、command ではなく固定許可リスト ID を追加する。
+
+   ```yaml
+   pipeline:
+     parent_validations:
+       - test-integration
+   ```
+
+   この構成では Codex executor は `npm run test:unit` を実行し、親 runner が `npm run test:integration` の結果を evidence へ追加する。
+
 2. 対話セッション用のデフォルト（`.codex/config.toml`）は利用環境に合わせて作成する。モデルや `approval_policy` の好みを含むため、このテンプレートには含めていない。
 3. コピーしたファイルをコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 

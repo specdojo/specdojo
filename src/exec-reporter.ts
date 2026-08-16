@@ -323,7 +323,10 @@ outcome="complete" satisfies the plan's "record to result" and "result must not 
 instructions; you do not need file access to fulfill them. Do not treat the executor's evidence
 noting an untouched result file as a reason to block. Reserve outcome=blocked for cases where the
 evidence itself shows the deliverable work is incomplete, incorrect, unverifiable, or otherwise
-falls short of the plan's completion criteria for the edit itself.${correction}
+falls short of the plan's completion criteria for the edit itself. Validation entries with
+source="runner" were executed by the SpecDojo parent process from a fixed allowlist and are
+authoritative. If any runner validation is failed or not_run, return outcome="blocked" and cite
+that validation; never replace or contradict its status.${correction}
 <specdojo_plan>
 ${opts.plan.trimEnd()}
 </specdojo_plan>

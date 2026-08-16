@@ -4,6 +4,7 @@ import { listFilesRecursive, readYaml } from "./exec-shared.js";
 import { specdojoRootDir, type AgentProvider, type ProjectMember } from "./specdojo-config.js";
 import type { AgentLimitKind } from "./exec-limit.js";
 import type { Proficiency, TaskMode } from "./exec-types.js";
+import { resolveParentValidationDefinitions } from "./exec-parent-validation.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -68,6 +69,9 @@ export type ProviderOverride = {
 };
 
 export type ExecDefaultsConfig = {
+  pipeline?: {
+    parent_validations?: string[];
+  };
   rate_limit_detection?: RateLimitDetection;
   rate_limit_policy?: RateLimitPolicy;
   providers?: Partial<Record<AgentProvider, ProviderOverride>>;
@@ -298,6 +302,8 @@ export function loadExecDefaultsConfig(
     const legacyPolicy = loadLegacyRateLimitPolicy(executionPath);
     if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy;
   }
+
+  resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
 
   return defaults;
 }

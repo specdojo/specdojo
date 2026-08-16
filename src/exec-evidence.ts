@@ -13,6 +13,8 @@ const MAX_VALIDATION_COMMAND_LENGTH = 500;
 const MAX_VALIDATION_SUMMARY_LENGTH = 1_000;
 
 export type EvidenceValidation = {
+  id?: string;
+  source?: "executor" | "runner";
   command: string;
   status: "passed" | "failed" | "not_run";
   summary: string;
@@ -60,6 +62,7 @@ export type RecordExecutorEvidenceInput = {
   attempts: number;
   stdout: string;
   stderr: string;
+  parentValidations?: EvidenceValidation[];
 };
 
 export type BuildExecutorEvidenceInput = Omit<
@@ -69,6 +72,7 @@ export type BuildExecutorEvidenceInput = Omit<
   changes: ExecEvidence["changes"];
   diffStat: string;
   logRefPath: string;
+  parentValidations?: EvidenceValidation[];
 };
 
 type ExecutorReport = {
@@ -128,6 +132,7 @@ export function parseExecutorReport(stdout: string): {
         continue;
       }
       validations.push({
+        source: "executor",
         command,
         status,
         summary: boundedText(candidate.summary, MAX_VALIDATION_SUMMARY_LENGTH),
@@ -173,6 +178,11 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
   logExcerpt: string;
 } {
   const report = parseExecutorReport(input.stdout);
+  const parentValidations = input.parentValidations ?? [];
+  const validations = [
+    ...report.validations.slice(0, Math.max(0, MAX_VALIDATIONS - parentValidations.length)),
+    ...parentValidations.slice(0, MAX_VALIDATIONS),
+  ].slice(0, MAX_VALIDATIONS);
   const changes = input.changes.slice(0, MAX_CHANGE_FILES).map((change) => ({
     path: boundedText(change.path, 1_000),
     status: boundedText(change.status, 40),
@@ -200,7 +210,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         files_changed: changes.length,
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
       },
-      validations: report.validations,
+      validations,
       final_message: report.finalMessage,
       log_refs: [
         {
@@ -256,6 +266,7 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     changes: changesBeforeEvidence,
     diffStat,
     logRefPath: repoRelative(input.worktreePath, logPath),
+    parentValidations: input.parentValidations,
   });
   writeFileSync(logPath, logExcerpt, "utf8");
   writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");

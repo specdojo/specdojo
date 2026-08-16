@@ -1,12 +1,43 @@
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
+  loadExecDefaultsConfig,
   resolveMaxConcurrency,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
   type RateLimitPolicy,
 } from "../../src/exec-agent-config.js";
+
+describe("parent validation config", () => {
+  it("loads allowlisted IDs and rejects unknown IDs", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-parent-validation-config-"));
+    try {
+      const validPath = join(root, "valid.yaml");
+      writeFileSync(
+        validPath,
+        "pipeline:\n  parent_validations:\n    - test-integration\n",
+        "utf8",
+      );
+      expect(loadExecDefaultsConfig(validPath).pipeline?.parent_validations).toEqual([
+        "test-integration",
+      ]);
+
+      const invalidPath = join(root, "invalid.yaml");
+      writeFileSync(
+        invalidPath,
+        "pipeline:\n  parent_validations:\n    - npm-run-arbitrary\n",
+        "utf8",
+      );
+      expect(() => loadExecDefaultsConfig(invalidPath)).toThrow(/Unknown parent validation id/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
 
 const globalPolicy: RateLimitPolicy = {
   on_non_critical: { action: "skip" },

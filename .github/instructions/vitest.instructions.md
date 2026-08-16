@@ -143,6 +143,7 @@ await expect(loadYaml("missing.yaml")).rejects.toThrow(/missing.yaml/);
 
 - テスト追加後は、プロジェクトで定義された Vitest 実行 script を使って確認する。
 - sandbox 内で決定的に実行できる単体テストは `npm run test:unit`、実 Git・worktree・CLI 子プロセスを必要とする統合テストは `npm run test:integration` で実行する。
+- SpecDojo の executor / reporter pipeline では executor が `npm run test:unit` を実行し、`pipeline.parent_validations: [test-integration]` が設定されている場合は親 runner が `npm run test:integration` を固定 argv で実行して evidence へ追加する。executor の sandbox 権限は integration テストのために拡張しない。
 - `npm test` は単体テストと統合テストを含む全件ゲートとして維持し、CI、マージ前、リリース前に実行する。
 - Vitest 実行 script が未定義の場合は、導入時に `npm test` または `npm run test` で実行できる script を追加する。
 - TypeScript の型影響がある変更では、`npm run typecheck` も実行する。`npm run build` は `src` のみが対象で、`tests` 配下の型エラーは検出されない。

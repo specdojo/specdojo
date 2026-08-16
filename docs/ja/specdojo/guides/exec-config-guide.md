@@ -160,9 +160,13 @@ flowchart LR
 
 ## 5. exec-defaults
 
-`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。
+`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。executor の sandbox 外で親 runner に実行させる固定検証は `pipeline.parent_validations` に許可リスト ID だけを指定します。
 
 ```yaml
+pipeline:
+  parent_validations:
+    - test-integration
+
 rate_limit_detection:
   exit_codes: []
   stderr_patterns:
@@ -183,6 +187,8 @@ rate_limit_policy:
       max_wait_seconds: 600
     on_exhausted: block
 ```
+
+`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `test-integration` だけです。
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
@@ -340,7 +346,10 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - 保存前に上限を適用します。ログ抜粋は 64KiB、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
 - 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と `executor.log` の両方に適用します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
+- `pipeline.parent_validations` がある場合、executor は sandbox 内で `npm run test:unit` を実行し、親 runner は executor の成功後・reporter の起動前に固定検証を実行します。executor 由来の検証には `source: executor`、親 runner 由来には `source: runner` と許可リスト `id` を付けて、同じ `validations` 配列へ保存します。
+- 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
+- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ evidence を再利用し、親検証も再実行しません。設定 ID が変わった、または結果が欠けている場合は古い checkpoint を採用せず、新しい executor run としてやり直します。
 - result の frontmatter は runner が scaffold した内容を保ち、本文は検証済み JSON から runner が描画します。reporter はファイルを書きません。
 
 ## 7. provider 設定の配布と scaffold

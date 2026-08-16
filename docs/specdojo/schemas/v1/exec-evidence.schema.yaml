@@ -82,6 +82,13 @@ properties:
       additionalProperties: false
       required: [command, status, summary]
       properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 100
+        source:
+          type: string
+          enum: [executor, runner]
         command:
           type: string
           minLength: 1
@@ -92,6 +99,14 @@ properties:
         summary:
           type: string
           maxLength: 1000
+      allOf:
+        - if:
+            required: [source]
+            properties:
+              source:
+                const: runner
+          then:
+            required: [id]
   final_message:
     type: string
     maxLength: 4000

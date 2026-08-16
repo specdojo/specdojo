@@ -4,8 +4,8 @@ title: "SpecDojo Exec Defaults schema"
 description: >
   Defines global defaults for specdojo exec run.
   Agent selection requirements are declared on sch-strategy phases; this file only
-  contains runtime defaults shared across tracks, such as agent launch command templates,
-  rate-limit detection, and retry policy.
+  contains runtime defaults shared across tracks, such as parent-run pipeline validations,
+  agent launch command templates, rate-limit detection, and retry policy.
   Detection signals, exit codes, and wait times differ per agent runtime provider, so the
   top-level rate_limit_detection / rate_limit_policy act as global defaults and providers.<name>
   supplies per-provider overrides keyed by pm-members[].provider. Launch command templates
@@ -14,6 +14,10 @@ type: object
 additionalProperties: false
 
 properties:
+  pipeline:
+    $ref: "#/$defs/PipelineDefaults"
+    description: "Runner-owned defaults for executor/reporter pipelines."
+
   rate_limit_detection:
     $ref: "#/$defs/RateLimitDetection"
     description: >
@@ -41,6 +45,23 @@ properties:
       $ref: "#/$defs/ProviderOverride"
 
 $defs:
+  PipelineDefaults:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    properties:
+      parent_validations:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          Fixed validation IDs executed by the SpecDojo parent runner after a successful
+          executor process and before reporter invocation. IDs resolve through the built-in
+          allowlist; command strings and arguments cannot be supplied by agents or config.
+        items:
+          type: string
+          enum: [test-integration]
+
   ProviderOverride:
     type: object
     additionalProperties: false

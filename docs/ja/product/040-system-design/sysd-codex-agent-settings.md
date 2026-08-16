@@ -323,7 +323,13 @@ phase の共通契約は親設計に従う。Codex の Web 検索が必要な ph
 
 共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Codex 固有の検出条件は `providers.codex.rate_limit_detection` に置き、`pm-members.yaml` で `provider: codex` の member に適用する。
 
+Codex worker は `workspace-write` sandbox 内で `npm run test:unit` を実行する。実 Git・worktree・CLI 子プロセスを必要とする integration テストは sandbox を広げず、SpecDojo 親 runner の固定許可リストへ分離する。
+
 ```yaml
+pipeline:
+  parent_validations:
+    - test-integration
+
 providers:
   codex:
     rate_limit_detection:
@@ -334,6 +340,8 @@ providers:
         - "weekly limit"
         - "usage limit"
 ```
+
+`test-integration` は親 runner が `npm run test:integration` として `shell: false` で実行する固定 ID である。Codex の出力に書かれた command は実行せず、親検証結果だけを `source: runner` 付きで evidence へ追記する。これにより `danger-full-access` を使わず、reporter が単体・統合の両方を根拠に判定できる。
 
 Codex は API 利用と ChatGPT プラン利用で limit の考え方が異なり、複数の limit がスタックする。共通モデルへの写像は親設計の limit 表に従う。
 

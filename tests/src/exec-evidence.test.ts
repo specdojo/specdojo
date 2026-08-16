@@ -28,7 +28,14 @@ describe("executor evidence", () => {
 
     expect(parseExecutorReport(stdout)).toEqual({
       finalMessage: "done; api_key=[REDACTED]",
-      validations: [{ command: "npm test", status: "passed", summary: "42 tests passed" }],
+      validations: [
+        {
+          source: "executor",
+          command: "npm test",
+          status: "passed",
+          summary: "42 tests passed",
+        },
+      ],
     });
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
   });
@@ -59,13 +66,29 @@ describe("executor evidence", () => {
       diffStat: " artifact.md | 2 +-",
       logRefPath:
         "docs/execution/exec/evidence/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
+      parentValidations: [
+        {
+          id: "test-integration",
+          source: "runner",
+          command: "npm run test:integration",
+          status: "passed",
+          summary: "exit 0: 66 tests passed",
+        },
+      ],
     });
 
     expect(evidence.changes).toContainEqual({ path: "artifact.md", status: "M" });
     expect(evidence.diff_summary.files_changed).toBe(1);
     expect(evidence.final_message).toBe("artifact updated");
     expect(evidence.validations).toEqual([
-      { command: "npm test", status: "passed", summary: "ok" },
+      { source: "executor", command: "npm test", status: "passed", summary: "ok" },
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status: "passed",
+        summary: "exit 0: 66 tests passed",
+      },
     ]);
     expect(evidence.log_refs[0].path).toContain("/exec/evidence/T-TEST-doc-010/");
     expect(JSON.stringify(evidence)).not.toContain("do-not-store");

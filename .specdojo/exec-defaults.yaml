@@ -11,6 +11,13 @@
 # 既定を使う。検出は候補ごとに provider で解決し、retry/backoff の policy は最優先
 # 候補（candidates[0]）の provider で解決する。
 
+# executor の sandbox では実行できない検証を、executor 成功後・reporter 起動前に
+# SpecDojo 親プロセスが固定許可リストから実行する。設定できるのは ID だけで、agent の
+# evidence や設定ファイルから任意の command / 引数を注入することはできない。
+pipeline:
+  parent_validations:
+    - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
+
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
   # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限

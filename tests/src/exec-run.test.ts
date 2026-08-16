@@ -299,11 +299,16 @@ describe("pipeline executor preparation", () => {
   });
 
   it("separates result writing from the executor prompt and requests structured evidence", () => {
-    const prompt = buildExecutorPrompt("# Edit Plan\n\nUpdate the result file.");
+    const prompt = buildExecutorPrompt("# Edit Plan\n\nUpdate the result file.", [
+      "test-integration",
+    ]);
 
     expect(prompt).toContain("do not create or update the result file");
     expect(prompt).toContain("<specdojo_executor_evidence>");
     expect(prompt).toContain("Update the result file.");
+    expect(prompt).toContain("npm run test:unit");
+    expect(prompt).toContain("test-integration");
+    expect(prompt).toContain("source=runner");
   });
 
   it("rejects an explicit legacy agent override for an executor stage", () => {

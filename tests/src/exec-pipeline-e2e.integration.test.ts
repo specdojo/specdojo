@@ -153,6 +153,9 @@ type PipelineFixture = {
   executionPath: string;
   logPath: string;
   behaviorPath: string;
+  parentValidationDir: string;
+  parentValidationLogPath: string;
+  parentValidationBehaviorPath: string;
 };
 
 function writeMembers(repo: string): void {
@@ -199,6 +202,9 @@ function writeExecDefaults(repo: string, logPath: string, behaviorPath: string):
   writeFileSync(
     join(repo, ".specdojo", "exec-defaults.yaml"),
     [
+      "pipeline:",
+      "  parent_validations:",
+      "    - test-integration",
       "rate_limit_detection:",
       "  exit_codes: []",
       "  stderr_patterns:",
@@ -367,6 +373,9 @@ function writeTemplates(repo: string): void {
 
 function setupPipelineRepository(): PipelineFixture {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-"));
+  const parentValidationDir = mkdtempSync(join(tmpdir(), "specdojo-parent-validation-e2e-"));
+  const parentValidationLogPath = join(parentValidationDir, "runs.log");
+  const parentValidationBehaviorPath = join(parentValidationDir, "behavior.txt");
   for (const dir of [
     join(repo, ".specdojo"),
     join(repo, "schedule"),
@@ -380,7 +389,28 @@ function setupPipelineRepository(): PipelineFixture {
   const logPath = join(repo, "agent-invocations.jsonl");
   const behaviorPath = join(repo, "agent-behavior.json");
   writeFileSync(logPath, "", "utf8");
+  writeFileSync(parentValidationLogPath, "", "utf8");
+  writeFileSync(parentValidationBehaviorPath, "pass\n", "utf8");
   writeFileSync(join(repo, "fake-agent.mjs"), FAKE_AGENT_SCRIPT, "utf8");
+  writeFileSync(
+    join(repo, "parent-validation.mjs"),
+    [
+      'import { appendFileSync, readFileSync } from "node:fs";',
+      `const logPath = ${JSON.stringify(parentValidationLogPath)};`,
+      `const behaviorPath = ${JSON.stringify(parentValidationBehaviorPath)};`,
+      'appendFileSync(logPath, "run\\n", "utf8");',
+      'const behavior = readFileSync(behaviorPath, "utf8").trim();',
+      'process.stdout.write("integration validation " + behavior + "\\n");',
+      'process.exit(behavior === "pass" ? 0 : 1);',
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "package.json"),
+    `${JSON.stringify({ scripts: { "test:integration": "node parent-validation.mjs" } }, null, 2)}\n`,
+    "utf8",
+  );
   writeFileSync(
     join(repo, ".specdojo", "specdojo.config.json"),
     `${JSON.stringify(
@@ -417,7 +447,15 @@ function setupPipelineRepository(): PipelineFixture {
   git(repo, "add", "-A");
   git(repo, "commit", "-m", "initial");
 
-  return { repo, executionPath: join(repo, "execution"), logPath, behaviorPath };
+  return {
+    repo,
+    executionPath: join(repo, "execution"),
+    logPath,
+    behaviorPath,
+    parentValidationDir,
+    parentValidationLogPath,
+    parentValidationBehaviorPath,
+  };
 }
 
 function setBehavior(behaviorPath: string, behaviors: Record<string, AgentBehavior>): void {
@@ -494,7 +532,10 @@ describe("executor / reporter pipeline E2E", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (fixture) rmSync(fixture.repo, { recursive: true, force: true });
+    if (fixture) {
+      rmSync(fixture.repo, { recursive: true, force: true });
+      rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+    }
     fixture = undefined;
   });
 
@@ -533,6 +574,7 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].model).toBe("gemma3-12b");
     expect(invocations[1].model).toBe("gemma3-12b");
     expect(invocations[0].prompt).toContain("executor stage");
+    expect(invocations[0].prompt).toContain("npm run test:unit");
 
     // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
     expect(readFileSync(join(target.repo, "pipeline-artifact.md"), "utf8")).toContain(
@@ -563,8 +605,21 @@ describe("executor / reporter pipeline E2E", () => {
     });
     expect(evidence.changes.map((change) => change.path)).toContain("pipeline-artifact.md");
     expect(evidence.validations).toEqual([
-      { command: "npm test", status: "passed", summary: "全テストが成功した。" },
+      {
+        source: "executor",
+        command: "npm test",
+        status: "passed",
+        summary: "全テストが成功した。",
+      },
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status: "passed",
+        summary: expect.stringContaining("integration validation pass"),
+      },
     ]);
+    expect(readFileSync(target.parentValidationLogPath, "utf8")).toBe("run\n");
 
     const state = JSON.parse(readFileSync(join(runDir, "pipeline-state.json"), "utf8")) as {
       stages: Record<string, { status: string; actor: string; attempts: number }>;
@@ -665,6 +720,33 @@ describe("executor / reporter pipeline E2E", () => {
     expect(result).toContain("validation command failed");
   });
 
+  it("records a failed parent validation and blocks even if the reporter returns complete", async () => {
+    const target = setup();
+    writeFileSync(target.parentValidationBehaviorPath, "fail\n", "utf8");
+
+    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
+
+    expect(process.exitCode).toBe(1);
+    expect(readInvocations(target.logPath).map((item) => item.role)).toEqual([
+      "executor",
+      "reporter",
+    ]);
+    const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
+      validations: Array<{ id?: string; source?: string; status: string }>;
+    };
+    expect(evidence.validations).toContainEqual(
+      expect.objectContaining({
+        id: "test-integration",
+        source: "runner",
+        status: "failed",
+      }),
+    );
+    expect(readResult(target, "T-TEST-doc-010")).toContain(
+      "parent validation failed: test-integration",
+    );
+  });
+
   it("blocks on reporter output that never validates, keeping the executor evidence for resume", async () => {
     const target = setup();
     setBehavior(target.behaviorPath, {
@@ -735,7 +817,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
   afterEach(() => {
     process.chdir(originalCwd);
     if (worktreeBase) rmSync(worktreeBase, { recursive: true, force: true });
-    if (fixture) rmSync(fixture.repo, { recursive: true, force: true });
+    if (fixture) {
+      rmSync(fixture.repo, { recursive: true, force: true });
+      rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+    }
     worktreeBase = undefined;
     fixture = undefined;
   });
@@ -796,6 +881,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const invocations = readInvocations(fixture.logPath);
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
+    expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\n");
 
     const result = readResult(fixture, "T-TEST-doc-010");
     expect(result).toContain("status: complete");

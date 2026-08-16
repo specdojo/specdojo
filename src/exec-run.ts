@@ -133,6 +133,11 @@ import {
   resolveTaskProficiency,
 } from "./exec-strategy.js";
 import { recordExecutorEvidence } from "./exec-evidence.js";
+import {
+  failedParentValidationReason,
+  hasRecordedParentValidations,
+  runParentValidations,
+} from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
 import {
   createPipelineState,
@@ -686,7 +691,12 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
   return plan ? expandPromptRefs(plan) : null;
 }
 
-const EXECUTOR_EVIDENCE_CONTRACT = `
+function executorEvidenceContract(parentValidationIds: readonly string[]): string {
+  const parentValidationInstruction =
+    parentValidationIds.length > 0
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")}. Do not run their underlying integration commands inside the agent sandbox. Run the sandbox-safe unit test command required by the plan (for this repository: npm run test:unit) and report it in your executor validations. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      : "";
+  return `
 
 ---
 
@@ -696,6 +706,7 @@ This invocation is the executor stage of an executor/reporter pipeline. Edit and
 artifacts required by the plan, but do not create or update the result file. Any plan instruction
 that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
 runner stage and does not apply here.
+${parentValidationInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
@@ -704,9 +715,29 @@ Markdown fences around the JSON.
 {"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
 </specdojo_executor_evidence>
 `;
+}
 
-export function buildExecutorPrompt(plan: string): string {
-  return `${plan.trimEnd()}${EXECUTOR_EVIDENCE_CONTRACT}`;
+export function buildExecutorPrompt(
+  plan: string,
+  parentValidationIds: readonly string[] = [],
+): string {
+  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds)}`;
+}
+
+async function runConfiguredParentValidations(
+  execDefaults: ExecDefaultsConfig,
+  cwd: string,
+): Promise<Awaited<ReturnType<typeof runParentValidations>>> {
+  const ids = execDefaults.pipeline?.parent_validations;
+  if (!ids?.length) return [];
+  process.stdout.write(`  Running parent validations: ${ids.join(", ")}\n`);
+  const validations = await runParentValidations(ids, cwd);
+  for (const validation of validations) {
+    process.stdout.write(
+      `  Parent validation ${validation.id ?? validation.command}: ${validation.status}\n`,
+    );
+  }
+  return validations;
 }
 
 export function executorRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
@@ -1208,7 +1239,9 @@ async function prepareSingleTask(
     process.stdout.write(`  Plan not found for ${task.id}.\n`);
     return "failure";
   }
-  const prompt = task.agent_pipeline ? buildExecutorPrompt(planPrompt) : planPrompt;
+  const prompt = task.agent_pipeline
+    ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
+    : planPrompt;
   const pipelineRunId = task.agent_pipeline
     ? `${new Date().toISOString().replace(/[-:.]/g, "").replace("Z", "Z")}-${randomHex(4)}`
     : undefined;
@@ -1471,7 +1504,14 @@ async function runPreparedTask(
       pipelineState = checkpoint.state;
       pipelineStatePath = checkpoint.statePath;
       pipelineStateRef = prepared.pipelineStateRef;
-      if (prepared.pipelineResumeStage === "reporter" && checkpoint.evidence) {
+      if (
+        prepared.pipelineResumeStage === "reporter" &&
+        checkpoint.evidence &&
+        hasRecordedParentValidations(
+          checkpoint.evidence.validations,
+          execDefaults.pipeline?.parent_validations,
+        )
+      ) {
         executorEvidence = checkpoint.evidence;
         executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
         resumeReporter = true;
@@ -1538,6 +1578,10 @@ async function runPreparedTask(
     stdout = executorOutcome.stdout;
     attempts = executorOutcome.attempts;
     limit = executorOutcome.limit;
+    const parentValidations =
+      result === "success"
+        ? await runConfiguredParentValidations(execDefaults, prepared.worktree.path)
+        : [];
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: prepared.worktree.path,
@@ -1553,6 +1597,7 @@ async function runPreparedTask(
       attempts,
       stdout,
       stderr,
+      parentValidations,
     });
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
@@ -1622,10 +1667,19 @@ async function runPreparedTask(
       if (reporter.result === "success") {
         try {
           await renderReporterResult(worktreeResultPath, reporter.output);
-          result = reporter.output.outcome === "complete" ? "success" : "failure";
+          const parentValidationFailure = failedParentValidationReason(
+            executorEvidence.validations,
+          );
+          result =
+            reporter.output.outcome === "complete" && !parentValidationFailure
+              ? "success"
+              : "failure";
           if (reporter.output.outcome === "blocked") {
             pipelineBlockReason = reporter.output.block_reason;
             stderr = reporter.output.block_reason;
+          } else if (parentValidationFailure) {
+            pipelineBlockReason = parentValidationFailure;
+            stderr = parentValidationFailure;
           }
           process.stdout.write(
             `  Reporter complete: ${prepared.reporterCandidates[0].actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
@@ -2565,7 +2619,9 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   }
 
   const planPrompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-  const prompt = task?.agent_pipeline ? buildExecutorPrompt(planPrompt) : planPrompt;
+  const prompt = task?.agent_pipeline
+    ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
+    : planPrompt;
 
   if (trackState) {
     if (!opts.task) throw new Error("--track-state requires --task.");
@@ -2655,6 +2711,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
     );
+    const parentValidations =
+      outcome.result === "success"
+        ? await runConfiguredParentValidations(execDefaults, repoRoot)
+        : [];
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: repoRoot,
@@ -2674,6 +2734,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       attempts: outcome.attempts,
       stdout: outcome.stdout,
       stderr: outcome.stderr,
+      parentValidations,
     });
     pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
     const executorCompletedAt = new Date().toISOString();
@@ -2738,9 +2799,14 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       if (reporter.result === "success" && resultPath) {
         try {
           await renderReporterResult(resultPath, reporter.output);
-          exitCode = reporter.output.outcome === "complete" ? 0 : 1;
+          const parentValidationFailure = failedParentValidationReason(
+            recorded.evidence.validations,
+          );
+          exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
           pipelineBlockReason =
-            reporter.output.outcome === "blocked" ? reporter.output.block_reason : undefined;
+            reporter.output.outcome === "blocked"
+              ? reporter.output.block_reason
+              : parentValidationFailure;
           process.stdout.write(
             `Reporter complete: ${reporterCandidates?.[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
           );
@@ -3155,8 +3221,10 @@ async function runRegisterAgentPipeline(params: {
   writePipelineState(stateLocation.path, state);
 
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
-  const executorPrompt = buildExecutorPrompt(planPrompt);
+  const executorPrompt = buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations);
   const outcome = await runWithRetry([executor], executorPrompt, execDefaults, cwd, env);
+  const parentValidations =
+    outcome.result === "success" ? await runConfiguredParentValidations(execDefaults, cwd) : [];
 
   const recorded = recordExecutorEvidence({
     repoRoot,
@@ -3177,6 +3245,7 @@ async function runRegisterAgentPipeline(params: {
     attempts: outcome.attempts,
     stdout: outcome.stdout,
     stderr: outcome.stderr,
+    parentValidations,
   });
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
@@ -3253,9 +3322,12 @@ async function runRegisterAgentPipeline(params: {
   if (reporter.result === "success") {
     try {
       await renderReporterResult(resultPath, reporter.output);
-      exitCode = reporter.output.outcome === "complete" ? 0 : 1;
+      const parentValidationFailure = failedParentValidationReason(recorded.evidence.validations);
+      exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
       blockReason =
-        reporter.output.outcome === "blocked" ? reporter.output.block_reason : undefined;
+        reporter.output.outcome === "blocked"
+          ? reporter.output.block_reason
+          : parentValidationFailure;
       process.stdout.write(
         `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
       );
