@@ -42,20 +42,22 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 
 `package.json` に、対話起動用の npm スクリプトを `orch:` 接頭辞で用意しています。Claude Code / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動します。
 
-| スクリプト           | CLI・モデル             | worktree                                         |
-| -------------------- | ----------------------- | ------------------------------------------------ |
-| `orch:sonnet`        | Claude Code / `sonnet`  | なし                                             |
-| `orch:sonnet:work`   | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）      |
-| `orch:opus`          | Claude Code / `opus`    | なし                                             |
-| `orch:opus:work`     | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）      |
-| `orch:terra`         | Codex / `gpt-5.6-terra` | なし                                             |
-| `orch:terra:work`    | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）    |
-| `orch:sol`           | Codex / `gpt-5.6-sol`   | なし                                             |
-| `orch:sol:work`      | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）    |
-| `orch:copilot`       | GitHub Copilot          | なし                                             |
-| `orch:copilot:work`  | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成）  |
-| `orch:opencode`      | OpenCode                | なし                                             |
-| `orch:opencode:work` | OpenCode                | `../worktrees/opencode-work`（無ければ自動作成） |
+| スクリプト          | CLI・モデル             | worktree                                        |
+| ------------------- | ----------------------- | ----------------------------------------------- |
+| `orch:sonnet`       | Claude Code / `sonnet`  | なし                                            |
+| `orch:sonnet:work`  | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）     |
+| `orch:opus`         | Claude Code / `opus`    | なし                                            |
+| `orch:opus:work`    | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）     |
+| `orch:terra`        | Codex / `gpt-5.6-terra` | なし                                            |
+| `orch:terra:work`   | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-5.6-sol`   | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:copilot`      | GitHub Copilot          | なし                                            |
+| `orch:copilot:work` | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成） |
+| `orch:qwen`         | OpenCode / Qwen 3.8     | なし                                            |
+| `orch:qwen:work`    | OpenCode / Qwen 3.8     | `../worktrees/qwen-work`（無ければ自動作成）    |
+| `orch:gemma`        | OpenCode / Gemma 4      | なし                                            |
+| `orch:gemma:work`   | OpenCode / Gemma 4      | `../worktrees/gemma-work`（無ければ自動作成）   |
 
 用途に応じて使い分けます。
 
@@ -103,12 +105,13 @@ worktree 付きは、固定名の worktree を使い、無ければ起動時に�
 
 指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。
 
-| 役割               | パス                                        |
-| ------------------ | ------------------------------------------- |
-| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`    |
-| Claude Code        | `.claude/agents/specdojo-orchestrator.md`   |
-| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`   |
-| Codex              | `.codex/agents/specdojo-orchestrator.toml`  |
-| OpenCode           | `.opencode/agents/specdojo-orchestrator.md` |
+| 役割               | パス                                       |
+| ------------------ | ------------------------------------------ |
+| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`   |
+| Claude Code        | `.claude/agents/specdojo-orchestrator.md`  |
+| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`  |
+| Codex              | `.codex/agents/specdojo-orchestrator.toml` |
+| OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    |
+| OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   |
 
 本文を変更する場合は SSOT を編集し、各ラッパーの本文を同期します。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。

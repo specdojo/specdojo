@@ -63,13 +63,14 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 指示本文の正本を1ファイルに集約し、各 agent CLI の設定は同一本文を埋め込む薄いラッパーとする。4系統の設定形式（配置先・frontmatter キー・OpenCode の権限・Codex の TOML）は非互換のため、単一のネイティブ設定ファイルを4環境で共有することはできない。そこで「本文の SSOT ＋ 環境別ラッパー」構成を採る。
 
-| 役割               | パス                                        | 形式・要点                                                         |
-| ------------------ | ------------------------------------------- | ------------------------------------------------------------------ |
-| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`    | システムプロンプトの唯一の正本                                     |
-| Claude Code        | `.claude/agents/specdojo-orchestrator.md`   | frontmatter に `tools` / `model`、本文は SSOT と同一               |
-| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`   | frontmatter に `target: github-copilot` / `tools` / `model`        |
-| Codex              | `.codex/agents/specdojo-orchestrator.toml`  | `developer_instructions` に SSOT 本文、`approval_policy` を宣言    |
-| OpenCode           | `.opencode/agents/specdojo-orchestrator.md` | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一 |
+| 役割               | パス                                       | 形式・要点                                                         |
+| ------------------ | ------------------------------------------ | ------------------------------------------------------------------ |
+| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`   | システムプロンプトの唯一の正本                                     |
+| Claude Code        | `.claude/agents/specdojo-orchestrator.md`  | frontmatter に `tools` / `model`、本文は SSOT と同一               |
+| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`  | frontmatter に `target: github-copilot` / `tools` / `model`        |
+| Codex              | `.codex/agents/specdojo-orchestrator.toml` | `developer_instructions` に SSOT 本文、`approval_policy` を宣言    |
+| OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一 |
+| OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一 |
 
 各ラッパーの本文は SSOT とバイト単位で一致させる。個別 CLI の認証・provider・モデル選択・非対話起動の詳細は共通設定の各子設計に従う。
 
@@ -96,30 +97,33 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 `package.json` に対話起動用の npm スクリプトを `orch:` 接頭辞で用意する。Claude / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動する。
 
-| スクリプト           | CLI・モデル             | worktree                                         |
-| -------------------- | ----------------------- | ------------------------------------------------ |
-| `orch:sonnet`        | Claude Code / `sonnet`  | なし                                             |
-| `orch:sonnet:work`   | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）      |
-| `orch:opus`          | Claude Code / `opus`    | なし                                             |
-| `orch:opus:work`     | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）      |
-| `orch:terra`         | Codex / `gpt-5.6-terra` | なし                                             |
-| `orch:terra:work`    | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）    |
-| `orch:sol`           | Codex / `gpt-5.6-sol`   | なし                                             |
-| `orch:sol:work`      | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）    |
-| `orch:copilot`       | GitHub Copilot          | なし                                             |
-| `orch:copilot:work`  | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成）  |
-| `orch:opencode`      | OpenCode                | なし                                             |
-| `orch:opencode:work` | OpenCode                | `../worktrees/opencode-work`（無ければ自動作成） |
+| スクリプト          | CLI・モデル             | worktree                                        |
+| ------------------- | ----------------------- | ----------------------------------------------- |
+| `orch:sonnet`       | Claude Code / `sonnet`  | なし                                            |
+| `orch:sonnet:work`  | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）     |
+| `orch:opus`         | Claude Code / `opus`    | なし                                            |
+| `orch:opus:work`    | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）     |
+| `orch:terra`        | Codex / `gpt-5.6-terra` | なし                                            |
+| `orch:terra:work`   | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-5.6-sol`   | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:copilot`      | GitHub Copilot          | なし                                            |
+| `orch:copilot:work` | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成） |
+| `orch:qwen`         | OpenCode / Qwen 3.8     | なし                                            |
+| `orch:qwen:work`    | OpenCode / Qwen 3.8     | `../worktrees/qwen-work`（無ければ自動作成）    |
+| `orch:gemma`        | OpenCode / Gemma 4      | なし                                            |
+| `orch:gemma:work`   | OpenCode / Gemma 4      | `../worktrees/gemma-work`（無ければ自動作成）   |
 
 起動方式の要点は次のとおりとする。
 
 - Claude Code は `--agent specdojo-orchestrator --model <model>` で起動し、`:work` は `--worktree claude-work` で worktree を自動作成する。orchestrator の承認フローを維持するため `--permission-mode acceptEdits` は付けない。
 - Codex は対話 TUI に agent 選択フラグが無いため、SSOT 本文（`.agents/specdojo-orchestrator.agent.md`）を初期プロンプトとして渡し、`-m <model>` でモデルを指定する。承認・sandbox は `.codex/config.toml` の設定に従う。
+- OpenCode は `--agent qwen-orchestrator` または `--agent gemma-orchestrator` で起動し、モデルは各 agent の frontmatter で固定する。
 - Codex / GitHub Copilot / OpenCode は worktree を作成できないため、`:work` は `git worktree add ../worktrees/<cli>-work` を冪等に先行させてから作業ディレクトリ指定で入る（Codex / Copilot は `-C <path>`、OpenCode は位置引数 `<path>`）。worktree 名を固定することで、Claude Code 以外でも worktree 実行を実現する。
 - frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。
 
 ## 7. 保守
 
-- 本文を変更する場合は SSOT（`.agents/specdojo-orchestrator.agent.md`）を編集し、4系統のラッパー本文をすべて同期する。ラッパー本文が SSOT とバイト一致していることを確認する。
+- 本文を変更する場合は SSOT（`.agents/specdojo-orchestrator.agent.md`）を編集し、全ラッパー本文（OpenCode の Qwen / Gemma を含む）を同期する。ラッパー本文が SSOT とバイト一致していることを確認する。
 - Markdown ラッパー（Claude / Copilot / OpenCode）は pre-commit の Markdown 整形（prettier）で表の列幅が整形されうる。Codex の TOML は Markdown 整形対象外のため、埋め込み表の空白が Markdown 側と異なる場合があるが、内容は同一とみなす。
 - モデル・権限・provider の変更は本文ではなく各ラッパーの frontmatter / TOML 側で行い、共通設定の各子設計と整合させる。

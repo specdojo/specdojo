@@ -20,7 +20,7 @@ SpecDojo CLI と OpenCode を組み合わせ、Ollama のローカルLLMでマ�
 
 本設計では OpenCode の provider を `ollama-local` に限定する。API key と外部クラウドLLMを必要としない一方、ホスト側 Ollama の稼働状態、モデルロード時間、メモリ容量が制約になる。
 
-複数モデルを同時にロードするとメモリを圧迫するため、`opencode.json` には利用可能な3モデル（`gemma4:31b-mlx-work-64k` / `qwen3.6:27b-mlx-work-64k` / `gemma4:e4b-mlx`）を定義しつつ、edit / review いずれの agent も `gemma4:31b-mlx-work-64k` を使用し、実行時に同時ロードするモデルを1つに保つ。
+OpenCode は Qwen 3.8 と Gemma 4 を用途別 agent として使い分ける。ただし全 agent は同じ `opencode` provider を使い、`max_concurrency: 1` により同時実行を1件へ制限して、異なるモデルの同時ロードを防ぐ。
 
 コンテキスト長は 64k とする。fully-guided の磨き込みタスクは rulebook / recipe と `depends_on` 成果物、対象成果物をまとめて読み込むため、32k では作業セットが収まらず agent がツール呼び出しに至らないまま終了（result 未記入のまま exit 0）する事象が確認された。64k にして作業セットに余裕を持たせる。ただし KV キャッシュは 32k 比でおおよそ倍のメモリを消費するため、ホスト側 Ollama の空きメモリを前提として確認する。
 
@@ -29,7 +29,7 @@ SpecDojo CLI と OpenCode を組み合わせ、Ollama のローカルLLMでマ�
 - **agent 定義は `.opencode/agents/*.md`**: モデル、primary / subagent、permission、最小限の実行契約を定義する。タスク固有の指示は edit / review plan を正本とする。
 - **共通ルールは project root の `AGENTS.md` を基本とする**: `.opencode/AGENTS.md` を使う場合は `opencode.json` の `instructions` に明示する。
 - **permission を安全境界とする**: edit agent は必要な編集操作を許可し、review agent は result ファイル以外の編集を禁止する。
-- **agent は単一モデルを共有する**: `opencode.json` に3モデルを定義しつつ、メモリ圧迫を避けるため edit / review いずれの agent も `gemma4:31b-mlx-work-64k` を使用する。`qwen3.6:27b-mlx-work-64k` と `gemma4:e4b-mlx` は選択肢として定義し、agent には既定で割り当てない。
+- **モデルは agent 名で明示する**: Qwen は汎用・コード寄り、Gemma は文書作成・レビュー寄りに使う。通常 agent は `reasoningEffort: none`、expert agent は同一モデルタグへの `reasoningEffort: high` で thinking を有効化する。thinking 用の派生タグは作らない。
 - **limit 情報は provider 非依存に共通化しない**: OpenCode 自身の session limit を前提にせず、失敗要因は Ollama のロード待ち、メモリ不足、接続タイムアウトを主として扱う。
 
 ## 2. 責務分担
@@ -57,9 +57,8 @@ repo-root/
 ├─ .opencode/
 │  ├─ AGENTS.md                        # instructions で明示して使うOpenCode固有ルール
 │  └─ agents/
-│     ├─ opencode-executor.md          # pipeline executor primary agent（edit）
-│     ├─ opencode-review-executor.md   # pipeline executor primary agent（review）
-│     └─ opencode-reporter.md          # pipeline reporter primary agent
+│     ├─ qwen-*.md                     # Qwen の通常・expert pipeline agent
+│     └─ gemma-*.md                    # Gemma の通常・expert pipeline agent
 ```
 
 OpenCode の設定は複数箇所からマージされる。主な優先順は remote config、global config、`OPENCODE_CONFIG`、project root の `opencode.json`、`.opencode/`、`OPENCODE_CONFIG_CONTENT` の順で、後の設定が競合キーを上書きする。
@@ -76,25 +75,25 @@ SpecDojo の project management 配下と worktree の共通構成は親設計�
 
 ### 5.2. provider 設計
 
-| 項目     | 設定値                                 | 意図                                             |
-| -------- | -------------------------------------- | ------------------------------------------------ |
-| provider | `ollama-local`                         | 外部 provider と区別するプロジェクト内識別子     |
-| npm      | `@ai-sdk/openai-compatible`            | Ollama の OpenAI互換 API を利用                  |
-| baseURL  | `http://host.docker.internal:11434/v1` | devcontainer からホスト側 Ollama に接続          |
-| apiKey   | `not-needed`                           | SDKの必須項目を満たすダミー値                    |
-| model    | `ollama-local/gemma4:31b-mlx-work-64k` | agent 未指定時のデフォルト（edit / review 共通） |
+| 項目     | 設定値                                  | 意図                                         |
+| -------- | --------------------------------------- | -------------------------------------------- |
+| provider | `ollama-local`                          | 外部 provider と区別するプロジェクト内識別子 |
+| npm      | `@ai-sdk/openai-compatible`             | Ollama の OpenAI互換 API を利用              |
+| baseURL  | `http://host.docker.internal:11434/v1`  | devcontainer からホスト側 Ollama に接続      |
+| apiKey   | `not-needed`                            | SDKの必須項目を満たすダミー値                |
+| model    | `ollama-local/qwen3.8:27b-mlx-work-64k` | agent 未指定時のデフォルト                   |
 
 ホスト外や Linux ホストで実行する場合は、`host.docker.internal` の名前解決と Ollama の listen address を別途確認する。
 
 ### 5.3. 使用モデル
 
-`opencode.json` には3モデルを定義し、その中から選択する。複数モデルの同時ロードによるメモリ圧迫を避けるため、edit / review いずれの agent も `gemma4:31b-mlx-work-64k` を使用し、実行時に同時ロードするモデルを1つに保つ。残る2モデルは選択肢として定義するが、agent には既定で割り当てない。
+`opencode.json` には Qwen 3.8 と Gemma 4 のモデルを定義し、agent frontmatter が各モデルを明示的に選ぶ。provider 単位の同時実行上限は1である。
 
-| モデルID                   | 用途                             | agent 例                                                               | 注意点                                       |
-| -------------------------- | -------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------- |
-| `gemma4:31b-mlx-work-64k`  | 文書作成・編集・レビューの全般   | `opencode-executor` / `opencode-review-executor` / `opencode-reporter` | edit / review / reporter 共通の既定モデル    |
-| `qwen3.6:27b-mlx-work-64k` | 汎用作業・コード寄りタスクの代替 | -                                                                      | 選択肢。agent へ割り当てた場合のみロードする |
-| `gemma4:e4b-mlx`           | 軽作業（短い要約・分類・整形）   | -                                                                      | 選択肢。軽量だが用途を限定する               |
+| モデルID                   | 用途                           | agent 例  | 注意点                          |
+| -------------------------- | ------------------------------ | --------- | ------------------------------- |
+| `qwen3.8:27b-mlx-work-64k` | 汎用作業・コード寄りタスク     | `qwen-*`  | expert は thinking を有効化する |
+| `gemma4:31b-mlx-work-64k`  | 文書作成・編集・レビュー       | `gemma-*` | expert は thinking を有効化する |
+| `gemma4:e4b-mlx`           | 軽作業（短い要約・分類・整形） | -         | 選択肢。軽量だが用途を限定する  |
 
 ### 5.4. 追加設定方針
 
@@ -139,11 +138,11 @@ OpenCode の project agent は `.opencode/agents/<name>.md` に定義する。�
 
 member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。
 
-### 7.2. `opencode-executor.md`
+### 7.2. モデル別 executor
 
 pipeline executor（edit）は executor plan に従って成果物の編集と検証だけを行い、result は更新しない。`docs/ja/projects/**/execution/exec/results/**` は明示的に deny する。変更ファイルと検証結果は runner が evidence として収集できるよう、ツール出力と最終応答へ残す。
 
-実際のファイル: `.opencode/agents/opencode-executor.md`
+実際のファイル: `.opencode/agents/qwen-executor.md`、`.opencode/agents/gemma-executor.md` と各 expert agent。
 
 主な安全境界は次のとおり。
 
@@ -153,11 +152,11 @@ pipeline executor（edit）は executor plan に従って成果物の編集と�
 - Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - agent 自身による claim、complete、reopen、block を禁止する。
 
-### 7.3. `opencode-review-executor.md`
+### 7.3. モデル別 review executor
 
 pipeline executor（review）は review plan の各観点に従って成果物を多観点でレビューするが、成果物・result のいずれにも書き込まない（`edit` を全面 deny する）。レビュー結果はツール出力と最終応答へ残し、reporter が evidence として引き継ぐ。
 
-実際のファイル: `.opencode/agents/opencode-review-executor.md`
+実際のファイル: `.opencode/agents/qwen-review-executor.md`、`.opencode/agents/gemma-review-executor.md` と各 expert agent。
 
 主な安全境界は次のとおり。
 
@@ -166,19 +165,18 @@ pipeline executor（review）は review plan の各観点に従って成果物�
 - `.env` と `secrets` の読み取りを禁止する。Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - 全基準を確認できない場合は pass または approve と判定しない。
 
-### 7.4. `opencode-reporter.md`
+### 7.4. モデル別 reporter
 
 pipeline reporter は標準入力で渡された plan、executor evidence、出力スキーマだけから構造化結果を返す。read / glob / grep / list / bash / edit / Web / subagent をすべて deny とし、成果物や result を直接変更できないようにする。応答には指定スキーマ外の説明やコードフェンスを加えない。edit/review どちらの executor の後段にも使う。
 
-実際のファイル: `.opencode/agents/opencode-reporter.md`
+実際のファイル: `.opencode/agents/qwen-reporter.md`、`.opencode/agents/gemma-reporter.md`。
 
 ### 7.5. エージェント一覧
 
-| ファイル名                    | `--agent` 指定名           | mode      | モデル                    | stage_role | 用途                        |
-| ----------------------------- | -------------------------- | --------- | ------------------------- | ---------- | --------------------------- |
-| `opencode-executor.md`        | `opencode-executor`        | `primary` | `gemma4:31b-mlx-work-64k` | executor   | pipeline executor（edit）   |
-| `opencode-review-executor.md` | `opencode-review-executor` | `primary` | `gemma4:31b-mlx-work-64k` | executor   | pipeline executor（review） |
-| `opencode-reporter.md`        | `opencode-reporter`        | `primary` | `gemma4:31b-mlx-work-64k` | reporter   | pipeline reporter           |
+| ファイル名   | `--agent` 指定名 | mode      | モデル                     | stage_role          | 用途                     |
+| ------------ | ---------------- | --------- | -------------------------- | ------------------- | ------------------------ |
+| `qwen-*.md`  | `qwen-*`         | `primary` | `qwen3.8:27b-mlx-work-64k` | executor / reporter | Qwen 通常・expert agent  |
+| `gemma-*.md` | `gemma-*`        | `primary` | `gemma4:31b-mlx-work-64k`  | executor / reporter | Gemma 通常・expert agent |
 
 ## 8. エージェント割り当て設定
 
@@ -276,7 +274,7 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ### 8.4. 実行コマンド
 
-共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は `specdojo exec run --by opencode-executor` を使用する。
+共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は `specdojo exec run --by qwen-executor` のようにモデル名を含む nickname を使用する。
 
 ## 9. 非対話実行とセッション
 
@@ -286,7 +284,7 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ```bash
 opencode run \
-  --agent opencode-executor \
+  --agent qwen-executor \
   --format json \
   "SpecDojo plan を実行してください"
 ```
@@ -305,7 +303,7 @@ opencode run \
   --attach http://127.0.0.1:4096 \
   --username opencode \
   --password "${OPENCODE_SERVER_PASSWORD}" \
-  --agent opencode-executor \
+  --agent qwen-executor \
   "SpecDojo plan を実行してください"
 ```
 
