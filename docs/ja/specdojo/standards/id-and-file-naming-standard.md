@@ -891,6 +891,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 外部API仕様 | External API Specification | ifx-api- | ifx-api-inventory |
 | 外部ファイル連携仕様 | External File Exchange Specification | ifx-file- | ifx-file-order |
 | 外部メッセージ仕様 | External Message Specification | ifx-msg- | ifx-msg-stock-changed |
+| 外部コマンド連携仕様 | External Command Interface Specification | ifx-cmd- | ifx-cmd-supplier-order |
 | コンテキスト図 | Context Diagram | cxd- | cxd-customer |
 | コンテナ図 | Container Diagram | cnd- | cnd-customer |
 | コンポーネント図 | Component Diagram | cpd- | cpd-inventory |

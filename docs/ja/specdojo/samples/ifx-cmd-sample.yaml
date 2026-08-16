@@ -1,0 +1,106 @@
+id: specdojo:ifx-cmd-sample
+type: command
+status: draft
+title: 仕入先への発注登録コマンド連携仕様サンプル
+rulebook: specdojo:ifx-cmd-rulebook
+version: 1
+based_on: []
+
+command:
+  executable: supplier-cli
+  subcommands:
+    - orders
+    - submit
+  purpose: 駄菓子屋きぬやで確定した発注データを仕入先サービスへ登録する
+  version_constraint: ">=2.1.0 <3.0.0"
+  shell: false
+
+arguments:
+  - name: --file
+    kind: option
+    required: true
+    value_type: path
+    value_source: generated
+    description: 発注 ID、商品 ID、数量を含む JSON ファイルのパス
+    example: tmp/orders/ORD-0001.json
+  - name: --request-id
+    kind: option
+    required: true
+    value_type: string
+    value_source: generated
+    description: 同じ発注の重複登録を防ぐリクエスト ID
+    example: req-order-0001
+  - name: --output
+    kind: option
+    required: true
+    value_type: string
+    value_source: literal
+    description: 機械処理する出力形式
+    example: json
+
+streams:
+  stdin:
+    mode: none
+    format: none
+  stdout:
+    format: json
+    encoding: UTF-8
+    description: order_id、request_id、status、accepted_at を含む登録結果
+  stderr:
+    format: text
+    encoding: UTF-8
+    description: 進捗、警告、失敗の診断情報。認証情報は出力しない
+
+exit_codes:
+  - code: 0
+    meaning: 発注を登録した、または同じ request_id の登録済み結果を返した
+    category: success
+    retryable: false
+  - code: 2
+    meaning: 必須引数の欠落、または発注データの形式が不正
+    category: input_error
+    retryable: false
+  - code: 4
+    meaning: 認証情報が未設定、失効、または有効期限切れ
+    category: authentication_error
+    retryable: false
+  - code: 5
+    meaning: 発注登録に必要な権限がない
+    category: authorization_error
+    retryable: false
+  - code: 69
+    meaning: 指定した仕入先または商品を登録できない
+    category: permanent_failure
+    retryable: false
+  - code: 75
+    meaning: 仕入先サービスが一時的に利用できない
+    category: transient_failure
+    retryable: true
+
+authentication:
+  method: api_token
+  injection:
+    mechanism: environment_variable
+    names:
+      - SUPPLIER_CLI_TOKEN
+  secret_source: 実行環境のシークレットストア
+  log_policy: 環境変数の値をコマンド表示、stdout、stderr、エラー記録に出力しない
+
+execution:
+  working_directory: repository_root
+  timeout_seconds: 60
+  network_required: true
+  max_parallel: 1
+  idempotency:
+    guaranteed: true
+    condition: 同じ --request-id に対して既存の登録結果を返す
+
+error_handling:
+  retry:
+    on_categories:
+      - transient_failure
+    max_attempts: 3
+    backoff: exponential
+  timeout_action: 子プロセスを終了し、不完全な stdout を破棄して人の確認待ちにする
+  malformed_output_action: 自動再試行せず、出力解析失敗として人の確認待ちにする
+  authentication_failure_action: 自動再試行せず、運用担当に認証状態の確認を依頼する

@@ -271,6 +271,7 @@ flowchart
 | [外部API仕様](../rulebooks/ifx-api-rulebook.md) | External API Specification | `ifx-api-<term>.yaml` | 外部システムとのAPI連携をOpenAPI形式(YAML)で定義する | エンドポイント、HTTPメソッド、リクエスト／レスポンス、ステータスコード |
 | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | External File Exchange Specification | `ifx-file-<term>.yaml` | 外部システムとのファイル連携をYAMLで定義する | ファイル形式、伝送方法、スケジュール、ファイル項目一覧 |
 | [外部メッセージ仕様](../rulebooks/ifx-msg-rulebook.md) | External Message Specification | `ifx-msg-<term>.yaml` | 他システムとのイベント／キューのメッセージ連携をAsyncAPI + CloudEvents(YAML)で定義する | チャネル名、メッセージ構造、エンドポイント、プロトコル |
+| [外部コマンド連携仕様](../rulebooks/ifx-cmd-rulebook.md) | External Command Interface Specification | `ifx-cmd-<term>.yaml` | 外部CLIコマンドの起動契約をYAMLで定義する | コマンド名、引数、stdin／stdout／stderr、終了コード、認証注入方式、エラー処理 |
 
 ### 2.3. アーキテクチャ
 

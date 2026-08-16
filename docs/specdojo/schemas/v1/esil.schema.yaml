@@ -117,6 +117,7 @@ properties:
             - API
             - ファイル
             - メッセージ
+            - コマンド
           description: "連携の種別"
         format:
           type: string
@@ -136,5 +137,6 @@ properties:
           description: "エラー処理・備考"
         spec_ref:
           type: string
-          pattern: "^(?:eapis|efes|ems)-[a-z0-9-]+$|^TBD$"
-          description: "詳細仕様ドキュメントのid（eapis-/efes-/ems-...）または TBD"
+          pattern: "^(?:ifx-api|ifx-file|ifx-msg|ifx-cmd)-[a-z0-9-]+$|^TBD$"
+          description: >-
+            詳細仕様ドキュメントの id（ifx-api-/ifx-file-/ifx-msg-/ifx-cmd-...）または TBD

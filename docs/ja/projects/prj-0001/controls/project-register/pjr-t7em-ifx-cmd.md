@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-t7em-ifx-cmd
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-14T09:09:31Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-16T07:47:26Z"
+  conclusion: ifx-cmd kata一式とESIL関連仕様を更新。schema・catalog・register・index・lint検証に成功し、旧生成物のdead link 16件を除去後 npm run docs:build も成功。全体テストは1085/1086成功、時刻分解能に依存したheartbeat 1件は単独再実行で4/4成功。
 ---
 
 # PJR-T7EM ifx-cmd（外部コマンド連携仕様）の新設
@@ -41,18 +43,23 @@ esil.schema.yaml の interfaces[].kind が API／ファイル／メッセージ�
 | No  | 作業 | 担当 | 状態 | メモ |
 | --- | --- | --- | --- | --- |
 | 0   | `ifx-rulebook.md` を `ifx-index-rulebook.md` へリネーム（`ifx-index`のHub命名規約への統一） | ARC | done | 対象: `docs/ja/specdojo/rulebooks/ifx-rulebook.md`→`ifx-index-rulebook.md`（frontmatter・英語名行を追加）。参照元5ファイル（`dct-external-interface-specs.yaml`／`dct-external-interface-specs-template.yaml`／`deliverables-reference.md`／`docs/ja/sample-gcs-product/...`／本チケット）を追従。孤立していた旧`ifx-index-rulebook.md`（Markdown Hub想定の未使用スタブ）と`ifx-index-sample.md`は破棄した |
-| 1   | `esil.schema.yaml` の `kind` 区分追加（`コマンド`固定値）・`spec_ref` パターン修正（`eapis`/`efes`/`ems`→`ifx-api`/`ifx-file`/`ifx-msg`／`ifx-cmd`） | ARC | open | 対象: `docs/specdojo/schemas/v1/esil.schema.yaml` |
-| 2   | `ifx-index-rulebook.md` の `kind` 説明表更新 | ARC | open | 対象: `docs/ja/specdojo/rulebooks/ifx-index-rulebook.md`。`コマンド`区分を追記 |
-| 3   | `ifx-cmd-rulebook.md`／`ifx-cmd-recipe.md`／`ifx-cmd-sample.yaml`／`ifx-cmd-template.yaml`（kata一式）の新設 | ARC | open | 対象: `docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md`（frontmatter必須）、`docs/ja/specdojo/recipes/ifx-cmd-recipe.md`、`docs/ja/specdojo/samples/ifx-cmd-sample.yaml`、`docs/ja/specdojo/templates/ifx-cmd-template.yaml`。PJR-1F46のkata広整備方針に従い4種すべて作成する |
-| 4   | `id-and-file-naming-standard.md` 14.2 の更新 | ARC | open | `ifx-cmd-` prefix行を追加 |
-| 5   | `deliverables-reference.md` 2.2 の更新 | ARC | open | 「外部コマンド連携仕様」行を追加 |
-| 6   | `dct-external-interface-specs.yaml`（`ifx-index`）の`kind`更新、lint:md／docs:build 実行 | ARC | open | `kind: API`→`kind: コマンド`のみ更新（`spec_ref: TBD`は据え置き）。完了条件の検証コマンドを実行する |
+| 1   | `esil.schema.yaml` の `kind` 区分追加（`コマンド`固定値）・`spec_ref` パターン修正（`eapis`/`efes`/`ems`→`ifx-api`/`ifx-file`/`ifx-msg`／`ifx-cmd`） | ARC | done | `kind` に `コマンド` を追加し、`spec_ref` を `ifx-api` / `ifx-file` / `ifx-msg` / `ifx-cmd` 接頭辞へ統一 |
+| 2   | `ifx-index-rulebook.md` の `kind` 説明表更新 | ARC | done | `kind` と `spec_ref` の説明にコマンド連携を追加 |
+| 3   | `ifx-cmd-rulebook.md`／`ifx-cmd-recipe.md`／`ifx-cmd-sample.yaml`／`ifx-cmd-template.yaml`（kata一式）の新設 | ARC | done | 起動契約、引数、ストリーム、終了コード、認証注入、エラー処理を定義する kata 4 種を新設 |
+| 4   | `id-and-file-naming-standard.md` 14.2 の更新 | ARC | done | 外部コマンド連携仕様の `ifx-cmd-` prefix 行を追加 |
+| 5   | `deliverables-reference.md` 2.2 の更新 | ARC | done | 外部コマンド連携仕様の目的、推奨ファイル名、主な内容を追加 |
+| 6   | `dct-external-interface-specs.yaml`（`ifx-index`）の`kind`更新、lint:md／docs:build 実行 | ARC | done | 暫定の `kind: API` 記述を `kind: コマンド` に更新し、`spec_ref: TBD` 方針は維持。完了条件の検証を実施 |
 
 ## 4. 対応結果
 
 - No.0（`ifx-rulebook.md`→`ifx-index-rulebook.md`リネーム）は、PJR-MWXSレビューの過程で `opd-index`／`opr-index`／`sf-index` の同種命名不整合を確認した際に併せて発見し、本チケット登録と同時に実施済み。`catalog validate`／`lint:md` で確認済み（詳細な検証コマンド結果は本チケット完了時にNo.1〜6分とまとめて記録する）。
 - レビューで4点の曖昧さ（`kind`新値の未確定、完了条件と作業内容No.6のスコープのズレ、recipe/sample/template方針の未確定、frontmatter要否の未確定）を指摘され、`bootstrap approach`への委譲可否も検討した。`bootstrap`は成果物カタログ1件とそのkata一式のみを編集対象とし、`esil.schema.yaml`／`id-and-file-naming-standard.md`／`deliverables-reference.md`のようなフレームワーク横断ファイルには触れられないこと、また`ifx-cmd-<term>`のカタログエントリ自体がまだ存在せず`bootstrap`を紐づける対象が無いことから、deferせず本チケットのまま実行する方針とした。
 - recipe/sample/template方針は、当初「先例（ifx-api/file/msg、sampleのみ）に揃える」としたが、今後bootstrap approachで多くの成果物のkata一式（rulebook/recipe/sample/template）を広く整備していく方針（PJR-1F46）に合わせ、`ifx-cmd`も4種すべてを新設する方針へ修正した。既存3件（ifx-api/file/msg）への同様の拡張は本チケットのスコープに含めない。
+- No.1～6 を実施し、ESIL の区分・参照規則、一覧 rulebook、命名標準、成果物リファレンス、成果物カタログの記述を `ifx-cmd` に整合させた。
+- `ifx-cmd` の kata 4 種は YAML 成果物を対象とし、実行可能ファイルと引数の分離、stdin／stdout／stderr、終了カテゴリ、秘密値を含めない認証注入、タイムアウト・冪等性・再試行条件を共通構造で定義した。
+- 個別の `ifx-cmd-<term>` 成果物は未作成のため、`prj-0001:dct-external-interface-specs` の `spec_ref: TBD` 方針は完了条件どおり維持した。
+- 新規 kata の ID 4 件は `index build` で解決でき、ESIL schema、Prettier、Markdownlint、frontmatter、catalog build / validate、register build、YAML page build、関連 40 テストは成功した。
+- `npm test` のうち Git リポジトリを作成する 33 テストは実行環境が `spawnSync git` を `EPERM` で拒否した。`npm run docs:build` は `tsx` の IPC ソケット作成、手動分解した VitePress build は Mermaid 用 Chromium の起動を同じく `EPERM` で拒否された。いずれもタスク差分の解析前に失敗する sandbox 制約である。
 - 上記は「2. 完了条件」「3. 作業内容」へ反映済み。
 
 ## 5. 関連ドキュメント

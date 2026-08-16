@@ -1,0 +1,86 @@
+# Template: external command interface specification
+# Replace _TERM_ with a kebab-case integration name and fill every remaining
+# _UPPER_SNAKE_ or _TODO_ placeholder before treating the generated file as complete.
+id: specdojo:ifx-cmd-template
+type: template
+status: draft
+title: 外部コマンド連携仕様テンプレート
+rulebook: none
+metadata_template:
+  id: ifx-cmd-_TERM_
+  type: command
+  status: draft
+  title: _COMMAND_SPEC_TITLE_
+  rulebook: specdojo:ifx-cmd-rulebook
+  version: 1
+  based_on: []
+
+command:
+  executable: _EXECUTABLE_
+  subcommands:
+    - _SUBCOMMAND_
+  purpose: "_TODO_: 呼び出し側から見た実行目的と成功後の状態を記載する。"
+  version_constraint: _VERSION_CONSTRAINT_
+  shell: false
+
+arguments:
+  - name: _ARGUMENT_NAME_
+    kind: _ARGUMENT_KIND_
+    required: _ARGUMENT_REQUIRED_
+    value_type: _ARGUMENT_VALUE_TYPE_
+    value_source: _ARGUMENT_VALUE_SOURCE_
+    description: "_TODO_: 引数の意味と制約を記載する。"
+    example: _PUBLIC_EXAMPLE_VALUE_
+
+streams:
+  stdin:
+    mode: _STDIN_MODE_
+    format: _STDIN_FORMAT_
+    encoding: UTF-8
+    description: "_TODO_: stdin を使う場合は入力の意味を記載する。使わない場合は mode と format を none にする。"
+  stdout:
+    format: _STDOUT_FORMAT_
+    encoding: UTF-8
+    description: "_TODO_: 呼び出し元が利用する成功出力の安定契約を記載する。"
+  stderr:
+    format: _STDERR_FORMAT_
+    encoding: UTF-8
+    description: "_TODO_: 進捗、警告、失敗詳細の用途と、秘密値を出力しない条件を記載する。"
+
+exit_codes:
+  - code: 0
+    meaning: _SUCCESS_MEANING_
+    category: success
+    retryable: false
+  - code: _FAILURE_EXIT_CODE_
+    meaning: _FAILURE_MEANING_
+    category: _FAILURE_CATEGORY_
+    retryable: _FAILURE_RETRYABLE_
+
+authentication:
+  method: _AUTHENTICATION_METHOD_
+  injection:
+    mechanism: _AUTHENTICATION_INJECTION_MECHANISM_
+    names:
+      - _AUTHENTICATION_REFERENCE_NAME_
+  secret_source: "_TODO_: シークレットストアや CLI プロファイルなど値の管理境界を記載する。"
+  log_policy: "_TODO_: 引数、環境変数、stdout、stderr、エラー記録のマスク条件を記載する。"
+
+execution:
+  working_directory: _WORKING_DIRECTORY_
+  timeout_seconds: _TIMEOUT_SECONDS_
+  network_required: _NETWORK_REQUIRED_
+  max_parallel: _MAX_PARALLEL_
+  idempotency:
+    guaranteed: _IDEMPOTENCY_GUARANTEED_
+    condition: "_TODO_: 重複実行を防ぐ条件、または冪等性を保証できない理由を記載する。"
+
+error_handling:
+  retry:
+    on_categories:
+      - _RETRYABLE_CATEGORY_
+    max_attempts: _MAX_ATTEMPTS_
+    backoff: _BACKOFF_STRATEGY_
+  timeout_action: "_TODO_: 子プロセスと不完全出力の扱いを記載する。"
+  malformed_output_action: "_TODO_: stdout を契約どおり解析できない場合の処置を記載する。"
+  authentication_failure_action: "_TODO_: 再認証の依頼先と自動再試行しない条件を記載する。"
