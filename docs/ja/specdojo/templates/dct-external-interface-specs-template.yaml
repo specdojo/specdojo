@@ -15,7 +15,7 @@ groups:
         depends_on: []
         overview: 外部システムとの連携を一覧（YAML）で定義する
         path: ifx-index.yaml
-        rulebook: specdojo:ifx-rulebook
+        rulebook: specdojo:ifx-index-rulebook
         done_criteria:
           - text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
             roles: [BA]

@@ -10,7 +10,7 @@ base_path: /docs/ja/product/020-external-interface-specs
 # SpecDojo自身の外部連携は AI provider CLI（Claude Code / Codex CLI / opencode 等）と
 # Git/GitHub（gh CLI）が中心で、いずれもCLIプロセス起動型のためesil.schema.yamlの
 # kind（API／ファイル／メッセージ）に厳密には合致しない。ifx-cmd新設（PJR-T7EM、
-# specdojo:ifx-rulebook・specdojo:esil.schema.yaml 拡張）までは kind: API を暫定使用し、
+# specdojo:ifx-index-rulebook・specdojo:esil.schema.yaml 拡張）までは kind: API を暫定使用し、
 # spec_ref は TBD とする。ifx-api/ifx-file/ifx-msg の詳細仕様は、対応する形式の連携が
 # 具体的に必要になった時点で追加する。
 
@@ -22,7 +22,7 @@ groups:
         depends_on: []
         overview: 外部システムとの連携を一覧（YAML）で定義する。SpecDojo自身の連携はAI provider CLIとGit/GitHubが中心
         path: ifx-index.yaml
-        rulebook: specdojo:ifx-rulebook
+        rulebook: specdojo:ifx-index-rulebook
         note: interfaces の kind は現状スキーマの制約上 API を暫定使用し、spec_ref は TBD とする。PJR-T7EM（ifx-cmd新設）完了後、kindをコマンド区分へ、spec_refをifx-cmd-<term>へ更新する
         evidence_refs:
           - kind: implementation

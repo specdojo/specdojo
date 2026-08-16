@@ -267,7 +267,7 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [外部システムI/F一覧](../rulebooks/ifx-rulebook.md) | External System Interface | `ifx-index.yaml` | 外部システムとの連携を一覧(YAML)で定義する | 連携名、連携元、連携先（外部システム）、伝送方式、フォーマット、タイミング |
+| [外部システムI/F一覧](../rulebooks/ifx-index-rulebook.md) | External System Interface | `ifx-index.yaml` | 外部システムとの連携を一覧(YAML)で定義する | 連携名、連携元、連携先（外部システム）、伝送方式、フォーマット、タイミング |
 | [外部API仕様](../rulebooks/ifx-api-rulebook.md) | External API Specification | `ifx-api-<term>.yaml` | 外部システムとのAPI連携をOpenAPI形式(YAML)で定義する | エンドポイント、HTTPメソッド、リクエスト／レスポンス、ステータスコード |
 | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | External File Exchange Specification | `ifx-file-<term>.yaml` | 外部システムとのファイル連携をYAMLで定義する | ファイル形式、伝送方法、スケジュール、ファイル項目一覧 |
 | [外部メッセージ仕様](../rulebooks/ifx-msg-rulebook.md) | External Message Specification | `ifx-msg-<term>.yaml` | 他システムとのイベント／キューのメッセージ連携をAsyncAPI + CloudEvents(YAML)で定義する | チャネル名、メッセージ構造、エンドポイント、プロトコル |

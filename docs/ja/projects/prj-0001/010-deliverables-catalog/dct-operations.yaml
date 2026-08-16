@@ -21,7 +21,7 @@ groups:
         depends_on: []
         overview: 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）をSSOT化する
         path: opd-index.md
-        rulebook: specdojo:opd-rulebook
+        rulebook: specdojo:opd-index-rulebook
         done_criteria: &opd-index-done-criteria
           - text: SLO/SLA・体制・監視・変更管理・バックアップ方針が業務継続性の観点で記述されていること
             roles: [BA]
@@ -85,7 +85,7 @@ groups:
           - opd-index
         overview: 運用作業を再現可能な手順として定義し、誰がやっても同じ結果になる状態を作る
         path: opr-index.md
-        rulebook: specdojo:opr-rulebook
+        rulebook: specdojo:opr-index-rulebook
         done_criteria: &opr-index-done-criteria
           - text: 日次・週次・月次の定常運用手順が業務観点で記述されていること
             roles: [BA]

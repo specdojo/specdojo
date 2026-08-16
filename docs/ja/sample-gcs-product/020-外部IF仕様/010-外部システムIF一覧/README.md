@@ -4,4 +4,4 @@
 
 ## 記法ガイド
 
-1. ドキュメントの作成・更新ルールは[ifx-rulebook.md](../../../specdojo/rulebooks/ifx-rulebook.md)を参照してください。
+1. ドキュメントの作成・更新ルールは[ifx-index-rulebook.md](../../../specdojo/rulebooks/ifx-index-rulebook.md)を参照してください。
