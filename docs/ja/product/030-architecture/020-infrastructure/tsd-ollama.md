@@ -62,17 +62,16 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 Ollama では、Ollama の公式ライブラリタグを優先して指定する。vllm-mlx で使う `mlx-community/...` 形式の MLX モデルIDとは異なるため、同じ用途でもランタイムごとにモデル名を分けて管理する。
 
-| 用途                         | 推奨モデル                 | 備考                                                       |
-| ---------------------------- | -------------------------- | ---------------------------------------------------------- |
-| 通常作業                     | `qwen3.6:27b-mlx`          | 設計、レビュー、通常のコード生成で使う標準モデル           |
-| Markdown生成・レビュー       | `gemma4:31b-mlx`           | Markdown の生成・レビューで使う標準モデル                  |
-| 軽作業                       | `gemma4:e4b-mlx`           | 短い要約、分類、文面調整、軽いMarkdown整理で使う軽量モデル |
-| 重い実装                     | `qwen3.6:27b-coding-mxfp8` | リポジトリ横断の実装、複雑な修正、重いコードレビューで使う |
-| 最終判断・難しい設計レビュー | Claude Code / Codex        | ローカルLLMの結果を必要に応じて補完する                    |
+| 用途                         | 推奨モデル          | 備考                                                       |
+| ---------------------------- | ------------------- | ---------------------------------------------------------- |
+| 通常作業                     | `qwen3.8:27b-mlx`   | 設計、レビュー、通常のコード生成で使う標準モデル           |
+| Markdown生成・レビュー       | `gemma4:31b-mlx`    | Markdown の生成・レビューで使う標準モデル                  |
+| 軽作業                       | `gemma4:e4b-mlx`    | 短い要約、分類、文面調整、軽いMarkdown整理で使う軽量モデル |
+| 最終判断・難しい設計レビュー | Claude Code / Codex | ローカルLLMの結果を必要に応じて補完する                    |
 
-SpecDojo では、通常作業を `qwen3.6:27b-mlx`、Markdown の生成・レビューを `gemma4:31b-mlx`、軽作業を `gemma4:e4b-mlx`、重い実装を `qwen3.6:27b-coding-mxfp8` に分担させる。`qwen3.6:27b-coding-mxfp8` はメモリ使用量が大きいため、常用ではなく、実装負荷が高い作業に限定してロードする。
+SpecDojo では、通常作業と重い実装を `qwen3.8:27b-mlx`、Markdown の生成・レビューを `gemma4:31b-mlx`、軽作業を `gemma4:e4b-mlx` に分担させる。
 
-`qwen3.6:27b-mlx` と `qwen3.6:27b-coding-mxfp8` は Ollama 公式ライブラリ側のモデルタグであり、vllm-mlx で使う `mlx-community/...` 形式の MLX モデルIDとは分けて管理する。サードパーティ名前空間のモデルは、公式ライブラリに必要な量子化やタグがない場合の代替候補として扱う。
+`qwen3.8:27b-mlx` は Ollama 公式ライブラリ側のモデルタグであり、vllm-mlx で使う `mlx-community/...` 形式の MLX モデルIDとは分けて管理する。サードパーティ名前空間のモデルは、公式ライブラリに必要な量子化やタグがない場合の代替候補として扱う。
 
 ## 4. メモリ安定化設定
 
@@ -83,7 +82,7 @@ export OLLAMA_KEEP_ALIVE=10m
 export OLLAMA_MAX_LOADED_MODELS=2
 ```
 
-`OLLAMA_MAX_LOADED_MODELS=2` にしておくと、重いモデルの同時常駐を抑えやすくなる。`qwen3.6:27b-coding-mxfp8` を使う作業では、通常作業用の `qwen3.6:27b-mlx` と同時に長時間常駐させない運用を推奨する。
+`OLLAMA_MAX_LOADED_MODELS=2` にしておくと、重いモデルの同時常駐を抑えやすくなる。`qwen3.8:27b-mlx` と `gemma4:31b-mlx` は、同時に長時間常駐させない運用を推奨する。
 
 但し、macOS では Ollama.app として常駐するため、`export` した環境変数は app に引き継がれない。app へ環境変数を渡すには `launchctl setenv` を使い、設定後に app を再起動する（次章参照）。
 
@@ -187,10 +186,9 @@ Ollama のモデルは Host Mac 側でダウンロードする。devcontainer �
 まず、利用する元モデルを `ollama pull` で取得する。
 
 ```bash
-ollama pull qwen3.6:27b-mlx
+ollama pull qwen3.8:27b-mlx
 ollama pull gemma4:e4b-mlx
 ollama pull gemma4:31b-mlx
-ollama pull qwen3.6:27b-coding-mxfp8
 ```
 
 取得済みモデルを確認する。
@@ -202,19 +200,17 @@ ollama list
 モデルを試しに実行し、初回ロードまで確認する。
 
 ```bash
-ollama run qwen3.6:27b-mlx "通常作業用として、TypeScript の関数例を1つ示してください。"
+ollama run qwen3.8:27b-mlx "通常作業用として、TypeScript の関数例を1つ示してください。"
 ollama run gemma4:e4b-mlx "軽作業用として、短い設計書のタイトル案を3つ出してください。"
 ollama run gemma4:31b-mlx "中量作業用として、設計書の要約を3文でまとめてください。"
-ollama run qwen3.6:27b-coding-mxfp8 "重い実装用として、TypeScript のリファクタリング観点を箇条書きで出してください。"
 ```
 
 不要になった元モデルまたは派生モデルは `ollama rm` で削除する。
 
 ```bash
-ollama rm qwen3.6:27b-mlx
+ollama rm qwen3.8:27b-mlx
 ollama rm gemma4:e4b-mlx
 ollama rm gemma4:31b-mlx
-ollama rm qwen3.6:27b-coding-mxfp8
 ```
 
 複数Agent運用前提のため、すべてのモデルを巨大コンテキストで動かさない設定を適用する。ダウンロード済みの元モデルを `FROM` に指定し、用途ごとにコンテキスト長と生成パラメータを分けた派生モデルを作成する。
@@ -226,30 +222,12 @@ mkdir -p ~/ollama-modelfiles
 cd ~/ollama-modelfiles
 ```
 
-### 7.1. Qwen3.6-27B 通常作業用
+### 7.1. Qwen3.8-27B 通常作業用（レビュー・長文向け 64k）
 
-`qwen3.6-27b-mlx-work-32k/Modelfile`:
-
-```text
-FROM qwen3.6:27b-mlx
-PARAMETER num_ctx 32768
-PARAMETER temperature 0.2
-PARAMETER top_p 0.9
-PARAMETER repeat_penalty 1.05
-```
-
-作成:
-
-```bash
-ollama create qwen3.6:27b-mlx-work-32k -f qwen3.6-27b-mlx-work-32k/Modelfile
-```
-
-### 7.2. Qwen3.6-27B 通常作業用（レビュー・長文向け 64k）
-
-`qwen3.6-27b-mlx-work-64k/Modelfile`:
+`qwen3.8-27b-mlx-work-64k/Modelfile`:
 
 ```text
-FROM qwen3.6:27b-mlx
+FROM qwen3.8:27b-mlx
 PARAMETER num_ctx 65536
 PARAMETER temperature 0.2
 PARAMETER top_p 0.9
@@ -259,10 +237,10 @@ PARAMETER repeat_penalty 1.05
 作成:
 
 ```bash
-ollama create qwen3.6:27b-mlx-work-64k -f qwen3.6-27b-mlx-work-64k/Modelfile
+ollama create qwen3.8:27b-mlx-work-64k -f qwen3.8-27b-mlx-work-64k/Modelfile
 ```
 
-### 7.3. Gemma 4 E4B 軽作業用
+### 7.2. Gemma 4 E4B 軽作業用
 
 `gemma4-e4b-mlx-light-8k/Modelfile`:
 
@@ -279,7 +257,7 @@ PARAMETER top_p 0.9
 ollama create gemma4:e4b-mlx-light-8k -f gemma4-e4b-mlx-light-8k/Modelfile
 ```
 
-### 7.4. Gemma 4 31B Markdown生成・レビュー用（64k）
+### 7.3. Gemma 4 31B Markdown生成・レビュー用（64k）
 
 `gemma4-31b-mlx-work-64k/Modelfile`:
 
@@ -297,32 +275,10 @@ PARAMETER repeat_penalty 1.05
 ollama create gemma4:31b-mlx-work-64k -f gemma4-31b-mlx-work-64k/Modelfile
 ```
 
-### 7.5. Qwen3.6-27B Coding MXFP8 重い実装用
-
-`qwen3.6-27b-coding-mxfp8-64k/Modelfile`:
-
-```text
-FROM qwen3.6:27b-coding-mxfp8
-PARAMETER num_ctx 65536
-PARAMETER temperature 0.2
-PARAMETER top_p 0.9
-PARAMETER repeat_penalty 1.05
-```
-
-作成:
+### 7.4. 動作確認
 
 ```bash
-ollama create qwen3.6:27b-coding-mxfp8-64k -f qwen3.6-27b-coding-mxfp8-64k/Modelfile
-```
-
-### 7.6. 動作確認
-
-```bash
-ollama run qwen3.6:27b-mlx-work-32k "通常作業用として、TypeScriptのテスト設計の観点を出してください。"
-```
-
-```bash
-ollama run qwen3.6:27b-mlx-work-64k "レビュー用として、このMarkdownの構成上の問題点を指摘してください。"
+ollama run qwen3.8:27b-mlx-work-64k "レビュー用として、このMarkdownの構成上の問題点を指摘してください。"
 ```
 
 ```bash
@@ -331,10 +287,6 @@ ollama run gemma4:31b-mlx-work-64k "Markdown生成・レビュー用として、
 
 ```bash
 ollama run gemma4:e4b-mlx-light-8k "軽作業用として、短い設計書のタイトル案を3つ出してください。"
-```
-
-```bash
-ollama run qwen3.6:27b-coding-mxfp8-64k "重い実装用として、既存コードを安全に変更する観点を箇条書きで出してください。"
 ```
 
 ## 8. アンインストール
