@@ -2,7 +2,7 @@
 specdojo:
   id: tsd-vllm-mlx-mr
   type: architecture
-  status: draft
+  status: deprecated
   rulebook: specdojo:tsd-rulebook
 ---
 

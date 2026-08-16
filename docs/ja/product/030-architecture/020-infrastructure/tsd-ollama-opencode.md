@@ -154,4 +154,3 @@ Host Mac 側で Ollama が停止していると、devcontainer からの接続�
 ## 7. 参照
 
 - [tsd-ollama](tsd-ollama.md)
-- [tsd-vllm-mlx-opencode](tsd-vllm-mlx-opencode.md)
