@@ -1,9 +1,11 @@
 ---
 specdojo:
   id: sysd-job-execution
-  type: project
+  type: architecture
   status: ready
   rulebook: specdojo:sysd-rulebook
+  part_of:
+    - sysd-index
 ---
 
 # Job実行設計

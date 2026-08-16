@@ -10,6 +10,7 @@ specdojo:
   item_status: decided
   priority: medium
   registered_at: "2026-08-14T14:29:15Z"
+  completed_at: "2026-08-14T14:56:58Z"
   conclusion: kataは広く整備し、成果物本体の完成はSC-01〜SC-03に必要な範囲へテーラリングする。prj-scope.md更新済み。
 ---
 

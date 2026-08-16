@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: sysd-github-copilot-agent-settings
-  type: project
+  type: architecture
   status: draft
   rulebook: specdojo:sysd-rulebook
   part_of:

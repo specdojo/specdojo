@@ -9,8 +9,8 @@ base_path: /docs/ja/product/090-operations
 
 # opd-<term>/opr-<term> は SpecDojo自身の運用実態（cdfd-routine.md・cdfd-reporting.md・
 # cdfd-agent-config-operation.md・sysd-agent-settings.mdの失敗処理設計）を根拠に選定する。
-# opr-agent-cli-update は PJR-ZP0B（system-design再構成）で sysd-agent-settings.md 7章の
-# 移設先として既に特定済み。opd/opr-backup-restore はGitの分散VCS冗長性により対象外とする。
+# opr-agent-cli-update は PJR-ZP0Bで sysd-agent-settings.md 7章から移設済み。
+# opd/opr-backup-restore はGitの分散VCS冗長性により対象外とする。
 
 groups:
   - name: 運用設計
@@ -111,7 +111,7 @@ groups:
         overview: 外部エージェントCLI（Claude Code／Codex／opencode／GitHub Copilot）の更新手順を定義する
         path: opr-agent-cli-update.md
         rulebook: specdojo:opr-rulebook
-        note: PJR-ZP0Bでsysd-agent-settings.md7章（CLI更新手順）の移設先として特定済み
+        note: PJR-ZP0Bでsysd-agent-settings.md7章から移設済み
         done_criteria: &opr-term-done-criteria
           - text: 個別手順が実施可能な粒度で記述されていること
             roles: [OPS]

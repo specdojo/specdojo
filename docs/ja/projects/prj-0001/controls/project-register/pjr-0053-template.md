@@ -21,7 +21,7 @@ specdojo:
 
 ## 1. 概要
 
-*CAPITAL_CASE*の形式に見直し
+`*CAPITAL_CASE*`の形式に見直し
 
 ## 2. 完了条件
 
