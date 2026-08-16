@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
@@ -17,29 +17,32 @@ specdojo:
 
 ## 1. 概要
 
-現状はschedule進捗(timeline.md)、register登録/消化状況(pjr-index.md/pjr-views.md)、routine実行状況(specdojo routine list等CLI出力のみ)を個別に確認する必要があり、一目で把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できるダッシュボードページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る
+現状、プロジェクトの状況確認は、Scheduleの進捗・日程を示す `execution/generated/gantt-chart.md` / `gantt-chart.svg`、トラックの着手順序を示す Timeline（`timeline/tml-index.yaml` と `timeline/generated/`）、registerの登録・消化状況、routineの実行状況に分散しており、一目で全体像を把握できるページがない。
 
-現状、プロジェクトの状況確認は `execution/generated/timeline.md`（schedule進捗）、`pjr-index.md` / `pjr-views.md`（register登録・消化状況）、`specdojo routine list`（routine実行状況、CLI出力のみで生成ページなし）に分散しており、一目で全体像を把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できる「ダッシュボード」ページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る。
+Schedule進捗、Timelineのトラック順序計画、register登録・消化状況、routine実行状況を一覧できるダッシュボードページをプロジェクトごとに生成する。生成機能は全プロジェクト共通とし、VitePressサイドバーの各プロジェクトメニューへダッシュボードの導線を自動追加する。完了時の表示確認は `prj-0001` を対象とする。
 
 ## 2. 完了条件
 
-- ダッシュボードに表示する情報（schedule進捗率・状態別タスク数、register状態別/優先度別件数、routineごとのlast_run/due状況）が定義されている。
-- 各情報の取得元（`timeline.md` の進捗サマリー、`pjr-index.md`/`pjr-views.md` の集計、routine状態ファイル）が明確化されている。
-- routine実行状況について、現状 `specdojo routine list` のCLI出力しか無く生成ページが存在しないため、ページ化の要否・方法（新規生成コマンド追加、または既存コマンド出力のmd化）が決まっている。
-- ダッシュボードページの生成方法（新規specdojoサブコマンド追加、または既存生成物の組み合わせ表示）が決まっている。
-- `.vitepress/sidebar-config.ts` の各プロジェクトメニューにダッシュボードへの導線が追加されている。
-- ダッシュボードページが実際に作成され、`.vitepress/sidebar-config.ts` からの導線を含めて対象プロジェクト（prj-0001）で表示確認できている。
+- ダッシュボードに表示する情報として、Scheduleの進捗率・状態別タスク数・Gantt chart、Timelineのwave・トラック・依存関係・カタログ状態・Schedule展開準備状況、registerの状態別・優先度別件数、routineごとの最終実行・実行結果・due状況が定義されている。
+- Scheduleの集計は `execution/generated/state.json` / `ready.json`、Timelineの集計は `timeline/tml-index.yaml` / `timeline/generated/timeline.json`、registerの集計は個票Frontmatter、routineの集計は `rtn-*.yaml` / `generated/routine-state.json` を使用し、Markdown表示文言の解析に依存していない。
+- Scheduleは既存の `execution/generated/gantt-chart.md` / `gantt-chart.svg` を表示し、Timelineについてもトラックのwave、依存関係、着手順序をGantt chart形式で表示できる。Timeline用Gantt chartの横軸はwave番号ではなく日付とし、Timelineの計画開始日、`catalog_duration_estimate_days`（稼働日の推定日数）、`order`、`depends_on`、`parallel_group` から各トラックの予定開始日・予定終了日を算出して表示する。
+- Timeline用Gantt chartの日付算出に使用する計画開始日と、推定稼働日数を暦日に変換する稼働日カレンダーの機械可読な正本・配置先が定義されている。
+- routineのdue状況は、routine定義、現在時刻、最終実行時刻から算出され、CLI出力の転記に依存せずダッシュボードへ表示される。
+- ダッシュボードの生成機能が全プロジェクト共通で実装され、各プロジェクトに固有のダッシュボードページが生成される。
+- VitePressサイドバーの各プロジェクトメニューに、ダッシュボードへの導線が自動追加される。
+- ダッシュボードページが実際に作成され、VitePressサイドバーからの導線を含めて対象プロジェクト（`prj-0001`）で表示確認できている。
 
 ## 3. 作業内容
 
-| No  | 作業                                                                         | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 表示項目の要件整理（schedule/register/routineそれぞれの必要情報の洗い出し）  | ARC  | open | -    |
-| 2   | 各情報の取得元・生成方法の設計（既存生成物の再利用 or 新規集計ロジック）     | ARC  | open | -    |
-| 3   | routine実行状況の可視化方法の検討（生成ページ新設要否）                      | ARC  | open | -    |
-| 4   | ダッシュボードページ生成の実装（specdojoコマンド拡張 or 生成スクリプト追加） | ARC  | open | -    |
-| 5   | `.vitepress/sidebar-config.ts` へのメニュー追加                              | ARC  | open | -    |
-| 6   | prj-0001での表示確認                                                         | ARC  | open | -    |
+| No  | 作業                                                                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | Schedule、Timeline、register、routineの表示項目を定義する                                      | ARC  | open | -    |
+| 2   | 機械可読な正本・JSONを入力とする集計方法を設計する                                             | ARC  | open | -    |
+| 3   | Scheduleの既存Gantt chartと、推定稼働日数から予定日付を算出するTimeline用Gantt chartを設計する | ARC  | open | -    |
+| 4   | routine定義と状態ファイルから最終実行・実行結果・due状況を算出する                             | ARC  | open | -    |
+| 5   | 全プロジェクト共通のダッシュボード生成機能と、プロジェクトごとのページ生成を実装する           | ARC  | open | -    |
+| 6   | VitePressサイドバーへ各プロジェクトのダッシュボード導線を自動追加する                          | ARC  | open | -    |
+| 7   | `prj-0001` でダッシュボードの内容、Gantt chart、サイドバー導線を表示確認する                   | ARC  | open | -    |
 
 ## 4. 対応結果
 
@@ -50,5 +53,7 @@ specdojo:
 - [[prj-0001:pjr-index|プロジェクト登録簿]]
 - [[specdojo:routine-operation-guide|routine運用ガイド]]
 - [[specdojo:schedule-operation-guide|Schedule実行運用ガイド]]
-- docs/ja/projects/prj-0001/execution/generated/timeline.md
+- [[specdojo:timeline-design-guide|Timeline設計ガイド]]
+- docs/ja/projects/prj-0001/execution/generated/gantt-chart.md
+- docs/ja/projects/prj-0001/timeline/tml-index.yaml
 - .vitepress/sidebar-config.ts
