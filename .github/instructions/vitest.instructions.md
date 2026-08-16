@@ -17,13 +17,16 @@ applyTo: "tests/**/*.test.ts"
 ## 2. ファイル配置と命名
 
 - テストコードは `tests/` 配下に配置する。
-- ファイル名は `*.test.ts` に統一し、`*.spec.ts` は使わない。
+- 単体テストのファイル名は `*.test.ts`、実 Git リポジトリ・worktree・CLI 子プロセスを使う統合テストは `*.integration.test.ts` とし、`*.spec.ts` は使わない。
 - テスト対象の本番コードのパスが分かるように、`tests/` 配下のディレクトリ構造を対応させる。
 - テストデータや fixture を分ける場合は、関連するテストに近い `tests/` 配下へ置く。
+- 同じ対象の単体テストと統合テストが混在する場合は、純粋な解析・整形・選択ロジックを `*.test.ts`、実プロセスや実 Git を必要とする契約を `*.integration.test.ts` へ分離する。
 
 ```text
 src/exec-shared.ts
 tests/src/exec-shared.test.ts
+src/exec-worktree.ts
+tests/src/exec-worktree.integration.test.ts
 tools/docs/src/validate-md-content.ts
 tests/tools/docs/src/validate-md-content.test.ts
 scripts/validate-templates.ts
@@ -139,6 +142,8 @@ await expect(loadYaml("missing.yaml")).rejects.toThrow(/missing.yaml/);
 ## 11. 実行と検証
 
 - テスト追加後は、プロジェクトで定義された Vitest 実行 script を使って確認する。
+- sandbox 内で決定的に実行できる単体テストは `npm run test:unit`、実 Git・worktree・CLI 子プロセスを必要とする統合テストは `npm run test:integration` で実行する。
+- `npm test` は単体テストと統合テストを含む全件ゲートとして維持し、CI、マージ前、リリース前に実行する。
 - Vitest 実行 script が未定義の場合は、導入時に `npm test` または `npm run test` で実行できる script を追加する。
 - TypeScript の型影響がある変更では、`npm run typecheck` も実行する。`npm run build` は `src` のみが対象で、`tests` 配下の型エラーは検出されない。
 - Markdown、schema、template 生成に関係するテストでは、必要に応じて `npm run check` または該当する検証 script を実行する。

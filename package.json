@@ -42,6 +42,8 @@
     "pre-commit": "lefthook run pre-commit",
     "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
     "test": "vitest run",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:watch": "vitest",
     "test:e2e": "npm run build && tsx tools/e2e/exec-run-e2e.ts",
     "dev": "tsx src/specdojo.ts",
