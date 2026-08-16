@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: specdojo:mtp-index-sample
+  id: specdojo:mtp-sample
   type: project
   status: draft
   rulebook: specdojo:mtp-rulebook

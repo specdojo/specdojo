@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:mtp-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:mtp-sample
 ---
 
 # 移行テスト計画 作成ルール
