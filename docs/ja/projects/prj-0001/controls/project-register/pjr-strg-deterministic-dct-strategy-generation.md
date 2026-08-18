@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: agent exited with non-zero code"
 ---
 
 # PJR-STRG DCTとsch-strategyの決定論的ジェネレーター実装
