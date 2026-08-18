@@ -441,7 +441,7 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   "pm-members": { text: "メンバー定義", order: 70 },
   "pm-raci": { text: "組織体制とRACI", order: 80 },
   // controls
-  "pjr-index": { text: "プロジェクト登録簿", order: 10 },
+  "pjr-index": { text: "プロジェクト登録台帳", order: 10 },
   "pjr-views-by-status": { text: "台帳ビュー（状態別）", order: 11 },
   "pjr-views-by-priority": { text: "台帳ビュー（優先度別）", order: 12 },
   "pjr-views-by-owner": { text: "台帳ビュー（担当者別）", order: 13 },

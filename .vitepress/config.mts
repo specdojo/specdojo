@@ -515,6 +515,31 @@ const promoteProjectDashboard = (items: SidebarItem[]): SidebarItem[] => {
   return extracted ? [extracted, ...remaining] : items;
 };
 
+const PROJECT_REGISTER_VIEW_FILES = [
+  "pjr-index",
+  "pjr-views-by-status",
+  "pjr-views-by-priority",
+  "pjr-views-by-owner",
+] as const;
+
+const promoteProjectRegisterViews = (items: SidebarItem[]): SidebarItem[] => {
+  // 個別PJRは「プロジェクト登録簿」に残し、登録台帳と集計ビューだけを管理ビュー直下へ出す。
+  if (!items.some((item) => item.text === "プロジェクト登録簿")) return items;
+
+  let remaining = items;
+  const promoted: SidebarItem[] = [];
+  for (const file of PROJECT_REGISTER_VIEW_FILES) {
+    const extracted = extractSidebarItem(
+      remaining,
+      (item) => item.link?.endsWith(`/controls/project-register/generated/${file}`) ?? false,
+    );
+    remaining = extracted.items;
+    if (extracted.extracted) promoted.push(extracted.extracted);
+  }
+
+  return [...promoted, ...remaining];
+};
+
 // 再帰的に: 表示名整形（xxx-削除）、並び替え
 const transformSidebar = (
   items: SidebarItem[],
@@ -547,7 +572,10 @@ const transformSidebar = (
       // 子も同じルールで処理
       if (next.items) {
         next.items = transformSidebar(next.items, locale, currentTree);
-        if (currentTree === "projects") next.items = promoteProjectDashboard(next.items);
+        if (currentTree === "projects") {
+          next.items = promoteProjectRegisterViews(next.items);
+          next.items = promoteProjectDashboard(next.items);
+        }
       }
 
       return next;
