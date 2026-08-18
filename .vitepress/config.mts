@@ -537,7 +537,12 @@ const promoteProjectRegisterViews = (items: SidebarItem[]): SidebarItem[] => {
     if (extracted.extracted) promoted.push(extracted.extracted);
   }
 
-  return [...promoted, ...remaining];
+  const registerIndex = remaining.findIndex((item) => item.text === "プロジェクト登録簿");
+  if (registerIndex < 0) return [...promoted, ...remaining];
+
+  const register = remaining[registerIndex];
+  const rest = remaining.filter((_, index) => index !== registerIndex);
+  return [register, ...promoted, ...rest];
 };
 
 // 再帰的に: 表示名整形（xxx-削除）、並び替え
