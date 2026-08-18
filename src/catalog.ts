@@ -1,6 +1,7 @@
 import { type Command } from "commander";
-import { join, resolve } from "node:path";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import yaml from "js-yaml";
 import { getProjectCatalogPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import {
@@ -13,8 +14,25 @@ import {
 } from "./catalog-build.js";
 import { collectDocIndexEntries } from "./doc-index.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
-import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
+import { deriveProjectId, runScaffold, type ProjectSize } from "./catalog-scaffold.js";
 import type { DctDoc } from "./catalog-types.js";
+import {
+  buildPlanSkeleton,
+  DCT_PLAN_SCHEMA_PATH,
+  listPlanFiles,
+  loadPlan,
+  loadTemplateForDomain,
+  planFileName,
+  resolvePlanInputs,
+  resolvePlanPath,
+  resolvePlansDir,
+  validateDctPlan,
+  validatePlanSchema,
+  writePlan,
+  type DctPlan,
+  type LoadedTemplateForDomain,
+} from "./catalog-plan.js";
+import { renderPlanPrompt } from "./catalog-plan-prompt.js";
 
 function readSizeFromIndex(catalogPath: string): ProjectSize | null {
   const indexPath = join(catalogPath, "dct-index.md");
@@ -83,6 +101,85 @@ function collectRepeatable(value: string, previous: string[]): string[] {
   return [...previous, value];
 }
 
+function resolveTemplatesPath(): string {
+  const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
+  if (!existsSync(templatesPath)) {
+    throw new Error(`Templates directory not found: ${templatesPath}`);
+  }
+  return templatesPath;
+}
+
+function repoRelative(absolutePath: string): string {
+  return relative(specdojoRootDir(), absolutePath).replace(/\\/g, "/");
+}
+
+function requireDomain(domain: unknown): string {
+  const value = typeof domain === "string" ? domain.trim() : "";
+  if (!value) {
+    throw new Error(`--domain <domain> is required (e.g. --domain data-flow).`);
+  }
+  return value;
+}
+
+function deriveProjectIdOrThrow(catalogPath: string, opts: { project?: string }): string {
+  const projectId = deriveProjectId(catalogPath) ?? opts.project?.trim() ?? "";
+  if (!/^prj-[0-9]{4,}$/.test(projectId)) {
+    throw new Error(
+      `Cannot derive project_id from catalog_path: ${catalogPath}\n` +
+        `Use --project <prj-NNNN> so the plan can record project_id.`,
+    );
+  }
+  return projectId;
+}
+
+function requireTemplateForDomain(domain: string): LoadedTemplateForDomain {
+  const templatesPath = resolveTemplatesPath();
+  const repoRoot = specdojoRootDir();
+  const loaded = loadTemplateForDomain(templatesPath, domain, repoRoot);
+  if (!loaded) {
+    throw new Error(
+      `No DCT template found for domain '${domain}' in ${repoRelative(templatesPath)}.`,
+    );
+  }
+  return loaded;
+}
+
+// Runs schema + semantic validation for one plan and prints findings.
+// Returns false when the plan must not be written or accepted.
+function reportPlanValidation(
+  plan: DctPlan,
+  opts: { catalogPath: string; fileName: string; template?: LoadedTemplateForDomain },
+): boolean {
+  const schemaErrors = validatePlanSchema(plan, specdojoRootDir());
+  for (const err of schemaErrors) {
+    process.stdout.write(`ERROR: ${opts.fileName}${err}\n`);
+  }
+  if (schemaErrors.length > 0) return false;
+
+  const result = validateDctPlan(plan, {
+    template: opts.template?.template,
+    knownLocalIds: collectCatalogLocalIds(opts.catalogPath),
+    fileName: opts.fileName,
+  });
+  for (const err of result.errors) {
+    process.stdout.write(`ERROR: ${err}\n`);
+  }
+  for (const warn of result.warnings) {
+    process.stdout.write(`WARN:  ${warn}\n`);
+  }
+  return result.ok;
+}
+
+function printPlanDiff(diff: string[]): void {
+  const MAX_DIFF_LINES = 200;
+  for (const line of diff.slice(0, MAX_DIFF_LINES)) {
+    process.stdout.write(`${line}\n`);
+  }
+  if (diff.length > MAX_DIFF_LINES) {
+    process.stdout.write(`... (${diff.length - MAX_DIFF_LINES} more diff lines)\n`);
+  }
+}
+
 function parseScaffoldVariables(values: string[]): Record<string, string> {
   const variables: Record<string, string> = {};
   for (const value of values) {
@@ -113,6 +210,7 @@ export function registerCatalogCommands(program: Command): void {
       const catalogPath = resolveCatalogPath(opts);
       process.stdout.write(`catalog-path: ${catalogPath}\n`);
       process.stdout.write(`generated   : ${join(catalogPath, "generated")}\n`);
+      process.stdout.write(`plans       : ${resolvePlansDir(catalogPath)}\n`);
     } catch (error) {
       printCommandError(error);
     }
@@ -263,10 +361,7 @@ export function registerCatalogCommands(program: Command): void {
           );
         })();
 
-      const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
-      if (!existsSync(templatesPath)) {
-        throw new Error(`Templates directory not found: ${templatesPath}`);
-      }
+      const templatesPath = resolveTemplatesPath();
 
       const { written, skipped, warnings, errors } = runScaffold({
         catalogPath,
@@ -292,6 +387,238 @@ export function registerCatalogCommands(program: Command): void {
       }
 
       if (errors.length > 0) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  registerCatalogPlanCommands(cat);
+}
+
+// `catalog plan` handles the agent judgment artifact (dct-plan-<domain>.yaml) that sits
+// between the DCT template and the deterministic catalog generator.
+function registerCatalogPlanCommands(cat: Command): void {
+  const plan = cat
+    .command("plan")
+    .description("DCT plan (dct-plan-<domain>.yaml) commands for agent judgment");
+
+  const pScaffold = plan
+    .command("scaffold")
+    .description("Create dct-plan-<domain>.yaml (skeleton, or ingest agent output with --from)");
+  addProjectOption(pScaffold);
+  pScaffold.option("--domain <domain>", "Target catalog domain (e.g. data-flow)");
+  pScaffold.option(
+    "--input <path>",
+    "Additional upstream document to record as input (repeatable)",
+    collectRepeatable,
+    [] as string[],
+  );
+  pScaffold.option("--from <path>", "Agent-produced plan file to validate and store");
+  pScaffold.option("--force", "Overwrite an existing plan", false);
+  pScaffold.option("--dry-run", "Show the diff without writing", false);
+  pScaffold.action((opts) => {
+    try {
+      const catalogPath = resolveCatalogPath(opts);
+      const domain = requireDomain(opts.domain);
+      const template = requireTemplateForDomain(domain);
+      const repoRoot = specdojoRootDir();
+
+      let planDoc: DctPlan;
+      if (opts.from) {
+        const fromPath = resolve(repoRoot, opts.from as string);
+        if (!existsSync(fromPath)) {
+          throw new Error(`--from not found: ${opts.from}`);
+        }
+        planDoc = loadPlan(fromPath);
+        if (planDoc.domain !== domain) {
+          throw new Error(
+            `--from plan domain '${planDoc.domain}' does not match --domain '${domain}'.`,
+          );
+        }
+      } else {
+        const projectId = deriveProjectIdOrThrow(catalogPath, opts);
+        const resolution = resolvePlanInputs({
+          catalogPath,
+          repoRoot,
+          domain,
+          extraInputs: (opts.input as string[]).map((input) => resolve(repoRoot, input)),
+        });
+        for (const warning of resolution.warnings) {
+          process.stdout.write(`WARN:  ${warning}\n`);
+        }
+        if (resolution.errors.length > 0) {
+          for (const err of resolution.errors) {
+            process.stdout.write(`ERROR: ${err}\n`);
+          }
+          process.exitCode = 1;
+          return;
+        }
+        planDoc = buildPlanSkeleton({
+          projectId,
+          domain,
+          template: { id: template.template.id, path: template.relPath },
+          inputs: resolution.inputs,
+        });
+      }
+
+      const ok = reportPlanValidation(planDoc, {
+        catalogPath,
+        fileName: planFileName(domain),
+        template,
+      });
+      if (!ok) {
+        process.exitCode = 1;
+        return;
+      }
+
+      const result = writePlan({
+        catalogPath,
+        plan: planDoc,
+        force: !!opts.force,
+        dryRun: !!opts.dryRun,
+      });
+
+      if (result.written) {
+        process.stdout.write(`${opts.force ? "Updated" : "Created"}: ${result.path}\n`);
+        return;
+      }
+      if (result.skippedReason === "unchanged") {
+        process.stdout.write(`Unchanged: ${result.path}\n`);
+        return;
+      }
+      if (result.skippedReason === "dry-run") {
+        process.stdout.write(`Dry-run (not written): ${result.path}\n`);
+        printPlanDiff(result.diff);
+        return;
+      }
+      process.stdout.write(
+        `Skipped (already exists; use --force to overwrite): ${result.path}\n` +
+          `Review the diff below before overwriting.\n`,
+      );
+      printPlanDiff(result.diff);
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const pPrompt = plan
+    .command("prompt")
+    .description("Print the agent instruction for judging deliverable instances");
+  addProjectOption(pPrompt);
+  pPrompt.option("--domain <domain>", "Target catalog domain (e.g. data-flow)");
+  pPrompt.option(
+    "--input <path>",
+    "Additional upstream document to include as input (repeatable)",
+    collectRepeatable,
+    [] as string[],
+  );
+  pPrompt.option("--out <path>", "Write the instruction to a file instead of stdout");
+  pPrompt.action((opts) => {
+    try {
+      const catalogPath = resolveCatalogPath(opts);
+      const domain = requireDomain(opts.domain);
+      const template = requireTemplateForDomain(domain);
+      const repoRoot = specdojoRootDir();
+      const projectId = deriveProjectIdOrThrow(catalogPath, opts);
+
+      const resolution = resolvePlanInputs({
+        catalogPath,
+        repoRoot,
+        domain,
+        extraInputs: (opts.input as string[]).map((input) => resolve(repoRoot, input)),
+      });
+      for (const warning of resolution.warnings) {
+        process.stderr.write(`WARN:  ${warning}\n`);
+      }
+      if (resolution.errors.length > 0) {
+        for (const err of resolution.errors) {
+          process.stdout.write(`ERROR: ${err}\n`);
+        }
+        process.exitCode = 1;
+        return;
+      }
+
+      const planPath = resolvePlanPath(catalogPath, domain);
+      const prompt = renderPlanPrompt({
+        projectId,
+        domain,
+        templateId: template.template.id,
+        templateRelPath: template.relPath,
+        planRelPath: repoRelative(planPath),
+        schemaRelPath: DCT_PLAN_SCHEMA_PATH,
+        inputs: resolution.inputs,
+        planExists: existsSync(planPath),
+      });
+
+      if (opts.out) {
+        const outPath = resolve(repoRoot, opts.out as string);
+        mkdirSync(dirname(outPath), { recursive: true });
+        writeFileSync(outPath, prompt, "utf8");
+        process.stdout.write(`Created: ${outPath}\n`);
+        return;
+      }
+      process.stdout.write(prompt);
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const pValidate = plan.command("validate").description("Validate dct-plan-*.yaml files");
+  addProjectOption(pValidate);
+  pValidate.option("--domain <domain>", "Limit validation to one domain");
+  pValidate.action((opts) => {
+    try {
+      const catalogPath = resolveCatalogPath(opts);
+      const plansDir = resolvePlansDir(catalogPath);
+      const domain = typeof opts.domain === "string" ? opts.domain.trim() : "";
+      const files = listPlanFiles(catalogPath).filter(
+        (file) => !domain || file === planFileName(domain),
+      );
+
+      if (files.length === 0) {
+        process.stdout.write(
+          domain
+            ? `No ${planFileName(domain)} found in: ${plansDir}\n`
+            : `No dct-plan-*.yaml files found in: ${plansDir}\n`,
+        );
+        return;
+      }
+
+      let allOk = true;
+      for (const file of files) {
+        const filePath = join(plansDir, file);
+        try {
+          const planDoc = loadPlan(filePath);
+          const template = loadTemplateForDomain(
+            resolveTemplatesPath(),
+            planDoc.domain,
+            specdojoRootDir(),
+          );
+          if (!template) {
+            process.stdout.write(
+              `WARN:  ${file}: no DCT template found for domain '${planDoc.domain}'; ` +
+                `template_local_id references are not checked.\n`,
+            );
+          }
+          const ok = reportPlanValidation(planDoc, {
+            catalogPath,
+            fileName: file,
+            ...(template ? { template } : {}),
+          });
+          if (ok) {
+            process.stdout.write(`OK: ${file}\n`);
+          } else {
+            allOk = false;
+          }
+        } catch (error) {
+          process.stdout.write(
+            `ERROR: ${filePath}: ${error instanceof Error ? error.message : String(error)}\n`,
+          );
+          allOk = false;
+        }
+      }
+
+      process.exitCode = allOk ? 0 : 1;
     } catch (error) {
       printCommandError(error);
     }

@@ -13,6 +13,7 @@ import {
   specdojoRootDir,
 } from "./specdojo-config.js";
 import { selfRunArgs } from "./spawn-self.js";
+import { isDctPlanFileName } from "./catalog-plan.js";
 
 // ================================
 // Types
@@ -102,7 +103,9 @@ function matchesExec(filename: string, watchedDir: string, ctx: WatchContext): b
 }
 
 function matchesCatalog(filename: string): boolean {
-  return /^dct-.+\.yaml$/.test(filename);
+  // Agent judgment plans (dct-plan-*.yaml) are not catalog inputs; editing one must not
+  // trigger a catalog build.
+  return /^dct-.+\.yaml$/.test(filename) && !isDctPlanFileName(filename);
 }
 
 function matchesRegister(filename: string): boolean {

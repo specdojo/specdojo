@@ -10,6 +10,7 @@ import {
 } from "./kata.js";
 import type { KataRefs } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
+import { isDctPlanFileName } from "./catalog-plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
@@ -83,8 +84,13 @@ function searchSections(
 
 function findDeliverableInfo(catalogPath: string, localId: string): DeliverableInfo | null {
   if (!catalogPath || !existsSync(catalogPath)) return null;
+  // Catalog scans walk subdirectories, so agent judgment plans (plans/dct-plan-*.yaml)
+  // must be excluded; they share the dct- prefix but carry no catalog structure.
   const files = listFilesRecursive(catalogPath)
-    .filter((f) => /^dct-.+\.ya?ml$/i.test(f.split("/").pop() ?? ""))
+    .filter((f) => {
+      const name = f.split("/").pop() ?? "";
+      return /^dct-.+\.ya?ml$/i.test(name) && !isDctPlanFileName(name);
+    })
     .sort();
 
   for (const filePath of files) {
@@ -111,8 +117,13 @@ export type ResolvedDeliverable = {
 
 function loadCatalogDocs(catalogPath: string): DctDoc[] {
   if (!catalogPath || !existsSync(catalogPath)) return [];
+  // Catalog scans walk subdirectories, so agent judgment plans (plans/dct-plan-*.yaml)
+  // must be excluded; they share the dct- prefix but carry no catalog structure.
   const files = listFilesRecursive(catalogPath)
-    .filter((f) => /^dct-.+\.ya?ml$/i.test(f.split("/").pop() ?? ""))
+    .filter((f) => {
+      const name = f.split("/").pop() ?? "";
+      return /^dct-.+\.ya?ml$/i.test(name) && !isDctPlanFileName(name);
+    })
     .sort();
 
   const docs: DctDoc[] = [];

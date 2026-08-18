@@ -52,6 +52,8 @@ docs/
 │   │   │   │   ├── dct-index.md                  # 成果物カタログの索引
 │   │   │   │   ├── dct-project-definition.yaml   # プロジェクト定義の成果物カタログ（正本）
 │   │   │   │   ├── dct-project-management.yaml   # プロジェクトマネジメントの成果物カタログ（正本）
+│   │   │   │   ├── plans/                        # agent判定結果（正本・カタログ生成の入力）
+│   │   │   │   │   └── dct-plan-data-flow.yaml
 │   │   │   │   └── generated/                    # 正本から生成される補助一覧
 │   │   │   │       ├── dct-project-definition.md
 │   │   │   │       └── dct-project-management.md
