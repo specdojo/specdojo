@@ -1,0 +1,30 @@
+PJR-KATA の実装を完了しました。
+
+## 実施内容
+
+**判定成果物の定義**
+
+- `docs/specdojo/schemas/v1/sch-assessment.schema.yaml`（新規）: `facts`（コード収集）／`judgment`（agent 意味判定）／`recommended_approach`（規則適用結果）を分離した schema。正準配置は `<schedule_path>/assessments/sch-assessment-<track>.yaml`。
+
+**コードによる事実収集と agent 判定の境界**
+
+- `src/schedule-assessment.ts`（新規）: `resolveKataRefs` / `loadRulebookRefs` / `resolveDeliverableSchemaRef` を再利用し、宣言・慣例・`none`・参照切れ・`status`・実装エビデンスの解決をコード側のみで判定。取り込み時に `facts` の改変と scope 欠落を検出。
+- `src/schedule-assessment-prompt.ts`（新規）: 探索・ID 導出・`facts` 編集・strategy 編集を禁止した agent 指示。
+- `src/kata.ts`: 解決不能マーカーを `KATA_MISSING` として公開（既存挙動は不変）。
+
+**推奨フローの判定規則**
+
+- 利用可能性は `target-fit` / `substantive-content` / `internal-consistency` / `standard-alignment` の4観点必須、`usability` は観点から導出して不一致をエラー化。
+- `intent`（7種）から導出。`author-deliverable` のみ整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズ（`approachPurpose` で区別）。`bootstrap` は `bootstrap_scope` と理由が必須で、全て利用可能なら選択不可。判定不能時は `undecided` + blocking `open_questions` 必須。
+
+**CLI・テスト・ドキュメント**
+
+- `src/schedule.ts`: `specdojo schedule assessment prompt / scaffold / validate` を追加。
+- テスト: `tests/src/schedule-assessment.test.ts`（36件）、`tests/src/schedule-assessment-command.test.ts`（10件）、`tests/src/schedule-command.test.ts` の登録確認を更新。部分整備・宣言先不在・`none` 宣言・慣例解決・`status: draft` だが利用可能・`evidence_refs` あり・既存成果物あり／なしを網羅。
+- ドキュメント: ryu-guide（責務分担表へ更新）、kata-guide、schedule-design-guide（判定規則の節を追加）、command-reference（`schedule assessment` 節）、directory-layout-reference、sch-rulebook、個票の作業内容・対応結果。
+
+申し送り: プロジェクト実データ（prj-0001 各 track の判定結果 YAML）は本タスクでは生成しておらず、strategy への反映は後続 PJR-STRG の範囲です。`package.json` への `validate:schema:sch-assessment` 追加は書き込み権限がなく実施できなかったため、`validate:schema:file` での実行手順を command-reference に記載しました。
+
+<specdojo_executor_evidence>
+{"final_message":"sch-assessment-<track>.yaml の schema・事実収集・agent判定境界・推奨フロー判定規則・CLI(schedule assessment)・テスト46件・関連ガイド更新を実装。プロジェクト実データ生成とpackage.jsonへのschema検証script追加は未実施（後者は書き込み権限なし）。","validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npx eslint src/schedule-assessment.ts src/schedule-assessment-prompt.ts src/schedule.ts src/kata.ts tests/src/schedule-assessment.test.ts tests/src/schedule-assessment-command.test.ts","status":"passed","summary":"変更ファイルに ESLint エラーなし（src/dashboard.ts の未使用変数は既存の別件）"},{"command":"npm run test:unit","status":"passed","summary":"80 files / 1149 tests 全通過（新規46件を含む）"},{"command":"npx prettier --check <変更ファイル一式>","status":"passed","summary":"整形差分なし"},{"command":"npx markdownlint 'docs/ja/specdojo/**/*.md' 'docs/ja/projects/prj-0001/controls/project-register/*.md'","status":"passed","summary":"指摘なし"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatter 検証エラーなし"},{"command":"npm run validate:schema","status":"passed","summary":"既存 schema 検証すべて valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-assessment.schema.yaml --data \"docs/ja/**/assessments/sch-assessment-*.yaml\" --allow-empty","status":"passed","summary":"新規 schema がコンパイル可能（対象データ0件でskip）"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"ERROR 0件（既存の based_on 警告のみ、exit 0）"},{"command":"npx tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"生成物を再生成（gitignore 対象）"},{"command":"npx tsx src/specdojo.ts exec refresh","status":"passed","summary":"OK: validation passed"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1232 entries"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"全 plan/result/個票 valid"}]}
+</specdojo_executor_evidence>

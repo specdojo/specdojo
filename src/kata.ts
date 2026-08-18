@@ -8,6 +8,8 @@ import { parsePracticeId, practiceLocalId, qualifyPracticeId } from "./practice-
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。
 
 const MISSING = "_MISSING_";
+// 解決できなかった実践の型を表すマーカー。呼び出し側が解決結果を判定できるよう公開する。
+export const KATA_MISSING = MISSING;
 const DOCS_BASE = "docs/ja/specdojo";
 // schema は言語非依存の正本資産（docs/ja/* の下ではない）。
 const SCHEMA_BASE = "docs/specdojo/schemas/v1";

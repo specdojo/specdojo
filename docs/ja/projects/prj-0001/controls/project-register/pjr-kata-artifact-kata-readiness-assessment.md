@@ -45,16 +45,22 @@ specdojo:
 
 | No  | 作業                                                                                        | 担当 | 状態 | メモ                                                                        |
 | --- | ------------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------- |
-| 1   | `resolveKataRefs`、Kata frontmatter、DCT、`approach` の現行解決規則を整理する               | ARC  | open | 存在と利用可能性を別フィールドとして扱う                                    |
-| 2   | `sch-assessment-<track>.yaml` の正準配置、schema、判定状態、根拠・confidence 契約を設計する | ARC  | open | agent 出力はバージョン管理し、strategy の再生成根拠としてレビュー可能にする |
-| 3   | コードによる事実収集と agent による意味判定の境界を実装する                                 | ARC  | open | agent にファイル探索、ID導出、存在判定をさせない                            |
-| 4   | 推奨フローの判定表と、判定不能時に未確定として停止する規則を実装する                        | ARC  | open | `bootstrap` / `fully-guided` / `recipe-guided` の3択へ限定しない            |
-| 5   | 正常系、部分整備、矛盾、参照切れ、実装先行を含む自動テストを追加する                        | ARC  | open | agent 応答は fixture 化し、schema・変換コードを決定的にテストする           |
-| 6   | 実践の進め方ガイド、Schedule設計ガイド、関連 schema・CLI リファレンスを更新する             | ARC  | open | human の `ready` 確定権限は変更しない                                       |
+| 1   | `resolveKataRefs`、Kata frontmatter、DCT、`approach` の現行解決規則を整理する               | ARC  | done | 存在と利用可能性を別フィールドとして扱う                                    |
+| 2   | `sch-assessment-<track>.yaml` の正準配置、schema、判定状態、根拠・confidence 契約を設計する | ARC  | done | agent 出力はバージョン管理し、strategy の再生成根拠としてレビュー可能にする |
+| 3   | コードによる事実収集と agent による意味判定の境界を実装する                                 | ARC  | done | agent にファイル探索、ID導出、存在判定をさせない                            |
+| 4   | 推奨フローの判定表と、判定不能時に未確定として停止する規則を実装する                        | ARC  | done | `bootstrap` / `fully-guided` / `recipe-guided` の3択へ限定しない            |
+| 5   | 正常系、部分整備、矛盾、参照切れ、実装先行を含む自動テストを追加する                        | ARC  | done | agent 応答は fixture 化し、schema・変換コードを決定的にテストする           |
+| 6   | 実践の進め方ガイド、Schedule設計ガイド、関連 schema・CLI リファレンスを更新する             | ARC  | done | human の `ready` 確定権限は変更しない                                       |
 
 ## 4. 対応結果
 
--
+- 判定結果の正本を `<schedule_path>/assessments/sch-assessment-<track>.yaml` と定め、schema を `docs/specdojo/schemas/v1/sch-assessment.schema.yaml` に追加した。`facts`（コード収集）と `judgment`（agent 判定）を分離し、`recommended_approach` は判定規則の結果として検証する契約にした。
+- 事実収集は `resolveKataRefs` / `loadRulebookRefs` / `resolveDeliverableSchemaRef` を再利用し、宣言・慣例・`none`・参照切れ・`status`・実装エビデンスの解決をコード側だけで判定する `src/schedule-assessment.ts` を追加した。agent prompt（`src/schedule-assessment-prompt.ts`）は探索と `facts` 編集を明示的に禁止する。
+- 利用可能性は `target-fit` / `substantive-content` / `internal-consistency` / `standard-alignment` の4観点を必須とし、`usability` は観点の結果から導出して不一致を検証エラーにした。
+- 推奨フローは `intent`（7種）と利用可能性から導出する。`author-deliverable` のみ整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` からのみ選べる（`approachPurpose` で区別）。`bootstrap` は `bootstrap_scope` と理由が必須で、対象がすべて利用可能なら選べない。判定不能時は `undecided` とし、対象 `local_id` の blocking な `open_questions` を必須にした。
+- CLI は `specdojo schedule assessment prompt / scaffold / validate` を追加し、`--from` 取り込み時に `facts` の改変・scope 欠落を検出する。テストは `tests/src/schedule-assessment.test.ts`（36件）と `tests/src/schedule-assessment-command.test.ts`（10件）で、部分整備・宣言先不在・`none` 宣言・慣例解決・`status: draft` だが利用可能・`evidence_refs` あり・既存成果物あり／なしを網羅した。
+- ガイドの「整備状況とタスク目的の判断は人が行う」という記述を、機械的事実判定・agent 意味判定・コードによる規則適用・human 承認の分担へ更新した（実践の進め方ガイド、実践の型活用ガイド、Schedule設計ガイド、CLIコマンドリファレンス、ディレクトリ構成リファレンス、スケジュール作成ルール）。
+- _ASSUMPTION_: 判定結果の配置は `dct-plan-<domain>.yaml` の先例に倣い、`sch-*.yaml` を直接走査する処理と衝突しないよう `assessments/` サブディレクトリとした。プロジェクト実データ（prj-0001 の各 track の判定結果）は本タスクでは生成していない。生成と strategy への反映は後続の PJR-STRG で扱う。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KATA",
+  "run_id": "20260818T220655833Z-5dee9a27",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-18T22:06:55.833Z",
+    "completed_at": "2026-08-18T22:29:04.655Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kata-artifact-kata-readiness-assessment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/kata-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sch-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/sch-assessment.schema.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/schedule-assessment-prompt.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/schedule-assessment.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/schedule-assessment-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/schedule-assessment.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 15,
+    "summary": ".../pjr-kata-artifact-kata-readiness-assessment.md |  20 +-\n docs/ja/specdojo/guides/kata-guide.md              |   2 +\n docs/ja/specdojo/guides/ryu-guide.md               |  13 +-\n docs/ja/specdojo/guides/schedule-design-guide.md   |  34 ++-\n docs/ja/specdojo/references/command-reference.md   |  42 ++++\n .../references/directory-layout-reference.md       |   4 +-\n docs/ja/specdojo/rulebooks/sch-rulebook.md         |   3 +-\n src/kata.ts                                        |   2 +\n src/schedule.ts                                    | 276 ++++++++++++++++++++-\n tests/src/schedule-command.test.ts                 |  16 +-\n 10 files changed, 392 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "command": "npx eslint src/schedule-assessment.ts src/schedule-assessment-prompt.ts src/schedule.ts src/kata.ts tests/src/schedule-assessment.test.ts tests/src/schedule-assessment-command.test.ts",
+      "status": "passed",
+      "summary": "変更ファイルに ESLint エラーなし（src/dashboard.ts の未使用変数は既存の別件）"
+    },
+    {
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "80 files / 1149 tests 全通過（新規46件を含む）"
+    },
+    {
+      "command": "npx prettier --check <変更ファイル一式>",
+      "status": "passed",
+      "summary": "整形差分なし"
+    },
+    {
+      "command": "npx markdownlint 'docs/ja/specdojo/**/*.md' 'docs/ja/projects/prj-0001/controls/project-register/*.md'",
+      "status": "passed",
+      "summary": "指摘なし"
+    },
+    {
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "frontmatter 検証エラーなし"
+    },
+    {
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "既存 schema 検証すべて valid"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-assessment.schema.yaml --data \"docs/ja/**/assessments/sch-assessment-*.yaml\" --allow-empty",
+      "status": "passed",
+      "summary": "新規 schema がコンパイル可能（対象データ0件でskip）"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "ERROR 0件（既存の based_on 警告のみ、exit 0）"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "生成物を再生成（gitignore 対象）"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts exec refresh",
+      "status": "passed",
+      "summary": "OK: validation passed"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1232 entries"
+    },
+    {
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "全 plan/result/個票 valid"
+    }
+  ],
+  "final_message": "sch-assessment-<track>.yaml の schema・事実収集・agent判定境界・推奨フロー判定規則・CLI(schedule assessment)・テスト46件・関連ガイド更新を実装。プロジェクト実データ生成とpackage.jsonへのschema検証script追加は未実施（後者は書き込み権限なし）。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KATA/20260818T220655833Z-5dee9a27/executor.log",
+      "bytes": 5185,
+      "truncated": false
+    }
+  ]
+}

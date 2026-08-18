@@ -73,8 +73,22 @@ describe("schedule command registration", () => {
     const commandNames = schedule?.commands.map((command) => command.name());
     const help = schedule?.helpInformation();
 
-    expect(commandNames).toEqual(["where", "build"]);
+    expect(commandNames).toEqual(["where", "build", "assessment"]);
     expect(help).toContain("build");
+  });
+
+  it("assessment サブコマンドを登録する", () => {
+    const program = new Command();
+    registerScheduleCommands(program);
+
+    const schedule = program.commands.find((command) => command.name() === "schedule");
+    const assessment = schedule?.commands.find((command) => command.name() === "assessment");
+
+    expect(assessment?.commands.map((command) => command.name())).toEqual([
+      "scaffold",
+      "prompt",
+      "validate",
+    ]);
   });
 });
 

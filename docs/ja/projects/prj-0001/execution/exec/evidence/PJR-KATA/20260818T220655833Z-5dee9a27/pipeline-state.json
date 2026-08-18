@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KATA",
+  "run_id": "20260818T220655833Z-5dee9a27",
+  "updated_at": "2026-08-18T22:29:49.023Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-18T22:06:55.833Z",
+      "completed_at": "2026-08-18T22:29:04.834Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KATA/20260818T220655833Z-5dee9a27/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-08-18T22:29:04.835Z",
+      "completed_at": "2026-08-18T22:29:49.023Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-kata-20260818T220616Z-c00d-result.md"
+    }
+  }
+}

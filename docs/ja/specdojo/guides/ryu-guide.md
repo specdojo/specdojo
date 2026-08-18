@@ -28,7 +28,16 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 
 ## 1. 整備状況に応じた進め方（approach）
 
-`approach`（進め方）は、タスクの目的と、対象成果物の rulebook / recipe / sample / template がどれだけ整備されているかに応じて選ぶプロファイルです。整備状況とタスク目的の判断は人が行い、エージェントは指定された `approach` に従います。手作業でも schedule 実行でも考え方は同じです。
+`approach`（進め方）は、タスクの目的と、対象成果物の rulebook / recipe / sample / template がどれだけ整備されているかに応じて選ぶプロファイルです。判断は次のように分担します。手作業でも schedule 実行でも考え方は同じです。
+
+| 判断                                                                         | 担当                            | 根拠・出力                                   |
+| ---------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------- |
+| ファイルの実在・宣言形式・`status`・参照切れ・実装エビデンスの解決           | コード（`schedule assessment`） | `sch-assessment-<track>.yaml` の `facts`     |
+| 内容が対象成果物の作成・更新基準として信頼できるか（利用可能性）とタスク目的 | エージェント                    | 同ファイルの `judgment`（4観点の根拠付き）   |
+| 上記から `approach` を決める判定規則の適用                                   | コード                          | 同ファイルの `recommended_approach`          |
+| 判定結果の承認、`undecided` の解消、`status` の `ready` 昇格                 | 人間                            | レビューと `finalize` / `bootstrap-finalize` |
+
+エージェントは、ファイル探索・ID 導出・存在判定をやり直さず、意味判断だけを担当します。実行時は指定された `approach` に従います。判定結果の作り方は [Schedule設計ガイド](schedule-design-guide.md) の `実践の型の整備状況判定（sch-assessment-<track>.yaml）` を参照してください。
 
 実践の型そのものの役割と使い分けは [実践の型活用ガイド](kata-guide.md) を参照してください。本ガイドは、それらを `approach` に応じてどこまで基準にするかという進め方を扱います。
 
@@ -52,6 +61,8 @@ flowchart TD
   P -->|"実践の型を見直す"| MT["各 maintenance<br/>成果物 → 実践の型"]
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
 ```
+
+整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、成果物と再利用できる実践の型を一式で初期整備する対象である場合に限って選びます。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
 
 ### 1.2. approach 一覧
 

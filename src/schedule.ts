@@ -1,6 +1,6 @@
 import { type Command } from "commander";
-import { join, resolve } from "node:path";
-import { existsSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { getProjectSchedulePath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import {
@@ -10,6 +10,23 @@ import {
   type GeneratedTask,
 } from "./schedule-build.js";
 import { readYaml } from "./exec-shared.js";
+import {
+  assessmentFileName,
+  buildAssessmentSkeleton,
+  collectAssessmentFacts,
+  loadAssessment,
+  loadStrategyScope,
+  resolveAssessmentPath,
+  resolveAssessmentsDir,
+  SCH_ASSESSMENT_SCHEMA_PATH,
+  validateAssessment,
+  validateAssessmentSchema,
+  writeAssessment,
+  type AssessedDeliverable,
+  type AssessmentFacts,
+  type SchAssessment,
+} from "./schedule-assessment.js";
+import { renderAssessmentPrompt } from "./schedule-assessment-prompt.js";
 
 function resolveSchedulePath(opts: { project?: string }): {
   schedulePath: string;
@@ -223,6 +240,259 @@ export function createScheduleTrackDocument(input: {
   };
 }
 
+function repoRelative(absolutePath: string): string {
+  return relative(specdojoRootDir(), absolutePath).replace(/\\/g, "/");
+}
+
+function requireTrack(track: unknown): string {
+  const value = typeof track === "string" ? track.trim() : "";
+  if (!value) {
+    throw new Error(`--track <track> is required (e.g. --track launch).`);
+  }
+  return value;
+}
+
+function requireStrategyPath(schedulePath: string, track: string): string {
+  const strategyPath = join(schedulePath, `sch-strategy-${track}.yaml`);
+  if (!existsSync(strategyPath)) {
+    throw new Error(`Strategy file not found: ${strategyPath}`);
+  }
+  return strategyPath;
+}
+
+function printDiff(diff: string[]): void {
+  const MAX_DIFF_LINES = 200;
+  for (const line of diff.slice(0, MAX_DIFF_LINES)) {
+    process.stdout.write(`${line}\n`);
+  }
+  if (diff.length > MAX_DIFF_LINES) {
+    process.stdout.write(`... (${diff.length - MAX_DIFF_LINES} more diff lines)\n`);
+  }
+}
+
+// Schema + semantic validation for one assessment. Returns false when the assessment must not
+// be written or accepted.
+function reportAssessmentValidation(
+  assessment: SchAssessment,
+  opts: { fileName: string; currentFacts?: Map<string, AssessmentFacts> },
+): boolean {
+  const schemaErrors = validateAssessmentSchema(assessment, specdojoRootDir());
+  for (const err of schemaErrors) {
+    process.stdout.write(`ERROR: ${opts.fileName}${err}\n`);
+  }
+  if (schemaErrors.length > 0) return false;
+
+  const result = validateAssessment(assessment, {
+    fileName: opts.fileName,
+    ...(opts.currentFacts ? { currentFacts: opts.currentFacts } : {}),
+  });
+  for (const err of result.errors) process.stdout.write(`ERROR: ${err}\n`);
+  for (const warn of result.warnings) process.stdout.write(`WARN:  ${warn}\n`);
+  return result.ok;
+}
+
+type CollectedScope = {
+  strategyPath: string;
+  scope: ReturnType<typeof loadStrategyScope>;
+  deliverables: AssessedDeliverable[];
+  factsByLocalId: Map<string, AssessmentFacts>;
+};
+
+// Collects the machine-determined facts for a track. Errors here mean the scope itself cannot be
+// resolved, so no agent judgment should be attempted.
+function collectScope(schedulePath: string, track: string): CollectedScope {
+  const repoRoot = specdojoRootDir();
+  const strategyPath = requireStrategyPath(schedulePath, track);
+  const scope = loadStrategyScope(strategyPath);
+  if (scope.track !== track) {
+    throw new Error(
+      `${repoRelative(strategyPath)}: track '${scope.track}' does not match '${track}'.`,
+    );
+  }
+  const collected = collectAssessmentFacts({ repoRoot, scope });
+  for (const warning of collected.warnings) process.stdout.write(`WARN:  ${warning}\n`);
+  if (collected.errors.length > 0) {
+    throw new Error(collected.errors.join("\n"));
+  }
+  return {
+    strategyPath,
+    scope,
+    deliverables: collected.deliverables,
+    factsByLocalId: new Map(collected.deliverables.map((item) => [item.local_id, item.facts])),
+  };
+}
+
+// `schedule assessment` handles the agent judgment artifact (sch-assessment-<track>.yaml) that
+// sits between the deliverable catalogs and the deterministic strategy generator.
+function registerScheduleAssessmentCommands(sch: Command): void {
+  const assessment = sch
+    .command("assessment")
+    .description("Readiness assessment (sch-assessment-<track>.yaml) commands for agent judgment");
+
+  const aScaffold = assessment
+    .command("scaffold")
+    .description(
+      "Create sch-assessment-<track>.yaml (facts only, or ingest agent output with --from)",
+    );
+  addProjectOption(aScaffold);
+  aScaffold.requiredOption("--track <track>", "Track name (e.g. launch)");
+  aScaffold.option("--from <path>", "Agent-produced assessment file to validate and store");
+  aScaffold.option("--force", "Overwrite an existing assessment", false);
+  aScaffold.option("--dry-run", "Show the diff without writing", false);
+  aScaffold.action((opts) => {
+    try {
+      const { schedulePath } = resolveSchedulePath(opts);
+      const track = requireTrack(opts.track);
+      const collected = collectScope(schedulePath, track);
+
+      let doc: SchAssessment;
+      if (opts.from) {
+        const fromPath = resolve(specdojoRootDir(), opts.from as string);
+        if (!existsSync(fromPath)) {
+          throw new Error(`--from not found: ${opts.from}`);
+        }
+        doc = loadAssessment(fromPath);
+        if (doc.track !== track) {
+          throw new Error(
+            `--from assessment track '${doc.track}' does not match --track '${track}'.`,
+          );
+        }
+      } else {
+        doc = buildAssessmentSkeleton({
+          scope: collected.scope,
+          strategyRelPath: repoRelative(collected.strategyPath),
+          deliverables: collected.deliverables,
+        });
+      }
+
+      const ok = reportAssessmentValidation(doc, {
+        fileName: assessmentFileName(track),
+        currentFacts: collected.factsByLocalId,
+      });
+      if (!ok) {
+        process.exitCode = 1;
+        return;
+      }
+
+      const result = writeAssessment({
+        schedulePath,
+        assessment: doc,
+        force: !!opts.force,
+        dryRun: !!opts.dryRun,
+      });
+
+      if (result.written) {
+        process.stdout.write(`${opts.force ? "Updated" : "Created"}: ${result.path}\n`);
+        return;
+      }
+      if (result.skippedReason === "unchanged") {
+        process.stdout.write(`Unchanged: ${result.path}\n`);
+        return;
+      }
+      if (result.skippedReason === "dry-run") {
+        process.stdout.write(`Dry-run (not written): ${result.path}\n`);
+        printDiff(result.diff);
+        return;
+      }
+      process.stdout.write(
+        `Skipped (already exists; use --force to overwrite): ${result.path}\n` +
+          `Review the diff below before overwriting.\n`,
+      );
+      printDiff(result.diff);
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const aPrompt = assessment
+    .command("prompt")
+    .description("Print the agent instruction for judging deliverable and Kata readiness");
+  addProjectOption(aPrompt);
+  aPrompt.requiredOption("--track <track>", "Track name (e.g. launch)");
+  aPrompt.option("--out <path>", "Write the instruction to a file instead of stdout");
+  aPrompt.action((opts) => {
+    try {
+      const { schedulePath } = resolveSchedulePath(opts);
+      const track = requireTrack(opts.track);
+      const collected = collectScope(schedulePath, track);
+      const assessmentPath = resolveAssessmentPath(schedulePath, track);
+
+      const prompt = renderAssessmentPrompt({
+        projectId: collected.scope.projectId,
+        track,
+        strategyRelPath: repoRelative(collected.strategyPath),
+        assessmentRelPath: repoRelative(assessmentPath),
+        schemaRelPath: SCH_ASSESSMENT_SCHEMA_PATH,
+        deliverables: collected.deliverables,
+        assessmentExists: existsSync(assessmentPath),
+      });
+
+      if (opts.out) {
+        const outPath = resolve(specdojoRootDir(), opts.out as string);
+        mkdirSync(dirname(outPath), { recursive: true });
+        writeFileSync(outPath, prompt, "utf8");
+        process.stdout.write(`Created: ${outPath}\n`);
+        return;
+      }
+      process.stdout.write(prompt);
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  const aValidate = assessment
+    .command("validate")
+    .description("Validate sch-assessment-*.yaml files");
+  addProjectOption(aValidate);
+  aValidate.option("--track <track>", "Limit validation to one track");
+  aValidate.action((opts) => {
+    try {
+      const { schedulePath } = resolveSchedulePath(opts);
+      const assessmentsDir = resolveAssessmentsDir(schedulePath);
+      const track = typeof opts.track === "string" ? opts.track.trim() : "";
+      const files = (existsSync(assessmentsDir) ? readdirSync(assessmentsDir) : [])
+        .filter((file) => /^sch-assessment-.+\.yaml$/.test(file))
+        .filter((file) => !track || file === assessmentFileName(track))
+        .sort();
+
+      if (files.length === 0) {
+        process.stdout.write(
+          track
+            ? `No ${assessmentFileName(track)} found in: ${assessmentsDir}\n`
+            : `No sch-assessment-*.yaml files found in: ${assessmentsDir}\n`,
+        );
+        return;
+      }
+
+      let allOk = true;
+      for (const file of files) {
+        const filePath = join(assessmentsDir, file);
+        try {
+          const doc = loadAssessment(filePath);
+          const collected = collectScope(schedulePath, doc.track);
+          const ok = reportAssessmentValidation(doc, {
+            fileName: file,
+            currentFacts: collected.factsByLocalId,
+          });
+          if (ok) {
+            process.stdout.write(`OK: ${file}\n`);
+          } else {
+            allOk = false;
+          }
+        } catch (error) {
+          process.stdout.write(
+            `ERROR: ${filePath}: ${error instanceof Error ? error.message : String(error)}\n`,
+          );
+          allOk = false;
+        }
+      }
+      if (!allOk) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+}
+
 export function registerScheduleCommands(program: Command): void {
   const sch = program.command("schedule").description("Schedule build commands");
 
@@ -354,4 +624,6 @@ export function registerScheduleCommands(program: Command): void {
       printCommandError(error);
     }
   });
+
+  registerScheduleAssessmentCommands(sch);
 }
