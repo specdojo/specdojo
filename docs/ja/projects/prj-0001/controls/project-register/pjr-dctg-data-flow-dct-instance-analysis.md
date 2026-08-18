@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
+  conclusion: "checkpoint failed: git add -- docs/ja/projects/prj-0001/execution/exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-resu…"
 ---
 
 # PJR-DCTG data-flow等からDCT成果物インスタンスを判定するagentの実装
