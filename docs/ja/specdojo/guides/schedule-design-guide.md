@@ -76,14 +76,15 @@ flowchart LR
 
 Schedule は用途別に4種類のファイルで管理します。
 
-| ファイル                    | 役割                                             |
-| --------------------------- | ------------------------------------------------ |
-| `sch-milestones.yaml`       | プロジェクト全体のマイルストーン計画             |
-| `sch-defaults.yaml`         | 全 Schedule 共通のカレンダーや開始日のデフォルト |
-| `sch-strategy-<track>.yaml` | track schedule の自動生成ルール                  |
-| `sch-track-<track>.yaml`    | 展開済みの Task / Milestone 定義                 |
+| ファイル                                  | 役割                                              |
+| ----------------------------------------- | ------------------------------------------------- |
+| `sch-milestones.yaml`                     | プロジェクト全体のマイルストーン計画              |
+| `sch-defaults.yaml`                       | 全 Schedule 共通のカレンダーや開始日のデフォルト  |
+| `sch-strategy-<track>.yaml`               | track schedule の自動生成ルール                   |
+| `sch-track-<track>.yaml`                  | 展開済みの Task / Milestone 定義                  |
+| `assessments/sch-assessment-<track>.yaml` | 成果物と実践の型の整備状況判定（strategy の入力） |
 
-`sch-strategy-<track>.yaml` は生成入力です。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。
+`sch-strategy-<track>.yaml` は生成入力です。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。整備状況判定は `assessments/` 配下に置き、`sch-*.yaml` を直接読む build 系の処理が strategy / track と取り違えないようにします。
 
 ## 2. sch-trackの生成
 
@@ -318,6 +319,25 @@ sch-track task
 ```
 
 `mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec refresh` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
+
+### 3.5. 実践の型の整備状況判定（`sch-assessment-<track>.yaml`）
+
+phase や owner rule に書く `approach` は、対象成果物と実践の型が実際に使える状態かどうかで変わります。この整備状況判定を `assessments/sch-assessment-<track>.yaml` に残し、strategy を書く前の入力にします。判断は次のとおり分担します。
+
+| 段階     | 担当                                                | 出力                                                                            |
+| -------- | --------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 事実収集 | コード（`schedule assessment scaffold`）            | `facts`（成果物・実践の型の実在、宣言形式、`status`、参照切れ、実装エビデンス） |
+| 意味判断 | エージェント（`schedule assessment prompt` の指示） | `judgment`（4観点の利用可能性とタスク目的 `intent`）                            |
+| 規則適用 | コード（`schedule assessment validate`）            | `recommended_approach`（判定規則の結果と一致することを検証）                    |
+| 承認     | 人間                                                | 判定結果のレビュー、`undecided` の解消、`status` の確定                         |
+
+- 実践の型の解決規則（宣言・`none`・慣例 ID・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
+- 利用可能性は、`target-fit`（対象成果物向けか）、`substantive-content`（空・placeholder 中心でないか）、`internal-consistency`（相互に致命的な矛盾がないか）、`standard-alignment`（現行 rulebook・schema と整合するか）の4観点を根拠付きで評価し、すべて `pass` なら `usable`、1件でも `fail` なら `unusable`、`fail` が無く未確認が残れば `unknown` とします。`status: draft` であること自体は利用不能の根拠になりません。
+- `recommended_approach` は `intent` と利用可能性から決まります。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
+- `bootstrap` は `bootstrap_scope`（一式で初期整備する実践の型）と理由の記載が必要で、対象がすべて利用可能な場合は選べません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
+- 判定できない項目が残る場合は `recommended_approach: undecided` とし、対象 `local_id` を `topic` にした blocking な `open_questions` を必ず添えます。`undecided` のまま strategy を生成しません。
+
+コマンドの使い方は [CLIコマンドリファレンス](../references/command-reference.md) の `schedule assessment（成果物・実践の型の利用可能性判定）`、`approach` ごとの進め方は [実践の進め方ガイド](ryu-guide.md) の `整備状況に応じた進め方（approach）` を参照します。
 
 ## 4. タスク設計の品質
 

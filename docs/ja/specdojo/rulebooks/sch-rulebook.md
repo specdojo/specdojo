@@ -46,7 +46,8 @@ Schedule は「いつ・誰が・どの順で作業するか」を定義する�
 - プロジェクト共通のデフォルト設定（カレンダー・開始日など）は `sch-defaults.yaml` とする。
 - トラックごとのスケジュールは `sch-track-<track>.yaml`、タスク生成戦略は `sch-strategy-<track>.yaml` とする。
 - `<track>` は Schedule の管理トラックを表す安定した識別子とし、Task / Milestone ID の `<TRACK>` と対応させる。
-- 例: `sch-milestones.yaml`, `sch-track-launch.yaml`, `sch-strategy-launch.yaml`
+- トラックごとの整備状況判定は `assessments/sch-assessment-<track>.yaml` とし、`sch-*.yaml` を直接読む処理が strategy / track と取り違えないよう `assessments/` 配下に置く。
+- 例: `sch-milestones.yaml`, `sch-track-launch.yaml`, `sch-strategy-launch.yaml`, `assessments/sch-assessment-launch.yaml`
 
 ### 3.2. Task の `id`
 
