@@ -283,8 +283,9 @@ function walkDir(
   }
   for (const item of items) {
     if (item.startsWith(".")) continue;
-    if (SKIP_DIRS.has(item) || item === "generated") continue;
     const full = join(dir, item);
+    if (SKIP_DIRS.has(item)) continue;
+    if (item === "generated" && !isControlsGeneratedDir(full, rootDir)) continue;
     let st;
     try {
       st = statSync(full);
@@ -296,6 +297,63 @@ function walkDir(
     } else if (FILE_RE.test(item)) {
       scanFile(full, rootDir, repoRoot, collector, nestedMap, locales);
     }
+  }
+}
+
+// generated/ は原則として索引対象外だが、controls 配下の管理ビューは文書 ID の正式な
+// 解決先として扱う。特に project-register/generated/pjr-index.md は個票から生成される
+// プロジェクト登録台帳の本体であり、追跡対象の案内ページを必要としない。
+function isControlsGeneratedDir(dir: string, rootDir: string): boolean {
+  const rel = relative(rootDir, dir).replace(/\\/g, "/");
+  return /(?:^|\/)controls(?:\/[^/]+)*\/generated$/.test(rel);
+}
+
+// index build 単独実行時に controls の生成物が欠落しても、未解決 ID のまま成功させない。
+// 通常の `specdojo build` は register build → index build の順なので、この検査を満たす。
+export function assertControlGeneratedIndexes(rootDir: string): void {
+  const missing: string[] = [];
+
+  const visit = (dir: string): void => {
+    let items: string[];
+    try {
+      items = readdirSync(dir);
+    } catch {
+      return;
+    }
+
+    const rel = relative(rootDir, dir).replace(/\\/g, "/");
+    if (/(?:^|\/)controls\/project-register$/.test(rel)) {
+      const generatedIndex = join(dir, "generated", "pjr-index.md");
+      let valid = false;
+      if (existsSync(generatedIndex)) {
+        try {
+          const id = readSpecdojoNamespace(readFileSync(generatedIndex, "utf8")).id;
+          valid = typeof id === "string" && id.endsWith(":pjr-index");
+        } catch {
+          valid = false;
+        }
+      }
+      if (!valid) missing.push(relative(rootDir, generatedIndex));
+      return;
+    }
+
+    for (const item of items) {
+      if (item.startsWith(".") || SKIP_DIRS.has(item) || item === "generated") continue;
+      const full = join(dir, item);
+      try {
+        if (statSync(full).isDirectory()) visit(full);
+      } catch {
+        // unreadable entries are ignored consistently with the main scanner
+      }
+    }
+  };
+
+  visit(rootDir);
+  if (missing.length > 0) {
+    throw new Error(
+      `Generated project register index is missing or invalid: ${missing.join(", ")}\n` +
+        "Run: specdojo register build before specdojo index build",
+    );
   }
 }
 

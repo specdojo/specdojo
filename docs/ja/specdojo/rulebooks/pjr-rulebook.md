@@ -25,6 +25,7 @@ Project Register Documentation Rules
 - 個票 Frontmatter は、分類、処理状態、優先度、担当、日付、結論の唯一の正本である。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
 - `generated/pjr-index.md` とすべての派生ビューは個票から `register build` で生成し、直接編集しない。
+- `<project-id>:pjr-index` は `generated/pjr-index.md` の文書 ID とする。`controls/**/generated/` はdoc-indexの限定走査対象とし、`register build` の後に `index build` を実行する。
 - 一覧と個票で同じ構造化フィールドを保持・同期する規則は設けない。
 - type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。
 

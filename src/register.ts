@@ -115,9 +115,6 @@ const REGISTER_SECTION_RE = /^## 1\.\s/;
 // 列見出しを所有し、生成処理は行だけを差し込む。列名を定数として持たないことで、
 // 一覧の言語は template 側の差し替えだけで切り替えられる。
 const REGISTER_INDEX_TEMPLATE = "pjr-index-template.md";
-// doc-index が generated/ を走査しなくても `<project-id>:pjr-index` を解決できるよう、
-// 追跡対象として残す案内ページの template。登録項目一覧そのものは引き続き generated/ に置く。
-const REGISTER_INDEX_REFERENCE_TEMPLATE = "pjr-index-reference-template.md";
 
 // ================================
 // Path Resolution
@@ -548,8 +545,8 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
 
   const sourceIndexContent = readFileSync(paths.pjrIndexPath, "utf8");
   const timeZone = paths.registerDateTimeZone;
-  // 移行後の pjr-index.md は文書 ID の解決先となる案内ページであり、旧一覧ではない。
-  // 一覧テーブルを持たない案内ページは、旧一覧が存在しない場合と同じ no-op として扱う。
+  // 旧構成の pjr-index.md が一覧テーブルを持たない参照案内だった場合もある。
+  // その案内ページは、旧一覧が存在しない場合と同じ no-op として扱う。
   if (!locateRegisterTable(sourceIndexContent.split("\n"))) {
     const notMigrated = docs.filter((doc) => !doc.hasRegisterFields);
     if (notMigrated.length > 0) {
@@ -805,10 +802,6 @@ function loadViewTemplate(templateFileName: string, projectId: string): string {
   }
   const raw = readFileSync(templatePath, "utf8");
   return flattenTemplateFrontmatter(raw).replace(/_PROJECT_ID_/g, projectId);
-}
-
-function generateRegisterIndexReference(projectId: string): string {
-  return loadViewTemplate(REGISTER_INDEX_REFERENCE_TEMPLATE, projectId);
 }
 
 // template 本文中の `<!-- specdojo:view-slot=<key> -->` 行を生成テーブルへ置換する。
@@ -1663,8 +1656,8 @@ export function registerRegisterCommands(program: Command): void {
   const reg = program.command("register").description("Project register (pjr-index.md) commands");
 
   // --- scaffold ---
-  // 一覧は generated/ 配下の派生ビューとして生成する。doc-index が generated/ を除外しても
-  // 個票の part_of と wikilink を解決できるよう、追跡対象の pjr-index.md は案内ページにする。
+  // 一覧は generated/ 配下の派生ビューとして生成する。controls/**/generated は doc-index の
+  // 限定的な走査対象なので、一覧自身が個票の part_of と wikilink の解決先になる。
   const scaffoldCmd = reg
     .command("scaffold")
     .description("Initialize the register directory and generate its views");
@@ -1673,10 +1666,8 @@ export function registerRegisterCommands(program: Command): void {
   scaffoldCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      const reference = generateRegisterIndexReference(paths.projectId);
 
       if (opts.dryRun) {
-        process.stdout.write(`=== ${paths.pjrIndexPath} ===\n${reference}\n\n`);
         for (const view of generateDerivedViewFiles(paths, "all")) {
           process.stdout.write(`=== ${view.path} ===\n${view.content}\n\n`);
         }
@@ -1685,11 +1676,6 @@ export function registerRegisterCommands(program: Command): void {
 
       mkdirSync(paths.projectRegisterPath, { recursive: true });
       process.stdout.write(`Created: ${paths.projectRegisterPath}/\n`);
-
-      if (!existsSync(paths.pjrIndexPath)) {
-        writeFileSync(paths.pjrIndexPath, reference, "utf8");
-        process.stdout.write(`Created: ${paths.pjrIndexPath}\n`);
-      }
 
       for (const view of writeDerivedViews(paths, "all")) {
         process.stdout.write(`Generated: ${view.path}\n`);

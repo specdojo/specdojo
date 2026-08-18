@@ -58,7 +58,7 @@ SpecDojo のレビューは次を扱います。
 | review viewpoints | `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する        |
 | 関連成果物        | -                           | 上位・下位・隣接成果物、Schedule、RACI、PJR                             |
 | 機械検証結果      | -                           | lint、schema validation、生成確認、リンク確認                           |
-| 登録簿            | `pjr-index.md`              | 未解決事項、課題、リスク、変更要求、決定の転記先                        |
+| 登録簿            | `generated/pjr-index.md`    | 未解決事項、課題、リスク、変更要求、決定の転記先                        |
 
 ### 1.3. 機械検証とレビューの分担
 

@@ -3,7 +3,12 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import fg from "fast-glob";
-import { buildDocIndex, lookupDocIndex, replaceDocIndexRefs } from "../../src/doc-index.js";
+import {
+  assertControlGeneratedIndexes,
+  buildDocIndex,
+  lookupDocIndex,
+  replaceDocIndexRefs,
+} from "../../src/doc-index.js";
 import type { DocIndex } from "../../src/doc-index.js";
 import { readSpecdojoNamespace } from "../../src/frontmatter-namespace.js";
 
@@ -412,15 +417,23 @@ describe("buildDocIndex", () => {
     }
   });
 
-  it("generated 配下を除外し、nested_id_files を収集する", () => {
+  it("通常の generated は除外し、controls 配下の generated は収集する", () => {
     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
     try {
       const docsRoot = join(repoRoot, "docs");
       mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
       mkdirSync(join(docsRoot, "generated"), { recursive: true });
+      mkdirSync(join(docsRoot, "ja", "projects", "prj-0001", "controls", "generated"), {
+        recursive: true,
+      });
       writeFileSync(
         join(docsRoot, "generated", "ignored.md"),
         "---\nspecdojo:\n  id: ignored-doc\n  type: guide\n  status: draft\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        join(docsRoot, "ja", "projects", "prj-0001", "controls", "generated", "included.md"),
+        "---\nspecdojo:\n  id: controls-generated-doc\n  type: project\n  status: ready\n---\n",
         "utf8",
       );
       writeFileSync(
@@ -455,6 +468,9 @@ describe("buildDocIndex", () => {
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       expect(index.entries["ignored-doc"]).toBeUndefined();
+      expect(index.entries["controls-generated-doc"]).toBe(
+        "docs/ja/projects/prj-0001/controls/generated/included.md",
+      );
       expect(index.entries["viewpoints-root"]).toBe("docs/viewpoints.yaml");
       expect(index.entries["vp-with-path"]).toBe("docs/custom-target.md");
       expect(index.entries["vp-with-line"]).toBe("docs/viewpoints.yaml:5");
@@ -462,10 +478,40 @@ describe("buildDocIndex", () => {
       rmSync(repoRoot, { recursive: true, force: true });
     }
   });
+
+  it("project-register の生成一覧が無ければ index build 用の事前検査で拒否する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      const registerDir = join(
+        docsRoot,
+        "ja",
+        "projects",
+        "prj-0001",
+        "controls",
+        "project-register",
+      );
+      mkdirSync(registerDir, { recursive: true });
+
+      expect(() => assertControlGeneratedIndexes(docsRoot)).toThrow(
+        /Run: specdojo register build before specdojo index build/,
+      );
+
+      mkdirSync(join(registerDir, "generated"), { recursive: true });
+      writeFileSync(
+        join(registerDir, "generated", "pjr-index.md"),
+        "---\nspecdojo:\n  id: prj-0001:pjr-index\n  type: project\n  status: ready\n---\n",
+        "utf8",
+      );
+      expect(() => assertControlGeneratedIndexes(docsRoot)).not.toThrow();
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("prj-0001 project register references", () => {
-  it("個票の part_of と pjr-index wikilink が追跡文書へ解決する", () => {
+  it("個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する", () => {
     const repoRoot = process.cwd();
     const outputDir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
     const indexPath = join(outputDir, "doc-index.json");
@@ -474,7 +520,8 @@ describe("prj-0001 project register references", () => {
     try {
       buildDocIndex(join(repoRoot, "docs"), indexPath, repoRoot);
 
-      const expectedPath = "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md";
+      const expectedPath =
+        "docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md";
       expect(lookupDocIndex(registerId, indexPath)).toBe(expectedPath);
 
       const registerFiles = fg.sync("docs/ja/projects/prj-0001/controls/project-register/*.md", {

@@ -97,10 +97,10 @@ docs/
 │   │   │   │
 │   │   │   ├── controls/                         # 管理台帳・管理ビュー（全ドメイン横断）
 │   │   │   │   ├── project-register/             # 統合管理台帳（正本）
-│   │   │   │   │   ├── pjr-index.md              # プロジェクト登録簿
 │   │   │   │   │   ├── pjr-0001-auth.md          # 登録項目（認証）
 │   │   │   │   │   ├── pjr-0002-payment.md       # 登録項目（決済）
 │   │   │   │   │   └── generated/                # 正本から生成される補助一覧
+│   │   │   │   │       ├── pjr-index.md              # プロジェクト登録台帳・文書IDの解決先
 │   │   │   │   │       ├── pjr-views-by-status.md    # 台帳ビュー（状態別）
 │   │   │   │   │       ├── pjr-views-by-priority.md  # 台帳ビュー（優先度別）
 │   │   │   │   │       └── pjr-views-by-owner.md     # 台帳ビュー（担当者別）

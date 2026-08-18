@@ -150,17 +150,17 @@ groups:
     deliverables:
       - local_id: pjr-index
         name: プロジェクト登録簿
-        kind: control
-        depends_on: []
+        kind: generated
+        depends_on:
+          - pjr-entry
         overview: 識別済み検討項目と対応策を管理（台帳）
-        path: pjr-index.md
+        path: generated/pjr-index.md
         rulebook: specdojo:pjr-rulebook
       - local_id: pjr-entry
         instance_id_pattern: pjr-{sequence}-{term}
         name: プロジェクト登録項目
         kind: control
-        depends_on:
-          - pjr-index
+        depends_on: []
         overview: 識別済み検討項目と対応策を管理（個別課題）
         note: sequence は4桁連番、term は件名の略称（kebab-case）
         rulebook: specdojo:pjr-rulebook

@@ -117,18 +117,17 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     process.exitCode = undefined;
   });
 
-  it("scaffold は追跡対象の参照ページと generated 配下の一覧を作成する", async () => {
+  it("scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない", async () => {
     await withRepo(async ({ registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
       await runRegister(["scaffold"]);
 
-      const reference = readFileSync(join(registerDir, "pjr-index.md"), "utf8");
-      expect(reference).toContain("id: prj-0001:pjr-index");
-      expect(reference).toContain("status: draft");
-      expect(reference).toContain("登録項目一覧: `./generated/pjr-index.md`");
-      expect(reference).not.toContain("## 1. 登録項目一覧");
-      expect(existsSync(join(registerDir, "generated/pjr-index.md"))).toBe(true);
+      expect(existsSync(join(registerDir, "pjr-index.md"))).toBe(false);
+      const generated = readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8");
+      expect(generated).toContain("id: prj-0001:pjr-index");
+      expect(generated).toContain("status: ready");
+      expect(generated).toContain("## 1. 登録項目一覧");
     });
   });
 
@@ -460,7 +459,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
   it("migrate は旧 registered_on / completed_on を UTC の日時へ移し、表示日を変えない", async () => {
     await withRepo(async ({ registerDir }) => {
-      // 一覧の個票化はすでに済んでいる状態（pjr-index.md は表を持たない案内ページ）を入力にする。
+      // 一覧の個票化はすでに済んでいる旧構成（pjr-index.md は表を持たない案内ページ）を入力にする。
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
       writeFileSync(
         ticketPath,

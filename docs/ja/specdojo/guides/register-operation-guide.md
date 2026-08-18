@@ -32,7 +32,7 @@ Register Operation Guide
 プロジェクト登録簿は、プロジェクト立ち上げ時または進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘を一元管理する台帳です。
 
 - 正本は各個票（`pjr-XXXX-<topic>.md`）です。登録項目一覧（`generated/pjr-index.md`）は個票から生成される一覧ビューです。
-- `project-register/pjr-index.md` は、文書 ID `<project-id>:pjr-index` の解決先と生成一覧への導線を維持する追跡対象の案内ページです。登録項目の値は持ちません。
+- 文書 ID `<project-id>:pjr-index` の解決先は `project-register/generated/pjr-index.md` です。`controls/**/generated/` はdoc-indexの限定的な走査対象であり、一覧自身を `[[id]]` で参照できます。
 - 一覧と、状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される派生物であり、直接編集しません。
 - 立ち上げ時は、未整理の問題・判断を `issue` / `question` / `decision` で記録し、合意した成果物カタログの作成を `todo` で追跡できます。
 - 成果物カタログと依存関係に基づく計画済みの作業へ移った後は schedule で管理し、登録簿との二重管理をしません。進行中に発生した計画外の単発対応・調査・判断は、引き続き登録簿で追跡します（[exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
@@ -42,7 +42,6 @@ Register Operation Guide
 ```mermaid
 flowchart LR
   PJR_ITEM["pjr-XXXX-&lt;topic&gt;<br>個別登録項目（正本）"]
-  PJR_REF["project-register<br>pjr-index 参照案内"]
   PJR_IDX["project-register/generated<br>pjr-index 登録項目一覧"]
   PJR_GEN["project-register/generated<br>登録簿内の補助一覧"]
   PM_GEN["controls/generated<br>controls 全体の派生管理ビュー"]
@@ -50,7 +49,6 @@ flowchart LR
   PJR_ITEM --> PJR_IDX
   PJR_ITEM --> PJR_GEN
   PJR_ITEM --> PM_GEN
-  PJR_REF --> PJR_IDX
 
   classDef target stroke-width:4px
   class PJR_ITEM target
@@ -208,9 +206,10 @@ specdojo register build --project <project-id>
 ```
 
 - `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
-- `project-register/pjr-index.md` は追跡対象の案内ページです。個票の `part_of` と本文の wikilink はこの文書 ID を参照し、本文から生成一覧へ移動できます。
+- 個票の `part_of` と本文のwikilinkが参照する `<project-id>:pjr-index` は、生成された `project-register/generated/pjr-index.md` へ解決されます。
 - `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成されます。
 - `generated/` 配下は追跡対象外の生成物です。生成ファイルを手編集しても次回の `register build` で失われるため、内容を直したい場合は個票を修正して再生成します。
+- doc-indexは通常の `generated/` を除外しますが、`controls/**/generated/` だけは文書IDの解決対象に含めます。このため `index build` は `register build` の後に実行します。生成一覧が無い状態で `index build` を単独実行すると、未解決IDを残さず明示エラーになります。
 - 行の並びは表示 ID の昇順に固定されます。同じ個票の集合からは常に同じ内容が生成されます。
 
 一覧・派生ビューのテーブルのタイトル行（列名の行）は、コードではなく `pjr-index-template.md` の「登録項目一覧」テーブルのタイトル行をそのまま継承します。列名を変更したい場合は、生成ファイルを直接編集せず、次を修正してから `register build` で再生成します。

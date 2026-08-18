@@ -37,7 +37,7 @@ SpecDojo は道場のメタファーとして、`specdojo` CLI のコマンド�
 | Schedule                   | `sch-*.yaml`               | `schedule`     |
 | 実行イベント               | `exec/events/*.json`       | `exec`         |
 | 実行生成物                 | `generated/*`              | `exec refresh` |
-| プロジェクト登録簿         | `pjr-index.md`             | `register`     |
+| プロジェクト登録簿         | `generated/pjr-index.md`   | `register`     |
 | 定期実行定義               | `rtn-*.yaml`               | `routine`      |
 | ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`        |
 
@@ -214,8 +214,8 @@ register から成果物カタログへ移す手順は [Quick Startガイド](qu
 
 register は立ち上げ時の未整理事項と進行中の計画外事項を扱い、schedule は成果物カタログから展開した計画済み作業を扱います。Jobは入力ごとに新しい反復作業のRunを生成し、routineはこれらを時刻条件で起動します。コマンドの詳細は [CLIコマンドリファレンス](../references/command-reference.md) を、使い分けは [exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
-| 機能                  | 概要                                                                                                                    |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す  |
-| `exec run --register` | 登録簿（`pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
-| `exec run --job`      | `job-*.yaml`から入力とcheckpointを解決し、一意なJob Runを生成してagentに実行させる                                      |
+| 機能                  | 概要                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す            |
+| `exec run --register` | 登録簿（`generated/pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
+| `exec run --job`      | `job-*.yaml`から入力とcheckpointを解決し、一意なJob Runを生成してagentに実行させる                                                |

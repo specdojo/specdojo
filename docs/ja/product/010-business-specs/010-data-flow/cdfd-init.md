@@ -158,7 +158,7 @@ flowchart LR
 
 ## 5. 個別プロセス主要入出力
 
-`<project-id>`、`<domain>`、`<provider>` は対象プロジェクト、選択した成果物ドメイン、provider に置き換える総称であり、未記入の成果物値ではない。`generated/pjr-index.md` は個票から再生成する派生ビューであり、追跡対象の `pjr-index.md` は同ビューへの案内を担う。本書は初回の受け皿作成だけを正本とし、派生ビューの生成順・上書き・再実行規則は対象外とする。プロセス ID・業務目的・主な担当・起動条件・必須性は「領域内プロセス一覧」を参照する。
+`<project-id>`、`<domain>`、`<provider>` は対象プロジェクト、選択した成果物ドメイン、provider に置き換える総称であり、未記入の成果物値ではない。`generated/pjr-index.md` は個票から再生成する派生ビューであり、登録簿の文書ID解決先も兼ねる。本書は初回の受け皿作成だけを正本とし、派生ビューの生成順・上書き・再実行規則は対象外とする。プロセス ID・業務目的・主な担当・起動条件・必須性は「領域内プロセス一覧」を参照する。
 
 ### 5.1. 必須プロセス（P-01-01〜P-01-03）
 
@@ -168,7 +168,7 @@ config init、register scaffold、catalog scaffold は計画開始に必要な�
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
 | `P-01-01` | config 初期化 | プロジェクト文脈、プロジェクト ID、文書・実行領域の配置方針 | 設定雛形を対象プロジェクト用に確定したプロジェクト構成 | `.specdojo/specdojo.config.json` |
-| `P-01-02` | register scaffold | プロジェクト構成、登録簿の配置方針 | 登録簿領域、追跡対象の案内ページ、初期生成ビュー | `docs/ja/projects/<project-id>/controls/project-register/pjr-index.md`、`generated/pjr-index.md` |
+| `P-01-02` | register scaffold | プロジェクト構成、登録簿の配置方針 | 登録簿領域、文書IDを持つ初期生成ビュー | `docs/ja/projects/<project-id>/controls/project-register/generated/pjr-index.md` |
 | `P-01-03` | catalog scaffold | プロジェクト構成、成果物カタログのテンプレート、プロジェクト規模、対象ドメイン、置換値 | 選択条件を反映したカタログ初期ファイル | `docs/ja/projects/<project-id>/010-deliverables-catalog/dct-<domain>.yaml` |
 
 ### 5.2. 条件付きプロセス（P-01-04・P-01-05）

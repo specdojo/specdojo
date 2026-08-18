@@ -3,6 +3,7 @@ import { type Command } from "commander";
 import { resolve } from "node:path";
 import { loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import {
+  assertControlGeneratedIndexes,
   buildDocIndex,
   lookupDocIndex,
   replaceDocIndexRefs,
@@ -30,6 +31,7 @@ export function registerIndexCommands(program: Command): void {
         const repoRoot = specdojoRootDir();
         const rootDir = resolve(repoRoot, opts.root as string);
         const outputPath = resolve(repoRoot, opts.output as string);
+        assertControlGeneratedIndexes(rootDir);
         const { count } = buildDocIndex(rootDir, outputPath, repoRoot);
         process.stdout.write(`Built index: ${count} entries → ${opts.output}\n`);
       } catch (error) {
@@ -89,6 +91,7 @@ export function registerIndexCommands(program: Command): void {
         const indexPath = resolve(repoRoot, opts.index as string);
         if (opts.build) {
           const rootDir = resolve(repoRoot, opts.root as string);
+          assertControlGeneratedIndexes(rootDir);
           const { count } = buildDocIndex(rootDir, indexPath, repoRoot);
           process.stderr.write(`Built index: ${count} entries → ${opts.index}\n`);
         }

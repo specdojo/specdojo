@@ -47,7 +47,7 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 
 | 観点         | schedule 実行                             | register 実行                                     | routine（トリガー層）                    |
 | ------------ | ----------------------------------------- | ------------------------------------------------- | ---------------------------------------- |
-| 実行対象     | `sch-track-*.yaml` のタスク（依存グラフ） | `pjr-index.md` の項目                             | `rtn-*.yaml` の定義（実体は左の 2 経路） |
+| 実行対象     | `sch-track-*.yaml` のタスク（依存グラフ） | `generated/pjr-index.md` の項目                   | `rtn-*.yaml` の定義（実体は左の 2 経路） |
 | 代表コマンド | `exec run --task` / `exec run --auto`     | `exec run --register`                             | `routine run --due`                      |
 | 起動         | 人、または routine（`kind: exec-auto`）   | 人、または routine（`kind: register`）            | 外部スケジューラ（cron / CI）            |
 | 状態追跡     | exec events（claim / complete / block）   | register の遷移（in-progress / review / waiting） | `last_run` の記録のみ                    |
