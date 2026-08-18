@@ -13,6 +13,7 @@ import { registerJobCommands } from "./job.js";
 import { registerWatchCommand } from "./watch.js";
 import { registerBuildCommand } from "./build-command.js";
 import { registerYamlPagesCommands } from "./yaml-pages-command.js";
+import { registerDashboardCommands } from "./dashboard.js";
 
 async function main(): Promise<void> {
   const program = new Command();
@@ -33,6 +34,7 @@ async function main(): Promise<void> {
   registerWatchCommand(program);
   registerBuildCommand(program);
   registerYamlPagesCommands(program);
+  registerDashboardCommands(program);
 
   await program.parseAsync(process.argv);
 }

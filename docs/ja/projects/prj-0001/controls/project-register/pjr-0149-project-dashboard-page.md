@@ -34,19 +34,25 @@ Schedule進捗、Timelineのトラック順序計画、register登録・消化�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                           | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | Schedule、Timeline、register、routineの表示項目を定義する                                      | ARC  | open | -    |
-| 2   | 機械可読な正本・JSONを入力とする集計方法を設計する                                             | ARC  | open | -    |
-| 3   | Scheduleの既存Gantt chartと、推定稼働日数から予定日付を算出するTimeline用Gantt chartを設計する | ARC  | open | -    |
-| 4   | routine定義と状態ファイルから最終実行・実行結果・due状況を算出する                             | ARC  | open | -    |
-| 5   | 全プロジェクト共通のダッシュボード生成機能と、プロジェクトごとのページ生成を実装する           | ARC  | open | -    |
-| 6   | VitePressサイドバーへ各プロジェクトのダッシュボード導線を自動追加する                          | ARC  | open | -    |
-| 7   | `prj-0001` でダッシュボードの内容、Gantt chart、サイドバー導線を表示確認する                   | ARC  | open | -    |
+| No  | 作業                                                                                           | 担当 | 状態 | メモ                                     |
+| --- | ---------------------------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
+| 1   | Schedule、Timeline、register、routineの表示項目を定義する                                      | ARC  | done | ダッシュボードの4セクションとして実装    |
+| 2   | 機械可読な正本・JSONを入力とする集計方法を設計する                                             | ARC  | done | Markdown文言を解析せず正本を直接集計     |
+| 3   | Scheduleの既存Gantt chartと、推定稼働日数から予定日付を算出するTimeline用Gantt chartを設計する | ARC  | done | 日付軸SVGと稼働日計算を実装              |
+| 4   | routine定義と状態ファイルから最終実行・実行結果・due状況を算出する                             | ARC  | done | interval・cronのdue判定を共通関数で算出  |
+| 5   | 全プロジェクト共通のダッシュボード生成機能と、プロジェクトごとのページ生成を実装する           | ARC  | done | `dashboard build` と統合build stepを追加 |
+| 6   | VitePressサイドバーへ各プロジェクトのダッシュボード導線を自動追加する                          | ARC  | done | 固定表示名と表示順を追加                 |
+| 7   | `prj-0001` でダッシュボードの内容、Gantt chart、サイドバー導線を表示確認する                   | ARC  | done | 生成とVitePress buildで確認              |
 
 ## 4. 対応結果
 
--
+- `specdojo dashboard build --project <project-id>` を追加し、各プロジェクトの `execution/generated/dashboard.md` と `dashboard-timeline-gantt.svg` を生成できるようにした。共通の `specdojo build` にも `dashboard` scopeを追加した。
+- Scheduleは `state.json` / `ready.json`、Timelineは `tml-index.yaml`、registerは個票Frontmatter、routineは `rtn-*.yaml` / `routine-state.json` を直接読み、MarkdownやCLI表示文言に依存せず集計する構成にした。
+- `tml-index.yaml` の `planned_start_date` とScheduleの稼働日カレンダーを正本として、トラックの推定稼働日数、wave、依存関係から予定開始日・予定終了日を算出し、日付軸のGantt SVGを生成するようにした。
+- 稼働日加算で非稼働日にカーソルが進まない無限ループを修正した。空の稼働曜日、不正日付を即時エラーにし、Vitestのworker数を2に制限して再発時の資源枯渇を抑止した。
+- routineのcron due判定では `last_run` ではなく機械可読な `last_scheduled_for` を使用するようにした。
+- VitePressサイドバーに「ダッシュボード」（order 60）を追加した。`prj-0001` のダッシュボードを再生成し、VitePress buildでページと導線を確認した。
+- 型検査、対象テスト43件、全unitテスト1,049件、Timeline schema検証、catalog validate、VitePress buildが成功した。catalog validateの既存未生成文書に関するwarningと、VitePressの既存chunk size・cron highlighting warningのみが残る。
 
 ## 5. 関連ドキュメント
 

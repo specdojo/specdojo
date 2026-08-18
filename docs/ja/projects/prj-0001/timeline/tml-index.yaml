@@ -6,6 +6,11 @@ rulebook: specdojo:tml-rulebook
 version: 1
 project_id: prj-0001
 
+# タイムライン用ガントチャートの横軸（日付）の起点。各トラックの予定開始日・終了日は、
+# この planned_start_date と catalog_duration_estimate_days（推定稼働日数）を、稼働日カレンダー
+# （正本は schedule/sch-defaults.yaml の calendar、復用元）で算出する。初期案。
+planned_start_date: "2026-05-24"
+
 # 着手前に人間が決めるトラック粒度のマクロな順序計画。
 # order / parallel_group / depends_on の値は track-design-guide.md の
 # 「トラックの標準的な実行順序」（ウォーターフォールの段階分け）と、

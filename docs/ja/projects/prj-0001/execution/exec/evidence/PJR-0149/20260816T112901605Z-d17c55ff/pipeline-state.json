@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0149",
+  "run_id": "20260816T112901605Z-d17c55ff",
+  "updated_at": "2026-08-16T16:26:30.056Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "qwen-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-16T11:29:01.605Z",
+      "completed_at": "2026-08-16T16:26:30.056Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0149/20260816T112901605Z-d17c55ff/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "qwen-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  }
+}

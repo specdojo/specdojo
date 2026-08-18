@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  addWorkingDaysToDate,
   addWorkingDayOffset,
   buildWorkingTaskSegments,
+  countWorkingDaysBetween,
   dateForWorkingOffset,
   isWorkingDateUtc,
   ganttChartPositionX,
@@ -73,6 +75,13 @@ describe("addWorkingDayOffset", () => {
     const actual = addWorkingDayOffset("2026-01-02", 1, calendar);
     expect(actual.toISOString()).toBe("2026-01-06T00:00:00.000Z");
   });
+
+  it("有効な稼働曜日がなければ無限ループせずエラーにする", () => {
+    const calendar = makeCalendar({ workdays: new Set() });
+    expect(() => addWorkingDayOffset("2026-01-02", 1, calendar)).toThrow(
+      "calendar.workdays must contain at least one weekday",
+    );
+  });
 });
 
 describe("buildWorkingTaskSegments", () => {
@@ -138,5 +147,39 @@ describe("ganttChartStartDate", () => {
 
   it("startDate がなければ 2000-01-01 を返す", () => {
     expect(ganttChartStartDate(null).toISOString()).toBe("2000-01-01T00:00:00.000Z");
+  });
+});
+
+describe("addWorkingDaysToDate", () => {
+  it("週末を跨いでもカーソルを進め、指定した稼働日数を加算する", () => {
+    expect(addWorkingDaysToDate("2026-01-02", 2, makeCalendar())).toBe("2026-01-06");
+  });
+
+  it("翌稼働日が休日ならさらに次の稼働日まで進める", () => {
+    const calendar = makeCalendar({ holidays: new Set(["2026-01-05"]) });
+    expect(addWorkingDaysToDate("2026-01-02", 1, calendar)).toBe("2026-01-06");
+  });
+
+  it("有効な稼働曜日がなければ無限ループせずエラーにする", () => {
+    const calendar = makeCalendar({ workdays: new Set() });
+    expect(() => addWorkingDaysToDate("2026-01-02", 1, calendar)).toThrow(
+      "calendar.workdays must contain at least one weekday",
+    );
+  });
+
+  it("不正な日付ならエラーにする", () => {
+    expect(() => addWorkingDaysToDate("2026-02-30", 1, makeCalendar())).toThrow(
+      "invalid date-only value",
+    );
+  });
+});
+
+describe("countWorkingDaysBetween", () => {
+  it("開始日と終了日を含めず、間にある稼働日だけを数える", () => {
+    expect(countWorkingDaysBetween("2026-01-05", "2026-01-09", makeCalendar())).toBe(3);
+  });
+
+  it("週末を除外して数える", () => {
+    expect(countWorkingDaysBetween("2026-01-02", "2026-01-06", makeCalendar())).toBe(1);
   });
 });

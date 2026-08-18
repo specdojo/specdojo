@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { readYaml } from "./exec-shared.js";
+import { normalizeDateOnly, readYaml } from "./exec-shared.js";
 
 export type CatalogStatus = "not_started" | "draft" | "primary";
 
@@ -20,6 +20,9 @@ export type TimelineIndex = {
   project_id: string;
   status: string;
   tracks: TimelineTrackPlan[];
+  // トラックの予定開始日・終了日を算出する計画開始日（機械可読正本）。ダッシュボードの
+  // タイムライン用 Gantt chart の横軸（日付）の起点になる。
+  planned_start_date?: string;
 };
 
 // 1 つの着手単位。同じ wave のトラックは並行して着手できる。
@@ -160,12 +163,24 @@ export function loadTimelineIndex(filePath: string): { index: TimelineIndex; err
     if (track) tracks.push(track);
   });
 
+  // 計画開始日は YYYY-MM-DD に正規化する。不正な値はエラーとして報告し、未設定とみなす。
+  let plannedStartDate: string | undefined;
+  if (parsed.planned_start_date !== undefined && parsed.planned_start_date !== null) {
+    const normalized = normalizeDateOnly(parsed.planned_start_date);
+    if (!normalized) {
+      errors.push("planned_start_date: must be a YYYY-MM-DD date");
+    } else {
+      plannedStartDate = normalized;
+    }
+  }
+
   return {
     index: {
       id: typeof parsed.id === "string" ? parsed.id : "",
       project_id: typeof projectId === "string" ? projectId : "",
       status: typeof parsed.status === "string" ? parsed.status : "",
       tracks,
+      ...(plannedStartDate !== undefined ? { planned_start_date: plannedStartDate } : {}),
     },
     errors,
   };

@@ -43,6 +43,10 @@ properties:
   notes:
     type: string
     description: "Optional file-level notes."
+  planned_start_date:
+    type: string
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Planned start date (YYYY-MM-DD) used as the x-axis origin of the dashboard Timeline Gantt chart. Each track's planned start/finish is derived from this date and catalog_duration_estimate_days using the Schedule calendar."
   tracks:
     type: array
     minItems: 1

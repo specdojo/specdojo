@@ -11,7 +11,7 @@ import {
 } from "./exec-shared.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 
-function defaultScheduleCalendar(): ScheduleCalendar {
+export function defaultScheduleCalendar(): ScheduleCalendar {
   return {
     timezone: "UTC",
     workdays: new Set([1, 2, 3, 4, 5]),
@@ -43,7 +43,10 @@ function cloneScheduleCalendar(calendar: ScheduleCalendar): ScheduleCalendar {
   };
 }
 
-function applyScheduleCalendar(base: ScheduleCalendar, calendar: unknown): ScheduleCalendar | null {
+export function applyScheduleCalendar(
+  base: ScheduleCalendar,
+  calendar: unknown,
+): ScheduleCalendar | null {
   if (!calendar || typeof calendar !== "object") return null;
 
   const cal = calendar as Record<string, unknown>;

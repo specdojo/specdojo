@@ -27,6 +27,7 @@ export function isWorkingDateUtc(dt: Date, calendar: ScheduleCalendar): boolean 
 }
 
 function advanceToNextWorkingInstantUtc(dt: Date, calendar: ScheduleCalendar): void {
+  assertCalendarHasWorkingDay(calendar);
   while (true) {
     if (!isWorkingDateUtc(dt, calendar)) {
       dt.setUTCDate(dt.getUTCDate() + 1);
@@ -165,4 +166,72 @@ export function ganttChartPositionX(
 
 export function ganttChartStartDate(startDate: string | null): Date {
   return ganttChartAnchorDate(startDate);
+}
+
+function parseDateOnlyUtc(dateOnly: string): Date {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOnly)) {
+    throw new Error(`invalid date-only value: ${dateOnly}`);
+  }
+
+  const [year, month, day] = dateOnly.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+  if (formatDateOnlyUtc(parsed) !== dateOnly) {
+    throw new Error(`invalid date-only value: ${dateOnly}`);
+  }
+  return parsed;
+}
+
+function assertCalendarHasWorkingDay(calendar: ScheduleCalendar): void {
+  if (![...calendar.workdays].some((day) => Number.isInteger(day) && day >= 0 && day <= 6)) {
+    throw new Error("calendar.workdays must contain at least one weekday");
+  }
+}
+
+// 計画開始日（yyyy-mm-dd）から推定稼働日数を暦日へ伸ばした予定終了日（yyyy-mm-dd）を返す。
+// 稼働日のみ数え、休日・週末は飛ばす。dayOffset <= 0 の場合 start 当日を返す。
+// 用途: Timeline 用 Gantt chart の各トラックの予定開始日・予定終了日の算出。
+export function addWorkingDaysToDate(
+  startDate: string,
+  dayOffset: number,
+  calendar: ScheduleCalendar,
+): string {
+  if (!Number.isFinite(dayOffset) || dayOffset <= 0) return startDate;
+  assertCalendarHasWorkingDay(calendar);
+
+  const target = parseDateOnlyUtc(startDate);
+  let remaining = Math.round(dayOffset);
+  while (remaining > 0) {
+    const next = new Date(target.getTime() + 86_400_000);
+    if (!Number.isFinite(next.getTime())) {
+      throw new Error(`working-day calculation exceeded the supported date range: ${startDate}`);
+    }
+
+    // 非稼働日でもカーソルは必ず進める。進めないと週末・休日で無限ループになる。
+    target.setTime(next.getTime());
+    if (isWorkingDateUtc(next, calendar)) {
+      remaining -= 1;
+    }
+  }
+  return formatDateOnlyUtc(target);
+}
+
+// 開始日・終了日を含めず、2 つの日付間にある稼働日数を返す。target <= start なら 0。
+export function countWorkingDaysBetween(
+  startDate: string,
+  targetDate: string,
+  calendar: ScheduleCalendar,
+): number {
+  const cursor = parseDateOnlyUtc(startDate);
+  const endMs = parseDateOnlyUtc(targetDate).getTime();
+  if (endMs <= cursor.getTime()) return 0;
+  assertCalendarHasWorkingDay(calendar);
+
+  let count = 0;
+  while (true) {
+    const next = new Date(cursor.getTime() + 86_400_000);
+    if (next.getTime() >= endMs) break;
+    if (isWorkingDateUtc(next, calendar)) count += 1;
+    cursor.setTime(next.getTime());
+  }
+  return count;
 }
