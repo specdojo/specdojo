@@ -85,7 +85,8 @@ flowchart LR
 flowchart TD
     A["人間がtml-index.yamlを更新<br/>（トラック追加・順序見直し・catalog_status変更）"] --> B["specdojo timeline build"]
     B --> C{"catalog-scaffold.mdに<br/>対象があるか"}
-    C -->|"あり"| D["specdojo catalog scaffold --domain <domain>"]
+    C -->|"あり"| P["specdojo catalog plan prompt / scaffold --domain <domain><br/>（agent判定→dct-plan-<domain>.yaml）"]
+    P --> D["specdojo catalog scaffold --domain <domain>"]
     D --> E["成果物カタログをdraft→primaryへ完成させる"]
     C -->|"なし"| E
     E --> F["tml-index.yamlのcatalog_statusをprimaryへ更新"]
@@ -107,6 +108,24 @@ flowchart TD
 ### 3.1. 既にSchedule展開済みのトラックの扱い
 
 `tml-index.yaml` の導入前から `sch-strategy-<track>.yaml` が存在し実行が始まっているトラックは、`catalog_status: primary` と `depends_on` をその実績に合わせて追認的に記載します。Timeline は実行結果を書き戻す文書ではないため（[タイムライン作成ルール](../rulebooks/tml-rulebook.md) の禁止事項を参照）、進捗率や実際の着手日は書かず、順序判断の根拠は `note` に残します。この場合、`timeline build` を実行しても当該トラックの `catalog-scaffold.md` 対象は 0 件になりますが、まだ着手していない後続トラックの wave 算出・整合性検証には引き続き意味があります。
+
+### 3.2. 成果物インスタンス判定（`dct-plan-<domain>.yaml`）の位置づけ
+
+`catalog-scaffold.md` が示すドメインは、テンプレートに何が必要かが決まっていても、そのドメインで実際に何件の成果物インスタンスが要るかまでは決まっていません。この判定を agent に任せ、結果を機械可読な `dct-plan-<domain>.yaml` として残します。責務は次のとおり分担します。
+
+| 段階         | 担当                                          | 出力                                                       |
+| ------------ | --------------------------------------------- | ---------------------------------------------------------- |
+| 着手対象提示 | Timeline（`timeline build`）                  | `catalog-scaffold.md`（未作成カタログのドメイン一覧）      |
+| 意味判断     | agent（`catalog plan`）                       | `dct-plan-<domain>.yaml`（インスタンス・根拠・未確定事項） |
+| 構造生成     | コード（`catalog scaffold` とジェネレーター） | `dct-<domain>.yaml`                                        |
+| 状態更新     | 人間                                          | `tml-index.yaml` の `catalog_status`                       |
+
+- agent は成果物インスタンスの要否、placeholder 値、採用しない候補、未確定事項の整理だけを担当します。ID・パス・`groups`・`done_criteria` の組み立てと schema 適合はコード側の責務です。
+- 判定は Timeline が着手対象として示したドメインに限定し、入力は data-flow を中心とした上流成果物と、既存カタログがある場合はその基準線に限定します。
+- 判定計画が保存されても `catalog_status` は自動では変わりません。`primary` への昇格は、生成された成果物カタログを人間が確認してから `tml-index.yaml` を更新します。
+- 再判定時は既存の判定計画を無条件に置き換えず、差分をレビューしてから `--force` で更新します。
+
+具体的なコマンドと検証内容は [CLIコマンドリファレンス](../references/command-reference.md) の `catalog plan（成果物インスタンスの判定）`、記述ルールは [成果物カタログ（ドメイン別）作成ルール](../rulebooks/dct-rulebook.md) の `成果物カタログ判定計画（dct-plan-<domain>.yaml）` を参照します。
 
 ## 4. `track-design-guide.md` との関係
 

@@ -1,0 +1,28 @@
+PJR-DCTG の実装を完了しました。
+
+## 変更ファイル
+
+**新規**
+
+- `docs/specdojo/schemas/v1/dct-plan.schema.yaml` — `dct-plan-<domain>.yaml` の schema（project ID / domain / template / 入力文書 / `iteration_pattern` / `variables` / 成果物インスタンス / 除外候補 / 未確定事項 / 判定理由 / confidence。`additionalProperties: false` で自由文とカタログ構造の混入を禁止）
+- `src/catalog-plan.ts` — 正準配置（カタログ配下 `plans/`）、schema 検証（Ajv2020）、意味検証（template 対応・placeholder 解決・パターンA/B・`local_id` 重複・`depends_on` 解決）、入力解決、骨組み生成、キー順固定の直列化、行差分、既存 plan 保護つき書き込み
+- `src/catalog-plan-prompt.ts` — data-flow と DCT template を入力にする agent 指示の生成（出力先・schema・入力一覧・判定手順・禁止事項・検証コマンド）
+- `tests/src/catalog-plan.test.ts`（41件）、`tests/src/catalog-plan-command.test.ts`（10件）
+
+**変更**
+
+- `src/catalog.ts` — `catalog plan prompt|scaffold|validate` を追加、`catalog where` に plans パスを追加
+- `src/exec-plans.ts` / `src/watch.ts` — 再帰走査が `plans/dct-plan-*.yaml` をカタログとして誤読しないよう除外
+- `tests/src/exec-deliverable.test.ts` — 上記除外の回帰テスト
+- `docs/ja/specdojo/references/command-reference.md`（`catalog plan` の節）、`docs/ja/specdojo/guides/timeline-design-guide.md`（判定の位置づけ・責務分担）、`docs/ja/specdojo/rulebooks/dct-rulebook.md`（判定計画の記述ルールと禁止事項）、`docs/ja/specdojo/references/directory-layout-reference.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md` — 作業内容の状態と対応結果（ステータス項目は未変更）
+
+## 申し送り
+
+- `package.json` への `validate:schema:dct-plan` script 追加はサンドボックス権限により未実施。当面は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data "docs/ja/**/plans/dct-plan-*.yaml" --allow-empty` または `specdojo catalog plan validate` を使用（コマンドリファレンスに記載済み）。
+- `dct-plan-<domain>.yaml` の実インスタンスは agent 判定の実行結果のため本タスクでは作成していない（仕組みの提供までが範囲）。
+- `npm run test:unit` 初回実行時の `doc-index.test.ts` 失敗は gitignore 対象の `generated/` 未生成に起因する既存事象で、`register build` 後は全件成功。
+
+<specdojo_executor_evidence>
+{"final_message":"dct-plan-<domain>.yaml の schema・正準配置（catalog/plans/）・agent 指示生成・schema/意味検証・既存 plan 保護と差分表示を実装し、catalog plan prompt|scaffold|validate を追加。plans/ をカタログ走査から除外し、unit/CLI テスト51件と関連ドキュメント（command-reference / timeline-design-guide / dct-rulebook / directory-layout-reference）および個票を更新した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit エラーなし"},{"command":"npx eslint src/catalog-plan.ts src/catalog-plan-prompt.ts src/catalog.ts src/exec-plans.ts src/watch.ts tests/src/catalog-plan.test.ts tests/src/catalog-plan-command.test.ts tests/src/exec-deliverable.test.ts","status":"passed","summary":"ESLint 指摘なし"},{"command":"npm run test:unit","status":"passed","summary":"78ファイル1102件すべて成功（新規51件を含む）"},{"command":"npx prettier --write <変更ファイル>","status":"passed","summary":"ts/yaml/md を整形（差分適用済み）"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/timeline-design-guide.md docs/ja/specdojo/rulebooks/dct-rulebook.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md","status":"passed","summary":"エラーなし"},{"command":"npx remark <変更md> --quiet --frail","status":"passed","summary":"frontmatter 検査エラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"exit 0（既存の based_on WARN のみ）"},{"command":"npx tsx src/specdojo.ts catalog build --project prj-0001","status":"passed","summary":"generated/dct-*.md 再生成に成功"},{"command":"npx tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"個票変更後の登録簿生成に成功"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1228 entries、ID 重複なし"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data \"docs/ja/**/plans/dct-plan-*.yaml\" --allow-empty","status":"passed","summary":"対象ファイル未作成のため skip（schema 読み込みは成功）"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴ファイルのリンク記法違反なし"},{"command":"npm run test:integration","status":"not_run","summary":"executor 範囲外（親 runner が実行）"}]}
+</specdojo_executor_evidence>

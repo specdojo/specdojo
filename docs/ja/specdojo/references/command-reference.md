@@ -97,6 +97,48 @@ specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.ya
 
 `deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [遂行の技活用ガイド](../guides/waza-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
 
+### 3.1. catalog plan（成果物インスタンスの判定）
+
+`catalog plan` は、data-flow 等の上流成果物からどの成果物インスタンスが必要かを agent が判定した結果（`dct-plan-<domain>.yaml`）を扱います。判定結果はカタログディレクトリ配下の `plans/` に保存し、後続の決定論的ジェネレーターの入力にします。
+
+| コマンド                | 用途                                                          | 例                                                                     |
+| ----------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `catalog plan prompt`   | agent へ渡す判定指示（入力文書・出力規約）を出力する          | `specdojo catalog plan prompt --project prj-0001 --domain data-flow`   |
+| `catalog plan scaffold` | 判定計画の骨組みを作る、または agent の判定結果を検証保存する | `specdojo catalog plan scaffold --project prj-0001 --domain data-flow` |
+| `catalog plan validate` | 保存済みの `dct-plan-*.yaml` を検証する                       | `specdojo catalog plan validate --project prj-0001`                    |
+
+主要オプション:
+
+| オプション          | 用途                                                       |
+| ------------------- | ---------------------------------------------------------- |
+| `--domain <domain>` | 対象ドメインを指定する（`prompt` / `scaffold` は必須）     |
+| `--input <path>`    | data-flow 以外の上流成果物を入力として明示する（反復可能） |
+| `--from <path>`     | agent が出力した判定計画を検証して正準パスへ保存する       |
+| `--out <path>`      | `catalog plan prompt` の出力をファイルへ書き出す           |
+| `--dry-run`         | 書き込まずに差分を表示する                                 |
+| `--force`           | 既存の判定計画を上書きする                                 |
+
+運用手順は次のとおりです。
+
+```bash
+specdojo catalog plan prompt --project prj-0001 --domain data-flow --out logs/dct-plan-prompt.md
+# 上記の指示で agent に判定させ、出力 YAML を保存先候補へ書き出す
+specdojo catalog plan scaffold --project prj-0001 --domain data-flow --from <agent-output>.yaml
+specdojo catalog plan validate --project prj-0001 --domain data-flow
+```
+
+`catalog plan scaffold` は、`--from` を省略すると入力文書と未確定事項だけを埋めた骨組みを作ります。既存の判定計画がある場合は上書きせず、差分を表示して終了します。上書きは `--force` で明示します。
+
+判定に使う data-flow 成果物が 1 件も無いドメインでは、`--input` で上流成果物を明示しない限りエラーで終了します。`trash/` へ移動した非推奨成果物は入力に含めません。既に `dct-<domain>.yaml` があるドメインでは、既存カタログを基準線として入力に記録し、差分レビューを促す警告を出します。
+
+検証では、スキーマ適合に加えて、template との対応、placeholder の解決、パターンA / パターンBの整合、`local_id` の重複、`depends_on` の解決を確認します。未解決の placeholder や根拠の無い判断はエラーになり、`open_questions` へ移すよう促されます。スキーマ単体で検証する場合は次を実行します。
+
+```bash
+npm run validate:schema:file -- \
+  --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml \
+  --data "docs/ja/**/plans/dct-plan-*.yaml" --allow-empty
+```
+
 ## 4. schedule
 
 `schedule` は `sch-strategy-<track>.yaml` から `sch-track-<track>.yaml` を生成します。

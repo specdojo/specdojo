@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DCTG",
+  "run_id": "20260818T151748980Z-5485bec4",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-18T15:17:48.980Z",
+    "completed_at": "2026-08-18T15:36:58.178Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/watch.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/dct-plan.schema.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/catalog-plan-prompt.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/catalog-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/catalog-plan-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/catalog-plan.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../pjr-dctg-data-flow-dct-instance-analysis.md    |  25 +-\n docs/ja/specdojo/guides/timeline-design-guide.md   |  21 +-\n docs/ja/specdojo/references/command-reference.md   |  42 +++\n .../references/directory-layout-reference.md       |   2 +\n docs/ja/specdojo/rulebooks/dct-rulebook.md         |  37 ++-\n src/catalog.ts                                     | 341 ++++++++++++++++++++-\n src/exec-plans.ts                                  |  15 +-\n src/watch.ts                                       |   5 +-\n tests/src/exec-deliverable.test.ts                 |  24 ++\n 9 files changed, 483 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit エラーなし"
+    },
+    {
+      "command": "npx eslint src/catalog-plan.ts src/catalog-plan-prompt.ts src/catalog.ts src/exec-plans.ts src/watch.ts tests/src/catalog-plan.test.ts tests/src/catalog-plan-command.test.ts tests/src/exec-deliverable.test.ts",
+      "status": "passed",
+      "summary": "ESLint 指摘なし"
+    },
+    {
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "78ファイル1102件すべて成功（新規51件を含む）"
+    },
+    {
+      "command": "npx prettier --write <変更ファイル>",
+      "status": "passed",
+      "summary": "ts/yaml/md を整形（差分適用済み）"
+    },
+    {
+      "command": "npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/timeline-design-guide.md docs/ja/specdojo/rulebooks/dct-rulebook.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "command": "npx remark <変更md> --quiet --frail",
+      "status": "passed",
+      "summary": "frontmatter 検査エラーなし"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "exit 0（既存の based_on WARN のみ）"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "generated/dct-*.md 再生成に成功"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票変更後の登録簿生成に成功"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1228 entries、ID 重複なし"
+    },
+    {
+      "command": "npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data \"docs/ja/**/plans/dct-plan-*.yaml\" --allow-empty",
+      "status": "passed",
+      "summary": "対象ファイル未作成のため skip（schema 読み込みは成功）"
+    },
+    {
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴ファイルのリンク記法違反なし"
+    },
+    {
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "executor 範囲外（親 runner が実行）"
+    }
+  ],
+  "final_message": "dct-plan-<domain>.yaml の schema・正準配置（catalog/plans/）・agent 指示生成・schema/意味検証・既存 plan 保護と差分表示を実装し、catalog plan prompt|scaffold|validate を追加。plans/ をカタログ走査から除外し、unit/CLI テスト51件と関連ドキュメント（command-reference / timeline-design-guide / dct-rulebook / directory-layout-reference）および個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-DCTG/20260818T151748980Z-5485bec4/executor.log",
+      "bytes": 5371,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DCTG",
+  "run_id": "20260818T151748980Z-5485bec4",
+  "updated_at": "2026-08-18T15:38:23.193Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-18T15:17:48.980Z",
+      "completed_at": "2026-08-18T15:36:58.269Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-DCTG/20260818T151748980Z-5485bec4/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-08-18T15:36:58.269Z",
+      "completed_at": "2026-08-18T15:38:23.193Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151719Z-2457-result.md"
+    }
+  }
+}

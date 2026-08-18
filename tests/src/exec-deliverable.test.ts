@@ -93,6 +93,30 @@ describe("resolveDeliverableTarget", () => {
       /deliverable not found: nope/,
     );
   });
+
+  it("ignores agent judgment plans under plans/ that share the dct- prefix", () => {
+    const catalogPath = setupCatalog();
+    mkdirSync(join(catalogPath, "plans"), { recursive: true });
+    writeFileSync(
+      join(catalogPath, "plans/dct-plan-alpha.yaml"),
+      [
+        "id: prj-test:dct-plan-alpha",
+        "type: project",
+        "status: draft",
+        "title: judgment plan",
+        "rulebook: none",
+        "schema_version: 1",
+        "project_id: prj-test",
+        "domain: alpha",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+
+    const result = resolveDeliverableTarget(catalogPath, "only-a");
+
+    expect(result.domain).toBe("alpha");
+  });
 });
 
 describe("generateDeliverablePlan", () => {
