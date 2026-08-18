@@ -455,6 +455,7 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   "critical-path": { text: "クリティカルパス", order: 30 },
   cpm: { text: "クリティカルパス分析", order: 40 },
   "schedule-diff": { text: "スケジュール差分", order: 50 },
+  dashboard: { text: "ダッシュボード", order: 60 },
 };
 
 // グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。

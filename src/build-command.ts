@@ -8,7 +8,7 @@ import { selfRunArgs } from "./spawn-self.js";
 // Types
 // ================================
 
-type BuildScope = "exec" | "catalog" | "register" | "yaml-pages" | "index" | "all";
+type BuildScope = "exec" | "catalog" | "register" | "yaml-pages" | "dashboard" | "index" | "all";
 
 type StepDef = {
   scope: Exclude<BuildScope, "all">;
@@ -16,7 +16,15 @@ type StepDef = {
   subArgs: string[];
 };
 
-const VALID_SCOPES: BuildScope[] = ["exec", "catalog", "register", "yaml-pages", "index", "all"];
+const VALID_SCOPES: BuildScope[] = [
+  "exec",
+  "catalog",
+  "register",
+  "yaml-pages",
+  "dashboard",
+  "index",
+  "all",
+];
 
 // ================================
 // Step Resolution
@@ -26,7 +34,7 @@ function isStepApplicable(
   scope: Exclude<BuildScope, "all">,
   project: SpecDojoProjectConfig | undefined,
 ): boolean {
-  if (scope === "index" || scope === "yaml-pages") return true;
+  if (scope === "yaml-pages" || scope === "index") return true;
   if (!project) return false;
   switch (scope) {
     case "exec":
@@ -35,6 +43,9 @@ function isStepApplicable(
       return !!project.catalog_path?.trim();
     case "register":
       return !!project.project_register_path?.trim();
+    case "dashboard":
+      // タスク実行中（execution_path 指定）のプロジェクトのみ。execution/generated/ に集約する。
+      return !!project.execution_path?.trim();
   }
 }
 
@@ -63,6 +74,14 @@ function resolveSteps(
       scope: "yaml-pages",
       label: "yaml-pages build",
       subArgs: ["yaml-pages", "build"],
+    },
+    // dashboard は execution/generated/dashboard.md + timeline Gantt SVG を生成する。
+    // state.json / ready.json（exec refresh）と tml-index / rtn-*.yaml / routine-state.json
+    // （routines）を機械可読な入力で集約するため、index build の手前に置く。
+    {
+      scope: "dashboard",
+      label: "dashboard build",
+      subArgs: ["dashboard", "build", ...projectArgs],
     },
     {
       scope: "index",
@@ -95,7 +114,9 @@ function logError(msg: string): void {
 export function registerBuildCommand(program: Command): void {
   program
     .command("build")
-    .description("Run all build steps in sequence (exec → catalog → register → yaml-pages → index)")
+    .description(
+      "Run all build steps in sequence (exec → catalog → register → yaml-pages → dashboard → index)",
+    )
     .option("--project <id>", "Project ID (specdojo.config.json)")
     .option("--scope <scope>", `Build scope: ${VALID_SCOPES.join(" | ")}`, "all")
     .option("--dry-run", "Print commands without executing", false)

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0149",
+  "run_id": "20260816T112901605Z-d17c55ff",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-08-16T11:29:01.605Z",
+    "completed_at": "2026-08-16T16:26:29.933Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/timeline/tml-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/tml-index.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/build-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-calendar.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard-calendar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard.smoke.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": "docs/ja/projects/prj-0001/timeline/tml-index.yaml |  5 ++\n docs/specdojo/schemas/v1/tml-index.schema.yaml    |  8 ++-\n src/build-command.ts                              | 75 ++++++++++++++---------\n src/exec-schedule-calendar.ts                     | 38 ++++++++++++\n src/exec-schedule-index.ts                        |  4 +-\n src/specdojo.ts                                   |  6 +-\n src/timeline-build.ts                             | 46 +++++++++-----\n 7 files changed, 133 insertions(+), 49 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "タスクを開始します。まず対象の登録簿・個票・関連成果物を確認します。\n個票と関連成果物を読みます。\nbash の一括コマンドは権限で拒否されたので、`read`/`glob`/`grep` を使って探索します。まず構造を把握します。\nプロジェクト全体像を把握します。関連ディレクトリ構造を確認します。\n大きなタスクです。まず既存の構造を把握します。prj-0001 のディレクトリ全体、関連する生成ファイル、VitePress設定を確認します。\n既存の生成インフラと関連ソースを把握します。複数のファイルを並列で確認します。\nconfig.mts と関連ソース、既存の生成ビューを確認します。\n既存の生成インフラを理解するため、主要ソースファイルを確認します。\n大きなタスクです。既存のインフラを深く理解する必要があるため、関連ソースを追加で確認します。\n非常に大規模なタスクです。実装前に既存インフラを深く理解する必要があります。まず git 状態と関連ソースを確認します。\n大規模な機能実装タスクです。関連ソースを系統的に把握します。build-command、calendar、schedule関連、register、既存の生成ファイルを確認します。\n大規模な実装タスクです。既存の生成物・config・register集計元を確認して、再利用可能な資産を把握します。\n複数のディレクトリを `read` ツールで確認します。\n生成ディレクトリはまだ存在せず、ビルドで生成される構造ですね。既存インフラを幅広く把握します。config、register集計、exec refresh、dashboard関連コードの有無を確認します。\nconfig と関連設定ファイルを読みます。\nconfig に `timeline_path` が無く derive されているようです。register 集計・schedule state.json 生成・index build・config helper を確認します。\n関連テストと設計ガイド、exec-types、schedule関連を確認します。\nexec plan を読み、関連する既存実装を把握します。\n関連する既存ソース（schedule-build, exec refresh/state生成, yaml-pages, index-command）を確認します。\n大規模なタスクです。実装方針を固めるため、state.json/ready.json の生成元（exec schedule）と、yaml-pages・command 構造を確認します。\nThis is a large feature task. Let me read the remaining infrastructure files (yaml-pages patterns, exec-refresh/state.json generation, register-item display types, and a routine file example).\nThis is a very large feature. I need to understand more infrastructure before implementing. Let me read the schedule index (calendar source), register-item display types, and the build/index commands.\nI now understand the calendar source. Let me look at the registration/commit hooks, the index command, and register item display types to design the dashboard cleanly.\nI have a solid understanding of the infrastructure. Let me read a few more key pieces: register item types, gitignore, doc-index, and a template example.\nI have a strong understanding of the infrastructure now. Let me read the shared helpers and project-path helpers used by the build steps, then check the timeline-design guide for the wave/track semantics.\nI now have a thorough understanding of the infrastructure. Let me set up a task plan and start by populating the generated files to inspect their actual shapes (state.json, ready.json, timeline.json, routine-state.json).\nLet me run the build steps to generate the derived files so I can inspect their actual shapes.\nThe `npx tsx` form isn't permitted, but `npm run *` and `specdojo *` are. Let me use the npm script that runs the full build to materialize generated files, then read them.\nThe piping/extra args are tripping the allowlist. Let me run plain approved commands (no pipes).\nThe build populated generated files. Now let me generate timeline outputs and inspect all the JSON shapes I'll aggregate from.\nThe shell only allows single simple commands (no `;` chaining). Let me inspect routines dir and a routine example via the read tool.\nLet me look at the timeline-design guide, an existing view template, and a couple interval-based routines to ground the design.\nLet me read the timeline-design guide, a couple of view templates, and a generated gantt-chart.md to ground the dashboard design.\nI have enough understanding of the data sources. Let me check the test fixture patterns and the tml-rulebook constraints before implementing.\nI now have a thorough understanding. This is a large feature. Let me confirm the executor-stage boundary: I will NOT touch the result file (that's the reporter), but I will update the ticket body sections as an artifact. Let me check the tml-rulebook and a couple more pieces, then implement.\nThe shell blocks chained/echo commands. Let me check the test fixture helpers via read to mirror the testing style, then implement.\nI now have a thorough understanding of all data sources and infrastructure. This is a large feature. Let me update my todos and start implementing. First, extend `timeline-build.ts` to add `planned_start_date` (the machine-readable timeline source required by completion condition 4).\nNow parse `planned…",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0149/20260816T112901605Z-d17c55ff/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}
