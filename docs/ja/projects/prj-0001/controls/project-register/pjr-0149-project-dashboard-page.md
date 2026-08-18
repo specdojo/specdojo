@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0149-project-dashboard-page
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   due_on: "2026-08-31"
-  conclusion: rate limit reached
+  completed_at: "2026-08-18T11:44:17Z"
+  conclusion: プロジェクトダッシュボード実装、無限ループ修正、資源枯渇の再発防止、全検証を完了
 ---
 
 # PJR-0149 各プロジェクトにダッシュボードページを追加（schedule進捗・register状況・routine実行状況の一覧化）
