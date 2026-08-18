@@ -476,6 +476,45 @@ const isHandbookTop = (item: SidebarItem): boolean => {
   return link.includes("/specdojo/") || text === "specdojo";
 };
 
+const isProjectDashboardLink = (item: SidebarItem): boolean =>
+  /\/projects\/[^/]+\/execution\/generated\/dashboard$/.test(item.link ?? "");
+
+// 子孫から最初に一致する項目を取り出す。ダッシュボードをプロジェクト直下へ昇格するとき、
+// 元の execution/generated 側に同じリンクを重複表示しないために使う。
+const extractSidebarItem = (
+  items: SidebarItem[],
+  predicate: (item: SidebarItem) => boolean,
+): { items: SidebarItem[]; extracted?: SidebarItem } => {
+  let extracted: SidebarItem | undefined;
+  const remaining: SidebarItem[] = [];
+
+  for (const item of items) {
+    if (!extracted && predicate(item)) {
+      extracted = item;
+      continue;
+    }
+
+    if (!extracted && item.items) {
+      const nested = extractSidebarItem(item.items, predicate);
+      extracted = nested.extracted;
+      remaining.push({ ...item, items: nested.items });
+      continue;
+    }
+
+    remaining.push(item);
+  }
+
+  return { items: remaining, extracted };
+};
+
+const promoteProjectDashboard = (items: SidebarItem[]): SidebarItem[] => {
+  // 「成果物カタログ」を直接持つグループをプロジェクトルートとして扱う。
+  if (!items.some((item) => item.text === "成果物カタログ")) return items;
+
+  const { items: remaining, extracted } = extractSidebarItem(items, isProjectDashboardLink);
+  return extracted ? [extracted, ...remaining] : items;
+};
+
 // 再帰的に: 表示名整形（xxx-削除）、並び替え
 const transformSidebar = (
   items: SidebarItem[],
@@ -506,7 +545,10 @@ const transformSidebar = (
       }
 
       // 子も同じルールで処理
-      if (next.items) next.items = transformSidebar(next.items, locale, currentTree);
+      if (next.items) {
+        next.items = transformSidebar(next.items, locale, currentTree);
+        if (currentTree === "projects") next.items = promoteProjectDashboard(next.items);
+      }
 
       return next;
     });
