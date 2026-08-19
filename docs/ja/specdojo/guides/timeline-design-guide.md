@@ -37,7 +37,7 @@ Timeline は「どのトラックを、どの順で、いつ着手するか」�
 
 ## 2. `timeline build` の生成フロー
 
-`specdojo timeline build` は `tml-index.yaml` を入力に、後続コマンド（`catalog scaffold` / `schedule build`）への入力情報を `timeline/generated/` へ出力する一方通行の生成コマンドです。生成物から `tml-index.yaml` を逆生成しません。
+`specdojo timeline build` は `tml-index.yaml` を入力に、後続コマンド（`catalog scaffold --plan` / `schedule strategy generate` / `schedule build`）への入力情報を `timeline/generated/` へ出力する一方通行の生成コマンドです。生成物から `tml-index.yaml` を逆生成しません。
 
 ```mermaid
 flowchart LR
@@ -113,17 +113,35 @@ flowchart TD
 
 `catalog-scaffold.md` が示すドメインは、テンプレートに何が必要かが決まっていても、そのドメインで実際に何件の成果物インスタンスが要るかまでは決まっていません。この判定を agent に任せ、結果を機械可読な `dct-plan-<domain>.yaml` として残します。責務は次のとおり分担します。
 
-| 段階         | 担当                                          | 出力                                                       |
-| ------------ | --------------------------------------------- | ---------------------------------------------------------- |
-| 着手対象提示 | Timeline（`timeline build`）                  | `catalog-scaffold.md`（未作成カタログのドメイン一覧）      |
-| 意味判断     | agent（`catalog plan`）                       | `dct-plan-<domain>.yaml`（インスタンス・根拠・未確定事項） |
-| 構造生成     | コード（`catalog scaffold` とジェネレーター） | `dct-<domain>.yaml`                                        |
-| 状態更新     | 人間                                          | `tml-index.yaml` の `catalog_status`                       |
+| 段階         | 担当                                | 出力                                                       |
+| ------------ | ----------------------------------- | ---------------------------------------------------------- |
+| 着手対象提示 | Timeline（`timeline build`）        | `catalog-scaffold.md`（未作成カタログのドメイン一覧）      |
+| 意味判断     | agent（`catalog plan`）             | `dct-plan-<domain>.yaml`（インスタンス・根拠・未確定事項） |
+| 構造生成     | コード（`catalog scaffold --plan`） | `dct-<domain>.yaml`                                        |
+| 状態更新     | 人間                                | `tml-index.yaml` の `catalog_status`                       |
 
 - agent は成果物インスタンスの要否、placeholder 値、採用しない候補、未確定事項の整理だけを担当します。ID・パス・`groups`・`done_criteria` の組み立てと schema 適合はコード側の責務です。
 - 判定は Timeline が着手対象として示したドメインに限定し、入力は data-flow を中心とした上流成果物と、既存カタログがある場合はその基準線に限定します。
 - 判定計画が保存されても `catalog_status` は自動では変わりません。`primary` への昇格は、生成された成果物カタログを人間が確認してから `tml-index.yaml` を更新します。
 - 再判定時は既存の判定計画を無条件に置き換えず、差分をレビューしてから `--force` で更新します。
+- 判定後は `catalog scaffold --plan --dry-run --domain <domain>` で差分を確認し、問題がなければ `--plan` で生成します。物理分割 domain は同じ `domain` の全 template から分割 DCT をまとめて生成します。
+- 生成成功だけでは `catalog_status` を変更しません。生成 DCT を人間が確認した後に `primary` へ更新し、`timeline build` を再実行します。
+
+### 3.3. Schedule strategy 生成への引き渡し
+
+カタログを確認した後は、Timeline の track と `domains` が新規 strategy の scope 解決に使われます。`schedule assessment scaffold` は strategy がまだ無い track でも Timeline と DCT から `kind: work` の対象を収集し、判定済み assessment を `schedule strategy generate` が標準 profile へ展開します。
+
+```text
+tml-index.yaml + dct-*.yaml
+  -> schedule assessment scaffold / prompt / validate
+  -> sch-assessment-<track>.yaml
+  -> schedule strategy generate --dry-run
+  -> sch-strategy-<track>.yaml
+  -> schedule build --track <track>
+  -> exec refresh
+```
+
+既存 strategy がある場合は、その `scope.catalogs` を人間が意図的に限定した正本として優先します。Timeline から追加で解決できるカタログが既存 scope に無い場合は警告し、generator が自動的に scope を広げることはありません。
 
 具体的なコマンドと検証内容は [CLIコマンドリファレンス](../references/command-reference.md) の `catalog plan（成果物インスタンスの判定）`、記述ルールは [成果物カタログ（ドメイン別）作成ルール](../rulebooks/dct-rulebook.md) の `成果物カタログ判定計画（dct-plan-<domain>.yaml）` を参照します。
 

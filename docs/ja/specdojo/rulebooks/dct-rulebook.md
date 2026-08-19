@@ -235,6 +235,14 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 既存の判定計画は無条件に上書きしない。再判定時は差分をレビューし、上書きは明示的な `--force` 操作で行う。
 - 判定計画の存在はカタログの `primary` 確定を意味しない。判定計画は draft 作成支援であり、`catalog_status` の更新は人間の確認を経て行う。
 
+### 6.12. 判定計画からの決定論的生成
+
+- 保存済みの判定計画からカタログを生成する場合は、`catalog scaffold --plan --domain <domain>` を使用する。`--var` は併用せず、placeholder 値は根拠付きの `variables` を正本とする。
+- ジェネレーターは template の `min_size`、placeholder 展開、`part_of`、`domain`、`base_path`、group 構造を scaffold と共通の処理で適用する。物理分割された template は、同じ `domain` を持つ全ファイルをファイル名順に処理し、対応する `dct-<domain>-<part>.yaml` を生成する。
+- blocking な `open_questions`、未解決 placeholder、重複 `local_id`、存在しない `depends_on`、schema 違反が一件でもあれば、その domain のファイルを一件も書き込まない。
+- 既存カタログとの差分は `--dry-run` で確認する。既存ファイルは既定で保護し、内容が異なる場合の上書きには `--force` を必要とする。同一入力の再実行で内容が同じ場合は書き込まない。
+- 生成されたカタログの `status` は template に従い `draft` のままとする。生成成功を理由に Timeline の `catalog_status` を `primary` へ変更せず、人間の内容確認後に別途更新する。
+
 ## 7. 禁止事項
 
 | 禁止事項                                                          | 理由                                               |
@@ -249,4 +257,5 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `work` 成果物で `path` または `done_criteria` を省略する          | スケジュール展開とレビュー計画生成に必須のため     |
 | `dct-plan-<domain>.yaml` にカタログ構造や自由文の判断メモを書く   | ジェネレーターが機械的に扱えず責務境界が崩れるため |
 | 根拠のない placeholder 値や成果物を判定計画で確定させる           | 推測がそのままカタログへ流れ込むため               |
+| 判定計画がある domain を `--var` 付きの通常 scaffold で再生成する | 根拠付きの判定結果と生成入力が分岐するため         |
 | 本ルールや成果物ファイルでスキーマ定義を再掲・上書きする          | `dct.schema.yaml` を SSOT とするため               |

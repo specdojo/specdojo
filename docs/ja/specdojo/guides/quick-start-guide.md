@@ -197,7 +197,7 @@ specdojo register close \
 
 ### 3.2. トラック戦略を作成する
 
-`sch-strategy-<track>.yaml` は、成果物カタログを実行タスクへ展開するための生成入力です。成果物カタログが WHAT / DONE を持つのに対し、strategy は対象カタログ、作業フェーズ、担当ロールを定義します。`schedule build` が生成する `sch-track-<track>.yaml` とは異なり、strategy はプロジェクトに合わせて人が作成・編集します。
+`sch-strategy-<track>.yaml` は、成果物カタログを実行タスクへ展開するための生成入力です。成果物カタログが WHAT / DONE を持つのに対し、strategy は対象カタログ、作業フェーズ、担当ロールを定義します。新規 strategy は DCT・Timeline・整備状況判定から `schedule strategy generate` で作成し、既存 strategy の owner や開始日などの人間が決めた項目は再生成時も保持します。
 
 `deliverable scaffold` で作成した `pm-members.yaml` の `members` に、タスクを実行する人を登録します。次の例では `<actor>` が BA ロールを担当します。
 
@@ -215,7 +215,16 @@ members:
 
 </details>
 
-`.specdojo/specdojo.config.json` の `schedule_path` 配下に、例えば `sch-strategy-launch.yaml` を作成します。次は small の `dct-project-definition.yaml` に含まれる3成果物を、依存順に BA が1回ずつ作成・確認する例です。最初の Ready タスクは `prj-overview` になります。`<project-id>` とカタログのパスは実際の値へ置き換えてください。この strategy はコマンドで生成できませんが、オーケストレーターに「launch トラックの sch-strategy-launch.yaml を作って。対象カタログは dct-project-definition、first-pass で BA が各成果物を1回ずつ作成・確認する構成にして」と伝えると、この雛形をドラフトできます。
+先に `schedule assessment scaffold / prompt / validate` で成果物ごとの進め方を判定し、次のコマンドで strategy の差分を確認して生成します。`<role>` は `pm-roles.yaml` に定義された主担当ロールへ置き換えてください。
+
+```bash
+specdojo schedule strategy generate --project <project-id> --track launch \
+  --default-owner <role> --gate-owner <role> --milestone-owner <role> --dry-run
+specdojo schedule strategy generate --project <project-id> --track launch \
+  --default-owner <role> --gate-owner <role> --milestone-owner <role>
+```
+
+以下は生成後の strategy 構造を理解するための例です。small の `dct-project-definition.yaml` に含まれる3成果物を依存順に作成・確認し、最初の Ready タスクが `prj-overview` になる構成を示します。
 
 <details>
 <summary>sch-strategy-launch.yaml の全体例（クリックで展開）</summary>

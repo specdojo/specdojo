@@ -19,6 +19,7 @@ import type { DctDoc } from "./catalog-types.js";
 import {
   buildPlanSkeleton,
   DCT_PLAN_SCHEMA_PATH,
+  domainFromPlanFileName,
   listPlanFiles,
   loadPlan,
   loadTemplateForDomain,
@@ -33,6 +34,7 @@ import {
   type LoadedTemplateForDomain,
 } from "./catalog-plan.js";
 import { renderPlanPrompt } from "./catalog-plan-prompt.js";
+import { generateCatalogsFromPlan, writeGeneratedCatalogs } from "./catalog-plan-generate.js";
 
 function readSizeFromIndex(catalogPath: string): ProjectSize | null {
   const indexPath = join(catalogPath, "dct-index.md");
@@ -200,6 +202,100 @@ function parseScaffoldVariables(values: string[]): Record<string, string> {
   return variables;
 }
 
+// Plan-driven catalog generation. Every domain is generated as a whole: the plan is validated,
+// the documents are built in memory, and only a fully valid set is written, so a failed run
+// never leaves a domain half regenerated.
+function runPlanScaffold(opts: {
+  catalogPath: string;
+  templatesPath: string;
+  size: ProjectSize;
+  domains: string[];
+  projectIdOption?: string;
+  force: boolean;
+  dryRun: boolean;
+}): void {
+  const { catalogPath, templatesPath, size, force, dryRun } = opts;
+  const repoRoot = specdojoRootDir();
+  const projectId = deriveProjectIdOrThrow(catalogPath, { project: opts.projectIdOption });
+
+  const requested = [...new Set(opts.domains.map((domain) => domain.trim()).filter(Boolean))];
+  const domains =
+    requested.length > 0
+      ? requested
+      : listPlanFiles(catalogPath)
+          .map((file) => domainFromPlanFileName(file))
+          .filter((domain): domain is string => domain !== null);
+
+  if (domains.length === 0) {
+    process.stdout.write(
+      `No dct-plan-*.yaml found in: ${resolvePlansDir(catalogPath)}\n` +
+        `Run: specdojo catalog plan scaffold --domain <domain>\n`,
+    );
+    process.exitCode = 1;
+    return;
+  }
+
+  let allOk = true;
+  for (const domain of domains) {
+    const planPath = resolvePlanPath(catalogPath, domain);
+    if (!existsSync(planPath)) {
+      process.stdout.write(`ERROR: DCT plan not found: ${planPath}\n`);
+      allOk = false;
+      continue;
+    }
+
+    const plan = loadPlan(planPath);
+    const schemaErrors = validatePlanSchema(plan, repoRoot);
+    for (const err of schemaErrors) {
+      process.stdout.write(`ERROR: ${planFileName(domain)}${err}\n`);
+    }
+    if (schemaErrors.length > 0) {
+      allOk = false;
+      continue;
+    }
+
+    const { files, errors, warnings } = generateCatalogsFromPlan({
+      catalogPath,
+      templatesPath,
+      repoRoot,
+      projectId,
+      size,
+      plan,
+    });
+    for (const warning of warnings) process.stdout.write(`WARN:  ${warning}\n`);
+    for (const err of errors) process.stdout.write(`ERROR: ${err}\n`);
+    if (errors.length > 0) {
+      process.stdout.write(`Not written (${domain}): 検証エラーのため書き込みを中止した。\n`);
+      allOk = false;
+      continue;
+    }
+
+    const outcomes = writeGeneratedCatalogs({ catalogPath, files, force, dryRun });
+    for (const outcome of outcomes) {
+      if (outcome.written) {
+        process.stdout.write(`${force ? "Updated" : "Created"}: ${outcome.path}\n`);
+        continue;
+      }
+      if (outcome.skippedReason === "unchanged") {
+        process.stdout.write(`Unchanged: ${outcome.path}\n`);
+        continue;
+      }
+      if (outcome.skippedReason === "dry-run") {
+        process.stdout.write(`Dry-run (not written): ${outcome.path}\n`);
+        printPlanDiff(outcome.diff);
+        continue;
+      }
+      process.stdout.write(
+        `Skipped (already exists; use --force to overwrite): ${outcome.path}\n` +
+          `Review the diff below before overwriting.\n`,
+      );
+      printPlanDiff(outcome.diff);
+    }
+  }
+
+  if (!allOk) process.exitCode = 1;
+}
+
 export function registerCatalogCommands(program: Command): void {
   const cat = program.command("catalog").description("Deliverables catalog (dct-*.yaml) commands");
 
@@ -342,6 +438,12 @@ export function registerCatalogCommands(program: Command): void {
     collectRepeatable,
     [] as string[],
   );
+  scCmd.option(
+    "--plan",
+    "Generate from the saved dct-plan-<domain>.yaml instead of the raw template",
+    false,
+  );
+  scCmd.option("--dry-run", "Show what would be generated without writing (with --plan)", false);
   scCmd.option("--force", "Overwrite existing files", false);
   scCmd.action((opts) => {
     try {
@@ -362,6 +464,25 @@ export function registerCatalogCommands(program: Command): void {
         })();
 
       const templatesPath = resolveTemplatesPath();
+
+      if (opts.plan) {
+        if ((opts.var as string[]).length > 0) {
+          throw new Error(
+            `--var は --plan と併用できない。placeholder の値は dct-plan-<domain>.yaml の variables ` +
+              `（根拠付き）を正本にする。`,
+          );
+        }
+        runPlanScaffold({
+          catalogPath,
+          templatesPath,
+          size,
+          domains: opts.domain as string[],
+          projectIdOption: opts.projectId as string | undefined,
+          force: !!opts.force,
+          dryRun: !!opts.dryRun,
+        });
+        return;
+      }
 
       const { written, skipped, warnings, errors } = runScaffold({
         catalogPath,

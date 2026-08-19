@@ -24,6 +24,7 @@ Schedule は「いつ・誰が・どの順で作業するか」を定義する�
 - Schedule は `sch-milestones.yaml` / `sch-defaults.yaml` / `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` の 4 種類に分割して管理する。各ファイルの役割と生成フローは [[specdojo:schedule-design-guide]] を参照する。
 - 成果物カタログの `kind: work` エントリを実行タスクへ展開し、期間・担当・依存関係を付与する。成果物パスと完了条件はカタログが管理する（[[specdojo:schedule-design-guide]] の `成果物カタログとの責務分担` を参照）。
 - `sch-strategy-<track>.yaml` が存在するトラックでは、strategy と成果物カタログを SSOT とし、`sch-track-<track>.yaml` は `specdojo schedule build` で再生成可能な生成物として扱う。生成後の track を直接編集しない。
+- strategy を新規作成または判定結果から更新する場合は、DCT・Timeline・`sch-assessment-<track>.yaml`・標準 strategy profile を入力とする `schedule strategy generate` を使用する。
 - Schedule の `owner` には Role code のみを記載し、実行主体との対応は `pm-members.yaml` で管理する。
 
 ## 2. 位置づけと用語定義
@@ -111,6 +112,15 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `cross_deliverable_passes` は完了済みの `after_gate` と後続の `before_phase_set` の間に置き、scope を `catalogs` / `groups` / `local_ids` で明示する。
 - レビュー担当ロールは各成果物の `done_criteria` から取得されるため、strategy に重複して記載しない。
 
+### 5.5. 判定結果からの strategy 生成
+
+- `schedule strategy generate --track <track>` は、既存 strategy の `scope.catalogs` を優先し、新規 track では Timeline の `domains` から物理分割を含む DCT を解決する。scope は `include_kinds: [work]` 固定とする。
+- 成果物ごとの `recommended_approach` は標準 profile へ写像し、`phase_sets`、`default_phase_sets`、`owner_rules`、phase gate、finalize 系フェーズをコードで組み立てる。profile は duration、`execution`、`mode`、`approach`、agent pipeline を一元管理する。
+- 主担当は `--owner <local_id>=<ROLE>`、既存 strategy の `owner_rules`、`--default-owner <ROLE>` の順に解決する。`done_criteria.roles` はレビュー観点であり主担当の根拠にしない。未解決または `pm-roles.yaml` に存在しない owner があれば生成を停止する。
+- `bootstrap` と他の approach が同一 track に混在する場合は成果物別に profile を分け、既定では同一カタログの非 bootstrap 成果物を代表 bootstrap 成果物の後に配置する。不要な場合だけ `--no-bootstrap-ordering` を明示する。
+- `cross-deliverable-dedup` が複数成果物に必要と判定された場合は、前段 gate と `refine-pass` の間に一つの `cross_deliverable_passes` を生成する。対象が一件だけ、前段 author フェーズがない、または pass owner が解決できない場合は停止する。
+- 書き込み前に assessment の facts・schema・scope、strategy schema、project ID、参照、全 strategy の milestone ID、`schedule build --dry-run` 相当を検証する。既存ファイルは `--force` なしで上書きせず、同じ入力の再実行では不要な差分を生じさせない。
+
 ## 6. 禁止事項
 
 - 成果物パスを Schedule に直接書くこと（パスは成果物カタログが管理する）。
@@ -122,3 +132,5 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `pm-roles.yaml` に存在しない Role code を `owner` に書くこと。
 - `sch-strategy-<track>.yaml` の `scope.catalogs[].path` に相対パスを使うこと（絶対パス必須）。
 - `sch-strategy-<track>.yaml` の `owner_rules` にカタログの `done_criteria` のレビューロールを重複して記載すること。
+- blocking な未確定事項、未判定成果物、`recommended_approach: undecided` を残した assessment から strategy を生成すること。
+- ジェネレーターが管理する標準 phase の ID・suffix・duration を track ごとに複製実装すること。
