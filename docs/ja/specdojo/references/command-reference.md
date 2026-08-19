@@ -71,6 +71,8 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 | `--project-id <id>`  | 生成ファイルに埋め込む project ID を上書きする                            |
 | `--domain <domain>`  | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り） |
 | `--var <NAME=value>` | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）           |
+| `--plan`             | 保存済みの `dct-plan-<domain>.yaml` から決定論的に生成する                |
+| `--dry-run`          | `--plan` の生成結果と既存ファイルとの差分を、書き込まずに表示する         |
 | `--dct <name>`       | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）         |
 | `--force`            | 既存ファイルを上書きする                                                  |
 
@@ -125,6 +127,8 @@ specdojo catalog plan prompt --project prj-0001 --domain data-flow --out logs/dc
 # 上記の指示で agent に判定させ、出力 YAML を保存先候補へ書き出す
 specdojo catalog plan scaffold --project prj-0001 --domain data-flow --from <agent-output>.yaml
 specdojo catalog plan validate --project prj-0001 --domain data-flow
+specdojo catalog scaffold --project prj-0001 --domain data-flow --plan --dry-run
+specdojo catalog scaffold --project prj-0001 --domain data-flow --plan
 ```
 
 `catalog plan scaffold` は、`--from` を省略すると入力文書と未確定事項だけを埋めた骨組みを作ります。既存の判定計画がある場合は上書きせず、差分を表示して終了します。上書きは `--force` で明示します。
@@ -132,6 +136,8 @@ specdojo catalog plan validate --project prj-0001 --domain data-flow
 判定に使う data-flow 成果物が 1 件も無いドメインでは、`--input` で上流成果物を明示しない限りエラーで終了します。`trash/` へ移動した非推奨成果物は入力に含めません。既に `dct-<domain>.yaml` があるドメインでは、既存カタログを基準線として入力に記録し、差分レビューを促す警告を出します。
 
 検証では、スキーマ適合に加えて、template との対応、placeholder の解決、パターンA / パターンBの整合、`local_id` の重複、`depends_on` の解決を確認します。未解決の placeholder や根拠の無い判断はエラーになり、`open_questions` へ移すよう促されます。スキーマ単体で検証する場合は次を実行します。
+
+`catalog scaffold --plan` は判定済み plan と同じ `domain` の template をすべて読み、通常の scaffold と同じ `min_size`・placeholder・`part_of`・group・base path 規則で `dct-<domain>.yaml` を生成します。物理分割 template は `dct-<domain>-<part>.yaml` のまま生成します。検証エラーや既存ファイル競合が一件でもあれば、その domain のファイルは一件も書き込みません。既存内容を変更する場合は、`--dry-run` の差分を確認してから `--force` を指定します。
 
 ```bash
 npm run validate:schema:file -- \
@@ -201,6 +207,45 @@ npm run validate:schema:file -- \
 ```
 
 判定規則と責務分担は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `実践の型の整備状況判定（sch-assessment-<track>.yaml）` を参照します。
+
+### 4.2. schedule strategy（決定論的な strategy 生成）
+
+`schedule strategy generate` は、DCT、Timeline、判定済みの `sch-assessment-<track>.yaml`、標準 strategy profile から `sch-strategy-<track>.yaml` を生成します。新規 track の assessment scaffold も Timeline の `domains` から scope を解決できるため、strategy を先に手書きする必要はありません。
+
+```bash
+specdojo schedule assessment scaffold --project prj-0001 --track data-model
+specdojo schedule assessment prompt --project prj-0001 --track data-model --out logs/sch-assessment-data-model.md
+# agent 出力を assessment scaffold --from で検証保存し、人間が判定内容を確認する
+specdojo schedule strategy generate \
+  --project prj-0001 \
+  --track data-model \
+  --default-owner ARC \
+  --gate-owner PM \
+  --milestone-owner PM \
+  --dry-run
+specdojo schedule strategy generate \
+  --project prj-0001 \
+  --track data-model \
+  --default-owner ARC \
+  --gate-owner PM \
+  --milestone-owner PM
+```
+
+主要オプション:
+
+| オプション                 | 用途                                                               |
+| -------------------------- | ------------------------------------------------------------------ |
+| `--owner <local_id=ROLE>`  | 一成果物の主担当を明示する（反復可能）                             |
+| `--default-owner <ROLE>`   | 既存 strategy から解決できない成果物の既定主担当                   |
+| `--gate-owner <ROLE>`      | 生成する phase gate の owner                                       |
+| `--milestone-owner <ROLE>` | 生成する group milestone の owner                                  |
+| `--pass-owner <ROLE>`      | owner が複数にまたがる横断 pass の主担当                           |
+| `--no-bootstrap-ordering`  | 非 bootstrap 成果物を代表 bootstrap の後へ置く既定動作を無効にする |
+| `--dry-run` / `--force`    | 差分だけを表示する / 確認済みの差分で既存 strategy を上書きする    |
+
+主担当の解決順は `--owner`、既存 strategy の `owner_rules`、`--default-owner` です。DCT の `done_criteria.roles` はレビュー担当であり、主担当として複製しません。主担当、gate / milestone / pass owner を決定できない場合、または `pm-roles.yaml` に存在しない場合は推測せず停止します。
+
+書き込み前に assessment の schema・facts・scope、DCT の全 `kind: work` の網羅、strategy schema、project ID、参照、milestone ID 重複、`schedule build --dry-run` 相当を検証します。既存 strategy は `--force` なしで保護し、同一内容の再生成は `Unchanged` として書き込みません。生成後は `schedule build --track <track> --force`、`exec refresh` の順に既存コマンドを実行します。
 
 ## 5. timeline
 

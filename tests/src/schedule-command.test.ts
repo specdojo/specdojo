@@ -73,7 +73,7 @@ describe("schedule command registration", () => {
     const commandNames = schedule?.commands.map((command) => command.name());
     const help = schedule?.helpInformation();
 
-    expect(commandNames).toEqual(["where", "build", "assessment"]);
+    expect(commandNames).toEqual(["where", "build", "assessment", "strategy"]);
     expect(help).toContain("build");
   });
 

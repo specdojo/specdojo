@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-STRG",
+  "run_id": "20260818T230147409Z-b6770392",
+  "updated_at": "2026-08-18T23:22:36.161Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-18T23:01:47.409Z",
+      "completed_at": "2026-08-18T23:22:33.527Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-STRG/20260818T230147409Z-b6770392/evidence.json"
+    },
+    "reporter": {
+      "status": "rate_limited",
+      "actor": "codex-reporter",
+      "attempts": 1,
+      "started_at": "2026-08-18T23:22:33.528Z",
+      "completed_at": "2026-08-18T23:22:36.161Z",
+      "artifact_ref": null
+    }
+  }
+}

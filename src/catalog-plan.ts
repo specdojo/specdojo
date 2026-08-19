@@ -180,14 +180,18 @@ export function validatePlanSchema(plan: unknown, repoRoot: string): string[] {
 
 // ---- template lookup ---------------------------------------------------------
 
-export function loadTemplateForDomain(
+// All templates that declare the domain, in file name order. A domain physically split into
+// dct-<domain>-<part>-template.yaml keeps one template per part (dct-rulebook,
+// 物理分割（1 ドメイン複数ファイル）), so callers that generate catalogs must handle the list.
+export function loadTemplatesForDomain(
   templatesPath: string,
   domain: string,
   repoRoot: string,
-): LoadedTemplateForDomain | null {
+): LoadedTemplateForDomain[] {
   const files = readdirSync(templatesPath)
     .filter((file) => /^dct-.+\.yaml$/.test(file))
     .sort();
+  const loaded: LoadedTemplateForDomain[] = [];
   for (const file of files) {
     const filePath = join(templatesPath, file);
     let template: DctTemplateDoc;
@@ -197,9 +201,17 @@ export function loadTemplateForDomain(
       continue;
     }
     if (!template || template.domain !== domain) continue;
-    return { file, relPath: toRepoRelative(filePath, repoRoot), template };
+    loaded.push({ file, relPath: toRepoRelative(filePath, repoRoot), template });
   }
-  return null;
+  return loaded;
+}
+
+export function loadTemplateForDomain(
+  templatesPath: string,
+  domain: string,
+  repoRoot: string,
+): LoadedTemplateForDomain | null {
+  return loadTemplatesForDomain(templatesPath, domain, repoRoot)[0] ?? null;
 }
 
 export function collectTemplateEntries(sections: DctSection[]): Map<string, DctDeliverableItem> {

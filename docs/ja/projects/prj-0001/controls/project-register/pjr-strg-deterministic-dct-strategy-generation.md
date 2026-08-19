@@ -50,19 +50,26 @@ agent が保存した `dct-plan-<domain>.yaml` と `sch-assessment-<track>.yaml`
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                      | 担当 | 状態 | メモ                                                                              |
-| --- | --------------------------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------- |
-| 1   | 2種類の agent 判定 YAML と generator の入力境界、正準配置、schema versioning を確定する                   | ARC  | open | PJR-DCTG と PJR-KATA の成果を前提とする                                           |
-| 2   | DCT plan を既存 scaffold 処理へ適用する決定論的 DCT generator を実装する                                  | ARC  | open | この段階の完了後に生成 DCT を PJR-KATA の入力として利用できる                     |
-| 3   | `approach` とフェーズ列を組み立てる標準 strategy profile を定義する                                       | ARC  | open | task目的と整備状況を分離し、`freeform`、`retrofit`、finalize 系も扱う             |
-| 4   | DCT、Timeline、assessment、profile から scope・owner・依存・gate を生成する strategy generator を実装する | ARC  | open | `sch-track` は生成せず、既存 `schedule build` に委ねる                            |
-| 5   | dry-run、差分表示、既存ファイル保護、原子的な書き込み、検証失敗時の無変更を実装する                       | ARC  | open | DCT と strategy の片方だけが不完全な状態で書き込まれないようにする                |
-| 6   | 代表 track と異常系 fixture による unit test / integration test を追加する                                | ARC  | open | launch と data-flow の既存 strategy を回帰 fixture または期待仕様の参考にする     |
-| 7   | CLI、schema、設計ガイド、rulebook、操作手順を更新する                                                     | ARC  | open | `agent判定 → review → generator → schedule build → exec refresh` の順序を記載する |
+| No  | 作業                                                                                                      | 担当 | 状態 | メモ                                                                          |
+| --- | --------------------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------- |
+| 1   | 2種類の agent 判定 YAML と generator の入力境界、正準配置、schema versioning を確定する                   | ARC  | done | plan / assessment の既存 schema v1 と正準配置を入力契約として再利用           |
+| 2   | DCT plan を既存 scaffold 処理へ適用する決定論的 DCT generator を実装する                                  | ARC  | done | `catalog scaffold --plan` で通常・物理分割 DCT を一括生成                     |
+| 3   | `approach` とフェーズ列を組み立てる標準 strategy profile を定義する                                       | ARC  | done | 全 approach の phase・duration・execution・mode・pipeline をコードで一元管理  |
+| 4   | DCT、Timeline、assessment、profile から scope・owner・依存・gate を生成する strategy generator を実装する | ARC  | done | `schedule strategy generate` を追加し、既存 `schedule build` は変更せず再利用 |
+| 5   | dry-run、差分表示、既存ファイル保護、原子的な書き込み、検証失敗時の無変更を実装する                       | ARC  | done | 候補を全検証後に書き込み、既存差分は `--force` なしで保護                     |
+| 6   | 代表 track と異常系 fixture による unit test / integration test を追加する                                | ARC  | done | 混在 profile、物理分割、owner 未解決、facts 改変、競合、再生成安定性を検証    |
+| 7   | CLI、schema、設計ガイド、rulebook、操作手順を更新する                                                     | ARC  | done | 判定から `schedule build` / `exec refresh` までの実行順序を反映               |
 
 ## 4. 対応結果
 
--
+- `catalog scaffold --plan` を追加し、`dct-plan-<domain>.yaml` と同一 domain の全 DCT template から、通常 DCT または物理分割 DCT を決定論的に生成できるようにした。template 展開は既存 scaffold の `min_size`、placeholder、`part_of`、group、base path 処理を共用する。
+- DCT 生成は blocking な未確定事項、未解決 placeholder、未判定 template entry、重複 `local_id`、未解決 `depends_on`、schema 違反で停止する。domain 内の全候補を検証してから一時領域経由で書き込み、既存ファイル競合時は分割ファイルを含めて一件も変更しない。
+- 標準 strategy profile をコードで一元化し、`bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、`cross-deliverable-dedup`、`finalize`、`bootstrap-finalize` を固定の phase ID・suffix・duration・execution・mode・pipeline へ写像した。
+- `schedule strategy generate` を追加した。既存 strategy の scope を優先し、新規 track は Timeline の domains から物理分割を含む DCT を解決する。assessment の schema・facts・全 work 成果物の網羅性を再検証し、成果物別 profile、owner rules、bootstrap 順序、phase gate、横断 pass、milestone を生成する。
+- owner は明示 override、既存 strategy、default owner の順で解決し、`pm-roles.yaml` に照合する。DCT の `done_criteria.roles` はレビュー観点として主担当導出に使用せず、未解決時は具体的なエラーで停止する。
+- strategy 候補は schema 検証と `schedule build --dry-run` 相当の展開を実施し、project ID、参照、全 strategy の milestone ID を検証してから書き込む。既存 strategy は差分を表示し、`--force` なしでは上書きしない。同一内容は `Unchanged` とする。
+- unit / CLI integration test を追加し、DCT の通常・物理分割生成、未確定 plan、既存競合、再生成安定性、混在 approach、bootstrap 順序、横断 pass、owner 未解決、assessment facts 改変、strategy 競合を検証した。
+- CLI リファレンス、Timeline / Schedule / Quick Start ガイド、DCT / Schedule rulebook を新しい生成順序へ更新し、plan / assessment schema の一括検証 script を追加した。generator は Timeline の `catalog_status` を変更せず、生成物の `status` も人間の確認なしに昇格させない。
 
 ## 5. 関連ドキュメント
 

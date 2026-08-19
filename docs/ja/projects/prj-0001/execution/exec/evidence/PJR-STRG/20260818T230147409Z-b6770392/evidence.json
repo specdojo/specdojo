@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-STRG",
+  "run_id": "20260818T230147409Z-b6770392",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-18T23:01:47.409Z",
+    "completed_at": "2026-08-18T23:22:33.390Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-strg-deterministic-dct-strategy-generation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sch-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-plan-generate.ts",
+      "status": "AM"
+    },
+    {
+      "path": "src/catalog-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-strategy-generate.ts",
+      "status": "AM"
+    },
+    {
+      "path": "src/schedule-strategy-profiles.ts",
+      "status": "A"
+    },
+    {
+      "path": "src/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-plan-generate.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/schedule-strategy-generate.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 18,
+    "summary": "...r-strg-deterministic-dct-strategy-generation.md |   27 +-\n docs/ja/specdojo/guides/quick-start-guide.md       |   13 +-\n docs/ja/specdojo/guides/schedule-design-guide.md   |   18 +-\n docs/ja/specdojo/guides/timeline-design-guide.md   |   32 +-\n docs/ja/specdojo/references/command-reference.md   |   45 +\n docs/ja/specdojo/rulebooks/dct-rulebook.md         |    9 +\n docs/ja/specdojo/rulebooks/sch-rulebook.md         |   12 +\n package.json                                       |    4 +-\n src/catalog-plan-generate.ts                       |  398 +++++++\n src/catalog-plan.ts                                |   20 +-\n src/catalog-scaffold.ts                            |  146 ++-\n src/catalog.ts                                     |  121 +++\n src/schedule-strategy-generate.ts                  | 1118 ++++++++++++++++++++\n src/schedule-strategy-profiles.ts                  |  323 ++++++\n src/schedule.ts                                    |  224 +++-\n tests/src/schedule-command.test.ts                 |    2 +-\n 16 files changed, 2447 insertions(+), 65 deletions(-)"
+  },
+  "validations": [
+    {
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査に成功"
+    },
+    {
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "82 test files、1160 testsが成功"
+    },
+    {
+      "command": "npx eslint src/catalog-plan-generate.ts src/catalog-plan.ts src/catalog-scaffold.ts src/catalog.ts src/schedule-strategy-generate.ts src/schedule-strategy-profiles.ts src/schedule.ts tests/src/catalog-plan-generate.test.ts tests/src/schedule-strategy-generate.test.ts tests/src/schedule-command.test.ts",
+      "status": "passed",
+      "summary": "変更対象のTypeScript lintに成功"
+    },
+    {
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "Markdown lintに成功"
+    },
+    {
+      "command": "npx prettier --check package.json src/catalog-plan-generate.ts src/catalog-plan.ts src/catalog-scaffold.ts src/catalog.ts src/schedule-strategy-generate.ts src/schedule-strategy-profiles.ts src/schedule.ts tests/src/catalog-plan-generate.test.ts tests/src/schedule-strategy-generate.test.ts tests/src/schedule-command.test.ts docs/ja/specdojo/rulebooks/dct-rulebook.md docs/ja/specdojo/rulebooks/sch-rulebook.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/timeline-desig…",
+      "status": "passed",
+      "summary": "全変更対象がPrettier形式に適合"
+    },
+    {
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data 'docs/ja/**/plans/dct-plan-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "対象ファイルなしを許容してdct-plan schema検証に成功"
+    },
+    {
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-assessment.schema.yaml --data 'docs/ja/**/assessments/sch-assessment-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "対象ファイルなしを許容してsch-assessment schema検証に成功"
+    },
+    {
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data 'docs/ja/**/schedule/sch-strategy-*.yaml'",
+      "status": "passed",
+      "summary": "既存sch-strategy 2件がschemaに適合"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成に成功"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全DCTを検証、既存成果物欠落に関するwarningのみ"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1236件の文書インデックス生成に成功"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "DCTとsch-strategyの決定論的ジェネレーター、テスト、関連文書、個票の更新を完了しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-STRG/20260818T230147409Z-b6770392/executor.log",
+      "bytes": 3785,
+      "truncated": false
+    }
+  ]
+}

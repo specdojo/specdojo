@@ -84,7 +84,7 @@ Schedule は用途別に4種類のファイルで管理します。
 | `sch-track-<track>.yaml`                  | 展開済みの Task / Milestone 定義                  |
 | `assessments/sch-assessment-<track>.yaml` | 成果物と実践の型の整備状況判定（strategy の入力） |
 
-`sch-strategy-<track>.yaml` は生成入力です。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。整備状況判定は `assessments/` 配下に置き、`sch-*.yaml` を直接読む build 系の処理が strategy / track と取り違えないようにします。
+`sch-strategy-<track>.yaml` は `schedule build` の生成入力であり、DCT・Timeline・assessment・標準 profile から `schedule strategy generate` で作成できます。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。整備状況判定は `assessments/` 配下に置き、`sch-*.yaml` を直接読む build 系の処理が strategy / track と取り違えないようにします。
 
 ## 2. sch-trackの生成
 
@@ -95,7 +95,8 @@ strategy から track への生成フロー、展開する情報、反復、タ�
 `sch-track-<track>.yaml` は原則として手書きせず、次の流れで生成します。
 
 ```text
-成果物カタログ（dct-*.yaml）
+成果物カタログ（dct-*.yaml）+ Timeline + sch-assessment-<track>.yaml
+  -> specdojo schedule strategy generate --track <track>
   -> sch-strategy-<track>.yaml
   -> specdojo schedule build --track <track> --force
   -> sch-track-<track>.yaml
@@ -108,6 +109,15 @@ strategy から track への生成フロー、展開する情報、反復、タ�
 ```bash
 specdojo schedule build --project <project-id> --track <track> --force
 specdojo exec refresh --project <project-id>
+```
+
+新規または再判定した track では、先に次を実行します。
+
+```bash
+specdojo schedule strategy generate --project <project-id> --track <track> \
+  --default-owner <role> --gate-owner <role> --milestone-owner <role> --dry-run
+specdojo schedule strategy generate --project <project-id> --track <track> \
+  --default-owner <role> --gate-owner <role> --milestone-owner <role>
 ```
 
 `phase_sets`、`cycles`、`iterations`、フェーズ追加削除、`phase_suffix`、依存関係、ゲートを変更した場合は、`schedule build` を先に実行してから `exec refresh` を実行します。
@@ -329,6 +339,7 @@ phase や owner rule に書く `approach` は、対象成果物と実践の型�
 | 事実収集 | コード（`schedule assessment scaffold`）            | `facts`（成果物・実践の型の実在、宣言形式、`status`、参照切れ、実装エビデンス） |
 | 意味判断 | エージェント（`schedule assessment prompt` の指示） | `judgment`（4観点の利用可能性とタスク目的 `intent`）                            |
 | 規則適用 | コード（`schedule assessment validate`）            | `recommended_approach`（判定規則の結果と一致することを検証）                    |
+| 構造生成 | コード（`schedule strategy generate`）              | scope・profile・owner・gate・依存・milestone を持つ strategy                    |
 | 承認     | 人間                                                | 判定結果のレビュー、`undecided` の解消、`status` の確定                         |
 
 - 実践の型の解決規則（宣言・`none`・慣例 ID・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
@@ -336,6 +347,9 @@ phase や owner rule に書く `approach` は、対象成果物と実践の型�
 - `recommended_approach` は `intent` と利用可能性から決まります。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
 - `bootstrap` は `bootstrap_scope`（一式で初期整備する実践の型）と理由の記載が必要で、対象がすべて利用可能な場合は選べません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
 - 判定できない項目が残る場合は `recommended_approach: undecided` とし、対象 `local_id` を `topic` にした blocking な `open_questions` を必ず添えます。`undecided` のまま strategy を生成しません。
+- 標準 profile は `bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
+- owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
+- generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 
 コマンドの使い方は [CLIコマンドリファレンス](../references/command-reference.md) の `schedule assessment（成果物・実践の型の利用可能性判定）`、`approach` ごとの進め方は [実践の進め方ガイド](ryu-guide.md) の `整備状況に応じた進め方（approach）` を参照します。
 

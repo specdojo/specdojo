@@ -2,7 +2,15 @@ import { type Command } from "commander";
 import { dirname, join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
-import { getProjectSchedulePath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
+import {
+  getProjectCatalogPath,
+  getProjectRolesPath,
+  getProjectSchedulePath,
+  getProjectTimelinePath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from "./specdojo-config.js";
 import {
   buildScheduleTrack,
   type BuildResult,
@@ -27,11 +35,23 @@ import {
   type SchAssessment,
 } from "./schedule-assessment.js";
 import { renderAssessmentPrompt } from "./schedule-assessment-prompt.js";
+import {
+  generateStrategyFromAssessment,
+  resolveTrackScopeCatalogs,
+  strategyPathFor,
+  writeStrategyFile,
+} from "./schedule-strategy-generate.js";
 
-function resolveSchedulePath(opts: { project?: string }): {
+type ResolvedScheduleContext = {
   schedulePath: string;
   baseDir: string;
-} {
+  projectId: string;
+  catalogPath: string | null;
+  timelinePath: string;
+  rolesPath?: string;
+};
+
+function resolveSchedulePath(opts: { project?: string }): ResolvedScheduleContext {
   loadEnv();
   const { config, configPath } = loadConfig();
   const baseDir = specdojoRootDir();
@@ -57,7 +77,16 @@ function resolveSchedulePath(opts: { project?: string }): {
     throw new Error(`schedule_path not set for project '${projectId}' in ${configPath}.`);
   }
 
-  return { schedulePath: resolve(baseDir, getProjectSchedulePath(project)), baseDir };
+  const catalogPath = getProjectCatalogPath(project);
+  const rolesPath = getProjectRolesPath(project);
+  return {
+    schedulePath: resolve(baseDir, getProjectSchedulePath(project)),
+    baseDir,
+    projectId,
+    catalogPath: catalogPath ? resolve(baseDir, catalogPath) : null,
+    timelinePath: resolve(baseDir, getProjectTimelinePath(project)),
+    ...(rolesPath ? { rolesPath } : {}),
+  };
 }
 
 export type ProjectMilestoneBuild = {
@@ -252,14 +281,6 @@ function requireTrack(track: unknown): string {
   return value;
 }
 
-function requireStrategyPath(schedulePath: string, track: string): string {
-  const strategyPath = join(schedulePath, `sch-strategy-${track}.yaml`);
-  if (!existsSync(strategyPath)) {
-    throw new Error(`Strategy file not found: ${strategyPath}`);
-  }
-  return strategyPath;
-}
-
 function printDiff(diff: string[]): void {
   const MAX_DIFF_LINES = 200;
   for (const line of diff.slice(0, MAX_DIFF_LINES)) {
@@ -300,10 +321,36 @@ type CollectedScope = {
 
 // Collects the machine-determined facts for a track. Errors here mean the scope itself cannot be
 // resolved, so no agent judgment should be attempted.
-function collectScope(schedulePath: string, track: string): CollectedScope {
+function collectScope(context: ResolvedScheduleContext, track: string): CollectedScope {
   const repoRoot = specdojoRootDir();
-  const strategyPath = requireStrategyPath(schedulePath, track);
-  const scope = loadStrategyScope(strategyPath);
+  const strategyPath = strategyPathFor(context.schedulePath, track);
+  let scope: ReturnType<typeof loadStrategyScope>;
+  if (existsSync(strategyPath)) {
+    scope = loadStrategyScope(strategyPath);
+  } else {
+    if (!existsSync(join(context.timelinePath, "tml-index.yaml"))) {
+      throw new Error(`Strategy file not found: ${strategyPath}`);
+    }
+    if (!context.catalogPath) {
+      throw new Error(`catalog_path is required to resolve track '${track}' from Timeline.`);
+    }
+    const resolved = resolveTrackScopeCatalogs({
+      repoRoot,
+      catalogPath: context.catalogPath,
+      timelinePath: context.timelinePath,
+      track,
+      existingStrategy: null,
+    });
+    for (const warning of resolved.warnings) process.stdout.write(`WARN:  ${warning}\n`);
+    if (resolved.errors.length > 0) throw new Error(resolved.errors.join("\n"));
+    scope = {
+      strategyId: `${context.projectId}:sch-strategy-${track}`,
+      track,
+      projectId: context.projectId,
+      catalogs: resolved.catalogs.map((catalog) => ({ id: catalog.id, path: catalog.path })),
+      includeKinds: ["work"],
+    };
+  }
   if (scope.track !== track) {
     throw new Error(
       `${repoRelative(strategyPath)}: track '${scope.track}' does not match '${track}'.`,
@@ -341,9 +388,10 @@ function registerScheduleAssessmentCommands(sch: Command): void {
   aScaffold.option("--dry-run", "Show the diff without writing", false);
   aScaffold.action((opts) => {
     try {
-      const { schedulePath } = resolveSchedulePath(opts);
+      const context = resolveSchedulePath(opts);
+      const { schedulePath } = context;
       const track = requireTrack(opts.track);
-      const collected = collectScope(schedulePath, track);
+      const collected = collectScope(context, track);
 
       let doc: SchAssessment;
       if (opts.from) {
@@ -412,9 +460,10 @@ function registerScheduleAssessmentCommands(sch: Command): void {
   aPrompt.option("--out <path>", "Write the instruction to a file instead of stdout");
   aPrompt.action((opts) => {
     try {
-      const { schedulePath } = resolveSchedulePath(opts);
+      const context = resolveSchedulePath(opts);
+      const { schedulePath } = context;
       const track = requireTrack(opts.track);
-      const collected = collectScope(schedulePath, track);
+      const collected = collectScope(context, track);
       const assessmentPath = resolveAssessmentPath(schedulePath, track);
 
       const prompt = renderAssessmentPrompt({
@@ -447,7 +496,8 @@ function registerScheduleAssessmentCommands(sch: Command): void {
   aValidate.option("--track <track>", "Limit validation to one track");
   aValidate.action((opts) => {
     try {
-      const { schedulePath } = resolveSchedulePath(opts);
+      const context = resolveSchedulePath(opts);
+      const { schedulePath } = context;
       const assessmentsDir = resolveAssessmentsDir(schedulePath);
       const track = typeof opts.track === "string" ? opts.track.trim() : "";
       const files = (existsSync(assessmentsDir) ? readdirSync(assessmentsDir) : [])
@@ -469,7 +519,7 @@ function registerScheduleAssessmentCommands(sch: Command): void {
         const filePath = join(assessmentsDir, file);
         try {
           const doc = loadAssessment(filePath);
-          const collected = collectScope(schedulePath, doc.track);
+          const collected = collectScope(context, doc.track);
           const ok = reportAssessmentValidation(doc, {
             fileName: file,
             currentFacts: collected.factsByLocalId,
@@ -487,6 +537,137 @@ function registerScheduleAssessmentCommands(sch: Command): void {
         }
       }
       if (!allOk) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+}
+
+function collectRepeatable(value: string, previous: string[] = []): string[] {
+  return [...previous, value];
+}
+
+function parseOwnerOverrides(values: string[]): Map<string, string> {
+  const owners = new Map<string, string>();
+  for (const value of values) {
+    const separator = value.indexOf("=");
+    const localId = separator >= 0 ? value.slice(0, separator).trim() : "";
+    const owner = separator >= 0 ? value.slice(separator + 1).trim() : "";
+    if (!localId || !owner) {
+      throw new Error(`Invalid --owner '${value}'. Expected <local_id>=<ROLE>.`);
+    }
+    const previous = owners.get(localId);
+    if (previous && previous !== owner) {
+      throw new Error(`Conflicting --owner values for '${localId}': '${previous}' and '${owner}'.`);
+    }
+    owners.set(localId, owner);
+  }
+  return owners;
+}
+
+// `schedule strategy generate` is the only path that turns an assessment into strategy YAML.
+// The generator performs schema, scope, owner, dependency and schedule dry-run validation before
+// this command is allowed to replace a file.
+function registerScheduleStrategyCommands(sch: Command): void {
+  const strategy = sch
+    .command("strategy")
+    .description("Deterministic sch-strategy-<track>.yaml generation commands");
+  const generate = strategy
+    .command("generate")
+    .description("Generate sch-strategy-<track>.yaml from DCT, Timeline and assessment");
+  addProjectOption(generate);
+  generate.requiredOption("--track <track>", "Track name (e.g. launch)");
+  generate.option(
+    "--owner <local_id=role>",
+    "Owner override for one deliverable (repeatable)",
+    collectRepeatable,
+    [] as string[],
+  );
+  generate.option("--default-owner <role>", "Fallback owner for unresolved deliverables");
+  generate.option("--gate-owner <role>", "Owner of generated phase gates");
+  generate.option("--milestone-owner <role>", "Owner of generated group milestones");
+  generate.option("--pass-owner <role>", "Owner of a generated cross-deliverable pass");
+  generate.option(
+    "--no-bootstrap-ordering",
+    "Do not make non-bootstrap deliverables wait for representative bootstrap deliverables",
+  );
+  generate.option(
+    "--force",
+    "Overwrite an existing strategy after showing a reviewable diff",
+    false,
+  );
+  generate.option("--dry-run", "Validate and show the diff without writing", false);
+  generate.action((opts) => {
+    try {
+      const context = resolveSchedulePath(opts);
+      const track = requireTrack(opts.track);
+      if (!context.catalogPath) {
+        throw new Error(`catalog_path not set for project '${context.projectId}'.`);
+      }
+      const assessmentPath = resolveAssessmentPath(context.schedulePath, track);
+      if (!existsSync(assessmentPath)) {
+        throw new Error(
+          `Assessment file not found: ${assessmentPath}\n` +
+            `Run: specdojo schedule assessment scaffold --track ${track}`,
+        );
+      }
+      const assessment = loadAssessment(assessmentPath);
+      const result = generateStrategyFromAssessment({
+        repoRoot: context.baseDir,
+        schedulePath: context.schedulePath,
+        catalogPath: context.catalogPath,
+        timelinePath: context.timelinePath,
+        ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
+        projectId: context.projectId,
+        track,
+        assessment,
+        ownerOverrides: parseOwnerOverrides(opts.owner as string[]),
+        ...(typeof opts.defaultOwner === "string"
+          ? { defaultOwner: opts.defaultOwner.trim() }
+          : {}),
+        ...(typeof opts.gateOwner === "string" ? { gateOwner: opts.gateOwner.trim() } : {}),
+        ...(typeof opts.milestoneOwner === "string"
+          ? { milestoneOwner: opts.milestoneOwner.trim() }
+          : {}),
+        ...(typeof opts.passOwner === "string" ? { passOwnerOverride: opts.passOwner.trim() } : {}),
+        bootstrapOrdering: opts.bootstrapOrdering !== false,
+      });
+      for (const warning of result.warnings) process.stdout.write(`WARN:  ${warning}\n`);
+      for (const error of result.errors) process.stdout.write(`ERROR: ${error}\n`);
+      if (result.errors.length > 0 || !result.doc) {
+        process.stdout.write(`Not written (${track}): validation failed.\n`);
+        process.exitCode = 1;
+        return;
+      }
+
+      const written = writeStrategyFile({
+        schedulePath: context.schedulePath,
+        track,
+        content: result.content,
+        force: !!opts.force,
+        dryRun: !!opts.dryRun,
+      });
+      const summary = `${result.taskCount} tasks, ${result.milestoneIds.length} milestones`;
+      if (written.written) {
+        process.stdout.write(
+          `${opts.force ? "Updated" : "Created"}: ${written.path} (${summary})\n`,
+        );
+        return;
+      }
+      if (written.skippedReason === "unchanged") {
+        process.stdout.write(`Unchanged: ${written.path} (${summary})\n`);
+        return;
+      }
+      if (written.skippedReason === "dry-run") {
+        process.stdout.write(`Dry-run (not written): ${written.path} (${summary})\n`);
+        printDiff(written.diff);
+        return;
+      }
+      process.stdout.write(
+        `Skipped (already exists; use --force to overwrite): ${written.path}\n` +
+          `Review the diff below before overwriting.\n`,
+      );
+      printDiff(written.diff);
     } catch (error) {
       printCommandError(error);
     }
@@ -626,4 +807,5 @@ export function registerScheduleCommands(program: Command): void {
   });
 
   registerScheduleAssessmentCommands(sch);
+  registerScheduleStrategyCommands(sch);
 }
