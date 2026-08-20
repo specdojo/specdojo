@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-strg-deterministic-dct-strategy-generation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
-  conclusion: rate limit reached
+  completed_at: "2026-08-20T12:27:51Z"
+  conclusion: catalog scaffold --plan と schedule strategy generate を実装し、DCT と sch-strategy を決定論的に生成できるようにした。異常系・再生成安定性を含むテストと、rulebook・設計ガイド・コマンドリファレンスの更新を完了した。
 ---
 
 # PJR-STRG DCTとsch-strategyの決定論的ジェネレーター実装
