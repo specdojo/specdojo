@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kata-artifact-kata-readiness-assessment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: agent exited with non-zero code"
+  completed_at: "2026-08-18T22:33:00Z"
+  conclusion: sch-assessment のschema・CLI・テスト・関連ガイドを実装し、typecheck・lint・unit testを通過。review完了。
 ---
 
 # PJR-KATA 成果物・Kataの利用可能性と推奨フローを判定するagentの実装
