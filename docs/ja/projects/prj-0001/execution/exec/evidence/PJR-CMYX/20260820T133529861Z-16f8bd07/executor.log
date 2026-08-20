@@ -1,0 +1,29 @@
+実装と検証が完了しました。
+
+## 変更ファイル
+
+| ファイル                                                                                   | 内容                                                                                                                         |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/dist-freshness.ts`（新規）                                                            | dist と src の鮮度比較、警告/中断の判定、古い dist の自動再ビルド（`npm run build`）を提供                                    |
+| `src/specdojo.ts`                                                                          | CLI 起動時に鮮度ガードを実行。`exec` 系は終了コード 1 で中断、他は警告のみ                                                    |
+| `src/routine.ts`                                                                           | `routine run`（非 dry-run）の先頭で古い dist を自動再ビルド。失敗時は routine を実行せず exit 1                               |
+| `src/build-if-stale.ts`（新規）                                                            | hook / 手動用の再ビルド判定スクリプト（linked worktree・src 無し・typescript 未導入では no-op）                               |
+| `tests/src/dist-freshness.test.ts`（新規）                                                 | 鮮度判定・サブコマンド解決・警告/中断/バイパス・自動再ビルドの単体テスト 22 件                                                |
+| `docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md` | 「対応結果」を記入（状態項目は未変更）                                                                                       |
+
+## 設計上のポイント
+
+- 判定は「エントリが `dist/**.js`」かつ「同じパッケージルートに `src` がある」開発チェックアウトのみで有効。配布パッケージ（`src` 無し）では no-op のため、`bin` / `files` / 配布ドキュメントの呼び出し記法は一切変更していない。
+- 手動実行の `exec` 系は中断するため、設定済み `pipeline.parent_validations` が未実行のまま success になる経路を塞いだ。
+- 自動実行経路（routine）は子プロセスとして bin を起動するため、routine 先頭で dist を最新化して自己修復する。
+- `SPECDOJO_SKIP_DIST_FRESHNESS_CHECK=1` で緊急時にバイパス可能。
+
+## 申し送り
+
+`lefthook.yml`（`post-merge` / `post-checkout` で `npx tsx src/build-if-stale.ts`）と `package.json`（`build:if-stale` script）への追記は、executor サンドボックスが両ファイルへの書き込みを拒否したため未実施です。未追加でも routine の自動再ビルドと CLI 鮮度ガードで検知・防止は成立します（個票の「未実施事項」に記録済み）。
+
+手動確認: `npm run build` 後に src の mtime を更新した状態で、`node dist/specdojo.js exec where` は中断メッセージ + exit 1、`node dist/specdojo.js --version` は警告のみ + exit 0、ビルド直後は無出力。確認用に生成した `dist` は削除して worktree の状態を戻しました。
+
+<specdojo_executor_evidence>
+{"final_message":"dist 鮮度ガード（CLI 起動時の警告/exec 中断）、routine 実行時の自動再ビルド、hook 用 build-if-stale スクリプトを実装し、単体テスト22件を追加。個票の対応結果を更新。lefthook.yml と package.json はサンドボックスの書き込み拒否のため未変更（申し送り済み）。","validations":[{"command":"npx prettier --write src/dist-freshness.ts src/build-if-stale.ts src/specdojo.ts src/routine.ts tests/src/dist-freshness.test.ts","status":"passed","summary":"全ファイル整形済み（変更なし）"},{"command":"npx eslint src/dist-freshness.ts src/build-if-stale.ts src/specdojo.ts src/routine.ts tests/src/dist-freshness.test.ts","status":"passed","summary":"エラー・警告なし"},{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit で型エラーなし"},{"command":"npm run test:unit","status":"passed","summary":"83 ファイル / 1182 テスト全て成功（新規 dist-freshness 22 件を含む）"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md","status":"passed","summary":"markdownlint エラーなし（prettier 整形後）"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0。既存の based_on 未作成文書に関する WARN のみで ERROR なし"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"exit 0。登録簿ビューと pm-* ログを再生成"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"exit 0。1242 entries を doc-index.json へ生成"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"exit 0。履歴蓄積ファイルのリンク記法違反なし"},{"command":"npm run build && node dist/specdojo.js exec where --project prj-0001","status":"passed","summary":"src を新しくした状態で中断メッセージを出力し exit 1。--version は警告のみで exit 0、ビルド直後は無出力。確認用 dist は削除"},{"command":"npm run test:integration","status":"not_run","summary":"executor sandbox では実行せず、親 runner の parent_validations に委ねる"}]}
+</specdojo_executor_evidence>
