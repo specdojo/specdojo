@@ -1,7 +1,9 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, rmSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { type Command } from "commander";
+import { ensureFreshDistBuildForEntry } from "./dist-freshness.js";
 import { selfRunArgs } from "./spawn-self.js";
 import { getProjectRoutinesPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
 import {
@@ -657,6 +659,21 @@ function releaseRoutineLock(lockDir: string): void {
 // Execution
 // ================================
 
+/**
+ * routine は bin（dist/specdojo.js）を子プロセスとして起動するため、dist が古いと
+ * 子プロセスも古い挙動で動き、設定済みの検証が沈黙して省略される。routine 実行の
+ * 先頭で dist を最新化し、再ビルドに失敗した場合は実行を中止する。
+ * tsx で src を直接実行している場合と配布環境では no-op になる。
+ */
+function ensureFreshDistForRoutineRun(): boolean {
+  const result = ensureFreshDistBuildForEntry(fileURLToPath(import.meta.url));
+  if (result.message) {
+    const stream = result.outcome === "rebuild-failed" ? process.stderr : process.stdout;
+    stream.write(`[routine] ${result.message}\n`);
+  }
+  return result.outcome !== "rebuild-failed";
+}
+
 function spawnSelf(args: string[]): RoutineExecutionResult {
   const [exe, fullArgs] = selfRunArgs(args);
   const result = spawnSync(exe, fullArgs, {
@@ -996,6 +1013,10 @@ export function registerRoutineCommands(program: Command): void {
 
       const dryRun = !!opts.dryRun;
       if (!dryRun) {
+        if (!ensureFreshDistForRoutineRun()) {
+          process.exitCode = 1;
+          return;
+        }
         lockDir = acquireRoutineLock(paths.routinesPath);
       }
 

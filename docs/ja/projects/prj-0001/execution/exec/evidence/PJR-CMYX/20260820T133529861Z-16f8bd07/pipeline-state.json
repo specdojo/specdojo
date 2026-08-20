@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CMYX",
+  "run_id": "20260820T133529861Z-16f8bd07",
+  "updated_at": "2026-08-20T13:47:11.797Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-20T13:35:29.861Z",
+      "completed_at": "2026-08-20T13:46:17.038Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CMYX/20260820T133529861Z-16f8bd07/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-08-20T13:46:17.039Z",
+      "completed_at": "2026-08-20T13:47:11.797Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-cmyx-20260820T133456Z-71e4-result.md"
+    }
+  }
+}

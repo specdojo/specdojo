@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CMYX",
+  "run_id": "20260820T133529861Z-16f8bd07",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-20T13:35:29.861Z",
+    "completed_at": "2026-08-20T13:46:16.916Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md",
+      "status": "M"
+    },
+    {
+      "path": "src/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/build-if-stale.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dist-freshness.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dist-freshness.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-cmyx-exec-dist-parent-validations.md       | 22 ++++++++++++++++++++-\n src/routine.ts                                     | 21 ++++++++++++++++++++\n src/specdojo.ts                                    | 23 ++++++++++++++++++++++\n 3 files changed, 65 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/dist-freshness.ts src/build-if-stale.ts src/specdojo.ts src/routine.ts tests/src/dist-freshness.test.ts",
+      "status": "passed",
+      "summary": "全ファイル整形済み（変更なし）"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/dist-freshness.ts src/build-if-stale.ts src/specdojo.ts src/routine.ts tests/src/dist-freshness.test.ts",
+      "status": "passed",
+      "summary": "エラー・警告なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit で型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "83 ファイル / 1182 テスト全て成功（新規 dist-freshness 22 件を含む）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md",
+      "status": "passed",
+      "summary": "markdownlint エラーなし（prettier 整形後）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0。既存の based_on 未作成文書に関する WARN のみで ERROR なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "exit 0。登録簿ビューと pm-* ログを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "exit 0。1242 entries を doc-index.json へ生成"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "exit 0。履歴蓄積ファイルのリンク記法違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build && node dist/specdojo.js exec where --project prj-0001",
+      "status": "passed",
+      "summary": "src を新しくした状態で中断メッセージを出力し exit 1。--version は警告のみで exit 0、ビルド直後は無出力。確認用 dist は削除"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "executor sandbox では実行せず、親 runner の parent_validations に委ねる"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CMYX\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-mBZeee/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "dist 鮮度ガード（CLI 起動時の警告/exec 中断）、routine 実行時の自動再ビルド、hook 用 build-if-stale スクリプトを実装し、単体テスト22件を追加。個票の対応結果を更新。lefthook.yml と package.json はサンドボックスの書き込み拒否のため未変更（申し送り済み）。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CMYX/20260820T133529861Z-16f8bd07/executor.log",
+      "bytes": 5856,
+      "truncated": false
+    }
+  ]
+}
