@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-20T13:30:02Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: runner validation `test-integration`（`npm run test:integration`）が failed（exit 1）。runner 検証が failed の場合は complete を返せない。"
 ---
 
 # PJR-6VFN exec run --register で executor 成功後に reporter だけを再開できるようにする
