@@ -60,3 +60,16 @@ commit-msg:
   commands:
     commitlint:
       run: npx commitlint --edit $1
+
+# specdojo の bin は dist/specdojo.js を指すため、merge / checkout で src が更新された
+# あとに再ビルドしないと、CLI が古い挙動のまま動く（PJR-CMYX）。src が dist より新しい
+# 場合だけ再ビルドし、それ以外は何もしない。失敗しても hook を止めない best-effort。
+post-merge:
+  commands:
+    build-if-stale:
+      run: npm run build:if-stale
+
+post-checkout:
+  commands:
+    build-if-stale:
+      run: npm run build:if-stale
