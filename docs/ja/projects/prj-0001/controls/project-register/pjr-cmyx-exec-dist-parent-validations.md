@@ -63,7 +63,7 @@ specdojo の bin は dist/specdojo.js を指すため、npm run build を再実�
 
 - `package.json` に `build:if-stale` script（`tsx src/build-if-stale.ts`）を追加した。
 - `lefthook.yml` に `post-merge` と `post-checkout` を追加し、いずれも `npm run build:if-stale` を実行するようにした。`npx lefthook install` で両 hook の同期を確認した。
-- executor のサンドボックスが `lefthook.yml` と `package.json` への書き込みを拒否したため、`.specdojo/claude/settings.edit.json` の allow リストに `Edit(lefthook.yml)` と `Edit(package.json)` を追加した。
+- 上記2ファイルは executor のサンドボックスが書き込みを拒否したため、agent の権限は広げず orchestrator が適用した。`package.json` の script 本体は親 runner の固定 argv（`npm run test:integration`）が実行する内容そのものであり、`lefthook.yml` のコマンドは commit 時に親コンテキストで実行される。agent に書き込みを許すと、parent_validations を ID 固定にして任意コマンドの注入を防いでいる設計が無効になるため、権限は追加しない方針とした。
 - 追加後の動作確認として、`src` を新しくした状態で `node dist/specdojo.js exec where` が終了コード 1 で中断すること、`register --help` は警告のみで終了コード 0 になること、`npm run build:if-stale` が古い場合だけ再ビルドし最新状態では無出力になること、再ビルド後は `exec where` が終了コード 0 で通ることを確認した。
 - 併せて `npm run build` を実行し、開発チェックアウトの dist を最新化した。
 
