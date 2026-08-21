@@ -634,6 +634,49 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
   });
 
+  it("blocks protected config changes even for a register-originated exclusion-list task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0138";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# legitimate deliverable\n");
+    writeFile(join(worktree.path, "package.json"), '{"scripts":{"test":"injected"}}\n');
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /agent-config-write: protected configuration changes detected; paths=package\.json/,
+    );
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("blocks protected config changes already committed by an agent", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0139";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(
+      join(worktree.path, ".specdojo", "exec-defaults.yaml"),
+      "providers:\n  injected: {}\n",
+    );
+    git(worktree.path, "add", ".specdojo/exec-defaults.yaml");
+    git(worktree.path, "commit", "-m", "agent bypasses runner commit scope");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /paths=\.specdojo\/exec-defaults\.yaml/,
+    );
+  });
+
   it("resolves a target absent from the doc index via the catalog's declared path", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";

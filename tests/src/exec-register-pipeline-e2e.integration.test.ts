@@ -144,7 +144,7 @@ function buildTicket(id: string): string {
 }
 
 const FAKE_PIPELINE_AGENT_SCRIPT = `
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 function arg(name) {
   const index = process.argv.indexOf("--" + name);
@@ -156,6 +156,13 @@ const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
+  if (nickname.includes("protected-write")) {
+    writeFileSync(
+      "package.json",
+      '{"scripts":{"test:integration":"echo ran > parent-validation-ran"}}\\n',
+      "utf8",
+    );
+  }
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
@@ -192,17 +199,26 @@ process.stderr.write("unknown role: " + role + "\\n");
 process.exit(1);
 `;
 
-type Fixture = { root: string };
+type Fixture = { root: string; worktreeBase: string };
 
 function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
   return (async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-"));
+    // worktree の既定基準パスは fixture 間で共有されるため、fixture ごとに専用ディレクトリを
+    // 作って --worktree-base で明示する。保護違反や失敗の検証では worktree を意図的に残すので、
+    // 共有パスのままだと孤児 worktree が後続テストの checkpoint を壊す。
+    const worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-wt-"));
     try {
       mkdirSync(join(root, ".specdojo"), { recursive: true });
       mkdirSync(join(root, ".specdojo", "claude"), { recursive: true });
       writeFileSync(
         join(root, ".specdojo", "specdojo.config.json"),
         `${JSON.stringify(CONFIG, null, 2)}\n`,
+        "utf8",
+      );
+      writeFileSync(
+        join(root, "package.json"),
+        `${JSON.stringify({ scripts: { "test:integration": 'node -e "process.exit(0)"' } }, null, 2)}\n`,
         "utf8",
       );
       mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
@@ -259,6 +275,28 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 1",
+          "  - nickname: exec-codex-protected-write",
+          "    display_name: exec-codex-protected-write",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: codex",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 2",
+          "  - nickname: exec-claude-protected-write",
+          "    display_name: exec-claude-protected-write",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: claude",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 3",
           "",
         ].join("\n"),
         "utf8",
@@ -271,6 +309,11 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
           "  claude:",
           `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
+          "  codex:",
+          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+          "pipeline:",
+          "  parent_validations:",
+          "    - test-integration",
           "",
         ].join("\n"),
         "utf8",
@@ -287,11 +330,15 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       // register start/review の再帰的な specdojo CLI 呼び出し（spawnSelf）を、実リポジトリの
       // src/specdojo.ts を tsx 経由で再実行する形で成立させる。
       process.argv[1] = join(REAL_REPO_ROOT, "src", "specdojo.ts");
-      await fn({ root });
+      await fn({ root, worktreeBase });
     } finally {
       process.chdir(originalCwd);
       process.argv[1] = originalArgv1;
-      rmSync(root, { recursive: true, force: true });
+      try {
+        rmSync(root, { recursive: true, force: true });
+      } finally {
+        rmSync(worktreeBase, { recursive: true, force: true });
+      }
     }
   })();
 }
@@ -358,7 +405,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     "runs the same pipeline in --worktree mode and merges the result back",
     { timeout: 60_000 },
     async () => {
-      await withRepo(async ({ root }) => {
+      await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
 
@@ -373,6 +420,8 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "--reporter-by",
           "report-1",
           "--worktree",
+          "--worktree-base",
+          worktreeBase,
         ]);
 
         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
@@ -431,6 +480,47 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(process.exitCode).toBe(1);
       });
     },
+  );
+
+  it.each(["exec-codex-protected-write", "exec-claude-protected-write"])(
+    "blocks %s before commit and keeps the register item out of review",
+    async (executor) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        const stderr: string[] = [];
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          stderr.push(String(chunk));
+          return true;
+        });
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          executor,
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
+        expect(ticket).toContain("item_status: waiting");
+        expect(readFileSync(join(root, "package.json"), "utf8")).toContain(
+          '"test:integration": "node -e \\"process.exit(0)\\""',
+        );
+        expect(existsSync(join(root, "parent-validation-ran"))).toBe(false);
+        expect(stderr.join("")).toContain(
+          "blocked: agent-config-write: protected configuration changes detected; paths=package.json",
+        );
+        expect(process.exitCode).toBe(1);
+      });
+    },
+    60_000,
   );
 });
 

@@ -1,0 +1,13 @@
+provider 非依存ガードを実装しました。
+
+- agent 終了直後・親検証前と、commit／merge 前の二段で保護設定の変更を検知
+- register の除外方式、agent による直接 commit、in-place 実行にも対応
+- codex／claude 両経路の integration test を追加
+- 個票・共通設計・運用手順を更新
+- executor 指示どおり result は未編集
+- unit test 1,222件、型検査、lint、catalog 検証に成功
+- integration test は親 runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"provider 非依存の設定変更ガード、回帰テスト、設計・運用文書の更新を完了した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功。"},{"command":"npm run test:unit","status":"passed","summary":"85 test files、1222 tests が成功。"},{"command":"npx markdownlint docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-y3kp-agent-config-write-enforcement.md","status":"passed","summary":"変更した Markdown の静的検査成功。"},{"command":"npx eslint src/exec-agent-protected-config.ts src/exec-run.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"変更した TypeScript の lint 成功。"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、catalog 検証、文書 index 生成に成功。既存の欠落文書 warning のみ。"},{"command":"npm run test:integration","status":"not_run","summary":"executor 指示に従い未実行。親 runner が実行して evidence へ追記する。"}]}
+</specdojo_executor_evidence>

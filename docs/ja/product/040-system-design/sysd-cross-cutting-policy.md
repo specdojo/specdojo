@@ -37,6 +37,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 | scp-GIT-002 | Git | commit・merge・completeを順序保証する | MUST | ARC |
 | scp-GIT-003 | Git | Git共有資源の一時競合だけを安全に再試行する | MUST | ARC |
 | scp-SEC-001 | Security | agentへ無制限権限・秘密情報を与えない | MUST NOT | ARC / OPS |
+| scp-SEC-002 | Security | agentによる親実行設定の変更を統合・実行しない | MUST NOT | ARC / OPS |
 
 ## 3. 各ルール詳細（ID単位）
 
@@ -165,6 +166,15 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 - **Enforcement（検証）**: provider設定review、commit許可範囲、branch protection。
 - **Exception（例外）**: 緊急権限は人間の承認・期限・監査証跡を要求する。
 - **References（参照）**: `sysd-critical-flows`のPR承認フロー、`opd-access-management`。
+
+### scp-SEC-002: 親実行設定の agent 書き込み禁止
+
+- **Rule（MUST NOT）**: agent 実行中に `package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定を変更し、その変更後の内容で親検証、commit、merge を行わない。
+- **Rationale（意図）**: sandbox 外の親 runner や Git hook が実行するコマンドを agent に差し替えさせず、固定 argv と許可 ID の安全境界を維持する。
+- **Scope（適用範囲）**: provider を問わない agent executor / reporter の in-place・worktree・register 実行。
+- **Enforcement（検証）**: CLI の固定パス定義を用い、agent 起動前後の差分を親検証前に検査する。worktree 統合時は未 commit 差分と exec branch 上の commit 済み差分を再検査し、違反パスを標準エラーへ出力して block する。
+- **Exception（例外）**: agent 向け解除設定は設けない。必要な変更は result の申し送りへ記録し、人間または対話型 orchestrator が agent 実行外で内容を確認して適用する。
+- **References（参照）**: [[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない]]、`src/exec-agent-protected-config.ts`、`src/exec-worktree-ops.ts`。
 
 ## 4. 例外（DECリンク）
 

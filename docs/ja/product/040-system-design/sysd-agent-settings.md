@@ -41,6 +41,8 @@ schedule / register item
 
 設定の一次情報は`.specdojo/exec-defaults.yaml`と`pm-members.yaml`、実行状態の一次情報はproject配下のplan・result・append-only eventである。
 
+agent が親 runner・Git hook・CI の実行内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定は provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未 commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission / sandbox は第一層として維持するが、この判定の入力には使わない。
+
 ## 4. 子設計一覧
 
 | 子設計                                                                    | 対象               | 固有責務                                |
