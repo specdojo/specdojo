@@ -378,6 +378,8 @@ specdojo schedule strategy generate \
 | `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。既定は in-place、`--worktree` で隔離）             | `run` / `plan`                                   |
 | `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（`--worktree` 時は常に commit のため無視） | `run --register`                                 |
 | `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                            | `run --register`                                 |
+| `--resume`                      | executor が成功した run の reporter 段だけを、既存 worktree と evidence を使って再開する               | `run --register --worktree`                      |
+| `--force-restart`               | 再開可能な executor の成果があっても、worktree を破棄して項目全体を再実行する                          | `run --register --worktree`                      |
 | `--executor-by <nickname>`      | executor/reporter パイプラインの executor 段に使う agent nickname                                      | `run --auto` / `resume` / `run --register`       |
 | `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                      | `run --auto` / `resume` / `run --register`       |
 | `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                         | `resume`                                         |
@@ -424,11 +426,16 @@ specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --worktree --p
 # executor/reporter パイプラインで実行する（両フラグ必須）
 specdojo exec run --project prj-0001 --register PJR-0012 --executor-by claude-expert-executor --reporter-by claude-reporter --worktree
 
+# executor 成功後に reporter だけが失敗した項目を、reporter 段から再開する
+specdojo exec run --project prj-0001 --register PJR-0012 --worktree --resume
+
 # Job Definitionから期間ごとのRunを生成して実行する
 specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
 `--register` は個票の項目を実行します。実行対象になるのは type が `todo` / `issue` / `change-request` / `question` / `risk` の項目で、`decision` / `note` は対象外です。既定は in-place の直列実行です。`--worktree` を付けると成果物の変更を worktree に隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--parallel <n>` は `--worktree` との併用時のみ指定でき、単独で指定するとエラーになります。
+
+`--resume` は `--register --worktree` の pipeline 実行専用で、executor が成功したまま reporter だけが失敗した run を reporter 段から再開します。対象 run は既存 worktree に残る最新の `pipeline-state.json` と `evidence.json` から特定し、`--reporter-by` を省略した場合は state に記録された reporter agent を使います。worktree が無い、executor が成功していない、evidence が欠損しているなど再開できない場合は、worktree を含め何も変更せずエラー終了します。再開可能な成果が残っている項目を `--resume` なしで再実行しようとした場合も、未コミットの executor 成果を守るために中断します。破棄して最初からやり直す場合は `--force-restart` を指定します。手順の使い分けは [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 `--by`（または owner 解決）を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--executor-by` と `--reporter-by` を両方指定した場合は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
 

@@ -109,6 +109,7 @@ import {
 } from "./exec-results.js";
 import { completeJobRun, materializeJobRun } from "./job.js";
 import {
+  findExecWorktree,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -132,13 +133,17 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "./exec-strategy.js";
-import { recordExecutorEvidence } from "./exec-evidence.js";
+import { recordExecutorEvidence, type ExecEvidence } from "./exec-evidence.js";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   runParentValidations,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
+import {
+  findResumableRegisterRun,
+  resolveRegisterResumeArtifacts,
+} from "./exec-register-resume.js";
 import {
   createPipelineState,
   loadPipelineResumeCheckpoint,
@@ -193,6 +198,8 @@ export type RunOpts = {
   jobTrigger?: string;
   registerCommit?: boolean;
   onFailure?: string;
+  resume?: boolean;
+  forceRestart?: boolean;
   worktree?: boolean;
   trackState?: boolean;
   archiveOnSuccess?: boolean;
@@ -3161,11 +3168,121 @@ export function resolveRegisterPipelineCommand(
   };
 }
 
+// register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
+// 成功したまま reporter だけが失敗した run の再開経路の双方から共有し、reporter 起動・
+// result 描画・pipeline-state 更新のみを担う（register の状態遷移と commit は呼び出し側）。
+async function runRegisterReporterStage(params: {
+  repoRoot: string;
+  cwd: string;
+  schedulePath: string;
+  executionPath: string;
+  reporterCandidates: AgentRunCandidate[];
+  planPrompt: string;
+  resultPath: string;
+  execDefaults: ExecDefaultsConfig;
+  evidence: ExecEvidence;
+  state: PipelineState;
+  statePath: string;
+}): Promise<{
+  exitCode: 0 | 1;
+  runResult: RunResult;
+  blockReason?: string;
+  state: PipelineState;
+}> {
+  const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
+  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
+  let state = params.state;
+
+  const reporterStartedAt = new Date().toISOString();
+  state = updatePipelineStage(
+    state,
+    "reporter",
+    {
+      status: "running",
+      actor: reporterCandidates[0]?.actor ?? null,
+      started_at: reporterStartedAt,
+      completed_at: null,
+    },
+    reporterStartedAt,
+  );
+  writePipelineState(params.statePath, state);
+  process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
+
+  let reporterAttempts = 0;
+  const reporter = await runReporterWithFormatRetry({
+    plan: params.planPrompt,
+    evidence: params.evidence,
+    mode: "edit",
+    invoke: async (reporterPrompt) => {
+      const reporterOutcome = await runWithRetry(
+        reporterCandidates,
+        reporterPrompt,
+        execDefaults,
+        cwd,
+        env,
+      );
+      reporterAttempts += reporterOutcome.attempts;
+      return {
+        result: reporterOutcome.result,
+        stdout: reporterOutcome.stdout,
+        stderr: reporterOutcome.stderr,
+      };
+    },
+  });
+
+  let exitCode: 0 | 1 = 1;
+  let blockReason: string | undefined;
+  if (reporter.result === "success") {
+    try {
+      await renderReporterResult(params.resultPath, reporter.output);
+      const parentValidationFailure = failedParentValidationReason(params.evidence.validations);
+      exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
+      blockReason =
+        reporter.output.outcome === "blocked"
+          ? reporter.output.block_reason
+          : parentValidationFailure;
+      process.stdout.write(
+        `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
+      );
+    } catch (error) {
+      exitCode = 1;
+      blockReason =
+        error instanceof Error
+          ? `reporter result rendering failed: ${error.message}`
+          : String(error);
+    }
+  } else {
+    blockReason = reporter.reason;
+  }
+
+  const reporterCompletedAt = new Date().toISOString();
+  state = updatePipelineStage(
+    state,
+    "reporter",
+    {
+      status:
+        exitCode === 0 ? "succeeded" : reporter.result === "rate_limit" ? "rate_limited" : "failed",
+      attempts: state.stages.reporter.attempts + reporterAttempts,
+      completed_at: reporterCompletedAt,
+      artifact_ref:
+        reporter.result === "success"
+          ? relative(cwd, params.resultPath).split(sep).join("/")
+          : state.stages.reporter.artifact_ref,
+    },
+    reporterCompletedAt,
+  );
+  writePipelineState(params.statePath, state);
+
+  const runResult: RunResult =
+    exitCode === 0 ? "success" : reporter.result === "rate_limit" ? "rate_limit" : "failure";
+  return { exitCode, runResult, blockReason, state };
+}
+
 // register 項目1件を executor→reporter の2段階で実行する。in-place（cwd: repoRoot）・
 // worktree（cwd: worktree.path）の双方から共有する。evidence・pipeline-state の記録先は
 // Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
-// 監査証跡のフォーマットを実行経路によらず統一する。register には resume の概念がまだ無いため
-// （PJR-TNDHの完了条件外）、失敗時は毎回このタスク全体を再実行する前提でよい。
+// 監査証跡のフォーマットを実行経路によらず統一する。state には plan / result の参照も
+// 記録し、reporter だけが失敗した場合に `--resume` が入力を復元できるようにする。
 async function runRegisterAgentPipeline(params: {
   repoRoot: string;
   cwd: string;
@@ -3174,6 +3291,7 @@ async function runRegisterAgentPipeline(params: {
   taskId: string;
   executor: AgentRunCandidate & { actor: string };
   reporterCandidates: AgentRunCandidate[];
+  planPath: string;
   planPrompt: string;
   resultPath: string;
   execDefaults: ExecDefaultsConfig;
@@ -3211,6 +3329,13 @@ async function runRegisterAgentPipeline(params: {
     updatedAt: startedAt,
     executorActor: executor.actor,
     reporterActor: reporterCandidates[0]?.actor,
+    // plan は root（統合ブランチ）で生成して checkpoint 済みのため、repo 相対パスが
+    // worktree 内の相対パスと一致する。result は cwd（in-place は root、worktree 実行は
+    // worktree）からの相対で、evidence の artifact_ref と同じ基準に揃える。
+    artifacts: {
+      plan_ref: relative(repoRoot, params.planPath).split(sep).join("/"),
+      result_ref: relative(cwd, resultPath).split(sep).join("/"),
+    },
   });
   state = updatePipelineStage(
     state,
@@ -3282,85 +3407,27 @@ async function runRegisterAgentPipeline(params: {
     };
   }
 
-  const reporterStartedAt = new Date().toISOString();
-  state = updatePipelineStage(
-    state,
-    "reporter",
-    {
-      status: "running",
-      actor: reporterCandidates[0]?.actor ?? null,
-      started_at: reporterStartedAt,
-    },
-    reporterStartedAt,
-  );
-  writePipelineState(stateLocation.path, state);
-  process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
-  let reporterAttempts = 0;
-  const reporter = await runReporterWithFormatRetry({
-    plan: planPrompt,
+  const reporterOutcome = await runRegisterReporterStage({
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    reporterCandidates,
+    planPrompt,
+    resultPath,
+    execDefaults,
     evidence: recorded.evidence,
-    mode: "edit",
-    invoke: async (reporterPrompt) => {
-      const reporterOutcome = await runWithRetry(
-        reporterCandidates,
-        reporterPrompt,
-        execDefaults,
-        cwd,
-        env,
-      );
-      reporterAttempts += reporterOutcome.attempts;
-      return {
-        result: reporterOutcome.result,
-        stdout: reporterOutcome.stdout,
-        stderr: reporterOutcome.stderr,
-      };
-    },
+    state,
+    statePath: stateLocation.path,
   });
 
-  let exitCode: 0 | 1 = 1;
-  let blockReason: string | undefined;
-  if (reporter.result === "success") {
-    try {
-      await renderReporterResult(resultPath, reporter.output);
-      const parentValidationFailure = failedParentValidationReason(recorded.evidence.validations);
-      exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
-      blockReason =
-        reporter.output.outcome === "blocked"
-          ? reporter.output.block_reason
-          : parentValidationFailure;
-      process.stdout.write(
-        `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
-      );
-    } catch (error) {
-      exitCode = 1;
-      blockReason =
-        error instanceof Error
-          ? `reporter result rendering failed: ${error.message}`
-          : String(error);
-    }
-  } else {
-    blockReason = reporter.reason;
-  }
-
-  const reporterCompletedAt = new Date().toISOString();
-  state = updatePipelineStage(
-    state,
-    "reporter",
-    {
-      status:
-        exitCode === 0 ? "succeeded" : reporter.result === "rate_limit" ? "rate_limited" : "failed",
-      attempts: reporterAttempts,
-      completed_at: reporterCompletedAt,
-      artifact_ref:
-        reporter.result === "success" ? relative(cwd, resultPath).split(sep).join("/") : null,
-    },
-    reporterCompletedAt,
-  );
-  writePipelineState(stateLocation.path, state);
-
-  const runResult: RunResult =
-    exitCode === 0 ? "success" : reporter.result === "rate_limit" ? "rate_limit" : "failure";
-  return { exitCode, runResult, blockReason, stateRef: stateLocation.ref, evidenceRef };
+  return {
+    exitCode: reporterOutcome.exitCode,
+    runResult: reporterOutcome.runResult,
+    blockReason: reporterOutcome.blockReason,
+    stateRef: stateLocation.ref,
+    evidenceRef,
+  };
 }
 
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
@@ -3519,6 +3586,7 @@ async function runSingleRegisterItem(
       taskId: item.id,
       executor: pipelineAgents.executor,
       reporterCandidates: pipelineAgents.reporterCandidates,
+      planPath,
       planPrompt: prompt,
       resultPath,
       execDefaults: context.execDefaults,
@@ -3673,6 +3741,128 @@ function commitRegisterState(
   stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths, ticketPath));
 }
 
+// register worktree 実行の失敗確定。waiting へ遷移し、その状態変更（個票・登録簿・派生ビュー）を
+// root へ commit して作業ツリーを清潔に保つ。通常実行と reporter 再開で共有する。
+function registerWaitSummary(params: {
+  repoRoot: string;
+  projectId: string;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  reason: string;
+}): RegisterItemSummary {
+  const { repoRoot, projectId, registerPaths, item, ticketPath } = params;
+  const conclusion = sanitizeRegisterConclusion(params.reason);
+  let transition: RegisterItemTransition = "waiting";
+  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+    process.stderr.write(`register wait transition failed: ${item.id}\n`);
+    transition = "none";
+  } else {
+    commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`, ticketPath);
+  }
+  return {
+    id: item.id,
+    title: item.title,
+    outcome: "failure",
+    transition,
+    commit: "off",
+    reason: conclusion,
+  };
+}
+
+// register worktree 実行の Phase 3（成果物統合と状態遷移）。成功なら worktree の成果物を
+// commit → 統合ブランチへ merge → worktree 撤去 → register review、失敗なら worktree を
+// 保持したまま waiting へ戻す。通常実行と reporter 再開で同じ後処理を通す。
+async function finalizeRegisterWorktreeRun(params: {
+  context: RegisterRunContext;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  worktree: ExecWorktree;
+  stem: string;
+  worktreeResultPath: string;
+  resultScaffold: Record<string, unknown>;
+  agentResult: RunResult;
+  stderr: string;
+}): Promise<RegisterItemSummary> {
+  const { context, registerPaths, item, ticketPath, worktree, stem, agentResult } = params;
+  const { projectId, schedulePath, executionPath, repoRoot } = context;
+  const wtContext = { repoRoot, schedulePath, executionPath };
+  const waitSummary = (reason: string): RegisterItemSummary =>
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
+
+  const completedAt = new Date().toISOString();
+  const worktreeResultPath = params.worktreeResultPath;
+  const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
+    agentResult,
+    worktreeResultPath,
+    "edit",
+    params.resultScaffold,
+  );
+
+  if (effectiveResult === "success") {
+    await updateResultStatus(worktreeResultPath, "complete", completedAt);
+    const title = item.title.replace(/\r?\n/g, " ").trim();
+    try {
+      commitWorktreeChanges({
+        context: wtContext,
+        worktree,
+        taskId: stem,
+        message: `exec(register ${item.id}): ${title}`,
+      });
+      mergeWorktreeIntoCurrent({ context: wtContext, worktree, taskId: stem });
+    } catch (error) {
+      const reason = sanitizeRegisterConclusion(
+        `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+      process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+      const summary = waitSummary(reason);
+      return { ...summary, commit: "incomplete" };
+    }
+    removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+
+    let transition: RegisterItemTransition = "review";
+    let reason: string | undefined;
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+      process.stderr.write(`register review transition failed: ${item.id}\n`);
+      transition = "none";
+      reason = "register review transition failed";
+    } else {
+      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): review`, ticketPath);
+    }
+    const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+    process.stdout.write(
+      `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
+    );
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "success",
+      transition,
+      commit: `committed ${sha}`,
+      reason,
+    };
+  }
+
+  // 失敗 / rate limit: worktree は保持し（調査・再開のため）、waiting へ遷移する。
+  const reason = unfilledBlock
+    ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
+    : agentResult === "rate_limit"
+      ? "rate limit reached"
+      : extractBlockReason(params.stderr);
+  await updateResultStatus(
+    worktreeResultPath,
+    "blocked",
+    completedAt,
+    sanitizeRegisterConclusion(reason),
+  );
+  process.stdout.write(
+    `run failed: ${item.id} (status: waiting; worktree kept: ${worktree.path})\n`,
+  );
+  return waitSummary(reason);
+}
+
 // register 項目1件の worktree 実行。成果物は worktree に隔離し、状態遷移（start/review/wait）は
 // root（統合ブランチ）で lifecycleLock 直列化して pjr-index の競合を避ける。フローは
 // Phase1: plan/result 生成 → register start → checkpoint（plan/result/pjr-index/views を root
@@ -3713,37 +3903,36 @@ async function runSingleRegisterItemWorktree(
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
-  const waitSummary = (reason: string): RegisterItemSummary => {
-    const conclusion = sanitizeRegisterConclusion(reason);
-    let transition: RegisterItemTransition = "waiting";
-    if (
-      !spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])
-    ) {
-      process.stderr.write(`register wait transition failed: ${item.id}\n`);
-      transition = "none";
-    } else {
-      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`, ticketPath);
-    }
-    return {
-      id: item.id,
-      title: item.title,
-      outcome: "failure",
-      transition,
-      commit: "off",
-      reason: conclusion,
-    };
-  };
+  const waitSummary = (reason: string): RegisterItemSummary =>
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
     | {
         worktree: ExecWorktree;
+        planPath: string;
         resultPath: string;
         resultScaffold: Record<string, unknown>;
         prompt: string;
       }
     | RegisterItemSummary
   > => {
+    // executor が成功した run の worktree を、全体再実行が破棄しないよう保護する。
+    // discardStaleExecWorktree は worktree と exec ブランチを強制削除するため、未コミットの
+    // executor 成果が失われる。この場合は何も壊さずに中断し、再開か明示的な破棄を促す。
+    const protection = protectResumableRegisterWorktree(context, opts, item.id, worktreeTaskId);
+    if (protection) {
+      process.stderr.write(`${protection}\n`);
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "failure",
+        transition: "none",
+        commit: "off",
+        reason: sanitizeRegisterConclusion(protection),
+      };
+    }
+
     const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
 
@@ -3795,7 +3984,7 @@ async function runSingleRegisterItemWorktree(
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
       );
-      return { worktree, resultPath, resultScaffold, prompt };
+      return { worktree, planPath, resultPath, resultScaffold, prompt };
     } catch (error) {
       // checkpoint 失敗時は start を巻き戻して waiting にする（worktree は未作成）。
       return waitSummary(
@@ -3806,7 +3995,7 @@ async function runSingleRegisterItemWorktree(
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
-  const { worktree, resultPath, resultScaffold, prompt } = prepared;
+  const { worktree, planPath, resultPath, resultScaffold, prompt } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
   const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
@@ -3825,6 +4014,7 @@ async function runSingleRegisterItemWorktree(
       taskId: item.id,
       executor: pipelineAgents.executor,
       reporterCandidates: pipelineAgents.reporterCandidates,
+      planPath,
       planPrompt: prompt,
       resultPath: worktreeResultPathForPipeline,
       execDefaults: context.execDefaults,
@@ -3844,84 +4034,202 @@ async function runSingleRegisterItemWorktree(
     stderr = outcome.stderr;
   }
 
-  // Phase 3: 成果物統合と状態遷移（root で直列化）。
-  const finalize = async (): Promise<RegisterItemSummary> => {
-    const completedAt = new Date().toISOString();
-    const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
-    const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
-      agentResult,
-      worktreeResultPath,
-      "edit",
+  // Phase 3: 成果物統合と状態遷移（root で直列化）。通常実行と reporter 再開で共通化する。
+  const finalize = async (): Promise<RegisterItemSummary> =>
+    finalizeRegisterWorktreeRun({
+      context,
+      registerPaths,
+      item,
+      ticketPath,
+      worktree,
+      stem,
+      worktreeResultPath: pathInsideWorktree(repoRoot, worktree.path, resultPath),
       resultScaffold,
-    );
+      agentResult,
+      stderr,
+    });
 
-    if (effectiveResult === "success") {
-      await updateResultStatus(worktreeResultPath, "complete", completedAt);
-      const title = item.title.replace(/\r?\n/g, " ").trim();
-      try {
-        commitWorktreeChanges({
-          context: wtContext,
-          worktree,
-          taskId: stem,
-          message: `exec(register ${item.id}): ${title}`,
-        });
-        mergeWorktreeIntoCurrent({ context: wtContext, worktree, taskId: stem });
-      } catch (error) {
-        const reason = sanitizeRegisterConclusion(
-          `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-        process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
-        const summary = waitSummary(reason);
-        return { ...summary, commit: "incomplete" };
-      }
-      removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+}
 
-      let transition: RegisterItemTransition = "review";
-      let reason: string | undefined;
-      if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
-        process.stderr.write(`register review transition failed: ${item.id}\n`);
-        transition = "none";
-        reason = "register review transition failed";
-      } else {
-        commitRegisterState(
-          repoRoot,
-          registerPaths,
-          `exec(register ${item.id}): review`,
-          ticketPath,
-        );
-      }
-      const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
-      process.stdout.write(
-        `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
-      );
-      return {
-        id: item.id,
-        title: item.title,
-        outcome: "success",
-        transition,
-        commit: `committed ${sha}`,
-        reason,
-      };
-    }
+// 全体再実行が executor の未コミット成果を破棄しないための保護。既存 worktree に executor
+// 成功済み・reporter 未完了の run が残っている場合だけ理由を返し、呼び出し側が破壊的操作
+// （discardStaleExecWorktree）の手前で中断できるようにする。--force-restart で無効化できる。
+function protectResumableRegisterWorktree(
+  context: RegisterRunContext,
+  opts: RunOpts,
+  taskId: string,
+  worktreeTaskId: string,
+): string | null {
+  if (opts.forceRestart) return null;
+  const worktree = findExecWorktree(context.repoRoot, worktreeTaskId);
+  if (!worktree) return null;
+  const lookup = findResumableRegisterRun({
+    repoRoot: context.repoRoot,
+    worktreePath: worktree.path,
+    executionPath: context.executionPath,
+    taskId,
+  });
+  if (lookup.kind !== "resumable") return null;
+  return (
+    `refusing to re-run ${taskId}: executor already succeeded in run ${lookup.target.runId} and ` +
+    `its changes are still uncommitted in ${worktree.path}. ` +
+    `Resume the reporter with --resume, or discard the worktree with --force-restart.`
+  );
+}
 
-    // 失敗 / rate limit: worktree は保持し（調査・再実行のため）、waiting へ遷移する。
-    const reason = unfilledBlock
-      ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
-      : agentResult === "rate_limit"
-        ? "rate limit reached"
-        : extractBlockReason(stderr);
-    await updateResultStatus(
-      worktreeResultPath,
-      "blocked",
-      completedAt,
-      sanitizeRegisterConclusion(reason),
-    );
-    process.stdout.write(
-      `run failed: ${item.id} (status: waiting; worktree kept: ${worktree.path})\n`,
-    );
-    return waitSummary(reason);
+// reporter 再開に使う agent を解決する。--reporter-by を優先し、省略時は再開対象 run の
+// pipeline-state に記録された reporter actor（通常は前回と同じ agent）へフォールバックする。
+export function resolveRegisterResumeReporter(
+  roster: MemberRoster | null,
+  opts: Pick<RunOpts, "reporterBy">,
+  execDefaults: ExecDefaultsConfig,
+  recordedActor: string | null,
+):
+  | { kind: "command"; candidate: AgentRunCandidate & { actor: string } }
+  | { kind: "error"; message: string } {
+  const nickname = (opts.reporterBy ?? recordedActor ?? "").trim();
+  if (!nickname) {
+    return {
+      kind: "error",
+      message: "reporter agent is unknown for this run; specify --reporter-by <nickname>",
+    };
+  }
+  const resolution = resolveAgentOverride("edit", nickname, {}, roster, execDefaults, "reporter");
+  if (resolution.kind === "error") {
+    return { kind: "error", message: resolution.message.replace(/^--by/, "--reporter-by") };
+  }
+  if (resolution.kind !== "command") {
+    return { kind: "error", message: `reporter agent not found in pm-members.yaml: ${nickname}` };
+  }
+  return {
+    kind: "command",
+    candidate: {
+      command: resolution.command,
+      actor: resolution.actor ?? nickname,
+      provider: resolution.provider,
+    },
   };
+}
+
+// register 項目1件の reporter 再開。executor が成功したまま reporter だけが失敗した run を、
+// worktree と executor の未コミット成果を保持したまま reporter 段からやり直す。入力は対象 run の
+// `pipeline-state.json`（plan / result の参照と stage 状態）と `evidence.json`（executor の記録）で、
+// 成功後の commit → merge → register review は通常実行と同じ finalizeRegisterWorktreeRun を通す。
+// 再開できない場合（worktree 不在、executor 未完了、evidence 欠損）は破壊的操作を行わず理由を返す。
+async function resumeSingleRegisterItemWorktree(
+  context: RegisterRunContext,
+  opts: RunOpts,
+  pjrId: string,
+  lifecycleLock?: AsyncLock,
+): Promise<RegisterItemSummary> {
+  const { projectId, schedulePath, executionPath, repoRoot } = context;
+  const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
+  requireRunnableRegisterItem(item);
+
+  // 再開できない場合は register の状態も worktree も変更せず、理由だけを返す。
+  const refuse = (reason: string): RegisterItemSummary => {
+    process.stderr.write(`resume refused: ${item.id}: ${reason}\n`);
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "failure",
+      transition: "none",
+      commit: "off",
+      reason: sanitizeRegisterConclusion(reason),
+    };
+  };
+
+  const worktreeTaskId = qualifyTaskId(projectId, item.id);
+  const worktree = findExecWorktree(repoRoot, worktreeTaskId);
+  if (!worktree) {
+    return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
+  }
+
+  const lookup = findResumableRegisterRun({
+    repoRoot,
+    worktreePath: worktree.path,
+    executionPath,
+    taskId: item.id,
+  });
+  if (lookup.kind !== "resumable") return refuse(lookup.reason);
+  const target = lookup.target;
+
+  const artifacts = resolveRegisterResumeArtifacts({
+    repoRoot,
+    worktreePath: worktree.path,
+    executionPath,
+    taskId: item.id,
+    state: target.state,
+  });
+  if (!artifacts) return refuse(`cannot restore the plan/result of run ${target.runId}`);
+
+  // plan は root（統合ブランチ）の checkpoint 済みファイルを正本にする。worktree 側の plan は
+  // agent が書き換えられるため、再開のプロンプト入力には使わない。
+  const planPath = resolve(repoRoot, artifacts.planRef);
+  if (!existsSync(planPath))
+    return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
+  const worktreeResultPath = resolve(worktree.path, artifacts.resultRef);
+  if (!existsSync(worktreeResultPath)) {
+    return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
+  }
+  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+
+  const reporter = resolveRegisterResumeReporter(
+    context.roster,
+    opts,
+    context.execDefaults,
+    target.state.stages.reporter.actor,
+  );
+  if (reporter.kind === "error") return refuse(reporter.message);
+
+  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `  Resuming reporter from run ${target.runId} (executor evidence: ${target.evidenceRef})\n` +
+      `  CWD: ${worktree.path}\n  Agent: ${reporter.candidate.actor} (reporter)\n`,
+  );
+
+  // waiting のまま reporter を走らせないよう、通常実行と同じく in-progress へ戻す。状態変更は
+  // root で直列化し、merge 前に作業ツリーを清潔にするため即時 commit する。
+  const begin = (): RegisterItemSummary | null => {
+    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+      return refuse(`register start failed: ${item.id}`);
+    }
+    commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): resume`, ticketPath);
+    return null;
+  };
+  const beginFailure = lifecycleLock ? await lifecycleLock.runExclusive(begin) : begin();
+  if (beginFailure) return beginFailure;
+
+  const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
+  const outcome = await runRegisterReporterStage({
+    repoRoot,
+    cwd: worktree.path,
+    schedulePath,
+    executionPath,
+    reporterCandidates: [reporter.candidate],
+    planPrompt: prompt,
+    resultPath: worktreeResultPath,
+    execDefaults: context.execDefaults,
+    evidence: target.evidence,
+    state: target.state,
+    statePath: target.statePath,
+  });
+
+  const finalize = async (): Promise<RegisterItemSummary> =>
+    finalizeRegisterWorktreeRun({
+      context,
+      registerPaths,
+      item,
+      ticketPath,
+      worktree,
+      stem: artifacts.stem,
+      worktreeResultPath,
+      resultScaffold,
+      agentResult: outcome.runResult,
+      stderr: outcome.blockReason ?? "",
+    });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
 }
@@ -3953,7 +4261,11 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
   // 曖昧なため、実行前に明示的なエラーで止める（isRegisterPipelineRequested は片方でも true を
   // 返すため、resolveRegisterPipelineCommand 側の対称チェックとは別に、ここで早期に検知する）。
-  if ((opts.executorBy && !opts.reporterBy) || (!opts.executorBy && opts.reporterBy)) {
+  // 再開は reporter 段だけを実行するため、executor の指定は不要（指定されても使わない）。
+  if (
+    !opts.resume &&
+    ((opts.executorBy && !opts.reporterBy) || (!opts.executorBy && opts.reporterBy))
+  ) {
     throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
   }
 
@@ -3969,6 +4281,31 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     opts.worktreeBase,
     configuredWorktreeBase(schedulePath),
   );
+
+  if (opts.dryRun && opts.resume) {
+    process.stdout.write(`[dry-run] resume reporter for register items: ${ids.join(", ")}\n`);
+    for (const pjrId of ids) {
+      const { item } = resolveRegisterRunTarget(projectId, pjrId);
+      requireRunnableRegisterItem(item);
+      const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, item.id));
+      if (!worktree) {
+        process.stdout.write(`[dry-run]   ${item.id}: no exec worktree — not resumable\n`);
+        continue;
+      }
+      const lookup = findResumableRegisterRun({
+        repoRoot,
+        worktreePath: worktree.path,
+        executionPath,
+        taskId: item.id,
+      });
+      process.stdout.write(
+        lookup.kind === "resumable"
+          ? `[dry-run]   ${item.id}: resume run ${lookup.target.runId} in ${worktree.path}\n`
+          : `[dry-run]   ${item.id}: not resumable (${lookup.reason})\n`,
+      );
+    }
+    return;
+  }
 
   if (opts.dryRun) {
     const modeLabel = useWorktree
@@ -4035,6 +4372,12 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   });
 
   const summaries: RegisterItemSummary[] = [];
+  // 再開は既存 worktree の reporter 段だけを実行する。それ以外の経路（plan 生成・executor 実行）
+  // は通らないため、通常実行と同じ並列・直列の枠だけを共有する。
+  const runItem = (pjrId: string, lifecycleLock?: AsyncLock): Promise<RegisterItemSummary> =>
+    opts.resume
+      ? resumeSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock)
+      : runSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock);
 
   if (useWorktree && parallel > 1) {
     // 並列実行: 成果物は worktree ごとに隔離し、状態遷移は lifecycleLock で直列化する。
@@ -4046,7 +4389,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     await runCompletionDrivenWorkerPool<string, RegisterItemSummary>({
       maxParallel: parallel,
       fillSlots: (openSlots) => (stop ? [] : queue.splice(0, openSlots)),
-      runItem: (pjrId) => runSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock),
+      runItem: (pjrId) => runItem(pjrId, lifecycleLock),
       onSettled: (pjrId, summary) => {
         byId.set(pjrId, summary);
         if (summary.outcome === "failure" && failureMode === "stop") {
@@ -4064,7 +4407,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         continue;
       }
       const summary = useWorktree
-        ? await runSingleRegisterItemWorktree(context, opts, pjrId)
+        ? await runItem(pjrId)
         : await runSingleRegisterItem(context, opts, pjrId);
       summaries.push(summary);
       if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
@@ -4109,6 +4452,16 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option(
     "--on-failure <mode>",
     "With --register: stop|continue remaining items after a failure (default: stop)",
+  );
+  rcmd.option(
+    "--resume",
+    "With --register --worktree: resume only the reporter stage of a run whose executor succeeded, reusing the existing worktree and evidence",
+    false,
+  );
+  rcmd.option(
+    "--force-restart",
+    "With --register --worktree: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
+    false,
   );
   rcmd.option(
     "--worktree",
@@ -4214,6 +4567,23 @@ export function registerRunCommand(exec: Command): void {
       }
       if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
         process.stdout.write("--register-commit and --on-failure require --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if ((opts.resume || opts.forceRestart) && !hasRegister) {
+        process.stdout.write("--resume and --force-restart require --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      // 再開は既存 worktree の成果を再利用する操作のため、worktree 実行に限る。in-place 実行は
+      // executor の変更が作業ツリーに残り、再開時のID単位 commit が対象を判別できない。
+      if ((opts.resume || opts.forceRestart) && !opts.worktree) {
+        process.stdout.write("--resume and --force-restart require --worktree with --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.resume && opts.forceRestart) {
+        process.stdout.write("Specify either --resume or --force-restart, not both.\n");
         process.exitCode = 1;
         return;
       }

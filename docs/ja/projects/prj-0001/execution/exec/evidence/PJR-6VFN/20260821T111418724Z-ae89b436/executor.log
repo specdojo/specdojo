@@ -1,0 +1,35 @@
+実装が完了しました。変更点と検証結果をまとめます。
+
+## 変更ファイル
+
+**実装**
+
+- `src/exec-register-resume.ts`（新規）: worktree に残る run の `pipeline-state.json` / `evidence.json` から再開対象 run を特定（最新 run のみ、遡らない）し、plan / result 参照と stem を復元する。state の参照が root 外を指す場合は拒否。
+- `src/exec-pipeline-state.ts`: `PipelineState` に任意項目 `artifacts`（`plan_ref` / `result_ref`）を追加し、検証も拡張（旧 state と後方互換）。
+- `src/exec-run.ts`:
+  - reporter 段を `runRegisterReporterStage` へ抽出し、通常実行と再開で共有。
+  - Phase 3（commit → merge → worktree 撤去 → `register review` / 失敗時 `waiting`）を `finalizeRegisterWorktreeRun` / `registerWaitSummary` へ抽出し、再開経路と共有。
+  - `resumeSingleRegisterItemWorktree` を追加（`register start` → reporter 実行 → 通常経路と同じ後処理）。拒否時は register も worktree も変更しない。
+  - `protectResumableRegisterWorktree` で、executor 成功済み run が残る項目の全体再実行を `discardStaleExecWorktree` の手前で中断。
+  - CLI に `--resume` / `--force-restart`（`--register --worktree` 専用、排他）と dry-run 表示を追加。`--reporter-by` 省略時は state の reporter actor を使用。
+
+**テスト**
+
+- `tests/src/exec-register-resume.test.ts`（新規・unit 18 ケース）: run 選択、evidence 欠損・reporter 完了済み・executor 未完了の拒否、artifacts / 旧 run からの入力復元、root 外参照の拒否、reporter 解決。
+- `tests/src/exec-register-resume.integration.test.ts`（新規）: reporter のみ再開して review まで到達、executor 未コミット成果がある状態での再実行拒否、worktree 不在時の拒否、`--resume` 単独指定の拒否。※親 runner の `test-integration` で実行される想定。
+
+**ドキュメント**
+
+- `docs/ja/specdojo/references/command-reference.md`: オプション表・説明・実行例。
+- `docs/ja/specdojo/guides/exec-operation-guide.md`: `2.6. register実行のreporter再開`（再開手順、拒否条件の表、`--force-restart` の使い分け）。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md`: 作業内容の状態と対応結果を更新（`item_status` は変更していません）。
+
+## 申し送り
+
+- in-place（`--worktree` なし）の再開は未対応で、CLI で明示的に拒否しています（executor の変更が作業ツリーに残り、ID 単位 commit の対象判別ができないため）。
+- `exec-operation-guide.md` の `1.2. 実行経路の使い分け` 表にある register 実行の「隔離: in-place のみ」は現状と食い違っていますが、本タスクの範囲外のため未修正です。
+- `src/dashboard.ts` に既存の ESLint エラー（未使用変数 `baseDir`）があります。本変更とは無関係で、pre-commit の検査対象にも含まれていません。
+
+<specdojo_executor_evidence>
+{"final_message":"exec run --register --worktree --resume を追加し、executor 成功後に reporter 段だけを既存 worktree と evidence から再開できるようにした。reporter 段と統合・状態遷移の後処理は通常実行と共有し、再開不可・全体再実行時は破壊的操作を行わず中断する。unit/integration テストとコマンドリファレンス・exec 運用ガイド・個票も更新した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit がエラーなしで完了。"},{"command":"npm run test:unit","status":"passed","summary":"84 ファイル / 1200 テストすべて成功（新規 unit テスト18件を含む）。"},{"command":"npx eslint src/exec-register-resume.ts src/exec-run.ts src/exec-pipeline-state.ts tests/src/exec-register-resume.test.ts tests/src/exec-register-resume.integration.test.ts","status":"passed","summary":"変更ファイルに ESLint エラーなし（既存の src/dashboard.ts のエラーは本変更と無関係）。"},{"command":"npx prettier --write <変更した ts/md ファイル>","status":"passed","summary":"実装・テスト・ドキュメント・個票を整形。"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md","status":"passed","summary":"markdownlint エラーなし。"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"終了コード 0。既存の based_on 未作成文書に関する WARN のみで ERROR なし。"},{"command":"npx tsx src/specdojo.ts register build --project prj-0001 && npx tsx src/specdojo.ts index build","status":"passed","summary":"派生ビューと doc-index（いずれも生成物）を再生成し、1246 エントリで成功。"},{"command":"npx tsx src/specdojo.ts exec run --project prj-0001 --register PJR-6VFN --resume","status":"passed","summary":"--worktree 併用必須の検証メッセージを出して exit 1。副作用なし（CLI スモークテスト）。"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline 規約により executor sandbox では実行せず、親 runner の test-integration に委ねる。"}]}
+</specdojo_executor_evidence>

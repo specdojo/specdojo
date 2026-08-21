@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6VFN",
+  "run_id": "20260821T111418724Z-ae89b436",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-21T11:14:18.724Z",
+    "completed_at": "2026-08-21T11:32:33.947Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": "...pjr-6vfn-exec-run-register-executor-reporter.md |  31 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  32 +\n docs/ja/specdojo/references/command-reference.md   |   7 +\n src/exec-pipeline-state.ts                         |  23 +\n src/exec-run.ts                                    | 724 ++++++++++++++++-----\n 5 files changed, 630 insertions(+), 187 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit がエラーなしで完了。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "84 ファイル / 1200 テストすべて成功（新規 unit テスト18件を含む）。"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec-register-resume.ts src/exec-run.ts src/exec-pipeline-state.ts tests/src/exec-register-resume.test.ts tests/src/exec-register-resume.integration.test.ts",
+      "status": "passed",
+      "summary": "変更ファイルに ESLint エラーなし（既存の src/dashboard.ts のエラーは本変更と無関係）。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更した ts/md ファイル>",
+      "status": "passed",
+      "summary": "実装・テスト・ドキュメント・個票を整形。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md",
+      "status": "passed",
+      "summary": "markdownlint エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード 0。既存の based_on 未作成文書に関する WARN のみで ERROR なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build --project prj-0001 && npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "派生ビューと doc-index（いずれも生成物）を再生成し、1246 エントリで成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec run --project prj-0001 --register PJR-6VFN --resume",
+      "status": "passed",
+      "summary": "--worktree 併用必須の検証メッセージを出して exit 1。副作用なし（CLI スモークテスト）。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline 規約により executor sandbox では実行せず、親 runner の test-integration に委ねる。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6VFN\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    }
+  ],
+  "final_message": "exec run --register --worktree --resume を追加し、executor 成功後に reporter 段だけを既存 worktree と evidence から再開できるようにした。reporter 段と統合・状態遷移の後処理は通常実行と共有し、再開不可・全体再実行時は破壊的操作を行わず中断する。unit/integration テストとコマンドリファレンス・exec 運用ガイド・個票も更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6VFN/20260821T111418724Z-ae89b436/executor.log",
+      "bytes": 5572,
+      "truncated": false
+    }
+  ]
+}
