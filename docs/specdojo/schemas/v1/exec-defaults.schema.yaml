@@ -116,7 +116,7 @@ $defs:
         minProperties: 1
         description: "Variables selected by the member's mode."
         propertyNames:
-          enum: ["edit", "review"]
+          enum: ["edit", "review", "report"]
         additionalProperties:
           $ref: "#/$defs/CommandVariableSet"
       by_proficiency:

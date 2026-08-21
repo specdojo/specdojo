@@ -33,18 +33,24 @@ claude の command_template は settings.{mode}.json を解決するため、cla
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                     | 担当 | 状態 | メモ                                                                                    |
-| --- | ---------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------- |
-| 1   | `pm-members.schema.yaml` の `mode` enum に `report` を追加し説明を更新する               | ARC  | open | 配布物の schema のため互換性への影響を明記する                                          |
-| 2   | reporter 専用 settings の内容を決めて `.specdojo/claude/settings.report.json` を追加する | ARC  | open | `.specdojo` 配下は agent の書き込み範囲外のため、内容を result へ申し送り人手で適用する |
-| 3   | `pm-members.yaml` の `claude-reporter` を `mode: report` へ変更し note を修正する        | ARC  | open | `docs/` 配下のため agent が直接編集できる                                               |
-| 4   | 選定ロジックの回帰確認とテスト追加を行う                                                 | ARC  | open | stage_role による選定、`--reporter-by`、edit / review 候補への非混入を検証する          |
-| 5   | settings の命名と役割を説明しているドキュメントを更新する                                | ARC  | open | 対応表が古いままにならないようにする                                                    |
-| 6   | pipeline 実行で reporter の起動と result 生成を実機確認する                              | ARC  | open | 起動コマンドに `settings.report.json` が現れることをログで確認する                      |
+| No  | 作業                                                                                     | 担当 | 状態 | メモ                                                                                               |
+| --- | ---------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------------- |
+| 1   | `pm-members.schema.yaml` の `mode` enum に `report` を追加し説明を更新する               | ARC  | done | member の起動 profile と task mode を区別し、reporter の適格性は stage_role で決まることを明記した |
+| 2   | reporter 専用 settings の内容を決めて `.specdojo/claude/settings.report.json` を追加する | ARC  | done | 配布原本とプロジェクト設定の両方へ追加し、Edit/Write と git add/commit を deny した                |
+| 3   | `pm-members.yaml` の `claude-reporter` を `mode: report` へ変更し note を修正する        | ARC  | done | settings.review.json の流用説明を settings.report.json の専用 profile 説明へ変更した               |
+| 4   | 選定ロジックの回帰確認とテスト追加を行う                                                 | ARC  | done | stage_role 選定、task mode 非混入、`--reporter-by` の command 展開を単体テストで固定した           |
+| 5   | settings の命名と役割を説明しているドキュメントを更新する                                | ARC  | done | Claude 設計書、exec 設定ガイド、provider template README の3文書を更新した                         |
+| 6   | pipeline 実行で reporter の起動と result 生成を実機確認する                              | ARC  | done | register pipeline integration test を settings.report.json の存在・引数検証つきに拡張した          |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `claude-reporter` の member profile を `mode: report` へ分離し、`ProjectMember` / `CommandParams` の型と `pm-members` / `exec-defaults` schema が report profile を扱えるようにした。task の mode は引き続き edit/review のままで、reporter の自動選定と明示指定は `stage_role: reporter` を正本とする。
+- `.specdojo/claude/settings.report.json` と配布原本 `templates/claude/settings.report.json` を追加した。allow は持たず、Edit/Write と `git add` / `git commit` を deny する。provider scaffold の配布対象にも含まれることを単体テストで固定した。
+- 実際の `pm-members.yaml`、Claude 固有設計、exec 設定ガイド、provider template README を更新し、edit / review / report の命名と権限境界を一致させた。
+- 単体テストでは、schema の report 受理、`{mode}` から `settings.report.json` への展開、stage_role による reporter 選定、edit/review executor 候補への非混入、`--reporter-by` の解決、settings の deny 内容を検証する。
+- register pipeline integration test は、reporter を `provider: claude` / `mode: report` として実 CLI 経路から起動し、`--settings .specdojo/claude/settings.report.json` と設定ファイルの存在を fake agent 側で検証してから result を生成する構成へ拡張した。この integration test は pipeline 規約に従い親 runner の `test-integration` で実行する。
+- Codex / OpenCode / Copilot reporter の member 定義と command template は変更していない。provider 固有の `{mode}` 展開を使用する Claude だけに report profile を適用した。
+- executor 内の検証は、対象限定 94 tests、全 unit 1206 tests、typecheck、Markdown lint、pm-members / exec-defaults schema、register build、catalog validate、index build、provider scaffold dry-run が成功した。`npm run validate:schema:pm-members` は sandbox が tsx の IPC socket 作成を拒否して起動できなかったため、同じ validator を `node --import tsx` で実行して実データの適合を確認した。
 
 ## 5. 関連ドキュメント
 

@@ -46,6 +46,11 @@ edit / review の選択と終了後の状態遷移は親設計に従う。
 ```text
 repo-root/
 ├─ CLAUDE.md                          # プロジェクト共通ルール（全エージェント共有）
+├─ .specdojo/
+│  └─ claude/
+│     ├─ settings.edit.json           # edit executor 用権限
+│     ├─ settings.review.json         # review executor 用権限
+│     └─ settings.report.json         # reporter 用の読み取り専用権限
 ├─ .claude/
 │  ├─ settings.json                   # 権限・モデルデフォルト（チーム共有）
 │  ├─ settings.local.json             # 個人ローカル設定（gitignore）
@@ -126,7 +131,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`。自動実行では `bypassPermissions` を使用（`settings.json` の deny リストが安全境界） |
 | `maxTurns`       | -    | エージェントの最大ターン数                                                                                                                             |
 
-member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化 result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。edit/review の違いは executor の `tools`（Edit/Write の有無）と起動時の `--settings` プロファイルで表す。
+member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化 result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings` プロファイルで権限を分離する。
 
 ### 8.2. `claude-executor.md` / `claude-expert-executor.md`
 
@@ -138,11 +143,13 @@ sonnet（`claude-executor`）または opus（`claude-expert-executor`）モデ�
 
 sonnet（`claude-review-executor`）または opus（`claude-expert-review-executor`）モデルを使用する pipeline executor（review）。review plan の各観点に従って成果物をレビューするが、成果物・result のいずれにも書き込まない（`tools` に Edit/Write を含まない）。レビュー結果は evidence として reporter へ引き継ぐ。
 
+`.specdojo/claude/settings.review.json` で起動する。設定上は result 配下への Edit を許可するが、review executor 自体の tools に Edit/Write を含めないためファイルは変更しない。
+
 実際のファイル: `.claude/agents/claude-review-executor.md`、`.claude/agents/claude-expert-review-executor.md`
 
 ### 8.4. `claude-reporter.md`
 
-sonnet モデルを使用する pipeline reporter。渡された evidence だけから指定スキーマの構造化結果を返す。`tools: Read, Glob, Grep` のみでファイルへは一切書き込まない（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。
+sonnet モデルを使用する pipeline reporter。渡された evidence だけから指定スキーマの構造化結果を返す。`tools: Read, Glob, Grep` のみでファイルへは一切書き込まない（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。`.specdojo/claude/settings.report.json` で起動し、Edit/Write と `git add` / `git commit` を明示的に deny する。
 
 実際のファイル: `.claude/agents/claude-reporter.md`
 
@@ -171,8 +178,9 @@ providers:
 ```
 
 - `{nickname}` は member の nickname に展開され、`.claude/agents/<nickname>.md` の agent 定義を選択する。member の nickname と agent 定義のファイル名を一致させる。
-- `{mode}` は member の `mode` に展開され、edit / review 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。executor（edit）は `mode: edit`、executor（review）と reporter は `mode: review` を持つ（reporter 自身は `tools` に Edit/Write を持たないため、`{mode}` の解決だけに使う）。
-- edit 用設定は文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` への Edit / Write を許可する。review 用設定は result 配下だけを許可する。
+- `{mode}` は member の `mode` に展開され、edit / review / report 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。executor（edit）は `mode: edit`、executor（review）は `mode: review`、reporter は `mode: report` を持つ。
+- edit 用設定は文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` への Edit / Write を許可する。review 用設定は result 配下だけを許可する。report 用設定は Edit/Write と `git add` / `git commit` を deny する。
+- reporter の候補選定と `--reporter-by` の検証は `stage_role: reporter` で行う。`mode: report` は `{mode}` の展開にだけ使い、edit/review task との適格性判定には使わない。
 - モデルは agent 定義ファイルの `model` フィールドで指定するため、テンプレートにモデル名を含めない（normal は `sonnet`、expert は `opus`）。
 
 `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md` に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
@@ -233,13 +241,13 @@ members:
     display_name: Claude Reporter
     type: agent
     provider: claude
-    mode: review
+    mode: report
     stage_role: reporter
     capabilities: []
     proficiency: normal
     priority: 3
     scheduler_strategy: fifo
-    note: Sonnet モデルを使用する pipeline reporter。evidence から構造化 result を返すだけで、ファイルへは一切書き込まない。edit/review どちらの executor の後段にも使う。
+    note: Sonnet モデルを使用する pipeline reporter。evidence から構造化 result を返すだけで、ファイルへは一切書き込まない。edit/review どちらの executor の後段にも使い、settings.report.json で起動する。
 ```
 
 ### 9.2. `sch-strategy-<track>.yaml`

@@ -86,6 +86,20 @@ describe("pm-members.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts the report launch profile for a reporter agent", () => {
+    const roster = load(readFileSync(rosterPath, "utf8")) as {
+      members: Array<Record<string, unknown>>;
+    };
+    const reporter = roster.members.find((member) => member.stage_role === "reporter");
+    if (!reporter) throw new Error("test roster must contain a reporter agent");
+    reporter.mode = "report";
+
+    const valid = validate(roster);
+
+    expect(validate.errors ?? []).toEqual([]);
+    expect(valid).toBe(true);
+  });
+
   it("rejects an unknown stage role", () => {
     const roster = load(readFileSync(rosterPath, "utf8")) as {
       members: Array<Record<string, unknown>>;

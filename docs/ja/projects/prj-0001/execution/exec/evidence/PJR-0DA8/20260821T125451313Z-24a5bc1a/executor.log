@@ -1,0 +1,15 @@
+実装完了です。
+
+- `claude-reporter` を `mode: report` に分離
+- Edit/Write・git add/commit を拒否する `settings.report.json` を配布原本とプロジェクトへ追加
+- schema・型・設計書・ガイド・個票を更新
+- stage_role 選定、command 展開、scaffold、`--reporter-by` の回帰テストを追加
+- unit test 1206件、typecheck、Markdown lint、schema 検証、catalog/register/index build が成功
+- integration test は親 runner が実行するため未実行
+- result ファイルは executor 指示どおり未変更
+
+`npm run validate:schema:pm-members` は sandbox の tsx IPC 制約で validator 起動前に停止しましたが、同一 validator を `node --import tsx` で実行し適合を確認済みです。
+
+<specdojo_executor_evidence>
+{"final_message":"claude-reporterをmode: reportと専用最小権限settingsへ分離し、schema・型・文書・回帰テストを更新した。","validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/docs/specdojo/schemas/pm-members-schema.test.ts tests/src/exec-agent-config-command.test.ts tests/src/exec-provider-scaffold.test.ts tests/src/exec-register.test.ts tests/src/exec-run.test.ts","status":"passed","summary":"5 files・94 tests成功"},{"command":"npm run validate:schema:pm-members","status":"not_run","summary":"sandboxがtsxのIPC socket作成をEPERMで拒否しvalidator起動前に停止"},{"command":"node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data 'docs/ja/**/pm-members.yaml' --allow-empty","status":"passed","summary":"実pm-members.yamlがschemaに適合"},{"command":"node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data '.specdojo/exec-defaults.yaml' --allow-empty","status":"passed","summary":"exec-defaults.yamlがschemaに適合"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run test:unit","status":"passed","summary":"84 files・1206 tests成功"},{"command":"npx markdownlint docs/ja/product/040-system-design/sysd-claude-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-0da8-claude-reporter-mode-and-settings.md docs/ja/specdojo/guides/exec-config-guide.md templates/claude/README.md","status":"passed","summary":"変更Markdownのlint成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生物を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1248件の文書indexを生成"},{"command":"node --import tsx src/specdojo.ts exec scaffold --provider claude --dry-run","status":"passed","summary":"settings.report.jsonが配布対象に含まれることを確認"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline指示に従い親runnerのtest-integration検証へ委譲"}]}
+</specdojo_executor_evidence>

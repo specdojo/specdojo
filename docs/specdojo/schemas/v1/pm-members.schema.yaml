@@ -194,13 +194,15 @@ $defs:
 
       mode:
         type: string
-        enum: ["edit", "review"]
+        enum: ["edit", "review", "report"]
         description: >
-          Work mode this agent is designed to handle.
-          edit:   deliverable creation and editing tasks.
-          review: deliverable review tasks.
-          When set, exec run only selects this agent for tasks whose assignment_rule
-          has a matching mode (or no mode specified). Omit to handle all modes.
+          Launch profile for this agent.
+          edit:   executor profile for deliverable creation and editing tasks.
+          review: executor profile for read-only deliverable review tasks.
+          report: reporter profile for turning evidence into a structured result without writing files.
+          For executor and legacy agents, exec run matches edit/review against the task mode.
+          Reporter eligibility is determined by stage_role: reporter instead, so report does not
+          restrict the reporter to edit or review tasks. Omit for a mode-agnostic member.
 
       stage_role:
         type: string

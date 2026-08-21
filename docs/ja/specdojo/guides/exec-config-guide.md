@@ -360,7 +360,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 | provider | 配布内容                                                                                                                                            | 配置先                                 |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude   | `agents/*.md`、`settings.edit.json` / `settings.review.json`                                                                                        | `.claude/agents/`、`.specdojo/claude/` |
+| claude   | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                               | `.claude/agents/`、`.specdojo/claude/` |
 | codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
 | opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
 | copilot  | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
@@ -368,6 +368,8 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
 
 `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定します。`--permission-mode bypassPermissions` は使いません（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します）。
+
+Claude member の `mode` はこの `{mode}` を権限プロファイル名へ展開するためにも使います。edit executor は `edit`、review executor は `review`、reporter は `report` を指定します。reporter の適格性は task mode ではなく `stage_role: reporter` で決まり、`settings.report.json` は Edit/Write と `git add` / `git commit` を deny します。
 
 ### 7.1. scaffold コマンド
 

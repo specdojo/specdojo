@@ -249,6 +249,41 @@ describe("resolveRegisterPipelineCommand", () => {
     });
   });
 
+  it("--reporter-by の report profile を Claude settings に展開する", () => {
+    const roster = makeRoster([
+      makeAgent({ nickname: "exec-1", stage_role: "executor", command: "run-exec-1" }),
+      makeAgent({
+        nickname: "claude-reporter",
+        stage_role: "reporter",
+        provider: "claude",
+        mode: "report",
+        command: undefined,
+      }),
+    ]);
+
+    const actual = resolveRegisterPipelineCommand(
+      roster,
+      { executorBy: "exec-1", reporterBy: "claude-reporter" },
+      {
+        providers: {
+          claude: {
+            command_template:
+              "claude -p --agent {nickname} --settings .specdojo/claude/settings.{mode}.json",
+          },
+        },
+      },
+    );
+
+    expect(actual.reporterCandidates).toEqual([
+      {
+        command:
+          "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
+        actor: "claude-reporter",
+        provider: "claude",
+      },
+    ]);
+  });
+
   it("片方だけの指定はエラーを投げる", () => {
     const roster = makeRoster([makeAgent({ nickname: "exec-1", stage_role: "executor" })]);
 
