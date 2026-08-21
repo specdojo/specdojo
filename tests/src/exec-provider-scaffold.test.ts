@@ -37,9 +37,10 @@ describe("specdojoPackageRootDir", () => {
     ) as { permissions?: { allow?: string[]; deny?: string[] } };
 
     expect(settings.permissions?.allow).toBeUndefined();
+    // Write(path) は claude CLI の権限判定の対象外で、Edit(path) が全ファイル編集ツールを覆う。
+    // 無効なルールを残すと CLI が警告を出すため、deny は Edit(**) と git 操作だけにする。
     expect(settings.permissions?.deny).toEqual([
       "Edit(**)",
-      "Write(**)",
       "Bash(git add *)",
       "Bash(git commit *)",
     ]);

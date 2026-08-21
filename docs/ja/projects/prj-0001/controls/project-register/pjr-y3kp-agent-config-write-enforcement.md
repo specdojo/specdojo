@@ -33,18 +33,25 @@ PJR-3S8Q で、実行コマンドを定義する設定ファイルは agent の�
 
 ## 3. 作業内容
 
-| No  | 作業                                               | 担当 | 状態 | メモ                                                                                                  |
-| --- | -------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------------------- |
-| 1   | 保護対象パスの一覧を単一の定義として実装に持たせる | ARC  | open | PJR-3S8Q の対象と一致させ、設定ファイルからの注入で広げられない形にする                               |
-| 2   | 検知と停止をどの層で行うか決める                   | ARC  | open | commit 対象の選別、agent 実行後の差分検査、hook のいずれか。register 実行の除外方式との整合を確認する |
-| 3   | 決めた層に実装する                                 | ARC  | open | 人間と orchestrator の変更は妨げない                                                                  |
-| 4   | codex と claude の双方で阻止されることを検証する   | ARC  | open | sandbox 方式が異なるため両方で確認する                                                                |
-| 5   | 例外時の手順を文書化する                           | ARC  | open | 申し送りと人手適用、または明示的な解除方法                                                            |
-| 6   | unit test / integration test を追加する            | ARC  | open | register 実行経路での通過を防ぐ回帰テストを含める                                                     |
+| No  | 作業                                               | 担当 | 状態 | メモ                                                                                                   |
+| --- | -------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------ |
+| 1   | 保護対象パスの一覧を単一の定義として実装に持たせる | ARC  | done | `src/exec-agent-protected-config.ts` の固定定義とし、実行設定から変更できないようにした                |
+| 2   | 検知と停止をどの層で行うか決める                   | ARC  | done | agent 試行直後・親検証前と、worktree commit 前の二段検査を採用した                                     |
+| 3   | 決めた層に実装する                                 | ARC  | done | in-place は起動前スナップショットとの差分だけを検査し、人手の既存変更を誤検知しない                    |
+| 4   | codex と claude の双方で阻止されることを検証する   | ARC  | done | 両 provider member を使う register pipeline integration test を追加した                                |
+| 5   | 例外時の手順を文書化する                           | ARC  | done | agent 用解除は設けず、result 申し送りを人間または orchestrator が agent 実行外で適用する手順を記載した |
+| 6   | unit test / integration test を追加する            | ARC  | done | 固定パス・前後差分の unit test と、register／直接 commit 回避を含む integration test を追加した        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/exec-agent-protected-config.ts` に provider 非依存の固定保護パス定義と、agent 起動前後の内容差分検査を実装した。
+- `src/exec-run.ts` で全 agent 試行を検査し、違反時は対象パスを標準エラーへ出力して失敗に変換することで、親検証と後続 reporter の起動を止めるようにした。
+- `src/exec-worktree-ops.ts` で未 commit 差分と exec branch の commit 済み差分を commit 前に再検査し、register 由来の除外リスト方式でも commit / merge を停止するようにした。
+- unit test と integration test を追加し、codex / claude member の双方、register 経路、agent による直接 commit の回避経路を検証対象にした。
+- 運用手順を [[sysd-agent-settings|エージェント実行・共通設計]] と [[specdojo:exec-config-guide|SpecDojo exec 設定ガイド]] へ反映した。agent 用解除は設けず、必要な変更は result 申し送りを人間または orchestrator が agent 実行外で適用する。
+- 初回 run では親検証 `npm run test:integration` が failed となり waiting で停止した。原因は保護機構ではなく、追加した保護テストが worktree 基準パスを共有の既定パスに任せ、block 時に保持される worktree を後片付けしていなかったことによる。orchestrator が fixture ごとの基準ディレクトリ指定と後片付けを適用し、連続 2 回の実行で 10 ファイル・75 件すべて成功することを確認した。
+- あわせて、claude CLI が無効と警告した `settings.report.json` の `Write(**)` を `.specdojo` と `templates` の双方から削除し、`exec-provider-scaffold` の期待値を更新した。`Edit(**)` が全ファイル編集ツールを覆うため実効的な権限は変わらない。PJR-0DA8 の成果物に対する修正だが、本項目に含めて対応した。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 

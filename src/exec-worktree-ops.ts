@@ -10,6 +10,10 @@ import {
 import { parseResultTaskIdentity } from "./exec-results.js";
 import { stripTerminalControlSequences } from "./exec-shared.js";
 import {
+  agentProtectedConfigViolation,
+  isAgentProtectedConfigPath,
+} from "./exec-agent-protected-config.js";
+import {
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
@@ -157,6 +161,43 @@ function assertNoAgentReadyPromotion(
     throw new Error(
       `Deliverable status promotion to "ready" is human-only and must not be done by an agent run: ${promoted.join(", ")}`,
     );
+  }
+}
+
+function isHumanWorktreeExecution(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): boolean {
+  const { resultRel } = taskPaths(context, taskId);
+  const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
+  return !!resultContent && parseResultTaskIdentity(resultContent)?.execution === "human";
+}
+
+// worktree の未 commit 差分に加え、agent が provider 側の git 制約を回避して直接
+// commit した差分も検査する。human execution と通常の人間 / orchestrator commit は
+// agent 統合経路ではないため、このガードの対象外。
+function assertNoAgentProtectedConfigChanges(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): void {
+  if (isHumanWorktreeExecution(context, worktree, taskId)) return;
+
+  const rootHead = gitOutput(context.repoRoot, ["rev-parse", "HEAD"]).trim();
+  const compareBase = gitOutput(worktree.path, ["merge-base", "HEAD", rootHead]).trim();
+  const committed = zeroSeparatedPaths(worktree.path, [
+    "diff",
+    "--no-renames",
+    "--name-only",
+    "-z",
+    `${compareBase}..HEAD`,
+  ]);
+  const protectedPaths = [...new Set([...statusPaths(worktree.path), ...committed])]
+    .filter(isAgentProtectedConfigPath)
+    .sort((a, b) => a.localeCompare(b));
+  if (protectedPaths.length > 0) {
+    throw new Error(agentProtectedConfigViolation(protectedPaths));
   }
 }
 
@@ -369,6 +410,7 @@ export function commitWorktreeChanges(params: {
   dryRun?: boolean;
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
+  assertNoAgentProtectedConfigChanges(context, worktree, taskId);
   const {
     targets: paths,
     outOfScope,

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Y3KP",
+  "run_id": "20260821T132331863Z-d1aaefba",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-21T13:23:31.863Z",
+    "completed_at": "2026-08-21T13:34:42.684Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y3kp-agent-config-write-enforcement.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": ".../040-system-design/sysd-agent-settings.md       |  2 +\n .../040-system-design/sysd-cross-cutting-policy.md | 10 +++\n .../pjr-y3kp-agent-config-write-enforcement.md     | 23 ++++---\n docs/ja/specdojo/guides/exec-config-guide.md       | 15 +++-\n src/exec-run.ts                                    | 26 ++++++-\n src/exec-worktree-ops.ts                           | 42 ++++++++++++\n .../exec-register-pipeline-e2e.integration.test.ts | 80 +++++++++++++++++++++-\n tests/src/exec-worktree-ops.integration.test.ts    | 43 ++++++++++++\n 8 files changed, 229 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "85 test files、1222 tests が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-y3kp-agent-config-write-enforcement.md",
+      "status": "passed",
+      "summary": "変更した Markdown の静的検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec-agent-protected-config.ts src/exec-run.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "passed",
+      "summary": "変更した TypeScript の lint 成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "登録簿生成、catalog 検証、文書 index 生成に成功。既存の欠落文書 warning のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "executor 指示に従い未実行。親 runner が実行して evidence へ追記する。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Y3KP\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-aiOgU0/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "provider 非依存の設定変更ガード、回帰テスト、設計・運用文書の更新を完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Y3KP/20260821T132331863Z-d1aaefba/executor.log",
+      "bytes": 2061,
+      "truncated": false
+    }
+  ]
+}

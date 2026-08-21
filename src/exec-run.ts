@@ -126,6 +126,11 @@ import {
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
 import {
+  agentProtectedConfigViolation,
+  captureAgentProtectedConfigSnapshot,
+  changedAgentProtectedConfigPaths,
+} from "./exec-agent-protected-config.js";
+import {
   buildPhaseModeIndex,
   resolveApproach,
   resolveTaskCapabilities,
@@ -961,6 +966,7 @@ async function runWithRetry(
       }
       const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
       attempts++;
+      const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
       const attempt = await executeAgent(
         candidates[idx].command,
         prompt,
@@ -970,6 +976,17 @@ async function runWithRetry(
         cwd,
         env,
       );
+      const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
+      if (protectedConfigChanges.length > 0) {
+        const reason = agentProtectedConfigViolation(protectedConfigChanges);
+        process.stderr.write(`blocked: ${reason}\n`);
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+        };
+      }
       lastStderr = attempt.stderr;
       lastStdout = attempt.stdout;
       lastExitCode = attempt.exitCode;
@@ -2477,6 +2494,7 @@ async function spawnAgentInPlace(
   schedulePath: string,
   executionPath: string,
 ): Promise<number> {
+  const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
   const child = spawn(command, {
     cwd,
     env: {
@@ -2490,10 +2508,16 @@ async function spawnAgentInPlace(
   // executeAgent と同じ理由で、stdin を読まないコマンドの EPIPE は無視する。
   child.stdin.on("error", () => undefined);
   child.stdin.end(prompt);
-  return new Promise<number>((resolveExit) => {
+  const exitCode = await new Promise<number>((resolveExit) => {
     child.once("error", () => resolveExit(1));
     child.once("close", (code) => resolveExit(code ?? 1));
   });
+  const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
+  if (protectedConfigChanges.length > 0) {
+    process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    return 1;
+  }
+  return exitCode;
 }
 
 // Default run path: generate the plan on demand and run the agent in the current
