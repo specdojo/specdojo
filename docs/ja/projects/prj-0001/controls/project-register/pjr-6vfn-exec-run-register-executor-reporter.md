@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6vfn-exec-run-register-executor-reporter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-20T13:30:02Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: runner validation `test-integration`（`npm run test:integration`）が failed（exit 1）。runner 検証が failed の場合は complete を返せない。"
+  completed_at: "2026-08-21T12:51:14Z"
+  conclusion: exec run --register --worktree --resume を追加し、executor 成功後に reporter だけを再開できるようにした。executor 成功分が未コミットのまま全体再実行しようとした場合は中断し、破棄には --force-restart を要求する。unit / integration テストと運用ドキュメントを整備した。in-place 実行の再開は未対応として残課題に記載している。
 ---
 
 # PJR-6VFN exec run --register で executor 成功後に reporter だけを再開できるようにする
