@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0da8-claude-reporter-mode-and-settings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-21T10:19:56Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-21T13:19:44Z"
+  conclusion: "pm-members.schema.yaml の mode enum に report を追加して起動プロファイルとして再定義し、claude-reporter を mode: report へ分離した。Edit と Write を全面 deny する settings.report.json を .specdojo と templates の双方に用意し、実装・テスト・ドキュメントを更新した。実際の起動コマンドが settings.report.json を指すことを確認済み。"
 ---
 
 # PJR-0DA8 claude-reporter の mode を report に分離し reporter 専用の最小権限 settings を用意する
