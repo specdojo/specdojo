@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cmyx-exec-dist-parent-validations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-20T12:28:52Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-21T10:05:38Z"
+  conclusion: CLI 起動時の dist 鮮度ガード、routine 実行時の自動再ビルド、post-merge / post-checkout での build-if-stale 配線を追加し、古い dist のまま exec を起動して parent_validations が沈黙して省略される事象を防げるようにした。bin・files・配布ドキュメントの呼び出し記法は変更していない。
 ---
 
 # PJR-CMYX exec 実行が古い dist ビルドを使い設定済み parent_validations が実行されない
