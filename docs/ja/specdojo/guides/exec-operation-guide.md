@@ -265,6 +265,38 @@ specdojo exec resume \
   --reporter-by <reporter-nickname>
 ```
 
+### 2.6. register実行のreporter再開
+
+register 実行（`exec run --register --worktree`）を executor/reporter パイプラインで走らせた場合も、executor が成功したまま reporter だけが失敗した run は reporter 段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume
+```
+
+再開の入力は、対象 worktree に残っている最新 run の `pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
+
+再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。
+
+| 状況                                     | 扱い                                                       |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| 項目の exec worktree が無い              | 再開せず、通常の再実行を促す                               |
+| 最新 run の executor が succeeded でない | 再開せず、通常の再実行を促す（古い run へは遡らない）      |
+| reporter が既に succeeded                | 再開不要として拒否する                                     |
+| `evidence.json` が欠損・不整合           | executor の記録を再利用できないため拒否する                |
+| 再開した reporter が再び失敗した         | worktree と executor の成果を保持したまま `waiting` へ戻す |
+
+executor が成功した run が残っている項目を `--resume` なしで再実行しようとした場合は、worktree を破棄する手前で中断します（未コミットの executor 成果を失わないための保護）。破棄したうえで最初からやり直す場合は `--force-restart` を明示します。
+
+```bash
+# executor の成果ごと破棄して、plan 生成からやり直す
+specdojo exec run --project <project-id> --register <PJR-ID> --worktree --force-restart \
+  --executor-by <executor-nickname> --reporter-by <reporter-nickname>
+```
+
 ## 3. humanタスクの実行
 
 `execution: human` のタスク（finalize など）はエージェントを起動しません。`exec run` / `exec worktree agent` で agent による実行を強制する場合は、登録済み agent の nickname を `--by` で明示します。人が result を作業の入口として、最終確認・修正と確定を行います。

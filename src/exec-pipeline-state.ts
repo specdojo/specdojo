@@ -15,12 +15,21 @@ export type PipelineStageState = {
   artifact_ref: string | null;
 };
 
+// run の入力成果物への参照（worktree 相対・POSIX 区切り）。reporter だけを再開するとき、
+// どの plan と result を対象にするかを state から復元するために使う。旧 run が書いた state には
+// 存在しないため任意項目とする。
+export type PipelineArtifactRefs = {
+  plan_ref: string;
+  result_ref: string;
+};
+
 export type PipelineState = {
   schema_version: 1;
   task_id: string;
   run_id: string;
   updated_at: string;
   stages: Record<AgentStageRole, PipelineStageState>;
+  artifacts?: PipelineArtifactRefs;
 };
 
 export type PipelineStateLocation = {
@@ -45,6 +54,7 @@ export function createPipelineState(input: {
   updatedAt: string;
   executorActor?: string;
   reporterActor?: string;
+  artifacts?: PipelineArtifactRefs;
 }): PipelineState {
   return {
     schema_version: 1,
@@ -55,6 +65,7 @@ export function createPipelineState(input: {
       executor: emptyStage(input.executorActor),
       reporter: emptyStage(input.reporterActor),
     },
+    ...(input.artifacts ? { artifacts: input.artifacts } : {}),
   };
 }
 
@@ -103,6 +114,17 @@ function isStageState(value: unknown): value is PipelineStageState {
   );
 }
 
+function isArtifactRefs(value: unknown): value is PipelineArtifactRefs {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const refs = value as Record<string, unknown>;
+  return (
+    typeof refs.plan_ref === "string" &&
+    !!refs.plan_ref &&
+    typeof refs.result_ref === "string" &&
+    !!refs.result_ref
+  );
+}
+
 export function isPipelineState(value: unknown): value is PipelineState {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const state = value as Record<string, unknown>;
@@ -119,6 +141,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
   ) {
     return false;
   }
+  if (state.artifacts !== undefined && !isArtifactRefs(state.artifacts)) return false;
   const stages = state.stages as Record<string, unknown>;
   return isStageState(stages.executor) && isStageState(stages.reporter);
 }

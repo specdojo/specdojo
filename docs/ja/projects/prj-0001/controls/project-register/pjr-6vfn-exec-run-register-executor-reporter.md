@@ -33,19 +33,32 @@ register 由来の exec 実行には resume の概念が無く、reporter が ra
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                            | 担当 | 状態 | メモ                                                                                       |
-| --- | ----------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------ |
-| 1   | 再開の CLI 形と対象 run の特定方法を決める                                                      | ARC  | open | `exec resume --register <PJR-ID>` と `exec run --register --resume` のどちらにするかを含む |
-| 2   | `pipeline-state.json` と `evidence.json` から reporter 再開に必要な入力を復元する               | ARC  | open | plan prompt、evidence、result パス、worktree の対応付けを確認する                          |
-| 3   | reporter 段のみを実行し、成功時に commit・merge・register review まで通常経路と同じ後処理を行う | ARC  | open | 成功経路の処理を再利用し、分岐を二重に持たない                                             |
-| 4   | 対象 run 不在、executor 未完了、再開の再失敗の扱いを実装する                                    | ARC  | open | いずれの場合も破壊的操作を行わない                                                         |
-| 5   | executor 成功後の全体再実行に警告または保護を入れる                                             | ARC  | open | `discardStaleExecWorktree` が未コミット成果を破棄する経路が対象                            |
-| 6   | unit test / integration test を追加する                                                         | ARC  | open | 再開、拒否、再失敗、worktree 再利用を検証する                                              |
-| 7   | コマンドリファレンスと exec 運用ガイドを更新する                                                | ARC  | open | 再開手順と、再実行との使い分けを記載する                                                   |
+| No  | 作業                                                                                            | 担当 | 状態 | メモ                                                                                             |
+| --- | ----------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------ |
+| 1   | 再開の CLI 形と対象 run の特定方法を決める                                                      | ARC  | done | `exec run --register --worktree --resume` を採用。対象は worktree に残る最新 run                 |
+| 2   | `pipeline-state.json` と `evidence.json` から reporter 再開に必要な入力を復元する               | ARC  | done | state に `artifacts`（plan / result 参照）を追加。旧 run は result ファイル名から復元            |
+| 3   | reporter 段のみを実行し、成功時に commit・merge・register review まで通常経路と同じ後処理を行う | ARC  | done | `runRegisterReporterStage` と `finalizeRegisterWorktreeRun` を通常実行と共有                     |
+| 4   | 対象 run 不在、executor 未完了、再開の再失敗の扱いを実装する                                    | ARC  | done | 拒否時は register も worktree も変更しない。再失敗時は worktree 保持のまま waiting               |
+| 5   | executor 成功後の全体再実行に警告または保護を入れる                                             | ARC  | done | `discardStaleExecWorktree` の手前で中断し、`--resume` / `--force-restart` を促す                 |
+| 6   | unit test / integration test を追加する                                                         | ARC  | done | `tests/src/exec-register-resume.test.ts` と `tests/src/exec-register-resume.integration.test.ts` |
+| 7   | コマンドリファレンスと exec 運用ガイドを更新する                                                | ARC  | done | コマンドリファレンスへオプションと例、exec 運用ガイドへ `register実行のreporter再開` を追加      |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`exec run --register --worktree --resume` を追加し、executor が成功したまま reporter だけが失敗した run を、worktree と executor の未コミット成果を保持したまま reporter 段から再開できるようにした。
+
+- 対象 run の特定と入力復元は `src/exec-register-resume.ts` に切り出し、worktree に残る run の `pipeline-state.json` と `evidence.json` から最新 run を選ぶ。最新 run が再開条件を満たさない場合は古い run へ遡らず、理由を返して終了する。
+- reporter 段（`runRegisterReporterStage`）と統合・状態遷移（`finalizeRegisterWorktreeRun`）を通常実行と共有し、再開経路に後処理の分岐を二重に持たせていない。
+- `pipeline-state.json` に任意項目 `artifacts`（plan / result の参照）を追加した。これを持たない旧 run は、worktree の result ファイル名から stem を復元して再開できる。
+- executor が成功した run が残っている項目の全体再実行は、worktree 破棄の手前で中断する。破棄してやり直す場合は `--force-restart` を明示する。
+- 検証は `tests/src/exec-register-resume.test.ts`（run 選択・入力復元・reporter 解決）と `tests/src/exec-register-resume.integration.test.ts`（再開成功、再実行拒否、worktree 不在時の拒否、オプション検証）で行う。
+
+初回 run では親検証 `npm run test:integration` が failed となり、項目は waiting で止まった。原因は実装ではなく追加した integration テストの独立性の欠陥（worktree 基準パスを既定の共有パスに任せ、reporter 失敗経路で残る worktree を後片付けしていない。既存 E2E と同じ項目 ID を使用）であり、orchestrator が fixture ごとの専用基準ディレクトリ指定・後片付け・項目 ID の変更を適用した。修正後は `npm run test:integration` を連続 2 回実行して全件成功し、共有パスに残骸が残らないことを確認している。
+
+残課題は次のとおり。
+
+- in-place 実行（`--worktree` なし）の再開は未対応。executor の変更が作業ツリーに残り、ID 単位 commit の対象判別ができないため、現状は明示的に拒否している。
+- 再開の並列実行は通常実行と同じ枠組みで動くが、複数項目の同時再開は検証していない。
 
 ## 5. 関連ドキュメント
 
