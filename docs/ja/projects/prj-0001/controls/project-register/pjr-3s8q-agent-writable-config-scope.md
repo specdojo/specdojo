@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3s8q-agent-writable-config-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-08-21T10:00:22Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-21T13:58:16Z"
+  conclusion: 実行コマンドを定義する設定ファイル（package.json、lefthook.yml、.specdojo/**、commitlint 設定、CI 設定）は agent の書き込み範囲に含めず、必要な変更は result の申し送りとして人間または orchestrator が適用する運用に確定した。決定だけでは provider の sandbox 方式に依存して守られないことが PJR-0DA8 で判明したため、PJR-Y3KP で provider 非依存の強制手段を実装し、対象一覧と例外手順を exec 設定ガイドへ明記した。
 ---
 
 # PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない
