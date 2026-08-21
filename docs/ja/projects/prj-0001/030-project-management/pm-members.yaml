@@ -25,8 +25,8 @@ project_id: prj-0001
 # stage_role: reporter は、executor の evidence から構造化 result を作るだけで、
 #   ファイルへは一切書き込まない（result への書き込みは runner が行う）。reporter の
 #   振る舞いは edit/review で変わらないため、選択条件としての mode（taskMode との
-#   一致判定）は課さない。ただし provider の command_template が {mode} を使う場合
-#   （claude 等）は、正しい permission profile を選ぶために mode を保持する。
+#   一致判定）は課さない。provider の command_template が {mode} を使う場合（claude 等）
+#   は、reporter 専用の permission profile を選ぶために mode: report を使用する。
 #
 # provider は agent を実行する CLI 種別を表す（opencode / claude / codex / copilot / custom）。
 # capabilities はツールアクセス（web_search 等）のみを表す。
@@ -351,7 +351,7 @@ members:
     roles: []
     type: agent
     provider: claude
-    mode: review
+    mode: report
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -360,7 +360,7 @@ members:
       - structured-result-generation
     capabilities: []
     scheduler_strategy: fifo
-    note: Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。mode は command_template の {mode} 解決のためだけに保持し、権限は .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）を流用する。モデル・ツールは .claude/agents/claude-reporter.md で定義。
+    note: Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。mode は command_template の {mode} を reporter 専用 profile に解決するための report とし、権限は Edit/Write と git add/commit を deny する .specdojo/claude/settings.report.json で定義する。モデル・ツールは .claude/agents/claude-reporter.md で定義。
 
   #
   # codex members

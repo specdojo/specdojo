@@ -211,6 +211,34 @@ describe("selectCandidates", () => {
     expect(reporterCandidates).toEqual(["reporter"]);
   });
 
+  it("uses stage_role for report-profile eligibility without mixing task modes", () => {
+    const members = roster([
+      agent({ nickname: "edit-executor", stage_role: "executor", mode: "edit" }),
+      agent({ nickname: "review-executor", stage_role: "executor", mode: "review" }),
+      agent({ nickname: "reporter", stage_role: "reporter", mode: "report" }),
+    ]);
+
+    const editCandidates = selectCandidates(
+      { ...requirements, stage_role: "executor" },
+      members,
+      "edit",
+    ).map((m) => m.nickname);
+    const reviewCandidates = selectCandidates(
+      { ...requirements, stage_role: "executor" },
+      members,
+      "review",
+    ).map((m) => m.nickname);
+    const reporterCandidates = selectCandidates(
+      { ...requirements, stage_role: "reporter" },
+      members,
+      undefined,
+    ).map((m) => m.nickname);
+
+    expect(editCandidates).toEqual(["edit-executor"]);
+    expect(reviewCandidates).toEqual(["review-executor"]);
+    expect(reporterCandidates).toEqual(["reporter"]);
+  });
+
   it("keeps the configured executor and reporter names out of legacy selection", () => {
     const members = roster([
       agent({ nickname: "opencode-edit-agent", priority: 3 }),

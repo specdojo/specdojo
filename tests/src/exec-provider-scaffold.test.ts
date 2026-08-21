@@ -17,6 +17,7 @@ async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   await writeFile(path.join(templateDir, "agents", "claude-review-agent.md"), "# review\n", "utf8");
   await writeFile(path.join(templateDir, "settings.edit.json"), '{"mode":"edit"}\n', "utf8");
   await writeFile(path.join(templateDir, "settings.review.json"), '{"mode":"review"}\n', "utf8");
+  await writeFile(path.join(templateDir, "settings.report.json"), '{"mode":"report"}\n', "utf8");
   await writeFile(path.join(templateDir, "README.md"), "# readme\n", "utf8");
 }
 
@@ -25,6 +26,23 @@ describe("specdojoPackageRootDir", () => {
     const root = specdojoPackageRootDir();
 
     expect(existsSync(path.join(root, "package.json"))).toBe(true);
+  });
+
+  it("ships a reporter profile that cannot edit files or commit changes", async () => {
+    const settings = JSON.parse(
+      await readFile(
+        path.join(specdojoPackageRootDir(), "templates", "claude", "settings.report.json"),
+        "utf8",
+      ),
+    ) as { permissions?: { allow?: string[]; deny?: string[] } };
+
+    expect(settings.permissions?.allow).toBeUndefined();
+    expect(settings.permissions?.deny).toEqual([
+      "Edit(**)",
+      "Write(**)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+    ]);
   });
 });
 
@@ -72,6 +90,7 @@ describe("buildProviderScaffoldPlan", () => {
         ".claude/agents/claude-edit-agent.md",
         ".claude/agents/claude-review-agent.md",
         ".specdojo/claude/settings.edit.json",
+        ".specdojo/claude/settings.report.json",
         ".specdojo/claude/settings.review.json",
       ]);
       expect(plan.entries[0]?.destinationPath).toBe(
@@ -111,10 +130,10 @@ describe("applyProviderScaffoldPlan", () => {
 
       expect(outcomes.every((outcome) => outcome.written)).toBe(true);
       const copied = await readFile(
-        path.join(repoRoot, ".specdojo", "claude", "settings.review.json"),
+        path.join(repoRoot, ".specdojo", "claude", "settings.report.json"),
         "utf8",
       );
-      expect(copied).toBe('{"mode":"review"}\n');
+      expect(copied).toBe('{"mode":"report"}\n');
       expect(existsSync(path.join(repoRoot, ".claude", "agents", "README.md"))).toBe(false);
     } finally {
       await rm(dir, { recursive: true, force: true });

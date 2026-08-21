@@ -1,9 +1,14 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
-import { specdojoRootDir, type AgentProvider, type ProjectMember } from "./specdojo-config.js";
+import {
+  specdojoRootDir,
+  type AgentMode,
+  type AgentProvider,
+  type ProjectMember,
+} from "./specdojo-config.js";
 import type { AgentLimitKind } from "./exec-limit.js";
-import type { Proficiency, TaskMode } from "./exec-types.js";
+import type { Proficiency } from "./exec-types.js";
 import { resolveParentValidationDefinitions } from "./exec-parent-validation.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
@@ -46,7 +51,7 @@ export type CommandVariableSet = Record<string, string>;
 // member's mode, by_proficiency by the member's proficiency. A variable name appearing in
 // both tables is a definition error (resolution would be ambiguous).
 export type CommandParams = {
-  by_mode?: Partial<Record<TaskMode, CommandVariableSet>>;
+  by_mode?: Partial<Record<AgentMode, CommandVariableSet>>;
   by_proficiency?: Partial<Record<Proficiency, CommandVariableSet>>;
 };
 

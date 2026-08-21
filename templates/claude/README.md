@@ -13,11 +13,12 @@ specdojo:
 
 ## 2. 構成
 
-| パス                   | 利用プロジェクトでの配置先 | 説明                                                               |
-| ---------------------- | -------------------------- | ------------------------------------------------------------------ |
-| `agents/*.md`          | `.claude/agents/`          | agent 定義。`--agent <name>` で参照されるため配置先は固定          |
-| `settings.edit.json`   | `.specdojo/claude/`        | edit agent 用 permission 設定。成果物への書き込みを許可する        |
-| `settings.review.json` | `.specdojo/claude/`        | review agent 用 permission 設定。result 配下のみ書き込みを許可する |
+| パス                   | 利用プロジェクトでの配置先 | 説明                                                                  |
+| ---------------------- | -------------------------- | --------------------------------------------------------------------- |
+| `agents/*.md`          | `.claude/agents/`          | agent 定義。`--agent <name>` で参照されるため配置先は固定             |
+| `settings.edit.json`   | `.specdojo/claude/`        | edit executor 用 permission 設定。成果物への書き込みを許可する        |
+| `settings.review.json` | `.specdojo/claude/`        | review executor 用 permission 設定。result 配下のみ書き込みを許可する |
+| `settings.report.json` | `.specdojo/claude/`        | reporter 用 permission 設定。Edit/Write と git add/commit を拒否する  |
 
 ## 3. 導入手順
 
@@ -41,4 +42,5 @@ providers:
 ## 4. カスタマイズ
 
 - edit 用の既定値は `docs/**`、`src/**`、`tests/**` を許可する。`Edit(...)` / `Write(...)` のパスパターンは、利用プロジェクトの成果物・execution ディレクトリ配置に合わせて調整する。
+- report 用の既定値はファイルへの Edit/Write と `git add` / `git commit` を deny する。reporter は evidence から構造化結果を返すだけで、result への反映は runner が行う。
 - 全セッション共通で効かせたい deny（`.env` 読み取り禁止、`git push` 禁止など）は、利用プロジェクトの `.claude/settings.json` に置く。ここで配布するロール別設定は `--settings` 指定時の追加マージであり、共通設定の allow を取り消すことはできない。

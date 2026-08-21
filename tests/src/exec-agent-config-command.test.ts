@@ -63,6 +63,17 @@ describe("resolveMemberCommand", () => {
     );
   });
 
+  it("expands the report profile for a reporter member", () => {
+    const actual = resolveMemberCommand(
+      claudeTemplateConfig,
+      buildMember({ nickname: "claude-reporter", mode: "report" }),
+    );
+
+    expect(actual).toBe(
+      "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
+    );
+  });
+
   it("expands by_proficiency variables for the member's proficiency", () => {
     const normal = resolveMemberCommand(
       codexTemplateConfig,
@@ -102,6 +113,30 @@ describe("resolveMemberCommand", () => {
     );
 
     expect(actual).toBe('copilot -p --agent copilot-review-agent --allow-tool "read"');
+  });
+
+  it("supports report-specific command variables without changing task modes", () => {
+    const config: ExecDefaultsConfig = {
+      providers: {
+        claude: {
+          command_template: "claude -p --agent {nickname} --settings {settings}",
+          command_params: {
+            by_mode: {
+              report: { settings: ".specdojo/claude/settings.report.json" },
+            },
+          },
+        },
+      },
+    };
+
+    const actual = resolveMemberCommand(
+      config,
+      buildMember({ nickname: "claude-reporter", mode: "report" }),
+    );
+
+    expect(actual).toBe(
+      "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
+    );
   });
 
   it("prefers the member-level command override over the provider template", () => {

@@ -144,7 +144,7 @@ function buildTicket(id: string): string {
 }
 
 const FAKE_PIPELINE_AGENT_SCRIPT = `
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 function arg(name) {
   const index = process.argv.indexOf("--" + name);
@@ -168,6 +168,11 @@ if (role === "executor") {
 }
 
 if (role === "reporter") {
+  const settings = arg("settings");
+  if (settings !== ".specdojo/claude/settings.report.json" || !existsSync(settings)) {
+    process.stderr.write("reporter settings profile is missing: " + settings + "\\n");
+    process.exit(1);
+  }
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
@@ -194,6 +199,7 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
     const root = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-"));
     try {
       mkdirSync(join(root, ".specdojo"), { recursive: true });
+      mkdirSync(join(root, ".specdojo", "claude"), { recursive: true });
       writeFileSync(
         join(root, ".specdojo", "specdojo.config.json"),
         `${JSON.stringify(CONFIG, null, 2)}\n`,
@@ -221,6 +227,10 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       symlinkSync(join(REAL_REPO_ROOT, "node_modules"), join(root, "node_modules"));
 
       writeFileSync(join(root, "fake-agent.mjs"), FAKE_PIPELINE_AGENT_SCRIPT, "utf8");
+      cpSync(
+        join(REAL_REPO_ROOT, "templates", "claude", "settings.report.json"),
+        join(root, ".specdojo", "claude", "settings.report.json"),
+      );
       writeFileSync(
         join(root, PROJECT_BASE, "pm-members.yaml"),
         [
@@ -243,8 +253,8 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    email: null",
           "    roles: []",
           "    type: agent",
-          "    provider: opencode",
-          "    mode: review",
+          "    provider: claude",
+          "    mode: report",
           "    stage_role: reporter",
           "    capabilities: []",
           "    proficiency: normal",
@@ -259,6 +269,8 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "providers:",
           "  opencode:",
           `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+          "  claude:",
+          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
           "",
         ].join("\n"),
         "utf8",

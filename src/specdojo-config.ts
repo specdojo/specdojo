@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
-import type { AgentStageRole, SchedulerStrategy } from "./exec-types.js";
+import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -55,6 +55,10 @@ export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 // exec-defaults.yaml applies to a member's failure handling.
 export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
 
+// Member launch profiles include the task-facing executor modes plus the reporter-only
+// profile. `report` never becomes a TaskMode: reporter eligibility is resolved by stage_role.
+export type AgentMode = TaskMode | "report";
+
 export type ProjectMember = {
   nickname: string;
   display_name: string;
@@ -68,7 +72,7 @@ export type ProjectMember = {
   proficiency?: "low" | "normal" | "high" | "expert"; // agent only: quality tier
   priority?: number; // agent only: tiebreaker within same profile (lower = tried first)
   command?: string; // agent only: shell command executed by exec run
-  mode?: "edit" | "review"; // agent only: work mode this agent handles (edit or review)
+  mode?: AgentMode; // agent only: launch profile; report is reserved for stage_role: reporter
   stage_role?: AgentStageRole; // agent only: pipeline stage; omit for legacy flow
   disabled?: boolean; // agent only: when true, excluded from exec run --auto candidate selection
   scheduler_strategy?: SchedulerStrategy;
