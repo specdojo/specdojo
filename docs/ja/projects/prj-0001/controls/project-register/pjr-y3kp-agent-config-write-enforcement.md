@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-21T13:12:40Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: runner 実行の test-integration 検証（id=test-integration, source=runner）が failed（exit 1）であるため、共通規約の完了手順（必要な整形・静的検査の解消）を満たしていない。この runner validation は authoritative であり、repor…"
 ---
 
 # PJR-Y3KP agent による設定ファイル変更を provider 非依存で実効的に止める
