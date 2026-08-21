@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-y3kp-agent-config-write-enforcement
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-21T13:12:40Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: runner 実行の test-integration 検証（id=test-integration, source=runner）が failed（exit 1）であるため、共通規約の完了手順（必要な整形・静的検査の解消）を満たしていない。この runner validation は authoritative であり、repor…"
+  completed_at: "2026-08-21T13:55:43Z"
+  conclusion: provider 非依存の保護パス定義と内容差分検査を src/exec-agent-protected-config.ts に実装し、agent 実行後の検査で親検証と reporter の起動を止め、commit 前の再検査で register 由来の除外リスト方式でも commit と merge を停止するようにした。codex と claude の双方で阻止されること、人間と orchestrator の変更は妨げられないことを検証済み。例外時は result の申し送りと人手適用に統一し、運用手順を文書化した。
 ---
 
 # PJR-Y3KP agent による設定ファイル変更を provider 非依存で実効的に止める
