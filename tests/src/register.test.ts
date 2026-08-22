@@ -681,7 +681,7 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
           "priority: high",
           "owner: role-<name>",
           'registered_at: "2026-08-01T12:00:00Z"',
-          'conclusion: "`dct-<domain>.yaml` と <br> を確認"',
+          'conclusion: "`dct-<domain>.yaml` と <br> を確認。sch-track-<track>.yaml と <phase>. も対象"',
         ]).replace("個票本文の説明。", "説明は Array<string>。"),
         "utf8",
       );
@@ -694,6 +694,11 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         expect(view.content).toContain("`dct-<domain>.yaml`");
         expect(view.content).toContain("`<br>`");
         expect(view.content).not.toContain("``dct-<domain>.yaml``");
+        // 拡張子はコードスパンの内側へ含める。分断すると表示が割れる。
+        expect(view.content).not.toContain("`sch-track-<track>`.yaml");
+        expect(view.content).toContain("`sch-track-<track>.yaml`");
+        // 文末の句点はコードスパンの外へ残す。
+        expect(view.content).toContain("`<phase>`.");
       }
     });
   });

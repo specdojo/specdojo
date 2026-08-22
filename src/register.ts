@@ -307,20 +307,27 @@ export function generatePjrId(
 }
 
 // Markdown コードスパン外にある山括弧トークンをインラインコード化する。
-// 山括弧に連結する英数字・ハイフン・アンダースコアは、記述規約どおり同じ範囲で囲む。
+// 山括弧に連結する英数字・ハイフン・アンダースコア・ドットは、記述規約どおり同じ範囲で囲む。
+// ドットを含めるのは `dct-<domain>.yaml` のような拡張子付きの参照を分断しないためだが、
+// 文末の句点を巻き込まないよう、末尾のドットはコードスパンの外へ戻す。
 function inlineCodeAnglePlaceholders(text: string): string {
-  const placeholder = /[A-Za-z0-9_-]*(?:<[^<>\r\n]+>[A-Za-z0-9_-]*)+/g;
+  const placeholder = /[A-Za-z0-9._-]*(?:<[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
   const codeSpan = /(`+)[\s\S]*?\1/g;
+  const wrapToken = (token: string): string => {
+    const trailing = token.match(/\.+$/)?.[0] ?? "";
+    const body = trailing ? token.slice(0, -trailing.length) : token;
+    return `\`${body}\`${trailing}`;
+  };
   let output = "";
   let lastIndex = 0;
 
   for (const match of text.matchAll(codeSpan)) {
     const index = match.index ?? 0;
-    output += text.slice(lastIndex, index).replace(placeholder, (token) => `\`${token}\``);
+    output += text.slice(lastIndex, index).replace(placeholder, wrapToken);
     output += match[0];
     lastIndex = index + match[0].length;
   }
-  return output + text.slice(lastIndex).replace(placeholder, (token) => `\`${token}\``);
+  return output + text.slice(lastIndex).replace(placeholder, wrapToken);
 }
 
 function formatTableRow(item: PjrDisplayItem): string {
