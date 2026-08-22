@@ -3,7 +3,7 @@
 // primary worktree かつローカルの tsx が利用できる場合だけ、既存の TypeScript 実装へ
 // 委譲する。hook を止めない best-effort 処理なので、起動失敗は報告して終了コード 0 にする。
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -14,6 +14,26 @@ function report(message) {
 const entryPath = fileURLToPath(import.meta.url);
 const defaultRepoRoot = path.dirname(path.dirname(entryPath));
 
+// tsx の CLI は package.json の bin から解決する。dist 配下のパスを直接組み立てると、
+// パッケージ内部のレイアウト変更で「未インストール」と誤判定し、再ビルド判定が黙って
+// 無効化される。bin はパッケージの公開契約なので、レイアウトが変わっても追従できる。
+function resolveTsxCli(repoRoot) {
+  const packageJsonPath = path.join(repoRoot, "node_modules", "tsx", "package.json");
+  if (!existsSync(packageJsonPath)) return undefined;
+
+  let bin;
+  try {
+    bin = JSON.parse(readFileSync(packageJsonPath, "utf8")).bin;
+  } catch {
+    return undefined;
+  }
+  const relative = typeof bin === "string" ? bin : bin?.tsx;
+  if (typeof relative !== "string") return undefined;
+
+  const cliPath = path.join(path.dirname(packageJsonPath), relative);
+  return existsSync(cliPath) ? cliPath : undefined;
+}
+
 export function runBuildIfStale(repoRoot, { runScript = spawnSync, reportMessage = report } = {}) {
   const gitEntry = path.join(repoRoot, ".git");
 
@@ -22,8 +42,8 @@ export function runBuildIfStale(repoRoot, { runScript = spawnSync, reportMessage
     return { outcome: "not-primary-worktree" };
   }
 
-  const tsxCli = path.join(repoRoot, "node_modules", "tsx", "dist", "cli.mjs");
-  if (!existsSync(tsxCli)) {
+  const tsxCli = resolveTsxCli(repoRoot);
+  if (!tsxCli) {
     reportMessage("tsx が未インストールのため再ビルド判定をスキップした（npm install を実行する）");
     return { outcome: "dependency-missing" };
   }

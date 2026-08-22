@@ -33,9 +33,16 @@ function createFixture(gitEntry: "directory" | "file", hasTsx = false): string {
     writeFileSync(path.join(root, ".git"), "gitdir: /tmp/example\n", "utf8");
   }
   if (hasTsx) {
-    const tsxCli = path.join(root, "node_modules", "tsx", "dist", "cli.mjs");
+    // 実際の tsx と同じく、package.json の bin から CLI を解決させる。
+    const tsxDir = path.join(root, "node_modules", "tsx");
+    const tsxCli = path.join(tsxDir, "dist", "cli.mjs");
     mkdirSync(path.dirname(tsxCli), { recursive: true });
     writeFileSync(tsxCli, "// fixture\n", "utf8");
+    writeFileSync(
+      path.join(tsxDir, "package.json"),
+      `${JSON.stringify({ name: "tsx", version: "0.0.0-fixture", bin: "./dist/cli.mjs" })}\n`,
+      "utf8",
+    );
   }
   return root;
 }
@@ -57,6 +64,32 @@ describe("tools/build-if-stale.mjs", () => {
     expect(result.outcome).toBe("not-primary-worktree");
     expect(runScript).not.toHaveBeenCalled();
     expect(reportMessage).not.toHaveBeenCalled();
+  });
+
+  it("resolves the tsx CLI from the package bin even when the layout differs", () => {
+    const root = createFixture("directory");
+    // 将来 tsx が dist 以外へ CLI を置いても、bin の宣言に従えば解決できる。
+    const tsxDir = path.join(root, "node_modules", "tsx");
+    const cliPath = path.join(tsxDir, "bin", "start.mjs");
+    mkdirSync(path.dirname(cliPath), { recursive: true });
+    writeFileSync(cliPath, "// fixture\n", "utf8");
+    writeFileSync(
+      path.join(tsxDir, "package.json"),
+      `${JSON.stringify({ name: "tsx", version: "0.0.0-fixture", bin: { tsx: "./bin/start.mjs" } })}\n`,
+      "utf8",
+    );
+    const calls: string[][] = [];
+
+    const result = runBuildIfStale(root, {
+      runScript: (command: string, args: string[]) => {
+        calls.push([command, ...args]);
+        return { status: 0 };
+      },
+      reportMessage: () => {},
+    });
+
+    expect(result.outcome).toBe("delegated");
+    expect(calls[0]?.[1]).toBe(cliPath);
   });
 
   it("skips successfully in the primary worktree when tsx is not installed", () => {
