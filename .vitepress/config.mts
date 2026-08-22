@@ -324,6 +324,8 @@ const sortKey = (item: SidebarItem): { bucket: number; name: string } => {
     if (groupOrder !== undefined) return { bucket: 2, name: String(groupOrder).padStart(4, "0") };
     return { bucket: 2, name: "" };
   }
+  const catalogOrder = catalogSidebarOrder(item.link);
+  if (catalogOrder !== undefined) return { bucket: 2, name: String(catalogOrder).padStart(4, "0") };
   const base = getBaseFromLink(item.link).toLowerCase();
   const order = PROJECTS_FILE_MENU[base]?.order ?? PRODUCT_FILE_MENU[base]?.order;
   if (order !== undefined) return { bucket: 2, name: String(order).padStart(4, "0") };
@@ -429,6 +431,19 @@ const readProjectsMenuTextFromMarkdown = (link: string): string | undefined => {
 // 成果物カタログのサイドバー表示名。親ノードが「成果物カタログ」なので、各アイテムでは
 // 接頭辞を繰り返さず内容だけを見せる。表示名の正本は dct-index.yaml の name（PJR-269Z で
 // 宣言化した）で、生成物の H1 は `成果物カタログ: <domain>` と slug 表記のため使わない。
+// 成果物カタログの物理分割ファイル（dct-<domain>-<part>.yaml）は yaml-pages build が
+// 表示用ページを生成する。内容は統合ビュー（dct-<domain>.md）に含まれるため、サイドバーへ
+// 並べると同じ成果物が二重に見える。リンクされたときの受け皿としてページ自体は残し、
+// 一覧からだけ外す。判定は yaml-pages が本文へ入れる注記で行う。
+const YAML_VIEWER_PAGE_NOTE = "から生成された表示用ページです";
+
+const isCatalogYamlViewerPage = (link?: string): boolean => {
+  if (!link || !isDeliverablesCatalogLink(link)) return false;
+  const filePath = docsPathFromLink(link);
+  if (!filePath || !existsSync(filePath)) return false;
+  return readFileSync(filePath, "utf8").includes(YAML_VIEWER_PAGE_NOTE);
+};
+
 const DELIVERABLES_CATALOG_SEGMENT = "010-deliverables-catalog";
 
 const isDeliverablesCatalogLink = (link?: string): boolean =>
@@ -445,13 +460,17 @@ const catalogIndexPathFromLink = (link: string): string | undefined => {
 };
 
 // domain -> 表示名。プロジェクトごとに1回だけ読む。
-const catalogDomainNameCache = new Map<string, ReadonlyMap<string, string>>();
+type CatalogDomainEntry = { name: string; order: number };
 
-const readCatalogDomainNames = (indexPath: string): ReadonlyMap<string, string> => {
-  const cached = catalogDomainNameCache.get(indexPath);
+const catalogDomainCache = new Map<string, ReadonlyMap<string, CatalogDomainEntry>>();
+
+// domain -> 表示名と宣言順。サイドバーの並びを索引（dct-index.yaml）の宣言順に合わせるため、
+// 名前と順序を同じ走査で読む。groups[].groups[].domains[] のどの階層でも出現順に採番する。
+const readCatalogDomains = (indexPath: string): ReadonlyMap<string, CatalogDomainEntry> => {
+  const cached = catalogDomainCache.get(indexPath);
   if (cached) return cached;
 
-  const names = new Map<string, string>();
+  const names = new Map<string, CatalogDomainEntry>();
   if (existsSync(indexPath)) {
     // YAML パーサを持ち込まず、インデント階層に依存しない `- domain:` と直後の
     // `name:` の対応だけを読む。groups[].groups[].domains[] でも同じ規則で解決できる。
@@ -465,13 +484,28 @@ const readCatalogDomainNames = (indexPath: string): ReadonlyMap<string, string> 
       }
       const nameMatch = line.match(/^\s+name:\s*(.+?)\s*$/);
       if (domain && nameMatch) {
-        names.set(domain, nameMatch[1].replace(/^["']|["']$/g, ""));
+        names.set(domain, {
+          name: nameMatch[1].replace(/^["']|["']$/g, ""),
+          order: names.size + 1,
+        });
         domain = undefined;
       }
     }
   }
-  catalogDomainNameCache.set(indexPath, names);
+  catalogDomainCache.set(indexPath, names);
   return names;
+};
+
+// 索引を先頭に置き、以降は索引の宣言順で並べる。索引に無いページは undefined を返し、
+// 既定の並び（表示名順）に委ねる。
+const catalogSidebarOrder = (link?: string): number | undefined => {
+  if (!link || !isDeliverablesCatalogLink(link)) return undefined;
+  const base = getBaseFromLink(link);
+  if (base === "dct-index") return 0;
+  if (!base.startsWith("dct-")) return undefined;
+  const indexPath = catalogIndexPathFromLink(link);
+  if (!indexPath) return undefined;
+  return readCatalogDomains(indexPath).get(base.slice("dct-".length))?.order;
 };
 
 // 「成果物カタログ（データモデル）」「成果物カタログ: data-model」「成果物カタログの索引」から
@@ -486,7 +520,7 @@ const toDeliverablesCatalogMenuText = (link: string, resolved: string): string =
   const domain = base.startsWith("dct-") ? base.slice("dct-".length) : "";
   if (domain) {
     const indexPath = catalogIndexPathFromLink(link);
-    const name = indexPath ? readCatalogDomainNames(indexPath).get(domain) : undefined;
+    const name = indexPath ? readCatalogDomains(indexPath).get(domain)?.name : undefined;
     if (name) return name;
   }
   return stripCatalogPrefix(resolved);
@@ -654,7 +688,9 @@ const transformSidebar = (
       }
 
       return next;
-    });
+    })
+    // link の正規化後に判定する（正規化前の raw link では docs 配下のパスを解決できない）
+    .filter((it) => !isCatalogYamlViewerPage(it.link));
 
   const flattened = transformed.flatMap((it) =>
     !it.link && it.items && FLATTENED_GROUP_TEXTS.has(it.text ?? "") ? it.items : [it],
