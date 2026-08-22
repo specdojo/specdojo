@@ -158,6 +158,18 @@ describe("parsePjrIndex — 章番号アンカーの言語非依存", () => {
 
     expect(items.map((it) => it.id)).toEqual(["PJR-0001"]);
   });
+
+  it("生成時に付与されたコードスパンを保持して読み戻す", () => {
+    const content = EN_PJR_INDEX.replace(
+      "| PJR-0001 | open | first | desc | todo | high | ARC |",
+      "| PJR-0001 | open | `prefix-<term>-suffix` | `dct-<domain>`.yaml | todo | high | ARC |",
+    );
+
+    const [item] = parsePjrIndex(content, "UTC");
+
+    expect(item.title).toBe("`prefix-<term>-suffix`");
+    expect(item.description).toBe("`dct-<domain>`.yaml");
+  });
 });
 
 describe("extractTableHeading — 見出し行を pjr-index から採用", () => {
@@ -657,6 +669,32 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
       expect(rows[0]).toContain("| PJR-AB12 | review | 先の項目 |");
       expect(rows[0]).toContain("[pjr-ab12-topic](../pjr-ab12-topic.md)");
       expect(rows[1]).toContain("| PJR-ZZ99 | open | 後の項目 |");
+    });
+  });
+
+  it("全表セルの山括弧をコード化し、既存コードスパンを二重化しない", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-ab12-topic.md"),
+        buildTicket("PJR-AB12", "prefix-<term>-suffix", [
+          "item_status: open",
+          "priority: high",
+          "owner: role-<name>",
+          'registered_at: "2026-08-01T12:00:00Z"',
+          'conclusion: "`dct-<domain>.yaml` と <br> を確認"',
+        ]).replace("個票本文の説明。", "説明は Array<string>。"),
+        "utf8",
+      );
+
+      const views = generateDerivedViewFiles(paths, "register");
+      for (const view of views) {
+        expect(view.content).toContain("`prefix-<term>-suffix`");
+        expect(view.content).toContain("`Array<string>`");
+        expect(view.content).toContain("`role-<name>`");
+        expect(view.content).toContain("`dct-<domain>.yaml`");
+        expect(view.content).toContain("`<br>`");
+        expect(view.content).not.toContain("``dct-<domain>.yaml``");
+      }
     });
   });
 

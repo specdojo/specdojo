@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- 登録簿の全セルで山括弧をコード化し、既存コードスパンは維持。
+- frontmatter の素の山括弧を remark で検知。
+- 原因となった PJR-WVNS の conclusion を修正。
+- 個票の対応結果を更新。ステータスと result は未変更。
+- 関連95テスト、型検査、lint、schema代替検証、各生成処理は成功。
+
+全 unit は既存テスト内の `git check-ignore --stdin` がsandbox環境で停止するため完走できませんでした。
+
+<specdojo_executor_evidence>
+{"final_message":"登録簿セルの山括弧無害化とfrontmatter検知を実装。関連検証は成功し、全unitのみ既存sandboxハングで未完走。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdown lint成功"},{"command":"npm run validate:schema","status":"failed","summary":"tsxがsandbox内IPCソケットを作成できずEPERM。各validatorをnode --import tsxで個別実行し全対象成功"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/register.test.ts tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts tests/src/doc-index.test.ts","status":"passed","summary":"関連95テスト成功"},{"command":"npm run test:unit","status":"failed","summary":"既存exec-agent-protected-configテストのgit check-ignore --stdinがsandbox内で停止したため中断"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビュー生成成功"},{"command":"npx remark docs/ja/projects/prj-0001/controls/project-register/generated/*.md docs/ja/projects/prj-0001/controls/generated/*.md --quiet --frail","status":"passed","summary":"生成された全登録簿ビューに未エスケープ山括弧なし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1275件の索引生成成功"}]}
+</specdojo_executor_evidence>

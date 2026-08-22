@@ -13,7 +13,7 @@ specdojo:
   registered_at: "2026-08-22T12:24:09Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-22T13:29:14Z"
-  conclusion: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、dct-<domain>.yaml と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
+  conclusion: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
 ---
 
 # PJR-WVNS 計画成果物をカタログへ載せ、専用の planning ドメインとトラックで所有する

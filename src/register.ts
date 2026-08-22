@@ -306,8 +306,41 @@ export function generatePjrId(
   throw new Error(`Failed to generate an unused PJR-ID after ${maxAttempts} attempts`);
 }
 
+// Markdown コードスパン外にある山括弧トークンをインラインコード化する。
+// 山括弧に連結する英数字・ハイフン・アンダースコアは、記述規約どおり同じ範囲で囲む。
+function inlineCodeAnglePlaceholders(text: string): string {
+  const placeholder = /[A-Za-z0-9_-]*(?:<[^<>\r\n]+>[A-Za-z0-9_-]*)+/g;
+  const codeSpan = /(`+)[\s\S]*?\1/g;
+  let output = "";
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(codeSpan)) {
+    const index = match.index ?? 0;
+    output += text.slice(lastIndex, index).replace(placeholder, (token) => `\`${token}\``);
+    output += match[0];
+    lastIndex = index + match[0].length;
+  }
+  return output + text.slice(lastIndex).replace(placeholder, (token) => `\`${token}\``);
+}
+
 function formatTableRow(item: PjrDisplayItem): string {
-  return `| ${item.id} | ${item.status} | ${item.title} | ${item.description} | ${item.type} | ${item.priority} | ${item.owner} | ${item.registered} | ${item.due} | ${item.completed} | ${item.conclusion} | ${item.ticket} |`;
+  // frontmatter・本文由来を問わず、表へ展開する全セルを同じ規則で無害化する。
+  // 既存コードスパンは変換処理が保持するため、再生成しても二重に囲まれない。
+  const cells = [
+    item.id,
+    item.status,
+    item.title,
+    item.description,
+    item.type,
+    item.priority,
+    item.owner,
+    item.registered,
+    item.due,
+    item.completed,
+    item.conclusion,
+    item.ticket,
+  ].map(inlineCodeAnglePlaceholders);
+  return `| ${cells.join(" | ")} |`;
 }
 
 // ================================
