@@ -1,0 +1,63 @@
+# dct-index.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Deliverables Catalog Index YAML schema"
+description: >
+  Schema for the declaration that controls project size, domain display metadata,
+  domain order, and table grouping in generated/dct-index.md.
+type: object
+additionalProperties: false
+required: [id, type, status, title, rulebook, project_id, size, groups]
+properties:
+  id:
+    type: string
+    pattern: "^(?:prj-[0-9]{4,}:dct-index|specdojo:dct-index-sample)$"
+  type:
+    const: project
+  status:
+    enum: [draft, ready, deprecated]
+  title:
+    type: string
+    minLength: 1
+  rulebook:
+    const: specdojo:dct-index-rulebook
+  project_id:
+    type: string
+    pattern: "^prj-[0-9]{4,}$"
+  size:
+    enum: [small, medium, large]
+  groups:
+    type: array
+    minItems: 1
+    items:
+      $ref: "#/$defs/Group"
+$defs:
+  Group:
+    type: object
+    additionalProperties: false
+    required: [name, domains]
+    properties:
+      name:
+        type: string
+        minLength: 1
+        pattern: "^[^|\\r\\n]+$"
+      domains:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/Domain"
+  Domain:
+    type: object
+    additionalProperties: false
+    required: [domain, name, overview]
+    properties:
+      domain:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
+      name:
+        type: string
+        minLength: 1
+        pattern: "^[^|\\r\\n]+$"
+      overview:
+        type: string
+        minLength: 1
+        pattern: "^[^|\\r\\n]+$"

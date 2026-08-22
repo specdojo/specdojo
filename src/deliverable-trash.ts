@@ -12,7 +12,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import yaml from "js-yaml";
-import { type DctDoc, type DctSection } from "./catalog-types.js";
+import { isDctCatalogFileName, type DctDoc, type DctSection } from "./catalog-types.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { gitOutput } from "./exec-worktree.js";
@@ -28,9 +28,7 @@ export type TrashPlan = {
 export type TrashResult = TrashPlan & { moved: boolean };
 
 function findCatalogFiles(catalogDir: string): string[] {
-  return readdirSync(catalogDir)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  return readdirSync(catalogDir).filter(isDctCatalogFileName).sort();
 }
 
 function findDeliverablePath(

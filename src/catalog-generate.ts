@@ -5,7 +5,7 @@ import { type ResolvedDeliverable, collectResolvedDeliverables } from "./catalog
 import { resolveBasePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
-import type { DctDeliverableItem, DctDoc } from "./catalog-types.js";
+import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./catalog-types.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
 
@@ -144,9 +144,7 @@ export function runGenerate(opts: {
     return { written, skipped, errors };
   }
 
-  const allFiles = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const allFiles = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
 
   if (allFiles.length === 0) {
     errors.push(`No dct-*.yaml files found in: ${catalogPath}`);

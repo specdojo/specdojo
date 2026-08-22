@@ -49,12 +49,13 @@ docs/
 │   ├── projects/
 │   │   ├── prj-0001/                             # プロジェクト（ID）
 │   │   │   ├── 010-deliverables-catalog/         # 成果物カタログ
-│   │   │   │   ├── dct-index.md                  # 成果物カタログの索引
+│   │   │   │   ├── dct-index.yaml                # 成果物カタログ索引の宣言（正本）
 │   │   │   │   ├── dct-project-definition.yaml   # プロジェクト定義の成果物カタログ（正本）
 │   │   │   │   ├── dct-project-management.yaml   # プロジェクトマネジメントの成果物カタログ（正本）
 │   │   │   │   ├── plans/                        # agent判定結果（正本・カタログ生成の入力）
 │   │   │   │   │   └── dct-plan-data-flow.yaml
 │   │   │   │   └── generated/                    # 正本から生成される補助一覧
+│   │   │   │       ├── dct-index.md
 │   │   │   │       ├── dct-project-definition.md
 │   │   │   │       └── dct-project-management.md
 │   │   │   │

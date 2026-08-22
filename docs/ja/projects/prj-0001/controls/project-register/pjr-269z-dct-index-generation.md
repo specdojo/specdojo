@@ -48,22 +48,29 @@ dct-index.md は現在すべて人が編集しており、ドメイン一覧表�
 
 | No  | 作業                                                                                     | 担当 | 状態 | メモ                                                                                                                               |
 | --- | ---------------------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `dct-index.yaml` の項目設計と schema 追加                                                | ARC  | open | groups、domains、name、overview、size を宣言する                                                                                   |
-| 2   | `dct-index-template.md` を新設し共通ルールの散文とスロットを定義する                     | ARC  | open | `pjr-index-template.md` と同じ view-slot 方式を踏襲する                                                                            |
-| 3   | `catalog build` に index 生成を実装する                                                  | ARC  | open | グループごとの表分割と宣言順の反映、ドメイン単位の重複排除を含む                                                                   |
-| 4   | `catalog validate` に宣言と実体の突き合わせを追加する                                    | ARC  | open | 宣言のみ、実体のみ、リンク先不在をエラーにする                                                                                     |
-| 5   | `size` の正本を `dct-index.yaml` へ移し、`readSizeFromIndex` を削除する                  | ARC  | open | 互換フォールバックは設けない。未解決時は新しい正本を案内するエラーで停止する                                                       |
-| 6   | 旧 `dct-index.md` を削除し、既存参照の張り替えと `dct-index-rulebook` の更新を行う       | ARC  | open | doc id `prj-0001:dct-index` を生成物へ引き継ぎ、wikilink を維持する。移行は対象1件のため手作業で行い、移行専用コマンドは追加しない |
-| 7   | unit test を追加し、生成順序・グループ分割・分割ドメインの重複排除・検証エラーを検証する | ARC  | open | 同じ入力から同じ出力になる決定論性も確認する                                                                                       |
+| 1   | `dct-index.yaml` の項目設計と schema 追加                                                | ARC  | done | groups、domains、name、overview、size を宣言する                                                                                   |
+| 2   | `dct-index-template.md` を新設し共通ルールの散文とスロットを定義する                     | ARC  | done | `pjr-index-template.md` と同じ view-slot 方式を踏襲する                                                                            |
+| 3   | `catalog build` に index 生成を実装する                                                  | ARC  | done | グループごとの表分割と宣言順の反映、ドメイン単位の重複排除を含む                                                                   |
+| 4   | `catalog validate` に宣言と実体の突き合わせを追加する                                    | ARC  | done | 宣言のみ、実体のみ、リンク先不在をエラーにする                                                                                     |
+| 5   | `size` の正本を `dct-index.yaml` へ移し、`readSizeFromIndex` を削除する                  | ARC  | done | 互換フォールバックは設けない。未解決時は新しい正本を案内するエラーで停止する                                                       |
+| 6   | 旧 `dct-index.md` を削除し、既存参照の張り替えと `dct-index-rulebook` の更新を行う       | ARC  | done | doc id `prj-0001:dct-index` を生成物へ引き継ぎ、wikilink を維持する。移行は対象1件のため手作業で行い、移行専用コマンドは追加しない |
+| 7   | unit test を追加し、生成順序・グループ分割・分割ドメインの重複排除・検証エラーを検証する | ARC  | done | 同じ入力から同じ出力になる決定論性も確認する                                                                                       |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `dct-index.yaml` と専用 schema を追加し、プロジェクト規模、グループ、ドメイン順、表示名、概要を宣言できるようにした。
+- `catalog build` に `generated/dct-index.md` の生成を追加し、template の散文を維持したままグループ別の表を宣言順で出力するようにした。
+- `catalog validate` に宣言ドメインと実在ドメインの双方向突き合わせを追加し、同一 domain の物理分割は 1 件として扱うようにした。
+- scaffold の規模解決を `dct-index.yaml` に一本化し、旧 `dct-index.md` の読み取りを削除した。
+- 旧手書き索引を削除し、rulebook、sample、配置例を新しい正本・生成物構成へ更新した。
+- unit test でグループ分割、宣言順、標準列、物理分割時の重複排除、決定論性、双方向不一致、schema 適合を確認した。
+- 初回 run は executor 成功後に設定変更ガードで停止した。`package.json` への `validate:schema:dct-index` 追加は PJR-3S8Q の運用に従い orchestrator がレビューのうえ適用し、あわせて検知された `.specdojo/doc-index.json` の誤検知は PJR-T1JW で解消した。reporter はガードにより起動しなかったため、result は evidence と実差分を根拠に orchestrator が記入した。
+- 統合前の確認として、生成物のグループ分割と宣言順、`data-model` の 6 分割ファイルが 1 行へ集約されること、`size` が `dct-index.yaml` から解決され未設定時は新しい正本を案内して停止すること、doc id `prj-0001:dct-index` が生成物へ引き継がれ `prj-charter` の wikilink が解決できることを実機で確認した。残課題はない。
 
 ## 5. 関連ドキュメント
 
 - 生成対象の規範: [[specdojo:dct-index-rulebook|成果物カタログ（インデックス）作成ルール]]
 - ドメイン別カタログの規範: [[specdojo:dct-rulebook|成果物カタログ（ドメイン別）作成ルール]]
-- 現在の正本: `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.md`
+- 現在の正本: `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml`
 - 踏襲する生成方式: `docs/ja/specdojo/templates/pjr-index-template.md` と `src/register.ts` の `injectViewSlots`
 - 変更対象の実装: `src/catalog.ts` の `readSizeFromIndex` と `buildCatalog`
