@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6hf3-hook-script-dependency-free-entry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-22T23:09:24Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
+  completed_at: "2026-08-22T23:52:46Z"
+  conclusion: hook から起動する入口を Node 標準だけで動く tools/build-if-stale.mjs へ置き換えた。linked worktree と依存未インストールを委譲より前に判定するため、node_modules の無い新規 worktree でも hook が失敗しない。tsx の CLI は package.json の bin から解決し、PATH やパッケージ内部のレイアウトに依存しない。
 ---
 
 # PJR-6HF3 git hook から呼ぶスクリプトが devDependency に依存し、新規 worktree で失敗する
