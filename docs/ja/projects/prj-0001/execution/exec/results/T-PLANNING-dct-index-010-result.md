@@ -7,7 +7,7 @@ specdojo:
   status: in_progress
   project_id: prj-0001
   plan_ref: exec/plans/T-PLANNING-dct-index-010-plan.md
-  started_at: "2026-08-22T16:00:05.765Z"
+  started_at: "2026-08-22T21:00:04.383Z"
   agent: qwen-executor
   execution: agent
   approach: fully-guided
