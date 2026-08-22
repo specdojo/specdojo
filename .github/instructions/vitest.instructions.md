@@ -89,6 +89,7 @@ expect(() => parseRequiredField({})).toThrow(/required field: id/);
 - リポジトリ内の実ファイルを直接変更しない。
 - パスは `node:path` で組み立て、OS 依存の区切り文字に依存しない。
 - ファイル内容の読み書きでは UTF-8 を明示する。
+- テストから `git` を実行する場合は、`cwd` を一時ディレクトリに指定したうえで、必ず `env: gitEnvironment()` を渡す。lefthook などの git hook 経由でテストが動くと `GIT_DIR` が linked worktree の gitdir を指し、その状態の `git init` は cwd ではなく `GIT_DIR` 側を bare として再初期化する。共有されているメインリポジトリの config へ `core.bare = true` が書き込まれ、以後そのリポジトリで作業ツリー操作ができなくなる。
 
 ```typescript
 const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));

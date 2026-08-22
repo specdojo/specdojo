@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-22T06:49:44Z"
   due_on: "2026-08-31"
+  conclusion: "integrate failed: git diff --no-renames --name-only -z failed: fatal: this operation must be run in a work tree"
 ---
 
 # PJR-ZJZD dct-index にサブグループ階層を追加し、成果物リファレンスの節構成へ揃える
