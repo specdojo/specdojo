@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x3e8-test-git-env-bare-repository
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-22T08:14:13Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-22T08:19:18Z"
+  conclusion: テストの git 実行へ gitEnvironment() を渡し、hook 由来の GIT_DIR を除去した。GIT_DIR が linked worktree の gitdir を指す状態で git init を実行すると、その gitdir が bare として再初期化され共有 config へ core.bare=true が書き込まれることを再現実験で特定し、修正後は同条件でも変化しないことを確認した。テストから git を扱う際の規約も vitest.instructions.md へ明記した。
 ---
 
 # PJR-X3E8 テストの git 実行が環境を隔離せず、メインリポジトリを bare 化する
