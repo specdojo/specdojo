@@ -453,7 +453,8 @@ const readCatalogDomainNames = (indexPath: string): ReadonlyMap<string, string> 
 
   const names = new Map<string, string>();
   if (existsSync(indexPath)) {
-    // YAML パーサを持ち込まず、`- domain:` と直後の `name:` の対応だけを読み取る。
+    // YAML パーサを持ち込まず、インデント階層に依存しない `- domain:` と直後の
+    // `name:` の対応だけを読む。groups[].groups[].domains[] でも同じ規則で解決できる。
     const lines = readFileSync(indexPath, "utf8").split(/\r?\n/);
     let domain: string | undefined;
     for (const line of lines) {
