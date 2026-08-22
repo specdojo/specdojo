@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zjzd-dct-index-nested-groups
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-22T06:49:44Z"
   due_on: "2026-08-31"
-  conclusion: "integrate failed: git diff --no-renames --name-only -z failed: fatal: this operation must be run in a work tree"
+  completed_at: "2026-08-22T10:34:04Z"
+  conclusion: dct-index に1段のサブグループ階層を追加し、ルートグループを H3、サブグループを親番号継承の H4 として出力できるようにした。schema でグループの domains と groups を排他にし、2段目のサブグループを構造的に許可しないことで H4 上限を保証している。dct-index.yaml を成果物リファレンスの章構成へ再編し、既存の1段構成の後方互換とサイドバー表示名の解決も維持した。
 ---
 
 # PJR-ZJZD dct-index にサブグループ階層を追加し、成果物リファレンスの節構成へ揃える
