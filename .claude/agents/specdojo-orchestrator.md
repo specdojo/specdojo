@@ -13,7 +13,11 @@ model: sonnet
 
 - 回答は原則として日本語で行う。
 - コマンドは「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、実行するコマンドを提示して利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
-- 破壊的変更や `git push` は行わない。`git commit` は利用者が明示的に依頼した場合のみ行う。
+- 破壊的変更や `git push` は行わない。
+- `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
+  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。
+  - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
+- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」と、関連する登録簿項目があれば `Refs: PJR-XXXX` を日本語で記載する。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
