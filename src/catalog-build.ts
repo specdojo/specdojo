@@ -4,14 +4,21 @@ import yaml from "js-yaml";
 import type {
   DctDeliverableItem,
   DctDoc,
+  DctIndexDoc,
   DctKind,
   DctSection,
   DctTemplateDoc,
   DctValidationResult,
 } from "./catalog-types.js";
+import { isDctCatalogFileName } from "./catalog-types.js";
 import { declaredIncludes, declaredKata } from "./kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { specdojoRootDir } from "./specdojo-config.js";
+
+const DCT_INDEX_FILE = "dct-index.yaml";
+const DCT_INDEX_TEMPLATE = "dct-index-template.md";
 
 function formatDependsOn(deps: string[] | undefined): string {
   if (!deps || deps.length === 0) return "-";
@@ -186,9 +193,7 @@ export function buildMarkdown(doc: DctDoc): string {
 // Used to resolve cross-file depends_on references (same project, other file).
 export function collectCatalogLocalIds(catalogPath: string): Set<string> {
   const ids = new Set<string>();
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
   for (const f of files) {
     let doc: DctDoc;
     try {
@@ -231,9 +236,7 @@ export type MergedDomainCatalog = {
 // and parse-error reporting are handled by the caller / validateDctDoc).
 export function loadCatalogDocs(catalogPath: string): LoadedDctDoc[] {
   const loaded: LoadedDctDoc[] = [];
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
   for (const f of files) {
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
@@ -404,9 +407,7 @@ export function validateCatalogLocalIds(catalogPath: string): DctValidationResul
   const warnings: string[] = [];
   const seen = new Map<string, string>();
   const reported = new Set<string>();
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
   for (const f of files) {
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
@@ -453,9 +454,7 @@ function readRulebookType(fsPath: string): string | undefined {
 export function validateRulebookKata(catalogPath: string): DctValidationResult {
   const warnings: string[] = [];
   const checked = new Set<string>();
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
   for (const f of files) {
     let doc: DctDoc;
     try {
@@ -702,9 +701,7 @@ type CatalogNode = {
 // `<project_id>:<dep>`; this lets the graph span multiple catalog files.
 function buildCatalogGraph(catalogPath: string): Map<string, CatalogNode> {
   const nodes = new Map<string, CatalogNode>();
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
 
   for (const f of files) {
     const filePath = join(catalogPath, f);
@@ -850,6 +847,144 @@ export function validateBasedOn(
   return { ok: errors.length === 0, errors, warnings };
 }
 
+function validateDctIndexStructure(doc: DctIndexDoc, filePath: string): DctValidationResult {
+  const errors: string[] = [];
+  if (!doc || typeof doc !== "object") {
+    return { ok: false, errors: [`${filePath}: document must be an object`], warnings: [] };
+  }
+  if (!doc.id) errors.push(`${filePath}: missing required field: id`);
+  if (doc.type !== "project") errors.push(`${filePath}: type must be 'project', got: ${doc.type}`);
+  if (!(["draft", "ready", "deprecated"] as unknown[]).includes(doc.status)) {
+    errors.push(`${filePath}: invalid status: ${doc.status}`);
+  }
+  if (!doc.title) errors.push(`${filePath}: missing required field: title`);
+  if (doc.rulebook !== "specdojo:dct-index-rulebook") {
+    errors.push(`${filePath}: rulebook must be 'specdojo:dct-index-rulebook'`);
+  }
+  if (!/^prj-[0-9]{4,}$/.test(doc.project_id ?? "")) {
+    errors.push(`${filePath}: invalid project_id: ${doc.project_id}`);
+  } else if (doc.id !== `${doc.project_id}:dct-index`) {
+    errors.push(`${filePath}: id must be '${doc.project_id}:dct-index', got: ${doc.id}`);
+  }
+  if (!(["small", "medium", "large"] as unknown[]).includes(doc.size)) {
+    errors.push(`${filePath}: size must be one of: small|medium|large`);
+  }
+  if (!Array.isArray(doc.groups) || doc.groups.length === 0) {
+    errors.push(`${filePath}: groups must be a non-empty array`);
+  } else {
+    const groupNames = new Set<string>();
+    const domains = new Set<string>();
+    for (const [groupIndex, group] of doc.groups.entries()) {
+      const groupAt = `${filePath}: groups[${groupIndex}]`;
+      if (!group?.name?.trim()) errors.push(`${groupAt}: name must be a non-empty string`);
+      else if (groupNames.has(group.name))
+        errors.push(`${groupAt}: duplicate group name: ${group.name}`);
+      else groupNames.add(group.name);
+      if (!Array.isArray(group?.domains) || group.domains.length === 0) {
+        errors.push(`${groupAt}: domains must be a non-empty array`);
+        continue;
+      }
+      for (const [domainIndex, entry] of group.domains.entries()) {
+        const at = `${groupAt}.domains[${domainIndex}]`;
+        if (!/^[a-z0-9][a-z0-9-]{0,62}$/.test(entry?.domain ?? "")) {
+          errors.push(`${at}: invalid domain: ${entry?.domain}`);
+        } else if (domains.has(entry.domain)) {
+          errors.push(`${at}: duplicate domain declaration: ${entry.domain}`);
+        } else {
+          domains.add(entry.domain);
+        }
+        for (const field of ["name", "overview"] as const) {
+          const value = entry?.[field];
+          if (typeof value !== "string" || value.trim().length === 0) {
+            errors.push(`${at}: ${field} must be a non-empty string`);
+          } else if (/[|\r\n]/.test(value)) {
+            errors.push(`${at}: ${field} must not contain a table delimiter or newline`);
+          }
+        }
+      }
+    }
+  }
+  return { ok: errors.length === 0, errors, warnings: [] };
+}
+
+export function loadDctIndex(catalogPath: string): DctIndexDoc | null {
+  const filePath = join(catalogPath, DCT_INDEX_FILE);
+  if (!existsSync(filePath)) return null;
+  return yaml.load(readFileSync(filePath, "utf8")) as DctIndexDoc;
+}
+
+// The index declaration and physical domain files must describe exactly the same domain set.
+// Multiple physical files for one domain intentionally collapse to one declaration.
+export function validateCatalogIndex(catalogPath: string): DctValidationResult {
+  const filePath = join(catalogPath, DCT_INDEX_FILE);
+  if (!existsSync(filePath)) {
+    return {
+      ok: false,
+      errors: [`${filePath}: missing dct-index.yaml; declare every catalog domain in this file`],
+      warnings: [],
+    };
+  }
+
+  let doc: DctIndexDoc;
+  try {
+    doc = loadDctIndex(catalogPath) as DctIndexDoc;
+  } catch (error) {
+    return {
+      ok: false,
+      errors: [`${filePath}: ${error instanceof Error ? error.message : String(error)}`],
+      warnings: [],
+    };
+  }
+  const structural = validateDctIndexStructure(doc, filePath);
+  if (!structural.ok) return structural;
+
+  const declared = new Set(doc.groups.flatMap((group) => group.domains.map((item) => item.domain)));
+  const actual = new Set(loadCatalogDocs(catalogPath).map((entry) => entry.doc.domain));
+  const errors: string[] = [];
+  for (const domain of [...declared].sort()) {
+    if (!actual.has(domain)) {
+      errors.push(`${filePath}: declared domain '${domain}' has no dct-*.yaml source`);
+    }
+  }
+  for (const domain of [...actual].sort()) {
+    if (!declared.has(domain)) {
+      errors.push(`${filePath}: domain '${domain}' from dct-*.yaml is not declared`);
+    }
+  }
+  return { ok: errors.length === 0, errors, warnings: [] };
+}
+
+function injectDctIndexSlot(content: string, tables: string): string {
+  const marker = "<!-- specdojo:view-slot=domain-tables -->";
+  if (!content.includes(marker)) {
+    throw new Error(`View-slot not found in template: domain-tables`);
+  }
+  return content.replace(marker, tables);
+}
+
+export function buildDctIndexMarkdown(doc: DctIndexDoc, templateRaw: string): string {
+  const template = flattenTemplateFrontmatter(templateRaw)
+    .replaceAll("_PROJECT_ID_", doc.project_id)
+    .replaceAll("_STATUS_", doc.status);
+  const tables = doc.groups
+    .map((group, groupIndex) => {
+      const rows = group.domains.map(
+        (entry) =>
+          `| \`${entry.domain}\` | ${entry.name} | [dct-${entry.domain}](./dct-${entry.domain}.md) | ${entry.overview} |`,
+      );
+      return [
+        `### 2.${groupIndex + 1}. ${group.name}`,
+        "",
+        "<!-- prettier-ignore -->",
+        "| ドメイン | 名称 | 成果物カタログ | 概要 |",
+        "| --- | --- | --- | --- |",
+        ...rows,
+      ].join("\n");
+    })
+    .join("\n\n");
+  return `${injectDctIndexSlot(template, tables).trimEnd()}\n`;
+}
+
 export function buildCatalog(catalogPath: string): { generated: string[]; errors: string[] } {
   const outputDir = join(catalogPath, "generated");
   mkdirSync(outputDir, { recursive: true });
@@ -857,9 +992,7 @@ export function buildCatalog(catalogPath: string): { generated: string[]; errors
   const generated: string[] = [];
   const errors: string[] = [];
 
-  const files = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
 
   const knownLocalIds = collectCatalogLocalIds(catalogPath);
 
@@ -900,6 +1033,30 @@ export function buildCatalog(catalogPath: string): { generated: string[]; errors
       generated.push(outPath);
     } catch (err) {
       errors.push(`dct-${catalog.domain}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  const indexPath = join(catalogPath, DCT_INDEX_FILE);
+  if (existsSync(indexPath)) {
+    const indexValidation = validateCatalogIndex(catalogPath);
+    if (!indexValidation.ok) {
+      errors.push(...indexValidation.errors);
+    } else {
+      try {
+        const index = loadDctIndex(catalogPath) as DctIndexDoc;
+        const templatePath = join(
+          specdojoRootDir(),
+          "docs/ja/specdojo/templates",
+          DCT_INDEX_TEMPLATE,
+        );
+        if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
+        const outputPath = join(outputDir, "dct-index.md");
+        const markdown = buildDctIndexMarkdown(index, readFileSync(templatePath, "utf8"));
+        writeFileSync(outputPath, markdown, "utf8");
+        generated.push(outputPath);
+      } catch (error) {
+        errors.push(`dct-index: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
   }
 

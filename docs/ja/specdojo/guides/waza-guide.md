@@ -71,8 +71,9 @@ repo-root/
 │     └─ projects/
 │        └─ prj-0001/
 │           ├─ 010-deliverables-catalog/
-│           │  ├─ dct-index.md
-│           │  └─ dct-*.yaml
+│           │  ├─ dct-index.yaml
+│           │  ├─ dct-*.yaml
+│           │  └─ generated/dct-index.md
 │           ├─ 030-project-management/
 │           ├─ schedule/
 │           │  ├─ sch-milestones.yaml

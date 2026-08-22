@@ -295,7 +295,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 
 ```text
 projects/<prj-id>/
-├── 010-deliverables-catalog/   # 成果物カタログ（dct-*.yaml と索引）
+├── 010-deliverables-catalog/   # 成果物カタログ（dct-index.yaml、dct-*.yaml、generated/）
 ├── 020-project-definition/     # プロジェクト定義（prj-*.md）
 ├── 030-project-management/     # プロジェクトマネジメント（pm-*）
 ├── 040-current-state/          # 現状（必要なプロダクト成果物のスナップショット）

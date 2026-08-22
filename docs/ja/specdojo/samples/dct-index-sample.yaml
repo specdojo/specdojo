@@ -1,0 +1,27 @@
+# dct-index-sample.yaml
+# 駄菓子屋きぬや販売管理システム構築プロジェクトの成果物カタログ索引宣言例。
+# 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct-index.schema.yaml に従う。
+id: specdojo:dct-index-sample
+type: project
+status: draft
+title: 成果物カタログ
+rulebook: specdojo:dct-index-rulebook
+project_id: prj-0001
+size: small
+groups:
+  - name: プロジェクト運営
+    domains:
+      - domain: project-definition
+        name: プロジェクト定義
+        overview: 駄菓子屋きぬや販売管理システムの目的、スコープ、前提条件を管理する。
+      - domain: project-management
+        name: プロジェクト管理
+        overview: 計画、課題、進捗、関係者との合意を管理する。
+  - name: 業務・システム
+    domains:
+      - domain: data-flow
+        name: データフロー
+        overview: 販売、在庫、つけ管理を横断するデータの流れを管理する。
+      - domain: system-functions
+        name: システム化機能
+        overview: 店頭販売と在庫確認を支援するシステム機能を管理する。

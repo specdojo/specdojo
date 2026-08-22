@@ -1,0 +1,16 @@
+実装完了です。
+
+- `dct-index.yaml` を正本化し、schema・template・生成処理・双方向検証を追加
+- 旧手書き Markdown と sample を YAML 方式へ移行
+- 4グループ・19ドメインを宣言順で生成
+- `data-model` など物理分割ドメインを1行へ集約
+- 個票を更新。executor 指示どおり result は未編集
+- 全1227 unit test、型検査、Markdown lint、schema、catalog build/validate が成功
+
+`npm run lint:ts` 全体では今回未変更の `src/dashboard.ts:57` に既存 unused-variable エラーがありますが、変更対象の ESLint は成功しています。また、sandbox の `tsx` IPC 制限には `node --import tsx` で同じ検証処理を実行しました。
+
+<specdojo_executor_evidence>
+{"final_message":"dct-index.yamlを正本とする索引生成・宣言順グループ化・整合性検証・size移行を実装し、文書とテストを更新した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run test:unit","status":"passed","summary":"86ファイル、1227テスト成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data 'docs/ja/**/dct-index.yaml' --allow-empty","status":"passed","summary":"dct-index.yamlのschema適合を確認"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"19ドメインとgenerated/dct-index.mdを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログとdct-index.yamlの整合性検証成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"個票更新後の登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1255件の文書索引生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json, package.json; agent must record the required change in the result handoff for human or orchestrator application

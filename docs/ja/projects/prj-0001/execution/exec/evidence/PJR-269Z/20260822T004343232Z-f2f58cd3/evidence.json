@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-269Z",
+  "run_id": "20260822T004343232Z-f2f58cd3",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-22T00:43:43.232Z",
+    "completed_at": "2026-08-22T00:57:07.137Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-269z-dct-index-generation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/waza-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dct-index-sample.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable-trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dct-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-index-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/dct-index.schema.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/catalog-index.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 19,
+    "summary": ".../prj-0001/010-deliverables-catalog/dct-index.md |  43 -----\n .../pjr-269z-dct-index-generation.md               |  23 ++-\n docs/ja/specdojo/guides/docs-structure-guide.md    |   2 +-\n docs/ja/specdojo/guides/waza-guide.md              |   5 +-\n .../references/directory-layout-reference.md       |   3 +-\n docs/ja/specdojo/rulebooks/dct-index-rulebook.md   | 179 +++++++++----------\n docs/ja/specdojo/samples/dct-index-sample.md       |  36 ----\n .../standards/id-and-file-naming-standard.md       |   2 +-\n package.json                                       |   3 +-\n src/catalog-build.ts                               | 193 +++++++++++++++++++--\n src/catalog-generate.ts                            |   6 +-\n src/catalog-types.ts                               |  27 +++\n src/catalog.ts                                     |  38 ++--\n src/deliverable-trash.ts                           |   6 +-\n 14 files changed, 342 insertions(+), 224 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "86ファイル、1227テスト成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全Markdown検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data 'docs/ja/**/dct-index.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "dct-index.yamlのschema適合を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "19ドメインとgenerated/dct-index.mdを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログとdct-index.yamlの整合性検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "個票更新後の登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1255件の文書索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    }
+  ],
+  "final_message": "dct-index.yamlを正本とする索引生成・宣言順グループ化・整合性検証・size移行を実装し、文書とテストを更新した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-269Z/20260822T004343232Z-f2f58cd3/executor.log",
+      "bytes": 2353,
+      "truncated": false
+    }
+  ]
+}
