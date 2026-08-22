@@ -29,22 +29,22 @@ PJR-WVNS の決定に基づき、計画成果物を所有する planning ドメ�
 - `dct-<domain>.yaml` そのものと `generated/` 配下の表示用生成物は登録されていない。
 - Timeline に `planning` トラックが追加され、他トラックより先行する順序になっている。
 - `sch-strategy-planning` が作成され、`planning` トラック自身の strategy が循環しない構成になっている（scope 外または `kind: control`）。
-- `dct-index.yaml` の分類へ `planning` が追加され、索引ビューとサイドバーへ反映されている。
+- `dct-index.yaml` の分類へ `planning` が追加され、索引ビューとサイドバーへ反映されている。配置はプロジェクト成果物の配下に新設したサブグループとし、既存サブグループへは含めない。
 - `schedule build --track planning` と `exec refresh` が成功し、計画成果物のタスクが Ready として生成される。
 - `npm run validate:schema`、`npm run validate:catalog`、`npm run lint:md` が成功する。
 
 ## 3. 作業内容
 
-| No  | 作業                                                                         | 担当 | 状態 | メモ                                                                       |
-| --- | ---------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------- |
-| 1   | `dct-planning.yaml` を新設し、計画成果物の宣言と完了条件を定義する           | ARC  | open | kind の割り当ては PJR-WVNS の決定に従う                                    |
-| 2   | `project-management` から計画成果物を移設する                                | ARC  | open | `tml-index`、`dct-index`、`sch-defaults`。移設後に重複が無いことを確認する |
-| 3   | 着手済みトラックの assessment と strategy を登録する                         | ARC  | open | launch と data-flow のみ。未着手分は登録しない                             |
-| 4   | Timeline へ `planning` トラックを追加する                                    | ARC  | open | 他トラックより先行する順序にする                                           |
-| 5   | `sch-strategy-planning` を作成し、循環しない構成にする                       | ARC  | open | 自身の strategy を scope 外にするか `kind: control` とする                 |
-| 6   | 索引へ `planning` を追加する                                                 | ARC  | open | プロジェクト成果物側のどのグループへ置くかもあわせて決める                 |
-| 7   | `schedule build` と `exec refresh` で Ready タスクが生成されることを確認する | ARC  | open | 生成物（`kind: generated`）がタスク化されないことも確認する                |
-| 8   | 関連ガイドと rulebook を更新する                                             | ARC  | open | Timeline / Schedule 設計ガイド、`dct-rulebook` の kind 運用                |
+| No  | 作業                                                                         | 担当 | 状態 | メモ                                                                                           |
+| --- | ---------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------- |
+| 1   | `dct-planning.yaml` を新設し、計画成果物の宣言と完了条件を定義する           | ARC  | open | kind の割り当ては PJR-WVNS の決定に従う                                                        |
+| 2   | `project-management` から計画成果物を移設する                                | ARC  | open | `tml-index`、`dct-index`、`sch-defaults`。移設後に重複が無いことを確認する                     |
+| 3   | 着手済みトラックの assessment と strategy を登録する                         | ARC  | open | launch と data-flow のみ。未着手分は登録しない                                                 |
+| 4   | Timeline へ `planning` トラックを追加する                                    | ARC  | open | 他トラックより先行する順序にする                                                               |
+| 5   | `sch-strategy-planning` を作成し、循環しない構成にする                       | ARC  | open | 自身の strategy を scope 外にするか `kind: control` とする                                     |
+| 6   | 索引へ `planning` を追加する                                                 | ARC  | open | プロジェクト成果物の配下へ新しいサブグループを作って置く。既存の `定義と管理` などへは入れない |
+| 7   | `schedule build` と `exec refresh` で Ready タスクが生成されることを確認する | ARC  | open | 生成物（`kind: generated`）がタスク化されないことも確認する                                    |
+| 8   | 関連ガイドと rulebook を更新する                                             | ARC  | open | Timeline / Schedule 設計ガイド、`dct-rulebook` の kind 運用                                    |
 
 ## 4. 対応結果
 
