@@ -1,0 +1,188 @@
+id: prj-0001:dct-planning
+type: project
+status: draft
+title: 成果物カタログ（計画）
+rulebook: specdojo:dct-rulebook
+part_of:
+  - prj-0001:dct-index
+project_id: prj-0001
+domain: planning
+base_path: /docs/ja/projects/prj-0001
+groups:
+  - name: 成果物計画
+    base_path: 010-deliverables-catalog
+    deliverables:
+      - local_id: dct-index
+        name: 成果物カタログ索引
+        kind: work
+        depends_on: []
+        overview: 成果物ドメインの分類と索引構造を定義
+        path: dct-index.yaml
+        rulebook: specdojo:dct-index-rulebook
+        done_criteria:
+          - text: 全ドメインが重複なく適切な分類へ配置されていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 索引ビューとサイドバーから全ドメインへ到達できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+  - name: トラック順序計画
+    base_path: timeline
+    deliverables:
+      - local_id: tml-index
+        name: トラック順序計画
+        kind: work
+        depends_on: [dct-index]
+        overview: 成果物カタログ作成からトラック実行までのマクロな着手順序を計画
+        path: tml-index.yaml
+        rulebook: specdojo:tml-rulebook
+        done_criteria:
+          - text: トラックの着手順序と並行方針を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: order・parallel_group・depends_on が計画立案に使える粒度で定義されていること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: トラック間の依存関係に循環や矛盾がないこと
+            roles: [PM]
+            viewpoint: vp-pm-dependency-risk
+          - text: catalog_status と実際のカタログ作成状況が一致していること
+            roles: [QE]
+            viewpoint: vp-qe-config-validity
+  - name: Schedule 共通計画
+    base_path: schedule
+    deliverables:
+      - local_id: sch-defaults
+        name: スケジュールデフォルト定義
+        kind: work
+        depends_on: [tml-index]
+        overview: 全トラック共通のカレンダーと開始日を定義
+        path: sch-defaults.yaml
+        rulebook: specdojo:sch-rulebook
+        done_criteria:
+          - text: カレンダー・開始日などのデフォルト設定を承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 稼働日・休日などスケジュール前提の設定が確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: schema を通過し設定値の妥当性が確認できること
+            roles: [ARC, QE]
+            viewpoint: vp-arc-document-structure
+      - local_id: sch-milestones
+        name: マイルストーン定義
+        kind: generated
+        depends_on:
+          - sch-strategy-planning
+          - sch-strategy-launch
+          - sch-strategy-data-flow
+        overview: 全トラックの strategy から生成するプロジェクト共通マイルストーン
+        path: sch-milestones.yaml
+        rulebook: specdojo:sch-rulebook
+  - name: Planning トラック
+    base_path: schedule
+    deliverables:
+      - local_id: sch-assessment-planning
+        name: Planning 整備状況判定
+        kind: work
+        depends_on: [dct-index, tml-index]
+        overview: Planning トラックの成果物と実践の型の整備状況を判定
+        path: assessments/sch-assessment-planning.yaml
+        rulebook: none
+        done_criteria:
+          - text: planning scope の全 work 成果物について事実と判断が記録されていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 未決事項と推奨 approach の根拠が検証可能であること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: sch-strategy-planning
+        name: Planning スケジュール戦略定義
+        kind: control
+        depends_on: [sch-assessment-planning, sch-defaults]
+        overview: planning strategy 自身を scope 外に保ちつつ計画成果物を展開する bootstrap 制御
+        path: sch-strategy-planning.yaml
+        rulebook: specdojo:sch-rulebook
+      - local_id: sch-track-planning
+        name: Planning スケジュール定義
+        kind: generated
+        depends_on: [sch-strategy-planning]
+        overview: Planning トラックの strategy から生成する詳細スケジュール
+        path: sch-track-planning.yaml
+        rulebook: specdojo:sch-rulebook
+  - name: Launch トラック
+    base_path: schedule
+    deliverables:
+      - local_id: sch-assessment-launch
+        name: Launch 整備状況判定
+        kind: work
+        depends_on: [dct-index, tml-index]
+        overview: Launch トラックの成果物と実践の型の整備状況を判定
+        path: assessments/sch-assessment-launch.yaml
+        rulebook: none
+        done_criteria:
+          - text: launch scope の全 work 成果物について事実と判断が記録されていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 未決事項と推奨 approach の根拠が検証可能であること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: sch-strategy-launch
+        name: Launch スケジュール戦略定義
+        kind: work
+        depends_on: [sch-assessment-launch, sch-defaults]
+        overview: Launch トラックのフェーズ・担当・初期状態を定義
+        path: sch-strategy-launch.yaml
+        rulebook: specdojo:sch-rulebook
+        done_criteria:
+          - text: owner_rules・フェーズ定義・initial_state を含む戦略が妥当であること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: schema を通過し scope と設定値が整合していること
+            roles: [ARC, QE]
+            viewpoint: vp-arc-document-structure
+      - local_id: sch-track-launch
+        name: Launch スケジュール定義
+        kind: generated
+        depends_on: [sch-strategy-launch]
+        overview: Launch トラックの strategy から生成する詳細スケジュール
+        path: sch-track-launch.yaml
+        rulebook: specdojo:sch-rulebook
+  - name: Data Flow トラック
+    base_path: schedule
+    deliverables:
+      - local_id: sch-assessment-data-flow
+        name: Data Flow 整備状況判定
+        kind: work
+        depends_on: [dct-index, tml-index]
+        overview: Data Flow トラックの成果物と実践の型の整備状況を判定
+        path: assessments/sch-assessment-data-flow.yaml
+        rulebook: none
+        done_criteria:
+          - text: data-flow scope の全 work 成果物について事実と判断が記録されていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 未決事項と推奨 approach の根拠が検証可能であること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: sch-strategy-data-flow
+        name: Data Flow スケジュール戦略定義
+        kind: work
+        depends_on: [sch-assessment-data-flow, sch-defaults]
+        overview: Data Flow トラックのフェーズ・担当・初期状態を定義
+        path: sch-strategy-data-flow.yaml
+        rulebook: specdojo:sch-rulebook
+        done_criteria:
+          - text: owner_rules・フェーズ定義・initial_state を含む戦略が妥当であること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: schema を通過し scope と設定値が整合していること
+            roles: [ARC, QE]
+            viewpoint: vp-arc-document-structure
+      - local_id: sch-track-data-flow
+        name: Data Flow スケジュール定義
+        kind: generated
+        depends_on: [sch-strategy-data-flow]
+        overview: Data Flow トラックの strategy から生成する詳細スケジュール
+        path: sch-track-data-flow.yaml
+        rulebook: specdojo:sch-rulebook

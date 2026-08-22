@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QF7T",
+  "run_id": "20260822T123249315Z-a7a8065b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-22T12:32:49.315Z",
+    "completed_at": "2026-08-22T12:56:04.170Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".vitepress/sidebar-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qf7t-planning-domain-and-track.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/timeline/tml-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule-build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-data-flow.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-launch.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-planning.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-planning.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 18,
+    "summary": ".vitepress/sidebar-config.ts                       |   1 +\n .../010-deliverables-catalog/dct-index.yaml        |   7 +-\n .../dct-project-management.yaml                    | 109 ---------------------\n .../pjr-qf7t-planning-domain-and-track.md          |  26 ++---\n .../projects/prj-0001/schedule/sch-milestones.yaml |  10 +-\n docs/ja/projects/prj-0001/timeline/tml-index.yaml  |  46 +++++----\n docs/ja/specdojo/guides/docs-structure-guide.md    |   7 +-\n docs/ja/specdojo/guides/schedule-design-guide.md   |   2 +\n docs/ja/specdojo/guides/timeline-design-guide.md   |   2 +\n docs/ja/specdojo/rulebooks/dct-rulebook.md         |   8 ++\n src/exec-schedule-index.ts                         |   6 +-\n tests/src/schedule-build.test.ts                   |  23 ++++-\n 12 files changed, 99 insertions(+), 148 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全Markdown lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "failed",
+      "summary": "tsx CLIのsandbox IPC制約（listen EPERM）。node --import tsxによる同一schema群検証は全件成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "failed",
+      "summary": "tsx CLIのsandbox IPC制約（listen EPERM）。node --import tsxによるcatalog validateは成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全カタログ検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track planning",
+      "status": "passed",
+      "summary": "planningの8タスクとマイルストーンを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "Schedule検証とReady生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/schedule-build.test.ts tests/src/exec-schedule-calendar.test.ts tests/src/exec-schedule-cpm.test.ts tests/src/exec-schedule-gantt-chart-render.test.ts tests/src/exec-schedule-gantt-chart-scope.test.ts tests/src/exec-schedule-hash.test.ts tests/src/exec-schedule-progress.test.ts tests/src/exec-schedule-ready.test.ts tests/src/exec-schedule-validation.test.ts tests/src/exec-scheduler-command.test.ts tests/src/dashboard.test.ts",
+      "status": "passed",
+      "summary": "関連11ファイル・116テスト成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "sandbox上でVitest workerが終了せず中断。関連テストに失敗なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog build && node --import tsx src/specdojo.ts timeline build --project prj-0001 && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "登録簿、カタログ、Timeline、文書索引の生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・パッチ形式エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QF7T\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\nUpdated: /tmp/specdojo-register-resume-e2e-ygRAoa/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\nUpdated: /tmp/specdojo-register-pipeline-e2e-ux8W0y/docs/ja/…"
+    }
+  ],
+  "final_message": "planningドメイン／トラックと計画成果物カタログを実装。関連検証は成功し、全unit suiteのみsandboxのVitest worker残留で完走せず。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QF7T/20260822T123249315Z-a7a8065b/executor.log",
+      "bytes": 3392,
+      "truncated": false
+    }
+  ]
+}

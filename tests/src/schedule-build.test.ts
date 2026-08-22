@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import yaml from "js-yaml";
@@ -543,6 +543,27 @@ describe("buildScheduleIndex start_date precedence", () => {
       const schedule = buildScheduleIndex(dir);
 
       expect(schedule.start_date).toBe("2026-05-24");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("ignores assessment YAML files in the dedicated subdirectory", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-assessment-ignore-"));
+    try {
+      writeTrackWithStartDate(dir, null);
+      const assessmentsDir = join(dir, "assessments");
+      mkdirSync(assessmentsDir);
+      writeFileSync(
+        join(assessmentsDir, "sch-assessment-test.yaml"),
+        yaml.dump({ kind: "assessment", track: "test", deliverables: [] }),
+        "utf8",
+      );
+
+      const schedule = buildScheduleIndex(dir);
+
+      expect(schedule.files).toEqual([join(dir, "sch-track-test.yaml")]);
+      expect(schedule.nodes.has("T-TEST-doc-010")).toBe(true);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

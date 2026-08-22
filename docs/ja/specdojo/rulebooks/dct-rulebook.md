@@ -162,6 +162,14 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `generated`: 自動生成・派生成果物。スケジュール展開対象外。
 - 3値以外に拡張しない。
 
+計画成果物をカタログへ登録する場合も、生成方法ではなくライフサイクルで区別する。
+
+- 人または agent が判断して更新する `tml-index`、`dct-index`、`dct-plan-<domain>`、`sch-assessment-<track>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
+- `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、対応する `sch-strategy-<track>` を `depends_on` に宣言する。
+- 計画成果物を所有するトラック自身の `sch-strategy` は、自己生成の循環を避けるため `control` とするか、そのトラックの scope 外へ置く。
+- `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、カタログ定義との二重管理を避けるため登録しない。
+- トラック別の assessment、strategy、track は、Timeline で当該トラックが `catalog_status: primary` になった時点で具体的な `local_id` を追加し、未着手トラックの分を先行登録しない。
+
 ### 6.3. `depends_on`
 
 - 直接依存する成果物の `local_id` を配列で記載する。依存がない場合は空配列 `[]` とする。

@@ -422,6 +422,7 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   "dct-index": { text: "成果物カタログの索引", order: 10 },
   "dct-project-definition": { text: "成果物カタログ（プロジェクト定義）", order: 20 },
   "dct-project-management": { text: "成果物カタログ（プロジェクトマネジメント）", order: 30 },
+  "dct-planning": { text: "成果物カタログ（計画）", order: 40 },
   // 020-project-definition
   "prj-overview": { text: "プロジェクト概要", order: 10 },
   "prj-stakeholder-register": { text: "ステークホルダー登録簿", order: 20 },

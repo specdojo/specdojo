@@ -1,0 +1,16 @@
+planning ドメイン／トラックを新設し、計画成果物の移設・登録、Schedule 生成、ガイド・個票更新まで完了しました。result ファイルと登録簿ステータスは変更していません。
+
+主な成果:
+
+- [dct-planning.yaml](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QF7T/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml) を新設
+- planning を Timeline の先頭 wave に追加
+- primary 3トラックの assessment と planning strategy/track を作成
+- planning の8タスクを生成し、先頭タスクが Ready になることを確認
+- assessment を Schedule 入力として誤読する再帰走査を修正
+- 関連116テスト、型、Markdown、schema、catalog、生成処理は成功
+
+`npm run test:unit` 全体は既知の sandbox 上の Vitest worker 残留により完走せず中断しました。関連テストはすべて成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"planningドメイン／トラックと計画成果物カタログを実装。関連検証は成功し、全unit suiteのみsandboxのVitest worker残留で完走せず。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdown lint成功"},{"command":"npm run validate:schema","status":"failed","summary":"tsx CLIのsandbox IPC制約（listen EPERM）。node --import tsxによる同一schema群検証は全件成功"},{"command":"npm run validate:catalog","status":"failed","summary":"tsx CLIのsandbox IPC制約（listen EPERM）。node --import tsxによるcatalog validateは成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログ検証成功。既存の未作成成果物警告のみ"},{"command":"node --import tsx src/specdojo.ts schedule build --project prj-0001 --track planning","status":"passed","summary":"planningの8タスクとマイルストーンを生成"},{"command":"node --import tsx src/specdojo.ts exec refresh --project prj-0001","status":"passed","summary":"Schedule検証とReady生成成功"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/schedule-build.test.ts tests/src/exec-schedule-calendar.test.ts tests/src/exec-schedule-cpm.test.ts tests/src/exec-schedule-gantt-chart-render.test.ts tests/src/exec-schedule-gantt-chart-scope.test.ts tests/src/exec-schedule-hash.test.ts tests/src/exec-schedule-progress.test.ts tests/src/exec-schedule-ready.test.ts tests/src/exec-schedule-validation.test.ts tests/src/exec-scheduler-command.test.ts tests/src/dashboard.test.ts","status":"passed","summary":"関連11ファイル・116テスト成功"},{"command":"npm run test:unit","status":"failed","summary":"sandbox上でVitest workerが終了せず中断。関連テストに失敗なし"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog build && node --import tsx src/specdojo.ts timeline build --project prj-0001 && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿、カタログ、Timeline、文書索引の生成成功"},{"command":"git diff --check","status":"passed","summary":"空白・パッチ形式エラーなし"}]}
+</specdojo_executor_evidence>

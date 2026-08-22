@@ -1,0 +1,58 @@
+kind: strategy
+id: prj-0001:sch-strategy-planning
+type: project
+status: draft
+title: スケジュール戦略（planning）
+rulebook: specdojo:sch-rulebook
+track: planning
+
+# planning ドメインの kind: work のみを対象とする。
+# 本 strategy 自身は dct-planning.yaml で kind: control として宣言し、
+# 自身を生成する循環を避ける。
+scope:
+  catalogs:
+    - id: prj-0001:dct-planning
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
+  include_kinds:
+    - work
+
+phase_sets:
+  maintain-pass:
+    - id: maintain
+      name: 計画成果物の整備
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.25
+      description: |
+        関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+        成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+
+default_phase_set: maintain-pass
+
+owner_rules:
+  - local_ids:
+      - dct-index
+      - tml-index
+      - sch-defaults
+      - sch-assessment-planning
+      - sch-assessment-launch
+      - sch-assessment-data-flow
+      - sch-strategy-launch
+      - sch-strategy-data-flow
+    owner: ARC
+
+group_milestones:
+  - catalog_id: prj-0001:dct-planning
+    milestone:
+      id: M-PLANNING-planning
+      name: ドメイン完了
+      artifact_name: 計画
+      owner: PM
