@@ -49,7 +49,7 @@ orchestrator が exec を介さず直接実装した。
 - 実際のサイドバー生成結果を確認し、20 件すべてが内容のみの日本語表示になることを確認した。
 - `.vscode/settings.json` に `dct-index.schema.yaml` と `dct-plan.schema.yaml` の専用マッピングを追加し、汎用の `dct.schema.yaml` は extglob で両者を除外するようにした。
 - 当初 extglob は使えないと判断したが、これは誤りだった。バンドル内に同名クラスが2つあり、`yaml.schemas` の照合に使われるのは picomatch を用いる YAML schema サービス側だった。picomatch は extglob を完全にサポートする。利用者による実機確認で誤りが判明し、picomatch でパターンを検証して裏付けた。
-- 再発防止として、`document-metadata-standard` の `バリデーション` に、schema 追加時は `package.json` と `.vscode/settings.json` の両方を更新すること、汎用パターンとの重なりは extglob で除外すること、適用確認は不正キーの一時追加で行うことを明記した。
+- 再発防止として、`document-metadata-standard` の `バリデーション` へ、スキーマ追加時の登録先を置き場所別に明記した。`docs/specdojo/schemas/v1/`（言語中立）は `package.json` の検証 script と `.vscode/settings.json` の `yaml.schemas`、Frontmatter 用なら `.remarkrc.yaml` の `schemaRules`。`docs/ja/specdojo/schemas/v1/`（言語別の本文構成検証）は `.remarkrc.yaml` の `remark-md-content` の `schemas`。あわせて `schemaRules` が最初に一致したスキーマだけを適用すること、汎用パターンとの重なりは extglob で除外すること、適用確認の方法も記載した。
 
 残課題はない。
 
