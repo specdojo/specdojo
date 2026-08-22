@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
+  buildDashboardMarkdown,
   buildTimelineGanttSvg,
   computeRoutineDue,
   computeTimelineTrackSchedules,
@@ -244,6 +248,30 @@ describe("buildTimelineGanttSvg", () => {
     expect(svg).toContain('role="img"');
     expect(svg).not.toContain('rx="3"');
     expect(svg).not.toContain("<polygon");
+  });
+});
+
+// ---- buildDashboardMarkdown --------------------------------------------------
+
+describe("buildDashboardMarkdown", () => {
+  it("末尾を空行で終えない", () => {
+    // 各セクションは区切りの空行で終わるため、そのまま連結すると書き出し時の改行と合わさって
+    // 末尾が空行2行になり markdownlint の MD012 に触れる。
+    const root = mkdtempSync(join(tmpdir(), "specdojo-dashboard-"));
+
+    try {
+      const markdown = buildDashboardMarkdown({
+        projectId: "prj-test",
+        projectPath: join(root, "project"),
+        timelinePath: join(root, "project", "timeline"),
+        executionGeneratedPath: join(root, "project", "execution", "generated"),
+      });
+
+      expect(markdown.endsWith("\n")).toBe(false);
+      expect(`${markdown}\n`).not.toMatch(/\n\n$/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 
