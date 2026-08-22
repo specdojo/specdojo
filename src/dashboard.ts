@@ -54,8 +54,6 @@ function resolveProjectConfig(opts: { project?: string }): {
 } {
   loadEnv();
   const { config, configPath } = loadConfig();
-  const baseDir = specdojoRootDir();
-
   const resolvedId =
     opts.project?.trim() ||
     process.env.SPECDOJO_PROJECT?.trim() ||
