@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zwmh-register-index-angle-placeholder-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-22T14:05:29Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-22T22:00:26Z"
+  conclusion: register build が索引の表セルへ展開する全項目で、コードスパン外の山括弧プレースホルダをインラインコード化するようにした。連結範囲は拡張子のドットまで含め、文末の句点はコードの外へ戻す。あわせて remark プラグインを拡張し、frontmatter の文字列値に素の山括弧があればビルド前に検知できるようにした。読み戻しはコードスパンを保持したまま扱う。
 ---
 
 # PJR-ZWMH 登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する
