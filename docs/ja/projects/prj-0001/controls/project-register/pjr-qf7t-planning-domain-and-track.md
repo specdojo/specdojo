@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qf7t-planning-domain-and-track
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-22T12:25:02Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-22T13:14:45Z"
+  conclusion: planning ドメインと planning トラックを新設し、tml-index・dct-index・sch-defaults を project-management から移設した。着手済み3トラックの assessment と strategy を work、sch-track と sch-milestones を generated として登録し、sch-strategy-planning は control として循環を回避した。schedule build で計画成果物8件がタスク化され、生成物と control はタスク化されないことを実機で確認した。
 ---
 
 # PJR-QF7T planning ドメインとトラックを新設し、計画成果物をカタログとScheduleへ載せる
