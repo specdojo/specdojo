@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { gitEnvironment } from "../../src/exec-worktree.js";
 import {
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
@@ -17,11 +18,21 @@ function write(path: string, content: string): void {
 }
 
 function initRepository(root: string): void {
-  execFileSync("git", ["init"], { cwd: root, stdio: "ignore" });
-  execFileSync("git", ["config", "user.name", "SpecDojo Test"], { cwd: root, stdio: "ignore" });
+  // git hook 経由でテストが動くと GIT_DIR が linked worktree の gitdir を指す。その環境で
+  // `git init` すると、cwd の一時ディレクトリではなく GIT_DIR 側が bare として再初期化され、
+  // 共有されているメインリポジトリの config へ core.bare=true が書き込まれてしまう。
+  // gitEnvironment() は GIT_DIR / GIT_WORK_TREE を除去するため、必ず経由する。
+  const env = gitEnvironment();
+  execFileSync("git", ["init"], { cwd: root, stdio: "ignore", env });
+  execFileSync("git", ["config", "user.name", "SpecDojo Test"], {
+    cwd: root,
+    stdio: "ignore",
+    env,
+  });
   execFileSync("git", ["config", "user.email", "specdojo@example.invalid"], {
     cwd: root,
     stdio: "ignore",
+    env,
   });
 }
 
