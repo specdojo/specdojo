@@ -26,6 +26,7 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 
 - 成果物をどのトラックで扱うかは [トラック設計ガイド](../guides/track-design-guide.md)、rulebook・recipe・sample・template の使い分けは [実践の型活用ガイド](../guides/kata-guide.md) を参照してください。
 - 各成果物がどの概念（要求 / 要件 / 仕様 / 設計 / 実装）にあたるかは [要求から実装までの考え方](../philosophy/needs-to-implementation-philosophy.md) を参照してください。
+- 本書の章は個別成果物を引きやすい単位（rulebook 単位）で構成しており、成果物カタログ（`dct-index.yaml`）のグループとは粒度が異なります。文書分類の正本は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) です。
 
 ## 1. プロジェクト成果物
 

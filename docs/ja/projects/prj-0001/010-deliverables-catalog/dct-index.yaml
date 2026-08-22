@@ -6,36 +6,33 @@ rulebook: specdojo:dct-index-rulebook
 project_id: prj-0001
 size: large
 groups:
+  # 分類は文書構成ガイド（specdojo:docs-structure-guide）の構成図に合わせる。
+  # プロジェクトは要求・現状・移行・マネジメント、プロダクトは要件〜設計・品質保証・運用でまとめる。
+  # 外部I/F仕様は構成図で業務仕様群の枠内に置かれるため、業務仕様群へ含める。
   - name: プロジェクト成果物
     groups:
-      - name: プロジェクト定義
+      - name: 定義と管理
         domains:
           - domain: project-definition
             name: プロジェクト定義
             overview: プロジェクトの目的、スコープ、前提条件などの定義成果物を管理する。
-      - name: 現状
+          - domain: project-management
+            name: プロジェクト管理
+            overview: 計画、課題、進捗、会議体などの管理成果物を管理する。
+      - name: 現状・影響・移行
         domains:
           - domain: current-state
             name: 現状
             overview: 現行業務、システム、運用の把握に必要な成果物を管理する。
-      - name: 影響調査
-        domains:
           - domain: impact-analysis
             name: 影響調査
             overview: 導入や変更が業務、システム、運用へ与える影響を管理する。
-      - name: 移行計画
-        domains:
           - domain: migration-planning
             name: 移行計画
             overview: データ移行、切替、リハーサル、運用移管の成果物を管理する。
-      - name: プロジェクトマネジメント
-        domains:
-          - domain: project-management
-            name: プロジェクト管理
-            overview: 計画、課題、進捗、会議体などの管理成果物を管理する。
   - name: プロダクト成果物
     groups:
-      - name: 業務仕様
+      - name: 業務仕様群
         domains:
           - domain: data-flow
             name: データフロー
@@ -55,38 +52,28 @@ groups:
           - domain: glossary
             name: 用語集
             overview: プロジェクトで使用する用語と定義を管理する。
-      - name: 外部I/F仕様
-        domains:
           - domain: external-interface-specs
             name: 外部I/F仕様
             overview: 外部システムやサービスとの接続仕様を管理する。
-      - name: アーキテクチャ
+      - name: アーキテクチャ・システム設計
         domains:
           - domain: architecture
             name: アーキテクチャ
             overview: システム全体の構造と技術方針を表す成果物を管理する。
-      - name: システム設計
-        domains:
           - domain: system-design
             name: システム設計
             overview: システムの実装に必要な詳細設計成果物を管理する。
-      - name: 業務受入条件
-        domains:
-          - domain: business-acceptance-criteria
-            name: 業務受入条件
-            overview: 業務観点で成果を受け入れるための条件を管理する。
-      - name: 非機能要件
+      - name: 品質保証
         domains:
           - domain: non-functional-requirements
             name: 非機能要件
             overview: 性能、可用性、セキュリティなどの品質要求を管理する。
-      - name: システム受入条件
-        domains:
+          - domain: business-acceptance-criteria
+            name: 業務受入条件
+            overview: 業務観点で成果を受け入れるための条件を管理する。
           - domain: system-acceptance-criteria
             name: システム受入条件
             overview: システム観点で成果を受け入れるための条件を管理する。
-      - name: テスト
-        domains:
           - domain: test-specs
             name: テスト
             overview: システムの品質を検証するためのテスト成果物を管理する。
