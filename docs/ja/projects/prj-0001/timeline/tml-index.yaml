@@ -20,19 +20,27 @@ notes: |
   進め方（アジャイル／ウォーターフォール）の確定に合わせて人間が見直す。
 
 tracks:
+  # 段階: 計画基盤
+  - track: planning
+    domains: [planning]
+    catalog_status: primary
+    order: 1
+    depends_on: []
+    note: 成果物カタログ、Timeline、Schedule の計画成果物を他トラックに先行して整備する。
+
   # 段階: 立ち上げ
   - track: launch
     domains: [project-definition, project-management]
     catalog_status: primary
-    order: 1
-    depends_on: []
+    order: 2
+    depends_on: [planning]
     note: プロジェクトの目的・範囲・体制と成果物カタログを定義する起点トラック。実行中。
 
   # 段階: 要件・仕様（business-specs のドメイン別トラック）
   - track: data-flow
     domains: [data-flow]
     catalog_status: primary
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
     note: 業務仕様のうち最初に着手したトラック。実行中。
@@ -41,7 +49,7 @@ tracks:
     domains: [data-model]
     catalog_status: draft
     catalog_duration_estimate_days: 5
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
     note: bdd / ccd / cld / cstd / cdsd / stsd の6カタログを持つため、他ドメインより見積りが大きい。
@@ -50,7 +58,7 @@ tracks:
     domains: [business-model]
     catalog_status: draft
     catalog_duration_estimate_days: 3
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
     note: bes / bps / br の3カタログを対象とする。
@@ -59,7 +67,7 @@ tracks:
     domains: [user-interface-model]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
 
@@ -67,7 +75,7 @@ tracks:
     domains: [system-functions]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
 
@@ -75,7 +83,7 @@ tracks:
     domains: [glossary]
     catalog_status: draft
     catalog_duration_estimate_days: 1
-    order: 2
+    order: 3
     parallel_group: business-specs
     depends_on: [launch]
     note: 他の業務仕様トラックと用語を往復させるため、早い段階から並行させる。
@@ -85,7 +93,7 @@ tracks:
     domains: [current-state]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 2
+    order: 3
     parallel_group: requirements
     depends_on: [launch]
     note: プロダクト仕様との間に固定の情報の流れを置かないため、業務仕様と並行してよい。
@@ -94,7 +102,7 @@ tracks:
     domains: [external-interface-specs]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 2
+    order: 3
     parallel_group: requirements
     depends_on: [launch]
 
@@ -103,7 +111,7 @@ tracks:
     domains: [impact-analysis]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 3
+    order: 4
     depends_on: [current-state, external-interface-specs, data-flow]
     note: 現行の姿と導入後の仕様が揃ってから着手する。
 
@@ -112,7 +120,7 @@ tracks:
     domains: [architecture]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 4
+    order: 5
     parallel_group: design
     depends_on: [impact-analysis]
 
@@ -120,7 +128,7 @@ tracks:
     domains: [business-acceptance-criteria]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 4
+    order: 5
     parallel_group: quality-specs
     depends_on: [impact-analysis]
 
@@ -128,7 +136,7 @@ tracks:
     domains: [non-functional-requirements]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 4
+    order: 5
     parallel_group: quality-specs
     depends_on: [impact-analysis]
 
@@ -136,7 +144,7 @@ tracks:
     domains: [system-acceptance-criteria]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 4
+    order: 5
     parallel_group: quality-specs
     depends_on: [impact-analysis]
 
@@ -144,7 +152,7 @@ tracks:
     domains: [test-specs]
     catalog_status: draft
     catalog_duration_estimate_days: 3
-    order: 4
+    order: 5
     parallel_group: quality-specs
     depends_on: [impact-analysis]
 
@@ -152,7 +160,7 @@ tracks:
     domains: [system-design]
     catalog_status: draft
     catalog_duration_estimate_days: 3
-    order: 5
+    order: 6
     parallel_group: design
     depends_on: [architecture]
     note: architecture の全体構造が定まってから詳細設計へ入る。
@@ -162,7 +170,7 @@ tracks:
     domains: [migration-planning]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 6
+    order: 7
     parallel_group: transition
     depends_on: [system-design]
 
@@ -170,7 +178,7 @@ tracks:
     domains: [operations]
     catalog_status: draft
     catalog_duration_estimate_days: 2
-    order: 6
+    order: 7
     parallel_group: transition
     depends_on: [system-design]
     note: 対象ドメインは operations。実施トラックの operations とは別トラックとして扱う。

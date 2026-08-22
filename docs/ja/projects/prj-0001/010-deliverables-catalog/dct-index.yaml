@@ -18,7 +18,12 @@ groups:
             overview: プロジェクトの目的、スコープ、前提条件などの定義成果物を管理する。
           - domain: project-management
             name: プロジェクト管理
-            overview: 計画、課題、進捗、会議体などの管理成果物を管理する。
+            overview: 課題、進捗、会議体などの管理成果物を管理する。
+      - name: 計画
+        domains:
+          - domain: planning
+            name: 計画
+            overview: 成果物カタログ、Timeline、Schedule の計画成果物を管理する。
       - name: 現状・影響・移行
         domains:
           - domain: current-state

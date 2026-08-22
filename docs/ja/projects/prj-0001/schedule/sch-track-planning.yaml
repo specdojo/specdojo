@@ -1,0 +1,111 @@
+kind: track
+id: prj-0001:sch-track-planning
+type: project
+status: draft
+title: スケジュールトラック（planning）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: planning
+settings: {}
+tasks:
+  - local_id: dct-index
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on: []
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: tml-index
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-defaults
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-tml-index-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-assessment-planning
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-010
+      - T-PLANNING-tml-index-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-assessment-launch
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-010
+      - T-PLANNING-tml-index-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-strategy-launch
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-launch-010
+      - T-PLANNING-sch-defaults-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-assessment-data-flow
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-010
+      - T-PLANNING-tml-index-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+  - local_id: sch-strategy-data-flow
+    phase_suffix: "010"
+    phase_set: maintain-pass
+    phase_id: maintain
+    name: 計画成果物の整備
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-data-flow-010
+      - T-PLANNING-sch-defaults-010
+    owner: ARC
+    description: |
+      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
+      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。

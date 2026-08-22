@@ -35,20 +35,24 @@ PJR-WVNS の決定に基づき、計画成果物を所有する planning ドメ�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                         | 担当 | 状態 | メモ                                                                                           |
-| --- | ---------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------- |
-| 1   | `dct-planning.yaml` を新設し、計画成果物の宣言と完了条件を定義する           | ARC  | open | kind の割り当ては PJR-WVNS の決定に従う                                                        |
-| 2   | `project-management` から計画成果物を移設する                                | ARC  | open | `tml-index`、`dct-index`、`sch-defaults`。移設後に重複が無いことを確認する                     |
-| 3   | 着手済みトラックの assessment と strategy を登録する                         | ARC  | open | launch と data-flow のみ。未着手分は登録しない                                                 |
-| 4   | Timeline へ `planning` トラックを追加する                                    | ARC  | open | 他トラックより先行する順序にする                                                               |
-| 5   | `sch-strategy-planning` を作成し、循環しない構成にする                       | ARC  | open | 自身の strategy を scope 外にするか `kind: control` とする                                     |
-| 6   | 索引へ `planning` を追加する                                                 | ARC  | open | プロジェクト成果物の配下へ新しいサブグループを作って置く。既存の `定義と管理` などへは入れない |
-| 7   | `schedule build` と `exec refresh` で Ready タスクが生成されることを確認する | ARC  | open | 生成物（`kind: generated`）がタスク化されないことも確認する                                    |
-| 8   | 関連ガイドと rulebook を更新する                                             | ARC  | open | Timeline / Schedule 設計ガイド、`dct-rulebook` の kind 運用                                    |
+| No  | 作業                                                                         | 担当 | 状態 | メモ                                                                                         |
+| --- | ---------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------- |
+| 1   | `dct-planning.yaml` を新設し、計画成果物の宣言と完了条件を定義する           | ARC  | done | PJR-WVNS に従い work / control / generated を分類した                                        |
+| 2   | `project-management` から計画成果物を移設する                                | ARC  | done | `tml-index`、`sch-defaults` と既存 Schedule 定義を移設し、`dct-index` を planning へ登録した |
+| 3   | 着手済みトラックの assessment と strategy を登録する                         | ARC  | done | primary の planning / launch / data-flow のみ登録し、assessment 骨組みを生成した             |
+| 4   | Timeline へ `planning` トラックを追加する                                    | ARC  | done | planning を wave 1、launch 以降を後続 wave とした                                            |
+| 5   | `sch-strategy-planning` を作成し、循環しない構成にする                       | ARC  | done | strategy 自身を `kind: control` とし、scope は `kind: work` に限定した                       |
+| 6   | 索引へ `planning` を追加する                                                 | ARC  | done | プロジェクト成果物直下へ独立した「計画」サブグループを追加し、サイドバー表示名も登録した     |
+| 7   | `schedule build` と `exec refresh` で Ready タスクが生成されることを確認する | ARC  | done | planning の work 8 件を track へ展開し、先頭タスクが Ready になることを確認した              |
+| 8   | 関連ガイドと rulebook を更新する                                             | ARC  | done | Timeline / Schedule / 文書構成ガイドと DCT の kind 運用を更新した                            |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `dct-planning.yaml` を新設し、計画入力を `work`、planning strategy 自身を `control`、track と milestones を `generated` として登録した。`dct-project-management.yaml` から旧登録を除去し、重複を解消した。
+- Timeline の先頭に planning トラックを追加し、launch と後続トラックの wave を繰り下げた。`dct-index.yaml` には既存サブグループと分離した「計画」を追加した。
+- primary の planning / launch / data-flow について assessment を生成し、planning strategy と track を新設した。planning strategy は自身を scope に含めず、8 件の work 成果物だけをタスク化する。
+- `exec refresh` が `schedule/assessments/` を再帰的に Schedule 入力として誤読する問題を修正し、専用サブディレクトリを除外する単体テストを追加した。
+- 関連ガイド、DCT rulebook、VitePress サイドバーを更新した。残課題はない。
 
 ## 5. 関連ドキュメント
 

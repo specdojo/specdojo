@@ -86,6 +86,8 @@ Schedule は用途別に4種類のファイルで管理します。
 
 `sch-strategy-<track>.yaml` は `schedule build` の生成入力であり、DCT・Timeline・assessment・標準 profile から `schedule strategy generate` で作成できます。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。整備状況判定は `assessments/` 配下に置き、`sch-*.yaml` を直接読む build 系の処理が strategy / track と取り違えないようにします。
 
+計画成果物を Schedule に載せるプロジェクトでは、専用の `planning` ドメインと `planning` トラックを用います。人または agent が更新する計画入力は `kind: work`、track と milestones は `kind: generated` としてカタログへ登録します。ただし `sch-strategy-planning` 自身は `kind: control` とするか planning scope 外へ置き、strategy が自身の作成タスクを生成する循環を避けます。`dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は Schedule 対象にしません。
+
 ## 2. sch-trackの生成
 
 strategy から track への生成フロー、展開する情報、反復、タスクIDの導出を示します。

@@ -1,0 +1,259 @@
+kind: assessment
+id: prj-0001:sch-assessment-planning
+type: project
+status: draft
+title: 実践の型整備状況の判定（planning）
+rulebook: none
+schema_version: 1
+project_id: prj-0001
+track: planning
+strategy:
+  id: prj-0001:sch-strategy-planning
+  path: docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml
+include_kinds:
+  - work
+deliverables:
+  - local_id: dct-index
+    name: 成果物カタログ索引
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
+        exists: true
+        status: draft
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:dct-index-rulebook
+          path: docs/ja/specdojo/rulebooks/dct-index-rulebook.md
+          exists: true
+          status: draft
+          broken_reference: false
+        recipe:
+          declaration: none
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:dct-index-sample
+          path: docs/ja/specdojo/samples/dct-index-sample.yaml
+          exists: true
+          status: draft
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:dct-index-template
+          path: docs/ja/specdojo/templates/dct-index-template.yaml
+          exists: false
+          broken_reference: true
+      schema:
+        path: docs/specdojo/schemas/v1/dct-index.schema.yaml
+        exists: true
+      evidence_refs: []
+  - local_id: sch-assessment-data-flow
+    name: Data Flow 整備状況判定
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-data-flow.yaml
+        exists: true
+        status: draft
+      kata:
+        rulebook:
+          declaration: none
+          exists: false
+          broken_reference: false
+        recipe:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        template:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+      evidence_refs: []
+  - local_id: sch-assessment-launch
+    name: Launch 整備状況判定
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-launch.yaml
+        exists: true
+        status: draft
+      kata:
+        rulebook:
+          declaration: none
+          exists: false
+          broken_reference: false
+        recipe:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        template:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+      evidence_refs: []
+  - local_id: sch-assessment-planning
+    name: Planning 整備状況判定
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-planning.yaml
+        exists: true
+        status: draft
+      kata:
+        rulebook:
+          declaration: none
+          exists: false
+          broken_reference: false
+        recipe:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+        template:
+          declaration: unresolved
+          exists: false
+          broken_reference: false
+      evidence_refs: []
+  - local_id: sch-defaults
+    name: スケジュールデフォルト定義
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/sch-defaults.yaml
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:sch-rulebook
+          path: docs/ja/specdojo/rulebooks/sch-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: none
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: none
+          exists: false
+          broken_reference: false
+        template:
+          declaration: none
+          exists: false
+          broken_reference: false
+      schema:
+        path: docs/specdojo/schemas/v1/sch-defaults.schema.yaml
+        exists: true
+      evidence_refs: []
+  - local_id: sch-strategy-data-flow
+    name: Data Flow スケジュール戦略定義
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow.yaml
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:sch-rulebook
+          path: docs/ja/specdojo/rulebooks/sch-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: none
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: none
+          exists: false
+          broken_reference: false
+        template:
+          declaration: none
+          exists: false
+          broken_reference: false
+      evidence_refs: []
+  - local_id: sch-strategy-launch
+    name: Launch スケジュール戦略定義
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:sch-rulebook
+          path: docs/ja/specdojo/rulebooks/sch-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: none
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: none
+          exists: false
+          broken_reference: false
+        template:
+          declaration: none
+          exists: false
+          broken_reference: false
+      evidence_refs: []
+  - local_id: tml-index
+    name: トラック順序計画
+    catalog_id: prj-0001:dct-planning
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/timeline/tml-index.yaml
+        exists: true
+        status: draft
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:tml-rulebook
+          path: docs/ja/specdojo/rulebooks/tml-rulebook.md
+          exists: true
+          status: draft
+          broken_reference: false
+        recipe:
+          declaration: none
+          exists: false
+          broken_reference: false
+        sample:
+          declaration: none
+          exists: false
+          broken_reference: false
+        template:
+          declaration: none
+          exists: false
+          broken_reference: false
+      schema:
+        path: docs/specdojo/schemas/v1/tml-index.schema.yaml
+        exists: true
+      evidence_refs: []
+open_questions:
+  - topic: planning
+    question: track 'planning' の成果物と実践の型の利用可能性を判定する
+    blocking: true
+    reason: agent 判定が未実施のため、推奨する進め方が未確定
+    next_action: specdojo schedule assessment prompt --track planning の指示で agent 判定を行う
+confidence: low

@@ -23,8 +23,6 @@ milestones:
       - T-LAUNCH-pm-quality-management-plan-140
       - T-LAUNCH-pm-members-140
       - T-LAUNCH-pm-raci-140
-      - T-LAUNCH-sch-defaults-000
-      - T-LAUNCH-sch-strategy-launch-000
     owner: PM
   - id: G-LAUNCH-bootstrap-pass
     name: bootstrap-pass 完了
@@ -152,4 +150,12 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-080
       - T-DATA-FLOW-cdfd-derived-content-080
       - T-DATA-FLOW-cdfd-reporting-080
+    owner: PM
+  - id: M-PLANNING-planning
+    name: ドメイン完了
+    artifact_name: 計画
+    depends_on:
+      - T-PLANNING-sch-assessment-planning-010
+      - T-PLANNING-sch-strategy-launch-010
+      - T-PLANNING-sch-strategy-data-flow-010
     owner: PM

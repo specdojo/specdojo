@@ -109,6 +109,8 @@ flowchart TD
 
 `tml-index.yaml` の導入前から `sch-strategy-<track>.yaml` が存在し実行が始まっているトラックは、`catalog_status: primary` と `depends_on` をその実績に合わせて追認的に記載します。Timeline は実行結果を書き戻す文書ではないため（[タイムライン作成ルール](../rulebooks/tml-rulebook.md) の禁止事項を参照）、進捗率や実際の着手日は書かず、順序判断の根拠は `note` に残します。この場合、`timeline build` を実行しても当該トラックの `catalog-scaffold.md` 対象は 0 件になりますが、まだ着手していない後続トラックの wave 算出・整合性検証には引き続き意味があります。
 
+計画成果物をカタログと Schedule で管理する場合は、専用の `planning` トラックを最初の wave に置き、他トラックから依存させます。これにより、成果物カタログ索引、Timeline、Schedule 共通設定、着手済みトラックの assessment と strategy を、個別成果物トラックより先に整備できます。planning strategy 自身の循環回避は [Schedule設計ガイド](schedule-design-guide.md) の `Scheduleファイル` に従います。
+
 ### 3.2. 成果物インスタンス判定（`dct-plan-<domain>.yaml`）の位置づけ
 
 `catalog-scaffold.md` が示すドメインは、テンプレートに何が必要かが決まっていても、そのドメインで実際に何件の成果物インスタンスが要るかまでは決まっていません。この判定を agent に任せ、結果を機械可読な `dct-plan-<domain>.yaml` として残します。責務は次のとおり分担します。
