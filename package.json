@@ -41,7 +41,7 @@
     "prepare": "node tools/install-lefthook.mjs",
     "pre-commit": "lefthook run pre-commit",
     "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
-    "build:if-stale": "tsx src/build-if-stale.ts",
+    "build:if-stale": "node tools/build-if-stale.mjs",
     "test": "vitest run",
     "test:unit": "vitest run --config vitest.unit.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",

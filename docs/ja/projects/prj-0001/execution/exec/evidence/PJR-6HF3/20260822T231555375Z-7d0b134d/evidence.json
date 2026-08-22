@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6HF3",
+  "run_id": "20260822T231555375Z-7d0b134d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-22T23:15:55.375Z",
+    "completed_at": "2026-08-22T23:38:17.469Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6hf3-hook-script-dependency-free-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/build-if-stale.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/build-if-stale.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../project-register/pjr-6hf3-hook-script-dependency-free-entry.md | 7 +++++--\n lefthook.yml                                                       | 4 ++--\n package.json                                                       | 2 +-\n 3 files changed, 8 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/build-if-stale.mjs tests/tools/build-if-stale.test.ts package.json lefthook.yml docs/ja/projects/prj-0001/controls/project-register/pjr-6hf3-hook-script-dependency-free-entry.md",
+      "status": "passed",
+      "summary": "変更対象を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit -- tests/tools/build-if-stale.test.ts tests/src/dist-freshness.test.ts tests/src/doc-index.test.ts",
+      "status": "passed",
+      "summary": "3 files、51 tests passed"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "既存 exec-agent-protected-config.test.ts がsandbox内のgit子プロセスで終了せず、5分後に停止"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6hf3-hook-script-dependency-free-entry.md",
+      "status": "passed",
+      "summary": "Markdown lint通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "failed",
+      "summary": "tsx IPCソケット作成がsandboxでEPERM"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "等価なローダー起動で登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の欠落文書warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1281 entriesを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/build-if-stale.mjs",
+      "status": "passed",
+      "summary": "linked worktreeで終了コード0"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "executor指示に従い親runnerへ委譲"
+    }
+  ],
+  "final_message": "依存不要のhook入口を実装し関連検証は通過。全unit suiteは既存テストのsandbox内ハングで未完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6HF3/20260822T231555375Z-7d0b134d/executor.log",
+      "bytes": 2546,
+      "truncated": false
+    }
+  ]
+}

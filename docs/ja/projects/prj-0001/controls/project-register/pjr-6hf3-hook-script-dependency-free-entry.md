@@ -41,7 +41,10 @@ post-checkout hook が npm run build:if-stale を実行し、その実体は tsx
 
 ## 4. 対応結果
 
--
+- Node 標準機能だけで起動する `tools/build-if-stale.mjs` を追加した。`.git` がファイルになる linked worktree では `node_modules` を確認する前に終了コード 0 で終了する。
+- primary worktree ではローカルの `tsx` が存在する場合だけ `src/build-if-stale.ts` へ委譲し、従来の鮮度判定と再ビルドを維持した。依存未インストール時や委譲失敗時も、best-effort の hook を止めず終了コード 0 とする。
+- `lefthook.yml` の `post-merge` / `post-checkout` と `package.json` の `build:if-stale` を、依存不要な入口を `node` で直接実行する形へ変更した。
+- 回帰テスト `tests/tools/build-if-stale.test.ts` を追加し、linked worktree、依存未インストールの primary worktree、既存実装への委譲、委譲失敗の各経路を確認した。
 
 検討時に却下した案を記録する。
 
@@ -53,5 +56,5 @@ post-checkout hook が npm run build:if-stale を実行し、その実体は tsx
 - hook を追加した項目: [[prj-0001:pjr-cmyx-exec-dist-parent-validations|PJR-CMYX exec 実行が古い dist ビルドを使い設定済み parent_validations が実行されない]]
 - 同種の見落とし: [[prj-0001:pjr-x3e8-test-git-env-bare-repository|PJR-X3E8 テストの git 実行が環境を隔離せず、メインリポジトリを bare 化する]]
 - 影響を受けた実行: `docs/ja/projects/prj-0001/execution/exec/events/` の `T-PLANNING-dct-index-010` の claim と release
-- 変更対象: `lefthook.yml`、`package.json` の `build:if-stale`、`src/build-if-stale.ts`
+- 変更対象: `tools/build-if-stale.mjs`、`tests/tools/build-if-stale.test.ts`、`lefthook.yml`、`package.json` の `build:if-stale`
 - 同方式の前例: `tools/install-lefthook.mjs`
