@@ -210,7 +210,15 @@
     "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": ["docs/ja/**/sch-strategy-*.yaml"],
     "./docs/specdojo/schemas/v1/job.schema.yaml": ["docs/ja/**/jobs/job-*.yaml"],
     "./docs/specdojo/schemas/v1/routine.schema.yaml": ["docs/ja/**/routines/rtn-*.yaml"],
-    "./docs/specdojo/schemas/v1/dct.schema.yaml": ["docs/**/dct-*.yaml"],
+    // dct-index.yaml と dct-plan-<domain>.yaml は別 schema。dct-*.yaml のパターンが
+    // これらにも一致してしまうため、専用マッピングを先に置き、汎用側から除外する。
+    "./docs/specdojo/schemas/v1/dct-index.schema.yaml": ["docs/**/dct-index.yaml"],
+    "./docs/specdojo/schemas/v1/dct-plan.schema.yaml": ["docs/**/plans/dct-plan-*.yaml"],
+    "./docs/specdojo/schemas/v1/dct.schema.yaml": [
+      "docs/**/dct-*.yaml",
+      "!docs/**/dct-index.yaml",
+      "!docs/**/dct-plan-*.yaml"
+    ],
     "./docs/specdojo/schemas/v1/pm-roles.schema.yaml": ["docs/ja/**/pm-roles.yaml"],
     "./docs/specdojo/schemas/v1/pm-members.schema.yaml": ["docs/ja/**/pm-members.yaml"]
   },
