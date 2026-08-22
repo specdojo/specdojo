@@ -426,6 +426,71 @@ const readProjectsMenuTextFromMarkdown = (link: string): string | undefined => {
   return readMarkdownTitle(content);
 };
 
+// 成果物カタログのサイドバー表示名。親ノードが「成果物カタログ」なので、各アイテムでは
+// 接頭辞を繰り返さず内容だけを見せる。表示名の正本は dct-index.yaml の name（PJR-269Z で
+// 宣言化した）で、生成物の H1 は `成果物カタログ: <domain>` と slug 表記のため使わない。
+const DELIVERABLES_CATALOG_SEGMENT = "010-deliverables-catalog";
+
+const isDeliverablesCatalogLink = (link?: string): boolean =>
+  !!link && link.includes(`/${DELIVERABLES_CATALOG_SEGMENT}/`);
+
+// link から dct-index.yaml の絶対パスを組み立てる。generated/ の有無に依存しないよう、
+// カタログディレクトリまでで切り詰める。
+const catalogIndexPathFromLink = (link: string): string | undefined => {
+  const clean = link.split("#")[0].replace(/^\/+/, "");
+  const segments = clean.split("/");
+  const index = segments.indexOf(DELIVERABLES_CATALOG_SEGMENT);
+  if (index < 0) return undefined;
+  return path.join(WORKSPACE_ROOT, "docs", ...segments.slice(0, index + 1), "dct-index.yaml");
+};
+
+// domain -> 表示名。プロジェクトごとに1回だけ読む。
+const catalogDomainNameCache = new Map<string, ReadonlyMap<string, string>>();
+
+const readCatalogDomainNames = (indexPath: string): ReadonlyMap<string, string> => {
+  const cached = catalogDomainNameCache.get(indexPath);
+  if (cached) return cached;
+
+  const names = new Map<string, string>();
+  if (existsSync(indexPath)) {
+    // YAML パーサを持ち込まず、`- domain:` と直後の `name:` の対応だけを読み取る。
+    const lines = readFileSync(indexPath, "utf8").split(/\r?\n/);
+    let domain: string | undefined;
+    for (const line of lines) {
+      const domainMatch = line.match(/^\s*-\s+domain:\s*(\S+)\s*$/);
+      if (domainMatch) {
+        domain = domainMatch[1].replace(/^["']|["']$/g, "");
+        continue;
+      }
+      const nameMatch = line.match(/^\s+name:\s*(.+?)\s*$/);
+      if (domain && nameMatch) {
+        names.set(domain, nameMatch[1].replace(/^["']|["']$/g, ""));
+        domain = undefined;
+      }
+    }
+  }
+  catalogDomainNameCache.set(indexPath, names);
+  return names;
+};
+
+// 「成果物カタログ（データモデル）」「成果物カタログ: data-model」「成果物カタログの索引」から
+// 内容部分だけを取り出す。取り出せない場合は元の表示名をそのまま返す。
+const stripCatalogPrefix = (text: string): string => {
+  const matched = text.match(/^成果物カタログ(?:の|[:：]\s*)?[（(]?(.+?)[)）]?$/);
+  return matched?.[1]?.trim() || text;
+};
+
+const toDeliverablesCatalogMenuText = (link: string, resolved: string): string => {
+  const base = getBaseFromLink(link);
+  const domain = base.startsWith("dct-") ? base.slice("dct-".length) : "";
+  if (domain) {
+    const indexPath = catalogIndexPathFromLink(link);
+    const name = indexPath ? readCatalogDomainNames(indexPath).get(domain) : undefined;
+    if (name) return name;
+  }
+  return stripCatalogPrefix(resolved);
+};
+
 const isProjectsLink = (link: string, locale: Locale): boolean => {
   return link === `/${locale}/projects` || link.startsWith(`/${locale}/projects/`);
 };
@@ -568,7 +633,11 @@ const transformSidebar = (
           PROJECTS_FILE_MENU,
           PROJECTS_FILE_TEXT,
         );
-        if (text) next.text = text;
+        if (text) {
+          next.text = isDeliverablesCatalogLink(next.link)
+            ? toDeliverablesCatalogMenuText(next.link!, text)
+            : text;
+        }
       } else if (currentTree === "product") {
         const text = toContentTreeMenuText(next, locale, PRODUCT_SEGMENT_TEXT, PRODUCT_FILE_MENU);
         if (text) next.text = text;
