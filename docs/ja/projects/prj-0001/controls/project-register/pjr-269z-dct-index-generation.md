@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-269z-dct-index-generation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-22T00:20:50Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json, package.json; agent must record the requ…"
+  completed_at: "2026-08-22T02:33:16Z"
+  conclusion: dct-index.yaml を正本として catalog build が generated/dct-index.md を生成する構成へ移行した。グループごとの表分割と宣言順の反映、物理分割ドメインの1行集約、宣言と実体の双方向突き合わせ、size の一本化（フォールバックなし）を実装し、共通ルールの散文は dct-index-template.md で保持する。旧 dct-index.md を削除し doc id は生成物へ引き継いだ。
 ---
 
 # PJR-269Z dct-index.md を dct-index.yaml から自動生成し、順序とグループ分割を宣言で制御する
