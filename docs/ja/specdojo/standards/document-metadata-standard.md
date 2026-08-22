@@ -279,3 +279,8 @@ specdojo:
 - 独立 YAML データファイルは、ファイル形式に対応するスキーマで検証する。
 - JSON データファイルは、用途別の JSON Schema または実装上の検証契約で必須項目、型、列挙値を検証する。
 - JSON に対応するスキーマがない場合でも、JSON 構文として読み込めることを検証する。
+- `docs/specdojo/schemas/v1/` へスキーマを追加したときは、あわせて次の2箇所を更新する。どちらか一方だけを更新すると、CI では検証されるのにエディタでは無検証（またはその逆）という不一致が生じる。
+  - `package.json` の `validate:schema:<name>` script と、それを連結する `validate:schema` script。
+  - `.vscode/settings.json` の `yaml.schemas`。対象ファイルの glob を、既存の汎用パターンと重ならない形で登録する。
+- 既存の汎用パターン（例: `docs/**/dct-*.yaml`）が新しいスキーマの対象ファイルにも一致する場合は、汎用側から除外する。除外には extglob（例: `docs/**/dct-!(index|plan-*).yaml`）を使う。`yaml.schemas` の照合は yaml-language-server が picomatch で行うため extglob が利用できる。
+- スキーマの適用状況は、対象ファイルへ一時的に不正なキーを追加してエディタがエラーを表示するかで確認できる。エラーが出ない場合は、意図したスキーマが適用されていない。
