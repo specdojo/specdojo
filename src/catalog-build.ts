@@ -5,6 +5,8 @@ import type {
   DctDeliverableItem,
   DctDoc,
   DctIndexDoc,
+  DctIndexDomainGroup,
+  DctIndexGroup,
   DctKind,
   DctSection,
   DctTemplateDoc,
@@ -872,39 +874,85 @@ function validateDctIndexStructure(doc: DctIndexDoc, filePath: string): DctValid
   if (!Array.isArray(doc.groups) || doc.groups.length === 0) {
     errors.push(`${filePath}: groups must be a non-empty array`);
   } else {
-    const groupNames = new Set<string>();
     const domains = new Set<string>();
-    for (const [groupIndex, group] of doc.groups.entries()) {
-      const groupAt = `${filePath}: groups[${groupIndex}]`;
-      if (!group?.name?.trim()) errors.push(`${groupAt}: name must be a non-empty string`);
-      else if (groupNames.has(group.name))
-        errors.push(`${groupAt}: duplicate group name: ${group.name}`);
-      else groupNames.add(group.name);
-      if (!Array.isArray(group?.domains) || group.domains.length === 0) {
-        errors.push(`${groupAt}: domains must be a non-empty array`);
-        continue;
-      }
-      for (const [domainIndex, entry] of group.domains.entries()) {
-        const at = `${groupAt}.domains[${domainIndex}]`;
-        if (!/^[a-z0-9][a-z0-9-]{0,62}$/.test(entry?.domain ?? "")) {
-          errors.push(`${at}: invalid domain: ${entry?.domain}`);
-        } else if (domains.has(entry.domain)) {
-          errors.push(`${at}: duplicate domain declaration: ${entry.domain}`);
-        } else {
-          domains.add(entry.domain);
+    const validateGroups = (groups: unknown[], path: string, depth: number): void => {
+      const groupNames = new Set<string>();
+      for (const [groupIndex, value] of groups.entries()) {
+        const groupAt = `${path}[${groupIndex}]`;
+        if (!isRecord(value)) {
+          errors.push(`${groupAt}: group must be an object`);
+          continue;
         }
-        for (const field of ["name", "overview"] as const) {
-          const value = entry?.[field];
-          if (typeof value !== "string" || value.trim().length === 0) {
-            errors.push(`${at}: ${field} must be a non-empty string`);
-          } else if (/[|\r\n]/.test(value)) {
-            errors.push(`${at}: ${field} must not contain a table delimiter or newline`);
+
+        const name = value.name;
+        if (typeof name !== "string" || name.trim().length === 0) {
+          errors.push(`${groupAt}: name must be a non-empty string`);
+        } else if (/[|\r\n]/.test(name)) {
+          errors.push(`${groupAt}: name must not contain a table delimiter or newline`);
+        } else if (groupNames.has(name)) {
+          errors.push(`${groupAt}: duplicate group name: ${name}`);
+        } else {
+          groupNames.add(name);
+        }
+
+        const hasDomains = Object.hasOwn(value, "domains");
+        const hasGroups = Object.hasOwn(value, "groups");
+        if (hasDomains === hasGroups) {
+          errors.push(`${groupAt}: exactly one of domains or groups must be specified`);
+          continue;
+        }
+
+        if (hasGroups) {
+          if (depth >= 1) {
+            errors.push(`${groupAt}: groups may only be nested one level`);
+            continue;
+          }
+          if (!Array.isArray(value.groups) || value.groups.length === 0) {
+            errors.push(`${groupAt}: groups must be a non-empty array`);
+            continue;
+          }
+          validateGroups(value.groups, `${groupAt}.groups`, depth + 1);
+          continue;
+        }
+
+        if (!Array.isArray(value.domains) || value.domains.length === 0) {
+          errors.push(`${groupAt}: domains must be a non-empty array`);
+          continue;
+        }
+        for (const [domainIndex, domainValue] of value.domains.entries()) {
+          const at = `${groupAt}.domains[${domainIndex}]`;
+          if (!isRecord(domainValue)) {
+            errors.push(`${at}: domain declaration must be an object`);
+            continue;
+          }
+          const domain = domainValue.domain;
+          if (typeof domain !== "string" || !/^[a-z0-9][a-z0-9-]{0,62}$/.test(domain)) {
+            errors.push(`${at}: invalid domain: ${String(domain)}`);
+          } else if (domains.has(domain)) {
+            errors.push(`${at}: duplicate domain declaration: ${domain}`);
+          } else {
+            domains.add(domain);
+          }
+          for (const field of ["name", "overview"] as const) {
+            const fieldValue = domainValue[field];
+            if (typeof fieldValue !== "string" || fieldValue.trim().length === 0) {
+              errors.push(`${at}: ${field} must be a non-empty string`);
+            } else if (/[|\r\n]/.test(fieldValue)) {
+              errors.push(`${at}: ${field} must not contain a table delimiter or newline`);
+            }
           }
         }
       }
-    }
+    };
+    validateGroups(doc.groups, `${filePath}: groups`, 0);
   }
   return { ok: errors.length === 0, errors, warnings: [] };
+}
+
+function flattenDctIndexDomains(groups: DctIndexGroup[]): DctIndexDomainGroup["domains"] {
+  return groups.flatMap((group) =>
+    "domains" in group ? group.domains : group.groups.flatMap((child) => child.domains),
+  );
 }
 
 export function loadDctIndex(catalogPath: string): DctIndexDoc | null {
@@ -938,7 +986,7 @@ export function validateCatalogIndex(catalogPath: string): DctValidationResult {
   const structural = validateDctIndexStructure(doc, filePath);
   if (!structural.ok) return structural;
 
-  const declared = new Set(doc.groups.flatMap((group) => group.domains.map((item) => item.domain)));
+  const declared = new Set(flattenDctIndexDomains(doc.groups).map((item) => item.domain));
   const actual = new Set(loadCatalogDocs(catalogPath).map((entry) => entry.doc.domain));
   const errors: string[] = [];
   for (const domain of [...declared].sort()) {
@@ -966,22 +1014,28 @@ export function buildDctIndexMarkdown(doc: DctIndexDoc, templateRaw: string): st
   const template = flattenTemplateFrontmatter(templateRaw)
     .replaceAll("_PROJECT_ID_", doc.project_id)
     .replaceAll("_STATUS_", doc.status);
-  const tables = doc.groups
-    .map((group, groupIndex) => {
+  const renderGroups = (groups: DctIndexGroup[], prefix: number[], level: number): string[] =>
+    groups.flatMap((group, groupIndex) => {
+      const numbers = [...prefix, groupIndex + 1];
+      const heading = `${"#".repeat(level)} ${numbers.join(".")}. ${group.name}`;
+      if ("groups" in group) {
+        return [heading, "", ...renderGroups(group.groups, numbers, level + 1)];
+      }
       const rows = group.domains.map(
         (entry) =>
           `| \`${entry.domain}\` | ${entry.name} | [dct-${entry.domain}](./dct-${entry.domain}.md) | ${entry.overview} |`,
       );
       return [
-        `### 2.${groupIndex + 1}. ${group.name}`,
+        heading,
         "",
         "<!-- prettier-ignore -->",
         "| ドメイン | 名称 | 成果物カタログ | 概要 |",
         "| --- | --- | --- | --- |",
         ...rows,
-      ].join("\n");
-    })
-    .join("\n\n");
+        "",
+      ];
+    });
+  const tables = renderGroups(doc.groups, [2], 3).join("\n").trimEnd();
   return `${injectDctIndexSlot(template, tables).trimEnd()}\n`;
 }
 

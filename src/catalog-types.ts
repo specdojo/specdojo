@@ -74,10 +74,17 @@ export type DctIndexDomain = {
   overview: string;
 };
 
-export type DctIndexGroup = {
+export type DctIndexDomainGroup = {
   name: string;
   domains: DctIndexDomain[];
 };
+
+export type DctIndexGroup =
+  | DctIndexDomainGroup
+  | {
+      name: string;
+      groups: DctIndexDomainGroup[];
+    };
 
 export type DctIndexDoc = {
   id: string;

@@ -90,12 +90,63 @@ describe("dct-index", () => {
     expect(markdown).toContain("[dct-beta](./dct-beta.md)");
   });
 
+  it("renders nested groups as H4 sections with parent-based numbering", () => {
+    const doc = indexDoc([
+      {
+        name: "プロジェクト成果物",
+        groups: [
+          {
+            name: "プロジェクト定義",
+            domains: [
+              { domain: "project", name: "プロジェクト", overview: "プロジェクトを管理する。" },
+            ],
+          },
+        ],
+      },
+      {
+        name: "プロダクト成果物",
+        groups: [
+          {
+            name: "業務仕様",
+            domains: [{ domain: "business", name: "業務", overview: "業務仕様を管理する。" }],
+          },
+          {
+            name: "外部I-F仕様",
+            domains: [{ domain: "interface", name: "外部I-F", overview: "外部連携を管理する。" }],
+          },
+        ],
+      },
+    ]);
+    const template = readFileSync(
+      resolve("docs/ja/specdojo/templates/dct-index-template.md"),
+      "utf8",
+    );
+
+    const markdown = buildDctIndexMarkdown(doc, template);
+
+    expect(markdown).toContain("### 2.1. プロジェクト成果物");
+    expect(markdown).toContain("#### 2.1.1. プロジェクト定義");
+    expect(markdown).toContain("### 2.2. プロダクト成果物");
+    expect(markdown).toContain("#### 2.2.1. 業務仕様");
+    expect(markdown).toContain("#### 2.2.2. 外部I-F仕様");
+    expect(markdown.match(/\| ドメイン \| 名称 \| 成果物カタログ \| 概要 \|/g)).toHaveLength(3);
+  });
+
   it("builds one index row for a domain split across physical files deterministically", () => {
     const index = indexDoc([
       {
-        name: "データ",
-        domains: [
-          { domain: "data-model", name: "データモデル", overview: "データ構造を管理する。" },
+        name: "プロダクト成果物",
+        groups: [
+          {
+            name: "業務仕様",
+            domains: [
+              {
+                domain: "data-model",
+                name: "データモデル",
+                overview: "データ構造を管理する。",
+              },
+            ],
+          },
         ],
       },
     ]);
@@ -141,6 +192,64 @@ describe("dct-index", () => {
     );
   });
 
+  it("compares and deduplicates domain declarations across nested groups", () => {
+    const catalogPath = makeCatalog(
+      { "dct-alpha.yaml": dctYaml("dct-alpha", "alpha") },
+      indexDoc([
+        {
+          name: "親",
+          groups: [
+            {
+              name: "子A",
+              domains: [{ domain: "alpha", name: "A", overview: "A を管理する。" }],
+            },
+            {
+              name: "子B",
+              domains: [{ domain: "alpha", name: "A", overview: "A を重複宣言する。" }],
+            },
+          ],
+        },
+      ]),
+    );
+
+    const result = validateCatalogIndex(catalogPath);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toEqual(
+      expect.arrayContaining([expect.stringContaining("duplicate domain declaration: alpha")]),
+    );
+  });
+
+  it("rejects groups nested deeper than one subgroup level", () => {
+    const groups = [
+      {
+        name: "親",
+        groups: [
+          {
+            name: "子",
+            groups: [
+              {
+                name: "孫",
+                domains: [{ domain: "alpha", name: "A", overview: "A を管理する。" }],
+              },
+            ],
+          },
+        ],
+      },
+    ] as unknown as DctIndexDoc["groups"];
+    const catalogPath = makeCatalog(
+      { "dct-alpha.yaml": dctYaml("dct-alpha", "alpha") },
+      indexDoc(groups),
+    );
+
+    const result = validateCatalogIndex(catalogPath);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toEqual(
+      expect.arrayContaining([expect.stringContaining("groups may only be nested one level")]),
+    );
+  });
+
   it("loads project size only from dct-index.yaml", () => {
     const catalogPath = makeCatalog(
       { "dct-alpha.yaml": dctYaml("dct-alpha", "alpha") },
@@ -162,5 +271,47 @@ describe("dct-index", () => {
     );
 
     expect(validator(sample), formatErrors(validator.errors)).toBe(true);
+  });
+
+  it("keeps one-level groups schema-compatible and rejects mixed or deeper groups", () => {
+    const validator = buildValidator("docs/specdojo/schemas/v1/dct-index.schema.yaml");
+    const legacy = indexDoc([
+      {
+        name: "従来形式",
+        domains: [{ domain: "alpha", name: "A", overview: "A を管理する。" }],
+      },
+    ]);
+    const mixed = indexDoc([
+      {
+        name: "混在",
+        domains: [{ domain: "alpha", name: "A", overview: "A を管理する。" }],
+        groups: [
+          {
+            name: "子",
+            domains: [{ domain: "beta", name: "B", overview: "B を管理する。" }],
+          },
+        ],
+      },
+    ] as unknown as DctIndexDoc["groups"]);
+    const tooDeep = indexDoc([
+      {
+        name: "親",
+        groups: [
+          {
+            name: "子",
+            groups: [
+              {
+                name: "孫",
+                domains: [{ domain: "alpha", name: "A", overview: "A を管理する。" }],
+              },
+            ],
+          },
+        ],
+      },
+    ] as unknown as DctIndexDoc["groups"]);
+
+    expect(validator(legacy), formatErrors(validator.errors)).toBe(true);
+    expect(validator(mixed)).toBe(false);
+    expect(validator(tooDeep)).toBe(false);
   });
 });

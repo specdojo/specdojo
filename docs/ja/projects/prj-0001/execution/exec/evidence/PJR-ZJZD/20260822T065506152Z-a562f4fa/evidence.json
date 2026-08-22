@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZJZD",
+  "run_id": "20260822T065506152Z-a562f4fa",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-22T06:55:06.152Z",
+    "completed_at": "2026-08-22T07:19:56.663Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zjzd-dct-index-nested-groups.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dct-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/dct-index.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-index.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".vitepress/config.mts                              |   3 +-\n .../010-deliverables-catalog/dct-index.yaml        | 154 +++++++++++---------\n .../pjr-zjzd-dct-index-nested-groups.md            |   9 +-\n docs/ja/specdojo/rulebooks/dct-index-rulebook.md   |  64 ++++++---\n docs/ja/specdojo/samples/dct-index-sample.yaml     |  43 +++---\n docs/specdojo/schemas/v1/dct-index.schema.yaml     |  22 +++\n src/catalog-build.ts                               | 118 +++++++++++-----\n src/catalog-types.ts                               |   9 +-\n tests/src/catalog-index.test.ts                    | 157 ++++++++++++++++++++-\n 9 files changed, 441 insertions(+), 138 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/catalog-index.test.ts tests/src/doc-index.test.ts",
+      "status": "passed",
+      "summary": "関連2ファイル、34テスト成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "テスト実行中のassertion失敗は解消したが、sandbox上でVitestワーカーが終了せず中断"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "Markdown全体検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data \"docs/ja/**/dct-index.yaml\" --allow-empty",
+      "status": "passed",
+      "summary": "プロジェクトdct-indexのschema検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログ検証成功。既存の欠落成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "H3/H4階層を含むカタログ生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス1260件生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZJZD\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-XCkSym/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "サブグループ階層の実装は完了。関連検証は成功したが、全unit suiteはsandboxの残留ワーカーにより終了せず未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZJZD/20260822T065506152Z-a562f4fa/executor.log",
+      "bytes": 2022,
+      "truncated": false
+    }
+  ]
+}
