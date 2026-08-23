@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-DCTG
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md
   started_at: "2026-08-18T15:14:39.031Z"
+  completed_at: "2026-08-18T15:17:19.000Z"
   agent: claude-expert-executor
 ---
 
