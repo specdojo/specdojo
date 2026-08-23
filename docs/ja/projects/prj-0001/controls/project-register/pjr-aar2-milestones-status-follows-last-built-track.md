@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-aar2-milestones-status-follows-last-built-track
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-22T13:28:17Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-23T00:32:52Z"
+  conclusion: schedule build が集約ファイルの status を書き換えないようにした。新規作成時のみ draft を書き、既存ファイルでは保持する。対象トラックの strategy の status を集約ファイルへ反映しないため、build 順による降格も自動昇格も起きない。draft の planning トラックを build しても ready が維持されることを実機で確認した。
 ---
 
 # PJR-AAR2 sch-milestones の status が最後に build したトラックの strategy に引きずられる
