@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-aq9g-exec-plan-angle-placeholder-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T02:24:50Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: 共通規約の検査対象表により、src/ および tests/ 配下の変更がある本タスクでは npm run test:unit（pipeline executor 環境）の実行が必須である。executor evidence では対象を絞った npm run test:unit（該当テストファイル指定）は69件成功しているが、全件の …"
+  completed_at: "2026-08-23T03:17:14Z"
+  conclusion: register build の変換処理を exec-shared へ切り出し、plan 生成にも適用した。個票由来の値に含まれる素の山括弧プレースホルダは、連結範囲ごとインラインコード化される。既存の残置 plan も修正し、lint:fm が成功する状態へ戻した。再適用しても二重化しないことをテストで固定している。
 ---
 
 # PJR-AQ9G plan 生成でも山括弧プレースホルダをインラインコード化する
