@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qesv-kata-creation-criteria
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: BA
   registered_at: "2026-08-23T04:51:20Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-23T07:24:37Z"
+  conclusion: 実践の型は4種すべてを機械的に作らず、種別ごとの作る条件・作らない条件で要否を判断する。必要な型は成果物カタログへ文書IDを宣言し、不要と判断した型は not-needed と宣言する。項目なしは要否未判断であり not-needed とは区別する。要否は初回の bootstrap で判断する。基準は kata-guide に記載し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外す。実装は PJR-K4TA で完了した。
 ---
 
 # PJR-QESV 実践の型は必要なものだけ作り、不要と判断した結果を宣言に残す
