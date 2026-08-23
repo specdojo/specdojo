@@ -19,6 +19,9 @@ groups:
         overview: 対象システムと境界外の人・外部システムとの関係を俯瞰的に定義する
         path: cxd-_CONTEXT_.md
         rulebook: specdojo:cxd-rulebook
+        recipe: not-needed
+        sample: specdojo:cxd-sample
+        template: not-needed
         note: "_CONTEXT_ は対象システム・文脈名の略称（kebab-case）"
         done_criteria:
           - text: 対象システムと外部システム・ユーザーの関係が業務観点で正確に表現されていること
@@ -41,6 +44,9 @@ groups:
         overview: 対象システムを主要実行・配備単位に分割し、利用者・外部システム・データストアとの関係を定義する
         path: cnd-_CONTAINER_.md
         rulebook: specdojo:cnd-rulebook
+        recipe: not-needed
+        sample: specdojo:cnd-sample
+        template: not-needed
         note: "_CONTAINER_ は対象コンテナ群・サービス名の略称（kebab-case）"
         done_criteria:
           - text: 主要コンテナ構成・データフローが業務観点で理解できること
@@ -67,6 +73,9 @@ groups:
         overview: 対象コンテナ内の主要コンポーネントを分解し、外部要素との依存関係を定義する
         path: cpd-_COMPONENT_.md
         rulebook: specdojo:cpd-rulebook
+        recipe: not-needed
+        sample: specdojo:cpd-sample
+        template: not-needed
         note: "_COMPONENT_ は対象コンテナ名の略称（kebab-case）"
         done_criteria:
           - text: コンポーネント構成と依存関係を設計の入力として参照できること
@@ -90,6 +99,9 @@ groups:
         overview: インフラの論理的な境界（環境・ネットワーク・ゾーン）と主要コンポーネント間の通信を定義する
         path: ifd-_TERM_.md
         rulebook: specdojo:ifd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: "_TERM_ は対象環境名の略称（kebab-case）"
         done_criteria:
           - text: 実行環境・ネットワーク・コンポーネント構成が業務制約と整合していること
@@ -115,6 +127,9 @@ groups:
         overview: システムで採用する技術（言語・フレームワーク・DB・ミドルウェア等）を一覧として定義する
         path: tsd-_TERM_.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         note: "_TERM_ は対象システム・サービス名の略称（kebab-case）"
         done_criteria:
           - text: 採用技術の選定理由と制約が業務要件と整合していること

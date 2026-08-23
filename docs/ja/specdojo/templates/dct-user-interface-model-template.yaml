@@ -16,6 +16,9 @@ groups:
         overview: 業務ユーザー視点の画面の利用目的・表示項目・操作・遷移を定義する
         path: uis-_TERM_.md
         rulebook: specdojo:uis-rulebook
+        recipe: not-needed
+        sample: specdojo:uis-sample
+        template: not-needed
         note: "_TERM_ は対象画面名の略称（kebab-case）"
         done_criteria:
           - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
@@ -42,6 +45,9 @@ groups:
         overview: 業務ユーザー視点の帳票の利用目的・表示項目・出力タイミングを定義する
         path: bds-_TERM_.md
         rulebook: specdojo:bds-rulebook
+        recipe: not-needed
+        sample: specdojo:bds-sample
+        template: not-needed
         note: "_TERM_ は対象帳票名の略称（kebab-case）"
         done_criteria:
           - text: 利用目的・表示項目・出力タイミングが業務観点で記述されていること

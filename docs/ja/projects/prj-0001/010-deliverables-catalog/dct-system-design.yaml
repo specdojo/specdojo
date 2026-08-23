@@ -20,6 +20,9 @@ groups:
         overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル・agent実行構成等）への導線を1箇所に集約する
         path: sysd-index.md
         rulebook: specdojo:sysd-index-rulebook
+        recipe: not-needed
+        sample: specdojo:sysd-index-sample
+        template: not-needed
         note: PJR-ZP0Bで新設。Configurations種別にagent実行構成のSSOTを登録済み
         done_criteria:
           - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
@@ -46,6 +49,9 @@ groups:
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
         rulebook: specdojo:sysd-critical-flows-rulebook
+        recipe: not-needed
+        sample: specdojo:sysd-critical-flows-sample
+        template: not-needed
         note: PJR-ZP0Bで要否を再評価し、PR承認、worktree統合、register ID衝突復旧、agent並列処理、利用制限後の延期再開の5件を重要フローとして採用した
         done_criteria:
           - text: 重要フローの選定理由と業務影響が確認できること
@@ -72,6 +78,9 @@ groups:
         overview: 実装全体に影響する共通ルール（エラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界等）をSSOT化する
         path: sysd-cross-cutting-policy.md
         rulebook: specdojo:sysd-cross-cutting-policy-rulebook
+        recipe: not-needed
+        sample: specdojo:sysd-cross-cutting-policy-sample
+        template: not-needed
         note: PJR-ZP0Bで新設。旧sysd-agent-settings.mdの規範をscp-<カテゴリ>-<連番>形式へ再構成済み
         evidence_refs:
           - kind: implementation
@@ -107,6 +116,9 @@ groups:
         overview: SpecDojo CLIと外部エージェントCLIを組み合わせたマルチエージェント実行の全体像と、provider別詳細設計への導線を示す
         path: sysd-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit。横断ルールと運用手順を移設し、4providerとorchestrator設計へのhubへ縮小済み
         evidence_refs:
           - kind: implementation
@@ -143,6 +155,9 @@ groups:
         overview: Claude Code固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
         path: sysd-claude-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
@@ -158,6 +173,9 @@ groups:
         overview: Codex固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
         path: sysd-codex-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
@@ -174,6 +192,9 @@ groups:
         overview: opencode（Ollama等ローカルLLM含む）固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
         path: sysd-opencode-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
@@ -189,6 +210,9 @@ groups:
         overview: GitHub Copilot固有の認証・モデル選択・エージェント定義・起動コマンド解決を定義する
         path: sysd-github-copilot-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
@@ -204,6 +228,9 @@ groups:
         overview: 人との対話からSpecDojoコマンドを提案し、承認後に実行するオーケストレーターの責務・権限・起動構成を定義する
         path: sysd-orchestrator-agent-settings.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: PJR-ZP0Bでhub配下の個別設計トピックとしてcatalogへ追加
         evidence_refs:
           - kind: implementation
@@ -221,6 +248,9 @@ groups:
         overview: 同じ作業定義から実行単位を繰り返し生成するJob実行モデル（Job Definition／Job Run）を定義する
         path: sysd-job-execution.md
         rulebook: specdojo:sysd-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: 既存文書のretrofit（現状status=ready）。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation

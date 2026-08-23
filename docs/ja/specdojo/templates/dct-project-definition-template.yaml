@@ -21,6 +21,9 @@ groups:
         overview: プロジェクトの目的・背景・ゴールを定義
         path: prj-overview.md
         rulebook: specdojo:prj-overview-rulebook
+        recipe: specdojo:prj-overview-recipe
+        sample: specdojo:prj-overview-sample
+        template: specdojo:prj-overview-template
         done_criteria:
           - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
             roles: [BA]
@@ -46,6 +49,9 @@ groups:
         overview: プロジェクトの対象範囲と除外範囲を定義
         path: prj-scope.md
         rulebook: specdojo:prj-scope-rulebook
+        recipe: specdojo:prj-scope-recipe
+        sample: specdojo:prj-scope-sample
+        template: specdojo:prj-scope-template
         done_criteria:
           - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
             roles: [BA]
@@ -71,6 +77,9 @@ groups:
         overview: プロジェクト成功の判定基準と受入条件を明確化
         path: prj-success-criteria-and-acceptance-criteria.md
         rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+        recipe: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
+        sample: specdojo:prj-success-criteria-and-acceptance-criteria-sample
+        template: specdojo:prj-success-criteria-and-acceptance-criteria-template
         done_criteria:
           - text: 業務価値と受入条件が対応していること
             roles: [BA]
@@ -95,6 +104,9 @@ groups:
         overview: 関係者の役割・関心・影響度を一覧化
         path: prj-stakeholder-register.md
         rulebook: specdojo:prj-stakeholder-register-rulebook
+        recipe: specdojo:prj-stakeholder-register-recipe
+        sample: specdojo:prj-stakeholder-register-sample
+        template: specdojo:prj-stakeholder-register-template
         done_criteria:
           - text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
             roles: [BA]
@@ -119,6 +131,9 @@ groups:
         overview: プロジェクトの正式な認可と権限委譲を文書化
         path: prj-charter.md
         rulebook: specdojo:prj-charter-rulebook
+        recipe: specdojo:prj-charter-recipe
+        sample: specdojo:prj-charter-sample
+        template: specdojo:prj-charter-template
         done_criteria:
           - text: 業務上の目的・認可条件・期待効果が明確であること
             roles: [BA]
@@ -142,6 +157,9 @@ groups:
         overview: 前提条件・制約事項・外部依存を整理
         path: prj-assumptions-constraints-dependencies.md
         rulebook: specdojo:prj-assumptions-constraints-dependencies-rulebook
+        recipe: specdojo:prj-assumptions-constraints-dependencies-recipe
+        sample: specdojo:prj-assumptions-constraints-dependencies-sample
+        template: specdojo:prj-assumptions-constraints-dependencies-template
         done_criteria:
           - text: 業務上の前提・制約が業務観点で識別できること
             roles: [BA]
@@ -169,6 +187,9 @@ groups:
         overview: 主要課題の特定と解決アプローチを定義
         path: prj-issues-and-approach.md
         rulebook: specdojo:prj-issues-and-approach-rulebook
+        recipe: specdojo:prj-issues-and-approach-recipe
+        sample: specdojo:prj-issues-and-approach-sample
+        template: specdojo:prj-issues-and-approach-template
         done_criteria:
           - text: 業務課題と解決アプローチが業務観点で対応していること
             roles: [BA]
@@ -193,6 +214,9 @@ groups:
         overview: 技術的・方針的な代替案を比較評価
         path: prj-comparison-of-alternatives.md
         rulebook: specdojo:prj-comparison-of-alternatives-rulebook
+        recipe: specdojo:prj-comparison-of-alternatives-recipe
+        sample: specdojo:prj-comparison-of-alternatives-sample
+        template: specdojo:prj-comparison-of-alternatives-template
         done_criteria:
           - text: 比較軸・評価根拠が業務価値と対応していること
             roles: [BA]

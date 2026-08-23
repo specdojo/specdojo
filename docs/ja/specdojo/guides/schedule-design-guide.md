@@ -346,12 +346,12 @@ phase や owner rule に書く `approach` は、対象成果物と実践の型�
 | 構造生成 | コード（`schedule strategy generate`）              | scope・profile・owner・gate・依存・milestone を持つ strategy                    |
 | 承認     | 人間                                                | 判定結果のレビュー、`undecided` の解消、`status` の確定                         |
 
-- 実践の型の解決規則（宣言・`none`・慣例 ID・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
+- 実践の型の解決規則（カタログの文書 ID / `not-needed` 宣言・未宣言・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
 - 利用可能性は、`target-fit`（対象成果物向けか）、`substantive-content`（空・placeholder 中心でないか）、`internal-consistency`（相互に致命的な矛盾がないか）、`standard-alignment`（現行 rulebook・schema と整合するか）の4観点を根拠付きで評価し、すべて `pass` なら `usable`、1件でも `fail` なら `unusable`、`fail` が無く未確認が残れば `unknown` とします。`status: draft` であること自体は利用不能の根拠になりません。
-- `recommended_approach` は `intent` と利用可能性から決まります。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
-- `bootstrap` は `bootstrap_scope`（一式で初期整備する実践の型）と理由の記載が必要で、対象がすべて利用可能な場合は選べません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
+- `recommended_approach` は `intent` と利用可能性から決まります。`not-needed` は欠落とみなさず、必要と宣言された型がすべて利用可能なら `fully-guided` を選べます。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
+- `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
 - 判定できない項目が残る場合は `recommended_approach: undecided` とし、対象 `local_id` を `topic` にした blocking な `open_questions` を必ず添えます。`undecided` のまま strategy を生成しません。
-- 標準 profile は `bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
+- 標準 profile は `bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
 - owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
 - generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 

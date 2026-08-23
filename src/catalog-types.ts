@@ -13,6 +13,8 @@ export type EvidenceRef = {
   purpose: string;
 };
 
+export type KataDeclaration = string | "not-needed";
+
 export type DctDeliverableItem = {
   local_id: string;
   instance_id_pattern?: string;
@@ -21,7 +23,10 @@ export type DctDeliverableItem = {
   depends_on?: string[];
   overview: string;
   path?: string;
-  rulebook?: string;
+  rulebook?: KataDeclaration;
+  recipe?: KataDeclaration;
+  sample?: KataDeclaration;
+  template?: KataDeclaration;
   evidence_refs?: EvidenceRef[];
   done_criteria?: CriteriaItem[];
   note?: string;

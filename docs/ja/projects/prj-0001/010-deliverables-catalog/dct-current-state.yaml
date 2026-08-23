@@ -26,6 +26,9 @@ groups:
         overview: Code for Japanが「じぶんごとプラネット」を企画・開発・公開した際の、要求から実装までの進め方（ソーシャルハックデーを中心とした反復開発プロセス）を、SpecDojoとの比較基準として定義する
         path: cdfd-jibungoto-planet.md
         rulebook: specdojo:cdfd-rulebook
+        recipe: specdojo:cdfd-recipe
+        sample: specdojo:cdfd-sample
+        template: specdojo:cdfd-template
         note: |
           対象は国立環境研究所とCode for Japanが2021年11月〜2022年8月に共同開発した実在プロジェクト。
           公開情報（Code for Japan公式サイト、国立環境研究所プレスリリース、開発当事者note記事等）を

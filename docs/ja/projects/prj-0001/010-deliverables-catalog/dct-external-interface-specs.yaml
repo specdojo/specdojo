@@ -22,6 +22,9 @@ groups:
         overview: 外部システムとの連携を一覧（YAML）で定義する。SpecDojo自身の連携はAI provider CLIとGit/GitHubが中心
         path: ifx-index.yaml
         rulebook: specdojo:ifx-index-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: interfaces の kind はコマンドを使用し、個別の ifx-cmd-<term> 詳細仕様が未作成の間は spec_ref を TBD とする
         evidence_refs:
           - kind: implementation

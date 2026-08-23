@@ -25,6 +25,9 @@ groups:
         overview: 業務上のエンティティ関係・継承・属性を図で定義する
         path: ccd-_TERM_.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること

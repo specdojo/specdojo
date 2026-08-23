@@ -22,6 +22,9 @@ groups:
         overview: 対象業務の全体構成・情報の流れ・業務主体を可視化し定義する
         path: cdfd-_TERM_.md
         rulebook: specdojo:cdfd-rulebook
+        recipe: specdojo:cdfd-recipe
+        sample: specdojo:cdfd-sample
+        template: specdojo:cdfd-template
         note: "_TERM_ は対象業務名の略称（kebab-case）。単一領域を複数のデータフローに分割する場合は dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を参照し、この1件を削除してデータフローごとに固定 local_id を記載する"
         done_criteria:
           - text: 業務プロセス・情報の流れ・業務主体が業務観点で正確に表現されていること

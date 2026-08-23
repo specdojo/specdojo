@@ -375,6 +375,21 @@ describe("resolveRecommendedApproach", () => {
     expect(decision.approach).toBe("fully-guided");
   });
 
+  it("not-needed を欠落扱いせず、必要な型が揃えば fully-guided を選ぶ", () => {
+    const decision = resolveRecommendedApproach({
+      ...base,
+      intent: "author-deliverable",
+      usability: usabilityOf({
+        rulebook: "usable",
+        recipe: "not-needed",
+        sample: "usable",
+        template: "not-needed",
+      }),
+    });
+
+    expect(decision.approach).toBe("fully-guided");
+  });
+
   it("recipe だけ利用可能なら recipe-guided を選ぶ", () => {
     const decision = resolveRecommendedApproach({
       ...base,
@@ -502,6 +517,18 @@ describe("resolveRecommendedApproach", () => {
     });
 
     expect(decision.approach).toBe("undecided");
+  });
+
+  it("not-needed の型は maintenance 対象にしない", () => {
+    const decision = resolveRecommendedApproach({
+      ...base,
+      intent: "improve-kata",
+      usability: usabilityOf({ recipe: "not-needed" }),
+      kataTarget: "recipe",
+    });
+
+    expect(decision.approach).toBe("undecided");
+    expect(decision.reasons.join("\n")).toContain("not-needed");
   });
 });
 

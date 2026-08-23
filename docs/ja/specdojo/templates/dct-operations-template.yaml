@@ -18,6 +18,9 @@ groups:
         overview: 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）をSSOT化する
         path: opd-index.md
         rulebook: specdojo:opd-rulebook
+        recipe: not-needed
+        sample: specdojo:opd-sample
+        template: not-needed
         done_criteria:
           - text: SLO/SLA・体制・監視・変更管理・バックアップ方針が業務継続性の観点で記述されていること
             roles: [BA]
@@ -44,6 +47,9 @@ groups:
         overview: 特定の運用テーマ（監視・障害対応等）に関する方針・設計を個別に定義する
         path: opd-_TERM_.md
         rulebook: specdojo:opd-rulebook
+        recipe: not-needed
+        sample: specdojo:opd-sample
+        template: not-needed
         note: "_TERM_ は対象運用テーマの略称（例: monitoring, incident）（kebab-case）"
         done_criteria:
           - text: 個別テーマの運用方針が業務継続性の観点で記述されていること
@@ -67,6 +73,9 @@ groups:
         overview: 運用作業を再現可能な手順として定義し、誰がやっても同じ結果になる状態を作る
         path: opr-index.md
         rulebook: specdojo:opr-rulebook
+        recipe: not-needed
+        sample: specdojo:opr-sample
+        template: not-needed
         done_criteria:
           - text: 日次・週次・月次の定常運用手順が業務観点で記述されていること
             roles: [BA]
@@ -93,6 +102,9 @@ groups:
         overview: 特定の運用作業（障害対応・バックアップ・リストア等）の手順を個別に定義する
         path: opr-_TERM_.md
         rulebook: specdojo:opr-rulebook
+        recipe: not-needed
+        sample: specdojo:opr-sample
+        template: not-needed
         note: "_TERM_ は対象運用作業の略称（例: incident, backup-restore）（kebab-case）"
         done_criteria:
           - text: 個別手順が実施可能な粒度で記述されていること

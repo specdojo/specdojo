@@ -13,7 +13,6 @@ groups:
         kind: work
         overview: SpecDojoの操作単位（CLIコマンド群）の利用目的・表示項目・操作・遷移の要点を、command-referenceや運用ガイドへの導線としてまとめる
         path: uis-index.md
-        rulebook: specdojo:uis-index-rulebook
         note: SpecDojoはCLIツールのためGUI画面を持たない。command-reference.md の11コマンド群を「画面」に見立てて要点を記述し、詳細はcommand-reference・各運用ガイドへリンクする。個別画面（uis-<term>）は作成しない
         done_criteria:
           - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
@@ -36,7 +35,6 @@ groups:
         kind: work
         overview: SpecDojoが生成する出力物（timeline・CPM・Ready一覧・登録簿ビュー・カタログ表示等）の利用目的・表示項目の要点を、既存guide/rulebookへの導線としてまとめる
         path: bds-index.md
-        rulebook: specdojo:bds-index-rulebook
         note: 出力物の多くは pjr-rulebook（台帳ビュー）・dct-rulebook（カタログ表示）が構造を規定済みのため重複記述はしない。専用rulebookが無い gantt-chart・CPM・critical-path・Ready一覧のみ要点を記述し、詳細はschedule-design-guide・schedule-operation-guideへリンクする。gantt-chartは元timelineから改名した生成物であり、新設のtml-（トラック順序計画）とは別物のため対象外とする。個別帳票（bds-<term>）は作成しない
         done_criteria:
           - text: 利用目的・表示項目・出力タイミングが業務観点で記述されていること

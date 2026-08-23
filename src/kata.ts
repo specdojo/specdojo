@@ -23,6 +23,8 @@ export type KataRefs = {
   template: string;
 };
 
+export type CatalogKataDeclarations = Partial<Record<keyof KataRefs, string>>;
+
 type RulebookRefs = {
   recipe?: string;
   sample?: string;
@@ -101,7 +103,7 @@ function resolveRef(
   rulebookId: string,
   ext: string,
 ): string {
-  if (declaredId === "none") return MISSING;
+  if (declaredId === "none" || declaredId === "not-needed") return MISSING;
   if (declaredId) return repoPath(kind, declaredId, ext);
   const fallbackId = conventionalRefId(rulebookId, kind);
   const fsPath = join(
@@ -117,17 +119,51 @@ function resolveRef(
 // recipe / sample / template は rulebook frontmatter の宣言を正とし、未宣言なら規定
 // ディレクトリ上の慣例ファイルの実在を確認してパスを補う。
 // 該当なしの項目は MISSING を返し、表示構造はテンプレート側に委ねる。
-export function resolveKataRefs(rulebookId: string | undefined): KataRefs {
-  if (!rulebookId || rulebookId === "none") {
-    return { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
-  }
-  const fm = loadRulebookRefs(rulebookId);
+export function resolveKataRefs(
+  rulebookId: string | undefined,
+  catalog: CatalogKataDeclarations = {},
+): KataRefs {
+  const usableRulebookId =
+    rulebookId && rulebookId !== "none" && rulebookId !== "not-needed" ? rulebookId : undefined;
+  const fm = usableRulebookId ? loadRulebookRefs(usableRulebookId) : {};
+  const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
+    (kind) => catalog[kind] !== undefined,
+  );
+  const directOrLegacy = (kind: KataKind): string | undefined =>
+    hasCatalogKataSet ? catalog[kind] : fm[kind];
   return {
-    rulebook: `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`,
-    recipe: resolveRef("recipe", fm.recipe, rulebookId, "md"),
-    sample: resolveRef("sample", fm.sample, rulebookId, formatExt(fm.target_format)),
-    template: resolveRef("template", fm.template, rulebookId, formatExt(fm.target_format)),
+    rulebook: usableRulebookId
+      ? `${DOCS_BASE}/rulebooks/${practiceLocalId(usableRulebookId)}.md`
+      : MISSING,
+    recipe: usableRulebookId
+      ? resolveRef("recipe", directOrLegacy("recipe"), usableRulebookId, "md")
+      : resolveRefWithoutRulebook("recipe", catalog.recipe, "md"),
+    sample: usableRulebookId
+      ? resolveRef(
+          "sample",
+          directOrLegacy("sample"),
+          usableRulebookId,
+          formatExt(fm.target_format),
+        )
+      : resolveRefWithoutRulebook("sample", catalog.sample, "md"),
+    template: usableRulebookId
+      ? resolveRef(
+          "template",
+          directOrLegacy("template"),
+          usableRulebookId,
+          formatExt(fm.target_format),
+        )
+      : resolveRefWithoutRulebook("template", catalog.template, "md"),
   };
+}
+
+function resolveRefWithoutRulebook(
+  kind: KataKind,
+  declaredId: string | undefined,
+  ext: string,
+): string {
+  if (!declaredId || declaredId === "none" || declaredId === "not-needed") return MISSING;
+  return repoPath(kind, declaredId, ext);
 }
 
 // rulebook の repo 相対パス（先頭スラッシュ無し）。
@@ -153,7 +189,7 @@ function declaredIncludeIds(rulebookId: string): string[] {
 // plan 注入用: 主 rulebook が include する rulebook の repo 相対パス一覧。
 // 実在するファイルのみを返す（不在の宣言は validate で警告する）。
 export function resolveIncludedRulebooks(rulebookId: string | undefined): string[] {
-  if (!rulebookId || rulebookId === "none") return [];
+  if (!rulebookId || rulebookId === "none" || rulebookId === "not-needed") return [];
   return declaredIncludeIds(rulebookId)
     .filter((id) => existsSync(rulebookFsPath(id)))
     .map((id) => rulebookRepoPath(id));
@@ -194,7 +230,7 @@ export function resolveDeliverableSchemaRef(
   rulebookId: string | undefined,
   localId: string | undefined,
 ): string {
-  if (!rulebookId || rulebookId === "none") return MISSING;
+  if (!rulebookId || rulebookId === "none" || rulebookId === "not-needed") return MISSING;
   const fm = loadRulebookRefs(rulebookId);
   if (fm.target_format !== "yaml") return MISSING;
   if (fm.schema === "none") return MISSING;

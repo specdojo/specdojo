@@ -19,6 +19,49 @@ import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-n
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 
+type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
+
+const CATALOG_KATA_ID_PATTERNS: Record<CatalogKataKind, RegExp> = {
+  rulebook: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$/,
+  recipe: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe$/,
+  sample: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample$/,
+  template: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template$/,
+};
+
+const CATALOG_KATA_DIRS: Record<CatalogKataKind, string> = {
+  rulebook: "rulebooks",
+  recipe: "recipes",
+  sample: "samples",
+  template: "templates",
+};
+
+function declaredKataCandidates(repoRoot: string, kind: CatalogKataKind, id: string): string[] {
+  const localId = id.includes(":") ? id.split(":").slice(1).join(":") : id;
+  const extensions = kind === "rulebook" || kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
+  return extensions.map((extension) =>
+    join(repoRoot, "docs/ja/specdojo", CATALOG_KATA_DIRS[kind], `${localId}.${extension}`),
+  );
+}
+
+function readPracticeDocumentId(filePath: string): string | undefined {
+  const content = readFileSync(filePath, "utf8");
+  if (filePath.endsWith(".md")) {
+    const id = readSpecdojoNamespace(content).id;
+    return typeof id === "string" ? id : undefined;
+  }
+  const parsed = yaml.load(content);
+  if (!isRecord(parsed)) return undefined;
+  const nested = isRecord(parsed.specdojo) ? parsed.specdojo.id : undefined;
+  const extensionMetadata = isRecord(parsed["x-spec-meta"]) ? parsed["x-spec-meta"].id : undefined;
+  const id =
+    typeof parsed.id === "string"
+      ? parsed.id
+      : typeof nested === "string"
+        ? nested
+        : extensionMetadata;
+  return typeof id === "string" ? id : undefined;
+}
+
 const DCT_INDEX_FILE = "dct-index.yaml";
 const DCT_INDEX_TEMPLATE = "dct-index-template.md";
 
@@ -469,7 +512,14 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
       for (const section of sections) {
         for (const item of section.deliverables ?? []) {
           const rulebookId = item.rulebook;
-          if (!rulebookId || rulebookId === "none" || checked.has(rulebookId)) continue;
+          if (
+            !rulebookId ||
+            rulebookId === "none" ||
+            rulebookId === "not-needed" ||
+            checked.has(rulebookId)
+          ) {
+            continue;
+          }
           checked.add(rulebookId);
           for (const ref of declaredKata(rulebookId)) {
             if (!existsSync(ref.fsPath)) {
@@ -559,6 +609,32 @@ export function validateDctDoc(
             errors.push(
               `${filePath}: ${item.local_id}: invalid instance_id_pattern: ${item.instance_id_pattern}`,
             );
+          }
+          for (const kind of ["rulebook", "recipe", "sample", "template"] as const) {
+            const declaration = item[kind];
+            if (declaration === undefined || declaration === "not-needed") continue;
+            if (!CATALOG_KATA_ID_PATTERNS[kind].test(declaration)) {
+              errors.push(
+                `${filePath}: ${item.local_id}: ${kind} must be a ${kind} document id or 'not-needed': ${declaration}`,
+              );
+              continue;
+            }
+            if (!repoRoot) continue;
+            const existing = declaredKataCandidates(repoRoot, kind, declaration).find((candidate) =>
+              existsSync(candidate),
+            );
+            if (!existing) {
+              errors.push(
+                `${filePath}: ${item.local_id}: declared ${kind} document id does not exist: ${declaration}`,
+              );
+              continue;
+            }
+            const actualId = readPracticeDocumentId(existing);
+            if (actualId !== undefined && actualId !== declaration) {
+              errors.push(
+                `${filePath}: ${item.local_id}: declared ${kind} document id '${declaration}' does not match '${actualId ?? "<missing>"}' in ${existing}`,
+              );
+            }
           }
           if (localIds.has(item.local_id)) {
             errors.push(`${filePath}: duplicate local_id: ${item.local_id}`);
