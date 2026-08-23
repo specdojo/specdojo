@@ -115,21 +115,44 @@ export function expandTemplate(template: string, values: Record<string, string>)
 // を含む ASCII トークンをバッククォートの code span で包み、prettier を通しても安定させる。
 // code span 内は強調解釈されないため MD049 を確実に回避できる。既存の code span は著者が意図した
 // 記法として温存する。日本語などマルチバイト文字は ASCII トークン境界となり巻き込まない。
-const MARKDOWN_CODE_SPAN = /`[^`]*`/g;
+const MARKDOWN_CODE_SPAN = /(`+)[\s\S]*?\1/g;
 // バックティック（0x60）を除く印字可能 ASCII の連続。空白とマルチバイト文字で区切られる。
 const ASCII_RUN = /[\x21-\x5f\x61-\x7e]+/g;
 
-export function escapeMarkdownInline(text: string): string {
+function replaceOutsideMarkdownCodeSpans(
+  text: string,
+  replace: (segment: string) => string,
+): string {
   let result = "";
   let lastIndex = 0;
   for (const match of text.matchAll(MARKDOWN_CODE_SPAN)) {
     const start = match.index ?? 0;
-    result += codeSpanRiskyTokens(text.slice(lastIndex, start));
+    result += replace(text.slice(lastIndex, start));
     result += match[0];
     lastIndex = start + match[0].length;
   }
-  result += codeSpanRiskyTokens(text.slice(lastIndex));
+  result += replace(text.slice(lastIndex));
   return result;
+}
+
+// Markdown コードスパン外にある山括弧トークンをインラインコード化する。
+// 山括弧に連結する英数字・ハイフン・アンダースコア・ドットは、記述規約どおり同じ範囲で囲む。
+// ドットを含めるのは `dct-<domain>.yaml` のような拡張子付きの参照を分断しないためだが、
+// 文末の句点を巻き込まないよう、末尾のドットはコードスパンの外へ戻す。
+export function inlineCodeAnglePlaceholders(text: string): string {
+  const placeholder = /[A-Za-z0-9._-]*(?:<[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
+  const wrapToken = (token: string): string => {
+    const trailing = token.match(/\.+$/)?.[0] ?? "";
+    const body = trailing ? token.slice(0, -trailing.length) : token;
+    return `\`${body}\`${trailing}`;
+  };
+  return replaceOutsideMarkdownCodeSpans(text, (segment) =>
+    segment.replace(placeholder, wrapToken),
+  );
+}
+
+export function escapeMarkdownInline(text: string): string {
+  return replaceOutsideMarkdownCodeSpans(inlineCodeAnglePlaceholders(text), codeSpanRiskyTokens);
 }
 
 function codeSpanRiskyTokens(segment: string): string {

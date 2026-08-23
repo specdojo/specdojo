@@ -256,7 +256,7 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
     `type: exec-plan`,
     `rulebook: none`,
     `task_id: ${item.id}`,
-    `name: "${item.title.replace(/"/g, "'")}"`,
+    `name: "${escapeMarkdownInline(item.title).replace(/"/g, "'")}"`,
     `mode: edit`,
     `status: ready`,
     `project_id: ${projectId}`,
@@ -296,9 +296,9 @@ export async function generateRegisterPlan(opts: {
   const values: Record<string, string> = {
     _FRONTMATTER_: registerPlanFrontmatter(opts.projectId, opts.stem, item),
     _PJR_ID_: item.id,
-    // title / description は登録簿の自由記述列に由来し、アンダースコア入り識別子や
-    // `_TODO_` などを含みうる。plan 本文（H1・説明文）へそのまま埋め込むと強調記号として
-    // 誤解釈され markdownlint(MD049) で生成が壊れるため、Markdown 特殊文字をエスケープする。
+    // title / description は登録簿の自由記述列に由来し、山括弧プレースホルダや
+    // アンダースコア入り識別子、`_TODO_` などを含みうる。plan 本文（H1・説明文）へ
+    // そのまま埋め込むと HTML / 強調記号として誤解釈されるため、Markdown 用に保護する。
     _PJR_TITLE_: escapeMarkdownInline(item.title),
     _PJR_DESCRIPTION_:
       item.description && item.description !== "_TODO_"
