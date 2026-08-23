@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
-  conclusion: "checkpoint failed: git add -- docs/ja/projects/prj-0001/execution/exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-resu…"
+  completed_at: "2026-08-23T02:23:23Z"
+  conclusion: dct-plan-<domain>.yaml の schema を定義し、正準配置をカタログ配下の plans/ とした。catalog plan prompt / scaffold / validate を追加し、agent 判定の入力と出力を機械可読に扱えるようにした。パターンA とパターンB を iteration_pattern で区別し、未解決 placeholder はエラーとして open_questions へ誘導する。既存 plan は --force なしで保護する。テスト50件とドキュメントを整備した。成果は PJR-STRG の catalog scaffold --plan が前提として利用している。
 ---
 
 # PJR-DCTG data-flow等からDCT成果物インスタンスを判定するagentの実装
