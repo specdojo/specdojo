@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T03:22:01Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: 本タスク（個票 PJR-17S7）の完了条件は「executor が unit test を二度実行しないよう規約で示され、かつ src/tests を変更するタスクで終了待ちの中断が起きないこと」の両方である。executor は規約更新と回帰テストにより前半は満たしたが、検証として実施した npm run test:unit（対…"
 ---
 
 # PJR-17S7 executor が unit test を二度実行し、Vitest の終了待ちが収束しない
