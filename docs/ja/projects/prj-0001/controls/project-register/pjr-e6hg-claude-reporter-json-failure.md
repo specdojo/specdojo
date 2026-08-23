@@ -7,12 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:03:45Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: executor validation `npm run test:unit` がfailedであり、doc-index.test.tsが生成前のpjr-index不在により1件失敗した。計画は終了前に検査失敗をすべて修正することを要求しているため、代替コマンドの成功だけでは完了を支持できない。"
+  conclusion: 失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧は利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要。
 ---
 
 # PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする
