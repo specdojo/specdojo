@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jg9q-auto-rebuild-stale-tracks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-22T14:30:21Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-23T01:32:32Z"
+  conclusion: exec cycle に stale トラックの自動再生成を追加し、手順を5段へ拡張した。判定は既存の鮮度検知を再利用するため設定項目は増やしていない。再生成は auto ループより前に完了し、失敗した場合はタスク実行へ進まず中断する。再生成が不要な場合は何も出力しない。preprocess や postprocess を宣言する仕組みは導入していない。
 ---
 
 # PJR-JG9Q strategy が更新されたトラックを exec cycle で自動再生成する
