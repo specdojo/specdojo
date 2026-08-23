@@ -57,7 +57,14 @@ import {
   resolveTaskProficiency,
 } from "./exec-strategy.js";
 
-export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
+export type StaleGeneratedTrack = {
+  track: string;
+  strategyFile: string;
+  trackFile?: string;
+  reason: "missing" | "outdated";
+};
+
+export function findStaleGeneratedTracks(projectPath: string): StaleGeneratedTrack[] {
   const files = listFilesRecursive(projectPath);
   const trackFiles = new Map<string, string>();
 
@@ -66,7 +73,7 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
     if (match) trackFiles.set(match[1], file);
   }
 
-  const warnings: string[] = [];
+  const staleTracks: StaleGeneratedTrack[] = [];
   for (const strategyFile of files) {
     const match = basename(strategyFile).match(/^sch-strategy-(.+)\.yaml$/);
     if (!match) continue;
@@ -74,22 +81,26 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
     const track = match[1];
     const trackFile = trackFiles.get(track);
     if (!trackFile) {
-      warnings.push(
-        `${basename(strategyFile)} has no generated sch-track-${track}.yaml. ` +
-          `Run: specdojo schedule build --track ${track}`,
-      );
+      staleTracks.push({ track, strategyFile, reason: "missing" });
       continue;
     }
 
     if (statSync(strategyFile).mtimeMs > statSync(trackFile).mtimeMs) {
-      warnings.push(
-        `${basename(strategyFile)} is newer than ${basename(trackFile)}. ` +
-          `Run: specdojo schedule build --track ${track} --force before exec refresh.`,
-      );
+      staleTracks.push({ track, strategyFile, trackFile, reason: "outdated" });
     }
   }
 
-  return warnings;
+  return staleTracks.sort((a, b) => a.track.localeCompare(b.track));
+}
+
+export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
+  return findStaleGeneratedTracks(projectPath).map((stale) =>
+    stale.reason === "missing"
+      ? `${basename(stale.strategyFile)} has no generated sch-track-${stale.track}.yaml. ` +
+        `Run: specdojo schedule build --track ${stale.track}`
+      : `${basename(stale.strategyFile)} is newer than ${basename(stale.trackFile!)}. ` +
+        `Run: specdojo schedule build --track ${stale.track} --force before exec refresh.`,
+  );
 }
 
 export function validateAll(projectPath: string): ValidateResult {
