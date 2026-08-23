@@ -25,9 +25,9 @@ groups:
         overview: SpecDojo導入が、ソーシャルハックデー中心の反復開発プロセス（企画・リサーチ・要件検討・軌道修正・検証・公開）へ与える影響を整理する
         path: imp-business.md
         rulebook: specdojo:imp-business-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-business-sample
-        template: not-needed
+        template: undecided
         note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
         done_criteria: &imp-done-criteria-5
           - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
@@ -54,9 +54,9 @@ groups:
         overview: SpecDojo導入が、要件・意思決定・検証結果などの記録方法（現状は非構造化、導入後はbdd/dct/pjr等の構造化データ）へ与える影響を整理する
         path: imp-data.md
         rulebook: specdojo:imp-data-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-data-sample
-        template: not-needed
+        template: undecided
         note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
         done_criteria: *imp-done-criteria-5
 
@@ -68,9 +68,9 @@ groups:
         overview: SpecDojo導入が、コミュニケーション・連携手段（現状はSlack中心、導入後はGit/GitHubの正本管理中心）へ与える影響を整理する
         path: imp-interface.md
         rulebook: specdojo:imp-interface-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-interface-sample
-        template: not-needed
+        template: undecided
         note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする。じぶんごとプラネット側に変更対象のI/Fは実在しないため内容は薄くなる見込みだが、PJR-1F46のとおりKata（imp-interface-rulebook）の整備・検証を目的として意図的に維持する
         done_criteria: &imp-done-criteria-4
           - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
@@ -94,9 +94,9 @@ groups:
         overview: SpecDojo導入が、検証方法（現状はペルソナワークショップ等の手動検証、導入後はdone_criteria・レビュー観点による検証）へ与える影響を整理する
         path: imp-test.md
         rulebook: specdojo:imp-test-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-test-sample
-        template: not-needed
+        template: undecided
         note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする。じぶんごとプラネット側に既存テスト資産は実在しないため内容は薄くなる見込みだが、PJR-1F46のとおりKata（imp-test-rulebook）の整備・検証を目的として意図的に維持する
         done_criteria: *imp-done-criteria-4
 
@@ -108,9 +108,9 @@ groups:
         overview: SpecDojo導入が、継続運用サイクル（現状は月次ソーシャルハックデー、導入後はroutine/Schedule駆動の運用）へ与える影響を整理する
         path: imp-operations.md
         rulebook: specdojo:imp-operations-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-operations-sample
-        template: not-needed
+        template: undecided
         note: cdfd-jibungoto-planet（現状）とcdfd-overview／cdfd-<area>（変更後）の比較を根拠とする
         done_criteria:
           - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること

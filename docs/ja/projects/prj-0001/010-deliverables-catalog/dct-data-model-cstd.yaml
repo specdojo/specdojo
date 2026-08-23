@@ -24,9 +24,9 @@ groups:
         overview: 登録項目個票のライフサイクル（状態変化）を図で定義する
         path: cstd-register-entry.md
         rulebook: specdojo:cstd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cstd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/register.ts
@@ -57,9 +57,9 @@ groups:
         overview: タスク実行のライフサイクル（状態変化）を図で定義する
         path: cstd-task-execution.md
         rulebook: specdojo:cstd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cstd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-schedule-index.ts
@@ -92,9 +92,9 @@ groups:
         overview: 成果物状態のライフサイクル（draft → ready → deprecated）を図で定義する
         path: cstd-deliverable.md
         rulebook: specdojo:cstd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cstd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/deliverable-trash.ts
@@ -124,9 +124,9 @@ groups:
         overview: Job Run のライフサイクル（状態変化）を図で定義する
         path: cstd-job-run.md
         rulebook: specdojo:cstd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cstd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/job.ts

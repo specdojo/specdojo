@@ -28,9 +28,9 @@ groups:
         overview: 業務プロセスのトリガー・入力・処理・出力・前提を定義する
         path: bps-_TERM_.md
         rulebook: specdojo:bps-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bps-sample
-        template: not-needed
+        template: undecided
         note: "_TERM_ は対象プロセス名の略称（kebab-case）"
         done_criteria:
           - text: トリガー・前提・入力・処理・出力が業務観点で正確に記述されていること

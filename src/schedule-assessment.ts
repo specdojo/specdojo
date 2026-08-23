@@ -43,7 +43,13 @@ export const KATA_CHECKS = [
 export type KataCheckId = (typeof KATA_CHECKS)[number];
 export type KataCheckResult = "pass" | "fail" | "unknown";
 export type AssessmentConfidence = "high" | "medium" | "low";
-export type KataDeclaration = "declared" | "conventional" | "none" | "not-needed" | "unresolved";
+export type KataDeclaration =
+  | "declared"
+  | "conventional"
+  | "none"
+  | "undecided"
+  | "not-needed"
+  | "unresolved";
 export type KataUsability = "usable" | "unusable" | "unknown";
 /** Usability as seen by the recommendation rule; 'absent' is machine-derived, never judged. */
 export type EffectiveUsability = KataUsability | "absent" | "not-needed";
@@ -312,6 +318,8 @@ function collectKataFact(
   let declaration: KataDeclaration;
   if (declaredValue === "not-needed") {
     declaration = "not-needed";
+  } else if (declaredValue === "undecided") {
+    declaration = "undecided";
   } else if (declaredValue === "none") {
     declaration = "none";
   } else if (declaredValue) {
@@ -383,7 +391,10 @@ export function collectAssessmentFacts(opts: {
         template: item.template,
       });
       const declared =
-        item.rulebook && item.rulebook !== "none" && item.rulebook !== "not-needed"
+        item.rulebook &&
+        item.rulebook !== "none" &&
+        item.rulebook !== "undecided" &&
+        item.rulebook !== "not-needed"
           ? loadRulebookRefs(item.rulebook)
           : {};
       const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(

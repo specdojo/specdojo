@@ -119,6 +119,21 @@ describe("kata", () => {
       });
     });
 
+    it("undecided は文書 ID として解決せず全項目を MISSING にする", () => {
+      expect(
+        resolveKataRefs("undecided", {
+          recipe: "undecided",
+          sample: "undecided",
+          template: "undecided",
+        }),
+      ).toEqual({
+        rulebook: "_MISSING_",
+        recipe: "_MISSING_",
+        sample: "_MISSING_",
+        template: "_MISSING_",
+      });
+    });
+
     it("宣言の無い参照は MISSING にし、rulebook パスは規約で返す", () => {
       writeRulebook(
         "minimal-rulebook",

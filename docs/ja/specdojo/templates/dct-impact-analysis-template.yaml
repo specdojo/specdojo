@@ -21,9 +21,9 @@ groups:
         overview: 導入・変更が業務へ与える影響を整理
         path: imp-business.md
         rulebook: specdojo:imp-business-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-business-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 影響対象業務・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -50,9 +50,9 @@ groups:
         overview: 導入・変更がデータへ与える影響を整理
         path: imp-data.md
         rulebook: specdojo:imp-data-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-data-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 影響対象データ・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -79,9 +79,9 @@ groups:
         overview: 導入・変更がインターフェースへ与える影響を整理
         path: imp-interface.md
         rulebook: specdojo:imp-interface-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-interface-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 影響対象I/F・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -104,9 +104,9 @@ groups:
         overview: 導入・変更がテストへ与える影響を整理
         path: imp-test.md
         rulebook: specdojo:imp-test-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-test-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 影響対象テスト・変更要否・影響度が業務観点で整理されていること
             roles: [BA]
@@ -130,9 +130,9 @@ groups:
         overview: 導入・変更が運用へ与える影響を整理
         path: imp-operations.md
         rulebook: specdojo:imp-operations-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:imp-operations-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 影響対象運用・変更要否・影響度が業務観点で整理されていること
             roles: [BA]

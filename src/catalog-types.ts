@@ -13,7 +13,7 @@ export type EvidenceRef = {
   purpose: string;
 };
 
-export type KataDeclaration = string | "not-needed";
+export type KataDeclaration = string | "undecided" | "not-needed";
 
 export type DctDeliverableItem = {
   local_id: string;

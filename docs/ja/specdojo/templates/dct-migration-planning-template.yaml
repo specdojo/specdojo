@@ -23,9 +23,9 @@ groups:
         overview: 移行方針と全体計画を定義し、切替リスクを管理
         path: mip-index.md
         rulebook: specdojo:mip-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:mip-index-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 移行範囲・移行方式・スケジュール・リスクが業務観点で確認できること
             roles: [BA]
@@ -56,9 +56,9 @@ groups:
         overview: データ移行の設計内容を定義し、移行時の整合性を確保
         path: dmd-index.md
         rulebook: specdojo:dmd-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:dmd-index-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 移行対象データ・変換方針・マッピングが業務観点で確認できること
             roles: [BA]
@@ -108,9 +108,9 @@ groups:
         overview: 本番切替の手順を定義し、停止時間と障害リスクを最小化
         path: cop-index.md
         rulebook: specdojo:cop-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cop-index-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 切替手順・業務停止範囲・判定ポイントが業務観点で確認できること
             roles: [BA]
@@ -137,9 +137,9 @@ groups:
         overview: 切替後の運用移管計画を定義し、安定稼働へ移行
         path: otp-index.md
         rulebook: specdojo:otp-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:otp-index-sample
-        template: not-needed
+        template: undecided
         done_criteria:
           - text: 運用引継ぎ・ハイパーケア体制が業務観点で確認できること
             roles: [BA]

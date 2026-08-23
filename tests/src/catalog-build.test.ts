@@ -133,6 +133,24 @@ describe("validateDctDoc", () => {
       expect(result.errors).toEqual([]);
     });
 
+    it("undecided は要否未判断として実在検証の対象外で受理する", () => {
+      const item = makeWorkItem({
+        rulebook: "undecided",
+        recipe: "undecided",
+        sample: "undecided",
+        template: "undecided",
+      });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors).toEqual([]);
+    });
+
     it("宣言した実践の型の文書 ID が実在しなければエラーにする", () => {
       const item = makeWorkItem({ recipe: "specdojo:missing-recipe" });
 

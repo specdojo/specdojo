@@ -103,7 +103,9 @@ function resolveRef(
   rulebookId: string,
   ext: string,
 ): string {
-  if (declaredId === "none" || declaredId === "not-needed") return MISSING;
+  if (declaredId === "none" || declaredId === "undecided" || declaredId === "not-needed") {
+    return MISSING;
+  }
   if (declaredId) return repoPath(kind, declaredId, ext);
   const fallbackId = conventionalRefId(rulebookId, kind);
   const fsPath = join(
@@ -124,7 +126,9 @@ export function resolveKataRefs(
   catalog: CatalogKataDeclarations = {},
 ): KataRefs {
   const usableRulebookId =
-    rulebookId && rulebookId !== "none" && rulebookId !== "not-needed" ? rulebookId : undefined;
+    rulebookId && rulebookId !== "none" && rulebookId !== "undecided" && rulebookId !== "not-needed"
+      ? rulebookId
+      : undefined;
   const fm = usableRulebookId ? loadRulebookRefs(usableRulebookId) : {};
   const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
     (kind) => catalog[kind] !== undefined,
@@ -162,7 +166,14 @@ function resolveRefWithoutRulebook(
   declaredId: string | undefined,
   ext: string,
 ): string {
-  if (!declaredId || declaredId === "none" || declaredId === "not-needed") return MISSING;
+  if (
+    !declaredId ||
+    declaredId === "none" ||
+    declaredId === "undecided" ||
+    declaredId === "not-needed"
+  ) {
+    return MISSING;
+  }
   return repoPath(kind, declaredId, ext);
 }
 
@@ -189,7 +200,14 @@ function declaredIncludeIds(rulebookId: string): string[] {
 // plan 注入用: 主 rulebook が include する rulebook の repo 相対パス一覧。
 // 実在するファイルのみを返す（不在の宣言は validate で警告する）。
 export function resolveIncludedRulebooks(rulebookId: string | undefined): string[] {
-  if (!rulebookId || rulebookId === "none" || rulebookId === "not-needed") return [];
+  if (
+    !rulebookId ||
+    rulebookId === "none" ||
+    rulebookId === "undecided" ||
+    rulebookId === "not-needed"
+  ) {
+    return [];
+  }
   return declaredIncludeIds(rulebookId)
     .filter((id) => existsSync(rulebookFsPath(id)))
     .map((id) => rulebookRepoPath(id));
@@ -230,7 +248,14 @@ export function resolveDeliverableSchemaRef(
   rulebookId: string | undefined,
   localId: string | undefined,
 ): string {
-  if (!rulebookId || rulebookId === "none" || rulebookId === "not-needed") return MISSING;
+  if (
+    !rulebookId ||
+    rulebookId === "none" ||
+    rulebookId === "undecided" ||
+    rulebookId === "not-needed"
+  ) {
+    return MISSING;
+  }
   const fm = loadRulebookRefs(rulebookId);
   if (fm.target_format !== "yaml") return MISSING;
   if (fm.schema === "none") return MISSING;

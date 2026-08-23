@@ -515,6 +515,7 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
           if (
             !rulebookId ||
             rulebookId === "none" ||
+            rulebookId === "undecided" ||
             rulebookId === "not-needed" ||
             checked.has(rulebookId)
           ) {
@@ -612,10 +613,16 @@ export function validateDctDoc(
           }
           for (const kind of ["rulebook", "recipe", "sample", "template"] as const) {
             const declaration = item[kind];
-            if (declaration === undefined || declaration === "not-needed") continue;
+            if (
+              declaration === undefined ||
+              declaration === "undecided" ||
+              declaration === "not-needed"
+            ) {
+              continue;
+            }
             if (!CATALOG_KATA_ID_PATTERNS[kind].test(declaration)) {
               errors.push(
-                `${filePath}: ${item.local_id}: ${kind} must be a ${kind} document id or 'not-needed': ${declaration}`,
+                `${filePath}: ${item.local_id}: ${kind} must be a ${kind} document id, 'undecided', or 'not-needed': ${declaration}`,
               );
               continue;
             }

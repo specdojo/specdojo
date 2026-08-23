@@ -27,9 +27,9 @@ groups:
         overview: システムで実現する機能の全体構成と一覧を定義する。行ごとに業務プロセス仕様（bps-*）・画面仕様（uis-index配下のCLIコマンド群）を要約参照する
         path: sf-index.md
         rulebook: specdojo:sf-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:sf-index-sample
-        template: not-needed
+        template: undecided
         note: 個別機能（sf-<term>）は現時点では作成しない。sf-indexの一覧行だけでは説明が不十分な機能が明らかになった時点で、id-and-file-naming-standard.md 9.2（経路B）に従って個別追加を検討する。sf-index-rulebookとsf-rulebookは別ドキュメントとして整備する（sf-rulebookは個別sf-<term>用に温存）
         evidence_refs:
           - kind: implementation

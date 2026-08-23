@@ -28,6 +28,7 @@ function kataStateLabel(deliverable: AssessedDeliverable, kind: KataKindKey): st
   if (fact.broken_reference) return `宣言先が存在しない（${fact.path}）`;
   if (!fact.exists) {
     if (fact.declaration === "not-needed") return "not-needed（不要と判断済み）";
+    if (fact.declaration === "undecided") return "undecided（要否未判断）";
     return fact.declaration === "none" ? "none 宣言で無効化" : "未解決（判定不要）";
   }
   const status = fact.status ? `status: ${fact.status}` : "status 不明";
@@ -126,6 +127,9 @@ export function renderAssessmentPrompt(options: AssessmentPromptOptions): string
   lines.push("- ファイルが存在しない型は判定しない（`judgment.kata` に書かない）。");
   lines.push(
     "- `not-needed` の型は欠落ではなく要否判断済みとして扱い、`bootstrap_scope` / `kata_target` に含めない。",
+  );
+  lines.push(
+    "- `undecided` の型は初回の `bootstrap` で要否を判断し、必要なら文書 ID、不要なら `not-needed` へ宣言を更新する。",
   );
   lines.push("");
 

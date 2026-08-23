@@ -12,7 +12,7 @@ _PHASE_DESCRIPTION_
 - `depends_on`: _DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
-- `rulebook`: `_RULEBOOK_REF_`（`_MISSING_` は `not-needed` または未整備）
+- `rulebook`: `_RULEBOOK_REF_`（`_MISSING_` は `undecided`、`not-needed`、または未整備）
 - `result`: `_RESULT_REF_`
 
 _PROJECT_CONTEXT_

@@ -23,9 +23,9 @@ groups:
         overview: SpecDojo CLIと、境界外の人・外部システム（AI provider CLI、Git/GitHub）との関係を俯瞰的に定義する
         path: cxd-specdojo.md
         rulebook: specdojo:cxd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cxd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -55,9 +55,9 @@ groups:
         overview: SpecDojo CLI・生成ドキュメントサイト（VitePress）・外部システム・リポジトリ（データストア）の関係を定義する
         path: cnd-specdojo.md
         rulebook: specdojo:cnd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cnd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -90,9 +90,9 @@ groups:
         overview: SpecDojo CLI内部の主要コンポーネント（catalog／schedule／exec／register／routine／index等のエンジン）と依存関係を定義する
         path: cpd-specdojo-cli.md
         rulebook: specdojo:cpd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:cpd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -119,9 +119,9 @@ groups:
         overview: SpecDojo CLIの実行環境（devcontainer／ホスト）と、クラウドAI provider（Claude・Codex・GitHub Copilot等）・Tailscale経由のホームMacローカルLLMゾーン（Ollama）・GitHubへの通信境界を定義する
         path: ifd-specdojo.md
         rulebook: specdojo:ifd-mermaid-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: not-needed
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: .devcontainer/devcontainer.json
@@ -186,9 +186,9 @@ groups:
         overview: TypeScript／Node.js／Commander.js／js-yaml／AJV／markdownlint-cli／remark／Prettier／lefthook／commitlint／npm配信など、CLI実装・開発ツールチェーンの詳細を定義する
         path: tsd-specdojo-cli.md
         rulebook: specdojo:tsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:tsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: package.json
@@ -203,9 +203,9 @@ groups:
         overview: VitePress・Mermaid CLIなど、ドキュメントサイトのビルド・配信技術の詳細を定義する
         path: tsd-docs-site.md
         rulebook: specdojo:tsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:tsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: .vitepress/config.mts

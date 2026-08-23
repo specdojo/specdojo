@@ -23,9 +23,9 @@ groups:
         overview: プロジェクトの初期セットアップ（config初期化・register/catalog scaffold等）が業務として成立することを確認する
         path: bac-init.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: &bac-ac-note 根拠はAC-01（利用者視点：代表試行に必要な最小成果物・作成支援資料・試行手順があり、代表試行に合格すること）
         done_criteria: &bac-done-criteria
           - text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること
@@ -52,9 +52,9 @@ groups:
         overview: 登録項目の起票から対応・終了判断・再開までが業務として成立することを確認する
         path: bac-register-lifecycle.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -68,9 +68,9 @@ groups:
         overview: 成果物カタログ・戦略からSchedule展開、実行状態再構成までが業務として成立することを確認する
         path: bac-catalog-planning.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -86,9 +86,9 @@ groups:
         overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する
         path: bac-task-execution.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -103,9 +103,9 @@ groups:
         overview: 定期実行対象選択から登録項目・Schedule・Job Runの反映までが業務として成立することを確認する
         path: bac-routine.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -121,9 +121,9 @@ groups:
         overview: project develop作成から分離作業・同期統合・main昇格までが業務として成立することを確認する
         path: bac-multi-project.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -138,9 +138,9 @@ groups:
         overview: agent・provider構成の変更評価から承認・設定変更・検証までが業務として成立することを確認する
         path: bac-agent-config-operation.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -155,9 +155,9 @@ groups:
         overview: 成果物・派生ビュー・索引の生成が業務として成立することを確認する
         path: bac-derived-content.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -172,9 +172,9 @@ groups:
         overview: 進捗監視・検知から報告記録・議事録作成までが業務として成立することを確認する
         path: bac-reporting.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
@@ -188,8 +188,8 @@ groups:
         overview: 文書の非推奨化判断から保管・カタログ更新までが業務として成立することを確認する
         path: bac-deprecation.md
         rulebook: specdojo:bac-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:bac-sample
-        template: not-needed
+        template: undecided
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
