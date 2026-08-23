@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { basename, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
@@ -31,7 +31,7 @@ import {
   type AgentLimitKind,
   type AgentLimitSignal,
 } from "./exec-limit.js";
-import { buildScheduleIndex } from "./exec-schedule.js";
+import { buildScheduleIndex, findStaleGeneratedTracks } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
 import { listFilesRecursive, qualifyTaskId, randomHex, readYaml } from "./exec-shared.js";
@@ -218,6 +218,7 @@ export type RunOpts = {
   worktreeBase?: string;
   due?: boolean;
   ifBusy?: string;
+  cycleRebuildStaleTracks?: boolean;
 };
 
 type RunResult = "success" | "rate_limit" | "failure";
@@ -1964,6 +1965,12 @@ function spawnRefresh(projectId: string | undefined): boolean {
   return spawnSelf(refreshArgs);
 }
 
+function spawnScheduleBuild(projectId: string | undefined, track: string): boolean {
+  const args = ["schedule", "build", "--track", track, "--force"];
+  if (projectId) args.push("--project", projectId);
+  return spawnSelf(args);
+}
+
 // doc-index is project-independent (it scans the whole docs/ tree), so no --project is passed.
 // Rebuilding it before Ready selection lets tasks resolve wikilinks/IDs to deliverables that a
 // prior round or a prior cycle step just created (see scheduleAvailable and runCycleMode).
@@ -2218,6 +2225,17 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
         process.exitCode = 1;
         stopNewTasks = true;
         return [];
+      }
+      // Only exec cycle opts into schedule regeneration. A strategy task completed by the prior
+      // auto round can therefore expose the next track in this same cycle, while standalone
+      // `exec run --auto --loop` keeps its existing refresh-only behavior.
+      if (opts.cycleRebuildStaleTracks) {
+        const rebuild = await rebuildStaleGeneratedTracksForCycle(schedulePath, projectId, false);
+        if (rebuild.status === "failure") {
+          process.exitCode = 1;
+          stopNewTasks = true;
+          return [];
+        }
       }
       process.stdout.write(`[run] exec refresh${roundSuffix}...\n`);
       if (!spawnRefresh(projectId)) {
@@ -4709,12 +4727,61 @@ export function registerRunCommand(exec: Command): void {
   });
 }
 
-// exec cycle: run limit-resume, doc-index rebuild, schedule refresh, and the auto loop as one
+export type CycleScheduleRebuildResult = {
+  status: "not-needed" | "success" | "failure";
+  tracks: string[];
+};
+
+type CycleScheduleRebuildDependencies = {
+  buildTrack?: (track: string) => boolean | Promise<boolean>;
+  write?: (message: string) => void;
+};
+
+// Rebuild only generated tracks whose strategy input is missing a generated track or has a newer
+// mtime. The same structured detector feeds exec validate warnings, keeping manual validation and
+// cycle automation on one freshness rule. No output is emitted when every track is fresh.
+export async function rebuildStaleGeneratedTracksForCycle(
+  schedulePath: string,
+  projectId: string | undefined,
+  dryRun: boolean,
+  dependencies: CycleScheduleRebuildDependencies = {},
+): Promise<CycleScheduleRebuildResult> {
+  const staleTracks = findStaleGeneratedTracks(schedulePath);
+  if (staleTracks.length === 0) return { status: "not-needed", tracks: [] };
+
+  const write = dependencies.write ?? ((message: string) => process.stdout.write(message));
+  const buildTrack =
+    dependencies.buildTrack ?? ((track: string) => spawnScheduleBuild(projectId, track));
+  const tracks: string[] = [];
+
+  for (const stale of staleTracks) {
+    const projectArgs = projectId ? ` --project ${projectId}` : "";
+    if (dryRun) {
+      write(`  [dry-run] specdojo schedule build --track ${stale.track} --force${projectArgs}\n`);
+      tracks.push(stale.track);
+      continue;
+    }
+
+    write(
+      `[cycle] step 3/5: rebuild stale schedule track ${basename(stale.strategyFile)} (${stale.reason})\n`,
+    );
+    if (!(await buildTrack(stale.track))) {
+      write(`[cycle] schedule build failed for track ${stale.track} — aborting auto step\n`);
+      return { status: "failure", tracks: [...tracks, stale.track] };
+    }
+    tracks.push(stale.track);
+  }
+
+  return { status: "success", tracks };
+}
+
+// exec cycle: run limit-resume, doc-index rebuild, stale schedule rebuild, schedule refresh, and
+// the auto loop as one
 // ordered sequence while holding a single project exec-run lock for the whole run. Ordering does
 // not depend on routine file order or cron time offsets, and no manual run / other routine / CI
 // can interleave between the steps. The individual steps (runResumeMode, index build,
-// validate/refresh, runBatchMode) do not acquire the exec-run lock themselves, so the later steps
-// never busy-skip against this run's own lock.
+// schedule build, validate/refresh, runBatchMode) do not acquire the exec-run lock themselves, so
+// the later steps never busy-skip against this run's own lock.
 //
 // Step failure policy (fixed and documented so results are predictable):
 //   - resume:  a re-deferred or failed limit task must not block Ready tasks, so a resume failure
@@ -4722,13 +4789,16 @@ export function registerRunCommand(exec: Command): void {
 //   - index:   doc-index feeds wikilink/ID resolution for Ready task plans; if it fails, tasks may
 //              reference deliverables the previous cycle just created but cannot resolve them
 //              reliably, so the cycle aborts the remaining steps.
+//   - schedule: stale generated tracks must be rebuilt before validation/refresh; if any build
+//               fails, the cycle stops instead of selecting tasks from an old track.
 //   - refresh: validate/refresh feeds ready.json; if it fails the auto step cannot select tasks
 //              safely, so the cycle aborts the remaining step.
 //   - auto:    failures are recorded; nothing runs after it.
 // The cycle exits non-zero when any executed step failed. Busy at start is handled by the shared
 // exec-run lock (--if-busy skip records a routine "skipped"; wait/fail behave as for run/resume).
 async function runCycleMode(opts: RunOpts): Promise<void> {
-  const projectId = opts.project;
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  const projectId = resolvedPaths.projectId ?? opts.project;
   const dryRun = !!opts.dryRun;
   const stepOutcomes: string[] = [];
   let anyFailure = false;
@@ -4741,8 +4811,8 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     return failed;
   };
 
-  // Step 1/4: resume due deferred-limit tasks.
-  process.stdout.write("[cycle] step 1/4: resume due deferred-limit tasks\n");
+  // Step 1/5: resume due deferred-limit tasks.
+  process.stdout.write("[cycle] step 1/5: resume due deferred-limit tasks\n");
   process.exitCode = 0;
   await runResumeMode({ ...opts, due: true });
   if (takeStepFailure()) {
@@ -4753,10 +4823,10 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("resume=success");
   }
 
-  // Step 2/4: rebuild doc-index before recalculating schedule state, so deliverables created by
+  // Step 2/5: rebuild doc-index before recalculating schedule state, so deliverables created by
   // the resume step, or left unindexed by a prior cycle run, are resolvable before Ready
   // selection instead of only becoming resolvable on a later, out-of-band index build.
-  process.stdout.write("[cycle] step 2/4: rebuild doc index\n");
+  process.stdout.write("[cycle] step 2/5: rebuild doc index\n");
   if (dryRun) {
     process.stdout.write("  [dry-run] specdojo index build\n");
     stepOutcomes.push("index=success");
@@ -4770,8 +4840,23 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("index=success");
   }
 
-  // Step 3/4: validate + refresh schedule state before selecting Ready tasks.
-  process.stdout.write("[cycle] step 3/4: validate + refresh schedule state\n");
+  // Step 3/5 is conditional: regenerate only stale/missing generated tracks. It intentionally
+  // emits nothing and adds nothing to the summary when no rebuild is needed.
+  const rebuild = await rebuildStaleGeneratedTracksForCycle(
+    resolvedPaths.schedulePath,
+    projectId,
+    dryRun,
+  );
+  if (rebuild.status === "failure") {
+    stepOutcomes.push("schedule=failure");
+    process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+    process.exitCode = 1;
+    return;
+  }
+  if (rebuild.status === "success") stepOutcomes.push("schedule=success");
+
+  // Step 4/5: validate + refresh schedule state before selecting Ready tasks.
+  process.stdout.write("[cycle] step 4/5: validate + refresh schedule state\n");
   if (dryRun) {
     process.stdout.write("  [dry-run] specdojo exec validate\n");
     process.stdout.write("  [dry-run] specdojo exec refresh\n");
@@ -4792,9 +4877,9 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("refresh=success");
   }
 
-  // Step 4/4: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
+  // Step 5/5: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
   // may be stale/absent; preview the planned auto invocation instead of reading the cache.
-  process.stdout.write("[cycle] step 4/4: run Ready tasks (--auto)\n");
+  process.stdout.write("[cycle] step 5/5: run Ready tasks (--auto)\n");
   if (dryRun) {
     const autoArgs = ["exec", "run", "--auto"];
     if (projectId) autoArgs.push("--project", projectId);
@@ -4810,7 +4895,7 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("auto=success");
   } else {
     process.exitCode = 0;
-    await runBatchMode({ ...opts, auto: true });
+    await runBatchMode({ ...opts, auto: true, cycleRebuildStaleTracks: true });
     if (takeStepFailure()) {
       anyFailure = true;
       stepOutcomes.push("auto=failure");
@@ -4827,7 +4912,7 @@ export function registerCycleCommand(exec: Command): void {
   const cmd = exec
     .command("cycle")
     .description(
-      "Run limit-resume, doc-index rebuild, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
+      "Run limit-resume, doc-index rebuild, stale track rebuild, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
     );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");

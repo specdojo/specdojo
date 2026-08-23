@@ -90,7 +90,7 @@ schedule タスクの自動実行・手動実行の具体的な手順は [Schedu
 
 ### 1.4. project単位の実行ロック
 
-`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
+`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・古い track の再生成・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
 
 ロックは別プロセスの heartbeat で更新されます。正常終了時は `finally` で解放し、プロセスが異常終了して heartbeat が stale になった場合は、後続 run がロックを安全に奪取します。
 
@@ -224,7 +224,9 @@ action:
   parallel: 2
 ```
 
-延期 task の再開に続けて Ready task も自動実行したい場合は、`exec-resume` と `exec-auto` を別 routine に分けず、`exec cycle`（routine では `kind: exec-cycle`）を使います。再開 → 状態再計算 → `--auto` loop を単一の project 実行ロック内で順次実行するため、実行順が routine ファイル名順や cron 時刻差に依存せず、step 間に手動実行・別 routine・CI が割り込みません。再開対象が再延期されても、依存しない Ready task の実行は継続します。詳細は [routine運用ガイド](routine-operation-guide.md) の順次実行（exec-cycle）を参照してください。
+延期 task の再開に続けて Ready task も自動実行したい場合は、`exec-resume` と `exec-auto` を別 routine に分けず、`exec cycle`（routine では `kind: exec-cycle`）を使います。再開 → doc-index 再構築 → 古い track の再生成 → 状態再計算 → `--auto` loop を単一の project 実行ロック内で順次実行するため、実行順が routine ファイル名順や cron 時刻差に依存せず、step 間に手動実行・別 routine・CI が割り込みません。
+
+track の再生成では、`exec validate` の警告と同じ鮮度判定を使います。`sch-track-<track>.yaml` がないか、`sch-strategy-<track>.yaml` の更新時刻が track より新しい場合だけ、`schedule build --track <track> --force` を実行します。再生成が不要ならコマンドも追加ログも発生しません。再生成に失敗した場合は、古い track のまま Ready task を選ばず cycle を停止します。単発の `exec run` と `exec refresh` は自動再生成しません。再開対象が再延期されても、依存しない Ready task の実行は継続します。詳細は [routine運用ガイド](routine-operation-guide.md) の順次実行（exec-cycle）を参照してください。
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 

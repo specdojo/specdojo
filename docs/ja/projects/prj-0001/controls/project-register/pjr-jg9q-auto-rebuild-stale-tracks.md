@@ -36,18 +36,25 @@ preprocess と postprocess を宣言する仕組みは導入しない。今回�
 
 ## 3. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ                                                                |
-| --- | --------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------- |
-| 1   | 既存の鮮度検知を再利用できる形に整理する            | ARC  | open | `src/exec-schedule.ts` の警告と同じ判定を関数として取り出す         |
-| 2   | `exec cycle` の手順へ自動再生成を組み込む           | ARC  | open | validate と refresh の前後関係を確認し、`--auto` より前に完了させる |
-| 3   | 失敗時の停止と出力を実装する                        | ARC  | open | 古い track のままタスクを実行しない                                 |
-| 4   | PJR-AAR2 の status 書き換えを解消してから有効化する | ARC  | open | 自動化すると降格が高頻度で起きるため、先に解消する                  |
-| 5   | unit test / integration test を追加する             | ARC  | open | 再生成あり・なし、失敗時の停止、単発コマンドへの非影響              |
-| 6   | コマンドリファレンスと exec 運用ガイドを更新する    | ARC  | open | cycle の手順が4段から変わる点を反映する                             |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                            |
+| --- | --------------------------------------------------- | ---- | ---- | --------------------------------------------------------------- |
+| 1   | 既存の鮮度検知を再利用できる形に整理する            | ARC  | done | 警告と cycle が `findStaleGeneratedTracks` を共用               |
+| 2   | `exec cycle` の手順へ自動再生成を組み込む           | ARC  | done | index 後・validate / refresh 前と auto の各次ラウンド前に実行   |
+| 3   | 失敗時の停止と出力を実装する                        | ARC  | done | build 失敗時は refresh と auto を実行せず終了コード 1           |
+| 4   | PJR-AAR2 の status 書き換えを解消してから有効化する | ARC  | done | PJR-AAR2 完了済みを確認し、既存 status 保持テストを前提にした   |
+| 5   | unit test / integration test を追加する             | ARC  | done | fresh・missing・outdated・失敗停止・Ready 反映・実行順を網羅    |
+| 6   | コマンドリファレンスと exec 運用ガイドを更新する    | ARC  | done | 5 step と loop 内の再判定を command / exec / routine 文書へ反映 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/exec-schedule.ts` の鮮度判定を `findStaleGeneratedTracks` として構造化し、従来の `exec validate` 警告と `exec cycle` の自動再生成で同じ判定を共用した。track がない場合と strategy の更新時刻が track より新しい場合を対象とし、track 名順で決定的に処理する。
+- `src/exec-run.ts` で doc-index 再構築後、`exec validate` / `exec refresh` より前に stale track ごとの `schedule build --force` を実行するようにした。`--loop` では auto の各次ラウンドでも index build 後・refresh 前に再判定するため、前ラウンドで strategy を更新した場合も同じ cycle で次 track の Ready task を選択できる。
+- 再生成が不要な場合はコマンドを実行せず、再生成用のログや summary 項目も出力しない。再生成に失敗した場合は該当 track を表示し、古い track のまま refresh / auto へ進まず終了コード 1 とする。単発の `exec run` と `exec refresh` には自動再生成を追加していない。
+- [[prj-0001:pjr-aar2-milestones-status-follows-last-built-track|PJR-AAR2 sch-milestones の status が最後に build したトラックの strategy に引きずられる]] が完了済みで、`schedule build` が既存 `sch-milestones.yaml` の status を保持する実装と回帰テストを確認した。今回の再生成経路でも同じコマンドを利用する。
+- unit test に鮮度判定、fresh 時の無処理・無出力、複数 track の処理順、失敗時の即時停止を追加した。integration test には、実際の `schedule build` と `exec refresh` を通して新規 task が Ready になること、および cycle の dry-run で build が index と validate の間に配置されることを追加した。
+- [[specdojo:command-reference|コマンドリファレンス]]、[[specdojo:exec-operation-guide|exec運用ガイド]]、[[specdojo:routine-operation-guide|routine運用ガイド]]へ、条件付きの再生成、失敗時の停止、loop 内の再判定、単発コマンドとの境界を反映した。
+- `npm run typecheck` と unit test 全 1,255 件が成功した。Markdown の整形・静的検査、register build、catalog validate、index build も成功した。integration test の実行は executor / reporter pipeline の分担に従って親 runner が行う。
+- preprocess / postprocess や新しい設定項目は追加していない。残課題はない。
 
 ## 5. 関連ドキュメント
 

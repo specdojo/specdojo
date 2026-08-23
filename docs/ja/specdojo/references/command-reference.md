@@ -331,29 +331,29 @@ specdojo schedule strategy generate \
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
 
-| コマンド         | 用途                                                                                     | 例                                                                                                      |
-| ---------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `exec where`     | execution 関連パスを表示する                                                             | `specdojo exec where --project prj-0001`                                                                |
-| `exec validate`  | schedule と event を検証する                                                             | `specdojo exec validate --project prj-0001`                                                             |
-| `exec refresh`   | state、Ready、CPM、gantt-chart を再計算する                                              | `specdojo exec refresh --project prj-0001`                                                              |
-| `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                            | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
-| `exec claim`     | タスクを `doing` にする                                                                  | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
-| `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                     | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
-| `exec reopen`    | 誤って完了したタスクを `done` から `todo` に戻す                                         | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
-| `exec block`     | タスクを `blocked` にする                                                                | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
-| `exec unblock`   | `blocked` を `doing` に戻す                                                              | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
-| `exec release`   | `doing` / `blocked` を `todo` に戻す                                                     | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
-| `exec cancel`    | `todo` を `cancelled` にする                                                             | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
-| `exec note`      | メモイベントを残す                                                                       | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
-| `exec link`      | 外部参照イベントを残す                                                                   | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
-| `exec estimate`  | 見積もりイベントを残す                                                                   | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
-| `exec run`       | plan を生成してエージェントを実行する                                                    | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
-| `exec resume`    | `doing`、または due な利用制限延期 task を既存 worktree で再開する                       | `specdojo exec resume --project prj-0001 --due`                                                         |
-| `exec cycle`     | 延期 task 再開・doc-index 再構築・状態再計算・`--auto` loop を単一ロック内で順次実行する | `specdojo exec cycle --project prj-0001 --loop`                                                         |
-| `exec status`    | 実行状態を表示する                                                                       | `specdojo exec status --project prj-0001 --state blocked`                                               |
-| `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                                               | `specdojo exec scaffold --provider claude`                                                              |
-| `exec plan`      | plan だけを生成する                                                                      | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
-| `exec archive`   | 完了済み plan を `done/` へ移動する                                                      | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+| コマンド         | 用途                                                                                                          | 例                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `exec where`     | execution 関連パスを表示する                                                                                  | `specdojo exec where --project prj-0001`                                                                |
+| `exec validate`  | schedule と event を検証する                                                                                  | `specdojo exec validate --project prj-0001`                                                             |
+| `exec refresh`   | state、Ready、CPM、gantt-chart を再計算する                                                                   | `specdojo exec refresh --project prj-0001`                                                              |
+| `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                                                 | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
+| `exec claim`     | タスクを `doing` にする                                                                                       | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
+| `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                          | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
+| `exec reopen`    | 誤って完了したタスクを `done` から `todo` に戻す                                                              | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
+| `exec block`     | タスクを `blocked` にする                                                                                     | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
+| `exec unblock`   | `blocked` を `doing` に戻す                                                                                   | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
+| `exec release`   | `doing` / `blocked` を `todo` に戻す                                                                          | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
+| `exec cancel`    | `todo` を `cancelled` にする                                                                                  | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
+| `exec note`      | メモイベントを残す                                                                                            | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
+| `exec link`      | 外部参照イベントを残す                                                                                        | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
+| `exec estimate`  | 見積もりイベントを残す                                                                                        | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
+| `exec run`       | plan を生成してエージェントを実行する                                                                         | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
+| `exec resume`    | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                            | `specdojo exec resume --project prj-0001 --due`                                                         |
+| `exec cycle`     | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する | `specdojo exec cycle --project prj-0001 --loop`                                                         |
+| `exec status`    | 実行状態を表示する                                                                                            | `specdojo exec status --project prj-0001 --state blocked`                                               |
+| `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                                                                    | `specdojo exec scaffold --provider claude`                                                              |
+| `exec plan`      | plan だけを生成する                                                                                           | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
+| `exec archive`   | 完了済み plan を `done/` へ移動する                                                                           | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
 
 状態イベントの `--msg` は、イベント種別によって必須・省略可が分かれます。
 
@@ -520,7 +520,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 | `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action.kind` は `register` / `exec-auto` / `exec-resume` / `exec-cycle` / `job` の5種類です。`exec-cycle` は延期 task の再開・doc-index 再構築・状態再計算・`--auto` loop を単一ロック内で順次実行します。定義ファイルの配置、`interval`または`trigger.cron`の書式、due判定、kindごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
+`action.kind` は `register` / `exec-auto` / `exec-resume` / `exec-cycle` / `job` の5種類です。`exec-cycle` は延期 task の再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行します。定義ファイルの配置、`interval`または`trigger.cron`の書式、due判定、kindごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）
