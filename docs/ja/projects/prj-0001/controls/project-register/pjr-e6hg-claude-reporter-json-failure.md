@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:03:45Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: executor validation `npm run test:unit` がfailedであり、doc-index.test.tsが生成前のpjr-index不在により1件失敗した。計画は終了前に検査失敗をすべて修正することを要求しているため、代替コマンドの成功だけでは完了を支持できない。"
 ---
 
 # PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする
