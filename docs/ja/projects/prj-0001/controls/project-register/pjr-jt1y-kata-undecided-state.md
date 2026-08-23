@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   registered_at: "2026-08-23T11:48:12Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: executor validationの npm run validate:schema がfailed（tsx IPC制約によるEPERM）であり、npm run test:unit もfailed（既存PJR-QVGX個票の未エスケープ<pid>検出後に中断、exit 130）である。完了手順は静的検査および必要なテストの失敗解…"
+  conclusion: 要否と整備状況を undecided・項目の省略・文書ID・not-needed の4通りで区別できるようにし、schema と検証・生成処理を対応させた。PJR-VV3M の種別ごとの作成方針を実践の型ガイドへ反映し、未作成の散文成果物155件を undecided へ移行した。実在する成果物の宣言は変更していない。新規プロジェクトのカタログ雛形にも同じ移行を適用した。
 ---
 
 # PJR-JT1Y 未着手成果物の実践の型の要否を未判断として区別できるようにする
