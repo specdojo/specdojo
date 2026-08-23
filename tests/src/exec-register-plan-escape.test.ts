@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { lint } from "markdownlint/sync";
 import yaml from "js-yaml";
-import { escapeMarkdownInline } from "../../src/exec-shared.js";
+import { escapeMarkdownInline, inlineCodeAnglePlaceholders } from "../../src/exec-shared.js";
 import { generateRegisterPlan } from "../../src/exec-register.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
 import type { PjrItem } from "../../src/register.js";
@@ -55,8 +55,29 @@ describe("escapeMarkdownInline", () => {
     );
   });
 
+  it("山括弧プレースホルダは連結範囲ごと code span 化する", () => {
+    expect(escapeMarkdownInline("dct-<domain>.yaml と prefix-<term>-suffix")).toBe(
+      "`dct-<domain>.yaml` と `prefix-<term>-suffix`",
+    );
+  });
+
+  it("既存の複数バッククォート code span も温存する", () => {
+    expect(escapeMarkdownInline("``dct-<domain>.yaml`` と <phase>.")).toBe(
+      "``dct-<domain>.yaml`` と `<phase>`.",
+    );
+  });
+
   it("`_` / `*` を含まない ASCII や日本語は変化しない", () => {
     expect(escapeMarkdownInline("普通の説明文 PJR-TEST です")).toBe("普通の説明文 PJR-TEST です");
+  });
+});
+
+describe("inlineCodeAnglePlaceholders", () => {
+  it("register build と plan 生成で共有する変換が再適用しても安定する", () => {
+    const once = inlineCodeAnglePlaceholders("dct-<domain>.yaml と <phase>.");
+
+    expect(once).toBe("`dct-<domain>.yaml` と `<phase>`.");
+    expect(inlineCodeAnglePlaceholders(once)).toBe(once);
   });
 });
 
@@ -116,6 +137,34 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     expect(content).toContain("`register_date_timezone`");
     expect(emphasisViolations(content)).toEqual([]);
+  });
+
+  it("title と description の山括弧プレースホルダをコード化し、再生成しても二重化しない", async () => {
+    const outPath = path.join(dir, "plan.md");
+    const input = {
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        title: "prefix-<term>-suffix を扱う",
+        description: "`dct-<domain>.yaml` と sch-track-<track>.yaml を確認し、末尾は <phase>.",
+      }),
+      stem: "xep-pjr-test",
+      outPath,
+    };
+
+    await generateRegisterPlan(input);
+    const first = await readFile(outPath, "utf8");
+    await generateRegisterPlan(input);
+    const second = await readFile(outPath, "utf8");
+
+    expect(first).toContain('name: "`prefix-<term>-suffix` を扱う"');
+    expect(first).toContain("# Edit Plan: PJR-TEST `prefix-<term>-suffix` を扱う");
+    expect(first).toContain("`dct-<domain>.yaml`");
+    expect(first).toContain("`sch-track-<track>.yaml`");
+    expect(first).toContain("`<phase>`.");
+    expect(first).not.toContain("``dct-<domain>.yaml``");
+    expect(second).toBe(first);
   });
 
   it("エスケープ前の生の説明文は MD049/MD050 違反を起こす（回帰の根拠）", () => {

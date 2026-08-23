@@ -18,7 +18,7 @@ specdojo:
 
 プロジェクト登録簿の項目 PJR-ZWMH「登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する」に対応する。
 
-個票 frontmatter の conclusion などに dct-<domain>.yaml のような素の山括弧プレースホルダを書くと、register build がそのまま表セルへ展開し、generated/pjr-index.md で HTML タグとして解釈されて VitePress ビルドが失敗する。remark の山括弧検査は本文の html ノードだけを対象とし、markdownlint も frontmatter を見ず、生成物は gitignore で lint:md の対象外のため、ビルドまで誰も検知できない。生成側でインラインコード化して塞ぎ、あわせて frontmatter 側でも検知できるようにする。
+個票 frontmatter の conclusion などに `dct-<domain>.yaml` のような素の山括弧プレースホルダを書くと、register build がそのまま表セルへ展開し、generated/pjr-index.md で HTML タグとして解釈されて VitePress ビルドが失敗する。remark の山括弧検査は本文の html ノードだけを対象とし、markdownlint も frontmatter を見ず、生成物は gitignore で lint:md の対象外のため、ビルドまで誰も検知できない。生成側でインラインコード化して塞ぎ、あわせて frontmatter 側でも検知できるようにする。
 
 ## 2. 対象項目
 
