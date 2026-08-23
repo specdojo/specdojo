@@ -346,7 +346,7 @@ phase や owner rule に書く `approach` は、対象成果物と実践の型�
 | 構造生成 | コード（`schedule strategy generate`）              | scope・profile・owner・gate・依存・milestone を持つ strategy                    |
 | 承認     | 人間                                                | 判定結果のレビュー、`undecided` の解消、`status` の確定                         |
 
-- 実践の型の解決規則（カタログの文書 ID / `not-needed` 宣言・未宣言・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
+- 実践の型の解決規則（カタログの文書 ID / `undecided` / `not-needed` 宣言・未宣言・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
 - 利用可能性は、`target-fit`（対象成果物向けか）、`substantive-content`（空・placeholder 中心でないか）、`internal-consistency`（相互に致命的な矛盾がないか）、`standard-alignment`（現行 rulebook・schema と整合するか）の4観点を根拠付きで評価し、すべて `pass` なら `usable`、1件でも `fail` なら `unusable`、`fail` が無く未確認が残れば `unknown` とします。`status: draft` であること自体は利用不能の根拠になりません。
 - `recommended_approach` は `intent` と利用可能性から決まります。`not-needed` は欠落とみなさず、必要と宣言された型がすべて利用可能なら `fully-guided` を選べます。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
 - `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。

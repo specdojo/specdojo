@@ -64,7 +64,9 @@ function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
     type: "project",
     status: "draft",
   };
-  if (item.rulebook) inner.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  if (item.rulebook && item.rulebook !== "undecided") {
+    inner.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  }
   const basedOn = (item.depends_on ?? []).map((dep) => `${projectId}:${dep}`);
   if (basedOn.length > 0) inner.based_on = basedOn;
 
@@ -84,7 +86,9 @@ function fallbackYaml(item: DctDeliverableItem, projectId: string): string {
     type: "project",
     status: "draft",
   };
-  if (item.rulebook) doc.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  if (item.rulebook && item.rulebook !== "undecided") {
+    doc.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  }
   return yaml.dump(doc, { lineWidth: 120, noRefs: true });
 }
 

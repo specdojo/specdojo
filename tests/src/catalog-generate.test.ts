@@ -141,6 +141,43 @@ groups:
       rulebook: "specdojo:pm-roles-rulebook",
     });
   });
+
+  it("rulebook が undecided の場合は生成物へ未判断値を転記しない", () => {
+    writeCatalog(
+      fx,
+      `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: undecided-md
+        name: 未判断 Markdown
+        kind: work
+        overview: rulebook の要否が未判断
+        path: undecided-md.md
+        rulebook: undecided
+      - local_id: undecided-yaml
+        name: 未判断 YAML
+        kind: work
+        overview: rulebook の要否が未判断
+        path: undecided-yaml.yaml
+        rulebook: undecided
+`,
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    expect(readFileSync(outPath(fx, "undecided-md.md"), "utf8")).not.toContain("rulebook:");
+    expect(load(readFileSync(outPath(fx, "undecided-yaml.yaml"), "utf8"))).toEqual({
+      id: "prjx:undecided-yaml",
+      type: "project",
+      status: "draft",
+    });
+  });
 });
 
 describe("runGenerate — テンプレートがある成果物", () => {

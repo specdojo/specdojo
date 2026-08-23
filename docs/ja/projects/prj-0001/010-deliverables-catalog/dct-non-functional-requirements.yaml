@@ -20,9 +20,9 @@ groups:
         overview: 非機能要件を8カテゴリに分冊管理し、測定可能・検証可能な形で一元化する
         path: nfr-index.md
         rulebook: specdojo:nfr-index-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-index-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸（効果・コスト・期間・リスク・運用適合・技術実現性・適応性・追跡性・AI適合・成熟度）
         done_criteria:
           - text: 非機能要件のカテゴリ構成と優先度が業務観点で確認できること
@@ -47,9 +47,9 @@ groups:
         overview: 障害抑止と誤動作防止に関する要件を定義する（故障率・MTBF・エラー率等）
         path: nfr-reliability.md
         rulebook: specdojo:nfr-reliability-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-reliability-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「リスク」（現場との乖離・負荷転嫁・責任不明・公開不備を抑えられるか）
         done_criteria:
           - text: 信頼性要件が業務継続性の観点で記述されていること
@@ -74,9 +74,9 @@ groups:
         overview: システム稼働の継続性に関する要件を定義する（稼働率・RTO/RPO・フェイルオーバー等）
         path: nfr-availability.md
         rulebook: specdojo:nfr-availability-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-availability-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「リスク」「運用適合」（少人数で費用と負荷を管理し分担・継承できるか）
         done_criteria:
           - text: 稼働率・RTO/RPO要件が業務影響の観点で記述されていること
@@ -104,9 +104,9 @@ groups:
         overview: 変更容易性と復旧容易性に関する要件を定義する（MTTR・変更リードタイム・ログ粒度等）
         path: nfr-maintainability.md
         rulebook: specdojo:nfr-maintainability-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-maintainability-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「運用適合」（少人数で費用と負荷を管理し分担・継承できるか）
         done_criteria:
           - text: 保守性要件が運用継続性の観点で記述されていること
@@ -131,9 +131,9 @@ groups:
         overview: データ正確性と改ざん防止に関する要件を定義する（整合性検証・監査証跡・トランザクション境界等）
         path: nfr-integrity.md
         rulebook: specdojo:nfr-integrity-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-integrity-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「追跡性」（社会課題、期待価値、要求、仕様、判断、検証を追跡できるか）
         done_criteria:
           - text: データ整合性要件が業務データ品質の観点で記述されていること
@@ -158,9 +158,9 @@ groups:
         overview: 不正利用防止とセキュリティに関する要件を定義する（認証・認可・暗号化・アクセス制御等）
         path: nfr-security-safety.md
         rulebook: specdojo:nfr-security-safety-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-security-safety-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「リスク」（現場との乖離・負荷転嫁・責任不明・公開不備を抑えられるか）
         done_criteria:
           - text: セキュリティ要件が業務データ保護の観点で記述されていること
@@ -185,9 +185,9 @@ groups:
         overview: 応答性と処理能力に関する要件を定義する（P95/P99レイテンシ・RPS・リソース効率等）
         path: nfr-performance.md
         rulebook: specdojo:nfr-performance-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-performance-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「効果」「技術実現性」
         done_criteria:
           - text: 性能要件が業務利用の観点で記述されていること
@@ -213,9 +213,9 @@ groups:
         overview: 監視・手順・継続運用に関する要件を定義する（アラート検知率・復旧達成率・運用手順充実度等）
         path: nfr-operations.md
         rulebook: specdojo:nfr-operations-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-operations-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「運用適合」、およびSC-02（低コストで試行成果を作る：追加現金支出と参加者別作業時間の上限管理）
         done_criteria:
           - text: 運用要件が業務継続性の観点で記述されていること
@@ -243,9 +243,9 @@ groups:
         overview: 使いやすさと誤操作防止に関する要件を定義する（タスク完了率・誤操作率・エラーメッセージ明確性等）
         path: nfr-usability.md
         rulebook: specdojo:nfr-usability-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:nfr-usability-sample
-        template: not-needed
+        template: undecided
         note: 根拠はprj-comparison-of-alternatives.mdのD-01評価軸「適応性」（当事者の学びと参加者の変化を仕様と作業へ反映できるか）
         done_criteria:
           - text: 操作性要件が業務ユーザー観点で記述されていること

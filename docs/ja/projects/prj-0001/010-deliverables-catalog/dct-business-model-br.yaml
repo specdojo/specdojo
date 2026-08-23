@@ -23,9 +23,9 @@ groups:
         overview: Ready task を critical-first / fifo などで選ぶ選択順位・selection strategyを定義する
         path: br-task-selection-strategy.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: &br-done-criteria
           - text: ルール・入力・出力・例外が業務観点で明確に記述されていること
             roles: [BA]
@@ -50,9 +50,9 @@ groups:
         overview: task の実行区分・mode・必要能力・熟練度から担当nickname（実行担当・記録担当）を解決する規則を定義する
         path: br-actor-assignment.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-execution-result-judgment
         name: ビジネスルール（実行結果判定）
@@ -62,9 +62,9 @@ groups:
         overview: 記入済みresultと必須節・frontmatterの保持状態からsuccess判定またはblockedを導く規則を定義する
         path: br-execution-result-judgment.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-routine-action-routing
         name: ビジネスルール（routine action kind選択・委譲）
@@ -75,9 +75,9 @@ groups:
         overview: routineのaction kind（register / exec-auto / exec-resume / exec-cycle / job）別の選択・制御・委譲条件を定義する
         path: br-routine-action-routing.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-review-verdict
         name: ビジネスルール（レビュー判定）
@@ -87,9 +87,9 @@ groups:
         overview: レビュー結果を pass / conditional_pass / changes_requested / blocked のいずれに判定するかの規則を定義する
         path: br-review-verdict.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-agent-config-safety-boundary
         name: ビジネスルール（agent構成の権限・安全境界）
@@ -99,9 +99,9 @@ groups:
         overview: task の mode・targets・capability、provider権限、プロンプトインジェクション対策から構成変更案の許可範囲・禁止事項を判定する規則を定義する
         path: br-agent-config-safety-boundary.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-branch-integration-direction
         name: ビジネスルール（branch・worktree統合方向）
@@ -111,9 +111,9 @@ groups:
         overview: feature / exec branch と project develop、mainの間で、どちらを正本としどちらへ統合するかの方向を定義する
         path: br-branch-integration-direction.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria
       - local_id: br-deprecation-route-selection
         name: ビジネスルール（非推奨化の経路選択）
@@ -123,7 +123,7 @@ groups:
         overview: 対象文書の同一性・後継候補から、経路A（ファイル名のみ変更）と経路B（新ID切替）のどちらを選ぶかの判断規則を定義する
         path: br-deprecation-route-selection.md
         rulebook: specdojo:br-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:br-sample
-        template: not-needed
+        template: undecided
         done_criteria: *br-done-criteria

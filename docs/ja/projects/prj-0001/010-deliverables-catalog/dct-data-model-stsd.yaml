@@ -22,9 +22,9 @@ groups:
         overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）を一覧で定義する
         path: stsd-register-entry.md
         rulebook: specdojo:stsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:stsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/register.ts
@@ -50,9 +50,9 @@ groups:
         overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）を一覧で定義する
         path: stsd-task-execution.md
         rulebook: specdojo:stsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:stsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-schedule-index.ts
@@ -78,9 +78,9 @@ groups:
         overview: 成果物が取り得る状態（draft / ready / deprecated）を一覧で定義する
         path: stsd-deliverable.md
         rulebook: specdojo:stsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:stsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/deliverable.ts
@@ -106,9 +106,9 @@ groups:
         overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態を一覧で定義する
         path: stsd-routine-run.md
         rulebook: specdojo:stsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:stsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/routine.ts
@@ -134,9 +134,9 @@ groups:
         overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）を一覧で定義する
         path: stsd-job-run.md
         rulebook: specdojo:stsd-rulebook
-        recipe: not-needed
+        recipe: undecided
         sample: specdojo:stsd-sample
-        template: not-needed
+        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/job.ts

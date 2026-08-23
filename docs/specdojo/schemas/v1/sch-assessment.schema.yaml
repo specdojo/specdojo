@@ -230,13 +230,14 @@ $defs:
     properties:
       declaration:
         type: string
-        enum: ["declared", "conventional", "none", "not-needed", "unresolved"]
+        enum: ["declared", "conventional", "none", "undecided", "not-needed", "unresolved"]
         description: >
           How the reference was resolved. declared: an explicit id in the catalog (rulebook) or in
           the rulebook frontmatter (recipe/sample/template). conventional: no declaration, resolved
-          by the conventional <prefix>-<kind> file that exists on disk. not-needed: the catalog
-          records an intentional decision not to create this Kata. none: a legacy rulebook-frontmatter
-          disablement. unresolved: no declaration and no conventional file.
+          by the conventional <prefix>-<kind> file that exists on disk. undecided: the catalog records
+          that the need has not been assessed yet. not-needed: the catalog records an intentional
+          decision not to create this Kata. none: a legacy rulebook-frontmatter disablement.
+          unresolved: the Kata is required but no declaration or conventional file is available.
       id:
         type: string
         minLength: 1

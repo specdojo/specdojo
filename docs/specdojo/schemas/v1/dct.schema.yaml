@@ -168,24 +168,27 @@ $defs:
 
   RecipeDeclaration:
     type: string
-    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe|not-needed)$"
+    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe|undecided|not-needed)$"
     description: >
-      Recipe document ID, or not-needed when the creation criteria determine that no recipe is
-      required. Omission means the need is unresolved or the required recipe is not prepared yet.
+      Recipe document ID, undecided while the need has not been assessed, or not-needed when the
+      creation criteria determine that no recipe is required. Omission means the recipe is required
+      but not prepared yet.
 
   SampleDeclaration:
     type: string
-    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample|not-needed)$"
+    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample|undecided|not-needed)$"
     description: >
-      Sample document ID, or not-needed when the creation criteria determine that no sample is
-      required. Omission means the need is unresolved or the required sample is not prepared yet.
+      Sample document ID, undecided while the need has not been assessed, or not-needed when the
+      creation criteria determine that no sample is required. Omission means the sample is required
+      but not prepared yet.
 
   TemplateDeclaration:
     type: string
-    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template|not-needed)$"
+    pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template|undecided|not-needed)$"
     description: >
-      Template document ID, or not-needed when the creation criteria determine that no template is
-      required. Omission means the need is unresolved or the required template is not prepared yet.
+      Template document ID, undecided while the need has not been assessed, or not-needed when the
+      creation criteria determine that no template is required. Omission means the template is
+      required but not prepared yet.
 
   DocId:
     type: string
@@ -332,12 +335,13 @@ $defs:
 
       rulebook:
         type: string
-        pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|not-needed)$"
+        pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|undecided|not-needed)$"
         description: >
           Optional rulebook ID for this deliverable (e.g., specdojo:prj-overview-rulebook).
           The authority identifies its practice package; the local ID resolves to the filename.
+          Use undecided until the creation criteria have been assessed during bootstrap.
           Use not-needed when the creation criteria determine that no rulebook is required.
-          Omission means the need is unresolved or the required rulebook is not prepared yet.
+          Omission means the rulebook is required but not prepared yet.
           Used by review plan generation to populate inputs.rulebook.
 
       recipe:

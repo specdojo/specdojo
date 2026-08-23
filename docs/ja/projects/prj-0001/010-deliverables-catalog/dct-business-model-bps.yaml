@@ -24,9 +24,9 @@ groups:
             overview: config初期化・register scaffold・catalog scaffoldの必須プロセスのフロー（P-01-01〜03）を定義する
             path: bps-init-required.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: &bps-done-criteria
               - text: トリガー・前提・入力・処理・出力が業務観点で正確に記述されていること
                 roles: [BA]
@@ -50,9 +50,9 @@ groups:
             overview: provider設定初期化・exec scaffoldの条件付きプロセスのフロー（P-01-04・05）を定義する
             path: bps-init-optional.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 登録簿ライフサイクル（P-02）
         deliverables:
@@ -63,9 +63,9 @@ groups:
             overview: 登録判断・個票起票から担当設定、審査・終了判断、登録簿ビュー生成までの必須プロセスのフローを定義する
             path: bps-register-required.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-register-response
             name: 業務プロセス仕様（登録簿・対応・調査）
@@ -74,9 +74,9 @@ groups:
             overview: 人またはAI Agentによる対応・調査プロセスのフロー（P-02-03・04）を定義する
             path: bps-register-response.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-register-resume-audit
             name: 業務プロセス仕様（登録簿・再開・監査・ID復旧）
@@ -85,9 +85,9 @@ groups:
             overview: 終了項目の再開、登録項目履歴再構成、ID競合・参照復旧のフロー（P-02-06・08・09）を定義する
             path: bps-register-resume-audit.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 計画展開（P-03）
         deliverables:
@@ -98,9 +98,9 @@ groups:
             overview: 成果物カタログ検証・Schedule展開の条件付きフロー（P-03-01・02）を定義する
             path: bps-planning-catalog-strategy-update.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-planning-schedule-event-update
             name: 業務プロセス仕様（計画情報更新）
@@ -109,9 +109,9 @@ groups:
             overview: 実行入力検証・実行状態再構成・計画情報算出の必須フロー（P-03-03〜05）を定義する
             path: bps-planning-schedule-event-update.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: タスク実行（P-04）
         deliverables:
@@ -122,9 +122,9 @@ groups:
             overview: 実行対象選択・担当確定・claim・実行入力準備のフロー（P-04-01〜03）を定義する
             path: bps-task-selection-preparation.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-task-edit
             name: 業務プロセス仕様（Edit実行）
@@ -133,9 +133,9 @@ groups:
             overview: edit planに基づく成果物更新・result記入のフロー（P-04-04）を定義する
             path: bps-task-edit.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-task-review-finalize
             name: 業務プロセス仕様（Review・Finalize確定）
@@ -144,9 +144,9 @@ groups:
             overview: review実行とfinalize・ready確定のフロー（P-04-05・06）を定義する
             path: bps-task-review-finalize.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-task-judgment-integration
             name: 業務プロセス仕様（判定・統合）
@@ -155,9 +155,9 @@ groups:
             overview: 実行結果判定・結果統合completeのフロー（P-04-07・08）を定義する
             path: bps-task-judgment-integration.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 定期処理（P-05）
         deliverables:
@@ -168,9 +168,9 @@ groups:
             overview: 定期実行対象選択・実行試行記録・routine結果反映の必須フロー（P-05-01・02・08）を定義する
             path: bps-routine-required.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-routine-register-schedule-cycle
             name: 業務プロセス仕様（登録項目・Schedule・cycle）
@@ -179,9 +179,9 @@ groups:
             overview: 登録項目実行委譲・Schedule実行委譲・exec-cycle順次制御の条件付きフロー（P-05-03〜05）を定義する
             path: bps-routine-register-schedule-cycle.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-routine-job-run
             name: 業務プロセス仕様（Job Run）
@@ -190,9 +190,9 @@ groups:
             overview: Job Run生成・Job Run結果反映の条件付きフロー（P-05-06・07）を定義する
             path: bps-routine-job-run.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 並行処理（P-06）
         deliverables:
@@ -203,9 +203,9 @@ groups:
             overview: project develop作成・並行実行割当の必須フロー（P-06-01・02）を定義する
             path: bps-parallel-required.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-isolation-work
             name: 業務プロセス仕様（分離と作業）
@@ -214,9 +214,9 @@ groups:
             overview: feature／exec worktree作成・分離作業・分離結果commitの条件付きフロー（P-06-03〜06）を定義する
             path: bps-parallel-isolation-work.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-sync-integration
             name: 業務プロセス仕様（同期・統合）
@@ -225,9 +225,9 @@ groups:
             overview: worktreeベース同期・feature/exec統合の条件付きフロー（P-06-07・08）を定義する
             path: bps-parallel-sync-integration.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-main-promotion
             name: 業務プロセス仕様（main同期・昇格・後片付け）
@@ -236,9 +236,9 @@ groups:
             overview: main共有変更同期・project develop昇格・worktree/branch後片付けの条件付きフロー（P-06-09〜11）を定義する
             path: bps-parallel-main-promotion.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 構成変更（P-07）
         deliverables:
@@ -249,9 +249,9 @@ groups:
             overview: 変更要件・問題評価の必須プロセス（P-07-01）を定義する
             path: bps-config-change-evaluation.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-config-change-proposal-approval
             name: 業務プロセス仕様（構成案作成・承認）
@@ -260,9 +260,9 @@ groups:
             overview: 構成案作成・権限安全境界確認・構成変更承認のフロー（P-07-02〜04）を定義する
             path: bps-config-change-proposal-approval.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-config-change-apply-verify
             name: 業務プロセス仕様（設定変更・検証）
@@ -271,9 +271,9 @@ groups:
             overview: 承認済み設定変更・構成検証・引き渡しのフロー（P-07-05・06）を定義する
             path: bps-config-change-apply-verify.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 派生生成（P-08）
         deliverables:
@@ -284,9 +284,9 @@ groups:
             overview: 実行情報更新・カタログ表示生成・登録簿ビュー生成・一括再生成のフロー（P-08-02〜04・07）を定義する
             path: bps-derived-project-scoped.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-derived-document-wide
             name: 業務プロセス仕様（文書全体対象の派生生成）
@@ -295,9 +295,9 @@ groups:
             overview: YAML表示ページ生成・文書索引生成のフロー（P-08-05・06）を定義する
             path: bps-derived-document-wide.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-derived-standalone
             name: 業務プロセス仕様（一括再生成の外で起動する派生生成）
@@ -306,9 +306,9 @@ groups:
             overview: 成果物雛形生成・変更監視/再生成起動のフロー（P-08-01・08）を定義する
             path: bps-derived-standalone.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 報告（P-09）
         deliverables:
@@ -319,9 +319,9 @@ groups:
             overview: 監視入力の有効性確認・進捗滞留検知のフロー（P-09-01・02）を定義する
             path: bps-reporting-monitoring-detection.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-reporting-consistency-delegation
             name: 業務プロセス仕様（整合確認・委譲）
@@ -330,9 +330,9 @@ groups:
             overview: 報告・管理記録整合確認のフロー（P-09-06）を定義する
             path: bps-reporting-consistency-delegation.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-reporting-conditional
             name: 業務プロセス仕様（報告・条件付きプロセス）
@@ -341,9 +341,9 @@ groups:
             overview: 対応・エスカレーション整理、進捗報告作成、会議・議事録作成の条件付きフロー（P-09-03〜05）を定義する
             path: bps-reporting-conditional.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
       - name: 非推奨化・保管（P-10）
         deliverables:
@@ -354,9 +354,9 @@ groups:
             overview: 非推奨化承認・移行経路選択、旧文書非推奨化のフロー（P-10-01・02）を定義する
             path: bps-deprecation-process.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria
           - local_id: bps-deprecation-storage
             name: 業務プロセス仕様（保管）
@@ -365,7 +365,7 @@ groups:
             overview: 保管計画確認・文書保管・カタログ更新のフロー（P-10-03・04）を定義する
             path: bps-deprecation-storage.md
             rulebook: specdojo:bps-rulebook
-            recipe: not-needed
+            recipe: undecided
             sample: specdojo:bps-sample
-            template: not-needed
+            template: undecided
             done_criteria: *bps-done-criteria

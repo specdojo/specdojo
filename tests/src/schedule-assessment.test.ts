@@ -150,6 +150,17 @@ function withRepo(fn: (root: string) => void): void {
                 ],
               },
               {
+                local_id: "undecided-kata-doc",
+                name: "実践の型の要否が未判断の成果物",
+                kind: "work",
+                overview: "4種の実践の型の要否を bootstrap で判断する成果物",
+                path: "undecided-kata-doc.md",
+                rulebook: "undecided",
+                recipe: "undecided",
+                sample: "undecided",
+                template: "undecided",
+              },
+              {
                 local_id: "control-doc",
                 name: "対象外の管理成果物",
                 kind: "control",
@@ -311,6 +322,15 @@ describe("collectAssessmentFacts", () => {
       for (const kind of ["rulebook", "recipe", "sample", "template"] as KataKindKey[]) {
         expect(none.facts.kata[kind]).toMatchObject({ declaration: "unresolved", exists: false });
       }
+
+      const undecided = byLocalId(deliverables, "undecided-kata-doc");
+      for (const kind of ["rulebook", "recipe", "sample", "template"] as KataKindKey[]) {
+        expect(undecided.facts.kata[kind]).toMatchObject({
+          declaration: "undecided",
+          exists: false,
+          broken_reference: false,
+        });
+      }
     });
   });
 
@@ -338,7 +358,12 @@ describe("collectAssessmentFacts", () => {
     withRepo((root) => {
       const localIds = collect(root).map((item) => item.local_id);
 
-      expect(localIds).toEqual(["full-kata-doc", "no-kata-doc", "partial-kata-doc"]);
+      expect(localIds).toEqual([
+        "full-kata-doc",
+        "no-kata-doc",
+        "partial-kata-doc",
+        "undecided-kata-doc",
+      ]);
     });
   });
 
@@ -869,6 +894,7 @@ describe("renderAssessmentPrompt", () => {
       expect(prompt).toContain("docs/ja/specdojo/rulebooks/full-rulebook.md（status: draft）");
       expect(prompt).toContain("宣言先が存在しない");
       expect(prompt).toContain("none 宣言で無効化");
+      expect(prompt).toContain("undecided（要否未判断）");
       expect(prompt).toContain("src/existing-impl.ts");
       expect(prompt).toContain("`facts` はコードが収集した事実であり、編集しない");
       expect(prompt).toContain("ファイル探索・ID 導出・存在判定はコードが済ませてある");
