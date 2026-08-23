@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:04:00Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: runner validation `test-integration` が failed（exit 1）であるため、親runner検証の失敗は authoritative とする規約により完了にできない。"
 ---
 
 # PJR-Q828 reporterが解消済みの検証失敗を再評価できない問題を解消する
