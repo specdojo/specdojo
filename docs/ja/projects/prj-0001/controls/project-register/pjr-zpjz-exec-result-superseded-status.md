@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zpjz-exec-result-superseded-status
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T01:44:00Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-23T02:23:07Z"
+  conclusion: exec-result の status へ superseded を追加した。新しい result を scaffold する際に、同一タスクで残っている in_progress と blocked の先行 result を遷移させる。complete の記録は書き換えない。固定名 result を再利用する実行は対象外とする。既存の残置 result（PJR-DCTG の1回目）も移行済み。
 ---
 
 # PJR-ZPJZ 破棄された実行試行を表す result status superseded を追加する
