@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: BA
   registered_at: "2026-08-23T04:52:41Z"
   due_on: "2026-08-31"
+  conclusion: 'agent exited with non-zero code: "... is not valid JSON'
 ---
 
 # PJR-K4TA 実践の型の要否宣言を導入し、既存の実践の型を棚卸しする
