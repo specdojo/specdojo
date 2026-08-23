@@ -3532,11 +3532,12 @@ function registerRunnerManagedPaths(
   resultPath: string,
   currentPaths: readonly string[],
   ticketPath?: string | null,
+  additionalManagedPaths: readonly string[] = [],
 ): string[] {
   // 状態遷移の書き込み先は個票（正本）。pjr-index と派生ビューは生成物として同時に更新される。
   // 移行完了後の pjr-index.md は非追跡の生成物になり存在しないため、存在する場合のみ対象に含める
   // （存在しないパスを git add すると pathspec エラーになる）。
-  const managed = [planPath, resultPath];
+  const managed = [planPath, resultPath, ...additionalManagedPaths];
   if (existsSync(registerPaths.pjrIndexPath)) managed.push(registerPaths.pjrIndexPath);
   if (ticketPath) managed.push(ticketPath);
   const exact = new Set(managed.map((path) => repoRelativePath(repoRoot, path)));
@@ -3594,7 +3595,7 @@ async function runSingleRegisterItem(
     stem,
   });
   const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-  const { resultPath } = await scaffoldResult({
+  const { resultPath, supersededPaths } = await scaffoldResult({
     executionPath,
     taskId: item.id,
     mode: "edit",
@@ -3685,6 +3686,7 @@ async function runSingleRegisterItem(
         resultPath,
         currentPaths,
         ticketPath,
+        supersededPaths,
       );
       try {
         const result = commitRegisterItemChanges(repoRoot, item, preexisting, runnerManaged);
@@ -3986,7 +3988,7 @@ async function runSingleRegisterItemWorktree(
       stem,
     });
     const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-    const { resultPath } = await scaffoldResult({
+    const { resultPath, supersededPaths } = await scaffoldResult({
       executionPath,
       taskId: item.id,
       mode: "edit",
@@ -4012,6 +4014,7 @@ async function runSingleRegisterItemWorktree(
       resultPath,
       worktreeStatusPaths(repoRoot),
       ticketPath,
+      supersededPaths,
     );
     const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
     try {

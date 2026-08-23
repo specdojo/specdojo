@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { specdojoRootDir } from "./specdojo-config.js";
@@ -125,6 +125,42 @@ export function resultPathForTask(executionPath: string, nameBase: string): stri
   return join(executionPath, "exec", "results", `${nameBase}-result.md`);
 }
 
+// A unique-name run retains every attempt as a separate result. When a new result is scaffolded,
+// close older unfinished attempts for the same task so they no longer look active or actionable.
+// Fixed-name runs return before this helper is reached and continue to reuse their single result.
+async function supersedePriorResults(
+  resultsDir: string,
+  taskId: string,
+  nextResultPath: string,
+  supersededAt: string,
+): Promise<string[]> {
+  const supersededPaths: string[] = [];
+  for (const fileName of readdirSync(resultsDir).sort()) {
+    if (!fileName.endsWith("-result.md")) continue;
+    const candidatePath = join(resultsDir, fileName);
+    if (candidatePath === nextResultPath) continue;
+
+    let meta: Record<string, string>;
+    try {
+      meta = parseFrontmatter(readFileSync(candidatePath, "utf8")).meta;
+    } catch {
+      // A malformed unrelated historical result must not prevent a new run from starting. It will
+      // remain visible to the normal frontmatter/schema validation and can be repaired separately.
+      continue;
+    }
+    if (
+      meta.type !== "exec-result" ||
+      meta.task_id !== taskId ||
+      (meta.status !== "in_progress" && meta.status !== "blocked")
+    ) {
+      continue;
+    }
+    await updateResultStatus(candidatePath, "superseded", supersededAt);
+    supersededPaths.push(candidatePath);
+  }
+  return supersededPaths;
+}
+
 export async function scaffoldResult(opts: {
   executionPath: string;
   taskId: string;
@@ -147,14 +183,14 @@ export async function scaffoldResult(opts: {
   // Shared plan/result stem. Defaults to taskId (fixed-name worktree/claim flow); in-place
   // callers pass a unique stem so file name and doc id stay unique and the result is tied to its plan.
   stem?: string;
-}): Promise<{ resultPath: string; created: boolean }> {
+}): Promise<{ resultPath: string; created: boolean; supersededPaths: string[] }> {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts;
   const stem = opts.stem ?? taskId;
   const resultPath = resultPathForTask(executionPath, stem);
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
   if (existsSync(resultPath)) {
-    return { resultPath, created: false };
+    return { resultPath, created: false, supersededPaths: [] };
   }
 
   const resultsDir = join(executionPath, "exec", "results");
@@ -198,7 +234,8 @@ export async function scaffoldResult(opts: {
 
   writeFileSync(resultPath, content, "utf8");
   await formatMarkdownFile(resultPath);
-  return { resultPath, created: true };
+  const supersededPaths = await supersedePriorResults(resultsDir, taskId, resultPath, startedAt);
+  return { resultPath, created: true, supersededPaths };
 }
 
 // 必須節が未記入（テンプレートのプレースホルダのまま）かを検知するためのマーカー。
@@ -237,7 +274,7 @@ function hasNonEmptyScaffoldFields(data: Record<string, unknown>, mode: TaskMode
   if (
     data.type !== "exec-result" ||
     data.mode !== mode ||
-    !["in_progress", "complete", "blocked"].includes(String(data.status))
+    !["in_progress", "complete", "blocked", "superseded"].includes(String(data.status))
   ) {
     return false;
   }
@@ -454,7 +491,7 @@ export async function renderReporterResult(
 
 export async function updateResultStatus(
   resultPath: string,
-  status: "complete" | "blocked",
+  status: "complete" | "blocked" | "superseded",
   completedAt: string,
   reason?: string,
 ): Promise<void> {

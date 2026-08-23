@@ -17,7 +17,7 @@ Plan and Result Lifecycle Guide
 
 **この文書で分かること**
 
-- plan・result の役割、配置、命名、生成ルール、テンプレート、アーカイブ、再実行時の扱い
+- plan・result の役割、配置、命名、生成ルール、status、テンプレート、アーカイブ、再実行時の扱い
 
 **次に読む文書**
 
@@ -154,6 +154,19 @@ result は実行記録です。agent では plan と対になり、human では�
 | `mode: review`                                | `xrr-template.md`                          |
 | `mode: edit` + `approach: finalize`           | `xer-human-finalize-template.md`           |
 | `mode: edit` + `approach: bootstrap-finalize` | `xer-human-bootstrap-finalize-template.md` |
+
+result の `status` は、個々の実行試行がどの状態にあるかを表します。
+
+| status        | 意味                                                  | 対応要否                                 |
+| ------------- | ----------------------------------------------------- | ---------------------------------------- |
+| `in_progress` | scaffold が作成され、実行中の試行                     | 実行終了を待つ                           |
+| `complete`    | 正常終了し、完了記録になった試行                      | なし                                     |
+| `blocked`     | 障害や未充足条件によって停止した試行                  | 理由を解消して再開または再実行する       |
+| `superseded`  | 後続の新しい run に置き換えられ、破棄された先行の試行 | なし。履歴として保持し、再開対象にしない |
+
+runner は一意名の新しい result を scaffold するとき、同じ `task_id` を持つ先行 result のうち `in_progress` または `blocked` のものを `superseded` へ更新します。`completed_at` には後続 run の開始時刻を記録し、先行 result の `block_reason` は除去します。`complete` の result は完了記録として変更しません。固定名 result の再利用や、同じ run を続ける `exec resume` は新しい result を作らないため、この遷移の対象外です。
+
+`exec status` が表示・集計する Schedule の `doing` / `blocked` などは event log から導出するタスク状態であり、result の status とは別です。このため、履歴上の `superseded` result が実行中件数や対応待ちの blocked 件数へ加算されることはありません。
 
 review の result には、scaffold 時に catalog から観点別セクション（RVP）を焼き込みます。同様に `finalize` / `bootstrap-finalize` の result には、done_criteria の確認チェックリスト（roles / viewpoint 注記付き）と確定対象（`status` を `ready` へ昇格する対象）のチェックリストを焼き込みます。human result は `execution: human` と `targets` を持ち、`plan_ref` を持ちません。確定手順・確認対象・確認記録・確定判断を result 側へ一元化し、恒久記録として残します。
 

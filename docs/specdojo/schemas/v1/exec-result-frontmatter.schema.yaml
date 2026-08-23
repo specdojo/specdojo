@@ -78,12 +78,13 @@ properties:
 
       status:
         type: string
-        enum: ["in_progress", "complete", "blocked"]
+        enum: ["in_progress", "complete", "blocked", "superseded"]
         description: >
           Lifecycle status managed by exec run harness.
           in_progress: scaffold created, agent running.
           complete: agent exited 0, exec complete recorded.
           blocked: agent exited non-zero, exec block recorded.
+          superseded: an unfinished attempt was replaced by a newly scaffolded run for the same task.
 
       project_id:
         $ref: "./exec-common.schema.yaml#/$defs/ProjectId"
@@ -112,7 +113,9 @@ properties:
       completed_at:
         type: string
         format: date-time
-        description: "ISO 8601 timestamp when the agent exited. Set by exec run harness."
+        description: >
+          ISO 8601 timestamp when the attempt reached a terminal result status. For superseded,
+          this is the start time of the replacing run. Set by exec run harness.
 
       agent:
         $ref: "./exec-common.schema.yaml#/$defs/AgentNickname"

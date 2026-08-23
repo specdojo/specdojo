@@ -168,6 +168,96 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(frontmatter).not.toContain("block_reason:");
   });
 
+  it("supersedes prior unfinished unique-name results without changing completed results", async () => {
+    const first = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/pjr-test-first-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+      stem: "pjr-test-first",
+    });
+    await updateResultStatus(first.resultPath, "complete", "2026-06-20T00:01:00.000Z");
+
+    const second = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/pjr-test-second-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:02:00.000Z",
+      stem: "pjr-test-second",
+    });
+    const third = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/pjr-test-third-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:03:00.000Z",
+      stem: "pjr-test-third",
+    });
+    await updateResultStatus(
+      third.resultPath,
+      "blocked",
+      "2026-06-20T00:04:00.000Z",
+      "retry required",
+    );
+
+    const fourth = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/pjr-test-fourth-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:05:00.000Z",
+      stem: "pjr-test-fourth",
+    });
+
+    const completed = readFileSync(first.resultPath, "utf8").split("\n---")[0];
+    const supersededInProgress = readFileSync(second.resultPath, "utf8").split("\n---")[0];
+    const supersededBlocked = readFileSync(third.resultPath, "utf8").split("\n---")[0];
+    expect(completed).toContain("status: complete");
+    expect(completed).toContain('completed_at: "2026-06-20T00:01:00.000Z"');
+    expect(supersededInProgress).toContain("status: superseded");
+    expect(supersededInProgress).toContain('completed_at: "2026-06-20T00:03:00.000Z"');
+    expect(supersededBlocked).toContain("status: superseded");
+    expect(supersededBlocked).toContain('completed_at: "2026-06-20T00:05:00.000Z"');
+    expect(supersededBlocked).not.toContain("block_reason:");
+    expect(third.supersededPaths).toEqual([second.resultPath]);
+    expect(fourth.supersededPaths).toEqual([third.resultPath]);
+  });
+
+  it("does not supersede a fixed-name result reused by the same run identity", async () => {
+    const first = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    const reused = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-06-20T00:01:00.000Z",
+    });
+
+    expect(reused.created).toBe(false);
+    expect(reused.supersededPaths).toEqual([]);
+    expect(readFileSync(first.resultPath, "utf8")).toContain("status: in_progress");
+  });
+
   it("resets lifecycle fields for a new claim while preserving the result body", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
