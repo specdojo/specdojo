@@ -153,7 +153,6 @@ export function updateMilestonesFile(
   schedulePath: string,
   projectId: string,
   newMilestones: GeneratedMilestone[],
-  status: string,
   dryRun: boolean,
 ): { added: string[]; updated: string[]; removed: string[]; fileCreated: boolean } {
   const filePath = join(schedulePath, "sch-milestones.yaml");
@@ -173,12 +172,13 @@ export function updateMilestonesFile(
     }
     doc = parsed as Record<string, unknown>;
     if (!Array.isArray(doc.milestones)) doc.milestones = [];
+    // Status is human-managed after creation; rebuilding generated content must preserve it.
   } else {
     doc = {
       kind: "milestones",
       id: `${projectId}:sch-milestones`,
       type: "project",
-      status,
+      status: "draft",
       version: 1,
       project_id: projectId,
       settings: {},
@@ -186,10 +186,6 @@ export function updateMilestonesFile(
     };
     fileCreated = true;
   }
-
-  // sch-milestones.yaml is fully managed by schedule build, so its status
-  // tracks the strategy status on every build (not only on creation).
-  doc.status = status;
 
   const previous = doc.milestones as Array<Record<string, unknown>>;
   const previousIds = new Set(previous.map((entry) => String(entry?.id ?? "")));
@@ -777,7 +773,7 @@ export function registerScheduleCommands(program: Command): void {
       if (opts.dryRun) {
         process.stdout.write(outYaml);
         process.stdout.write(`\n# dry-run: ${tasks.length} tasks — not written to disk\n`);
-        updateMilestonesFile(schedulePath, projectId, projectMilestones.milestones, status, true);
+        updateMilestonesFile(schedulePath, projectId, projectMilestones.milestones, true);
         return;
       }
 
@@ -790,7 +786,6 @@ export function registerScheduleCommands(program: Command): void {
           schedulePath,
           projectId,
           projectMilestones.milestones,
-          status,
           false,
         );
         const verb = fileCreated ? "Created" : "Updated";

@@ -274,7 +274,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
   }
 
   const track = String(strategy.track ?? "");
-  // 生成物（track / milestones）には strategy の status を引き継ぐ。
+  // 生成する track には strategy の status を引き継ぐ。
   const status = String(strategy.status ?? "draft");
 
   const projectId = String(strategy.id ?? "").split(":")[0] ?? "unknown";

@@ -41,7 +41,9 @@ sch-milestones.yaml はプロジェクト全トラックのマイルストーン
 
 ## 4. 対応結果
 
--
+- `updateMilestonesFile` から対象 strategy の `status` の受け渡しと既存ファイルへの上書きを除去した。既存 `sch-milestones.yaml` の `status` は再構築後も保持し、新規作成時だけ `draft` とする。
+- 新規作成時の `draft` と、既存の `draft` / `ready` / `deprecated` を再構築後も保持する回帰テストを追加した。
+- [[specdojo:schedule-design-guide|Schedule設計ガイド]] に、strategy の状態から独立して既存 status を保持し、自動昇格しない方式を明記した。
 
 検討時に却下した案を記録する。
 
