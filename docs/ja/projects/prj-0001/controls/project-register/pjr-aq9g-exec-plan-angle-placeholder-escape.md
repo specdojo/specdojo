@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T02:24:50Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: 共通規約の検査対象表により、src/ および tests/ 配下の変更がある本タスクでは npm run test:unit（pipeline executor 環境）の実行が必須である。executor evidence では対象を絞った npm run test:unit（該当テストファイル指定）は69件成功しているが、全件の …"
 ---
 
 # PJR-AQ9G plan 生成でも山括弧プレースホルダをインラインコード化する
