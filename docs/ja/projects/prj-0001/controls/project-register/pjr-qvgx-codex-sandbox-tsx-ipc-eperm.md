@@ -18,7 +18,7 @@ specdojo:
 
 ## 1. 概要
 
-codex-expert-executor の sandbox 内では tsx が IPC ソケット /tmp/tsx-1000/<pid>.pipe を作成できず EPERM となり、npm run validate:schema が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
 
 ## 2. 完了条件
 
