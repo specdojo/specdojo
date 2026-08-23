@@ -2167,19 +2167,3 @@ tasks:
       担当ロールがレビュー後の内容を最終確認し、完成版として確定する。
       bootstrap で整備し consolidate で最終調整した参考資料（rulebook / recipe / sample / template）も
       あわせて確認し、成果物と参考資料それぞれの frontmatter の status を ready に更新する。
-  - local_id: sch-defaults
-    phase_suffix: "000"
-    name: 完了済み
-    duration_days: 0.001
-    depends_on: []
-    owner: ARC
-    tags:
-      - initial-complete
-  - local_id: sch-strategy-launch
-    phase_suffix: "000"
-    name: 完了済み
-    duration_days: 0.001
-    depends_on: []
-    owner: PM
-    tags:
-      - initial-complete
