@@ -302,6 +302,32 @@ describe("strategy generator", () => {
     ]);
   });
 
+  it("not-needed の型に対応する maintenance pass を生成しない", () => {
+    const built = buildStrategyDocument({
+      projectId: "prj-0001",
+      track: "demo",
+      catalogs: [{ id: "prj-0001:dct-demo", path: "/catalog/dct-demo.yaml", domain: "demo" }],
+      deliverables: [
+        {
+          local_id: "ordinary",
+          catalog_id: "prj-0001:dct-demo",
+          approach: "recipe-maintenance",
+          not_needed_kata: ["recipe"],
+        },
+      ],
+      dependsOn: new Map(),
+      owners: new Map([["ordinary", "DEV"]]),
+      gateOwner: "PO",
+      milestoneOwner: "PO",
+      bootstrapOrdering: true,
+      includeKinds: ["work"],
+      preserved: { ownerByLocalId: new Map() },
+    });
+
+    expect(built.errors.join("\n")).toContain("recipe-maintenance を生成しない");
+    expect(built.doc.phase_sets).not.toHaveProperty("recipe-maintenance-pass");
+  });
+
   it("schedule strategy generate CLI が正準パスへ strategy を生成する", async () => {
     write(
       ".specdojo/specdojo.config.json",

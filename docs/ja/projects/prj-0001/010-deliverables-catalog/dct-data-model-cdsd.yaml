@@ -27,6 +27,9 @@ groups:
         overview: プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する
         path: cdsd-planning.md
         rulebook: specdojo:cdsd-rulebook
+        recipe: not-needed
+        sample: specdojo:cdsd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/specdojo-config.ts
@@ -67,6 +70,9 @@ groups:
         overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
         path: cdsd-execution.md
         rulebook: specdojo:cdsd-rulebook
+        recipe: not-needed
+        sample: specdojo:cdsd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/exec-events.ts
@@ -106,6 +112,9 @@ groups:
         overview: 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する
         path: cdsd-sharing.md
         rulebook: specdojo:cdsd-rulebook
+        recipe: not-needed
+        sample: specdojo:cdsd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/deliverable.ts

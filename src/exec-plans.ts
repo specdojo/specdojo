@@ -501,7 +501,7 @@ function targetDocIds(
   const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
-  const refs = resolveKataRefs(deliverable.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable);
   for (const kind of kinds) {
     const refPath = refs[kind];
     if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));
@@ -664,7 +664,7 @@ function doneCriteriaResultChecklist(criteria: CriteriaItem[]): string {
 function finalizeTargetsChecklist(deliverable: DeliverableInfo, approach: Approach): string {
   const lines = [`- [ ] 成果物: \`${deliverablePath(deliverable)}\``];
   if (approach === "bootstrap-finalize") {
-    const refs = resolveKataRefs(deliverable.deliverable.rulebook);
+    const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable);
     const entries: [string, string][] = [
       ["rulebook", refs.rulebook],
       ["recipe", refs.recipe],
@@ -813,7 +813,7 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap);
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable ?? {});
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -878,7 +878,7 @@ function buildReviewPlanMarkdown(
     ...(targets.length > 0 ? { targets } : {}),
   };
 
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook);
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable ?? {});
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,

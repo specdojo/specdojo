@@ -25,6 +25,9 @@ groups:
         overview: 業務上の管理単位（エンティティ）とその属性の論理名・説明・制約を定義する
         path: bdd-_TERM_.yaml
         rulebook: specdojo:bdd-rulebook
+        recipe: not-needed
+        sample: specdojo:bdd-sample
+        template: not-needed
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: エンティティ・属性の業務的定義が正確に記述されていること

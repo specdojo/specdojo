@@ -43,10 +43,10 @@ export const KATA_CHECKS = [
 export type KataCheckId = (typeof KATA_CHECKS)[number];
 export type KataCheckResult = "pass" | "fail" | "unknown";
 export type AssessmentConfidence = "high" | "medium" | "low";
-export type KataDeclaration = "declared" | "conventional" | "none" | "unresolved";
+export type KataDeclaration = "declared" | "conventional" | "none" | "not-needed" | "unresolved";
 export type KataUsability = "usable" | "unusable" | "unknown";
 /** Usability as seen by the recommendation rule; 'absent' is machine-derived, never judged. */
-export type EffectiveUsability = KataUsability | "absent";
+export type EffectiveUsability = KataUsability | "absent" | "not-needed";
 
 export type TaskIntent =
   | "author-deliverable"
@@ -310,7 +310,9 @@ function collectKataFact(
   const declaredValue = kind === "rulebook" ? rulebookId : declaredId;
 
   let declaration: KataDeclaration;
-  if (declaredValue === "none") {
+  if (declaredValue === "not-needed") {
+    declaration = "not-needed";
+  } else if (declaredValue === "none") {
     declaration = "none";
   } else if (declaredValue) {
     declaration = "declared";
@@ -375,14 +377,41 @@ export function collectAssessmentFacts(opts: {
       seen.add(item.local_id);
 
       const docPath = item.path ? resolvedPath : undefined;
-      const refs = resolveKataRefs(item.rulebook);
+      const refs = resolveKataRefs(item.rulebook, {
+        recipe: item.recipe,
+        sample: item.sample,
+        template: item.template,
+      });
       const declared =
-        item.rulebook && item.rulebook !== "none" ? loadRulebookRefs(item.rulebook) : {};
+        item.rulebook && item.rulebook !== "none" && item.rulebook !== "not-needed"
+          ? loadRulebookRefs(item.rulebook)
+          : {};
+      const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
+        (kind) => item[kind] !== undefined,
+      );
       const kata = {
         rulebook: collectKataFact(repoRoot, "rulebook", item.rulebook, refs, undefined),
-        recipe: collectKataFact(repoRoot, "recipe", item.rulebook, refs, declared.recipe),
-        sample: collectKataFact(repoRoot, "sample", item.rulebook, refs, declared.sample),
-        template: collectKataFact(repoRoot, "template", item.rulebook, refs, declared.template),
+        recipe: collectKataFact(
+          repoRoot,
+          "recipe",
+          item.rulebook,
+          refs,
+          hasCatalogKataSet ? item.recipe : declared.recipe,
+        ),
+        sample: collectKataFact(
+          repoRoot,
+          "sample",
+          item.rulebook,
+          refs,
+          hasCatalogKataSet ? item.sample : declared.sample,
+        ),
+        template: collectKataFact(
+          repoRoot,
+          "template",
+          item.rulebook,
+          refs,
+          hasCatalogKataSet ? item.template : declared.template,
+        ),
       };
 
       const schemaRef = resolveDeliverableSchemaRef(item.rulebook, item.local_id);
@@ -462,6 +491,7 @@ export function effectiveUsability(
   judgment: AssessmentJudgment | undefined,
   kind: KataKindKey,
 ): EffectiveUsability {
+  if (facts.kata[kind].declaration === "not-needed") return "not-needed";
   if (!facts.kata[kind].exists) return "absent";
   return judgment?.kata[kind]?.usability ?? "unknown";
 }
@@ -491,6 +521,12 @@ export function resolveRecommendedApproach(input: {
         return {
           approach: "undecided",
           reasons: ["intent improve-kata には kata_target（対象の実践の型）が必要"],
+        };
+      }
+      if (usability[input.kataTarget] === "not-needed") {
+        return {
+          approach: "undecided",
+          reasons: [`${input.kataTarget} は not-needed と宣言されており、見直し対象ではない`],
         };
       }
       return {
@@ -542,6 +578,15 @@ export function resolveRecommendedApproach(input: {
         };
       }
       const alreadyUsable = scope.filter((kind) => usability[kind] === "usable");
+      const notNeeded = scope.filter((kind) => usability[kind] === "not-needed");
+      if (notNeeded.length > 0) {
+        return {
+          approach: "undecided",
+          reasons: [
+            `bootstrap_scope に not-needed の実践の型が含まれている: ${notNeeded.join(", ")}`,
+          ],
+        };
+      }
       if (alreadyUsable.length === scope.length) {
         return {
           approach: "undecided",
@@ -559,16 +604,20 @@ export function resolveRecommendedApproach(input: {
       };
     }
     case "author-deliverable": {
-      const unknownKinds = KATA_KINDS.filter((kind) => usability[kind] === "unknown");
+      const requiredKinds = KATA_KINDS.filter((kind) => usability[kind] !== "not-needed");
+      const unknownKinds = requiredKinds.filter((kind) => usability[kind] === "unknown");
       if (unknownKinds.length > 0) {
         return {
           approach: "undecided",
           reasons: [`利用可否を判定できない実践の型がある: ${unknownKinds.join(", ")}`],
         };
       }
-      const usable = KATA_KINDS.filter((kind) => usability[kind] === "usable");
-      if (usable.length === KATA_KINDS.length) {
-        return { approach: "fully-guided", reasons: ["4種の実践の型がすべて利用可能"] };
+      const usable = requiredKinds.filter((kind) => usability[kind] === "usable");
+      if (usable.length === requiredKinds.length) {
+        return {
+          approach: "fully-guided",
+          reasons: ["必要と宣言された実践の型がすべて利用可能"],
+        };
       }
       if (usability.recipe === "usable") {
         return {

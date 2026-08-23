@@ -71,19 +71,21 @@ flowchart TB
   PHIL --> STD
   PHIL --> RB
   STD --> RB
-  DEL -->|rulebookフィールドで指定| RB
-  RB -->|frontmatterのsample/recipe/templateで宣言| RC
-  RB --> SMP
-  RB --> TPL
+  DEL -->|rulebookフィールドで宣言| RB
+  DEL -->|recipeフィールドで宣言| RC
+  DEL -->|sampleフィールドで宣言| SMP
+  DEL -->|templateフィールドで宣言| TPL
 ```
 
-| 実践体系                   | 成果物との紐付け方                                                             | 例                                          |
-| -------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
-| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない   | specdojo:needs-to-implementation-philosophy |
-| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない     | specdojo:document-metadata-standard         |
-| rulebook                   | 成果物カタログの `deliverables[].rulebook` フィールドで指定する                | `rulebook: specdojo:prj-overview-rulebook`  |
-| recipe / sample / template | 対応する rulebook の frontmatter（`recipe` / `sample` / `template`）で宣言する | `sample: specdojo:dct-sample`               |
-| guide / reference          | 個別成果物に紐づかない横断文書                                                 | 本ガイド自身                                |
+| 実践体系                   | 成果物との紐付け方                                                                                                                  | 例                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない                                                        | specdojo:needs-to-implementation-philosophy |
+| standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない                                                          | specdojo:document-metadata-standard         |
+| rulebook                   | 成果物カタログの `deliverables[].rulebook` で宣言する                                                                               | `rulebook: specdojo:prj-overview-rulebook`  |
+| recipe / sample / template | 成果物カタログの同名フィールドで宣言する。不要と判断した型は `not-needed`、要否未判断または必要だが未整備の型はフィールドを省略する | `sample: specdojo:dct-sample`               |
+| guide / reference          | 個別成果物に紐づかない横断文書                                                                                                      | 本ガイド自身                                |
+
+既存 rulebook の frontmatter にある `recipe` / `sample` / `template` は、カタログへ直接宣言していない既存利用者向けの後方互換として解決できます。新規・更新時は成果物ごとの要否判断を残せるカタログ宣言を正本とします。
 
 ## 4. 実践の型サブセットと活用
 

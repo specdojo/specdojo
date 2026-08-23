@@ -114,6 +114,41 @@ describe("renderCatalogTemplateBody", () => {
 });
 
 describe("validateDctDoc", () => {
+  describe("実践の型の要否宣言", () => {
+    it("not-needed は実在検証の対象外として受理する", () => {
+      const item = makeWorkItem({
+        rulebook: "not-needed",
+        recipe: "not-needed",
+        sample: "not-needed",
+        template: "not-needed",
+      });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors).toEqual([]);
+    });
+
+    it("宣言した実践の型の文書 ID が実在しなければエラーにする", () => {
+      const item = makeWorkItem({ recipe: "specdojo:missing-recipe" });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors.join("\n")).toContain(
+        "declared recipe document id does not exist: specdojo:missing-recipe",
+      );
+    });
+  });
+
   describe("必須フィールドの検証", () => {
     it("全フィールドが正しい場合は ok:true を返す", () => {
       const result = validateDctDoc(makeDoc(), "/dummy/dct.yaml");

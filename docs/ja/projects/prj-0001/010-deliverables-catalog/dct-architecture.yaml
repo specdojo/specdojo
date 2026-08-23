@@ -23,6 +23,9 @@ groups:
         overview: SpecDojo CLIと、境界外の人・外部システム（AI provider CLI、Git/GitHub）との関係を俯瞰的に定義する
         path: cxd-specdojo.md
         rulebook: specdojo:cxd-rulebook
+        recipe: not-needed
+        sample: specdojo:cxd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -52,6 +55,9 @@ groups:
         overview: SpecDojo CLI・生成ドキュメントサイト（VitePress）・外部システム・リポジトリ（データストア）の関係を定義する
         path: cnd-specdojo.md
         rulebook: specdojo:cnd-rulebook
+        recipe: not-needed
+        sample: specdojo:cnd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -84,6 +90,9 @@ groups:
         overview: SpecDojo CLI内部の主要コンポーネント（catalog／schedule／exec／register／routine／index等のエンジン）と依存関係を定義する
         path: cpd-specdojo-cli.md
         rulebook: specdojo:cpd-rulebook
+        recipe: not-needed
+        sample: specdojo:cpd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -110,6 +119,9 @@ groups:
         overview: SpecDojo CLIの実行環境（devcontainer／ホスト）と、クラウドAI provider（Claude・Codex・GitHub Copilot等）・Tailscale経由のホームMacローカルLLMゾーン（Ollama）・GitHubへの通信境界を定義する
         path: ifd-specdojo.md
         rulebook: specdojo:ifd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: .devcontainer/devcontainer.json
@@ -141,6 +153,9 @@ groups:
         overview: SpecDojoが採用する技術の全体インベントリ（既存文書、retrofit対象）
         path: tsd-index.md
         rulebook: specdojo:tsd-index-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-index-sample
+        template: not-needed
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         evidence_refs:
           - kind: implementation
@@ -171,6 +186,9 @@ groups:
         overview: TypeScript／Node.js／Commander.js／js-yaml／AJV／markdownlint-cli／remark／Prettier／lefthook／commitlint／npm配信など、CLI実装・開発ツールチェーンの詳細を定義する
         path: tsd-specdojo-cli.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: package.json
@@ -185,6 +203,9 @@ groups:
         overview: VitePress・Mermaid CLIなど、ドキュメントサイトのビルド・配信技術の詳細を定義する
         path: tsd-docs-site.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: .vitepress/config.mts
@@ -202,6 +223,9 @@ groups:
         overview: Host Mac上でのローカルLLM実行（Ollama）の詳細（既存文書、retrofit対象）
         path: tsd-ollama.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         done_criteria: *tsd-done-criteria
 
@@ -213,6 +237,9 @@ groups:
         overview: opencodeからOllamaを利用する構成の詳細（既存文書、retrofit対象）
         path: tsd-ollama-opencode.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         done_criteria: *tsd-done-criteria
 
@@ -230,6 +257,9 @@ groups:
         overview: 自宅MacBook Proを常時起動の開発サーバとして使うための初期設定の詳細（既存文書、retrofit対象）
         path: tsd-home-mac-dev-server.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         done_criteria: *tsd-done-criteria
 
@@ -246,5 +276,8 @@ groups:
         overview: tmuxとSpecDojoを用いたホームMac開発サーバの日常運用の詳細（既存文書、retrofit対象）
         path: tsd-home-mac-dev-server-usage.md
         rulebook: specdojo:tsd-rulebook
+        recipe: not-needed
+        sample: specdojo:tsd-sample
+        template: not-needed
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         done_criteria: *tsd-done-criteria

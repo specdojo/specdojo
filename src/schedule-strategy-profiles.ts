@@ -64,9 +64,9 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       approach: "bootstrap",
       pipeline: EXPERT_PIPELINE,
       description:
-        "代表成果物と、その成果物種別の rulebook / recipe / sample / template を同じタスクで初期整備し、" +
-        "構造・用語・粒度が互いに矛盾しない一式として揃える。成果物カタログの done_criteria と" +
-        "プロジェクト文脈を基準にし、判断できない前提は推測せず result に残す。",
+        "実践の型の作成条件から要否を判断し、代表成果物と必要な rulebook / recipe / sample / template を" +
+        "同じタスクで初期整備する。不要な型は成果物カタログへ not-needed と宣言し、必要な一式の構造・" +
+        "用語・粒度を整合させる。判断できない前提は推測せず result に残す。",
     },
   ],
   "retrofit-pass": [
@@ -96,8 +96,8 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       approach: "fully-guided",
       pipeline: NORMAL_PIPELINE,
       description:
-        "整備済みの rulebook / recipe / sample / template に沿って草案を作成する。章構成・必須表・用語は" +
-        "実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。",
+        "必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。" +
+        "利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。",
     },
   ],
   "recipe-guided-pass": [
@@ -126,8 +126,8 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       approach: "freeform",
       pipeline: EXPERT_PIPELINE,
       description:
-        "基準にできる実践の型が無い状態で草案を作成する。成果物カタログの done_criteria と上流成果物だけを" +
-        "根拠にし、参考にした文書と決めきれなかった論点を result に明示する。",
+        "基準にできる実践の型が無い状態で草案を作成する。成果物カタログの done_criteria、対応 schema、" +
+        "既存の類似成果物を根拠にし、参考にした文書と決めきれなかった論点を result に明示する。",
     },
   ],
   "rulebook-maintenance-pass": [maintenancePhase("rulebook")],

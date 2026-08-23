@@ -40,18 +40,23 @@ PJR-QESV の決定に基づき、成果物カタログへ実践の型の要否�
 
 | No  | 作業                                                         | 担当 | 状態 | メモ                                                                         |
 | --- | ------------------------------------------------------------ | ---- | ---- | ---------------------------------------------------------------------------- |
-| 1   | 要否宣言の項目設計と schema 追加                             | BA   | open | 既存の `rulebook: none` との関係を整理する                                   |
-| 2   | 宣言された実践の型の実在検証を `catalog validate` へ追加     | BA   | open | 存在しない ID の宣言を検出する。`dct-planning.yaml` の `tml-rulebook` が実例 |
-| 3   | `not-needed` の型に対応する maintenance フェーズを生成しない | BA   | open | `src/schedule-strategy-profiles.ts` の maintenance pass                      |
-| 4   | approach 判定で `not-needed` を欠落扱いしない                | BA   | open | assessment と strategy 生成の両方を確認する                                  |
-| 5   | `ryu-guide` の `bootstrap` と `freeform` の記述を更新        | BA   | open | 一式の意味、頼れない場合の根拠を明記する                                     |
-| 6   | 作成条件を guide または standard へ記載                      | BA   | open | 記載先は `kata-guide` か新設の standard を検討する                           |
-| 7   | 既存の実践の型を基準に照らして棚卸しする                     | BA   | open | 一括の調査として行い、成果物ごとの個別タスクには分割しない                   |
-| 8   | 棚卸し結果を宣言へ反映する                                   | BA   | open | `not-needed` と未整備を区別して記録する                                      |
+| 1   | 要否宣言の項目設計と schema 追加                             | BA   | done | 既存の `rulebook: none` との関係を整理する                                   |
+| 2   | 宣言された実践の型の実在検証を `catalog validate` へ追加     | BA   | done | 存在しない ID の宣言を検出する。`dct-planning.yaml` の `tml-rulebook` が実例 |
+| 3   | `not-needed` の型に対応する maintenance フェーズを生成しない | BA   | done | `src/schedule-strategy-profiles.ts` の maintenance pass                      |
+| 4   | approach 判定で `not-needed` を欠落扱いしない                | BA   | done | assessment と strategy 生成の両方を確認する                                  |
+| 5   | `ryu-guide` の `bootstrap` と `freeform` の記述を更新        | BA   | done | 一式の意味、頼れない場合の根拠を明記する                                     |
+| 6   | 作成条件を guide または standard へ記載                      | BA   | done | 記載先は `kata-guide` か新設の standard を検討する                           |
+| 7   | 既存の実践の型を基準に照らして棚卸しする                     | BA   | done | 一括の調査として行い、成果物ごとの個別タスクには分割しない                   |
+| 8   | 棚卸し結果を宣言へ反映する                                   | BA   | done | `not-needed` と未整備を区別して記録する                                      |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `dct.schema.yaml` とカタログ型へ `rulebook` / `recipe` / `sample` / `template` の要否宣言を追加した。文書 ID は必要かつ整備済み、`not-needed` は不要と判断済み、項目省略は要否未判断または必要だが未整備を表す。
+- `catalog validate` へ宣言 ID の形式・実在・文書内 ID 整合の検証を追加し、`schedule assessment` では `not-needed` を欠落とみなさず、必要な型がすべて利用可能なら `fully-guided` を選べるようにした。`not-needed` の型を指定した maintenance は strategy へ生成しない。
+- [[specdojo:kata-guide|実践の型活用ガイド]] に4種の作成条件、[[specdojo:ryu-guide|実践の進め方ガイド]] に必要な型だけを整える `bootstrap` と、`done_criteria`・schema・類似成果物を根拠にする `freeform` を記載した。
+- 26件の DCT template、27件のプロジェクト DCT、1件の DCT sample、計345エントリを一括棚卸しした。宣言結果は rulebook が ID 321・`not-needed` 3・未宣言21、recipe が ID 47・`not-needed` 277・未宣言21、sample が ID 289・`not-needed` 35・未宣言21、template が ID 48・`not-needed` 276・未宣言21となった。テンプレートとプロジェクト DCT の重複エントリを含む集計である。
+- 登録時の基準件数に対し、実行時の実ファイルは rulebook 106件・recipe 19件・sample 106件・template 92件だった。sample と template は各1件少なかったため、実在する全ファイルを棚卸しの基準とした。
+- 未宣言21件には、実践の型を元から宣言していない管理・生成成果物と、参照先が未整備の `mtp-index` / `uis-index` / `bds-index` を含む。`not-needed` へ推測で確定せず、未整備として区別した。
 
 ## 5. 関連ドキュメント
 

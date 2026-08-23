@@ -27,6 +27,9 @@ groups:
         overview: プロジェクトの立上と計画に関わるエンティティ間の関係を図で定義する
         path: ccd-project-planning.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/catalog-types.ts
@@ -62,6 +65,9 @@ groups:
         overview: プロジェクト実行に関わるエンティティ間の関係を図で定義する
         path: ccd-task-execution.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/exec-types.ts
@@ -95,6 +101,9 @@ groups:
         overview: 活用と共有に関わるエンティティ間の関係を図で定義する
         path: ccd-sharing.md
         rulebook: specdojo:ccd-mermaid-rulebook
+        recipe: not-needed
+        sample: not-needed
+        template: not-needed
         evidence_refs:
           - kind: implementation
             path: src/catalog-generate.ts

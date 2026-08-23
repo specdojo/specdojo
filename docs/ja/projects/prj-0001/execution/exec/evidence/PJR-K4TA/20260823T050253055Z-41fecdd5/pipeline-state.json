@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-K4TA",
+  "run_id": "20260823T050253055Z-41fecdd5",
+  "updated_at": "2026-08-23T06:57:47.663Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-08-23T05:02:53.055Z",
+      "completed_at": "2026-08-23T05:22:10.847Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K4TA/20260823T050253055Z-41fecdd5/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "codex-reporter",
+      "attempts": 4,
+      "started_at": "2026-08-23T06:57:28.139Z",
+      "completed_at": "2026-08-23T06:57:47.663Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-k4ta-20260823T050146Z-e3e5-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-k4ta-20260823T050146Z-e3e5-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-k4ta-20260823T050146Z-e3e5-result.md"
+  }
+}
