@@ -275,7 +275,7 @@ export type ExecResultMeta = {
   type: "exec-result";
   task_id: string;
   mode: TaskMode;
-  status: "in_progress" | "complete" | "blocked";
+  status: "in_progress" | "complete" | "blocked" | "superseded";
   project_id: string;
   origin?: TaskOrigin;
   job_id?: string;

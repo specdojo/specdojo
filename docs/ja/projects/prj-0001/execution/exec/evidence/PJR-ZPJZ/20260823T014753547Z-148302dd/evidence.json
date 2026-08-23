@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZPJZ",
+  "run_id": "20260823T014753547Z-148302dd",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-23T01:47:53.547Z",
+    "completed_at": "2026-08-23T02:15:31.459Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-zpjz-exec-result-superseded-status.md      | 27 ++++---\n .../pjr-dctg-20260818T151438Z-ce4f-result.md       |  3 +-\n .../specdojo/guides/plan-result-lifecycle-guide.md | 15 +++-\n .../schemas/v1/exec-result-frontmatter.schema.yaml |  7 +-\n src/exec-results.ts                                | 49 ++++++++++--\n src/exec-run.ts                                    |  9 ++-\n src/exec-types.ts                                  |  2 +-\n tests/src/exec-results.test.ts                     | 90 ++++++++++++++++++++++\n 8 files changed, 177 insertions(+), 25 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec-results.test.ts tests/src/exec-run-inplace.test.ts tests/src/exec-register-multiple-ids.test.ts",
+      "status": "passed",
+      "summary": "3 files、62 tests passed"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript typecheck passed"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint passed"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-result.md",
+      "status": "passed",
+      "summary": "変更Markdownにエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx remark docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-result.md --quiet --frail",
+      "status": "passed",
+      "summary": "変更文書のfrontmatterを含め成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "全1,257件対象の実行が5分以上終了せず、失敗出力なしの状態で中断（exit 130）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "failed",
+      "summary": "sandboxがtsx IPC socketをEPERMで拒否。node --import tsxによる全validatorの代替実行は成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "failed",
+      "summary": "今回未変更の既存 pjr-zwmh plan にある未エスケープ <domain> 1件で失敗。変更対象のみは成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "catalog validation passed（既存warningのみ）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1,288 entriesを生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validation対象のためexecutorでは未実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZPJZ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-Tyar9t/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "superseded の実装・文書化・既存 result 移行を完了。対象検証は成功したが、全体検証には既存・環境要因の未解消あり。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZPJZ/20260823T014753547Z-148302dd/executor.log",
+      "bytes": 3262,
+      "truncated": false
+    }
+  ]
+}

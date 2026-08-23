@@ -32,23 +32,28 @@ exec-result の status は in_progress、complete、blocked の3値しかなく�
 
 ## 3. 作業内容
 
-| No  | 作業                                            | 担当 | 状態 | メモ                                                                                    |
-| --- | ----------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------- |
-| 1   | `superseded` の意味と、他の値との境界を定義する | ARC  | open | `blocked` との違い（解決すべきか否か）を明確にする                                      |
-| 2   | schema へ値を追加する                           | ARC  | open | `exec-result-frontmatter.schema.yaml`                                                   |
-| 3   | 設定主体とタイミングを決めて実装する            | ARC  | open | runner が新しい run の開始時に先行 result を遷移させる案を軸にする。`complete` は対象外 |
-| 4   | 状態集計や一覧での扱いを確認する                | ARC  | open | `exec status` などで実行中やブロックとして数えない                                      |
-| 5   | 既存の残置 result を移行する                    | ARC  | open | PJR-DCTG の1回目（`ce4f`）が対象                                                        |
-| 6   | rulebook またはガイドへ status の区別を記載する | ARC  | open | 3値の使い分けを本文で説明する                                                           |
-| 7   | unit test を追加する                            | ARC  | open | schema 検証、遷移条件、`complete` を落とさないこと                                      |
+| No  | 作業                                            | 担当 | 状態 | メモ                                                                            |
+| --- | ----------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------- |
+| 1   | `superseded` の意味と、他の値との境界を定義する | ARC  | done | 対応不要な破棄済み試行として定義し、`blocked` と区別した                        |
+| 2   | schema へ値を追加する                           | ARC  | done | `exec-result-frontmatter.schema.yaml` の enum と説明を更新した                  |
+| 3   | 設定主体とタイミングを決めて実装する            | ARC  | done | runner が一意名 result の scaffold 時に先行未完了 result を遷移させる           |
+| 4   | 状態集計や一覧での扱いを確認する                | ARC  | done | `exec status` は event log 由来のタスク状態を集計し、result status を集計しない |
+| 5   | 既存の残置 result を移行する                    | ARC  | done | PJR-DCTG の1回目（`ce4f`）を2回目の開始時刻で `superseded` に移行した           |
+| 6   | rulebook またはガイドへ status の区別を記載する | ARC  | done | plan/resultライフサイクルガイドへ4値と遷移ルールを記載した                      |
+| 7   | unit test を追加する                            | ARC  | done | 未完了の自動遷移、`complete` の保持、固定名 result の非遷移を追加した           |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `exec-result-frontmatter.schema.yaml` と `ExecResultMeta` の status に `superseded` を追加した。`completed_at` は試行が終端 status へ到達した時刻とし、`superseded` では後続 run の開始時刻を記録する。
+- runner の result scaffold 処理で、同じ `task_id` を持つ先行の一意名 result を検索し、`in_progress` / `blocked` だけを `superseded` へ更新するようにした。`complete` / 既に `superseded` の result、固定名 result の再利用、同じ run の `resume` は変更しない。
+- register の in-place / worktree 実行では、遷移した先行 result も runner 管理対象へ含め、当該 run の checkpoint / commit から漏れないようにした。
+- [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] に4値の意味、設定主体・タイミング、`exec status` のタスク状態集計との分離を記載した。
+- `pjr-dctg-20260818T151438Z-ce4f-result.md` を `superseded` へ移行し、後続 run の `started_at`（`2026-08-18T15:17:19.842Z`）を `completed_at` に記録した。
+- unit test で先行 `in_progress` / `blocked` result の自動遷移、`block_reason` の除去、`complete` result の保持、固定名 result を再利用する場合の非遷移を検証した。関連3 suite 62件、typecheck、ESLint、対象Markdown/frontmatter、catalog/index の検証は成功した。全1,257件を対象にした `npm run test:unit` はプロセスが終了せず中断し、`npm run validate:schema` は sandbox の tsx IPC 制約で停止したが、同じvalidatorを `node --import tsx` で実行して全対象の適合を確認した。`npm run lint:fm` は今回未変更の既存planにある未エスケープ `<domain>` 1件で失敗し、変更対象ファイルのみの実行は成功した。
 
 ## 5. 関連ドキュメント
 
 - 事象が確認された項目: [[prj-0001:pjr-dctg-data-flow-dct-instance-analysis|PJR-DCTG data-flow等からDCT成果物インスタンスを判定するagentの実装]]（本対応の完了までクローズを保留する）
 - 再実行を前提とした設計: [[prj-0001:pjr-6vfn-exec-run-register-executor-reporter|PJR-6VFN exec run --register で executor 成功後に reporter だけを再開できるようにする]]
 - 変更対象の schema: `docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml`
-- 変更対象の実装: `src/exec-run.ts` の `updateResultStatus` と result の scaffold 処理
+- 変更対象の実装: `src/exec-results.ts` の status 更新と result の scaffold 処理、`src/exec-run.ts` の register checkpoint / commit 対象
