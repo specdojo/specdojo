@@ -1,0 +1,9 @@
+原因を特定し、[PJR-E6HG 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E6HG/docs/ja/projects/prj-0001/controls/project-register/pjr-e6hg-claude-reporter-json-failure.md)へ記録しました。
+
+原因は reporter の出力長ではなく、Claude CLI が起動時に読む実行環境側 credentials JSON の不正です。正規の認証再設定による復旧手順と、復旧まで codex-reporter を使う回避策も明記しました。認証情報と result ファイルは変更していません。
+
+unit test は生成前の `pjr-index` 不在により1件失敗しました。その後 register build と index lookup で不整合を解消しましたが、規約に従い unit test は再実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Claude CLIのcredentials JSON不正が原因と特定し、再現条件・復旧手順・回避策をPJR-E6HG個票へ記録した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-e6hg-claude-reporter-json-failure.md","status":"passed","summary":"対象Markdownを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e6hg-claude-reporter-json-failure.md","status":"passed","summary":"エラーなし"},{"command":"npm run test:unit","status":"failed","summary":"生成前のpjr-index不在によりdoc-index.test.tsが1件失敗。規約により再実行せず、後続のregister buildとindex lookupで原因を解消確認"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"既知のsandbox制約によりtsx IPCソケット作成がEPERM"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPCを使わない同一エントリポイントで登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証成功。既存のbased_on警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1312件の文書インデックスを生成"},{"command":"node --import tsx src/specdojo.ts index lookup prj-0001:pjr-index","status":"passed","summary":"生成pjr-indexへの解決を確認"},{"command":"git diff --check","status":"passed","summary":"差分エラーなし"}]}
+</specdojo_executor_evidence>
