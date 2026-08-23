@@ -7,12 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: BA
   registered_at: "2026-08-23T11:48:12Z"
   due_on: "2026-08-31"
-  conclusion: 'agent exited with non-zero code: "... is not valid JSON'
+  conclusion: "agent exited with non-zero code: executor validationの npm run validate:schema がfailed（tsx IPC制約によるEPERM）であり、npm run test:unit もfailed（既存PJR-QVGX個票の未エスケープ<pid>検出後に中断、exit 130）である。完了手順は静的検査および必要なテストの失敗解…"
 ---
 
 # PJR-JT1Y 未着手成果物の実践の型の要否を未判断として区別できるようにする
