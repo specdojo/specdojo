@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pjr-dctg-data-flow-dct-instance-analysis
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
@@ -59,7 +59,7 @@ agent は候補の意味判断と根拠整理だけを担い、成果物カタ�
 - テストを追加した。`tests/src/catalog-plan.test.ts`（40件。正常系・placeholder 未解決・パターンA/B・入力不足・trash 除外・既存 plan 競合・差分・スキーマ違反）と `tests/src/catalog-plan-command.test.ts`（10件。CLI 経由の scaffold / `--from` 取り込み / 検証失敗時の非書き込み / `--force` / validate / prompt 出力）。
 - ドキュメントを更新した。[[specdojo:command-reference|CLIコマンドリファレンス]] に `catalog plan` の節、[[specdojo:timeline-design-guide|Timeline設計ガイド]] に判定の位置づけと責務分担、[[specdojo:dct-rulebook|成果物カタログ（ドメイン別）作成ルール]] に判定計画の記述ルールと禁止事項を追加した。
 - _ASSUMPTION_: `dct-plan-<domain>.yaml` 自体の実インスタンス（prj-0001 の data-flow 等）は agent 判定の実行結果であり、本タスクでは作成していない。仕組みの提供までを完了範囲とした。
-- _TODO_: `package.json` への `validate:schema:dct-plan` script 追加は実行環境の権限制約により未実施。当面は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data "docs/ja/**/plans/dct-plan-*.yaml" --allow-empty` または `specdojo catalog plan validate` を使う。
+- `package.json` への `validate:schema:dct-plan` script 追加は、実行環境の権限制約により本タスクでは実施できなかった。PJR-STRG の対応時に追加され、集約 script `validate:schema` へも組み込まれている。
 - 後続の PJR-STRG（決定論的ジェネレーター）は、この判定計画と既存 DCT template から `dct-<domain>.yaml` を生成する。判定計画の存在は `catalog_status: primary` を意味しない。
 
 ## 5. 関連ドキュメント
