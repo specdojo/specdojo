@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-24T11:34:30Z"
   due_on: "2026-08-31"
+  conclusion: 'agent exited with non-zero code: "... is not valid JSON'
 ---
 
 # PJR-XGJK 実践の型の宣言をrulebook frontmatterへ移行する
