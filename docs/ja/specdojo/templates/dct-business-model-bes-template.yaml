@@ -31,9 +31,6 @@ groups:
         overview: 業務上で発生する主要なイベントを一覧で定義する
         path: bes-index.md
         rulebook: specdojo:bes-index-rulebook
-        recipe: undecided
-        sample: specdojo:bes-index-sample
-        template: undecided
         done_criteria:
           - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
             roles: [BA]
@@ -57,9 +54,6 @@ groups:
         overview: 業務上で発生する主要なイベントを個別に詳細定義する
         path: bes-_TERM_.md
         rulebook: specdojo:bes-rulebook
-        recipe: undecided
-        sample: specdojo:bes-sample
-        template: undecided
         note: "_TERM_ は対象イベント名の略称（kebab-case）"
         done_criteria:
           - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること

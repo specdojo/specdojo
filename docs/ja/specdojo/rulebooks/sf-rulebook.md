@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:sf-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:sf-sample
+  template: undecided
 ---
 
 # システム化機能一覧（System Function List, SFL）作成ルール

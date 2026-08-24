@@ -19,9 +19,6 @@ groups:
         overview: 成果物ドメインの分類と索引構造を定義
         path: dct-index.yaml
         rulebook: specdojo:dct-index-rulebook
-        recipe: not-needed
-        sample: specdojo:dct-index-sample
-        template: specdojo:dct-index-template
         done_criteria:
           - text: 全ドメインが重複なく適切な分類へ配置されていること
             roles: [ARC]
@@ -39,9 +36,6 @@ groups:
         overview: 成果物カタログ作成からトラック実行までのマクロな着手順序を計画
         path: tml-index.yaml
         rulebook: specdojo:tml-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: トラックの着手順序と並行方針を承認できること
             roles: [PO]
@@ -65,9 +59,6 @@ groups:
         overview: 全トラック共通のカレンダーと開始日を定義
         path: sch-defaults.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: カレンダー・開始日などのデフォルト設定を承認できること
             roles: [PO]
@@ -88,9 +79,6 @@ groups:
         overview: 全トラックの strategy から生成するプロジェクト共通マイルストーン
         path: sch-milestones.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
   - name: Planning トラック
     base_path: schedule
     deliverables:
@@ -101,9 +89,6 @@ groups:
         overview: Planning トラックの成果物と実践の型の整備状況を判定
         path: assessments/sch-assessment-planning.yaml
         rulebook: not-needed
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: planning scope の全 work 成果物について事実と判断が記録されていること
             roles: [ARC]
@@ -118,9 +103,6 @@ groups:
         overview: planning strategy 自身を scope 外に保ちつつ計画成果物を展開する bootstrap 制御
         path: sch-strategy-planning.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
       - local_id: sch-track-planning
         name: Planning スケジュール定義
         kind: generated
@@ -128,9 +110,6 @@ groups:
         overview: Planning トラックの strategy から生成する詳細スケジュール
         path: sch-track-planning.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
   - name: Launch トラック
     base_path: schedule
     deliverables:
@@ -141,9 +120,6 @@ groups:
         overview: Launch トラックの成果物と実践の型の整備状況を判定
         path: assessments/sch-assessment-launch.yaml
         rulebook: not-needed
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: launch scope の全 work 成果物について事実と判断が記録されていること
             roles: [ARC]
@@ -158,9 +134,6 @@ groups:
         overview: Launch トラックのフェーズ・担当・初期状態を定義
         path: sch-strategy-launch.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: owner_rules・フェーズ定義・initial_state を含む戦略が妥当であること
             roles: [PM]
@@ -175,9 +148,6 @@ groups:
         overview: Launch トラックの strategy から生成する詳細スケジュール
         path: sch-track-launch.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
   - name: Data Flow トラック
     base_path: schedule
     deliverables:
@@ -188,9 +158,6 @@ groups:
         overview: Data Flow トラックの成果物と実践の型の整備状況を判定
         path: assessments/sch-assessment-data-flow.yaml
         rulebook: not-needed
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: data-flow scope の全 work 成果物について事実と判断が記録されていること
             roles: [ARC]
@@ -205,9 +172,6 @@ groups:
         overview: Data Flow トラックのフェーズ・担当・初期状態を定義
         path: sch-strategy-data-flow.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: owner_rules・フェーズ定義・initial_state を含む戦略が妥当であること
             roles: [PM]
@@ -222,6 +186,3 @@ groups:
         overview: Data Flow トラックの strategy から生成する詳細スケジュール
         path: sch-track-data-flow.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed

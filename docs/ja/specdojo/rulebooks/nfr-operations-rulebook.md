@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:nfr-operations-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:nfr-operations-sample
+  template: undecided
 ---
 
 # 非機能要件 / 運用 作成ルール

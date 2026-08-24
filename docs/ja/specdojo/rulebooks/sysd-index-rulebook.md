@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:sysd-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:sysd-index-sample
+  template: undecided
 ---
 
 # システム設計-全体構成 作成ルール

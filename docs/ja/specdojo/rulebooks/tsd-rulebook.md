@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:tsd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:tsd-sample
+  template: undecided
 ---
 
 # 特定領域 技術スタック詳細定義（TSD）作成ルール

@@ -160,13 +160,7 @@ describe("kata", () => {
     });
 
     it("undecided は文書 ID として解決せず全項目を MISSING にする", () => {
-      expect(
-        resolveKataRefs("undecided", {
-          recipe: "undecided",
-          sample: "undecided",
-          template: "undecided",
-        }),
-      ).toEqual({
+      expect(resolveKataRefs("undecided")).toEqual({
         rulebook: "_MISSING_",
         recipe: "_MISSING_",
         sample: "_MISSING_",
@@ -188,7 +182,7 @@ describe("kata", () => {
       expect(refs.template).toBe("_MISSING_");
     });
 
-    it("未宣言でも規定ディレクトリに慣例ファイルがあればそのパスを返す", () => {
+    it("未宣言の参照は慣例ファイルが存在しても MISSING にする", () => {
       writeRulebook(
         "specdojo:pm-organization-rulebook",
         [
@@ -207,19 +201,42 @@ describe("kata", () => {
 
       const refs = resolveKataRefs("specdojo:pm-organization-rulebook");
 
-      expect(refs.sample).toBe("docs/ja/specdojo/samples/pm-organization-sample.md");
+      expect(refs.sample).toBe("_MISSING_");
       expect(refs.recipe).toBe("_MISSING_");
       expect(refs.template).toBe("_MISSING_");
     });
 
-    it("宣言が 'none' なら慣例ファイルが存在しても MISSING にする", () => {
+    it("宣言が 'not-needed' なら慣例ファイルが存在しても MISSING にする", () => {
       writeRulebook(
         "opt-out-rulebook",
-        ["id: opt-out-rulebook", "type: rulebook", "status: draft", "sample: none"].join("\n"),
+        ["id: opt-out-rulebook", "type: rulebook", "status: draft", "sample: not-needed"].join(
+          "\n",
+        ),
       );
       writeFileSync(join(root, SPECDOJO, "samples", "opt-out-sample.md"), "# sample\n", "utf8");
 
       expect(resolveKataRefs("opt-out-rulebook").sample).toBe("_MISSING_");
+    });
+
+    it("kind: generated には rulebook の宣言があっても実践の型を適用しない", () => {
+      writeRulebook(
+        "specdojo:generated-rulebook",
+        [
+          "id: specdojo:generated-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "recipe: specdojo:generated-recipe",
+          "sample: specdojo:generated-sample",
+          "template: specdojo:generated-template",
+        ].join("\n"),
+      );
+
+      expect(resolveKataRefs("specdojo:generated-rulebook", "generated")).toEqual({
+        rulebook: "_MISSING_",
+        recipe: "_MISSING_",
+        sample: "_MISSING_",
+        template: "_MISSING_",
+      });
     });
   });
 

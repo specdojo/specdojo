@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:imp-business-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:imp-business-sample
+  template: undecided
 ---
 
 # 影響調査（業務）作成ルール

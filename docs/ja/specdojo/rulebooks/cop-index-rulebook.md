@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cop-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cop-index-sample
+  template: undecided
 ---
 
 # カットオーバー計画（本番切替手順） 作成ルール

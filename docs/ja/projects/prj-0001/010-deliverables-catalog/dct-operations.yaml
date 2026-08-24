@@ -22,9 +22,6 @@ groups:
         overview: 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）をSSOT化する
         path: opd-index.md
         rulebook: specdojo:opd-index-rulebook
-        recipe: undecided
-        sample: specdojo:opd-index-sample
-        template: undecided
         done_criteria: &opd-index-done-criteria
           - text: SLO/SLA・体制・監視・変更管理・バックアップ方針が業務継続性の観点で記述されていること
             roles: [BA]
@@ -49,9 +46,6 @@ groups:
         overview: 定期処理の失敗検知、rate limit監視、登録項目の期限監視など監視方針を定義する
         path: opd-monitoring.md
         rulebook: specdojo:opd-rulebook
-        recipe: undecided
-        sample: specdojo:opd-sample
-        template: undecided
         done_criteria: &opd-term-done-criteria
           - text: 個別テーマの運用方針が業務継続性の観点で記述されていること
             roles: [BA]
@@ -71,9 +65,6 @@ groups:
         overview: agent・provider障害時のエスカレーション、block/reopen判断の運用方針を定義する
         path: opd-incident-response.md
         rulebook: specdojo:opd-rulebook
-        recipe: undecided
-        sample: specdojo:opd-sample
-        template: undecided
         done_criteria: *opd-term-done-criteria
       - local_id: opd-access-management
         name: 運用方針・設計（権限管理）
@@ -83,9 +74,6 @@ groups:
         overview: provider認証情報・GitHub権限のアカウント管理方針を定義する
         path: opd-access-management.md
         rulebook: specdojo:opd-rulebook
-        recipe: undecided
-        sample: specdojo:opd-sample
-        template: undecided
         done_criteria: *opd-term-done-criteria
 
   - name: 運用手順
@@ -98,9 +86,6 @@ groups:
         overview: 運用作業を再現可能な手順として定義し、誰がやっても同じ結果になる状態を作る
         path: opr-index.md
         rulebook: specdojo:opr-index-rulebook
-        recipe: undecided
-        sample: specdojo:opr-index-sample
-        template: undecided
         done_criteria: &opr-index-done-criteria
           - text: 日次・週次・月次の定常運用手順が業務観点で記述されていること
             roles: [BA]
@@ -126,9 +111,6 @@ groups:
         overview: 外部エージェントCLI（Claude Code／Codex／opencode／GitHub Copilot）の更新手順を定義する
         path: opr-agent-cli-update.md
         rulebook: specdojo:opr-rulebook
-        recipe: not-needed
-        sample: specdojo:opr-sample
-        template: not-needed
         note: PJR-ZP0Bでsysd-agent-settings.md7章から移設済み
         done_criteria: &opr-term-done-criteria
           - text: 個別手順が実施可能な粒度で記述されていること
@@ -149,9 +131,6 @@ groups:
         overview: block解除、利用制限からの復旧対応など障害対応手順を定義する
         path: opr-incident-response.md
         rulebook: specdojo:opr-rulebook
-        recipe: undecided
-        sample: specdojo:opr-sample
-        template: undecided
         done_criteria: *opr-term-done-criteria
       - local_id: opr-routine-monitoring
         name: 運用手順（定期処理監視）
@@ -162,7 +141,4 @@ groups:
         overview: 定期処理の監視・失敗時対応手順を定義する
         path: opr-routine-monitoring.md
         rulebook: specdojo:opr-rulebook
-        recipe: undecided
-        sample: specdojo:opr-sample
-        template: undecided
         done_criteria: *opr-term-done-criteria

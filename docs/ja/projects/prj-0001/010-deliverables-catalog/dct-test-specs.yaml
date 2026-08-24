@@ -23,9 +23,6 @@ groups:
         overview: テストレベル・スコープ・品質目標・体制・環境・ツール・入出口条件を定義する
         path: tsp-index.md
         rulebook: specdojo:tsp-index-rulebook
-        recipe: undecided
-        sample: specdojo:tsp-index-sample
-        template: undecided
         done_criteria:
           - text: テストスコープと品質目標が業務観点で確認できること
             roles: [BA]
@@ -54,9 +51,6 @@ groups:
         overview: 単体テストとして確認する観点・条件と分配を定義する
         path: utc-index.md
         rulebook: specdojo:utc-index-rulebook
-        recipe: undecided
-        sample: specdojo:utc-index-sample
-        template: undecided
         done_criteria: &utc-index-done-criteria
           - text: 単体テストの対象範囲・除外・モック方針が合意できること
             roles: [BA]
@@ -81,9 +75,6 @@ groups:
         overview: catalog*.ts／deliverable*.ts／kata.ts の単体テスト観点・条件を定義する
         path: utc-catalog.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/catalog.ts
@@ -109,9 +100,6 @@ groups:
         overview: schedule.ts／schedule-build.ts／schedule-phase-sets.ts の単体テスト観点・条件を定義する
         path: utc-schedule.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/schedule.ts
@@ -128,9 +116,6 @@ groups:
         overview: exec.ts／exec-run.ts／exec-plans.ts／exec-results.ts／exec-events.ts等の単体テスト観点・条件を定義する
         path: utc-exec-core.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-run.ts
@@ -150,9 +135,6 @@ groups:
         overview: exec-schedule*.ts（CPM・timeline・ready等）の単体テスト観点・条件を定義する
         path: utc-exec-schedule.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-schedule-cpm.ts
@@ -169,9 +151,6 @@ groups:
         overview: exec-worktree*.ts の単体テスト観点・条件を定義する
         path: utc-exec-worktree.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-worktree.ts
@@ -188,9 +167,6 @@ groups:
         overview: register*.ts の単体テスト観点・条件を定義する
         path: utc-register.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/register.ts
@@ -207,9 +183,6 @@ groups:
         overview: routine.ts／job.ts の単体テスト観点・条件を定義する
         path: utc-routine-job.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/routine.ts
@@ -226,9 +199,6 @@ groups:
         overview: index-command.ts／doc-index.ts／watch.ts／build-command.ts／yaml-pages*.ts の単体テスト観点・条件を定義する
         path: utc-index-build.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/doc-index.ts
@@ -245,9 +215,6 @@ groups:
         overview: specdojo.ts／specdojo-config.ts／spawn-self.ts等の単体テスト観点・条件を定義する
         path: utc-cli-config.md
         rulebook: specdojo:utc-rulebook
-        recipe: undecided
-        sample: specdojo:utc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -268,9 +235,6 @@ groups:
         overview: 内部コンポーネント間の連携を確認する観点・条件を定義する
         path: itc-index.md
         rulebook: specdojo:itc-index-rulebook
-        recipe: undecided
-        sample: specdojo:itc-index-sample
-        template: undecided
         done_criteria: &itc-index-done-criteria
           - text: 結合テストの対象コンポーネントと結合範囲が確認できること
             roles: [BA]
@@ -292,9 +256,6 @@ groups:
         overview: 成果物カタログからSchedule展開までの連携を確認する
         path: itc-catalog-schedule.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/catalog-build.ts
@@ -317,9 +278,6 @@ groups:
         overview: Schedule展開からexec refresh・Ready算出までの連携を確認する
         path: itc-schedule-exec.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-schedule.ts
@@ -336,9 +294,6 @@ groups:
         overview: 登録簿連携タスク（AI Agentによる対応・調査）の実行連携を確認する
         path: itc-exec-register.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-register.ts
@@ -355,9 +310,6 @@ groups:
         overview: exec実行とworktree分離・統合の連携を確認する
         path: itc-exec-worktree.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-run.ts
@@ -374,9 +326,6 @@ groups:
         overview: routineからのexec自動実行（exec-auto／exec-cycle等）の連携を確認する
         path: itc-routine-exec.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/routine.ts
@@ -393,9 +342,6 @@ groups:
         overview: build実行からindex・yaml-pages等の派生生成までの連携を確認する
         path: itc-build-index.md
         rulebook: specdojo:itc-rulebook
-        recipe: undecided
-        sample: specdojo:itc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/build-command.ts
@@ -416,9 +362,6 @@ groups:
         overview: 外部システム連携を含む結合観点・条件を定義する
         path: etc-index.md
         rulebook: specdojo:etc-index-rulebook
-        recipe: undecided
-        sample: specdojo:etc-index-sample
-        template: undecided
         done_criteria: &etc-index-done-criteria
           - text: 外部I/Fテストの対象と観点が業務観点で確認できること
             roles: [BA]
@@ -440,9 +383,6 @@ groups:
         overview: AI provider CLI（Claude Code／Codex／opencode等）との連携（ifx-index対応）を確認する
         path: etc-provider-cli.md
         rulebook: specdojo:etc-rulebook
-        recipe: undecided
-        sample: specdojo:etc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-agent-config.ts
@@ -462,9 +402,6 @@ groups:
         overview: Git／GitHub（gh CLI）との連携（ifx-index対応）を確認する
         path: etc-git-github.md
         rulebook: specdojo:etc-rulebook
-        recipe: undecided
-        sample: specdojo:etc-sample
-        template: undecided
         evidence_refs:
           - kind: implementation
             path: src/exec-worktree.ts
@@ -482,9 +419,6 @@ groups:
         overview: システム全体として業務シナリオが成立することを確認する観点・条件を定義する
         path: stc-index.md
         rulebook: specdojo:stc-index-rulebook
-        recipe: undecided
-        sample: specdojo:stc-index-sample
-        template: undecided
         done_criteria: &stc-index-done-criteria
           - text: エンドツーエンドの業務シナリオが網羅されていること
             roles: [BA]
@@ -505,9 +439,6 @@ groups:
         overview: 初期セットアップのエンドツーエンドシナリオを定義する
         path: stc-init.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-init
           - kind: implementation
             path: src/specdojo-config.ts
@@ -532,9 +463,6 @@ groups:
         overview: 登録簿ライフサイクルのエンドツーエンドシナリオを定義する
         path: stc-register-lifecycle.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-register-lifecycle
           - kind: implementation
             path: src/register.ts
@@ -553,9 +481,6 @@ groups:
         overview: 計画展開のエンドツーエンドシナリオを定義する
         path: stc-catalog-planning.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-catalog-planning
           - kind: implementation
             path: src/catalog-build.ts
@@ -574,9 +499,6 @@ groups:
         overview: タスク実行のエンドツーエンドシナリオを定義する
         path: stc-task-execution.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-task-execution
           - kind: implementation
             path: src/exec-run.ts
@@ -598,9 +520,6 @@ groups:
         overview: 定期処理のエンドツーエンドシナリオを定義する
         path: stc-routine.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-routine
           - kind: implementation
             path: src/routine.ts
@@ -619,9 +538,6 @@ groups:
         overview: 並行処理のエンドツーエンドシナリオを定義する
         path: stc-multi-project.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-multi-project
           - kind: implementation
             path: src/exec-project.ts
@@ -637,9 +553,6 @@ groups:
         overview: agent・provider構成変更のエンドツーエンドシナリオを定義する
         path: stc-agent-config-operation.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-agent-config-operation
           - kind: implementation
             path: src/exec-agent-config.ts
@@ -655,9 +568,6 @@ groups:
         overview: 派生生成のエンドツーエンドシナリオを定義する
         path: stc-derived-content.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-derived-content
           - kind: implementation
             path: src/build-command.ts
@@ -679,9 +589,6 @@ groups:
         overview: 報告のエンドツーエンドシナリオを定義する
         path: stc-reporting.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-reporting
           - kind: implementation
             path: src/exec-task-view.ts
@@ -700,9 +607,6 @@ groups:
         overview: 非推奨化・保管のエンドツーエンドシナリオを定義する
         path: stc-deprecation.md
         rulebook: specdojo:stc-rulebook
-        recipe: undecided
-        sample: specdojo:stc-sample
-        template: undecided
         evidence_refs: &evidence-deprecation
           - kind: implementation
             path: src/deliverable-trash.ts
@@ -723,9 +627,6 @@ groups:
         overview: 業務として受け入れ可能であることを確認する観点・条件を定義する
         path: atc-index.md
         rulebook: specdojo:atc-index-rulebook
-        recipe: undecided
-        sample: specdojo:atc-index-sample
-        template: undecided
         done_criteria: &atc-index-done-criteria
           - text: 業務受入シナリオと受入条件が業務観点で網羅されていること
             roles: [BA]
@@ -746,9 +647,6 @@ groups:
         overview: 初期セットアップの受入テスト条件を定義する
         path: atc-init.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-init
         done_criteria: &atc-target-done-criteria
           - text: 個別シナリオの前提・テスト条件・期待結果・合格基準が記述されていること
@@ -767,9 +665,6 @@ groups:
         overview: 登録簿ライフサイクルの受入テスト条件を定義する
         path: atc-register-lifecycle.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-register-lifecycle
         done_criteria: *atc-target-done-criteria
       - local_id: atc-catalog-planning
@@ -779,9 +674,6 @@ groups:
         overview: 計画展開の受入テスト条件を定義する
         path: atc-catalog-planning.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-catalog-planning
         done_criteria: *atc-target-done-criteria
       - local_id: atc-task-execution
@@ -791,9 +683,6 @@ groups:
         overview: タスク実行の受入テスト条件を定義する
         path: atc-task-execution.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-task-execution
         done_criteria: *atc-target-done-criteria
       - local_id: atc-routine
@@ -803,9 +692,6 @@ groups:
         overview: 定期処理の受入テスト条件を定義する
         path: atc-routine.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-routine
         done_criteria: *atc-target-done-criteria
       - local_id: atc-multi-project
@@ -815,9 +701,6 @@ groups:
         overview: 並行処理の受入テスト条件を定義する
         path: atc-multi-project.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-multi-project
         done_criteria: *atc-target-done-criteria
       - local_id: atc-agent-config-operation
@@ -827,9 +710,6 @@ groups:
         overview: agent・provider構成変更の受入テスト条件を定義する
         path: atc-agent-config-operation.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-agent-config-operation
         done_criteria: *atc-target-done-criteria
       - local_id: atc-derived-content
@@ -839,9 +719,6 @@ groups:
         overview: 派生生成の受入テスト条件を定義する
         path: atc-derived-content.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-derived-content
         done_criteria: *atc-target-done-criteria
       - local_id: atc-reporting
@@ -851,9 +728,6 @@ groups:
         overview: 報告の受入テスト条件を定義する
         path: atc-reporting.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-reporting
         done_criteria: *atc-target-done-criteria
       - local_id: atc-deprecation
@@ -863,8 +737,5 @@ groups:
         overview: 非推奨化・保管の受入テスト条件を定義する
         path: atc-deprecation.md
         rulebook: specdojo:atc-rulebook
-        recipe: undecided
-        sample: specdojo:atc-sample
-        template: undecided
         evidence_refs: *evidence-deprecation
         done_criteria: *atc-target-done-criteria

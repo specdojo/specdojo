@@ -17,9 +17,6 @@ groups:
         overview: システムで実現する機能の全体構成と一覧を定義する
         path: sf-index.md
         rulebook: specdojo:sf-rulebook
-        recipe: undecided
-        sample: specdojo:sf-sample
-        template: undecided
         done_criteria:
           - text: 機能一覧が業務仕様と対応し、スコープが網羅されていること
             roles: [BA]
@@ -46,9 +43,6 @@ groups:
         overview: 個別のシステム化機能の概要・関連仕様を定義する
         path: sf-_TERM_.md
         rulebook: specdojo:sf-rulebook
-        recipe: undecided
-        sample: specdojo:sf-sample
-        template: undecided
         note: "_TERM_ は対象機能名の略称（kebab-case）"
         done_criteria:
           - text: 機能概要・関連プロセス・関連仕様が業務観点で記述されていること

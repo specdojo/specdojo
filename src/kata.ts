@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
-import { parsePracticeId, practiceLocalId, qualifyPracticeId } from "./practice-id.js";
+import { practiceLocalId } from "./practice-id.js";
 
 // 実践の型（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。
@@ -23,7 +23,7 @@ export type KataRefs = {
   template: string;
 };
 
-export type CatalogKataDeclarations = Partial<Record<keyof KataRefs, string>>;
+export type KataTargetKind = "work" | "control" | "generated";
 
 type RulebookRefs = {
   recipe?: string;
@@ -98,98 +98,50 @@ function declaredRefExt(kind: KataKind, id: string, preferredExt: string): strin
   return preferredExt;
 }
 
-// rulebook 未宣言時の慣例 ID（<rulebook-prefix>-<kind>）。
-// 例: rulebook `specdojo:pm-organization-rulebook` → sample `specdojo:pm-organization-sample`。
-function conventionalRefId(rulebookId: string, kind: KataKind): string {
-  const { authority, localId } = parsePracticeId(rulebookId);
-  const conventionalId = `${localId.replace(/-rulebook$/, "")}-${kind}`;
-  return authority ? qualifyPracticeId(authority, conventionalId) : conventionalId;
-}
-
 // recipe / sample / template を 1 件解決する。
-// 宣言があればそれを正とする。'none' は明示的な無効化として MISSING を返す。
-// 未宣言の場合は規定ディレクトリ上の慣例ファイルを探し、実在すればそのパスを返す。
+// rulebook frontmatter の宣言だけを正とする。未判断・不要・未宣言は MISSING を返す。
 function resolveRef(
   kind: KataKind,
   declaredId: string | string[] | undefined,
-  rulebookId: string,
   ext: string,
 ): string {
-  // 複数 sample は宣言順の先頭を、カタログ指定がない場合の既定例として使う。
+  // 複数 sample は宣言順の先頭を既定例として使う。
   const primaryId = Array.isArray(declaredId) ? declaredId[0] : declaredId;
   if (primaryId === "none" || primaryId === "undecided" || primaryId === "not-needed") {
     return MISSING;
   }
   if (primaryId) return repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
-  const fallbackId = conventionalRefId(rulebookId, kind);
-  const fsPath = join(
-    specdojoRootDir(),
-    DOCS_BASE,
-    KIND_DIR[kind],
-    `${practiceLocalId(fallbackId)}.${ext}`,
-  );
-  return existsSync(fsPath) ? repoPath(kind, fallbackId, ext) : MISSING;
+  return MISSING;
 }
 
 // 成果物の rulebook ID を起点に、recipe / sample / template の repo 相対パスを解決する。
-// カタログに recipe / sample / template が1つでも宣言されていれば、その宣言セットを優先する。
-// セット内で未宣言の種別は rulebook frontmatter へ戻らず、規定ディレクトリ上の慣例ファイルを探す。
-// カタログ側が3種とも未宣言の場合だけ rulebook frontmatter を使う。
+// 要否と所在は rulebook frontmatter だけを正本とし、成果物カタログの宣言は参照しない。
+// kind: generated は実践の型を適用しないため、rulebook 宣言の有無にかかわらず全項目を MISSING にする。
 // 該当なしの項目は MISSING を返し、表示構造はテンプレート側に委ねる。
 export function resolveKataRefs(
   rulebookId: string | undefined,
-  catalog: CatalogKataDeclarations = {},
+  targetKind?: KataTargetKind,
 ): KataRefs {
+  if (targetKind === "generated") {
+    return { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
+  }
   const usableRulebookId =
     rulebookId && rulebookId !== "none" && rulebookId !== "undecided" && rulebookId !== "not-needed"
       ? rulebookId
       : undefined;
   const fm = usableRulebookId ? loadRulebookRefs(usableRulebookId) : {};
-  const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
-    (kind) => catalog[kind] !== undefined,
-  );
-  const directOrLegacy = (kind: KataKind): string | string[] | undefined =>
-    hasCatalogKataSet ? catalog[kind] : fm[kind];
   return {
     rulebook: usableRulebookId
       ? `${DOCS_BASE}/rulebooks/${practiceLocalId(usableRulebookId)}.md`
       : MISSING,
-    recipe: usableRulebookId
-      ? resolveRef("recipe", directOrLegacy("recipe"), usableRulebookId, "md")
-      : resolveRefWithoutRulebook("recipe", catalog.recipe, "md"),
+    recipe: usableRulebookId ? resolveRef("recipe", fm.recipe, "md") : MISSING,
     sample: usableRulebookId
-      ? resolveRef(
-          "sample",
-          directOrLegacy("sample"),
-          usableRulebookId,
-          formatExt(fm.target_format),
-        )
-      : resolveRefWithoutRulebook("sample", catalog.sample, "md"),
+      ? resolveRef("sample", fm.sample, formatExt(fm.target_format))
+      : MISSING,
     template: usableRulebookId
-      ? resolveRef(
-          "template",
-          directOrLegacy("template"),
-          usableRulebookId,
-          formatExt(fm.target_format),
-        )
-      : resolveRefWithoutRulebook("template", catalog.template, "md"),
+      ? resolveRef("template", fm.template, formatExt(fm.target_format))
+      : MISSING,
   };
-}
-
-function resolveRefWithoutRulebook(
-  kind: KataKind,
-  declaredId: string | undefined,
-  ext: string,
-): string {
-  if (
-    !declaredId ||
-    declaredId === "none" ||
-    declaredId === "undecided" ||
-    declaredId === "not-needed"
-  ) {
-    return MISSING;
-  }
-  return repoPath(kind, declaredId, ext);
 }
 
 // rulebook の repo 相対パス（先頭スラッシュ無し）。
@@ -291,7 +243,7 @@ export type DeclaredKata = {
 };
 
 // rulebook frontmatter で宣言された recipe / sample / template の絶対パス一覧。
-// none・未宣言は含めない（validate で存在確認するため）。
+// not-needed・undecided・旧 none・未宣言は含めない（validate で存在確認するため）。
 export function declaredKata(rulebookId: string): DeclaredKata[] {
   const fm = loadRulebookRefs(rulebookId);
   const root = specdojoRootDir();
@@ -299,7 +251,7 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
   const add = (kind: KataKind, value: string | string[] | undefined, ext: string): void => {
     const ids = Array.isArray(value) ? value : value ? [value] : [];
     for (const id of ids) {
-      if (id === "none") continue;
+      if (id === "none" || id === "not-needed" || id === "undecided") continue;
       out.push({
         kind,
         id,

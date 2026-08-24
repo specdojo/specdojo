@@ -20,9 +20,6 @@ groups:
         overview: cdfd-overview.md の10プロセス領域の起点イベントを一覧で定義する
         path: bes-index.md
         rulebook: specdojo:bes-index-rulebook
-        recipe: undecided
-        sample: specdojo:bes-index-sample
-        template: undecided
         done_criteria:
           - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
             roles: [BA]
@@ -44,9 +41,6 @@ groups:
         overview: 定期実行の期限または条件が到来したイベント（cron / interval等、いつの基準が割れやすい）を定義する
         path: bes-routine-due.md
         rulebook: specdojo:bes-rulebook
-        recipe: undecided
-        sample: specdojo:bes-sample
-        template: undecided
         done_criteria:
           - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
             roles: [BA]
@@ -71,9 +65,6 @@ groups:
         overview: 実行可能なタスクが選択されたイベント（単発／自動／並列など起点が一意にならない）を定義する
         path: bes-task-ready-selected.md
         rulebook: specdojo:bes-rulebook
-        recipe: undecided
-        sample: specdojo:bes-sample
-        template: undecided
         done_criteria:
           - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
             roles: [BA]
@@ -98,9 +89,6 @@ groups:
         overview: 正本が更新された、または派生生成が要求されたイベント（起点が複数系統ある）を定義する
         path: bes-derived-content-requested.md
         rulebook: specdojo:bes-rulebook
-        recipe: undecided
-        sample: specdojo:bes-sample
-        template: undecided
         done_criteria:
           - text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
             roles: [BA]

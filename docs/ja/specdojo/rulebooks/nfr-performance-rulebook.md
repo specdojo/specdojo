@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:nfr-performance-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:nfr-performance-sample
+  template: undecided
 ---
 
 # 非機能要件 / 性能 作成ルール

@@ -1,0 +1,688 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XGJK",
+  "run_id": "20260824T114121554Z-a1d41572",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-24T11:41:21.554Z",
+    "completed_at": "2026-08-24T12:00:31.904Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cstd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xgjk-kata-declaration-migrate-to-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/kata-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/practice-system-composition-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bps-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-business-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-data-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-test-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mm-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sch-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/uis-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dct-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-architecture-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-business-model-bes-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-business-model-bps-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-business-model-br-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-flow-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-bdd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-ccd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-cdsd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-cld-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-cstd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-sld-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-stsd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-external-interface-specs-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-glossary-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-impact-analysis-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-migration-planning-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-non-functional-requirements-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-operations-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-project-definition-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-project-management-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-system-acceptance-criteria-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-system-design-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-system-functions-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-test-specs-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-user-interface-model-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-bootstrap-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/dct.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-assessment.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule-assessment.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 146,
+    "summary": ".../010-deliverables-catalog/dct-architecture.yaml |  33 ------\n .../dct-business-acceptance-criteria.yaml          |  30 -----\n .../dct-business-model-bes.yaml                    |  12 --\n .../dct-business-model-bps.yaml                    |  87 --------------\n .../dct-business-model-br.yaml                     |  24 ----\n .../dct-current-state.yaml                         |   3 -\n .../010-deliverables-catalog/dct-data-flow.yaml    |  36 ------\n .../dct-data-model-bdd.yaml                        |  48 --------\n .../dct-data-model-ccd.yaml                        |   9 --\n .../dct-data-model-cdsd.yaml                       |   9 --\n .../dct-data-model-cld.yaml                        |  15 ---\n .../dct-data-model-cstd.yaml                       |  12 --\n .../dct-data-model-stsd.yaml                       |  15 ---\n .../dct-external-interface-specs.yaml              |   3 -\n .../010-deliverables-catalog/dct-glossary.yaml     |   3 -\n .../dct-impact-analysis.yaml                       |  15 ---\n .../dct-migration-planning.yaml                    |  15 ---\n .../dct-non-functional-requirements.yaml           |  27 -----\n .../010-deliverables-catalog/dct-operations.yaml   |  24 ----\n .../010-deliverables-catalog/dct-planning.yaml     |  39 -------\n .../dct-project-definition.yaml                    |  24 ----\n .../dct-project-management.yaml                    |  33 ------\n .../dct-system-acceptance-criteria.yaml            |  24 ----\n .../dct-system-design.yaml                         |  30 -----\n .../dct-system-functions.yaml                      |   3 -\n .../010-deliverables-catalog/dct-test-specs.yaml   | 129 ---------------------\n ...jr-xgjk-kata-declaration-migrate-to-rulebook.md |  22 ++--\n docs/ja/specdojo/guides/kata-guide.md              |   8 +-\n .../guides/practice-system-composition-guide.md    |  22 ++--\n docs/ja/specdojo/guides/ryu-guide.md               |  14 +--\n docs/ja/specdojo/rulebooks/atc-index-rulebook.md   |   2 +\n docs/ja/specdojo/rulebooks/atc-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/bac-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/bdd-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/bds-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/bes-index-rulebook.md   |   2 +\n docs/ja/specdojo/rulebooks/bes-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/bps-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/br-rulebook.md          |   2 +\n docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md |   6 +-\n .../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md |   6 +-\n docs/ja/specdojo/rulebooks/cdsd-rulebook.md        |   2 +\n docs/ja/specdojo/rulebooks/cld-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/cnd-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/cop-index-rulebook.md   |   2 +\n docs/ja/specdojo/rulebooks/cpd-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/cstd-rulebook.md        |   2 +\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/dct-index-rulebook.md   |   2 +-\n docs/ja/specdojo/rulebooks/dct-rulebook.md         |  13 +--\n docs/ja/specdojo/rulebooks/dmd-index-rulebook.md   |   2 +\n docs/ja/specdojo/rulebooks/etc-index-rulebook.md   |   2 +\n docs/ja/specdojo/rulebooks/etc-rulebook.md         |   2 +\n docs/ja/specdojo/rulebooks/gl-rulebook.md          |   2 +\n docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md |   6 +-\n docs/ja/specdojo/rulebooks/ifx-api-rulebook.md     |   2 +\n docs/ja/specdojo/rulebooks/ifx-file-rulebook.md    |   2 +\n docs/ja/specdojo/rulebooks/ifx-index-rulebook.md   |   3 +\n docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md     |   2 +\n .../ja/specdojo/rulebooks/imp-business-rulebook.md |   2 +\n docs/ja/specdojo/rulebooks/imp-data-rulebook.md    |   2 +\n .../specdojo/rulebooks/imp-interface-rulebook.md   |   2 +\n .../specdojo/rulebooks/imp-operations-rulebook.md  |   2 +\n docs/ja/specdojo/rulebooks/imp-test-rulebook.md    |   2 +\n docs/ja/specdojo/rulebooks/itc-index-rulebook.m…"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全Markdown検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "frontmatter検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "3件失敗。期待値2件と未生成pjr-indexが原因で、いずれも修正済み。1回限定規約により未再実行"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全DCT成功。既存based_on警告とccd/ifd sampleの双方向検証警告あり"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "全カタログ生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct.schema.yaml --data 'docs/ja/projects/prj-0001/010-deliverables-catalog/dct-*.yaml' --data '!**/dct-index.yaml' --data 'docs/ja/specdojo/templates/dct-*-template.yaml' --data 'docs/ja/specdojo/samples/dct-sample.yaml'",
+      "status": "passed",
+      "summary": "全対象DCTが更新後schemaに適合"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "failed",
+      "summary": "変更対象外の3番目の検証でtsx IPCソケット作成がEPERM。変更対象DCTは代替起動で検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "生成登録簿を再構築"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1337件の文書索引を再構築"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XGJK\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-8aXuMY/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    }
+  ],
+  "final_message": "rulebook frontmatterへの型宣言移行を完了。unit test初回失敗3件は修正済みだが、1回限定規約により未再実行。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XGJK/20260824T114121554Z-a1d41572/executor.log",
+      "bytes": 2507,
+      "truncated": false
+    }
+  ]
+}

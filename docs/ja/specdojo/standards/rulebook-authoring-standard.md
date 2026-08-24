@@ -41,15 +41,16 @@ Rulebook Authoring Standard
 | type          | ○    | `rulebook` 固定                                                |
 | status        | ○    | `draft` / `ready` / `deprecated`                               |
 | target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
-| recipe        | 任意 | 対応する recipe の完全 ID。該当なしは `none`                   |
-| sample        | 任意 | 対応する sample の完全 ID または ID 配列。該当なしは `none`    |
-| template      | 任意 | 対応する template の完全 ID。該当なしは `none`                 |
+| recipe        | 任意 | 対応する recipe の完全 ID、`undecided`、`not-needed`           |
+| sample        | 任意 | 対応する sample の完全 ID または ID 配列、上記2状態            |
+| template      | 任意 | 対応する template の完全 ID、`undecided`、`not-needed`         |
 | based_on      | 任意 | 上位規約や根拠ドキュメント                                     |
 | supersedes    | 任意 | 置き換え関係                                                   |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
-- `recipe` / `sample` / `template` は ID 参照であり、`fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
-- 同じ rulebook 系統に複数の完成例がある場合、`sample` を ID 配列で宣言する。カタログ側で sample を指定しない参照解決では、配列の先頭を既定例として使う。
+- `recipe` / `sample` / `template` は要否と所在の正本であり、`undecided` は要否未判断、項目省略は必要だが未整備、完全 ID は必要かつ整備済み、`not-needed` は不要を表す。
+- 完全 ID は `fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
+- 同じ rulebook 系統に複数の完成例がある場合、`sample` を ID 配列で宣言する。配列の先頭を既定例として使う。
 - 機械検証は [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml) を SSOT とする。
 
 記述例:
@@ -101,8 +102,8 @@ specdojo:
   - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
   - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
   - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
-- `サンプル` 章を置く場合は、最小例をコードブロックで本文内に自己完結して埋め込む。sample ファイルの有無は Frontmatter の `sample`（該当なしは `none`）で宣言し、本文にリンクを記載しない。
-- template がない場合は、Frontmatter の `template` を省略するか `none` を宣言する。
+- `サンプル` 章を置く場合は、最小例をコードブロックで本文内に自己完結して埋め込む。sample ファイルの要否と所在は Frontmatter の `sample` で宣言し、本文にリンクを記載しない。
+- template が不要な場合は Frontmatter へ `template: not-needed`、要否未判断なら `template: undecided` を宣言する。項目省略は必要だが未整備を表す。
 
 ## 6. 内容充実化（薄いドキュメント防止）
 

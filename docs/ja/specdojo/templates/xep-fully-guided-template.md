@@ -31,7 +31,7 @@ _OWNER_ROLE_VIEWPOINTS_
 
 対象成果物に必要と宣言された rulebook / recipe は、指定されたファイルを実際に読み込んだうえで、次の役割に沿って参照する。読み込まずに記憶や推測で代替しない。
 
-参照ファイル（成果物カタログから解決。`_MISSING_` は `undecided`、`not-needed`、または未整備を表す。fully-guided では通常 `not-needed` の項目だけが該当する）:
+参照ファイル（成果物カタログの rulebook ID と rulebook frontmatter から解決。`_MISSING_` は `undecided`、`not-needed`、未整備、または `kind: generated` による非適用を表す。fully-guided では通常 `not-needed` の項目だけが該当する）:
 
 - rulebook: `_RULEBOOK_REF_`
 - 併せて適用する rulebook（記法など）: _RULEBOOK_INCLUDES_

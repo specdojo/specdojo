@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cnd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cnd-sample
+  template: undecided
 ---
 
 # C4コンテナ図 ドキュメント作成ルール

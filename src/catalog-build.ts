@@ -21,12 +21,7 @@ import { specdojoRootDir } from "./specdojo-config.js";
 
 type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
 
-const CATALOG_KATA_ID_PATTERNS: Record<CatalogKataKind, RegExp> = {
-  rulebook: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$/,
-  recipe: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe$/,
-  sample: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample$/,
-  template: /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template$/,
-};
+const CATALOG_RULEBOOK_ID_PATTERN = /^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$/;
 
 const CATALOG_KATA_DIRS: Record<CatalogKataKind, string> = {
   rulebook: "rulebooks",
@@ -667,36 +662,32 @@ export function validateDctDoc(
               `${filePath}: ${item.local_id}: invalid instance_id_pattern: ${item.instance_id_pattern}`,
             );
           }
-          for (const kind of ["rulebook", "recipe", "sample", "template"] as const) {
-            const declaration = item[kind];
-            if (
-              declaration === undefined ||
-              declaration === "undecided" ||
-              declaration === "not-needed"
-            ) {
-              continue;
-            }
-            if (!CATALOG_KATA_ID_PATTERNS[kind].test(declaration)) {
+          const declaration = item.rulebook;
+          if (
+            declaration !== undefined &&
+            declaration !== "undecided" &&
+            declaration !== "not-needed"
+          ) {
+            if (!CATALOG_RULEBOOK_ID_PATTERN.test(declaration)) {
               errors.push(
-                `${filePath}: ${item.local_id}: ${kind} must be a ${kind} document id, 'undecided', or 'not-needed': ${declaration}`,
+                `${filePath}: ${item.local_id}: rulebook must be a rulebook document id, 'undecided', or 'not-needed': ${declaration}`,
               );
-              continue;
-            }
-            if (!repoRoot) continue;
-            const existing = declaredKataCandidates(repoRoot, kind, declaration).find((candidate) =>
-              existsSync(candidate),
-            );
-            if (!existing) {
-              errors.push(
-                `${filePath}: ${item.local_id}: declared ${kind} document id does not exist: ${declaration}`,
+            } else if (repoRoot) {
+              const existing = declaredKataCandidates(repoRoot, "rulebook", declaration).find(
+                (candidate) => existsSync(candidate),
               );
-              continue;
-            }
-            const actualId = readPracticeDocumentId(existing);
-            if (actualId !== undefined && actualId !== declaration) {
-              errors.push(
-                `${filePath}: ${item.local_id}: declared ${kind} document id '${declaration}' does not match '${actualId ?? "<missing>"}' in ${existing}`,
-              );
+              if (!existing) {
+                errors.push(
+                  `${filePath}: ${item.local_id}: declared rulebook document id does not exist: ${declaration}`,
+                );
+              } else {
+                const actualId = readPracticeDocumentId(existing);
+                if (actualId !== undefined && actualId !== declaration) {
+                  errors.push(
+                    `${filePath}: ${item.local_id}: declared rulebook document id '${declaration}' does not match '${actualId ?? "<missing>"}' in ${existing}`,
+                  );
+                }
+              }
             }
           }
           if (localIds.has(item.local_id)) {

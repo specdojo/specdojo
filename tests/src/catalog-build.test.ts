@@ -114,14 +114,9 @@ describe("renderCatalogTemplateBody", () => {
 });
 
 describe("validateDctDoc", () => {
-  describe("実践の型の要否宣言", () => {
+  describe("rulebook の要否宣言", () => {
     it("not-needed は実在検証の対象外として受理する", () => {
-      const item = makeWorkItem({
-        rulebook: "not-needed",
-        recipe: "not-needed",
-        sample: "not-needed",
-        template: "not-needed",
-      });
+      const item = makeWorkItem({ rulebook: "not-needed" });
 
       const result = validateDctDoc(
         makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
@@ -134,12 +129,7 @@ describe("validateDctDoc", () => {
     });
 
     it("undecided は要否未判断として実在検証の対象外で受理する", () => {
-      const item = makeWorkItem({
-        rulebook: "undecided",
-        recipe: "undecided",
-        sample: "undecided",
-        template: "undecided",
-      });
+      const item = makeWorkItem({ rulebook: "undecided" });
 
       const result = validateDctDoc(
         makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
@@ -151,8 +141,8 @@ describe("validateDctDoc", () => {
       expect(result.errors).toEqual([]);
     });
 
-    it("宣言した実践の型の文書 ID が実在しなければエラーにする", () => {
-      const item = makeWorkItem({ recipe: "specdojo:missing-recipe" });
+    it("宣言した rulebook の文書 ID が実在しなければエラーにする", () => {
+      const item = makeWorkItem({ rulebook: "specdojo:missing-rulebook" });
 
       const result = validateDctDoc(
         makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
@@ -162,7 +152,7 @@ describe("validateDctDoc", () => {
       );
 
       expect(result.errors.join("\n")).toContain(
-        "declared recipe document id does not exist: specdojo:missing-recipe",
+        "declared rulebook document id does not exist: specdojo:missing-rulebook",
       );
     });
   });

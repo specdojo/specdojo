@@ -62,7 +62,7 @@ flowchart TD
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
 ```
 
-整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、`undecided` の型を含めてどの型が必要かを作成条件に照らして判断し、成果物と必要な型を一式で初期整備する場合に限って選びます。不要な型は成果物カタログへ `not-needed` と宣言し、作成対象へ含めません。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
+整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、`undecided` の型を含めてどの型が必要かを作成条件に照らして判断し、成果物と必要な型を一式で初期整備する場合に限って選びます。不要な recipe / sample / template は rulebook frontmatter へ `not-needed` と宣言し、作成対象へ含めません。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
 
 ### 1.2. approach 一覧
 
@@ -114,11 +114,11 @@ flowchart LR
   S --> DD --> C
 ```
 
-| `approach`                | 参照方針と進め方                                                                                                                                            | 対応テンプレート                                                                                                              |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `bootstrap`               | 作成条件から型の要否を判断し、成果物と必要な rulebook / recipe / sample / template を同じタスクで初期作成する。不要な型はカタログへ `not-needed` と宣言する | [edit](../templates/xep-bootstrap-template.md)                                                                                |
-| `retrofit`                | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する                       | [edit](../templates/xep-retrofit-template.md) / [review](../templates/xrp-retrofit-template.md)                               |
-| `cross-deliverable-dedup` | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                              | [edit](../templates/xep-cross-deliverable-dedup-template.md) / [result](../templates/xer-cross-deliverable-dedup-template.md) |
+| `approach`                | 参照方針と進め方                                                                                                                                                           | 対応テンプレート                                                                                                              |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap`               | 作成条件から型の要否を判断し、成果物と必要な rulebook / recipe / sample / template を同じタスクで初期作成する。不要な3種は rulebook frontmatter へ `not-needed` と宣言する | [edit](../templates/xep-bootstrap-template.md)                                                                                |
+| `retrofit`                | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する                                      | [edit](../templates/xep-retrofit-template.md) / [review](../templates/xrp-retrofit-template.md)                               |
+| `cross-deliverable-dedup` | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                                             | [edit](../templates/xep-cross-deliverable-dedup-template.md) / [result](../templates/xer-cross-deliverable-dedup-template.md) |
 
 `retrofit` では、実装を現在動作（AS-IS）の根拠、既存成果物・決定記録・プロジェクトコンテキストを意図された仕様の根拠、`done_criteria` を成果物が満たすべき目的として扱います。三者が一致すれば成果物へ反映し、実装が意図された仕様と異なる場合は実装へ無条件に合わせず、乖離と修正対象候補を result に記録します。実装から確認できない目的・業務判断・将来方針は推測しません。
 
@@ -147,7 +147,7 @@ flowchart LR
 | `sample-maintenance`   | sample     | [edit](../templates/xep-sample-maintenance-template.md) / [review](../templates/xrp-sample-maintenance-template.md)     |
 | `template-maintenance` | template   | [edit](../templates/xep-template-maintenance-template.md) / [review](../templates/xrp-template-maintenance-template.md) |
 
-成果物カタログで `not-needed` と宣言された型はメンテナンス対象ではなく、strategy へ対応する `*-maintenance` フェーズを生成しません。作成が必要になった場合は、先に要否判断の根拠とカタログ宣言を更新します。
+rulebook frontmatter で `not-needed` と宣言された型はメンテナンス対象ではなく、strategy へ対応する `*-maintenance` フェーズを生成しません。作成が必要になった場合は、先に要否判断の根拠と rulebook frontmatter の宣言を更新します。
 
 #### 1.2.4. human による確定
 

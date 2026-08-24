@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:tsp-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:tsp-index-sample
+  template: undecided
 ---
 
 # テスト戦略・方針 作成ルール

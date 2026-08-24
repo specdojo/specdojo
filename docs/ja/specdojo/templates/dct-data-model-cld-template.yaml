@@ -26,9 +26,6 @@ groups:
         overview: 業務上の分類（カテゴリ・種別・区分など）を一覧で定義する
         path: cld-_TERM_.md
         rulebook: specdojo:cld-rulebook
-        recipe: undecided
-        sample: specdojo:cld-sample
-        template: undecided
         note: "_TERM_ は対象分類体系の略称（kebab-case）"
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること

@@ -35,11 +35,15 @@ properties:
               sample / template / schema / target_format のアンカーは主 rulebook が保持し、
               includes 先は記法・散文の寄与のみとする。
           recipe:
-            $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
-            description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
+            type: string
+            pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe|undecided|not-needed)$"
+            description: >-
+              対応する recipe の ID、要否未判断の undecided、または不要を表す not-needed。
+              省略は必要だが未整備であることを表す。
           sample:
             oneOf:
-              - $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
+              - type: string
+                pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample|undecided|not-needed)$"
               - type: array
                 minItems: 1
                 uniqueItems: true
@@ -47,11 +51,14 @@ properties:
                   type: string
                   pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample$"
             description: >-
-              対応する sample の ID または ID 配列（fully-guided の参照解決に使う）。
-              配列の場合、先頭をカタログ指定がない場合の既定例とする。
+              対応する sample の ID または ID 配列、要否未判断の undecided、または不要を表す
+              not-needed。省略は必要だが未整備であることを表す。配列の場合、先頭を既定例とする。
           template:
-            $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
-            description: "対応する template の ID（fully-guided の参照解決に使う）。"
+            type: string
+            pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template|undecided|not-needed)$"
+            description: >-
+              対応する template の ID、要否未判断の undecided、または不要を表す not-needed。
+              省略は必要だが未整備であることを表す。
           schema:
             type: string
             description: >-

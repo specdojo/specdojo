@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:uis-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:uis-sample
+  template: undecided
 ---
 
 # 画面仕様(UI) 作成ルール

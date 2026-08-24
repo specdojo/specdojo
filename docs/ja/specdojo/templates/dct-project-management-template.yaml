@@ -24,9 +24,6 @@ groups:
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
         rulebook: specdojo:pm-plan-rulebook
-        recipe: specdojo:pm-plan-recipe
-        sample: specdojo:pm-plan-sample
-        template: specdojo:pm-plan-template
         done_criteria:
           - text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
             roles: [PO]
@@ -53,9 +50,6 @@ groups:
         overview: 報告・連絡・会議体の計画を定義
         path: pm-communication-plan.md
         rulebook: specdojo:pm-communication-plan-rulebook
-        recipe: specdojo:pm-communication-plan-recipe
-        sample: specdojo:pm-communication-plan-sample
-        template: specdojo:pm-communication-plan-template
         done_criteria:
           - text: 報告・連絡・会議体の計画を承認できる粒度で記述されていること
             roles: [PO]
@@ -82,9 +76,6 @@ groups:
         overview: 品質目標・レビュー方針・品質基準を定義
         path: pm-quality-management-plan.md
         rulebook: specdojo:pm-quality-management-plan-rulebook
-        recipe: specdojo:pm-quality-management-plan-recipe
-        sample: specdojo:pm-quality-management-plan-sample
-        template: specdojo:pm-quality-management-plan-template
         done_criteria:
           - text: 品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
             roles: [PO]
@@ -114,9 +105,6 @@ groups:
         overview: ロール・メンバー構成の方針と設計根拠を定義
         path: pm-organization.md
         rulebook: specdojo:pm-organization-rulebook
-        recipe: specdojo:pm-organization-recipe
-        sample: specdojo:pm-organization-sample
-        template: specdojo:pm-organization-template
         done_criteria:
           - text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
             roles: [PO]
@@ -139,9 +127,6 @@ groups:
         overview: 全 Role code を machine-readable な YAML として一覧化する
         path: pm-roles.yaml
         rulebook: specdojo:pm-roles-rulebook
-        recipe: specdojo:pm-roles-recipe
-        sample: specdojo:pm-roles-sample
-        template: specdojo:pm-roles-template
         done_criteria:
           - text: 全ロールコードとプロジェクト固有メモを承認できること
             roles: [PO]
@@ -177,9 +162,6 @@ groups:
         overview: yaml で実行主体（人間・agent）と担当ロールリスト（roles）を定義
         path: pm-members.yaml
         rulebook: specdojo:pm-members-rulebook
-        recipe: specdojo:pm-members-recipe
-        sample: specdojo:pm-members-sample
-        template: specdojo:pm-members-template
         done_criteria:
           - text: 実行主体（人間・agent）と担当ロールリスト（roles）を承認できること
             roles: [PO]
@@ -206,9 +188,6 @@ groups:
         overview: 成果物・プロセスごとの責任分担マトリクスを定義（中規模以上）
         path: pm-raci.md
         rulebook: specdojo:pm-raci-rulebook
-        recipe: specdojo:pm-raci-recipe
-        sample: specdojo:pm-raci-sample
-        template: specdojo:pm-raci-template
         done_criteria:
           - text: 成果物・プロセスごとの責任分担マトリクスを承認できること
             roles: [PO]
@@ -236,10 +215,6 @@ groups:
         overview: 識別済み検討項目と対応策を管理（台帳）
         path: generated/pjr-index.md
         rulebook: specdojo:pjr-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
-
       - local_id: pjr-entry
         instance_id_pattern: pjr-{sequence}-{term}
         name: プロジェクト登録項目
@@ -248,10 +223,6 @@ groups:
         overview: 識別済み検討項目と対応策を管理（個別課題）
         note: sequence は4桁連番、term は件名の略称（kebab-case）
         rulebook: specdojo:pjr-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
-
   # ── 管理台帳補助ビュー (medium+) ──────────────────────────────────────────
   - name: 管理台帳補助ビュー
     base_path: controls/project-register/generated
@@ -341,9 +312,6 @@ groups:
         overview: プロジェクト全体のマイルストーンを定義
         path: sch-milestones.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: プロジェクト全体のマイルストーンを承認できること
             roles: [PO]
@@ -366,9 +334,6 @@ groups:
         overview: スケジュールのデフォルト設定を定義
         path: sch-defaults.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: カレンダー・開始日などのデフォルト設定を承認できること
             roles: [PO]
@@ -391,9 +356,6 @@ groups:
         overview: Launch フェーズの詳細スケジュールを定義
         path: sch-track-launch.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: Launch フェーズのタスク・マイルストーン計画を承認できること
             roles: [PO]
@@ -416,9 +378,6 @@ groups:
         overview: フェーズ定義・オーナー割当・初期状態を含む Launch トラック生成戦略を定義
         path: sch-strategy-launch.yaml
         rulebook: specdojo:sch-rulebook
-        recipe: not-needed
-        sample: not-needed
-        template: not-needed
         done_criteria:
           - text: owner_rules・フェーズ定義・initial_state を含むトラック戦略を承認できること
             roles: [PO]
@@ -447,9 +406,6 @@ groups:
             depends_on: []
             overview: 定期的な進捗状況の報告
             rulebook: specdojo:pr-rulebook
-            recipe: not-needed
-            sample: specdojo:pr-sample
-            template: not-needed
             note: yyyy-mm-dd は報告日
 
       - name: 議事録
@@ -462,7 +418,4 @@ groups:
             depends_on: []
             overview: 会議の決定事項・アクションを記録
             rulebook: specdojo:mm-rulebook
-            recipe: not-needed
-            sample: specdojo:mm-sample
-            template: not-needed
             note: yyyy-mm-dd は会議日

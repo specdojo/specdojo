@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:imp-test-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:imp-test-sample
+  template: undecided
 ---
 
 # 影響調査（テスト）作成ルール

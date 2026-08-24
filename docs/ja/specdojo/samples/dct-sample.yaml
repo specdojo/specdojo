@@ -22,9 +22,6 @@ groups:
         overview: 駄菓子屋きぬや販売管理システムの目的・背景・ゴールを定義する
         path: prj-overview.md
         rulebook: specdojo:prj-overview-rulebook
-        recipe: specdojo:prj-overview-recipe
-        sample: specdojo:prj-overview-sample
-        template: specdojo:prj-overview-template
         done_criteria:
           - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
             roles: [BA]
@@ -46,9 +43,6 @@ groups:
         overview: 対象業務と対象外業務を明確化し、合意境界を固定する
         path: prj-scope.md
         rulebook: specdojo:prj-scope-rulebook
-        recipe: specdojo:prj-scope-recipe
-        sample: specdojo:prj-scope-sample
-        template: specdojo:prj-scope-template
         done_criteria:
           - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
             roles: [BA]
@@ -67,9 +61,6 @@ groups:
         overview: 初期課題と対応方針を整理し、計画立案の前提を明示する
         path: prj-issues-and-approach.md
         rulebook: specdojo:prj-issues-and-approach-rulebook
-        recipe: specdojo:prj-issues-and-approach-recipe
-        sample: specdojo:prj-issues-and-approach-sample
-        template: specdojo:prj-issues-and-approach-template
         done_criteria:
           - text: 業務課題と解決アプローチが業務観点で対応していること
             roles: [BA]

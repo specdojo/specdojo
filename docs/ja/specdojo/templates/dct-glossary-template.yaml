@@ -17,9 +17,6 @@ groups:
         overview: 業務・システムで使用する用語の意味を統一的に定義する
         path: gl-_DOMAIN_.md
         rulebook: specdojo:gl-rulebook
-        recipe: undecided
-        sample: specdojo:gl-sample
-        template: undecided
         note: "_DOMAIN_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること

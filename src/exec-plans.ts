@@ -451,7 +451,11 @@ function doneCriteriaItems(criteria: CriteriaItem[]): string {
 // 主 rulebook が include する rulebook を plan へ注入する表記に整形する。
 // 併せて適用する rulebook（記法など）を backtick 付きパスのカンマ区切りで示す。
 // include が無い場合は他の参照と同様に MISSING を返す。
-function rulebookIncludesText(rulebookId: string | undefined): string {
+function rulebookIncludesText(
+  rulebookId: string | undefined,
+  targetKind: DctDeliverableItem["kind"] | undefined,
+): string {
+  if (targetKind === "generated") return MISSING;
   const paths = resolveIncludedRulebooks(rulebookId);
   if (paths.length === 0) return MISSING;
   return paths.map((p) => `\`${p}\``).join(", ");
@@ -501,7 +505,7 @@ function targetDocIds(
   const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
-  const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable);
+  const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind);
   for (const kind of kinds) {
     const refPath = refs[kind];
     if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));
@@ -664,7 +668,7 @@ function doneCriteriaResultChecklist(criteria: CriteriaItem[]): string {
 function finalizeTargetsChecklist(deliverable: DeliverableInfo, approach: Approach): string {
   const lines = [`- [ ] 成果物: \`${deliverablePath(deliverable)}\``];
   if (approach === "bootstrap-finalize") {
-    const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable);
+    const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind);
     const entries: [string, string][] = [
       ["rulebook", refs.rulebook],
       ["recipe", refs.recipe],
@@ -813,7 +817,7 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap);
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable ?? {});
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -826,7 +830,10 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
-    _RULEBOOK_INCLUDES_: rulebookIncludesText(deliverable?.deliverable.rulebook),
+    _RULEBOOK_INCLUDES_: rulebookIncludesText(
+      deliverable?.deliverable.rulebook,
+      deliverable?.deliverable.kind,
+    ),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
@@ -878,7 +885,7 @@ function buildReviewPlanMarkdown(
     ...(targets.length > 0 ? { targets } : {}),
   };
 
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable ?? {});
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -891,7 +898,10 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
-    _RULEBOOK_INCLUDES_: rulebookIncludesText(deliverable?.deliverable.rulebook),
+    _RULEBOOK_INCLUDES_: rulebookIncludesText(
+      deliverable?.deliverable.rulebook,
+      deliverable?.deliverable.kind,
+    ),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,

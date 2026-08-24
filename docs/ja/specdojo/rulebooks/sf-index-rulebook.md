@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:sf-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:sf-index-sample
+  template: undecided
 ---
 
 # [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール

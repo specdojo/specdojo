@@ -16,9 +16,6 @@ groups:
         overview: システム全体としての合格基準（機能・非機能・障害・移行等）を定義する
         path: sac-_TERM_.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: "_TERM_ は対象システム・機能領域の略称（kebab-case）"
         done_criteria:
           - text: 業務機能・非機能の受入条件が業務観点で記述されていること

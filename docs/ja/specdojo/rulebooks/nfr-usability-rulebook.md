@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:nfr-usability-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:nfr-usability-sample
+  template: undecided
 ---
 
 # 非機能要件 / 操作性 作成ルール

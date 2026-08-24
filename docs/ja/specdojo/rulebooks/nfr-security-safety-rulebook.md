@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:nfr-security-safety-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:nfr-security-safety-sample
+  template: undecided
 ---
 
 # 非機能要件 / 機密性・安全性 作成ルール
