@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jt1y-kata-undecided-state
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-08-23T11:48:12Z"
   due_on: "2026-08-31"
-  conclusion: 要否と整備状況を undecided・項目の省略・文書ID・not-needed の4通りで区別できるようにし、schema と検証・生成処理を対応させた。PJR-VV3M の種別ごとの作成方針を実践の型ガイドへ反映し、未作成の散文成果物155件を undecided へ移行した。実在する成果物の宣言は変更していない。新規プロジェクトのカタログ雛形にも同じ移行を適用した。
+  completed_at: "2026-08-24T09:43:43Z"
+  conclusion: 実践の型の要否と整備状況を undecided・項目の省略・文書ID・not-needed の4通りで区別できるようにし、schema と検証・生成処理を対応させた。PJR-VV3M の種別ごとの作成方針を実践の型ガイドへ反映し、sample は rulebook がある系統へ一律に作る、template は rulebook 系統単位で判断する、recipe は独立して判断する、を明記した。未作成の散文成果物155件を undecided へ移行し、実在する成果物の宣言は変更していない。新規プロジェクトのカタログ雛形にも同じ移行を適用した。
 ---
 
 # PJR-JT1Y 未着手成果物の実践の型の要否を未判断として区別できるようにする

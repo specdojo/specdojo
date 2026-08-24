@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e6hg-claude-reporter-json-failure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:03:45Z"
   due_on: "2026-08-31"
-  conclusion: 失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧は利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要。
+  completed_at: "2026-08-24T09:43:44Z"
+  conclusion: claude-reporter の失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧には利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要であり、本項目の範囲である原因特定と記録を完了した。
 ---
 
 # PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする

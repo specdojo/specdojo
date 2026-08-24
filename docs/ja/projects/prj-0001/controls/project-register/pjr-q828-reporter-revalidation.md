@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q828-reporter-revalidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:04:00Z"
   due_on: "2026-08-31"
-  conclusion: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。
+  completed_at: "2026-08-24T09:43:51Z"
+  conclusion: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。source が executor の検証は再評価対象外のため、同種の詰まりは PJR-0FCT と PJR-QVGX の対応が必要である。
 ---
 
 # PJR-Q828 reporterが解消済みの検証失敗を再評価できない問題を解消する

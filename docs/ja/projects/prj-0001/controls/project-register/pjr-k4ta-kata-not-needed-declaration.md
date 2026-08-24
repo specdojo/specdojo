@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-k4ta-kata-not-needed-declaration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-08-23T04:52:41Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: executor validation「npm run test:unit」がfailedであり、修正後は一回限定ルールにより再実行されていないため、成果物の最終状態が完了条件を満たすと確認できない。加えて「npm run validate:schema」もfailed（tsx IPCのsandbox EPERM）である。"
+  completed_at: "2026-08-24T09:43:33Z"
+  conclusion: 成果物カタログの各成果物へ rulebook / recipe / sample / template の要否を宣言できるようにし、不要と判断した型は not-needed と明示する仕組みを導入した。kata-guide に4種それぞれの作る条件と作らない条件を追加し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外すようにした。prj-0001 の全成果物へ要否を宣言し、ID宣言496件はすべて実在する型へ解決する。未作成成果物への一律の not-needed は PJR-JT1Y で undecided へ移行した。
 ---
 
 # PJR-K4TA 実践の型の要否宣言を導入し、既存の実践の型を棚卸しする
