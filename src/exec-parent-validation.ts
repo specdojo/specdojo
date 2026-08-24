@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import type { EvidenceValidation } from "./exec-evidence.js";
+import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
 
 const MAX_CAPTURE_BYTES = 64 * 1024;
@@ -164,6 +164,30 @@ export function failedParentValidationReason(
   );
   if (failed.length === 0) return undefined;
   return `parent validation failed: ${failed.map((validation) => validation.id ?? validation.command).join(", ")}`;
+}
+
+/**
+ * Replaces stale runner-owned validation results while preserving executor-owned evidence.
+ * The caller must supply results produced from the fixed parent-validation allowlist.
+ */
+export function replaceParentValidationResults(
+  evidence: ExecEvidence,
+  parentValidations: readonly EvidenceValidation[],
+): ExecEvidence {
+  if (
+    parentValidations.some(
+      (validation) => validation.source !== "runner" || typeof validation.id !== "string",
+    )
+  ) {
+    throw new Error("Refreshed parent validations must be runner-owned and include an id.");
+  }
+  return {
+    ...evidence,
+    validations: [
+      ...evidence.validations.filter((validation) => validation.source !== "runner"),
+      ...parentValidations,
+    ],
+  };
 }
 
 export function hasRecordedParentValidations(

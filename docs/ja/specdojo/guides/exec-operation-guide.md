@@ -256,9 +256,10 @@ stage 別の失敗と対応は次のとおりです。
 | executor の rate limit        | executor が `rate_limited`、block に再開時刻           | `レートリミット対応` と同じ（`exec resume --due`）                   |
 | reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する              |
 | reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                    |
+| 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）         |
 | reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                   |
 
-reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。
+reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
 ```bash
 specdojo exec resume \
@@ -279,7 +280,7 @@ specdojo exec run \
   --resume
 ```
 
-再開の入力は、対象 worktree に残っている最新 run の `pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
+再開の入力は、対象 worktree に残っている最新 run の `pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。保存済みの親 runner 検証が失敗していれば、Schedule 実行と同様に再実行して evidence を更新します。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
 
 再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。
 
@@ -289,6 +290,7 @@ specdojo exec run \
 | 最新 run の executor が succeeded でない | 再開せず、通常の再実行を促す（古い run へは遡らない）      |
 | reporter が既に succeeded                | 再開不要として拒否する                                     |
 | `evidence.json` が欠損・不整合           | executor の記録を再利用できないため拒否する                |
+| 親検証の設定 ID が変更・欠損             | 古い検証を流用せず、明示的な再実行を促して拒否する         |
 | 再開した reporter が再び失敗した         | worktree と executor の成果を保持したまま `waiting` へ戻す |
 
 executor が成功した run が残っている項目を `--resume` なしで再実行しようとした場合は、worktree を破棄する手前で中断します（未コミットの executor 成果を失わないための保護）。破棄したうえで最初からやり直す場合は `--force-restart` を明示します。

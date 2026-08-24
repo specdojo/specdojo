@@ -31,16 +31,19 @@ reporter は executor の evidence.json に記録された検証結果のみを�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                               | 担当 | 状態 | メモ                      |
-| --- | -------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------- |
-| 1   | reporter が evidence のみで判断している箇所を特定する                                              | ARC  | open | `exec` の reporter 段階   |
-| 2   | 再評価の方式を選定し、採用理由とともに記録する                                                     | ARC  | open | 再検証 / 再検証済みの伝達 |
-| 3   | 選定した方式を実装する                                                                             | ARC  | open | 抜け道を作らない          |
-| 4   | 解消済みの失敗から complete へ到達できること、未解消ならブロックすることを確認するテストを追加する | ARC  | open | 双方向の確認              |
+| No  | 作業                                                                                               | 担当 | 状態 | メモ                     |
+| --- | -------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------ |
+| 1   | reporter が evidence のみで判断している箇所を特定する                                              | ARC  | done | `src/exec-run.ts`        |
+| 2   | 再評価の方式を選定し、採用理由とともに記録する                                                     | ARC  | done | 親 runner による再検証   |
+| 3   | 選定した方式を実装する                                                                             | ARC  | done | 固定許可リストのみ再実行 |
+| 4   | 解消済みの失敗から complete へ到達できること、未解消ならブロックすることを確認するテストを追加する | ARC  | done | 双方向を E2E で確認      |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- reporter 自身に worktree のコマンド実行権限を与えず、親 runner が `pipeline.parent_validations` の固定許可リストだけを再実行する方式を採用した。reporter の read-only 境界を維持し、任意コマンド実行や古い evidence の自己申告による上書きを許さないためである。
+- reporter 再開時、保存済み evidence の `source: runner` に `failed` / `not_run` があれば親検証を再実行し、同じ ID の古い runner 結果を置換して永続化してから reporter へ渡す。`source: executor` は成果物側の検証として保持し、再評価対象にしないことで実行環境起因の失敗と区別する。
+- 解消後に親検証が成功すれば reporter が `complete` へ到達でき、再検証後も失敗すれば runner が reporter の出力にかかわらず従来どおりブロックする。設定 ID の変更・欠損時は古い結果を流用しない。
+- 実装は `src/exec-parent-validation.ts`、`src/exec-evidence.ts`、`src/exec-run.ts`、自動テストは `tests/src/exec-parent-validation.test.ts` と `tests/src/exec-pipeline-e2e.integration.test.ts`、運用説明は `docs/ja/specdojo/guides/exec-config-guide.md` と `docs/ja/specdojo/guides/exec-operation-guide.md` を更新した。残課題はない。
 
 ## 5. 関連ドキュメント
 
