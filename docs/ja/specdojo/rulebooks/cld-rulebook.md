@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cld-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cld-sample
+  template: undecided
 ---
 
 # 分類一覧（Classification List）作成ルール

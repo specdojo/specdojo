@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:nfr-availability-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:nfr-availability-sample
+  template: undecided
 ---
 
 # 非機能要件 / 可用性 作成ルール

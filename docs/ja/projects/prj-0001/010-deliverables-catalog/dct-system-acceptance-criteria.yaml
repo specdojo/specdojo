@@ -22,9 +22,6 @@ groups:
         overview: 障害抑止・誤動作防止に関するシステム全体としての合格基準を定義する
         path: sac-reliability.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: &sac-ac-note 根拠はAC-02（技術的受入：ID・参照関係・生成物の検証、支出・作業時間・判断者の追跡可能性）
         done_criteria: &sac-done-criteria
           - text: 業務機能・非機能の受入条件が業務観点で記述されていること
@@ -52,9 +49,6 @@ groups:
         overview: システム稼働の継続性（稼働率・RTO/RPO・フェイルオーバー等）に関するシステム全体としての合格基準を定義する
         path: sac-availability.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -67,9 +61,6 @@ groups:
         overview: 変更容易性・復旧容易性に関するシステム全体としての合格基準を定義する
         path: sac-maintainability.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -82,9 +73,6 @@ groups:
         overview: データ正確性・改ざん防止に関するシステム全体としての合格基準を定義する
         path: sac-integrity.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -97,9 +85,6 @@ groups:
         overview: 不正利用防止・セキュリティ（認証・認可・アクセス制御等）に関するシステム全体としての合格基準を定義する
         path: sac-security-safety.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -112,9 +97,6 @@ groups:
         overview: 応答性・処理能力（レイテンシ・スループット等）に関するシステム全体としての合格基準を定義する
         path: sac-performance.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -127,9 +109,6 @@ groups:
         overview: 監視・手順・継続運用に関するシステム全体としての合格基準を定義する
         path: sac-operations.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria
 
@@ -142,8 +121,5 @@ groups:
         overview: 使いやすさ・誤操作防止に関するシステム全体としての合格基準を定義する
         path: sac-usability.md
         rulebook: specdojo:sac-rulebook
-        recipe: undecided
-        sample: specdojo:sac-sample
-        template: undecided
         note: *sac-ac-note
         done_criteria: *sac-done-criteria

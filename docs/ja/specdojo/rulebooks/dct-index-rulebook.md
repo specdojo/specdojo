@@ -4,7 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: yaml
-  recipe: none
+  recipe: not-needed
   sample: specdojo:dct-index-sample
   template: specdojo:dct-index-template
   schema: dct-index

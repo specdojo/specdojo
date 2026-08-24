@@ -25,9 +25,6 @@ groups:
         overview: 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する
         path: stsd-_TERM_.md
         rulebook: specdojo:stsd-rulebook
-        recipe: undecided
-        sample: specdojo:stsd-sample
-        template: undecided
         note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること

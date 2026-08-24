@@ -26,9 +26,6 @@ groups:
         overview: 概念データストア（情報の保管場所）を一覧で定義する
         path: cdsd-_TERM_.md
         rulebook: specdojo:cdsd-rulebook
-        recipe: undecided
-        sample: specdojo:cdsd-sample
-        template: undecided
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること

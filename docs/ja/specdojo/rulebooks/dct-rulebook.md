@@ -127,9 +127,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `overview`            | ○           | 成果物の目的を1文で記述                                           |
 | `path`                | ○（`work`） | 成果物のファイルパス                                              |
 | `rulebook`            | 任意        | rulebook の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
-| `recipe`              | 任意        | recipe の文書 ID、未判断なら `undecided`、不要なら `not-needed`   |
-| `sample`              | 任意        | sample の文書 ID、未判断なら `undecided`、不要なら `not-needed`   |
-| `template`            | 任意        | template の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
 | `evidence_refs`       | 任意        | `retrofit` で読む非成果物エビデンス                               |
 | `done_criteria`       | ○（`work`） | 完了条件の配列                                                    |
 | `note`                | 任意        | 構造化フィールドで表せない補足                                    |
@@ -164,6 +161,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `control`: プロジェクト管理・統制文書。スケジュール展開対象外。
 - `generated`: 自動生成・派生成果物。スケジュール展開対象外。
 - 3値以外に拡張しない。
+- `generated` には実践の型を適用しない。`rulebook` が記載されていても、実行時は `kind` から非適用を導出する。
 
 計画成果物をカタログへ登録する場合も、生成方法ではなくライフサイクルで区別する。
 
@@ -181,12 +179,11 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 6.4. 実践の型の要否宣言
 
-- `rulebook` / `recipe` / `sample` / `template` には、必要と判断して実在する実践の型の完全 ID を記載する。`catalog validate` は宣言 ID に対応する文書の実在を検証する。
-- 要否をまだ判断していない型は `undecided`、作成条件に照らして不要と判断した型は `not-needed` と記載する。項目の省略は必要だが未整備であることだけを表す。
-- 初回の `bootstrap` で `undecided` を解消する。必要なら項目を省略して型を整備し、実在後に文書 ID を宣言する。不要なら `not-needed` へ更新する。
+- 成果物カタログは成果物と rulebook の対応だけを `rulebook` に宣言する。recipe / sample / template の要否と所在は、参照先 rulebook の frontmatter を正本とする。
+- `rulebook` には、必要と判断して実在する rulebook の完全 ID を記載する。要否未判断は `undecided`、不要は `not-needed`、項目省略は必要だが未整備を表す。`catalog validate` は完全 ID に対応する文書の実在を検証する。
 - `rulebook: none` は成果物本体のメタ情報で「準拠 rulebook なし」を表す値であり、カタログの要否宣言には使わない。カタログで不要と判断した場合は `rulebook: not-needed` を使う。
-- recipe / sample / template のカタログ宣言を解決の正本とし、既存 rulebook の frontmatter 宣言は未移行カタログとの後方互換にだけ使う。
-- `undecided` は利用可能性判定で未整備として扱い、`not-needed` は欠落とみなさず対応する `*-maintenance` の対象にも含めない。要否を再検討する場合は、先にカタログ宣言を更新する。
+- `kind: generated` では `rulebook` 宣言の有無にかかわらず4種すべてを適用しない。成果物ごとの型宣言を追加せず、`kind` から導出する。
+- recipe / sample / template の `undecided` は利用可能性判定で未整備として扱い、`not-needed` は欠落とみなさず対応する `*-maintenance` の対象にも含めない。要否を再検討する場合は、先に rulebook frontmatter の宣言を更新する。
 
 ### 6.5. `evidence_refs`
 

@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:bds-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:bds-sample
+  template: undecided
 ---
 
 # 帳票仕様 作成ルール

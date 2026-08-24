@@ -324,4 +324,16 @@ describe("catalog scaffold — dct テンプレートファイル直接検証", 
     >;
     expect(validator(data), formatErrors(validator.errors)).toBe(true);
   });
+
+  it("deliverables[] の recipe / sample / template 宣言を受け付けない", () => {
+    const validator = buildValidator("docs/specdojo/schemas/v1/dct.schema.yaml");
+    const data = load(readFileSync(resolve(files[0]!), "utf8")) as Record<string, unknown>;
+    const groups = data.groups as Array<{ deliverables?: Array<Record<string, unknown>> }>;
+    const deliverable = groups.find((group) => group.deliverables?.length)?.deliverables?.[0];
+    expect(deliverable).toBeDefined();
+    deliverable!.recipe = "not-needed";
+
+    expect(validator(data)).toBe(false);
+    expect(formatErrors(validator.errors)).toContain("additional properties");
+  });
 });

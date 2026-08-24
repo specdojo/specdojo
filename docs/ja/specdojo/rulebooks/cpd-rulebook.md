@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cpd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cpd-sample
+  template: undecided
 ---
 
 # C4コンポーネント図 ドキュメント作成ルール

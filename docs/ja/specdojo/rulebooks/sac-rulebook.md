@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:sac-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:sac-sample
+  template: undecided
 ---
 
 # システム受入条件仕様（SAC）作成ルール

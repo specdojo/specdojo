@@ -34,17 +34,23 @@ PJR-3N21 の決定に従い、実践の型の要否と所在の正本を ruleboo
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当 | 状態 | メモ                                 |
-| --- | -------------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | カタログ側の要否判断を rulebook frontmatter へ移す             | ARC  | open | 判断を失わないことが最優先           |
-| 2   | 成果物カタログ234件から型宣言を削除する                        | ARC  | open | `rulebook` の宣言のみ残す            |
-| 3   | `src/kata.ts` の解決を rulebook 正本へ変更する                 | ARC  | open | カタログを参照しない                 |
-| 4   | `kind: generated` への非適用を `kind` からの導出として実装する | ARC  | open | 成果物ごとの宣言にしない             |
-| 5   | schema と双方向検証を移行後の構造へ合わせる                    | ARC  | open | 最小構成リポジトリでの動作も確認する |
+| No  | 作業                                                           | 担当 | 状態 | メモ                                    |
+| --- | -------------------------------------------------------------- | ---- | ---- | --------------------------------------- |
+| 1   | カタログ側の要否判断を rulebook frontmatter へ移す             | ARC  | done | 89系統へ移行し、競合6系統は未判断へ集約 |
+| 2   | 成果物カタログ234件から型宣言を削除する                        | ARC  | done | template/sample を含む972宣言も削除     |
+| 3   | `src/kata.ts` の解決を rulebook 正本へ変更する                 | ARC  | done | カタログの3種を参照しない               |
+| 4   | `kind: generated` への非適用を `kind` からの導出として実装する | ARC  | done | 4種すべてを `_MISSING_` へ導出          |
+| 5   | schema と双方向検証を移行後の構造へ合わせる                    | ARC  | done | DCTで3種を禁止し、rulebook側4状態を検証 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- プロジェクト DCT 27ファイル・244成果物のうち3種を宣言していた234成果物から、`recipe` / `sample` / `template` を削除した。共通 DCT template/sample も同じ schema に従うため、全55ファイル・345成果物の324宣言行（3種合計972行）を削除し、成果物カタログには `rulebook` だけを残した。
+- `kind: generated` 25件は移行元の要否集計から除外した。実行時は `kind` から4種すべてを非適用として導出し、成果物ごとの代替宣言は追加していない。
+- 非生成成果物が参照する89本の rulebook へ要否を移した。移行後は、recipe が文書ID 17系統・`not-needed` 13系統・`undecided` 59系統、sample が文書ID 82系統・`not-needed` 7系統、template が文書ID 18系統・`not-needed` 12系統・`undecided` 59系統となった。既存の複数 sample 配列は所在情報として保持した。旧 `none` 20宣言は4状態の `not-needed` へ正規化した。
+- 移行元で `not-needed` と `undecided` が混在した `gl-rulebook`、`opr-rulebook`、`sysd-index-rulebook`、`sysd-critical-flows-rulebook`、`sysd-cross-cutting-policy-rulebook`、`tsd-rulebook` は、recipe / template とも系統全体を確定扱いしない `undecided` へ集約した。旧 `not-needed` の存在と対象系統を本項へ記録し、PJR-K9KG での要否確定時に追跡できるようにした。
+- `src/kata.ts` は rulebook frontmatter の明示宣言だけを解決し、未宣言時の慣例ファイル探索とカタログ優先経路を廃止した。`catalog validate` の成果物側実在検証は rulebook のみに限定し、rulebook frontmatter と実ファイルの双方向検証は最小構成リポジトリでディレクトリ不在を許容したまま維持した。
+- `dct.schema.yaml` は成果物の3種宣言を追加プロパティとして拒否し、`rulebook-frontmatter.schema.yaml` は `undecided`・項目省略・文書ID・`not-needed` の4状態を受理する。関連する authoring standard、guide、DCT rulebook、exec plan template、unit test も新しい正本へ揃えた。
+- 双方向検証により、`sample: not-needed` へ移した `ccd-mermaid-rulebook` / `ifd-mermaid-rulebook` に対して既存の `ccd-sample.md` / `ifd-sample.md` が未宣言となる警告を確認した。移行元の要否を変更したり既存 sample を削除したりせず、混在6系統の最終判断とともに [[prj-0001:pjr-k9kg-kata-requirement-existing-deliverables|PJR-K9KG 実在する成果物の要否確定]] で扱う。
 
 ## 5. 関連ドキュメント
 

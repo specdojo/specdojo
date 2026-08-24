@@ -16,9 +16,6 @@ groups:
         overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル等）への導線を1箇所に集約する
         path: sysd-index.md
         rulebook: specdojo:sysd-index-rulebook
-        recipe: undecided
-        sample: specdojo:sysd-index-sample
-        template: undecided
         done_criteria:
           - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
             roles: [ARC]
@@ -42,9 +39,6 @@ groups:
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
         rulebook: specdojo:sysd-critical-flows-rulebook
-        recipe: undecided
-        sample: specdojo:sysd-critical-flows-sample
-        template: undecided
         done_criteria:
           - text: 重要フローの選定理由と業務影響が確認できること
             roles: [BA]
@@ -71,9 +65,6 @@ groups:
         overview: 実装全体に影響する共通ルール（エラー・タイムアウト・冪等・トレーシング等）をSSOT化する
         path: sysd-cross-cutting-policy.md
         rulebook: specdojo:sysd-cross-cutting-policy-rulebook
-        recipe: undecided
-        sample: specdojo:sysd-cross-cutting-policy-sample
-        template: undecided
         done_criteria:
           - text: 横断ルールが実装上の制約として確認できること
             roles: [ARC]

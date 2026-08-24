@@ -4,7 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: yaml
+  recipe: not-needed
   sample: specdojo:bdd-sample
+  template: not-needed
 ---
 
 # 業務データ辞書 作成ルール

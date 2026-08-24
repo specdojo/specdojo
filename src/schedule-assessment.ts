@@ -385,11 +385,7 @@ export function collectAssessmentFacts(opts: {
       seen.add(item.local_id);
 
       const docPath = item.path ? resolvedPath : undefined;
-      const refs = resolveKataRefs(item.rulebook, {
-        recipe: item.recipe,
-        sample: item.sample,
-        template: item.template,
-      });
+      const refs = resolveKataRefs(item.rulebook, item.kind);
       const declared =
         item.rulebook &&
         item.rulebook !== "none" &&
@@ -397,25 +393,34 @@ export function collectAssessmentFacts(opts: {
         item.rulebook !== "not-needed"
           ? loadRulebookRefs(item.rulebook)
           : {};
-      const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
-        (kind) => item[kind] !== undefined,
-      );
+      const derivedDeclaration =
+        item.kind === "generated"
+          ? "not-needed"
+          : item.rulebook === "undecided" || item.rulebook === "not-needed"
+            ? item.rulebook
+            : undefined;
       const kata = {
-        rulebook: collectKataFact(repoRoot, "rulebook", item.rulebook, refs, undefined),
+        rulebook: collectKataFact(
+          repoRoot,
+          "rulebook",
+          item.kind === "generated" ? "not-needed" : item.rulebook,
+          refs,
+          undefined,
+        ),
         recipe: collectKataFact(
           repoRoot,
           "recipe",
           item.rulebook,
           refs,
-          hasCatalogKataSet ? item.recipe : declared.recipe,
+          derivedDeclaration ?? declared.recipe,
         ),
         sample: collectKataFact(
           repoRoot,
           "sample",
           item.rulebook,
           refs,
-          hasCatalogKataSet
-            ? item.sample
+          derivedDeclaration
+            ? derivedDeclaration
             : Array.isArray(declared.sample)
               ? declared.sample[0]
               : declared.sample,
@@ -425,7 +430,7 @@ export function collectAssessmentFacts(opts: {
           "template",
           item.rulebook,
           refs,
-          hasCatalogKataSet ? item.template : declared.template,
+          derivedDeclaration ?? declared.template,
         ),
       };
 

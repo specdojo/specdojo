@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:itc-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:itc-index-sample
+  template: undecided
 ---
 
 # 内部結合テストカタログ概要 作成ルール

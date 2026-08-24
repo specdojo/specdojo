@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:atc-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:atc-index-sample
+  template: undecided
 ---
 
 # 受入テストカタログ 概要 作成ルール

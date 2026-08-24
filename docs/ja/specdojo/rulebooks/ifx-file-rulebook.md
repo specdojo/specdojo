@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:ifx-file-rulebook
   type: rulebook
   status: draft
+  recipe: not-needed
   sample: specdojo:ifx-file-sample
+  template: not-needed
 ---
 
 # 外部ファイル連携仕様（External File Exchange Specification: EFES）作成ルール

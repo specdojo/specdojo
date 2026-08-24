@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:bac-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:bac-sample
+  template: undecided
 ---
 
 # 業務受入条件 作成ルール

@@ -1,0 +1,13 @@
+実装と移行は完了しました。
+
+- DCT 324件・972宣言を削除し、89本の rulebook へ要否を移行
+- rulebook frontmatter を正本化
+- `kind: generated` の4種非適用を実装
+- schema・規約・テスト・個票を更新
+- result ファイルと登録簿ステータスは未変更
+
+ただし規定の1回だけ実行した unit test は3件失敗しました。原因は修正済みですが、再実行禁止のため個別検査で確認しています。`validate:schema` 全体は sandbox の `tsx` IPC制約で停止し、変更対象schemaは代替起動で検証成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"rulebook frontmatterへの型宣言移行を完了。unit test初回失敗3件は修正済みだが、1回限定規約により未再実行。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatter検証成功"},{"command":"npm run test:unit","status":"failed","summary":"3件失敗。期待値2件と未生成pjr-indexが原因で、いずれも修正済み。1回限定規約により未再実行"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全DCT成功。既存based_on警告とccd/ifd sampleの双方向検証警告あり"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"全カタログ生成成功"},{"command":"node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct.schema.yaml --data 'docs/ja/projects/prj-0001/010-deliverables-catalog/dct-*.yaml' --data '!**/dct-index.yaml' --data 'docs/ja/specdojo/templates/dct-*-template.yaml' --data 'docs/ja/specdojo/samples/dct-sample.yaml'","status":"passed","summary":"全対象DCTが更新後schemaに適合"},{"command":"npm run validate:schema","status":"failed","summary":"変更対象外の3番目の検証でtsx IPCソケット作成がEPERM。変更対象DCTは代替起動で検証成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"生成登録簿を再構築"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1337件の文書索引を再構築"}]}
+</specdojo_executor_evidence>

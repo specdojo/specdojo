@@ -26,9 +26,6 @@ groups:
         overview: 業務対象となる物の物理的な保管場所を一覧で定義する
         path: sld-_TERM_.md
         rulebook: specdojo:sld-rulebook
-        recipe: undecided
-        sample: specdojo:sld-sample
-        template: undecided
         note: "_TERM_ は対象業務領域の略称（kebab-case）"
         done_criteria:
           - text: 保管場所・保管対象・管理頻度が業務観点で記述されていること

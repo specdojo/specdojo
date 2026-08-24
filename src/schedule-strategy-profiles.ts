@@ -65,7 +65,7 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       pipeline: EXPERT_PIPELINE,
       description:
         "実践の型の作成条件から要否を判断し、代表成果物と必要な rulebook / recipe / sample / template を" +
-        "同じタスクで初期整備する。不要な型は成果物カタログへ not-needed と宣言し、必要な一式の構造・" +
+        "同じタスクで初期整備する。不要な3種は rulebook frontmatter へ not-needed と宣言し、必要な一式の構造・" +
         "用語・粒度を整合させる。判断できない前提は推測せず result に残す。",
     },
   ],

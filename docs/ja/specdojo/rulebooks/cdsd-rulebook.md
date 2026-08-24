@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cdsd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cdsd-sample
+  template: undecided
 ---
 
 # 概念データストア定義 作成ルール

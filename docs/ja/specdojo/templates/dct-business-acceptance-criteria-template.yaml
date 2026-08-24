@@ -16,9 +16,6 @@ groups:
         overview: 業務として受け入れ可能であることを示す条件・シナリオ・判定方法を定義する
         path: bac-_TERM_.md
         rulebook: specdojo:bac-rulebook
-        recipe: undecided
-        sample: specdojo:bac-sample
-        template: undecided
         note: "_TERM_ は対象業務シナリオ・機能名の略称（kebab-case）"
         done_criteria:
           - text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること

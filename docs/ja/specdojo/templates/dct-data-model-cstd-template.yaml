@@ -26,9 +26,6 @@ groups:
         overview: 業務オブジェクトの状態変化・イベント・遷移条件を図で定義する
         path: cstd-_TERM_.md
         rulebook: specdojo:cstd-rulebook
-        recipe: undecided
-        sample: specdojo:cstd-sample
-        template: undecided
         note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
         done_criteria:
           - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること

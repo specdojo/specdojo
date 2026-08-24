@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:utc-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:utc-index-sample
+  template: undecided
 ---
 
 # 単体テストカタログ概要 作成ルール

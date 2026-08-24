@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:cstd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:cstd-sample
+  template: undecided
 ---
 
 # 概念状態遷移図（Conceptual State Transition Diagram: CSTD）ドキュメント作成ルール

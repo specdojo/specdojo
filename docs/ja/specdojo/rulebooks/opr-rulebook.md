@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  recipe: undecided
   sample:
     - specdojo:opr-sample
     - specdojo:opr-access-control-sample
@@ -13,6 +14,7 @@ specdojo:
     - specdojo:opr-incident-sample
     - specdojo:opr-monitoring-sample
     - specdojo:opr-support-sample
+  template: undecided
 ---
 
 # 運用手順 作成ルール
