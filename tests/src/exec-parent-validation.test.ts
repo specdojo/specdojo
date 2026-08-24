@@ -2,9 +2,47 @@ import { describe, expect, it, vi } from "vitest";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  replaceParentValidationResults,
   resolveParentValidationDefinitions,
   runParentValidations,
 } from "../../src/exec-parent-validation.js";
+import type { ExecEvidence } from "../../src/exec-evidence.js";
+
+function evidenceWithRunnerStatus(status: "passed" | "failed" | "not_run"): ExecEvidence {
+  return {
+    schema_version: 1,
+    task_id: "T-TEST-doc-010",
+    run_id: "run-1",
+    stage: {
+      role: "executor",
+      actor: "executor",
+      status: "succeeded",
+      started_at: "2026-08-10T07:00:00.000Z",
+      completed_at: "2026-08-10T07:01:00.000Z",
+      exit_code: 0,
+      attempts: 1,
+    },
+    changes: [],
+    diff_summary: { files_changed: 0, summary: "" },
+    validations: [
+      {
+        source: "executor",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "unit passed",
+      },
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status,
+        summary: "old result",
+      },
+    ],
+    final_message: "done",
+    log_refs: [],
+  };
+}
 
 describe("parent validation allowlist", () => {
   it("resolves a fixed executable and argv without a shell command from config", () => {
@@ -78,5 +116,46 @@ describe("parent validation allowlist", () => {
     expect(hasRecordedParentValidations(recorded, ["test-integration"])).toBe(true);
     expect(hasRecordedParentValidations([], ["test-integration"])).toBe(false);
     expect(hasRecordedParentValidations(recorded, [])).toBe(false);
+  });
+
+  it("replaces a resolved runner failure without changing executor-owned validations", () => {
+    const evidence = evidenceWithRunnerStatus("failed");
+    const refreshed = replaceParentValidationResults(evidence, [
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status: "passed",
+        summary: "exit 0: integration passed",
+      },
+    ]);
+
+    expect(refreshed.validations).toEqual([
+      evidence.validations[0],
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status: "passed",
+        summary: "exit 0: integration passed",
+      },
+    ]);
+    expect(failedParentValidationReason(refreshed.validations)).toBeUndefined();
+  });
+
+  it("keeps an unresolved runner failure authoritative after revalidation", () => {
+    const refreshed = replaceParentValidationResults(evidenceWithRunnerStatus("failed"), [
+      {
+        id: "test-integration",
+        source: "runner",
+        command: "npm run test:integration",
+        status: "failed",
+        summary: "exit 1: integration still fails",
+      },
+    ]);
+
+    expect(failedParentValidationReason(refreshed.validations)).toBe(
+      "parent validation failed: test-integration",
+    );
   });
 });

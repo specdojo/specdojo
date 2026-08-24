@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { ensureDir, safeSlug } from "./exec-shared.js";
 import { gitOutput } from "./exec-worktree.js";
@@ -275,4 +275,11 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
 
 export function readExecutorEvidence(path: string): ExecEvidence {
   return JSON.parse(readFileSync(path, "utf8")) as ExecEvidence;
+}
+
+/** Persists runner-refreshed evidence without exposing a partially written JSON checkpoint. */
+export function writeExecutorEvidence(path: string, evidence: ExecEvidence): void {
+  const temporaryPath = `${path}.tmp`;
+  writeFileSync(temporaryPath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
+  renameSync(temporaryPath, path);
 }

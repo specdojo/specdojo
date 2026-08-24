@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Q828",
+  "run_id": "20260823T212421176Z-312f3507",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-23T21:24:21.176Z",
+    "completed_at": "2026-08-23T21:37:53.217Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-parent-validation.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../pjr-q828-reporter-revalidation.md              |  17 ++--\n docs/ja/specdojo/guides/exec-config-guide.md       |   2 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   6 +-\n src/exec-evidence.ts                               |   9 +-\n src/exec-parent-validation.ts                      |  26 ++++-\n src/exec-run.ts                                    |  53 ++++++++++-\n tests/src/exec-parent-validation.test.ts           |  79 ++++++++++++++++\n tests/src/exec-pipeline-e2e.integration.test.ts    | 105 +++++++++++++++++++++\n 8 files changed, 283 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-evidence.ts src/exec-parent-validation.ts src/exec-run.ts tests/src/exec-parent-validation.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md",
+      "status": "passed",
+      "summary": "変更したTypeScript・Markdownを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript ESLint検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md",
+      "status": "passed",
+      "summary": "変更したMarkdownの静的検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "生成前のproject-register/generated/pjr-index.md欠損により既存doc-indexテストが1件失敗し、その後停止した。規約に従い再実行していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "failed",
+      "summary": "sandboxのtsx IPC制約によりlisten EPERMで起動できなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "IPC不要の同一CLI起動経路で登録簿生成に成功した。PJR-Q828の状態はin-progressのまま維持した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証は既存警告を伴い終了コード0で成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス1314件を生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "変更差分に空白エラーはなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline指示に従いexecutor内では実行せず、親runnerのtest-integration検証に委ねた。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q828\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-jwykJJ/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "親検証の再評価機能と双方向テスト、関連文書を更新した。unit testは生成前のpjr-index欠損により失敗し、integration testは親runner実行待ち。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Q828/20260823T212421176Z-312f3507/executor.log",
+      "bytes": 3127,
+      "truncated": false
+    }
+  ]
+}

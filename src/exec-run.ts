@@ -138,10 +138,15 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "./exec-strategy.js";
-import { recordExecutorEvidence, type ExecEvidence } from "./exec-evidence.js";
+import {
+  recordExecutorEvidence,
+  writeExecutorEvidence,
+  type ExecEvidence,
+} from "./exec-evidence.js";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  replaceParentValidationResults,
   runParentValidations,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
@@ -751,6 +756,24 @@ async function runConfiguredParentValidations(
     );
   }
   return validations;
+}
+
+async function revalidateFailedParentValidationsForReporterResume(params: {
+  execDefaults: ExecDefaultsConfig;
+  cwd: string;
+  evidence: ExecEvidence;
+  evidencePath: string;
+}): Promise<ExecEvidence> {
+  if (!failedParentValidationReason(params.evidence.validations)) return params.evidence;
+
+  process.stdout.write("  Re-running failed parent validations before reporter resume.\n");
+  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
+  const evidence = replaceParentValidationResults(params.evidence, parentValidations);
+  writeExecutorEvidence(params.evidencePath, evidence);
+  process.stdout.write(
+    `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
+  );
+  return evidence;
 }
 
 export function executorRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
@@ -1543,6 +1566,14 @@ async function runPreparedTask(
         process.stdout.write(
           `  Resuming reporter from persisted executor evidence: ${executorEvidenceRef}\n`,
         );
+        if (failedParentValidationReason(executorEvidence.validations) && executorEvidenceRef) {
+          executorEvidence = await revalidateFailedParentValidationsForReporterResume({
+            execDefaults,
+            cwd: prepared.worktree.path,
+            evidence: executorEvidence,
+            evidencePath: resolve(prepared.worktree.path, executorEvidenceRef),
+          });
+        }
       } else if (prepared.pipelineResumeStage === "reporter") {
         process.stdout.write(
           "  Persisted executor evidence is invalid; starting a new executor run.\n",
@@ -4201,6 +4232,17 @@ async function resumeSingleRegisterItemWorktree(
   if (lookup.kind !== "resumable") return refuse(lookup.reason);
   const target = lookup.target;
 
+  if (
+    !hasRecordedParentValidations(
+      target.evidence.validations,
+      context.execDefaults.pipeline?.parent_validations,
+    )
+  ) {
+    return refuse(
+      `parent validation configuration changed or its results are missing for run ${target.runId}; restart the executor run`,
+    );
+  }
+
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
     worktreePath: worktree.path,
@@ -4247,6 +4289,13 @@ async function resumeSingleRegisterItemWorktree(
   const beginFailure = lifecycleLock ? await lifecycleLock.runExclusive(begin) : begin();
   if (beginFailure) return beginFailure;
 
+  const evidence = await revalidateFailedParentValidationsForReporterResume({
+    execDefaults: context.execDefaults,
+    cwd: worktree.path,
+    evidence: target.evidence,
+    evidencePath: resolve(worktree.path, target.evidenceRef),
+  });
+
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
   const outcome = await runRegisterReporterStage({
     repoRoot,
@@ -4257,7 +4306,7 @@ async function resumeSingleRegisterItemWorktree(
     planPrompt: prompt,
     resultPath: worktreeResultPath,
     execDefaults: context.execDefaults,
-    evidence: target.evidence,
+    evidence,
     state: target.state,
     statePath: target.statePath,
   });
