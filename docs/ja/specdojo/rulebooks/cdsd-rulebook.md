@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:cdsd-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:cdsd-sample
+---
+
 # 概念データストア定義 作成ルール
 
 Conceptual Data Stores Definition (CDSD) Documentation Rules

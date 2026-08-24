@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:otp-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:otp-sample
 ---
 
 # 運用切替計画 作成ルール

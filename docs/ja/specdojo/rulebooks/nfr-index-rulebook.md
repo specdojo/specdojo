@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-index-sample
 ---
 
 # 非機能要件インデックス 作成ルール

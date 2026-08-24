@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-performance-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-performance-sample
 ---
 
 # 非機能要件 / 性能 作成ルール

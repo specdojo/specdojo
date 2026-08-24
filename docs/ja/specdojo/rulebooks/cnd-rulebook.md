@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:cnd-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:cnd-sample
+---
+
 # C4コンテナ図 ドキュメント作成ルール
 
 C4 Container Diagram (CND) Documentation Rules

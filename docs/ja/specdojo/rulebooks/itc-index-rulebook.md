@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:itc-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:itc-index-sample
 ---
 
 # 内部結合テストカタログ概要 作成ルール

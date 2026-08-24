@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:bps-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:bps-sample
+---
+
 # 業務プロセス仕様書 作成ルール
 
 Business Process Specification (BPS) Documentation Rules

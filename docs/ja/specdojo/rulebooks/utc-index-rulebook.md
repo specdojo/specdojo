@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:utc-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:utc-index-sample
 ---
 
 # 単体テストカタログ概要 作成ルール

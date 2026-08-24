@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-security-safety-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-security-safety-sample
 ---
 
 # 非機能要件 / 機密性・安全性 作成ルール

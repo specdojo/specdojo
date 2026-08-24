@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:br-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:br-sample
+---
+
 # ビジネスルール 作成ルール
 
 Business Rule (BR) Documentation Rules

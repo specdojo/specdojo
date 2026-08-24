@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-operations-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-operations-sample
 ---
 
 # 非機能要件 / 運用 作成ルール

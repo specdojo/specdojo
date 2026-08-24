@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:tsp-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:tsp-index-sample
 ---
 
 # テスト戦略・方針 作成ルール

@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:gl-rulebook
   type: rulebook
   status: draft
+  target_format: yaml
   sample: specdojo:gl-sample
 ---
 

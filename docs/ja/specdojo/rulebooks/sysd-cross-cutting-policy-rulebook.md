@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:sysd-cross-cutting-policy-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:sysd-cross-cutting-policy-sample
 ---
 
 # システム設計 / 横断ルール 作成ルール

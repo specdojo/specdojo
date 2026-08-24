@@ -491,14 +491,12 @@ function readRulebookType(fsPath: string): string | undefined {
   return typeof fm.type === "string" ? fm.type : undefined;
 }
 
-// Cross-file check: each rulebook referenced by a catalog deliverable that declares
-// recipe / sample / template (or includes other rulebooks) in its frontmatter must
-// point at files that exist. Returns warnings (not errors); a declared-but-missing
-// reference is a soft signal to author the asset, not a build blocker. Each rulebook
-// is checked once.
+// Cross-file check: rulebook frontmatter declarations and practice files must agree.
+// Declared-but-missing references and existing-but-undeclared counterparts are warnings,
+// because the mismatch is an authoring signal rather than a catalog schema failure.
 export function validateRulebookKata(catalogPath: string): DctValidationResult {
   const warnings: string[] = [];
-  const checked = new Set<string>();
+  const rulebookIds = new Set<string>();
   const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
   for (const f of files) {
     let doc: DctDoc;
@@ -516,42 +514,100 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
             !rulebookId ||
             rulebookId === "none" ||
             rulebookId === "undecided" ||
-            rulebookId === "not-needed" ||
-            checked.has(rulebookId)
+            rulebookId === "not-needed"
           ) {
             continue;
           }
-          checked.add(rulebookId);
-          for (const ref of declaredKata(rulebookId)) {
-            if (!existsSync(ref.fsPath)) {
-              warnings.push(
-                `rulebook '${rulebookId}' declares ${ref.kind} '${ref.id}' but the file is missing: ${ref.fsPath}`,
-              );
-            }
-          }
-          for (const inc of declaredIncludes(rulebookId)) {
-            if (inc.selfReference) {
-              warnings.push(`rulebook '${rulebookId}' includes itself; remove the self-reference`);
-              continue;
-            }
-            if (!existsSync(inc.fsPath)) {
-              warnings.push(
-                `rulebook '${rulebookId}' includes '${inc.id}' but the file is missing: ${inc.fsPath}`,
-              );
-              continue;
-            }
-            const type = readRulebookType(inc.fsPath);
-            if (type !== "rulebook") {
-              warnings.push(
-                `rulebook '${rulebookId}' includes '${inc.id}' but it is not a rulebook (type: ${type ?? "unknown"})`,
-              );
-            }
-          }
+          rulebookIds.add(rulebookId);
         }
         if (section.groups) walk(section.groups);
       }
     };
     walk(doc.groups);
+  }
+
+  const repoRoot = specdojoRootDir();
+  const practiceRoot = join(repoRoot, "docs/ja/specdojo");
+  const rulebooksDir = join(practiceRoot, "rulebooks");
+  // 実践の型のディレクトリを持たないリポジトリ（テスト用の最小構成など）では、
+  // 突き合わせる対象がないため検証を行わない。
+  if (!existsSync(rulebooksDir)) return { ok: true, errors: [], warnings };
+  for (const file of readdirSync(rulebooksDir).filter((name) => name.endsWith("-rulebook.md"))) {
+    const fsPath = join(rulebooksDir, file);
+    const id = readSpecdojoNamespace(readFileSync(fsPath, "utf8")).id;
+    rulebookIds.add(typeof id === "string" ? id : file.replace(/\.md$/, ""));
+  }
+
+  const declaredSampleLocalIds = new Set<string>();
+  for (const rulebookId of [...rulebookIds].sort()) {
+    const refs = declaredKata(rulebookId);
+    const declaredPaths = new Set(refs.map((ref) => ref.fsPath));
+    for (const ref of refs) {
+      if (ref.kind === "sample") {
+        declaredSampleLocalIds.add(
+          ref.id.includes(":") ? ref.id.split(":").slice(1).join(":") : ref.id,
+        );
+      }
+      if (!existsSync(ref.fsPath)) {
+        warnings.push(
+          `rulebook '${rulebookId}' declares ${ref.kind} '${ref.id}' but the file is missing: ${ref.fsPath}`,
+        );
+      }
+    }
+
+    const localRulebookId = rulebookId.includes(":")
+      ? rulebookId.split(":").slice(1).join(":")
+      : rulebookId;
+    const prefix = localRulebookId.replace(/-rulebook$/, "");
+    for (const kind of ["recipe", "template"] as const) {
+      const extensions = kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
+      for (const extension of extensions) {
+        const fsPath = join(
+          practiceRoot,
+          CATALOG_KATA_DIRS[kind],
+          `${prefix}-${kind}.${extension}`,
+        );
+        if (existsSync(fsPath) && !declaredPaths.has(fsPath)) {
+          warnings.push(`rulebook '${rulebookId}' does not declare existing ${kind}: ${fsPath}`);
+        }
+      }
+    }
+
+    for (const inc of declaredIncludes(rulebookId)) {
+      if (inc.selfReference) {
+        warnings.push(`rulebook '${rulebookId}' includes itself; remove the self-reference`);
+        continue;
+      }
+      if (!existsSync(inc.fsPath)) {
+        warnings.push(
+          `rulebook '${rulebookId}' includes '${inc.id}' but the file is missing: ${inc.fsPath}`,
+        );
+        continue;
+      }
+      const type = readRulebookType(inc.fsPath);
+      if (type !== "rulebook") {
+        warnings.push(
+          `rulebook '${rulebookId}' includes '${inc.id}' but it is not a rulebook (type: ${type ?? "unknown"})`,
+        );
+      }
+    }
+  }
+
+  const samplesDir = join(practiceRoot, "samples");
+  const sampleFiles = existsSync(samplesDir)
+    ? readdirSync(samplesDir).filter((name) => /-sample\.(?:md|yaml|json)$/.test(name))
+    : [];
+  for (const file of sampleFiles) {
+    const fsPath = join(samplesDir, file);
+    const declaredId = readPracticeDocumentId(fsPath);
+    const localId = declaredId
+      ? declaredId.includes(":")
+        ? declaredId.split(":").slice(1).join(":")
+        : declaredId
+      : file.replace(/\.(?:md|yaml|json)$/, "");
+    if (!declaredSampleLocalIds.has(localId)) {
+      warnings.push(`sample '${localId}' exists but no rulebook declares it: ${fsPath}`);
+    }
   }
   return { ok: true, errors: [], warnings };
 }

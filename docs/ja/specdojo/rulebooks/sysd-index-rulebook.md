@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:sysd-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:sysd-index-sample
 ---
 
 # システム設計-全体構成 作成ルール

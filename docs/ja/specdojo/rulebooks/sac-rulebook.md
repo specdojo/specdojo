@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:sac-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:sac-sample
+---
+
 # システム受入条件仕様（SAC）作成ルール
 
 本ドキュメントは、品質保証・運用設計・テスト設計のために **システム受入条件（System Acceptance Criteria: SAC）を統一形式で記述する標準ルール**です。

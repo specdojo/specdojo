@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-1Z1H",
+  "run_id": "20260824T102408091Z-7b0e0917",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-24T10:24:08.091Z",
+    "completed_at": "2026-08-24T10:42:40.045Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1z1h-rulebook-sample-declaration-gap.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bps-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/uis-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-assessment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 60,
+    "summary": ".../dct-project-management.yaml                    |   8 ++\n .../pjr-1z1h-rulebook-sample-declaration-gap.md    |  19 ++--\n docs/ja/specdojo/rulebooks/atc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/atc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/bac-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/bds-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/bes-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/bps-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/br-rulebook.md          |   8 ++\n docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md |   2 +-\n docs/ja/specdojo/rulebooks/cdsd-rulebook.md        |   8 ++\n docs/ja/specdojo/rulebooks/cld-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/cnd-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/cop-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/cpd-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/cstd-rulebook.md        |   8 ++\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/dmd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/etc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/etc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/gl-rulebook.md          |   1 +\n docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md |   2 +-\n docs/ja/specdojo/rulebooks/ifx-api-rulebook.md     |   1 +\n docs/ja/specdojo/rulebooks/ifx-file-rulebook.md    |   8 ++\n docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md     |   1 +\n docs/ja/specdojo/rulebooks/itc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/itc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/mip-index-rulebook.md   |   1 +\n .../rulebooks/nfr-availability-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/nfr-index-rulebook.md   |   1 +\n .../specdojo/rulebooks/nfr-integrity-rulebook.md   |   1 +\n .../rulebooks/nfr-maintainability-rulebook.md      |   1 +\n .../specdojo/rulebooks/nfr-operations-rulebook.md  |   1 +\n .../specdojo/rulebooks/nfr-performance-rulebook.md |   1 +\n .../specdojo/rulebooks/nfr-reliability-rulebook.md |   1 +\n .../rulebooks/nfr-security-safety-rulebook.md      |   1 +\n .../specdojo/rulebooks/nfr-usability-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/opd-rulebook.md         |   5 +\n docs/ja/specdojo/rulebooks/opr-rulebook.md         |   9 ++\n docs/ja/specdojo/rulebooks/otp-rulebook.md         |   1 +\n .../rulebooks/pm-change-request-log-rulebook.md    |   1 +\n .../ja/specdojo/rulebooks/pm-issue-log-rulebook.md |   1 +\n .../rulebooks/pm-risk-register-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/sac-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/stc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/stc-rulebook.md         |   1 +\n .../rulebooks/sysd-critical-flows-rulebook.md      |   1 +\n .../sysd-cross-cutting-policy-rulebook.md          |   1 +\n docs/ja/specdojo/rulebooks/sysd-index-rulebook.md  |   1 +\n docs/ja/specdojo/rulebooks/tsp-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/uis-rulebook.md         |   8 ++\n docs/ja/specdojo/rulebooks/utc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/utc-rulebook.md         |   1 +\n .../standards/rulebook-authoring-standard.md       |   3 +-\n .../schemas/v1/rulebook-frontmatter.schema.yaml    |  13 ++-\n src/catalog-build.ts                               | 120 +++++++++++++++------\n src/catalog.ts                                     |   6 ++\n src/kata.ts                                        |  39 +++++--\n src/schedule-assessment.ts                         |   6 +-\n tests/src/kata.test.ts                             | 101 +++++++++++++++++\n 60 files changed, 420 insertions(+), 58 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only --diff-filter=ACM | xargs npx prettier --write",
+      "status": "passed",
+      "summary": "変更したMarkdown・YAML・TypeScriptを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "Markdown全件の静的検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter検査が成功し、sample配列を含むrulebook schemaに適合した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "failed",
+      "summary": "BDD・ESIL検証後、sandboxのtsx IPCソケット作成がEPERMとなり中断した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.schema.yaml --data 'docs/ja/**/sch-milestones*.yaml'",
+      "status": "passed",
+      "summary": "マイルストーンschema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-track.schema.yaml --data 'docs/ja/**/sch-track-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "Schedule track schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data 'docs/ja/**/sch-strategy-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "Schedule strategy schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-assessment.schema.yaml --data 'docs/ja/**/assessments/sch-assessment-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "Schedule assessment schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data 'docs/ja/**/plans/dct-plan-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "対象ファイルなしとして正常終了した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data 'docs/ja/**/dct-index.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "DCT index schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data '.specdojo/exec-defaults.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "exec defaults schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/job.schema.yaml --data 'docs/ja/**/jobs/job-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "job schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data 'docs/ja/**/execution/jobs/runs/*.json' --allow-empty",
+      "status": "passed",
+      "summary": "対象ファイルなしとして正常終了した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/routine.schema.yaml --data 'docs/ja/**/routines/rtn-*.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "routine schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data 'docs/ja/**/pm-members.yaml' --allow-empty",
+      "status": "passed",
+      "summary": "PM members schema検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログが成功。今回追加した実践の型不整合警告は0件で、既存の未作成成果物警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "カタログ生成が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と管理ビューの生成が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス1332件を生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "単独で1回実行したが、Vitest開始後5分超結果が出ず、既知のPJR-17S7と同じ終了待ち状態のため中断した。再実行していない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "変更差分に空白エラーはない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline指示に従いexecutor内では実行せず、親runnerへ委ねた。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Z1H\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-5dypmv/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "sample 106件の宣言整合、カタログ8件のrulebook設定、双方向検証を実装。unit testのみ既知のVitestハングで未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-1Z1H/20260824T102408091Z-7b0e0917/executor.log",
+      "bytes": 5516,
+      "truncated": false
+    }
+  ]
+}

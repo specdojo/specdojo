@@ -414,7 +414,11 @@ export function collectAssessmentFacts(opts: {
           "sample",
           item.rulebook,
           refs,
-          hasCatalogKataSet ? item.sample : declared.sample,
+          hasCatalogKataSet
+            ? item.sample
+            : Array.isArray(declared.sample)
+              ? declared.sample[0]
+              : declared.sample,
         ),
         template: collectKataFact(
           repoRoot,

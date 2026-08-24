@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:cxd-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:cxd-sample
+---
+
 # C4コンテキスト図 ドキュメント作成ルール
 
 C4 Contextual Diagram (CXD) Documentation Rules

@@ -27,7 +27,7 @@ export type CatalogKataDeclarations = Partial<Record<keyof KataRefs, string>>;
 
 type RulebookRefs = {
   recipe?: string;
-  sample?: string;
+  sample?: string | string[];
   template?: string;
   target_format?: string;
   schema?: string;
@@ -65,9 +65,11 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
     Array.isArray(value)
       ? value.filter((v): v is string => typeof v === "string" && v !== "")
       : undefined;
+  const strOrArray = (value: unknown): string | string[] | undefined =>
+    str(value) ?? strArray(value);
   return {
     recipe: str(fm.recipe),
-    sample: str(fm.sample),
+    sample: strOrArray(fm.sample),
     template: str(fm.template),
     target_format: str(fm.target_format),
     schema: str(fm.schema),
@@ -86,6 +88,16 @@ function repoPath(kind: KataKind, id: string, ext: string): string {
   return `${DOCS_BASE}/${KIND_DIR[kind]}/${practiceLocalId(id)}.${ext}`;
 }
 
+// 宣言 ID は拡張子を持たないため、対象形式を優先しつつ実在する例外形式も解決する。
+// dct-index の YAML 正本に対する Markdown 生成ビュー template などが該当する。
+function declaredRefExt(kind: KataKind, id: string, preferredExt: string): string {
+  const candidates = kind === "recipe" ? ["md"] : [preferredExt, "md", "yaml", "json"];
+  for (const ext of [...new Set(candidates)]) {
+    if (existsSync(join(specdojoRootDir(), repoPath(kind, id, ext)))) return ext;
+  }
+  return preferredExt;
+}
+
 // rulebook 未宣言時の慣例 ID（<rulebook-prefix>-<kind>）。
 // 例: rulebook `specdojo:pm-organization-rulebook` → sample `specdojo:pm-organization-sample`。
 function conventionalRefId(rulebookId: string, kind: KataKind): string {
@@ -99,14 +111,16 @@ function conventionalRefId(rulebookId: string, kind: KataKind): string {
 // 未宣言の場合は規定ディレクトリ上の慣例ファイルを探し、実在すればそのパスを返す。
 function resolveRef(
   kind: KataKind,
-  declaredId: string | undefined,
+  declaredId: string | string[] | undefined,
   rulebookId: string,
   ext: string,
 ): string {
-  if (declaredId === "none" || declaredId === "undecided" || declaredId === "not-needed") {
+  // 複数 sample は宣言順の先頭を、カタログ指定がない場合の既定例として使う。
+  const primaryId = Array.isArray(declaredId) ? declaredId[0] : declaredId;
+  if (primaryId === "none" || primaryId === "undecided" || primaryId === "not-needed") {
     return MISSING;
   }
-  if (declaredId) return repoPath(kind, declaredId, ext);
+  if (primaryId) return repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
   const fallbackId = conventionalRefId(rulebookId, kind);
   const fsPath = join(
     specdojoRootDir(),
@@ -118,8 +132,9 @@ function resolveRef(
 }
 
 // 成果物の rulebook ID を起点に、recipe / sample / template の repo 相対パスを解決する。
-// recipe / sample / template は rulebook frontmatter の宣言を正とし、未宣言なら規定
-// ディレクトリ上の慣例ファイルの実在を確認してパスを補う。
+// カタログに recipe / sample / template が1つでも宣言されていれば、その宣言セットを優先する。
+// セット内で未宣言の種別は rulebook frontmatter へ戻らず、規定ディレクトリ上の慣例ファイルを探す。
+// カタログ側が3種とも未宣言の場合だけ rulebook frontmatter を使う。
 // 該当なしの項目は MISSING を返し、表示構造はテンプレート側に委ねる。
 export function resolveKataRefs(
   rulebookId: string | undefined,
@@ -133,7 +148,7 @@ export function resolveKataRefs(
   const hasCatalogKataSet = (["recipe", "sample", "template"] as const).some(
     (kind) => catalog[kind] !== undefined,
   );
-  const directOrLegacy = (kind: KataKind): string | undefined =>
+  const directOrLegacy = (kind: KataKind): string | string[] | undefined =>
     hasCatalogKataSet ? catalog[kind] : fm[kind];
   return {
     rulebook: usableRulebookId
@@ -281,12 +296,14 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
   const fm = loadRulebookRefs(rulebookId);
   const root = specdojoRootDir();
   const out: DeclaredKata[] = [];
-  const add = (kind: KataKind, id: string | undefined, ext: string): void => {
-    if (id && id !== "none") {
+  const add = (kind: KataKind, value: string | string[] | undefined, ext: string): void => {
+    const ids = Array.isArray(value) ? value : value ? [value] : [];
+    for (const id of ids) {
+      if (id === "none") continue;
       out.push({
         kind,
         id,
-        fsPath: join(root, DOCS_BASE, KIND_DIR[kind], `${practiceLocalId(id)}.${ext}`),
+        fsPath: join(root, repoPath(kind, id, declaredRefExt(kind, id, ext))),
       });
     }
   };

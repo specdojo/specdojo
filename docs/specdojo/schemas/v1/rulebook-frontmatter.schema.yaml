@@ -38,8 +38,17 @@ properties:
             $ref: "./common-frontmatter.schema.yaml#/$defs/recipeRef"
             description: "対応する recipe の ID（fully-guided / recipe-guided の参照解決に使う）。"
           sample:
-            $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
-            description: "対応する sample の ID（fully-guided の参照解決に使う）。"
+            oneOf:
+              - $ref: "./common-frontmatter.schema.yaml#/$defs/sampleRef"
+              - type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: string
+                  pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-sample$"
+            description: >-
+              対応する sample の ID または ID 配列（fully-guided の参照解決に使う）。
+              配列の場合、先頭をカタログ指定がない場合の既定例とする。
           template:
             $ref: "./common-frontmatter.schema.yaml#/$defs/templateRef"
             description: "対応する template の ID（fully-guided の参照解決に使う）。"

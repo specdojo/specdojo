@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:pm-issue-log-sample
+  template: specdojo:pm-issue-log-template
 ---
 
 # 課題ログ 作成ルール
