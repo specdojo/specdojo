@@ -12,8 +12,8 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-23T13:03:45Z"
   due_on: "2026-08-31"
-  completed_at: "2026-08-24T09:43:44Z"
-  conclusion: claude-reporter の失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧には利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要であり、本項目の範囲である原因特定と記録を完了した。
+  completed_at: "2026-08-24T10:19:04Z"
+  conclusion: claude CLI（Nodeプロセス）内で JSON.parse が失敗して非ゼロ終了したことまでは確実だが、パース対象は特定できていない。初回調査の「credentials JSON が不正」という結論は誤りであり訂正した。当該文言は Node の JSON.parse 失敗時の標準形式であり認証情報固有の診断ではなく、再検証では最小プロンプトと約22KiBのプロンプトのいずれでも claude-reporter が正常に応答した。6回連続の失敗後に再現しなくなっており、一過性の事象であった可能性が高い。生の stderr が保全されていなかったため原因を追えなかった。保全の整備は PJR-KAQV で行う。
 ---
 
 # PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする
@@ -36,8 +36,8 @@ claude-reporter が PJR-K4TA で3回、PJR-JT1Y で3回、いずれも is not va
 
 | 項目     | 内容                                                                                                                                                                                 |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 原因     | Claude CLI が reporter prompt の処理前に読む、実行環境側の credentials JSON が不正だった。SpecDojo の reporter 出力解析やプロジェクト内の settings JSON の失敗ではない               |
-| 対応策   | Claude CLI の正規の認証操作で credentials を再生成してから reporter を再開する。復旧までは `--reporter-by codex-reporter` を使い、不正な credentials を手編集・共有・成果物化しない  |
+| 原因     | 未特定。claude CLI（Node プロセス）内で `JSON.parse` が失敗して非ゼロ終了したことまでは確実だが、パース対象は判別できていない。SpecDojo の reporter 出力解析の失敗ではない           |
+| 対応策   | 失敗時の生の stderr を保全したうえで再調査する。保全の仕組みは PJR-KAQV で扱う。再発時は `--reporter-by codex-reporter` へ切り替えて実行を継続する                                   |
 | 依存事項 | PJR-Q828（reporter の再評価手段）と同じ reporter 段階を扱うため、実装が重なる場合は順序を調整する                                                                                    |
 | 完了条件 | 失敗の再現条件と原因が特定され、本個票に記録されている。原因が SpecDojo 側にある場合は修正方針が判断できる状態になっている。修正そのものは本個票の範囲に含めず、必要なら別途起票する |
 
@@ -45,9 +45,27 @@ claude-reporter が PJR-K4TA で3回、PJR-JT1Y で3回、いずれも is not va
 
 - PJR-K4TA と PJR-JT1Y の保存済み plan / evidence を比較した。入力はそれぞれ約28 KiB（plan 約11 KiB、evidence 約17 KiB）と約26 KiB（plan 約11 KiB、evidence 約15 KiB）で、変更一覧は78件と59件だった。いずれも JSON として読み込め、`diff_summary` などの可変長項目には既定の上限が適用されていた。
 - `.specdojo/claude/settings.report.json` と共通 `.claude/settings.json` は現在と両実行の成果コミット（`5a2e9011`、`03aa42e0`）で JSON として妥当だった。reporter command も両実行で同一であり、変更一覧の件数が settings の解決結果を変える経路はない。
-- SpecDojo が reporter の stdout を解析できない場合の診断は `response is not a single JSON value` である。一方、当該実行で記録された `is not valid JSON` は Claude CLI の credentials 読み込み失敗の診断と一致する。Claude CLI の `--settings` 構文エラーは `Invalid JSON provided to --settings` / `Invalid JSON syntax in settings file` という別の診断になる。この文言の発生箇所と、同じローカル状態のまま3回とも起動時に失敗したことから、reporter 出力長ではなく実行環境側 credentials の不正が再現条件だったと特定した。
-- この失敗は agent が応答を生成する前に起きるため、reporter JSON schema、形式リトライ、evidence の変更ファイル数を調整しても解消しない。プロジェクト成果物に credentials を取り込まず、Claude CLI の正規の logout / login 相当の操作でローカル認証状態を再生成することを復旧手順とした。認証情報へアクセスしないプロジェクト方針に従い、本対応では credentials の読み取り・編集・再生成を行っていない。
-- 復旧確認は、認証状態を管理する利用者が Claude CLI の認証を再設定した後、同じ checkpoint を `specdojo exec resume --task <task-id> --reporter-by claude-reporter` で再開して行う。復旧までの回避策は、実績のある `--reporter-by codex-reporter` への切り替えとする。原因は SpecDojo の実装・設定ではないため、ソースコードと provider 設定は変更していない。
+- SpecDojo が reporter の stdout を解析できない場合の診断は `response is not a single JSON value: ...` である。記録された文言は `agent exited with non-zero code: "... is not valid JSON` で接頭辞が異なるため、SpecDojo の出力解析の失敗ではなく、claude CLI 自身が非ゼロ終了したことによる。この点は裏付けられた。
+
+### 訂正（オーケストレーターによる再検証）
+
+初回の調査では「実行環境側の credentials JSON が不正だった」と結論づけたが、これは誤りである。以下の再検証により訂正する。
+
+- `"... is not valid JSON` は Node.js が `JSON.parse` 失敗時に出力する標準形式であり、認証情報の読み込み失敗に固有の診断ではない。`node -e 'JSON.parse("this is a long non-json string here")'` は `Unexpected token 'h', "this is a l"... is not valid JSON` を出力する。`"..."` は Node が入力を切り詰めた跡である。したがって、この文言から「パース対象が credentials である」とは導けない。
+- claude-reporter を最小プロンプト（約30 B）と失敗時と同規模のプロンプト（約22 KiB）で直接起動したところ、いずれも exit 0 で正常に応答した。認証情報は壊れておらず、入力サイズも要因ではない。
+- オーケストレーター自身が claude として動作し続けている状態で claude-reporter だけが認証に失敗する、という当初の説明は整合しない。
+- 失敗した2回の実行の stderr ログには当該メッセージが記録されておらず、残っていたのは stdout の切り詰められた要約行のみであった。初回の調査は生の出力を確認できないまま推論しており、結論の根拠が不足していた。
+
+### 現時点の判定
+
+| 判定 | 内容                                                                  |
+| ---- | --------------------------------------------------------------------- |
+| 確実 | claude CLI（Node プロセス）内で `JSON.parse` が失敗し、非ゼロ終了した |
+| 確実 | SpecDojo の reporter 出力解析の失敗ではない                           |
+| 確実 | 現在は再現しない。入力サイズは要因ではない                            |
+| 不明 | パース対象が何だったか（認証情報・設定・ストリーム応答のいずれか）    |
+
+6回連続で失敗した後、現在は正常に動作する。間に何が変わったかは特定できていない。一過性の事象であった可能性が高いが、断定はできない。再発時に原因を追えるよう、生の stderr を保全する仕組みを PJR-KAQV で整備する。
 
 ## 5. 関連ドキュメント
 
@@ -55,3 +73,4 @@ claude-reporter が PJR-K4TA で3回、PJR-JT1Y で3回、いずれも is not va
 - 2回目の発生: [[prj-0001:pjr-jt1y-kata-undecided-state|PJR-JT1Y 実践の型の要否に未判断の状態を追加]]
 - 同じ reporter 段階の課題: [[prj-0001:pjr-q828-reporter-revalidation|PJR-Q828 reporterの再評価]]
 - 実行ログ: `logs/exec-register-PJR-K4TA.stderr.log`、`logs/exec-register-PJR-JT1Y.stderr.log`
+- 生ログ保全の整備: [[prj-0001:pjr-kaqv-agent-raw-stderr-retention|PJR-KAQV agent失敗時の生のstderrを保全する]]
