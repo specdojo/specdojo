@@ -202,6 +202,7 @@ groups:
           - pjr-entry
         overview: プロジェクト登録簿の未完了項目を一覧化
         path: pjr-open-items.md
+        rulebook: specdojo:pjr-rulebook
       - local_id: pjr-by-owner
         name: 担当者別一覧
         kind: generated
@@ -210,6 +211,7 @@ groups:
           - pjr-entry
         overview: プロジェクト登録簿の担当者別項目を一覧化
         path: pjr-by-owner.md
+        rulebook: specdojo:pjr-rulebook
       - local_id: pjr-by-priority
         name: 優先度別一覧
         kind: generated
@@ -218,6 +220,7 @@ groups:
           - pjr-entry
         overview: プロジェクト登録簿の優先度別項目を一覧化
         path: pjr-by-priority.md
+        rulebook: specdojo:pjr-rulebook
       - local_id: pjr-by-status
         name: 状態別一覧
         kind: generated
@@ -226,6 +229,7 @@ groups:
           - pjr-entry
         overview: プロジェクト登録簿の状態別項目を一覧化
         path: pjr-by-status.md
+        rulebook: specdojo:pjr-rulebook
   - name: 管理ビュー
     base_path: controls/generated
     deliverables:
@@ -236,6 +240,7 @@ groups:
           - pjr-entry
         overview: 識別済みリスクと対応策を管理
         path: pm-risk-register.md
+        rulebook: specdojo:pm-risk-register-rulebook
       - local_id: pm-issue-log
         name: 課題ログ
         kind: generated
@@ -243,6 +248,7 @@ groups:
           - pjr-entry
         overview: 発生した課題と対応状況を管理
         path: pm-issue-log.md
+        rulebook: specdojo:pm-issue-log-rulebook
       - local_id: pm-change-request-log
         name: 変更要求ログ
         kind: generated
@@ -250,6 +256,7 @@ groups:
           - pjr-entry
         overview: 変更要求の申請・審査・決定を管理
         path: pm-change-request-log.md
+        rulebook: specdojo:pm-change-request-log-rulebook
       - local_id: pm-decision-log
         name: 決定記録
         kind: generated
@@ -257,6 +264,7 @@ groups:
           - pjr-entry
         overview: プロジェクト上の意思決定とその根拠を記録
         path: pm-decision-log.md
+        rulebook: specdojo:pjr-rulebook
   - name: レポート
     groups:
       - name: 進捗報告

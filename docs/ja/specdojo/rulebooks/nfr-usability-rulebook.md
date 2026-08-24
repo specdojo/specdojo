@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-usability-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-usability-sample
 ---
 
 # 非機能要件 / 操作性 作成ルール

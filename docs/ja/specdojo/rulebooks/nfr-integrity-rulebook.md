@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-integrity-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-integrity-sample
 ---
 
 # 非機能要件 / 完全性 作成ルール

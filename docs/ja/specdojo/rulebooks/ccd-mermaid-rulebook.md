@@ -5,7 +5,7 @@ specdojo:
   status: draft
   target_format: markdown
   recipe: none
-  sample: none
+  sample: specdojo:ccd-sample
   template: none
   based_on:
     - specdojo:rulebook-authoring-standard

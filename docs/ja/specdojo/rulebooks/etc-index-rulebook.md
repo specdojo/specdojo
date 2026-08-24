@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:etc-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:etc-index-sample
 ---
 
 # 外部結合テストカタログ概要 作成ルール

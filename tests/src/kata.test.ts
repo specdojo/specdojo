@@ -93,6 +93,24 @@ describe("kata", () => {
       );
     });
 
+    it("複数 sample の宣言では先頭を既定例として解決する", () => {
+      writeRulebook(
+        "specdojo:opr-rulebook",
+        [
+          "id: specdojo:opr-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "sample:",
+          "  - specdojo:opr-sample",
+          "  - specdojo:opr-incident-sample",
+        ].join("\n"),
+      );
+
+      expect(resolveKataRefs("specdojo:opr-rulebook").sample).toBe(
+        "docs/ja/specdojo/samples/opr-sample.md",
+      );
+    });
+
     it("template の拡張子も target_format に従う", () => {
       writeRulebook(
         "specdojo:pm-roles-rulebook",
@@ -107,6 +125,28 @@ describe("kata", () => {
 
       expect(resolveKataRefs("specdojo:pm-roles-rulebook").template).toBe(
         "docs/ja/specdojo/templates/pm-roles-template.yaml",
+      );
+    });
+
+    it("宣言 ID に対象形式と異なる実在ファイルがあれば実在する拡張子を使う", () => {
+      writeRulebook(
+        "specdojo:dct-index-rulebook",
+        [
+          "id: specdojo:dct-index-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "target_format: yaml",
+          "template: specdojo:dct-index-template",
+        ].join("\n"),
+      );
+      writeFileSync(
+        join(root, SPECDOJO, "templates", "dct-index-template.md"),
+        "# template\n",
+        "utf8",
+      );
+
+      expect(resolveKataRefs("specdojo:dct-index-rulebook").template).toBe(
+        "docs/ja/specdojo/templates/dct-index-template.md",
       );
     });
 
@@ -321,6 +361,25 @@ describe("kata", () => {
       ]);
       expect(refs[0].fsPath).toBe(join(root, SPECDOJO, "recipes", "prj-overview-recipe.md"));
     });
+
+    it("sample の配列宣言をすべて返す", () => {
+      writeRulebook(
+        "specdojo:opr-rulebook",
+        [
+          "id: specdojo:opr-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "sample:",
+          "  - specdojo:opr-sample",
+          "  - specdojo:opr-incident-sample",
+        ].join("\n"),
+      );
+
+      expect(declaredKata("specdojo:opr-rulebook").map((ref) => ref.id)).toEqual([
+        "specdojo:opr-sample",
+        "specdojo:opr-incident-sample",
+      ]);
+    });
   });
 
   describe("resolveIncludedRulebooks", () => {
@@ -446,6 +505,48 @@ describe("kata", () => {
         ["id: doc-rulebook", "type: rulebook", "status: draft", "recipe: doc-recipe"].join("\n"),
       );
       writeFileSync(join(root, SPECDOJO, "recipes", "doc-recipe.md"), "# recipe\n", "utf8");
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      expect(validateRulebookKata(catalogDir).warnings).toEqual([]);
+    });
+
+    it("実在する sample をどの rulebook も宣言していなければ警告する", () => {
+      writeRulebook(
+        "doc-rulebook",
+        ["id: doc-rulebook", "type: rulebook", "status: draft"].join("\n"),
+      );
+      writeFileSync(
+        join(root, SPECDOJO, "samples", "doc-sample.md"),
+        "---\nspecdojo:\n  id: specdojo:doc-sample\n  type: sample\n  status: draft\n---\n\n# sample\n",
+        "utf8",
+      );
+      const catalogDir = writeCatalog("doc-rulebook");
+
+      const { warnings } = validateRulebookKata(catalogDir);
+
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]).toContain("sample 'doc-sample' exists but no rulebook declares it");
+    });
+
+    it("複数の sample がすべて宣言されていれば警告しない", () => {
+      writeRulebook(
+        "doc-rulebook",
+        [
+          "id: doc-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "sample:",
+          "  - specdojo:doc-sample",
+          "  - specdojo:doc-alternate-sample",
+        ].join("\n"),
+      );
+      for (const id of ["doc-sample", "doc-alternate-sample"]) {
+        writeFileSync(
+          join(root, SPECDOJO, "samples", `${id}.md`),
+          `---\nspecdojo:\n  id: specdojo:${id}\n  type: sample\n  status: draft\n---\n\n# sample\n`,
+          "utf8",
+        );
+      }
       const catalogDir = writeCatalog("doc-rulebook");
 
       expect(validateRulebookKata(catalogDir).warnings).toEqual([]);

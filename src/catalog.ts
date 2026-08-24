@@ -13,6 +13,7 @@ import {
   validateCatalogIndex,
   validateCatalogLocalIds,
   validateDctDoc,
+  validateRulebookKata,
 } from "./catalog-build.js";
 import { collectDocIndexEntries } from "./doc-index.js";
 import { deriveProjectId, runScaffold, type ProjectSize } from "./catalog-scaffold.js";
@@ -387,6 +388,11 @@ export function registerCatalogCommands(program: Command): void {
       // Cross-file: local_id must be unique project-wide so a bare local_id resolves
       // to one deliverable (scheduled tasks and --deliverable).
       for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
+        process.stdout.write(`WARN:  ${warn}\n`);
+      }
+
+      // Cross-file: rulebook declarations and recipe / sample / template files must agree.
+      for (const warn of validateRulebookKata(catalogPath).warnings) {
         process.stdout.write(`WARN:  ${warn}\n`);
       }
 

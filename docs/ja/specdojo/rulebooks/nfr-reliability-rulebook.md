@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-reliability-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-reliability-sample
 ---
 
 # 非機能要件 / 信頼性 作成ルール

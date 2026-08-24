@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:dmd-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:dmd-sample
 ---
 
 # データ移行設計 作成ルール

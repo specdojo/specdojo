@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:cstd-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:cstd-sample
+---
+
 # 概念状態遷移図（Conceptual State Transition Diagram: CSTD）ドキュメント作成ルール
 
 本ドキュメントは、業務分析・要求定義のために **概念状態遷移図（Conceptual State Transition Diagram: CSTD）** を、統一形式で作成するためのルールです。

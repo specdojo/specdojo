@@ -4,6 +4,15 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample:
+    - specdojo:opr-sample
+    - specdojo:opr-access-control-sample
+    - specdojo:opr-backup-restore-sample
+    - specdojo:opr-batch-sample
+    - specdojo:opr-change-sample
+    - specdojo:opr-incident-sample
+    - specdojo:opr-monitoring-sample
+    - specdojo:opr-support-sample
 ---
 
 # 運用手順 作成ルール

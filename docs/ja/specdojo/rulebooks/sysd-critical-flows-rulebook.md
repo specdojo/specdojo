@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:sysd-critical-flows-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:sysd-critical-flows-sample
 ---
 
 # システム設計 重要フロー 作成ルール

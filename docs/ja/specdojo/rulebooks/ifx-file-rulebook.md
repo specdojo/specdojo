@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:ifx-file-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:ifx-file-sample
+---
+
 # 外部ファイル連携仕様（External File Exchange Specification: EFES）作成ルール
 
 外部システム（仕入先、物流、会計など）と **ファイル連携**するために、ファイルの形式・項目・制約・受け渡し手順を定義します。

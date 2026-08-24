@@ -34,16 +34,21 @@ sample の実ファイルは107本あり rulebook 106本とほぼ1対1だが、r
 
 ## 3. 作業内容
 
-| No  | 作業                                                                               | 担当 | 状態 | メモ                           |
-| --- | ---------------------------------------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | rulebook frontmatter の型宣言と実ファイルを突き合わせ、未宣言55本を宣言する        | BA   | open | 所在の正本を完成させる         |
-| 2   | 成果物カタログで rulebook 未宣言の散文成果物10件を調査し、宣言または理由を記録する | BA   | open | 実在する rulebook の有無を確認 |
-| 3   | 宣言と実ファイルの食い違いを検知する検証を追加する                                 | BA   | open | 双方向の欠落を対象にする       |
-| 4   | `src/kata.ts` の解決順序のコメントを実装に合わせて修正する                         | BA   | open | 実装は変更しない               |
+| No  | 作業                                                                               | 担当 | 状態 | メモ                         |
+| --- | ---------------------------------------------------------------------------------- | ---- | ---- | ---------------------------- |
+| 1   | rulebook frontmatter の型宣言と実ファイルを突き合わせ、未宣言55本を宣言する        | BA   | done | 所在の正本を完成させた       |
+| 2   | 成果物カタログで rulebook 未宣言の散文成果物10件を調査し、宣言または理由を記録する | BA   | done | 8件を宣言し、2件は理由を記録 |
+| 3   | 宣言と実ファイルの食い違いを検知する検証を追加する                                 | BA   | done | 双方向の欠落を対象にした     |
+| 4   | `src/kata.ts` の解決順序のコメントを実装に合わせて修正する                         | BA   | done | 実装の優先順を正確に記載した |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- rulebook frontmatter が参照していた sample 51件に対し、実在するが未参照だった55件を追加し、sample 106件すべてを rulebook から宣言した。同一系統に複数の完成例がある OPD / OPR は `sample` を配列で宣言し、先頭を既定例として解決するよう schema・標準・実装を揃えた。あわせて、実在する同名 template が未宣言だった管理ログ3系統も宣言した。
+- rulebook 未宣言の Markdown 成果物10件を調査した。`pjr-open-items` / `pjr-by-owner` / `pjr-by-priority` / `pjr-by-status` / `pm-decision-log` は、登録個票から生成する派生ビューまで適用範囲に含む `specdojo:pjr-rulebook` を宣言した。`pm-risk-register` / `pm-issue-log` / `pm-change-request-log` は各専用 rulebook を宣言した。
+- `uis-index` / `bds-index` は Hub 専用 rulebook が存在せず、[[prj-0001:pjr-mwxs-uis-index-rulebook-bds-index-rulebook|PJR-MWXS uis-index / bds-index の実践の型（kata）一式の新設]] が bootstrap まで deferred のため、推測で個別成果物用 rulebook を流用せず未宣言を維持した。
+- `catalog validate` から rulebook 宣言の双方向検査を実行するようにした。宣言済みファイルの不存在、既存 sample の未宣言、同名 recipe / template の未宣言を警告として検知する。複数 sample の解決・列挙と未宣言検知の単体テストを追加した。
+- `src/kata.ts` のコメントを、カタログに recipe / sample / template のいずれかがあればカタログの宣言セットを優先し、未宣言種別は rulebook frontmatter へ戻らず慣例ファイルを探索する実装順序に合わせた。要否と所在の分離は [[prj-0001:pjr-3n21-kata-declaration-ssot-split|PJR-3N21 実践の型の要否と所在の正本を分ける]] の判断対象として残し、本項目では変更していない。
+- schema・型検査・lint・catalog validate / build・register build・index build は成功した。`npm run test:unit` は単独で1回だけ実行したが、既知の [[prj-0001:pjr-17s7-unit-test-double-run-hang|PJR-17S7 executor が unit test を二度実行し、Vitest の終了待ちが収束しない]] と同じく開始後5分超結果が出ず、重複実行せず中断した。
 
 ## 5. 関連ドキュメント
 

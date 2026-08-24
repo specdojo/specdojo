@@ -4,6 +4,11 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample:
+    - specdojo:opd-sample
+    - specdojo:opd-access-control-sample
+    - specdojo:opd-incident-management-sample
+    - specdojo:opd-monitoring-sample
 ---
 
 # 運用方針・設計 作成ルール

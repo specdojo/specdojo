@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-maintainability-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-maintainability-sample
 ---
 
 # 非機能要件 / 保守性 作成ルール

@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:nfr-availability-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:nfr-availability-sample
 ---
 
 # 非機能要件 / 可用性 作成ルール

@@ -42,13 +42,14 @@ Rulebook Authoring Standard
 | status        | ○    | `draft` / `ready` / `deprecated`                               |
 | target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
 | recipe        | 任意 | 対応する recipe の完全 ID。該当なしは `none`                   |
-| sample        | 任意 | 対応する sample の完全 ID。該当なしは `none`                   |
+| sample        | 任意 | 対応する sample の完全 ID または ID 配列。該当なしは `none`    |
 | template      | 任意 | 対応する template の完全 ID。該当なしは `none`                 |
 | based_on      | 任意 | 上位規約や根拠ドキュメント                                     |
 | supersedes    | 任意 | 置き換え関係                                                   |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
 - `recipe` / `sample` / `template` は ID 参照であり、`fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
+- 同じ rulebook 系統に複数の完成例がある場合、`sample` を ID 配列で宣言する。カタログ側で sample を指定しない参照解決では、配列の先頭を既定例として使う。
 - 機械検証は [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml) を SSOT とする。
 
 記述例:

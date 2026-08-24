@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:bds-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:bds-sample
+---
+
 # 帳票仕様 作成ルール
 
 Business Document Specification (BDS) Documentation Rules

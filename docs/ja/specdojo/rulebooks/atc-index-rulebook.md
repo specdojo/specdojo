@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:atc-index-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:atc-index-sample
 ---
 
 # 受入テストカタログ 概要 作成ルール

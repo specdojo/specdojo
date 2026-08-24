@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:pm-risk-register-sample
+  template: specdojo:pm-risk-register-template
 ---
 
 # リスク登録簿 作成ルール

@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:bac-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:bac-sample
+---
+
 # 業務受入条件 作成ルール
 
 Business Acceptance Criteria (BAC) Documentation Rules

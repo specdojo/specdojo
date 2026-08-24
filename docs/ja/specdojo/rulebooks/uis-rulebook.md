@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:uis-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:uis-sample
+---
+
 # 画面仕様(UI) 作成ルール
 
 本ドキュメントは、業務分析・要求定義のために **画面仕様（User Interface: UI）を統一形式で記述する標準ルール**です。

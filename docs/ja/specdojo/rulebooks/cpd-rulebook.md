@@ -1,3 +1,11 @@
+---
+specdojo:
+  id: specdojo:cpd-rulebook
+  type: rulebook
+  status: draft
+  sample: specdojo:cpd-sample
+---
+
 # C4コンポーネント図 ドキュメント作成ルール
 
 C4 Component Diagram (CPD) Documentation Rules
