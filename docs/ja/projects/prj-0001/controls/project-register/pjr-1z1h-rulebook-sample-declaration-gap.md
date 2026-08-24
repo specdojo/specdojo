@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1z1h-rulebook-sample-declaration-gap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-08-23T11:48:52Z"
   due_on: "2026-08-31"
-  conclusion: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正した。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
+  completed_at: "2026-08-24T11:26:12Z"
+  conclusion: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正し、解決処理そのものは変更していない。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。この点は当初の完了条件が1系統1sampleを前提としており実態と合っていなかった。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
 ---
 
 # PJR-1Z1H rulebookのsample未宣言55本と成果物のrulebook未宣言10件を突き合わせる
