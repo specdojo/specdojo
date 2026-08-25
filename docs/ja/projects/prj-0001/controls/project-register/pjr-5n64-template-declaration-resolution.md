@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: BA
   registered_at: "2026-08-23T11:48:45Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: runner validation「test-unit」（npm run test:unit）がexit 1で失敗した。tests/src/catalog-generate.test.tsの「rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する」が失敗しており、1289件中1件のテスト失敗が残ってい…"
 ---
 
 # PJR-5N64 templateをrulebook宣言から解決し系統単位の標準templateを整備する
