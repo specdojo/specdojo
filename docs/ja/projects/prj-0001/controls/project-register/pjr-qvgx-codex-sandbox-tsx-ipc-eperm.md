@@ -20,7 +20,7 @@ specdojo:
 
 codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。
 
-起票後の実行で、同種の事象が検証コマンド全般に及ぶことが分かった。いずれも子プロセスの生成・通信・終了が sandbox 内で成立しない点が共通する。
+起票後の実行で、同種の事象が検証コマンド全般に及ぶことが分かった。調査用の Node.js プロセスから `child_process.spawnSync` で別の Node.js プロセスを起動すると、子側の処理結果ではなく `spawnSync /usr/local/bin/node EPERM` が返った。`tsx` CLI、Vitest、`git check-ignore` はいずれも内部でこの子プロセス経路を使うため、表面上の事象は異なるが同じ sandbox 制約に起因する。
 
 | 実行     | 検証                      | 事象                                                   |
 | -------- | ------------------------- | ------------------------------------------------------ |
@@ -43,16 +43,18 @@ codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1
 
 ## 3. 作業内容
 
-| No  | 作業                                                               | 担当 | 状態 | メモ                                           |
-| --- | ------------------------------------------------------------------ | ---- | ---- | ---------------------------------------------- |
-| 1   | 上表3事象の再現条件を確認し、同一原因か別々かを判別する            | ARC  | open | 子プロセスの生成・通信・終了のどこで失敗するか |
-| 2   | 対処方針を選び、理由を記録する                                     | ARC  | open | sandbox 設定 / 実行方式 / 親 runner への移動   |
-| 3   | 対処を実装する                                                     | ARC  | open | 隔離を不必要に弱めない                         |
-| 4   | 実際の exec 実行または自動テストで、対処が効いていることを確認する | ARC  | open | 二重実行にならないことも確認する               |
+| No  | 作業                                                               | 担当 | 状態        | メモ                                                    |
+| --- | ------------------------------------------------------------------ | ---- | ----------- | ------------------------------------------------------- |
+| 1   | 上表3事象の再現条件を確認し、同一原因か別々かを判別する            | ARC  | done        | Node.js の子プロセス生成が `EPERM` になる同一制約と判定 |
+| 2   | 対処方針を選び、理由を記録する                                     | ARC  | done        | sandbox は緩和せず親 runner へ移す                      |
+| 3   | 対処を実装する                                                     | ARC  | in-progress | 固定 allowlist と二重実行防止を実装。設定適用待ち       |
+| 4   | 実際の exec 実行または自動テストで、対処が効いていることを確認する | ARC  | in-progress | 自動テスト後、設定を適用した exec 実行で確認する        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 原因は、Codex の `workspace-write` sandbox 内で Node.js の `child_process` による子プロセス生成が `EPERM` になることと特定した。`tsx` の IPC エラー、Vitest の無出力停止、`git check-ignore` の停止は同じ制約の異なる現れ方である。
+- sandbox の隔離範囲は変更しない。`validate-schema`、`test-unit`、`test-integration` の固定 allowlist ID を親 runner に追加し、executor prompt と共通規約には、設定済み親検証を executor が重複実行しない指示を追加した。
+- `.specdojo/exec-defaults.yaml` は [[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない]] の保護対象である。agent は変更せず、orchestrator または人間が `pipeline.parent_validations` に `validate-schema`、`test-unit`、`test-integration` を指定してから、実際の pipeline exec で3検証の `source: runner` 成功と executor 側の非実行を確認する必要がある。
 
 ## 5. 関連ドキュメント
 

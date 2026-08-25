@@ -148,6 +148,7 @@ import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   replaceParentValidationResults,
+  resolveParentValidationDefinitions,
   runParentValidations,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
@@ -711,9 +712,12 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
 }
 
 function executorEvidenceContract(parentValidationIds: readonly string[]): string {
+  const parentValidationCommands = resolveParentValidationDefinitions(parentValidationIds).map(
+    (definition) => definition.displayCommand,
+  );
   const parentValidationInstruction =
     parentValidationIds.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")}. Do not run their underlying integration commands inside the agent sandbox. Run the sandbox-safe unit test command required by the plan (for this repository: npm run test:unit) and report it in your executor validations. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   return `
 

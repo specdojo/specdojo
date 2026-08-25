@@ -5,7 +5,7 @@ import { redactSensitiveText } from "./exec-evidence.js";
 const MAX_CAPTURE_BYTES = 64 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 
-export type ParentValidationId = "test-integration";
+export type ParentValidationId = "validate-schema" | "test-unit" | "test-integration";
 
 export type ParentValidationDefinition = {
   id: ParentValidationId;
@@ -29,6 +29,20 @@ export type ParentValidationInvoker = (
 ) => Promise<ParentValidationProcessResult>;
 
 const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDefinition> = {
+  "validate-schema": {
+    id: "validate-schema",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "validate:schema"],
+    displayCommand: "npm run validate:schema",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "test-unit": {
+    id: "test-unit",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "test:unit"],
+    displayCommand: "npm run test:unit",
+    timeoutMs: 10 * 60 * 1_000,
+  },
   "test-integration": {
     id: "test-integration",
     command: process.platform === "win32" ? "npm.cmd" : "npm",

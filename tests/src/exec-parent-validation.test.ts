@@ -46,12 +46,32 @@ function evidenceWithRunnerStatus(status: "passed" | "failed" | "not_run"): Exec
 
 describe("parent validation allowlist", () => {
   it("resolves a fixed executable and argv without a shell command from config", () => {
-    const [definition] = resolveParentValidationDefinitions(["test-integration"]);
+    const definitions = resolveParentValidationDefinitions([
+      "validate-schema",
+      "test-unit",
+      "test-integration",
+    ]);
 
-    expect(definition.id).toBe("test-integration");
-    expect(definition.command).toMatch(/^npm(?:\.cmd)?$/);
-    expect(definition.args).toEqual(["run", "test:integration"]);
-    expect(definition.displayCommand).toBe("npm run test:integration");
+    expect(definitions).toEqual([
+      expect.objectContaining({
+        id: "validate-schema",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "validate:schema"],
+        displayCommand: "npm run validate:schema",
+      }),
+      expect.objectContaining({
+        id: "test-unit",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "test:unit"],
+        displayCommand: "npm run test:unit",
+      }),
+      expect.objectContaining({
+        id: "test-integration",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "test:integration"],
+        displayCommand: "npm run test:integration",
+      }),
+    ]);
   });
 
   it("rejects unknown and duplicate IDs before any process starts", () => {

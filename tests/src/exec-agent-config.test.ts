@@ -19,10 +19,12 @@ describe("parent validation config", () => {
       const validPath = join(root, "valid.yaml");
       writeFileSync(
         validPath,
-        "pipeline:\n  parent_validations:\n    - test-integration\n",
+        "pipeline:\n  parent_validations:\n    - validate-schema\n    - test-unit\n    - test-integration\n",
         "utf8",
       );
       expect(loadExecDefaultsConfig(validPath).pipeline?.parent_validations).toEqual([
+        "validate-schema",
+        "test-unit",
         "test-integration",
       ]);
 

@@ -467,7 +467,10 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain("`[[id|title]]` 形式");
       // unit test の対象限定・全件を連続実行しない規約も全 plan へ注入される。
       expect(editPlan).toContain("全件を1回だけ実行して対象限定の実行を省く");
-      expect(editPlan).toContain("その前後に対象限定の `npm run test:unit` を追加しない");
+      // 親検証に設定されたコマンドを executor が sandbox 内で実行しない規約も注入される。
+      expect(editPlan).toContain(
+        "executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない",
+      );
       // 配置制御: テンプレートの _COMMON_CONVENTIONS_ 位置（末尾・異常終了の条件の後）に入る。
       expect(editPlan.indexOf("`[[id|title]]` 形式")).toBeGreaterThan(
         editPlan.indexOf("異常終了の条件"),
