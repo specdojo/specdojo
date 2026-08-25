@@ -60,7 +60,7 @@ $defs:
           allowlist; command strings and arguments cannot be supplied by agents or config.
         items:
           type: string
-          enum: [test-integration]
+          enum: [validate-schema, test-unit, test-integration]
 
   ProviderOverride:
     type: object

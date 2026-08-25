@@ -602,7 +602,9 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].model).toBe("gemma3-12b");
     expect(invocations[1].model).toBe("gemma3-12b");
     expect(invocations[0].prompt).toContain("executor stage");
-    expect(invocations[0].prompt).toContain("npm run test:unit");
+    // 親 runner が実行する検証は、ID と対応コマンドを添えて executor へ伝える。
+    // executor 側で同じコマンドを実行させないため、prompt に含まれている必要がある。
+    expect(invocations[0].prompt).toContain("test-integration (npm run test:integration)");
 
     // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
     expect(readFileSync(join(target.repo, "pipeline-artifact.md"), "utf8")).toContain(

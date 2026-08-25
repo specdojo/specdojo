@@ -389,6 +389,8 @@ describe("pipeline executor preparation", () => {
 
   it("separates result writing from the executor prompt and requests structured evidence", () => {
     const prompt = buildExecutorPrompt("# Edit Plan\n\nUpdate the result file.", [
+      "validate-schema",
+      "test-unit",
       "test-integration",
     ]);
 
@@ -396,7 +398,9 @@ describe("pipeline executor preparation", () => {
     expect(prompt).toContain("<specdojo_executor_evidence>");
     expect(prompt).toContain("Update the result file.");
     expect(prompt).toContain("npm run test:unit");
+    expect(prompt).toContain("npm run validate:schema");
     expect(prompt).toContain("test-integration");
+    expect(prompt).toContain("Do not run those commands inside the agent sandbox");
     expect(prompt).toContain("source=runner");
   });
 
