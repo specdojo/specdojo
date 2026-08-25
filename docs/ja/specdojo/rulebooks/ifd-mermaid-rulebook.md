@@ -5,7 +5,7 @@ specdojo:
   status: draft
   target_format: markdown
   recipe: undecided
-  sample: not-needed
+  sample: specdojo:ifd-sample
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard

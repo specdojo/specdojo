@@ -52,14 +52,36 @@ specdojo:
 
 | No  | 作業                                                                     | 担当 | 状態 | メモ                                     |
 | --- | ------------------------------------------------------------------------ | ---- | ---- | ---------------------------------------- |
-| 1   | 対象5系統の実在成果物を読み、recipe と template の要否を判断する         | BA   | open | 基準は PJR-QESV と PJR-VV3M              |
-| 2   | `sample: not-needed` の8系統を PJR-VV3M の方針と突き合わせる             | BA   | open | 例外を認めるなら理由と適用範囲を記録する |
-| 3   | `not-needed` としながら sample が実在する3系統の矛盾を解消する           | BA   | open | ccd-mermaid / cdfd-mermaid / ifd-mermaid |
-| 4   | 判断結果を rulebook frontmatter へ反映し、双方向検証が通ることを確認する | BA   | open | 型の新規作成は範囲外                     |
+| 1   | 対象5系統の実在成果物を読み、recipe と template の要否を判断する         | BA   | done | 基準は PJR-QESV と PJR-VV3M              |
+| 2   | `sample: not-needed` の8系統を PJR-VV3M の方針と突き合わせる             | BA   | done | 例外を認めるなら理由と適用範囲を記録する |
+| 3   | `not-needed` としながら sample が実在する3系統の矛盾を解消する           | BA   | done | ccd-mermaid / cdfd-mermaid / ifd-mermaid |
+| 4   | 判断結果を rulebook frontmatter へ反映し、双方向検証が通ることを確認する | BA   | done | 型の新規作成は範囲外                     |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+PJR-QESV と PJR-VV3M の基準を、実在成果物の章構成と内容差へ適用した。必要だが未整備の型は frontmatter の項目を省略し、不要な型は `not-needed`、整備済みの型は文書 ID で宣言した。型そのものは新規作成していない。
+
+### 4.1. recipe / template の判断
+
+| rulebook 系統                        | recipe       | template     | 判断根拠                                                                                                   |
+| ------------------------------------ | ------------ | ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `opr-rulebook`                       | 必要・未整備 | 必要・未整備 | 実行可能性・復旧条件・証跡の深掘りで品質差が出る。実物は rulebook の固定12章を使用している                 |
+| `sysd-index-rulebook`                | 不要         | 必要・未整備 | SSOT への導線は規約を満たせば内容がほぼ決まる。実物は固定5章を使用している                                 |
+| `sysd-critical-flows-rulebook`       | 必要・未整備 | 必要・未整備 | 最大5件の選定、失敗境界、再実行性の深掘りが必要で、実物は固定5章とフロー別の反復構造を使用している         |
+| `sysd-cross-cutting-policy-rulebook` | 必要・未整備 | 必要・未整備 | 横断ルールの抽出、例外、検証方法に品質差が出る。実物は固定5章と Rule ID 単位の反復構造を使用している       |
+| `tsd-rulebook`                       | 必要・未整備 | 不要         | 採用理由・設定・検証・運用上の注意の深さに品質差が出る。一方、実物の章数と構成は技術領域ごとに大きく異なる |
+| `sysd-rulebook`                      | 必要・未整備 | 不要         | provider 別設計4件で同種の深掘り観点が反復する一方、hub・個別設計・Job設計では章構成が異なる               |
+
+`sysd-rulebook` は recipe の見込みも合わせて確定した。agent 設計4件は約300〜400行で共通の設計観点を持つため recipe を必要とし、同じ系統に hub と Job 設計も含むため固定 template は不要と判断した。
+
+### 4.2. sample の判断
+
+- `ccd-mermaid-rulebook` と `ifd-mermaid-rulebook` は、実在する `specdojo:ccd-sample` と `specdojo:ifd-sample` を宣言した。
+- `pjr-rulebook` と `sysd-rulebook` は Markdown 系統であるため sample を必要とし、未整備を表すため `sample` 項目を省略した。
+- `sch-rulebook`、`ifx-index-rulebook`、`tml-rulebook` は、`additionalProperties: false`、必須キー、列挙値、入れ子の型を schema が規定する YAML 成果物であるため、PJR-VV3M が認める「構造が schema で完全に決まる YAML 成果物」の例外として `sample: not-needed` を維持した。例外はこの3系統に限定する。
+- `cdfd-mermaid-rulebook` は `cdfd-rulebook` から `includes` される記法部品であり、sample のアンカーは主 rulebook が保持する。`specdojo:cdfd-sample` は主 `cdfd-rulebook` が宣言済みであるため、記法部品側の `sample: not-needed` を維持した。例外は、主 rulebook が sample を宣言済みで、成果物から直接参照されない include 専用 rulebook に限定する。
+
+双方向検証で報告されていた `ccd-sample` と `ifd-sample` の未宣言警告は、対応する文書 ID の宣言により解消した。`cdfd-sample` は主 `cdfd-rulebook` の宣言対象であり、検証上の未宣言警告は発生していない。
 
 ## 5. 関連ドキュメント
 
