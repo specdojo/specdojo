@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-24T10:17:53Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
 ---
 
 # PJR-KAQV agent失敗時の生のstderrを保全する
