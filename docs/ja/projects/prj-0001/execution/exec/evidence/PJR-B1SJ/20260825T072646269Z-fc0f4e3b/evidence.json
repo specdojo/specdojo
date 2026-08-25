@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-B1SJ",
+  "run_id": "20260825T072646269Z-fc0f4e3b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-25T07:26:46.269Z",
+    "completed_at": "2026-08-25T07:33:05.980Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-item.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/docs/src/remark-no-unescaped-angle-placeholder.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../pjr-b1sj-angle-placeholder-escape-scope.md     | 17 ++++---\n src/exec-register.ts                               |  8 +++-\n src/register-item.ts                               | 13 ++++--\n tests/src/exec-register.test.ts                    |  6 +++\n tests/src/register-commands.test.ts                | 54 ++++++++++++++++++++++\n tests/src/register-item.test.ts                    | 33 +++++++++++++\n .../remark-no-unescaped-angle-placeholder.test.ts  | 19 ++++++++\n .../src/remark-no-unescaped-angle-placeholder.ts   |  6 ++-\n 8 files changed, 141 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register-item.ts src/exec-register.ts tools/docs/src/remark-no-unescaped-angle-placeholder.ts tests/src/register-item.test.ts tests/src/exec-register.test.ts tests/src/register-commands.test.ts tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md",
+      "status": "passed",
+      "summary": "変更8ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md",
+      "status": "passed",
+      "summary": "個票のMarkdown検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "fatal化後の全docs frontmatter・本文検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全Markdown検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と派生ビューを正常生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証成功（既存の参照先未作成warningあり）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1347件を正常生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B1SJ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-x5b5n0/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B1SJ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-NREkZF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PG2Qov/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AkyZDI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3rhLKQ/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5hoG7b/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-DMzY2h/pjr-0001-topic.md\n\n Test Files  87 passed (87)\n      Tests  1286 passed (1286)\n   Start at  16:32:48\n   Duration  17.65s (transform 1.42s, setup 0ms, import 10.24s, tests 13.98s, environment 5ms)\n\n\nreporter failederror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '…"
+    }
+  ],
+  "final_message": "山括弧プレースホルダの個票本文・frontmatter対策とfatal検知を実装し、executor担当検証はすべて成功",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-B1SJ/20260825T072646269Z-fc0f4e3b/executor.log",
+      "bytes": 2026,
+      "truncated": false
+    }
+  ]
+}

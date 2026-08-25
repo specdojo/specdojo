@@ -121,6 +121,25 @@ describe("remarkNoUnescapedAnglePlaceholder", () => {
     expect(reasons).toHaveLength(1);
     expect(reasons[0]).toContain("`<br>`");
   });
+
+  it("reports body and frontmatter violations as fatal errors", async () => {
+    const file = await createProcessor().process({
+      value: [
+        "---",
+        "specdojo:",
+        "  conclusion: dct-<domain>.yaml を生成する",
+        "---",
+        "",
+        "# 文書",
+        "",
+        "生成先は <lang> ディレクトリです。",
+      ].join("\n"),
+      path: "target.md",
+    });
+
+    expect(file.messages).toHaveLength(2);
+    expect(file.messages.every((message) => message.fatal === true)).toBe(true);
+  });
 });
 
 describe("remarkNoUnescapedAnglePlaceholder against the real docs tree", () => {

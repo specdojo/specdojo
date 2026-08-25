@@ -383,6 +383,18 @@ describe("setRegisterItemTitle / setRegisterItemDescription — 本文側の項�
     expect(updated).not.toContain("開店時の在庫初期値を決める。");
     expect(updated).toContain("## 2. 完了条件");
   });
+
+  it("山括弧プレースホルダを連結範囲ごと code span 化する", () => {
+    const updated = setRegisterItemDescription(
+      buildItemFile(),
+      "dct-<domain>.yaml と <phase>. を確認する。",
+    );
+
+    expect(updated).toContain("`dct-<domain>.yaml` と `<phase>`. を確認する。");
+    expect(setRegisterItemDescription(updated, "`dct-<domain>.yaml` を確認する。")).not.toContain(
+      "``dct-<domain>.yaml``",
+    );
+  });
 });
 
 describe("registerItemFieldsFromItem — 一覧値から frontmatter フィールドへの写像", () => {
@@ -439,5 +451,26 @@ describe("registerItemFieldsFromItem — 一覧値から frontmatter フィー�
 
     expect(undecided).not.toContain("due_on");
     expect(none).toContain("  due_on: null");
+  });
+
+  it("conclusion の山括弧プレースホルダを frontmatter 書き込み前に code span 化する", () => {
+    const item: PjrItem = {
+      id: "PJR-AB12",
+      status: "waiting",
+      title: "題名",
+      description: "説明",
+      type: "todo",
+      priority: "medium",
+      owner: "ARC",
+      registeredAt: "2026-08-01T12:34:56Z",
+      due: "-",
+      completedAt: "-",
+      conclusion: "dct-<domain>.yaml と <phase>. を確認する",
+      ticket: "-",
+    };
+
+    expect(registerItemFieldsFromItem(item).conclusion).toBe(
+      "`dct-<domain>.yaml` と `<phase>`. を確認する",
+    );
   });
 });
