@@ -5,7 +5,6 @@ specdojo:
   status: ready
   target_format: markdown
   recipe: not-needed
-  sample: not-needed
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
