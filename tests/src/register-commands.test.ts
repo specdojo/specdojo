@@ -211,6 +211,32 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("add は description の山括弧プレースホルダを個票本文で code span 化する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "プレースホルダを扱う",
+        "--description",
+        "dct-<domain>.yaml と <phase>. を確認する。",
+        "--topic",
+        "angle-placeholder",
+        "--id",
+        "PJR-AB12",
+        "--registered",
+        "2026-08-01T00:00:00Z",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-angle-placeholder.md"), "utf8");
+      expect(ticket).toContain("`dct-<domain>.yaml` と `<phase>`. を確認する。");
+    });
+  });
+
   it("build は個票ファイル名と frontmatter ID の不一致を検出して失敗する", async () => {
     await withRepo(async ({ registerDir }) => {
       writeFileSync(
@@ -278,6 +304,34 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(closed).toContain("  conclusion: 初期値を決定した");
       // 文書成熟度（status）は登録項目の処理状態とは別軸で昇格する。
       expect(closed).toContain("  status: ready");
+    });
+  });
+
+  it("状態遷移は conclusion の山括弧プレースホルダを frontmatter で code span 化する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "wait",
+        "--id",
+        "PJR-AB12",
+        "--conclusion",
+        "dct-<domain>.yaml と <phase>. を確認する",
+      ]);
+
+      const waiting = readFileSync(ticketPath, "utf8");
+      expect(waiting).toContain('conclusion: "`dct-<domain>.yaml` と `<phase>`. を確認する"');
     });
   });
 

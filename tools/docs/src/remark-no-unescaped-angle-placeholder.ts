@@ -215,13 +215,14 @@ const remarkNoUnescapedAnglePlaceholder: Plugin<[], Root> = function () {
       const tagNames = extractTagNames(node.value);
       for (const tagName of tagNames) {
         if (KNOWN_HTML_TAGS.has(tagName.toLowerCase())) continue;
-        file.message(
+        const message = file.message(
           `未エスケープの山括弧プレースホルダ \`<${tagName}>\` を検知しました。` +
             "実在しない HTML タグ名のため、VitePress の Vue コンパイラが未クローズタグと解釈し " +
             "docs:build が失敗します。インラインコード（バッククォート）で囲んでください（例: " +
             `\`<${tagName}>\`）。`,
           node,
         );
+        message.fatal = true;
       }
     }
 
@@ -241,11 +242,12 @@ const remarkNoUnescapedAnglePlaceholder: Plugin<[], Root> = function () {
       collectStringValues(parsed, values);
       for (const value of values) {
         for (const token of findUnescapedAnglePlaceholders(value)) {
-          file.message(
+          const message = file.message(
             `frontmatter に未エスケープの山括弧 \`${token}\` を検知しました。` +
               `インラインコード（例: \`${token}\`）で囲んでください。`,
             node,
           );
+          message.fatal = true;
         }
       }
     }

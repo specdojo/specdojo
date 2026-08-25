@@ -1,0 +1,11 @@
+実装完了です。
+
+- description／conclusion 書き込み時に山括弧プレースホルダをインラインコード化。
+- remark 診断を fatal error 化。
+- 回帰テストと個票の対応結果を更新。
+- result は executor 指示に従い未編集。
+- unit／integration／schema 検証は親 runner に委譲しています。
+
+<specdojo_executor_evidence>
+{"final_message":"山括弧プレースホルダの個票本文・frontmatter対策とfatal検知を実装し、executor担当検証はすべて成功","validations":[{"command":"npx prettier --write src/register-item.ts src/exec-register.ts tools/docs/src/remark-no-unescaped-angle-placeholder.ts tests/src/register-item.test.ts tests/src/exec-register.test.ts tests/src/register-commands.test.ts tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md","status":"passed","summary":"変更8ファイルを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md","status":"passed","summary":"個票のMarkdown検査成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:fm","status":"passed","summary":"fatal化後の全docs frontmatter・本文検査成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功（既存の参照先未作成warningあり）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1347件を正常生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

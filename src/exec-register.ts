@@ -14,6 +14,7 @@ import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
   expandTemplate,
+  inlineCodeAnglePlaceholders,
   stripTerminalControlSequences,
 } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
@@ -226,8 +227,11 @@ export function sanitizeRegisterConclusion(reason: string): string {
     .replace(/\r?\n/g, " ")
     .replace(/\|/g, "/")
     .trim();
-  if (singleLine.length <= MAX_CONCLUSION_LENGTH) return singleLine;
-  return `${singleLine.slice(0, MAX_CONCLUSION_LENGTH)}…`;
+  const truncated =
+    singleLine.length <= MAX_CONCLUSION_LENGTH
+      ? singleLine
+      : `${singleLine.slice(0, MAX_CONCLUSION_LENGTH)}…`;
+  return inlineCodeAnglePlaceholders(truncated);
 }
 
 // ---------------------------------------------------------------------------

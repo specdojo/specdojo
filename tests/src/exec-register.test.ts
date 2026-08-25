@@ -136,6 +136,12 @@ describe("sanitizeRegisterConclusion", () => {
 
     expect(sanitizeRegisterConclusion(reason)).toBe("line1 line2 / note");
   });
+
+  it("失敗理由の山括弧プレースホルダを code span 化する", () => {
+    expect(sanitizeRegisterConclusion("dct-<domain>.yaml の生成に失敗した")).toBe(
+      "`dct-<domain>.yaml` の生成に失敗した",
+    );
+  });
 });
 
 describe("resolveRegisterCommand", () => {
