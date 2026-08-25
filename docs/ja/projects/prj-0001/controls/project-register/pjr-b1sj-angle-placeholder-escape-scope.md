@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-b1sj-angle-placeholder-escape-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-23T13:03:06Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-25T22:08:42Z"
+  conclusion: 検知の仕組みは frontmatter にも対応済みだったが、報告が warning のため lint:fm では失敗せず、単体テストでのみ検出される状態だった。message.fatal を設定して error 化し、コミット前に失敗するようにした。既存文書に違反が残っていないことも確認した。混入経路3つ（register add の description、exec の失敗理由から frontmatter の conclusion、索引の conclusion セル）へ既存の inlineCodeAnglePlaceholders を適用し、未エスケープのまま書き込まれないようにした。実装は PJR-ZWMH の既存関数を再利用しており分散していない。
 ---
 
 # PJR-B1SJ 山括弧プレースホルダのインラインコード化を個票本文とfrontmatterへ広げる
