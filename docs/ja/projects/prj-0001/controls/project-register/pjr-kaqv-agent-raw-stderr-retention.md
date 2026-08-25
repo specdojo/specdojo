@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kaqv-agent-raw-stderr-retention
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-24T10:17:53Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
+  completed_at: "2026-08-25T06:21:46Z"
+  conclusion: reporter の各形式試行の stdout と stderr を試行番号付きのファイルへ分離保存し、evidence.json の log_refs から参照できるようにした。保存前に既存の redactSensitiveText を適用し、既存と同じ64KiB上限で切り詰めて bytes と truncated を記録する。stdout と stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。executor 側の保全処理も共通化した。evidence 配下は Git 管理対象とし、既知パターン以外の秘密が残る可能性があるため外部共有前の確認を運用上の前提とした。
 ---
 
 # PJR-KAQV agent失敗時の生のstderrを保全する

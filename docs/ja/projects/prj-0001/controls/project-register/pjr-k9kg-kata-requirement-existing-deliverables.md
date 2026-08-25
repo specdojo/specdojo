@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-k9kg-kata-requirement-existing-deliverables
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-08-23T11:48:28Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: 個票 pjr-k9kg-kata-requirement-existing-deliverables.md の完了条件は npm run test:unit の成功を明示的に要求しているが、executor 実行では npm run test:unit がVitest起動後5分間出力・終了せず中断し（status: failed）、…"
+  completed_at: "2026-08-25T06:21:45Z"
+  conclusion: "実在成果物が参照する5系統（opr、sysd-index、sysd-critical-flows、sysd-cross-cutting-policy、tsd）の recipe と template の要否を、実物の章構成と反復構造に照らして確定した。多くは必要だが未整備として項目を省略し、sysd-index の recipe と tsd の template は不要と判断した。sample: not-needed は8系統から4系統へ減らし、schema が構造を完全に規定する YAML 成果物3系統と include 専用 rulebook 1系統に限定して理由と適用範囲を記録した。not-needed としながら sample が実在した ccd-mermaid と ifd-mermaid は文書ID の宣言へ改め、双方向検証の警告を解消した。型そのものの新規作成は範囲外とした。"
 ---
 
 # PJR-K9KG 実在する成果物が参照する rulebook 系統の実践の型の要否を確定する

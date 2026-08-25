@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qvgx-codex-sandbox-tsx-ipc-eperm
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-23T07:24:17Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: runner validation「test-integration」がfailed（exit 1）。指示によりrunner validationのfailedはblockedとしなければならない。加えて、executor validation「npm run test:unit」はfailed、executor validatio…"
+  completed_at: "2026-08-25T06:22:02Z"
+  conclusion: sandbox 内で子プロセスの生成・通信・終了が成立しない検証を、sandbox を緩めずに親 runner へ移した。parent_validations の固定許可リストへ validate-schema と test-unit を追加し、schema の列挙値として定義した。共通規約を親検証に設定された ID のコマンドは executor が sandbox 内で実行しないと改め、prompt にも ID と対応コマンドを明示して二重実行を防ぐ。.specdojo/exec-defaults.yaml は agent の保護対象のため executor が更新できず、オーケストレーターが承認を得て適用した。sandbox の設定は変更しておらず隔離は弱まっていない。sandbox 内で子プロセスが成立しない原因そのものは特定しておらず、影響を回避した対処である。
 ---
 
 # PJR-QVGX codex sandboxで子プロセスが成立せず検証が常に失敗する問題を解消する
