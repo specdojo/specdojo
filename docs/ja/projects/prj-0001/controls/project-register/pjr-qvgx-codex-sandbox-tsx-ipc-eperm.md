@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-23T07:24:17Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: runner validation「test-integration」がfailed（exit 1）。指示によりrunner validationのfailedはblockedとしなければならない。加えて、executor validation「npm run test:unit」はfailed、executor validatio…"
 ---
 
 # PJR-QVGX codex sandboxで子プロセスが成立せず検証が常に失敗する問題を解消する
