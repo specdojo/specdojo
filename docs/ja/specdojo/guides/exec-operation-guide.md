@@ -240,13 +240,14 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 
 run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
 
-| ファイル              | 確認できること                                                              |
-| --------------------- | --------------------------------------------------------------------------- |
-| `pipeline-state.json` | 各 stage の状態（`succeeded` / `failed` / `rate_limited`）・actor・試行回数 |
-| `evidence.json`       | executor の変更ファイル、diff サマリ、検証結果、最終メッセージ              |
-| `executor.log`        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                   |
+| ファイル                                                              | 確認できること                                                                                 |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `pipeline-state.json`                                                 | 各 stage の状態（`succeeded` / `failed` / `rate_limited`）・actor・試行回数                    |
+| `evidence.json`                                                       | executor の変更ファイル、diff サマリ、検証結果、最終メッセージ、executor / reporter のログ参照 |
+| `executor.log`                                                        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                                      |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行別の生出力（秘匿値は伏せ字化、各ストリーム 64KiB で切り詰め）      |
 
-`executor.log` は人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
+agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです。失敗理由の要約だけでは原因が分からない場合は、`evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
 
 stage 別の失敗と対応は次のとおりです。
 

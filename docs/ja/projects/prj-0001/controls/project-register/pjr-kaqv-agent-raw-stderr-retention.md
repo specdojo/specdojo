@@ -33,19 +33,25 @@ PJR-E6HG の調査では、失敗した実行の stderr ログに原因を示す
 
 ## 3. 作業内容
 
-| No  | 作業                                                             | 担当 | 状態 | メモ                                         |
-| --- | ---------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
-| 1   | reporter 段階の出力が保全されていない経路を特定する              | ARC  | open | `src/exec-run.ts` の reporter 段階           |
-| 2   | 保全先、サイズ上限、Git 管理下に置くか否かを判断し理由を記録する | ARC  | open | 秘密混入と worktree 削除の双方を考慮する     |
-| 3   | 保全を実装し、既存の秘匿処理を適用する                           | ARC  | open | `redactSensitiveText` を通す                 |
-| 4   | 保全の有無と内容を確認するテストを追加する                       | ARC  | open | 最小構成リポジトリでも動作することを確認する |
+| No  | 作業                                                             | 担当 | 状態 | メモ                                                                                |
+| --- | ---------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------- |
+| 1   | reporter 段階の出力が保全されていない経路を特定する              | ARC  | done | Schedule / in-place / register / resume の reporter 経路を確認                      |
+| 2   | 保全先、サイズ上限、Git 管理下に置くか否かを判断し理由を記録する | ARC  | done | run 単位の evidence 配下、stdout / stderr ごとに 64KiB、Git 管理対象とした          |
+| 3   | 保全を実装し、既存の秘匿処理を適用する                           | ARC  | done | `recordReporterFailureOutput` で `redactSensitiveText` を適用                       |
+| 4   | 保全の有無と内容を確認するテストを追加する                       | ARC  | done | 非ゼロ終了、形式再試行、秘匿、ストリーム分離、切り詰め、evidence 参照を自動テスト化 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- reporter が非ゼロ終了または形式エラーで失敗した場合、各形式試行の stdout と stderr を `exec/evidence/<task>/<run>/reporter-attempt-<n>.<stdout|stderr>.log` へ分離して保存し、`evidence.json` の `log_refs` から参照できるようにした。失敗理由の要約とは別に、上限内で出力順を保ったストリーム内容を確認できる。
+- 保存前に既存の `redactSensitiveText` を適用し、Bearer トークン、`sk-` / `gh*_` 形式のキー、`api_key` / `token` / `password` などを伏せ字化する。各ストリームは既存の `MAX_LOG_BYTES` と同じ 64KiB 上限とし、`bytes` と `truncated` を参照情報へ記録する。stdout / stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。
+- Schedule の worktree / in-place、register の通常実行 / worktree / reporter resume の全 reporter 経路を同じ保存処理へ接続した。同じ run の resume が再度失敗した場合は直近の失敗ログで置換し、`log_refs` の最大件数内に保つ。
+- evidence 配下は Git 管理対象とした。成功して統合された run のログは履歴に残る一方、失敗中の worktree では未コミットであり、worktree を破棄すると消失する。既知の秘密パターンは保存前に秘匿するが、未知形式の秘密が残る可能性があるため、外部共有前の確認を運用上の前提とした。
+- executor は従来から stdout と stderr の秘匿済み内容を `executor.log` に最大 64KiB で保全し、`log_refs` に切り詰め有無を記録しているため、今回の不足は reporter 側に限定されると判断した。reporter は原因調査でストリーム境界が重要なため別ファイルとした。
+- 対象単体テスト 11 件で、非ゼロ終了時の stdout / stderr 収集、形式エラー時の全試行収集、秘匿、64KiB 切り詰め、`evidence.json` からの参照を確認した。全 unit suite は sandbox 内で既存の `git check-ignore -z --stdin` 子プロセスが終了せず完走できなかったため、停止しない環境での全件再検証が必要である。
 
 ## 5. 関連ドキュメント
 
 - 保全が必要になった調査: [[prj-0001:pjr-e6hg-claude-reporter-json-failure|PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする]]
 - 同じ reporter 段階の課題: [[prj-0001:pjr-q828-reporter-revalidation|PJR-Q828 reporterが解消済みの検証失敗を再評価できない問題を解消する]]
 - exec の運用: [[specdojo:exec-operation-guide|exec運用ガイド]]
+- evidence とログの設計: [[specdojo:exec-config-guide|exec設定ガイド]]

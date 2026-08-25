@@ -140,6 +140,7 @@ import {
 } from "./exec-strategy.js";
 import {
   recordExecutorEvidence,
+  recordReporterFailureOutput,
   writeExecutorEvidence,
   type ExecEvidence,
 } from "./exec-evidence.js";
@@ -1515,6 +1516,7 @@ async function runPreparedTask(
   let attempts = 0;
   let limit: AgentLimitSignal | undefined;
   let executorEvidenceRef: string | undefined;
+  let executorEvidencePath: string | undefined;
   let executorEvidence: ReturnType<typeof recordExecutorEvidence>["evidence"] | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
   let pipelineBlockReason: string | undefined;
@@ -1562,6 +1564,9 @@ async function runPreparedTask(
       ) {
         executorEvidence = checkpoint.evidence;
         executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
+        executorEvidencePath = executorEvidenceRef
+          ? resolve(prepared.worktree.path, executorEvidenceRef)
+          : undefined;
         resumeReporter = true;
         process.stdout.write(
           `  Resuming reporter from persisted executor evidence: ${executorEvidenceRef}\n`,
@@ -1658,6 +1663,7 @@ async function runPreparedTask(
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
       .join("/");
+    executorEvidencePath = recorded.evidencePath;
     executorEvidence = recorded.evidence;
     const executorCompletedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
@@ -1769,6 +1775,14 @@ async function runPreparedTask(
         result = reporter.result;
         pipelineBlockReason = reporter.reason;
         stderr = reporter.reason;
+        if (executorEvidencePath) {
+          executorEvidence = recordReporterFailureOutput({
+            worktreePath: prepared.worktree.path,
+            evidencePath: executorEvidencePath,
+            evidence: executorEvidence,
+            invocationOutputs: reporter.invocationOutputs,
+          });
+        }
       }
       if (result !== "success") {
         const reporterCompletedAt = new Date().toISOString();
@@ -2903,6 +2917,12 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       } else {
         exitCode = 1;
         pipelineBlockReason = reporter.reason;
+        recordReporterFailureOutput({
+          worktreePath: repoRoot,
+          evidencePath: recorded.evidencePath,
+          evidence: recorded.evidence,
+          invocationOutputs: reporter.invocationOutputs,
+        });
       }
       const reporterCompletedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
@@ -3254,6 +3274,7 @@ async function runRegisterReporterStage(params: {
   resultPath: string;
   execDefaults: ExecDefaultsConfig;
   evidence: ExecEvidence;
+  evidencePath: string;
   state: PipelineState;
   statePath: string;
 }): Promise<{
@@ -3326,6 +3347,12 @@ async function runRegisterReporterStage(params: {
     }
   } else {
     blockReason = reporter.reason;
+    recordReporterFailureOutput({
+      worktreePath: cwd,
+      evidencePath: params.evidencePath,
+      evidence: params.evidence,
+      invocationOutputs: reporter.invocationOutputs,
+    });
   }
 
   const reporterCompletedAt = new Date().toISOString();
@@ -3490,6 +3517,7 @@ async function runRegisterAgentPipeline(params: {
     resultPath,
     execDefaults,
     evidence: recorded.evidence,
+    evidencePath: recorded.evidencePath,
     state,
     statePath: stateLocation.path,
   });
@@ -4307,6 +4335,7 @@ async function resumeSingleRegisterItemWorktree(
     resultPath: worktreeResultPath,
     execDefaults: context.execDefaults,
     evidence,
+    evidencePath: resolve(worktree.path, target.evidenceRef),
     state: target.state,
     statePath: target.statePath,
   });

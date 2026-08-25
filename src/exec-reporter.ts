@@ -347,6 +347,11 @@ export type ReporterInvocation = (prompt: string) => Promise<{
   stderr: string;
 }>;
 
+export type ReporterInvocationOutput = {
+  stdout: string;
+  stderr: string;
+};
+
 export async function runReporterWithFormatRetry(opts: {
   plan: string;
   evidence: ExecEvidence;
@@ -355,10 +360,16 @@ export async function runReporterWithFormatRetry(opts: {
   maxFormatAttempts?: number;
 }): Promise<
   | { result: "success"; output: ReporterOutput; formatAttempts: number }
-  | { result: "failure" | "rate_limit"; reason: string; formatAttempts: number }
+  | {
+      result: "failure" | "rate_limit";
+      reason: string;
+      formatAttempts: number;
+      invocationOutputs: ReporterInvocationOutput[];
+    }
 > {
   const maxAttempts = opts.maxFormatAttempts ?? REPORTER_FORMAT_ATTEMPTS;
   let validationError: string | undefined;
+  const invocationOutputs: ReporterInvocationOutput[] = [];
   for (let formatAttempts = 1; formatAttempts <= maxAttempts; formatAttempts++) {
     const attempt = await opts.invoke(
       buildReporterPrompt({
@@ -368,11 +379,13 @@ export async function runReporterWithFormatRetry(opts: {
         ...(validationError ? { validationError } : {}),
       }),
     );
+    invocationOutputs.push({ stdout: attempt.stdout, stderr: attempt.stderr });
     if (attempt.result !== "success") {
       return {
         result: attempt.result,
         reason: attempt.stderr.trim() || `reporter exited with ${attempt.result}`,
         formatAttempts,
+        invocationOutputs,
       };
     }
     const parsed = parseReporterOutput(attempt.stdout, opts.mode);
@@ -383,5 +396,6 @@ export async function runReporterWithFormatRetry(opts: {
     result: "failure",
     reason: `reporter output invalid after ${maxAttempts} format attempts: ${validationError ?? "unknown validation error"}`,
     formatAttempts: maxAttempts,
+    invocationOutputs,
   };
 }
