@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KAQV",
+  "run_id": "20260825T024003480Z-2d921e71",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-25T02:40:03.480Z",
+    "completed_at": "2026-08-25T03:05:44.477Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kaqv-agent-raw-stderr-retention.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-evidence.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-kaqv-agent-raw-stderr-retention.md         | 20 ++++---\n docs/ja/specdojo/guides/exec-config-guide.md       | 17 +++---\n docs/ja/specdojo/guides/exec-operation-guide.md    | 15 ++---\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml |  3 +-\n src/exec-evidence.ts                               | 67 ++++++++++++++++++++--\n src/exec-reporter.ts                               | 16 +++++-\n src/exec-run.ts                                    | 29 ++++++++++\n tests/src/exec-evidence.test.ts                    | 55 +++++++++++++++++-\n tests/src/exec-reporter.test.ts                    | 30 +++++++++-\n 9 files changed, 222 insertions(+), 30 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更ファイル>",
+      "status": "passed",
+      "summary": "変更したTypeScript、テスト、Markdown、YAMLを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-kaqv-agent-raw-stderr-retention.md",
+      "status": "passed",
+      "summary": "Markdownエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/exec-evidence.test.ts tests/src/exec-reporter.test.ts",
+      "status": "passed",
+      "summary": "2ファイル、11テスト成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "既存のgit check-ignore -z --stdin子プロセスがsandbox内で終了せず、長時間停止したため中断（exit 130）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿派生ビューを再生成。PJR-KAQVの状態はin-progressのまま"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1343件の文書インデックスを生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline指示に従い親runnerで実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KAQV\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-0dbltx/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    }
+  ],
+  "final_message": "reporter失敗時のstdout/stderr保全を実装。対象11テストは成功したが、全unit suiteは既存git check-ignoreの停止により未完走。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KAQV/20260825T024003480Z-2d921e71/executor.log",
+      "bytes": 2133,
+      "truncated": false
+    }
+  ]
+}

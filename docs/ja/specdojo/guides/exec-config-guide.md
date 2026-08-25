@@ -333,18 +333,21 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
 
-| ファイル              | 内容                                                                      |
-| --------------------- | ------------------------------------------------------------------------- |
-| `evidence.json`       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ |
-| `executor.log`        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）         |
-| `pipeline-state.json` | executor / reporter の状態・actor・試行回数・成果物参照                   |
+| ファイル                                                              | 内容                                                                                |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、ログ参照 |
+| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                   |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）            |
+| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                             |
 
 引き渡しの方針は次のとおりです。
 
 - reporter へ渡すのは、plan と `evidence.json` の内容と出力 JSON Schema だけです。ログ本文・生 diff は渡しません。
 - ログは `evidence.json` の `log_refs` に参照（パス・バイト数・切り詰めの有無）としてだけ現れます。ログ本文を読むのは人です。
-- 保存前に上限を適用します。ログ抜粋は 64KiB、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
-- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と `executor.log` の両方に適用します。
+- 保存前に上限を適用します。`executor.log` は全体で 64KiB、失敗した reporter のログは stdout / stderr の各ファイルを 64KiB とし、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。stdout と stderr を分離することで原因調査時にストリームを識別でき、同じ上限を各ストリームへ適用することで片方の大量出力がもう片方を押し出しません。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
+- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と executor / reporter のログに適用します。
+- reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
+- evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
 - `pipeline.parent_validations` がある場合、executor は sandbox 内で `npm run test:unit` を実行し、親 runner は executor の成功後・reporter の起動前に固定検証を実行します。executor 由来の検証には `source: executor`、親 runner 由来には `source: runner` と許可リスト `id` を付けて、同じ `validations` 配列へ保存します。
 - 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。

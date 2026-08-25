@@ -3,7 +3,8 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo executor evidence schema"
 description: >
   Bounded, structured evidence collected by the runner after an executor pipeline stage.
-  Raw diffs and unbounded process logs are intentionally excluded.
+  Redacted and bounded agent output logs may be referenced for failure investigation;
+  raw diffs and unbounded process logs are intentionally excluded.
 type: object
 additionalProperties: false
 required:
