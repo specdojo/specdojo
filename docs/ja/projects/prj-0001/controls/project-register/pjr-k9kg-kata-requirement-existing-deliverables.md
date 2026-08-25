@@ -14,21 +14,47 @@ specdojo:
   due_on: "2026-08-31"
 ---
 
-# PJR-K9KG 実在する散文成果物31件の実践の型の要否を確定する
+# PJR-K9KG 実在する成果物が参照する rulebook 系統の実践の型の要否を確定する
 
 ## 1. 概要
 
-実在する散文成果物31件は実物があるため基準を適用して要否を確定できる。うち recipe が not-needed の11件はすべて sysd 系と opr 系である。sysd-rulebook は119行と薄く sample もない状態で300〜400行の設計書を6本書いているため、recipe より先に sample を整備する効果が大きい。同一構造が並ぶ agent 設計書4件は recipe が必要と見込む。
+実物がある成果物は基準を適用して要否を確定できる。PJR-XGJK により要否の宣言先は rulebook frontmatter へ移り、判断の単位も成果物ごとから rulebook 系統ごとへ変わった。本項目は、実在する成果物が参照する系統のうち要否が未確定のものを確定させる。
+
+対象は次の5系統である。いずれも PJR-XGJK の移行時に、成果物ごとの `not-needed` と `undecided` が混在していたため、系統全体を確定扱いせず `undecided` へ集約したものである。元の `not-needed` は PJR-K4TA における現状追認であり、実質的な判断ではなかった。
+
+| 系統                                 | recipe      | template    |
+| ------------------------------------ | ----------- | ----------- |
+| `opr-rulebook`                       | `undecided` | `undecided` |
+| `sysd-index-rulebook`                | `undecided` | `undecided` |
+| `sysd-critical-flows-rulebook`       | `undecided` | `undecided` |
+| `sysd-cross-cutting-policy-rulebook` | `undecided` | `undecided` |
+| `tsd-rulebook`                       | `undecided` | `undecided` |
+
+あわせて、PJR-VV3M の方針と矛盾する宣言が2種類ある。
+
+- `sample: not-needed` が8系統にある。PJR-VV3M は「sample は rulebook がある系統へ一律に作る」と定めたため、原則としてこの宣言は成立しない。
+- そのうち `ccd-mermaid-rulebook` / `cdfd-mermaid-rulebook` / `ifd-mermaid-rulebook` の3系統は、`not-needed` としながら `ccd-sample.md` / `cdfd-sample.md` / `ifd-sample.md` が実在する。PJR-1Z1H で追加した双方向検証がこの矛盾を警告として検出している。
+
+`sysd-rulebook` は119行と薄く sample も無い状態で、300〜400行の設計書を6本書いている。同一構造が並ぶ agent 設計書4件は recipe が必要と見込む。この見込みの妥当性も本項目で判断する。
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 上表の5系統について、recipe と template の要否が `undecided` 以外へ確定している。判断の根拠が記録されている。
+- 判断は PJR-QESV の作る条件・作らない条件と PJR-VV3M の種別ごとの方針に照らして行う。実物がある成果物の内容を根拠にする。
+- `sample: not-needed` の8系統について、PJR-VV3M の「rulebook がある系統へ一律に作る」との整合が取れている。例外を認める場合は、その理由と適用範囲が記録されている。
+- `not-needed` としながら sample が実在する3系統の矛盾が解消している。宣言を改めるか実ファイルを整理するかは、判断の結果に従う。
+- 実在する成果物の内容に照らして必要と判断した型は、文書 ID を宣言するか、必要だが未整備であることが分かる状態（項目の省略）になっている。型そのものの新規作成は本項目の範囲に含めない。
+- PJR-1Z1H の双方向検証が、確定後の宣言に対して矛盾を報告しない。
+- `npm run test:unit`、`catalog validate`、`catalog build` が成功する。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                     | 担当 | 状態 | メモ                                     |
+| --- | ------------------------------------------------------------------------ | ---- | ---- | ---------------------------------------- |
+| 1   | 対象5系統の実在成果物を読み、recipe と template の要否を判断する         | BA   | open | 基準は PJR-QESV と PJR-VV3M              |
+| 2   | `sample: not-needed` の8系統を PJR-VV3M の方針と突き合わせる             | BA   | open | 例外を認めるなら理由と適用範囲を記録する |
+| 3   | `not-needed` としながら sample が実在する3系統の矛盾を解消する           | BA   | open | ccd-mermaid / cdfd-mermaid / ifd-mermaid |
+| 4   | 判断結果を rulebook frontmatter へ反映し、双方向検証が通ることを確認する | BA   | open | 型の新規作成は範囲外                     |
 
 ## 4. 対応結果
 
@@ -36,4 +62,9 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 要否の判断基準: [[specdojo:kata-guide|実践の型ガイド]]
+- 判断基準の決定: [[prj-0001:pjr-qesv-kata-creation-criteria|PJR-QESV 実践の型の要否判断基準]]
+- 種別ごとの作成方針: [[prj-0001:pjr-vv3m-kata-creation-policy-by-type|PJR-VV3M 実践の型は種別ごとに作成方針を変える]]
+- 宣言先の決定: [[prj-0001:pjr-3n21-kata-declaration-ssot-split|PJR-3N21 実践の型の要否と所在の正本を分ける]]
+- 対象を undecided へ集約した項目: [[prj-0001:pjr-xgjk-kata-declaration-migrate-to-rulebook|PJR-XGJK 実践の型の宣言を rulebook frontmatter へ移行する]]
+- 矛盾を検出する検証を追加した項目: [[prj-0001:pjr-1z1h-rulebook-sample-declaration-gap|PJR-1Z1H 実践の型の宣言の欠落を埋める]]
