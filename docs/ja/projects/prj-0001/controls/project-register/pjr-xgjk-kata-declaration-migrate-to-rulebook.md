@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xgjk-kata-declaration-migrate-to-rulebook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-24T11:34:30Z"
   due_on: "2026-08-31"
-  conclusion: 'agent exited with non-zero code: "... is not valid JSON'
+  completed_at: "2026-08-25T01:42:23Z"
+  conclusion: PJR-3N21 の決定に従い、実践の型の要否と所在の正本を rulebook frontmatter へ一本化した。成果物カタログの型宣言634件を削除し rulebook 宣言242件のみを残し、非生成成果物が参照する89本の rulebook へ要否を移した。移行前スナップショットとの突き合わせで判断の欠落がないことを確認した。要否が割れていた6系統は系統全体を確定扱いせず undecided へ集約し、旧 not-needed の存在を記録して PJR-K9KG で追跡する。kind が generated の成果物への非適用を kind からの導出として実装し、schema は成果物側の型宣言を拒否する。慣例ファイル探索は宣言を正本とする決定および項目の省略を必要だが未整備とする定義と矛盾するため廃止した。これは完了条件の範囲外の仕様変更であり申し送りへ明記した。単体1278件・統合79件が成功する。
 ---
 
 # PJR-XGJK 実践の型の宣言をrulebook frontmatterへ移行する
