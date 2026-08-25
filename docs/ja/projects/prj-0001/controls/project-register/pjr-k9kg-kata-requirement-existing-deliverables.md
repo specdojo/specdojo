@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-08-23T11:48:28Z"
   due_on: "2026-08-31"
+  conclusion: "agent exited with non-zero code: 個票 pjr-k9kg-kata-requirement-existing-deliverables.md の完了条件は npm run test:unit の成功を明示的に要求しているが、executor 実行では npm run test:unit がVitest起動後5分間出力・終了せず中断し（status: failed）、…"
 ---
 
 # PJR-K9KG 実在する成果物が参照する rulebook 系統の実践の型の要否を確定する
