@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-nw9v-agent-comparison-trial
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-26T08:17:39Z"
   due_on: "2026-10-31"
+  completed_at: "2026-08-26T10:29:53Z"
+  conclusion: exec trial として新設した。run で同一 plan を複数 agent へ与えて試行し、status で状況を確認、rate で人が判断の質・文章の質・範囲の遵守を1〜5で記入、adopt で1つを採用、discard で破棄する。plan は必須で生成せず、agent 間で指示が揺れない。register の状態遷移には触れず試行が本来のタスクの状態を進めない。worktree とブランチは比較IDと agent 名を含む別系統の命名とし、既存の命名処理は変更していない。客観指標と主観評価は分けて記録する。1回の比較では agent 選定を自動変更せず、繰り返しの証跡が揃った時点で人が pm-members.yaml を更新する方針とした。実地での比較実行は未実施であり、dry-run で動作を確認した。
 ---
 
 # PJR-NW9V 同一タスクを複数agentで試行し性能を比較できるようにする
