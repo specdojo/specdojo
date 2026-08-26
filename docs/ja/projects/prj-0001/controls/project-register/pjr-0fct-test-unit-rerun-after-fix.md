@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0fct-test-unit-rerun-after-fix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-23T07:24:10Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T08:14:28Z"
   block_reason: 'agent exited with non-zero code: reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token ''I'', "I need to "... is not valid JSON'
+  conclusion: 共通規約の test 実行に関する記述の矛盾を解消した。親検証に設定された ID のコマンドは対応表よりも優先し executor は実行しないことを明記し、対応表の該当行を条件付きの記述へ改めた。test-unit が親検証に設定されている場合と設定されていない場合の双方で、executor が何を実行すべきかが一意に定まる。全件を1回だけ実行する制約は executor が sandbox 内で実行する test script に対するものであり、親検証のコマンドは対象外であることも明記した。当初の課題であった1回限定規約による再検証の禁止は PJR-QVGX で既に解消しており、例外規定の追加は行っていない。
 ---
 
 # PJR-0FCT 共通規約のtest実行に関する記述の矛盾を解消する
