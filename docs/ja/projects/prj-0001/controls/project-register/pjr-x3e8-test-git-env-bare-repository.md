@@ -60,6 +60,12 @@ PJR-T1JW で追加した exec-agent-protected-config のテストが、git 実�
 - 規約への明記により、今後テストで git を扱う際に同じ経路を再現しにくくする。
 - 単独実行では再現せず hook 経由でのみ発火するため、`npm test` を伴う commit を worktree で行う経路が実質的な検証となる。
 
+### 追記（対処が不十分であったこと）
+
+本項目の対処は当該テストの個別修正と規約の追記に留まり、agent 起動環境そのものが `GIT_DIR` などを子プロセスへ渡していた点を修正していなかった。そのため PJR-5YW6 の実行で同種の事象が再発した。根本原因の特定と、予防（全 agent 起動の環境隔離）および検知（HEAD と local config の前後比較）の実装は [[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]] で行った。
+
+原因を「テストが `GIT_DIR` を継承したこと」と結論づけた際に、なぜ `GIT_DIR` が設定されていたのかを追わずに閉じたことが、再発を許した判断上の誤りである。
+
 ## 5. 関連ドキュメント
 
 - 原因となった変更: [[prj-0001:pjr-t1jw-protected-config-gitignore-false-positive|PJR-T1JW 設定変更ガードが gitignore 済み生成物を誤検知する問題を解消する]]

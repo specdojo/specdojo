@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-a99j-agent-git-isolation-breach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-26T10:59:39Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T11:37:52Z"
+  conclusion: 原因は PJR-X3E8 の対処が個別テストの隔離に留まり、agent 起動環境そのものが GIT_DIR などを子プロセスへ渡していたことであった。exec-run・exec-trial・exec-worktree-command の全 agent 起動を gitEnvironment 経由へ統一し、job と e2e ツールの直接 Git 実行も揃えた。あわせて exec-agent-git-state を新設し、agent の各試行の前後で HEAD と local config を比較して、差分があれば親検証・reporter・commit・merge へ進む前に失敗させる。予防と検知の2層とした。agent による commit と core.bare 変更の検知、および危険な GIT_DIR が agent へ継承されないことを確認する回帰テストを追加した。統合テストは83件へ増えた。
 ---
 
 # PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した
