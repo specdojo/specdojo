@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-5n64-template-declaration-resolution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-08-23T11:48:45Z"
   due_on: "2026-08-31"
-  conclusion: "agent exited with non-zero code: runner validation「test-unit」（npm run test:unit）がexit 1で失敗した。tests/src/catalog-generate.test.tsの「rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する」が失敗しており、1289件中1件のテスト失敗が残ってい…"
+  completed_at: "2026-08-26T05:49:08Z"
+  conclusion: template の解決元を local_id 命名規約から rulebook frontmatter の宣言へ変更し、同一系統の成果物が1つの template を共有できるようにした。正本が rulebook であるため命名規約による解決は意図的に残していない。4状態のうち文書IDは使用し、not-needed・undecided・項目の省略はカタログ情報による最小雛形へ退避する。成果物情報を展開するプレースホルダを追加し、代表として OPR 系統を template 化して rulebook の本文構成章を規約へ整理した。本文構成を持つ92本すべての template 化は範囲外とし、固定骨組みを持たない系統まで切り出すと undecided の意味を失うことを理由として記録した。命名規約の廃止で到達不能になる成果物用 template がないことも確認した。
 ---
 
 # PJR-5N64 templateをrulebook宣言から解決し系統単位の標準templateを整備する

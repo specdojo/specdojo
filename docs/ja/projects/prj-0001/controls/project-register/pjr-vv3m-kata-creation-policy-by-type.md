@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vv3m-kata-creation-policy-by-type
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: BA
   registered_at: "2026-08-23T11:48:35Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T05:49:26Z"
+  conclusion: 種別ごとに作成方針を変える方針を実装まで完了した。sample は rulebook がある系統へ一律に作り要否を判断しない。template は rulebook 系統単位で持ち骨組みが固定の系統に作る。recipe は品質差が出る系統のみ他の型と独立して判断する。rulebook は従来どおり判断して作る。sample を作らない条件は構造が schema で完全に決まる YAML 成果物に限定した。実装は PJR-JT1Y でガイドへ反映、PJR-1Z1H で宣言の欠落を解消、PJR-K9KG で実在成果物の要否を確定、PJR-5N64 で template の解決と代表系統の整備を行った。宣言先は PJR-3N21 の決定により rulebook frontmatter へ一本化されている。
 ---
 
 # PJR-VV3M 実践の型は種別ごとに作成方針を変える
