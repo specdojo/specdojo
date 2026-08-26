@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   registered_at: "2026-08-12T09:35:22Z"
-  due_on: "2026-08-31"
+  due_on: "2026-09-30"
 ---
 
 # PJR-ZFFZ cdfd 3ファイルの状態・分類詳細をstsd/cstd等へ移設
