@@ -462,16 +462,26 @@ register 実行の対応内容、状態追跡、commit の扱いは [登録簿�
 specdojo exec trial run \
   --project prj-0001 \
   --plan docs/ja/projects/prj-0001/execution/exec/plans/<task>-plan.md \
+  --base <commit-before-completed-work> \
   --agent agent-a agent-b \
   --reporter-by reporter-a \
   --parallel 2
+
+# executorとreporterを組で比較する場合
+specdojo exec trial run \
+  --project prj-0001 \
+  --plan docs/ja/projects/prj-0001/execution/exec/plans/<task>-plan.md \
+  --base <commit-before-completed-work> \
+  --pair executor-a=reporter-a executor-b=reporter-b
 
 specdojo exec trial status --project prj-0001 --comparison <comparison-id>
 specdojo exec trial rate --project prj-0001 --comparison <comparison-id> --trial agent-a --judgment-quality 4 --writing-quality 4 --scope-adherence 5
 specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --trial agent-a
 ```
 
-`run`はplan frontmatterの`task_id` / `mode` / `project_id`を要求します。`--reporter-by`は任意ですが、指定すると全trialで同じreporterを使い、JSON Schemaに適合した構造化出力の成否と形式試行回数も比較記録へ保存します。記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して`pm-members.yaml`を更新します。
+`run`はplan frontmatterの`task_id` / `mode` / `project_id`を要求します。`--base`はworktreeの起点となるcommit-ishで、省略時は従来どおりHEADです。指定値は完全なcommitへ解決され、実行開始時のHEAD（完了済み作業の参照結果）、baseがHEADの祖先か、plan内で参照されたリポジトリ相対パスが起点ツリーに存在するかという互換性確認とともに比較記録へ保存されます。plan自体が起点に存在しなくても、指定した現在のplan内容を全trialへ共通で渡します。
+
+`--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して`pm-members.yaml`を更新します。
 
 ## 8. exec worktree
 

@@ -1,0 +1,12 @@
+実装完了です。
+
+- `--base`による起点コミット指定と、HEAD参照成果・plan互換性の記録を追加
+- `--pair executor=reporter`による組単位の比較を追加
+- reporterの状態、形式再試行回数、失敗分類を記録
+- unit test、CLIリファレンス、運用ガイド、個票を更新
+- resultファイルはpipeline指示に従い未編集
+- unit／integration／schema検証は親runnerへ委ねています
+
+<specdojo_executor_evidence>
+{"final_message":"exec trialの起点指定、executor/reporterペア比較、reporter客観指標を実装し、文書と回帰テストを更新した","validations":[{"command":"npx prettier --write src/exec-trial.ts tests/src/exec-trial.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md","status":"passed","summary":"全変更ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md","status":"passed","summary":"Markdown lint成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書index生成成功"},{"command":"node --import tsx src/specdojo.ts exec trial run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/pjr-5yw6-20260826T114130Z-2acc-plan.md --base HEAD^ --pair qwen-executor=qwen-reporter gemma-executor=gemma-reporter --comparison pjr-5yw6-smoke --dry-run","status":"passed","summary":"起点解決、HEAD参照、互換性記録、paired trial構成を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
