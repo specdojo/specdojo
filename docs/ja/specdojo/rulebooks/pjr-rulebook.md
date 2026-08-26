@@ -62,10 +62,12 @@ Project Register Documentation Rules
 | `registered_at` | 起票日時                                     | 任意 |
 | `due_on`        | 対応期限または判断期限                       | 任意 |
 | `completed_at`  | 完了・却下・決定日時                         | 条件 |
+| `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
 | `conclusion`    | 終端時の結論要約                             | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
+- `block_reason` は途中の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新する。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
 
 ### 3.1. 日時と日付の使い分け
@@ -117,7 +119,7 @@ Project Register Documentation Rules
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。
+- 担当・期限・結論などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。
 

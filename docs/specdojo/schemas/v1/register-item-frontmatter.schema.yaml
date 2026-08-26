@@ -7,7 +7,7 @@ description: >
 
   The frontmatter is the single source of truth for the structured fields of one
   register item: classification (item_type), processing status (item_status),
-  priority, owner, dates and conclusion. The register list (pjr-index) is a derived
+  priority, owner, dates, block reason and conclusion. The register list (pjr-index) is a derived
   view generated from these files, so the same field is never stored in two places.
 
   Conventions:
@@ -126,6 +126,14 @@ properties:
               for the closed statuses and removed when the item is reopened. The
               displayed completion date (list column: 完了日) is derived by converting
               it to the project register timezone.
+
+          block_reason:
+            type: string
+            minLength: 1
+            description: >
+              Most recent reason the item transitioned to waiting. This operational
+              record is separate from conclusion so a failed execution cannot replace
+              the item's final result. Git-backed register history retains its changes.
 
           conclusion:
             type: string

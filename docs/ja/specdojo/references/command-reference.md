@@ -285,7 +285,7 @@ specdojo schedule strategy generate \
 | `register scaffold` | 登録簿ディレクトリと生成ビューを初期化する   | `specdojo register scaffold --project prj-0001`                             |
 | `register add`      | issue / todo / question などの項目を追加する | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
 | `register build`    | 個票から登録項目一覧と派生ビューを生成する   | `specdojo register build --project prj-0001`                                |
-| `register update`   | 登録項目を更新する                           | `specdojo register update --project prj-0001 --id PJR-001 --field owner=PM` |
+| `register update`   | 登録項目を更新する                           | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
 | `register start`    | 項目を対応中へ変更する                       | `specdojo register start --project prj-0001 --id PJR-001`                   |
 | `register wait`     | 項目を待ち状態へ変更する                     | `specdojo register wait --project prj-0001 --id PJR-001`                    |
 | `register review`   | 項目をレビュー状態へ変更する                 | `specdojo register review --project prj-0001 --id PJR-001`                  |
@@ -301,19 +301,21 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                | 用途                                                          | 対象                           |
-| ------------------------- | ------------------------------------------------------------- | ------------------------------ |
-| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                     |
-| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                          |
-| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`             |
-| `--topic <slug>`          | 個票ファイル名の論点部分を指定する                            | `add`                          |
-| `--dry-run`               | 書き込みを行わず変更対象を表示する                            | `renumber` / `add` / `migrate` |
-| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）              | `history`                      |
-| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）              | `history`                      |
-| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）          | `history`                      |
-| `--status-only`           | 追加・削除・状態遷移だけを出力する                            | `history`                      |
-| `--limit <count>`         | 走査するコミット数の上限                                      | `history`                      |
-| `--json`                  | イベントを JSON で出力する                                    | `history`                      |
+| オプション                | 用途                                                          | 対象                            |
+| ------------------------- | ------------------------------------------------------------- | ------------------------------- |
+| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                      |
+| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                           |
+| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`              |
+| `--reason <text>`         | 待機・ブロック理由を `block_reason` に記録                    | `wait`                          |
+| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド |
+| `--topic <slug>`          | 個票ファイル名の論点部分を指定する                            | `add`                           |
+| `--dry-run`               | 書き込みを行わず変更対象を表示する                            | `renumber` / `add` / `migrate`  |
+| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）              | `history`                       |
+| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）              | `history`                       |
+| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）          | `history`                       |
+| `--status-only`           | 追加・削除・状態遷移だけを出力する                            | `history`                       |
+| `--limit <count>`         | 走査するコミット数の上限                                      | `history`                       |
+| `--json`                  | イベントを JSON で出力する                                    | `history`                       |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
@@ -323,7 +325,7 @@ specdojo schedule strategy generate \
 
 `register migrate` は旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドです。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、続けて旧 `registered_on` / `completed_on` を `registered_at` / `completed_at` へ移行します。日時は Git 履歴（起票は個票の追加コミット、完了は終端状態への遷移コミット）から復元し、復元できない場合は旧日付に `run.register_date_timezone` の 21:00 を補って UTC へ変換します。移行によって一覧に出る暦日は変わりません。
 
-`register history` は登録簿ディレクトリの Git 履歴を走査し、個票単位の追加（`added`）・変更（`updated`）・削除（`removed`）を古い順に出力します。比較対象は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）で、一覧の列に現れない変更は出力しません。一覧そのものは `generated/` 配下の非追跡な生成物のため、履歴の入力にはなりません。
+`register history` は登録簿ディレクトリの Git 履歴を走査し、個票単位の追加（`added`）・変更（`updated`）・削除（`removed`）を古い順に出力します。比較対象は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）と `block_reason` です。一覧そのものは `generated/` 配下の非追跡な生成物のため、履歴の入力にはなりません。
 
 登録項目を agent に実行させるには `exec run --register` を使います（`exec` の章を参照）。
 

@@ -307,7 +307,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("状態遷移は conclusion の山括弧プレースホルダを frontmatter で code span 化する", async () => {
+  it("wait はブロック理由を conclusion と分けて frontmatter へ記録する", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
@@ -326,12 +326,60 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "wait",
         "--id",
         "PJR-AB12",
-        "--conclusion",
+        "--reason",
         "dct-<domain>.yaml と <phase>. を確認する",
       ]);
 
       const waiting = readFileSync(ticketPath, "utf8");
-      expect(waiting).toContain('conclusion: "`dct-<domain>.yaml` と `<phase>`. を確認する"');
+      expect(waiting).toContain('block_reason: "`dct-<domain>.yaml` と `<phase>`. を確認する"');
+      expect(waiting).not.toContain("conclusion:");
+
+      await runRegister(["start", "--id", "PJR-AB12"]);
+      await runRegister(["review", "--id", "PJR-AB12"]);
+      await runRegister(["close", "--id", "PJR-AB12", "--completed", "2026-08-05T10:15:30Z"]);
+
+      const completed = readFileSync(ticketPath, "utf8");
+      expect(completed).toContain("item_status: done");
+      expect(completed).toContain("block_reason:");
+      expect(completed).not.toContain("conclusion:");
+    });
+  });
+
+  it("wait の旧 --conclusion オプションも block_reason へ記録する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["wait", "--id", "PJR-AB12", "--conclusion", "互換オプション"]);
+
+      const waiting = readFileSync(ticketPath, "utf8");
+      expect(waiting).toContain("block_reason: 互換オプション");
+      expect(waiting).not.toContain("conclusion:");
+    });
+  });
+
+  it("update は conclusion を更新・削除できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: review", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--conclusion", "初期値を決定した"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("conclusion: 初期値を決定した");
+
+      await runRegister(["update", "--id", "PJR-AB12", "--conclusion", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("conclusion:");
     });
   });
 

@@ -90,6 +90,7 @@ export type RegisterItemFieldUpdates = {
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  block_reason?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
@@ -133,6 +134,7 @@ const SPECDOJO_KEY_ORDER = [
   "registered_at",
   "due_on",
   "completed_at",
+  "block_reason",
   "conclusion",
 ];
 
@@ -216,7 +218,7 @@ export function descriptionFromBody(body: string): string {
 export function readRegisterItemContent(
   content: string,
   filename: string,
-): { id: string; item: PjrItem; hasRegisterFields: boolean } | undefined {
+): { id: string; item: PjrItem; hasRegisterFields: boolean; blockReason: string } | undefined {
   const id = displayIdFromTicketFilename(filename);
   if (!id) return undefined;
 
@@ -252,7 +254,12 @@ export function readRegisterItemContent(
     ticket: ticketRefCell(filename),
   };
 
-  return { id, item, hasRegisterFields: asString(fields.item_status) !== undefined };
+  return {
+    id,
+    item,
+    hasRegisterFields: asString(fields.item_status) !== undefined,
+    blockReason: asString(fields.block_reason) ?? CELL_NONE,
+  };
 }
 
 // 個票の日時を、指定タイムゾーン上の暦日へ変換した表示値へ写す。
