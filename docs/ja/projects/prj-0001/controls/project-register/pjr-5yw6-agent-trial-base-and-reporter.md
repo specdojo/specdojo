@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-26T10:37:28Z"
   due_on: "2026-08-31"
+  block_reason: "integrate failed: git commit -m exec(register PJR-5YW6): trialで完了済みtodoを起点に指定しreporterも比較できるようにする -- docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md docs/…"
 ---
 
 # PJR-5YW6 trialで完了済みtodoを起点に指定しreporterも比較できるようにする
@@ -29,6 +30,7 @@ PJR-NW9V で新設した exec trial には2つの制約がある。試行の起�
 - reporter を全試行で共有する現在の方式も残る。executor の差だけを切り出す用途に対応する。どちらの方式で実行したかが記録に残る。
 - reporter の成否が客観指標として記録される。構造化出力を返せたか、形式リトライの回数、失敗理由の分類が比較できる。現在の指標は executor 側が中心である。
 - 既存の `exec trial` の利用方法が壊れない。起点も reporter の指定方法も、省略時は現在と同じ動作になる。
+- 実リポジトリの git 設定と履歴を変更しない。`core.bare` の変更や、テスト用フィクスチャのコミット混入を起こさない。git を扱うテストは一時ディレクトリで隔離した環境変数のもとで実行する。1回目の実行ではこれが守られず、メインリポジトリが bare 化して worktree を破棄した（PJR-A99J）。
 - 規約や生成物の文言を変えた場合、既存テストの期待値が新しい仕様と整合していることを確認する。
 - `npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration` が成功する。
 
