@@ -27,6 +27,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { gitEnvironment } from "../../src/exec-worktree.js";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const cliPath = join(projectRoot, "dist", "specdojo.js");
@@ -40,7 +41,7 @@ const DELIVERABLE_REL = join("docs", "project", "out.md");
 const EDITED_CONTENT = "# Edited by agent\n";
 
 function git(cwd: string, ...args: string[]): string {
-  return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
 }
 
 function cli(cwd: string, args: string[]): string {
@@ -222,6 +223,7 @@ function run(): void {
         ["-C", repo, "show-ref", "--verify", "--quiet", `refs/heads/${EXEC_BRANCH}`],
         {
           stdio: "ignore",
+          env: gitEnvironment(),
         },
       );
     } catch {

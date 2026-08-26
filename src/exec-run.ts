@@ -110,6 +110,7 @@ import {
 import { completeJobRun, materializeJobRun } from "./job.js";
 import {
   findExecWorktree,
+  gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -130,6 +131,11 @@ import {
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
 } from "./exec-agent-protected-config.js";
+import {
+  agentGitStateViolation,
+  captureAgentGitStateSnapshot,
+  changedAgentGitStateFields,
+} from "./exec-agent-git-state.js";
 import {
   buildPhaseModeIndex,
   resolveApproach,
@@ -996,6 +1002,7 @@ async function runWithRetry(
       const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
       attempts++;
       const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
+      const gitStateBefore = captureAgentGitStateSnapshot(cwd);
       const attempt = await executeAgent(
         candidates[idx].command,
         prompt,
@@ -1008,6 +1015,17 @@ async function runWithRetry(
       const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
         const reason = agentProtectedConfigViolation(protectedConfigChanges);
+        process.stderr.write(`blocked: ${reason}\n`);
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+        };
+      }
+      const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+      if (gitStateChanges.length > 0) {
+        const reason = agentGitStateViolation(gitStateChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         return {
           result: "failure",
@@ -1105,7 +1123,7 @@ function agentEnvironment(
   executionPath: string,
 ): NodeJS.ProcessEnv {
   return {
-    ...process.env,
+    ...gitEnvironment(),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
   };
@@ -2562,10 +2580,11 @@ async function spawnAgentInPlace(
   executionPath: string,
 ): Promise<number> {
   const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
+  const gitStateBefore = captureAgentGitStateSnapshot(cwd);
   const child = spawn(command, {
     cwd,
     env: {
-      ...process.env,
+      ...gitEnvironment(),
       SPECDOJO_SCHEDULE_PATH: schedulePath,
       SPECDOJO_EXECUTION_PATH: executionPath,
     },
@@ -2582,6 +2601,11 @@ async function spawnAgentInPlace(
   const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
     process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    return 1;
+  }
+  const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+  if (gitStateChanges.length > 0) {
+    process.stderr.write(`blocked: ${agentGitStateViolation(gitStateChanges)}\n`);
     return 1;
   }
   return exitCode;
@@ -2804,7 +2828,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       execDefaults,
       repoRoot,
       {
-        ...process.env,
+        ...gitEnvironment(),
         SPECDOJO_SCHEDULE_PATH: schedulePath,
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
@@ -2881,7 +2905,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
             execDefaults,
             repoRoot,
             {
-              ...process.env,
+              ...gitEnvironment(),
               SPECDOJO_SCHEDULE_PATH: schedulePath,
               SPECDOJO_EXECUTION_PATH: executionPath,
             },

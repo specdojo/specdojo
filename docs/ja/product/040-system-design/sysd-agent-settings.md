@@ -43,6 +43,8 @@ schedule / register item
 
 agent が親 runner・Git hook・CI の実行内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定は provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未 commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission / sandbox は第一層として維持するが、この判定の入力には使わない。
 
+agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を除去し、cwdから対象worktreeを再解決させる。runnerは各agent試行の前後でHEADとlocal configも比較し、agent自身のcommitまたは`core.bare`を含む設定変更を検知した場合は親検証・reporter・統合を行わずblockする。この境界は通常実行、in-place、trial、分割worktree commandのすべてへ適用する。
+
 ## 4. 子設計一覧
 
 | 子設計                                                                    | 対象               | 固有責務                                |

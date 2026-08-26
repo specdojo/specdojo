@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { gitEnvironment } from "./exec-worktree.js";
 import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
 
@@ -97,7 +98,7 @@ async function invokeParentValidation(
     let timedOut = false;
     const child = spawn(definition.command, [...definition.args], {
       cwd,
-      env: process.env,
+      env: gitEnvironment(),
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,

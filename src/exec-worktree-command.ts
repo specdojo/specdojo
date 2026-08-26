@@ -15,6 +15,16 @@ import {
 } from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
+  agentGitStateViolation,
+  captureAgentGitStateSnapshot,
+  changedAgentGitStateFields,
+} from "./exec-agent-git-state.js";
+import {
+  agentProtectedConfigViolation,
+  captureAgentProtectedConfigSnapshot,
+  changedAgentProtectedConfigPaths,
+} from "./exec-agent-protected-config.js";
+import {
   buildTaskPhaseMap,
   loadPrompt,
   loadRosterForExecutionPath,
@@ -28,6 +38,7 @@ import { qualifyTaskId } from "./exec-shared.js";
 import { buildTaskView } from "./exec-task-view.js";
 import {
   findExecWorktree,
+  gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -331,10 +342,12 @@ async function agent(opts: AgentOpts): Promise<void> {
     return;
   }
 
+  const protectedConfigBefore = captureAgentProtectedConfigSnapshot(worktree.path);
+  const gitStateBefore = captureAgentGitStateSnapshot(worktree.path);
   const child = spawn(resolved.command, {
     cwd: worktree.path,
     env: {
-      ...process.env,
+      ...gitEnvironment(),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
     },
@@ -346,6 +359,21 @@ async function agent(opts: AgentOpts): Promise<void> {
     child.once("error", () => resolveExit(1));
     child.once("close", (code) => resolveExit(code ?? 1));
   });
+  const protectedConfigChanges = changedAgentProtectedConfigPaths(
+    worktree.path,
+    protectedConfigBefore,
+  );
+  if (protectedConfigChanges.length > 0) {
+    process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    process.exitCode = 1;
+    return;
+  }
+  const gitStateChanges = changedAgentGitStateFields(worktree.path, gitStateBefore);
+  if (gitStateChanges.length > 0) {
+    process.stderr.write(`blocked: ${agentGitStateViolation(gitStateChanges)}\n`);
+    process.exitCode = 1;
+    return;
+  }
   if (exitCode !== 0) process.exitCode = exitCode;
 }
 

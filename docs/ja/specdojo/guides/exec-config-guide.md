@@ -407,6 +407,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 | -------------------------- | ------------------------------------------------------------------------------------------------ |
 | worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                      |
 | git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
+| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
 | ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
 | commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
 | merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
@@ -480,7 +481,7 @@ providers:
 
 - 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
 - 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用します。
-- agent の mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent は working tree の plan を書き換えられますが HEAD は書き換えられないため、許可リストの導出は改ざん耐性があります。
+- agent の mode / approach / `targets` は worktree の **agent 起動前の HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent 前後の HEAD は runner が比較し、agent 自身の commit や checkout を検知した場合は統合前に block するため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
@@ -488,7 +489,7 @@ providers:
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
 - worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
 
-### 8.4. 親 runner が実行する設定の変更ガード
+### 8.4. 親 runner が実行する設定と Git 状態の変更ガード
 
 commit 許可リストだけでは、register 由来の除外リスト方式や、commit より前に親 runner が検証を起動する経路を守れません。そのため `src/exec-agent-protected-config.ts` の固定定義で、次のパスを全 provider 共通の書き込み禁止対象にします。
 
@@ -498,6 +499,10 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 - `.github/workflows/**`、`.gitlab-ci.*`、`.gitlab/ci/**`、`.circleci/**`、Azure Pipelines / Jenkins の設定
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
+
+agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。Git hook経由でrunnerが起動されても、agent内のテストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+
+さらに`src/exec-agent-git-state.ts`が各agent試行の直前にHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
 
 設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で提案を確認して適用し、対象設定に対応する test / hook / CI 検証を実行して commit します。agent 用の解除フラグはありません。
 
