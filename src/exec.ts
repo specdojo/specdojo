@@ -83,6 +83,7 @@ import { scaffoldViewpoints } from "./review-plan.js";
 import { registerCycleCommand, registerResumeCommand, registerRunCommand } from "./exec-run.js";
 import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
+import { registerExecTrialCommands } from "./exec-trial.js";
 import { discardStaleExecWorktree } from "./exec-worktree-ops.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import {
@@ -1224,6 +1225,7 @@ export function registerExecCommands(program: Command): void {
   registerResumeCommand(exec);
   registerCycleCommand(exec);
   registerExecWorktreeCommands(exec);
+  registerExecTrialCommands(exec);
 
   // exec scaffold: creates project setup files (viewpoints etc.) or provider templates
   const scaffoldCmd = exec

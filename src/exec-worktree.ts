@@ -216,6 +216,7 @@ export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
+  startPoint?: string;
   installDependencies?: (worktreePath: string) => void;
 }): ExecWorktree {
   const repoRoot = resolve(opts.repoRoot);
@@ -251,7 +252,14 @@ export function ensureExecWorktree(opts: {
     gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0;
   const args = branchExists
     ? ["worktree", "add", worktreePath, branch]
-    : ["worktree", "add", worktreePath, "-b", branch];
+    : [
+        "worktree",
+        "add",
+        worktreePath,
+        "-b",
+        branch,
+        ...(opts.startPoint ? [opts.startPoint] : []),
+      ];
   gitOutput(repoRoot, args);
 
   (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);

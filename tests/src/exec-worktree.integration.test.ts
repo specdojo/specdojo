@@ -137,6 +137,30 @@ describe("exec worktree", () => {
     }
   });
 
+  it("creates a new worktree from an explicit start point", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    try {
+      const startPoint = git(repo, "rev-parse", "HEAD");
+      writeFileSync(join(repo, "later.txt"), "later\n", "utf8");
+      git(repo, "add", "later.txt");
+      git(repo, "commit", "-m", "later");
+
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "prj-0001:trial:cmp-001:agent-a",
+        startPoint,
+      });
+
+      expect(git(created.path, "rev-parse", "HEAD")).toBe(startPoint);
+      expect(existsSync(join(created.path, "later.txt"))).toBe(false);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
   it("installs root and package-local dependencies inside a newly created worktree", () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
