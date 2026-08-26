@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-5yw6-agent-trial-base-and-reporter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-26T10:37:28Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T12:17:23Z"
   block_reason: "integrate failed: git commit -m exec(register PJR-5YW6): trialで完了済みtodoを起点に指定しreporterも比較できるようにする -- docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md docs/…"
+  conclusion: exec trial run へ --base を追加し、起点コミットを指定できるようにした。省略時は従来どおり HEAD を使う。plan が参照するリポジトリ相対パスを抽出し、起点コミットのツリーに存在するかを実行前に確認して、欠落一覧と警告を比較記録へ保存する。従来の --agent と共有 --reporter-by を維持したまま、代替として --pair executor=reporter を追加し、reporter_mode として none / shared / paired を記録する。paired では組ごとに独立した trial ID・worktree・branch・reporter command を使う。reporter の客観指標へ状態、形式再試行回数、失敗分類（reported_blocked / invalid_output / invocation_failure / rate_limit）を追加した。実リポジトリの Git 状態を変更する処理は追加せず、PJR-A99J の隔離と前後検査を維持している。
 ---
 
 # PJR-5YW6 trialで完了済みtodoを起点に指定しreporterも比較できるようにする
