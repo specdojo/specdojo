@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-23T07:24:10Z"
   due_on: "2026-08-31"
+  block_reason: 'agent exited with non-zero code: reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token ''I'', "I need to "... is not valid JSON'
 ---
 
 # PJR-0FCT 共通規約のtest実行に関する記述の矛盾を解消する
