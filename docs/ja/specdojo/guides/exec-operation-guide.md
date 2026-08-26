@@ -136,7 +136,9 @@ specdojo exec trial run \
 
 `--agent`だけならreporterなし、`--agent`と`--reporter-by`なら全trialで同じreporter、`--pair`ならtrialごとのreporterを使います。比較記録の`reporter_mode`にはそれぞれ`none` / `shared` / `paired`を保存します。
 
-比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。所要時間はexecutor、親検証、trial全体を分け、親検証の実行時間がagent比較へ混入しないようにします。検証件数もexecutor報告と親runner実行を分け、executorの`passed` / `failed` / `not_run`と報告総数を保存します。理由付きの`not_run`は意図した省略、報告件数の不足は未報告として比較できます。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+
+`pipeline.parent_validations`が設定されている場合、trialも通常のpipelineと同様にexecutor成功後・reporter起動前に各worktreeで親検証を実行します。結果は`source: runner`としてevidenceへ追記され、失敗したtrialは採用可能な`succeeded`になりません。executorが失敗して親検証へ進めなかった場合も`parent_validation.status: not_run`として比較記録と`trial status`に表示します。これにより、採用前に親検証の不足を確認できます。
 
 ```bash
 specdojo exec trial status --project <project-id> --comparison <comparison-id>
@@ -150,7 +152,7 @@ specdojo exec trial rate \
   --notes "human review notes"
 ```
 
-評価後は成功したtrialを1つだけ採用します。`adopt`は選択したbranchを現在branchへmergeし、残りのworktreeとbranchを破棄します。破棄後も中央の比較記録とagent別evidenceは残ります。どれも採用しない場合は`discard`を使います。
+評価後は成功したtrialを1つだけ採用します。`adopt`は選択したbranchを現在branchへmergeし、残りのworktreeとbranchを破棄します。採用前に`trial status`の親検証状態とexecutorの報告総数・`not_run`件数を確認します。`not_run`の理由は`comparison.json`の`executor.validations`で確認できます。破棄後も中央の比較記録とagent別evidenceは残ります。どれも採用しない場合は`discard`を使います。
 
 ```bash
 specdojo exec trial adopt \
