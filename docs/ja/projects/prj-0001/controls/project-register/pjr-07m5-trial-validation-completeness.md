@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-26T14:13:16Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=local-config; agent must leave commits and repository configuration changes …"
 ---
 
 # PJR-07M5 trialで親検証が実行されず成果の検証が不完全になる問題を解消する
