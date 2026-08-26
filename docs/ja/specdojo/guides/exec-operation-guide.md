@@ -83,6 +83,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 | 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
 | plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
 | worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
+| 同じplanで複数agentを比較する           | `exec trial run`                      | なし            | agent別  |
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
@@ -106,6 +107,46 @@ specdojo exec run --project <project-id> --auto --if-busy skip
 # ロックが空くまで待ってから実行
 specdojo exec run --project <project-id> --auto --if-busy wait
 ```
+
+### 1.5. 同一planによるagent比較
+
+`exec trial run` は、既存planを生成し直さず、その同じ内容を複数agentへ渡して独立したworktreeで試行します。trialはSchedule eventとregisterの状態遷移を更新しないため、本来のタスクを完了・review・waitingへ進めません。
+
+```bash
+specdojo exec trial run \
+  --project <project-id> \
+  --plan <existing-plan-path> \
+  --agent <agent-a> <agent-b> \
+  --reporter-by <shared-reporter> \
+  --parallel 2
+```
+
+比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commit、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力、reporter構造化出力と形式試行回数を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+
+```bash
+specdojo exec trial status --project <project-id> --comparison <comparison-id>
+specdojo exec trial rate \
+  --project <project-id> \
+  --comparison <comparison-id> \
+  --trial <agent> \
+  --judgment-quality 4 \
+  --writing-quality 3 \
+  --scope-adherence 5 \
+  --notes "human review notes"
+```
+
+評価後は成功したtrialを1つだけ採用します。`adopt`は選択したbranchを現在branchへmergeし、残りのworktreeとbranchを破棄します。破棄後も中央の比較記録とagent別evidenceは残ります。どれも採用しない場合は`discard`を使います。
+
+```bash
+specdojo exec trial adopt \
+  --project <project-id> \
+  --comparison <comparison-id> \
+  --trial <agent>
+
+specdojo exec trial discard --project <project-id> --comparison <comparison-id>
+```
+
+1回の比較だけでは`pm-members.yaml`を自動変更しません。人が客観指標と主観評価を確認し、複数タスクで傾向が再現した場合にpriorityやcapabilitiesを更新します。この判断方針も比較記録の`agent_selection`へ保存されます。
 
 ## 2. 中断・訂正・再実行
 

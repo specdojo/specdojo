@@ -354,6 +354,7 @@ specdojo schedule strategy generate \
 | `exec run`       | plan を生成してエージェントを実行する                                                                         | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
 | `exec resume`    | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                            | `specdojo exec resume --project prj-0001 --due`                                                         |
 | `exec cycle`     | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する | `specdojo exec cycle --project prj-0001 --loop`                                                         |
+| `exec trial`     | 同一planを複数agentで隔離試行し、比較・評価・採否を管理する                                                   | `specdojo exec trial run --project prj-0001 --plan <path> --agent agent-a agent-b`                      |
 | `exec status`    | 実行状態を表示する                                                                                            | `specdojo exec status --project prj-0001 --state blocked`                                               |
 | `exec scaffold`  | 実行補助設定や provider 設定一式を生成する                                                                    | `specdojo exec scaffold --provider claude`                                                              |
 | `exec plan`      | plan だけを生成する                                                                                           | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
@@ -444,6 +445,33 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 `--by`（または owner 解決）を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--executor-by` と `--reporter-by` を両方指定した場合は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
 
 register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
+
+### 7.1. agent比較trial
+
+`exec trial`は、同一タスクの既存planを複数agentへ同じ内容で渡し、agent名を含む独立worktreeとbranchで試行します。Schedule eventとregister状態は変更しません。
+
+| サブコマンド | 用途                                                            |
+| ------------ | --------------------------------------------------------------- |
+| `run`        | 2つ以上のagentで試行し、客観指標を中央の比較記録へ集約する      |
+| `status`     | plan/promptハッシュとagent別指標を表示する                      |
+| `rate`       | 判断・文章・範囲遵守の人手評価（1〜5）と注記を記録する          |
+| `adopt`      | 成功trialを現在branchへmergeし、残りのworktree/branchを破棄する |
+| `discard`    | 成果を採用せず全worktree/branchを破棄し、比較記録だけを残す     |
+
+```bash
+specdojo exec trial run \
+  --project prj-0001 \
+  --plan docs/ja/projects/prj-0001/execution/exec/plans/<task>-plan.md \
+  --agent agent-a agent-b \
+  --reporter-by reporter-a \
+  --parallel 2
+
+specdojo exec trial status --project prj-0001 --comparison <comparison-id>
+specdojo exec trial rate --project prj-0001 --comparison <comparison-id> --trial agent-a --judgment-quality 4 --writing-quality 4 --scope-adherence 5
+specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --trial agent-a
+```
+
+`run`はplan frontmatterの`task_id` / `mode` / `project_id`を要求します。`--reporter-by`は任意ですが、指定すると全trialで同じreporterを使い、JSON Schemaに適合した構造化出力の成否と形式試行回数も比較記録へ保存します。記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して`pm-members.yaml`を更新します。
 
 ## 8. exec worktree
 

@@ -56,17 +56,26 @@ PJR-0FCT を qwen-expert-executor / qwen-reporter で実行した際の観測で
 
 ## 3. 作業内容
 
-| No  | 作業                                                                 | 担当 | 状態 | メモ                                   |
-| --- | -------------------------------------------------------------------- | ---- | ---- | -------------------------------------- |
-| 1   | 試行の実行方法を設計する                                             | ARC  | open | 状態を進めない扱いと worktree の命名   |
-| 2   | 同じ plan を複数 agent へ与える手段を用意する                        | ARC  | open | `--plan` の活用を含めて検討する        |
-| 3   | 比較記録の形式を決め、客観指標と主観評価を分けて記録できるようにする | ARC  | open | 何を測るかの判断を含む                 |
-| 4   | 採用と破棄の手順を用意する                                           | ARC  | open | 破棄した試行の記録は残す               |
-| 5   | 試行結果を agent 選定へ反映する経路を決める                          | ARC  | open | pm-members.yaml へ反映するかを判断する |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                                                                  |
+| --- | -------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------- |
+| 1   | 試行の実行方法を設計する                                             | ARC  | done | `exec trial run`を追加。状態遷移なしでagent別worktree/branchを作る                    |
+| 2   | 同じ plan を複数 agent へ与える手段を用意する                        | ARC  | done | 既存planを1回だけ読み、全trialへ同一promptを渡してplan/promptのSHA-256を記録          |
+| 3   | 比較記録の形式を決め、客観指標と主観評価を分けて記録できるようにする | ARC  | done | 中央JSONに機械指標を集約し、`exec trial rate`で人手評価を別フィールドへ記録           |
+| 4   | 採用と破棄の手順を用意する                                           | ARC  | done | `adopt`で1trialを統合して残りを破棄、`discard`で全破棄。記録/evidenceは中央に保持     |
+| 5   | 試行結果を agent 選定へ反映する経路を決める                          | ARC  | done | 単発結果では自動変更せず、人が反復結果を確認して`pm-members.yaml`を更新する方針とした |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`specdojo exec trial`を追加し、同じplanを2つ以上のagentへ渡す比較試行を、通常のSchedule/registerライフサイクルから分離した。
+
+- `trial run`はplanを再生成せず1回だけ読み、全agentへ同一promptを渡す。比較IDとagent名を含むworktree/branchを使うため、同一task IDでも衝突しない。planとpromptのSHA-256および共通base commitを保存する。
+- 比較記録を`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約した。所要時間、終了コード、試行回数、変更ファイル、検証結果、executor構造化出力、reporter構造化出力・形式試行回数を客観指標として保存し、agent別のredact済みevidence/logも同じディレクトリへ中央保存する。
+- `trial rate`で判断の質、文章の質、範囲の遵守を1〜5と注記で記録する。自動指標とは別の`subjective`フィールドに保持する。
+- `trial adopt`は成功した1trialだけを現在branchへmergeし、ほかのtrial worktree/branchを破棄する。`trial discard`はどれも採用せず全trialを破棄する。どちらも中央の比較記録とevidenceを削除しない。
+- agent選定は単一trialから自動変更しない。人が複数タスクの客観・主観結果を確認し、傾向が再現した場合に`pm-members.yaml`のpriority/capabilitiesへ反映する。この方針を各比較記録の`agent_selection`にも保存する。
+- CLIの使い方と安全条件を[[specdojo:exec-operation-guide|exec運用ガイド]]およびコマンドリファレンスへ追記し、比較記録生成のunit testを追加した。
+
+残課題はない。
 
 ## 5. 関連ドキュメント
 
