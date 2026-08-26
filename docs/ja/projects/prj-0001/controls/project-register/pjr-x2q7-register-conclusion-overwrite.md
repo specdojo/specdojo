@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x2q7-register-conclusion-overwrite
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-24T11:26:51Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T06:42:33Z"
+  conclusion: ブロック理由を conclusion とは別の block_reason へ分離した。失敗した実行が項目の最終結果を置き換えられないようにしつつ、理由自体は残る。register wait は --reason を新設し、--conclusion は非推奨の別名として残して既存の呼び出しを壊さない。register update に --conclusion を追加し、直接編集せずに更新でき、ハイフン指定で削除もできる。register history はブロック理由の変化を追える。既存個票に残る過去のブロック理由は本項目では書き換えていない。
 ---
 
 # PJR-X2Q7 失敗時のブロック理由が個票のconclusionを上書きする問題を解消する
