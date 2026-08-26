@@ -402,6 +402,8 @@ describe("pipeline executor preparation", () => {
     expect(prompt).toContain("test-integration");
     expect(prompt).toContain("Do not run those commands inside the agent sandbox");
     expect(prompt).toContain("source=runner");
+    expect(prompt).toContain("Do not run git commit or change");
+    expect(prompt).toContain("user.name and user.email");
   });
 
   it("rejects an explicit legacy agent override for an executor stage", () => {

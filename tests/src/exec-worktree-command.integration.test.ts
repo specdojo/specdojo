@@ -106,8 +106,6 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
 
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   git(
     repo,
     "add",

@@ -39,16 +39,20 @@ PJR-07M5 の実行で agent が git の local config（user.name / user.email）
 
 ## 3. 作業内容
 
-| No  | 作業                                                         | 担当 | 状態 | メモ                              |
-| --- | ------------------------------------------------------------ | ---- | ---- | --------------------------------- |
-| 1   | テストの git identity 設定が実リポジトリへ及ぶ経路を特定する | ARC  | open | 複数のテストが該当する            |
-| 2   | 一時ディレクトリ内に限定するか、設定なしで動作するようにする | ARC  | open | 検知機構は弱めない                |
-| 3   | agent が identity を設定しようとする経路を確認し対処する     | ARC  | open | worktree 内に限定するか不要にする |
-| 4   | 影響を受けたコミットの範囲を記録する                         | ARC  | open | author の書き換えは行わない       |
+| No  | 作業                                                         | 担当 | 状態 | メモ                             |
+| --- | ------------------------------------------------------------ | ---- | ---- | -------------------------------- |
+| 1   | テストの git identity 設定が実リポジトリへ及ぶ経路を特定する | ARC  | done | Vitest 3設定とE2E toolへ集約した |
+| 2   | 一時ディレクトリ内に限定するか、設定なしで動作するようにする | ARC  | done | process環境だけへidentityを注入  |
+| 3   | agent が identity を設定しようとする経路を確認し対処する     | ARC  | done | executor promptで親管理を明示    |
+| 4   | 影響を受けたコミットの範囲を記録する                         | ARC  | done | 1,877件を記録し履歴は維持した    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+テストで直接実行していた`git config user.name` / `user.email`を全廃した。Vitestの3設定は共通の`TEST_GIT_ENVIRONMENT`をworkerと子プロセスへ渡し、author / committer identityと`commit.gpgsign=false`をprocess環境だけに限定する。`tools/e2e/exec-run-e2e.ts`も同じ方式へ変更した。fixture commit後のlocal configにidentityがないことと、commit authorがテスト用identityになることを統合テストで確認する。
+
+PJR-07M5でagentがidentityを設定しようとした経路はexecutor stageであった。executor promptへ、commitとrepository設定は親runnerが所有し、agentは`git commit`およびlocal / global / system config（`user.name` / `user.email`を含む）を変更しないという契約を追加した。既存のPJR-A99JによるHEAD・local config前後比較は変更せず、違反時に親検証・reporter・commit・mergeより前でblockする検知を維持した。
+
+履歴は書き換えていない。`git log --all`で`SpecDojo Test <specdojo@example.invalid>`を監査した時点では、2026-06-24T11:23:30Zの`2beff3bd`から2026-08-26T23:52:19+09:00の`c36541a8`まで1,877 commitが該当した。全refを対象とした観測件数であり、既存branchの削除やauthorの修正は行わない。対応後の実repositoryではlocalの`user.name` / `user.email`が未設定で、globalの`naoji3x <naoji.3x@gmail.com>`が有効であることを確認した。残課題はない。
 
 ## 5. 関連ドキュメント
 

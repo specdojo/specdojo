@@ -502,6 +502,8 @@ runner は agent の各試行前後でファイル内容を比較し、差分が
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。Git hook経由でrunnerが起動されても、agent内のテストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 
+executor / reporter pipelineのexecutor promptは、commitとrepository設定を親runnerが所有することを明記し、`git commit`およびlocal / global / system configの変更（`user.name` / `user.email`を含む）を禁止します。fixture commitに使うテスト用identityはVitest workerと子プロセスの環境変数だけへ注入し、fixtureを含むrepositoryのlocal configへは書き込みません。
+
 さらに`src/exec-agent-git-state.ts`が各agent試行の直前にHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
 
 設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で提案を確認して適用し、対象設定に対応する test / hook / CI 検証を実行して commit します。agent 用の解除フラグはありません。

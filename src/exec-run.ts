@@ -735,6 +735,10 @@ This invocation is the executor stage of an executor/reporter pipeline. Edit and
 artifacts required by the plan, but do not create or update the result file. Any plan instruction
 that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
 runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
 ${parentValidationInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
