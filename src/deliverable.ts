@@ -41,13 +41,18 @@ export function registerDeliverableCommands(program: Command): void {
     try {
       const catalogPath = resolveCatalogPath(opts);
       const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
+      const rulebooksPath = resolve(specdojoRootDir(), "docs/ja/specdojo/rulebooks");
       if (!existsSync(templatesPath)) {
         throw new Error(`Templates directory not found: ${templatesPath}`);
+      }
+      if (!existsSync(rulebooksPath)) {
+        throw new Error(`Rulebooks directory not found: ${rulebooksPath}`);
       }
 
       const { written, skipped, errors } = runGenerate({
         catalogPath,
         templatesPath,
+        rulebooksPath,
         repoRoot: specdojoRootDir(),
         projectId: opts.projectId ?? null,
         force: !!opts.force,

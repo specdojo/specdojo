@@ -87,6 +87,8 @@ flowchart TB
 
 `recipe` / `sample` / `template` の要否と所在は rulebook frontmatter を正本とし、成果物カタログは `rulebook` の宣言だけを保持します。`kind: generated` の成果物には実践の型を適用せず、個別宣言ではなく `kind` から導出します。
 
+`deliverable scaffold` は成果物の `rulebook` を辿り、その frontmatter の `template` が宣言する文書 ID から雛形を解決します。成果物の `local_id` と template ファイル名を一致させる必要はなく、同じ rulebook 系統の複数成果物が 1 つの template を共有できます。`template: not-needed`、`template: undecided`、項目省略は template を適用せず、カタログ情報による最小雛形へ退避します。
+
 ## 4. 実践の型サブセットと活用
 
 exec plan が実行時に参照するのは、実践体系のうち rulebook / recipe / sample / template の4種（実践の型）です。これらをどこまで参照するか（`approach` に応じた参照方針）は [実践の進め方ガイド](ryu-guide.md) を正本とします。

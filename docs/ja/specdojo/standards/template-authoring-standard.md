@@ -14,15 +14,16 @@ Template Authoring Standard
 ## 1. 適用範囲
 
 - 対象: `docs/ja/specdojo/templates/` 配下のすべての `*-template.(md|yaml)`
-- 目的: テンプレートの構成・プレースホルダ記法を統一し、埋めるだけで成果物の雛形が完成する状態を提供する
-- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- 目的: テンプレートの構成・プレースホルダ記法を統一し、同じ rulebook 系統の成果物へ再利用できる雛形を提供する
+- 成果物の意味要件の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- 見出し・キー・記入欄の骨組みの正本: rulebook frontmatter が文書 ID で宣言する template
 - 完成後の Frontmatter 規約の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 
 ## 2. 出力フォーマットと命名
 
 - ファイル名は `<prefix>-template.md` / `<prefix>-template.yaml` とし、対応 rulebook の `target_format` に合わせる。
-- Markdown テンプレートは、見出し構成を対象成果物の `本文構成（標準テンプレ）` に対応させる。
+- Markdown テンプレートは、対応 rulebook の本文要件を満たす見出し構成を持つ。見出しの順序と記入欄は template を正本とし、rulebook 本文へ同じ骨組みを転載しない。
 - YAML テンプレートは、対象成果物のルートキー・必須キー・型を雛形として示す。
 - テンプレートファイル自身の Frontmatter も `specdojo:` 名前空間配下に実値で記述する（`specdojo.id: specdojo:<prefix>-template`、`specdojo.type: template`、`specdojo.status: draft`）。生成物の Frontmatter は自身 Frontmatter とは別に表現する。表現方法は [document-metadata-standard.md](document-metadata-standard.md) の `テンプレート自身のメタ情報と生成物 Frontmatter の分離` に従い、Markdown 成果物テンプレートは `specdojo:` 配下の `frontmatter_template` フィールド（中身は `specdojo:` ラッパー込みの生成物 Frontmatter）、exec / result テンプレートは本文先頭の `_FRONTMATTER_` を用いる。
 - YAML テンプレートも自身のメタ情報（`id` / `type` / `status` / `title` / `rulebook`）をトップレベルに実値で記述する。YAML catalog（`dct-*`）を除き、生成物のメタ情報はトップレベルの `metadata_template` フィールドに記述する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物メタ情報雛形（metadata_template）`）。
@@ -35,14 +36,24 @@ Template Authoring Standard
 - 固定値（変更しない記述）はプレースホルダにせず、そのまま記述する。
 - すべてのプレースホルダは、埋めれば成果物として成立する粒度にする。
 
-| 記法                   | 用途                                                                      | 例                     |
-| ---------------------- | ------------------------------------------------------------------------- | ---------------------- |
-| `_UPPER_SNAKE_`        | 埋めるべき可変項目（記入プレースホルダ）                                  | `_RISK_TITLE_`         |
-| _TODO_                 | 後で記入・判断する箇所（記入プレースホルダ）                              | 担当 / 期限など        |
-| `_PROJECT_ID_`         | 生成時に置換するプロジェクト ID（生成時プレースホルダ）                   | `_PROJECT_ID_:pm-plan` |
-| `frontmatter_template` | 生成物 Frontmatter 雛形（Markdown 成果物テンプレート自身 Frontmatter 内） | —                      |
-| `metadata_template`    | 生成物メタ情報雛形（YAML テンプレートのトップレベル。`dct-*` を除く）     | —                      |
-| `_FRONTMATTER_`        | 生成処理が注入する Frontmatter（exec / result テンプレート本文先頭）      | —                      |
+`deliverable scaffold` がカタログから確定できる次の値は予約済みの生成時プレースホルダとし、同じ rulebook 系統で template を共有するときに使用する。
+
+| プレースホルダ           | 置換元                                |
+| ------------------------ | ------------------------------------- |
+| `_PROJECT_ID_`           | 対象 project ID                       |
+| `_LOCAL_ID_`             | `deliverables[].local_id`             |
+| `_DELIVERABLE_NAME_`     | `deliverables[].name`                 |
+| `_DELIVERABLE_OVERVIEW_` | `deliverables[].overview`             |
+| `_BASED_ON_`             | `depends_on` を project ID 化した配列 |
+
+| 記法                   | 用途                                                                      | 例                        |
+| ---------------------- | ------------------------------------------------------------------------- | ------------------------- |
+| `_UPPER_SNAKE_`        | 埋めるべき可変項目（記入プレースホルダ）                                  | `_RISK_TITLE_`            |
+| _TODO_                 | 後で記入・判断する箇所（記入プレースホルダ）                              | 担当 / 期限など           |
+| `_PROJECT_ID_` 等      | `deliverable scaffold` が置換する予約済み生成時プレースホルダ             | `_PROJECT_ID_:_LOCAL_ID_` |
+| `frontmatter_template` | 生成物 Frontmatter 雛形（Markdown 成果物テンプレート自身 Frontmatter 内） | —                         |
+| `metadata_template`    | 生成物メタ情報雛形（YAML テンプレートのトップレベル。`dct-*` を除く）     | —                         |
+| `_FRONTMATTER_`        | 生成処理が注入する Frontmatter（exec / result テンプレート本文先頭）      | —                         |
 
 ### 3.1. 他のプレースホルダ記法との使い分け
 
@@ -59,7 +70,8 @@ Template Authoring Standard
 ## 4. 構成の原則
 
 - Markdown の見出しは `##` から開始し、章番号は 1 始まりの連番、末尾に `.` を付ける。
-- 章構成は対応成果物の rulebook が定める本文構成に対応させ、テンプレート独自の章立てを作らない。
+- 章構成は対応成果物の rulebook が定める本文要件を満たし、同じ rulebook 系統の成果物で共有できる粒度にする。
+- 見出しの順序、表の列、記入欄の配置は template を正本とする。rulebook は章の目的、必須・任意、記述上の規約を正本とする。
 - YAML はキー構造・必須キー・型制約を、対象成果物の schema と整合する形で示す。
 - 埋めた結果が対象 `type` のメタ情報標準（[document-metadata-standard.md](document-metadata-standard.md)）を満たすようにする。
 
@@ -83,6 +95,6 @@ Template Authoring Standard
 
 ## 7. 運用ルール
 
-- 対応成果物の rulebook 本文構成や schema が変わった場合は、テンプレートの構成・キーを追従させる。
+- 対応成果物の rulebook 本文要件や schema が変わった場合は、テンプレートの構成・キーを追従させる。
 - プレースホルダ名を変更する場合は、対応する recipe / 生成処理との整合を確認する。
 - 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
