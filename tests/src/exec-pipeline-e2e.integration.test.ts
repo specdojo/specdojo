@@ -441,9 +441,6 @@ function setupPipelineRepository(): PipelineFixture {
   // evidence は git status / diff から変更ファイルを収集するため、実リポジトリを用意し、
   // agent 実行前の状態をコミットしておく。
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
-  git(repo, "config", "commit.gpgsign", "false");
   git(repo, "add", "-A");
   git(repo, "commit", "-m", "initial");
 

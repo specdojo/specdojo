@@ -24,16 +24,6 @@ function initRepository(root: string): void {
   // gitEnvironment() は GIT_DIR / GIT_WORK_TREE を除去するため、必ず経由する。
   const env = gitEnvironment();
   execFileSync("git", ["init"], { cwd: root, stdio: "ignore", env });
-  execFileSync("git", ["config", "user.name", "SpecDojo Test"], {
-    cwd: root,
-    stdio: "ignore",
-    env,
-  });
-  execFileSync("git", ["config", "user.email", "specdojo@example.invalid"], {
-    cwd: root,
-    stdio: "ignore",
-    env,
-  });
 }
 
 afterEach(() => {

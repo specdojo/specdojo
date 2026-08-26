@@ -32,8 +32,6 @@ function git(cwd: string, ...args: string[]): string {
 function createGitRepository(): string {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-worktree-repo-"));
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
   git(repo, "add", "README.md");
   git(repo, "commit", "-m", "initial");

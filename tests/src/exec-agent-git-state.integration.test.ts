@@ -17,8 +17,6 @@ function git(cwd: string, ...args: string[]): string {
 function createRepository(): string {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-agent-git-state-"));
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   writeFileSync(join(repo, "README.md"), "# initial\n", "utf8");
   git(repo, "add", "README.md");
   git(repo, "commit", "-m", "initial");
@@ -26,6 +24,18 @@ function createRepository(): string {
 }
 
 describe("agent Git state guard", () => {
+  it("creates fixture commits without writing identity to local config", () => {
+    const repo = createRepository();
+    try {
+      expect(git(repo, "config", "--local", "--list")).not.toMatch(/user\.(?:name|email)/);
+      expect(git(repo, "log", "-1", "--format=%an <%ae>")).toBe(
+        "SpecDojo Test <specdojo@example.invalid>",
+      );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("detects a commit created by an agent", () => {
     const repo = createRepository();
     try {
