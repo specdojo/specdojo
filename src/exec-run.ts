@@ -753,7 +753,7 @@ export function buildExecutorPrompt(
   return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds)}`;
 }
 
-async function runConfiguredParentValidations(
+export async function runConfiguredParentValidations(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
 ): Promise<Awaited<ReturnType<typeof runParentValidations>>> {

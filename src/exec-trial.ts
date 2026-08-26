@@ -27,7 +27,12 @@ import {
   type ExecEvidence,
 } from "./exec-evidence.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
-import { buildExecutorPrompt, isRateLimitError, loadRosterForExecutionPath } from "./exec-run.js";
+import {
+  buildExecutorPrompt,
+  isRateLimitError,
+  loadRosterForExecutionPath,
+  runConfiguredParentValidations,
+} from "./exec-run.js";
 import { parsePlanTaskIdentity } from "./exec-plans.js";
 import { runReporterWithFormatRetry, type ReporterOutput } from "./exec-reporter.js";
 import { ensureDir, safeSlug } from "./exec-shared.js";
@@ -105,7 +110,9 @@ export type AgentTrialRecord = {
   executor: {
     exit_code: number | null;
     attempts: number;
+    duration_ms: number | null;
     structured_output: boolean;
+    validations_reported: number;
     validations_passed: number;
     validations_failed: number;
     validations_not_run: number;
@@ -115,6 +122,14 @@ export type AgentTrialRecord = {
     validations: EvidenceValidation[];
     changes: Array<{ path: string; status: string }>;
     diff_summary: string;
+  };
+  parent_validation: {
+    configured_ids: string[];
+    status: "not_configured" | "not_run" | "passed" | "failed";
+    duration_ms: number | null;
+    validations_passed: number;
+    validations_failed: number;
+    validations_not_run: number;
   };
   reporter: {
     status: ReporterStatus;
@@ -465,6 +480,7 @@ function blankTrial(params: {
   trialId?: string;
   reporter?: string;
   worktreeBase: string;
+  parentValidationIds?: string[];
 }): AgentTrialRecord {
   const trialId = safeSlug(params.trialId ?? params.agent);
   const worktreeTaskId = `${params.projectId}:trial:${params.comparisonId}:${trialId}`;
@@ -482,7 +498,9 @@ function blankTrial(params: {
     executor: {
       exit_code: null,
       attempts: 0,
+      duration_ms: null,
       structured_output: false,
+      validations_reported: 0,
       validations_passed: 0,
       validations_failed: 0,
       validations_not_run: 0,
@@ -492,6 +510,14 @@ function blankTrial(params: {
       validations: [],
       changes: [],
       diff_summary: "",
+    },
+    parent_validation: {
+      configured_ids: [...(params.parentValidationIds ?? [])],
+      status: params.parentValidationIds?.length ? "not_run" : "not_configured",
+      duration_ms: null,
+      validations_passed: 0,
+      validations_failed: 0,
+      validations_not_run: 0,
     },
     reporter: {
       status: "not_run",
@@ -526,6 +552,7 @@ export function buildComparisonRecord(params: {
   pairs?: TrialAgentPair[];
   reporter?: string;
   worktreeBase: string;
+  parentValidationIds?: string[];
 }): AgentComparisonRecord {
   const reporterMode: ReporterMode = params.pairs ? "paired" : params.reporter ? "shared" : "none";
   const definitions =
@@ -576,6 +603,7 @@ export function buildComparisonRecord(params: {
         trialId: trialIds[index],
         reporter,
         worktreeBase: params.worktreeBase,
+        parentValidationIds: params.parentValidationIds,
       }),
     ),
     agent_selection: {
@@ -587,7 +615,7 @@ export function buildComparisonRecord(params: {
   };
 }
 
-function updateObjectiveMetrics(
+export function updateObjectiveMetrics(
   trial: AgentTrialRecord,
   evidence: ExecEvidence,
   structuredOutput: boolean,
@@ -598,11 +626,31 @@ function updateObjectiveMetrics(
   trial.executor.validations = evidence.validations;
   trial.executor.changes = evidence.changes;
   trial.executor.diff_summary = evidence.diff_summary.summary;
-  for (const validation of evidence.validations) {
+  const executorValidations = evidence.validations.filter(
+    (validation) => validation.source !== "runner",
+  );
+  trial.executor.validations_reported = executorValidations.length;
+  trial.executor.validations_passed = 0;
+  trial.executor.validations_failed = 0;
+  trial.executor.validations_not_run = 0;
+  for (const validation of executorValidations) {
     if (validation.status === "passed") trial.executor.validations_passed++;
     else if (validation.status === "failed") trial.executor.validations_failed++;
     else trial.executor.validations_not_run++;
   }
+
+  const parentValidations = evidence.validations.filter(
+    (validation) => validation.source === "runner",
+  );
+  trial.parent_validation.validations_passed = parentValidations.filter(
+    (validation) => validation.status === "passed",
+  ).length;
+  trial.parent_validation.validations_failed = parentValidations.filter(
+    (validation) => validation.status === "failed",
+  ).length;
+  trial.parent_validation.validations_not_run = parentValidations.filter(
+    (validation) => validation.status === "not_run",
+  ).length;
 }
 
 async function runOneTrial(params: {
@@ -615,6 +663,8 @@ async function runOneTrial(params: {
   executorCommand: string;
   reporterCommand?: string;
   reporterRateLimitDetection?: RateLimitDetection;
+  parentValidationIds: string[];
+  execDefaults: ReturnType<typeof loadExecDefaultsConfig>;
   repoRoot: string;
   schedulePath: string;
   executionPath: string;
@@ -631,6 +681,23 @@ async function runOneTrial(params: {
     worktreeEnvironment(params.repoRoot, worktree.path, params.schedulePath, params.executionPath),
   );
   const executorCompletedAt = new Date();
+  trial.executor.duration_ms = executorCompletedAt.getTime() - startedAt.getTime();
+  trial.parent_validation.configured_ids = [...params.parentValidationIds];
+  let parentValidations: EvidenceValidation[] = [];
+  if (params.parentValidationIds.length === 0) {
+    trial.parent_validation.status = "not_configured";
+  } else if (outcome.exitCode !== 0) {
+    trial.parent_validation.status = "not_run";
+  } else {
+    const parentValidationStartedAt = Date.now();
+    parentValidations = await runConfiguredParentValidations(params.execDefaults, worktree.path);
+    trial.parent_validation.duration_ms = Date.now() - parentValidationStartedAt;
+    trial.parent_validation.status = parentValidations.some(
+      (validation) => validation.status !== "passed",
+    )
+      ? "failed"
+      : "passed";
+  }
   const runId = `${safeSlug(params.record.comparison_id)}-${trial.trial_id}`;
   const evidenceRecorded = recordExecutorEvidence({
     repoRoot: params.repoRoot,
@@ -646,6 +713,7 @@ async function runOneTrial(params: {
     attempts: 1,
     stdout: outcome.stdout,
     stderr: outcome.stderr,
+    parentValidations,
   });
   const centralizedEvidenceDir = join(
     comparisonDir(params.executionPath, params.record.comparison_id),
@@ -736,7 +804,11 @@ async function runOneTrial(params: {
   trial.completed_at = completedAt.toISOString();
   trial.duration_ms = completedAt.getTime() - startedAt.getTime();
   trial.status =
-    outcome.exitCode === 0 && trial.executor.validations_failed === 0 && reporterSucceeded
+    outcome.exitCode === 0 &&
+    trial.executor.validations_failed === 0 &&
+    trial.parent_validation.status !== "failed" &&
+    trial.parent_validation.status !== "not_run" &&
+    reporterSucceeded
       ? "succeeded"
       : "failed";
   writeComparison(params.recordPath, params.record);
@@ -863,7 +935,8 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
       resolveRateLimitDetection(defaults, reporterMember.provider),
     );
   }
-  const prompt = `${buildExecutorPrompt(planContent).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
+  const parentValidationIds = defaults.pipeline?.parent_validations ?? [];
+  const prompt = `${buildExecutorPrompt(planContent, parentValidationIds).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
   const requestedRevision = opts.base?.trim() || "HEAD";
   const headCommit = resolveBaseCommit(repoRoot, "HEAD");
   const baseCommit = resolveBaseCommit(repoRoot, requestedRevision);
@@ -891,6 +964,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
     pairs,
     reporter: opts.reporterBy,
     worktreeBase,
+    parentValidationIds,
   });
   if (opts.dryRun) {
     process.stdout.write(`${JSON.stringify(record, null, 2)}\n`);
@@ -933,6 +1007,8 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
         reporterRateLimitDetection: trial.reporter_agent
           ? reporterRateLimitDetections.get(trial.reporter_agent)
           : undefined,
+        parentValidationIds,
+        execDefaults: defaults,
         repoRoot,
         schedulePath: paths.schedulePath,
         executionPath: paths.executionPath,
@@ -979,8 +1055,15 @@ function statusTrials(opts: TrialRecordOptions): void {
   for (const trial of record.trials) {
     const reporterStatus =
       trial.reporter.status ?? (trial.reporter.structured_output ? "succeeded" : "not_run");
+    const parentValidation = trial.parent_validation ?? {
+      status: "not_configured",
+      duration_ms: null,
+      validations_passed: 0,
+      validations_failed: 0,
+      validations_not_run: 0,
+    };
     process.stdout.write(
-      `${trial.trial_id}\t${trial.status}\t${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\tvalidations=${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
+      `${trial.trial_id}\t${trial.status}\ttime(executor/parent/total)=${trial.executor.duration_ms ?? "-"}/${parentValidation.duration_ms ?? "-"}/${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\texecutor-validations(reported/passed/failed/not_run)=${trial.executor.validations_reported ?? trial.executor.validations.length}/${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\tparent-validations(status/passed/failed/not_run)=${parentValidation.status}/${parentValidation.validations_passed}/${parentValidation.validations_failed}/${parentValidation.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
     );
   }
 }
