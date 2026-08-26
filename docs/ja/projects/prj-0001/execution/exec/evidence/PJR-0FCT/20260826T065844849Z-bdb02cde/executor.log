@@ -1,0 +1,43 @@
+個票は存在しましたが、登録簿 `pjr-index.md` のパスが plan と異なっていました。実際の構造を確認します。
+個票が存在し、完了条件が明確です。核心は `xep-common-conventions-template.md` の18/19/31行目の矛盾です。このテンプレートはどう消費され、既存テストの期待値がどうなっているかを確認します。
+This is a nuanced task. The core is fixing the contradiction in `xep-common-conventions-template.md` (lines 18/19/31). Before deciding the fix, I need to understand how the template is consumed in `src/exec-plans.ts` and what the existing tests expect, so my wording change doesn't break test expectations.
+
+Note: as executor I will NOT touch the result file or run the parent-run validations (`test:unit`, `test:integration`, `validate:schema`). Let me gather the remaining context.
+Now let me read the exact test that pins these strings, since changing the wording must keep test expectations consistent.
+The picture is clear now. Let me check for any other test that pins the exact table-row or surrounding wording, and look at how the template body is assembled (the `_COMMON_CONVENTIONS_` placeholder), to avoid breaking expectations.
+Let me examine the lefthook pre-commit config, the executor prompt construction, and related tickets that shaped these rules.
+I now understand the structure. Let me read the executor-prompt construction in `exec-run.ts` and check environment/tooling before editing.
+The compound `git status && git branch` was denied; I'll use allowed single commands. Let me confirm the injection mechanism and check whether any test pins the table-row text or snapshots it, so my wording change is safe.
+Bash is restricted to an allowlist; I'll use the dedicated grep tool instead. Let me confirm no test pins the table-row wording or snapshots it.
+No snapshot tests exist, and no test pins the line-31 table text — only two phrases matter: `"全件を1回だけ実行して対象限定の実行を省く"` (line 469 of test) and `"executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない"` (line 472). I'll preserve both verbatim.
+
+Let me set up a task list and make the core edits.
+I'll edit the template: clarify line 18's scope, add a note to the table intro, and make line 31 conditional (scoped to validations not in `parent_validations`). Both pinned phrases are preserved verbatim.
+The line-18 edit failed (my oldString crossed a line boundary). Let me re-read the current state of the file.
+The 23/31 edits applied. Now fix line 18 (single-line). I'll keep the pinned phrase verbatim and clarify its scope excludes parent validations.
+The edits applied, but I referenced "19行目" inside the template prose. Since this fragment is injected into generated plans where source line numbers carry no meaning for the reader, and they shift on every edit, I'll replace them with topic-based references so the template stays self-contained.
+I left two more "19行目" references (in the line-18 scope clause and the table row). Let me replace those too for consistency.
+Let me verify the full current state of the template.
+The template now resolves the contradiction cleanly while keeping both test-pinned phrases verbatim. Now run the sandbox-safe static checks for the changed `*.md` template (prettier + markdownlint). I will NOT run `npm run test:unit` / `test:integration` / `validate:schema` since they are configured parent-run validations.
+prettier re-expanded the table to fit the longer cell and keeps it a valid single-row-width table; markdownlint passed with no errors. Both test-pinned phrases remain verbatim.
+
+Now update the 個票's 作業内容 / 対応結果 sections with what I implemented (without touching frontmatter, status, due_on, title, or section 1).
+Now format and lint the updated 個票 (it's `docs/ja/projects/` → also needs catalog validate). First prettier + markdownlint.
+markdownlint passed. Now run `specdojo catalog validate` for the `docs/ja/projects/` change, using the documented launch method.
+The sandbox allowlist blocks the `npx tsx src/specdojo.ts ...` and piped forms. Let me run catalog validate via the allowed `specdojo` invocation without a pipe.
+catalog validate completed with only pre-existing WARNs (missing `docs/ja/product/*` based_on docs — unrelated to my edits) and an OK for dct-index.yaml. Let me confirm there were no ERROR-level failures in that output, and verify the final state of both files I changed.
+Now re-run prettier + markdownlint on both changed `*.md` files post-edits to confirm clean state.
+Both files are clean (prettier unchanged, markdownlint no errors). Let me verify via the dedicated grep tool that catalog validate had no ERROR-level findings affecting my change, and confirm only the two intended files changed.
+Only the two intended `*.md` files are modified (the untracked `evidence/PJR-0FCT/` is pipeline infrastructure, outside my scope). Let me review the exact diffs to confirm I changed no frontmatter/status/title and only the body sections.
+The diff confirms: only the template body text and the 個票's 作業内容/対応結果 sections changed — no frontmatter, status, title, due_on, or section 1 was touched. The table re-wrapping is solely prettier aligning column width for the longer cell. Both required static checks passed, and `catalog validate` ran clean (only pre-existing WARNs about missing `docs/ja/product/*` based_on docs, unrelated to this change).
+
+Summary of what I did:
+- **Contradiction fix** in `xep-common-conventions-template.md`: made the line‑31 対応表 row conditional ("設定済み親検証 ID に含まれていない場合のみ `npm run test:unit`… 含まれている場合は親 runner が実行"), added a priority clause to the table‑intro bullet, and scoped line 18's "全件を1回だけ実行" to executor‑side sandbox scripts excluding parent‑validation IDs. This makes executor behavior unique whether or not `test-unit` is in `parent_validations`, and removes any wording whose meaning depends on the config.
+- **Test compatibility**: preserved both phrases pinned by `tests/src/exec-plans.test.ts` verbatim (`全件を1回だけ実行して対象限定の実行を省く` and `executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない`).
+- **個票 update**: filled 作業内容 (status) and 対応結果 in `pjr-0fct-test-unit-rerun-after-fix.md` with the implemented change, judgment rationale, and remaining follow-up.
+
+I did not touch the result file (executor stage), and did not run `npm run test:unit` / `test:integration` / `validate:schema` (parent runner's allowlist — they will be appended with `source=runner`).
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-0FCT: xep-common-conventions-template.md の test 実行記述の矛盾（18/19/31行目）を解消。対応表(test:unit)を親検証 ID に依存する条件付きへ改め、19行目の二重実行防止優先順位を明記し、18行目の「全件を1回だけ実行」は親検証除く範囲に限定。test-pinned 文言は保持。個票の作業内容/対応結果を実施内容で更新。frontmatter・状態は変更なし。残: test:unit 実行確認（親 runner 依存）","validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md","status":"passed","summary":"2ファイル整形（最終 run は unchanged、整列済み）"},{"command":"npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md","status":"passed","summary":"エラーなし（出力空）"},{"command":"specdojo catalog validate --project prj-0001","status":"passed","summary":"ERROR なし。既存の based_on 未解決 WARN のみ、末尾 OK: dct-index.yaml"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner 実行（executor/reporter pipeline の親検証 allowlist）"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner 実行（親検証 allowlist）"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner 実行（親検証 allowlist）"}]}
+</specdojo_executor_evidence>

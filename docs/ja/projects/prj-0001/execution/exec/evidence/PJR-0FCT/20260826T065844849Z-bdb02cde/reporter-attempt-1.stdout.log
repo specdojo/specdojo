@@ -1,0 +1,31 @@
+The supplied evidence shows a runner (parent validation) entry for `test-unit` with `status="failed"` (exit 1, one failing test in `tests/src/doc-index.test.ts`). Per the pipeline rules, a failed runner validation is authoritative and mandates `outcome=blocked`.
+The runner validation `test-unit` is `failed`, which is authoritative. I must return `outcome=blocked`. Generating the edit-mode JSON.
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "blocked",
+  "summary": [
+    "xep-common-conventions-template.md の test 実行記述の矛盾（18/19/31行目）を解消するため、対応表(test:unit)を親検証 ID に依存する条件付きへ改め、二重実行防止優先順位を明記し、「全件を1回だけ実行」は親検証除く範囲に限定した。test-pinned 文言は保持。",
+    "個票 pjr-0fct-test-unit-rerun-after-fix.md の作業内容・対応结果を実施内容で更新。フロントマター・状態は変更していない。",
+    "executor 側静的検査（prettier / markdownlint / catalog validate）は全件 passed、test-integration と validate:schema も runner で passed。",
+    "しかし親 runner の検証 test-unit (npm run test:unit) が status=failed / exit 1 を返しており、tests/src/doc-index.test.ts の1件（個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する）が失敗。runner 検証は権威的であり完了要件を満たしていないため blocked と判定する。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "summary": "test:unit の対応表を親検証 ID 依存の条件付記述へ改修、19行目の二重実行防止優先順位を明記、18行目の「全件を1回だけ実行」を親検証除く範囲に限定。"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+      "summary": "個票の作業内容・対応結果を今回の実施内容で更新。状態・フロントマターは変更なし。"
+    }
+  ],
+  "handoff": [
+    "残作業: test:unit (npm run test:unit) の実行確認（親 runner 依存）。executor/reporter pipeline では executor 側で not_run、親 runner が実行する。",
+    "失敗中点: runner 検証 test-unit が exit 1。tests/src/doc-index.test.ts の「個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する」が失敗している。この失敗は本タスクの変更対象ファイル（xep-common-conventions-template.md / 個票 pjr-0fct）とは直接関係し得ず、既存ドキュメント・登録台帳の整合性問題に起因する可能性がある。",
+    "next action: tests/src/doc-index.test.ts の当該失敗を調査し、個票の part_of と pjr-index wikilink が登録台帳へ解決されることを確認・修正する。その後 test:unit を再実行して0に落としたうえで完了処理へ進める。",
+    "ref: docs/ja/specdojo/templates/xep-common-conventions-template.md, docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md, tests/src/doc-index.test.ts"
+  ],
+  "approach": "executor evidence と親 runner 検証結果を確認した。executor 側変更（2ファイル）と executor 静的検査は全件 passed、runner の test-integration / validate:schema も passed。一方 source=runner の test-unit が failed (exit 1, 1 failed / 1292 passed / tests/src/doc-index.test.ts)。パイプライン規約により runner 検証の failed は権威的であり、変更そのものの完了要件を満たしていないため outcome=blocked とした。",
+  "block_reason": "runner 検証 test-unit (npm run test:unit) が status=failed / exit 1 を返しており、tests/src/doc-index.test.ts の「個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する」が失敗。runner 検証は権威的であり完了を阻むため block。next=当該失敗の原因（個票の part_of と pjr-index wikilink が登録台帳へ解決されない件）を調査・修正し test:unit を再実行。ref=tests/src/doc-index.test.ts, docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md"
+}
