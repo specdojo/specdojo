@@ -10,7 +10,7 @@ specdojo:
   item_status: open
   priority: low
   owner: ARC
-  due_on: "2026-08-31"
+  due_on: "2026-10-31"
 ---
 
 # PJR-0142 ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加

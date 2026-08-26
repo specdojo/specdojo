@@ -10,7 +10,7 @@ specdojo:
   item_status: open
   priority: medium
   owner: PO
-  due_on: "2026-08-31"
+  due_on: "2026-10-31"
 ---
 
 # PJR-0145 README.md / docs/index.md / docs/`<lang>`/index.md の責務再整理と記述見直し

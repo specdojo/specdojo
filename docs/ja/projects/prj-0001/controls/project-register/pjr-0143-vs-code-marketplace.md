@@ -10,7 +10,7 @@ specdojo:
   item_status: open
   priority: medium
   owner: ARC
-  due_on: "2026-08-31"
+  due_on: "2026-10-31"
 ---
 
 # PJR-0143 VS Code拡張のMarketplace登録
