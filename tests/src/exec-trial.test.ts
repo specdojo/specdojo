@@ -1,6 +1,20 @@
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildComparisonRecord } from "../../src/exec-trial.js";
+import {
+  buildComparisonRecord,
+  buildTrialBaseValidation,
+  classifyReporterFailure,
+  extractPlanRepoPaths,
+} from "../../src/exec-trial.js";
+import { gitEnvironment } from "../../src/exec-worktree.js";
+
+function git(cwd: string, ...args: string[]): string {
+  return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
+}
 
 describe("exec trial comparison record", () => {
   it("pins one plan and prompt hash for every agent while assigning distinct worktrees", () => {
@@ -28,6 +42,14 @@ describe("exec trial comparison record", () => {
     ]);
     expect(new Set(record.trials.map((trial) => trial.worktree)).size).toBe(2);
     expect(record.trials.every((trial) => trial.reporter_agent === "reporter-a")).toBe(true);
+    expect(record.reporter_mode).toBe("shared");
+    expect(record.base).toMatchObject({
+      requested_revision: "HEAD",
+      resolved_commit: "abc123",
+      head_commit_at_start: "abc123",
+      base_is_ancestor_of_head: true,
+      defaulted_to_head: true,
+    });
   });
 
   it("separates objective metrics from empty human ratings", () => {
@@ -58,5 +80,100 @@ describe("exec trial comparison record", () => {
     });
     expect(record.agent_selection.policy).toBe("manual");
     expect(record.agent_selection.target).toBe("pm-members.yaml");
+    expect(record.reporter_mode).toBe("none");
+    expect(record.trials[0].reporter).toMatchObject({
+      status: "not_run",
+      format_attempts: 0,
+      format_retries: 0,
+      failure_category: null,
+    });
+  });
+
+  it("records distinct executor/reporter pairs as end-to-end trials", () => {
+    const record = buildComparisonRecord({
+      comparisonId: "cmp-paired",
+      projectId: "prj-0001",
+      taskId: "T-TEST-003",
+      createdAt: "2026-08-26T00:00:00.000Z",
+      baseCommit: "123abc",
+      planPath: "plan.md",
+      planContent: "plan",
+      prompt: "prompt",
+      pairs: [
+        { executor: "qwen-executor", reporter: "qwen-reporter" },
+        { executor: "gemma-executor", reporter: "gemma-reporter" },
+      ],
+      worktreeBase: "/tmp/trial-worktrees",
+    });
+
+    expect(record.reporter_mode).toBe("paired");
+    expect(record.trials.map((trial) => trial.trial_id)).toEqual([
+      "qwen-executor-qwen-reporter",
+      "gemma-executor-gemma-reporter",
+    ]);
+    expect(record.trials.map((trial) => trial.reporter_agent)).toEqual([
+      "qwen-reporter",
+      "gemma-reporter",
+    ]);
+  });
+
+  it("extracts repository paths from a plan and classifies reporter failures", () => {
+    const plan = [
+      "Edit `src/exec-trial.ts:42` and [the guide](docs/ja/guide.md).",
+      "Run `npm run typecheck`; do not read `.env` or `secrets/token`.",
+    ].join("\n");
+
+    expect(extractPlanRepoPaths(plan)).toEqual(["docs/ja/guide.md", "src/exec-trial.ts"]);
+    expect(
+      classifyReporterFailure(
+        "failure",
+        "reporter output invalid after 3 format attempts: invalid JSON",
+      ),
+    ).toBe("invalid_output");
+    expect(classifyReporterFailure("failure", "agent exited with code 1")).toBe(
+      "invocation_failure",
+    );
+    expect(classifyReporterFailure("rate_limit", "limited")).toBe("rate_limit");
+  });
+
+  it("checks plan path references against an isolated historical base", () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-trial-base-"));
+    try {
+      git(repo, "init");
+      git(repo, "config", "user.name", "SpecDojo Test");
+      git(repo, "config", "user.email", "specdojo@example.invalid");
+      mkdirSync(join(repo, "src"));
+      writeFileSync(join(repo, "src/existing.ts"), "export {};\n", "utf8");
+      git(repo, "add", "src/existing.ts");
+      git(repo, "commit", "-m", "base");
+      const baseCommit = git(repo, "rev-parse", "HEAD");
+
+      mkdirSync(join(repo, "docs"));
+      writeFileSync(join(repo, "docs/plan.md"), "plan\n", "utf8");
+      git(repo, "add", "docs/plan.md");
+      git(repo, "commit", "-m", "add plan");
+      const headCommit = git(repo, "rev-parse", "HEAD");
+
+      const validation = buildTrialBaseValidation({
+        repoRoot: repo,
+        requestedRevision: "HEAD^",
+        resolvedCommit: baseCommit,
+        headCommit,
+        defaultedToHead: false,
+        planPath: "docs/plan.md",
+        planContent: "Use `src/existing.ts` and `src/missing.ts`.",
+      });
+
+      expect(validation).toMatchObject({
+        resolved_commit: baseCommit,
+        head_commit_at_start: headCommit,
+        base_is_ancestor_of_head: true,
+        plan_path_exists_at_base: false,
+        compatible: false,
+        missing_referenced_paths: ["src/missing.ts"],
+      });
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
   });
 });

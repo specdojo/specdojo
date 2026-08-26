@@ -7,6 +7,8 @@ import {
   defaultExecDefaultsPath,
   loadExecDefaultsConfig,
   resolveMemberCommand,
+  resolveRateLimitDetection,
+  type RateLimitDetection,
 } from "./exec-agent-config.js";
 import {
   agentProtectedConfigViolation,
@@ -25,7 +27,7 @@ import {
   type ExecEvidence,
 } from "./exec-evidence.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
-import { buildExecutorPrompt, loadRosterForExecutionPath } from "./exec-run.js";
+import { buildExecutorPrompt, isRateLimitError, loadRosterForExecutionPath } from "./exec-run.js";
 import { parsePlanTaskIdentity } from "./exec-plans.js";
 import { runReporterWithFormatRetry, type ReporterOutput } from "./exec-reporter.js";
 import { ensureDir, safeSlug } from "./exec-shared.js";
@@ -56,6 +58,32 @@ type TrialStatus =
   | "failed"
   | "adopted"
   | "discarded";
+
+type ReporterMode = "none" | "shared" | "paired";
+type ReporterStatus = "not_run" | "succeeded" | "blocked" | "failed";
+type ReporterFailureCategory =
+  | "reported_blocked"
+  | "invalid_output"
+  | "invocation_failure"
+  | "rate_limit";
+
+export type TrialAgentPair = {
+  executor: string;
+  reporter: string;
+};
+
+export type TrialBaseValidation = {
+  requested_revision: string;
+  resolved_commit: string;
+  head_commit_at_start: string;
+  base_is_ancestor_of_head: boolean;
+  defaulted_to_head: boolean;
+  plan_path_exists_at_base: boolean;
+  compatible: boolean;
+  referenced_paths: Array<{ path: string; exists_at_base: boolean }>;
+  missing_referenced_paths: string[];
+  warnings: string[];
+};
 
 export type TrialSubjectiveRating = {
   judgment_quality: number | null;
@@ -89,10 +117,13 @@ export type AgentTrialRecord = {
     diff_summary: string;
   };
   reporter: {
+    status: ReporterStatus;
     structured_output: boolean;
     format_attempts: number;
+    format_retries: number;
     outcome: "complete" | "blocked" | null;
     output: ReporterOutput | null;
+    failure_category: ReporterFailureCategory | null;
     failure_reason: string;
   };
   subjective: TrialSubjectiveRating;
@@ -107,6 +138,8 @@ export type AgentComparisonRecord = {
   created_at: string;
   completed_at: string | null;
   base_commit: string;
+  base: TrialBaseValidation;
+  reporter_mode: ReporterMode;
   plan: {
     path: string;
     sha256: string;
@@ -124,8 +157,10 @@ export type AgentComparisonRecord = {
 type TrialRunOptions = {
   project?: string;
   plan: string;
-  agent: string[];
+  agent?: string[];
+  pair?: string[];
   reporterBy?: string;
+  base?: string;
   comparison?: string;
   parallel?: string;
   worktreeBase?: string;
@@ -160,6 +195,116 @@ exactly one machine-readable executor evidence envelope as documented by SpecDoj
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function normalizePlanPathCandidate(value: string): string | null {
+  const candidate = value
+    .trim()
+    .replace(/^\.\//u, "")
+    .replace(/:\d+(?::\d+)?$/u, "")
+    .replace(/[.,;]$/u, "");
+  if (
+    !candidate ||
+    candidate.startsWith("/") ||
+    candidate.includes("://") ||
+    /[\s<>{}*?$]/u.test(candidate) ||
+    candidate === ".env" ||
+    candidate.startsWith("secrets/")
+  ) {
+    return null;
+  }
+  if (
+    /^(?:\.specdojo|docs|scripts|src|tests|tools)\//u.test(candidate) ||
+    /^(?:lefthook\.yml|package\.json|tsconfig[^/]*\.json|vitest[^/]*\.ts)$/u.test(candidate)
+  ) {
+    return candidate;
+  }
+  return null;
+}
+
+export function extractPlanRepoPaths(plan: string): string[] {
+  const candidates: string[] = [];
+  for (const match of plan.matchAll(/`([^`\n]+)`/gu)) candidates.push(match[1]);
+  for (const match of plan.matchAll(/\]\(([^)\s]+)(?:\s+[^)]*)?\)/gu)) candidates.push(match[1]);
+  return [
+    ...new Set(
+      candidates
+        .map(normalizePlanPathCandidate)
+        .filter((candidate): candidate is string => candidate !== null),
+    ),
+  ].sort();
+}
+
+function objectExistsAtCommit(repoRoot: string, commit: string, path: string): boolean {
+  return gitResult(repoRoot, ["cat-file", "-e", `${commit}:${path}`]).status === 0;
+}
+
+export function buildTrialBaseValidation(params: {
+  repoRoot: string;
+  requestedRevision: string;
+  resolvedCommit: string;
+  headCommit: string;
+  defaultedToHead: boolean;
+  planPath: string;
+  planContent: string;
+}): TrialBaseValidation {
+  const referencedPaths = extractPlanRepoPaths(params.planContent).map((path) => ({
+    path,
+    exists_at_base: objectExistsAtCommit(params.repoRoot, params.resolvedCommit, path),
+  }));
+  const missingReferencedPaths = referencedPaths
+    .filter((entry) => !entry.exists_at_base)
+    .map((entry) => entry.path);
+  const planPathExistsAtBase = objectExistsAtCommit(
+    params.repoRoot,
+    params.resolvedCommit,
+    params.planPath,
+  );
+  const warnings: string[] = [];
+  const baseIsAncestorOfHead =
+    gitResult(params.repoRoot, [
+      "merge-base",
+      "--is-ancestor",
+      params.resolvedCommit,
+      params.headCommit,
+    ]).status === 0;
+  if (!baseIsAncestorOfHead) {
+    warnings.push(
+      "The base commit is not an ancestor of HEAD; the current HEAD cannot be used as a linear reference result.",
+    );
+  }
+  if (!planPathExistsAtBase) {
+    warnings.push(
+      "The plan file is not present at the base commit; the current plan content will still be supplied to every trial.",
+    );
+  }
+  if (missingReferencedPaths.length > 0) {
+    warnings.push(
+      `Referenced paths missing at the base commit: ${missingReferencedPaths.join(", ")}`,
+    );
+  }
+  return {
+    requested_revision: params.requestedRevision,
+    resolved_commit: params.resolvedCommit,
+    head_commit_at_start: params.headCommit,
+    base_is_ancestor_of_head: baseIsAncestorOfHead,
+    defaulted_to_head: params.defaultedToHead,
+    plan_path_exists_at_base: planPathExistsAtBase,
+    compatible: baseIsAncestorOfHead && missingReferencedPaths.length === 0,
+    referenced_paths: referencedPaths,
+    missing_referenced_paths: missingReferencedPaths,
+    warnings,
+  };
+}
+
+export function classifyReporterFailure(
+  result: "failure" | "rate_limit",
+  reason: string,
+): ReporterFailureCategory {
+  if (result === "rate_limit") return "rate_limit";
+  return reason.startsWith("reporter output invalid after")
+    ? "invalid_output"
+    : "invocation_failure";
 }
 
 function hasValidExecutorEnvelope(stdout: string): boolean {
@@ -317,13 +462,15 @@ function blankTrial(params: {
   projectId: string;
   comparisonId: string;
   agent: string;
+  trialId?: string;
   reporter?: string;
   worktreeBase: string;
 }): AgentTrialRecord {
-  const worktreeTaskId = `${params.projectId}:trial:${params.comparisonId}:${params.agent}`;
+  const trialId = safeSlug(params.trialId ?? params.agent);
+  const worktreeTaskId = `${params.projectId}:trial:${params.comparisonId}:${trialId}`;
   const name = worktreeNameFromTaskId(worktreeTaskId);
   return {
-    trial_id: safeSlug(params.agent),
+    trial_id: trialId,
     agent: params.agent,
     reporter_agent: params.reporter ?? null,
     worktree: resolve(params.worktreeBase, name),
@@ -347,10 +494,13 @@ function blankTrial(params: {
       diff_summary: "",
     },
     reporter: {
+      status: "not_run",
       structured_output: false,
       format_attempts: 0,
+      format_retries: 0,
       outcome: null,
       output: null,
+      failure_category: null,
       failure_reason: "",
     },
     subjective: {
@@ -368,13 +518,39 @@ export function buildComparisonRecord(params: {
   taskId: string;
   createdAt: string;
   baseCommit: string;
+  baseValidation?: TrialBaseValidation;
   planPath: string;
   planContent: string;
   prompt: string;
-  agents: string[];
+  agents?: string[];
+  pairs?: TrialAgentPair[];
   reporter?: string;
   worktreeBase: string;
 }): AgentComparisonRecord {
+  const reporterMode: ReporterMode = params.pairs ? "paired" : params.reporter ? "shared" : "none";
+  const definitions =
+    params.pairs ??
+    (params.agents ?? []).map((agent) => ({ executor: agent, reporter: params.reporter }));
+  const trialIds = definitions.map(({ executor, reporter }) =>
+    safeSlug(reporterMode === "paired" ? `${executor}-${reporter}` : executor),
+  );
+  if (new Set(trialIds).size !== trialIds.length) {
+    throw new Error("Trial executor/reporter selections must produce distinct trial ids.");
+  }
+  const baseValidation =
+    params.baseValidation ??
+    ({
+      requested_revision: "HEAD",
+      resolved_commit: params.baseCommit,
+      head_commit_at_start: params.baseCommit,
+      base_is_ancestor_of_head: true,
+      defaulted_to_head: true,
+      plan_path_exists_at_base: true,
+      compatible: true,
+      referenced_paths: [],
+      missing_referenced_paths: [],
+      warnings: [],
+    } satisfies TrialBaseValidation);
   return {
     schema_version: 1,
     comparison_id: params.comparisonId,
@@ -384,18 +560,21 @@ export function buildComparisonRecord(params: {
     created_at: params.createdAt,
     completed_at: null,
     base_commit: params.baseCommit,
+    base: baseValidation,
+    reporter_mode: reporterMode,
     plan: {
       path: params.planPath,
       sha256: sha256(params.planContent),
       prompt_sha256: sha256(params.prompt),
     },
     selected_trial_id: null,
-    trials: params.agents.map((agent) =>
+    trials: definitions.map(({ executor, reporter }, index) =>
       blankTrial({
         projectId: params.projectId,
         comparisonId: params.comparisonId,
-        agent,
-        reporter: params.reporter,
+        agent: executor,
+        trialId: trialIds[index],
+        reporter,
         worktreeBase: params.worktreeBase,
       }),
     ),
@@ -435,6 +614,7 @@ async function runOneTrial(params: {
   prompt: string;
   executorCommand: string;
   reporterCommand?: string;
+  reporterRateLimitDetection?: RateLimitDetection;
   repoRoot: string;
   schedulePath: string;
   executionPath: string;
@@ -513,20 +693,40 @@ async function runOneTrial(params: {
             params.executionPath,
           ),
         );
+        const result =
+          reporterOutcome.exitCode === 0
+            ? "success"
+            : isRateLimitError(
+                  reporterOutcome.exitCode,
+                  `${reporterOutcome.stdout}\n${reporterOutcome.stderr}`,
+                  params.reporterRateLimitDetection,
+                )
+              ? "rate_limit"
+              : "failure";
         return {
-          result: reporterOutcome.exitCode === 0 ? "success" : "failure",
+          result,
           stdout: reporterOutcome.stdout,
           stderr: reporterOutcome.stderr,
         };
       },
     });
     trial.reporter.format_attempts = reporter.formatAttempts;
+    trial.reporter.format_retries = Math.max(0, reporter.formatAttempts - 1);
     if (reporter.result === "success") {
       trial.reporter.structured_output = true;
       trial.reporter.outcome = reporter.output.outcome;
       trial.reporter.output = reporter.output;
       reporterSucceeded = reporter.output.outcome === "complete";
+      if (reporterSucceeded) {
+        trial.reporter.status = "succeeded";
+      } else {
+        trial.reporter.status = "blocked";
+        trial.reporter.failure_category = "reported_blocked";
+        trial.reporter.failure_reason = reporter.output.block_reason;
+      }
     } else {
+      trial.reporter.status = "failed";
+      trial.reporter.failure_category = classifyReporterFailure(reporter.result, reporter.reason);
       trial.reporter.failure_reason = reporter.reason;
       reporterSucceeded = false;
     }
@@ -553,6 +753,54 @@ async function runPool(items: Array<() => Promise<void>>, parallel: number): Pro
   await Promise.all(workers);
 }
 
+function parseTrialPair(value: string): TrialAgentPair {
+  const separator = value.indexOf("=");
+  const executor = value.slice(0, separator).trim();
+  const reporter = value.slice(separator + 1).trim();
+  if (separator < 1 || !executor || !reporter || reporter.includes("=")) {
+    throw new Error(`--pair must use <executor>=<reporter>: ${value}`);
+  }
+  return { executor, reporter };
+}
+
+function resolveTrialDefinitions(opts: TrialRunOptions): {
+  agents: string[];
+  pairs?: TrialAgentPair[];
+} {
+  const agentValues = (opts.agent ?? []).map((value) => value.trim()).filter(Boolean);
+  const pairValues = (opts.pair ?? []).map((value) => value.trim()).filter(Boolean);
+  if (agentValues.length > 0 && pairValues.length > 0) {
+    throw new Error("Use either --agent or --pair, not both.");
+  }
+  if (pairValues.length > 0) {
+    if (opts.reporterBy) throw new Error("--pair cannot be combined with --reporter-by.");
+    const pairs = pairValues.map(parseTrialPair);
+    const keys = pairs.map((pair) => `${pair.executor}\0${pair.reporter}`);
+    if (new Set(keys).size < 2 || new Set(keys).size !== keys.length) {
+      throw new Error("exec trial run requires at least two distinct --pair values.");
+    }
+    return { agents: [...new Set(pairs.map((pair) => pair.executor))], pairs };
+  }
+  const agents = [...new Set(agentValues)];
+  if (agents.length < 2) {
+    throw new Error(
+      "exec trial run requires at least two distinct --agent values or --pair values.",
+    );
+  }
+  return { agents };
+}
+
+function resolveBaseCommit(repoRoot: string, revision: string): string {
+  const result = gitResult(repoRoot, [
+    "rev-parse",
+    "--verify",
+    "--end-of-options",
+    `${revision}^{commit}`,
+  ]);
+  if (result.status !== 0) throw new Error(`Trial base is not a commit: ${revision}`);
+  return String(result.stdout).trim();
+}
+
 async function runTrials(opts: TrialRunOptions): Promise<void> {
   const paths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(paths);
@@ -568,9 +816,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
   if (identity.projectId && identity.projectId !== projectId) {
     throw new Error(`Plan project_id ${identity.projectId} does not match --project ${projectId}.`);
   }
-  const agents = [...new Set(opts.agent.map((value) => value.trim()).filter(Boolean))];
-  if (agents.length < 2)
-    throw new Error("exec trial run requires at least two distinct --agent values.");
+  const { agents, pairs } = resolveTrialDefinitions(opts);
   const parallel = parsePositiveInteger(opts.parallel ?? "1", "--parallel");
   const comparisonId = safeSlug(
     opts.comparison?.trim() ||
@@ -594,26 +840,55 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
     if (!command) throw new Error(`Agent command could not be resolved: ${agent}`);
     executorCommands.set(agent, command);
   }
-  let reporterCommand: string | undefined;
+  const reporterCommands = new Map<string, string>();
+  const reporterRateLimitDetections = new Map<string, RateLimitDetection | undefined>();
   if (opts.reporterBy) {
-    reporterCommand = resolveMemberCommand(
-      defaults,
-      resolveMember(roster, opts.reporterBy, "reporter"),
-    );
+    const reporterMember = resolveMember(roster, opts.reporterBy, "reporter");
+    const reporterCommand = resolveMemberCommand(defaults, reporterMember);
     if (!reporterCommand)
       throw new Error(`Reporter command could not be resolved: ${opts.reporterBy}`);
+    reporterCommands.set(opts.reporterBy, reporterCommand);
+    reporterRateLimitDetections.set(
+      opts.reporterBy,
+      resolveRateLimitDetection(defaults, reporterMember.provider),
+    );
+  }
+  for (const reporter of new Set(pairs?.map((pair) => pair.reporter) ?? [])) {
+    const reporterMember = resolveMember(roster, reporter, "reporter");
+    const reporterCommand = resolveMemberCommand(defaults, reporterMember);
+    if (!reporterCommand) throw new Error(`Reporter command could not be resolved: ${reporter}`);
+    reporterCommands.set(reporter, reporterCommand);
+    reporterRateLimitDetections.set(
+      reporter,
+      resolveRateLimitDetection(defaults, reporterMember.provider),
+    );
   }
   const prompt = `${buildExecutorPrompt(planContent).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
+  const requestedRevision = opts.base?.trim() || "HEAD";
+  const headCommit = resolveBaseCommit(repoRoot, "HEAD");
+  const baseCommit = resolveBaseCommit(repoRoot, requestedRevision);
+  const planRepoPath = repoRelative(repoRoot, planPath);
+  const baseValidation = buildTrialBaseValidation({
+    repoRoot,
+    requestedRevision,
+    resolvedCommit: baseCommit,
+    headCommit,
+    defaultedToHead: !opts.base?.trim(),
+    planPath: planRepoPath,
+    planContent,
+  });
   const record = buildComparisonRecord({
     comparisonId,
     projectId,
     taskId: identity.taskId,
     createdAt: new Date().toISOString(),
-    baseCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
-    planPath: repoRelative(repoRoot, planPath),
+    baseCommit,
+    baseValidation,
+    planPath: planRepoPath,
     planContent,
     prompt,
     agents,
+    pairs,
     reporter: opts.reporterBy,
     worktreeBase,
   });
@@ -625,7 +900,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
 
   const prepared = new Map<string, ExecWorktree>();
   for (const trial of record.trials) {
-    const worktreeTaskId = `${projectId}:trial:${comparisonId}:${trial.agent}`;
+    const worktreeTaskId = `${projectId}:trial:${comparisonId}:${trial.trial_id}`;
     if (findExecWorktree(repoRoot, worktreeTaskId) || execBranchExists(repoRoot, worktreeTaskId)) {
       throw new Error(`Trial worktree or branch already exists: ${trial.branch}`);
     }
@@ -652,7 +927,12 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
         plan: planContent,
         prompt,
         executorCommand: executorCommands.get(trial.agent) as string,
-        reporterCommand,
+        reporterCommand: trial.reporter_agent
+          ? reporterCommands.get(trial.reporter_agent)
+          : undefined,
+        reporterRateLimitDetection: trial.reporter_agent
+          ? reporterRateLimitDetections.get(trial.reporter_agent)
+          : undefined,
         repoRoot,
         schedulePath: paths.schedulePath,
         executionPath: paths.executionPath,
@@ -690,9 +970,17 @@ function statusTrials(opts: TrialRecordOptions): void {
   process.stdout.write(
     `plan sha256=${record.plan.sha256} prompt sha256=${record.plan.prompt_sha256}\n`,
   );
+  process.stdout.write(
+    `base=${record.base_commit} requested=${record.base?.requested_revision ?? "(legacy)"} head_reference=${record.base?.head_commit_at_start ?? "unknown"} compatible=${record.base?.compatible ?? "unknown"} reporter_mode=${record.reporter_mode ?? "shared-or-none"}\n`,
+  );
+  for (const warning of record.base?.warnings ?? []) {
+    process.stdout.write(`base warning: ${warning}\n`);
+  }
   for (const trial of record.trials) {
+    const reporterStatus =
+      trial.reporter.status ?? (trial.reporter.structured_output ? "succeeded" : "not_run");
     process.stdout.write(
-      `${trial.trial_id}\t${trial.status}\t${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\tvalidations=${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\treporter=${trial.reporter.structured_output ? `ok/${trial.reporter.format_attempts}` : "-"}\n`,
+      `${trial.trial_id}\t${trial.status}\t${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\tvalidations=${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
     );
   }
 }
@@ -831,8 +1119,13 @@ export function registerExecTrialCommands(exec: Command): void {
     .command("run")
     .requiredOption("--project <projectId>", "Project id")
     .requiredOption("--plan <path>", "Existing SpecDojo plan used unchanged by every trial")
-    .requiredOption("--agent <nicknames...>", "Two or more executor agent nicknames")
+    .option("--agent <nicknames...>", "Two or more executor agent nicknames")
+    .option(
+      "--pair <executor=reporter...>",
+      "Two or more executor/reporter pairs (alternative to --agent)",
+    )
     .option("--reporter-by <nickname>", "Shared reporter agent used to assess structured output")
+    .option("--base <revision>", "Commit used as the trial worktree start point (default: HEAD)")
     .option("--comparison <id>", "Stable comparison id (generated when omitted)")
     .option("--parallel <n>", "Maximum concurrent trials", "1")
     .option("--worktree-base <path>", "Override worktree base directory")

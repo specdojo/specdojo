@@ -116,12 +116,27 @@ specdojo exec run --project <project-id> --auto --if-busy wait
 specdojo exec trial run \
   --project <project-id> \
   --plan <existing-plan-path> \
+  --base <commit-before-completed-work> \
   --agent <agent-a> <agent-b> \
   --reporter-by <shared-reporter> \
   --parallel 2
 ```
 
-比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commit、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力、reporter構造化出力と形式試行回数を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+`--base`にはcommit-ishを指定でき、省略時はHEADを使います。完了済みtodoの統合前commitを指定すると、同じplanを作業前の状態から再試行できます。指定値は完全なcommitへ解決し、実行開始時のHEADを統合済み成果の参照commitとして保存します。baseがそのHEADの祖先か、plan内のリポジトリ相対パスが起点ツリーに存在するかも事前に確認します。結果と警告は`comparison.json`の`base`へ記録され、`status`でも確認できます。planファイル自体が古い起点に存在しなくても、コマンドで指定した現在のplan内容を全trialへ渡します。
+
+executorとreporterを組で比較する場合は、`--agent` / `--reporter-by`の代わりに次のように指定します。
+
+```bash
+specdojo exec trial run \
+  --project <project-id> \
+  --plan <existing-plan-path> \
+  --base <commit-before-completed-work> \
+  --pair <executor-a>=<reporter-a> <executor-b>=<reporter-b>
+```
+
+`--agent`だけならreporterなし、`--agent`と`--reporter-by`なら全trialで同じreporter、`--pair`ならtrialごとのreporterを使います。比較記録の`reporter_mode`にはそれぞれ`none` / `shared` / `paired`を保存します。
+
+比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
 
 ```bash
 specdojo exec trial status --project <project-id> --comparison <comparison-id>
