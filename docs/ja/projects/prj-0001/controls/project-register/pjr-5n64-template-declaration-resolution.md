@@ -48,17 +48,32 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                    | 担当 | 状態 | メモ                           |
-| --- | ----------------------------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | `findTemplate` の解決元を rulebook frontmatter へ変更する               | BA   | open | 命名規約との優先順位を決める   |
-| 2   | 4状態（ID / `not-needed` / `undecided` / 項目の省略）の扱いを定義する   | BA   | open | 未整備時は最小 scaffold へ退避 |
-| 3   | template として切り出す範囲を判断し、理由を記録する                     | BA   | open | 92本すべてを対象とするかを含む |
-| 4   | 切り出した系統の rulebook 本文構成章を規約へ整理する                    | BA   | open | 骨組みの正本は template        |
-| 5   | scaffold の出力を移行前後で比較し、骨組みが失われていないことを確認する | BA   | open | 退行の検出                     |
+| No  | 作業                                                                    | 担当 | 状態 | メモ                         |
+| --- | ----------------------------------------------------------------------- | ---- | ---- | ---------------------------- |
+| 1   | `findTemplate` の解決元を rulebook frontmatter へ変更する               | BA   | done | 命名規約フォールバックは廃止 |
+| 2   | 4状態（ID / `not-needed` / `undecided` / 項目の省略）の扱いを定義する   | BA   | done | 3つの非 ID 状態は最小雛形    |
+| 3   | template として切り出す範囲を判断し、理由を記録する                     | BA   | done | 代表移行は OPR 系統          |
+| 4   | 切り出した系統の rulebook 本文構成章を規約へ整理する                    | BA   | done | 骨組みの正本は template      |
+| 5   | scaffold の出力を移行前後で比較し、骨組みが失われていないことを確認する | BA   | done | 単体テストで回帰を固定       |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`deliverable scaffold` の template 解決を、`local_id` と同名のファイル探索から rulebook frontmatter の `template` 文書 ID へ変更した。命名規約フォールバックは、宣言を正本とする PJR-3N21 の決定と競合し、`not-needed` の明示を無視し得るため廃止した。
+
+4状態の生成時の扱いは次のとおりとした。
+
+| rulebook の `template` | scaffold の扱い                                  |
+| ---------------------- | ------------------------------------------------ |
+| 文書 ID                | 宣言 ID の template を使用                       |
+| `not-needed`           | template を使用せず、カタログ情報による最小雛形  |
+| `undecided`            | 判断を先取りせず、カタログ情報による最小雛形     |
+| 項目省略               | 必要だが未整備のため、カタログ情報による最小雛形 |
+
+同一 rulebook 系統で template を共有するため、`_LOCAL_ID_`、`_DELIVERABLE_NAME_`、`_DELIVERABLE_OVERVIEW_`、`_BASED_ON_` を生成時プレースホルダとして追加した。代表移行対象には、`opr-index` と `opr-<term>` が同じ rulebook を参照し、固定の12要件を持つ一方で template 項目が省略されていた OPR 系統を選んだ。`opr-template` へ既存の12章の骨組みを移し、rulebook 側は章の目的・必須性・index / term の責務分担を正本とする本文要件へ整理した。
+
+本文構成を持つ92本すべての template 化は本項目の範囲に含めない。既存の文書 ID 宣言22系統は新しい解決処理で利用可能になり、`not-needed` 14系統は作成対象外、`undecided` 54系統は個別の要否判断前に作成しない。項目省略16系統のうち OPR を本項目で整備し、残る系統は各 rulebook の対象・schema・成果物実績を確認する template maintenance で扱う。全件を機械的に切り出すと、固定骨組みを持たない系統まで template 化して `undecided` の意味を失うためである。
+
+既存の Markdown / YAML template の展開結果を検証するテストは維持し、宣言経由でも Frontmatter の平坦化、`_PROJECT_ID_` の置換、記入プレースホルダの保持が変わらないことを確認できるようにした。加えて、OPR の異なる `local_id` へ共有 template を適用する回帰テストと、`not-needed` / `undecided` / 項目省略で同名 template が存在しても最小雛形へ退避する回帰テストを追加した。executor 後の単体・統合・schema 検証は pipeline の親 runner が実施し、evidence を正本とする。
 
 ## 5. 関連ドキュメント
 
