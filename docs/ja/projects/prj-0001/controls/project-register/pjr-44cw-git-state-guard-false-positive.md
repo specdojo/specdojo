@@ -1,0 +1,57 @@
+---
+specdojo:
+  id: prj-0001:pjr-44cw-git-state-guard-false-positive
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: open
+  priority: high
+  owner: ARC
+  registered_at: "2026-08-26T22:34:03Z"
+  due_on: "2026-09-30"
+---
+
+# PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める
+
+## 1. 概要
+
+PJR-A99J で追加した検知機構が、agent の操作と runner 自身の操作を区別できていない。PJR-07M5 と PJR-EX5E の2回連続で実行が停止したが、いずれも成果物に問題はなく、検知された HEAD の変化は exec の register 遷移コミット（start / wait）という runner 自身の操作であった。正当な実行が毎回止まると、そのたびにオーケストレーターの代行が必要になり運用の妨げになる。検知の目的である事故の防止を保ちながら、runner 自身の操作を除外する。
+
+## 2. 完了条件
+
+- runner 自身の操作（register の遷移コミットなど）が検知の対象から外れる。agent が起動している区間の変化だけを見る、比較対象を worktree に限る、など方法は判断してよい。
+- agent による実リポジトリの変更は引き続き検知される。検知の目的を弱めない。`core.bare` の変更と意図しないコミットの混入は検知できる状態を保つ。
+- 誤検知と真の検知を区別できることを、自動テストで確認する。runner の遷移コミットだけがある場合は通り、agent の変更がある場合は止まる、の双方を検証する。
+- 過去に停止した2件（PJR-07M5、PJR-EX5E）が、修正後の条件では停止しないことを確認する。実際の記録を用いて判定できるとよい。
+- `npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration` が成功する。
+
+### 調査済みの事実
+
+- 検知は `src/exec-agent-git-state.ts` の `captureAgentGitStateSnapshot` が HEAD（commit と symbolic ref）と local config を agent 起動の前後で比較する方式である。
+- PJR-07M5 の停止理由は `fields=local-config`、PJR-EX5E は `fields=HEAD, local-config` であった。後者の HEAD の変化は `exec(register PJR-EX5E): start` と `wait` という runner 自身のコミットである。
+- 2件とも成果物に問題はなく、オーケストレーターが検証したうえで統合した。実リポジトリへの被害もなかった。
+- 一方で検知そのものは有効に働いている。PJR-5YW6 の1回目では同種の事象で実リポジトリが bare 化し復旧が必要だったが、検知の導入後は被害が出ていない。検知を外す方向の対処は採らない。
+
+## 3. 作業内容
+
+| No  | 作業                                                | 担当 | 状態 | メモ                               |
+| --- | --------------------------------------------------- | ---- | ---- | ---------------------------------- |
+| 1   | 誤検知の発生条件を特定する                          | ARC  | open | runner の操作と agent の操作の境界 |
+| 2   | runner 自身の操作を対象から外す                     | ARC  | open | 検知の目的は弱めない               |
+| 3   | 誤検知と真の検知を区別するテストを追加する          | ARC  | open | 双方向の確認                       |
+| 4   | 過去に停止した2件が修正後は停止しないことを確認する | ARC  | open | PJR-07M5 と PJR-EX5E               |
+
+## 4. 対応結果
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- 検知機構を実装した項目: [[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]
+- 誤検知で停止した実行: [[prj-0001:pjr-07m5-trial-validation-completeness|PJR-07M5 trialで親検証が実行されず成果の検証が不完全になる問題を解消する]]
+- 同上: [[prj-0001:pjr-ex5e-git-identity-isolation|PJR-EX5E テストとagentによるgit identity設定が実リポジトリへ及ぶ経路を隔離する]]
+- 検知が有効だった事例: [[prj-0001:pjr-5yw6-agent-trial-base-and-reporter|PJR-5YW6 trialで完了済みtodoを起点に指定しreporterも比較できるようにする]]
+- 実装: `src/exec-agent-git-state.ts`

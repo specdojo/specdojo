@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ex5e-git-identity-isolation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-26T15:20:09Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-26T22:33:54Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+  conclusion: テストが直接実行していた git config user.name / user.email を全廃し、共通の TEST_GIT_ENVIRONMENT を worker と子プロセスへ渡して identity を供給する方式へ変更した。config へ書き込む限り書き込み先を誤れば同じ事故が起きるため、そもそも config を変更しない方式を選んだ。実リポジトリの local config へ identity が書き込まれないことを検証するテストを追加し、テスト実行後も user.name / user.email が0件であることを確認した。PJR-A99J の検知機構は変更しておらず、検知を弱めずに漏洩経路を塞いだ。過去のコミット1,877件は履歴の改変になるため author を書き換えていない。
 ---
 
 # PJR-EX5E テストとagentによるgit identity設定が実リポジトリへ及ぶ経路を隔離する
