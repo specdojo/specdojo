@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BJ97",
+  "run_id": "20260826T142418903Z-b7d83a45",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T14:24:18.903Z",
+    "completed_at": "2026-08-26T14:29:28.763Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bj97-codeowners-and-branch-protection.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../pjr-bj97-codeowners-and-branch-protection.md   |  5 ++++-\n docs/ja/specdojo/guides/branch-workflow-guide.md   | 26 ++++++++++++++++++++++\n 2 files changed, 30 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bj97-codeowners-and-branch-protection.md && npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bj97-codeowners-and-branch-protection.md",
+      "status": "passed",
+      "summary": "対象Markdownの整形と静的検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node -e 'const fs=require(\"node:fs\"); const active=fs.readFileSync(\".github/CODEOWNERS\",\"utf8\").split(/\\r?\\n/).map((line)=>line.trim()).filter((line)=>line&&!line.startsWith(\"#\")); if(active.length!==1||active[0]!==\"* @naoji3x\") throw new Error(\"unexpected CODEOWNERS rule\"); if(/[!\\[\\]]/.test(active[0].split(/\\s+/)[0])) throw new Error(\"unsupported CODEOWNERS pattern\"); console.log(\"CODEOWNERS rule is structurally valid: * @naoji3x\");'",
+      "status": "passed",
+      "summary": "有効ルールと非対応パターン不使用を確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全Markdownのmarkdownlintに成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "全ドキュメントのfrontmatter検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "IPC不要の同一tsx loaderで登録簿生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1369件の文書索引生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委任"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BJ97\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-mWD0AF/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BJ97\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-UQeQbr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xm9Ppi/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-EKNq5q/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WQ31aS/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5C0AeY/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-pwMw2Z/pjr-0001-topic.md\n\n Test Files  88 passed (88)\n      Tests  1298 passed (1298)\n   Start at  23:29:11\n   Duration  16.95s (transform 1.38s, setup 0ms, import 9.84s, tests 14.11s, environment 5ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-br…"
+    }
+  ],
+  "final_message": "CODEOWNERSを新設し、branch protection手順・単独運用時の未承認扱い・対応結果を文書化した。resultと登録簿ステータスは未変更。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-BJ97/20260826T142418903Z-b7d83a45/executor.log",
+      "bytes": 3487,
+      "truncated": false
+    }
+  ]
+}

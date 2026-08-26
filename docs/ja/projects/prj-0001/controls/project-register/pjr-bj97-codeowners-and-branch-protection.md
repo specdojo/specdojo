@@ -73,7 +73,10 @@ PR 承認を強制する 3 ケース（`develop → main` 昇格、`change-reque
 
 ## 4. 対応結果
 
--
+- `.github/CODEOWNERS` を作成し、リポジトリ全体の owner に `@naoji3x` を指定した。`develop → main` 昇格は任意のパスを変更し得るため、統制対象を一部の project 文書や `.specdojo/` に限定すると owner のない差分が生じる。そこで `*` を既定ルールとし、`main` と全 project の承認対象を漏れなく含めた。project ごとに独立した承認者を割り当てる場合は、既定ルールより後へ限定パスのルールを追加する。
+- [[specdojo:branch-workflow-guide]] の「CODEOWNERS と branch protection を設定する」に、管理者が行う設定の前提、`main` と `project/<project-id>/develop` の保護条件、確認項目を記録した。`project/<project-id>/develop` では通常の自動統合を維持するため、統合専用 actor だけに bypass を限定する。actor を分離できない間は develop の保護を有効化せず、未設定期間を project register で追跡する。
+- 同ガイドの「独立した承認者がいない期間を扱う」に、単独運用中は PR 強制 3 ケースを「承認待ち」とし、自己承認や管理者 bypass を承認として記録しないことを明記した。緊急 bypass は未承認の例外として記録し、独立した承認者の参加後に遡及レビューする。
+- branch protection の GitHub 上の設定と PR 強制 3 ケースの実地確認は本項目の範囲外であり、リポジトリ管理者がガイドの手順に従って実施する。設定時には `@naoji3x` の明示的な write 権限と、`CODEOWNERS` が各 base branch に存在することも確認する。
 
 ## 5. 関連ドキュメント
 
