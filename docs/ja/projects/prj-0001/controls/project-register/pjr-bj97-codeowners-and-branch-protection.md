@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bj97-codeowners-and-branch-protection
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-09T02:12:43Z"
   due_on: "2026-08-31"
+  completed_at: "2026-08-26T14:36:20Z"
+  conclusion: .github/CODEOWNERS を作成し、リポジトリ全体の承認者として @naoji3x を宣言した。独立した所有者が割り当てられた時点でより限定的なルールを追加する方針をコメントで残している。branch-workflow-guide へ、管理者が実施する branch protection の設定手順と確認項目、および統合専用 actor のみが bypass できる設計を追記した。独立した承認者がいない期間は PR 強制3ケースを承認待ちとし、作成者自身の approve と管理者権限の bypass を承認として扱わないことを明記した。緊急対応で bypass する場合も承認済みとせず例外として記録する。branch protection の設定と PR 強制3ケースの検証は GitHub 上の操作であり、リポジトリ管理者が実施する。実施後は対応結果へ追記する。
 ---
 
 # PJR-BJ97 CODEOWNERS 未整備により PR 承認の職務分離が強制されていない
