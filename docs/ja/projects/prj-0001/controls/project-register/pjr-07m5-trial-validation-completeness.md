@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-07m5-trial-validation-completeness
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-26T14:13:16Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-26T15:31:31Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=local-config; agent must leave commits and repository configuration changes …"
+  conclusion: trial から親検証を実行し、結果を source が runner の記録として中央 evidence へ保存するようにした。親検証が失敗した trial は採用不可とし、検証が不足したまま成果を採用することを防ぐ。executor へ設定済みの親検証 ID を渡して二重実行を防ぐ。比較記録では executor の所要時間と親検証の所要時間を分けて保存し、親検証の時間が agent の性能評価へ混ざらないようにした。executor の検証報告総数と passed / failed / not_run を runner の件数から分離し、理由付きの not_run により意図して省いた検証と単に実施しなかった検証を区別できるようにした。本実行は agent が git identity を設定しようとして PJR-A99J の検知機構が作動し停止したが、成果物とは無関係であり実リポジトリへの影響もなかった。
 ---
 
 # PJR-07M5 trialで親検証が実行されず成果の検証が不完全になる問題を解消する
