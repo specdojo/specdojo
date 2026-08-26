@@ -15,6 +15,11 @@ import {
   isAgentProtectedConfigPath,
 } from "./exec-agent-protected-config.js";
 import {
+  agentGitStateViolation,
+  captureAgentGitStateSnapshot,
+  changedAgentGitStateFields,
+} from "./exec-agent-git-state.js";
+import {
   recordExecutorEvidence,
   type EvidenceValidation,
   type ExecEvidence,
@@ -28,6 +33,7 @@ import {
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
+  gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -253,9 +259,12 @@ function spawnAgent(
   env: NodeJS.ProcessEnv,
 ): Promise<SpawnOutcome> {
   return new Promise((resolveOutcome) => {
+    const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
+    const gitStateBefore = captureAgentGitStateSnapshot(cwd);
     const child = spawn(command, { cwd, env, shell: true, stdio: ["pipe", "pipe", "pipe"] });
     let stdout = "";
     let stderr = "";
+    let settled = false;
     child.stdin.on("error", () => undefined);
     child.stdout.setEncoding("utf8");
     child.stderr.setEncoding("utf8");
@@ -267,11 +276,26 @@ function spawnAgent(
       stderr += chunk;
       process.stderr.write(chunk);
     });
+    const finish = (outcome: SpawnOutcome): void => {
+      if (settled) return;
+      settled = true;
+      const protectedChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
+      if (protectedChanges.length > 0) {
+        outcome.stderr += `${agentProtectedConfigViolation(protectedChanges)}\n`;
+        outcome.exitCode = 1;
+      }
+      const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+      if (gitStateChanges.length > 0) {
+        outcome.stderr += `${agentGitStateViolation(gitStateChanges)}\n`;
+        outcome.exitCode = 1;
+      }
+      resolveOutcome(outcome);
+    };
     child.once("error", (error) => {
       stderr += `${error.message}\n`;
-      resolveOutcome({ exitCode: null, stdout, stderr });
+      finish({ exitCode: null, stdout, stderr });
     });
-    child.once("close", (exitCode) => resolveOutcome({ exitCode, stdout, stderr }));
+    child.once("close", (exitCode) => finish({ exitCode, stdout, stderr }));
     child.stdin.end(prompt);
   });
 }
@@ -283,7 +307,7 @@ function worktreeEnvironment(
   executionPath: string,
 ): NodeJS.ProcessEnv {
   return {
-    ...process.env,
+    ...gitEnvironment(),
     SPECDOJO_SCHEDULE_PATH: resolve(worktreePath, repoRelative(repoRoot, schedulePath)),
     SPECDOJO_EXECUTION_PATH: resolve(worktreePath, repoRelative(repoRoot, executionPath)),
   };
@@ -420,18 +444,12 @@ async function runOneTrial(params: {
   trial.status = "running";
   trial.started_at = startedAt.toISOString();
   writeComparison(params.recordPath, params.record);
-  const protectedBefore = captureAgentProtectedConfigSnapshot(worktree.path);
   const outcome = await spawnAgent(
     params.executorCommand,
     params.prompt,
     worktree.path,
     worktreeEnvironment(params.repoRoot, worktree.path, params.schedulePath, params.executionPath),
   );
-  const protectedChanges = changedAgentProtectedConfigPaths(worktree.path, protectedBefore);
-  if (protectedChanges.length > 0) {
-    outcome.stderr += `${agentProtectedConfigViolation(protectedChanges)}\n`;
-    outcome.exitCode = 1;
-  }
   const executorCompletedAt = new Date();
   const runId = `${safeSlug(params.record.comparison_id)}-${trial.trial_id}`;
   const evidenceRecorded = recordExecutorEvidence({

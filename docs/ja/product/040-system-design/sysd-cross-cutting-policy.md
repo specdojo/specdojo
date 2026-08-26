@@ -36,6 +36,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 | scp-GIT-001 | Git | 並列edit taskをtask単位worktreeへ分離する | MUST | ARC |
 | scp-GIT-002 | Git | commit・merge・completeを順序保証する | MUST | ARC |
 | scp-GIT-003 | Git | Git共有資源の一時競合だけを安全に再試行する | MUST | ARC |
+| scp-GIT-004 | Git | agentへrepository固有環境を継承せずGit状態変更を検知する | MUST | ARC |
 | scp-SEC-001 | Security | agentへ無制限権限・秘密情報を与えない | MUST NOT | ARC / OPS |
 | scp-SEC-002 | Security | agentによる親実行設定の変更を統合・実行しない | MUST NOT | ARC / OPS |
 
@@ -157,6 +158,15 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 - **Enforcement（検証）**: lock error識別、retry上限、merge conflict保持のテスト。
 - **Exception（例外）**: なし。
 - **References（参照）**: `sysd-critical-flows`のworktreeフロー。
+
+### scp-GIT-004: agent Git環境の隔離と状態ガード
+
+- **Rule（MUST）**: agent、agent配下の子プロセス、親検証へ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。agent起動前後でworktreeのHEADと共有local configを比較し、差分があれば親検証・reporter・統合へ進めずblockする。
+- **Rationale（意図）**: Git hookから継承した`GIT_DIR`が一時fixture向けの`git init`や`git commit`を実repositoryへ向け、`core.bare`の変更や履歴混入を起こすことを防ぐ。
+- **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、および親runner検証。
+- **Enforcement（検証）**: `gitEnvironment()`による起動環境の除去、agent前後のHEAD・local config比較、危険な継承環境とGit状態変更の回帰テスト。
+- **Exception（例外）**: なし。agentが必要とするrepositoryはcwdからGit自身に再解決させる。
+- **References（参照）**: `src/exec-worktree.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]。
 
 ### scp-SEC-001: agent権限制約
 

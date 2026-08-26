@@ -148,11 +148,19 @@ specdojo exec trial discard --project <project-id> --comparison <comparison-id>
 
 1回の比較だけでは`pm-members.yaml`を自動変更しません。人が客観指標と主観評価を確認し、複数タスクで傾向が再現した場合にpriorityやcapabilitiesを更新します。この判断方針も比較記録の`agent_selection`へ保存されます。
 
+agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdからGit repositoryを解決します。trial前後でHEADまたはlocal configが変化した場合、そのtrialは`agent-git-state-write:`で失敗し、採用対象になりません。
+
 ## 2. 中断・訂正・再実行
 
 実行が途中で止まった場合、完了判定そのものを訂正する場合、利用制限で中断した場合の戻し方を扱います。これらは schedule 実行を主な対象としますが、`reopen` を除き register 実行にも共通する考え方です。
 
-### 2.1. blockedタスクの復帰
+### 2.1. Git状態変更を検知した場合の復旧
+
+`agent-git-state-write:`が出た場合は、そのworktreeを統合せず保持して原因を確認します。`fields=local-config`で`git status`が`fatal: this operation must be run in a work tree`となる場合は、repositoryの管理者が影響範囲を確認したうえで共有repositoryに対して`git config --local core.bare false`を実行し、`git status`と`git fsck`で復旧を確認します。
+
+`fields=HEAD`の場合は`git log --oneline --decorate <起動前HEAD>..HEAD`と`git show --stat <commit>`で混入commitを確認します。成果が不要なら対象exec / trial worktreeを破棄し、未統合branchを削除します。必要な成果が含まれる場合は、汚染branchを直接mergeせず、許可対象のファイル差分だけを新しいworktreeへ適用してrunner管理のcommitとして取り込みます。共有済み履歴を書き換えるresetやforce pushは行いません。
+
+### 2.2. blockedタスクの復帰
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
@@ -199,7 +207,7 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
-### 2.2. 完了済みタスクをtodoに戻す
+### 2.3. 完了済みタスクをtodoに戻す
 
 完了条件を満たしていないのに `complete` した場合など、完了判定そのものを訂正するときは `exec reopen` を使います。単に追加作業が発生した場合は、完了履歴を訂正せず新しい schedule task として計画します。
 
@@ -232,7 +240,7 @@ specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
 ```
 
-### 2.3. 完了済みタスクの再実行
+### 2.4. 完了済みタスクの再実行
 
 完了済み（`done`）タスクをやり直す場合は、既定の軽量実行でそのまま実行します。状態イベントは追加されず、変更は作業ツリーに残ります。
 
@@ -242,7 +250,7 @@ specdojo exec run --project <project-id> --task <task-id>
 
 完了判定を取り消して Schedule の進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
 
-### 2.4. レートリミット対応
+### 2.5. レートリミット対応
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
@@ -271,7 +279,7 @@ track の再生成では、`exec validate` の警告と同じ鮮度判定を使�
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
-### 2.5. executor / reporter pipelineの実行と復旧
+### 2.6. executor / reporter pipelineの実行と復旧
 
 `agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。
 
@@ -310,7 +318,7 @@ specdojo exec resume \
   --reporter-by <reporter-nickname>
 ```
 
-### 2.6. register実行のreporter再開
+### 2.7. register実行のreporter再開
 
 register 実行（`exec run --register --worktree`）を executor/reporter パイプラインで走らせた場合も、executor が成功したまま reporter だけが失敗した run は reporter 段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
 

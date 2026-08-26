@@ -8,6 +8,7 @@ import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { injectCommonConventions, MISSING, templatesDir } from "./exec-plans.js";
 import { expandTemplate, listFilesRecursive, readJson, writeJson } from "./exec-shared.js";
+import { gitEnvironment } from "./exec-worktree.js";
 import {
   getProjectJobsPath,
   getProjectExecutionPath,
@@ -498,6 +499,7 @@ function resolveInputs(
       const result = spawnSync("git", ["rev-parse", "HEAD"], {
         cwd: specdojoRootDir(),
         encoding: "utf8",
+        env: gitEnvironment(),
       });
       if (result.status !== 0) throw new Error(`Unable to resolve git HEAD for input ${key}`);
       value = result.stdout.trim();
@@ -514,6 +516,7 @@ function resolveInputs(
       const result = spawnSync("git", ["rev-parse", String(parsed)], {
         cwd: specdojoRootDir(),
         encoding: "utf8",
+        env: gitEnvironment(),
       });
       if (result.status !== 0)
         throw new Error(`Unable to resolve git revision for input ${key}: ${parsed}`);

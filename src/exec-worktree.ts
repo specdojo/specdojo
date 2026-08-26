@@ -176,7 +176,7 @@ function runNpmCi(packageDir: string): void {
   const command = process.platform === "win32" ? "npm.cmd" : "npm";
   const result = spawnSync(command, ["ci", "--include=dev"], {
     cwd: packageDir,
-    env: { ...process.env, CI: "true", LEFTHOOK: "0" },
+    env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
     stdio: "inherit",
   });
   if (result.error) {

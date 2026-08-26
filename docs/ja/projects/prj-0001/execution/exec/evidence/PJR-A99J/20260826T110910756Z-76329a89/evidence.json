@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-A99J",
+  "run_id": "20260826T110910756Z-76329a89",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T11:09:10.756Z",
+    "completed_at": "2026-08-26T11:19:16.853Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a99j-agent-git-isolation-breach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/e2e/exec-run-e2e.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-git-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-agent-git-state.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../040-system-design/sysd-agent-settings.md       |  2 ++\n .../040-system-design/sysd-cross-cutting-policy.md | 10 ++++++\n .../pjr-a99j-agent-git-isolation-breach.md         | 34 +++++++++++++++-----\n docs/ja/specdojo/guides/exec-config-guide.md       |  9 ++++--\n docs/ja/specdojo/guides/exec-operation-guide.md    | 20 ++++++++----\n src/exec-agent-protected-config.ts                 |  2 ++\n src/exec-parent-validation.ts                      |  3 +-\n src/exec-run.ts                                    | 32 ++++++++++++++++---\n src/exec-trial.ts                                  | 36 ++++++++++++++++------\n src/exec-worktree-command.ts                       | 30 +++++++++++++++++-\n src/exec-worktree.ts                               |  2 +-\n src/job.ts                                         |  3 ++\n .../src/exec-worktree-command.integration.test.ts  | 25 +++++++++++++--\n tools/e2e/exec-run-e2e.ts                          |  4 ++-\n 14 files changed, 178 insertions(+), 34 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更したMarkdown・TypeScript全ファイル>",
+      "status": "passed",
+      "summary": "変更ファイルを整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/projects/prj-0001/controls/project-register/pjr-a99j-agent-git-isolation-breach.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "passed",
+      "summary": "Markdownエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLintエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "not_run",
+      "summary": "tsxのsandbox IPC作成がEPERMとなり検証開始前に停止。同等のloader起動へ切り替えた"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビューを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "エラーなし。既存の未作成文書に関するwarningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1364件の文書indexを生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・patch形式エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runner検証へ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runner検証へ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runner検証へ委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A99J\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-pzKr2G/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A99J\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-7vnfUs/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-tqoUsR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-d7TGnz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-191bpT/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-HN61uv/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-NBwHsS/pjr-0001-topic.md\n\n Test Files  88 passed (88)\n      Tests  1295 passed (1295)\n   Start at  20:18:59\n   Duration  16.98s (transform 1.35s, setup 0ms, import 9.94s, tests 14.02s, environment 4ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-br…"
+    }
+  ],
+  "final_message": "Git環境変数の継承遮断とHEAD・local config変更ガードを全agent起動経路へ実装し、設計・復旧手順・個票・回帰テストを更新した。resultとステータスは未変更。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-A99J/20260826T110910756Z-76329a89/executor.log",
+      "bytes": 2506,
+      "truncated": false
+    }
+  ]
+}

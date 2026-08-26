@@ -32,12 +32,12 @@ PJR-5YW6 の実行で、メインリポジトリの core.bare が true に変更
 
 ## 3. 対応方針
 
-| 項目     | 内容                                                                                                                                                                                                   |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 原因     | 未特定。agent の git 操作が隔離されず、実リポジトリの `core.bare` を変更しフィクスチャのコミットを混入させた。PJR-X3E8 では特定のテストが `GIT_DIR` を継承したことが原因だったが、同一かは未確認である |
-| 対応策   | 個別のテストを直す方式では再発を防げていない。agent の git 操作が実リポジトリへ影響しない仕組みか、影響を検知して止める仕組みを設ける                                                                  |
-| 依存事項 | worktree による隔離を前提とした実行方式に関わるため、exec の実行経路を変更する場合は影響範囲を確認する                                                                                                 |
-| 完了条件 | 下記のとおり                                                                                                                                                                                           |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `exec trial`を含むagent起動経路が親の`process.env`をそのまま渡し、Git hook由来の`GIT_DIR`をagentとテスト子プロセスへ継承していた。fixtureの`git init`と`git commit`が一時directoryではなくlinked worktreeのgitdirへ向いたため、共有configの`core.bare`変更とexec branchへのfixture commit混入が同時に発生した |
+| 対応策   | 全agent起動経路と親検証からrepository固有Git環境変数を除去する。加えてagent前後のHEADとlocal configを比較し、変更時は親検証・reporter・統合前にblockする                                                                                                                                                      |
+| 依存事項 | worktree による隔離を前提とした実行方式に関わるため、exec の実行経路を変更する場合は影響範囲を確認する                                                                                                                                                                                                        |
+| 完了条件 | 下記のとおり                                                                                                                                                                                                                                                                                                  |
 
 ## 3.1. 完了条件
 
@@ -58,7 +58,27 @@ PJR-5YW6 の実行で、メインリポジトリの core.bare が true に変更
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容:
+
+- `src/exec-run.ts`、`src/exec-trial.ts`、`src/exec-worktree-command.ts`の全agent起動環境を`gitEnvironment()`経由に変更した。通常worktree、in-place、executor / reporter pipeline、trial、分割worktree commandのいずれでも`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`などを子プロセスへ渡さない。
+- `src/exec-agent-git-state.ts`を追加し、agentの各試行前後でHEAD（commitとsymbolic ref）およびlocal configを比較するようにした。差分は`agent-git-state-write:`として記録し、親検証、reporter、commit、mergeへ進む前に失敗させる。
+- 親検証とworktree依存installにも隔離環境を適用した。残っていた`src/job.ts`と`tools/e2e/exec-run-e2e.ts`の直接Git実行も`gitEnvironment()`経由へ統一し、テスト・tool・本番コードの直接Git起動を再監査した。
+- `tests/src/exec-agent-git-state.integration.test.ts`でagentによるcommitと`core.bare`変更の検知を追加し、`tests/src/exec-worktree-command.integration.test.ts`で危険な`GIT_DIR` / `GIT_WORK_TREE`がagentへ継承されないことを確認する回帰ケースを追加した。
+
+原因の切り分け:
+
+- PJR-X3E8は`tests/src/exec-agent-protected-config.test.ts`の個別Git呼び出しだけを隔離したため、そのテストの再発は防いだが、上流のagent起動環境は未修正だった。
+- 今回事象で`core.bare`変更とfixture commit 2件が同時に発生したことは、異なる一時repository用Git操作が同じ継承`GIT_DIR`へ向いた場合の挙動と一致する。実際に`exec trial`の`worktreeEnvironment()`が`process.env`を無加工で複製していたことから、再発経路を特定した。
+
+再発防止と復旧:
+
+- 環境隔離を第一防御、HEAD・local config比較を検知防御、既存のcommit許可リストを統合防御とする。設計上の必須ルールを`docs/ja/product/040-system-design/sysd-cross-cutting-policy.md`、運用詳細を`docs/ja/specdojo/guides/exec-config-guide.md`へ反映した。
+- 復旧手順を`docs/ja/specdojo/guides/exec-operation-guide.md`へ記録した。`core.bare`は影響確認後に`git config --local core.bare false`で戻し、`git status`と`git fsck`で確認する。混入commitは差分を確認して対象worktree / 未統合branchを破棄し、必要な成果だけを新しいworktreeへ適用する。共有済み履歴のresetやforce pushは行わない。
+
+確認結果:
+
+- executor内で`npm run typecheck`、`npm run lint:ts`、変更Markdownの`prettier` / `markdownlint`、register build、catalog validate、index buildが成功した。catalog validateの既存未作成文書に対するwarningを除き、errorはない。
+- `npm run test:unit`、`npm run test:integration`、`npm run validate:schema`はexecutor / reporter pipelineの親検証として設定されているため、sandbox内では重複実行せずrunnerの検証結果を正本とする。
 
 ## 5. 関連ドキュメント
 

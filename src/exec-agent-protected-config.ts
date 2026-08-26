@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { gitEnvironment } from "./exec-worktree.js";
 
 // PJR-3S8Q で agent の書き込み対象外とした、親 runner / hook / CI の実行内容を
 // 変えられる設定パス。provider 設定から注入できない固定定義として CLI 側に持つ。
@@ -49,6 +50,7 @@ function ignoredPaths(repoRoot: string, candidates: readonly string[]): Readonly
   if (candidates.length === 0) return new Set();
   const result = spawnSync("git", ["check-ignore", "-z", "--stdin"], {
     cwd: repoRoot,
+    env: gitEnvironment(),
     input: `${candidates.join("\0")}\0`,
     encoding: "utf8",
   });
