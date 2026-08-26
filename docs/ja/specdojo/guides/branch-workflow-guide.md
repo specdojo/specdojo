@@ -211,6 +211,32 @@ gh pr create --base project/prj-0001/develop --title "PJR-XXXX schema 破壊的�
 
 merge 後は、承認者・承認日・承認対象・証跡（PR URL・merge SHA）をチケット個票の承認節へ書き戻します。`main` と `project/<project-id>/develop` の承認者は `CODEOWNERS` と branch protection で強制します。
 
+### 7.1. CODEOWNERS と branch protection を設定する
+
+`CODEOWNERS` は PR の base branch にあるファイルが評価されます。保護ルールを有効にする前に、`.github/CODEOWNERS` を `main` と保護対象の `project/<project-id>/develop` へ反映し、指定した user または team にリポジトリへの明示的な write 権限があることを確認します。
+
+リポジトリ管理者は GitHub の `Settings` → `Branches` で、次の branch protection rule を設定します。ruleset を使う場合も、同等の条件を設定します。
+
+| 対象 branch                    | 必須設定                                                                                                                                                                   |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `main`                         | Pull Request 経由、承認 1 件以上、Code Owners のレビュー、新規 commit 時の古い承認無効化、未解決 conversation の解消、必須 CI、管理者を含む bypass・force-push・削除の禁止 |
+| `project/<project-id>/develop` | Pull Request 経由、承認 1 件以上、Code Owners のレビュー、新規 commit 時の古い承認無効化、未解決 conversation の解消、統合専用 actor 以外の bypass・force-push・削除の禁止 |
+
+`project/<project-id>/develop` では通常の自動 `exec → develop` 統合を止めないように、SpecDojo の統合専用 GitHub App または service account だけを bypass actor に指定します。人の管理者や承認者へ広い bypass を付与してはいけません。統合専用 actor を分離できない間は develop の保護を有効化せず、その未設定期間を project register で追跡します。`main` の保護は自動統合の bypass 対象にしません。
+
+設定後、管理者は次を確認します。
+
+1. `main` を base にした PR で `@naoji3x` が Code Owner として review request される。
+2. 未承認、作成者自身の操作、古い承認、未成功の必須 CI の各状態では `main` へ merge できない。
+3. PR 強制ケースの差分を base にした `project/<project-id>/develop` 向け PR で、Code Owner の承認なしに merge できない。
+4. 統合専用 actor による通常の `exec → develop` だけが bypass でき、人の変更は bypass できない。
+
+### 7.2. 独立した承認者がいない期間を扱う
+
+PR の作成者と独立した Code Owner がいない場合、PR 強制 3 ケースは「承認待ち」とし、作成者自身の approve、管理者権限、または bypass を承認として記録しません。独立した承認者が参加して approve するまで merge と承認対象チケットの close を保留します。
+
+緊急対応で管理者 bypass による merge が不可避な場合は、承認済みとは扱わず、例外として対象、理由、実施者、期間、PR URL、merge SHA、復帰条件を project register に記録します。独立した承認者が参加した後に差分を遡及レビューし、その結果を同じ登録項目へ追記します。
+
 ## 8. 複数projectを並行する
 
 `worktree:sync` は既定で main worktree が checkout しているブランチをベースにします。複数 project の worktree が同時に存在する場合は、対象 project の `develop` を毎回明示します。
