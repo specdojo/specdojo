@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0FCT",
+  "run_id": "PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-qwen-expert-executor-qwen-reporter",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T12:35:26.502Z",
+    "completed_at": "2026-08-26T13:29:43.819Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../templates/xep-common-conventions-template.md   | 26 +++++++++++-----------\n 1 file changed, 13 insertions(+), 13 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "整形適用（表の列幅を調整）。差分のみ対象。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "出力なし＝エラー 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "markdownlint '**/*.md' で全 md 対象、エラー 0 件。pre-commit の markdown チェック相当。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "remark --frail で docs/ 配下の frontmatter スキーマ検査（個票の完了条件）、エラー 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff -- docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "1 ファイルのみ変更。exec-plans.test.ts の検証サブストリング（全件を1回だけ実行して対象限定の実行を省く / executor は親検証と同じコマンドの対象限定版も追加ず、二重実行しない）が残存することを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親検証に設定済み ID で executor の sandbox 内実行は禁止（PJR-0FCT 本体の規律・共通規約 L19）。親 runner が source=runner で執行。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親検証に設定済み。executor の実行は二重実行になるため禁止、親 runner が執行。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親検証に該当する場合は executor では禁止し親 runner に委譲。本 trial は template(.md) 編集のみのため実行対象外。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "not_run",
+      "summary": "pjr-index.md を変更していないためトリガ外。また specdojo/tsx の起動手段が本 executor sandbox の許可リストに無く、runner が実施する想定。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "not_run",
+      "summary": "docs/ 配下は変更したが生成物(doc-index)は gitignore 済みで再生成のみ。tsx 起動手段が許可リストに無いため未実施。"
+    }
+  ],
+  "final_message": "xep-common-conventions-template.md の test 実行記述（18/19/31 行）を矛盾なく統一: 18 行目に「1回だけ」の適用範囲（親検証未設定の script にのみ）、19 行目に下表との優先順位と条件付き委譲を追加、31 行目の矛盾指示を条件付きへ改写。テスト検証の 2 サブストリングは保持し、prettier/markdownlint/lint:md/lint:fm を通過。親検証(test-unit等)・tsx ビルド系の未実施は executor 制約による。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log",
+      "bytes": 65535,
+      "truncated": true
+    }
+  ]
+}
