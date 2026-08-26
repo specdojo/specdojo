@@ -68,7 +68,7 @@ catalog 成果物と register(PJR) 系タスクの実行区分を実装から確
 ### 4.4. レビュー結果が否のときの状態遷移
 
 - 差し戻し用の新規ステータスは新設せず、既存の `register wait`（`waiting`）を流用する。
-- 遷移: `edit 成功 → review agent 実行`。可なら現行どおり `review` ステータス（人間 close 待ち）を維持。否なら `register wait` で `waiting` へ差し戻し、`--conclusion` に差し戻し理由を記録する（`waiting` は再実行で `in-progress` に戻せる既存意味と整合）。
+- 遷移: `edit 成功 → review agent 実行`。可なら現行どおり `review` ステータス（人間 close 待ち）を維持。否なら `register wait` で `waiting` へ差し戻し、`--reason` に差し戻し理由を指定して `block_reason` へ記録する（`waiting` は再実行で `in-progress` に戻せる既存意味と整合）。
 - 新設を避ける理由: ステータス語彙を増やすと `pjr-index`・派生ビュー（`generated/`）・遷移ガードの複雑化を招く。`waiting`＝要再対応の意味に差し戻しが合致する。
 
 ### 4.5. 必須／任意
@@ -89,7 +89,7 @@ catalog 成果物と register(PJR) 系タスクの実行区分を実装から確
 
 - `exec run --register` への `--register-review`（任意）オプション追加と `runSingleRegisterItem` へのレビューフェーズ組み込み（`src/exec-run.ts`）。
 - review 用 plan テンプレート `xrp-register-template.md` の新設と、個票「完了条件」節の抽出・埋め込み処理（`src/exec-register.ts`）。
-- レビュー否時の `register wait` 差し戻し（`--conclusion` に理由）と、可時の `review` 維持のフロー実装。
+- レビュー否時の `register wait` 差し戻し（`--reason` に理由）と、可時の `review` 維持のフロー実装。
 - `register-operation-guide` / `pjr-rulebook` の該当節（`状態遷移とコマンド` / 承認方式）へレビューフェーズの記述追加。
 
 ## 5. 関連ドキュメント

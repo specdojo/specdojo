@@ -1,0 +1,14 @@
+対応完了しました。
+
+- 失敗理由を `conclusion` から専用の `block_reason` へ分離
+- `register wait --reason` を追加し、exec の全失敗経路を変更
+- 旧 `wait --conclusion` は互換性を維持しつつ `block_reason` へ記録
+- `register update --conclusion` の更新・削除に対応
+- `register history`、schema、設計文書、テストを更新
+- 個票の作業内容・対応結果を更新。status と result は未変更
+
+型検査、lint、Frontmatter、Markdown、register/catalog/index 検証は成功しています。unit・integration・schema の各テストは指示どおり親 runner に委ねました。
+
+<specdojo_executor_evidence>
+{"final_message":"ブロック理由をblock_reasonへ分離し、conclusion更新CLI・履歴追跡・schema・文書・テストを整備した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run lint:fm","status":"passed","summary":"全ドキュメントのFrontmatter検査成功"},{"command":"npx markdownlint docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-25sf-register-ai.md docs/ja/projects/prj-0001/controls/project-register/pjr-x2q7-register-conclusion-overwrite.md","status":"passed","summary":"変更Markdownの静的検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の未作成文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1353件を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

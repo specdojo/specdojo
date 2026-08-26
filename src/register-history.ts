@@ -3,7 +3,8 @@
 // 個票群のコミット履歴から「追加・状態遷移・フィールド変更・削除」を時系列で組み立てる。
 //
 // 比較対象は生成される登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・
-// 登録日・期限・完了日・結論）に揃える。旧一覧の差分で見えていた変化と同じ粒度になる。
+// 登録日・期限・完了日・結論）に、待機時のブロック理由を加える。ブロック理由は一覧には
+// 表示しないが、conclusion と用途を分けた後も監査できるよう履歴の比較対象にする。
 
 import { basename } from "node:path";
 import {
@@ -66,6 +67,7 @@ export const REGISTER_HISTORY_FIELDS = [
   "due",
   "completed",
   "conclusion",
+  "block_reason",
 ] as const;
 
 export type RegisterHistoryField = (typeof REGISTER_HISTORY_FIELDS)[number];
@@ -77,7 +79,14 @@ const UNIT_SEPARATOR = "\u001f";
 const LOG_PRETTY_FORMAT = `format:${RECORD_SEPARATOR}%H${UNIT_SEPARATOR}%ad${UNIT_SEPARATOR}%an${UNIT_SEPARATOR}%s`;
 
 // `--status-only` で残すフィールド。状態遷移そのものと、遷移に伴って記録される値に限る。
-const STATUS_ONLY_FIELDS = new Set(["id", "status", "type", "completed", "conclusion"]);
+const STATUS_ONLY_FIELDS = new Set([
+  "id",
+  "status",
+  "type",
+  "completed",
+  "conclusion",
+  "block_reason",
+]);
 
 // 値なしを表す表示文字列。frontmatter のキー省略と、一覧のプレースホルダの両方を含む。
 const EMPTY_VALUE = "(none)";
@@ -155,6 +164,7 @@ function itemFieldValues(
     due: item.due,
     completed: item.completed,
     conclusion: item.conclusion,
+    block_reason: parsed.blockReason,
   };
 }
 

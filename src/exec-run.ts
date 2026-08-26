@@ -3759,13 +3759,7 @@ async function runSingleRegisterItem(
         const commitReason = sanitizeRegisterConclusion(`register commit incomplete: ${detail}`);
         process.stderr.write(`run commit failed: ${item.id}: ${detail}\n`);
         if (
-          spawnRegisterTransition(projectId, [
-            "wait",
-            "--id",
-            item.id,
-            "--conclusion",
-            commitReason,
-          ])
+          spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", commitReason])
         ) {
           transition = "waiting";
         } else {
@@ -3788,10 +3782,10 @@ async function runSingleRegisterItem(
     return { id: item.id, title: item.title, outcome: "success", transition, commit, reason };
   }
 
-  const conclusion = sanitizeRegisterConclusion(
+  const waitingReason = sanitizeRegisterConclusion(
     blockReason ?? `agent exited with non-zero code (exit ${exitCode})`,
   );
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", waitingReason])) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
   }
   process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
@@ -3801,7 +3795,7 @@ async function runSingleRegisterItem(
     outcome: "failure",
     transition: "waiting",
     commit: context.registerCommit ? "skipped" : "off",
-    reason: conclusion,
+    reason: waitingReason,
   };
 }
 
@@ -3859,9 +3853,9 @@ function registerWaitSummary(params: {
   reason: string;
 }): RegisterItemSummary {
   const { repoRoot, projectId, registerPaths, item, ticketPath } = params;
-  const conclusion = sanitizeRegisterConclusion(params.reason);
+  const blockReason = sanitizeRegisterConclusion(params.reason);
   let transition: RegisterItemTransition = "waiting";
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", blockReason])) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
     transition = "none";
   } else {
@@ -3873,7 +3867,7 @@ function registerWaitSummary(params: {
     outcome: "failure",
     transition,
     commit: "off",
-    reason: conclusion,
+    reason: blockReason,
   };
 }
 

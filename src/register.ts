@@ -1140,6 +1140,7 @@ function applyItemUpdate(opts: {
   action?: string;
   title?: string;
   description?: string;
+  fieldUpdates?: RegisterItemFieldUpdates;
 }): void {
   const ticketPath = opts.view.ticketPath;
   if (!ticketPath) {
@@ -1147,7 +1148,10 @@ function applyItemUpdate(opts: {
   }
 
   const label = opts.action ?? `→ ${opts.updated.status}`;
-  const updates: RegisterItemFieldUpdates = registerItemFieldsFromItem(opts.updated);
+  const updates: RegisterItemFieldUpdates = {
+    ...registerItemFieldsFromItem(opts.updated),
+    ...opts.fieldUpdates,
+  };
 
   if (opts.dryRun) {
     const lines = [`Would update ${ticketPath} (${opts.updated.id} ${label}):`];
@@ -1955,19 +1959,34 @@ export function registerRegisterCommands(program: Command): void {
   const waitCmd = reg.command("wait").description("Set item status to waiting");
   addProjectOption(waitCmd);
   waitCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
-  waitCmd.option("--conclusion <text>", "Reason for waiting");
+  waitCmd.option("--reason <text>", "Reason for waiting");
+  waitCmd.option("--conclusion <text>", "Deprecated alias for --reason");
   waitCmd.option("--dry-run", "Print change without writing", false);
   waitCmd.action((opts) => {
     try {
+      if (opts.reason !== undefined && opts.conclusion !== undefined) {
+        throw new Error("Specify only one of --reason or --conclusion");
+      }
       const paths = resolveRegisterPaths(opts);
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      const reason = (opts.reason ?? opts.conclusion)?.trim();
+      if (reason !== undefined && reason === "") {
+        throw new Error("Waiting reason must not be empty");
+      }
       const updated: PjrItem = {
         ...item,
         status: "waiting",
-        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        ...(reason !== undefined
+          ? { fieldUpdates: { block_reason: inlineCodeAnglePlaceholders(reason) } }
+          : {}),
+      });
     } catch (error) {
       printCommandError(error);
     }
@@ -1999,6 +2018,7 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--priority <priority>", `Update priority: ${VALID_PRIORITIES.join(" | ")}`);
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
+  updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
   updateCmd.option("--dry-run", "Print change without writing", false);
   updateCmd.action((opts) => {
     try {
@@ -2006,12 +2026,12 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id);
       const item = view.item;
 
-      const hasUpdates = ["title", "description", "priority", "owner", "due"].some(
+      const hasUpdates = ["title", "description", "priority", "owner", "due", "conclusion"].some(
         (k) => opts[k] !== undefined,
       );
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion)",
         );
       }
 
@@ -2034,6 +2054,7 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.priority !== undefined ? { priority: opts.priority } : {}),
         ...(opts.owner !== undefined ? { owner: opts.owner } : {}),
         ...(opts.due !== undefined ? { due: opts.due } : {}),
+        ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
       applyItemUpdate({
         paths,

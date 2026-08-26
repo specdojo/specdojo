@@ -167,6 +167,32 @@ describe("buildRegisterHistoryEvents", () => {
     ]);
   });
 
+  it("waiting への遷移で conclusion ではなく block_reason の変化を記録する", () => {
+    const commits: RegisterCommitEntry[] = [
+      {
+        commit: "wait1234",
+        date: "2026-08-06",
+        author: "ARC",
+        subject: "exec(register PJR-AB12): wait",
+        files: [{ status: "M", path }],
+      },
+    ];
+    const waitingFields = [
+      ...OPEN_FIELDS.map((line) => line.replace("item_status: open", "item_status: waiting")),
+      "block_reason: 検証が失敗した",
+    ];
+
+    const actual = buildRegisterHistoryEvents(commits, (revision) =>
+      revision.endsWith("^") ? ticket(OPEN_FIELDS) : ticket(waitingFields),
+    );
+
+    expect(actual[0].changes).toEqual([
+      { field: "status", from: "open", to: "waiting" },
+      { field: "block_reason", from: "-", to: "検証が失敗した" },
+    ]);
+    expect(actual[0].changes.some((change) => change.field === "conclusion")).toBe(false);
+  });
+
   it("一覧の列に現れない変更（文書成熟度 status）だけのコミットはイベントにしない", () => {
     const commits: RegisterCommitEntry[] = [
       {

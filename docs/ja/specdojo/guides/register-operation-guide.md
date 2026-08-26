@@ -144,6 +144,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 ```
 
 - 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。
+- `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは途中経過であり、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
 
@@ -196,6 +197,15 @@ specdojo register close \
 タイムゾーンを含まない値（`2026-08-09` や `2026-08-09T23:08:51`）は、解釈が実行環境に依存するため受け付けません。
 
 結論が残っていない終了項目は、後から経緯を追えなくなるため、close 前に埋めます。
+
+状態を変えずに結論だけを補正するときは、個票を直接編集せず次を使います。`-` を指定すると既存の `conclusion` を削除できます。
+
+```bash
+specdojo register update \
+  --project <project-id> \
+  --id PJR-0005 \
+  --conclusion "取消処理で在庫数を戻すよう修正"
+```
 
 ### 2.4. 派生ビューの扱い
 
