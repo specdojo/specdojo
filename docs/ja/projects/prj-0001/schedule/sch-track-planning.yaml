@@ -10,102 +10,390 @@ track: planning
 settings: {}
 tasks:
   - local_id: dct-index
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: freeform-pass
+    phase_id: draft
+    name: 草案作成（基準なし）
+    duration_days: 0.5
     depends_on: []
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      基準にできる実践の型が無い状態で草案を作成する。成果物カタログの done_criteria、対応 schema、既存の類似成果物を根拠にし、参考にした文書と決めきれなかった論点を result に明示する。
+  - local_id: dct-index
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: dct-index
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-dct-index-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: dct-index
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-dct-index-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: tml-index
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-dct-index-010
+      - T-PLANNING-dct-index-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: tml-index
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-tml-index-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: tml-index
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-tml-index-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: tml-index
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-tml-index-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-defaults
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-tml-index-010
+      - T-PLANNING-tml-index-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-defaults
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-defaults-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-defaults
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-defaults-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-defaults
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-defaults-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-assessment-planning
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-dct-index-010
-      - T-PLANNING-tml-index-010
+      - T-PLANNING-dct-index-020
+      - T-PLANNING-tml-index-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-assessment-planning
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-planning-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-assessment-planning
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-planning-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-assessment-planning
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-assessment-planning-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-assessment-launch
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-dct-index-010
-      - T-PLANNING-tml-index-010
+      - T-PLANNING-dct-index-020
+      - T-PLANNING-tml-index-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-assessment-launch
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-launch-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-assessment-launch
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-launch-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-assessment-launch
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-assessment-launch-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-strategy-launch
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-sch-assessment-launch-010
-      - T-PLANNING-sch-defaults-010
+      - T-PLANNING-sch-assessment-launch-020
+      - T-PLANNING-sch-defaults-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-strategy-launch
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-strategy-launch-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-strategy-launch
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-strategy-launch-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-strategy-launch
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-strategy-launch-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-assessment-data-flow
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-dct-index-010
-      - T-PLANNING-tml-index-010
+      - T-PLANNING-dct-index-020
+      - T-PLANNING-tml-index-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-assessment-data-flow
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-data-flow-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-assessment-data-flow
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-assessment-data-flow-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-assessment-data-flow
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-assessment-data-flow-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。
   - local_id: sch-strategy-data-flow
-    phase_suffix: "010"
-    phase_set: maintain-pass
-    phase_id: maintain
-    name: 計画成果物の整備
-    duration_days: 0.25
+    phase_suffix: "020"
+    phase_set: guided-pass
+    phase_id: draft
+    name: 草案作成（実践の型に沿う）
+    duration_days: 0.5
     depends_on:
-      - T-PLANNING-sch-assessment-data-flow-010
-      - T-PLANNING-sch-defaults-010
+      - T-PLANNING-sch-assessment-data-flow-020
+      - T-PLANNING-sch-defaults-020
     owner: ARC
     description: |
-      関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-      成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
+      必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result へ確認事項として残す。
+  - local_id: sch-strategy-data-flow
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-strategy-data-flow-020
+      - G-PLANNING-first-pass
+    owner: ARC
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: sch-strategy-data-flow
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-PLANNING-sch-strategy-data-flow-070
+      - G-PLANNING-refine-pass
+    owner: ARC
+    description: |
+      完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  - local_id: sch-strategy-data-flow
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-PLANNING-sch-strategy-data-flow-090
+      - G-PLANNING-review-pass
+    owner: ARC
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。

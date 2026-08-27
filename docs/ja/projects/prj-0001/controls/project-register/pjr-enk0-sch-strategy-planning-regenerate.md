@@ -40,16 +40,21 @@ docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml は手書きで作
 
 ## 3. 作業内容
 
-| No  | 作業                                                          | 担当 | 状態 | メモ                             |
-| --- | ------------------------------------------------------------- | ---- | ---- | -------------------------------- |
-| 1   | assessment の facts を最新化する                              | ARC  | open | `assessment scaffold` の再実行   |
-| 2   | 成果物と実践の型の利用可能性を判定し取り込む                  | ARC  | open | `assessment prompt` の指示に従う |
-| 3   | strategy を生成し、既存の手書き内容との差分を確認する         | ARC  | open | 失われる情報がないかを検証する   |
-| 4   | `schedule build` が成功し想定外のタスクが出ないことを確認する | ARC  | open | 生成結果の妥当性確認             |
+| No  | 作業                                                          | 担当 | 状態 | メモ                                                                   |
+| --- | ------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------- |
+| 1   | assessment の facts を最新化する                              | ARC  | done | `assessment scaffold --force` で要否宣言と template 参照先を再収集した |
+| 2   | 成果物と実践の型の利用可能性を判定し取り込む                  | ARC  | done | 8成果物を判定し、blocking open question を解消した                     |
+| 3   | strategy を生成し、既存の手書き内容との差分を確認する         | ARC  | done | owner 8件と group milestone を保持し、標準 profile へ再生成した        |
+| 4   | `schedule build` が成功し想定外のタスクが出ないことを確認する | ARC  | done | 対象8成果物だけに4フェーズずつ、計32タスクが生成されることを確認した   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `sch-assessment-planning.yaml` の facts を再収集し、旧来の `none` / `unresolved` 宣言を現在の `not-needed` 宣言へ同期した。`dct-index-template` の参照先も、存在しない YAML から実在する Markdown へ更新した。
+- 8成果物すべてに `author-deliverable` の判定を記録した。`dct-index` は、rulebook と sample は利用可能だが、template が YAML 正本ではなく生成 Markdown ビュー用であるため `freeform` とした。他7成果物は必要な型が利用可能または `not-needed` であり、`fully-guided` とした。
+- `schedule strategy generate` で `sch-strategy-planning.yaml` を再生成した。手書きの `maintain-pass` は標準 profile の `guided-pass` / `freeform-pass` / `refine-pass` / `review-pass` / `finalize-pass` に置き換わった。
+- 既存の owner 割り当て8件は全件 `ARC` のまま保持され、approach に応じて2つの `owner_rules` へ再編された。`M-PLANNING-planning` の `group_milestones` も owner `PM` のまま保持された。失われた運用情報はない。
+- `schedule build --track planning --force` で `sch-track-planning.yaml` と `sch-milestones.yaml` を再生成した。対象は登録済みの8成果物だけで、各成果物に draft・refine・review・finalize の4フェーズ、合計32タスクが生成された。想定外の local_id はなかった。
+- 残課題はない。`dct-index-template.md` 自体の責務不整合を解消する場合は別項目で扱う。
 
 ## 5. 関連ドキュメント
 

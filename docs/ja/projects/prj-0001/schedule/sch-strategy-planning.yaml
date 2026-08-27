@@ -5,21 +5,16 @@ status: draft
 title: スケジュール戦略（planning）
 rulebook: specdojo:sch-rulebook
 track: planning
-
-# planning ドメインの kind: work のみを対象とする。
-# 本 strategy 自身は dct-planning.yaml で kind: control として宣言し、
-# 自身を生成する循環を避ける。
 scope:
   catalogs:
     - id: prj-0001:dct-planning
       path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
   include_kinds:
     - work
-
 phase_sets:
-  maintain-pass:
-    - id: maintain
-      name: 計画成果物の整備
+  guided-pass:
+    - id: draft
+      name: 草案作成（実践の型に沿う）
       execution: agent
       mode: edit
       approach: fully-guided
@@ -29,26 +24,123 @@ phase_sets:
             proficiency: normal
           - stage_role: reporter
             proficiency: normal
-      task_suffix: "010"
+      task_suffix: "020"
+      duration_days: 0.5
+      description: >
+        必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。利用可能な実践の型を正本とし、根拠を確認できない内容は書かずに result
+        へ確認事項として残す。
+  freeform-pass:
+    - id: draft
+      name: 草案作成（基準なし）
+      execution: agent
+      mode: edit
+      approach: freeform
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "020"
+      duration_days: 0.5
+      description: |
+        基準にできる実践の型が無い状態で草案を作成する。成果物カタログの done_criteria、対応 schema、既存の類似成果物を根拠にし、参考にした文書と決めきれなかった論点を result に明示する。
+  refine-pass:
+    - id: refine
+      name: 磨き込み・整合性確認
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "070"
+      duration_days: 0.25
+      description: >
+        整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria
+        を満たす状態へ整える。
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
       duration_days: 0.25
       description: |
-        関連する rulebook と設計ガイドに沿って計画成果物を更新し、
-        成果物カタログ、Timeline、Schedule 間の参照と依存関係を整合させる。
-
-default_phase_set: maintain-pass
-
+        完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description: >
+        担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample /
+        template もあわせて確認する。
+default_phase_sets:
+  - phase_set: guided-pass
+  - phase_set: refine-pass
+  - phase_set: review-pass
+  - phase_set: finalize-pass
 owner_rules:
   - local_ids:
       - dct-index
-      - tml-index
-      - sch-defaults
-      - sch-assessment-planning
-      - sch-assessment-launch
-      - sch-assessment-data-flow
-      - sch-strategy-launch
-      - sch-strategy-data-flow
     owner: ARC
-
+    phase_sets:
+      - phase_set: freeform-pass
+      - phase_set: refine-pass
+      - phase_set: review-pass
+      - phase_set: finalize-pass
+  - local_ids:
+      - sch-assessment-data-flow
+      - sch-assessment-launch
+      - sch-assessment-planning
+      - sch-defaults
+      - sch-strategy-data-flow
+      - sch-strategy-launch
+      - tml-index
+    owner: ARC
+phase_gates:
+  - id: G-PLANNING-first-pass
+    name: 初回パス完了
+    artifact_name: 計画
+    after_phase_sets:
+      - guided-pass
+      - freeform-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-planning
+  - id: G-PLANNING-refine-pass
+    name: 磨き込み完了
+    artifact_name: 計画
+    after_phase_sets:
+      - refine-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-planning
+  - id: G-PLANNING-review-pass
+    name: レビュー完了
+    artifact_name: 計画
+    after_phase_sets:
+      - review-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-planning
 group_milestones:
   - catalog_id: prj-0001:dct-planning
     milestone:
