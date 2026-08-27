@@ -3,9 +3,9 @@
   "comparison_id": "PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891",
   "project_id": "prj-0001",
   "task_id": "PJR-0FCT",
-  "status": "active",
+  "status": "discarded",
   "created_at": "2026-08-27T13:24:27.800Z",
-  "completed_at": null,
+  "completed_at": "2026-08-27T23:02:42.714Z",
   "base_commit": "3128b9faf0210d969b68bb71918e5fca77a92c25",
   "base": {
     "requested_revision": "bb3ce4bc~1",
@@ -83,7 +83,7 @@
       "reporter_agent": "qwen-reporter",
       "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-qwen-expert-executor-qwen-reporter",
       "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-qwen-expert-executor-qwen-reporter",
-      "status": "failed",
+      "status": "discarded",
       "started_at": "2026-08-27T13:25:23.607Z",
       "completed_at": "2026-08-27T14:41:02.982Z",
       "duration_ms": 4539375,
@@ -153,10 +153,10 @@
         "failure_reason": "reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token 'I', \"I need to \"... is not valid JSON"
       },
       "subjective": {
-        "judgment_quality": null,
-        "writing_quality": null,
-        "scope_adherence": null,
-        "notes": ""
+        "judgment_quality": 3,
+        "writing_quality": 2,
+        "scope_adherence": 3,
+        "notes": "指示文へ JSON 単体出力と /no_think を追加した状態でも、reporter は3回とも前置き付きで invalid_output となった。指示の改善では解決しない。executor は65分を要し、検証を1件も報告していない（前回は5件報告）。変更ファイルは2件で、前回の1件より広い。"
       }
     },
     {
@@ -165,7 +165,7 @@
       "reporter_agent": "gemma-reporter",
       "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter",
       "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter",
-      "status": "failed",
+      "status": "discarded",
       "started_at": "2026-08-27T14:41:02.984Z",
       "completed_at": "2026-08-27T15:26:44.390Z",
       "duration_ms": 2741406,
@@ -262,10 +262,10 @@
         "failure_reason": "runner validation 'test-unit' failed (exit 1). Specifically, the test case '個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する' failed."
       },
       "subjective": {
-        "judgment_quality": null,
-        "writing_quality": null,
-        "scope_adherence": null,
-        "notes": ""
+        "judgment_quality": 4,
+        "writing_quality": 4,
+        "scope_adherence": 4,
+        "notes": "reporter は3例目も構造化出力に成功し、内容を見て reported_blocked と判断した。形式エラーではない。executor は40分で検証を2件報告し両方 passed。変更は1ファイルで範囲を守っている。親検証の test:unit 失敗は起点コミット時点の状態によるもので、成果物とは無関係である。"
       }
     }
   ],
