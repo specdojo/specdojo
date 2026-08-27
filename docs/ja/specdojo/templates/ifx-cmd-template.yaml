@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
+# specdojo-schema: validate=false reason=template
 # Template: external command interface specification
 # Replace _TERM_ with a kebab-case integration name and fill every remaining
 # _UPPER_SNAKE_ or _TODO_ placeholder before treating the generated file as complete.

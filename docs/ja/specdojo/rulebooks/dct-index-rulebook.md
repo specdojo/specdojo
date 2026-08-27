@@ -7,7 +7,6 @@ specdojo:
   recipe: not-needed
   sample: specdojo:dct-index-sample
   template: specdojo:dct-index-template
-  schema: dct-index
   based_on:
     - specdojo:rulebook-authoring-standard
 ---

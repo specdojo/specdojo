@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-defaults.schema.yaml
 kind: defaults
 id: prj-0001:sch-defaults
 type: project

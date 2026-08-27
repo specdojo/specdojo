@@ -999,10 +999,7 @@ async function writeTaskPlan(
           stem,
           crossDeliverables,
         );
-  const schemaRef = resolveDeliverableSchemaRef(
-    deliverable?.deliverable.rulebook,
-    deliverable?.deliverable.local_id,
-  );
+  const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
   const content = injectCommonConventions(body, schemaRef, ctx.templateCache);
 
   writeFileSync(outPath, content, "utf8");

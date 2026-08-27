@@ -512,7 +512,7 @@ executor / reporter pipelineのexecutor promptは、commitとrepository設定を
 
 `nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。`pm-members.yaml` を書き換えられる者が `nickname` にシェルメタ文字を仕込むと、command 起動時にコマンドインジェクションが成立し得ます。これを次の 2 層で防ぎます。
 
-- 入力検証: `pm-members.yaml` を `npm run validate:schema` の集約対象（`validate:schema:pm-members`）に含め、CI で `pm-members.schema.yaml` に照らして検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
+- 入力検証: `pm-members.yaml` の先頭 modeline を `pm-members.schema.yaml` へ向け、CI の `npm run validate:schema` が同じ宣言を読んで検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
 - 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand`（`src/exec-agent-config.ts`）は、`{nickname}` を展開する直前に同じパターンで `nickname` を再検証し、不一致の場合は command を組み立てずに例外を送出します。schema 検証を経ていない `pm-members.yaml` を読み込んだ場合でも、不正な `nickname` が shell へ到達する前に停止します。
 
 再検証のパターンは `pm-members.schema.yaml` の `nickname` と同一に保ちます（一方を変更したら他方も合わせます）。

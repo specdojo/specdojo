@@ -434,8 +434,8 @@ export function collectAssessmentFacts(opts: {
         ),
       };
 
-      const schemaRef = resolveDeliverableSchemaRef(item.rulebook, item.local_id);
       const docExists = docPath ? existsSync(join(repoRoot, docPath)) : false;
+      const schemaRef = docExists ? resolveDeliverableSchemaRef(docPath) : KATA_MISSING;
       const docStatus = docPath && docExists ? readDocStatus(repoRoot, docPath) : undefined;
       const facts: AssessmentFacts = {
         deliverable: {

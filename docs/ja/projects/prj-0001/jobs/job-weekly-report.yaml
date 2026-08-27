@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-weekly-report
 name: 週報作成
 description: 対象週の実績を進捗報告へまとめる。

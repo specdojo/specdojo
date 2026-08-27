@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
 id: prj-0001:dct-system-design
 type: project
 status: draft

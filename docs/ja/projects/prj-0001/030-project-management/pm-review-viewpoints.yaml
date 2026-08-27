@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-review-viewpoints.schema.yaml
 id: prj-0001:pm-review-viewpoints
 type: project
 status: draft

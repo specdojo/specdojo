@@ -49,17 +49,31 @@ YAML の schema 対応が3か所に分散している。.vscode/settings.json �
 
 ## 3. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                             |
-| --- | ------------------------------------------------------ | ---- | ---- | -------------------------------- |
-| 1   | テンプレートへ modeline を追加する                     | ARC  | open | 新規ファイルが継承する           |
-| 2   | 既存 YAML へ modeline を付与する                       | ARC  | open | 89件。相対パスは機械的に算出する |
-| 3   | modeline の欠落とパスの誤りを検出する検証を追加する    | ARC  | open | カバレッジを下げない歯止め       |
-| 4   | `_SCHEMA_REF_` の解決を modeline からに変更する        | ARC  | open | rulebook 依存を解消する          |
-| 5   | 検証スクリプトを集約し、settings.json の扱いを判断する | ARC  | open | 食い違い6件の解消を含む          |
+| No  | 作業                                                   | 担当 | 状態    | メモ                                                                                    |
+| --- | ------------------------------------------------------ | ---- | ------- | --------------------------------------------------------------------------------------- |
+| 1   | テンプレートへ modeline を追加する                     | ARC  | done    | 30件すべてに付与し、`validate=false reason=template` を併記                             |
+| 2   | 既存 YAML へ modeline を付与する                       | ARC  | done    | 非 schema YAML 89件中86件に modeline、3件に `schema none` を付与                        |
+| 3   | modeline の欠落とパスの誤りを検出する検証を追加する    | ARC  | done    | `validate-yaml-schema.ts --modeline` を追加                                             |
+| 4   | `_SCHEMA_REF_` の解決を modeline からに変更する        | ARC  | done    | `src/kata.ts` の schema 解決を対象 YAML の modeline 読み取りへ変更                      |
+| 5   | 検証スクリプトを集約し、settings.json の扱いを判断する | ARC  | partial | `.vscode/settings.json` の `yaml.schemas` は削除。`package.json` は保護対象のため未適用 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `docs/` 配下の非 schema YAML 89件を走査し、86件に
+  `# yaml-language-server: $schema=<relative-schema-path>` を付与した。内部 schema が未整備の
+  `gl-sample.yaml`、`ifx-api-sample.yaml`、`ifx-msg-sample.yaml` は
+  `# specdojo-schema: none reason=<reason>` で対象外理由を明示した。
+- `docs/ja/specdojo/templates/` 配下の YAML template 30件はすべて modeline を持つ。完成前の
+  placeholder を含むため、modeline に加えて `# specdojo-schema: validate=false reason=template` を併記し、生成先へ modeline が引き継がれる形にした。
+- `ifx-cmd` は内部 schema が無かったため、`docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` を追加し、sample と template の modeline から参照するようにした。
+- `tools/docs/src/validate-yaml-schema.ts` に `--modeline` を追加した。既存の `--schema` / `--data` による単一 schema 検証は維持しつつ、modeline 走査では schema 欠落、schema パス不在、対象外理由なしを検出できる。
+- `_SCHEMA_REF_` は `src/kata.ts` の `resolveDeliverableSchemaRef` が対象 YAML の modeline から repo 相対 schema パスを解決する形に変更した。`src/exec-plans.ts` と `src/schedule-assessment.ts` はこの解決結果を使用し、rulebook frontmatter の `schema` へ依存しない。
+- rulebook frontmatter の `schema` 宣言は役割を失うため、`dct-index-rulebook.md` と `ifx-cmd-rulebook.md` から削除した。あわせて `rulebook-frontmatter.schema.yaml` から `schema` プロパティを削除した。
+- `.vscode/settings.json` の `yaml.schemas` は削除した。modeline 欠落は `--modeline` 検証で検出できるため、VS Code 側に保険として重複した対応表を残さない判断とした。
+- `package.json` の `validate:schema:*` 集約は、個票の保護対象条件に従い agent では未適用とした。オーケストレーター承認後に、個別13本を削除して
+  `validate:schema:file` を維持し、`validate:schema` を
+  `tsx tools/docs/src/validate-yaml-schema.ts --modeline` へ差し替える必要がある。
+- `result` は reporter 専有のため、本 executor では作成・更新していない。
 
 ## 5. 関連ドキュメント
 

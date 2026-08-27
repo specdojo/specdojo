@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-milestones.schema.yaml
 kind: milestones
 id: prj-0001:sch-milestones
 type: project

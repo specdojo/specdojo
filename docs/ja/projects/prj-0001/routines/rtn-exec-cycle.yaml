@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # 利用制限で延期された task の再開・状態再計算・Ready task の auto loop を
 # 1 つの定時実行単位として順次処理する routine のサンプル。
 # 実行順は resume(due) → validate/refresh → run --auto --loop で固定され、

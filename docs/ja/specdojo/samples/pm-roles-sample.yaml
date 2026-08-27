@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-roles.schema.yaml
 id: specdojo:pm-roles-sample
 type: project
 status: ready

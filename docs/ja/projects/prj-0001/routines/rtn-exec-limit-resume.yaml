@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # 利用制限で延期された schedule task を定期的に再開する routine のサンプル。
 # 外部スケジューラから `specdojo routine run --due` を呼び出して発火する。
 # enabled: false のため、運用開始時に interval と parallel を確認して有効化する。

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
 kind: track
 id: prj-0001:sch-track-data-flow
 type: project
