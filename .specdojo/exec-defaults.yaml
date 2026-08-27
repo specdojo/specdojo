@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../docs/specdojo/schemas/v1/exec-defaults.schema.yaml
 # exec-defaults.yaml
 # specdojo exec run の共通実行設定。
 #
