@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "comparison_id": "PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891",
+  "project_id": "prj-0001",
+  "task_id": "PJR-0FCT",
+  "status": "active",
+  "created_at": "2026-08-27T13:24:27.800Z",
+  "completed_at": null,
+  "base_commit": "3128b9faf0210d969b68bb71918e5fca77a92c25",
+  "base": {
+    "requested_revision": "bb3ce4bc~1",
+    "resolved_commit": "3128b9faf0210d969b68bb71918e5fca77a92c25",
+    "head_commit_at_start": "efd3424763a054bedf6e9f57344006f4ba6120a0",
+    "base_is_ancestor_of_head": true,
+    "defaulted_to_head": false,
+    "plan_path_exists_at_base": true,
+    "compatible": false,
+    "referenced_paths": [
+      {
+        "path": "docs/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md",
+        "exists_at_base": false
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/execution/exec/results/pjr-0fct-20260826T065759Z-f6d7-result.md",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/specdojo/templates/",
+        "exists_at_base": true
+      },
+      {
+        "path": "lefthook.yml",
+        "exists_at_base": true
+      },
+      {
+        "path": "scripts/",
+        "exists_at_base": false
+      },
+      {
+        "path": "src/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tests/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tools/",
+        "exists_at_base": true
+      }
+    ],
+    "missing_referenced_paths": [
+      "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md",
+      "scripts/"
+    ],
+    "warnings": [
+      "Referenced paths missing at the base commit: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md, scripts/"
+    ]
+  },
+  "reporter_mode": "paired",
+  "plan": {
+    "path": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-0fct-20260826T065759Z-f6d7-plan.md",
+    "sha256": "ffbd13deeeaa04e8a8d1ee782795c22cadeb45c2e92df16f268d3feb3f52e8f2",
+    "prompt_sha256": "d8b27cfd9c55b6e9e79396b37876c361aad8847a7982faee3c37618cddcf499a"
+  },
+  "selected_trial_id": null,
+  "trials": [
+    {
+      "trial_id": "qwen-expert-executor-qwen-reporter",
+      "agent": "qwen-expert-executor",
+      "reporter_agent": "qwen-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-qwen-expert-executor-qwen-reporter",
+      "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-qwen-expert-executor-qwen-reporter",
+      "status": "running",
+      "started_at": "2026-08-27T13:25:23.607Z",
+      "completed_at": null,
+      "duration_ms": null,
+      "executor": {
+        "exit_code": null,
+        "attempts": 0,
+        "duration_ms": null,
+        "structured_output": false,
+        "validations_reported": 0,
+        "validations_passed": 0,
+        "validations_failed": 0,
+        "validations_not_run": 0,
+        "files_changed": 0,
+        "evidence_ref": null,
+        "final_message": "",
+        "validations": [],
+        "changes": [],
+        "diff_summary": ""
+      },
+      "parent_validation": {
+        "configured_ids": ["test-integration", "validate-schema", "test-unit"],
+        "status": "not_run",
+        "duration_ms": null,
+        "validations_passed": 0,
+        "validations_failed": 0,
+        "validations_not_run": 0
+      },
+      "reporter": {
+        "status": "not_run",
+        "structured_output": false,
+        "format_attempts": 0,
+        "format_retries": 0,
+        "outcome": null,
+        "output": null,
+        "failure_category": null,
+        "failure_reason": ""
+      },
+      "subjective": {
+        "judgment_quality": null,
+        "writing_quality": null,
+        "scope_adherence": null,
+        "notes": ""
+      }
+    },
+    {
+      "trial_id": "gemma-expert-executor-gemma-reporter",
+      "agent": "gemma-expert-executor",
+      "reporter_agent": "gemma-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter",
+      "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter",
+      "status": "prepared",
+      "started_at": null,
+      "completed_at": null,
+      "duration_ms": null,
+      "executor": {
+        "exit_code": null,
+        "attempts": 0,
+        "duration_ms": null,
+        "structured_output": false,
+        "validations_reported": 0,
+        "validations_passed": 0,
+        "validations_failed": 0,
+        "validations_not_run": 0,
+        "files_changed": 0,
+        "evidence_ref": null,
+        "final_message": "",
+        "validations": [],
+        "changes": [],
+        "diff_summary": ""
+      },
+      "parent_validation": {
+        "configured_ids": ["test-integration", "validate-schema", "test-unit"],
+        "status": "not_run",
+        "duration_ms": null,
+        "validations_passed": 0,
+        "validations_failed": 0,
+        "validations_not_run": 0
+      },
+      "reporter": {
+        "status": "not_run",
+        "structured_output": false,
+        "format_attempts": 0,
+        "format_retries": 0,
+        "outcome": null,
+        "output": null,
+        "failure_category": null,
+        "failure_reason": ""
+      },
+      "subjective": {
+        "judgment_quality": null,
+        "writing_quality": null,
+        "scope_adherence": null,
+        "notes": ""
+      }
+    }
+  ],
+  "agent_selection": {
+    "policy": "manual",
+    "target": "pm-members.yaml",
+    "rationale": "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates pm-members.yaml priority/capabilities when repeated evidence supports the change."
+  }
+}
