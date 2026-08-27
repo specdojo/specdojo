@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-enk0-sch-strategy-planning-regenerate
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-26T15:20:19Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-27T13:21:57Z"
+  conclusion: assessment の事実を最新化し判定を実施したうえで、sch-strategy-planning.yaml を決定論的に再生成した。approach は fully-guided 一律ではなく、guided-pass / freeform-pass / refine-pass / review-pass / finalize-pass の5つへ分かれ、track では判定に応じて振り分けられている。freeform は1件のみで、実践の型が整っていない成果物に限定されている。手書きの owner_rules 8件は同一 owner の集約により2ルールとなり、group_milestones も保持された。失われた情報はない。assessment は以前あった facts 不一致3件のエラーが解消し、エラーなく通る。sch-track-planning.yaml と sch-milestones.yaml も更新した。残る警告は検証側の誤警告であり、判定の根拠は status draft ではなく target-fit と internal-consistency の実質的な不整合である。
 ---
 
 # PJR-ENK0 sch-strategy-planningをassessmentから再生成する
