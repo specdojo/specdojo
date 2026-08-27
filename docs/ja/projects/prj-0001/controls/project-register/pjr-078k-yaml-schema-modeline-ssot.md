@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-078k-yaml-schema-modeline-ssot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-27T13:50:22Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-27T21:56:46Z"
   block_reason: "agent exited with non-zero code: runner validation `test-unit`（`npm run test:unit`）が exit 1 で失敗している。88テストファイル中1件、1298テスト中2件が失敗しており、modeline を正とした schema パス解決と rulebook frontmatter 非依存の挙動を検証する tests/sr…"
+  conclusion: YAML の schema 定義を yaml-language-server の modeline へ集約した。docs 配下の86ファイルへ modeline を付与し、テンプレート30本にも付与して生成物へ引き継がれるようにした。テンプレートはプレースホルダを含むため検証対象外、サンプルは完成例のため対象とする。modeline の欠落とパスの誤りを検出する検証を追加し、書き忘れが黙って対象から外れない状態にした。_SCHEMA_REF_ は rulebook frontmatter ではなく対象ファイルの modeline から解決する。package.json の validate:schema:* 個別12本を削除し --modeline による全YAML走査へ集約した。validate:schema:file は単一ファイル検証、validate:schema:job-run は対象がJSONでmodelineを持てないため残した。保護対象の package.json と .specdojo/exec-defaults.yaml は agent が変更せず、オーケストレーターが承認のうえ適用した。settings.json と検証スクリプトの食い違い6件も解消した。
 ---
 
 # PJR-078K YAMLのschema定義をmodelineへ集約する
