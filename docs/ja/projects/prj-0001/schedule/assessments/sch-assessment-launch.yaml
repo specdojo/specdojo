@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../../specdojo/schemas/v1/sch-assessment.schema.yaml
 kind: assessment
 id: prj-0001:sch-assessment-launch
 type: project

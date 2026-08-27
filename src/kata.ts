@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { practiceLocalId } from "./practice-id.js";
+import { readYamlSchemaModelineRef } from "./yaml-schema-modeline.js";
 
 // 実践の型（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。
@@ -11,9 +12,6 @@ const MISSING = "_MISSING_";
 // 解決できなかった実践の型を表すマーカー。呼び出し側が解決結果を判定できるよう公開する。
 export const KATA_MISSING = MISSING;
 const DOCS_BASE = "docs/ja/specdojo";
-// schema は言語非依存の正本資産（docs/ja/* の下ではない）。
-const SCHEMA_BASE = "docs/specdojo/schemas/v1";
-
 export type KataKind = "recipe" | "sample" | "template";
 
 export type KataRefs = {
@@ -30,7 +28,6 @@ type RulebookRefs = {
   sample?: string | string[];
   template?: string;
   target_format?: string;
-  schema?: string;
   includes?: string[];
 };
 
@@ -72,7 +69,6 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
     sample: strOrArray(fm.sample),
     template: str(fm.template),
     target_format: str(fm.target_format),
-    schema: str(fm.schema),
     includes: strArray(fm.includes),
   };
 }
@@ -201,39 +197,11 @@ export function declaredIncludes(rulebookId: string): DeclaredInclude[] {
   return out;
 }
 
-// schema ファイル（docs/specdojo/schemas/v1/<id>.schema.yaml）の repo 相対パス。
-function schemaRepoPath(id: string): string {
-  return `${SCHEMA_BASE}/${id}.schema.yaml`;
-}
-
-// 成果物を検証する schema の repo 相対パスを解決する。
-// rulebook frontmatter の `schema` 宣言を正とし（`none` は検証無効）、未宣言なら
-// <local_id>.schema.yaml → <rulebook-prefix>.schema.yaml の順で実在を確認して補う。
-// target_format が yaml 以外、または該当 schema が無い場合は MISSING を返す。
-// 決定論的に解決できるため、plan 生成時にこの具体パスを焼き込み、agent には探索させない。
-export function resolveDeliverableSchemaRef(
-  rulebookId: string | undefined,
-  localId: string | undefined,
-): string {
-  if (
-    !rulebookId ||
-    rulebookId === "none" ||
-    rulebookId === "undecided" ||
-    rulebookId === "not-needed"
-  ) {
-    return MISSING;
-  }
-  const fm = loadRulebookRefs(rulebookId);
-  if (fm.target_format !== "yaml") return MISSING;
-  if (fm.schema === "none") return MISSING;
-  if (fm.schema) return schemaRepoPath(fm.schema);
-  const prefix = practiceLocalId(rulebookId).replace(/-rulebook$/, "");
-  const root = specdojoRootDir();
-  for (const id of [localId, prefix]) {
-    if (!id) continue;
-    if (existsSync(join(root, SCHEMA_BASE, `${id}.schema.yaml`))) return schemaRepoPath(id);
-  }
-  return MISSING;
+// 成果物を検証する schema の repo 相対パスを、対象 YAML の yaml-language-server
+// modeline から解決する。schema の正本は rulebook frontmatter や命名規約ではなく
+// YAML ファイル自身の先頭宣言である。
+export function resolveDeliverableSchemaRef(deliverablePath: string | undefined): string {
+  return readYamlSchemaModelineRef(specdojoRootDir(), deliverablePath) ?? MISSING;
 }
 
 export type DeclaredKata = {

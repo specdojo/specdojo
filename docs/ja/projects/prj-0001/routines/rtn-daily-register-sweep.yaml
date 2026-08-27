@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # 登録簿の open な todo を毎日 agent に消化させる routine のサンプル。
 # 外部スケジューラ（cron / CI）から `specdojo routine run --due` を呼び出して発火する。
 # enabled: false のため --due では実行されない。試すときは true にするか

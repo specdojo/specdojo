@@ -7,7 +7,6 @@ specdojo:
   recipe: specdojo:ifx-cmd-recipe
   sample: specdojo:ifx-cmd-sample
   template: specdojo:ifx-cmd-template
-  schema: none
 ---
 
 # 外部コマンド連携仕様作成ルール

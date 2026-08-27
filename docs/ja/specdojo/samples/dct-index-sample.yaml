@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/dct-index.schema.yaml
 # dct-index-sample.yaml
 # 駄菓子屋きぬや販売管理システム構築プロジェクトの成果物カタログ索引宣言例。
 # 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct-index.schema.yaml に従う。

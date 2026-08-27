@@ -283,9 +283,13 @@ specdojo:
 - 独立 YAML データファイルは、ファイル形式に対応するスキーマで検証する。
 - JSON データファイルは、用途別の JSON Schema または実装上の検証契約で必須項目、型、列挙値を検証する。
 - JSON に対応するスキーマがない場合でも、JSON 構文として読み込めることを検証する。
-- スキーマを追加したときは、置き場所に応じた登録先も更新する。登録を怠ると、スキーマは存在するのに検証されない状態になる。
-  - `docs/specdojo/schemas/v1/`（言語中立。YAML データファイルと Frontmatter 用）: `package.json` の `validate:schema:<name>` script とそれを連結する `validate:schema` script、および `.vscode/settings.json` の `yaml.schemas` を更新する。Frontmatter 用スキーマの場合は `.remarkrc.yaml` の `remark-frontmatter-ajv2020` の `schemaRules` へ対象 glob を追加する。
+- YAML データファイルのスキーマ対応は、各 YAML 先頭の
+  `# yaml-language-server: $schema=<schema-path>` modeline を正本とする。スキーマを追加したときは、
+  対象 YAML または template の modeline を更新する。Frontmatter 用スキーマの場合は
+  `.remarkrc.yaml` の `remark-frontmatter-ajv2020` の `schemaRules` へ対象 glob を追加する。
+  - `docs/specdojo/schemas/v1/`（言語中立。YAML データファイルと Frontmatter 用）: YAML データファイルでは modeline、Frontmatter 用スキーマでは `.remarkrc.yaml` の `schemaRules` を更新する。
   - `docs/ja/specdojo/schemas/v1/`（言語別。Markdown 本文の構成検証用）: `.remarkrc.yaml` の `remark-md-content` の `schemas` へ、スキーマと対象 glob の対応を追加する。
 - `.remarkrc.yaml` の `schemaRules` は配列を上から評価し、最初に一致したスキーマだけを適用する。対象を追加するときは、より限定的な glob を先に置く。
-- `.vscode/settings.json` の `yaml.schemas` では、既存の汎用パターン（例: `docs/**/dct-*.yaml`）が新しいスキーマの対象ファイルにも一致する場合、汎用側から除外する。除外には extglob（例: `docs/**/dct-!(index|plan-*).yaml`）を使う。照合は yaml-language-server が picomatch で行うため extglob が利用できる。
+- `.vscode/settings.json` の `yaml.schemas` へ YAML データファイルの対応表を重複管理しない。VS Code の YAML 拡張は modeline を読み、CLI 検証も同じ宣言を読む。
+- schema 検証が不要な YAML には `# specdojo-schema: none reason=<reason>` を先頭コメントで明示する。template のように modeline は必要だが完成前プレースホルダにより検証対象外とする YAML には `# specdojo-schema: validate=false reason=template` を併記する。
 - スキーマの適用状況は、対象ファイルへ一時的に不正なキー（YAML データファイル・Frontmatter）や不足した章（Markdown 本文）を作り、エディタまたは検証コマンドがエラーを報告するかで確認できる。エラーが出ない場合は、意図したスキーマが適用されていない。

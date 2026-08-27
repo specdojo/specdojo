@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-translate-updated-docs
 name: 更新文書の翻訳
 description: 前回成功時点以降に更新された日本語文書の他言語版を同期する。

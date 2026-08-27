@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # Job実装の週報サンプル。運用開始時にenabledをtrueへ変更する。
 id: rtn-weekly-report
 name: 週報作成

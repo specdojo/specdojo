@@ -1,3 +1,4 @@
+# specdojo-schema: none reason=external-asyncapi
 asyncapi: 2.6.0
 info:
   title: 在庫変更イベント仕様

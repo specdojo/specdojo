@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
 kind: strategy
 id: prj-0001:sch-strategy-planning
 type: project

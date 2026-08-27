@@ -32,8 +32,8 @@ properties:
             description: >-
               併せて適用する rulebook の ID 配列（記法ルールなど共有部品）。
               自分自身は含めない。単一段のみ（include 先の include はたどらない）。
-              sample / template / schema / target_format のアンカーは主 rulebook が保持し、
-              includes 先は記法・散文の寄与のみとする。
+              sample / template / target_format のアンカーは主 rulebook が保持し、includes
+              先は記法・散文の寄与のみとする。
           recipe:
             type: string
             pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-recipe|undecided|not-needed)$"
@@ -59,9 +59,3 @@ properties:
             description: >-
               対応する template の ID、要否未判断の undecided、または不要を表す not-needed。
               省略は必要だが未整備であることを表す。
-          schema:
-            type: string
-            description: >-
-              対象成果物（target_format: yaml）を検証する JSON Schema のファイル名 stem。
-              docs/specdojo/schemas/v1/<schema>.schema.yaml に解決される。'none' で検証を無効化。
-              未宣言時は <local_id>.schema.yaml → <prefix>.schema.yaml の順に慣例解決する。

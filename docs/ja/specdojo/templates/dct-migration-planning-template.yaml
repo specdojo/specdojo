@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
+# specdojo-schema: validate=false reason=template
 # Template: migration planning deliverables catalog
 # min_size: deliverable is included only when scaffold --size >= this value
 # Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
