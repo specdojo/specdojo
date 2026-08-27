@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-08-26T22:34:03Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
 ---
 
 # PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める
