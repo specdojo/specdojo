@@ -30,7 +30,7 @@ deliverables:
           status: draft
           broken_reference: false
         recipe:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
@@ -43,13 +43,78 @@ deliverables:
         template:
           declaration: declared
           id: specdojo:dct-index-template
-          path: docs/ja/specdojo/templates/dct-index-template.yaml
-          exists: false
-          broken_reference: true
+          path: docs/ja/specdojo/templates/dct-index-template.md
+          exists: true
+          status: draft
+          broken_reference: false
       schema:
         path: docs/specdojo/schemas/v1/dct-index.schema.yaml
         exists: true
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: 既存の成果物カタログ索引宣言を更新し、ドメイン構成と表示順を保守する作業であるため。
+      kata:
+        rulebook:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: 5章と6章が dct-index.yaml の責務、グループ構造、生成規則を対象としている。
+            - check: substantive-content
+              result: pass
+              note: 必須メタデータ、domains と groups の排他、生成・検証規則が具体化されている。
+            - check: internal-consistency
+              result: pass
+              note: sample の二階層グループと schema の Group・Subgroup 構造に矛盾しない。
+            - check: standard-alignment
+              result: pass
+              note: dct-index schema の必須キー、列挙値、文字制約と整合する規則を示している。
+          rationale: YAML 正本の構造と運用を判断する規約として利用できる。
+          confidence: high
+        sample:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: dct-index.yaml のプロジェクト成果物・プロダクト成果物の分類例を示している。
+            - check: substantive-content
+              result: pass
+              note: 二階層の groups と複数 domains に name・overview を埋めた完成例である。
+            - check: internal-consistency
+              result: pass
+              note: rulebook 6.1節の分類宣言と二階層上限に沿った構成である。
+            - check: standard-alignment
+              result: pass
+              note: dct-index schema が要求するルートキーと Group・Subgroup・Domain の構造に整合する。
+          rationale: 同種 YAML の粒度と分類表現を参照できる完成例である。
+          confidence: high
+        template:
+          usability: unusable
+          checks:
+            - check: target-fit
+              result: fail
+              note: 対象は YAML 正本だが、この template は generated/dct-index.md の表示ビューを雛形としている。
+            - check: substantive-content
+              result: pass
+              note: 生成ビューの説明、共通ルール、domain-tables の view slot は具体的に記載されている。
+            - check: internal-consistency
+              result: fail
+              note: rulebook が dct-index.yaml を正本、generated/dct-index.md を直接編集禁止とする責務分担に合わない。
+            - check: standard-alignment
+              result: fail
+              note: Markdown frontmatter と章構成であり、dct-index schema が要求する YAML ルート構造を開始点として提供しない。
+          rationale: 生成 Markdown ビュー用であり、dct-index.yaml 作成時の雛形には利用できない。
+          confidence: high
+      recommended_approach: freeform
+      rationale: recipe は not-needed で、必要と宣言された template が利用不能なため、利用可能な rulebook と sample を参考にしつつ freeform で更新する。
+      evidence:
+        - docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
+        - docs/ja/specdojo/rulebooks/dct-index-rulebook.md
+        - docs/ja/specdojo/samples/dct-index-sample.yaml
+        - docs/ja/specdojo/templates/dct-index-template.md
+        - docs/specdojo/schemas/v1/dct-index.schema.yaml
+      confidence: high
   - local_id: sch-assessment-data-flow
     name: Data Flow 整備状況判定
     catalog_id: prj-0001:dct-planning
@@ -60,22 +125,31 @@ deliverables:
         status: draft
       kata:
         rulebook:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         recipe:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: data-flow track の整備状況判定を最新の事実と判断に合わせて更新する作業であるため。
+      kata: {}
+      recommended_approach: fully-guided
+      rationale: 4種の実践の型はすべて not-needed と宣言されており、必要な型に未整備や利用不能がない。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-data-flow.yaml
+      confidence: high
   - local_id: sch-assessment-launch
     name: Launch 整備状況判定
     catalog_id: prj-0001:dct-planning
@@ -86,22 +160,31 @@ deliverables:
         status: draft
       kata:
         rulebook:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         recipe:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: launch track の整備状況判定を最新の事実と判断に合わせて更新する作業であるため。
+      kata: {}
+      recommended_approach: fully-guided
+      rationale: 4種の実践の型はすべて not-needed と宣言されており、必要な型に未整備や利用不能がない。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-launch.yaml
+      confidence: high
   - local_id: sch-assessment-planning
     name: Planning 整備状況判定
     catalog_id: prj-0001:dct-planning
@@ -112,22 +195,31 @@ deliverables:
         status: draft
       kata:
         rulebook:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         recipe:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: unresolved
+          declaration: not-needed
           exists: false
           broken_reference: false
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: planning track 自身の整備状況判定を facts の再収集と判定結果で更新する作業であるため。
+      kata: {}
+      recommended_approach: fully-guided
+      rationale: 4種の実践の型はすべて not-needed と宣言されており、必要な型に未整備や利用不能がない。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/assessments/sch-assessment-planning.yaml
+      confidence: high
   - local_id: sch-defaults
     name: スケジュールデフォルト定義
     catalog_id: prj-0001:dct-planning
@@ -145,21 +237,49 @@ deliverables:
           status: ready
           broken_reference: false
         recipe:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
       schema:
         path: docs/specdojo/schemas/v1/sch-defaults.schema.yaml
         exists: true
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: プロジェクト共通のカレンダーとスケジュール既定値を保守する作業であるため。
+      kata:
+        rulebook:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: 1章、4章、5.2節が sch-defaults.yaml の役割と記述規則を明示している。
+            - check: substantive-content
+              result: pass
+              note: ファイル分割、calendar・settings の集約、期間と依存の規則が具体化されている。
+            - check: internal-consistency
+              result: pass
+              note: recipe・sample・template は not-needed であり、同一 Kata 一式内の矛盾はない。
+            - check: standard-alignment
+              result: pass
+              note: sch-defaults schema を構造の正本として参照し、重複定義を禁止している。
+          rationale: スケジュール既定値を保守する規約として利用できる。
+          confidence: high
+      recommended_approach: fully-guided
+      rationale: 必要と宣言された rulebook が利用可能で、他の型は not-needed である。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/sch-defaults.yaml
+        - docs/ja/specdojo/rulebooks/sch-rulebook.md
+        - docs/specdojo/schemas/v1/sch-defaults.schema.yaml
+      confidence: high
   - local_id: sch-strategy-data-flow
     name: Data Flow スケジュール戦略定義
     catalog_id: prj-0001:dct-planning
@@ -177,18 +297,45 @@ deliverables:
           status: ready
           broken_reference: false
         recipe:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: data-flow track の生成入力となる schedule strategy を保守する作業であるため。
+      kata:
+        rulebook:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: 5.4節と5.5節が strategy の scope、owner_rules、判定結果からの生成を対象としている。
+            - check: substantive-content
+              result: pass
+              note: owner 解決、profile 写像、gate・milestone、生成前検証の規則が具体化されている。
+            - check: internal-consistency
+              result: pass
+              note: recipe・sample・template は not-needed であり、同一 Kata 一式内の矛盾はない。
+            - check: standard-alignment
+              result: pass
+              note: sch-strategy schema を構造の正本とし、scope の絶対パスや work 網羅を要求している。
+          rationale: schedule strategy の生成・保守を判断する規約として利用できる。
+          confidence: high
+      recommended_approach: fully-guided
+      rationale: 必要と宣言された rulebook が利用可能で、他の型は not-needed である。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow.yaml
+        - docs/ja/specdojo/rulebooks/sch-rulebook.md
+      confidence: high
   - local_id: sch-strategy-launch
     name: Launch スケジュール戦略定義
     catalog_id: prj-0001:dct-planning
@@ -206,18 +353,45 @@ deliverables:
           status: ready
           broken_reference: false
         recipe:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
       evidence_refs: []
+    judgment:
+      intent: author-deliverable
+      intent_rationale: launch track の生成入力となる schedule strategy を保守する作業であるため。
+      kata:
+        rulebook:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: 5.4節と5.5節が strategy の scope、owner_rules、判定結果からの生成を対象としている。
+            - check: substantive-content
+              result: pass
+              note: owner 解決、profile 写像、gate・milestone、生成前検証の規則が具体化されている。
+            - check: internal-consistency
+              result: pass
+              note: recipe・sample・template は not-needed であり、同一 Kata 一式内の矛盾はない。
+            - check: standard-alignment
+              result: pass
+              note: sch-strategy schema を構造の正本とし、scope の絶対パスや work 網羅を要求している。
+          rationale: schedule strategy の生成・保守を判断する規約として利用できる。
+          confidence: high
+      recommended_approach: fully-guided
+      rationale: 必要と宣言された rulebook が利用可能で、他の型は not-needed である。
+      evidence:
+        - docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml
+        - docs/ja/specdojo/rulebooks/sch-rulebook.md
+      confidence: high
   - local_id: tml-index
     name: トラック順序計画
     catalog_id: prj-0001:dct-planning
@@ -235,25 +409,49 @@ deliverables:
           status: draft
           broken_reference: false
         recipe:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         sample:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
         template:
-          declaration: none
+          declaration: not-needed
           exists: false
           broken_reference: false
       schema:
         path: docs/specdojo/schemas/v1/tml-index.schema.yaml
         exists: true
       evidence_refs: []
-open_questions:
-  - topic: planning
-    question: track 'planning' の成果物と実践の型の利用可能性を判定する
-    blocking: true
-    reason: agent 判定が未実施のため、推奨する進め方が未確定
-    next_action: specdojo schedule assessment prompt --track planning の指示で agent 判定を行う
-confidence: low
+    judgment:
+      intent: author-deliverable
+      intent_rationale: トラック順序、依存関係、カタログ準備状況を保守する作業であるため。
+      kata:
+        rulebook:
+          usability: usable
+          checks:
+            - check: target-fit
+              result: pass
+              note: Timeline のトラック粒度、順序、依存、カタログ状況を tml-index.yaml 向けに定義している。
+            - check: substantive-content
+              result: pass
+              note: 必須キー、catalog_status、order、parallel_group、depends_on の判断基準が具体化されている。
+            - check: internal-consistency
+              result: pass
+              note: recipe・sample・template は not-needed であり、同一 Kata 一式内の矛盾はない。
+            - check: standard-alignment
+              result: pass
+              note: tml-index schema の必須キーと制約を構造の正本として参照している。
+          rationale: Timeline 正本を保守する規約として利用できる。
+          confidence: high
+      recommended_approach: fully-guided
+      rationale: 必要と宣言された rulebook が利用可能で、他の型は not-needed である。
+      evidence:
+        - docs/ja/projects/prj-0001/timeline/tml-index.yaml
+        - docs/ja/specdojo/rulebooks/tml-rulebook.md
+        - docs/specdojo/schemas/v1/tml-index.schema.yaml
+      confidence: high
+open_questions: []
+confidence: high
+notes: facts の再収集で実践の型の要否宣言と参照先を最新化し、全成果物を再判定した。
