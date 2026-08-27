@@ -24,6 +24,9 @@ YAML の schema 対応が3か所に分散している。.vscode/settings.json �
 ## 2. 完了条件
 
 - `docs/` 配下の YAML 成果物が `# yaml-language-server: $schema=` の modeline を持つ。対象は89件である。schema 検証が不要なものは、その旨が判別できる。
+- **テンプレート（`docs/ja/specdojo/templates/`）は schema 検証の対象外とする**。`_PROJECT_ID_` などのプレースホルダを含み、そのままでは schema を満たさないためである。ただし modeline は付与する。生成される成果物へ引き継がれ、かつ編集時にエディタの補完が効くためである。検証対象から外れることが機械的に判別できる形にする。
+- **サンプル（`docs/ja/specdojo/samples/`）は schema 検証の対象とする**。完成例であり schema を満たすべきものである。現時点で満たさないサンプルがあれば、修正するか、対象外とする理由を記録する。
+- 検証範囲を変更した結果、従来のグロブ指定では対象外だったファイルが新たに対象へ入る。**入った結果として失敗するものがないこと**を確認する。1回目の実行では104件が失敗した。
 - **modeline を持たない YAML を検出できる**。書き忘れたファイルが黙って検証対象から外れる状態を作らない。現在はグロブ指定のため新規ファイルも自動的に対象になっており、移行でカバレッジを下げない。
 - **modeline のパスが実在する schema を指すことを検証できる**。パスが誤っていてもエディタは黙って検証しないだけで気づけないため、機械的に確認する。
 - YAML テンプレート30本が modeline を持ち、`deliverable scaffold` で生成されるファイルへ引き継がれる。新規ファイルが最初から modeline を持つ。
@@ -32,7 +35,8 @@ YAML の schema 対応が3か所に分散している。.vscode/settings.json �
 - `.vscode/settings.json` の `yaml.schemas` をどう扱うかを判断する。modeline が優先されるため削除できるが、modeline 未付与ファイルの保険として残す選択もある。判断した理由を記録する。
 - 現在 `settings.json` と検証スクリプトで食い違っている6件（`dct` / `pm-roles` / `sch-defaults` がエディタのみ、`exec-defaults` / `job-run` / `sch-assessment` が CI のみ）が解消する。
 - `rulebook` frontmatter の `schema` 宣言をどうするか判断する。役割を失うため削除できるが、残す場合は modeline との関係を明示する。schema は実践の型ではないため、PJR-3N21 の決定とは矛盾しない。
-- `npm run validate:schema`、`npm run lint:md`、`npm run lint:fm`、`npm run test:unit`、`npm run test:integration` が成功する。
+- `package.json` と `.specdojo/exec-defaults.yaml` は agent の保護対象であり書き込めない。必要な変更内容を result へ具体的に記載し、オーケストレーターが承認のうえ適用する。agent 自身は変更しない。
+- `npm run validate:schema`、`npm run lint:md`、`npm run lint:fm`、`npm run test:unit`、`npm run test:integration` が成功する。**検証の失敗を残したまま完了としない。**
 
 ### 調査済みの事実
 
