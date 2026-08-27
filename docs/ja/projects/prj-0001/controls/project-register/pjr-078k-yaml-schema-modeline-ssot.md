@@ -7,12 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-27T13:50:22Z"
   due_on: "2026-09-30"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml, package.json; agent must record the …"
+  block_reason: "agent exited with non-zero code: runner validation `test-unit`（`npm run test:unit`）が exit 1 で失敗している。88テストファイル中1件、1298テスト中2件が失敗しており、modeline を正とした schema パス解決と rulebook frontmatter 非依存の挙動を検証する tests/sr…"
 ---
 
 # PJR-078K YAMLのschema定義をmodelineへ集約する
