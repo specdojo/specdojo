@@ -165,7 +165,7 @@ specdojo exec trial discard --project <project-id> --comparison <comparison-id>
 
 1回の比較だけでは`pm-members.yaml`を自動変更しません。人が客観指標と主観評価を確認し、複数タスクで傾向が再現した場合にpriorityやcapabilitiesを更新します。この判断方針も比較記録の`agent_selection`へ保存されます。
 
-agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdからGit repositoryを解決します。trial前後でHEADまたはlocal configが変化した場合、そのtrialは`agent-git-state-write:`で失敗し、採用対象になりません。
+agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdからGit repositoryを解決します。trial前後でagent worktreeのHEADまたは監視対象のlocal configが変化した場合、そのtrialは`agent-git-state-write:`で失敗し、採用対象になりません。別worktreeで行われたrunnerの遷移commitと、runnerが作成したbranchの表示用metadataは検知対象に含めません。
 
 ## 2. 中断・訂正・再実行
 

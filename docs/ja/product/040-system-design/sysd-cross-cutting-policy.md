@@ -161,12 +161,12 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-GIT-004: agent Git環境の隔離と状態ガード
 
-- **Rule（MUST）**: agent、agent配下の子プロセス、親検証へ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でworktreeのHEADと共有local configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。テストfixtureのidentityはプロセス環境だけに注入し、local configへ書き込まない。
+- **Rule（MUST）**: agent、agent配下の子プロセス、親検証へ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でagent worktreeのHEADと共有local configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local configへ書き込まない。
 - **Rationale（意図）**: Git hookから継承した`GIT_DIR`が一時fixture向けの`git init`や`git commit`を実repositoryへ向け、`core.bare`やidentity設定の変更、履歴混入を起こすことを防ぐ。
 - **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、および親runner検証。
-- **Enforcement（検証）**: `gitEnvironment()`による起動環境の除去、executor promptのGit操作禁止契約、agent前後のHEAD・local config比較、fixture commit後もlocal identityが未設定であること、および危険な継承環境とGit状態変更の回帰テスト。
+- **Enforcement（検証）**: `gitEnvironment()`による起動環境の除去、executor promptのGit操作禁止契約、agent worktreeのHEAD・local config比較、fixture commit後もlocal identityが未設定であること、およびrunner遷移commitの除外と危険な継承環境・Git状態変更の回帰テスト。
 - **Exception（例外）**: なし。agentが必要とするrepositoryはcwdからGit自身に再解決させる。
-- **References（参照）**: `src/exec-worktree.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]。
+- **References（参照）**: `src/exec-worktree.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]、[[prj-0001:pjr-44cw-git-state-guard-false-positive|PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める]]。
 
 ### scp-SEC-001: agent権限制約
 

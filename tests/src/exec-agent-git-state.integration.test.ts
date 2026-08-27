@@ -23,6 +23,12 @@ function createRepository(): string {
   return repo;
 }
 
+function createLinkedWorktree(repo: string, name: string): string {
+  const worktree = `${repo}-${name.replaceAll("/", "-")}-worktree`;
+  git(repo, "worktree", "add", "-b", name, worktree);
+  return worktree;
+}
+
 describe("agent Git state guard", () => {
   it("creates fixture commits without writing identity to local config", () => {
     const repo = createRepository();
@@ -46,6 +52,47 @@ describe("agent Git state guard", () => {
 
       expect(changedAgentGitStateFields(repo, before)).toEqual(["HEAD"]);
     } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("ignores runner register commits outside the agent worktree", () => {
+    const repo = createRepository();
+    const worktree = createLinkedWorktree(repo, "exec/pjr-44cw-runner-transition");
+    try {
+      const before = captureAgentGitStateSnapshot(worktree);
+
+      writeFileSync(join(repo, "register.md"), "start\n", "utf8");
+      git(repo, "add", "register.md");
+      git(repo, "commit", "-m", "exec(register PJR-EX5E): start");
+      writeFileSync(join(repo, "register.md"), "wait\n", "utf8");
+      git(repo, "add", "register.md");
+      git(repo, "commit", "-m", "exec(register PJR-07M5): wait");
+      git(repo, "config", "branch.exec/pjr-44cw-runner-transition.vscode-merge-base", "HEAD~1");
+
+      expect(changedAgentGitStateFields(worktree, before)).toEqual([]);
+    } finally {
+      rmSync(worktree, { recursive: true, force: true });
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("still detects a commit in the agent worktree while runner commits are present", () => {
+    const repo = createRepository();
+    const worktree = createLinkedWorktree(repo, "exec/pjr-44cw-agent-change");
+    try {
+      const before = captureAgentGitStateSnapshot(worktree);
+
+      writeFileSync(join(repo, "register.md"), "start\n", "utf8");
+      git(repo, "add", "register.md");
+      git(repo, "commit", "-m", "exec(register PJR-EX5E): start");
+      writeFileSync(join(worktree, "agent.txt"), "unexpected commit\n", "utf8");
+      git(worktree, "add", "agent.txt");
+      git(worktree, "commit", "-m", "agent fixture commit");
+
+      expect(changedAgentGitStateFields(worktree, before)).toEqual(["HEAD"]);
+    } finally {
+      rmSync(worktree, { recursive: true, force: true });
       rmSync(repo, { recursive: true, force: true });
     }
   });

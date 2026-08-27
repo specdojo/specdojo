@@ -38,16 +38,19 @@ PJR-A99J で追加した検知機構が、agent の操作と runner 自身の操
 
 ## 3. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ                               |
-| --- | --------------------------------------------------- | ---- | ---- | ---------------------------------- |
-| 1   | 誤検知の発生条件を特定する                          | ARC  | open | runner の操作と agent の操作の境界 |
-| 2   | runner 自身の操作を対象から外す                     | ARC  | open | 検知の目的は弱めない               |
-| 3   | 誤検知と真の検知を区別するテストを追加する          | ARC  | open | 双方向の確認                       |
-| 4   | 過去に停止した2件が修正後は停止しないことを確認する | ARC  | open | PJR-07M5 と PJR-EX5E               |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                 |
+| --- | --------------------------------------------------- | ---- | ---- | ---------------------------------------------------- |
+| 1   | 誤検知の発生条件を特定する                          | ARC  | done | 共有 config の branch 表示用 metadata を検知していた |
+| 2   | runner 自身の操作を対象から外す                     | ARC  | done | agent worktree の HEAD と動作設定は監視を継続        |
+| 3   | 誤検知と真の検知を区別するテストを追加する          | ARC  | done | 双方向の回帰ケースを追加                             |
+| 4   | 過去に停止した2件が修正後は停止しないことを確認する | ARC  | done | PJR-07M5 / PJR-EX5E の遷移commitを再現               |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- agentのcwdから解決したHEADだけを比較する既存の境界を維持し、別worktreeでrunnerが行うregister遷移commitを検知対象外とした。
+- local configは、runnerが作成したworktree branchをVS Codeが発見した際に付与する`branch.*.vscode-merge-base`だけを除外した。その他のentryは順序と重複を含めて比較するため、`core.bare`を含むrepository動作設定の変更は引き続き検知する。
+- PJR-07M5の`wait`とPJR-EX5Eの`start`に相当するcommitをroot worktreeへ作る回帰ケースを追加した。runner遷移だけなら通過し、同じ区間にagent worktreeのcommitがあれば`HEAD`、`core.bare`変更があれば`local-config`として検知する。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 
