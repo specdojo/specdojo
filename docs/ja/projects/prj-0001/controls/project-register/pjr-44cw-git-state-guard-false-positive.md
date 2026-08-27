@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-44cw-git-state-guard-false-positive
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-26T22:34:03Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-27T10:57:56Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+  conclusion: 誤検知の原因は2つあった。local config 側は VS Code が runner 作成の worktree branch を発見した際に付与する branch のメタデータであり、HEAD 側は比較対象が実リポジトリになっていたため runner の register 遷移コミットを拾っていた。前者は当該メタデータのみを除外し、順序と重複は保持して同名設定の順序依存の変化を引き続き検知できるようにした。後者は除外規則を設けず、比較対象を agent の cwd で解決した worktree へ限定することで解決した。網羅的な除外リストは設けていない。広く除外すると検知すべき変更を見逃すためである。検知の範囲は弱めておらず、agent が worktree 内で作ったコミットと core.bare の変更は引き続き検知する。runner のコミットと agent の変更が混在する場合も検知できることを含め、双方向のテストを追加した。修正が適用されるのは次回の実行からであり、実運用での裏付けはそこで得られる。
 ---
 
 # PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める
