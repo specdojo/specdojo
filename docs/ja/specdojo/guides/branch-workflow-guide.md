@@ -175,17 +175,40 @@ project の変更が受入可能になったら、次の順序で `main` への�
 3. project 全体に必要な test、build、schema 検証を実行します。
 4. project register、exec result、未解決事項を確認します。
 5. project `develop` から `main` への Pull Request を作成します。
-6. レビューとCIが成功した後に統合します。
+6. レビューとCIが成功した後、merge commit を作る方式で統合します。squash merge と rebase merge は選びません。
 
-確認例:
+昇格前に、最新の `main` を取り込んだ `develop` の先端 SHA を記録します。次の `<promoted-develop-sha>` にはこの値を使います。
 
 ```bash
+git fetch origin
+git switch project/prj-0001/develop
+git status --short
+git merge origin/main
+git rev-parse HEAD
 git log --oneline main..project/prj-0001/develop
 git diff --stat main...project/prj-0001/develop
 git branch --no-merged project/prj-0001/develop
 ```
 
-project 完了後に `develop` を削除する場合は、`main` への統合と未退避作業がないことを確認してから行います。
+Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、register 遷移 commit だけを除外したりしません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
+
+```bash
+git fetch origin
+git merge-base --is-ancestor <promoted-develop-sha> origin/main
+git log --first-parent --oneline origin/main
+```
+
+`git merge-base --is-ancestor` が終了コード0にならない場合、squash merge または rebase merge により祖先関係が失われた可能性があります。次の昇格を進めず、使用した merge 方式と Pull Request を確認します。push 済み履歴を rebase や force-push で直してはいけません。
+
+project `develop` を引き続き使う場合は、昇格後の `main` を取り込みます。fast-forward になる場合も、分岐して merge commit が作られる場合もあります。
+
+```bash
+git switch project/prj-0001/develop
+git merge origin/main
+git log --oneline origin/main..project/prj-0001/develop
+```
+
+同期直後の最後のコマンドは出力なしになります。その後の出力は次回昇格の新しい commit だけであり、過去の昇格済み commit は再表示されません。project 完了後に `develop` を削除する場合は、祖先確認と未退避作業の確認を終えてから行います。
 
 ## 7. 承認方式を使い分ける
 

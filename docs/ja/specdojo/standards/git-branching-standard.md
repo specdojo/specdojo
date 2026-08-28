@@ -61,6 +61,24 @@ main
 - feature または exec の統合後も project の完了判断までは `develop` を保持します。
 - project `develop` から `main` への統合は Pull Request または同等のレビュー可能な変更単位で行います。
 
+### 4.1. developからmainへの昇格方式
+
+project `develop` から `main` への昇格は、`develop` の先端を第2 parent とする merge commit を必ず作ります。ローカルで再現する場合は `git merge --no-ff`、Pull Request では merge commit を作る方式を選びます。squash merge と rebase merge は使用しません。
+
+この方式で「まとめる」対象は物理的な commit 数ではなく、`main` の first-parent 履歴です。`develop` の細かな commit は監査と `register history` のために DAG へ保持し、プロダクト変更を追うときは次の表示を正規の履歴とします。
+
+```bash
+git log --first-parent --oneline main
+```
+
+昇格 merge commit の subject は昇格した変更範囲を要約し、Pull Request から検証結果、承認、未解決事項を追跡できるようにします。通常の `git log` では `develop` の詳細 commit も表示されます。first-parent 表示で1昇格を1行に集約しながら、次の性質を維持することが採用理由です。
+
+- 昇格済みの `develop` commit がすべて `main` の祖先となり、次回の昇格で再び未マージ扱いになりません。
+- `main` の更新を共有中の `develop` へ通常の merge で取り込めます。fast-forward できる場合も履歴を書き換えません。
+- push 済み commit の ID と到達可能性を保ち、Git 履歴へフォールバックする監査情報を失いません。
+
+昇格後は、昇格対象だった `develop` の先端が `main` の祖先であることを `git merge-base --is-ancestor` で確認します。squash merge、一時ブランチでの rebase / cherry-pick、特定 commit の除外は元の `develop` との祖先関係を記録しないため、昇格の集約方式として使用しません。
+
 ## 5. 同期・履歴・保護
 
 - `main` と共有中の project `develop` では force-push と履歴を書き換える rebase を禁止します。
@@ -124,16 +142,17 @@ Refs: PJR-T1JW
 
 ## 10. 禁止事項
 
-| 禁止事項                                                 | 理由                                              |
-| -------------------------------------------------------- | ------------------------------------------------- |
-| feature / exec を `main` へ直接統合する                  | project 単位の検証・レビューを迂回するため        |
-| 別 project の `develop` へ統合する                       | 変更の所属と追跡先が不明になるため                |
-| `main` または共有中の `develop` を force-pushする        | 他の branch と worktree の比較起点を破壊するため  |
-| 統合先を確認せず `exec worktree merge` を実行する        | 現在ブランチがそのまま統合先になるため            |
-| 未commit変更を確認せず worktree または branch を削除する | 成果物と result を失う可能性があるため            |
-| `feature/<project-id>` という終端ブランチを作る          | 同名を親に持つ feature 階層を作成できなくなるため |
-| 自動 `exec → develop` 統合に PR 承認ゲートを課す         | 自動実行を止め、承認境界を過剰に内側へ広げるため  |
-| PR 強制 3 ケースの承認を作成者が自己承認する             | 職務分離が崩れ、承認の実効性が失われるため        |
+| 禁止事項                                                 | 理由                                               |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| feature / exec を `main` へ直接統合する                  | project 単位の検証・レビューを迂回するため         |
+| 別 project の `develop` へ統合する                       | 変更の所属と追跡先が不明になるため                 |
+| `main` または共有中の `develop` を force-pushする        | 他の branch と worktree の比較起点を破壊するため   |
+| `develop → main` 昇格で squash / rebase merge を使う     | `develop` の祖先関係と Git fallback 履歴を失うため |
+| 統合先を確認せず `exec worktree merge` を実行する        | 現在ブランチがそのまま統合先になるため             |
+| 未commit変更を確認せず worktree または branch を削除する | 成果物と result を失う可能性があるため             |
+| `feature/<project-id>` という終端ブランチを作る          | 同名を親に持つ feature 階層を作成できなくなるため  |
+| 自動 `exec → develop` 統合に PR 承認ゲートを課す         | 自動実行を止め、承認境界を過剰に内側へ広げるため   |
+| PR 強制 3 ケースの承認を作成者が自己承認する             | 職務分離が崩れ、承認の実効性が失われるため         |
 
 ## 11. 運用・見直しルール
 

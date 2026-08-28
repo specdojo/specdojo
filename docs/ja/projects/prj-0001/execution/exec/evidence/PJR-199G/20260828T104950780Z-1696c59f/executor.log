@@ -1,0 +1,13 @@
+`develop → main` は「`--no-ff` merge + first-parent 表示」に確定しました。squash/rebase merge は禁止し、詳細コミットと祖先関係を保持します。
+
+変更箇所:
+
+- [PJR-199G 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-199G/docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:109)
+- [Gitブランチ標準](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-199G/docs/ja/specdojo/standards/git-branching-standard.md:64)
+- [ブランチワークフローガイド](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-199G/docs/ja/specdojo/guides/branch-workflow-guide.md:171)
+
+使い捨て clone では、2回の昇格と逆マージ、770件の `register history` 完全復元を確認しました。squash の対照実験では277コミットが未マージとなり、Git fallback 4件が失われました。実昇格・push・result更新・ステータス変更は行っていません。
+
+<specdojo_executor_evidence>
+{"final_message":"--no-ff mergeで祖先関係を保持し、first-parent上で昇格を1件に集約する方式を確定した","validations":[{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: first develop promotion'","status":"passed","summary":"使い捨てcloneでtree一致、278件中first-parentは1件、未マージ0件"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-main -m 'validation: reverse merge main into develop'","status":"passed","summary":"mainからdevelopへの逆マージが競合なく成立"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: second develop promotion'","status":"passed","summary":"2回目の昇格も競合なく成功しmerge-baseとdevelop先端が一致"},{"command":"cmp -s \"$validation_dir/history-before.json\" \"$validation_dir/history-after.json\"","status":"passed","summary":"昇格前後で770 event・261項目・Git fallback 4件が完全一致"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --squash \"$old_develop\"","status":"passed","summary":"対照実験として277件の未マージとGit fallback 4件の欠落を確認"},{"command":"npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md","status":"passed","summary":"対象Markdown 3件を整形"},{"command":"npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md","status":"passed","summary":"Markdown静的検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"project register生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0、既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1395件の文書index生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

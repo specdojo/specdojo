@@ -98,22 +98,52 @@ PJR-T7ZQ の決定により、遷移時の commit policy は変更せず、雑�
 
 - `main` は現在 `--no-ff` マージで develop の全コミットを取り込んでおり、遷移コミットもそのまま載っている。1つの項目で `start` / `wait` / `review` / `close` の4件前後が並ぶ。
 - 全コミット2,935件のうち register の遷移コミットは305件で約10%を占める。
-- PJR-TPY9 の完了と移行により、`register history` は765件中761件を個票内の event から読む。Git 履歴へのフォールバックは PJR-TPY9 自身の4件だけである。コミットをまとめても各遷移の発生日時・actor・理由は失われない。
+- PJR-TPY9 の完了と移行により、検証時点の `register history` は770件中766件を個票内の event から読む。Git 履歴へのフォールバックは PJR-TPY9 自身の4件だけである。この4件を復元するには、該当 commit が現在の履歴から到達可能でなければならない。
 - `Merge remote-tracking branch 'origin/main'` という main から develop への逆マージが履歴にある。双方向のマージが行われている。
 - squash merge は祖先関係を記録しないため、long-lived branch 同士では次回のマージで競合が繰り返される。
 - `git-branching-standard.md` は `develop → main` 昇格を承認ゲートの境界と定めており、`main` には branch protection と CODEOWNERS を要求している（PJR-BJ97 で整備済み）。
 
 ## 3. 作業内容
 
-| No  | 作業                                                  | 担当 | 状態 | メモ                              |
-| --- | ----------------------------------------------------- | ---- | ---- | --------------------------------- |
-| 1   | まとめ方の候補を比較し、方式を決めて理由を記録する    | ARC  | open | 祖先関係と逆マージへの影響を含む  |
-| 2   | 手順を `git-branching-standard.md` へ反映する         | ARC  | open | 管理者が実施できる粒度            |
-| 3   | 使い捨て clone で昇格を再現し粒度と逆マージを確認する | ARC  | open | 実昇格は行わない。push は人の操作 |
+### 3.1. 候補比較
+
+| 方式                                      | `main` の見え方                        | 祖先関係・次回昇格                                                                      | `register history`                       | 判断 |
+| ----------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------- | ---- |
+| `--no-ff` merge と first-parent 表示      | first-parent では昇格 merge commit 1件 | `develop` の全 commit が `main` の祖先になり、逆マージと次回昇格を通常の merge で扱える | Git fallback を含む全履歴を復元できる    | 採用 |
+| squash merge                              | `main` には集約 commit 1件だけ         | `develop` の commit が祖先にならず、次回も未マージとして残る                            | PJR-TPY9 の Git fallback 4件を失う       | 却下 |
+| 一時ブランチで rebase / cherry-pick       | 選別後の commit だけを `main` に置ける | commit ID を作り直し、元の `develop` との祖先関係を記録しない                           | squash と同じく Git fallback を失う      | 却下 |
+| register 遷移 commit だけを除外して再構成 | プロダクト commit だけを並べられる     | 選別した commit を作り直す必要があり、双方向 merge の基準にならない                     | 遷移 commit にある個票の現在値も欠落する | 却下 |
+
+採用方式では commit を物理的に削除しない。`develop → main` の昇格を必ず `--no-ff` の merge commit で記録し、プロダクト変更を追うときは `main` の first-parent 履歴を正規の表示とする。これにより、細かな commit は監査可能な DAG に保持しながら、昇格単位を1行で追える。通常の `git log` には `develop` の詳細 commit も表示されるため、「まとめる」とは first-parent 上での論理的な集約を意味する。
+
+### 3.2. 使い捨て clone での検証
+
+実リポジトリをローカルの一時ディレクトリへ clone し、`main` の `b4203fc0` と `project/prj-0001/develop` の `50374a66` を起点に再現した。実リポジトリの branch、commit、設定は変更せず、push も行っていない。
+
+| 確認項目                       | 結果                                                                                                                                    |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1回目の `--no-ff` 昇格         | tree は `develop` と一致した。`main` から増えた278 commitのうち first-parent は昇格 merge commit 1件だった                              |
+| 祖先関係                       | 昇格前の `develop` について `git rev-list <develop> --not <main>` は0件となった                                                         |
+| `main → develop` と2回目の昇格 | `main` 側と `develop` 側へ各1変更を追加して逆マージ後に再昇格し、競合なく成功した。merge-base は2回目の `develop` 先端と一致した        |
+| 2回目の tree と祖先関係        | tree は `develop` と一致し、2回目の `develop` についても未マージ commit は0件だった                                                     |
+| `register history`             | 昇格前後のJSONが一致した。770 event・261項目を復元し、内訳は個票 event 766件、PJR-TPY9 の Git fallback 4件だった                        |
+| squash merge の対照実験        | tree は一致したが277 commitが未マージで、merge-base は昇格前の `main` のままだった。履歴は766件となり、PJR-TPY9 の fallback 4件を失った |
+
+### 3.3. 実施状況
+
+| No  | 作業                                                  | 担当 | 状態 | メモ                                         |
+| --- | ----------------------------------------------------- | ---- | ---- | -------------------------------------------- |
+| 1   | まとめ方の候補を比較し、方式を決めて理由を記録する    | ARC  | done | `--no-ff` merge と first-parent 表示を採用   |
+| 2   | 手順を `git-branching-standard.md` へ反映する         | ARC  | done | 管理者向けの確認条件と禁止方式を明記         |
+| 3   | 使い捨て clone で昇格を再現し粒度と逆マージを確認する | ARC  | done | 実昇格・push・push済み履歴の書き換えは未実施 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `develop → main` は squash / rebase で commit を作り直さず、merge commit を必ず作る方式に確定した。昇格単位の履歴は `git log --first-parent` で参照する。
+- [[specdojo:git-branching-standard|Gitブランチ標準]]へ、昇格方式、祖先関係の完了確認、first-parent の位置付け、squash / rebase merge の禁止を反映した。
+- [[specdojo:branch-workflow-guide|ブランチワークフローガイド]]へ、管理者が実施する事前同期、PR の merge 方式、昇格後の祖先確認、`main → develop` 同期、次回差分確認の手順を反映した。
+- 使い捨て clone で2回の昇格と逆マージを再現し、意図した first-parent 粒度、tree の一致、祖先関係、`register history` 770件の完全一致を確認した。対照実験により squash merge では完了条件を満たさないことも確認した。
+- 実際の昇格、push、force-push、push済み履歴の書き換えは行っていない。残課題はなく、実昇格はリポジトリ管理者が規約とガイドに従って実施する。
 
 ## 5. 関連ドキュメント
 
