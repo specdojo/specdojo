@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qw5t-protect-main-push-and-merge-method
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-28T12:10:09Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-28T13:37:30Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+  conclusion: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
   register_events:
     - v: 1
       id: reg_56845a9469a241f2b318c30d24703491
@@ -76,6 +78,38 @@ specdojo:
           from: "-"
           to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
       previous_event_id: reg_169a4d307696403798442f55b01beb9c
+    - v: 1
+      id: reg_e2047a64fa36462cb3886466429733b3
+      ts: "2026-08-28T13:37:29Z"
+      action: review
+      actor: manual
+      from_status: waiting
+      to_status: review
+      reason: ready for review
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      previous_event_id: reg_91713be970b444f3a9fdb64fc2d620b3
+    - v: 1
+      id: reg_7e4d78eee379439885996f54ba24ea1b
+      ts: "2026-08-28T13:37:30Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
+      previous_event_id: reg_e2047a64fa36462cb3886466429733b3
 ---
 
 # PJR-QW5T mainへの直接pushとsquash/rebase mergeを機械的に禁止する
