@@ -2,17 +2,51 @@
 specdojo:
   id: prj-0001:pjr-tpy9-register-git-github
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T21:33:06Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-28T03:49:54Z"
   block_reason: "agent exited with non-zero code: runnerによる検証 `test-unit` (npm run test:unit) が失敗しているため。具体的に `tests/src/register-commands.test.ts` の 1 テストが失敗しており、完了条件を満たしていない。"
+  conclusion: Registerの状態遷移を個票内の追記型event（register_events）として記録する構造を実装した。現在値は個票frontmatter、変更履歴は同じ個票のevent配列を正本とし、1項目1ファイルのままのためファイルは増えない。register historyはeventを優先し、未移行の期間だけGit履歴へフォールバックする。3遷移を1コミットへまとめても各遷移を復元できることをテストで確認した。register migrateは既存Git履歴を決定的なevent IDへ変換し、実データで260項目・762eventの復元が可能であることを確認した。移行は別途実施する。レビューで、未設定フィールドが空から表示用の-への変更としてadd eventに記録される問題と、概念データフロー図が履歴の入力をGit commitのままとしていた点を修正した。実行中に新テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを初期化する事故が起きたため、gitEnvironment()経由へ修正し、envを渡さないgit起動を検出するテストを追加した。
+  register_events:
+    - v: 1
+      id: reg_91b24d74e7094493911d42a2f2d1d6c6
+      ts: "2026-08-28T03:49:53Z"
+      action: review
+      actor: manual
+      from_status: waiting
+      to_status: review
+      reason: ready for review
+      changes:
+        - field: status
+          from: waiting
+          to: review
+    - v: 1
+      id: reg_d5375960921b41449a0050fa30e31cd9
+      ts: "2026-08-28T03:49:54Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: Registerの状態遷移を個票内の追記型event（register_events）として記録する構造を実装した。現在値は個票frontmatter、変更履歴は同じ個票のevent配列を正本とし、1項目1ファイルのままのためファイルは増えない。register historyはeventを優先し、未移行の期間だけGit履歴へフォールバックする。3遷移を1コミットへまとめても各遷移を復元できることをテストで確認した。register migrateは既存Git履歴を決定的なevent IDへ変換し、実データで260項目・762eventの復元が可能であることを確認した。移行は別途実施する。レビューで、未設定フィールドが空から表示用の-への変更としてadd eventに記録される問題と、概念データフロー図が履歴の入力をGit commitのままとしていた点を修正した。実行中に新テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを初期化する事故が起きたため、gitEnvironment()経由へ修正し、envを渡さないgit起動を検出するテストを追加した。
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: Registerの状態遷移を個票内の追記型event（register_events）として記録する構造を実装した。現在値は個票frontmatter、変更履歴は同じ個票のevent配列を正本とし、1項目1ファイルのままのためファイルは増えない。register historyはeventを優先し、未移行の期間だけGit履歴へフォールバックする。3遷移を1コミットへまとめても各遷移を復元できることをテストで確認した。register migrateは既存Git履歴を決定的なevent IDへ変換し、実データで260項目・762eventの復元が可能であることを確認した。移行は別途実施する。レビューで、未設定フィールドが空から表示用の-への変更としてadd eventに記録される問題と、概念データフロー図が履歴の入力をGit commitのままとしていた点を修正した。実行中に新テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを初期化する事故が起きたため、gitEnvironment()経由へ修正し、envを渡さないgit起動を検出するテストを追加した。
+      previous_event_id: reg_91b24d74e7094493911d42a2f2d1d6c6
 ---
 
 # PJR-TPY9 Register履歴をGitコミット粒度から分離する
