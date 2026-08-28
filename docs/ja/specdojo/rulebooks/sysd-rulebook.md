@@ -4,9 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
-  sample: none
-  recipe: none
-  template: none
+  template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
     - specdojo:tsd-rulebook

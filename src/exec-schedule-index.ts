@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { type DctSection } from "./catalog-types.js";
 import { type ScheduleCalendar, type ScheduleIndex, type ScheduleNode } from "./exec-types.js";
 import {
@@ -176,7 +176,9 @@ function buildArtifactNameMap(projectPath: string, baseDir: string): Map<string,
 
 export function buildScheduleIndex(projectPath: string): ScheduleIndex {
   const all = listFilesRecursive(projectPath);
-  const candidateFiles = all.filter((p) => isSchYamlFilename(p));
+  const candidateFiles = all.filter(
+    (path) => dirname(path) === projectPath && isSchYamlFilename(path),
+  );
   const files: string[] = [];
   const defaultsPath = join(projectPath, "sch-defaults.yaml");
 

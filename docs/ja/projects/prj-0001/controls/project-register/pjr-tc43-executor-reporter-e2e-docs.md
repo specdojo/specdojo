@@ -14,6 +14,101 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T22:42:31Z"
   conclusion: 従来フロー・ローカルLLM・クラウドexecutor構成・失敗/再開経路のE2Eテスト9件を追加し、exec設定/運用ガイドへpipeline構成と復旧手順を文書化。typecheck/lint/test 1050件成功、schema/catalog/index検証成功。
+  register_events:
+    - v: 1
+      id: reg_99a6c0606aada3cbb5fe562bcf82f816
+      ts: "2026-08-10T06:36:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add executor reporter pipeline todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: executor / reporterパイプラインのE2E検証と文書化を行う
+        - field: description
+          from: ""
+          to: 従来フローとの後方互換、ローカルLLM構成、クラウドagent構成、失敗・再開経路をテストし、設定例と運用手順を文書化する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05c3d3781552e051565e003506dd009eb1312db5
+    - v: 1
+      id: reg_7f571768a9f726372efedc779c570933
+      ts: "2026-08-10T08:01:36Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-TC43): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: c74a308bed6bb9aefa4d2b8670b92c9919a3b183
+      previous_event_id: reg_99a6c0606aada3cbb5fe562bcf82f816
+    - v: 1
+      id: reg_beec98993026ceb6d4d8de627f4822aa
+      ts: "2026-08-10T08:02:06Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-TC43): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: rate limit reached
+      legacy_commit: a7aa5dc49e249521e3e3da0aba4815db185447e7
+      previous_event_id: reg_7f571768a9f726372efedc779c570933
+    - v: 1
+      id: reg_e71ab2d91e54b4720c5239493f599ed1
+      ts: "2026-08-10T22:46:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: done
+      reason: "exec(register PJR-TC43): executor / reporterパイプラインのE2E検証と文書化"
+      changes:
+        - field: status
+          from: waiting
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-11"
+        - field: conclusion
+          from: rate limit reached
+          to: 従来フロー・ローカルLLM・クラウドexecutor構成・失敗/再開経路のE2Eテスト9件を追加し、exec設定/運用ガイドへpipeline構成と復旧手順を文書化。typecheck/lint/test 1050件成功、schema/catalog/index検証成功。
+      legacy_commit: 095189d5df7fcb58163a4c5c1f6e847a113a1db3
+      previous_event_id: reg_beec98993026ceb6d4d8de627f4822aa
 ---
 
 # PJR-TC43 executor / reporterパイプラインのE2E検証と文書化を行う

@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-10"
   completed_at: "2026-07-23T12:00:00Z"
   conclusion: specdojo:pjr-rulebookを個別に作成
+  register_events:
+    - v: 1
+      id: reg_057e3cdaa1598adf32826dbbb32b3b77
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: specdojo:pjr-rulebook作成のtask化
+        - field: description
+          from: ""
+          to: specdojo:pjr-rulebookの作成をスケジュールに記述
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: PO
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-10"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: specdojo:pjr-rulebookを個別に作成
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_c5a86b6e24e3ec26abb5133da7a45928
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-23"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_057e3cdaa1598adf32826dbbb32b3b77
 ---
 
 # PJR-0005 specdojo:pjr-rulebook作成のtask化

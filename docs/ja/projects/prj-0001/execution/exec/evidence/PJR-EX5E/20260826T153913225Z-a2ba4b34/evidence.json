@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EX5E",
+  "run_id": "20260826T153913225Z-a2ba4b34",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-26T15:39:13.225Z",
+    "completed_at": "2026-08-26T15:46:38.110Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/vitest.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ex5e-git-identity-isolation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable-trash.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-git-state.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-release-reset-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-trial.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/e2e/exec-run-e2e.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.integration.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.unit.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/helpers/git-environment.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 24,
+    "summary": ".github/instructions/vitest.instructions.md          |  1 +\n .../040-system-design/sysd-cross-cutting-policy.md   |  6 +++---\n .../pjr-ex5e-git-identity-isolation.md               | 18 +++++++++++-------\n docs/ja/specdojo/guides/exec-config-guide.md         |  2 ++\n src/exec-run.ts                                      |  4 ++++\n tests/src/deliverable-trash.integration.test.ts      |  2 --\n tests/src/exec-agent-git-state.integration.test.ts   | 14 ++++++++++++--\n tests/src/exec-agent-protected-config.test.ts        | 10 ----------\n tests/src/exec-pipeline-e2e.integration.test.ts      |  3 ---\n .../exec-register-multiple-ids.integration.test.ts   |  2 --\n .../exec-register-pipeline-e2e.integration.test.ts   |  3 ---\n tests/src/exec-register-resume.integration.test.ts   |  3 ---\n tests/src/exec-register-worktree.integration.test.ts |  3 ---\n .../exec-release-reset-worktree.integration.test.ts  |  2 --\n tests/src/exec-run.test.ts                           |  2 ++\n tests/src/exec-trial.test.ts                         |  2 --\n tests/src/exec-worktree-command.integration.test.ts  |  2 --\n tests/src/exec-worktree-ops.integration.test.ts      |  2 --\n tests/src/exec-worktree.integration.test.ts          |  2 --\n tools/e2e/exec-run-e2e.ts                            | 20 ++++++++++++++++----\n vitest.config.ts                                     |  2 ++\n vitest.integration.config.ts                         |  2 ++\n vitest.unit.config.ts                                |  2 ++\n 23 files changed, 57 insertions(+), 52 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write .github/instructions/vitest.instructions.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/projects/prj-0001/controls/project-register/pjr-ex5e-git-identity-isolation.md docs/ja/specdojo/guides/exec-config-guide.md src/exec-run.ts tests/helpers/git-environment.ts tests/src/deliverable-trash.integration.test.ts tests/src/exec-agent-git-state.integration.test.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-pipeline-e2e.integration.test.…",
+      "status": "passed",
+      "summary": "全変更ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint .github/instructions/vitest.instructions.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/projects/prj-0001/controls/project-register/pjr-ex5e-git-identity-isolation.md docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "passed",
+      "summary": "Markdown違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "register生成成功。npx tsxのsandbox IPC制約を回避する同等loaderを使用"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "エラーなし。既存の未作成文書warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1375件のindex生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "git config --local --get-regexp '^user\\.(name|email)$'",
+      "status": "passed",
+      "summary": "該当設定なしであることを確認"
+    }
+  ],
+  "final_message": "Git identity設定をプロセス環境へ隔離し、agentのGit設定変更経路を明示的に禁止した。過去履歴は変更せず影響範囲を記録した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EX5E/20260826T153913225Z-a2ba4b34/executor.log",
+      "bytes": 3312,
+      "truncated": false
+    }
+  ]
+}

@@ -12,7 +12,8 @@ const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUT
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
 const FAKE_AGENT_CMD =
   `node -e "const fs=require('node:fs');` +
-  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
+  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'));` +
+  `fs.writeFileSync('agent-git-env.json',JSON.stringify({GIT_DIR:process.env.GIT_DIR,GIT_WORK_TREE:process.env.GIT_WORK_TREE}))"`;
 
 function git(cwd: string, ...args: string[]): string {
   return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
@@ -105,8 +106,6 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
 
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   git(
     repo,
     "add",
@@ -176,10 +175,30 @@ describe("exec worktree commands", () => {
 
       process.chdir(worktree!.path);
       await runExecWorktree(["status", "--project", "test", "--task", taskId]);
-      await runExecWorktree(["agent", "--project", "test", "--task", taskId, "--by", "edit-agent"]);
+      const originalGitDir = process.env.GIT_DIR;
+      const originalGitWorkTree = process.env.GIT_WORK_TREE;
+      process.env.GIT_DIR = join(repo, ".git");
+      process.env.GIT_WORK_TREE = repo;
+      try {
+        await runExecWorktree([
+          "agent",
+          "--project",
+          "test",
+          "--task",
+          taskId,
+          "--by",
+          "edit-agent",
+        ]);
+      } finally {
+        if (originalGitDir === undefined) delete process.env.GIT_DIR;
+        else process.env.GIT_DIR = originalGitDir;
+        if (originalGitWorkTree === undefined) delete process.env.GIT_WORK_TREE;
+        else process.env.GIT_WORK_TREE = originalGitWorkTree;
+      }
       expect(readFileSync(join(worktree!.path, "agent-ran.txt"), "utf8")).toContain(
         "Update README.",
       );
+      expect(readFileSync(join(worktree!.path, "agent-git-env.json"), "utf8")).toBe("{}");
 
       writeFileSync(join(worktree!.path, "README.md"), "# updated\n", "utf8");
       writeFileSync(

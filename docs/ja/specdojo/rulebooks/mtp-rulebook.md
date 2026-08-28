@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:mtp-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:mtp-sample
+  template: undecided
 ---
 
 # 移行テスト計画 作成ルール

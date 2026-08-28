@@ -85,11 +85,71 @@ describe("remarkNoUnescapedAnglePlaceholder", () => {
 
     expect(reasons).toEqual([]);
   });
+
+  it("detects an unescaped placeholder in frontmatter", async () => {
+    const reasons = await lint(
+      ["---", "specdojo:", "  conclusion: dct-<domain>.yaml を生成する", "---", "", "# 文書"].join(
+        "\n",
+      ),
+    );
+
+    expect(reasons).toHaveLength(1);
+    expect(reasons[0]).toContain("frontmatter");
+    expect(reasons[0]).toContain("`dct-<domain>`");
+  });
+
+  it("does not flag a frontmatter placeholder already wrapped in inline code", async () => {
+    const reasons = await lint(
+      [
+        "---",
+        "specdojo:",
+        '  conclusion: "`dct-<domain>.yaml` を生成する"',
+        "---",
+        "",
+        "# 文書",
+      ].join("\n"),
+    );
+
+    expect(reasons).toEqual([]);
+  });
+
+  it("detects a known HTML tag in frontmatter because generated table cells do not allow HTML", async () => {
+    const reasons = await lint(
+      ["---", "specdojo:", "  conclusion: 一行目<br>二行目", "---", "", "# 文書"].join("\n"),
+    );
+
+    expect(reasons).toHaveLength(1);
+    expect(reasons[0]).toContain("`<br>`");
+  });
+
+  it("reports body and frontmatter violations as fatal errors", async () => {
+    const file = await createProcessor().process({
+      value: [
+        "---",
+        "specdojo:",
+        "  conclusion: dct-<domain>.yaml を生成する",
+        "---",
+        "",
+        "# 文書",
+        "",
+        "生成先は <lang> ディレクトリです。",
+      ].join("\n"),
+      path: "target.md",
+    });
+
+    expect(file.messages).toHaveLength(2);
+    expect(file.messages.every((message) => message.fatal === true)).toBe(true);
+  });
 });
 
 describe("remarkNoUnescapedAnglePlaceholder against the real docs tree", () => {
   it("produces no false positives on the existing docs/ markdown", async () => {
-    const files = await fastGlob("docs/**/*.md", { cwd: repoRoot, absolute: true });
+    const files = await fastGlob("docs/**/*.md", {
+      cwd: repoRoot,
+      absolute: true,
+      // executor 実行中に scaffold される plan/result は runner 管理であり、対象成果物ではない。
+      ignore: ["docs/**/execution/exec/{plans,results}/**"],
+    });
 
     const violations: string[] = [];
     for (const absPath of files) {

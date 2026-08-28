@@ -12,7 +12,7 @@ _PHASE_DESCRIPTION_
 - `depends_on`: _DELIVERABLE_DEPENDS_ON_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
-- `rulebook`: `_RULEBOOK_REF_`
+- `rulebook`: `_RULEBOOK_REF_`（`_MISSING_` は `undecided`、`not-needed`、または未整備）
 - `result`: `_RESULT_REF_`
 
 _PROJECT_CONTEXT_
@@ -39,10 +39,10 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 
 参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備のため「実践の型が存在しない・内容が薄い場合」に従う）:
 
-- rulebook: `_RULEBOOK_REF_`
-- recipe: `_RECIPE_REF_`
-- sample: `_SAMPLE_REF_`
-- template: `_TEMPLATE_REF_`
+- rulebook: `_RULEBOOK_REF_`（`_MISSING_` なら対象外）
+- recipe: `_RECIPE_REF_`（`_MISSING_` なら対象外）
+- sample: `_SAMPLE_REF_`（`_MISSING_` なら対象外）
+- template: `_TEMPLATE_REF_`（`_MISSING_` なら対象外）
 
 1. rulebook: 指定された rulebook を読み込み、成果物が必須要素をすべて満たし、禁止事項に抵触していないかを構造面の基準として確認する。
 2. recipe: 指定された recipe を読み込み、示された問い・観点に対して成果物の内容が十分かを確認する。

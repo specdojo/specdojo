@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0FCT",
+  "run_id": "20260826T065844849Z-bdb02cde",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T06:58:44.849Z",
+    "completed_at": "2026-08-26T07:42:07.968Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../pjr-0fct-test-unit-rerun-after-fix.md          | 17 +++++++++-----\n .../templates/xep-common-conventions-template.md   | 26 +++++++++++-----------\n 2 files changed, 24 insertions(+), 19 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+      "status": "passed",
+      "summary": "2ファイル整形（最終 run は unchanged、整列済み）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+      "status": "passed",
+      "summary": "エラーなし（出力空）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "ERROR なし。既存の based_on 未解決 WARN のみ、末尾 OK: dct-index.yaml"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner 実行（executor/reporter pipeline の親検証 allowlist）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner 実行（親検証 allowlist）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner 実行（親検証 allowlist）"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0FCT\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0FCT\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-83OfWU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9fQNxg/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-G0H6lQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FrFxHU/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-wWkikv/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-M18JP5/pjr-0001-topic.md\n ❯ tests/src/doc-index.test.ts (25 tests | 1 failed) 826ms\n     × 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する 803ms\n\n Test Files  1 failed | 86 passed (87)\n      Tests  1 failed | 1292 passed (1293)\n   Start at  16:41:51\n   Duration  16.02s (transform 1.31s, setup 0ms, import 9.95s, tests 12.26s, environment 4ms)\n\n\n…"
+    }
+  ],
+  "final_message": "PJR-0FCT: xep-common-conventions-template.md の test 実行記述の矛盾（18/19/31行目）を解消。対応表(test:unit)を親検証 ID に依存する条件付きへ改め、19行目の二重実行防止優先順位を明記し、18行目の「全件を1回だけ実行」は親検証除く範囲に限定。test-pinned 文言は保持。個票の作業内容/対応結果を実施内容で更新。frontmatter・状態は変更なし。残: test:unit 実行確認（親 runner 依存）",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/executor.log",
+      "bytes": 8452,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-1.stdout.log",
+      "bytes": 4320,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-1.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-2.stdout.log",
+      "bytes": 7940,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-2.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-3.stdout.log",
+      "bytes": 3871,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0FCT/20260826T065844849Z-bdb02cde/reporter-attempt-3.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

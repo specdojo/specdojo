@@ -16,6 +16,49 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-25T12:00:00Z"
   conclusion: exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした
+  register_events:
+    - v: 1
+      id: reg_833fa837ac91c0cf94cc1bf4dc5fb1ce
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`exec run --register` に複数の PJR-ID を渡し、指定順に直列実行できるようにする。各IDの実行後にcommitするかどうかをオプションで選択でき、失敗時に停止するか残りを継続するかも明示できるようにする。register の worktree 化と並列実行は本項目の対象外とする。"
+          to: 複数のPJR-IDを指定順に実行し、ID単位のcommit有無と失敗時の継続方針を選択できるようにする
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: exec run --register を複数PJR-IDの指定順直列実行へ拡張し、ID単位commitと失敗時の停止・継続を選択可能にした
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_b7b21a18b1dbe78a01f0e9ae8fdfbd4d
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-25"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_833fa837ac91c0cf94cc1bf4dc5fb1ce
 ---
 
 # PJR-0135 exec run --registerの複数ID直列実行

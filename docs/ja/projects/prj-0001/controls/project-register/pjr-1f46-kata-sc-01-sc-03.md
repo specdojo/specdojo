@@ -12,6 +12,64 @@ specdojo:
   registered_at: "2026-08-14T14:29:15Z"
   completed_at: "2026-08-14T14:56:58Z"
   conclusion: kataは広く整備し、成果物本体の完成はSC-01〜SC-03に必要な範囲へテーラリングする。prj-scope.md更新済み。
+  register_events:
+    - v: 1
+      id: reg_2f23c24ea73752737b895eec769c6d49
+      ts: "2026-08-14T14:50:11Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: decided
+      reason: "docs: 成果物カタログにevidence_refsとprj-*根拠を追加、prj-scopeにkata方針を記録"
+      changes:
+        - field: status
+          from: ""
+          to: decided
+        - field: title
+          from: ""
+          to: 成果物カタログはkata整備のため最大セットで作成し、実装・運用はSC-01〜SC-03へテーラリングする
+        - field: description
+          from: ""
+          to: 全19ドメイン238件の成果物カタログを、prj-0001自身の最小スコープではなくkata（rulebook/recipe/sample/template）整備・検証を兼ねて最大セットで作成した。evidence_refs（コード・テスト）とbased_on（prj-*/pm-*文書）による裏付けでAI生成の捏造リスクを抑える方針とし、prj-scope.mdの該当箇所（初期公開に含めるもの2、スコープ外表）を更新済み。
+        - field: type
+          from: ""
+          to: note
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: "2026-08-14"
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: kataは広く整備し、成果物本体の完成はSC-01〜SC-03に必要な範囲へテーラリングする。prj-scope.md更新済み。
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8fdf3fa1a667b139cc1709e0f412035f62479d06
+    - v: 1
+      id: reg_27e05e08266533534234e25db07f12c0
+      ts: "2026-08-16T10:04:37Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: decided
+      to_status: decided
+      reason: "docs: complete PJR-ZP0B system design restructure"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-14"
+      legacy_commit: bf5276ca6a5d527e30d46b4f9ceb54e890b8eabf
+      previous_event_id: reg_2f23c24ea73752737b895eec769c6d49
 ---
 
 # PJR-1F46 成果物カタログはkata整備のため最大セットで作成し、実装・運用はSC-01〜SC-03へテーラリングする

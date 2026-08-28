@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: specdojo:recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d）
+  register_events:
+    - v: 1
+      id: reg_17c3db8ed290eddebe7c1beb128a7fbf
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: Why-What-How作成原則をrecipeへ反映
+        - field: description
+          from: ""
+          to: agent が手段や網羅的な説明へ引っ張られず、主要な論点を保って成果物を作成できるよう、Why・What・How・Trace を共通の論理構造として定義する。全成果物へ同じ章順を強制せず、共通原則は一か所に置き、各 recipe には成果物の責務に応じた問いと適用方法だけを反映する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_972eb82fed1337766c60236781a76993
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: agent が手段や網羅的な説明へ引っ張られず、主要な論点を保って成果物を作成できるよう、Why・What・How・Trace を共通の論理構造として定義する。全成果物へ同じ章順を強制せず、共通原則は一か所に置き、各 recipe には成果物の責務に応じた問いと適用方法だけを反映する。
+          to: Why・What・How・Traceを章順ではなく論理の骨格として定義し、各成果物recipeへ重複なく適用する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: specdojo:recipe-authoring-standardにWhy/What/How/Traceを論理の骨格として定義し、全16 recipeへ成果物固有の問いと委譲境界を反映（コミット67f8049d）
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_17c3db8ed290eddebe7c1beb128a7fbf
+    - v: 1
+      id: reg_0c9993db8a6e1afcdbfaf3f3867f31ef
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_972eb82fed1337766c60236781a76993
 ---
 
 # PJR-0129 Why-What-How作成原則をrecipeへ反映

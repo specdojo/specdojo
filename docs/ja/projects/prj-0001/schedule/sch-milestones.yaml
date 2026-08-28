@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-milestones.schema.yaml
 kind: milestones
 id: prj-0001:sch-milestones
 type: project
@@ -23,8 +24,6 @@ milestones:
       - T-LAUNCH-pm-quality-management-plan-140
       - T-LAUNCH-pm-members-140
       - T-LAUNCH-pm-raci-140
-      - T-LAUNCH-sch-defaults-000
-      - T-LAUNCH-sch-strategy-launch-000
     owner: PM
   - id: G-LAUNCH-bootstrap-pass
     name: bootstrap-pass 完了
@@ -152,4 +151,51 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-080
       - T-DATA-FLOW-cdfd-derived-content-080
       - T-DATA-FLOW-cdfd-reporting-080
+    owner: PM
+  - id: M-PLANNING-planning
+    name: ドメイン完了
+    artifact_name: 計画
+    depends_on:
+      - T-PLANNING-sch-assessment-planning-140
+      - T-PLANNING-sch-strategy-launch-140
+      - T-PLANNING-sch-strategy-data-flow-140
+    owner: PM
+  - id: G-PLANNING-first-pass
+    name: 初回パス完了
+    artifact_name: 計画
+    depends_on:
+      - T-PLANNING-dct-index-020
+      - T-PLANNING-tml-index-020
+      - T-PLANNING-sch-defaults-020
+      - T-PLANNING-sch-assessment-planning-020
+      - T-PLANNING-sch-assessment-launch-020
+      - T-PLANNING-sch-strategy-launch-020
+      - T-PLANNING-sch-assessment-data-flow-020
+      - T-PLANNING-sch-strategy-data-flow-020
+    owner: PM
+  - id: G-PLANNING-refine-pass
+    name: 磨き込み完了
+    artifact_name: 計画
+    depends_on:
+      - T-PLANNING-dct-index-070
+      - T-PLANNING-tml-index-070
+      - T-PLANNING-sch-defaults-070
+      - T-PLANNING-sch-assessment-planning-070
+      - T-PLANNING-sch-assessment-launch-070
+      - T-PLANNING-sch-strategy-launch-070
+      - T-PLANNING-sch-assessment-data-flow-070
+      - T-PLANNING-sch-strategy-data-flow-070
+    owner: PM
+  - id: G-PLANNING-review-pass
+    name: レビュー完了
+    artifact_name: 計画
+    depends_on:
+      - T-PLANNING-dct-index-090
+      - T-PLANNING-tml-index-090
+      - T-PLANNING-sch-defaults-090
+      - T-PLANNING-sch-assessment-planning-090
+      - T-PLANNING-sch-assessment-launch-090
+      - T-PLANNING-sch-strategy-launch-090
+      - T-PLANNING-sch-assessment-data-flow-090
+      - T-PLANNING-sch-strategy-data-flow-090
     owner: PM

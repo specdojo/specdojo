@@ -12,6 +12,87 @@ specdojo:
   owner: ARC
   due_on: "2026-08-31"
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_9bc53f7e64d74fc20f8761daa0c136d6
+      ts: "2026-08-08T03:44:06Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0XXZを起票（pjr-indexへ登録日列を追加しタイムゾーン設定を導入する）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: pjr-indexへ登録日列を追加しタイムゾーン設定を導入する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-0163-register-add-id-fetch]] でPJR-IDを数字4桁連番から英数字4桁ランダムへ変更した結果、ID自体から起票の前後関係を読み取れなくなった。`pjr-index.md`には登録日に相当する列がなく、追記方式による行の物理的な並び順だけが起票順の手がかりになっている。行順は現行の`register add`（追記）・`register renumber`・状態遷移コマンド（同一行を書き換えるのみで並べ替えない）では崩れないことを確認済みだが、手動編集や将来の並べ替えに対して脆弱なため、明示的な「登録日」列を追加する。日付計算はOS/コンテナのタイムゾーン設定に依存させず、プロジェクト設定で明示的に指定できるようにする。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3d637a53f100720025273a61f9d519da6f613d6d
+    - v: 1
+      id: reg_e8629cd1dc3fef61f8776416de77537f
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "[[prj-0001:pjr-0163-register-add-id-fetch]] でPJR-IDを数字4桁連番から英数字4桁ランダムへ変更した結果、ID自体から起票の前後関係を読み取れなくなった。`pjr-index.md`には登録日に相当する列がなく、追記方式による行の物理的な並び順だけが起票順の手がかりになっている。行順は現行の`register add`（追記）・`register renumber`・状態遷移コマンド（同一行を書き換えるのみで並べ替えない）では崩れないことを確認済みだが、手動編集や将来の並べ替えに対して脆弱なため、明示的な「登録日」列を追加する。日付計算はOS/コンテナのタイムゾーン設定に依存させず、プロジェクト設定で明示的に指定できるようにする。"
+          to: pjr-index.mdにはID採番順序が失われた(英数字ランダムID化)ため起票順を追える列がない。登録日列(YYYY-MM-DD)を追加し、register add実行時に自動記入する。日付計算はOS/コンテナのTZに依存させず、SpecDojoRunConfigに register*date_timezone(既定UTC)を追加してIntl.DateTimeFormatで明示解決する。既存の完了日デフォルトも同じヘルパーへ統一する。手動でpjr-index.mdを直接編集する場合は不明なら\_TODO*のままでよい(既存の担当・期限と同じ運用)。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_9bc53f7e64d74fc20f8761daa0c136d6
+    - v: 1
+      id: reg_4d3b97e1249251d6c130abde24f97e22
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_e8629cd1dc3fef61f8776416de77537f
 ---
 
 # PJR-0XXZ pjr-indexへ登録日列を追加しタイムゾーン設定を導入する

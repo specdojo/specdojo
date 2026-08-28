@@ -1,19 +1,21 @@
-// 登録項目（PJR-XXXX）の変更履歴を git から再構成する。個票 frontmatter を正本にした結果、
-// 台帳全体を1ファイル（旧 pjr-index.md）の差分で追う手段が失われたため、その代替として
-// 個票群のコミット履歴から「追加・状態遷移・フィールド変更・削除」を時系列で組み立てる。
+// 登録項目（PJR-XXXX）の変更履歴を個票内の追記型 event から再構成する。event 導入前または
+// 未移行の期間だけ Git 差分を読み、event の開始時刻より前の legacy 履歴として統合する。
 //
 // 比較対象は生成される登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・
-// 登録日・期限・完了日・結論）に揃える。旧一覧の差分で見えていた変化と同じ粒度になる。
+// 登録日・期限・完了日・結論）に、待機時のブロック理由を加える。ブロック理由は一覧には
+// 表示しないが、conclusion と用途を分けた後も監査できるよう履歴の比較対象にする。
 
-import { basename } from "node:path";
-import {
-  displayIdFromTicketFilename,
-  isPlaceholderCell,
-  readRegisterItemContent,
-  toDisplayItem,
-} from "./register-item.js";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { basename, join } from "node:path";
+import { displayIdFromTicketFilename, isPlaceholderCell } from "./register-item.js";
 import { gitOutput, gitResult } from "./exec-worktree.js";
 import { DEFAULT_REGISTER_DATE_TIMEZONE } from "./specdojo-config.js";
+import {
+  REGISTER_EVENT_FIELDS,
+  readRegisterEventsFromContent,
+  registerEventFieldValues,
+  type RegisterEventV1,
+} from "./register-events.js";
 
 // ================================
 // Types & Constants
@@ -52,21 +54,14 @@ export type RegisterHistoryEvent = {
   kind: RegisterHistoryEventKind;
   file: string;
   changes: RegisterHistoryChange[];
+  source?: "event" | "git";
+  action?: string;
+  event_id?: string;
+  sequence?: number;
 };
 
 // 比較する項目と出力順。登録項目一覧の列順（ID と個票リンクを除く）に合わせる。
-export const REGISTER_HISTORY_FIELDS = [
-  "status",
-  "title",
-  "description",
-  "type",
-  "priority",
-  "owner",
-  "registered",
-  "due",
-  "completed",
-  "conclusion",
-] as const;
+export const REGISTER_HISTORY_FIELDS = REGISTER_EVENT_FIELDS;
 
 export type RegisterHistoryField = (typeof REGISTER_HISTORY_FIELDS)[number];
 
@@ -77,7 +72,14 @@ const UNIT_SEPARATOR = "\u001f";
 const LOG_PRETTY_FORMAT = `format:${RECORD_SEPARATOR}%H${UNIT_SEPARATOR}%ad${UNIT_SEPARATOR}%an${UNIT_SEPARATOR}%s`;
 
 // `--status-only` で残すフィールド。状態遷移そのものと、遷移に伴って記録される値に限る。
-const STATUS_ONLY_FIELDS = new Set(["id", "status", "type", "completed", "conclusion"]);
+const STATUS_ONLY_FIELDS = new Set([
+  "id",
+  "status",
+  "type",
+  "completed",
+  "conclusion",
+  "block_reason",
+]);
 
 // 値なしを表す表示文字列。frontmatter のキー省略と、一覧のプレースホルダの両方を含む。
 const EMPTY_VALUE = "(none)";
@@ -134,30 +136,6 @@ export function parseRegisterLogOutput(output: string): RegisterCommitEntry[] {
 
 // 個票の内容から、比較対象フィールドの値を取り出す。個票として読めない内容は undefined。
 // 登録日・完了日は保存された日時を表示タイムゾーンの暦日へ変換した値で比較する。
-function itemFieldValues(
-  content: string | undefined,
-  filename: string,
-  timeZone: string,
-): Record<RegisterHistoryField, string> | undefined {
-  if (content === undefined) return undefined;
-  const parsed = readRegisterItemContent(content, filename);
-  if (!parsed) return undefined;
-
-  const item = toDisplayItem(parsed.item, timeZone);
-  return {
-    status: item.status,
-    title: item.title,
-    description: item.description,
-    type: item.type,
-    priority: item.priority,
-    owner: item.owner,
-    registered: item.registered,
-    due: item.due,
-    completed: item.completed,
-    conclusion: item.conclusion,
-  };
-}
-
 function kindFromStatus(status: string): RegisterHistoryEventKind {
   if (status.startsWith("A")) return "added";
   if (status.startsWith("D")) return "removed";
@@ -210,7 +188,7 @@ export function buildRegisterHistoryEvents(
       const before =
         kind === "added"
           ? undefined
-          : itemFieldValues(
+          : registerEventFieldValues(
               readAt(`${commit.commit}^`, sourcePath),
               basename(sourcePath),
               timeZone,
@@ -218,7 +196,11 @@ export function buildRegisterHistoryEvents(
       const after =
         kind === "removed"
           ? undefined
-          : itemFieldValues(readAt(commit.commit, file.path), basename(file.path), timeZone);
+          : registerEventFieldValues(
+              readAt(commit.commit, file.path),
+              basename(file.path),
+              timeZone,
+            );
 
       let changes = kind === "removed" ? [] : diffFieldValues(before, after);
 
@@ -280,9 +262,14 @@ function formatChanges(event: RegisterHistoryEvent): string {
 export function formatRegisterHistoryEvents(events: readonly RegisterHistoryEvent[]): string {
   return events
     .map((event) => {
-      const commit = event.commit.slice(0, 7);
+      const commit =
+        event.source === "event" ? event.commit.slice(4, 11) : event.commit.slice(0, 7);
       const kind = event.kind.padEnd(7);
-      return `${event.date}  ${commit}  ${event.id}  ${kind}  ${formatChanges(event)}  # ${event.subject}`;
+      const suffix =
+        event.source === "event"
+          ? `${event.action ?? "update"} by ${event.author}: ${event.subject}`
+          : event.subject;
+      return `${event.date}  ${commit}  ${event.id}  ${kind}  ${formatChanges(event)}  # ${suffix}`;
     })
     .join("\n");
 }
@@ -315,7 +302,7 @@ function buildLogArgs(query: RegisterHistoryQuery): string[] {
     "log",
     "--reverse",
     "--no-merges",
-    "--date=short",
+    "--date=iso-strict",
     `--pretty=${LOG_PRETTY_FORMAT}`,
     "--name-status",
     "--find-renames",
@@ -338,6 +325,74 @@ function buildLogArgs(query: RegisterHistoryQuery): string[] {
   return args;
 }
 
+function storedEventToHistory(
+  id: string,
+  file: string,
+  event: RegisterEventV1,
+  sequence: number,
+  options: { statusOnly?: boolean },
+): RegisterHistoryEvent | undefined {
+  const kind: RegisterHistoryEventKind = event.action === "add" ? "added" : "updated";
+  let changes = event.changes.map((change) => ({ ...change }));
+  if (options.statusOnly) {
+    if (kind === "updated" && !changes.some((change) => change.field === "status")) {
+      return undefined;
+    }
+    changes = changes.filter((change) => STATUS_ONLY_FIELDS.has(change.field));
+  }
+  return {
+    id,
+    commit: `evt:${event.id}`,
+    date: event.ts,
+    author: event.actor,
+    subject: event.reason,
+    kind,
+    file,
+    changes,
+    source: "event",
+    action: event.action,
+    event_id: event.id,
+    sequence,
+  };
+}
+
+function collectStoredRegisterHistoryEvents(query: RegisterHistoryQuery): {
+  events: RegisterHistoryEvent[];
+  firstEventById: Map<string, string>;
+} {
+  const registerDir = join(query.repoRoot, query.registerPathspec);
+  if (!existsSync(registerDir)) return { events: [], firstEventById: new Map() };
+  const idFilter = query.ids && query.ids.length > 0 ? new Set(query.ids) : undefined;
+  const events: RegisterHistoryEvent[] = [];
+  const firstEventById = new Map<string, string>();
+  const entries = readdirSync(registerDir, { withFileTypes: true }).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    const id = displayIdFromTicketFilename(entry.name);
+    if (!id || (idFilter && !idFilter.has(id))) continue;
+    const content = readFileSync(join(registerDir, entry.name), "utf8");
+    const stored = readRegisterEventsFromContent(content, entry.name);
+    if (stored.length === 0) continue;
+    firstEventById.set(id, stored[0].ts);
+    for (const [sequence, event] of stored.entries()) {
+      const date = event.ts.slice(0, 10);
+      if (query.since && date < query.since) continue;
+      if (query.until && date > query.until) continue;
+      const history = storedEventToHistory(
+        id,
+        `${query.registerPathspec}/${entry.name}`,
+        event,
+        sequence,
+        { statusOnly: query.statusOnly },
+      );
+      if (history) events.push(history);
+    }
+  }
+  return { events, firstEventById };
+}
+
 // 指定リビジョン時点のファイル内容を返す。そのリビジョンに存在しない場合は undefined。
 function readFileAtRevision(repoRoot: string, revision: string, path: string): string | undefined {
   const result = gitResult(repoRoot, ["show", `${revision}:${path}`]);
@@ -347,11 +402,35 @@ function readFileAtRevision(repoRoot: string, revision: string, path: string): s
 
 // git 履歴から登録項目の変更イベントを古い順に集める。
 export function collectRegisterHistoryEvents(query: RegisterHistoryQuery): RegisterHistoryEvent[] {
-  const output = gitOutput(query.repoRoot, buildLogArgs(query));
-  const commits = parseRegisterLogOutput(output);
-  return buildRegisterHistoryEvents(
-    commits,
-    (revision, path) => readFileAtRevision(query.repoRoot, revision, path),
-    { ids: query.ids, statusOnly: query.statusOnly, timeZone: query.timeZone },
-  );
+  if (query.since) assertHistoryDate(query.since, "--since");
+  if (query.until) assertHistoryDate(query.until, "--until");
+  const stored = collectStoredRegisterHistoryEvents(query);
+  let gitEvents: RegisterHistoryEvent[] = [];
+  try {
+    const output = gitOutput(query.repoRoot, buildLogArgs(query));
+    const commits = parseRegisterLogOutput(output).map((commit) => ({
+      ...commit,
+      date: commit.date.includes("T")
+        ? new Date(commit.date).toISOString().replace(/\.000Z$/, "Z")
+        : commit.date,
+    }));
+    gitEvents = buildRegisterHistoryEvents(
+      commits,
+      (revision, path) => readFileAtRevision(query.repoRoot, revision, path),
+      { ids: query.ids, statusOnly: query.statusOnly, timeZone: query.timeZone },
+    ).filter((event) => {
+      const cutoff = stored.firstEventById.get(event.id);
+      return cutoff === undefined || event.date < cutoff;
+    });
+  } catch (error) {
+    if (stored.events.length === 0) throw error;
+  }
+  return [...gitEvents, ...stored.events].sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    if (a.id !== b.id) return a.id < b.id ? -1 : 1;
+    if (a.source === "event" && b.source === "event") {
+      return (a.sequence ?? 0) - (b.sequence ?? 0);
+    }
+    return a.commit < b.commit ? -1 : a.commit > b.commit ? 1 : 0;
+  });
 }

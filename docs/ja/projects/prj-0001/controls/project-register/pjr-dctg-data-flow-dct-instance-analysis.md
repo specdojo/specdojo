@@ -2,17 +2,127 @@
 specdojo:
   id: prj-0001:pjr-dctg-data-flow-dct-instance-analysis
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-16T13:17:17Z"
   due_on: "2026-08-31"
-  conclusion: "checkpoint failed: git add -- docs/ja/projects/prj-0001/execution/exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-resu…"
+  completed_at: "2026-08-23T02:23:23Z"
+  conclusion: "`dct-plan-<domain>.yaml` の schema を定義し、正準配置をカタログ配下の plans/ とした。catalog plan prompt / scaffold / validate を追加し、agent 判定の入力と出力を機械可読に扱えるようにした。パターンA とパターンB を iteration_pattern で区別し、未解決 placeholder はエラーとして open_questions へ誘導する。既存 plan は --force なしで保護する。テスト50件とドキュメントを整備した。成果は PJR-STRG の catalog scaffold --plan が前提として利用している。"
+  register_events:
+    - v: 1
+      id: reg_ea8c63ca563b547463f34a97323a745c
+      ts: "2026-08-16T13:29:53Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add catalog and strategy automation todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: data-flow等からDCT成果物インスタンスを判定するagentの実装
+        - field: description
+          from: ""
+          to: Timeline が着手対象として示す product 系ドメインについて、DCT template と確定済みの上流成果物、特に data-flow を agent が読み、template の placeholder 値、必要な成果物インスタンス、採用しない候補を構造化判定する処理を実装する。判定結果は、後続の決定論的ジェネレーターが同じ入力から再生成できるよう、バージョン管理対象の `dct-plan-<domain>.yaml` として保存する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-16"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7769f1ba92e4242dc32091f30ef7c3d57fae7dac
+    - v: 1
+      id: reg_decedf7eb93f06b1e3c0f8ccc1824daa
+      ts: "2026-08-18T15:17:21Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-DCTG): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+        - field: conclusion
+          from: "-"
+          to: "checkpoint failed: git add -- docs/ja/projects/prj-0001/execution/exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-resu…"
+      legacy_commit: 15e6c3eaf68559bd89eb4c5efab5a7a658061441
+      previous_event_id: reg_ea8c63ca563b547463f34a97323a745c
+    - v: 1
+      id: reg_1414633c9de3a65b86905772c0af8a79
+      ts: "2026-08-18T15:38:51Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-DCTG): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 630a80dc557d7f16017b75a18077681c2cf27ea8
+      previous_event_id: reg_decedf7eb93f06b1e3c0f8ccc1824daa
+    - v: 1
+      id: reg_d8181e5f0c7813cc46486c7549d63e2c
+      ts: "2026-08-23T02:23:24Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-DCTG): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "checkpoint failed: git add -- docs/ja/projects/prj-0001/execution/exec/plans/pjr-dctg-20260818T151438Z-ce4f-plan.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-resu…"
+          to: "`dct-plan-<domain>.yaml` の schema を定義し、正準配置をカタログ配下の plans/ とした。catalog plan prompt / scaffold / validate を追加し、agent 判定の入力と出力を機械可読に扱えるようにした。パターンA とパターンB を iteration_pattern で区別し、未解決 placeholder はエラーとして open_questions へ誘導する。既存 plan は --force なしで保護する。テスト50件とドキュメントを整備した。成果は PJR-STRG の catalog scaffold --plan が前提として利用している。"
+      legacy_commit: 00ec10b5b2f56578efdb562cc86207b810a96fd5
+      previous_event_id: reg_1414633c9de3a65b86905772c0af8a79
+    - v: 1
+      id: reg_bc61dd9b53ed6807381a1ce0dd61ddea
+      ts: "2026-08-23T02:54:50Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-AQ9G): plan 生成でも山括弧プレースホルダをインラインコード化する"
+      changes:
+        - field: conclusion
+          from: "`dct-plan-<domain>.yaml` の schema を定義し、正準配置をカタログ配下の plans/ とした。catalog plan prompt / scaffold / validate を追加し、agent 判定の入力と出力を機械可読に扱えるようにした。パターンA とパターンB を iteration_pattern で区別し、未解決 placeholder はエラーとして open_questions へ誘導する。既存 plan は --force なしで保護する。テスト50件とドキュメントを整備した。成果は PJR-STRG の catalog scaffold --plan が前提として利用している。"
+          to: "`dct-plan-<domain>.yaml` の schema を定義し、正準配置をカタログ配下の plans/ とした。catalog plan prompt / scaffold / validate を追加し、agent 判定の入力と出力を機械可読に扱えるようにした。パターンA とパターンB を iteration_pattern で区別し、未解決 placeholder はエラーとして open_questions へ誘導する。既存 plan は --force なしで保護する。テスト50件とドキュメントを整備した。成果は PJR-STRG の catalog scaffold --plan が前提として利用している。"
+      legacy_commit: 8f4c158ef3a91ead9b0276dd62f0b96ea18bf0a7
+      previous_event_id: reg_d8181e5f0c7813cc46486c7549d63e2c
 ---
 
 # PJR-DCTG data-flow等からDCT成果物インスタンスを判定するagentの実装
@@ -58,7 +168,7 @@ agent は候補の意味判断と根拠整理だけを担い、成果物カタ�
 - テストを追加した。`tests/src/catalog-plan.test.ts`（40件。正常系・placeholder 未解決・パターンA/B・入力不足・trash 除外・既存 plan 競合・差分・スキーマ違反）と `tests/src/catalog-plan-command.test.ts`（10件。CLI 経由の scaffold / `--from` 取り込み / 検証失敗時の非書き込み / `--force` / validate / prompt 出力）。
 - ドキュメントを更新した。[[specdojo:command-reference|CLIコマンドリファレンス]] に `catalog plan` の節、[[specdojo:timeline-design-guide|Timeline設計ガイド]] に判定の位置づけと責務分担、[[specdojo:dct-rulebook|成果物カタログ（ドメイン別）作成ルール]] に判定計画の記述ルールと禁止事項を追加した。
 - _ASSUMPTION_: `dct-plan-<domain>.yaml` 自体の実インスタンス（prj-0001 の data-flow 等）は agent 判定の実行結果であり、本タスクでは作成していない。仕組みの提供までを完了範囲とした。
-- _TODO_: `package.json` への `validate:schema:dct-plan` script 追加は実行環境の権限制約により未実施。当面は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-plan.schema.yaml --data "docs/ja/**/plans/dct-plan-*.yaml" --allow-empty` または `specdojo catalog plan validate` を使う。
+- `package.json` への `validate:schema:dct-plan` script 追加は、実行環境の権限制約により本タスクでは実施できなかった。PJR-STRG の対応時に追加され、集約 script `validate:schema` へも組み込まれている。
 - 後続の PJR-STRG（決定論的ジェネレーター）は、この判定計画と既存 DCT template から `dct-<domain>.yaml` を生成する。判定計画の存在は `catalog_status: primary` を意味しない。
 
 ## 5. 関連ドキュメント

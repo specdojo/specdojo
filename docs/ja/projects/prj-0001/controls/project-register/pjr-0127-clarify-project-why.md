@@ -13,6 +13,93 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: IDを付与してトレースを明確化
+  register_events:
+    - v: 1
+      id: reg_04ffc02055504a1b9946846903f39bfa
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: prj-overviewのプロジェクトWhyを明確化
+        - field: description
+          from: ""
+          to: launch track では、対象を CivicTech に絞り、`prj-overview` の必要性を三つに明確化した後に、agent が生成する文書の論点と内容が改善した。後続成果物が共通の判断軸を参照できるよう、対象者、課題、中心仮説、価値仮説、判断原則をプロジェクトレベルの Why の正本として磨き込む。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_f1e8c3b8fbf3d820b70c1ea2252ec82f
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: launch track では、対象を CivicTech に絞り、`prj-overview` の必要性を三つに明確化した後に、agent が生成する文書の論点と内容が改善した。後続成果物が共通の判断軸を参照できるよう、対象者、課題、中心仮説、価値仮説、判断原則をプロジェクトレベルの Why の正本として磨き込む。
+          to: 後続文書の論点を安定させるため、対象者・課題・中心仮説・価値仮説・判断原則をプロジェクト概要の正本として明確化する
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: BA
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: IDを付与してトレースを明確化
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_04ffc02055504a1b9946846903f39bfa
+    - v: 1
+      id: reg_9586a71638f3248ea6c667de8d651974
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_f1e8c3b8fbf3d820b70c1ea2252ec82f
 ---
 
 # PJR-0127 prj-overviewのプロジェクトWhyを明確化

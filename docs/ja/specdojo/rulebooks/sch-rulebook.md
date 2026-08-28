@@ -4,9 +4,9 @@ specdojo:
   type: rulebook
   status: ready
   target_format: yaml
-  recipe: none
-  sample: none
-  template: none
+  recipe: not-needed
+  sample: not-needed
+  template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
 ---

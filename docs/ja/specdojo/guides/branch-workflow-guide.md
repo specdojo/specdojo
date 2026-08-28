@@ -175,17 +175,42 @@ project の変更が受入可能になったら、次の順序で `main` への�
 3. project 全体に必要な test、build、schema 検証を実行します。
 4. project register、exec result、未解決事項を確認します。
 5. project `develop` から `main` への Pull Request を作成します。
-6. レビューとCIが成功した後に統合します。
+6. レビューとCIが成功した後、merge commit を作る方式で統合します。squash merge と rebase merge は選びません。
 
-確認例:
+昇格前に、最新の `main` を取り込んだ `develop` の先端 SHA を記録します。次の `<promoted-develop-sha>` にはこの値を使います。
 
 ```bash
+git fetch origin
+git switch project/prj-0001/develop
+git status --short
+git merge origin/main
+git rev-parse HEAD
 git log --oneline main..project/prj-0001/develop
 git diff --stat main...project/prj-0001/develop
 git branch --no-merged project/prj-0001/develop
 ```
 
-project 完了後に `develop` を削除する場合は、`main` への統合と未退避作業がないことを確認してから行います。
+Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、register 遷移 commit だけを除外したりしません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
+
+```bash
+git fetch origin
+git merge-base --is-ancestor <promoted-develop-sha> origin/main
+git log --first-parent --oneline origin/main
+```
+
+`git merge-base --is-ancestor` が終了コード0にならない場合、squash merge または rebase merge により祖先関係が失われた可能性があります。次の昇格を進めず、使用した merge 方式と Pull Request を確認します。push 済み履歴を rebase や force-push で直してはいけません。
+
+`git log --first-parent --oneline origin/main` の出力に exec / register の遷移 commit が並ぶ区間があっても、本手順の適用前に行った昇格の区間であれば異常ではありません。過去に merge の向きが逆（`develop` 上で `main` を取り込み、`main` を fast-forward）だった場合、その区間の first-parent 系列は `develop` の詳細 commit を辿ります。押し込み済みの履歴は書き換えないため、そのまま残します。確認するのは、**本手順で行った昇格が1件の merge commit として見えているか**です。
+
+project `develop` を引き続き使う場合は、昇格後の `main` を取り込みます。fast-forward になる場合も、分岐して merge commit が作られる場合もあります。
+
+```bash
+git switch project/prj-0001/develop
+git merge origin/main
+git log --oneline origin/main..project/prj-0001/develop
+```
+
+同期直後の最後のコマンドは出力なしになります。その後の出力は次回昇格の新しい commit だけであり、過去の昇格済み commit は再表示されません。project 完了後に `develop` を削除する場合は、祖先確認と未退避作業の確認を終えてから行います。
 
 ## 7. 承認方式を使い分ける
 
@@ -210,6 +235,32 @@ gh pr create --base project/prj-0001/develop --title "PJR-XXXX schema 破壊的�
 ```
 
 merge 後は、承認者・承認日・承認対象・証跡（PR URL・merge SHA）をチケット個票の承認節へ書き戻します。`main` と `project/<project-id>/develop` の承認者は `CODEOWNERS` と branch protection で強制します。
+
+### 7.1. CODEOWNERS と branch protection を設定する
+
+`CODEOWNERS` は PR の base branch にあるファイルが評価されます。保護ルールを有効にする前に、`.github/CODEOWNERS` を `main` と保護対象の `project/<project-id>/develop` へ反映し、指定した user または team にリポジトリへの明示的な write 権限があることを確認します。
+
+リポジトリ管理者は GitHub の `Settings` → `Branches` で、次の branch protection rule を設定します。ruleset を使う場合も、同等の条件を設定します。
+
+| 対象 branch                    | 必須設定                                                                                                                                                                   |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `main`                         | Pull Request 経由、承認 1 件以上、Code Owners のレビュー、新規 commit 時の古い承認無効化、未解決 conversation の解消、必須 CI、管理者を含む bypass・force-push・削除の禁止 |
+| `project/<project-id>/develop` | Pull Request 経由、承認 1 件以上、Code Owners のレビュー、新規 commit 時の古い承認無効化、未解決 conversation の解消、統合専用 actor 以外の bypass・force-push・削除の禁止 |
+
+`project/<project-id>/develop` では通常の自動 `exec → develop` 統合を止めないように、SpecDojo の統合専用 GitHub App または service account だけを bypass actor に指定します。人の管理者や承認者へ広い bypass を付与してはいけません。統合専用 actor を分離できない間は develop の保護を有効化せず、その未設定期間を project register で追跡します。`main` の保護は自動統合の bypass 対象にしません。
+
+設定後、管理者は次を確認します。
+
+1. `main` を base にした PR で `@naoji3x` が Code Owner として review request される。
+2. 未承認、作成者自身の操作、古い承認、未成功の必須 CI の各状態では `main` へ merge できない。
+3. PR 強制ケースの差分を base にした `project/<project-id>/develop` 向け PR で、Code Owner の承認なしに merge できない。
+4. 統合専用 actor による通常の `exec → develop` だけが bypass でき、人の変更は bypass できない。
+
+### 7.2. 独立した承認者がいない期間を扱う
+
+PR の作成者と独立した Code Owner がいない場合、PR 強制 3 ケースは「承認待ち」とし、作成者自身の approve、管理者権限、または bypass を承認として記録しません。独立した承認者が参加して approve するまで merge と承認対象チケットの close を保留します。
+
+緊急対応で管理者 bypass による merge が不可避な場合は、承認済みとは扱わず、例外として対象、理由、実施者、期間、PR URL、merge SHA、復帰条件を project register に記録します。独立した承認者が参加した後に差分を遡及レビューし、その結果を同じ登録項目へ追記します。
 
 ## 8. 複数projectを並行する
 

@@ -255,6 +255,10 @@ specdojo:
 - `specdojo:` 配下では未定義プロパティを使用しない（`unevaluatedProperties: false`）。トップレベルには他フレームワークの項目を置いてよい。
 - 配列項目は重複させない。
 - 項目ごとの型、列挙値、パターンは成果物スキーマに従う。
+- `status` の値は `draft` / `ready` / `deprecated` で共通だが、意味の重みは成果物カタログの `kind` によって異なる。
+  - `kind: work`（人や agent が書く成果物）: `ready` は内容を確認して確定したことを表す。`ready` への昇格は人だけが行い、agent の実行では行わない。
+  - `kind: generated`（コマンドが再生成する成果物）: `ready` はその生成物を運用に使える状態であることを表す。再生成のたびに内容が変わることは正常であり、`ready` のまま内容が更新されてよい。
+- 生成コマンドは、既存ファイルの `status` を書き換えない。新規作成時に `draft` を書き、以後の昇格と降格は人の判断に委ねる。生成対象が複数のファイルから集約される場合も、特定の入力ファイルの `status` を集約ファイルへ反映しない。
 
 ## 8. 成果物の記述例
 
@@ -279,3 +283,13 @@ specdojo:
 - 独立 YAML データファイルは、ファイル形式に対応するスキーマで検証する。
 - JSON データファイルは、用途別の JSON Schema または実装上の検証契約で必須項目、型、列挙値を検証する。
 - JSON に対応するスキーマがない場合でも、JSON 構文として読み込めることを検証する。
+- YAML データファイルのスキーマ対応は、各 YAML 先頭の
+  `# yaml-language-server: $schema=<schema-path>` modeline を正本とする。スキーマを追加したときは、
+  対象 YAML または template の modeline を更新する。Frontmatter 用スキーマの場合は
+  `.remarkrc.yaml` の `remark-frontmatter-ajv2020` の `schemaRules` へ対象 glob を追加する。
+  - `docs/specdojo/schemas/v1/`（言語中立。YAML データファイルと Frontmatter 用）: YAML データファイルでは modeline、Frontmatter 用スキーマでは `.remarkrc.yaml` の `schemaRules` を更新する。
+  - `docs/ja/specdojo/schemas/v1/`（言語別。Markdown 本文の構成検証用）: `.remarkrc.yaml` の `remark-md-content` の `schemas` へ、スキーマと対象 glob の対応を追加する。
+- `.remarkrc.yaml` の `schemaRules` は配列を上から評価し、最初に一致したスキーマだけを適用する。対象を追加するときは、より限定的な glob を先に置く。
+- `.vscode/settings.json` の `yaml.schemas` へ YAML データファイルの対応表を重複管理しない。VS Code の YAML 拡張は modeline を読み、CLI 検証も同じ宣言を読む。
+- schema 検証が不要な YAML には `# specdojo-schema: none reason=<reason>` を先頭コメントで明示する。template のように modeline は必要だが完成前プレースホルダにより検証対象外とする YAML には `# specdojo-schema: validate=false reason=template` を併記する。
+- スキーマの適用状況は、対象ファイルへ一時的に不正なキー（YAML データファイル・Frontmatter）や不足した章（Markdown 本文）を作り、エディタまたは検証コマンドがエラーを報告するかで確認できる。エラーが出ない場合は、意図したスキーマが適用されていない。

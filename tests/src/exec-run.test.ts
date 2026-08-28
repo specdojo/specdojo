@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   buildExecutorPrompt,
   executorRequirements,
@@ -6,10 +6,14 @@ import {
   isRateLimitError,
   parseExecRunBusyPolicy,
   pipelineRecoveryMeta,
+  rebuildStaleGeneratedTracksForCycle,
   resolveAgentOverride,
   reporterRequirements,
   selectCandidates,
 } from "../../src/exec-run.js";
+import { mkdtempSync, utimesSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
@@ -20,6 +24,63 @@ describe("parseExecRunBusyPolicy", () => {
     expect(parseExecRunBusyPolicy("wait")).toBe("wait");
     expect(parseExecRunBusyPolicy("fail")).toBe("fail");
     expect(() => parseExecRunBusyPolicy("retry")).toThrow(/--if-busy/);
+  });
+});
+
+describe("rebuildStaleGeneratedTracksForCycle", () => {
+  it("does not build or write output when every generated track is current", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-cycle-rebuild-"));
+    const strategyPath = join(dir, "sch-strategy-launch.yaml");
+    const trackPath = join(dir, "sch-track-launch.yaml");
+    writeFileSync(strategyPath, "kind: strategy\ntrack: launch\n", "utf8");
+    writeFileSync(trackPath, "kind: track\ntrack: launch\ntasks: []\n", "utf8");
+    const oldTime = new Date("2026-01-01T00:00:00Z");
+    const newTime = new Date("2026-01-02T00:00:00Z");
+    utimesSync(strategyPath, oldTime, oldTime);
+    utimesSync(trackPath, newTime, newTime);
+    const buildTrack = vi.fn(() => true);
+    const write = vi.fn();
+
+    const result = await rebuildStaleGeneratedTracksForCycle(dir, "test", false, {
+      buildTrack,
+      write,
+    });
+
+    expect(result).toEqual({ status: "not-needed", tracks: [] });
+    expect(buildTrack).not.toHaveBeenCalled();
+    expect(write).not.toHaveBeenCalled();
+  });
+
+  it("builds stale tracks in order and reports success", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-cycle-rebuild-"));
+    writeFileSync(join(dir, "sch-strategy-beta.yaml"), "kind: strategy\ntrack: beta\n", "utf8");
+    writeFileSync(join(dir, "sch-strategy-alpha.yaml"), "kind: strategy\ntrack: alpha\n", "utf8");
+    const buildTrack = vi.fn(() => true);
+
+    const result = await rebuildStaleGeneratedTracksForCycle(dir, "test", false, {
+      buildTrack,
+      write: () => undefined,
+    });
+
+    expect(result).toEqual({ status: "success", tracks: ["alpha", "beta"] });
+    expect(buildTrack.mock.calls).toEqual([["alpha"], ["beta"]]);
+  });
+
+  it("stops at the failed build so later stale tracks cannot reach auto execution", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-cycle-rebuild-"));
+    writeFileSync(join(dir, "sch-strategy-alpha.yaml"), "kind: strategy\ntrack: alpha\n", "utf8");
+    writeFileSync(join(dir, "sch-strategy-beta.yaml"), "kind: strategy\ntrack: beta\n", "utf8");
+    const buildTrack = vi.fn((track: string) => track !== "alpha");
+    const output: string[] = [];
+
+    const result = await rebuildStaleGeneratedTracksForCycle(dir, "test", false, {
+      buildTrack,
+      write: (message) => output.push(message),
+    });
+
+    expect(result).toEqual({ status: "failure", tracks: ["alpha"] });
+    expect(buildTrack.mock.calls).toEqual([["alpha"]]);
+    expect(output.join("")).toContain("schedule build failed for track alpha");
   });
 });
 
@@ -328,6 +389,8 @@ describe("pipeline executor preparation", () => {
 
   it("separates result writing from the executor prompt and requests structured evidence", () => {
     const prompt = buildExecutorPrompt("# Edit Plan\n\nUpdate the result file.", [
+      "validate-schema",
+      "test-unit",
       "test-integration",
     ]);
 
@@ -335,8 +398,12 @@ describe("pipeline executor preparation", () => {
     expect(prompt).toContain("<specdojo_executor_evidence>");
     expect(prompt).toContain("Update the result file.");
     expect(prompt).toContain("npm run test:unit");
+    expect(prompt).toContain("npm run validate:schema");
     expect(prompt).toContain("test-integration");
+    expect(prompt).toContain("Do not run those commands inside the agent sandbox");
     expect(prompt).toContain("source=runner");
+    expect(prompt).toContain("Do not run git commit or change");
+    expect(prompt).toContain("user.name and user.email");
   });
 
   it("rejects an explicit legacy agent override for an executor stage", () => {

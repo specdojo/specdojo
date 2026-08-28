@@ -12,6 +12,87 @@ specdojo:
   owner: ARC
   completed_at: "2026-08-08T12:00:00Z"
   conclusion: 旧agent指定フラグ(--cmd/--agent-cmd/--edit-agent/--review-agent)を物理撤去。exec run/resume/worktree agentをnickname(--by/--edit-by/--review-by/--auto)一本化。全878テスト成功を確認。
+  register_events:
+    - v: 1
+      id: reg_c26d8eeede2188a4d0499063aca65282
+      ts: "2026-08-07T12:28:46Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "feat(exec): agent 指定フラグを --by 系へ統一（PJR-0159 段階移行）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 旧agent指定フラグの撤去（--cmd/--agent-cmd/--edit-agent/--review-agent）
+        - field: description
+          from: ""
+          to: PJR-0159 で agent 指定フラグを `--by` 系（`--by` / `--edit-by` / `--review-by`）＋ `--auto` へ統一し、旧フラグ `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent`（および `exec worktree agent` の `--agent-cmd`）は deprecated alias（動作維持＋警告）として残した。本項目は、その deprecation 期間（1〜2 リリース）経過後に旧フラグと生コマンド受理経路を物理撤去する後続タスクである。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 0ec44187323187bf83ec08824f1618e537c53473
+    - v: 1
+      id: reg_96e7cd9bacc2b17dd0e13173c3033d16
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: PJR-0159 で agent 指定フラグを `--by` 系（`--by` / `--edit-by` / `--review-by`）＋ `--auto` へ統一し、旧フラグ `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent`（および `exec worktree agent` の `--agent-cmd`）は deprecated alias（動作維持＋警告）として残した。本項目は、その deprecation 期間（1〜2 リリース）経過後に旧フラグと生コマンド受理経路を物理撤去する後続タスクである。
+          to: PJR-0159で導入したdeprecated aliasを、deprecation期間（1〜2リリース）後に物理撤去する。exec run/resumeの--cmd/--agent-cmd/--edit-agent/--review-agent、exec worktree agentの--agent-cmd、生コマンド受理経路（resolveAgentOverrideのagentCmdOverride分岐・auto-agentフォールバック）、--cmdによるバッチ起動判定を除去し、worktree agentのcommand供給を--by nickname解決へ付け替える。関連テストとdocsを更新する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: conclusion
+          from: "-"
+          to: 旧agent指定フラグ(--cmd/--agent-cmd/--edit-agent/--review-agent)を物理撤去。exec run/resume/worktree agentをnickname(--by/--edit-by/--review-by/--auto)一本化。全878テスト成功を確認。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_c26d8eeede2188a4d0499063aca65282
+    - v: 1
+      id: reg_effa9aa9857f2de039236977ec7f63da
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_96e7cd9bacc2b17dd0e13173c3033d16
 ---
 
 # PJR-0162 旧agent指定フラグの撤去（--cmd/--agent-cmd/--edit-agent/--review-agent）

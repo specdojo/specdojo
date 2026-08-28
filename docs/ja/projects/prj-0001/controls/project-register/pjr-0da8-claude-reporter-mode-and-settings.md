@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-21T13:19:44Z"
   conclusion: "pm-members.schema.yaml の mode enum に report を追加して起動プロファイルとして再定義し、claude-reporter を mode: report へ分離した。Edit と Write を全面 deny する settings.report.json を .specdojo と templates の双方に用意し、実装・テスト・ドキュメントを更新した。実際の起動コマンドが settings.report.json を指すことを確認済み。"
+  register_events:
+    - v: 1
+      id: reg_a46a51936b880c259ac522b977b9a170
+      ts: "2026-08-21T10:20:29Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-0DA8 reporter mode and settings separation"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: claude-reporter の mode を report に分離し reporter 専用の最小権限 settings を用意する
+        - field: description
+          from: ""
+          to: "claude の command_template は settings.{mode}.json を解決するため、claude-reporter は mode: review を流用している。しかし reporter は成果物も result も自分で書かず、runner が renderReporterResult で反映するため、review 用 settings の Edit 権限は不要である。reporter 候補の選定は stage_role で行い mode は eligibility に影響しないため、mode: report へ分離しても選定と --reporter-by の解決は変わらない。pm-members.schema.yaml の enum に report を追加し、Edit を持たない settings.report.json を用意して、名前と権限を実態に合わせる。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-21"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 1d3503ae08a0978a576731c2d234229b2a202e9c
+    - v: 1
+      id: reg_d9bfe3bbdb0c3ef57d96074ff9916bd0
+      ts: "2026-08-21T12:54:19Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-0DA8): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 0ac427265bcbe51baaea9c558dfa5972a35423df
+      previous_event_id: reg_a46a51936b880c259ac522b977b9a170
+    - v: 1
+      id: reg_c103d7855d15ca810394f682a917f624
+      ts: "2026-08-21T13:07:09Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-0DA8): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 430b729a12d2708a3bcc8e46199742666a77c694
+      previous_event_id: reg_d9bfe3bbdb0c3ef57d96074ff9916bd0
+    - v: 1
+      id: reg_f238ed8f34e6d03a09d552a56c19844c
+      ts: "2026-08-21T13:19:53Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-0DA8): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-21"
+        - field: conclusion
+          from: "-"
+          to: "pm-members.schema.yaml の mode enum に report を追加して起動プロファイルとして再定義し、claude-reporter を mode: report へ分離した。Edit と Write を全面 deny する settings.report.json を .specdojo と templates の双方に用意し、実装・テスト・ドキュメントを更新した。実際の起動コマンドが settings.report.json を指すことを確認済み。"
+      legacy_commit: 0617594d859e7b25a6ec160dd0e7404142718421
+      previous_event_id: reg_c103d7855d15ca810394f682a917f624
 ---
 
 # PJR-0DA8 claude-reporter の mode を report に分離し reporter 専用の最小権限 settings を用意する

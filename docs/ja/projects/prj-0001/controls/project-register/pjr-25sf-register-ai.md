@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-08T12:00:00Z"
   conclusion: 自動レビューパスは任意導入(オプトイン)、対象はedit区分に限定、否時は既存register waitへ差し戻し、完了条件節をdone_criteria相当として活用する方針。実装は別途todo化する。
+  register_events:
+    - v: 1
+      id: reg_25de649fdd2ddc0c0bd7a0fd3c953e3a
+      ts: "2026-08-08T02:23:52Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-25SFを起票（register系タスクへのAIレビューフェーズ導入を検討する）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register系タスクへのAIレビューフェーズ導入を検討する
+        - field: description
+          from: ""
+          to: catalog成果物には edit phase → review phase の2段階agent実行があるが、register(PJR)系タスク（`exec run --register`）は edit/investigate の実行区分のみで、review用のモード・planテンプレート・状態遷移が存在しない。[[prj-0001:pjr-0163-register-add-id-fetch]] の実行後、`review` 状態は「agentによる自動レビュー待ち」ではなく「人間が確認して `register close` するのを待つだけの手動チェックポイント」であることが判明した。この非対称性を踏まえ、register系タスクへの自動レビューパス導入の要否と設計を検討する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 278c348f5e51abc1b42b7b9de0acbdf27182961a
+    - v: 1
+      id: reg_dbdb9e8828ab647ae4f5298349af3f0e
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: catalog成果物には edit phase → review phase の2段階agent実行があるが、register(PJR)系タスク（`exec run --register`）は edit/investigate の実行区分のみで、review用のモード・planテンプレート・状態遷移が存在しない。[[prj-0001:pjr-0163-register-add-id-fetch]] の実行後、`review` 状態は「agentによる自動レビュー待ち」ではなく「人間が確認して `register close` するのを待つだけの手動チェックポイント」であることが判明した。この非対称性を踏まえ、register系タスクへの自動レビューパス導入の要否と設計を検討する。
+          to: catalog成果物はedit/review2段階のagent実行があるが、register(PJR)系タスクはeditのみでcloseの可否確認が人間任せになっている。review-agentによる自動レビューパスの導入価値と設計（対象item_type、レビュー失敗時の遷移、必須/任意、レビュー用planテンプレートと個票「完了条件」のdone_criteria相当としての参照方法）を検討する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: 自動レビューパスは任意導入(オプトイン)、対象はedit区分に限定、否時は既存register waitへ差し戻し、完了条件節をdone_criteria相当として活用する方針。実装は別途todo化する。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_25de649fdd2ddc0c0bd7a0fd3c953e3a
+    - v: 1
+      id: reg_dfbfbfaeefc44af7c6bd738e950f09f8
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_dbdb9e8828ab647ae4f5298349af3f0e
 ---
 
 # PJR-25SF register系タスクへのAIレビューフェーズ導入を検討する
@@ -68,7 +152,7 @@ catalog 成果物と register(PJR) 系タスクの実行区分を実装から確
 ### 4.4. レビュー結果が否のときの状態遷移
 
 - 差し戻し用の新規ステータスは新設せず、既存の `register wait`（`waiting`）を流用する。
-- 遷移: `edit 成功 → review agent 実行`。可なら現行どおり `review` ステータス（人間 close 待ち）を維持。否なら `register wait` で `waiting` へ差し戻し、`--conclusion` に差し戻し理由を記録する（`waiting` は再実行で `in-progress` に戻せる既存意味と整合）。
+- 遷移: `edit 成功 → review agent 実行`。可なら現行どおり `review` ステータス（人間 close 待ち）を維持。否なら `register wait` で `waiting` へ差し戻し、`--reason` に差し戻し理由を指定して `block_reason` へ記録する（`waiting` は再実行で `in-progress` に戻せる既存意味と整合）。
 - 新設を避ける理由: ステータス語彙を増やすと `pjr-index`・派生ビュー（`generated/`）・遷移ガードの複雑化を招く。`waiting`＝要再対応の意味に差し戻しが合致する。
 
 ### 4.5. 必須／任意
@@ -89,7 +173,7 @@ catalog 成果物と register(PJR) 系タスクの実行区分を実装から確
 
 - `exec run --register` への `--register-review`（任意）オプション追加と `runSingleRegisterItem` へのレビューフェーズ組み込み（`src/exec-run.ts`）。
 - review 用 plan テンプレート `xrp-register-template.md` の新設と、個票「完了条件」節の抽出・埋め込み処理（`src/exec-register.ts`）。
-- レビュー否時の `register wait` 差し戻し（`--conclusion` に理由）と、可時の `review` 維持のフロー実装。
+- レビュー否時の `register wait` 差し戻し（`--reason` に理由）と、可時の `review` 維持のフロー実装。
 - `register-operation-guide` / `pjr-rulebook` の該当節（`状態遷移とコマンド` / 承認方式）へレビューフェーズの記述追加。
 
 ## 5. 関連ドキュメント

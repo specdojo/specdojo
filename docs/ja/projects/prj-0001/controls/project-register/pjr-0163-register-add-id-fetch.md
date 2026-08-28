@@ -11,6 +11,84 @@ specdojo:
   priority: medium
   owner: ARC
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_5d9413c02cd2478702bc8b03c45ef4c1
+      ts: "2026-08-08T01:22:00Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0163を起票（register addのID採番方式見直しと統合ブランチ予約のfetch同期）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register addのID採番方式見直しと統合ブランチ予約のfetch同期
+        - field: description
+          from: ""
+          to: "`register add` を worktree 側から実行して即座に起票したいが、統合ブランチが未同期だと別マシンとの並行起票でIDが衝突しうる。数字4桁連番の代替として検討したダミーID・案3（1項目1ファイル化）・数字乱数（4桁/5桁）はいずれも過剰な改修範囲か実用に耐えない衝突確率だったため、既存の統合ブランチ予約経路（[[prj-0001:pjr-0138-register-add-on-integration-branch]]）を維持したまま、ID の文字種変更と fetch 同期の自動化で残存リスクを縮小する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 603e6b5a537914ef74cae1e61ea682c9f5d59a5c
+    - v: 1
+      id: reg_0f827177c5ff45c8e9c7bc4ea714bdc8
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`register add` を worktree 側から実行して即座に起票したいが、統合ブランチが未同期だと別マシンとの並行起票でIDが衝突しうる。数字4桁連番の代替として検討したダミーID・案3（1項目1ファイル化）・数字乱数（4桁/5桁）はいずれも過剰な改修範囲か実用に耐えない衝突確率だったため、既存の統合ブランチ予約経路（[[prj-0001:pjr-0138-register-add-on-integration-branch]]）を維持したまま、ID の文字種変更と fetch 同期の自動化で残存リスクを縮小する。"
+          to: PJR-IDの採番を数字4桁の連番から、曖昧文字・母音を一部除いた英大文字+数字4桁のランダムIDへ変更する。統合ブランチworktreeへの予約経路(reservePjrIdOnIntegration)はそのまま維持し、予約直前にfetch+ff-only mergeを自動実行して他マシンとの採番ズレを軽減する。push はspecdojoに含めず人間が明示実行する。衝突検知・復旧は新規フォーマットを作らず既存のregister renumberを流用する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_5d9413c02cd2478702bc8b03c45ef4c1
+    - v: 1
+      id: reg_483aba2fb68fdc8c367fd8eb82bb7023
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_0f827177c5ff45c8e9c7bc4ea714bdc8
 ---
 
 # PJR-0163 register addのID採番方式見直しと統合ブランチ予約のfetch同期

@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { load } from "js-yaml";
@@ -8,6 +9,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildExecutorEvidence,
   parseExecutorReport,
+  recordReporterFailureOutput,
   redactSensitiveText,
 } from "../../src/exec-evidence.js";
 
@@ -149,5 +151,56 @@ describe("executor evidence", () => {
     expect(evidence.final_message.length).toBeLessThanOrEqual(4_000);
     expect(Buffer.byteLength(logExcerpt, "utf8")).toBeLessThanOrEqual(65_536);
     expect(evidence.log_refs[0].truncated).toBe(true);
+  });
+
+  it("persists failed reporter stdout and stderr as redacted bounded evidence refs", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-reporter-evidence-"));
+    try {
+      const evidenceDir = join(root, "execution", "exec", "evidence", "T-TEST-doc-010", "run-1");
+      mkdirSync(evidenceDir, { recursive: true });
+      const evidencePath = join(evidenceDir, "evidence.json");
+      const { evidence } = buildExecutorEvidence({
+        taskId: "T-TEST-doc-010",
+        runId: "run-1",
+        actor: "executor",
+        status: "succeeded",
+        startedAt: "2026-08-10T07:03:34Z",
+        completedAt: "2026-08-10T07:04:34Z",
+        exitCode: 0,
+        attempts: 1,
+        stdout: "executor done",
+        stderr: "",
+        changes: [],
+        diffStat: "",
+        logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
+      });
+
+      const updated = recordReporterFailureOutput({
+        worktreePath: root,
+        evidencePath,
+        evidence,
+        invocationOutputs: [
+          {
+            stdout: "parser input; api_key=raw-secret-value",
+            stderr: `SyntaxError: ${"あ".repeat(30_000)}`,
+          },
+        ],
+      });
+
+      const stdoutRef = updated.log_refs.find((ref) => ref.path.endsWith(".stdout.log"));
+      const stderrRef = updated.log_refs.find((ref) => ref.path.endsWith(".stderr.log"));
+      expect(stdoutRef).toMatchObject({ bytes: expect.any(Number), truncated: false });
+      expect(stderrRef).toMatchObject({ bytes: expect.any(Number), truncated: true });
+      const stdout = readFileSync(join(root, stdoutRef?.path ?? ""), "utf8");
+      const stderr = readFileSync(join(root, stderrRef?.path ?? ""), "utf8");
+      expect(stdout).toContain("api_key=[REDACTED]");
+      expect(stdout).not.toContain("raw-secret-value");
+      expect(stderr).toContain("SyntaxError:");
+      expect(Buffer.byteLength(stderr, "utf8")).toBeLessThanOrEqual(65_536);
+      expect(stderr).not.toContain("�");
+      expect(JSON.parse(readFileSync(evidencePath, "utf8"))).toEqual(updated);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

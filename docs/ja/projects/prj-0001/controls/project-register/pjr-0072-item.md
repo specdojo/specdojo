@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-24"
   completed_at: "2026-05-24T12:00:00Z"
   conclusion: vitestのコードを追加
+  register_events:
+    - v: 1
+      id: reg_f6cad88a8a1ae1c9e179fe725e5faef3
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: 単体テストの追加
+        - field: description
+          from: ""
+          to: specdojoコマンドの単体テストを追加
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-24"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: vitestのコードを追加
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_585a700fb4a95dad09bc9c1b08e0af11
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-24"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_f6cad88a8a1ae1c9e179fe725e5faef3
 ---
 
 # PJR-0072 単体テストの追加

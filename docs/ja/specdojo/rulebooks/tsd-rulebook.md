@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:tsd-sample
+  template: not-needed
 ---
 
 # 特定領域 技術スタック詳細定義（TSD）作成ルール

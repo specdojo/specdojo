@@ -8,7 +8,13 @@ import { runGenerate } from "../../src/catalog-generate.js";
 
 // A self-contained fixture: a catalog dir (dct-*.yaml), a templates dir, and an
 // output repo root, all under a fresh temp directory so the real repo is untouched.
-type Fixture = { dir: string; catalogPath: string; templatesPath: string; repoRoot: string };
+type Fixture = {
+  dir: string;
+  catalogPath: string;
+  templatesPath: string;
+  rulebooksPath: string;
+  repoRoot: string;
+};
 
 let fx: Fixture;
 
@@ -16,11 +22,13 @@ async function makeFixture(): Promise<Fixture> {
   const dir = await mkdtemp(path.join(tmpdir(), "catalog-generate-"));
   const catalogPath = path.join(dir, "catalog");
   const templatesPath = path.join(dir, "templates");
+  const rulebooksPath = path.join(dir, "rulebooks");
   const repoRoot = path.join(dir, "root");
   mkdirSync(catalogPath, { recursive: true });
   mkdirSync(templatesPath, { recursive: true });
+  mkdirSync(rulebooksPath, { recursive: true });
   mkdirSync(repoRoot, { recursive: true });
-  return { dir, catalogPath, templatesPath, repoRoot };
+  return { dir, catalogPath, templatesPath, rulebooksPath, repoRoot };
 }
 
 function writeCatalog(fixture: Fixture, body: string): void {
@@ -31,12 +39,22 @@ function run(fixture: Fixture, force = false, dryRun = false, dctNames: string[]
   return runGenerate({
     catalogPath: fixture.catalogPath,
     templatesPath: fixture.templatesPath,
+    rulebooksPath: fixture.rulebooksPath,
     repoRoot: fixture.repoRoot,
     projectId: null,
     force,
     dryRun,
     dctNames,
   });
+}
+
+function writeRulebook(fixture: Fixture, localId: string, template?: string): void {
+  const templateLine = template === undefined ? "" : `  template: ${template}\n`;
+  writeFileSync(
+    path.join(fixture.rulebooksPath, `${localId}-rulebook.md`),
+    `---\nspecdojo:\n  id: specdojo:${localId}-rulebook\n  type: rulebook\n  status: draft\n${templateLine}---\n`,
+    "utf8",
+  );
 }
 
 function writeNamedCatalog(fixture: Fixture, fileName: string, body: string): void {
@@ -141,11 +159,49 @@ groups:
       rulebook: "specdojo:pm-roles-rulebook",
     });
   });
+
+  it("rulebook が undecided の場合は生成物へ未判断値を転記しない", () => {
+    writeCatalog(
+      fx,
+      `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: undecided-md
+        name: 未判断 Markdown
+        kind: work
+        overview: rulebook の要否が未判断
+        path: undecided-md.md
+        rulebook: undecided
+      - local_id: undecided-yaml
+        name: 未判断 YAML
+        kind: work
+        overview: rulebook の要否が未判断
+        path: undecided-yaml.yaml
+        rulebook: undecided
+`,
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    expect(readFileSync(outPath(fx, "undecided-md.md"), "utf8")).not.toContain("rulebook:");
+    expect(load(readFileSync(outPath(fx, "undecided-yaml.yaml"), "utf8"))).toEqual({
+      id: "prjx:undecided-yaml",
+      type: "project",
+      status: "draft",
+    });
+  });
 });
 
 describe("runGenerate — テンプレートがある成果物", () => {
   it("Markdown テンプレートを平坦化し _PROJECT_ID_ を置換、記入プレースホルダは残す", () => {
     writeCatalog(fx, CATALOG_ONE_WORK_MD);
+    writeRulebook(fx, "prj-charter", "specdojo:prj-charter-template");
     writeFileSync(
       path.join(fx.templatesPath, "prj-charter-template.md"),
       `---
@@ -202,6 +258,7 @@ groups:
         rulebook: specdojo:pm-roles-rulebook
 `,
     );
+    writeRulebook(fx, "pm-roles", "specdojo:pm-roles-template");
     writeFileSync(
       path.join(fx.templatesPath, "pm-roles-template.yaml"),
       `id: specdojo:pm-roles-template
@@ -227,6 +284,99 @@ roles:
     expect(doc).not.toHaveProperty("metadata_template");
     // 本文（roles）は保持し、_PROJECT_ID_ のみ置換、記入プレースホルダは温存
     expect(doc.roles).toEqual([{ id: "_ROLE_ID_", project_id: "prjx" }]);
+  });
+
+  it("rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する", () => {
+    writeCatalog(
+      fx,
+      `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: opr-backup-restore
+        name: バックアップ・リストア手順
+        kind: work
+        overview: バックアップと復旧の手順
+        path: opr-backup-restore.md
+        rulebook: specdojo:opr-rulebook
+        depends_on:
+          - opr-index
+`,
+    );
+    writeRulebook(fx, "opr", "specdojo:opr-template");
+    writeFileSync(
+      path.join(fx.templatesPath, "opr-template.md"),
+      `---
+specdojo:
+  id: specdojo:opr-template
+  type: template
+  status: draft
+  frontmatter_template:
+    specdojo:
+      id: _PROJECT_ID_:_LOCAL_ID_
+      type: project
+      status: draft
+      rulebook: specdojo:opr-rulebook
+      based_on: _BASED_ON_
+---
+
+# _DELIVERABLE_NAME_
+
+_DELIVERABLE_OVERVIEW_
+`,
+      "utf8",
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    const content = readFileSync(outPath(fx, "opr-backup-restore.md"), "utf8");
+    expect(content).toContain("id: prjx:opr-backup-restore");
+    expect(content).toContain('based_on: ["prjx:opr-index"]');
+    expect(content).toContain("# バックアップ・リストア手順");
+    expect(content).toContain("バックアップと復旧の手順");
+    expect(content).not.toContain("_LOCAL_ID_");
+  });
+
+  it.each(["not-needed", "undecided"])(
+    "template: %s は local_id 慣例テンプレートがあっても最小雛形へ退避する",
+    (templateState) => {
+      writeCatalog(fx, CATALOG_ONE_WORK_MD);
+      writeRulebook(fx, "prj-charter", templateState);
+      writeFileSync(
+        path.join(fx.templatesPath, "prj-charter-template.md"),
+        "# この慣例テンプレートは使わない\n",
+        "utf8",
+      );
+
+      const result = run(fx);
+
+      expect(result.errors).toEqual([]);
+      const content = readFileSync(outPath(fx, "prj-charter.md"), "utf8");
+      expect(content).not.toContain("この慣例テンプレートは使わない");
+      expect(content).toContain("_TODO_: 本文を記述する");
+    },
+  );
+
+  it("template 未宣言は local_id 慣例テンプレートがあっても最小雛形へ退避する", () => {
+    writeCatalog(fx, CATALOG_ONE_WORK_MD);
+    writeRulebook(fx, "prj-charter");
+    writeFileSync(
+      path.join(fx.templatesPath, "prj-charter-template.md"),
+      "# この慣例テンプレートは使わない\n",
+      "utf8",
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    const content = readFileSync(outPath(fx, "prj-charter.md"), "utf8");
+    expect(content).not.toContain("この慣例テンプレートは使わない");
+    expect(content).toContain("_TODO_: 本文を記述する");
   });
 });
 

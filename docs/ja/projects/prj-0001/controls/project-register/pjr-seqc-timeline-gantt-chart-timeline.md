@@ -13,6 +13,129 @@ specdojo:
   registered_at: "2026-08-14T15:08:17Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-15T04:43:43Z"
+  register_events:
+    - v: 1
+      id: reg_a0d7baef0428a7b2e431ef305cd6cd10
+      ts: "2026-08-14T15:11:01Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: timelineのgantt-chart改名と新timeline新設のTODOを起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: timelineをgantt-chartへ改名し、timelineをトラック順序計画として新設する
+        - field: description
+          from: ""
+          to: 現状のtimeline（sch-track群から生成するGantt可視化）をgantt-chartへ改名し、空いたtimelineという名前を、成果物カタログ作成〜トラック実行までのマクロな順序を人間が決めて記録する新しい成果物種別として新設する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-15"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 88c2c7269fc1f0c6a1cec86eb6ab05ea1444f692
+    - v: 1
+      id: reg_7edfe42e8311284a8b2a4c115d8966cc
+      ts: "2026-08-15T01:38:05Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs: PJR-SEQCに設計決定を反映しAI Agent実行可能な粒度へ具体化"
+      changes:
+        - field: description
+          from: 現状のtimeline（sch-track群から生成するGantt可視化）をgantt-chartへ改名し、空いたtimelineという名前を、成果物カタログ作成〜トラック実行までのマクロな順序を人間が決めて記録する新しい成果物種別として新設する。
+          to: 現状のtimeline（sch-track群から生成するGantt可視化）をgantt-chartへ改名し、空いたtimelineという名前を、成果物カタログ作成〜トラック実行までのマクロな順序を人間が決めて記録する新しい成果物種別（`tml-`）として新設する。設計判断は本チケットで確定済みのため、以降の実装はAI Agentが本文の仕様に沿って進めてよい。
+      legacy_commit: b2b1cc87208f2c35888548c6e47a849eb5353043
+      previous_event_id: reg_a0d7baef0428a7b2e431ef305cd6cd10
+    - v: 1
+      id: reg_ddd8ea7803c99a6f6a3981b529e25f2a
+      ts: "2026-08-15T01:53:11Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-SEQC): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: d4016a324b8fee848588d9e5532ef07b769d1a24
+      previous_event_id: reg_7edfe42e8311284a8b2a4c115d8966cc
+    - v: 1
+      id: reg_1e98a4f14a9e4664d94d0f4d150c23ce
+      ts: "2026-08-15T02:11:55Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-SEQC): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+      legacy_commit: 5a7e0ad2de3770aa6d4a7c652a72c70e2c07c707
+      previous_event_id: reg_ddd8ea7803c99a6f6a3981b529e25f2a
+    - v: 1
+      id: reg_9a3370bbbe11fb16743ce559a3060744
+      ts: "2026-08-15T02:46:14Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-SEQC): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+        - field: conclusion
+          from: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+          to: "-"
+      legacy_commit: 5bb5530fbec99b565fce16e25f7fb1700b3d7c49
+      previous_event_id: reg_1e98a4f14a9e4664d94d0f4d150c23ce
+    - v: 1
+      id: reg_8648dba76712ffdca2524e4b9eaf3a27
+      ts: "2026-08-15T04:43:53Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-SEQC): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-15"
+      legacy_commit: 44c9f87d38041ef3a12cb05401a85b3be564a8e8
+      previous_event_id: reg_9a3370bbbe11fb16743ce559a3060744
 ---
 
 # PJR-SEQC timelineをgantt-chartへ改名し、timelineをトラック順序計画として新設する

@@ -114,6 +114,49 @@ describe("renderCatalogTemplateBody", () => {
 });
 
 describe("validateDctDoc", () => {
+  describe("rulebook の要否宣言", () => {
+    it("not-needed は実在検証の対象外として受理する", () => {
+      const item = makeWorkItem({ rulebook: "not-needed" });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors).toEqual([]);
+    });
+
+    it("undecided は要否未判断として実在検証の対象外で受理する", () => {
+      const item = makeWorkItem({ rulebook: "undecided" });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors).toEqual([]);
+    });
+
+    it("宣言した rulebook の文書 ID が実在しなければエラーにする", () => {
+      const item = makeWorkItem({ rulebook: "specdojo:missing-rulebook" });
+
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+
+      expect(result.errors.join("\n")).toContain(
+        "declared rulebook document id does not exist: specdojo:missing-rulebook",
+      );
+    });
+  });
+
   describe("必須フィールドの検証", () => {
     it("全フィールドが正しい場合は ok:true を返す", () => {
       const result = validateDctDoc(makeDoc(), "/dummy/dct.yaml");

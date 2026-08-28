@@ -10,7 +10,65 @@ specdojo:
   item_status: open
   priority: medium
   owner: ARC
-  due_on: "2026-08-31"
+  due_on: "2026-10-31"
+  register_events:
+    - v: 1
+      id: reg_16ddd74f050a6a3b9b9aa755b081b256
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: fmt-md-table を VS Code 拡張へ統合
+        - field: description
+          from: ""
+          to: 現在 .vscode/tasks.json のタスク（Format Markdown Table）として提供している fmt-md-table を vscode-specdojo 拡張のコマンドとして統合する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_4c97b744ae4f1a17d4ed4e8f3b35d14e
+      ts: "2026-08-26T14:43:32Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): VS Code拡張関連4件の期限を10月末へ変更する"
+      changes:
+        - field: due
+          from: "2026-08-31"
+          to: "2026-10-31"
+      legacy_commit: c7434585ee94e78f867d19b0ccbe52862ca56ca5
+      previous_event_id: reg_16ddd74f050a6a3b9b9aa755b081b256
 ---
 
 # PJR-0144 fmt-md-table を VS Code 拡張へ統合

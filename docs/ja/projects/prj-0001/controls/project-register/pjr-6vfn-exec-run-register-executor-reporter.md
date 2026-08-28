@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-21T12:51:14Z"
   conclusion: exec run --register --worktree --resume を追加し、executor 成功後に reporter だけを再開できるようにした。executor 成功分が未コミットのまま全体再実行しようとした場合は中断し、破棄には --force-restart を要求する。unit / integration テストと運用ドキュメントを整備した。in-place 実行の再開は未対応として残課題に記載している。
+  register_events:
+    - v: 1
+      id: reg_fee55dcde92dfd8702955b4cb393bf22
+      ts: "2026-08-20T13:31:07Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-6VFN reporter-only resume for register runs"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec run --register で executor 成功後に reporter だけを再開できるようにする
+        - field: description
+          from: ""
+          to: register 由来の exec 実行には resume の概念が無く、reporter が rate limit などで失敗すると、タスク全体を再実行するしかない。再実行は discardStaleExecWorktree により worktree と exec ブランチを強制削除するため、executor が生成した未コミットの成果を失う。一方で pipeline-state.json には stage 別の状態が、evidence.json には executor の変更一覧・検証結果・final message が残っており、reporter の再開に必要な入力は揃っている。executor が succeeded の run を検出し、reporter 段だけを再実行して result 記入から統合・register 遷移までを完了できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-20"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: a3173a8eb78ae963af560b2938e256df31bf1ec0
+    - v: 1
+      id: reg_0bf45c9f3b408c50f37887be50787ef3
+      ts: "2026-08-21T11:13:48Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-6VFN): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 5efd120694e9041d952c4a23092e0415b58f7c91
+      previous_event_id: reg_fee55dcde92dfd8702955b4cb393bf22
+    - v: 1
+      id: reg_7088e113e596929e3e0d8675da0aa4c7
+      ts: "2026-08-21T11:32:50Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-6VFN): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: runner validation `test-integration`（`npm run test:integration`）が failed（exit 1）。runner 検証が failed の場合は complete を返せない。"
+      legacy_commit: bd2221f5a68571089c8504d78e61d601d6f47093
+      previous_event_id: reg_0bf45c9f3b408c50f37887be50787ef3
+    - v: 1
+      id: reg_fd8ce11cf41d45655560201ec331b7d5
+      ts: "2026-08-21T12:04:16Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-6VFN): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 827e3b7527873a347bc052ce429997390e70c122
+      previous_event_id: reg_7088e113e596929e3e0d8675da0aa4c7
+    - v: 1
+      id: reg_d8f391f4084bd248ae82c48bb59541db
+      ts: "2026-08-21T12:51:14Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-6VFN): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-21"
+        - field: conclusion
+          from: "agent exited with non-zero code: runner validation `test-integration`（`npm run test:integration`）が failed（exit 1）。runner 検証が failed の場合は complete を返せない。"
+          to: exec run --register --worktree --resume を追加し、executor 成功後に reporter だけを再開できるようにした。executor 成功分が未コミットのまま全体再実行しようとした場合は中断し、破棄には --force-restart を要求する。unit / integration テストと運用ドキュメントを整備した。in-place 実行の再開は未対応として残課題に記載している。
+      legacy_commit: 8db0e71996a281ca1f36149a3c13731e78c9834a
+      previous_event_id: reg_fd8ce11cf41d45655560201ec331b7d5
 ---
 
 # PJR-6VFN exec run --register で executor 成功後に reporter だけを再開できるようにする

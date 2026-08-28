@@ -83,6 +83,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 | 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
 | plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
 | worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
+| 同じplanで複数agentを比較する           | `exec trial run`                      | なし            | agent別  |
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
@@ -90,7 +91,7 @@ schedule タスクの自動実行・手動実行の具体的な手順は [Schedu
 
 ### 1.4. project単位の実行ロック
 
-`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
+`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・古い track の再生成・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
 
 ロックは別プロセスの heartbeat で更新されます。正常終了時は `finally` で解放し、プロセスが異常終了して heartbeat が stale になった場合は、後続 run がロックを安全に奪取します。
 
@@ -107,11 +108,76 @@ specdojo exec run --project <project-id> --auto --if-busy skip
 specdojo exec run --project <project-id> --auto --if-busy wait
 ```
 
+### 1.5. 同一planによるagent比較
+
+`exec trial run` は、既存planを生成し直さず、その同じ内容を複数agentへ渡して独立したworktreeで試行します。trialはSchedule eventとregisterの状態遷移を更新しないため、本来のタスクを完了・review・waitingへ進めません。
+
+```bash
+specdojo exec trial run \
+  --project <project-id> \
+  --plan <existing-plan-path> \
+  --base <commit-before-completed-work> \
+  --agent <agent-a> <agent-b> \
+  --reporter-by <shared-reporter> \
+  --parallel 2
+```
+
+`--base`にはcommit-ishを指定でき、省略時はHEADを使います。完了済みtodoの統合前commitを指定すると、同じplanを作業前の状態から再試行できます。指定値は完全なcommitへ解決し、実行開始時のHEADを統合済み成果の参照commitとして保存します。baseがそのHEADの祖先か、plan内のリポジトリ相対パスが起点ツリーに存在するかも事前に確認します。結果と警告は`comparison.json`の`base`へ記録され、`status`でも確認できます。planファイル自体が古い起点に存在しなくても、コマンドで指定した現在のplan内容を全trialへ渡します。
+
+executorとreporterを組で比較する場合は、`--agent` / `--reporter-by`の代わりに次のように指定します。
+
+```bash
+specdojo exec trial run \
+  --project <project-id> \
+  --plan <existing-plan-path> \
+  --base <commit-before-completed-work> \
+  --pair <executor-a>=<reporter-a> <executor-b>=<reporter-b>
+```
+
+`--agent`だけならreporterなし、`--agent`と`--reporter-by`なら全trialで同じreporter、`--pair`ならtrialごとのreporterを使います。比較記録の`reporter_mode`にはそれぞれ`none` / `shared` / `paired`を保存します。
+
+比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。所要時間はexecutor、親検証、trial全体を分け、親検証の実行時間がagent比較へ混入しないようにします。検証件数もexecutor報告と親runner実行を分け、executorの`passed` / `failed` / `not_run`と報告総数を保存します。理由付きの`not_run`は意図した省略、報告件数の不足は未報告として比較できます。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+
+`pipeline.parent_validations`が設定されている場合、trialも通常のpipelineと同様にexecutor成功後・reporter起動前に各worktreeで親検証を実行します。結果は`source: runner`としてevidenceへ追記され、失敗したtrialは採用可能な`succeeded`になりません。executorが失敗して親検証へ進めなかった場合も`parent_validation.status: not_run`として比較記録と`trial status`に表示します。これにより、採用前に親検証の不足を確認できます。
+
+```bash
+specdojo exec trial status --project <project-id> --comparison <comparison-id>
+specdojo exec trial rate \
+  --project <project-id> \
+  --comparison <comparison-id> \
+  --trial <agent> \
+  --judgment-quality 4 \
+  --writing-quality 3 \
+  --scope-adherence 5 \
+  --notes "human review notes"
+```
+
+評価後は成功したtrialを1つだけ採用します。`adopt`は選択したbranchを現在branchへmergeし、残りのworktreeとbranchを破棄します。採用前に`trial status`の親検証状態とexecutorの報告総数・`not_run`件数を確認します。`not_run`の理由は`comparison.json`の`executor.validations`で確認できます。破棄後も中央の比較記録とagent別evidenceは残ります。どれも採用しない場合は`discard`を使います。
+
+```bash
+specdojo exec trial adopt \
+  --project <project-id> \
+  --comparison <comparison-id> \
+  --trial <agent>
+
+specdojo exec trial discard --project <project-id> --comparison <comparison-id>
+```
+
+1回の比較だけでは`pm-members.yaml`を自動変更しません。人が客観指標と主観評価を確認し、複数タスクで傾向が再現した場合にpriorityやcapabilitiesを更新します。この判断方針も比較記録の`agent_selection`へ保存されます。
+
+agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdからGit repositoryを解決します。trial前後でagent worktreeのHEADまたは監視対象のlocal configが変化した場合、そのtrialは`agent-git-state-write:`で失敗し、採用対象になりません。別worktreeで行われたrunnerの遷移commitと、runnerが作成したbranchの表示用metadataは検知対象に含めません。
+
 ## 2. 中断・訂正・再実行
 
 実行が途中で止まった場合、完了判定そのものを訂正する場合、利用制限で中断した場合の戻し方を扱います。これらは schedule 実行を主な対象としますが、`reopen` を除き register 実行にも共通する考え方です。
 
-### 2.1. blockedタスクの復帰
+### 2.1. Git状態変更を検知した場合の復旧
+
+`agent-git-state-write:`が出た場合、またはhook内のテストが実repositoryを変更した疑いがある場合は、そのworktreeを統合せず保持して原因を確認します。最初に`git rev-parse --git-common-dir`で全worktreeが共有するrepositoryを特定し、`git config --local --list --show-origin`で`core.bare`とfixture用identityの混入を記録します。`git status`が`fatal: this operation must be run in a work tree`となる場合は、repositoryの管理者が影響範囲を確認したうえで共有repositoryに対して`git config --local core.bare false`を実行します。`user.name` / `user.email`は`git config --local --get-all <key>`で値を確認し、事故で追加された値だけを`git config --local --unset-all <key> '<value-regex>'`で除去します。正当なlocal設定を一括削除してはいけません。最後に`git status`と`git fsck`でrepositoryが復旧したことを確認します。
+
+`fields=HEAD`の場合は`git reflog`、`git log --oneline --decorate <起動前HEAD>..HEAD`、`git show --stat <commit>`で混入commitと変更前HEADを特定します。`git fetch origin`後に`git branch -r --contains <commit>`と`git tag --contains <commit>`を確認し、remote branchまたはtagへ到達していないことを確定してから破棄します。成果が不要なら対象exec / trial worktreeを破棄し、未統合branchを削除します。必要な成果が含まれる場合は、汚染branchを直接mergeせず、許可対象のファイル差分だけを新しいworktreeへ適用してrunner管理のcommitとして取り込みます。remoteへ到達済みの場合は履歴を書き換えず、管理者がrevertと関係者通知を行います。共有済み履歴のresetやforce pushは行いません。
+
+### 2.2. blockedタスクの復帰
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
@@ -158,7 +224,7 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
-### 2.2. 完了済みタスクをtodoに戻す
+### 2.3. 完了済みタスクをtodoに戻す
 
 完了条件を満たしていないのに `complete` した場合など、完了判定そのものを訂正するときは `exec reopen` を使います。単に追加作業が発生した場合は、完了履歴を訂正せず新しい schedule task として計画します。
 
@@ -191,7 +257,7 @@ specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
 ```
 
-### 2.3. 完了済みタスクの再実行
+### 2.4. 完了済みタスクの再実行
 
 完了済み（`done`）タスクをやり直す場合は、既定の軽量実行でそのまま実行します。状態イベントは追加されず、変更は作業ツリーに残ります。
 
@@ -201,7 +267,7 @@ specdojo exec run --project <project-id> --task <task-id>
 
 完了判定を取り消して Schedule の進捗として再度記録する場合は、先に `reopen` して `todo` に戻し、その後 `claim`、`run`、`complete` を明示的に行います。`complete` が正しく、追加作業だけが必要な場合は元の task を `reopen` せず、新しい task として計画します。
 
-### 2.4. レートリミット対応
+### 2.5. レートリミット対応
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
@@ -224,11 +290,13 @@ action:
   parallel: 2
 ```
 
-延期 task の再開に続けて Ready task も自動実行したい場合は、`exec-resume` と `exec-auto` を別 routine に分けず、`exec cycle`（routine では `kind: exec-cycle`）を使います。再開 → 状態再計算 → `--auto` loop を単一の project 実行ロック内で順次実行するため、実行順が routine ファイル名順や cron 時刻差に依存せず、step 間に手動実行・別 routine・CI が割り込みません。再開対象が再延期されても、依存しない Ready task の実行は継続します。詳細は [routine運用ガイド](routine-operation-guide.md) の順次実行（exec-cycle）を参照してください。
+延期 task の再開に続けて Ready task も自動実行したい場合は、`exec-resume` と `exec-auto` を別 routine に分けず、`exec cycle`（routine では `kind: exec-cycle`）を使います。再開 → doc-index 再構築 → 古い track の再生成 → 状態再計算 → `--auto` loop を単一の project 実行ロック内で順次実行するため、実行順が routine ファイル名順や cron 時刻差に依存せず、step 間に手動実行・別 routine・CI が割り込みません。
+
+track の再生成では、`exec validate` の警告と同じ鮮度判定を使います。`sch-track-<track>.yaml` がないか、`sch-strategy-<track>.yaml` の更新時刻が track より新しい場合だけ、`schedule build --track <track> --force` を実行します。再生成が不要ならコマンドも追加ログも発生しません。再生成に失敗した場合は、古い track のまま Ready task を選ばず cycle を停止します。単発の `exec run` と `exec refresh` は自動再生成しません。再開対象が再延期されても、依存しない Ready task の実行は継続します。詳細は [routine運用ガイド](routine-operation-guide.md) の順次実行（exec-cycle）を参照してください。
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
-### 2.5. executor / reporter pipelineの実行と復旧
+### 2.6. executor / reporter pipelineの実行と復旧
 
 `agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。
 
@@ -238,13 +306,14 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 
 run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
 
-| ファイル              | 確認できること                                                              |
-| --------------------- | --------------------------------------------------------------------------- |
-| `pipeline-state.json` | 各 stage の状態（`succeeded` / `failed` / `rate_limited`）・actor・試行回数 |
-| `evidence.json`       | executor の変更ファイル、diff サマリ、検証結果、最終メッセージ              |
-| `executor.log`        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                   |
+| ファイル                                                              | 確認できること                                                                                 |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `pipeline-state.json`                                                 | 各 stage の状態（`succeeded` / `failed` / `rate_limited`）・actor・試行回数                    |
+| `evidence.json`                                                       | executor の変更ファイル、diff サマリ、検証結果、最終メッセージ、executor / reporter のログ参照 |
+| `executor.log`                                                        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                                      |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行別の生出力（秘匿値は伏せ字化、各ストリーム 64KiB で切り詰め）      |
 
-`executor.log` は人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
+agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです。失敗理由の要約だけでは原因が分からない場合は、`evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
 
 stage 別の失敗と対応は次のとおりです。
 
@@ -254,9 +323,10 @@ stage 別の失敗と対応は次のとおりです。
 | executor の rate limit        | executor が `rate_limited`、block に再開時刻           | `レートリミット対応` と同じ（`exec resume --due`）                   |
 | reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する              |
 | reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                    |
+| 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）         |
 | reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                   |
 
-reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。
+reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
 ```bash
 specdojo exec resume \
@@ -265,7 +335,7 @@ specdojo exec resume \
   --reporter-by <reporter-nickname>
 ```
 
-### 2.6. register実行のreporter再開
+### 2.7. register実行のreporter再開
 
 register 実行（`exec run --register --worktree`）を executor/reporter パイプラインで走らせた場合も、executor が成功したまま reporter だけが失敗した run は reporter 段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
 
@@ -277,7 +347,7 @@ specdojo exec run \
   --resume
 ```
 
-再開の入力は、対象 worktree に残っている最新 run の `pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
+再開の入力は、対象 worktree に残っている最新 run の `pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。保存済みの親 runner 検証が失敗していれば、Schedule 実行と同様に再実行して evidence を更新します。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
 
 再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。
 
@@ -287,6 +357,7 @@ specdojo exec run \
 | 最新 run の executor が succeeded でない | 再開せず、通常の再実行を促す（古い run へは遡らない）      |
 | reporter が既に succeeded                | 再開不要として拒否する                                     |
 | `evidence.json` が欠損・不整合           | executor の記録を再利用できないため拒否する                |
+| 親検証の設定 ID が変更・欠損             | 古い検証を流用せず、明示的な再実行を促して拒否する         |
 | 再開した reporter が再び失敗した         | worktree と executor の成果を保持したまま `waiting` へ戻す |
 
 executor が成功した run が残っている項目を `--resume` なしで再実行しようとした場合は、worktree を破棄する手前で中断します（未コミットの executor 成果を失わないための保護）。破棄したうえで最初からやり直す場合は `--force-restart` を明示します。

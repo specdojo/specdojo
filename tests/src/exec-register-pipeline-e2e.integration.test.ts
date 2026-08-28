@@ -320,9 +320,6 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       );
 
       git(root, "init");
-      git(root, "config", "user.name", "SpecDojo Test");
-      git(root, "config", "user.email", "specdojo@example.invalid");
-      git(root, "config", "commit.gpgsign", "false");
       git(root, "add", "-A");
       git(root, "commit", "-m", "initial");
 
@@ -510,6 +507,8 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
 
         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
         expect(ticket).toContain("item_status: waiting");
+        expect(ticket).toContain("block_reason:");
+        expect(ticket).not.toContain("conclusion:");
         expect(readFileSync(join(root, "package.json"), "utf8")).toContain(
           '"test:integration": "node -e \\"process.exit(0)\\""',
         );

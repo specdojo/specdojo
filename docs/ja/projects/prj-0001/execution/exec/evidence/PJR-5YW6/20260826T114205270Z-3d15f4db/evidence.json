@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-5YW6",
+  "run_id": "20260826T114205270Z-3d15f4db",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T11:42:05.270Z",
+    "completed_at": "2026-08-26T11:53:27.085Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-trial.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-5yw6-agent-trial-base-and-reporter.md      |  19 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  17 +-\n docs/ja/specdojo/references/command-reference.md   |  12 +-\n src/exec-trial.ts                                  | 339 +++++++++++++++++++--\n tests/src/exec-trial.test.ts                       | 119 +++++++-\n 5 files changed, 473 insertions(+), 33 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-trial.ts tests/src/exec-trial.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md",
+      "status": "passed",
+      "summary": "全変更ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md",
+      "status": "passed",
+      "summary": "Markdown lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec trial run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/pjr-5yw6-20260826T114130Z-2acc-plan.md --base HEAD^ --pair qwen-executor=qwen-reporter gemma-executor=gemma-reporter --comparison pjr-5yw6-smoke --dry-run",
+      "status": "passed",
+      "summary": "起点解決、HEAD参照、互換性記録、paired trial構成を確認"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5YW6\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-FK88M3/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5YW6\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-bYt3NI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KUguMb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-30Ydku/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-D7r60X/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-brVhC6/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-0Ym83F/pjr-0001-topic.md\n\n Test Files  88 passed (88)\n      Tests  1298 passed (1298)\n   Start at  20:53:09\n   Duration  17.57s (transform 1.39s, setup 0ms, import 10.33s, tests 14.46s, environment 4ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-b…"
+    }
+  ],
+  "final_message": "exec trialの起点指定、executor/reporterペア比較、reporter客観指標を実装し、文書と回帰テストを更新した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5YW6/20260826T114205270Z-3d15f4db/executor.log",
+      "bytes": 2317,
+      "truncated": false
+    }
+  ]
+}

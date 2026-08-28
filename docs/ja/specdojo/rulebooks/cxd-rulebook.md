@@ -1,3 +1,13 @@
+---
+specdojo:
+  id: specdojo:cxd-rulebook
+  type: rulebook
+  status: draft
+  recipe: undecided
+  sample: specdojo:cxd-sample
+  template: undecided
+---
+
 # C4コンテキスト図 ドキュメント作成ルール
 
 C4 Contextual Diagram (CXD) Documentation Rules

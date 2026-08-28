@@ -13,6 +13,118 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:24:53Z"
+  register_events:
+    - v: 1
+      id: reg_0f3238ed11576e383123a456c70c3d2a
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: pjr-index を generated 配下の生成ビューへ移す
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割3。個票群から登録項目一覧を生成し、`pjr-index.md` を `generated/` 配下の非追跡な派生ビューへ移す。既存の派生ビュー（状態別・優先度別・担当者別、controls 全体の type 別ビュー）も同じ入力から生成されるようにする。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_c26fbeed307286c8666bbb2a101ff3ab
+      ts: "2026-08-09T09:35:40Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-RZR3): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: 215d239973365320136cfb8fed9a1fd52254c86c
+      previous_event_id: reg_0f3238ed11576e383123a456c70c3d2a
+    - v: 1
+      id: reg_ab445c4463e5b2d6be5017ca99d3b207
+      ts: "2026-08-09T09:55:15Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-RZR3): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: de40b7bff486a8053463b6d161d5000edf579763
+      previous_event_id: reg_c26fbeed307286c8666bbb2a101ff3ab
+    - v: 1
+      id: reg_a1b6f6a23bbc0cfc050f49bf97afe66a
+      ts: "2026-08-09T10:24:53Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-RZR3, fix register-build hook glob"
+      changes:
+        - field: status
+          from: review
+          to: done
+      legacy_commit: a348755ade67776864f4aa66125956635e04b51e
+      previous_event_id: reg_ab445c4463e5b2d6be5017ca99d3b207
+    - v: 1
+      id: reg_55d0d84f0782886a8f3cc74432714a75
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_a1b6f6a23bbc0cfc050f49bf97afe66a
 ---
 
 # PJR-RZR3 pjr-index を generated 配下の生成ビューへ移す

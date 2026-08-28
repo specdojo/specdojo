@@ -27,6 +27,8 @@ function kataStateLabel(deliverable: AssessedDeliverable, kind: KataKindKey): st
   const fact = deliverable.facts.kata[kind];
   if (fact.broken_reference) return `宣言先が存在しない（${fact.path}）`;
   if (!fact.exists) {
+    if (fact.declaration === "not-needed") return "not-needed（不要と判断済み）";
+    if (fact.declaration === "undecided") return "undecided（要否未判断）";
     return fact.declaration === "none" ? "none 宣言で無効化" : "未解決（判定不要）";
   }
   const status = fact.status ? `status: ${fact.status}` : "status 不明";
@@ -123,6 +125,12 @@ export function renderAssessmentPrompt(options: AssessmentPromptOptions): string
   );
   lines.push("- `status: draft` であること自体は利用不能の根拠にしない。内容で判断する。");
   lines.push("- ファイルが存在しない型は判定しない（`judgment.kata` に書かない）。");
+  lines.push(
+    "- `not-needed` の型は欠落ではなく要否判断済みとして扱い、`bootstrap_scope` / `kata_target` に含めない。",
+  );
+  lines.push(
+    "- `undecided` の型は初回の `bootstrap` で要否を判断し、必要なら文書 ID、不要なら `not-needed` へ宣言を更新する。",
+  );
   lines.push("");
 
   lines.push("## 4. タスク目的と推奨フロー");
@@ -138,7 +146,7 @@ export function renderAssessmentPrompt(options: AssessmentPromptOptions): string
     "| --------------------------------- | ---------------------------------------- | -------------------------------------------------- |",
   );
   lines.push(
-    "| `author-deliverable`              | 成果物を作成・更新する                   | 4種利用可 → `fully-guided` / recipe 利用可 → `recipe-guided` / それ以外 → `freeform` |",
+    "| `author-deliverable`              | 成果物を作成・更新する                   | 必要な型が全て利用可 → `fully-guided` / recipe 利用可 → `recipe-guided` / それ以外 → `freeform` |",
   );
   lines.push(
     "| `bootstrap-kata-set`              | 成果物と再利用可能な型を一式で初期整備   | `bootstrap`（`bootstrap_scope` 必須）              |",
@@ -160,7 +168,7 @@ export function renderAssessmentPrompt(options: AssessmentPromptOptions): string
   );
   lines.push("");
   lines.push(
-    "- `bootstrap` は「型が1件でも欠ける」ことを理由に選ばない。成果物と再利用可能な型を一式で初期整備する対象である理由を `intent_rationale` に書き、対象の型を `bootstrap_scope` に列挙する。",
+    "- `bootstrap` は「型が1件でも欠ける」ことを理由に選ばない。作成条件から必要と判断した型だけを `bootstrap_scope` に列挙し、対象とする理由を `intent_rationale` に書く。",
   );
   lines.push(
     "- `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `*-maintenance` / `finalize` / `bootstrap-finalize` は整備状況ではなく目的で選ぶフェーズである。整備状況だけを見て選ばない。",

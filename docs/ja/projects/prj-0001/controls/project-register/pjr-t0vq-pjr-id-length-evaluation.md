@@ -13,6 +13,93 @@ specdojo:
   due_on: null
   completed_at: "2026-08-09T10:55:22Z"
   conclusion: 32^4の空間と再抽選方式により通常経路では衝突しないと評価。桁数拡張は後方互換で後から可能
+  register_events:
+    - v: 1
+      id: reg_ce6c4d02672fd6d33c92572f0b15a473
+      ts: "2026-08-09T00:30:44Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): close PJR-T0VQ"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: PJR-ID の桁数は4桁で十分（衝突可能性を評価済み）
+        - field: description
+          from: ""
+          to: PJR-ID の桁数（4文字）は将来の大規模プロジェクトでも十分であり、桁数を増やす必要はない。評価結果は次のとおり。
+        - field: type
+          from: ""
+          to: note
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 52a66a9471e130f50485abfcb4bf24fd74a781ef
+    - v: 1
+      id: reg_047f080ee78f8f20bbf051920b3128ec
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: PJR-ID の桁数（4文字）は将来の大規模プロジェクトでも十分であり、桁数を増やす必要はない。評価結果は次のとおり。
+          to: 32^4=1,048,576 の ID 空間と再抽選方式の評価結果を記録する。通常経路では衝突せず、桁数拡張は後方互換で後から可能。
+        - field: priority
+          from: medium
+          to: low
+        - field: due
+          from: _TODO_
+          to: "-"
+        - field: conclusion
+          from: "-"
+          to: 32^4の空間と再抽選方式により通常経路では衝突しないと評価。桁数拡張は後方互換で後から可能
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_ce6c4d02672fd6d33c92572f0b15a473
+    - v: 1
+      id: reg_3f29c2ebc0b109d9d8ad0547f9f7b371
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_047f080ee78f8f20bbf051920b3128ec
 ---
 
 # PJR-T0VQ PJR-ID の桁数は4桁で十分（衝突可能性を評価済み）

@@ -117,19 +117,19 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 5.3. `deliverables[]`（成果物エントリ）
 
-| フィールド            | 必須        | 内容                                                         |
-| --------------------- | ----------- | ------------------------------------------------------------ |
-| `local_id`            | ○           | 成果物の論理名（例: `prj-overview`）                         |
-| `instance_id_pattern` | 任意        | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`）        |
-| `name`                | ○           | 業務ユーザーが理解可能な日本語名                             |
-| `kind`                | ○           | `work` / `control` / `generated`                             |
-| `depends_on`          | 任意        | 依存する成果物の `local_id` 配列。なければ空配列 `[]`        |
-| `overview`            | ○           | 成果物の目的を1文で記述                                      |
-| `path`                | ○（`work`） | 成果物のファイルパス                                         |
-| `rulebook`            | 任意        | 成果物の rulebook ID（例: `specdojo:prj-overview-rulebook`） |
-| `evidence_refs`       | 任意        | `retrofit` で読む非成果物エビデンス                          |
-| `done_criteria`       | ○（`work`） | 完了条件の配列                                               |
-| `note`                | 任意        | 構造化フィールドで表せない補足                               |
+| フィールド            | 必須        | 内容                                                              |
+| --------------------- | ----------- | ----------------------------------------------------------------- |
+| `local_id`            | ○           | 成果物の論理名（例: `prj-overview`）                              |
+| `instance_id_pattern` | 任意        | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`）             |
+| `name`                | ○           | 業務ユーザーが理解可能な日本語名                                  |
+| `kind`                | ○           | `work` / `control` / `generated`                                  |
+| `depends_on`          | 任意        | 依存する成果物の `local_id` 配列。なければ空配列 `[]`             |
+| `overview`            | ○           | 成果物の目的を1文で記述                                           |
+| `path`                | ○（`work`） | 成果物のファイルパス                                              |
+| `rulebook`            | 任意        | rulebook の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
+| `evidence_refs`       | 任意        | `retrofit` で読む非成果物エビデンス                               |
+| `done_criteria`       | ○（`work`） | 完了条件の配列                                                    |
+| `note`                | 任意        | 構造化フィールドで表せない補足                                    |
 
 ### 5.4. `evidence_refs[]`（非成果物エビデンス）
 
@@ -161,6 +161,15 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `control`: プロジェクト管理・統制文書。スケジュール展開対象外。
 - `generated`: 自動生成・派生成果物。スケジュール展開対象外。
 - 3値以外に拡張しない。
+- `generated` には実践の型を適用しない。`rulebook` が記載されていても、実行時は `kind` から非適用を導出する。
+
+計画成果物をカタログへ登録する場合も、生成方法ではなくライフサイクルで区別する。
+
+- 人または agent が判断して更新する `tml-index`、`dct-index`、`dct-plan-<domain>`、`sch-assessment-<track>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
+- `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、対応する `sch-strategy-<track>` を `depends_on` に宣言する。
+- 計画成果物を所有するトラック自身の `sch-strategy` は、自己生成の循環を避けるため `control` とするか、そのトラックの scope 外へ置く。
+- `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、カタログ定義との二重管理を避けるため登録しない。
+- トラック別の assessment、strategy、track は、Timeline で当該トラックが `catalog_status: primary` になった時点で具体的な `local_id` を追加し、未着手トラックの分を先行登録しない。
 
 ### 6.3. `depends_on`
 
@@ -168,7 +177,15 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 参照先は同一カタログまたは他ドメインカタログに存在する `local_id` とし、ファイルパスや URL を混在させない。
 - 反復成果物を参照する場合は、`instance_id_pattern` ではなく固定の `local_id` を参照する。
 
-### 6.4. `evidence_refs`
+### 6.4. 実践の型の要否宣言
+
+- 成果物カタログは成果物と rulebook の対応だけを `rulebook` に宣言する。recipe / sample / template の要否と所在は、参照先 rulebook の frontmatter を正本とする。
+- `rulebook` には、必要と判断して実在する rulebook の完全 ID を記載する。要否未判断は `undecided`、不要は `not-needed`、項目省略は必要だが未整備を表す。`catalog validate` は完全 ID に対応する文書の実在を検証する。
+- `rulebook: none` は成果物本体のメタ情報で「準拠 rulebook なし」を表す値であり、カタログの要否宣言には使わない。カタログで不要と判断した場合は `rulebook: not-needed` を使う。
+- `kind: generated` では `rulebook` 宣言の有無にかかわらず4種すべてを適用しない。成果物ごとの型宣言を追加せず、`kind` から導出する。
+- recipe / sample / template の `undecided` は利用可能性判定で未整備として扱い、`not-needed` は欠落とみなさず対応する `*-maintenance` の対象にも含めない。要否を再検討する場合は、先に rulebook frontmatter の宣言を更新する。
+
+### 6.5. `evidence_refs`
 
 - `evidence_refs` は成果物ごとの安定した調査入力であり、`approach: retrofit` の edit / review plan に「実装エビデンス」として展開される。
 - `depends_on` のような成果物間の根拠・実行順序を作らず、`based_on` のような文書 ID 参照にも使わない。
@@ -177,40 +194,40 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `purpose` はファイル名の言い換えではなく、入出力、状態遷移、例外など、その参照から何を確認するかを記載する。
 - 実装エビデンスは読み取り専用であり、plan frontmatter の `targets`、worktree の変更許可範囲、commit 許可リストへ追加しない。
 
-### 6.5. `base_path` と `path` の解決
+### 6.6. `base_path` と `path` の解決
 
 - 先頭が `/` のパスはリポジトリルートからの絶対パスとして解決する。
 - 先頭が `/` でないパスは相対パスとし、最も近い祖先（グループまたはドメイン）の解決済み `base_path` に連結する。
 - ドメインの `base_path` は絶対パス（先頭 `/`）で記載することを推奨する。
 - 解決結果はリポジトリルートからの相対パスを正準形とし、先頭スラッシュなし・POSIX 区切り（`/`）で正規化する。`base_path` 先頭の `/` はルートを起点とする記法上の目印であり、生成される dct ビュー・exec plan・doc-index など下流の参照表記には残さない。
 
-### 6.6. `done_criteria`
+### 6.7. `done_criteria`
 
 - `work` 成果物には最低 1 件の完了条件を記載する。
 - `text` は「確認できること」「識別できること」など、検証可能な形で記述する。
 - `roles` には条件を確認する責務を持つロールコードのみを記載する。
 - `viewpoint` には `pm-review-viewpoints.yaml` で定義された `vp-*` の ID を 1 つ記載する。
 
-### 6.7. 反復成果物
+### 6.8. 反復成果物
 
 - 反復成果物の `local_id` には成果物ファミリーを表す固定の kebab-case を使用する。
 - 実体IDの命名規則は `instance_id_pattern` に分離する（例: `pjr-{sequence}-{term}`、`pr-{yyyy}-{mm}-{dd}`）。
 - プレースホルダは小文字を波括弧で囲んで記述し、固定語はハイフンで連結する。
 
-### 6.8. テンプレート固有項目
+### 6.9. テンプレート固有項目
 
 - `type: template` のファイルでのみ `min_size`（`small` / `medium` / `large`）を使用できる。
 - `min_size` は規模に応じた取捨選択のための項目であり、scaffold 時に除去される。
 - テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。
 
-### 6.9. 業務領域テンプレートの反復方針（`_TERM_` の使い分け）
+### 6.10. 業務領域テンプレートの反復方針（`_TERM_` の使い分け）
 
 - `local_id` に `_TERM_` を含むテンプレート項目（例: `cdfd-_TERM_`、`bdd-_TERM_`）は、パターンA（複数業務領域）を既定とする。業務領域が複数ある場合（例: 販売/調達/会計）に、業務領域ごとへ項目を複製し、`_TERM_` を各業務領域の略称へ置き換える。
 - 対象業務が単一で、成果物を業務の局面・処理内容ごとに複数項目へ分割する場合はパターンB（単一領域・複数項目）を用いる。このときは `_TERM_` を使わず、項目ごとに固定の `local_id` と `done_criteria` を個別に記載する。
 - どちらのパターンでも `groups[]` と `deliverables[]` の項目数に上限はない。テンプレートの1件は書式サンプルであり、実際に必要な数だけ記載する。
 - パターンBの実例は `prj-0001:dct-data-flow`（`domain: data-flow`。単一業務（SpecDojo運用）を、初期化・課題整理・タスク実行・例外対応・定期実行など複数のデータフロー（`cdfd`）に分割している）を参照する。
 
-### 6.10. 物理分割（1 ドメイン複数ファイル）
+### 6.11. 物理分割（1 ドメイン複数ファイル）
 
 - 反復要素が多く単一ファイルが肥大化するドメイン（例: `data-model` を成果物種別ごとに分ける場合）は、論理ドメインを保ったまま複数ファイルへ物理分割してよい。
 - 分割ファイルは `dct-<domain>-<part>.yaml` とし、すべて同一の `domain` キーを持たせる。`catalog build` は同一 `domain` のファイルをファイル名の昇順でマージし、`dct-<domain>.md` を 1 つ生成する。
@@ -222,7 +239,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `local_id` はプロジェクト内で一意という制約を維持する。同一ドメインの分割ファイル間で `local_id` が重複するとマージがエラーになる。
 - ドキュメントの `id`・`title` 等のメタ情報は、マージ後カタログではファイル名昇順で先頭となるファイルの値を採用する。分割してもメタ情報が一貫するよう記載する。
 
-### 6.11. 成果物カタログ判定計画（`dct-plan-<domain>.yaml`）
+### 6.12. 成果物カタログ判定計画（`dct-plan-<domain>.yaml`）
 
 - data-flow 等の上流成果物からどの成果物インスタンスが必要かを agent が判定した結果は、`dct-plan-<domain>.yaml` へ機械可読な形で保存する。構造の SSOT は `docs/specdojo/schemas/v1/dct-plan.schema.yaml` とする。
 - 配置先は成果物カタログディレクトリ配下の `plans/` とする（例: `docs/ja/projects/prj-0001/010-deliverables-catalog/plans/dct-plan-data-flow.yaml`）。`dct-*.yaml` と同じ階層に置かない。`catalog validate` / `catalog build` の対象と混同させないためである。
@@ -235,7 +252,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 既存の判定計画は無条件に上書きしない。再判定時は差分をレビューし、上書きは明示的な `--force` 操作で行う。
 - 判定計画の存在はカタログの `primary` 確定を意味しない。判定計画は draft 作成支援であり、`catalog_status` の更新は人間の確認を経て行う。
 
-### 6.12. 判定計画からの決定論的生成
+### 6.13. 判定計画からの決定論的生成
 
 - 保存済みの判定計画からカタログを生成する場合は、`catalog scaffold --plan --domain <domain>` を使用する。`--var` は併用せず、placeholder 値は根拠付きの `variables` を正本とする。
 - ジェネレーターは template の `min_size`、placeholder 展開、`part_of`、`domain`、`base_path`、group 構造を scaffold と共通の処理で適用する。物理分割された template は、同じ `domain` を持つ全ファイルをファイル名順に処理し、対応する `dct-<domain>-<part>.yaml` を生成する。
@@ -245,17 +262,18 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ## 7. 禁止事項
 
-| 禁止事項                                                          | 理由                                               |
-| ----------------------------------------------------------------- | -------------------------------------------------- |
-| `local_id` に日本語・空白・大文字を使用する（`project` の場合）   | スキーマの kebab-case 制約に反するため             |
-| 成果物の詳細本文（仕様・手順・構成図など）をカタログに記載する    | 詳細は成果物本体に集約するため                     |
-| `kind` を `work` / `control` / `generated` 以外に拡張する         | スケジュール展開・レビュー生成の前提が崩れるため   |
-| 同一 `local_id` を複数ドメインのカタログに重複して記載する        | トレーサビリティとスケジュール展開が破綻するため   |
-| `depends_on` に `local_id` 以外（ファイルパス・URL）を混在させる  | 依存解決が機械的に行えなくなるため                 |
-| `evidence_refs.path` に絶対パス・親参照・存在しないパスを記載する | 再現可能で安全な調査範囲を確定できないため         |
-| `evidence_refs.path` にリポジトリ全体など広すぎる範囲を指定する   | 調査範囲と判断根拠を限定できないため               |
-| `work` 成果物で `path` または `done_criteria` を省略する          | スケジュール展開とレビュー計画生成に必須のため     |
-| `dct-plan-<domain>.yaml` にカタログ構造や自由文の判断メモを書く   | ジェネレーターが機械的に扱えず責務境界が崩れるため |
-| 根拠のない placeholder 値や成果物を判定計画で確定させる           | 推測がそのままカタログへ流れ込むため               |
-| 判定計画がある domain を `--var` 付きの通常 scaffold で再生成する | 根拠付きの判定結果と生成入力が分岐するため         |
-| 本ルールや成果物ファイルでスキーマ定義を再掲・上書きする          | `dct.schema.yaml` を SSOT とするため               |
+| 禁止事項                                                          | 理由                                                     |
+| ----------------------------------------------------------------- | -------------------------------------------------------- |
+| `local_id` に日本語・空白・大文字を使用する（`project` の場合）   | スキーマの kebab-case 制約に反するため                   |
+| 成果物の詳細本文（仕様・手順・構成図など）をカタログに記載する    | 詳細は成果物本体に集約するため                           |
+| `kind` を `work` / `control` / `generated` 以外に拡張する         | スケジュール展開・レビュー生成の前提が崩れるため         |
+| 同一 `local_id` を複数ドメインのカタログに重複して記載する        | トレーサビリティとスケジュール展開が破綻するため         |
+| `depends_on` に `local_id` 以外（ファイルパス・URL）を混在させる  | 依存解決が機械的に行えなくなるため                       |
+| `evidence_refs.path` に絶対パス・親参照・存在しないパスを記載する | 再現可能で安全な調査範囲を確定できないため               |
+| `evidence_refs.path` にリポジトリ全体など広すぎる範囲を指定する   | 調査範囲と判断根拠を限定できないため                     |
+| `work` 成果物で `path` または `done_criteria` を省略する          | スケジュール展開とレビュー計画生成に必須のため           |
+| 実在しない実践の型 ID、またはカタログで `rulebook: none` を使う   | 未判断・未整備・不要・参照切れを機械的に区別できないため |
+| `dct-plan-<domain>.yaml` にカタログ構造や自由文の判断メモを書く   | ジェネレーターが機械的に扱えず責務境界が崩れるため       |
+| 根拠のない placeholder 値や成果物を判定計画で確定させる           | 推測がそのままカタログへ流れ込むため                     |
+| 判定計画がある domain を `--var` 付きの通常 scaffold で再生成する | 根拠付きの判定結果と生成入力が分岐するため               |
+| 本ルールや成果物ファイルでスキーマ定義を再掲・上書きする          | `dct.schema.yaml` を SSOT とするため                     |

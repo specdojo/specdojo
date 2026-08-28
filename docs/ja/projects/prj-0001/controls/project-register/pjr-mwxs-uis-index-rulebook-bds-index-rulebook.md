@@ -13,6 +13,67 @@ specdojo:
   registered_at: "2026-08-14T08:18:42Z"
   due_on: "2026-08-31"
   conclusion: "bootstrap approachへ委譲。user-interface-modelトラックがtml-rulebook.mdの定める順序でSchedule化され、sch-strategy-user-interface-model.yamlにuis-index/bds-indexのowner_rulesが定義された時点で、approach: bootstrapのタスクとして再開する"
+  register_events:
+    - v: 1
+      id: reg_3a972b2305a9d5ea8622496bbfc967df
+      ts: "2026-08-14T08:28:16Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: dct-user-interface-modelを修正"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: uis-index / bds-index の実践の型（kata）一式の新設
+        - field: description
+          from: ""
+          to: uis-index・bds-index 成果物向けのHub専用 rulebook が存在しない。bes-index-rulebook.md に倣い、rulebook だけでなく recipe・sample・template を含む kata 一式を新設する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-14"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 45aa75fe144bb8c2305667e025b6cb9269a783d4
+    - v: 1
+      id: reg_bdd3a4a193d518014e2579ec63ad1868
+      ts: "2026-08-15T06:37:33Z"
+      action: defer
+      actor: SpecDojo Test
+      from_status: open
+      to_status: deferred
+      reason: "exec(register PJR-MWXS): bootstrap approachへ委譲しdeferする"
+      changes:
+        - field: status
+          from: open
+          to: deferred
+        - field: conclusion
+          from: "-"
+          to: "bootstrap approachへ委譲。user-interface-modelトラックがtml-rulebook.mdの定める順序でSchedule化され、sch-strategy-user-interface-model.yamlにuis-index/bds-indexのowner_rulesが定義された時点で、approach: bootstrapのタスクとして再開する"
+      legacy_commit: c430211d64527758970933f282f04b622428e91d
+      previous_event_id: reg_3a972b2305a9d5ea8622496bbfc967df
 ---
 
 # PJR-MWXS uis-index / bds-index の実践の型（kata）一式の新設

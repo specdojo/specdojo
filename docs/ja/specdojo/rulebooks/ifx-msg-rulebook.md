@@ -3,7 +3,10 @@ specdojo:
   id: specdojo:ifx-msg-rulebook
   type: rulebook
   status: draft
+  target_format: yaml
+  recipe: not-needed
   sample: specdojo:ifx-msg-sample
+  template: not-needed
 ---
 
 # 外部メッセージ仕様（External Message Specification: EMS）作成ルール

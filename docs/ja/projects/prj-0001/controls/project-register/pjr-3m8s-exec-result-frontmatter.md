@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T04:18:49Z"
   conclusion: result frontmatterの破壊検出を全exec経路へ追加し、rate-limit再開時はrunner管理項目だけを許容する二段階照合で誤blockを解消
+  register_events:
+    - v: 1
+      id: reg_bbdd287c532e67b7b6400d3b1f3b7ea2
+      ts: "2026-08-10T03:31:44Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "fix(exec-plans): require result frontmatter/heading structure to stay scaffolded"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec完了ガードがresultのfrontmatter破壊を検出できない
+        - field: description
+          from: ""
+          to: "`downgradeUnfilledResult`/`isResultUnfilled` は result 本文の `_TODO_` 残存有無のみを検証し、result frontmatter の必須フィールド（`id`/`task_id`/`project_id`/`agent`/`approach`/`targets` 等）の欠落・改変を検出しない。ローカルモデル等が `_TODO_` を消しつつ frontmatter を独自形式へ書き換えた場合、success として扱われ commit/merge/complete まで進んでしまう（`T-DATA-FLOW-cdfd-agent-config-operation-070` で実際に発生）。frontmatter 必須フィールドの非空・scaffold 値との一致検証を追加する。"
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 83dd002c28a2c083b970c54c95f3e6cf2980f1c2
+    - v: 1
+      id: reg_37ff6bcfc1aec534734e5775b39525b5
+      ts: "2026-08-10T04:32:53Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "fix(exec): guard result frontmatter and completion merge"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-10"
+        - field: conclusion
+          from: "-"
+          to: result frontmatterの破壊検出を全exec経路へ追加し、rate-limit再開時はrunner管理項目だけを許容する二段階照合で誤blockを解消
+      legacy_commit: 518fe51391ba29d889433758f3f59f951648c304
+      previous_event_id: reg_bbdd287c532e67b7b6400d3b1f3b7ea2
 ---
 
 # PJR-3M8S exec完了ガードがresultのfrontmatter破壊を検出できない

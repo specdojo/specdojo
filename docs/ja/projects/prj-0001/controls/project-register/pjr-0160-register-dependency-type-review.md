@@ -11,6 +11,84 @@ specdojo:
   priority: medium
   completed_at: "2026-08-07T12:00:00Z"
   conclusion: 案A（dependency type 廃止）を採択。enum・VALID_TYPES・テンプレート・schema・docs・テストを一貫更新。実績0件のため移行不要。必要時は後方互換の追加で再導入。
+  register_events:
+    - v: 1
+      id: reg_7cd94ae89cafac07a085bdad2ceea88f
+      ts: "2026-08-07T04:53:57Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0160をopenで起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿type dependencyの要否見直し(廃止 or Assumption Log化 or 明文化)
+        - field: description
+          from: ""
+          to: 登録簿 type の `dependency` は PMBOK 標準の登録簿ではなく、SpecDojo 独自に「外部の対応・提供物への依存（外部待ち）」を記録するために用意された type である。しかし exec 実行区分（edit/investigate）を持たず、生成 PM ログも無く、実績は 0 件で、`waiting` ステータスや `prj-assumptions-constraints-dependencies` 成果物と役割が重複している。8 type 中で最も配線が薄い純ラベルであるため、要否を判断し対応する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ca04fc25dcd36f1959a6df233c299af8ff68a15a
+    - v: 1
+      id: reg_78f02d11d909a530c143018979fed755
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 登録簿 type の `dependency` は PMBOK 標準の登録簿ではなく、SpecDojo 独自に「外部の対応・提供物への依存（外部待ち）」を記録するために用意された type である。しかし exec 実行区分（edit/investigate）を持たず、生成 PM ログも無く、実績は 0 件で、`waiting` ステータスや `prj-assumptions-constraints-dependencies` 成果物と役割が重複している。8 type 中で最も配線が薄い純ラベルであるため、要否を判断し対応する。
+          to: dependencyはPMBOK非標準でexec実行区分/生成PMログなし・実績0件。waitingステータスおよびprj-assumptions-constraints-dependencies成果物と役割が重複。廃止/assumption type化/rulebook明文化のいずれかを決定し対応する。enum変更はschema・VALID_TYPES・exec-registerのSet・テンプレ・docsの同時修正を伴う破壊的変更。
+        - field: conclusion
+          from: "-"
+          to: 案A（dependency type 廃止）を採択。enum・VALID_TYPES・テンプレート・schema・docs・テストを一貫更新。実績0件のため移行不要。必要時は後方互換の追加で再導入。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_7cd94ae89cafac07a085bdad2ceea88f
+    - v: 1
+      id: reg_3f11891fe1b4a63a353ee75f59983bf1
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-07"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_78f02d11d909a530c143018979fed755
 ---
 
 # PJR-0160 登録簿type dependencyの要否見直し(廃止 or Assumption Log化 or 明文化)

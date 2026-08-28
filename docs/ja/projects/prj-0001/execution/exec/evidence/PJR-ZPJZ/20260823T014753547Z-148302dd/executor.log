@@ -1,0 +1,13 @@
+`superseded` の実装・文書化・既存 result 移行を完了しました。
+
+- [exec-results.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZPJZ/src/exec-results.ts): 新規 run 開始時に同一タスクの未完了 result を自動遷移
+- [exec-result schema](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZPJZ/docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml): enum と意味を追加
+- [PJR-ZPJZ 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZPJZ/docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md): 作業内容・対応結果を更新
+- PJR-DCTG の残置 result を `superseded` へ移行
+- 関連3 suite・62テスト、型検査、ESLint、対象文書検査は成功
+
+全体検証は、`test:unit` の終了待ち停滞、tsx IPC の sandbox 制約、既存 plan の lint 違反により完全には通過していません。executor 指示どおり今回の result ファイルは更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"superseded の実装・文書化・既存 result 移行を完了。対象検証は成功したが、全体検証には既存・環境要因の未解消あり。","validations":[{"command":"npx vitest run tests/src/exec-results.test.ts tests/src/exec-run-inplace.test.ts tests/src/exec-register-multiple-ids.test.ts","status":"passed","summary":"3 files、62 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript typecheck passed"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint passed"},{"command":"npx markdownlint docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-result.md","status":"passed","summary":"変更Markdownにエラーなし"},{"command":"npx remark docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md docs/ja/projects/prj-0001/execution/exec/results/pjr-dctg-20260818T151438Z-ce4f-result.md --quiet --frail","status":"passed","summary":"変更文書のfrontmatterを含め成功"},{"command":"npm run test:unit","status":"failed","summary":"全1,257件対象の実行が5分以上終了せず、失敗出力なしの状態で中断（exit 130）"},{"command":"npm run validate:schema","status":"failed","summary":"sandboxがtsx IPC socketをEPERMで拒否。node --import tsxによる全validatorの代替実行は成功"},{"command":"npm run lint:fm","status":"failed","summary":"今回未変更の既存 pjr-zwmh plan にある未エスケープ <domain> 1件で失敗。変更対象のみは成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog validation passed（既存warningのみ）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1,288 entriesを生成"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validation対象のためexecutorでは未実行"}]}
+</specdojo_executor_evidence>

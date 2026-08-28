@@ -179,7 +179,35 @@ describe("reporter structured output", () => {
       },
     });
 
-    expect(outcome).toMatchObject({ result: "failure", formatAttempts: 3 });
+    expect(outcome).toMatchObject({
+      result: "failure",
+      formatAttempts: 3,
+      invocationOutputs: [
+        { stdout: "{}", stderr: "" },
+        { stdout: "{}", stderr: "" },
+        { stdout: "{}", stderr: "" },
+      ],
+    });
     expect(calls).toBe(3);
+  });
+
+  it("returns the raw streams when the reporter process exits non-zero", async () => {
+    const outcome = await runReporterWithFormatRetry({
+      plan: "# Plan",
+      evidence: evidence(),
+      mode: "edit",
+      invoke: async () => ({
+        result: "failure",
+        stdout: "diagnostic stdout",
+        stderr: "SyntaxError: broken JSON",
+      }),
+    });
+
+    expect(outcome).toEqual({
+      result: "failure",
+      reason: "SyntaxError: broken JSON",
+      formatAttempts: 1,
+      invocationOutputs: [{ stdout: "diagnostic stdout", stderr: "SyntaxError: broken JSON" }],
+    });
   });
 });

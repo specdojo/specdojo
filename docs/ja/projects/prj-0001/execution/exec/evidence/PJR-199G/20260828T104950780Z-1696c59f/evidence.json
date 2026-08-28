@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-199G",
+  "run_id": "20260828T104950780Z-1696c59f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-28T10:49:50.780Z",
+    "completed_at": "2026-08-28T10:59:32.087Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../pjr-199g-promotion-commit-consolidation.md     | 44 ++++++++++++++++++----\n docs/ja/specdojo/guides/branch-workflow-guide.md   | 29 ++++++++++++--\n .../specdojo/standards/git-branching-standard.md   | 39 ++++++++++++++-----\n 3 files changed, 92 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: first develop promotion'",
+      "status": "passed",
+      "summary": "使い捨てcloneでtree一致、278件中first-parentは1件、未マージ0件"
+    },
+    {
+      "source": "executor",
+      "command": "git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-main -m 'validation: reverse merge main into develop'",
+      "status": "passed",
+      "summary": "mainからdevelopへの逆マージが競合なく成立"
+    },
+    {
+      "source": "executor",
+      "command": "git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: second develop promotion'",
+      "status": "passed",
+      "summary": "2回目の昇格も競合なく成功しmerge-baseとdevelop先端が一致"
+    },
+    {
+      "source": "executor",
+      "command": "cmp -s \"$validation_dir/history-before.json\" \"$validation_dir/history-after.json\"",
+      "status": "passed",
+      "summary": "昇格前後で770 event・261項目・Git fallback 4件が完全一致"
+    },
+    {
+      "source": "executor",
+      "command": "git -c core.hooksPath=/dev/null merge --quiet --squash \"$old_develop\"",
+      "status": "passed",
+      "summary": "対照実験として277件の未マージとGit fallback 4件の欠落を確認"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md",
+      "status": "passed",
+      "summary": "対象Markdown 3件を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md",
+      "status": "passed",
+      "summary": "Markdown静的検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "project register生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0、既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1395件の文書index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-199G\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-199G\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-eVsarX/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-eE5XKv/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0MqZsB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vjxB7M/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-fkdrAb/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-c7VY46/pjr-0001-topic.md\n\n Test Files  90 passed (90)\n      Tests  1309 passed (1309)\n   Start at  19:59:13\n   Duration  18.15s (transform 1.46s, setup 371ms, import 10.38s, tests 15.07s, environment 4ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration…"
+    }
+  ],
+  "final_message": "--no-ff mergeで祖先関係を保持し、first-parent上で昇格を1件に集約する方式を確定した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-199G/20260828T104950780Z-1696c59f/executor.log",
+      "bytes": 3361,
+      "truncated": false
+    }
+  ]
+}

@@ -10,7 +10,65 @@ specdojo:
   item_status: open
   priority: medium
   owner: PO
-  due_on: "2026-08-31"
+  due_on: "2026-10-31"
+  register_events:
+    - v: 1
+      id: reg_516fc5fdc686320142d540b4a5bdd90f
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: README.md / docs/index.md / docs/`<lang>`/index.md の責務再整理と記述見直し
+        - field: description
+          from: ""
+          to: READMEおよびdocs配下のindex.mdの役割分担を再整理し、記述内容を見直す
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: PO
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_c59b6621e24be1e26266a12caa6ccff9
+      ts: "2026-08-26T14:43:32Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): VS Code拡張関連4件の期限を10月末へ変更する"
+      changes:
+        - field: due
+          from: "2026-08-31"
+          to: "2026-10-31"
+      legacy_commit: c7434585ee94e78f867d19b0ccbe52862ca56ca5
+      previous_event_id: reg_516fc5fdc686320142d540b4a5bdd90f
 ---
 
 # PJR-0145 README.md / docs/index.md / docs/`<lang>`/index.md の責務再整理と記述見直し

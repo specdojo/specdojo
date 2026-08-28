@@ -165,6 +165,8 @@ flowchart LR
 ```yaml
 pipeline:
   parent_validations:
+    - validate-schema
+    - test-unit
     - test-integration
 
 rate_limit_detection:
@@ -333,23 +335,27 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
 
-| ファイル              | 内容                                                                      |
-| --------------------- | ------------------------------------------------------------------------- |
-| `evidence.json`       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ |
-| `executor.log`        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）         |
-| `pipeline-state.json` | executor / reporter の状態・actor・試行回数・成果物参照                   |
+| ファイル                                                              | 内容                                                                                |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、ログ参照 |
+| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                   |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）            |
+| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                             |
 
 引き渡しの方針は次のとおりです。
 
 - reporter へ渡すのは、plan と `evidence.json` の内容と出力 JSON Schema だけです。ログ本文・生 diff は渡しません。
 - ログは `evidence.json` の `log_refs` に参照（パス・バイト数・切り詰めの有無）としてだけ現れます。ログ本文を読むのは人です。
-- 保存前に上限を適用します。ログ抜粋は 64KiB、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
-- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と `executor.log` の両方に適用します。
+- 保存前に上限を適用します。`executor.log` は全体で 64KiB、失敗した reporter のログは stdout / stderr の各ファイルを 64KiB とし、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。stdout と stderr を分離することで原因調査時にストリームを識別でき、同じ上限を各ストリームへ適用することで片方の大量出力がもう片方を押し出しません。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
+- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と executor / reporter のログに適用します。
+- reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
+- evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
-- `pipeline.parent_validations` がある場合、executor は sandbox 内で `npm run test:unit` を実行し、親 runner は executor の成功後・reporter の起動前に固定検証を実行します。executor 由来の検証には `source: executor`、親 runner 由来には `source: runner` と許可リスト `id` を付けて、同じ `validations` 配列へ保存します。
+- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
+- executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、親 runner の結果だけを `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行しません。
 - 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
-- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ evidence を再利用し、親検証も再実行しません。設定 ID が変わった、または結果が欠けている場合は古い checkpoint を採用せず、新しい executor run としてやり直します。
+- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
 - result の frontmatter は runner が scaffold した内容を保ち、本文は検証済み JSON から runner が描画します。reporter はファイルを書きません。
 
 ## 7. provider 設定の配布と scaffold
@@ -401,6 +407,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 | -------------------------- | ------------------------------------------------------------------------------------------------ |
 | worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                      |
 | git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
+| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
 | ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
 | commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
 | merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
@@ -474,7 +481,7 @@ providers:
 
 - 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
 - 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用します。
-- agent の mode / approach / `targets` は worktree の **HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent は working tree の plan を書き換えられますが HEAD は書き換えられないため、許可リストの導出は改ざん耐性があります。
+- agent の mode / approach / `targets` は worktree の **agent 起動前の HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent 前後の HEAD は runner が比較し、agent 自身の commit や checkout を検知した場合は統合前に block するため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
@@ -482,7 +489,7 @@ providers:
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
 - worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
 
-### 8.4. 親 runner が実行する設定の変更ガード
+### 8.4. 親 runner が実行する設定と Git 状態の変更ガード
 
 commit 許可リストだけでは、register 由来の除外リスト方式や、commit より前に親 runner が検証を起動する経路を守れません。そのため `src/exec-agent-protected-config.ts` の固定定義で、次のパスを全 provider 共通の書き込み禁止対象にします。
 
@@ -493,13 +500,21 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
 
+agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+
+TypeScriptのテスト・tool・本体コードが`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを直接起動する箇所は、AST検査により`gitEnvironment()`から作った`env`だけを許可します。`env: process.env`や単なる`env`プロパティは隔離済みとは扱いません。shell scriptとnpm scriptのGit起動はこのAST検査の対象外ですが、現状のhook経路はVitest setupを必ず通り、hookから直接Gitを起動するテスト用scriptはありません。今後その経路を追加する場合は、入口で`GIT_LOCAL_ENV_VARS`相当を除去する専用検査を追加します。
+
+executor / reporter pipelineのexecutor promptは、commitとrepository設定を親runnerが所有することを明記し、`git commit`およびlocal / global / system configの変更（`user.name` / `user.email`を含む）を禁止します。fixture commitに使うテスト用identityはVitest workerと子プロセスの環境変数だけへ注入し、fixtureを含むrepositoryのlocal configへは書き込みません。
+
+さらに`src/exec-agent-git-state.ts`が各agent試行の直前にagentのcwdから解決したHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。runnerが作成したworktree branchをVS Codeが発見した際に付与する`branch.*.vscode-merge-base`は表示用metadataなので比較から除外します。それ以外のlocal configは順序と重複を保って比較し、`core.bare`などrepository動作に関わる変更を検知します。HEADまたは監視対象設定に差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
+
 設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で提案を確認して適用し、対象設定に対応する test / hook / CI 検証を実行して commit します。agent 用の解除フラグはありません。
 
 ### 8.5. pm-members.yaml の値検証（nickname インジェクション対策）
 
 `nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。`pm-members.yaml` を書き換えられる者が `nickname` にシェルメタ文字を仕込むと、command 起動時にコマンドインジェクションが成立し得ます。これを次の 2 層で防ぎます。
 
-- 入力検証: `pm-members.yaml` を `npm run validate:schema` の集約対象（`validate:schema:pm-members`）に含め、CI で `pm-members.schema.yaml` に照らして検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
+- 入力検証: `pm-members.yaml` の先頭 modeline を `pm-members.schema.yaml` へ向け、CI の `npm run validate:schema` が同じ宣言を読んで検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
 - 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand`（`src/exec-agent-config.ts`）は、`{nickname}` を展開する直前に同じパターンで `nickname` を再検証し、不一致の場合は command を組み立てずに例外を送出します。schema 検証を経ていない `pm-members.yaml` を読み込んだ場合でも、不正な `nickname` が shell へ到達する前に停止します。
 
 再検証のパターンは `pm-members.schema.yaml` の `nickname` と同一に保ちます（一方を変更したら他方も合わせます）。

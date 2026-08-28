@@ -1,3 +1,4 @@
+# specdojo-schema: none reason=external-openapi
 openapi: 3.0.3
 info:
   title: 決済サービスAPI

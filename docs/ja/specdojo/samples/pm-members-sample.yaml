@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-members.schema.yaml
 id: specdojo:pm-members-sample
 type: project
 status: draft

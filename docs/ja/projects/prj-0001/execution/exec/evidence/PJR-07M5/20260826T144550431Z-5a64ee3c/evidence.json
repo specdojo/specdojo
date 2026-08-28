@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-07M5",
+  "run_id": "20260826T144550431Z-5a64ee3c",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-26T14:45:50.431Z",
+    "completed_at": "2026-08-26T14:52:17.856Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-07m5-trial-validation-completeness.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-trial.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-07m5-trial-validation-completeness.md      | 22 +++--\n docs/ja/specdojo/guides/exec-operation-guide.md    |  6 +-\n docs/ja/specdojo/references/command-reference.md   |  6 +-\n src/exec-run.ts                                    |  2 +-\n src/exec-trial.ts                                  | 95 +++++++++++++++++++--\n tests/src/exec-trial.test.ts                       | 97 ++++++++++++++++++++++\n 6 files changed, 211 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-run.ts src/exec-trial.ts tests/src/exec-trial.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-07m5-trial-validation-completeness.md",
+      "status": "passed",
+      "summary": "変更したTypeScript・Markdownを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript lintが成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-07m5-trial-validation-completeness.md",
+      "status": "passed",
+      "summary": "変更したMarkdownのlintが成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成が成功した。npx tsxはsandboxのIPC制限で起動できないためIPC不要の同等起動方式を使用した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証が成功した。既存の欠落文書に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引を1371件で再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはなかった。"
+    }
+  ],
+  "final_message": "trialで親検証をexecutor成功後・reporter前に実行し、検証件数と所要時間をexecutor／runner別に記録・表示するよう改善した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-07M5/20260826T144550431Z-5a64ee3c/executor.log",
+      "bytes": 2442,
+      "truncated": false
+    }
+  ]
+}

@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-04T12:00:00Z"
   conclusion: シビックテックサービスの運用設計（090-operations相当）はprj-0001の対象外とし、代表試行（SC-01〜SC-03）確認後の後続プロジェクトで検討する
+  register_events:
+    - v: 1
+      id: reg_d8cd2456072f27bea3e300acfb9a796c
+      ts: "2026-08-05T09:31:39Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0153をdeprecate, PJR-0154を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: シビックテックサービスの運用設計（090-operationsドメイン）の対応時期を決定
+        - field: description
+          from: ""
+          to: "`dct-data-flow.yaml`（プロジェクト推進・オペレーション推進の業務フロー）を拡充する過程で、SpecDojoを用いて作成するシビックテックサービス自体の「運用設計」（`docs-structure-guide.md` が定める製品ドキュメント構成の `090-operations` ドメイン相当）を、どのプロジェクトでいつ整理するかが未確定であることが判明した。`prj-scope.md` は「個別ソリューションの本番開発・運用」をスコープ外としているが、その担い手が prj-0001 の後続活動か、別プロジェクトかは明記されていなかったため、判断を確定する。"
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: f1e6a33769b5de1c207e05a8815b101314b018cd
+    - v: 1
+      id: reg_2addc0f74a54b612a567203b5e8f057e
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: description
+          from: "`dct-data-flow.yaml`（プロジェクト推進・オペレーション推進の業務フロー）を拡充する過程で、SpecDojoを用いて作成するシビックテックサービス自体の「運用設計」（`docs-structure-guide.md` が定める製品ドキュメント構成の `090-operations` ドメイン相当）を、どのプロジェクトでいつ整理するかが未確定であることが判明した。`prj-scope.md` は「個別ソリューションの本番開発・運用」をスコープ外としているが、その担い手が prj-0001 の後続活動か、別プロジェクトかは明記されていなかったため、判断を確定する。"
+          to: 運用設計について、prj-0001での対応方針を決定する
+        - field: owner
+          from: _TODO_
+          to: PO
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: シビックテックサービスの運用設計（090-operations相当）はprj-0001の対象外とし、代表試行（SC-01〜SC-03）確認後の後続プロジェクトで検討する
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_d8cd2456072f27bea3e300acfb9a796c
+    - v: 1
+      id: reg_34584a950f84cb88f8d8e155f88b7145
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: decided
+      to_status: decided
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-04"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_2addc0f74a54b612a567203b5e8f057e
 ---
 
 # PJR-0154 シビックテックサービスの運用設計（090-operationsドメイン）の対応時期を決定

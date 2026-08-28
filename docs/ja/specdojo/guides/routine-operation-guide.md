@@ -55,13 +55,13 @@ action:
 
 `action.kind` で、どの実行経路を発火させるかを選びます。
 
-| kind          | 動作                                                                                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する                                         |
-| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                                                                 |
-| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）                                              |
-| `exec-cycle`  | `exec cycle` を実行し、`exec-resume` → 状態再計算 → `exec-auto` を単一ロック内で順次処理する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる） |
-| `job`         | `job-*.yaml`から一意なJob Runを生成し、`exec run --job`で実行する                                                                                            |
+| kind          | 動作                                                                                                                                                                               |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `register`    | 登録簿から `filter`（`types` / `priorities` / `statuses`）と `limit` で選んだ項目を `exec run --register` で実行する                                                               |
+| `exec-auto`   | `exec run --auto` を実行する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる）                                                                                       |
+| `exec-resume` | 再開時刻を迎えた retryable な利用制限 task を `exec resume --due` で排他的に再開する（`parallel` を指定できる）                                                                    |
+| `exec-cycle`  | `exec cycle` を実行し、`exec-resume` → 古い track の再生成 → 状態再計算 → `exec-auto` を単一ロック内で順次処理する（`strategy` / `parallel` / `loop` / `max_rounds` を指定できる） |
+| `job`         | `job-*.yaml`から一意なJob Runを生成し、`exec run --job`で実行する                                                                                                                  |
 
 週報Jobを毎週金曜日17時（Asia/Tokyo）に起動する例です。
 
@@ -156,25 +156,29 @@ routine 自体は実行機構を持たないトリガー層です。何を実行
 
 延期 task の再開と Ready task の自動実行を続けて動かしたいとき、`exec-resume` と `exec-auto` を別々の routine に分けると、実行順は routine ファイルの列挙順や複数 routine の cron 時刻差に依存します。先行 routine が想定時間を超えると後続 routine が busy skip され、次回の発火まで進みません。
 
-`kind: exec-cycle` は 1 つの routine で次の4 step を固定順で順次実行します。step の順序は routine ファイル名順や cron 時刻差に依存しません。
+`kind: exec-cycle` は 1 つの routine で次の5 step を固定順で順次実行します。step の順序は routine ファイル名順や cron 時刻差に依存しません。
 
 1. `exec-resume --due`（再開時刻を迎えた retryable な利用制限 task の再開）
 2. `index build`（`.specdojo/doc-index.json` の再構築）
-3. schedule 状態の再計算（`exec validate` と `exec refresh`）
-4. `exec run --auto`（Ready task の実行。`loop` 指定時は Ready がなくなるまで反復）
+3. 古い track の再生成（必要な track ごとの `schedule build --force`）
+4. schedule 状態の再計算（`exec validate` と `exec refresh`）
+5. `exec run --auto`（Ready task の実行。`loop` 指定時は Ready がなくなるまで反復）
 
-`index build` を状態再計算より前に挟むのは、直前の step（`resume` や、前回 routine 実行の取りこぼし）が新設した成果物を、Ready task の plan 生成が参照できるようにするためです。これを省くと、ある task が新設した成果物を同じ project の後続 task が wikilink/ID 参照で解決できず、生成された plan に `Unresolved ID reference` の警告が残ることがあります。`loop` 指定時は、auto step 内のラウンドを跨ぐたびにも `index build` → `exec refresh` の順で再実行され、ラウンド内で新設された成果物を次のラウンドから解決できます。
+step 3 は、`sch-track-<track>.yaml` がないか、`sch-strategy-<track>.yaml` の更新時刻が track より新しい場合だけ実行します。これは `exec validate` の警告と同じ判定です。該当 track がなければ step 3 のコマンドとログを省略します。再生成に失敗した場合は古い track のまま状態再計算や auto 実行へ進みません。自動再生成は `exec cycle` に限定し、単発の `exec run` と `exec refresh` の動作は変えません。
+
+`index build` を状態再計算より前に挟むのは、直前の step（`resume` や、前回 routine 実行の取りこぼし）が新設した成果物を、Ready task の plan 生成が参照できるようにするためです。これを省くと、ある task が新設した成果物を同じ project の後続 task が wikilink/ID 参照で解決できず、生成された plan に `Unresolved ID reference` の警告が残ることがあります。`loop` 指定時は、auto step 内のラウンドを跨ぐたびにも `index build` → 古い track の再生成 → `exec refresh` の順で再実行されます。前ラウンドで新設された成果物を解決できるだけでなく、strategy の更新で追加された次 track の task も同じ cycle の次ラウンドから Ready 選択できます。
 
 一連の処理は単一の project 実行ロック内で保持されます。step 間に手動実行・別 routine・CI の `exec run` / `exec resume` は割り込めません。後続 step は自身でロックを取り直さないため、同一 routine 実行の後続 step を busy skip することもありません。
 
 step 単位の失敗方針は次のとおりで、`[cycle] summary: ...` に step ごとの結果が出力されます。
 
-| step      | 失敗時の扱い                                                                       |
-| --------- | ---------------------------------------------------------------------------------- |
-| `resume`  | 再延期や失敗があっても中断しない。依存しない Ready task の実行を継続する           |
-| `index`   | `index build` は後続 step の参照解決の前提のため、失敗したら残りの step を中止する |
-| `refresh` | `validate` / `refresh` は Ready 選択の前提のため、失敗したら auto step を中止する  |
-| `auto`    | 失敗を記録する。以降の step はない                                                 |
+| step       | 失敗時の扱い                                                                       |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `resume`   | 再延期や失敗があっても中断しない。依存しない Ready task の実行を継続する           |
+| `index`    | `index build` は後続 step の参照解決の前提のため、失敗したら残りの step を中止する |
+| `schedule` | 古い track の再生成に失敗したら状態再計算と auto step を中止する                   |
+| `refresh`  | `validate` / `refresh` は Ready 選択の前提のため、失敗したら auto step を中止する  |
+| `auto`     | 失敗を記録する。以降の step はない                                                 |
 
 いずれかの step が失敗すると routine 実行全体は失敗（終了コード 1）になり、`routine-state.json` の `last_result` は `failure` を記録します。開始時に project が busy の場合だけ `--if-busy` 方針（既定は routine 経由で `skip`）が適用され、`skipped` として記録されます。再開対象が 0 件でも状態再計算と auto 実行へ進みます。
 

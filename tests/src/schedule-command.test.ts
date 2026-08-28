@@ -15,6 +15,7 @@ function writeMilestoneStrategy(
   track: string,
   milestoneId: string,
   projectId = "prj-test",
+  status = "ready",
 ): string {
   const localId = `doc-${track}`;
   const catalogFile = `catalog-${track}.yaml`;
@@ -38,7 +39,7 @@ function writeMilestoneStrategy(
       kind: "strategy",
       id: `${projectId}:sch-strategy-${track}`,
       type: "project",
-      status: "ready",
+      status,
       track,
       scope: {
         catalogs: [{ id: `${projectId}:catalog-${track}`, path: `/${catalogFile}` }],
@@ -116,11 +117,11 @@ describe("project milestone rebuild", () => {
     try {
       writeMilestoneStrategy(dir, "launch", "G-LAUNCH-first");
       const initial = collectProjectMilestones(dir, dir, "prj-test");
-      updateMilestonesFile(dir, "prj-test", initial.milestones, "ready", false);
+      updateMilestonesFile(dir, "prj-test", initial.milestones, false);
 
       writeMilestoneStrategy(dir, "data-flow", "G-DATA-FLOW-first");
       const rebuilt = collectProjectMilestones(dir, dir, "prj-test");
-      updateMilestonesFile(dir, "prj-test", rebuilt.milestones, "ready", false);
+      updateMilestonesFile(dir, "prj-test", rebuilt.milestones, false);
       const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
         milestones: Array<{ id: string }>;
       };
@@ -144,7 +145,7 @@ describe("project milestone rebuild", () => {
       writeMilestoneStrategy(dir, "alpha", "G-ALPHA-first");
       const betaFile = writeMilestoneStrategy(dir, "beta", "G-BETA-first");
       const initial = collectProjectMilestones(dir, dir, "prj-test");
-      updateMilestonesFile(dir, "prj-test", initial.milestones, "ready", false);
+      updateMilestonesFile(dir, "prj-test", initial.milestones, false);
 
       unlinkSync(join(dir, betaFile));
       const rebuilt = collectProjectMilestones(dir, dir, "prj-test");
@@ -153,7 +154,7 @@ describe("project milestone rebuild", () => {
         owner: "PO",
         tags: ["rebuilt"],
       };
-      const update = updateMilestonesFile(dir, "prj-test", rebuilt.milestones, "ready", false);
+      const update = updateMilestonesFile(dir, "prj-test", rebuilt.milestones, false);
       const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
         milestones: Array<{ id: string; owner: string; tags?: string[] }>;
       };
@@ -181,6 +182,61 @@ describe("project milestone rebuild", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  it("新規 milestone 集約ファイルを draft で作成する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-status-new-"));
+    try {
+      writeMilestoneStrategy(dir, "alpha", "G-ALPHA-first");
+      const result = collectProjectMilestones(dir, dir, "prj-test");
+
+      updateMilestonesFile(dir, "prj-test", result.milestones, false);
+      const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+        status: string;
+      };
+
+      expect(doc.status).toBe("draft");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ["ready", "draft"],
+    ["draft", "ready"],
+    ["deprecated", "ready"],
+  ])(
+    "既存 milestone 集約ファイルの status=%s を strategy status=%s の再構築でも保持する",
+    (status, strategyStatus) => {
+      const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-status-existing-"));
+      try {
+        writeMilestoneStrategy(dir, "alpha", "G-ALPHA-first", "prj-test", strategyStatus);
+        writeFileSync(
+          join(dir, "sch-milestones.yaml"),
+          yaml.dump({
+            kind: "milestones",
+            id: "prj-test:sch-milestones",
+            type: "project",
+            status,
+            version: 1,
+            project_id: "prj-test",
+            settings: {},
+            milestones: [],
+          }),
+          "utf8",
+        );
+        const result = collectProjectMilestones(dir, dir, "prj-test");
+
+        updateMilestonesFile(dir, "prj-test", result.milestones, false);
+        const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+          status: string;
+        };
+
+        expect(doc.status).toBe(status);
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("別 strategy が不正なら不完全な集約結果を成功扱いしない", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-invalid-"));

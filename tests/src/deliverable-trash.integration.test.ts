@@ -41,8 +41,6 @@ groups:
 function createRepo(): string {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-deliverable-trash-"));
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
 
   const catalogDir = join(repo, "docs/ja/projects/prj-0001/010-deliverables-catalog");
   mkdirSync(catalogDir, { recursive: true });

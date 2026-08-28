@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: PJR idの重複検知と再採番を追加
+  register_events:
+    - v: 1
+      id: reg_d7ec8b4132f40f127d57db63adb6c520
+      ts: "2026-07-25T22:58:27Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(pjr): PJR-0137, 0138を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: pjr-indexの重複ID検知と再採番
+        - field: description
+          from: ""
+          to: "`specdojo register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生する。表末尾への追記は通常 merge conflict になるが、rebase や cherry-pick を経た場合は重複が検知されずに通る。重複 ID を検証で必ず落とし、発生時には表・個票ファイル名・参照リンクを一括で付け替える再採番コマンドを用意する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7b06a00ba03afd333ecf8e743345791fa885a1c9
+    - v: 1
+      id: reg_aad0233a2f95d6fe1d0bdaff5c53ebf5
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`specdojo register add` の PJR-ID は `pjr-index.md` の最大値 +1 で採番されるため、複数の作業者や worktree が並行して起票すると同じ ID が別 branch で発生する。表末尾への追記は通常 merge conflict になるが、rebase や cherry-pick を経た場合は重複が検知されずに通る。重複 ID を検証で必ず落とし、発生時には表・個票ファイル名・参照リンクを一括で付け替える再採番コマンドを用意する。"
+          to: 並行作業でPJR-IDが重複しても検知できないため、schemaでID一意性を検証し、重複時に表・個票ファイル名・リンク・plan/resultのtargetsを一括更新するrenumberコマンドを追加する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: PJR idの重複検知と再採番を追加
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_d7ec8b4132f40f127d57db63adb6c520
+    - v: 1
+      id: reg_052956cea3b907f90b2490ab12541378
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_aad0233a2f95d6fe1d0bdaff5c53ebf5
 ---
 
 # PJR-0137 pjr-indexの重複ID検知と再採番

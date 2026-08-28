@@ -1,3 +1,13 @@
+---
+specdojo:
+  id: specdojo:cld-rulebook
+  type: rulebook
+  status: draft
+  recipe: undecided
+  sample: specdojo:cld-sample
+  template: undecided
+---
+
 # 分類一覧（Classification List）作成ルール
 
 業務上の分類（カテゴリ、種別、区分など）を一覧で整理するための標準ルールです。

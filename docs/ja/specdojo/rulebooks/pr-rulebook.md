@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:pr-rulebook
   type: rulebook
   status: draft
+  recipe: not-needed
   sample: specdojo:pr-sample
+  template: not-needed
 ---
 
 # 進捗報告 作成ルール

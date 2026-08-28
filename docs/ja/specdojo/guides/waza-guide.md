@@ -71,8 +71,9 @@ repo-root/
 │     └─ projects/
 │        └─ prj-0001/
 │           ├─ 010-deliverables-catalog/
-│           │  ├─ dct-index.md
-│           │  └─ dct-*.yaml
+│           │  ├─ dct-index.yaml
+│           │  ├─ dct-*.yaml
+│           │  └─ generated/dct-index.md
 │           ├─ 030-project-management/
 │           ├─ schedule/
 │           │  ├─ sch-milestones.yaml
@@ -200,11 +201,13 @@ register から成果物カタログへ移す手順は [Quick Startガイド](qu
 
 成果物ごとの生成方針は次のとおりです。
 
-| 条件                                    | 生成内容                                                                                                                                                                                             |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `local_id` に対応するテンプレートがある | `<local_id>-template.md` / `<local_id>-template.yaml` から生成する。`frontmatter_template` を平坦化し、`_PROJECT_ID_` を実プロジェクトIDへ置換する（`_TODO_` などの記入プレースホルダは残す）        |
-| テンプレートがない                      | カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行） |
-| すでにファイルが存在する                | 上書きしない（`--force` を指定した場合のみ上書きする）                                                                                                                                               |
+| 条件                                            | 生成内容                                                                                                                                                                                                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rulebook が template の文書 ID を宣言           | 宣言 ID の `*-template.md` / `*-template.yaml` から生成する。同じ rulebook 系統は template を共有できる。`frontmatter_template` を平坦化し、カタログから確定できる予約済み生成時プレースホルダを置換する（`_TODO_` などの記入プレースホルダは残す） |
+| `template: not-needed` / `undecided` / 項目省略 | `local_id` の命名規約では探索せず、カタログ情報から埋められる範囲で最小雛形を生成する（`id` / `type` / `status` / `rulebook` / `depends_on` 由来の `based_on` を持つ Frontmatter、`name` の H1、`overview` 本文、記入用の `_TODO_` 行）             |
+| すでにファイルが存在する                        | 上書きしない（`--force` を指定した場合のみ上書きする）                                                                                                                                                                                              |
+
+template の要否と所在は rulebook frontmatter が正本です。`local_id` と同名の template が存在しても、rulebook が文書 ID を宣言していなければ使用しません。予約済み生成時プレースホルダは `_PROJECT_ID_`、`_LOCAL_ID_`、`_DELIVERABLE_NAME_`、`_DELIVERABLE_OVERVIEW_`、`_BASED_ON_` です。
 
 `deliverable scaffold` は成果物本体を一度だけ材料化し、以後は人手で記入・編集します。そのため、冪等な再生成をまとめる `specdojo build` には含めません（`build` に含めると記入済みの本文を上書きしてしまうため）。プロジェクト初期化時に `catalog scaffold` → `catalog validate` の後で 1 回だけ実行します。
 

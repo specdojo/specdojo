@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # 利用制限で延期された task の再開・状態再計算・Ready task の auto loop を
 # 1 つの定時実行単位として順次処理する routine のサンプル。
 # 実行順は resume(due) → validate/refresh → run --auto --loop で固定され、
@@ -9,7 +10,7 @@
 id: rtn-exec-cycle
 name: 延期 task 再開と Ready task 自動実行の順次処理
 description: 毎日1時と6時（Asia/Tokyo）に、due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
-enabled: true
+enabled: false
 trigger:
   cron: "0 1,6 * * *"
   timezone: Asia/Tokyo

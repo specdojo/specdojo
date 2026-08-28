@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-26"
   completed_at: "2026-05-30T12:00:00Z"
   conclusion: 初期値をずらすのとgateの処理を追加
+  register_events:
+    - v: 1
+      id: reg_16790c9ef8bb43f37db752d94ee18f0c
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: 完了成果物をscheduleへ反映
+        - field: description
+          from: ""
+          to: specdojo scheduleに完了成果物を反映して初期値をずらす
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-26"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: 初期値をずらすのとgateの処理を追加
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_18d2b182278ed3dd3d5f92aca3758fc0
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-30"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_16790c9ef8bb43f37db752d94ee18f0c
 ---
 
 # PJR-0076 完了成果物をscheduleへ反映

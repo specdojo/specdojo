@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
 # dct-sample.yaml
 # 成果物カタログ（ドメイン別）の完成例。
 # 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。

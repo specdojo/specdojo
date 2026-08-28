@@ -583,7 +583,7 @@ test-specs
 | プロダクト文書   | `bdd-common`                            | `bdd-common.md`                     |
 | プロジェクト文書 | `prj-0001:prj-overview`                 | `prj-overview.md`                   |
 | プロジェクト文書 | `prj-0001:prj-charter`                  | `prj-charter.md`                    |
-| 成果物カタログ   | `prj-0001:dct-index`                    | `dct-index.md`                      |
+| 成果物カタログ   | `prj-0001:dct-index`                    | `generated/dct-index.md`            |
 | プロジェクト文書 | `prj-0001:sch-track-project-definition` | `sch-track-project-definition.yaml` |
 
 ### 6.3. namespace とディレクトリの関係

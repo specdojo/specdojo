@@ -257,9 +257,6 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       );
 
       git(root, "init");
-      git(root, "config", "user.name", "SpecDojo Test");
-      git(root, "config", "user.email", "specdojo@example.invalid");
-      git(root, "config", "commit.gpgsign", "false");
       git(root, "add", "-A");
       git(root, "commit", "-m", "initial");
 

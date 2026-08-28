@@ -1,0 +1,11 @@
+実装は完了しましたが、unit test が未解消扱いのため executor 検証は失敗です。
+
+- reporter 再開時、失敗した親 runner 検証のみを固定許可リストから再実行し、evidence を安全に置換するよう変更。
+- executor 由来の検証は保持し、環境起因の親検証と区別。
+- 解消済み／未解消の両経路を確認する E2E テストを追加。
+- 個票と運用ガイドを更新。result と登録簿ステータスは未変更。
+- unit test は生成前の `pjr-index.md` 欠損で既存テストが失敗後に停止。規約により再実行していません。integration test は親 runner 実行対象です。
+
+<specdojo_executor_evidence>
+{"final_message":"親検証の再評価機能と双方向テスト、関連文書を更新した。unit testは生成前のpjr-index欠損により失敗し、integration testは親runner実行待ち。","validations":[{"command":"npx prettier --write src/exec-evidence.ts src/exec-parent-validation.ts src/exec-run.ts tests/src/exec-parent-validation.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md","status":"passed","summary":"変更したTypeScript・Markdownを整形した。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査が成功した。"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint検査が成功した。"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md","status":"passed","summary":"変更したMarkdownの静的検査が成功した。"},{"command":"npm run test:unit","status":"failed","summary":"生成前のproject-register/generated/pjr-index.md欠損により既存doc-indexテストが1件失敗し、その後停止した。規約に従い再実行していない。"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"sandboxのtsx IPC制約によりlisten EPERMで起動できなかった。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPC不要の同一CLI起動経路で登録簿生成に成功した。PJR-Q828の状態はin-progressのまま維持した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証は既存警告を伴い終了コード0で成功した。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックス1314件を生成した。"},{"command":"git diff --check","status":"passed","summary":"変更差分に空白エラーはなかった。"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline指示に従いexecutor内では実行せず、親runnerのtest-integration検証に委ねた。"}]}
+</specdojo_executor_evidence>

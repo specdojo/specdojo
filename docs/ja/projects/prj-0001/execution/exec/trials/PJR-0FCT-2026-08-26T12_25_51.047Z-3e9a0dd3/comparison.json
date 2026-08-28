@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "comparison_id": "PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3",
+  "project_id": "prj-0001",
+  "task_id": "PJR-0FCT",
+  "status": "discarded",
+  "created_at": "2026-08-26T12:25:51.155Z",
+  "completed_at": "2026-08-26T13:43:49.798Z",
+  "base_commit": "3128b9faf0210d969b68bb71918e5fca77a92c25",
+  "base": {
+    "requested_revision": "bb3ce4bc~1",
+    "resolved_commit": "3128b9faf0210d969b68bb71918e5fca77a92c25",
+    "head_commit_at_start": "68e0cfa0a6e67b076288f6aa4342391254c78a47",
+    "base_is_ancestor_of_head": true,
+    "defaulted_to_head": false,
+    "plan_path_exists_at_base": true,
+    "compatible": false,
+    "referenced_paths": [
+      {
+        "path": "docs/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md",
+        "exists_at_base": false
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/execution/exec/results/pjr-0fct-20260826T065759Z-f6d7-result.md",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/specdojo/templates/",
+        "exists_at_base": true
+      },
+      {
+        "path": "lefthook.yml",
+        "exists_at_base": true
+      },
+      {
+        "path": "scripts/",
+        "exists_at_base": false
+      },
+      {
+        "path": "src/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tests/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tools/",
+        "exists_at_base": true
+      }
+    ],
+    "missing_referenced_paths": [
+      "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md",
+      "scripts/"
+    ],
+    "warnings": [
+      "Referenced paths missing at the base commit: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md, scripts/"
+    ]
+  },
+  "reporter_mode": "paired",
+  "plan": {
+    "path": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-0fct-20260826T065759Z-f6d7-plan.md",
+    "sha256": "ffbd13deeeaa04e8a8d1ee782795c22cadeb45c2e92df16f268d3feb3f52e8f2",
+    "prompt_sha256": "161d2c2f367b92d2301c1ec57771ef04614862de3bf61e765f1ff27173bc179a"
+  },
+  "selected_trial_id": null,
+  "trials": [
+    {
+      "trial_id": "gemma-expert-executor-gemma-reporter",
+      "agent": "gemma-expert-executor",
+      "reporter_agent": "gemma-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-gemma-expert-executor-gemma-reporter",
+      "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-gemma-expert-executor-gemma-reporter",
+      "status": "discarded",
+      "started_at": "2026-08-26T12:26:40.848Z",
+      "completed_at": "2026-08-26T12:35:26.500Z",
+      "duration_ms": 525652,
+      "executor": {
+        "exit_code": 0,
+        "attempts": 1,
+        "structured_output": true,
+        "validations_passed": 2,
+        "validations_failed": 0,
+        "validations_not_run": 0,
+        "files_changed": 1,
+        "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/gemma-expert-executor-gemma-reporter/evidence.json",
+        "final_message": "Resolved contradictions in test execution descriptions in xep-common-conventions-template.md by clarifying the scope of 'run once' rule and adding conditional execution for pipeline executor's unit tests depending on parent validation settings. Verified with prettier and markdownlint.",
+        "validations": [
+          {
+            "source": "executor",
+            "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "passed",
+            "summary": "Formatted successfully"
+          },
+          {
+            "source": "executor",
+            "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "passed",
+            "summary": "No linting errors"
+          }
+        ],
+        "changes": [
+          {
+            "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "M"
+          }
+        ],
+        "diff_summary": ".../templates/xep-common-conventions-template.md   | 24 +++++++++++-----------\n 1 file changed, 12 insertions(+), 12 deletions(-)"
+      },
+      "reporter": {
+        "status": "succeeded",
+        "structured_output": true,
+        "format_attempts": 1,
+        "format_retries": 0,
+        "outcome": "complete",
+        "output": {
+          "schema_version": 1,
+          "mode": "edit",
+          "outcome": "complete",
+          "summary": [
+            "共通規約テンプレート（xep-common-conventions-template.md）におけるテスト実行に関する記述の矛盾を解消しました。",
+            "「1回だけ実行する」ルールの適用範囲を明確化し、親検証の設定に応じたパイプラインexecutorのユニットテスト実行条件を追加しました。",
+            "変更後、prettierによる整形およびmarkdownlintによる静的検査を実施し、エラーがないことを確認済みです。"
+          ],
+          "changed_files": [
+            {
+              "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+              "summary": "テスト実行（test:unit）に関する規約の記述を修正し、矛盾を解消。"
+            }
+          ],
+          "handoff": [],
+          "approach": "共通規約テンプレートの内容を更新し、「test:unit は1回だけ実行する」という制約が再検証まで禁止すると誤解されないよう定義を明確化しました。また、親runnerによる検証が行われる仕組み（PJR-QVGXで解消済み）に合わせ、pipeline executor側の動作記述を整合させました。",
+          "block_reason": ""
+        },
+        "failure_category": null,
+        "failure_reason": ""
+      },
+      "subjective": {
+        "judgment_quality": 4,
+        "writing_quality": 4,
+        "scope_adherence": 3,
+        "notes": "矛盾を解消し、保持すべき固定句2つを維持した。対応表の書き換えは簡潔で、採用済みの実装に最も近い。行番号参照も持ち込んでいない。reporter は形式リトライなしで構造化出力を返し、qwen が2回とも失敗した能力を示した。一方で完了条件が求める lint:md と lint:fm を実施していない。これらは親検証の固定許可リストに含まれず executor 側の責務であり、qwen は両方を実行している。所要時間8分46秒は qwen の7.2倍速いが、実施した検証の量が異なるため単純比較はできない。executor としての評価は追加の試行が必要である。"
+      }
+    },
+    {
+      "trial_id": "qwen-expert-executor-qwen-reporter",
+      "agent": "qwen-expert-executor",
+      "reporter_agent": "qwen-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-qwen-expert-executor-qwen-reporter",
+      "branch": "exec/prj-0001-trial-PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-qwen-expert-executor-qwen-reporter",
+      "status": "discarded",
+      "started_at": "2026-08-26T12:35:26.502Z",
+      "completed_at": "2026-08-26T13:38:20.421Z",
+      "duration_ms": 3773919,
+      "executor": {
+        "exit_code": 0,
+        "attempts": 1,
+        "structured_output": true,
+        "validations_passed": 5,
+        "validations_failed": 0,
+        "validations_not_run": 5,
+        "files_changed": 1,
+        "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/evidence.json",
+        "final_message": "xep-common-conventions-template.md の test 実行記述（18/19/31 行）を矛盾なく統一: 18 行目に「1回だけ」の適用範囲（親検証未設定の script にのみ）、19 行目に下表との優先順位と条件付き委譲を追加、31 行目の矛盾指示を条件付きへ改写。テスト検証の 2 サブストリングは保持し、prettier/markdownlint/lint:md/lint:fm を通過。親検証(test-unit等)・tsx ビルド系の未実施は executor 制約による。",
+        "validations": [
+          {
+            "source": "executor",
+            "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "passed",
+            "summary": "整形適用（表の列幅を調整）。差分のみ対象。"
+          },
+          {
+            "source": "executor",
+            "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "passed",
+            "summary": "出力なし＝エラー 0 件。"
+          },
+          {
+            "source": "executor",
+            "command": "npm run lint:md",
+            "status": "passed",
+            "summary": "markdownlint '**/*.md' で全 md 対象、エラー 0 件。pre-commit の markdown チェック相当。"
+          },
+          {
+            "source": "executor",
+            "command": "npm run lint:fm",
+            "status": "passed",
+            "summary": "remark --frail で docs/ 配下の frontmatter スキーマ検査（個票の完了条件）、エラー 0 件。"
+          },
+          {
+            "source": "executor",
+            "command": "git diff -- docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "passed",
+            "summary": "1 ファイルのみ変更。exec-plans.test.ts の検証サブストリング（全件を1回だけ実行して対象限定の実行を省く / executor は親検証と同じコマンドの対象限定版も追加ず、二重実行しない）が残存することを確認。"
+          },
+          {
+            "source": "executor",
+            "command": "npm run test:unit",
+            "status": "not_run",
+            "summary": "親検証に設定済み ID で executor の sandbox 内実行は禁止（PJR-0FCT 本体の規律・共通規約 L19）。親 runner が source=runner で執行。"
+          },
+          {
+            "source": "executor",
+            "command": "npm run validate:schema",
+            "status": "not_run",
+            "summary": "親検証に設定済み。executor の実行は二重実行になるため禁止、親 runner が執行。"
+          },
+          {
+            "source": "executor",
+            "command": "npm run test:integration",
+            "status": "not_run",
+            "summary": "親検証に該当する場合は executor では禁止し親 runner に委譲。本 trial は template(.md) 編集のみのため実行対象外。"
+          },
+          {
+            "source": "executor",
+            "command": "npx tsx src/specdojo.ts register build",
+            "status": "not_run",
+            "summary": "pjr-index.md を変更していないためトリガ外。また specdojo/tsx の起動手段が本 executor sandbox の許可リストに無く、runner が実施する想定。"
+          },
+          {
+            "source": "executor",
+            "command": "npx tsx src/specdojo.ts index build",
+            "status": "not_run",
+            "summary": "docs/ 配下は変更したが生成物(doc-index)は gitignore 済みで再生成のみ。tsx 起動手段が許可リストに無いため未実施。"
+          }
+        ],
+        "changes": [
+          {
+            "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+            "status": "M"
+          }
+        ],
+        "diff_summary": ".../templates/xep-common-conventions-template.md   | 26 +++++++++++-----------\n 1 file changed, 13 insertions(+), 13 deletions(-)"
+      },
+      "reporter": {
+        "status": "failed",
+        "structured_output": false,
+        "format_attempts": 3,
+        "format_retries": 2,
+        "outcome": null,
+        "output": null,
+        "failure_category": "invalid_output",
+        "failure_reason": "reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token 'I', \"I'll exami\"... is not valid JSON"
+      },
+      "subjective": {
+        "judgment_quality": 4,
+        "writing_quality": 2,
+        "scope_adherence": 4,
+        "notes": "矛盾は解消し、保持すべき固定句2つを維持した。検証の記録は理由を添えた丁寧なものである。一方で対応表の記述が冗長で、生成 plan の読み手には意味を持たない行番号参照（19 行目）を残した。reporter は3回とも JSON でなく自然文を返し invalid_output となった。所要時間62分54秒で gemma の7.2倍。"
+      }
+    }
+  ],
+  "agent_selection": {
+    "policy": "manual",
+    "target": "pm-members.yaml",
+    "rationale": "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates pm-members.yaml priority/capabilities when repeated evidence supports the change."
+  }
+}

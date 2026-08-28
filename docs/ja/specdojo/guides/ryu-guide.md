@@ -32,7 +32,7 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 
 | 判断                                                                         | 担当                            | 根拠・出力                                   |
 | ---------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------- |
-| ファイルの実在・宣言形式・`status`・参照切れ・実装エビデンスの解決           | コード（`schedule assessment`） | `sch-assessment-<track>.yaml` の `facts`     |
+| ファイルの実在・要否宣言・`status`・参照切れ・実装エビデンスの解決           | コード（`schedule assessment`） | `sch-assessment-<track>.yaml` の `facts`     |
 | 内容が対象成果物の作成・更新基準として信頼できるか（利用可能性）とタスク目的 | エージェント                    | 同ファイルの `judgment`（4観点の根拠付き）   |
 | 上記から `approach` を決める判定規則の適用                                   | コード                          | 同ファイルの `recommended_approach`          |
 | 判定結果の承認、`undecided` の解消、`status` の `ready` 昇格                 | 人間                            | レビューと `finalize` / `bootstrap-finalize` |
@@ -49,7 +49,7 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 flowchart TD
   P{"タスクの目的"}
   P -->|"成果物を作成・更新する"| M{"実践の型の整備状況"}
-  M -->|"4種が揃い信頼できる"| FG["fully-guided"]
+  M -->|"必要な型が揃い信頼できる"| FG["fully-guided"]
   M -->|"recipe のみ使える"| RG["recipe-guided"]
   M -->|"実践の型に頼れない"| FF["freeform"]
   FG --> W["雛形から開始 → 内容を記述 → レビュー"]
@@ -62,7 +62,7 @@ flowchart TD
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
 ```
 
-整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、成果物と再利用できる実践の型を一式で初期整備する対象である場合に限って選びます。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
+整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、`undecided` の型を含めてどの型が必要かを作成条件に照らして判断し、成果物と必要な型を一式で初期整備する場合に限って選びます。不要な recipe / sample / template は rulebook frontmatter へ `not-needed` と宣言し、作成対象へ含めません。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
 
 ### 1.2. approach 一覧
 
@@ -88,11 +88,11 @@ flowchart LR
   CTX -->|freeform| D
 ```
 
-| `approach`      | 参照方針と進め方                                                                                                                                               | 対応テンプレート                                                                                          |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `fully-guided`  | rulebook / recipe / sample / template をそれぞれの役割に沿って使う。template から開始し、プレースホルダを残さず、rulebook と矛盾する場合は rulebook を正とする | [edit](../templates/xep-fully-guided-template.md) / [review](../templates/xrp-fully-guided-template.md)   |
-| `recipe-guided` | recipe が示す構成・問い・観点を主基準にする。rulebook / sample / template が存在しても、構造・文体の基準にはしない                                             | [edit](../templates/xep-recipe-guided-template.md) / [review](../templates/xrp-recipe-guided-template.md) |
-| `freeform`      | 実践の型より、対象領域の類似成果物やプロジェクト文脈を優先する。実践の型は矛盾しない範囲の参考にとどめる                                                       | [edit](../templates/xep-freeform-template.md) / [review](../templates/xrp-freeform-template.md)           |
+| `approach`      | 参照方針と進め方                                                                                                                                                             | 対応テンプレート                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `fully-guided`  | 必要と宣言された rulebook / recipe / sample / template をそれぞれの役割に沿って使う。利用する template があればそこから開始し、rulebook と矛盾する場合は rulebook を正とする | [edit](../templates/xep-fully-guided-template.md) / [review](../templates/xrp-fully-guided-template.md)   |
+| `recipe-guided` | recipe が示す構成・問い・観点を主基準にする。rulebook / sample / template が存在しても、構造・文体の基準にはしない                                                           | [edit](../templates/xep-recipe-guided-template.md) / [review](../templates/xrp-recipe-guided-template.md) |
+| `freeform`      | 実践の型に頼れないため、カタログの `done_criteria`、対応 schema、既存の類似成果物を根拠に構成と内容を決める。参照した根拠と未決事項を result に残す                          | [edit](../templates/xep-freeform-template.md) / [review](../templates/xrp-freeform-template.md)           |
 
 #### 1.2.2. 初期整備・実装反映・横断整理
 
@@ -114,11 +114,11 @@ flowchart LR
   S --> DD --> C
 ```
 
-| `approach`                | 参照方針と進め方                                                                                                                      | 対応テンプレート                                                                                                              |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `bootstrap`               | 成果物と rulebook / recipe / sample / template を同じタスクで初期作成し、互いに矛盾しない一式として揃える                             | [edit](../templates/xep-bootstrap-template.md)                                                                                |
-| `retrofit`                | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する | [edit](../templates/xep-retrofit-template.md) / [review](../templates/xrp-retrofit-template.md)                               |
-| `cross-deliverable-dedup` | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する        | [edit](../templates/xep-cross-deliverable-dedup-template.md) / [result](../templates/xer-cross-deliverable-dedup-template.md) |
+| `approach`                | 参照方針と進め方                                                                                                                                                           | 対応テンプレート                                                                                                              |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap`               | 作成条件から型の要否を判断し、成果物と必要な rulebook / recipe / sample / template を同じタスクで初期作成する。不要な3種は rulebook frontmatter へ `not-needed` と宣言する | [edit](../templates/xep-bootstrap-template.md)                                                                                |
+| `retrofit`                | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する                                      | [edit](../templates/xep-retrofit-template.md) / [review](../templates/xrp-retrofit-template.md)                               |
+| `cross-deliverable-dedup` | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                                             | [edit](../templates/xep-cross-deliverable-dedup-template.md) / [result](../templates/xer-cross-deliverable-dedup-template.md) |
 
 `retrofit` では、実装を現在動作（AS-IS）の根拠、既存成果物・決定記録・プロジェクトコンテキストを意図された仕様の根拠、`done_criteria` を成果物が満たすべき目的として扱います。三者が一致すれば成果物へ反映し、実装が意図された仕様と異なる場合は実装へ無条件に合わせず、乖離と修正対象候補を result に記録します。実装から確認できない目的・業務判断・将来方針は推測しません。
 
@@ -146,6 +146,8 @@ flowchart LR
 | `recipe-maintenance`   | recipe     | [edit](../templates/xep-recipe-maintenance-template.md) / [review](../templates/xrp-recipe-maintenance-template.md)     |
 | `sample-maintenance`   | sample     | [edit](../templates/xep-sample-maintenance-template.md) / [review](../templates/xrp-sample-maintenance-template.md)     |
 | `template-maintenance` | template   | [edit](../templates/xep-template-maintenance-template.md) / [review](../templates/xrp-template-maintenance-template.md) |
+
+rulebook frontmatter で `not-needed` と宣言された型はメンテナンス対象ではなく、strategy へ対応する `*-maintenance` フェーズを生成しません。作成が必要になった場合は、先に要否判断の根拠と rulebook frontmatter の宣言を更新します。
 
 #### 1.2.4. human による確定
 
@@ -211,7 +213,7 @@ review でも「整備状況に応じた進め方（approach）」を同じ基�
 
 - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体との整合を確認します。template がある場合は、章構成が雛形と整合しているか、プレースホルダが残っていないかを確認します。あわせて、成果物中の具体的な実装事実（ファイルパス・コマンド・設定値など）が参照範囲の文書で裏付けられているかを確認し、裏付けが無ければ unclear とします。
 - `recipe-guided`: recipe の問いとレビュー観点に照らして確認し、rulebook / sample / template の構造・文体は基準にしません。
-- `freeform`: 実践の型より、対象領域の類似成果物の実例やプロジェクト文脈との整合を確認します。
+- `freeform`: カタログの `done_criteria`、対応 schema、既存の類似成果物を根拠に、目的達成・構造・粒度・既存慣行との整合を確認します。
 - `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance`: 「実践の型メンテナンスの進め方」に従い、対象の実践の型が見直しに値するかという向きで確認観点を読み替えます。
 - `approach` に関わらず、evidence・notes は対象成果物・実践の型を実際に読んで得た具体的な観察に限ります。実行 agent（executor）の最終メッセージや result の自己申告を、そのまま、または言い換えて evidence として扱いません。対象成果物の内容と executor の報告が一致しない場合は、対象成果物側を優先し findings に記録します。
 - 判断の根拠をレビュー結果に残します。

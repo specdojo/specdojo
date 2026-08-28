@@ -1,7 +1,9 @@
+import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { gitEnvironment } from "../../src/exec-worktree.js";
 import {
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
@@ -13,6 +15,15 @@ const roots: string[] = [];
 function write(path: string, content: string): void {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, content, "utf8");
+}
+
+function initRepository(root: string): void {
+  // git hook 経由でテストが動くと GIT_DIR が linked worktree の gitdir を指す。その環境で
+  // `git init` すると、cwd の一時ディレクトリではなく GIT_DIR 側が bare として再初期化され、
+  // 共有されているメインリポジトリの config へ core.bare=true が書き込まれてしまう。
+  // gitEnvironment() は GIT_DIR / GIT_WORK_TREE を除去するため、必ず経由する。
+  const env = gitEnvironment();
+  execFileSync("git", ["init"], { cwd: root, stdio: "ignore", env });
 }
 
 afterEach(() => {
@@ -59,5 +70,47 @@ describe("agent protected configuration paths", () => {
       ".github/workflows/ci.yml",
       "package.json",
     ]);
+  });
+
+  it("ignores gitignored generated files under a protected directory", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".gitignore"), ".specdojo/doc-index.json\n");
+    write(join(root, ".specdojo", "exec-defaults.yaml"), "providers: {}\n");
+    write(join(root, ".specdojo", "doc-index.json"), '{"entries":[]}\n');
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    // agent が共通規約どおり index build を実行して生成物を書き換えても違反にしない。
+    write(join(root, ".specdojo", "doc-index.json"), '{"entries":[{"id":"a"}]}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
+  });
+
+  it("still protects an untracked config file that is not gitignored", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".gitignore"), ".specdojo/doc-index.json\n");
+    write(join(root, ".specdojo", "exec-defaults.yaml"), "providers: {}\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    // 未追跡でも ignore されていない新規の設定ファイルは、すり抜けを防ぐため保護対象に残す。
+    write(join(root, ".specdojo", "claude", "settings.report.json"), "{}\n");
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".specdojo/claude/settings.report.json",
+    ]);
+  });
+
+  it("protects every candidate when the directory is not a Git repository", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".specdojo", "doc-index.json"), '{"entries":[]}\n');
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".specdojo", "doc-index.json"), '{"entries":[{"id":"a"}]}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([".specdojo/doc-index.json"]);
   });
 });

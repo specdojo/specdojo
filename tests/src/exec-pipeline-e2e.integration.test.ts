@@ -9,7 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -441,9 +441,6 @@ function setupPipelineRepository(): PipelineFixture {
   // evidence は git status / diff から変更ファイルを収集するため、実リポジトリを用意し、
   // agent 実行前の状態をコミットしておく。
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
-  git(repo, "config", "commit.gpgsign", "false");
   git(repo, "add", "-A");
   git(repo, "commit", "-m", "initial");
 
@@ -504,6 +501,34 @@ function readTaskEvents(fixture: PipelineFixture, taskId: string): TaskEvent[] {
 function readResult(fixture: PipelineFixture, taskId: string): string {
   return readFileSync(
     join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+    "utf8",
+  );
+}
+
+// 実行が失敗すると worktree はマージされずに保持されるため、その run の result は
+// リポジトリ側ではなく worktree 側にだけ残る。worktree 名は実装の命名規則に依存する
+// ので、base 直下の唯一のディレクトリとして解決する。
+function readWorktreeResult(
+  worktreeBase: string,
+  fixture: PipelineFixture,
+  taskId: string,
+): string {
+  const entries = readdirSync(worktreeBase, { withFileTypes: true }).filter((entry) =>
+    entry.isDirectory(),
+  );
+  if (entries.length !== 1) {
+    throw new Error(`expected exactly one worktree under ${worktreeBase}, found ${entries.length}`);
+  }
+  const executionRelativePath = relative(fixture.repo, fixture.executionPath);
+  return readFileSync(
+    join(
+      worktreeBase,
+      entries[0]!.name,
+      executionRelativePath,
+      "exec",
+      "results",
+      `${taskId}-result.md`,
+    ),
     "utf8",
   );
 }
@@ -574,7 +599,9 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].model).toBe("gemma3-12b");
     expect(invocations[1].model).toBe("gemma3-12b");
     expect(invocations[0].prompt).toContain("executor stage");
-    expect(invocations[0].prompt).toContain("npm run test:unit");
+    // 親 runner が実行する検証は、ID と対応コマンドを添えて executor へ伝える。
+    // executor 側で同じコマンドを実行させないため、prompt に含まれている必要がある。
+    expect(invocations[0].prompt).toContain("test-integration (npm run test:integration)");
 
     // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
     expect(readFileSync(join(target.repo, "pipeline-artifact.md"), "utf8")).toContain(
@@ -889,5 +916,113 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     // 同一秒に書かれるイベントはファイル名順が確定しないため、種別の集合で確認する。
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
+  }, 20_000);
+
+  it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+
+    writeFileSync(fixture.parentValidationBehaviorPath, "fail\n", "utf8");
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+    expect(process.exitCode).toBe(1);
+
+    writeFileSync(fixture.parentValidationBehaviorPath, "pass\n", "utf8");
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(
+      readInvocations(fixture.logPath).filter((item) => item.role === "executor"),
+    ).toHaveLength(1);
+    expect(
+      readInvocations(fixture.logPath).filter((item) => item.role === "reporter"),
+    ).toHaveLength(2);
+    expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\nrun\n");
+    expect(readResult(fixture, "T-TEST-doc-010")).toContain("status: complete");
+
+    const evidence = JSON.parse(
+      readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "evidence.json"), "utf8"),
+    ) as { validations: Array<{ source?: string; status: string }> };
+    expect(evidence.validations).toContainEqual(
+      expect.objectContaining({ source: "runner", status: "passed" }),
+    );
+  }, 20_000);
+
+  it("keeps blocking when parent validation still fails after reporter resume", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+
+    writeFileSync(fixture.parentValidationBehaviorPath, "fail\n", "utf8");
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+    expect(process.exitCode).toBe(1);
+
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    expect(
+      readInvocations(fixture.logPath).filter((item) => item.role === "executor"),
+    ).toHaveLength(1);
+    expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\nrun\n");
+    // 失敗時は worktree をマージしないため、ブロック理由はリポジトリ側ではなく
+    // worktree 側の result に記録される。
+    expect(readWorktreeResult(worktreeBase, fixture, "T-TEST-doc-010")).toContain(
+      "parent validation failed: test-integration",
+    );
+    expect(readResult(fixture, "T-TEST-doc-010")).toContain("status: in_progress");
   }, 20_000);
 });

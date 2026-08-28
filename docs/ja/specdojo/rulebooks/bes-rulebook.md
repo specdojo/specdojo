@@ -1,3 +1,13 @@
+---
+specdojo:
+  id: specdojo:bes-rulebook
+  type: rulebook
+  status: draft
+  recipe: undecided
+  sample: specdojo:bes-sample
+  template: undecided
+---
+
 # 業務イベント仕様 作成ルール
 
 Business Event Specification (BES) Documentation Rules

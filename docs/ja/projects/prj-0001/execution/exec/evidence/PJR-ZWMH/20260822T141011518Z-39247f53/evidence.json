@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZWMH",
+  "run_id": "20260822T141011518Z-39247f53",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-22T14:10:11.518Z",
+    "completed_at": "2026-08-22T14:38:49.714Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wvns-planning-artifacts-catalog-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zwmh-register-index-angle-placeholder-escape.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/docs/src/remark-no-unescaped-angle-placeholder.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-wvns-planning-artifacts-catalog-scope.md   |  2 +-\n ...zwmh-register-index-angle-placeholder-escape.md | 23 ++++----\n src/register.ts                                    | 35 +++++++++++-\n tests/src/register.test.ts                         | 38 +++++++++++++\n .../remark-no-unescaped-angle-placeholder.test.ts  | 43 +++++++++++++-\n .../src/remark-no-unescaped-angle-placeholder.ts   | 66 +++++++++++++++++++++-\n 6 files changed, 193 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全Markdown lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "failed",
+      "summary": "tsxがsandbox内IPCソケットを作成できずEPERM。各validatorをnode --import tsxで個別実行し全対象成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/register.test.ts tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts tests/src/doc-index.test.ts",
+      "status": "passed",
+      "summary": "関連95テスト成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "既存exec-agent-protected-configテストのgit check-ignore --stdinがsandbox内で停止したため中断"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx remark docs/ja/projects/prj-0001/controls/project-register/generated/*.md docs/ja/projects/prj-0001/controls/generated/*.md --quiet --frail",
+      "status": "passed",
+      "summary": "生成された全登録簿ビューに未エスケープ山括弧なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存の欠落文書警告のみで検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1275件の索引生成成功"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZWMH\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-U8qn6L/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\nUpdated: /tmp/specdojo-register-resume-e2e-tS4oKi/docs/j…"
+    }
+  ],
+  "final_message": "登録簿セルの山括弧無害化とfrontmatter検知を実装。関連検証は成功し、全unitのみ既存sandboxハングで未完走。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZWMH/20260822T141011518Z-39247f53/executor.log",
+      "bytes": 2280,
+      "truncated": false
+    }
+  ]
+}

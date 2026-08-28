@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0FCT",
+  "run_id": "PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter",
+  "stage": {
+    "role": "executor",
+    "actor": "gemma-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-27T14:41:02.984Z",
+    "completed_at": "2026-08-27T15:21:08.152Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../templates/xep-common-conventions-template.md   | 24 +++++++++++-----------\n 1 file changed, 12 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "Formatted successfully"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "No lint errors"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in workt…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891-gemma-expert-executor-gemma-reporter\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-qbWiHl/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UYyoaH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UMb58d/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wI2P2Y/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-AKj4bW/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-Awz009/pjr-0001-topic.md\n ❯ tests/src/doc-index.test.ts (25 tests | 1 failed) 871ms\n     × 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する 843ms\n\n Test Files  1 failed | 86 passed (87)\n      Tests  1 failed | 1292 passed (1293)\n   Start at  00:21:28\n   Duration  16.62s…"
+    }
+  ],
+  "final_message": "Resolved contradiction in test execution descriptions in xep-common-conventions-template.md by clarifying the scope of all-test execution and explicitly noting that pipeline executors skip test:unit when configured as a parent validation.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-27T13_24_27.677Z-07ab8891/trials/gemma-expert-executor-gemma-reporter/executor.log",
+      "bytes": 10950,
+      "truncated": false
+    }
+  ]
+}

@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:nfr-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:nfr-index-sample
+  template: undecided
 ---
 
 # 非機能要件インデックス 作成ルール

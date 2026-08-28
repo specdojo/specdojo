@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: 個票frontmatterのstatus遷移をcloseで実行
+  register_events:
+    - v: 1
+      id: reg_8705d3d169f1a78ef27d9e45fbd5fd5d
+      ts: "2026-07-25T23:49:11Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(pjr): PJR-0139を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 個票frontmatterのstatus遷移を自動化
+        - field: description
+          from: ""
+          to: 個票の frontmatter `status` は文書の成熟度を表すが、遷移させる時期が rulebook に定義されておらず、`register` のどのコマンドも個票の frontmatter を更新しない。`register add` がテンプレート由来で `draft` を書き込んだあとは誰も更新しないため、既存 16 件のうち 15 件が `draft` のまま残り、成熟度の指標として機能していない。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: f1b4dbdba002167820e4c547938f1eeba01536b4
+    - v: 1
+      id: reg_93d650fa61b87150a4c22485f758962c
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 個票の frontmatter `status` は文書の成熟度を表すが、遷移させる時期が rulebook に定義されておらず、`register` のどのコマンドも個票の frontmatter を更新しない。`register add` がテンプレート由来で `draft` を書き込んだあとは誰も更新しないため、既存 16 件のうち 15 件が `draft` のまま残り、成熟度の指標として機能していない。
+          to: 個票のstatus遷移時期が規約に無くコマンドも更新しないため全件がdraftのまま残る。close/rejectで個票をready/deprecatedへ更新し、遷移基準をrulebookへ明記する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: 個票frontmatterのstatus遷移をcloseで実行
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_8705d3d169f1a78ef27d9e45fbd5fd5d
+    - v: 1
+      id: reg_770aa0f7b5552ea6e18646a3d4bf79d3
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_93d650fa61b87150a4c22485f758962c
 ---
 
 # PJR-0139 個票frontmatterのstatus遷移を自動化

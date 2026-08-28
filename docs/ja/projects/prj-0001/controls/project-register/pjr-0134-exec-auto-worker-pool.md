@@ -16,6 +16,49 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: 連続worker pool方式へ変更
+  register_events:
+    - v: 1
+      id: reg_be86ea169d6ccf1fff7c026ed4b9d66f
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`exec run --auto --loop --parallel` の固定バッチ方式を、agent の終了ごとに空いた実行枠へ次の Ready task を投入する連続 worker pool 方式へ変更する。長時間実行される task があっても、依存関係のない Ready task を空き枠で継続実行できるようにする。"
+          to: parallel実行でagentが完了するたびに空いた実行枠へ次のReady taskを投入できるようにする
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: 連続worker pool方式へ変更
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_3473a4d2363ecf36755849b3a5598f75
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_be86ea169d6ccf1fff7c026ed4b9d66f
 ---
 
 # PJR-0134 exec run --autoを連続worker pool化

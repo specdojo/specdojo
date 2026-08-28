@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:mm-rulebook
   type: rulebook
   status: draft
+  recipe: not-needed
   sample: specdojo:mm-sample
+  template: not-needed
 ---
 
 # 議事録 作成ルール

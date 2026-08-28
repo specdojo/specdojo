@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-12T01:11:57Z"
   due_on: null
+  register_events:
+    - v: 1
+      id: reg_4d56d315bf6760ed77f32470787b273b
+      ts: "2026-08-12T01:18:15Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): register bootstrap/refine-pass quality improvement proposals"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: "sch-strategy: bootstrap後にhuman review ゲートを追加"
+        - field: description
+          from: ""
+          to: "cdfd-overview/cdfd-initのbootstrap完了後、cross_deliverable_passesでhuman review（approach: bootstrap-finalize流用、after_gate: G-DATA-FLOW-bootstrap-pass、before_phase_set: retrofit-pass）を挟み、Kata・代表成果物の品質を8成果物への複製前に確認する。次回sch-strategy-data-flow.yaml改訂時に反映する。適用前にcross_deliverable_passes x execution:humanの組み合わせをdry-runで検証すること。"
+        - field: type
+          from: ""
+          to: note
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-12"
+        - field: due
+          from: ""
+          to: "-"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3648966bca821bf8da59d6b3d185e95f8666f7cd
 ---
 
 # PJR-EZ9G sch-strategy: bootstrap後にhuman review ゲートを追加

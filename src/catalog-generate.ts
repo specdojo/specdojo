@@ -3,11 +3,16 @@ import { dirname, join } from "node:path";
 import yaml from "js-yaml";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./catalog-build.js";
 import { resolveBasePath } from "./catalog-paths.js";
-import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { practiceLocalId } from "./practice-id.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
-import type { DctDeliverableItem, DctDoc } from "./catalog-types.js";
+import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./catalog-types.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
+const LOCAL_ID_PLACEHOLDER = "_LOCAL_ID_";
+const DELIVERABLE_NAME_PLACEHOLDER = "_DELIVERABLE_NAME_";
+const DELIVERABLE_OVERVIEW_PLACEHOLDER = "_DELIVERABLE_OVERVIEW_";
+const BASED_ON_PLACEHOLDER = "_BASED_ON_";
 
 // Template-own metadata keys are dropped when flattening a YAML template into its
 // generated form; the generated metadata comes from `metadata_template` instead
@@ -25,12 +30,30 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function replaceProjectIdDeep(value: unknown, projectId: string): unknown {
-  if (typeof value === "string") return value.replaceAll(PROJECT_ID_PLACEHOLDER, projectId);
-  if (Array.isArray(value)) return value.map((item) => replaceProjectIdDeep(item, projectId));
+function replaceGeneratedPlaceholders(
+  value: unknown,
+  item: DctDeliverableItem,
+  projectId: string,
+): unknown {
+  if (typeof value === "string") {
+    const basedOn = (item.depends_on ?? []).map((dependency) => `${projectId}:${dependency}`);
+    if (value === BASED_ON_PLACEHOLDER) return basedOn;
+    return value
+      .replaceAll(PROJECT_ID_PLACEHOLDER, projectId)
+      .replaceAll(LOCAL_ID_PLACEHOLDER, item.local_id)
+      .replaceAll(DELIVERABLE_NAME_PLACEHOLDER, item.name)
+      .replaceAll(DELIVERABLE_OVERVIEW_PLACEHOLDER, item.overview)
+      .replaceAll(BASED_ON_PLACEHOLDER, JSON.stringify(basedOn));
+  }
+  if (Array.isArray(value)) {
+    return value.map((nested) => replaceGeneratedPlaceholders(nested, item, projectId));
+  }
   if (isRecord(value)) {
     return Object.fromEntries(
-      Object.entries(value).map(([key, item]) => [key, replaceProjectIdDeep(item, projectId)]),
+      Object.entries(value).map(([key, nested]) => [
+        key,
+        replaceGeneratedPlaceholders(nested, item, projectId),
+      ]),
     );
   }
   return value;
@@ -49,9 +72,38 @@ function normalizeDctName(name: string): string {
     .replace(/^dct-/, "");
 }
 
-// Locate a deliverable template `<local_id>-template.<ext>` under the templates dir.
-function findTemplate(templatesPath: string, localId: string, ext: ".md" | ".yaml"): string | null {
-  const candidate = join(templatesPath, `${localId}-template${ext}`);
+// Resolve a deliverable template from the rulebook frontmatter declaration. The declaration is
+// the SSOT, so local_id naming conventions are deliberately not used as a fallback. This lets
+// every deliverable in one rulebook lineage share a single template.
+function findTemplate(
+  templatesPath: string,
+  rulebooksPath: string,
+  rulebookId: string | undefined,
+  ext: ".md" | ".yaml",
+): string | null {
+  if (
+    !rulebookId ||
+    rulebookId === "none" ||
+    rulebookId === "not-needed" ||
+    rulebookId === "undecided"
+  ) {
+    return null;
+  }
+
+  const rulebookPath = join(rulebooksPath, `${practiceLocalId(rulebookId)}.md`);
+  if (!existsSync(rulebookPath)) return null;
+
+  const templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
+  if (
+    typeof templateId !== "string" ||
+    templateId === "none" ||
+    templateId === "not-needed" ||
+    templateId === "undecided"
+  ) {
+    return null;
+  }
+
+  const candidate = join(templatesPath, `${practiceLocalId(templateId)}${ext}`);
   return existsSync(candidate) ? candidate : null;
 }
 
@@ -64,7 +116,9 @@ function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
     type: "project",
     status: "draft",
   };
-  if (item.rulebook) inner.rulebook = item.rulebook;
+  if (item.rulebook && item.rulebook !== "undecided") {
+    inner.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  }
   const basedOn = (item.depends_on ?? []).map((dep) => `${projectId}:${dep}`);
   if (basedOn.length > 0) inner.based_on = basedOn;
 
@@ -84,13 +138,19 @@ function fallbackYaml(item: DctDeliverableItem, projectId: string): string {
     type: "project",
     status: "draft",
   };
-  if (item.rulebook) doc.rulebook = item.rulebook;
+  if (item.rulebook && item.rulebook !== "undecided") {
+    doc.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
+  }
   return yaml.dump(doc, { lineWidth: 120, noRefs: true });
 }
 
 // Flatten a YAML deliverable template (`metadata_template` + body, minus own-meta)
-// into its generated form, replacing `_PROJECT_ID_` with the real project id.
-function expandYamlTemplate(templatePath: string, projectId: string): string {
+// into its generated form, replacing catalog-derived generation placeholders.
+function expandYamlTemplate(
+  templatePath: string,
+  item: DctDeliverableItem,
+  projectId: string,
+): string {
   const loaded = yaml.load(readFileSync(templatePath, "utf8"));
   if (!isRecord(loaded)) {
     throw new Error(`Template is not a YAML mapping: ${templatePath}`);
@@ -100,7 +160,7 @@ function expandYamlTemplate(templatePath: string, projectId: string): string {
     Object.entries(loaded).filter(([key]) => !TEMPLATE_OWN_META_KEYS.has(key)),
   );
   const merged = isRecord(metadataTemplate) ? { ...metadataTemplate, ...body } : body;
-  const doc = replaceProjectIdDeep(merged, projectId);
+  const doc = replaceGeneratedPlaceholders(merged, item, projectId);
   return yaml.dump(doc, { lineWidth: 120, noRefs: true });
 }
 
@@ -109,15 +169,16 @@ function generateContent(
   resolvedPath: string,
   projectId: string,
   templatesPath: string,
+  rulebooksPath: string,
 ): string {
   if (isYamlPath(resolvedPath)) {
-    const template = findTemplate(templatesPath, item.local_id, ".yaml");
-    return template ? expandYamlTemplate(template, projectId) : fallbackYaml(item, projectId);
+    const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".yaml");
+    return template ? expandYamlTemplate(template, item, projectId) : fallbackYaml(item, projectId);
   }
-  const template = findTemplate(templatesPath, item.local_id, ".md");
+  const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".md");
   if (template) {
     const raw = readFileSync(template, "utf8");
-    return flattenTemplateFrontmatter(raw).replaceAll(PROJECT_ID_PLACEHOLDER, projectId);
+    return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
   }
   return fallbackMarkdown(item, projectId);
 }
@@ -128,13 +189,22 @@ function generateContent(
 export function runGenerate(opts: {
   catalogPath: string;
   templatesPath: string;
+  rulebooksPath: string;
   repoRoot: string;
   projectId: string | null;
   force: boolean;
   dryRun?: boolean;
   dctNames?: string[];
 }): { written: string[]; skipped: string[]; errors: string[] } {
-  const { catalogPath, templatesPath, repoRoot, force, dryRun = false, dctNames = [] } = opts;
+  const {
+    catalogPath,
+    templatesPath,
+    rulebooksPath,
+    repoRoot,
+    force,
+    dryRun = false,
+    dctNames = [],
+  } = opts;
   const written: string[] = [];
   const skipped: string[] = [];
   const errors: string[] = [];
@@ -144,9 +214,7 @@ export function runGenerate(opts: {
     return { written, skipped, errors };
   }
 
-  const allFiles = readdirSync(catalogPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const allFiles = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
 
   if (allFiles.length === 0) {
     errors.push(`No dct-*.yaml files found in: ${catalogPath}`);
@@ -196,7 +264,13 @@ export function runGenerate(opts: {
       }
 
       try {
-        const content = generateContent(item, resolvedPath, projectId, templatesPath);
+        const content = generateContent(
+          item,
+          resolvedPath,
+          projectId,
+          templatesPath,
+          rulebooksPath,
+        );
         if (!dryRun) {
           mkdirSync(dirname(outputPath), { recursive: true });
           writeFileSync(outputPath, content, "utf8");

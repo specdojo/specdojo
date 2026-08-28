@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-06T12:00:00Z"
   conclusion: catalog buildで同一domainの複数dctファイルをファイル名昇順でマージする機能を実装。dct.schema.yaml・dct-rulebook（物理分割の命名/ID規約とテンプレート分割）を更新し、tests/src/catalog-merge.test.ts等を追加。全テスト通過。
+  register_events:
+    - v: 1
+      id: reg_a524432f9c1357d0fa4995917238838f
+      ts: "2026-08-06T10:56:40Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0155をopenで起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: dctカタログの1 domain複数ファイル分割（物理分割）対応
+        - field: description
+          from: ""
+          to: 現行の dct カタログは、`catalog build` の出力が `domain` をキーに束ねられる都合上、`domain` 一意制約（`src/catalog.ts` の `validateCatalogDomains`）により 1 domain = 1 ファイルが前提となっている。`data-model` のように反復要素（業務データ辞書・概念モデルを業務領域ごとに複製）が多いカタログは単一ファイルが肥大化するため、論理 domain を維持したまま物理ファイルを分割できるよう、同一 `domain` を持つ複数 dct ファイルを build 時にマージ可能にする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8c071db4f82a2d9e81af229d28d0bf28890e0011
+    - v: 1
+      id: reg_c7fa5d7b7357b6f465387793ab637d50
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 現行の dct カタログは、`catalog build` の出力が `domain` をキーに束ねられる都合上、`domain` 一意制約（`src/catalog.ts` の `validateCatalogDomains`）により 1 domain = 1 ファイルが前提となっている。`data-model` のように反復要素（業務データ辞書・概念モデルを業務領域ごとに複製）が多いカタログは単一ファイルが肥大化するため、論理 domain を維持したまま物理ファイルを分割できるよう、同一 `domain` を持つ複数 dct ファイルを build 時にマージ可能にする。
+          to: domain一意制約を緩和し、同一domainの複数dctファイルをbuild時にマージ可能にする
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: catalog buildで同一domainの複数dctファイルをファイル名昇順でマージする機能を実装。dct.schema.yaml・dct-rulebook（物理分割の命名/ID規約とテンプレート分割）を更新し、tests/src/catalog-merge.test.ts等を追加。全テスト通過。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_a524432f9c1357d0fa4995917238838f
+    - v: 1
+      id: reg_163c82ee825cb57b120625e5c3e684d3
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-06"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_c7fa5d7b7357b6f465387793ab637d50
 ---
 
 # PJR-0155 dctカタログの1 domain複数ファイル分割（物理分割）対応

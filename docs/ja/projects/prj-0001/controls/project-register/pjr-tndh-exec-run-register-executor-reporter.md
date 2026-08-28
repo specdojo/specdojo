@@ -13,6 +13,81 @@ specdojo:
   registered_at: "2026-08-15T02:51:26Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-15T03:47:49Z"
+  register_events:
+    - v: 1
+      id: reg_49053a2e2ba6e75f4488785685dd556b
+      ts: "2026-08-15T02:53:38Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: exec run --registerのpipeline未対応をTODOとして起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec run --register をexecutor/reporterパイプラインに対応させる
+        - field: description
+          from: ""
+          to: "`exec run --register`（PJR個票のAI Agent実行）は単一エージェントが編集からresult記入までを完結する前提だが、現行`pm-members.yaml`は全provider（opencode/claude/codex/copilot）の`stage_role: executor`メンバーが「成果物の編集・検証のみを担当し、resultは更新しない」設計に統一されている。この不整合により、どのexecutorメンバーで`--register`を実行してもresult未記入のまま`waiting`（blocked扱い）に陥る。PJR-SEQCの実行（`claude-expert-executor`使用）で実際に発生を確認した。Schedule タスクの `agent_pipeline`（executor→reporterの2段階固定）と同じモデルを`--register`にも適用し、この構造的ギャップを解消する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-15"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 47addc5e1b670420acc8566a420aa48c05f5d4b2
+    - v: 1
+      id: reg_e257e97d946acfc020bdc06c3af065d6
+      ts: "2026-08-15T03:34:32Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: open
+      to_status: review
+      reason: "exec(register PJR-TNDH): exec run --registerをexecutor/reporterパイプラインに対応させる"
+      changes:
+        - field: status
+          from: open
+          to: review
+      legacy_commit: be20ceb207a6acab92a57d66aa6142d8ef5f2a95
+      previous_event_id: reg_49053a2e2ba6e75f4488785685dd556b
+    - v: 1
+      id: reg_b8e28be71290d890bff366c13b3611ce
+      ts: "2026-08-15T03:47:55Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-TNDH): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-15"
+      legacy_commit: 6df862e0c899d995685e502d7dcce90aa077246d
+      previous_event_id: reg_e257e97d946acfc020bdc06c3af065d6
 ---
 
 # PJR-TNDH exec run --register をexecutor/reporterパイプラインに対応させる

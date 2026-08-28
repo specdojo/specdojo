@@ -1,11 +1,12 @@
 import { spawn } from "node:child_process";
-import type { EvidenceValidation } from "./exec-evidence.js";
+import { gitEnvironment } from "./exec-worktree.js";
+import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
 
 const MAX_CAPTURE_BYTES = 64 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 
-export type ParentValidationId = "test-integration";
+export type ParentValidationId = "validate-schema" | "test-unit" | "test-integration";
 
 export type ParentValidationDefinition = {
   id: ParentValidationId;
@@ -29,6 +30,20 @@ export type ParentValidationInvoker = (
 ) => Promise<ParentValidationProcessResult>;
 
 const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDefinition> = {
+  "validate-schema": {
+    id: "validate-schema",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "validate:schema"],
+    displayCommand: "npm run validate:schema",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "test-unit": {
+    id: "test-unit",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "test:unit"],
+    displayCommand: "npm run test:unit",
+    timeoutMs: 10 * 60 * 1_000,
+  },
   "test-integration": {
     id: "test-integration",
     command: process.platform === "win32" ? "npm.cmd" : "npm",
@@ -83,7 +98,7 @@ async function invokeParentValidation(
     let timedOut = false;
     const child = spawn(definition.command, [...definition.args], {
       cwd,
-      env: process.env,
+      env: gitEnvironment(),
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
@@ -164,6 +179,30 @@ export function failedParentValidationReason(
   );
   if (failed.length === 0) return undefined;
   return `parent validation failed: ${failed.map((validation) => validation.id ?? validation.command).join(", ")}`;
+}
+
+/**
+ * Replaces stale runner-owned validation results while preserving executor-owned evidence.
+ * The caller must supply results produced from the fixed parent-validation allowlist.
+ */
+export function replaceParentValidationResults(
+  evidence: ExecEvidence,
+  parentValidations: readonly EvidenceValidation[],
+): ExecEvidence {
+  if (
+    parentValidations.some(
+      (validation) => validation.source !== "runner" || typeof validation.id !== "string",
+    )
+  ) {
+    throw new Error("Refreshed parent validations must be runner-owned and include an id.");
+  }
+  return {
+    ...evidence,
+    validations: [
+      ...evidence.validations.filter((validation) => validation.source !== "runner"),
+      ...parentValidations,
+    ],
+  };
 }
 
 export function hasRecordedParentValidations(

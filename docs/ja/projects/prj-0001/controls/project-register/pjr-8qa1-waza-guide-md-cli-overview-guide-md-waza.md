@@ -12,6 +12,87 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-08T12:33:02Z"
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_ae589fd748cb1aba776af1970382c194
+      ts: "2026-08-08T12:33:02Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "exec(register PJR-8QA1): waza-guide.md新設(cli-overview-guide.mdをWaza名称へ改称)とサイドバー・相互参照リンク更新"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: waza-guide.md新設(cli-overview-guide.mdをWaza名称へ改称)とサイドバー・相互参照リンク更新
+        - field: description
+          from: ""
+          to: SpecDojo は道場のメタファーとして、実践の型（rulebook/recipe/sample/template）を「Kata」、進め方（`approach`）を「Ryu」、`specdojo` CLI コマンド群を「Waza」と呼ぶ整理を採用した。既存の [[specdojo:cli-overview-guide]] は `specdojo` CLI 全体の入口ガイドであり、この「Waza」に相当するため、`waza-guide.md` へ改称し、id・H1 を Waza の枠組みに合わせて更新する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: eae70c0129e5f546fd2a0ee18b331c69423d2455
+    - v: 1
+      id: reg_bdcded08bdd9facf8354326f4b47acb3
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: SpecDojo は道場のメタファーとして、実践の型（rulebook/recipe/sample/template）を「Kata」、進め方（`approach`）を「Ryu」、`specdojo` CLI コマンド群を「Waza」と呼ぶ整理を採用した。既存の [[specdojo:cli-overview-guide]] は `specdojo` CLI 全体の入口ガイドであり、この「Waza」に相当するため、`waza-guide.md` へ改称し、id・H1 を Waza の枠組みに合わせて更新する。
+          to: cli-overview-guide.mdをwaza-guide.mdへリネームし、id・frontmatter・H1(遂行の技活用ガイド/Waza Guide)を更新する。サイドバー表示名(遂行の技活用)と、約30ファイルに及ぶ相互参照リンクを追従修正する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_ae589fd748cb1aba776af1970382c194
+    - v: 1
+      id: reg_fe28c00c57df21410ae457677ca3b7b0
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-08"
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_bdcded08bdd9facf8354326f4b47acb3
 ---
 
 # PJR-8QA1 waza-guide.md新設(cli-overview-guide.mdをWaza名称へ改称)とサイドバー・相互参照リンク更新

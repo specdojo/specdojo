@@ -1,0 +1,13 @@
+実装と棚卸し反映は完了しました。
+
+- カタログへ4種の文書ID／`not-needed`／未宣言の三状態を導入
+- 宣言IDの実在検証、assessment・strategy・plan生成を対応
+- 作成条件、`bootstrap`、`freeform` の文書を更新
+- DCT 345エントリを棚卸し
+- executor 指示どおり result ファイルは未更新
+
+単体テストは初回に3件失敗しました。原因となったテストfixtureと生成登録簿は修正済みですが、一回限定のため再実行していません。親工程での再検証が必要です。
+
+<specdojo_executor_evidence>
+{"final_message":"要否宣言と棚卸しを実装。静的検査は通過したが、修正後の単体テスト再実行が必要","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run lint:md","status":"passed","summary":"Markdown全件lint成功"},{"command":"npm run validate:schema","status":"failed","summary":"tsx IPCのsandbox EPERMで中断。node --import tsxによる全schema代替検証は成功"},{"command":"node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/dct.schema.yaml --data \"docs/ja/specdojo/templates/dct-*-template.yaml\" --data \"docs/ja/specdojo/samples/dct-sample.yaml\" --data \"docs/ja/projects/prj-0001/010-deliverables-catalog/dct-*.yaml\" --data \"!docs/ja/projects/**/dct-index.yaml\"","status":"passed","summary":"変更対象DCT schema検証成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全プロジェクトカタログ検証成功。既存の成果物未作成警告のみ"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"カタログ派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックス1298件生成成功"},{"command":"npm run test:unit","status":"failed","summary":"3件失敗。生成登録簿不足1件とlegacy rulebook:none fixture 2件を修正済み。一回限定ルールにより再実行なし"},{"command":"test-integration","status":"not_run","summary":"親runner実行対象のためexecutorでは未実行"}]}
+</specdojo_executor_evidence>

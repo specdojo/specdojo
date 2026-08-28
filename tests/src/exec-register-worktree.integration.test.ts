@@ -38,9 +38,6 @@ describe("registerStatePaths", () => {
   function setup(): string {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-reg-state-"));
     git(dir, "init");
-    git(dir, "config", "user.name", "SpecDojo Test");
-    git(dir, "config", "user.email", "specdojo@example.invalid");
-    git(dir, "config", "commit.gpgsign", "false");
     mkdirSync(join(dir, REGISTER_REL, "generated"), { recursive: true });
     mkdirSync(join(dir, "docs/ja/projects/prj-x/controls/generated"), { recursive: true });
     mkdirSync(join(dir, "docs/ja/projects/prj-x"), { recursive: true });

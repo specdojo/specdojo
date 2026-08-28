@@ -1,0 +1,14 @@
+Git 破壊の再発経路を修正しました。
+
+- agent 起動時の `GIT_DIR` 等の継承を全経路で遮断
+- agent 前後の HEAD・local config 変更を検知して block
+- commit／`core.bare` 変更の回帰テストを追加
+- 設計、運用、復旧手順、PJR-A99J 個票を更新
+- result と登録簿ステータスは未変更
+- typecheck、lint、Markdown、catalog、register／index build は成功
+
+unit・integration・schema 検証は指示どおり親 runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"Git環境変数の継承遮断とHEAD・local config変更ガードを全agent起動経路へ実装し、設計・復旧手順・個票・回帰テストを更新した。resultとステータスは未変更。","validations":[{"command":"npx prettier --write <変更したMarkdown・TypeScript全ファイル>","status":"passed","summary":"変更ファイルを整形済み"},{"command":"npx markdownlint docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/projects/prj-0001/controls/project-register/pjr-a99j-agent-git-isolation-breach.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintエラーなし"},{"command":"npx tsx src/specdojo.ts register build","status":"not_run","summary":"tsxのsandbox IPC作成がEPERMとなり検証開始前に停止。同等のloader起動へ切り替えた"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"エラーなし。既存の未作成文書に関するwarningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1364件の文書indexを生成"},{"command":"git diff --check","status":"passed","summary":"空白・patch形式エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runner検証へ委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runner検証へ委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runner検証へ委譲"}]}
+</specdojo_executor_evidence>

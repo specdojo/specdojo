@@ -38,7 +38,7 @@ function template(domain: string, localId: string, part = ""): string {
             depends_on: [],
             overview: "成果物を定義する",
             path: `${localId}.md`,
-            rulebook: "none",
+            rulebook: "not-needed",
             done_criteria: [{ text: "完了していること", roles: ["QE"], viewpoint: "vp-qe" }],
           },
         ],

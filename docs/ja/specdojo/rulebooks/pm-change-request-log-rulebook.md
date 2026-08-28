@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:pm-change-request-log-sample
+  template: specdojo:pm-change-request-log-template
 ---
 
 # 変更要求ログ 作成ルール

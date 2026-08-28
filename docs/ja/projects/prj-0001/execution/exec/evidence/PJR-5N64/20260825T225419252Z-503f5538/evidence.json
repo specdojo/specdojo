@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-5N64",
+  "run_id": "20260825T225419252Z-503f5538",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-25T22:54:19.252Z",
+    "completed_at": "2026-08-25T23:05:27.687Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5n64-template-declaration-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/practice-system-composition-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/waza-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-generate.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/opr-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../pjr-5n64-template-declaration-resolution.md    |  31 ++++--\n .../guides/practice-system-composition-guide.md    |   2 +\n docs/ja/specdojo/guides/waza-guide.md              |  12 ++-\n docs/ja/specdojo/references/command-reference.md   |   2 +\n docs/ja/specdojo/rulebooks/opr-rulebook.md         |  27 ++---\n .../standards/rulebook-authoring-standard.md       |  27 ++---\n .../standards/template-authoring-standard.md       |  38 ++++---\n src/catalog-generate.ts                            | 106 ++++++++++++++++---\n src/deliverable.ts                                 |   5 +\n tests/src/catalog-generate.test.ts                 | 115 ++++++++++++++++++++-\n 10 files changed, 287 insertions(+), 78 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/catalog-generate.ts src/deliverable.ts tests/src/catalog-generate.test.ts docs/ja/specdojo/templates/opr-template.md docs/ja/specdojo/rulebooks/opr-rulebook.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/specdojo/guides/waza-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-registe…",
+      "status": "passed",
+      "summary": "対象ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/opr-template.md docs/ja/specdojo/rulebooks/opr-rulebook.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/specdojo/guides/waza-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-5n64-template-declaration-resolution.md",
+      "status": "passed",
+      "summary": "変更Markdownの検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "upsert-rulebook Skill指定の全Markdown lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全catalogがOK、既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "catalog派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "register派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1351件の文書index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts deliverable scaffold --project prj-0001 --dct operations --dry-run",
+      "status": "passed",
+      "summary": "OPRを含むoperations成果物のscaffold計画成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "pipeline親runnerが実施"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline親runnerが実施"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "pipeline親runnerが実施"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5N64\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-qswdqx/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:bdd && npm run validate:schema:esil && npm run validate:schema:sch-milestones && npm run validate:schema:sch-track && npm run validate:schema:sch-strategy && npm run validate:schema:sch-assessment && npm run validate:schema:dct-plan && npm run validate:schema:dct-index && npm run validate:schema:exec-defaults && npm run validate:schema:job && npm run validate:schema:job-run && npm run validate:schema:routine && npm run validate:schema:pm-members\n\n\n> specdojo@0.1.0 validate:schema:bdd\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/bdd.schema.yaml -d \"docs/**/bdd-*.yaml\"\n\ndocs/ja/specdojo/samples/bdd-sample.yaml valid\n\n> specdojo@0.1.0 validate:schema:esil\n> ajv --spec=draft2020 --strict=true -s docs/specdojo/schemas/v1/esil.schema.yaml -d \"docs/**/esil-*.yaml\"\n\n\n> specdojo@0.1.0 validate:schema:sch-milestones\n> tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/sch-milestones.…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5N64\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-NUnrlm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-cb5pS4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3vQZKA/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-7aMfp0/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-x8HxdQ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-tVuwoQ/pjr-0001-topic.md\n ❯ tests/src/catalog-generate.test.ts (17 tests | 1 failed) 60ms\n     × rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する 5ms\n\n Test Files  1 failed | 86 passed (87)\n      Tests  1 failed | 1289 passed (1290)\n   Start at  08:05:11\n   Duration  16.28s (transform 1.33s, setup 0ms, import 9.41s, tests 13.54s, environment 4ms)\n\n\nr…"
+    }
+  ],
+  "final_message": "rulebook宣言によるtemplate解決とOPR系統の共有template整備を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5N64/20260825T225419252Z-503f5538/executor.log",
+      "bytes": 3621,
+      "truncated": false
+    }
+  ]
+}

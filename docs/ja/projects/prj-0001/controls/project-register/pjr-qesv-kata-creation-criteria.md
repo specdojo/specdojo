@@ -1,0 +1,147 @@
+---
+specdojo:
+  id: prj-0001:pjr-qesv-kata-creation-criteria
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: decision
+  item_status: decided
+  priority: high
+  owner: BA
+  registered_at: "2026-08-23T04:51:20Z"
+  due_on: "2026-08-31"
+  completed_at: "2026-08-23T07:24:37Z"
+  conclusion: 実践の型は4種すべてを機械的に作らず、種別ごとの作る条件・作らない条件で要否を判断する。必要な型は成果物カタログへ文書IDを宣言し、不要と判断した型は not-needed と宣言する。項目なしは要否未判断であり not-needed とは区別する。要否は初回の bootstrap で判断する。基準は kata-guide に記載し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外す。実装は PJR-K4TA で完了した。
+  register_events:
+    - v: 1
+      id: reg_b3e4093583bbfb503ba98796720a46e2
+      ts: "2026-08-23T04:58:31Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成基準を PJR-QESV と PJR-K4TA として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型は必要なものだけ作り、不要と判断した結果を宣言に残す
+        - field: description
+          from: ""
+          to: どの成果物にどの実践の型（rulebook / recipe / sample / template）を作るかの基準が存在せず、整合性を担保できない。各 authoring standard は既に作ると決めたものの書き方しか定めておらず、kata-guide と practice-system-composition-guide は役割と使い分けを説明するだけである。結果として recipe だけが 84 種別中 19 件という分布になり、その理由が記録されていない。作らない判断と未整備の区別も付かないため、棚卸しのたびに同じ議論が繰り返される。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: d74d2e877f1d7703b493a0bfaadbc072b614d1f8
+    - v: 1
+      id: reg_9a7fd6c4ab5996c9ea7d39fd9d02a6e6
+      ts: "2026-08-23T07:24:57Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-0FCT・PJR-QVGX を起票し PJR-QESV を決定済みにする"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: 実践の型は4種すべてを機械的に作らず、種別ごとの作る条件・作らない条件で要否を判断する。必要な型は成果物カタログへ文書IDを宣言し、不要と判断した型は not-needed と宣言する。項目なしは要否未判断であり not-needed とは区別する。要否は初回の bootstrap で判断する。基準は kata-guide に記載し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外す。実装は PJR-K4TA で完了した。
+      legacy_commit: 12e833e39ea35d48c4cdea320289b34ef954b55e
+      previous_event_id: reg_b3e4093583bbfb503ba98796720a46e2
+---
+
+# PJR-QESV 実践の型は必要なものだけ作り、不要と判断した結果を宣言に残す
+
+## 1. 背景
+
+どの成果物にどの実践の型（rulebook / recipe / sample / template）を作るかの基準が存在せず、整合性を担保できない。各 authoring standard は既に作ると決めたものの書き方しか定めておらず、kata-guide と practice-system-composition-guide は役割と使い分けを説明するだけである。結果として recipe だけが 84 種別中 19 件という分布になり、その理由が記録されていない。作らない判断と未整備の区別も付かないため、棚卸しのたびに同じ議論が繰り返される。
+
+## 2. 検討した選択肢
+
+| 選択肢 | 内容                                                         | 利点                                                                                | 懸念                                                                                                                                                                                                   |
+| ------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | 全成果物へ4種すべてを、薄くてもよいので作る                  | approach が常に `fully-guided` になり分岐が消える。宣言と実在の食い違いも起きない   | `rulebook-authoring-standard` の「薄いドキュメント防止」と衝突する。中身の無い型は agent に「基準がある」と誤認させ、推測で埋める動機を与える。84 種別 × 4 の維持コストと、schema との二重管理も生じる |
+| B      | 判断を伝える必要があるものだけ作り、作らない判断を宣言へ残す | 実態（recipe 19件）と整合する。整備状況に応じた approach 分岐という既存設計とも合う | 基準を明文化しないと運用できない。宣言の仕組みと棚卸しが必要になる                                                                                                                                     |
+| C      | 現状維持（基準を定めない）                                   | 追加作業が無い                                                                      | 何を作るべきかを人も agent も判断できず、未整備と不要の区別も付かない                                                                                                                                  |
+
+## 3. 決定内容
+
+選択肢 B を採択する。実践の型は必要なものだけ作り、作らないと判断した結果を成果物カタログの宣言へ残す。
+
+作成条件は次のとおりとする。
+
+- rulebook: 構造・必須項目・禁止事項のうち、schema だけでは伝わらない判断がある場合に作る。構造が schema で完全に規定され判断の余地が無い場合は作らない。
+- recipe: 規約を満たすだけでは品質が担保できない成果物に作る。判定の目安は、書き手によって出来に差が出る、浅い内容になりやすく深掘りの観点が要る、レビューで繰り返し同じ指摘が出る、のいずれかに当てはまること。規約と schema を満たせば内容がほぼ一意に決まる場合は作らない。
+- sample: 完成形を見ないと粒度・文体・表の書き方が伝わらない場合に作る。template の穴埋めで完成形が想像できる場合は作らない。
+- template: 定型の骨組みがあり毎回同じ章立てから始める場合に作る。構成が対象ごとに変わり固定の雛形が制約になる場合は作らない。
+
+作らないと判断した場合は、成果物カタログの宣言へ `not-needed` として記録する。未整備（いずれ作る）と不要（作らないと決めた）を区別できる状態を保つ。
+
+`not-needed` は approach の判定において「意図的に無い」として扱い、欠落とみなさない。対応する `*-maintenance` のフェーズは生成しない。`bootstrap` は「4種すべてを揃える」ではなく「必要と判断した型を揃える」と解釈し、どの型を作るかの判断を初期整備の作業に含める。新しい approach は追加しない。
+
+## 4. 採択理由
+
+- `rulebook-authoring-standard` は「薄いドキュメント防止」として、各必須章に3つ以上の具体項目と判断可能な条件を要求している。薄い型を全成果物へ作る方針は、この規約と両立しない。
+- `ryu-guide` は既に「実践の型の整備状況」で approach を分岐させ、「基準にできる実践の型が無くても、初期整備の対象でなければ `freeform`」と定めている。揃わない前提が設計に組み込まれており、全数整備はこの設計と矛盾する。
+- 中身の無い型があると agent は `fully-guided` を選び、基準が無いまま推測で内容を埋める。型が無ければ `freeform` を選び、カタログの `done_criteria` や schema を根拠にする正しい行動を取る。判断を助けるのは「常に何かある」ことではなく「無いと分かる」ことである。
+- 構造は JSON Schema が正本であり、薄い rulebook は二重管理を生む。実際に `dct-planning.yaml` が存在しない `specdojo:tml-rulebook` を宣言し、`fully-guided` が成立しない状態が発生した。
+- recipe は順序ではなく品質の型である。標準の章構成は `各章の書き方`、`深掘り手順`、`良い例 / 悪い例`、`レビュー観点` であり、書き手の判断が品質を左右する成果物にこそ価値がある。既存 19 件が `prj-*` と `pm-*` に集中している実態とも一致する。
+- 未整備と不要を区別できないと、棚卸しのたびに同じ判断をやり直すことになる。判断結果を宣言として残すことで、再検討の対象を絞れる。
+
+## 5. 承認
+
+| 項目     | 内容                                                      |
+| -------- | --------------------------------------------------------- |
+| 決定者   | PO                                                        |
+| 決定日   | 2026-08-23                                                |
+| 承認方式 | commit                                                    |
+| 証跡     | 本個票を追加した commit（`docs(register): add PJR-QESV`） |
+
+- 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
+- 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
+
+## 6. 影響範囲とフォローアップ
+
+| 項目       | 内容                                                                                                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | 成果物カタログの宣言、strategy 生成の phase 選択、`ryu-guide` の approach 定義、既存の実践の型 325 件（rulebook 106・recipe 19・sample 107・template 93）の位置づけ |
+| 必要な対応 | カタログ schema への `not-needed` 宣言の追加、`*-maintenance` の生成抑止、`bootstrap` と `freeform` の記述更新、既存分の棚卸し                                      |
+| 追跡先     | 実装と棚卸しは PJR-K4TA で追跡する                                                                                                                                  |
+
+## 7. 関連ドキュメント
+
+- 実践の型の役割: [[specdojo:kata-guide|実践の型活用ガイド]]
+- approach の分岐: [[specdojo:ryu-guide|実践の進め方ガイド]]
+- 薄いドキュメント防止: [[specdojo:rulebook-authoring-standard|rulebook作成標準]]
+- 体系の位置づけ: [[specdojo:practice-system-composition-guide|実践体系構成ガイド]]
+- 不整合が顕在化した宣言: `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml`

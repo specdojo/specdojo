@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0FCT",
+  "run_id": "PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3-gemma-expert-executor-gemma-reporter",
+  "stage": {
+    "role": "executor",
+    "actor": "gemma-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-26T12:26:40.848Z",
+    "completed_at": "2026-08-26T12:33:32.211Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../templates/xep-common-conventions-template.md   | 24 +++++++++++-----------\n 1 file changed, 12 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "Formatted successfully"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "No linting errors"
+    }
+  ],
+  "final_message": "Resolved contradictions in test execution descriptions in xep-common-conventions-template.md by clarifying the scope of 'run once' rule and adding conditional execution for pipeline executor's unit tests depending on parent validation settings. Verified with prettier and markdownlint.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/gemma-expert-executor-gemma-reporter/executor.log",
+      "bytes": 9708,
+      "truncated": false
+    }
+  ]
+}

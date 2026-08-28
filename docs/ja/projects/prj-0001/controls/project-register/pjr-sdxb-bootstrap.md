@@ -13,6 +13,95 @@ specdojo:
   registered_at: "2026-08-12T01:12:02Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-12T04:35:44Z"
+  register_events:
+    - v: 1
+      id: reg_9c3ae216ddd734694ef01dcbfc1ccd7f
+      ts: "2026-08-12T01:18:15Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): register bootstrap/refine-pass quality improvement proposals"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: bootstrapテンプレートに仕上げ品質チェックを追加
+        - field: description
+          from: ""
+          to: xep-bootstrap-template.mdの完了手順に、内容の質を上げる基本操作（不要記述の削除・重複記述の統合・可読性のための分割・論理整合の確認）を単発の仕上げチェックとして追加する。観点別自己レビュー・修正ループとは区別し、既存の禁止事項と矛盾しないよう記述する。フレームワーク共通ファイルのため他プロジェクトへの影響を確認のうえ反映する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-12"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3648966bca821bf8da59d6b3d185e95f8666f7cd
+    - v: 1
+      id: reg_1b5b45b174c21494774d031f63d24b37
+      ts: "2026-08-12T04:19:56Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-SDXB): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: d784024812e8bb47a0dcfe5d62e0df240fd077cf
+      previous_event_id: reg_9c3ae216ddd734694ef01dcbfc1ccd7f
+    - v: 1
+      id: reg_a5f944c9b2e4bec27822eab8f40658b5
+      ts: "2026-08-12T04:26:24Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-SDXB): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: b0b14e4fb4b13e09c755eb2f687d0fb64b2af1db
+      previous_event_id: reg_1b5b45b174c21494774d031f63d24b37
+    - v: 1
+      id: reg_7bd573ba376db3383b07c250ce33ef34
+      ts: "2026-08-12T04:35:55Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-SDXB"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-12"
+      legacy_commit: b4631d56ba8a2cbd790e12efcefe079301b04063
+      previous_event_id: reg_a5f944c9b2e4bec27822eab8f40658b5
 ---
 
 # PJR-SDXB bootstrapテンプレートに仕上げ品質チェックを追加

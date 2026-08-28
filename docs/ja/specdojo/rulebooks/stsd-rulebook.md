@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:stsd-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:stsd-sample
+  template: undecided
 ---
 
 # ステータス一覧（Status List）作成ルール

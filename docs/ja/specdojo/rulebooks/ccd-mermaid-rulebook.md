@@ -4,9 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
-  recipe: none
-  sample: none
-  template: none
+  recipe: undecided
+  sample: specdojo:ccd-sample
+  template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
 ---

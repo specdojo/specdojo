@@ -7,6 +7,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import yaml from "js-yaml";
+import { inlineCodeAnglePlaceholders } from "./exec-shared.js";
 import { registerDateFromTimestamp } from "./register-date.js";
 
 // ================================
@@ -89,6 +90,7 @@ export type RegisterItemFieldUpdates = {
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  block_reason?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
@@ -132,7 +134,9 @@ const SPECDOJO_KEY_ORDER = [
   "registered_at",
   "due_on",
   "completed_at",
+  "block_reason",
   "conclusion",
+  "register_events",
 ];
 
 // ================================
@@ -215,7 +219,7 @@ export function descriptionFromBody(body: string): string {
 export function readRegisterItemContent(
   content: string,
   filename: string,
-): { id: string; item: PjrItem; hasRegisterFields: boolean } | undefined {
+): { id: string; item: PjrItem; hasRegisterFields: boolean; blockReason: string } | undefined {
   const id = displayIdFromTicketFilename(filename);
   if (!id) return undefined;
 
@@ -251,7 +255,12 @@ export function readRegisterItemContent(
     ticket: ticketRefCell(filename),
   };
 
-  return { id, item, hasRegisterFields: asString(fields.item_status) !== undefined };
+  return {
+    id,
+    item,
+    hasRegisterFields: asString(fields.item_status) !== undefined,
+    blockReason: asString(fields.block_reason) ?? CELL_NONE,
+  };
 }
 
 // 個票の日時を、指定タイムゾーン上の暦日へ変換した表示値へ写す。
@@ -371,7 +380,9 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
           ? null
           : item.due.trim(),
     completed_at: isPlaceholderCell(item.completedAt) ? null : item.completedAt.trim(),
-    conclusion: isPlaceholderCell(item.conclusion) ? null : item.conclusion.trim(),
+    conclusion: isPlaceholderCell(item.conclusion)
+      ? null
+      : inlineCodeAnglePlaceholders(item.conclusion.trim()),
   };
 }
 
@@ -388,7 +399,7 @@ function orderSpecdojoKeys(fields: Record<string, unknown>): Record<string, unkn
 
 // 個票 frontmatter の `specdojo:` 名前空間を読み書きする共通処理。
 // mutate はキーの追加・更新・削除だけを行い、frontmatter 以外（本文）は書き換えない。
-function updateSpecdojoFields(
+export function updateSpecdojoFields(
   content: string,
   mutate: (fields: Record<string, unknown>) => void,
 ): string {
@@ -408,6 +419,20 @@ function updateSpecdojoFields(
   const document = { ...parsed, specdojo: orderSpecdojoKeys(fields) };
   const dumped = yaml.dump(document, { lineWidth: -1, noRefs: true, quotingType: '"' });
   return `---\n${dumped}---\n${match[2] ?? ""}`;
+}
+
+// 個票 frontmatter の `specdojo:` 名前空間を、イベント検証などの読み取り用途へ返す。
+// 呼び出し側が誤って元の文書を変更しないよう shallow copy にする。
+export function readSpecdojoFields(content: string): Record<string, unknown> {
+  const match = content.match(FRONTMATTER_RE);
+  if (!match) {
+    throw new Error("frontmatter not found in register item file");
+  }
+  const parsed = parseFrontmatterDocument(match[1]);
+  if (!isRecord(parsed.specdojo)) {
+    throw new Error("register item frontmatter has no specdojo namespace");
+  }
+  return { ...parsed.specdojo };
 }
 
 function parseFrontmatterDocument(frontmatter: string): Record<string, unknown> {
@@ -489,6 +514,7 @@ export function setRegisterItemTitle(content: string, title: string): string {
 
 // 説明の導出元（最初の `##` 見出し直後の段落）を差し替える。段落が無い場合は見出し直後へ挿入する。
 export function setRegisterItemDescription(content: string, description: string): string {
+  const safeDescription = inlineCodeAnglePlaceholders(description);
   const lines = content.split("\n");
   const sectionIndex = lines.findIndex((line) => /^##\s/.test(line));
   if (sectionIndex === -1) {
@@ -502,17 +528,18 @@ export function setRegisterItemDescription(content: string, description: string)
   while (end < lines.length && lines[end].trim() !== "" && !/^#{1,4}\s/.test(lines[end])) end++;
 
   if (start >= lines.length || /^#{1,4}\s/.test(lines[start] ?? "")) {
-    lines.splice(sectionIndex + 1, 0, "", description);
+    lines.splice(sectionIndex + 1, 0, "", safeDescription);
     return lines.join("\n");
   }
 
-  lines.splice(start, end - start, description);
+  lines.splice(start, end - start, safeDescription);
   return lines.join("\n");
 }
 
 // 一覧に記録されていた要約を最初の章の先頭段落へ移し、既存段落はその後ろへ残す。
 // 既存個票の詳細を失わず、本文から生成する一覧の「説明」を移行前と一致させるために使う。
 export function prependRegisterItemDescription(content: string, description: string): string {
+  const safeDescription = inlineCodeAnglePlaceholders(description);
   const lines = content.split("\n");
   const sectionIndex = lines.findIndex((line) => /^##\s/.test(line));
   if (sectionIndex === -1) {
@@ -521,7 +548,7 @@ export function prependRegisterItemDescription(content: string, description: str
 
   let insertAt = sectionIndex + 1;
   while (insertAt < lines.length && lines[insertAt].trim() === "") insertAt++;
-  lines.splice(insertAt, 0, description, "");
+  lines.splice(insertAt, 0, safeDescription, "");
   return lines.join("\n");
 }
 

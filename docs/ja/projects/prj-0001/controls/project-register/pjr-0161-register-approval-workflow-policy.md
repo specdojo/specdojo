@@ -10,6 +10,84 @@ specdojo:
   item_status: done
   priority: high
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_9910a850fc490d2fc87fabf5ced1c355
+      ts: "2026-08-07T05:31:32Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0161をopenで起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿承認typeの承認フローとPR/commit使い分けの規約化
+        - field: description
+          from: ""
+          to: 承認を要する登録簿 type（`change-request` / `decision` / `risk` / `question` / `issue`）について、承認フロー（誰が・どの状態遷移で承認するか）と承認方式（Pull Request ベースか単なる commit か）が未規定である。SpecDojo は既に `exec → develop` を自動 commit 統合、`develop → main` を PR 必須とする階層モデルを持つため、これに整合する形で type 別の承認運用を明文化する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 415e065c5294be222bd7797fa89d382952445a06
+    - v: 1
+      id: reg_a92dbb7c5e652008ef6ac23cf6b37e01
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 承認を要する登録簿 type（`change-request` / `decision` / `risk` / `question` / `issue`）について、承認フロー（誰が・どの状態遷移で承認するか）と承認方式（Pull Request ベースか単なる commit か）が未規定である。SpecDojo は既に `exec → develop` を自動 commit 統合、`develop → main` を PR 必須とする階層モデルを持つため、これに整合する形で type 別の承認運用を明文化する。
+          to: 承認を要するtype(change-request/decision/risk/question/issue)の承認フローをregister状態遷移(review→close等)へ明文化し、承認方式を既定commit＋限定PRで規約化する。PR強制はdevelop→main昇格/change-request承認/不可逆・高リスク・schema破壊的変更に限定。branch protectionとCODEOWNERSで承認者を強制、decision/questionテンプレに承認者欄を追加。関連文書はbranch-workflow-guide/git-branching-standard/register-operation-guide/pjr-rulebook。
+        - field: priority
+          from: medium
+          to: high
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_9910a850fc490d2fc87fabf5ced1c355
+    - v: 1
+      id: reg_08902340d3f268f6060a6dd87880a243
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_a92dbb7c5e652008ef6ac23cf6b37e01
 ---
 
 # PJR-0161 登録簿承認typeの承認フローとPR/commit使い分けの規約化

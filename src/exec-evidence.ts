@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { readFileSync, renameSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
 import { ensureDir, safeSlug } from "./exec-shared.js";
 import { gitOutput } from "./exec-worktree.js";
 import type { AgentStageRole } from "./exec-types.js";
@@ -75,6 +75,13 @@ export type BuildExecutorEvidenceInput = Omit<
   parentValidations?: EvidenceValidation[];
 };
 
+export type RecordReporterFailureOutputInput = {
+  worktreePath: string;
+  evidencePath: string;
+  evidence: ExecEvidence;
+  invocationOutputs: Array<{ stdout: string; stderr: string }>;
+};
+
 type ExecutorReport = {
   final_message?: unknown;
   validations?: unknown;
@@ -86,6 +93,20 @@ const REPORT_PATTERN =
 function truncate(value: string, limit: number): string {
   if (value.length <= limit) return value;
   return `${value.slice(0, Math.max(0, limit - 1))}…`;
+}
+
+function boundedLog(value: string): { content: string; truncated: boolean } {
+  const redacted = redactSensitiveText(value);
+  const buffer = Buffer.from(redacted, "utf8");
+  if (buffer.byteLength <= MAX_LOG_BYTES) {
+    return { content: redacted, truncated: false };
+  }
+  let end = MAX_LOG_BYTES;
+  while (end > 0 && (buffer[end] & 0xc0) === 0x80) end--;
+  return {
+    content: buffer.subarray(0, end).toString("utf8"),
+    truncated: true,
+  };
 }
 
 /** Redacts common credential forms before agent output is persisted as evidence or a log excerpt. */
@@ -187,9 +208,9 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
     path: boundedText(change.path, 1_000),
     status: boundedText(change.status, 40),
   }));
-  const output = redactSensitiveText(`${input.stdout}\n${input.stderr}`.trim());
-  const logExcerpt = Buffer.from(output, "utf8").subarray(0, MAX_LOG_BYTES).toString("utf8");
-  const logTruncated = Buffer.byteLength(output, "utf8") > MAX_LOG_BYTES;
+  const output = `${input.stdout}\n${input.stderr}`.trim();
+  const boundedOutput = boundedLog(output);
+  const logExcerpt = boundedOutput.content;
   return {
     logExcerpt,
     evidence: {
@@ -217,7 +238,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
           kind: "agent-output-excerpt",
           path: input.logRefPath,
           bytes: Buffer.byteLength(logExcerpt, "utf8"),
-          truncated: logTruncated,
+          truncated: boundedOutput.truncated,
         },
       ],
     },
@@ -275,4 +296,47 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
 
 export function readExecutorEvidence(path: string): ExecEvidence {
   return JSON.parse(readFileSync(path, "utf8")) as ExecEvidence;
+}
+
+/** Persists runner-refreshed evidence without exposing a partially written JSON checkpoint. */
+export function writeExecutorEvidence(path: string, evidence: ExecEvidence): void {
+  const temporaryPath = `${path}.tmp`;
+  writeFileSync(temporaryPath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
+  renameSync(temporaryPath, path);
+}
+
+/**
+ * Persists the latest failed reporter invocation streams beside executor evidence.
+ * Each stream is independently redacted and bounded so stdout/stderr remain distinguishable.
+ */
+export function recordReporterFailureOutput(input: RecordReporterFailureOutputInput): ExecEvidence {
+  const evidenceDir = dirname(input.evidencePath);
+  ensureDir(evidenceDir);
+  const retainedRefs = input.evidence.log_refs.filter(
+    (ref) =>
+      !/^reporter-attempt-\d+\.(?:stdout|stderr)\.log$/u.test(ref.path.split("/").at(-1) ?? ""),
+  );
+  const reporterRefs: ExecEvidence["log_refs"] = [];
+
+  input.invocationOutputs.forEach((output, index) => {
+    const attempt = index + 1;
+    for (const stream of ["stdout", "stderr"] as const) {
+      const logPath = join(evidenceDir, `reporter-attempt-${attempt}.${stream}.log`);
+      const boundedOutput = boundedLog(output[stream]);
+      writeFileSync(logPath, boundedOutput.content, "utf8");
+      reporterRefs.push({
+        kind: "agent-output-excerpt",
+        path: repoRelative(input.worktreePath, logPath),
+        bytes: Buffer.byteLength(boundedOutput.content, "utf8"),
+        truncated: boundedOutput.truncated,
+      });
+    }
+  });
+
+  const evidence = {
+    ...input.evidence,
+    log_refs: [...retainedRefs, ...reporterRefs],
+  };
+  writeExecutorEvidence(input.evidencePath, evidence);
+  return evidence;
 }

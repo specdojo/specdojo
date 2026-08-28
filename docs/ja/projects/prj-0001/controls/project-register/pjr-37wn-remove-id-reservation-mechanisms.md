@@ -14,6 +14,152 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-09T11:18:08Z"
   conclusion: 統合ブランチ自動ルーティング・予約経路・同期scriptを撤去し、renumberを乱数ID衝突の救済のみへ縮小した。
+  register_events:
+    - v: 1
+      id: reg_6c63bc333f067f3518db7839f3451a22
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: ID 予約などの競合回避機構を撤去し renumber を縮小する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割5。表の共有編集を前提として導入した競合回避の補償機構を撤去する。個票が正本になると項目の追加と状態遷移が構造的に衝突しなくなるため、これらの機構は不要になる。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_04f0915af667dbf6b4d51f40a3787e87
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割5。表の共有編集を前提として導入した競合回避の補償機構を撤去する。個票が正本になると項目の追加と状態遷移が構造的に衝突しなくなるため、これらの機構は不要になる。"
+          to: PJR-ES57 の分割5。統合ブランチ自動ルーティング・予約経路・同期 script を撤去し、renumber を乱数 ID 衝突の救済のみへ縮小する。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_6c63bc333f067f3518db7839f3451a22
+    - v: 1
+      id: reg_0a8f478963cac7e326d0a356ee96f1b8
+      ts: "2026-08-09T11:04:49Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: open
+      to_status: waiting
+      reason: "exec(register PJR-37WN): wait"
+      changes:
+        - field: status
+          from: open
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "checkpoint failed: git add -- docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-37wn-20260809T110448Z-4c53-plan.md docs/ja/projects/pr…"
+      legacy_commit: 16bde662a47ce728c47f967bdb75a9a3ae569c8d
+      previous_event_id: reg_04f0915af667dbf6b4d51f40a3787e87
+    - v: 1
+      id: reg_ee3b491c9674bfa2fb8aa5c42486359d
+      ts: "2026-08-09T11:10:10Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-37WN): start"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: 5cc55a8c61fd24ad5c1bdd68cf1ee5a4f2acd1c8
+      previous_event_id: reg_0a8f478963cac7e326d0a356ee96f1b8
+    - v: 1
+      id: reg_1967aafddc9b706c765a54dd9bfcf58d
+      ts: "2026-08-09T11:17:08Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-37WN): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 7c881bca4c4cab686403497f467100f1365104e8
+      previous_event_id: reg_ee3b491c9674bfa2fb8aa5c42486359d
+    - v: 1
+      id: reg_f8880ac2316a7841ad2fd7379be3326b
+      ts: "2026-08-09T11:18:08Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-37WN"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: conclusion
+          from: "checkpoint failed: git add -- docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-37wn-20260809T110448Z-4c53-plan.md docs/ja/projects/pr…"
+          to: 統合ブランチ自動ルーティング・予約経路・同期scriptを撤去し、renumberを乱数ID衝突の救済のみへ縮小した。
+      legacy_commit: 0062d4340b4400a03d1825845b217a95218a90b4
+      previous_event_id: reg_1967aafddc9b706c765a54dd9bfcf58d
+    - v: 1
+      id: reg_48b1ea8cfaaaa9a8bd9174a305a38932
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_f8880ac2316a7841ad2fd7379be3326b
 ---
 
 # PJR-37WN ID 予約などの競合回避機構を撤去し renumber を縮小する

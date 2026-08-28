@@ -13,6 +13,109 @@ specdojo:
   registered_at: "2026-08-09T11:03:44Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T12:42:13Z"
+  register_events:
+    - v: 1
+      id: reg_fbe056e6775f250be948363b77779d53
+      ts: "2026-08-09T11:03:44Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): close PJR-9P5Q, add PJR-1D0C"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 個票のpart_ofとwikilinkがprj-0001:pjr-indexを参照できない
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-rzr3-pjr-index-as-generated-view]] が追跡対象の `pjr-index.md` を `generated/` 配下の非追跡ビューへ移し、[[prj-0001:pjr-9p5q-migrate-existing-register-items]]（2026-08-09）が追跡版 `pjr-index.md` 本体を削除した。これにより、文書ID `prj-0001:pjr-index` を参照する箇所（個票 60 件の `part_of` と、本文中の wikilink 10 箇所。PJR-9P5Q・PJR-RZR3 自身の `5. 関連ドキュメント` を含む）が解決不能になっている。"
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7eeeb85408d2e382450800116dca75eba2633d62
+    - v: 1
+      id: reg_a37e9d484314d954c175773c52cc8f23
+      ts: "2026-08-09T12:24:25Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-1D0C): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 0f4eb0c1636ca3bde4abf83750c199d37fa1914b
+      previous_event_id: reg_fbe056e6775f250be948363b77779d53
+    - v: 1
+      id: reg_ee67e6f0a04c86cb35137cc0cb84f144
+      ts: "2026-08-09T12:35:31Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-1D0C): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 32ac28c16e2687d8f745e050758c294eee5dbc20
+      previous_event_id: reg_a37e9d484314d954c175773c52cc8f23
+    - v: 1
+      id: reg_f9c10890c3817e7e1e5c0a93732386c9
+      ts: "2026-08-09T12:42:13Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-1D0C"
+      changes:
+        - field: status
+          from: review
+          to: done
+      legacy_commit: e3b3f6c3c89a911849cef8d212e3d32427aefc87
+      previous_event_id: reg_ee67e6f0a04c86cb35137cc0cb84f144
+    - v: 1
+      id: reg_7b94f6fa15c4c1a582a0e0422dd42e66
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_f9c10890c3817e7e1e5c0a93732386c9
 ---
 
 # PJR-1D0C 個票のpart_ofとwikilinkがprj-0001:pjr-indexを参照できない

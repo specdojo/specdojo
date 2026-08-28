@@ -61,6 +61,34 @@ main
 - feature または exec の統合後も project の完了判断までは `develop` を保持します。
 - project `develop` から `main` への統合は Pull Request または同等のレビュー可能な変更単位で行います。
 
+### 4.1. developからmainへの昇格方式
+
+project `develop` から `main` への昇格は、`develop` の先端を第2 parent とする merge commit を必ず作ります。ローカルで再現する場合は `git merge --no-ff`、Pull Request では merge commit を作る方式を選びます。squash merge と rebase merge は使用しません。
+
+この方式で「まとめる」対象は物理的な commit 数ではなく、`main` の first-parent 履歴です。`develop` の細かな commit は監査と `register history` のために DAG へ保持し、プロダクト変更を追うときは次の表示を正規の履歴とします。
+
+```bash
+git log --first-parent --oneline main
+```
+
+昇格 merge commit の subject は昇格した変更範囲を要約し、Pull Request から検証結果、承認、未解決事項を追跡できるようにします。通常の `git log` では `develop` の詳細 commit も表示されます。first-parent 表示で1昇格を1行に集約しながら、次の性質を維持することが採用理由です。
+
+- 昇格済みの `develop` commit がすべて `main` の祖先となり、次回の昇格で再び未マージ扱いになりません。
+- `main` の更新を共有中の `develop` へ通常の merge で取り込めます。fast-forward できる場合も履歴を書き換えません。
+- push 済み commit の ID と到達可能性を保ち、Git 履歴へフォールバックする監査情報を失いません。
+
+昇格後は、昇格対象だった `develop` の先端が `main` の祖先であることを `git merge-base --is-ancestor` で確認します。squash merge、一時ブランチでの rebase / cherry-pick、特定 commit の除外は元の `develop` との祖先関係を記録しないため、昇格の集約方式として使用しません。
+
+#### 適用範囲（本方式が有効になる時点）
+
+本方式は、**本規約の適用後に行う昇格から有効になります**。それ以前に作られた `main` の first-parent 履歴は集約されません。
+
+`develop` を第2 parent とする merge commit を `main` 上で作らず、`main` 上へ取り込む merge を `develop` 側で実行して `main` を fast-forward した場合、`main` の first-parent 系列は `develop` の詳細 commit を辿ります。過去にこの形で昇格した区間では、`git log --first-parent main` に exec / register の遷移 commit がそのまま現れます。
+
+既存の first-parent 系列を集約するには push 済み履歴の書き換えが必要であり、本規約は書き換えを禁止します。したがって過去区間はそのまま残します。読み手は、集約された first-parent 表示が得られるのは本規約適用後の区間である、と理解して利用します。
+
+昇格を行う担当者は、merge の向きが逆にならないよう次を確認します。`main` を checkout した状態で `develop` を merge する、または Pull Request の base を `main`、head を `develop` として merge commit を作る方式を選びます。
+
 ## 5. 同期・履歴・保護
 
 - `main` と共有中の project `develop` では force-push と履歴を書き換える rebase を禁止します。
@@ -69,8 +97,24 @@ main
 - feature worktree は対象 project の `develop` を明示的なベースとして同期します。
 - 複数プロジェクトを並行する場合、main worktree の現在ブランチによるベース自動判定だけに依存せず、対象 project の `develop` を指定します。
 - `main` には branch protection を設定し、直接 push を禁止し、Pull Request と最低 1 名の承認、必須 CI の成功を merge 条件にします。
+- GitHub のリポジトリ設定では merge commit だけを許可し、squash merge と rebase merge を無効にします。これは Pull Request 画面で誤った昇格方式を選べないようにするサーバ側の設定です。
 - `project/<project-id>/develop` には branch protection を設定し、`develop → main` 昇格 PR の承認を強制します。exec の自動 commit を受け入れるため、`develop` への feature / exec 統合そのものは PR 承認を必須にしません（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
 - 承認者は `CODEOWNERS` で宣言し、branch protection の "Require review from Code Owners" で強制します。`main` はリポジトリ管理者、各 project の承認対象は当該 project の承認権限者（PO / CCB）を owner に割り当てます。
+
+### 5.1. mainへの直接pushを防ぐ防護柵
+
+Lefthook の `pre-push` は、Git が標準入力へ渡す各更新の remote ref を検査し、リモート名にかかわらず `refs/heads/main` への更新を拒否します。`project/<project-id>/develop`、feature、exec など他の remote ref への push は妨げません。拒否時は base を `main`、head を project `develop` とする Pull Request を作り、merge commit で昇格するよう案内します。
+
+このフックはローカルの誤操作を早期に止める防護柵であり、アクセス制御の境界ではありません。`--no-verify` で迂回でき、Lefthook を導入していない環境では実行されません。実際の境界は GitHub の branch protection であり、`main` への Pull Request、承認、必須 CI をサーバ側で強制します。
+
+実際に push せず判定を確認するには、Git の `pre-push` 入力と同じ4フィールドをスクリプトへ渡します。最初のコマンドは終了コード1で拒否メッセージを表示し、2つ目は終了コード0になります。
+
+```bash
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/main REMOTE' \
+  | node tools/protect-main-push.mjs
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/project/prj-0001/develop REMOTE' \
+  | node tools/protect-main-push.mjs
+```
 
 ## 6. ブランチの完了・削除
 
@@ -105,20 +149,38 @@ main
 - PR 承認を強制しない理由は、可逆性（記録のみか実装を伴うか）、職務分離（自己承認の回避が platform 強制でなくても成立するか）、自動化整合（PR ゲートを自動 `exec → develop` の内側に置かない）の 3 点で判断します。
 - 3 ケースに該当する承認は自己承認をカウントせず、作成者と承認者を分離します。承認事実（承認者・承認日・対象差分）は PR で担保し、決定内容の SSOT はチケット個票に恒久保持します。
 
-## 9. 禁止事項
+## 9. commit メッセージ規約
 
-| 禁止事項                                                 | 理由                                              |
-| -------------------------------------------------------- | ------------------------------------------------- |
-| feature / exec を `main` へ直接統合する                  | project 単位の検証・レビューを迂回するため        |
-| 別 project の `develop` へ統合する                       | 変更の所属と追跡先が不明になるため                |
-| `main` または共有中の `develop` を force-pushする        | 他の branch と worktree の比較起点を破壊するため  |
-| 統合先を確認せず `exec worktree merge` を実行する        | 現在ブランチがそのまま統合先になるため            |
-| 未commit変更を確認せず worktree または branch を削除する | 成果物と result を失う可能性があるため            |
-| `feature/<project-id>` という終端ブランチを作る          | 同名を親に持つ feature 階層を作成できなくなるため |
-| 自動 `exec → develop` 統合に PR 承認ゲートを課す         | 自動実行を止め、承認境界を過剰に内側へ広げるため  |
-| PR 強制 3 ケースの承認を作成者が自己承認する             | 職務分離が崩れ、承認の実効性が失われるため        |
+- subject は `<type>(<scope>): <日本語の要約>` とし、要約を日本語で書きます。`type` は `commitlint.config.cjs` の `type-enum` に定義された値だけを使います。
+- subject は 100 文字以内に収めます（`subject-max-length`）。日本語は情報密度が高いため、詳細は body へ回します。
+- body には「何を変えたか」ではなく「なぜそうしたか」を日本語で書きます。判断の根拠、採らなかった選択肢、制約が該当します。1 行は 100 文字以内にします（`body-max-line-length`）。
+- 関連する登録簿項目がある場合は、body の末尾に `Refs: PJR-XXXX` を記載します。個票が判断の SSOT であり、commit からの追跡経路を残すためです。
+- `exec` 実行に伴う runner の自動 commit（register 状態遷移、worktree の統合など）は、既存の生成規則をそのまま用います。人が書く commit と形式を揃えるために書き換えません。
 
-## 10. 運用・見直しルール
+```text
+fix(exec): 保護対象の判定を gitignore 済みファイルの除外へ変更
+
+未追跡をすべて除外すると、agent が名簿へ mode を追加して settings ファイルを新規作成し、
+権限プロファイルを自作できるため、ignore 済みだけを除外対象とした。
+
+Refs: PJR-T1JW
+```
+
+## 10. 禁止事項
+
+| 禁止事項                                                 | 理由                                               |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| feature / exec を `main` へ直接統合する                  | project 単位の検証・レビューを迂回するため         |
+| 別 project の `develop` へ統合する                       | 変更の所属と追跡先が不明になるため                 |
+| `main` または共有中の `develop` を force-pushする        | 他の branch と worktree の比較起点を破壊するため   |
+| `develop → main` 昇格で squash / rebase merge を使う     | `develop` の祖先関係と Git fallback 履歴を失うため |
+| 統合先を確認せず `exec worktree merge` を実行する        | 現在ブランチがそのまま統合先になるため             |
+| 未commit変更を確認せず worktree または branch を削除する | 成果物と result を失う可能性があるため             |
+| `feature/<project-id>` という終端ブランチを作る          | 同名を親に持つ feature 階層を作成できなくなるため  |
+| 自動 `exec → develop` 統合に PR 承認ゲートを課す         | 自動実行を止め、承認境界を過剰に内側へ広げるため   |
+| PR 強制 3 ケースの承認を作成者が自己承認する             | 職務分離が崩れ、承認の実効性が失われるため         |
+
+## 11. 運用・見直しルール
 
 - ブランチ命名を変更するときは、SpecDojo の branch 導出、worktree 検索、テスト、関連 guide を同時に確認します。
 - exec の分岐元または統合先の挙動を変更するときは、[exec-worktree-guide.md](../guides/exec-worktree-guide.md) と CLI 実装の整合を確認します。

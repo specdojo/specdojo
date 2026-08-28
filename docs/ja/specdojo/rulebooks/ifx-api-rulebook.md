@@ -3,7 +3,10 @@ specdojo:
   id: specdojo:ifx-api-rulebook
   type: rulebook
   status: draft
+  target_format: yaml
+  recipe: not-needed
   sample: specdojo:ifx-api-sample
+  template: not-needed
 ---
 
 # 外部API仕様（External API Specification: EAPIS）作成ルール

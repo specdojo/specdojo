@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-07T12:00:00Z"
   conclusion: 多言語IDは同一論理ID＋言語スコープ解決に決定し、doc-index を言語スコープ対応に実装。標準へ反映済み。
+  register_events:
+    - v: 1
+      id: reg_f043b598c5e108258405c5afa130aaa6
+      ts: "2026-08-02T23:04:27Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0151を起票（index buildの重複IDあと勝ちをエラー検知に変更）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: specdojo index buildの重複ID「あと勝ち」をエラー検知に変更
+        - field: description
+          from: ""
+          to: "`src/doc-index.ts` のID登録処理（`scanFile`・`collectFromFields`）は既存キーの存在チェックを行わず、Markdown frontmatter・YAML top-level・ネストID（`nested_id_files`によるglossary等）のいずれも `entries[id] = ...` による無条件上書き（あと勝ち）になっている。`walkDir` のディレクトリ走査順（`readdirSync`、ソートなし）に依存するため、どちらが勝つかも決定論的でない。`specdojo index build` と総合validateの両方で重複IDをエラーとして検知するようにする。あわせて、`docs/en/` 等の多言語文書展開時にIDがどう扱われるべきか（言語別インデックス化 or 同一論理IDの言語variant）を決める。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 6abb53f6b9b05c3665f1e259b1494235f514be5e
+    - v: 1
+      id: reg_12a91058c4e90bacdbaddc031df35dbc
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`src/doc-index.ts` のID登録処理（`scanFile`・`collectFromFields`）は既存キーの存在チェックを行わず、Markdown frontmatter・YAML top-level・ネストID（`nested_id_files`によるglossary等）のいずれも `entries[id] = ...` による無条件上書き（あと勝ち）になっている。`walkDir` のディレクトリ走査順（`readdirSync`、ソートなし）に依存するため、どちらが勝つかも決定論的でない。`specdojo index build` と総合validateの両方で重複IDをエラーとして検知するようにする。あわせて、`docs/en/` 等の多言語文書展開時にIDがどう扱われるべきか（言語別インデックス化 or 同一論理IDの言語variant）を決める。"
+          to: src/doc-index.tsのID登録処理(scanFile/collectFromFields)は既存キーの存在チェックをせず、Markdown/YAML/ネストIDいずれも無条件上書き(あと勝ち)になっている。同一Unit内の重複IDをエラーにし、衝突したIDと全ファイルパスを表示し、Markdown/YAML/ネストIDを同じ基準で検証し、specdojo index buildと総合validateの両方で失敗させるようにする。あわせて多言語文書(docs/en等)を言語別インデックスにするか同一論理IDの言語variantとして扱うかを決定する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: 多言語IDは同一論理ID＋言語スコープ解決に決定し、doc-index を言語スコープ対応に実装。標準へ反映済み。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_f043b598c5e108258405c5afa130aaa6
+    - v: 1
+      id: reg_efe1bf1a822d39a3808a09dec89420d1
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-07"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_12a91058c4e90bacdbaddc031df35dbc
 ---
 
 # PJR-0151 specdojo index buildの重複ID「あと勝ち」をエラー検知に変更

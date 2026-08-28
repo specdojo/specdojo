@@ -4,7 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  recipe: undecided
   sample: specdojo:bes-index-sample
+  template: undecided
 ---
 
 # 業務イベント仕様 全体構成 作成ルール

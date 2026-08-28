@@ -3,7 +3,10 @@ specdojo:
   id: specdojo:gl-rulebook
   type: rulebook
   status: draft
+  target_format: yaml
+  recipe: undecided
   sample: specdojo:gl-sample
+  template: undecided
 ---
 
 # 用語集（Glossary）作成ルール

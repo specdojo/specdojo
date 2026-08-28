@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:cop-rulebook
   type: rulebook
   status: draft
+  sample: specdojo:cop-sample
 ---
 
 # カットオーバー計画 作成ルール

@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-17"
   completed_at: "2026-05-17T12:00:00Z"
   conclusion: "`specdojo catalog build` で自動生成"
+  register_events:
+    - v: 1
+      id: reg_2e5a37b684d39334ca0ce808b14d60d7
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: 成果物カタログのyamlからmd生成
+        - field: description
+          from: ""
+          to: 可読性向上のため、yamlからmdへの変換を自動化
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-17"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "`specdojo catalog build` で自動生成"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_71634aa1554ab694670bcba45c5adc1c
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-17"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_2e5a37b684d39334ca0ce808b14d60d7
 ---
 
 # PJR-0033 成果物カタログのyamlからmd生成

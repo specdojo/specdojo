@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:etc-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:etc-sample
+  template: undecided
 ---
 
 # 外部結合テストカタログ 対象別 作成ルール

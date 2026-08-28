@@ -13,6 +13,93 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: project contextをtemplateに追加
+  register_events:
+    - v: 1
+      id: reg_b0bd0f845c030d7e21446f142e41783a
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec planへproject contextを伝播
+        - field: description
+          from: ""
+          to: guided な agent 実行では exec plan に列挙された参考資料と `depends_on` 成果物だけが参照範囲となるため、`prj-overview` の Why が直接依存しない成果物へ届かない。作成順序・根拠関係を表す `depends_on` は変更せず、プロジェクト共通文脈を渡す独立した仕組みを設け、対象となる edit / review plan へ `prj-overview` を確実に伝播する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_bd24d1e68b0b4bd02d086ceb3be54a41
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: guided な agent 実行では exec plan に列挙された参考資料と `depends_on` 成果物だけが参照範囲となるため、`prj-overview` の Why が直接依存しない成果物へ届かない。作成順序・根拠関係を表す `depends_on` は変更せず、プロジェクト共通文脈を渡す独立した仕組みを設け、対象となる edit / review plan へ `prj-overview` を確実に伝播する。
+          to: 全ての対象成果物生成でprj-overviewを参照できるよう、depends_onと分離したproject contextをexec planへ追加する
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: project contextをtemplateに追加
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_b0bd0f845c030d7e21446f142e41783a
+    - v: 1
+      id: reg_755ac815fa575d253103a66c10892c12
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_bd24d1e68b0b4bd02d086ceb3be54a41
 ---
 
 # PJR-0128 exec planへproject contextを伝播

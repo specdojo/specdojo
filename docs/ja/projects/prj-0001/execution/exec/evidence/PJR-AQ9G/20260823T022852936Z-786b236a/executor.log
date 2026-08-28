@@ -1,0 +1,13 @@
+実装と対象テストは完了しました。
+
+- 山括弧変換を [exec-shared.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AQ9G/src/exec-shared.ts) に共通化し、register build と plan 生成で共有。
+- plan のタイトル・説明・frontmatter name に適用。
+- 既存 plan と残置 frontmatter を補正。
+- 対象 unit test は 69/69 成功。
+- result は executor 指示どおり未編集です。
+
+ただし全 unit suite は Vitest が終了せず中断したため、検証未完として block 報告します。
+
+<specdojo_executor_evidence>
+{"final_message":"実装と対象検証は完了したが、全 unit suite が終了待ちで収束せず検証未完","validations":[{"command":"npx prettier --write src/exec-shared.ts src/register.ts src/exec-register.ts tests/src/exec-register-plan-escape.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-aq9g-exec-plan-angle-placeholder-escape.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-aq9g-20260823T022819Z-511a-plan.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-zwmh-20260822T140937Z-7efd-plan.md","status":"passed","summary":"対象ファイルを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-aq9g-exec-plan-angle-placeholder-escape.md docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-aq9g-20260823T022819Z-511a-plan.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-zwmh-20260822T140937Z-7efd-plan.md","status":"passed","summary":"Markdown 違反なし"},{"command":"npm run lint:fm","status":"passed","summary":"全 docs の frontmatter・山括弧検査成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npm run test:unit -- tests/src/exec-register-plan-escape.test.ts tests/src/register.test.ts","status":"passed","summary":"対象テスト 69件成功"},{"command":"npm run test:unit","status":"failed","summary":"Vitest が終了待ちのまま収束せず、約3分後に中断（exit 130）"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の成果物未配置警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1291件の文書インデックスを生成"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline 指示に従い親 runner が実行"}]}
+</specdojo_executor_evidence>

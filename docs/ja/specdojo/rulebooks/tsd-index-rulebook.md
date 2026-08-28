@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:tsd-index-rulebook
   type: rulebook
   status: draft
+  recipe: not-needed
   sample: specdojo:tsd-index-sample
+  template: not-needed
 ---
 
 # 技術スタック定義（TSD Index）作成ルール

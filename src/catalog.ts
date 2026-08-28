@@ -7,15 +7,17 @@ import { getProjectCatalogPath, loadConfig, loadEnv, specdojoRootDir } from "./s
 import {
   buildCatalog,
   collectCatalogLocalIds,
+  loadDctIndex,
   validateBasedOn,
   validateCatalogDomains,
+  validateCatalogIndex,
   validateCatalogLocalIds,
   validateDctDoc,
+  validateRulebookKata,
 } from "./catalog-build.js";
 import { collectDocIndexEntries } from "./doc-index.js";
-import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { deriveProjectId, runScaffold, type ProjectSize } from "./catalog-scaffold.js";
-import type { DctDoc } from "./catalog-types.js";
+import { isDctCatalogFileName, type DctDoc } from "./catalog-types.js";
 import {
   buildPlanSkeleton,
   DCT_PLAN_SCHEMA_PATH,
@@ -36,13 +38,9 @@ import {
 import { renderPlanPrompt } from "./catalog-plan-prompt.js";
 import { generateCatalogsFromPlan, writeGeneratedCatalogs } from "./catalog-plan-generate.js";
 
-function readSizeFromIndex(catalogPath: string): ProjectSize | null {
-  const indexPath = join(catalogPath, "dct-index.md");
-  if (!existsSync(indexPath)) return null;
-  const content = readFileSync(indexPath, "utf8");
-  const size = readSpecdojoNamespace(content).size;
-  if (size === "small" || size === "medium" || size === "large") return size;
-  return null;
+function readSizeFromDeclaration(catalogPath: string): ProjectSize | null {
+  const size = loadDctIndex(catalogPath)?.size;
+  return size === "small" || size === "medium" || size === "large" ? size : null;
 }
 
 export function resolveCatalogPath(opts: { project?: string }): string {
@@ -317,13 +315,10 @@ export function registerCatalogCommands(program: Command): void {
   vcmd.action((opts) => {
     try {
       const catalogPath = resolveCatalogPath(opts);
-      const files = readdirSync(catalogPath)
-        .filter((f) => /^dct-.+\.yaml$/.test(f))
-        .sort();
+      const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
 
       if (files.length === 0) {
         process.stdout.write(`No dct-*.yaml files found in: ${catalogPath}\n`);
-        return;
       }
 
       const knownLocalIds = collectCatalogLocalIds(catalogPath);
@@ -380,9 +375,24 @@ export function registerCatalogCommands(program: Command): void {
         allOk = false;
       }
 
+      const indexResult = validateCatalogIndex(catalogPath);
+      for (const err of indexResult.errors) {
+        process.stdout.write(`ERROR: ${err}\n`);
+      }
+      if (!indexResult.ok) {
+        allOk = false;
+      } else {
+        process.stdout.write(`OK: dct-index.yaml\n`);
+      }
+
       // Cross-file: local_id must be unique project-wide so a bare local_id resolves
       // to one deliverable (scheduled tasks and --deliverable).
       for (const warn of validateCatalogLocalIds(catalogPath).warnings) {
+        process.stdout.write(`WARN:  ${warn}\n`);
+      }
+
+      // Cross-file: rulebook declarations and recipe / sample / template files must agree.
+      for (const warn of validateRulebookKata(catalogPath).warnings) {
         process.stdout.write(`WARN:  ${warn}\n`);
       }
 
@@ -420,7 +430,7 @@ export function registerCatalogCommands(program: Command): void {
   addProjectOption(scCmd);
   scCmd.option(
     "--size <size>",
-    "Project size: small|medium|large (default: read from dct-index.md)",
+    "Project size: small|medium|large (default: read from dct-index.yaml)",
   );
   scCmd.option(
     "--project-id <projectId>",
@@ -455,11 +465,11 @@ export function registerCatalogCommands(program: Command): void {
       }
       const size: ProjectSize =
         (explicitSize as ProjectSize | undefined) ??
-        readSizeFromIndex(catalogPath) ??
+        readSizeFromDeclaration(catalogPath) ??
         (() => {
           throw new Error(
-            `--size not specified and dct-index.md has no "size" field.\n` +
-              `Use --size <small|medium|large> or add size: to dct-index.md frontmatter.`,
+            `--size not specified and dct-index.yaml has no valid "size" field.\n` +
+              `Use --size <small|medium|large> or add size: to dct-index.yaml.`,
           );
         })();
 

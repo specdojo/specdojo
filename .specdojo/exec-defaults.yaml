@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../docs/specdojo/schemas/v1/exec-defaults.schema.yaml
 # exec-defaults.yaml
 # specdojo exec run の共通実行設定。
 #
@@ -17,6 +18,10 @@
 pipeline:
   parent_validations:
     - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
+    # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
+    # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
+    - validate-schema # npm run validate:schema
+    - test-unit # npm run test:unit
 
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も

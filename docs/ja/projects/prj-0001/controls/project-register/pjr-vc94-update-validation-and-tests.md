@@ -13,6 +13,132 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T11:27:57Z"
+  register_events:
+    - v: 1
+      id: reg_1d59a509b7697764fac546dea616dcc1
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 検証とテストを個票正本の構成へ更新する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割6。表専用スキーマによる検証を廃止し、個票 frontmatter を対象とする検証へ付け替える。あわせて既存テストを新構成へ更新し、移行後の挙動を検証するテストを追加する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_2f14df856bab8e7f161a8f2b2d681994
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割6。表専用スキーマによる検証を廃止し、個票 frontmatter を対象とする検証へ付け替える。あわせて既存テストを新構成へ更新し、移行後の挙動を検証するテストを追加する。"
+          to: PJR-ES57 の分割6。表専用スキーマの廃止に伴う検証経路の付け替えと、移行後の挙動を検証するテストを整備する。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_1d59a509b7697764fac546dea616dcc1
+    - v: 1
+      id: reg_332b4245148f37e0789387ae51415bce
+      ts: "2026-08-09T11:19:32Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-VC94): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 1be7bcd5052320582bcb57dde132dfb9d78f4c9b
+      previous_event_id: reg_2f14df856bab8e7f161a8f2b2d681994
+    - v: 1
+      id: reg_26b6dc34aed91235e32045fd3f63544c
+      ts: "2026-08-09T11:26:47Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-VC94): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 7b6b4ecc318b69f001a2864020b68aee2cdcd6ba
+      previous_event_id: reg_332b4245148f37e0789387ae51415bce
+    - v: 1
+      id: reg_fc38e5bfd0611255ca03f24cee81bd42
+      ts: "2026-08-09T11:27:57Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-VC94"
+      changes:
+        - field: status
+          from: review
+          to: done
+      legacy_commit: 3f05c6ce0c1397606cabe2544a45658cb1a85b73
+      previous_event_id: reg_26b6dc34aed91235e32045fd3f63544c
+    - v: 1
+      id: reg_7d9d546a1708a84cfc09a4a5afd79406
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_fc38e5bfd0611255ca03f24cee81bd42
 ---
 
 # PJR-VC94 検証とテストを個票正本の構成へ更新する

@@ -4,6 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: yaml
+  recipe: not-needed
+  sample: not-needed
+  template: not-needed
 ---
 
 # 外部システムIF一覧（External System Interface List: ESIL）作成ルール

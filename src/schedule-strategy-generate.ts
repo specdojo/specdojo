@@ -58,6 +58,7 @@ export type StrategyDeliverable = {
   local_id: string;
   catalog_id: string;
   approach: Approach;
+  not_needed_kata?: Array<"rulebook" | "recipe" | "sample" | "template">;
 };
 
 export type PreservedStrategyFields = {
@@ -355,7 +356,22 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
   const errors: string[] = [];
   const trackUpper = input.track.toUpperCase();
 
-  const sorted = [...input.deliverables].sort((left, right) =>
+  const maintenanceKind = (
+    approach: Approach,
+  ): "rulebook" | "recipe" | "sample" | "template" | undefined => {
+    const match = approach.match(/^(rulebook|recipe|sample|template)-maintenance$/);
+    return match?.[1] as "rulebook" | "recipe" | "sample" | "template" | undefined;
+  };
+  const eligibleDeliverables = input.deliverables.filter((deliverable) => {
+    const kind = maintenanceKind(deliverable.approach);
+    if (!kind || !deliverable.not_needed_kata?.includes(kind)) return true;
+    errors.push(
+      `${deliverable.local_id}: ${kind} は not-needed と宣言されているため ${kind}-maintenance を生成しない。`,
+    );
+    return false;
+  });
+
+  const sorted = [...eligibleDeliverables].sort((left, right) =>
     left.local_id.localeCompare(right.local_id),
   );
 
@@ -661,6 +677,9 @@ export function readAssessmentApproaches(assessment: SchAssessment): AssessmentR
       local_id: entry.local_id,
       catalog_id: entry.catalog_id,
       approach: judgment.recommended_approach,
+      not_needed_kata: (["rulebook", "recipe", "sample", "template"] as const).filter(
+        (kind) => entry.facts.kata[kind].declaration === "not-needed",
+      ),
     });
   }
 

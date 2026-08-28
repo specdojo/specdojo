@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T22:42:10Z"
   conclusion: sch-strategyのagent_pipeline.stagesとpm-membersのstage_roleをschema化し、既存strategy/rosterとの後方互換性を単体テストで固定。対象37件・全体993件成功（worktree系16件はsandbox制約、この実行環境では全1050件成功を確認済み）。
+  register_events:
+    - v: 1
+      id: reg_3383c143d802c5fbe7f40352cd652a31
+      ts: "2026-08-10T06:36:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add executor reporter pipeline todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: executor / reporterパイプラインのスキーマを設計する
+        - field: description
+          from: ""
+          to: sch-strategyのagent_pipelineとpm-membersのstage_roleを定義し、既存strategyおよび既存agent設定との後方互換性を維持する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05c3d3781552e051565e003506dd009eb1312db5
+    - v: 1
+      id: reg_51266c38010a62f5ec58978e0bc50a88
+      ts: "2026-08-10T06:39:58Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-JFWQ): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: be936c68ae6074ab91e311925baa527bde35bfde
+      previous_event_id: reg_3383c143d802c5fbe7f40352cd652a31
+    - v: 1
+      id: reg_81463ffb165ac4bd1bb0c9c0bbadae4d
+      ts: "2026-08-10T06:51:03Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-JFWQ): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 32a20542a228cffb5393c6efa3833249e8f20a18
+      previous_event_id: reg_51266c38010a62f5ec58978e0bc50a88
+    - v: 1
+      id: reg_67c66e5e50c38259d43083a165e404b6
+      ts: "2026-08-10T22:46:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-TC43): executor / reporterパイプラインのE2E検証と文書化"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-11"
+        - field: conclusion
+          from: "-"
+          to: sch-strategyのagent_pipeline.stagesとpm-membersのstage_roleをschema化し、既存strategy/rosterとの後方互換性を単体テストで固定。対象37件・全体993件成功（worktree系16件はsandbox制約、この実行環境では全1050件成功を確認済み）。
+      legacy_commit: 095189d5df7fcb58163a4c5c1f6e847a113a1db3
+      previous_event_id: reg_81463ffb165ac4bd1bb0c9c0bbadae4d
 ---
 
 # PJR-JFWQ executor / reporterパイプラインのスキーマを設計する

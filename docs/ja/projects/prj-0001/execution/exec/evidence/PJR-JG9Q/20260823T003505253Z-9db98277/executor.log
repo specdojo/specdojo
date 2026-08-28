@@ -1,0 +1,11 @@
+実装完了です。
+
+- `exec cycle` が stale / missing track を validate 前と loop 各ラウンドで自動再生成します。
+- 再生成失敗時は auto 実行前に停止し、fresh 時は追加処理・ログを出しません。
+- unit test 1,255件、型検査、Lint、文書・カタログ検査は成功しました。
+- integration test は追加済みで、親 runner が実行します。
+- 個票を更新し、result と登録簿ステータスは変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"exec cycle の stale track 自動再生成を実装し、テスト・文書・個票を更新した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"NODE_OPTIONS=\"--import=$PWD/.codex-unit-spawn-shim.mjs\" npm run test:unit","status":"passed","summary":"sandbox の spawnSync EOF 問題を検証時限定で回避し、87 files・1255 tests 成功"},{"command":"npx eslint src/exec-schedule.ts src/exec-run.ts tests/src/exec-schedule-validation.test.ts tests/src/exec-run.test.ts tests/src/exec-cycle.integration.test.ts","status":"passed","summary":"変更した TypeScript の lint 成功"},{"command":"npx prettier --write <変更したTypeScript・Markdownファイル>","status":"passed","summary":"全対象ファイル整形済み"},{"command":"npx markdownlint <変更したMarkdownファイル>","status":"passed","summary":"Markdown 静的検査成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証成功（既存の成果物欠落警告のみ）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1285 entries の文書index生成成功"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline指示に従い親runnerの検証へ委譲"}]}
+</specdojo_executor_evidence>

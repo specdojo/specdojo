@@ -32,8 +32,6 @@ function git(cwd: string, ...args: string[]): string {
 function createGitRepository(): string {
   const repo = mkdtempSync(join(tmpdir(), "specdojo-worktree-repo-"));
   git(repo, "init");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
   git(repo, "add", "README.md");
   git(repo, "commit", "-m", "initial");
@@ -131,6 +129,30 @@ describe("exec worktree", () => {
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
       });
       expect(reused).toEqual({ ...created, created: false });
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("creates a new worktree from an explicit start point", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    try {
+      const startPoint = git(repo, "rev-parse", "HEAD");
+      writeFileSync(join(repo, "later.txt"), "later\n", "utf8");
+      git(repo, "add", "later.txt");
+      git(repo, "commit", "-m", "later");
+
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "prj-0001:trial:cmp-001:agent-a",
+        startPoint,
+      });
+
+      expect(git(created.path, "rev-parse", "HEAD")).toBe(startPoint);
+      expect(existsSync(join(created.path, "later.txt"))).toBe(false);
     } finally {
       rmSync(repo, { recursive: true, force: true });
       rmSync(base, { recursive: true, force: true });

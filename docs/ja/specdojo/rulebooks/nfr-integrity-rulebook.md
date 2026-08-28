@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:nfr-integrity-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:nfr-integrity-sample
+  template: undecided
 ---
 
 # 非機能要件 / 完全性 作成ルール

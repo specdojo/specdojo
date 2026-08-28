@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:nfr-maintainability-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:nfr-maintainability-sample
+  template: undecided
 ---
 
 # 非機能要件 / 保守性 作成ルール

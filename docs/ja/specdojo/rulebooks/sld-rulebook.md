@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:sld-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:sld-sample
+  template: undecided
 ---
 
 # 保管場所一覧 （Storage Locations List）作成ルール

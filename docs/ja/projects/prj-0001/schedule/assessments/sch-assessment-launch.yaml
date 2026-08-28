@@ -1,0 +1,599 @@
+# yaml-language-server: $schema=../../../../../specdojo/schemas/v1/sch-assessment.schema.yaml
+kind: assessment
+id: prj-0001:sch-assessment-launch
+type: project
+status: draft
+title: 実践の型整備状況の判定（launch）
+rulebook: none
+schema_version: 1
+project_id: prj-0001
+track: launch
+strategy:
+  id: prj-0001:sch-strategy-launch
+  path: docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml
+include_kinds:
+  - work
+deliverables:
+  - local_id: prj-assumptions-constraints-dependencies
+    name: 前提・制約・依存関係
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-assumptions-constraints-dependencies-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-assumptions-constraints-dependencies-recipe
+          path: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-assumptions-constraints-dependencies-sample
+          path: docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-assumptions-constraints-dependencies-template
+          path: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-charter
+    name: プロジェクト憲章
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-charter-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-charter-recipe
+          path: docs/ja/specdojo/recipes/prj-charter-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-charter-sample
+          path: docs/ja/specdojo/samples/prj-charter-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-charter-template
+          path: docs/ja/specdojo/templates/prj-charter-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-comparison-of-alternatives
+    name: 代替案比較
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-comparison-of-alternatives-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-comparison-of-alternatives-recipe
+          path: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-comparison-of-alternatives-sample
+          path: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-comparison-of-alternatives-template
+          path: docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-issues-and-approach
+    name: プロジェクト課題と解決アプローチ
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-issues-and-approach-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-issues-and-approach-recipe
+          path: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-issues-and-approach-sample
+          path: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-issues-and-approach-template
+          path: docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-overview
+    name: プロジェクト概要
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-overview-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-overview-recipe
+          path: docs/ja/specdojo/recipes/prj-overview-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-overview-sample
+          path: docs/ja/specdojo/samples/prj-overview-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-overview-template
+          path: docs/ja/specdojo/templates/prj-overview-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-scope
+    name: プロジェクトスコープ
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-scope-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-scope-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-scope-recipe
+          path: docs/ja/specdojo/recipes/prj-scope-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-scope-sample
+          path: docs/ja/specdojo/samples/prj-scope-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-scope-template
+          path: docs/ja/specdojo/templates/prj-scope-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-stakeholder-register
+    name: ステークホルダー登録簿
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-stakeholder-register-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-stakeholder-register-recipe
+          path: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-stakeholder-register-sample
+          path: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-stakeholder-register-template
+          path: docs/ja/specdojo/templates/prj-stakeholder-register-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: prj-success-criteria-and-acceptance-criteria
+    name: 成功基準と受入条件
+    catalog_id: prj-0001:dct-project-definition
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+          path: docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
+          path: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:prj-success-criteria-and-acceptance-criteria-sample
+          path: docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:prj-success-criteria-and-acceptance-criteria-template
+          path: docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-communication-plan
+    name: コミュニケーション計画
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-communication-plan-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-communication-plan-recipe
+          path: docs/ja/specdojo/recipes/pm-communication-plan-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-communication-plan-sample
+          path: docs/ja/specdojo/samples/pm-communication-plan-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-communication-plan-template
+          path: docs/ja/specdojo/templates/pm-communication-plan-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-members
+    name: メンバー定義
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-members.yaml
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-members-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-members-recipe
+          path: docs/ja/specdojo/recipes/pm-members-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-members-sample
+          path: docs/ja/specdojo/samples/pm-members-sample.yaml
+          exists: true
+          status: draft
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-members-template
+          path: docs/ja/specdojo/templates/pm-members-template.yaml
+          exists: true
+          status: ready
+          broken_reference: false
+      schema:
+        path: docs/specdojo/schemas/v1/pm-members.schema.yaml
+        exists: true
+      evidence_refs: []
+  - local_id: pm-organization
+    name: 組織定義
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-organization-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-organization-recipe
+          path: docs/ja/specdojo/recipes/pm-organization-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-organization-sample
+          path: docs/ja/specdojo/samples/pm-organization-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-organization-template
+          path: docs/ja/specdojo/templates/pm-organization-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-plan
+    name: プロジェクト管理計画
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-plan-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-plan-recipe
+          path: docs/ja/specdojo/recipes/pm-plan-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-plan-sample
+          path: docs/ja/specdojo/samples/pm-plan-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-plan-template
+          path: docs/ja/specdojo/templates/pm-plan-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-quality-management-plan
+    name: 品質管理計画
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-quality-management-plan-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-quality-management-plan-recipe
+          path: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-quality-management-plan-sample
+          path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-quality-management-plan-template
+          path: docs/ja/specdojo/templates/pm-quality-management-plan-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-raci
+    name: RACI
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-raci-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-raci-recipe
+          path: docs/ja/specdojo/recipes/pm-raci-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-raci-sample
+          path: docs/ja/specdojo/samples/pm-raci-sample.md
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-raci-template
+          path: docs/ja/specdojo/templates/pm-raci-template.md
+          exists: true
+          status: ready
+          broken_reference: false
+      evidence_refs: []
+  - local_id: pm-roles
+    name: ロール定義
+    catalog_id: prj-0001:dct-project-management
+    facts:
+      deliverable:
+        path: docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+        exists: true
+        status: ready
+      kata:
+        rulebook:
+          declaration: declared
+          id: specdojo:pm-roles-rulebook
+          path: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+          exists: true
+          status: ready
+          broken_reference: false
+        recipe:
+          declaration: declared
+          id: specdojo:pm-roles-recipe
+          path: docs/ja/specdojo/recipes/pm-roles-recipe.md
+          exists: true
+          status: ready
+          broken_reference: false
+        sample:
+          declaration: declared
+          id: specdojo:pm-roles-sample
+          path: docs/ja/specdojo/samples/pm-roles-sample.yaml
+          exists: true
+          status: ready
+          broken_reference: false
+        template:
+          declaration: declared
+          id: specdojo:pm-roles-template
+          path: docs/ja/specdojo/templates/pm-roles-template.yaml
+          exists: true
+          status: ready
+          broken_reference: false
+      schema:
+        path: docs/specdojo/schemas/v1/pm-roles.schema.yaml
+        exists: true
+      evidence_refs: []
+open_questions:
+  - topic: launch
+    question: track 'launch' の成果物と実践の型の利用可能性を判定する
+    blocking: true
+    reason: agent 判定が未実施のため、推奨する進め方が未確定
+    next_action: specdojo schedule assessment prompt --track launch の指示で agent 判定を行う
+confidence: low

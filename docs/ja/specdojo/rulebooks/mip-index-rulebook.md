@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:mip-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:mip-index-sample
+  template: undecided
 ---
 
 # 移行計画 作成ルール

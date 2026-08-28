@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TPY9",
+  "run_id": "20260827T234618114Z-cb416678",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-27T23:46:18.114Z",
+    "completed_at": "2026-08-28T00:19:34.585Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tpy9-register-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-history.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-events.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../pjr-tpy9-register-git-github.md                |  18 +-\n .../ja/specdojo/guides/register-operation-guide.md |  21 +-\n docs/ja/specdojo/references/command-reference.md   |  41 +--\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  49 ++--\n .../v1/register-item-frontmatter.schema.yaml       | 104 ++++++-\n src/exec-run.ts                                    |  66 ++++-\n src/register-history.ts                            | 189 +++++++++----\n src/register-item.ts                               |  17 +-\n src/register.ts                                    | 311 +++++++++++++++++++--\n tests/src/register-commands.test.ts                |  35 ++-\n tests/src/register-history.test.ts                 |  88 ++++++\n 11 files changed, 793 insertions(+), 146 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "Markdown全件lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "event整合性検証を含むRegister生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "Catalog検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1390件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register history --project prj-0001 --id PJR-TPY9 --status-only --json",
+      "status": "passed",
+      "summary": "既存Git履歴の後方互換再構成を確認"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TPY9\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TPY9\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-cLSgfc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-zL5TWp/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5uzXPb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Y1Mtbf/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1hY9Nb/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-G1s3LY/pjr-0001-topic.md\n ❯ tests/src/register-commands.test.ts (23 tests | 1 failed) 551ms\n     × add は個票を作成し、構造化フィールドを frontmatter へ書く（表へ行を追記しない） 55ms\n\n Test Files  1 failed | 87 passed (88)\n      Tests  1 failed | 1298 passed (1299)\n   Start at  09:19:17\n   Duration  17.51s (transform 1.37s, setup 0ms, import 9.96s, tests 14.81s, environment …"
+    }
+  ],
+  "final_message": "Register履歴を個票内の追記型eventへ分離し、Git互換履歴・移行・検証・文書・自動テストを更新した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-TPY9/20260827T234618114Z-cb416678/executor.log",
+      "bytes": 2417,
+      "truncated": false
+    }
+  ]
+}

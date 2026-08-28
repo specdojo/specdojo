@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 # Job実装の翻訳サンプル。運用開始時にenabledをtrueへ変更する。
 id: rtn-translate-updated-docs
 name: 更新文書の翻訳

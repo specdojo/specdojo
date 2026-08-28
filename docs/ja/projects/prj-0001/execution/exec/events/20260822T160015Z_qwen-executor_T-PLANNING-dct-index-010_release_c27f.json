@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-08-22T16:00:15Z",
+  "type": "release",
+  "task_id": "T-PLANNING-dct-index-010",
+  "by": "qwen-executor",
+  "msg": "rollback: checkpoint failed"
+}

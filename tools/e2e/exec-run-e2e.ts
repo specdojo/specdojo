@@ -27,6 +27,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { gitEnvironment } from "../../src/exec-worktree.js";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const cliPath = join(projectRoot, "dist", "specdojo.js");
@@ -38,14 +39,28 @@ const PROJECT_ID = "test";
 const EXEC_BRANCH = `exec/${PROJECT_ID}-${TASK_ID}`;
 const DELIVERABLE_REL = join("docs", "project", "out.md");
 const EDITED_CONTENT = "# Edited by agent\n";
+const E2E_GIT_ENVIRONMENT = {
+  ...gitEnvironment(),
+  GIT_AUTHOR_NAME: "SpecDojo E2E",
+  GIT_AUTHOR_EMAIL: "specdojo-e2e@example.invalid",
+  GIT_COMMITTER_NAME: "SpecDojo E2E",
+  GIT_COMMITTER_EMAIL: "specdojo-e2e@example.invalid",
+  GIT_CONFIG_COUNT: "1",
+  GIT_CONFIG_KEY_0: "commit.gpgsign",
+  GIT_CONFIG_VALUE_0: "false",
+};
 
 function git(cwd: string, ...args: string[]): string {
-  return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  return execFileSync("git", args, { cwd, encoding: "utf8", env: E2E_GIT_ENVIRONMENT }).trim();
 }
 
 function cli(cwd: string, args: string[]): string {
   try {
-    return execFileSync("node", [cliPath, ...args], { cwd, encoding: "utf8" });
+    return execFileSync("node", [cliPath, ...args], {
+      cwd,
+      encoding: "utf8",
+      env: E2E_GIT_ENVIRONMENT,
+    });
   } catch (error) {
     const e = error as { stdout?: string; stderr?: string };
     const detail = `${e.stdout ?? ""}${e.stderr ?? ""}`.trim();
@@ -137,8 +152,6 @@ function setupFixture(repo: string, worktreeBase: string, agentScript: string): 
   );
 
   git(repo, "init", "-q");
-  git(repo, "config", "user.name", "SpecDojo E2E");
-  git(repo, "config", "user.email", "specdojo-e2e@example.invalid");
   git(repo, "add", "-A");
   git(repo, "commit", "-qm", "initial");
 }
@@ -222,6 +235,7 @@ function run(): void {
         ["-C", repo, "show-ref", "--verify", "--quiet", `refs/heads/${EXEC_BRANCH}`],
         {
           stdio: "ignore",
+          env: gitEnvironment(),
         },
       );
     } catch {

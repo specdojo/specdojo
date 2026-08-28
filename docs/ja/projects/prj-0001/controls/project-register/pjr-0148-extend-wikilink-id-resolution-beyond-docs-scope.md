@@ -11,6 +11,73 @@ specdojo:
   priority: low
   owner: ARC
   due_on: "2026-09-30"
+  register_events:
+    - v: 1
+      id: reg_201b406d80c93adca3ac4bfad8f4eb05
+      ts: "2026-08-02T02:22:59Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0146をwikilink併用ルールに修正しPJR-0148を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: docs/外への[[id]]（wikilink）解決範囲拡張の要否検討
+        - field: description
+          from: ""
+          to: PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `docs/` 配下に限定されているため、`.github/instructions/`、`README.md`、`CLAUDE.md` 等 `docs/` 外のファイルは `[[id]]`（wikilink）で参照できないことが判明した。`docs/` 外への `[[id]]` 解決範囲拡張が必要かどうかを、実装上の制約と費用対効果を踏まえて検討する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: d4c2113e9fc24d7e0c7f64806d60054bfd6e2e67
+    - v: 1
+      id: reg_a1c8370246873c3cc7554c9523e6e23b
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `docs/` 配下に限定されているため、`.github/instructions/`、`README.md`、`CLAUDE.md` 等 `docs/` 外のファイルは `[[id]]`（wikilink）で参照できないことが判明した。`docs/` 外への `[[id]]` 解決範囲拡張が必要かどうかを、実装上の制約と費用対効果を踏まえて検討する。
+          to: 現状specdojo index buildの走査対象はdocs/配下のみで、.github/instructions/やREADME.md等docs/外のファイルは[[id]]で参照できない。docs/外への[[id]]解決範囲拡張が必要かどうかを、走査対象拡大に伴う除外ロジック変更・frontmatter契約の非互換・ID衝突リスク等を踏まえて検討する
+        - field: priority
+          from: medium
+          to: low
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-09-30"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_201b406d80c93adca3ac4bfad8f4eb05
 ---
 
 # PJR-0148 docs/外への[[id]]（wikilink）解決範囲拡張の要否検討

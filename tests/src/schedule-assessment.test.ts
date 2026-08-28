@@ -56,7 +56,7 @@ function rulebookDoc(id: string, refs: Record<string, string>, status = "draft")
 }
 
 // 一時リポジトリを cwd にして specdojoRootDir() と実践の型の解決先を temp 内へ閉じ込める。
-// 判定条件（4種そろい／一部のみ／宣言先不在／none 宣言／慣例解決／実装エビデンス／既存成果物の有無）を
+// 判定条件（4種そろい／一部のみ／宣言先不在／not-needed 宣言／実装エビデンス／既存成果物の有無）を
 // 1 つのカタログに集約し、事実収集の分岐を網羅する。
 function withRepo(fn: (root: string) => void): void {
   const originalCwd = process.cwd();
@@ -100,7 +100,7 @@ function withRepo(fn: (root: string) => void): void {
       "docs/ja/specdojo/rulebooks/partial-rulebook.md",
       rulebookDoc("specdojo:partial-rulebook", {
         sample: "specdojo:missing-sample",
-        template: "none",
+        template: "not-needed",
       }),
     );
     write(
@@ -148,6 +148,14 @@ function withRepo(fn: (root: string) => void): void {
                   { kind: "implementation", path: "src/existing-impl.ts", purpose: "現在動作" },
                   { kind: "implementation", path: "src/gone-impl.ts", purpose: "不在" },
                 ],
+              },
+              {
+                local_id: "undecided-kata-doc",
+                name: "実践の型の要否が未判断の成果物",
+                kind: "work",
+                overview: "4種の実践の型の要否を bootstrap で判断する成果物",
+                path: "undecided-kata-doc.md",
+                rulebook: "undecided",
               },
               {
                 local_id: "control-doc",
@@ -272,7 +280,7 @@ function usabilityOf(overrides: Partial<Record<KataKindKey, EffectiveUsability>>
 // --- tests --------------------------------------------------------------------
 
 describe("collectAssessmentFacts", () => {
-  it("宣言・慣例・none・宣言先不在を区別して実践の型の事実を収集する", () => {
+  it("rulebook 正本の宣言・未宣言・not-needed・宣言先不在を区別して事実を収集する", () => {
     withRepo((root) => {
       const deliverables = collect(root);
 
@@ -292,9 +300,8 @@ describe("collectAssessmentFacts", () => {
 
       const partial = byLocalId(deliverables, "partial-kata-doc");
       expect(partial.facts.kata.recipe).toMatchObject({
-        declaration: "conventional",
-        path: "docs/ja/specdojo/recipes/partial-recipe.md",
-        exists: true,
+        declaration: "unresolved",
+        exists: false,
       });
       expect(partial.facts.kata.sample).toMatchObject({
         declaration: "declared",
@@ -302,7 +309,7 @@ describe("collectAssessmentFacts", () => {
         broken_reference: true,
       });
       expect(partial.facts.kata.template).toMatchObject({
-        declaration: "none",
+        declaration: "not-needed",
         exists: false,
         broken_reference: false,
       });
@@ -310,6 +317,15 @@ describe("collectAssessmentFacts", () => {
       const none = byLocalId(deliverables, "no-kata-doc");
       for (const kind of ["rulebook", "recipe", "sample", "template"] as KataKindKey[]) {
         expect(none.facts.kata[kind]).toMatchObject({ declaration: "unresolved", exists: false });
+      }
+
+      const undecided = byLocalId(deliverables, "undecided-kata-doc");
+      for (const kind of ["rulebook", "recipe", "sample", "template"] as KataKindKey[]) {
+        expect(undecided.facts.kata[kind]).toMatchObject({
+          declaration: "undecided",
+          exists: false,
+          broken_reference: false,
+        });
       }
     });
   });
@@ -338,7 +354,12 @@ describe("collectAssessmentFacts", () => {
     withRepo((root) => {
       const localIds = collect(root).map((item) => item.local_id);
 
-      expect(localIds).toEqual(["full-kata-doc", "no-kata-doc", "partial-kata-doc"]);
+      expect(localIds).toEqual([
+        "full-kata-doc",
+        "no-kata-doc",
+        "partial-kata-doc",
+        "undecided-kata-doc",
+      ]);
     });
   });
 
@@ -369,6 +390,21 @@ describe("resolveRecommendedApproach", () => {
         recipe: "usable",
         sample: "usable",
         template: "usable",
+      }),
+    });
+
+    expect(decision.approach).toBe("fully-guided");
+  });
+
+  it("not-needed を欠落扱いせず、必要な型が揃えば fully-guided を選ぶ", () => {
+    const decision = resolveRecommendedApproach({
+      ...base,
+      intent: "author-deliverable",
+      usability: usabilityOf({
+        rulebook: "usable",
+        recipe: "not-needed",
+        sample: "usable",
+        template: "not-needed",
       }),
     });
 
@@ -503,6 +539,18 @@ describe("resolveRecommendedApproach", () => {
 
     expect(decision.approach).toBe("undecided");
   });
+
+  it("not-needed の型は maintenance 対象にしない", () => {
+    const decision = resolveRecommendedApproach({
+      ...base,
+      intent: "improve-kata",
+      usability: usabilityOf({ recipe: "not-needed" }),
+      kataTarget: "recipe",
+    });
+
+    expect(decision.approach).toBe("undecided");
+    expect(decision.reasons.join("\n")).toContain("not-needed");
+  });
 });
 
 describe("approachPurpose", () => {
@@ -527,11 +575,19 @@ describe("effectiveUsability", () => {
     withRepo((root) => {
       const deliverables = collect(root);
       const partial = byLocalId(deliverables, "partial-kata-doc");
+      const full = byLocalId(deliverables, "full-kata-doc");
 
       expect(effectiveUsability(partial.facts, undefined, "sample")).toBe("absent");
-      expect(effectiveUsability(partial.facts, undefined, "recipe")).toBe("unknown");
+      expect(effectiveUsability(partial.facts, undefined, "recipe")).toBe("absent");
+      // 実体が無い型は、判定があっても absent のままとする。慣例ファイルの探索を廃止したため、
+      // rulebook が宣言していない型は「必要だが未整備」であり、判定で埋められない。
       expect(
         effectiveUsability(partial.facts, judgment({ kata: { recipe: kataJudgment() } }), "recipe"),
+      ).toBe("absent");
+      // 実体がある型は、判定が無ければ unknown、判定があればその usability を返す。
+      expect(effectiveUsability(full.facts, undefined, "recipe")).toBe("unknown");
+      expect(
+        effectiveUsability(full.facts, judgment({ kata: { recipe: kataJudgment() } }), "recipe"),
       ).toBe("usable");
     });
   });
@@ -841,7 +897,8 @@ describe("renderAssessmentPrompt", () => {
 
       expect(prompt).toContain("docs/ja/specdojo/rulebooks/full-rulebook.md（status: draft）");
       expect(prompt).toContain("宣言先が存在しない");
-      expect(prompt).toContain("none 宣言で無効化");
+      expect(prompt).toContain("not-needed（不要と判断済み）");
+      expect(prompt).toContain("undecided（要否未判断）");
       expect(prompt).toContain("src/existing-impl.ts");
       expect(prompt).toContain("`facts` はコードが収集した事実であり、編集しない");
       expect(prompt).toContain("ファイル探索・ID 導出・存在判定はコードが済ませてある");

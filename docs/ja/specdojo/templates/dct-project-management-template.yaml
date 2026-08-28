@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
+# specdojo-schema: validate=false reason=template
 # Template: project management deliverables catalog
 # min_size on a group excludes the entire group below that size.
 # min_size on a deliverable excludes only that item.
@@ -215,7 +217,6 @@ groups:
         overview: 識別済み検討項目と対応策を管理（台帳）
         path: generated/pjr-index.md
         rulebook: specdojo:pjr-rulebook
-
       - local_id: pjr-entry
         instance_id_pattern: pjr-{sequence}-{term}
         name: プロジェクト登録項目
@@ -224,7 +225,6 @@ groups:
         overview: 識別済み検討項目と対応策を管理（個別課題）
         note: sequence は4桁連番、term は件名の略称（kebab-case）
         rulebook: specdojo:pjr-rulebook
-
   # ── 管理台帳補助ビュー (medium+) ──────────────────────────────────────────
   - name: 管理台帳補助ビュー
     base_path: controls/project-register/generated

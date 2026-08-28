@@ -13,6 +13,104 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T11:39:40Z"
+  register_events:
+    - v: 1
+      id: reg_64d9d2121a0eff3726944289ed4e4e3b
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: rulebook・運用ガイド・テンプレートを個票正本へ更新する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割7。個票 frontmatter が正本になることに合わせて、記載ルール・運用手順・テンプレートを更新する。二重管理を前提とした規則と、個票を作るかどうかの判断基準を削除する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_2268abe263cde81f336acb02a87db408
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割7。個票 frontmatter が正本になることに合わせて、記載ルール・運用手順・テンプレートを更新する。二重管理を前提とした規則と、個票を作るかどうかの判断基準を削除する。"
+          to: PJR-ES57 の分割7。index と個票の同期規則を削除し、個票分離基準の二分を廃止して、テンプレートを新構成へ揃える。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_64d9d2121a0eff3726944289ed4e4e3b
+    - v: 1
+      id: reg_7cc1e081ed8cce2ce3878363ca91c3a0
+      ts: "2026-08-09T11:39:40Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "docs(prj-0001): close PJR-RDNC, sync docs to ticket-SSOT"
+      changes:
+        - field: status
+          from: open
+          to: done
+      legacy_commit: 0de3d5ee63b15b4290dc85bdbe0d029d775f9c2d
+      previous_event_id: reg_2268abe263cde81f336acb02a87db408
+    - v: 1
+      id: reg_57abf9ada99a983a5eb73688de0f16c7
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_7cc1e081ed8cce2ce3878363ca91c3a0
 ---
 
 # PJR-RDNC rulebook・運用ガイド・テンプレートを個票正本へ更新する

@@ -54,8 +54,6 @@ function resolveProjectConfig(opts: { project?: string }): {
 } {
   loadEnv();
   const { config, configPath } = loadConfig();
-  const baseDir = specdojoRootDir();
-
   const resolvedId =
     opts.project?.trim() ||
     process.env.SPECDOJO_PROJECT?.trim() ||
@@ -763,7 +761,10 @@ export function buildDashboardMarkdown(paths: DashboardPaths): string {
   lines.push(...renderRegisterSection(paths.projectId));
   lines.push(...renderRoutineSection(paths));
 
-  return lines.join("\n");
+  // 各セクションは次のセクションとの区切りとして空行で終わる。最後のセクションの空行を
+  // そのまま残すと、書き出し時に付ける改行と合わさって末尾が空行2行になり markdownlint の
+  // MD012 に触れるため、ここで末尾の空行を落とす。
+  return lines.join("\n").replace(/\n+$/, "");
 }
 
 export function writeDashboard(paths: DashboardPaths): {

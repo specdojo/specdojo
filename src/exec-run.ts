@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { basename, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
@@ -31,7 +31,7 @@ import {
   type AgentLimitKind,
   type AgentLimitSignal,
 } from "./exec-limit.js";
-import { buildScheduleIndex } from "./exec-schedule.js";
+import { buildScheduleIndex, findStaleGeneratedTracks } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
 import { listFilesRecursive, qualifyTaskId, randomHex, readYaml } from "./exec-shared.js";
@@ -110,6 +110,7 @@ import {
 import { completeJobRun, materializeJobRun } from "./job.js";
 import {
   findExecWorktree,
+  gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -131,6 +132,11 @@ import {
   changedAgentProtectedConfigPaths,
 } from "./exec-agent-protected-config.js";
 import {
+  agentGitStateViolation,
+  captureAgentGitStateSnapshot,
+  changedAgentGitStateFields,
+} from "./exec-agent-git-state.js";
+import {
   buildPhaseModeIndex,
   resolveApproach,
   resolveTaskCapabilities,
@@ -138,10 +144,17 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "./exec-strategy.js";
-import { recordExecutorEvidence, type ExecEvidence } from "./exec-evidence.js";
+import {
+  recordExecutorEvidence,
+  recordReporterFailureOutput,
+  writeExecutorEvidence,
+  type ExecEvidence,
+} from "./exec-evidence.js";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  replaceParentValidationResults,
+  resolveParentValidationDefinitions,
   runParentValidations,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
@@ -218,6 +231,7 @@ export type RunOpts = {
   worktreeBase?: string;
   due?: boolean;
   ifBusy?: string;
+  cycleRebuildStaleTracks?: boolean;
 };
 
 type RunResult = "success" | "rate_limit" | "failure";
@@ -704,9 +718,12 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
 }
 
 function executorEvidenceContract(parentValidationIds: readonly string[]): string {
+  const parentValidationCommands = resolveParentValidationDefinitions(parentValidationIds).map(
+    (definition) => definition.displayCommand,
+  );
   const parentValidationInstruction =
     parentValidationIds.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")}. Do not run their underlying integration commands inside the agent sandbox. Run the sandbox-safe unit test command required by the plan (for this repository: npm run test:unit) and report it in your executor validations. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   return `
 
@@ -718,6 +735,10 @@ This invocation is the executor stage of an executor/reporter pipeline. Edit and
 artifacts required by the plan, but do not create or update the result file. Any plan instruction
 that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
 runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
 ${parentValidationInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
@@ -736,7 +757,7 @@ export function buildExecutorPrompt(
   return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds)}`;
 }
 
-async function runConfiguredParentValidations(
+export async function runConfiguredParentValidations(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
 ): Promise<Awaited<ReturnType<typeof runParentValidations>>> {
@@ -750,6 +771,24 @@ async function runConfiguredParentValidations(
     );
   }
   return validations;
+}
+
+async function revalidateFailedParentValidationsForReporterResume(params: {
+  execDefaults: ExecDefaultsConfig;
+  cwd: string;
+  evidence: ExecEvidence;
+  evidencePath: string;
+}): Promise<ExecEvidence> {
+  if (!failedParentValidationReason(params.evidence.validations)) return params.evidence;
+
+  process.stdout.write("  Re-running failed parent validations before reporter resume.\n");
+  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
+  const evidence = replaceParentValidationResults(params.evidence, parentValidations);
+  writeExecutorEvidence(params.evidencePath, evidence);
+  process.stdout.write(
+    `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
+  );
+  return evidence;
 }
 
 export function executorRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
@@ -967,6 +1006,7 @@ async function runWithRetry(
       const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
       attempts++;
       const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
+      const gitStateBefore = captureAgentGitStateSnapshot(cwd);
       const attempt = await executeAgent(
         candidates[idx].command,
         prompt,
@@ -979,6 +1019,17 @@ async function runWithRetry(
       const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
         const reason = agentProtectedConfigViolation(protectedConfigChanges);
+        process.stderr.write(`blocked: ${reason}\n`);
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+        };
+      }
+      const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+      if (gitStateChanges.length > 0) {
+        const reason = agentGitStateViolation(gitStateChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         return {
           result: "failure",
@@ -1076,7 +1127,7 @@ function agentEnvironment(
   executionPath: string,
 ): NodeJS.ProcessEnv {
   return {
-    ...process.env,
+    ...gitEnvironment(),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
   };
@@ -1491,6 +1542,7 @@ async function runPreparedTask(
   let attempts = 0;
   let limit: AgentLimitSignal | undefined;
   let executorEvidenceRef: string | undefined;
+  let executorEvidencePath: string | undefined;
   let executorEvidence: ReturnType<typeof recordExecutorEvidence>["evidence"] | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
   let pipelineBlockReason: string | undefined;
@@ -1538,10 +1590,21 @@ async function runPreparedTask(
       ) {
         executorEvidence = checkpoint.evidence;
         executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
+        executorEvidencePath = executorEvidenceRef
+          ? resolve(prepared.worktree.path, executorEvidenceRef)
+          : undefined;
         resumeReporter = true;
         process.stdout.write(
           `  Resuming reporter from persisted executor evidence: ${executorEvidenceRef}\n`,
         );
+        if (failedParentValidationReason(executorEvidence.validations) && executorEvidenceRef) {
+          executorEvidence = await revalidateFailedParentValidationsForReporterResume({
+            execDefaults,
+            cwd: prepared.worktree.path,
+            evidence: executorEvidence,
+            evidencePath: resolve(prepared.worktree.path, executorEvidenceRef),
+          });
+        }
       } else if (prepared.pipelineResumeStage === "reporter") {
         process.stdout.write(
           "  Persisted executor evidence is invalid; starting a new executor run.\n",
@@ -1626,6 +1689,7 @@ async function runPreparedTask(
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
       .join("/");
+    executorEvidencePath = recorded.evidencePath;
     executorEvidence = recorded.evidence;
     const executorCompletedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
@@ -1737,6 +1801,14 @@ async function runPreparedTask(
         result = reporter.result;
         pipelineBlockReason = reporter.reason;
         stderr = reporter.reason;
+        if (executorEvidencePath) {
+          executorEvidence = recordReporterFailureOutput({
+            worktreePath: prepared.worktree.path,
+            evidencePath: executorEvidencePath,
+            evidence: executorEvidence,
+            invocationOutputs: reporter.invocationOutputs,
+          });
+        }
       }
       if (result !== "success") {
         const reporterCompletedAt = new Date().toISOString();
@@ -1962,6 +2034,12 @@ function spawnRefresh(projectId: string | undefined): boolean {
   const refreshArgs = ["exec", "refresh"];
   if (projectId) refreshArgs.push("--project", projectId);
   return spawnSelf(refreshArgs);
+}
+
+function spawnScheduleBuild(projectId: string | undefined, track: string): boolean {
+  const args = ["schedule", "build", "--track", track, "--force"];
+  if (projectId) args.push("--project", projectId);
+  return spawnSelf(args);
 }
 
 // doc-index is project-independent (it scans the whole docs/ tree), so no --project is passed.
@@ -2218,6 +2296,17 @@ async function runBatchMode(opts: RunOpts): Promise<void> {
         process.exitCode = 1;
         stopNewTasks = true;
         return [];
+      }
+      // Only exec cycle opts into schedule regeneration. A strategy task completed by the prior
+      // auto round can therefore expose the next track in this same cycle, while standalone
+      // `exec run --auto --loop` keeps its existing refresh-only behavior.
+      if (opts.cycleRebuildStaleTracks) {
+        const rebuild = await rebuildStaleGeneratedTracksForCycle(schedulePath, projectId, false);
+        if (rebuild.status === "failure") {
+          process.exitCode = 1;
+          stopNewTasks = true;
+          return [];
+        }
       }
       process.stdout.write(`[run] exec refresh${roundSuffix}...\n`);
       if (!spawnRefresh(projectId)) {
@@ -2495,10 +2584,11 @@ async function spawnAgentInPlace(
   executionPath: string,
 ): Promise<number> {
   const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
+  const gitStateBefore = captureAgentGitStateSnapshot(cwd);
   const child = spawn(command, {
     cwd,
     env: {
-      ...process.env,
+      ...gitEnvironment(),
       SPECDOJO_SCHEDULE_PATH: schedulePath,
       SPECDOJO_EXECUTION_PATH: executionPath,
     },
@@ -2515,6 +2605,11 @@ async function spawnAgentInPlace(
   const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
     process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    return 1;
+  }
+  const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+  if (gitStateChanges.length > 0) {
+    process.stderr.write(`blocked: ${agentGitStateViolation(gitStateChanges)}\n`);
     return 1;
   }
   return exitCode;
@@ -2737,7 +2832,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       execDefaults,
       repoRoot,
       {
-        ...process.env,
+        ...gitEnvironment(),
         SPECDOJO_SCHEDULE_PATH: schedulePath,
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
@@ -2814,7 +2909,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
             execDefaults,
             repoRoot,
             {
-              ...process.env,
+              ...gitEnvironment(),
               SPECDOJO_SCHEDULE_PATH: schedulePath,
               SPECDOJO_EXECUTION_PATH: executionPath,
             },
@@ -2854,6 +2949,12 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       } else {
         exitCode = 1;
         pipelineBlockReason = reporter.reason;
+        recordReporterFailureOutput({
+          worktreePath: repoRoot,
+          evidencePath: recorded.evidencePath,
+          evidence: recorded.evidence,
+          invocationOutputs: reporter.invocationOutputs,
+        });
       }
       const reporterCompletedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
@@ -3205,6 +3306,7 @@ async function runRegisterReporterStage(params: {
   resultPath: string;
   execDefaults: ExecDefaultsConfig;
   evidence: ExecEvidence;
+  evidencePath: string;
   state: PipelineState;
   statePath: string;
 }): Promise<{
@@ -3277,6 +3379,12 @@ async function runRegisterReporterStage(params: {
     }
   } else {
     blockReason = reporter.reason;
+    recordReporterFailureOutput({
+      worktreePath: cwd,
+      evidencePath: params.evidencePath,
+      evidence: params.evidence,
+      invocationOutputs: reporter.invocationOutputs,
+    });
   }
 
   const reporterCompletedAt = new Date().toISOString();
@@ -3441,6 +3549,7 @@ async function runRegisterAgentPipeline(params: {
     resultPath,
     execDefaults,
     evidence: recorded.evidence,
+    evidencePath: recorded.evidencePath,
     state,
     statePath: stateLocation.path,
   });
@@ -3514,11 +3623,12 @@ function registerRunnerManagedPaths(
   resultPath: string,
   currentPaths: readonly string[],
   ticketPath?: string | null,
+  additionalManagedPaths: readonly string[] = [],
 ): string[] {
   // 状態遷移の書き込み先は個票（正本）。pjr-index と派生ビューは生成物として同時に更新される。
   // 移行完了後の pjr-index.md は非追跡の生成物になり存在しないため、存在する場合のみ対象に含める
   // （存在しないパスを git add すると pathspec エラーになる）。
-  const managed = [planPath, resultPath];
+  const managed = [planPath, resultPath, ...additionalManagedPaths];
   if (existsSync(registerPaths.pjrIndexPath)) managed.push(registerPaths.pjrIndexPath);
   if (ticketPath) managed.push(ticketPath);
   const exact = new Set(managed.map((path) => repoRelativePath(repoRoot, path)));
@@ -3576,7 +3686,7 @@ async function runSingleRegisterItem(
     stem,
   });
   const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-  const { resultPath } = await scaffoldResult({
+  const { resultPath, supersededPaths } = await scaffoldResult({
     executionPath,
     taskId: item.id,
     mode: "edit",
@@ -3594,7 +3704,7 @@ async function runSingleRegisterItem(
   if (pipelineAgents) {
     process.stdout.write(`  Agent: ${pipelineAgents.reporterCandidates[0]?.actor} (reporter)\n`);
   }
-  if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+  if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
     throw new Error(`register start failed: ${item.id}`);
   }
 
@@ -3652,7 +3762,7 @@ async function runSingleRegisterItem(
   if (effectiveExit === 0) {
     let transition: RegisterItemTransition = "review";
     let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
@@ -3667,6 +3777,7 @@ async function runSingleRegisterItem(
         resultPath,
         currentPaths,
         ticketPath,
+        supersededPaths,
       );
       try {
         const result = commitRegisterItemChanges(repoRoot, item, preexisting, runnerManaged);
@@ -3680,8 +3791,10 @@ async function runSingleRegisterItem(
             "wait",
             "--id",
             item.id,
-            "--conclusion",
+            "--reason",
             commitReason,
+            "--by",
+            actor,
           ])
         ) {
           transition = "waiting";
@@ -3705,10 +3818,20 @@ async function runSingleRegisterItem(
     return { id: item.id, title: item.title, outcome: "success", transition, commit, reason };
   }
 
-  const conclusion = sanitizeRegisterConclusion(
+  const waitingReason = sanitizeRegisterConclusion(
     blockReason ?? `agent exited with non-zero code (exit ${exitCode})`,
   );
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+  if (
+    !spawnRegisterTransition(projectId, [
+      "wait",
+      "--id",
+      item.id,
+      "--reason",
+      waitingReason,
+      "--by",
+      actor,
+    ])
+  ) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
   }
   process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
@@ -3718,7 +3841,7 @@ async function runSingleRegisterItem(
     outcome: "failure",
     transition: "waiting",
     commit: context.registerCommit ? "skipped" : "off",
-    reason: conclusion,
+    reason: waitingReason,
   };
 }
 
@@ -3774,11 +3897,22 @@ function registerWaitSummary(params: {
   item: PjrItem;
   ticketPath: string | null;
   reason: string;
+  actor: string;
 }): RegisterItemSummary {
-  const { repoRoot, projectId, registerPaths, item, ticketPath } = params;
-  const conclusion = sanitizeRegisterConclusion(params.reason);
+  const { repoRoot, projectId, registerPaths, item, ticketPath, actor } = params;
+  const blockReason = sanitizeRegisterConclusion(params.reason);
   let transition: RegisterItemTransition = "waiting";
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--conclusion", conclusion])) {
+  if (
+    !spawnRegisterTransition(projectId, [
+      "wait",
+      "--id",
+      item.id,
+      "--reason",
+      blockReason,
+      "--by",
+      actor,
+    ])
+  ) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
     transition = "none";
   } else {
@@ -3790,7 +3924,7 @@ function registerWaitSummary(params: {
     outcome: "failure",
     transition,
     commit: "off",
-    reason: conclusion,
+    reason: blockReason,
   };
 }
 
@@ -3808,12 +3942,13 @@ async function finalizeRegisterWorktreeRun(params: {
   resultScaffold: Record<string, unknown>;
   agentResult: RunResult;
   stderr: string;
+  actor: string;
 }): Promise<RegisterItemSummary> {
-  const { context, registerPaths, item, ticketPath, worktree, stem, agentResult } = params;
+  const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
@@ -3848,7 +3983,7 @@ async function finalizeRegisterWorktreeRun(params: {
 
     let transition: RegisterItemTransition = "review";
     let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
@@ -3928,7 +4063,7 @@ async function runSingleRegisterItemWorktree(
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -3968,7 +4103,7 @@ async function runSingleRegisterItemWorktree(
       stem,
     });
     const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-    const { resultPath } = await scaffoldResult({
+    const { resultPath, supersededPaths } = await scaffoldResult({
       executionPath,
       taskId: item.id,
       mode: "edit",
@@ -3983,7 +4118,7 @@ async function runSingleRegisterItemWorktree(
 
     process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
     process.stdout.write(`  Agent: ${actor}\n`);
-    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
       throw new Error(`register start failed: ${item.id}`);
     }
 
@@ -3994,6 +4129,7 @@ async function runSingleRegisterItemWorktree(
       resultPath,
       worktreeStatusPaths(repoRoot),
       ticketPath,
+      supersededPaths,
     );
     const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
     try {
@@ -4071,6 +4207,7 @@ async function runSingleRegisterItemWorktree(
       resultScaffold,
       agentResult,
       stderr,
+      actor,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -4180,6 +4317,17 @@ async function resumeSingleRegisterItemWorktree(
   if (lookup.kind !== "resumable") return refuse(lookup.reason);
   const target = lookup.target;
 
+  if (
+    !hasRecordedParentValidations(
+      target.evidence.validations,
+      context.execDefaults.pipeline?.parent_validations,
+    )
+  ) {
+    return refuse(
+      `parent validation configuration changed or its results are missing for run ${target.runId}; restart the executor run`,
+    );
+  }
+
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
     worktreePath: worktree.path,
@@ -4217,7 +4365,17 @@ async function resumeSingleRegisterItemWorktree(
   // waiting のまま reporter を走らせないよう、通常実行と同じく in-progress へ戻す。状態変更は
   // root で直列化し、merge 前に作業ツリーを清潔にするため即時 commit する。
   const begin = (): RegisterItemSummary | null => {
-    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+    if (
+      !spawnRegisterTransition(projectId, [
+        "start",
+        "--id",
+        item.id,
+        "--by",
+        reporter.candidate.actor,
+        "--reason",
+        "reporter resumed",
+      ])
+    ) {
       return refuse(`register start failed: ${item.id}`);
     }
     commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): resume`, ticketPath);
@@ -4225,6 +4383,13 @@ async function resumeSingleRegisterItemWorktree(
   };
   const beginFailure = lifecycleLock ? await lifecycleLock.runExclusive(begin) : begin();
   if (beginFailure) return beginFailure;
+
+  const evidence = await revalidateFailedParentValidationsForReporterResume({
+    execDefaults: context.execDefaults,
+    cwd: worktree.path,
+    evidence: target.evidence,
+    evidencePath: resolve(worktree.path, target.evidenceRef),
+  });
 
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
   const outcome = await runRegisterReporterStage({
@@ -4236,7 +4401,8 @@ async function resumeSingleRegisterItemWorktree(
     planPrompt: prompt,
     resultPath: worktreeResultPath,
     execDefaults: context.execDefaults,
-    evidence: target.evidence,
+    evidence,
+    evidencePath: resolve(worktree.path, target.evidenceRef),
     state: target.state,
     statePath: target.statePath,
   });
@@ -4253,6 +4419,7 @@ async function resumeSingleRegisterItemWorktree(
       resultScaffold,
       agentResult: outcome.runResult,
       stderr: outcome.blockReason ?? "",
+      actor: reporter.candidate.actor,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -4709,12 +4876,61 @@ export function registerRunCommand(exec: Command): void {
   });
 }
 
-// exec cycle: run limit-resume, doc-index rebuild, schedule refresh, and the auto loop as one
+export type CycleScheduleRebuildResult = {
+  status: "not-needed" | "success" | "failure";
+  tracks: string[];
+};
+
+type CycleScheduleRebuildDependencies = {
+  buildTrack?: (track: string) => boolean | Promise<boolean>;
+  write?: (message: string) => void;
+};
+
+// Rebuild only generated tracks whose strategy input is missing a generated track or has a newer
+// mtime. The same structured detector feeds exec validate warnings, keeping manual validation and
+// cycle automation on one freshness rule. No output is emitted when every track is fresh.
+export async function rebuildStaleGeneratedTracksForCycle(
+  schedulePath: string,
+  projectId: string | undefined,
+  dryRun: boolean,
+  dependencies: CycleScheduleRebuildDependencies = {},
+): Promise<CycleScheduleRebuildResult> {
+  const staleTracks = findStaleGeneratedTracks(schedulePath);
+  if (staleTracks.length === 0) return { status: "not-needed", tracks: [] };
+
+  const write = dependencies.write ?? ((message: string) => process.stdout.write(message));
+  const buildTrack =
+    dependencies.buildTrack ?? ((track: string) => spawnScheduleBuild(projectId, track));
+  const tracks: string[] = [];
+
+  for (const stale of staleTracks) {
+    const projectArgs = projectId ? ` --project ${projectId}` : "";
+    if (dryRun) {
+      write(`  [dry-run] specdojo schedule build --track ${stale.track} --force${projectArgs}\n`);
+      tracks.push(stale.track);
+      continue;
+    }
+
+    write(
+      `[cycle] step 3/5: rebuild stale schedule track ${basename(stale.strategyFile)} (${stale.reason})\n`,
+    );
+    if (!(await buildTrack(stale.track))) {
+      write(`[cycle] schedule build failed for track ${stale.track} — aborting auto step\n`);
+      return { status: "failure", tracks: [...tracks, stale.track] };
+    }
+    tracks.push(stale.track);
+  }
+
+  return { status: "success", tracks };
+}
+
+// exec cycle: run limit-resume, doc-index rebuild, stale schedule rebuild, schedule refresh, and
+// the auto loop as one
 // ordered sequence while holding a single project exec-run lock for the whole run. Ordering does
 // not depend on routine file order or cron time offsets, and no manual run / other routine / CI
 // can interleave between the steps. The individual steps (runResumeMode, index build,
-// validate/refresh, runBatchMode) do not acquire the exec-run lock themselves, so the later steps
-// never busy-skip against this run's own lock.
+// schedule build, validate/refresh, runBatchMode) do not acquire the exec-run lock themselves, so
+// the later steps never busy-skip against this run's own lock.
 //
 // Step failure policy (fixed and documented so results are predictable):
 //   - resume:  a re-deferred or failed limit task must not block Ready tasks, so a resume failure
@@ -4722,13 +4938,16 @@ export function registerRunCommand(exec: Command): void {
 //   - index:   doc-index feeds wikilink/ID resolution for Ready task plans; if it fails, tasks may
 //              reference deliverables the previous cycle just created but cannot resolve them
 //              reliably, so the cycle aborts the remaining steps.
+//   - schedule: stale generated tracks must be rebuilt before validation/refresh; if any build
+//               fails, the cycle stops instead of selecting tasks from an old track.
 //   - refresh: validate/refresh feeds ready.json; if it fails the auto step cannot select tasks
 //              safely, so the cycle aborts the remaining step.
 //   - auto:    failures are recorded; nothing runs after it.
 // The cycle exits non-zero when any executed step failed. Busy at start is handled by the shared
 // exec-run lock (--if-busy skip records a routine "skipped"; wait/fail behave as for run/resume).
 async function runCycleMode(opts: RunOpts): Promise<void> {
-  const projectId = opts.project;
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  const projectId = resolvedPaths.projectId ?? opts.project;
   const dryRun = !!opts.dryRun;
   const stepOutcomes: string[] = [];
   let anyFailure = false;
@@ -4741,8 +4960,8 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     return failed;
   };
 
-  // Step 1/4: resume due deferred-limit tasks.
-  process.stdout.write("[cycle] step 1/4: resume due deferred-limit tasks\n");
+  // Step 1/5: resume due deferred-limit tasks.
+  process.stdout.write("[cycle] step 1/5: resume due deferred-limit tasks\n");
   process.exitCode = 0;
   await runResumeMode({ ...opts, due: true });
   if (takeStepFailure()) {
@@ -4753,10 +4972,10 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("resume=success");
   }
 
-  // Step 2/4: rebuild doc-index before recalculating schedule state, so deliverables created by
+  // Step 2/5: rebuild doc-index before recalculating schedule state, so deliverables created by
   // the resume step, or left unindexed by a prior cycle run, are resolvable before Ready
   // selection instead of only becoming resolvable on a later, out-of-band index build.
-  process.stdout.write("[cycle] step 2/4: rebuild doc index\n");
+  process.stdout.write("[cycle] step 2/5: rebuild doc index\n");
   if (dryRun) {
     process.stdout.write("  [dry-run] specdojo index build\n");
     stepOutcomes.push("index=success");
@@ -4770,8 +4989,23 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("index=success");
   }
 
-  // Step 3/4: validate + refresh schedule state before selecting Ready tasks.
-  process.stdout.write("[cycle] step 3/4: validate + refresh schedule state\n");
+  // Step 3/5 is conditional: regenerate only stale/missing generated tracks. It intentionally
+  // emits nothing and adds nothing to the summary when no rebuild is needed.
+  const rebuild = await rebuildStaleGeneratedTracksForCycle(
+    resolvedPaths.schedulePath,
+    projectId,
+    dryRun,
+  );
+  if (rebuild.status === "failure") {
+    stepOutcomes.push("schedule=failure");
+    process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+    process.exitCode = 1;
+    return;
+  }
+  if (rebuild.status === "success") stepOutcomes.push("schedule=success");
+
+  // Step 4/5: validate + refresh schedule state before selecting Ready tasks.
+  process.stdout.write("[cycle] step 4/5: validate + refresh schedule state\n");
   if (dryRun) {
     process.stdout.write("  [dry-run] specdojo exec validate\n");
     process.stdout.write("  [dry-run] specdojo exec refresh\n");
@@ -4792,9 +5026,9 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("refresh=success");
   }
 
-  // Step 4/4: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
+  // Step 5/5: run Ready tasks (auto loop). In dry-run the refresh above is skipped, so ready.json
   // may be stale/absent; preview the planned auto invocation instead of reading the cache.
-  process.stdout.write("[cycle] step 4/4: run Ready tasks (--auto)\n");
+  process.stdout.write("[cycle] step 5/5: run Ready tasks (--auto)\n");
   if (dryRun) {
     const autoArgs = ["exec", "run", "--auto"];
     if (projectId) autoArgs.push("--project", projectId);
@@ -4810,7 +5044,7 @@ async function runCycleMode(opts: RunOpts): Promise<void> {
     stepOutcomes.push("auto=success");
   } else {
     process.exitCode = 0;
-    await runBatchMode({ ...opts, auto: true });
+    await runBatchMode({ ...opts, auto: true, cycleRebuildStaleTracks: true });
     if (takeStepFailure()) {
       anyFailure = true;
       stepOutcomes.push("auto=failure");
@@ -4827,7 +5061,7 @@ export function registerCycleCommand(exec: Command): void {
   const cmd = exec
     .command("cycle")
     .description(
-      "Run limit-resume, doc-index rebuild, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
+      "Run limit-resume, doc-index rebuild, stale track rebuild, schedule refresh, and the --auto loop as one ordered sequence under a single project lock",
     );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");

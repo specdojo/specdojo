@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:dmd-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:dmd-index-sample
+  template: undecided
 ---
 
 # データ移行設計 作成ルール

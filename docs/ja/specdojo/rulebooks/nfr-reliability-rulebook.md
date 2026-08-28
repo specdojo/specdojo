@@ -3,6 +3,9 @@ specdojo:
   id: specdojo:nfr-reliability-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
+  sample: specdojo:nfr-reliability-sample
+  template: undecided
 ---
 
 # 非機能要件 / 信頼性 作成ルール

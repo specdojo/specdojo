@@ -1,6 +1,9 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { gitEnvironment } from "./git-environment.js";
+
+export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
 
 export type ExecWorktree = {
   path: string;
@@ -13,27 +16,6 @@ export type RegisteredWorktree = {
   path: string;
   branch?: string;
 };
-
-const GIT_LOCAL_ENV_VARS = [
-  "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-  "GIT_COMMON_DIR",
-  "GIT_DIR",
-  "GIT_GRAFT_FILE",
-  "GIT_IMPLICIT_WORK_TREE",
-  "GIT_INDEX_FILE",
-  "GIT_NO_REPLACE_OBJECTS",
-  "GIT_OBJECT_DIRECTORY",
-  "GIT_PREFIX",
-  "GIT_REPLACE_REF_BASE",
-  "GIT_SHALLOW_FILE",
-  "GIT_WORK_TREE",
-] as const;
-
-export function gitEnvironment(): NodeJS.ProcessEnv {
-  const env = { ...process.env };
-  for (const name of GIT_LOCAL_ENV_VARS) delete env[name];
-  return env;
-}
 
 // git serializes index access through .git/index.lock and fails immediately (no wait) when it
 // cannot acquire it. Under `exec run --parallel`, the parent's root-index operations and the
@@ -176,7 +158,7 @@ function runNpmCi(packageDir: string): void {
   const command = process.platform === "win32" ? "npm.cmd" : "npm";
   const result = spawnSync(command, ["ci", "--include=dev"], {
     cwd: packageDir,
-    env: { ...process.env, CI: "true", LEFTHOOK: "0" },
+    env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
     stdio: "inherit",
   });
   if (result.error) {
@@ -216,6 +198,7 @@ export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
+  startPoint?: string;
   installDependencies?: (worktreePath: string) => void;
 }): ExecWorktree {
   const repoRoot = resolve(opts.repoRoot);
@@ -251,7 +234,14 @@ export function ensureExecWorktree(opts: {
     gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0;
   const args = branchExists
     ? ["worktree", "add", worktreePath, branch]
-    : ["worktree", "add", worktreePath, "-b", branch];
+    : [
+        "worktree",
+        "add",
+        worktreePath,
+        "-b",
+        branch,
+        ...(opts.startPoint ? [opts.startPoint] : []),
+      ];
   gitOutput(repoRoot, args);
 
   (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);

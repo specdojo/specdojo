@@ -21,7 +21,7 @@ export type DctDeliverableItem = {
   depends_on?: string[];
   overview: string;
   path?: string;
-  rulebook?: string;
+  rulebook?: string | "undecided" | "not-needed";
   evidence_refs?: EvidenceRef[];
   done_criteria?: CriteriaItem[];
   note?: string;
@@ -67,3 +67,37 @@ export type DctValidationResult = {
   errors: string[];
   warnings: string[];
 };
+
+export type DctIndexDomain = {
+  domain: string;
+  name: string;
+  overview: string;
+};
+
+export type DctIndexDomainGroup = {
+  name: string;
+  domains: DctIndexDomain[];
+};
+
+export type DctIndexGroup =
+  | DctIndexDomainGroup
+  | {
+      name: string;
+      groups: DctIndexDomainGroup[];
+    };
+
+export type DctIndexDoc = {
+  id: string;
+  type: "project";
+  status: DctStatus;
+  title: string;
+  rulebook: string;
+  project_id: string;
+  size: "small" | "medium" | "large";
+  groups: DctIndexGroup[];
+};
+
+// dct-index.yaml is the declaration that orders domain catalogs, not a domain catalog itself.
+export function isDctCatalogFileName(fileName: string): boolean {
+  return /^dct-.+\.yaml$/.test(fileName) && fileName !== "dct-index.yaml";
+}

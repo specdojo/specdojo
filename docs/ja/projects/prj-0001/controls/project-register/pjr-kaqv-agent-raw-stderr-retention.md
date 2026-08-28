@@ -1,0 +1,168 @@
+---
+specdojo:
+  id: prj-0001:pjr-kaqv-agent-raw-stderr-retention
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  registered_at: "2026-08-24T10:17:53Z"
+  due_on: "2026-08-31"
+  completed_at: "2026-08-25T06:21:46Z"
+  conclusion: reporter の各形式試行の stdout と stderr を試行番号付きのファイルへ分離保存し、evidence.json の log_refs から参照できるようにした。保存前に既存の redactSensitiveText を適用し、既存と同じ64KiB上限で切り詰めて bytes と truncated を記録する。stdout と stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。executor 側の保全処理も共通化した。evidence 配下は Git 管理対象とし、既知パターン以外の秘密が残る可能性があるため外部共有前の確認を運用上の前提とした。
+  register_events:
+    - v: 1
+      id: reg_1793bb92ede652f2fbed14d763ed8f7c
+      ts: "2026-08-24T10:20:28Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-E6HG の結論を訂正し PJR-KAQV を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: agent失敗時の生のstderrを保全する
+        - field: description
+          from: ""
+          to: PJR-E6HG の調査では、失敗した実行の stderr ログに原因を示すメッセージが残っておらず、stdout の切り詰められた要約行だけが手がかりだった。そのため原因を推測に頼らざるを得ず、初回の結論が誤りとなった。agent が非ゼロ終了した場合に生の stdout と stderr を evidence の一部として保全し、失敗理由の要約とは別に参照できるようにする。認証情報などの秘密が混入しうる点を踏まえ、保全先と取り扱いもあわせて定める。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: f47d535fdef903d5970a87ab79fb666e760e87ae
+    - v: 1
+      id: reg_9f650a4ba81a7b49d057e17e44f44ba6
+      ts: "2026-08-25T02:39:34Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-KAQV): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: a225e900aa4423d55cbe0023770b70eaeb78515e
+      previous_event_id: reg_1793bb92ede652f2fbed14d763ed8f7c
+    - v: 1
+      id: reg_1fc3eca86483cda3a419983425f7c162
+      ts: "2026-08-25T03:05:59Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-KAQV): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
+      legacy_commit: 9eb052f263ec6b5fdf7c3491e513ae31d6ef3318
+      previous_event_id: reg_9f650a4ba81a7b49d057e17e44f44ba6
+    - v: 1
+      id: reg_0254c71dd491b412857b8c639e8255e9
+      ts: "2026-08-25T03:09:27Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-KAQV): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 109ea3d588d752d3bead65712453e9aac60785fe
+      previous_event_id: reg_1fc3eca86483cda3a419983425f7c162
+    - v: 1
+      id: reg_776c841e121a9e087825164c203013e0
+      ts: "2026-08-25T06:23:02Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの3件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-25"
+        - field: conclusion
+          from: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
+          to: reporter の各形式試行の stdout と stderr を試行番号付きのファイルへ分離保存し、evidence.json の log_refs から参照できるようにした。保存前に既存の redactSensitiveText を適用し、既存と同じ64KiB上限で切り詰めて bytes と truncated を記録する。stdout と stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。executor 側の保全処理も共通化した。evidence 配下は Git 管理対象とし、既知パターン以外の秘密が残る可能性があるため外部共有前の確認を運用上の前提とした。
+      legacy_commit: d20d78a7ef2e0dc2f58d3344dff92deeaaa2693e
+      previous_event_id: reg_0254c71dd491b412857b8c639e8255e9
+---
+
+# PJR-KAQV agent失敗時の生のstderrを保全する
+
+## 1. 概要
+
+PJR-E6HG の調査では、失敗した実行の stderr ログに原因を示すメッセージが残っておらず、stdout の切り詰められた要約行だけが手がかりだった。そのため原因を推測に頼らざるを得ず、初回の結論が誤りとなった。agent が非ゼロ終了した場合に生の stdout と stderr を evidence の一部として保全し、失敗理由の要約とは別に参照できるようにする。認証情報などの秘密が混入しうる点を踏まえ、保全先と取り扱いもあわせて定める。
+
+## 2. 完了条件
+
+- reporter 段階が非ゼロ終了した場合に、その生の stdout と stderr が保全され、後から参照できる。現在は executor 段階のみ `recordExecutorEvidence` が `log_refs` として記録しており、reporter 段階の出力はどこにも残らない。
+- 保全した出力から、失敗理由の要約では失われる情報を追える。PJR-E6HG では記録が `agent exited with non-zero code: "... is not valid JSON` の切り詰められた1行のみで、原因を特定できなかった。この状態が解消している。
+- 既存の秘密情報の秘匿（`redactSensitiveText`）が保全した出力にも適用される。Bearer トークン、API キー、`password` などの既存パターンを通す。
+- 保全先とサイズ上限が定められている。既存の `MAX_LOG_BYTES`（64 KiB）と同じ扱いにするか、別に定めるかを判断し、理由を記録する。切り詰めが発生した場合はその旨が分かる。
+- 保全した出力が Git 管理下に入るか否かが明示されている。入る場合は秘密混入時の影響、入らない場合は worktree 削除時の消失を、それぞれ許容できる形で扱う。
+- executor 段階についても、非ゼロ終了時に `log_refs` の内容が原因調査に足りるかを確認し、不足があれば揃える。
+- 保全の有無と内容を確認する自動テストが追加されている。
+- `npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration` が成功する。
+
+## 3. 作業内容
+
+| No  | 作業                                                             | 担当 | 状態 | メモ                                                                                |
+| --- | ---------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------- |
+| 1   | reporter 段階の出力が保全されていない経路を特定する              | ARC  | done | Schedule / in-place / register / resume の reporter 経路を確認                      |
+| 2   | 保全先、サイズ上限、Git 管理下に置くか否かを判断し理由を記録する | ARC  | done | run 単位の evidence 配下、stdout / stderr ごとに 64KiB、Git 管理対象とした          |
+| 3   | 保全を実装し、既存の秘匿処理を適用する                           | ARC  | done | `recordReporterFailureOutput` で `redactSensitiveText` を適用                       |
+| 4   | 保全の有無と内容を確認するテストを追加する                       | ARC  | done | 非ゼロ終了、形式再試行、秘匿、ストリーム分離、切り詰め、evidence 参照を自動テスト化 |
+
+## 4. 対応結果
+
+- reporter が非ゼロ終了または形式エラーで失敗した場合、各形式試行の stdout と stderr を `exec/evidence/<task>/<run>/reporter-attempt-<n>.<stdout|stderr>.log` へ分離して保存し、`evidence.json` の `log_refs` から参照できるようにした。失敗理由の要約とは別に、上限内で出力順を保ったストリーム内容を確認できる。
+- 保存前に既存の `redactSensitiveText` を適用し、Bearer トークン、`sk-` / `gh*_` 形式のキー、`api_key` / `token` / `password` などを伏せ字化する。各ストリームは既存の `MAX_LOG_BYTES` と同じ 64KiB 上限とし、`bytes` と `truncated` を参照情報へ記録する。stdout / stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。
+- Schedule の worktree / in-place、register の通常実行 / worktree / reporter resume の全 reporter 経路を同じ保存処理へ接続した。同じ run の resume が再度失敗した場合は直近の失敗ログで置換し、`log_refs` の最大件数内に保つ。
+- evidence 配下は Git 管理対象とした。成功して統合された run のログは履歴に残る一方、失敗中の worktree では未コミットであり、worktree を破棄すると消失する。既知の秘密パターンは保存前に秘匿するが、未知形式の秘密が残る可能性があるため、外部共有前の確認を運用上の前提とした。
+- executor は従来から stdout と stderr の秘匿済み内容を `executor.log` に最大 64KiB で保全し、`log_refs` に切り詰め有無を記録しているため、今回の不足は reporter 側に限定されると判断した。reporter は原因調査でストリーム境界が重要なため別ファイルとした。
+- 対象単体テスト 11 件で、非ゼロ終了時の stdout / stderr 収集、形式エラー時の全試行収集、秘匿、64KiB 切り詰め、`evidence.json` からの参照を確認した。全 unit suite は sandbox 内で既存の `git check-ignore -z --stdin` 子プロセスが終了せず完走できなかったため、停止しない環境での全件再検証が必要である。
+
+## 5. 関連ドキュメント
+
+- 保全が必要になった調査: [[prj-0001:pjr-e6hg-claude-reporter-json-failure|PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする]]
+- 同じ reporter 段階の課題: [[prj-0001:pjr-q828-reporter-revalidation|PJR-Q828 reporterが解消済みの検証失敗を再評価できない問題を解消する]]
+- exec の運用: [[specdojo:exec-operation-guide|exec運用ガイド]]
+- evidence とログの設計: [[specdojo:exec-config-guide|exec設定ガイド]]

@@ -12,6 +12,87 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-08T12:34:12Z"
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_651732fc10b045a5f346f9ff82ee60a4
+      ts: "2026-08-08T12:34:12Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "exec(register PJR-A45T): ryu-guide.md新設(kata-guide.mdからapproachの説明を分離)とサイドバー・相互参照リンク更新"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: ryu-guide.md新設(kata-guide.mdからapproachの説明を分離)とサイドバー・相互参照リンク更新
+        - field: description
+          from: ""
+          to: SpecDojo の道場メタファーで、進め方（`approach`）は「Ryu」に対応する。現行の [[specdojo:kata-guide]] は、実質的な内容の大半（進め方の選び方・一覧、参照の共通原則、型メンテナンスの進め方、reviewへの適用）が `approach` の説明であり、型（rulebook/recipe/sample/template）そのものの使い分けを示す内容は冒頭の一部にとどまる。`approach` に関する章を `ryu-guide.md` として新設分離し、[[specdojo:kata-guide]] は型の役割・使い分けに焦点を絞り直す。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 32c881be17db7c6c0d4502d44086549153d0ce08
+    - v: 1
+      id: reg_4c53defa331df41edb3783dbe421509b
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: SpecDojo の道場メタファーで、進め方（`approach`）は「Ryu」に対応する。現行の [[specdojo:kata-guide]] は、実質的な内容の大半（進め方の選び方・一覧、参照の共通原則、型メンテナンスの進め方、reviewへの適用）が `approach` の説明であり、型（rulebook/recipe/sample/template）そのものの使い分けを示す内容は冒頭の一部にとどまる。`approach` に関する章を `ryu-guide.md` として新設分離し、[[specdojo:kata-guide]] は型の役割・使い分けに焦点を絞り直す。
+          to: kata-guide.mdの進め方(approach)に関する章をryu-guide.mdへ分離し、id・frontmatter・H1(実践の進め方ガイド/Ryu Guide)を新設する。kata-guide.mdは型(rulebook/recipe/sample/template)の使い分けに焦点を絞る。サイドバー表示名(実践の進め方)と相互参照リンクを追従修正する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_651732fc10b045a5f346f9ff82ee60a4
+    - v: 1
+      id: reg_97fecee9c903c0f2854cee79580d07b9
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-08"
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_4c53defa331df41edb3783dbe421509b
 ---
 
 # PJR-A45T ryu-guide.md新設(kata-guide.mdからapproachの説明を分離)とサイドバー・相互参照リンク更新

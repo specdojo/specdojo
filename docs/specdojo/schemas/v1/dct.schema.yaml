@@ -311,10 +311,13 @@ $defs:
 
       rulebook:
         type: string
-        pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$"
+        pattern: "^(?:(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|undecided|not-needed)$"
         description: >
           Optional rulebook ID for this deliverable (e.g., specdojo:prj-overview-rulebook).
           The authority identifies its practice package; the local ID resolves to the filename.
+          Use undecided until the creation criteria have been assessed during bootstrap.
+          Use not-needed when the creation criteria determine that no rulebook is required.
+          Omission means the rulebook is required but not prepared yet.
           Used by review plan generation to populate inputs.rulebook.
 
       done_criteria:

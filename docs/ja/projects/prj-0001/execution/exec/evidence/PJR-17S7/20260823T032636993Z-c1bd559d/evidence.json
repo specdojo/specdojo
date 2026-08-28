@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-17S7",
+  "run_id": "20260823T032636993Z-c1bd559d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-23T03:26:36.993Z",
+    "completed_at": "2026-08-23T03:34:36.270Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-17s7-unit-test-double-run-hang.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../controls/project-register/pjr-17s7-unit-test-double-run-hang.md  | 5 ++++-\n docs/ja/specdojo/templates/xep-common-conventions-template.md        | 4 ++--\n tests/src/exec-plans.test.ts                                         | 3 +++\n 3 files changed, 9 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/templates/xep-common-conventions-template.md tests/src/exec-plans.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-17s7-unit-test-double-run-hang.md",
+      "status": "passed",
+      "summary": "変更3ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-17s7-unit-test-double-run-hang.md",
+      "status": "passed",
+      "summary": "変更Markdownの静的検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "failed",
+      "summary": "sandboxのtsx IPCソケット制限によりlisten EPERM"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "IPCを使わない同等起動で成功。既存の成果物欠落警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "生成登録簿を構築"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1294件の文書索引を構築"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "対象限定実行なしで全件を1回だけ実行したが、約3分30秒結果が出ず終了待ちが収束しないため中断。アサーション失敗は未観測"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・パッチ形式エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "executor指示に従い未実行。親runnerが実行予定"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-17S7\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-ztWsDE/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-A…"
+    }
+  ],
+  "final_message": "unit test の二重実行を禁止する共通規約と回帰テストを追加したが、単独の全件実行でも終了待ちが収束せず、追加調査が必要",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-17S7/20260823T032636993Z-c1bd559d/executor.log",
+      "bytes": 2263,
+      "truncated": false
+    }
+  ]
+}

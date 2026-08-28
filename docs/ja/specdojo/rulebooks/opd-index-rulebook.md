@@ -4,7 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  recipe: undecided
   sample: specdojo:opd-index-sample
+  template: undecided
 ---
 
 # 運用方針・設計 全体構成 作成ルール

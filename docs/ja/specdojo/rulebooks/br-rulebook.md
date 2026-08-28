@@ -1,3 +1,13 @@
+---
+specdojo:
+  id: specdojo:br-rulebook
+  type: rulebook
+  status: draft
+  recipe: undecided
+  sample: specdojo:br-sample
+  template: undecided
+---
+
 # ビジネスルール 作成ルール
 
 Business Rule (BR) Documentation Rules

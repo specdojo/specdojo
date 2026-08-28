@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T22:42:18Z"
   conclusion: executor stageの選択・専用promptとevidence.json生成（差分統計・検証・ログ抜粋・秘匿化・上限）をrunnerに実装。exec-evidence.schema.yaml追加。対象48件成功、typecheck/lint/schema検証成功。
+  register_events:
+    - v: 1
+      id: reg_78ef18ee74a0cb64fd90f5b6ff5cdf4d
+      ts: "2026-08-10T06:36:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add executor reporter pipeline todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: executorステージとevidence収集を実装する
+        - field: description
+          from: ""
+          to: executorには成果物編集だけを担当させ、差分、変更ファイル、検証結果、ログ参照を構造化evidenceとして保存する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05c3d3781552e051565e003506dd009eb1312db5
+    - v: 1
+      id: reg_e655291db87d9cb45febec0c874dfd4a
+      ts: "2026-08-10T07:03:35Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-JXV7): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 73b04d494e4a086d535b36e0faf2df7cfe23371e
+      previous_event_id: reg_78ef18ee74a0cb64fd90f5b6ff5cdf4d
+    - v: 1
+      id: reg_be923468df593cdd274f510827fe3bc3
+      ts: "2026-08-10T07:22:09Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-JXV7): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: b9068819ffd0bd38bf47372d99a907ecfcfa0786
+      previous_event_id: reg_e655291db87d9cb45febec0c874dfd4a
+    - v: 1
+      id: reg_b1f6f9f2c8491ab1021ac206786a0aa3
+      ts: "2026-08-10T22:46:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-TC43): executor / reporterパイプラインのE2E検証と文書化"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-11"
+        - field: conclusion
+          from: "-"
+          to: executor stageの選択・専用promptとevidence.json生成（差分統計・検証・ログ抜粋・秘匿化・上限）をrunnerに実装。exec-evidence.schema.yaml追加。対象48件成功、typecheck/lint/schema検証成功。
+      legacy_commit: 095189d5df7fcb58163a4c5c1f6e847a113a1db3
+      previous_event_id: reg_be923468df593cdd274f510827fe3bc3
 ---
 
 # PJR-JXV7 executorステージとevidence収集を実装する

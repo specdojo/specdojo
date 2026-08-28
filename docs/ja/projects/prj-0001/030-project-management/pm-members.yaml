@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-members.schema.yaml
 id: prj-0001:pm-members
 type: project
 status: ready

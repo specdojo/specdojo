@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
 id: specdojo:ifx-cmd-sample
 type: command
 status: draft

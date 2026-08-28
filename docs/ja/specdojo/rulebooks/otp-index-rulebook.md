@@ -3,7 +3,9 @@ specdojo:
   id: specdojo:otp-index-rulebook
   type: rulebook
   status: draft
+  recipe: undecided
   sample: specdojo:otp-index-sample
+  template: undecided
 ---
 
 # 運用切替計画（ハイパーケア含む） 作成ルール

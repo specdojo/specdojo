@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QVGX",
+  "run_id": "20260825T035312587Z-bbc4dcf1",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-25T03:53:12.587Z",
+    "completed_at": "2026-08-25T04:01:40.805Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-parent-validation.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md        | 18 +++++++------\n docs/ja/specdojo/guides/exec-config-guide.md       |  5 +++-\n .../templates/xep-common-conventions-template.md   |  2 +-\n docs/specdojo/schemas/v1/exec-defaults.schema.yaml |  2 +-\n src/exec-parent-validation.ts                      | 16 +++++++++++-\n src/exec-run.ts                                    |  6 ++++-\n tests/src/exec-agent-config.test.ts                |  4 ++-\n tests/src/exec-parent-validation.test.ts           | 30 ++++++++++++++++++----\n tests/src/exec-run.test.ts                         |  4 +++\n 9 files changed, 68 insertions(+), 19 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更9ファイル>",
+      "status": "passed",
+      "summary": "TypeScript、テスト、YAML、Markdownを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/templates/xep-common-conventions-template.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md",
+      "status": "passed",
+      "summary": "Markdownエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "生成登録簿不足による2件の失敗表示後に停止したため中断。register buildで生成物を復元済みだが1回限定規約により再実行なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data .specdojo/exec-defaults.yaml",
+      "status": "passed",
+      "summary": "exec-defaults schema検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿派生ビューを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "catalog検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1345件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e <parent-validation smoke test>",
+      "status": "passed",
+      "summary": "3種の固定argv解決とexecutor promptの二重実行防止指示を確認"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "新しいvalidate-schema親検証IDの設定適用後に親runnerで実行する"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "pipeline指示に従い親runnerが実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QVGX\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-M0tVR7/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 …"
+    }
+  ],
+  "final_message": "固定親検証と二重実行防止を実装。保護対象設定の適用と親環境でのunit再検証が必要",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QVGX/20260825T035312587Z-bbc4dcf1/executor.log",
+      "bytes": 2641,
+      "truncated": false
+    }
+  ]
+}

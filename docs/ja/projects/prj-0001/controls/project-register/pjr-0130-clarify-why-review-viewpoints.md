@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: whyの明確性をreview viewpointsに反映
+  register_events:
+    - v: 1
+      id: reg_c23c3c8fdcc3fbb99e7a8bf35ae77fc7
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: Whyの明確性を既存review viewpointsへ反映
+        - field: description
+          from: ""
+          to: 成果物の主要な定義・判断が、どの対象者のどの課題・期待価値に応えるかをレビューで判定できるようにする。類似する viewpoint を新設してレビューを細分化するのではなく、既存の目的整合、業務価値、可読性の観点へ、Why の明確性と手段の目的化を検出する具体的な check / evidence を反映する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_f0987e71c54f275dcdceb1ca4132c9bf
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 成果物の主要な定義・判断が、どの対象者のどの課題・期待価値に応えるかをレビューで判定できるようにする。類似する viewpoint を新設してレビューを細分化するのではなく、既存の目的整合、業務価値、可読性の観点へ、Why の明確性と手段の目的化を検出する具体的な check / evidence を反映する。
+          to: 重複観点を増やさず、目的整合・業務価値・可読性の既存観点にWhyの判定基準と証拠を具体化する
+        - field: owner
+          from: _TODO_
+          to: QE
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: whyの明確性をreview viewpointsに反映
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_c23c3c8fdcc3fbb99e7a8bf35ae77fc7
+    - v: 1
+      id: reg_a78f739e6e6cfb69efd993404c1366ab
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_f0987e71c54f275dcdceb1ca4132c9bf
 ---
 
 # PJR-0130 Whyの明確性を既存review viewpointsへ反映

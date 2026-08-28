@@ -4,6 +4,16 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample:
+    - specdojo:opr-sample
+    - specdojo:opr-access-control-sample
+    - specdojo:opr-backup-restore-sample
+    - specdojo:opr-batch-sample
+    - specdojo:opr-change-sample
+    - specdojo:opr-incident-sample
+    - specdojo:opr-monitoring-sample
+    - specdojo:opr-support-sample
+  template: specdojo:opr-template
 ---
 
 # 運用手順 作成ルール
@@ -76,28 +86,14 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 - `based_on` には手順判断に直接利用した成果物（例: `opd-*` / `nfr-*` / `issue-*`）のみ列挙する
 - `based_on` / `supersedes` は ID 配列（未指定は `[]` 可）
 
-## 5. 本文構成（標準テンプレ）
+## 5. 本文要件
 
-`opr-index` / `opr-<term>` は以下の見出し構成を **順序固定** で配置します。
+本文の見出し順と記入欄の骨組みは Frontmatter で宣言した template を正本とし、本章では各章の目的と必須性だけを定めます。
 
-| 番号 | 見出し                                                         | 必須 |
-| ---- | -------------------------------------------------------------- | ---- |
-| 1    | 概要（`index` / `<term>`）                                     | ○    |
-| 2    | 手順適用範囲・前提                                             | ○    |
-| 3    | 日次/週次/月次点検手順                                         | ○    |
-| 4    | 障害対応手順（P1/P2…、切り分け、一次対応、復旧）               | ○    |
-| 5    | アラート対応手順（確認→暫定対応→恒久対応）                     | ○    |
-| 6    | バックアップ確認・リストア手順（演習含む）                     | ○    |
-| 7    | バッチ再実行・失敗時対応                                       | ○    |
-| 8    | 運用変更作業（設定変更・デプロイ・ロールバック）               | ○    |
-| 9    | アカウント付与/剥奪手順                                        | ○    |
-| 10   | 問い合わせ一次対応手順（テンプレ・ナレッジ）                   | ○    |
-| 11   | 証跡（ログ、チケット、チェックリスト、実施記録）               | ○    |
-| 12   | 関連ドキュメント導線（`opd` 参照、`mip` / `otp` / `cop` 連携） | ○    |
-
-補足:
-
-- `opr-<term>` で該当しない章がある場合でも章は残し、内容は `（なし）` / `（opr-index参照）` / `（本書の範囲外）` のいずれかを明記する
+- 概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線を必須とします。
+- 各章は、実施条件、実施者、判断条件、完了条件、証跡のうち該当する要素を第三者が再現できる粒度で定義します。
+- `opr-<term>` で該当する作業がない章も省略せず、`なし`、`opr-index 参照`、`本書の範囲外` のいずれかと理由を記載します。
+- `opr-index` は共通規約と全体の導線、`opr-<term>` は対象作業の具体手順と個別判断を正本とし、同じ規約を重複させません。
 
 ## 6. 記述ガイド
 
