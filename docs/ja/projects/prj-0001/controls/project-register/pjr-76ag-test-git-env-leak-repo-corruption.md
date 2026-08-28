@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-76ag-test-git-env-leak-repo-corruption
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-08-28T10:10:24Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-28T10:37:27Z"
+  conclusion: "テスト実行の入口でrepositoryの位置を決める環境変数を除去する構造にした。GIT_LOCAL_ENV_VARSをsrc/git-environment.tsへ集約し、gitEnvironment()とVitest setupが同じ正本を参照する。3つのvitest設定すべてに共通setupを入れ、各workerがtest moduleを読み込む前にGIT_DIR・GIT_INDEX_FILE・GIT_WORK_TREE等を除去するため、個々のテストがenvを渡し忘れても汚染しない。PJR-EX5Eのidentity注入は維持している。検査は文字列走査からTypeScript AST解析へ置き換え、env: process.envを不合格とし、gitEnvironment()由来であることを追跡する。検証として、envを意図的に渡さないテストをGIT_DIRを設定して実行し使い捨てリポジトリが無傷であることと、setupFilesを外すと回帰テストが失敗することを確認した。3度の再発それぞれで見落とした境界も記録した。復旧手順はexec運用ガイドへ記載した。"
   register_events:
     - v: 1
       id: reg_90a1afff79f74d12b5be0a023c4ef88e
@@ -72,6 +74,25 @@ specdojo:
           from: in-progress
           to: review
       previous_event_id: reg_92ffa34aa6a246619efcc2fd368c6fcd
+    - v: 1
+      id: reg_200af00d6ae446a9b174c7ea11ee6f49
+      ts: "2026-08-28T10:37:27Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: "テスト実行の入口でrepositoryの位置を決める環境変数を除去する構造にした。GIT_LOCAL_ENV_VARSをsrc/git-environment.tsへ集約し、gitEnvironment()とVitest setupが同じ正本を参照する。3つのvitest設定すべてに共通setupを入れ、各workerがtest moduleを読み込む前にGIT_DIR・GIT_INDEX_FILE・GIT_WORK_TREE等を除去するため、個々のテストがenvを渡し忘れても汚染しない。PJR-EX5Eのidentity注入は維持している。検査は文字列走査からTypeScript AST解析へ置き換え、env: process.envを不合格とし、gitEnvironment()由来であることを追跡する。検証として、envを意図的に渡さないテストをGIT_DIRを設定して実行し使い捨てリポジトリが無傷であることと、setupFilesを外すと回帰テストが失敗することを確認した。3度の再発それぞれで見落とした境界も記録した。復旧手順はexec運用ガイドへ記載した。"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: "テスト実行の入口でrepositoryの位置を決める環境変数を除去する構造にした。GIT_LOCAL_ENV_VARSをsrc/git-environment.tsへ集約し、gitEnvironment()とVitest setupが同じ正本を参照する。3つのvitest設定すべてに共通setupを入れ、各workerがtest moduleを読み込む前にGIT_DIR・GIT_INDEX_FILE・GIT_WORK_TREE等を除去するため、個々のテストがenvを渡し忘れても汚染しない。PJR-EX5Eのidentity注入は維持している。検査は文字列走査からTypeScript AST解析へ置き換え、env: process.envを不合格とし、gitEnvironment()由来であることを追跡する。検証として、envを意図的に渡さないテストをGIT_DIRを設定して実行し使い捨てリポジトリが無傷であることと、setupFilesを外すと回帰テストが失敗することを確認した。3度の再発それぞれで見落とした境界も記録した。復旧手順はexec運用ガイドへ記載した。"
+      previous_event_id: reg_de83e374859048b181f79be5ef41a8d1
 ---
 
 # PJR-76AG テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを破壊する事故が3度目の再発をした
