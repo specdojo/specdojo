@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-06-14"
   completed_at: "2026-06-21T12:00:00Z"
   conclusion: idや参考資料の参照を見直し
+  register_events:
+    - v: 1
+      id: reg_3bb0262db0a34a8fe53211b189a81105
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: xrp-recipe-maintenance-templateの拡充
+        - field: description
+          from: ""
+          to: agentへの指示を明確化
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-06-14"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: idや参考資料の参照を見直し
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_e6dbb4268f2b0ff6b7a2bdd2fdbd7eef
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-06-21"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_3bb0262db0a34a8fe53211b189a81105
 ---
 
 # PJR-0112 xrp-recipe-maintenance-templateの拡充

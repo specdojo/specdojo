@@ -15,6 +15,93 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: idの--reserveオプションを追加
+  register_events:
+    - v: 1
+      id: reg_4fa0fefc93f47b30b1f8c4faca5d2206
+      ts: "2026-07-25T22:58:27Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(pjr): PJR-0137, 0138を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 起票を統合ブランチへ委譲するregister add
+        - field: description
+          from: ""
+          to: PJR-ID の重複と `pjr-index.md` 末尾での merge conflict は、採番と行追加が作業 branch 上で分散して行われることに起因する。起票のたびに統合ブランチへ checkout し直す運用は、exec が worktree 単位で走る前提では退避コストが高く、気づいた時点で登録するという登録簿の利点を損なう。`specdojo register add` が統合ブランチの worktree へ登録行だけを書き込んで commit することで、作業 worktree を離れずに ID を予約できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7b06a00ba03afd333ecf8e743345791fa885a1c9
+    - v: 1
+      id: reg_89eb140a293214b75c024255c97601cd
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: PJR-ID の重複と `pjr-index.md` 末尾での merge conflict は、採番と行追加が作業 branch 上で分散して行われることに起因する。起票のたびに統合ブランチへ checkout し直す運用は、exec が worktree 単位で走る前提では退避コストが高く、気づいた時点で登録するという登録簿の利点を損なう。`specdojo register add` が統合ブランチの worktree へ登録行だけを書き込んで commit することで、作業 worktree を離れずに ID を予約できるようにする。
+          to: 作業worktreeを離れずにPJR-IDを予約できるよう、register addが統合ブランチのworktreeへ登録行だけを追記・commitするモードを追加し、表末尾の追記競合を解消する
+        - field: priority
+          from: medium
+          to: low
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: idの--reserveオプションを追加
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_4fa0fefc93f47b30b1f8c4faca5d2206
+    - v: 1
+      id: reg_246ef7e800474a686bc273875d39008c
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_89eb140a293214b75c024255c97601cd
 ---
 
 # PJR-0138 起票を統合ブランチへ委譲するregister add

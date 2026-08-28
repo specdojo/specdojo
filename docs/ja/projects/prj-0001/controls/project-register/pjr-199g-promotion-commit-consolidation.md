@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-27T23:40:53Z"
   due_on: "2026-10-31"
+  register_events:
+    - v: 1
+      id: reg_676d6ad7bda6ebfe87e39692932fbe66
+      ts: "2026-08-27T23:45:32Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-T7ZQ を決定しPJR-199Gを起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: develop から main への昇格時にコミットをまとめる方式を確定する
+        - field: description
+          from: ""
+          to: PJR-T7ZQ の決定により、遷移時の commit policy は変更せず、雑音の削減は develop から main への昇格境界で行うこととした。まとめ方の具体は検証を伴うため本項目で確定する。squash merge は祖先関係が記録されず、次回の昇格で develop の過去コミットが未マージ扱いとなり競合が繰り返される。main から develop への逆マージも履歴にあるため、双方向のマージが成立する方式を選ぶ必要がある。push 済み履歴の書き換えは行わない。PJR-TPY9 の完了後に有効となる。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-28"
+        - field: due
+          from: ""
+          to: "2026-10-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 6dd9ca7d550ed466e08b09e59decfc5dbdf35dc9
 ---
 
 # PJR-199G develop から main への昇格時にコミットをまとめる方式を確定する

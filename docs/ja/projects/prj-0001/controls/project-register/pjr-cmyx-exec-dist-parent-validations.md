@@ -14,6 +14,129 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-21T10:05:38Z"
   conclusion: CLI 起動時の dist 鮮度ガード、routine 実行時の自動再ビルド、post-merge / post-checkout での build-if-stale 配線を追加し、古い dist のまま exec を起動して parent_validations が沈黙して省略される事象を防げるようにした。bin・files・配布ドキュメントの呼び出し記法は変更していない。
+  register_events:
+    - v: 1
+      id: reg_4412e11d37c3067124ae3b20b2690345
+      ts: "2026-08-20T12:29:20Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-CMYX exec dist staleness issue"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec 実行が古い dist ビルドを使い設定済み parent_validations が実行されない
+        - field: description
+          from: ""
+          to: "specdojo の bin は dist/specdojo.js を指すため、npm run build を再実行しない限り古い挙動で exec run が動く。PJR-STRG の run（2026-08-18）では dist が 2026-08-15 12:33 のビルド（コミット be20ceb2 相当）で、parent_validations 機能を追加した 19eea172（2026-08-16）を含んでいなかった。その結果 exec-defaults.yaml の pipeline.parent_validations: [test-integration] が設定済みにもかかわらず npm run test:integration が実行されず、evidence にも記録が残らなかった。設定した検証が沈黙して省略されるため、dist の鮮度検証・実行時警告・tsx 直接実行への統一などの恒久対応を検討する。"
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: "2026-08-20"
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: baf687b180147438b589b177dd50c20bf23f6891
+    - v: 1
+      id: reg_d6936a06342ff15fd77c6d7d705ff404
+      ts: "2026-08-20T12:54:32Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): set PJR-CMYX owner, due and response policy"
+      changes:
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: 6a5e354f2084adf0e9b62d633004fb8cac1b61d9
+      previous_event_id: reg_4412e11d37c3067124ae3b20b2690345
+    - v: 1
+      id: reg_e5a24d5726ee8df4e7c380c8278ff517
+      ts: "2026-08-20T13:23:24Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): revise PJR-CMYX policy to keep distribution surface"
+      changes:
+        - field: description
+          from: "specdojo の bin は dist/specdojo.js を指すため、npm run build を再実行しない限り古い挙動で exec run が動く。PJR-STRG の run（2026-08-18）では dist が 2026-08-15 12:33 のビルド（コミット be20ceb2 相当）で、parent_validations 機能を追加した 19eea172（2026-08-16）を含んでいなかった。その結果 exec-defaults.yaml の pipeline.parent_validations: [test-integration] が設定済みにもかかわらず npm run test:integration が実行されず、evidence にも記録が残らなかった。設定した検証が沈黙して省略されるため、dist の鮮度検証・実行時警告・tsx 直接実行への統一などの恒久対応を検討する。"
+          to: "specdojo の bin は dist/specdojo.js を指すため、npm run build を再実行しない限り古い挙動で exec run が動く。PJR-STRG の run（2026-08-18）では dist が 2026-08-15 12:33 のビルド（コミット be20ceb2 相当）で、parent_validations 機能を追加した 19eea172（2026-08-16）を含んでいなかった。その結果 exec-defaults.yaml の pipeline.parent_validations: [test-integration] が設定済みにもかかわらず npm run test:integration が実行されず、evidence にも記録が残らなかった。設定した検証が沈黙して省略されるため、恒久対応が必要である。なお docs/ja/specdojo は package.json の files に含まれる配布物であり、利用者環境には src が存在しないため、配布ドキュメントや orchestrator 指示書の呼び出しを tsx 直接実行へ変更する対応は採れない。本件は配布側ではなく開発チェックアウト固有の問題として扱う。"
+      legacy_commit: 556b87f4f41492509c1687826fe9a55209f6f797
+      previous_event_id: reg_d6936a06342ff15fd77c6d7d705ff404
+    - v: 1
+      id: reg_858a8011a74599002f3a0aa46eafd65c
+      ts: "2026-08-20T13:34:59Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-CMYX): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 269ac2f72800103fddf35b9e1ce8b3f853178787
+      previous_event_id: reg_e5a24d5726ee8df4e7c380c8278ff517
+    - v: 1
+      id: reg_3b43c9bd7025e2d35ea1591647909207
+      ts: "2026-08-20T13:47:41Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-CMYX): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: ff96a976685328d4f1cd61c2ee06f3b57e3d0877
+      previous_event_id: reg_858a8011a74599002f3a0aa46eafd65c
+    - v: 1
+      id: reg_6f0c721d8f9476d98637992f2ab5d972
+      ts: "2026-08-21T10:05:38Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-CMYX): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-21"
+        - field: conclusion
+          from: "-"
+          to: CLI 起動時の dist 鮮度ガード、routine 実行時の自動再ビルド、post-merge / post-checkout での build-if-stale 配線を追加し、古い dist のまま exec を起動して parent_validations が沈黙して省略される事象を防げるようにした。bin・files・配布ドキュメントの呼び出し記法は変更していない。
+      legacy_commit: fd866f85467375647cf73d6051fda4fbd462a0f2
+      previous_event_id: reg_3b43c9bd7025e2d35ea1591647909207
 ---
 
 # PJR-CMYX exec 実行が古い dist ビルドを使い設定済み parent_validations が実行されない

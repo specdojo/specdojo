@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-21T13:58:16Z"
   conclusion: 実行コマンドを定義する設定ファイル（package.json、lefthook.yml、.specdojo/**、commitlint 設定、CI 設定）は agent の書き込み範囲に含めず、必要な変更は result の申し送りとして人間または orchestrator が適用する運用に確定した。決定だけでは provider の sandbox 方式に依存して守られないことが PJR-0DA8 で判明したため、PJR-Y3KP で provider 非依存の強制手段を実装し、対象一覧と例外手順を exec 設定ガイドへ明記した。
+  register_events:
+    - v: 1
+      id: reg_6188bc59fe2d65990d4e39d74e1e2b2a
+      ts: "2026-08-21T10:01:02Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-3S8Q and revert agent config write permissions"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない
+        - field: description
+          from: ""
+          to: 親 runner の parent_validations は固定 argv（npm run test:integration）で起動するが、実行される内容は package.json の script 本体である。lefthook.yml のコマンドも commit 時に親コンテキストで実行される。したがって edit agent にこれらの書き込みを許すと、設定できるのは ID だけで任意の command や引数を注入できないという exec-defaults の設計前提が無効になり、サンドボックス外での任意コード実行につながる。PJR-CMYX の対応中に一度 allow へ追加したが取り消し、agent は変更が必要な場合に result へ申し送りとして記録し、人間または orchestrator が適用する運用とする。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-21"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8abef5e7a23b57b37cb452fdcfd1728b04ce9359
+    - v: 1
+      id: reg_11e6fa6353fd36da082b0c471d2ee40a
+      ts: "2026-08-21T13:58:17Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): close PJR-3S8Q agent writable config scope decision"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-21"
+        - field: conclusion
+          from: "-"
+          to: 実行コマンドを定義する設定ファイル（package.json、lefthook.yml、.specdojo/**、commitlint 設定、CI 設定）は agent の書き込み範囲に含めず、必要な変更は result の申し送りとして人間または orchestrator が適用する運用に確定した。決定だけでは provider の sandbox 方式に依存して守られないことが PJR-0DA8 で判明したため、PJR-Y3KP で provider 非依存の強制手段を実装し、対象一覧と例外手順を exec 設定ガイドへ明記した。
+      legacy_commit: ce4132f45be88f9c6f28405bd377a64f2e2816bb
+      previous_event_id: reg_6188bc59fe2d65990d4e39d74e1e2b2a
 ---
 
 # PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない

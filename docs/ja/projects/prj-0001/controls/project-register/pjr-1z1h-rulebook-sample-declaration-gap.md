@@ -14,6 +14,118 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-24T11:26:12Z"
   conclusion: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正し、解決処理そのものは変更していない。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。この点は当初の完了条件が1系統1sampleを前提としており実態と合っていなかった。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
+  register_events:
+    - v: 1
+      id: reg_74fb90fc612c1c3811e809867fe58fdf
+      ts: "2026-08-23T11:50:59Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成方針に関する5件を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: rulebookのsample未宣言55本と成果物のrulebook未宣言10件を突き合わせる
+        - field: description
+          from: ""
+          to: sample の実ファイルは107本あり rulebook 106本とほぼ1対1だが、rulebook frontmatter で sample を宣言しているのは51本のみで、bps や bac など55本は実ファイルがあるのに未宣言である。実践の型の宣言箇所が rulebook frontmatter と成果物カタログの2か所にあり、片方が更新されていない。あわせてカタログ側で rulebook を宣言していない散文成果物10件も調査して宣言する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3dbc7a661e9b50d6bdeb59073fbdc3fb62dcbc83
+    - v: 1
+      id: reg_242063621e15ae438e1fcffa06b05775
+      ts: "2026-08-24T10:23:40Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-1Z1H): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 1b2f038f1ef6a35671a5bae6a73f5896d13677cf
+      previous_event_id: reg_74fb90fc612c1c3811e809867fe58fdf
+    - v: 1
+      id: reg_bbcbab4cfb86e010fbef10d205d97ed2
+      ts: "2026-08-24T10:45:49Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-1Z1H): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: 親runnerのvalidation（id: test-integration, source: runner, command: npm run test:integration）がstatus: failed（exit 1）である。runner validationは権威あるものとして上書きできないため、成果物編集自体（rule…"
+      legacy_commit: 4f818f6e1adf0ad1ad8e5487a27805b77fde9a02
+      previous_event_id: reg_242063621e15ae438e1fcffa06b05775
+    - v: 1
+      id: reg_e84028fb094f3ddf6144bd56cb00e4dc
+      ts: "2026-08-24T11:22:08Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-1Z1H): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+        - field: conclusion
+          from: "agent exited with non-zero code: 親runnerのvalidation（id: test-integration, source: runner, command: npm run test:integration）がstatus: failed（exit 1）である。runner validationは権威あるものとして上書きできないため、成果物編集自体（rule…"
+          to: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正した。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
+      legacy_commit: ff5753902ead5e0c7684c8581229b4eddb1fc373
+      previous_event_id: reg_bbcbab4cfb86e010fbef10d205d97ed2
+    - v: 1
+      id: reg_22f77dfdf917096b903659cbff1748b3
+      ts: "2026-08-24T11:27:34Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-1Z1H をクローズし PJR-X2Q7 を起票する"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-24"
+        - field: conclusion
+          from: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正した。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
+          to: rulebook 55本へ sample 宣言を追加し、宣言済みを106本中101本とした。残る5本は sample の実ファイルが存在しないため宣言しない。成果物カタログへ rulebook 宣言を8件追加し、宣言と実ファイルの食い違いを検知する双方向の検証を catalog-build へ追加した。kata.ts の解決順序のコメントを実装に合わせて修正し、解決処理そのものは変更していない。複数の sample を持つ系統が12本あったため sample の配列宣言に対応した。この点は当初の完了条件が1系統1sampleを前提としており実態と合っていなかった。実行時の統合テスト失敗は追加した検証がディレクトリ不在を考慮していなかったことによる退行で、ガードを追加して解消した。
+      legacy_commit: 05d41b3153b4a5ac5470686af42af41aa3c7acb3
+      previous_event_id: reg_e84028fb094f3ddf6144bd56cb00e4dc
 ---
 
 # PJR-1Z1H rulebookのsample未宣言55本と成果物のrulebook未宣言10件を突き合わせる

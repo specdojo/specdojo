@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-23T07:24:37Z"
   conclusion: 実践の型は4種すべてを機械的に作らず、種別ごとの作る条件・作らない条件で要否を判断する。必要な型は成果物カタログへ文書IDを宣言し、不要と判断した型は not-needed と宣言する。項目なしは要否未判断であり not-needed とは区別する。要否は初回の bootstrap で判断する。基準は kata-guide に記載し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外す。実装は PJR-K4TA で完了した。
+  register_events:
+    - v: 1
+      id: reg_b3e4093583bbfb503ba98796720a46e2
+      ts: "2026-08-23T04:58:31Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成基準を PJR-QESV と PJR-K4TA として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型は必要なものだけ作り、不要と判断した結果を宣言に残す
+        - field: description
+          from: ""
+          to: どの成果物にどの実践の型（rulebook / recipe / sample / template）を作るかの基準が存在せず、整合性を担保できない。各 authoring standard は既に作ると決めたものの書き方しか定めておらず、kata-guide と practice-system-composition-guide は役割と使い分けを説明するだけである。結果として recipe だけが 84 種別中 19 件という分布になり、その理由が記録されていない。作らない判断と未整備の区別も付かないため、棚卸しのたびに同じ議論が繰り返される。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: d74d2e877f1d7703b493a0bfaadbc072b614d1f8
+    - v: 1
+      id: reg_9a7fd6c4ab5996c9ea7d39fd9d02a6e6
+      ts: "2026-08-23T07:24:57Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-0FCT・PJR-QVGX を起票し PJR-QESV を決定済みにする"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: 実践の型は4種すべてを機械的に作らず、種別ごとの作る条件・作らない条件で要否を判断する。必要な型は成果物カタログへ文書IDを宣言し、不要と判断した型は not-needed と宣言する。項目なしは要否未判断であり not-needed とは区別する。要否は初回の bootstrap で判断する。基準は kata-guide に記載し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外す。実装は PJR-K4TA で完了した。
+      legacy_commit: 12e833e39ea35d48c4cdea320289b34ef954b55e
+      previous_event_id: reg_b3e4093583bbfb503ba98796720a46e2
 ---
 
 # PJR-QESV 実践の型は必要なものだけ作り、不要と判断した結果を宣言に残す

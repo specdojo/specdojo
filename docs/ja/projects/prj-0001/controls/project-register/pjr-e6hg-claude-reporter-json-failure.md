@@ -14,6 +14,163 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T22:33:15Z"
   conclusion: "根本原因は Claude Code の既知の不具合で、~/.claude.json への並行書き込みが競合し不完全な内容を読んだプロセスで JSON.parse が失敗する。SpecDojo 側の問題ではない。issue #15608 や #40226 として報告されており、2.1.61 のホットフィックスは過剰な書き込みのみを対象とし根本の競合は未対応、2.1.86 で再報告された #40226 は closed as not planned のため修正の見込みがない。バージョンアップでは解決しない。適用範囲は reporter に限らず claude provider の agent 全般であり、実行時間の長い executor の方が競合に当たる機会は多い。回避策は、claude 系を使う実行中はオーケストレーターが待機するか、codex 系で統一することである。"
+  register_events:
+    - v: 1
+      id: reg_b99562f482cfdeccb112f7223fe22c23
+      ts: "2026-08-23T13:06:13Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): reporter運用の課題3件を起票しPJR-JT1Yの結論を修正する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: claude-reporterがJSON解析失敗で再現性をもってブロックする
+        - field: description
+          from: ""
+          to: claude-reporter が PJR-K4TA で3回、PJR-JT1Y で3回、いずれも is not valid JSON を理由に失敗した。変更規模はそれぞれ79ファイルと61ファイルで、出力が長大になる条件で再現する疑いがある。設定ファイルはいずれも妥当な JSON であり、worktree にも存在することを確認済みである。現状 claude-reporter は reporter として使えず、codex-reporter への差し替えで回避している。原因を特定して解消する。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 68b091b8dc80c11b9518ac1106d8672d31d1f038
+    - v: 1
+      id: reg_9aa8a12680cf79f760b90a8b7de17bb3
+      ts: "2026-08-23T13:15:29Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-E6HG): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 68e577835d75d71cf056a1a81c2ded27587f0b97
+      previous_event_id: reg_b99562f482cfdeccb112f7223fe22c23
+    - v: 1
+      id: reg_f87206d0ad423cdab39e7c921e7400d9
+      ts: "2026-08-23T13:26:23Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-E6HG): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: executor validation `npm run test:unit` がfailedであり、doc-index.test.tsが生成前のpjr-index不在により1件失敗した。計画は終了前に検査失敗をすべて修正することを要求しているため、代替コマンドの成功だけでは完了を支持できない。"
+      legacy_commit: 6a238c134b7d01045cba1ad6fd84865eca28ff3a
+      previous_event_id: reg_9aa8a12680cf79f760b90a8b7de17bb3
+    - v: 1
+      id: reg_3f15a98652db3069c12a61522fead6c6
+      ts: "2026-08-23T21:23:05Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-E6HG): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+        - field: conclusion
+          from: "agent exited with non-zero code: executor validation `npm run test:unit` がfailedであり、doc-index.test.tsが生成前のpjr-index不在により1件失敗した。計画は終了前に検査失敗をすべて修正することを要求しているため、代替コマンドの成功だけでは完了を支持できない。"
+          to: 失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧は利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要。
+      legacy_commit: 2db25d5d574f391218c235bc238c64605fb1b924
+      previous_event_id: reg_f87206d0ad423cdab39e7c921e7400d9
+    - v: 1
+      id: reg_5c112dc63cbe7d1ac6b6ecb92fa658f9
+      ts: "2026-08-24T09:44:21Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの4件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-24"
+        - field: conclusion
+          from: 失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧は利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要。
+          to: claude-reporter の失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧には利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要であり、本項目の範囲である原因特定と記録を完了した。
+      legacy_commit: 59f9cfeb2344fdd332a0604ce466414de2087076
+      previous_event_id: reg_3f15a98652db3069c12a61522fead6c6
+    - v: 1
+      id: reg_4c3921427d19720958ab92f9f8248025
+      ts: "2026-08-24T10:20:28Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "docs(register): PJR-E6HG の結論を訂正し PJR-KAQV を起票する"
+      changes:
+        - field: conclusion
+          from: claude-reporter の失敗は Claude CLI が reporter prompt の処理前に読む実行環境側の credentials JSON が不正だったことによるもので、SpecDojo の出力解析やプロジェクト内の settings JSON の問題ではない。診断文言の出所で切り分け、出力長との関連は否定した。復旧には利用者による Claude CLI の再認証が必要で、それまでは codex-reporter で回避する。原因が実行環境側のため SpecDojo 側の修正は不要であり、本項目の範囲である原因特定と記録を完了した。
+          to: claude CLI（Nodeプロセス）内で JSON.parse が失敗して非ゼロ終了したことまでは確実だが、パース対象は特定できていない。初回調査の「credentials JSON が不正」という結論は誤りであり訂正した。当該文言は Node の JSON.parse 失敗時の標準形式であり認証情報固有の診断ではなく、再検証では最小プロンプトと約22KiBのプロンプトのいずれでも claude-reporter が正常に応答した。6回連続の失敗後に再現しなくなっており、一過性の事象であった可能性が高い。生の stderr が保全されていなかったため原因を追えなかった。保全の整備は PJR-KAQV で行う。
+      legacy_commit: f47d535fdef903d5970a87ab79fb666e760e87ae
+      previous_event_id: reg_5c112dc63cbe7d1ac6b6ecb92fa658f9
+    - v: 1
+      id: reg_30c9dfb26de619a3812922dae2f2be40
+      ts: "2026-08-24T12:32:36Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "docs(register): PJR-XGJK を review にし PJR-E6HG へ再発を追記する"
+      changes:
+        - field: conclusion
+          from: claude CLI（Nodeプロセス）内で JSON.parse が失敗して非ゼロ終了したことまでは確実だが、パース対象は特定できていない。初回調査の「credentials JSON が不正」という結論は誤りであり訂正した。当該文言は Node の JSON.parse 失敗時の標準形式であり認証情報固有の診断ではなく、再検証では最小プロンプトと約22KiBのプロンプトのいずれでも claude-reporter が正常に応答した。6回連続の失敗後に再現しなくなっており、一過性の事象であった可能性が高い。生の stderr が保全されていなかったため原因を追えなかった。保全の整備は PJR-KAQV で行う。
+          to: claude CLI（Nodeプロセス）内で JSON.parse が失敗して非ゼロ終了したことまでは確実だが、パース対象は特定できていない。初回調査の credentials JSON が不正という結論は誤りであり訂正した。その後 PJR-XGJK で再発したため一過性でもない。入力サイズ説も否定された（17889Bで成功、15126Bで失敗）。認証情報と worktree 環境も直接起動の検証で否定した。唯一データと矛盾しない仮説は、オーケストレーター自身が並行作業していたかどうかとの相関である。検証には生ログの保全（PJR-KAQV）が前提となる。原因特定と記録という本項目の範囲は満たしたが、根本原因は未解明である。
+      legacy_commit: 0da8ccff10fd29f5fcf34e967c9e2d6a6d8ca9ad
+      previous_event_id: reg_4c3921427d19720958ab92f9f8248025
+    - v: 1
+      id: reg_14e94d0645acab53acd5423c51108bed
+      ts: "2026-08-25T22:33:39Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "docs(register): PJR-E6HG の根本原因を特定して記録する"
+      changes:
+        - field: completed
+          from: "2026-08-24"
+          to: "2026-08-26"
+        - field: conclusion
+          from: claude CLI（Nodeプロセス）内で JSON.parse が失敗して非ゼロ終了したことまでは確実だが、パース対象は特定できていない。初回調査の credentials JSON が不正という結論は誤りであり訂正した。その後 PJR-XGJK で再発したため一過性でもない。入力サイズ説も否定された（17889Bで成功、15126Bで失敗）。認証情報と worktree 環境も直接起動の検証で否定した。唯一データと矛盾しない仮説は、オーケストレーター自身が並行作業していたかどうかとの相関である。検証には生ログの保全（PJR-KAQV）が前提となる。原因特定と記録という本項目の範囲は満たしたが、根本原因は未解明である。
+          to: "根本原因は Claude Code の既知の不具合で、~/.claude.json への並行書き込みが競合し不完全な内容を読んだプロセスで JSON.parse が失敗する。SpecDojo 側の問題ではない。issue #15608 や #40226 として報告されており、2.1.61 のホットフィックスは過剰な書き込みのみを対象とし根本の競合は未対応、2.1.86 で再報告された #40226 は closed as not planned のため修正の見込みがない。バージョンアップでは解決しない。適用範囲は reporter に限らず claude provider の agent 全般であり、実行時間の長い executor の方が競合に当たる機会は多い。回避策は、claude 系を使う実行中はオーケストレーターが待機するか、codex 系で統一することである。"
+      legacy_commit: 05e38f0c1c038db64552232e7e9484ec5617e621
+      previous_event_id: reg_30c9dfb26de619a3812922dae2f2be40
 ---
 
 # PJR-E6HG claude-reporterがJSON解析失敗で再現性をもってブロックする

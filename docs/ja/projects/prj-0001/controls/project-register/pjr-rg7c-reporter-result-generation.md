@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T22:42:22Z"
   conclusion: reporterの厳格な出力契約（Ajv 2020 strict schema検証・形式不正時3回再試行）とresult決定的描画をexec-reporter.ts/exec-results.tsに実装。frontmatter不変・review RVP順序一致を確認。対象85件成功。
+  register_events:
+    - v: 1
+      id: reg_0bdc07b7a0ade614ff3088724904fd5c
+      ts: "2026-08-10T06:36:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add executor reporter pipeline todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: reporterステージとresult生成を実装する
+        - field: description
+          from: ""
+          to: reporterへplanとevidenceを引き渡し、厳格な構造化出力を検証してからrunnerがfrontmatterとresult Markdownを決定的に生成する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05c3d3781552e051565e003506dd009eb1312db5
+    - v: 1
+      id: reg_ea1d39c7074d6978899e32de974d9d63
+      ts: "2026-08-10T07:22:15Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-RG7C): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 2e2e94eb632acd326d03d55d3c1cb649b642fd46
+      previous_event_id: reg_0bdc07b7a0ade614ff3088724904fd5c
+    - v: 1
+      id: reg_b9783f93953299caa9a70c37dddad1d1
+      ts: "2026-08-10T07:44:35Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-RG7C): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: b68fa59bc32f855d3adfba271e0431ca6fcc1e76
+      previous_event_id: reg_ea1d39c7074d6978899e32de974d9d63
+    - v: 1
+      id: reg_97a4f52e6b585c4b78f6f7e116efe4a9
+      ts: "2026-08-10T22:46:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-TC43): executor / reporterパイプラインのE2E検証と文書化"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-11"
+        - field: conclusion
+          from: "-"
+          to: reporterの厳格な出力契約（Ajv 2020 strict schema検証・形式不正時3回再試行）とresult決定的描画をexec-reporter.ts/exec-results.tsに実装。frontmatter不変・review RVP順序一致を確認。対象85件成功。
+      legacy_commit: 095189d5df7fcb58163a4c5c1f6e847a113a1db3
+      previous_event_id: reg_b9783f93953299caa9a70c37dddad1d1
 ---
 
 # PJR-RG7C reporterステージとresult生成を実装する

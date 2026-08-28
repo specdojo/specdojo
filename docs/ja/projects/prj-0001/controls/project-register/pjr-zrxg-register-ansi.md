@@ -14,6 +14,93 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-08T12:00:00Z"
   conclusion: stripTerminalControlSequences(src/exec-shared.ts)を追加し、sanitizeRegisterConclusion・checkpoint失敗メッセージ・block_reason書き出しの3箇所でANSIエスケープコード等を除去。実装レビューで正規表現に生の制御バイトが直接埋め込まれgitがバイナリ扱いする不備を発見し、\\uXXXXエスケープ表記へ修正済み。
+  register_events:
+    - v: 1
+      id: reg_36b5a9de3dfccfd4ba16a6d7849deef5
+      ts: "2026-08-08T06:44:02Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "fix(register): PJR-PP0Dの説明文修正と結論列の破損修正、PJR-ZRXGを起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register系失敗理由の文字列にANSIエスケープコードが混入し登録簿が破損する
+        - field: description
+          from: ""
+          to: "`exec run --register PJR-NWPC PJR-PP0D PJR-4AHZ --worktree`実行時、PJR-PP0Dのcheckpoint commitがpre-commit hook（markdownlint）失敗で異常終了し、その際の生のsubprocess出力（lefthookの色付きボックスUIによるANSIエスケープコード込み）が`pjr-index.md`の「結論」列にそのまま書き込まれ表示が破損した。`sanitizeRegisterConclusion`（`src/exec-register.ts`）が改行と`\\|`のみ除去し、ANSIエスケープコードを除去していないことが原因である。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 15fd21670ae7172dca2c9727f85370c8b890e6d8
+    - v: 1
+      id: reg_e2802d26a8a1448ba763c193fc50d759
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`exec run --register PJR-NWPC PJR-PP0D PJR-4AHZ --worktree`実行時、PJR-PP0Dのcheckpoint commitがpre-commit hook（markdownlint）失敗で異常終了し、その際の生のsubprocess出力（lefthookの色付きボックスUIによるANSIエスケープコード込み）が`pjr-index.md`の「結論」列にそのまま書き込まれ表示が破損した。`sanitizeRegisterConclusion`（`src/exec-register.ts`）が改行と`\\|`のみ除去し、ANSIエスケープコードを除去していないことが原因である。"
+          to: sanitizeRegisterConclusion（src/exec-register.ts）は改行とパイプ文字のみ除去し長さを制限するが、ANSIエスケープコード（ターミナル制御文字）は除去しない。checkpoint commit失敗時（src/exec-worktree-ops.ts）はcommitted.stdout/stderrを生のまま連結してエラーメッセージにするため、lefthook等が色付き出力を返す失敗ではANSIエスケープコードがそのままpjr-index.mdの結論列やresultのblocked理由に書き込まれ表示が壊れる（PJR-PP0Dのcheckpoint失敗で実際に発生）。sanitizeRegisterConclusionにANSIエスケープコード除去を追加し、同様に生のsubprocess出力をユーザ向け文字列として扱う他の箇所（exec-worktree-opsのチェックポイント/commit/merge失敗メッセージ等）も洗い出して対応する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: stripTerminalControlSequences(src/exec-shared.ts)を追加し、sanitizeRegisterConclusion・checkpoint失敗メッセージ・block_reason書き出しの3箇所でANSIエスケープコード等を除去。実装レビューで正規表現に生の制御バイトが直接埋め込まれgitがバイナリ扱いする不備を発見し、\\uXXXXエスケープ表記へ修正済み。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_36b5a9de3dfccfd4ba16a6d7849deef5
+    - v: 1
+      id: reg_c76ba4d4f833b293e0cd066eaab13be6
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-08"
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_e2802d26a8a1448ba763c193fc50d759
 ---
 
 # PJR-ZRXG register系失敗理由の文字列にANSIエスケープコードが混入し登録簿が破損する

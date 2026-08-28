@@ -13,6 +13,124 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-18T11:44:17Z"
   conclusion: プロジェクトダッシュボード実装、無限ループ修正、資源枯渇の再発防止、全検証を完了
+  register_events:
+    - v: 1
+      id: reg_b3eb16beae36891c3a7169824493b0e1
+      ts: "2026-08-02T02:35:39Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0149を起票（プロジェクトダッシュボードページの新設）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 各プロジェクトにダッシュボードページを追加（schedule進捗・register状況・routine実行状況の一覧化）
+        - field: description
+          from: ""
+          to: 現状、プロジェクトの状況確認は `execution/generated/timeline.md`（schedule進捗）、`pjr-index.md` / `pjr-views.md`（register登録・消化状況）、`specdojo routine list`（routine実行状況、CLI出力のみで生成ページなし）に分散しており、一目で全体像を把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できる「ダッシュボード」ページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: db591fd5669549ce6cd25fba1dd2ba5c7471676f
+    - v: 1
+      id: reg_e8cd470cfbd21036749ef4498f6fa712
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: 現状、プロジェクトの状況確認は `execution/generated/timeline.md`（schedule進捗）、`pjr-index.md` / `pjr-views.md`（register登録・消化状況）、`specdojo routine list`（routine実行状況、CLI出力のみで生成ページなし）に分散しており、一目で全体像を把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できる「ダッシュボード」ページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る。
+          to: 現状はschedule進捗(timeline.md)、register登録/消化状況(pjr-index.md/pjr-views.md)、routine実行状況(specdojo routine list等CLI出力のみ)を個別に確認する必要があり、一目で把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できるダッシュボードページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_b3eb16beae36891c3a7169824493b0e1
+    - v: 1
+      id: reg_0a7867556363672749820d7ffd7fa5f6
+      ts: "2026-08-16T11:28:23Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-0149): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+        - field: description
+          from: 現状はschedule進捗(timeline.md)、register登録/消化状況(pjr-index.md/pjr-views.md)、routine実行状況(specdojo routine list等CLI出力のみ)を個別に確認する必要があり、一目で把握できるページがない。schedule進捗・register登録/消化状況・routine実行状況を一覧できるダッシュボードページを各プロジェクトに追加し、VitePressサイドバーの各プロジェクトメニューから導線を張る
+          to: 現状、プロジェクトの状況確認は、Scheduleの進捗・日程を示す `execution/generated/gantt-chart.md` / `gantt-chart.svg`、トラックの着手順序を示す Timeline（`timeline/tml-index.yaml` と `timeline/generated/`）、registerの登録・消化状況、routineの実行状況に分散しており、一目で全体像を把握できるページがない。
+      legacy_commit: 4565d6b7e003939dd24d3d1d222c34709ff054cf
+      previous_event_id: reg_e8cd470cfbd21036749ef4498f6fa712
+    - v: 1
+      id: reg_58b71ed55f262cdec125eadce52dcdb2
+      ts: "2026-08-16T16:26:31Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-0149): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: rate limit reached
+      legacy_commit: b390a366458e64fe42110b1397354a4350a26807
+      previous_event_id: reg_0a7867556363672749820d7ffd7fa5f6
+    - v: 1
+      id: reg_a3ff465ea4b5277a38dbe8b0eda14aff
+      ts: "2026-08-18T11:45:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: done
+      reason: "chore: close PJR-0149"
+      changes:
+        - field: status
+          from: waiting
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-18"
+        - field: conclusion
+          from: rate limit reached
+          to: プロジェクトダッシュボード実装、無限ループ修正、資源枯渇の再発防止、全検証を完了
+      legacy_commit: 53a7631e9b2f1af94e25ade3478604e610761f11
+      previous_event_id: reg_58b71ed55f262cdec125eadce52dcdb2
 ---
 
 # PJR-0149 各プロジェクトにダッシュボードページを追加（schedule進捗・register状況・routine実行状況の一覧化）

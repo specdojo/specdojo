@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-25T12:00:00Z"
   conclusion: human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a）
+  register_events:
+    - v: 1
+      id: reg_a3754e76f44281a089cb6b433f7b3b16
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: human実行時のplan非生成とresultへの統合
+        - field: description
+          from: ""
+          to: "`execution: human` のタスクでは、実行者が plan を参照せず result だけで確認していた。plan の固有価値は HEAD 由来の改ざん耐性ある commit スコープ導出だが、これは agent のプロンプトインジェクション対策であり、敵対 agent が存在しない human では無効になる。したがって human 時は plan を生成せず result へ統合し、commit スコープは result frontmatter の `targets` から導出する。result のチェックは現状で最低限のため温存し、done_criteria 確認の一元的な受け皿とする。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_7a511e781f2298e9f334e5c450d83743
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`execution: human` のタスクでは、実行者が plan を参照せず result だけで確認していた。plan の固有価値は HEAD 由来の改ざん耐性ある commit スコープ導出だが、これは agent のプロンプトインジェクション対策であり、敵対 agent が存在しない human では無効になる。したがって human 時は plan を生成せず result へ統合し、commit スコープは result frontmatter の `targets` から導出する。result のチェックは現状で最低限のため温存し、done_criteria 確認の一元的な受け皿とする。"
+          to: execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a）
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_a3754e76f44281a089cb6b433f7b3b16
+    - v: 1
+      id: reg_ffeeb8235ec4ab8b4e4b2fd11c29f0ec
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-25"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_7a511e781f2298e9f334e5c450d83743
 ---
 
 # PJR-0124 human実行時のplan非生成とresultへの統合

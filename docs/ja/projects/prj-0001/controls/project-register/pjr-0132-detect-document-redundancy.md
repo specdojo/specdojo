@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: review-viewpointsに反映
+  register_events:
+    - v: 1
+      id: reg_f4a15cf97afb00fdcd9c2b53f043417f
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 既存review viewpointで文書の冗長性を検出
+        - field: description
+          from: ""
+          to: 文書の主要な目的や判断点を短時間で把握できるかという観点から、冗長性を review で検出できるようにする。類似 viewpoint を新設せず、既存の `vp-ux-readability` に、同じ主張の反復、判断に不要な一般論、表と本文の重複、正本からの過剰な再掲を確認する具体的な check / evidence を反映する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_2ec856238e8e7c93b19bc3d34bd4c180
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 文書の主要な目的や判断点を短時間で把握できるかという観点から、冗長性を review で検出できるようにする。類似 viewpoint を新設せず、既存の `vp-ux-readability` に、同じ主張の反復、判断に不要な一般論、表と本文の重複、正本からの過剰な再掲を確認する具体的な check / evidence を反映する。
+          to: 新しい観点を重複追加せず、vp-ux-readabilityに反復・一般論・表と本文の重複・正本の過剰再掲を検出する基準を追加する
+        - field: owner
+          from: _TODO_
+          to: UX
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: review-viewpointsに反映
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_f4a15cf97afb00fdcd9c2b53f043417f
+    - v: 1
+      id: reg_ec743bd6aef7db39d56bc73bfaa896a3
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_2ec856238e8e7c93b19bc3d34bd4c180
 ---
 
 # PJR-0132 既存review viewpointで文書の冗長性を検出

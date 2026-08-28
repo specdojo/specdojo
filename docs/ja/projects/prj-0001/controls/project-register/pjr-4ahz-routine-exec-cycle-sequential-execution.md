@@ -16,6 +16,104 @@ specdojo:
   registered_at: "2026-08-08T12:00:00Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_96e125242391742ca2af6fe0e9b79cf1
+      ts: "2026-08-08T05:40:51Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-4AHZ"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: routineでexec resumeからautoを順次実行可能にする
+        - field: description
+          from: ""
+          to: _TODO_
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3ad50a1ec533bb04a1eac50cfae6e1d770041264
+    - v: 1
+      id: reg_de53a2dcd129ce0f760f10e5fe6a50dc
+      ts: "2026-08-08T05:57:13Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): detail PJR-4AHZ ticket"
+      changes:
+        - field: description
+          from: _TODO_
+          to: 定時 routine から利用制限で延期された task の再開と Ready task の自動実行を行う際、現行の `exec-resume` と `exec-auto` は別々の routine として起動する必要があり、実行順はファイル名順または発火時刻の差に依存する。時刻をずらす方式では、先行処理が想定時間を超えると後続処理が busy skip され、次回の定時発火まで実行されない。
+      legacy_commit: b799d02ffdca45751cd003bf8fd21a07db164e6a
+      previous_event_id: reg_96e125242391742ca2af6fe0e9b79cf1
+    - v: 1
+      id: reg_336d69a13d7d202ea8495837db55ccab
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 定時 routine から利用制限で延期された task の再開と Ready task の自動実行を行う際、現行の `exec-resume` と `exec-auto` は別々の routine として起動する必要があり、実行順はファイル名順または発火時刻の差に依存する。時刻をずらす方式では、先行処理が想定時間を超えると後続処理が busy skip され、次回の定時発火まで実行されない。
+          to: 定時実行でrate limitからの再開、状態再計算、Ready taskのauto loop実行を単一project lock内で順次処理できる仕組みを追加する。ファイル名順や時刻差に依存せず、busy・失敗・再延期・結果集約の挙動を設計し、routine定義、CLI、schema、ガイド、テストへ反映する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_de53a2dcd129ce0f760f10e5fe6a50dc
+    - v: 1
+      id: reg_ef1ee32e7561dcefd0847919d2adb801
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-08"
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_336d69a13d7d202ea8495837db55ccab
 ---
 
 # PJR-4AHZ routineでexec resumeからautoを順次実行可能にする

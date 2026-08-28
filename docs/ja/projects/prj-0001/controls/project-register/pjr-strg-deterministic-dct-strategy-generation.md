@@ -14,6 +14,146 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-20T12:27:51Z"
   conclusion: catalog scaffold --plan と schedule strategy generate を実装し、DCT と sch-strategy を決定論的に生成できるようにした。異常系・再生成安定性を含むテストと、rulebook・設計ガイド・コマンドリファレンスの更新を完了した。
+  register_events:
+    - v: 1
+      id: reg_922be21c0628ec2c277dcc68b91378a2
+      ts: "2026-08-16T13:29:53Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add catalog and strategy automation todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: DCTとsch-strategyの決定論的ジェネレーター実装
+        - field: description
+          from: ""
+          to: agent が保存した `dct-plan-<domain>.yaml` と `sch-assessment-<track>.yaml` を入力に、成果物カタログと `sch-strategy-<track>.yaml` をコードで決定論的に生成する。agent の責務は意味判断と根拠整理に限定し、YAML 構造、ID、パス、owner、フェーズ、ゲート、依存関係、schema 適合性は generator が保証する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-16"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7769f1ba92e4242dc32091f30ef7c3d57fae7dac
+    - v: 1
+      id: reg_046cb78371bb1509dd3735553ad01899
+      ts: "2026-08-18T22:33:57Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-STRG): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 5a2d67a3829fd2e5b17c2348a604f87b2cae67fd
+      previous_event_id: reg_922be21c0628ec2c277dcc68b91378a2
+    - v: 1
+      id: reg_868adccb67f34a59778f21a9d54dd5a6
+      ts: "2026-08-18T22:47:22Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-STRG): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code"
+      legacy_commit: 9854cb0d0be0834cbcc3c10bb5d10cc7c435871c
+      previous_event_id: reg_046cb78371bb1509dd3735553ad01899
+    - v: 1
+      id: reg_1e98700ce42bb05ba6a9519284ff8eae
+      ts: "2026-08-18T23:01:18Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-STRG): start"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: 88f072f93348296443ef95921a319a5b93cf2c70
+      previous_event_id: reg_868adccb67f34a59778f21a9d54dd5a6
+    - v: 1
+      id: reg_aa599972320dd5d477edac3de9d65d49
+      ts: "2026-08-18T23:22:37Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-STRG): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "agent exited with non-zero code: agent exited with non-zero code"
+          to: rate limit reached
+      legacy_commit: 8024c6c3a6e037fdbeebef77790f046243da8f25
+      previous_event_id: reg_1e98700ce42bb05ba6a9519284ff8eae
+    - v: 1
+      id: reg_c3df51172edf4326b9fa1079a4167f0b
+      ts: "2026-08-19T22:56:08Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-STRG): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 99ca98dbfbfd67e7820f0a947d6e7043849d4152
+      previous_event_id: reg_aa599972320dd5d477edac3de9d65d49
+    - v: 1
+      id: reg_ebc1b62850e2b9a88207cb9c472e7c4e
+      ts: "2026-08-20T12:27:56Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-STRG): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-20"
+        - field: conclusion
+          from: rate limit reached
+          to: catalog scaffold --plan と schedule strategy generate を実装し、DCT と sch-strategy を決定論的に生成できるようにした。異常系・再生成安定性を含むテストと、rulebook・設計ガイド・コマンドリファレンスの更新を完了した。
+      legacy_commit: d2ba8a8c10ce9deec27cafeeece3d8be884eee1e
+      previous_event_id: reg_c3df51172edf4326b9fa1079a4167f0b
 ---
 
 # PJR-STRG DCTとsch-strategyの決定論的ジェネレーター実装

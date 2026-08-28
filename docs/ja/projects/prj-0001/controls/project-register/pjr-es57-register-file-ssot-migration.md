@@ -14,6 +14,107 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-09T12:03:32Z"
   conclusion: 8件の分割先すべてが完了し、個票frontmatterを唯一の正本とする移行が完了した。
+  register_events:
+    - v: 1
+      id: reg_ebcde46a1c91939dc1ac56712c1bd884
+      ts: "2026-08-09T02:12:43Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): add PJR-ES57, PJR-GQFX, PJR-BJ97"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿を1項目1ファイル正本へ移行し pjr-index を生成ビュー化する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B を採択したため、登録項目の正本を個票 frontmatter へ一本化し、`pjr-index.md` を `generated/` 配下の派生ビューへ移行する。正本の粒度を実体（登録項目）単位に合わせることで、index と個票の同期規則、表末尾の追記競合、それを回避するための補償機構を不要にする。未リリースのうちに実施する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3f1be811234eaf5d52ea68370d0ed906d7f01245
+    - v: 1
+      id: reg_c6a172b80b6f32ed8ac83edfca109ada
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: "[[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B を採択したため、登録項目の正本を個票 frontmatter へ一本化し、`pjr-index.md` を `generated/` 配下の派生ビューへ移行する。正本の粒度を実体（登録項目）単位に合わせることで、index と個票の同期規則、表末尾の追記競合、それを回避するための補償機構を不要にする。未リリースのうちに実施する。"
+          to: PJR-9Y7G の決定（選択肢B）に基づき、個票 frontmatter を正本、pjr-index.md を generated の派生ビューへ移行する。CLI・スキーマ・rulebook・テンプレート・既存項目移行を対象とする。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_ebcde46a1c91939dc1ac56712c1bd884
+    - v: 1
+      id: reg_e0fe1d535023f6f0fb99c1fb46e24ee4
+      ts: "2026-08-09T12:03:32Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "docs(prj-0001): close PJR-ES57 (parent of 8-way split)"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: conclusion
+          from: "-"
+          to: 8件の分割先すべてが完了し、個票frontmatterを唯一の正本とする移行が完了した。
+      legacy_commit: 92b1ff3dc5a941789d627913305525f1e149ef28
+      previous_event_id: reg_c6a172b80b6f32ed8ac83edfca109ada
+    - v: 1
+      id: reg_882e2221f364056f47a75c93feaccfdf
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_e0fe1d535023f6f0fb99c1fb46e24ee4
 ---
 
 # PJR-ES57 登録簿を1項目1ファイル正本へ移行し pjr-index を生成ビュー化する

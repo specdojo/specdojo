@@ -14,6 +14,112 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T22:08:42Z"
   conclusion: 検知の仕組みは frontmatter にも対応済みだったが、報告が warning のため lint:fm では失敗せず、単体テストでのみ検出される状態だった。message.fatal を設定して error 化し、コミット前に失敗するようにした。既存文書に違反が残っていないことも確認した。混入経路3つ（register add の description、exec の失敗理由から frontmatter の conclusion、索引の conclusion セル）へ既存の inlineCodeAnglePlaceholders を適用し、未エスケープのまま書き込まれないようにした。実装は PJR-ZWMH の既存関数を再利用しており分散していない。
+  register_events:
+    - v: 1
+      id: reg_2d4817ac5224034387375c91a68d2412
+      ts: "2026-08-23T13:06:13Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): reporter運用の課題3件を起票しPJR-JT1Yの結論を修正する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 山括弧プレースホルダのインラインコード化を個票本文とfrontmatterへ広げる
+        - field: description
+          from: ""
+          to: PJR-ZWMH は登録簿索引の山括弧プレースホルダをインラインコード化したが、register add の description は個票本文へそのまま書き込まれるため未エスケープのまま残る。PJR-QVGX で実際に混入し、remark-no-unescaped-angle-placeholder のテストが統合ブランチで失敗した。さらに exec の block_reason は frontmatter へ書かれるため lint も remark も検知できず、VitePress のビルドで問題になる。個票本文と frontmatter の双方を対象へ広げる。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 68b091b8dc80c11b9518ac1106d8672d31d1f038
+    - v: 1
+      id: reg_b71ea35f692e91f99adb439b40d071b2
+      ts: "2026-08-25T07:26:00Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): PJR-B1SJ に完了条件と調査結果を追記する"
+      changes:
+        - field: description
+          from: PJR-ZWMH は登録簿索引の山括弧プレースホルダをインラインコード化したが、register add の description は個票本文へそのまま書き込まれるため未エスケープのまま残る。PJR-QVGX で実際に混入し、remark-no-unescaped-angle-placeholder のテストが統合ブランチで失敗した。さらに exec の block_reason は frontmatter へ書かれるため lint も remark も検知できず、VitePress のビルドで問題になる。個票本文と frontmatter の双方を対象へ広げる。
+          to: PJR-ZWMH は登録簿索引の山括弧プレースホルダをインラインコード化したが、`register add` の description は個票本文へそのまま書き込まれるため未エスケープのまま残る。PJR-QVGX で実際に混入し、`remark-no-unescaped-angle-placeholder` のテストが統合ブランチで失敗した。
+      legacy_commit: 6f2b63431d1a5533e25191cbbde07518a7a161ec
+      previous_event_id: reg_2d4817ac5224034387375c91a68d2412
+    - v: 1
+      id: reg_8d302d4136149e29d17972fd94de8958
+      ts: "2026-08-25T07:26:18Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-B1SJ): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: b2fd157886ded0d2c9de883e744a90a63d1ed654
+      previous_event_id: reg_b71ea35f692e91f99adb439b40d071b2
+    - v: 1
+      id: reg_0543987793135b6cf52d2221964a9590
+      ts: "2026-08-25T07:34:27Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-B1SJ): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: d65c9763c456db66f6e9b759ad81390ba876326c
+      previous_event_id: reg_8d302d4136149e29d17972fd94de8958
+    - v: 1
+      id: reg_f852e473d013f4e10fe017ecf9fc46ed
+      ts: "2026-08-25T22:09:24Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-B1SJ をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: 検知の仕組みは frontmatter にも対応済みだったが、報告が warning のため lint:fm では失敗せず、単体テストでのみ検出される状態だった。message.fatal を設定して error 化し、コミット前に失敗するようにした。既存文書に違反が残っていないことも確認した。混入経路3つ（register add の description、exec の失敗理由から frontmatter の conclusion、索引の conclusion セル）へ既存の inlineCodeAnglePlaceholders を適用し、未エスケープのまま書き込まれないようにした。実装は PJR-ZWMH の既存関数を再利用しており分散していない。
+      legacy_commit: c486e89efaf9430645253f45e13ba93486008c0e
+      previous_event_id: reg_0543987793135b6cf52d2221964a9590
 ---
 
 # PJR-B1SJ 山括弧プレースホルダのインラインコード化を個票本文とfrontmatterへ広げる

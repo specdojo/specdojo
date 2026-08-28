@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-26T06:42:33Z"
   conclusion: ブロック理由を conclusion とは別の block_reason へ分離した。失敗した実行が項目の最終結果を置き換えられないようにしつつ、理由自体は残る。register wait は --reason を新設し、--conclusion は非推奨の別名として残して既存の呼び出しを壊さない。register update に --conclusion を追加し、直接編集せずに更新でき、ハイフン指定で削除もできる。register history はブロック理由の変化を追える。既存個票に残る過去のブロック理由は本項目では書き換えていない。
+  register_events:
+    - v: 1
+      id: reg_63952c818af4ff57b5d4b41240ebbb9d
+      ts: "2026-08-24T11:27:34Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-1Z1H をクローズし PJR-X2Q7 を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 失敗時のブロック理由が個票のconclusionを上書きする問題を解消する
+        - field: description
+          from: ""
+          to: exec run が失敗すると、その時点のブロック理由が個票の conclusion へ書き込まれる。実行が成功して完了した後も古いブロック理由が残るため、PJR-JT1Y・PJR-E6HG・PJR-Q828・PJR-1Z1H の4件連続で手作業による書き換えが必要になった。conclusion は項目の結論を記録する欄であり、途中の失敗理由を保持する場所として適切ではない。ブロック理由の記録先を分けるか、完了時に上書きされるようにする。あわせて register update に conclusion を更新するオプションがなく、直接編集が必要である点も解消する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05d41b3153b4a5ac5470686af42af41aa3c7acb3
+    - v: 1
+      id: reg_7f715d8146b69b832e39836174730385
+      ts: "2026-08-26T06:26:30Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-X2Q7): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 9d88f844ee53396a9577420d84702710304b4a41
+      previous_event_id: reg_63952c818af4ff57b5d4b41240ebbb9d
+    - v: 1
+      id: reg_be2cf3a85c6c68c2aaf6ecc5e30fe07e
+      ts: "2026-08-26T06:37:08Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-X2Q7): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: fe9a6bafe0d26a6220e391d3a3cedbd32b9d5d3e
+      previous_event_id: reg_7f715d8146b69b832e39836174730385
+    - v: 1
+      id: reg_1c5ad3d70ea9ba360a7bda9cafc95448
+      ts: "2026-08-26T06:43:33Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-X2Q7 をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: ブロック理由を conclusion とは別の block_reason へ分離した。失敗した実行が項目の最終結果を置き換えられないようにしつつ、理由自体は残る。register wait は --reason を新設し、--conclusion は非推奨の別名として残して既存の呼び出しを壊さない。register update に --conclusion を追加し、直接編集せずに更新でき、ハイフン指定で削除もできる。register history はブロック理由の変化を追える。既存個票に残る過去のブロック理由は本項目では書き換えていない。
+      legacy_commit: ee6560f504b6ca15d50e9d27837a205a25a80249
+      previous_event_id: reg_be2cf3a85c6c68c2aaf6ecc5e30fe07e
 ---
 
 # PJR-X2Q7 失敗時のブロック理由が個票のconclusionを上書きする問題を解消する

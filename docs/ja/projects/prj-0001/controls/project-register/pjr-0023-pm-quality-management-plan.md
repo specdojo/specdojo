@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-10"
   completed_at: "2026-05-24T12:00:00Z"
   conclusion: このtodoはschで管理
+  register_events:
+    - v: 1
+      id: reg_0afbf3385ab224b4c43685bf243d42cc
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: pm-quality-management-plan-\*作成
+        - field: description
+          from: ""
+          to: rulebookを作成して、instruction, sampleへ展開する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: PO
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-10"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: このtodoはschで管理
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_20cddf9ad3d5b666da6b4f611914eca4
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-24"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_0afbf3385ab224b4c43685bf243d42cc
 ---
 
 # PJR-0023 pm-quality-management-plan-\*作成

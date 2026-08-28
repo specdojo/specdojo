@@ -13,6 +13,118 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T11:03:44Z"
+  register_events:
+    - v: 1
+      id: reg_cb57373bf64b368f556837fc1a02c997
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 既存登録項目を個票 frontmatter へ一括移行する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割4。現行の登録項目一覧に存在する全行を個票へ移行する。個票を持たない項目には新たに個票を生成し、既に個票を持つ項目には表の構造化フィールドを frontmatter へ移す。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_8a0a632092a305890c299c1e613252e1
+      ts: "2026-08-09T10:26:35Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-9P5Q): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: 96fa32cf55b83365a5331a5b2856245edda7679b
+      previous_event_id: reg_cb57373bf64b368f556837fc1a02c997
+    - v: 1
+      id: reg_2d50c86a5fe504b7655bd0d7239377cf
+      ts: "2026-08-09T10:55:48Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-9P5Q): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 089a3ffa2ed946e691e67e6102340986fcd6b613
+      previous_event_id: reg_8a0a632092a305890c299c1e613252e1
+    - v: 1
+      id: reg_98251a7e72c81f95ee53f4dc11fa6bf9
+      ts: "2026-08-09T11:03:44Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-9P5Q, add PJR-1D0C"
+      changes:
+        - field: status
+          from: review
+          to: done
+      legacy_commit: 7eeeb85408d2e382450800116dca75eba2633d62
+      previous_event_id: reg_2d50c86a5fe504b7655bd0d7239377cf
+    - v: 1
+      id: reg_0c7c34e3181bbd3df8058bce468d6fc1
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_98251a7e72c81f95ee53f4dc11fa6bf9
 ---
 
 # PJR-9P5Q 既存登録項目を個票 frontmatter へ一括移行する

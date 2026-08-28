@@ -16,6 +16,49 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: 利用制限に達した場合にroutineで再開
+  register_events:
+    - v: 1
+      id: reg_ef9b5d378efeb0e6f345bf19c22c0bc5
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`exec run --auto` で Claude Code、Codex などの利用制限により task を継続できない場合に、制限種別と再開可能時刻を永続化する。定時起動される routine から再開時刻を迎えた task を抽出し、保持した実行状態と worktree を使って安全に再実行できるようにする。"
+          to: 利用制限で継続できないtaskの再開可能時刻を記録し、定時routineから安全に再実行できるようにする
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: 利用制限に達した場合にroutineで再開
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_1ac91ff29c166e11c29244b22a65f255
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_ef9b5d378efeb0e6f345bf19c22c0bc5
 ---
 
 # PJR-0136 agent利用制限後の自動再開

@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T06:21:46Z"
   conclusion: reporter の各形式試行の stdout と stderr を試行番号付きのファイルへ分離保存し、evidence.json の log_refs から参照できるようにした。保存前に既存の redactSensitiveText を適用し、既存と同じ64KiB上限で切り詰めて bytes と truncated を記録する。stdout と stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。executor 側の保全処理も共通化した。evidence 配下は Git 管理対象とし、既知パターン以外の秘密が残る可能性があるため外部共有前の確認を運用上の前提とした。
+  register_events:
+    - v: 1
+      id: reg_1793bb92ede652f2fbed14d763ed8f7c
+      ts: "2026-08-24T10:20:28Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-E6HG の結論を訂正し PJR-KAQV を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: agent失敗時の生のstderrを保全する
+        - field: description
+          from: ""
+          to: PJR-E6HG の調査では、失敗した実行の stderr ログに原因を示すメッセージが残っておらず、stdout の切り詰められた要約行だけが手がかりだった。そのため原因を推測に頼らざるを得ず、初回の結論が誤りとなった。agent が非ゼロ終了した場合に生の stdout と stderr を evidence の一部として保全し、失敗理由の要約とは別に参照できるようにする。認証情報などの秘密が混入しうる点を踏まえ、保全先と取り扱いもあわせて定める。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: f47d535fdef903d5970a87ab79fb666e760e87ae
+    - v: 1
+      id: reg_9f650a4ba81a7b49d057e17e44f44ba6
+      ts: "2026-08-25T02:39:34Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-KAQV): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: a225e900aa4423d55cbe0023770b70eaeb78515e
+      previous_event_id: reg_1793bb92ede652f2fbed14d763ed8f7c
+    - v: 1
+      id: reg_1fc3eca86483cda3a419983425f7c162
+      ts: "2026-08-25T03:05:59Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-KAQV): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
+      legacy_commit: 9eb052f263ec6b5fdf7c3491e513ae31d6ef3318
+      previous_event_id: reg_9f650a4ba81a7b49d057e17e44f44ba6
+    - v: 1
+      id: reg_0254c71dd491b412857b8c639e8255e9
+      ts: "2026-08-25T03:09:27Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-KAQV): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 109ea3d588d752d3bead65712453e9aac60785fe
+      previous_event_id: reg_1fc3eca86483cda3a419983425f7c162
+    - v: 1
+      id: reg_776c841e121a9e087825164c203013e0
+      ts: "2026-08-25T06:23:02Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの3件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-25"
+        - field: conclusion
+          from: "agent exited with non-zero code: executor validationの「npm run test:unit」がfailed（exit 130、既存のgit check-ignore -z --stdin子プロセス停止により中断）であり、計画が要求する全unit検証を完了できていない。"
+          to: reporter の各形式試行の stdout と stderr を試行番号付きのファイルへ分離保存し、evidence.json の log_refs から参照できるようにした。保存前に既存の redactSensitiveText を適用し、既存と同じ64KiB上限で切り詰めて bytes と truncated を記録する。stdout と stderr を別枠にしたのは、一方の大量出力で原因を含む他方が失われることを避けるためである。executor 側の保全処理も共通化した。evidence 配下は Git 管理対象とし、既知パターン以外の秘密が残る可能性があるため外部共有前の確認を運用上の前提とした。
+      legacy_commit: d20d78a7ef2e0dc2f58d3344dff92deeaaa2693e
+      previous_event_id: reg_0254c71dd491b412857b8c639e8255e9
 ---
 
 # PJR-KAQV agent失敗時の生のstderrを保全する

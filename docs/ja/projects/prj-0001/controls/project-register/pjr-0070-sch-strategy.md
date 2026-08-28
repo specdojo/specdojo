@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-24"
   completed_at: "2026-05-23T12:00:00Z"
   conclusion: sch-strategyにinitial_stateを追加
+  register_events:
+    - v: 1
+      id: reg_48cfe28d26c7ec8f4510e2c088e93973
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: sch-strategyに作成済み成果物を設定
+        - field: description
+          from: ""
+          to: scheduleを生成するときに作成済みの成果物を考慮する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-24"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: sch-strategyにinitial_stateを追加
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_65b4bc0c58c283c4f576f6ecf87cee81
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-23"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_48cfe28d26c7ec8f4510e2c088e93973
 ---
 
 # PJR-0070 sch-strategyに作成済み成果物を設定

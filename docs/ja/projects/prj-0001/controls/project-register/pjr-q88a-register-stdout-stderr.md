@@ -14,6 +14,93 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-08T12:00:00Z"
   conclusion: printCommandErrorをstderr出力へ変更し、printWhereErrorと統合(削除)。register系全サブコマンドのエラー出力がstderrに統一された。内部呼び出し元はstdio inherit+終了コード判定のため影響なし。command-referenceへ反映。
+  register_events:
+    - v: 1
+      id: reg_57f1ce004c2c46ec1cf6e303e27d1d76
+      ts: "2026-08-08T09:57:44Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-Q88Aを起票（register系コマンド全体のエラー出力をstdoutからstderrへ統一する）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register系コマンド全体のエラー出力をstdoutからstderrへ統一する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-nwpc-register-where-stderr]]では`register where`のみエラー出力をstderrへ分離したが、`add`/`start`/`wait`/`review`/`close`/`reject`/`defer`/`reopen`/`update`/`renumber`等の他サブコマンドは`printCommandError`慣例のままstdoutへエラーを出している。内部呼び出し元（`spawnSelf`/`spawnRegisterTransition`等）は`stdio: inherit`＋終了コードのみで成否判定しており、stdout内容を解析する箇所は無いため、stderrへの変更は安全である。Unix/CLIの一般的な慣習（正常出力はstdout、エラーはstderr）に揃える。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 51de0ed486628bb6c179eeb0f10a4a633b751bb7
+    - v: 1
+      id: reg_6e3457486df8f44d34bfefa057efd922
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "[[prj-0001:pjr-nwpc-register-where-stderr]]では`register where`のみエラー出力をstderrへ分離したが、`add`/`start`/`wait`/`review`/`close`/`reject`/`defer`/`reopen`/`update`/`renumber`等の他サブコマンドは`printCommandError`慣例のままstdoutへエラーを出している。内部呼び出し元（`spawnSelf`/`spawnRegisterTransition`等）は`stdio: inherit`＋終了コードのみで成否判定しており、stdout内容を解析する箇所は無いため、stderrへの変更は安全である。Unix/CLIの一般的な慣習（正常出力はstdout、エラーはstderr）に揃える。"
+          to: registerサブコマンド(add/start/wait/review/close/reject/defer/reopen/update/renumber等)はほぼ全てprintCommandError慣例でエラーをstdoutへ出す。PJR-NWPCでregister whereのみstderrへ分離したが、他のサブコマンドはstdoutのまま残っている。内部呼び出し元(spawnSelf/spawnRegisterTransition等)はstdio inherit+終了コードのみで成否判定しておりstdout内容を解析していないため、stderrへ変更しても既存の内部呼び出しへの影響はない。printCommandErrorを呼ぶ全箇所をstderrへ揃え、既存テストのstdout検証も合わせて更新する。catalog.ts/schedule.tsにも同種のstdout一本化が見られるが、対象はregister系に限定し、他コマンドへの拡張は別途判断する。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: printCommandErrorをstderr出力へ変更し、printWhereErrorと統合(削除)。register系全サブコマンドのエラー出力がstderrに統一された。内部呼び出し元はstdio inherit+終了コード判定のため影響なし。command-referenceへ反映。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_57f1ce004c2c46ec1cf6e303e27d1d76
+    - v: 1
+      id: reg_2e4aa5ea6b0a4312c5911e92c5aff005
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-08"
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_6e3457486df8f44d34bfefa057efd922
 ---
 
 # PJR-Q88A register系コマンド全体のエラー出力をstdoutからstderrへ統一する

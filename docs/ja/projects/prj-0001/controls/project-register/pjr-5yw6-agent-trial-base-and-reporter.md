@@ -15,6 +15,129 @@ specdojo:
   completed_at: "2026-08-26T12:17:23Z"
   block_reason: "integrate failed: git commit -m exec(register PJR-5YW6): trialで完了済みtodoを起点に指定しreporterも比較できるようにする -- docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md docs/…"
   conclusion: exec trial run へ --base を追加し、起点コミットを指定できるようにした。省略時は従来どおり HEAD を使う。plan が参照するリポジトリ相対パスを抽出し、起点コミットのツリーに存在するかを実行前に確認して、欠落一覧と警告を比較記録へ保存する。従来の --agent と共有 --reporter-by を維持したまま、代替として --pair executor=reporter を追加し、reporter_mode として none / shared / paired を記録する。paired では組ごとに独立した trial ID・worktree・branch・reporter command を使う。reporter の客観指標へ状態、形式再試行回数、失敗分類（reported_blocked / invalid_output / invocation_failure / rate_limit）を追加した。実リポジトリの Git 状態を変更する処理は追加せず、PJR-A99J の隔離と前後検査を維持している。
+  register_events:
+    - v: 1
+      id: reg_a212d9ca2ed56974ab6590e37a441a5b
+      ts: "2026-08-26T10:38:35Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-5YW6 trialの起点指定とreporter比較を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: trialで完了済みtodoを起点に指定しreporterも比較できるようにする
+        - field: description
+          from: ""
+          to: PJR-NW9V で新設した exec trial には2つの制約がある。試行の起点が HEAD 固定のため、完了済みの todo を使うと作業が既に統合済みで比較にならない。また reporter は全試行で共有されるため、executor の差だけを切り出せる一方で LLM 全体の性能を比較できない。起点コミットを指定できるようにし、executor と reporter を組で指定する方式も選べるようにする。reporter の成否を客観指標として記録し、構造化出力を返せたかや形式リトライの回数を比較できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-26"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8bbec9e358bdf45d7b1ac0aebfa31f4e4805a13f
+    - v: 1
+      id: reg_847f8ebb2a27bda47392cda7ccc36ae1
+      ts: "2026-08-26T10:41:08Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-5YW6): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: f196e2a83cde733db7427c35c2c14aa1e1344830
+      previous_event_id: reg_a212d9ca2ed56974ab6590e37a441a5b
+    - v: 1
+      id: reg_d248d8968c53f8f87e5c25dd451d304d
+      ts: "2026-08-26T11:01:37Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "docs(register): PJR-A99J agentのgit操作による実リポジトリ破壊を起票する"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: "integrate failed: git commit -m exec(register PJR-5YW6): trialで完了済みtodoを起点に指定しreporterも比較できるようにする -- docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md docs/…"
+      legacy_commit: ad5dea8c612638af7a1ca7b471b3f094f113574b
+      previous_event_id: reg_847f8ebb2a27bda47392cda7ccc36ae1
+    - v: 1
+      id: reg_be431909bac97ed97962147207e976c3
+      ts: "2026-08-26T11:41:33Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-5YW6): start"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: e00c436d7448df91fb75d16d78c2ea6fcda3d8d8
+      previous_event_id: reg_d248d8968c53f8f87e5c25dd451d304d
+    - v: 1
+      id: reg_e8577641a741b145f072d92740cf6221
+      ts: "2026-08-26T11:54:14Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-5YW6): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 6ba07dbc3ee2ae57e8721526bd8d50d48451a28b
+      previous_event_id: reg_be431909bac97ed97962147207e976c3
+    - v: 1
+      id: reg_404ed270f00fed3c0806401f7866e14f
+      ts: "2026-08-26T12:18:19Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-5YW6 をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: exec trial run へ --base を追加し、起点コミットを指定できるようにした。省略時は従来どおり HEAD を使う。plan が参照するリポジトリ相対パスを抽出し、起点コミットのツリーに存在するかを実行前に確認して、欠落一覧と警告を比較記録へ保存する。従来の --agent と共有 --reporter-by を維持したまま、代替として --pair executor=reporter を追加し、reporter_mode として none / shared / paired を記録する。paired では組ごとに独立した trial ID・worktree・branch・reporter command を使う。reporter の客観指標へ状態、形式再試行回数、失敗分類（reported_blocked / invalid_output / invocation_failure / rate_limit）を追加した。実リポジトリの Git 状態を変更する処理は追加せず、PJR-A99J の隔離と前後検査を維持している。
+      legacy_commit: 68e0cfa0a6e67b076288f6aa4342391254c78a47
+      previous_event_id: reg_e8577641a741b145f072d92740cf6221
 ---
 
 # PJR-5YW6 trialで完了済みtodoを起点に指定しreporterも比較できるようにする

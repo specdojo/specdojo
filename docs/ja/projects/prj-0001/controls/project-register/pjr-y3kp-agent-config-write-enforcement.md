@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-21T13:55:43Z"
   conclusion: provider 非依存の保護パス定義と内容差分検査を src/exec-agent-protected-config.ts に実装し、agent 実行後の検査で親検証と reporter の起動を止め、commit 前の再検査で register 由来の除外リスト方式でも commit と merge を停止するようにした。codex と claude の双方で阻止されること、人間と orchestrator の変更は妨げられないことを検証済み。例外時は result の申し送りと人手適用に統一し、運用手順を文書化した。
+  register_events:
+    - v: 1
+      id: reg_412083f3d0b3b75c3aac7b2fe78da242
+      ts: "2026-08-21T13:13:14Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-Y3KP and record PJR-3S8Q violation case"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: agent による設定ファイル変更を provider 非依存で実効的に止める
+        - field: description
+          from: ""
+          to: PJR-3S8Q で、実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めないと決定した。しかし claude は allow リスト方式で守られる一方、codex は sandbox workspace-write のため物理的に書き込める。実際に PJR-0DA8 の実行で codex-expert-executor が .specdojo/claude/settings.report.json を直接作成し、register 実行の commit 対象が除外方式であるためコミットと merge まで通過した。provider の sandbox 方式に依存せず、対象パスへの agent 由来の変更を検知して止める仕組みを用意する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-21"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 6c0c2c317737540ca98031279b1faec4298020ce
+    - v: 1
+      id: reg_045d21d50c08e788f825f623c8c84afb
+      ts: "2026-08-21T13:22:59Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-Y3KP): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: b67d35144e9c3369c035be57af3be6b760d0eb6d
+      previous_event_id: reg_412083f3d0b3b75c3aac7b2fe78da242
+    - v: 1
+      id: reg_506022a397ff575267409822e4376c65
+      ts: "2026-08-21T13:35:28Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-Y3KP): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: runner 実行の test-integration 検証（id=test-integration, source=runner）が failed（exit 1）であるため、共通規約の完了手順（必要な整形・静的検査の解消）を満たしていない。この runner validation は authoritative であり、repor…"
+      legacy_commit: db5e17d2b707d89dabb9f1fa2ddeb356e53ff676
+      previous_event_id: reg_045d21d50c08e788f825f623c8c84afb
+    - v: 1
+      id: reg_0abd54eb24627b257afced11078493d3
+      ts: "2026-08-21T13:50:42Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-Y3KP): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 6a920a74d7610104db3efe5f668e4b7eca016607
+      previous_event_id: reg_506022a397ff575267409822e4376c65
+    - v: 1
+      id: reg_0b1c49951e5f439d600784a9fd413411
+      ts: "2026-08-21T13:55:43Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-Y3KP): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-21"
+        - field: conclusion
+          from: "agent exited with non-zero code: runner 実行の test-integration 検証（id=test-integration, source=runner）が failed（exit 1）であるため、共通規約の完了手順（必要な整形・静的検査の解消）を満たしていない。この runner validation は authoritative であり、repor…"
+          to: provider 非依存の保護パス定義と内容差分検査を src/exec-agent-protected-config.ts に実装し、agent 実行後の検査で親検証と reporter の起動を止め、commit 前の再検査で register 由来の除外リスト方式でも commit と merge を停止するようにした。codex と claude の双方で阻止されること、人間と orchestrator の変更は妨げられないことを検証済み。例外時は result の申し送りと人手適用に統一し、運用手順を文書化した。
+      legacy_commit: b7f0a91338795fda4d3a71a944830df2d34d9f48
+      previous_event_id: reg_0abd54eb24627b257afced11078493d3
 ---
 
 # PJR-Y3KP agent による設定ファイル変更を provider 非依存で実効的に止める

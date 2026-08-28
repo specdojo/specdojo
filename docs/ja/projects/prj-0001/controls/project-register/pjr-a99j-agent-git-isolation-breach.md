@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-26T11:37:52Z"
   conclusion: 原因は PJR-X3E8 の対処が個別テストの隔離に留まり、agent 起動環境そのものが GIT_DIR などを子プロセスへ渡していたことであった。exec-run・exec-trial・exec-worktree-command の全 agent 起動を gitEnvironment 経由へ統一し、job と e2e ツールの直接 Git 実行も揃えた。あわせて exec-agent-git-state を新設し、agent の各試行の前後で HEAD と local config を比較して、差分があれば親検証・reporter・commit・merge へ進む前に失敗させる。予防と検知の2層とした。agent による commit と core.bare 変更の検知、および危険な GIT_DIR が agent へ継承されないことを確認する回帰テストを追加した。統合テストは83件へ増えた。
+  register_events:
+    - v: 1
+      id: reg_72580f9f0cc78423bb7467231839e3f5
+      ts: "2026-08-26T11:01:37Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-A99J agentのgit操作による実リポジトリ破壊を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: agentのgit操作が実リポジトリを破壊する事象が再発した
+        - field: description
+          from: ""
+          to: PJR-5YW6 の実行で、メインリポジトリの core.bare が true に変更され作業ツリーが操作不能になった。あわせて worktree へテスト用フィクスチャのコミット2件が混入し、docs/register-item.md という実在しないファイルが追加された。実装の成果はなく worktree は破棄した。同種の事象は PJR-X3E8 で一度発生しており、テストで git を扱う際は隔離した環境変数を渡す規約を設けたが、再発を防げていない。agent の git 操作が実リポジトリの設定と履歴へ影響しないようにする。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-26"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ad5dea8c612638af7a1ca7b471b3f094f113574b
+    - v: 1
+      id: reg_66dc65594b0f0dbdd9c419ef67f1b28c
+      ts: "2026-08-26T11:08:44Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-A99J): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 0cb1ae1e4a05dabf421e6a368bc9d79203e7f7a7
+      previous_event_id: reg_72580f9f0cc78423bb7467231839e3f5
+    - v: 1
+      id: reg_d7ab4196585d9417138e7f536ab2cd76
+      ts: "2026-08-26T11:20:07Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-A99J): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 63559916ae63e2c0e3ee780122d6a0a6fe22ed39
+      previous_event_id: reg_66dc65594b0f0dbdd9c419ef67f1b28c
+    - v: 1
+      id: reg_43a1eecd6f8d446baecd3d18efa32d91
+      ts: "2026-08-26T11:39:15Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-A99J をクローズし PJR-X3E8 へ追記する"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: 原因は PJR-X3E8 の対処が個別テストの隔離に留まり、agent 起動環境そのものが GIT_DIR などを子プロセスへ渡していたことであった。exec-run・exec-trial・exec-worktree-command の全 agent 起動を gitEnvironment 経由へ統一し、job と e2e ツールの直接 Git 実行も揃えた。あわせて exec-agent-git-state を新設し、agent の各試行の前後で HEAD と local config を比較して、差分があれば親検証・reporter・commit・merge へ進む前に失敗させる。予防と検知の2層とした。agent による commit と core.bare 変更の検知、および危険な GIT_DIR が agent へ継承されないことを確認する回帰テストを追加した。統合テストは83件へ増えた。
+      legacy_commit: 4a488be579bc72479627a26e04df6dbd2aabf20e
+      previous_event_id: reg_d7ab4196585d9417138e7f536ab2cd76
 ---
 
 # PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した

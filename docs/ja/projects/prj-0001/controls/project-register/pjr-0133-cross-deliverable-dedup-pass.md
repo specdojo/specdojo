@@ -13,6 +13,93 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: 横断pass, dedup approachを追加
+  register_events:
+    - v: 1
+      id: reg_c65d7bad13ada889ea42054c51e3d813
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: bootstrap後に成果物間の重複を整理する横断passを追加
+        - field: description
+          from: ""
+          to: launch track では、一成果物単位で生成した文書に同じ説明や判断理由が散在し、最終段階で多数の重複削除が必要になった。全成果物の初稿がそろう `bootstrap-pass` 完了後、個別の `refine-pass` を始める前に、意味的に近い成果物群を横断して正本を選択し、重複を必要最小限の要約と参照へ置き換える直列 pass を追加する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_58a800b79c0cfd4309236752d2a3c710
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: launch track では、一成果物単位で生成した文書に同じ説明や判断理由が散在し、最終段階で多数の重複削除が必要になった。全成果物の初稿がそろう `bootstrap-pass` 完了後、個別の `refine-pass` を始める前に、意味的に近い成果物群を横断して正本を選択し、重複を必要最小限の要約と参照へ置き換える直列 pass を追加する。
+          to: bootstrap完了後、refine前に成果物群を横断して正本を選択し、重複記述を要約と参照へ置き換える直列passを設ける
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: 横断pass, dedup approachを追加
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_c65d7bad13ada889ea42054c51e3d813
+    - v: 1
+      id: reg_2b0eadafe32a0f5c73fd53c5a299e629
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_58a800b79c0cfd4309236752d2a3c710
 ---
 
 # PJR-0133 bootstrap後に成果物間の重複を整理する横断passを追加

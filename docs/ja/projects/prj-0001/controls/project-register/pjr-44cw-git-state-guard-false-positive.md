@@ -15,6 +15,115 @@ specdojo:
   completed_at: "2026-08-27T10:57:56Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
   conclusion: 誤検知の原因は2つあった。local config 側は VS Code が runner 作成の worktree branch を発見した際に付与する branch のメタデータであり、HEAD 側は比較対象が実リポジトリになっていたため runner の register 遷移コミットを拾っていた。前者は当該メタデータのみを除外し、順序と重複は保持して同名設定の順序依存の変化を引き続き検知できるようにした。後者は除外規則を設けず、比較対象を agent の cwd で解決した worktree へ限定することで解決した。網羅的な除外リストは設けていない。広く除外すると検知すべき変更を見逃すためである。検知の範囲は弱めておらず、agent が worktree 内で作ったコミットと core.bare の変更は引き続き検知する。runner のコミットと agent の変更が混在する場合も検知できることを含め、双方向のテストを追加した。修正が適用されるのは次回の実行からであり、実運用での裏付けはそこで得られる。
+  register_events:
+    - v: 1
+      id: reg_cab54237db9692ae97094a3c146bd86a
+      ts: "2026-08-26T22:35:41Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-EX5E をクローズし PJR-44CW を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: git状態の検知がrunner自身の操作を誤検知して実行を止める
+        - field: description
+          from: ""
+          to: PJR-A99J で追加した検知機構が、agent の操作と runner 自身の操作を区別できていない。PJR-07M5 と PJR-EX5E の2回連続で実行が停止したが、いずれも成果物に問題はなく、検知された HEAD の変化は exec の register 遷移コミット（start / wait）という runner 自身の操作であった。正当な実行が毎回止まると、そのたびにオーケストレーターの代行が必要になり運用の妨げになる。検知の目的である事故の防止を保ちながら、runner 自身の操作を除外する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-27"
+        - field: due
+          from: ""
+          to: "2026-09-30"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 093801a97d1af7023d0ff0d216565ea814d337f3
+    - v: 1
+      id: reg_aee256d35d0b63cde7e507b46861d899
+      ts: "2026-08-27T10:42:17Z"
+      action: start
+      actor: naoji3x
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-44CW): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 32dd412f8876410f8d54b59d43a21d7fe753d838
+      previous_event_id: reg_cab54237db9692ae97094a3c146bd86a
+    - v: 1
+      id: reg_87e3948ef745c0a86bd3153a392949b0
+      ts: "2026-08-27T10:49:30Z"
+      action: wait
+      actor: naoji3x
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-44CW): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+      legacy_commit: 53654ea794f03758489a64fafb5cf780f404419c
+      previous_event_id: reg_aee256d35d0b63cde7e507b46861d899
+    - v: 1
+      id: reg_baca40cdebe97dce1b951545f950b838
+      ts: "2026-08-27T10:52:56Z"
+      action: review
+      actor: naoji3x
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-44CW): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: cda8925918fb7c54c237fe7feaf33fea71ce54fb
+      previous_event_id: reg_87e3948ef745c0a86bd3153a392949b0
+    - v: 1
+      id: reg_37045c9261e2da641e381e2d688623ab
+      ts: "2026-08-27T10:59:38Z"
+      action: close
+      actor: naoji3x
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-44CW をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-27"
+        - field: conclusion
+          from: "-"
+          to: 誤検知の原因は2つあった。local config 側は VS Code が runner 作成の worktree branch を発見した際に付与する branch のメタデータであり、HEAD 側は比較対象が実リポジトリになっていたため runner の register 遷移コミットを拾っていた。前者は当該メタデータのみを除外し、順序と重複は保持して同名設定の順序依存の変化を引き続き検知できるようにした。後者は除外規則を設けず、比較対象を agent の cwd で解決した worktree へ限定することで解決した。網羅的な除外リストは設けていない。広く除外すると検知すべき変更を見逃すためである。検知の範囲は弱めておらず、agent が worktree 内で作ったコミットと core.bare の変更は引き続き検知する。runner のコミットと agent の変更が混在する場合も検知できることを含め、双方向のテストを追加した。修正が適用されるのは次回の実行からであり、実運用での裏付けはそこで得られる。
+      legacy_commit: 39ab08f0aad51cbbe6b992fe8dcbd99b192b77e5
+      previous_event_id: reg_baca40cdebe97dce1b951545f950b838
 ---
 
 # PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める

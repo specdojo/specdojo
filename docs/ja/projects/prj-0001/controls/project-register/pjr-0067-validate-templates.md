@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-24"
   completed_at: "2026-05-23T12:00:00Z"
   conclusion: catalog-scaffold, register, review-planのテストへ分解
+  register_events:
+    - v: 1
+      id: reg_0d48066b1778cabbfcf44a90857f59a9
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: validate-templatesをテスト化
+        - field: description
+          from: ""
+          to: validate-templatesをテストに移行
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-24"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: catalog-scaffold, register, review-planのテストへ分解
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_fbdf228334b95b961d40bb2d0d31d798
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-23"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_0d48066b1778cabbfcf44a90857f59a9
 ---
 
 # PJR-0067 validate-templatesをテスト化

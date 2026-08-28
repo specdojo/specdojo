@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-23T02:23:07Z"
   conclusion: exec-result の status へ superseded を追加した。新しい result を scaffold する際に、同一タスクで残っている in_progress と blocked の先行 result を遷移させる。complete の記録は書き換えない。固定名 result を再利用する実行は対象外とする。既存の残置 result（PJR-DCTG の1回目）も移行済み。
+  register_events:
+    - v: 1
+      id: reg_7db5572239d4cf0ab692504865e11352
+      ts: "2026-08-23T01:47:07Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): result の superseded ステータスを PJR-ZPJZ として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 破棄された実行試行を表す result status superseded を追加する
+        - field: description
+          from: ""
+          to: exec-result の status は in_progress、complete、blocked の3値しかなく、再実行によって後続の実行に置き換えられた試行を表せない。PJR-DCTG では1回目の実行が checkpoint 失敗で成果を残さず終了し、2回目が成功したが、1回目の result は in_progress のまま残っている。実行中に見える in_progress も、解決すべきブロックに見える blocked も実態と合わない。SpecDojo は resume や force-restart など再実行を前提とした設計であり、破棄された試行は今後も発生する。schema へ superseded を追加し、誰がいつ設定するかを含めて運用を定める。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 6d116474d033fd79633356cf0e943b1dfe8e0d90
+    - v: 1
+      id: reg_0e5cdaf6bb70cba8cc8c8b827f71b637
+      ts: "2026-08-23T01:47:23Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-ZPJZ): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: d6d22969fd26cb173d7a07a2e147d297034b67a6
+      previous_event_id: reg_7db5572239d4cf0ab692504865e11352
+    - v: 1
+      id: reg_bac461ae4345460ed104db3c6fa523b4
+      ts: "2026-08-23T02:17:34Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-ZPJZ): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: a6a88de8188025c9b4827cd52b3d79abe6cf07c7
+      previous_event_id: reg_0e5cdaf6bb70cba8cc8c8b827f71b637
+    - v: 1
+      id: reg_3f48b8235422184d6c68ba6f0befcd9f
+      ts: "2026-08-23T02:23:07Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-ZPJZ): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: exec-result の status へ superseded を追加した。新しい result を scaffold する際に、同一タスクで残っている in_progress と blocked の先行 result を遷移させる。complete の記録は書き換えない。固定名 result を再利用する実行は対象外とする。既存の残置 result（PJR-DCTG の1回目）も移行済み。
+      legacy_commit: d3b7848686816912da71c2fe15729be3e09b4cf8
+      previous_event_id: reg_bac461ae4345460ed104db3c6fa523b4
 ---
 
 # PJR-ZPJZ 破棄された実行試行を表す result status superseded を追加する

@@ -13,6 +13,93 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:55:22Z"
+  register_events:
+    - v: 1
+      id: reg_31903a7bf351787312d221b4fcfb88b4
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録項目の個票 frontmatter スキーマを定義する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割1。移行の起点となる作業として、登録項目の構造化フィールドを個票 frontmatter へ定義し、共通の frontmatter スキーマで検証できるようにする。以降の CLI 変更・一覧生成・既存項目移行はすべてこのスキーマに依存する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_1708e46c7132b78f187a39802f6de3ee
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割1。移行の起点となる作業として、登録項目の構造化フィールドを個票 frontmatter へ定義し、共通の frontmatter スキーマで検証できるようにする。以降の CLI 変更・一覧生成・既存項目移行はすべてこのスキーマに依存する。"
+          to: PJR-ES57 の分割1。処理状態・優先度・担当・期限・完了日・結論・分類を個票 frontmatter へ定義し、共通スキーマで検証できるようにする。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_31903a7bf351787312d221b4fcfb88b4
+    - v: 1
+      id: reg_620b9c2bd8abdbf5895ce1f619143b1e
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_1708e46c7132b78f187a39802f6de3ee
 ---
 
 # PJR-RF3B 登録項目の個票 frontmatter スキーマを定義する

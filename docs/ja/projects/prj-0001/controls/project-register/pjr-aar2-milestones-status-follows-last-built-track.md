@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-23T00:32:52Z"
   conclusion: schedule build が集約ファイルの status を書き換えないようにした。新規作成時のみ draft を書き、既存ファイルでは保持する。対象トラックの strategy の status を集約ファイルへ反映しないため、build 順による降格も自動昇格も起きない。draft の planning トラックを build しても ready が維持されることを実機で確認した。
+  register_events:
+    - v: 1
+      id: reg_f042f29a1e7047ca8177aa36b3bd431d
+      ts: "2026-08-22T13:29:14Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-AAR2 を起票し PJR-WVNS を decided にする"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: sch-milestones の status が最後に build したトラックの strategy に引きずられる
+        - field: description
+          from: ""
+          to: sch-milestones.yaml はプロジェクト全トラックのマイルストーンを集約する単一ファイルだが、schedule build は毎回 doc.status を対象トラックの strategy の status で上書きする。そのため draft の strategy を持つトラック（新設直後の planning など）を build すると、ready だったプロジェクト全体のマイルストーンが draft へ降格する。逆に draft のまま ready のトラックを build すると ready へ昇格する。集約ファイルの status が最後に build したトラックに依存し、人が昇格させた状態も保持されない。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 47bc0d0fe2bd0c114b32a70105c9990121c0ac89
+    - v: 1
+      id: reg_345d8fc7c559cfb5cb1e375f59492b1d
+      ts: "2026-08-23T00:20:00Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-AAR2): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 368e333c8e887c8b501ec2d53d03ad5526778bbd
+      previous_event_id: reg_f042f29a1e7047ca8177aa36b3bd431d
+    - v: 1
+      id: reg_6795892b81337c9f40a98f4f090702d1
+      ts: "2026-08-23T00:31:12Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-AAR2): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: dd91cd1a10394784d949c0908885a6f32acc7a91
+      previous_event_id: reg_345d8fc7c559cfb5cb1e375f59492b1d
+    - v: 1
+      id: reg_4cf577a0cfd6a1ec214b7c4babb95b3d
+      ts: "2026-08-23T00:32:52Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-AAR2): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: schedule build が集約ファイルの status を書き換えないようにした。新規作成時のみ draft を書き、既存ファイルでは保持する。対象トラックの strategy の status を集約ファイルへ反映しないため、build 順による降格も自動昇格も起きない。draft の planning トラックを build しても ready が維持されることを実機で確認した。
+      legacy_commit: cd0b997134c94963b8d061289bfd83730cfaee4e
+      previous_event_id: reg_6795892b81337c9f40a98f4f090702d1
 ---
 
 # PJR-AAR2 sch-milestones の status が最後に build したトラックの strategy に引きずられる

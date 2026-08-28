@@ -13,6 +13,118 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-07T12:00:00Z"
   conclusion: retrofit approachとevidence_refsを実装。型/CLI/schema/edit・review planテンプレート整備、data-flow全10成果物へ適用、関連ガイド反映、125テスト通過
+  register_events:
+    - v: 1
+      id: reg_ca41f659110292f73c51bc5364e671d3
+      ts: "2026-08-02T01:51:20Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0147を起票（実装先行時の設計書/仕様書/要件書反映approach整備）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実装先行（コード先行）時に設計書/仕様書/要件書へ反映・新設するapproachの整備
+        - field: description
+          from: ""
+          to: 実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、実装内容を既存文書へ反映するか、対応する文書が存在しない場合は新設するかを判断する基準・手順（approach）を策定する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: a797fdf926ade2b7b2a03e5eb3bb77cfb0800d07
+    - v: 1
+      id: reg_79e2ade4d5aa5162ca42588a122784b5
+      ts: "2026-08-02T01:58:52Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs: PJR-0147にretrofit approach新設とテンプレート作成を反映"
+      changes:
+        - field: description
+          from: 実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、実装内容を既存文書へ反映するか、対応する文書が存在しない場合は新設するかを判断する基準・手順（approach）を策定する。
+          to: "実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、実装を正本として成果物へ「反映」または「新設」する新しい`approach: retrofit`を新設し、対応する plan テンプレート（`xep-retrofit-template.md` / `xrp-retrofit-template.md`）を作成する。"
+      legacy_commit: 78413172dad3d46ffd1817f39fbe860482cf0528
+      previous_event_id: reg_ca41f659110292f73c51bc5364e671d3
+    - v: 1
+      id: reg_e9c0141e14d280c1b8545f1769b8617a
+      ts: "2026-08-06T12:47:57Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs: PJR-0147の個票を修正"
+      changes:
+        - field: description
+          from: "実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、実装を正本として成果物へ「反映」または「新設」する新しい`approach: retrofit`を新設し、対応する plan テンプレート（`xep-retrofit-template.md` / `xrp-retrofit-template.md`）を作成する。"
+          to: "実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、現在実装されている挙動を AS-IS の根拠として調査し、成果物へ「反映」または「新設」する新しい `approach: retrofit` を整備する。"
+      legacy_commit: f436e516bfd80e5c3fd443bd4f55bb7b00d4a2db
+      previous_event_id: reg_79e2ade4d5aa5162ca42588a122784b5
+    - v: 1
+      id: reg_934a194ab5301a43bd8d631ce91b8a71
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "実装が既に存在するにもかかわらず、対応する設計書・仕様書・要件書が未整備、または実装内容と文書内容が乖離しているケースがある。この場合に、現在実装されている挙動を AS-IS の根拠として調査し、成果物へ「反映」または「新設」する新しい `approach: retrofit` を整備する。"
+          to: 実装が既に存在するにもかかわらず対応する設計書/仕様書/要件書が未整備、または内容が乖離している場合に、実装内容を既存文書へ反映するか、文書が存在しない場合は新設するための判断基準・手順（approach）を策定する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: retrofit approachとevidence_refsを実装。型/CLI/schema/edit・review planテンプレート整備、data-flow全10成果物へ適用、関連ガイド反映、125テスト通過
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_e9c0141e14d280c1b8545f1769b8617a
+    - v: 1
+      id: reg_61a5c16ab85bd4367c9d350bb7af61ac
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-07"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_934a194ab5301a43bd8d631ce91b8a71
 ---
 
 # PJR-0147 実装先行（コード先行）時に設計書/仕様書/要件書へ反映・新設するapproachの整備

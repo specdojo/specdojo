@@ -14,6 +14,50 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T05:59:47Z"
   conclusion: サイドバー表示名を dct-index.yaml の name を正本とする内容のみの表示へ変更し、dct-index と dct-plan の schema をエディタの yaml.schemas へ関連付けて汎用パターンから extglob で除外した。schema 追加時に package.json と .vscode/settings.json の両方を更新する旨を document-metadata-standard へ追記した。
+  register_events:
+    - v: 1
+      id: reg_80ebd882ef89a51b1d162513520ee777
+      ts: "2026-08-22T05:59:55Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "docs(register): add and close PJR-8PJ4 with schema mapping rule"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: 成果物カタログのサイドバー表示名と新規 schema のエディタ関連付けを整える
+        - field: description
+          from: ""
+          to: サイドバーは親ノードが成果物カタログであるにもかかわらず、各アイテムも成果物カタログを繰り返していた。また大半のアイテムは生成物 H1 由来のためドメイン slug 表記だった。あわせて PJR-269Z で追加した dct-index.schema.yaml が .vscode/settings.json の yaml.schemas に登録されておらず、dct-index.yaml が汎用の dct.schema.yaml で検証されてエディタ上でエラーになっていた。表示名は dct-index.yaml の name を正本として内容だけを表示し、schema は専用マッピングを追加して汎用パターンから除外する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: low
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "2026-08-22"
+        - field: conclusion
+          from: ""
+          to: サイドバー表示名を dct-index.yaml の name を正本とする内容のみの表示へ変更し、dct-index と dct-plan の schema をエディタの yaml.schemas へ関連付けて汎用パターンから extglob で除外した。schema 追加時に package.json と .vscode/settings.json の両方を更新する旨を document-metadata-standard へ追記した。
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 734b6a4a7f4857383cb68420c1407c26a766a197
 ---
 
 # PJR-8PJ4 成果物カタログのサイドバー表示名と新規 schema のエディタ関連付けを整える

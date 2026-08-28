@@ -13,6 +13,93 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: hook整形差分が出る場合は再度commitするように変更
+  register_events:
+    - v: 1
+      id: reg_c7635996344a60e19debb46aab639432
+      ts: "2026-07-26T02:07:31Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(pjr): PJR-0140を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register commitがhook整形差分と失敗残骸を取りこぼす
+        - field: description
+          from: ""
+          to: 2026-07-26 に `specdojo exec run --register PJR-0139 PJR-0137 --register-commit` を実行したところ、両 ID とも commit は成功したにもかかわらず、PJR-0137 が追加した `tests/src/register.test.ts` の 223 行、`pjr-index.md` の状態遷移、先行する失敗試行の plan / result が commit されず作業ツリーに残った。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: d5078dc5f54f9c600b44dbcb041ecc915231692a
+    - v: 1
+      id: reg_06acf4c69fe1afdada8025dcb0c7a9f5
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: 2026-07-26 に `specdojo exec run --register PJR-0139 PJR-0137 --register-commit` を実行したところ、両 ID とも commit は成功したにもかかわらず、PJR-0137 が追加した `tests/src/register.test.ts` の 223 行、`pjr-index.md` の状態遷移、先行する失敗試行の plan / result が commit されず作業ツリーに残った。
+          to: pathspec commitでhookの整形差分がindexに残り、次ID実行の開始前スナップショットに載って commit 対象から丸ごと除外される。失敗試行の残骸とrunner自身の状態遷移も同様に取りこぼす
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: hook整形差分が出る場合は再度commitするように変更
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_c7635996344a60e19debb46aab639432
+    - v: 1
+      id: reg_5484adf8c79fa82795dc6207d2e7fe10
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_06acf4c69fe1afdada8025dcb0c7a9f5
 ---
 
 # PJR-0140 register commitがhook整形差分と失敗残骸を取りこぼす

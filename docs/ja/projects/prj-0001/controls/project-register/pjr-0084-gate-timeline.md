@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-31"
   completed_at: "2026-05-30T12:00:00Z"
   conclusion: phase_gateをtaskの中に行表示
+  register_events:
+    - v: 1
+      id: reg_ce0f3a46b03998092cfde3840b6e40b3
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: gateをtimelineに表示
+        - field: description
+          from: ""
+          to: gateをtimelineのtaskの中に表示する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: phase_gateをtaskの中に行表示
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_0fef95cf19d81534401a23fd5a74664d
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-30"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_ce0f3a46b03998092cfde3840b6e40b3
 ---
 
 # PJR-0084 gateをtimelineに表示

@@ -13,6 +13,124 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-05T12:00:00Z"
   conclusion: 履歴蓄積ファイル(plan/result/個票)のMarkdownリンク禁止・[[id]]/パス表記統一ルールをmarkdown.instructions.mdへ追加し、検知CLI(validate-history-links)とunit testを実装、npm run checkへ組み込み。既存違反0件のため一括遡及移行は不要
+  register_events:
+    - v: 1
+      id: reg_a071f57d664ef90c20bf3a0c075c2de1
+      ts: "2026-08-02T01:44:31Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0145/0146を起票（README/docs index責務整理、履歴ファイルのリンク禁止）"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 履歴蓄積ファイル（plan/result/`pjr-NNNN-<topic>`等）はリンクを禁止しリポジトリルート相対パス記述に統一するルール化
+        - field: description
+          from: ""
+          to: plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生するリンク（wikilink・Markdownリンク）を含めず、リポジトリルートからの相対パス表記のみで参照先を記述するルールを定める。加えて、ルール違反を自動検知できるよう validation / スキーマチェックの仕組みを整備する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: e221dec4f591f9372095d1eb41258a6e1db27133
+    - v: 1
+      id: reg_6549c32c054db030075d336ffbc7cc1a
+      ts: "2026-08-02T02:22:59Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs: PJR-0146をwikilink併用ルールに修正しPJR-0148を起票"
+      changes:
+        - field: title
+          from: 履歴蓄積ファイル（plan/result/`pjr-NNNN-<topic>`等）はリンクを禁止しリポジトリルート相対パス記述に統一するルール化
+          to: 履歴蓄積ファイル（plan/result/`pjr-NNNN-<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+        - field: description
+          from: plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生するリンク（wikilink・Markdownリンク）を含めず、リポジトリルートからの相対パス表記のみで参照先を記述するルールを定める。加えて、ルール違反を自動検知できるよう validation / スキーマチェックの仕組みを整備する。
+          to: plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生する Markdown リンク（`[]()`）を含めない。`docs/` 配下の文書を参照する場合は `id` を正とする `[[id]]`（wikilink）に統一し、`docs/` 外のファイル（`.github/instructions/` 等）や外部URLはリポジトリルートからの相対パス表記／URLそのままで記述するルールを定める。加えて、ルール違反（Markdownリンクの使用）を自動検知できるよう validation / lint チェックの仕組みを整備する。
+      legacy_commit: d4c2113e9fc24d7e0c7f64806d60054bfd6e2e67
+      previous_event_id: reg_a071f57d664ef90c20bf3a0c075c2de1
+    - v: 1
+      id: reg_c4d6d89bcfa7dee74f37e63e8ddfd6cf
+      ts: "2026-08-04T10:50:42Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "fix: PJR-0145/0146の未エスケープ山括弧プレースホルダを修正しdocs:build失敗を解消"
+      changes:
+        - field: title
+          from: 履歴蓄積ファイル（plan/result/`pjr-NNNN-<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+          to: 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+      legacy_commit: be50ff0ffa9c2d87c50ee3a1da576a1ec86f8616
+      previous_event_id: reg_6549c32c054db030075d336ffbc7cc1a
+    - v: 1
+      id: reg_9d8d2ad43dd23e4beb617b6cde58adfd
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: title
+          from: 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し`[[id]]`/パス表記に統一するルール化
+          to: 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し[[id]]/パス表記に統一するルール化
+        - field: description
+          from: plan/result/pjr-NNNN-`<topic>` 等、履歴として蓄積される成果物には、リンク先ファイル名変更のたびに追従修正が発生する Markdown リンク（`[]()`）を含めない。`docs/` 配下の文書を参照する場合は `id` を正とする `[[id]]`（wikilink）に統一し、`docs/` 外のファイル（`.github/instructions/` 等）や外部URLはリポジトリルートからの相対パス表記／URLそのままで記述するルールを定める。加えて、ルール違反（Markdownリンクの使用）を自動検知できるよう validation / lint チェックの仕組みを整備する。
+          to: "plan/result/pjr-NNNN-`<topic>`等の履歴として蓄積されるファイルは、リンク先のファイル名変更時に修正が発生してしまうため、Markdownリンク`[]()`を使わず、docs/配下の参照は`[[id]]`、docs/外の参照・外部URLはパス表記/URLのままとするルールを定め、関連する記述ルール文書（例: markdown.instructions.md等）へ反映する"
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: 履歴蓄積ファイル(plan/result/個票)のMarkdownリンク禁止・[[id]]/パス表記統一ルールをmarkdown.instructions.mdへ追加し、検知CLI(validate-history-links)とunit testを実装、npm run checkへ組み込み。既存違反0件のため一括遡及移行は不要
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_c4d6d89bcfa7dee74f37e63e8ddfd6cf
+    - v: 1
+      id: reg_dce6a4ceea43a788222810ef8365fe7b
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-05"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_9d8d2ad43dd23e4beb617b6cde58adfd
 ---
 
 # PJR-0146 履歴蓄積ファイル（plan/result/pjr-NNNN-`<topic>`等）はMarkdownリンクを禁止し[[id]]/パス表記に統一するルール化

@@ -14,6 +14,93 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:55:22Z"
   conclusion: xep-common-conventions-template.md へ project context を based_on へ転記しない規約と、終了前に pre-commit 相当の検査を実行する規約（変更ファイル種別と検査コマンドの対応表付き）を追記。catalog validate のメッセージ改善は既存文言で要件が示されているため見送り
+  register_events:
+    - v: 1
+      id: reg_f8e73bc9675df475b3beeac25c346fc6
+      ts: "2026-08-08T22:31:55Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): add PJR-C0B7 ticket for plan context and pre-commit check"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec plan 共通規約へ project context の based_on 転記禁止と pre-commit 事前チェックを明記する
+        - field: description
+          from: ""
+          to: exec plan の共通規約テンプレート `docs/ja/specdojo/templates/xep-common-conventions-template.md` へ、次の2点を追記する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 4dae9bea21756f9f0a18e878632ab4227d76ca3e
+    - v: 1
+      id: reg_3dd0bfc35d137281442a737f806787be
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: exec plan の共通規約テンプレート `docs/ja/specdojo/templates/xep-common-conventions-template.md` へ、次の2点を追記する。
+          to: xep-common-conventions-template.md へ、plan のプロジェクトコンテキストを成果物 frontmatter の based_on へ転記しない旨と、完了前に pre-commit 相当の検査（prettier / markdownlint / typecheck / test / catalog validate 等）を実行し失敗を修正する旨を追記する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: xep-common-conventions-template.md へ project context を based_on へ転記しない規約と、終了前に pre-commit 相当の検査を実行する規約（変更ファイル種別と検査コマンドの対応表付き）を追記。catalog validate のメッセージ改善は既存文言で要件が示されているため見送り
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_f8e73bc9675df475b3beeac25c346fc6
+    - v: 1
+      id: reg_dbbcc5d71efcc016a44738dd7190a3ed
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_3dd0bfc35d137281442a737f806787be
 ---
 
 # PJR-C0B7 exec plan 共通規約へ project context の based_on 転記禁止と pre-commit 事前チェックを明記する

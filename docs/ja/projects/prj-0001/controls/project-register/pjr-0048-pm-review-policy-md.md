@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-19"
   completed_at: "2026-05-18T12:00:00Z"
   conclusion: 不要なため削除
+  register_events:
+    - v: 1
+      id: reg_7811fc454b35f87f8618868aeebaa977
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: pm-review-policy.mdの要否確認
+        - field: description
+          from: ""
+          to: pm-review-policy.mdの必要性を確認
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-19"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: 不要なため削除
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_076646226008574de4567dcd20def639
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-18"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_7811fc454b35f87f8618868aeebaa977
 ---
 
 # PJR-0048 pm-review-policy.mdの要否確認

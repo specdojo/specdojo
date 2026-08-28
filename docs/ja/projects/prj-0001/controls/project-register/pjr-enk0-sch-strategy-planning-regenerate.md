@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-09-30"
   completed_at: "2026-08-27T13:21:57Z"
   conclusion: assessment の事実を最新化し判定を実施したうえで、sch-strategy-planning.yaml を決定論的に再生成した。approach は fully-guided 一律ではなく、guided-pass / freeform-pass / refine-pass / review-pass / finalize-pass の5つへ分かれ、track では判定に応じて振り分けられている。freeform は1件のみで、実践の型が整っていない成果物に限定されている。手書きの owner_rules 8件は同一 owner の集約により2ルールとなり、group_milestones も保持された。失われた情報はない。assessment は以前あった facts 不一致3件のエラーが解消し、エラーなく通る。sch-track-planning.yaml と sch-milestones.yaml も更新した。残る警告は検証側の誤警告であり、判定の根拠は status draft ではなく target-fit と internal-consistency の実質的な不整合である。
+  register_events:
+    - v: 1
+      id: reg_30c19a681af4eb1a0ce3c864b37e912d
+      ts: "2026-08-26T15:22:21Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-EX5E と PJR-ENK0 を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: sch-strategy-planningをassessmentから再生成する
+        - field: description
+          from: ""
+          to: "docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml は手書きで作成されており、全フェーズが approach: fully-guided の一律指定になっている。本来は sch-assessment-planning.yaml の判定に基づいて決定論的に生成されるべきである。現状の assessment は facts が実態と一致せず（3件）、判定も1件も入っていない骨組みの状態で、strategy 生成は blocking open question により停止する。assessment の事実を最新化し、agent による判定を経て strategy を再生成する。既存ファイルには手書きの owner_rules 8件と group_milestones が含まれるため、生成結果との差分を確認して失われる情報がないかを検証する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-27"
+        - field: due
+          from: ""
+          to: "2026-09-30"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: c14ab796eb88bff66c1ebb7b7abeaa6fcdfc2519
+    - v: 1
+      id: reg_e12af2caa8b660ac31aa105cf4947701
+      ts: "2026-08-27T11:23:30Z"
+      action: start
+      actor: naoji3x
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-ENK0): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 7aa56ea3a6a8b32efd079f1833c1842752819929
+      previous_event_id: reg_30c19a681af4eb1a0ce3c864b37e912d
+    - v: 1
+      id: reg_ad3fdf2b9235707bbbc34eb1b6c41c04
+      ts: "2026-08-27T11:33:30Z"
+      action: review
+      actor: naoji3x
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-ENK0): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 1ce494e7bb63c514f66c1e79867d62e3420e4ed4
+      previous_event_id: reg_e12af2caa8b660ac31aa105cf4947701
+    - v: 1
+      id: reg_5249421aa7d118b33759d2c98766d6a9
+      ts: "2026-08-27T13:23:32Z"
+      action: close
+      actor: naoji3x
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-ENK0 をクローズし PJR-6AAX を起票する"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-27"
+        - field: conclusion
+          from: "-"
+          to: assessment の事実を最新化し判定を実施したうえで、sch-strategy-planning.yaml を決定論的に再生成した。approach は fully-guided 一律ではなく、guided-pass / freeform-pass / refine-pass / review-pass / finalize-pass の5つへ分かれ、track では判定に応じて振り分けられている。freeform は1件のみで、実践の型が整っていない成果物に限定されている。手書きの owner_rules 8件は同一 owner の集約により2ルールとなり、group_milestones も保持された。失われた情報はない。assessment は以前あった facts 不一致3件のエラーが解消し、エラーなく通る。sch-track-planning.yaml と sch-milestones.yaml も更新した。残る警告は検証側の誤警告であり、判定の根拠は status draft ではなく target-fit と internal-consistency の実質的な不整合である。
+      legacy_commit: 6ba4158b1f9a5372bca146832c79c724b376708d
+      previous_event_id: reg_ad3fdf2b9235707bbbc34eb1b6c41c04
 ---
 
 # PJR-ENK0 sch-strategy-planningをassessmentから再生成する

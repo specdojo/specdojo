@@ -14,6 +14,132 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-26T14:36:20Z"
   conclusion: .github/CODEOWNERS を作成し、リポジトリ全体の承認者として @naoji3x を宣言した。独立した所有者が割り当てられた時点でより限定的なルールを追加する方針をコメントで残している。branch-workflow-guide へ、管理者が実施する branch protection の設定手順と確認項目、および統合専用 actor のみが bypass できる設計を追記した。独立した承認者がいない期間は PR 強制3ケースを承認待ちとし、作成者自身の approve と管理者権限の bypass を承認として扱わないことを明記した。緊急対応で bypass する場合も承認済みとせず例外として記録する。branch protection の設定と PR 強制3ケースの検証は GitHub 上の操作であり、リポジトリ管理者が実施する。実施後は対応結果へ追記する。
+  register_events:
+    - v: 1
+      id: reg_4a0d3e228b09a27a011384931379a0ab
+      ts: "2026-08-09T02:12:43Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): add PJR-ES57, PJR-GQFX, PJR-BJ97"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: CODEOWNERS 未整備により PR 承認の職務分離が強制されていない
+        - field: description
+          from: ""
+          to: PR 承認を強制する 3 ケース（`develop → main` 昇格、`change-request` の承認、不可逆・高リスク・framework schema 破壊的変更）について、承認者を宣言する仕組みが未整備であり、職務分離が platform 側で強制されていない。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3f1be811234eaf5d52ea68370d0ed906d7f01245
+    - v: 1
+      id: reg_37118835786cdd562a35418b0621fa94
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: PR 承認を強制する 3 ケース（`develop → main` 昇格、`change-request` の承認、不可逆・高リスク・framework schema 破壊的変更）について、承認者を宣言する仕組みが未整備であり、職務分離が platform 側で強制されていない。
+          to: .github/CODEOWNERS が存在せず branch protection の Code Owners 承認を強制できないため、PR 強制3ケースで自己承認が成立してしまう。
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_4a0d3e228b09a27a011384931379a0ab
+    - v: 1
+      id: reg_0ecf47ce4b0612aa417cc2c213683e94
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_37118835786cdd562a35418b0621fa94
+    - v: 1
+      id: reg_6191bd64d67ceb2e49c851e7dd9d0342
+      ts: "2026-08-26T14:23:51Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-BJ97): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 1592cdea1182f2effac85e6fb907e9059ef6b678
+      previous_event_id: reg_0ecf47ce4b0612aa417cc2c213683e94
+    - v: 1
+      id: reg_f14ceb8c586f4fa73bfa120e36dbc408
+      ts: "2026-08-26T14:32:10Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-BJ97): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 67ec643043e88a79d998b83f83ab1932bc86fa3a
+      previous_event_id: reg_6191bd64d67ceb2e49c851e7dd9d0342
+    - v: 1
+      id: reg_4d2646e4083f9cd133f3448ef77b7db4
+      ts: "2026-08-26T14:36:44Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-BJ97 をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: .github/CODEOWNERS を作成し、リポジトリ全体の承認者として @naoji3x を宣言した。独立した所有者が割り当てられた時点でより限定的なルールを追加する方針をコメントで残している。branch-workflow-guide へ、管理者が実施する branch protection の設定手順と確認項目、および統合専用 actor のみが bypass できる設計を追記した。独立した承認者がいない期間は PR 強制3ケースを承認待ちとし、作成者自身の approve と管理者権限の bypass を承認として扱わないことを明記した。緊急対応で bypass する場合も承認済みとせず例外として記録する。branch protection の設定と PR 強制3ケースの検証は GitHub 上の操作であり、リポジトリ管理者が実施する。実施後は対応結果へ追記する。
+      legacy_commit: 5db3830cb2dc6f2db68a160cc79a3508f361c725
+      previous_event_id: reg_f14ceb8c586f4fa73bfa120e36dbc408
 ---
 
 # PJR-BJ97 CODEOWNERS 未整備により PR 承認の職務分離が強制されていない

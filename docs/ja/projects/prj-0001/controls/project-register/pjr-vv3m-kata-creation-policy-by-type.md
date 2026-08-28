@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-26T05:49:26Z"
   conclusion: 種別ごとに作成方針を変える方針を実装まで完了した。sample は rulebook がある系統へ一律に作り要否を判断しない。template は rulebook 系統単位で持ち骨組みが固定の系統に作る。recipe は品質差が出る系統のみ他の型と独立して判断する。rulebook は従来どおり判断して作る。sample を作らない条件は構造が schema で完全に決まる YAML 成果物に限定した。実装は PJR-JT1Y でガイドへ反映、PJR-1Z1H で宣言の欠落を解消、PJR-K9KG で実在成果物の要否を確定、PJR-5N64 で template の解決と代表系統の整備を行った。宣言先は PJR-3N21 の決定により rulebook frontmatter へ一本化されている。
+  register_events:
+    - v: 1
+      id: reg_790af8e2c5589447c76e24a72099f903
+      ts: "2026-08-23T11:50:59Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成方針に関する5件を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型は種別ごとに作成方針を変える
+        - field: description
+          from: ""
+          to: PJR-QESV は4種すべてを機械的に作らず要否を判断すると定めたが、種別ごとの性質の違いを扱っていない。PJR-K4TA の宣言結果を確認したところ、4種を同じ枠組みで判断させた結果、未作成の成果物171件が根拠のないまま `not-needed` となった。種別ごとに判断の前提条件が異なることを踏まえ、判断の枠組みを具体化する。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3dbc7a661e9b50d6bdeb59073fbdc3fb62dcbc83
+    - v: 1
+      id: reg_78490b30b620898afbe8614160f3714c
+      ts: "2026-08-26T05:49:48Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-5N64 と PJR-VV3M をクローズする"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: 種別ごとに作成方針を変える方針を実装まで完了した。sample は rulebook がある系統へ一律に作り要否を判断しない。template は rulebook 系統単位で持ち骨組みが固定の系統に作る。recipe は品質差が出る系統のみ他の型と独立して判断する。rulebook は従来どおり判断して作る。sample を作らない条件は構造が schema で完全に決まる YAML 成果物に限定した。実装は PJR-JT1Y でガイドへ反映、PJR-1Z1H で宣言の欠落を解消、PJR-K9KG で実在成果物の要否を確定、PJR-5N64 で template の解決と代表系統の整備を行った。宣言先は PJR-3N21 の決定により rulebook frontmatter へ一本化されている。
+      legacy_commit: f5fd1586b2cd13c7d9358005d6cb66be70216c3c
+      previous_event_id: reg_790af8e2c5589447c76e24a72099f903
 ---
 
 # PJR-VV3M 実践の型は種別ごとに作成方針を変える

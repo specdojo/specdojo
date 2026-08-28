@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T04:18:49Z"
   conclusion: Schedule taskの完了可否をGit統合前に検証し、actorまたはstate不一致時はworktreeを保持して統合を中止
+  register_events:
+    - v: 1
+      id: reg_516887f16fe736c17fe1de5735d4f9d2
+      ts: "2026-08-10T01:58:26Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(prj-0001): record exec-cycle events and recover agent-config-operation-070"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec complete失敗時にworktree merge/削除が巻き戻されず状態不整合になる
+        - field: description
+          from: ""
+          to: resume等でclaiming actorと異なるactorとして完了させると、spawnComplete(exec complete)がactor不一致で失敗してもcommitWorktreeChanges/mergeWorktreeIntoCurrent/removeWorktreeは既に完了しており、schedule状態はdoingのまま成果物だけmerge済みという不整合が生じる。complete失敗時の巻き戻し、またはmerge前のactor一致検証を検討する。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: c58cf083e543351943f2090c3108ee6f2c81e4c2
+    - v: 1
+      id: reg_80df96aa79c510186d28c8a5df3576b7
+      ts: "2026-08-10T04:32:53Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "fix(exec): guard result frontmatter and completion merge"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-10"
+        - field: conclusion
+          from: "-"
+          to: Schedule taskの完了可否をGit統合前に検証し、actorまたはstate不一致時はworktreeを保持して統合を中止
+      legacy_commit: 518fe51391ba29d889433758f3f59f951648c304
+      previous_event_id: reg_516887f16fe736c17fe1de5735d4f9d2
 ---
 
 # PJR-H95R exec complete失敗時にworktree merge/削除が巻き戻されず状態不整合になる

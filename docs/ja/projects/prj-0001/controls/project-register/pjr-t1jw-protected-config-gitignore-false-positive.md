@@ -14,6 +14,50 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T02:05:41Z"
   conclusion: 保護判定から gitignore 済みのパスを除外し、agent が共通規約どおり index build を実行しても違反にならないようにした。除外条件は未追跡ではなく ignore 済みとし、未追跡の新規設定ファイルによるすり抜けを防いでいる。git が使えない場合は除外せず全候補を保護する fail closed とした。
+  register_events:
+    - v: 1
+      id: reg_54b417b42d0171af6659495e979110df
+      ts: "2026-08-22T02:05:43Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "docs(register): add and close PJR-T1JW protected config false positive"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: 設定変更ガードが gitignore 済み生成物を誤検知する問題を解消する
+        - field: description
+          from: ""
+          to: PJR-Y3KP で追加した設定変更ガードは .specdojo/ ディレクトリ全体を保護対象にしていたため、gitignore 済みの生成物である .specdojo/doc-index.json まで検知していた。agent は共通規約に従って docs/ 配下の変更後に index build を実行するため、規約どおりに作業しただけで必ず block され、docs を変更するすべての exec タスクが完了できない状態になっていた。PJR-269Z の実行で顕在化した。保護判定から gitignore 済みのパスを除外する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "2026-08-22"
+        - field: conclusion
+          from: ""
+          to: 保護判定から gitignore 済みのパスを除外し、agent が共通規約どおり index build を実行しても違反にならないようにした。除外条件は未追跡ではなく ignore 済みとし、未追跡の新規設定ファイルによるすり抜けを防いでいる。git が使えない場合は除外せず全候補を保護する fail closed とした。
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: abbc94794adf937eb7453729717bb5ab90228bb9
 ---
 
 # PJR-T1JW 設定変更ガードが gitignore 済み生成物を誤検知する問題を解消する

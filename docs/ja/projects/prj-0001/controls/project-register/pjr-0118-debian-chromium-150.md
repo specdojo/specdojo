@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-07-08"
   completed_at: "2026-07-08T12:00:00Z"
   conclusion: Dockerfileを修正
+  register_events:
+    - v: 1
+      id: reg_0873158927ad344442aa7eb55087b96c
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: Debian chromium 150のヘッドレス描画クラッシュ対応
+        - field: description
+          from: ""
+          to: "arm64 full版chromium 150.0.7871.46がヘッドレス描画時にbrk #0でクラッシュしmermaid SVG生成が失敗。chromium-headless-shellへ切替(Dockerfile変更済み)。"
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-07-08"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: Dockerfileを修正
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_bad87ef142dcdc3723a16f34457d0635
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_0873158927ad344442aa7eb55087b96c
 ---
 
 # PJR-0118 Debian chromium 150のヘッドレス描画クラッシュ対応

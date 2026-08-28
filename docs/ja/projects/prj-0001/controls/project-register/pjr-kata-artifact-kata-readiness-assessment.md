@@ -14,6 +14,129 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-18T22:33:00Z"
   conclusion: sch-assessment のschema・CLI・テスト・関連ガイドを実装し、typecheck・lint・unit testを通過。review完了。
+  register_events:
+    - v: 1
+      id: reg_fd7216ad0aa6b95c95d7d86faefba5b7
+      ts: "2026-08-16T13:29:53Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add catalog and strategy automation todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 成果物・Kataの利用可能性と推奨フローを判定するagentの実装
+        - field: description
+          from: ""
+          to: "成果物カタログの各 `kind: work` を対象に、成果物本体と Kata（rulebook / recipe / sample / template）の存在、文書状態、内容の利用可能性、既存実装エビデンスの有無を判定する agent 処理を実装する。結果は track 単位のバージョン管理対象 `sch-assessment-<track>.yaml` として保存し、後続コードが標準 strategy profile と `approach` を決定論的に選択する入力にする。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-16"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7769f1ba92e4242dc32091f30ef7c3d57fae7dac
+    - v: 1
+      id: reg_1ee66b21251648e6da197ad6ed680ecc
+      ts: "2026-08-18T15:38:58Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-KATA): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 747c809840c408653c1c1473ff5086e4aa553afc
+      previous_event_id: reg_fd7216ad0aa6b95c95d7d86faefba5b7
+    - v: 1
+      id: reg_49c7e9886b344b1d66078d53effdfb21
+      ts: "2026-08-18T15:45:50Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-KATA): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code"
+      legacy_commit: 06f04bdfa27e31c643753f22e3faa6721f9575d2
+      previous_event_id: reg_1ee66b21251648e6da197ad6ed680ecc
+    - v: 1
+      id: reg_6f3908f732937d06d1e8d2d26785f4cc
+      ts: "2026-08-18T22:06:30Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-KATA): start"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: 7f63d856ba4c58f67327275f8542fcb08c59e637
+      previous_event_id: reg_49c7e9886b344b1d66078d53effdfb21
+    - v: 1
+      id: reg_814c391a166410c4eaa9d4cdbb64cede
+      ts: "2026-08-18T22:30:20Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-KATA): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 4521c9cd2d013367b319fb60f9e2d44051b7cbd9
+      previous_event_id: reg_6f3908f732937d06d1e8d2d26785f4cc
+    - v: 1
+      id: reg_4507731688c32a16e358738b7d031767
+      ts: "2026-08-20T13:25:09Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "chore: pjr-kataをclose"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-19"
+        - field: conclusion
+          from: "agent exited with non-zero code: agent exited with non-zero code"
+          to: sch-assessment のschema・CLI・テスト・関連ガイドを実装し、typecheck・lint・unit testを通過。review完了。
+      legacy_commit: 51160c8176a310d584b9b3c79c0d84d7160c563c
+      previous_event_id: reg_814c391a166410c4eaa9d4cdbb64cede
 ---
 
 # PJR-KATA 成果物・Kataの利用可能性と推奨フローを判定するagentの実装

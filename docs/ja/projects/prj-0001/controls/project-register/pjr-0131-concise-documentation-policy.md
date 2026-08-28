@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: 簡潔な文書作成の共通原則を追加
+  register_events:
+    - v: 1
+      id: reg_d63bcc604b37ae4fac3899b735fadd1c
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 簡潔な文書作成の共通原則をdocumentation policyへ追加
+        - field: description
+          from: ""
+          to: agent が生成する文書を、必要な論点と判断根拠を保ったまま簡潔にするため、SpecDojo の文書全体に適用する共通原則を documentation policy に追加する。文字数や行数の機械的な達成を目的にせず、一文一主張、適切な段落・箇条書きの粒度、正本への参照、重複削除を基本方針として定義する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_6bf8434041e0ed15373b3131946f7410
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: agent が生成する文書を、必要な論点と判断根拠を保ったまま簡潔にするため、SpecDojo の文書全体に適用する共通原則を documentation policy に追加する。文字数や行数の機械的な達成を目的にせず、一文一主張、適切な段落・箇条書きの粒度、正本への参照、重複削除を基本方針として定義する。
+          to: 文書全体に適用する簡潔性・重複回避・正本参照・文章量の目安をdocumentation policyの共通原則として定義する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: 簡潔な文書作成の共通原則を追加
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_d63bcc604b37ae4fac3899b735fadd1c
+    - v: 1
+      id: reg_00918663478e65ffe24cbf3f78ec3f71
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_6bf8434041e0ed15373b3131946f7410
 ---
 
 # PJR-0131 簡潔な文書作成の共通原則をdocumentation policyへ追加

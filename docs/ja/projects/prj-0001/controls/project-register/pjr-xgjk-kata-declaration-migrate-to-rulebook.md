@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T01:42:23Z"
   conclusion: PJR-3N21 の決定に従い、実践の型の要否と所在の正本を rulebook frontmatter へ一本化した。成果物カタログの型宣言634件を削除し rulebook 宣言242件のみを残し、非生成成果物が参照する89本の rulebook へ要否を移した。移行前スナップショットとの突き合わせで判断の欠落がないことを確認した。要否が割れていた6系統は系統全体を確定扱いせず undecided へ集約し、旧 not-needed の存在を記録して PJR-K9KG で追跡する。kind が generated の成果物への非適用を kind からの導出として実装し、schema は成果物側の型宣言を拒否する。慣例ファイル探索は宣言を正本とする決定および項目の省略を必要だが未整備とする定義と矛盾するため廃止した。これは完了条件の範囲外の仕様変更であり申し送りへ明記した。単体1278件・統合79件が成功する。
+  register_events:
+    - v: 1
+      id: reg_0f1776fae80c5a0b27c8001573665b39
+      ts: "2026-08-24T11:35:11Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-3N21 を決定し移行作業 PJR-XGJK を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型の宣言をrulebook frontmatterへ移行する
+        - field: description
+          from: ""
+          to: PJR-3N21 の決定に従い、実践の型の要否と所在の正本を rulebook frontmatter へ一本化する。成果物カタログ208件から型宣言を削除して rulebook の宣言のみを残し、要否を rulebook 側へ移す。src/kata.ts の解決をカタログ優先から rulebook 正本へ変更し、kind が generated の成果物には型を適用しない導出を実装する。schema と検証も決定内容に合わせる。PJR-K4TA と PJR-JT1Y で導入した要否の4状態と判断基準は意味を変えず、置き場所のみを移す。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 5da5e2d22e3d9fc799b23308f39645f3723dde16
+    - v: 1
+      id: reg_4ae18134fed085a80ebbbcb9e369a62c
+      ts: "2026-08-24T11:40:55Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-XGJK): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 211621995add2548ce7020664261ce7e523ab788
+      previous_event_id: reg_0f1776fae80c5a0b27c8001573665b39
+    - v: 1
+      id: reg_4c07fcaed585d4f4e58f43a2472a64c6
+      ts: "2026-08-24T12:08:34Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-XGJK): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: 'agent exited with non-zero code: "... is not valid JSON'
+      legacy_commit: 2fcff0d2ba525fc9013f66bdce68d2327de7f381
+      previous_event_id: reg_4ae18134fed085a80ebbbcb9e369a62c
+    - v: 1
+      id: reg_8cdd9a127086f96b9ebe06b1b156f7a8
+      ts: "2026-08-24T12:32:36Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "docs(register): PJR-XGJK を review にし PJR-E6HG へ再発を追記する"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 0da8ccff10fd29f5fcf34e967c9e2d6a6d8ca9ad
+      previous_event_id: reg_4c07fcaed585d4f4e58f43a2472a64c6
+    - v: 1
+      id: reg_5269a90b2fa3b7f8a7fa24f83537597e
+      ts: "2026-08-25T01:43:15Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-XGJK をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-25"
+        - field: conclusion
+          from: 'agent exited with non-zero code: "... is not valid JSON'
+          to: PJR-3N21 の決定に従い、実践の型の要否と所在の正本を rulebook frontmatter へ一本化した。成果物カタログの型宣言634件を削除し rulebook 宣言242件のみを残し、非生成成果物が参照する89本の rulebook へ要否を移した。移行前スナップショットとの突き合わせで判断の欠落がないことを確認した。要否が割れていた6系統は系統全体を確定扱いせず undecided へ集約し、旧 not-needed の存在を記録して PJR-K9KG で追跡する。kind が generated の成果物への非適用を kind からの導出として実装し、schema は成果物側の型宣言を拒否する。慣例ファイル探索は宣言を正本とする決定および項目の省略を必要だが未整備とする定義と矛盾するため廃止した。これは完了条件の範囲外の仕様変更であり申し送りへ明記した。単体1278件・統合79件が成功する。
+      legacy_commit: 4686aa26c0549d229595c004fb49d3b030f9c434
+      previous_event_id: reg_8cdd9a127086f96b9ebe06b1b156f7a8
 ---
 
 # PJR-XGJK 実践の型の宣言をrulebook frontmatterへ移行する

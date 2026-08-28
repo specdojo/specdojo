@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-25T22:47:29Z"
   due_on: "2026-10-31"
+  register_events:
+    - v: 1
+      id: reg_4de0b8b1d1d9ecee6dd204904525fae2
+      ts: "2026-08-25T22:49:27Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-0XEJ claude系agentの設定ディレクトリ分離を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: claude系agentの設定ディレクトリを分離して並行実行できるようにする
+        - field: description
+          from: ""
+          to: PJR-E6HG で特定したとおり、Claude Code は起動のたびに共有の設定ファイルを書き換えるため、複数の claude プロセスが並行すると競合して JSON パースに失敗する。Claude Code 側に修正の予定はない。CLAUDE_CONFIG_DIR で設定ディレクトリを分離すると、実測では設定ファイル・セッション・バックアップまで含めて分離されることを確認した。ただし分離先は未認証状態であるため、専用プロファイルの認証をどう扱うかが課題となる。分離により claude 系 agent をオーケストレーターの待機なしで実行できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-26"
+        - field: due
+          from: ""
+          to: "2026-10-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 791c6e157b8b2fd6f29f9a6bcd88d5958868b76e
 ---
 
 # PJR-0XEJ claude系agentの設定ディレクトリを分離して並行実行できるようにする

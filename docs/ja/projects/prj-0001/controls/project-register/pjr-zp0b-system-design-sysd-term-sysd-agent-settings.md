@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-16T10:00:11Z"
   conclusion: 個別SYSD体系を新設し、agent実行設計をhub・横断ルール・重要フロー・運用手順へ再構成した
+  register_events:
+    - v: 1
+      id: reg_53f30b1201e68a6dd65b834750f50e17
+      ts: "2026-08-14T12:54:48Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: dct-architectureを修正、bac, sysdを作成"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: "system-design: `sysd-<term>` 新設と `sysd-agent-settings` 系の再構成"
+        - field: description
+          from: ""
+          to: "`sysd-index`／`sysd-critical-flows`／`sysd-cross-cutting-policy` の最小3種構成では、既存のマルチエージェント実行設計（`sysd-agent-settings` 系4件・`sysd-job-execution`）を収める場所が無い。`tsd-index`／`tsd-rulebook` に倣い `sysd-rulebook`（hub＋子構成を許容する個別設計トピック用rulebook）を新設し、既存文書を横断ルール・運用手順・個別設計トピックへ再配置する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-14"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7d81eab6edd4bb61ce7fcc3232ac5dd3057ab84f
+    - v: 1
+      id: reg_aae62807db78068a635bb196357e1390
+      ts: "2026-08-16T10:04:37Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "docs: complete PJR-ZP0B system design restructure"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-16"
+        - field: conclusion
+          from: "-"
+          to: 個別SYSD体系を新設し、agent実行設計をhub・横断ルール・重要フロー・運用手順へ再構成した
+      legacy_commit: bf5276ca6a5d527e30d46b4f9ceb54e890b8eabf
+      previous_event_id: reg_53f30b1201e68a6dd65b834750f50e17
 ---
 
 # PJR-ZP0B system-design: `sysd-<term>` 新設と `sysd-agent-settings` 系の再構成

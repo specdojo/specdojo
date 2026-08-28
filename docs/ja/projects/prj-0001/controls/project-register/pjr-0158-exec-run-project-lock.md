@@ -10,6 +10,84 @@ specdojo:
   item_status: done
   priority: high
   completed_at: "2026-08-08T12:00:00Z"
+  register_events:
+    - v: 1
+      id: reg_962cc7858bbcd14fdaec1a3698b4a93f
+      ts: "2026-08-07T02:46:14Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0158 exec runにproject単位実行ロックとroutine busy-skipを起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: exec runにproject単位の実行ロックを追加しroutineのbusy-skipを実現
+        - field: description
+          from: ""
+          to: "`exec run` プロセス同士（routine 起動・手動・CI）の重なりを止めるガードが無く、provider の `max_concurrency` は 1 プロセス内でしか効かないため、同時 agent 数とレートリミットが想定を超える。同一タスクの二重実行は claim が防ぐため正しさの問題ではなく、リソース統制の課題である。project 単位の実行ロックを `exec run` に導入し、routine は busy なら skip する運用に統一する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 34c8c32d4cadba5c0dd2d27421a1e4a0ff72552b
+    - v: 1
+      id: reg_3454c574ad9bb148c6a20e7632607fc2
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`exec run` プロセス同士（routine 起動・手動・CI）の重なりを止めるガードが無く、provider の `max_concurrency` は 1 プロセス内でしか効かないため、同時 agent 数とレートリミットが想定を超える。同一タスクの二重実行は claim が防ぐため正しさの問題ではなく、リソース統制の課題である。project 単位の実行ロックを `exec run` に導入し、routine は busy なら skip する運用に統一する。"
+          to: exec run全体をproject単位のheartbeatロックで排他。--if-busy skip/wait/fail(手動fail/routine skip)。routine-state.jsonにlast_result=skippedを追加。retryは次のcron tickに委ね待機なし。
+        - field: priority
+          from: medium
+          to: high
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_962cc7858bbcd14fdaec1a3698b4a93f
+    - v: 1
+      id: reg_66879dd3d90965c2148cfc6064b6af37
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-08"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_3454c574ad9bb148c6a20e7632607fc2
 ---
 
 # PJR-0158 exec runにproject単位の実行ロックを追加しroutineのbusy-skipを実現

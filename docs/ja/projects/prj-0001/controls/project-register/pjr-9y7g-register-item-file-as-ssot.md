@@ -14,6 +14,96 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:55:22Z"
   conclusion: 選択肢Bを採択。個票 frontmatter を正本とし pjr-index を生成ビュー化する
+  register_events:
+    - v: 1
+      id: reg_be33484e86afa184cda3095b19ce66ee
+      ts: "2026-08-09T00:19:28Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): add PJR-9Y7G"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿の正本を1項目1ファイルへ移し pjr-index を生成ビュー化する
+        - field: description
+          from: ""
+          to: 登録簿は `pjr-index.md` の登録項目一覧（表）を正本とし、詳細が必要な項目のみ個票 `pjr-XXXX-<topic>.md` へ分離する二層構造をとっている。この構造について、正本の粒度を実体（登録項目）単位のファイルへ移すべきかを判断する必要がある。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 9e931a860589b688f067946c34aefa29fe849522
+    - v: 1
+      id: reg_ec13d146b2922f18d36245ed3543a407
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: description
+          from: 登録簿は `pjr-index.md` の登録項目一覧（表）を正本とし、詳細が必要な項目のみ個票 `pjr-XXXX-<topic>.md` へ分離する二層構造をとっている。この構造について、正本の粒度を実体（登録項目）単位のファイルへ移すべきかを判断する必要がある。
+          to: 登録項目の正本を個票 frontmatter へ一本化し、pjr-index.md を generated の派生ビューへ変更するかを判断する。表の差分レビュー喪失の代替手段も選択肢比較に含める。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: PO
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: 選択肢Bを採択。個票 frontmatter を正本とし pjr-index を生成ビュー化する
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_be33484e86afa184cda3095b19ce66ee
+    - v: 1
+      id: reg_65c19d5dc8262cf1875365a0d5f050d4
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: decided
+      to_status: decided
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_ec13d146b2922f18d36245ed3543a407
 ---
 
 # PJR-9Y7G 登録簿の正本を1項目1ファイルへ移し pjr-index を生成ビュー化する

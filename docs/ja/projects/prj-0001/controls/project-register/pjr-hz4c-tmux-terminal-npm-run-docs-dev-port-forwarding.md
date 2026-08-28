@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-13T04:49:02Z"
   conclusion: devcontainer.jsonのforwardPortsをappPort（Dockerレベルの固定ポート公開）へ変更し、リモート端末からのアクセスはVS CodeのPorts機能ではなくtmux接続用Hostエントリへのssh local forwardingで対応。Mac自身・リモート端末（ThinkPad）双方のブラウザで実機確認済み。
+  register_events:
+    - v: 1
+      id: reg_7f5a759aa6ff7cb71d2bb0d4f3c9ac0e
+      ts: "2026-08-12T22:37:01Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "exec(register PJR-HZ4C): file todo to enable port forwarding for tmux-launched docs:dev"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: tmuxのterminalからnpm run docs:devを起動してもport forwardingを機能させる
+        - field: description
+          from: ""
+          to: 現状、npm run docs:devはvscodeのterminalで実行し、vscodeのport forwarding機能でホスト/リモート端末からWebページを表示している。tmuxのterminalから起動した場合も同様にport forwardingできるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-13"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 738759050b53e847a1469e10e80f944b4908514d
+    - v: 1
+      id: reg_a61f168345c59d579477dfeb7560f734
+      ts: "2026-08-13T01:48:07Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-HZ4C): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: a5d192fa476d3899d448e86d8dc12e74e9403391
+      previous_event_id: reg_7f5a759aa6ff7cb71d2bb0d4f3c9ac0e
+    - v: 1
+      id: reg_d11d1191657c88ecbae52d8881f89c87
+      ts: "2026-08-13T01:55:17Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-HZ4C): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 53a04bb10d06ff31963d5e044e865bdfd1b1c576
+      previous_event_id: reg_a61f168345c59d579477dfeb7560f734
+    - v: 1
+      id: reg_fdd5746ab9218fc49bddd09f013eccb8
+      ts: "2026-08-13T04:59:13Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-HZ4C): switch devcontainer port to appPort with SSH local forwarding"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-13"
+        - field: conclusion
+          from: "-"
+          to: devcontainer.jsonのforwardPortsをappPort（Dockerレベルの固定ポート公開）へ変更し、リモート端末からのアクセスはVS CodeのPorts機能ではなくtmux接続用Hostエントリへのssh local forwardingで対応。Mac自身・リモート端末（ThinkPad）双方のブラウザで実機確認済み。
+      legacy_commit: e4217de1a2af0fd1502ad69e417d669c433cc587
+      previous_event_id: reg_d11d1191657c88ecbae52d8881f89c87
 ---
 
 # PJR-HZ4C tmuxのterminalからnpm run docs:devを起動してもport forwardingを機能させる

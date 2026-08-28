@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-10"
   completed_at: "2026-05-23T12:00:00Z"
   conclusion: PJR-0059で対応
+  register_events:
+    - v: 1
+      id: reg_8cfbb1dc8fd990f2cba9866024393b34
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: pjr-\*->generated展開スクリプト
+        - field: description
+          from: ""
+          to: pjr-\* を generated に展開するスクリプトを開発する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-10"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: PJR-0059で対応
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_8a313d056d795bfd75a41e090dd23373
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-23"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_8cfbb1dc8fd990f2cba9866024393b34
 ---
 
 # PJR-0004 pjr-\*->generated展開スクリプト

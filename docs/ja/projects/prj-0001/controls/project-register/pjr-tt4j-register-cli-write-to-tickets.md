@@ -13,6 +13,93 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:55:22Z"
+  register_events:
+    - v: 1
+      id: reg_1a9b73ad79cfc32d6bebc8a5371025ef
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: register CLI の読み書き先を個票 frontmatter へ変更する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割2。register の各サブコマンドが `pjr-index.md` の表ではなく個票 frontmatter を読み書きするようにする。[[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] のスキーマ定義に依存する。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_72c91fd3e1a4f8169e3446a51cc184b8
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割2。register の各サブコマンドが `pjr-index.md` の表ではなく個票 frontmatter を読み書きするようにする。[[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] のスキーマ定義に依存する。"
+          to: PJR-ES57 の分割2。add・状態遷移・update が pjr-index.md ではなく個票 frontmatter を読み書きするようにする。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_1a9b73ad79cfc32d6bebc8a5371025ef
+    - v: 1
+      id: reg_b7d03669d2cd428768981ecdbb32062d
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_72c91fd3e1a4f8169e3446a51cc184b8
 ---
 
 # PJR-TT4J register CLI の読み書き先を個票 frontmatter へ変更する

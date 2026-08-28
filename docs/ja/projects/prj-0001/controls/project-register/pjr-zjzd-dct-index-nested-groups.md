@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T10:34:04Z"
   conclusion: dct-index に1段のサブグループ階層を追加し、ルートグループを H3、サブグループを親番号継承の H4 として出力できるようにした。schema でグループの domains と groups を排他にし、2段目のサブグループを構造的に許可しないことで H4 上限を保証している。dct-index.yaml を成果物リファレンスの章構成へ再編し、既存の1段構成の後方互換とサイドバー表示名の解決も維持した。
+  register_events:
+    - v: 1
+      id: reg_5b2b970933e3c93ec7e03f287f335f3e
+      ts: "2026-08-22T06:51:56Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-ZJZD（dct-index のサブグループ階層）を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: dct-index にサブグループ階層を追加し、成果物リファレンスの節構成へ揃える
+        - field: description
+          from: ""
+          to: "dct-index.yaml の groups は 1 段固定で、生成物も ### の見出しと表しか出せない。成果物リファレンスは 2 章の下に 2.1 業務仕様などの節を持つ二階層構造のため、リファレンスへ正確に揃えられない。groups[].groups[] によるサブグループを許可し、生成物で #### 2.2.1. 業務仕様 のような見出しと表を出せるようにする。Markdown 記述ルールで H5 以下は禁止のため、追加できる階層は 1 段までとする。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 954172ec3e9e3850c1b50ae0613c81a9abbb6e9f
+    - v: 1
+      id: reg_334777ade0546aee095610a5ad55cc22
+      ts: "2026-08-22T06:54:25Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-ZJZD): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: ed355ea66f9863130ec0716e97932473eb59d9a1
+      previous_event_id: reg_5b2b970933e3c93ec7e03f287f335f3e
+    - v: 1
+      id: reg_0df3aee4f14382a6e1eb7a12745782e0
+      ts: "2026-08-22T08:18:54Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "fix(test): テストの git 実行で GIT_DIR を除去する"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "integrate failed: git diff --no-renames --name-only -z failed: fatal: this operation must be run in a work tree"
+      legacy_commit: 9e32ada4e8bff149981238b9c8f6f79aa1e51b46
+      previous_event_id: reg_334777ade0546aee095610a5ad55cc22
+    - v: 1
+      id: reg_186af334c41a2e6e601799b52e51a3eb
+      ts: "2026-08-22T08:36:53Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-ZJZD): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 44589d177c4a85ebdc21189e805b919a617e027c
+      previous_event_id: reg_0df3aee4f14382a6e1eb7a12745782e0
+    - v: 1
+      id: reg_2634c9f3f063dad95f0ef61797e1be44
+      ts: "2026-08-22T10:34:04Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-ZJZD): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-22"
+        - field: conclusion
+          from: "integrate failed: git diff --no-renames --name-only -z failed: fatal: this operation must be run in a work tree"
+          to: dct-index に1段のサブグループ階層を追加し、ルートグループを H3、サブグループを親番号継承の H4 として出力できるようにした。schema でグループの domains と groups を排他にし、2段目のサブグループを構造的に許可しないことで H4 上限を保証している。dct-index.yaml を成果物リファレンスの章構成へ再編し、既存の1段構成の後方互換とサイドバー表示名の解決も維持した。
+      legacy_commit: 377989e3dfaa593b3c5a333134f498a4e8df8fe8
+      previous_event_id: reg_186af334c41a2e6e601799b52e51a3eb
 ---
 
 # PJR-ZJZD dct-index にサブグループ階層を追加し、成果物リファレンスの節構成へ揃える

@@ -15,6 +15,115 @@ specdojo:
   completed_at: "2026-08-26T22:33:54Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
   conclusion: テストが直接実行していた git config user.name / user.email を全廃し、共通の TEST_GIT_ENVIRONMENT を worker と子プロセスへ渡して identity を供給する方式へ変更した。config へ書き込む限り書き込み先を誤れば同じ事故が起きるため、そもそも config を変更しない方式を選んだ。実リポジトリの local config へ identity が書き込まれないことを検証するテストを追加し、テスト実行後も user.name / user.email が0件であることを確認した。PJR-A99J の検知機構は変更しておらず、検知を弱めずに漏洩経路を塞いだ。過去のコミット1,877件は履歴の改変になるため author を書き換えていない。
+  register_events:
+    - v: 1
+      id: reg_72ddc555d96ff16f73df51a023fc1f82
+      ts: "2026-08-26T15:22:21Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-EX5E と PJR-ENK0 を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: テストとagentによるgit identity設定が実リポジトリへ及ぶ経路を隔離する
+        - field: description
+          from: ""
+          to: PJR-07M5 の実行で agent が git の local config（user.name / user.email）を設定しようとし、PJR-A99J の検知機構が作動して停止した。検知は正しく働き実リポジトリへの影響はなかったが、設定しようとする経路自体は残っている。あわせて本体リポジトリの local config にテスト用の識別情報が残っており、global 設定を上書きしていた。その結果、複数のコミットがテスト用の author で記録されている。tests 配下に git config user.name を実行する箇所が複数あり、隔離されていない経路を特定して塞ぐ。過去のコミットの author は履歴の改変になるため書き換えない。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-27"
+        - field: due
+          from: ""
+          to: "2026-09-30"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: c14ab796eb88bff66c1ebb7b7abeaa6fcdfc2519
+    - v: 1
+      id: reg_991d43dba378c053da1d2ba00b5c1275
+      ts: "2026-08-26T15:38:46Z"
+      action: start
+      actor: naoji3x
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-EX5E): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 6177648e1d8e289877edf58140ccec33103f69df
+      previous_event_id: reg_72ddc555d96ff16f73df51a023fc1f82
+    - v: 1
+      id: reg_562b3f269be41b695532baacd8463c0b
+      ts: "2026-08-26T15:46:39Z"
+      action: wait
+      actor: naoji3x
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-EX5E): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+      legacy_commit: 06ff5b21cca268f4a3ce6bd89dac16b02756ec5b
+      previous_event_id: reg_991d43dba378c053da1d2ba00b5c1275
+    - v: 1
+      id: reg_5665cfbf9c2eafa343373ddd05f7b2c6
+      ts: "2026-08-26T15:51:10Z"
+      action: review
+      actor: naoji3x
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-EX5E): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 260b177e2ea9e12a684c1df9335aac90be797708
+      previous_event_id: reg_562b3f269be41b695532baacd8463c0b
+    - v: 1
+      id: reg_e65f2edb3ab2128b739b5ebae4e6ee9d
+      ts: "2026-08-26T22:35:41Z"
+      action: close
+      actor: naoji3x
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-EX5E をクローズし PJR-44CW を起票する"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-27"
+        - field: conclusion
+          from: "-"
+          to: テストが直接実行していた git config user.name / user.email を全廃し、共通の TEST_GIT_ENVIRONMENT を worker と子プロセスへ渡して identity を供給する方式へ変更した。config へ書き込む限り書き込み先を誤れば同じ事故が起きるため、そもそも config を変更しない方式を選んだ。実リポジトリの local config へ identity が書き込まれないことを検証するテストを追加し、テスト実行後も user.name / user.email が0件であることを確認した。PJR-A99J の検知機構は変更しておらず、検知を弱めずに漏洩経路を塞いだ。過去のコミット1,877件は履歴の改変になるため author を書き換えていない。
+      legacy_commit: 093801a97d1af7023d0ff0d216565ea814d337f3
+      previous_event_id: reg_5665cfbf9c2eafa343373ddd05f7b2c6
 ---
 
 # PJR-EX5E テストとagentによるgit identity設定が実リポジトリへ及ぶ経路を隔離する

@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-10-31"
   completed_at: "2026-08-26T10:29:53Z"
   conclusion: exec trial として新設した。run で同一 plan を複数 agent へ与えて試行し、status で状況を確認、rate で人が判断の質・文章の質・範囲の遵守を1〜5で記入、adopt で1つを採用、discard で破棄する。plan は必須で生成せず、agent 間で指示が揺れない。register の状態遷移には触れず試行が本来のタスクの状態を進めない。worktree とブランチは比較IDと agent 名を含む別系統の命名とし、既存の命名処理は変更していない。客観指標と主観評価は分けて記録する。1回の比較では agent 選定を自動変更せず、繰り返しの証跡が揃った時点で人が pm-members.yaml を更新する方針とした。実地での比較実行は未実施であり、dry-run で動作を確認した。
+  register_events:
+    - v: 1
+      id: reg_351a560cd26b62aaa110266f9dd0daca
+      ts: "2026-08-26T08:19:02Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-NW9V agentの性能比較の仕組みを起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 同一タスクを複数agentで試行し性能を比較できるようにする
+        - field: description
+          from: ""
+          to: agent の実力を把握する手段がない。実際のタスクで一度試すしかなく、結果は個別の result に散在して比較できない。同じタスクを worktree を分けて複数の agent で実行し、結果を比較できるようにする。現状は worktree 名とブランチ名が task ID から決まるため同一タスクの並行実行が衝突し、register の状態遷移も1つの実行しか想定していない。比較には同じ plan を与える必要がある点にも配慮する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-26"
+        - field: due
+          from: ""
+          to: "2026-10-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3b3a4818c236620b6f53b77eb2adc37323f636a7
+    - v: 1
+      id: reg_f14230afe1e70efca488dd1384cbd511
+      ts: "2026-08-26T08:21:05Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-NW9V): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: fd607aa6a79598e8f548455ed26627ef0fcc691f
+      previous_event_id: reg_351a560cd26b62aaa110266f9dd0daca
+    - v: 1
+      id: reg_56a2f9e0e829a878401eb5da587500d1
+      ts: "2026-08-26T08:34:40Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-NW9V): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: f23420eb30084dedaec866f929110b8526d49841
+      previous_event_id: reg_f14230afe1e70efca488dd1384cbd511
+    - v: 1
+      id: reg_237f1e3d8bf02ddbf8fa915a08d02915
+      ts: "2026-08-26T10:30:15Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-NW9V をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: exec trial として新設した。run で同一 plan を複数 agent へ与えて試行し、status で状況を確認、rate で人が判断の質・文章の質・範囲の遵守を1〜5で記入、adopt で1つを採用、discard で破棄する。plan は必須で生成せず、agent 間で指示が揺れない。register の状態遷移には触れず試行が本来のタスクの状態を進めない。worktree とブランチは比較IDと agent 名を含む別系統の命名とし、既存の命名処理は変更していない。客観指標と主観評価は分けて記録する。1回の比較では agent 選定を自動変更せず、繰り返しの証跡が揃った時点で人が pm-members.yaml を更新する方針とした。実地での比較実行は未実施であり、dry-run で動作を確認した。
+      legacy_commit: ef1c40a107d95aea9d19c57b6eb5a11cd233c8ba
+      previous_event_id: reg_56a2f9e0e829a878401eb5da587500d1
 ---
 
 # PJR-NW9V 同一タスクを複数agentで試行し性能を比較できるようにする

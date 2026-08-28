@@ -14,6 +14,132 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T06:21:45Z"
   conclusion: "実在成果物が参照する5系統（opr、sysd-index、sysd-critical-flows、sysd-cross-cutting-policy、tsd）の recipe と template の要否を、実物の章構成と反復構造に照らして確定した。多くは必要だが未整備として項目を省略し、sysd-index の recipe と tsd の template は不要と判断した。sample: not-needed は8系統から4系統へ減らし、schema が構造を完全に規定する YAML 成果物3系統と include 専用 rulebook 1系統に限定して理由と適用範囲を記録した。not-needed としながら sample が実在した ccd-mermaid と ifd-mermaid は文書ID の宣言へ改め、双方向検証の警告を解消した。型そのものの新規作成は範囲外とした。"
+  register_events:
+    - v: 1
+      id: reg_1a9bcef5377d2b9a997976f219c5fede
+      ts: "2026-08-23T11:50:59Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成方針に関する5件を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実在する散文成果物31件の実践の型の要否を確定する
+        - field: description
+          from: ""
+          to: 実在する散文成果物31件は実物があるため基準を適用して要否を確定できる。うち recipe が not-needed の11件はすべて sysd 系と opr 系である。sysd-rulebook は119行と薄く sample もない状態で300〜400行の設計書を6本書いているため、recipe より先に sample を整備する効果が大きい。同一構造が並ぶ agent 設計書4件は recipe が必要と見込む。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3dbc7a661e9b50d6bdeb59073fbdc3fb62dcbc83
+    - v: 1
+      id: reg_7b87fa04f0c63d07e78c1956104d51b5
+      ts: "2026-08-25T01:54:44Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): PJR-K9KG を移行後の構造に合わせて記述する"
+      changes:
+        - field: title
+          from: 実在する散文成果物31件の実践の型の要否を確定する
+          to: 実在する成果物が参照する rulebook 系統の実践の型の要否を確定する
+        - field: description
+          from: 実在する散文成果物31件は実物があるため基準を適用して要否を確定できる。うち recipe が not-needed の11件はすべて sysd 系と opr 系である。sysd-rulebook は119行と薄く sample もない状態で300〜400行の設計書を6本書いているため、recipe より先に sample を整備する効果が大きい。同一構造が並ぶ agent 設計書4件は recipe が必要と見込む。
+          to: 実物がある成果物は基準を適用して要否を確定できる。PJR-XGJK により要否の宣言先は rulebook frontmatter へ移り、判断の単位も成果物ごとから rulebook 系統ごとへ変わった。本項目は、実在する成果物が参照する系統のうち要否が未確定のものを確定させる。
+      legacy_commit: 45ccddcbbd6997133f8c430461af36cb7f01f58e
+      previous_event_id: reg_1a9bcef5377d2b9a997976f219c5fede
+    - v: 1
+      id: reg_b0107ca62d84751390a7925e095c8a98
+      ts: "2026-08-25T02:00:27Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-K9KG): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 947e4328f01b030ef70ff1935d475139d99d2bdc
+      previous_event_id: reg_7b87fa04f0c63d07e78c1956104d51b5
+    - v: 1
+      id: reg_4c270a88d13b3e3e9bf4722266b86e2c
+      ts: "2026-08-25T02:23:22Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-K9KG): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: 個票 pjr-k9kg-kata-requirement-existing-deliverables.md の完了条件は npm run test:unit の成功を明示的に要求しているが、executor 実行では npm run test:unit がVitest起動後5分間出力・終了せず中断し（status: failed）、…"
+      legacy_commit: a88d64c17d159dc24884d413e0e7047aaa92aeca
+      previous_event_id: reg_b0107ca62d84751390a7925e095c8a98
+    - v: 1
+      id: reg_642f756091a3c1221937c4b468830646
+      ts: "2026-08-25T02:30:03Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "docs(register): PJR-K9KG を review にし PJR-E6HG へ検証結果を追記する"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 58872184d0e1ecfc7245e4c03d1f247136dcbec1
+      previous_event_id: reg_4c270a88d13b3e3e9bf4722266b86e2c
+    - v: 1
+      id: reg_5e5e6bc28d91207f5d1cfd231172d070
+      ts: "2026-08-25T06:23:02Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの3件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-25"
+        - field: conclusion
+          from: "agent exited with non-zero code: 個票 pjr-k9kg-kata-requirement-existing-deliverables.md の完了条件は npm run test:unit の成功を明示的に要求しているが、executor 実行では npm run test:unit がVitest起動後5分間出力・終了せず中断し（status: failed）、…"
+          to: "実在成果物が参照する5系統（opr、sysd-index、sysd-critical-flows、sysd-cross-cutting-policy、tsd）の recipe と template の要否を、実物の章構成と反復構造に照らして確定した。多くは必要だが未整備として項目を省略し、sysd-index の recipe と tsd の template は不要と判断した。sample: not-needed は8系統から4系統へ減らし、schema が構造を完全に規定する YAML 成果物3系統と include 専用 rulebook 1系統に限定して理由と適用範囲を記録した。not-needed としながら sample が実在した ccd-mermaid と ifd-mermaid は文書ID の宣言へ改め、双方向検証の警告を解消した。型そのものの新規作成は範囲外とした。"
+      legacy_commit: d20d78a7ef2e0dc2f58d3344dff92deeaaa2693e
+      previous_event_id: reg_642f756091a3c1221937c4b468830646
 ---
 
 # PJR-K9KG 実在する成果物が参照する rulebook 系統の実践の型の要否を確定する

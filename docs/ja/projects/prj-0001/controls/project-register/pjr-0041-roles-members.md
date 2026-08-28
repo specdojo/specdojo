@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-17"
   completed_at: "2026-05-17T12:00:00Z"
   conclusion: rolesとmembers, 関連文書を見直し
+  register_events:
+    - v: 1
+      id: reg_5b8875ee557ac62b50a1cf987b8b9aad
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: roles, membersの見直し
+        - field: description
+          from: ""
+          to: rolesに全ロールを記述して、membersに兼務を反映するように変更
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: PO
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-17"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: rolesとmembers, 関連文書を見直し
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_b58e7f40e499eb1250edcfd6f4351ae6
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-17"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_5b8875ee557ac62b50a1cf987b8b9aad
 ---
 
 # PJR-0041 roles, membersの見直し

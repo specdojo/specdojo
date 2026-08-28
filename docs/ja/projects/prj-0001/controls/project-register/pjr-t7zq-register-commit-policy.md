@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-10-31"
   completed_at: "2026-08-27T23:42:06Z"
   conclusion: 遷移時の commit policy は per-event を維持し、雑音の削減は develop から main への昇格境界で行う。register start のコミットは worktree 隔離の構造上の要件であり、コミットしないと worktree の個票が着手前の状態のままとなり agent が誤読する。当初の課題はプロダクト変更を追う Git 履歴の信号対雑音比であり、main が読みやすければ目的を果たす。develop の細かさは実行記録として意味を持つ。push 済み履歴は書き換えず force-push を伴う rebase は行わない。まとめ方の具体は squash merge に祖先関係が記録されない副作用があるため検証を伴い、PJR-199G で確定する。PJR-TPY9 の完了後に有効となる。
+  register_events:
+    - v: 1
+      id: reg_2d8341d87f2f3f98ceaf3c977abd2ae6
+      ts: "2026-08-24T12:02:39Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-TPY9 を3段に分割し PJR-T7ZQ と PJR-5W8C を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: Registerの状態遷移に対するcommit policyを選定する
+        - field: description
+          from: ""
+          to: PJR-TPY9 で Register の状態遷移を追記型 event として記録できるようにした後、遷移ごとにコミットする現行の運用を見直す。per-event、per-item、batch、related-change、manual などの候補を評価し、採用する policy、既定値、設定方法、人手・Agent・routine・worktree 実行時の扱いを決める。event が履歴を保持するならコミット頻度を下げられるため、PJR-TPY9 の完了を前提とする。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-10-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 53ba454ab5e41af45bd85e68b555973a9977c4fc
+    - v: 1
+      id: reg_1881c9e7d891bfeeb2e49d3a52a094d7
+      ts: "2026-08-27T23:45:32Z"
+      action: close
+      actor: naoji3x
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-T7ZQ を決定しPJR-199Gを起票する"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: 遷移時の commit policy は per-event を維持し、雑音の削減は develop から main への昇格境界で行う。register start のコミットは worktree 隔離の構造上の要件であり、コミットしないと worktree の個票が着手前の状態のままとなり agent が誤読する。当初の課題はプロダクト変更を追う Git 履歴の信号対雑音比であり、main が読みやすければ目的を果たす。develop の細かさは実行記録として意味を持つ。push 済み履歴は書き換えず force-push を伴う rebase は行わない。まとめ方の具体は squash merge に祖先関係が記録されない副作用があるため検証を伴い、PJR-199G で確定する。PJR-TPY9 の完了後に有効となる。
+      legacy_commit: 6dd9ca7d550ed466e08b09e59decfc5dbdf35dc9
+      previous_event_id: reg_2d8341d87f2f3f98ceaf3c977abd2ae6
 ---
 
 # PJR-T7ZQ Registerの状態遷移に対するcommit policyを選定する

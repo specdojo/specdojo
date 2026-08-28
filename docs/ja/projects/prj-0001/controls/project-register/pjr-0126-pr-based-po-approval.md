@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-07-31"
   completed_at: "2026-07-26T12:00:00Z"
   conclusion: pull requestで承認する運用を明記
+  register_events:
+    - v: 1
+      id: reg_2e8284e64c027527c3add5d888ca760e
+      ts: "2026-07-25T10:10:47Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "refactor(docs): 横断ディレクトリをプロジェクト直下へ移動"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: PO承認をpull requestベースにする承認フロー整備
+        - field: description
+          from: ""
+          to: プロジェクト憲章の承認（[[prj-0001:pjr-0119-charter-approval\|PJR-0119]]）は decision 個票の起票のみで行ったが、承認者が表のセル文字列で、作成者と承認者が分離されておらず自己承認になりうるため証跡が弱い。charter 等の PO 留保事項の承認を pull request レビューで行い、承認者・承認日時・承認対象差分を platform 側で担保する運用を整備する。decision 個票は決定内容の SSOT として残し、PR は承認イベントとして併用する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 393767768e66c987bff6cfac9914f208620e9166
+    - v: 1
+      id: reg_8df44e11c1d26e317eeab50429507cb9
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: プロジェクト憲章の承認（[[prj-0001:pjr-0119-charter-approval\|PJR-0119]]）は decision 個票の起票のみで行ったが、承認者が表のセル文字列で、作成者と承認者が分離されておらず自己承認になりうるため証跡が弱い。charter 等の PO 留保事項の承認を pull request レビューで行い、承認者・承認日時・承認対象差分を platform 側で担保する運用を整備する。decision 個票は決定内容の SSOT として残し、PR は承認イベントとして併用する。
+          to: decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討
+        - field: owner
+          from: _TODO_
+          to: PM
+        - field: due
+          from: _TODO_
+          to: "2026-07-31"
+        - field: conclusion
+          from: "-"
+          to: pull requestで承認する運用を明記
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_2e8284e64c027527c3add5d888ca760e
+    - v: 1
+      id: reg_dd1607232cc3722fc738a0c8277d49da
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-07-26"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_8df44e11c1d26e317eeab50429507cb9
 ---
 
 # PJR-0126 PO承認をpull requestベースにする承認フロー整備

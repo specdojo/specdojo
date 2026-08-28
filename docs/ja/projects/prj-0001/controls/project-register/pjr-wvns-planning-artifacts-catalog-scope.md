@@ -14,6 +14,84 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T13:29:14Z"
   conclusion: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
+  register_events:
+    - v: 1
+      id: reg_97c282f036f39ce03c54af7f07de661b
+      ts: "2026-08-22T12:28:15Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 計画成果物のカタログ設計を決定として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 計画成果物をカタログへ載せ、専用の planning ドメインとトラックで所有する
+        - field: description
+          from: ""
+          to: timeline、dct-index、dct-plan、sch-assessment、sch-strategy、sch-track の一部がカタログ未登録で、Schedule に載っていない。トラックのスコープはドメイン単位でしか絞れず、また sch-track-X は sch-strategy-X から生成されるため、あるトラックの計画物を同じトラック自身で生成することはできない。計画物の所有トラック、カタログへの登録範囲、トラック別ファイルの粒度を決める。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ac987294fa662defee8311be380cefc6855200e2
+    - v: 1
+      id: reg_8dffe2737def39327611c6b768dbfe22
+      ts: "2026-08-22T13:29:14Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-AAR2 を起票し PJR-WVNS を decided にする"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-22"
+        - field: conclusion
+          from: "-"
+          to: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
+      legacy_commit: 47bc0d0fe2bd0c114b32a70105c9990121c0ac89
+      previous_event_id: reg_97c282f036f39ce03c54af7f07de661b
+    - v: 1
+      id: reg_a86197b6aa393e1782b269d6f7d117f9
+      ts: "2026-08-22T14:40:10Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: decided
+      to_status: decided
+      reason: "exec(register PJR-ZWMH): 登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する"
+      changes:
+        - field: conclusion
+          from: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
+          to: 計画成果物は新設の planning ドメインと planning トラックが所有する。人や agent が判断して書く入力は work、sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と表示用生成物は登録しない。トラック別ファイルは具体的な local_id で個別登録し、着手時に追加する。planning 自身の strategy は control として循環を避ける。実装は PJR-QF7T で完了した。
+      legacy_commit: bbbd8bb0b5d590eb848aa4aa0b9368be01ee2f0f
+      previous_event_id: reg_8dffe2737def39327611c6b768dbfe22
 ---
 
 # PJR-WVNS 計画成果物をカタログへ載せ、専用の planning ドメインとトラックで所有する

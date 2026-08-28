@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-23T01:32:32Z"
   conclusion: exec cycle に stale トラックの自動再生成を追加し、手順を5段へ拡張した。判定は既存の鮮度検知を再利用するため設定項目は増やしていない。再生成は auto ループより前に完了し、失敗した場合はタスク実行へ進まず中断する。再生成が不要な場合は何も出力しない。preprocess や postprocess を宣言する仕組みは導入していない。
+  register_events:
+    - v: 1
+      id: reg_9399ff3756284d318ade07fbceaf0690
+      ts: "2026-08-22T14:32:19Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): トラック自動再生成を PJR-JG9Q として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: strategy が更新されたトラックを exec cycle で自動再生成する
+        - field: description
+          from: ""
+          to: 計画物として `sch-strategy-<track>` を更新しても、`sch-track-<track>` を再生成しない限り次のトラックのタスクは現れない。exec validate は strategy が track より新しいことを既に検出して警告するが、exec cycle の手順は resume・doc-index・validate と refresh・auto ループの4段で、schedule build を含まない。鮮度検知の結果を使って自動再生成することで、設定面を増やさずに次トラックへ自動で進めるようにする。preprocess や postprocess を宣言できる仕組みは、鮮度では表せない要求が出るまで導入しない。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 44b2d0c51cd72d25d215b2375a744deaa8cd6164
+    - v: 1
+      id: reg_ad19c015600d0ffea51719d186da5854
+      ts: "2026-08-23T00:34:34Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-JG9Q): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 22c543ec1572dbac011f06a518a21673a61ee016
+      previous_event_id: reg_9399ff3756284d318ade07fbceaf0690
+    - v: 1
+      id: reg_f4b42ad8e0c46f3257bace2d758ae87a
+      ts: "2026-08-23T00:55:19Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-JG9Q): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 9fd47831885ccb503865db8f034027d8c65fe5dc
+      previous_event_id: reg_ad19c015600d0ffea51719d186da5854
+    - v: 1
+      id: reg_5c263333826db913ab2415412cfd8afc
+      ts: "2026-08-23T01:32:32Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-JG9Q): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: exec cycle に stale トラックの自動再生成を追加し、手順を5段へ拡張した。判定は既存の鮮度検知を再利用するため設定項目は増やしていない。再生成は auto ループより前に完了し、失敗した場合はタスク実行へ進まず中断する。再生成が不要な場合は何も出力しない。preprocess や postprocess を宣言する仕組みは導入していない。
+      legacy_commit: 08c492b3799f2a66589811c2964c03f683067734
+      previous_event_id: reg_f4b42ad8e0c46f3257bace2d758ae87a
 ---
 
 # PJR-JG9Q strategy が更新されたトラックを exec cycle で自動再生成する

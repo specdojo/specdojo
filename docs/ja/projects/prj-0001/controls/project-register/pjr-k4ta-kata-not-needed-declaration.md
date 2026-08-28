@@ -14,6 +14,146 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-24T09:43:33Z"
   conclusion: 成果物カタログの各成果物へ rulebook / recipe / sample / template の要否を宣言できるようにし、不要と判断した型は not-needed と明示する仕組みを導入した。kata-guide に4種それぞれの作る条件と作らない条件を追加し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外すようにした。prj-0001 の全成果物へ要否を宣言し、ID宣言496件はすべて実在する型へ解決する。未作成成果物への一律の not-needed は PJR-JT1Y で undecided へ移行した。
+  register_events:
+    - v: 1
+      id: reg_eddc6e4b41fe891033ce813fe3080fda
+      ts: "2026-08-23T04:58:31Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 実践の型の作成基準を PJR-QESV と PJR-K4TA として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型の要否宣言を導入し、既存の実践の型を棚卸しする
+        - field: description
+          from: ""
+          to: PJR-QESV の決定に基づき、成果物カタログへ実践の型の要否を宣言できるようにする。作らないと判断した型は not-needed として記録し、未整備と区別する。strategy 生成では not-needed の型に対応する maintenance フェーズを生成しない。あわせて ryu-guide の bootstrap と freeform の記述を決定内容へ揃え、既存の rulebook 106 件、recipe 19 件、sample 107 件、template 93 件を基準に照らして分類する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: BA
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: d74d2e877f1d7703b493a0bfaadbc072b614d1f8
+    - v: 1
+      id: reg_1df9eee63ccb133cedb313ebfe58d6e2
+      ts: "2026-08-23T05:02:20Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-K4TA): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 750c825299834e1e56a9d4f943e42061b40ba8c5
+      previous_event_id: reg_eddc6e4b41fe891033ce813fe3080fda
+    - v: 1
+      id: reg_ced84feab7be3e1a1e3b1aa057f1791e
+      ts: "2026-08-23T05:27:40Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-K4TA): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: 'agent exited with non-zero code: "... is not valid JSON'
+      legacy_commit: 61fc3bb414e61c285b4f8776b9901c0500d216d6
+      previous_event_id: reg_1df9eee63ccb133cedb313ebfe58d6e2
+    - v: 1
+      id: reg_fe68721c7b0269bbe8490b56b15e7dde
+      ts: "2026-08-23T06:57:22Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-K4TA): resume"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: 3618706542d18d1decde7d0117cc41ad8cfebcc5
+      previous_event_id: reg_ced84feab7be3e1a1e3b1aa057f1791e
+    - v: 1
+      id: reg_fc5c834d6a83ae68c8d0d455e9714b7f
+      ts: "2026-08-23T06:57:48Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-K4TA): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: 'agent exited with non-zero code: "... is not valid JSON'
+          to: "agent exited with non-zero code: executor validation「npm run test:unit」がfailedであり、修正後は一回限定ルールにより再実行されていないため、成果物の最終状態が完了条件を満たすと確認できない。加えて「npm run validate:schema」もfailed（tsx IPCのsandbox EPERM）である。"
+      legacy_commit: 022d9d5cc594df516aae073313c68e1a1df64d4a
+      previous_event_id: reg_fe68721c7b0269bbe8490b56b15e7dde
+    - v: 1
+      id: reg_8b6533792637133678c46a677993d9f6
+      ts: "2026-08-23T07:13:57Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-K4TA): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 74cb6da402737c38591e1286b37a8f52848e4ca5
+      previous_event_id: reg_fc5c834d6a83ae68c8d0d455e9714b7f
+    - v: 1
+      id: reg_77bfc4068beb7587adc1d2e9e2801d14
+      ts: "2026-08-24T09:44:21Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの4件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-24"
+        - field: conclusion
+          from: "agent exited with non-zero code: executor validation「npm run test:unit」がfailedであり、修正後は一回限定ルールにより再実行されていないため、成果物の最終状態が完了条件を満たすと確認できない。加えて「npm run validate:schema」もfailed（tsx IPCのsandbox EPERM）である。"
+          to: 成果物カタログの各成果物へ rulebook / recipe / sample / template の要否を宣言できるようにし、不要と判断した型は not-needed と明示する仕組みを導入した。kata-guide に4種それぞれの作る条件と作らない条件を追加し、catalog build が宣言の実在性を検証、schedule assessment が not-needed の型を維持タスクの対象から外すようにした。prj-0001 の全成果物へ要否を宣言し、ID宣言496件はすべて実在する型へ解決する。未作成成果物への一律の not-needed は PJR-JT1Y で undecided へ移行した。
+      legacy_commit: 59f9cfeb2344fdd332a0604ce466414de2087076
+      previous_event_id: reg_8b6533792637133678c46a677993d9f6
 ---
 
 # PJR-K4TA 実践の型の要否宣言を導入し、既存の実践の型を棚卸しする

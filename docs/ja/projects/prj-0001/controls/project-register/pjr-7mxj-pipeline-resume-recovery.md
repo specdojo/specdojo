@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-10T22:42:26Z"
   conclusion: run-scoped pipeline-state.jsonの永続化・検証、exec resumeでのreporterのみ再開（executor再実行抑止）、--executor-by/--reporter-byを実装。運用・設定ガイドへ復旧手順を反映。対象57件成功。
+  register_events:
+    - v: 1
+      id: reg_8f0714b0398372c459916d93de6a467c
+      ts: "2026-08-10T06:36:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add executor reporter pipeline todos"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: パイプラインの再実行と復旧制御を実装する
+        - field: description
+          from: ""
+          to: pipeline-stateを永続化し、reporter失敗時はexecutorを再実行せずreporterから再開できるようにする。ステージ別agent指定CLIも追加する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-10"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 05c3d3781552e051565e003506dd009eb1312db5
+    - v: 1
+      id: reg_5fde9a6b7c3c46ae2a37f174018cd3d2
+      ts: "2026-08-10T07:44:40Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-7MXJ): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: c89d964f3a5a8c82fc75aba1f6d8737de02897ff
+      previous_event_id: reg_8f0714b0398372c459916d93de6a467c
+    - v: 1
+      id: reg_96ca3b3a38ffc9125f3c33dc534680c1
+      ts: "2026-08-10T08:01:30Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-7MXJ): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 99444178dc22133965da43b18a3609bb9e7d0f10
+      previous_event_id: reg_5fde9a6b7c3c46ae2a37f174018cd3d2
+    - v: 1
+      id: reg_b3f5e4911f849da9b5cdd555d5c35518
+      ts: "2026-08-10T22:46:50Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-TC43): executor / reporterパイプラインのE2E検証と文書化"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-11"
+        - field: conclusion
+          from: "-"
+          to: run-scoped pipeline-state.jsonの永続化・検証、exec resumeでのreporterのみ再開（executor再実行抑止）、--executor-by/--reporter-byを実装。運用・設定ガイドへ復旧手順を反映。対象57件成功。
+      legacy_commit: 095189d5df7fcb58163a4c5c1f6e847a113a1db3
+      previous_event_id: reg_96ca3b3a38ffc9125f3c33dc534680c1
 ---
 
 # PJR-7MXJ パイプラインの再実行と復旧制御を実装する

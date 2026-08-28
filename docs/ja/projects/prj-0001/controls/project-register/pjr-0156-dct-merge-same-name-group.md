@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-06T12:00:00Z"
   conclusion: mergeDomainCatalogsに同名group結合(決定的・再帰的)を実装。data-modelテンプレートをbdd/cdsd/sld/stsd/cld/ccd/cstdの7種別へ分割し、マージ後は業務データ辞書・概念モデルの2章に再構成。catalog-mergeテスト11件含め全対象テスト成功。
+  register_events:
+    - v: 1
+      id: reg_fe758602cb77e627c2cd23bd65a66ec3
+      ts: "2026-08-06T13:36:46Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "chore(register): PJR-0156をopenで起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: dctカタログmergeの同名group結合対応
+        - field: description
+          from: ""
+          to: PJR-0155 で実装した dct カタログの物理分割マージ（`mergeDomainCatalogs`）は、同一 `domain` の各ファイルの `groups` をファイル順に連結するだけで、同名 group を1章へ結合しない（`src/catalog-build.ts`）。このため成果物種別ごとにファイルを分割すると、`業務データ辞書`・`概念モデル` などの章見出しがファイル数だけ重複する。種別ごと物理分割（data-model テンプレートの再分割）を成立させ、rulebook の業務領域分割例（`dct-data-model-sales.yaml`／`-buy.yaml`）も正しく描画するため、マージ時に同一 `domain` 内の同名 group を1章へ結合できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: da911bde79055fa8bfb92bcfb2a8aa25dc3d7713
+    - v: 1
+      id: reg_576c9d20e1823334ebc9b601d6aad6b7
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: PJR-0155 で実装した dct カタログの物理分割マージ（`mergeDomainCatalogs`）は、同一 `domain` の各ファイルの `groups` をファイル順に連結するだけで、同名 group を1章へ結合しない（`src/catalog-build.ts`）。このため成果物種別ごとにファイルを分割すると、`業務データ辞書`・`概念モデル` などの章見出しがファイル数だけ重複する。種別ごと物理分割（data-model テンプレートの再分割）を成立させ、rulebook の業務領域分割例（`dct-data-model-sales.yaml`／`-buy.yaml`）も正しく描画するため、マージ時に同一 `domain` 内の同名 group を1章へ結合できるようにする。
+          to: 同一domainの複数dctファイルで同名groupを1章へ結合し、種別ごと物理分割時の章重複を解消する
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: mergeDomainCatalogsに同名group結合(決定的・再帰的)を実装。data-modelテンプレートをbdd/cdsd/sld/stsd/cld/ccd/cstdの7種別へ分割し、マージ後は業務データ辞書・概念モデルの2章に再構成。catalog-mergeテスト11件含め全対象テスト成功。
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_fe758602cb77e627c2cd23bd65a66ec3
+    - v: 1
+      id: reg_cc6a4c197b87f3e86292ce73e96992d5
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-06"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_576c9d20e1823334ebc9b601d6aad6b7
 ---
 
 # PJR-0156 dctカタログmergeの同名group結合対応

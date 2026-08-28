@@ -13,6 +13,132 @@ specdojo:
   registered_at: "2026-08-09T08:48:42Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T11:58:09Z"
+  register_events:
+    - v: 1
+      id: reg_e87284967b23cb726e171ebf2dfd0af8
+      ts: "2026-08-09T08:48:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): split PJR-ES57 into 8 register items"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 台帳の差分レビュー代替手段を決めて実装する
+        - field: description
+          from: ""
+          to: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割8。一覧が生成物となり追跡対象から外れることで、台帳全体の変更を1ファイルの差分で追えなくなる。これは [[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B の懸念として挙げた点であり、成立条件として代替手段を決めることが求められている。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ed4a5ebd78cf5d5c024951e1eb834e5a78317135
+    - v: 1
+      id: reg_032bf4bf345a6600eacaba2774116464
+      ts: "2026-08-09T10:55:22Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: description
+          from: "[[prj-0001:pjr-es57-register-file-ssot-migration]] の分割8。一覧が生成物となり追跡対象から外れることで、台帳全体の変更を1ファイルの差分で追えなくなる。これは [[prj-0001:pjr-9y7g-register-item-file-as-ssot]] で選択肢 B の懸念として挙げた点であり、成立条件として代替手段を決めることが求められている。"
+          to: PJR-ES57 の分割8。一覧が非追跡になることで失われる台帳全体の差分レビューについて、代替手段を決めて運用ガイドへ反映する。
+        - field: priority
+          from: medium
+          to: high
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_e87284967b23cb726e171ebf2dfd0af8
+    - v: 1
+      id: reg_69f665f86c4dbab67f8da58810f9af1d
+      ts: "2026-08-09T11:42:45Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-GH26): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 53cc1d3a2f766d36ef108e4752c77de17aead0fb
+      previous_event_id: reg_032bf4bf345a6600eacaba2774116464
+    - v: 1
+      id: reg_75c1feddc9a44f64ad2a78573cf7091c
+      ts: "2026-08-09T11:55:55Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-GH26): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 5801cc1f258dbd6c43742c217e68fa363f1dae00
+      previous_event_id: reg_69f665f86c4dbab67f8da58810f9af1d
+    - v: 1
+      id: reg_1a38c773576116c079dd02d9fa8af2a9
+      ts: "2026-08-09T11:58:09Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-GH26"
+      changes:
+        - field: status
+          from: review
+          to: done
+      legacy_commit: 41366b07cc873bec9fafc54092e3ffd4fab23e64
+      previous_event_id: reg_75c1feddc9a44f64ad2a78573cf7091c
+    - v: 1
+      id: reg_a6d94610c53adc719c1c5a9803532956
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_1a38c773576116c079dd02d9fa8af2a9
 ---
 
 # PJR-GH26 台帳の差分レビュー代替手段を決めて実装する

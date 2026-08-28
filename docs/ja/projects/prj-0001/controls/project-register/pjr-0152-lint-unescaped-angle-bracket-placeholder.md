@@ -13,6 +13,90 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-05T12:00:00Z"
   conclusion: 未エスケープ山括弧プレースホルダ検知のremarkプラグイン(remark-no-unescaped-angle-placeholder)を実装しroot .remarkrc.yamlへ配線。HTMLタグ許可リストで正規HTML(br/details等)を非検知、`<lang>`/`<topic>`等を検知。unit test10件・全docs誤検知ゼロ・npm run check通過を確認
+  register_events:
+    - v: 1
+      id: reg_7df0eef10e0c1c6a9409808814ccdfd1
+      ts: "2026-08-04T11:29:19Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: PJR-0152を起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 未エスケープの山括弧プレースホルダ（`<lang>`等）を検知するlintルールの追加
+        - field: description
+          from: ""
+          to: "`markdown.instructions.md` は山括弧付きプレースホルダ（例: `<project-id>`）をインラインコードで囲むことを必須としているが、機械的な検知手段がない。実際にPJR-0145/0146で未エスケープの `<lang>`/`<topic>` が混入し、VitePressのVueテンプレートコンパイラが未クローズのHTMLタグと解釈して `docs:build` が失敗した（`fix: PJR-0145/0146の未エスケープ山括弧プレースホルダを修正しdocs:build失敗を解消`で対応済み）。`MD033`（インラインHTML禁止）は `<br>` や `<details>` 等の正規HTML利用（`docs/` 全体で150件以上）と衝突するため単純に有効化できない。実在HTMLタグ名の許可リストを用いたカスタムルールを追加し、同種の不具合を未然に防ぐ。"
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8a5bf79850e092906761a4d804913139f45549f1
+    - v: 1
+      id: reg_bdb514f7fafa6ea8a169a1d94e2f5566
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: "`markdown.instructions.md` は山括弧付きプレースホルダ（例: `<project-id>`）をインラインコードで囲むことを必須としているが、機械的な検知手段がない。実際にPJR-0145/0146で未エスケープの `<lang>`/`<topic>` が混入し、VitePressのVueテンプレートコンパイラが未クローズのHTMLタグと解釈して `docs:build` が失敗した（`fix: PJR-0145/0146の未エスケープ山括弧プレースホルダを修正しdocs:build失敗を解消`で対応済み）。`MD033`（インラインHTML禁止）は `<br>` や `<details>` 等の正規HTML利用（`docs/` 全体で150件以上）と衝突するため単純に有効化できない。実在HTMLタグ名の許可リストを用いたカスタムルールを追加し、同種の不具合を未然に防ぐ。"
+          to: markdown.instructions.mdは山括弧付きプレースホルダをインラインコードで囲むことを必須としているが、機械的な検知手段がない。MD033(インラインHTML禁止)は`<br>`や`<details>`等の正規HTML利用と衝突するため有効化できない。実在HTMLタグ名の許可リストを用いたカスタムルールを、既存のremarkプラグイン基盤(tools/docs/src配下、.remarkrc.yaml、lint:fm)またはmarkdownlintのcustomRulesに追加し、docs:build失敗(Vueコンパイラのタグ未クローズエラー)を未然に防ぐ
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: 未エスケープ山括弧プレースホルダ検知のremarkプラグイン(remark-no-unescaped-angle-placeholder)を実装しroot .remarkrc.yamlへ配線。HTMLタグ許可リストで正規HTML(br/details等)を非検知、`<lang>`/`<topic>`等を検知。unit test10件・全docs誤検知ゼロ・npm run check通過を確認
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_7df0eef10e0c1c6a9409808814ccdfd1
+    - v: 1
+      id: reg_3651797a1a78f2576dd90378685abe50
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-08-05"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_bdb514f7fafa6ea8a169a1d94e2f5566
 ---
 
 # PJR-0152 未エスケープの山括弧プレースホルダ（`<lang>`等）を検知するlintルールの追加

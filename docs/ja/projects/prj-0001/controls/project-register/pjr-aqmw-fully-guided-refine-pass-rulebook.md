@@ -13,6 +13,123 @@ specdojo:
   registered_at: "2026-08-12T01:12:06Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-12T03:16:33Z"
+  register_events:
+    - v: 1
+      id: reg_8e67b0217afd0de9c4f92a997a514d56
+      ts: "2026-08-12T01:18:15Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): register bootstrap/refine-pass quality improvement proposals"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: fully-guided(refine-pass)の指示にrulebook不適合の修正を追加
+        - field: description
+          from: ""
+          to: xep-fully-guided-template.mdの「4.2 既存記述の扱い」およびryu-guide.mdの「1.3 参照の共通原則」で、修正対象をdepends_onとの矛盾だけでなく、手順1で確認するrulebookの必須要素・禁止事項（章構成を含む）への不適合も含めるよう修正する。retrofit側（xep-retrofit-template.mdの判断基準表）にrulebook適合を判断基準として追加するかも合わせて検討する。フレームワーク共通ファイルのため他プロジェクトへの影響を確認のうえ反映する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-12"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 3648966bca821bf8da59d6b3d185e95f8666f7cd
+    - v: 1
+      id: reg_20ca402830b015dd26198cec900a2f0c
+      ts: "2026-08-12T02:34:15Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-AQMW): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 90e4c4c20523b94cfa424769acf3eb57fc192aac
+      previous_event_id: reg_8e67b0217afd0de9c4f92a997a514d56
+    - v: 1
+      id: reg_cd7f534b5859a1fe868a7c7120dda8b4
+      ts: "2026-08-12T02:41:23Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-AQMW): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: e62a4fcdff72a4987ecd6b94bc129b788a65d6c9
+      previous_event_id: reg_20ca402830b015dd26198cec900a2f0c
+    - v: 1
+      id: reg_a52e93f1c56021a3bbe12ba004e1541f
+      ts: "2026-08-12T03:00:01Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: review
+      to_status: in-progress
+      reason: "exec(register PJR-AQMW): start"
+      changes:
+        - field: status
+          from: review
+          to: in-progress
+      legacy_commit: 7cb77b390002caa61c4a7d1cd8e598d9c30bd2fd
+      previous_event_id: reg_cd7f534b5859a1fe868a7c7120dda8b4
+    - v: 1
+      id: reg_ac233457b3294f4f0c0531e2d016abe5
+      ts: "2026-08-12T03:06:51Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-AQMW): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 680ee1d1434681bc1dff967823acbdfe997445ab
+      previous_event_id: reg_a52e93f1c56021a3bbe12ba004e1541f
+    - v: 1
+      id: reg_683a8382e4bf88c50d5e84666171310a
+      ts: "2026-08-12T03:16:43Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-AQMW and fix inline _TODO_ marker false positive"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-12"
+      legacy_commit: 526230e5fff20369e97973189abc1e77d0700e60
+      previous_event_id: reg_ac233457b3294f4f0c0531e2d016abe5
 ---
 
 # PJR-AQMW fully-guided(refine-pass)の指示にrulebook不適合の修正を追加

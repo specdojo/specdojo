@@ -15,6 +15,146 @@ specdojo:
   completed_at: "2026-08-27T21:56:46Z"
   block_reason: "agent exited with non-zero code: runner validation `test-unit`（`npm run test:unit`）が exit 1 で失敗している。88テストファイル中1件、1298テスト中2件が失敗しており、modeline を正とした schema パス解決と rulebook frontmatter 非依存の挙動を検証する tests/sr…"
   conclusion: YAML の schema 定義を yaml-language-server の modeline へ集約した。docs 配下の86ファイルへ modeline を付与し、テンプレート30本にも付与して生成物へ引き継がれるようにした。テンプレートはプレースホルダを含むため検証対象外、サンプルは完成例のため対象とする。modeline の欠落とパスの誤りを検出する検証を追加し、書き忘れが黙って対象から外れない状態にした。_SCHEMA_REF_ は rulebook frontmatter ではなく対象ファイルの modeline から解決する。package.json の validate:schema:* 個別12本を削除し --modeline による全YAML走査へ集約した。validate:schema:file は単一ファイル検証、validate:schema:job-run は対象がJSONでmodelineを持てないため残した。保護対象の package.json と .specdojo/exec-defaults.yaml は agent が変更せず、オーケストレーターが承認のうえ適用した。settings.json と検証スクリプトの食い違い6件も解消した。
+  register_events:
+    - v: 1
+      id: reg_5037b1ce14c48af486cd5d511a9b6e3e
+      ts: "2026-08-27T13:52:07Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-078K YAMLのschema定義をmodelineへ集約を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: YAMLのschema定義をmodelineへ集約する
+        - field: description
+          from: ""
+          to: YAML の schema 対応が3か所に分散している。.vscode/settings.json の yaml.schemas が13パターン、package.json の検証スクリプトが13本、rulebook frontmatter の schema 宣言が2本である。前二者は同じ対応を別形式で持ち、既に6件が片方にしか存在しない。rulebook 経由の解決は106本中2本しか宣言がなく、未宣言だと plan から schema 検証の指示が落ちる。yaml-language-server の modeline を正本とし、各 YAML が自身の schema を宣言する形へ集約する。_SCHEMA_REF_ も modeline から展開する。VS Code のライブ検証はツール側が modeline を優先するため設定なしで効き、他のツールからも同じ宣言を読める。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-27"
+        - field: due
+          from: ""
+          to: "2026-09-30"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 7fdb07839ded39a89293bbbc41b10a644801a34b
+    - v: 1
+      id: reg_3e558dc34b65360763f6f8552c051ad0
+      ts: "2026-08-27T13:54:12Z"
+      action: start
+      actor: naoji3x
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-078K): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: b19cfde583eb0621464ee7c0b7554dfa147a4e3d
+      previous_event_id: reg_5037b1ce14c48af486cd5d511a9b6e3e
+    - v: 1
+      id: reg_f8a20215e7a20e8f4e3c06cde06fca62
+      ts: "2026-08-27T14:11:14Z"
+      action: wait
+      actor: naoji3x
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-078K): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml, package.json; agent must record the …"
+      legacy_commit: 668a4322589dec6c2d1f913f251ea72c5b366316
+      previous_event_id: reg_3e558dc34b65360763f6f8552c051ad0
+    - v: 1
+      id: reg_3cc8d12c3ffd62e7c7b7c04bd3797889
+      ts: "2026-08-27T14:17:28Z"
+      action: start
+      actor: naoji3x
+      from_status: waiting
+      to_status: in-progress
+      reason: "exec(register PJR-078K): start"
+      changes:
+        - field: status
+          from: waiting
+          to: in-progress
+      legacy_commit: 08fe27bb57d61555495cdd1ecb197155c4f97a58
+      previous_event_id: reg_f8a20215e7a20e8f4e3c06cde06fca62
+    - v: 1
+      id: reg_f8a8baa1cf86804c7d5575df45112eeb
+      ts: "2026-08-27T14:34:49Z"
+      action: wait
+      actor: naoji3x
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-078K): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml, package.json; agent must record the …"
+          to: "agent exited with non-zero code: runner validation `test-unit`（`npm run test:unit`）が exit 1 で失敗している。88テストファイル中1件、1298テスト中2件が失敗しており、modeline を正とした schema パス解決と rulebook frontmatter 非依存の挙動を検証する tests/sr…"
+      legacy_commit: 1dc0b354c732d807d1af17ac5c13ef8380d1e62d
+      previous_event_id: reg_3cc8d12c3ffd62e7c7b7c04bd3797889
+    - v: 1
+      id: reg_bb1b22ac4802ea355b75b01b1bf67e32
+      ts: "2026-08-27T14:42:21Z"
+      action: review
+      actor: naoji3x
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-078K): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 4b592289d0155bb4409b3b1c6d19d9d989e23d7e
+      previous_event_id: reg_f8a8baa1cf86804c7d5575df45112eeb
+    - v: 1
+      id: reg_1e6b963f01c4f4a74b0119ef04b3e94c
+      ts: "2026-08-27T21:56:53Z"
+      action: close
+      actor: naoji3x
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-078K をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: YAML の schema 定義を yaml-language-server の modeline へ集約した。docs 配下の86ファイルへ modeline を付与し、テンプレート30本にも付与して生成物へ引き継がれるようにした。テンプレートはプレースホルダを含むため検証対象外、サンプルは完成例のため対象とする。modeline の欠落とパスの誤りを検出する検証を追加し、書き忘れが黙って対象から外れない状態にした。_SCHEMA_REF_ は rulebook frontmatter ではなく対象ファイルの modeline から解決する。package.json の validate:schema:* 個別12本を削除し --modeline による全YAML走査へ集約した。validate:schema:file は単一ファイル検証、validate:schema:job-run は対象がJSONでmodelineを持てないため残した。保護対象の package.json と .specdojo/exec-defaults.yaml は agent が変更せず、オーケストレーターが承認のうえ適用した。settings.json と検証スクリプトの食い違い6件も解消した。
+      legacy_commit: e7519e8225d800948f6fb809b7de5ae91eb593b3
+      previous_event_id: reg_bb1b22ac4802ea355b75b01b1bf67e32
 ---
 
 # PJR-078K YAMLのschema定義をmodelineへ集約する

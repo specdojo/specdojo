@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-27T23:00:18Z"
   due_on: "2026-09-30"
+  register_events:
+    - v: 1
+      id: reg_46dd43dc781c26a074df0791447b8ab7
+      ts: "2026-08-27T23:03:10Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-G2F4 を起票しqwen比較の結果を記録する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: qwen-reporterへ構造化出力を指定してJSON単体出力を強制する
+        - field: description
+          from: ""
+          to: qwen-reporter は JSON 自体は生成できるが前後に散文が付き、SpecDojo の単一 JSON 解析に失敗する。指示文へ JSON オブジェクト単体で出力する旨と no_think を明示したが、3回とも同じ失敗で効果がなかった。opencode.json のスキーマにはモデル単位の options が任意オブジェクトとして定義されており、Ollama の OpenAI 互換 API へ response_format を渡せる可能性がある。JSON モードを強制すれば構造上前置きを出力できなくなる。ただし同じモデルを executor でも使っているため、モデル設定では両者を分離できない。別名登録などの分離方法とあわせて検証する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-28"
+        - field: due
+          from: ""
+          to: "2026-09-30"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 8500f4214d92fb08157eefcac13b4b7b895b0790
 ---
 
 # PJR-G2F4 qwen-reporterへ構造化出力を指定してJSON単体出力を強制する

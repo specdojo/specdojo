@@ -13,6 +13,109 @@ specdojo:
   registered_at: "2026-08-09T14:04:24Z"
   due_on: "2026-08-31"
   completed_at: "2026-08-09T14:46:30Z"
+  register_events:
+    - v: 1
+      id: reg_7dc28f2880003c4b73b52d3ed791590d
+      ts: "2026-08-09T14:04:24Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add timestamp migration todo"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿日時をregistered_at・completed_atへ移行する
+        - field: description
+          from: ""
+          to: 登録簿の起票・完了時刻をUTCのRFC 3339秒精度で記録する。既存項目はGit履歴から可能な範囲で復元し、時刻不明時は既存日付の21:00（プロジェクトタイムゾーン）として移行する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 1f1de557d10e0bf552be6a8f4abc5fd135813565
+    - v: 1
+      id: reg_b5868f79e8d55a8f6b5f0e086aeb974b
+      ts: "2026-08-09T14:08:52Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-EQAQ): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 0e545de30dc5680168cba72ec855f92aef0df3a2
+      previous_event_id: reg_7dc28f2880003c4b73b52d3ed791590d
+    - v: 1
+      id: reg_b1daf590b37e95c556f655724d78fd46
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: in-progress
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_b5868f79e8d55a8f6b5f0e086aeb974b
+    - v: 1
+      id: reg_3c1be1f9f1c7e708bb8784db4c6eb722
+      ts: "2026-08-09T14:40:07Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-EQAQ): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 574f4546e36247f115ab0c192b5d411671832b4e
+      previous_event_id: reg_b1daf590b37e95c556f655724d78fd46
+    - v: 1
+      id: reg_8147d9215a7608315a103efc860126b4
+      ts: "2026-08-09T14:46:42Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(prj-0001): close PJR-EQAQ"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 7d0f10a33992b6592dd529e3e27dd1e8bb80386f
+      previous_event_id: reg_3c1be1f9f1c7e708bb8784db4c6eb722
 ---
 
 # PJR-EQAQ 登録簿日時をregistered_at・completed_atへ移行する

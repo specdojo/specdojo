@@ -14,6 +14,160 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-25T06:22:02Z"
   conclusion: sandbox 内で子プロセスの生成・通信・終了が成立しない検証を、sandbox を緩めずに親 runner へ移した。parent_validations の固定許可リストへ validate-schema と test-unit を追加し、schema の列挙値として定義した。共通規約を親検証に設定された ID のコマンドは executor が sandbox 内で実行しないと改め、prompt にも ID と対応コマンドを明示して二重実行を防ぐ。.specdojo/exec-defaults.yaml は agent の保護対象のため executor が更新できず、オーケストレーターが承認を得て適用した。sandbox の設定は変更しておらず隔離は弱まっていない。sandbox 内で子プロセスが成立しない原因そのものは特定しておらず、影響を回避した対処である。
+  register_events:
+    - v: 1
+      id: reg_c6dc5fb6e9741ff5f16eaf9dfe0e2bfb
+      ts: "2026-08-23T07:24:57Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-0FCT・PJR-QVGX を起票し PJR-QESV を決定済みにする"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: codex sandboxでvalidate:schemaがtsxのIPC EPERMにより常に失敗する問題を解消する
+        - field: description
+          from: ""
+          to: codex-expert-executor の sandbox 内では tsx が IPC ソケット /tmp/tsx-1000/`<pid>.pipe` を作成できず EPERM となり、npm run validate:schema が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 12e833e39ea35d48c4cdea320289b34ef954b55e
+    - v: 1
+      id: reg_5f010752c3129ac9b921073f8d7f11eb
+      ts: "2026-08-23T12:41:11Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "fix(register): PJR-QVGX の山括弧プレースホルダをインラインコード化する"
+      changes:
+        - field: description
+          from: codex-expert-executor の sandbox 内では tsx が IPC ソケット /tmp/tsx-1000/`<pid>.pipe` を作成できず EPERM となり、npm run validate:schema が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+          to: codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+      legacy_commit: 04992f471223c60e40f34e0e6f2235628123b585
+      previous_event_id: reg_c6dc5fb6e9741ff5f16eaf9dfe0e2bfb
+    - v: 1
+      id: reg_2e52f27aa196e0b6d5ba8346f40cacf0
+      ts: "2026-08-23T12:58:31Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "feat(kata): 実践の型の要否に未判断の状態を追加する"
+      changes:
+        - field: description
+          from: codex-expert-executor の sandbox 内では tsx が IPC ソケット /tmp/tsx-1000/`<pid>.pipe` を作成できず EPERM となり、npm run validate:schema が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+          to: codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+      legacy_commit: 03aa42e02c33f84b03960d48d193fae3e1ef277b
+      previous_event_id: reg_5f010752c3129ac9b921073f8d7f11eb
+    - v: 1
+      id: reg_5fb7325b5889edfced43c576726569df
+      ts: "2026-08-25T03:52:30Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): PJR-QVGX を子プロセス全般の問題として捉え直す"
+      changes:
+        - field: title
+          from: codex sandboxでvalidate:schemaがtsxのIPC EPERMにより常に失敗する問題を解消する
+          to: codex sandboxで子プロセスが成立せず検証が常に失敗する問題を解消する
+        - field: description
+          from: codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。sandbox 設定で当該パスを許可するか、validate:schema を tsx の IPC に依存しない実行方式へ変更する。
+          to: codex-expert-executor の sandbox 内では tsx が IPC ソケット `/tmp/tsx-1000/<pid>.pipe` を作成できず EPERM となり、`npm run validate:schema` が成果物の内容と無関係に常に failed となる。PJR-K4TA では reporter のブロック理由の一つになった。
+      legacy_commit: 9609f1cba1bcc51b282450699ef74f13d51c8f9b
+      previous_event_id: reg_2e52f27aa196e0b6d5ba8346f40cacf0
+    - v: 1
+      id: reg_cf62bead9073d8dbac06dc9bd89458c0
+      ts: "2026-08-25T03:52:44Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-QVGX): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: d316f7d927669989efd20cca854e060e733378aa
+      previous_event_id: reg_5fb7325b5889edfced43c576726569df
+    - v: 1
+      id: reg_83e74aa3b89a34437e1a2699472c9a25
+      ts: "2026-08-25T04:01:57Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-QVGX): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: runner validation「test-integration」がfailed（exit 1）。指示によりrunner validationのfailedはblockedとしなければならない。加えて、executor validation「npm run test:unit」はfailed、executor validatio…"
+      legacy_commit: 2e5058595abd8be49ac8589851836b5699d54337
+      previous_event_id: reg_cf62bead9073d8dbac06dc9bd89458c0
+    - v: 1
+      id: reg_ea968b7d65f252d74acd751ecb2af938
+      ts: "2026-08-25T06:04:01Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-QVGX): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 566be8025d44b302ba5e6eafaa4f30a72fc989a7
+      previous_event_id: reg_83e74aa3b89a34437e1a2699472c9a25
+    - v: 1
+      id: reg_583a242bdfad951a37d797fee00b2416
+      ts: "2026-08-25T06:23:02Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの3件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-25"
+        - field: conclusion
+          from: "agent exited with non-zero code: runner validation「test-integration」がfailed（exit 1）。指示によりrunner validationのfailedはblockedとしなければならない。加えて、executor validation「npm run test:unit」はfailed、executor validatio…"
+          to: sandbox 内で子プロセスの生成・通信・終了が成立しない検証を、sandbox を緩めずに親 runner へ移した。parent_validations の固定許可リストへ validate-schema と test-unit を追加し、schema の列挙値として定義した。共通規約を親検証に設定された ID のコマンドは executor が sandbox 内で実行しないと改め、prompt にも ID と対応コマンドを明示して二重実行を防ぐ。.specdojo/exec-defaults.yaml は agent の保護対象のため executor が更新できず、オーケストレーターが承認を得て適用した。sandbox の設定は変更しておらず隔離は弱まっていない。sandbox 内で子プロセスが成立しない原因そのものは特定しておらず、影響を回避した対処である。
+      legacy_commit: d20d78a7ef2e0dc2f58d3344dff92deeaaa2693e
+      previous_event_id: reg_ea968b7d65f252d74acd751ecb2af938
 ---
 
 # PJR-QVGX codex sandboxで子プロセスが成立せず検証が常に失敗する問題を解消する

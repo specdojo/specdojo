@@ -14,6 +14,96 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-09T10:55:22Z"
   conclusion: xer-template.md 第4章を「進め方と実践の型の適用」へ改称し、本文も両者を求める記述へ調整。plan テンプレート9ファイル26箇所とテスト3箇所を追随、旧名称の残存0件
+  register_events:
+    - v: 1
+      id: reg_01ccf8e5d8438d91c73bac5038f99ff1
+      ts: "2026-08-08T23:29:02Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(prj-0001): add PJR-XXBC ticket for result section rename"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: result の「実践の型の活用」を「進め方と実践の型の適用」へ改称する
+        - field: description
+          from: ""
+          to: edit result テンプレート `docs/ja/specdojo/templates/xer-template.md` の第4章「実践の型の活用」を「進め方と実践の型の適用」へ改称し、これを参照する plan テンプレートおよびテストの文言を追随させる。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: _TODO_
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: _TODO_
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: af5bbf6d463ede96292b2ba3047657a61b1b3036
+    - v: 1
+      id: reg_fab8a920bd21a3320ee4fac006bf7749
+      ts: "2026-08-09T10:55:22Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: description
+          from: edit result テンプレート `docs/ja/specdojo/templates/xer-template.md` の第4章「実践の型の活用」を「進め方と実践の型の適用」へ改称し、これを参照する plan テンプレートおよびテストの文言を追随させる。
+          to: xer-template.md の見出しと、それを参照する xep-\* テンプレート10ファイル・テストの文言を改称する。approach 由来の記録（retrofit の実装参照、freeform のプロジェクト文脈優先など）を名称で包含できるようにする
+        - field: priority
+          from: medium
+          to: low
+        - field: owner
+          from: _TODO_
+          to: ARC
+        - field: due
+          from: _TODO_
+          to: "2026-08-31"
+        - field: conclusion
+          from: "-"
+          to: xer-template.md 第4章を「進め方と実践の型の適用」へ改称し、本文も両者を求める記述へ調整。plan テンプレート9ファイル26箇所とテスト3箇所を追随、旧名称の残存0件
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+      previous_event_id: reg_01ccf8e5d8438d91c73bac5038f99ff1
+    - v: 1
+      id: reg_6c305a4d0c0a06bf30acc4fb2e56f164
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: registered
+          from: _TODO_
+          to: "2026-08-09"
+        - field: completed
+          from: "-"
+          to: "2026-08-09"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_fab8a920bd21a3320ee4fac006bf7749
 ---
 
 # PJR-XXBC result の「実践の型の活用」を「進め方と実践の型の適用」へ改称する

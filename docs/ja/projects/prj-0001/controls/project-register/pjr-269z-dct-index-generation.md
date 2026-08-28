@@ -14,6 +14,115 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T02:33:16Z"
   conclusion: dct-index.yaml を正本として catalog build が generated/dct-index.md を生成する構成へ移行した。グループごとの表分割と宣言順の反映、物理分割ドメインの1行集約、宣言と実体の双方向突き合わせ、size の一本化（フォールバックなし）を実装し、共通ルールの散文は dct-index-template.md で保持する。旧 dct-index.md を削除し doc id は生成物へ引き継いだ。
+  register_events:
+    - v: 1
+      id: reg_b1c7c0d5fbc26aa80ccfbe25d68c5319
+      ts: "2026-08-22T00:21:42Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): add PJR-269Z dct-index generation from yaml"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: dct-index.md を dct-index.yaml から自動生成し、順序とグループ分割を宣言で制御する
+        - field: description
+          from: ""
+          to: dct-index.md は現在すべて人が編集しており、ドメイン一覧表の並び順とグループ分割を宣言的に制御できない。表の4列のうち domain とカタログへのリンクは dct-\*.yaml から導出できるが、名称・概要・並び順・グループの出典が存在しない。順序とグループはドメイン横断の編集意図であるため、各ドメインファイルへ分散させず dct-index.yaml に集約し、catalog build が generated/dct-index.md を生成する方式へ移行する。共通ルールの散文は register の pjr-index-template.md と同じ template 方式で保持する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 620d7647265712f63d8868eb734209556e1c65d8
+    - v: 1
+      id: reg_a750696412822fa972bcd77206ce4647
+      ts: "2026-08-22T00:43:13Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-269Z): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 4a8584d9f5c22347694fb80473c14e9b56150fb6
+      previous_event_id: reg_b1c7c0d5fbc26aa80ccfbe25d68c5319
+    - v: 1
+      id: reg_feab2a0ff2135ac832b8b8e2761fc180
+      ts: "2026-08-22T00:57:08Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-269Z): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json, package.json; agent must record the requ…"
+      legacy_commit: 3403fc5455f6843d17265d16ce440253db1904d7
+      previous_event_id: reg_a750696412822fa972bcd77206ce4647
+    - v: 1
+      id: reg_19acbed759050ef4347680642e193ce4
+      ts: "2026-08-22T02:12:17Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-269Z): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: 0f4fff0a59faeaea115c4fd0c3e7c4dfbe270601
+      previous_event_id: reg_feab2a0ff2135ac832b8b8e2761fc180
+    - v: 1
+      id: reg_726772edd67edc0f325ee47629069427
+      ts: "2026-08-22T02:33:29Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-269Z): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-22"
+        - field: conclusion
+          from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json, package.json; agent must record the requ…"
+          to: dct-index.yaml を正本として catalog build が generated/dct-index.md を生成する構成へ移行した。グループごとの表分割と宣言順の反映、物理分割ドメインの1行集約、宣言と実体の双方向突き合わせ、size の一本化（フォールバックなし）を実装し、共通ルールの散文は dct-index-template.md で保持する。旧 dct-index.md を削除し doc id は生成物へ引き継いだ。
+      legacy_commit: 00953e4e0e75ac82d28f7b93f97b44e9f3671d8e
+      previous_event_id: reg_19acbed759050ef4347680642e193ce4
 ---
 
 # PJR-269Z dct-index.md を dct-index.yaml から自動生成し、順序とグループ分割を宣言で制御する

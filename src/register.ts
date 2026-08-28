@@ -1756,6 +1756,63 @@ function actionFromLegacyHistory(
   return "update";
 }
 
+// Git 履歴から復元した1件の変更を Register event へ変換する。状態連鎖を成立させるための
+// 接続処理を含むため、移行本体から切り離して単体で検証できるようにしている。
+export function legacyHistoryEventToRegisterEvent(
+  historyEvent: {
+    id: string;
+    commit: string;
+    date: string;
+    author: string;
+    subject: string;
+    kind: "added" | "updated" | "removed";
+    changes: readonly { field: string; from: string; to: string }[];
+  },
+  context: { isFirst: boolean; currentStatus: string | null; fallbackStatus: string },
+): RegisterEventV1 {
+  // 過去の revision には、山括弧のエスケープ規約（PJR-B1SJ / PJR-ZWMH）より前に書かれた
+  // `<domain>` のようなプレースホルダが素のまま残っている。event へ写すと個票 frontmatter の
+  // 検証に落ちるため、現行の規約に合わせてインラインコードで囲んでから記録する。
+  const escape = (text: string): string => inlineCodeAnglePlaceholders(text);
+  const statusChange = historyEvent.changes.find((change) => change.field === "status");
+  // 同じ個票が Git 履歴上で複数回 `added` として現れることがある。worktree のブランチで
+  // 作成した個票が統合ブランチへ再度追加された場合などで、走査は両方の commit を見る。
+  // 起票は状態連鎖の起点であり1件しか置けないため、2件目以降は追加ではなく更新として扱う。
+  const kind = historyEvent.kind === "added" && !context.isFirst ? "updated" : historyEvent.kind;
+  // 再追加の差分は「無」との比較になるため status の from が空になる。空のときは直前の
+  // event の到達状態へ接続し、状態連鎖が途切れないようにする。
+  const fromStatus: string | null =
+    kind === "added" ? null : statusChange?.from || context.currentStatus || context.fallbackStatus;
+  const toStatus: string = statusChange?.to ?? fromStatus ?? context.fallbackStatus;
+  return {
+    v: 1,
+    id: deterministicRegisterEventId(
+      `${historyEvent.commit}\0${historyEvent.id}\0${JSON.stringify(historyEvent.changes)}`,
+    ),
+    ts: normalizeRegisterTimestamp(historyEvent.date, "legacy event date"),
+    action: actionFromLegacyHistory(kind, historyEvent.changes),
+    actor: historyEvent.author.trim() || "git-author-unknown",
+    from_status: fromStatus,
+    to_status: toStatus,
+    reason:
+      escape(historyEvent.subject.trim()) || `migrated from ${historyEvent.commit.slice(0, 7)}`,
+    // 再追加を更新として扱う場合、status の差分は「無 -> open」のまま残ると from_status /
+    // to_status と食い違う。接続先の状態に合わせ、実際に変化していなければ差分から落とす。
+    changes: historyEvent.changes.flatMap((change) => {
+      const from = change.field === "status" ? (fromStatus ?? change.from) : change.from;
+      if (change.field === "status" && from === change.to) return [];
+      return [
+        {
+          field: change.field as RegisterEventV1["changes"][number]["field"],
+          from: escape(from),
+          to: escape(change.to),
+        },
+      ];
+    }),
+    legacy_commit: historyEvent.commit,
+  };
+}
+
 function migrateRegisterEventsFromGit(
   paths: RegisterPaths,
   dryRun: boolean,
@@ -1794,32 +1851,13 @@ function migrateRegisterEventsFromGit(
     let currentStatus: string | null = null;
     let appended = 0;
     for (const historyEvent of legacyEvents) {
-      const statusChange = historyEvent.changes.find((change) => change.field === "status");
-      const fromStatus: string | null =
-        historyEvent.kind === "added"
-          ? null
-          : (statusChange?.from ?? currentStatus ?? doc.item.status);
-      const toStatus: string = statusChange?.to ?? fromStatus ?? doc.item.status;
-      const event: RegisterEventV1 = {
-        v: 1,
-        id: deterministicRegisterEventId(
-          `${historyEvent.commit}\0${historyEvent.id}\0${JSON.stringify(historyEvent.changes)}`,
-        ),
-        ts: normalizeRegisterTimestamp(historyEvent.date, "legacy event date"),
-        action: actionFromLegacyHistory(historyEvent.kind, historyEvent.changes),
-        actor: historyEvent.author.trim() || "git-author-unknown",
-        from_status: fromStatus,
-        to_status: toStatus,
-        reason: historyEvent.subject.trim() || `migrated from ${historyEvent.commit.slice(0, 7)}`,
-        changes: historyEvent.changes.map((change) => ({
-          field: change.field as RegisterEventV1["changes"][number]["field"],
-          from: change.from,
-          to: change.to,
-        })),
-        legacy_commit: historyEvent.commit,
-      };
+      const event = legacyHistoryEventToRegisterEvent(historyEvent, {
+        isFirst: appended === 0,
+        currentStatus,
+        fallbackStatus: doc.item.status,
+      });
       content = appendRegisterEvent(content, event);
-      currentStatus = toStatus;
+      currentStatus = event.to_status;
       appended++;
     }
     if (appended === 0) continue;

@@ -15,6 +15,132 @@ specdojo:
   completed_at: "2026-08-26T08:14:28Z"
   block_reason: 'agent exited with non-zero code: reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token ''I'', "I need to "... is not valid JSON'
   conclusion: 共通規約の test 実行に関する記述の矛盾を解消した。親検証に設定された ID のコマンドは対応表よりも優先し executor は実行しないことを明記し、対応表の該当行を条件付きの記述へ改めた。test-unit が親検証に設定されている場合と設定されていない場合の双方で、executor が何を実行すべきかが一意に定まる。全件を1回だけ実行する制約は executor が sandbox 内で実行する test script に対するものであり、親検証のコマンドは対象外であることも明記した。当初の課題であった1回限定規約による再検証の禁止は PJR-QVGX で既に解消しており、例外規定の追加は行っていない。
+  register_events:
+    - v: 1
+      id: reg_575dbad39c42a93c479c82cc997ad16b
+      ts: "2026-08-23T07:24:57Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-0FCT・PJR-QVGX を起票し PJR-QESV を決定済みにする"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: test:unitの1回限定規約に修正後の再実行例外を追加する
+        - field: description
+          from: ""
+          to: xep-common-conventions-template.md の「test:unit は1回だけ実行する」規約が、失敗を修正した後の再検証まで禁止すると解釈され、executor が失敗を抱えたまま終了し reporter も完了を確認できずブロックする事象が PJR-K4TA で発生した。無条件の二重実行を防ぐ意図は維持しつつ、失敗を修正した場合は再実行して最終状態を確認する例外を明記する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 12e833e39ea35d48c4cdea320289b34ef954b55e
+    - v: 1
+      id: reg_bd5172c5941c52771d0b96642b21f09d
+      ts: "2026-08-26T06:57:45Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: open
+      to_status: open
+      reason: "docs(register): PJR-0FCT を規約の矛盾解消へ範囲変更する"
+      changes:
+        - field: title
+          from: test:unitの1回限定規約に修正後の再実行例外を追加する
+          to: 共通規約のtest実行に関する記述の矛盾を解消する
+        - field: description
+          from: xep-common-conventions-template.md の「test:unit は1回だけ実行する」規約が、失敗を修正した後の再検証まで禁止すると解釈され、executor が失敗を抱えたまま終了し reporter も完了を確認できずブロックする事象が PJR-K4TA で発生した。無条件の二重実行を防ぐ意図は維持しつつ、失敗を修正した場合は再実行して最終状態を確認する例外を明記する。
+          to: 起票時の課題は「`test:unit` は1回だけ実行する」規約が、失敗を修正した後の再検証まで禁止すると解釈され、executor が失敗を抱えたまま終了する事象であった。この事象は PJR-QVGX により解消している。`test-unit` が親検証へ移り、executor は `npm run test:unit` を実行しなくなったためである。実行3件の evidence でも executor 側は `not_run` で、親 runner が実行している。
+      legacy_commit: 9eac4a4d698a3a5475d5803aa61eb3f7abc1dea3
+      previous_event_id: reg_575dbad39c42a93c479c82cc997ad16b
+    - v: 1
+      id: reg_0c2a27762ab8ff04262ba4e12779be46
+      ts: "2026-08-26T06:58:16Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-0FCT): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: c6bd27276aba397a4046254eb838757e2c5a279d
+      previous_event_id: reg_bd5172c5941c52771d0b96642b21f09d
+    - v: 1
+      id: reg_84ab0423033644d0cd84ca8797529626
+      ts: "2026-08-26T07:51:05Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-0FCT): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: 'agent exited with non-zero code: reporter output invalid after 3 format attempts: response is not a single JSON value: Unexpected token ''I'', "I need to "... is not valid JSON'
+      legacy_commit: 3128b9faf0210d969b68bb71918e5fca77a92c25
+      previous_event_id: reg_0c2a27762ab8ff04262ba4e12779be46
+    - v: 1
+      id: reg_d9514c15ed9a4bcc9d557fe12325f6f6
+      ts: "2026-08-26T08:01:09Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-0FCT): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      legacy_commit: c5640b6571a6df6b5537d36fee879810964caed7
+      previous_event_id: reg_84ab0423033644d0cd84ca8797529626
+    - v: 1
+      id: reg_d155d84063541880fd9930d306cb5b23
+      ts: "2026-08-26T08:14:49Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): PJR-0FCT をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-26"
+        - field: conclusion
+          from: "-"
+          to: 共通規約の test 実行に関する記述の矛盾を解消した。親検証に設定された ID のコマンドは対応表よりも優先し executor は実行しないことを明記し、対応表の該当行を条件付きの記述へ改めた。test-unit が親検証に設定されている場合と設定されていない場合の双方で、executor が何を実行すべきかが一意に定まる。全件を1回だけ実行する制約は executor が sandbox 内で実行する test script に対するものであり、親検証のコマンドは対象外であることも明記した。当初の課題であった1回限定規約による再検証の禁止は PJR-QVGX で既に解消しており、例外規定の追加は行っていない。
+      legacy_commit: 5d0e3416600b49223d47e7bc9bd5a8d077e99b42
+      previous_event_id: reg_d9514c15ed9a4bcc9d557fe12325f6f6
 ---
 
 # PJR-0FCT 共通規約のtest実行に関する記述の矛盾を解消する

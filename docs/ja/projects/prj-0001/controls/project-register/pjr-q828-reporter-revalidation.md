@@ -14,6 +14,118 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-24T09:43:51Z"
   conclusion: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。source が executor の検証は再評価対象外のため、同種の詰まりは PJR-0FCT と PJR-QVGX の対応が必要である。
+  register_events:
+    - v: 1
+      id: reg_a9da3945c73235405e1da0d59417b2a3
+      ts: "2026-08-23T13:06:13Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): reporter運用の課題3件を起票しPJR-JT1Yの結論を修正する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: reporterが解消済みの検証失敗を再評価できない問題を解消する
+        - field: description
+          from: ""
+          to: reporter は executor の evidence.json に記録された検証結果のみを読み、worktree を再検証しない。そのため失敗の原因が解消されていても評価は変わらず、正当な理由でブロックし続ける。PJR-K4TA と PJR-JT1Y の2回連続でオーケストレーターによる代行記入が必要になった。失敗原因が実行環境に起因する場合や解消済みの場合に reporter が再検証できる手段、または再検証済みであることを reporter へ伝える手段を用意する。関連して PJR-0FCT の再実行例外と PJR-QVGX のsandbox制約も同じ詰まりに寄与している。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-23"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 68b091b8dc80c11b9518ac1106d8672d31d1f038
+    - v: 1
+      id: reg_5a8cfe5c7c95527339f4e73140bf17b9
+      ts: "2026-08-23T21:23:51Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-Q828): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 92bd3a5323d982ae6aa06ac721324b232e3b4a1f
+      previous_event_id: reg_a9da3945c73235405e1da0d59417b2a3
+    - v: 1
+      id: reg_1af90383f05d3b05f865a9fe2c8b8b02
+      ts: "2026-08-23T21:38:09Z"
+      action: wait
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: waiting
+      reason: "exec(register PJR-Q828): wait"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: conclusion
+          from: "-"
+          to: "agent exited with non-zero code: runner validation `test-integration` が failed（exit 1）であるため、親runner検証の失敗は authoritative とする規約により完了にできない。"
+      legacy_commit: 130c68814672a66f16baff0a1f7a504659ac17db
+      previous_event_id: reg_5a8cfe5c7c95527339f4e73140bf17b9
+    - v: 1
+      id: reg_c7cf43c2078e0faf9b9d0e6e7b0a6080
+      ts: "2026-08-24T03:38:13Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: waiting
+      to_status: review
+      reason: "exec(register PJR-Q828): review"
+      changes:
+        - field: status
+          from: waiting
+          to: review
+        - field: conclusion
+          from: "agent exited with non-zero code: runner validation `test-integration` が failed（exit 1）であるため、親runner検証の失敗は authoritative とする規約により完了にできない。"
+          to: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。
+      legacy_commit: 56889fb6480842e7922b74ace5db6c0508675a9e
+      previous_event_id: reg_1af90383f05d3b05f865a9fe2c8b8b02
+    - v: 1
+      id: reg_77081540508477010f6e4e7709bdc36c
+      ts: "2026-08-24T09:44:21Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "docs(register): レビュー済みの4件をクローズする"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-24"
+        - field: conclusion
+          from: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。
+          to: reporter に worktree の実行権限を与えず、親 runner が parent_validations の固定許可リストだけを再実行する方式を採用した。source が runner の failed / not_run のみ再評価して置換し、source が executor の検証は成果物側として保持することで実行環境起因の失敗と区別する。再検証後も失敗する場合は従来どおりブロックする。実行時に失敗した否定側テストは実装ではなく期待値の誤りで、worktree 側の result を参照するよう修正した。source が executor の検証は再評価対象外のため、同種の詰まりは PJR-0FCT と PJR-QVGX の対応が必要である。
+      legacy_commit: 59f9cfeb2344fdd332a0604ce466414de2087076
+      previous_event_id: reg_c7cf43c2078e0faf9b9d0e6e7b0a6080
 ---
 
 # PJR-Q828 reporterが解消済みの検証失敗を再評価できない問題を解消する

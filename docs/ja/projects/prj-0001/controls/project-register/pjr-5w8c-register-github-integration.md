@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-24T12:01:27Z"
   due_on: "2026-12-31"
+  register_events:
+    - v: 1
+      id: reg_960be3a44661d9524002545cc04aa733
+      ts: "2026-08-24T12:02:39Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-TPY9 を3段に分割し PJR-T7ZQ と PJR-5W8C を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: RegisterとGitHub Issues/Projectsの連携を実装する
+        - field: description
+          from: ""
+          to: GitHub Issues/Projects を任意の共同作業UIとして利用できる連携境界を設け、Gitのみで完結する運用とGitHubを利用する運用の双方を選択できるようにする。none、一方向のpublish/import、参照のみのlinked などの候補を評価し、方式・正本側・ID対応・同期失敗・競合・認証情報の境界を定める。方式の採用は decision として起票し承認を得る。外部ツール連携の共通契約とGitHub固有処理を分離し、将来 GitLab や Jira などのアダプターを追加するときに Register 本体の状態遷移・履歴モデルを変更しなくてよい境界にする。GitHub 以外のアダプターの実装・接続試験・運用文書は本項目の対象外とし、必要になった時点で別途起票する。同期対象が Register event となるため PJR-TPY9 の完了を前提とする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: low
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-12-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 53ba454ab5e41af45bd85e68b555973a9977c4fc
 ---
 
 # PJR-5W8C RegisterとGitHub Issues/Projectsの連携を実装する

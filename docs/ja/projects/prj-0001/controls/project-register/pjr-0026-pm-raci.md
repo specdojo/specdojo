@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-10"
   completed_at: "2026-05-05T12:00:00Z"
   conclusion: rulebook/instruction/sample作成済み
+  register_events:
+    - v: 1
+      id: reg_89b3ed9f8e5b87ee6c609bfa214246f2
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: pm-raci-\*作成
+        - field: description
+          from: ""
+          to: rulebookを作成して、instruction, sampleへ展開する
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: PO
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-10"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: rulebook/instruction/sample作成済み
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_1c95c0423a7247b4204332bc718332a7
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-05"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_89b3ed9f8e5b87ee6c609bfa214246f2
 ---
 
 # PJR-0026 pm-raci-\*作成

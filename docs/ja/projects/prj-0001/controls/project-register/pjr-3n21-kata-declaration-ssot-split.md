@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-24T11:34:23Z"
   conclusion: "実践の型の要否と所在は、いずれも rulebook frontmatter を正本とする（選択肢A）。成果物カタログは型の宣言を持たず rulebook の宣言のみを保持する。kind が generated の成果物には型を適用せず、宣言ではなく kind から導出する。rulebook を持たない成果物は rulebook: not-needed で表現し型の宣言を不要とする。所在が rulebook の外に置かれた例が実在せず、PJR-VV3M の方針も3種すべてが系統単位の判断であるため。要否の4状態と判断基準は置き場所を変えるのみで意味は変えない。移行は別途起票する。"
+  register_events:
+    - v: 1
+      id: reg_e8f7290065e2d1ddf161cdb0977e3b48
+      ts: "2026-08-24T10:04:04Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-3N21 実践の型の要否と所在の正本を分ける決定を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 実践の型の要否と所在の正本を分ける
+        - field: description
+          from: ""
+          to: 実践の型の宣言が成果物カタログと rulebook frontmatter の2か所にあり、意味が混ざっている。カタログには文書 ID が書かれ、bps-sample が29件の成果物へ重複するなど、系統単位で決まる情報を成果物ごとに持つ二重管理になっている。要否（その成果物にその型が必要か）と所在（実体がどの文書か）で正本を分けるかを決める。
+        - field: type
+          from: ""
+          to: decision
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-24"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 513d3e8c6b739a78593ab3005bf6e4b9cdbe8ab7
+    - v: 1
+      id: reg_232e190c992dab7e9f9c1f3a202223ce
+      ts: "2026-08-24T11:35:11Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: decided
+      reason: "docs(register): PJR-3N21 を決定し移行作業 PJR-XGJK を起票する"
+      changes:
+        - field: status
+          from: open
+          to: decided
+        - field: completed
+          from: "-"
+          to: "2026-08-24"
+        - field: conclusion
+          from: "-"
+          to: "実践の型の要否と所在は、いずれも rulebook frontmatter を正本とする（選択肢A）。成果物カタログは型の宣言を持たず rulebook の宣言のみを保持する。kind が generated の成果物には型を適用せず、宣言ではなく kind から導出する。rulebook を持たない成果物は rulebook: not-needed で表現し型の宣言を不要とする。所在が rulebook の外に置かれた例が実在せず、PJR-VV3M の方針も3種すべてが系統単位の判断であるため。要否の4状態と判断基準は置き場所を変えるのみで意味は変えない。移行は別途起票する。"
+      legacy_commit: 5da5e2d22e3d9fc799b23308f39645f3723dde16
+      previous_event_id: reg_e8f7290065e2d1ddf161cdb0977e3b48
 ---
 
 # PJR-3N21 実践の型の要否と所在の正本を分ける

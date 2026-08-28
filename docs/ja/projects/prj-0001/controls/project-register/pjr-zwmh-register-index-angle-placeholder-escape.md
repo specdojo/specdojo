@@ -14,6 +14,112 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T22:00:26Z"
   conclusion: register build が索引の表セルへ展開する全項目で、コードスパン外の山括弧プレースホルダをインラインコード化するようにした。連結範囲は拡張子のドットまで含め、文末の句点はコードの外へ戻す。あわせて remark プラグインを拡張し、frontmatter の文字列値に素の山括弧があればビルド前に検知できるようにした。読み戻しはコードスパンを保持したまま扱う。
+  register_events:
+    - v: 1
+      id: reg_44c2f358955370a92147e366d6a28424
+      ts: "2026-08-22T14:08:07Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 索引生成の山括弧エスケープを PJR-ZWMH として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: 登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する
+        - field: description
+          from: ""
+          to: 個票 frontmatter の conclusion などに `dct-<domain>.yaml` のような素の山括弧プレースホルダを書くと、register build がそのまま表セルへ展開し、generated/pjr-index.md で HTML タグとして解釈されて VitePress ビルドが失敗する。remark の山括弧検査は本文の html ノードだけを対象とし、markdownlint も frontmatter を見ず、生成物は gitignore で lint:md の対象外のため、ビルドまで誰も検知できない。生成側でインラインコード化して塞ぎ、あわせて frontmatter 側でも検知できるようにする。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: b9258a0ec52eab6ec8d2f6c64cb15be76cc14e09
+    - v: 1
+      id: reg_9c356fbb136008b9f35c3ae32f0c199c
+      ts: "2026-08-22T14:09:40Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-ZWMH): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: cb85bbc1a6a0cd2bfdada03ea9f912205c3aa7aa
+      previous_event_id: reg_44c2f358955370a92147e366d6a28424
+    - v: 1
+      id: reg_ccab11bb4cce0b2179d58df5a55b556d
+      ts: "2026-08-22T14:40:10Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: in-progress
+      reason: "exec(register PJR-ZWMH): 登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する"
+      changes:
+        - field: description
+          from: 個票 frontmatter の conclusion などに `dct-<domain>.yaml` のような素の山括弧プレースホルダを書くと、register build がそのまま表セルへ展開し、generated/pjr-index.md で HTML タグとして解釈されて VitePress ビルドが失敗する。remark の山括弧検査は本文の html ノードだけを対象とし、markdownlint も frontmatter を見ず、生成物は gitignore で lint:md の対象外のため、ビルドまで誰も検知できない。生成側でインラインコード化して塞ぎ、あわせて frontmatter 側でも検知できるようにする。
+          to: 個票 frontmatter の conclusion などに `dct-<domain>.yaml` のような山括弧プレースホルダをインラインコードにせず書くと、register build がそのまま表セルへ展開し、generated/pjr-index.md で HTML タグとして解釈されて VitePress ビルドが失敗する。remark の山括弧検査は本文の html ノードだけを対象とし、markdownlint も frontmatter を見ず、生成物は gitignore で lint:md の対象外のため、ビルドまで誰も検知できない。生成側でインラインコード化して塞ぎ、あわせて frontmatter 側でも検知できるようにする。
+      legacy_commit: bbbd8bb0b5d590eb848aa4aa0b9368be01ee2f0f
+      previous_event_id: reg_9c356fbb136008b9f35c3ae32f0c199c
+    - v: 1
+      id: reg_a7ef44e6377f4514deff89dcbf918549
+      ts: "2026-08-22T14:40:46Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-ZWMH): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: 1dc1d697a04c08859f5d8e822ffa260208a05b20
+      previous_event_id: reg_ccab11bb4cce0b2179d58df5a55b556d
+    - v: 1
+      id: reg_41ee701bcb49580b573ac93199d053e0
+      ts: "2026-08-22T22:00:26Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-ZWMH): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-23"
+        - field: conclusion
+          from: "-"
+          to: register build が索引の表セルへ展開する全項目で、コードスパン外の山括弧プレースホルダをインラインコード化するようにした。連結範囲は拡張子のドットまで含め、文末の句点はコードの外へ戻す。あわせて remark プラグインを拡張し、frontmatter の文字列値に素の山括弧があればビルド前に検知できるようにした。読み戻しはコードスパンを保持したまま扱う。
+      legacy_commit: fcb0267ae8fcccf71035c8972b5f2e617679d31a
+      previous_event_id: reg_a7ef44e6377f4514deff89dcbf918549
 ---
 
 # PJR-ZWMH 登録簿の索引生成で山括弧プレースホルダをインラインコード化し、frontmatter でも検知する

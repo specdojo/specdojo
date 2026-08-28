@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T08:19:18Z"
   conclusion: テストの git 実行へ gitEnvironment() を渡し、hook 由来の GIT_DIR を除去した。GIT_DIR が linked worktree の gitdir を指す状態で git init を実行すると、その gitdir が bare として再初期化され共有 config へ core.bare=true が書き込まれることを再現実験で特定し、修正後は同条件でも変化しないことを確認した。テストから git を扱う際の規約も vitest.instructions.md へ明記した。
+  register_events:
+    - v: 1
+      id: reg_8113b9426fbe3409d57aba1ccb920d3f
+      ts: "2026-08-22T08:18:54Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "fix(test): テストの git 実行で GIT_DIR を除去する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: テストの git 実行が環境を隔離せず、メインリポジトリを bare 化する
+        - field: description
+          from: ""
+          to: PJR-T1JW で追加した exec-agent-protected-config のテストが、git 実行時に gitEnvironment() を経由していなかった。lefthook の pre-commit が npm test を実行する経路では git が GIT_DIR を設定するため、worktree 内での commit 時は GIT_DIR が linked worktree の gitdir を指す。その状態で git init を実行すると、cwd の一時ディレクトリではなく GIT_DIR 側が bare として再初期化され、共有されているメインリポジトリの config へ core.bare=true が書き込まれる。PJR-ZJZD の実行でこれが発火し、統合処理が this operation must be run in a work tree で失敗した。
+        - field: type
+          from: ""
+          to: issue
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 9e32ada4e8bff149981238b9c8f6f79aa1e51b46
+    - v: 1
+      id: reg_741c39c9ccab400192ab0c2ce714f1d9
+      ts: "2026-08-22T08:19:18Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "docs(register): PJR-X3E8 をクローズ"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-22"
+        - field: conclusion
+          from: "-"
+          to: テストの git 実行へ gitEnvironment() を渡し、hook 由来の GIT_DIR を除去した。GIT_DIR が linked worktree の gitdir を指す状態で git init を実行すると、その gitdir が bare として再初期化され共有 config へ core.bare=true が書き込まれることを再現実験で特定し、修正後は同条件でも変化しないことを確認した。テストから git を扱う際の規約も vitest.instructions.md へ明記した。
+      legacy_commit: d1bd835af472026a0b6f0b9fd87b55f34be3f733
+      previous_event_id: reg_8113b9426fbe3409d57aba1ccb920d3f
 ---
 
 # PJR-X3E8 テストの git 実行が環境を隔離せず、メインリポジトリを bare 化する

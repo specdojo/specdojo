@@ -13,6 +13,64 @@ specdojo:
   due_on: "2026-05-24"
   completed_at: "2026-05-21T12:00:00Z"
   conclusion: specdojo review scaffoldを作成
+  register_events:
+    - v: 1
+      id: reg_2c43b5d18ad9d811e34401783499c2aa
+      ts: "2026-08-09T10:55:22Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: done
+      reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+      changes:
+        - field: status
+          from: ""
+          to: done
+        - field: title
+          from: ""
+          to: レビュー観点生成コマンド作成
+        - field: description
+          from: ""
+          to: レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: _TODO_
+        - field: due
+          from: ""
+          to: "2026-05-24"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: specdojo review scaffoldを作成
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+    - v: 1
+      id: reg_ad55a4ffc5d9be7895e335cb9c0c948f
+      ts: "2026-08-09T14:39:40Z"
+      action: update
+      actor: SpecDojo Test
+      from_status: done
+      to_status: done
+      reason: "exec(register PJR-EQAQ): 登録簿日時をregistered_at・completed_atへ移行する"
+      changes:
+        - field: completed
+          from: "-"
+          to: "2026-05-21"
+      legacy_commit: 38201bef867f3cc1454db6b748fc979ed3f2fa8f
+      previous_event_id: reg_2c43b5d18ad9d811e34401783499c2aa
 ---
 
 # PJR-0056 レビュー観点生成コマンド作成

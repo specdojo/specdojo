@@ -14,6 +14,70 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-16T07:47:26Z"
   conclusion: ifx-cmd kata一式とESIL関連仕様を更新。schema・catalog・register・index・lint検証に成功し、旧生成物のdead link 16件を除去後 npm run docs:build も成功。全体テストは1085/1086成功、時刻分解能に依存したheartbeat 1件は単独再実行で4/4成功。
+  register_events:
+    - v: 1
+      id: reg_b863c82175af22384730e919780d1e7d
+      ts: "2026-08-14T09:15:41Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs: dct-external-interface-specsを作成"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: ifx-cmd（外部コマンド連携仕様）の新設
+        - field: description
+          from: ""
+          to: esil.schema.yaml の interfaces[].kind が API／ファイル／メッセージの3値固定で、CLIコマンド起動型の外部連携（AI provider CLI、Git/GitHub等）を表す区分が無い。ifx-cmd-rulebook.md を新設し、esil.schema.yaml のkind・spec_refパターンを拡張する。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: medium
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-14"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ef9e983b61461aa0873796c72ade1dbab2d33ca0
+    - v: 1
+      id: reg_98126144a1d21bdb7386fc97c6f7561c
+      ts: "2026-08-16T08:43:28Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: open
+      to_status: done
+      reason: "docs(specdojo): complete PJR-T7EM IFX command artifacts"
+      changes:
+        - field: status
+          from: open
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-16"
+        - field: conclusion
+          from: "-"
+          to: ifx-cmd kata一式とESIL関連仕様を更新。schema・catalog・register・index・lint検証に成功し、旧生成物のdead link 16件を除去後 npm run docs:build も成功。全体テストは1085/1086成功、時刻分解能に依存したheartbeat 1件は単独再実行で4/4成功。
+      legacy_commit: 424b910b7785b8001ecccd0a5f5e3588f42d308e
+      previous_event_id: reg_b863c82175af22384730e919780d1e7d
 ---
 
 # PJR-T7EM ifx-cmd（外部コマンド連携仕様）の新設

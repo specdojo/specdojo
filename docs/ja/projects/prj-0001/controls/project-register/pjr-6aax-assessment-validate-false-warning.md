@@ -12,6 +12,50 @@ specdojo:
   owner: ARC
   registered_at: "2026-08-27T13:22:07Z"
   due_on: "2026-10-31"
+  register_events:
+    - v: 1
+      id: reg_7632207864a673c19afb7509958a372f
+      ts: "2026-08-27T13:23:32Z"
+      action: add
+      actor: naoji3x
+      from_status: null
+      to_status: open
+      reason: "docs(register): PJR-ENK0 をクローズし PJR-6AAX を起票する"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: assessment validateが正しい判定に対して誤警告を出す
+        - field: description
+          from: ""
+          to: schedule assessment validate が、判定の根拠として status draft を挙げていない箇所に対して「status draft であること自体は利用不能の根拠にならない」という警告を出す。PJR-ENK0 で生成した sch-assessment-planning.yaml の dct-index / kata.template が該当したが、実際の根拠は target-fit と internal-consistency の失敗であり、draft には言及していない。判定の checks に draft という語が含まれるかどうかなど、機械的な条件で誤検知していると見られる。正しい判定に警告が出るとレビューのたびに確認の手間がかかる。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: low
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-27"
+        - field: due
+          from: ""
+          to: "2026-10-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: 6ba4158b1f9a5372bca146832c79c724b376708d
 ---
 
 # PJR-6AAX assessment validateが正しい判定に対して誤警告を出す

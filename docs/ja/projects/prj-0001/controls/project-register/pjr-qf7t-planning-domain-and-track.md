@@ -14,6 +14,98 @@ specdojo:
   due_on: "2026-08-31"
   completed_at: "2026-08-22T13:14:45Z"
   conclusion: planning ドメインと planning トラックを新設し、tml-index・dct-index・sch-defaults を project-management から移設した。着手済み3トラックの assessment と strategy を work、sch-track と sch-milestones を generated として登録し、sch-strategy-planning は control として循環を回避した。schedule build で計画成果物8件がタスク化され、生成物と control はタスク化されないことを実機で確認した。
+  register_events:
+    - v: 1
+      id: reg_ccbb757b301069ffbe5093b6519c7e50
+      ts: "2026-08-22T12:28:15Z"
+      action: add
+      actor: SpecDojo Test
+      from_status: null
+      to_status: open
+      reason: "docs(register): 計画成果物のカタログ設計を決定として起票"
+      changes:
+        - field: status
+          from: ""
+          to: open
+        - field: title
+          from: ""
+          to: planning ドメインとトラックを新設し、計画成果物をカタログとScheduleへ載せる
+        - field: description
+          from: ""
+          to: PJR-WVNS の決定に基づき、計画成果物を所有する planning ドメインと planning トラックを新設する。tml-index、dct-index、sch-defaults などを project-management から移設し、着手済みトラックの sch-assessment と sch-strategy を登録する。sch-track と sch-milestones は generated として登録し、`dct-<domain>.yaml` と generated 配下の表示用生成物は登録しない。planning トラック自身の strategy は循環を避けるため scope から外すか control として扱う。
+        - field: type
+          from: ""
+          to: todo
+        - field: priority
+          from: ""
+          to: high
+        - field: owner
+          from: ""
+          to: ARC
+        - field: registered
+          from: ""
+          to: "2026-08-22"
+        - field: due
+          from: ""
+          to: "2026-08-31"
+        - field: completed
+          from: ""
+          to: "-"
+        - field: conclusion
+          from: ""
+          to: "-"
+        - field: block_reason
+          from: ""
+          to: "-"
+      legacy_commit: ac987294fa662defee8311be380cefc6855200e2
+    - v: 1
+      id: reg_76f2238ae85bcc6088f1e10757f53252
+      ts: "2026-08-22T12:32:19Z"
+      action: start
+      actor: SpecDojo Test
+      from_status: open
+      to_status: in-progress
+      reason: "exec(register PJR-QF7T): start"
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      legacy_commit: 05b8efa31cd83e2d27fff9d6a13bfc2fe813ab27
+      previous_event_id: reg_ccbb757b301069ffbe5093b6519c7e50
+    - v: 1
+      id: reg_748f650dc4666d939353717ebea86df7
+      ts: "2026-08-22T12:59:05Z"
+      action: review
+      actor: SpecDojo Test
+      from_status: in-progress
+      to_status: review
+      reason: "exec(register PJR-QF7T): review"
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      legacy_commit: b65b70a888272de5bbd1230f26a7b62ca9c3b471
+      previous_event_id: reg_76f2238ae85bcc6088f1e10757f53252
+    - v: 1
+      id: reg_1302565fbe7a6d33cb821d48fe995969
+      ts: "2026-08-22T13:14:45Z"
+      action: close
+      actor: SpecDojo Test
+      from_status: review
+      to_status: done
+      reason: "exec(register PJR-QF7T): close"
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-22"
+        - field: conclusion
+          from: "-"
+          to: planning ドメインと planning トラックを新設し、tml-index・dct-index・sch-defaults を project-management から移設した。着手済み3トラックの assessment と strategy を work、sch-track と sch-milestones を generated として登録し、sch-strategy-planning は control として循環を回避した。schedule build で計画成果物8件がタスク化され、生成物と control はタスク化されないことを実機で確認した。
+      legacy_commit: 6cbc4e244965edb8cc25eb2d19b055c84090301c
+      previous_event_id: reg_748f650dc4666d939353717ebea86df7
 ---
 
 # PJR-QF7T planning ドメインとトラックを新設し、計画成果物をカタログとScheduleへ載せる
