@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-23T21:33:06Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: runnerによる検証 `test-unit` (npm run test:unit) が失敗しているため。具体的に `tests/src/register-commands.test.ts` の 1 テストが失敗しており、完了条件を満たしていない。"
 ---
 
 # PJR-TPY9 Register履歴をGitコミット粒度から分離する
