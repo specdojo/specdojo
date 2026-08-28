@@ -1,0 +1,14 @@
+PJR-76AG の再発防止を実装しました。
+
+- Git環境変数一覧を共通化し、全Vitest設定でテスト読込前に除去。
+- AST検査へ強化し、`env: process.env`を拒否。
+- identity注入は維持。
+- 3度の再発原因、対象範囲、事故復旧手順を文書化。
+- 個票ステータスとresultは変更していません。
+- unit／integration／schema検証は親runnerへ委譲します。
+
+`npx tsx`はsandboxのIPC制約で起動できなかったため、同じtsx loaderを使う`node --import tsx`でSpecDojo検査を実行し、成功しました。
+
+<specdojo_executor_evidence>
+{"final_message":"Vitest入口でGit環境を隔離し、AST検査・設計・復旧手順を更新した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npx markdownlint .github/instructions/vitest.instructions.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/projects/prj-0001/controls/project-register/pjr-76ag-test-git-env-leak-repo-corruption.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"変更Markdownのlint成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"errorなし、既存未作成文書のwarningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1393件のindex生成成功"},{"command":"node --import tsx --input-type=module --eval 'Vitest設定とGit環境除去を検証'","status":"passed","summary":"全3設定のsetup・identityと危険変数除去を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runner検証へ委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runner検証へ委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runner検証へ委譲"}]}
+</specdojo_executor_evidence>

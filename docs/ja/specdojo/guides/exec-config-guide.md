@@ -500,7 +500,9 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
 
-agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。Git hook経由でrunnerが起動されても、agent内のテストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+
+TypeScriptのテスト・tool・本体コードが`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを直接起動する箇所は、AST検査により`gitEnvironment()`から作った`env`だけを許可します。`env: process.env`や単なる`env`プロパティは隔離済みとは扱いません。shell scriptとnpm scriptのGit起動はこのAST検査の対象外ですが、現状のhook経路はVitest setupを必ず通り、hookから直接Gitを起動するテスト用scriptはありません。今後その経路を追加する場合は、入口で`GIT_LOCAL_ENV_VARS`相当を除去する専用検査を追加します。
 
 executor / reporter pipelineのexecutor promptは、commitとrepository設定を親runnerが所有することを明記し、`git commit`およびlocal / global / system configの変更（`user.name` / `user.email`を含む）を禁止します。fixture commitに使うテスト用identityはVitest workerと子プロセスの環境変数だけへ注入し、fixtureを含むrepositoryのlocal configへは書き込みません。
 

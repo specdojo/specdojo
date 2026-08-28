@@ -159,14 +159,14 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 - **Exception（例外）**: なし。
 - **References（参照）**: `sysd-critical-flows`のworktreeフロー。
 
-### scp-GIT-004: agent Git環境の隔離と状態ガード
+### scp-GIT-004: agent・テストのGit環境隔離と状態ガード
 
-- **Rule（MUST）**: agent、agent配下の子プロセス、親検証へ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でagent worktreeのHEADと共有local configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local configへ書き込まない。
+- **Rule（MUST）**: agent、agent配下の子プロセス、親検証、Vitest workerへ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。Vitestは全設定の共通setupでtest module読込前にこれらを除去し、個々のTypeScriptテストからGitを起動する場合も`gitEnvironment()`から作った環境を明示する。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でagent worktreeのHEADと共有local configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local configへ書き込まない。
 - **Rationale（意図）**: Git hookから継承した`GIT_DIR`が一時fixture向けの`git init`や`git commit`を実repositoryへ向け、`core.bare`やidentity設定の変更、履歴混入を起こすことを防ぐ。
-- **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、および親runner検証。
-- **Enforcement（検証）**: `gitEnvironment()`による起動環境の除去、executor promptのGit操作禁止契約、agent worktreeのHEAD・local config比較、fixture commit後もlocal identityが未設定であること、およびrunner遷移commitの除外と危険な継承環境・Git状態変更の回帰テスト。
+- **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、親runner検証、および3つのVitest実行設定。shell scriptとnpm scriptの直接Git起動はVitestの静的検査対象外とし、hookからテストを起動する境界ではVitest setupを防御点とする。
+- **Enforcement（検証）**: 共通のrepository固有環境変数一覧と`gitEnvironment()`による除去、Vitest setup、TypeScript ASTによるGit起動環境の静的検査、executor promptのGit操作禁止契約、agent worktreeのHEAD・local config比較、fixture commit後もlocal identityが未設定であること、およびrunner遷移commitの除外と危険な継承環境・Git状態変更の回帰テスト。
 - **Exception（例外）**: なし。agentが必要とするrepositoryはcwdからGit自身に再解決させる。
-- **References（参照）**: `src/exec-worktree.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]、[[prj-0001:pjr-44cw-git-state-guard-false-positive|PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める]]。
+- **References（参照）**: `src/git-environment.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]、[[prj-0001:pjr-76ag-test-git-env-leak-repo-corruption|PJR-76AG テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを破壊する事故が3度目の再発をした]]、[[prj-0001:pjr-44cw-git-state-guard-false-positive|PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める]]。
 
 ### scp-SEC-001: agent権限制約
 
