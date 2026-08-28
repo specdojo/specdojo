@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-27T23:40:53Z"
@@ -56,6 +56,19 @@ specdojo:
           from: ""
           to: "-"
       legacy_commit: 6dd9ca7d550ed466e08b09e59decfc5dbdf35dc9
+    - v: 1
+      id: reg_0296306e704c47acbef46dd31deca571
+      ts: "2026-08-28T10:49:20Z"
+      action: start
+      actor: codex-expert-executor
+      from_status: open
+      to_status: in-progress
+      reason: work started
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      previous_event_id: reg_676d6ad7bda6ebfe87e39692932fbe66
 ---
 
 # PJR-199G develop から main への昇格時にコミットをまとめる方式を確定する
