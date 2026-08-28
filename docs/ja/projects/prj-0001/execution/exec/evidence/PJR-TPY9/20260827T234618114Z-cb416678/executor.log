@@ -1,0 +1,15 @@
+Register履歴をGitコミット粒度から分離しました。
+
+- 個票内の `register_events` を追記型監査履歴のSSOTとして実装しました。
+- `register history` はeventを優先し、導入前の期間のみGit履歴へフォールバックします。
+- 原子的書き込み、冪等な再実行、event連鎖検証、Git履歴からの移行を追加しました。
+- 複数遷移を1コミットにまとめても復元できる自動テストを追加しました。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TPY9/docs/ja/projects/prj-0001/controls/project-register/pjr-tpy9-register-git-github.md) の作業内容・対応結果を更新しました。ステータスは変更していません。
+- Rulebook Skillに従い、[pjr-rulebook.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TPY9/docs/ja/specdojo/rulebooks/pjr-rulebook.md)へ責務境界と禁止事項を追加しました。
+- resultファイルは後段担当のため編集していません。
+
+親runner管轄のunit・integration・schema検証は指示どおり未実行です。Catalog検証は成功し、既存の成果物未作成に関する警告のみでした。
+
+<specdojo_executor_evidence>
+{"final_message":"Register履歴を個票内の追記型eventへ分離し、Git互換履歴・移行・検証・文書・自動テストを更新した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run -s lint:md","status":"passed","summary":"Markdown全件lint成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"event整合性検証を含むRegister生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Catalog検証成功。既存の未作成成果物警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1390件を生成"},{"command":"node --import tsx src/specdojo.ts register history --project prj-0001 --id PJR-TPY9 --status-only --json","status":"passed","summary":"既存Git履歴の後方互換再構成を確認"},{"command":"git diff --check","status":"passed","summary":"空白・差分形式エラーなし"}]}
+</specdojo_executor_evidence>

@@ -1,10 +1,25 @@
 import { describe, expect, it } from "vitest";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   buildRegisterHistoryEvents,
+  collectRegisterHistoryEvents,
   formatRegisterHistoryEvents,
   parseRegisterLogOutput,
   type RegisterCommitEntry,
 } from "../../src/register-history.js";
+import { appendRegisterEvent, buildRegisterEvent } from "../../src/register-events.js";
+import { gitEnvironment } from "../../src/exec-worktree.js";
+
+// lefthook などの git フック配下でテストを実行すると、親の git が GIT_DIR / GIT_INDEX_FILE を
+// 環境変数へ設定する。それを引き継いだまま git を起動すると、一時ディレクトリで実行したつもりの
+// init / add / commit が実リポジトリへ適用される（core.bare の書き換えと不正コミットが発生する）。
+// 一時リポジトリを扱う git はすべて隔離した環境で起動する。
+function git(args: string[], cwd: string): void {
+  execFileSync("git", args, { cwd, stdio: "ignore", env: gitEnvironment() });
+}
 
 const RECORD = "\u001e";
 const UNIT = "\u001f";
@@ -423,5 +438,84 @@ describe("formatRegisterHistoryEvents", () => {
     expect(actual).toBe(
       "2026-08-06  ccc3333  PJR-AB12  removed  (register item file removed)  # docs: remove PJR-AB12",
     );
+  });
+});
+
+describe("collectRegisterHistoryEvents — append-only events", () => {
+  it("複数の状態遷移を1コミットへまとめてもイベント粒度で再構成する", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-register-event-history-"));
+    try {
+      const registerDir = join(root, REGISTER_DIR);
+      mkdirSync(registerDir, { recursive: true });
+      const path = join(registerDir, "pjr-ab12-inventory-seed.md");
+      const filename = "pjr-ab12-inventory-seed.md";
+
+      let content = ticket(OPEN_FIELDS);
+      const add = buildRegisterEvent({
+        afterContent: content,
+        filename,
+        timeZone: "UTC",
+        action: "add",
+        actor: "pm",
+        reason: "item added",
+        ts: "2026-08-01T00:00:00Z",
+        id: "reg_00000000000000000000000000000001",
+      });
+      if (!add) throw new Error("add event not built");
+      content = appendRegisterEvent(content, add);
+
+      let after = content.replace("item_status: open", "item_status: in-progress");
+      const start = buildRegisterEvent({
+        beforeContent: content,
+        afterContent: after,
+        filename,
+        timeZone: "UTC",
+        action: "start",
+        actor: "agent",
+        reason: "work started",
+        ts: "2026-08-02T00:00:00Z",
+        id: "reg_00000000000000000000000000000002",
+      });
+      if (!start) throw new Error("start event not built");
+      content = appendRegisterEvent(after, start);
+
+      after = content.replace("item_status: in-progress", "item_status: review");
+      const review = buildRegisterEvent({
+        beforeContent: content,
+        afterContent: after,
+        filename,
+        timeZone: "UTC",
+        action: "review",
+        actor: "agent",
+        reason: "ready for review",
+        ts: "2026-08-03T00:00:00Z",
+        id: "reg_00000000000000000000000000000003",
+      });
+      if (!review) throw new Error("review event not built");
+      content = appendRegisterEvent(after, review);
+      writeFileSync(path, content, "utf8");
+
+      git(["init"], root);
+      git(["config", "user.name", "test"], root);
+      git(["config", "user.email", "test@example.com"], root);
+      git(["add", "."], root);
+      git(["commit", "-m", "squashed register transitions"], root);
+
+      const events = collectRegisterHistoryEvents({
+        repoRoot: root,
+        registerPathspec: REGISTER_DIR,
+        timeZone: "UTC",
+      });
+      expect(events.map((event) => event.action)).toEqual(["add", "start", "review"]);
+      expect(events.map((event) => event.date)).toEqual([
+        "2026-08-01T00:00:00Z",
+        "2026-08-02T00:00:00Z",
+        "2026-08-03T00:00:00Z",
+      ]);
+      expect(new Set(events.map((event) => event.commit)).size).toBe(3);
+      expect(readFileSync(path, "utf8")).toContain("register_events:");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

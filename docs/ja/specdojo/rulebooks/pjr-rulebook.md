@@ -5,6 +5,7 @@ specdojo:
   status: ready
   target_format: markdown
   recipe: not-needed
+  sample: not-needed
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
@@ -21,7 +22,8 @@ Project Register Documentation Rules
 ## 1. 全体方針
 
 - TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
-- 個票 Frontmatter は、分類、処理状態、優先度、担当、日付、結論の唯一の正本である。
+- 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論の唯一の正本である。
+- 同じ個票 Frontmatter の `register_events` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、現在値との整合を検証する。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
 - `generated/pjr-index.md` とすべての派生ビューは個票から `register build` で生成し、直接編集しない。
 - `<project-id>:pjr-index` は `generated/pjr-index.md` の文書 ID とする。`controls/**/generated/` はdoc-indexの限定走査対象とし、`register build` の後に `index build` を実行する。
@@ -48,22 +50,23 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目            | 説明                                         | 必須 |
-| --------------- | -------------------------------------------- | ---- |
-| `id`            | `<project-id>:pjr-XXXX-<topic>`              | ○    |
-| `type`          | `project`                                    | ○    |
-| `status`        | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
-| `rulebook`      | `specdojo:pjr-rulebook`                      | ○    |
-| `part_of`       | `<project-id>:pjr-index` を要素に持つ配列    | ○    |
-| `item_type`     | 登録項目の分類                               | ○    |
-| `item_status`   | 登録項目の処理状態                           | ○    |
-| `priority`      | 対応優先度                                   | ○    |
-| `owner`         | 主担当者または役割                           | 任意 |
-| `registered_at` | 起票日時                                     | 任意 |
-| `due_on`        | 対応期限または判断期限                       | 任意 |
-| `completed_at`  | 完了・却下・決定日時                         | 条件 |
-| `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
-| `conclusion`    | 終端時の結論要約                             | 任意 |
+| 項目              | 説明                                         | 必須 |
+| ----------------- | -------------------------------------------- | ---- |
+| `id`              | `<project-id>:pjr-XXXX-<topic>`              | ○    |
+| `type`            | `project`                                    | ○    |
+| `status`          | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
+| `rulebook`        | `specdojo:pjr-rulebook`                      | ○    |
+| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列    | ○    |
+| `item_type`       | 登録項目の分類                               | ○    |
+| `item_status`     | 登録項目の処理状態                           | ○    |
+| `priority`        | 対応優先度                                   | ○    |
+| `owner`           | 主担当者または役割                           | 任意 |
+| `registered_at`   | 起票日時                                     | 任意 |
+| `due_on`          | 対応期限または判断期限                       | 任意 |
+| `completed_at`    | 完了・却下・決定日時                         | 条件 |
+| `block_reason`    | `waiting` へ遷移した直近の理由               | 任意 |
+| `conclusion`      | 終端時の結論要約                             | 任意 |
+| `register_events` | 起票・状態遷移・更新の追記型イベント配列     | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
@@ -76,6 +79,14 @@ Project Register Documentation Rules
 - 期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`due_on` は `YYYY-MM-DD` のまま保持する。
 - 一覧・派生ビューの「登録日」「完了日」は、保存した日時をプロジェクトの登録日タイムゾーンへ変換して導出する表示値であり、個票へ日付として重複保存しない。
 - 日時は register コマンドが記録する。手書きで日時を入力する場合も、タイムゾーンを含む値から UTC へ変換した値だけを保存する。
+
+### 3.2. Register event と責務境界
+
+- 個票の現在値は `item_status` などの通常フィールド、変更履歴は `register_events`、保存・配布・差分レビューは Git が担う。Git コミットはイベントの発生単位ではなく、履歴再構成の正本にしない。
+- イベントは個票ごとの配列へ古い順に追記する。項目ごとの配置により、イベントごとの追加ファイルを作らず、異なる項目を並行更新したときの共有ログ競合を避ける。
+- 各イベントは version、イベント ID、UTC 発生日時、action、actor、遷移前後の `item_status`、reason、変更フィールド、直前イベント ID を保持する。Git から移行したイベントだけは移行元 commit も保持できる。
+- action は `add` / `start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen` / `update` / `renumber` / `migrate` のいずれかとする。詳細な型と enum は `register-item-frontmatter.schema.yaml` を正本とする。
+- `register build` はイベント ID の一意性、時刻順、直前イベント参照、遷移前後状態の連鎖、最新イベントと現在値の一致を検証する。不正なイベントを無視して一覧を生成しない。
 
 ## 4. 本文構成（標準テンプレ）
 
@@ -121,6 +132,8 @@ Project Register Documentation Rules
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
 - 担当・期限・結論などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
+- `register add`、状態遷移、`register update`、`register renumber` は現在値とイベントを同じ個票更新で記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
+- 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。
 
 ### 5.3. 個票 status の遷移基準
@@ -144,4 +157,4 @@ Project Register Documentation Rules
 - `registered_at` / `completed_at` に、UTC 以外のオフセットやタイムゾーンを伴わない値、暦日だけの値を保存しない。
 - 個票の文書 ID から `<topic>` を省略したり、ファイル名と異なるローカル ID を使用したりしない。
 - type 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
-- Git 管理を前提とする場合に、手書きの更新履歴を追加しない。
+- `register_events` を手書きで追加・修正・並べ替え・削除しない。履歴補正が必要な場合も register コマンドを使い、監査イベントを破壊しない。

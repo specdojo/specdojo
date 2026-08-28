@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { registerRegisterCommands } from "../../src/register.js";
+import { readRegisterEventsFromContent } from "../../src/register-events.js";
 
 // register サブコマンドの読み書き先が個票 frontmatter であることを、CLI 経由で確認する。
 // 一時リポジトリを cwd にして specdojoRootDir() / loadConfig() を temp 内へ閉じ込める。
@@ -168,6 +169,12 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(ticket).toContain('  due_on: "2026-08-31"');
       expect(ticket).toContain("# PJR-AB12 在庫初期値を決める");
       expect(ticket).toContain("開店時の在庫初期値を決める。");
+      expect(readRegisterEventsFromContent(ticket, "pjr-ab12-inventory-seed.md")[0]).toMatchObject({
+        action: "add",
+        actor: "manual",
+        from_status: null,
+        to_status: "open",
+      });
       // 未定値（完了日時・結論）はキーを置かない。
       expect(ticket).not.toContain("completed_at");
       expect(ticket).not.toContain("conclusion");
@@ -285,8 +292,21 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       );
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-      await runRegister(["start", "--id", "PJR-AB12"]);
-      expect(readFileSync(ticketPath, "utf8")).toContain("  item_status: in-progress");
+      await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
+      const started = readFileSync(ticketPath, "utf8");
+      expect(started).toContain("  item_status: in-progress");
+      expect(readRegisterEventsFromContent(started, ticketPath)[0]).toMatchObject({
+        action: "start",
+        actor: "codex",
+        from_status: "open",
+        to_status: "in-progress",
+      });
+
+      // 同じ遷移の再実行は現在値もイベント列も増やさない。
+      await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
+      expect(
+        readRegisterEventsFromContent(readFileSync(ticketPath, "utf8"), ticketPath),
+      ).toHaveLength(1);
 
       await runRegister([
         "close",
@@ -296,6 +316,8 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "2026-08-05T10:15:30Z",
         "--conclusion",
         "初期値を決定した",
+        "--by",
+        "po",
       ]);
 
       const closed = readFileSync(ticketPath, "utf8");
@@ -304,6 +326,15 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(closed).toContain("  conclusion: 初期値を決定した");
       // 文書成熟度（status）は登録項目の処理状態とは別軸で昇格する。
       expect(closed).toContain("  status: ready");
+      const events = readRegisterEventsFromContent(closed, ticketPath);
+      expect(events).toHaveLength(2);
+      expect(events[1]).toMatchObject({
+        action: "close",
+        actor: "po",
+        previous_event_id: events[0].id,
+        from_status: "in-progress",
+        to_status: "done",
+      });
     });
   });
 

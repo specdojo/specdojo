@@ -45,15 +45,22 @@ Gitを正本の保存・配布・レビュー基盤として利用できる特�
 
 | No  | 作業                                                                        | 担当 | 状態 | メモ                                                 |
 | --- | --------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------- |
-| 1   | 現行の個票SSOT、Git履歴依存、commit・PR・worktree運用の利点と問題を整理する | ARC  | open | `register history`とsquash・コミット集約の関係を含む |
-| 2   | Register eventのデータモデル、状態再構成、検証、冪等性、障害復旧を設計する  | ARC  | open | exec eventとの共通化可能性も評価する                 |
-| 3   | 設計したRegister eventと履歴再構成を実装する                                | ARC  | open | 個票を正本とする位置づけの扱いを明示する             |
-| 4   | 既存プロジェクトの互換性・移行手順を実装し、単体・統合テストで検証する      | ARC  | open | 既存Git履歴からの移行とロールバックを含む            |
-| 5   | CLIリファレンス、Register運用ガイド、rulebook、関連システム設計を更新する   | ARC  | open | 第2段・第3段の前提となる部分を明示する               |
+| 1   | 現行の個票SSOT、Git履歴依存、commit・PR・worktree運用の利点と問題を整理する | ARC  | done | `register history`とsquash・コミット集約の関係を整理 |
+| 2   | Register eventのデータモデル、状態再構成、検証、冪等性、障害復旧を設計する  | ARC  | done | exec eventとの共通点と分離理由を規約へ記録           |
+| 3   | 設計したRegister eventと履歴再構成を実装する                                | ARC  | done | 現在値は個票、監査履歴は個票内eventを正本化          |
+| 4   | 既存プロジェクトの互換性・移行手順を実装し、単体・統合テストで検証する      | ARC  | done | Git fallback、移行、ロールバックを実装               |
+| 5   | CLIリファレンス、Register運用ガイド、rulebook、関連システム設計を更新する   | ARC  | done | 責務境界と運用手順を同期                             |
 
 ## 4. 対応結果
 
--
+- 個票 Frontmatter の通常フィールドを現在値のSSOTとして維持し、同じ個票の`register_events`配列を監査履歴のSSOTとした。Gitは保存・配布・差分レビューを担うが、commitを業務eventの粒度とはみなさない。1項目1ファイルのままなのでeventごとのファイルは増えず、異なる項目のworktree並行実行も共有ログで競合しない。
+- event v1は一意なevent ID、UTC秒精度の発生日時、action、actor、遷移前後の状態、reason、変更フィールド、直前event IDを保持する。`register add`、全状態遷移、`register update`、`register renumber`が現在値とeventを同じ個票へ原子的に書き込む。自動実行経路は解決済みagent名を`--by`で引き渡す。
+- `register history`はeventを優先し、導入前または未移行の期間だけGit履歴を統合する。eventの開始時刻以後のGit差分を除外するため、eventを含む複数遷移が1commitへsquashされても重複せず、各遷移を復元できる。1commitに`add`・`start`・`review`をまとめた自動テストを追加した。
+- 同じ現在値への再実行はeventを追加しない。書き込みは同一ディレクトリの一時ファイル完成後に置換し、途中中断で現在値とeventの片方だけを残さない。`register build`はevent shape、ID一意性、時刻順、直前参照、状態連鎖、最新eventと現在値の一致を検証する。同じ個票の並行変更は通常の個票競合として統合を止め、event削除による解消は行わない。
+- `register migrate`は利用可能なGit履歴を決定的event IDで個票へ変換する。Git履歴がない場合や既にeventがある個票は破壊的に補完せずfallbackを維持する。旧CLIへ戻しても現在値は従来フィールドのまま読めるため、eventを削除せずevent対応版を再適用する手順をロールバック方針とした。
+- exec eventとはversion、UTC日時、actor、reason、追記・検証の原則だけを共通化した。execはtask stateのSSOTとして1 event 1 JSONをfoldする一方、Registerは個票の現在値を維持しファイル増加を避ける必要があるため、保存形式と状態foldは分離した。
+- レビューで2点を補った。1点目は、起票直後の個票で未設定の`completed`・`conclusion`・`block_reason`が「空から表示用の`-`への変更」としてadd eventへ記録されていた問題である。frontmatterにキーが無い状態と表示上の未設定セルを差分では同一視するようにし、既存の`register history`の表示（`-`から実値への変更）は変えていない。2点目は、概念データフロー図が履歴の入力をGit commitのままとしていた点で、[[prj-0001:cdfd-register-lifecycle]]の`P-02-08`と[[prj-0001:cdfd-reporting]]の記述を個票eventへ更新した。
+- 遷移時のcommit policyは変更していない。`register start`のworktree隔離要件とper-event commitは維持し、`develop`から`main`への昇格方式は後続項目の範囲とした。GitHub連携もeventを同期境界として利用できるようにしただけで、本項目では実装していない。
 
 ## 5. 関連ドキュメント
 
