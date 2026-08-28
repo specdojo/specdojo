@@ -97,8 +97,24 @@ git log --first-parent --oneline main
 - feature worktree は対象 project の `develop` を明示的なベースとして同期します。
 - 複数プロジェクトを並行する場合、main worktree の現在ブランチによるベース自動判定だけに依存せず、対象 project の `develop` を指定します。
 - `main` には branch protection を設定し、直接 push を禁止し、Pull Request と最低 1 名の承認、必須 CI の成功を merge 条件にします。
+- GitHub のリポジトリ設定では merge commit だけを許可し、squash merge と rebase merge を無効にします。これは Pull Request 画面で誤った昇格方式を選べないようにするサーバ側の設定です。
 - `project/<project-id>/develop` には branch protection を設定し、`develop → main` 昇格 PR の承認を強制します。exec の自動 commit を受け入れるため、`develop` への feature / exec 統合そのものは PR 承認を必須にしません（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
 - 承認者は `CODEOWNERS` で宣言し、branch protection の "Require review from Code Owners" で強制します。`main` はリポジトリ管理者、各 project の承認対象は当該 project の承認権限者（PO / CCB）を owner に割り当てます。
+
+### 5.1. mainへの直接pushを防ぐ防護柵
+
+Lefthook の `pre-push` は、Git が標準入力へ渡す各更新の remote ref を検査し、リモート名にかかわらず `refs/heads/main` への更新を拒否します。`project/<project-id>/develop`、feature、exec など他の remote ref への push は妨げません。拒否時は base を `main`、head を project `develop` とする Pull Request を作り、merge commit で昇格するよう案内します。
+
+このフックはローカルの誤操作を早期に止める防護柵であり、アクセス制御の境界ではありません。`--no-verify` で迂回でき、Lefthook を導入していない環境では実行されません。実際の境界は GitHub の branch protection であり、`main` への Pull Request、承認、必須 CI をサーバ側で強制します。
+
+実際に push せず判定を確認するには、Git の `pre-push` 入力と同じ4フィールドをスクリプトへ渡します。最初のコマンドは終了コード1で拒否メッセージを表示し、2つ目は終了コード0になります。
+
+```bash
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/main REMOTE' \
+  | node tools/protect-main-push.mjs
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/project/prj-0001/develop REMOTE' \
+  | node tools/protect-main-push.mjs
+```
 
 ## 6. ブランチの完了・削除
 

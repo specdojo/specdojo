@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QW5T",
+  "run_id": "20260828T132419877Z-87a39cd4",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-28T13:24:19.877Z",
+    "completed_at": "2026-08-28T13:30:24.758Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/protect-main-push.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/protect-main-push.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-qw5t-protect-main-push-and-merge-method.md    | 19 ++++++++++++-------\n docs/ja/specdojo/standards/git-branching-standard.md  | 16 ++++++++++++++++\n lefthook.yml                                          |  8 ++++++++\n 3 files changed, 36 insertions(+), 7 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write lefthook.yml tools/protect-main-push.mjs tests/tools/protect-main-push.test.ts docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md",
+      "status": "passed",
+      "summary": "全対象ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "printfによるmain/develop入力 | npx lefthook run pre-push --no-auto-install",
+      "status": "passed",
+      "summary": "mainは終了コード1、project developは0"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md",
+      "status": "passed",
+      "summary": "Markdownエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx lefthook validate",
+      "status": "passed",
+      "summary": "All good"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLintエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed",
+      "status": "failed",
+      "summary": "sandboxからapi.github.comへ接続不可。個票記録の同日実測値を確認"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "IPC不要の同等起動で登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1398件の索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    }
+  ],
+  "final_message": "main直接push防止フック、回帰テスト、運用標準および個票の更新を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QW5T/20260828T132419877Z-87a39cd4/executor.log",
+      "bytes": 2991,
+      "truncated": false
+    }
+  ]
+}

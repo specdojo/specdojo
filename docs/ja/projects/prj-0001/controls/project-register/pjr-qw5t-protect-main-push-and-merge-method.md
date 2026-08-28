@@ -90,16 +90,21 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                    | 担当 | 状態 | メモ                                 |
-| --- | ------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | GitHub 設定で squash / rebase merge を無効化する        | PO   | done | 2026-08-28 に PO が実施済み          |
-| 2   | 無効化が他の用途を妨げないことを確認する                | ARC  | open | PR 経由は実質 `develop → main` のみ  |
-| 3   | `lefthook.yml` へ `pre-push` を追加し `main` を拒否する | ARC  | open | ref 判定と拒否メッセージを含む       |
-| 4   | 防護柵と境界の違いを Gitブランチ標準へ記録する          | ARC  | open | `--no-verify` で迂回できることを明記 |
+| No  | 作業                                                    | 担当 | 状態 | メモ                                |
+| --- | ------------------------------------------------------- | ---- | ---- | ----------------------------------- |
+| 1   | GitHub 設定で squash / rebase merge を無効化する        | PO   | done | 2026-08-28 に PO が実施済み         |
+| 2   | 無効化が他の用途を妨げないことを確認する                | ARC  | done | PR 経由は実質 `develop → main` のみ |
+| 3   | `lefthook.yml` へ `pre-push` を追加し `main` を拒否する | ARC  | done | ref 判定と拒否メッセージを実装      |
+| 4   | 防護柵と境界の違いを Gitブランチ標準へ記録する          | ARC  | done | `--no-verify` での迂回可能性を明記  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- GitHub の merge 設定は、2026-08-28 に PO が取得した `{"mergeCommitAllowed":true,"rebaseMergeAllowed":false,"squashMergeAllowed":false}` を確認した。executor からの再取得は実行環境のネットワーク制限で GitHub API に接続できなかったが、リポジトリ内の変更がこの外部設定へ影響する経路はない。
+- PR を使用する経路を確認した。feature / exec は project `develop` へローカル統合され、通常の登録項目の承認も commit ベースであるため、merge 方式の無効化が影響する実質的な経路は `develop → main` の昇格 PR である。squash merge を前提とする他用途は確認されなかった。
+- `tools/protect-main-push.mjs` を追加し、Git の `pre-push` 標準入力に含まれる remote ref が `refs/heads/main` の場合だけ終了コード1にした。リモート名を判定条件にしないため、`origin` 以外のリモートでも main の更新を拒否する。他の ref は終了コード0とする。
+- `lefthook.yml` に `pre-push` を定義し、標準入力を判定スクリプトへ引き継ぐようにした。拒否メッセージは base `main`、head `project/<project-id>/develop` の Pull Request と merge commit 方式を案内する。
+- [[specdojo:git-branching-standard|Gitブランチ標準]] に、GitHub 側で merge commit だけを許可すること、ローカルフックの判定範囲、実 push を伴わない確認手順、`--no-verify` とフック未導入環境では迂回できる限界、実際の境界が branch protection であることを追記した。
+- `tests/tools/protect-main-push.test.ts` で main の拒否、develop / feature / exec の許可、複数 ref に main を含む push の拒否、次の行動を示すメッセージを検証する。
 
 ## 5. 関連ドキュメント
 

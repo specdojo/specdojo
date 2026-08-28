@@ -1,0 +1,15 @@
+main への直接 push を拒否する `pre-push` フックを実装しました。
+
+- `refs/heads/main` の更新のみ拒否し、develop／feature／exec は許可
+- PR の向きと merge commit 方式を拒否メッセージで案内
+- 防護柵の限界と branch protection の役割を標準へ追記
+- 個票の作業内容・対応結果を更新
+- result は executor 指示どおり未編集
+
+GitHub 設定の再取得のみ、sandbox のネットワーク制限で実施できませんでした。個票に記録済みの同日実測値は確認しています。
+
+<specdojo_executor_evidence>
+{"final_message":"main直接push防止フック、回帰テスト、運用標準および個票の更新を完了","validations":[{"command":"npx prettier --write lefthook.yml tools/protect-main-push.mjs tests/tools/protect-main-push.test.ts docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md","status":"passed","summary":"全対象ファイルを整形"},{"command":"printfによるmain/develop入力 | npx lefthook run pre-push --no-auto-install","status":"passed","summary":"mainは終了コード1、project developは0"},{"command":"npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npx lefthook validate","status":"passed","summary":"All good"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintエラーなし"},{"command":"gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed","status":"failed","summary":"sandboxからapi.github.comへ接続不可。個票記録の同日実測値を確認"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPC不要の同等起動で登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1398件の索引生成成功"},{"command":"npm run test:unit","status":"not_run","summary":"親runner実行対象のため未実行"},{"command":"npm run test:integration","status":"not_run","summary":"親runner実行対象のため未実行"},{"command":"npm run validate:schema","status":"not_run","summary":"親runner実行対象のため未実行"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result handoff for human or orchestrator application
