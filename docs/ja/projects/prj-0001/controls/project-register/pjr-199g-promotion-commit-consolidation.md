@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-199g-promotion-commit-consolidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-27T23:40:53Z"
   due_on: "2026-10-31"
+  completed_at: "2026-08-28T11:41:46Z"
+  conclusion: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
   register_events:
     - v: 1
       id: reg_676d6ad7bda6ebfe87e39692932fbe66
@@ -82,6 +84,25 @@ specdojo:
           from: in-progress
           to: review
       previous_event_id: reg_0296306e704c47acbef46dd31deca571
+    - v: 1
+      id: reg_a2bcdb4ab5f74b6fa4f2bf3eff903b55
+      ts: "2026-08-28T11:41:46Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-28"
+        - field: conclusion
+          from: "-"
+          to: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
+      previous_event_id: reg_b9a3d16114d6470e895d5ea60ebd666f
 ---
 
 # PJR-199G develop から main への昇格時にコミットをまとめる方式を確定する
@@ -156,7 +177,15 @@ PJR-T7ZQ の決定により、遷移時の commit policy は変更せず、雑�
 - [[specdojo:git-branching-standard|Gitブランチ標準]]へ、昇格方式、祖先関係の完了確認、first-parent の位置付け、squash / rebase merge の禁止を反映した。
 - [[specdojo:branch-workflow-guide|ブランチワークフローガイド]]へ、管理者が実施する事前同期、PR の merge 方式、昇格後の祖先確認、`main → develop` 同期、次回差分確認の手順を反映した。
 - 使い捨て clone で2回の昇格と逆マージを再現し、意図した first-parent 粒度、tree の一致、祖先関係、`register history` 770件の完全一致を確認した。対照実験により squash merge では完了条件を満たさないことも確認した。
-- 実際の昇格、push、force-push、push済み履歴の書き換えは行っていない。残課題はなく、実昇格はリポジトリ管理者が規約とガイドに従って実施する。
+- 実際の昇格、push、force-push、push済み履歴の書き換えは行っていない。実昇格はリポジトリ管理者が規約とガイドに従って実施する。
+
+レビューで判明した適用範囲の制約（追記）:
+
+- **本方式は次回の昇格から有効になる**。実リポジトリの現在の `main` に対して `git log --first-parent main` を実行すると2,675件中2,289件が表示され、`exec(register ...)` の遷移 commit がそのまま並ぶ。集約は効いていない。
+- 原因は `main` の現在の先端 `b4203fc0` にある。この merge は第1 parent が `develop` 側の `ce4132f4`、第2 parent が `main` 側の `5ccd851b` であり、`develop` 上で実行して `main` を fast-forward した形である。**確定した方式とは親子関係が逆向き**のため、`main` の first-parent 系列が `develop` の詳細履歴へ潜り込んでいる。
+- 既存の first-parent 系列を集約するには push 済み履歴の書き換えが必要であり、本規約が禁止する。過去区間はそのまま残す。
+- 検証は使い捨て clone 上の合成シナリオで行っており、実リポジトリの first-parent 系列がすでに汚れている事実は確認されていなかった。この制約を [[specdojo:git-branching-standard|Gitブランチ標準]] の「適用範囲」と [[specdojo:branch-workflow-guide|ブランチワークフローガイド]] の確認手順へ追記した。
+- 昇格担当者への注意として、merge の向きが逆にならないこと（`main` を checkout して `develop` を merge する、または PR の base を `main`・head を `develop` とする）を規約へ明記した。
 
 ## 5. 関連ドキュメント
 

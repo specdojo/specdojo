@@ -79,6 +79,16 @@ git log --first-parent --oneline main
 
 昇格後は、昇格対象だった `develop` の先端が `main` の祖先であることを `git merge-base --is-ancestor` で確認します。squash merge、一時ブランチでの rebase / cherry-pick、特定 commit の除外は元の `develop` との祖先関係を記録しないため、昇格の集約方式として使用しません。
 
+#### 適用範囲（本方式が有効になる時点）
+
+本方式は、**本規約の適用後に行う昇格から有効になります**。それ以前に作られた `main` の first-parent 履歴は集約されません。
+
+`develop` を第2 parent とする merge commit を `main` 上で作らず、`main` 上へ取り込む merge を `develop` 側で実行して `main` を fast-forward した場合、`main` の first-parent 系列は `develop` の詳細 commit を辿ります。過去にこの形で昇格した区間では、`git log --first-parent main` に exec / register の遷移 commit がそのまま現れます。
+
+既存の first-parent 系列を集約するには push 済み履歴の書き換えが必要であり、本規約は書き換えを禁止します。したがって過去区間はそのまま残します。読み手は、集約された first-parent 表示が得られるのは本規約適用後の区間である、と理解して利用します。
+
+昇格を行う担当者は、merge の向きが逆にならないよう次を確認します。`main` を checkout した状態で `develop` を merge する、または Pull Request の base を `main`、head を `develop` として merge commit を作る方式を選びます。
+
 ## 5. 同期・履歴・保護
 
 - `main` と共有中の project `develop` では force-push と履歴を書き換える rebase を禁止します。

@@ -200,6 +200,8 @@ git log --first-parent --oneline origin/main
 
 `git merge-base --is-ancestor` が終了コード0にならない場合、squash merge または rebase merge により祖先関係が失われた可能性があります。次の昇格を進めず、使用した merge 方式と Pull Request を確認します。push 済み履歴を rebase や force-push で直してはいけません。
 
+`git log --first-parent --oneline origin/main` の出力に exec / register の遷移 commit が並ぶ区間があっても、本手順の適用前に行った昇格の区間であれば異常ではありません。過去に merge の向きが逆（`develop` 上で `main` を取り込み、`main` を fast-forward）だった場合、その区間の first-parent 系列は `develop` の詳細 commit を辿ります。押し込み済みの履歴は書き換えないため、そのまま残します。確認するのは、**本手順で行った昇格が1件の merge commit として見えているか**です。
+
 project `develop` を引き続き使う場合は、昇格後の `main` を取り込みます。fast-forward になる場合も、分岐して merge commit が作られる場合もあります。
 
 ```bash
