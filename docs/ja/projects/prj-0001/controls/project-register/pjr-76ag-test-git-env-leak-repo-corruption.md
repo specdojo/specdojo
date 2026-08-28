@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: in-progress
   priority: high
   owner: ARC
   registered_at: "2026-08-28T10:10:24Z"
@@ -46,6 +46,19 @@ specdojo:
         - field: due
           from: ""
           to: "2026-09-30"
+    - v: 1
+      id: reg_92ffa34aa6a246619efcc2fd368c6fcd
+      ts: "2026-08-28T10:21:02Z"
+      action: start
+      actor: codex-expert-executor
+      from_status: open
+      to_status: in-progress
+      reason: work started
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      previous_event_id: reg_90a1afff79f74d12b5be0a023c4ef88e
 ---
 
 # PJR-76AG テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを破壊する事故が3度目の再発をした
