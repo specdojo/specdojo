@@ -56,7 +56,7 @@ specdojo:
 
 ## 2. 完了条件
 
-- **GitHub のリポジトリ設定で squash merge と rebase merge が無効になっている**。`gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed` で確認できる。設定変更はリポジトリ管理者が行う。
+- **GitHub のリポジトリ設定で squash merge と rebase merge が無効になっている**。`gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed` で確認できる。設定変更はリポジトリ管理者が行う。**この条件は 2026-08-28 に PO が実施し充足済みである**。再確認したうえで、その事実を記録する。
 - 無効化の影響が確認されている。`exec → develop` の統合はローカルの merge であり PR を使わないため、PR 経由のマージは実質 `develop → main` に限られる。他の用途で squash merge を使っていないことを確認する。
 - **`pre-push` フックが `main` への直接 push を拒否する**。`lefthook.yml` へ定義を追加する。現在フックファイルは存在するが定義がなく、何もしていない。
 - 拒否の範囲が明確である。`main` への直接 push を止め、`develop` や `feature` / `exec` への push は妨げない。リモート名と ref の判定方法（`refs/heads/main` への更新か）を実装で明示する。
@@ -68,7 +68,7 @@ specdojo:
 
 ### 調査済みの事実
 
-- `gh repo view` の実測値は `{"mergeCommitAllowed":true,"rebaseMergeAllowed":true,"squashMergeAllowed":true}` である。規約が禁止した方式が設定上は選べる。
+- **作業1は完了済みである**。2026-08-28 に PO が GitHub 設定を変更し、`gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed` の実測値は `{"mergeCommitAllowed":true,"rebaseMergeAllowed":false,"squashMergeAllowed":false}` になった。起票時点は3つとも `true` であった。残る作業は2以降である。
 - specdojo CLI には `git push` の呼び出しが**1箇所も存在しない**（`src/` と `tools/` を全走査）。CLI 経由で push されることはない。
 - agent は provider ごとに push を禁じている。claude は `.claude/settings.json` の deny、copilot は `--deny-tool 'shell(git push)'`、codex は sandbox の `network_access=false` による。**provider 設定に依存しない一律の手段がない**のが穴である。
 - `.git/hooks/pre-push` は lefthook のスタブが置かれているが、`lefthook.yml` に `pre-push` の定義がないため何も実行しない。
@@ -77,12 +77,12 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                    | 担当 | 状態 | メモ                                     |
-| --- | ------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
-| 1   | GitHub 設定で squash / rebase merge を無効化する        | PO   | open | リポジトリ管理者の操作。agent は実施不可 |
-| 2   | 無効化が他の用途を妨げないことを確認する                | ARC  | open | PR 経由は実質 `develop → main` のみ      |
-| 3   | `lefthook.yml` へ `pre-push` を追加し `main` を拒否する | ARC  | open | ref 判定と拒否メッセージを含む           |
-| 4   | 防護柵と境界の違いを Gitブランチ標準へ記録する          | ARC  | open | `--no-verify` で迂回できることを明記     |
+| No  | 作業                                                    | 担当 | 状態 | メモ                                 |
+| --- | ------------------------------------------------------- | ---- | ---- | ------------------------------------ |
+| 1   | GitHub 設定で squash / rebase merge を無効化する        | PO   | done | 2026-08-28 に PO が実施済み          |
+| 2   | 無効化が他の用途を妨げないことを確認する                | ARC  | open | PR 経由は実質 `develop → main` のみ  |
+| 3   | `lefthook.yml` へ `pre-push` を追加し `main` を拒否する | ARC  | open | ref 判定と拒否メッセージを含む       |
+| 4   | 防護柵と境界の違いを Gitブランチ標準へ記録する          | ARC  | open | `--no-verify` で迂回できることを明記 |
 
 ## 4. 対応結果
 
