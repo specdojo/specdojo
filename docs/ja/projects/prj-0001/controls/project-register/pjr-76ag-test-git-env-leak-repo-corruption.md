@@ -117,7 +117,29 @@ PJR-TPY9 の実行結果をコミットした際、lefthook の pre-commit が n
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容:
+
+- repositoryの位置を決める環境変数一覧を`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`へ移し、`gitEnvironment()`とVitest setupが同じ正本を参照する構造にした。`src/exec-worktree.ts`からの既存exportは維持しているため、既存呼び出し元の互換性は変えていない。
+- `vitest.config.ts`、`vitest.unit.config.ts`、`vitest.integration.config.ts`の全入口へ共通setupを設定した。各workerはtest moduleを読み込む前に`GIT_DIR`、`GIT_INDEX_FILE`、`GIT_WORK_TREE`などを`process.env`から除去し、個々のテストが`env`を渡し忘れても子プロセスはcwdからrepositoryを解決する。
+- PJR-EX5Eで導入した`TEST_GIT_ENVIRONMENT`は変更せず、author / committer identityと`commit.gpgsign=false`の一時設定を引き続きworkerへ注入する。回帰テストでrepository固有変数が未設定であることとidentityが設定済みであることを同時に確認する。
+- `tests/src/git-environment-isolation.test.ts`の文字列window検査をTypeScript AST検査へ置き換えた。`env`プロパティの有無ではなく、直接呼び出し、短縮プロパティ、拡張objectのいずれも`gitEnvironment()`由来であることを追跡するため、`env: process.env`は不合格になる。
+
+3度の再発で見落とした境界:
+
+- PJR-X3E8は事故を起こした1テストへ`env: gitEnvironment()`を追加し、記述規約を設けたが、テスト実行の入口は隔離しなかった。今回、Vitest workerのsetupを必須にして、個別テストの遵守に依存しない防御を追加した。
+- PJR-A99Jはagent起動環境の隔離とagent前後のGit状態検知を実装したが、人がcommitした際にagent外で起動するlefthook pre-commitの`npm test`はその境界を通らなかった。今回、全Vitest設定を直接防御対象に追加した。
+- PJR-TPY9の暫定検査はGit起動optionに`env`という語があれば通り、`env: process.env`も許可した。また既存のVitest共通環境はidentity注入だけでrepository固有変数を除去しなかった。今回、ASTで`gitEnvironment()`由来を検証し、共通setupでworker環境自体を無害化する二層にした。
+
+TypeScript以外の扱い:
+
+- 現在の静的検査は`src`、`tests`、`tools`、`scripts`配下のTypeScriptから`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを起動する箇所を対象とする。shell scriptとnpm scriptはAST検査の対象外とした。
+- 調査時点でlefthookから直接Git fixtureを起動するshell / npm scriptはなく、事故経路はpre-commitからVitestへ入るため共通setupで遮断できる。将来hookから直接Gitを起動するテスト用scriptを追加する場合は、その入口で同じ変数一覧を除去する専用検査を追加する。この境界を[[sysd-cross-cutting-policy|SpecDojo システム設計横断ルール]]と[[specdojo:exec-config-guide|exec設定ガイド]]へ記録した。
+
+復旧と確認:
+
+- [[specdojo:exec-operation-guide|exec運用ガイド]]へ、共有Git directoryの特定、`core.bare=false`への復旧、事故で混入したlocal identityだけの除去、reflogによる変更前HEAD特定、remote branch / tagへの到達有無確認、未pushの不正commitを含むworktree / branchの破棄、push済みの場合のrevert方針を記録した。
+- `npm run typecheck`と`npm run lint:ts`は成功した。危険な`GIT_DIR` / `GIT_INDEX_FILE`を設定して共通setupだけを読み込むスモーク確認でも、両変数が削除された。
+- `npm run test:unit`、`npm run test:integration`、`npm run validate:schema`はexecutor内で二重実行せず、pipeline親runnerの検証結果を正本とする。
 
 ## 5. 関連ドキュメント
 
@@ -125,4 +147,4 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 - 1度目の同型事故: [[prj-0001:pjr-x3e8-test-git-env-bare-repository]]
 - 2度目の同型事故: [[prj-0001:pjr-a99j-agent-git-isolation-breach]]
 - git identity の混入: [[prj-0001:pjr-ex5e-git-identity-isolation]]
-- 検査の実体: `tests/src/git-environment-isolation.test.ts`、`src/exec-worktree.ts` の `gitEnvironment()`
+- 検査の実体: `tests/src/git-environment-isolation.test.ts`、`tests/setup/git-environment.ts`、`src/git-environment.ts`

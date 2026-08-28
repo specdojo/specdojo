@@ -173,9 +173,9 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 ### 2.1. Git状態変更を検知した場合の復旧
 
-`agent-git-state-write:`が出た場合は、そのworktreeを統合せず保持して原因を確認します。`fields=local-config`で`git status`が`fatal: this operation must be run in a work tree`となる場合は、repositoryの管理者が影響範囲を確認したうえで共有repositoryに対して`git config --local core.bare false`を実行し、`git status`と`git fsck`で復旧を確認します。
+`agent-git-state-write:`が出た場合、またはhook内のテストが実repositoryを変更した疑いがある場合は、そのworktreeを統合せず保持して原因を確認します。最初に`git rev-parse --git-common-dir`で全worktreeが共有するrepositoryを特定し、`git config --local --list --show-origin`で`core.bare`とfixture用identityの混入を記録します。`git status`が`fatal: this operation must be run in a work tree`となる場合は、repositoryの管理者が影響範囲を確認したうえで共有repositoryに対して`git config --local core.bare false`を実行します。`user.name` / `user.email`は`git config --local --get-all <key>`で値を確認し、事故で追加された値だけを`git config --local --unset-all <key> '<value-regex>'`で除去します。正当なlocal設定を一括削除してはいけません。最後に`git status`と`git fsck`でrepositoryが復旧したことを確認します。
 
-`fields=HEAD`の場合は`git log --oneline --decorate <起動前HEAD>..HEAD`と`git show --stat <commit>`で混入commitを確認します。成果が不要なら対象exec / trial worktreeを破棄し、未統合branchを削除します。必要な成果が含まれる場合は、汚染branchを直接mergeせず、許可対象のファイル差分だけを新しいworktreeへ適用してrunner管理のcommitとして取り込みます。共有済み履歴を書き換えるresetやforce pushは行いません。
+`fields=HEAD`の場合は`git reflog`、`git log --oneline --decorate <起動前HEAD>..HEAD`、`git show --stat <commit>`で混入commitと変更前HEADを特定します。`git fetch origin`後に`git branch -r --contains <commit>`と`git tag --contains <commit>`を確認し、remote branchまたはtagへ到達していないことを確定してから破棄します。成果が不要なら対象exec / trial worktreeを破棄し、未統合branchを削除します。必要な成果が含まれる場合は、汚染branchを直接mergeせず、許可対象のファイル差分だけを新しいworktreeへ適用してrunner管理のcommitとして取り込みます。remoteへ到達済みの場合は履歴を書き換えず、管理者がrevertと関係者通知を行います。共有済み履歴のresetやforce pushは行いません。
 
 ### 2.2. blockedタスクの復帰
 
