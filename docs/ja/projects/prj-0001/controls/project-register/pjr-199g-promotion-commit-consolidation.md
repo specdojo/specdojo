@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-08-27T23:40:53Z"
@@ -69,6 +69,19 @@ specdojo:
           from: open
           to: in-progress
       previous_event_id: reg_676d6ad7bda6ebfe87e39692932fbe66
+    - v: 1
+      id: reg_b9a3d16114d6470e895d5ea60ebd666f
+      ts: "2026-08-28T11:02:26Z"
+      action: review
+      actor: codex-expert-executor
+      from_status: in-progress
+      to_status: review
+      reason: ready for review
+      changes:
+        - field: status
+          from: in-progress
+          to: review
+      previous_event_id: reg_0296306e704c47acbef46dd31deca571
 ---
 
 # PJR-199G develop から main への昇格時にコミットをまとめる方式を確定する
