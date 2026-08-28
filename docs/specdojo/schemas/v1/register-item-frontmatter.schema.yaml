@@ -133,7 +133,7 @@ properties:
             description: >
               Most recent reason the item transitioned to waiting. This operational
               record is separate from conclusion so a failed execution cannot replace
-              the item's final result. Git-backed register history retains its changes.
+              the item's final result. Append-only register events retain its changes.
 
           conclusion:
             type: string
@@ -142,6 +142,15 @@ properties:
               One-sentence summary of the result at completion, decision or
               rejection. Omit the key while it is undetermined; the details stay in
               the body (list column: 結論).
+
+          register_events:
+            type: array
+            items:
+              $ref: "#/$defs/RegisterEvent"
+            description: >
+              Append-only business events for this item. Current structured values
+              remain authoritative in the surrounding frontmatter; this log is the
+              authoritative audit history and survives squashed Git commits.
 
 $defs:
   ItemType:
@@ -202,3 +211,96 @@ $defs:
       Storing the instant instead of a calendar day keeps the record independent of
       the display timezone. Write it as a quoted YAML string, because an unquoted
       date-time is loaded as a timestamp value instead of a string.
+
+  RegisterEventId:
+    type: string
+    pattern: "^reg_[a-f0-9]{32}$"
+    description: "Globally unique and immutable register event identifier."
+
+  RegisterEventAction:
+    type: string
+    enum:
+      - add
+      - start
+      - wait
+      - review
+      - close
+      - reject
+      - defer
+      - reopen
+      - update
+      - renumber
+      - migrate
+
+  RegisterEventChange:
+    type: object
+    additionalProperties: false
+    required:
+      - field
+      - from
+      - to
+    properties:
+      field:
+        type: string
+        enum:
+          - id
+          - status
+          - title
+          - description
+          - type
+          - priority
+          - owner
+          - registered
+          - due
+          - completed
+          - conclusion
+          - block_reason
+      from:
+        type: string
+      to:
+        type: string
+
+  RegisterEvent:
+    type: object
+    additionalProperties: false
+    required:
+      - v
+      - id
+      - ts
+      - action
+      - actor
+      - from_status
+      - to_status
+      - reason
+      - changes
+    properties:
+      v:
+        const: 1
+      id:
+        $ref: "#/$defs/RegisterEventId"
+      ts:
+        $ref: "#/$defs/Timestamp"
+      action:
+        $ref: "#/$defs/RegisterEventAction"
+      actor:
+        type: string
+        minLength: 1
+      from_status:
+        oneOf:
+          - $ref: "#/$defs/ItemStatus"
+          - type: "null"
+      to_status:
+        $ref: "#/$defs/ItemStatus"
+      reason:
+        type: string
+        minLength: 1
+      changes:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/RegisterEventChange"
+      previous_event_id:
+        $ref: "#/$defs/RegisterEventId"
+      legacy_commit:
+        type: string
+        minLength: 1

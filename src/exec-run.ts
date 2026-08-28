@@ -3704,7 +3704,7 @@ async function runSingleRegisterItem(
   if (pipelineAgents) {
     process.stdout.write(`  Agent: ${pipelineAgents.reporterCandidates[0]?.actor} (reporter)\n`);
   }
-  if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+  if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
     throw new Error(`register start failed: ${item.id}`);
   }
 
@@ -3762,7 +3762,7 @@ async function runSingleRegisterItem(
   if (effectiveExit === 0) {
     let transition: RegisterItemTransition = "review";
     let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
@@ -3787,7 +3787,15 @@ async function runSingleRegisterItem(
         const commitReason = sanitizeRegisterConclusion(`register commit incomplete: ${detail}`);
         process.stderr.write(`run commit failed: ${item.id}: ${detail}\n`);
         if (
-          spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", commitReason])
+          spawnRegisterTransition(projectId, [
+            "wait",
+            "--id",
+            item.id,
+            "--reason",
+            commitReason,
+            "--by",
+            actor,
+          ])
         ) {
           transition = "waiting";
         } else {
@@ -3813,7 +3821,17 @@ async function runSingleRegisterItem(
   const waitingReason = sanitizeRegisterConclusion(
     blockReason ?? `agent exited with non-zero code (exit ${exitCode})`,
   );
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", waitingReason])) {
+  if (
+    !spawnRegisterTransition(projectId, [
+      "wait",
+      "--id",
+      item.id,
+      "--reason",
+      waitingReason,
+      "--by",
+      actor,
+    ])
+  ) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
   }
   process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
@@ -3879,11 +3897,22 @@ function registerWaitSummary(params: {
   item: PjrItem;
   ticketPath: string | null;
   reason: string;
+  actor: string;
 }): RegisterItemSummary {
-  const { repoRoot, projectId, registerPaths, item, ticketPath } = params;
+  const { repoRoot, projectId, registerPaths, item, ticketPath, actor } = params;
   const blockReason = sanitizeRegisterConclusion(params.reason);
   let transition: RegisterItemTransition = "waiting";
-  if (!spawnRegisterTransition(projectId, ["wait", "--id", item.id, "--reason", blockReason])) {
+  if (
+    !spawnRegisterTransition(projectId, [
+      "wait",
+      "--id",
+      item.id,
+      "--reason",
+      blockReason,
+      "--by",
+      actor,
+    ])
+  ) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
     transition = "none";
   } else {
@@ -3913,12 +3942,13 @@ async function finalizeRegisterWorktreeRun(params: {
   resultScaffold: Record<string, unknown>;
   agentResult: RunResult;
   stderr: string;
+  actor: string;
 }): Promise<RegisterItemSummary> {
-  const { context, registerPaths, item, ticketPath, worktree, stem, agentResult } = params;
+  const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
@@ -3953,7 +3983,7 @@ async function finalizeRegisterWorktreeRun(params: {
 
     let transition: RegisterItemTransition = "review";
     let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
@@ -4033,7 +4063,7 @@ async function runSingleRegisterItemWorktree(
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason });
+    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -4088,7 +4118,7 @@ async function runSingleRegisterItemWorktree(
 
     process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
     process.stdout.write(`  Agent: ${actor}\n`);
-    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
       throw new Error(`register start failed: ${item.id}`);
     }
 
@@ -4177,6 +4207,7 @@ async function runSingleRegisterItemWorktree(
       resultScaffold,
       agentResult,
       stderr,
+      actor,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -4334,7 +4365,17 @@ async function resumeSingleRegisterItemWorktree(
   // waiting のまま reporter を走らせないよう、通常実行と同じく in-progress へ戻す。状態変更は
   // root で直列化し、merge 前に作業ツリーを清潔にするため即時 commit する。
   const begin = (): RegisterItemSummary | null => {
-    if (!spawnRegisterTransition(projectId, ["start", "--id", item.id])) {
+    if (
+      !spawnRegisterTransition(projectId, [
+        "start",
+        "--id",
+        item.id,
+        "--by",
+        reporter.candidate.actor,
+        "--reason",
+        "reporter resumed",
+      ])
+    ) {
       return refuse(`register start failed: ${item.id}`);
     }
     commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): resume`, ticketPath);
@@ -4378,6 +4419,7 @@ async function resumeSingleRegisterItemWorktree(
       resultScaffold,
       agentResult: outcome.runResult,
       stderr: outcome.blockReason ?? "",
+      actor: reporter.candidate.actor,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();

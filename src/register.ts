@@ -28,6 +28,15 @@ import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
+  appendRegisterEvent,
+  buildRegisterEvent,
+  deterministicRegisterEventId,
+  readRegisterEventsFromContent,
+  validateRegisterEventDocs,
+  type RegisterEventAction,
+  type RegisterEventV1,
+} from "./register-events.js";
+import {
   applyRegisterItemFields,
   CELL_NONE,
   CELL_TODO,
@@ -91,6 +100,20 @@ export type RegisterItemView = {
   // ticket: 個票 frontmatter が正本 / index: 未移行のため pjr-index の行から読んだ項目。
   source: "ticket" | "index";
 };
+
+function registerEventActor(opts: { by?: string }): string {
+  return opts.by?.trim() || process.env.SPECDOJO_ACTOR?.trim() || "manual";
+}
+
+function atomicWriteFile(path: string, content: string): void {
+  const temporary = join(dirname(path), `.${basename(path)}.${randomUUID()}.tmp`);
+  try {
+    writeFileSync(temporary, content, { encoding: "utf8", flag: "wx" });
+    renameSync(temporary, path);
+  } finally {
+    if (existsSync(temporary)) unlinkSync(temporary);
+  }
+}
 
 // ================================
 // Constants
@@ -1141,6 +1164,9 @@ function applyItemUpdate(opts: {
   title?: string;
   description?: string;
   fieldUpdates?: RegisterItemFieldUpdates;
+  eventAction: RegisterEventAction;
+  eventActor: string;
+  eventReason: string;
 }): void {
   const ticketPath = opts.view.ticketPath;
   if (!ticketPath) {
@@ -1162,13 +1188,28 @@ function applyItemUpdate(opts: {
     return;
   }
 
-  let content = readFileSync(ticketPath, "utf8");
+  const beforeContent = readFileSync(ticketPath, "utf8");
+  let content = beforeContent;
   if (opts.title !== undefined) content = setRegisterItemTitle(content, opts.title);
   if (opts.description !== undefined) {
     content = setRegisterItemDescription(content, opts.description);
   }
   content = applyRegisterItemFields(content, updates);
-  writeFileSync(ticketPath, content, "utf8");
+  const event = buildRegisterEvent({
+    beforeContent,
+    afterContent: content,
+    filename: basename(ticketPath),
+    timeZone: opts.paths.registerDateTimeZone,
+    action: opts.eventAction,
+    actor: opts.eventActor,
+    reason: opts.eventReason,
+  });
+  if (!event) {
+    process.stdout.write(`Unchanged: ${ticketPath} (${opts.updated.id})\n`);
+    return;
+  }
+  content = appendRegisterEvent(content, event);
+  atomicWriteFile(ticketPath, content);
   process.stdout.write(`Updated: ${ticketPath} (${opts.updated.id} ${label})\n`);
 
   for (const view of writeDerivedViews(opts.paths, "all")) {
@@ -1343,7 +1384,7 @@ export function updateTicketStatusForItem(opts: {
     return;
   }
 
-  writeFileSync(ticketPath, updated, "utf8");
+  atomicWriteFile(ticketPath, updated);
   process.stdout.write(`Updated ticket status → ${opts.targetStatus}: ${ticketPath}\n`);
 }
 
@@ -1528,6 +1569,8 @@ export function renumberPjrItem(opts: {
   fromId: string;
   toId: string;
   dryRun: boolean;
+  actor?: string;
+  reason?: string;
 }): void {
   const { paths, fromId, toId, dryRun } = opts;
 
@@ -1542,6 +1585,25 @@ export function renumberPjrItem(opts: {
 
   const plan = planRenumber(paths, fromId, toId);
 
+  if (!dryRun && plan.ticketRename) {
+    const ticketWrite = plan.writes.find((write) => write.path === plan.ticketRename?.to);
+    if (!ticketWrite)
+      throw new Error(`Renumbered ticket content not found: ${plan.ticketRename.to}`);
+    const beforeContent = readFileSync(plan.ticketRename.from, "utf8");
+    const event = buildRegisterEvent({
+      beforeContent,
+      afterContent: ticketWrite.content,
+      filename: basename(plan.ticketRename.to),
+      timeZone: paths.registerDateTimeZone,
+      action: "renumber",
+      actor: opts.actor?.trim() || "manual",
+      reason: opts.reason?.trim() || `renumbered ${fromId} to ${toId}`,
+      extraChanges: [{ field: "id", from: fromId, to: toId }],
+    });
+    if (!event) throw new Error(`Failed to build renumber event for ${fromId}`);
+    ticketWrite.content = appendRegisterEvent(ticketWrite.content, event);
+  }
+
   if (dryRun) {
     process.stdout.write(`Would renumber ${fromId} → ${toId}:\n`);
     if (plan.ticketRename) {
@@ -1554,7 +1616,7 @@ export function renumberPjrItem(opts: {
   }
 
   for (const write of plan.writes) {
-    writeFileSync(write.path, write.content, "utf8");
+    atomicWriteFile(write.path, write.content);
     process.stdout.write(`Updated: ${write.path}\n`);
   }
   if (plan.ticketRename) {
@@ -1669,6 +1731,105 @@ function parseHistoryIds(values: string[] | undefined): string[] | undefined {
   return ids.length > 0 ? ids : undefined;
 }
 
+function actionFromLegacyHistory(
+  kind: "added" | "updated" | "removed",
+  changes: readonly { field: string; from: string; to: string }[],
+): RegisterEventAction {
+  if (kind === "added") return "add";
+  const statusChange = changes.find((change) => change.field === "status");
+  const status = statusChange?.to;
+  if (
+    statusChange &&
+    TERMINAL_STATUSES_SET.has(statusChange.from) &&
+    !TERMINAL_STATUSES_SET.has(statusChange.to)
+  ) {
+    return "reopen";
+  }
+  if (status === "in-progress") return "start";
+  if (status === "waiting") return "wait";
+  if (status === "review") return "review";
+  if (status === "done" || status === "decided") return "close";
+  if (status === "rejected") return "reject";
+  if (status === "deferred") return "defer";
+  const idChange = changes.some((change) => change.field === "id");
+  if (idChange) return "renumber";
+  return "update";
+}
+
+function migrateRegisterEventsFromGit(
+  paths: RegisterPaths,
+  dryRun: boolean,
+): { items: number; events: number; skipped: number; available: boolean } {
+  let history: ReturnType<typeof collectRegisterHistoryEvents>;
+  try {
+    history = collectRegisterHistoryEvents({
+      repoRoot: specdojoRootDir(),
+      registerPathspec: repoRelativePathspec(specdojoRootDir(), paths.projectRegisterPath),
+      timeZone: paths.registerDateTimeZone,
+    });
+  } catch {
+    return { items: 0, events: 0, skipped: 0, available: false };
+  }
+
+  const byId = new Map<string, typeof history>();
+  for (const event of history) {
+    if (event.source === "event" || event.kind === "removed") continue;
+    const entries = byId.get(event.id) ?? [];
+    entries.push(event);
+    byId.set(event.id, entries);
+  }
+
+  let itemCount = 0;
+  let eventCount = 0;
+  let skipped = 0;
+  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
+    let content = readFileSync(doc.path, "utf8");
+    if (readRegisterEventsFromContent(content, doc.filename).length > 0) {
+      skipped++;
+      continue;
+    }
+    const legacyEvents = byId.get(doc.id) ?? [];
+    if (legacyEvents.length === 0) continue;
+
+    let currentStatus: string | null = null;
+    let appended = 0;
+    for (const historyEvent of legacyEvents) {
+      const statusChange = historyEvent.changes.find((change) => change.field === "status");
+      const fromStatus: string | null =
+        historyEvent.kind === "added"
+          ? null
+          : (statusChange?.from ?? currentStatus ?? doc.item.status);
+      const toStatus: string = statusChange?.to ?? fromStatus ?? doc.item.status;
+      const event: RegisterEventV1 = {
+        v: 1,
+        id: deterministicRegisterEventId(
+          `${historyEvent.commit}\0${historyEvent.id}\0${JSON.stringify(historyEvent.changes)}`,
+        ),
+        ts: normalizeRegisterTimestamp(historyEvent.date, "legacy event date"),
+        action: actionFromLegacyHistory(historyEvent.kind, historyEvent.changes),
+        actor: historyEvent.author.trim() || "git-author-unknown",
+        from_status: fromStatus,
+        to_status: toStatus,
+        reason: historyEvent.subject.trim() || `migrated from ${historyEvent.commit.slice(0, 7)}`,
+        changes: historyEvent.changes.map((change) => ({
+          field: change.field as RegisterEventV1["changes"][number]["field"],
+          from: change.from,
+          to: change.to,
+        })),
+        legacy_commit: historyEvent.commit,
+      };
+      content = appendRegisterEvent(content, event);
+      currentStatus = toStatus;
+      appended++;
+    }
+    if (appended === 0) continue;
+    if (!dryRun) atomicWriteFile(doc.path, content);
+    itemCount++;
+    eventCount += appended;
+  }
+  return { items: itemCount, events: eventCount, skipped, available: true };
+}
+
 // ================================
 // Command Registration
 // ================================
@@ -1731,6 +1892,8 @@ export function registerRegisterCommands(program: Command): void {
     "--topic <topic>",
     "Topic slug for ticket filename; derived from --title if omitted",
   );
+  addCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  addCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   addCmd.option("--force", "Overwrite existing ticket file", false);
   addCmd.option("--dry-run", "Print the generated item file without writing", false);
   addCmd.action((opts) => {
@@ -1774,13 +1937,23 @@ export function registerRegisterCommands(program: Command): void {
       });
 
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
-      const content = buildRegisterItemContent({
+      let content = buildRegisterItemContent({
         projectId: paths.projectId,
         displayId,
         topic,
         fields,
         templatePath,
       });
+      const addEvent = buildRegisterEvent({
+        afterContent: content,
+        filename: ticketFilename,
+        timeZone: paths.registerDateTimeZone,
+        action: "add",
+        actor: registerEventActor(opts),
+        reason: opts.reason?.trim() || "item added",
+      });
+      if (!addEvent) throw new Error(`Failed to build add event for ${displayId}`);
+      content = appendRegisterEvent(content, addEvent);
 
       if (opts.dryRun) {
         process.stdout.write(`Would create ${ticketPath}:\n${content}\n`);
@@ -1792,7 +1965,7 @@ export function registerRegisterCommands(program: Command): void {
       }
 
       mkdirSync(paths.projectRegisterPath, { recursive: true });
-      writeFileSync(ticketPath, content, "utf8");
+      atomicWriteFile(ticketPath, content);
       process.stdout.write(`Created: ${ticketPath} (added ${displayId})\n`);
 
       if (existsSync(paths.pjrIndexPath)) {
@@ -1815,6 +1988,8 @@ export function registerRegisterCommands(program: Command): void {
     "--completed <datetime>",
     "Completion date-time (RFC 3339 with time zone; defaults to now in UTC)",
   );
+  closeCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  closeCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   closeCmd.option("--dry-run", "Print change without writing", false);
   closeCmd.action((opts) => {
     try {
@@ -1842,7 +2017,15 @@ export function registerRegisterCommands(program: Command): void {
         completedAt,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "close",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || opts.conclusion?.trim() || `closed as ${targetStatus}`,
+      });
       updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
@@ -1858,6 +2041,8 @@ export function registerRegisterCommands(program: Command): void {
     "--completed <datetime>",
     "Rejection date-time (RFC 3339 with time zone; defaults to now in UTC)",
   );
+  rejectCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  rejectCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   rejectCmd.option("--dry-run", "Print change without writing", false);
   rejectCmd.action((opts) => {
     try {
@@ -1879,7 +2064,15 @@ export function registerRegisterCommands(program: Command): void {
         completedAt,
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "reject",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || opts.conclusion?.trim() || "item rejected",
+      });
       updateTicketStatusForItem({ paths, item, targetStatus: "deprecated", dryRun: opts.dryRun });
     } catch (error) {
       printCommandError(error);
@@ -1891,6 +2084,8 @@ export function registerRegisterCommands(program: Command): void {
   addProjectOption(deferCmd);
   deferCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
   deferCmd.option("--conclusion <text>", "Reason for deferral");
+  deferCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  deferCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   deferCmd.option("--dry-run", "Print change without writing", false);
   deferCmd.action((opts) => {
     try {
@@ -1903,7 +2098,15 @@ export function registerRegisterCommands(program: Command): void {
         status: "deferred",
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "defer",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || opts.conclusion?.trim() || "item deferred",
+      });
     } catch (error) {
       printCommandError(error);
     }
@@ -1918,6 +2121,8 @@ export function registerRegisterCommands(program: Command): void {
     "Target status: open | in-progress | waiting | review",
     "open",
   );
+  reopenCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  reopenCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   reopenCmd.option("--dry-run", "Print change without writing", false);
   reopenCmd.action((opts) => {
     try {
@@ -1932,7 +2137,15 @@ export function registerRegisterCommands(program: Command): void {
 
       // reopen は完了日時のキーを取り除き、活動中の項目として扱えるようにする。
       const updated: PjrItem = { ...item, status: opts.status, completedAt: CELL_NONE };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "reopen",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || `reopened as ${opts.status}`,
+      });
     } catch (error) {
       printCommandError(error);
     }
@@ -1942,6 +2155,8 @@ export function registerRegisterCommands(program: Command): void {
   const startCmd = reg.command("start").description("Set item status to in-progress");
   addProjectOption(startCmd);
   startCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
+  startCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  startCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   startCmd.option("--dry-run", "Print change without writing", false);
   startCmd.action((opts) => {
     try {
@@ -1949,7 +2164,15 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
       const updated: PjrItem = { ...item, status: "in-progress" };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "start",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || "work started",
+      });
     } catch (error) {
       printCommandError(error);
     }
@@ -1961,6 +2184,7 @@ export function registerRegisterCommands(program: Command): void {
   waitCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
   waitCmd.option("--reason <text>", "Reason for waiting");
   waitCmd.option("--conclusion <text>", "Deprecated alias for --reason");
+  waitCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   waitCmd.option("--dry-run", "Print change without writing", false);
   waitCmd.action((opts) => {
     try {
@@ -1986,6 +2210,9 @@ export function registerRegisterCommands(program: Command): void {
         ...(reason !== undefined
           ? { fieldUpdates: { block_reason: inlineCodeAnglePlaceholders(reason) } }
           : {}),
+        eventAction: "wait",
+        eventActor: registerEventActor(opts),
+        eventReason: reason || "item waiting",
       });
     } catch (error) {
       printCommandError(error);
@@ -1996,6 +2223,8 @@ export function registerRegisterCommands(program: Command): void {
   const reviewCmd = reg.command("review").description("Set item status to review");
   addProjectOption(reviewCmd);
   reviewCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
+  reviewCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  reviewCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   reviewCmd.option("--dry-run", "Print change without writing", false);
   reviewCmd.action((opts) => {
     try {
@@ -2003,7 +2232,15 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
       const updated: PjrItem = { ...item, status: "review" };
-      applyItemUpdate({ paths, view, updated, dryRun: opts.dryRun });
+      applyItemUpdate({
+        paths,
+        view,
+        updated,
+        dryRun: opts.dryRun,
+        eventAction: "review",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || "ready for review",
+      });
     } catch (error) {
       printCommandError(error);
     }
@@ -2019,6 +2256,8 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
+  updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
   updateCmd.action((opts) => {
     try {
@@ -2064,6 +2303,9 @@ export function registerRegisterCommands(program: Command): void {
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
+        eventAction: "update",
+        eventActor: registerEventActor(opts),
+        eventReason: opts.reason?.trim() || "fields updated",
       });
     } catch (error) {
       printCommandError(error);
@@ -2108,7 +2350,12 @@ export function registerRegisterCommands(program: Command): void {
       const timestampSummary = summarizeTimestampMigration(timestampPlan);
 
       if (opts.dryRun) {
+        const eventMigration = migrateRegisterEventsFromGit(paths, true);
+        const eventSummary = eventMigration.available
+          ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
+          : "unavailable (Git history not found; legacy fallback remains active)";
         process.stdout.write(`Would migrate register timestamps: ${timestampSummary}\n`);
+        process.stdout.write(`Would migrate register events: ${eventSummary}\n`);
         return;
       }
 
@@ -2116,6 +2363,11 @@ export function registerRegisterCommands(program: Command): void {
         writeFileSync(file.path, file.content, "utf8");
       }
       process.stdout.write(`Migrated register timestamps: ${timestampSummary}\n`);
+      const eventMigration = migrateRegisterEventsFromGit(paths, false);
+      const eventSummary = eventMigration.available
+        ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
+        : "unavailable (Git history not found; legacy fallback remains active)";
+      process.stdout.write(`Migrated register events: ${eventSummary}\n`);
 
       for (const view of writeDerivedViews(paths, "all")) {
         process.stdout.write(`Generated: ${view.path}\n`);
@@ -2151,8 +2403,14 @@ export function registerRegisterCommands(program: Command): void {
       }
 
       const validation = validateRegisterItemDocs(paths.projectRegisterPath);
-      if (validation.errors.length > 0) {
-        throw new Error(`Invalid register item files:\n${validation.errors.join("\n")}`);
+      const eventErrors = validateRegisterEventDocs(
+        paths.projectRegisterPath,
+        paths.registerDateTimeZone,
+      );
+      if (validation.errors.length > 0 || eventErrors.length > 0) {
+        throw new Error(
+          `Invalid register item files:\n${[...validation.errors, ...eventErrors].join("\n")}`,
+        );
       }
 
       const views = generateDerivedViewFiles(paths, scope);
@@ -2173,11 +2431,10 @@ export function registerRegisterCommands(program: Command): void {
   });
 
   // --- history ---
-  // 個票 frontmatter が正本になったことで、台帳全体を1ファイルの差分で追えなくなった。
-  // その代替として、個票群の git 履歴から項目単位の追加・状態遷移・削除を再構成する。
+  // 新しい変更は個票内の追記型 event、event 導入前の変更は Git 履歴から再構成する。
   const historyCmd = reg
     .command("history")
-    .description("Show register item changes reconstructed from Git history");
+    .description("Show register item changes from append-only events and legacy Git history");
   addProjectOption(historyCmd);
   historyCmd.option("--since <date>", "Include commits on or after this date (YYYY-MM-DD)");
   historyCmd.option("--until <date>", "Include commits on or before this date (YYYY-MM-DD)");
@@ -2220,8 +2477,13 @@ export function registerRegisterCommands(program: Command): void {
 
       process.stdout.write(`${formatRegisterHistoryEvents(events)}\n`);
       const itemCount = new Set(events.map((event) => event.id)).size;
-      const commitCount = new Set(events.map((event) => event.commit)).size;
-      process.stdout.write(`events=${events.length} items=${itemCount} commits=${commitCount}\n`);
+      const gitCommitCount = new Set(
+        events.filter((event) => event.source !== "event").map((event) => event.commit),
+      ).size;
+      const storedEventCount = events.filter((event) => event.source === "event").length;
+      process.stdout.write(
+        `events=${events.length} items=${itemCount} stored=${storedEventCount} legacy_commits=${gitCommitCount}\n`,
+      );
     } catch (error) {
       printCommandError(error);
     }
@@ -2234,11 +2496,20 @@ export function registerRegisterCommands(program: Command): void {
   addProjectOption(renumberCmd);
   renumberCmd.requiredOption("--id <id>", "Current item ID (PJR-XXXX)");
   renumberCmd.requiredOption("--to <id>", "Target unused ID (PJR-XXXX)");
+  renumberCmd.option("--by <actor>", "Actor recorded in the append-only register event");
+  renumberCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   renumberCmd.option("--dry-run", "Print planned changes without writing", false);
   renumberCmd.action((opts) => {
     try {
       const paths = resolveRegisterPaths(opts);
-      renumberPjrItem({ paths, fromId: opts.id, toId: opts.to, dryRun: opts.dryRun });
+      renumberPjrItem({
+        paths,
+        fromId: opts.id,
+        toId: opts.to,
+        dryRun: opts.dryRun,
+        actor: registerEventActor(opts),
+        reason: opts.reason,
+      });
     } catch (error) {
       printCommandError(error);
     }

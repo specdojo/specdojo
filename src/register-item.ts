@@ -136,6 +136,7 @@ const SPECDOJO_KEY_ORDER = [
   "completed_at",
   "block_reason",
   "conclusion",
+  "register_events",
 ];
 
 // ================================
@@ -398,7 +399,7 @@ function orderSpecdojoKeys(fields: Record<string, unknown>): Record<string, unkn
 
 // 個票 frontmatter の `specdojo:` 名前空間を読み書きする共通処理。
 // mutate はキーの追加・更新・削除だけを行い、frontmatter 以外（本文）は書き換えない。
-function updateSpecdojoFields(
+export function updateSpecdojoFields(
   content: string,
   mutate: (fields: Record<string, unknown>) => void,
 ): string {
@@ -418,6 +419,20 @@ function updateSpecdojoFields(
   const document = { ...parsed, specdojo: orderSpecdojoKeys(fields) };
   const dumped = yaml.dump(document, { lineWidth: -1, noRefs: true, quotingType: '"' });
   return `---\n${dumped}---\n${match[2] ?? ""}`;
+}
+
+// 個票 frontmatter の `specdojo:` 名前空間を、イベント検証などの読み取り用途へ返す。
+// 呼び出し側が誤って元の文書を変更しないよう shallow copy にする。
+export function readSpecdojoFields(content: string): Record<string, unknown> {
+  const match = content.match(FRONTMATTER_RE);
+  if (!match) {
+    throw new Error("frontmatter not found in register item file");
+  }
+  const parsed = parseFrontmatterDocument(match[1]);
+  if (!isRecord(parsed.specdojo)) {
+    throw new Error("register item frontmatter has no specdojo namespace");
+  }
+  return { ...parsed.specdojo };
 }
 
 function parseFrontmatterDocument(frontmatter: string): Record<string, unknown> {
