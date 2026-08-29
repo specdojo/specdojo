@@ -175,7 +175,7 @@ viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` �
 
 `grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
 
-grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。grade の結果は schedule assessment の機械収集 `facts` に取り込まれますが、目的・業務価値など `evaluation: human` の観点や最終承認を代替しません。
+grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、目的・業務価値など `evaluation: human` の観点や最終承認を代替しません。
 
 ## 3. review plan と review result
 

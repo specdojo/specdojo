@@ -121,9 +121,7 @@ docs/
 │   │   │   │   ├── sch-milestones.yaml           # マイルストーン定義
 │   │   │   │   ├── sch-defaults.yaml             # 共通デフォルト設定
 │   │   │   │   ├── sch-track-<track>.yaml        # トラックごとのSchedule定義
-│   │   │   │   ├── sch-strategy-<track>.yaml     # トラックごとのタスク生成戦略
-│   │   │   │   └── assessments/                  # agent判定結果（正本・approach選択の入力）
-│   │   │   │       └── sch-assessment-<track>.yaml
+│   │   │   │   └── sch-strategy-<track>.yaml     # intent とトラックごとのタスク生成戦略
 │   │   │   │
 │   │   │   ├── routines/                         # 定期実行ルーチン ※成果物カタログ管理対象外
 │   │   │   │   └── rtn-<name>.yaml               # ルーチン定義

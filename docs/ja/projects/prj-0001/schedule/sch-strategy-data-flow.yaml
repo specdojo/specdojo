@@ -23,6 +23,27 @@ scope:
   include_kinds:
     - work
 
+approach_rules:
+  - local_ids:
+      - cdfd-overview
+      - cdfd-init
+    intent: bootstrap-kata-set
+    bootstrap_scope: [rulebook, recipe, sample, template]
+  - local_ids:
+      - cdfd-register-operation
+      - cdfd-register-lifecycle
+      - cdfd-catalog-planning
+      - cdfd-task-execution
+      - cdfd-routine
+      - cdfd-multi-project
+      - cdfd-agent-config-operation
+      - cdfd-derived-content
+      - cdfd-reporting
+    intent: reflect-implementation
+  - local_ids:
+      - cdfd-deprecation
+    intent: author-deliverable
+
 # cdfd-register-operation を cdfd-register-lifecycle へ改称した（id-and-file-naming-standard.md
 # 9.2 経路B）。旧 local_id の完了実績（010〜140）を新 local_id へ引き継ぎ、フルフェーズの
 # タスクチェーンを再生成しないようにするための登録。

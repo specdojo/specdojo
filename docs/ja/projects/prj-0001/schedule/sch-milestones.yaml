@@ -156,7 +156,6 @@ milestones:
     name: ドメイン完了
     artifact_name: 計画
     depends_on:
-      - T-PLANNING-sch-assessment-planning-140
       - T-PLANNING-sch-strategy-launch-140
       - T-PLANNING-sch-strategy-data-flow-140
     owner: PM
@@ -167,10 +166,7 @@ milestones:
       - T-PLANNING-dct-index-020
       - T-PLANNING-tml-index-020
       - T-PLANNING-sch-defaults-020
-      - T-PLANNING-sch-assessment-planning-020
-      - T-PLANNING-sch-assessment-launch-020
       - T-PLANNING-sch-strategy-launch-020
-      - T-PLANNING-sch-assessment-data-flow-020
       - T-PLANNING-sch-strategy-data-flow-020
     owner: PM
   - id: G-PLANNING-refine-pass
@@ -180,10 +176,7 @@ milestones:
       - T-PLANNING-dct-index-070
       - T-PLANNING-tml-index-070
       - T-PLANNING-sch-defaults-070
-      - T-PLANNING-sch-assessment-planning-070
-      - T-PLANNING-sch-assessment-launch-070
       - T-PLANNING-sch-strategy-launch-070
-      - T-PLANNING-sch-assessment-data-flow-070
       - T-PLANNING-sch-strategy-data-flow-070
     owner: PM
   - id: G-PLANNING-review-pass
@@ -193,9 +186,6 @@ milestones:
       - T-PLANNING-dct-index-090
       - T-PLANNING-tml-index-090
       - T-PLANNING-sch-defaults-090
-      - T-PLANNING-sch-assessment-planning-090
-      - T-PLANNING-sch-assessment-launch-090
       - T-PLANNING-sch-strategy-launch-090
-      - T-PLANNING-sch-assessment-data-flow-090
       - T-PLANNING-sch-strategy-data-flow-090
     owner: PM

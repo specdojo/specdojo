@@ -30,6 +30,25 @@ scope:
   include_kinds:
     - work
 
+approach_rules:
+  - local_ids:
+      - prj-overview
+      - prj-scope
+      - prj-success-criteria-and-acceptance-criteria
+      - prj-stakeholder-register
+      - prj-charter
+      - prj-assumptions-constraints-dependencies
+      - prj-issues-and-approach
+      - prj-comparison-of-alternatives
+      - pm-plan
+      - pm-communication-plan
+      - pm-quality-management-plan
+      - pm-organization
+      - pm-roles
+      - pm-members
+      - pm-raci
+    intent: author-deliverable
+
 # named phase sets（作業フローで分類する）
 # Markdown・YAML 問わず同じフェーズを使う。
 # バリデーションはエージェントが各フェーズの作業に組み込んで実行するため、

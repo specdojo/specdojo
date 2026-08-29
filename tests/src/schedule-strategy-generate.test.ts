@@ -6,16 +6,11 @@ import { dirname, join, relative } from "node:path";
 import yaml from "js-yaml";
 import {
   buildStrategyDocument,
-  generateStrategyFromAssessment,
+  generateStrategy,
   validateStrategySchema,
   writeStrategyFile,
 } from "../../src/schedule-strategy-generate.js";
-import {
-  collectAssessmentFacts,
-  type AssessmentJudgment,
-  type SchAssessment,
-  type StrategyScope,
-} from "../../src/schedule-assessment.js";
+import { resolveRecommendedApproach } from "../../src/schedule-approach.js";
 import { registerScheduleCommands } from "../../src/schedule.js";
 
 let root: string;
@@ -58,68 +53,38 @@ function catalog(): Record<string, unknown> {
   };
 }
 
-function freeformJudgment(): AssessmentJudgment {
-  return {
-    intent: "author-deliverable",
-    intent_rationale: "成果物を作成する",
-    kata: {},
-    recommended_approach: "freeform",
-    rationale: "利用可能な実践の型がない",
-    evidence: ["docs/demo"],
-    confidence: "high",
-  };
-}
-
-function bootstrapJudgment(): AssessmentJudgment {
-  return {
-    intent: "bootstrap-kata-set",
-    intent_rationale: "代表成果物と実践の型を初期整備する",
-    bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
-    kata: {},
-    recommended_approach: "bootstrap",
-    rationale: "後続成果物で再利用する一式を作る",
-    evidence: ["docs/demo"],
-    confidence: "high",
-  };
-}
-
-function assessment(): SchAssessment {
-  const scope: StrategyScope = {
-    strategyId: "prj-0001:sch-strategy-demo",
-    track: "demo",
-    projectId: "prj-0001",
-    catalogs: [
-      {
-        id: "prj-0001:dct-demo",
-        path: `/${relative(root, join(catalogPath, "dct-demo.yaml")).replace(/\\/g, "/")}`,
-      },
-    ],
-    includeKinds: ["work"],
-  };
-  const facts = collectAssessmentFacts({ repoRoot: root, scope });
-  return {
-    kind: "assessment",
-    id: "prj-0001:sch-assessment-demo",
-    type: "project",
-    status: "draft",
-    title: "実践の型整備状況の判定（demo）",
-    rulebook: "none",
-    schema_version: 1,
-    project_id: "prj-0001",
-    track: "demo",
-    strategy: {
+function writeIntentStrategy(): void {
+  write(
+    "schedule/sch-strategy-demo.yaml",
+    yaml.dump({
+      kind: "strategy",
       id: "prj-0001:sch-strategy-demo",
-      path: relative(root, join(schedulePath, "sch-strategy-demo.yaml")).replace(/\\/g, "/"),
-    },
-    include_kinds: ["work"],
-    deliverables: facts.deliverables.map((deliverable) => ({
-      ...deliverable,
-      judgment:
-        deliverable.local_id === "representative" ? bootstrapJudgment() : freeformJudgment(),
-    })),
-    open_questions: [],
-    confidence: "high",
-  };
+      type: "project",
+      status: "draft",
+      title: "demo",
+      rulebook: "specdojo:sch-rulebook",
+      track: "demo",
+      scope: {
+        catalogs: [
+          {
+            id: "prj-0001:dct-demo",
+            path: `/${relative(root, join(catalogPath, "dct-demo.yaml")).replace(/\\/g, "/")}`,
+          },
+        ],
+        include_kinds: ["work"],
+      },
+      approach_rules: [
+        {
+          local_ids: ["representative"],
+          intent: "bootstrap-kata-set",
+          bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
+        },
+        { local_ids: ["ordinary"], intent: "author-deliverable" },
+      ],
+      phase_sets: { placeholder: [{ id: "draft" }] },
+      owner_rules: [],
+    }),
+  );
 }
 
 beforeEach(() => {
@@ -146,6 +111,7 @@ beforeEach(() => {
   );
   write(rolesPath, yaml.dump({ roles: [{ code: "DEV" }, { code: "PO" }, { code: "QE" }] }));
   mkdirSync(schedulePath, { recursive: true });
+  writeIntentStrategy();
 });
 
 afterEach(() => {
@@ -156,8 +122,49 @@ afterEach(() => {
 });
 
 describe("strategy generator", () => {
-  it("DCT・Timeline・assessment から混在 profile、owner、gate、依存を生成して dry-run 検証する", () => {
-    const result = generateStrategyFromAssessment({
+  it("TaskIntent 7 種を決定論的な approach へ写像する", () => {
+    const usable = {
+      rulebook: "usable",
+      recipe: "usable",
+      sample: "usable",
+      template: "usable",
+    } as const;
+    const base = { usability: usable, deliverableExists: true, resolvedEvidenceCount: 1 };
+    expect(resolveRecommendedApproach({ ...base, intent: "author-deliverable" }).approach).toBe(
+      "fully-guided",
+    );
+    expect(
+      resolveRecommendedApproach({
+        ...base,
+        intent: "bootstrap-kata-set",
+        usability: { ...usable, template: "absent" },
+        bootstrapScope: ["template"],
+      }).approach,
+    ).toBe("bootstrap");
+    expect(resolveRecommendedApproach({ ...base, intent: "reflect-implementation" }).approach).toBe(
+      "retrofit",
+    );
+    expect(
+      resolveRecommendedApproach({ ...base, intent: "deduplicate-across-deliverables" }).approach,
+    ).toBe("cross-deliverable-dedup");
+    expect(
+      resolveRecommendedApproach({ ...base, intent: "improve-kata", kataTarget: "rulebook" })
+        .approach,
+    ).toBe("rulebook-maintenance");
+    expect(resolveRecommendedApproach({ ...base, intent: "confirm-deliverable" }).approach).toBe(
+      "finalize",
+    );
+    expect(
+      resolveRecommendedApproach({
+        ...base,
+        intent: "confirm-with-kata-set",
+        bootstrapScope: ["rulebook"],
+      }).approach,
+    ).toBe("bootstrap-finalize");
+  });
+
+  it("DCT・Timeline・intent・grade から混在 profile、owner、gate、依存を生成する", () => {
+    const result = generateStrategy({
       repoRoot: root,
       schedulePath,
       catalogPath,
@@ -165,7 +172,6 @@ describe("strategy generator", () => {
       rolesPath,
       projectId: "prj-0001",
       track: "demo",
-      assessment: assessment(),
       defaultOwner: "DEV",
       gateOwner: "PO",
       milestoneOwner: "PO",
@@ -199,7 +205,7 @@ describe("strategy generator", () => {
   });
 
   it("owner を解決できない場合は推測せず停止する", () => {
-    const result = generateStrategyFromAssessment({
+    const result = generateStrategy({
       repoRoot: root,
       schedulePath,
       catalogPath,
@@ -207,7 +213,6 @@ describe("strategy generator", () => {
       rolesPath,
       projectId: "prj-0001",
       track: "demo",
-      assessment: assessment(),
       gateOwner: "PO",
       milestoneOwner: "PO",
     });
@@ -216,11 +221,13 @@ describe("strategy generator", () => {
     expect(result.errors.join("\n")).toContain("主担当ロールを決定できない");
   });
 
-  it("assessment の facts 改変を検出し、候補を返さない", () => {
-    const input = assessment();
-    input.deliverables[0].facts.deliverable.exists = true;
-
-    const result = generateStrategyFromAssessment({
+  it("intent 宣言が不足する場合は候補を返さない", () => {
+    const strategy = yaml.load(
+      readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8"),
+    ) as Record<string, unknown>;
+    strategy.approach_rules = [];
+    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+    const result = generateStrategy({
       repoRoot: root,
       schedulePath,
       catalogPath,
@@ -228,14 +235,13 @@ describe("strategy generator", () => {
       rolesPath,
       projectId: "prj-0001",
       track: "demo",
-      assessment: input,
       defaultOwner: "DEV",
       gateOwner: "PO",
       milestoneOwner: "PO",
     });
 
     expect(result.doc).toBeNull();
-    expect(result.errors.join("\n")).toContain("facts が実際の解決結果と一致しない");
+    expect(result.errors.join("\n")).toContain("intent 宣言がない");
   });
 
   it("既存 strategy は --force なしで保護し、同一内容の再実行は unchanged になる", () => {
@@ -289,7 +295,7 @@ describe("strategy generator", () => {
       milestoneOwner: "PO",
       bootstrapOrdering: true,
       includeKinds: ["work"],
-      preserved: { ownerByLocalId: new Map() },
+      preserved: { ownerByLocalId: new Map(), approachRules: [] },
     });
 
     expect(built.errors).toEqual([]);
@@ -321,7 +327,7 @@ describe("strategy generator", () => {
       milestoneOwner: "PO",
       bootstrapOrdering: true,
       includeKinds: ["work"],
-      preserved: { ownerByLocalId: new Map() },
+      preserved: { ownerByLocalId: new Map(), approachRules: [] },
     });
 
     expect(built.errors.join("\n")).toContain("recipe-maintenance を生成しない");
@@ -349,7 +355,6 @@ describe("strategy generator", () => {
         2,
       )}\n`,
     );
-    write("schedule/assessments/sch-assessment-demo.yaml", yaml.dump(assessment()));
     const stdout: string[] = [];
     vi.spyOn(process.stdout, "write").mockImplementation((chunk: unknown) => {
       stdout.push(String(chunk));
@@ -373,6 +378,7 @@ describe("strategy generator", () => {
           "PO",
           "--milestone-owner",
           "PO",
+          "--force",
         ],
         { from: "user" },
       );
@@ -380,7 +386,7 @@ describe("strategy generator", () => {
       process.chdir(originalRoot);
     }
 
-    expect(stdout.join("")).toContain("Created:");
+    expect(stdout.join("")).toContain("Updated:");
     expect(readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8")).toContain(
       "kind: strategy",
     );

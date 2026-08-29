@@ -215,7 +215,7 @@ members:
 
 </details>
 
-先に `schedule assessment scaffold / prompt / validate` で成果物ごとの進め方を判定し、次のコマンドで strategy の差分を確認して生成します。`<role>` は `pm-roles.yaml` に定義された主担当ロールへ置き換えてください。
+先に `sch-strategy-launch.yaml` の `approach_rules` へ成果物ごとの intent を宣言し、必要な Kata を `specdojo grade` で評価します。次のコマンドで strategy の差分を確認して生成します。`<role>` は `pm-roles.yaml` に定義された主担当ロールへ置き換えてください。
 
 ```bash
 specdojo schedule strategy generate --project <project-id> --track launch \

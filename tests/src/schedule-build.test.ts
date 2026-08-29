@@ -548,15 +548,15 @@ describe("buildScheduleIndex start_date precedence", () => {
     }
   });
 
-  it("ignores assessment YAML files in the dedicated subdirectory", () => {
-    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-assessment-ignore-"));
+  it("ignores schedule-like YAML files in nested subdirectories", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-nested-ignore-"));
     try {
       writeTrackWithStartDate(dir, null);
-      const assessmentsDir = join(dir, "assessments");
-      mkdirSync(assessmentsDir);
+      const nestedDir = join(dir, "archive");
+      mkdirSync(nestedDir);
       writeFileSync(
-        join(assessmentsDir, "sch-assessment-test.yaml"),
-        yaml.dump({ kind: "assessment", track: "test", deliverables: [] }),
+        join(nestedDir, "sch-track-archived.yaml"),
+        yaml.dump({ kind: "track", track: "archived", tasks: [] }),
         "utf8",
       );
 

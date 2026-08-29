@@ -1,0 +1,14 @@
+`sch-assessment` を廃止し、`approach_rules`・都度収集 facts・保存済み grade からの決定論的導出へ移行しました。
+
+- 専用 schema、CLI、prompt、実データ3件、専用テストを削除
+- 7種類の `TaskIntent` と必須パラメータを schema・テストへ反映
+- Planning カタログ／track／milestones と関連ガイド・rulebookを更新
+- 入力・grade不足時は推測せず生成停止
+- executor指示どおり result は未編集
+- 親 runner 担当の unit・integration・schema検証は未実行
+
+全 executor 検証は成功しました。既存の未作成成果物警告と履歴イベント警告のみ残っています。
+
+<specdojo_executor_evidence>
+{"final_message":"sch-assessmentを廃止し、strategyのintent宣言・都度収集facts・保存済みgradeによる決定論的approach導出へ移行した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功。"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintに成功。"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdownの静的検査に成功。"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter検査に成功。"},{"command":"node --import tsx src/specdojo.ts schedule build --project prj-0001 --track planning --force","status":"passed","summary":"Planning trackを20タスクへ再生成し、assessmentタスクを除去。"},{"command":"node --import tsx src/specdojo.ts schedule build --project prj-0001 --track launch --force && node --import tsx src/specdojo.ts schedule build --project prj-0001 --track data-flow --force && node --import tsx src/specdojo.ts exec refresh","status":"passed","summary":"関連trackと実行ビューを更新。既存の履歴イベント警告のみ。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログ検証に成功。既存の未作成成果物警告のみ。"},{"command":"node --import tsx src/specdojo.ts catalog build --project prj-0001","status":"passed","summary":"カタログ表示を再生成。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001 && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿ビューと文書index 1382件を生成。"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"全履歴リンク検証に成功。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"},{"command":"npm run validate:schema","status":"not_run","summary":"pipeline指示に従い親runnerへ委任。"},{"command":"npm run test:unit","status":"not_run","summary":"pipeline指示に従い親runnerへ委任。"},{"command":"npm run test:integration","status":"not_run","summary":"pipeline指示に従い親runnerへ委任。"}]}
+</specdojo_executor_evidence>

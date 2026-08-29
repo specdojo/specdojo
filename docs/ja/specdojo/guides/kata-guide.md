@@ -41,7 +41,7 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 4 種類すべてが揃っているとは限りません。整備状況に応じてどこまで参照するかは、`approach`（進め方）で切り替えます。詳細は [実践の進め方ガイド](ryu-guide.md) を参照してください。
 
-ファイルが存在することと、内容を基準にできることは別です。存在・宣言形式・`status`・参照切れはコードが判定し、内容が対象成果物向けか、空・placeholder 中心でないか、相互に矛盾しないか、現行の rulebook・schema と整合するかはエージェントが判定します。判定結果の残し方は [Schedule設計ガイド](schedule-design-guide.md) の `実践の型の整備状況判定（sch-assessment-<track>.yaml）` を参照してください。
+ファイルが存在することと、内容を基準にできることは別です。存在・宣言形式・参照切れはコードが判定し、内容品質は `specdojo grade` の共通 rubric で評価します。Schedule は保存済み grade と strategy の intent から approach を都度導出します。詳しくは [Schedule設計ガイド](schedule-design-guide.md) の `intent 宣言と approach の決定論的導出` を参照してください。
 
 ## 2. 実践の型を作る条件
 

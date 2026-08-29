@@ -1,5 +1,5 @@
-// Standard strategy profiles: the single place that maps a recommended approach
-// (sch-assessment-<track>.yaml) to the phase sequence a deliverable runs through. Profiles are
+// Standard strategy profiles: the single place that maps a deterministically derived approach
+// to the phase sequence a deliverable runs through. Profiles are
 // code constants rather than free-form YAML so every generated sch-strategy-<track>.yaml uses
 // the same phase ids, task suffixes, durations, modes and execution kinds.
 
