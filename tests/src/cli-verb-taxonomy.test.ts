@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { registerCatalogCommands } from "../../src/catalog.js";
 import { registerDeliverableCommands } from "../../src/deliverable.js";
 import { registerExecCommands } from "../../src/exec.js";
+import { registerGradeCommand } from "../../src/grade.js";
 
 function subcommandNames(program: Command, name: string): string[] {
   return (
@@ -28,5 +29,12 @@ describe("CLI generation verb taxonomy", () => {
 
     expect(subcommandNames(program, "exec")).toContain("refresh");
     expect(subcommandNames(program, "exec")).not.toContain("build");
+  });
+
+  it("registers the grade prompt/apply/validate workflow", () => {
+    const program = new Command();
+    registerGradeCommand(program);
+
+    expect(subcommandNames(program, "grade")).toEqual(["prompt", "apply", "validate"]);
   });
 });

@@ -148,6 +148,9 @@ properties:
     items:
       $ref: "#/$defs/RoleViewpointSet"
 
+  grade_rubric:
+    $ref: "#/$defs/GradeRubric"
+
 $defs:
   RoleCode:
     type: string
@@ -231,7 +234,7 @@ $defs:
   Viewpoint:
     type: object
     additionalProperties: false
-    required: [id, role, category, title, check, evidence, default_severity]
+    required: [id, role, category, title, check, evidence, default_severity, evaluation, continuous]
     properties:
       id:
         type: string
@@ -268,6 +271,70 @@ $defs:
         type: string
         enum: [blocker, major, minor, note]
         description: "Default finding severity when this viewpoint fails."
+      evaluation:
+        enum: [deterministic, agent, human]
+        description: "Judgment layer responsible for this viewpoint."
+      continuous:
+        type: boolean
+        description: "Whether grade evaluates this viewpoint continuously."
+      grade_targets:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          enum: [kata, deliverable]
+        description: "Optional grade target restriction; omitted means both targets."
+
+  GradeRubric:
+    type: object
+    additionalProperties: false
+    required: [id, pass_score, levels, weights]
+    properties:
+      id:
+        type: string
+        pattern: "^[a-z][a-z0-9-]*$"
+      pass_score:
+        type: integer
+        minimum: 0
+        maximum: 100
+      levels:
+        type: array
+        minItems: 5
+        maxItems: 5
+        items:
+          type: object
+          additionalProperties: false
+          required: [level, name, description, review_verdict]
+          properties:
+            level:
+              type: integer
+              minimum: 0
+              maximum: 4
+            name:
+              type: string
+              minLength: 1
+            description:
+              type: string
+              minLength: 1
+            review_verdict:
+              enum: [pass, conditional_pass, changes_requested]
+      weights:
+        type: object
+        additionalProperties: false
+        required: [kata, deliverable]
+        properties:
+          kata:
+            $ref: "#/$defs/CategoryWeights"
+          deliverable:
+            $ref: "#/$defs/CategoryWeights"
+
+  CategoryWeights:
+    type: object
+    propertyNames:
+      pattern: "^[a-z][a-z0-9_-]*$"
+    additionalProperties:
+      type: number
+      exclusiveMinimum: 0
 
   RoleViewpointSet:
     type: object

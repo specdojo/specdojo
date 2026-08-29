@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-grade-kata
+name: 実践の型の継続品質評価
+description: 前回の grade 以降に内容が変わった Markdown の実践の型を共通 viewpoint で評価する。
+inputs:
+  scheduled_at:
+    type: string
+    required: true
+task:
+  mode: edit
+  owner: ARC
+  description: |
+    `specdojo grade prompt --target kata --changed-only --project prj-0001` で判定対象と
+    共通 rubric を取得し、全 agent viewpoint の GradeSubmission JSON を作成する。
+    `specdojo grade apply --target kata --changed-only --project prj-0001 --from <json>` で
+    検証・スコア計算・finding 配置を行う。対象がなければ result に no-op と記録する。
+  paths:
+    - docs/ja/specdojo/rulebooks
+    - docs/ja/specdojo/recipes
+    - docs/ja/specdojo/samples
+    - docs/ja/specdojo/templates
+run:
+  idempotency_key: "{{job_id}}:{{inputs.scheduled_at}}"

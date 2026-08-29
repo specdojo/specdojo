@@ -169,6 +169,14 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 | 設計 | 仕様を実現する構造、制約、責務、データ、外部依存、運用方法が明確か               |
 | 運用 | 公開後の変更、問い合わせ、障害対応、監査、保守の扱いが明確か                     |
 
+### 2.1. grade と共有する評価属性・rubric
+
+viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定層（`deterministic` / `agent` / `human`）、`continuous` は grade 対象かを宣言します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。grade 専用の別観点 ID は作りません。
+
+`grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
+
+grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。grade の結果は schedule assessment の機械収集 `facts` に取り込まれますが、目的・業務価値など `evaluation: human` の観点や最終承認を代替しません。
+
 ## 3. review plan と review result
 
 SpecDojo のレビューは、原則として review plan を作ってから実施し、review result を残します。

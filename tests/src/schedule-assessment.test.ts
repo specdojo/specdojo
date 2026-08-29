@@ -895,7 +895,9 @@ describe("renderAssessmentPrompt", () => {
         assessmentExists: false,
       });
 
-      expect(prompt).toContain("docs/ja/specdojo/rulebooks/full-rulebook.md（status: draft）");
+      expect(prompt).toContain(
+        "docs/ja/specdojo/rulebooks/full-rulebook.md（status: draft, grade: 未評価）",
+      );
       expect(prompt).toContain("宣言先が存在しない");
       expect(prompt).toContain("not-needed（不要と判断済み）");
       expect(prompt).toContain("undecided（要否未判断）");

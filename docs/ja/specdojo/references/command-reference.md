@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（config / catalog / deliverable / schedule / register / exec / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（config / catalog / deliverable / schedule / register / exec / grade / index / watch / build / routine）
 
 **ここで引けるもの**
 
@@ -494,7 +494,30 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して`pm-members.yaml`を更新します。
 
-## 8. exec worktree
+## 8. grade
+
+`grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、prompt と反映を分離します。
+
+| コマンド         | 用途                                                      |
+| ---------------- | --------------------------------------------------------- |
+| `grade prompt`   | 対象文書・rubric・継続評価対象 viewpoint を prompt にする |
+| `grade apply`    | agent の JSON を検証し、スコアと finding を冪等に反映する |
+| `grade validate` | 内容ハッシュと Frontmatter / 本文 finding 件数を検証する  |
+
+```bash
+specdojo grade prompt --target kata --changed-only --project prj-0001 --out logs/grade-prompt.md
+# prompt に従った GradeSubmission JSON を agent が作成する
+specdojo grade apply --target kata --changed-only --project prj-0001 --from logs/grade-result.json
+specdojo grade validate --target kata --project prj-0001
+```
+
+`--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。`--changed-only` は既存 grade の `content_hash` と、grade・finding を除いた現在内容のハッシュを比較するため、評価結果の書き込み自体を変更として再検出しません。
+
+`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が 70 未満なら `needs-work`、それ以外を `pass` とします。
+
+現行のインライン記録対象は Markdown です。YAML / JSON の kata・成果物はコメントと Frontmatter を同じ契約で保持できないため、`--path` で指定した場合は書き込まずエラーにします。非 Markdown の記録形式はサイドカー schema を導入する後続変更で扱います。
+
+## 9. exec worktree
 
 `exec worktree` は、claim 済みタスクを段階ごとに確認しながら隔離実行するための分割コマンドです。
 
@@ -521,7 +544,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 詳細な安全条件は [exec worktree運用ガイド](../guides/exec-worktree-guide.md) を参照します。
 
-## 9. index
+## 10. index
 
 `index` は frontmatter の `id` とファイルパスのインデックスを扱います。
 
@@ -533,7 +556,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `exec run` は agent に plan を渡す直前に `index replace --format path --missing keep` 相当の処理を行います。
 
-## 10. watch / build
+## 11. watch / build
 
 | コマンド | 用途                                        | 例                                               |
 | -------- | ------------------------------------------- | ------------------------------------------------ |
@@ -542,7 +565,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
-## 11. job
+## 12. job
 
 `job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
 
@@ -554,7 +577,7 @@ specdojo exec worktree remove --project prj-0001 --task <task-id> --delete-branc
 
 `exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
 
-## 12. routine
+## 13. routine
 
 `routine` は `rtn-*.yaml` の定義に基づき、schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐せず、外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出します。
 
@@ -588,7 +611,7 @@ specdojo routine run --project prj-0001 --due --dry-run
 
 schedule / register / job / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
 
-## 13. 関連ガイド
+## 14. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |

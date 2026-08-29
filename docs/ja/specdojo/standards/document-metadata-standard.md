@@ -249,6 +249,30 @@ specdojo:
 
 参照の正本は各成果物の `relations` とします。要求から仕様・テストへの対応表、カバレッジ、未充足項目はこれらの参照から導出する派生ビューであり、独立した手編集のSSOTを作りません。成果物本文に項目単位のトレース列を持つ場合も、安定したIDを記載し、同じ関係を別の状態情報として重複管理しないようにします。
 
+### 6.2. 継続品質評価（`grade`）
+
+Markdown 文書の最新の継続品質評価は `specdojo.grade` に記録します。これは履歴ではなく状態のスナップショットであり、`specdojo grade apply` は同じキーを冪等に上書きします。履歴と合意形成は review result が担います。
+
+| 項目           | 意味                                                      |
+| -------------- | --------------------------------------------------------- |
+| `rubric`       | 判定に使った共通 rubric の版                              |
+| `target`       | `kata` または `deliverable`                               |
+| `verdict`      | `pass` / `needs-work` / `fail`                            |
+| `score`        | category の重み付き総合点（0-100）                        |
+| `graded_at/by` | 評価日時と判定主体                                        |
+| `content_hash` | grade と finding コメントを除く内容の SHA-256             |
+| `categories`   | category 別 score                                         |
+| `viewpoints`   | viewpoint 別 level / score                                |
+| `findings`     | `blocker` / `major` / `minor` / `note` の本文コメント件数 |
+
+要修正箇所の直前には独立行で次のコメントを置きます。`rule` は共通 viewpoint ID です。`grade validate` は Frontmatter の severity 別件数、本文コメント数、内容ハッシュを突き合わせます。
+
+```markdown
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency 必須の禁止事項が欠落している。 -->
+```
+
+YAML / JSON は Markdown Frontmatter と HTML コメントの契約を持たないため、現行 grade のインライン記録対象外です。別形式を黙って書き換えず、将来のサイドカー schema 導入まではエラーとして扱います。
+
 ## 7. 成果物の値制約
 
 - `type` は `適用範囲` に列挙した成果物種別のいずれかとする。
