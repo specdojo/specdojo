@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T00:15:15Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/schedule-assessment.test.ts (1 failed)"
   register_events:
     - v: 1
       id: reg_5a502849368e4319a6ed07318995a8e7
@@ -59,6 +60,22 @@ specdojo:
           from: open
           to: in-progress
       previous_event_id: reg_5a502849368e4319a6ed07318995a8e7
+    - v: 1
+      id: reg_dcd563a4acfa41d9b491b00a9fa40f93
+      ts: "2026-08-29T10:02:24Z"
+      action: wait
+      actor: codex-expert-executor
+      from_status: in-progress
+      to_status: waiting
+      reason: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/schedule-assessment.test.ts (1 failed)"
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/schedule-assessment.test.ts (1 failed)"
+      previous_event_id: reg_7642eaa4ee6345f8948072143785aa2f
 ---
 
 # PJR-49D2 rulebook/sample/recipe/template の品質評価コマンドを設計・実装する
