@@ -903,6 +903,56 @@ describe("generateSinglePlan", () => {
     }
   });
 
+  it("review plan はプロジェクト差分から共通レビュー観点を解決して展開する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    const viewpointsPath = join(root, "pm-review-viewpoints.yaml");
+
+    try {
+      writeCatalog(catalogPath);
+      writeFileSync(
+        viewpointsPath,
+        [
+          "id: prj-9999:pm-review-viewpoints",
+          "type: project",
+          "status: draft",
+          "title: レビュー観点一覧",
+          "rulebook: none",
+          "project_id: prj-9999",
+          "extends: specdojo:pm-review-viewpoints",
+          "viewpoints: []",
+          "role_viewpoint_sets: []",
+          "disabled:",
+          "  viewpoints: []",
+          "  role_viewpoint_sets: []",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        viewpointsPath,
+        task: {
+          id: "T-TEST-overview-091",
+          local_id: "overview",
+          mode: "review",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("業務価値を定義・展開する成果物で");
+      expect(plan).toContain("vp-ba-business-value");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("project_context は空配列で opt-out でき、context 文書自身には自己参照を出さない", async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
     const executionPath = join(root, "execution");

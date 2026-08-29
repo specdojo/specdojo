@@ -2,9 +2,8 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo Review Viewpoints YAML schema"
 description: >
-  Schema for project-scoped review viewpoints files: pm-review-viewpoints.yaml.
-  Defines categories, coverage_types, severity_levels, verdict_definitions,
-  viewpoints, and role_viewpoint_sets used in review plans and results.
+  Schema for the common review viewpoints file and project-scoped overlays.
+  A project can inherit the common set and upsert or disable keyed entries.
 type: object
 additionalProperties: false
 
@@ -14,13 +13,49 @@ required:
   - status
   - title
   - rulebook
-  - project_id
-  - categories
-  - coverage_types
-  - severity_levels
-  - verdict_definitions
-  - viewpoints
-  - role_viewpoint_sets
+
+oneOf:
+  - properties:
+      type:
+        const: "standard"
+      categories:
+        minItems: 1
+      coverage_types:
+        minItems: 1
+      severity_levels:
+        minItems: 1
+      verdict_definitions:
+        minItems: 1
+      viewpoints:
+        minItems: 1
+      role_viewpoint_sets:
+        minItems: 1
+    required:
+      - categories
+      - coverage_types
+      - severity_levels
+      - verdict_definitions
+      - viewpoints
+      - role_viewpoint_sets
+  - properties:
+      type:
+        const: "project"
+      extends:
+        const: "specdojo:pm-review-viewpoints"
+    required: [project_id, extends]
+  - properties:
+      type:
+        const: "project"
+    required:
+      - project_id
+      - categories
+      - coverage_types
+      - severity_levels
+      - verdict_definitions
+      - viewpoints
+      - role_viewpoint_sets
+    not:
+      required: [extends]
 
 properties:
   id:
@@ -30,8 +65,8 @@ properties:
 
   type:
     type: string
-    const: "project"
-    description: "Document type. Must be 'project'."
+    enum: ["standard", "project"]
+    description: "Common definitions use standard; project files use project."
 
   status:
     type: string
@@ -66,44 +101,49 @@ properties:
     pattern: "^prj-[0-9]{4,}$"
     description: "Project identifier (e.g., prj-0001)."
 
+  extends:
+    type: string
+    const: "specdojo:pm-review-viewpoints"
+    description: >
+      Common set inherited by a project overlay. Inheritance is intentionally one level.
+      Arrays in an inherited project file upsert common entries by id, or by role for
+      role_viewpoint_sets.
+
+  disabled:
+    $ref: "#/$defs/DisabledEntries"
+
   categories:
     type: array
-    minItems: 1
     description: "Review category vocabulary. Each viewpoint belongs to one category."
     items:
       $ref: "#/$defs/Category"
 
   coverage_types:
     type: array
-    minItems: 1
     description: "Coverage type vocabulary for recording what was checked during review."
     items:
       $ref: "#/$defs/CoverageType"
 
   severity_levels:
     type: array
-    minItems: 1
     description: "Finding severity vocabulary."
     items:
       $ref: "#/$defs/SeverityLevel"
 
   verdict_definitions:
     type: array
-    minItems: 1
     description: "Review verdict vocabulary."
     items:
       $ref: "#/$defs/VerdictDefinition"
 
   viewpoints:
     type: array
-    minItems: 1
     description: "Role-based review viewpoints. Each viewpoint belongs to one role and one category."
     items:
       $ref: "#/$defs/Viewpoint"
 
   role_viewpoint_sets:
     type: array
-    minItems: 1
     description: "Mapping from Role code to the list of viewpoint IDs assigned to that role."
     items:
       $ref: "#/$defs/RoleViewpointSet"
@@ -111,8 +151,10 @@ properties:
 $defs:
   RoleCode:
     type: string
-    enum: [PO, PM, BA, ARC, DEV, QE, UX, OPS]
-    description: "Role code. Must match a role defined in pm-roles.yaml."
+    pattern: "^[A-Z][A-Z0-9_-]*$"
+    description: >
+      Role code. Standard codes are PO, PM, BA, ARC, DEV, QE, UX, and OPS.
+      Project overlays may use an additional code defined in pm-roles.yaml.
 
   ArtifactKind:
     type: string
@@ -243,3 +285,36 @@ $defs:
         items:
           type: string
           pattern: "^vp-[a-z][a-z0-9-]*$"
+
+  DisabledEntries:
+    type: object
+    additionalProperties: false
+    description: >
+      Keys removed after project upserts. The same key cannot be both upserted and disabled.
+    properties:
+      categories:
+        $ref: "#/$defs/DisabledIds"
+      coverage_types:
+        $ref: "#/$defs/DisabledIds"
+      severity_levels:
+        $ref: "#/$defs/DisabledIds"
+      verdict_definitions:
+        $ref: "#/$defs/DisabledIds"
+      viewpoints:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          pattern: "^vp-[a-z][a-z0-9-]*$"
+      role_viewpoint_sets:
+        type: array
+        uniqueItems: true
+        items:
+          $ref: "#/$defs/RoleCode"
+
+  DisabledIds:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1

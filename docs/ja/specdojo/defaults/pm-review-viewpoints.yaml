@@ -1,22 +1,10 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-review-viewpoints.schema.yaml
-# specdojo-schema: validate=false reason=template
-# Template: project review viewpoints
-# Placeholder _PROJECT_ID_ is replaced with the actual project_id on scaffold.
-# On scaffold, flatten metadata_template to the top level (with placeholders
-# replaced) and drop the template's own metadata (id/type/status/title/rulebook).
-# See document-metadata-standard.md "生成物メタ情報雛形（metadata_template）".
-id: specdojo:pm-review-viewpoints-template
-type: template
+# SpecDojo 共通レビュー観点の正本。プロジェクトは extends と差分だけを宣言する。
+id: specdojo:pm-review-viewpoints
+type: standard
 status: draft
-title: レビュー観点一覧テンプレート
+title: 共通レビュー観点一覧
 rulebook: none
-metadata_template:
-  id: _PROJECT_ID_:pm-review-viewpoints
-  type: project
-  status: draft
-  title: レビュー観点一覧
-  rulebook: none
-  project_id: _PROJECT_ID_
 
 # レビュー観点一覧。
 # Role code の語彙は pm-roles.yaml を参照する。
@@ -181,8 +169,12 @@ viewpoints:
     role: PO
     category: purpose
     title: 目的・スコープとの整合
-    check: 成果物の内容がプロジェクト目的、スコープ、優先順位、公開方針と矛盾していないか。
-    evidence: 目的、対象範囲、対象外、判断理由、関連成果物への参照。
+    check: 成果物の主要な定義・判断が、プロジェクト目的、スコープ、優先順位、公開方針と矛盾せず、成果物固有の目的または上位文書への参照から必要性を説明できるか。対応する目的・成果のない手段を目的として扱っていないか。
+    evidence: プロジェクト概要の目的・必要性・期待効果、成果物固有の目的、対象範囲、対象外、主要な定義・判断と上位根拠との対応、判断理由、関連成果物への参照。
+    # project-level Why との整合と、根拠のない主要判断・手段の検出を担う。
+    # 対象者・業務課題・期待価値の内容は vp-ba-business-value、読み手への伝わり方は
+    # vp-ux-readability の責務とし、同じ指摘を複数観点で重複させない。
+    # 構造・設定中心の成果物は参照・命名・下流利用の整合で判定し、業務上の Why の詳細な再掲を要求しない。
     coverage_types:
       - business_goal
       - scope_boundary
@@ -235,13 +227,14 @@ viewpoints:
     role: BA
     category: business
     title: 業務価値との対応
-    check: 成果物の記述が業務目的、利用者、業務課題、期待効果と対応しているか。
-    evidence: 背景、目的、利用者、業務フロー、価値、成功基準。
+    check: 業務価値を定義・展開する成果物で、主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。構造・設定中心の成果物では、上位目的への参照と下流利用の整合を確認し、業務上の Why の詳細な再掲を要求しない。
+    evidence: 対象者、業務課題、放置時の影響、期待価値・効果、成功基準、判断理由、主要な成果・方針との対応、上位文書への参照。
+    # 業務上の Why の充足と主要な What / How との対応を確認し、対象者・課題・期待価値の不足、
+    # 上位目的との矛盾、対応先のない成果・方針を finding として説明できる範囲に絞る。
+    # 利用者像・利用シーン・業務イベントの列挙は、それぞれ vp-ba-stakeholder-clarity /
+    # vp-ba-requirements-completeness の責務とし、概要・憲章などへの過剰な詳細流入を避ける。
     coverage_types:
-      - stakeholder
       - business_goal
-      - use_case
-      - business_event
       - traceability
     default_severity: major
   - id: vp-ba-requirements-completeness
@@ -362,19 +355,27 @@ viewpoints:
     title: 抜け漏れ・矛盾
     check: 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。
     evidence: rulebook、schema、関連文書、禁止事項、レビュー履歴。
+    # 構造・整合の抜け漏れを見る観点であり、特定の業務 coverage 次元の網羅は要求しない。
+    # 必須要素の充足は check / evidence と各成果物の rulebook・schema で判定し、
+    # 構造系成果物（pm-roles / pm-members / pm-raci など）への無関係な詳細流入を避ける。
+    default_severity: major
+  - id: vp-qe-config-validity
+    role: QE
+    category: quality
+    title: 設定値の妥当性
+    check: 設定値・必須キー・参照が schema と整合し、妥当な値で過不足なく定義されているか。
+    evidence: schema、必須キー、設定値、デフォルト値、validate 結果。
+    # 設定 YAML（スケジュール定義・デフォルト等）向けの軽量観点。挙動仕様向けの
+    # coverage（exception_case / state_transition / non_functional）を要求せず、
+    # 設定値の妥当性と schema 整合に絞る。
+    default_severity: major
+  - id: vp-qe-kata-conformance
+    role: QE
+    category: quality
+    title: 実践の型としての適合性
+    check: rulebook、recipe、sample、template が種別ごとの責務を守り、相互参照と対象成果物への適用方法が矛盾なく定義されているか。
+    evidence: authoring standard、rulebook の型宣言、recipe の問い、sample の完成例、template の骨組み、対象成果物との対応。
     coverage_types:
-      - stakeholder
-      - scope_boundary
-      - use_case
-      - business_event
-      - exception_case
-      - permission
-      - state_transition
-      - data
-      - integration
-      - non_functional
-      - operations
-      - auditability
       - acceptance
       - traceability
     default_severity: major
@@ -469,6 +470,8 @@ role_viewpoint_sets:
       - vp-qe-done-criteria
       - vp-qe-verifiability
       - vp-qe-omissions-consistency
+      - vp-qe-config-validity
+      - vp-qe-kata-conformance
   - role: UX
     viewpoints:
       - vp-ux-readability

@@ -1265,20 +1265,20 @@ export function registerExecCommands(program: Command): void {
       if (!project) throw new Error(`Unknown project: ${projectId}`);
 
       const baseDir = specdojoRootDir();
-      const templatePath = join(
+      const commonPath = join(
         baseDir,
         "docs",
         "ja",
         "specdojo",
-        "templates",
-        "pm-review-viewpoints-template.yaml",
+        "standards",
+        "pm-review-viewpoints.yaml",
       );
 
       const viewpointsRel = getProjectViewpointsPath(project);
       if (viewpointsRel) {
         const outputPath = pathResolve(baseDir, viewpointsRel);
         const result = scaffoldViewpoints({
-          templatePath,
+          commonPath,
           projectId,
           outputPath,
           force: !!opts.force,

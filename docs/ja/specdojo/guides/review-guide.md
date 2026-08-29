@@ -49,16 +49,16 @@ SpecDojo のレビューは次を扱います。
 
 レビューでは次を入力として扱います。
 
-| 入力              | 正本ファイル                | 役割                                                                    |
-| ----------------- | --------------------------- | ----------------------------------------------------------------------- |
-| 対象成果物        | -                           | レビュー対象の Markdown / YAML / JSON など                              |
-| 成果物カタログ    | `dct-*.yaml`                | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する |
-| rulebook          | `*-rulebook.md`             | 成果物ごとの構造、必須章、必須キー、禁止事項を定義する                  |
-| sample            | `*-sample.*`                | 期待する成果物の具体例                                                  |
-| review viewpoints | `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する        |
-| 関連成果物        | -                           | 上位・下位・隣接成果物、Schedule、RACI、PJR                             |
-| 機械検証結果      | -                           | lint、schema validation、生成確認、リンク確認                           |
-| 登録簿            | `generated/pjr-index.md`    | 未解決事項、課題、リスク、変更要求、決定の転記先                        |
+| 入力              | 正本ファイル                           | 役割                                                                               |
+| ----------------- | -------------------------------------- | ---------------------------------------------------------------------------------- |
+| 対象成果物        | -                                      | レビュー対象の Markdown / YAML / JSON など                                         |
+| 成果物カタログ    | `dct-*.yaml`                           | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する            |
+| rulebook          | `*-rulebook.md`                        | 成果物ごとの構造、必須章、必須キー、禁止事項を定義する                             |
+| sample            | `*-sample.*`                           | 期待する成果物の具体例                                                             |
+| review viewpoints | 共通正本 + `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types とプロジェクト差分を定義する |
+| 関連成果物        | -                                      | 上位・下位・隣接成果物、Schedule、RACI、PJR                                        |
+| 機械検証結果      | -                                      | lint、schema validation、生成確認、リンク確認                                      |
+| 登録簿            | `generated/pjr-index.md`               | 未解決事項、課題、リスク、変更要求、決定の転記先                                   |
 
 ### 1.3. 機械検証とレビューの分担
 
@@ -76,6 +76,17 @@ SpecDojo のレビューは次を扱います。
 | 判断責任               | human approver         |
 
 機械検証で失敗した成果物は、意味レビューの前に修正します。ただし、検証不能な前提や設計判断は review result に残して構いません。
+
+### 1.2.1. 共通観点とプロジェクト差分
+
+レビュー観点の共通正本は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] です。プロジェクトの `viewpoints_path` は共通正本の全量コピーではなく、次の差分だけを保持します。
+
+- `extends: specdojo:pm-review-viewpoints` で共通正本を1段だけ継承する。
+- `categories`、`coverage_types`、`severity_levels`、`verdict_definitions`、`viewpoints` は `id`、`role_viewpoint_sets` は `role` が同じ項目を全体上書きし、新しいキーを追加する。
+- `disabled` は共通項目または追加項目を解決結果から除外する。同じキーの upsert と無効化は同時に宣言できない。
+- 解決順序は「共通正本 → プロジェクト upsert → `disabled`」で固定する。多段継承は行わない。
+
+標準ロールは PO、PM、BA、ARC、DEV、QE、UX、OPS です。独自ロールを使うプロジェクトは、その Role code を `pm-roles.yaml` に定義したうえで、同じ role の `viewpoints` と `role_viewpoint_sets` をプロジェクト差分へ追加します。既存の全量形式は互換入力として読み込めますが、`exec scaffold` が新規生成するのは差分形式です。
 
 ## 2. レビューの観点とパス
 
@@ -165,8 +176,8 @@ SpecDojo のレビューは、原則として review plan を作ってから実�
 review plan は `specdojo exec plan` または `specdojo exec run` が必要時に生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
 
 ```text
-pm-review-viewpoints.yaml
-  ↓
+共通レビュー観点 + プロジェクト差分（pm-review-viewpoints.yaml）
+  ↓ 解決
 dct-*.yaml
   ↓
 rulebook
@@ -206,7 +217,7 @@ review plan は `specdojo exec plan` または `specdojo exec run` によって�
 主な入力
 
 - 成果物カタログの `local_id`、`path`、`depends_on`、`done_criteria`
-- `pm-review-viewpoints.yaml` の `viewpoints`、`coverage_types`
+- 共通正本と `pm-review-viewpoints.yaml` の差分を解決した `viewpoints`、`coverage_types`
 - 対応する rulebook
 - `sch-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
 

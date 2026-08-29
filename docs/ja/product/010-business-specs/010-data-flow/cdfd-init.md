@@ -36,7 +36,7 @@ BA が必須の初期化と任意設定の境界を整理し、PO、ARC、QE が
 | `P-01-02` | register scaffold | 計画外事項と判断を個票で記録し、一覧を再生成できる登録簿の初期受け皿を用意する。 | BA、PM | config 初期化が完了し、登録簿の生成先が確定した | 必須 |
 | `P-01-03` | catalog scaffold | 管理する成果物、依存、完了条件を定義できるカタログの初期受け皿を用意する。 | BA、ARC | config 初期化が完了し、カタログの生成先と対象規模が確定した | 必須 |
 | `P-01-04` | provider 設定初期化 | 承認済みの provider 利用方針を、agent 定義と provider 固有設定からなる実行構成へ展開する。 | PO、PM | provider の利用と権限方針が承認され、配布原本から対象 provider を選択できる | 条件付き |
-| `P-01-05` | exec scaffold | 承認済みのレビュー方針を、exec が参照する実行補助設定の初期状態へ展開する。 | PM、BA | exec のレビュー管理を利用する方針が承認され、レビュー設定の生成先が確定した | 条件付き |
+| `P-01-05` | exec scaffold | 共通レビュー観点を継承するプロジェクト差分を、exec が参照する初期状態として生成する。 | PM、BA | exec のレビュー管理を利用する方針が承認され、レビュー設定の生成先が確定した | 条件付き |
 
 ## 4. 概念データフロー
 
@@ -179,7 +179,7 @@ provider 設定初期化と exec scaffold は、それぞれの利用方針が�
 | プロセス ID | プロセス | 主要入力 | 主要出力 | データストア |
 | --- | --- | --- | --- | --- |
 | `P-01-04` | provider 設定初期化 | プロジェクト構成、provider 利用方針、権限方針、provider テンプレート | provider 実行構成、後続の手動設定確認事項 | `.<provider>/agents/`、`.specdojo/<provider>/` |
-| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、レビュー観点 | レビュー観点の初期設定 | `docs/ja/projects/<project-id>/030-project-management/pm-review-viewpoints.yaml` |
+| `P-01-05` | exec scaffold | プロジェクト構成、レビュー方針、共通レビュー観点 | 共通正本を継承するレビュー観点差分 | `docs/ja/projects/<project-id>/030-project-management/pm-review-viewpoints.yaml` |
 
 ## 6. 主要例外と領域外への委譲
 

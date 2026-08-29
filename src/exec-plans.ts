@@ -14,6 +14,7 @@ import { isDctPlanFileName } from "./catalog-plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
+import { resolveViewpointsDoc } from "./review-plan.js";
 import {
   expandTemplate,
   listFilesRecursive,
@@ -23,7 +24,7 @@ import {
 } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
-import type { CoverageType, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
+import type { CoverageType, ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
 
 // ---------------------------------------------------------------------------
@@ -163,22 +164,14 @@ export function resolveDeliverableTarget(catalogPath: string, value: string): Re
 
 function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
   if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map();
-  try {
-    const doc = load(readFileSync(viewpointsPath, "utf8")) as ReviewViewpointsDoc;
-    return new Map((doc.viewpoints ?? []).map((vp) => [vp.id, vp]));
-  } catch {
-    return new Map();
-  }
+  const doc = resolveViewpointsDoc(viewpointsPath);
+  return new Map((doc.viewpoints ?? []).map((vp) => [vp.id, vp]));
 }
 
 function loadCoverageTypes(viewpointsPath: string): Map<string, CoverageType> {
   if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map();
-  try {
-    const doc = load(readFileSync(viewpointsPath, "utf8")) as ReviewViewpointsDoc;
-    return new Map((doc.coverage_types ?? []).map((ct) => [ct.id, ct]));
-  } catch {
-    return new Map();
-  }
+  const doc = resolveViewpointsDoc(viewpointsPath);
+  return new Map((doc.coverage_types ?? []).map((ct) => [ct.id, ct]));
 }
 
 function loadRoles(rolesPath: string | undefined): Map<string, RoleDefinition> {

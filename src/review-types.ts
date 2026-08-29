@@ -16,12 +16,29 @@ export type CoverageType = {
   applies_to?: string[];
 };
 
+export type ReviewViewpointSet = {
+  role: string;
+  viewpoints: string[];
+};
+
+export type DisabledReviewViewpoints = {
+  categories?: string[];
+  coverage_types?: string[];
+  severity_levels?: string[];
+  verdict_definitions?: string[];
+  viewpoints?: string[];
+  role_viewpoint_sets?: string[];
+};
+
 export type ReviewViewpointsDoc = {
   id: string;
   type: string;
   status: string;
-  project_id: string;
-  viewpoints: ReviewViewpoint[];
+  project_id?: string;
+  extends?: string;
+  viewpoints?: ReviewViewpoint[];
   coverage_types?: CoverageType[];
+  role_viewpoint_sets?: ReviewViewpointSet[];
+  disabled?: DisabledReviewViewpoints;
   [key: string]: unknown;
 };
