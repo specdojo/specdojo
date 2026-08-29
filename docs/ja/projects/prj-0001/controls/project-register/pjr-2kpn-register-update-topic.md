@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T06:54:31Z"
   due_on: "2026-09-30"
+  block_reason: rate limit reached
   register_events:
     - v: 1
       id: reg_220c4eda72ff46a29ed52c3a2ceba550
@@ -59,6 +60,22 @@ specdojo:
           from: open
           to: in-progress
       previous_event_id: reg_220c4eda72ff46a29ed52c3a2ceba550
+    - v: 1
+      id: reg_af7998bbbeef4227b1ae1a8d323947c1
+      ts: "2026-08-29T11:08:34Z"
+      action: wait
+      actor: codex-expert-executor
+      from_status: in-progress
+      to_status: waiting
+      reason: rate limit reached
+      changes:
+        - field: status
+          from: in-progress
+          to: waiting
+        - field: block_reason
+          from: "-"
+          to: rate limit reached
+      previous_event_id: reg_a82bd40af09346d9a8e9939307e695c8
 ---
 
 # PJR-2KPN register update に個票の topic 変更手段を追加する
