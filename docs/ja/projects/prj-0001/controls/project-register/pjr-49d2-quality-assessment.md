@@ -74,7 +74,7 @@ rulebook / sample / recipe / template には agent が機械的に生成した�
 - Frontmatter の findings 件数と本文コメント数の不一致を検出する検証が存在する。
 - routine から定期実行できる。
 - agent 判定層が、前回評価以降に変更があった文書だけを対象にできる。
-- kata 用観点の置き場所が決まっている。
+- 観点の正本が共通集合として定まり、kata 用の観点を参照できる（PJR-KCE0 の成果を前提とする）。
 - bootstrap および `<kind>-maintenance` approach の plan から findings を参照して修正できる。
 - grade 結果を approach 決定の `facts` として取り込める。
 - `npm run check` が通る。
@@ -84,19 +84,18 @@ rulebook / sample / recipe / template には agent が機械的に生成した�
 | No  | 作業                               | 担当   | 状態 | メモ                                                    |
 | --- | ---------------------------------- | ------ | ---- | ------------------------------------------------------- |
 | 1   | 観点の一本化設計                   | ARC    | open | grade 専用軸を廃止し viewpoint 定義へ集約する           |
-| 2   | 観点の正本の置き場所の決定         | ARC    | open | SpecDojo 共通とプロジェクト固有の階層をどう作るか       |
-| 3   | 冗長性・簡潔性の観点追加           | ARC    | open | 既存 viewpoint に存在しない唯一の観点                   |
-| 4   | viewpoint への評価属性の追加       | ARC    | open | 判定層と継続評価の可否を宣言する                        |
-| 5   | category 単位ルーブリックの定義    | ARC    | open | grade と review が共有する 0-4 の level 基準            |
-| 6   | スコア算出と review 判定の対応定義 | ARC    | open | category 別集約、総合スコア、pass/fail/unclear との写像 |
-| 7   | grade の Frontmatter schema 拡張   | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断  |
-| 8   | finding コメント記法の確定         | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い             |
-| 9   | 決定的層の実装                     | _TODO_ | open | 機械判定可能な観点の評価と冗長性の代理指標              |
-| 10  | agent 判定層と差分検知の実装       | _TODO_ | open | 前回評価以降に変更のあった文書だけを対象にする          |
-| 11  | routine 対応                       | _TODO_ | open | action kind を追加するか job として定義するかを判断する |
-| 12  | review への grade 結果の受け渡し   | _TODO_ | open | 同じ観点 ID で突き合わせ、再確認の二度手間を避ける      |
-| 13  | kata への一括適用と閾値検証        | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                      |
-| 14  | approach 決定の facts への取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC と歩調を合わせる        |
+| 2   | 冗長性・簡潔性の観点追加           | ARC    | open | 既存 viewpoint に存在しない唯一の観点                   |
+| 3   | viewpoint への評価属性の追加       | ARC    | open | 判定層と継続評価の可否を宣言する                        |
+| 4   | category 単位ルーブリックの定義    | ARC    | open | grade と review が共有する 0-4 の level 基準            |
+| 5   | スコア算出と review 判定の対応定義 | ARC    | open | category 別集約、総合スコア、pass/fail/unclear との写像 |
+| 6   | grade の Frontmatter schema 拡張   | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断  |
+| 7   | finding コメント記法の確定         | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い             |
+| 8   | 決定的層の実装                     | _TODO_ | open | 機械判定可能な観点の評価と冗長性の代理指標              |
+| 9   | agent 判定層と差分検知の実装       | _TODO_ | open | 前回評価以降に変更のあった文書だけを対象にする          |
+| 10  | routine 対応                       | _TODO_ | open | action kind を追加するか job として定義するかを判断する |
+| 11  | review への grade 結果の受け渡し   | _TODO_ | open | 同じ観点 ID で突き合わせ、再確認の二度手間を避ける      |
+| 12  | kata への一括適用と閾値検証        | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                      |
+| 13  | approach 決定の facts への取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC と歩調を合わせる        |
 
 ### 3.1. 観点の一本化
 
@@ -114,6 +113,8 @@ rulebook / sample / recipe / template には agent が機械的に生成した�
 新たに必要なのは冗長性・簡潔性の観点だけである。agent が生成した文書は冗長になりやすく、既存観点はこれを捉えていない。観点の id は `vp-arc-conciseness` のように既存の命名に合わせる。
 
 grade 専用の軸体系は作らない。観点を分けると同一文書に対して異なる判定が並立し、どちらを正とするか判別できなくなる。
+
+観点の正本は SpecDojo 共通の観点集合とし、プロジェクトは差分（追加・上書き・無効化）を宣言して継承する。レビュー観点は本来プロジェクト横断で共通であり、プロジェクト固有なのは例外的な追加分に限られるためである。kata 用の観点も特定プロジェクトに属さないため共通側へ置く。共通化と継承の仕組みそのものは PJR-KCE0 で扱い、本項目はその結果として定まる観点集合を前提とする。
 
 ### 3.2. 評価可能性の宣言
 
@@ -258,7 +259,6 @@ grade が代替できるのは `KataJudgment` の 4 つの check のうち `subs
 
 ### 3.8. 未決の論点
 
-- 観点の正本の置き場所。`pm-review-viewpoints.yaml` はプロジェクト固有の成果物だが、kata は SpecDojo 全体の資産であり特定プロジェクトに属さない。SpecDojo 共通の観点集合を設けてプロジェクトが継承・追加する構造が筋は通るが、継承の仕組みが新規に必要になる。
 - review result の判定と level の対応。review を level で記録する形へ寄せるか、pass / fail / unclear との写像規則を定めるか。
 - routine からの起動方法。action kind を追加するか、job として定義するか。
 - Markdown 以外の成果物の扱い。`target_format: yaml` の成果物は `#` コメントで記録できるが、JSON はコメントを書けない。サイドカーファイルへ落とすか対象外とするかを決める。
@@ -273,6 +273,7 @@ grade が代替できるのは `KataJudgment` の 4 つの check のうち `subs
 
 ## 5. 関連ドキュメント
 
+- [[prj-0001:pjr-kce0-review-viewpoints-inheritance]]: 観点を共通集合として定義し継承する仕組み。観点の正本が定まることが本項目の前提。
 - [[prj-0001:pjr-jftc-sch-assessment-retirement]]: sch-assessment の廃止可否を判断する TODO。本項目の設計確定が着手の前提。
 - [[specdojo:review-guide]]: review の観点体系と plan / result の運用。観点の正本を共有する。
 - [[specdojo:rulebook-authoring-standard]]: rulebook の判定根拠となる規範。
