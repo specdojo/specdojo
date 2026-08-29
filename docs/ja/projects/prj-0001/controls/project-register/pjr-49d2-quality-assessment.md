@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T00:15:15Z"
@@ -46,6 +46,19 @@ specdojo:
         - field: due
           from: ""
           to: "2026-09-30"
+    - v: 1
+      id: reg_7642eaa4ee6345f8948072143785aa2f
+      ts: "2026-08-29T09:40:47Z"
+      action: start
+      actor: codex-expert-executor
+      from_status: open
+      to_status: in-progress
+      reason: work started
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      previous_event_id: reg_5a502849368e4319a6ed07318995a8e7
 ---
 
 # PJR-49D2 rulebook/sample/recipe/template の品質評価コマンドを設計・実装する
