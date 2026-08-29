@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2KPN",
+  "run_id": "20260829T110242815Z-0bac5786",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-08-29T11:02:42.815Z",
+    "completed_at": "2026-08-29T11:08:32.499Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2kpn-register-update-topic.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-2kpn-register-update-topic.md              |  22 ++-\n .../ja/specdojo/guides/register-operation-guide.md |  22 +++\n docs/ja/specdojo/references/command-reference.md   |  34 ++--\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |   3 +-\n src/register.ts                                    | 186 ++++++++++++++++++++-\n tests/src/register-commands.test.ts                | 106 ++++++++++++\n 6 files changed, 342 insertions(+), 31 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2KPN/20260829T110242815Z-0bac5786/executor.log",
+      "bytes": 65535,
+      "truncated": true
+    }
+  ]
+}

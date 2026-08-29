@@ -478,6 +478,110 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("update --topic は個票名・文書 ID・参照・event・生成ビューを一括更新する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const oldTicketPath = join(registerDir, "pjr-ab12-topic.md");
+      const newTicketPath = join(registerDir, "pjr-ab12-inventory-policy.md");
+      writeFileSync(
+        join(registerDir, "pjr-index.md"),
+        buildIndex([
+          "| PJR-AB12 | open | 在庫初期値を決める | 個票本文の説明。 | todo | high | - | _TODO_ | - | - | - | [pjr-ab12-topic](./pjr-ab12-topic.md) |",
+        ]),
+        "utf8",
+      );
+      writeFileSync(
+        oldTicketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      const referencePath = join(root, "docs/ja/topic-reference.md");
+      writeFileSync(
+        referencePath,
+        "詳細は [[prj-0001:pjr-ab12-topic|登録項目]] を参照。\n",
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "inventory-policy",
+        "--title",
+        "在庫方針を決める",
+        "--by",
+        "ARC",
+        "--reason",
+        "主題変更",
+      ]);
+
+      expect(existsSync(oldTicketPath)).toBe(false);
+      const updated = readFileSync(newTicketPath, "utf8");
+      expect(updated).toContain("id: prj-0001:pjr-ab12-inventory-policy");
+      expect(updated).toContain("# PJR-AB12 在庫方針を決める");
+      expect(readFileSync(referencePath, "utf8")).toContain(
+        "[[prj-0001:pjr-ab12-inventory-policy|登録項目]]",
+      );
+      // 移行前の pjr-index.md は読み取り互換の入力であり正本ではないため、topic 変更では更新しない。
+      expect(readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8")).toContain(
+        "pjr-ab12-inventory-policy.md",
+      );
+
+      const event = readRegisterEventsFromContent(updated, newTicketPath)[0];
+      expect(event).toMatchObject({ action: "update", actor: "ARC", reason: "主題変更" });
+      expect(event.changes).toContainEqual({
+        field: "id",
+        from: "prj-0001:pjr-ab12-topic",
+        to: "prj-0001:pjr-ab12-inventory-policy",
+      });
+    });
+  });
+
+  it("update --topic --dry-run は変更対象を表示するだけでファイルを更新しない", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "inventory-policy", "--dry-run"]);
+
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      expect(existsSync(join(registerDir, "pjr-ab12-inventory-policy.md"))).toBe(false);
+      const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
+      expect(printed).toContain("Would change topic for PJR-AB12: topic → inventory-policy");
+      expect(printed).toContain("Rename:");
+    });
+  });
+
+  it("update --topic は不正な形式と既存ファイルへの衝突を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "Bad--Topic"]);
+      expect(process.exitCode).toBe(1);
+      expect(String(stderr.mock.calls.at(-1)?.[0])).toContain("Invalid topic");
+      expect(readFileSync(ticketPath, "utf8")).toContain("pjr-ab12-topic");
+
+      process.exitCode = undefined;
+      writeFileSync(join(registerDir, "pjr-ab12-inventory-policy.md"), "occupied\n", "utf8");
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "inventory-policy"]);
+      expect(process.exitCode).toBe(1);
+      expect(String(stderr.mock.calls.at(-1)?.[0])).toContain("Target ticket file already exists");
+      expect(existsSync(ticketPath)).toBe(true);
+    });
+  });
+
   it("未移行（pjr-index の行のみ）の項目は、遷移時に行の値を個票 frontmatter へ移す", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
