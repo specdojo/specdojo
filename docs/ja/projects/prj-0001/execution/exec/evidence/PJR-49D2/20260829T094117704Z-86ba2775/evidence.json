@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-49D2",
+  "run_id": "20260829T094117704Z-86ba2775",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-29T09:41:17.704Z",
+    "completed_at": "2026-08-29T09:59:19.052Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-49d2-quality-assessment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-bootstrap-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/sch-assessment.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-assessment-prompt.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-assessment.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-kata.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 23,
+    "summary": ".../pjr-49d2-quality-assessment.md                 |  38 ++++----\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml | 104 +++++++++++++++++++++\n docs/ja/specdojo/guides/review-guide.md            |   8 ++\n docs/ja/specdojo/guides/routine-operation-guide.md |   2 +\n docs/ja/specdojo/references/command-reference.md   |  37 ++++++--\n .../standards/document-metadata-standard.md        |  24 +++++\n .../specdojo/templates/xep-bootstrap-template.md   |   2 +\n .../templates/xep-recipe-maintenance-template.md   |   2 +\n .../templates/xep-rulebook-maintenance-template.md |   2 +\n .../templates/xep-sample-maintenance-template.md   |   2 +\n .../templates/xep-template-maintenance-template.md |   2 +\n .../schemas/v1/common-frontmatter.schema.yaml      |  77 +++++++++++++++\n .../schemas/v1/pm-review-viewpoints.schema.yaml    |  69 +++++++++++++-\n .../specdojo/schemas/v1/sch-assessment.schema.yaml |  25 +++++\n src/review-types.ts                                |  18 ++++\n src/schedule-assessment-prompt.ts                  |  10 +-\n src/schedule-assessment.ts                         |  50 +++++++++-\n src/specdojo.ts                                    |   2 +\n tests/src/cli-verb-taxonomy.test.ts                |   8 ++\n 19 files changed, 456 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "CLIビルド成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "全MarkdownのFrontmatter検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/templates/xep-bootstrap-template.md docs/ja/specdojo/templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/templates/xep-recipe-maintenance-template.md docs/ja/specdojo/templates/xep-sample-maintenance-template.md docs/ja/specdojo/templates/xep-template-main…",
+      "status": "passed",
+      "summary": "変更Markdownのlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全catalog検証成功。既存の未作成成果物warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1383件の文書index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts routine validate --project prj-0001",
+      "status": "passed",
+      "summary": "6 routine、エラー0件"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "passed",
+      "summary": "3 job、エラー0件"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade prompt --target kata --project prj-0001 --path docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md",
+      "status": "passed",
+      "summary": "共通rubric・agent viewpoint・対象文書を含むprompt生成成功"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-49D2\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-49D2\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-7r3NE8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-VKAwiu/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-S40Qh6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-OGM6oe/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-OgAgF5/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-3YviFz/pjr-0001-topic.md\n ❯ tests/src/schedule-assessment.test.ts (38 tests | 1 failed) 114ms\n     × 収集済みの事実と判定観点を指示に含め、探索と strategy 編集を禁止する 9ms\n\n Test Files  1 failed | 91 passed (92)\n      Tests  1 failed | 1318 passed (1319)\n   Start at  18:59:00\n   Duration  18.06s (transform 1.44s, setup 369ms, import 10.06s, tests 15.42s, environment 4ms)\n…"
+    }
+  ],
+  "final_message": "品質評価CLI、共通rubric、finding記録、差分評価、routine連携、schedule facts連携を実装し、executor側検証に合格",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-49D2/20260829T094117704Z-86ba2775/executor.log",
+      "bytes": 3004,
+      "truncated": false
+    }
+  ]
+}

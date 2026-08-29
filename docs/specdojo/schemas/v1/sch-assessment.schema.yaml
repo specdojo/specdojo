@@ -172,6 +172,8 @@ $defs:
           status:
             type: string
             description: "Frontmatter status of the existing document, when readable."
+          grade:
+            $ref: "#/$defs/GradeFact"
       kata:
         type: object
         additionalProperties: false
@@ -253,6 +255,29 @@ $defs:
       broken_reference:
         type: boolean
         description: "True when an explicit declaration points at a file that does not exist."
+      grade:
+        $ref: "#/$defs/GradeFact"
+
+  GradeFact:
+    type: object
+    additionalProperties: false
+    required: [rubric, verdict, score, graded_at, content_hash]
+    properties:
+      rubric:
+        type: string
+        minLength: 1
+      verdict:
+        enum: [pass, needs-work, fail]
+      score:
+        type: integer
+        minimum: 0
+        maximum: 100
+      graded_at:
+        type: string
+        format: date-time
+      content_hash:
+        type: string
+        pattern: "^[a-f0-9]{64}$"
 
   Judgment:
     type: object

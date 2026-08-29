@@ -44,6 +44,80 @@ $defs:
       - type: string
         pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template$"
     description: "対応する template の ID。該当がない場合は none。"
+  grade:
+    type: object
+    additionalProperties: false
+    required:
+      - rubric
+      - target
+      - verdict
+      - score
+      - graded_at
+      - graded_by
+      - content_hash
+      - categories
+      - viewpoints
+      - findings
+    properties:
+      rubric:
+        type: string
+        pattern: "^[a-z][a-z0-9-]*$"
+      target:
+        enum: [kata, deliverable]
+      verdict:
+        enum: [pass, needs-work, fail]
+      score:
+        type: integer
+        minimum: 0
+        maximum: 100
+      graded_at:
+        type: string
+        format: date-time
+      graded_by:
+        type: string
+        minLength: 1
+      content_hash:
+        type: string
+        pattern: "^[a-f0-9]{64}$"
+      categories:
+        type: object
+        propertyNames:
+          pattern: "^[a-z][a-z0-9_-]*$"
+        additionalProperties:
+          type: object
+          additionalProperties: false
+          required: [score]
+          properties:
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+      viewpoints:
+        type: object
+        propertyNames:
+          pattern: "^vp-[a-z][a-z0-9-]*$"
+        additionalProperties:
+          type: object
+          additionalProperties: false
+          required: [level, score]
+          properties:
+            level:
+              type: integer
+              minimum: 0
+              maximum: 4
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+      findings:
+        type: object
+        additionalProperties: false
+        required: [blocker, major, minor, note]
+        properties:
+          blocker: { type: integer, minimum: 0 }
+          major: { type: integer, minimum: 0 }
+          minor: { type: integer, minimum: 0 }
+          note: { type: integer, minimum: 0 }
 properties:
   id:
     $ref: "#/$defs/idRef"
@@ -75,3 +149,6 @@ properties:
   supersedes:
     $ref: "#/$defs/idRefArray"
     default: []
+  grade:
+    $ref: "#/$defs/grade"
+    description: "共通 viewpoint と rubric による最新の継続品質評価。履歴ではなく冪等な状態。"

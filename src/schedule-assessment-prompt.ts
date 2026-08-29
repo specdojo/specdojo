@@ -32,7 +32,10 @@ function kataStateLabel(deliverable: AssessedDeliverable, kind: KataKindKey): st
     return fact.declaration === "none" ? "none 宣言で無効化" : "未解決（判定不要）";
   }
   const status = fact.status ? `status: ${fact.status}` : "status 不明";
-  return `${fact.path}（${status}）`;
+  const grade = fact.grade
+    ? `, grade: ${fact.grade.verdict} (${fact.grade.score})`
+    : ", grade: 未評価";
+  return `${fact.path}（${status}${grade}）`;
 }
 
 export function renderAssessmentPrompt(options: AssessmentPromptOptions): string {
@@ -78,6 +81,11 @@ export function renderAssessmentPrompt(options: AssessmentPromptOptions): string
       : "文書パス未宣言";
     lines.push(`- \`${deliverable.local_id}\` ${deliverable.name}`);
     lines.push(`  - 成果物: ${docState}`);
+    if (doc.grade) {
+      lines.push(
+        `  - 成果物 grade: ${doc.grade.verdict} (${doc.grade.score}, ${doc.grade.rubric})`,
+      );
+    }
     for (const kind of KATA_KINDS) {
       lines.push(`  - ${KATA_LABEL[kind]}: ${kataStateLabel(deliverable, kind)}`);
     }

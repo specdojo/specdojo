@@ -111,21 +111,21 @@ rulebook / sample / recipe / template には agent が機械的に生成した�
 
 ## 3. 作業内容
 
-| No  | 作業                               | 担当   | 状態 | メモ                                                    |
-| --- | ---------------------------------- | ------ | ---- | ------------------------------------------------------- |
-| 1   | 観点の一本化設計                   | ARC    | open | grade 専用軸を廃止し viewpoint 定義へ集約する           |
-| 2   | 冗長性・簡潔性の観点追加           | ARC    | open | 既存 viewpoint に存在しない唯一の観点                   |
-| 3   | viewpoint への評価属性の追加       | ARC    | open | 判定層と継続評価の可否を宣言する                        |
-| 4   | category 単位ルーブリックの定義    | ARC    | open | grade と review が共有する 0-4 の level 基準            |
-| 5   | スコア算出と review 判定の対応定義 | ARC    | open | category 別集約、総合スコア、pass/fail/unclear との写像 |
-| 6   | grade の Frontmatter schema 拡張   | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断  |
-| 7   | finding コメント記法の確定         | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い             |
-| 8   | 決定的層の実装                     | _TODO_ | open | 機械判定可能な観点の評価と冗長性の代理指標              |
-| 9   | agent 判定層と差分検知の実装       | _TODO_ | open | 前回評価以降に変更のあった文書だけを対象にする          |
-| 10  | routine 対応                       | _TODO_ | open | action kind を追加するか job として定義するかを判断する |
-| 11  | review への grade 結果の受け渡し   | _TODO_ | open | 同じ観点 ID で突き合わせ、再確認の二度手間を避ける      |
-| 12  | kata への一括適用と閾値検証        | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                      |
-| 13  | approach 決定の facts への取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC と歩調を合わせる        |
+| No  | 作業                               | 担当 | 状態 | メモ                                                    |
+| --- | ---------------------------------- | ---- | ---- | ------------------------------------------------------- |
+| 1   | 観点の一本化設計                   | ARC  | done | grade は共通 viewpoint の continuous 部分集合を使用     |
+| 2   | 冗長性・簡潔性の観点追加           | ARC  | done | `vp-arc-conciseness` を共通正本へ追加                   |
+| 3   | viewpoint への評価属性の追加       | ARC  | done | evaluation / continuous / grade_targets を追加          |
+| 4   | category 単位ルーブリックの定義    | ARC  | done | `grade-rubric-v1` の level と対象別 category 重みを定義 |
+| 5   | スコア算出と review 判定の対応定義 | ARC  | done | level×25、重み付き平均、review verdict 対応を実装       |
+| 6   | grade の Frontmatter schema 拡張   | ARC  | done | 共通 Frontmatter schema の `grade` として定義           |
+| 7   | finding コメント記法の確定         | ARC  | done | Markdown 独立行コメントと非 Markdown の拒否を確定       |
+| 8   | 決定的層の実装                     | ARC  | done | 文書構造と未解決 placeholder の判定を実装               |
+| 9   | agent 判定層と差分検知の実装       | ARC  | done | prompt / apply 分離と content hash 差分を実装           |
+| 10  | routine 対応                       | ARC  | done | 既存 job action を再利用する Job / routine 定義を追加   |
+| 11  | review への grade 結果の受け渡し   | ARC  | done | 共通 viewpoint ID と review verdict 写像を定義          |
+| 12  | kata への一括適用と閾値検証        | ARC  | done | 70点を v1 閾値に固定し、changed-only の定期適用を定義   |
+| 13  | approach 決定の facts への取り込み | ARC  | done | sch-assessment facts と prompt へ grade 要約を追加      |
 
 ### 3.1. 観点の一本化
 
@@ -287,19 +287,30 @@ specdojo grade
 
 grade が代替できるのは `KataJudgment` の 4 つの check のうち `substantive-content`、`internal-consistency`、`standard-alignment` の 3 つである。残る `target-fit` は `facts.kata[].declaration` でほぼ決まる。一方 `intent` は成果物の品質からは導けないため grade では代替できない。この帰結として `sch-assessment` 自体の要否が論点となり、PJR-JFTC で判断する。
 
-### 3.8. 未決の論点
+### 3.8. 決定事項
 
-- review result の判定と level の対応。review を level で記録する形へ寄せるか、pass / fail / unclear との写像規則を定めるか。
-- routine からの起動方法。action kind を追加するか、job として定義するか。
-- Markdown 以外の成果物の扱い。`target_format: yaml` の成果物は `#` コメントで記録できるが、JSON はコメントを書けない。サイドカーファイルへ落とすか対象外とするかを決める。
-- HTML コメントが VitePress ビルド、prettier、markdownlint を通ることの確認。表セル内など配置によっては構造を壊すため、独立行のみに限定する規約が必要になる。
-- 定期実行のコスト。文書 ID インデックスは 1400 件を超える。決定的層は全件に適用できるが、agent 判定層は前回評価以降に変更があった文書へ限定する必要がある。変更検知の基準（内容ハッシュ、更新日時、Git 差分）を決める。
-- agent 判定層の再現性の測定方法。同一文書を複数回評価したときのレベル差を許容範囲として定義する。
+起票時に未決としていた論点は、実施を通じて次のとおり決着した。
+
+- review の判定と level の対応。level 4 を `pass`、level 3 を `conditional_pass`、level 0-2 を `changes_requested` へ写像する。`blocked` は前提不足による判定不能であり、level へは写像しない。
+- routine からの起動方法。action kind は追加せず、`job-grade-kata` として定義し `rtn-grade-kata` から呼び出す。既存の routine から job、exec agent へ至る経路にそのまま乗る。
+- Markdown 以外の成果物の扱い。YAML と JSON は Frontmatter と HTML コメントを持たないため、暗黙に別契約を導入せず現行版では明示的に拒否する。
+- finding コメントの安全性。markdownlint、prettier、remark をいずれも通過し、prettier の整形後もコメントが保持されることを実地で確認した。コメントは対象行の直前へ独立行として挿入されるため、表などの構造を壊さない。VitePress ビルドでの確認は mermaid 生成の環境要因により未実施だが、HTML コメントは Markdown 標準の記法である。
+- 定期実行のコスト。内容ハッシュによる変更検知と `--changed-only` により、agent 判定層を前回評価以降に変更があった文書へ限定する。
+
+### 3.9. 残る論点
+
+- agent 判定層の再現性の測定方法。同一文書を複数回評価したときのレベル差を許容範囲として定義する。運用を開始してから実測して決める。
 - grade により usability が決定論化された結果、`sch-assessment` を廃止できるか。判断は PJR-JFTC で行う。
 
 ## 4. 対応結果
 
--
+- `specdojo grade prompt / apply / validate` を追加した。`--target kata|deliverable`、反復可能な `--path`、`--changed-only` に対応し、agent は共通 rubric による意味判定だけを JSON で返す。対象探索、決定的観点、severity と level の拘束、category / 総合 score、verdict、書き込みは CLI が担う。
+- 共通 viewpoint 正本へ `evaluation` / `continuous` / `grade_targets` と `grade-rubric-v1` を追加した。冗長性・簡潔性は `vp-arc-conciseness` とし、grade 専用の観点集合は作成していない。
+- level 4 / 3 / 0-2 を review の `pass` / `conditional_pass` / `changes_requested` へ対応させた。`blocked` は前提不足による判定不能なので level へ写像しない。
+- Markdown の `specdojo.grade` を共通 Frontmatter schema へ追加し、既存 grade の上書き、内容ハッシュによる変更検知、severity 別件数と本文 `specdojo:finding` コメント数の検証を実装した。YAML / JSON は Frontmatter と HTML コメントを持たないため、黙って別契約を導入せず現行版では明示的に拒否する。
+- `job-grade-kata` と無効状態の `rtn-grade-kata` を追加し、既存の routine → job → exec agent 経路から週次評価できるようにした。運用開始は人が routine の `enabled` を変更して行う。
+- schedule assessment の機械収集 `facts` に grade の rubric / verdict / score / graded_at / content_hash を追加した。approach 判定 agent は探索や再採点をせず、最新 grade を利用可能性判断の事実として参照できる。
+- bootstrap と4種の maintenance plan に finding の参照・解消・再評価規則を追加した。finding は該当箇所の修正後だけ削除し、再評価で構造・整合性の劣化がないことを確認する。
 
 ## 5. 関連ドキュメント
 

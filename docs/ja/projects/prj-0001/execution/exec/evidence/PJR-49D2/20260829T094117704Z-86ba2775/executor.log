@@ -1,0 +1,14 @@
+実装完了です。
+
+- `grade prompt / apply / validate`、共通rubric、スコア・verdict計算、冪等更新、finding整合検証を追加
+- content hashによる変更文書限定、schedule facts連携、定期Job/routineを実装
+- bootstrap／maintenanceテンプレートと関連文書・個票を更新
+- Markdownを対象とし、YAML／JSONは不正なインライン更新を防ぐため明示的に拒否
+- 親runner担当の単体・統合テストとschema検証以外はすべて成功
+
+主要実装: [grade.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-49D2/src/grade.ts)  
+対応個票: [pjr-49d2-quality-assessment.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-49D2/docs/ja/projects/prj-0001/controls/project-register/pjr-49d2-quality-assessment.md)
+
+<specdojo_executor_evidence>
+{"final_message":"品質評価CLI、共通rubric、finding記録、差分評価、routine連携、schedule facts連携を実装し、executor側検証に合格","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run build","status":"passed","summary":"CLIビルド成功"},{"command":"npm run lint:fm","status":"passed","summary":"全MarkdownのFrontmatter検査成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/templates/xep-bootstrap-template.md docs/ja/specdojo/templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/templates/xep-recipe-maintenance-template.md docs/ja/specdojo/templates/xep-sample-maintenance-template.md docs/ja/specdojo/templates/xep-template-maintenance-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-49d2-quality-assessment.md","status":"passed","summary":"変更Markdownのlint成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全catalog検証成功。既存の未作成成果物warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1383件の文書index生成成功"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"6 routine、エラー0件"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"3 job、エラー0件"},{"command":"node --import tsx src/specdojo.ts grade prompt --target kata --project prj-0001 --path docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md","status":"passed","summary":"共通rubric・agent viewpoint・対象文書を含むprompt生成成功"}]}
+</specdojo_executor_evidence>

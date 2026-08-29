@@ -36,6 +36,8 @@ _OWNER_ROLE_VIEWPOINTS_
 3. 成果物間で共通する定型部分は雛形の本文に取り込み、成果物ごとに内容が異なる部分は _TODO_ などのプレースホルダとして配置する。
 4. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。
 
+対象 template に `specdojo.grade` と `specdojo:finding` がある場合は、同じ viewpoint ID で根拠を確認し、該当箇所を修正した finding コメントだけを削除する。修正後の再評価で構造・整合性が劣化していないことを確認する。
+
 見直した template は [[specdojo:template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従う。rulebook / recipe / sample と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 
 approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な template メンテナンスの進め方は、このセクションで完結する。

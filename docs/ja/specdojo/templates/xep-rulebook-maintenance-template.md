@@ -36,6 +36,8 @@ _OWNER_ROLE_VIEWPOINTS_
 3. 成果物側で繰り返し守られていない規定は、規定が過剰なのか成果物側の不備なのかを判断し、根拠とともに rulebook へ反映するか result に記録する。
 4. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。
 
+対象 rulebook に `specdojo.grade` と `specdojo:finding` がある場合は、同じ viewpoint ID で根拠を確認し、該当箇所を修正した finding コメントだけを削除する。修正後の再評価で構造・整合性が劣化していないことを確認する。
+
 見直した rulebook は [[specdojo:rulebook-authoring-standard]]（章立て・記述ルール・禁止事項の正本）に従う。recipe / sample / template と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
 
 approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な rulebook メンテナンスの進め方は、このセクションで完結する。

@@ -82,6 +82,15 @@ export type KataFact = {
   exists: boolean;
   status?: string;
   broken_reference: boolean;
+  grade?: GradeFact;
+};
+
+export type GradeFact = {
+  rubric: string;
+  verdict: "pass" | "needs-work" | "fail";
+  score: number;
+  graded_at: string;
+  content_hash: string;
 };
 
 export type EvidenceFact = {
@@ -91,7 +100,7 @@ export type EvidenceFact = {
 };
 
 export type AssessmentFacts = {
-  deliverable: { path?: string; exists: boolean; status?: string };
+  deliverable: { path?: string; exists: boolean; status?: string; grade?: GradeFact };
   kata: Record<KataKindKey, KataFact>;
   schema?: { path: string; exists: boolean };
   evidence_refs: EvidenceFact[];
@@ -301,6 +310,41 @@ function readDocStatus(repoRoot: string, relPath: string): string | undefined {
   return typeof status === "string" && status !== "" ? status : undefined;
 }
 
+function readDocGrade(repoRoot: string, relPath: string): GradeFact | undefined {
+  const filePath = join(repoRoot, relPath);
+  if (!existsSync(filePath)) return undefined;
+  let parsed: Record<string, unknown>;
+  try {
+    const content = readFileSync(filePath, "utf8");
+    if (relPath.endsWith(".md")) parsed = readSpecdojoNamespace(content);
+    else {
+      const value = relPath.endsWith(".json") ? JSON.parse(content) : yaml.load(content);
+      if (!isRecord(value)) return undefined;
+      parsed = isRecord(value.specdojo) ? value.specdojo : value;
+    }
+  } catch {
+    return undefined;
+  }
+  const grade = parsed.grade;
+  if (
+    !isRecord(grade) ||
+    typeof grade.rubric !== "string" ||
+    (grade.verdict !== "pass" && grade.verdict !== "needs-work" && grade.verdict !== "fail") ||
+    typeof grade.score !== "number" ||
+    typeof grade.graded_at !== "string" ||
+    typeof grade.content_hash !== "string"
+  ) {
+    return undefined;
+  }
+  return {
+    rubric: grade.rubric,
+    verdict: grade.verdict,
+    score: grade.score,
+    graded_at: grade.graded_at,
+    content_hash: grade.content_hash,
+  };
+}
+
 // Resolves one Kata reference into facts. The resolution rules themselves stay in kata.ts;
 // this only classifies how the reference was resolved so the assessment can distinguish
 // "not declared" from "declared but missing" (broken reference).
@@ -332,6 +376,7 @@ function collectKataFact(
 
   const exists = resolvedPath ? existsSync(join(repoRoot, resolvedPath)) : false;
   const status = resolvedPath && exists ? readDocStatus(repoRoot, resolvedPath) : undefined;
+  const grade = resolvedPath && exists ? readDocGrade(repoRoot, resolvedPath) : undefined;
 
   return {
     declaration,
@@ -339,6 +384,7 @@ function collectKataFact(
     ...(resolvedPath ? { path: resolvedPath } : {}),
     exists,
     ...(status ? { status } : {}),
+    ...(grade ? { grade } : {}),
     broken_reference: declaration === "declared" && !exists,
   };
 }
@@ -437,11 +483,13 @@ export function collectAssessmentFacts(opts: {
       const docExists = docPath ? existsSync(join(repoRoot, docPath)) : false;
       const schemaRef = docExists ? resolveDeliverableSchemaRef(docPath) : KATA_MISSING;
       const docStatus = docPath && docExists ? readDocStatus(repoRoot, docPath) : undefined;
+      const docGrade = docPath && docExists ? readDocGrade(repoRoot, docPath) : undefined;
       const facts: AssessmentFacts = {
         deliverable: {
           ...(docPath ? { path: docPath } : {}),
           exists: docExists,
           ...(docStatus ? { status: docStatus } : {}),
+          ...(docGrade ? { grade: docGrade } : {}),
         },
         kata,
         ...(schemaRef !== KATA_MISSING

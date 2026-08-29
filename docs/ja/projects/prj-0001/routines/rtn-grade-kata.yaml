@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# 運用開始時に enabled を true へ変更する。
+id: rtn-grade-kata
+name: 実践の型の週次品質評価
+description: 毎週月曜日2時（Asia/Tokyo）に変更済みの実践の型を grade する。
+enabled: false
+trigger:
+  cron: "0 2 * * 1"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-grade-kata
+  inputs:
+    scheduled_at: "{{scheduled_at}}"
+policy:
+  missed_run: latest
+  overlap: skip
