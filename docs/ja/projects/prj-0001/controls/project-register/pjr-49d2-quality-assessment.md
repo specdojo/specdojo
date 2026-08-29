@@ -54,164 +54,197 @@ specdojo:
 
 rulebook / sample / recipe / template には agent が機械的に生成したものが含まれ、品質にばらつきがある。既存の `lint:md` / `lint:fm` / `validate:schema` は形式のみを検証するため、内容品質のばらつきは検出できない。
 
-authoring standard および成果物 rulebook への準拠度を評価する `specdojo grade` コマンドを追加する。評価軸は共通コア5軸（completeness / reference / specificity / conciseness / coherence）と種別固有軸で構成し、agent が生成した文書に出やすい冗長性・論理矛盾を明示的な軸として含める。スコアは軸別に 0-4 のルーブリックレベルで判定して 0-100 へ写像し、種別ごとの重み付き平均で総合スコアを出す。verdict はスコアと独立に finding severity から決める。
+さらに、人が直接ファイルを編集した場合は exec task を経由しないため review が起動せず、品質劣化を検知する経路が存在しない。継続的に品質を観測する手段が要る。
 
-評価結果は対象文書の Frontmatter `specdojo.grade` に、要修正箇所は本文の `specdojo:finding` コメントに記録する。修正は評価コマンドでは行わず、bootstrap および `<kind>-maintenance` approach の exec タスクで agent が解消する。
+`specdojo grade` を追加し、品質を定期的に評価して結果を対象文書の Frontmatter へ記録する。評価観点は grade 専用に定義せず、正本を viewpoint 定義に一本化する。grade と review は同じ観点集合を、違う時間軸と深さで評価する関係とする。観点を分けると、grade が pass とした項目を review が fail と判定する食い違いが起き、基準が二重管理になるためである。
 
-評価対象は kata（rulebook / recipe / sample / template）と成果物の両方とする。実装は kata を先行させ、成果物は後続フェーズで展開する。
+評価対象は kata（rulebook / recipe / sample / template）と成果物の両方とする。実装は kata を先行させる。
 
 ## 2. 完了条件
 
 - `specdojo grade` が追加され、対象種別（kata / 成果物）を指定して実行できる。
-- 共通コア5軸と種別固有軸について 0-4 のレベル基準が rubric 定義ファイルとして存在し、種別ごとの重みを設定できる。
-- rubric は種別別に分かれており、completeness の判定根拠を種別ごとに切り替えられる。
-- 評価結果が対象文書の Frontmatter `specdojo.grade` へ記録され、schema 検証を通る。
+- 評価観点の正本が viewpoint 定義に一本化され、grade 専用の軸が存在しない。
+- 冗長性・簡潔性の観点が viewpoint として追加されている。
+- viewpoint に判定層と継続評価の可否が宣言され、grade が継続評価対象の観点だけを評価する。
+- ルーブリックが category 単位で定義され、grade と review が同じ基準で判定する。
+- スコアが category 別と総合で算出される。
+- review result の判定（pass / fail / unclear）とルーブリックの level の対応が定義されている。
+- 評価結果が Frontmatter へ冪等に上書きされ、再実行しても履歴が増えない。
 - 要修正箇所が本文の `specdojo:finding` コメントとして該当箇所の直前に挿入される。
 - Frontmatter の findings 件数と本文コメント数の不一致を検出する検証が存在する。
+- routine から定期実行できる。
+- agent 判定層が、前回評価以降に変更があった文書だけを対象にできる。
+- kata 用観点の置き場所が決まっている。
 - bootstrap および `<kind>-maintenance` approach の plan から findings を参照して修正できる。
-- 修正後の再評価で completeness が劣化していないことを確認する手順が文書化されている。
 - grade 結果を approach 決定の `facts` として取り込める。
-- 既存の kata へ一括適用し、ばらつきの実態と閾値の妥当性を把握できている。
 - `npm run check` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業                                      | 担当   | 状態 | メモ                                                           |
-| --- | ----------------------------------------- | ------ | ---- | -------------------------------------------------------------- |
-| 1   | 評価軸とルーブリックの確定                | ARC    | open | 共通コア5軸と種別固有軸のレベル基準を rubric 定義へ落とす      |
-| 2   | スコア算出仕様の確定                      | ARC    | open | 軸別スコア、種別別の重み、総合スコア、verdict 判定             |
-| 3   | grade の Frontmatter schema 拡張          | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断する     |
-| 4   | finding コメント記法の確定                | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い                    |
-| 5   | 決定的層の実装（kata 先行）               | _TODO_ | open | completeness / reference の算出と冗長性の代理指標              |
-| 6   | agent 判定層の実装（kata 先行）           | _TODO_ | open | exec と同様に agent を起動し findings を生成する               |
-| 7   | maintenance フローへの接続                | _TODO_ | open | plan への findings 供給と修正後の再評価                        |
-| 8   | kata への一括適用と閾値検証               | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                             |
-| 9   | approach 決定の facts への grade 取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC の廃止可否判断と歩調を合わせる |
-| 10  | 成果物への展開                            | _TODO_ | open | 種別固有軸の追加と段階適用。共通コア5軸の確定後                |
+| No  | 作業                               | 担当   | 状態 | メモ                                                    |
+| --- | ---------------------------------- | ------ | ---- | ------------------------------------------------------- |
+| 1   | 観点の一本化設計                   | ARC    | open | grade 専用軸を廃止し viewpoint 定義へ集約する           |
+| 2   | 観点の正本の置き場所の決定         | ARC    | open | SpecDojo 共通とプロジェクト固有の階層をどう作るか       |
+| 3   | 冗長性・簡潔性の観点追加           | ARC    | open | 既存 viewpoint に存在しない唯一の観点                   |
+| 4   | viewpoint への評価属性の追加       | ARC    | open | 判定層と継続評価の可否を宣言する                        |
+| 5   | category 単位ルーブリックの定義    | ARC    | open | grade と review が共有する 0-4 の level 基準            |
+| 6   | スコア算出と review 判定の対応定義 | ARC    | open | category 別集約、総合スコア、pass/fail/unclear との写像 |
+| 7   | grade の Frontmatter schema 拡張   | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断  |
+| 8   | finding コメント記法の確定         | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い             |
+| 9   | 決定的層の実装                     | _TODO_ | open | 機械判定可能な観点の評価と冗長性の代理指標              |
+| 10  | agent 判定層と差分検知の実装       | _TODO_ | open | 前回評価以降に変更のあった文書だけを対象にする          |
+| 11  | routine 対応                       | _TODO_ | open | action kind を追加するか job として定義するかを判断する |
+| 12  | review への grade 結果の受け渡し   | _TODO_ | open | 同じ観点 ID で突き合わせ、再確認の二度手間を避ける      |
+| 13  | kata への一括適用と閾値検証        | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                      |
+| 14  | approach 決定の facts への取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC と歩調を合わせる        |
 
-### 3.1. コマンドと記録形式
+### 3.1. 観点の一本化
 
-コマンド名は `specdojo grade` とし、対象種別は引数で指定する。approach 決定のための整備状況の評価が成果物と kata の両方を対象にしている以上、その入力となる品質評価も両方を対象にする必要があるため、名前に `kata` を含めない。
+当初は grade 専用に7軸を設計したが、既存 viewpoint と突き合わせた結果、その大半が言い換えであることが分かった。
 
-```sh
-specdojo grade run --kind kata
-specdojo grade run --kind deliverable --project prj-0001
-specdojo grade report --project prj-0001
-specdojo grade check
+| 当初の軸            | 対応する既存 viewpoint                               |
+| ------------------- | ---------------------------------------------------- |
+| `completeness`      | `vp-qe-done-criteria`、`vp-qe-omissions-consistency` |
+| `reference`         | `vp-arc-document-structure`                          |
+| `coherence`         | `vp-qe-omissions-consistency`                        |
+| `cross-consistency` | `vp-arc-cross-document-consistency`                  |
+| `specificity`       | `vp-qe-verifiability`                                |
+| `conciseness`       | 該当なし。viewpoint として追加する                   |
+
+新たに必要なのは冗長性・簡潔性の観点だけである。agent が生成した文書は冗長になりやすく、既存観点はこれを捉えていない。観点の id は `vp-arc-conciseness` のように既存の命名に合わせる。
+
+grade 専用の軸体系は作らない。観点を分けると同一文書に対して異なる判定が並立し、どちらを正とするか判別できなくなる。
+
+### 3.2. 評価可能性の宣言
+
+観点が同じでも、継続的に評価できるものとできないものがある。`vp-po-purpose-alignment`（目的整合）や `vp-ba-business-value`（業務価値）は役割としての主観的判断を要するため、毎回機械的に評価しても意味を持たない。一方で文書構造や冗長性は継続評価に適する。
+
+viewpoint 定義に評価属性を追加し、grade が扱う範囲を宣言で決める。
+
+```yaml
+- id: vp-arc-document-structure
+  role: ARC
+  category: architecture
+  title: 文書構造・配置・命名
+  check: frontmatter、ID、ファイル名、配置、見出し、リンクが文書体系と整合しているか。
+  default_severity: major
+  evaluation: deterministic # deterministic | agent | human
+  continuous: true # grade が継続評価する対象か
 ```
 
-Frontmatter キーは `specdojo.grade` とする。`assessment` は approach 決定が使う語であり、混同を避ける。
+観点集合は一つで、grade は継続評価対象の部分集合を評価し、review は全観点を判定する。
 
-### 3.2. 評価軸
+### 3.3. 判定基準とスコア
 
-共通コア5軸はどの対象にも適用し、種別固有軸を追加する。冗長性と論理矛盾は agent が生成した文書で特に問題になるため、対象を問わず評価する。
+判定基準も観点側に持たせ、grade と review が同じルーブリックを使う。基準を共有することで、grade の結果と review の判定が原理的に食い違わなくなる。
 
-| 軸                  | 判定層          | kata での基準               | 成果物での基準                   |
-| ------------------- | --------------- | --------------------------- | -------------------------------- |
-| `completeness`      | 決定的          | authoring standard の要求章 | 成果物 rulebook と done_criteria |
-| `reference`         | 決定的          | 相互参照の解決              | wikilink と上位下位の参照        |
-| `specificity`       | agent           | 共通                        | 共通                             |
-| `conciseness`       | agent＋代理指標 | 共通                        | 共通                             |
-| `coherence`         | agent           | 共通                        | 共通                             |
-| `cross-consistency` | agent           | rulebook と sample の整合   | 上位成果物と下位成果物の整合     |
-| `context`           | agent           | sample の業務文脈統一       | 適用しない                       |
+観点は 20 件以上あるため、ルーブリックは category 単位で定義し、viewpoint が継承する形を第一候補とする。`pm-review-viewpoints.yaml` には既に category が定義されており、スコアの集約単位としてもそのまま使える。
 
-`completeness` は判定根拠の正本が種別で変わるため、rubric を `kata-rubric-v1` と `deliverable-rubric-v1` に分けて持つ。
+生の点数を agent に直接答えさせると同一文書でも判定がぶれ、経時比較が成立しない。agent 判定は 0-4 の離散レベルで行い、`score = level × 25` へ写像する。決定的判定は充足率から算出する。
 
-決定的層は specdojo 内で完結し、agent 判定層は exec と同様に agent を起動する重い操作として分離する。
+| level | 意味       | 判定基準                                       |
+| ----- | ---------- | ---------------------------------------------- |
+| 4     | 良好       | 指摘なし、または info のみ                     |
+| 3     | 軽微な課題 | minor のみ。実務上そのまま使える               |
+| 2     | 要改善     | major あり。誤用・誤読を招く箇所がある         |
+| 1     | 不十分     | major が複数、または観点の目的をほぼ果たさない |
+| 0     | 不成立     | critical あり。その観点で文書が機能していない  |
 
-`conciseness` の finding ルールは `redundant-restatement`（同一内容の反復）、`standard-duplication`（上位 standard の引き写し）、`filler-prose`（規範を含まない一般論）、`redundant-preamble`（重複する章冒頭説明）、`over-structuring`（情報量に対する過剰な階層・表）とする。
+冗長性の観点における具体基準を例として示す。
 
-`coherence` の finding ルールは `internal-contradiction`（文書内の規則の食い違い）、`rule-sample-mismatch`（rulebook の規則と sample の実体の矛盾）、`unsatisfiable-rule`（適用条件が矛盾し満たせない規則）、`terminology-drift`（用語の定義と使用のずれ）とする。
-
-### 3.3. 軸別スコアの基準
-
-生の点数を agent に直接答えさせると同一文書でも判定がぶれ、経時比較が成立しない。agent 判定軸は 0-4 の離散レベルをルーブリックで判定させ、`score = level × 25` へ写像する。決定的軸は充足率から算出する。
-
-| level | 意味       | 判定基準                                         |
-| ----- | ---------- | ------------------------------------------------ |
-| 4     | 良好       | 指摘なし、または info のみ                       |
-| 3     | 軽微な課題 | minor のみ。実務上そのまま使える                 |
-| 2     | 要改善     | major あり。誤用・誤読を招く箇所がある           |
-| 1     | 不十分     | major が複数、または軸の目的をほぼ果たしていない |
-| 0     | 不成立     | critical あり。その軸で文書が機能していない      |
-
-軸ごとの具体基準は rubric 定義ファイルに置く。`conciseness` の例を次に示す。
-
-| level | conciseness の基準                                         |
+| level | 冗長性・簡潔性の基準                                       |
 | ----- | ---------------------------------------------------------- |
 | 4     | 各章が固有情報を持ち、削れる段落がない                     |
 | 3     | 冗長な前置きが数箇所あるが、規範の読み取りに支障がない     |
-| 2     | 上位 standard の引き写しや同一内容の反復が章単位で存在する |
-| 1     | 相当部分が一般論・反復で占められ、固有の規範を探すのが困難 |
-| 0     | 実質的な規範がほぼなく、冗長な散文だけで構成されている     |
+| 2     | 上位文書の引き写しや同一内容の反復が章単位で存在する       |
+| 1     | 相当部分が一般論・反復で占められ、固有の内容を探すのが困難 |
+| 0     | 実質的な内容がほぼなく、冗長な散文だけで構成されている     |
 
-スコアと finding は相互に拘束する。根拠のない点数を構造的に排除するため、level を 3 以下にする場合は根拠となる finding の提示を必須とし、severity は level の上限を制限する。
+スコアと finding は相互に拘束する。根拠のない点数を排除するため、level を 3 以下にする場合は根拠となる finding の提示を必須とし、severity は level の上限を制限する。severity は viewpoint の `default_severity` を起点とする。
 
-| severity   | 意味                                    | スコアへの影響          |
-| ---------- | --------------------------------------- | ----------------------- |
-| `critical` | 規範として誤り、必須要素が不成立        | その軸を level 0 に固定 |
-| `major`    | 誤用・誤読を招く、standard の要求に違反 | level 上限を 2 に制限   |
-| `minor`    | 改善が望ましいが実害は小さい            | level 上限を 3 に制限   |
-| `info`     | 提案・気づき                            | 影響しない              |
+| severity   | 意味                             | スコアへの影響            |
+| ---------- | -------------------------------- | ------------------------- |
+| `critical` | 規範として誤り、必須要素が不成立 | その観点を level 0 に固定 |
+| `major`    | 誤用・誤読を招く、要求に違反     | level 上限を 2 に制限     |
+| `minor`    | 改善が望ましいが実害は小さい     | level 上限を 3 に制限     |
+| `info`     | 提案・気づき                     | 影響しない                |
 
-### 3.4. 総合スコアと verdict
-
-総合スコアは軸別スコアの重み付き平均とする。重みは種別ごとに変える（rulebook は completeness を重く、sample は context と cross-consistency を重くする）。重みは rubric 定義ファイルに置く。
-
-verdict はスコアから独立させ、finding severity から決める。総合スコアが高くても critical が 1 件でもあれば fail とする。
+総合スコアは category 別スコアの重み付き平均とする。重みは対象種別ごとに変える。verdict はスコアから独立させ、finding severity から決める。
 
 ```text
-total   = Σ(weight_axis × score_axis)
-verdict = critical > 0                  → fail
-          major > 0 または total < 70   → needs-work
-          上記以外                      → pass
+category_score = 該当 viewpoint の score の平均
+total          = Σ(weight_category × category_score)
+verdict        = critical > 0                  → fail
+                 major > 0 または total < 70   → needs-work
+                 上記以外                      → pass
 ```
 
 合格閾値 70 は仮置きであり、kata への一括適用の結果を見て確定する。
 
-`verdict: needs-work` を検出しても register への自動起票は行わない。既存資産へ一括適用すると大量の項目が生まれ、登録簿が実質的に使えなくなるためである。
+review result の判定は現在 pass / fail / unclear であるため、level との対応を定める必要がある。review を level で記録する形へ寄せるか、写像規則を定義するかは設計判断とする。
 
-### 3.5. 評価結果の記録
+### 3.4. 評価結果の記録
 
-評価結果は対象文書の Frontmatter に記録する。rubric のバージョンを併記しないと、スコアの変化が品質改善によるものか基準改定によるものか判別できないため、`rubric` は必須とする。
+評価結果は対象文書の Frontmatter に記録する。ルーブリックのバージョンを併記しないと、スコアの変化が品質改善によるものか基準改定によるものか判別できないため必須とする。
 
 ```yaml
 specdojo:
   grade:
-    rubric: kata-rubric-v1
+    rubric: grade-rubric-v1
     verdict: needs-work
     score: 68
     graded_at: 2026-08-29T00:00:00Z
     graded_by: specdojo-grade/claude-opus
-    axes:
-      completeness: { level: 3, score: 75 }
-      reference: { level: 4, score: 100 }
-      specificity: { level: 2, score: 50 }
-      conciseness: { level: 2, score: 50 }
-      coherence: { level: 3, score: 75 }
-      cross_consistency: { level: 3, score: 75 }
-      context: { level: 4, score: 100 }
+    categories:
+      architecture: { level: 3, score: 75 }
+      consistency: { level: 3, score: 75 }
+      quality: { level: 2, score: 50 }
+      usability: { level: 2, score: 50 }
+    viewpoints:
+      vp-arc-document-structure: { level: 3 }
+      vp-arc-conciseness: { level: 2 }
+      vp-qe-omissions-consistency: { level: 3 }
     findings: { critical: 0, major: 2, minor: 3, info: 1 }
 ```
 
-要修正箇所は指摘対象の直前に独立行の HTML コメントとして挿入する。
+記録は冪等とする。再実行時は既存の `grade` を上書きし、履歴を増やさない。定期実行しても文書が肥大せず、常に最新状態だけが残る。判断の履歴が必要な場合は review result が担う。
+
+要修正箇所は指摘対象の直前に独立行の HTML コメントとして挿入する。`rule` には viewpoint の id を書き、review 側と同じ語彙で参照できるようにする。
 
 ```markdown
-<!-- specdojo:finding id=F1 severity=major rule=required-section 「禁止事項」表が無い。standard の要求章が欠落している。 -->
+<!-- specdojo:finding id=F1 severity=major rule=vp-qe-omissions-consistency 「禁止事項」表が無い。rulebook の要求章が欠落している。 -->
 ```
 
 Frontmatter の findings 件数と本文コメント数の一致を検証することで、Frontmatter だけを pass へ書き換えてコメントが残る不整合を検出できる。
 
+### 3.5. grade と review の関係
+
+両者は同じ観点を評価するが、契機と出力の性質が異なる。
+
+| 項目         | grade                       | review                     |
+| ------------ | --------------------------- | -------------------------- |
+| 契機         | 定期実行（継続監視）        | 成果物の完成時（ゲート）   |
+| 対象観点     | 継続評価対象の部分集合      | 全観点                     |
+| 出力         | Frontmatter（状態・上書き） | plan / result（履歴）      |
+| 冪等性       | あり                        | なし。実行ごとに記録が残る |
+| 人の直接編集 | 捕捉できる                  | 捕捉できない               |
+| 判断の性質   | 観測                        | 合意形成                   |
+
+review を定期実行に流用できない理由は、plan / result が履歴として蓄積するためである。毎回の実行で result が積み上がると、どれが意味のあるレビューだったのか判別できなくなる。plan / result は合意形成の記録であり、状態のスナップショットではない。
+
+人が直接ファイルを編集した場合は exec task を経由しないため review が起動しない。この空白を grade が埋める。
+
+grade の結果は review の入力として渡す。同じ観点 id で結果を突き合わせられるため、review では grade が判定済みの観点を再確認せず、役割としての主観的判断を要する観点に集中できる。
+
 ### 3.6. 修正フローへの接続
 
-評価コマンドは評価のみを行い、文書を修正しない。修正は既存の bootstrap および `<kind>-maintenance` approach の exec タスクが担う。
+grade は評価のみを行い、文書を修正しない。修正は既存の bootstrap および `<kind>-maintenance` approach の exec タスクが担う。
 
-`conciseness` を軸に加えると、maintenance で規範情報ごと削られる副作用が生じうる。これを防ぐため、finding には削除案ではなく統合先を書かせ、maintenance の done_criteria に「対応した finding のコメントを削除する」と「再評価で completeness が劣化していない」を含める。
+冗長性を観点に加えると、maintenance で必要な情報ごと削られる副作用が生じうる。これを防ぐため、finding には削除案ではなく統合先を書かせ、maintenance の done_criteria に「対応した finding のコメントを削除する」と「再評価で構造・整合の観点が劣化していない」を含める。
 
-### 3.7. approach 決定および review との責務分担
+### 3.7. approach 決定との関係
 
-approach の決定（`sch-assessment`）は、track 単位で成果物と kata が根拠として使える状態かを判定し、`recommended_approach` を導く。品質評価は資産単位で内容品質を測る。両者は評価の単位も対象も異なるため分離し、品質評価を approach 決定の入力とする。
+approach の決定（`sch-assessment`）は、track 単位で成果物と kata が根拠として使える状態かを判定する。`facts` はコードが収集し agent が編集してはならないという責務分離があるため、機械可読な Frontmatter に記録された grade は事実として `facts` へ取り込める。
 
 ```text
 specdojo grade
@@ -221,22 +254,18 @@ specdojo grade
         → intent と合わせて recommended_approach を導出
 ```
 
-`facts` はコードが収集し agent が編集してはならないという責務分離があるため、機械可読な Frontmatter に記録された grade は agent の推測ではなく事実として扱え、`facts` へ取り込める。これにより判定の再現性が上がり、品質の低い資産を根拠にして成果物まで品質が下がる連鎖を facts の段階で断てる。
-
-grade が代替できるのは `KataJudgment` の 4 つの check のうち `substantive-content`（specificity）、`internal-consistency`（coherence / cross-consistency）、`standard-alignment`（completeness / reference）の 3 つである。残る `target-fit` は文書単体の品質ではなく成果物との対応関係の判定であり、`facts.kata[].declaration` でほぼ決まる。
-
-一方で `intent`（次のタスクの目的）は成果物や kata の品質からは導けないため、grade は intent を代替しない。`recommended_approach` は intent と usability から決定的ルールで導出されるため、決定論化の残るボトルネックは intent である。この帰結として `sch-assessment` 自体の要否が論点になり、PJR-JFTC で判断する。
-
-exec の review task と `pm-review-viewpoints` は、内容の妥当性（要求の抜け漏れ、トレース欠落）を多観点で判定する。品質評価は文書としての品質を測るものであり、review を置き換えない。両者を混同すると二重のレビュー体制になるため、役割の違いを規範文書へ明記する。
+grade が代替できるのは `KataJudgment` の 4 つの check のうち `substantive-content`、`internal-consistency`、`standard-alignment` の 3 つである。残る `target-fit` は `facts.kata[].declaration` でほぼ決まる。一方 `intent` は成果物の品質からは導けないため grade では代替できない。この帰結として `sch-assessment` 自体の要否が論点となり、PJR-JFTC で判断する。
 
 ### 3.8. 未決の論点
 
+- 観点の正本の置き場所。`pm-review-viewpoints.yaml` はプロジェクト固有の成果物だが、kata は SpecDojo 全体の資産であり特定プロジェクトに属さない。SpecDojo 共通の観点集合を設けてプロジェクトが継承・追加する構造が筋は通るが、継承の仕組みが新規に必要になる。
+- review result の判定と level の対応。review を level で記録する形へ寄せるか、pass / fail / unclear との写像規則を定めるか。
+- routine からの起動方法。action kind を追加するか、job として定義するか。
 - Markdown 以外の成果物の扱い。`target_format: yaml` の成果物は `#` コメントで記録できるが、JSON はコメントを書けない。サイドカーファイルへ落とすか対象外とするかを決める。
 - HTML コメントが VitePress ビルド、prettier、markdownlint を通ることの確認。表セル内など配置によっては構造を壊すため、独立行のみに限定する規約が必要になる。
-- 成果物へ展開する際の実行コスト。文書 ID インデックスは 1399 件あり、全件を agent 判定へ回すのは現実的でない。決定的層を全件へ適用し、閾値未満のみ agent 判定へ送る段階適用を検討する。
-- findings を maintenance plan へ埋め込むか、本文コメントを agent に読ませるだけにするか。
+- 定期実行のコスト。文書 ID インデックスは 1400 件を超える。決定的層は全件に適用できるが、agent 判定層は前回評価以降に変更があった文書へ限定する必要がある。変更検知の基準（内容ハッシュ、更新日時、Git 差分）を決める。
 - agent 判定層の再現性の測定方法。同一文書を複数回評価したときのレベル差を許容範囲として定義する。
-- grade により usability が決定論化された結果、`sch-assessment` を廃止できるか。判断は PJR-JFTC で行うが、grade の記録形式が facts へ取り込める形になっていることが前提となる。
+- grade により usability が決定論化された結果、`sch-assessment` を廃止できるか。判断は PJR-JFTC で行う。
 
 ## 4. 対応結果
 
@@ -245,10 +274,11 @@ exec の review task と `pm-review-viewpoints` は、内容の妥当性（要�
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-jftc-sch-assessment-retirement]]: sch-assessment の廃止可否を判断する TODO。本項目の設計確定が着手の前提。
-- [[specdojo:rulebook-authoring-standard]]: rulebook の評価基準の正本。
-- [[specdojo:sample-authoring-standard]]: sample の評価基準の正本。
-- [[specdojo:recipe-authoring-standard]]: recipe の評価基準の正本。
-- [[specdojo:template-authoring-standard]]: template の評価基準の正本。
+- [[specdojo:review-guide]]: review の観点体系と plan / result の運用。観点の正本を共有する。
+- [[specdojo:rulebook-authoring-standard]]: rulebook の判定根拠となる規範。
+- [[specdojo:sample-authoring-standard]]: sample の判定根拠となる規範。
+- [[specdojo:recipe-authoring-standard]]: recipe の判定根拠となる規範。
+- [[specdojo:template-authoring-standard]]: template の判定根拠となる規範。
 - [[specdojo:document-metadata-standard]]: Frontmatter へ grade を追加する際の規約。
 - [[specdojo:exec-operation-guide]]: maintenance approach の実行フローとの接続先。
-- [[specdojo:review-guide]]: review との責務分担を確認する。
+- [[specdojo:routine-operation-guide]]: 定期実行の設定先。

@@ -102,12 +102,14 @@ PJR-49D2 の品質評価（`specdojo grade`）を導入すると、`KataJudgment
 
 `KataJudgment` は 4 つの check の全 pass で `usability: usable` を決める。この 4 つと grade の軸は次のように対応する。
 
-| check                  | 内容                                    | 代替手段                               |
-| ---------------------- | --------------------------------------- | -------------------------------------- |
-| `substantive-content`  | 空・プレースホルダ主体でないか          | grade の specificity                   |
-| `internal-consistency` | 同じ set の他 kata と致命的矛盾がないか | grade の coherence / cross-consistency |
-| `standard-alignment`   | 現行 rulebook / schema と整合しているか | grade の completeness / reference      |
-| `target-fit`           | その成果物向けの内容か                  | facts の `declaration` でほぼ決まる    |
+| check                  | 内容                                    | 代替手段                                 |
+| ---------------------- | --------------------------------------- | ---------------------------------------- |
+| `substantive-content`  | 空・プレースホルダ主体でないか          | grade の該当観点（実質的内容の充足）     |
+| `internal-consistency` | 同じ set の他 kata と致命的矛盾がないか | grade の該当観点（文書内・文書間の整合） |
+| `standard-alignment`   | 現行 rulebook / schema と整合しているか | grade の該当観点（規範との整合）         |
+| `target-fit`           | その成果物向けの内容か                  | facts の `declaration` でほぼ決まる      |
+
+観点と grade の対応の具体的な割り当ては、PJR-49D2 の観点一本化設計で確定する。
 
 `target-fit` は文書単体の品質ではなく成果物との対応関係の判定であるため grade の対象外だが、`facts.kata[].declaration` が `declared` または `conventional` であれば規約上その成果物向けである。agent 判定が必要なのは、宣言はあるが中身が別物という異常系に限られる。
 
