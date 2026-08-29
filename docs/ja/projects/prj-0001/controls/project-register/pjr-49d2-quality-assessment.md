@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-49d2-quality-assessment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T00:15:15Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-29T10:22:12Z"
   block_reason: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/schedule-assessment.test.ts (1 failed)"
+  conclusion: specdojo grade prompt / apply / validate を追加した。評価観点は共通 viewpoint 正本へ一本化し、冗長性・簡潔性を vp-arc-conciseness として加えた。agent は共通 rubric による意味判定のみを返し、対象探索・決定的観点・スコア算出・verdict・書き込みは CLI が担う。結果は Frontmatter の specdojo.grade へ冪等に上書きし、要修正箇所は specdojo:finding コメントで記録する。job-grade-kata と無効状態の rtn-grade-kata により定期実行の経路を用意し、schedule assessment の facts へ grade を取り込んだ。
   register_events:
     - v: 1
       id: reg_5a502849368e4319a6ed07318995a8e7
@@ -76,6 +78,38 @@ specdojo:
           from: "-"
           to: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/schedule-assessment.test.ts (1 failed)"
       previous_event_id: reg_7642eaa4ee6345f8948072143785aa2f
+    - v: 1
+      id: reg_b56518517ee649c9ac8b927d7abfe9b8
+      ts: "2026-08-29T10:22:11Z"
+      action: review
+      actor: manual
+      from_status: waiting
+      to_status: review
+      reason: テスト期待値の修正と実装レビューを完了したため
+      changes:
+        - field: status
+          from: waiting
+          to: review
+      previous_event_id: reg_dcd563a4acfa41d9b491b00a9fa40f93
+    - v: 1
+      id: reg_d0c66296c67a443fbc750e8ce386d62b
+      ts: "2026-08-29T10:22:12Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: 実装・検証・レビューが完了したため
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-29"
+        - field: conclusion
+          from: "-"
+          to: specdojo grade prompt / apply / validate を追加した。評価観点は共通 viewpoint 正本へ一本化し、冗長性・簡潔性を vp-arc-conciseness として加えた。agent は共通 rubric による意味判定のみを返し、対象探索・決定的観点・スコア算出・verdict・書き込みは CLI が担う。結果は Frontmatter の specdojo.grade へ冪等に上書きし、要修正箇所は specdojo:finding コメントで記録する。job-grade-kata と無効状態の rtn-grade-kata により定期実行の経路を用意し、schedule assessment の facts へ grade を取り込んだ。
+      previous_event_id: reg_b56518517ee649c9ac8b927d7abfe9b8
 ---
 
 # PJR-49D2 rulebook/sample/recipe/template の品質評価コマンドを設計・実装する
