@@ -256,26 +256,28 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                | 用途                                                          | 対象                            |
-| ------------------------- | ------------------------------------------------------------- | ------------------------------- |
-| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                      |
-| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                           |
-| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`              |
-| `--by <actor>`            | 追記型 event に記録する actor を指定                          | `add` / 更新 / 遷移コマンド     |
-| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）       | `add` / 更新 / 遷移コマンド     |
-| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド |
-| `--topic <slug>`          | 個票ファイル名の論点部分を指定する                            | `add`                           |
-| `--dry-run`               | 書き込みを行わず変更対象を表示する                            | `renumber` / `add` / `migrate`  |
-| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）              | `history`                       |
-| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）              | `history`                       |
-| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）          | `history`                       |
-| `--status-only`           | 追加・削除・状態遷移だけを出力する                            | `history`                       |
-| `--limit <count>`         | 走査するコミット数の上限                                      | `history`                       |
-| `--json`                  | イベントを JSON で出力する                                    | `history`                       |
+| オプション                | 用途                                                          | 対象                                      |
+| ------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
+| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                                |
+| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                                     |
+| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`                        |
+| `--by <actor>`            | 追記型 event に記録する actor を指定                          | `add` / 更新 / 遷移コマンド               |
+| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）       | `add` / 更新 / 遷移コマンド               |
+| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド           |
+| `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する            | `add` / `update`                          |
+| `--dry-run`               | 書き込みを行わず変更対象を表示する                            | `renumber` / `add` / `update` / `migrate` |
+| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）              | `history`                                 |
+| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）              | `history`                                 |
+| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）          | `history`                                 |
+| `--status-only`           | 追加・削除・状態遷移だけを出力する                            | `history`                                 |
+| `--limit <count>`         | 走査するコミット数の上限                                      | `history`                                 |
+| `--json`                  | イベントを JSON で出力する                                    | `history`                                 |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `--registered` / `--completed` にはタイムゾーン付きの RFC 3339 値（`2026-08-09T14:08:51Z` または `2026-08-09T23:08:51+09:00`）を指定し、保存時に UTC へ正規化します。タイムゾーンを含まない値は解釈が実行環境に依存するため受け付けません。期限（`--due`）は瞬間ではなく暦日のため `YYYY-MM-DD` のままです。
+
+`register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 

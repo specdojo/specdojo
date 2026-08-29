@@ -130,11 +130,12 @@ Project Register Documentation Rules
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
+- 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値とイベントを同じ個票更新で記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。
+- 主題の変化に伴う `<topic>` の変更は `register update --topic` で行う。個票のファイル名と Frontmatter の文書 ID、他文書中の旧文書 ID 参照を同時に更新し、生成ビューを再生成する。
 
 ### 5.3. 個票 status の遷移基準
 

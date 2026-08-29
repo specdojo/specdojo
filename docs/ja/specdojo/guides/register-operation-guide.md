@@ -208,6 +208,28 @@ specdojo register update \
   --conclusion "取消処理で在庫数を戻すよう修正"
 ```
 
+項目の主題が変わり、個票名の topic が実態と合わなくなった場合も、個票を直接移動せず `register update --topic` を使います。まず dry-run で、個票の移動先と旧文書 ID を参照している更新対象を確認します。
+
+```bash
+specdojo register update \
+  --project <project-id> \
+  --id PJR-0005 \
+  --topic inventory-cancellation \
+  --reason "取消処理へ主題を変更" \
+  --dry-run
+
+specdojo register update \
+  --project <project-id> \
+  --id PJR-0005 \
+  --topic inventory-cancellation \
+  --reason "取消処理へ主題を変更"
+```
+
+- topic は英小文字・数字を単一ハイフンで区切った slug にします。
+- 個票ファイル名と Frontmatter の文書 ID、`docs/ja` 配下の旧文書 ID 参照を一括更新し、一覧・派生ビューを再生成します。
+- 変更先ファイルが既に存在する場合は、どのファイルも書き換えずに停止します。
+- event は `action: update` とし、`changes` の `id` に変更前後の文書 ID を残します。
+
 ### 2.4. 派生ビューの扱い
 
 登録項目一覧と派生ビューは、個票を入力として `register build` で生成します。

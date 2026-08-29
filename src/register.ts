@@ -122,6 +122,9 @@ function atomicWriteFile(path: string, content: string): void {
 // PJR-ID の乱数部分の桁数。
 const PJR_ID_LENGTH = 4;
 
+// 個票ファイル名・文書 ID の論点部分。先頭・末尾や連続ハイフンを許さない。
+export const REGISTER_TOPIC_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 // 生成した ID が偶然含みうる不適切語の簡易ブロックリスト（4 文字, 大文字, 曖昧文字除外後）。
 // 一致した候補は採用せず再抽選する。曖昧文字（I/L/O/U）を含む語は生成されえないため載せない。
 const PJR_ID_BLOCKLIST = new Set<string>(["CRAP", "DAMN", "TWAT", "WANK", "SHAG", "FART"]);
@@ -1468,6 +1471,146 @@ export type RenumberPlan = {
   ticketRename?: { from: string; to: string };
 };
 
+export type RetopicPlan = {
+  writes: { path: string; content: string }[];
+  ticketRename: { from: string; to: string };
+  fromTopic: string;
+  fromDocId: string;
+  toDocId: string;
+};
+
+// topic 変更で書き換える全ファイルを事前に算出する。参照の更新範囲は renumber と
+// 同じく docs/ja 配下（生成物を除く）とし、文書 ID を含む wikilink / targets を
+// 付け替える。衝突や個票 ID の不整合は、書き込み前に検出する。
+export function planRetopic(paths: RegisterPaths, id: string, topic: string): RetopicPlan {
+  if (!PJR_ID_RE.test(id)) {
+    throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
+  }
+  if (!REGISTER_TOPIC_RE.test(topic)) {
+    throw new Error(
+      `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+    );
+  }
+
+  const view = loadItemForUpdate(paths, id);
+  const oldFilename = view.ticketFilename;
+  if (!oldFilename || !view.ticketPath) {
+    throw new Error(`Item ${id} has no ticket file to change topic`);
+  }
+  const fromTopic = ticketTopicFromFilename(id, oldFilename);
+  if (!fromTopic) {
+    throw new Error(
+      `Ticket filename "${oldFilename}" does not match ID "${id}"; fix it before changing topic.`,
+    );
+  }
+
+  const fromDocId = `${paths.projectId}:${oldFilename.replace(/\.md$/, "")}`;
+  const newFilename = `${id.toLowerCase()}-${topic}.md`;
+  const toDocId = `${paths.projectId}:${newFilename.replace(/\.md$/, "")}`;
+  const newTicketPath = join(paths.projectRegisterPath, newFilename);
+  const ticketContent = readFileSync(view.ticketPath, "utf8");
+  const currentDocId = parseSpecdojoDocument(ticketContent).data.id;
+  if (currentDocId !== fromDocId) {
+    throw new Error(
+      `Ticket ${oldFilename} must have frontmatter id "${fromDocId}" before changing topic`,
+    );
+  }
+  if (existsSync(newTicketPath)) {
+    throw new Error(`Target ticket file already exists: ${newTicketPath}`);
+  }
+
+  const writes: RetopicPlan["writes"] = [
+    {
+      path: newTicketPath,
+      content: renumberReferences(ticketContent, fromDocId, toDocId).content,
+    },
+  ];
+  const root = specdojoRootDir();
+  const referenceFiles = fg
+    .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
+    .sort((a, b) => a.localeCompare(b));
+
+  for (const absPath of referenceFiles) {
+    if (absPath === view.ticketPath) continue;
+    const content = readFileSync(absPath, "utf8");
+    const referenceUpdate = renumberReferences(content, fromDocId, toDocId);
+    // 旧構成の pjr-index に登録項目行が残っている場合は、文書 ID だけでなく個票リンクの
+    // ファイル名も追随させる。現行の generated ビューは適用後に再生成する。
+    const replaced =
+      absPath === paths.pjrIndexPath
+        ? referenceUpdate.content.split(oldFilename).join(newFilename)
+        : referenceUpdate.content;
+    if (referenceUpdate.changed || replaced !== content) {
+      writes.push({ path: absPath, content: replaced });
+    }
+  }
+
+  return {
+    writes,
+    ticketRename: { from: view.ticketPath, to: newTicketPath },
+    fromTopic,
+    fromDocId,
+    toDocId,
+  };
+}
+
+export function retopicPjrItem(opts: {
+  paths: RegisterPaths;
+  id: string;
+  topic: string;
+  updated: PjrItem;
+  dryRun: boolean;
+  title?: string;
+  description?: string;
+  actor?: string;
+  reason?: string;
+}): void {
+  const plan = planRetopic(opts.paths, opts.id, opts.topic);
+  const ticketWrite = plan.writes.find((write) => write.path === plan.ticketRename.to);
+  if (!ticketWrite) throw new Error(`Retopiced ticket content not found: ${plan.ticketRename.to}`);
+
+  if (opts.title !== undefined)
+    ticketWrite.content = setRegisterItemTitle(ticketWrite.content, opts.title);
+  if (opts.description !== undefined) {
+    ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
+  }
+  ticketWrite.content = applyRegisterItemFields(
+    ticketWrite.content,
+    registerItemFieldsFromItem(opts.updated),
+  );
+
+  if (opts.dryRun) {
+    process.stdout.write(`Would change topic for ${opts.id}: ${plan.fromTopic} → ${opts.topic}\n`);
+    process.stdout.write(`  Rename: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+    for (const write of plan.writes) process.stdout.write(`  Update: ${write.path}\n`);
+    return;
+  }
+
+  const beforeContent = readFileSync(plan.ticketRename.from, "utf8");
+  const event = buildRegisterEvent({
+    beforeContent,
+    afterContent: ticketWrite.content,
+    filename: basename(plan.ticketRename.to),
+    timeZone: opts.paths.registerDateTimeZone,
+    action: "update",
+    actor: opts.actor?.trim() || "manual",
+    reason: opts.reason?.trim() || `topic changed from ${plan.fromTopic} to ${opts.topic}`,
+    extraChanges: [{ field: "id", from: plan.fromDocId, to: plan.toDocId }],
+  });
+  if (!event) throw new Error(`Failed to build topic update event for ${opts.id}`);
+  ticketWrite.content = appendRegisterEvent(ticketWrite.content, event);
+
+  for (const write of plan.writes) {
+    atomicWriteFile(write.path, write.content);
+    process.stdout.write(`Updated: ${write.path}\n`);
+  }
+  unlinkSync(plan.ticketRename.from);
+  process.stdout.write(`Renamed: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+  for (const view of writeDerivedViews(opts.paths, "all")) {
+    process.stdout.write(`Generated: ${view.path}\n`);
+  }
+}
+
 // 再採番で書き換える全ファイルを事前に算出する。
 // 途中で衝突・不整合を検出したら例外を投げ、部分適用が起きないようにする。
 export function planRenumber(paths: RegisterPaths, fromId: string, toId: string): RenumberPlan {
@@ -1939,7 +2082,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
 
       const topic = opts.topic?.trim() || slugify(opts.title);
-      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
+      if (!REGISTER_TOPIC_RE.test(topic)) {
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
@@ -2294,6 +2437,10 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
+  updateCmd.option(
+    "--topic <topic>",
+    "Update the topic slug in the ticket filename and document ID",
+  );
   updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
@@ -2303,12 +2450,18 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id);
       const item = view.item;
 
-      const hasUpdates = ["title", "description", "priority", "owner", "due", "conclusion"].some(
-        (k) => opts[k] !== undefined,
-      );
+      const hasUpdates = [
+        "title",
+        "description",
+        "priority",
+        "owner",
+        "due",
+        "conclusion",
+        "topic",
+      ].some((k) => opts[k] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --topic)",
         );
       }
 
@@ -2323,6 +2476,12 @@ export function registerRegisterCommands(program: Command): void {
       if (opts.due !== undefined && !/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
         throw new Error(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`);
       }
+      const topic = opts.topic?.trim();
+      if (topic !== undefined && !REGISTER_TOPIC_RE.test(topic)) {
+        throw new Error(
+          `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+        );
+      }
 
       const updated: PjrItem = {
         ...item,
@@ -2333,6 +2492,23 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
+      const currentTopic = view.ticketFilename
+        ? ticketTopicFromFilename(opts.id, view.ticketFilename)
+        : undefined;
+      if (topic !== undefined && topic !== currentTopic) {
+        retopicPjrItem({
+          paths,
+          id: opts.id,
+          topic,
+          updated,
+          dryRun: opts.dryRun,
+          ...(opts.title !== undefined ? { title: opts.title } : {}),
+          ...(opts.description !== undefined ? { description: opts.description } : {}),
+          actor: registerEventActor(opts),
+          reason: opts.reason?.trim() || "",
+        });
+        return;
+      }
       applyItemUpdate({
         paths,
         view,
