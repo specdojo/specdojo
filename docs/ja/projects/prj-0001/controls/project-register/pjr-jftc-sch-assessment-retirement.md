@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jftc-sch-assessment-retirement
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T00:39:35Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-29T10:56:46Z"
+  conclusion: sch-assessment を廃止し、strategy の approach_rules による intent 宣言、都度収集する成果物・Kata facts、保存済み grade から approach を決定論的に導出する構造へ移行した。7 種の intent はすべて approach_rules[].intent で表現でき、local_ids により同一 phase set 内で intent が分かれる場合も宣言できる。専用 schema、CLI の schedule assessment、agent prompt、実データ 3 件、専用テストを削除し、approach 決定から agent 起動を排除した。入力が欠ける場合は undecided を保存せずエラー停止する。
   register_events:
     - v: 1
       id: reg_d456456e8e514734bf5fdae2b5de387a
@@ -88,6 +90,25 @@ specdojo:
           from: in-progress
           to: review
       previous_event_id: reg_8e73b42c62564da6b03f1a8437b41160
+    - v: 1
+      id: reg_dbb530a026564faca304f051de4142f3
+      ts: "2026-08-29T10:56:46Z"
+      action: close
+      actor: manual
+      from_status: review
+      to_status: done
+      reason: 実装・検証・レビューが完了したため
+      changes:
+        - field: status
+          from: review
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-29"
+        - field: conclusion
+          from: "-"
+          to: sch-assessment を廃止し、strategy の approach_rules による intent 宣言、都度収集する成果物・Kata facts、保存済み grade から approach を決定論的に導出する構造へ移行した。7 種の intent はすべて approach_rules[].intent で表現でき、local_ids により同一 phase set 内で intent が分かれる場合も宣言できる。専用 schema、CLI の schedule assessment、agent prompt、実データ 3 件、専用テストを削除し、approach 決定から agent 起動を排除した。入力が欠ける場合は undecided を保存せずエラー停止する。
+      previous_event_id: reg_b05d8fb7d1cd4c1cb1f832bb836ad0e6
 ---
 
 # PJR-JFTC sch-assessment の廃止可否を判断し approach の決定論的導出へ移行する
@@ -160,7 +181,9 @@ strategy（intent を宣言）＋ facts（コードが収集）＋ grade（品�
 
 facts の収集コストが問題になる場合は、`.specdojo/doc-index.json` と同じ位置づけのキャッシュとして残す。この場合も `docs/` 配下の成果物としては存在しない。
 
-### 3.4. 廃止しない場合
+### 3.4. 検討した代替案（不採用）
+
+検証の結果、7 種の intent はすべて宣言で表現できたため、以下の代替案は採用していない。判断の過程として記録に残す。
 
 intent の宣言化が一部のケースで成立せず agent 判定が残るなら、その judgment を保存する場所が必要になる。その場合は `sch-assessment` を縮退させたうえで、名称が汎用語で品質評価と紛らわしい問題に対処する。
 
