@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2kpn-register-update-topic
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T06:54:31Z"
   due_on: "2026-09-30"
+  completed_at: "2026-08-29T11:32:30Z"
   block_reason: rate limit reached
+  conclusion: register update --topic を追加し、個票ファイル名と文書 ID の変更、参照の更新、event 記録、生成ビューの再生成を一度のコマンドで完結させた。topic は英小文字・数字を単一ハイフンで区切る形式に限定し、変更先ファイルが存在する場合は計画段階で停止する。参照の更新範囲は既存の register renumber と揃え、生成物を除く docs/ja 配下の旧文書 ID を自動更新する。event の action は新設せず update を用い、changes の id へ変更前後の完全な文書 ID を保存する。
   register_events:
     - v: 1
       id: reg_220c4eda72ff46a29ed52c3a2ceba550
@@ -76,6 +78,25 @@ specdojo:
           from: "-"
           to: rate limit reached
       previous_event_id: reg_a82bd40af09346d9a8e9939307e695c8
+    - v: 1
+      id: reg_1dea7669f5dd46319b6a518cfa23f055
+      ts: "2026-08-29T11:32:30Z"
+      action: close
+      actor: manual
+      from_status: waiting
+      to_status: done
+      reason: 実装・検証・レビューが完了したため
+      changes:
+        - field: status
+          from: waiting
+          to: done
+        - field: completed
+          from: "-"
+          to: "2026-08-29"
+        - field: conclusion
+          from: "-"
+          to: register update --topic を追加し、個票ファイル名と文書 ID の変更、参照の更新、event 記録、生成ビューの再生成を一度のコマンドで完結させた。topic は英小文字・数字を単一ハイフンで区切る形式に限定し、変更先ファイルが存在する場合は計画段階で停止する。参照の更新範囲は既存の register renumber と揃え、生成物を除く docs/ja 配下の旧文書 ID を自動更新する。event の action は新設せず update を用い、changes の id へ変更前後の完全な文書 ID を保存する。
+      previous_event_id: reg_af7998bbbeef4227b1ae1a8d323947c1
 ---
 
 # PJR-2KPN register update に個票の topic 変更手段を追加する
@@ -144,6 +165,8 @@ PJR-JFTC は当初「sch-assessment を sch-readiness へ改名する」とし�
 - 文書 ID インデックスとの整合は、変更後に `index build` を実行して再生成することで保つ。
 
 移行前の `pjr-index.md` は読み取り互換の入力であり正本ではないため、topic 変更の更新対象に含めない。未移行データの扱いは `register migrate` の責務とする。
+
+参照を追随させない選択肢も検討したが採用しなかった。解決できない wikilink は `index build` でも `validate-history-links` でも検出されないことを実測で確認しており、追随させない場合は壊れた参照が検出されないまま蓄積する。また wikilink は文書の同一性を指すポインタであって記録された事実ではなく、ID を更新しても指し示す文書は変わらない。実行した事実は plan / result の本文、状態遷移は `register_events`、変更の時刻と実施者は git 履歴がそれぞれ担保する。文書 ID を外部へ公開・引用する運用を始める場合は、この方針を再検討する。
 
 ## 4. 対応結果
 
