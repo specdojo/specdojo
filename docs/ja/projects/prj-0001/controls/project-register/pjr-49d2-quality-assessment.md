@@ -70,28 +70,28 @@ authoring standard および成果物 rulebook への準拠度を評価する `s
 - Frontmatter の findings 件数と本文コメント数の不一致を検出する検証が存在する。
 - bootstrap および `<kind>-maintenance` approach の plan から findings を参照して修正できる。
 - 修正後の再評価で completeness が劣化していないことを確認する手順が文書化されている。
-- grade 結果を readiness 評価の `facts` として取り込める。
+- grade 結果を approach 決定の `facts` として取り込める。
 - 既存の kata へ一括適用し、ばらつきの実態と閾値の妥当性を把握できている。
 - `npm run check` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業                                   | 担当   | 状態 | メモ                                                       |
-| --- | -------------------------------------- | ------ | ---- | ---------------------------------------------------------- |
-| 1   | 評価軸とルーブリックの確定             | ARC    | open | 共通コア5軸と種別固有軸のレベル基準を rubric 定義へ落とす  |
-| 2   | スコア算出仕様の確定                   | ARC    | open | 軸別スコア、種別別の重み、総合スコア、verdict 判定         |
-| 3   | grade の Frontmatter schema 拡張       | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断する |
-| 4   | finding コメント記法の確定             | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い                |
-| 5   | 決定的層の実装（kata 先行）            | _TODO_ | open | completeness / reference の算出と冗長性の代理指標          |
-| 6   | agent 判定層の実装（kata 先行）        | _TODO_ | open | exec と同様に agent を起動し findings を生成する           |
-| 7   | maintenance フローへの接続             | _TODO_ | open | plan への findings 供給と修正後の再評価                    |
-| 8   | kata への一括適用と閾値検証            | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                         |
-| 9   | readiness の facts への grade 取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC と歩調を合わせる           |
-| 10  | 成果物への展開                         | _TODO_ | open | 種別固有軸の追加と段階適用。共通コア5軸の確定後            |
+| No  | 作業                                      | 担当   | 状態 | メモ                                                           |
+| --- | ----------------------------------------- | ------ | ---- | -------------------------------------------------------------- |
+| 1   | 評価軸とルーブリックの確定                | ARC    | open | 共通コア5軸と種別固有軸のレベル基準を rubric 定義へ落とす      |
+| 2   | スコア算出仕様の確定                      | ARC    | open | 軸別スコア、種別別の重み、総合スコア、verdict 判定             |
+| 3   | grade の Frontmatter schema 拡張          | ARC    | open | 共通 schema へ置くか種別別 schema へ置くかを含めて判断する     |
+| 4   | finding コメント記法の確定                | ARC    | open | 記法、配置制約、Markdown 以外の成果物の扱い                    |
+| 5   | 決定的層の実装（kata 先行）               | _TODO_ | open | completeness / reference の算出と冗長性の代理指標              |
+| 6   | agent 判定層の実装（kata 先行）           | _TODO_ | open | exec と同様に agent を起動し findings を生成する               |
+| 7   | maintenance フローへの接続                | _TODO_ | open | plan への findings 供給と修正後の再評価                        |
+| 8   | kata への一括適用と閾値検証               | _TODO_ | open | ばらつきの実態把握と合格閾値の確定                             |
+| 9   | approach 決定の facts への grade 取り込み | _TODO_ | open | schema 拡張と収集処理。PJR-JFTC の廃止可否判断と歩調を合わせる |
+| 10  | 成果物への展開                            | _TODO_ | open | 種別固有軸の追加と段階適用。共通コア5軸の確定後                |
 
 ### 3.1. コマンドと記録形式
 
-コマンド名は `specdojo grade` とし、対象種別は引数で指定する。readiness 評価が成果物と kata の両方を対象にしている以上、その入力となる品質評価も両方を対象にする必要があるため、名前に `kata` を含めない。
+コマンド名は `specdojo grade` とし、対象種別は引数で指定する。approach 決定のための整備状況の評価が成果物と kata の両方を対象にしている以上、その入力となる品質評価も両方を対象にする必要があるため、名前に `kata` を含めない。
 
 ```sh
 specdojo grade run --kind kata
@@ -100,7 +100,7 @@ specdojo grade report --project prj-0001
 specdojo grade check
 ```
 
-Frontmatter キーは `specdojo.grade` とする。`assessment` は readiness 評価が使う語であり、混同を避ける。
+Frontmatter キーは `specdojo.grade` とする。`assessment` は approach 決定が使う語であり、混同を避ける。
 
 ### 3.2. 評価軸
 
@@ -209,19 +209,23 @@ Frontmatter の findings 件数と本文コメント数の一致を検証する�
 
 `conciseness` を軸に加えると、maintenance で規範情報ごと削られる副作用が生じうる。これを防ぐため、finding には削除案ではなく統合先を書かせ、maintenance の done_criteria に「対応した finding のコメントを削除する」と「再評価で completeness が劣化していない」を含める。
 
-### 3.7. 既存の評価・レビューとの責務分担
+### 3.7. approach 決定および review との責務分担
 
-readiness 評価（`sch-assessment`、PJR-JFTC で `sch-readiness` へ改名予定）は、track 単位で成果物と kata が根拠として使える状態かを判定し、`recommended_approach` を導く。品質評価は資産単位で内容品質を測る。両者は評価対象が異なるため分離し、品質評価を readiness の入力とする。
+approach の決定（`sch-assessment`）は、track 単位で成果物と kata が根拠として使える状態かを判定し、`recommended_approach` を導く。品質評価は資産単位で内容品質を測る。両者は評価の単位も対象も異なるため分離し、品質評価を approach 決定の入力とする。
 
 ```text
 specdojo grade
   → 対象文書の Frontmatter へ grade を記録
-    → readiness の facts 収集がコードで読み取る
-      → judgment（この資産を根拠にできるか）
-        → recommended_approach
+    → facts 収集がコードで読み取る
+      → usability（この資産を根拠にできるか）
+        → intent と合わせて recommended_approach を導出
 ```
 
-readiness 評価は `facts` をコードが収集し、agent が編集してはならない責務分離を持つ。grade は機械可読な Frontmatter に記録されるため agent の推測ではなく事実として扱え、`facts` へ取り込める。これにより readiness 判定の再現性が上がり、品質の低い資産を根拠にして成果物まで品質が下がる連鎖を facts の段階で断てる。
+`facts` はコードが収集し agent が編集してはならないという責務分離があるため、機械可読な Frontmatter に記録された grade は agent の推測ではなく事実として扱え、`facts` へ取り込める。これにより判定の再現性が上がり、品質の低い資産を根拠にして成果物まで品質が下がる連鎖を facts の段階で断てる。
+
+grade が代替できるのは `KataJudgment` の 4 つの check のうち `substantive-content`（specificity）、`internal-consistency`（coherence / cross-consistency）、`standard-alignment`（completeness / reference）の 3 つである。残る `target-fit` は文書単体の品質ではなく成果物との対応関係の判定であり、`facts.kata[].declaration` でほぼ決まる。
+
+一方で `intent`（次のタスクの目的）は成果物や kata の品質からは導けないため、grade は intent を代替しない。`recommended_approach` は intent と usability から決定的ルールで導出されるため、決定論化の残るボトルネックは intent である。この帰結として `sch-assessment` 自体の要否が論点になり、PJR-JFTC で判断する。
 
 exec の review task と `pm-review-viewpoints` は、内容の妥当性（要求の抜け漏れ、トレース欠落）を多観点で判定する。品質評価は文書としての品質を測るものであり、review を置き換えない。両者を混同すると二重のレビュー体制になるため、役割の違いを規範文書へ明記する。
 
@@ -232,6 +236,7 @@ exec の review task と `pm-review-viewpoints` は、内容の妥当性（要�
 - 成果物へ展開する際の実行コスト。文書 ID インデックスは 1399 件あり、全件を agent 判定へ回すのは現実的でない。決定的層を全件へ適用し、閾値未満のみ agent 判定へ送る段階適用を検討する。
 - findings を maintenance plan へ埋め込むか、本文コメントを agent に読ませるだけにするか。
 - agent 判定層の再現性の測定方法。同一文書を複数回評価したときのレベル差を許容範囲として定義する。
+- grade により usability が決定論化された結果、`sch-assessment` を廃止できるか。判断は PJR-JFTC で行うが、grade の記録形式が facts へ取り込める形になっていることが前提となる。
 
 ## 4. 対応結果
 
@@ -239,7 +244,7 @@ exec の review task と `pm-review-viewpoints` は、内容の妥当性（要�
 
 ## 5. 関連ドキュメント
 
-- [[prj-0001:pjr-jftc-sch-readiness-rename]]: readiness 評価の改名 TODO。facts 連携と歩調を合わせる。
+- [[prj-0001:pjr-jftc-sch-assessment-retirement]]: sch-assessment の廃止可否を判断する TODO。本項目の設計確定が着手の前提。
 - [[specdojo:rulebook-authoring-standard]]: rulebook の評価基準の正本。
 - [[specdojo:sample-authoring-standard]]: sample の評価基準の正本。
 - [[specdojo:recipe-authoring-standard]]: recipe の評価基準の正本。
