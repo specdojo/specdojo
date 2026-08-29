@@ -131,12 +131,11 @@ flowchart TD
 
 ### 3.3. Schedule strategy 生成への引き渡し
 
-カタログを確認した後は、Timeline の track と `domains` が新規 strategy の scope 解決に使われます。`schedule assessment scaffold` は strategy がまだ無い track でも Timeline と DCT から `kind: work` の対象を収集し、判定済み assessment を `schedule strategy generate` が標準 profile へ展開します。
+カタログを確認した後は、Timeline の track と `domains` が新規 strategy の scope 解決に使われます。strategy に scope と成果物別 `approach_rules` を宣言した後、`schedule strategy generate` が facts と grade から approach を導出して標準 profile へ展開します。
 
 ```text
 tml-index.yaml + dct-*.yaml
-  -> schedule assessment scaffold / prompt / validate
-  -> sch-assessment-<track>.yaml
+  -> sch-strategy-<track>.yaml に scope / approach_rules を宣言
   -> schedule strategy generate --dry-run
   -> sch-strategy-<track>.yaml
   -> schedule build --track <track>

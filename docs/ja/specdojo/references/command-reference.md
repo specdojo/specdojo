@@ -168,56 +168,11 @@ npm run validate:schema:file -- \
 
 Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-guide.md) を参照します。
 
-### 4.1. schedule assessment（成果物・実践の型の利用可能性判定）
+### 4.1. schedule strategy（決定論的な strategy 生成）
 
-`schedule assessment` は、strategy の scope にある成果物について、成果物本体と実践の型（rulebook / recipe / sample / template）が作成・更新の基準として使えるかを判定した結果（`sch-assessment-<track>.yaml`）を扱います。判定結果は `schedule_path` 配下の `assessments/` に保存し、`approach` 選択の根拠として版管理します。
-
-| コマンド                       | 用途                                                          | 例                                                                        |
-| ------------------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `schedule assessment prompt`   | agent へ渡す判定指示（収集済みの事実・判定観点）を出力する    | `specdojo schedule assessment prompt --project prj-0001 --track launch`   |
-| `schedule assessment scaffold` | 事実だけの骨組みを作る、または agent の判定結果を検証保存する | `specdojo schedule assessment scaffold --project prj-0001 --track launch` |
-| `schedule assessment validate` | 保存済みの `sch-assessment-*.yaml` を検証する                 | `specdojo schedule assessment validate --project prj-0001`                |
-
-主要オプション:
-
-| オプション        | 用途                                                    |
-| ----------------- | ------------------------------------------------------- |
-| `--track <track>` | 対象 track を指定する（`prompt` / `scaffold` は必須）   |
-| `--from <path>`   | agent が出力した判定結果を検証して正準パスへ保存する    |
-| `--out <path>`    | `schedule assessment prompt` の出力をファイルへ書き出す |
-| `--dry-run`       | 書き込まずに差分を表示する                              |
-| `--force`         | 既存の判定結果を上書きする                              |
-
-運用手順は次のとおりです。
+`schedule strategy generate` は、DCT、Timeline、strategy の `approach_rules`、Kata の保存済み grade、標準 strategy profile から `sch-strategy-<track>.yaml` を生成します。先に strategy へ scope と成果物別 intent を宣言してください。
 
 ```bash
-specdojo schedule assessment scaffold --project prj-0001 --track launch
-specdojo schedule assessment prompt --project prj-0001 --track launch --out logs/sch-assessment-prompt.md
-# 上記の指示で agent に判定させ、出力 YAML を保存先候補へ書き出す
-specdojo schedule assessment scaffold --project prj-0001 --track launch --from <agent-output>.yaml --force
-specdojo schedule assessment validate --project prj-0001 --track launch
-```
-
-`scaffold` は、`--from` を省略するとコードが収集した事実（成果物と実践の型の実在、宣言形式、`status`、参照切れ、実装エビデンスの解決結果）だけを埋めた骨組みを作ります。既存の判定結果がある場合は上書きせず、差分を表示して終了します。上書きは `--force` で明示します。
-
-検証では、スキーマ適合に加えて、`facts` が実際の解決結果と一致すること、実在する実践の型がすべて判定されていること、`checks` と `usability` が整合すること、`recommended_approach` が判定規則の結果と一致すること、`undecided` に blocking な `open_questions` が添えられていることを確認します。スキーマ単体で検証する場合は次を実行します。
-
-```bash
-npm run validate:schema:file -- \
-  --schema docs/specdojo/schemas/v1/sch-assessment.schema.yaml \
-  --data "docs/ja/**/assessments/sch-assessment-*.yaml" --allow-empty
-```
-
-判定規則と責務分担は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `実践の型の整備状況判定（sch-assessment-<track>.yaml）` を参照します。
-
-### 4.2. schedule strategy（決定論的な strategy 生成）
-
-`schedule strategy generate` は、DCT、Timeline、判定済みの `sch-assessment-<track>.yaml`、標準 strategy profile から `sch-strategy-<track>.yaml` を生成します。新規 track の assessment scaffold も Timeline の `domains` から scope を解決できるため、strategy を先に手書きする必要はありません。
-
-```bash
-specdojo schedule assessment scaffold --project prj-0001 --track data-model
-specdojo schedule assessment prompt --project prj-0001 --track data-model --out logs/sch-assessment-data-model.md
-# agent 出力を assessment scaffold --from で検証保存し、人間が判定内容を確認する
 specdojo schedule strategy generate \
   --project prj-0001 \
   --track data-model \
@@ -247,7 +202,7 @@ specdojo schedule strategy generate \
 
 主担当の解決順は `--owner`、既存 strategy の `owner_rules`、`--default-owner` です。DCT の `done_criteria.roles` はレビュー担当であり、主担当として複製しません。主担当、gate / milestone / pass owner を決定できない場合、または `pm-roles.yaml` に存在しない場合は推測せず停止します。
 
-書き込み前に assessment の schema・facts・scope、DCT の全 `kind: work` の網羅、strategy schema、project ID、参照、milestone ID 重複、`schedule build --dry-run` 相当を検証します。既存 strategy は `--force` なしで保護し、同一内容の再生成は `Unchanged` として書き込みません。生成後は `schedule build --track <track> --force`、`exec refresh` の順に既存コマンドを実行します。
+書き込み前に intent の網羅・重複、追加パラメータ、都度収集した facts、必要な grade、DCT の全 `kind: work` の網羅、strategy schema、project ID、参照、milestone ID 重複、`schedule build --dry-run` 相当を検証します。不足時は暫定値で進めず停止します。既存 strategy は `--force` なしで保護し、同一内容の再生成は `Unchanged` として書き込みません。生成後は `schedule build --track <track> --force`、`exec refresh` の順に既存コマンドを実行します。
 
 ## 5. timeline
 

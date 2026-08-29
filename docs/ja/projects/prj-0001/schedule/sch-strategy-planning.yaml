@@ -12,6 +12,14 @@ scope:
       path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
   include_kinds:
     - work
+approach_rules:
+  - local_ids:
+      - dct-index
+      - tml-index
+      - sch-defaults
+      - sch-strategy-launch
+      - sch-strategy-data-flow
+    intent: author-deliverable
 phase_sets:
   guided-pass:
     - id: draft
@@ -105,9 +113,6 @@ owner_rules:
       - phase_set: review-pass
       - phase_set: finalize-pass
   - local_ids:
-      - sch-assessment-data-flow
-      - sch-assessment-launch
-      - sch-assessment-planning
       - sch-defaults
       - sch-strategy-data-flow
       - sch-strategy-launch

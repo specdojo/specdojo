@@ -102,14 +102,14 @@ PJR-49D2 の品質評価（`specdojo grade`）を導入すると、`KataJudgment
 
 ## 3. 作業内容
 
-| No  | 作業                            | 担当   | 状態 | メモ                                                   |
-| --- | ------------------------------- | ------ | ---- | ------------------------------------------------------ |
-| 1   | intent 宣言化の可否検証         | ARC    | open | `TaskIntent` 7 種を strategy の宣言で表現できるか      |
-| 2   | 廃止可否の判断                  | ARC    | open | 検証結果に基づき廃止・縮退・改名のいずれかを決める     |
-| 3   | 決定論的な approach 導出の実装  | _TODO_ | open | strategy の宣言、facts、grade からの導出               |
-| 4   | facts の扱いの決定              | _TODO_ | open | 都度収集か `.specdojo/` 配下のキャッシュか             |
-| 5   | sch-assessment の削除と実装整理 | _TODO_ | open | schema、実データ、`src` 5 ファイル、`tests` 4 ファイル |
-| 6   | 規範文書の更新                  | _TODO_ | open | sch-rulebook、dct-rulebook、command-reference ほか     |
+| No  | 作業                            | 担当 | 状態 | メモ                                                   |
+| --- | ------------------------------- | ---- | ---- | ------------------------------------------------------ |
+| 1   | intent 宣言化の可否検証         | ARC  | done | 7 種すべてを `approach_rules` で表現可能と確認         |
+| 2   | 廃止可否の判断                  | ARC  | done | 派生値の重複保存となるため廃止を決定                   |
+| 3   | 決定論的な approach 導出の実装  | ARC  | done | strategy の宣言、facts、grade から都度導出             |
+| 4   | facts の扱いの決定              | ARC  | done | 収集が軽量なためキャッシュせず都度収集                 |
+| 5   | sch-assessment の削除と実装整理 | ARC  | done | schema、実データ、CLI、agent prompt、専用テストを削除  |
+| 6   | 規範文書の更新                  | ARC  | done | sch-rulebook、dct-rulebook、command-reference ほか更新 |
 
 ### 3.1. grade が代替できる範囲
 
@@ -155,16 +155,18 @@ intent の宣言化が一部のケースで成立せず agent 判定が残るな
 
 改名する場合、参照は 63 ファイルに及ぶ。`execution` 配下の plan / result 42 件は当時の実行事実の記録であり、遡って書き換えない。新旧の名称が履歴に混在することは許容し、改名した事実と時期を規範文書へ記す。
 
-### 3.5. 未決の論点
+### 3.5. 検証結論
 
-- `TaskIntent` 7 種のうち、strategy の宣言で表現できないものがあるか。
-- 同一 phase_set 内で成果物ごとに intent が分かれるケースを、宣言でどう表現するか。
-- facts を都度収集するか、キャッシュとして保持するか。判断には成果物数と収集コストの実測が必要になる。
-- 廃止する場合、既存 3 track の `sch-assessment-<track>.yaml` を削除するか、参照用に一定期間残すか。
+- 7 種の intent はすべて `approach_rules[].intent` で表現できる。成果物単位の `local_ids` により、同じ phase set 内で intent が分かれる場合も別 rule として宣言できる。
+- `improve-kata` は `kata_target`、`bootstrap-kata-set` と `confirm-with-kata-set` は `bootstrap_scope` を追加すれば、必要な入力を欠落なく表現できる。
+- facts はファイル参照とメタデータ読取で都度収集できるためキャッシュしない。grade は各 Kata 文書のメタデータを正本とする。
+- `sch-assessment` は派生 facts と導出結果の重複保存になるため廃止し、既存 3 track の実データも削除する。過去の execution plan / result は実行記録として維持する。
 
 ## 4. 対応結果
 
--
+`sch-assessment` を廃止し、strategy の `approach_rules`、都度収集する DCT / Kata facts、保存済み grade から approach を決定論的に導出する構造へ移行した。7 種の intent はすべて schema で宣言でき、必要入力が欠ける場合は `undecided` を保存せず strategy 生成をエラー停止する。
+
+専用 schema、CLI の `schedule assessment`、agent prompt、実データ 3 件、専用テストを削除した。Planning カタログから assessment 成果物を外し、既存 3 strategy へ `approach_rules` を追加した。facts のキャッシュは設けていない。
 
 ## 5. 関連ドキュメント
 

@@ -88,6 +88,67 @@ properties:
           type: string
           enum: ["work", "control", "generated"]
 
+  approach_rules:
+    type: array
+    minItems: 1
+    description: >
+      Per-deliverable task intent used to derive approach from current catalog facts and stored
+      grades. Every work deliverable in scope must occur exactly once; semantic validation checks
+      coverage and duplicates. Rules may group local_ids only when all parameters are identical.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - local_ids
+        - intent
+      properties:
+        local_ids:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+        intent:
+          type: string
+          enum:
+            - author-deliverable
+            - bootstrap-kata-set
+            - reflect-implementation
+            - deduplicate-across-deliverables
+            - improve-kata
+            - confirm-deliverable
+            - confirm-with-kata-set
+        kata_target:
+          type: string
+          enum: ["rulebook", "recipe", "sample", "template"]
+        bootstrap_scope:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            enum: ["rulebook", "recipe", "sample", "template"]
+      allOf:
+        - if:
+            properties:
+              intent:
+                const: improve-kata
+          then:
+            required: [kata_target]
+          else:
+            not:
+              required: [kata_target]
+        - if:
+            properties:
+              intent:
+                enum: [bootstrap-kata-set, confirm-with-kata-set]
+          then:
+            required: [bootstrap_scope]
+          else:
+            not:
+              required: [bootstrap_scope]
+
   phase_sets:
     type: object
     description: >
