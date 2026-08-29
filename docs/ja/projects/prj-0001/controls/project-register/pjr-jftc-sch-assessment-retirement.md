@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T00:39:35Z"
@@ -62,6 +62,19 @@ specdojo:
           from: "`sch-assessment` は track 単位で成果物と kata（rulebook / recipe / sample / template）の整備状況を評価し、`recommended_approach` を導くものである。schema の description 自身が readiness と説明しているにもかかわらず、名前が `assessment` という汎用語のため、何を評価するのかが名前から読み取れない。"
           to: specdojo grade が kata usability の judgment を代替できるため、sch-assessment の agent 判定は intent の決定を残すのみとなる。intent を strategy 側の宣言で表現できれば recommended_approach は決定論的に導出でき、agent 再実行を避けるための保存という sch-assessment の存在理由が消える。判断の履歴は exec plan が持つため、成果物としてのファイルは不要になる見込み。intent 宣言化の可否を検証し、可能なら sch-assessment を廃止して schedule 生成時の都度導出へ移行する。廃止しない場合に限り sch-readiness などへの改名を検討する。
       previous_event_id: reg_d456456e8e514734bf5fdae2b5de387a
+    - v: 1
+      id: reg_8e73b42c62564da6b03f1a8437b41160
+      ts: "2026-08-29T10:27:56Z"
+      action: start
+      actor: codex-expert-executor
+      from_status: open
+      to_status: in-progress
+      reason: work started
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      previous_event_id: reg_c4a2eafa366542a8aea76417691db51c
 ---
 
 # PJR-JFTC sch-assessment の廃止可否を判断し approach の決定論的導出へ移行する
