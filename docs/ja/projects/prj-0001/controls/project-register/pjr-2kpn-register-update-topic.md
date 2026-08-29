@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-08-29T06:54:31Z"
@@ -46,6 +46,19 @@ specdojo:
         - field: due
           from: ""
           to: "2026-09-30"
+    - v: 1
+      id: reg_a82bd40af09346d9a8e9939307e695c8
+      ts: "2026-08-29T11:02:14Z"
+      action: start
+      actor: codex-expert-executor
+      from_status: open
+      to_status: in-progress
+      reason: work started
+      changes:
+        - field: status
+          from: open
+          to: in-progress
+      previous_event_id: reg_220c4eda72ff46a29ed52c3a2ceba550
 ---
 
 # PJR-2KPN register update に個票の topic 変更手段を追加する
