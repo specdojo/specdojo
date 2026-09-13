@@ -40,7 +40,7 @@ groups:
         name: 概念データフロー図（初期セットアップ）
         kind: work
         overview: config・register・catalog・実行補助設定を初期化し、プロジェクトの計画と実行を開始できる状態にする流れを可視化し定義する
-        path: cdfd-init.md
+        path: /docs/ja/product/trash/cdfd-init.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -112,7 +112,7 @@ groups:
         name: 概念データフロー図（登録簿ライフサイクル）
         kind: work
         overview: 立ち上げ時の未整理事項と運用中の計画外事項を個票へ登録し、判断・実行・待機・レビュー・承認・終了・再開、派生ビュー生成・履歴確認と例外復旧まで継続管理する流れを可視化し定義する
-        path: cdfd-register-lifecycle.md
+        path: /docs/ja/product/trash/cdfd-register-lifecycle.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -150,7 +150,7 @@ groups:
         name: 概念データフロー図（カタログ〜計画展開）
         kind: work
         overview: 成果物カタログとスケジュール戦略を検証し、Scheduleと実行状態・Ready・CPM・timelineへ展開する流れを可視化し定義する
-        path: cdfd-catalog-planning.md
+        path: /docs/ja/product/trash/cdfd-catalog-planning.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -178,7 +178,7 @@ groups:
         name: 概念データフロー図（タスク実行ライフサイクル）
         kind: work
         overview: Readyタスクの選択・claimからhuman/agentによる実行、レビュー・ready確定、完了記録、中断・訂正・再実行までの流れを可視化し定義する
-        path: cdfd-task-execution.md
+        path: /docs/ja/product/trash/cdfd-task-execution.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -217,7 +217,7 @@ groups:
         name: 概念データフロー図（定期処理）
         kind: work
         overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、順次実行cycle、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
-        path: cdfd-routine.md
+        path: /docs/ja/product/trash/cdfd-routine.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -246,7 +246,7 @@ groups:
         name: 概念データフロー図（複数プロジェクト・ブランチ並行処理）
         kind: work
         overview: project develop・feature・execの各ブランチとworktreeを用いて複数プロジェクト・タスクを分離し、同期・統合する流れを可視化し定義する
-        path: cdfd-multi-project.md
+        path: /docs/ja/product/trash/cdfd-multi-project.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -271,7 +271,7 @@ groups:
         name: 概念データフロー図（agent・provider構成の運用変更）
         kind: work
         overview: 作業要件と実行結果に応じてagent・provider・phaseの構成を評価し、承認・変更・検証する流れを可視化し定義する
-        path: cdfd-agent-config-operation.md
+        path: /docs/ja/product/trash/cdfd-agent-config-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -299,7 +299,7 @@ groups:
         name: 概念データフロー図（成果物・派生ビュー・索引生成）
         kind: work
         overview: カタログ・登録簿・実行状態などの正本から、成果物本体・表示ビュー・YAML表示ページ・文書索引を生成し同期する流れを可視化し定義する
-        path: cdfd-derived-content.md
+        path: /docs/ja/product/trash/cdfd-derived-content.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -332,7 +332,7 @@ groups:
         name: 概念データフロー図（進捗監視・報告・ログ管理）
         kind: work
         overview: 実行状態・CPM・マイルストーン・登録簿を監視し、遅延や滞留を検知して進捗報告・議事録・管理ログへ反映する流れを可視化し定義する
-        path: cdfd-reporting.md
+        path: /docs/ja/product/trash/cdfd-reporting.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -368,7 +368,7 @@ groups:
         name: 概念データフロー図（非推奨化・保管）
         kind: work
         overview: 役割を終えた、または新IDへ引き継がれた文書を非推奨化し、id・Schedule taskIDを維持したまま誤参照を防ぐ保管場所へ移す流れを可視化し定義する
-        path: cdfd-deprecation.md
+        path: /docs/ja/product/trash/cdfd-deprecation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation

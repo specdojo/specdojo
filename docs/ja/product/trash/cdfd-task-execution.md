@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:cdfd-task-execution
   type: flow
-  status: ready
+  status: deprecated
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - prj-0001:cdfd-catalog-planning
