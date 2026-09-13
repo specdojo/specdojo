@@ -67,15 +67,19 @@ scope:
 
 | No  | 作業                                                              | 担当 | 状態 | メモ                                   |
 | --- | ----------------------------------------------------------------- | ---- | ---- | -------------------------------------- |
-| 1   | schema に `scope.catalogs[].local_ids` を追加する                 | ARC  | open | 省略時は全件                           |
-| 2   | `schedule build` の scope 展開と rules の網羅検査を部分集合にする | ARC  | open | 不正な local_id はエラー               |
-| 3   | `schedule strategy generate` を同じ選択に従わせる                 | ARC  | open | -                                      |
-| 4   | 複数 track で同じ成果物を選択した場合の状態表示を確認する         | ARC  | open | `exec refresh`、dashboard              |
-| 5   | ガイドと sch-rulebook に分担・再修正の意味を記述する              | ARC  | open | 定義した track と修正する track の区別 |
+| 1   | schema に `scope.catalogs[].local_ids` を追加する                 | ARC  | done | 省略時は全件                           |
+| 2   | `schedule build` の scope 展開と rules の網羅検査を部分集合にする | ARC  | done | 不正な local_id はエラー               |
+| 3   | `schedule strategy generate` を同じ選択に従わせる                 | ARC  | done | -                                      |
+| 4   | 複数 track で同じ成果物を選択した場合の状態表示を確認する         | ARC  | done | `exec refresh`、dashboard              |
+| 5   | ガイドと sch-rulebook に分担・再修正の意味を記述する              | ARC  | done | 定義した track と修正する track の区別 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- schema と build / generator に catalog ごとの `local_ids` 選択を追加し、省略時の全件選択との後方互換を維持した。
+- 選択部分集合に対する `approach_rules` / `owner_rules` の網羅・重複・範囲外参照と、catalog に存在しない `local_id` を検出するようにした。
+- 同じ成果物を複数 track が選択した場合に、track を含む task ID と schedule file によって状態を区別できることを単体テストで確認対象にした。
+- [[specdojo:track-design-guide]]、[[specdojo:schedule-design-guide]]、[[specdojo:sch-rulebook]] と CLI リファレンスへ、分担・再修正および定義責任の意味を反映した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

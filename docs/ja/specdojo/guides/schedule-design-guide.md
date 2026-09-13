@@ -85,6 +85,19 @@ Schedule は用途別に4種類のファイルで管理します。
 
 `sch-strategy-<track>.yaml` は `schedule build` の生成入力であり、DCT・Timeline・`approach_rules`・Kata grade・標準 profile から `schedule strategy generate` で更新できます。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。
 
+strategy の scope は catalog と成果物の二段階で指定します。`scope.catalogs[].local_ids` を省略すると、従来どおりその catalog で `include_kinds` に一致する全成果物が対象です。指定した場合は一致する成果物との積集合だけが対象となり、`approach_rules` と `owner_rules` はその部分集合を重複なく網羅します。カタログに存在しない `local_id`、選択外の rule、rule の欠落・重複はエラーになります。
+
+```yaml
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids: [cdfd-onboarding, cdfd-plan]
+  include_kinds: [work]
+```
+
+同じ成果物を複数 strategy が選択しても構いません。生成 task ID は `T-<TRACK>-<local_id>-<suffix>` なので、各 track の作成・レビュー・完了状態は `exec refresh` と dashboard で別々に扱われます。成果物カタログを定義する track は Timeline の `catalog_status: primary` で示し、別 track による再修正はその定義責任や所属ドメインを変更しません。`schedule strategy generate` は既存 strategy の catalog ごとの `local_ids` を維持し、選択外の成果物には rule やタスクを生成しません。
+
 計画成果物を Schedule に載せるプロジェクトでは、専用の `planning` ドメインと `planning` トラックを用います。人または agent が更新する計画入力は `kind: work`、track と milestones は `kind: generated` としてカタログへ登録します。ただし `sch-strategy-planning` 自身は `kind: control` とするか planning scope 外へ置き、strategy が自身の作成タスクを生成する循環を避けます。`dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は Schedule 対象にしません。
 
 ## 2. sch-trackの生成

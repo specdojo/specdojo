@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-S190",
+  "run_id": "20260913T220811544Z-f2fc2da0",
+  "updated_at": "2026-09-13T22:20:18.926Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-13T22:08:11.544Z",
+      "completed_at": "2026-09-13T22:16:52.354Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-S190/20260913T220811544Z-f2fc2da0/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-13T22:17:31.943Z",
+      "completed_at": "2026-09-13T22:20:18.910Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-s190-20260913T220727Z-8002-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-13T22:20:18.926Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-s190-20260913T220727Z-8002-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-s190-20260913T220727Z-8002-result.md"
+  }
+}

@@ -80,6 +80,16 @@ properties:
               type: string
               pattern: "^/"
               description: "Absolute path to the catalog YAML file."
+            local_ids:
+              type: array
+              minItems: 1
+              uniqueItems: true
+              description: >
+                Deliverable local_ids selected from this catalog. When omitted, every deliverable
+                matching include_kinds is selected.
+              items:
+                type: string
+                minLength: 1
       include_kinds:
         type: array
         minItems: 1

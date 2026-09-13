@@ -130,22 +130,23 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 
 ### 5.4. strategy の記述
 
-- `scope.catalogs` は絶対パスで記載し、`include_kinds: [work]` で `kind: control` / `generated` を除外する。
-- `owner_rules` は、カタログに存在する全 `kind: work` の `local_id` を網羅する。
+- `scope.catalogs` は絶対パスで記載し、`include_kinds: [work]` で `kind: control` / `generated` を除外する。catalog 内の一部だけを対象にする場合は、その catalog の `local_ids` に存在する成果物 ID を重複なく指定する。`local_ids` の省略時は対象 kind の全成果物を選択する。
+- `approach_rules` と `owner_rules` は、scope で選択された全 `kind: work` の `local_id` を重複なく網羅し、選択外の `local_id` を含めない。
+- 同じ成果物を複数 track が選択してよい。各 track の task ID と状態は独立させ、別 track での再修正を理由に成果物カタログの所属や Timeline の `catalog_status: primary` が示す定義責任を移さない。
 - `cross_domain_dependencies` は、カタログの `depends_on` に含まれないドメイン間依存だけを補完し、重複して記載しない。
 - `cross_deliverable_passes` は完了済みの `after_gate` と後続の `before_phase_set` の間に置き、scope を `catalogs` / `groups` / `local_ids` で明示する。
 - レビュー担当ロールは各成果物の `done_criteria` から取得されるため、strategy に重複して記載しない。
 
 ### 5.5. intent と grade からの strategy 生成
 
-- `schedule strategy generate --track <track>` は、既存 strategy の `scope.catalogs` を優先し、新規 track では Timeline の `domains` から物理分割を含む DCT を解決する。scope は `include_kinds: [work]` 固定とする。
+- `schedule strategy generate --track <track>` は、既存 strategy の `scope.catalogs` と catalog ごとの `local_ids` を優先し、新規 track では Timeline の `domains` から物理分割を含む DCT を解決する。scope は `include_kinds: [work]` 固定とし、既存の `local_ids` がある場合は選択部分集合だけを生成対象にする。
 - `approach_rules` は scope の全 work 成果物を重複なく網羅し、7 種の intent を成果物別に宣言する。`improve-kata` は `kata_target`、`bootstrap-kata-set` と `confirm-with-kata-set` は `bootstrap_scope` も宣言する。
 - `author-deliverable` の approach は Kata 宣言と保存済み grade から `fully-guided` / `recipe-guided` / `freeform` へ導出する。他の intent は目的別 approach へ一意に写像し、必要な evidence や追加パラメータがなければ生成を停止する。
 - 導出した approach は標準 profile へ写像し、`phase_sets`、`default_phase_sets`、`owner_rules`、phase gate、finalize 系フェーズをコードで組み立てる。profile は duration、`execution`、`mode`、`approach`、agent pipeline を一元管理する。
 - 主担当は `--owner <local_id>=<ROLE>`、既存 strategy の `owner_rules`、`--default-owner <ROLE>` の順に解決する。`done_criteria.roles` はレビュー観点であり主担当の根拠にしない。未解決または `pm-roles.yaml` に存在しない owner があれば生成を停止する。
 - `bootstrap` と他の approach が同一 track に混在する場合は成果物別に profile を分け、既定では同一カタログの非 bootstrap 成果物を代表 bootstrap 成果物の後に配置する。不要な場合だけ `--no-bootstrap-ordering` を明示する。
 - `cross-deliverable-dedup` が複数成果物に必要と判定された場合は、前段 gate と `refine-pass` の間に一つの `cross_deliverable_passes` を生成する。対象が一件だけ、前段 author フェーズがない、または pass owner が解決できない場合は停止する。
-- 書き込み前に intent の網羅性、都度収集した facts、Kata grade、strategy schema、project ID、参照、全 strategy の milestone ID、`schedule build --dry-run` 相当を検証する。既存ファイルは `--force` なしで上書きせず、同じ入力の再実行では不要な差分を生じさせない。
+- 書き込み前に選択した `local_ids` の実在、選択部分集合に対する intent と owner の網羅性、都度収集した facts、Kata grade、strategy schema、project ID、参照、全 strategy の milestone ID、`schedule build --dry-run` 相当を検証する。既存ファイルは `--force` なしで上書きせず、同じ入力の再実行では不要な差分を生じさせない。
 
 ## 6. 禁止事項
 

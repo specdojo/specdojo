@@ -36,7 +36,7 @@ export type StrategyScope = {
   strategyId: string;
   track: string;
   projectId: string;
-  catalogs: Array<{ id: string; path: string }>;
+  catalogs: Array<{ id: string; path: string; local_ids?: string[] }>;
   includeKinds: DctKind[];
 };
 
@@ -149,8 +149,10 @@ export function collectApproachFacts(opts: { repoRoot: string; scope: StrategySc
     }
     const collected: ResolvedDeliverable[] = [];
     collectResolvedDeliverables(doc.groups, resolveBasePath("", doc.base_path), collected);
+    const selectedLocalIds = catalogRef.local_ids ? new Set(catalogRef.local_ids) : null;
     for (const { item, resolvedPath } of collected) {
       if (!opts.scope.includeKinds.includes(item.kind)) continue;
+      if (selectedLocalIds && !selectedLocalIds.has(item.local_id)) continue;
       if (seen.has(item.local_id)) {
         warnings.push(`Duplicate local_id in scope (kept first): ${item.local_id}`);
         continue;

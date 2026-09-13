@@ -12,7 +12,7 @@ import {
 // --- Strategy file types ---
 
 type StrategyScope = {
-  catalogs: Array<{ id: string; path: string }>;
+  catalogs: Array<{ id: string; path: string; local_ids?: string[] }>;
   include_kinds: string[];
 };
 
@@ -95,6 +95,7 @@ type StrategyDoc = {
   phase_sets: Record<string, StrategyPhase[]>;
   default_phase_sets?: PhaseSetSelection;
   default_phase_set?: string;
+  approach_rules?: Array<{ local_ids: string[] }>;
   owner_rules: OwnerRule[];
   cross_domain_dependencies?: CrossDomainDep[];
   phase_gates?: PhaseGate[];
@@ -165,6 +166,8 @@ function collectDeliverables(
   sections: DctSection[],
   includeKinds: string[],
   catalogId: string,
+  selectedLocalIds: Set<string> | null,
+  catalogLocalIds: Set<string>,
   topLevelGroup: string | null,
   out: DeliverableInfo[],
 ): void {
@@ -172,11 +175,21 @@ function collectDeliverables(
     // Lock the top-level group name on the first call; preserve it for nested calls.
     const effectiveGroup = topLevelGroup ?? section.name ?? null;
     if (section.groups) {
-      collectDeliverables(section.groups, includeKinds, catalogId, effectiveGroup, out);
+      collectDeliverables(
+        section.groups,
+        includeKinds,
+        catalogId,
+        selectedLocalIds,
+        catalogLocalIds,
+        effectiveGroup,
+        out,
+      );
     }
     if (!section.deliverables) continue;
     for (const item of section.deliverables) {
+      catalogLocalIds.add(item.local_id);
       if (!includeKinds.includes(item.kind)) continue;
+      if (selectedLocalIds && !selectedLocalIds.has(item.local_id)) continue;
       if (!item.path) continue;
       out.push({
         local_id: item.local_id,
@@ -186,6 +199,35 @@ function collectDeliverables(
         groupName: effectiveGroup,
       });
     }
+  }
+}
+
+function validateRuleCoverage(
+  label: "approach_rules" | "owner_rules",
+  rules: Array<{ local_ids: string[] }>,
+  deliverables: DeliverableInfo[],
+  errors: string[],
+): void {
+  const scopedLocalIds = new Set(deliverables.map((deliverable) => deliverable.local_id));
+  const coveredLocalIds = new Set<string>();
+  for (const rule of rules) {
+    for (const localId of rule.local_ids) {
+      if (!scopedLocalIds.has(localId)) {
+        errors.push(`${label}: local_id '${localId}' is not in the selected scope`);
+      }
+      if (coveredLocalIds.has(localId)) {
+        errors.push(`${label}: local_id '${localId}' is covered more than once`);
+      }
+      coveredLocalIds.add(localId);
+    }
+  }
+  for (const localId of scopedLocalIds) {
+    if (coveredLocalIds.has(localId)) continue;
+    errors.push(
+      label === "owner_rules"
+        ? `No owner_rule found for local_id: ${localId}`
+        : `No approach_rule found for local_id: ${localId}`,
+    );
   }
 }
 
@@ -294,7 +336,41 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       errors.push(`${catalogPath}: missing groups field`);
       continue;
     }
-    collectDeliverables(doc.groups, strategy.scope.include_kinds, ref.id, null, allDeliverables);
+    if (ref.local_ids && ref.local_ids.length === 0) {
+      errors.push(`scope.catalogs '${ref.id}': local_ids must contain at least one local_id`);
+      continue;
+    }
+    const selectedLocalIds = ref.local_ids ? new Set(ref.local_ids) : null;
+    if (selectedLocalIds && selectedLocalIds.size !== ref.local_ids!.length) {
+      errors.push(`scope.catalogs '${ref.id}': local_ids must not contain duplicates`);
+    }
+    const catalogLocalIds = new Set<string>();
+    collectDeliverables(
+      doc.groups,
+      strategy.scope.include_kinds,
+      ref.id,
+      selectedLocalIds,
+      catalogLocalIds,
+      null,
+      allDeliverables,
+    );
+    for (const localId of selectedLocalIds ?? []) {
+      if (!catalogLocalIds.has(localId)) {
+        errors.push(
+          `scope.catalogs '${ref.id}': local_id '${localId}' was not found in the catalog`,
+        );
+      }
+    }
+  }
+
+  const hasDeliverableSelection = strategy.scope.catalogs.some(
+    (catalog) => catalog.local_ids !== undefined,
+  );
+  if (hasDeliverableSelection) {
+    validateRuleCoverage("owner_rules", strategy.owner_rules, allDeliverables, errors);
+    if (strategy.approach_rules) {
+      validateRuleCoverage("approach_rules", strategy.approach_rules, allDeliverables, errors);
+    }
   }
 
   if (errors.length > 0)

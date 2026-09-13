@@ -91,3 +91,25 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     expect(validate(strategy)).toBe(false);
   });
 });
+
+describe("sch-strategy.schema.yaml catalog local_ids", () => {
+  const validate = compileStrategySchema();
+
+  it("catalog ごとの成果物選択を受け入れる", () => {
+    const strategy = loadStrategyFixture();
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["prj-charter"];
+
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("空または重複した local_ids を拒否する", () => {
+    const strategy = loadStrategyFixture();
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["prj-charter", "prj-charter"];
+
+    expect(validate(strategy)).toBe(false);
+    scope.catalogs[0].local_ids = [];
+    expect(validate(strategy)).toBe(false);
+  });
+});

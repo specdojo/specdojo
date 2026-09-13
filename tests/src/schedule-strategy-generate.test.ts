@@ -204,6 +204,73 @@ describe("strategy generator", () => {
     expect(validateStrategySchema(doc, root)).toEqual([]);
   });
 
+  it("既存 scope の local_ids を保ち、選択した成果物だけの strategy を再生成する", () => {
+    const path = join(schedulePath, "sch-strategy-demo.yaml");
+    const strategy = yaml.load(readFileSync(path, "utf8")) as Record<string, unknown>;
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["representative"];
+    strategy.approach_rules = [
+      {
+        local_ids: ["representative"],
+        intent: "bootstrap-kata-set",
+        bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
+      },
+    ];
+    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+
+    const result = generateStrategy({
+      repoRoot: root,
+      schedulePath,
+      catalogPath,
+      timelinePath,
+      rolesPath,
+      projectId: "prj-0001",
+      track: "demo",
+      defaultOwner: "DEV",
+      gateOwner: "PO",
+      milestoneOwner: "PO",
+    });
+
+    expect(result.errors).toEqual([]);
+    expect(result.doc?.scope).toMatchObject({
+      catalogs: [{ local_ids: ["representative"] }],
+    });
+    expect(result.doc?.owner_rules).toEqual([
+      expect.objectContaining({ local_ids: ["representative"] }),
+    ]);
+    expect(result.doc?.approach_rules).toEqual([
+      expect.objectContaining({ local_ids: ["representative"] }),
+    ]);
+    expect(result.doc?.cross_domain_dependencies).toBeUndefined();
+  });
+
+  it("既存 scope の local_ids がカタログに存在しない場合は停止する", () => {
+    const path = join(schedulePath, "sch-strategy-demo.yaml");
+    const strategy = yaml.load(readFileSync(path, "utf8")) as Record<string, unknown>;
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["missing"];
+    strategy.approach_rules = [{ local_ids: ["missing"], intent: "author-deliverable" }];
+    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+
+    const result = generateStrategy({
+      repoRoot: root,
+      schedulePath,
+      catalogPath,
+      timelinePath,
+      rolesPath,
+      projectId: "prj-0001",
+      track: "demo",
+      defaultOwner: "DEV",
+      gateOwner: "PO",
+      milestoneOwner: "PO",
+    });
+
+    expect(result.doc).toBeNull();
+    expect(result.errors.join("\n")).toContain(
+      "scope.local_ids の 'missing' がカタログに存在しない",
+    );
+  });
+
   it("owner を解決できない場合は推測せず停止する", () => {
     const result = generateStrategy({
       repoRoot: root,

@@ -46,6 +46,8 @@ export type StrategyCatalogRef = {
   id: string;
   /** Repository-root absolute path as required by sch-strategy.schema.yaml (leading slash). */
   path: string;
+  /** Optional per-catalog deliverable selection. Omission keeps the legacy all-items behavior. */
+  local_ids?: string[];
   domain: string;
   title?: string;
 };
@@ -109,7 +111,7 @@ export function resolveTrackScopeCatalogs(opts: {
   const errors: string[] = [];
 
   const byDomain = collectCatalogFilesByDomain(catalogPath);
-  const refFor = (filePath: string): StrategyCatalogRef | null => {
+  const refFor = (filePath: string, localIds?: string[]): StrategyCatalogRef | null => {
     const doc = readYaml(filePath) as DctDoc | null;
     if (!doc?.id || !doc.domain) {
       errors.push(`${filePath}: id / domain が読み取れないため scope に含められない。`);
@@ -118,6 +120,7 @@ export function resolveTrackScopeCatalogs(opts: {
     return {
       id: doc.id,
       path: toRepoAbsolute(filePath, repoRoot),
+      ...(localIds ? { local_ids: localIds } : {}),
       domain: doc.domain,
       ...(doc.title ? { title: doc.title } : {}),
     };
@@ -164,12 +167,24 @@ export function resolveTrackScopeCatalogs(opts: {
     const catalogs: StrategyCatalogRef[] = [];
     for (const entry of existingCatalogs) {
       if (!isRecord(entry) || typeof entry.path !== "string") continue;
+      let localIds: string[] | undefined;
+      if (entry.local_ids !== undefined) {
+        if (
+          !Array.isArray(entry.local_ids) ||
+          entry.local_ids.length === 0 ||
+          entry.local_ids.some((localId) => typeof localId !== "string" || localId.length === 0)
+        ) {
+          errors.push(`scope.catalogs: ${entry.path} の local_ids は空でない文字列配列にする。`);
+        } else {
+          localIds = entry.local_ids as string[];
+        }
+      }
       const filePath = resolve(repoRoot, entry.path.replace(/^\//, ""));
       if (!existsSync(filePath)) {
         errors.push(`scope.catalogs: カタログが見つからない: ${entry.path}`);
         continue;
       }
-      const ref = refFor(filePath);
+      const ref = refFor(filePath, localIds);
       if (ref) catalogs.push(ref);
     }
     const known = new Set(catalogs.map((catalog) => catalog.id));
@@ -217,8 +232,16 @@ export function collectScopeDeliverables(opts: {
     const collected: Array<{ item: { local_id: string; kind: string; depends_on?: string[] } }> =
       [];
     collectResolvedDeliverables(doc.groups, resolveBasePath("", doc.base_path), collected as never);
+    const catalogLocalIds = new Set(collected.map(({ item }) => item.local_id));
+    for (const localId of catalog.local_ids ?? []) {
+      if (!catalogLocalIds.has(localId)) {
+        errors.push(`${catalog.id}: scope.local_ids の '${localId}' がカタログに存在しない。`);
+      }
+    }
+    const selectedLocalIds = catalog.local_ids ? new Set(catalog.local_ids) : null;
     for (const { item } of collected) {
       if (!opts.includeKinds.includes(item.kind)) continue;
+      if (selectedLocalIds && !selectedLocalIds.has(item.local_id)) continue;
       deliverables.push({
         local_id: item.local_id,
         catalog_id: catalog.id,
@@ -618,7 +641,11 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
       ? { settings: input.preserved.settings }
       : {}),
     scope: {
-      catalogs: input.catalogs.map((catalog) => ({ id: catalog.id, path: catalog.path })),
+      catalogs: input.catalogs.map((catalog) => ({
+        id: catalog.id,
+        path: catalog.path,
+        ...(catalog.local_ids ? { local_ids: catalog.local_ids } : {}),
+      })),
       include_kinds: input.includeKinds,
     },
     approach_rules: input.preserved.approachRules,
@@ -930,7 +957,11 @@ export function generateStrategy(opts: {
     strategyId: `${opts.projectId}:sch-strategy-${opts.track}`,
     track: opts.track,
     projectId: opts.projectId,
-    catalogs: scope.catalogs.map((catalog) => ({ id: catalog.id, path: catalog.path })),
+    catalogs: scope.catalogs.map((catalog) => ({
+      id: catalog.id,
+      path: catalog.path,
+      ...(catalog.local_ids ? { local_ids: catalog.local_ids } : {}),
+    })),
     includeKinds: ["work"] as DctKind[],
   };
   const current = collectApproachFacts({ repoRoot: opts.repoRoot, scope: strategyScope });
