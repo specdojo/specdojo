@@ -395,3 +395,263 @@ groups:
           - text: 非推奨化の承認境界と、恒久的な削除・復元の方針が本領域の対象外として未定義のままであることを承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
+  - name: プロセスグループ別 CDFD
+    deliverables:
+      - local_id: cdfd-onboarding
+        name: 概念データフロー図（Onboarding）
+        kind: work
+        overview: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える Onboarding グループ（P-01）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-onboarding.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: specdojo.config.json の読込と初期化
+          - kind: implementation
+            path: src/exec-provider-scaffold.ts
+            purpose: provider 別の agent 定義・設定の雛形配置
+          - kind: implementation
+            path: src/catalog-scaffold.ts
+            purpose: 成果物カタログの雛形生成
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿の初期化（scaffold）
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Onboarding（P-01）を詳細化する。repository からの導入、既存プロジェクトへの導入、Detached Unit の複数ケースを扱う。旧 cdfd-init は参照しない
+        done_criteria:
+          - text: 全体概要の P-01 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Kata の配置と稼働構成の初期化がプロセス単位で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先が識別でき、後続の Plan への引き渡しがグループ外委譲として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 既存設定の検出、雛形の不足、権限不足など、成果の採否を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-plan
+        name: 概念データフロー図（Plan）
+        kind: work
+        overview: 登録簿定義、成果物カタログ定義、スケジュール計画展開、定期実行定義、ジョブ定義からなる Plan グループ（P-02〜P-06）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-plan.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目の起票・更新・状態遷移
+          - kind: implementation
+            path: src/catalog-build.ts
+            purpose: 成果物カタログの検証と派生生成
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: 成果物カタログとスケジュール戦略からの track 生成
+          - kind: implementation
+            path: src/schedule-strategy-generate.ts
+            purpose: intent と Kata grade からの approach 導出
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期実行定義の検証と due 判定
+          - kind: implementation
+            path: src/job.ts
+            purpose: ジョブ定義の検証と Job Run の生成
+        depends_on:
+          - cdfd-overview
+        note: 5 領域を含むため、概念データフローは領域ごとに分ける。定期実行の起動は Orchestrator の責務であり本書では扱わない。旧 cdfd-register-lifecycle・cdfd-catalog-planning・cdfd-routine は参照しない
+        done_criteria:
+          - text: 全体概要の P-02〜P-06 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: 登録項目の状態の定義と遷移を本書で再定義せず、STSD / CSTD への参照に留めていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: カタログ検証の失敗、依存の循環、strategy と Kata grade の不整合など、後続起動を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-do
+        name: 概念データフロー図（Do）
+        kind: work
+        overview: 実行計画に基づいて人または AI Agent が Kata を参照してタスクを実行し、成果物と実行記録を残す Do グループ（P-07）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。定期実行・ジョブ・並行実行はタスク実行の実行形態として扱う
+        path: cdfd-do.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: plan の生成、agent の起動、result の記録、状態遷移
+          - kind: implementation
+            path: src/exec-worktree.ts
+            purpose: worktree による並行実行と統合
+          - kind: implementation
+            path: src/exec-agent-protected-config.ts
+            purpose: agent が変更できない設定の保護
+          - kind: implementation
+            path: src/exec-protection-handoff.ts
+            purpose: 保護対象の変更を申し送りへ記録
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Do（P-07）を詳細化する。executor / reporter pipeline、worktree 隔離、保護機構による block と申し送りを主要例外として扱う。旧 cdfd-task-execution・cdfd-multi-project は参照しない
+        done_criteria:
+          - text: 全体概要の P-07 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Schedule task・登録項目・Job のいずれを対象にしても同じプロセスで説明できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 実行計画、Kata、稼働構成、成果物、登録簿、実行記録への読み書きがプロセス単位で識別でき、worktree 隔離と統合ブランチへの merge が並行実行の形態として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-check
+        name: 概念データフロー図（Check）
+        kind: work
+        overview: 成果物評価、進捗可視化報告、派生生成閲覧提供からなる Check グループ（P-08〜P-10）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-check.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/grade.ts
+            purpose: Kata と成果物の評価、done_criteria の判定、content_hash による変更検知
+          - kind: implementation
+            path: src/dashboard.ts
+            purpose: 進捗ダッシュボードの生成
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 派生生成の一括実行
+          - kind: implementation
+            path: src/doc-index.ts
+            purpose: 文書索引の生成
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Check（P-08〜P-10）を詳細化する。成果物評価（grade）と review の責務分担を明示する。旧 cdfd-reporting・cdfd-derived-content は参照しない
+        done_criteria:
+          - text: 全体概要の P-08〜P-10 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 評価結果、進捗報告、派生ビュー・索引の生成先と、成果物・実行記録・登録簿・Schedule（track）からの参照がプロセス単位で識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 評価対象の変更検知、評価の失敗、生成物の不整合など、Action への引き渡しを変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-action
+        name: 概念データフロー図（Action）
+        kind: work
+        overview: タスク完了、稼働構成管理、非推奨化保管からなる Action グループ（P-11〜P-13）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-action.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録項目の review と close の遷移
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: agent・provider・実行既定値の稼働構成
+          - kind: implementation
+            path: src/deliverable-trash.ts
+            purpose: 非推奨化した成果物の trash への退避
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Action（P-11〜P-13）を詳細化する。完了確定、構成変更の承認、非推奨化の判断は人間が担う。旧 cdfd-agent-config-operation・cdfd-deprecation は参照しない
+        done_criteria:
+          - text: 全体概要の P-11〜P-13 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 完了確定、構成変更の承認、非推奨化の判断が人間の判断として表され、承認境界が承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-orchestrator
+        name: 概念データフロー図（Orchestrator）
+        kind: work
+        overview: Plan・Do・Check・Action へ要求を発行して PDCA を回す Orchestrator グループ（P-14）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含む
+        path: cdfd-orchestrator.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期実行の due 判定と起動、routine-state の記録
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: auto 実行と Ready task の選択
+          - kind: implementation
+            path: .claude/agents/specdojo-orchestrator.md
+            purpose: 対話型オーケストレーターの入口指示
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要の Orchestrator（P-14）を詳細化する。各グループの内部処理は担当せず、要求の発行と実行状態の受け取りに限る。旧 cdfd-routine は参照しない
+        done_criteria:
+          - text: 全体概要の P-14 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、対話型運転と自動運転が同じ要求発行のプロセスで説明できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録への読み書きと、Plan・Do・Check・Action への要求がグループ外委譲として識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 実行ロックの競合、定期実行の取りこぼし、要求先の失敗など、サイクルの継続を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+  - name: ユースケース別 CDFD
+    deliverables:
+      - local_id: cdfd-uc-register
+        name: 概念データフロー図（登録簿起票から完了まで）
+        kind: work
+        overview: 登録項目の起票から、対応、評価、完了記録までの Plan → Do → Check → Action の順序と引き渡し条件を定義する。グループ内部のプロセスは再掲しない
+        path: cdfd-uc-register.md
+        rulebook: specdojo:cdfd-uc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-register.ts
+            purpose: 登録項目を対象とする exec run の遷移
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要のケース C-01 を詳細化する
+        done_criteria:
+          - text: 起票から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 完了記録を人間が確定する境界が承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-uc-deliverable
+        name: 概念データフロー図（成果物の作成から完了まで）
+        kind: work
+        overview: 成果物カタログの定義からタスク展開、実行、評価、完了記録までの Plan → Do → Check → Action の順序と引き渡し条件を定義する。グループ内部のプロセスは再掲しない
+        path: cdfd-uc-deliverable.md
+        rulebook: specdojo:cdfd-uc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/schedule-build.ts
+            purpose: 成果物カタログから Schedule task への展開
+          - kind: implementation
+            path: src/exec-run.ts
+            purpose: Schedule task を対象とする実行と完了
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要のケース C-02 を詳細化する
+        done_criteria:
+          - text: カタログ定義から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: レビューによる確定と grade による評価の責務分担が引き渡し条件として区別できること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency

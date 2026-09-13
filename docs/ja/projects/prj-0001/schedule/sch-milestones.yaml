@@ -94,6 +94,14 @@ milestones:
       - T-DATA-FLOW-cdfd-derived-content-070
       - T-DATA-FLOW-cdfd-reporting-070
       - T-DATA-FLOW-cdfd-deprecation-070
+      - T-DATA-FLOW-cdfd-onboarding-070
+      - T-DATA-FLOW-cdfd-plan-070
+      - T-DATA-FLOW-cdfd-do-070
+      - T-DATA-FLOW-cdfd-check-070
+      - T-DATA-FLOW-cdfd-action-070
+      - T-DATA-FLOW-cdfd-orchestrator-070
+      - T-DATA-FLOW-cdfd-uc-register-070
+      - T-DATA-FLOW-cdfd-uc-deliverable-070
     owner: PM
   - id: G-DATA-FLOW-review-pass
     name: review-pass 完了
@@ -110,6 +118,14 @@ milestones:
       - T-DATA-FLOW-cdfd-derived-content-090
       - T-DATA-FLOW-cdfd-reporting-090
       - T-DATA-FLOW-cdfd-deprecation-090
+      - T-DATA-FLOW-cdfd-onboarding-090
+      - T-DATA-FLOW-cdfd-plan-090
+      - T-DATA-FLOW-cdfd-do-090
+      - T-DATA-FLOW-cdfd-check-090
+      - T-DATA-FLOW-cdfd-action-090
+      - T-DATA-FLOW-cdfd-orchestrator-090
+      - T-DATA-FLOW-cdfd-uc-register-090
+      - T-DATA-FLOW-cdfd-uc-deliverable-090
     owner: PM
   - id: M-DATA-FLOW-data-flow
     name: ドメイン完了
@@ -121,6 +137,10 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-140
       - T-DATA-FLOW-cdfd-reporting-140
       - T-DATA-FLOW-cdfd-deprecation-140
+      - T-DATA-FLOW-cdfd-onboarding-140
+      - T-DATA-FLOW-cdfd-orchestrator-140
+      - T-DATA-FLOW-cdfd-uc-register-140
+      - T-DATA-FLOW-cdfd-uc-deliverable-140
     owner: PM
   - id: G-DATA-FLOW-retrofit-pass-2
     name: retrofit-pass-2 完了

@@ -43,6 +43,18 @@ approach_rules:
   - local_ids:
       - cdfd-deprecation
     intent: author-deliverable
+  # PDCA 構成への作り直し（PJR-6PD7）。旧領域別 CDFD は参照せず、cdfd-overview と
+  # 現行実装から新規に作成するため author-deliverable とする。
+  - local_ids:
+      - cdfd-onboarding
+      - cdfd-plan
+      - cdfd-do
+      - cdfd-check
+      - cdfd-action
+      - cdfd-orchestrator
+      - cdfd-uc-register
+      - cdfd-uc-deliverable
+    intent: author-deliverable
 
 # cdfd-register-operation を cdfd-register-lifecycle へ改称した（id-and-file-naming-standard.md
 # 9.2 経路B）。旧 local_id の完了実績（010〜140）を新 local_id へ引き継ぎ、フルフェーズの
@@ -120,6 +132,26 @@ phase_sets:
         Mermaid の共通記法は cdfd-mermaid-rulebook を参照する。成果物カタログの done_criteria と
         cdfd-overview が定義した領域境界を基準にし、実装エビデンスの詳細な反映は後続の
         retrofit-pass に委ねる。
+
+  author-pass:
+    - id: author
+      name: cdfd-overview と Kata に基づく新規作成
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        cdfd-overview の該当プロセスグループ（またはユースケース）の定義と、成果物カタログの
+        done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
+        従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
+        cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
 
   retrofit-pass:
     - id: retrofit
@@ -317,6 +349,27 @@ owner_rules:
   - local_ids:
       - cdfd-deprecation
     owner: BA
+
+  # PDCA 構成への作り直し（PJR-6PD7）。新規作成のため author-pass から始め、
+  # 旧領域別 CDFD の retrofit は行わない。
+  - local_ids:
+      - cdfd-onboarding
+      - cdfd-plan
+      - cdfd-do
+      - cdfd-check
+      - cdfd-action
+      - cdfd-orchestrator
+      - cdfd-uc-register
+      - cdfd-uc-deliverable
+    owner: BA
+    phase_sets:
+      - phase_set: author-pass
+      - phase_set: refine-pass
+      - phase_set: review-pass
+      - phase_set: finalize-pass
+    phase_overrides:
+      - phase: review
+        approach: fully-guided
 
 # retrofit-pass 後に全 CDFD を一度だけ横断し、同じ操作・状態遷移・データストアの
 # 重複記述を正本選択・要約・参照へ整理してから、成果物別の磨き込みへ進む。

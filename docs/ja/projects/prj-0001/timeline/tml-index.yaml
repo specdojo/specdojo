@@ -44,7 +44,7 @@ tracks:
     order: 3
     parallel_group: business-specs
     depends_on: [launch]
-    note: 業務仕様のうち最初に着手したトラック。実行中。
+    note: 業務仕様のうち最初に着手したトラック。領域別 CDFD の整備は完了し、cdfd-overview の PDCA 構成（プロセスグループ別・ユースケース別 CDFD）へ作り直し中（PJR-6PD7）。
 
   - track: data-model
     domains: [data-model]
