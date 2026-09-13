@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bd1f9369a75f41c991379fd15892c531
+  ts: "2026-09-13T13:45:01Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): CDFD 3 レベルの章構成を前半共通に揃える todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD 3 レベルの章構成を前半共通（目的・適用範囲・プロセス領域・データストア・概念データフロー）に揃える
+    - field: description
+      from: ""
+      to: "cdfd-overview、プロセスグループ別 CDFD、ユースケース別 CDFD の章構成が 3 章以降で食い違い、読み方が揃わない。1 目的、2 適用範囲、3 プロセス領域（対象単位ごとの節: 説明文 → 主要入力・主要出力・データストアの箇条書き → 表）、4 データストア（overview の一覧と同じ名称・区分の部分集合）、5 概念データフロー（図直後の注記）を 3 レベル共通の骨組みとし、6 章以降にレベル固有の章、末尾に未決事項を置く。cdfd-rulebook / cdfd-uc-rulebook とそれぞれの template・sample・recipe を揃える。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-13"
+    - field: due
+      from: ""
+      to: "2026-09-30"
