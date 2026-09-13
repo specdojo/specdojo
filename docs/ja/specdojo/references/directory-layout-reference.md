@@ -189,7 +189,7 @@ docs/
 │   └── product/
 │       ├── 010-business-specs/                   # 業務仕様
 │       │   ├── 010-data-flow/                    # データフロー
-│       │   │   └── cdfd-sales-management.md      # 概念データフロー図（例：販売管理）
+│       │   │   └── cdfd-sales.md                 # 概念データフロー図（プロセスグループ別の例：販売）
 │       │   ├── 020-data-model/                   # データモデル
 │       │   │   ├── bdd-sales-management.md       # 業務データ辞書（例：販売管理）
 │       │   │   ├── cdsd-sales-management.md      # 概念データストア定義（例：販売管理）

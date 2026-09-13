@@ -79,7 +79,12 @@ sample / template:
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `cdfd-rulebook` を一文書一プロセスグループの規範へ改訂し、対象プロセス領域、`P-<領域番号>-<枝番>` のプロセス ID、`E-<領域番号>-<枝番>` の例外 ID、`cdfd-<group>` の product ID、データストア名称・区分、状態遷移の参照、グループ外委譲を定義した。
+- `cdfd-recipe` と `cdfd-template` を新しい章構成へ追従させ、全体概要から領域群とグループ入出力を引き継ぐ手順、責任分担、領域単位の図分割、STSD / CSTD 参照の確認項目を追加した。
+- `cdfd-sample` を全体概要 sample の仕入グループ（`P-01`〜`P-02`）全体の完成例へ改訂し、仕入計画と入荷検品の内部フロー、条件付き処理、状態遷移参照、在庫・販売・横断ユースケースへの委譲を整合させた。
+- `cdfd-overview` と overview の rulebook・recipe・sample・template に、状態の定義は STSD、状態遷移は CSTD が正本であり CDFD は参照に留める役割分担を反映した。
+- `deliverables-reference`、`id-and-file-naming-standard`、`directory-layout-reference` の命名例を `cdfd-<group>` へ更新した。
+- Prettier、Markdownlint、Frontmatter lint、SpecDojo の派生生成・索引生成は成功した。VitePress 全体ビルドは Mermaid 事前生成用 Chromium が sandbox 制約で起動できず、変更ファイルのレンダリング前に停止したため、ブラウザを起動できる CI または開発環境での再確認が必要である。
 
 ## 5. 関連ドキュメント
 

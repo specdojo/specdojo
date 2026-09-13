@@ -847,7 +847,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | プロジェクト課題と解決アプローチ | Project Issues and Approach | prj- | prj-issues-and-approach | prj-0001:prj-issues-and-approach |
 | 前提・制約・依存 | Assumptions, Constraints, and Dependencies | prj- | prj-assumptions-constraints-dependencies | prj-0001:prj-assumptions-constraints-dependencies |
 | 代替案の比較 | Comparison of Alternatives | prj- | prj-comparison-of-alternatives | prj-0001:prj-comparison-of-alternatives |
-| 現状定義 | Current State Definition | - | cdfd-sales-management | prj-0001:cdfd-sales-management |
+| 現状定義 | Current State Definition | - | cdfd-sales | prj-0001:cdfd-sales |
 | 影響調査 | Impact Analysis | imp- | imp-business | prj-0001:imp-business |
 | プロジェクトマネジメント計画 | Project Management Plan | pm- | pm-plan | prj-0001:pm-plan |
 | スケジュール | Schedule | sch- | sch-milestones, sch-defaults, sch-track-project-definition, sch-strategy-project-definition | prj-0001:sch-track-project-definition |
@@ -871,7 +871,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 <!-- prettier-ignore -->
 | 種別 | English | prefix | 例 |
 | --- | --- | --- | --- |
-| 概念データフロー図 | Conceptual Data Flow Diagram | cdfd- | cdfd-index |
+| 概念データフロー図 | Conceptual Data Flow Diagram | cdfd- | cdfd-overview, cdfd-sales |
 | 概念クラス図 | Conceptual Class Diagram | ccd- | ccd-customer |
 | 業務データ辞書 | Business Data Dictionary | bdd- | bdd-common, bdd-sales |
 | 概念データストア定義 | Conceptual Data Store Definition | cdsd- | cdsd-common, cdsd-sales |

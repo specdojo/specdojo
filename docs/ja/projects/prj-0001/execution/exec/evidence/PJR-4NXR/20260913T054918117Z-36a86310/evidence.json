@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-4NXR",
+  "run_id": "20260913T054918117Z-36a86310",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-13T05:49:18.117Z",
+    "completed_at": "2026-09-13T06:11:36.013Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-4nxr-cdfd-rulebook-process-group.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-overview-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/deliverables-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../010-data-flow/cdfd-overview.md                 |   4 +-\n .../pjr-4nxr-cdfd-rulebook-process-group.md        |   7 +-\n docs/ja/specdojo/recipes/cdfd-overview-recipe.md   |   1 +\n docs/ja/specdojo/recipes/cdfd-recipe.md            | 272 ++++++++++----------\n .../specdojo/references/deliverables-reference.md  |   2 +-\n .../references/directory-layout-reference.md       |   2 +-\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |  37 +--\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        | 231 ++++++++---------\n docs/ja/specdojo/samples/cdfd-overview-sample.md   |  18 +-\n docs/ja/specdojo/samples/cdfd-sample.md            | 284 +++++++++++----------\n .../standards/id-and-file-naming-standard.md       |   4 +-\n .../specdojo/templates/cdfd-overview-template.md   |   6 +-\n docs/ja/specdojo/templates/cdfd-template.md        | 190 ++++++--------\n 13 files changed, 503 insertions(+), 555 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/cdfd*.md docs/ja/specdojo/recipes/cdfd*.md docs/ja/specdojo/samples/cdfd*.md docs/ja/specdojo/templates/cdfd*.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/specdojo/references/deliverables-reference.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/specdojo/standards/id-and-file-naming-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-4nxr-cdfd-rulebook-process-group.md",
+      "status": "passed",
+      "summary": "対象文書はすべて Prettier 準拠"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全 Markdown の lint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "passed",
+      "summary": "成功。差分外の br-sample.md に既存 warning 1件"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "配布用 CLI の TypeScript ビルド成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js build",
+      "status": "passed",
+      "summary": "exec refresh、catalog、register、YAML pages、dashboard、index の生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証成功。未作成成果物に関する既存 warning のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js index build",
+      "status": "passed",
+      "summary": "1653件の文書索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "Mermaid生成用Chromiumがsandbox内で起動できず、変更文書のレンダリング前に停止"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade validate --target kata --path docs/ja/specdojo/rulebooks/cdfd-rulebook.md --path docs/ja/specdojo/recipes/cdfd-recipe.md --path docs/ja/specdojo/samples/cdfd-sample.md --path docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "failed",
+      "summary": "改訂後文書は再grade前のためspecdojo.gradeが未設定。grade executor/reporter pipelineで再評価が必要"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validation"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validation"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validation"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4NXR\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4NXR\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-3UK8GS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-OCy1hL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KLcrpH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HGneuO/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-7wLFqo/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-BF0ByP/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-Eth9NP/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-QgstLA/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1454 passed (1454)\n   Start at  15:11:53\n   Duration  21.35s (transform 1.66s, setup 413ms, impor…"
+    }
+  ],
+  "final_message": "プロセスグループ別 CDFD への改訂を完了。静的検査・派生生成は成功し、docs build と再gradeのみ環境・別pipeline制約で未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-4NXR/20260913T054918117Z-36a86310/executor.log",
+      "bytes": 3047,
+      "truncated": false
+    }
+  ]
+}

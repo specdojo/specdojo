@@ -213,7 +213,7 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [概念データフロー図](../rulebooks/cdfd-rulebook.md) | Concept Data Flow Diagram | `cdfd-<term>` | 対象となる業務の全体構成・流れを可視化し、定義する | 業務（プロセス）とその間の情報の流れ・物の流れ、業務のきっかけとなるイベント、業務主体 など |
+| [概念データフロー図](../rulebooks/cdfd-rulebook.md) | Conceptual Data Flow Diagram | `cdfd-<group>` | 一つのプロセスグループに属する領域内部と領域間の流れを可視化し、グループ外との責任境界を定義する | 対象プロセス領域、内部プロセス、情報・物の流れ、起点イベント、データストア、主要例外、STSD / CSTD 参照、グループ外委譲 |
 
 #### 2.1.2. データモデル
 
