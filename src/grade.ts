@@ -438,8 +438,12 @@ function assertRubric(doc: ReviewViewpointsDoc): GradeRubric {
   return rubric;
 }
 
+function relativePathFromRoot(path: string, rootDir: string): string {
+  return relative(rootDir, path).replace(/\\/g, "/");
+}
+
 function repoRelativePath(path: string): string {
-  return relative(specdojoRootDir(), path).replace(/\\/g, "/");
+  return relativePathFromRoot(path, specdojoRootDir());
 }
 
 type KataReference = {
@@ -607,10 +611,9 @@ export function selectGradeReferenceExample(opts: {
   });
 }
 
-function resolveSafeMarkdownPath(input: string): string {
-  const root = specdojoRootDir();
+function resolveSafeMarkdownPath(input: string, root = specdojoRootDir()): string {
   const absolute = resolve(root, input);
-  const rel = repoRelativePath(absolute);
+  const rel = relativePathFromRoot(absolute, root);
   if (rel.startsWith("../") || isAbsolute(rel))
     throw new Error(`Path is outside repository: ${input}`);
   if (extname(absolute).toLowerCase() !== ".md") {
@@ -630,8 +633,8 @@ function resolveSafeRepositoryPath(input: string, option: string): string {
   return absolute;
 }
 
-function isGeneratedGradeTarget(path: string): boolean {
-  return repoRelativePath(path).split("/").includes("generated");
+function isGeneratedGradeTarget(path: string, rootDir = specdojoRootDir()): boolean {
+  return relativePathFromRoot(path, rootDir).split("/").includes("generated");
 }
 
 type DeliverableCatalogEntry = {
@@ -646,8 +649,10 @@ function criterionId(index: number): string {
 
 // カタログの Markdown 成果物を絶対パスで引ける形にする。grade の対象探索と
 // done_criteria の解決が同じ集合を見るよう、両者はこの関数を共有する。
-function loadDeliverableCatalog(projectOption?: string): Map<string, DeliverableCatalogEntry> {
-  const root = specdojoRootDir();
+function loadDeliverableCatalog(
+  projectOption?: string,
+  root = specdojoRootDir(),
+): Map<string, DeliverableCatalogEntry> {
   const { project } = resolveProject(projectOption);
   const catalog = getProjectCatalogPath(project);
   if (!catalog) throw new Error("catalog_path is required for deliverable grading");
@@ -703,26 +708,30 @@ export function discoverGradeTargets(
     project?: string;
     paths?: string[];
   } & GradeTargetFilters,
+  rootDir = specdojoRootDir(),
 ): string[] {
   validateGradeTargetFilters(opts);
-  const root = specdojoRootDir();
   let candidates: string[];
   if (opts.paths && opts.paths.length > 0) {
-    candidates = opts.paths.map(resolveSafeMarkdownPath);
-    const generated = candidates.find(isGeneratedGradeTarget);
+    candidates = opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir));
+    const generated = candidates.find((path) => isGeneratedGradeTarget(path, rootDir));
     if (generated) {
-      throw new Error(`${repoRelativePath(generated)}: generated documents cannot be graded`);
+      throw new Error(
+        `${relativePathFromRoot(generated, rootDir)}: generated documents cannot be graded`,
+      );
     }
   } else if (opts.target === "kata") {
     candidates = KATA_DIRS.flatMap((dir) =>
-      listFilesRecursive(join(root, "docs/ja/specdojo", dir)).filter((path) =>
+      listFilesRecursive(join(rootDir, "docs/ja/specdojo", dir)).filter((path) =>
         path.endsWith(".md"),
       ),
     );
   } else {
-    candidates = [...loadDeliverableCatalog(opts.project).keys()];
+    candidates = [...loadDeliverableCatalog(opts.project, rootDir).keys()];
   }
-  const unique = [...new Set(candidates)].filter((path) => !isGeneratedGradeTarget(path)).sort();
+  const unique = [...new Set(candidates)]
+    .filter((path) => !isGeneratedGradeTarget(path, rootDir))
+    .sort();
   if (
     !opts.changedOnly &&
     opts.verdict === undefined &&
@@ -733,7 +742,7 @@ export function discoverGradeTargets(
     return unique;
   }
   return unique.filter((path) => {
-    const rel = repoRelativePath(path);
+    const rel = relativePathFromRoot(path, rootDir);
     return matchesParsedGradeTargetFilters(
       parseMarkdown(readFileSync(path, "utf8"), rel),
       rel,

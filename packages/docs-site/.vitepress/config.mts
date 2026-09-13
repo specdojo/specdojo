@@ -13,7 +13,11 @@ import {
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
 import type { Plugin } from "vite";
-import { generateMermaidSvgs, generateMermaidSvgsForFile } from "../src/gen-mermaid-svg";
+import {
+  generateMermaidSvgs,
+  generateMermaidSvgsForFile,
+  shouldGenerateMermaidForFile,
+} from "../src/gen-mermaid-svg";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { existsSync, readFileSync } from "node:fs";
@@ -211,8 +215,16 @@ const mermaidSvgAutoGenerate = (): Plugin => {
         const files = [...pendingFiles];
         pendingFiles.clear();
         console.log(`[mermaid] generating svgs for ${files.length} file(s) (${reason})`);
-        for (const file of files)
-          generateMermaidSvgsForFile(file, { rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR });
+        for (const file of files) {
+          try {
+            generateMermaidSvgsForFile(file, {
+              rootDir: CONTENT_ROOT,
+              outDir: MERMAID_OUT_DIR,
+            });
+          } catch (error) {
+            console.error(`[mermaid] failed to generate SVGs for ${file}`, error);
+          }
+        }
       } else {
         console.log(`[mermaid] generating svgs (${reason})`);
         generateMermaidSvgs({ rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR });
@@ -237,9 +249,7 @@ const mermaidSvgAutoGenerate = (): Plugin => {
   };
 
   const shouldHandle = (file: string): boolean => {
-    if (!file) return false;
-    if (!file.endsWith(".md")) return false;
-    return file.startsWith(CONTENT_ROOT + path.sep);
+    return shouldGenerateMermaidForFile(file, CONTENT_ROOT);
   };
 
   return {
@@ -262,6 +272,11 @@ const mermaidSvgAutoGenerate = (): Plugin => {
       server.watcher.on("add", (file) => {
         if (!shouldHandle(file)) return;
         scheduleFile(file, "md:add");
+      });
+
+      server.watcher.on("unlink", (file) => {
+        if (!shouldHandle(file)) return;
+        scheduleFile(file, "md:unlink");
       });
     },
 

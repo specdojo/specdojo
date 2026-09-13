@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- grade テストを tmpdir に隔離。
+- Mermaid の ENOENT、unlink、manifest cleanup、`generated/` 除外を実装。
+- 回帰テストと個票の対応結果を追加。
+- result は executor 指示どおり未編集です。
+- unit／integration／schema 検証は親 runner に委ねます。
+
+`npx tsx` は sandbox の IPC 制限で EPERM となったため、catalog／index は同等の `node --import tsx` で検証しています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade テストの tmpdir 隔離と Mermaid watcher の ENOENT・unlink・generated 除外対応を完了","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md","status":"passed","summary":"変更ファイルを整形"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査通過"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript lint 通過"},{"command":"npm --prefix packages/docs-site run typecheck","status":"passed","summary":"docs-site 型検査通過"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md","status":"passed","summary":"個票の Markdown lint 通過"},{"command":"npx prettier --check src/grade.ts tests/src/grade.test.ts packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md","status":"passed","summary":"全変更ファイルの整形確認通過"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告はあるが終了コード0"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1649件の文書インデックスを構築"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

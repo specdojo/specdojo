@@ -137,18 +137,23 @@ describe("grade target filters", () => {
   });
 
   it("excludes generated documents and rejects their explicit selection", () => {
-    const generatedRoot = "docs/ja/specdojo/samples/generated";
+    const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-target-"));
+    const generatedRoot = join(directory, "docs/ja/specdojo/samples/generated");
+    const generatedPath = join(generatedRoot, "example.md");
     mkdirSync(generatedRoot, { recursive: true });
-    const directory = mkdtempSync(join(generatedRoot, "grade-target-test-"));
-    const generatedPath = join(directory, "example.md");
-    writeFileSync(generatedPath, markdown);
+    writeFileSync(generatedPath, markdown, "utf8");
 
     try {
-      const targets = discoverGradeTargets({ target: "kata" });
+      const targets = discoverGradeTargets({ target: "kata" }, directory);
 
-      expect(targets).not.toContainEqual(expect.stringContaining("/generated/"));
-      expect(() => discoverGradeTargets({ target: "kata", paths: [generatedPath] })).toThrow(
-        `${generatedPath}: generated documents cannot be graded`,
+      expect(targets).toEqual([]);
+      expect(() =>
+        discoverGradeTargets(
+          { target: "kata", paths: ["docs/ja/specdojo/samples/generated/example.md"] },
+          directory,
+        ),
+      ).toThrow(
+        "docs/ja/specdojo/samples/generated/example.md: generated documents cannot be graded",
       );
     } finally {
       rmSync(directory, { recursive: true, force: true });

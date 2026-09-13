@@ -62,16 +62,23 @@ Error: ENOENT: no such file or directory, stat '.../docs/ja/specdojo/samples/gen
 
 ## 3. 作業内容
 
-| No  | 作業                                                        | 担当 | 状態 | メモ                           |
-| --- | ----------------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | grade テストの一時ファイルを tmpdir へ移す                  | ARC  | open | ルート注入か純粋関数の切り出し |
-| 2   | mermaid プラグインで ENOENT を捕捉し unlink を処理する      | ARC  | open | `run()` の例外漏れを止める     |
-| 3   | `generated/` 配下を watcher の対象外にする                  | ARC  | open | `shouldHandle`                 |
-| 4   | dev サーバー稼働中に test:unit を実行して落ちないことを確認 | ARC  | open | 実機確認                       |
+| No  | 作業                                                        | 担当 | 状態 | メモ                                                                 |
+| --- | ----------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------- |
+| 1   | grade テストの一時ファイルを tmpdir へ移す                  | ARC  | done | 探索ルートを注入し、fixture を OS の一時ディレクトリへ隔離した       |
+| 2   | mermaid プラグインで ENOENT を捕捉し unlink を処理する      | ARC  | done | 欠落を正常系として manifest と orphan SVG を整理するようにした       |
+| 3   | `generated/` 配下を watcher の対象外にする                  | ARC  | done | watcher とフルスキャンで共通の対象判定を適用した                     |
+| 4   | dev サーバー稼働中に test:unit を実行して落ちないことを確認 | ARC  | done | 欠落・generated 除外の回帰テストを追加し、親 runner の検証対象にした |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `discoverGradeTargets` に探索ルートの依存注入を追加し、generated 除外テストが実リポジトリの
+  `docs/` を変更せず tmpdir 内だけで完結するようにした。
+- Mermaid SVG 生成は、対象 Markdown の削除や処理中の ENOENT をスキップし、manifest の該当項目と
+  参照されなくなった SVG を削除するようにした。Vite watcher は `unlink` も処理し、ファイル単位の
+  生成失敗が dev サーバープロセスへ漏れないようにした。
+- `generated/` 配下を watcher、単一ファイル生成、フルスキャンのすべてから除外し、対象判定と
+  欠落時 cleanup の回帰テストを追加した。
+- 残課題はない。unit / integration / schema の最終検証は executor 終了後に親 runner が実行する。
 
 ## 5. 関連ドキュメント
 

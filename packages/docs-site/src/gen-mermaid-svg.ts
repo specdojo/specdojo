@@ -81,15 +81,38 @@ function extractMermaidBlocks(markdown: string): string[] {
   return mermaidBlocks.map((m) => m[1]?.trim()).filter((v): v is string => !!v);
 }
 
+function relativePathWithinRoot(file: string, rootDir: string): string | undefined {
+  const rel = path.relative(path.resolve(rootDir), path.resolve(file));
+  if (rel === "" || rel === ".." || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) {
+    return undefined;
+  }
+  return rel;
+}
+
+export function shouldGenerateMermaidForFile(file: string, rootDir = DEFAULT_ROOT): boolean {
+  if (!file.endsWith(".md")) return false;
+  const rel = relativePathWithinRoot(file, rootDir);
+  return rel !== undefined && !rel.split(path.sep).includes("generated");
+}
+
+function isFileNotFoundError(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && (error as NodeJS.ErrnoException).code === "ENOENT";
+}
+
 function collectMarkdownFiles(dir: string, acc: string[] = []): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
     const full = path.join(dir, entry.name);
 
-    // .vitepress や public などは無視
+    // .vitepress や public、派生生成物などは無視
     if (entry.isDirectory()) {
-      if (entry.name === ".vitepress" || entry.name === "public" || entry.name === "node_modules") {
+      if (
+        entry.name === ".vitepress" ||
+        entry.name === "public" ||
+        entry.name === "node_modules" ||
+        entry.name === "generated"
+      ) {
         continue;
       }
       collectMarkdownFiles(full, acc);
@@ -250,15 +273,20 @@ export function generateMermaidSvgs(options?: { rootDir?: string; outDir?: strin
   const nextManifest: Manifest = { version: MANIFEST_VERSION, files: {} };
 
   for (const mdPath of collectMarkdownFiles(rootDir)) {
-    const stat = fs.statSync(mdPath);
-    const hashes = processMarkdown(mdPath, rootDir, outDir, prevManifest);
-    if (hashes.length > 0) {
-      // mermaid を含むファイルのみ記録する（mtime/size で次回の差分判定に使う）
-      nextManifest.files[path.relative(rootDir, mdPath)] = {
-        mtimeMs: stat.mtimeMs,
-        size: stat.size,
-        hashes,
-      };
+    try {
+      const stat = fs.statSync(mdPath);
+      const hashes = processMarkdown(mdPath, rootDir, outDir, prevManifest);
+      if (hashes.length > 0) {
+        // mermaid を含むファイルのみ記録する（mtime/size で次回の差分判定に使う）
+        nextManifest.files[path.relative(rootDir, mdPath)] = {
+          mtimeMs: stat.mtimeMs,
+          size: stat.size,
+          hashes,
+        };
+      }
+    } catch (error) {
+      if (!isFileNotFoundError(error)) throw error;
+      console.warn(`[mermaid] skipping missing Markdown: ${path.relative(process.cwd(), mdPath)}`);
     }
   }
 
@@ -277,18 +305,40 @@ export function generateMermaidSvgsForFile(
 
   if (!mdPath.endsWith(".md")) return;
 
+  const relKey = relativePathWithinRoot(mdPath, rootDir);
+  if (relKey === undefined) return;
+
   // 単一ファイル更新（dev のホットリロード等）では対象ファイルを常に処理し、
   // manifest の該当エントリだけを更新する。
   const manifest = loadManifest(outDir);
-  const hashes = processMarkdown(mdPath, rootDir, outDir);
-  const relKey = path.relative(rootDir, mdPath);
-  if (hashes.length > 0) {
-    const stat = fs.statSync(mdPath);
-    manifest.files[relKey] = { mtimeMs: stat.mtimeMs, size: stat.size, hashes };
-  } else {
+
+  const removeManifestEntry = (): void => {
     delete manifest.files[relKey];
+    pruneOrphanSvgs(outDir, manifest);
+    saveManifest(outDir, manifest);
+  };
+
+  if (!shouldGenerateMermaidForFile(mdPath, rootDir) || !fs.existsSync(mdPath)) {
+    console.warn(`[mermaid] skipping missing or generated Markdown: ${relKey}`);
+    removeManifestEntry();
+    return;
   }
-  saveManifest(outDir, manifest);
+
+  try {
+    const hashes = processMarkdown(mdPath, rootDir, outDir);
+    if (hashes.length > 0) {
+      const stat = fs.statSync(mdPath);
+      manifest.files[relKey] = { mtimeMs: stat.mtimeMs, size: stat.size, hashes };
+    } else {
+      delete manifest.files[relKey];
+    }
+    pruneOrphanSvgs(outDir, manifest);
+    saveManifest(outDir, manifest);
+  } catch (error) {
+    if (!isFileNotFoundError(error)) throw error;
+    console.warn(`[mermaid] skipping missing Markdown: ${relKey}`);
+    removeManifestEntry();
+  }
 }
 
 function isDirectRun(): boolean {

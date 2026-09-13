@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-3J5D",
+  "run_id": "20260913T044303163Z-ec4f5453",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-13T04:43:03.163Z",
+    "completed_at": "2026-09-13T04:50:35.360Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md   | 21 ++++--\n packages/docs-site/.vitepress/config.mts           | 27 +++++--\n packages/docs-site/src/gen-mermaid-svg.ts          | 86 +++++++++++++++++-----\n src/grade.ts                                       | 41 +++++++----\n tests/src/grade.test.ts                            | 21 ++++--\n 5 files changed, 141 insertions(+), 55 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/grade.ts tests/src/grade.test.ts packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md",
+      "status": "passed",
+      "summary": "変更ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript lint 通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site 型検査通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md",
+      "status": "passed",
+      "summary": "個票の Markdown lint 通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/grade.ts tests/src/grade.test.ts packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md",
+      "status": "passed",
+      "summary": "全変更ファイルの整形確認通過"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存の欠落文書警告はあるが終了コード0"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1649件の文書インデックスを構築"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3J5D\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3J5D\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-WtltMp/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kHCzWv/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5eaaLD/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ApHP9y/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-aBTBlv/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-mpmLyq/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-MicwUB/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-Ovy9cN/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1454 passed (1454)\n   Start at  13:50:53\n   Duration  22.70s (transform 1.71s, setup 404ms, impor…"
+    }
+  ],
+  "final_message": "grade テストの tmpdir 隔離と Mermaid watcher の ENOENT・unlink・generated 除外対応を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-3J5D/20260913T044303163Z-ec4f5453/executor.log",
+      "bytes": 2259,
+      "truncated": false
+    }
+  ]
+}
