@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c6220a6fd9b24416be3975ea42feefcd
+- v: 1
+  id: reg_7079f17f2c664e36a18b75b177962428
+  ts: "2026-09-13T07:10:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。codex-expert-executor が新規 4 文書を作成後に利用制限で中断し、claude-expert-executor が --resume で検証と仕上げを完了。親検証 3 件 passed、lint:md と docs:build を確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-13"
+    - field: conclusion
+      from: "-"
+      to: ユースケース別 CDFD の cdfd-uc-rulebook を新設し、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定める契約、`cdfd-uc-<topic>` の命名、C-01 形式のケース ID、グループ内部・状態遷移を扱わない境界を規定した。template・sample（欠品から補充まで）・recipe を一式作成し、cdfd-overview-rulebook・cdfd-mermaid-rulebook・deliverables-reference・命名標準へ種別と命名を追記した。
+  previous_event_id: reg_cd44727093f5490a8c39b5087e535cc0

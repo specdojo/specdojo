@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1d9c833b966f43a4a4045428bb4d028b
+- v: 1
+  id: reg_f9ccd902138e4adbaa79f8eba924f307
+  ts: "2026-09-13T07:10:39Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed、lint:md と docs:build を確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-13"
+    - field: conclusion
+      from: "-"
+      to: cdfd-rulebook をプロセスグループ別 CDFD 専用へ改訂し、対象プロセス領域章、`P-<領域 ID>-<nn>` のプロセス ID、`cdfd-<group>` の命名、データストア一覧との名称一致、グループ外委譲、状態遷移の STSD / CSTD 参照を規定した。template・sample・recipe を追従させ、sample は仕入グループ（P-01〜P-02）の詳細化へ書き直した。cdfd-overview の詳細 CDFD 一覧と overview 側 kata、reference・命名標準も同じ方針に揃えた。
+  previous_event_id: reg_59ff5d89c78444cf852f0eb2c7e9b60e

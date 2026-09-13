@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-zkna-cdfd-uc-rulebook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T05:07:17Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-13T07:10:40Z"
   block_reason: rate limit reached
+  conclusion: ユースケース別 CDFD の cdfd-uc-rulebook を新設し、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定める契約、`cdfd-uc-<topic>` の命名、C-01 形式のケース ID、グループ内部・状態遷移を扱わない境界を規定した。template・sample（欠品から補充まで）・recipe を一式作成し、cdfd-overview-rulebook・cdfd-mermaid-rulebook・deliverables-reference・命名標準へ種別と命名を追記した。
 ---
 
 # PJR-ZKNA ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する

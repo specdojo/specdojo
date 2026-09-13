@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4nxr-cdfd-rulebook-process-group
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T05:07:17Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-13T07:10:39Z"
+  conclusion: cdfd-rulebook をプロセスグループ別 CDFD 専用へ改訂し、対象プロセス領域章、`P-<領域 ID>-<nn>` のプロセス ID、`cdfd-<group>` の命名、データストア一覧との名称一致、グループ外委譲、状態遷移の STSD / CSTD 参照を規定した。template・sample・recipe を追従させ、sample は仕入グループ（P-01〜P-02）の詳細化へ書き直した。cdfd-overview の詳細 CDFD 一覧と overview 側 kata、reference・命名標準も同じ方針に揃えた。
 ---
 
 # PJR-4NXR cdfd-rulebook と recipe・sample・template をプロセスグループ別 CDFD へ改訂する
@@ -71,11 +73,11 @@ sample / template:
 
 | No  | 作業                                                            | 担当 | 状態 | メモ                                        |
 | --- | --------------------------------------------------------------- | ---- | ---- | ------------------------------------------- |
-| 1   | `cdfd-rulebook` をプロセスグループ別へ改訂する                  | ARC  | open | 規範を先に確定する                          |
-| 2   | `cdfd-template` を新章構成へ更新する                            | ARC  | open | 骨組み                                      |
-| 3   | `cdfd-sample` を仕入グループの詳細化へ書き直す                  | ARC  | open | 完成例。`cdfd-overview-sample` と整合させる |
-| 4   | `cdfd-recipe` を更新する                                        | ARC  | open | 手順。grade の finding も解消               |
-| 5   | `cdfd-overview` の状態遷移の文言と周辺の reference を追従させる | ARC  | open | stsd / cstd 参照、`cdfd-<group>` の例       |
+| 1   | `cdfd-rulebook` をプロセスグループ別へ改訂する                  | ARC  | done | 規範を先に確定する                          |
+| 2   | `cdfd-template` を新章構成へ更新する                            | ARC  | done | 骨組み                                      |
+| 3   | `cdfd-sample` を仕入グループの詳細化へ書き直す                  | ARC  | done | 完成例。`cdfd-overview-sample` と整合させる |
+| 4   | `cdfd-recipe` を更新する                                        | ARC  | done | 手順。grade の finding も解消               |
+| 5   | `cdfd-overview` の状態遷移の文言と周辺の reference を追従させる | ARC  | done | stsd / cstd 参照、`cdfd-<group>` の例       |
 
 ## 4. 対応結果
 
