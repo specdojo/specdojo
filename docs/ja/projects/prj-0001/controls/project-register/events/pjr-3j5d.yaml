@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_062b10cf47c24ffba9d4704ef28974f2
+- v: 1
+  id: reg_3f8387a756e24dfc9db44e0faad76c0d
+  ts: "2026-09-13T05:00:04Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。オーケストレーターが tmpdir 化と ENOENT 耐性を実機確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-13"
+    - field: conclusion
+      from: "-"
+      to: grade テストの一時ファイルを tmpdir へ移し（discoverGradeTargets のルート注入）、mermaid 生成器は存在しない・generated 配下の Markdown を正常系としてスキップし manifest から除去、VitePress プラグインはファイル単位で例外を捕捉し unlink も処理するようにした。存在しないパスを渡しても例外にならないことと、テスト 50 件の成功を確認した。
+  previous_event_id: reg_de80bad2121541db868604e7d21f4127

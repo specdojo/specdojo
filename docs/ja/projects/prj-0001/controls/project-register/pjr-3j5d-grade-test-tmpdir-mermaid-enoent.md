@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3j5d-grade-test-tmpdir-mermaid-enoent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T04:41:14Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-13T05:00:04Z"
+  conclusion: grade テストの一時ファイルを tmpdir へ移し（discoverGradeTargets のルート注入）、mermaid 生成器は存在しない・generated 配下の Markdown を正常系としてスキップし manifest から除去、VitePress プラグインはファイル単位で例外を捕捉し unlink も処理するようにした。存在しないパスを渡しても例外にならないことと、テスト 50 件の成功を確認した。
 ---
 
 # PJR-3J5D grade テストの docs 配下への一時ファイル作成をやめ mermaid プラグインを ENOENT に耐えるようにする
