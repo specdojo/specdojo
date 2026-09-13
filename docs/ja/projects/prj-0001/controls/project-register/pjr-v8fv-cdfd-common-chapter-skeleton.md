@@ -63,7 +63,7 @@ overview に合わせて「プロセス領域」「データストア」「概�
 
 - `cdfd-rulebook` と `cdfd-uc-rulebook` の本文要件が、1 目的 / 2 適用範囲 / 3 プロセス領域 / 4 データストア / 5 概念データフロー を共通の骨組みとして規定し、6 章以降にレベル固有の章、末尾に未決事項を置いている。
 - 3 章は対象単位ごとの節（説明文 → 主要入力・主要出力・データストアの箇条書き → 表）で、`cdfd-overview-rulebook` の「プロセス領域」と同じ構成規則になっている。
-- 4 章は overview の「データストア一覧」と同じ名称・区分を使う部分集合として規定され、図のノードとの一対一対応を完成判定に含む。
+- 4 章は overview の「データストア」と同じ名称・区分を使う部分集合として規定され、図のノードとの一対一対応を完成判定に含む。
 - `cdfd-template` / `cdfd-sample` / `cdfd-recipe` と `cdfd-uc-template` / `cdfd-uc-sample` / `cdfd-uc-recipe` が改訂後の rulebook と整合し、sample は `cdfd-overview-sample` と 3 レベルで同じ読み方ができる。
 - `cdfd-overview-rulebook` / `cdfd-overview-template` / `cdfd-overview-sample` と `cdfd-overview` は、章名の統一で変更が必要な箇所だけを最小限に更新している。
 - 各 authoring standard の最終チェックを満たし、`npm run lint:md`、`npm run lint:fm`、`npm run docs:build` が成功する。
@@ -72,15 +72,19 @@ overview に合わせて「プロセス領域」「データストア」「概�
 
 | No  | 作業                                                            | 担当 | 状態 | メモ                                   |
 | --- | --------------------------------------------------------------- | ---- | ---- | -------------------------------------- |
-| 1   | `cdfd-rulebook` の本文要件と記述ガイドを共通骨組みへ改める      | ARC  | open | 3 章を領域ごとの節、4 章にデータストア |
-| 2   | `cdfd-template` / `cdfd-sample` / `cdfd-recipe` を追従させる    | ARC  | open | sample は仕入グループ                  |
-| 3   | `cdfd-uc-rulebook` の本文要件を共通骨組みへ改める               | ARC  | open | 4 データストア、6 引き渡し、7 戻り先   |
-| 4   | `cdfd-uc-template` / `cdfd-uc-sample` / `cdfd-uc-recipe` を追従 | ARC  | open | sample は欠品から補充まで              |
-| 5   | overview 側の章名統一の要否を判断し、必要な箇所だけ更新する     | ARC  | open | 「データストア一覧」→「データストア」  |
+| 1   | `cdfd-rulebook` の本文要件と記述ガイドを共通骨組みへ改める      | ARC  | done | 3 章を領域ごとの節、4 章にデータストア |
+| 2   | `cdfd-template` / `cdfd-sample` / `cdfd-recipe` を追従させる    | ARC  | done | sample は仕入グループ                  |
+| 3   | `cdfd-uc-rulebook` の本文要件を共通骨組みへ改める               | ARC  | done | 4 データストア、6 引き渡し、7 戻り先   |
+| 4   | `cdfd-uc-template` / `cdfd-uc-sample` / `cdfd-uc-recipe` を追従 | ARC  | done | sample は欠品から補充まで              |
+| 5   | overview 側の章名統一の要否を判断し、必要な箇所だけ更新する     | ARC  | done | 「データストア一覧」→「データストア」  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- プロセスグループ別 CDFD は、3 章を領域ごとの「説明文 → 主要入力・主要出力・データストア → プロセス表」へ統合し、4 章へ全体概要の部分集合と読み書きの別を追加した。
+- ユースケース別 CDFD は、3 章をグループごとの同型構成へ変更し、4 章へ引き渡しに関係するデータストアの部分集合を追加した。引き渡しは 6 章、例外時の戻り先は 7 章へ移した。
+- 両レベルの rulebook、template、sample、recipe を新しい章構成へ揃えた。sample は仕入グループと「欠品から補充まで」の内容を維持し、表・図・上位一覧のデータストア名を対応させた。
+- overview の rulebook、template、sample、recipe と product の `cdfd-overview` は、4 章名と本文中の参照を「データストア」へ統一した。
+- 成果物内容の残課題はない。全体 `lint:fm` は今回未変更の `br-sample.md` にある既存 frontmatter 警告、`docs:build` は sandbox の `tsx` IPC・Chromium 起動制約で完走しなかったが、変更ファイル限定の frontmatter 検査と Markdown 検査は成功した。登録項目のステータスと exec result は pipeline の runner / reporter が更新するため変更していない。
 
 ## 5. 関連ドキュメント
 

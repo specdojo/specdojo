@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-V8FV",
+  "run_id": "20260913T134655526Z-43101f97",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-13T13:46:55.526Z",
+    "completed_at": "2026-09-13T14:05:59.229Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-overview-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-uc-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../010-data-flow/cdfd-overview.md                 |   4 +-\n .../pjr-v8fv-cdfd-common-chapter-skeleton.md       |  18 ++--\n docs/ja/specdojo/recipes/cdfd-overview-recipe.md   |  18 ++--\n docs/ja/specdojo/recipes/cdfd-recipe.md            | 100 +++++++++++----------\n docs/ja/specdojo/recipes/cdfd-uc-recipe.md         |  90 +++++++++++--------\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |  14 +--\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        |  59 ++++++------\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     |  62 +++++++------\n docs/ja/specdojo/samples/cdfd-overview-sample.md   |   6 +-\n docs/ja/specdojo/samples/cdfd-sample.md            |  62 +++++++++----\n docs/ja/specdojo/samples/cdfd-uc-sample.md         |  74 ++++++++++++---\n .../specdojo/templates/cdfd-overview-template.md   |   6 +-\n docs/ja/specdojo/templates/cdfd-template.md        |  52 ++++++++---\n docs/ja/specdojo/templates/cdfd-uc-template.md     |  65 +++++++++++---\n 14 files changed, 407 insertions(+), 223 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "リポジトリ全体のMarkdownlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/{rulebooks,recipes,samples,templates}/cdfd{,-uc,-overview}-*.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md",
+      "status": "passed",
+      "summary": "CDFD関連文書と個票のMarkdownlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx remark docs/ja/specdojo/{rulebooks,recipes,samples,templates}/cdfd{,-uc,-overview}-*.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md --quiet --frail >/dev/null",
+      "status": "passed",
+      "summary": "変更対象のfrontmatter検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "failed",
+      "summary": "未変更のdocs/ja/specdojo/samples/br-sample.mdに既存frontmatter警告"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証成功。既存の未作成成果物に関する警告あり"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1662件の索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "sandboxがMermaid生成用Chromiumの起動を拒否"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V8FV\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V8FV\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-k1RKli/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-QHHHTc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Dp9m6A/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5rrRhe/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-z6Cs1d/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-9BuIFn/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-V88df4/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-QXVK4c/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1454 passed (1454)\n   Start at  23:06:17\n   Duration  22.70s (transform 1.88s, setup 429ms, impor…"
+    }
+  ],
+  "final_message": "CDFD 3レベルの共通章構成への編集は完了。対象検証は成功したが、全体lint:fmの既存警告とsandboxによるdocs build制約を検出。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-V8FV/20260913T134655526Z-43101f97/executor.log",
+      "bytes": 3119,
+      "truncated": false
+    }
+  ]
+}

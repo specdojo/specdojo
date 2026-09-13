@@ -1,0 +1,13 @@
+成果物の編集は完了しました。
+
+- CDFD 3 レベルの前半を「目的／適用範囲／プロセス領域／データストア／概念データフロー」に統一。
+- [cdfd-rulebook](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V8FV/docs/ja/specdojo/rulebooks/cdfd-rulebook.md) と [cdfd-uc-rulebook](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V8FV/docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md)、各 template・sample・recipe を同期。
+- overview 系と product `cdfd-overview` は「データストア」への章名統一だけを実施。
+- [PJR-V8FV 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V8FV/docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md) に対応結果を記録。ステータスと exec result は未変更です。
+- Markdown、対象 frontmatter、catalog、register、index 検証は成功。
+
+ただし、全体 `lint:fm` は未変更の `br-sample.md` にある既存警告、docs build は sandbox の IPC／Chromium 制約により完走していないため、executor 検証としては blocked 要因を残しています。
+
+<specdojo_executor_evidence>
+{"final_message":"CDFD 3レベルの共通章構成への編集は完了。対象検証は成功したが、全体lint:fmの既存警告とsandboxによるdocs build制約を検出。","validations":[{"command":"npm run -s lint:md","status":"passed","summary":"リポジトリ全体のMarkdownlint成功"},{"command":"npx markdownlint docs/ja/specdojo/{rulebooks,recipes,samples,templates}/cdfd{,-uc,-overview}-*.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md","status":"passed","summary":"CDFD関連文書と個票のMarkdownlint成功"},{"command":"npx remark docs/ja/specdojo/{rulebooks,recipes,samples,templates}/cdfd{,-uc,-overview}-*.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md --quiet --frail >/dev/null","status":"passed","summary":"変更対象のfrontmatter検査成功"},{"command":"npm run lint:fm","status":"failed","summary":"未変更のdocs/ja/specdojo/samples/br-sample.mdに既存frontmatter警告"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の未作成成果物に関する警告あり"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1662件の索引生成成功"},{"command":"npm run docs:build","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"npm --prefix packages/docs-site run docs:build","status":"failed","summary":"sandboxがMermaid生成用Chromiumの起動を拒否"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
