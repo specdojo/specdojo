@@ -1,0 +1,919 @@
+Reading prompt from stdin...
+2026-09-13T06:16:38.637425Z ERROR codex_models_manager::manager: failed to load models cache: missing field `supports_parallel_tool_calls` at line 133 column 5
+OpenAI Codex v0.147.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a09969-214b-74b0-ae57-c5453c24169d
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-zkna-20260913t061556z-485b
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-ZKNA
+  name: "ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-ZKNA ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-ZKNA「ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する」に対応する。
+
+cdfd-overview が定義するユースケース別 CDFD（`cdfd-uc-<topic>`）は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定め、グループ内部のプロセスは再掲しない。一ノード一プロセスを契約とする cdfd-rulebook では表現できないため、専用の cdfd-uc-rulebook と recipe・sample・template を新設する。章構成と記述レベルは cdfd-overview に合わせ、ID はプロジェクト修飾なしとする。
+
+## 2. 対象項目
+
+- `id`: PJR-ZKNA
+- `type`: todo
+- `priority`: medium
+- `owner`: ARC
+- `due`: 2026-09-30
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-zkna-cdfd-uc-rulebook.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-zkna-20260913T061556Z-485b-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, test-unit (npm run test:integration, npm run validate:schema, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+codex
+`upsert-rulebook` と `upsert-sample` を使います。既存の CDFD 設計・命名・検証規約を確認し、rulebook と sample は各 Skill の手順に従い、recipe／template も同じ体系へ整合させて新設します。executor 指示に従い result は編集しません。
+exec
+/bin/bash -lc "sed -n '1,240p' .agents/skills/upsert-sample/SKILL.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+---
+name: upsert-sample
+description: "`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を新規作成または更新する Skill です。"
+---
+
+# SKILL: upsert-sample
+
+`docs/ja/specdojo/samples` 配下の `*-sample.(md|yaml|json)` を新規作成または更新するための Skill です。
+
+## 使いどころ
+
+- 新しい `*-sample.(md|yaml|json)` を新規作成したいとき
+- 既存の `*-sample.(md|yaml|json)` を Sample 記述標準に準拠させたいとき
+- 対応 rulebook が更新されたため sample 側へ差分を反映したいとき
+- 章構成や業務文脈の整合性を確認・修正したいとき
+
+## 前提
+
+- 記述標準・共通文脈: `docs/ja/specdojo/standards/sample-authoring-standard.md`
+- 作業手順: `.github/instructions/sample.instructions.md`
+- 対応 rulebook: `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- 前提プロジェクト: 駄菓子屋の販売管理システムを構築するプロジェクト（固定）
+
+## 引数仕様
+
+- `/upsert-sample <file1> <file2> ...` の複数指定を受け付ける。
+- 区切りはスペース / 改行 / カンマを受け付ける。
+- `-sample.md` / `-sample.yaml` / `-sample.json` を含む完全指定と、省略した短縮指定を受け付ける（例: `imp-business-sample.md`, `imp-business-sample.yaml`, `imp-business`）。
+- `-rulebook.md` 形式での指定も受け付け、対応する `*-sample.<ext>` に変換する。
+- 同一対象の重複指定は 1 件に正規化する。
+- 引数なしの場合は、現在開いているファイルを単一対象として扱う。
+
+## 実行フロー
+
+1. 引数有無を判定し、対象一覧を正規化する（未指定時は開いている 1 件）
+2. 対象を 1 ファイルずつ順に処理する
+3. 各対象 `*-sample.<ext>` の既存有無を確認する（`<ext>` は `target_format` に応じて決定）
+4. 情報収集を行う
+   - 対応 `<prefix>-rulebook.md` を一次根拠として読み込み、出力構造・必須要素・禁止事項を把握する
+   - `target_format` を確認し、sample の拡張子（`.md` / `.yaml` / `.json`）を決定する
+   - 類似 sample を 2〜3 件確認する
+5. 新規作成または差分アップサートを行う
+   - 章構成・記述品質・禁止事項・共通文脈は `docs/ja/specdojo/standards/sample-authoring-standard.md` に従う
+   - 対応 rulebook に従い、駄菓子屋文脈の記述例を構成する
+   - 必要な前提情報が不足する場合は、駄菓子屋の販売管理システムとして妥当な内容を仮定して記述する
+6. sample 作成後にリンク解決を確認する
+   - sample 内で記載したリンク先ファイルの存在を確認する
+   - 存在しないリンクはデッドリンク回避のため Markdown リンクにせず、バッククォートで囲んだファイル名表記へ置換する
+7. 対応 rulebook の Frontmatter に `sample: <prefix>-sample` が宣言されていることを確認し、未宣言なら追記する（rulebook 本文にリンク章は置かない）
+8. 対象ごとの結果を集約し、`npm run -s lint:md` で検証する
+
+## 実行ルール
+
+- 正規化後の対象を 1 ファイルずつ独立に判定し、順次実行する
+- ある対象で失敗しても他対象の処理は継続する
+- rulebook の内容をそのまま複製せず、ルールに準拠した記述例として再構成する
+- sample の直接的な記述根拠は対応 rulebook とする
+- 業務文脈は「駄菓子屋の販売管理システム構築プロジェクト」に統一し、他業種の題材を混在させない
+- 不足している前提条件は、駄菓子屋の販売管理システムに適合する範囲で合理的に仮定して補う
+- 実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）は sample に含めない
+- sample 作成後の最終状態では、存在確認できない参照先を Markdown リンクのまま残さず、すべてバッククォートで囲んだファイル名表記へ置換する
+
+## 出力
+
+- 対象ごとの結果（更新 / 新規 / スキップ / 失敗）
+- 変更ファイル一覧
+- 実行時に参照した根拠（対応 rulebook、類似 sample）
+- `npm run -s lint:md` の結果
+
+exec
+/bin/bash -lc "sed -n '1,240p' .agents/skills/upsert-rulebook/SKILL.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+---
+name: upsert-rulebook
+description: "`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を新規作成または更新する Skill です。"
+---
+
+# SKILL: upsert-rulebook
+
+`docs/ja/specdojo/rulebooks` 配下の `*-rulebook.md` を新規作成または更新するための Skill です。
+
+## 使いどころ
+
+- 新しい `*-rulebook.md` を新規作成したいとき
+- 既存の `*-rulebook.md` を `docs/ja/specdojo/standards/rulebook-authoring-standard.md` に準拠させたいとき
+- 章構成や記述品質の整合性を確認・修正したいとき
+- docs-contents-guide や成果物カタログに定義されているドキュメントの rulebook を起こしたいとき
+
+補足:
+
+- 成果物ファイル（`sample-gcs-product/` 配下等）から逆生成する場合は、`reverse-rulebook` Skill（`.agents/skills/reverse-rulebook/SKILL.md`）を使用する。
+
+## 前提
+
+- 章立て・記述ルール・Frontmatter 規約の正本: `docs/ja/specdojo/standards/rulebook-authoring-standard.md`
+- 作業手順: `.github/instructions/rulebook.instructions.md`
+- ドキュメント内容ガイド: `docs/ja/specdojo/guides/docs-contents-guide.md`
+
+## 引数仕様
+
+- `/upsert-rulebook <file1> <file2> ...` の複数指定を受け付ける。
+- 区切りはスペース / 改行 / カンマを受け付ける。
+- `-rulebook.md` を含む完全指定と、省略した短縮指定を受け付ける。
+  - 例: `imp-business-rulebook.md`
+  - 例: `imp-business`
+- 同一対象の重複指定は 1 件に正規化する。
+- 引数なしの場合は、現在開いているファイルを単一対象として扱う。
+
+## 実行フロー
+
+1. 引数有無を判定し、対象一覧を正規化する（未指定時は開いている 1 件）
+2. 対象を 1 ファイルずつ順に処理する
+3. 各対象 `*-rulebook.md` の既存有無を確認する
+4. 情報収集を行う
+   - docs-contents-guide で目的・主な内容を確認する
+   - 類似 rulebook を 2〜3 件確認する
+   - 対応 sample があれば確認する
+5. 新規作成または差分アップサートを行う
+   - 章構成・記述品質・禁止事項は `docs/ja/specdojo/standards/rulebook-authoring-standard.md` に従う
+   - Frontmatter は `docs/ja/specdojo/standards/rulebook-authoring-standard.md` の `Frontmatter 規約` に従う
+   - `target_format` が未記載の場合は markdown を対象とみなす
+6. sample / recipe / template との対応を Frontmatter の `sample` / `recipe` / `template` で宣言する（本文にリンク章や wikilink を置かない）
+7. 対象ごとの結果を集約し、`npm run -s lint:md` で検証する
+
+## 実行ルール
+
+- 正規化後の対象を 1 ファイルずつ独立に判定し、順次実行する
+- ある対象で失敗しても他対象の処理は継続する
+- 実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）は rulebook に含めない
+
+## 出力
+
+- 対象ごとの結果（更新 / 新規 / スキップ / 失敗）
+- 変更ファイル一覧
+- 実行時に参照した根拠（docs-contents-guide と類似 rulebook）
+- `npm run -s lint:md` の結果
+
+codex
+まず登録簿・個票と、Skill が正本として指定する authoring standard／作業手順／contents guide を確認します。その後、`cdfd-overview` と近い rulebook・recipe・sample・template を比較して、4成果物の正確な配置と frontmatter 契約を確定します。
+exec
+/bin/bash -lc 'wc -l docs/ja/specdojo/standards/rulebook-authoring-standard.md .github/instructions/rulebook.instructions.md docs/ja/specdojo/guides/docs-contents-guide.md docs/ja/specdojo/standards/sample-authoring-standard.md .github/instructions/sample.instructions.md' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ exited 1 in 0ms:
+  141 docs/ja/specdojo/standards/rulebook-authoring-standard.md
+   38 .github/instructions/rulebook.instructions.md
+wc: docs/ja/specdojo/guides/docs-contents-guide.md: No such file or directory
+  151 docs/ja/specdojo/standards/sample-authoring-standard.md
+   35 .github/instructions/sample.instructions.md
+  365 total
+
+exec
+/bin/bash -lc "rg --files docs/ja/specdojo | rg 'cdfd|recipe|template|sample|rulebook' | sort" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+docs/ja/specdojo/exec-templates/xep-bootstrap-template.md
+docs/ja/specdojo/exec-templates/xep-common-conventions-template.md
+docs/ja/specdojo/exec-templates/xep-cross-deliverable-dedup-template.md
+docs/ja/specdojo/exec-templates/xep-freeform-template.md
+docs/ja/specdojo/exec-templates/xep-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xep-job-template.md
+docs/ja/specdojo/exec-templates/xep-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-register-investigate-template.md
+docs/ja/specdojo/exec-templates/xep-register-template.md
+docs/ja/specdojo/exec-templates/xep-retrofit-template.md
+docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-template.md
+docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md
+docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md
+docs/ja/specdojo/exec-templates/xer-human-finalize-template.md
+docs/ja/specdojo/exec-templates/xer-template.md
+docs/ja/specdojo/exec-templates/xrp-freeform-template.md
+docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-retrofit-template.md
+docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-template.md
+docs/ja/specdojo/exec-templates/xrp-viewpoint-detail-template.md
+docs/ja/specdojo/exec-templates/xrr-template.md
+docs/ja/specdojo/exec-templates/xrr-viewpoint-detail-template.md
+docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+docs/ja/specdojo/recipes/cdfd-recipe.md
+docs/ja/specdojo/recipes/exec-human-finalize-recipe.md
+docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+docs/ja/specdojo/recipes/pm-communication-plan-recipe.md
+docs/ja/specdojo/recipes/pm-members-recipe.md
+docs/ja/specdojo/recipes/pm-organization-recipe.md
+docs/ja/specdojo/recipes/pm-plan-recipe.md
+docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+docs/ja/specdojo/recipes/pm-raci-recipe.md
+docs/ja/specdojo/recipes/pm-roles-recipe.md
+docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+docs/ja/specdojo/recipes/prj-charter-recipe.md
+docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+docs/ja/specdojo/recipes/prj-overview-recipe.md
+docs/ja/specdojo/recipes/prj-scope-recipe.md
+docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+docs/ja/specdojo/rulebooks/atc-rulebook.md
+docs/ja/specdojo/rulebooks/bac-rulebook.md
+docs/ja/specdojo/rulebooks/bdd-rulebook.md
+docs/ja/specdojo/rulebooks/bds-rulebook.md
+docs/ja/specdojo/rulebooks/bes-index-rulebook.md
+docs/ja/specdojo/rulebooks/bes-rulebook.md
+docs/ja/specdojo/rulebooks/bps-rulebook.md
+docs/ja/specdojo/rulebooks/br-rulebook.md
+docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+docs/ja/specdojo/rulebooks/cld-rulebook.md
+docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cnd-rulebook.md
+docs/ja/specdojo/rulebooks/cop-index-rulebook.md
+docs/ja/specdojo/rulebooks/cop-rulebook.md
+docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cpd-rulebook.md
+docs/ja/specdojo/rulebooks/cstd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cstd-rulebook.md
+docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/cxd-rulebook.md
+docs/ja/specdojo/rulebooks/dct-index-rulebook.md
+docs/ja/specdojo/rulebooks/dct-rulebook.md
+docs/ja/specdojo/rulebooks/dec-rulebook.md
+docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
+docs/ja/specdojo/rulebooks/dmd-rulebook.md
+docs/ja/specdojo/rulebooks/etc-index-rulebook.md
+docs/ja/specdojo/rulebooks/etc-rulebook.md
+docs/ja/specdojo/rulebooks/gl-rulebook.md
+docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
+docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+docs/ja/specdojo/rulebooks/imp-test-rulebook.md
+docs/ja/specdojo/rulebooks/itc-index-rulebook.md
+docs/ja/specdojo/rulebooks/itc-rulebook.md
+docs/ja/specdojo/rulebooks/mip-index-rulebook.md
+docs/ja/specdojo/rulebooks/mm-rulebook.md
+docs/ja/specdojo/rulebooks/mtp-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
+docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
+docs/ja/specdojo/rulebooks/ntp-rulebook.md
+docs/ja/specdojo/rulebooks/opd-index-rulebook.md
+docs/ja/specdojo/rulebooks/opd-rulebook.md
+docs/ja/specdojo/rulebooks/opr-index-rulebook.md
+docs/ja/specdojo/rulebooks/opr-rulebook.md
+docs/ja/specdojo/rulebooks/otp-index-rulebook.md
+docs/ja/specdojo/rulebooks/otp-rulebook.md
+docs/ja/specdojo/rulebooks/pjr-rulebook.md
+docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
+docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
+docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
+docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
+docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
+docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md
+docs/ja/specdojo/rulebooks/pm-raci-rulebook.md
+docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md
+docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+docs/ja/specdojo/rulebooks/pr-rulebook.md
+docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md
+docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
+docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md
+docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md
+docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
+docs/ja/specdojo/rulebooks/prj-scope-rulebook.md
+docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md
+docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
+docs/ja/specdojo/rulebooks/sac-rulebook.md
+docs/ja/specdojo/rulebooks/sch-rulebook.md
+docs/ja/specdojo/rulebooks/sf-index-rulebook.md
+docs/ja/specdojo/rulebooks/sf-rulebook.md
+docs/ja/specdojo/rulebooks/sld-rulebook.md
+docs/ja/specdojo/rulebooks/stc-index-rulebook.md
+docs/ja/specdojo/rulebooks/stc-rulebook.md
+docs/ja/specdojo/rulebooks/stsd-rulebook.md
+docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
+docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
+docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
+docs/ja/specdojo/rulebooks/sysd-rulebook.md
+docs/ja/specdojo/rulebooks/tml-rulebook.md
+docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
+docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md
+docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
+docs/ja/specdojo/rulebooks/tsd-rulebook.md
+docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
+docs/ja/specdojo/rulebooks/uis-rulebook.md
+docs/ja/specdojo/rulebooks/utc-index-rulebook.md
+docs/ja/specdojo/rulebooks/utc-rulebook.md
+docs/ja/specdojo/samples/atc-index-sample.md
+docs/ja/specdojo/samples/atc-sample.md
+docs/ja/specdojo/samples/bac-sample.md
+docs/ja/specdojo/samples/bdd-sample.yaml
+docs/ja/specdojo/samples/bds-sample.md
+docs/ja/specdojo/samples/bes-index-sample.md
+docs/ja/specdojo/samples/bes-sample.md
+docs/ja/specdojo/samples/bps-sample.md
+docs/ja/specdojo/samples/br-sample.md
+docs/ja/specdojo/samples/ccd-sample.md
+docs/ja/specdojo/samples/cdfd-overview-sample.md
+docs/ja/specdojo/samples/cdfd-sample.md
+docs/ja/specdojo/samples/cdsd-sample.md
+docs/ja/specdojo/samples/cld-sample.md
+docs/ja/specdojo/samples/cnd-sample.md
+docs/ja/specdojo/samples/cop-index-sample.md
+docs/ja/specdojo/samples/cop-sample.md
+docs/ja/specdojo/samples/cpd-sample.md
+docs/ja/specdojo/samples/cstd-sample.md
+docs/ja/specdojo/samples/cxd-sample.md
+docs/ja/specdojo/samples/dct-index-sample.yaml
+docs/ja/specdojo/samples/dct-sample.yaml
+docs/ja/specdojo/samples/dec-sample.md
+docs/ja/specdojo/samples/dmd-index-sample.md
+docs/ja/specdojo/samples/dmd-sample.md
+docs/ja/specdojo/samples/etc-index-sample.md
+docs/ja/specdojo/samples/etc-sample.md
+docs/ja/specdojo/samples/gl-sample.yaml
+docs/ja/specdojo/samples/ifd-sample.md
+docs/ja/specdojo/samples/ifx-api-sample.yaml
+docs/ja/specdojo/samples/ifx-cmd-sample.yaml
+docs/ja/specdojo/samples/ifx-file-sample.md
+docs/ja/specdojo/samples/ifx-msg-sample.yaml
+docs/ja/specdojo/samples/imp-business-sample.md
+docs/ja/specdojo/samples/imp-data-sample.md
+docs/ja/specdojo/samples/imp-interface-sample.md
+docs/ja/specdojo/samples/imp-operations-sample.md
+docs/ja/specdojo/samples/imp-test-sample.md
+docs/ja/specdojo/samples/itc-index-sample.md
+docs/ja/specdojo/samples/itc-sample.md
+docs/ja/specdojo/samples/mip-index-sample.md
+docs/ja/specdojo/samples/mm-sample.md
+docs/ja/specdojo/samples/mtp-sample.md
+docs/ja/specdojo/samples/nfr-availability-sample.md
+docs/ja/specdojo/samples/nfr-index-sample.md
+docs/ja/specdojo/samples/nfr-integrity-sample.md
+docs/ja/specdojo/samples/nfr-maintainability-sample.md
+docs/ja/specdojo/samples/nfr-operations-sample.md
+docs/ja/specdojo/samples/nfr-performance-sample.md
+docs/ja/specdojo/samples/nfr-reliability-sample.md
+docs/ja/specdojo/samples/nfr-security-safety-sample.md
+docs/ja/specdojo/samples/nfr-usability-sample.md
+docs/ja/specdojo/samples/ntp-sample.md
+docs/ja/specdojo/samples/opd-access-control-sample.md
+docs/ja/specdojo/samples/opd-incident-management-sample.md
+docs/ja/specdojo/samples/opd-index-sample.md
+docs/ja/specdojo/samples/opd-monitoring-sample.md
+docs/ja/specdojo/samples/opd-sample.md
+docs/ja/specdojo/samples/opr-access-control-sample.md
+docs/ja/specdojo/samples/opr-backup-restore-sample.md
+docs/ja/specdojo/samples/opr-batch-sample.md
+docs/ja/specdojo/samples/opr-change-sample.md
+docs/ja/specdojo/samples/opr-incident-sample.md
+docs/ja/specdojo/samples/opr-index-sample.md
+docs/ja/specdojo/samples/opr-monitoring-sample.md
+docs/ja/specdojo/samples/opr-sample.md
+docs/ja/specdojo/samples/opr-support-sample.md
+docs/ja/specdojo/samples/otp-index-sample.md
+docs/ja/specdojo/samples/otp-sample.md
+docs/ja/specdojo/samples/pm-change-request-log-sample.md
+docs/ja/specdojo/samples/pm-communication-plan-sample.md
+docs/ja/specdojo/samples/pm-issue-log-sample.md
+docs/ja/specdojo/samples/pm-members-sample.yaml
+docs/ja/specdojo/samples/pm-organization-sample.md
+docs/ja/specdojo/samples/pm-plan-sample.md
+docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+docs/ja/specdojo/samples/pm-raci-sample.md
+docs/ja/specdojo/samples/pm-risk-register-sample.md
+docs/ja/specdojo/samples/pm-roles-sample.yaml
+docs/ja/specdojo/samples/pr-sample.md
+docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
+docs/ja/specdojo/samples/prj-charter-sample.md
+docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
+docs/ja/specdojo/samples/prj-overview-sample.md
+docs/ja/specdojo/samples/prj-scope-sample.md
+docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md
+docs/ja/specdojo/samples/sac-sample.md
+docs/ja/specdojo/samples/sf-index-sample.md
+docs/ja/specdojo/samples/sf-sample.md
+docs/ja/specdojo/samples/sld-sample.md
+docs/ja/specdojo/samples/stc-index-sample.md
+docs/ja/specdojo/samples/stc-sample.md
+docs/ja/specdojo/samples/stsd-sample.md
+docs/ja/specdojo/samples/sysd-critical-flows-sample.md
+docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md
+docs/ja/specdojo/samples/sysd-index-sample.md
+docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md
+docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
+docs/ja/specdojo/samples/tsd-index-sample.md
+docs/ja/specdojo/samples/tsd-sample.md
+docs/ja/specdojo/samples/tsp-index-sample.md
+docs/ja/specdojo/samples/uis-sample.md
+docs/ja/specdojo/samples/utc-index-sample.md
+docs/ja/specdojo/samples/utc-sample.md
+docs/ja/specdojo/standards/recipe-authoring-standard.md
+docs/ja/specdojo/standards/rulebook-authoring-standard.md
+docs/ja/specdojo/standards/sample-authoring-standard.md
+docs/ja/specdojo/standards/template-authoring-standard.md
+docs/ja/specdojo/templates/cdfd-overview-template.md
+docs/ja/specdojo/templates/cdfd-template.md
+docs/ja/specdojo/templates/dct-architecture-template.yaml
+docs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml
+docs/ja/specdojo/templates/dct-business-model-bes-template.yaml
+docs/ja/specdojo/templates/dct-business-model-bps-template.yaml
+docs/ja/specdojo/templates/dct-business-model-br-template.yaml
+docs/ja/specdojo/templates/dct-data-flow-template.yaml
+docs/ja/specdojo/templates/dct-data-model-bdd-template.yaml
+docs/ja/specdojo/templates/dct-data-model-ccd-template.yaml
+docs/ja/specdojo/templates/dct-data-model-cdsd-template.yaml
+docs/ja/specdojo/templates/dct-data-model-cld-template.yaml
+docs/ja/specdojo/templates/dct-data-model-cstd-template.yaml
+docs/ja/specdojo/templates/dct-data-model-sld-template.yaml
+docs/ja/specdojo/templates/dct-data-model-stsd-template.yaml
+docs/ja/specdojo/templates/dct-external-interface-specs-template.yaml
+docs/ja/specdojo/templates/dct-glossary-template.yaml
+docs/ja/specdojo/templates/dct-impact-analysis-template.yaml
+docs/ja/specdojo/templates/dct-index-template.md
+docs/ja/specdojo/templates/dct-migration-planning-template.yaml
+docs/ja/specdojo/templates/dct-non-functional-requirements-template.yaml
+docs/ja/specdojo/templates/dct-operations-template.yaml
+docs/ja/specdojo/templates/dct-project-definition-template.yaml
+docs/ja/specdojo/templates/dct-project-management-template.yaml
+docs/ja/specdojo/templates/dct-system-acceptance-criteria-template.yaml
+docs/ja/specdojo/templates/dct-system-design-template.yaml
+docs/ja/specdojo/templates/dct-system-functions-template.yaml
+docs/ja/specdojo/templates/dct-test-specs-template.yaml
+docs/ja/specdojo/templates/dct-user-interface-model-template.yaml
+docs/ja/specdojo/templates/ifx-cmd-template.yaml
+docs/ja/specdojo/templates/opr-template.md
+docs/ja/specdojo/templates/pjr-change-request-template.md
+docs/ja/specdojo/templates/pjr-decision-template.md
+docs/ja/specdojo/templates/pjr-index-template.md
+docs/ja/specdojo/templates/pjr-issue-template.md
+docs/ja/specdojo/templates/pjr-note-template.md
+docs/ja/specdojo/templates/pjr-question-template.md
+docs/ja/specdojo/templates/pjr-risk-template.md
+docs/ja/specdojo/templates/pjr-todo-template.md
+docs/ja/specdojo/templates/pjr-views-by-owner-template.md
+docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+docs/ja/specdojo/templates/pjr-views-by-status-template.md
+docs/ja/specdojo/templates/pm-change-request-log-template.md
+docs/ja/specdojo/templates/pm-communication-plan-template.md
+docs/ja/specdojo/templates/pm-decision-log-template.md
+docs/ja/specdojo/templates/pm-issue-log-template.md
+docs/ja/specdojo/templates/pm-members-template.yaml
+docs/ja/specdojo/templates/pm-organization-template.md
+docs/ja/specdojo/templates/pm-plan-template.md
+docs/ja/specdojo/templates/pm-quality-management-plan-template.md
+docs/ja/specdojo/templates/pm-raci-template.md
+docs/ja/specdojo/templates/pm-risk-register-template.md
+docs/ja/specdojo/templates/pm-roles-template.yaml
+docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+docs/ja/specdojo/templates/prj-charter-template.md
+docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md
+docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+docs/ja/specdojo/templates/prj-overview-template.md
+docs/ja/specdojo/templates/prj-scope-template.md
+docs/ja/specdojo/templates/prj-stakeholder-register-template.md
+docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md
+
+exec
+/bin/bash -lc 'rg -n "PJR-ZKNA|cdfd-uc|ユースケース別 CDFD" docs/ja/projects/prj-0001/controls/project-register docs/ja/specdojo' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 15ms:
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zkna.yaml:9:  reason: "docs(register): ユースケース別 CDFD の rulebook 一式を新設する todo を起票する"
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zkna.yaml:16:      to: ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zkna.yaml:19:      to: cdfd-overview が定義するユースケース別 CDFD（`cdfd-uc-<topic>`）は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定め、グループ内部のプロセスは再掲しない。一ノード一プロセスを契約とする cdfd-rulebook では表現できないため、専用の cdfd-uc-rulebook と recipe・sample・template を新設する。章構成と記述レベルは cdfd-overview に合わせ、ID はプロジェクト修飾なしとする。
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/ja/projects/prj-0001/controls/project-register/pjr-zkna-cdfd-uc-rulebook.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+---
+specdojo:
+  id: prj-0001:pjr-zkna-cdfd-uc-rulebook
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: medium
+  owner: ARC
+  registered_at: "2026-09-13T05:07:17Z"
+  due_on: "2026-09-30"
+---
+
+# PJR-ZKNA ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する
+
+## 1. 概要
+
+cdfd-overview が定義するユースケース別 CDFD（`cdfd-uc-<topic>`）は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定め、グループ内部のプロセスは再掲しない。一ノード一プロセスを契約とする cdfd-rulebook では表現できないため、専用の cdfd-uc-rulebook と recipe・sample・template を新設する。章構成と記述レベルは cdfd-overview に合わせ、ID はプロジェクト修飾なしとする。
+
+### 1.1. 決定事項（2026-09-13）
+
+- ユースケース別 CDFD の rulebook は `cdfd-rulebook` に統合せず、`cdfd-uc-rulebook` として新設する。recipe / sample / template も一式そろえる。
+- 状態遷移の正本は stsd / cstd とし、ユースケース別 CDFD でも状態の定義・遷移表を書かない。
+- product 成果物の ID はプロジェクト修飾なし（`cdfd-uc-<topic>`）。
+- 章構成・記述レベルは `cdfd-overview` に合わせる。
+
+### 1.2. ユースケース別 CDFD の契約（`cdfd-overview` の「詳細 CDFD 一覧」より）
+
+- 複数のプロセスグループをまたぐ順序と引き渡し条件だけを定める。グループ内部のプロセスは再掲せず、プロセスグループ別 CDFD を参照する。
+- 単一のグループに閉じる業務はユースケース別 CDFD を作らない。
+- ケース ID は `cdfd-overview` の `C-01` 形式を引き継ぐ。
+
+### 1.3. 想定する章構成
+
+| 番号 | 見出し                   | 内容                                                                                        |
+| ---- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| 冒頭 | 導入文                   | 対象ユースケースを一文で定義                                                                |
+| 1    | 目的                     | 対象者と利用場面                                                                            |
+| 2    | 適用範囲                 | 開始イベント、終了条件、横断するプロセスグループ、対象外（グループ内部、補助操作）          |
+| 3    | 横断するプロセスグループ | グループの順序と各グループの役割。`cdfd-overview` の代表ノード名と領域 ID を用いる          |
+| 4    | 引き渡し                 | 引き渡し ID、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件の表       |
+| 5    | 概念データフロー         | 代表ノードと関係するデータストアだけの Mermaid 図。凡例は「凡例（本プロダクト共通）」を参照 |
+| 6    | 例外時の戻り先           | 引き渡し条件を満たさない場合にどのグループへ戻すか。グループ内部の例外は扱わない            |
+| 7    | 未決事項                 | 条件付き                                                                                    |
+
+sample は共通サンプル文脈（駄菓子屋）で、`cdfd-overview-sample` の 2 グループ以上を横断するケース（例: 仕入から販売までの商品の流れ）を扱う。
+
+## 2. 完了条件
+
+- `cdfd-uc-rulebook` が、プロセスグループの順序と引き渡し条件だけを定める契約、`cdfd-uc-<topic>` の命名、`C-01` 形式のケース ID、グループ内部・状態遷移を扱わない境界、`cdfd-<group>` への参照方法を規定している。
+- `cdfd-uc-recipe`、`cdfd-uc-template`、`cdfd-uc-sample` が rulebook と整合し、sample は `cdfd-overview-sample` の 2 グループ以上を横断するケースを矛盾なく詳細化している。
+- `cdfd-overview-rulebook` の用語表と「詳細 CDFD 一覧」の記述が、新設した rulebook を参照している。
+- `deliverables-reference` に成果物種別として追加され、`id-and-file-naming-standard` に命名が載っている。
+- rulebook / recipe / sample / template の各 authoring standard の最終チェックを満たし、`npm run lint:md`、`npm run lint:fm`、`npm run docs:build` が成功する。
+
+## 3. 作業内容
+
+| No  | 作業                                               | 担当 | 状態 | メモ                                  |
+| --- | -------------------------------------------------- | ---- | ---- | ------------------------------------- |
+| 1   | `cdfd-uc-rulebook` を新設する                      | ARC  | open | 契約と章構成を先に確定する            |
+| 2   | `cdfd-uc-template` を作成する                      | ARC  | open | 骨組み                                |
+| 3   | `cdfd-uc-sample` を作成する                        | ARC  | open | 駄菓子屋で 2 グループ以上を横断する例 |
+| 4   | `cdfd-uc-recipe` を作成する                        | ARC  | open | 手順                                  |
+| 5   | overview-rulebook と reference・命名標準へ追記する | ARC  | open | 種別追加と命名                        |
+
+## 4. 対応結果
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- 新しい全体概要: [[cdfd-overview]]
+- 全体概要の規範: [[specdojo:cdfd-overview-rulebook]]
+- プロセスグループ別の改訂: [[prj-0001:pjr-4nxr-cdfd-rulebook-process-group]]
+- 記法: [[specdojo:cdfd-mermaid-rulebook]]
+- 全体概要の見直し元: [[prj-0001:pjr-6pd7-cdfd-overview]]
+
+exec
+/bin/bash -lc "rg -n '"'^'"\\| PJR-ZKNA ' docs/ja/projects/prj-0001/controls/project-register/pjr-index.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ exited 2 in 0ms:
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: IO error for operation on docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+
+exec
+/bin/bash -lc "rg --files | rg 'docs-contents-guide\\.md"'$|recipe'"\\.instructions\\.md"'$|template'"\\.instructions\\.md"'$|authoring-standard'"\\.md"'$'"'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+docs/ja/specdojo/standards/template-authoring-standard.md
+docs/ja/specdojo/standards/sample-authoring-standard.md
+docs/ja/specdojo/standards/recipe-authoring-standard.md
+docs/ja/specdojo/standards/guide-authoring-standard.md
+docs/ja/specdojo/standards/rulebook-authoring-standard.md
+docs/ja/specdojo/standards/standard-authoring-standard.md
+docs/ja/specdojo/standards/philosophy-authoring-standard.md
+docs/ja/specdojo/standards/reference-authoring-standard.md
+
+exec
+/bin/bash -lc 'git status --short' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 87ms:
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZKNA/
+
+exec
+/bin/bash -lc 'wc -l docs/ja/specdojo/standards/recipe-authoring-standard.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/references/deliverables-reference.md docs/ja/specdojo/standards/id-and-file-naming-standard.md 2>/dev/null || true' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+   143 docs/ja/specdojo/standards/recipe-authoring-standard.md
+   102 docs/ja/specdojo/standards/template-authoring-standard.md
+   407 docs/ja/specdojo/references/deliverables-reference.md
+   929 docs/ja/specdojo/standards/id-and-file-naming-standard.md
+  1581 total
+
+exec
+/bin/bash -lc 'find .github/instructions -maxdepth 1 -type f -print | sort' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+.github/instructions/markdown.instructions.md
+.github/instructions/rulebook.instructions.md
+.github/instructions/sample.instructions.md
+.github/instructions/specdojo-exec-workflow.instructions.md
+.github/instructions/typescript.instructions.md
+.github/instructions/vitest.instructions.md
+
+exec
+/bin/bash -lc "find docs/ja/specdojo -maxdepth 2 -type f -name '*guide*.md' -o -name '*contents*.md'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+docs/ja/specdojo/guides/review-guide.md
+docs/ja/specdojo/guides/practice-system-composition-guide.md
+docs/ja/specdojo/guides/docs-structure-guide.md
+docs/ja/specdojo/guides/quick-start-guide.md
+docs/ja/specdojo/guides/exec-operation-guide.md
+docs/ja/specdojo/guides/plan-result-lifecycle-guide.md
+docs/ja/specdojo/guides/exec-config-guide.md
+docs/ja/specdojo/guides/kata-guide.md
+docs/ja/specdojo/guides/ryu-guide.md
+docs/ja/specdojo/guides/timeline-design-guide.md
+docs/ja/specdojo/guides/schedule-operation-guide.md
+docs/ja/specdojo/guides/use-case-guide.md
+docs/ja/specdojo/guides/branch-workflow-guide.md
+docs/ja/specdojo/guides/register-operation-guide.md
+docs/ja/specdojo/guides/exec-worktree-guide.md
+docs/ja/specdojo/guides/orchestrator-operation-guide.md
+docs/ja/specdojo/guides/specdojo-overview-guide.md
+docs/ja/specdojo/guides/waza-guide.md
+docs/ja/specdojo/guides/docs-editing-guide.md
+docs/ja/specdojo/guides/routine-operation-guide.md
+docs/ja/specdojo/guides/schedule-design-guide.md
+docs/ja/specdojo/guides/track-design-guide.md
+docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xep-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xep-fully-guided-template.md
+docs/ja/specdojo/standards/guide-authoring-standard.md
+
+exec
+/bin/bash -lc "rg --files docs/ja/projects/prj-0001 | rg 'pjr-index\\.md"'$|deliverables-reference|id-and-file-naming-standard'"'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0058-pjr-index.md
+
+exec
+/bin/bash -lc "sed -n '1,1000p' docs/ja/specdojo/standards/recipe-authoring-standard.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA
+ succeeded in 0ms:
+---
+specdojo:
+  id: specdojo:recipe-authoring-standard
+  type: standard
+  status: ready
+---
+
+# Recipe 記述標準
+
+Recipe Authoring Standard
+
+`docs/ja/specdojo/recipes/` 配下の各 `*-recipe.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。成果物の構造・必須項目・禁止事項は対応する rulebook を正本とし、本書は「良い内容を書くための作り方」の記述方法を定義します。
+
+## 1. 適用範囲
+
+- 対象: `docs/ja/specdojo/recipes/` 配下のすべての `*-recipe.md`
+- 目的: recipe の章構成・記述品質を統一し、書き手が良い内容を再現可能に作成できるようにする
+- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
+- 成果物 Frontmatter の構築: template の `frontmatter_template` から構築する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物 Frontmatter 雛形`）。この手順を recipe 本文に複製しない。
+- 参照スキーマ: [recipe-frontmatter.schema.yaml](../../../specdojo/schemas/v1/recipe-frontmatter.schema.yaml)
+- ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
+
+## 2. 見出しレベルと章番号の原則
+
+- `#` はタイトルのみ。章は `##` から開始する。
+- 章番号は 1 始まりの連番。スキップしない（例: `## 1.`, 次は `## 2.`）。
+- 章番号末尾には必ず `.` を付ける。
+- 章への参照は章番号ではなく章タイトルで記載する（例: `各章の書き方`）。
+- タイトル直下に **英語名（1行）** を置き、その直下に **目的・概要（1〜3文）** を置く。
+
+## 3. Frontmatter 規約
+
+- ファイル名は `<prefix>-recipe.md` とする。
+- `id` / `type` / `status` を必須とし、共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従う。
+- `type` は `recipe` 固定とする。
+- 対応する成果物の根拠を示すため、`rulebook` と `sample`（存在する場合）を記載する。
+
+| 項目     | 必須 | 説明                                     |
+| -------- | ---- | ---------------------------------------- |
+| id       | ○    | `specdojo:<prefix>-recipe` 形式の一意 ID |
+| type     | ○    | `recipe` 固定                            |
+| status   | ○    | `draft` / `ready` / `deprecated`         |
+| rulebook | ○    | 構造の正本となる rulebook の完全 ID      |
+| sample   | 任意 | 粒度・文体の参照となる sample の完全 ID  |
+
+## 4. 標準章構成（`*-recipe.md`）
+
+章構成は以下を原則とする。不要な章は省略可だが、省略理由を記載することを推奨する。
+
+| 章番号 | 章タイトル         | 必須 | 説明                                                        |
+| ------ | ------------------ | ---- | ----------------------------------------------------------- |
+| 1      | このレシピの使い方 | ○    | このレシピを使う順序と確認の進め方を示す                    |
+| 2      | 作成前に集める情報 | ○    | 着手前に短いメモで集める入力情報を表で示す                  |
+| 3      | 全体の作成手順     | ○    | 完成までの手順を番号付きで示す                              |
+| 4      | 各章の書き方       | ○    | 章ごとの問い・具体化のコツ・良い例/避けたい例を示す         |
+| 5      | 深掘り手順         | 任意 | 内容が浅いときに具体化を進める順序を示す                    |
+| 6      | 良い例 / 悪い例    | ○    | 観点ごとに良い例と悪い例を対比する                          |
+| 7      | レビュー観点       | ○    | 作成後に確認する観点を表で示す                              |
+| 8      | 仕上げチェック     | ○    | recipe 内の記述だけで判定できる整合・公開適性の最終確認項目 |
+
+## 5. 記述ガイド
+
+- recipe は「成果物が成立するか」ではなく「内容が良いか」を高める作り方を扱う。構造・必須項目・禁止事項の正本は対応 rulebook とし、その規約一覧を recipe 側で再定義しない。
+- rulebook / sample との対応関係は frontmatter の `rulebook` / `sample` だけで示す。本文には rulebook / sample への参照（wikilink や「〜と同程度」などの照合指示）を置かない。recipe-guided 実行では recipe だけが読み込まれるため、本文中の参照は実行不能な指示になる。
+- recipe 単体で成果物を組み立てられるよう、成果物の章立ては「全体の作成手順」と「各章の書き方」で recipe 自身の言葉で示す。
+- 各章の書き方には、書き手が答えるべき問いを置き、抽象論で終わらせない。
+- 良い例と悪い例は同じ観点で対比し、何が良し悪しを分けるかを判定可能にする。
+- 推奨表のカラム（例: 観点、確認内容、良い例、悪い例）を 1 つ以上提示する。
+- 未確定事項や仮置き情報は、本文中に次の共通ラベルで記述する。
+  - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
+  - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
+  - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
+- リンクはファイルがある場合に記載し、ない場合はバッククォートで仮置きする。
+
+### 5.1. Why・What・How・Trace の共通原則
+
+Why・What・How・Trace は章の固定順ではなく、成果物に含まれる主要な主張・判断を支える論理の骨格として扱う。成果物の既存の章、表、フィールドへ必要な要素を配置し、4 要素を見出しとして追加することは要求しない。
+
+| 要素  | 意味                                                          | 記述時の判定基準                                                                |
+| ----- | ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Why   | 解決する課題、守る価値、その判断が必要な理由                  | 読み手が「なぜ扱うのか」と、扱わない場合の影響または目指す価値を説明できる      |
+| What  | Why に応える成果、状態、条件、範囲、または決定事項            | 達成・合意・選択したかを判定でき、特定の手段を前提にしなくても意味が通る        |
+| How   | What を実現・維持・判定する方針、責任分担、手順、または方式   | 対応する What が明らかで、成果物の責務を超える詳細は後続成果物へ委譲されている  |
+| Trace | Why、What、How と根拠・証跡の対応を後から確認できる識別・参照 | 主要な主張を ID、同じ行、参照、対応表、または許可されたフィールドでたどり直せる |
+
+Why は What の必要性を説明し、What は How が満たすべき境界を定める。Trace は独立した説明を増やす要素ではなく、Why → What → How の対応と、その根拠・判断結果を検証可能にする。詳細な How から書き始めた場合も、対応する What と Why を確認し、対応先のない手段は削除する。
+
+### 5.2. Recipe への適用方法
+
+- 「このレシピの使い方」には、その成果物が引き継ぐ Why、定義する What、扱ってよい How、用いる Trace を成果物固有の語彙で示す。共通原則の定義は複製しない。
+- 「作成前に集める情報」と「各章の書き方」には、主要な What がどの Why に応え、How がどの What を支えるかを具体化できる問いを置く。
+- 「深掘り手順」は、手段の追加ではなく、孤立した What、根拠のない How、追跡できない主張を見つける順序にする。
+- 「レビュー観点」または「仕上げチェック」には、成果物固有の対応関係と委譲境界を確認する項目を置く。
+- 4 要素すべてを成果物内へ再掲する必要はない。上位成果物を正本とする Why などは参照で引き継ぎ、この成果物が更新責任を持つ要素だけを書く。
+
+### 5.3. 成果物形式ごとの表し方
+
+| 形式           | 適用方法                                                                                                                                                        |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Markdown 本文  | 既存の章と問いへ分散して記述する。主要な主張が離れる場合は、文書 ID、項目 ID、または短い対応表で接続する。                                                      |
+| 表形式の登録簿 | 1 行を一つの管理対象とし、行 ID、理由・影響、対象・条件、対応、根拠・証跡の列または参照先で接続する。同じ説明を複数行へ複製しない。                             |
+| YAML / JSON    | schema で許可された ID、参照フィールド、配列要素間のキーで接続する。Why・What・How のために schema 外のキーを追加せず、詳細説明は責務を持つ上位文書へ委譲する。 |
+| 実行結果・ログ | plan の完了条件を Why / What の根拠として引き継ぎ、実施内容、検証結果、判断、変更対象を同じ result または安定した参照で追跡できるようにする。                   |
+
+識別情報だけを定義する YAML、生成物、機械的な索引など、形式または schema が説明文を持たない成果物では、4 要素の明示を要求しない。recipe は許可された参照と下流利用の整合だけを求め、説明の正本へ委譲する。生成物は直接編集せず、その生成元で対応を維持する。
+
+### 5.4. アンチパターン
+
+| アンチパターン                | 判定                                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------- |
+| 4 要素を固定章として追加する  | 既存の成果物責務や形式に関係なく `Why`、`What`、`How`、`Trace` の章を増やしている           |
+| 手段が目的化する              | ツール導入、会議開催、文書作成などの How だけがあり、対応する価値・課題と成果が説明できない |
+| 同じ Why を各成果物へ複製する | 上位成果物を参照できるのに、背景や目的を言い換えて複数の成果物で正本化している              |
+| What と How の粒度が混在する  | 成果・条件と、実装クラス、詳細 API、会議の進行手順などが同じ管理単位に並んでいる            |
+| Trace のために説明を重複する  | ID や参照で接続できる内容を、対応を示す目的だけで別章・別行へ再掲している                   |
+| 追跡先のない主張・手段を残す  | 主要な What が Why に結び付かない、または How が支える What を特定できない                  |
+
+## 6. 内容充実化（薄いドキュメント防止）
+
+- 各必須章には、最低 3 つ以上の具体項目（箇条書き・表項目・問い）を置く。
+- 「適切に」「十分に」などの抽象語だけで終わらせず、判断可能な条件を書く。
+- 少なくとも 1 つの章で、対応 rulebook の本文構成と章を対応付けて書き方を示す。
+- 数値目標を扱う章では、測定方法と判定タイミングまで踏み込む。
+- ただし、実装依存の詳細（SQL 全文、具体クラス名、詳細 API 設計）には踏み込まない。
+
+## 7. 禁止事項
+
+- 章番号なし見出し（例: `## このレシピの使い方`）を使用しない。
+- 章番号末尾の `.` を省略しない。
+- 章参照を番号のみ（例: `§4` / `第4章`）で記述しない。
+- rulebook の構造・必須項目・禁止事項を recipe 側で再定義しない。
+- 本文に rulebook / sample への wikilink や照合指示（「rulebook の本文構成に従っている」「sample と同程度の粒度」など）を書かない。対応関係は frontmatter で示す。
+- rulebook / recipe / sample / template の種別ごとの役

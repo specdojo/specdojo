@@ -59,17 +59,20 @@ sample は共通サンプル文脈（駄菓子屋）で、`cdfd-overview-sample`
 
 ## 3. 作業内容
 
-| No  | 作業                                               | 担当 | 状態 | メモ                                  |
-| --- | -------------------------------------------------- | ---- | ---- | ------------------------------------- |
-| 1   | `cdfd-uc-rulebook` を新設する                      | ARC  | open | 契約と章構成を先に確定する            |
-| 2   | `cdfd-uc-template` を作成する                      | ARC  | open | 骨組み                                |
-| 3   | `cdfd-uc-sample` を作成する                        | ARC  | open | 駄菓子屋で 2 グループ以上を横断する例 |
-| 4   | `cdfd-uc-recipe` を作成する                        | ARC  | open | 手順                                  |
-| 5   | overview-rulebook と reference・命名標準へ追記する | ARC  | open | 種別追加と命名                        |
+| No  | 作業                                               | 担当 | 状態 | メモ                                             |
+| --- | -------------------------------------------------- | ---- | ---- | ------------------------------------------------ |
+| 1   | `cdfd-uc-rulebook` を新設する                      | ARC  | done | 契約、命名、章構成、完成判定を規定した           |
+| 2   | `cdfd-uc-template` を作成する                      | ARC  | done | 引き渡しと戻り先を含む骨組みを作成した           |
+| 3   | `cdfd-uc-sample` を作成する                        | ARC  | done | `C-02` の在庫 → 仕入 → 販売を詳細化した          |
+| 4   | `cdfd-uc-recipe` を作成する                        | ARC  | done | 情報収集から仕上げ確認までの手順を作成した       |
+| 5   | overview-rulebook と reference・命名標準へ追記する | ARC  | done | 新 rulebook の参照、成果物種別、命名例を追加した |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo:cdfd-uc-rulebook` と対応する recipe・sample・template を新設し、プロセスグループの順序、`H-<nn>` 形式の引き渡し、条件不成立時の戻り先を一貫して記述できるようにした。
+- sample は [[specdojo:cdfd-overview-sample|概念データフロー図（全体概要）]] の `C-02` を、在庫 → 仕入 → 販売の三グループを横断する例として詳細化した。
+- [[specdojo:cdfd-overview-rulebook|概念データフロー図（全体概要）作成ルール]]、CDFD の Mermaid 記法、成果物リファレンス、ID・ファイル命名標準を新しい成果物種別へ整合させた。
+- 残課題はない。成果物の `status` は規約どおり `draft` のままとし、`ready` への昇格は人間の確認後に行う。
 
 ## 5. 関連ドキュメント
 

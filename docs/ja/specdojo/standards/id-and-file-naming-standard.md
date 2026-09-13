@@ -872,6 +872,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 種別 | English | prefix | 例 |
 | --- | --- | --- | --- |
 | 概念データフロー図 | Conceptual Data Flow Diagram | cdfd- | cdfd-overview, cdfd-sales |
+| 概念データフロー図（ユースケース別） | Conceptual Data Flow Diagram (Use Case) | cdfd-uc- | cdfd-uc-credit-sales, cdfd-uc-replenishment |
 | 概念クラス図 | Conceptual Class Diagram | ccd- | ccd-customer |
 | 業務データ辞書 | Business Data Dictionary | bdd- | bdd-common, bdd-sales |
 | 概念データストア定義 | Conceptual Data Store Definition | cdsd- | cdsd-common, cdsd-sales |
