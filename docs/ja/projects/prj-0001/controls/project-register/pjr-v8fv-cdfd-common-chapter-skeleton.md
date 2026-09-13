@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v8fv-cdfd-common-chapter-skeleton
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T13:45:01Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-13T14:15:38Z"
+  conclusion: cdfd-overview、プロセスグループ別、ユースケース別の 3 レベルで、1 目的 / 2 適用範囲 / 3 プロセス領域（対象単位ごとの節） / 4 データストア（マスタ・構成／トランザクション） / 5 概念データフローを共通の骨組みとし、6 章以降をレベル固有、末尾を未決事項に揃えた。cdfd-rulebook と cdfd-uc-rulebook、overview-rulebook、template・sample・recipe 各 3 本を更新し、cdfd-overview の 4 章名を「データストア」に統一した。
 ---
 
 # PJR-V8FV CDFD 3 レベルの章構成を前半共通（目的・適用範囲・プロセス領域・データストア・概念データフロー）に揃える
