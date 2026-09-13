@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_357baafbb4514f75859484d90005af79
+- v: 1
+  id: reg_c905b695e5a84f02ba86661de3fcb856
+  ts: "2026-09-13T22:40:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_195301b5a4484e7db46ae8c94dca6685
