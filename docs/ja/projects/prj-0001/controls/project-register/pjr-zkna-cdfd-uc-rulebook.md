@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T05:07:17Z"
   due_on: "2026-09-30"
+  block_reason: rate limit reached
 ---
 
 # PJR-ZKNA ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する
