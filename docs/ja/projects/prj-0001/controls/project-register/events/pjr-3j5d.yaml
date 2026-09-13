@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_60d262f2218c404392fe47487cd29a83
+  ts: "2026-09-13T04:41:15Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): docs:dev が ENOENT で落ちる原因 2 件の修正を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade テストの docs 配下への一時ファイル作成をやめ mermaid プラグインを ENOENT に耐えるようにする
+    - field: description
+      from: ""
+      to: tests/src/grade.test.ts の generated 除外テストが実リポジトリの docs/ja/specdojo/samples/generated/ 配下に一時 Markdown を作成・削除するため、npm test が走るたび（pre-commit hook、exec run の親検証、手動実行）に VitePress dev サーバーの watcher が add を検知し、250 ms 後の mermaid SVG 生成で fs.statSync が ENOENT を投げてプロセスが落ちる。テストは tmpdir で検証できるようにし、mermaid プラグインはファイル単位で例外を捕捉して ENOENT をスキップし、unlink を処理し、generated/ 配下を対象外にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-13"
+    - field: due
+      from: ""
+      to: "2026-09-30"
