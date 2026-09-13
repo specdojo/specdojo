@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_357baafbb4514f75859484d90005af79
+  ts: "2026-09-13T21:49:34Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): grade の段失敗を次回再試行する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の段が失敗した文書を次回の定期再評価で失敗した段から再試行する
+    - field: description
+      from: ""
+      to: run-per-document.sh は同じ --run-id での再実行なら失敗した段から再開できるが、定期再評価は毎回新しい Job Run になるため、失敗した段は引き継がれない。段が失敗すると直前の段の判定が content_hash 付きで残り、内容が変わらない限り --changed-only でも --ungraded でも再選択されないため、codex の 3 段目だけが拒否された文書は gemma の判定のまま確定する。9/14 0 時の run では 10 件中 4 件で段が失敗し、cdfd-uc-rulebook と cdfd-mermaid-rulebook が 3 段目未実施のまま pass 100 で残った。段の失敗を文書の評価状態として記録し、次回の選択で拾って失敗した段から再試行する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-14"
+    - field: due
+      from: ""
+      to: "2026-09-30"
