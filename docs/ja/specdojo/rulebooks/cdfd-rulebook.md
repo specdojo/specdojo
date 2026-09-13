@@ -11,6 +11,30 @@ specdojo:
     - specdojo:cdfd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 93
+    graded_at: "2026-09-13T17:35:43.492Z"
+    graded_by: gemma-expert-executor
+    content_hash: 0e828fbb9e7cf9d30831f726c2135f1ffe1fe187d1a10c4c1cc2bc4f34e1503a
+    categories:
+      consistency: { score: 88 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 88 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）作成ルール
@@ -173,3 +197,6 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 - 一覧、検索、状態参照、検証、dry-run など、独自の業務成果を持たない補助操作を独立プロセスにしません。
 - プロセス領域の表と個別プロセス主要入出力、図直後の注記、例外表の間で同じ事実を重複記載しません。
 - すべての内部エラー、ログ、再試行を主要例外として列挙せず、停止範囲や再開条件を判定できない曖昧な記述を残しません。
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=170 状態変更プロセスがない場合の章の扱いについて、レシピ(4.7)の「章を省略」という案内が、本書の「必須章として事実と確認根拠を記載する」方針と矛盾している。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=170 状態変更プロセスがない場合の章の扱いについて、レシピ(4.7)の案内が、本書およびテンプレートで定義されている「章を保持して該当なしの事実を記載する」適用方法と矛盾している。 -->

@@ -7,6 +7,30 @@ specdojo:
   based_on:
     - specdojo:cdfd-overview-sample
   supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 96
+    graded_at: "2026-09-13T19:00:10.982Z"
+    graded_by: codex-expert-executor
+    content_hash: e249f71063077096d306fbce9809ada3fd3a11738f93197cf90c736a65407bde
+    categories:
+      consistency: { score: 88 }
+      usability: { score: 92 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）: 仕入
@@ -220,6 +244,9 @@ flowchart LR
 | `E-02-02` | `P-02-03`    | 仕入記録または在庫記録の更新結果を読み返して確認できない | 売場補充を起動せず、未確定の記録と受入品を分けて保持する                         | 両記録の更新と読み返しが成功した後、`P-02-03` から再開する         |
 
 ### 8.2. グループ外への委譲
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=216 `cdfd-sales` への引き渡し情報を「在庫数量」としているが、全体概要で仕入グループの出力は「入荷数量」、販売グループの入力は「売場棚の商品」であり、「在庫数量」は販売への引き渡しとして定義されていないため、上位文書と整合する名称と内容へ修正してください。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=216 `P-02-03` の出力、概念データフロー、領域の主要出力では「入荷数量」を使用している一方、`cdfd-sales` への引き渡しだけ「在庫数量」となっており別概念に読めるため、意図する情報名へ統一してください。 -->
 
 | 委譲先                  | 委譲する事項                                         | 引き渡す情報                           | 本グループへ戻す条件                                         |
 | ----------------------- | ---------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------ |

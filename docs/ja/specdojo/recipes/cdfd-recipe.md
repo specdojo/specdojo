@@ -5,6 +5,30 @@ specdojo:
   status: ready
   rulebook: specdojo:cdfd-rulebook
   sample: specdojo:cdfd-sample
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: needs-work
+    score: 81
+    graded_at: "2026-09-13T15:58:52.396Z"
+    graded_by: codex-expert-executor
+    content_hash: 0e3ef717473ad39dd7fbd3f888a11def361439ea0565ec744a978b9a3939e242
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 75 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）作成レシピ
@@ -140,6 +164,10 @@ Conceptual Data Flow Diagram Process Group Writing Recipe
 - 状態を変える全プロセスについて、状態定義の STSD と状態遷移の CSTD を特定できますか。
 - CDFD は状態を変えるプロセスと起動条件だけを示し、状態名、状態説明、遷移元・遷移先、遷移条件を再定義していませんか。
 - 参照先が未作成の場合、文書 ID をバッククォートで仮置きし、状態内容を CDFD へ代替記載していませんか。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=135 状態変更プロセスがない場合に章を省略する指示は、rulebook が必須章として事実と確認根拠を一文で残すこと、および template が表だけを削除することと矛盾するため、章を保持してその事実と確認根拠を記載する手順へ修正してください。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=135 状態変更プロセスがないケースで「状態遷移の参照」章を省略させると、rulebook の必須章と「該当なしの事実・確認根拠」が欠落するため、章を残して表のみ削除する手順へ修正してください。 -->
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=135 recipe が「章を省略」と案内する一方, rulebook と template は章を保持して該当なしの事実と確認根拠を記載するため、成果物への適用方法を rulebook/template に一致させてください。 -->
 
 対象、状態を変えるプロセス、STSD、CSTD の四点を一行で結びます。状態を変えるプロセスがない場合だけ章を省略します。
 

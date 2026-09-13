@@ -7,28 +7,29 @@ specdojo:
   sample: specdojo:cdfd-overview-sample
   grade:
     rubric: grade-rubric-v1
+    reference: specdojo:prj-overview-recipe
     target: kata
-    verdict: needs-work
-    score: 53
-    graded_at: "2026-09-04T12:18:23.628Z"
-    graded_by: codex-expert-executor
-    content_hash: ef240fb1e9d97d9054c960aa377144ac502ce3b635de3f5a99f1a5d0cd0f5d00
+    verdict: pass
+    score: 98
+    graded_at: "2026-09-13T15:15:12.765Z"
+    graded_by: gemma-expert-executor
+    content_hash: 1eca8c27f397d5cd6e2eb46f63dd7efc95d42362f833326603e2b71d89ee7694
     categories:
-      consistency: { score: 25 }
-      usability: { score: 58 }
+      consistency: { score: 88 }
+      usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 38 }
+      quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 1, score: 25 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 17, minor: 5, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成レシピ
@@ -112,6 +113,8 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 ### 4.4. データストア
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=81 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。 -->
+
 問い:
 
 - 各データストアは、何の正本かが分かる名称ですか。生成物の場合は生成元、退避先の場合は退避対象が主な内容に書かれていますか。
@@ -139,6 +142,8 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 問い:
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=113 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。 -->
+
 - 章の冒頭で、プロセスグループ別 CDFD とユースケース別 CDFD の役割分担を示していますか。
 - 状態の定義は STSD、状態遷移は CSTD を正本とし、詳細 CDFD は参照に留める役割分担を示していますか。
 - プロセスグループ別 CDFD の表に全グループが 1 行ずつあり、各領域がちょうど一つの行に属していますか。
@@ -154,6 +159,8 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 - 本プロダクトに複数の詳細 CDFD があり、共通のノード形状・色・絵文字を使いますか。
 - 全体概要と詳細 CDFD の各図が、この章の定義を再掲せず参照する形になっていますか。
 - サンプル図には、`specdojo:cdfd-mermaid-rulebook` が定義する全ノード種別が一つずつ含まれていますか。
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=124 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。 -->
 
 詳細 CDFD が複数あり、色・絵文字の割り当てを毎回説明し直すと負担になる場合に設けます。単一の CDFD しかない場合は省略します。
 

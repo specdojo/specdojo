@@ -5,6 +5,31 @@ specdojo:
   status: draft
   rulebook: specdojo:cdfd-uc-rulebook
   sample: specdojo:cdfd-uc-sample
+  grade:
+    rubric: grade-rubric-v1
+    reference: specdojo:prj-overview-recipe
+    target: kata
+    verdict: pass
+    score: 100
+    graded_at: "2026-09-13T16:08:58.961Z"
+    graded_by: gemma-expert-executor
+    content_hash: af0428e9a3389def16b48bf703d60abbce02417033263fbf28a87be46f781cc7
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）作成レシピ

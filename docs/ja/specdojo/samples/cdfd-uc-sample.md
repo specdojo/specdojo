@@ -7,6 +7,30 @@ specdojo:
   based_on:
     - specdojo:cdfd-overview-sample
   supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 100
+    graded_at: "2026-09-13T19:24:25.097Z"
+    graded_by: codex-expert-executor
+    content_hash: bcfa3bf2ec332112e7b342b95e77cf89bd0acb827c51359162f6b44c3d26ab41
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）: 欠品から補充まで

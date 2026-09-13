@@ -10,26 +10,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: needs-work
-    score: 85
-    graded_at: "2026-09-04T22:44:47.109Z"
+    score: 93
+    graded_at: "2026-09-13T18:31:49.497Z"
     graded_by: gemma-expert-executor
-    content_hash: 6f05258309c57dd747b2fd82691a5665d96686eee1190746aad4de6f76a9a6c8
+    content_hash: d625a50f0ad7f959a6896797ed75ba1e502299c7de5aefede46139b5d6720582
     categories:
-      consistency: { score: 100 }
-      usability: { score: 58 }
+      consistency: { score: 75 }
+      usability: { score: 92 }
       architecture: { score: 100 }
-      quality: { score: 88 }
+      quality: { score: 100 }
     viewpoints:
       vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 1, score: 25 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
+    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）: 駄菓子屋きぬや販売管理
@@ -83,6 +83,8 @@ specdojo:
 | --- | --- | --- | --- | --- |
 | `P-03` | 店頭販売 | 現金販売を記録し、商品を顧客へ渡す。 | 店番担当（管理責任: 店主代表） | 顧客が商品を購入した |
 | `P-04` | つけ販売 | つけ上限と残高を確認したうえで、つけ販売を記録する。 | 店主代表 | 常連客がつけでの購入を依頼した |
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency line=52 STSD および CSTD という用語が定義なしに使用されており、ルールブックの「用語表または各初出箇所で定義する必要がある」という規定に違反している。 -->
 
 ### 3.3. 在庫（P-05〜P-06）
 
@@ -154,6 +156,9 @@ specdojo:
 ## 5. 概念データフロー（概要）
 
 プロセスは五つのプロセスグループの代表ノード、データストアは「データストア」の各行をノードとして示す。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新のエッジは更新前の参照を含む。店主代表と店番担当は各領域の担当として内側にいるため外部主体としては描かず、対象範囲外の顧客と仕入先を外部主体として描く。ノード総数は 16 のため 1 図で示す。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=141 顧客台帳とつけ台帳（L141, L151）、および販売記録と日次締め記録（L148, L152）の主な保管先が重複しており、ルールブックおよび完成判定の「各パスが一つのデータストアにだけ属する」という規定に違反している。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=158 図のノード総数を 16 としているが、これは外部主体を含めた数であり、ルールブックで定義された「代表ノードとデータストアの合計」という算出基準と整合していない。 -->
 
 ```mermaid
 flowchart LR

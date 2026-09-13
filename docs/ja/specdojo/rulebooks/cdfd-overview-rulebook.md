@@ -15,26 +15,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: needs-work
-    score: 55
-    graded_at: "2026-09-02T01:02:42.330Z"
+    score: 66
+    graded_at: "2026-09-13T17:10:42.597Z"
     graded_by: codex-expert-executor
-    content_hash: 5f014cd35c69a1689b05572e1586dbabccaceea01c57e93bd999c3aab42fdcd3
+    content_hash: 9d936a74079121bc5fcbabe8308a67f1ea54d1f8326ed50df5bae95fdba47540
     categories:
-      consistency: { score: 25 }
-      usability: { score: 50 }
+      consistency: { score: 50 }
+      usability: { score: 75 }
       architecture: { score: 100 }
       quality: { score: 50 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 3, score: 75 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 1, score: 25 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 10, minor: 7, note: 0 }
+    findings: { blocker: 0, major: 4, minor: 4, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成ルール
@@ -44,6 +44,8 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 業務または運用の全体を、プロセスグループとデータストアの間の情報・実行要求の流れとして定義するためのルールです。プロセス領域の分割とデータストアの一覧を合意し、各プロセスグループをプロセスグループ別 CDFD へ、横断的な業務をユースケース別 CDFD へ重複・欠落なく引き渡せる粒度を定めます。
 
 ## 1. 全体方針
+
+<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-language-consistency line=10 `STSD`、`CSTD`、`PO`、`retrofit`、`Orchestrator` が正式名称・役割・参照先なしで使われ、Role code と関連成果物の解釈が読み手依存になるため、用語表または各初出箇所で定義する必要がある。 -->
 
 - 全体概要は、業務または運用を構成するプロセス領域、プロセスグループ、データストア、グループとデータストアの間の受け渡し、人間の判断境界を合意する概念仕様とします。
 - プロセス領域は業務の性質が近いものをプロセスグループにまとめ、概念データフローではプロセスグループを一つの代表ノードで表します。領域単位の内部プロセス、状態を変える処理と起点イベント、例外経路はプロセスグループ別 CDFD へ委ね、状態の定義と遷移は STSD / CSTD へ委ねます。
@@ -161,6 +163,8 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 - 章の冒頭で、区分の意味、パスの略記（例: `<project-id>` が指す範囲）、データストアとして扱わないもの（リポジトリ基盤、開発環境の設定など）を各一文で示します。
 - マスタ・構成データとトランザクションデータの 2 表に分け、各行は次の列で構成します。
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=130 対応 sample では「常連客ノート（現行）」が「顧客台帳」と「つけ台帳」の保管先として重複し、本行および完成判定の保管先一意性を満たさないため, sample の保管先を分離するか共有を許す条件を rulebook に明記する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=130 rulebook が対応する完成例として宣言した sample が保管先一意性に違反しており、規則を適用した完成形を示せていないため、sample の「顧客台帳」と「つけ台帳」の保管先を分離して本行の判定基準に適合させる必要がある。 -->
 <!-- prettier-ignore -->
 | 列 | 記載内容 | 判定基準 |
 | --- | --- | --- |
@@ -173,6 +177,8 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 - 生成物の集約先（評価結果、報告、派生ビューなど）や退避先（保管庫など）も、プロセスグループが更新するならデータストアとして一覧に含めます。
 
 ### 6.6. 概念データフロー（概要）
+
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=143 本行はノード総数を代表ノードとデータストアの合計と定義しているが、対応 sample は外部主体2件も含めて「16」と数えており、分割閾値の数え方が一致しないため sample の記述を「14」に修正するか外部主体を含む定義へ統一する必要がある。 -->
 
 - 章の冒頭で、ノードの構成（プロセスグループの代表ノードとデータストア）、矢印の意味（情報または実行要求の受け渡しであり実行順ではない）、更新エッジが参照を含むこと、外部主体の扱いを各一文で示します。
 - 代表ノードはプロセスグループごとに一つとし、ラベルにグループ名と含む領域 ID の範囲を書きます。`subgraph` で領域や代表ノードを囲みません。
@@ -204,6 +210,11 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 - 確定した論点は、本文へ反映したうえで表から削除します。
 
 ### 6.10. 完成判定
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness line=169 名称一致、データストアの一対一対応、`subgraph` 禁止、ノード数閾値などが前節と完成判定、禁止事項で反復されているため、判定条件を本節へ集約し、前節は理由と本節への参照に絞る必要がある。 -->
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability line=169 「他節の条件はここに集約」と宣言している一方、必須 Frontmatter、導入文・目的・適用範囲、各領域の業務目的・担当・起点イベント、詳細 CDFD 一覧の列要件、PO の承認記録がチェック項目に含まれず、この一覧だけでは `ready` の pass / fail を判定できない。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=169 完成判定から Frontmatter 必須キー、対象者と利用場面、開始点・終了点・境界、責任分担、領域表の必須列、データストアの区分、詳細 CDFD 一覧の必須列が欠落しており、「他節の条件を集約する」という宣言と整合しないため、全必須条件をチェックリストへ追加する必要がある。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=169 完成判定が前節の規則を部分的に再掲しながら一部を欠くため、読者が「ここだけ読めばよいのか、各節も再確認すべきか」を判断できず、完全なチェックリストへ集約するか各条件の参照先を明示する必要がある。 -->
 
 本節をチェックリストの正本とし、他節の条件はここに集約します。
 

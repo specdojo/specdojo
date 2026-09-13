@@ -11,6 +11,30 @@ specdojo:
     - specdojo:cdfd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 100
+    graded_at: "2026-09-13T17:55:50.612Z"
+    graded_by: gemma-expert-executor
+    content_hash: 5efc666d921f464fcfdb4cee32c5cd7e01515e375eef351cde8823515e8bc389
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）作成ルール
